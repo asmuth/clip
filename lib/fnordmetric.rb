@@ -7,9 +7,13 @@ module FnordMetric
         self.create(:data => hash.to_json)
       end
 
+      def self.generate_report(options={})
+      	FnordMetric::Report.new(self, options)
+      end
+
     end
   end
 
 end
 
-require "fnordmetric/base"
+require "fnordmetric/report"
