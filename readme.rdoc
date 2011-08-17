@@ -2,6 +2,66 @@
 
 yet another report generator
 
+
+== Usage
+
+migration:
+
+  create_table :exercise_metric do |t|        
+    t.text :data
+    t.timestamps
+  end
+
+model:
+
+  class CaffeineMetric < ActiveRecord::Base
+    include FnordMetric
+    set_table_name "coffeine_metric"
+  end
+
+add datapoints manually:
+
+  metric = CoffeMetric.metric("my_coffe_metric")
+  metric.insert(:coffee => 1, :espresso => 0, :time => 50.hours.ago)
+  metric.insert(:coffee => 1, :espresso => 1, :time => 30.hours.ago)
+  metric.insert(:coffee => 2, :espresso => 0, :time => 25.hours.ago)
+  metric.insert(:coffee => 1, :espresso => 0), :time => 3.hours.ago)
+  metric.insert(:coffee => 0, :espresso => 1)
+
+add datapoints automatically:
+
+  class CaffeineMetric < ActiveRecord::Base
+    include FnordMetric
+    set_table_name "coffeine_metric"
+    
+    insert_every 10.minutes do
+      { :my_value => my_helper_func }
+    end
+  end
+
+get the report
+
+  report = CoffeMetric.report("my_coffe_metric", :from => 3.days.ago, :until => Time.now)
+
+  report.totals_at(27.hours.ago)
+    => { :coffe => 2, :espresso => 1 }
+
+  report.sums_range(27.hours.ago..Time.now)
+    => { :coffe => 3, :espresso => 1 }
+
+  report.sum_range(:coffee, 2.days.ago..1.day.ago)
+    => 3
+
+  report.sum_range(:espresso, 2.days.ago..1.day.ago)
+    => 1
+
+  report.total_at(:coffe, 2.days.ago)
+    => 1
+
+  report.total_at(:coffe, 1.days.ago)
+    => 4
+  
+
 == Copyright
 
 Copyright (c) 2011 Paul Asmuth
