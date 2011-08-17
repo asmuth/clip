@@ -25,17 +25,3 @@ require 'rspec/core/rake_task'
 desc "Run all examples"
 task RSpec::Core::RakeTask.new('spec')
 
-desc "Create test-database (db/test.sqlite)"
-task :create_test_database do
-  require ::File.expand_path('../spec/spec_helper.rb', __FILE__)
-  begin
-    ActiveRecord::Migration.class_eval do
-      drop_table :my_metrics
-    end
-  rescue; end
-  ActiveRecord::Migration.class_eval do
-    create_table :my_metrics do |t|        
-      t.text :data
-    end
-  end
-end

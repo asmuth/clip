@@ -1,3 +1,0 @@
-class FnordMetric::Base
-
-end
