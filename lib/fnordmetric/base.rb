@@ -1,0 +1,3 @@
+class FnordMetric::Base
+
+end
