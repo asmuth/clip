@@ -1,7 +1,5 @@
 source "http://rubygems.org"
 
-gem "activerecord"
-
 group :development do
   gem 'sqlite3-ruby'
   gem "rspec"

@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+
+gem 'rails', '3.0.8'
+#gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem "bson_ext"
+gem "mongo_ext"
+gem "mongo_mapper"
