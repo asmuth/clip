@@ -1,0 +1,7 @@
+development:
+    host: localhost
+    database: fnordmetric_dev
+
+test:
+    host: localhost
+    database: fnordmetric_test
