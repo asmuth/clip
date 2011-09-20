@@ -1,5 +1,7 @@
 source "http://rubygems.org"
 
+gem "mongoid"
+
 group :development do
   gem 'sqlite3-ruby'
   gem "rspec"
