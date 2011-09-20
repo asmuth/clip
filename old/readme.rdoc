@@ -1,0 +1,86 @@
+= fnordmetric
+
+yet another report generator
+
+
+== Usage
+
+migration:
+
+  create_table :exercise_metric do |t|        
+    t.text :data
+    t.timestamps
+  end
+
+model:
+
+  class CaffeineMetric < ActiveRecord::Base
+    include FnordMetric
+    set_table_name "coffeine_metric"
+  end
+
+add datapoints manually:
+
+  metric = CoffeMetric.metric("my_coffe_metric")
+  metric.insert(:coffee => 1, :espresso => 0, :time => 50.hours.ago)
+  metric.insert(:coffee => 1, :espresso => 1, :time => 30.hours.ago)
+  metric.insert(:coffee => 2, :espresso => 0, :time => 25.hours.ago)
+  metric.insert(:coffee => 1, :espresso => 0), :time => 3.hours.ago)
+  metric.insert(:coffee => 0, :espresso => 1)
+
+add datapoints automatically:
+
+  class CaffeineMetric < ActiveRecord::Base
+    include FnordMetric
+    set_table_name "coffeine_metric"
+    
+    insert_every 10.minutes do
+      { :my_value => my_helper_func }
+    end
+  end
+
+get the report
+
+  report = CoffeMetric.report("my_coffe_metric", :from => 3.days.ago, :until => Time.now)
+
+  report.totals_at(27.hours.ago)
+    => { :coffe => 2, :espresso => 1 }
+
+  report.sums_range(27.hours.ago..Time.now)
+    => { :coffe => 3, :espresso => 1 }
+
+  report.sum_range(:coffee, 2.days.ago..1.day.ago)
+    => 3
+
+  report.sum_range(:espresso, 2.days.ago..1.day.ago)
+    => 1
+
+  report.total_at(:coffe, 2.days.ago)
+    => 1
+
+  report.total_at(:coffe, 1.days.ago)
+    => 4
+  
+
+== Copyright
+
+Copyright (c) 2011 Paul Asmuth
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

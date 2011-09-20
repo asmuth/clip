@@ -1,15 +1,9 @@
-module FnordMetric 
+require 'mongoid'
+require 'haml'
+require 'sinatra/base'
 
-  def self.included(base)
-    base.class_eval do
-
-      def self.foobar(hash)      	      	      
-      end
-
-    end
-  end
-
-end
+module Fnordmetric; end
 
 require "fnordmetric/report"
 require "fnordmetric/event"
+

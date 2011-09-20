@@ -1,0 +1,14 @@
+body, html{ height:100%; padding:0px;}
+body{ background:#111; color:#fff; overflow:hidden; margin:0px 40px; padding:0px; margin-right:50px; overflow-y:scroll; font-family:sans-serif; }
+
+.logo{ margin-top:5px; margin-left:3px; }
+
+
+.logo{ background:#5EBDD1; height:64px; width:100px; position:absolute; margin-top:-5px; margin-left:-115px; }
+
+.head{ height:35px; border-bottom:1px solid #333; padding-left:125px; }
+.head a{ color:#fff; text-decoration:none; font-weight:bold; font-size:10pt; height:31px; line-height:32px; display:block; float:left; color:#eee; padding:0px 10px; margin:0px 10px; margin-top:2px; }
+.head a:hover{ color:#5EBDD1; }
+.head a.active{ color:#000; background:#5EBDD1; }
+
+.bar{ height:35px; border-bottom:1px solid #333; border-top:1px solid #333; color:#fff; line-height:35px; color:#eee; padding-left:10px; }

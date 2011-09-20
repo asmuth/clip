@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+###################################################################
+#                                                                 #
+#  ZOE FUCKING SHELL                                              #
+#  © 2011 Paul Asmuth <paul@23linesofcode.com>                    #
+#                                                                 #
+###################################################################
+
+require 'sinatra'
+
+$: << ::File.expand_path('../../lib', __FILE__)
+
+require 'fnordmetric'
+require 'fnordmetric/app'
+
+use Rack::Reloader
+use Fnordmetric::App
+
+

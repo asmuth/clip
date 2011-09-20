@@ -1,4 +1,4 @@
-class Fnordmetric::Report
+class FnordMetric::Report
 
 	attr_accessor :nodes
 
