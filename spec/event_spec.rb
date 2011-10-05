@@ -9,21 +9,21 @@ describe "event" do
   end
 
   it "should create a new data point" do
-    event = Event.track!(:type => '_referral', :foobar => "fnord")
+    event = Event.track!('_referral', :foobar => "fnord")
     puts Event.last.inspect
     Event.last[:type].should == "_referral"
     Event.last[:foobar].should == "fnord"
   end
 
   it "should access info like a 'ostruct' object" do
-    event = Event.track!(:type => '_referral', :foobar => "fnord")
+    event = Event.track!('_referral', :foobar => "fnord")
     Event.last.type.should == "_referral"
     Event.last.foobar.should == "fnord"
   end
 
   it "should insert a data point in the past" do
     my_time = 23.minutes.ago
-    event = Event.track!(:type => '_referral', :foobar => "fnord", :time => my_time)
+    event = Event.track!('_referral', :foobar => "fnord", :time => my_time)
     Event.last[:type].should == "_referral"
     Event.last[:foobar].should == "fnord"
     Event.last[:time].should == my_time.to_i

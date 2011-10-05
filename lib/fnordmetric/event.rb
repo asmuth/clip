@@ -1,21 +1,26 @@
-class Fnordmetric::Event	
+class Fnordmetric::Event  
   include Mongoid::Document
 
   field :type, :type => String
   field :client, :type => Integer
   field :data, :type => Hash
 
-  def self.track!(params_hash)
-  	params_hash.to_options!
-  	self.create(:type => params_hash.delete(:type), :data => params_hash)
+  def self.track!(event_type, event_data)
+    event_data.to_options!
+    event_time = (event_data.delete(:time) || Time.now).to_i
+    self.create(:type => event_type, :time => event_time, :data => event_data)
+  end
+
+  def time
+    read_attribute(:time).to_i
   end
 
   def [](key)
-	self.send(key)
+    send(key)
   end
 
   def method_missing(method)
-  	self.data[method.to_s]
+    data[method.to_s]
   end
 
 end
