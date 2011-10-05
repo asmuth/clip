@@ -115,10 +115,7 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
 
   require "rubygems"
   require "fnordmetric"
-
-  Mongoid.configure do |c| 
-    c.master = Mongo::Connection.new.db("myfnordmetric") 
-  end
+  require "thin"
 
   FnordMetric.define(:passengers_total, :sum => :passengers)
   FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
@@ -132,9 +129,15 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
     passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
     passengers.graph [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
     passengers.graph :passengers_total, :title => "Passengers (total)"    
+  end  
+
+  Mongoid.configure do |c| 
+    c.master = Mongo::Connection.new.db("myfnordmetric") 
   end
 
-  FnordMetric::Dispatch.start!(:port => 2323)
+  app = FnordMetric::App.new
+  Thin::Server.start('127.0.0.1', 2323, app)
+  
 
 when run as a standalone service events can be added via a very simple (restful) http post:
 

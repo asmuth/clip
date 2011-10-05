@@ -5,7 +5,6 @@ gem "mongo", "~> 1.4.0"
 gem "bson_ext", "~> 1.4.0"
 gem "sinatra", "~> 1.2.6"
 gem "haml"
-gem "thin"
 gem "rack"
 gem "rack-test"
 

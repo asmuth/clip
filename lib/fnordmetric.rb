@@ -1,6 +1,5 @@
 require 'mongoid'
 require 'haml'
-require 'thin'
 require 'sinatra/base'
 
 require "fnordmetric/core"
