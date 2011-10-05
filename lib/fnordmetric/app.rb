@@ -10,7 +10,9 @@ class FnordMetric::App < Sinatra::Base
   set :views, ::File.expand_path('../../../haml', __FILE__)
   set :public, ::File.expand_path('../../../pub', __FILE__)
   
-  set :raise_errors, true if ENV['RACK_ENV'] == "test"
+  if ENV['RACK_ENV'] == "test"
+    set :raise_errors, true 
+  end
 
   get '/' do
     haml :app
