@@ -5,14 +5,9 @@ yet another report generator
 
 == Usage
 
-the fnordmetric webservice is a middleware. include it by adding this line to your environment.rb:
+you'll have to configure mongoid if your app doesn't already do that:
 
-  require 'fnordmetric'
-  config.middleware "FnordMetric::Dispatch"
-
-
-you'll also have to configure mongoid if your app doesn't already do that:
- 
+  require 'fnordmetric' 
   Mongoid.configure{ |c| c.master = Mongo::Connection.new.db("fnordmetric_test") }
 
 
@@ -80,7 +75,14 @@ generate the report in your controller or model:
     => [ (<Date 03-10-11 00:00:00>..<Date 03-10-11 23:59:59>), (<Date 04-10...
    
 
-you can reach the dashboard @ '/fnordmetric'. add tabs to it like this:
+fnordmetric comes with a built-in javascript dashboard app. to enable it you have to load
+a middleware by adding this line to your environment.rb:
+
+  config.middleware "FnordMetric::Dispatch"
+
+
+point your browser to 'myapp,com/fnordmetric' and you should see an empty dashboard.
+add tabs to it like this (in initializers/fnordmetric.rb):
 
   FnordMetric.dashboard 'Passengers' do |passengers|    
     passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
@@ -95,7 +97,7 @@ you can reach the dashboard @ '/fnordmetric'. add tabs to it like this:
   end
 
 
-you can also render the stats yourself:
+you can also render the stats yourself (you'll still need the middleware):
 
   report = FnordMetric.report(:range => (3.days.ago..Time.now))
 
