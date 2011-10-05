@@ -9,12 +9,14 @@ add datapoints manually:
 
   FnordMetric.track('drink_something', :coffee => 1, :size => 200, :time => 50.hours.ago)
   FnordMetric.track('drink_something', :coffee => 1, :size => 200, :espresso => 1, :time => 30.hours.ago)
-  FnordMetric.track('drink_something', :coffee => 2, :size => 200, :espresso => 0, :time => 25.hours.ago)
+  FnordMetric.track('drink_something', :coffee => 2, :size => 150, :espresso => 0, :time => 25.hours.ago)
   FnordMetric.track('drink_something', :coffee => 1, :size => 200, :espresso => 0, :time => 3.hours.ago)
-  FnordMetric.track('drink_something', :coffee => 0, :size => 200, :espresso => 1)
+  FnordMetric.track('drink_something', :coffee => 0, :size => 150, :espresso => 1)
 
 
 define your metrics:
+
+  FnordMetric.define_metric(:count, :size => 150) # => 2
 
   FnordMetric.define('coffees_total') do |memo,event|
     memo += 1
