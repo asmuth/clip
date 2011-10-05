@@ -1,23 +1,33 @@
-= fnordmetric
+= FnordMetric
 
 yet another report generator
 
 
+== Usage
 
-== Usage: Tracking and Reports
+the fnordmetric webservice is a middleware. include it by adding this line to your environment.rb:
 
-track some data:
+  require 'fnordmetric'
+  config.middleware "FnordMetric::Dispatch"
+
+
+you'll also have to configure mongoid if your app doesn't already do that:
+ 
+  Mongoid.configure{ |c| c.master = Mongo::Connection.new.db("fnordmetric_test") }
+
+
+now you can start tracking data:
   
   FnordMetric.track!('car_seen', :color => "red",  :speed => 130, :passengers => 2)
   FnordMetric.track!('car_seen', :color => "pink", :speed => 150, :passengers => 1)
   FnordMetric.track!('car_seen', :color => "red",  :speed => 65,  :passengers => 4, :time => 50.hours.ago)
-  FnordMetric.track!('car_seen', :color => "blue", :speed => 100, :passengers => 2)
+  FnordMetric.track!('car_seen', :color => "blue", :speed => 100, :passengers => 2, :time => 30.hours.ago)
   FnordMetric.track!('car_seen', :color => "red",  :speed => 123, :passengers => 2)
   FnordMetric.track!('car_seen', :color => "blue", :speed => 130, :passengers => 3)
   FnordMetric.track!('car_seen', :color => "red",  :speed => 142, :passengers => 2)
 
 
-define your metrics:
+to see some shiny stats you first have to define your metrics. e.g. in 'config/initializers/fnordmetric.rb':
 
   FnordMetric.define(:colors_total, :count => true, :unique => :color) 
   FnordMetric.define(:cars_total, :count => true) 
@@ -25,35 +35,92 @@ define your metrics:
   FnordMetric.define(:average_speed, :average => :speed) 
 
 
-get your report:
+the "event_types" option is mandatory, you also always have to provide exactly one of these:
 
-  report = FnordMetric.report(:range => (3.days.ago..Time.now))
-  report.colors_total      # => 3
-  report.cars_total        # => 7
-  report.average_speed     # => 113.6
-  report.passengers_total  # => 26
-  report.colors_total      # => 3
-
-
-
-== Metric options
-
-you have to provide exactly one of these:
   :count    => true      # return the total number of events              
   :average  => (field)   # return the avg of all "field"-values
   :sum      => (field)   # return the sum of all "field"-values
   :combine  => (lambda)  # custom accumulator
 
 
-you can optionally add these options:
+and you can optionally add these options:
+
   :unique   => (field)   # only consider events with unique (field)
   :filter   => (hash)    # only consider events with fields matching (hash)
   :select   => (lambda)  # only consider events for which (lambda) is true
 
 
+use combine-metrics to build your own 'indices':
 
-== More Examples
+  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
+  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }) 
 
+  FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
+    x.passengers_blue_car / x.passengers_red_car
+  })
+
+
+generate the report in your controller or model:
+
+  report = FnordMetric.report(:range => (3.days.ago..Time.now))
+  report.colors_total.current      # => 3  
+  report.colors_total.current      # => 3
+  report.cars_total.current        # => 7
+  report.average_speed.current     # => 113.6
+  report.passengers_total.current  # => 26
+  report.colors_total.current      # => 3
+
+  report.colors_total.at(40.hours.ago)   # => 1
+  report.colors_total.at(20.hours.ago)   # => 2
+
+  report.colors_total.values  
+    => { <Date 03-10-11> => 1, <Date 04-10-11> => 2, <Date 05-10-11> => 3 }
+
+  report.colors_total.ticks
+    => [ (<Date 03-10-11 00:00:00>..<Date 03-10-11 23:59:59>), (<Date 04-10...
+   
+
+you can reach the dashboard @ '/fnordmetric'. add tabs to it like this:
+
+  FnordMetric.dashboard 'Passengers' do |passengers|    
+    passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
+    passengers.graph [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
+    passengers.graph :passengers_total, :title => "Passengers (total)"    
+  end
+
+  FnordMetric.dashboard 'Cars' do |cars|
+    cars.graph :cars_total, :title => "Cars (total)"
+    cars.graph :colors_total, :title => "Number of different colors"
+    cars.graph :average_speed, :title => "Speed (avg)"    
+  end
+
+
+you can also render the stats yourself:
+
+  report = FnordMetric.report(:range => (3.days.ago..Time.now))
+
+  graph = FnordMetric::JSGraph.new(
+    :data => [report.passengers_blue_car, report.passengers_red_car], 
+    :title => "Passengers (red/blue)"
+  )
+
+  graph.render
+    => "<script type="text/javascript" src="/fnordmetric/graph.js?type=..."
+
+
+
+== Standalone service
+
+you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would look like this:
+
+  require "rubygems"
+  require "fnordmetric"
+
+  Mongoid.configure do |c| 
+    c.master = Mongo::Connection.new.db("myfnordmetric") 
+  end
+
+  FnordMetric.define(:passengers_total, :sum => :passengers)
   FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
   FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }) 
   
@@ -61,23 +128,27 @@ you can optionally add these options:
     x.passengers_blue_car / x.passengers_red_car
   })
 
-
-
-== Usage: Webservice
-
-you can run the fnordmetric webapp as a standalone service
-
-  require "fnordmetric"
-
-  Mongoid.configure do |c| 
-    c.master = Mongo::Connection.new.db("myfnordmetric") 
+  FnordMetric.dashboard 'Passengers' do |passengers|    
+    passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
+    passengers.graph [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
+    passengers.graph :passengers_total, :title => "Passengers (total)"    
   end
 
   FnordMetric::Dispatch.start!(:port => 2323)
 
-...or integrate the middelware into your rack app
+when run as a standalone service events can be added via a very simple (restful) http post:
 
-  config.middleware "FnordMetric::Dispatch"
+  POST http://myapp:port/fnordmetric/events type=car_seen&color=red&passengers=2&speed=120
+
+with curl:
+
+  curl -X POST -d "type=car_seen&color=red&passengers=2&speed=120" http://myapp:port/fnordmetric/events
+
+
+
+== TODO
+
+* event type(s) for each FnordMetric.define call!
 
 
 
