@@ -16,7 +16,7 @@ describe FnordMetric do
 	FnordMetric.track('car_seen', :color => "blue", :speed => 130, :passengers => 3)
 	FnordMetric.track('car_seen', :color => "red",  :speed => 142, :passengers => 2)
 
-	report = FnordMetric.new(:range => (3.days.ago..Time.now))
+	report = FnordMetric.report(:range => (3.days.ago..Time.now))
 	report.colors_total.should     == 3
 	report.cars_total.should       == 7
 	report.average_speed.should    == 113.6

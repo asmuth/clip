@@ -27,7 +27,7 @@ define your metrics:
 
 get your report:
 
-  report = FnordMetric.new(:range => (3.days.ago..Time.now))
+  report = FnordMetric.report(:range => (3.days.ago..Time.now))
   report.colors_total      # => 3
   report.cars_total        # => 7
   report.average_speed     # => 113.6
@@ -52,7 +52,7 @@ you can optionally add these options:
 
 
   
-== More Examples ==
+== More Examples
 
   FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
   FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }) 
