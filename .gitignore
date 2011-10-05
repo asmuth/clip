@@ -4,3 +4,4 @@ doc
 .bundle
 pkg
 db/*.sqlite
+server.rb

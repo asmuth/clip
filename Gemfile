@@ -1,9 +1,9 @@
 source "http://rubygems.org"
 
 gem "mongoid", "~> 2.2.0"
-
 gem "sinatra", "~> 1.2.6"
 gem "haml"
+gem "thin"
 gem "rack"
 gem "rack-test"
 
