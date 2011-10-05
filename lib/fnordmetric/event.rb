@@ -1,4 +1,4 @@
-class Fnordmetric::Event  
+class FnordMetric::Event  
   include Mongoid::Document
 
   field :type, :type => String

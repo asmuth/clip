@@ -1,6 +1,6 @@
 require ::File.expand_path('../spec_helper.rb', __FILE__)
 
-include Fnordmetric
+include FnordMetric
 
 describe "event" do
 

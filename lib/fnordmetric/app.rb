@@ -1,4 +1,4 @@
-class Fnordmetric::App	< Sinatra::Base
+class FnordMetric::App < Sinatra::Base
 	
 	@@sessions = Hash.new
 	

@@ -2,7 +2,7 @@ require 'mongoid'
 require 'haml'
 require 'sinatra/base'
 
-module Fnordmetric; end
+module FnordMetric; end
 
 require "fnordmetric/report"
 require "fnordmetric/event"
