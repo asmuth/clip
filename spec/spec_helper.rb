@@ -2,11 +2,9 @@ require 'rubygems'
 require 'rspec'
 require 'mongoid'
 require 'rack'
-
 require 'rack/test'
 
-
-Mongoid.load!(::File.expand_path('../../mongo.yml', __FILE__))
+Mongoid.configure{ |c| c.master = Mongo::Connection.new.db("fnordmetric_test") }
 
 $: << ::File.expand_path('../../lib', __FILE__)
 require "fnordmetric"
