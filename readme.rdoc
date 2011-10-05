@@ -68,6 +68,11 @@ you can optionally add these options:
 you can run the fnordmetric webapp as a standalone service
 
   require "fnordmetric"
+
+  Mongoid.configure do |c| 
+    c.master = Mongo::Connection.new.db("myfnordmetric") 
+  end
+
   FnordMetric::Dispatch.start!(:port => 2323)
 
 ...or integrate the middelware into your rack app
