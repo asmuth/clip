@@ -12,6 +12,7 @@ module FnordMetric
   end
 
   def self.report(options)  
+    FnordMetric::Report.new(metrics, options)
   end
   
   def self.metrics

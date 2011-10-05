@@ -21,7 +21,6 @@ describe FnordMetric do
 	report.cars_total.should       == 7
 	report.average_speed.should    == 113.6
 	report.passengers_total.should == 26
-	report.colors_total.should     == 3
   end
  
 end
