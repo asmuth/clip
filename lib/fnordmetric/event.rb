@@ -10,4 +10,12 @@ class Fnordmetric::Event
   	self.create(:type => params_hash.delete(:type), :data => params_hash)
   end
 
+  def [](key)
+	self.send(key)
+  end
+
+  def method_missing(method)
+  	self.data[method.to_s]
+  end
+
 end
