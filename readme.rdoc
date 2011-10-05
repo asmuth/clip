@@ -5,13 +5,13 @@ yet another report generator
 
 == Usage
 
-you'll have to configure mongoid if your app doesn't already do that:
+you need a mongodb instance and have to configure the mongoid-gem if your app doesn't already do that:
 
   require 'fnordmetric' 
   Mongoid.configure{ |c| c.master = Mongo::Connection.new.db("fnordmetric_test") }
 
 
-now you can start tracking data:
+that's all. you can start tracking data:
   
   FnordMetric.track!('car_seen', :color => "red",  :speed => 130, :passengers => 2)
   FnordMetric.track!('car_seen', :color => "pink", :speed => 150, :passengers => 1)
@@ -24,13 +24,13 @@ now you can start tracking data:
 
 to see some shiny stats you first have to define your metrics. e.g. in 'config/initializers/fnordmetric.rb':
 
-  FnordMetric.define(:colors_total, :count => true, :unique => :color) 
-  FnordMetric.define(:cars_total, :count => true) 
-  FnordMetric.define(:passengers_total, :sum => :passengers) 
-  FnordMetric.define(:average_speed, :average => :speed) 
+  FnordMetric.define(:colors_total,     :types => [:car_seen], :count => true, :unique => :color) 
+  FnordMetric.define(:cars_total,       :types => [:car_seen], :count => true) 
+  FnordMetric.define(:passengers_total, :types => [:car_seen], :sum => :passengers) 
+  FnordMetric.define(:average_speed,    :types => [:car_seen], :average => :speed) 
 
 
-the "event_types" option is mandatory, you also always have to provide exactly one of these:
+you always have to provide exactly one of these options:
 
   :count    => true      # return the total number of events              
   :average  => (field)   # return the avg of all "field"-values
@@ -41,14 +41,15 @@ the "event_types" option is mandatory, you also always have to provide exactly o
 and you can optionally add these options:
 
   :unique   => (field)   # only consider events with unique (field)
+  :types    => (types)   # only consider events where type in types
   :filter   => (hash)    # only consider events with fields matching (hash)
-  :select   => (lambda)  # only consider events for which (lambda) is true
+  :select   => (lambda)  # only consider events for which (lambda) is true  
 
 
 use combine-metrics to build your own 'indices':
 
-  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
-  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }) 
+  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
+  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
 
   FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
     x.passengers_blue_car / x.passengers_red_car
@@ -90,19 +91,19 @@ add tabs to it like this (in initializers/fnordmetric.rb):
     passengers.graph :passengers_total, :title => "Passengers (total)"    
   end
 
-  FnordMetric.dashboard 'Cars' do |cars|
-    cars.graph :cars_total, :title => "Cars (total)"
+  FnordMetric.dashboard 'Cars' do |cars|    
+    cars.graph :average_speed, :title => "Speed (avg)" 
     cars.graph :colors_total, :title => "Number of different colors"
-    cars.graph :average_speed, :title => "Speed (avg)"    
+    cars.graph :cars_total, :title => "Cars (total)"
   end
 
 
-you can also render the stats yourself (you'll still need the middleware):
+you can also render the stats yourself at some other place in your app (you'll still need the middleware though):
 
   report = FnordMetric.report(:range => (3.days.ago..Time.now))
 
   widget = FnordMetric::Widget.new( 
-    :title => "Passengers (red/blue)"
+    :title => "Passengers (red/blue)".
     :data => [report.passengers_blue_car, report.passengers_red_car]    
   )
 
@@ -119,9 +120,9 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
   require "fnordmetric"
   require "thin"
 
-  FnordMetric.define(:passengers_total, :sum => :passengers)
-  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
-  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }) 
+  FnordMetric.define(:passengers_total, :sum => :passengers, :types => [:car_seen])
+  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
+  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
   
   FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
     x.passengers_blue_car / x.passengers_red_car
@@ -153,8 +154,6 @@ with curl:
 
 == TODO
 
-* event type(s) for each FnordMetric.define call!
-* widget types
 * auth?!
 
 
