@@ -3,52 +3,65 @@
 yet another report generator
 
 
+
 == Usage
 
-add datapoints manually:
-
-  FnordMetric.track('drink_something', :coffee => 1, :size => 200, :time => 50.hours.ago)
-  FnordMetric.track('drink_something', :coffee => 1, :size => 200, :espresso => 1, :time => 30.hours.ago)
-  FnordMetric.track('drink_something', :coffee => 2, :size => 150, :espresso => 0, :time => 25.hours.ago)
-  FnordMetric.track('drink_something', :coffee => 1, :size => 200, :espresso => 0, :time => 3.hours.ago)
-  FnordMetric.track('drink_something', :coffee => 0, :size => 150, :espresso => 1)
+track some data:
+  
+  FnordMetric.track('car_seen', :color => "red",  :speed => 130, :passengers => 2)
+  FnordMetric.track('car_seen', :color => "pink", :speed => 150, :passengers => 1)
+  FnordMetric.track('car_seen', :color => "red",  :speed => 65,  :passengers => 4, :time => 50.hours.ago)
+  FnordMetric.track('car_seen', :color => "blue", :speed => 100, :passengers => 2)
+  FnordMetric.track('car_seen', :color => "red",  :speed => 123, :passengers => 2)
+  FnordMetric.track('car_seen', :color => "blue", :speed => 130, :passengers => 3)
+  FnordMetric.track('car_seen', :color => "red",  :speed => 142, :passengers => 2)
 
 
 define your metrics:
 
-  FnordMetric.define_metric(:count, :size => 150) # => 2
-
-  FnordMetric.define('coffees_total') do |memo,event|
-    memo += 1
-  end
-
-  FnordMetric.define('coffee_size_total') do |memo,event|
-    memo += event[:size]
-  end
+  FnordMetric.define(:colors_total, :count => true, :unique => :color) 
+  FnordMetric.define(:cars_total, :count => true) 
+  FnordMetric.define(:passengers_total, :sum => passengers) 
+  FnordMetric.define(:average_speed, :average => :speed) 
 
 
 get your report:
 
-  report = CoffeMetric.report(:coffees_total, :from => 3.days.ago, :until => Time.now)
+  report = FnordMetric.new(:range => (3.days.ago..Time.now))
+  report.colors_total      # => 3
+  report.cars_total        # => 7
+  report.average_speed     # => 113.6
+  report.passengers_total  # => 26
+  report.colors_total      # => 3
 
-  report.totals_at(27.hours.ago)
-    => { :coffe => 2, :espresso => 1 }
 
-  report.sums_range(27.hours.ago..Time.now)
-    => { :coffe => 3, :espresso => 1 }
 
-  report.sum_range(:coffee, 2.days.ago..1.day.ago)
-    => 3
+== Options
 
-  report.sum_range(:espresso, 2.days.ago..1.day.ago)
-    => 1
+you have to provide exactly one of these:
+  :count    => true      # return the total number of events              
+  :average  => (field)   # return the avg of all "field"-values
+  :sum      => (field)   # return the sum of all "field"-values
+  :combine  => (lambda)  # custom accumulator
 
-  report.total_at(:coffe, 2.days.ago)
-    => 1
 
-  report.total_at(:coffe, 1.days.ago)
-    => 4
+you can optionally add these options:
+  :unique   => (field)   # only consider events with unique (field)
+  :filter   => (hash)    # only consider events with fields matching (hash)
+  :select   => (lambda)  # only consider events for which (lambda) is true
+
+
   
+== More Examples ==
+
+  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
+  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }) 
+  
+  FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
+    x.passengers_blue_car / x.passengers_red_car
+  })
+
+
 
 == Copyright
 
