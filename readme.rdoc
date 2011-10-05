@@ -4,7 +4,7 @@ yet another report generator
 
 
 
-== Usage
+== Usage: Tracking and Reports
 
 track some data:
   
@@ -36,7 +36,7 @@ get your report:
 
 
 
-== Options
+== Metric options
 
 you have to provide exactly one of these:
   :count    => true      # return the total number of events              
@@ -51,7 +51,7 @@ you can optionally add these options:
   :select   => (lambda)  # only consider events for which (lambda) is true
 
 
-  
+
 == More Examples
 
   FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }) 
@@ -60,6 +60,19 @@ you can optionally add these options:
   FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
     x.passengers_blue_car / x.passengers_red_car
   })
+
+
+
+== Usage: Webservice
+
+you can run the fnordmetric webapp as a standalone service
+
+  require "fnordmetric"
+  FnordMetric::Dispatch.start!(:port => 2323)
+
+...or integrate the middelware into your rack app
+
+  config.middleware "FnordMetric::Dispatch"
 
 
 
