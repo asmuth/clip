@@ -99,12 +99,12 @@ you can also render the stats yourself:
 
   report = FnordMetric.report(:range => (3.days.ago..Time.now))
 
-  graph = FnordMetric::JSGraph.new(
-    :data => [report.passengers_blue_car, report.passengers_red_car], 
+  widget = FnordMetric::Widget.new( 
     :title => "Passengers (red/blue)"
+    :data => [report.passengers_blue_car, report.passengers_red_car]    
   )
 
-  graph.render
+  widget.render
     => "<script type="text/javascript" src="/fnordmetric/graph.js?type=..."
 
 
@@ -152,6 +152,8 @@ with curl:
 == TODO
 
 * event type(s) for each FnordMetric.define call!
+* widget types
+* auth?!
 
 
 
