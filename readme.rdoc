@@ -8,20 +8,20 @@ yet another report generator
 
 track some data:
   
-  FnordMetric.track('car_seen', :color => "red",  :speed => 130, :passengers => 2)
-  FnordMetric.track('car_seen', :color => "pink", :speed => 150, :passengers => 1)
-  FnordMetric.track('car_seen', :color => "red",  :speed => 65,  :passengers => 4, :time => 50.hours.ago)
-  FnordMetric.track('car_seen', :color => "blue", :speed => 100, :passengers => 2)
-  FnordMetric.track('car_seen', :color => "red",  :speed => 123, :passengers => 2)
-  FnordMetric.track('car_seen', :color => "blue", :speed => 130, :passengers => 3)
-  FnordMetric.track('car_seen', :color => "red",  :speed => 142, :passengers => 2)
+  FnordMetric.track!('car_seen', :color => "red",  :speed => 130, :passengers => 2)
+  FnordMetric.track!('car_seen', :color => "pink", :speed => 150, :passengers => 1)
+  FnordMetric.track!('car_seen', :color => "red",  :speed => 65,  :passengers => 4, :time => 50.hours.ago)
+  FnordMetric.track!('car_seen', :color => "blue", :speed => 100, :passengers => 2)
+  FnordMetric.track!('car_seen', :color => "red",  :speed => 123, :passengers => 2)
+  FnordMetric.track!('car_seen', :color => "blue", :speed => 130, :passengers => 3)
+  FnordMetric.track!('car_seen', :color => "red",  :speed => 142, :passengers => 2)
 
 
 define your metrics:
 
   FnordMetric.define(:colors_total, :count => true, :unique => :color) 
   FnordMetric.define(:cars_total, :count => true) 
-  FnordMetric.define(:passengers_total, :sum => passengers) 
+  FnordMetric.define(:passengers_total, :sum => :passengers) 
   FnordMetric.define(:average_speed, :average => :speed) 
 
 

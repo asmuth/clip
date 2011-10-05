@@ -10,7 +10,6 @@ describe "event" do
 
   it "should create a new data point" do
     event = Event.track!('_referral', :foobar => "fnord")
-    puts Event.last.inspect
     Event.last[:type].should == "_referral"
     Event.last[:foobar].should == "fnord"
   end
@@ -28,5 +27,15 @@ describe "event" do
     Event.last[:foobar].should == "fnord"
     Event.last[:time].should == my_time.to_i
   end
-    
+
+  it "should save integer data" do
+    event = Event.track!('_test', :num => 23)
+    Event.last.num.should == 23
+  end
+
+  it "should save float data" do
+    event = Event.track!('_test', :num => 42.5)
+    Event.last.num.should == 42.5
+  end
+  
 end
