@@ -1,6 +1,8 @@
 class FnordMetric::Event  
   include Mongoid::Document
 
+  self.collection_name = 'fnordmetric_event' 
+
   field :type, :type => String
   field :client, :type => Integer
   field :data, :type => Hash
