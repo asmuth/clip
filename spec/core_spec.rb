@@ -12,5 +12,10 @@ describe FnordMetric do
     FnordMetric.metrics[:myfield_total][:name].should == :myfield_total
     FnordMetric.metrics[:myfield_total][:sum].should == :myfield
   end
+
+  it "should track an event" do
+  	FnordMetric.track('blubb', :foo => "bar")
+  	FnordMetric::Event.last.foo.should == "bar"
+  end
   
 end

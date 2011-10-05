@@ -8,6 +8,7 @@ module FnordMetric
   end
 
   def self.track(event_name, event_data)
+    FnordMetric::Event.track!(event_name, event_data)
   end
 
   def self.report(options)  
