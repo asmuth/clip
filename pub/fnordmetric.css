@@ -2,7 +2,7 @@ body, html{ height:100%; padding:0px;}
 body{ background:#fff; color:#333; margin:0; padding:0 20px; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 #head{ height:70px; border-bottom:1px solid #e0e0e0; }
-#tabs{ width:200px; float:left; min-height:8		00px; border-right:1px solid #e0e0e0; }
+#tabs{ width:200px; border-right:1px solid #e0e0e0; position:fixed; height:100%; }
 #tabs ul{ list-style-type:none; padding:0; margin:0; }
 #tabs ul li{ height:34px; line-height:35px; border-bottom:1px dotted #ececec; cursor:pointer; color:#666; font-size:13px; }
 #tabs ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:35px; }
