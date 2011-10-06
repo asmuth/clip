@@ -1,4 +1,4 @@
-function renderWidget(data){ 
-  document.write(data.foobar); 
-  console.log(data);
+function renderWidget(conf){ 
+  document.write(conf.title); 
+  console.log(conf);
 }

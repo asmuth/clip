@@ -20,9 +20,12 @@ class FnordMetric::Widget
     @report = report
   end
 
+  def data_for_js
+    { :title => @options[:title] }
+  end
+
   def render_js
-    data = { :foobar => 123, :blubb => "42" }
-    build_js_snippet("f#{(rand*99999).to_i}", data)
+    build_js_snippet("f#{(rand*99999).to_i}", data_for_js)
   end
 
   def render

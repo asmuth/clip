@@ -5,6 +5,7 @@ require "fnordmetric"
 require "thin"
 
 FnordMetric.define(:passengers_total, :sum => :passengers, :types => [:car_seen])
+FnordMetric.define(:blubbs, :sum => :passengers, :types => [:car_seen])
 FnordMetric.define(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
 FnordMetric.define(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
 
@@ -17,6 +18,11 @@ FnordMetric.dashboard 'Passengers' do |passengers|
   passengers.widget [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)", :type => :graph
   passengers.widget :passengers_total, :title => "Passengers (total)", :type => :graph
 end  
+
+FnordMetric.dashboard 'Blubb' do |passengers|    
+  passengers.widget :blubbs, :title => "Summ blubbs", :type => :graph
+end  
+
 
 Mongoid.configure do |c| 
   c.master = Mongo::Connection.new.db("myfnordmetric") 
