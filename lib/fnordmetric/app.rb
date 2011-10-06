@@ -28,7 +28,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/fnordmetric/dashboard/:name' do
-    @dashboard = FnordMetric.dashboards.last
+    @dashboard = FnordMetric.dashboards.first
     haml :app
   end
 
