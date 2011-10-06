@@ -1,0 +1,36 @@
+FnordMetric = {
+  d: document,
+  p: '/fnordmetric/',
+  id: function(id){return FnordMetric.d.getElementById(id)},
+  tag: function(element){return FnordMetric.d.getElementsByTagName(element)},
+  ce: function(element){return FnordMetric.d.createElement(element)},
+
+  js: function(url, callback){
+    var s = FnordMetric.ce('script');
+    s.type = "text/javascript";
+    s.onload = callback;
+    s.src = FnordMetric.p+url;
+    FnordMetric.tag('head')[0].appendChild(s);  
+  },
+
+  css: function(url, callback){
+    var s = FnordMetric.ce('link');
+    s.type = "text/css";
+    s.rel = 'stylesheet';
+    s.href = FnordMetric.p+url;
+    s.onload = callback;         
+    FnordMetric.tag('head')[0].appendChild(s); 
+  },
+
+  render: function(_widget_config){
+    var f = FnordMetric.ce('iframe');    
+    FnordMetric.tag('body')[0].appendChild(f); 
+    var s = f.contentDocument.createElement('script')
+    s.type = "text/javascript";
+    s.src = FnordMetric.p+'fnordmetric.js';    
+    s.onload = function(){ f.contentWindow.FnordMetric.js(_widget_config.widget_url); }
+    f.contentWindow.widget_config = _widget_config;        
+    f.contentDocument.getElementsByTagName('head')[0].appendChild(s);   	
+  }
+
+};
