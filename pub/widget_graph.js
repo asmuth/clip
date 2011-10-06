@@ -1,27 +1,21 @@
 js_loader.js('/jquery-1.6.1.min.js', function(){  
 js_loader.js('/highcharts/highcharts.js', function(){  
+css_loader.css('/widget_graph.css', function(){});
 
+  $('body').append( $('<div></div>').attr('id', 'head') );
   $('body').append( $('<div></div>').attr('id', 'container') );
 
-  chart = new Highcharts.Chart({ 
-    
-    chart: {
-      renderTo: 'container',
-      defaultSeriesType: 'line'
-    },
-
+  chart = new Highcharts.Chart({     
+    chart: { renderTo: 'container', defaultSeriesType: 'line' },
     series: widget_config.series,
-
     title: { text: widget_config.title },
     subtitle: { text: widget_config.title },
-
-    xAxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    },
-    yAxis: {
+    xAxis: { categories: widget_config.x_labels },
+    
+    /*yAxis: {
       title: { text: 'Fnord' },
       plotLines: [{ value: 0, width: 1, color: '#808080' }]
-    },
+    },*/
 
     legend: {
       layout: 'vertical',

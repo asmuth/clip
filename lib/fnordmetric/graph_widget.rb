@@ -17,6 +17,7 @@ class FnordMetric::GraphWidget < FnordMetric::Widget
            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
         }
       ],
+      :x_labels => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],      
       :js_file => "/widget_graph.js?#{(rand*999).to_i}"
     )
   end
