@@ -2,37 +2,74 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Report do
 
-  before(:each) do
-    FnordMetric.reset_metrics
-    FnordMetric::Event.destroy_all
-    build_report_for_test!
+  describe "Car Report" do
+
+    before(:each) do
+      FnordMetric.reset_metrics
+      FnordMetric::Event.destroy_all
+      build_car_report_for_test!
+    end
+
+    it "should build the car report" do
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.should be_a(FnordMetric::Report)
+      report.metrics.length.should == 4
+    end
+
+    it "should return a metrics object for each defined metric" do
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.colors_total.should be_a(FnordMetric::Metric)
+      report.cars_total.should be_a(FnordMetric::Metric)
+      report.average_speed.should be_a(FnordMetric::Metric)
+      report.passengers_total.should be_a(FnordMetric::Metric)
+    end
+
+    it "should have the right total/current values" do
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.colors_total.current.should     == 3
+      report.cars_total.current.should       == 7
+      report.average_speed.current.should    == 113.6
+      report.passengers_total.current.should == 26
+    end
+
   end
 
-  it "should build the car report" do
-    report = FnordMetric.report(:range => (3.days.ago..Time.now))
-    report.should be_a(FnordMetric::Report)
-    report.metrics.length.should == 4
-  end
+  describe "Metric Types" do
 
-  it "should return a metrics object for each defined metric" do
-    report = FnordMetric.report(:range => (3.days.ago..Time.now))
-    report.colors_total.should be_a(FnordMetric::Metric)
-    report.cars_total.should be_a(FnordMetric::Metric)
-    report.average_speed.should be_a(FnordMetric::Metric)
-    report.passengers_total.should be_a(FnordMetric::Metric)
-  end
+    before(:each) do
+      FnordMetric.reset_metrics
+      FnordMetric::Event.destroy_all
+    end
+  
+    it "should create a sum-metric if the sum-option is provided" do
+      FnordMetric.define(:testmetric, :sum => :field_name)
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.testmetric.should be_a(FnordMetric::SumMetric)
+    end
 
-  it "should have the right total/current values" do
-    report = FnordMetric.report(:range => (3.days.ago..Time.now))
-    report.colors_total.current.should     == 3
-    report.cars_total.current.should       == 7
-    report.average_speed.current.should    == 113.6
-    report.passengers_total.current.should == 26
+    it "should create avg-metric if the avg-option is provided" do
+      FnordMetric.define(:testmetric, :avg => :field_name)
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.testmetric.should be_a(FnordMetric::AverageMetric)
+    end
+
+    it "should create a count-metric if the count-option is provided" do
+      FnordMetric.define(:testmetric, :count => true)
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.testmetric.should be_a(FnordMetric::CountMetric)
+    end
+
+    it "should create a sum-metric if the sum-option is provided" do
+      FnordMetric.define(:testmetric, :combine => :lambda)
+      report = FnordMetric.report(:range => (3.days.ago..Time.now))
+      report.testmetric.should be_a(FnordMetric::CombineMetric)
+    end
+
   end
  
  private
 
-  def build_report_for_test!
+  def build_car_report_for_test!
     FnordMetric.define(:colors_total, :count => true, :unique => :color) 
     FnordMetric.define(:cars_total, :count => true) 
     FnordMetric.define(:passengers_total, :sum => :passengers) 
