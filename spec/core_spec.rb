@@ -13,5 +13,20 @@ describe FnordMetric do
     FnordMetric.metrics[:myfield_total][:sum].should == :myfield
   end
 
+  it "should define a new dashboard" do
+    FnordMetric.dashboard('My Dashboard'){ |dash| }
+    dashboard = FnordMetric.dashboards.last
+    dashboard.should be_a(FnordMetric::Dashboard)
+    dashboard.title.should == 'My Dashboard'
+  end
+
+  it "should define a new dashboard and call the config block" do
+    block_called = false
+    FnordMetric.dashboard 'My Dashboard' do |dash|
+      block_called = true
+      dash.should be_a(FnordMetric::Dashboard)
+    end
+    block_called.should be_true
+  end
 
 end

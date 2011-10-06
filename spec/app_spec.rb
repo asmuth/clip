@@ -12,7 +12,19 @@ describe "app" do
     @app ||= FnordMetric::App
   end
 
-  it "should render something on /" do
+  it "should redirect to '/fnordmetric'" do
+  	get "/"
+  	last_response.status.should == 200
+  	last_response.location.should == "/fnordmetric"
+  end
+
+  it "should redirect to the default dashboard" do
+  	get "/fnordmetric"
+  	last_response.status.should == 302
+  	last_response.location.should == "/fnordmetric/dashboard/default"
+  end
+
+  it "should render the dashboard" do
   	get "/"
   	last_response.status.should == 200
   end
