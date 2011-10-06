@@ -1,23 +1,23 @@
 class FnordMetric::Report
 
-  attr_accessor :nodes
+  attr_accessor :events, :metrics
 
-  def initialize(metric_data, options)
-    @metric_data = metrics
+  def initialize(metric_options, options)
+    @metric_options = metric_options
     @options = options
-    @metrics = Array.new
-    @data = Hash.new
+    @metrics = Hash.new
     @events = Array.new
     build_all!
   end
 
   def build_all!
-    @metric_data.each{ |k,m| self.build!(m) }
+    @metric_options.each{ |k,m| self.build!(m) }
   end
 
-  def build!(metric)
-    calculate_metric(metric)
-    add_helper_methods(metric)
+  def build!(metric_options)
+    metric = build_metric(metric_options)
+    @metrics[metric_options[:name]] = metric
+    add_helper_methods(metric_options[:name])
   end
 
   def metaclass
@@ -26,8 +26,8 @@ class FnordMetric::Report
 
 private
 
-  def calculate_metric(metric_data)
-    @metrics[metric_data[:name]] = 123
+  def build_metric(metric_options)
+    FnordMetric::Metric.new(metric_options)
   end
 
   def add_helper_methods(metric_name)
