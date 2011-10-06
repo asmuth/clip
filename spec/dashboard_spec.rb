@@ -46,7 +46,7 @@ describe FnordMetric::Dashboard do
       FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
         dash.widget :my_unknown_metric, :title => "My Widget"
       }
-    }.should raise_error("missing option - :type")
+    }.should raise_error(RuntimeError)
   end
 
   it "should raise an error if an unknown metric is added to a widget" do
@@ -54,13 +54,13 @@ describe FnordMetric::Dashboard do
       FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
         dash.widget :my_unknown_metric, :title => "My Widget"
       }
-    }.should raise_error("metric not found: my_unknown_metric")
+    }.should raise_error(RuntimeError)
   end
 
   it "should define a new widget showing one metric" do
     FnordMetric.define(:my_metric, :sum => :my_field)
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget, :type => :graph"
+      dash.widget :my_metric, :title => "My Widget", :type => :graph
     }
     widget = dashboard.widgets.last
     widget.metrics.length.should == 1
