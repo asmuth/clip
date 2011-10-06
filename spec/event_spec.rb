@@ -8,10 +8,15 @@ describe "event" do
     Event.destroy_all
   end
 
-  it "should create a new data point" do
+  it "should track an event" do
     event = Event.track!('_referral', :foobar => "fnord")
     Event.last[:type].should == "_referral"
     Event.last[:foobar].should == "fnord"
+  end
+
+  it "should track an event via the proxy method" do
+    FnordMetric.track('blubb', :foo => "bar")
+    FnordMetric::Event.last.foo.should == "bar"
   end
 
   it "should access info like a 'ostruct' object" do

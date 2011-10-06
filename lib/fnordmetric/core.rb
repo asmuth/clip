@@ -19,4 +19,8 @@ module FnordMetric
     @@metrics
   end
 
+  def self.reset_metrics
+    @@metrics = {}
+  end
+
 end
