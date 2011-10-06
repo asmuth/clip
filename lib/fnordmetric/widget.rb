@@ -26,7 +26,7 @@ class FnordMetric::Widget
 
   def render_js(frame_id="f#{(rand*99999).to_i}")
     %Q{      
-      _#{frame_id} = "document.getElementById('#{frame_id}').contentWindow.renderWidget(#{data_for_js.to_json.gsub('"', '\'')});"
+      _#{frame_id} = "document.getElementById('#{frame_id}').contentWindow.widget_loader(#{data_for_js.to_json.gsub('"', '\'')});"
       document.write(unescape("%3Ciframe frameborder='none' width='100%' height='400' name='#{frame_id}' id='#{frame_id}' src='/widget.html' onload=%22"+_#{frame_id}+"%22 %3E%3C/iframe%3E"));
     }
   end
