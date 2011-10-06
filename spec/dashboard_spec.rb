@@ -7,7 +7,7 @@ describe FnordMetric::Dashboard do
   end
 
   it "should remember it's title" do
-    dashboard = FnordMetric::Dashboard.new('My Foobar Dashboard'){ |dash| }
+    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| }
     dashboard.title.should == 'My Foobar Dashboard'
   end
 
