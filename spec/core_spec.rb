@@ -29,4 +29,23 @@ describe FnordMetric do
     block_called.should be_true
   end
 
+  it "should define a new widget" do
+    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+    FnordMetric.widgets[:my_widget].title.should == "My Widget"
+  end
+
+  it "should raise an error if no type option is provided" do
+    FnordMetric.define(:my_metric, :sum => :my_field)
+    lambda{
+      FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget")      
+    }.should raise_error(RuntimeError)
+  end
+
+  it "should raise an error if an unknown metric is added to a widget" do
+    lambda{
+      FnordMetric.widget(:my_widget, :metrics => :my_unknown_metric, :title => "My Widget", :type => :graph)      
+    }.should raise_error(RuntimeError)
+  end
+
 end

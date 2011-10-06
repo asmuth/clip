@@ -17,51 +17,25 @@ describe FnordMetric::Dashboard do
     dashboard.token.should == 'MyF00barDash_board'
   end
 
-  it "should define a new widget" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
-    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget", :type => :graph
-    }
-    dashboard.widgets.last.title.should == "My Widget"
+  it "should add a widget" do
+    dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
+    widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+    dashboard.add_widget(widget)
+    dashboard.widgets.first.should == widget
   end
 
-  it "should define a new widget" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
-    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget", :type => :graph
-    }
-    dashboard.widgets.last.should be_a(FnordMetric::GraphWidget)
-  end
-
-  it "should define a new widget" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
-    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget", :type => :funnel
-    }
-    dashboard.widgets.last.should be_a(FnordMetric::FunnelWidget)
-  end
-
-  it "should raise an error if no type option is provided" do
-    lambda{
-      FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-        dash.widget :my_unknown_metric, :title => "My Widget"
-      }
-    }.should raise_error(RuntimeError)
-  end
-
-  it "should raise an error if an unknown metric is added to a widget" do
-    lambda{
-      FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-        dash.widget :my_unknown_metric, :title => "My Widget"
-      }
-    }.should raise_error(RuntimeError)
+  it "should add a widget by name" do
+    dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
+    widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+    dashboard.add_widget(:my_widget)
+    dashboard.widgets.first.should == widget
   end
 
   it "should add the report on init (and to all widgets)" do
     FnordMetric.define(:my_metric, :sum => :my_field)
     report = FnordMetric.report(:range => (4.days.ago..Time.now))
-    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard', :report => report){ |dash| 
-      dash.widget :my_metric, :title => "My Widget", :type => :graph
+    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard', :report => report){ |dash|       
+      dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
     }
     dashboard.report.should == report
     dashboard.widgets.last.report.should == report
@@ -71,27 +45,12 @@ describe FnordMetric::Dashboard do
     FnordMetric.define(:my_metric, :sum => :my_field)
     report = FnordMetric.report(:range => (4.days.ago..Time.now))
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget", :type => :graph
+      dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
     }
     dashboard.report.should == nil
     dashboard.add_report(report)
     dashboard.report.should == report
     dashboard.widgets.last.report.should == report
-  end
-
-  it "should define a new widget showing two metrics" do
-    FnordMetric.define(:first_metric, :count => :true)
-    FnordMetric.define(:second_metric, :count => :true)
-    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget [:first_metric, :second_metric], :title => "My Widget", :type => :graph
-    }
-    dashboard.add_report(FnordMetric.report(:range => (4.days.ago..Time.now)))
-    widget = dashboard.widgets.last
-    widget.metrics.length.should == 2
-    widget.metrics.first.should be_a(FnordMetric::CountMetric)
-    widget.metrics.first.token.should == :first_metric
-    widget.metrics.last.should be_a(FnordMetric::CountMetric)
-    widget.metrics.last.token.should == :second_metric
   end
     
   it "should call the config block" do

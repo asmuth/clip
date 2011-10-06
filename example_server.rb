@@ -13,16 +13,28 @@ FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
   x.passengers_blue_car / x.passengers_red_car
 })
 
-FnordMetric.dashboard 'Passengers' do |passengers|    
-  passengers.widget :blue_to_red_ratio, :title => "Passenger blue/red Ratio", :type => :graph
-  passengers.widget [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)", :type => :graph
-  passengers.widget :passengers_total, :title => "Passengers (total)", :type => :graph
-end  
 
-FnordMetric.dashboard 'Blubb' do |passengers|    
-  passengers.widget :blubbs, :title => "Summ blubbs", :type => :graph
-end  
+FnordMetric.dashboard 'Passengers' do |passengers| 
+   
+	passengers.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+	  :metrics => :blue_to_red_ratio, 
+	  :title => "Passenger blue/red Ratio", 
+	  :type => :graph
+	)
 
+	passengers.add_widget FnordMetric.widget(:passenger_blue_red_graph, 
+	  :metrics => [:passengers_blue_car, :passengers_red_car], 
+	  :title => "Passengers (red/blue)", 
+	  :type => :graph
+	)
+	
+	passengers.add_widget FnordMetric.widget(:passengers_total_graph, 
+	  :metrics => :passengers_total,
+	  :title => "Passenger blue/red Ratio", 
+	  :type => :graph
+	)
+
+end
 
 Mongoid.configure do |c| 
   c.master = Mongo::Connection.new.db("myfnordmetric") 

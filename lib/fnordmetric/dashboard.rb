@@ -10,15 +10,8 @@ class FnordMetric::Dashboard
     add_report(@options[:report]) if @options[:report]
   end
 
-  def widget(metric_names, options)
-    options.merge!(:metric_names => metric_names)
-    raise "missing option: :type" unless options[:type]
-    klass = if FnordMetric::WIDGET_TYPES.include?(options[:type].to_s) 
-      "FnordMetric::#{options[:type].to_s.classify}Widget".constantize
-    else
-      raise "unknown widget type: #{options[:type]}"
-    end
-    @widgets << klass.new(options)
+  def add_widget(widget)
+    @widgets << widget
   end
 
   def title

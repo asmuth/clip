@@ -76,40 +76,65 @@ generate the report in your controller or model:
     => [ (<Date 03-10-11 00:00:00>..<Date 03-10-11 23:59:59>), (<Date 04-10...
    
 
-fnordmetric comes with a built-in javascript dashboard app. to enable it you have to load
-a middleware by adding this line to your environment.rb:
+fnordmetric comes with javascript charting helper and a javascript dashboard app. to 
+use them you have to load a middleware by adding this line to your environment.rb:
 
   config.middleware "FnordMetric::Dispatch"
 
 
-point your browser to 'myapp,com/fnordmetric' and you should see an empty dashboard.
-add tabs to it like this (in initializers/fnordmetric.rb):
+now you can start rendering widgets in your own views:
 
-  FnordMetric.dashboard 'Passengers' do |passengers|    
-    passengers.widget :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
-    passengers.widget [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
-    passengers.widget :passengers_total, :title => "Passengers (total)"    
-  end
-
-  FnordMetric.dashboard 'Cars' do |cars|    
-    cars.widget :average_speed, :title => "Speed (avg)" 
-    cars.widget :colors_total, :title => "Number of different colors"
-    cars.widget :cars_total, :title => "Cars (total)"
-  end
-
-
-you can also render the stats yourself at some other place in your app (you'll still need the middleware though):
-
-  report = FnordMetric.report(:range => (3.days.ago..Time.now))
-
-  widget = FnordMetric::Widget.new( 
+  widget = FnordMetric.widget(
+    :passengers_red_blue_widget,
     :title => "Passengers (red/blue)".
-    :data => [report.passengers_blue_car, report.passengers_red_car]    
+    :type => :graph,
+    :metrics => [:passengers_blue_car, :passengers_red_car]        
   )
 
   widget.render
     => "<script type="text/javascript" src="/fnordmetric/widget.js?type=..."
 
+
+point your browser to 'myapp.com/fnordmetric' and you should see an empty dashboard. you can 
+add dashbaords and widgets like this (e.g. in initializers/fnordmetric.rb):
+
+  FnordMetric.widget(
+    :cars_avg_speed, 
+    :type => :graph, 
+    :metrics => :average_speed, 
+    :title => "Speed (avg)"
+  )
+
+  FnordMetric.widget(
+    :cars_unique_colors, 
+    :type => :graph, 
+    :metrics => :colors_total, 
+    :title => "Number of different colors"
+  )
+
+  FnordMetric.dashboard 'Cars' do |dash|    
+    dash.add_widget :cars_avg_speed
+    dash.add_widget :cars_unique_colors
+  end
+
+
+or like this:
+
+  FnordMetric.dashboard 'Passengers' do |dash|  
+
+    dash.add_widget FnordMetric.widget(:passenger_blue_red_graph, 
+      :metrics => [:passengers_blue_car, :passengers_red_car], 
+      :title => "Passengers (red/blue)", 
+      :type => :graph
+    )
+    
+    dash.add_widget FnordMetric.widget(:passengers_total_graph, 
+      :metrics => :passengers_total,
+      :title => "Passenger blue/red Ratio", 
+      :type => :graph
+    )
+
+  end
 
 
 == Standalone service
@@ -123,16 +148,32 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
   FnordMetric.define(:passengers_total, :sum => :passengers, :types => [:car_seen])
   FnordMetric.define(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
   FnordMetric.define(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
-  
+
   FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
     x.passengers_blue_car / x.passengers_red_car
   })
 
-  FnordMetric.dashboard 'Passengers' do |passengers|    
-    passengers.widget :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
-    passengers.widget [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)"
-    passengers.widget :passengers_total, :title => "Passengers (total)"    
-  end  
+  FnordMetric.dashboard 'Passengers' do |passengers| 
+     
+    passengers.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+      :metrics => :blue_to_red_ratio, 
+      :title => "Passenger blue/red Ratio", 
+      :type => :graph
+    )
+
+    passengers.add_widget FnordMetric.widget(:passenger_blue_red_graph, 
+      :metrics => [:passengers_blue_car, :passengers_red_car], 
+      :title => "Passengers (red/blue)", 
+      :type => :graph
+    )
+    
+    passengers.add_widget FnordMetric.widget(:passengers_total_graph, 
+      :metrics => :passengers_total,
+      :title => "Passenger blue/red Ratio", 
+      :type => :graph
+    )
+
+  end
 
   Mongoid.configure do |c| 
     c.master = Mongo::Connection.new.db("myfnordmetric") 
@@ -140,8 +181,8 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
 
   app = FnordMetric::App.new
   Thin::Server.start('127.0.0.1', 2323, app)
-  
 
+ 
 when run as a standalone service events can be added via a very simple (restful) http post:
 
   POST http://myapp:port/fnordmetric/events type=car_seen&color=red&passengers=2&speed=120

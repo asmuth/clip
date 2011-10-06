@@ -27,6 +27,7 @@ class FnordMetric::Report
 private
 
   def build_metric(metric_options)
+    metric_options.reverse_merge!(@options)
     return FnordMetric::AverageMetric.new(metric_options) if metric_options[:average]
     return FnordMetric::SumMetric.new(metric_options) if metric_options[:sum]
     return FnordMetric::CountMetric.new(metric_options) if metric_options[:count]

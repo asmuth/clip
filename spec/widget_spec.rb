@@ -36,4 +36,19 @@ describe FnordMetric::Widget do
     lambda{ widget.metrics }.should_not raise_error(RuntimeError)
   end
 
+  it "should define a new widget showing two metrics" do
+    FnordMetric.define(:first_metric, :count => :true)
+    FnordMetric.define(:second_metric, :count => :true)
+    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
+      dash.widget [:first_metric, :second_metric], :title => "My Widget", :type => :graph
+    }
+    dashboard.add_report(FnordMetric.report(:range => (4.days.ago..Time.now)))
+    widget = dashboard.widgets.last
+    widget.metrics.length.should == 2
+    widget.metrics.first.should be_a(FnordMetric::CountMetric)
+    widget.metrics.first.token.should == :first_metric
+    widget.metrics.last.should be_a(FnordMetric::CountMetric)
+    widget.metrics.last.token.should == :second_metric
+  end
+  
 end

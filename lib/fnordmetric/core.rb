@@ -3,11 +3,23 @@ module FnordMetric
   WIDGET_TYPES = %(graph funnel)
   
   @@metrics = {}
+  @@widgets = {}
   @@dashboards = Array.new
 
   def self.define(metric_name, options)
     options.merge!(:name => metric_name)
     @@metrics[metric_name] = options
+  end
+
+  def self.widget(widget_name, options)
+    options.merge!(:widget_name => widget_name)
+    raise "missing option: :type" unless options[:type]
+    klass = if FnordMetric::WIDGET_TYPES.include?(options[:type].to_s) 
+      "FnordMetric::#{options[:type].to_s.classify}Widget".constantize
+    else
+      raise "unknown widget type: #{options[:type]}"
+    end
+    @@widgets[widget_name] = klass.new(options)
   end
 
   def self.dashboard(title, options={}, &block)
@@ -27,8 +39,16 @@ module FnordMetric
     @@metrics
   end
 
+  def self.widgets
+    @@widgets
+  end
+
   def self.reset_metrics
     @@metrics = {}
+  end
+
+  def self.reset_widgets
+    @@widgets = {}
   end
 
   def self.dashboards
