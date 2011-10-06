@@ -33,7 +33,7 @@ class FnordMetric::Widget
     %Q{
       _#{frame_id} = "#{data.to_json.gsub('"', '\'')}";
       _#{frame_id} = "document.getElementById('#{frame_id}').contentWindow.renderWidget("+_#{frame_id}+");"
-      document.write(unescape("%3Ciframe width='100%' height='200' name='#{frame_id}' id='#{frame_id}' src='#{jslib_url}' onload=%22"+_#{frame_id}+"%22 %3E%3C/iframe%3E"));
+      document.write(unescape("%3Ciframe frameborder='none' width='100%' height='200' name='#{frame_id}' id='#{frame_id}' src='#{jslib_url}' onload=%22"+_#{frame_id}+"%22 %3E%3C/iframe%3E"));
     }
   end
 

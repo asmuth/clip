@@ -1,4 +1,4 @@
-      function renderWidget(data){ 
-	    document.write('fuckyeah'); 
-	    console.log(data);
-	  }
+function renderWidget(data){ 
+  document.write(data.foobar); 
+  console.log(data);
+}
