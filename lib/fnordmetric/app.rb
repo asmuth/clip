@@ -15,10 +15,18 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
+  	redirect '/fnordmetric'
+  end
+
+  get '/fnordmetric' do
+  	redirect '/fnordmetric/dashboard/default'
+  end
+
+  get '/fnordmetric/dashboard/:name' do
     haml :app
   end
 
-  post '/events' do
+  post '/fnordmetric/events' do
     halt 400, 'please specify the event_type' unless params["type"]       
     event_type = params.delete("type")
     FnordMetric.track(event_type, parse_params(params))

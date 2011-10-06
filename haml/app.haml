@@ -18,5 +18,8 @@
 
 :javascript
   $(document).ready(function(){
+    $('#tabs li').click(function(){
+      document.location.href = '/fnordmetric/dashboard/' + $(this).attr('rel');
+    });
   });
 
