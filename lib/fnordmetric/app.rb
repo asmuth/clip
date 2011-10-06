@@ -10,6 +10,11 @@ class FnordMetric::App < Sinatra::Base
   set :views, ::File.expand_path('../../../haml', __FILE__)
   set :public, ::File.expand_path('../../../pub', __FILE__)
   
+  helpers do
+    include Rack::Utils
+    alias_method :h, :escape_html
+  end
+
   if ENV['RACK_ENV'] == "test"
     set :raise_errors, true 
   end
@@ -23,6 +28,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/fnordmetric/dashboard/:name' do
+    @dashboard = FnordMetric.dashboards.first
     haml :app
   end
 

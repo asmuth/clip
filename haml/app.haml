@@ -14,12 +14,24 @@
         -FnordMetric.dashboards.each do |dashboard|
           %li{:rel => dashboard.token}
             .picto.piechart
-            =dashboard.title
+            =h dashboard.title
+
+    #viewport
+      -@dashboard.widgets.each do |widget|
+        %div(style="height:200px; background:#0f0; margin-bottom:10px;")
+          =widget.render
+          
 
 :javascript
   $(document).ready(function(){
+
     $('#tabs li').click(function(){
       document.location.href = '/fnordmetric/dashboard/' + $(this).attr('rel');
     });
+
+    function resizeViewport(){ $('#viewport').width(window.innerWidth-290); }
+    resizeViewport();
+    $(window).resize(resizeViewport);
+
   });
 

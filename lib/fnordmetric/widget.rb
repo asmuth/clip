@@ -20,4 +20,21 @@ class FnordMetric::Widget
     @report = report
   end
 
+  def render_js
+    data = { :foobar => 123, :blubb => "42" }
+    build_js_snippet("f#{(rand*99999).to_i}", data)
+  end
+
+  def render
+    "<script type='text/javascript'>#{render_js}</script>"
+  end
+
+  def build_js_snippet(frame_id, data, jslib_url = "/widget.html")
+    %Q{
+      _#{frame_id} = "#{data.to_json.gsub('"', '\'')}";
+      _#{frame_id} = "document.getElementById('#{frame_id}').contentWindow.renderWidget("+_#{frame_id}+");"
+      document.write(unescape("%3Ciframe width='100%' height='200' name='#{frame_id}' id='#{frame_id}' src='#{jslib_url}' onload=%22"+_#{frame_id}+"%22 %3E%3C/iframe%3E"));
+    }
+  end
+
 end

@@ -13,3 +13,5 @@ body{ background:#fff; color:#333; margin:0; padding:0 20px; overflow-y:scroll; 
 .picto{ display:block; height:14px; width:14px; float:left; background:url('/img/picto_sprite.gif') no-repeat 14px 14px #ccc; opacity:0.7; }
 .picto.edit{ background-position:0px 0px; }
 .picto.piechart{ background-position:0px -280px; }
+
+#viewport{ min-height:800px; float:left; margin-left:20px; }

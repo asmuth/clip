@@ -13,9 +13,9 @@ FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
 })
 
 FnordMetric.dashboard 'Passengers' do |passengers|    
-#  passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
-#  passengers.graph [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
-#  passengers.graph :passengers_total, :title => "Passengers (total)"    
+  passengers.widget :blue_to_red_ratio, :title => "Passenger blue/red Ratio", :type => :graph
+  passengers.widget [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)", :type => :graph
+  passengers.widget :passengers_total, :title => "Passengers (total)", :type => :graph
 end  
 
 Mongoid.configure do |c| 
