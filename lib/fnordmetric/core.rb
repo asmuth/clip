@@ -1,4 +1,6 @@
 module FnordMetric
+
+  WIDGET_TYPES = %(graph funnel)
   
   @@metrics = {}
   @@dashboards = Array.new
@@ -10,9 +12,7 @@ module FnordMetric
 
   def self.dashboard(title, options={}, &block)
     options.merge!(:title => title)
-    @@dashboards << FnordMetric::Dashboard.new(options).tap do |_dashboard|
-      block.call(_dashboard)
-    end
+    @@dashboards << FnordMetric::Dashboard.new(options, block)
   end
 
   def self.track(event_name, event_data)

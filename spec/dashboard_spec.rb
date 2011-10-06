@@ -82,4 +82,13 @@ describe FnordMetric::Dashboard do
     widget.metrics.last.token.should == :second_metric
   end
     
+  it "should call the config block" do
+   block_called = false
+   FnordMetric::Dashboard.new(:title => 'My Dashboard') do |dash|
+      block_called = true
+      dash.should be_a(FnordMetric::Dashboard)
+    end
+    block_called.should be_true
+  end
+
 end
