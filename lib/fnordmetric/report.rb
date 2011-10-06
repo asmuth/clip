@@ -27,7 +27,11 @@ class FnordMetric::Report
 private
 
   def build_metric(metric_options)
-    FnordMetric::Metric.new(metric_options)
+    return FnordMetric::AverageMetric.new(metric_options) if metric_options[:average]
+    return FnordMetric::SumMetric.new(metric_options) if metric_options[:sum]
+    return FnordMetric::CountMetric.new(metric_options) if metric_options[:count]
+    return FnordMetric::CombineMetric.new(metric_options) if metric_options[:combine]
+    raise "please provide one of these options: average, sum, count, combine"
   end
 
   def add_helper_methods(metric_name)

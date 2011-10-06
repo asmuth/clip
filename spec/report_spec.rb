@@ -48,7 +48,7 @@ describe FnordMetric::Report do
     end
 
     it "should create avg-metric if the avg-option is provided" do
-      FnordMetric.define(:testmetric, :avg => :field_name)
+      FnordMetric.define(:testmetric, :average => :field_name)
       report = FnordMetric.report(:range => (3.days.ago..Time.now))
       report.testmetric.should be_a(FnordMetric::AverageMetric)
     end

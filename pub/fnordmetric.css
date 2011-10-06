@@ -1,14 +1,15 @@
 body, html{ height:100%; padding:0px;}
-body{ background:#111; color:#fff; overflow:hidden; margin:0px 40px; padding:0px; margin-right:50px; overflow-y:scroll; font-family:sans-serif; }
+body{ background:#fff; color:#333; margin:0; padding:0 20px; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-.logo{ margin-top:5px; margin-left:3px; }
+#head{ height:70px; border-bottom:1px solid #e0e0e0; }
+#tabs{ width:200px; float:left; min-height:800px; border-right:1px solid #e0e0e0; }
+#tabs ul{ list-style-type:none; padding:0; margin:0; }
+#tabs ul li{ height:34px; line-height:35px; border-bottom:1px dotted #ececec; cursor:pointer; color:#666; font-size:13px; }
+#tabs ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:35px; }
+#tabs ul li .picto{ margin-top:10px; margin-right:7px; }
+#tabs ul li:hover, #tabs ul li:hover:after{ color:#000; }
+#tabs ul li:hover .picto{ opacity:1; }
 
-
-.logo{ background:#5EBDD1; height:64px; width:100px; position:absolute; margin-top:-5px; margin-left:-115px; }
-
-.head{ height:35px; border-bottom:1px solid #333; padding-left:125px; }
-.head a{ color:#fff; text-decoration:none; font-weight:bold; font-size:10pt; height:31px; line-height:32px; display:block; float:left; color:#eee; padding:0px 10px; margin:0px 10px; margin-top:2px; }
-.head a:hover{ color:#5EBDD1; }
-.head a.active{ color:#000; background:#5EBDD1; }
-
-.bar{ height:35px; border-bottom:1px solid #333; border-top:1px solid #333; color:#fff; line-height:35px; color:#eee; padding-left:10px; }
+.picto{ display:block; height:14px; width:14px; float:left; background:url('/img/picto_sprite.gif') no-repeat 14px 14px #ccc; opacity:0.7; }
+.picto.edit{ background-position:0px 0px; }
+.picto.piechart{ background-position:0px -280px; }

@@ -48,8 +48,8 @@ and you can optionally add these options:
 
 use combine-metrics to build your own 'indices':
 
-  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
-  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
+  FnordMetric.define(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
+  FnordMetric.define(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
 
   FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
     x.passengers_blue_car / x.passengers_red_car
@@ -121,8 +121,8 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
   require "thin"
 
   FnordMetric.define(:passengers_total, :sum => :passengers, :types => [:car_seen])
-  FnordMetric.define(:passengers_red_car, :sum => passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
-  FnordMetric.define(:passengers_blue_car, :sum => passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
+  FnordMetric.define(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
+  FnordMetric.define(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
   
   FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
     x.passengers_blue_car / x.passengers_red_car
@@ -130,7 +130,7 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
 
   FnordMetric.dashboard 'Passengers' do |passengers|    
     passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
-    passengers.graph [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
+    passengers.graph [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)"
     passengers.graph :passengers_total, :title => "Passengers (total)"    
   end  
 

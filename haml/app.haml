@@ -2,42 +2,19 @@
 %html
 
   %head
-    %title zoe.sh
+    %title Fnordmetric Dashboard
     %script(type="text/javascript" src="/jquery-1.6.1.min.js")
-    %script(type="text/javascript" src="/strophe.min.js")
-    %script(type="text/javascript" src="/zoeshell.js")    
     %link(type="text/css" rel="stylesheet" href="/fnordmetric.css")  
     
   %body
-    
-    .head
-      .logo
-      %a(href="#todo") Foobar
-      %a(href="#todo") Foobar
-      %a(href="#todo") Foobar
-      %a(href="#todo") Foobar
-      %a.active(href="#todo") Foobar
-      %a(href="#todo") Foobar
-      %a(href="#todo") Foobar
-      /%img.logo(src="/img/logo.png")
+    #head
 
-    %br
-    %br
-    %br
-    %br
-    %br
-
-    .bar
-      %b Lorem ipsum dolor &raquo; Daily Visits
-
-    %br
-    %br
-    %br
-    %br
-    %br
-    
-    .bar
-      %b Lorem ipsum dolor &raquo; Daily Visits
+    #tabs
+      %ul
+        -10.times do
+          %li(rel="asd") 
+            .picto.piechart
+            Foobar
 
 :javascript
   $(document).ready(function(){
