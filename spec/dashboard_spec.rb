@@ -73,8 +73,8 @@ describe FnordMetric::Dashboard do
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
       dash.widget :my_metric, :title => "My Widget", :type => :graph
     }
-    dashboard.add_report(report)
     dashboard.report.should == nil
+    dashboard.add_report(report)
     dashboard.report.should == report
     dashboard.widgets.last.report.should == report
   end

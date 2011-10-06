@@ -1,12 +1,13 @@
 class FnordMetric::Dashboard
 
-  attr_accessor :widgets
+  attr_accessor :widgets, :report
 
   def initialize(options, _block=nil, &block)
     @options = options.to_options
-    raise "please provide a :title" unless @options[:title]
     @widgets = Array.new
+    raise "please provide a :title" unless @options[:title]
     (_block||block).call(self)
+    add_report(@options[:report]) if @options[:report]
   end
 
   def widget(metric_names, options)
@@ -28,4 +29,9 @@ class FnordMetric::Dashboard
     title.gsub(/[\W]/, '')
   end
   
+  def add_report(report)
+    @report = report
+    @widgets.each{ |w| w.add_report(report) }
+  end
+
 end
