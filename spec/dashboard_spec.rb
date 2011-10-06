@@ -20,14 +20,36 @@ describe FnordMetric::Dashboard do
   it "should define a new widget" do
     FnordMetric.define(:my_metric, :sum => :my_field)
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget"
+      dash.widget :my_metric, :title => "My Widget", :type => :graph
     }
-    widget = dashboard.widgets.last
-    widget.title.should == "My Widget"
-    widget.should be_a(FnordMetric::Widget)
+    dashboard.widgets.last.title.should == "My Widget"
   end
 
-  it "should raise an error if an unknonw metric is added to a widget" do
+  it "should define a new widget" do
+    FnordMetric.define(:my_metric, :sum => :my_field)
+    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
+      dash.widget :my_metric, :title => "My Widget", :type => :graph
+    }
+    dashboard.widgets.last.should be_a(FnordMetric::GraphWidget)
+  end
+
+  it "should define a new widget" do
+    FnordMetric.define(:my_metric, :sum => :my_field)
+    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
+      dash.widget :my_metric, :title => "My Widget", :type => :funnel
+    }
+    dashboard.widgets.last.should be_a(FnordMetric::FunnelWidget)
+  end
+
+  it "should raise an error if no type option is provided" do
+    lambda{
+      FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
+        dash.widget :my_unknown_metric, :title => "My Widget"
+      }
+    }.should raise_error("missing option - :type")
+  end
+
+  it "should raise an error if an unknown metric is added to a widget" do
     lambda{
       FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
         dash.widget :my_unknown_metric, :title => "My Widget"
@@ -38,7 +60,7 @@ describe FnordMetric::Dashboard do
   it "should define a new widget showing one metric" do
     FnordMetric.define(:my_metric, :sum => :my_field)
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget :my_metric, :title => "My Widget"
+      dash.widget :my_metric, :title => "My Widget, :type => :graph"
     }
     widget = dashboard.widgets.last
     widget.metrics.length.should == 1
@@ -50,7 +72,7 @@ describe FnordMetric::Dashboard do
     FnordMetric.define(:first_metric, :count => :true)
     FnordMetric.define(:second_metric, :count => :true)
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.widget [:first_metric, :second_metric], :title => "My Widget"
+      dash.widget [:first_metric, :second_metric], :title => "My Widget", :type => :graph
     }
     widget = dashboard.widgets.last
     widget.metrics.length.should == 2
