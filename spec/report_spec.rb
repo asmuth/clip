@@ -66,8 +66,8 @@ describe FnordMetric::Report do
     end
 
   end
- 
- private
+
+  private
 
   def build_car_report_for_test!
     FnordMetric.define(:colors_total, :count => true, :unique => :color) 

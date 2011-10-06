@@ -57,15 +57,26 @@ describe FnordMetric::Dashboard do
     }.should raise_error(RuntimeError)
   end
 
-  it "should define a new widget showing one metric" do
+  it "should add the report on init (and to all widgets)" do
     FnordMetric.define(:my_metric, :sum => :my_field)
+    report = FnordMetric.report(:range => (4.days.ago..Time.now))
+    dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard', :report => report){ |dash| 
+      dash.widget :my_metric, :title => "My Widget", :type => :graph
+    }
+    dashboard.report.should == report
+    dashboard.widgets.last.report.should == report
+  end
+
+  it "should add the report after init (and to all widgets)" do
+    FnordMetric.define(:my_metric, :sum => :my_field)
+    report = FnordMetric.report(:range => (4.days.ago..Time.now))
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
       dash.widget :my_metric, :title => "My Widget", :type => :graph
     }
-    widget = dashboard.widgets.last
-    widget.metrics.length.should == 1
-    widget.metrics.first.should be_a(FnordMetric::SumMetric)
-    widget.metrics.first.token.should == :my_metric
+    dashboard.add_report(report)
+    dashboard.report.should == nil
+    dashboard.report.should == report
+    dashboard.widgets.last.report.should == report
   end
 
   it "should define a new widget showing two metrics" do
@@ -74,6 +85,7 @@ describe FnordMetric::Dashboard do
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
       dash.widget [:first_metric, :second_metric], :title => "My Widget", :type => :graph
     }
+    dashboard.add_report(FnordMetric.report(:range => (4.days.ago..Time.now)))
     widget = dashboard.widgets.last
     widget.metrics.length.should == 2
     widget.metrics.first.should be_a(FnordMetric::CountMetric)
