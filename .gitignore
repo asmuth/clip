@@ -1,6 +1,5 @@
 coverage
 rdoc
-doc
 .bundle
 pkg
 db/*.sqlite
