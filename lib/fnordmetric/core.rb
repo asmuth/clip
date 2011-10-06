@@ -7,6 +7,11 @@ module FnordMetric
   @@dashboards = Array.new
 
   def self.define(metric_name, options)
+    warn "FnordMetric.define is deprecated, please use FnordMetric.metric instead"
+    self.metric(metric_name, options)
+  end
+
+  def self.metric(metric_name, options)
     options.merge!(:name => metric_name)
     @@metrics[metric_name] = options
   end
