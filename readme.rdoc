@@ -86,15 +86,15 @@ point your browser to 'myapp,com/fnordmetric' and you should see an empty dashbo
 add tabs to it like this (in initializers/fnordmetric.rb):
 
   FnordMetric.dashboard 'Passengers' do |passengers|    
-    passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
-    passengers.graph [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
-    passengers.graph :passengers_total, :title => "Passengers (total)"    
+    passengers.widget :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
+    passengers.widget [:passengers_blue_car, passengers_red_car], :title => "Passengers (red/blue)"
+    passengers.widget :passengers_total, :title => "Passengers (total)"    
   end
 
   FnordMetric.dashboard 'Cars' do |cars|    
-    cars.graph :average_speed, :title => "Speed (avg)" 
-    cars.graph :colors_total, :title => "Number of different colors"
-    cars.graph :cars_total, :title => "Cars (total)"
+    cars.widget :average_speed, :title => "Speed (avg)" 
+    cars.widget :colors_total, :title => "Number of different colors"
+    cars.widget :cars_total, :title => "Cars (total)"
   end
 
 
@@ -108,7 +108,7 @@ you can also render the stats yourself at some other place in your app (you'll s
   )
 
   widget.render
-    => "<script type="text/javascript" src="/fnordmetric/graph.js?type=..."
+    => "<script type="text/javascript" src="/fnordmetric/widget.js?type=..."
 
 
 
@@ -129,9 +129,9 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
   })
 
   FnordMetric.dashboard 'Passengers' do |passengers|    
-    passengers.graph :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
-    passengers.graph [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)"
-    passengers.graph :passengers_total, :title => "Passengers (total)"    
+    passengers.widget :blue_to_red_ratio, :title => "Passenger blue/red Ratio"
+    passengers.widget [:passengers_blue_car, :passengers_red_car], :title => "Passengers (red/blue)"
+    passengers.widget :passengers_total, :title => "Passengers (total)"    
   end  
 
   Mongoid.configure do |c| 

@@ -11,10 +11,10 @@
 
     #tabs
       %ul
-        -10.times do
-          %li(rel="asd") 
+        -FnordMetric.dashboards.each do |dashboard|
+          %li{:rel => dashboard.token}
             .picto.piechart
-            Foobar
+            =dashboard.title
 
 :javascript
   $(document).ready(function(){

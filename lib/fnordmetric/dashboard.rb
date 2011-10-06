@@ -8,5 +8,9 @@ class FnordMetric::Dashboard
   def title
     @options[:title]
   end
+
+  def token
+    title.gsub(/[\W]/, '')
+  end
   
 end
