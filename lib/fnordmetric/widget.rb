@@ -20,16 +20,20 @@ class FnordMetric::Widget
     @report = report
   end
 
-  def data_for_js
+  def data
     { :title => @options[:title] }
   end
 
-  def render_js(frame_id="f#{(rand*99999).to_i}")
-    "FnordMetric.render(#{data_for_js.to_json.gsub('"', '\'')});"
+  def data_json
+    data.to_json.gsub('"', '\'')
   end
 
-  def render
-    "<script type='text/javascript'>#{render_js}</script>"
+  def render(elem_id)
+    %Q{      
+      <script type='text/javascript'>
+        FnordMetric.render('#{elem_id}', #{data_json});
+      </script>
+    }
   end
 
 

@@ -1,6 +1,6 @@
 class FnordMetric::GraphWidget < FnordMetric::Widget
 
-  def data_for_js
+  def data
     super.merge(
       :series => [
         {

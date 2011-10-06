@@ -22,14 +22,14 @@ FnordMetric = {
     FnordMetric.tag('head')[0].appendChild(s); 
   },
 
-  render: function(_widget_config){
+  render: function(elem, widget_config){
     var f = FnordMetric.ce('iframe');    
-    FnordMetric.tag('body')[0].appendChild(f); 
+    FnordMetric.id(elem).appendChild(f); 
     var s = f.contentDocument.createElement('script')
     s.type = "text/javascript";
     s.src = FnordMetric.p+'fnordmetric.js';    
-    s.onload = function(){ f.contentWindow.FnordMetric.js(_widget_config.widget_url); }
-    f.contentWindow.widget_config = _widget_config;        
+    s.onload = function(){ f.contentWindow.FnordMetric.js(widget_config.widget_url); }
+    f.contentWindow.widget_config = widget_config;        
     f.contentDocument.getElementsByTagName('head')[0].appendChild(s);   	
   }
 

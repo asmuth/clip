@@ -19,8 +19,9 @@
 
     #viewport
       -@dashboard.widgets.each do |widget|
-        %div(style="margin-bottom:10px;")
-          =widget.render
+        -elem_id = "fw#{(rand*9999).to_i}"
+        %div{:id => elem_id, :style => "margin-bottom:10px;"}
+        =widget.render(elem_id)
           
 
 :javascript
