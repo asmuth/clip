@@ -2,11 +2,11 @@ class FnordMetric::Dashboard
 
   attr_accessor :widgets
 
-  def initialize(options, &block)
+  def initialize(options, _block=nil, &block)
     @options = options.to_options
     raise "please provide a :title" unless @options[:title]
     @widgets = Array.new
-    block.call(self)
+    (_block||block).call(self)
   end
 
   def widget(metric_names, options)
