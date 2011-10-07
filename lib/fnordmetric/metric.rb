@@ -34,7 +34,7 @@ class FnordMetric::Metric
 
   def events_at(time_or_range)
     if time_or_range.is_a?(Range)
-      events.where(:time.lt => time_or_range.first.to_i).where(:time.gt => time_or_range.last.to_i)
+      events.where(:time.lt => time_or_range.last.to_i).where(:time.gt => time_or_range.first.to_i)
     else
       events.where(:time.lt => time_or_range.to_i)
     end

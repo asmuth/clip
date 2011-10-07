@@ -32,17 +32,17 @@ describe FnordMetric::Metric do
 
   it "should find events by time range" do
     metric = FnordMetric::Metric.new({})
-    metric.events_at(20.hours.ago..30.hours.ago).count.should == 4
+    metric.events_at(30.hours.ago..20.hours.ago).count.should == 4
   end
 
   it "should find events by time range and event type" do
     metric = FnordMetric::Metric.new(:types => [:my_event_type, :another_event_type])
-    metric.events_at(20.hours.ago..30.hours.ago).count.should == 4
+    metric.events_at(30.hours.ago..20.hours.ago).count.should == 4
   end
 
   it "should find events by time range and event type" do
     metric = FnordMetric::Metric.new(:types => [:my_event_type])
-    metric.events_at(20.hours.ago..30.hours.ago).count.should == 3
+    metric.events_at(30.hours.ago..20.hours.ago).count.should == 3
   end
 
   it "should find events until time" do

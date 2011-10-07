@@ -26,7 +26,7 @@ describe FnordMetric::CountMetric do
 
   it "should count events from 30 to 20 hours ago" do
     metric = FnordMetric.metric('my_event_count', :count => true, :types => [:my_event_type])
-    metric.at(30.hours.ago..20.hour.ago).should == 3
+    metric.at(30.hours.ago..20.hours.ago).should == 3
   end
 
 end
