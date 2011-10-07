@@ -30,21 +30,6 @@ to see some shiny stats you first have to define your metrics. e.g. in 'config/i
   FnordMetric.metric(:average_speed,    :types => [:car_seen], :average => :speed) 
 
 
-you always have to provide exactly one of these options:
-
-  :count    => true      # return the total number of events              
-  :average  => (field)   # return the avg of all "field"-values
-  :sum      => (field)   # return the sum of all "field"-values
-  :combine  => (lambda)  # custom accumulator
-
-
-and you can optionally add these options:
-
-  :unique   => (field)   # only consider events with unique (field)
-  :types    => (types)   # only consider events where type in types
-  :filter   => (hash)    # only consider events with fields matching (hash)
-  :select   => (lambda)  # only consider events for which (lambda) is true  
-
 
 use combine-metrics to build your own 'indices':
 
@@ -194,6 +179,45 @@ with curl:
 
 
 
+
+== Option Reference
+
+FnordMetric.metric(name, options)
+
+  [mutually exclusive, one mandatory]
+  :count    => true      # return the total number of events              
+  :average  => (field)   # return the avg of all "field"-values
+  :sum      => (field)   # return the sum of all "field"-values
+  :combine  => (lambda)  # custom accumulator
+
+  [optional]
+  :unique   => (field)   # only consider events with unique (field)
+  :types    => (types)   # only consider events where type in types
+  :filter   => (hash)    # only consider events with fields matching (hash)
+  :select   => (lambda)  # only consider events for which (lambda) is true  
+
+
+FnordMetric.widget(name, options)
+
+  [mandatory]
+  :metrics  => (fnord)   # foobar 
+  :title    => (fnord)   # foobar
+
+  [optional]
+  :tick     => (fnord)   # foobar
+  :range    => (fnord)   # foobar
+  :current  => (fnord)   # FIXME: opt is actually named :include_curent
+  :report   => (fnord)   # foobar
+  
+
+
+FnordMetric.widget(name, :type => :graph)
+
+  [optional]
+  :delta   => (fnord)   # foobar
+  :chart   => (fnord)   # foobar
+
+
 == TODO
 
 * auth?!
@@ -222,3 +246,5 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+

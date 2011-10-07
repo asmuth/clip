@@ -24,7 +24,7 @@ FnordMetric = {
 
   render: function(elem, widget_config){
     var f = FnordMetric.ce('iframe');    
-    f.style.width = '100%'; f.style.height = '400px';
+    f.style.width = '100%'; f.style.height = widget_config.widget_height+'px';
     f.frameBorder = 'none'; f.scrolling = 'no';
     FnordMetric.id(elem).appendChild(f); 
     var s = f.contentDocument.createElement('script')

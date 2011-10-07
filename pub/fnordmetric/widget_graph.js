@@ -16,7 +16,7 @@ FnordMetric.css('widget_graph.css', function(){});
 
 
   chart = new Highcharts.Chart({     
-    chart: { renderTo: 'container', defaultSeriesType: 'line' },
+    chart: { renderTo: 'container', defaultSeriesType: widget_config.chart_type, height: 270 },
     series: widget_config.series,
     title: { text: '' },
     xAxis: { categories: widget_config.x_labels, title: (widget_config.x_title||'') },
