@@ -25,15 +25,19 @@ class FnordMetric::Metric
   end
 
   def events
-    events = FnordMetric::Event
+    _events = FnordMetric::Event
     if @options[:types]
-      events = events.where(:type.in => [@options[:types]].flatten) 
+      _events = _events.where(:type.in => [@options[:types]].flatten) 
     end
-    events
+    _events
   end
 
   def events_at(time_or_range)
-
+    if time_or_range.is_a?(Range)
+      events.where(:time.lt => time_or_range.first.to_i).where(:time.gt => time_or_range.last.to_i)
+    else
+      events.where(:time.lt => time_or_range.to_i)
+    end
   end
 
   def value_at(time_or_range)
