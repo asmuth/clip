@@ -12,8 +12,9 @@ class FnordMetric::Widget
   end
 
   def metrics
-    raise "please add a report first" unless @report
-    @report.metrics.map{|k,v| v }
+    [@options[:metrics]].flatten.map{ |m|
+      m.is_a?(FnordMetric::Metric) ? m : FnordMetric.metrics[m]
+    }
   end
 
   def tick
@@ -59,6 +60,5 @@ class FnordMetric::Widget
       </script>
     }
   end
-
 
 end

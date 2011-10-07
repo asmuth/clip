@@ -13,7 +13,7 @@ module FnordMetric
 
   def self.metric(metric_name, options)
     options.merge!(:name => metric_name)
-    @@metrics[metric_name] = options
+    @@metrics[metric_name] = FnordMetric::Metric.from_options(options)
   end
 
   def self.widget(widget_name, options)
