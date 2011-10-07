@@ -4,7 +4,7 @@ require "rubygems"
 require "fnordmetric"
 require "thin"
 
-FnordMetric.define(:passengers_total, :sum => :passengers, :types => [:car_seen])
+FnordMetric.define(:passengers_total, :count => true, :types => [:car_seen])
 FnordMetric.define(:blubbs, :sum => :passengers, :types => [:car_seen])
 FnordMetric.define(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
 FnordMetric.define(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
@@ -16,9 +16,10 @@ FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
 
 FnordMetric.dashboard 'Passengers' do |passengers| 
    
-	passengers.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
-	  :metrics => :blue_to_red_ratio, 
-	  :title => "Passenger blue/red Ratio", 
+	passengers.add_widget FnordMetric.widget(:passengers_total_graph, 
+	  :metrics => :passengers_total,
+	  :tick => 4.minutes,
+	  :title => "Passengers total", 
 	  :type => :graph
 	)
 
@@ -28,8 +29,8 @@ FnordMetric.dashboard 'Passengers' do |passengers|
 	  :type => :graph
 	)
 	
-	passengers.add_widget FnordMetric.widget(:passengers_total_graph, 
-	  :metrics => :passengers_total,
+	passengers.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+	  :metrics => :blue_to_red_ratio,
 	  :title => "Passenger blue/red Ratio", 
 	  :type => :graph
 	)

@@ -22,7 +22,7 @@ class FnordMetric::Widget
   end
 
   def range
-    @options[:range] || (14.days.ago..Time.now)
+    @options[:range] || ((Time.now-(tick*24))..Time.now)
   end
 
   def range_to_i
