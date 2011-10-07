@@ -1,7 +1,6 @@
 = FnordMetric
 
-yet another report generator
-
+yet another report *generator*
 
 == Usage
 
@@ -178,44 +177,79 @@ with curl:
   curl -X POST -d "type=car_seen&color=red&passengers=2&speed=120" http://myapp:port/fnordmetric/events
 
 
-
-
 == Option Reference
 
-FnordMetric.metric(name, options)
+*FnordMetric.metric* (FnordMetric::Metric.new) 
 
-  [mutually exclusive, one mandatory]
-  :count    => true      # return the total number of events              
-  :average  => (field)   # return the avg of all "field"-values
-  :sum      => (field)   # return the sum of all "field"-values
-  :combine  => (lambda)  # custom accumulator
+===== :count => true
+====== return the total number of events (one of count, average, sum or combine is mandatory)
+====== ~
 
-  [optional]
-  :unique   => (field)   # only consider events with unique (field)
-  :types    => (types)   # only consider events where type in types
-  :filter   => (hash)    # only consider events with fields matching (hash)
-  :select   => (lambda)  # only consider events for which (lambda) is true  
+===== :average => (field)  
+====== return the avg of all "field"-values (one of count, average, sum or combine is mandatory)
+====== ~
+
+===== :sum => (field)      
+====== return the sum of all "field"-values (one of count, average, sum or combine is mandatory)
+====== ~
+
+===== :combine => (lambda) 
+====== custom accumulator (one of count, average, sum or combine is mandatory)
+====== ~
+
+===== :unique   => (field)    
+====== only consider events with unique (field)
+====== ~
+
+===== :types    => (types)    
+====== only consider events where type in types
+====== ~
+
+===== :filter   => (hash)     
+====== only consider events with fields matching (hash)
+====== ~
+
+===== :select   => (lambda)   
+====== only consider events for which (lambda) is true
 
 
-FnordMetric.widget(name, options)
+*FnordMetric.widget* (FnordMetric::Widget.new)
 
-  [mandatory]
-  :metrics  => (fnord)   # foobar 
-  :title    => (fnord)   # foobar
+===== :metrics  => (fnord)       
+====== foobar (mandatory)
+====== ~
 
-  [optional]
-  :tick     => (fnord)   # foobar
-  :range    => (fnord)   # foobar
-  :current  => (fnord)   # FIXME: opt is actually named :include_curent
-  :report   => (fnord)   # foobar
-  
+===== :title    => (fnord)       
+====== foobar (mandatory)
+====== ~
+
+===== :tick     => (fnord)       
+====== foobar
+====== ~
+
+===== :range    => (fnord)       
+====== foobar
+====== ~
+
+===== :current  => (fnord)       
+====== FIXME: opt is actually named :include_curent
+====== ~
+
+===== :report   => (fnord)       
+====== foobar
+====== ~
+
+*GraphWidget* (FnordMetric::GraphWidget.new)
+
+===== :delta   => (fnord)       
+====== foobar
+====== ~
+
+===== :chart   => (fnord)       
+====== foobar
+====== ~
 
 
-FnordMetric.widget(name, :type => :graph)
-
-  [optional]
-  :delta   => (fnord)   # foobar
-  :chart   => (fnord)   # foobar
 
 
 == TODO
