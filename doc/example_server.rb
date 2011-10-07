@@ -36,6 +36,17 @@ FnordMetric.dashboard 'Passengers' do |passengers|
 
 end
 
+FnordMetric.dashboard 'Cars & Bikes' do |cars| 
+   
+	cars.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+	  :metrics => :blue_to_red_ratio, 
+	  :title => "Passenger blue/red Ratio", 
+	  :type => :graph
+	)
+
+end
+
+
 Mongoid.configure do |c| 
   c.master = Mongo::Connection.new.db("myfnordmetric") 
 end

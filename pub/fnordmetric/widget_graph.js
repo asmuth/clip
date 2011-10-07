@@ -1,9 +1,19 @@
 FnordMetric.js('jquery-1.6.1.min.js', function(){  
 FnordMetric.js('highcharts/highcharts.js', function(){  
+FnordMetric.css('fnordmetric.css', function(){});
 FnordMetric.css('widget_graph.css', function(){});
 
-  $('body').append( $('<div></div>').attr('id', 'head') );
+  $('body').append( $('<div></div>').attr('class', 'headbar').append(
+    $('<div></div>').attr('class', 'datepicker')
+  ).append(
+    $('<div></div>').attr('class', 'button').append($('<span></span>').html('Foobar'))
+  ).append(
+    $('<div></div>').attr('class', 'button').append($('<span></span>').html('Barfoo'))
+  ).append(
+    $('<h2></h2>').html(widget_config.title)
+  ) );
   $('body').append( $('<div></div>').attr('id', 'container') );
+
 
   chart = new Highcharts.Chart({     
     chart: { renderTo: 'container', defaultSeriesType: 'line' },

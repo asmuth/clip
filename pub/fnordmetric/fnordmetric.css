@@ -1,8 +1,9 @@
 body, html{ height:100%; padding:0px;}
-body{ background:#fff; color:#333; margin:0; padding:0 20px; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
+body{ background:#fff; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-#head{ height:70px; border-bottom:1px solid #e0e0e0; position:fixed; width:100%; background:#fff; }
-#tabs{ width:200px; border-right:1px solid #e0e0e0; position:fixed; height:100%; margin-top:70px; }
+#wrap{ margin:0 40px; }
+
+#tabs{ width:200px; position:fixed; height:100%; margin-top:70px; }
 #tabs ul{ list-style-type:none; padding:0; margin:0; }
 #tabs ul li{ height:34px; line-height:35px; border-bottom:1px dotted #ececec; cursor:pointer; color:#666; font-size:13px; }
 #tabs ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:35px; }
@@ -10,8 +11,34 @@ body{ background:#fff; color:#333; margin:0; padding:0 20px; overflow-y:scroll; 
 #tabs ul li:hover, #tabs ul li:hover:after{ color:#000; }
 #tabs ul li:hover .picto{ opacity:1; }
 
-.picto{ display:block; height:14px; width:14px; float:left; background:url('/img/picto_sprite.gif') no-repeat 14px 14px #ccc; opacity:0.7; }
-.picto.edit{ background-position:0px 0px; }
-.picto.piechart{ background-position:0px -280px; }
+.picto{ display:block; height:14px; width:14px; float:left; background:url('/fnordmetric/sprite.png') no-repeat 14px 14px; opacity:0.7; }
+.picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
-#viewport{ min-height:800px; float:left; margin-left:220px; margin-top:90px; }
+#viewport{ min-height:800px; float:left; margin-left:220px; padding-top:20px; border-right:1px solid #e0e0e0; border-left:1px solid #e0e0e0; }
+
+.headbar{ height:36px; background:#f2f2f2; border-bottom:1px solid #e2e2e2; }
+.headbar h2{ margin:8px; line-height:20px; float:left; height:20px; font-size:14px; }
+.headbar .datepicker{ background:#fff; border:1px solid #999; height:20px; padding-left:5px; float:right; margin:8px; margin-right:13px; min-width:100px; margin-left:-1px; }
+
+
+.headbar .button, .headbar .button:active, .headbar .button:hover{
+  margin:8px 0px; height:16px; float:right; display:block;
+  margin-right:-1px;
+  background:url('/fnordmetric/sprite.png') no-repeat 0 -49px #eee; 
+  border:1px solid #999;
+  border-bottom-color:#888;
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .1); 
+  cursor:pointer;
+  
+  font-size: 11px;
+  font-weight:bold;
+  line-height:16px;
+  padding:2px 6px;
+  text-align:center;
+  text-decoration:none;
+  vertical-align:top;
+  white-space:nowrap;
+}
+
+.headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
+

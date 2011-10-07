@@ -8,20 +8,19 @@
     %link(type="text/css" rel="stylesheet" href="/fnordmetric/fnordmetric.css")
 
   %body
-    #head
+    #wrap
+      #tabs
+        %ul
+          -FnordMetric.dashboards.each do |dashboard|
+            %li{:rel => dashboard.token}
+              .picto.piechart
+              =h dashboard.title
 
-    #tabs
-      %ul
-        -FnordMetric.dashboards.each do |dashboard|
-          %li{:rel => dashboard.token}
-            .picto.piechart
-            =h dashboard.title
-
-    #viewport
-      -@dashboard.widgets.each do |widget|
-        -elem_id = "fw#{(rand*9999).to_i}"
-        %div{:id => elem_id, :style => "margin-bottom:10px;"}
-        =widget.render(elem_id)
+      #viewport
+        -@dashboard.widgets.each do |widget|
+          -elem_id = "fw#{(rand*9999).to_i}"
+          %div{:id => elem_id, :style => "margin-bottom:10px;"}
+          =widget.render(elem_id)
           
 
 :javascript
@@ -31,7 +30,7 @@
       document.location.href = '/fnordmetric/dashboard/' + $(this).attr('rel');
     });
 
-    function resizeViewport(){ $('#viewport').width(window.innerWidth-290); }
+    function resizeViewport(){ $('#viewport').width(window.innerWidth-310); }
     resizeViewport();
     $(window).resize(resizeViewport);
 
