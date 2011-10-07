@@ -19,7 +19,7 @@ class FnordMetric::Dashboard
   end
 
   def token
-    title.gsub(/[\W]/, '')
+    title.to_s.gsub(/[\W]/, '')
   end
   
   def add_report(report)

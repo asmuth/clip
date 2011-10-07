@@ -29,6 +29,17 @@ describe "app" do
   	last_response.status.should == 200
   end
 
+  it "should render the right dashboard" do
+    FnordMetric.dashboard("Deine Mama"){|dash|}
+    FnordMetric.dashboard("My Dashboard"){|dash|}
+    get "/fnordmetric/dashboard/DeineMama"
+    last_response.status.should == 200
+    last_response.body.should include("Deine Mama")
+    get "/fnordmetric/dashboard/MyDashboard"
+    last_response.status.should == 200
+    last_response.body.should include("My Dashboard")
+  end
+
   it "should track an event without auth" do
   	post "/fnordmetric/events", :type => "myevent", :fnord => "foobar"
   	last_response.status.should == 200

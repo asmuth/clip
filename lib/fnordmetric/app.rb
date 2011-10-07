@@ -28,7 +28,8 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/fnordmetric/dashboard/:name' do
-    @dashboard = FnordMetric.dashboards.first
+    @dashboard = FnordMetric.dashboards.detect{|d| d.token == params[:name] }
+    @dashboard ||= FnordMetric.dashboards.first
     haml :app
   end
 

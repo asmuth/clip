@@ -17,6 +17,9 @@
               =h dashboard.title
 
       #viewport
+        -unless @dashboard
+          no dashboard selected
+          
         -@dashboard.widgets.each do |widget|
           -elem_id = "fw#{(rand*9999).to_i}"
           %div{:id => elem_id, :style => "margin-bottom:10px;"}
