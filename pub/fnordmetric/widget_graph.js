@@ -18,9 +18,9 @@ FnordMetric.css('widget_graph.css', function(){});
   chart = new Highcharts.Chart({     
     chart: { renderTo: 'container', defaultSeriesType: 'line' },
     series: widget_config.series,
-    title: { text: widget_config.title },
-    subtitle: { text: widget_config.title },
-    xAxis: { categories: widget_config.x_labels },
+    title: { text: '' },
+    xAxis: { categories: widget_config.x_labels, title: (widget_config.x_title||'') },
+    yAxis: { categories: widget_config.y_labels, title: (widget_config.y_title||'') },
     
     /*yAxis: {
       title: { text: 'Fnord' },
@@ -28,11 +28,12 @@ FnordMetric.css('widget_graph.css', function(){});
     },*/
 
     legend: {
-      layout: 'vertical',
-      align: 'right',
+      layout: 'horizontal',
+      align: 'top',
       verticalAlign: 'top',
-      x: -10,
-      y: 100,
+      x: -5,
+      y: -3,
+      margin: 25,
       borderWidth: 0
     },
 
