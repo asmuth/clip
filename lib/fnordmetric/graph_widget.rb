@@ -15,10 +15,13 @@ private
   end
 
   def build_series(metric)
-    { 
-      :name => metric.token,
-      :data => ticks.map{ |tick| metric.at(tick.last) }
+    {  
+      :name => metric.token,     
+      :data => ticks.map{ |tick| 
+        metric.at(@options[:delta] ? tick : tick.last)
+      }
     }
   end
+
 
 end
