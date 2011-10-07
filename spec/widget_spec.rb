@@ -50,5 +50,28 @@ describe FnordMetric::Widget do
     widget.metrics.last.should be_a(FnordMetric::CountMetric)
     widget.metrics.last.token.should == :second_metric
   end
+
+  it "should return the right ticks for 1h intervals with current" do
+    t = Time.now
+    widget = FnordMetric::Widget.new(:range => (t-2.days)..t, :tick => 1.hour)
+    widget.ticks.length.should == 49
+    ranges_should_match! widget.ticks.first, ((t-48.hours)..(t-47.hours))
+    ranges_should_match! widget.ticks.last, (t..(t+1.hour))
+  end
+
+  it "should return the right ticks for 1h intervals without current" do
+    t = Time.now
+    widget = FnordMetric::Widget.new(:range => (t-2.days)..t, :tick => 1.hour, :include_current => false)
+    widget.ticks.length.should == 48
+    ranges_should_match! widget.ticks.first, ((t-48.hours)..(t-47.hours))
+    ranges_should_match!widget.ticks.last, ((t-1.hour)..t)
+  end
+
+private
   
+  def ranges_should_match!(a, b)
+    (a.first.to_i - b.first.to_i).should == 0
+    (a.last.to_i - b.last.to_i).should == 0
+  end
+
 end
