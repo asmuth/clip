@@ -24,6 +24,18 @@ class FnordMetric::Metric
     @options[:name]
   end
 
+  def events
+    events = FnordMetric::Event
+    if @options[:types]
+      events = events.where(:type.in => [@options[:types]].flatten) 
+    end
+    events
+  end
+
+  def events_at(time_or_range)
+
+  end
+
   def value_at(time_or_range)
     raise "implemented in subclass"
   end
