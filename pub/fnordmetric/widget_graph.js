@@ -19,8 +19,16 @@ FnordMetric.css('widget_graph.css', function(){});
     chart: { renderTo: 'container', defaultSeriesType: widget_config.chart_type, height: 270 },
     series: widget_config.series,
     title: { text: '' },
-    xAxis: { categories: widget_config.x_labels, title: (widget_config.x_title||'') },
-    yAxis: { categories: widget_config.y_labels, title: (widget_config.y_title||'') },
+    xAxis: { 
+      categories: widget_config.x_labels, 
+      title: (widget_config.x_title||''), 
+      labels: { step: parseInt(widget_config.x_labels.length/17) } 
+    },
+    yAxis: { 
+      categories: widget_config.y_labels, 
+      title: (widget_config.y_title||''), 
+      maxPadding: 0 
+    },
     
     /*yAxis: {
       title: { text: 'Fnord' },
