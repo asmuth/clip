@@ -1,10 +1,12 @@
 class FnordMetric::Metric
   
-  def self.from_options(metric_options)
-    return FnordMetric::AverageMetric.new(metric_options) if metric_options[:average]
-    return FnordMetric::SumMetric.new(metric_options) if metric_options[:sum]
-    return FnordMetric::CountMetric.new(metric_options) if metric_options[:count]
-    return FnordMetric::CombineMetric.new(metric_options) if metric_options[:combine]
+  METRIC_TYPES = %w(count average sum combine)
+    
+  def self.from_options(options)
+    if (klass_name = METRIC_TYPES.detect{ |n| !!options[n.intern] })
+      klass = "FnordMetric::#{klass_name.classify}Metric".constantize
+      return klass.new(options)
+    end
     raise "please provide one of these options: average, sum, count, combine"
   end
 
