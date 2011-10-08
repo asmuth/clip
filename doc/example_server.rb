@@ -16,33 +16,33 @@ FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
 
 FnordMetric.dashboard 'Passengers' do |passengers| 
    
-	passengers.add_widget FnordMetric.widget(:passengers_total_graph, 
+	passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
 	  :metrics => :passengers_total,
 	  :tick => 4.minutes,
 	  :title => "Passengers total", 
-	  :type => :graph
+	  :type => :timeline
 	)
 
-	passengers.add_widget FnordMetric.widget(:passenger_blue_red_graph, 
+	passengers.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
 	  :metrics => [:passengers_blue_car, :passengers_red_car], 
 	  :title => "Passengers (red/blue)", 
-	  :type => :graph
+	  :type => :timeline
 	)
 	
-	passengers.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+	passengers.add_widget FnordMetric.widget(:passenger_br_ratio_timeline, 
 	  :metrics => :blue_to_red_ratio,
 	  :title => "Passenger blue/red Ratio", 
-	  :type => :graph
+	  :type => :timeline
 	)
 
 end
 
 FnordMetric.dashboard 'Cars & Bikes' do |cars| 
    
-	cars.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+	cars.add_widget FnordMetric.widget(:passenger_br_ratio_timeline, 
 	  :metrics => :blue_to_red_ratio, 
 	  :title => "Passenger blue/red Ratio", 
-	  :type => :graph
+	  :type => :timeline
 	)
 
 end

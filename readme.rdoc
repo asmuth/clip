@@ -71,7 +71,7 @@ now you can start rendering widgets in your own views:
   widget = FnordMetric.widget(
     :passengers_red_blue_widget,
     :title => "Passengers (red/blue)",
-    :type => :graph,
+    :type => :timeline,
     :metrics => [:passengers_blue_car, :passengers_red_car],
     :range => (14.days.ago..Time.now)
   )
@@ -85,14 +85,14 @@ add dashbaords and widgets like this (e.g. in initializers/fnordmetric.rb):
 
   FnordMetric.widget(
     :cars_avg_speed, 
-    :type => :graph, 
+    :type => :timeline, 
     :metrics => :average_speed, 
     :title => "Speed (avg)"
   )
 
   FnordMetric.widget(
     :cars_unique_colors, 
-    :type => :graph, 
+    :type => :timeline, 
     :metrics => :colors_total, 
     :title => "Number of different colors"
   )
@@ -107,16 +107,16 @@ or like this:
 
   FnordMetric.dashboard 'Passengers' do |dash|  
 
-    dash.add_widget FnordMetric.widget(:passenger_blue_red_graph, 
+    dash.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
       :metrics => [:passengers_blue_car, :passengers_red_car], 
       :title => "Passengers (red/blue)", 
-      :type => :graph
+      :type => :timeline
     )
     
-    dash.add_widget FnordMetric.widget(:passengers_total_graph, 
+    dash.add_widget FnordMetric.widget(:passengers_total_timeline, 
       :metrics => :passengers_total,
       :title => "Passenger blue/red Ratio", 
-      :type => :graph
+      :type => :timeline
     )
 
   end
@@ -140,22 +140,22 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
 
   FnordMetric.dashboard 'Passengers' do |passengers| 
      
-    passengers.add_widget FnordMetric.widget(:passenger_br_ratio_graph, 
+    passengers.add_widget FnordMetric.widget(:passenger_br_ratio_timeline, 
       :metrics => :blue_to_red_ratio, 
       :title => "Passenger blue/red Ratio", 
-      :type => :graph
+      :type => :timeline
     )
 
-    passengers.add_widget FnordMetric.widget(:passenger_blue_red_graph, 
+    passengers.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
       :metrics => [:passengers_blue_car, :passengers_red_car], 
       :title => "Passengers (red/blue)", 
-      :type => :graph
+      :type => :timeline
     )
     
-    passengers.add_widget FnordMetric.widget(:passengers_total_graph, 
+    passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
       :metrics => :passengers_total,
       :title => "Passenger blue/red Ratio", 
-      :type => :graph
+      :type => :timeline
     )
 
   end
@@ -239,7 +239,7 @@ with curl:
 ====== foobar
 ====== ~
 
-*GraphWidget* (FnordMetric::GraphWidget.new)
+*TimelineWidget* (FnordMetric::TimelineWidget.new)
 
 ===== :delta   => (fnord)       
 ====== foobar
@@ -259,8 +259,8 @@ with curl:
 * countmetric: value_at(range) should use value_at(range.last)-value_at(range.first)
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]
 * /metric/:name?at=timestamp api
-* graph_widget: rename to timeline widget
-* graph_widget: re-render & autoupdate via /metric/:name-api
+* timeline_widget: rename to timeline widget
+* timeline_widget: re-render & autoupdate via /metric/:name-api
 * add widgets/metrics via webapp?
 * auth?!
 

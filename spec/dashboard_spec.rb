@@ -19,14 +19,14 @@ describe FnordMetric::Dashboard do
 
   it "should add a widget" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
-    widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+    widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     dashboard.add_widget(widget)
     dashboard.widgets.first.should == widget
   end
 
   it "should add a widget by name" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
-    widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+    widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     dashboard.add_widget(:my_widget)
     dashboard.widgets.first.should == widget
   end
@@ -35,7 +35,7 @@ describe FnordMetric::Dashboard do
     FnordMetric.define(:my_metric, :sum => :my_field)
     report = FnordMetric.report(:range => (4.days.ago..Time.now))
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard', :report => report){ |dash|       
-      dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+      dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     }
     dashboard.report.should == report
     dashboard.widgets.last.report.should == report
@@ -45,7 +45,7 @@ describe FnordMetric::Dashboard do
     FnordMetric.define(:my_metric, :sum => :my_field)
     report = FnordMetric.report(:range => (4.days.ago..Time.now))
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
-      dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :graph)
+      dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     }
     dashboard.report.should == nil
     dashboard.add_report(report)

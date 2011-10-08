@@ -1,10 +1,10 @@
-class FnordMetric::GraphWidget < FnordMetric::Widget
+class FnordMetric::TimelineWidget  < FnordMetric::Widget
 
   def data
     super.merge(
       :x_labels => ticks.map{ |t| build_label(t) },      
       :series => metrics.map{ |m| build_series(m) },
-      :widget_url => "/widget_graph.js?#{(rand*999).to_i}",
+      :widget_url => "/widget_timeline.js?#{(rand*999).to_i}",
       :chart_type => (@options[:chart] || "line"),
       :widget_height => 320
     )

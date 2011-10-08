@@ -30,7 +30,7 @@ describe FnordMetric::Widget do
   it "should define a new widget when given two metric-token" do
     FnordMetric.define(:first_metric, :count => :true)
     FnordMetric.define(:second_metric, :count => :true)
-    widget = FnordMetric::Widget.new(:metrics => [:first_metric, :second_metric], :title => "My Widget", :type => :graph)
+    widget = FnordMetric::Widget.new(:metrics => [:first_metric, :second_metric], :title => "My Widget", :type => :timeline)
     widget.metrics.length.should == 2
     widget.metrics.first.should be_a(FnordMetric::CountMetric)
     widget.metrics.first.token.should == :first_metric
@@ -43,7 +43,7 @@ describe FnordMetric::Widget do
       FnordMetric.define(:first_metric, :count => :true),
       FnordMetric.define(:second_metric, :count => :true)
     ]
-    widget = FnordMetric::Widget.new(:metrics => my_metrics, :title => "My Widget", :type => :graph)
+    widget = FnordMetric::Widget.new(:metrics => my_metrics, :title => "My Widget", :type => :timeline)
     widget.metrics.length.should == 2
     widget.metrics.first.should be_a(FnordMetric::CountMetric)
     widget.metrics.first.token.should == :first_metric

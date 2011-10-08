@@ -1,6 +1,6 @@
 module FnordMetric
 
-  WIDGET_TYPES = %(graph funnel)
+  WIDGET_TYPES = %(timeline funnel)
   
   @@metrics = {}
   @@widgets = {}
