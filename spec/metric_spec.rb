@@ -60,4 +60,15 @@ describe FnordMetric::Metric do
     metric.events_at(20.hours.ago).count.should == 5
   end
 
+  it "#from_options should return an instance of the right subclass" do
+    FnordMetric::Metric.from_options(:count => true).should be_a(FnordMetric::CountMetric)
+    FnordMetric::Metric.from_options(:sum => :fnord).should be_a(FnordMetric::SumMetric)
+    FnordMetric::Metric.from_options(:average => :f).should be_a(FnordMetric::AverageMetric)
+    FnordMetric::Metric.from_options(:combine => :l).should be_a(FnordMetric::CombineMetric)
+  end
+
+  it "#from_options should raise if none of the mandatory opts is provided" do
+    lambda{ FnordMetric::Metric.from_options({}) }.should raise_error(RuntimeError)
+  end
+
 end
