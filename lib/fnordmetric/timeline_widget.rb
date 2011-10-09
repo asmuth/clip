@@ -6,6 +6,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
       :end_timestamp => range_to_i.last,
       :tick => tick.to_i,
       :delta => !!@options[:delta],
+      :autoupdate => !!@options[:autoupdate],
       :metrics => metrics.map{ |m| m.token },
       :widget_url => "/widget_timeline.js?#{(rand*999).to_i}",
       :chart_type => (@options[:chart] || "line"),

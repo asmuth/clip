@@ -50,7 +50,7 @@ class FnordMetric::Widget
   end
 
   def include_current?
-    !(@options[:include_current] == false)
+    !(@options[:current] == false)
   end
 
   def render(elem_id)

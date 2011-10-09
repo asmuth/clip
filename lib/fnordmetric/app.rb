@@ -2,7 +2,7 @@ class FnordMetric::App < Sinatra::Base
   
   @@sessions = Hash.new
   
-  use Rack::Reloader, 0
+  #use Rack::Reloader, 0
   
   enable :session
 

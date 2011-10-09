@@ -31,8 +31,14 @@ FnordMetric.css('widget_timeline.css', function(){});
   });
   redrawWithRange(true);
 
-  function redrawWithRange(first_time){
-    $("#container").css('opacity', 0.5);
+  if(widget_config.autoupdate){
+    window.setInterval(function(){
+      redrawWithRange(false, true);
+    }, 3000);
+  }
+
+  function redrawWithRange(first_time, silent){
+    if(!silent){ $("#container").css('opacity', 0.5); }
     redrawDatepicker();    
     var _query = '?at='+widget_config.start_timestamp+'-'+widget_config.end_timestamp+
                  '&tick='+widget_config.tick+(widget_config.delta ? '&delta=1' : '');    
