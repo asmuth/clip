@@ -18,10 +18,11 @@ body{ background:#fff; color:#333; margin:0; padding:0; overflow-y:scroll; font:
 
 .headbar{ height:36px; background:#f2f2f2; border-bottom:1px solid #e2e2e2; }
 .headbar h2{ margin:8px; line-height:21px; float:left; height:20px; font-size:14px; }
-.headbar .datepicker{ background:#fff; border:1px solid #999; height:20px; padding-left:5px; float:right; margin:8px; margin-right:13px; min-width:100px; margin-left:-1px; }
+.headbar .datepicker{ background:#fff; border:1px solid #999; height:20px; padding:0 7px; float:right; margin:8px -1px; min-width:100px; font-size:11px; font-style:italic; }
+.headbar .button.mr{ margin-right:16px;  }
 
 
-.headbar .button, .headbar .button:active, .headbar .button:hover{
+.headbar .button{
   margin:8px 0px; height:16px; float:right; display:block;
   margin-right:-1px;
   background:url('/fnordmetric/sprite.png') no-repeat 0 -49px #eee; 
