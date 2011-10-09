@@ -255,7 +255,11 @@ with curl:
 == TODO
 
 * /metric/:name?at=timestamp api
+* /metric/:name?from=ts&until=ts
+* /metric/:name?from=ts&until=ts&tick=s api
 * timeline_widget: re-render & autoupdate via /metric/:name-api
+* timeline_widget: no data on init, all via metric-api
+* widget: allow init without name (autogenerate)
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]
 * add widgets/metrics via webapp?
 * auth?!
