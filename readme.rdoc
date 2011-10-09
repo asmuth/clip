@@ -257,6 +257,11 @@ with curl:
 * timeline-widget: autoupdate
 * metric-api: request caching
 * add mongo indices
+* default range (daily/hourly)
+* highcharts cleanup
+* numbers/table widget
+* compare widget
+* funnel widget
 * widget: allow init without name (autogenerate)
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]
 * add widgets/metrics via webapp?
