@@ -254,9 +254,6 @@ with curl:
 
 == TODO
 
-* generic caching in metric.at(time_or_range)
-* countmetric: special caching for value_at(time) 
-* countmetric: value_at(range) should use value_at(range.last)-value_at(range.first)
 * /metric/:name?at=timestamp api
 * timeline_widget: re-render & autoupdate via /metric/:name-api
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]

@@ -18,13 +18,10 @@ class FnordMetric::Metric
     self.at(Time.now)
   end
 
-  def at(time_or_range)
-    print "metric#at called - #{cache_this?(time_or_range)} - "
+  def at(time_or_range)    
     if cache_this?(time_or_range) && (_v=try_cache(time_or_range))
-      print "hit\n"
       _v # cache hit
     else # cache miss
-      print "miss\n"
       value_at(time_or_range).tap do |_v| 
         store_cache(time_or_range, _v) if cache_this?(time_or_range)
       end
@@ -63,13 +60,21 @@ private
   end
 
   def try_cache(time_or_range)
-    nil
+    FnordMetric::Cache.get(cache_key(time_or_range))
   end
 
   def store_cache(time_or_range, value)
+    FnordMetric::Cache.store!(cache_key(time_or_range), value)
   end
 
   def cache_key(time_or_range)
+    time_part = if time_or_range.is_a?(Range) 
+      "r#{time_or_range.first.to_i}-#{time_or_range.last.to_i}"
+    else
+      "t#{time_or_range.to_i.to_s}"
+    end    
+    [self.token, time_part].join("|")
   end
+
 
 end

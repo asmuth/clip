@@ -17,7 +17,7 @@ describe FnordMetric::Cache do
     FnordMetric::Cache.store!('mykey', 123.5)
     FnordMetric::Cache.last[:data].should be_a(Hash)
     FnordMetric::Cache.last[:data].keys.should == ["value"]
-    FnordMetric::Cache.last[:data]["value"].to_i.should == 123.5
+    FnordMetric::Cache.last[:data]["value"].to_f.should == 123.5
   end
 
   it "should store a cache item with a hash value" do
