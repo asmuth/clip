@@ -32,10 +32,12 @@ FnordMetric.css('widget_timeline.css', function(){});
   redrawWithRange(true);
 
   function redrawWithRange(first_time){
-    redrawDatepicker();
+    $("#container").css('opacity', 0.5);
+    redrawDatepicker();    
     var _query = '?at='+widget_config.start_timestamp+'-'+widget_config.end_timestamp+
                  '&tick='+widget_config.tick+(widget_config.delta ? '&delta=1' : '');    
     chart.series = [];
+    metrics_completed = 0;
     for(n in widget_config.metrics){
       $.ajax({
         url: '/fnordmetric/metric/'+widget_config.metrics[n]+_query, 
@@ -51,6 +53,9 @@ FnordMetric.css('widget_timeline.css', function(){});
         chart.get('series-'+n).setData(json.values);
       } else {
         chart.addSeries({name: widget_config.metrics[n], data: json.values, id: 'series-'+n });     
+      }       
+      if((metrics_completed += 1) == widget_config.metrics.length){ 
+        $("#container").css('opacity', 1);
       }
     });
   }
