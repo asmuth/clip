@@ -34,6 +34,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/fnordmetric/metric/:name' do
+    content_type 'application/json'
     FnordMetric::MetricAPI.new(params).render    
   end
 

@@ -254,8 +254,6 @@ with curl:
 
 == TODO
 
-* timeline_widget: re-render & autoupdate via /metric/:name-api
-* timeline_widget: no data on init, all via metric-api
 * widget: allow init without name (autogenerate)
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]
 * add widgets/metrics via webapp?

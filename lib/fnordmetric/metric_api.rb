@@ -2,11 +2,11 @@ class FnordMetric::MetricAPI
 
   def initialize(params)
     @params = params.to_options   
-    @metric = FnordMetric.metrics[params[:name]]
+    @metric = FnordMetric.metrics[params[:name].to_sym]
   end
 
   def render
-    return "metric not found" unless @metric
+    return {:error => "metric not found"}.to_json unless @metric
     data = if @params[:at] && @params[:at] =~ /^[0-9]+$/
       { :value => @metric.at(Time.at(@params[:at].to_i)) }
     elsif @params[:at] && @params[:at] =~ /^([0-9]+)-([0-9]+)$/ && @params[:tick]

@@ -15,26 +15,23 @@ FnordMetric.css('widget_timeline.css', function(){});
   $('body').append( $('<div></div>').attr('id', 'container') );
 
 
-  chart = new Highcharts.Chart({     
+  console.log(widget_config);
+
+
+  var chart_options = {     
     chart: { renderTo: 'container', defaultSeriesType: widget_config.chart_type, height: 270 },
-    series: widget_config.series,
+    series: [],
     title: { text: '' },
-    xAxis: { 
-      categories: widget_config.x_labels, 
+    xAxis: {       
+      type: 'datetime',
+      tickInterval: widget_config.tick * 1000, 
       title: (widget_config.x_title||''), 
-      labels: { step: parseInt(widget_config.x_labels.length/17) } 
+      labels: { step: 2 } 
     },
     yAxis: { 
-      categories: widget_config.y_labels, 
       title: (widget_config.y_title||''), 
       maxPadding: 0 
     },
-    
-    /*yAxis: {
-      title: { text: 'Fnord' },
-      plotLines: [{ value: 0, width: 1, color: '#808080' }]
-    },*/
-
     legend: {
       layout: 'horizontal',
       align: 'top',
@@ -44,15 +41,24 @@ FnordMetric.css('widget_timeline.css', function(){});
       margin: 25,
       borderWidth: 0
     },
+  };
 
-    tooltip: {
-      formatter: function(){
-        return '<b>'+ this.series.name +'</b><br/>'+
-        this.x +': '+ this.y +'°';
+
+  chart = new Highcharts.Chart(chart_options);
+
+  for(n in widget_config.metrics){
+    var _query = '?at='+widget_config.start_timestamp+'-'+widget_config.end_timestamp+
+                 '&tick='+widget_config.tick+(widget_config.delta ? '&delta=1' : '');
+    $.ajax({
+      url: '/fnordmetric/metric/'+widget_config.metrics[n]+_query, 
+      success: function(json){                
+        for(i in json.values){ json.values[i][0] = json.values[i][0]*1000; }
+        chart.addSeries({name: widget_config.metrics[n], data: json.values}); 
+        chart.redraw();
       }
-    },
+    });         
+  }  
 
-  });
-    
+
 });  
 });
