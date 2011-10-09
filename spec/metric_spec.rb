@@ -71,4 +71,36 @@ describe FnordMetric::Metric do
     lambda{ FnordMetric::Metric.from_options({}) }.should raise_error(RuntimeError)
   end
 
+  it "should never cache value_at(time) where time is in the future" do
+    FnordMetric::Metric.new({}).send(:cache_this?, Time.now.to_i+60).should be_false
+  end
+
+  it "should never cache value_at(time) where time is now" do
+    FnordMetric::Metric.new({}).send(:cache_this?, Time.now.to_i).should be_false
+  end
+
+  it "should always cache value_at(time) where time is in the past" do
+    FnordMetric::Metric.new({}).send(:cache_this?, Time.now.to_i-60).should be_true
+  end
+
+  it "should never cache value_at(range) where range is completely in the future" do
+    range = ((Time.now.to_i+60)..(Time.now.to_i+120))
+    FnordMetric::Metric.new({}).send(:cache_this?, range).should be_false
+  end
+
+  it "should never cache value_at(range) where range is partially in the future" do
+    range = ((Time.now.to_i-60)..(Time.now.to_i+120))
+    FnordMetric::Metric.new({}).send(:cache_this?, range).should be_false
+  end
+
+  it "should never cache value_at(range) where range ends now" do
+    range = ((Time.now.to_i-60)..Time.now.to_i)
+    FnordMetric::Metric.new({}).send(:cache_this?, range).should be_false
+  end
+
+  it "should always cache value_at(range) where range is completely in the past" do
+    range = ((Time.now.to_i-120)..(Time.now.to_i-60))
+    FnordMetric::Metric.new({}).send(:cache_this?, range).should be_true
+  end
+
 end
