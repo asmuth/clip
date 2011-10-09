@@ -75,4 +75,41 @@ describe "app" do
   	FnordMetric::Event.last.blubb.should == 42.23
   end
 
+
+  describe "metrics api" do
+
+    before(:each) do
+      FnordMetric::Event.destroy_all
+      FnordMetric.track('my_event_type', :time => 33.hours.ago)
+      FnordMetric.track('my_event_type', :time => 32.hours.ago)
+      FnordMetric.track('my_event_type', :time => 28.hours.ago)
+      FnordMetric.track('my_event_type', :time => 27.hours.ago)
+      FnordMetric.track('my_event_type', :time => 26.hours.ago)
+      FnordMetric.track('my_event_type', :time => 13.hours.ago)
+      FnordMetric.track('my_event_type', :time => 12.hours.ago)
+      FnordMetric.track('my_event_type', :time => 11.hours.ago)
+    end
+
+    it "should return the right answer for: /metric/:name" do
+      metric = FnordMetric.metric('my_event_count', :count => true, :types => [:my_event_type])
+      get "/fnordmetric/metric/my_event_count"
+      JSON.parse(last_response.body)["value"].to_i.should == 8      
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp" do
+      metric = FnordMetric.metric('my_event_count', :count => true, :types => [:my_event_type])
+      get "/fnordmetric/metric/my_event_count", :at => 18.hours.ago.to_i.to_s
+      JSON.parse(last_response.body)["value"].to_i.should == 5
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do
+      metric = FnordMetric.metric('my_event_count', :count => true, :types => [:my_event_type])
+      get "/fnordmetric/metric/my_event_count", :at => "#{30.hours.ago.to_i}-#{20.hours.ago.to_i}"
+      JSON.parse(last_response.body)["value"].to_i.should == 3
+    end   
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds"
+ 
+  end
+ 
 end
