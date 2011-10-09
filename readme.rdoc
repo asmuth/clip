@@ -254,6 +254,7 @@ with curl:
 
 == TODO
 
+* timeline-widget: autoupdate
 * metric-api: request caching
 * widget: allow init without name (autogenerate)
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]

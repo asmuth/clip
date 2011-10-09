@@ -72,12 +72,14 @@ FnordMetric.css('widget_timeline.css', function(){});
   
   function drawLayout(){
     $('body').append( $('<div></div>').attr('class', 'headbar').append(
-      $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('delta'))
+      $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
+        function(){ redrawWithRange(); }
+      )
     ).append(
-      $('<div></div>').attr('class', 'button').append($('<span></span>').html('1h'))
-    ).append(
-      $('<div></div>').attr('class', 'button').append($('<span></span>').html('1d'))
-    ).append(
+    //  $('<div></div>').attr('class', 'button').append($('<span></span>').html('1h'))
+    //).append(
+    //  $('<div></div>').attr('class', 'button').append($('<span></span>').html('1d'))
+    //).append(
       $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
         function(){ moveRange(1); }
       )
