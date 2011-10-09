@@ -69,4 +69,7 @@ private
   def store_cache(time_or_range, value)
   end
 
+  def cache_key(time_or_range)
+  end
+
 end

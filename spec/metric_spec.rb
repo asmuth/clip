@@ -103,4 +103,16 @@ describe FnordMetric::Metric do
     FnordMetric::Metric.new({}).send(:cache_this?, range).should be_true
   end
 
+  it "should generate a cache key for a time" do
+    time = Time.now.to_i - 120
+    metric = FnordMetric::Metric.new(:name => "my_foobar_metric")
+    metric.send(:cache_key, time).should == "my_foobar_metric|t#{time.to_i}"
+  end
+
+  it "should generate a cache key for a range" do
+    range = ((Time.now.to_i-120)..(Time.now.to_i-60))
+    metric = FnordMetric::Metric.new(:name => "my_foobar_metric")
+    metric.send(:cache_key, range).should == "my_foobar_metric|r#{range.first.to_i}-#{range.last.to_i}"
+  end
+
 end
