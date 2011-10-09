@@ -4,6 +4,7 @@ require 'sinatra/base'
 
 require "fnordmetric/core"
 require "fnordmetric/app"
+require "fnordmetric/metric_api"
 require "fnordmetric/dispatch"
 require "fnordmetric/dashboard"
 require "fnordmetric/event"

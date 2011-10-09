@@ -33,6 +33,10 @@ class FnordMetric::App < Sinatra::Base
     haml :app
   end
 
+  get '/fnordmetric/metric/:name' do
+    FnordMetric::MetricAPI.new(params).render    
+  end
+
   get '/fnordmetric/widget/:name' do
     @dashboard = FnordMetric.dashboards.first
     @widget = @dashboard.widgets.first

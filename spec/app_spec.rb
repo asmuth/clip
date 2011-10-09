@@ -108,38 +108,75 @@ describe "app" do
     end   
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
+      get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i, :delta => true
+      JSON.parse(last_response.body)["values"].length.should == 6
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
+      get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i, :delta => true
+      JSON.parse(last_response.body)["values"][0].first.should == 34.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][0].last.should == 3
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
+      get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i, :delta => true
+      JSON.parse(last_response.body)["values"][1].first.should == 28.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][1].last.should == 2
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
+      get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i, :delta => true
+      JSON.parse(last_response.body)["values"][2].first.should == 22.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][2].last.should == 0
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
+      get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i, :delta => true
+      JSON.parse(last_response.body)["values"][3].first.should == 16.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][3].last.should == 2
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
+      get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i, :delta => true
+      JSON.parse(last_response.body)["values"][5].first.should == 4.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][5].last.should == 2
+    end
+
+
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
       get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i
       JSON.parse(last_response.body)["values"].length.should == 6
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
       get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i
-      JSON.parse(last_response.body)["values"][0].keys.should == [34.hours.ago.to_i]
-      JSON.parse(last_response.body)["values"][0].values.should == [3]
+      JSON.parse(last_response.body)["values"][0].first.should == 34.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][0].last.should == 0
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
       get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i
-      JSON.parse(last_response.body)["values"][1].keys.should == [28.hours.ago.to_i]
-      JSON.parse(last_response.body)["values"][1].values.should == [2]
+      JSON.parse(last_response.body)["values"][1].first.should == 28.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][1].last.should == 3
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
       get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i
-      JSON.parse(last_response.body)["values"][2].keys.should == [22.hours.ago.to_i]
-      JSON.parse(last_response.body)["values"][2].values.should == [0]
+      JSON.parse(last_response.body)["values"][2].first.should == 22.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][2].last.should == 5
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
       get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i
-      JSON.parse(last_response.body)["values"][3].keys.should == [16.hours.ago.to_i]
-      JSON.parse(last_response.body)["values"][3].values.should == [1]
+      JSON.parse(last_response.body)["values"][3].first.should == 16.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][3].last.should == 5
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp&tick=seconds" do
       get "/fnordmetric/metric/my_event_count", :at => "#{34.hours.ago.to_i}-#{1.hour.ago.to_i}", :tick => 6.hours.to_i
-      JSON.parse(last_response.body)["values"][3].keys.should == [4.hours.ago.to_i]
-      JSON.parse(last_response.body)["values"][3].values.should == [2]
+      JSON.parse(last_response.body)["values"][5].first.should == 4.hours.ago.to_i
+      JSON.parse(last_response.body)["values"][5].last.should == 7
     end
 
   end
