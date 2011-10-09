@@ -15,11 +15,20 @@ class FnordMetric::Metric
   end
 
   def current
-  	self.at(Time.now)
+    self.at(Time.now)
   end
 
   def at(time_or_range)
-    self.value_at(time_or_range)
+    print "metric#at called - #{cache_this?(time_or_range)} - "
+    if cache_this?(time_or_range) && (_v=try_cache(time_or_range))
+      print "hit\n"
+      _v # cache hit
+    else # cache miss
+      print "miss\n"
+      value_at(time_or_range).tap do |_v| 
+        store_cache(time_or_range, _v) if cache_this?(time_or_range)
+      end
+    end
   end
 
   def token
@@ -42,8 +51,22 @@ class FnordMetric::Metric
     end
   end
 
+private
+
   def value_at(time_or_range)
     raise "implemented in subclass"
+  end
+
+  def cache_this?(time_or_range)
+    ((!time_or_range.is_a?(Range) && time_or_range.to_i < Time.now.to_i) ||
+    (time_or_range.is_a?(Range) && time_or_range.last.to_i < Time.now.to_i))
+  end
+
+  def try_cache(time_or_range)
+    nil
+  end
+
+  def store_cache(time_or_range, value)
   end
 
 end
