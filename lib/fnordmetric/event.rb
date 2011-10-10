@@ -9,7 +9,7 @@ class FnordMetric::Event
 
   def self.track!(event_type, event_data)
     event_data.to_options!
-    event_time = (event_data.delete(:time) || Time.now).to_i
+    event_time = (event_data.delete(:time) || Time.now.getutc).to_i
     self.create(:type => event_type, :time => event_time, :data => event_data)
   end
 

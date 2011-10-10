@@ -254,12 +254,14 @@ with curl:
 
 == TODO
 
-* timeline-widget: autoupdate
-* metric-api: request caching
 * add mongo indices
 * default range (daily/hourly)
 * highcharts cleanup
-* numbers/table widget
+* numbers widget: date format
+* numbers widget: delta option
+* numbers widget: 'trend' option
+* timeline widget: timezones
+* metric-api: request caching
 * compare widget
 * funnel widget
 * widget: allow init without name (autogenerate)
