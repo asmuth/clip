@@ -2,7 +2,7 @@ class FnordMetric::MetricAPI
 
   def initialize(params)
     @params = params.to_options   
-    @metric = FnordMetric.metrics[params[:name].to_sym]
+    @metric = FnordMetric.metrics.to_options[params[:name].to_sym] 
   end
 
   def render
