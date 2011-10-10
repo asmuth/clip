@@ -1,6 +1,6 @@
 module FnordMetric
 
-  WIDGET_TYPES = %(timeline funnel)
+  WIDGET_TYPES = %(timeline funnel numbers)
   
   @@metrics = {}
   @@widgets = {}
@@ -20,7 +20,7 @@ module FnordMetric
     options.merge!(:widget_name => widget_name)
     raise "missing option: :type" unless options[:type]
     klass = if FnordMetric::WIDGET_TYPES.include?(options[:type].to_s) 
-      "FnordMetric::#{options[:type].to_s.classify}Widget".constantize
+      "FnordMetric::#{options[:type].to_s.capitalize}Widget".constantize
     else
       raise "unknown widget type: #{options[:type]}"
     end
