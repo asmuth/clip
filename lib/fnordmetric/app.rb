@@ -13,6 +13,11 @@ class FnordMetric::App < Sinatra::Base
   helpers do
     include Rack::Utils
     alias_method :h, :escape_html
+
+    def path_prefix
+      request.env["SCRIPT_NAME"]
+    end
+
   end
 
   if ENV['RACK_ENV'] == "test"
@@ -20,31 +25,27 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
-  	redirect '/fnordmetric'
+  	redirect "#{request.env["SCRIPT_NAME"]}/dashboard/default"
   end
 
-  get '/fnordmetric' do
-  	redirect '/fnordmetric/dashboard/default'
-  end
-
-  get '/fnordmetric/dashboard/:name' do
+  get '/dashboard/:name' do
     @dashboard = FnordMetric.dashboards.detect{|d| d.token == params[:name] }
     @dashboard ||= FnordMetric.dashboards.first
     haml :app
   end
 
-  get '/fnordmetric/metric/:name' do
+  get '/metric/:name' do
     content_type 'application/json'
     FnordMetric::MetricAPI.new(params).render    
   end
 
-  get '/fnordmetric/widget/:name' do
+  get '/widget/:name' do
     @dashboard = FnordMetric.dashboards.first
     @widget = @dashboard.widgets.first
     haml :widget
   end
 
-  post '/fnordmetric/events' do
+  post '/events' do
     halt 400, 'please specify the event_type' unless params["type"]       
     event_type = params.delete("type")
     FnordMetric.track(event_type, parse_params(params))

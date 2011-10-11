@@ -1,5 +1,5 @@
-FnordMetric.css('fnordmetric.css', function(){});
-FnordMetric.js('jquery-1.6.1.min.js', function(){  
+FnordMetric.css('/fnordmetric/fnordmetric.css', function(){});
+FnordMetric.js('/jquery-1.6.1.min.js', function(){  
 
   drawLayout();
   updateDataAndValues();
@@ -11,7 +11,7 @@ FnordMetric.js('jquery-1.6.1.min.js', function(){
       $('body').append(container=$('<div></div>').attr('class', 'numbers_container').attr('rel', widget_config.metrics[n]));
       container.append($('<div></div>').addClass('title').html(widget_config.metrics[n]));
       for(var k in widget_config.intervals){
-        var u = "/fnordmetric/metric/"+widget_config.metrics[n]+'?'+widget_config.intervals[k];
+        var u = FnordMetric.p+"/metric/"+widget_config.metrics[n]+'?'+widget_config.intervals[k];
         container.append($('<div></div>').addClass('number').attr('rel', u).attr('data',0).append(
           $('<span></span>').addClass('value').html(0)
         ).append(
@@ -23,7 +23,7 @@ FnordMetric.js('jquery-1.6.1.min.js', function(){
 
   function updateDataAndValues(){
     for(n in widget_config.metrics){
-      $.get('/fnordmetric/metric/'+widget_config.metrics[n], updateSingleNumber(widget_config.metrics[n]));
+      $.get(FnordMetric.p+'/metric/'+widget_config.metrics[n], updateSingleNumber(widget_config.metrics[n]));
     }
   }
 

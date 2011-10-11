@@ -10,7 +10,7 @@ class FnordMetric::NumbersWidget  < FnordMetric::Widget
         "Today" => "at=#{1.day.ago.to_i}-#{Time.now.to_i}",
         "Month" => "at=#{30.days.ago.to_i}-#{Time.now.to_i}"
       },
-      :widget_url => "/widget_numbers.js?#{(rand*999).to_i}",
+      :widget_url => "/fnordmetric/widget_numbers.js?#{(rand*999).to_i}",
       :widget_height => 100
     )
   end

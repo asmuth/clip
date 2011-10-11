@@ -8,7 +8,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
       :delta => !!@options[:delta],
       :autoupdate => !!@options[:autoupdate],
       :metrics => metrics.map{ |m| m.token },
-      :widget_url => "/widget_timeline.js?#{(rand*999).to_i}",
+      :widget_url => "/fnordmetric/widget_timeline.js?#{(rand*999).to_i}",
       :chart_type => (@options[:chart] || "line"),
       :widget_height => 320
     )

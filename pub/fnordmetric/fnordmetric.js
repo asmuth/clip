@@ -5,10 +5,18 @@ FnordMetric = {
   tag: function(element){return FnordMetric.d.getElementsByTagName(element)},
   ce: function(element){return FnordMetric.d.createElement(element)},
 
+  init: function(){
+    if(widget_config.path_prefix){ FnordMetric.p = widget_config.path_prefix; } 
+    console.log(widget_config);
+    console.log(FnordMetric.p);
+  },
+
   js: function(url, callback){
     var s = FnordMetric.ce('script');
     s.type = "text/javascript";
     s.onload = callback;
+    FnordMetric.init();
+    console.log(url);
     s.src = FnordMetric.p+url;
     FnordMetric.tag('head')[0].appendChild(s);  
   },
@@ -26,10 +34,11 @@ FnordMetric = {
     var f = FnordMetric.ce('iframe');    
     f.style.width = '100%'; f.style.height = widget_config.widget_height+'px';
     f.frameBorder = 'none'; f.scrolling = 'no';
-    FnordMetric.id(elem).appendChild(f); 
+    FnordMetric.id(elem).appendChild(f);
     var s = f.contentDocument.createElement('script')
     s.type = "text/javascript";
-    s.src = FnordMetric.p+'fnordmetric.js';    
+    s.src = FnordMetric.p+'/fnordmetric/fnordmetric.js';    
+    widget_config.path_prefix = FnordMetric.p;
     s.onload = function(){ f.contentWindow.FnordMetric.js(widget_config.widget_url); }
     f.contentWindow.widget_config = widget_config;        
     f.contentDocument.getElementsByTagName('head')[0].appendChild(s);   	

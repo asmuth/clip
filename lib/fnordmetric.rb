@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'mongoid'
 require 'haml'
 require 'sinatra/base'
@@ -5,7 +6,7 @@ require 'sinatra/base'
 require "fnordmetric/core"
 require "fnordmetric/app"
 require "fnordmetric/metric_api"
-require "fnordmetric/dispatch"
+require "fnordmetric/engine"
 require "fnordmetric/dashboard"
 require "fnordmetric/event"
 require "fnordmetric/cache"

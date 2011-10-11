@@ -3,9 +3,11 @@
 
   %head
     %title Fnordmetric Dashboard
-    %script(type="text/javascript" src="/fnordmetric/jquery-1.6.1.min.js")
-    %script(type="text/javascript" src="/fnordmetric/fnordmetric.js")
-    %link(type="text/css" rel="stylesheet" href="/fnordmetric/fnordmetric.css")
+    %script(type="text/javascript" src="#{path_prefix}/jquery-1.6.1.min.js")
+    %link(type="text/css" rel="stylesheet" href="#{path_prefix}/fnordmetric/fnordmetric.css")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric/fnordmetric.js")
+    :javascript
+      FnordMetric.p = '#{path_prefix}';
 
   %body
     #wrap
@@ -30,7 +32,7 @@
   $(document).ready(function(){
 
     $('#tabs li').click(function(){
-      document.location.href = '/fnordmetric/dashboard/' + $(this).attr('rel');
+      document.location.href = '#{path_prefix}/dashboard/' + $(this).attr('rel');
     });
 
     function resizeViewport(){ $('#viewport').width(window.innerWidth-310); }
@@ -38,4 +40,6 @@
     $(window).resize(resizeViewport);
 
   });
+
+
 
