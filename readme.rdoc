@@ -254,6 +254,9 @@ with curl:
 
 == TODO
 
+* numbers_widget: fix js endless loop in formatNumber
+* widget loader: hide iframe body content until css has loaded
+* timeline widget: make range input editable (+parse)
 * add mongo indices
 * default range (daily/hourly)
 * highcharts cleanup
