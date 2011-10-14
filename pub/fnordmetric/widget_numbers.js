@@ -34,6 +34,12 @@ FnordMetric.js('/jquery-1.6.1.min.js', function(){
     };
   }
 
+  function formatValue(value){
+    if(value < 10){ return value.toFixed(2); }
+    if(value > 1000){ return (value/1000.0).toFixed(1) + "k"; }
+    return value.toFixed(0); 
+  }
+
   function updateValues(diff_factor){
     var still_running = false;
     $('.number').each(function(){
@@ -45,7 +51,7 @@ FnordMetric.js('/jquery-1.6.1.min.js', function(){
         still_running = true;
         var new_val = current_val+diff;
         if(new_val > target_val){ new_val = target_val; }
-        $('.value', this).html(new_val.toFixed(widget_config.round_to));
+        $('.value', this).html(formatValue(new_val));
       }
     });
     if(still_running){ 
