@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "fnordmetric"
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = "2011-10-10"
+  s.date = "2011-10-14"
   s.description = "FnordMetric is a Ruby Event-Tracking gem on steroids"
   s.email = "paul@paulasmuth.com"
   s.files = [
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "doc/example_server.rb",
+    "fnordmetric.gemspec",
     "haml/app.haml",
     "haml/widget.haml",
     "lib/fnordmetric.rb",
@@ -30,7 +31,7 @@ Gem::Specification.new do |s|
     "lib/fnordmetric/core.rb",
     "lib/fnordmetric/count_metric.rb",
     "lib/fnordmetric/dashboard.rb",
-    "lib/fnordmetric/dispatch.rb",
+    "lib/fnordmetric/engine.rb",
     "lib/fnordmetric/event.rb",
     "lib/fnordmetric/funnel_widget.rb",
     "lib/fnordmetric/metric.rb",
@@ -42,23 +43,23 @@ Gem::Specification.new do |s|
     "lib/fnordmetric/widget.rb",
     "pub/fnordmetric/fnordmetric.css",
     "pub/fnordmetric/fnordmetric.js",
-    "pub/fnordmetric/highcharts/adapters/mootools-adapter.js",
-    "pub/fnordmetric/highcharts/adapters/mootools-adapter.src.js",
-    "pub/fnordmetric/highcharts/adapters/prototype-adapter.js",
-    "pub/fnordmetric/highcharts/adapters/prototype-adapter.src.js",
-    "pub/fnordmetric/highcharts/highcharts.js",
-    "pub/fnordmetric/highcharts/highcharts.src.js",
-    "pub/fnordmetric/highcharts/modules/exporting.js",
-    "pub/fnordmetric/highcharts/modules/exporting.src.js",
-    "pub/fnordmetric/highcharts/themes/dark-blue.js",
-    "pub/fnordmetric/highcharts/themes/dark-green.js",
-    "pub/fnordmetric/highcharts/themes/gray.js",
-    "pub/fnordmetric/highcharts/themes/grid.js",
-    "pub/fnordmetric/jquery-1.6.1.min.js",
-    "pub/fnordmetric/sprite.png",
     "pub/fnordmetric/widget_numbers.js",
     "pub/fnordmetric/widget_timeline.css",
     "pub/fnordmetric/widget_timeline.js",
+    "pub/highcharts/adapters/mootools-adapter.js",
+    "pub/highcharts/adapters/mootools-adapter.src.js",
+    "pub/highcharts/adapters/prototype-adapter.js",
+    "pub/highcharts/adapters/prototype-adapter.src.js",
+    "pub/highcharts/highcharts.js",
+    "pub/highcharts/highcharts.src.js",
+    "pub/highcharts/modules/exporting.js",
+    "pub/highcharts/modules/exporting.src.js",
+    "pub/highcharts/themes/dark-blue.js",
+    "pub/highcharts/themes/dark-green.js",
+    "pub/highcharts/themes/gray.js",
+    "pub/highcharts/themes/grid.js",
+    "pub/jquery-1.6.1.min.js",
+    "pub/sprite.png",
     "readme.rdoc",
     "spec/app_spec.rb",
     "spec/cache_spec.rb",
