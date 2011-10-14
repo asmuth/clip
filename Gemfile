@@ -7,7 +7,6 @@ gem "sinatra", "~> 1.2.6"
 gem "haml"
 gem "rack"
 gem "rack-test"
-gem "fnordmetric", :git => "git@github.com:paulasmuth/fnordmetric.git"
 
 group :development do  
   gem "rspec", "~> 2.6.0"
