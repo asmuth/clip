@@ -1,6 +1,10 @@
 = FnordMetric
 
-yet another report *generator*
+fnordmetric is a ruby event tracking gem 
+
+{<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
+
+
 
 == Usage
 
