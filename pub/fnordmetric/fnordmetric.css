@@ -43,3 +43,11 @@ body{ background:#fff; color:#333; margin:0; padding:0; overflow-y:scroll; font:
 
 .headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
 
+.numbers_container, .number{ float:left; border-right:1px solid #ececec;}
+.number{ margin-left:12px; padding-right:20px; margin-right:10px; }
+.number .value{ color:#333; font-size:30px; display:block; margin-bottom:5px; }
+.number .desc{ color:#999; font-size:12px; }
+.number:last-child{ border-right:none; }
+.numbers_container{ padding-right:0px; min-width:33.3%; }
+
+.numbers_container .title{ padding:4px 10px 1px 10px; color:#333; font-size:13px; display:block; background:#f2f2f2; border-bottom:1px solid #e2e2e2; margin-bottom:15px; }

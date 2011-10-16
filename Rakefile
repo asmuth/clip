@@ -14,8 +14,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "fnordmetric"
   gem.homepage = "http://github.com/paulasmuth/fnordmetric"
   gem.license = "MIT"
-  gem.summary = "yet another report generator"
-  gem.description = "yet another report generator"
+  gem.summary = "FnordMetric is a Ruby Event-Tracking gem on steroids"
+  gem.description = "FnordMetric is a Ruby Event-Tracking gem on steroids"
   gem.email = "paul@paulasmuth.com"
   gem.authors = ["Paul Asmuth"]
 end

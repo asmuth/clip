@@ -13,7 +13,7 @@ class FnordMetric::Widget
 
   def metrics
     [@options[:metrics]].flatten.map{ |m|
-      m.is_a?(FnordMetric::Metric) ? m : FnordMetric.metrics[m]
+      m.is_a?(FnordMetric::Metric) ? m : FnordMetric.metrics.fetch(m)
     }
   end
 

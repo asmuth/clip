@@ -1,7 +1,7 @@
-FnordMetric.js('jquery-1.6.1.min.js', function(){  
-FnordMetric.js('highcharts/highcharts.js', function(){  
-FnordMetric.css('fnordmetric.css', function(){});
-FnordMetric.css('widget_timeline.css', function(){});
+FnordMetric.js('/jquery-1.6.1.min.js', function(){  
+FnordMetric.js('/highcharts/highcharts.js', function(){  
+FnordMetric.css('/fnordmetric/fnordmetric.css', function(){});
+FnordMetric.css('/fnordmetric/widget_timeline.css', function(){});
 
 
   drawLayout();
@@ -46,7 +46,7 @@ FnordMetric.css('widget_timeline.css', function(){});
     metrics_completed = 0;
     for(n in widget_config.metrics){
       $.ajax({
-        url: '/fnordmetric/metric/'+widget_config.metrics[n]+_query, 
+        url: FnordMetric.p+'/metric/'+widget_config.metrics[n]+_query, 
         success: redrawMetric(first_time, n)
       });         
     }  
