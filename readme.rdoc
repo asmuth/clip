@@ -254,6 +254,7 @@ with curl:
 
 == TODO
 
+* window.resize float/round-bug
 * timeline-widget: autoupdate
 * metric-api: request caching
 * add mongo indices
