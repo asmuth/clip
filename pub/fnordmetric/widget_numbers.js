@@ -4,7 +4,7 @@ FnordMetric.js('/jquery-1.6.1.min.js', function(){
   drawLayout();
   updateDataAndValues();
 
-  window.setInterval(updateDataAndValues, 3000);
+  window.setInterval(updateDataAndValues, 5000);
 
   function drawLayout(){
     for(n in widget_config.metrics){
@@ -44,13 +44,15 @@ FnordMetric.js('/jquery-1.6.1.min.js', function(){
     var still_running = false;
     $('.number').each(function(){
       var target_val = parseFloat($(this).attr('data'));
-      var current_val = parseFloat($('.value', this).html());
+      var current_val = parseFloat($(this).attr('data-current'));
+      if(!current_val){ current_val=0; }
       var diff = (target_val-current_val)/diff_factor; 
       if(diff < 1){ diff=1; }
       if(target_val > current_val){ 
         still_running = true;
         var new_val = current_val+diff;
         if(new_val > target_val){ new_val = target_val; }
+        $(this).attr('data-current', new_val);
         $('.value', this).html(formatValue(new_val));
       }
     });
