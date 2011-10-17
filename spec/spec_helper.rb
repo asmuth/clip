@@ -3,6 +3,7 @@ require 'rspec'
 require 'mongoid'
 require 'rack'
 require 'rack/test'
+require 'delorean'
 
 ENV['RACK_ENV'] = "test"
 

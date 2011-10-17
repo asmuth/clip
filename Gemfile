@@ -9,6 +9,7 @@ gem "rack"
 gem "rack-test"
 
 group :development do  
+  gem "delorean", ">= 0" 
   gem "rspec", "~> 2.6.0"
   gem "shoulda", ">= 0"
   gem "bundler", "~> 1.0.0"

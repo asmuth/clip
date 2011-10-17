@@ -67,6 +67,29 @@ describe FnordMetric::Widget do
     ranges_should_match!widget.ticks.last, ((t-1.hour)..t)
   end
 
+  it "should generate a default range for daily graphs" do
+    widget = FnordMetric::Widget.new(:tick => 1.day)
+    Delorean.time_travel_to(Time.utc(1992,01,13,18,23,23)) do
+      widget.default_range.first.should == Time.utc(1991,12,15,00,00,00)
+      widget.default_range.last.should == Time.utc(1992,1,13,23,59,59)
+    end
+  end
+
+  it "should generate ticks with default range for daily graphs" do
+    widget = FnordMetric::Widget.new(:tick => 1.day)
+    Delorean.time_travel_to(Time.utc(1992,01,13,18,23,23)) do
+      widget.ticks.length.should == 30
+      widget.ticks.first.first.utc.should == Time.utc(1991,12,15,00,00,00)
+      widget.ticks.first.last.utc.should == Time.utc(1991,12,16,00,00,00)
+      widget.ticks.last.first.utc.should == Time.utc(1992,1,13,0,0,0)
+      widget.ticks.last.last.utc.should == Time.utc(1992,1,14,0,0,0)
+    end
+  end
+
+  it "should generate a default range for hourly graphs"
+
+  it "should generate ticks with default range for hourly graphs" 
+
 private
   
   def ranges_should_match!(a, b)

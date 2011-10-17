@@ -22,7 +22,7 @@ class FnordMetric::Widget
   end
 
   def range
-    @options[:range] || ((Time.now-(tick*24))..Time.now)
+    @options[:range] || default_range
   end
 
   def range_to_i
@@ -35,6 +35,15 @@ class FnordMetric::Widget
       next unless range_to_i.include?(te.to_i) || include_current?
       (Time.at(ts)..Time.at(te))
     }.compact
+  end
+
+  def default_range(now=Time.now)
+    if tick.to_i == 1.day.to_i
+      te = Time.utc(now.year, now.month, now.day+1) 
+      (te-30.days)..(te-1.second)
+    else
+      (now-(tick*30))..now
+    end
   end
     
   def add_report(report)
