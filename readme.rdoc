@@ -1,8 +1,70 @@
 = FnordMetric
 
-yet another report *generator*
+fnordmetric is a ruby event tracking gem 
 
-== Usage
+{<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
+
+
+== Usage: Standalone service
+
+you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would look like this:
+
+  require "rubygems"
+  require "fnordmetric"
+  require "thin"
+
+  FnordMetric.metric(:passengers_total, :sum => :passengers, :types => [:car_seen])
+  FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
+  FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
+
+  FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x|
+    x.passengers_blue_car / x.passengers_red_car
+  })
+
+  FnordMetric.dashboard 'Passengers' do |passengers| 
+     
+    passengers.add_widget FnordMetric.widget(:passenger_br_ratio_timeline, 
+      :metrics => :blue_to_red_ratio, 
+      :title => "Passenger blue/red Ratio", 
+      :type => :timeline
+    )
+
+    passengers.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
+      :metrics => [:passengers_blue_car, :passengers_red_car], 
+      :title => "Passengers (red/blue)", 
+      :type => :timeline
+    )
+    
+    passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
+      :metrics => :passengers_total,
+      :title => "Passenger blue/red Ratio", 
+      :type => :timeline
+    )
+
+  end
+
+  Mongoid.configure do |c| 
+    c.master = Mongo::Connection.new.db("myfnordmetric") 
+  end
+
+  app = FnordMetric::App.new
+  Thin::Server.start('127.0.0.1', 2323, app)
+
+ 
+when run as a standalone service events can be added via a very simple (restful) http post:
+
+  POST http://myapp:port/fnordmetric/events type=car_seen&color=red&passengers=2&speed=120
+
+with curl:
+
+  curl -X POST -d "type=car_seen&color=red&passengers=2&speed=120" http://myapp:port/fnordmetric/events
+
+
+
+== Usage: From Rails
+
+
+== Usage: From Ruby/Rack
 
 you need a mongodb instance and have to configure the mongoid-gem if your app doesn't already do that:
 
@@ -122,61 +184,6 @@ or like this:
   end
 
 
-== Standalone service
-
-you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would look like this:
-
-  require "rubygems"
-  require "fnordmetric"
-  require "thin"
-
-  FnordMetric.metric(:passengers_total, :sum => :passengers, :types => [:car_seen])
-  FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
-  FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
-
-  FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x|
-    x.passengers_blue_car / x.passengers_red_car
-  })
-
-  FnordMetric.dashboard 'Passengers' do |passengers| 
-     
-    passengers.add_widget FnordMetric.widget(:passenger_br_ratio_timeline, 
-      :metrics => :blue_to_red_ratio, 
-      :title => "Passenger blue/red Ratio", 
-      :type => :timeline
-    )
-
-    passengers.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
-      :metrics => [:passengers_blue_car, :passengers_red_car], 
-      :title => "Passengers (red/blue)", 
-      :type => :timeline
-    )
-    
-    passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
-      :metrics => :passengers_total,
-      :title => "Passenger blue/red Ratio", 
-      :type => :timeline
-    )
-
-  end
-
-  Mongoid.configure do |c| 
-    c.master = Mongo::Connection.new.db("myfnordmetric") 
-  end
-
-  app = FnordMetric::App.new
-  Thin::Server.start('127.0.0.1', 2323, app)
-
- 
-when run as a standalone service events can be added via a very simple (restful) http post:
-
-  POST http://myapp:port/fnordmetric/events type=car_seen&color=red&passengers=2&speed=120
-
-with curl:
-
-  curl -X POST -d "type=car_seen&color=red&passengers=2&speed=120" http://myapp:port/fnordmetric/events
-
-
 == Option Reference
 
 *FnordMetric.metric* (FnordMetric::Metric.new) 
@@ -253,7 +260,7 @@ with curl:
 
 
 == TODO
-
+* metric-api: request caching
 * widget loader: hide iframe body content until css has loaded
 * timeline widget: make range input editable (+parse)
 * add mongo indices
