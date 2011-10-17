@@ -86,9 +86,24 @@ describe FnordMetric::Widget do
     end
   end
 
-  it "should generate a default range for hourly graphs"
+  it "should generate a default range for hourly graphs" do
+    widget = FnordMetric::Widget.new(:tick => 1.hour)
+    Delorean.time_travel_to(Time.utc(1992,01,13,18,23,23)) do
+      widget.default_range.first.should == Time.utc(1992,1,12,19,00,00)
+      widget.default_range.last.should == Time.utc(1992,1,13,18,59,59)
+    end
+  end
 
-  it "should generate ticks with default range for hourly graphs" 
+  it "should generate a default range for hourly graphs" do
+    widget = FnordMetric::Widget.new(:tick => 1.hour)
+    Delorean.time_travel_to(Time.utc(1992,01,13,18,23,23)) do
+      widget.ticks.length.should == 24
+      widget.ticks.first.first.utc.should == Time.utc(1992,1,12,19,00,00)
+      widget.ticks.first.last.utc.should == Time.utc(1992,1,12,20,00,00)
+      widget.ticks.last.first.utc.should == Time.utc(1992,1,13,18,0,0)
+      widget.ticks.last.last.utc.should == Time.utc(1992,1,13,19,00,00)
+    end
+  end
 
 private
   

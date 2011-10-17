@@ -41,6 +41,9 @@ class FnordMetric::Widget
     if tick.to_i == 1.day.to_i
       te = Time.utc(now.year, now.month, now.day+1) 
       (te-30.days)..(te-1.second)
+    elsif tick.to_i == 1.hour.to_i
+      te = Time.utc(now.year, now.month, now.day, now.hour) 
+      (te-24.hours)..(te-1.second)
     else
       (now-(tick*30))..now
     end
