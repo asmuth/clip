@@ -35,7 +35,10 @@
       document.location.href = '#{path_prefix}/dashboard/' + $(this).attr('rel');
     });
 
-    function resizeViewport(){ $('#viewport').width(window.innerWidth-310); }
+    function resizeViewport(){ 
+      var viewport_width = window.innerWidth-310
+      $('#viewport').width(viewport_width); 
+    }
     resizeViewport();
     $(window).resize(resizeViewport);
 
