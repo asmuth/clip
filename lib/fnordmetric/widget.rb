@@ -37,9 +37,9 @@ class FnordMetric::Widget
     }.compact
   end
 
-  def default_range(now=Time.now)
+  def default_range(now=Time.now+1.day)
     if tick.to_i == 1.day.to_i
-      te = Time.utc(now.year, now.month, now.day+1) 
+      te = Time.utc(now.year, now.month, now.day) 
       (te-30.days)..(te-1.second)
     elsif tick.to_i == 1.hour.to_i
       te = Time.utc(now.year, now.month, now.day, now.hour) 
