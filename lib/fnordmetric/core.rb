@@ -24,6 +24,9 @@ module FnordMetric
     else
       raise "unknown widget type: #{options[:type]}"
     end
+    [options[:metrics]].flatten.each do |m|
+      raise "unknown metric: #{m}" unless @@metrics[m]
+    end
     @@widgets[widget_name] = klass.new(options)
   end
 
