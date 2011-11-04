@@ -14,31 +14,23 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
   require "thin"
 
   FnordMetric.metric(:passengers_total, :sum => :passengers, :types => [:car_seen])
-  FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
-  FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
-
-  FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x|
-    x.passengers_blue_car / x.passengers_red_car
-  })
+  FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :color => :red }, :types => [:car_seen]) 
+  FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :color => :blue }, :types => [:car_seen]) 
+  FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x| x.passengers_blue_car / x.passengers_red_car })
 
   FnordMetric.dashboard 'Passengers' do |passengers| 
      
-    passengers.add_widget FnordMetric.widget(:passenger_br_ratio_timeline, 
-      :metrics => :blue_to_red_ratio, 
-      :title => "Passenger blue/red Ratio", 
-      :type => :timeline
-    )
-
     passengers.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
       :metrics => [:passengers_blue_car, :passengers_red_car], 
-      :title => "Passengers (red/blue)", 
+      :title => "Passengers (red/blue) timeline", 
       :type => :timeline
     )
     
     passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
-      :metrics => :passengers_total,
-      :title => "Passenger blue/red Ratio", 
-      :type => :timeline
+      :metrics => [:passengers_total, :blue_to_red_ratio],
+      :title => "Passenger total + Red/Blue Ratio", 
+      :autoupdate => true,
+      :type => :numbers
     )
 
   end
@@ -61,10 +53,7 @@ with curl:
 
 
 
-== Usage: From Rails
-
-
-== Usage: From Ruby/Rack
+== Usage: From Rails/Rack
 
 you need a mongodb instance and have to configure the mongoid-gem if your app doesn't already do that:
 
@@ -83,7 +72,7 @@ that's all. you can start tracking data:
   FnordMetric.track('car_seen', :color => "red",  :speed => 142, :passengers => 2)
 
 
-to see some shiny stats you first have to define your metrics. e.g. in 'config/initializers/fnordmetric.rb':
+to see some shiny stats you first have to define a 'metric'. e.g. in 'config/initializers/fnordmetric.rb':
 
   FnordMetric.metric(:colors_total,     :types => [:car_seen], :count => true, :unique => :color) 
   FnordMetric.metric(:cars_total,       :types => [:car_seen], :count => true) 
@@ -102,7 +91,33 @@ use combine-metrics to build your own 'indices':
   })
 
 
-generate the report in your controller or model:
+fnordmetric comes with javascript charting helper and a javascript dashboard app. to 
+use them you have to load a rails engine by adding this line to your routes.rb:
+
+  mount FnordMetric::App => '/fnordmetric'
+
+
+point your browser to 'myapp.com/fnordmetric' and you should see an empty dashboard. you can 
+add dashboards and widgets like this (e.g. in initializers/fnordmetric.rb):
+
+  FnordMetric.dashboard 'Passengers' do |dash|  
+
+    dash.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
+      :metrics => [:passengers_blue_car, :passengers_red_car], 
+      :title => "Passengers (red/blue)", 
+      :type => :timeline
+    )
+    
+    dash.add_widget FnordMetric.widget(:passengers_total_timeline, 
+      :metrics => :passengers_total,
+      :title => "Passenger blue/red Ratio", 
+      :type => :timeline
+    )
+
+  end
+
+
+you can also get the raw numbers in your controller or model:
 
   report = FnordMetric.report(:range => (3.days.ago..Time.now))
   report.colors_total.current      # => 3  
@@ -122,13 +137,7 @@ generate the report in your controller or model:
     => [ (<Date 03-10-11 00:00:00>..<Date 03-10-11 23:59:59>), (<Date 04-10...
    
 
-fnordmetric comes with javascript charting helper and a javascript dashboard app. to 
-use them you have to load a middleware by adding this line to your environment.rb:
-
-  config.middleware "FnordMetric::Dispatch"
-
-
-now you can start rendering widgets in your own views:
+and you can render the widgets in your own views:
 
   widget = FnordMetric.widget(
     :passengers_red_blue_widget,
@@ -140,48 +149,6 @@ now you can start rendering widgets in your own views:
 
   widget.render
     => "<script type="text/javascript" src="/fnordmetric/widget.js?type=..."
-
-
-point your browser to 'myapp.com/fnordmetric' and you should see an empty dashboard. you can 
-add dashbaords and widgets like this (e.g. in initializers/fnordmetric.rb):
-
-  FnordMetric.widget(
-    :cars_avg_speed, 
-    :type => :timeline, 
-    :metrics => :average_speed, 
-    :title => "Speed (avg)"
-  )
-
-  FnordMetric.widget(
-    :cars_unique_colors, 
-    :type => :timeline, 
-    :metrics => :colors_total, 
-    :title => "Number of different colors"
-  )
-
-  FnordMetric.dashboard 'Cars' do |dash|    
-    dash.add_widget :cars_avg_speed
-    dash.add_widget :cars_unique_colors
-  end
-
-
-or like this:
-
-  FnordMetric.dashboard 'Passengers' do |dash|  
-
-    dash.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
-      :metrics => [:passengers_blue_car, :passengers_red_car], 
-      :title => "Passengers (red/blue)", 
-      :type => :timeline
-    )
-    
-    dash.add_widget FnordMetric.widget(:passengers_total_timeline, 
-      :metrics => :passengers_total,
-      :title => "Passenger blue/red Ratio", 
-      :type => :timeline
-    )
-
-  end
 
 
 == Option Reference
