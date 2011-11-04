@@ -19,6 +19,7 @@ describe FnordMetric::Dashboard do
 
   it "should add a widget" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
+    FnordMetric.define(:my_metric, :sum => :my_field)
     widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     dashboard.add_widget(widget)
     dashboard.widgets.first.should == widget
@@ -26,6 +27,7 @@ describe FnordMetric::Dashboard do
 
   it "should add a widget by name" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
+    FnordMetric.define(:my_metric, :sum => :my_field)
     widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     dashboard.add_widget(:my_widget)
     dashboard.widgets.first.should == widget
