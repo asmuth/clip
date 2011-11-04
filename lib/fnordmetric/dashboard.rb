@@ -10,8 +10,8 @@ class FnordMetric::Dashboard
     add_report(@options[:report]) if @options[:report]
   end
 
-  def add_widget(widget)
-    @widgets << widget
+  def add_widget(w)
+    @widgets << (w.is_a?(FnordMetric::Widget) ? w : FnordMetric.widgets.fetch(w))
   end
 
   def title
