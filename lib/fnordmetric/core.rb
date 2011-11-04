@@ -7,7 +7,7 @@ module FnordMetric
   @@dashboards = Array.new
 
   def self.define(metric_name, options)
-    warn "FnordMetric.define is deprecated, please use FnordMetric.metric instead"
+    warn "FnordMetric.metric is deprecated, please use FnordMetric.metric instead"
     self.metric(metric_name, options)
   end
 

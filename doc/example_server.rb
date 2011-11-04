@@ -4,12 +4,12 @@ require "rubygems"
 require "fnordmetric"
 require "thin"
 
-FnordMetric.define(:passengers_total, :count => true, :types => [:car_seen])
-FnordMetric.define(:blubbs, :sum => :passengers, :types => [:car_seen])
-FnordMetric.define(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
-FnordMetric.define(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
+FnordMetric.metric(:passengers_total, :count => true, :types => [:car_seen])
+FnordMetric.metric(:blubbs, :sum => :passengers, :types => [:car_seen])
+FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
+FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
 
-FnordMetric.define(:blue_to_red_ratio, :combine => lambda{ |x|
+FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x|
   x.passengers_blue_car / x.passengers_red_car
 })
 

@@ -12,14 +12,14 @@ describe FnordMetric::Widget do
   end
 
   it "should add the report on init" do
-  	FnordMetric.define(:my_metric, :sum => :my_field)
+  	FnordMetric.metric(:my_metric, :sum => :my_field)
   	report = FnordMetric.report(:range => (4.days.ago..Time.now))
   	widget = FnordMetric::Widget.new(:report => report)
   	widget.report.should == report
   end
  
   it "should add the report after init" do
-  	FnordMetric.define(:my_metric, :sum => :my_field)
+  	FnordMetric.metric(:my_metric, :sum => :my_field)
   	report = FnordMetric.report(:range => (4.days.ago..Time.now))
   	widget = FnordMetric::Widget.new
   	widget.report.should be_nil
@@ -28,8 +28,8 @@ describe FnordMetric::Widget do
   end
 
   it "should define a new widget when given two metric-token" do
-    FnordMetric.define(:first_metric, :count => :true)
-    FnordMetric.define(:second_metric, :count => :true)
+    FnordMetric.metric(:first_metric, :count => :true)
+    FnordMetric.metric(:second_metric, :count => :true)
     widget = FnordMetric::Widget.new(:metrics => [:first_metric, :second_metric], :title => "My Widget", :type => :timeline)
     widget.metrics.length.should == 2
     widget.metrics.first.should be_a(FnordMetric::CountMetric)
@@ -40,8 +40,8 @@ describe FnordMetric::Widget do
 
   it "should define a new widget when given two metrics" do
     my_metrics = [
-      FnordMetric.define(:first_metric, :count => :true),
-      FnordMetric.define(:second_metric, :count => :true)
+      FnordMetric.metric(:first_metric, :count => :true),
+      FnordMetric.metric(:second_metric, :count => :true)
     ]
     widget = FnordMetric::Widget.new(:metrics => my_metrics, :title => "My Widget", :type => :timeline)
     widget.metrics.length.should == 2

@@ -19,7 +19,7 @@ describe FnordMetric::Dashboard do
 
   it "should add a widget" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
-    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.metric(:my_metric, :sum => :my_field)
     widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     dashboard.add_widget(widget)
     dashboard.widgets.first.should == widget
@@ -27,14 +27,14 @@ describe FnordMetric::Dashboard do
 
   it "should add a widget by name" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }
-    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.metric(:my_metric, :sum => :my_field)
     widget = FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     dashboard.add_widget(:my_widget)
     dashboard.widgets.first.should == widget
   end
 
   it "should add the report on init (and to all widgets)" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.metric(:my_metric, :sum => :my_field)
     report = FnordMetric.report(:range => (4.days.ago..Time.now))
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard', :report => report){ |dash|       
       dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
@@ -44,7 +44,7 @@ describe FnordMetric::Dashboard do
   end
 
   it "should add the report after init (and to all widgets)" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.metric(:my_metric, :sum => :my_field)
     report = FnordMetric.report(:range => (4.days.ago..Time.now))
     dashboard = FnordMetric::Dashboard.new(:title => 'My Foobar Dashboard'){ |dash| 
       dash.add_widget FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)

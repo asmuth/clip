@@ -7,7 +7,7 @@ describe FnordMetric do
   end
 
   it "should define a new metric" do
-    FnordMetric.define(:myfield_total, :sum => :myfield)
+    FnordMetric.metric(:myfield_total, :sum => :myfield)
     FnordMetric.metrics.keys.should include(:myfield_total)
     FnordMetric.metrics[:myfield_total].should be_a(FnordMetric::Metric)
   end
@@ -29,13 +29,13 @@ describe FnordMetric do
   end
 
   it "should define a new widget" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.metric(:my_metric, :sum => :my_field)
     FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget", :type => :timeline)
     FnordMetric.widgets[:my_widget].title.should == "My Widget"
   end
 
   it "should raise an error if no type option is provided" do
-    FnordMetric.define(:my_metric, :sum => :my_field)
+    FnordMetric.metric(:my_metric, :sum => :my_field)
     lambda{
       FnordMetric.widget(:my_widget, :metrics => :my_metric, :title => "My Widget")      
     }.should raise_error(RuntimeError)

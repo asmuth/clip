@@ -42,25 +42,25 @@ describe FnordMetric::Report do
     end
   
     it "should create a sum-metric if the sum-option is provided" do
-      FnordMetric.define(:testmetric, :sum => :field_name)
+      FnordMetric.metric(:testmetric, :sum => :field_name)
       report = FnordMetric.report(:range => (3.days.ago..Time.now))
       report.testmetric.should be_a(FnordMetric::SumMetric)
     end
 
     it "should create avg-metric if the avg-option is provided" do
-      FnordMetric.define(:testmetric, :average => :field_name)
+      FnordMetric.metric(:testmetric, :average => :field_name)
       report = FnordMetric.report(:range => (3.days.ago..Time.now))
       report.testmetric.should be_a(FnordMetric::AverageMetric)
     end
 
     it "should create a count-metric if the count-option is provided" do
-      FnordMetric.define(:testmetric, :count => true)
+      FnordMetric.metric(:testmetric, :count => true)
       report = FnordMetric.report(:range => (3.days.ago..Time.now))
       report.testmetric.should be_a(FnordMetric::CountMetric)
     end
 
     it "should create a sum-metric if the sum-option is provided" do
-      FnordMetric.define(:testmetric, :combine => :lambda)
+      FnordMetric.metric(:testmetric, :combine => :lambda)
       report = FnordMetric.report(:range => (3.days.ago..Time.now))
       report.testmetric.should be_a(FnordMetric::CombineMetric)
     end
@@ -70,10 +70,10 @@ describe FnordMetric::Report do
   private
 
   def build_car_report_for_test!
-    FnordMetric.define(:colors_total, :count => true, :unique => :color) 
-    FnordMetric.define(:cars_total, :count => true) 
-    FnordMetric.define(:passengers_total, :sum => :passengers) 
-    FnordMetric.define(:average_speed, :average => :speed)
+    FnordMetric.metric(:colors_total, :count => true, :unique => :color) 
+    FnordMetric.metric(:cars_total, :count => true) 
+    FnordMetric.metric(:passengers_total, :sum => :passengers) 
+    FnordMetric.metric(:average_speed, :average => :speed)
     FnordMetric.track('car_seen', :color => "red",  :speed => 130, :passengers => 2)
     FnordMetric.track('car_seen', :color => "pink", :speed => 150, :passengers => 1)
     FnordMetric.track('car_seen', :color => "red",  :speed => 65,  :passengers => 4)
