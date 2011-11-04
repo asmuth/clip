@@ -7,8 +7,6 @@ FnordMetric = {
 
   init: function(){
     if(widget_config.path_prefix){ FnordMetric.p = widget_config.path_prefix; } 
-    console.log(widget_config);
-    console.log(FnordMetric.p);
   },
 
   js: function(url, callback){
@@ -16,7 +14,6 @@ FnordMetric = {
     s.type = "text/javascript";
     s.onload = callback;
     FnordMetric.init();
-    console.log(url);
     s.src = FnordMetric.p+url;
     FnordMetric.tag('head')[0].appendChild(s);  
   },
