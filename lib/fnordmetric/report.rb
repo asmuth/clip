@@ -6,7 +6,7 @@ class FnordMetric::Report
     @options = options
     @metrics = Hash.new
     @events = Array.new
-    _metrics.each{ |m| self.add_metric!(m) }
+    _metrics.each{ |k,m| self.add_metric!(m) }
   end
 
   def add_metric!(metric)
