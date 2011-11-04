@@ -23,6 +23,7 @@ GEM
       bundler (~> 1.0.0)
       git (>= 1.2.5)
       rake
+    json (1.6.1)
     mongo (1.4.0)
       bson (= 1.4.0)
     mongoid (2.2.0)
@@ -58,6 +59,7 @@ DEPENDENCIES
   delorean
   haml
   jeweler (~> 1.5.2)
+  json
   mongo (~> 1.4.0)
   mongoid (~> 2.2.0)
   rack
