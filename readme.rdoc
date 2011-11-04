@@ -7,12 +7,13 @@ fnordmetric is a ruby event tracking gem
 
 == Usage: Standalone service
 
-you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would look like this:
+you can run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would propably look something like this:
 
   require "rubygems"
   require "fnordmetric"
   require "thin"
 
+  FnordMetric.metric(:cars_total, :count => :true, :types => [:car_seen])
   FnordMetric.metric(:passengers_total, :sum => :passengers, :types => [:car_seen])
   FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :color => :red }, :types => [:car_seen]) 
   FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :color => :blue }, :types => [:car_seen]) 
@@ -27,8 +28,8 @@ you can also run the fnordmetric webapp as a standalone service. Your 'fnordmetr
     )
     
     passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
-      :metrics => [:passengers_total, :blue_to_red_ratio],
-      :title => "Passenger total + Red/Blue Ratio", 
+      :metrics => [:cars_total, :passengers_total, :blue_to_red_ratio],
+      :title => "Cars total + Passenger total + Red/Blue Ratio", 
       :autoupdate => true,
       :type => :numbers
     )
