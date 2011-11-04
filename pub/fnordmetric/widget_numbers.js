@@ -11,8 +11,7 @@ FnordMetric.js('/jquery-1.6.1.min.js', function(){
       $('body').append(container=$('<div></div>').attr('class', 'numbers_container').attr('rel', widget_config.metrics[n]));
       container.append($('<div></div>').addClass('title').html(widget_config.metrics[n]));
       for(var k in widget_config.intervals){
-        var u = FnordMetric.p+"/metric/"+widget_config.metrics[n]+'?'+widget_config.intervals[k];
-        container.append($('<div></div>').addClass('number').attr('rel', u).attr('data',0).append(
+        container.append($('<div></div>').addClass('number').attr('rel', k).attr('data',0).append(
           $('<span></span>').addClass('value').html(0)
         ).append(
           $('<span></span>').addClass('desc').html(k)
@@ -23,13 +22,17 @@ FnordMetric.js('/jquery-1.6.1.min.js', function(){
 
   function updateDataAndValues(){
     for(n in widget_config.metrics){
-      $.get(FnordMetric.p+'/metric/'+widget_config.metrics[n], updateSingleNumber(widget_config.metrics[n]));
+      for(k in widget_config.intervals){
+        var _url = FnordMetric.p+'/metric/'+widget_config.metrics[n]+'?'+widget_config.intervals[k];
+        $.get(_url, updateSingleNumber(widget_config.metrics[n], k));
+      }
     }
   }
 
-  function updateSingleNumber(metric_name){
+  function updateSingleNumber(metric_name, interval_name){
     return function(json){
-      $('.number:first', $('.numbers_container[rel="'+metric_name+'"]')).attr('data', json.value);
+      var _elem = $('.number[rel="'+interval_name+'"]', $('.numbers_container[rel="'+metric_name+'"]'));
+      _elem.attr('data', json.value);
       updateValues(4);
     };
   }
