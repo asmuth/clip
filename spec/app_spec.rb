@@ -19,8 +19,10 @@ describe "app" do
   end
 
   it "should render the dashboard" do
+    FnordMetric.dashboard("Deine Mama"){|dash|}
   	get "/dashboard/default"
   	last_response.status.should == 200
+    last_response.body.should include("Deine Mama")
   end
 
   it "should render the right dashboard" do
