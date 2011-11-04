@@ -31,9 +31,7 @@ class FnordMetric::Widget
 
   def ticks
     range_to_i.step(tick.to_i).map{ |ts|
-      te = Time.at(ts+tick.to_i)
-      next unless range_to_i.include?(te.to_i) || include_current?
-      (Time.at(ts)..Time.at(te))
+      (Time.at(ts)..Time.at(ts+tick.to_i))
     }.compact
   end
 
