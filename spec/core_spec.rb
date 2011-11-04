@@ -9,8 +9,7 @@ describe FnordMetric do
   it "should define a new metric" do
     FnordMetric.define(:myfield_total, :sum => :myfield)
     FnordMetric.metrics.keys.should include(:myfield_total)
-    FnordMetric.metrics[:myfield_total][:name].should == :myfield_total
-    FnordMetric.metrics[:myfield_total][:sum].should == :myfield
+    FnordMetric.metrics[:myfield_total].should be_a(FnordMetric::Metric)
   end
 
   it "should define a new dashboard" do
