@@ -1,11 +1,11 @@
 class FnordMetric::Event  
-  include Mongoid::Document
+#  include Mongoid::Document
 
-  self.collection_name = 'fnordmetric_event' 
+#  self.collection_name = 'fnordmetric_event' 
 
-  field :type, :type => String
-  field :client, :type => Integer
-  field :data, :type => Hash
+#  field :type, :type => String
+#  field :client, :type => Integer
+#  field :data, :type => Hash
 
   def self.track!(event_type, event_data)
     event_data.to_options!

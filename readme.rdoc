@@ -5,6 +5,32 @@ fnordmetric is a ruby event tracking gem
 {<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
 
 
+
+== Limitations
+
+Events can't be added retroactively, since we use stateful counters in redis. If you loose your redis db, history data can be replayed, but the recorded events need to be in a chronolgical order.
+
+If you run fnordmetric on multiple machines (and shared database/redis) make shure the system clocks are in sync.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+= Old stuff
+
 == Usage: Standalone service
 
 you can run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would propably look something like this:

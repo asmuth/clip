@@ -63,4 +63,8 @@ module FnordMetric
     @@dashboards
   end
 
+  def self.run
+    FnordMetric::Builder.new   
+  end
+
 end

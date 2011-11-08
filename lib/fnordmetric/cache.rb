@@ -1,10 +1,10 @@
 class FnordMetric::Cache
-  include Mongoid::Document
+#  include Mongoid::Document
 
-  self.collection_name = 'fnordmetric_cache' 
+#  self.collection_name = 'fnordmetric_cache' 
 
-  field :cache_key, :type => String
-  field :data, :type => Hash
+#  field :cache_key, :type => String
+#  field :data, :type => Hash
 
   def self.store!(cache_key, data)
     data = { :value => data } unless data.is_a?(Hash)
