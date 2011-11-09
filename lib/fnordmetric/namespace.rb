@@ -1,18 +1,14 @@
 class FnordMetric::Namespace
 
-	@@opts = [:event]
+	@@opts = [:event, :gauge]
 
 	def initialize(key)
-	  @handlers = {}
+	  @handlers = Hash.new([])
 	  @key = key
 	end
 
-    def announce(event)
-      #puts "<#{@key}> #{event}"
-      return if !event["_type"]
-      if (handler=@handlers[event["_type"]])
-      	handler.call(event)
-      end      
+    def announce(event)            
+      @handlers[event["_type"]].each{ |c| c.call(event) }
     end
 
 	def method_missing(m, *args, &block)
@@ -20,9 +16,15 @@ class FnordMetric::Namespace
       send(:"opt_#{m}", *args, &block)
 	end
 
-	def opt_event(event_type, &block)
-	  @handlers[event_type.to_s] = block
-      puts "event registered: #{event_type}"
+	def opt_event(event_type, opts={}, &block)
+	  opts.merge!(:block => block)
+	  FnordMetric::Context.new(opts).tap do |context|
+	    @handlers[event_type.to_s] << context
+	  end      
+	end
+
+	def opt_gauge(gauge_key, opts={})
+		puts "new gauge: #{gauge_key}"
 	end
     
 end

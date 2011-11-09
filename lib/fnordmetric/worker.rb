@@ -3,10 +3,23 @@ class FnordMetric::Worker
   @@expiration_time = 10
   @@idle_time = 0.3
 
-  def initialize(opts)
+  def initialize(namespaces, opts)    
+    @namespaces = {}
     @opts = opts
-    @redis = opts.fetch(:redis)
+    @redis = Redis.new    
+    configure(namespaces)
     loop{ work! }
+  end
+
+  def configure(namespaces)   
+    namespaces.each do |key, block|
+      @namespaces[key] = FnordMetric::Namespace.new(key)
+      @namespaces[key].instance_eval(&block)
+    end
+  end
+
+  def namespace(key)
+    (@namespaces[key] || @namespaces.first.last)
   end
 
   def pubsub_key
@@ -31,8 +44,8 @@ class FnordMetric::Worker
 
   def process_event(event_data)
     JSON.parse(event_data).tap do |event|      
-      namespace = FnordMetric.namespace(event["_namespace"])
-      namespace.announce(event)
+      event.merge(:time => Time.now.getutc.to_i)
+      namespace(event["_namespace"]).announce(event)      
     end
   end
 
