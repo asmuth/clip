@@ -33,6 +33,7 @@ end
 require "fnordmetric/worker"
 require "fnordmetric/namespace"
 require "fnordmetric/context"
+require "fnordmetric/gauge"
 
 
 #require "fnordmetric/app"

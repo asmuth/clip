@@ -3,4 +3,3 @@ rdoc
 .bundle
 pkg
 db/*.sqlite
-server.rb

@@ -5,7 +5,7 @@ class FnordMetric::Worker
 
   def initialize(namespaces, opts)    
     @namespaces = {}
-    @opts = opts
+    @opts = opts    
     @redis = Redis.new    
     configure(namespaces)
     loop{ work! }
@@ -13,7 +13,8 @@ class FnordMetric::Worker
 
   def configure(namespaces)   
     namespaces.each do |key, block|
-      @namespaces[key] = FnordMetric::Namespace.new(key)
+      opts = @opts.merge(:redis => @redis, :gauge_key => gauge_key)
+      @namespaces[key] = FnordMetric::Namespace.new(key, opts)
       @namespaces[key].instance_eval(&block)
     end
   end
@@ -34,6 +35,10 @@ class FnordMetric::Worker
     [@opts[:redis_prefix], 'event', event_id].join("-")
   end
 
+  def gauge_key
+    [@opts[:redis_prefix], 'gauge'].join("-")
+  end
+
   def try_event(event_id) 
     event_data = @redis.get(event_key(event_id))
     return false unless event_data
@@ -44,7 +49,7 @@ class FnordMetric::Worker
 
   def process_event(event_data)
     JSON.parse(event_data).tap do |event|      
-      event.merge(:time => Time.now.getutc.to_i)
+      event.merge!(:time => Time.now.getutc.to_i)
       namespace(event["_namespace"]).announce(event)      
     end
   end
