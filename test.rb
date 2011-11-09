@@ -16,6 +16,6 @@ event = { :_type => "foobar" }.to_json
 
 end
 
-redis.keys("fnordmetric-gauge-blubbers*").each do |k|
+redis.keys("fnordmetric-blubber*").each do |k|
   puts "#{k} -> #{redis.get(k)}"
 end

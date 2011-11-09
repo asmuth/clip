@@ -13,7 +13,7 @@ class FnordMetric::Worker
 
   def configure(namespaces)   
     namespaces.each do |key, block|
-      opts = @opts.merge(:redis => @redis, :gauge_key => gauge_key)
+      opts = @opts.merge(:redis => @redis)
       @namespaces[key] = FnordMetric::Namespace.new(key, opts)
       @namespaces[key].instance_eval(&block)
     end
@@ -33,10 +33,6 @@ class FnordMetric::Worker
 
   def event_key(event_id)
     [@opts[:redis_prefix], 'event', event_id].join("-")
-  end
-
-  def gauge_key
-    [@opts[:redis_prefix], 'gauge'].join("-")
   end
 
   def try_event(event_id) 
