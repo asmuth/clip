@@ -1,12 +1,14 @@
 require 'rubygems'
 #require 'mongoid'
 require 'redis'
+require 'json'
 #require 'haml'
 #require 'sinatra/base'
 
 require "fnordmetric/core"
 require "fnordmetric/builder"
 require "fnordmetric/worker"
+require "fnordmetric/namespace"
 
 #require "fnordmetric/app"
 #require "fnordmetric/metric_api"

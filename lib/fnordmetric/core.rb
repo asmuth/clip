@@ -4,6 +4,7 @@ module FnordMetric
   
   @@metrics = {}
   @@widgets = {}
+  @@namespaces = Hash.new
   @@dashboards = Array.new
 
   def self.define(metric_name, options)
@@ -65,6 +66,16 @@ module FnordMetric
 
   def self.run
     FnordMetric::Builder.new   
+  end
+
+  def self.namespace(key=nil, &block)    
+    return namespace_for(key) unless block_given?
+    @@namespaces[key] = FnordMetric::Namespace.new(key)
+    @@namespaces[key].instance_eval(&block)
+  end
+
+  def self.namespace_for(key)
+    (@@namespaces[key] || @@namespaces.first.last)
   end
 
 end

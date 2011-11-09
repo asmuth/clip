@@ -5,7 +5,7 @@ class FnordMetric::Builder
   	opts[:redis] = Redis.new
   	opts[:redis_prefix] ||= "fnordmetric"    
     
-    4.times do 
+    1.times do 
       start_worker!(opts)
     end
 

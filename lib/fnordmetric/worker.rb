@@ -29,6 +29,13 @@ class FnordMetric::Worker
     expire_event(event_id)
   end
 
+  def process_event(event_data)
+    JSON.parse(event_data).tap do |event|      
+      namespace = FnordMetric.namespace(event["_namespace"])
+      namespace.announce(event)
+    end
+  end
+
   def expire_event(event_id)
     @redis.expire(event_key(event_id), @@expiration_time)
   end
@@ -37,16 +44,11 @@ class FnordMetric::Worker
     @redis.publish(pubsub_key, event_id)
   end
 
-  def process_event(event_data)
-    print "!"
-  end
-
   def work!(_key=queue_key)
     (n=@redis.rpop(_key)) ? try_event(n) : idle!
   end
 
   def idle!
-    print(".")
     sleep(@@idle_time)
   end
 
