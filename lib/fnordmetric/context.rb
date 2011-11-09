@@ -18,17 +18,23 @@ class FnordMetric::Context
   end
 
   def incr(gauge_name, value=1)
-    gauge = fetch_gauge(gauge_name)
-    error! "error: 'incr' can only be used with numeric gauges" unless gauge.numeric?
+    gauge = fetch_gauge(gauge_name)    
+    assure_two_dimensional!(gauge)
     if gauge.progressive?
-      head = @redis.incrby(gauge.key_head, value).inspect
-      @redis.setnx(gauge.key_at(time), head)
+      head = @redis.incrby(gauge.key(:head), value).inspect
+      @redis.hsetnx(gauge.key, gauge.tick_at(time), head)
     end
-    @redis.incrby(gauge.key_at(time), value)    
+    @redis.hincrby(gauge.key, gauge.tick_at(time), value)    
   end  
 
-  def key(gauge, at=time)
-    fetch_gauge(gauge).key_at(time)
+  def incr_field(gauge_name, field_name, value=1)
+    gauge = fetch_gauge(gauge_name)
+    assure_three_dimensional!(gauge)
+    #here be dragons
+  end
+
+  def key(gauge)
+    fetch_gauge(gauge).key
   end
 
   def time
@@ -47,4 +53,15 @@ protected
     puts(msg); exit!
   end
 
+  def assure_two_dimensional!(gauge)
+    return true if gauge.two_dimensional?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with 2-dimensional gauges" 
+  end
+
+  def assure_three_dimensional!(gauge)
+    return true unless gauge.two_dimensional?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with 3-dimensional gauges" 
+  end
+
 end
+    

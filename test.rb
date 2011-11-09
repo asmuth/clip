@@ -2,20 +2,33 @@ require "redis"
 require "json"
 
 redis = Redis.new
-
-# send 10.000 simple events to fnordmetric
-
 event = { :_type => "foobar" }.to_json
 
-10000.times do |i| 
+loop do
 
-  my_uuid = i.to_s # generate a unique event id ;)
+  # send 10.000 simple events to fnordmetric
+    
+  10000.times do |i| 
 
-  redis.lpush("fnordmetric-queue", my_uuid) 
-  redis.set("fnordmetric-event-#{my_uuid}", event)
+    my_uuid = i.to_s # generate a unique event id ;)
 
-end
+    redis.lpush("fnordmetric-queue", my_uuid) 
+    redis.set("fnordmetric-event-#{my_uuid}", event)
 
-redis.keys("fnordmetric-blubber*").each do |k|
-  puts "#{k} -> #{redis.get(k)}"
+  end
+
+  # see what that did
+
+  redis.keys("fnordmetric-blubber*").each do |k|
+    begin
+      puts "#{k} -> #{redis.get(k)}"
+    rescue
+      redis.hgetall(k).each do |_k,v|
+        puts "#{k} -> #{_k} -> #{v}"
+      end
+    end
+  end
+
+  puts "\n#{"-"*30}\n\n"
+
 end
