@@ -35,12 +35,17 @@ class FnordMetric::Worker
     [@opts[:redis_prefix], 'event', event_id].join("-")
   end
 
+  def stats_key(stat)
+    [@opts[:redis_prefix], 'stats', stat].join("-")
+  end
+
   def try_event(event_id) 
     event_data = @redis.get(event_key(event_id))
     return false unless event_data
     publish_event(event_id)
     process_event(event_data)    
     expire_event(event_id)
+    @redis.incr(stats_key(:events_processed))
   end
 
   def process_event(event_data)

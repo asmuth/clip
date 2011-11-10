@@ -14,17 +14,26 @@ module FnordMetric
 
   def self.run(opts={})
     opts[:redis_prefix] ||= "fnordmetric"    
+
+    redis = Redis.new
     
-    1.times do 
+    4.times do 
       start_worker!(opts)
     end
 
-    loop{ sleep 1 }  
+    loop{ sleep 2; print_stats!(redis, opts[:redis_prefix]) }  
   end
 
   def self.start_worker!(opts)      
     Process.fork do       
       FnordMetric::Worker.new(@@namespaces.clone, opts)
+    end
+  end
+
+  def self.print_stats!(redis, prefix)
+    redis.keys("#{prefix}-stats*").each do |k|
+      t = Time.now.strftime("%y-%m-%d %H:%M:%S")
+      puts "[#{t}] #{k.gsub("#{prefix}-stats-", '')} => #{redis.get(k)}"
     end
   end
 
