@@ -16,38 +16,56 @@ module FnordMetric
     @@namespaces[key] = block    
   end
 
+  def self.time_str
+    Time.now.strftime("%y-%m-%d %H:%M:%S")
+  end
+
   def self.run(opts={})
+    start_em(opts) 
+  rescue Exception => e
+    puts "[#{time_str}] !!! eventmachine died, restarting... #{e.message}"
+    sleep(1); run(opts)  
+  end
+
+  def self.start_em(opts)
     opts[:redis_prefix] ||= "fnordmetric"            
     EM.run do
-      redis = EM::Hiredis.connect("redis://localhost:6379")
 
+      redis = EM::Hiredis.connect("redis://localhost:6379")
       FnordMetric::Worker.new(@@namespaces.clone, opts)
 
       begin
         EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
-        puts "listening on tcp#1337 for json event data"
+        puts "[#{time_str}] listening on tcp#1337 for json event data"
       rescue
-        puts "cant start FnordMetric::InboundStream. port in use?"
+        puts "[#{time_str}] !!! cant start FnordMetric::InboundStream. port in use?"
       end
 
       EventMachine::PeriodicTimer.new(1){ heartbeat!(opts, redis) }
+
+      proc{
+        puts "\n[#{time_str}] shutting down, byebye"
+        EM.stop
+      }.tap do |shutdown|
+        trap("TERM", shutdown)
+        trap("INT", shutdown)
+      end
+      
     end 
   end
 
   def self.heartbeat!(opts, redis, keys=@@stat_keys) 
     redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|
-      time_part = Time.now.strftime("%y-%m-%d %H:%M:%S")
       if queue_length > 50000
-        puts "[#{time_part}] !!! node overloaded, dropping queue !!!"
+        puts "[#{time_str}] !!! node overloaded, dropping queue !!!"
         redis.del("#{opts[:redis_prefix]}-queue")
       end
       redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
         data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}.join(", ")
-        puts "[#{time_part}] #{data_human}, queue_length: #{queue_length}"
+        puts "[#{time_str}] #{data_human}, queue_length: #{queue_length}"
       end  
     end
   end
-
 
 end
 
