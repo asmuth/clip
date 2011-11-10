@@ -12,7 +12,7 @@ if [ "$1" != "stream" ]
 else
   while true; do
     echo "{\"_type\": \"foobar\"}"
-    sleep 0.0001
+    sleep 0.001
   done
 fi
 
