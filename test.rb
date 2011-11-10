@@ -6,16 +6,16 @@ event = { :_type => "foobar" }.to_json
 
 loop do
 
-  # send 10.000 simple events to fnordmetric
+  # send 1.000 simple events to fnordmetric
     
-  #5000.times do |i| 
+  1000.times do |i| 
 
-    #my_uuid = rand(9999999999999999999).to_s # generate a unique event id ;)
+    my_uuid = rand(9999999999999999999).to_s # generate a unique event id ;)
 
-    #redis.lpush("fnordmetric-queue", my_uuid) 
-    #redis.set("fnordmetric-event-#{my_uuid}", event)
+    redis.lpush("fnordmetric-queue", my_uuid) 
+    redis.set("fnordmetric-event-#{my_uuid}", event)
 
-  #end
+  end
 
   sleep 5
 
