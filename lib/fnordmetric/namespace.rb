@@ -6,12 +6,16 @@ class FnordMetric::Namespace
 	  @opts = opts
 	  @gauges = Hash.new
 	  @handlers = Hash.new([])	  
-	  @redis = opts.delete(:redis)
 	  @key = key	  
+    @redis = EM::Hiredis.connect("redis://localhost:6379")
 	end
 
+  def ready!
+    self
+  end
+
     def announce(event)            
-      @handlers[event["_type"]].each{ |c| c.clone.call(event) }
+      @handlers[event["_type"]].each{ |c| c.clone.call(event, @redis) }
     end
 
     def key_prefix

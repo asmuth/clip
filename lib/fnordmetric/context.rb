@@ -3,12 +3,14 @@ class FnordMetric::Context
   def initialize(opts, block)
     @block = block
   	@opts = opts    
-    @redis = opts.fetch(:redis)
   end
 
-  def call(event)
+  def call(event, redis)
+    @redis = redis
   	@event = event    
   	self.instance_eval(&@block)
+  rescue Exception => e
+   puts "error: #{e.message}"
   end
 
   private
@@ -21,10 +23,14 @@ class FnordMetric::Context
     gauge = fetch_gauge(gauge_name)    
     assure_two_dimensional!(gauge)
     if gauge.progressive?
-      head = @redis.incrby(gauge.key(:head), value).inspect
-      @redis.hsetnx(gauge.key, gauge.tick_at(time), head)
+      @redis.incrby(gauge.key(:head), value).callback{ |head|
+        @redis.hsetnx(gauge.key, gauge.tick_at(time), head).callback{
+          @redis.hincrby(gauge.key, gauge.tick_at(time), value)    
+        }
+      }
+    else
+      @redis.hincrby(gauge.key, gauge.tick_at(time), value)    
     end
-    @redis.hincrby(gauge.key, gauge.tick_at(time), value)    
   end  
 
   def incr_field(gauge_name, field_name, value=1)
