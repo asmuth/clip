@@ -59,8 +59,8 @@ class FnordMetric::Worker
   def process_event(event)
     EM.defer do
       event.merge!(:time => Time.now.getutc.to_i)
-      namespace(event["_namespace"]).clone.ready!.announce(event)          
       EM.next_tick(&method(:tick))
+      namespace(event["_namespace"]).clone.ready!.announce(event)          
     end
   end
 
