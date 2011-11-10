@@ -8,9 +8,9 @@ class FnordMetric::Worker
     @opts = opts    
     @parser = Yajl::Parser.new
     @parser.on_parse_complete = method(:process_event)
-    @redis = Redis.new    
+    @redis = EM::Hiredis.connect("redis://localhost:6379")
     configure(namespaces)
-    loop{ work! }
+    tick
   end
 
   def configure(namespaces)   
@@ -18,6 +18,16 @@ class FnordMetric::Worker
       opts = @opts.merge(:redis => @redis)
       @namespaces[key] = FnordMetric::Namespace.new(key, opts)
       @namespaces[key].instance_eval(&block)
+    end
+  end
+
+  def tick
+    @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|      
+      @redis.get(event_key(event_id)).callback do |event_data|   
+        push_event(event_id, event_data) if event_data
+        @redis.hincrby(stats_key, :events_processed, 1)
+      end
+      EM.next_tick(&method(:tick))
     end
   end
 
@@ -37,17 +47,14 @@ class FnordMetric::Worker
     [@opts[:redis_prefix], 'event', event_id].join("-")
   end
 
-  def stats_key(stat)
-    [@opts[:redis_prefix], 'stats', stat].join("-")
+  def stats_key
+    [@opts[:redis_prefix], 'stats'].join("-")
   end
 
-  def try_event(event_id) 
-    event_data = @redis.get(event_key(event_id))
-    return false unless event_data
+  def push_event(event_id, event_data)            
     publish_event(event_id)
     @parser << event_data
     expire_event(event_id)
-    @redis.incr(stats_key(:events_processed))
   end
 
   def process_event(event)
@@ -55,22 +62,12 @@ class FnordMetric::Worker
     namespace(event["_namespace"]).announce(event)          
   end
 
-
-
   def expire_event(event_id)
     @redis.expire(event_key(event_id), @@expiration_time)
   end
 
   def publish_event(event_id)
     @redis.publish(pubsub_key, event_id)
-  end
-
-  def work!(_key=queue_key)
-    (n=@redis.rpop(_key)) ? try_event(n) : idle!
-  end
-
-  def idle!
-    sleep(@@idle_time)
   end
 
 end

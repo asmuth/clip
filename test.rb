@@ -8,7 +8,7 @@ loop do
 
   # send 1.000 simple events to fnordmetric
     
-  1000.times do |i| 
+  10000.times do |i| 
 
     my_uuid = rand(9999999999999999999).to_s # generate a unique event id ;)
 

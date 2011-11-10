@@ -26,7 +26,7 @@ module FnordTransport
 end
 
 
-EventMachine::run do
+EventMachine::run do  
   EventMachine::start_server "0.0.0.0", 1337, FnordTransport
 end
 
