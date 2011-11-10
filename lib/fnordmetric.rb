@@ -20,7 +20,8 @@ module FnordMetric
     opts[:redis_prefix] ||= "fnordmetric"            
     EM.run do
       redis = EM::Hiredis.connect("redis://localhost:6379")
-      10.times{ FnordMetric::Worker.new(@@namespaces.clone, opts) }
+
+      FnordMetric::Worker.new(@@namespaces.clone, opts)
 
       begin
         EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
