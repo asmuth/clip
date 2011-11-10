@@ -6,9 +6,10 @@ fnordmetric is a ruby event tracking gem
 
 
 
-== Limitations
 
-==== Events can't be added retroactively.
+=== Gotcha: Events can't be added retroactively.
+
+All gauge values are calculated in a 'stateful'/'progressive' manner. Most of the modifiactor methods (incr, etc) assume that time can only go in one direction: forward. that means:
 
 -> If you loose your redis db, you'll need to replay all recorded events in the correct chronological order. 
 
@@ -16,13 +17,7 @@ fnordmetric is a ruby event tracking gem
 
 -> If the events were captured on multiple machines you need to merge and sort(!) the log-files first before they can be replayed.
 
-
-==== Multiple instances don't sync
-
 -> If you run fnordmetric on multiple machines, you need to make shure the system clocks are in sync!
-
-
-==== Queries/Graphs can't be added retroactively
 
 -> If you wan't a new query/graph for history data, you'll have to replay your logs...
 
