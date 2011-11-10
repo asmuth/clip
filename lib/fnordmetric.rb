@@ -26,11 +26,14 @@ module FnordMetric
     end 
   end
 
-  def self.print_stats!(opts, redis, keys=@@stat_keys)      
-    redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
-      data_human = keys.size.times.map{|n|"#{keys[n]} => #{data[n]}"}.join(", ")
-      puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{data_human}"
-    end  
+  def self.print_stats!(opts, redis, keys=@@stat_keys) 
+    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|
+      redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
+        data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}.join(", ")
+        time_part = Time.now.strftime("%y-%m-%d %H:%M:%S")
+        puts "[#{time_part}] #{data_human}, queue_length: #{queue_length}"
+      end  
+    end
   end
 
 end
