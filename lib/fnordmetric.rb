@@ -21,7 +21,14 @@ module FnordMetric
     EM.run do
       redis = EM::Hiredis.connect("redis://localhost:6379")
       10.times{ FnordMetric::Worker.new(@@namespaces.clone, opts) }
-      EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
+
+      begin
+        EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
+        puts "listening on tcp#1337 for json event data"
+      rescue
+        puts "cant start FnordMetric::InboundStream. port in use?"
+      end
+
       EventMachine::PeriodicTimer.new(1){ heartbeat!(opts, redis) }
     end 
   end
