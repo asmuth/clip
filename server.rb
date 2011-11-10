@@ -11,6 +11,7 @@ FnordMetric.namespace :blubber do
     #incr(:blubbers_total, 1)
     incr(:blubbers_delta, 1)
     #puts "fuuu: #{data} ! #{key(:blubbers_total)}"
+    sleep 0.3
   end
 
 end

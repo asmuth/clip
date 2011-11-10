@@ -27,7 +27,6 @@ class FnordMetric::Worker
         push_event(event_id, event_data) if event_data
         @redis.hincrby(stats_key, :events_processed, 1)
       end
-      EM.next_tick(&method(:tick))
     end
   end
 
@@ -58,8 +57,11 @@ class FnordMetric::Worker
   end
 
   def process_event(event)
-    event.merge!(:time => Time.now.getutc.to_i)
-    namespace(event["_namespace"]).announce(event)          
+    EM.defer do
+      event.merge!(:time => Time.now.getutc.to_i)
+      namespace(event["_namespace"]).announce(event)          
+      EM.next_tick(&method(:tick))
+    end
   end
 
   def expire_event(event_id)
