@@ -8,9 +8,10 @@ FnordMetric.namespace :blubber do
   gauge :blubbers_total, :tick => 10, :progressive => true
 
   event :foobar do
-    incr(:blubbers_total, 1)
-    incr(:blubbers_delta, 1)
-    sleep 0.05  
+    50.times do # simulate load
+      incr(:blubbers_total, 1)
+      incr(:blubbers_delta, 1) 
+    end
     #puts "fuuu: #{data} ! #{key(:blubbers_total)}"
   end
 
