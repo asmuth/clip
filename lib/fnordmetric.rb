@@ -22,12 +22,16 @@ module FnordMetric
       redis = EM::Hiredis.connect("redis://localhost:6379")
       10.times{ FnordMetric::Worker.new(@@namespaces.clone, opts) }
       EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
-      EventMachine::PeriodicTimer.new(1){ print_stats!(opts, redis) }
+      EventMachine::PeriodicTimer.new(1){ heartbeat!(opts, redis) }
     end 
   end
 
-  def self.print_stats!(opts, redis, keys=@@stat_keys) 
+  def self.heartbeat!(opts, redis, keys=@@stat_keys) 
     redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|
+      if queue_length > 50000
+        puts "!!! node overloaded, dropping queue !!!"
+        redis.del("#{opts[:redis_prefix]}-queue")
+      end
       redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
         data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}.join(", ")
         time_part = Time.now.strftime("%y-%m-%d %H:%M:%S")
@@ -35,6 +39,7 @@ module FnordMetric
       end  
     end
   end
+
 
 end
 
