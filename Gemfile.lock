@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/brianmario/yajl-ruby.git
+  revision: eef5c48be81b6404af66da3f185ec9301e5214d8
+  specs:
+    yajl-ruby (1.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -16,6 +22,7 @@ GEM
     delorean (1.1.0)
       chronic
     diff-lcs (1.1.3)
+    eventmachine (0.12.10)
     git (1.2.5)
     haml (3.1.2)
     i18n (0.6.0)
@@ -58,6 +65,7 @@ DEPENDENCIES
   bson_ext (~> 1.4.0)
   bundler (~> 1.0.0)
   delorean
+  eventmachine
   haml
   jeweler (~> 1.5.2)
   json
@@ -69,3 +77,4 @@ DEPENDENCIES
   rspec (~> 2.6.0)
   shoulda
   sinatra (~> 1.2.6)
+  yajl-ruby!

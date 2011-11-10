@@ -6,6 +6,8 @@ class FnordMetric::Worker
   def initialize(namespaces, opts)    
     @namespaces = {}
     @opts = opts    
+    @parser = Yajl::Parser.new
+    @parser.on_parse_complete = method(:process_event)
     @redis = Redis.new    
     configure(namespaces)
     loop{ work! }
@@ -43,17 +45,17 @@ class FnordMetric::Worker
     event_data = @redis.get(event_key(event_id))
     return false unless event_data
     publish_event(event_id)
-    process_event(event_data)    
+    @parser << event_data
     expire_event(event_id)
     @redis.incr(stats_key(:events_processed))
   end
 
-  def process_event(event_data)
-    JSON.parse(event_data).tap do |event|      
-      event.merge!(:time => Time.now.getutc.to_i)
-      namespace(event["_namespace"]).announce(event)      
-    end
+  def process_event(event)
+    event.merge!(:time => Time.now.getutc.to_i)
+    namespace(event["_namespace"]).announce(event)          
   end
+
+
 
   def expire_event(event_id)
     @redis.expire(event_key(event_id), @@expiration_time)

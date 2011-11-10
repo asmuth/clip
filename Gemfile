@@ -5,10 +5,12 @@ gem "mongo", "~> 1.4.0"
 gem "bson_ext", "~> 1.4.0"
 gem "sinatra", "~> 1.2.6"
 gem "redis", "~> 2.2.2"
+gem "eventmachine"
 gem "json"
 gem "haml"
 gem "rack"
 gem "rack-test"
+gem "yajl-ruby", :git => "git://github.com/brianmario/yajl-ruby.git"
 
 
 group :development do  

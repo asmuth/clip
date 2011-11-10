@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'redis'
-require 'json'
+require 'yajl'
 #require 'sinatra/base'
 #require 'haml'
 
@@ -17,7 +17,7 @@ module FnordMetric
 
     redis = Redis.new
     
-    4.times do 
+    1.times do 
       start_worker!(opts)
     end
 
