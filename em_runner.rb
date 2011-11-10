@@ -17,6 +17,17 @@ module Runner
 
 end
 
+
+module Ticker
+
+  def self.tick
+    EM.defer(proc { print '.'; sleep 1; }, proc{ EM.next_tick(&method(:tick)) })
+    #EM.next_tick(&method(:next))    
+  end
+
+end
+
 EM.run do
+  Ticker.tick
   Runner.next
 end
