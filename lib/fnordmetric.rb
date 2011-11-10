@@ -9,6 +9,7 @@ require 'yajl'
 
 module FnordMetric
 
+  @@stat_keys = [:events_received, :events_processed]
   @@namespaces = {}
 
   def self.namespace(key=nil, &block)    
@@ -16,41 +17,20 @@ module FnordMetric
   end
 
   def self.run(opts={})
-    opts[:redis_prefix] ||= "fnordmetric"        
-
+    opts[:redis_prefix] ||= "fnordmetric"            
     EM.run do
-
-      4.times do
-        FnordMetric::Worker.new(@@namespaces.clone, opts)                
-      end
-
-      EventMachine::PeriodicTimer.new(1) do
-        print_stats!(opts)
-      end
-
-    end
-
-
-    #loop{ sleep 2; print_stats!(redis, opts[:redis_prefix]) }  
+      redis = EM::Hiredis.connect("redis://localhost:6379")
+      FnordMetric::Worker.new(@@namespaces.clone, opts)                
+      EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
+      EventMachine::PeriodicTimer.new(1){ print_stats!(opts, redis) }
+    end 
   end
 
-  #def self.start_worker!(opts)      
-  #  Process.fork do       
-      
-  #  end
-  #end
-
-  def self.print_stats!(opts)      
-    #EM.defer proc{        
-      redis = Redis.new
-      stats_key = "#{opts[:redis_prefix]}-stats"
-      time_str = Time.now.strftime("%y-%m-%d %H:%M:%S")
-      data = {
-        :events_processed => redis.hget(stats_key, :events_processed)
-      }      
-      puts "[#{time_str}] #{data.map{|k,v| "#{k} => #{v}"}.join(", ")}"
-      #redis.keys("#{opts[:redis_prefix]}-stats*").each do |k|
-    #}    
+  def self.print_stats!(opts, redis, keys=@@stat_keys)      
+    redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
+      data_human = keys.size.times.map{|n|"#{keys[n]} => #{data[n]}"}.join(", ")
+      puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{data_human}"
+    end  
   end
 
 end
@@ -59,7 +39,7 @@ require "fnordmetric/worker"
 require "fnordmetric/namespace"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
-
+require "fnordmetric/inbound_stream"
 
 #require "fnordmetric/app"
 #require "fnordmetric/metric_api"
