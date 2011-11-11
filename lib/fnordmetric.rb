@@ -69,11 +69,14 @@ module FnordMetric
 
 end
 
+require "fnordmetric/inbound_stream"
 require "fnordmetric/worker"
 require "fnordmetric/namespace"
+require "fnordmetric/gauge_modifiers"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
-require "fnordmetric/inbound_stream"
+
+
 
 #require "fnordmetric/app"
 #require "fnordmetric/metric_api"
