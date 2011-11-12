@@ -24,7 +24,11 @@ class FnordMetric::Worker
   def tick
     @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|      
       @redis.get(event_key(event_id)).callback do |event_data|   
-        push_event(event_id, event_data) if event_data
+        if event_data
+          push_event(event_id, event_data) 
+        else
+          EM.next_tick(&method(:tick))
+        end
         @redis.hincrby(stats_key, :events_processed, 1)
       end
     end
