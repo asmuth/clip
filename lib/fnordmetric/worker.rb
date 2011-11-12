@@ -23,12 +23,9 @@ class FnordMetric::Worker
 
   def tick
     @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|      
-      @redis.get(event_key(event_id)).callback do |event_data|   
-        if event_data
-          push_event(event_id, event_data) 
-        else
-          EM.next_tick(&method(:tick))
-        end
+      EM.next_tick(&method(:tick)) 
+      @redis.get(event_key(event_id)).callback do |event_data|                  
+        push_event(event_id, event_data) if event_data        
         @redis.hincrby(stats_key, :events_processed, 1)
       end
     end
@@ -63,7 +60,6 @@ class FnordMetric::Worker
   def process_event(event)
     EM.defer do
       event.merge!(:time => Time.now.getutc.to_i)
-      EM.next_tick(&method(:tick))
       namespace(event["_namespace"]).clone.ready!.announce(event)          
     end
   end
