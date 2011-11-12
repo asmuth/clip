@@ -15,8 +15,7 @@ class FnordMetric::Worker
 
   def configure(namespaces)   
     namespaces.each do |key, block|
-      opts = @opts.merge(:redis => @redis)
-      @namespaces[key] = FnordMetric::Namespace.new(key, opts)
+      @namespaces[key] = FnordMetric::Namespace.new(key, @opts.clone)
       @namespaces[key].instance_eval(&block)
     end
   end
