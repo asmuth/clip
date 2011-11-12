@@ -6,6 +6,21 @@ fnordmetric is a ruby event tracking gem
 
 
 
+=== Sending data
+
+The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
+
+  echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 2323
+
+The fast way: Add your event directly to the redis-based queue:
+
+  uuid = "sobv67a9v73sba74"
+  event = { :_type => "foobar" }.to_json
+
+  redis.lpush("fnordmetric-queue", uuid) 
+  redis.set("fnordmetric-event-#{my_uuid}", event)
+  redis.expire("fnordmetric-event-#{my_uuid}", 60)
+
 
 === Gotchas: 
 
