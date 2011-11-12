@@ -1,6 +1,7 @@
 class FnordMetric::Gauge
   
   def initialize(opts)
+    opts.fetch(:key) && opts.fetch(:key_prefix)
     @opts = opts
   end
 
