@@ -7,9 +7,13 @@ fnordmetric is a ruby event tracking gem
 
 
 
-=== Gotcha: Events can't be added retroactively.
+=== Gotchas: 
 
-All gauge values are calculated in a 'stateful'/'progressive' manner. Most of the modifiactor methods (incr, etc) assume that time can only go in one direction: forward. that means:
+-> It will drop events if it gets over capacity (prevent this by setting high timeouts)
+
+-> It will drop the queue if it's larger than 50k items (don't prevent this. it causes strange bugs)
+
+-> All gauge values are calculated in a 'stateful'/'progressive' manner. Most of the modifiactor methods (incr, etc) assume that time can only go in one direction: forward. that means Events can't be added retroactively:
 
 -> If you loose your redis db, you'll need to replay all recorded events in the correct chronological order. 
 
