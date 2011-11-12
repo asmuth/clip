@@ -98,7 +98,8 @@ describe FnordMetric::GaugeModifiers do
 
     it "should increment a progressive gauge by 1 and copy head" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_128"    
-      @redis.set(gauge_key+"-head",  "17")  
+      @redis.hdel(gauge_key, "695280200")
+      @redis.set(gauge_key+"-head", "17")  
       create_gauge_context({
         :key => "mygauge_128", 
         :tick => 10,
@@ -115,7 +116,8 @@ describe FnordMetric::GaugeModifiers do
 
     it "should increment a progressive gauge by 5 and copy head" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_121"    
-      @redis.set(gauge_key+"-head",  "19")  
+      @redis.hdel(gauge_key, "695280200")
+      @redis.set(gauge_key+"-head", "19")  
       create_gauge_context({
         :key => "mygauge_121", 
         :tick => 10,
