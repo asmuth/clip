@@ -12,7 +12,8 @@ class FnordMetric::Context
   	@event = event    
   	self.instance_eval(&@block)
   rescue Exception => e
-   puts "error: #{e.message}"
+    raise e  if ENV['FNORDMETRIC_ENV'] == 'test'
+    puts "error: #{e.message}"
   end
 
   private
@@ -34,10 +35,11 @@ protected
   def fetch_gauge(_gauge)
     _gauge.is_a?(FnordMetric::Gauge) ? _gauge : @opts[:gauges].fetch(_gauge)
   rescue
-    error! "error: gauge '#{name}' is undefined"
+    error! "error: gauge '#{_gauge}' is undefined"
   end
 
   def error!(msg)
+    raise msg if ENV['FNORDMETRIC_ENV'] == 'test'
     puts(msg); exit!
   end
 
