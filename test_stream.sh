@@ -95,7 +95,7 @@ else
     echo "{\"_type\": \"foobar\", \"_session\": \"fghfgh7asdfa\"}"
     echo "{\"_type\": \"foobar\", \"_session\": \"fghfgh7asdfa\"}"
     echo "{\"_type\": \"foobar\", \"_session\": \"fghfgh7asdfa\"}"
-    sleep 0.1
+    sleep 0.02
   done
 fi
 

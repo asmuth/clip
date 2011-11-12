@@ -17,6 +17,8 @@ class FnordMetric::InboundStream  < EventMachine::Connection
     my_uuid = rand(9999999999999999999).to_s # FIXME 
     @redis.set("fnordmetric-event-#{my_uuid}", event_data).callback do
       @redis.lpush("fnordmetric-queue", my_uuid)
+      # events that aren't processed within 60 seconds get dropped
+      @redis.expire("fnordmetric-event-#{my_uuid}", 60)      
     end
   end
 
