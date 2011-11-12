@@ -22,6 +22,8 @@ class FnordMetric::Namespace
     if event[:_session]      
       FnordMetric::Session.new(@opts.clone.merge(
         :namespace_key => @key, 
+        :namespace_prefix => key_prefix,
+        :redis => @redis,
         :event => event
       ))        
     end
