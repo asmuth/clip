@@ -76,6 +76,7 @@ require "fnordmetric/namespace"
 require "fnordmetric/gauge_modifiers"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
+require "fnordmetric/session"
 
 
 

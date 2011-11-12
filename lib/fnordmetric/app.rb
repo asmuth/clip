@@ -34,16 +34,16 @@ class FnordMetric::App < Sinatra::Base
     haml :app
   end
 
-  get '/metric/:name' do
-    content_type 'application/json'
-    FnordMetric::MetricAPI.new(params).render    
-  end
+  #get '/metric/:name' do
+  #  content_type 'application/json'
+  #  FnordMetric::MetricAPI.new(params).render    
+  #end
 
-  get '/widget/:name' do
-    @dashboard = FnordMetric.dashboards.first
-    @widget = @dashboard.widgets.first
-    haml :widget
-  end
+  #get '/widget/:name' do
+  #  @dashboard = FnordMetric.dashboards.first
+  #  @widget = @dashboard.widgets.first
+  #  haml :widget
+  #end
 
   post '/events' do
     halt 400, 'please specify the event_type' unless params["type"]       

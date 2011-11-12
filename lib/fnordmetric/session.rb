@@ -1,0 +1,3 @@
+class FnordMetric::Session
+
+end

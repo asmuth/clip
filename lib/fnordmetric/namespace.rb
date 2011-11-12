@@ -6,8 +6,8 @@ class FnordMetric::Namespace
 
   def initialize(key, opts)    
     @gauges = Hash.new
-    @handlers = Hash.new([])          
-    @redis = EM::Hiredis.connect("redis://localhost:6379")
+    @handlers = Hash.new([])     
+    @redis = opts.delete(:redis) || EM::Hiredis.connect("redis://localhost:6379")
     @opts = opts
     @key = key  
   end
@@ -17,7 +17,15 @@ class FnordMetric::Namespace
   end
 
   def announce(event)            
-    @handlers[event["_type"]].each{ |c| c.clone.call(event, @redis) }
+    @handlers[event[:_type]].each{ |c| c.clone.call(event, @redis) }
+
+    if event[:_session]      
+      FnordMetric::Session.new(@opts.clone.merge(
+        :namespace_key => @key, 
+        :event => event
+      ))        
+    end
+
   end
 
   def key_prefix

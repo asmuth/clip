@@ -27,7 +27,7 @@ class FnordMetric::Context
   end
 
   def time
-    @event[:time]
+    @event[:_time]
   end
 
 protected

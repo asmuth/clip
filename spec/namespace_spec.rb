@@ -2,6 +2,13 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Namespace do
 
+  include FnordMetric
+
+  before(:all) do
+    @redis = Redis.new
+    @redis_wrap = RedisWrap.new(@redis)
+  end
+
   it "should generate the correct redis prefix"
 
   it "should register a gauge"
@@ -23,5 +30,20 @@ describe FnordMetric::Namespace do
   end
 
   it "should announce an event to multiple handlers"
+
+
+  it "should create a new session on announce if _session is set" do
+    Session.should_receive(:new)
+    Namespace.new(
+      :myns_213, 
+      :redis_prefix => "fnordmetric", 
+      :redis => @redis_wrap
+    ).announce(
+      :_time => Time.now.to_i, 
+      :_type => "foobar", 
+      :_session => "sess213"
+    )
+  end
+
 
 end

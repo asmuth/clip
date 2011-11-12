@@ -19,7 +19,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_234, 1)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "13"
@@ -34,7 +34,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_224, 5)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "23"
@@ -49,7 +49,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_253, data[:myval].to_i)  
       }).tap do |context|      
-        event = { :time => @now, :myval => "25" }
+        event = { :_time => @now, :myval => "25" }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "36"
@@ -71,7 +71,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_123, 1)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "24"
@@ -89,7 +89,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_125, 5)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "27"
@@ -107,7 +107,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_128, 3)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "20"
@@ -125,7 +125,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_121, 6)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "25"
@@ -140,7 +140,7 @@ describe FnordMetric::GaugeModifiers do
       }, proc{ 
         incr(:mygauge_167, 1)  
       }).tap do |context|      
-        event = { :time => @now }
+        event = { :_time => @now }
         lambda{
           context.call(event, @redis_wrap)
         }.should raise_error(RuntimeError)
