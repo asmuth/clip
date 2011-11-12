@@ -6,6 +6,30 @@ fnordmetric is a ruby event tracking gem
 
 
 
+=== Special Keys
+
+-> "_type": The event class/type. (mandatory)
+
+-> "_namespace": The namespace (if you have more than one)
+
+-> "_session": Your session identifier (recommended)
+
+-> "_time": The event time (do not use!)
+
+-> "_eid": The event id (do not use!)
+
+
+=== Special Event Types
+
+-> "_pageview": Track a pageview (should have a "url" attr!)
+
+-> "_set_name": Set the username for the current session (should have a "name" attr)
+
+-> "_set_picture": Set the user picture for the current session (should have a "url" attr)
+
+-> "_set_data": Store all event attributes in the current session
+
+
 === Sending data
 
 The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
