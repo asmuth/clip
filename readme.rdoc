@@ -1,36 +1,47 @@
 = FnordMetric
 
-fnordmetric is a ruby event tracking gem 
+FnordMetric is a highly configurable realtime app tracking thing. 
 
-{<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
+Step 1: You send send json events from your web/facebook app. eg:
 
+  // track a pageview
+  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
 
+  // track a waypoint (see below)
+  { "_type": "_waypoint", "waypoint": "thank_you_site", "map": "checkout_flow", "_session": "mysessiontoken" }
 
-=== Special Keys
+  // track a custom action
+  { "_type": "my_foo_type", "my_foo_action": "wink", "other_user": "myuserid" }
 
--> "_type": The event class/type. (mandatory)
+  // set the user name
+  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
 
--> "_namespace": The namespace (if you have more than one)
-
--> "_session": Your session identifier (recommended)
-
--> "_time": The event time (do not use!)
-
--> "_eid": The event id (do not use!)
-
-
-=== Special Event Types
-
--> "_pageview": Track a pageview (should have a "url" attr!)
-
--> "_set_name": Set the username for the current session (should have a "name" attr)
-
--> "_set_picture": Set the user picture for the current session (should have a "url" attr)
-
--> "_set_data": Store all event attributes in the current session
+  // set the user picture
+  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 
 
-=== Sending data
+Step 2: FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
+
+  (pic here)
+
+Step 3: FnordMetric keeps track of your data and draws nice timeline plots. (You can define your own plotting and counting functions as ruby blocks!)
+
+  (pic here)
+
+Step 4: FnordMetric draws nice "user-flow" maps (Use them to optimize your navigation!)
+
+  (pic here)
+
+Step 5: Even more shiny stuff!
+
+  (pic)
+
+
+=== Installation
+
+=== Configuration
+
+=== Sending data: Connection
 
 The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
 
@@ -46,7 +57,32 @@ The fast way: Add your event directly to the redis-based queue:
   redis.expire("fnordmetric-event-#{my_uuid}", 60)
 
 
-=== Gotchas: 
+=== Sending data: Special Keys
+
+-> "_type": The event class/type. (mandatory)
+
+-> "_namespace": The namespace (if you have more than one)
+
+-> "_session": Your session identifier (recommended)
+
+-> "_time": The event time (do not use!)
+
+-> "_eid": The event id (do not use!)
+
+
+=== Sending data: Special Event Types
+
+-> "_pageview": Track a pageview (should have a "url" attr!)
+
+-> "_set_name": Set the username for the current session (should have a "name" attr)
+
+-> "_set_picture": Set the user picture for the current session (should have a "url" attr)
+
+-> "_set_data": Store all event attributes in the current session
+
+
+
+=== Limitations 
 
 -> It will drop events if it gets over capacity (prevent this by setting high timeouts)
 
@@ -66,6 +102,29 @@ The fast way: Add your event directly to the redis-based queue:
 
 
 
+
+== License (It's free!)
+
+Copyright (c) 2011 Paul Asmuth
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 
@@ -322,30 +381,5 @@ and you can render the widgets in your own views:
 * virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]
 * add widgets/metrics via webapp?
 * auth?!
-
-
-
-== Copyright
-
-Copyright (c) 2011 Paul Asmuth
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
