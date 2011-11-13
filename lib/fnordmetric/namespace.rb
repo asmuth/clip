@@ -17,15 +17,8 @@ class FnordMetric::Namespace
   end
 
   def announce(event)                  
-
-    if event[:_session]      
-      FnordMetric::Session.create(@opts.clone.merge(
-        :namespace_key => @key, 
-        :namespace_prefix => key_prefix,
-        :redis => @redis,
-        :event => event
-      ))        
-    end
+    announce_to_timeline(event)
+    announce_to_session(event) if event[:_session]
 
     @handlers[event[:_type]].each do |context| 
       context.call(event, @redis) 
@@ -34,8 +27,22 @@ class FnordMetric::Namespace
     self
   end
 
-  def key_prefix
-    [@opts[:redis_prefix], @key].join("-")
+  def announce_to_session(event)
+    FnordMetric::Session.create(@opts.clone.merge(
+      :namespace_key => @key, 
+      :namespace_prefix => key_prefix,
+      :redis => @redis,
+      :event => event
+    )) 
+  end
+
+  def announce_to_timeline(event)
+    timeline_key = key_prefix(:timeline)
+    @redis.zadd(timeline_key, event[:_time], event[:_eid])
+  end
+
+  def key_prefix(append=nil)
+    [@opts[:redis_prefix], @key, append].compact.join("-")
   end
 
   def method_missing(m, *args, &block)

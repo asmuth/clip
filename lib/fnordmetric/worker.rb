@@ -28,8 +28,7 @@ class FnordMetric::Worker
 
   def process_event(event_id, event_data)
     EM.defer do      
-      parse_json(event_data).tap do |event|
-        publish_event(event_id)
+      parse_json(event_data).tap do |event|                
         event[:_time] ||= Time.now.to_i
         event[:_eid] = event_id
         announce_event(event)
@@ -55,7 +54,7 @@ class FnordMetric::Worker
     [@opts[:redis_prefix], 'stats'].join("-")
   end
 
-  def announce_event(event)
+  def announce_event(event)   
     namespace(event[:_namespace]).ready!(@redis).announce(event)
   end
 
@@ -63,8 +62,8 @@ class FnordMetric::Worker
     @redis.expire(event_key(event_id), @opts[:event_data_ttl])
   end
 
-  def publish_event(event_id)
-    @redis.publish(pubsub_key, event_id)
+  def publish_event(event)    
+    @redis.publish(pubsub_key, event[:_eid])    
   end
 
   def namespace(key)
