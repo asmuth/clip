@@ -2,11 +2,9 @@ class FnordMetric::Session
 
   @@expiration_time = 3600*24*30
 
-  def self.create(opts)    
+  def self.create(opts)        
     redis = opts.fetch(:redis)
-    event = opts[:event]  
-    
-    puts event.inspect
+    event = opts[:event]   
 
     hash = Digest::MD5.hexdigest(event[:_session])
     set_key = "#{opts[:namespace_prefix]}-sessions"

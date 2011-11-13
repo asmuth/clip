@@ -17,8 +17,9 @@ loop do
 
   end
 
-  sleep 5
+  sleep 1
 
+   next
   # see what that did
 
   redis.keys("fnordmetric-blubber*").each do |k|

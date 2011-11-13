@@ -6,17 +6,17 @@ class FnordMetric::Namespace
 
   def initialize(key, opts)    
     @gauges = Hash.new
-    @handlers = Hash.new([])     
-    @redis = opts.delete(:redis) || EM::Hiredis.connect("redis://localhost:6379")
+    @handlers = Hash.new([])         
     @opts = opts
     @key = key  
   end
 
-  def ready!
-    self
+  def ready!(redis)
+    @redis = redis
   end
 
-  def announce(event)           
+  def announce(event)                  
+
     if event[:_session]      
       FnordMetric::Session.create(@opts.clone.merge(
         :namespace_key => @key, 
@@ -27,8 +27,10 @@ class FnordMetric::Namespace
     end
 
     @handlers[event[:_type]].each do |context| 
-      context.clone.call(event, @redis) 
+      context.call(event, @redis) 
     end
+
+    self
   end
 
   def key_prefix

@@ -18,18 +18,18 @@ class FnordMetric::Worker
   end
 
   def tick
-    @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|      
-      EM.next_tick(&method(:tick)) 
-      @redis.get(event_key(event_id)).callback do |event_data|                  
+    @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|           
+      @redis.get(event_key(event_id)).callback do |event_data|                     
         process_event(event_id, event_data) if event_data        
+        EM.next_tick(&method(:tick))      
         @redis.hincrby(stats_key, :events_processed, 1)
       end
     end
   end
 
   def process_event(event_id, event_data)
-    EM.defer do
-      Yajl::Parser.parse(event_data).tap do |event|
+    EM.defer do      
+      parse_json(event_data).tap do |event|
         publish_event(event_id)
         event[:_time] ||= Time.now.to_i
         event[:_eid] = event_id
@@ -57,7 +57,7 @@ class FnordMetric::Worker
   end
 
   def announce_event(event)
-    namespace(event[:_namespace]).announce(event)
+    namespace(event[:_namespace]).ready!(@redis).announce(event)
   end
 
   def expire_event(event_id)
@@ -69,7 +69,11 @@ class FnordMetric::Worker
   end
 
   def namespace(key)
-    (@namespaces[key] || @namespaces.first.last).clone.ready!
+    (@namespaces[key] || @namespaces.first.last).clone
+  end
+
+  def parse_json(data)
+    Yajl::Parser.new(:symbolize_keys => true).parse(data)
   end
 
 end
