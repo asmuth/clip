@@ -23,44 +23,32 @@ describe "app" do
   	last_response.location.should == "http://example.org/foospace"
   end
 
-  it "should print a message if there are no dashboards" do
-    @app ||= FnordMetric::App.new({
-      :foospace => proc{}
-    }, @opts)
+  it "should render the namespace" do
     get "/foospace"
     last_response.status.should == 200
-    last_response.body.should == "please define a dashboard"
   end
 
-  it "should redirect to the first dashboard" do
-    get "/foospace"
-    last_response.status.should == 302
-    last_response.location.should == "http://example.org/foospace/d/Blubb"
-  end
-
-  it "should render the dashboard" do
+  it "should render the dashboards" do
     @app ||= FnordMetric::App.new({
       :foospace => proc{        
         widget 'Blubb', nil
       }
     }, @opts)
-  	get "/foospace/d/Blubb"
+  	get "/foospace"
   	last_response.status.should == 200
     last_response.body.should include("Blubb")
   end
 
-  it "should render the right dashboard" do
+  it "should render the dashboards" do
     @app ||= FnordMetric::App.new({
       :foospace => proc{        
         widget 'Blubb', nil
         widget 'Fnord', nil
       }
     }, @opts)
-    get "/foospace/d/Blubb"
+    get "/foospace"
     last_response.status.should == 200
     last_response.body.should include("Blubb")
-    get "/foospace/d/Fnord"
-    last_response.status.should == 200
     last_response.body.should include("Fnord")
   end
 

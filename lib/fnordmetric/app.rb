@@ -46,13 +46,6 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/:namespace' do
-    return "please define a dashboard" if current_namespace.dashboards.empty?
-    dash_token = current_namespace.dashboards.first.last.token
-    redirect "#{path_prefix}/#{current_namespace.token}/d/#{dash_token}"
-  end
-
-  get '/:namespace/d/:dashboard' do
-    @dashboard = current_namespace.dashboards(params[:dashboard])
     haml :app
   end
 
