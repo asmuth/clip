@@ -81,7 +81,7 @@ class FnordMetric::Session
   end
 
   def add_event(event)    
-    @redis.rpush(redis_key(:events), event[:_eid])    
+    @redis.zadd(redis_key(:events), event[:_time], event[:_eid])    
     add_data(:_picture, event[:url]) if event[:_type] == "_set_picture"    
     add_data(:_name, event[:name]) if event[:_type] == "_set_name"    
     add_event_data(event) if event[:_type] == "_set_data" 
@@ -116,8 +116,9 @@ class FnordMetric::Session
     end
   end
 
-  def fetch_event_ids!
-    @event_ids = @redis.lrange(redis_key(:events), 0,-1).reverse
+  def fetch_event_ids!(since=-1)
+    # FIXME: use WITHSCORE to get the timestamps and return event objects
+    @event_ids = @redis.zrange(redis_key(:events), 0, since)
   end
 
 end

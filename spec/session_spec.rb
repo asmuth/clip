@@ -66,7 +66,7 @@ describe FnordMetric::Session do
       @redis.zscore(@sessions, @md5_key).to_i.should == @now
     end
 
-    it "should add the event_id to the session-event list on a new session" do               
+    it "should add the event_id to the session-event set on a new session" do               
       Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
@@ -74,7 +74,7 @@ describe FnordMetric::Session do
         :redis => @redis_wrap
       )    
       events_key = "#{@namespace}-sessions-#{@md5_key}-events"
-      @redis.lrange(events_key, 0, -1).first.should == @event[:_eid]
+      @redis.zrange(events_key, 0, -1).first.should == @event[:_eid]
     end
 
     it "should store a name in the session data" do   
@@ -92,7 +92,7 @@ describe FnordMetric::Session do
       @redis.hget(data_key, "_name").should == "Horst Mayer"
     end
 
-    it "should store a picutre in the session data" do               
+    it "should store a picture in the session data" do               
       event_data = @event.merge(
         :_type => "_set_picture", 
         :url => "http://myhost/mypic.jpg"
@@ -203,8 +203,8 @@ describe FnordMetric::Session do
 
     it "should find a session and return a session object with event_ids" do
       sesshash = create_session("sess923", @now, {})
-      @redis_wrap.rpush("#{@namespace}-sessions-#{sesshash}-events", "shmoo")       
-      @redis_wrap.rpush("#{@namespace}-sessions-#{sesshash}-events", "fnord")
+      @redis_wrap.zadd("#{@namespace}-sessions-#{sesshash}-events", @now, "shmoo")       
+      @redis_wrap.zadd("#{@namespace}-sessions-#{sesshash}-events", @now, "fnord")
       sess = Session.find(sesshash, @opts)
       sess.event_ids[0].should == "fnord"
       sess.event_ids[1].should == "shmoo"
