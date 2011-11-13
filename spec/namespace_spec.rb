@@ -36,9 +36,8 @@ describe FnordMetric::Namespace do
     Session.should_receive(:create)
     Namespace.new(
       :myns_213, 
-      :redis_prefix => "fnordmetric", 
-      :redis => @redis_wrap
-    ).announce(
+      :redis_prefix => "fnordmetric"      
+    ).ready!(@redis_wrap).announce(
       :_time => Time.now.to_i, 
       :_type => "foobar", 
       :_session => "sess213"
