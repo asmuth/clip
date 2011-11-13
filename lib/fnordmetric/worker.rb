@@ -3,12 +3,12 @@ class FnordMetric::Worker
   @@expiration_time = 10
   @@idle_time = 0.3
 
-  def initialize(namespaces, opts)    
-    @namespaces = {}
-    @opts = opts    
-    @parser = Yajl::Parser.new
-    @parser.on_parse_complete = method(:process_event)
+  def initialize(namespaces, opts)        
+    @parser = Yajl::Parser.new(:stringify_keys => true)
+    @parser.on_parse_complete = method(:process_event)    
     @redis = EM::Hiredis.connect("redis://localhost:6379")
+    @namespaces = {}
+    @opts = opts
     configure(namespaces)
     tick
   end

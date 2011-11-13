@@ -1,18 +1,20 @@
 class FnordMetric::Session
 
-  def self.create(opts)
-    @opts = opts    
+  @@expiration_time = 3600*24*30
+
+  def self.create(opts)    
+    redis = opts.fetch(:redis)
+    event = opts[:event]  
     
-    redis = @opts.fetch(:redis)
-    event = @opts[:event]
+    puts event.inspect
 
-    session_key_hash = Digest::MD5.hexdigest(event[:_session])
+    hash = Digest::MD5.hexdigest(event[:_session])
+    set_key = "#{opts[:namespace_prefix]}-sessions"
 
-    sessions_set_key = [@opts[:namespace_prefix], 'sessions'].join("-")
-    session_events_key = [sessions_set_key, session_key_hash, 'events'].join("-")
-
-    redis.rpush(session_events_key, event[:_eid] )
-    redis.zadd(sessions_set_key, event[:_time], session_key_hash)
+    self.new(hash).tap do |session|
+      session.add_redis(redis, set_key)      
+      session.add_event(event)            
+    end    
   end
 
   def self.find(session_key)
@@ -23,8 +25,44 @@ class FnordMetric::Session
     end
   end
 
+
   def self.all(since=nil)
     []
+  end
+
+  def initialize(session_key, redis_opts=nil)
+    @session_key = session_key
+    add_redis(*redis_opts) if redis_opts
+  end
+
+  def redis_key(append=nil)
+    [@redis_prefix, @session_key, append].compact.join("-")
+  end
+
+  def add_redis(redis, prefix)
+    @redis_prefix = prefix
+    @redis = redis
+  end
+
+  def touch(time=Time.now.to_i)      
+    @redis.zadd(@redis_prefix, time, @session_key)
+  end
+
+  def expire(time)
+    @redis.expire(redis_key(:events), time)
+    @redis.expire(redis_key(:data), time)
+  end
+
+  def add_event(event)    
+    @redis.rpush(redis_key(:events), event[:_eid])
+    add_data(:_picture, event[:url]) if event[:_type] == "_set_picture"    
+    add_data(:_name, event[:name]) if event[:_type] == "_set_name"    
+    touch(event[:_time])
+    expire(@@expiration_time)
+  end
+
+  def add_data(key, value)
+    @redis.hset(redis_key(:data), key, value)
   end
 
   def picture
@@ -42,7 +80,7 @@ class FnordMetric::Session
   def event_ids
     []
   end
-  
+
   def events
     [] 
   end

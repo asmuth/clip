@@ -15,14 +15,15 @@ require 'em-hiredis'
 
 class RedisWrap
 
-  def initialize(redis)
+  def initialize(redis, callbackable=true)
     @redis = redis
+    @callbackable = callbackable
   end
 
   def method_missing(m, *args)
     puts ">> REDIS: #{m} #{args.join(" ")}"
     @last_return = @redis.send(m, *args)
-    return self
+    @callbackable ? self : @last_return
   end
 
   def callback(&block)

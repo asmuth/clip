@@ -74,7 +74,7 @@ describe FnordMetric::Session do
 
     it "should store a name in the session data" do   
       event_data = @event.merge(
-        :type => "_set_picture", 
+        :_type => "_set_picture", 
         :name => "Horst Mayer"
       )            
       Session.create(
@@ -88,7 +88,7 @@ describe FnordMetric::Session do
 
     it "should store a picutre in the session data" do               
       event_data = @event.merge(
-        :type => "_set_picture", 
+        :_type => "_set_picture", 
         :picture => "http://myhost/mypic.jpg"
       )
       Session.create(
@@ -102,7 +102,7 @@ describe FnordMetric::Session do
 
     it "should store arbitrary data in the session data" do               
       event_data = @event.merge(
-        :type => "_set_data", 
+        :_type => "_set_data", 
         :fnord => "blubb", 
         :foobar => "123"
       )
@@ -118,7 +118,7 @@ describe FnordMetric::Session do
 
     it "not store special attributes in the session" do               
       event_data = @event.merge(
-        :type => "_set_data", 
+        :_type => "_set_data", 
         :fnord => "blubb", 
         :foobar => "123"
       )
