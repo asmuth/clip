@@ -1,20 +1,25 @@
 body, html{ height:100%; padding:0px;}
-body{ background:#fff; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
+body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-#wrap{ margin:0 40px; }
+.topbar{ height:43px; background:#24272c; display:none; }
 
-#tabs{ width:200px; position:fixed; height:100%; margin-top:70px; }
-#tabs ul{ list-style-type:none; padding:0; margin:0; }
-#tabs ul li{ height:34px; line-height:35px; border-bottom:1px dotted #ececec; cursor:pointer; color:#666; font-size:13px; }
+#wrap{ margin:0 20px; }
+
+#tabs{ width:150px; position:fixed; height:100%; margin-top:70px; }
+#tabs ul{ list-style-type:none; padding:0; margin:0; width:156px;}
+#tabs ul li{ height:34px; line-height:35px; cursor:pointer; color:#ccc; font-size:13px; border-radius:3px; }
 #tabs ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:35px; }
 #tabs ul li .picto{ margin-top:10px; margin-right:7px; }
-#tabs ul li:hover, #tabs ul li:hover:after{ color:#000; }
+#tabs ul li:hover, #tabs ul li:hover:after{ color:#fff; }
 #tabs ul li:hover .picto{ opacity:1; }
 
 .picto{ display:block; height:14px; width:14px; float:left; background:url('/fnordmetric/sprite.png') no-repeat 14px 14px; opacity:0.7; }
 .picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
-#viewport{ min-height:800px; float:left; margin-left:220px; padding-top:20px; border-right:1px solid #e0e0e0; border-left:1px solid #e0e0e0; }
+#viewport{ float:left; margin-left:150px; margin-top:50px; border-radius:3px; }
+#viewport .viewport_inner{ margin:6px; background:#fff; min-height:1200px; padding-top:20px; border-radius:2px; }
+
+#viewport, #tabs ul li{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
 
 .headbar{ height:36px; background:#f2f2f2; border-bottom:1px solid #e2e2e2; }
 .headbar h2{ margin:8px; line-height:21px; float:left; height:20px; font-size:14px; }

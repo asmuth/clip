@@ -10,6 +10,8 @@
       FnordMetric.p = '#{path_prefix}';
 
   %body
+    .topbar
+
     #wrap
       #tabs
         %ul
@@ -19,14 +21,15 @@
               =h dashboard.title
 
       #viewport
-        -unless @dashboard
-          no dashboard selected
-          
-        -@dashboard.widgets.each do |widget|
-          -elem_id = "fw#{(rand*9999).to_i}"
-          %div{:id => elem_id, :style => "margin-bottom:10px;"}
-          =widget.render(elem_id)
-          
+        .viewport_inner
+          -unless @dashboard
+            no dashboard selected
+            
+          -@dashboard.widgets.each do |widget|
+            -elem_id = "fw#{(rand*9999).to_i}"
+            %div{:id => elem_id, :style => "margin-bottom:10px;"}
+            =widget.render(elem_id)
+            
 
 :javascript
   $(document).ready(function(){
@@ -36,7 +39,7 @@
     });
 
     function resizeViewport(){ 
-      var viewport_width = window.innerWidth-310
+      var viewport_width = window.innerWidth-220
       $('#viewport').width(viewport_width); 
     }
     resizeViewport();

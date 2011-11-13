@@ -4,6 +4,8 @@ require "fnordmetric"
 
 FnordMetric.namespace :blubber do
 
+  widget 'MyDash', nil
+
   gauge :blubbers_delta, :tick => 60
   gauge :blubbers_total, :tick => 10, :progressive => true
 

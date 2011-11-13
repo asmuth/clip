@@ -31,7 +31,7 @@ class FnordMetric::App < Sinatra::Base
     def current_namespace          
       @namespaces[@namespaces.keys.detect{ |k|
         puts "#{k} <-> #{params[:namespace]}"
-        k.to_s == params[:namespace]
+        k && k.to_s == params[:namespace]
       }.intern]
     end
 
