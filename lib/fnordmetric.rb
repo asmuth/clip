@@ -16,14 +16,11 @@ module FnordMetric
     @@namespaces[key] = block    
   end
 
-  def self.time_str
-    Time.now.strftime("%y-%m-%d %H:%M:%S")
-  end
 
   def self.run(opts={})
     start_em(opts) 
   rescue Exception => e
-    puts "[#{time_str}] !!! eventmachine died, restarting... #{e.message}"
+    log "!!! eventmachine died, restarting... #{e.message}"
     sleep(1); run(opts)  
   end
 
@@ -36,15 +33,15 @@ module FnordMetric
 
       begin
         EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
-        puts "[#{time_str}] listening on tcp#1337 for json event data"
+        log "listening on tcp#1337 for json event data"
       rescue
-        puts "[#{time_str}] !!! cant start FnordMetric::InboundStream. port in use?"
+        log "cant start FnordMetric::InboundStream. port in use?"
       end
 
       EventMachine::PeriodicTimer.new(1){ heartbeat!(opts, redis) }
 
       proc{
-        puts "\n[#{time_str}] shutting down, byebye"
+        log "shutting down, byebye"
         EM.stop
       }.tap do |shutdown|
         trap("TERM", shutdown)
@@ -58,9 +55,13 @@ module FnordMetric
     redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|      
       redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
         data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}.join(", ")
-        puts "[#{time_str}] #{data_human}, queue_length: #{queue_length}"
+        log "#{data_human}, queue_length: #{queue_length}"
       end  
     end
+  end
+
+  def self.log(msg)
+    puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{msg}"
   end
 
 end
