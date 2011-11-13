@@ -1,5 +1,6 @@
 class FnordMetric::Worker
 
+  # events will be kept in mem for one day
   @@expiration_time = 3600*24
 
   def initialize(namespaces, opts)        
@@ -21,6 +22,7 @@ class FnordMetric::Worker
     @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|           
       @redis.get(event_key(event_id)).callback do |event_data|                     
         process_event(event_id, event_data) if event_data        
+        FnordMetric.log("oops, lost an event :(") unless event_data
         EM.next_tick(&method(:tick))      
         @redis.hincrby(stats_key, :events_processed, 1)
       end

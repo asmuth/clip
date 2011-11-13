@@ -1,5 +1,6 @@
 class FnordMetric::Session
 
+  # session data is kept for one month
   @@expiration_time = 3600*24*30
 
   def self.create(opts)        

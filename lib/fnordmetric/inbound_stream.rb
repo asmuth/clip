@@ -1,6 +1,10 @@
 class FnordMetric::InboundStream < EventMachine::Connection 
 
+  # connection to redis is closed 3 seconds after client quits
   @@timeout = 3
+
+  # events that aren't processed within 60 seconds are dropped
+  @@expiration_time = 60 
 
   def post_init
      @redis = Redis.new
@@ -46,7 +50,7 @@ class FnordMetric::InboundStream < EventMachine::Connection
     @redis.hincrby("fnordmetric-stats", "events_received", 1)
     @redis.set("fnordmetric-event-#{event_id}", event_data)
     @redis.lpush("fnordmetric-queue", event_id)
-    @redis.expire("fnordmetric-event-#{event_id}", 60) 
+    @redis.expire("fnordmetric-event-#{event_id}", @@expiration_time) 
     @events_buffered -= 1
     close_connection?
   end
