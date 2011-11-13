@@ -7,18 +7,28 @@ class FnordMetric::InboundStream  < EventMachine::Connection
      @buffer = ""
   end
 
-  def process_event(event)
-    @redis.hincrby("fnordmetric-stats", "events_received", 1)    
+  def unbind                
+    @redis.close_connection
+    @finito = true    
+  end
+
+  def process_event(event)       
     event_data = Yajl::Encoder.encode(event)
     EM.defer{ push_event(event_data) }
   end
 
-  def push_event(event_data)
+  def push_event(event_data)    
     my_uuid = rand(9999999999999999999).to_s # FIXME 
     @redis.set("fnordmetric-event-#{my_uuid}", event_data).callback do
-      @redis.lpush("fnordmetric-queue", my_uuid)
-      # events that aren't processed within 60 seconds get dropped
-      @redis.expire("fnordmetric-event-#{my_uuid}", 60)      
+      @redis.lpush("fnordmetric-queue", my_uuid).callback do
+        # events that aren't processed within 60 seconds get dropped
+        @redis.expire("fnordmetric-event-#{my_uuid}", 60).callback do
+          @redis.hincrby("fnordmetric-stats", "events_received", 1) do
+            # HACK!!! - otherwise the connection is never closed :( 
+            @redis.instance_variable_get(:@connection).close_connection if @finito == true
+          end
+        end
+      end
     end
   end
 
