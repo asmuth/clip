@@ -10,7 +10,7 @@ describe FnordMetric::Session do
     @redis_wrap = RedisWrap.new(@redis)
 
     @namespace = "fnordmetric-ns123" 
-    @sessions = "#{@namespace}-sessions"
+    @sessions = "#{@namespace}-session"
   end
 
   describe "creating sessions" do
@@ -19,9 +19,9 @@ describe FnordMetric::Session do
       @event = { :_session => "sess123", :_time => @now, :_eid => "34089749" }
       @md5_key = Digest::MD5.hexdigest("sess123")          
 
-      @redis.del("#{@namespace}-sessions")           
-      @redis.del("#{@namespace}-sessions-#{@md5_key}-events")
-      @redis.del("#{@namespace}-sessions-#{@md5_key}-data")
+      @redis.del("#{@namespace}-session")           
+      @redis.del("#{@namespace}-session-#{@md5_key}-events")
+      @redis.del("#{@namespace}-session-#{@md5_key}-data")
     end
 
     it "should add a new session on intialize" do        
@@ -73,7 +73,7 @@ describe FnordMetric::Session do
         :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
-      events_key = "#{@namespace}-sessions-#{@md5_key}-events"
+      events_key = "#{@namespace}-session-#{@md5_key}-events"
       @redis.zrange(events_key, 0, -1).first.should == @event[:_eid]
     end
 
@@ -88,7 +88,7 @@ describe FnordMetric::Session do
         :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
-      data_key = "#{@namespace}-sessions-#{@md5_key}-data"
+      data_key = "#{@namespace}-session-#{@md5_key}-data"
       @redis.hget(data_key, "_name").should == "Horst Mayer"
     end
 
@@ -103,7 +103,7 @@ describe FnordMetric::Session do
         :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
-      data_key = "#{@namespace}-sessions-#{@md5_key}-data"
+      data_key = "#{@namespace}-session-#{@md5_key}-data"
       @redis.hget(data_key, "_picture").should == "http://myhost/mypic.jpg"
     end
 
@@ -119,7 +119,7 @@ describe FnordMetric::Session do
         :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
-      data_key = "#{@namespace}-sessions-#{@md5_key}-data"
+      data_key = "#{@namespace}-session-#{@md5_key}-data"
       @redis.hget(data_key, "fnord").should == "blubb"
       @redis.hget(data_key, "foobar").should == "123"
     end
@@ -136,7 +136,7 @@ describe FnordMetric::Session do
         :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
-      data_key = "#{@namespace}-sessions-#{@md5_key}-data"
+      data_key = "#{@namespace}-session-#{@md5_key}-data"
       @redis.hget(data_key, "_time").should be_nil
       @redis.hget(data_key, "_eid").should be_nil
     end
@@ -146,11 +146,11 @@ describe FnordMetric::Session do
   describe "Finding Sessions" do
 
     before(:each) do      
-      @redis.del("#{@namespace}-sessions")           
-      @redis.keys("#{@namespace}-sessions-*").each { |k| @redis.del(k) }     
+      @redis.del("#{@namespace}-session")           
+      @redis.keys("#{@namespace}-session-*").each { |k| @redis.del(k) }     
 
       @opts = {         
-        :redis_prefix => "#{@namespace}-sessions",
+        :redis_prefix => "#{@namespace}-session",
         :redis => @redis
       }  
     end
@@ -203,8 +203,8 @@ describe FnordMetric::Session do
 
     it "should find a session and return a session object with event_ids" do
       sesshash = create_session("sess923", @now, {})
-      @redis_wrap.zadd("#{@namespace}-sessions-#{sesshash}-events", @now, "shmoo")       
-      @redis_wrap.zadd("#{@namespace}-sessions-#{sesshash}-events", @now, "fnord")
+      @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "shmoo")       
+      @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "fnord")
       sess = Session.find(sesshash, @opts)
       sess.event_ids[0].should == "fnord"
       sess.event_ids[1].should == "shmoo"
@@ -212,9 +212,9 @@ describe FnordMetric::Session do
 
     def create_session(sesskey, sesstime, sessdata)        
       Digest::MD5.hexdigest(sesskey).tap do |sesshash|
-        @redis_wrap.zadd("#{@namespace}-sessions", sesstime, sesshash)        
+        @redis_wrap.zadd("#{@namespace}-session", sesstime, sesshash)        
         sessdata.each do |k,v|
-          @redis_wrap.hset("#{@namespace}-sessions-#{sesshash}-data", k, v)        
+          @redis_wrap.hset("#{@namespace}-session-#{sesshash}-data", k, v)        
         end
       end
     end

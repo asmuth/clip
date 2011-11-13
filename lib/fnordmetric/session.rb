@@ -7,7 +7,7 @@ class FnordMetric::Session
     event = opts[:event]   
 
     hash = Digest::MD5.hexdigest(event[:_session])
-    set_key = "#{opts[:namespace_prefix]}-sessions"
+    set_key = "#{opts[:namespace_prefix]}-session"
 
     self.new(hash).tap do |session|
       session.add_redis(redis, set_key)      
