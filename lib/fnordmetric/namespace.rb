@@ -16,9 +16,7 @@ class FnordMetric::Namespace
     self
   end
 
-  def announce(event)            
-    @handlers[event[:_type]].each{ |c| c.clone.call(event, @redis) }
-
+  def announce(event)           
     if event[:_session]      
       FnordMetric::Session.create(@opts.clone.merge(
         :namespace_key => @key, 
@@ -28,6 +26,9 @@ class FnordMetric::Namespace
       ))        
     end
 
+    @handlers[event[:_type]].each do |context| 
+      context.clone.call(event, @redis) 
+    end
   end
 
   def key_prefix

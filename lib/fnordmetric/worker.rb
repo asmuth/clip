@@ -1,11 +1,8 @@
 class FnordMetric::Worker
 
-  @@expiration_time = 10
-  @@idle_time = 0.3
+  @@expiration_time = 3600*24
 
   def initialize(namespaces, opts)        
-    @parser = Yajl::Parser.new(:stringify_keys => true)
-    @parser.on_parse_complete = method(:process_event)    
     @redis = EM::Hiredis.connect("redis://localhost:6379")
     @namespaces = {}
     @opts = opts
@@ -24,14 +21,23 @@ class FnordMetric::Worker
     @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|      
       EM.next_tick(&method(:tick)) 
       @redis.get(event_key(event_id)).callback do |event_data|                  
-        push_event(event_id, event_data) if event_data        
+        process_event(event_id, event_data) if event_data        
         @redis.hincrby(stats_key, :events_processed, 1)
       end
     end
   end
 
-  def namespace(key)
-    (@namespaces[key] || @namespaces.first.last)
+  def process_event(event_id, event_data)
+    EM.defer do
+      Yajl::Parser.parse(event_data).tap do |event|
+        publish_event(event_id)
+        event[:_time] ||= Time.now.to_i
+        event[:_eid] = event_id
+        announce_event(event)
+        publish_event(event)
+        expire_event(event_id)       
+      end
+    end
   end
 
   def pubsub_key
@@ -50,17 +56,8 @@ class FnordMetric::Worker
     [@opts[:redis_prefix], 'stats'].join("-")
   end
 
-  def push_event(event_id, event_data)            
-    publish_event(event_id)
-    @parser << event_data
-    expire_event(event_id)
-  end
-
-  def process_event(event)
-    EM.defer do
-      event[:_time] ||= Time.now.to_i
-      namespace(event["_namespace"]).clone.ready!.announce(event)          
-    end
+  def announce_event(event)
+    namespace(event[:_namespace]).announce(event)
   end
 
   def expire_event(event_id)
@@ -69,6 +66,10 @@ class FnordMetric::Worker
 
   def publish_event(event_id)
     @redis.publish(pubsub_key, event_id)
+  end
+
+  def namespace(key)
+    (@namespaces[key] || @namespaces.first.last).clone.ready!
   end
 
 end
