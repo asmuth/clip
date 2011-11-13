@@ -28,7 +28,8 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
-        :redis => @redis_wrap
+        :session_data_ttl => 10,
+        :redis => @redis_wrap        
       )
       @redis.zcard(@sessions).should == 1
     end
@@ -37,6 +38,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       @redis.zrange(@sessions, 0, -1).should == [ @md5_key]
@@ -46,6 +48,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       @redis.zscore(@sessions, @md5_key).to_i.should == @now
@@ -57,6 +60,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       @redis.zscore(@sessions, @md5_key).to_i.should == @now
@@ -66,10 +70,11 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       events_key = "#{@namespace}-sessions-#{@md5_key}-events"
-      @redis.lrange(events_key, 0, 0).first.should == @event[:_eid]
+      @redis.lrange(events_key, 0, -1).first.should == @event[:_eid]
     end
 
     it "should store a name in the session data" do   
@@ -80,6 +85,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       data_key = "#{@namespace}-sessions-#{@md5_key}-data"
@@ -94,6 +100,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       data_key = "#{@namespace}-sessions-#{@md5_key}-data"
@@ -109,6 +116,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       data_key = "#{@namespace}-sessions-#{@md5_key}-data"
@@ -125,6 +133,7 @@ describe FnordMetric::Session do
       Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
+        :session_data_ttl => 10,
         :redis => @redis_wrap
       )    
       data_key = "#{@namespace}-sessions-#{@md5_key}-data"

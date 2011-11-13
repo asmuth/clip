@@ -20,9 +20,9 @@ class RedisWrap
     @callbackable = callbackable
   end
 
-  def method_missing(m, *args)
-    puts ">> REDIS: #{m} #{args.join(" ")}"
+  def method_missing(m, *args)    
     @last_return = @redis.send(m, *args)
+    puts ">> REDIS: #{m} #{args.join(" ")} => #{@last_return}"
     @callbackable ? self : @last_return
   end
 
