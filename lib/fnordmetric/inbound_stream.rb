@@ -1,10 +1,13 @@
 class FnordMetric::InboundStream < EventMachine::Connection 
 
+  @@timeout = 3
+
   def post_init
-     @redis = EM::Hiredis.connect("redis://localhost:6379")
+     @redis = Redis.new
+     @events_buffered = 0
      @streaming = true
      @buffer = ""
-     @events = []
+     @events = []          
   end
 
   def get_next_uuid
@@ -13,43 +16,44 @@ class FnordMetric::InboundStream < EventMachine::Connection
   
   def unbind
     @streaming = false
+    close_connection?
   end
 
   def receive_data(chunk)        
     @buffer << chunk         
-    EM.defer{ read_next_event }
+    EM.defer{ next_event }
+  end
+
+  def next_event
+    read_next_event
+    push_next_event
   end
   
   def read_next_event
     while (event = @buffer.slice!(/^(.*)\n/))
+      @events_buffered += 1
       @events << event
     end 
-    EM.next_tick(&method(:push_next_event))
   end
 
   def push_next_event
-    return hacky_close_connection? if @events.empty?
-    push_event(get_next_uuid, @events.pop)    
+    return true if @events.empty?
+    push_event(get_next_uuid, @events.pop) 
+    EM.next_tick(&method(:push_next_event))    
   end
 
   def push_event(event_id, event_data)
-    @redis.hincrby("fnordmetric-stats", "events_received", 1) do
-      @redis.set("fnordmetric-event-#{event_id}", event_data) do
-        @redis.lpush("fnordmetric-queue", event_id) do
-          @redis.expire("fnordmetric-event-#{event_id}", 60) do
-            EM.next_tick(&method(:push_next_event))     
-          end
-        end
-      end
-    end
+    @redis.hincrby("fnordmetric-stats", "events_received", 1)
+    @redis.set("fnordmetric-event-#{event_id}", event_data)
+    @redis.lpush("fnordmetric-queue", event_id)
+    @redis.expire("fnordmetric-event-#{event_id}", 60) 
+    @events_buffered -= 1
+    close_connection?
   end
 
-  def hacky_close_connection?
-    return true if @streaming
-    @redis.instance_variable_get(:@connection).tap do |c|
-      # this is uber-hacky but it works...
-      c.close_connection
-    end
+
+  def close_connection?
+    @redis.quit unless @streaming || (@events_buffered!=0) 
   end
 
 end
