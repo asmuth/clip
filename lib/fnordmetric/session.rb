@@ -1,8 +1,5 @@
 class FnordMetric::Session
 
-  # session data is kept for one month
-  @@expiration_time = 3600*24*30
-
   def self.create(opts)        
     redis = opts.fetch(:redis)
     event = opts[:event]   
@@ -12,7 +9,8 @@ class FnordMetric::Session
 
     self.new(hash).tap do |session|
       session.add_redis(redis, set_key)      
-      session.add_event(event)            
+      session.add_event(event)    
+      session.expire(opts[:session_data_ttl])
     end    
   end
 
@@ -57,7 +55,6 @@ class FnordMetric::Session
     add_data(:_picture, event[:url]) if event[:_type] == "_set_picture"    
     add_data(:_name, event[:name]) if event[:_type] == "_set_name"    
     touch(event[:_time])
-    expire(@@expiration_time)
   end
 
   def add_data(key, value)

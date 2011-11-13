@@ -1,26 +1,9 @@
 class FnordMetric::InboundStream < EventMachine::Connection 
 
-  # connection to redis is closed 3 seconds after client quits
-  @@timeout = 3
+  @@opts = nil
 
-  # events that aren't processed within 60 seconds are dropped
-  @@expiration_time = 60 
-
-  def post_init
-     @redis = Redis.new
-     @events_buffered = 0
-     @streaming = true
-     @buffer = ""
-     @events = []          
-  end
-
-  def get_next_uuid
-    rand(9999999999999999999).to_s
-  end
-  
-  def unbind
-    @streaming = false
-    close_connection?
+  def self.configure(opts)
+    @@opts = opts
   end
 
   def receive_data(chunk)        
@@ -28,6 +11,18 @@ class FnordMetric::InboundStream < EventMachine::Connection
     EM.defer{ next_event }
   end
 
+  def push_event(event_id, event_data)    
+    prefix = @@opts[:redis_prefix]
+        
+    @redis.hincrby "#{prefix}-stats",             "events_received", 1
+    @redis.set     "#{prefix}-event-#{event_id}", event_data
+    @redis.lpush   "#{prefix}-queue",             event_id       
+    @redis.expire  "#{prefix}-event-#{event_id}", @@opts[:event_queue_ttl]
+    
+    @events_buffered -= 1
+    close_connection?
+  end
+  
   def next_event
     read_next_event
     push_next_event
@@ -46,18 +41,25 @@ class FnordMetric::InboundStream < EventMachine::Connection
     EM.next_tick(&method(:push_next_event))    
   end
 
-  def push_event(event_id, event_data)
-    @redis.hincrby("fnordmetric-stats", "events_received", 1)
-    @redis.set("fnordmetric-event-#{event_id}", event_data)
-    @redis.lpush("fnordmetric-queue", event_id)
-    @redis.expire("fnordmetric-event-#{event_id}", @@expiration_time) 
-    @events_buffered -= 1
-    close_connection?
+  def get_next_uuid
+    rand(9999999999999999999).to_s # FIXME
   end
-
 
   def close_connection?
     @redis.quit unless @streaming || (@events_buffered!=0) 
+  end
+
+  def post_init
+    @redis = Redis.new
+    @events_buffered = 0
+    @streaming = true
+    @buffer = ""
+    @events = []          
+  end
+
+  def unbind
+    @streaming = false
+    close_connection?
   end
 
 end

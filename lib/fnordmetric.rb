@@ -25,13 +25,26 @@ module FnordMetric
   end
 
   def self.start_em(opts)
+
+    opts[:redis_uri] = "redis://localhost:6379"
     opts[:redis_prefix] ||= "fnordmetric"            
+
+    # events that aren't processed after 2 min get dropped
+    opts[:event_queue_ttl] ||= 120
+
+    # event data is kept for one month
+    opts[:event_data_ttl] ||= 3600*24*30
+
+    # session data is kept for one month
+    opts[:session_data_ttl] ||= 3600*24*30 
+
     EM.run do
 
-      redis = EM::Hiredis.connect("redis://localhost:6379")
+      redis = EM::Hiredis.connect(opts[:redis_uri])
       FnordMetric::Worker.new(@@namespaces.clone, opts)
 
       begin
+        FnordMetric::InboundStream.configure(opts)
         EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
         log "listening on tcp#1337 for json event data"
       rescue

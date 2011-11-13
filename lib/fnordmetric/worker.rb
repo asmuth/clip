@@ -1,10 +1,7 @@
 class FnordMetric::Worker
 
-  # events will be kept in mem for one day
-  @@expiration_time = 3600*24
-
   def initialize(namespaces, opts)        
-    @redis = EM::Hiredis.connect("redis://localhost:6379")
+    @redis = EM::Hiredis.connect(opts[:redis_uri])
     @namespaces = {}
     @opts = opts
     configure(namespaces)
@@ -19,7 +16,7 @@ class FnordMetric::Worker
   end
 
   def tick
-    @redis.blpop('fnordmetric-queue', 0).callback do |list, event_id|           
+    @redis.blpop(queue_key, 0).callback do |list, event_id|           
       @redis.get(event_key(event_id)).callback do |event_data|                     
         process_event(event_id, event_data) if event_data        
         FnordMetric.log("oops, lost an event :(") unless event_data
@@ -36,7 +33,7 @@ class FnordMetric::Worker
         event[:_time] ||= Time.now.to_i
         event[:_eid] = event_id
         announce_event(event)
-        publish_event(event)
+        publish_event(event)        
         expire_event(event_id)       
       end
     end
@@ -63,7 +60,7 @@ class FnordMetric::Worker
   end
 
   def expire_event(event_id)
-    @redis.expire(event_key(event_id), @@expiration_time)
+    @redis.expire(event_key(event_id), @opts[:event_data_ttl])
   end
 
   def publish_event(event_id)
