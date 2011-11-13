@@ -60,13 +60,13 @@ module FnordMetric
       end
 
       if opts[:web_interface]
-        #begin             
+        begin             
           app = FnordMetric::App.new(@@namespaces.clone, opts)
           Thin::Server.start(*opts[:web_interface], app)
           log "listening on http##{opts[:web_interface].join(":")}"
-        #rescue
-        #  log "cant start FnordMetric::App. port in use?"
-        #end
+        rescue
+          log "cant start FnordMetric::App. port in use?"
+        end
       end
 
       if opts[:print_stats]        
