@@ -13,6 +13,7 @@ class FnordMetric::Namespace
 
   def ready!(redis)
     @redis = redis
+    self
   end
 
   def announce(event)                  
