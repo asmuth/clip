@@ -146,38 +146,43 @@ describe FnordMetric::Session do
   describe "Finding Sessions" do
 
     before(:each) do      
-      @redis.del("#{@namespace}-sessions") 
-      @redis.del("#{@namespace}-sessions*")   
+      @redis.del("#{@namespace}-sessions")           
+      @redis.keys("#{@namespace}-sessions-*").each { |k| @redis.del(k) }     
+
+      @opts = {         
+        :redis_prefix => "#{@namespace}-sessions",
+        :redis => @redis
+      }  
     end
 
     it "should find all sessions" do
       create_session("sess533", @now, {})
       create_session("sess343", @now, {})
-      Session.all.length.should == 2
+      Session.all(@opts).length.should == 2
     end
 
     it "should find all sessions and return session objects" do
       create_session("sess523", @now, {})
-      Session.all.first.should be_a(FnordMetric::Session)
+      Session.all(@opts).first.should be_a(FnordMetric::Session)
     end
 
     it "should find a session and return a session object" do
       create_session("sess223", @now, {})
-      sess = Session.find(Digest::MD5.hexdigest("sess223"))
+      sess = Session.find(Digest::MD5.hexdigest("sess223"), @opts)
       sess.should be_a(FnordMetric::Session)
-      sess.session_key_hash.should == Digest::MD5.hexdigest("sess223")
+      sess.session_key.should == Digest::MD5.hexdigest("sess223")
     end
 
     it "should find a sessions and return a session object with data" do
       create_session("sess123", @now, { :fnord => "blubb" })
-      sess = Session.find(Digest::MD5.hexdigest("sess123"))      
+      sess = Session.find(Digest::MD5.hexdigest("sess123"), @opts)      
       sess.data(:fnord).should == "blubb"
     end
 
     it "should not include special attributes in data" do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess173", @now, event_data)
-      sess = Session.find(Digest::MD5.hexdigest("sess173"))      
+      sess = Session.find(Digest::MD5.hexdigest("sess173"), @opts)      
       sess.data(:_name).should == nil
       sess.data(:_picture).should == nil
     end
@@ -185,31 +190,31 @@ describe FnordMetric::Session do
     it "should find a session and return a session object with picture" do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess163", @now, event_data)
-      sess = Session.find(Digest::MD5.hexdigest("sess163"))      
+      sess = Session.find(Digest::MD5.hexdigest("sess163"), @opts)      
       sess.picture.should == "http://myhost/mypic.jpg"
     end
 
     it "should find a session and return a session object with name" do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess143", @now, event_data)
-      sess = Session.find(Digest::MD5.hexdigest("sess143"))      
+      sess = Session.find(Digest::MD5.hexdigest("sess143"), @opts)      
       sess.name.should == "Horst Mayer"
     end
 
     it "should find a session and return a session object with event_ids" do
       sesshash = create_session("sess923", @now, {})
-      @redis.rpush("#{@namespace}-sessions-#{sesshash}-events", "shmoo")       
-      @redis.rpush("#{@namespace}-sessions-#{sesshash}-events", "fnord")
-      sess = Session.find(sesshash)
+      @redis_wrap.rpush("#{@namespace}-sessions-#{sesshash}-events", "shmoo")       
+      @redis_wrap.rpush("#{@namespace}-sessions-#{sesshash}-events", "fnord")
+      sess = Session.find(sesshash, @opts)
       sess.event_ids[0].should == "fnord"
       sess.event_ids[1].should == "shmoo"
     end
 
     def create_session(sesskey, sesstime, sessdata)        
       Digest::MD5.hexdigest(sesskey).tap do |sesshash|
-        @redis.zadd("#{@namespace}-sessions", sesstime, sesshash)        
+        @redis_wrap.zadd("#{@namespace}-sessions", sesstime, sesshash)        
         sessdata.each do |k,v|
-          @redis.hset("#{@namespace}-sessions-#{sesshash}-data", k, v)        
+          @redis_wrap.hset("#{@namespace}-sessions-#{sesshash}-data", k, v)        
         end
       end
     end

@@ -1,5 +1,7 @@
 class FnordMetric::Session
 
+  @@meta_attributes = %w(name picture)
+
   def self.create(opts)        
     redis = opts.fetch(:redis)
     event = opts[:event]   
@@ -14,22 +16,50 @@ class FnordMetric::Session
     end    
   end
 
-  def self.find(session_key)
+  def self.find(session_key, opts)
     self.new(session_key).tap do |session|
-      #session.fetch_data!
-      #session.fetch_event_ids!
+      redis_opts = opts[:redis], opts[:redis_prefix]
+      session.add_redis(*redis_opts)
+      session.fetch_data!
+      session.fetch_event_ids!
       #session.fetch_events!
     end
   end
 
-
-  def self.all(since=nil)
-    []
+  def self.all(opts)    
+    redis, redis_prefix = opts[:redis], opts[:redis_prefix]    
+    redis.zrange(redis_prefix, 0, -1).map do |session_key|
+      find(session_key, opts)
+    end
   end
 
   def initialize(session_key, redis_opts=nil)
     @session_key = session_key
     add_redis(*redis_opts) if redis_opts
+  end
+
+  def session_key
+    @session_key
+  end
+
+  def picture
+    @picture
+  end
+
+  def name
+    @name
+  end
+
+  def data(key=nil)
+    key ? @data[key] : @data 
+  end
+
+  def event_ids
+    @event_ids || []
+  end
+
+  def events
+    [] 
   end
 
   def redis_key(append=nil)
@@ -67,25 +97,27 @@ class FnordMetric::Session
   def add_data(key, value)    
     @redis.hset(redis_key(:data), key, value)
   end
-
-  def picture
-    "sdgjsdfg"
+  
+  def fetch_data!
+    @data = Hash.new
+    @redis.hgetall(redis_key(:data)).each do |key, value|    
+      if key[0]=="_" 
+        fetch_meta_key(key, value)
+      else      
+        @data[key.intern] = value 
+      end
+    end
   end
 
-  def name
-    "areazrh"
+  def fetch_meta_key(key, value)
+    meta_key = key[1..-1]
+    if @@meta_attributes.include?(meta_key)
+      instance_variable_set(:"@#{meta_key}", value)
+    end
   end
 
-  def data(key)
-    {}
-  end
-
-  def event_ids
-    []
-  end
-
-  def events
-    [] 
+  def fetch_event_ids!
+    @event_ids = @redis.lrange(redis_key(:events), 0,-1).reverse
   end
 
 end
