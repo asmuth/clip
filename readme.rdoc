@@ -43,6 +43,12 @@ Step 5: Even more shiny stuff!
 
 === Sending data: Connection
 
+The slow way: HTTP-Post the json event to the fnordmetric webinterface
+
+  POST http://localhost:2323/events _type=_set_name&name=Horst(..)
+
+  curl -X POST -d "_type=_set_name&name=Horst(..)" http://localhost:2323/events
+
 The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
 
   echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 2323

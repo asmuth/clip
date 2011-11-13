@@ -2,13 +2,14 @@ class FnordMetric::Namespace
   
   attr_reader :handlers, :gauges, :opts, :key
 
-  @@opts = [:event, :gauge]
+  @@opts = [:event, :gauge, :widget]
 
   def initialize(key, opts)    
     @gauges = Hash.new
-    @handlers = Hash.new([])         
+    @dashboards = Hash.new
+    @handlers = Hash.new([])                 
     @opts = opts
-    @key = key  
+    @key = key      
   end
 
   def ready!(redis)
@@ -45,6 +46,17 @@ class FnordMetric::Namespace
     [@opts[:redis_prefix], @key, append].compact.join("-")
   end
 
+  def token
+    @key
+  end
+
+  def dashboards(name=nil)
+    return @dashboards unless name
+    @dashboards[name] ||= FnordMetric::Dashboard.new(
+      :title => name
+    )       
+  end
+
   def method_missing(m, *args, &block)
     raise "unknown option: #{m}" unless @@opts.include?(m)
     send(:"opt_#{m}", *args, &block)
@@ -60,6 +72,10 @@ class FnordMetric::Namespace
   def opt_gauge(gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
     @gauges[gauge_key] = FnordMetric::Gauge.new(opts)   
+  end
+
+  def opt_widget(dashboard, widget)
+    dashboards(dashboard).add_widget(widget)
   end
     
 end

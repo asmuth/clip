@@ -6,9 +6,19 @@ class FnordMetric::App < Sinatra::Base
   
   enable :session
 
+  
   set :haml, :format => :html5 
   set :views, ::File.expand_path('../../../haml', __FILE__)
   set :public, ::File.expand_path('../../../pub', __FILE__)
+
+  def initialize(namespaces, opts)
+    @namespaces = {}
+    namespaces.each do |key, block|
+      @namespaces[key] = FnordMetric::Namespace.new(key, opts.clone)
+      @namespaces[key].instance_eval(&block)
+    end
+    super(nil)
+  end
   
   helpers do
     include Rack::Utils
@@ -18,6 +28,13 @@ class FnordMetric::App < Sinatra::Base
       request.env["SCRIPT_NAME"]
     end
 
+    def current_namespace          
+      @namespaces[@namespaces.keys.detect{ |k|
+        puts "#{k} <-> #{params[:namespace]}"
+        k.to_s == params[:namespace]
+      }.intern]
+    end
+
   end
 
   if ENV['RACK_ENV'] == "test"
@@ -25,12 +42,17 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
-  	redirect "#{request.env["SCRIPT_NAME"]}/dashboard/default"
+  	redirect "#{path_prefix}/#{@namespaces.keys.first}"
   end
 
-  get '/dashboard/:name' do
-    @dashboard = FnordMetric.dashboards.detect{|d| d.token == params[:name] }
-    @dashboard ||= FnordMetric.dashboards.first
+  get '/:namespace' do
+    return "please define a dashboard" if current_namespace.dashboards.empty?
+    dash_token = current_namespace.dashboards.first.last.token
+    redirect "#{path_prefix}/#{current_namespace.token}/d/#{dash_token}"
+  end
+
+  get '/:namespace/d/:dashboard' do
+    @dashboard = current_namespace.dashboards(params[:dashboard])
     haml :app
   end
 

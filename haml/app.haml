@@ -13,7 +13,7 @@
     #wrap
       #tabs
         %ul
-          -FnordMetric.dashboards.each do |dashboard|
+          -current_namespace.dashboards.each do |key,dashboard|
             %li{:rel => dashboard.token}
               .picto.piechart
               =h dashboard.title

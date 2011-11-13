@@ -12,6 +12,7 @@ gem "haml"
 gem "rack"
 gem "rack-test"
 gem "yajl-ruby", :git => "git://github.com/brianmario/yajl-ruby.git"
+gem "thin"
 
 
 group :development do  

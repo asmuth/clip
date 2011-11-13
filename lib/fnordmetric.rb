@@ -3,9 +3,9 @@ require "eventmachine"
 require 'em-hiredis'
 require 'redis'
 require 'yajl'
-
-#require 'sinatra/base'
-#require 'haml'
+require 'sinatra/base'
+require 'haml'
+require 'thin'
 
 module FnordMetric
 
@@ -21,6 +21,7 @@ module FnordMetric
     opts[:redis_prefix] ||= "fnordmetric"            
 
     opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
+    opts[:web_interface] ||= ["0.0.0.0", "2323"]
 
     opts[:start_worker] ||= true
     opts[:print_stats] ||= 3
@@ -58,13 +59,23 @@ module FnordMetric
         end
       end
 
+      if opts[:web_interface]
+        #begin             
+          app = FnordMetric::App.new(@@namespaces.clone, opts)
+          Thin::Server.start(*opts[:web_interface], app)
+          log "listening on http##{opts[:web_interface].join(":")}"
+        #rescue
+        #  log "cant start FnordMetric::App. port in use?"
+        #end
+      end
+
       if opts[:print_stats]        
         redis = connect_redis(opts[:redis_url])
         EM::PeriodicTimer.new(opts[:print_stats]) do 
           print_stats(opts, redis) 
         end
       end
-  
+
     end 
   end
 
@@ -107,12 +118,11 @@ require "fnordmetric/gauge_modifiers"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
 require "fnordmetric/session"
+require "fnordmetric/app"
+require "fnordmetric/dashboard"
 
-
-
-#require "fnordmetric/app"
 #require "fnordmetric/metric_api"
-#require "fnordmetric/dashboard"
+
 #require "fnordmetric/event"
 #require "fnordmetric/cache"
 #require "fnordmetric/report"
@@ -125,3 +135,4 @@ require "fnordmetric/session"
 #require "fnordmetric/numbers_widget"
 #require "fnordmetric/timeline_widget"
 #require "fnordmetric/funnel_widget"
+

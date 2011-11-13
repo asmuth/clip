@@ -9,6 +9,24 @@ describe FnordMetric::Namespace do
     @redis_wrap = RedisWrap.new(@redis)
   end
 
+  describe "instance methods" do
+
+    before(:each) do
+      @namespace = Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
+    end
+
+    it "should create a new dashboard if a widget is added" do
+      @namespace.widget("My Dash", nil)
+      @namespace.dashboards.keys.should == ["My Dash"]
+    end
+
+
+    it "should create a new dashboard if a widget is added and add the widget"
+    it "should add widget to an existing dashboard"
+
+  end
+
+
   it "should generate the correct redis prefix"
 
   it "should register a gauge"

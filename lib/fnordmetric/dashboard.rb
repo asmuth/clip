@@ -1,17 +1,15 @@
 class FnordMetric::Dashboard
 
-  attr_accessor :widgets, :report
+  attr_accessor :widgets
 
-  def initialize(options, _block=nil, &block)
-    @options = options.to_options
+  def initialize(options={})    
+    raise "please provide a :title" unless options[:title]        
     @widgets = Array.new
-    raise "please provide a :title" unless @options[:title]
-    (_block||block).call(self)
-    add_report(@options[:report]) if @options[:report]
+    @options = options
   end
 
   def add_widget(w)
-    @widgets << (w.is_a?(FnordMetric::Widget) ? w : FnordMetric.widgets.fetch(w))
+    #@widgets << (w.is_a?(FnordMetric::Widget) ? w : FnordMetric.widgets.fetch(w))
   end
 
   def title
@@ -22,9 +20,4 @@ class FnordMetric::Dashboard
     title.to_s.gsub(/[\W]/, '')
   end
   
-  def add_report(report)
-    @report = report
-    @widgets.each{ |w| w.add_report(report) }
-  end
-
 end
