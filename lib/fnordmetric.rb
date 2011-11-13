@@ -56,11 +56,6 @@ module FnordMetric
 
   def self.heartbeat!(opts, redis, keys=@@stat_keys) 
     redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|      
-      if queue_length > 50000
-        # if the queue size gets above 50k, some very strange things happen...
-        puts "[#{time_str}] !!! node overloaded, dropping queue !!!"
-        redis.del("#{opts[:redis_prefix]}-queue")
-      end
       redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
         data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}.join(", ")
         puts "[#{time_str}] #{data_human}, queue_length: #{queue_length}"
