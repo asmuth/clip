@@ -9,25 +9,21 @@ require 'yajl'
 
 module FnordMetric
 
-  @@stat_keys = [:events_received, :events_processed]
   @@namespaces = {}
 
   def self.namespace(key=nil, &block)    
     @@namespaces[key] = block    
   end
-
-
-  def self.run(opts={})
-    start_em(opts) 
-  rescue Exception => e
-    log "!!! eventmachine died, restarting... #{e.message}"
-    sleep(1); run(opts)  
-  end
-
-  def self.start_em(opts)
+  
+  def self.default_options(opts)
 
     opts[:redis_uri] = "redis://localhost:6379"
     opts[:redis_prefix] ||= "fnordmetric"            
+
+    opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
+
+    opts[:start_worker] ||= true
+    opts[:print_stats] ||= 3
 
     # events that aren't processed after 2 min get dropped
     opts[:event_queue_ttl] ||= 120
@@ -37,44 +33,69 @@ module FnordMetric
 
     # session data is kept for one month
     opts[:session_data_ttl] ||= 3600*24*30 
-
-    EM.run do
-
-      redis = EM::Hiredis.connect(opts[:redis_uri])
-      FnordMetric::Worker.new(@@namespaces.clone, opts)
-
-      begin
-        FnordMetric::InboundStream.configure(opts)
-        EventMachine::start_server "0.0.0.0", 1337, FnordMetric::InboundStream
-        log "listening on tcp#1337 for json event data"
-      rescue
-        log "cant start FnordMetric::InboundStream. port in use?"
-      end
-
-      EventMachine::PeriodicTimer.new(1){ heartbeat!(opts, redis) }
-
-      proc{
-        log "shutting down, byebye"
-        EM.stop
-      }.tap do |shutdown|
-        trap("TERM", shutdown)
-        trap("INT", shutdown)
-      end
-      
-    end 
+    
+    opts
   end
 
-  def self.heartbeat!(opts, redis, keys=@@stat_keys) 
-    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|      
-      redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
-        data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}.join(", ")
-        log "#{data_human}, queue_length: #{queue_length}"
-      end  
-    end
+  def self.start_em(opts)
+    EM.run do
+
+      trap("TERM", &method(:shutdown))
+      trap("INT",  &method(:shutdown))
+
+      opts = default_options(opts)      
+
+      if opts[:start_worker]
+        worker = Worker.new(@@namespaces.clone, opts)     
+      end
+
+      if opts[:inbound_stream]
+        begin   
+          inbound_stream = InboundStream.start(opts)           
+          log "listening on tcp##{opts[:inbound_stream].join(":")}"
+        rescue
+          log "cant start FnordMetric::InboundStream. port in use?"
+        end
+      end
+
+      if opts[:print_stats]        
+        redis = connect_redis(opts[:redis_url])
+        EM::PeriodicTimer.new(opts[:print_stats]) do 
+          print_stats(opts, redis) 
+        end
+      end
+  
+    end 
   end
 
   def self.log(msg)
     puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{msg}"
+  end
+
+  def self.run(opts={})
+    start_em(opts) 
+  rescue Exception => e
+    log "!!! eventmachine died, restarting... #{e.message}"
+    sleep(1); run(opts)  
+  end
+
+  def self.shutdown
+    log "shutting down, byebye"
+    EM.stop
+  end
+
+  def self.connect_redis(redis_url)
+    EM::Hiredis.connect(redis_url)
+  end
+
+  def self.print_stats(opts, redis) # FIXME: refactor this mess
+    keys = [:events_received, :events_processed]
+    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|      
+      redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
+        data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}
+        log "#{data_human.join(", ")}, queue_length: #{queue_length}"
+      end  
+    end
   end
 
 end

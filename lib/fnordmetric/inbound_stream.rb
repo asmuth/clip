@@ -2,8 +2,9 @@ class FnordMetric::InboundStream < EventMachine::Connection
 
   @@opts = nil
 
-  def self.configure(opts)
+  def self.start(opts)
     @@opts = opts
+    EM.start_server(*opts[:inbound_stream], self)    
   end
 
   def receive_data(chunk)        
