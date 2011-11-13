@@ -79,7 +79,7 @@ describe FnordMetric::Session do
 
     it "should store a name in the session data" do   
       event_data = @event.merge(
-        :_type => "_set_picture", 
+        :_type => "_set_name", 
         :name => "Horst Mayer"
       )            
       Session.create(
@@ -95,7 +95,7 @@ describe FnordMetric::Session do
     it "should store a picutre in the session data" do               
       event_data = @event.merge(
         :_type => "_set_picture", 
-        :picture => "http://myhost/mypic.jpg"
+        :url => "http://myhost/mypic.jpg"
       )
       Session.create(
         :namespace_prefix => @namespace,

@@ -51,13 +51,20 @@ class FnordMetric::Session
   end
 
   def add_event(event)    
-    @redis.rpush(redis_key(:events), event[:_eid])
+    @redis.rpush(redis_key(:events), event[:_eid])    
     add_data(:_picture, event[:url]) if event[:_type] == "_set_picture"    
     add_data(:_name, event[:name]) if event[:_type] == "_set_name"    
+    add_event_data(event) if event[:_type] == "_set_data" 
     touch(event[:_time])
   end
 
-  def add_data(key, value)
+  def add_event_data(event)
+    event.each do |key,value|
+      add_data(key, value) unless key[0]=="_"
+    end
+  end
+
+  def add_data(key, value)    
     @redis.hset(redis_key(:data), key, value)
   end
 
