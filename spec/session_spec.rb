@@ -149,13 +149,13 @@ describe FnordMetric::Session do
 
     it "should find all sessions and return session objects" do
       create_session("sess523", @now, {})
-      Session.all.first.should be_a?(FnordMetric::Session)
+      Session.all.first.should be_a(FnordMetric::Session)
     end
 
     it "should find a session and return a session object" do
       create_session("sess223", @now, {})
       sess = Session.find(Digest::MD5.hexdigest("sess223"))
-      sess.should be_a?(FnordMetric::Session)
+      sess.should be_a(FnordMetric::Session)
       sess.session_key_hash.should == Digest::MD5.hexdigest("sess223")
     end
 
@@ -189,18 +189,18 @@ describe FnordMetric::Session do
 
     it "should find a session and return a session object with event_ids" do
       sesshash = create_session("sess923", @now, {})
-      redis.rpush("#{@namespace}-sessions-#{sesshash}-events", "shmoo")       
-      redis.rpush("#{@namespace}-sessions-#{sesshash}-events", "fnord")
+      @redis.rpush("#{@namespace}-sessions-#{sesshash}-events", "shmoo")       
+      @redis.rpush("#{@namespace}-sessions-#{sesshash}-events", "fnord")
       sess = Session.find(sesshash)
       sess.event_ids[0].should == "fnord"
       sess.event_ids[1].should == "shmoo"
     end
 
     def create_session(sesskey, sesstime, sessdata)        
-      Digest::MD5.hexdigest(sessskey).tap do |sesshash|
-        redis.zadd("#{@namespace}-sessions", sesstime, sesshash)        
+      Digest::MD5.hexdigest(sesskey).tap do |sesshash|
+        @redis.zadd("#{@namespace}-sessions", sesstime, sesshash)        
         sessdata.each do |k,v|
-          redis.hset("#{@namespace}-sessions-#{sesshash}-data", k, v)        
+          @redis.hset("#{@namespace}-sessions-#{sesshash}-data", k, v)        
         end
       end
     end
