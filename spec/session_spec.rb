@@ -25,7 +25,7 @@ describe FnordMetric::Session do
     end
 
     it "should add a new session on intialize" do        
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :redis => @redis_wrap
@@ -34,7 +34,7 @@ describe FnordMetric::Session do
     end
 
     it "should add a new session on intialize and hash the session token" do               
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :redis => @redis_wrap
@@ -43,7 +43,7 @@ describe FnordMetric::Session do
     end
 
     it "should add a new session on intialize and set the timestamp as score" do               
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :redis => @redis_wrap
@@ -54,7 +54,7 @@ describe FnordMetric::Session do
     it "should update the timestamp on a existing session" do     
       @redis.zadd(@sessions, @now-10, @md5_key)
       @redis.zscore(@sessions, @md5_key).to_i.should == @now-10
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :redis => @redis_wrap
@@ -63,7 +63,7 @@ describe FnordMetric::Session do
     end
 
     it "should add the event_id to the session-event list on a new session" do               
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :redis => @redis_wrap
@@ -77,7 +77,7 @@ describe FnordMetric::Session do
         :type => "_set_picture", 
         :name => "Horst Mayer"
       )            
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :redis => @redis_wrap
@@ -91,7 +91,7 @@ describe FnordMetric::Session do
         :type => "_set_picture", 
         :picture => "http://myhost/mypic.jpg"
       )
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :redis => @redis_wrap
@@ -106,7 +106,7 @@ describe FnordMetric::Session do
         :fnord => "blubb", 
         :foobar => "123"
       )
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :redis => @redis_wrap
@@ -122,7 +122,7 @@ describe FnordMetric::Session do
         :fnord => "blubb", 
         :foobar => "123"
       )
-      Session.new(
+      Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :redis => @redis_wrap

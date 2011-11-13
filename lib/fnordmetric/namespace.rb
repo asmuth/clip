@@ -20,7 +20,7 @@ class FnordMetric::Namespace
     @handlers[event[:_type]].each{ |c| c.clone.call(event, @redis) }
 
     if event[:_session]      
-      FnordMetric::Session.new(@opts.clone.merge(
+      FnordMetric::Session.create(@opts.clone.merge(
         :namespace_key => @key, 
         :namespace_prefix => key_prefix,
         :redis => @redis,

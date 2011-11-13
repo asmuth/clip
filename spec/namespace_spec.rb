@@ -33,7 +33,7 @@ describe FnordMetric::Namespace do
 
 
   it "should create a new session on announce if _session is set" do
-    Session.should_receive(:new)
+    Session.should_receive(:create)
     Namespace.new(
       :myns_213, 
       :redis_prefix => "fnordmetric", 
