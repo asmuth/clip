@@ -6,16 +6,17 @@ class FnordMetric::App < Sinatra::Base
   
   enable :session
 
-  
   set :haml, :format => :html5 
   set :views, ::File.expand_path('../../../haml', __FILE__)
   set :public, ::File.expand_path('../../../pub', __FILE__)
 
   def initialize(namespaces, opts)
     @namespaces = {}
+    @redis = Redis.new
     namespaces.each do |key, block|
       @namespaces[key] = FnordMetric::Namespace.new(key, opts.clone)
       @namespaces[key].instance_eval(&block)
+      @namespaces[key].ready!(@redis.clone)
     end
     super(nil)
   end
@@ -59,6 +60,10 @@ class FnordMetric::App < Sinatra::Base
   #  @widget = @dashboard.widgets.first
   #  haml :widget
   #end
+
+  get '/:namespace/sessions' do
+    { :sessions => current_namespace.sessions(:all) }.to_json
+  end
 
   post '/events' do
     halt 400, 'please specify the event_type' unless params["type"]       

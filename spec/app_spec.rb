@@ -7,9 +7,10 @@ describe "app" do
 
   before(:all) do
     @redis = Redis.new
-    @redis_wrap = RedisWrap.new(@redis)
+    @now = Time.utc(1992,01,13,5,23,23).to_i   
     @namespace = Namespace.new(:foospace, :redis_prefix => "fnordmetric")
-    @opts = {}
+    @redis_wrap = RedisWrap.new(@redis)
+    @opts = { :redis_prefix => "fnordmetric" }
   end
 
   def app
@@ -95,11 +96,11 @@ describe "app" do
     end
 
     it "should not render more than 100 sessions at once" do
-      123.times do
+      123.times do |n|
         @namespace.ready!(@redis_wrap).announce(
           :_time => Time.now.to_i, 
           :_type => "foobar", 
-          :_session => "sess213"
+          :_session => "sess213-#{n}"
         )
       end
       get "/foospace/sessions" 

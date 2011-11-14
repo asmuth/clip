@@ -27,8 +27,8 @@ class FnordMetric::Session
   end
 
   def self.all(opts)    
-    redis, redis_prefix = opts[:redis], opts[:redis_prefix]    
-    redis.zrange(redis_prefix, 0, -1).map do |session_key|
+    set_key = "#{opts[:namespace_prefix]}-session"
+    opts[:redis].zrange(set_key, 0, -1).map do |session_key|
       find(session_key, opts)
     end
   end
