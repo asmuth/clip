@@ -1,44 +1,98 @@
-FnordMetric = {
-  d: document,
-  p: '/fnordmetric/',
-  id: function(id){return FnordMetric.d.getElementById(id)},
-  tag: function(element){return FnordMetric.d.getElementsByTagName(element)},
-  ce: function(element){return FnordMetric.d.createElement(element)},
+var FnordMetric = (function(){
+ 
+  var canvasElem = false;
 
-  init: function(){
-    if(widget_config.path_prefix){ FnordMetric.p = widget_config.path_prefix; } 
-  },
+  var currentNamespace = false;
+  var currentView = false;
 
-  js: function(url, callback){
-    var s = FnordMetric.ce('script');
-    s.type = "text/javascript";
-    s.onload = callback;
-    FnordMetric.init();
-    s.src = FnordMetric.p+url;
-    FnordMetric.tag('head')[0].appendChild(s);  
-  },
+  var sessionView = (function(){
+    
+    var feedElem = $('<div class="sessions_feed"></div>');
+    var sideElem = $('<div class="sessions_sidebar"></div>');
+    var sessionData;
 
-  css: function(url, callback){
-    var s = FnordMetric.ce('link');
-    s.type = "text/css";
-    s.rel = 'stylesheet';
-    s.href = FnordMetric.p+url;
-    s.onload = callback;         
-    FnordMetric.tag('head')[0].appendChild(s); 
-  },
+    function load(elem){
+      elem.html('').append(feedElem).append(sideElem);
+      startPoll();
+    };
 
-  render: function(elem, widget_config){
-    var f = FnordMetric.ce('iframe');    
-    f.style.width = '100%'; f.style.height = widget_config.widget_height+'px';
-    f.frameBorder = 'none'; f.scrolling = 'no';
-    FnordMetric.id(elem).appendChild(f);
-    var s = f.contentDocument.createElement('script')
-    s.type = "text/javascript";
-    s.src = FnordMetric.p+'/fnordmetric/fnordmetric.js';    
-    widget_config.path_prefix = FnordMetric.p;
-    s.onload = function(){ f.contentWindow.FnordMetric.js(widget_config.widget_url); }
-    f.contentWindow.widget_config = widget_config;        
-    f.contentDocument.getElementsByTagName('head')[0].appendChild(s);   	
+    function resize(_width, _height){
+      $('.sessions_feed').width(_width-251);
+    };
+
+    function startPoll(){
+      sessionView.poll = window.setInterval(function(){
+        $.ajax({
+          url: '/'+currentNamespace+'/sessions',
+          success: callbackPoll()
+        });
+      }, 500);
+    };
+
+    function callbackPoll(){
+      return (function(_data, _status){
+        sessionData = JSON.parse(_data).sessions;
+        renderSidebar();
+      });
+    };
+
+    function renderSidebar(){
+      var listElem = $('<ul class="session_list"></ul>');
+      for(session_key in sessionData){
+        listElem.append(
+          $('<li class="session"></li>').append(
+            $('<div class="picture"></div>')
+          ).append(
+            $('<span class="name"></span>').html(session_key)
+          ).append(
+            $('<span class="time"></span>').html('23min')
+          )
+        );
+      }
+      sideElem.html(
+        $('<div class="headbar"></div>').html('Active Users')
+      );
+      sideElem.append(listElem);
+    };
+
+    function close(){
+      
+    };
+
+    return {
+      load: load,
+      resize: resize,
+      close: close
+    };
+
+  })();
+  
+  function loadView(_view){
+    if(currentView){ currentView.close(); }
+    canvasElem.html('loading!');
+    currentView = _view;
+    currentView.load(canvasElem);
+    resizeView();
+  };
+
+  function resizeView(){
+    currentView.resize(
+      canvasElem.innerWidth(), 
+      canvasElem.innerHeight()
+    );
   }
 
-};
+  function init(_namespace, _canvasElem){
+    canvasElem = _canvasElem;
+    currentNamespace = _namespace;
+    loadView(sessionView);
+  };
+
+  return {
+    p: '/fnordmetric/',  
+    loadView: loadView,
+    resizeView: resizeView,
+    init: init
+  };
+
+})();

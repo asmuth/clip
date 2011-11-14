@@ -2,6 +2,7 @@ require 'rubygems'
 require "eventmachine"
 require 'em-hiredis'
 require 'redis'
+require "active_support/core_ext"
 require 'yajl'
 require 'sinatra/base'
 require 'haml'

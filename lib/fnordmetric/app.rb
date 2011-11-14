@@ -31,9 +31,8 @@ class FnordMetric::App < Sinatra::Base
 
     def current_namespace          
       @namespaces[@namespaces.keys.detect{ |k|
-        puts "#{k} <-> #{params[:namespace]}"
-        k && k.to_s == params[:namespace]
-      }.intern]
+        k.to_s == params[:namespace]
+      }.try(:intern)]
     end
 
   end
@@ -50,6 +49,10 @@ class FnordMetric::App < Sinatra::Base
     haml :app
   end
 
+  get '/favicon.ico' do
+    ""
+  end
+
   #get '/metric/:name' do
   #  content_type 'application/json'
   #  FnordMetric::MetricAPI.new(params).render    
@@ -62,11 +65,11 @@ class FnordMetric::App < Sinatra::Base
   #end
 
   get '/:namespace/sessions' do
-    {:sessions=>{}}.tap do |h|
+    { :sessions => Hash.new.tap{ |sessions|
       current_namespace.sessions(:all)[0..99].each do |s|
-        h[:sessions][s.session_key] = s.to_json
+        sessions[s.session_key] = s.to_json
       end
-    end.to_json
+    } }.to_json
   end
 
   post '/events' do

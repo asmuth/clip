@@ -15,6 +15,10 @@
     #wrap
       #tabs
         %ul
+          %li.active{:rel => "_sessions"}
+            .picto.piechart
+            Active Users
+
           -current_namespace.dashboards.each do |key,dashboard|
             %li{:rel => dashboard.token}
               .picto.piechart
@@ -28,13 +32,17 @@
 :javascript
   $(document).ready(function(){
 
+    FnordMetric.init('#{current_namespace.token}', $('.viewport_inner'));
+
     $('#tabs li').click(function(){
-      document.location.href = '#{path_prefix}/dashboard/' + $(this).attr('rel');
+      //document.location.href = '#{path_prefix}/dashboard/' + $(this).attr('rel');
+      alert(1);
     });
 
     function resizeViewport(){ 
       var viewport_width = window.innerWidth-220
       $('#viewport').width(viewport_width); 
+      FnordMetric.resizeView();
     }
     resizeViewport();
     $(window).resize(resizeViewport);

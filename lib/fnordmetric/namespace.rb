@@ -59,7 +59,7 @@ class FnordMetric::Namespace
 
   def sessions(_ids, opts={})
     _opts = { :redis => @redis, :namespace_prefix => key_prefix }
-    return Session.all(_opts.merge(opts)) if _ids == :all
+    return FnordMetric::Session.all(_opts.merge(opts)) if _ids == :all
   end
 
   def method_missing(m, *args, &block)
