@@ -62,6 +62,10 @@ class FnordMetric::Session
     [] 
   end
 
+  def to_json
+    { :session_key => session_key }
+  end
+
   def redis_key(append=nil)
     [@redis_prefix, @session_key, append].compact.join("-")
   end

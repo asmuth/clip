@@ -58,7 +58,7 @@ describe "app" do
 
   describe "sessions api" do
   
-    before(:all) do
+    before(:each) do
       @redis.keys("fnordmetric-foospace*").each { |k| @redis.del(k) }  
     end
 
@@ -92,7 +92,7 @@ describe "app" do
       )
       get "/foospace/sessions" 
       sesskey = JSON.parse(last_response.body)["sessions"].first.first
-      sesskey.shoukd == Digest::MD5.hexdigest("sess133")
+      sesskey.should == Digest::MD5.hexdigest("sess133")
     end
 
     it "should not render more than 100 sessions at once" do

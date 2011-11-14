@@ -151,6 +151,7 @@ describe FnordMetric::Session do
 
       @opts = {         
         :redis_prefix => "#{@namespace}-session",
+        :namespace_prefix => "#{@namespace}",
         :redis => @redis
       }  
     end
