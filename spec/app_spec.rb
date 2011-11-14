@@ -1,15 +1,18 @@
 require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 include Rack::Test::Methods
+include FnordMetric
 
 describe "app" do
 
   before(:all) do
+    @redis = Redis.new
+    @redis_wrap = RedisWrap.new(@redis)
+    @namespace = Namespace.new(:foospace, :redis_prefix => "fnordmetric")
     @opts = {}
   end
 
   def app
-    namespaces =     
     @app ||= FnordMetric::App.new({
       :foospace => proc{        
         widget 'Blubb', nil
@@ -52,6 +55,59 @@ describe "app" do
     last_response.body.should include("Fnord")
   end
 
+  describe "sessions api" do
+  
+    before(:all) do
+      @redis.keys("fnordmetric-foospace*").each { |k| @redis.del(k) }  
+    end
+
+    it "should render a list of all active sessions" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => Time.now.to_i, 
+        :_type => "foobar", 
+        :_session => "sess213"
+      )
+      get "/foospace/sessions" 
+      JSON.parse(last_response.body).should have_key("sessions")
+      JSON.parse(last_response.body)["sessions"].length.should == 1
+    end
+
+    it "should render a list of all active sessions with timestamps" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now-5, 
+        :_type => "foobar", 
+        :_session => "sess213"
+      )
+      get "/foospace/sessions" 
+      sess = JSON.parse(last_response.body)["sessions"].first.last
+      sess["last_updated"].should == @now-5
+    end
+
+    it "should render a list of all active sessions with hashed keys" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now-5, 
+        :_type => "foobar", 
+        :_session => "sess133"
+      )
+      get "/foospace/sessions" 
+      sesskey = JSON.parse(last_response.body)["sessions"].first.first
+      sesskey.shoukd == Digest::MD5.hexdigest("sess133")
+    end
+
+    it "should not render more than 100 sessions at once" do
+      123.times do
+        @namespace.ready!(@redis_wrap).announce(
+          :_time => Time.now.to_i, 
+          :_type => "foobar", 
+          :_session => "sess213"
+        )
+      end
+      get "/foospace/sessions" 
+      JSON.parse(last_response.body).should have_key("sessions")
+      JSON.parse(last_response.body)["sessions"].length.should == 100
+    end
+
+  end
 
   describe "events api" do
 
