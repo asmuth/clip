@@ -26,7 +26,7 @@ var FnordMetric = (function(){
 
     function startPoll(){
       (doPoll())();
-      sessionView.poll = window.setInterval(doPoll(), 15000);
+      sessionView.poll = window.setInterval(doPoll(), 1000);
     };
 
     function doPoll(){
