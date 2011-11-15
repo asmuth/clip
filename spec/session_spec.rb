@@ -176,7 +176,8 @@ describe FnordMetric::Session do
 
     it "should find a sessions and return a session object with data" do
       create_session("sess123", @now, { :fnord => "blubb" })
-      sess = Session.find(Digest::MD5.hexdigest("sess123"), @opts)      
+      sess = Session.find(Digest::MD5.hexdigest("sess123"), @opts)  
+      sess.fetch_data!    
       sess.data(:fnord).should == "blubb"
     end
 
@@ -184,6 +185,7 @@ describe FnordMetric::Session do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess173", @now, event_data)
       sess = Session.find(Digest::MD5.hexdigest("sess173"), @opts)      
+      sess.fetch_data!
       sess.data(:_name).should == nil
       sess.data(:_picture).should == nil
     end
@@ -192,6 +194,7 @@ describe FnordMetric::Session do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess163", @now, event_data)
       sess = Session.find(Digest::MD5.hexdigest("sess163"), @opts)      
+      sess.fetch_data!
       sess.picture.should == "http://myhost/mypic.jpg"
     end
 
@@ -199,6 +202,7 @@ describe FnordMetric::Session do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess143", @now, event_data)
       sess = Session.find(Digest::MD5.hexdigest("sess143"), @opts)      
+      sess.fetch_data!
       sess.name.should == "Horst Mayer"
     end
 
@@ -207,6 +211,7 @@ describe FnordMetric::Session do
       @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "shmoo")       
       @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "fnord")
       sess = Session.find(sesshash, @opts)
+      sess.fetch_event_ids!
       sess.event_ids[0].should == "fnord"
       sess.event_ids[1].should == "shmoo"
     end

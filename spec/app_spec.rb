@@ -96,7 +96,7 @@ describe "app" do
       )
       get "/foospace/sessions" 
       sess = JSON.parse(last_response.body)["sessions"].first
-      sess["name"].should == "Hans Peter"
+      sess["_name"].should == "Hans Peter"
     end
 
     it "should render a list of all active sessions with user pictures" do
@@ -108,7 +108,7 @@ describe "app" do
       )
       get "/foospace/sessions" 
       sess = JSON.parse(last_response.body)["sessions"].first
-      sess["picture"].should == "http://myhost.com/mypic.jpg"
+      sess["_picture"].should == "http://myhost.com/mypic.jpg"
     end
 
     it "should render a list of all active sessions with hashed keys" do

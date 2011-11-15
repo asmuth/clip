@@ -59,8 +59,8 @@ class FnordMetric::Session
 
   def to_json
     { :session_key => session_key }.tap do |hash| 
-      hash.merge!(:picture => @picture) if @picture
-      hash.merge!(:name => @name) if @name
+      hash.merge!(:_picture => @picture) if @picture
+      hash.merge!(:_name => @name) if @name
     end
   end
 

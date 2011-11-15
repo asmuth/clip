@@ -21,13 +21,18 @@ var FnordMetric = (function(){
     };
 
     function startPoll(){
-      sessionView.poll = window.setInterval(function(){
+      (doPoll())();
+      sessionView.poll = window.setInterval(doPoll(), 15000);
+    };
+
+    function doPoll(){
+      return (function(){
         $.ajax({
           url: '/'+currentNamespace+'/sessions',
           success: callbackPoll()
         });
-      }, 500);
-    };
+      });
+    }
 
     function callbackPoll(){
       return (function(_data, _status){
@@ -39,11 +44,24 @@ var FnordMetric = (function(){
     function renderSidebar(){
       var listElem = $('<ul class="session_list"></ul>');
       for(var sessionIndex=0; sessionIndex < sessionData.length; sessionIndex++){
+        var session_data = sessionData[sessionIndex]
+        var session_name = session_data["_name"];
+        var session_picture = 'X';
+    
+        if(!session_name){ 
+          session_name = session_data["session_key"].substr(0,15)
+        };
+
+        if(session_data["_picture"]){ 
+          session_picture = $('<img width="18" />');
+          session_picture.attr('src', session_data["_picture"]);
+        };
+
         listElem.append(
           $('<li class="session"></li>').append(
-            $('<div class="picture"></div>')
+            $('<div class="picture"></div>').html(session_picture)
           ).append(
-            $('<span class="name"></span>').html(sessionData[sessionIndex]["session_key"])
+            $('<span class="name"></span>').html(session_name)
           ).append(
             $('<span class="time"></span>').html('23min')
           )
