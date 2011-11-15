@@ -14,6 +14,7 @@ describe FnordMetric::Event do
 
     @opts = {         
       :namespace_prefix => "#{@namespace}",
+      :redis_prefix => "fnordmetric-test",
       :redis => @redis
     }  
   end
@@ -35,6 +36,12 @@ describe FnordMetric::Event do
       Event.all(@opts).first.should be_a(FnordMetric::Event)
     end
 
+    it "should find all events and returnevent objects with time" do
+      create_event("352234", {:_type => "Fn0rd", :blah => :blubb, :_time => @now})
+      events = Event.all(@opts) 
+      events.first.time.to_i.should == @now
+    end
+
     it "should find an event and return a event object" do
       create_event("756753", {:_type => "Fn0rd", :_time => @now})
       event = Event.find("756753", @opts)
@@ -54,15 +61,9 @@ describe FnordMetric::Event do
       event.id.should == "5262435"
     end
 
-    it "should find an event and return a event object with time" do
-      create_event("352234", {:_type => "Fn0rd", :blah => :blubb, :_time => @now})
-      event = Event.find("352234", @opts) 
-      event.time.should == @now
-    end
-
     def create_event(event_id, event_data)        
       @redis_wrap.zadd(@timeline, event_data.delete(:_time), event_id)
-      @redis.set(event_id, event_data.to_json)        
+      @redis.set("fnordmetric-test-event-#{event_id}", event_data.to_json)        
     end
 
   end
