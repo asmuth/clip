@@ -61,6 +61,43 @@ describe FnordMetric::Event do
       event.id.should == "5262435"
     end
 
+    it "should find all in the correct order" do
+      create_event("5645642", {:_type => "foo", :_time => @now-17})
+      create_event("2342366", {:_type => "foo", :_time => @now-23})
+      create_event("3452345", {:_type => "foo", :_time => @now-42})
+      create_event("6345345", {:_type => "foo", :_time => @now-5})
+      Event.all(@opts).length.should == 4
+      Event.all(@opts)[0].id.should == "6345345"
+      Event.all(@opts)[1].id.should == "5645642"
+      Event.all(@opts)[2].id.should == "2342366"
+      Event.all(@opts)[3].id.should == "3452345"
+    end
+
+    it "should find all events since a given time, including that exact time" do
+      create_event("3452345", {:_type => "foo", :_time => @now-42})
+      create_event("2342366", {:_type => "foo", :_time => @now-23})
+      create_event("5645642", {:_type => "foo", :_time => @now-17})
+      create_event("6345345", {:_type => "foo", :_time => @now-5})
+      Event.all(@opts).length.should == 4
+      Event.all(@opts.merge(:since => @now-42)).length.should == 4
+      Event.all(@opts.merge(:since => @now-23)).length.should == 3
+      Event.all(@opts.merge(:since => @now-22)).length.should == 2
+      Event.all(@opts.merge(:since => @now-17)).length.should == 2
+      Event.all(@opts.merge(:since => @now-16)).length.should == 1
+      Event.all(@opts.merge(:since => @now-5)).length.should == 1
+    end
+
+    it "should find a maximum number of events" do
+      create_event("3452345", {:_type => "foo", :_time => @now-42})
+      create_event("2342366", {:_type => "foo", :_time => @now-23})
+      create_event("5645642", {:_type => "foo", :_time => @now-17})
+      create_event("6345345", {:_type => "foo", :_time => @now-5})
+      Event.all(@opts).length.should == 4
+      Event.all(@opts.merge(:limit => 2)).length.should == 2
+      Event.all(@opts.merge(:limit => 2)).first.id.should == "6345345"
+      Event.all(@opts.merge(:limit => 2)).last.id.should == "5645642"
+    end
+
     def create_event(event_id, event_data)        
       @redis_wrap.zadd(@timeline, event_data.delete(:_time), event_id)
       @redis.set("fnordmetric-test-event-#{event_id}", event_data.to_json)        
