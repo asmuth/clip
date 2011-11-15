@@ -8,11 +8,18 @@ var FnordMetric = (function(){
   var sessionView = (function(){
     
     var feedElem = $('<div class="sessions_feed"></div>');
-    var sideElem = $('<div class="sessions_sidebar"></div>');
+    var listElem = $('<ul class="session_list"></ul>');
     var filterElem = $('<div class="events_sidebar"></div>');
-    var sessionData;
+    var sideElem = $('<div class="sessions_sidebar"></div>').html(
+      $('<div class="headbar"></div>').html('Active Users')
+    ).append(listElem);
+    
+
+    var eventsPolledUntil = false;
+    var sessionData = {};
 
     function load(elem){
+      eventsPolledUntil = new Date().getTime();
       elem.html('')
         .append(filterElem)
         .append(feedElem)
@@ -25,23 +32,26 @@ var FnordMetric = (function(){
     };
 
     function startPoll(){
-      (doPoll())();
-      sessionView.poll = window.setInterval(doPoll(), 1000);
+      (doSessionPoll())();
+      //(doEventsPoll())();
+      sessionView.session_poll = window.setInterval(doSessionPoll(), 1000);
     };
 
-    function doPoll(){
+    function doSessionPoll(){
       return (function(){
         $.ajax({
           url: '/'+currentNamespace+'/sessions',
-          success: callbackPoll()
+          success: callbackSessionPoll()
         });
       });
     }
 
-    function callbackPoll(){
+    function callbackSessionPoll(){
       return (function(_data, _status){
-        sessionData = JSON.parse(_data).sessions;
-        renderSidebar();
+        $.each(JSON.parse(_data).sessions, function(i,v){
+          updateSession(v);  
+        });
+        sortSessions();
       });
     };
 
@@ -59,24 +69,45 @@ var FnordMetric = (function(){
       }
     }
 
-    function renderSidebar(){
-      var listElem = $('<ul class="session_list"></ul>');
-      for(var sessionIndex=0; sessionIndex < sessionData.length; sessionIndex++){
-        var session_data = sessionData[sessionIndex]
-        var session_name = session_data["_name"];
-        var session_picture = 'X';
-    
+    function updateSession(session_data){
+      sessionData[session_data.session_key] = session_data;
+      renderSession(session_data);
+    }
+
+    function sortSessions(){
+      console.log("fixme: sort");
+    }
+
+    function renderSession(session_data){
+
+      var session_name = session_data["_name"];
+      var session_time = formatTimeSince(session_data["_updated_at"]);
+      var session_elem = $('li[data-session='+session_data["session_key"]+']:first');
+
+      if(session_elem.length>0){
+
+        if(session_data["_picture"] && (session_data["_picture"].length > 1)){
+          $('.picture img', session_elem).attr('src', session_data["_picture"])
+        }
+
+        if(session_name){
+          $('.name', session_elem).html(session_name);
+        }
+        
+        $('.time', session_elem).html(session_time);
+
+      } else {
+        
+        var session_picture = $('<img width="18" />');
+
         if(!session_name){ 
           session_name = session_data["session_key"].substr(0,15)
         };
 
         if(session_data["_picture"]){ 
-          session_picture = $('<img width="18" />');
           session_picture.attr('src', session_data["_picture"]);
         };
-
-        var session_time = formatTimeSince(session_data["_updated_at"]);
-
+        
         listElem.append(
           $('<li class="session"></li>').append(
             $('<div class="picture"></div>').html(session_picture)
@@ -84,13 +115,10 @@ var FnordMetric = (function(){
             $('<span class="name"></span>').html(session_name)
           ).append(
             $('<span class="time"></span>').html(session_time)
-          )
+          ).attr('data-session', session_data["session_key"])
         );
+
       }
-      sideElem.html(
-        $('<div class="headbar"></div>').html('Active Users')
-      );
-      sideElem.append(listElem);
     };
 
     function close(){
