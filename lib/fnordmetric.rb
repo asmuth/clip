@@ -121,10 +121,11 @@ require "fnordmetric/gauge"
 require "fnordmetric/session"
 require "fnordmetric/app"
 require "fnordmetric/dashboard"
+require "fnordmetric/event"
 
 #require "fnordmetric/metric_api"
 
-#require "fnordmetric/event"
+
 #require "fnordmetric/cache"
 #require "fnordmetric/report"
 #require "fnordmetric/metric"
