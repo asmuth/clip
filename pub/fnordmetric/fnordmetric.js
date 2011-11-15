@@ -9,11 +9,10 @@ var FnordMetric = (function(){
     
     var listElem = $('<ul class="session_list"></ul>');
     var filterElem = $('<div class="events_sidebar"></div>');
+    var feedInnerElem = $('<div class="feed_inner"></div>');
     var feedElem = $('<div class="sessions_feed"></div>').html(
       $('<div class="headbar"></div>').html('Event Feed')
-    ).append(
-      $('<div class="feed_inner"></div>')
-    );
+    ).append(feedInnerElem);
     var sideElem = $('<div class="sessions_sidebar"></div>').html(
       $('<div class="headbar"></div>').html('Active Users')
     ).append(listElem);
@@ -23,7 +22,7 @@ var FnordMetric = (function(){
     var sessionData = {};
 
     function load(elem){
-      eventsPolledUntil = new Date().getTime();
+      eventsPolledUntil = new Date().getTime()/10000;
       elem.html('')
         .append(filterElem)
         .append(feedElem)
@@ -37,7 +36,7 @@ var FnordMetric = (function(){
 
     function startPoll(){
       (doSessionPoll())();
-      //(doEventsPoll())();
+      (doEventsPoll())();
       sessionView.session_poll = window.setInterval(doSessionPoll(), 1000);
     };
 
@@ -56,6 +55,36 @@ var FnordMetric = (function(){
           updateSession(v);  
         });
         sortSessions();
+      });
+    };
+
+
+    function doEventsPoll(){
+      return (function(){         
+        $.ajax({
+          url: '/'+currentNamespace+'/events?since='+eventsPolledUntil,
+          success: callbackEventsPoll()
+        });
+      });
+    };
+
+    function callbackEventsPoll(){
+      return (function(_data, _status){
+        var events = JSON.parse(_data).events;
+        var timout = 1000;
+        var maxevents = 200;
+        $.each(events, function(i,v){ 
+          renderEvent(v);  
+        });
+        if(events.length > 0){
+          eventsPolledUntil = events[0]._time;
+          timout = 1000;
+        }
+        var elems = $("p", feedInnerElem);
+        for(var n=maxevents; n < elems.length; n++){
+          $(elems[n]).remove();
+        }
+        window.setTimeout(doEventsPoll(), timout);
       });
     };
 
@@ -124,6 +153,12 @@ var FnordMetric = (function(){
 
       }
     };
+
+    function renderEvent(event_data){
+      feedInnerElem.prepend(
+        $('<p></p>').html(event_data._eid)
+      );
+    }
 
     function close(){
       

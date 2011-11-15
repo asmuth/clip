@@ -6,9 +6,13 @@ class FnordMetric::Event
   #end
 
   def self.all(opts)    
-    set_key = "#{opts[:namespace_prefix]}-timeline"
-    event_ids = opts[:redis].zrevrange(set_key, 0, -1, :withscores => true)
-    event_ids.in_groups_of(2).map do |event_id, ts|
+    range_opts = { :withscores => true }
+    range_opts.merge!(:limit => [0,opts[:limit]]) if opts[:limit]
+    opts[:redis].zrevrangebyscore(
+      "#{opts[:namespace_prefix]}-timeline", 
+      '+inf', opts[:since]||'0',
+      range_opts
+    ).in_groups_of(2).map do |event_id, ts|
       next if event_id.blank?
       find(event_id, opts).tap{ |s| s.time = ts }
     end

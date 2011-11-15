@@ -66,7 +66,7 @@ class FnordMetric::App < Sinatra::Base
 
   get '/:namespace/sessions' do
 
-    sessions = current_namespace.sessions(:all)[0..99].map do |session|
+    sessions = current_namespace.sessions(:all, :limit => 100).map do |session|
       session.fetch_data!
       session.to_json
     end 
@@ -76,7 +76,10 @@ class FnordMetric::App < Sinatra::Base
 
   get '/:namespace/events' do
 
-    events = current_namespace.events(:all).map(&:to_json)
+    find_opts = { :limit => 100 }
+    find_opts.merge!(:since => params[:since].to_i+1) if params[:since]
+
+    events = current_namespace.events(:all, find_opts).map(&:to_json)
 
     { :events => events }.to_json
   end

@@ -25,7 +25,8 @@ class FnordMetric::Session
 
   def self.all(opts)    
     set_key = "#{opts[:namespace_prefix]}-session"
-    session_ids = opts[:redis].zrevrange(set_key, 0, -1, :withscores => true)
+    limit = (opts[:limit].try(:to_i)||0)-1
+    session_ids = opts[:redis].zrevrange(set_key, 0, limit, :withscores => true)
     session_ids.in_groups_of(2).map do |session_key, ts|
       find(session_key, opts).tap{ |s| s.updated_at = ts }
     end

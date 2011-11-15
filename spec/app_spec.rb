@@ -216,11 +216,68 @@ describe "app" do
       JSON.parse(last_response.body)["events"].first["_type"].should == "foobar!!!"
     end
 
-    it "should render a list of all events in the correct chronological order"
+    it "should render a list of all events in the correct chronological order" do
+      create_event("daasdasd", { 
+        :_eid => "daasdasd",
+        :_time => @now-23, 
+        :_type => "foobar!!!"
+      })
+      create_event("345345345", { 
+        :_eid => "345345345",
+        :_time => @now-5, 
+        :_type => "foobar!!!"
+      })
+      create_event("sdygsygsdg", { 
+        :_eid => "sdygsygsdg",
+        :_time => @now-16, 
+        :_type => "foobar!!!"
+      })
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 3
+      JSON.parse(last_response.body)["events"][0]["_eid"].should == "345345345"
+      JSON.parse(last_response.body)["events"][1]["_eid"].should == "sdygsygsdg"
+      JSON.parse(last_response.body)["events"][2]["_eid"].should == "daasdasd"
+    end
 
-    it "should not render more than 100 events at a time"
+    it "should not render more than 100 events at a time" do
+      120.times do |n|
+        create_event("sdygsygsdg-#{n}", { 
+          :_eid => "sdygsygsdg-#{n}",
+          :_time => @now-16, 
+          :_type => "foobar!!!"
+        })
+      end
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 100
+    end
 
-    it "should render all events since a unix timestamp (not including events at that exact ts)"
+    it "should render all events since a time, not including events at that exact time" do
+      create_event("daasdasd", { 
+        :_eid => "daasdasd",
+        :_time => @now-23, 
+        :_type => "foobar!!!"
+      })
+      create_event("345345345", { 
+        :_eid => "345345345",
+        :_time => @now-5, 
+        :_type => "foobar!!!"
+      })
+      create_event("sdygsygsdg", { 
+        :_eid => "sdygsygsdg",
+        :_time => @now-16, 
+        :_type => "foobar!!!"
+      })
+      get "/foospace/events?since=#{@now-24}" 
+      JSON.parse(last_response.body)["events"].length.should == 3
+      get "/foospace/events?since=#{@now-17}" 
+      JSON.parse(last_response.body)["events"].length.should == 2
+      get "/foospace/events?since=#{@now-16}" 
+      JSON.parse(last_response.body)["events"].length.should == 1
+      get "/foospace/events?since=#{@now-2}" 
+      JSON.parse(last_response.body)["events"].length.should == 0
+    end
 
     it "should render all events for a single session"
 
