@@ -9,15 +9,19 @@ var FnordMetric = (function(){
     
     var feedElem = $('<div class="sessions_feed"></div>');
     var sideElem = $('<div class="sessions_sidebar"></div>');
+    var filterElem = $('<div class="events_sidebar"></div>');
     var sessionData;
 
     function load(elem){
-      elem.html('').append(feedElem).append(sideElem);
+      elem.html('')
+        .append(filterElem)
+        .append(feedElem)
+        .append(sideElem);
       startPoll();
     };
 
     function resize(_width, _height){
-      $('.sessions_feed').width(_width-251);
+      $('.sessions_feed').width(_width-452);
     };
 
     function startPoll(){

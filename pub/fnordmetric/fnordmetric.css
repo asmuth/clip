@@ -60,6 +60,7 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 
 .sessions_feed{ min-width:300px; background:#ccc; min-height:100px; float:left; }
 .sessions_sidebar{ min-height:900px; float:right; width:250px; border-left:1px solid #C7C9CC; }
+.events_sidebar{ min-height:900px; float:left; width:200px; border-right:1px solid #C7C9CC; }
 
 
 .headbar {
