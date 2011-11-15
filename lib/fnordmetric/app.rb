@@ -74,6 +74,13 @@ class FnordMetric::App < Sinatra::Base
     { :sessions => sessions }.to_json
   end
 
+  get '/:namespace/events' do
+
+    events = current_namespace.events(:all).map(&:to_json)
+
+    { :events => events }.to_json
+  end
+
   post '/events' do
     halt 400, 'please specify the event_type' unless params["type"]       
     event_type = params.delete("type")

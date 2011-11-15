@@ -9,6 +9,7 @@ class FnordMetric::Event
     set_key = "#{opts[:namespace_prefix]}-timeline"
     event_ids = opts[:redis].zrevrange(set_key, 0, -1, :withscores => true)
     event_ids.in_groups_of(2).map do |event_id, ts|
+      next if event_id.blank?
       find(event_id, opts).tap{ |s| s.time = ts }
     end
   end
@@ -31,7 +32,7 @@ class FnordMetric::Event
   end
 
   def fetch_json
-    @opts[:redis].get(redis_key)
+    @opts[:redis].get(redis_key) || "{}"
   end
 
   def redis_key
@@ -47,5 +48,9 @@ class FnordMetric::Event
   end
 
   alias :[] :data
+
+  def to_json
+    @data.merge!(:_type => @type, :_eid => @event_id, :_time => @time)
+  end
 
 end

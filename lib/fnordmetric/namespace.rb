@@ -58,8 +58,11 @@ class FnordMetric::Namespace
   end
 
   def sessions(_ids, opts={})
-    opts.merge!(:namespace_prefix => key_prefix, :redis => @redis)
-    return FnordMetric::Session.all(opts) if _ids == :all
+    return FnordMetric::Session.all(extend_opts(opts)) if _ids == :all
+  end
+
+  def events(_ids, opts={})
+    return FnordMetric::Event.all(extend_opts(opts)) if _ids == :all
   end
 
   def method_missing(m, *args, &block)
@@ -82,5 +85,13 @@ class FnordMetric::Namespace
   def opt_widget(dashboard, widget)
     dashboards(dashboard).add_widget(widget)
   end
-    
+
+  def extend_opts(opts)
+    opts.merge(
+      :namespace_prefix => key_prefix,
+      :redis_prefix => @opts[:redis_prefix],
+      :redis => @redis
+    )
+  end
+
 end

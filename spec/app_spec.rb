@@ -162,7 +162,80 @@ describe "app" do
 
   end
 
-  describe "events api" do
+  describe "events api: rendering events" do
+
+    before(:each) do
+      @redis.keys("fnordmetric-foospace*").each { |k| @redis.del(k) }  
+    end
+
+    it "should render a list of all events" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_eid => "sdkjgh9sd8f",
+        :_time => Time.now.to_i, 
+        :_type => "foobar!!!"
+      )
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 1
+    end
+
+    it "should render a list of all events including event-times" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_eid => "sdkjgh9sd8f",
+        :_time => @now-23, 
+        :_type => "foobar!!!"
+      )
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 1
+      JSON.parse(last_response.body)["events"].first["_time"].to_i.should == @now-23
+    end
+
+    it "should render a list of all events including event-ids" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_eid => "sdkjgh9sd8f",
+        :_time => Time.now.to_i, 
+        :_type => "foobar!!!"
+      )
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 1
+      JSON.parse(last_response.body)["events"].first["_eid"].should == "sdkjgh9sd8f"
+    end
+
+
+    it "should render a list of all events including event-types" do
+      create_event("sdkjgh9sd8f", { 
+        :_eid => "sdkjgh9sd8f",
+        :_time => Time.now.to_i, 
+        :_type => "foobar!!!"
+      })
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 1
+      JSON.parse(last_response.body)["events"].first["_type"].should == "foobar!!!"
+    end
+
+    it "should render a list of all events in the correct chronological order"
+
+    it "should not render more than 100 events at a time"
+
+    it "should render all events since a unix timestamp (not including events at that exact ts)"
+
+    it "should render all events for a single session"
+
+    it "should render all events for a single session since a unix timestamp"
+
+    it "should render all events for a single session, but not more than 100"
+
+    def create_event(event_id, event_data)        
+      @redis_wrap.zadd(@namespace.key_prefix(:timeline), event_data.delete(:_time), event_id)
+      @redis_wrap.set("fnordmetric-event-#{event_id}", event_data.to_json)        
+    end
+
+  end
+
+  describe "events api: creating events" do
 
     it "should track an event without auth" do
       pending("fix this")
@@ -203,6 +276,9 @@ describe "app" do
     	#FnordMetric::Event.last.type.should == "myevent"
     	#FnordMetric::Event.last.blubb.should == 42.23
     end
+
+
+
 
   end
 

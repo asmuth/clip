@@ -7,9 +7,13 @@ var FnordMetric = (function(){
 
   var sessionView = (function(){
     
-    var feedElem = $('<div class="sessions_feed"></div>');
     var listElem = $('<ul class="session_list"></ul>');
     var filterElem = $('<div class="events_sidebar"></div>');
+    var feedElem = $('<div class="sessions_feed"></div>').html(
+      $('<div class="headbar"></div>').html('Event Feed')
+    ).append(
+      $('<div class="feed_inner"></div>')
+    );
     var sideElem = $('<div class="sessions_sidebar"></div>').html(
       $('<div class="headbar"></div>').html('Active Users')
     ).append(listElem);
@@ -75,7 +79,7 @@ var FnordMetric = (function(){
     }
 
     function sortSessions(){
-      console.log("fixme: sort");
+      console.log("fixme: sort and splice to 100");
     }
 
     function renderSession(session_data){
