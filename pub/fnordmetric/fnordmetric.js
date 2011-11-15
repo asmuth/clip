@@ -38,12 +38,12 @@ var FnordMetric = (function(){
 
     function renderSidebar(){
       var listElem = $('<ul class="session_list"></ul>');
-      for(session_key in sessionData){
+      for(var sessionIndex=0; sessionIndex < sessionData.length; sessionIndex++){
         listElem.append(
           $('<li class="session"></li>').append(
             $('<div class="picture"></div>')
           ).append(
-            $('<span class="name"></span>').html(session_key)
+            $('<span class="name"></span>').html(sessionData[sessionIndex]["session_key"])
           ).append(
             $('<span class="time"></span>').html('23min')
           )

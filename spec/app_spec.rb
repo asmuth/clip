@@ -80,7 +80,7 @@ describe "app" do
         :_session => "sess213"
       )
       get "/foospace/sessions" 
-      sess = JSON.parse(last_response.body)["sessions"].first.last
+      sess = JSON.parse(last_response.body)["sessions"].first
       sess["last_updated"].should == @now-5
     end
 
@@ -91,8 +91,8 @@ describe "app" do
         :_session => "sess133"
       )
       get "/foospace/sessions" 
-      sesskey = JSON.parse(last_response.body)["sessions"].first.first
-      sesskey.should == Digest::MD5.hexdigest("sess133")
+      sess = JSON.parse(last_response.body)["sessions"].first
+      sess["session_key"].should == Digest::MD5.hexdigest("sess133")
     end
 
     it "should not render more than 100 sessions at once" do
@@ -106,6 +106,31 @@ describe "app" do
       get "/foospace/sessions" 
       JSON.parse(last_response.body).should have_key("sessions")
       JSON.parse(last_response.body)["sessions"].length.should == 100
+    end
+
+    it "should render sessions ordered by last_updated_at" do
+      context = @namespace.ready!(@redis_wrap)
+      context.announce(
+        :_time => Time.now.to_i, 
+        :_type => "foobar", 
+        :_session => "sessfoo"
+      )
+      context.announce(
+        :_time => Time.now.to_i-23, 
+        :_type => "foobar", 
+        :_session => "sessbar"
+      )
+      context.announce(
+        :_time => Time.now.to_i-5, 
+        :_type => "foobar", 
+        :_session => "sessfnord"
+      )
+      get "/foospace/sessions" 
+      sessions = JSON.parse(last_response.body)["sessions"]
+      sessions.length.should == 3
+      sessions[0]["session_key"].should == Digest::MD5.hexdigest("sessfoo")
+      sessions[1]["session_key"].should == Digest::MD5.hexdigest("sessfnord")
+      sessions[2]["session_key"].should == Digest::MD5.hexdigest("sessbar")
     end
 
   end

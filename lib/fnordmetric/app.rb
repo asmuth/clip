@@ -65,11 +65,8 @@ class FnordMetric::App < Sinatra::Base
   #end
 
   get '/:namespace/sessions' do
-    { :sessions => Hash.new.tap{ |sessions|
-      current_namespace.sessions(:all)[0..99].each do |s|
-        sessions[s.session_key] = s.to_json
-      end
-    } }.to_json
+    @sessions = current_namespace.sessions(:all)[0..99]
+    { :sessions => @sessions.map(&:to_json) }.to_json
   end
 
   post '/events' do
