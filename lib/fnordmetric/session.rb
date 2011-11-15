@@ -17,13 +17,8 @@ class FnordMetric::Session
   end
 
   def self.find(session_key, opts)
-    self.new(session_key).tap do |session|
-      redis_opts = opts[:redis], opts[:redis_prefix]
-      session.add_redis(*redis_opts)
-      session.fetch_data!
-      session.fetch_event_ids!
-      #session.fetch_events!
-    end
+    set_key = "#{opts[:namespace_prefix]}-session"
+    self.new(session_key, [opts[:redis], set_key])
   end
 
   def self.all(opts)    
@@ -63,7 +58,10 @@ class FnordMetric::Session
   end
 
   def to_json
-    { :session_key => session_key }
+    { :session_key => session_key }.tap do |hash| 
+      hash.merge!(:picture => @picture) if @picture
+      hash.merge!(:name => @name) if @name
+    end
   end
 
   def redis_key(append=nil)

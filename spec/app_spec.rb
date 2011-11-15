@@ -7,10 +7,13 @@ describe "app" do
 
   before(:all) do
     @redis = Redis.new
+    @opts = { 
+      :redis_prefix => "fnordmetric",
+      :session_data_ttl => 120,
+    }
     @now = Time.utc(1992,01,13,5,23,23).to_i   
-    @namespace = Namespace.new(:foospace, :redis_prefix => "fnordmetric")
+    @namespace = Namespace.new(:foospace, @opts)
     @redis_wrap = RedisWrap.new(@redis)
-    @opts = { :redis_prefix => "fnordmetric" }
   end
 
   def app
@@ -82,6 +85,30 @@ describe "app" do
       get "/foospace/sessions" 
       sess = JSON.parse(last_response.body)["sessions"].first
       sess["last_updated"].should == @now-5
+    end
+
+    it "should render a list of all active sessions with usernames" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now, 
+        :_type => "_set_name", 
+        :_session => "sess213",
+        :name => "Hans Peter"
+      )
+      get "/foospace/sessions" 
+      sess = JSON.parse(last_response.body)["sessions"].first
+      sess["name"].should == "Hans Peter"
+    end
+
+    it "should render a list of all active sessions with user pictures" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now, 
+        :_type => "_set_picture", 
+        :_session => "sess213",
+        :url => "http://myhost.com/mypic.jpg"
+      )
+      get "/foospace/sessions" 
+      sess = JSON.parse(last_response.body)["sessions"].first
+      sess["picture"].should == "http://myhost.com/mypic.jpg"
     end
 
     it "should render a list of all active sessions with hashed keys" do
