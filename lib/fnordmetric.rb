@@ -22,7 +22,7 @@ module FnordMetric
     opts[:redis_prefix] ||= "fnordmetric"            
 
     opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
-    opts[:web_interface] ||= ["0.0.0.0", "2323"]
+    opts[:web_interface] ||= ["0.0.0.0", "4242"]
 
     opts[:start_worker] ||= true
     opts[:print_stats] ||= 3

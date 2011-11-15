@@ -1,4 +1,6 @@
 class FnordMetric::Session
+ 
+  attr_accessor :updated_at, :name, :picture
 
   @@meta_attributes = %w(name picture)
 
@@ -23,8 +25,9 @@ class FnordMetric::Session
 
   def self.all(opts)    
     set_key = "#{opts[:namespace_prefix]}-session"
-    opts[:redis].zrevrange(set_key, 0, -1).map do |session_key|
-      find(session_key, opts)
+    session_ids = opts[:redis].zrevrange(set_key, 0, -1, :withscores => true)
+    session_ids.in_groups_of(2).map do |session_key, ts|
+      find(session_key, opts).tap{ |s| s.updated_at = ts }
     end
   end
 
@@ -61,6 +64,7 @@ class FnordMetric::Session
     { :session_key => session_key }.tap do |hash| 
       hash.merge!(:_picture => @picture) if @picture
       hash.merge!(:_name => @name) if @name
+      hash.merge!(:_updated_at => @updated_at) if @updated_at
     end
   end
 

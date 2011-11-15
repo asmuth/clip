@@ -84,7 +84,7 @@ describe "app" do
       )
       get "/foospace/sessions" 
       sess = JSON.parse(last_response.body)["sessions"].first
-      sess["last_updated"].should == @now-5
+      sess["_updated_at"].should == (@now-5).to_s
     end
 
     it "should render a list of all active sessions with usernames" do
