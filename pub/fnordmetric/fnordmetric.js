@@ -41,6 +41,20 @@ var FnordMetric = (function(){
       });
     };
 
+    function formatTimeSince(time){
+      var now = new Date().getTime()/1000;
+      var since = now - time;
+      if(since < 60){
+        return parseInt(since) + 's';
+      } else if(since<3600){
+        return parseInt(since/60) + 'm';
+      } else if(since<(3600*24)){
+        return parseInt(since/3600) + 'h';
+      } else {
+        return ">1d"
+      }
+    }
+
     function renderSidebar(){
       var listElem = $('<ul class="session_list"></ul>');
       for(var sessionIndex=0; sessionIndex < sessionData.length; sessionIndex++){
@@ -57,13 +71,15 @@ var FnordMetric = (function(){
           session_picture.attr('src', session_data["_picture"]);
         };
 
+        var session_time = formatTimeSince(session_data["_updated_at"]);
+
         listElem.append(
           $('<li class="session"></li>').append(
             $('<div class="picture"></div>').html(session_picture)
           ).append(
             $('<span class="name"></span>').html(session_name)
           ).append(
-            $('<span class="time"></span>').html('23min')
+            $('<span class="time"></span>').html(session_time)
           )
         );
       }
