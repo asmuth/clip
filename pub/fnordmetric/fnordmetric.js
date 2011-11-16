@@ -75,7 +75,7 @@ var FnordMetric = (function(){
         var timout = 1000;
         var maxevents = 200;
         if(events.length > 0){ 
-          timeout = 1000; 
+          timeout = 200; 
           eventsPolledUntil = parseInt(events[0]._time)-1;
         }
 	for(var n=events.length-1; n >= 0; n--){
@@ -92,6 +92,18 @@ var FnordMetric = (function(){
       });
     };
 
+    function decPrint(val){
+      return (val < 10 ? '0'+val : val);
+    }
+
+    function formatTimeOfDay(_time){
+      var time = new Date();
+      time.setTime(_time*1000);
+      return decPrint(time.getHours()) + ':' +
+             decPrint(time.getMinutes()) + ':' +
+             decPrint(time.getSeconds());
+    }
+    
     function formatTimeSince(time){
       var now = new Date().getTime()/1000;
       var since = now - time;
@@ -164,6 +176,22 @@ var FnordMetric = (function(){
       var event_props = $('<span class="properties"></span>');
       var event_picture = $('<div class="picture"></picture>');
 
+      var event_type = event_data._type;
+      
+      if(!event_type){ return true; }
+
+      if(event_data._message){
+        event_message.html(event_data._message);
+      } else if(event_type=="_pageview"){
+        event_message.html("Pageview: " + event_data.url);
+      } else if(event_type.substr(0,5) == '_set_'){
+        return true; /* dont render */
+      } else {
+        event_message.html(event_type);
+      }
+
+      event_time.html(formatTimeOfDay(event_data._time));
+      
       if(event_data._session_key && event_data._session_key.length > 0){
         if(session_data=sessionData[event_data._session_key]){
           if(session_data._name){            
@@ -178,14 +206,6 @@ var FnordMetric = (function(){
           }
         }
       }
-
-      if(event_data._type=="_pageview"){
-        event_message.html("Pageview: " + event_data.url);
-      } else {
-        event_message.html(event_data._type);
-      }
-
-      event_time.html(formatTimeSince(event_data._time));
 
       feedInnerElem.prepend(
         $('<li class="feed_event"></li>')
