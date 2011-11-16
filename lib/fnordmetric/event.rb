@@ -14,7 +14,16 @@ class FnordMetric::Event
       range_opts
     ).in_groups_of(2).map do |event_id, ts|
       next if event_id.blank?
-      find(event_id, opts).tap{ |s| s.time = ts }
+      find(event_id, opts).tap{ |e| e.time = ts }
+    end
+  end
+
+  def self.by_type(_type, opts)
+    opts[:redis].lrange(
+      "#{opts[:namespace_prefix]}-type-#{_type}", 
+      0, 1000).map do |event_id|
+      next if event_id.blank?
+      find(event_id, opts).tap{ |e| }
     end
   end
 

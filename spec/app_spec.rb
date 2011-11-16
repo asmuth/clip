@@ -6,7 +6,8 @@ include FnordMetric
 describe "app" do
 
   before(:all) do
-    @redis = Redis.new
+    redis = Redis.new
+    @redis = RedisWrap.new(redis, false)
     @opts = { 
       :redis_prefix => "fnordmetric",
       :session_data_ttl => 120,
@@ -305,6 +306,28 @@ describe "app" do
       JSON.parse(last_response.body)["events"].length.should == 1
       get "/foospace/events?since=#{@now-2}" 
       JSON.parse(last_response.body)["events"].length.should == 0
+    end
+
+    it "should render all events for a single event type" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_type => "fn0rd",
+        :_time => @now,
+        :_eid => "124234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_type => "f00bar",
+        :_time => @now,
+        :_eid => "12235234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_type => "fn0rd",
+        :_time => @now,
+        :_eid => "124234234"
+      )
+      get "/foospace/events?type=fn0rd" 
+      JSON.parse(last_response.body)["events"].length.should == 2
+      get "/foospace/events?type=f00bar" 
+      JSON.parse(last_response.body)["events"].length.should == 1
     end
 
     it "should render all events for a single session"

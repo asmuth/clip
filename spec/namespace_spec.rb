@@ -9,6 +9,10 @@ describe FnordMetric::Namespace do
     @redis_wrap = RedisWrap.new(@redis)
   end
 
+  before(:each) do
+    @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
+  end
+
   describe "instance methods" do
 
     before(:each) do
@@ -60,6 +64,21 @@ describe FnordMetric::Namespace do
       :_type => "foobar", 
       :_session => "sess213"
     )
+  end
+
+  it "should add the event to the namespace-event-type-list" do
+    Namespace.new(
+      :myns_213, 
+      :redis_prefix => "fnordmetric"      
+    ).ready!(@redis_wrap).announce(
+      :_eid => "35r2423",
+      :_time => Time.now.to_i, 
+      :_type => "fnordbar", 
+      :_session => "sess213"
+    )
+    event_ids = @redis.lrange("fnordmetric-myns_213-type-fnordbar", 0, -1)
+    event_ids.length.should == 1
+    event_ids.first.should == "35r2423"
   end
 
 

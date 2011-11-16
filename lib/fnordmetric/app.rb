@@ -80,13 +80,15 @@ class FnordMetric::App < Sinatra::Base
 
   get '/:namespace/events' do
 
-    find_opts = { :limit => 100 }
-    find_opts.merge!(:since => params[:since].to_i+1) if params[:since]
+    events = if params[:type] 
+      current_namespace.events(:by_type, :type => params[:type])
+    else 
+      find_opts = { :limit => 100 }
+      find_opts.merge!(:since => params[:since].to_i+1) if params[:since]
+      current_namespace.events(:all, find_opts)
+    end
 
-    query_time = (params[:since]||Time.now).to_i
-    events = current_namespace.events(:all, find_opts).map(&:to_json)
-
-    { :events => events, :query_time => query_time }.to_json
+    { :events => events.map(&:to_json) }.to_json
   end
 
   post '/events' do

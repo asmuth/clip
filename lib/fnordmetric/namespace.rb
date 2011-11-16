@@ -19,6 +19,7 @@ class FnordMetric::Namespace
 
   def announce(event)                  
     announce_to_timeline(event)
+    announce_to_typelist(event)
     announce_to_session(event) if event[:_session]
 
     @handlers[event[:_type]].each do |context| 
@@ -42,6 +43,12 @@ class FnordMetric::Namespace
     @redis.zadd(timeline_key, event[:_time], event[:_eid])
   end
 
+  def announce_to_typelist(event)
+    typelist_key = key_prefix("type-#{event[:_type]}")
+    @redis.lpush(typelist_key, event[:_eid])
+  end
+
+
   def key_prefix(append=nil)
     [@opts[:redis_prefix], @key, append].compact.join("-")
   end
@@ -63,6 +70,7 @@ class FnordMetric::Namespace
 
   def events(_ids, opts={})
     return FnordMetric::Event.all(extend_opts(opts)) if _ids == :all
+    return FnordMetric::Event.by_type(opts.delete(:type), extend_opts(opts)) if _ids == :by_type
   end
 
   def method_missing(m, *args, &block)

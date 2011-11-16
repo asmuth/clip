@@ -108,6 +108,11 @@ The fast way: Add your event directly to the redis-based queue:
 
 
 
+== FIXMES
+
+-> prune the namespace-sessions-timline (remove event_ids older than x)
+-> prune the namespace-event-types-list (trim to max items)
+
 
 == License (It's free!)
 

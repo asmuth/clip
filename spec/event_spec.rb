@@ -98,7 +98,25 @@ describe FnordMetric::Event do
       Event.all(@opts.merge(:limit => 2)).last.id.should == "5645642"
     end
 
-    def create_event(event_id, event_data)        
+    it "should find all events by type" do
+      namespace = Namespace.new(:ns123, :redis_prefix => "fnordmetric-test")
+      namespace.ready!(@redis_wrap).announce(
+        :_type => "fn0rd",
+        :_time => @now
+      )
+      namespace.ready!(@redis_wrap).announce(
+        :_type => "f00bar",
+        :_time => @now
+      )
+      namespace.ready!(@redis_wrap).announce(
+        :_type => "fn0rd",
+        :_time => @now
+      )
+      Event.by_type('fn0rd', @opts).length.should == 2
+      Event.by_type('f00bar', @opts).length.should == 1
+    end
+
+    def create_event(event_id, event_data)
       @redis_wrap.zadd(@timeline, event_data.delete(:_time), event_id)
       @redis.set("fnordmetric-test-event-#{event_id}", event_data.to_json)        
     end
