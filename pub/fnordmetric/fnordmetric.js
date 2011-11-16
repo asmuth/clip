@@ -74,16 +74,16 @@ var FnordMetric = (function(){
         var events = data.events;
         var timout = 1000;
         var maxevents = 200;
-        eventsPolledUntil = parseInt(data.query_time)-1;
         if(events.length > 0){ 
           timeout = 1000; 
           eventsPolledUntil = parseInt(events[0]._time)-1;
         }
-        $.each(events, function(i,v){ 
+	for(var n=events.length-1; n >= 0; n--){
+	  var v = events[n];
           if(parseInt(v._time)<=eventsPolledUntil){
             renderEvent(v);  
           }
-        });
+        };
         var elems = $("p", feedInnerElem);
         for(var n=maxevents; n < elems.length; n++){
           $(elems[n]).remove();
