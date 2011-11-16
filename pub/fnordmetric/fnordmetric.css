@@ -89,9 +89,9 @@ ul.session_list li .time{ float:right; width:40px; overflow:hidden; text-align:r
 
 .sessions_feed{ min-width:300px; min-height:100px; float:left; }
 .sessions_feed ul.feed_inner{ margin:5px 15px; min-height:100px; padding:0px; }
-.sessions_feed ul.feed_inner li{ list-style-type:none; border-bottom:1px solid #e2e2e2; height:54px; }
+.sessions_feed ul.feed_inner li{ list-style-type:none; border-bottom:1px solid #e2e2e2; min-height:54px; }
 .sessions_feed ul.feed_inner li .message{ font-size:12px; line-height:19px; padding-top:9px; display:block; }
-.sessions_feed ul.feed_inner li .properties{ font-size:10px; display:block; color:#555; }
+.sessions_feed ul.feed_inner li .properties{ margin-left:50px; font-size:10px; display:block; color:#555; }
 .sessions_feed ul.feed_inner li .time{ font-size:10px; line-height:20px; padding-top:19px; padding-right:10px; display:block; color:#999; float:right; font-style:italic; }
 .sessions_feed ul.feed_inner li .picture{ height:40px; overflow:hidden; width:40px; float:left; background:#333; margin:7px 10px 0 0;  }
 .sessions_sidebar{ min-height:1200px; float:right; width:250px; border-left:1px solid #C7C9CC; }
