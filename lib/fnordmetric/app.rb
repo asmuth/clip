@@ -91,6 +91,13 @@ class FnordMetric::App < Sinatra::Base
     { :events => events.map(&:to_json) }.to_json
   end
 
+  get '/:namespace/event_types' do
+    types_key = current_namespace.key_prefix("type-")
+    keys = @redis.keys("#{types_key}*").map{ |k| k.gsub(types_key,'') }
+
+    { :types => keys }.to_json
+  end
+
   post '/events' do
     halt 400, 'please specify the event_type' unless params["type"]       
     event_type = params.delete("type")

@@ -330,6 +330,28 @@ describe "app" do
       JSON.parse(last_response.body)["events"].length.should == 1
     end
 
+    it "should render a list of event types" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_type => "fn0rd",
+        :_time => @now,
+        :_eid => "124234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_type => "f00bar",
+        :_time => @now,
+        :_eid => "12235234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_type => "fn0rd",
+        :_time => @now,
+        :_eid => "124234234"
+      )
+      get "/foospace/event_types" 
+      JSON.parse(last_response.body)["types"].length.should == 2
+      JSON.parse(last_response.body)["types"].should include("fn0rd")
+      JSON.parse(last_response.body)["types"].should include("f00bar")
+    end
+
     it "should render all events for a single session"
 
     it "should render all events for a single session since a unix timestamp"
