@@ -8,14 +8,25 @@ var FnordMetric = (function(){
   var sessionView = (function(){
     
     var listElem = $('<ul class="session_list"></ul>');
-    var filterElem = $('<div class="events_sidebar"></div>');
-    var feedInnerElem = $('<ul class="feed_inner"></div>');
+    var feedInnerElem = $('<ul class="feed_inner"></ul>');
+    var typeListElem  = $('<ul class="event_type_list"></ul>');
+    var filterElem = $('<div class="events_sidebar"></div>').html(
+      $('<div class="headbar"></div>').html('Event Types')
+    ).append(typeListElem);
     var feedElem = $('<div class="sessions_feed"></div>').html(
       $('<div class="headbar"></div>').html('Event Feed')
     ).append(feedInnerElem);
     var sideElem = $('<div class="sessions_sidebar"></div>').html(
       $('<div class="headbar"></div>').html('Active Users')
     ).append(listElem);
+
+    typeListElem.append(
+      $('<li class="event_type"></li>').append(
+        $('<input type="checkbox" />')
+      ).append(
+        $('<span></span>').html('Live Feed (All)')
+      )
+    );
     
 
     var eventsPolledUntil = false;

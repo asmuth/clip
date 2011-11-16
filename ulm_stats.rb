@@ -8,4 +8,7 @@ FnordMetric.namespace :blubber do
 
 end
 
-FnordMetric.run 
+fm_opts = {}
+fm_opts.merge!(:web_interface => ["0.0.0.0", "2323"]) if ENV['DEV']
+
+FnordMetric.run(fm_opts)
