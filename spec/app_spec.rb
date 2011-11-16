@@ -216,6 +216,34 @@ describe "app" do
       JSON.parse(last_response.body)["events"].first["_type"].should == "foobar!!!"
     end
 
+    it "should render a list of all events including _session-data" do
+      create_event("65785678634", {
+        :_eid => "65785678634",
+        :_time => @now-23, 
+        :_type => "foobar!!!",
+        :_session => "blubb123"
+      })
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 1
+      JSON.parse(last_response.body)["events"].first["_session"].should == "blubb123"
+    end
+
+    it "should render a list of all events including _session-data" do
+      create_event("4234234634", { 
+        :_eid => "4234234634",
+        :_time => @now-23, 
+        :_type => "foobar!!!",
+        :_session => "blubb123",
+        :fnord => "yeah"
+      })
+      get "/foospace/events" 
+      JSON.parse(last_response.body).should have_key("events")
+      JSON.parse(last_response.body)["events"].length.should == 1
+      blubb123_md5 = "e5fa475b26873af5ec6c77668f9975a5"
+      JSON.parse(last_response.body)["events"].first["_session_key"].should == blubb123_md5
+    end
+
     it "should render a list of all events in the correct chronological order" do
       create_event("daasdasd", { 
         :_eid => "daasdasd",

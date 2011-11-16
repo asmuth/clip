@@ -43,6 +43,10 @@ class FnordMetric::Event
     [@opts[:redis_prefix], :event, @event_id].join("-")
   end
 
+  def session_key
+    @data["_session"] ? Digest::MD5.hexdigest(@data["_session"]) : nil
+  end
+
   def id
     @event_id
   end
@@ -54,7 +58,12 @@ class FnordMetric::Event
   alias :[] :data
 
   def to_json
-    @data.merge!(:_type => @type, :_eid => @event_id, :_time => @time)
+    @data.merge!(
+      :_type => @type, 
+      :_session_key => session_key,
+      :_eid => @event_id,
+      :_time => @time
+    )
   end
 
 end

@@ -9,7 +9,7 @@ var FnordMetric = (function(){
     
     var listElem = $('<ul class="session_list"></ul>');
     var filterElem = $('<div class="events_sidebar"></div>');
-    var feedInnerElem = $('<div class="feed_inner"></div>');
+    var feedInnerElem = $('<ul class="feed_inner"></div>');
     var feedElem = $('<div class="sessions_feed"></div>').html(
       $('<div class="headbar"></div>').html('Event Feed')
     ).append(feedInnerElem);
@@ -22,7 +22,7 @@ var FnordMetric = (function(){
     var sessionData = {};
 
     function load(elem){
-      eventsPolledUntil = new Date().getTime()/10000;
+      eventsPolledUntil = parseInt(new Date().getTime()/10000);
       elem.html('')
         .append(filterElem)
         .append(feedElem)
@@ -70,16 +70,20 @@ var FnordMetric = (function(){
 
     function callbackEventsPoll(){
       return (function(_data, _status){
-        var events = JSON.parse(_data).events;
+        var data = JSON.parse(_data)
+        var events = data.events;
         var timout = 1000;
         var maxevents = 200;
-        $.each(events, function(i,v){ 
-          renderEvent(v);  
-        });
-        if(events.length > 0){
-          eventsPolledUntil = events[0]._time;
-          timout = 1000;
+        eventsPolledUntil = parseInt(data.query_time)-1;
+        if(events.length > 0){ 
+          timeout = 1000; 
+          eventsPolledUntil = parseInt(events[0]._time)-1;
         }
+        $.each(events, function(i,v){ 
+          if(parseInt(v._time)<=eventsPolledUntil){
+            renderEvent(v);  
+          }
+        });
         var elems = $("p", feedInnerElem);
         for(var n=maxevents; n < elems.length; n++){
           $(elems[n]).remove();
@@ -155,8 +159,40 @@ var FnordMetric = (function(){
     };
 
     function renderEvent(event_data){
+      var event_time = $('<span class="time"></span>');
+      var event_message = $('<span class="message"></span>');
+      var event_props = $('<span class="properties"></span>');
+      var event_picture = $('<div class="picture"></picture>');
+
+      if(event_data._session_key && event_data._session_key.length > 0){
+        if(session_data=sessionData[event_data._session_key]){
+          if(session_data._name){            
+            event_props.append(
+              $('<strong></strong>').html(session_data._name)
+            );
+          }
+          if(session_data._picture){ 
+            event_picture.append(
+              $('<img width="40" />').attr('src', session_data._picture)
+            )
+          }
+        }
+      }
+
+      if(event_data._type=="_pageview"){
+        event_message.html("Pageview: " + event_data.url);
+      } else {
+        event_message.html(event_data._type);
+      }
+
+      event_time.html(formatTimeSince(event_data._time));
+
       feedInnerElem.prepend(
-        $('<p></p>').html(event_data._eid)
+        $('<li class="feed_event"></li>')
+        .append(event_time)
+        .append(event_picture)
+        .append(event_message)
+        .append(event_props)
       );
     }
 
