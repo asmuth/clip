@@ -1,7 +1,11 @@
+# encoding: utf-8
+
 class FnordMetric::App < Sinatra::Base
   
   @@sessions = Hash.new
   
+  Encoding.default_external = Encoding::UTF_8
+
   #use Rack::Reloader, 0
   
   enable :session
