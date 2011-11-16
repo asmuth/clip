@@ -20,7 +20,7 @@ var FnordMetric = (function(){
       $('<div class="headbar"></div>').html('Active Users')
     ).append(listElem);
 
-    addEventType('Live Feed');
+    addEventType('feed', 'Live Feed');
     
 
     var eventsPolledUntil = false;
@@ -55,6 +55,20 @@ var FnordMetric = (function(){
       });
     };
 
+    function loadEventHistory(event_type){
+      feedInnerElem.html('');
+      $.ajax({
+        url: '/'+currentNamespace+'/events?type='+event_type,
+        success: function(_data, _status){
+          var data = JSON.parse(_data).events;
+          console.log(data);
+          for(var n=data.length; n >= 0; n--){
+            if(data[n]){ renderEvent(data[n]); }
+          }
+        }
+      });
+    }
+
     function callbackSessionPoll(){
       return (function(_data, _status){
         $.each(JSON.parse(_data).sessions, function(i,v){
@@ -68,21 +82,25 @@ var FnordMetric = (function(){
       $.ajax({
         url: '/'+currentNamespace+'/event_types',
         success: function(_data){
-          data = JSON.parse(_data);
+          var data = JSON.parse(_data);
           $(data.types).each(function(i,v){
-            if(v.slice(0,5)!='_set_'){ addEventType(v); }
+            if(v.slice(0,5)!='_set_'){ addEventType(v,v); }
           });
         }
       });
     };
 
-    function addEventType(type){
+    function addEventType(type, display){
       typeListElem.append(
         $('<li class="event_type"></li>').append(
+          $('<span class="history"></span>').html('history')
+        ).append(
           $('<input type="checkbox" />')
         ).append(
-          $('<span></span>').html(type)
-        )
+          $('<span></span>').html(display)
+        ).click(function(){
+          loadEventHistory(type);
+        })
       );
     }
 

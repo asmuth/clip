@@ -98,9 +98,11 @@ ul.session_list li .time{ float:right; width:40px; overflow:hidden; text-align:r
 .events_sidebar{ min-height:1200px; float:left; width:200px; border-right:1px solid #C7C9CC; }
 
 ul.event_type_list{ margin:10px; padding:0; }
-ul.event_type_list li{ list-style-type:none; color:#0A0A0A; margin-bottom:10px; height:18px; overflow:hidden; line-height:18px; padding:4px; }
+ul.event_type_list li{ list-style-type:none; color:#0A0A0A; margin-bottom:8px; height:18px; overflow:hidden; line-height:18px; padding:4px; }
 ul.event_type_list li input{ margin-right:7px; }
 ul.event_type_list li:hover{ background:#eee; cursor:pointer; }
+ul.event_type_list li .history{ float:right; color:#999; font-size:10px; }
+ul.event_type_list li .history:hover{ color:#333; text-decoration:underline; }
 
 .clearfix:after {
   content: ".";
