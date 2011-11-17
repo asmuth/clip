@@ -21,7 +21,7 @@ class FnordMetric::Event
   def self.by_type(_type, opts)
     opts[:redis].lrange(
       "#{opts[:namespace_prefix]}-type-#{_type}", 
-      0, 1000).map do |event_id|
+      0, 200).map do |event_id|
       next if event_id.blank?
       find(event_id, opts).tap{ |e| }
     end
