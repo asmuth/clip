@@ -20,10 +20,8 @@ var FnordMetric = (function(){
       $('<div class="headbar"></div>').html('Active Users')
     ).append(listElem);
 
-    addEventType('feed', 'Live Feed');
-    
-
     var eventsPolledUntil = false;
+    var eventsFilter = [];
     var sessionData = {};
 
     function load(elem){
@@ -94,14 +92,28 @@ var FnordMetric = (function(){
       typeListElem.append(
         $('<li class="event_type"></li>').append(
           $('<span class="history"></span>').html('history')
+          .click(function(){ 
+            $('.event_type_list .event_type input').attr('checked', false);
+            $('input', $(this).parent()).attr('checked', true);
+            updateEventFilter(); loadEventHistory(type); 
+          })
         ).append(
-          $('<input type="checkbox" />')
+          $('<input type="checkbox" />').attr('checked', true)
+          .click(function(){ updateEventFilter(); })
         ).append(
           $('<span></span>').html(display)
-        ).click(function(){
-          loadEventHistory(type);
-        })
+        ).attr('rel', type)
       );
+    }
+
+    function updateEventFilter(){
+      var _unchecked_types = [];
+      $('ul.event_type_list li.event_type').each(function(i,v){
+        if(!$('input', v).attr('checked')){
+          _unchecked_types.push($(v).attr('rel'));
+        }
+      });
+      eventsFilter = _unchecked_types;
     }
 
     function doEventsPoll(){
@@ -123,10 +135,12 @@ var FnordMetric = (function(){
           timeout = 200; 
           eventsPolledUntil = parseInt(events[0]._time)-1;
         }
-	for(var n=events.length-1; n >= 0; n--){
-	  var v = events[n];
-          if(parseInt(v._time)<=eventsPolledUntil){
-            renderEvent(v);  
+	      for(var n=events.length-1; n >= 0; n--){
+	        var v = events[n];
+          if(eventsFilter.indexOf(v._type) == -1){
+            if(parseInt(v._time)<=eventsPolledUntil){
+              renderEvent(v);  
+            }
           }
         };
         var elems = $("p", feedInnerElem);
