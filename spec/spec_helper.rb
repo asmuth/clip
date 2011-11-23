@@ -23,7 +23,9 @@ class RedisWrap
 
   def method_missing(m, *args)    
     @last_return = @redis.send(m, *args)
-    puts ">> REDIS: #{m} #{args.join(" ")} => #{@last_return}"
+    if ENV["VERBOSE_REDIS"]
+      puts ">> REDIS: #{m} #{args.join(" ")} => #{@last_return}" 
+    end
     @callbackable ? self : @last_return
   end
 
