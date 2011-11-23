@@ -287,9 +287,37 @@ var FnordMetric = (function(){
 
   });
   
-  function loadDashboard(_dash){  
-    alert('load me and instantiate a new DashboardView: ' + _dash);
+
+  var dashboardView = (function(dashboard_name){
+
+    function load(){
+      alert('yay, new dashboard view loaded: ' + dashboard_name);
+    };
+
+    function resize(){
+      
+    };
+
+    function close(){
+      
+    };
+
+    return {
+      load: load,
+      resize: resize,
+      close: close
+    };
+
+  });
+
+
+  function renderDashboard(_dash){  
+    loadView(dashboardView(_dash));
   };
+
+  function renderSessionView(){
+    loadView(sessionView());
+  }
 
   function loadView(_view){
     if(currentView){ currentView.close(); }
@@ -314,8 +342,8 @@ var FnordMetric = (function(){
 
   return {
     p: '/fnordmetric/',  
-    loadView: loadView,
-    loadDashboard: loadDashboard,
+    renderDashboard: renderDashboard,
+    renderSessionView: renderSessionView,
     resizeView: resizeView,
     init: init
   };

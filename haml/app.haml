@@ -34,7 +34,15 @@
     FnordMetric.init('#{current_namespace.token}', $('.viewport_inner'));
 
     $('#tabs li.dashboard').click(function(){
-      FnordMetric.loadDashboard($(this).attr('rel'));
+      FnordMetric.renderDashboard($(this).attr('rel'));
+    });
+
+    $('#tabs li.sessions').click(function(){
+      FnordMetric.renderSessionView();
+    });
+
+    $('#tabs li').click(function(){
+      $(this).addClass('active').siblings().removeClass('active');
     });
 
     function resizeViewport(){ 
