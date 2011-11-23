@@ -48,7 +48,8 @@ module FnordMetric
       opts = default_options(opts)      
 
       if opts[:start_worker]
-        worker = Worker.new(@@namespaces.clone, opts)     
+        worker = Worker.new(@@namespaces.clone, opts)
+        worker.ready!   
       end
 
       if opts[:inbound_stream]

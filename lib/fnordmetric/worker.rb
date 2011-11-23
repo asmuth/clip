@@ -1,10 +1,13 @@
 class FnordMetric::Worker
 
   def initialize(namespaces, opts)        
-    @redis = EM::Hiredis.connect(opts[:redis_uri])
     @namespaces = {}
     @opts = opts
     configure(namespaces)
+  end
+
+  def ready!
+    @redis = EM::Hiredis.connect(@opts[:redis_uri]) 
     tick
   end
 
