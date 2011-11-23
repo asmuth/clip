@@ -88,6 +88,19 @@ The fast way: Add your event directly to the redis-based queue:
 
 
 
+== Configuration
+
+=== Gauge Modifiers
+
+  incr(gauge_name, value=1): Increment the given (two-dimensional) gauge by value
+
+  incr_uniq(gauge_name, value=1): Increment the given (two-dimensional) gauge by value unless incr_uniq was already called for this session and tick
+
+not yet implemented
+
+  incr_field(gauge_name, field_name, value=1): Increment the given (three-dimensional) gauge by value
+
+
 === Limitations 
 
 -> It will drop events if it gets over capacity (prevent this by setting high timeouts)

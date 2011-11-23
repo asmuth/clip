@@ -57,5 +57,10 @@ protected
     error! "error: #{caller[0].split(" ")[-1]} can only be used with 3-dimensional gauges" 
   end
 
+  def assure_non_progressive!(gauge)
+    return true unless gauge.progressive?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with non-progressive gauges" 
+  end
+
 end
     
