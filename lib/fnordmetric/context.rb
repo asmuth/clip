@@ -31,7 +31,7 @@ private
   end
 
   def time
-    @event[:_time]
+    @event[:_time].to_i
   end
 
 protected

@@ -1,5 +1,7 @@
 class FnordMetric::Gauge
   
+  include FnordMetric::GaugeCalculations
+
   def initialize(opts)
     opts.fetch(:key) && opts.fetch(:key_prefix)
     @opts = opts
@@ -14,7 +16,11 @@ class FnordMetric::Gauge
   end
   
   def key(_append=nil)
-    [@opts[:key_prefix], "gauge", @opts[:key], _append].compact.join("-")
+    [@opts[:key_prefix], "gauge", @opts[:key], _append].flatten.compact.join("-")
+  end
+
+  def tick_key(_time, _append=nil)
+    key([(progressive? ? :progressive : tick_at(_time).to_s), _append])
   end
 
   def two_dimensional?
@@ -23,6 +29,10 @@ class FnordMetric::Gauge
 
   def progressive?
     !!@opts[:progressive]
+  end
+
+  def unique?
+    !!@opts[:unique]
   end
 
 end

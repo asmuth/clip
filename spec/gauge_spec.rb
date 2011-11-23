@@ -2,6 +2,16 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Gauge do
 
+  before(:all) do    
+    @now = Time.utc(1992,01,13,5,23,23).to_i    
+    @redis = Redis.new
+    @redis_wrap = RedisWrap.new(@redis, false)
+  end
+
+  before(:each) do
+    @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
+  end
+
   it "should raise an error when initialize without key" do
   	lambda{ 
 	  FnordMetric::Gauge.new({:key_prefix => "foo"}) 
@@ -24,9 +34,54 @@ describe FnordMetric::Gauge do
   	gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-fnord"
   end
 
-  it "should return the correct tick if configured"
-  it "should return the default tick if none configured"
+  describe "ticks" do
 
-  it "should return the correct tick_at"
+    it "should return the correct tick if configured"
+    it "should return the default tick if none configured"
+
+
+    it "should return the correct tick_at" do
+      gauge = FnordMetric::Gauge.new({:tick => 10, :key_prefix => "fnordmetrics-myns", :key => "mygauge"})
+      gauge.tick_at(@now).should == 695280200
+      gauge.tick_at(@now+6).should == 695280200
+      gauge.tick_at(@now+8).should == 695280210
+    end
+
+  end
+
+
+  describe "value retrival" do
+
+    before(:each) do
+      @gauge_key = "fnordmetric-myns-gauge-mygauge_966"    
+      @redis.hset(@gauge_key, "695280200", "54")
+      @gauge = FnordMetric::Gauge.new({
+        :tick => 10, 
+        :key_prefix => "fnordmetric-myns", 
+        :key => "mygauge_966",
+        :redis => @redis_wrap
+      })
+    end
+
+    it "should retrieve a gauge value at a given time" do
+      @gauge.value_at(@now).should == "54"
+    end
+
+    it "should retrieve a gauge value at the current tick"
+
+    it "should receive gauge values for multiple ticks"
+
+    it "should receive gauge values for all ticks in a given range"
+
+    it "should call the value calculation block and return the result" do
+      @gauge.value_at(@now){ |v| v.to_i + 123 }.should == 177
+    end
+
+    it "should return the correct value_at per session" do
+      @redis.set(@gauge_key+"-695280200-sessions-count", "23")
+      @gauge.value_at(@now, :avg_per_session => 1).should == (54.0/23.0)
+    end
+
+  end
   
 end

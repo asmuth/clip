@@ -94,7 +94,7 @@ The fast way: Add your event directly to the redis-based queue:
 
   incr(gauge_name, value=1): Increment the given (two-dimensional) gauge by value
 
-  incr_uniq(gauge_name, value=1): Increment the given (two-dimensional) gauge by value unless incr_uniq was already called for this session and tick
+  incr_uniq(gauge_name, value=1): Increment the given (two-dimensional) gauge by value unless incr_uniq was already called for this session and tick (using incr_uniq on a progressive gauge is propably a bad idea)
 
 not yet implemented
 

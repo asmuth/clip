@@ -158,71 +158,101 @@ describe FnordMetric::GaugeModifiers do
     it "should increment_unique a non-progressive gauge" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_963"    
       @redis.hset(gauge_key, "695280200", "54")
-      @redis.set(gauge_key+"-sessions-count", 5)
+      @redis.set(gauge_key+"-695280200-sessions-count", 5)
       create_gauge_context({
         :key => "mygauge_963", 
+        :unique => true,
         :tick => 10
       }, proc{ 
-        incr_uniq(:mygauge_963, 30)  
+        incr(:mygauge_963, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "84"
-      @redis.get(gauge_key+"-sessions-count").should == "6"
-      @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
+      @redis.get(gauge_key+"-695280200-sessions-count").should == "6"
+      @redis.smembers(gauge_key+"-695280200-sessions").should == ["mysesskey"]
     end
 
     it "should not increment_unique a non-progressive gauge if session is known" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_966"    
       @redis.hset(gauge_key, "695280200", "54")
-      @redis.set(gauge_key+"-sessions-count", 5)
-      @redis.sadd(gauge_key+"-sessions", "mysesskey")
+      @redis.set(gauge_key+"-695280200-sessions-count", 5)
+      @redis.sadd(gauge_key+"-695280200-sessions", "mysesskey")
       create_gauge_context({
         :key => "mygauge_966", 
+        :unique => true,
         :tick => 10
       }, proc{ 
-        incr_uniq(:mygauge_966, 30)  
+        incr(:mygauge_966, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "54"
-      @redis.get(gauge_key+"-sessions-count").should == "5"
-      @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
+      @redis.get(gauge_key+"-695280200-sessions-count").should == "5"
+      @redis.smembers(gauge_key+"-695280200-sessions").should == ["mysesskey"]
     end
 
     it "should not increment_unique a non-progressive gauge w/o session" do
       gauge_key = "fnordmetrics-myns-gauge-mygauge_966"    
       @redis.hset(gauge_key, "695280200", "54")
-      @redis.set(gauge_key+"-sessions-count", 5)
+      @redis.set(gauge_key+"-695280200-sessions-count", 5)
       create_gauge_context({
         :key => "mygauge_966", 
+        :unique => true,
         :tick => 10
       }, proc{ 
-        incr_uniq(:mygauge_966, 30)  
+        incr(:mygauge_966, 30)  
       }).tap do |context|      
         event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "695280200").should == "54"
-      @redis.get(gauge_key+"-sessions-count").should == "5"
-      @redis.smembers(gauge_key+"-sessions").should == []
+      @redis.get(gauge_key+"-695280200-sessions-count").should == "5"
+      @redis.smembers(gauge_key+"-695280200-sessions").should == []
     end
 
-    it "should raise an error if increment_unique is called on a progressive gauge" do
+
+    it "should increment_unique a non-progressive gauge" do  
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_963"    
+      @redis.hset(gauge_key, "695280200", "54")
+      @redis.set(gauge_key+"-progressive-sessions-count", 5)
       create_gauge_context({
-        :key => "mygauge_756", 
+        :key => "mygauge_963", 
         :tick => 10,
+        :unique => true,
         :progressive => true
       }, proc{ 
-        incr_uniq(:mygauge_756, 1)  
+        incr(:mygauge_963, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        lambda{
-          context.call(event, @redis_wrap)
-        }.should raise_error(RuntimeError)
+        context.call(event, @redis_wrap)
       end
+      @redis.hget(gauge_key, "695280200").should == "84"
+      @redis.get(gauge_key+"-progressive-sessions-count").should == "6"
+      @redis.smembers(gauge_key+"-progressive-sessions").should == ["mysesskey"]
+    end
+
+    it "should not increment_unique a non-progressive gauge if session is known" do  
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_966"    
+      @redis.hset(gauge_key, "695280200", "54")
+      @redis.set(gauge_key+"-progressive-sessions-count", 5)
+      @redis.sadd(gauge_key+"-progressive-sessions", "mysesskey")
+      create_gauge_context({
+        :key => "mygauge_966", 
+        :tick => 10,
+        :unique => true,
+        :progressive => true
+      }, proc{ 
+        incr(:mygauge_966, 30)  
+      }).tap do |context|      
+        event = { :_time => @now, :_session_key => "mysesskey" }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "695280200").should == "54"
+      @redis.get(gauge_key+"-progressive-sessions-count").should == "5"
+      @redis.smembers(gauge_key+"-progressive-sessions").should == ["mysesskey"]
     end
 
   end
