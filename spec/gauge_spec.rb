@@ -49,12 +49,12 @@ describe FnordMetric::Gauge do
 
   end
 
-
   describe "value retrival" do
 
     before(:each) do
       @gauge_key = "fnordmetric-myns-gauge-mygauge_966"    
       @redis.hset(@gauge_key, "695280200", "54")
+      @redis.hset(@gauge_key, "695280210", "123")
       @gauge = FnordMetric::Gauge.new({
         :tick => 10, 
         :key_prefix => "fnordmetric-myns", 
@@ -65,13 +65,11 @@ describe FnordMetric::Gauge do
 
     it "should retrieve a gauge value at a given time" do
       @gauge.value_at(@now).should == "54"
+      @gauge.value_at(@now+6).should == "54"
+      @gauge.value_at(@now+8).should == "123"
     end
 
     it "should retrieve a gauge value at the current tick"
-
-    it "should receive gauge values for multiple ticks"
-
-    it "should receive gauge values for all ticks in a given range"
 
     it "should call the value calculation block and return the result" do
       @gauge.value_at(@now){ |v| v.to_i + 123 }.should == 177
@@ -80,6 +78,44 @@ describe FnordMetric::Gauge do
     it "should return the correct value_at per session" do
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       @gauge.value_at(@now, :avg_per_session => 1).should == (54.0/23.0)
+    end
+
+    it "should receive gauge values for multiple ticks" do
+      @gauge.values_at([@now, @now+8]).should == {
+        695280200 => "54",
+        695280210 => "123"
+      }
+    end
+
+    it "should receive gauge values per session for multiple ticks" do  
+      @redis.set(@gauge_key+"-695280200-sessions-count", "23")
+      @redis.set(@gauge_key+"-695280210-sessions-count", "8")
+      @gauge.values_at([@now, @now+8], :avg_per_session => 1).should == {
+        695280200 => (54.0/23.0),
+        695280210 => (123.0/8.0)
+      }
+    end
+
+    it "should receive gauge values with custom calculation for multiple ticks" do  
+      @gauge.values_at([@now, @now+8]){ |val|
+        val.to_i + 30
+      }.should == {
+        695280200 => 84,
+        695280210 => 153
+      }
+    end
+
+    it "should receive gauge values for all ticks in a given range" do
+      @gauge.values_in(@now..@now+8).should == {
+        695280200 => "54",
+        695280210 => "123"
+      }
+      @gauge.values_in(@now..@now+6).should == {
+        695280200 => "54"
+      }
+      @gauge.values_in(@now+8..@now+10).should == {
+        695280210 => "123"
+      }
     end
 
   end
