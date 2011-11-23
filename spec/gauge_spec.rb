@@ -12,16 +12,21 @@ describe FnordMetric::Gauge do
     @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
   end
 
+  it "should remember it's own name" do
+    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"}) 
+    gauge.name.should == "fnordgauge"
+  end
+
   it "should raise an error when initialize without key" do
   	lambda{ 
-	  FnordMetric::Gauge.new({:key_prefix => "foo"}) 
-	}.should raise_error(KeyError)
+	    FnordMetric::Gauge.new({:key_prefix => "foo"}) 
+	  }.should raise_error(KeyError)
   end
 
   it "should raise an error when initialize without key_prefix" do
   	lambda{ 
-	  FnordMetric::Gauge.new({:key => "foo"}) 
-	}.should raise_error(KeyError)
+	    FnordMetric::Gauge.new({:key => "foo"}) 
+	  }.should raise_error(KeyError)
   end
 
   it "should generate the correct key without append" do

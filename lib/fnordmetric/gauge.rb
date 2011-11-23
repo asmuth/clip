@@ -14,9 +14,13 @@ class FnordMetric::Gauge
   def tick_at(time)    
     (time/tick.to_f).floor*tick
   end
+
+  def name
+    @opts[:key]
+  end
   
   def key(_append=nil)
-    [@opts[:key_prefix], "gauge", @opts[:key], _append].flatten.compact.join("-")
+    [@opts[:key_prefix], "gauge", name, _append].flatten.compact.join("-")
   end
 
   def tick_key(_time, _append=nil)
