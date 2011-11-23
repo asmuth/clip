@@ -2,7 +2,6 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Namespace do
 
-  include FnordMetric
 
   before(:all) do
     @redis = Redis.new
@@ -16,14 +15,13 @@ describe FnordMetric::Namespace do
   describe "instance methods" do
 
     before(:each) do
-      @namespace = Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
+      @namespace = FnordMetric::Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
     end
 
     it "should create a new dashboard if a widget is added" do
       @namespace.widget("My Dash", nil)
       @namespace.dashboards.keys.should == ["My Dash"]
     end
-
 
     it "should create a new dashboard if a widget is added and add the widget"
     it "should add widget to an existing dashboard"
@@ -55,8 +53,8 @@ describe FnordMetric::Namespace do
 
 
   it "should create a new session on announce if _session is set" do
-    Session.should_receive(:create)
-    Namespace.new(
+    FnordMetric::Session.should_receive(:create).and_return(SessionMock.new)
+    FnordMetric::Namespace.new(
       :myns_213, 
       :redis_prefix => "fnordmetric"      
     ).ready!(@redis_wrap).announce(
@@ -67,8 +65,8 @@ describe FnordMetric::Namespace do
   end
 
   it "should add the event to the namespace-event-type-list" do
-    Namespace.new(
-      :myns_213, 
+    FnordMetric::Namespace.new(
+      :myns_215, 
       :redis_prefix => "fnordmetric"      
     ).ready!(@redis_wrap).announce(
       :_eid => "35r2423",
@@ -76,10 +74,15 @@ describe FnordMetric::Namespace do
       :_type => "fnordbar", 
       :_session => "sess213"
     )
-    event_ids = @redis.lrange("fnordmetric-myns_213-type-fnordbar", 0, -1)
+    event_ids = @redis.lrange("fnordmetric-myns_215-type-fnordbar", 0, -1)
     event_ids.length.should == 1
     event_ids.first.should == "35r2423"
   end
 
+  class SessionMock
+    def session_key
+      "asdasd"
+    end
+  end
 
 end

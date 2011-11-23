@@ -59,7 +59,7 @@ describe FnordMetric::Gauge do
         :tick => 10, 
         :key_prefix => "fnordmetric-myns", 
         :key => "mygauge_966",
-        :redis => @redis_wrap
+        :redis => @redis
       })
     end
 
