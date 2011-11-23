@@ -85,6 +85,11 @@ module FnordMetric
     puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{msg}"
   end
 
+  def self.error!(msg)
+    raise msg if ENV['FNORDMETRIC_ENV'] == 'test'
+    puts(msg); exit!
+  end
+
   def self.run(opts={})
     start_em(opts) 
   rescue Exception => e
@@ -124,6 +129,7 @@ require "fnordmetric/session"
 require "fnordmetric/app"
 require "fnordmetric/dashboard"
 require "fnordmetric/event"
+require "fnordmetric/widget"
 
 #require "fnordmetric/metric_api"
 

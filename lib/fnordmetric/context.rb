@@ -43,8 +43,7 @@ protected
   end
 
   def error!(msg)
-    raise msg if ENV['FNORDMETRIC_ENV'] == 'test'
-    puts(msg); exit!
+    FnordMetric.error!(msg)
   end
 
   def assure_two_dimensional!(gauge)

@@ -1,67 +1,60 @@
 class FnordMetric::Widget
 
-  attr_accessor :report
+  attr_accessor :gauges, :tick
 
-  def initialize(options={})
-    @options = options
-    add_report(@options[:report]) if @options[:report]
+  def initialize(opts={})
+    @opts = opts
+    add_gauges(opts.delete(:gauges))
   end
 
   def title
-    @options[:title]
+    @opts[:title]
   end
 
-  def metrics
-    [@options[:metrics]].flatten.map{ |m|
-      m.is_a?(FnordMetric::Metric) ? m : FnordMetric.metrics.fetch(m)
-    }
+  def add_gauges(gauges)
+    if gauges.blank?
+      error! "initializing a widget without gauges is void"
+    else
+      @gauges = gauges
+    end
+    
+    if (ticks = gauges.map{ |g| g.tick }).length == 1
+      @tick = ticks.first
+    else
+      error! "you can't add gauges with different ticks to the same widget"
+    end
   end
 
-  def tick
-    @options[:tick] || 1.day
+  def error!(msg)
+    FnordMetric.error!(msg)
   end
 
   def range
-    @options[:range] || default_range
-  end
-
-  def range_to_i
-    (range.first.to_i..range.last.to_i)
+    #@opts[:range] || default_range # FIXME: allow custom ranges, but assure that the range-start is 'on a tick'
+    default_range
   end
 
   def ticks
-    range_to_i.step(tick.to_i).map{ |ts|
-      (Time.at(ts)..Time.at(ts+tick.to_i))
-    }.compact
+    range.step(@tick)
   end
 
   def default_range(now=Time.now)
-    if tick.to_i == 1.day.to_i
-      now = now+1.day
-      te = Time.utc(now.year, now.month, now.day) 
-      (te-30.days)..(te-1.second)
-    elsif tick.to_i == 1.hour.to_i
-      te = Time.utc(now.year, now.month, now.day, now.hour) 
-      (te-24.hours)..(te-1.second)
-    else
-      (now-(tick*30))..now
-    end
-  end
-    
-  def add_report(report)
-    @report = report
+    te = gauges.first.tick_at(now.to_i)
+    te += @tick if include_current?
+    rs = @tick == 1.hour.to_i ? 24 : 30
+    (te-(@tick*rs)..te)
   end
 
+  def include_current?
+    !(@opts[:include_current] == false)
+  end
+    
   def data
     { :title => @options[:title] }
   end
 
   def data_json
     data.to_json.gsub('"', '\'')
-  end
-
-  def include_current?
-    !(@options[:current] == false)
   end
 
   def render(elem_id)
