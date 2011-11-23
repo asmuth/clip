@@ -20,7 +20,10 @@ class FnordMetric::Namespace
   def announce(event)                  
     announce_to_timeline(event)
     announce_to_typelist(event)
-    announce_to_session(event) if event[:_session]
+    
+    if event[:_session]
+      event[:_session_key] = announce_to_session(event).session_key 
+    end
 
     @handlers[event[:_type]].each do |context| 
       context.call(event, @redis) 

@@ -16,7 +16,11 @@ class FnordMetric::Context
     puts "error: #{e.message}"
   end
 
-  private
+private
+
+  def session_key
+    @event[:_session_key]
+  end
 
   def data
   	@event
