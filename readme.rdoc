@@ -121,8 +121,6 @@ not yet implemented
 
 == TODOS
 
--> incr => incr_tick, incr dispatches to incr_tick or incr_uniq
-
 -> opt_event options: :increment => gauge_name
 
 -> OverviewDashboard (uniques day/week/month, events per min, online users, events per user)
