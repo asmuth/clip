@@ -285,8 +285,12 @@ var FnordMetric = (function(){
       close: close
     };
 
-  })();
+  });
   
+  function loadDashboard(_dash){  
+    alert('load me and instantiate a new DashboardView: ' + _dash);
+  };
+
   function loadView(_view){
     if(currentView){ currentView.close(); }
     canvasElem.html('loading!');
@@ -300,17 +304,18 @@ var FnordMetric = (function(){
       canvasElem.innerWidth(), 
       canvasElem.innerHeight()
     );
-  }
+  };
 
   function init(_namespace, _canvasElem){
     canvasElem = _canvasElem;
     currentNamespace = _namespace;
-    loadView(sessionView);
+    loadView(sessionView());
   };
 
   return {
     p: '/fnordmetric/',  
     loadView: loadView,
+    loadDashboard: loadDashboard,
     resizeView: resizeView,
     init: init
   };

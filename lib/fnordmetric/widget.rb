@@ -53,16 +53,8 @@ class FnordMetric::Widget
     { :title => @options[:title] }
   end
 
-  def data_json
+  def render
     data.to_json.gsub('"', '\'')
-  end
-
-  def render(elem_id)
-    %Q{      
-      <script type='text/javascript'>
-        FnordMetric.render('#{elem_id}', #{data_json});
-      </script>
-    }
   end
 
 end
