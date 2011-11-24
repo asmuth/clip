@@ -39,4 +39,8 @@ class FnordMetric::Gauge
     !!@opts[:unique]
   end
 
+  def add_redis(_redis)
+    @opts[:redis] = _redis
+  end
+
 end
