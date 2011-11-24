@@ -9,7 +9,7 @@ class FnordMetric::Dashboard
   end
 
   def add_widget(w)
-    #@widgets << (w.is_a?(FnordMetric::Widget) ? w : FnordMetric.widgets.fetch(w))
+    @widgets << w
   end
 
   def title
@@ -18,6 +18,17 @@ class FnordMetric::Dashboard
 
   def token
     title.to_s.gsub(/[\W]/, '')
+  end
+
+  def to_json
+    {
+      :title => title,
+      :widgets => {}.tap { |wids|
+        @widgets.each do |w|
+          wids[w.token] = w.render
+        end
+      }
+    }.to_json
   end
   
 end

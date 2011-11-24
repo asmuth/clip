@@ -66,7 +66,7 @@ module FnordMetric
           app = FnordMetric::App.new(@@namespaces.clone, opts)
           Thin::Server.start(*opts[:web_interface], app)
           log "listening on http##{opts[:web_interface].join(":")}"
-        rescue
+        rescue Exception => e
           log "cant start FnordMetric::App. port in use?"
         end
       end
@@ -120,6 +120,8 @@ end
 
 require "fnordmetric/inbound_stream"
 require "fnordmetric/worker"
+require "fnordmetric/widget"
+require "fnordmetric/timeline_widget"
 require "fnordmetric/namespace"
 require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_calculations"
@@ -129,7 +131,7 @@ require "fnordmetric/session"
 require "fnordmetric/app"
 require "fnordmetric/dashboard"
 require "fnordmetric/event"
-require "fnordmetric/widget"
+
 
 #require "fnordmetric/metric_api"
 
@@ -143,6 +145,6 @@ require "fnordmetric/widget"
 #require "fnordmetric/sum_metric"
 #require "fnordmetric/widget"
 #require "fnordmetric/numbers_widget"
-#require "fnordmetric/timeline_widget"
+#
 #require "fnordmetric/funnel_widget"
 

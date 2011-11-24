@@ -4,7 +4,32 @@ require "fnordmetric"
 
 FnordMetric.namespace :blubber do
 
-  widget 'Channels', nil
+  gauge :events_total
+
+  event :foobar do
+    incr :events_total
+  end
+
+
+  widget 'Channels', {
+    :title => "Snafu Foobar",
+    :type => :timeline,
+    :width => 30,
+    :gauges => :events_total
+  }
+
+  widget 'Channels', {
+    :title => "Blubb Yeah",
+    :type => :timeline,
+    :width => 70,
+    :gauges => :events_total
+  }
+
+  widget 'Channels', {
+    :title => "Events (total)",
+    :type => :timeline,
+    :gauges => :events_total
+  }
 
 end
 

@@ -4,11 +4,20 @@ class FnordMetric::Widget
 
   def initialize(opts={})
     @opts = opts
+
+    unless opts.has_key?(:title)
+      error! "widget can't be initialized without a title"
+    end
+
     add_gauges(opts.delete(:gauges))
   end
 
   def title
     @opts[:title]
+  end
+
+  def token
+    title.to_s.gsub(/[\W]/, '').downcase
   end
 
   def add_gauges(gauges)
@@ -50,11 +59,15 @@ class FnordMetric::Widget
   end
     
   def data
-    { :title => @options[:title] }
+    { 
+      :title => @opts[:title], 
+      :width => @opts[:width] || 100,
+      :klass => self.class.name.split("::").last 
+    }
   end
 
   def render
-    data.to_json.gsub('"', '\'')
+    data
   end
 
 end

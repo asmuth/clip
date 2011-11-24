@@ -98,6 +98,12 @@ class FnordMetric::App < Sinatra::Base
     { :types => keys }.to_json
   end
 
+  get '/:namespace/dashboard/:dashboard' do
+    dashboard = current_namespace.dashboards.fetch(params[:dashboard])
+
+    dashboard.to_json
+  end
+
   post '/events' do
     halt 400, 'please specify the event_type' unless params["type"]       
     event_type = params.delete("type")

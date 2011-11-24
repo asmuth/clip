@@ -1,6 +1,6 @@
 class FnordMetric::Namespace
   
-  attr_reader :handlers, :gauges, :opts, :key
+  attr_reader :handlers, :gauges, :opts, :key, :dashboards
 
   @@opts = [:event, :gauge, :widget]
 
@@ -90,11 +90,18 @@ class FnordMetric::Namespace
 
   def opt_gauge(gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
-    @gauges[gauge_key] = FnordMetric::Gauge.new(opts)   
+    @gauges[gauge_key] ||= FnordMetric::Gauge.new(opts)   
   end
 
   def opt_widget(dashboard, widget)
+    widget = build_widget(widget) if widget.is_a?(Hash)
     dashboards(dashboard).add_widget(widget)
+  end
+
+  def build_widget(opts)
+    _gauges = [opts[:gauges]].flatten.map{ |g| @gauges.fetch(g) }
+    widget_klass = "FnordMetric::#{opts.fetch(:type).to_s.classify}Widget"
+    widget_klass.constantize.new(opts.merge(:gauges => _gauges))
   end
 
   def extend_opts(opts)
