@@ -37,7 +37,8 @@ var FnordMetric = (function(){
 
       var labels = ['foo', 'bar', 'fnord', 'snafu', 'foo', 'bar', 'fnord', 'snafu', 'foo'];
       var series = [
-        {data: [ 234, 234, 7567, 235, 3, 2345, 85, 235, 7]}
+        { data: [ 234, 234, 7567, 235, 3, 2345, 85, 235, 7], color: '#0f0' },
+        { data: [ 562, 75, 5345, 345, 123, 534, 123, 34, 123], color: '#f00' }
       ];
 
       var elem_id = "fm_graph_"+parseInt(Math.random()*99999);
@@ -46,37 +47,42 @@ var FnordMetric = (function(){
 
       var width = elem_inner.width();
       var height = 240;
-      var canvas = Raphael(elem_id, width, height);
-      var txt = {font: '10px Helvetica, Arial', fill: "#777"};
+      var canvas = Raphael(elem_id, width, height+50);
       var xtick = width / (labels.length-1);
 
       var max = false; // each series has an individual y scale...
 
       canvas.drawGrid(0, 0, width, height, 1, 6, "#ececec");
       
-
       $(series).each(function(n,_series){
 
         var path_string = "M0,"+height;
-
         var _max = max;
+
         if(!_max){ _max = Math.max.apply(Math, _series.data)*1.1; }
 
-        $(_series.data).each(function(i,v){        
+        $(_series.data).each(function(i,v){    
+            
           path_string += ( "L" + (i*xtick) + ',' + (height-((v/_max)*height)) );
+
+          canvas.text((i*xtick), height+10, labels[i]).attr({
+            font: '10px Helvetica, Arial', 
+            fill: "#777"
+          });
+
         });
 
-        var line_path = canvas.path(path_string).attr({
-          stroke: '#ccc', 
+        canvas.path(path_string).attr({
+          stroke: _series.color, 
           "stroke-width": 1, 
           "stroke-linejoin": 'round'
         }); 
 
         path_string += "L"+width+","+height+" Z";
 
-        var fill_path = canvas.path(path_string).attr({
-          stroke: "#000", 
-          fill: '#000', 
+        canvas.path(path_string).attr({
+          stroke: "none", 
+          fill: '_series.color', 
           opacity: 0.3
         });
 
