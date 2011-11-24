@@ -82,7 +82,7 @@ var FnordMetric = (function(){
 
         canvas.path(path_string).attr({
           stroke: "none", 
-          fill: '_series.color', 
+          fill: _series.color, 
           opacity: 0.3
         });
 
