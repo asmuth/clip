@@ -21,6 +21,11 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 
 #viewport, #tabs ul li:hover, #tabs ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
 
+.widget{ min-height:100px; border-right:1px solid #ececec; float:left; }
+.widget.full_width{ border-right:none; }
+.widget .inner{ margin:20px; }
+.widget .headbar{ margin-bottom:30px; }
+
 /*
 .headbar{ height:36px; background:#f2f2f2; border-bottom:1px solid #e2e2e2; }
 .headbar h2{ margin:8px; line-height:21px; float:left; height:20px; font-size:14px; }
@@ -49,7 +54,7 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 
 .headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
 */
-.numbers_container, .number{ float:left; border-right:1px solid #ececec;}
+.numbers_container, .number{ float:left; border-right:1px solid #ececec; }
 .number{ margin-left:12px; padding-right:20px; margin-right:10px; }
 .number .value{ color:#333; font-size:30px; display:block; margin-bottom:5px; }
 .number .desc{ color:#999; font-size:12px; }

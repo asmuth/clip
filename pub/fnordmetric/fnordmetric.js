@@ -5,6 +5,111 @@ var FnordMetric = (function(){
   var currentNamespace = false;
   var currentView = false;
 
+  function decPrint(val){
+    return (val < 10 ? '0'+val : val);
+  }
+
+  function formatTimeOfDay(_time){
+    var time = new Date();
+    time.setTime(_time*1000);
+    return decPrint(time.getHours()) + ':' +
+           decPrint(time.getMinutes()) + ':' +
+           decPrint(time.getSeconds());
+  }
+  
+  function formatTimeSince(time){
+    var now = new Date().getTime()/1000;
+    var since = now - time;
+    if(since < 60){
+      return parseInt(since) + 's';
+    } else if(since<3600){
+      return parseInt(since/60) + 'm';
+    } else if(since<(3600*24)){
+      return parseInt(since/3600) + 'h';
+    } else {
+      return ">1d"
+    }
+  }
+
+  var timelineWidget = function(opts){
+    
+    function render(){
+
+      var labels = ['foo', 'bar', 'fnord', 'snafu', 'foo', 'bar', 'fnord', 'snafu', 'foo'];
+      var series = [
+        {data: [ 234, 234, 7567, 235, 3, 2345, 85, 235, 7]}
+      ];
+
+      var elem_id = "fm_graph_"+parseInt(Math.random()*99999);
+      var elem_inner = $('.inner', opts.elem);
+      elem_inner.append($('<div id="'+elem_id+'"></div>'));
+
+      var width = elem_inner.width();
+      var height = 240;
+      var canvas = Raphael(elem_id, width, height);
+      var txt = {font: '10px Helvetica, Arial', fill: "#777"};
+      var xtick = width / (labels.length-1);
+
+      var max = false; // each series has an individual y scale...
+
+      canvas.drawGrid(0, 0, width, height, 1, 6, "#ececec");
+      
+
+      $(series).each(function(n,_series){
+
+        var path_string = "M0,"+height;
+
+        var _max = max;
+        if(!_max){ _max = Math.max.apply(Math, _series.data)*1.1; }
+
+        $(_series.data).each(function(i,v){        
+          path_string += ( "L" + (i*xtick) + ',' + (height-((v/_max)*height)) );
+        });
+
+        var line_path = canvas.path(path_string).attr({
+          stroke: '#ccc', 
+          "stroke-width": 1, 
+          "stroke-linejoin": 'round'
+        }); 
+
+        path_string += "L"+width+","+height+" Z";
+
+        var fill_path = canvas.path(path_string).attr({
+          stroke: "#000", 
+          fill: '#000', 
+          opacity: 0.3
+        });
+
+      });
+
+      //jQuery.each(data, function(i, value) {
+        //var y = -50,
+        //    x = 50;
+        //label = dataSet.labels ? dataSet.labels[i]  : " ";
+        //line_path[i == 0 ? "moveTo" : "cplineTo"](x+i, y, 2).attr({opacity: 0.7});
+        
+        //if (dataSet.settings.fillUnderLine) {
+         // fill_path[i == 0 ? "lineTo" : "cplineTo"](x, y, dataSet.settings.cpWidth);
+        //}
+        //if (dataSet.settings.addHover) {
+        //  var rect = canvas.rect(x - 50, y - 50, 100, 100).attr({stroke: "none", fill: "#fff", opacity: 0}); //TODO PARAM - hover target width / height
+        //  jQuery(rect[0]).hover( function() {
+        //    jQuery.fn.simplegraph.hoverIn(canvas, value, label, x, y, hoverFrame, hoverText, dot, dataSet.settings);
+        //  }, 
+        //  function() {
+        //    jQuery.fn.simplegraph.hoverOut(canvas, hoverFrame, hoverText, dot, dataSet.settings);
+        //  });
+        //}
+      //});
+
+    }
+
+    return {
+      render: render  
+    };
+
+  };
+
   var sessionView = (function(){
     
     var listElem = $('<ul class="session_list"></ul>');
@@ -23,6 +128,7 @@ var FnordMetric = (function(){
     var eventsPolledUntil = false;
     var eventsFilter = [];
     var sessionData = {};
+    var pollRunning = true;
 
     function load(elem){
       eventsPolledUntil = parseInt(new Date().getTime()/10000);
@@ -43,6 +149,11 @@ var FnordMetric = (function(){
       (doEventsPoll())();
       sessionView.session_poll = window.setInterval(doSessionPoll(), 1000);
     };
+
+    function stopPoll(){
+      pollRunning = false;
+      window.clearInterval(sessionView.session_poll);
+    }
 
     function doSessionPoll(){
       return (function(){
@@ -147,35 +258,11 @@ var FnordMetric = (function(){
         for(var n=maxevents; n < elems.length; n++){
           $(elems[n]).remove();
         }
-        window.setTimeout(doEventsPoll(), timout);
+        if(pollRunning){
+          window.setTimeout(doEventsPoll(), timout);
+        }
       });
     };
-
-    function decPrint(val){
-      return (val < 10 ? '0'+val : val);
-    }
-
-    function formatTimeOfDay(_time){
-      var time = new Date();
-      time.setTime(_time*1000);
-      return decPrint(time.getHours()) + ':' +
-             decPrint(time.getMinutes()) + ':' +
-             decPrint(time.getSeconds());
-    }
-    
-    function formatTimeSince(time){
-      var now = new Date().getTime()/1000;
-      var since = now - time;
-      if(since < 60){
-        return parseInt(since) + 's';
-      } else if(since<3600){
-        return parseInt(since/60) + 'm';
-      } else if(since<(3600*24)){
-        return parseInt(since/3600) + 'h';
-      } else {
-        return ">1d"
-      }
-    }
 
     function updateSession(session_data){
       sessionData[session_data.session_key] = session_data;
@@ -276,7 +363,7 @@ var FnordMetric = (function(){
     }
 
     function close(){
-      
+      stopPoll();
     };
 
     return {
@@ -290,12 +377,58 @@ var FnordMetric = (function(){
 
   var dashboardView = (function(dashboard_name){
 
-    function load(){
-      alert('yay, new dashboard view loaded: ' + dashboard_name);
+    var widgets = [];
+    var viewport = null;
+
+    function load(_viewport){
+      viewport = _viewport.html('');
+      /*alert('yay, new dashboard view loaded: ' + dashboard_name);*/
+      $.ajax({
+        url: '/'+currentNamespace+'/dashboard/'+dashboard_name,
+        success: function(resp, status){
+          var conf = JSON.parse(resp);
+          renderWidgets(conf.widgets);
+        }
+      });
     };
 
+    function renderWidgets(_widgets){
+      for(wkey in _widgets){
+        var widget = _widgets[wkey];
+        widget["elem"] = $('<div class="widget"></div>').append(
+          $('<div class="headbar"></div>').html(widget.title)
+        ).append(
+          $('<div class="inner"></div>')
+        );
+        console.log(widget);
+        widgets[wkey] = widget;
+        viewport.append(widget.elem);
+        resizeWidget(wkey);
+        renderWidget(wkey);
+      };
+      resize();
+    };
+
+    function renderWidget(wkey){
+      var widget = widgets[wkey];
+      timelineWidget(widget).render();
+    };
+
+    function resizeWidget(wkey){
+      var widget = widgets[wkey];
+      var wwperc = widgets[wkey].width;
+      if(!wwperc){ wwperc = 100; }
+      var wwidth = viewport.width() * (wwperc/100.0);
+      if(wwperc==100){
+        widgets[wkey].elem.addClass('full_width');
+      } else { wwidth -= 1; }
+      widget.elem.width(wwidth);  
+    }
+
     function resize(){
-      
+      for(wkey in widgets){
+        resizeWidget(wkey);  
+      };
     };
 
     function close(){
