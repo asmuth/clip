@@ -35,11 +35,8 @@ var FnordMetric = (function(){
     
     function render(){
 
-      var labels = ['foo', 'bar', 'fnord', 'snafu', 'foo', 'bar', 'fnord', 'snafu', 'foo'];
-      var series = [
-        { data: [ 234, 234, 7567, 235, 3, 2345, 85, 235, 7], color: '#0f0' },
-        { data: [ 562, 75, 5345, 345, 123, 534, 123, 34, 123], color: '#f00' }
-      ];
+      var labels = opts.labels;
+      var series = opts.series;
 
       var elem_id = "fm_graph_"+parseInt(Math.random()*99999);
       var elem_inner = $('.inner', opts.elem);
@@ -47,8 +44,10 @@ var FnordMetric = (function(){
 
       var width = elem_inner.width();
       var height = 240;
-      var canvas = Raphael(elem_id, width, height+50);
+      var canvas = Raphael(elem_id, width, height+30);
       var xtick = width / (labels.length-1);
+
+      var label_mod = Math.ceil((labels.length/10));
 
       var max = false; // each series has an individual y scale...
 
@@ -65,10 +64,12 @@ var FnordMetric = (function(){
             
           path_string += ( "L" + (i*xtick) + ',' + (height-((v/_max)*height)) );
 
-          canvas.text((i*xtick), height+10, labels[i]).attr({
-            font: '10px Helvetica, Arial', 
-            fill: "#777"
-          });
+          if(i%label_mod==0){
+            canvas.text((i*xtick), height+10, labels[i]).attr({
+              font: '10px Helvetica, Arial', 
+              fill: "#777"
+            });
+          }
 
         });
 

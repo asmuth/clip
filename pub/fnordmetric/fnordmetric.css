@@ -16,7 +16,7 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 .picto{ display:block; height:14px; width:14px; float:left; background:url('/fnordmetric/sprite.png') no-repeat 14px 14px; opacity:0.7; }
 .picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
-#viewport{ float:left; margin-left:150px; margin-top:50px; border-radius:3px; min-width:790px; }
+#viewport{ float:left; margin-left:150px; margin-top:30px; border-radius:3px; min-width:790px; }
 #viewport .viewport_inner{ margin:6px; background:#fff; min-height:1200px; border-radius:2px; }
 
 #viewport, #tabs ul li:hover, #tabs ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
