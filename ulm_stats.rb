@@ -5,32 +5,35 @@ require "fnordmetric"
 FnordMetric.namespace :blubber do
 
   gauge :events_total, :tick => 10
+  gauge :uniques_daily, :tick => 1.day.to_i, :unique => true
 
   event :"*" do
     incr :events_total
+    incr :uniques_daily
   end
-
 
   gauge :skip_votes, :tick => 60
   gauge :yes_votes, :tick => 60
   gauge :maybe_votes, :tick => 60
 
+  gauge :mails_sent, :tick => 60
+  gauge :mails_clicked, :tick => 60
+
   event(:skip_vote){ incr :skip_votes }
   event(:yes_vote){ incr :yes_votes }
   event(:maybe_vote){ incr :maybe_votes }
 
-
   widget 'Channels', {
-    :title => "Snafu Foobar",
+    :title => "Daily Uniques",
     :type => :timeline,
-    :width => 30,
-    :gauges => :events_total
+    :width => 70,
+    :gauges => :uniques_daily
   }
 
   widget 'Channels', {
-    :title => "Total Events",
+    :title => "Events per Minute",
     :type => :timeline,
-    :width => 70,
+    :width => 30,
     :gauges => :events_total
   }
 
