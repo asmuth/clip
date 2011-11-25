@@ -34,24 +34,39 @@ describe FnordMetric::Namespace do
   it "should register a gauge"
   it "should register a gauge and pass options"
 
-  it "should register an event handler"
-  it "should register an event handler and create a context"
-  it "should register an event handler and pass options"
-  it "should register an event handler and pass gauges"
+  describe "registering event handlers" do
 
-  it "should announce an event to the correct handler" do
-    pending("finish this")
-  # block_called = false
-  # FnordMetric::Dashboard.new(:title => 'My Dashboard') do |dash|
-  #    block_called = true
-  #    dash.should be_a(FnordMetric::Dashboard)
-  #  end
-  #  block_called.should be_true
+    before(:each) do
+      @namespace = FnordMetric::Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
+    end
+
+    it "should register an event handler" do
+      @namespace.handlers.length.should == 0
+      @namespace.event(:foobar){}
+      @namespace.event(:fnordbar){}
+      @namespace.handlers["foobar"].length.should == 1
+      @namespace.handlers["fnordbar"].length.should == 1
+      @namespace.handlers.length.should == 2
+    end
+
+    it "should register an event handler and create a context"
+    it "should register an event handler and pass options"
+    it "should register an event handler and pass gauges"
+
+    it "should announce an event to the correct handler" do
+      pending("finish this")
+    # block_called = false
+    # FnordMetric::Dashboard.new(:title => 'My Dashboard') do |dash|
+    #    block_called = true
+    #    dash.should be_a(FnordMetric::Dashboard)
+    #  end
+    #  block_called.should be_true
+    end
+
+    it "should announce an event to multiple handlers"
+    it "should announce an event to the wildcard handler"
+
   end
-
-  it "should announce an event to multiple handlers"
-  it "should announce an event to the wildcard handler"
-
 
   it "should create a new session on announce if _session is set" do
     FnordMetric::Session.should_receive(:create).and_return(SessionMock.new)

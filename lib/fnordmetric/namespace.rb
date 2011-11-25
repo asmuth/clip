@@ -7,7 +7,7 @@ class FnordMetric::Namespace
   def initialize(key, opts)    
     @gauges = Hash.new
     @dashboards = Hash.new
-    @handlers = Hash.new([])                 
+    @handlers = Hash.new                 
     @opts = opts
     @key = key      
   end
@@ -26,9 +26,10 @@ class FnordMetric::Namespace
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
-    handlers = @handlers[event[:_type]] + @handlers["*"]
-
-    handlers.each do |context| 
+    [
+      @handlers[event[:_type].to_s],
+      @handlers["*"]
+    ].flatten.compact.each do |context| 
       context.call(event, @redis) 
     end
 
@@ -87,6 +88,7 @@ class FnordMetric::Namespace
   def opt_event(event_type, opts={}, &block)    
     opts.merge!(:redis => @redis, :gauges => @gauges)   
     FnordMetric::Context.new(opts, block).tap do |context|
+      @handlers[event_type.to_s] ||= []
       @handlers[event_type.to_s] << context
     end      
   end

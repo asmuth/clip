@@ -15,9 +15,9 @@ FnordMetric.namespace :blubber do
   gauge :yes_votes, :tick => 10
   gauge :maybe_votes, :tick => 10
 
-  event(:action_skip){ incr :skip_votes}
-  event(:action_yes){ incr :yes_votes}
-  event(:action_maybe){ incr :maybe_votes}
+  event(:action_skip){ incr :skip_votes }
+  event(:action_yes){ incr :yes_votes }
+  event(:action_maybe){ incr :maybe_votes }
 
 
   widget 'Channels', {
