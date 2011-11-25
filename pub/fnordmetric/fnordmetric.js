@@ -49,15 +49,25 @@ var FnordMetric = (function(){
 
       var label_mod = Math.ceil((labels.length/10));
 
-      var max = false; // each series has an individual y scale...
-      
+      if(opts.independent_y_axis){
+        var max = false;  
+      } else {
+        var amax = [];   
+        $(series).each(function(n,_series){
+          amax.push(Math.max.apply(Math, _series.data));
+        });
+        var max = Math.max.apply(Math, amax);
+      }
+
       $(series).each(function(n,_series){
 
         //var path_string = "M0,"+height;
         var path_string = "";
         var _max = max;
 
-        if(!_max){ _max = Math.max.apply(Math, _series.data)*1.1; }
+        if(!_max){ _max = Math.max.apply(Math, _series.data); }
+        
+        _max = _max * 1.1;
 
         $(_series.data).each(function(i,v){    
 
@@ -103,7 +113,6 @@ var FnordMetric = (function(){
               opacity: 0
             }).toBack();
 
-            
 
             $(htrgt[0]).hover(function(){
               tt.animate({ opacity: 0.8 }, 300);

@@ -125,6 +125,8 @@ not yet implemented
 
 -> bug: include_current=false does what include_current=true is supposed to do and include_current=true is always one tick in the future 
 
+-> gauge-key should include tick
+
 -> opt_event options: :increment => gauge_name
 
 -> OverviewDashboard (uniques day/week/month, events per min, online users, events per user)

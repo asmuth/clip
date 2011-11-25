@@ -11,9 +11,9 @@ FnordMetric.namespace :blubber do
   end
 
 
-  gauge :skip_votes, :tick => 10
-  gauge :yes_votes, :tick => 10
-  gauge :maybe_votes, :tick => 10
+  gauge :skip_votes, :tick => 60
+  gauge :yes_votes, :tick => 60
+  gauge :maybe_votes, :tick => 60
 
   event(:action_skip){ incr :skip_votes }
   event(:action_yes){ incr :yes_votes }
