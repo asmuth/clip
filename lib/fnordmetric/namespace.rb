@@ -26,7 +26,9 @@ class FnordMetric::Namespace
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
-    @handlers[event[:_type]].each do |context| 
+    handlers = @handlers[event[:_type]] + @handlers["*"]
+
+    handlers.each do |context| 
       context.call(event, @redis) 
     end
 

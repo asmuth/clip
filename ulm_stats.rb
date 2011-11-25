@@ -6,9 +6,18 @@ FnordMetric.namespace :blubber do
 
   gauge :events_total, :tick => 10
 
-  event :foobar do
+  event :"*" do
     incr :events_total
   end
+
+
+  gauge :skip_votes, :tick => 10
+  gauge :yes_votes, :tick => 10
+  gauge :maybe_votes, :tick => 10
+
+  event(:action_skip){ incr :skip_votes}
+  event(:action_yes){ incr :yes_votes}
+  event(:action_maybe){ incr :maybe_votes}
 
 
   widget 'Channels', {
@@ -19,17 +28,17 @@ FnordMetric.namespace :blubber do
   }
 
   widget 'Channels', {
-    :title => "Blubb Yeah",
+    :title => "Total Events",
     :type => :timeline,
     :width => 70,
     :gauges => :events_total
   }
 
   widget 'Channels', {
-    :title => "Events (total)",
+    :title => "Yes/No/Skip-Votes",
     :type => :timeline,
     :include_current => false,
-    :gauges => :events_total
+    :gauges => [:skip_votes]
   }
 
 end

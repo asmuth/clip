@@ -22,7 +22,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
   end
 
   def data
-    @series_colors = ["#FACE4F", "#2F635E", "#42436B", "#CD645A"]
+    @series_colors = ["#FACE4F", "#2F635E", "#42436B", "#CD645A"].shuffle
 
     super.merge(
       :labels => data_labels,

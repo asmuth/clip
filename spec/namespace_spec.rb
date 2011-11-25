@@ -50,6 +50,7 @@ describe FnordMetric::Namespace do
   end
 
   it "should announce an event to multiple handlers"
+  it "should announce an event to the wildcard handler"
 
 
   it "should create a new session on announce if _session is set" do
