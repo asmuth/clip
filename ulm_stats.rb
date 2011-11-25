@@ -38,7 +38,7 @@ FnordMetric.namespace :blubber do
     :title => "Yes/No/Skip-Votes",
     :type => :timeline,
     :include_current => false,
-    :gauges => [:skip_votes]
+    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
   }
 
 end
