@@ -143,7 +143,7 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv, hv, color) {
     for (i = 1; i < wv; i++) {
         path = path.concat(["M", Math.round(x + i * columnWidth) + .5, Math.round(y) + .5, "V", Math.round(y + h) + .5]);
     }
-    return this.path(path.join(",")).attr({stroke: color});
+    return this.path(path.join(",")).attr({stroke: color}).toBack();
 };
 
 Raphael.el.isAbsolute = true;
