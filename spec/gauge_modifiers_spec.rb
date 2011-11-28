@@ -15,7 +15,7 @@ describe FnordMetric::GaugeModifiers do
   describe "increment non-progressive gauges" do
 
     it "should increment a non-progressive gauge by 1" do
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_234"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_234-10"
       @redis.hset(gauge_key, "695280200", "12")  
       create_gauge_context({
         :key => "mygauge_234", 
@@ -30,7 +30,7 @@ describe FnordMetric::GaugeModifiers do
     end
 
     it "should increment a non-progressive gauge by 5" do
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_224"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_224-10"
       @redis.hset(gauge_key, "695280200", "18")  
       create_gauge_context({
         :key => "mygauge_224", 
@@ -45,7 +45,7 @@ describe FnordMetric::GaugeModifiers do
     end
 
     it "should increment a non-progressive gauge by event_value" do
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_253"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_253-10"
       @redis.hset(gauge_key, "695280200", "11")  
       create_gauge_context({
         :key => "mygauge_253", 
@@ -65,7 +65,7 @@ describe FnordMetric::GaugeModifiers do
   describe "increment progressive gauges" do
 
     it "should increment a progressive gauge by 1" do  
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_123"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_123-10"
       @redis.hset(gauge_key, "695280200", "23")  
       @redis.set(gauge_key+"-head",  "23")  
       create_gauge_context({
@@ -83,7 +83,7 @@ describe FnordMetric::GaugeModifiers do
     end
 
     it "should increment a progressive gauge by 5" do  
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_125"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_125-10"
       @redis.hset(gauge_key, "695280200", "22")  
       @redis.set(gauge_key+"-head",  "22")  
       create_gauge_context({
@@ -101,7 +101,7 @@ describe FnordMetric::GaugeModifiers do
     end
 
     it "should increment a progressive gauge by 1 and copy head" do  
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_128"    
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_128-10"    
       @redis.hdel(gauge_key, "695280200")
       @redis.set(gauge_key+"-head", "17")  
       create_gauge_context({
@@ -119,7 +119,7 @@ describe FnordMetric::GaugeModifiers do
     end
 
     it "should increment a progressive gauge by 5 and copy head" do  
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_121"    
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_121-10"    
       @redis.hdel(gauge_key, "695280200")
       @redis.set(gauge_key+"-head", "19")  
       create_gauge_context({
@@ -156,7 +156,7 @@ describe FnordMetric::GaugeModifiers do
   describe "increment uniquely by session_key" do
 
     it "should increment_unique a non-progressive gauge" do  
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_963"    
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_963-10"    
       @redis.hset(gauge_key, "695280200", "54")
       @redis.set(gauge_key+"-695280200-sessions-count", 5)
       create_gauge_context({
@@ -215,7 +215,7 @@ describe FnordMetric::GaugeModifiers do
 
 
     it "should increment_unique a non-progressive gauge" do  
-      gauge_key = "fnordmetrics-myns-gauge-mygauge_963"    
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_963-10"    
       @redis.hset(gauge_key, "695280200", "54")
       @redis.set(gauge_key+"-progressive-sessions-count", 5)
       create_gauge_context({

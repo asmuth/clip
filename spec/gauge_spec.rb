@@ -30,13 +30,13 @@ describe FnordMetric::Gauge do
   end
 
   it "should generate the correct key without append" do
-  	gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge"})
-  	gauge.key.should == "fnordmetrics-myns-gauge-mygauge"
+  	gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
+  	gauge.key.should == "fnordmetrics-myns-gauge-mygauge-23"
   end
 
   it "should generate the correct key with append" do
-  	gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge"})
-  	gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-fnord"
+  	gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
+  	gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
   end
 
   describe "ticks" do
@@ -57,7 +57,7 @@ describe FnordMetric::Gauge do
   describe "value retrival" do
 
     before(:each) do
-      @gauge_key = "fnordmetric-myns-gauge-mygauge_966"    
+      @gauge_key = "fnordmetric-myns-gauge-mygauge_966-10"    
       @redis.hset(@gauge_key, "695280200", "54")
       @redis.hset(@gauge_key, "695280210", "123")
       @gauge = FnordMetric::Gauge.new({

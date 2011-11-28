@@ -20,7 +20,7 @@ class FnordMetric::Gauge
   end
   
   def key(_append=nil)
-    [@opts[:key_prefix], "gauge", name, _append].flatten.compact.join("-")
+    [@opts[:key_prefix], "gauge", name, tick, _append].flatten.compact.join("-")
   end
 
   def tick_key(_time, _append=nil)
