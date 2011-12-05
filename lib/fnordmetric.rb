@@ -122,6 +122,7 @@ require "fnordmetric/inbound_stream"
 require "fnordmetric/worker"
 require "fnordmetric/widget"
 require "fnordmetric/timeline_widget"
+require "fnordmetric/numbers_widget"
 require "fnordmetric/namespace"
 require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_calculations"
@@ -144,7 +145,7 @@ require "fnordmetric/event"
 #require "fnordmetric/combine_metric"
 #require "fnordmetric/sum_metric"
 #require "fnordmetric/widget"
-#require "fnordmetric/numbers_widget"
+
 #
 #require "fnordmetric/funnel_widget"
 

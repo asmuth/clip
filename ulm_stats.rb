@@ -4,44 +4,138 @@ require "fnordmetric"
 
 FnordMetric.namespace :blubber do
 
-  gauge :events_total, :tick => 10
-  gauge :uniques_daily, :tick => 1.day.to_i, :unique => true
+  # user activity
 
-  event :"*" do
-    incr :events_total
-    incr :uniques_daily
-  end
-
-  gauge :skip_votes, :tick => 60
-  gauge :yes_votes, :tick => 60
-  gauge :maybe_votes, :tick => 60
-
-  gauge :mails_sent, :tick => 60
-  gauge :mails_clicked, :tick => 60
+  gauge :skip_votes, :tick => 1.day.to_i
+  gauge :yes_votes, :tick => 1.day.to_i
+  gauge :maybe_votes, :tick => 1.day.to_i
 
   event(:skip_vote){ incr :skip_votes }
   event(:yes_vote){ incr :yes_votes }
   event(:maybe_vote){ incr :maybe_votes }
 
-  widget 'Channels', {
+  widget 'UserActivity', {
+    :title => "Yes/No/Skip-Votes",
+    :type => :timeline,
+    :include_current => false,
+    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
+  }
+
+  widget 'UserActivity', {
+    :title => "Yes/No/Skip Numbers",
+    :type => :numbers,
+    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
+  }
+
+
+  gauge :messages_sent, :tick => 1.day.to_i
+  gauge :messages_read, :tick => 1.day.to_i
+  gauge :winks_sent, :tick => 1.day.to_i
+
+  event(:action_wink){ incr :winks_sent }
+  event(:message_sent){ incr :messages_sent }
+  event(:message_read){ incr :messages_read }
+
+  widget 'UserActivity', {
+    :title => "Messages sent/read",
+    :type => :timeline,
+    :include_current => false,
+    :gauges => [:messages_sent, :messages_read]
+  }
+
+  widget 'UserActivity', {
+    :title => "Messages sent/read",
+    :type => :timeline,
+    :include_current => false,
+    :gauges => [:winks_sent]
+  }
+
+  widget 'UserActivity', {
+    :title => "Messages sent+read/Winks Numbers",
+    :type => :numbers,
+    :gauges => [:messages_sent, :messages_read, :winks_sent]
+  }
+
+  gauge :events_per_minute, :tick => 60
+  gauge :uniques_daily, :tick => 1.day.to_i, :unique => true
+
+  event :"*" do
+    incr :events_per_minute
+    incr :uniques_daily
+  end
+
+  widget 'TrafficChannels', {
     :title => "Daily Uniques",
     :type => :timeline,
     :width => 70,
     :gauges => :uniques_daily
   }
 
-  widget 'Channels', {
+  widget 'TrafficChannels', {
     :title => "Events per Minute",
     :type => :timeline,
     :width => 30,
-    :gauges => :events_total
+    :gauges => :events_per_minute
   }
 
-  widget 'Channels', {
-    :title => "Yes/No/Skip-Votes",
+  #widget 'TrafficChannels', {
+  #  :title => "Daily uniques / EPM",
+  #  :type => :numbers,
+  #  :gauges => [:uniques_daily, :events_per_minute]
+  #}
+
+  gauge :mails_sent, :tick => 1.day.to_i
+  gauge :mails_clicked, :tick => 1.day.to_i
+
+  event(:mails_sent){ incr :mails_sent }
+  event(:mails_clicked){ incr :mails_clicked }
+
+  widget 'TrafficChannels', {
+    :title => "Mails sent/read",
     :type => :timeline,
-    :include_current => false,
-    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
+    :gauges => [:mails_sent, :mails_clicked]
+  }
+
+  widget 'TrafficChannels', {
+    :title => "Mail sent/read",
+    :type => :numbers,
+    :gauges => [:mails_sent, :mails_clicked]
+  }
+
+  gauge :app_requests_sent, :tick => 1.day.to_i
+  gauge :app_requests_clicked, :tick => 1.day.to_i
+
+  event(:app_request_sent){ incr :app_requests_sent }
+  event(:app_request_click){ incr :app_requests_clicked }
+
+  widget 'TrafficChannels', {
+    :title => "App-Requests sent/clicked",
+    :type => :timeline,
+    :gauges => [:app_requests_sent, :app_requests_clicked]
+  }
+
+  widget 'TrafficChannels', {
+    :title => "App-Requests sent/clicked",
+    :type => :numbers,
+    :gauges => [:app_requests_sent, :app_requests_clicked]
+  }
+
+  gauge :wall_posts_sent, :tick => 1.day.to_i
+  gauge :wall_posts_clicked, :tick => 1.day.to_i
+
+  event(:wallpost_sent){ incr :wall_posts_sent }
+  event(:wallpost_click){ incr :wall_posts_clicked }
+
+  widget 'TrafficChannels', {
+    :title => "Wall-Posts sent/clicked",
+    :type => :timeline,
+    :gauges => [:wall_posts_sent, :wall_posts_clicked]
+  }
+
+  widget 'TrafficChannels', {
+    :title => "Wall-Posts sent/clicked",
+    :type => :numbers,
+    :gauges => [:wall_posts_sent, :wall_posts_clicked]
   }
 
 end

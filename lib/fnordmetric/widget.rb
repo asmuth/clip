@@ -21,7 +21,7 @@ class FnordMetric::Widget
   end
 
   def add_gauges(gauges)
-    if gauges.blank?
+    if gauges.blank? && has_tick?
       error! "initializing a widget without gauges is void"
     else
       @gauges = gauges
@@ -39,15 +39,18 @@ class FnordMetric::Widget
   end
 
   def range
+    ensure_has_tick!
     #@opts[:range] || default_range # FIXME: allow custom ranges, but assure that the range-start is 'on a tick'
     default_range
   end
 
   def ticks
+    ensure_has_tick!
     range.step(@tick)
   end
 
   def default_range(now=Time.now)
+    ensure_has_tick!
     te = gauges.first.tick_at(now.to_i)
     te += @tick if include_current?
     rs = @tick == 1.hour.to_i ? 24 : 30
@@ -68,6 +71,10 @@ class FnordMetric::Widget
 
   def render
     data
+  end
+
+  def ensure_has_tick!
+    error! "widget does not have_tick" unless has_tick?
   end
 
 end

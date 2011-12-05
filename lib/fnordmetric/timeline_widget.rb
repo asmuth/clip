@@ -30,4 +30,8 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
     )
   end
 
+  def has_tick?
+    true
+  end
+
 end

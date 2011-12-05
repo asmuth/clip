@@ -31,6 +31,18 @@ var FnordMetric = (function(){
     }
   }
 
+  var numbersWidget = function(opts){
+    
+    function render(){
+      console.log(opts);
+    }
+
+    return {
+      render: render  
+    };
+
+  };
+
   var timelineWidget = function(opts){
     
     function render(){
@@ -212,7 +224,6 @@ var FnordMetric = (function(){
         url: '/'+currentNamespace+'/events?type='+event_type,
         success: function(_data, _status){
           var data = JSON.parse(_data).events;
-          console.log(data);
           for(var n=data.length; n >= 0; n--){
             if(data[n]){ renderEvent(data[n]); }
           }
@@ -442,7 +453,6 @@ var FnordMetric = (function(){
         ).append(
           $('<div class="inner"></div>')
         );
-        console.log(widget);
         widgets[wkey] = widget;
         viewport.append(widget.elem);
         resizeWidget(wkey);
@@ -453,7 +463,9 @@ var FnordMetric = (function(){
 
     function renderWidget(wkey){
       var widget = widgets[wkey];
-      timelineWidget(widget).render();
+      /* argh... */
+      if(widget.klass=='TimelineWidget'){ timelineWidget(widget).render(); }
+      if(widget.klass=='NumbersWidget'){ numbersWidget(widget).render(); }
     };
 
     function resizeWidget(wkey){
