@@ -11,8 +11,11 @@ FnordMetric.namespace :blubber do
   gauge :maybe_votes, :tick => 1.day.to_i
 
   event(:skip_vote){ incr :skip_votes }
+  event(:action_skip){ incr :skip_votes }
   event(:yes_vote){ incr :yes_votes }
+  event(:action_yes){ incr :yes_votes }
   event(:maybe_vote){ incr :maybe_votes }
+  event(:action_maybe){ incr :maybe_votes }
 
   widget 'UserActivity', {
     :title => "Yes/No/Skip-Votes",
