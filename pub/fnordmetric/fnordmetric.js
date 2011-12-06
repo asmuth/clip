@@ -34,7 +34,7 @@ var FnordMetric = (function(){
   var numbersWidget = function(opts){
     
     function render(){
-      console.log(opts);
+      //console.log(opts);
     }
 
     return {
@@ -138,19 +138,24 @@ var FnordMetric = (function(){
 
         });
 
-        canvas.path(path_string).attr({
-          stroke: _series.color, 
-          "stroke-width": 3, 
-          "stroke-linejoin": 'round'
-        }).toBack(); 
+        if(_max>0){
 
-        path_string += "L"+width+","+height+" L0,"+height+" Z";
+          canvas.path(path_string).attr({
+            stroke: _series.color, 
+            "stroke-width": 3, 
+            "stroke-linejoin": 'round'
+          }).toBack(); 
 
-        canvas.path(path_string).attr({
-          stroke: "none", 
-          fill: _series.color, 
-          opacity: 0.1
-        }).toBack();
+          path_string += "L"+width+","+height+" L0,"+height+" Z";
+
+          canvas.path(path_string).attr({
+            stroke: "none", 
+            fill: _series.color, 
+            opacity: 0.1
+          }).toBack();
+
+        }
+       
 
       });
 
