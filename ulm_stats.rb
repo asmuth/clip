@@ -1,11 +1,12 @@
 $: << ::File.expand_path("../../fnordmetric/lib/", __FILE__)
-
 require "fnordmetric"
 
-FnordMetric.namespace :blubber do
+# todos: old stylesheet, numbers widget, dump-to-file(+reimport)
+
+
+FnordMetric.namespace :ulmstats do
 
   # user activity
-
   gauge :skip_votes, :tick => 1.day.to_i
   gauge :yes_votes, :tick => 1.day.to_i
   gauge :maybe_votes, :tick => 1.day.to_i
@@ -36,6 +37,7 @@ FnordMetric.namespace :blubber do
   gauge :winks_sent, :tick => 1.day.to_i
 
   event(:action_wink){ incr :winks_sent }
+  event(:wink_sent){ incr :winks_sent }
   event(:message_sent){ incr :messages_sent }
   event(:message_read){ incr :messages_read }
 
@@ -47,7 +49,7 @@ FnordMetric.namespace :blubber do
   }
 
   widget 'UserActivity', {
-    :title => "Messages sent/read",
+    :title => "Winks sent",
     :type => :timeline,
     :include_current => false,
     :gauges => [:winks_sent]
@@ -90,8 +92,8 @@ FnordMetric.namespace :blubber do
   gauge :mails_sent, :tick => 1.day.to_i
   gauge :mails_clicked, :tick => 1.day.to_i
 
-  event(:mails_sent){ incr :mails_sent }
-  event(:mails_clicked){ incr :mails_clicked }
+  event(:mail_sent){ incr :mails_sent }
+  event(:mail_clicked){ incr :mails_clicked }
 
   widget 'TrafficChannels', {
     :title => "Mails sent/read",
@@ -100,7 +102,7 @@ FnordMetric.namespace :blubber do
   }
 
   widget 'TrafficChannels', {
-    :title => "Mail sent/read",
+    :title => "Mail sent/read Numbers",
     :type => :numbers,
     :gauges => [:mails_sent, :mails_clicked]
   }
@@ -118,7 +120,7 @@ FnordMetric.namespace :blubber do
   }
 
   widget 'TrafficChannels', {
-    :title => "App-Requests sent/clicked",
+    :title => "App-Requests sent/clicked Numbers",
     :type => :numbers,
     :gauges => [:app_requests_sent, :app_requests_clicked]
   }
@@ -136,7 +138,7 @@ FnordMetric.namespace :blubber do
   }
 
   widget 'TrafficChannels', {
-    :title => "Wall-Posts sent/clicked",
+    :title => "Wall-Posts sent/clicked Numbers",
     :type => :numbers,
     :gauges => [:wall_posts_sent, :wall_posts_clicked]
   }
