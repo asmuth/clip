@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fnordmetric}
-  s.version = "0.3.2"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = %q{2011-11-05}
+  s.date = %q{2011-12-10}
   s.description = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.email = %q{paul@paulasmuth.com}
   s.files = [
@@ -19,7 +19,20 @@ Gem::Specification.new do |s|
     "Procfile",
     "Rakefile",
     "VERSION",
+    "_spec/app_spec.rb",
+    "_spec/cache_spec.rb",
+    "_spec/combine_metric_spec.rb",
+    "_spec/core_spec.rb",
+    "_spec/count_metric_spec.rb",
+    "_spec/dashboard_spec.rb",
+    "_spec/event_spec.rb",
+    "_spec/metric_spec.rb",
+    "_spec/report_spec.rb",
+    "_spec/sum_metric_spec.rb",
+    "_spec/widget_spec.rb",
     "doc/example_server.rb",
+    "doc/import_dump.rb",
+    "em_runner.rb",
     "fnordmetric.gemspec",
     "haml/app.haml",
     "haml/widget.haml",
@@ -28,19 +41,27 @@ Gem::Specification.new do |s|
     "lib/fnordmetric/average_metric.rb",
     "lib/fnordmetric/cache.rb",
     "lib/fnordmetric/combine_metric.rb",
-    "lib/fnordmetric/core.rb",
+    "lib/fnordmetric/context.rb",
     "lib/fnordmetric/count_metric.rb",
     "lib/fnordmetric/dashboard.rb",
-    "lib/fnordmetric/engine.rb",
     "lib/fnordmetric/event.rb",
     "lib/fnordmetric/funnel_widget.rb",
+    "lib/fnordmetric/gauge.rb",
+    "lib/fnordmetric/gauge_calculations.rb",
+    "lib/fnordmetric/gauge_modifiers.rb",
+    "lib/fnordmetric/inbound_stream.rb",
+    "lib/fnordmetric/logger.rb",
     "lib/fnordmetric/metric.rb",
     "lib/fnordmetric/metric_api.rb",
+    "lib/fnordmetric/namespace.rb",
     "lib/fnordmetric/numbers_widget.rb",
     "lib/fnordmetric/report.rb",
+    "lib/fnordmetric/session.rb",
+    "lib/fnordmetric/standalone.rb",
     "lib/fnordmetric/sum_metric.rb",
     "lib/fnordmetric/timeline_widget.rb",
     "lib/fnordmetric/widget.rb",
+    "lib/fnordmetric/worker.rb",
     "pub/fnordmetric/fnordmetric.css",
     "pub/fnordmetric/fnordmetric.js",
     "pub/fnordmetric/widget_numbers.js",
@@ -59,20 +80,24 @@ Gem::Specification.new do |s|
     "pub/highcharts/themes/gray.js",
     "pub/highcharts/themes/grid.js",
     "pub/jquery-1.6.1.min.js",
+    "pub/raphael-min.js",
+    "pub/raphael-utils.js",
     "pub/sprite.png",
     "readme.rdoc",
+    "server.rb",
     "spec/app_spec.rb",
-    "spec/cache_spec.rb",
-    "spec/combine_metric_spec.rb",
-    "spec/core_spec.rb",
-    "spec/count_metric_spec.rb",
+    "spec/context_spec.rb",
     "spec/dashboard_spec.rb",
     "spec/event_spec.rb",
-    "spec/metric_spec.rb",
-    "spec/report_spec.rb",
+    "spec/gauge_modifiers_spec.rb",
+    "spec/gauge_spec.rb",
+    "spec/namespace_spec.rb",
+    "spec/session_spec.rb",
     "spec/spec_helper.rb",
-    "spec/sum_metric_spec.rb",
-    "spec/widget_spec.rb"
+    "spec/widget_spec.rb",
+    "spec/worker_spec.rb",
+    "test_stream.sh",
+    "ulm_stats.rb"
   ]
   s.homepage = %q{http://github.com/paulasmuth/fnordmetric}
   s.licenses = ["MIT"]
@@ -81,17 +106,16 @@ Gem::Specification.new do |s|
   s.summary = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.test_files = [
     "spec/app_spec.rb",
-    "spec/cache_spec.rb",
-    "spec/combine_metric_spec.rb",
-    "spec/core_spec.rb",
-    "spec/count_metric_spec.rb",
+    "spec/context_spec.rb",
     "spec/dashboard_spec.rb",
     "spec/event_spec.rb",
-    "spec/metric_spec.rb",
-    "spec/report_spec.rb",
+    "spec/gauge_modifiers_spec.rb",
+    "spec/gauge_spec.rb",
+    "spec/namespace_spec.rb",
+    "spec/session_spec.rb",
     "spec/spec_helper.rb",
-    "spec/sum_metric_spec.rb",
-    "spec/widget_spec.rb"
+    "spec/widget_spec.rb",
+    "spec/worker_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -102,10 +126,15 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<mongo>, ["~> 1.4.0"])
       s.add_runtime_dependency(%q<bson_ext>, ["~> 1.4.0"])
       s.add_runtime_dependency(%q<sinatra>, ["~> 1.2.6"])
+      s.add_runtime_dependency(%q<redis>, ["~> 2.2.2"])
+      s.add_runtime_dependency(%q<eventmachine>, [">= 0"])
+      s.add_runtime_dependency(%q<em-hiredis>, [">= 0"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
       s.add_runtime_dependency(%q<haml>, [">= 0"])
       s.add_runtime_dependency(%q<rack>, [">= 0"])
       s.add_runtime_dependency(%q<rack-test>, [">= 0"])
+      s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
+      s.add_runtime_dependency(%q<thin>, [">= 0"])
       s.add_development_dependency(%q<delorean>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
@@ -116,10 +145,15 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<mongo>, ["~> 1.4.0"])
       s.add_dependency(%q<bson_ext>, ["~> 1.4.0"])
       s.add_dependency(%q<sinatra>, ["~> 1.2.6"])
+      s.add_dependency(%q<redis>, ["~> 2.2.2"])
+      s.add_dependency(%q<eventmachine>, [">= 0"])
+      s.add_dependency(%q<em-hiredis>, [">= 0"])
       s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<haml>, [">= 0"])
       s.add_dependency(%q<rack>, [">= 0"])
       s.add_dependency(%q<rack-test>, [">= 0"])
+      s.add_dependency(%q<yajl-ruby>, [">= 0"])
+      s.add_dependency(%q<thin>, [">= 0"])
       s.add_dependency(%q<delorean>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
@@ -131,10 +165,15 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<mongo>, ["~> 1.4.0"])
     s.add_dependency(%q<bson_ext>, ["~> 1.4.0"])
     s.add_dependency(%q<sinatra>, ["~> 1.2.6"])
+    s.add_dependency(%q<redis>, ["~> 2.2.2"])
+    s.add_dependency(%q<eventmachine>, [">= 0"])
+    s.add_dependency(%q<em-hiredis>, [">= 0"])
     s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<haml>, [">= 0"])
     s.add_dependency(%q<rack>, [">= 0"])
     s.add_dependency(%q<rack-test>, [">= 0"])
+    s.add_dependency(%q<yajl-ruby>, [">= 0"])
+    s.add_dependency(%q<thin>, [">= 0"])
     s.add_dependency(%q<delorean>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
