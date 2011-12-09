@@ -2,8 +2,6 @@ $: << ::File.expand_path("../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
 # todos: old stylesheet, numbers widget, dump-to-file(+reimport)
-
-
 FnordMetric.namespace :ulmstats do
 
   # user activity
@@ -193,7 +191,8 @@ FnordMetric.namespace :ulmstats do
 
 end
 
-fm_opts = {}
-fm_opts.merge!(:web_interface => ["0.0.0.0", "2323"]) if ENV['DEV']
+#task :setup do
+#  @fm_opts = {:web_interface => ["0.0.0.0", "2323"]} if ENV['DEV']
+#end
 
-FnordMetric.run(fm_opts)
+FnordMetric.standalone

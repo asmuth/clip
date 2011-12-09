@@ -116,6 +116,10 @@ module FnordMetric
     end
   end
 
+  def self.standalone
+    require "fnordmetric/standalone"
+  end
+
 end
 
 require "fnordmetric/inbound_stream"
