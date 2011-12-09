@@ -166,24 +166,28 @@ FnordMetric.namespace :ulmstats do
   widget 'Campaigns', {
     :title => "RockYou (1) - Installs via PPI",
     :type => :timeline,
+    :include_current => false,
     :gauges => [:rockyou1_ppis]
   }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - Installs via Referral",
     :gauges => [:rockyou1_refs],
+    :include_current => false,
     :type => :timeline
   }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - AppRequests sent",
     :gauges => [:rockyou1_requests],
+    :include_current => false,
     :type => :timeline
   }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - PPI vs. Requests vs. Refs",
     :gauges => [:rockyou1_requests, :rockyou1_ppis, :rockyou1_refs],
+    :include_current => false,
     :type => :timeline
   }
 
