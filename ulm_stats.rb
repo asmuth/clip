@@ -143,6 +143,50 @@ FnordMetric.namespace :ulmstats do
     :gauges => [:wall_posts_sent, :wall_posts_clicked]
   }
 
+
+  gauge :rockyou1_ppis, :tick => 1.day.to_i
+  gauge :rockyou1_requests, :tick => 1.day.to_i
+  gauge :rockyou1_refs, :tick => 1.day.to_i
+
+  event :campaign_install do
+    if %w(ry201112a ry201112b).include?(data[:campaign_key])
+      incr :rockyou1_ppis
+    end
+    if %w(ry201112_ref).include?(data[:campaign_key])
+      incr :rockyou1_refs
+    end
+  end
+
+  event :app_request_sent do
+    if %w(ry201112a ry201112b ry201112_ref).include?(data[:campaign_key])
+      incr :rockyou1_requests
+    end
+  end
+
+  widget 'Campaigns', {
+    :title => "RockYou (1) - Installs via PPI",
+    :type => :timeline,
+    :gauges => [:rockyou1_ppis]
+  }
+
+  widget 'Campaigns', {
+    :title => "RockYou (1) - Installs via Referral",
+    :gauges => [:rockyou1_refs],
+    :type => :timeline
+  }
+
+  widget 'Campaigns', {
+    :title => "RockYou (1) - AppRequests sent",
+    :gauges => [:rockyou1_requests],
+    :type => :timeline
+  }
+
+  widget 'Campaigns', {
+    :title => "RockYou (1) - PPI vs. Requests vs. Refs",
+    :gauges => [:rockyou1_requests, :rockyou1_ppis, :rockyou1_refs],
+    :type => :timeline
+  }
+
 end
 
 fm_opts = {}
