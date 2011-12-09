@@ -116,7 +116,8 @@ module FnordMetric
     end
   end
 
-  def self.standalone
+  def self.standalone    
+    require "fnordmetric/logger"
     require "fnordmetric/standalone"
   end
 
