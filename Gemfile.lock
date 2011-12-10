@@ -70,7 +70,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bson_ext (~> 1.4.0)
+  bson_ext (>= 1.4.0)
   bundler (~> 1.0.0)
   delorean
   em-hiredis
@@ -78,13 +78,13 @@ DEPENDENCIES
   haml
   jeweler (~> 1.5.2)
   json
-  mongo (~> 1.4.0)
-  mongoid (~> 2.2.0)
+  mongo (>= 1.4.0)
+  mongoid (>= 2.2.0)
   rack
   rack-test
-  redis (~> 2.2.2)
+  redis (>= 2.2.2)
   rspec (~> 2.6.0)
   shoulda
-  sinatra (~> 1.2.6)
+  sinatra (>= 1.2.6)
   thin
   yajl-ruby!
