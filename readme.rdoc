@@ -125,27 +125,25 @@ not yet implemented
 
 -> incr_fields
 
--> numbers widget
+-> numbers widget, funnel-widget, list-widget, toplist-widget
 
 -> back2highcharts: timline, bar, pie
 
--> change /dashboard/mydashboard and add /widget/mywidget -> defer widget.render until a n-th ajax call (the dashboard-json should not contain the rendered widget)
-
--> bug: include_current=false does what include_current=true is supposed to do and include_current=true is always one tick in the future 
-
--> opt_event options: :increment => gauge_name
+-> demo / example: chatroom;  
+  -> events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
+  -> widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
 
 -> timelinewidget + numberswidget => should use redis hmget
 
--> OverviewDashboard (uniques day/week/month, events per min, online users, events per user)
-
--> ReferralDashboard (last 100 uniq googlequeries+refs, top refs, top googlequeries)
-
--> SalesDashboard (arpu, avgsale, sales, tot. revenue)
+-> referall tracking fu (parse googlequeries)
 
 -> prune the namespace-sessions-timline (remove event_ids older than x)
 
 -> prune the namespace-event-types-list (trim to max items)
+
+-> bug: include_current=false does what include_current=true is supposed to do and include_current=true is always one tick in the future 
+
+-> opt_event options: :increment => gauge_name
 
 
 == License (It's free!)
