@@ -26,8 +26,9 @@ module FnordMetric::GaugeCalculations
   end
 
   def calculate_value(_v, _t, opts, block)
-    block = @@avg_per_session_proc if opts[:avg_per_session]
-
+    block = @@avg_per_count_proc if average?
+    block = @@avg_per_session_proc if unique?
+    
     if block
       instance_exec(_v, _t, &block)
     else
