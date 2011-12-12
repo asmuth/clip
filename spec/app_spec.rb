@@ -432,17 +432,23 @@ describe "app" do
       JSON.parse(last_response.body).first.last.to_i.should == 23
     end
 
-    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do      
-      pending "fix-meh"
-      #get "/foospace/gauge/testgauge", :at => "#{30.hours.ago.to_i}-#{20.hours.ago.to_i}"
-      #JSON.parse(last_response.body)["value"].to_i.should == 3
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
+      get "/foospace/gauge/testgauge?at=1323694801-1323694861", :at => 18.hours.ago.to_i.to_s
+      JSON.parse(last_response.body).first.last.to_i.should == 23
     end
 
-    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&sum=1" do      
-      pending "fix-meh"
-      #get "/foospace/gauge/testgauge", :at => "#{30.hours.ago.to_i}-#{20.hours.ago.to_i}"
-      #JSON.parse(last_response.body)["value"].to_i.should == 3
-    end   
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
+      get "/foospace/gauge/testgauge?at=1323691199-1323691201", :at => 18.hours.ago.to_i.to_s
+      JSON.parse(last_response.body).first.last.to_i.should == 18
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
+      get "/foospace/gauge/testgauge?at=1323691199-1323694861", :at => 18.hours.ago.to_i.to_s
+      JSON.parse(last_response.body).first.first.should == "1323691200"
+      JSON.parse(last_response.body).first.last.to_i.should == 18
+      JSON.parse(last_response.body).last.first.should == "1323694800"
+      JSON.parse(last_response.body).last.last.to_i.should == 23
+    end
 
   end
 
