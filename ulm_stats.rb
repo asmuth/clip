@@ -60,18 +60,21 @@ FnordMetric.namespace :ulmstats do
   }
 
   gauge :events_per_minute, :tick => 60
-  gauge :uniques_daily, :tick => 1.day.to_i, :unique => true
+  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true
 
   event :"*" do
     incr :events_per_minute
-    incr :uniques_daily
+  end
+
+  event :_pageview do
+    incr :pageviews_daily_unique
   end
 
   widget 'TrafficChannels', {
     :title => "Daily Uniques",
     :type => :timeline,
     :width => 70,
-    :gauges => :uniques_daily
+    :gauges => :pageviews_daily_unique
   }
 
   widget 'TrafficChannels', {

@@ -21,9 +21,7 @@ module FnordMetric::GaugeModifiers
       end
     else
       @redis.hsetnx(gauge.key, gauge.tick_at(time), 0).callback do
-        @redis.hincrby(gauge.key, gauge.tick_at(time), value).callback do |_nval|
-          puts "#{gauge.key} / #{gauge.tick_at(time)} : #{value} -> #{_nval}"
-        end
+        @redis.hincrby(gauge.key, gauge.tick_at(time), value)
       end
     end
   end  
@@ -32,7 +30,7 @@ module FnordMetric::GaugeModifiers
     return false if session_key.blank?
     @redis.sadd(gauge.tick_key(time, :sessions), session_key).callback do |_new|
       @redis.expire(gauge.tick_key(time, :sessions), gauge.tick)
-      if _new
+      if _new == 1
         @redis.incr(gauge.tick_key(time, :"sessions-count")).callback do |sc|
           incr_tick(gauge, value)
         end
