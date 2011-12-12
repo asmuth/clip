@@ -4,13 +4,13 @@ class FnordMetric::Context
 
   def initialize(opts, block)
     @block = block
-  	@opts = opts    
+    @opts = opts    
   end
 
   def call(event, redis)
     @redis = redis
-  	@event = event    
-  	self.instance_eval(&@block)
+    @event = event    
+    self.instance_eval(&@block)
   rescue Exception => e
     raise e  if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
