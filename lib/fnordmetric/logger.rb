@@ -44,8 +44,9 @@ class FnordMetric::Logger
 
     puts "importing #{dump_lines.length} events..."
     pre_uuid = rand(999999999999999999999)
+    log_every = (dump_lines.length / 150)
     dump_lines.each_with_index do |line,n|
-      puts "#{n}/#{dump_lines.length} (#{((n/dump_lines.length.to_f)*100).to_i}%)" if n%100==0
+      puts "#{n}/#{dump_lines.length} (#{((n/dump_lines.length.to_f)*100).to_i}%)" if n%log_every==0
       my_uuid = "#{pre_uuid}-#{n}"
       redis.set("fnordmetric-event-#{my_uuid}", line)
       redis.lpush("fnordmetric-queue", my_uuid) 
