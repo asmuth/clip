@@ -5,6 +5,8 @@ module FnordMetric::GaugeModifiers
     assure_two_dimensional!(gauge)
     if gauge.unique? 
       incr_uniq(gauge, value)
+    elsif gauge.average? 
+      incr_avg(gauge, value)
     else
       incr_tick(gauge, value)
     end
@@ -23,7 +25,7 @@ module FnordMetric::GaugeModifiers
   end  
 
   def incr_uniq(gauge, value)
-    return false unless session_key
+    return false if session_key.blank?
     @redis.sadd(gauge.tick_key(time, :sessions), session_key).callback do |_new|
       @redis.expire(gauge.tick_key(time, :sessions), gauge.tick)
       if _new
@@ -31,6 +33,12 @@ module FnordMetric::GaugeModifiers
           incr_tick(gauge, value)
         end
       end
+    end
+  end
+
+  def incr_avg(gauge, value)
+    @redis.incr(gauge.tick_key(time, :"value-count")).callback do |sc|
+      incr_tick(gauge, value)
     end
   end
 
