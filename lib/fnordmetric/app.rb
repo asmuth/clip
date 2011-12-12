@@ -66,9 +66,9 @@ class FnordMetric::App < Sinatra::Base
     elsif params[:at] && params[:at] =~ /^([0-9]+)-([0-9]+)$/
       _times = params[:at].split("-").map(&:to_i)
       _ticks = gauge.ticks_in(_times.first.._times.last)
-      { (_t = Time.now.to_i) => gauge.values_at(_ticks) }
+      # not yet implemented
     else
-      { (_t = Time.now.to_i) => gauge.value_at(_t) }
+      { (_t = gauge.tick_at(Time.now.to_i-gauge.tick)) => gauge.value_at(_t) }
     end    
 
     data.to_json

@@ -20,7 +20,11 @@ module FnordMetric::GaugeModifiers
         end
       end
     else
-      @redis.hincrby(gauge.key, gauge.tick_at(time), value)    
+      @redis.hsetnx(gauge.key, gauge.tick_at(time), 0).callback do
+        @redis.hincrby(gauge.key, gauge.tick_at(time), value).callback do |_nval|
+          puts "#{gauge.key} / #{gauge.tick_at(time)} : #{value} -> #{_nval}"
+        end
+      end
     end
   end  
 
@@ -37,7 +41,7 @@ module FnordMetric::GaugeModifiers
   end
 
   def incr_avg(gauge, value)
-    @redis.incr(gauge.tick_key(time, :"value-count")).callback do |sc|
+    @redis.incr(gauge.tick_key(time, :"value-count")).callback do
       incr_tick(gauge, value)
     end
   end

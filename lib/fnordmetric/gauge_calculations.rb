@@ -1,7 +1,15 @@
 module FnordMetric::GaugeCalculations
 
   @@avg_per_session_proc = proc{ |_v, _t|
-    (_v.to_f / (redis.get(tick_key(_t, :"sessions-count"))||0).to_i)
+    (_v.to_f / (redis.get(tick_key(_t, :"sessions-count"))||1).to_i)
+  }
+
+  @@count_per_session_proc = proc{ |_v, _t|
+    (redis.get(tick_key(_t, :"sessions-count"))||0).to_i
+  }
+
+  @@avg_per_count_proc = proc{ |_v, _t|
+    (_v.to_f / (redis.get(tick_key(_t, :"value-count"))||1).to_i)
   }
 
   def value_at(time, opts={}, &block)
@@ -27,7 +35,8 @@ module FnordMetric::GaugeCalculations
 
   def calculate_value(_v, _t, opts, block)
     block = @@avg_per_count_proc if average?
-    block = @@avg_per_session_proc if unique?
+    block = @@count_per_session_proc if unique?
+    block = @@avg_per_session_proc if unique? && average?
     
     if block
       instance_exec(_v, _t, &block)
