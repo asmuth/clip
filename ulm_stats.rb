@@ -2,7 +2,7 @@ $: << ::File.expand_path("../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
 # todos: legende, numbers widget, yscale
-FnordMetric.namespace :ulm_stats do
+FnordMetric.namespace :ulikeme do
 
   # user activity
   gauge :skip_votes, :tick => 1.day.to_i
