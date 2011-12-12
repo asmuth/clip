@@ -141,8 +141,6 @@ not yet implemented
 
 -> prune the namespace-event-types-list (trim to max items)
 
--> bug: include_current=false does what include_current=true is supposed to do and include_current=true is always one tick in the future 
-
 -> opt_event options: :increment => gauge_name
 
 
