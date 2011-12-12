@@ -121,6 +121,14 @@ not yet implemented
 
 == TODOS
 
+-> avg-gauge (vs. uniq-avg-gauge)
+
+-> incr_fields
+
+-> numbers widget
+
+-> back2highcharts: timline, bar, pie
+
 -> change /dashboard/mydashboard and add /widget/mywidget -> defer widget.render until a n-th ajax call (the dashboard-json should not contain the rendered widget)
 
 -> bug: include_current=false does what include_current=true is supposed to do and include_current=true is always one tick in the future 
