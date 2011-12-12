@@ -1,7 +1,6 @@
 module FnordMetric::GaugeCalculations
 
   @@avg_per_session_proc = proc{ |_v, _t|
-    #raise redis.get(tick_key(_t, :"sessions-count")).inspect
     (_v.to_f / (redis.get(tick_key(_t, :"sessions-count"))||0).to_i)
   }
 

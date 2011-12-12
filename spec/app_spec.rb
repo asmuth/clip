@@ -21,6 +21,9 @@ describe "app" do
     @app ||= FnordMetric::App.new({
       :foospace => proc{        
         widget 'Blubb', nil
+
+        gauge :testgauge, :tick => 1.hour.to_i, :progressive => true
+
       }
     }, @opts)
   end
@@ -407,13 +410,40 @@ describe "app" do
     	#FnordMetric::Event.last.blubb.should == 42.23
     end
 
-
-
-
   end
 
-  describe "metrics api" do
-    # copy from _spec/app_spec.rb ?
+  describe "gauges api" do
+
+    before(:all) do
+      @redis.keys("fnordmetric-foospace*").each { |k| @redis.del(k) }  
+      gauge_key = "fnordmetric-foospace-gauge-testgauge-#{1.hour.to_i}"
+      @redis.hset(gauge_key, (Time.now.to_i/1.hour.to_i.to_f).floor*1.hour.to_i, "18")  
+      @redis.hset(gauge_key, 1323691200, "23")  
+      
+    end
+
+    it "should return the right answer for: /gauge/:name" do      
+      get "/foospace/gauge/testgauge"
+      JSON.parse(last_response.body).first.last.to_i.should == 18      
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp" do      
+      get "/foospace/gauge/testgauge?at=1323694799", :at => 18.hours.ago.to_i.to_s
+      JSON.parse(last_response.body).first.last.to_i.should == 23
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do      
+      pending "fix-meh"
+      #get "/foospace/gauge/testgauge", :at => "#{30.hours.ago.to_i}-#{20.hours.ago.to_i}"
+      #JSON.parse(last_response.body)["value"].to_i.should == 3
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&sum=1" do      
+      pending "fix-meh"
+      #get "/foospace/gauge/testgauge", :at => "#{30.hours.ago.to_i}-#{20.hours.ago.to_i}"
+      #JSON.parse(last_response.body)["value"].to_i.should == 3
+    end   
+
   end
 
 

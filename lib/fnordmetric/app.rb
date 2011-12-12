@@ -57,16 +57,20 @@ class FnordMetric::App < Sinatra::Base
     ""
   end
 
-  #get '/metric/:name' do
-  #  content_type 'application/json'
-  #  FnordMetric::MetricAPI.new(params).render    
-  #end
+  get '/:namespace/gauge/:name' do
 
-  #get '/widget/:name' do
-  #  @dashboard = FnordMetric.dashboards.first
-  #  @widget = @dashboard.widgets.first
-  #  haml :widget
-  #end
+    gauge = current_namespace.gauges.fetch(params[:name].intern)
+
+    data = if params[:at] && params[:at] =~ /^[0-9]+$/
+      { (_t = gauge.tick_at(params[:at].to_i)) => gauge.value_at(_t) }
+    elsif params[:at] && params[:at] =~ /^([0-9]+)-([0-9]+)$/
+      { :fixme => :fu }
+    else
+      { (_t = Time.now.to_i) => gauge.value_at(_t) }
+    end    
+
+    data.to_json
+  end
 
   get '/:namespace/sessions' do
 

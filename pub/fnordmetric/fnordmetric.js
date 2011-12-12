@@ -34,7 +34,7 @@ var FnordMetric = (function(){
   var numbersWidget = function(opts){
     
     function render(){
-      //console.log(opts);
+      console.log(opts);
     }
 
     return {
