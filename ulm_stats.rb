@@ -108,8 +108,14 @@ FnordMetric.namespace :ulmstats do
   gauge :app_requests_sent, :tick => 1.day.to_i
   gauge :app_requests_clicked, :tick => 1.day.to_i
 
+  gauge :app_invites_sent, :tick => 1.day.to_i
+  gauge :app_invites_clicked, :tick => 1.day.to_i
+
   event(:app_request_sent){ incr :app_requests_sent }
   event(:app_request_click){ incr :app_requests_clicked }
+
+  event(:app_invite_sent){ incr :app_invites_sent }
+  event(:app_invite_click){ incr :app_invites_clicked }
 
   widget 'TrafficChannels', {
     :title => "App-Requests sent/clicked",
@@ -121,6 +127,18 @@ FnordMetric.namespace :ulmstats do
     :title => "App-Requests sent/clicked Numbers",
     :type => :numbers,
     :gauges => [:app_requests_sent, :app_requests_clicked]
+  }
+
+  widget 'TrafficChannels', {
+    :title => "App-Invites sent/clicked",
+    :type => :timeline,
+    :gauges => [:app_invites_sent, :app_invites_clicked]
+  }
+
+  widget 'TrafficChannels', {
+    :title => "App-Invites sent/clicked Numbers",
+    :type => :numbers,
+    :gauges => [:app_invites_sent, :app_invites_clicked]
   }
 
   gauge :wall_posts_sent, :tick => 1.day.to_i
@@ -159,7 +177,14 @@ FnordMetric.namespace :ulmstats do
     if %w(ry201112a ry201112b ry201112_ref).include?(data[:campaign_key])
       incr :rockyou1_requests
     end
-  end
+  end  
+
+  widget 'Campaigns', {
+    :title => "RockYou (1) - PPI vs. Requests vs. Refs",
+    :gauges => [:rockyou1_requests, :rockyou1_ppis, :rockyou1_refs],
+    :include_current => false,
+    :type => :timeline
+  }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - Installs via PPI",
@@ -178,13 +203,6 @@ FnordMetric.namespace :ulmstats do
   widget 'Campaigns', {
     :title => "RockYou (1) - AppRequests sent",
     :gauges => [:rockyou1_requests],
-    :include_current => false,
-    :type => :timeline
-  }
-
-  widget 'Campaigns', {
-    :title => "RockYou (1) - PPI vs. Requests vs. Refs",
-    :gauges => [:rockyou1_requests, :rockyou1_ppis, :rockyou1_refs],
     :include_current => false,
     :type => :timeline
   }
