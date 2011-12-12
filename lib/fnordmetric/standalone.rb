@@ -10,7 +10,7 @@ task :log do
 end
 
 task :import do
-  puts 'not yet implemented :('
+  FnordMetric::Logger.import(dump_file_path)
 end
 
 task :help do

@@ -35,4 +35,20 @@ class FnordMetric::Logger
     fetcher.join
   end
 
+  def self.import(logfile_path)
+    redis = Redis.new
+    dump_file = File.open(logfile_path, 'r')
+
+    puts "reading #{logfile_path}..."
+    dump_lines = dump_file.read.split("\n")
+
+    puts "importing #{dump_lines.length} events..."
+    dump_lines.each do |line|
+      my_uuid = rand(999999999999999999999); print '.'
+      redis.lpush("fnordmetric-queue", my_uuid) 
+      redis.set("fnordmetric-event-#{my_uuid}", line)
+      redis.expire("fnordmetric-event-#{my_uuid}", 60)
+    end
+  end
+
 end
