@@ -1,7 +1,7 @@
 $: << ::File.expand_path("../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
-# todos: old stylesheet, numbers widget, dump-to-file(+reimport)
+# todos: legende, numbers widget, yscale
 FnordMetric.namespace :ulmstats do
 
   # user activity
