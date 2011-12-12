@@ -19,7 +19,6 @@ FnordMetric.namespace :ulikeme do
   widget 'UserActivity', {
     :title => "Yes/No/Skip-Votes",
     :type => :timeline,
-    :include_current => false,
     :gauges => [:skip_votes, :yes_votes, :maybe_votes]
   }
 
@@ -42,14 +41,12 @@ FnordMetric.namespace :ulikeme do
   widget 'UserActivity', {
     :title => "Messages sent/read",
     :type => :timeline,
-    :include_current => false,
     :gauges => [:messages_sent, :messages_read]
   }
 
   widget 'UserActivity', {
     :title => "Winks sent",
     :type => :timeline,
-    :include_current => false,
     :gauges => [:winks_sent]
   }
 
@@ -185,28 +182,24 @@ FnordMetric.namespace :ulikeme do
   widget 'Campaigns', {
     :title => "RockYou (1) - PPI vs. Requests vs. Refs",
     :gauges => [:rockyou1_requests, :rockyou1_ppis, :rockyou1_refs],
-    :include_current => false,
     :type => :timeline
   }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - Installs via PPI",
     :type => :timeline,
-    :include_current => false,
     :gauges => [:rockyou1_ppis]
   }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - Installs via Referral",
     :gauges => [:rockyou1_refs],
-    :include_current => false,
     :type => :timeline
   }
 
   widget 'Campaigns', {
     :title => "RockYou (1) - AppRequests sent",
     :gauges => [:rockyou1_requests],
-    :include_current => false,
     :type => :timeline
   }
 
