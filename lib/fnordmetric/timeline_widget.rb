@@ -26,7 +26,10 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
 
     super.merge(
       :labels => data_labels,
-      :series => data_series
+      :series => data_series,
+      :gauges => gauges.map(&:name),
+      :start_timestamp => ticks.first,
+      :end_timestamp => ticks.last
     )
   end
 

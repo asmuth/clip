@@ -34,7 +34,7 @@ var FnordMetric = (function(){
   var numbersWidget = function(opts){
     
     function render(){
-      console.log(opts);
+      //console.log(opts);
     }
 
     return {
@@ -47,49 +47,40 @@ var FnordMetric = (function(){
   
     var chart=false;
 
-    opts.elem_inner = $('.inner', opts.elem);
-    //redrawWithRange(true);
-
-    //if(widget_config.autoupdate){
-    //  window.setInterval(function(){
-    //    redrawWithRange(false, true);
-    //  }, 3000);
-    // }
-
     function redrawWithRange(first_time, silent){
-      if(!silent){ $("#container").css('opacity', 0.5); }
+      if(!silent){ $(opts.elem).css('opacity', 0.5); }
       redrawDatepicker();    
-      var _query = '?at='+widget_config.start_timestamp+'-'+widget_config.end_timestamp+
-                   '&tick='+widget_config.tick+(widget_config.delta ? '&delta=1' : '');    
+      var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;    
       chart.series = [];
-      metrics_completed = 0;
-      for(n in widget_config.metrics){
+      //metrics_completed = 0;
+      $(opts.gauges).each(function(i,gauge){
         $.ajax({
-          url: FnordMetric.p+'/metric/'+widget_config.metrics[n]+_query, 
-          success: redrawMetric(first_time, n)
+          url: '/'+currentNamespace+'/gauge/'+gauge+_query, 
+          success: redrawGauge(first_time, gauge)
         });         
-      }  
+      });
     }
 
-    function redrawMetric(first_time, n){
+    function redrawGauge(first_time, gauge){
       return (function(json){                   
-        for(i in json.values){ json.values[i][0] = json.values[i][0]*1000; }
-        if(!first_time){ 
-          chart.get('series-'+n).setData(json.values);
-        } else {
-          chart.addSeries({name: widget_config.metrics[n], data: json.values, id: 'series-'+n });     
-        }       
-        if((metrics_completed += 1) == widget_config.metrics.length){ 
-          $("#container").css('opacity', 1);
-        }
+        console.log(json);
+        //for(i in json.values){ json.values[i][0] = json.values[i][0]*1000; }
+        //if(!first_time){ 
+        //  chart.get('series-'+n).setData(json.values);
+        //} else {
+        //  chart.addSeries({name: gauge, data: json.values, id: 'series-'+n });     
+        //}       
+        //if((metrics_completed += 1) == widget_config.metrics.length){ 
+        //  $("#container").css('opacity', 1);
+        //}
       });
     }
 
     function redrawDatepicker(){
       $('.datepicker').html(
-        Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(widget_config.start_timestamp)*1000) + 
+        Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) + 
         '&nbsp;&dash;&nbsp;' +
-        Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(widget_config.end_timestamp)*1000) 
+        Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000) 
       );
     }
 
@@ -152,6 +143,14 @@ var FnordMetric = (function(){
 
       drawLayout();
       drawChart();
+
+      redrawWithRange(true);
+
+    //if(widget_config.autoupdate){
+    //  window.setInterval(function(){
+    //    redrawWithRange(false, true);
+    //  }, 3000);
+    // }
 
 
       /*var labels = opts.labels;
