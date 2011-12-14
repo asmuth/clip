@@ -56,6 +56,7 @@ var FnordMetric = (function(){
       
       var widget_uid = getNextWidgetUID();
       var chart=false;
+      var max_y=0;
 
       function redrawWithRange(first_time, silent){
         if(!silent){ $(opts.elem).css('opacity', 0.5); }
@@ -75,13 +76,20 @@ var FnordMetric = (function(){
         return (function(json){                   
           var raw_data = JSON.parse(json);
           var series_data = [];
-          for(p in raw_data){ series_data.push([parseInt(p)*1000, raw_data[p]||0]); }
+
+          for(p in raw_data){ 
+            series_data.push([parseInt(p)*1000, raw_data[p]||0]); 
+            max_y = Math.max(max_y, raw_data[p]);
+          }
         
+          chart.yAxis[0].setExtremes(0,max_y);
+
           if(!first_time){ 
             chart.get('series-'+gauge).setData(series_data);
           } else {
             chart.addSeries({name: gauge, data: series_data, id: 'series-'+gauge });     
           }       
+
           // shown on the *first* gauge load
           $(opts.elem).css('opacity', 1);
         });
@@ -135,7 +143,8 @@ var FnordMetric = (function(){
           },
           yAxis: { 
             title: (opts.y_title||''),
-            min: 0
+            min: 0,
+            max: 1000
           },
           legend: {
             layout: 'horizontal',
@@ -471,7 +480,7 @@ var FnordMetric = (function(){
       var widget = widgets[wkey];
       /* argh... */
       if(widget.klass=='TimelineWidget'){ timelineWidget().render(widget); }
-      if(widget.klass=='NumbersWidget'){ numbersWidget().render(widgets); }
+      if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
     };
 
     function resizeWidget(wkey){
