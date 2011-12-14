@@ -124,7 +124,7 @@ var FnordMetric = (function(){
 
       function drawChart(){
         chart = new Highcharts.Chart({     
-          chart: { renderTo: 'container-'+widget_uid, defaultSeriesType: 'areaspline', height: 270 },
+          chart: { renderTo: 'container-'+widget_uid, defaultSeriesType: 'line', height: 270 },
           series: [],
           title: { text: '' },
           xAxis: {       
@@ -134,8 +134,8 @@ var FnordMetric = (function(){
             labels: { step: 2 } 
           },
           yAxis: { 
-            title: (opts.y_title||''), 
-            maxPadding: 0 
+            title: (opts.y_title||''),
+            min: 0
           },
           legend: {
             layout: 'horizontal',
@@ -146,6 +146,12 @@ var FnordMetric = (function(){
             margin: 25,
             borderWidth: 0
           },
+          plotOptions: {
+            line: {
+              shadow: false,
+              lineWidth: 3
+            }
+          }
         });
       }
 
@@ -465,7 +471,7 @@ var FnordMetric = (function(){
       var widget = widgets[wkey];
       /* argh... */
       if(widget.klass=='TimelineWidget'){ timelineWidget().render(widget); }
-      if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
+      if(widget.klass=='NumbersWidget'){ numbersWidget().render(widgets); }
     };
 
     function resizeWidget(wkey){

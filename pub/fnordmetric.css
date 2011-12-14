@@ -119,3 +119,4 @@ ul.event_type_list li .history:hover{ color:#333; text-decoration:underline; }
   height: 0;
 }
  
+.highcharts-series circle{ stroke-width:1px; }
