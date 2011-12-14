@@ -43,103 +43,104 @@ var FnordMetric = (function(){
 
   };
 
-  var timelineWidget = function(opts){
-  
-    var chart=false;
-
-    function redrawWithRange(first_time, silent){
-      if(!silent){ $(opts.elem).css('opacity', 0.5); }
-      redrawDatepicker();    
-      var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;    
-      chart.series = [];
-      //metrics_completed = 0;
-      $(opts.gauges).each(function(i,gauge){
-        $.ajax({
-          url: '/'+currentNamespace+'/gauge/'+gauge+_query, 
-          success: redrawGauge(first_time, gauge)
-        });         
-      });
-    }
-
-    function redrawGauge(first_time, gauge){
-      return (function(json){                   
-        console.log(json);
-        //for(i in json.values){ json.values[i][0] = json.values[i][0]*1000; }
-        //if(!first_time){ 
-        //  chart.get('series-'+n).setData(json.values);
-        //} else {
-        //  chart.addSeries({name: gauge, data: json.values, id: 'series-'+n });     
-        //}       
-        //if((metrics_completed += 1) == widget_config.metrics.length){ 
-        //  $("#container").css('opacity', 1);
-        //}
-      });
-    }
-
-    function redrawDatepicker(){
-      $('.datepicker').html(
-        Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) + 
-        '&nbsp;&dash;&nbsp;' +
-        Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000) 
-      );
-    }
-
-    function moveRange(direction){
-      v = widget_config.tick*direction*8;
-      widget_config.start_timestamp += v;
-      widget_config.end_timestamp += v;
-      redrawWithRange();
-    }
+  var timelineWidget = function(){
     
-    function drawLayout(){
-      $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
-        $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
-          function(){ redrawWithRange(); }
-        )
-      ).append(
-        $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
-          function(){ moveRange(1); }
-        )
-      ).append(
-        $('<div></div>').attr('class', 'datepicker')
-      ).append(
-        $('<div></div>').attr('class', 'button').append($('<span></span>').html('&larr;')).click(
-          function(){ moveRange(-1); }
-        )
-      ).append(
-        $('<h2></h2>').html(opts.title)
-      ) ).append( $('<div></div>').attr('id', 'container') );
-    }
+    function render(opts){
 
-    function drawChart(){
-      chart = new Highcharts.Chart({     
-        chart: { renderTo: 'container', defaultSeriesType: 'areaspline', height: 270 },
-        series: [],
-        title: { text: '' },
-        xAxis: {       
-          type: 'datetime',
-          tickInterval: opts.tick * 1000, 
-          title: (opts.x_title||''), 
-          labels: { step: 2 } 
-        },
-        yAxis: { 
-          title: (opts.y_title||''), 
-          maxPadding: 0 
-        },
-        legend: {
-          layout: 'horizontal',
-          align: 'top',
-          verticalAlign: 'top',
-          x: -5,
-          y: -3,
-          margin: 25,
-          borderWidth: 0
-        },
-      });
-    }
+      var chart=false;
 
-    
-    function render(){
+      function redrawWithRange(first_time, silent){
+        if(!silent){ $(opts.elem).css('opacity', 0.5); }
+        redrawDatepicker();    
+        var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;    
+        chart.series = [];
+        //metrics_completed = 0;
+        $(opts.gauges).each(function(i,gauge){
+          $.ajax({
+            url: '/'+currentNamespace+'/gauge/'+gauge+_query, 
+            success: redrawGauge(first_time, gauge)
+          });         
+        });
+      }
+
+      function redrawGauge(first_time, gauge){
+        return (function(json){                   
+          var raw_data = JSON.parse(json);
+          var series_data = [];
+          for(p in raw_data){ series_data.push([parseInt(p)*1000, raw_data[p]||0]); }
+        
+          if(!first_time){ 
+            chart.get('series-'+gauge).setData(series_data);
+          } else {
+            chart.addSeries({name: gauge, data: series_data, id: 'series-'+gauge });     
+          }       
+          // shown on the *first* gauge load
+          $(opts.elem).css('opacity', 1);
+        });
+      }
+
+      function redrawDatepicker(){
+        $('.datepicker').html(
+          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) + 
+          '&nbsp;&dash;&nbsp;' +
+          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000) 
+        );
+      }
+
+      function moveRange(direction){
+        v = opts.tick*direction*8;
+        alert(opts.tick);
+        opts.start_timestamp += v;
+        opts.end_timestamp += v;
+        redrawWithRange();
+      }
+      
+      function drawLayout(){
+        $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
+          $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
+            function(){ redrawWithRange(); }
+          )
+        ).append(
+          $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
+            function(){ moveRange(1); }
+          )
+        ).append(
+          $('<div></div>').attr('class', 'datepicker')
+        ).append(
+          $('<div></div>').attr('class', 'button').append($('<span></span>').html('&larr;')).click(
+            function(){ moveRange(-1); }
+          )
+        ).append(
+          $('<h2></h2>').html(opts.title)
+        ) ).append( $('<div></div>').attr('id', 'container') );
+      }
+
+      function drawChart(){
+        chart = new Highcharts.Chart({     
+          chart: { renderTo: 'container', defaultSeriesType: 'areaspline', height: 270 },
+          series: [],
+          title: { text: '' },
+          xAxis: {       
+            type: 'datetime',
+            tickInterval: opts.tick * 1000, 
+            title: (opts.x_title||''), 
+            labels: { step: 2 } 
+          },
+          yAxis: { 
+            title: (opts.y_title||''), 
+            maxPadding: 0 
+          },
+          legend: {
+            layout: 'horizontal',
+            align: 'top',
+            verticalAlign: 'top',
+            x: -5,
+            y: -3,
+            margin: 25,
+            borderWidth: 0
+          },
+        });
+      }
 
       drawLayout();
       drawChart();
@@ -571,7 +572,7 @@ var FnordMetric = (function(){
     function renderWidget(wkey){
       var widget = widgets[wkey];
       /* argh... */
-      if(widget.klass=='TimelineWidget'){ timelineWidget(widget).render(); }
+      if(widget.klass=='TimelineWidget'){ timelineWidget().render(widget); }
       if(widget.klass=='NumbersWidget'){ numbersWidget(widget).render(); }
     };
 
