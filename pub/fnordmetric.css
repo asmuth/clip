@@ -45,6 +45,7 @@ line-height:29px;
 text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 -moz-text-shadow: 1px 0px 2px rgba(255,255,255,1);
 -webkit-text-shadow: 1px 0px 2px rgba(255,255,255,1);
+  overflow:hidden;
 }
 
 .headbar.small{ height:29px; }
