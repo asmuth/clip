@@ -127,6 +127,8 @@ not yet implemented
 
 -> toplist-widget
 
+-> numbers_widget: handle decreasing vals
+
 -> funnel-widget
 
 -> bars-widget

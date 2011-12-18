@@ -279,8 +279,101 @@ describe FnordMetric::GaugeModifiers do
 
   end
 
-  it "should increment a field on a three-dimensional gauge by 1"
-  it "should increment a field on a three-dimensional gauge by 5"
+describe "increment three-dimensional gagues" do
+
+    it "should increment a three-dim gauge by 1" do
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_434-10-695280200"
+      @redis.hset(gauge_key, "whoopwhoop", 12)  
+      create_gauge_context({
+        :key => "mygauge_434", 
+        :three_dimensional => true,
+        :tick => 10,
+      }, proc{ 
+        incr_field(:mygauge_434, "whoopwhoop", 1)  
+      }).tap do |context|      
+        event = { :_time => @now }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "whoopwhoop").should == "13"
+      @redis.get(gauge_key+"-count").should == "1"
+    end
+
+    it "should increment a three-dim gauge by 5 on an empty field" do
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_634-10-695280200"
+      @redis.set(gauge_key+"-count", 6)
+      create_gauge_context({
+        :key => "mygauge_634", 
+        :three_dimensional => true,
+        :tick => 10,
+      }, proc{ 
+        incr_field(:mygauge_634, "whoopwhoop", 5)  
+      }).tap do |context|      
+        event = { :_time => @now }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "whoopwhoop").should == "5"
+      @redis.get(gauge_key+"-count").should == "7"
+    end
+
+    it "should increment a three-dim gauge by event supplied field" do
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_634-10-695280200"
+      @redis.hset(gauge_key, "fnordybar", 11)  
+      create_gauge_context({
+        :key => "mygauge_634", 
+        :three_dimensional => true,
+        :tick => 10,
+      }, proc{ 
+        incr_field(:mygauge_634, data[:myfield], 5)  
+      }).tap do |context|      
+        event = { :_time => @now, :myfield => "fnordybar" }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "fnorybar").should == "36"
+    end
+
+    it "should increment_unique a three-dim gauge" do  
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_1263-10-695280200"    
+      @redis.hset(gauge_key, "mykey", "54")
+      @redis.set(gauge_key+"-progressive-sessions-count", 5)
+      create_gauge_context({
+        :key => "mygauge_1263", 
+        :tick => 10,
+        :unique => true,
+        :three_dimensional => true
+      }, proc{ 
+        incr_field(:mygauge_1263, "mykes", 30)  
+      }).tap do |context|      
+        event = { :_time => @now, :_session_key => "mysesskey" }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "mykey").should == "84"
+      @redis.get(gauge_key+"-progressive-sessions-count").should == "6"
+      @redis.smembers(gauge_key+"-progressive-sessions").should == ["mysesskey"]
+    end
+
+    it "should not increment_unique a non-progressive gauge if session is known" do  
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_1266-695280200"    
+      @redis.hset(gauge_key, "otherkey", "54")
+      @redis.set(gauge_key+"-progressive-sessions-count", 5)
+      @redis.sadd(gauge_key+"-progressive-sessions", "mysesskey")
+      create_gauge_context({
+        :key => "mygauge_1266", 
+        :tick => 10,
+        :unique => true,
+        :three_dimensional => true
+      }, proc{ 
+        incr_field(:mygauge_1266, "otherkey", 30)  
+      }).tap do |context|      
+        event = { :_time => @now, :_session_key => "mysesskey" }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "otherkey").should == "54"
+      @redis.get(gauge_key+"-progressive-sessions-count").should == "5"
+      @redis.smembers(gauge_key+"-progressive-sessions").should == ["mysesskey"]
+    end
+
+  end
+
   it "should raise an error if incr_field is called on a 2d gauge"
 
 private
