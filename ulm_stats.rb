@@ -4,6 +4,40 @@ require "fnordmetric"
 # todos: legende, numbers widget, yscale
 FnordMetric.namespace :ulikeme do
 
+
+  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true
+  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true
+
+  event :_pageview do
+    incr :pageviews_daily_unique
+    incr :pageviews_hourly_unique
+  end
+
+  widget 'Overview', {
+    :title => "Uniques per Day",
+    :type => :timeline,
+    :width => 65,
+    :gauges => :pageviews_daily_unique,
+    :include_current => true,
+    :autoupdate => 30
+  }
+
+  widget 'Overview', {
+    :title => "Uniques per Hour",
+    :type => :timeline,
+    :width => 35,
+    :gauges => :pageviews_hourly_unique,
+    :include_current => true,
+    :autoupdate => 30
+  }
+
+  widget 'Overview', {
+    :title => "uLikeMe Key Metrics",
+    :type => :numbers,
+    :gauges => [:pageviews_daily_unique]
+  }
+
+
   # user activity
   gauge :skip_votes, :tick => 1.day.to_i
   gauge :yes_votes, :tick => 1.day.to_i
@@ -56,62 +90,7 @@ FnordMetric.namespace :ulikeme do
     :gauges => [:messages_sent, :messages_read, :winks_sent]
   }
 
-  gauge :events_per_minute, :tick => 60
-  gauge :events_per_hour, :tick => 1.hour.to_i
-  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true
-  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true
 
-  event :"*" do
-    incr :events_per_minute
-    incr :events_per_hour
-  end
-
-  event :_pageview do
-    incr :pageviews_daily_unique
-    incr :pageviews_hourly_unique
-  end
-
-  widget 'TrafficChannels', {
-    :title => "Uniques per Day",
-    :type => :timeline,
-    :width => 70,
-    :gauges => :pageviews_daily_unique,
-    :include_current => true,
-    :autoupdate => 30
-  }
-
-  widget 'TrafficChannels', {
-    :title => "Events per Minute",
-    :type => :timeline,
-    :width => 30,
-    :gauges => :events_per_minute,
-    :include_current => true,
-    :autoupdate => 30
-  }
-
-  widget 'TrafficChannels', {
-    :title => "Uniques per Hour",
-    :type => :timeline,
-    :width => 50,
-    :gauges => :pageviews_hourly_unique,
-    :include_current => true,
-    :autoupdate => 30
-  }
-
-  widget 'TrafficChannels', {
-    :title => "Events per Hour",
-    :type => :timeline,
-    :width => 50,
-    :gauges => :events_per_hour,
-    :include_current => true,
-    :autoupdate => 30
-  }
-
-  #widget 'TrafficChannels', {
-  #  :title => "Daily uniques / EPM",
-  #  :type => :numbers,
-  #  :gauges => [:uniques_daily, :events_per_minute]
-  #}
 
   gauge :mails_sent, :tick => 1.day.to_i
   gauge :mails_clicked, :tick => 1.day.to_i
@@ -227,6 +206,33 @@ FnordMetric.namespace :ulikeme do
     :title => "RockYou (1) - AppRequests sent",
     :gauges => [:rockyou1_requests],
     :type => :timeline
+  }
+
+
+  gauge :events_per_minute, :tick => 60
+  gauge :events_per_hour, :tick => 1.hour.to_i
+  
+  event :"*" do
+    incr :events_per_minute
+    incr :events_per_hour
+  end
+
+  widget 'TechStats', {
+    :title => "Events per Minute",
+    :type => :timeline,
+    :width => 50,
+    :gauges => :events_per_minute,
+    :include_current => true,
+    :autoupdate => 30
+  }
+
+  widget 'TechStats', {
+    :title => "Events per Hour",
+    :type => :timeline,
+    :width => 50,
+    :gauges => :events_per_hour,
+    :include_current => true,
+    :autoupdate => 30
   }
 
 end
