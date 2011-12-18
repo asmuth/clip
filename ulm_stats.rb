@@ -4,14 +4,59 @@ require "fnordmetric"
 # todos: legende, numbers widget, yscale
 FnordMetric.namespace :ulikeme do
 
+  gauge :skip_votes, :tick => 1.day.to_i
+  gauge :yes_votes, :tick => 1.day.to_i
+  gauge :maybe_votes, :tick => 1.day.to_i
 
   gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true
   gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true
+
+  gauge :messages_sent, :tick => 1.day.to_i
+  gauge :messages_read, :tick => 1.day.to_i
+  gauge :winks_sent, :tick => 1.day.to_i
 
   event :_pageview do
     incr :pageviews_daily_unique
     incr :pageviews_hourly_unique
   end
+
+  event(:action_wink){ incr :winks_sent }
+  event(:wink_sent){ incr :winks_sent }
+  event(:message_sent){ incr :messages_sent }
+  event(:message_read){ incr :messages_read }
+
+  event(:skip_vote){ incr :skip_votes }
+  event(:action_skip){ incr :skip_votes }
+  event(:yes_vote){ incr :yes_votes }
+  event(:action_yes){ incr :yes_votes }
+  event(:maybe_vote){ incr :maybe_votes }
+  event(:action_maybe){ incr :maybe_votes }
+
+
+  gauge :mails_sent, :tick => 1.day.to_i
+  gauge :mails_clicked, :tick => 1.day.to_i
+
+  event(:mail_sent){ incr :mails_sent }
+  event(:mail_clicked){ incr :mails_clicked }
+
+
+  gauge :app_requests_sent, :tick => 1.day.to_i
+  gauge :app_requests_clicked, :tick => 1.day.to_i
+
+  gauge :app_invites_sent, :tick => 1.day.to_i
+  gauge :app_invites_clicked, :tick => 1.day.to_i
+
+  event(:app_request_sent){ incr :app_requests_sent }
+  event(:app_request_click){ incr :app_requests_clicked }
+
+  event(:app_invite_sent){ incr :app_invites_sent }
+  event(:app_invite_click){ incr :app_invites_clicked }
+
+  gauge :rockyou1_ppis, :tick => 1.day.to_i
+  gauge :rockyou1_requests, :tick => 1.day.to_i
+  gauge :rockyou1_refs, :tick => 1.day.to_i
+
+
 
   widget 'Overview', {
     :title => "Uniques per Day",
@@ -34,21 +79,22 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "uLikeMe Key Metrics",
     :type => :numbers,
-    :gauges => [:pageviews_daily_unique]
+    :gauges => [
+      :pageviews_daily_unique, :skip_votes, :yes_votes, 
+      :maybe_votes, :messages_sent, :messages_read, :winks_sent,
+      :mails_sent, :mails_clicked, :app_requests_sent, :app_requests_clicked,
+      :app_invites_sent, :app_invites_clicked
+    ]
+  }
+
+  widget 'Overview', {
+    :title => "RockYou Campaign (12/11) Metrics",
+    :type => :numbers,
+    :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
   }
 
 
   # user activity
-  gauge :skip_votes, :tick => 1.day.to_i
-  gauge :yes_votes, :tick => 1.day.to_i
-  gauge :maybe_votes, :tick => 1.day.to_i
-
-  event(:skip_vote){ incr :skip_votes }
-  event(:action_skip){ incr :skip_votes }
-  event(:yes_vote){ incr :yes_votes }
-  event(:action_yes){ incr :yes_votes }
-  event(:maybe_vote){ incr :maybe_votes }
-  event(:action_maybe){ incr :maybe_votes }
 
   widget 'UserActivity', {
     :title => "Yes/No/Skip-Votes",
@@ -62,15 +108,6 @@ FnordMetric.namespace :ulikeme do
     :gauges => [:skip_votes, :yes_votes, :maybe_votes]
   }
 
-
-  gauge :messages_sent, :tick => 1.day.to_i
-  gauge :messages_read, :tick => 1.day.to_i
-  gauge :winks_sent, :tick => 1.day.to_i
-
-  event(:action_wink){ incr :winks_sent }
-  event(:wink_sent){ incr :winks_sent }
-  event(:message_sent){ incr :messages_sent }
-  event(:message_read){ incr :messages_read }
 
   widget 'UserActivity', {
     :title => "Messages sent/read",
@@ -91,13 +128,6 @@ FnordMetric.namespace :ulikeme do
   }
 
 
-
-  gauge :mails_sent, :tick => 1.day.to_i
-  gauge :mails_clicked, :tick => 1.day.to_i
-
-  event(:mail_sent){ incr :mails_sent }
-  event(:mail_clicked){ incr :mails_clicked }
-
   widget 'TrafficChannels', {
     :title => "Mails sent/read",
     :type => :timeline,
@@ -109,18 +139,6 @@ FnordMetric.namespace :ulikeme do
     :type => :numbers,
     :gauges => [:mails_sent, :mails_clicked]
   }
-
-  gauge :app_requests_sent, :tick => 1.day.to_i
-  gauge :app_requests_clicked, :tick => 1.day.to_i
-
-  gauge :app_invites_sent, :tick => 1.day.to_i
-  gauge :app_invites_clicked, :tick => 1.day.to_i
-
-  event(:app_request_sent){ incr :app_requests_sent }
-  event(:app_request_click){ incr :app_requests_clicked }
-
-  event(:app_invite_sent){ incr :app_invites_sent }
-  event(:app_invite_click){ incr :app_invites_clicked }
 
   widget 'TrafficChannels', {
     :title => "App-Requests sent/clicked",
@@ -165,9 +183,6 @@ FnordMetric.namespace :ulikeme do
   }
 
 
-  gauge :rockyou1_ppis, :tick => 1.day.to_i
-  gauge :rockyou1_requests, :tick => 1.day.to_i
-  gauge :rockyou1_refs, :tick => 1.day.to_i
 
   event :campaign_install do
     if %w(ry201112a ry201112b).include?(data[:campaign_key])
