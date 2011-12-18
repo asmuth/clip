@@ -13,7 +13,7 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 {<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
 
 
-== Basic Example
+== Getting Started
 
 This will listen for json-events with type=unicorn_seen and render a timeline-plot showing the number of received events per hour.
 
@@ -48,7 +48,16 @@ This is the easiest way to submit an event:
 
   echo "{'_type': 'unicorn_seen'}\n" | nc localhost 1337
 
-==  Events
+
+== Reference
+
+==== DSL Methods
+
+  gauge
+
+  widget
+
+  event
 
 ==== Example Events
 
@@ -89,16 +98,6 @@ The fast way: Add your event directly to the redis-based queue:
   redis.set("fnordmetric-event-#{my_uuid}", event)
   redis.expire("fnordmetric-event-#{my_uuid}", 60)
 
-
-== API Reference
-
-==== DSL Methods
-
-  gauge
-
-  widget
-
-  event
 
 ==== Gauge Modifiers Methods
 
