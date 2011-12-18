@@ -148,7 +148,7 @@ var FnordMetric = (function(){
         var at = parseInt(new Date().getTime()/1000);
         var url = '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
         if(_sum > 0){
-          url += '?at='+at+'-'+(at-_sum)+'&sum=true';
+          url += '?at='+(at-_sum)+'-'+at+'&sum=true';
         } else {
           at -= parseInt($(this).attr('data-offset'));
           url += '?at='+at;
