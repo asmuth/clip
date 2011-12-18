@@ -15,7 +15,7 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 
 == Basic Example
 
-This will listen on TCP#1337 and HTTP#4242 draw the number of received json-events (where type=unicorn_seen) on a timeline-plot with 1-hour-ticks:
+This will listen on TCP#1337 and HTTP#4242 ánd draw the number of received json-events (where type=unicorn_seen) on a timeline-plot with 1-hour-ticks:
 
  require "fnordmetric"
 
