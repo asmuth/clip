@@ -2,13 +2,13 @@
 
 FnordMetric is a highly configurable realtime app tracking thing. 
 
+{<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
 
-==== Example Dashboard
+== Screenshots
 FnordMetric keeps track of your data and draws nice timeline plots. (You can define your own plotting and counting functions as ruby blocks!)
 
 {<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
 
-==== User Activity Dashboard
 FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
 
 {<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
