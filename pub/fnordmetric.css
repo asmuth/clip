@@ -77,14 +77,14 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
 
 
-.numbers_container, .number{ float:left; border-right:1px solid #ececec; }
-.number{ margin-left:12px; padding-right:20px; margin-right:10px; }
-.number .value{ color:#333; font-size:30px; display:block; margin-bottom:5px; }
-.number .desc{ color:#999; font-size:12px; }
+.numbers_container, .number{ float:left; }
+.number{ padding-right:20px; margin-right:10px; }
+.number .value{ color:#444; font-size:20px; display:block; margin-bottom:5px; font-weight:bold; }
+.number .desc{ color:#999; font-size:12px; margin-bottom:5px; display:block; }
 .number:last-child{ border-right:none; }
-.numbers_container{ padding-right:0px; width:33.2%; }
+.numbers_container{ padding-right:0px; width:220px; float:left; margin:20px; padding-bottom:5px; border-bottom:1px solid #dedede; }
 
-.numbers_container .title{ padding:4px 10px 1px 10px; color:#333; font-size:13px; display:block; background:#f2f2f2; border-bottom:1px solid #e2e2e2; margin-bottom:15px; }
+.numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block;font-weight:400; }
 
 
 ul.session_list{ list-style-type:none; margin:0; padding:9px 16px 0 11px; }

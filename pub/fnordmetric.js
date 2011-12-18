@@ -32,16 +32,63 @@ var FnordMetric = (function(){
     }
   }
 
+  function formatOffset(offset){
+    if(offset == 0){
+      return 'just now';
+    } else if (offset < 60){
+      return offset + 's ago';
+    } else if(offset<3600){
+      return parseInt(offset/60) + 'm ago';
+    } else if(offset<(3600*24)){
+      return parseInt(offset/3600) + 'h ago';
+    } else {
+      return parseInt(offset/(3600*24)) + 'd ago';
+    }
+  }
+
   function getNextWidgetUID(){
     return (currentWidgetUID += 1);
   }
 
   var numbersWidget = function(){
+
     
     function render(opts){
       opts.elem.append(
         $('<div class="headbar small"></div>').html(opts.title)
       );
+
+       for(k in opts.gauges){
+        var title = 'External Backlinks';
+        var gtick = opts.gauges[k].tick;
+        //console.log(gtick);
+        var offsets = [0, gtick];
+        var container = $('<div></div>')
+          .attr('class', 'numbers_container')
+          .attr('rel', k)      
+          .append(
+            $('<div></div>')
+              .addClass('title')
+              .html(title)
+          );
+        
+        $(offsets).each(function(n, offset){
+          container.append(
+            $('<div></div>')
+              .addClass('number')
+              .attr('rel', k)
+              .attr('data-offset', offset)
+              .attr('data',0)
+              .append(
+                $('<span></span>').addClass('desc').html(formatOffset(offset))
+              )
+              .append(
+                $('<span></span>').addClass('value').html(0)
+              )
+          );
+        })
+        opts.elem.append(container);
+      }
     }
 
     return {
