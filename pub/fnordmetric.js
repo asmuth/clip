@@ -46,6 +46,16 @@ var FnordMetric = (function(){
     }
   }
 
+  function formatValue(value){
+    if(value < 10){ 
+      return value.toFixed(2); 
+    } else if(value > 1000){ 
+      return (value/1000.0).toFixed(1) + "k"; 
+    } else {
+      return value.toFixed(0);     
+    }    
+  }
+
   function getNextWidgetUID(){
     return (currentWidgetUID += 1);
   }
@@ -54,11 +64,12 @@ var FnordMetric = (function(){
 
     
     function render(opts){
+
       opts.elem.append(
         $('<div class="headbar small"></div>').html(opts.title)
       );
 
-       for(k in opts.gauges){
+      for(k in opts.gauges){
         var title = 'External Backlinks';
         var gtick = opts.gauges[k].tick;
         //console.log(gtick);
@@ -78,16 +89,42 @@ var FnordMetric = (function(){
               .addClass('number')
               .attr('rel', k)
               .attr('data-offset', offset)
-              .attr('data',0)
+              .attr('data',23525)
               .append(
                 $('<span></span>').addClass('desc').html(formatOffset(offset))
               )
               .append(
                 $('<span></span>').addClass('value').html(0)
               )
-          );
-        })
+            );
+        });
+
         opts.elem.append(container);
+      }
+
+      updateValues(opts, 4);
+    }
+
+    function updateValues(opts, diff_factor){
+      var still_running = false;
+      $('.number', $(opts.elem)).each(function(){
+        var target_val = parseFloat($(this).attr('data'));
+        var current_val = parseFloat($(this).attr('data-current'));
+        if(!current_val){ current_val=0; }
+        var diff = (target_val-current_val)/diff_factor; 
+        if(diff < 1){ diff=1; }
+        if(target_val > current_val){ 
+          still_running = true;
+          var new_val = current_val+diff;
+          if(new_val > target_val){ new_val = target_val; }
+          $(this).attr('data-current', new_val);
+          $('.value', this).html(formatValue(new_val));
+        }
+      });
+      if(still_running){ 
+        (function(df){
+          window.setTimeout(function(){ updateValues(opts, df); }, 30);
+        })(diff_factor);
       }
     }
 
