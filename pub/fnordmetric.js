@@ -20,17 +20,17 @@ var FnordMetric = (function(){
 
   function formatTimeRange(range){
     if (range < 60){
-      return range + 'sec';
+      return range + ' sec';
     } else if(range<3600){
-      return parseInt(range/60) + 'min';
+      return parseInt(range/60) + ' min';
     } else if(range==3600){
-      return 'one hour';
+      return '1 hour';
     } else if(range<(3600*24)){
-      return parseInt(range/3600) + 'hour';
+      return parseInt(range/3600) + ' hours';
     } else if(range==(3600*24)){
-      return 'one day';
+      return '1 day';
     } else {
-      return parseInt(range/(3600*24)) + 'day';
+      return parseInt(range/(3600*24)) + ' days';
     }
   }
   
@@ -78,25 +78,26 @@ var FnordMetric = (function(){
         var gtick = opts.gauges[k].tick;
         var gtitle = opts.gauges[k].title;
         //console.log(gtick);
-        var offsets = [0, gtick];
         var container = $('<div></div>')
-          .attr('class', 'numbers_container')
+          .addClass('numbers_container')
+          .addClass('size_'+opts.offsets.length)
           .attr('rel', k)      
           .append(
             $('<div></div>')
               .addClass('title')
               .html(gtitle)
           );
+
         
-        $(offsets).each(function(n, offset){
+        $(opts.offsets).each(function(n, offset){
           container.append(
             $('<div></div>')
               .addClass('number')
               .attr('rel', k)
-              .attr('data-offset', offset)
+              .attr('data-offset', offset*gtick)
               .attr('data',0)
               .append(
-                $('<span></span>').addClass('desc').html(formatOffset(offset, offsets[n+1]))
+                $('<span></span>').addClass('desc').html(formatOffset(offset*gtick, gtick))
               )
               .append(
                 $('<span></span>').addClass('value').html(0)

@@ -77,13 +77,13 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
 
 
-.numbers_container, .number{ float:left; }
+.numbers_container, .number{ float:left; width:60px; }
 .number{ padding-right:20px; margin-right:6px; }
 .number .value{ color:#444; font-size:20px; display:block; margin-bottom:5px; font-weight:bold; }
-.number .desc{ color:#999; font-size:12px; margin-bottom:5px; display:block; }
+.number .desc{ color:#999; font-size:12px; margin-bottom:5px; display:block;  white-space:nowrap; }
 .number:last-child{ border-right:none; }
 .numbers_container{ padding-right:0px; width:215px; float:left; margin:15px 0 -1px 20px; padding-bottom:5px; border-bottom:1px solid #dedede; }
-
+.numbers_container.size_3{ width:258px; }
 .numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block;font-weight:400; }
 
 
