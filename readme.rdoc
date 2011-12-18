@@ -1,11 +1,11 @@
 = FnordMetric
 
-FnordMetric is a highly configurable realtime app tracking thing. 
+FnordMetric is a highly configurable realtime app tracking thing. (You define your own plotting and counting functions as ruby blocks!)
 
 {<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
 
 == Screenshots
-FnordMetric keeps track of your data and draws nice timeline plots. (You can define your own plotting and counting functions as ruby blocks!)
+FnordMetric keeps track of your data and draws nice timeline plots.
 
 {<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
 
