@@ -41,7 +41,7 @@ describe FnordMetric::Widget do
   
   it "should raise an error if two gauges with different ticks are added" do
     lambda{
-      widget = FnordMetric::Widget.new(
+      widget = FnordMetric::TimelineWidget.new(
         :title => "My Widget",
         :gauges => [@gauge1, @gauge2]
       ) 
@@ -49,9 +49,19 @@ describe FnordMetric::Widget do
   end
 
   it "should generate the correct default range for daily graphs without include current" do
-    widget = FnordMetric::Widget.new(
+    widget = FnordMetric::TimelineWidget.new(
       :title => "My Widget",
       :include_current => false,
+      :gauges => [@gauge1]
+    ) 
+    range = widget.default_range(Time.utc(1992,01,13,18,23,23))
+    Time.at(range.last).utc.should == Time.utc(1992,01,12,00,00)
+    Time.at(range.first).utc.should == Time.utc(1991,12,13,00,00)
+  end
+
+  it "should generate the correct default range for daily graphs with include current" do
+    widget = FnordMetric::TimelineWidget.new(
+      :title => "My Widget",
       :gauges => [@gauge1]
     ) 
     range = widget.default_range(Time.utc(1992,01,13,18,23,23))
@@ -59,30 +69,9 @@ describe FnordMetric::Widget do
     Time.at(range.first).utc.should == Time.utc(1991,12,14,00,00)
   end
 
-  it "should generate the correct default range for daily graphs with include current" do
-    widget = FnordMetric::Widget.new(
-      :title => "My Widget",
-      :gauges => [@gauge1]
-    ) 
-    range = widget.default_range(Time.utc(1992,01,13,18,23,23))
-    Time.at(range.last).utc.should == Time.utc(1992,01,14,00,00)
-    Time.at(range.first).utc.should == Time.utc(1991,12,15,00,00)
-  end
-
   it "should generate the correct default range for hourly graphs with include current" do
-    widget = FnordMetric::Widget.new(
+    widget = FnordMetric::TimelineWidget.new(
       :title => "My Widget",
-      :gauges => [@gauge2]
-    ) 
-    range = widget.default_range(Time.utc(1992,01,13,18,23,23))
-    Time.at(range.last).utc.should == Time.utc(1992,01,13,19,00)
-    Time.at(range.first).utc.should == Time.utc(1992,01,12,19,00)
-  end
-
-  it "should generate the correct default range for hourly graphs with include current" do
-    widget = FnordMetric::Widget.new(
-      :title => "My Widget",
-      :include_current => false,
       :gauges => [@gauge2]
     ) 
     range = widget.default_range(Time.utc(1992,01,13,18,23,23))
@@ -90,16 +79,27 @@ describe FnordMetric::Widget do
     Time.at(range.first).utc.should == Time.utc(1992,01,12,18,00)
   end
 
+  it "should generate the correct default range for hourly graphs with include current" do
+    widget = FnordMetric::TimelineWidget.new(
+      :title => "My Widget",
+      :include_current => false,
+      :gauges => [@gauge2]
+    ) 
+    range = widget.default_range(Time.utc(1992,01,13,18,23,23))
+    Time.at(range.last).utc.should == Time.utc(1992,01,13,17,00)
+    Time.at(range.first).utc.should == Time.utc(1992,01,12,17,00)
+  end
+
   it "should generate the correct ticks" do
-    widget = FnordMetric::Widget.new(
+    widget = FnordMetric::TimelineWidget.new(
       :title => "My Widget",
       :gauges => [@gauge2]
     ) 
     Delorean.time_travel_to(Time.utc(1992,01,13,18,23,23)) do
-      Time.at(widget.ticks[0]).should == Time.utc(1992,01,12,19,00)
-      Time.at(widget.ticks[1]).should == Time.utc(1992,01,12,20,00)
-      Time.at(widget.ticks[-1]).should == Time.utc(1992,01,13,19,00)
-      Time.at(widget.ticks[-2]).should == Time.utc(1992,01,13,18,00)
+      Time.at(widget.ticks[0]).utc.should == Time.utc(1992,01,12,18,00)
+      Time.at(widget.ticks[1]).utc.should == Time.utc(1992,01,12,19,00)
+      Time.at(widget.ticks[-1]).utc.should == Time.utc(1992,01,13,18,00)
+      Time.at(widget.ticks[-2]).utc.should == Time.utc(1992,01,13,17,00)
     end
   end
 
