@@ -246,7 +246,7 @@ var FnordMetric = (function(){
       }
 
       function redrawDatepicker(){
-        $('.datepicker').html(
+        $('.datepicker', opts.elem).html(
           Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) + 
           '&nbsp;&dash;&nbsp;' +
           Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000) 
