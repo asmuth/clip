@@ -41,8 +41,16 @@ var FnordMetric = (function(){
   }
 
   function formatOffset(offset, next_offset){
-    if(offset == 0){
+    if((offset == 0) && (next_offset==(3600*24))){
+      return 'today';
+    } if((offset == 0) && (next_offset==3600)){
+      return 'this hour';
+    } else if(offset == 0){
       return 'last ' + formatTimeRange(next_offset||0);
+    } else if(offset==(3600*24)){
+      return 'yesterday';
+    } else if(offset==3600){
+      return 'last hour';
     } else {
       return formatTimeRange(offset) + ' ago';
     }
