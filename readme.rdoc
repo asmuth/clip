@@ -113,8 +113,6 @@ call these methods from the event-handler block
 
 === Gauge Options
 
-== Widget-Options
-
 === Widget-Options: TimelineWidget
 
 === Widget-Options: Numbers-Widget
