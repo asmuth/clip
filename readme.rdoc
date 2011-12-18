@@ -4,15 +4,6 @@ FnordMetric is a highly configurable (and pretty fast) realtime app/event tracki
 
 {<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
 
-== Screenshots
-FnordMetric keeps track of your data and draws nice timeline plots.
-
-{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
-
-FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
-
-{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
-
 
 == Basic Example
 
@@ -42,6 +33,15 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
   end
 
   FnordMetric.standalone
+
+== Screenshots
+FnordMetric keeps track of your data and draws nice timeline plots.
+
+{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
+
+FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
+
+{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
 
 
 ==  Events
@@ -84,30 +84,6 @@ The fast way: Add your event directly to the redis-based queue:
 
   // set the user picture
   { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
-
-
-==== Special Event-Fields
-
--> "_type": The event class/type. (mandatory)
-
--> "_namespace": The namespace (if you have more than one)
-
--> "_session": Your session identifier (recommended)
-
--> "_time": The event time (do not use!)
-
--> "_eid": The event id (do not use!)
-
-
-==== Special Event-Types
-
--> "_pageview": Track a pageview (should have a "url" attr!)
-
--> "_set_name": Set the username for the current session (should have a "name" attr)
-
--> "_set_picture": Set the user picture for the current session (should have a "url" attr)
-
--> "_set_data": Store all event attributes in the current session
 
 
 == API Reference
