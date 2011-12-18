@@ -8,8 +8,8 @@ FnordMetric.namespace :ulikeme do
   gauge :yes_votes, :tick => 1.day.to_i, :title => "Yes-Votes"
   gauge :maybe_votes, :tick => 1.day.to_i, :title => "Maybe-Votes"
 
-  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true, :title => "Pageviews (Daily)"
-  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true, :title => "Pageviews (Hourly)"
+  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true, :title => "Unique Visits (Daily)"
+  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true, :title => "Unique Visits (Hourly)"
 
   gauge :messages_sent, :tick => 1.day.to_i, :title => "Messages (sent)"
   gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
@@ -52,14 +52,14 @@ FnordMetric.namespace :ulikeme do
   event(:app_invite_sent){ incr :app_invites_sent }
   event(:app_invite_click){ incr :app_invites_clicked }
 
-  gauge :rockyou1_ppis, :tick => 1.day.to_i, :title => "RockYou 11/12 (Paid Installs)"
-  gauge :rockyou1_requests, :tick => 1.day.to_i, :title => "RockYou 11/12 (Invites sent)"
-  gauge :rockyou1_refs, :tick => 1.day.to_i, :title => "RockYou 11/12 (Ref. Installs)"
+  gauge :rockyou1_ppis, :tick => 1.day.to_i, :title => "RockYou (12/11): Paid Installs"
+  gauge :rockyou1_requests, :tick => 1.day.to_i, :title => "RockYou (12/11): Invites sent"
+  gauge :rockyou1_refs, :tick => 1.day.to_i, :title => "RockYou (12/11): Ref. Installs"
 
 
 
   widget 'Overview', {
-    :title => "Uniques per Day",
+    :title => "Unique Visits per Day",
     :type => :timeline,
     :width => 65,
     :gauges => :pageviews_daily_unique,
@@ -68,7 +68,7 @@ FnordMetric.namespace :ulikeme do
   }
 
   widget 'Overview', {
-    :title => "Uniques per Hour",
+    :title => "Unique Visits per Hour",
     :type => :timeline,
     :width => 35,
     :gauges => :pageviews_hourly_unique,
