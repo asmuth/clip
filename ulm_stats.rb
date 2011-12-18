@@ -104,13 +104,12 @@ FnordMetric.namespace :ulikeme do
   }
 
   widget 'Overview', {
-    :title => "Top Pages",
-    :type => :toplist,
-    :autoupdate => 20,
+    :title => "RockYou Campaign (12/11) Metrics",
+    :type => :numbers,
     :width => 33,
-    :gauges => [ :pageviews_per_url_daily, :pageviews_per_url_monthly ]
+    :autoupdate => 20,
+    :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
   }
-
 
   widget 'Overview', {
     :title => "User-Activity",
@@ -120,11 +119,11 @@ FnordMetric.namespace :ulikeme do
   }
 
   widget 'Overview', {
-    :title => "RockYou Campaign (12/11) Metrics",
-    :type => :numbers,
-    :width => 33,
+    :title => "Top Pages",
+    :type => :toplist,
     :autoupdate => 20,
-    :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
+    :width => 33,
+    :gauges => [ :pageviews_per_url_daily, :pageviews_per_url_monthly ]
   }
 
 
