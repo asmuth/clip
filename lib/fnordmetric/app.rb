@@ -65,7 +65,8 @@ class FnordMetric::App < Sinatra::Base
       { (_t = gauge.tick_at(params[:at].to_i)) => gauge.value_at(_t) }
     elsif params[:at] && params[:at] =~ /^([0-9]+)-([0-9]+)$/
       _range = params[:at].split("-").map(&:to_i)
-      gauge.values_in(_range.first.._range.last)
+      _values = gauge.values_in(_range.first.._range.last)
+      params[:sum] ? { :sum => _values.values.compact.map(&:to_i).sum } : _values
     else
       { (_t = gauge.tick_at(Time.now.to_i-gauge.tick)) => gauge.value_at(_t) }
     end    

@@ -442,10 +442,16 @@ describe "app" do
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
-      get "/foospace/gauge/testgauge?at=1323691199-1323691201", :at => 18.hours.ago.to_i.to_s
-      JSON.parse(last_response.body).keys.length.should == 2
-      JSON.parse(last_response.body)["1323687600"] == 18
-      JSON.parse(last_response.body)["1323691200"] == 23
+      get "/foospace/gauge/testgauge?at=1323691199-1323701201"
+      JSON.parse(last_response.body).keys.length.should == 4
+      JSON.parse(last_response.body)["1323687600"].to_i.should == 18
+      JSON.parse(last_response.body)["1323691200"].to_i.should == 23
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp&sum=true" do  
+      get "/foospace/gauge/testgauge?at=1323691199-1323701201&sum=true"
+      JSON.parse(last_response.body).keys.length.should == 1
+      JSON.parse(last_response.body)["sum"].to_i.should == 18+23
     end
 
   end
