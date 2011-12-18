@@ -51,9 +51,15 @@ describe FnordMetric::Gauge do
 
   describe "ticks" do
 
-    it "should return the correct tick if configured"
-    it "should return the default tick if none configured"
+    it "should return the correct tick if configured" do
+      gauge = FnordMetric::Gauge.new({:tick => 23, :key_prefix => "fnordmetrics-myns", :key => "mygauge"})
+      gauge.tick.should == 23
+    end
 
+    it "should return the default tick if none configured" do
+      gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge"})
+      gauge.tick.should == 3600
+    end
 
     it "should return the correct tick_at" do
       gauge = FnordMetric::Gauge.new({:tick => 10, :key_prefix => "fnordmetrics-myns", :key => "mygauge"})
@@ -99,6 +105,19 @@ describe FnordMetric::Gauge do
         :unique => true,
         :redis => @redis
       })
+      _gauge.value_at(@now).should == 23
+    end
+
+    it "should return the correct value_at per session with avg" do
+      @redis.set(@gauge_key+"-695280200-sessions-count", "23")
+      _gauge = FnordMetric::Gauge.new({
+        :tick => 10, 
+        :key_prefix => "fnordmetric-myns", 
+        :key => "mygauge_966",
+        :unique => true,
+        :average => true,
+        :redis => @redis
+      })
       _gauge.value_at(@now).should == (54.0/23.0)
     end
 
@@ -120,6 +139,23 @@ describe FnordMetric::Gauge do
         :redis => @redis
       })
       _gauge.values_at([@now, @now+8]).should == {
+        695280200 => 23,
+        695280210 => 8
+      }
+    end
+
+    it "should receive gauge values per session for multiple ticks with avg" do  
+      @redis.set(@gauge_key+"-695280200-sessions-count", "23")
+      @redis.set(@gauge_key+"-695280210-sessions-count", "8")
+      _gauge = FnordMetric::Gauge.new({
+        :tick => 10, 
+        :key_prefix => "fnordmetric-myns", 
+        :key => "mygauge_966",
+        :unique => true,
+        :average => true,
+        :redis => @redis
+      })
+      _gauge.values_at([@now, @now+8]).should == {
         695280200 => (54.0/23.0),
         695280210 => (123.0/8.0)
       }
@@ -135,14 +171,8 @@ describe FnordMetric::Gauge do
     end
 
     it "should receive gauge values for all ticks in a given range" do
-      @gauge.values_in(@now..@now+8).should == {
+      @gauge.values_in(@now+10..@now+18).should == {
         695280200 => "54",
-        695280210 => "123"
-      }
-      @gauge.values_in(@now..@now+6).should == {
-        695280200 => "54"
-      }
-      @gauge.values_in(@now+8..@now+10).should == {
         695280210 => "123"
       }
     end
