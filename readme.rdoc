@@ -51,7 +51,7 @@ This is the easiest way to submit an event:
 
 == Documentation
 
-==== Example Events
+=== Example Events
 
   // track a pageview
   { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
@@ -69,7 +69,7 @@ This is the easiest way to submit an event:
   { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 
 
-==== Sending Events
+=== Sending Events
 
 The slow way: HTTP-Post the json event to the fnordmetric webinterface
 
@@ -92,7 +92,7 @@ The fast way: Add your event directly to the redis-based queue:
 
 
 
-==== DSL Methods
+=== DSL Methods
 
   gauge
 
@@ -100,7 +100,7 @@ The fast way: Add your event directly to the redis-based queue:
 
   event
 
-==== Gauge Modifiers Methods
+=== Gauge Modifiers Methods
 
 call these methods from the event-handler block
 
@@ -111,15 +111,15 @@ call these methods from the event-handler block
     Increment the given given field on a three-dimensional gauge by value
 
 
-==== Gauge Options
+=== Gauge Options
 
-==== Widget-Options
+== Widget-Options
 
-==== Widget-Options: TimelineWidget
+=== Widget-Options: TimelineWidget
 
-==== Widget-Options: Numbers-Widget
+=== Widget-Options: Numbers-Widget
 
-==== Widget-Options: ToplistWidget
+=== Widget-Options: ToplistWidget
 
 
 == Full Example
