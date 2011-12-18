@@ -17,32 +17,34 @@ var FnordMetric = (function(){
            decPrint(time.getMinutes()) + ':' +
            decPrint(time.getSeconds());
   }
+
+  function formatTimeRange(range){
+    if (range < 60){
+      return range + 'sec';
+    } else if(range<3600){
+      return parseInt(range/60) + 'min';
+    } else if(range==3600){
+      return 'one hour';
+    } else if(range<(3600*24)){
+      return parseInt(range/3600) + 'hour';
+    } else if(range==(3600*24)){
+      return 'one day';
+    } else {
+      return parseInt(range/(3600*24)) + 'day';
+    }
+  }
   
   function formatTimeSince(time){
     var now = new Date().getTime()/1000;
     var since = now - time;
-    if(since < 60){
-      return parseInt(since) + 's';
-    } else if(since<3600){
-      return parseInt(since/60) + 'm';
-    } else if(since<(3600*24)){
-      return parseInt(since/3600) + 'h';
-    } else {
-      return ">1d"
-    }
+    return formatTimeRange(since);
   }
 
-  function formatOffset(offset){
+  function formatOffset(offset, next_offset){
     if(offset == 0){
-      return 'just now';
-    } else if (offset < 60){
-      return offset + 's ago';
-    } else if(offset<3600){
-      return parseInt(offset/60) + 'm ago';
-    } else if(offset<(3600*24)){
-      return parseInt(offset/3600) + 'h ago';
+      return 'last ' + formatTimeRange(next_offset||0);
     } else {
-      return parseInt(offset/(3600*24)) + 'd ago';
+      return formatTimeRange(offset) + ' ago';
     }
   }
 
@@ -94,7 +96,7 @@ var FnordMetric = (function(){
               .attr('data-offset', offset)
               .attr('data',0)
               .append(
-                $('<span></span>').addClass('desc').html(formatOffset(offset))
+                $('<span></span>').addClass('desc').html(formatOffset(offset, offsets[n+1]))
               )
               .append(
                 $('<span></span>').addClass('value').html(0)
