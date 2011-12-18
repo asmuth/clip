@@ -121,15 +121,13 @@ not yet implemented
 
 == TODOS
 
--> toplist-widget
-
 -> set_value
+
+-> bars-widget
 
 -> numbers_widget: handle decreasing vals
 
 -> funnel-widget
-
--> bars-widget
 
 -> pie-widget
 
