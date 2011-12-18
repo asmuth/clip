@@ -14,32 +14,39 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 {<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
 
 
-=== Getting started
+== Basic Example
 
-1) You send send json events from your web/facebook app. eg:
+ require "fnordmetric"
 
-  // track a pageview
-  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
+  FnordMetric.namespace :myapp do
 
-  // track a waypoint (see below)
-  { "_type": "_waypoint", "waypoint": "thank_you_site", "map": "checkout_flow", "_session": "mysessiontoken" }
+    # numeric (delta) gauge, 1-hour tick
+    gauge :unicorns_seen_per_hour, 
+      :tick => 1.hour.to_i, 
+      :title => "Unicorns seenper Hour"
 
-  // track a custom action
-  { "_type": "my_foo_type", "my_foo_action": "wink", "other_user": "myuserid" }
+    # on every event like { _type: 'unicorn_seen' }
+    event(:unicorn_seen) do
+      # increment the unicorns_seen_per_hour gauge by 1
+      incr :unicorns_seen_per_hour 
+    end
 
-  // set the user name
-  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
+    # draw a timeline showing the gauges value, auto-refresh every 30s
+    widget 'Overview', {
+      :title => "Unicorn-Sightings per Hour",
+      :type => :timeline,
+      :gauges => :unicorns_seen_per_hour,
+      :autoupdate => 30
+    }
 
-  // set the user picture
-  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
+  end
+
+  FnordMetric.standalone
 
 
+==  Events
 
-=== Installation
-
-=== Configuration
-
-=== Sending data: Connection
+==== Sending Events
 
 The slow way: HTTP-Post the json event to the fnordmetric webinterface
 
@@ -61,7 +68,25 @@ The fast way: Add your event directly to the redis-based queue:
   redis.expire("fnordmetric-event-#{my_uuid}", 60)
 
 
-=== Sending data: Special Keys
+==== Example Events
+
+  // track a pageview
+  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
+
+  // track a waypoint (see below)
+  { "_type": "_waypoint", "waypoint": "thank_you_site", "map": "checkout_flow", "_session": "mysessiontoken" }
+
+  // track a custom action
+  { "_type": "my_foo_type", "my_foo_action": "wink", "other_user": "myuserid" }
+
+  // set the user name
+  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
+
+  // set the user picture
+  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
+
+
+==== Special Event-Fields
 
 -> "_type": The event class/type. (mandatory)
 
@@ -74,7 +99,7 @@ The fast way: Add your event directly to the redis-based queue:
 -> "_eid": The event id (do not use!)
 
 
-=== Sending data: Special Event Types
+==== Special Event-Types
 
 -> "_pageview": Track a pageview (should have a "url" attr!)
 
@@ -85,39 +110,169 @@ The fast way: Add your event directly to the redis-based queue:
 -> "_set_data": Store all event attributes in the current session
 
 
+== API Reference
 
-== Configuration
+==== DSL Methods
 
-=== Gauge Modifiers
+  gauge
 
-  incr(gauge_name, value=1): Increment the given (two-dimensional) gauge by value
+  widget
 
-  incr_uniq(gauge_name, value=1): Increment the given (two-dimensional) gauge by value unless incr_uniq was already called for this session and tick (using incr_uniq on a progressive gauge is propably a bad idea)
+  event
 
-not yet implemented
+==== Gauge Modifiers Methods
 
-  incr_field(gauge_name, field_name, value=1): Increment the given (three-dimensional) gauge by value
+call these methods from the event-handler block
 
+  incr(gauge_name, value=1): 
+    Increment the given (two-dimensional) gauge by value
 
-=== Limitations 
-
--> It will drop events if it gets over capacity (prevent this by setting high timeouts)
-
--> All gauge values are calculated in a 'stateful'/'progressive' manner. Most of the modifiactor methods (incr, etc) assume that time can only go in one direction: forward. that means Events can't be added retroactively:
-
--> If you loose your redis db, you'll need to replay all recorded events in the correct chronological order. 
-
--> If the events were captured on a single machine you can just replay the logfile fnordmetric creates by default.
-
--> If the events were captured on multiple machines you need to merge and sort(!) the log-files first before they can be replayed.
-
--> If you run fnordmetric on multiple machines, you need to make shure the system clocks are in sync!
-
--> If you wan't a new query/graph for history data, you'll have to replay your logs...
+  incr_field(gauge_name, field_name, value=1): 
+    Increment the given given field on a three-dimensional gauge by value
 
 
+==== Gauge Options
 
-== TODOS
+==== Widget-Options
+
+==== Widget-Options: TimelineWidget
+
+==== Widget-Options: Numbers-Widget
+
+==== Widget-Options: ToplistWidget
+
+
+== Full Example
+
+  require "fnordmetric"
+
+  FnordMetric.namespace :myapp do
+
+    # numeric (delta) gauge, 1-hour tick
+    gauge :messages_sent, 
+      :tick => 1.hour.to_i, 
+      :title => "Messages (sent) per Hour"
+
+    # numeric (delta) gauge, 1-hour tick
+    gauge :messages_read, 
+      :tick => 1.hour.to_i, 
+      :title => "Messages (read) per Hour"
+
+    # numeric (progressive) gauge, 1-hour tick
+    gauge :events_total, 
+      :tick => 1.day.to_i, 
+      :progressive => true,
+      :title => "Events (total)"
+
+    # numeric (delta) gauge, increments uniquely by session_key
+    gauge :pageviews_daily_unique, 
+      :tick => 1.day.to_i, 
+      :unique => true, 
+      :title => "Unique Visits (Daily)"
+
+    # numeric (delta) gauge, increments uniquely by session_key, returns average
+    gauge :avg_age_per_session, 
+      :tick => 1.day.to_i, 
+      :unique => true,
+      :average => true,
+      :title => "Avg. User Age"
+
+    # three-dimensional (delta) gauge (time->key->value)
+    gauge :pageviews_per_url_daily, 
+      :tick => 1.day.to_i, 
+      :title => "Daily Pageviews per URL", 
+      :three_dimensional => true
+
+
+    # on every event like { _type: 'message_sent' }
+    event(:message_sent) do
+      # increment the messages_sent gauge by 1
+      incr :messages_sent 
+    end
+
+    # on every event like { _type: 'message_read' }
+    event(:message_read) do 
+      # increment the messages_read gauge by 1
+      incr :messages_read 
+    end
+
+    # on _every_ event
+    event :"*" do
+      # increment the events_total gauge by 1
+      incr :events_total
+    end
+
+    # on every event like { _type: '_pageview', _session: 'sbz7jset', _url: '/page2' }
+    event :_pageview do
+      # increment the daily_uniques gauge by 1 if session_key hasn't been seen in this tick yet
+      incr :pageviews_daily_unique
+      # increment the pageviews_per_url_daily gauge by 1 where key = 'page2'
+      incr_field :pageviews_per_url_daily, data[:url]
+    end
+
+   # on every event like { _type: '_pageview', my_set_age: '23' }
+    event(:my_set_age) do 
+      # add the value of my_set_age to the avg_age_per_session gauge if session_key 
+      # hasn't been seen in this tick yet
+      incr :avg_age_per_session, data[:my_age_field] 
+    end
+ 
+    # draw a timeline showing the pageviews_daily_unique, auto-refresh every 30s
+    widget 'Overview', {
+      :title => "Unique Visits per Day",
+      :type => :timeline,
+      :width => 70,
+      :gauges => :pageviews_daily_unique,
+      :include_current => true,
+      :autoupdate => 30
+    }
+
+   # draw the values of the messages_sent and messages_read gauge at the current tick, three ticks ago, and
+   # the sum of the last 10 ticks, auto-refresh every 20s
+   widget 'Overview', {
+      :title => "Messages Sent / Read",
+      :type => :numbers,
+      :width => 30,
+      :autoupdate => 20,
+      :offsets => [0,3,"10s"]
+      :gauges => [ :messages_sent, :messages_read ]
+    }
+
+    # draw a list of the most visited urls (url, visits + percentage), auto-refresh every 20s
+    widget 'Overview', {
+      :title => "Top Pages",
+      :type => :toplist,
+      :autoupdate => 20,
+      :gauges => [ :pageviews_per_url_daily ]
+    }
+
+  end
+
+  FnordMetric.standalone
+
+
+== License
+
+Copyright (c) 2011 Paul Asmuth
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to use, copy and modify copies of the Software, subject 
+to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+== Todos
 
 -> set_value
 
@@ -144,282 +299,5 @@ not yet implemented
 -> prune the namespace-event-types-list (trim to max items)
 
 -> opt_event options: :increment => gauge_name
-
-
-== License (It's free!)
-
-Copyright (c) 2011 Paul Asmuth
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to use, copy and modify copies of the Software, subject 
-to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-= Old stuff
-
-== Usage: Standalone service
-
-you can run the fnordmetric webapp as a standalone service. Your 'fnordmetric_server.rb' would propably look something like this:
-
-  require "rubygems"
-  require "fnordmetric"
-  require "thin"
-
-  FnordMetric.metric(:cars_total, :count => :true, :types => [:car_seen])
-  FnordMetric.metric(:passengers_total, :sum => :passengers, :types => [:car_seen])
-  FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :color => :red }, :types => [:car_seen]) 
-  FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :color => :blue }, :types => [:car_seen]) 
-  FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x| x.passengers_blue_car / x.passengers_red_car })
-
-  FnordMetric.dashboard 'Passengers' do |passengers| 
-     
-    passengers.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
-      :metrics => [:passengers_blue_car, :passengers_red_car], 
-      :title => "Passengers (red/blue) timeline", 
-      :type => :timeline
-    )
-    
-    passengers.add_widget FnordMetric.widget(:passengers_total_timeline, 
-      :metrics => [:cars_total, :passengers_total, :blue_to_red_ratio],
-      :title => "Cars total + Passenger total + Red/Blue Ratio", 
-      :autoupdate => true,
-      :type => :numbers
-    )
-
-  end
-
-  Mongoid.configure do |c| 
-    c.master = Mongo::Connection.new.db("myfnordmetric") 
-  end
-
-  app = FnordMetric::App.new
-  Thin::Server.start('127.0.0.1', 2323, app)
-
- 
-when run as a standalone service events can be added via a very simple (restful) http post:
-
-  POST http://myapp:port/fnordmetric/events type=car_seen&color=red&passengers=2&speed=120
-
-with curl:
-
-  curl -X POST -d "type=car_seen&color=red&passengers=2&speed=120" http://myapp:port/fnordmetric/events
-
-
-
-== Usage: From Rails/Rack
-
-you need a mongodb instance and have to configure the mongoid-gem if your app doesn't already do that:
-
-  require 'fnordmetric' 
-  Mongoid.configure{ |c| c.master = Mongo::Connection.new.db("fnordmetric_test") }
-
-
-that's all. you can start tracking data:
-  
-  FnordMetric.track('car_seen', :color => "red",  :speed => 130, :passengers => 2)
-  FnordMetric.track('car_seen', :color => "pink", :speed => 150, :passengers => 1)
-  FnordMetric.track('car_seen', :color => "red",  :speed => 65,  :passengers => 4, :time => 50.hours.ago)
-  FnordMetric.track('car_seen', :color => "blue", :speed => 100, :passengers => 2, :time => 30.hours.ago)
-  FnordMetric.track('car_seen', :color => "red",  :speed => 123, :passengers => 2)
-  FnordMetric.track('car_seen', :color => "blue", :speed => 130, :passengers => 3)
-  FnordMetric.track('car_seen', :color => "red",  :speed => 142, :passengers => 2)
-
-
-to see some shiny stats you first have to define a 'metric'. e.g. in 'config/initializers/fnordmetric.rb':
-
-  FnordMetric.metric(:colors_total,     :types => [:car_seen], :count => true, :unique => :color) 
-  FnordMetric.metric(:cars_total,       :types => [:car_seen], :count => true) 
-  FnordMetric.metric(:passengers_total, :types => [:car_seen], :sum => :passengers) 
-  FnordMetric.metric(:average_speed,    :types => [:car_seen], :average => :speed) 
-
-
-
-use combine-metrics to build your own 'indices':
-
-  FnordMetric.metric(:passengers_red_car, :sum => :passengers, :filter => { :colors => :red }, :types => [:car_seen]) 
-  FnordMetric.metric(:passengers_blue_car, :sum => :passengers, :filter => { :colors => :blue }, :types => [:car_seen]) 
-
-  FnordMetric.metric(:blue_to_red_ratio, :combine => lambda{ |x|
-    x.passengers_blue_car / x.passengers_red_car
-  })
-
-
-fnordmetric comes with javascript charting helper and a javascript dashboard app. to 
-use them you have to load a rails engine by adding this line to your routes.rb:
-
-  mount FnordMetric::App => '/fnordmetric'
-
-
-point your browser to 'myapp.com/fnordmetric' and you should see an empty dashboard. you can 
-add dashboards and widgets like this (e.g. in initializers/fnordmetric.rb):
-
-  FnordMetric.dashboard 'Passengers' do |dash|  
-
-    dash.add_widget FnordMetric.widget(:passenger_blue_red_timeline, 
-      :metrics => [:passengers_blue_car, :passengers_red_car], 
-      :title => "Passengers (red/blue)", 
-      :type => :timeline
-    )
-    
-    dash.add_widget FnordMetric.widget(:passengers_total_timeline, 
-      :metrics => :passengers_total,
-      :title => "Passenger blue/red Ratio", 
-      :type => :timeline
-    )
-
-  end
-
-
-you can also get the raw numbers in your controller or model:
-
-  report = FnordMetric.report(:range => (3.days.ago..Time.now))
-  report.colors_total.current      # => 3  
-  report.colors_total.current      # => 3
-  report.cars_total.current        # => 7
-  report.average_speed.current     # => 113.6
-  report.passengers_total.current  # => 26
-  report.colors_total.current      # => 3
-
-  report.colors_total.at(40.hours.ago)   # => 1
-  report.colors_total.at(20.hours.ago)   # => 2
-
-  report.colors_total.values  
-    => { <Date 03-10-11> => 1, <Date 04-10-11> => 2, <Date 05-10-11> => 3 }
-
-  report.colors_total.ticks
-    => [ (<Date 03-10-11 00:00:00>..<Date 03-10-11 23:59:59>), (<Date 04-10...
-   
-
-and you can render the widgets in your own views:
-
-  widget = FnordMetric.widget(
-    :passengers_red_blue_widget,
-    :title => "Passengers (red/blue)",
-    :type => :timeline,
-    :metrics => [:passengers_blue_car, :passengers_red_car],
-    :range => (14.days.ago..Time.now)
-  )
-
-  widget.render
-    => "<script type="text/javascript" src="/fnordmetric/widget.js?type=..."
-
-
-== Option Reference
-
-*FnordMetric.metric* (FnordMetric::Metric.new) 
-
-===== :count => true
-====== return the total number of events (one of count, average, sum or combine is mandatory)
-====== ~
-
-===== :average => (field)  
-====== return the avg of all "field"-values (one of count, average, sum or combine is mandatory)
-====== ~
-
-===== :sum => (field)      
-====== return the sum of all "field"-values (one of count, average, sum or combine is mandatory)
-====== ~
-
-===== :combine => (lambda) 
-====== custom accumulator (one of count, average, sum or combine is mandatory)
-====== ~
-
-===== :unique   => (field)    
-====== only consider events with unique (field)
-====== ~
-
-===== :types    => (types)    
-====== only consider events where type in types
-====== ~
-
-===== :filter   => (hash)     
-====== only consider events with fields matching (hash)
-====== ~
-
-===== :select   => (lambda)   
-====== only consider events for which (lambda) is true
-
-
-*FnordMetric.widget* (FnordMetric::Widget.new)
-
-===== :metrics  => (fnord)       
-====== foobar (mandatory)
-====== ~
-
-===== :title    => (fnord)       
-====== foobar (mandatory)
-====== ~
-
-===== :tick     => (fnord)       
-====== foobar
-====== ~
-
-===== :range    => (fnord)       
-====== foobar
-====== ~
-
-===== :current  => (fnord)       
-====== FIXME: opt is actually named :include_curent
-====== ~
-
-===== :report   => (fnord)       
-====== foobar
-====== ~
-
-*TimelineWidget* (FnordMetric::TimelineWidget.new)
-
-===== :delta   => (fnord)       
-====== foobar
-====== ~
-
-===== :chart   => (fnord)       
-====== foobar
-====== ~
-
-
-
-
-== TODO
-* metric-api: request caching
-* widget loader: hide iframe body content until css has loaded
-* timeline widget: make range input editable (+parse)
-* add mongo indices
-* default range (daily/hourly)
-* highcharts cleanup
-* numbers widget: date format
-* numbers widget: delta option
-* numbers widget: 'trend' option
-* timeline widget: timezones
-* metric-api: request caching
-* compare widget
-* funnel widget
-* widget: allow init without name (autogenerate)
-* virtual dashboard: all metrics (current+today+last week+last month) [+add metric btn]
-* add widgets/metrics via webapp?
-* auth?!
 
 
