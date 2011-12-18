@@ -86,6 +86,7 @@ var FnordMetric = (function(){
 
           if(!first_time){ 
             chart.get('series-'+gauge).setData(series_data);
+            chart.redraw();
           } else {
             chart.addSeries({name: gauge, data: series_data, id: 'series-'+gauge });     
           }       
@@ -169,12 +170,11 @@ var FnordMetric = (function(){
 
       redrawWithRange(true);
 
-      console.log(opts.autoupdate);
       if(opts.autoupdate){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
           window.setInterval(function(){
-            redrawWithRange(false, true);
+            redrawWithRange();
           }, secs*1000);
         }
       };
