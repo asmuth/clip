@@ -9,6 +9,7 @@ FnordMetric.namespace :ulikeme do
 
   gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true, :title => "Unique Visits (Daily)"
   gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true, :title => "Unique Visits (Hourly)"
+  gauge :pageviews_monthly_unique, :tick => 40.days.to_i, :unique => true, :title => "Unique Visits (Month)"
 
   gauge :messages_sent, :tick => 1.day.to_i, :title => "Messages (sent)"
   gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
@@ -27,6 +28,7 @@ FnordMetric.namespace :ulikeme do
   event :_pageview do
     incr :pageviews_daily_unique
     incr :pageviews_hourly_unique
+    incr :pageviews_monthly_unique
     incr_field :pageviews_per_url_daily, data[:url]
     incr_field :pageviews_per_url_monthly, data[:url]
   end
@@ -93,7 +95,7 @@ FnordMetric.namespace :ulikeme do
     :type => :numbers,
     :autoupdate => 20,
     :gauges => [
-      :pageviews_daily_unique, :skip_votes, :yes_votes, 
+      :pageviews_daily_unique, :pageviews_monthly_unique, :skip_votes, :yes_votes, 
       :maybe_votes, :messages_sent, :messages_read, :winks_sent,
       :mails_sent, :mails_clicked, :app_requests_sent, :app_requests_clicked,
       :app_invites_sent, :app_invites_clicked
