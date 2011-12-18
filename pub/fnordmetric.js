@@ -89,7 +89,7 @@ var FnordMetric = (function(){
               .addClass('number')
               .attr('rel', k)
               .attr('data-offset', offset)
-              .attr('data',23525)
+              .attr('data',0)
               .append(
                 $('<span></span>').addClass('desc').html(formatOffset(offset))
               )
@@ -102,10 +102,27 @@ var FnordMetric = (function(){
         opts.elem.append(container);
       }
 
-      updateValues(opts, 4);
+      updateValues(opts);
     }
 
-    function updateValues(opts, diff_factor){
+    function updateValues(opts){
+      $('.number', $(opts.elem)).each(function(){
+        var num = this;
+        var at = parseInt(new Date().getTime()/1000);
+        var url = '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
+        at -= parseInt($(this).attr('data-offset'));
+        url += '?at='+at;
+        $.get(url, function(_resp){ 
+          var resp = JSON.parse(_resp);
+          for(_k in resp){
+            $(num).attr('data', (resp[_k]||0));
+          }
+          updateDisplay(opts, 4);
+        });
+      });
+    }
+
+    function updateDisplay(opts, diff_factor){
       var still_running = false;
       $('.number', $(opts.elem)).each(function(){
         var target_val = parseFloat($(this).attr('data'));
@@ -123,7 +140,7 @@ var FnordMetric = (function(){
       });
       if(still_running){ 
         (function(df){
-          window.setTimeout(function(){ updateValues(opts, df); }, 30);
+          window.setTimeout(function(){ updateDisplay(opts, df); }, 30);
         })(diff_factor);
       }
     }
