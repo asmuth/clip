@@ -20,7 +20,7 @@ var FnordMetric = (function(){
 
   function formatTimeRange(range){
     if (range < 60){
-      return range + ' sec';
+      return parseInt(range) + ' sec';
     } else if(range<3600){
       return parseInt(range/60) + ' min';
     } else if(range==3600){
@@ -110,15 +110,15 @@ var FnordMetric = (function(){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
           window.setInterval(function(){
-            loadGauge();
+            loadGauge(false, true);
           }, secs*1000);
         }
       };
       
-      function loadGauge(gkey){
+      function loadGauge(gkey, silent){
         if(!gkey){ gkey = current_gauge; }
         current_gauge = gkey;
-        $('.toplist_inner', opts.elem).addClass('loading');
+        if(!silent){ $('.toplist_inner', opts.elem).addClass('loading'); }
         var _url = '/' + currentNamespace + '/gauge/' + gkey;
         $.get(_url, function(_resp){
           var resp = JSON.parse(_resp);
