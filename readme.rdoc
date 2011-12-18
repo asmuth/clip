@@ -49,15 +49,7 @@ This is the easiest way to submit an event:
   echo "{'_type': 'unicorn_seen'}\n" | nc localhost 1337
 
 
-== Reference
-
-==== DSL Methods
-
-  gauge
-
-  widget
-
-  event
+== Documentation
 
 ==== Example Events
 
@@ -98,6 +90,15 @@ The fast way: Add your event directly to the redis-based queue:
   redis.set("fnordmetric-event-#{my_uuid}", event)
   redis.expire("fnordmetric-event-#{my_uuid}", 60)
 
+
+
+==== DSL Methods
+
+  gauge
+
+  widget
+
+  event
 
 ==== Gauge Modifiers Methods
 
