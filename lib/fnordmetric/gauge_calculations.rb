@@ -45,6 +45,21 @@ module FnordMetric::GaugeCalculations
     end
   end
 
+  def field_values_at(time, opts={}, &block)
+    opts[:max_fields] ||= 50
+    redis.zrevrange(
+      tick_key(time), 
+      0, opts[:max_fields]-1, 
+      :withscores => true
+    ).in_groups_of(2).map do |key, val|
+      [key, calculate_value(val, time, opts, block)]
+    end
+  end
+
+  def field_values_total(time)
+    (redis.get(tick_key(time, :count))||0).to_i
+  end
+
   def redis
     @opts[:redis]
   end

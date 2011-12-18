@@ -179,4 +179,77 @@ describe FnordMetric::Gauge do
 
   end
   
+  describe "three-dim value retrival" do
+
+    before(:each) do
+      @gauge = FnordMetric::Gauge.new({
+        :tick => 10, 
+        :key_prefix => "fnordmetric-myns", 
+        :three_dimensional => true,
+        :key => "mygauge_966",
+        :redis => @redis
+      })
+      @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
+      @gauge_key = "fnordmetric-myns-gauge-mygauge_966-10-1323691200"
+      @redis.zadd(@gauge_key, 18, "fnordyblubb")  
+      @redis.zadd(@gauge_key, 23, "uberfoo")  
+      @redis.set(@gauge_key+"-count", 41)
+    end
+
+    it "should retrieve field_values at a given time" do
+      @gauge.field_values_at(1323691200).should be_a(Array)
+      @gauge.field_values_at(1323691200).length.should == 2
+      @gauge.field_values_at(1323691200)[0].should == ["uberfoo", "23"]
+      @gauge.field_values_at(1323691200)[1].should == ["fnordyblubb", "18"]
+    end
+
+    it "should retrieve the correct total count" do
+      @gauge.field_values_total(1323691200).should == 41
+    end
+
+    it "should retrieve max 50 fields per default" do
+      70.times{ |n| @redis.zadd(@gauge_key, 23, "field#{n}") }
+      @gauge.field_values_at(1323691200).should be_a(Array)
+      @gauge.field_values_at(1323691200).length.should == 50
+    end
+
+    it "should retrieve more than 50 fields if requested" do
+      70.times{ |n| @redis.zadd(@gauge_key, 23, "field#{n}") }
+      @gauge.field_values_at(1323691200, :max_fields => 60).should be_a(Array)
+      @gauge.field_values_at(1323691200, :max_fields => 60).length.should == 60
+    end
+
+    it "should retrieve all fields if requested" do
+      70.times{ |n| @redis.zadd(@gauge_key, 23, "field#{n}") }
+      @gauge.field_values_at(1323691200, :max_fields => 0).should be_a(Array)
+      @gauge.field_values_at(1323691200, :max_fields => 0).length.should == 72
+    end
+
+    it "should call the value calculation block and return the result" do
+      vals = @gauge.field_values_at(1323691200){ |v| v.to_i + 123 }
+      vals.should be_a(Array)
+      vals.length.should == 2
+      vals[0].should == ["uberfoo", 146]
+      vals[1].should == ["fnordyblubb", 141]
+    end
+
+    it "should return the correct field_values per session with avg" do
+      @redis.set(@gauge_key+"-sessions-count", "3")
+      @gauge = FnordMetric::Gauge.new({
+        :tick => 10, 
+        :key_prefix => "fnordmetric-myns", 
+        :three_dimensional => true,
+        :unique => true,
+        :average => true,
+        :key => "mygauge_966",
+        :redis => @redis
+      })
+      vals = @gauge.field_values_at(1323691200)
+      vals.should be_a(Array)
+      vals.length.should == 2
+      vals[0].should == ["uberfoo", 23/3.0]
+      vals[1].should == ["fnordyblubb", 18/3.0]
+    end
+
+  end
 end

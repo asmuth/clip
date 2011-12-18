@@ -23,6 +23,7 @@ describe "app" do
         widget 'Blubb', nil
 
         gauge :testgauge, :tick => 1.hour.to_i, :progressive => true
+        gauge :test3gauge, :tick => 1.hour.to_i, :three_dimensional => true
 
       }
     }, @opts)
@@ -456,5 +457,24 @@ describe "app" do
 
   end
 
+  describe "three-dim gauges api" do
+
+    before(:all) do
+      @redis.keys("fnordmetric-foospace*").each { |k| @redis.del(k) }  
+      gauge_key = "fnordmetric-foospace-gauge-test3gauge-#{1.hour.to_i}-1323691200"
+      @redis.zadd(gauge_key, 18, "fnordyblubb")  
+      @redis.zadd(gauge_key, 23, "uberfoo")  
+      @redis.set(gauge_key+"-count", 41)
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp" do      
+      get "/foospace/gauge/test3gauge?at=1323691205"
+      JSON.parse(last_response.body)["count"].to_i.should == 41
+      JSON.parse(last_response.body)["values"].length.should == 2
+      JSON.parse(last_response.body)["values"][0].should == ["ubefoo", 23]
+      JSON.parse(last_response.body)["values"][1].should == ["fnordyblubb", 18]
+    end
+
+  end
 
 end

@@ -61,7 +61,10 @@ class FnordMetric::App < Sinatra::Base
 
     gauge = current_namespace.gauges.fetch(params[:name].intern)
 
-    data = if params[:at] && params[:at] =~ /^[0-9]+$/
+    data = if gauge.three_dimensional?
+      _t = (params[:at] || Time.now).to_i
+      
+    elsif params[:at] && params[:at] =~ /^[0-9]+$/
       { (_t = gauge.tick_at(params[:at].to_i)) => gauge.value_at(_t) }
     elsif params[:at] && params[:at] =~ /^([0-9]+)-([0-9]+)$/
       _range = params[:at].split("-").map(&:to_i)

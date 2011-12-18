@@ -35,6 +35,10 @@ class FnordMetric::Gauge
     !@opts[:three_dimensional]
   end
 
+  def three_dimensional?
+    !!@opts[:three_dimensional]
+  end
+
   def progressive?
     !!@opts[:progressive]
   end
