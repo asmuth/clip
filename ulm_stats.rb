@@ -114,13 +114,7 @@ FnordMetric.namespace :ulikeme do
   widget 'UserActivity', {
     :title => "Messages sent/read",
     :type => :timeline,
-    :gauges => [:messages_sent, :messages_read]
-  }
-
-  widget 'UserActivity', {
-    :title => "Winks sent",
-    :type => :timeline,
-    :gauges => [:winks_sent]
+    :gauges => [:messages_sent, :messages_read, :winks_sent]
   }
 
   widget 'UserActivity', {
