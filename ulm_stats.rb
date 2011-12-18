@@ -86,7 +86,7 @@ FnordMetric.namespace :ulikeme do
     :width => 30,
     :gauges => :events_per_minute,
     :include_current => true,
-    :autoupdate => 5
+    :autoupdate => 30
   }
 
   widget 'TrafficChannels', {
