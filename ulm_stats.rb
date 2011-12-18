@@ -15,9 +15,21 @@ FnordMetric.namespace :ulikeme do
   gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
   gauge :winks_sent, :tick => 1.day.to_i, :title => "Winks sent"
 
+  gauge :pageviews_per_url_daily, 
+    :tick => 1.day.to_i, 
+    :title => "Daily Pageviews per URL", 
+    :three_dimensional => true
+
+  gauge :pageviews_per_url_monthly, 
+    :tick => 30.days.to_i, 
+    :title => "Monthly Pageviews per URL", 
+    :three_dimensional => true
+
   event :_pageview do
     incr :pageviews_daily_unique
     incr :pageviews_hourly_unique
+    incr_field :pageviews_per_url_daily, data[:url]
+    incr_field :pageviews_per_url_monthly, data[:url]
   end
 
   event(:action_wink){ incr :winks_sent }
@@ -55,6 +67,7 @@ FnordMetric.namespace :ulikeme do
   gauge :rockyou1_ppis, :tick => 1.day.to_i, :title => "RockYou (12/11): Paid Installs"
   gauge :rockyou1_requests, :tick => 1.day.to_i, :title => "RockYou (12/11): Invites sent"
   gauge :rockyou1_refs, :tick => 1.day.to_i, :title => "RockYou (12/11): Ref. Installs"
+
 
 
 
