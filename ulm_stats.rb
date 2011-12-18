@@ -75,7 +75,7 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "Unique Visits per Day",
     :type => :timeline,
-    :width => 65,
+    :width => 67,
     :gauges => :pageviews_daily_unique,
     :include_current => true,
     :autoupdate => 30
@@ -84,7 +84,7 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "Unique Visits per Hour",
     :type => :timeline,
-    :width => 35,
+    :width => 33,
     :gauges => :pageviews_hourly_unique,
     :include_current => true,
     :autoupdate => 30
@@ -93,6 +93,7 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "uLikeMe Key Metrics",
     :type => :numbers,
+    :width => 67,
     :autoupdate => 20,
     :gauges => [
       :pageviews_daily_unique, :pageviews_monthly_unique, :skip_votes, :yes_votes, 
@@ -105,9 +106,27 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "RockYou Campaign (12/11) Metrics",
     :type => :numbers,
+    :width => 33,
     :autoupdate => 20,
     :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
   }
+
+  widget 'Overview', {
+    :title => "User-Activity",
+    :type => :timeline,
+    :width => 67,
+    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
+  }
+
+  widget 'Overview', {
+    :title => "Top Pages",
+    :type => :toplist,
+    :autoupdate => 20,
+    :width => 33,
+    :gauges => [ :pageviews_per_url_daily, :pageviews_per_url_monthly ]
+  }
+
+
 
 
   # user activity
