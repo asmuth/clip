@@ -1,6 +1,6 @@
 = FnordMetric
 
-FnordMetric is a highly configurable realtime app tracking thing. (You define your own plotting and counting functions as ruby blocks!)
+FnordMetric is a highly configurable (and pretty fast) realtime app/event tracking thing based on ruby eventmachine and redis. You define your own plotting and counting functions as ruby blocks!
 
 {<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
 
