@@ -417,37 +417,35 @@ describe "app" do
     before(:all) do
       @redis.keys("fnordmetric-foospace*").each { |k| @redis.del(k) }  
       gauge_key = "fnordmetric-foospace-gauge-testgauge-#{1.hour.to_i}"
-      @redis.hset(gauge_key, (Time.now.to_i/1.hour.to_i.to_f).floor*1.hour.to_i, "18")  
-      @redis.hset(gauge_key, 1323691200, "23")  
-      
-    end
-
-    it "should return the right answer for: /gauge/:name" do      
-      get "/foospace/gauge/testgauge"
-      JSON.parse(last_response.body).first.last.to_i.should == 18      
+      @redis.hset(gauge_key, 1323687600, "18")  
+      @redis.hset(gauge_key, 1323691200, "23")
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp" do      
-      get "/foospace/gauge/testgauge?at=1323694799", :at => 18.hours.ago.to_i.to_s
+      get "/foospace/gauge/testgauge?at=1323691205"
+      JSON.parse(last_response.body).first.last.to_i.should == 23
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp" do      
+      get "/foospace/gauge/testgauge?at=1323691200"
       JSON.parse(last_response.body).first.last.to_i.should == 23
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
-      get "/foospace/gauge/testgauge?at=1323694801-1323694861", :at => 18.hours.ago.to_i.to_s
-      JSON.parse(last_response.body).first.last.to_i.should == 23
+      get "/foospace/gauge/testgauge?at=1323691200-1323691205"
+      JSON.parse(last_response.body).first.last.to_i.should == 18
+    end
+
+    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
+      get "/foospace/gauge/testgauge?at=1323691201-1323695205"
+      JSON.parse(last_response.body).keys.length
     end
 
     it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
       get "/foospace/gauge/testgauge?at=1323691199-1323691201", :at => 18.hours.ago.to_i.to_s
-      JSON.parse(last_response.body).first.last.to_i.should == 18
-    end
-
-    it "should return the right answer for: /metric/:name?at=timestamp-timstamp" do  
-      get "/foospace/gauge/testgauge?at=1323691199-1323694861", :at => 18.hours.ago.to_i.to_s
-      JSON.parse(last_response.body).first.first.should == "1323691200"
-      JSON.parse(last_response.body).first.last.to_i.should == 18
-      JSON.parse(last_response.body).last.first.should == "1323694800"
-      JSON.parse(last_response.body).last.last.to_i.should == 23
+      JSON.parse(last_response.body).keys.length.should == 2
+      JSON.parse(last_response.body)["1323687600"] == 18
+      JSON.parse(last_response.body)["1323691200"] == 23
     end
 
   end

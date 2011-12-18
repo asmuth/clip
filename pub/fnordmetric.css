@@ -24,14 +24,35 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 .widget{ min-height:100px; border-right:1px solid #ececec; float:left; }
 .widget.full_width{ border-right:none; }
 .widget .inner{ margin:20px; }
-.widget .headbar{ margin-bottom:30px; }
+/*.widget .headbar{ margin-bottom:30px; }*/
 
-/*
-.headbar{ height:36px; background:#f2f2f2; border-bottom:1px solid #e2e2e2; }
-.headbar h2{ margin:8px; line-height:21px; float:left; height:20px; font-size:14px; }
-.headbar .datepicker{ background:#fff; border:1px solid #999; height:20px; padding:0 7px; float:right; margin:8px -1px; min-width:100px; font-size:11px; font-style:italic; }
-.headbar .button.mr{ margin-right:16px;  }
 
+.headbar {
+  height:36px;
+background-color: #F4F4F4;
+background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e9e9e9));
+background-image: -webkit-linear-gradient(top, #f4f4f4, #e9e9e9);
+background-image: -moz-linear-gradient(top, #f4f4f4, #e9e9e9);
+background-image: -ms-linear-gradient(top, #f4f4f4, #e9e9e9);
+background-image: -o-linear-gradient(top, #f4f4f4, #e9e9e9);
+background-image: linear-gradient(top, #f4f4f4, #e9e9e9);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f4f4f4', EndColorStr='#e9e9e9');
+padding: 0 15px;
+border-bottom: 1px solid #C9C9C9;
+border-top: 1px solid #F9F9F9;
+font-size:13px;
+line-height:29px;
+text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
+-moz-text-shadow: 1px 0px 2px rgba(255,255,255,1);
+-webkit-text-shadow: 1px 0px 2px rgba(255,255,255,1);
+  overflow:hidden;
+}
+
+.headbar.small{ height:29px; }
+
+.headbar h2{ margin:7px 5px; line-height:21px; float:left; height:20px; font-size:14px; }
+.headbar .datepicker{ background:#fff; border:1px solid #999; height:20px; padding:0 7px; float:right; margin:8px -1px; min-width:100px; font-size:11px; font-style:italic; line-height:21px; }
+.headbar .button.mr{ margin-right:16px; }
 
 .headbar .button{
   margin:8px 0px; height:16px; float:right; display:block;
@@ -53,7 +74,8 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 }
 
 .headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
-*/
+
+
 .numbers_container, .number{ float:left; border-right:1px solid #ececec; }
 .number{ margin-left:12px; padding-right:20px; margin-right:10px; }
 .number .value{ color:#333; font-size:30px; display:block; margin-bottom:5px; }
@@ -62,27 +84,6 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 .numbers_container{ padding-right:0px; width:33.2%; }
 
 .numbers_container .title{ padding:4px 10px 1px 10px; color:#333; font-size:13px; display:block; background:#f2f2f2; border-bottom:1px solid #e2e2e2; margin-bottom:15px; }
-
-
-.headbar {
-background-color: #F4F4F4;
-background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e9e9e9));
-background-image: -webkit-linear-gradient(top, #f4f4f4, #e9e9e9);
-background-image: -moz-linear-gradient(top, #f4f4f4, #e9e9e9);
-background-image: -ms-linear-gradient(top, #f4f4f4, #e9e9e9);
-background-image: -o-linear-gradient(top, #f4f4f4, #e9e9e9);
-background-image: linear-gradient(top, #f4f4f4, #e9e9e9);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f4f4f4', EndColorStr='#e9e9e9');
-padding: 0 15px;
-border-bottom: 1px solid #C9C9C9;
-border-top: 1px solid #F9F9F9;
-height: 28px;
-font-size:13px;
-line-height:29px;
-text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
--moz-text-shadow: 1px 0px 2px rgba(255,255,255,1);
--webkit-text-shadow: 1px 0px 2px rgba(255,255,255,1);
-}
 
 
 ul.session_list{ list-style-type:none; margin:0; padding:9px 16px 0 11px; }
@@ -118,3 +119,4 @@ ul.event_type_list li .history:hover{ color:#333; text-decoration:underline; }
   height: 0;
 }
  
+.highcharts-series circle{ stroke-width:1px; }

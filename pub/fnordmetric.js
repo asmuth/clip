@@ -4,6 +4,7 @@ var FnordMetric = (function(){
 
   var currentNamespace = false;
   var currentView = false;
+  var currentWidgetUID=23;
 
   function decPrint(val){
     return (val < 10 ? '0'+val : val);
@@ -31,10 +32,16 @@ var FnordMetric = (function(){
     }
   }
 
-  var numbersWidget = function(opts){
+  function getNextWidgetUID(){
+    return (currentWidgetUID += 1);
+  }
+
+  var numbersWidget = function(){
     
-    function render(){
-      console.log(opts);
+    function render(opts){
+      opts.elem.append(
+        $('<div class="headbar small"></div>').html('Fnordbar!')
+      );
     }
 
     return {
@@ -43,123 +50,130 @@ var FnordMetric = (function(){
 
   };
 
-  var timelineWidget = function(opts){
+  var timelineWidget = function(){
     
-    function render(){
+    function render(opts){
+      
+      var widget_uid = getNextWidgetUID();
+      var chart=false;
+      var max_y=0;
 
-      var labels = opts.labels;
-      var series = opts.series;
-
-      var elem_id = "fm_graph_"+parseInt(Math.random()*99999);
-      var elem_inner = $('.inner', opts.elem);
-      elem_inner.append($('<div id="'+elem_id+'"></div>'));
-
-      var width = elem_inner.width();
-      var height = 240;
-      var canvas = Raphael(elem_id, width, height+30);
-      var xtick = width / (labels.length-1);
-
-      var label_mod = Math.ceil((labels.length/10));
-
-      if(opts.independent_y_axis){
-        var max = false;  
-      } else {
-        var amax = [];   
-        $(series).each(function(n,_series){
-          amax.push(Math.max.apply(Math, _series.data));
+      function redrawWithRange(first_time, silent){
+        if(!silent){ $(opts.elem).css('opacity', 0.5); }
+        redrawDatepicker();    
+        var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;    
+        chart.series = [];
+        //metrics_completed = 0;
+        $(opts.gauges).each(function(i,gauge){
+          $.ajax({
+            url: '/'+currentNamespace+'/gauge/'+gauge+_query, 
+            success: redrawGauge(first_time, gauge)
+          });         
         });
-        var max = Math.max.apply(Math, amax);
       }
 
-      $(series).each(function(n,_series){
+      function redrawGauge(first_time, gauge){
+        return (function(json){                   
+          var raw_data = JSON.parse(json);
+          var series_data = [];
 
-        //var path_string = "M0,"+height;
-        var path_string = "";
-        var _max = max;
-
-        if(!_max){ _max = Math.max.apply(Math, _series.data); }
-        
-        _max = _max * 1.1;
-
-        $(_series.data).each(function(i,v){    
-
-          var p_x = (i*xtick);
-          var p_y = (height-((v/_max)*height));
-            
-          path_string += ( ( i == 0 ? "M" : "L" ) + p_x + ',' + p_y );
-
-          if(i%label_mod==0){
-            canvas.text(p_x, height+10, labels[i]).attr({
-              font: '10px Helvetica, Arial', 
-              fill: "#777"
-            });
+          for(p in raw_data){ 
+            series_data.push([parseInt(p)*1000, raw_data[p]||0]); 
+            max_y = Math.max(max_y, raw_data[p]);
           }
+        
+          chart.yAxis[0].setExtremes(0,max_y);
 
-          canvas.circle(p_x, p_y, 4).attr({
-            fill: _series.color,
-            stroke: '#fff',
-            "stroke-width": 1, 
-          }).toBack();
+          if(!first_time){ 
+            chart.get('series-'+gauge).setData(series_data);
+          } else {
+            chart.addSeries({name: gauge, data: series_data, id: 'series-'+gauge });     
+          }       
 
-
-          var htrgt = canvas.rect(p_x - 20, p_y - 20, 40, 40).attr({
-            stroke: "none", 
-            fill: "#fff", 
-            opacity: 0
-          }).toFront();
-
-          (function(htrgt){
-
-            var t_y = p_y + 9;
-            var ttt = canvas.text(p_x, t_y+10, v).attr({
-              font: '12px Helvetica, Arial',
-              fill: "#fff",
-              opacity: 0
-            });
-            
-            var tttb = ttt.getBBox();
-            var ttw = tttb.width+20;
-            var tt = canvas.rect(p_x-(ttw/2), t_y, ttw, 22, 5).attr({
-              stroke: "none",
-              fill: "#000",
-              opacity: 0
-            }).toBack();
-
-
-            $(htrgt[0]).hover(function(){
-              tt.animate({ opacity: 0.8 }, 300);
-              ttt.animate({ opacity: 0.8 }, 300);
-            }, function(){
-              tt.animate({ opacity: 0 }, 300);
-              ttt.animate({ opacity: 0 }, 300);
-            });
-
-          })(htrgt);
-
+          // shown on the *first* gauge load
+          $(opts.elem).css('opacity', 1);
         });
+      }
 
-        if(_max>0){
+      function redrawDatepicker(){
+        $('.datepicker').html(
+          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) + 
+          '&nbsp;&dash;&nbsp;' +
+          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000) 
+        );
+      }
 
-          canvas.path(path_string).attr({
-            stroke: _series.color, 
-            "stroke-width": 3, 
-            "stroke-linejoin": 'round'
-          }).toBack(); 
+      function moveRange(direction){
+        v = opts.tick*direction*8;
+        opts.start_timestamp += v;
+        opts.end_timestamp += v;
+        redrawWithRange();
+      }
+      
+      function drawLayout(){
+        $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
+          $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
+            function(){ redrawWithRange(); }
+          )
+        ).append(
+          $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
+            function(){ moveRange(1); }
+          )
+        ).append(
+          $('<div></div>').attr('class', 'datepicker')
+        ).append(
+          $('<div></div>').attr('class', 'button').append($('<span></span>').html('&larr;')).click(
+            function(){ moveRange(-1); }
+          )
+        ).append(
+          $('<h2></h2>').html(opts.title)
+        ) ).append( $('<div></div>').attr('id', 'container-'+widget_uid) );
+      }
 
-          path_string += "L"+width+","+height+" L0,"+height+" Z";
+      function drawChart(){
+        chart = new Highcharts.Chart({     
+          chart: { renderTo: 'container-'+widget_uid, defaultSeriesType: 'line', height: 270 },
+          series: [],
+          title: { text: '' },
+          xAxis: {       
+            type: 'datetime',
+            tickInterval: opts.tick * 1000, 
+            title: (opts.x_title||''), 
+            labels: { step: 2 } 
+          },
+          yAxis: { 
+            title: (opts.y_title||''),
+            min: 0,
+            max: 1000
+          },
+          legend: {
+            layout: 'horizontal',
+            align: 'top',
+            verticalAlign: 'top',
+            x: -5,
+            y: -3,
+            margin: 25,
+            borderWidth: 0
+          },
+          plotOptions: {
+            line: {
+              shadow: false,
+              lineWidth: 3
+            }
+          }
+        });
+      }
 
-          canvas.path(path_string).attr({
-            stroke: "none", 
-            fill: _series.color, 
-            opacity: 0.1
-          }).toBack();
+      drawLayout();
+      drawChart();
 
-        }
-       
+      redrawWithRange(true);
 
-      });
-
-      canvas.drawGrid(0, 0, width, height, 1, 6, "#ececec");
+      //if(widget_config.autoupdate){
+      //  window.setInterval(function(){
+      //    redrawWithRange(false, true);
+      //  }, 3000);
+      // }
 
     }
 
@@ -175,13 +189,13 @@ var FnordMetric = (function(){
     var feedInnerElem = $('<ul class="feed_inner"></ul>');
     var typeListElem  = $('<ul class="event_type_list"></ul>');
     var filterElem = $('<div class="events_sidebar"></div>').html(
-      $('<div class="headbar"></div>').html('Event Types')
+      $('<div class="headbar small"></div>').html('Event Types')
     ).append(typeListElem);
     var feedElem = $('<div class="sessions_feed"></div>').html(
-      $('<div class="headbar"></div>').html('Event Feed')
+      $('<div class="headbar small"></div>').html('Event Feed')
     ).append(feedInnerElem);
     var sideElem = $('<div class="sessions_sidebar"></div>').html(
-      $('<div class="headbar"></div>').html('Active Users')
+      $('<div class="headbar small"></div>').html('Active Users')
     ).append(listElem);
 
     var eventsPolledUntil = false;
@@ -453,11 +467,7 @@ var FnordMetric = (function(){
     function renderWidgets(_widgets){
       for(wkey in _widgets){
         var widget = _widgets[wkey];
-        widget["elem"] = $('<div class="widget"></div>').append(
-          $('<div class="headbar"></div>').html(widget.title)
-        ).append(
-          $('<div class="inner"></div>')
-        );
+        widget["elem"] = $('<div class="widget"></div>');
         widgets[wkey] = widget;
         viewport.append(widget.elem);
         resizeWidget(wkey);
@@ -469,8 +479,8 @@ var FnordMetric = (function(){
     function renderWidget(wkey){
       var widget = widgets[wkey];
       /* argh... */
-      if(widget.klass=='TimelineWidget'){ timelineWidget(widget).render(); }
-      if(widget.klass=='NumbersWidget'){ numbersWidget(widget).render(); }
+      if(widget.klass=='TimelineWidget'){ timelineWidget().render(widget); }
+      if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
     };
 
     function resizeWidget(wkey){

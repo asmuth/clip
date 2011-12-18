@@ -47,4 +47,12 @@ class FnordMetric::Gauge
     @opts[:redis] = _redis
   end
 
+  def ticks_in(r)
+    (((r.last-r.first)/tick.to_f).ceil+1).times.map{ |n| tick_at(r.first + tick*(n-1)) }
+  end
+
+  def values_in(range)
+    values_at(ticks_in(range))
+  end
+
 end
