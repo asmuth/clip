@@ -11,7 +11,7 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
       gauges.each do |g|
         hash[g.name] = {
           :tick => g.tick,
-          :title => g.name
+          :title => g.title
         }
       end
     end

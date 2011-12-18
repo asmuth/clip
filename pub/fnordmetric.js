@@ -73,8 +73,8 @@ var FnordMetric = (function(){
       });
 
       for(k in opts.gauges){
-        var title = 'External Backlinks';
         var gtick = opts.gauges[k].tick;
+        var gtitle = opts.gauges[k].title;
         //console.log(gtick);
         var offsets = [0, gtick];
         var container = $('<div></div>')
@@ -83,7 +83,7 @@ var FnordMetric = (function(){
           .append(
             $('<div></div>')
               .addClass('title')
-              .html(title)
+              .html(gtitle)
           );
         
         $(offsets).each(function(n, offset){
