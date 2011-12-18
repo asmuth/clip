@@ -109,9 +109,14 @@ var FnordMetric = (function(){
       if(opts.autoupdate){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
-          window.setInterval(function(){
+
+          var autoupdate_interval = window.setInterval(function(){
             loadGauge(false, true);
           }, secs*1000);
+
+          $('body').bind('fm_dashboard_close', function(){
+            window.clearInterval(autoupdate_interval);
+          });  
         }
       };
       
@@ -206,10 +211,17 @@ var FnordMetric = (function(){
       if(opts.autoupdate){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
-          window.setInterval(function(){
+
+          var autoupdate_interval = window.setInterval(function(){
             updateValues(opts);
           }, secs*1000);
+
+          $('body').bind('fm_dashboard_close', function(){
+            window.clearInterval(autoupdate_interval);
+          });  
+
         }
+
       };
 
       updateValues(opts);
@@ -399,9 +411,15 @@ var FnordMetric = (function(){
       if(opts.autoupdate){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
-          window.setInterval(function(){
+
+          var autoupdate_interval = window.setInterval(function(){
             redrawWithRange(false, true);
           }, secs*1000);
+
+          $('body').bind('fm_dashboard_close', function(){
+            window.clearInterval(autoupdate_interval);
+          });  
+
         }
       };
 
@@ -731,7 +749,7 @@ var FnordMetric = (function(){
     };
 
     function close(){
-      
+      $('body').trigger('fm_dashboard_close');  
     };
 
     return {
