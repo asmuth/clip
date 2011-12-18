@@ -63,7 +63,7 @@ class FnordMetric::App < Sinatra::Base
 
     data = if gauge.three_dimensional?
       _t = (params[:at] || Time.now).to_i
-      
+      { :count => gauge.field_values_total(_t), :values => gauge.field_values_at(_t) }
     elsif params[:at] && params[:at] =~ /^[0-9]+$/
       { (_t = gauge.tick_at(params[:at].to_i)) => gauge.value_at(_t) }
     elsif params[:at] && params[:at] =~ /^([0-9]+)-([0-9]+)$/

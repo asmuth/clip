@@ -121,8 +121,6 @@ not yet implemented
 
 == TODOS
 
--> gauge-api for three-dim gauges
-
 -> toplist-widget
 
 -> set_value
