@@ -40,7 +40,7 @@ var FnordMetric = (function(){
     
     function render(opts){
       opts.elem.append(
-        $('<div class="headbar small"></div>').html('Fnordbar!')
+        $('<div class="headbar small"></div>').html(opts.title)
       );
     }
 
@@ -174,7 +174,7 @@ var FnordMetric = (function(){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
           window.setInterval(function(){
-            redrawWithRange();
+            redrawWithRange(false, true);
           }, secs*1000);
         }
       };
@@ -458,7 +458,6 @@ var FnordMetric = (function(){
 
     function load(_viewport){
       viewport = _viewport.html('');
-      /*alert('yay, new dashboard view loaded: ' + dashboard_name);*/
       $.ajax({
         url: '/'+currentNamespace+'/dashboard/'+dashboard_name,
         success: function(resp, status){
