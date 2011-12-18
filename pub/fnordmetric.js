@@ -75,7 +75,7 @@ var FnordMetric = (function(){
       });
 
       for(k in opts.gauges){
-        var gtick = opts.gauges[k].tick;
+        var gtick = parseInt(opts.gauges[k].tick);        
         var gtitle = opts.gauges[k].title;
         //console.log(gtick);
         var container = $('<div></div>')
@@ -90,14 +90,24 @@ var FnordMetric = (function(){
 
         
         $(opts.offsets).each(function(n, offset){
+          var _off, _nextoff, _sum;
+          if (offset[0]=="s"){
+            _off = 0;
+            _sum = _nextoff = (gtick * parseInt(offset.slice(1)));
+          } else {
+            _sum = 0;
+            _off = offset*gtick;
+            _nextoff = gtick;  
+          }          
           container.append(
             $('<div></div>')
               .addClass('number')
               .attr('rel', k)
-              .attr('data-offset', offset*gtick)
+              .attr('data-offset', _off)
+              .attr('data-sum', _sum)
               .attr('data',0)
               .append(
-                $('<span></span>').addClass('desc').html(formatOffset(offset*gtick, gtick))
+                $('<span></span>').addClass('desc').html(formatOffset(_off, _nextoff))
               )
               .append(
                 $('<span></span>').addClass('value').html(0)
@@ -125,11 +135,17 @@ var FnordMetric = (function(){
       var values = $('.number', $(opts.elem));
       var values_pending = values.length;
       values.each(function(){
+        var _sum = parseInt($(this).attr('data-sum'));
         var num = this;
         var at = parseInt(new Date().getTime()/1000);
         var url = '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
-        at -= parseInt($(this).attr('data-offset'));
-        url += '?at='+at;
+        if(_sum > 0){
+          url += '?at='+at+'-'+(at-_sum)+'&sum=true';
+        } else {
+          at -= parseInt($(this).attr('data-offset'));
+          url += '?at='+at;
+        }
+        
         $.get(url, function(_resp){ 
           var resp = JSON.parse(_resp);
           for(_k in resp){
