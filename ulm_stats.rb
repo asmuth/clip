@@ -4,16 +4,16 @@ require "fnordmetric"
 # todos: legende, numbers widget, yscale
 FnordMetric.namespace :ulikeme do
 
-  gauge :skip_votes, :tick => 1.day.to_i
-  gauge :yes_votes, :tick => 1.day.to_i
-  gauge :maybe_votes, :tick => 1.day.to_i
+  gauge :skip_votes, :tick => 1.day.to_i, :title => "Skip-Votes"
+  gauge :yes_votes, :tick => 1.day.to_i, :title => "Yes-Votes"
+  gauge :maybe_votes, :tick => 1.day.to_i, :title => "Maybe-Votes"
 
-  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true
-  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true
+  gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true, :title => "Pageviews (Daily)"
+  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true, :title => "Pageviews (Hourly)"
 
-  gauge :messages_sent, :tick => 1.day.to_i
-  gauge :messages_read, :tick => 1.day.to_i
-  gauge :winks_sent, :tick => 1.day.to_i
+  gauge :messages_sent, :tick => 1.day.to_i, :title => "Messages (sent)"
+  gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
+  gauge :winks_sent, :tick => 1.day.to_i, :title => "Winks sent"
 
   event :_pageview do
     incr :pageviews_daily_unique
@@ -33,18 +33,18 @@ FnordMetric.namespace :ulikeme do
   event(:action_maybe){ incr :maybe_votes }
 
 
-  gauge :mails_sent, :tick => 1.day.to_i
-  gauge :mails_clicked, :tick => 1.day.to_i
+  gauge :mails_sent, :tick => 1.day.to_i, :title => "Mails (sent)"
+  gauge :mails_clicked, :tick => 1.day.to_i, :title => "Mails (clicked)"
 
   event(:mail_sent){ incr :mails_sent }
   event(:mail_clicked){ incr :mails_clicked }
 
 
-  gauge :app_requests_sent, :tick => 1.day.to_i
-  gauge :app_requests_clicked, :tick => 1.day.to_i
+  gauge :app_requests_sent, :tick => 1.day.to_i, :title => "App-Requests (sent)"
+  gauge :app_requests_clicked, :tick => 1.day.to_i, :title => "App-Requests (clicked)"
 
-  gauge :app_invites_sent, :tick => 1.day.to_i
-  gauge :app_invites_clicked, :tick => 1.day.to_i
+  gauge :app_invites_sent, :tick => 1.day.to_i, :title => "App-Invites (sent)"
+  gauge :app_invites_clicked, :tick => 1.day.to_i, :title => "App-Invites (clicked)"
 
   event(:app_request_sent){ incr :app_requests_sent }
   event(:app_request_click){ incr :app_requests_clicked }
@@ -52,9 +52,9 @@ FnordMetric.namespace :ulikeme do
   event(:app_invite_sent){ incr :app_invites_sent }
   event(:app_invite_click){ incr :app_invites_clicked }
 
-  gauge :rockyou1_ppis, :tick => 1.day.to_i
-  gauge :rockyou1_requests, :tick => 1.day.to_i
-  gauge :rockyou1_refs, :tick => 1.day.to_i
+  gauge :rockyou1_ppis, :tick => 1.day.to_i, :title => "RockYou 11/12 (Paid Installs)"
+  gauge :rockyou1_requests, :tick => 1.day.to_i, :title => "RockYou 11/12 (Invites sent)"
+  gauge :rockyou1_refs, :tick => 1.day.to_i, :title => "RockYou 11/12 (Ref. Installs)"
 
 
 
