@@ -93,22 +93,12 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "uLikeMe Key Metrics",
     :type => :numbers,
-    :width => 67,
+    :width => 100,
     :autoupdate => 20,
     :gauges => [
-      :pageviews_daily_unique, :pageviews_monthly_unique, :skip_votes, :yes_votes, 
-      :maybe_votes, :messages_sent, :messages_read, :winks_sent,
-      :mails_sent, :mails_clicked, :app_requests_sent, :app_requests_clicked,
+      :pageviews_daily_unique, :pageviews_monthly_unique, :app_requests_sent, :app_requests_clicked, :mails_sent, :mails_clicked,
       :app_invites_sent, :app_invites_clicked
     ]
-  }
-
-  widget 'Overview', {
-    :title => "RockYou Campaign (12/11) Metrics",
-    :type => :numbers,
-    :width => 33,
-    :autoupdate => 20,
-    :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
   }
 
   widget 'Overview', {
@@ -127,6 +117,24 @@ FnordMetric.namespace :ulikeme do
   }
 
 
+  widget 'Overview', {
+    :title => "uLikeMe User Metrics",
+    :type => :numbers,
+    :width => 67,
+    :autoupdate => 20,
+    :gauges => [
+      :skip_votes, :yes_votes, 
+      :maybe_votes, :winks_sent, :messages_sent, :messages_read, 
+    ]
+  }
+
+  widget 'Overview', {
+    :title => "RockYou Campaign (12/11) Metrics",
+    :type => :numbers,
+    :width => 33,
+    :autoupdate => 20,
+    :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
+  }
 
 
   # user activity
