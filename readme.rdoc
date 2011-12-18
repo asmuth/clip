@@ -15,7 +15,7 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 
 == Basic Example
 
-This will listen on TCP#1337 and HTTP#4242 for json-events with type=unicorn_seen and draw the number of received events per hour on a timeline-plot with 1-hour-ticks:
+This will listen for json-events with type=unicorn_seen and render a timeline-plot showing the number of received events per hour.
 
  require "fnordmetric"
 
@@ -46,7 +46,7 @@ This will listen on TCP#1337 and HTTP#4242 for json-events with type=unicorn_see
 
 This is the easiest way to submit an event:
 
-  echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 2323
+  echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 1337
 
 ==  Events
 
