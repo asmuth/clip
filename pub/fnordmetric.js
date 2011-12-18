@@ -107,11 +107,23 @@ var FnordMetric = (function(){
         opts.elem.append(container);
       }
 
+      if(opts.autoupdate){
+        var secs = parseInt(opts.autoupdate);
+        if(secs > 0){
+          window.setInterval(function(){
+            updateValues(opts);
+          }, secs*1000);
+        }
+      };
+
       updateValues(opts);
+      
     }
 
     function updateValues(opts){
-      $('.number', $(opts.elem)).each(function(){
+      var values = $('.number', $(opts.elem));
+      var values_pending = values.length;
+      values.each(function(){
         var num = this;
         var at = parseInt(new Date().getTime()/1000);
         var url = '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
@@ -122,7 +134,9 @@ var FnordMetric = (function(){
           for(_k in resp){
             $(num).attr('data', (resp[_k]||0));
           }
-          updateDisplay(opts, 4);
+          if((values_pending -= 1)==0){
+            updateDisplay(opts, 4);
+          }
         });
       });
     }

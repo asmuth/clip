@@ -2,7 +2,8 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
 
   def data
     super.merge(
-      :gauges => data_gauges
+      :gauges => data_gauges,
+      :autoupdate => (@opts[:autoupdate] || 0)
     )
   end
 

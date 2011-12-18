@@ -79,6 +79,7 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "uLikeMe Key Metrics",
     :type => :numbers,
+    :autoupdate => 20,
     :gauges => [
       :pageviews_daily_unique, :skip_votes, :yes_votes, 
       :maybe_votes, :messages_sent, :messages_read, :winks_sent,
@@ -90,6 +91,7 @@ FnordMetric.namespace :ulikeme do
   widget 'Overview', {
     :title => "RockYou Campaign (12/11) Metrics",
     :type => :numbers,
+    :autoupdate => 20,
     :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
   }
 
