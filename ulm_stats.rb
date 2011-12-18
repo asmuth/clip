@@ -57,28 +57,54 @@ FnordMetric.namespace :ulikeme do
   }
 
   gauge :events_per_minute, :tick => 60
+  gauge :events_per_hour, :tick => 1.hour.to_i
   gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true
+  gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true
 
   event :"*" do
     incr :events_per_minute
+    incr :events_per_hour
   end
 
   event :_pageview do
     incr :pageviews_daily_unique
+    incr :pageviews_hourly_unique
   end
 
   widget 'TrafficChannels', {
-    :title => "Daily Uniques",
+    :title => "Uniques per Day",
     :type => :timeline,
     :width => 70,
-    :gauges => :pageviews_daily_unique
+    :gauges => :pageviews_daily_unique,
+    :include_current => true,
+    :autoupdate => 30
   }
 
   widget 'TrafficChannels', {
     :title => "Events per Minute",
     :type => :timeline,
     :width => 30,
-    :gauges => :events_per_minute
+    :gauges => :events_per_minute,
+    :include_current => true,
+    :autoupdate => 5
+  }
+
+  widget 'TrafficChannels', {
+    :title => "Uniques per Hour",
+    :type => :timeline,
+    :width => 50,
+    :gauges => :pageviews_hourly_unique,
+    :include_current => true,
+    :autoupdate => 30
+  }
+
+  widget 'TrafficChannels', {
+    :title => "Events per Hour",
+    :type => :timeline,
+    :width => 50,
+    :gauges => :events_per_hour,
+    :include_current => true,
+    :autoupdate => 30
   }
 
   #widget 'TrafficChannels', {
