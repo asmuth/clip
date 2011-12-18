@@ -15,6 +15,8 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 
 == Basic Example
 
+This will listen on TCP#1337 and HTTP#4242 draw the number of received json-events (where type=unicorn_seen) on a timeline-plot with 1-hour-ticks:
+
  require "fnordmetric"
 
   FnordMetric.namespace :myapp do
@@ -42,8 +44,29 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 
   FnordMetric.standalone
 
+This is the easiest way to submit an event:
+
+  echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 2323
 
 ==  Events
+
+==== Example Events
+
+  // track a pageview
+  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
+
+  // track a waypoint (see below)
+  { "_type": "_waypoint", "waypoint": "thank_you_site", "map": "checkout_flow", "_session": "mysessiontoken" }
+
+  // track a custom action
+  { "_type": "my_foo_type", "my_foo_action": "wink", "other_user": "myuserid" }
+
+  // set the user name
+  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
+
+  // set the user picture
+  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
+
 
 ==== Sending Events
 
@@ -65,24 +88,6 @@ The fast way: Add your event directly to the redis-based queue:
   redis.lpush("fnordmetric-queue", uuid) 
   redis.set("fnordmetric-event-#{my_uuid}", event)
   redis.expire("fnordmetric-event-#{my_uuid}", 60)
-
-
-==== Example Events
-
-  // track a pageview
-  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
-
-  // track a waypoint (see below)
-  { "_type": "_waypoint", "waypoint": "thank_you_site", "map": "checkout_flow", "_session": "mysessiontoken" }
-
-  // track a custom action
-  { "_type": "my_foo_type", "my_foo_action": "wink", "other_user": "myuserid" }
-
-  // set the user name
-  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
-
-  // set the user picture
-  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 
 
 == API Reference
