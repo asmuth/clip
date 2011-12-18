@@ -121,11 +121,11 @@ not yet implemented
 
 == TODOS
 
--> incr_fields
-
--> set_value
+-> gauge-api for three-dim gauges
 
 -> toplist-widget
+
+-> set_value
 
 -> numbers_widget: handle decreasing vals
 
