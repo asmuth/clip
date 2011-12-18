@@ -67,7 +67,10 @@ var FnordMetric = (function(){
 
       opts.elem.append(
         $('<div class="headbar small"></div>').html(opts.title)
-      );
+      ).css({
+        'marginBottom': 20,
+        'overflow': 'hidden'
+      });
 
       for(k in opts.gauges){
         var title = 'External Backlinks';
