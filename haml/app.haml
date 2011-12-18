@@ -39,6 +39,7 @@
 
     $('#tabs li.dashboard').click(function(){
       FnordMetric.renderDashboard($(this).attr('rel'));
+      window.location.hash = $(this).attr('rel');
     });
 
     $('#tabs li.sessions').click(function(){
@@ -57,6 +58,10 @@
 
     resizeViewport();
     $(window).resize(resizeViewport);
+
+    if(window.location.hash){
+      $('#tabs li.dashboard[rel="'+window.location.hash.slice(1)+'"]').trigger('click');
+    }
 
   });
 
