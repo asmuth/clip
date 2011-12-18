@@ -46,7 +46,7 @@ This will listen for json-events with type=unicorn_seen and render a timeline-pl
 
 This is the easiest way to submit an event:
 
-  echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 1337
+  echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 1337
 
 ==  Events
 
