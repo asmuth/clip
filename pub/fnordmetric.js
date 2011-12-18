@@ -208,7 +208,11 @@ var FnordMetric = (function(){
             chart.get('series-'+gauge).setData(series_data);
             chart.redraw();
           } else {
-            chart.addSeries({name: gauge, data: series_data, id: 'series-'+gauge });     
+            chart.addSeries({
+              name: opts.gauge_titles[gauge], 
+              data: series_data, 
+              id: 'series-'+gauge 
+            });     
           }       
 
           // shown on the *first* gauge load

@@ -5,11 +5,20 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
 
     super.merge(
       :gauges => gauges.map(&:name),
+      :gauge_titles => gauge_titles,
       :start_timestamp => ticks.first,
       :end_timestamp => ticks.last,
       :autoupdate => (@opts[:autoupdate] || 0),
       :tick => tick
     )
+  end
+
+  def gauge_titles
+    {}.tap do |_hash|
+      gauges.each do |gauge|
+        _hash.merge!(gauge.name => gauge.title)
+      end
+    end
   end
 
   def has_tick?
