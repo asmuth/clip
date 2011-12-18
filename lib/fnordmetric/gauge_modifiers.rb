@@ -55,10 +55,8 @@ module FnordMetric::GaugeModifiers
   end
 
   def incr_field_by(gauge, field_name, value)
-    @redis.hsetnx(gauge.tick_key(time), field_name, 0).callback do
-      @redis.hincrby(gauge.tick_key(time), field_name, value).callback do 
-        @redis.incrby(gauge.tick_key(time, :count), 1)
-      end
+    @redis.zincrby(gauge.tick_key(time), value, field_name).callback do
+      @redis.incrby(gauge.tick_key(time, :count), 1)
     end
   end  
   

@@ -283,7 +283,7 @@ describe "increment three-dimensional gagues" do
 
     it "should increment a three-dim gauge by 1" do
       gauge_key = "fnordmetrics-myns-gauge-mygauge_434-10-695280200"
-      @redis.hset(gauge_key, "whoopwhoop", 12)  
+      @redis.zadd(gauge_key, 12, "whoopwhoop")  
       create_gauge_context({
         :key => "mygauge_434", 
         :three_dimensional => true,
@@ -294,7 +294,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
-      @redis.hget(gauge_key, "whoopwhoop").should == "13"
+      @redis.zscore(gauge_key, "whoopwhoop").should == "13"
       @redis.get(gauge_key+"-count").should == "1"
     end
 
@@ -311,13 +311,13 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
-      @redis.hget(gauge_key, "whoopwhoop").should == "5"
+      @redis.zscore(gauge_key, "whoopwhoop").should == "5"
       @redis.get(gauge_key+"-count").should == "7"
     end
 
     it "should increment a three-dim gauge by event supplied field" do
       gauge_key = "fnordmetrics-myns-gauge-mygauge_634-10-695280200"
-      @redis.hset(gauge_key, "fnordybar", 11)  
+      @redis.zadd(gauge_key, 11, "fnordybar")  
       create_gauge_context({
         :key => "mygauge_634", 
         :three_dimensional => true,
@@ -328,12 +328,12 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :myfield => "fnordybar" }
         context.call(event, @redis_wrap)
       end
-      @redis.hget(gauge_key, "fnordybar").should == "16"
+      @redis.zscore(gauge_key, "fnordybar").should == "16"
     end
 
     it "should increment_unique a three-dim gauge" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_1263-10-695280200"    
-      @redis.hset(gauge_key, "mykey", "54")
+      @redis.zadd(gauge_key, 54, "mykey")
       @redis.set(gauge_key+"-sessions-count", 5)
       create_gauge_context({
         :key => "mygauge_1263", 
@@ -346,14 +346,14 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
-      @redis.hget(gauge_key, "mykey").should == "84"
+      @redis.zscore(gauge_key, "mykey").should == "84"
       @redis.get(gauge_key+"-sessions-count").should == "6"
       @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
     end
 
     it "should not increment_unique a non-progressive gauge if session is known" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_1266-695280200"    
-      @redis.hset(gauge_key, "otherkey", "54")
+      @redis.zadd(gauge_key, 54, "otherkey")
       @redis.set(gauge_key+"-sessions-count", 5)
       @redis.sadd(gauge_key+"-sessions", "mysesskey")
       create_gauge_context({
@@ -367,7 +367,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
-      @redis.hget(gauge_key, "otherkey").should == "54"
+      @redis.zscore(gauge_key, "otherkey").should == "54"
       @redis.get(gauge_key+"-sessions-count").should == "5"
       @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
     end
