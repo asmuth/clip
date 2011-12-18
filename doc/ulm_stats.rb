@@ -78,7 +78,7 @@ FnordMetric.namespace :ulikeme do
     :width => 67,
     :gauges => :pageviews_daily_unique,
     :include_current => true,
-    :autoupdate => 30
+    :autoupdate => 5
   }
 
   widget 'Overview', {
@@ -87,14 +87,14 @@ FnordMetric.namespace :ulikeme do
     :width => 33,
     :gauges => :pageviews_hourly_unique,
     :include_current => true,
-    :autoupdate => 30
+    :autoupdate => 5
   }
 
   widget 'Overview', {
     :title => "uLikeMe Key Metrics",
     :type => :numbers,
     :width => 100,
-    :autoupdate => 20,
+    :autoupdate => 5,
     :gauges => [
       :pageviews_daily_unique, :pageviews_monthly_unique, :app_requests_sent, :app_requests_clicked, :mails_sent, :mails_clicked,
       :app_invites_sent, :app_invites_clicked
@@ -105,13 +105,14 @@ FnordMetric.namespace :ulikeme do
     :title => "User-Activity",
     :type => :timeline,
     :width => 67,
+    :autoupdate => 5,
     :gauges => [:skip_votes, :yes_votes, :maybe_votes]
   }
 
   widget 'Overview', {
     :title => "Top Pages",
     :type => :toplist,
-    :autoupdate => 20,
+    :autoupdate => 5,
     :width => 33,
     :gauges => [ :pageviews_per_url_daily, :pageviews_per_url_monthly ]
   }
@@ -121,7 +122,7 @@ FnordMetric.namespace :ulikeme do
     :title => "uLikeMe User Metrics",
     :type => :numbers,
     :width => 67,
-    :autoupdate => 20,
+    :autoupdate => 5,
     :gauges => [
       :skip_votes, :yes_votes, 
       :maybe_votes, :winks_sent, :messages_sent, :messages_read, 
@@ -132,7 +133,7 @@ FnordMetric.namespace :ulikeme do
     :title => "RockYou Campaign (12/11) Metrics",
     :type => :numbers,
     :width => 33,
-    :autoupdate => 20,
+    :autoupdate => 5,
     :gauges => [ :rockyou1_ppis, :rockyou1_refs, :rockyou1_requests ]
   }
 
@@ -275,7 +276,7 @@ FnordMetric.namespace :ulikeme do
     :width => 50,
     :gauges => :events_per_minute,
     :include_current => true,
-    :autoupdate => 30
+    :autoupdate => 5
   }
 
   widget 'TechStats', {
@@ -284,7 +285,7 @@ FnordMetric.namespace :ulikeme do
     :width => 50,
     :gauges => :events_per_hour,
     :include_current => true,
-    :autoupdate => 30
+    :autoupdate => 5
   }
 
 end
