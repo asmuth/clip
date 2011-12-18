@@ -125,13 +125,7 @@ not yet implemented
 
 -> set_value
 
--> numbers widget
-
--> metric-titles
-
 -> toplist-widget
-
--> event-feed-widget (filter by type)
 
 -> funnel-widget
 
