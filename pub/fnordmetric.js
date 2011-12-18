@@ -169,11 +169,15 @@ var FnordMetric = (function(){
 
       redrawWithRange(true);
 
-      //if(widget_config.autoupdate){
-      //  window.setInterval(function(){
-      //    redrawWithRange(false, true);
-      //  }, 3000);
-      // }
+      console.log(opts.autoupdate);
+      if(opts.autoupdate){
+        var secs = parseInt(opts.autoupdate);
+        if(secs > 0){
+          window.setInterval(function(){
+            redrawWithRange(false, true);
+          }, secs*1000);
+        }
+      };
 
     }
 
