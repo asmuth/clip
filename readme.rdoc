@@ -123,6 +123,8 @@ not yet implemented
 
 -> incr_fields
 
+-> set_value
+
 -> numbers widget
 
 -> metric-titles
