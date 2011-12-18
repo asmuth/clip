@@ -4,7 +4,6 @@ FnordMetric is a highly configurable (and pretty fast) realtime app/event tracki
 
 {<img src="https://secure.travis-ci.org/paulasmuth/fnordmetric.png" />}[http://travis-ci.org/paulasmuth/fnordmetric]
 
-== Screenshots
 FnordMetric keeps track of your data and draws nice timeline plots.
 
 {<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
