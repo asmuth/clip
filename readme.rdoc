@@ -131,6 +131,8 @@ not yet implemented
 
 -> toplist-widget
 
+-> event-feed-widget (filter by type)
+
 -> funnel-widget
 
 -> bars-widget
