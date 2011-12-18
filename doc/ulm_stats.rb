@@ -1,4 +1,4 @@
-$: << ::File.expand_path("../../fnordmetric/lib/", __FILE__)
+$: << ::File.expand_path("../../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
 FnordMetric.namespace :ulikeme do
