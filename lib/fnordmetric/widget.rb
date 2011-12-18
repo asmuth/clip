@@ -29,7 +29,7 @@ class FnordMetric::Widget
     
     if (ticks = gauges.map{ |g| g.tick }).uniq.length == 1
       @tick = ticks.first
-    else
+    elsif !!self.try(:has_tick?)
       error! "you can't add gauges with different ticks to the same widget"
     end
   end
