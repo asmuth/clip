@@ -2,7 +2,7 @@
 
 FnordMetric is a highly configurable realtime app tracking thing. 
 
-Step 1: You send send json events from your web/facebook app. eg:
+1) You send send json events from your web/facebook app. eg:
 
   // track a pageview
   { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
@@ -20,21 +20,14 @@ Step 1: You send send json events from your web/facebook app. eg:
   { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 
 
-Step 2: FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
+
+2) FnordMetric keeps track of your data and draws nice timeline plots. (You can define your own plotting and counting functions as ruby blocks!)
+
+{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
+
+3) FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
 
   (pic here)
-
-Step 3: FnordMetric keeps track of your data and draws nice timeline plots. (You can define your own plotting and counting functions as ruby blocks!)
-
-  (pic here)
-
-Step 4: FnordMetric draws nice "user-flow" maps (Use them to optimize your navigation!)
-
-  (pic here)
-
-Step 5: Even more shiny stuff!
-
-  (pic)
 
 
 === Installation
