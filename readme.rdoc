@@ -123,17 +123,27 @@ not yet implemented
 
 -> incr_fields
 
--> numbers widget, funnel-widget, list-widget, toplist-widget
+-> numbers widget
 
--> back2highcharts: timline, bar, pie
+-> metric-titles
+
+-> toplist-widget
+
+-> funnel-widget
+
+-> bars-widget
+
+-> pie-widget
 
 -> demo / example: chatroom;  
   -> events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
   -> widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
 
+-> referall tracking fu (parse googlequeries)
+
 -> timelinewidget + numberswidget => should use redis hmget
 
--> referall tracking fu (parse googlequeries)
+-> get multiple metrics in a single http get
 
 -> prune the namespace-sessions-timline (remove event_ids older than x)
 
