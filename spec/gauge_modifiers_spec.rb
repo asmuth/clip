@@ -328,34 +328,34 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :myfield => "fnordybar" }
         context.call(event, @redis_wrap)
       end
-      @redis.hget(gauge_key, "fnorybar").should == "36"
+      @redis.hget(gauge_key, "fnordybar").should == "16"
     end
 
     it "should increment_unique a three-dim gauge" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_1263-10-695280200"    
       @redis.hset(gauge_key, "mykey", "54")
-      @redis.set(gauge_key+"-progressive-sessions-count", 5)
+      @redis.set(gauge_key+"-sessions-count", 5)
       create_gauge_context({
         :key => "mygauge_1263", 
         :tick => 10,
         :unique => true,
         :three_dimensional => true
       }, proc{ 
-        incr_field(:mygauge_1263, "mykes", 30)  
+        incr_field(:mygauge_1263, "mykey", 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "mykey").should == "84"
-      @redis.get(gauge_key+"-progressive-sessions-count").should == "6"
-      @redis.smembers(gauge_key+"-progressive-sessions").should == ["mysesskey"]
+      @redis.get(gauge_key+"-sessions-count").should == "6"
+      @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
     end
 
     it "should not increment_unique a non-progressive gauge if session is known" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_1266-695280200"    
       @redis.hset(gauge_key, "otherkey", "54")
-      @redis.set(gauge_key+"-progressive-sessions-count", 5)
-      @redis.sadd(gauge_key+"-progressive-sessions", "mysesskey")
+      @redis.set(gauge_key+"-sessions-count", 5)
+      @redis.sadd(gauge_key+"-sessions", "mysesskey")
       create_gauge_context({
         :key => "mygauge_1266", 
         :tick => 10,
@@ -368,8 +368,8 @@ describe "increment three-dimensional gagues" do
         context.call(event, @redis_wrap)
       end
       @redis.hget(gauge_key, "otherkey").should == "54"
-      @redis.get(gauge_key+"-progressive-sessions-count").should == "5"
-      @redis.smembers(gauge_key+"-progressive-sessions").should == ["mysesskey"]
+      @redis.get(gauge_key+"-sessions-count").should == "5"
+      @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
     end
 
   end

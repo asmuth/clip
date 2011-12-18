@@ -26,13 +26,13 @@ module FnordMetric::GaugeModifiers
     end
   end  
 
-  def incr_uniq(gauge, value)
+  def incr_uniq(gauge, value, field_name=nil)
     return false if session_key.blank?
     @redis.sadd(gauge.tick_key(time, :sessions), session_key).callback do |_new|
       @redis.expire(gauge.tick_key(time, :sessions), gauge.tick)
-      if _new == 1
+      if (_new == 1) || (_new == true) #redis vs. em-redis
         @redis.incr(gauge.tick_key(time, :"sessions-count")).callback do |sc|
-          incr_tick(gauge, value)
+          field_name ? incr_field_by(gauge, field_name, value) : incr_tick(gauge, value)
         end
       end
     end
@@ -47,7 +47,19 @@ module FnordMetric::GaugeModifiers
   def incr_field(gauge_name, field_name, value=1)
     gauge = fetch_gauge(gauge_name)
     assure_three_dimensional!(gauge)
-    # here be dragons
+    if gauge.unique? 
+      incr_uniq(gauge, value, field_name)
+    else
+      incr_field_by(gauge, field_name, value)
+    end
   end
 
+  def incr_field_by(gauge, field_name, value)
+    @redis.hsetnx(gauge.tick_key(time), field_name, 0).callback do
+      @redis.hincrby(gauge.tick_key(time), field_name, value).callback do 
+        @redis.incrby(gauge.tick_key(time, :count), 1)
+      end
+    end
+  end  
+  
 end
