@@ -287,7 +287,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 == Todos
 
   -> fix include_current
-  -> timeline-widget: auto-advance
   -> timeline-widget: areaspline-option
   -> set_value / set_field
   -> bars-widget
@@ -306,6 +305,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -> prune the namespace-event-types-list (trim to max items)
   -> timelinewidget + numberswidget => should use redis hmget
   -> get multiple metrics in a single http get
+  -> { _namespace: myns } field (!!!)
   
 
   -> demo / example: chatroom;  

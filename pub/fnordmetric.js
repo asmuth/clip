@@ -413,6 +413,14 @@ var FnordMetric = (function(){
         if(secs > 0){
 
           var autoupdate_interval = window.setInterval(function(){
+            if(
+              (parseInt(new Date().getTime()/1000) - opts.end_timestamp) >
+              (opts.include_current ? 0 : opts.tick)
+            ){
+              opts.end_timestamp += opts.tick;
+              opts.start_timestamp += opts.tick;
+            }
+
             redrawWithRange(false, true);
           }, secs*1000);
 
