@@ -49,24 +49,17 @@ This is the easiest way to submit an event:
   echo "{'_type': 'unicorn_seen'}\n" | nc localhost 1337
 
 
+== Installation
+
+here be dragons
+
+
+== Configuration
+
+here be dragons
+
+
 == Documentation
-
-=== Example Events
-
-  // track a pageview
-  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
-
-  // track a waypoint (see below)
-  { "_type": "_waypoint", "waypoint": "thank_you_site", "map": "checkout_flow", "_session": "mysessiontoken" }
-
-  // track a custom action
-  { "_type": "my_foo_type", "my_foo_action": "wink", "other_user": "myuserid" }
-
-  // set the user name
-  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
-
-  // set the user picture
-  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 
 
 === Sending Events
@@ -90,7 +83,21 @@ The fast way: Add your event directly to the redis-based queue:
   redis.set("fnordmetric-event-#{my_uuid}", event)
   redis.expire("fnordmetric-event-#{my_uuid}", 60)
 
+---
 
+=== Special Events
+
+  // track a pageview
+  { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
+
+  // set the user name
+  { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
+
+  // set the user picture
+  { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
+
+
+---
 
 === DSL Methods
 
@@ -100,7 +107,10 @@ The fast way: Add your event directly to the redis-based queue:
 
   event
 
-=== Handler Methods
+
+---
+
+=== Event Handlers
 
 call these methods from the event-handler block
 
@@ -116,24 +126,32 @@ call these methods from the event-handler block
   set_field(gauge_name, field_name, value)
     Set the given  field on a three-dimensional gauge to value at the tick specified by event-time (overwrite existing value)
 
-e.g.
 
-  event :user_signed_up do
-    incr(:total_registrations, 1)
-    incr_field(:users_per_gender, data[:gender], 1)
-  end
+---
 
-  # example event:
-  # { "_type": "user_signed_up", "gender": "male" }
+=== Gauges
+
+---
+
+=== Widgets
+
+==== Widget-Options: TimelineWidget
+
+==== Widget-Options: Numbers-Widget
+
+==== Widget-Options: ToplistWidget
+
+
+---
+
+=== JSON API
+
+
+
+== Examples
   
+(link1), (link2), (link3), (link4)
 
-=== Gauge Options
-
-=== Widget-Options: TimelineWidget
-
-=== Widget-Options: Numbers-Widget
-
-=== Widget-Options: ToplistWidget
 
 
 == Full Example
@@ -268,24 +286,30 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Todos
 
--> set_value / set_field
--> bars-widget
--> timeline_widget: 'compare mode': compate gauge to yesterday
--> numbers_widget: handle decreasing vals
--> numbers_widget: list style
--> subscribe to metrics via websocket :)
--> trend detection
--> funnel-widget, pie-widget
--> referall tracking fu (parse googlequeries)
--> timelinewidget + numberswidget => should use redis hmget
--> get multiple metrics in a single http get
--> prune the namespace-sessions-timline (remove event_ids older than x)
--> prune the namespace-event-types-list (trim to max items)
--> opt_event options: :increment => gauge_name
--> custom calculation blocks: calculate ctr
+  -> fix include_current
+  -> timeline-widget: auto-advance
+  -> timeline-widget: areaspline-option
+  -> set_value / set_field
+  -> bars-widget
+  -> combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
+  -> timeline_widget: 'compare mode': compate gauge to yesterday
+  -> numbers_widget: handle decreasing vals
+  -> make redis-addr and redis-prefix + listen-ports configurable
+  -> referal tracking fu (parse googlequeries)  
+  -> trend detection
+  -> funnel-widget, pie-widget
+  -> opt_event options: :increment => gauge_name
+  -> preconfigured default-dashboard (like google analytics)
+  -> pagview+ref-tracking via js-tracking-pixel 
+  -> table/gauge-list-widget (with mini-stats!)
+  -> prune the namespace-sessions-timline (remove event_ids older than x)
+  -> prune the namespace-event-types-list (trim to max items)
+  -> timelinewidget + numberswidget => should use redis hmget
+  -> get multiple metrics in a single http get
+  
 
--> demo / example: chatroom;  
-  -> events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
-  -> widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
+  -> demo / example: chatroom;  
+    -> events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
+    -> widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
 
 
