@@ -371,7 +371,11 @@ var FnordMetric = (function(){
 
       function drawChart(){
         chart = new Highcharts.Chart({     
-          chart: { renderTo: 'container-'+widget_uid, defaultSeriesType: 'line', height: 270 },
+          chart: { 
+            renderTo: 'container-'+widget_uid, 
+            defaultSeriesType: opts.plot_style, 
+            height: 270 
+          },
           series: [],
           title: { text: '' },
           xAxis: {       

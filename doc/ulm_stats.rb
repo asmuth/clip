@@ -379,6 +379,7 @@ FnordMetric.namespace :ulikeme do
     :width => 50,
     :gauges => :events_per_second,
     :include_current => true,
+    :plot_style => :areaspline,
     :autoupdate => 1
   }
 
@@ -389,6 +390,7 @@ FnordMetric.namespace :ulikeme do
     :width => 50,
     :gauges => :votes_per_second,
     :include_current => true,
+    :plot_style => :areaspline,
     :autoupdate => 1
   }
 

@@ -137,6 +137,10 @@ call these methods from the event-handler block
 
 ==== Widget-Options: TimelineWidget
 
+[plot_style] one of: line, areaspline
+[include_current] show the current tick?
+[autoupdate] auto-refresh the timeline every n secs (0 turns autoupdate off)
+
 ==== Widget-Options: Numbers-Widget
 
 ==== Widget-Options: ToplistWidget
@@ -286,12 +290,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Todos
 
-  -> fix include_current
-  -> timeline-widget: areaspline-option
   -> set_value / set_field
   -> bars-widget
   -> combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
   -> timeline_widget: 'compare mode': compate gauge to yesterday
+  -> fix include_current
   -> numbers_widget: handle decreasing vals
   -> make redis-addr and redis-prefix + listen-ports configurable
   -> referal tracking fu (parse googlequeries)  
