@@ -374,6 +374,48 @@ describe "increment three-dimensional gagues" do
 
   end
 
+  describe "set value on two/three-dim gauge" do
+
+    it "should set a value on a two-dim gauge" do  
+      pending "implement me!"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_5463-10"    
+      @redis.hset(gauge_key, "695280200", "54")
+      @redis.set(gauge_key+"-695280200-sessions-count", 5)
+      @redis.hget(gauge_key, "695280200").should == "54"
+      create_gauge_context({
+        :key => "mygauge_5463",
+        :tick => 10
+      }, proc{ 
+        set_value(:mygauge_5463, 17)  
+      }).tap do |context|      
+        event = { :_time => @now, :_session_key => "mysesskey" }
+        context.call(event, @redis_wrap)
+      end
+      @redis.hget(gauge_key, "695280200").should == "17"
+    end
+
+
+    it "should set a value on a two-dim gauge" do  
+      pending "implement me!"
+      gauge_key = "fnordmetrics-myns-gauge-mygauge_1463-10-695280200"
+      @redis.zadd(gauge_key, 65, "asdasdkey")
+      @redis.zscore(gauge_key, "asdasdkey").should == "65"
+      create_gauge_context({
+        :key => "mygauge_1463",
+        :three_dimensional => true,
+        :tick => 10
+      }, proc{ 
+        set_field(:mygauge_1463, "asdasdkey", 23)  
+      }).tap do |context|      
+        event = { :_time => @now, :_session_key => "mysesskey" }
+        context.call(event, @redis_wrap)
+      end
+      @redis.zscore(gauge_key, "asdasdkey").should == "23"
+    end
+
+  end
+
+
   it "should raise an error if incr_field is called on a 2d gauge"
 
 private

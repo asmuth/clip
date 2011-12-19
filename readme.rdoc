@@ -100,16 +100,32 @@ The fast way: Add your event directly to the redis-based queue:
 
   event
 
-=== Gauge Modifiers Methods
+=== Handler Methods
 
 call these methods from the event-handler block
 
   incr(gauge_name, value=1): 
-    Increment the given (two-dimensional) gauge by value
+    Increment the given (two-dimensional) gauge by value at the tick specified by event-time
 
   incr_field(gauge_name, field_name, value=1): 
-    Increment the given given field on a three-dimensional gauge by value
+    Increment the given field on a three-dimensional gauge by value at the tick specified by event-time
 
+  set_value(gauge_name, value)
+    Set the given (two-dimensional) to value at the tick specified by event-time (overwrite existing value)
+
+  set_field(gauge_name, field_name, value)
+    Set the given  field on a three-dimensional gauge to value at the tick specified by event-time (overwrite existing value)
+
+e.g.
+
+  event :user_signed_up do
+    incr(:total_registrations, 1)
+    incr_field(:users_per_gender, data[:gender], 1)
+  end
+
+  # example event:
+  # { "_type": "user_signed_up", "gender": "male" }
+  
 
 === Gauge Options
 
@@ -252,7 +268,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Todos
 
--> set_value
+-> set_value / set_field
 -> bars-widget
 -> timeline_widget: 'compare mode': compate gauge to yesterday
 -> numbers_widget: handle decreasing vals
