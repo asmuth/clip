@@ -253,29 +253,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 == Todos
 
 -> set_value
-
 -> bars-widget
-
+-> timeline_widget: 'compare mode': compate gauge to yesterday
 -> numbers_widget: handle decreasing vals
-
--> funnel-widget
-
--> pie-widget
+-> numbers_widget: list style
+-> subscribe to metrics via websocket :)
+-> trend detection
+-> funnel-widget, pie-widget
+-> referall tracking fu (parse googlequeries)
+-> timelinewidget + numberswidget => should use redis hmget
+-> get multiple metrics in a single http get
+-> prune the namespace-sessions-timline (remove event_ids older than x)
+-> prune the namespace-event-types-list (trim to max items)
+-> opt_event options: :increment => gauge_name
+-> custom calculation blocks: calculate ctr
 
 -> demo / example: chatroom;  
   -> events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
   -> widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
-
--> referall tracking fu (parse googlequeries)
-
--> timelinewidget + numberswidget => should use redis hmget
-
--> get multiple metrics in a single http get
-
--> prune the namespace-sessions-timline (remove event_ids older than x)
-
--> prune the namespace-event-types-list (trim to max items)
-
--> opt_event options: :increment => gauge_name
 
 
