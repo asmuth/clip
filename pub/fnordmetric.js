@@ -167,7 +167,7 @@ var FnordMetric = (function(){
       for(k in opts.gauges){
         var gtick = parseInt(opts.gauges[k].tick);        
         var gtitle = opts.gauges[k].title;
-        //console.log(gtick);
+
         var container = $('<div></div>')
           .addClass('numbers_container')
           .addClass('size_'+opts.offsets.length)
@@ -296,7 +296,8 @@ var FnordMetric = (function(){
         if(!silent){ $(opts.elem).css('opacity', 0.5); }
         redrawDatepicker();    
         var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;    
-        chart.series = [];
+        //chart.series = [];
+        max_y=0;
         //metrics_completed = 0;
         $(opts.gauges).each(function(i,gauge){
           $.ajax({
@@ -315,12 +316,9 @@ var FnordMetric = (function(){
             series_data.push([parseInt(p)*1000, raw_data[p]||0]); 
             max_y = Math.max(max_y, raw_data[p]);
           }
-        
-          chart.yAxis[0].setExtremes(0,max_y);
-
+  
           if(!first_time){ 
-            chart.get('series-'+gauge).setData(series_data);
-            chart.redraw();
+            chart.get('series-'+gauge).setData(series_data);            
           } else {
             chart.addSeries({
               name: opts.gauge_titles[gauge], 
@@ -328,6 +326,9 @@ var FnordMetric = (function(){
               id: 'series-'+gauge 
             });     
           }       
+
+          chart.yAxis[0].setExtremes(0,max_y);
+          chart.redraw();
 
           // shown on the *first* gauge load
           $(opts.elem).css('opacity', 1);
@@ -366,7 +367,13 @@ var FnordMetric = (function(){
           )
         ).append(
           $('<h2></h2>').html(opts.title)
-        ) ).append( $('<div></div>').attr('id', 'container-'+widget_uid) );
+        ) ).append( 
+          $('<div></div>').attr('id', 'container-'+widget_uid).css({
+            height: 256,
+            marginBottom: 20,
+            overflow: 'hidden'
+          })
+        );
       }
 
       function drawChart(){
