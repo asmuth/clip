@@ -8,7 +8,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
       :gauge_titles => gauge_titles,
       :start_timestamp => ticks.first,
       :end_timestamp => ticks.last,
-      :autoupdate => (@opts[:autoupdate] || 0),
+      :autoupdate => (@opts[:autoupdate] || 60),
       :include_current => !!@opts[:include_current],
       :tick => tick
     )
