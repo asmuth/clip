@@ -336,10 +336,12 @@ FnordMetric.namespace :ulikeme do
 
   gauge :events_per_minute, :tick => 60
   gauge :events_per_hour, :tick => 1.hour.to_i
+  gauge :events_per_second, :tick => 1
   
   event :"*" do
     incr :events_per_minute
     incr :events_per_hour
+    incr :events_per_second
   end
 
   widget 'TechStats', {
@@ -360,6 +362,24 @@ FnordMetric.namespace :ulikeme do
     :autoupdate => 30
   }
 
+
+  widget 'TechStats', {
+    :title => "Events per Second (now)",
+    :type => :timeline,
+    :width => 50,
+    :gauges => :events_per_second,
+    :include_current => true,
+    :autoupdate => 1
+  }
+
+
+  widget 'TechStats', {
+    :title => "Events per Second (-1)",
+    :type => :timeline,
+    :width => 50,
+    :gauges => :events_per_second,
+    :autoupdate => 1
+  }
 
 end
 
