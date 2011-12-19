@@ -262,6 +262,78 @@ FnordMetric.namespace :ulikeme do
   }
 
 
+
+  gauge :abtest_sidebar_btn_totals, 
+    :tick => 36000.days.to_i, 
+    :title => "Sidebar-Button (A/B): Total Clicks per Variant", 
+    :three_dimensional => true
+
+  gauge :abtest_sidebar_btn_daily, 
+    :tick => 1.day.to_i, 
+    :title => "Sidebar-Button (A/B): Total Clicks per Variant (Daily)", 
+    :three_dimensional => true
+
+  gauge :abtest_sidebar_btn_leute_treffen, 
+    :tick => 1.day.to_i, 
+    :title => "Sidebar-Button (A/B): 'leute_treffen'"
+
+  gauge :abtest_sidebar_btn_jetzt_losflirten, 
+    :tick => 1.day.to_i, 
+    :title => "Sidebar-Button (A/B): 'jetzt_losflirten'"
+
+  gauge :abtest_sidebar_btn_dates_finden, 
+    :tick => 1.day.to_i, 
+    :title => "Sidebar-Button (A/B): 'dates_finden'"
+
+
+  event :abtest_sidebar_btn_click do
+    incr :abtest_sidebar_btn_leute_treffen if data[:variant] == "leute_treffen"
+    incr :abtest_sidebar_btn_jetzt_losflirten if data[:variant] == "jetzt_losflirten"
+    incr :abtest_sidebar_btn_dates_finden if data[:variant] == "dates_finden"
+    incr_field :abtest_sidebar_btn_totals, data[:variant]
+    incr_field :abtest_sidebar_btn_daily, data[:variant]
+  end
+
+
+  widget 'ABTests', {
+    :title => "Sidebar-Button (A/B): Daily Clicks per Variant",
+    :type => :timeline,
+    :autoupdate => 5,
+    :width => 67,
+    :gauges => [
+      :abtest_sidebar_btn_leute_treffen,
+      :abtest_sidebar_btn_jetzt_losflirten,
+      :abtest_sidebar_btn_dates_finden
+    ]
+  }
+
+  widget 'ABTests', {
+    :title => "Top Pages",
+    :type => :toplist,
+    :autoupdate => 5,
+    :width => 33,
+    :gauges => [ :abtest_sidebar_btn_totals, :abtest_sidebar_btn_daily ]
+  }
+
+
+  widget 'ABTests', {
+    :title => "Sidebar-Button (A/B): Daily Clicks per Variant (Numbers)",
+    :type => :numbers,
+    :autoupdate => 5,
+    :gauges => [
+      :abtest_sidebar_btn_leute_treffen,
+      :abtest_sidebar_btn_jetzt_losflirten,
+      :abtest_sidebar_btn_dates_finden
+    ]
+  }
+
+
+
+
+
+
+
+
   gauge :events_per_minute, :tick => 60
   gauge :events_per_hour, :tick => 1.hour.to_i
   
@@ -287,6 +359,7 @@ FnordMetric.namespace :ulikeme do
     :include_current => true,
     :autoupdate => 30
   }
+
 
 end
 
