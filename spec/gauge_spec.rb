@@ -97,6 +97,7 @@ describe FnordMetric::Gauge do
     end
 
     it "should return the correct value_at per session" do
+      @redis.hset(@gauge_key, "695280200", "76")
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       _gauge = FnordMetric::Gauge.new({
         :tick => 10, 
@@ -105,10 +106,11 @@ describe FnordMetric::Gauge do
         :unique => true,
         :redis => @redis
       })
-      _gauge.value_at(@now).should == 23
+      _gauge.value_at(@now).should == "76"
     end
 
     it "should return the correct value_at per session with avg" do
+      @redis.hset(@gauge_key, "695280200", "76")
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       _gauge = FnordMetric::Gauge.new({
         :tick => 10, 
@@ -118,7 +120,7 @@ describe FnordMetric::Gauge do
         :average => true,
         :redis => @redis
       })
-      _gauge.value_at(@now).should == (54.0/23.0)
+      _gauge.value_at(@now).should == (76.0/23.0)
     end
 
     it "should receive gauge values for multiple ticks" do
@@ -131,6 +133,8 @@ describe FnordMetric::Gauge do
     it "should receive gauge values per session for multiple ticks" do  
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       @redis.set(@gauge_key+"-695280210-sessions-count", "8")
+      @redis.hset(@gauge_key, "695280200", "76")
+      @redis.hset(@gauge_key, "695280210", "56")
       _gauge = FnordMetric::Gauge.new({
         :tick => 10, 
         :key_prefix => "fnordmetric-myns", 
@@ -139,8 +143,8 @@ describe FnordMetric::Gauge do
         :redis => @redis
       })
       _gauge.values_at([@now, @now+8]).should == {
-        695280200 => 23,
-        695280210 => 8
+        695280200 => "76",
+        695280210 => "56"
       }
     end
 
