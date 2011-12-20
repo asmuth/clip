@@ -329,10 +329,37 @@ FnordMetric.namespace :ulikeme do
 
 
 
+  gauge :age_distribution_female,
+    :tick => 1.month.to_i,
+    :three_dimensional => true,
+    :title => "Age Distribution (female)"
+
+  gauge :age_distribution_male,
+    :tick => 1.month.to_i,
+    :three_dimensional => true,
+    :title => "Age Distribution (male)"
 
 
+  widget 'Demography', {
+    :title => "Age Distribution: Female Users",
+    :type => :toplist,
+    :width => 50,
+    :autoupdate => 5,
+    :gauges => [ :age_distribution_female ]
+  }
 
+  widget 'Demography', {
+    :title => "Age Distribution: Male Users",
+    :type => :toplist,
+    :width => 50,
+    :autoupdate => 5,
+    :gauges => [ :age_distribution_male ]
+  }
 
+  event "user_demography" do
+    incr_field(:age_distribution_female, data[:age], 1) if data[:gender] == "female"
+    incr_field(:age_distribution_male, data[:age], 1) if data[:gender] == "male"
+  end
 
   gauge :events_per_minute, :tick => 60
   gauge :events_per_hour, :tick => 1.hour.to_i
