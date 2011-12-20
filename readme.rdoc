@@ -135,11 +135,17 @@ call these methods from the event-handler block
 
 === Widgets
 
+[autoupdate] auto-refresh the timeline every n secs (0 turns autoupdate off)
+
 ==== Widget-Options: TimelineWidget
 
 [plot_style] one of: line, areaspline
 [include_current] show the current tick?
-[autoupdate] auto-refresh the timeline every n secs (0 turns autoupdate off)
+
+==== Widget-Options: BarsWidget
+
+[plot_style] one of: vertical, horizontal
+[order_by]: order bars/columns by: value, field
 
 ==== Widget-Options: Numbers-Widget
 
@@ -290,7 +296,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Todos
 
-  -> bars-widget
+  -> pie-widget, funnel-widget
   -> combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
   -> timeline_widget: 'compare mode': compate gauge to yesterday
   -> fix include_current
@@ -298,7 +304,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -> make redis-addr and redis-prefix + listen-ports configurable
   -> referal tracking fu (parse googlequeries)  
   -> trend detection
-  -> funnel-widget, pie-widget
   -> opt_event options: :increment => gauge_name
   -> preconfigured default-dashboard (like google analytics)
   -> pagview+ref-tracking via js-tracking-pixel 
