@@ -296,7 +296,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Todos
 
-  -> pie-widget, funnel-widget
+  -> funnel-widget
   -> combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
   -> timeline_widget: 'compare mode': compate gauge to yesterday
   -> fix include_current

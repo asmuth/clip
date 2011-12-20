@@ -507,7 +507,6 @@ var FnordMetric = (function(){
               defaultSeriesType: series_type, 
               height: 270 
             },
-            series: [],
             title: { text: '' },
             xAxis: {       
              categories: label_data
@@ -554,6 +553,116 @@ var FnordMetric = (function(){
             height: 256,
             marginBottom: 20,
             overflow: 'hidden'
+          })
+        );
+      }
+
+      drawLayout();
+      redraw(true);
+
+      if(opts.autoupdate){  
+        var autoupdate_interval = window.setInterval(function(){
+          redraw(false, true);
+        }, opts.autoupdate*1000);
+
+        $('body').bind('fm_dashboard_close', function(){
+          window.clearInterval(autoupdate_interval);
+        });  
+      }
+
+    }
+
+    return {
+      render: render  
+    };
+
+  };
+
+
+  var pieWidget = function(){
+    
+    function render(opts){
+      
+      var widget_uid = getNextWidgetUID();
+      var chart=false;
+
+      function redraw(first_time, silent){
+        if(!silent){ $(opts.elem).css('opacity', 0.5); }
+        var gauge_values = {};
+        var gauges_left = opts.gauges.length;
+        $(opts.gauges).each(function(i,gauge){
+          gauges_left -= 1;
+          gauge_values[gauge] = 123;
+          if(gauges_left==0){
+            redrawChart(first_time, gauge_values);
+          }
+        //  $.ajax({
+        //    url: '/'+currentNamespace+'/gauge/'+gauge, 
+        //    success: function(){
+        //      
+        //    }
+        //  });         
+        });
+      }
+
+      function redrawChart(first_time, gauge_values){       
+      
+        var series_data = [];
+        
+        for(_gkey in gauge_values){
+          series_data.push([
+            opts.gauge_titles[_gkey],
+            gauge_values[_gkey]
+          ]);
+        } 
+          
+        chart = new Highcharts.Chart({     
+          chart: { 
+            renderTo: 'container-'+widget_uid, 
+            defaultSeriesType: 'pie', 
+            height: 270,
+            spacingTop: -10,
+            spacingBottom: 30
+          },
+          credits: {
+            enabled: false
+          },
+          title: { text: '' },
+          legend: {
+            layout: 'horizontal',
+            align: 'top',
+            verticalAlign: 'top',
+            margin: 25,
+            borderWidth: 0
+          },
+          plotOptions: {
+            pie: {
+              animation: first_time,
+              dataLabels: {
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b><br />'+ this.percentage.toFixed(1) +' %';
+                }
+              }
+            }
+          },
+          series: [
+            {
+              name: opts.title,
+              data: series_data
+            }
+          ]
+        });
+
+        //chart.redraw();
+        $(opts.elem).css('opacity', 1);
+      }
+    
+      function drawLayout(){
+        $(opts.elem).append( $('<div></div>').attr('class', 'headbar small').append(
+          $('<span></span>').html(opts.title)
+        ) ).append( 
+          $('<div></div>').attr('id', 'container-'+widget_uid).css({
+            height: 270
           })
         );
       }
@@ -879,6 +988,7 @@ var FnordMetric = (function(){
       if(widget.klass=='BarsWidget'){ barsWidget().render(widget); }
       if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
       if(widget.klass=='ToplistWidget'){ toplistWidget().render(widget); }
+      if(widget.klass=='PieWidget'){ pieWidget().render(widget); }
     };
 
     function resizeWidget(wkey){

@@ -275,15 +275,15 @@ FnordMetric.namespace :ulikeme do
 
   gauge :abtest_sidebar_btn_leute_treffen, 
     :tick => 1.day.to_i, 
-    :title => "Sidebar-Button (A/B): 'leute_treffen'"
+    :title => "leute_treffen"
 
   gauge :abtest_sidebar_btn_jetzt_losflirten, 
     :tick => 1.day.to_i, 
-    :title => "Sidebar-Button (A/B): 'jetzt_losflirten'"
+    :title => "jetzt_losflirten"
 
   gauge :abtest_sidebar_btn_dates_finden, 
     :tick => 1.day.to_i, 
-    :title => "Sidebar-Button (A/B): 'dates_finden'"
+    :title => "dates_finden"
 
 
   event :abtest_sidebar_btn_click do
