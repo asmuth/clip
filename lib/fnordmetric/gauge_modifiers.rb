@@ -59,5 +59,18 @@ module FnordMetric::GaugeModifiers
       @redis.incrby(gauge.tick_key(time, :count), 1)
     end
   end  
-  
+
+  def set_value(gauge_name, value)
+    gauge = fetch_gauge(gauge_name)
+    assure_two_dimensional!(gauge)
+    @redis.hset(gauge.key, gauge.tick_at(time), value)
+  end
+
+  def set_field(gauge_name, field_name, value)
+    gauge = fetch_gauge(gauge_name)
+    assure_three_dimensional!(gauge)
+    @redis.zadd(gauge.tick_key(time), value, field_name)
+  end
+
+
 end

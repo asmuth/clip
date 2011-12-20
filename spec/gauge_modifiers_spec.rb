@@ -377,7 +377,6 @@ describe "increment three-dimensional gagues" do
   describe "set value on two/three-dim gauge" do
 
     it "should set a value on a two-dim gauge" do  
-      pending "implement me!"
       gauge_key = "fnordmetrics-myns-gauge-mygauge_5463-10"    
       @redis.hset(gauge_key, "695280200", "54")
       @redis.set(gauge_key+"-695280200-sessions-count", 5)
@@ -396,7 +395,6 @@ describe "increment three-dimensional gagues" do
 
 
     it "should set a value on a two-dim gauge" do  
-      pending "implement me!"
       gauge_key = "fnordmetrics-myns-gauge-mygauge_1463-10-695280200"
       @redis.zadd(gauge_key, 65, "asdasdkey")
       @redis.zscore(gauge_key, "asdasdkey").should == "65"
