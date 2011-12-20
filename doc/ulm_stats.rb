@@ -328,16 +328,29 @@ FnordMetric.namespace :ulikeme do
   }
 
 
-
-  gauge :age_distribution_female,
+  gauge :age_distribution_female_monthly,
     :tick => 1.month.to_i,
     :three_dimensional => true,
-    :title => "Age Distribution (female)"
+    :unique => true,
+    :title => "Age Distribution (female) monthly"
 
-  gauge :age_distribution_male,
+  gauge :age_distribution_male_monthly,
     :tick => 1.month.to_i,
     :three_dimensional => true,
-    :title => "Age Distribution (male)"
+    :unique => true,
+    :title => "Age Distribution (male) monthly"
+
+  gauge :age_distribution_female_daily,
+    :tick => 1.day.to_i,
+    :three_dimensional => true,
+    :unique => true,
+    :title => "Age Distribution (female) daily"
+
+  gauge :age_distribution_male_daily,
+    :tick => 1.day.to_i,
+    :three_dimensional => true,
+    :unique => true,
+    :title => "Age Distribution (male) daily"
 
 
   widget 'Demography', {
@@ -345,7 +358,7 @@ FnordMetric.namespace :ulikeme do
     :type => :toplist,
     :width => 50,
     :autoupdate => 5,
-    :gauges => [ :age_distribution_female ]
+    :gauges => [ :age_distribution_female_monthly, :age_distribution_female_daily ]
   }
 
   widget 'Demography', {
@@ -353,12 +366,18 @@ FnordMetric.namespace :ulikeme do
     :type => :toplist,
     :width => 50,
     :autoupdate => 5,
-    :gauges => [ :age_distribution_male ]
+    :gauges => [ :age_distribution_male_monthly, :age_distribution_male_daily ]
   }
 
   event "user_demography" do
-    incr_field(:age_distribution_female, data[:age], 1) if data[:gender] == "female"
-    incr_field(:age_distribution_male, data[:age], 1) if data[:gender] == "male"
+    if data[:gender] == "female"
+      incr_field(:age_distribution_female_monthly, data[:age], 1)
+      incr_field(:age_distribution_female_daily, data[:age], 1)
+    end
+    if data[:gender] == "male"
+      incr_field(:age_distribution_male_monthly, data[:age], 1)
+      incr_field(:age_distribution_male_daily, data[:age], 1)
+    end
   end
 
   gauge :events_per_minute, :tick => 60

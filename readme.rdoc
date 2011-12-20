@@ -290,7 +290,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Todos
 
-  -> set_value / set_field
   -> bars-widget
   -> combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
   -> timeline_widget: 'compare mode': compate gauge to yesterday
