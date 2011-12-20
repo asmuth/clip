@@ -320,6 +320,19 @@ FnordMetric.namespace :ulikeme do
     :title => "Sidebar-Button (A/B): Daily Clicks per Variant (Numbers)",
     :type => :numbers,
     :autoupdate => 5,
+    :width => 67,
+    :gauges => [
+      :abtest_sidebar_btn_leute_treffen,
+      :abtest_sidebar_btn_jetzt_losflirten,
+      :abtest_sidebar_btn_dates_finden
+    ]
+  }
+
+  widget 'ABTests', {
+    :title => "Sidebar-Button (A/B): Monthly Clicks per Variant",
+    :type => :pie,
+    :autoupdate => 5,
+    :width => 33,
     :gauges => [
       :abtest_sidebar_btn_leute_treffen,
       :abtest_sidebar_btn_jetzt_losflirten,
