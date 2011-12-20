@@ -265,12 +265,12 @@ FnordMetric.namespace :ulikeme do
 
   gauge :abtest_sidebar_btn_totals, 
     :tick => 36000.days.to_i, 
-    :title => "Sidebar-Button (A/B): Total Clicks per Variant", 
+    :title => "(A/B) sidebar_btn: Totals", 
     :three_dimensional => true
 
   gauge :abtest_sidebar_btn_daily, 
     :tick => 1.day.to_i, 
-    :title => "Sidebar-Button (A/B): Total Clicks per Variant (Daily)", 
+    :title => "(A/B) sidebar_btn: Daily", 
     :three_dimensional => true
 
   gauge :abtest_sidebar_btn_leute_treffen, 
@@ -285,11 +285,26 @@ FnordMetric.namespace :ulikeme do
     :tick => 1.day.to_i, 
     :title => "dates_finden"
 
+  gauge :abtest_sidebar_btn_leute_treffen_monthly, 
+    :tick => 1.month.to_i, 
+    :title => "leute_treffen"
+
+  gauge :abtest_sidebar_btn_jetzt_losflirten_monthly, 
+    :tick => 1.month.to_i, 
+    :title => "jetzt_losflirten"
+
+  gauge :abtest_sidebar_btn_dates_finden_monthly, 
+    :tick => 1.month.to_i, 
+    :title => "dates_finden"
+
 
   event :abtest_sidebar_btn_click do
     incr :abtest_sidebar_btn_leute_treffen if data[:variant] == "leute_treffen"
     incr :abtest_sidebar_btn_jetzt_losflirten if data[:variant] == "jetzt_losflirten"
     incr :abtest_sidebar_btn_dates_finden if data[:variant] == "dates_finden"
+    incr :abtest_sidebar_btn_leute_treffen_monthly if data[:variant] == "leute_treffen"
+    incr :abtest_sidebar_btn_jetzt_losflirten_monthly if data[:variant] == "jetzt_losflirten"
+    incr :abtest_sidebar_btn_dates_finden_monthly if data[:variant] == "dates_finden"
     incr_field :abtest_sidebar_btn_totals, data[:variant]
     incr_field :abtest_sidebar_btn_daily, data[:variant]
   end
@@ -334,9 +349,9 @@ FnordMetric.namespace :ulikeme do
     :autoupdate => 5,
     :width => 33,
     :gauges => [
-      :abtest_sidebar_btn_leute_treffen,
-      :abtest_sidebar_btn_jetzt_losflirten,
-      :abtest_sidebar_btn_dates_finden
+      :abtest_sidebar_btn_leute_treffen_monthly,
+      :abtest_sidebar_btn_jetzt_losflirten_monthly,
+      :abtest_sidebar_btn_dates_finden_monthly
     ]
   }
 

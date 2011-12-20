@@ -590,18 +590,21 @@ var FnordMetric = (function(){
         if(!silent){ $(opts.elem).css('opacity', 0.5); }
         var gauge_values = {};
         var gauges_left = opts.gauges.length;
+        var at = parseInt(new Date().getTime()/1000);
         $(opts.gauges).each(function(i,gauge){
-          gauges_left -= 1;
-          gauge_values[gauge] = 123;
-          if(gauges_left==0){
-            redrawChart(first_time, gauge_values);
-          }
-        //  $.ajax({
-        //    url: '/'+currentNamespace+'/gauge/'+gauge, 
-        //    success: function(){
-        //      
-        //    }
-        //  });         
+          $.ajax({
+            url: '/'+currentNamespace+'/gauge/'+gauge+'?at='+at, 
+            success: function(_resp){
+              var resp = JSON.parse(_resp);
+              gauges_left -= 1;
+              for(_tk in resp){ 
+                gauge_values[gauge] = parseInt(resp[_tk]||0);
+              }
+              if(gauges_left==0){
+                redrawChart(first_time, gauge_values);
+              }
+            }
+          });         
         });
       }
 
@@ -621,7 +624,7 @@ var FnordMetric = (function(){
             renderTo: 'container-'+widget_uid, 
             defaultSeriesType: 'pie', 
             height: 270,
-            spacingTop: -10,
+            spacingTop: 5,
             spacingBottom: 30
           },
           credits: {
@@ -634,6 +637,11 @@ var FnordMetric = (function(){
             verticalAlign: 'top',
             margin: 25,
             borderWidth: 0
+          },
+          tooltip: {
+            formatter: function() {
+              return '<b>'+ this.point.name +'</b>: '+ this.y + ' (' + this.percentage.toFixed(1) + '%)';
+            }
           },
           plotOptions: {
             pie: {
