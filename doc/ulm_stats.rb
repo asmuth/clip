@@ -354,6 +354,25 @@ FnordMetric.namespace :ulikeme do
 
 
   widget 'Demography', {
+    :title => "Age Distribution: Female Users (Monthly)",
+    :type => :bars,
+    :width => 50,
+    :autoupdate => 5,
+    :order_by => :field,
+    :gauges => [ :age_distribution_female_monthly ]
+  }
+
+  widget 'Demography', {
+    :title => "Age Distribution: Male Users (Monthly)",
+    :type => :bars,
+    :width => 50,
+    :autoupdate => 5,
+    :order_by => :field,
+    :gauges => [ :age_distribution_male_monthly ]
+  }
+
+
+  widget 'Demography', {
     :title => "Age Distribution: Female Users",
     :type => :toplist,
     :width => 50,
