@@ -141,6 +141,7 @@ call these methods from the event-handler block
 
 [plot_style] one of: line, areaspline
 [include_current] show the current tick?
+[ticks] number of ticks to show (defaults to 24/30)
 
 ==== Widget-Options: BarsWidget
 

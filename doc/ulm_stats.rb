@@ -484,6 +484,7 @@ FnordMetric.namespace :ulikeme do
   widget "Competition", {
     :title => "Competition: Badoo",
     :type => :timeline,
+    :ticks => 90,
     :gauges => [:competitors_badoo_mau, :competitors_badoo_dau]
   }
 
@@ -497,6 +498,7 @@ FnordMetric.namespace :ulikeme do
   widget "Competition", {
     :title => "Competition: zoosk",
     :type => :timeline,
+    :ticks => 90,
     :gauges => [:competitors_zoosk_mau, :competitors_zoosk_dau]
   }
 
@@ -510,6 +512,7 @@ FnordMetric.namespace :ulikeme do
   widget "Competition", {
     :title => "Competition: onetwolike",
     :type => :timeline,
+    :ticks => 90,
     :gauges => [:competitors_onetwolike_mau, :competitors_onetwolike_dau]
   }
 
@@ -523,6 +526,7 @@ FnordMetric.namespace :ulikeme do
   widget "Competition", {
     :title => "Competition: kizzle",
     :type => :timeline,
+    :ticks => 90,
     :gauges => [:competitors_kizzle_mau, :competitors_kizzle_dau]
   }
 
@@ -536,6 +540,7 @@ FnordMetric.namespace :ulikeme do
   widget "Competition", {
     :title => "Competition: areyouinterested",
     :type => :timeline,
+    :ticks => 90,
     :gauges => [:competitors_areyouinterested_mau, :competitors_areyouinterested_dau]
   }
 
