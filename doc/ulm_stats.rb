@@ -427,6 +427,122 @@ FnordMetric.namespace :ulikeme do
     end
   end
 
+
+  gauge :competitors_badoo_mau, 
+    :tick => 1.day.to_i,
+    :title => "Badoo (MAU)"
+
+  gauge :competitors_badoo_dau, 
+    :tick => 1.day.to_i,
+    :title => "Badoo (DAU)"
+
+  gauge :competitors_zoosk_mau, 
+    :tick => 1.day.to_i,
+    :title => "zoosk (MAU)"
+
+  gauge :competitors_zoosk_dau, 
+    :tick => 1.day.to_i,
+    :title => "zoosk (DAU)"
+
+  gauge :competitors_areyouinterested_mau, 
+    :tick => 1.day.to_i,
+    :title => "areyouinterested (MAU)"
+
+  gauge :competitors_areyouinterested_dau, 
+    :tick => 1.day.to_i,
+    :title => "areyouinterested (DAU)"
+
+  gauge :competitors_onetwolike_mau, 
+    :tick => 1.day.to_i,
+    :title => "onetwolike (MAU)"
+
+  gauge :competitors_onetwolike_dau, 
+    :tick => 1.day.to_i,
+    :title => "onetwolike (DAU)"
+
+  gauge :competitors_kizzle_mau, 
+    :tick => 1.day.to_i,
+    :title => "kizzle (MAU)"
+
+  gauge :competitors_kizzle_dau, 
+    :tick => 1.day.to_i,
+    :title => "kizzle (DAU)"
+  
+  event :competition_data do
+    set_value(:competitors_badoo_mau, data[:badoo_mau]) if data[:badoo_mau]
+    set_value(:competitors_badoo_dau, data[:badoo_dau]) if data[:badoo_dau]
+    set_value(:competitors_areyouinterested_mau, data[:areyouinterested_mau]) if data[:areyouinterested_mau]
+    set_value(:competitors_areyouinterested_dau, data[:areyouinterested_dau]) if data[:areyouinterested_dau]
+    set_value(:competitors_zoosk_mau, data[:zoosk_mau]) if data[:zoosk_mau]
+    set_value(:competitors_zoosk_dau, data[:zoosk_dau]) if data[:zoosk_dau]
+    set_value(:competitors_onetwolike_mau, data[:onetwolike_mau]) if data[:onetwolike_mau]
+    set_value(:competitors_onetwolike_dau, data[:onetwolike_dau]) if data[:onetwolike_dau]
+    set_value(:competitors_kizzle_mau, data[:kizzle_mau]) if data[:kizzle_mau]
+    set_value(:competitors_kizzle_dau, data[:kizzle_dau]) if data[:kizzle_dau]
+  end
+
+  widget "Competition", {
+    :title => "Competition: Badoo",
+    :type => :timeline,
+    :gauges => [:competitors_badoo_mau, :competitors_badoo_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: Badoo (Numbers)",
+    :type => :numbers,
+    :gauges => [:competitors_badoo_mau, :competitors_badoo_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: zoosk",
+    :type => :timeline,
+    :gauges => [:competitors_zoosk_mau, :competitors_zoosk_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: zoosk (Numbers)",
+    :type => :numbers,
+    :gauges => [:competitors_zoosk_mau, :competitors_zoosk_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: onetwolike",
+    :type => :timeline,
+    :gauges => [:competitors_onetwolike_mau, :competitors_onetwolike_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: onetwolike (Numbers)",
+    :type => :numbers,
+    :gauges => [:competitors_onetwolike_mau, :competitors_onetwolike_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: kizzle",
+    :type => :timeline,
+    :gauges => [:competitors_kizzle_mau, :competitors_kizzle_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: kizzle (Numbers)",
+    :type => :numbers,
+    :gauges => [:competitors_kizzle_mau, :competitors_kizzle_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: areyouinterested",
+    :type => :timeline,
+    :gauges => [:competitors_areyouinterested_mau, :competitors_areyouinterested_dau]
+  }
+
+  widget "Competition", {
+    :title => "Competition: areyouinterested (Numbers)",
+    :type => :numbers,
+    :gauges => [:competitors_areyouinterested_mau, :competitors_areyouinterested_dau]
+  }
+
+
+
   gauge :events_per_minute, :tick => 60
   gauge :events_per_hour, :tick => 1.hour.to_i
   gauge :events_per_second, :tick => 1
