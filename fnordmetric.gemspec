@@ -5,38 +5,30 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fnordmetric}
-  s.version = "0.5.1"
+  s.version = "0.5.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = %q{2011-12-10}
+  s.date = %q{2011-12-26}
   s.description = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.email = %q{paul@paulasmuth.com}
   s.files = [
-    ".document",
+    ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
     "Rakefile",
     "VERSION",
-    "_spec/app_spec.rb",
-    "_spec/cache_spec.rb",
-    "_spec/combine_metric_spec.rb",
-    "_spec/core_spec.rb",
-    "_spec/count_metric_spec.rb",
-    "_spec/dashboard_spec.rb",
-    "_spec/event_spec.rb",
-    "_spec/metric_spec.rb",
-    "_spec/report_spec.rb",
-    "_spec/sum_metric_spec.rb",
-    "_spec/widget_spec.rb",
-    "doc/example_server.rb",
-    "doc/import_dump.rb",
+    "doc/preview1.png",
+    "doc/preview2.png",
+    "doc/ulm_stats.rb",
+    "doc/version",
     "fnordmetric.gemspec",
     "haml/app.haml",
     "haml/widget.haml",
     "lib/fnordmetric.rb",
     "lib/fnordmetric/app.rb",
     "lib/fnordmetric/average_metric.rb",
+    "lib/fnordmetric/bars_widget.rb",
     "lib/fnordmetric/cache.rb",
     "lib/fnordmetric/combine_metric.rb",
     "lib/fnordmetric/context.rb",
@@ -53,34 +45,21 @@ Gem::Specification.new do |s|
     "lib/fnordmetric/metric_api.rb",
     "lib/fnordmetric/namespace.rb",
     "lib/fnordmetric/numbers_widget.rb",
+    "lib/fnordmetric/pie_widget.rb",
     "lib/fnordmetric/report.rb",
     "lib/fnordmetric/session.rb",
     "lib/fnordmetric/standalone.rb",
     "lib/fnordmetric/sum_metric.rb",
     "lib/fnordmetric/timeline_widget.rb",
+    "lib/fnordmetric/toplist_widget.rb",
     "lib/fnordmetric/widget.rb",
     "lib/fnordmetric/worker.rb",
-    "pub/fnordmetric/fnordmetric.css",
-    "pub/fnordmetric/fnordmetric.js",
-    "pub/fnordmetric/widget_numbers.js",
-    "pub/fnordmetric/widget_timeline.css",
-    "pub/fnordmetric/widget_timeline.js",
-    "pub/highcharts/adapters/mootools-adapter.js",
-    "pub/highcharts/adapters/mootools-adapter.src.js",
-    "pub/highcharts/adapters/prototype-adapter.js",
-    "pub/highcharts/adapters/prototype-adapter.src.js",
-    "pub/highcharts/highcharts.js",
-    "pub/highcharts/highcharts.src.js",
-    "pub/highcharts/modules/exporting.js",
-    "pub/highcharts/modules/exporting.src.js",
-    "pub/highcharts/themes/dark-blue.js",
-    "pub/highcharts/themes/dark-green.js",
-    "pub/highcharts/themes/gray.js",
-    "pub/highcharts/themes/grid.js",
-    "pub/jquery-1.6.1.min.js",
-    "pub/raphael-min.js",
-    "pub/raphael-utils.js",
+    "pub/fnordmetric.css",
+    "pub/fnordmetric.js",
+    "pub/loader.gif",
     "pub/sprite.png",
+    "pub/vendor/highcharts.js",
+    "pub/vendor/jquery-1.6.1.min.js",
     "readme.rdoc",
     "spec/app_spec.rb",
     "spec/context_spec.rb",
@@ -92,8 +71,7 @@ Gem::Specification.new do |s|
     "spec/session_spec.rb",
     "spec/spec_helper.rb",
     "spec/widget_spec.rb",
-    "spec/worker_spec.rb",
-    "ulm_stats.rb"
+    "spec/worker_spec.rb"
   ]
   s.homepage = %q{http://github.com/paulasmuth/fnordmetric}
   s.licenses = ["MIT"]
