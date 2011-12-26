@@ -19,7 +19,9 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 
 == Getting Started
 
-This will listen for json-events with type=unicorn_seen and render a timeline-plot showing the number of received events per hour.
+Copy doc/ulm_stats.rb (that's the configuration from the screenshots and screencast) or the simple example from below to 'my_stats_app.rb'
+
+Simple Example: This will listen for json-events with type=unicorn_seen and render a timeline-plot showing the number of received events per hour.
 
  require "fnordmetric"
 
@@ -48,6 +50,14 @@ This will listen for json-events with type=unicorn_seen and render a timeline-pl
 
   FnordMetric.standalone
 
+Start the app (requires ruby >= 1.9.2):
+
+  $ ruby my_stats_app.rb run
+
+Log all incoming events:
+
+  $ ruby my_stats_app.rb log
+
 This is the easiest way to submit an event:
 
   echo "{'_type': 'unicorn_seen'}\n" | nc localhost 1337
@@ -55,12 +65,11 @@ This is the easiest way to submit an event:
 
 == Installation
 
-here be dragons
+  gem install fnordmetric
 
+or in your Gemfile:
 
-== Configuration
-
-here be dragons
+  gem 'fnordmetric', '>= 0.5.1'
 
 
 == Documentation
