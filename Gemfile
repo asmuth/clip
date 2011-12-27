@@ -11,7 +11,7 @@ gem "rack"
 gem "rack-test"
 gem "yajl-ruby", :git => "git://github.com/brianmario/yajl-ruby.git"
 gem "thin"
-
+gem "activesupport"
 
 group :development do  
   gem "delorean", ">= 0" 
