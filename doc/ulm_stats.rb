@@ -1,7 +1,7 @@
 $: << ::File.expand_path("../../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
-FnordMetric.namespace :ulikeme do
+FnordMetric.namespace :ulm do
 
   gauge :skip_votes, :tick => 1.day.to_i, :title => "Skip-Votes"
   gauge :yes_votes, :tick => 1.day.to_i, :title => "Yes-Votes"
@@ -91,7 +91,7 @@ FnordMetric.namespace :ulikeme do
   }
 
   widget 'Overview', {
-    :title => "uLikeMe Key Metrics",
+    :title => "ULM Key Metrics",
     :type => :numbers,
     :width => 100,
     :autoupdate => 30,
@@ -119,7 +119,7 @@ FnordMetric.namespace :ulikeme do
 
 
   widget 'Overview', {
-    :title => "uLikeMe User Metrics",
+    :title => "ULM User Metrics",
     :type => :numbers,
     :width => 67,
     :autoupdate => 30,
