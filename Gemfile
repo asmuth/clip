@@ -1,7 +1,5 @@
 source "http://rubygems.org"
 
-gem "mongoid", ">= 2.2.0"
-gem "mongo", ">= 1.4.0"
 gem "bson_ext", ">= 1.4.0"
 gem "sinatra", ">= 1.2.6"
 gem "redis", ">= 2.2.2"
