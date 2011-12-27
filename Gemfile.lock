@@ -21,6 +21,7 @@ GEM
     git (1.2.5)
     haml (3.1.2)
     hiredis (0.3.2)
+    i18n (0.6.0)
     jeweler (1.5.2)
       bundler (~> 1.0.0)
       git (>= 1.2.5)
@@ -61,6 +62,7 @@ DEPENDENCIES
   em-hiredis
   eventmachine
   haml
+  i18n
   jeweler (~> 1.5.2)
   json
   rack
