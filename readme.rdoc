@@ -42,8 +42,9 @@ Simple Example: This will listen for json-events with type=unicorn_seen and rend
     widget 'Overview', {
       :title => "Unicorn-Sightings per Hour",
       :type => :timeline,
-      :gauges => :unicorns_seen_per_hour,
-      :autoupdate => 30
+      :gauges => :unicorns_seen_per_hour,  
+      :include_current => true,
+      :autoupdate => 2
     }
 
   end
@@ -56,11 +57,11 @@ Start the app (requires ruby >= 1.9.2):
 
 Log all incoming events:
 
-  $ ruby my_stats_app.rb log
+  $ ruby my_stats_app.rb log DUMP_FILE=/tmp/foo.json
 
 This is the easiest way to submit an event:
 
-  echo "{'_type': 'unicorn_seen'}\n" | nc localhost 1337
+  echo "{\"_type\": \"unicorn_seen\"}" | nc localhost 1337
 
 
 == Installation
