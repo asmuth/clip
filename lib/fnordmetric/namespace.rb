@@ -66,9 +66,8 @@ class FnordMetric::Namespace
 
   def dashboards(name=nil)
     return @dashboards unless name
-    @dashboards[name] ||= FnordMetric::Dashboard.new(
-      :title => name
-    )       
+    dash = FnordMetric::Dashboard.new(:title => name)
+    @dashboards[dash.token.to_s] ||= dash
   end
 
   def sessions(_ids, opts={})

@@ -19,8 +19,13 @@ describe FnordMetric::Namespace do
     end
 
     it "should create a new dashboard if a widget is added" do
+      @namespace.widget("MyFooDash", nil)
+      @namespace.dashboards.keys.should == ["MyFooDash"]
+    end
+
+    it "should create a new dashboard if the dashboard-title contains whitespaces" do
       @namespace.widget("My Dash", nil)
-      @namespace.dashboards.keys.should == ["My Dash"]
+      @namespace.dashboards.keys.should == ["MyDash"]
     end
 
     it "should create a new dashboard if a widget is added and add the widget"

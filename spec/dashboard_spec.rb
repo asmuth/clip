@@ -15,6 +15,11 @@ describe FnordMetric::Dashboard do
     dashboard.token.should == 'MyF00barDash_board'
   end
 
+  it "should build the correct token if the dashboard name contains whitespaces" do
+    dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar Dash_board'){ |dash| }
+    dashboard.token.should == 'MyF00barDash_board'
+  end
+
   it "should add a widget" do
     pending("fix this")
     #dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar-.Dash_board'){ |dash| }

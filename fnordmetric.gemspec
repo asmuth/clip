@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "fnordmetric"
-  s.version = "0.5.3"
+  s.version = "0.5.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = "2011-12-27"
+  s.date = "2011-12-28"
   s.description = "FnordMetric is a Ruby Event-Tracking gem on steroids"
   s.email = "paul@paulasmuth.com"
   s.files = [
@@ -76,7 +76,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/paulasmuth/fnordmetric"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.11"
   s.summary = "FnordMetric is a Ruby Event-Tracking gem on steroids"
   s.test_files = [
     "spec/app_spec.rb",
@@ -102,11 +102,13 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<eventmachine>, [">= 0"])
       s.add_runtime_dependency(%q<em-hiredis>, [">= 0"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
+      s.add_runtime_dependency(%q<i18n>, [">= 0"])
       s.add_runtime_dependency(%q<haml>, [">= 0"])
       s.add_runtime_dependency(%q<rack>, [">= 0"])
       s.add_runtime_dependency(%q<rack-test>, [">= 0"])
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<thin>, [">= 0"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 0"])
       s.add_development_dependency(%q<delorean>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
@@ -119,11 +121,13 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<eventmachine>, [">= 0"])
       s.add_dependency(%q<em-hiredis>, [">= 0"])
       s.add_dependency(%q<json>, [">= 0"])
+      s.add_dependency(%q<i18n>, [">= 0"])
       s.add_dependency(%q<haml>, [">= 0"])
       s.add_dependency(%q<rack>, [">= 0"])
       s.add_dependency(%q<rack-test>, [">= 0"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<thin>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 0"])
       s.add_dependency(%q<delorean>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
@@ -137,11 +141,13 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<eventmachine>, [">= 0"])
     s.add_dependency(%q<em-hiredis>, [">= 0"])
     s.add_dependency(%q<json>, [">= 0"])
+    s.add_dependency(%q<i18n>, [">= 0"])
     s.add_dependency(%q<haml>, [">= 0"])
     s.add_dependency(%q<rack>, [">= 0"])
     s.add_dependency(%q<rack-test>, [">= 0"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<thin>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 0"])
     s.add_dependency(%q<delorean>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
