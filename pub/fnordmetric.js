@@ -779,7 +779,9 @@ var FnordMetric = (function(){
         success: function(_data){
           var data = JSON.parse(_data);
           $(data.types).each(function(i,v){
-            if(v.slice(0,5)!='_set_'){ addEventType(v,v); }
+            if((v.length > 0) && (v.slice(0,5)!='_set_')){ 
+              addEventType(v,v); 
+            }
           });
         }
       });
