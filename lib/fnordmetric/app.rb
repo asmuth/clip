@@ -17,6 +17,7 @@ class FnordMetric::App < Sinatra::Base
   def initialize(namespaces, opts)
     @namespaces = {}
     @redis = Redis.new
+    @opts = opts
     namespaces.each do |key, block|
       @namespaces[key] = FnordMetric::Namespace.new(key, opts.clone)
       @namespaces[key].instance_eval(&block)
@@ -114,9 +115,8 @@ class FnordMetric::App < Sinatra::Base
   end
 
   post '/events' do
-    halt 400, 'please specify the event_type' unless params["type"]       
-    event_type = params.delete("type")
-    FnordMetric.track(event_type, parse_params(params))
+    halt 400, 'please specify the event_type (_type)' unless params["_type"]           
+    track_event((8**32).to_s(36), parse_params(params))
   end
 
 private
@@ -132,6 +132,13 @@ private
     return object.to_f if object.match(/^[0-9]+[,\.][0-9]+$/)
     return object.to_i if object.match(/^[0-9]+$/)
     object
+  end
+
+  def track_event(event_id, event_data)
+    @redis.hincrby "#{@opts[:redis_prefix]}-stats",             "events_received", 1
+    @redis.set     "#{@opts[:redis_prefix]}-event-#{event_id}", event_data.to_json
+    @redis.lpush   "#{@opts[:redis_prefix]}-queue",             event_id
+    @redis.expire  "#{@opts[:redis_prefix]}-event-#{event_id}", @opts[:event_queue_ttl]
   end
 
 end

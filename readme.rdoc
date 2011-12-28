@@ -80,18 +80,18 @@ or in your Gemfile:
 
 The slow way: HTTP-Post the json event to the fnordmetric webinterface
 
-  POST http://localhost:2323/events _type=_set_name&name=Horst(..)
+  POST http://localhost:2323/events _type=unicorn_seen
 
-  curl -X POST -d "_type=_set_name&name=Horst(..)" http://localhost:2323/events
+  curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
 
 The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
 
-  echo "\{\"_type\": \"foobar\"\}\n" | nc localhost 2323
+  echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
 
 The fast way: Add your event directly to the redis-based queue:
 
-  uuid = "sobv67a9v73sba74"
-  event = { :_type => "foobar" }.to_json
+  uuid = (8**32).to_s(36)
+  event = { :_type => "unicorn_seen" }.to_json
 
   redis.lpush("fnordmetric-queue", uuid) 
   redis.set("fnordmetric-event-#{my_uuid}", event)
