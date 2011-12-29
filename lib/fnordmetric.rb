@@ -12,14 +12,14 @@ module FnordMetric
 
   @@namespaces = {}
 
-  def self.namespace(key=nil, &block)    
-    @@namespaces[key] = block    
+  def self.namespace(key=nil, &block)
+    @@namespaces[key] = block
   end
-  
+
   def self.default_options(opts)
 
     opts[:redis_url] ||= "redis://localhost:6379"
-    opts[:redis_prefix] ||= "fnordmetric"            
+    opts[:redis_prefix] ||= "fnordmetric"
 
     opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
     opts[:web_interface] ||= ["0.0.0.0", "4242"]
@@ -34,8 +34,8 @@ module FnordMetric
     opts[:event_data_ttl] ||= 3600*24*30
 
     # session data is kept for one month
-    opts[:session_data_ttl] ||= 3600*24*30 
-    
+    opts[:session_data_ttl] ||= 3600*24*30
+
     opts
   end
 
@@ -45,25 +45,10 @@ module FnordMetric
       trap("TERM", &method(:shutdown))
       trap("INT",  &method(:shutdown))
 
-      opts = default_options(opts)      
-
-      if opts[:start_worker]
-        worker = Worker.new(@@namespaces.clone, opts)
-        worker.ready!   
-      end
-
-      if opts[:inbound_stream]
-        begin   
-          inbound_stream = InboundStream.start(opts)           
-          log "listening on tcp##{opts[:inbound_stream].join(":")}"
-        rescue
-          log "cant start FnordMetric::InboundStream. port in use?"
-        end
-      end
+      app = embedded(opts)
 
       if opts[:web_interface]
-        begin             
-          app = FnordMetric::App.new(@@namespaces.clone, opts)
+        begin
           Thin::Server.start(*opts[:web_interface], app)
           log "listening on http##{opts[:web_interface].join(":")}"
         rescue Exception => e
@@ -71,14 +56,7 @@ module FnordMetric
         end
       end
 
-      if opts[:print_stats]        
-        redis = connect_redis(opts[:redis_url])
-        EM::PeriodicTimer.new(opts[:print_stats]) do 
-          print_stats(opts, redis) 
-        end
-      end
-
-    end 
+    end
   end
 
   def self.log(msg)
@@ -91,10 +69,10 @@ module FnordMetric
   end
 
   def self.run(opts={})
-    start_em(opts) 
+    start_em(opts)
   rescue Exception => e
     log "!!! eventmachine died, restarting... #{e.message}"
-    sleep(1); run(opts)  
+    sleep(1); run(opts)
   end
 
   def self.shutdown
@@ -108,17 +86,55 @@ module FnordMetric
 
   def self.print_stats(opts, redis) # FIXME: refactor this mess
     keys = [:events_received, :events_processed]
-    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|      
+    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|
       redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
         data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}
         log "#{data_human.join(", ")}, queue_length: #{queue_length}"
-      end  
+      end
     end
   end
 
-  def self.standalone    
+  def self.standalone
     require "fnordmetric/logger"
     require "fnordmetric/standalone"
+  end
+
+  # returns a Rack app which can be mounted under any path.
+  # `:start_worker`   starts a worker
+  # `:inbound_stream` starts the TCP interface
+  # `:print_stats`    periodicaly prints worker stats
+  def self.embedded(opts={})
+    opts = default_options(opts)
+    app  = nil
+
+    if opts[:rack_app] or opts[:web_interface]
+      app = FnordMetric::App.new(@@namespaces.clone, opts)
+    end
+
+    EM.next_tick do
+      if opts[:start_worker]
+        worker = Worker.new(@@namespaces.clone, opts)
+        worker.ready!
+      end
+
+      if opts[:inbound_stream]
+        begin
+          inbound_stream = InboundStream.start(opts)
+          log "listening on tcp##{opts[:inbound_stream].join(":")}"
+        rescue
+          log "cant start FnordMetric::InboundStream. port in use?"
+        end
+      end
+
+      if opts[:print_stats]
+        redis = connect_redis(opts[:redis_url])
+        EM::PeriodicTimer.new(opts[:print_stats]) do
+          print_stats(opts, redis)
+        end
+      end
+    end
+
+    app
   end
 
 end
