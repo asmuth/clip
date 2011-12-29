@@ -1,18 +1,18 @@
 # encoding: utf-8
 
 class FnordMetric::App < Sinatra::Base
-  
+
   @@sessions = Hash.new
-  
+
   Encoding.default_external = Encoding::UTF_8
 
   #use Rack::Reloader, 0
-  
+
   enable :session
 
-  set :haml, :format => :html5 
+  set :haml, :format => :html5
   set :views, ::File.expand_path('../../../haml', __FILE__)
-  set :public, ::File.expand_path('../../../pub', __FILE__)
+  set :public_folder, ::File.expand_path('../../../pub', __FILE__)
 
   def initialize(namespaces, opts)
     @namespaces = {}
@@ -25,7 +25,7 @@ class FnordMetric::App < Sinatra::Base
     end
     super(nil)
   end
-  
+
   helpers do
     include Rack::Utils
     alias_method :h, :escape_html
@@ -38,7 +38,7 @@ class FnordMetric::App < Sinatra::Base
       @namespaces
     end
 
-    def current_namespace          
+    def current_namespace
       @namespaces[@namespaces.keys.detect{ |k|
         k.to_s == params[:namespace]
       }.try(:intern)]
@@ -47,7 +47,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   if ENV['RACK_ENV'] == "test"
-    set :raise_errors, true 
+    set :raise_errors, true
   end
 
   get '/' do
@@ -78,7 +78,7 @@ class FnordMetric::App < Sinatra::Base
       params[:sum] ? { :sum => _values.values.compact.map(&:to_i).sum } : _values
     else
       { (_t = gauge.tick_at(Time.now.to_i-gauge.tick)) => gauge.value_at(_t) }
-    end    
+    end
 
     data.to_json
   end
@@ -88,16 +88,16 @@ class FnordMetric::App < Sinatra::Base
     sessions = current_namespace.sessions(:all, :limit => 100).map do |session|
       session.fetch_data!
       session.to_json
-    end 
+    end
 
     { :sessions => sessions }.to_json
   end
 
   get '/:namespace/events' do
 
-    events = if params[:type] 
+    events = if params[:type]
       current_namespace.events(:by_type, :type => params[:type])
-    else 
+    else
       find_opts = { :limit => 100 }
       find_opts.merge!(:since => params[:since].to_i+1) if params[:since]
       current_namespace.events(:all, find_opts)
@@ -120,7 +120,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   post '/events' do
-    halt 400, 'please specify the event_type (_type)' unless params["_type"]           
+    halt 400, 'please specify the event_type (_type)' unless params["_type"]
     track_event((8**32).to_s(36), parse_params(params))
   end
 
@@ -128,7 +128,7 @@ private
 
   def parse_params(hash)
     hash.tap do |h|
-      h.keys.each{ |k| h[k] = parse_param(h[k]) }      
+      h.keys.each{ |k| h[k] = parse_param(h[k]) }
     end
   end
 
