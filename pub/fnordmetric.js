@@ -1,5 +1,5 @@
 var FnordMetric = (function(){
- 
+
   var canvasElem = false;
 
   var currentNamespace = false;
@@ -33,7 +33,7 @@ var FnordMetric = (function(){
       return parseInt(range/(3600*24)) + ' days';
     }
   }
-  
+
   function formatTimeSince(time){
     var now = new Date().getTime()/1000;
     var since = now - time;
@@ -57,13 +57,13 @@ var FnordMetric = (function(){
   }
 
   function formatValue(value){
-    if(value < 10){ 
-      return value.toFixed(2); 
-    } else if(value > 1000){ 
-      return (value/1000.0).toFixed(1) + "k"; 
+    if(value < 10){
+      return value.toFixed(2);
+    } else if(value > 1000){
+      return (value/1000.0).toFixed(1) + "k";
     } else {
-      return value.toFixed(0);     
-    }    
+      return value.toFixed(0);
+    }
   }
 
   function getNextWidgetUID(){
@@ -95,8 +95,8 @@ var FnordMetric = (function(){
             .attr('rel', k)
             .append(
               $('<span></span>').html(opts.gauges[k].title)
-            ).click(function(){ 
-              loadGauge($(this).attr('rel')); 
+            ).click(function(){
+              loadGauge($(this).attr('rel'));
             }
           )
         );
@@ -116,15 +116,15 @@ var FnordMetric = (function(){
 
           $('body').bind('fm_dashboard_close', function(){
             window.clearInterval(autoupdate_interval);
-          });  
+          });
         }
       };
-      
+
       function loadGauge(gkey, silent){
         if(!gkey){ gkey = current_gauge; }
         current_gauge = gkey;
         if(!silent){ $('.toplist_inner', opts.elem).addClass('loading'); }
-        var _url = '/' + currentNamespace + '/gauge/' + gkey;
+        var _url = FnordMetric.p + '/' + currentNamespace + '/gauge/' + gkey;
         $.get(_url, function(_resp){
           var resp = JSON.parse(_resp);
           renderGauge(gkey, resp);
@@ -147,14 +147,14 @@ var FnordMetric = (function(){
 
 
     return {
-      render: render  
+      render: render
     };
 
   };
 
   var numbersWidget = function(){
 
-    
+
     function render(opts){
 
       opts.elem.append(
@@ -165,20 +165,20 @@ var FnordMetric = (function(){
       });
 
       for(k in opts.gauges){
-        var gtick = parseInt(opts.gauges[k].tick);        
+        var gtick = parseInt(opts.gauges[k].tick);
         var gtitle = opts.gauges[k].title;
 
         var container = $('<div></div>')
           .addClass('numbers_container')
           .addClass('size_'+opts.offsets.length)
-          .attr('rel', k)      
+          .attr('rel', k)
           .append(
             $('<div></div>')
               .addClass('title')
               .html(gtitle)
           );
 
-        
+
         $(opts.offsets).each(function(n, offset){
           var _off, _nextoff, _sum;
           if (offset[0]=="s"){
@@ -187,8 +187,8 @@ var FnordMetric = (function(){
           } else {
             _sum = 0;
             _off = offset*gtick;
-            _nextoff = gtick;  
-          }          
+            _nextoff = gtick;
+          }
           container.append(
             $('<div></div>')
               .addClass('number')
@@ -218,14 +218,14 @@ var FnordMetric = (function(){
 
           $('body').bind('fm_dashboard_close', function(){
             window.clearInterval(autoupdate_interval);
-          });  
+          });
 
         }
 
       };
 
       updateValues(opts);
-      
+
     }
 
     function updateValues(opts){
@@ -235,15 +235,15 @@ var FnordMetric = (function(){
         var _sum = parseInt($(this).attr('data-sum'));
         var num = this;
         var at = parseInt(new Date().getTime()/1000);
-        var url = '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
+        var url = FnordMetric.p + '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
         if(_sum > 0){
           url += '?at='+(at-_sum)+'-'+at+'&sum=true';
         } else {
           at -= parseInt($(this).attr('data-offset'));
           url += '?at='+at;
         }
-        
-        $.get(url, function(_resp){ 
+
+        $.get(url, function(_resp){
           var resp = JSON.parse(_resp);
           for(_k in resp){
             $(num).attr('data', (resp[_k]||0));
@@ -261,9 +261,9 @@ var FnordMetric = (function(){
         var target_val = parseFloat($(this).attr('data'));
         var current_val = parseFloat($(this).attr('data-current'));
         if(!current_val){ current_val=0; }
-        var diff = (target_val-current_val)/diff_factor; 
+        var diff = (target_val-current_val)/diff_factor;
         if(diff < 1){ diff=1; }
-        if(target_val > current_val){ 
+        if(target_val > current_val){
           still_running = true;
           var new_val = current_val+diff;
           if(new_val > target_val){ new_val = target_val; }
@@ -271,7 +271,7 @@ var FnordMetric = (function(){
           $('.value', this).html(formatValue(new_val));
         }
       });
-      if(still_running){ 
+      if(still_running){
         (function(df){
           window.setTimeout(function(){ updateDisplay(opts, df); }, 30);
         })(diff_factor);
@@ -279,53 +279,53 @@ var FnordMetric = (function(){
     }
 
     return {
-      render: render  
+      render: render
     };
 
   };
 
   var timelineWidget = function(){
-    
+
     function render(opts){
-      
+
       var widget_uid = getNextWidgetUID();
       var chart=false;
       var max_y=0;
 
       function redrawWithRange(first_time, silent){
         if(!silent){ $(opts.elem).css('opacity', 0.5); }
-        redrawDatepicker();    
-        var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;    
+        redrawDatepicker();
+        var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;
         //chart.series = [];
         max_y=0;
         //metrics_completed = 0;
         $(opts.gauges).each(function(i,gauge){
           $.ajax({
-            url: '/'+currentNamespace+'/gauge/'+gauge+_query, 
+            url: FnordMetric.p + '/' + currentNamespace +'/gauge/'+gauge+_query,
             success: redrawGauge(first_time, gauge)
-          });         
+          });
         });
       }
 
       function redrawGauge(first_time, gauge){
-        return (function(json){                   
+        return (function(json){
           var raw_data = JSON.parse(json);
           var series_data = [];
 
-          for(p in raw_data){ 
-            series_data.push([parseInt(p)*1000, raw_data[p]||0]); 
+          for(p in raw_data){
+            series_data.push([parseInt(p)*1000, raw_data[p]||0]);
             max_y = Math.max(max_y, raw_data[p]);
           }
-  
-          if(!first_time){ 
-            chart.get('series-'+gauge).setData(series_data);            
+
+          if(!first_time){
+            chart.get('series-'+gauge).setData(series_data);
           } else {
             chart.addSeries({
-              name: opts.gauge_titles[gauge], 
-              data: series_data, 
-              id: 'series-'+gauge 
-            });     
-          }       
+              name: opts.gauge_titles[gauge],
+              data: series_data,
+              id: 'series-'+gauge
+            });
+          }
 
           chart.yAxis[0].setExtremes(0,max_y);
           chart.redraw();
@@ -337,9 +337,9 @@ var FnordMetric = (function(){
 
       function redrawDatepicker(){
         $('.datepicker', opts.elem).html(
-          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) + 
+          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) +
           '&nbsp;&dash;&nbsp;' +
-          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000) 
+          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000)
         );
       }
 
@@ -349,7 +349,7 @@ var FnordMetric = (function(){
         opts.end_timestamp += v;
         redrawWithRange();
       }
-      
+
       function drawLayout(){
         $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
           $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
@@ -367,7 +367,7 @@ var FnordMetric = (function(){
           )
         ).append(
           $('<h2></h2>').html(opts.title)
-        ) ).append( 
+        ) ).append(
           $('<div></div>').attr('id', 'container-'+widget_uid).css({
             height: 256,
             marginBottom: 20,
@@ -377,21 +377,21 @@ var FnordMetric = (function(){
       }
 
       function drawChart(){
-        chart = new Highcharts.Chart({     
-          chart: { 
-            renderTo: 'container-'+widget_uid, 
-            defaultSeriesType: opts.plot_style, 
-            height: 270 
+        chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'container-'+widget_uid,
+            defaultSeriesType: opts.plot_style,
+            height: 270
           },
           series: [],
           title: { text: '' },
-          xAxis: {       
+          xAxis: {
             type: 'datetime',
-            tickInterval: opts.tick * 1000, 
-            title: (opts.x_title||''), 
-            labels: { step: 2 } 
+            tickInterval: opts.tick * 1000,
+            title: (opts.x_title||''),
+            labels: { step: 2 }
           },
-          yAxis: { 
+          yAxis: {
             title: (opts.y_title||''),
             min: 0,
             max: 1000
@@ -437,7 +437,7 @@ var FnordMetric = (function(){
 
           $('body').bind('fm_dashboard_close', function(){
             window.clearInterval(autoupdate_interval);
-          });  
+          });
 
         }
       };
@@ -445,16 +445,16 @@ var FnordMetric = (function(){
     }
 
     return {
-      render: render  
+      render: render
     };
 
   };
 
 
   var barsWidget = function(){
-    
+
     function render(opts){
-      
+
       var widget_uid = getNextWidgetUID();
       var chart=false;
       var max_y=0;
@@ -464,14 +464,14 @@ var FnordMetric = (function(){
         max_y=0;
         $(opts.gauges).each(function(i,gauge){
           $.ajax({
-            url: '/'+currentNamespace+'/gauge/'+gauge, 
+            url: FnordMetric.p + '/' + currentNamespace +'/gauge/'+gauge,
             success: redrawGauge(first_time, gauge)
-          });         
+          });
         });
       }
 
       function redrawGauge(first_time, gauge){
-        return (function(json){                   
+        return (function(json){
           var raw_data = JSON.parse(json);
           var series_data = [];
           var series_type;
@@ -487,28 +487,28 @@ var FnordMetric = (function(){
             raw_data.values.sort(function(a,b){
               if(a[0] == b[0]){
                 return 0;
-              }else if(a[0] > b[0]){ 
+              }else if(a[0] > b[0]){
                 return 1;
               } else {
                 return -1;
               }
             });
           }
-          
-          for(p in raw_data.values){ 
-            label_data.push(raw_data.values[p][0]||'?'); 
-            series_data.push(parseInt(raw_data.values[p][1]||0)); 
+
+          for(p in raw_data.values){
+            label_data.push(raw_data.values[p][0]||'?');
+            series_data.push(parseInt(raw_data.values[p][1]||0));
             //max_y = Math.max(max_y, raw_data[p]);
           }
-  
-          chart = new Highcharts.Chart({     
-            chart: { 
-              renderTo: 'container-'+widget_uid, 
-              defaultSeriesType: series_type, 
-              height: 270 
+
+          chart = new Highcharts.Chart({
+            chart: {
+              renderTo: 'container-'+widget_uid,
+              defaultSeriesType: series_type,
+              height: 270
             },
             title: { text: '' },
-            xAxis: {       
+            xAxis: {
              categories: label_data
             },
             yAxis: {
@@ -540,7 +540,7 @@ var FnordMetric = (function(){
           $(opts.elem).css('opacity', 1);
         });
       }
-    
+
       function drawLayout(){
         $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
           $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
@@ -548,7 +548,7 @@ var FnordMetric = (function(){
           )
         ).append(
           $('<h2></h2>').html(opts.title)
-        ) ).append( 
+        ) ).append(
           $('<div></div>').attr('id', 'container-'+widget_uid).css({
             height: 256,
             marginBottom: 20,
@@ -560,29 +560,29 @@ var FnordMetric = (function(){
       drawLayout();
       redraw(true);
 
-      if(opts.autoupdate){  
+      if(opts.autoupdate){
         var autoupdate_interval = window.setInterval(function(){
           redraw(false, true);
         }, opts.autoupdate*1000);
 
         $('body').bind('fm_dashboard_close', function(){
           window.clearInterval(autoupdate_interval);
-        });  
+        });
       }
 
     }
 
     return {
-      render: render  
+      render: render
     };
 
   };
 
 
   var pieWidget = function(){
-    
+
     function render(opts){
-      
+
       var widget_uid = getNextWidgetUID();
       var chart=false;
 
@@ -593,36 +593,36 @@ var FnordMetric = (function(){
         var at = parseInt(new Date().getTime()/1000);
         $(opts.gauges).each(function(i,gauge){
           $.ajax({
-            url: '/'+currentNamespace+'/gauge/'+gauge+'?at='+at, 
+            url: FnordMetric.p + '/' + currentNamespace+'/gauge/'+gauge+'?at='+at,
             success: function(_resp){
               var resp = JSON.parse(_resp);
               gauges_left -= 1;
-              for(_tk in resp){ 
+              for(_tk in resp){
                 gauge_values[gauge] = parseInt(resp[_tk]||0);
               }
               if(gauges_left==0){
                 redrawChart(first_time, gauge_values);
               }
             }
-          });         
+          });
         });
       }
 
-      function redrawChart(first_time, gauge_values){       
-      
+      function redrawChart(first_time, gauge_values){
+
         var series_data = [];
-        
+
         for(_gkey in gauge_values){
           series_data.push([
             opts.gauge_titles[_gkey],
             gauge_values[_gkey]
           ]);
-        } 
-          
-        chart = new Highcharts.Chart({     
-          chart: { 
-            renderTo: 'container-'+widget_uid, 
-            defaultSeriesType: 'pie', 
+        }
+
+        chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'container-'+widget_uid,
+            defaultSeriesType: 'pie',
             height: 270,
             spacingTop: 5,
             spacingBottom: 30
@@ -664,11 +664,11 @@ var FnordMetric = (function(){
         //chart.redraw();
         $(opts.elem).css('opacity', 1);
       }
-    
+
       function drawLayout(){
         $(opts.elem).append( $('<div></div>').attr('class', 'headbar small').append(
           $('<span></span>').html(opts.title)
-        ) ).append( 
+        ) ).append(
           $('<div></div>').attr('id', 'container-'+widget_uid).css({
             height: 270
           })
@@ -678,27 +678,27 @@ var FnordMetric = (function(){
       drawLayout();
       redraw(true);
 
-      if(opts.autoupdate){  
+      if(opts.autoupdate){
         var autoupdate_interval = window.setInterval(function(){
           redraw(false, true);
         }, opts.autoupdate*1000);
 
         $('body').bind('fm_dashboard_close', function(){
           window.clearInterval(autoupdate_interval);
-        });  
+        });
       }
 
     }
 
     return {
-      render: render  
+      render: render
     };
 
   };
 
 
   var sessionView = (function(){
-    
+
     var listElem = $('<ul class="session_list"></ul>');
     var feedInnerElem = $('<ul class="feed_inner"></ul>');
     var typeListElem  = $('<ul class="event_type_list"></ul>');
@@ -745,7 +745,7 @@ var FnordMetric = (function(){
     function doSessionPoll(){
       return (function(){
         $.ajax({
-          url: '/'+currentNamespace+'/sessions',
+          url: FnordMetric.p + '/' + currentNamespace+'/sessions',
           success: callbackSessionPoll()
         });
       });
@@ -754,7 +754,7 @@ var FnordMetric = (function(){
     function loadEventHistory(event_type){
       feedInnerElem.html('');
       $.ajax({
-        url: '/'+currentNamespace+'/events?type='+event_type,
+        url: FnordMetric.p + '/' + currentNamespace+'/events?type='+event_type,
         success: function(_data, _status){
           var data = JSON.parse(_data).events;
           for(var n=data.length; n >= 0; n--){
@@ -767,7 +767,7 @@ var FnordMetric = (function(){
     function callbackSessionPoll(){
       return (function(_data, _status){
         $.each(JSON.parse(_data).sessions, function(i,v){
-          updateSession(v);  
+          updateSession(v);
         });
         sortSessions();
       });
@@ -775,12 +775,12 @@ var FnordMetric = (function(){
 
     function loadEventTypes(){
       $.ajax({
-        url: '/'+currentNamespace+'/event_types',
+        url: FnordMetric.p + '/' + currentNamespace+'/event_types',
         success: function(_data){
           var data = JSON.parse(_data);
           $(data.types).each(function(i,v){
-            if((v.length > 0) && (v.slice(0,5)!='_set_')){ 
-              addEventType(v,v); 
+            if((v.length > 0) && (v.slice(0,5)!='_set_')){
+              addEventType(v,v);
             }
           });
         }
@@ -791,10 +791,10 @@ var FnordMetric = (function(){
       typeListElem.append(
         $('<li class="event_type"></li>').append(
           $('<span class="history"></span>').html('history')
-          .click(function(){ 
+          .click(function(){
             $('.event_type_list .event_type input').attr('checked', false);
             $('input', $(this).parent()).attr('checked', true);
-            updateEventFilter(); loadEventHistory(type); 
+            updateEventFilter(); loadEventHistory(type);
           })
         ).append(
           $('<input type="checkbox" />').attr('checked', true)
@@ -816,9 +816,9 @@ var FnordMetric = (function(){
     }
 
     function doEventsPoll(){
-      return (function(){         
+      return (function(){
         $.ajax({
-          url: '/'+currentNamespace+'/events?since='+eventsPolledUntil,
+          url: FnordMetric.p + '/' + currentNamespace+'/events?since='+eventsPolledUntil,
           success: callbackEventsPoll()
         });
       });
@@ -830,15 +830,15 @@ var FnordMetric = (function(){
         var events = data.events;
         var timout = 1000;
         var maxevents = 200;
-        if(events.length > 0){ 
-          timeout = 200; 
+        if(events.length > 0){
+          timeout = 200;
           eventsPolledUntil = parseInt(events[0]._time)-1;
         }
 	      for(var n=events.length-1; n >= 0; n--){
 	        var v = events[n];
           if(eventsFilter.indexOf(v._type) == -1){
             if(parseInt(v._time)<=eventsPolledUntil){
-              renderEvent(v);  
+              renderEvent(v);
             }
           }
         };
@@ -876,21 +876,21 @@ var FnordMetric = (function(){
         if(session_name){
           $('.name', session_elem).html(session_name);
         }
-        
+
         $('.time', session_elem).html(session_time);
 
       } else {
-        
+
         var session_picture = $('<img width="18" />');
 
-        if(!session_name){ 
+        if(!session_name){
           session_name = session_data["session_key"].substr(0,15)
         };
 
-        if(session_data["_picture"]){ 
+        if(session_data["_picture"]){
           session_picture.attr('src', session_data["_picture"]);
         };
-        
+
         listElem.append(
           $('<li class="session"></li>').append(
             $('<div class="picture"></div>').html(session_picture)
@@ -911,7 +911,7 @@ var FnordMetric = (function(){
       var event_picture = $('<div class="picture"></picture>');
 
       var event_type = event_data._type;
-      
+
       if(!event_type){ return true; }
 
       if(event_data._message){
@@ -925,15 +925,15 @@ var FnordMetric = (function(){
       }
 
       event_time.html(formatTimeOfDay(event_data._time));
-      
+
       if(event_data._session_key && event_data._session_key.length > 0){
         if(session_data=sessionData[event_data._session_key]){
-          if(session_data._name){            
+          if(session_data._name){
             event_props.append(
               $('<strong></strong>').html(session_data._name)
             );
           }
-          if(session_data._picture){ 
+          if(session_data._picture){
             event_picture.append(
               $('<img width="40" />').attr('src', session_data._picture)
             )
@@ -961,7 +961,7 @@ var FnordMetric = (function(){
     };
 
   });
-  
+
 
   var dashboardView = (function(dashboard_name){
 
@@ -971,7 +971,7 @@ var FnordMetric = (function(){
     function load(_viewport){
       viewport = _viewport.html('');
       $.ajax({
-        url: '/'+currentNamespace+'/dashboard/'+dashboard_name,
+        url: FnordMetric.p + '/' + currentNamespace+'/dashboard/'+dashboard_name,
         success: function(resp, status){
           var conf = JSON.parse(resp);
           renderWidgets(conf.widgets);
@@ -1009,17 +1009,17 @@ var FnordMetric = (function(){
       if(wwperc==100){
         widgets[wkey].elem.addClass('full_width');
       } else { wwidth -= 1; }
-      widget.elem.width(wwidth);  
+      widget.elem.width(wwidth);
     }
 
     function resize(){
       for(wkey in widgets){
-        resizeWidget(wkey);  
+        resizeWidget(wkey);
       };
     };
 
     function close(){
-      $('body').trigger('fm_dashboard_close');  
+      $('body').trigger('fm_dashboard_close');
     };
 
     return {
@@ -1031,7 +1031,7 @@ var FnordMetric = (function(){
   });
 
 
-  function renderDashboard(_dash){  
+  function renderDashboard(_dash){
     loadView(dashboardView(_dash));
   };
 
@@ -1049,19 +1049,22 @@ var FnordMetric = (function(){
 
   function resizeView(){
     currentView.resize(
-      canvasElem.innerWidth(), 
+      canvasElem.innerWidth(),
       canvasElem.innerHeight()
     );
   };
 
   function init(_namespace, _canvasElem){
+    if (FnordMetric.p == ''){
+      FnordMetric.p = '/';
+    }
     canvasElem = _canvasElem;
     currentNamespace = _namespace;
     loadView(sessionView());
   };
 
   return {
-    p: '/fnordmetric/',  
+    p: '/fnordmetric/',
     renderDashboard: renderDashboard,
     renderSessionView: renderSessionView,
     resizeView: resizeView,
