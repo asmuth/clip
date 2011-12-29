@@ -291,6 +291,14 @@ end
 FnordMetric.standalone
 ```
 
+Contributors
+------------
+
++ Simon Menke (http://github.com/fd)
++ Bruno Michel (http://github.com/nono)
+
+To contribute, please fork this repository, make your changes and run the specs, commit them to your github repository and send me a pull request.
+
 
 License
 -------
