@@ -14,7 +14,7 @@ FnordMetric keeps track of your data and draws nice timeline plots.
 
 FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
 
-{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png]
+{<img src="https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png" />}[https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png]
 
 
 == Getting Started
@@ -23,7 +23,7 @@ Copy doc/ulm_stats.rb (that's the configuration from the screenshots and screenc
 
 Simple Example: This will listen for json-events with type=unicorn_seen and render a timeline-plot showing the number of received events per hour.
 
- require "fnordmetric"
+  require "fnordmetric"
 
   FnordMetric.namespace :myapp do
 
@@ -38,7 +38,7 @@ Simple Example: This will listen for json-events with type=unicorn_seen and rend
       incr :unicorns_seen_per_hour 
     end
 
-    # draw a timeline showing the gauges value, auto-refresh every 30s
+    # draw a timeline showing the gauges value, auto-refresh every 2s
     widget 'Overview', {
       :title => "Unicorn-Sightings per Hour",
       :type => :timeline,
@@ -70,7 +70,7 @@ This is the easiest way to submit an event:
 
 or in your Gemfile:
 
-  gem 'fnordmetric', '>= 0.5.1'
+  gem 'fnordmetric', '~> 0.5'
 
 
 == Documentation
@@ -78,7 +78,7 @@ or in your Gemfile:
 
 === Sending Events
 
-The slow way: HTTP-Post the json event to the fnordmetric webinterface
+The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
   POST http://localhost:2323/events _type=unicorn_seen
 
@@ -88,7 +88,7 @@ The easy way: Stream one ore more newline-seperated json encoded events through 
 
   echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
 
-The fast way: Add your event directly to the redis-based queue:
+The fast way: Add your event directly to the redis-based queue.
 
   uuid = (8**32).to_s(36)
   event = { :_type => "unicorn_seen" }.to_json
@@ -126,7 +126,7 @@ The fast way: Add your event directly to the redis-based queue:
 
 === Event Handlers
 
-call these methods from the event-handler block
+Call these methods from the event-handler block
 
   incr(gauge_name, value=1): 
     Increment the given (two-dimensional) gauge by value at the tick specified by event-time
@@ -221,13 +221,13 @@ call these methods from the event-handler block
       :three_dimensional => true
 
 
-    # on every event like { _type: 'message_sent' }
+    # on every event like { "_type": "message_sent" }
     event(:message_sent) do
       # increment the messages_sent gauge by 1
       incr :messages_sent 
     end
 
-    # on every event like { _type: 'message_read' }
+    # on every event like { "_type": "message_read" }
     event(:message_read) do 
       # increment the messages_read gauge by 1
       incr :messages_read 
@@ -239,7 +239,7 @@ call these methods from the event-handler block
       incr :events_total
     end
 
-    # on every event like { _type: '_pageview', _session: 'sbz7jset', _url: '/page2' }
+    # on every event like { "_type": "_pageview", "_session": "sbz7jset", "url": "/page2" }
     event :_pageview do
       # increment the daily_uniques gauge by 1 if session_key hasn't been seen in this tick yet
       incr :pageviews_daily_unique
@@ -247,7 +247,7 @@ call these methods from the event-handler block
       incr_field :pageviews_per_url_daily, data[:url]
     end
 
-   # on every event like { _type: '_pageview', my_set_age: '23' }
+    # on every event like { "_type": "_my_set_age", "my_age_field": "23" }
     event(:my_set_age) do 
       # add the value of my_set_age to the avg_age_per_session gauge if session_key 
       # hasn't been seen in this tick yet
@@ -271,7 +271,7 @@ call these methods from the event-handler block
       :type => :numbers,
       :width => 30,
       :autoupdate => 20,
-      :offsets => [0,3,"10s"]
+      :offsets => [0,3,"10s"],
       :gauges => [ :messages_sent, :messages_read ]
     }
 
@@ -333,5 +333,4 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -> demo / example: chatroom;  
     -> events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
     -> widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
-
 
