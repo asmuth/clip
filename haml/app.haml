@@ -15,6 +15,10 @@
 
   %body
     .topbar
+      %ul
+        -namespaces.each do |key,namespace|
+          %li{:class => namespace.token == current_namespace.token ? 'active' : nil}
+            %a{:href=>"/#{namespace.token}"}=h namespace.token
 
     #wrap
       #tabs
