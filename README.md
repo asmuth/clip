@@ -99,9 +99,9 @@ The fast way: Add your event directly to the redis-based queue.
 uuid = (8**32).to_s(36)
 event = { :_type => "unicorn_seen" }.to_json
 
-redis.lpush("fnordmetric-queue", uuid) 
 redis.set("fnordmetric-event-#{my_uuid}", event)
 redis.expire("fnordmetric-event-#{my_uuid}", 60)
+redis.lpush("fnordmetric-queue", uuid) 
 ```
 
 ----
@@ -118,14 +118,6 @@ redis.expire("fnordmetric-event-#{my_uuid}", 60)
 // set the user picture
 { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 ```
-
-----
-
-### DSL Methods ###
-
-* gauge
-* widget
-* event
 
 ----
 
@@ -147,28 +139,25 @@ Call these methods from the event-handler block
 
 ----
 
-### Gauges ###
+### Options: Gauges ###
 
 ----
 
-### Widgets ###
+### Options: Widgets ###
 
-`[autoupdate]` auto-refresh the timeline every n secs (0 turns autoupdate off)
++ `[autoupdate]` auto-refresh the timeline every n secs (0 turns autoupdate off)
 
-#### Widget-Options: TimelineWidget ####
+TimelineWidget
 
-`[plot_style]` one of: line, areaspline
-`[include_current]` show the current tick?
-`[ticks]` number of ticks to show (defaults to 24/30)
++ `[plot_style]` one of: line, areaspline
++ `[include_current]` show the current tick?
++ `[ticks]` number of ticks to show (defaults to 24/30)
 
-#### Widget-Options: BarsWidget ####
+BarsWidget
 
-`[plot_style]` one of: vertical, horizontal
-`[order_by]`: order bars/columns by: value, field
++ `[plot_style]` one of: vertical, horizontal
++ `[order_by]`: order bars/columns by: value, field
 
-#### Widget-Options: Numbers-Widget ####
-
-#### Widget-Options: ToplistWidget ####
 
 ----
 
@@ -178,7 +167,7 @@ Call these methods from the event-handler block
 Examples
 --------
 
-(link1), (link2), (link3), (link4)
++ doc/ulm_stats.rb
 
 
 ## Full Example ##
@@ -341,10 +330,4 @@ Todos
 * prune the namespace-event-types-list (trim to max items)
 * timelinewidget + numberswidget => should use redis hmget
 * get multiple metrics in a single http get
-* `{ _namespace: myns }` field (!!!)
-  
-
-* demo / example: chatroom;  
-  * events: msg_read, msg_sent, {reg_start, reg_register, reg_active}, login (+demog.data+lang), referall
-  * widgets: msgs sent/read (timeline), user-demog. (bars), reg-funnel (funnel), male vs. female users (pie), top langs (list), kpi list (toplist - regs, msg/user, conversion rate, etc), top referrers
-
+* `{ _namespace: myns }` field 
