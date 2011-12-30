@@ -34,6 +34,10 @@ class FnordMetric::App < Sinatra::Base
       request.env["SCRIPT_NAME"]
     end
 
+    def namespaces
+      @namespaces
+    end
+
     def current_namespace          
       @namespaces[@namespaces.keys.detect{ |k|
         k.to_s == params[:namespace]

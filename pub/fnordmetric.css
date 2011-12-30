@@ -1,9 +1,14 @@
 body, html{ height:100%; padding:0px;}
 body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-.topbar{ height:43px; background:#24272c; display:none; }
+.topbar{ height:38px; background:#24272c; position:fixed; top:0px; width:100%;}
+.topbar ul { list-style-type:none; margin:0; }
+.topbar ul li { padding: 5px 10px 5px 10px; background-color:#3b3e45; display:inline; height:38px; line-height:38px; border-radius:3px; margin-right:5px;}
+.topbar ul li a { color:#ccc; font-size:13px; text-decoration:none; }
+.topbar ul li a:hover { color:#fff; }
+.topbar ul li.active a { color:#fff; }
 
-#wrap{ margin:0 20px; }
+#wrap{ margin:25px 20px; }
 
 #tabs{ width:150px; position:fixed; height:100%; margin-top:70px; }
 #tabs ul{ list-style-type:none; padding:0; margin:0; width:156px;}
