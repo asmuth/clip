@@ -18,7 +18,7 @@ module FnordMetric
   
   def self.default_options(opts)
 
-    opts[:redis_uri] = "redis://localhost:6379"
+    opts[:redis_url] ||= "redis://localhost:6379"
     opts[:redis_prefix] ||= "fnordmetric"            
 
     opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
