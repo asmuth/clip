@@ -3,7 +3,7 @@ FnordMetric
 
 FnordMetric is a highly configurable (and pretty fast) realtime app/event tracking thing based on ruby eventmachine and redis. You define your own plotting and counting functions as ruby blocks!
 
-[ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
+[ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric) [ ![Dependency status - Gemnasium](https://gemnasium.com/paulasmuth/fnordmetric.png) ](https://gemnasium.com/paulasmuth/fnordmetric)
 
 [SCREENCAST](http://www.screenr.com/KiJs): the FnordMetric-instance we use to track our social dating app.
 
