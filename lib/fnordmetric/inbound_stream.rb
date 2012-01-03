@@ -51,7 +51,7 @@ class FnordMetric::InboundStream < EventMachine::Connection
   end
 
   def post_init
-    @redis = Redis.new
+    @redis = Redis.connect(:url => opts[:redis_url])
     @events_buffered = 0
     @streaming = true
     @buffer = ""

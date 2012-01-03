@@ -285,6 +285,9 @@ Contributors
 
 + Simon Menke (http://github.com/fd)
 + Bruno Michel (http://github.com/nono)
++ Marco Borromeo (http://github.com/mborromeo)
++ Leo Lou (http://github.com/l4u)
++ Andy Lindeman (http://github.com/alindeman)
 
 To contribute, please fork this repository, make your changes and run the specs, commit them to your github repository and send me a pull request.
 
@@ -317,9 +320,8 @@ Todos
 * funnel-widget
 * combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
 * timeline_widget: 'compare mode': compate gauge to yesterday
-* fix include_current
 * numbers_widget: handle decreasing vals
-* make redis-addr and redis-prefix + listen-ports configurable
+* make listen-ports configurable
 * referal tracking fu (parse googlequeries)  
 * trend detection
 * opt_event options: :increment => gauge_name

@@ -7,7 +7,7 @@ class FnordMetric::Worker
   end
 
   def ready!
-    @redis = EM::Hiredis.connect(@opts[:redis_uri]) 
+    @redis = EM::Hiredis.connect(@opts[:redis_url])
     tick
   end
 

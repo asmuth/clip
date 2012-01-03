@@ -14,7 +14,7 @@
       FnordMetric.p = '#{path_prefix}';
 
   %body
-    .topbar
+    .topbar{:class => namespaces.count > 1 ? 'shown' : 'hidden'}
       %ul
         -namespaces.each do |key,namespace|
           %li{:class => namespace.token == current_namespace.token ? 'active' : nil}
@@ -48,6 +48,7 @@
 
     $('#tabs li.sessions').click(function(){
       FnordMetric.renderSessionView();
+      window.location.hash = '';
     });
 
     $('#tabs li').click(function(){
