@@ -1055,16 +1055,13 @@ var FnordMetric = (function(){
   };
 
   function init(_namespace, _canvasElem){
-    if (FnordMetric.p == ''){
-      FnordMetric.p = '/';
-    }
     canvasElem = _canvasElem;
     currentNamespace = _namespace;
     loadView(sessionView());
   };
 
   return {
-    p: '/fnordmetric/',
+    p: '',
     renderDashboard: renderDashboard,
     renderSessionView: renderSessionView,
     resizeView: resizeView,
