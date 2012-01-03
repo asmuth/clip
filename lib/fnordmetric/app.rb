@@ -16,7 +16,7 @@ class FnordMetric::App < Sinatra::Base
 
   def initialize(namespaces, opts)
     @namespaces = {}
-    @redis = Redis.new
+    @redis = Redis.connect(:url => opts[:redis_url])
     @opts = opts
     namespaces.each do |key, block|
       @namespaces[key] = FnordMetric::Namespace.new(key, opts.clone)
