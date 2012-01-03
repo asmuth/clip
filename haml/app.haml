@@ -48,6 +48,7 @@
 
     $('#tabs li.sessions').click(function(){
       FnordMetric.renderSessionView();
+      window.location.hash = '';
     });
 
     $('#tabs li').click(function(){
