@@ -2,12 +2,13 @@ class FnordMetric::Namespace
   
   attr_reader :handlers, :gauges, :opts, :key, :dashboards
 
-  @@opts = [:event, :gauge, :widget]
+  @@opts = [:event, :gauge, :widget, :set_title]
 
   def initialize(key, opts)    
     @gauges = Hash.new
     @dashboards = Hash.new
-    @handlers = Hash.new                 
+    @handlers = Hash.new
+    @title = key
     @opts = opts
     @key = key      
   end
@@ -63,7 +64,11 @@ class FnordMetric::Namespace
   def token
     @key
   end
-
+  
+  def title
+    @title
+  end
+  
   def dashboards(name=nil)
     return @dashboards unless name
     dash = FnordMetric::Dashboard.new(:title => name)
@@ -84,6 +89,10 @@ class FnordMetric::Namespace
     send(:"opt_#{m}", *args, &block)
   end
 
+  def set_title(key)
+    @title = key
+  end
+  
   def opt_event(event_type, opts={}, &block)    
     opts.merge!(:redis => @redis, :gauges => @gauges)   
     FnordMetric::Context.new(opts, block).tap do |context|

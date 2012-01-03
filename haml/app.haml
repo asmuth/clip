@@ -2,7 +2,7 @@
 %html
 
   %head
-    %title Fnordmetric Dashboard
+    %title=current_namespace.title
 
     %script(type="text/javascript" src="#{path_prefix}/vendor/jquery-1.6.1.min.js")
     %script(type="text/javascript" src="#{path_prefix}/vendor/highcharts.js")
@@ -18,7 +18,7 @@
       %ul
         -namespaces.each do |key,namespace|
           %li{:class => namespace.token == current_namespace.token ? 'active' : nil}
-            %a{:href=>"/#{namespace.token}"}=h namespace.token
+            %a{:href=>"/#{namespace.token}"}=h namespace.title
 
     #wrap
       #tabs
