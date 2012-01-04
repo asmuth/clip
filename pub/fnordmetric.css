@@ -98,7 +98,11 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .number .desc{ color:#999; font-size:12px; margin-bottom:5px; display:block;  white-space:nowrap; }
 .number:last-child{ border-right:none; }
 .numbers_container{ padding-right:0px; width:215px; float:left; margin:15px 0 -1px 20px; padding-bottom:5px; border-bottom:1px solid #dedede; }
+
 .numbers_container.size_3{ width:258px; }
+.numbers_container.size_4{ width:358px; }
+.numbers_container.size_5{ width:450px; }
+
 .numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block;font-weight:400; }
 
 
