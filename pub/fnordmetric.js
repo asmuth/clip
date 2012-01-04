@@ -66,6 +66,26 @@ var FnordMetric = (function(){
     }
   }
 
+  function formatTimeValue(value){
+    if (value < 60){
+      return parseFloat(value).toFixed(1) + 's';
+    } else if(value<3600){
+      return parseFloat(value/60).toFixed(1) + 'm';
+    } else if(value<(3600*24)){
+      return parseFloat(value/3600).toFixed(1) + 'h';
+    } else {
+      return parseFloat(value/(3600*24)).toFixed(1) + 'd';
+    }
+  }
+
+  function formatGaugeValue(gauge_key, value){
+    if(gauge_key.slice(0,8) === '__time__'){
+      return formatTimeValue(value);
+    } else {
+      return formatValue(value);
+    }
+  }
+
   function getNextWidgetUID(){
     return (currentWidgetUID += 1);
   }
@@ -137,7 +157,7 @@ var FnordMetric = (function(){
           var _perc  = (parseInt(gdata.values[n][1]) / parseFloat(gdata.count))*100;
           var _item = $('<div class="toplist_item"><div class="title"></div><div class="value"></div><div class="percent"></div></div>');
           $('.title', _item).html(gdata.values[n][0]);
-          $('.value', _item).html(formatValue(parseInt(gdata.values[n][1])));
+          $('.value', _item).html(formatGaugeValue(gkey, parseInt(gdata.values[n][1])));
           $('.percent', _item).html(_perc.toFixed(1) + '%');
           _elem.append(_item);
         });
@@ -268,7 +288,7 @@ var FnordMetric = (function(){
           var new_val = current_val+diff;
           if(new_val > target_val){ new_val = target_val; }
           $(this).attr('data-current', new_val);
-          $('.value', this).html(formatValue(new_val));
+          $('.value', this).html(formatGaugeValue($(this).attr('rel'), new_val));
         }
       });
       if(still_running){
