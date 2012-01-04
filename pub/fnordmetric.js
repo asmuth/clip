@@ -78,9 +78,15 @@ var FnordMetric = (function(){
     }
   }
 
+  function formatPercentValue(value){
+    return value + '%';  
+  }
+
   function formatGaugeValue(gauge_key, value){
     if(gauge_key.slice(0,8) === '__time__'){
       return formatTimeValue(value);
+    } else if(gauge_key.slice(0,11) === '__percent__'){
+      return formatPercentValue(value);
     } else {
       return formatValue(value);
     }
