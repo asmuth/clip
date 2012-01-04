@@ -65,6 +65,10 @@
     resizeViewport();
     $(window).resize(resizeViewport);
 
+    if(!#{current_namespace.active_users_available.to_s}) {
+      $('#tabs li:first').trigger('click');
+    }
+    
     if(window.location.hash){
       $('#tabs li.dashboard[rel="'+window.location.hash.slice(1)+'"]').trigger('click');
     }
