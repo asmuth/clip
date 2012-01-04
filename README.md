@@ -179,6 +179,9 @@ FnordMetric.namespace :myapp do
 
   # Set a custom namespace title, if you want one
   # set_title "Emails sent"
+  
+  # Hide the "Active Users" tab, if you want
+  # hide_active_users
 
   # numeric (delta) gauge, 1-hour tick
   gauge :messages_sent, 
