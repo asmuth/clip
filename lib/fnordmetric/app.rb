@@ -55,6 +55,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/:namespace' do
+    pass unless current_namespace
     haml :app
   end
 
