@@ -177,6 +177,9 @@ require "fnordmetric"
 
 FnordMetric.namespace :myapp do
 
+  # Set a custom namespace title, if you want one
+  # set_title "Emails sent"
+
   # numeric (delta) gauge, 1-hour tick
   gauge :messages_sent, 
     :tick => 1.hour.to_i, 
