@@ -73,7 +73,7 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .headbar .button{
   margin:8px 0px; height:16px; float:right; display:block;
   margin-right:-1px;
-  background:url('/sprite.png') no-repeat 0 -49px #eee; 
+  background:url('/fnordmetric/sprite.png') no-repeat 0 -49px #eee; 
   border:1px solid #999;
   border-bottom-color:#888;
   -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .1); 
