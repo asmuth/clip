@@ -2,13 +2,14 @@ class FnordMetric::Namespace
   
   attr_reader :handlers, :gauges, :opts, :key, :dashboards
 
-  @@opts = [:event, :gauge, :widget, :set_title]
+  @@opts = [:event, :gauge, :widget, :set_title, :active_users_available]
 
   def initialize(key, opts)    
     @gauges = Hash.new
     @dashboards = Hash.new
     @handlers = Hash.new
     @title = key
+    @active_users_available = true
     @opts = opts
     @key = key      
   end
@@ -69,6 +70,10 @@ class FnordMetric::Namespace
     @title
   end
   
+  def active_users_available
+    @active_users_available
+  end
+  
   def dashboards(name=nil)
     return @dashboards unless name
     dash = FnordMetric::Dashboard.new(:title => name)
@@ -89,6 +94,10 @@ class FnordMetric::Namespace
     send(:"opt_#{m}", *args, &block)
   end
 
+  def hide_active_users
+    @active_users_available = false
+  end
+  
   def set_title(key)
     @title = key
   end
