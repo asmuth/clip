@@ -1,6 +1,4 @@
-require 'securerandom'
 class FnordMetric::InboundStream < EventMachine::Connection 
-
   @@opts = nil
 
   def self.start(opts)
@@ -13,18 +11,6 @@ class FnordMetric::InboundStream < EventMachine::Connection
     EM.defer{ next_event }
   end
 
-  def push_event(event_id, event_data)    
-    prefix = @@opts[:redis_prefix]
-        
-    @redis.hincrby "#{prefix}-stats",             "events_received", 1
-    @redis.set     "#{prefix}-event-#{event_id}", event_data
-    @redis.lpush   "#{prefix}-queue",             event_id       
-    @redis.expire  "#{prefix}-event-#{event_id}", @@opts[:event_queue_ttl]
-    
-    @events_buffered -= 1
-    close_connection?
-  end
-  
   def next_event
     read_next_event
     push_next_event
@@ -39,20 +25,18 @@ class FnordMetric::InboundStream < EventMachine::Connection
 
   def push_next_event
     return true if @events.empty?
-    push_event(get_next_uuid, @events.pop) 
+    @api.event event_data
+    @events_buffered -= 1
+    close_connection?
     EM.next_tick(&method(:push_next_event))    
   end
 
-  def get_next_uuid
-    SecureRandom.uuid
-  end
-
   def close_connection?
-    @redis.quit unless @streaming || (@events_buffered!=0) 
+    @api.disconnect unless @streaming || (@events_buffered!=0) 
   end
 
   def post_init
-    @redis = Redis.connect(:url => @@opts[:redis_url])
+    @api = API.new(@@opts)
     @events_buffered = 0
     @streaming = true
     @buffer = ""
@@ -63,5 +47,4 @@ class FnordMetric::InboundStream < EventMachine::Connection
     @streaming = false
     close_connection?
   end
-
 end

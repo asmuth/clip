@@ -1,0 +1,37 @@
+require 'securerandom'
+class FnordMetric::API
+  @@opts = nil
+  def initialize opts
+    @@opts = FnordMetric.default_options opts
+    connect
+  end
+  
+  def connect
+    @redis = @@opts[:redis] if @@opts[:redis]
+    @redis = Redis.connect(:url => @@opts[:redis_url])
+  end
+  
+  def event event_data
+    push_event get_next_uuid, event_data
+  end
+
+  def disconnect
+    @redis.quit
+  end
+  
+  private 
+  
+  def push_event(event_id, event_data)    
+    prefix = @@opts[:redis_prefix]
+    @redis.hincrby "#{prefix}-testdata",             "events_received", 1
+    @redis.hincrby "#{prefix}-stats",             "events_received", 1
+    @redis.set     "#{prefix}-event-#{event_id}", event_data
+    @redis.lpush   "#{prefix}-queue",             event_id       
+    @redis.expire  "#{prefix}-event-#{event_id}", @@opts[:event_queue_ttl]
+    event_id
+  end
+  
+  def get_next_uuid
+    SecureRandom.uuid
+  end
+end
