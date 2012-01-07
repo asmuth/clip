@@ -15,6 +15,10 @@ module FnordMetric
   def self.namespace(key=nil, &block)    
     @@namespaces[key] = block    
   end
+
+  def self.server_configuration=(configuration)
+    @@server_configuration = configuration
+  end
   
   def self.default_options(opts)
 
@@ -90,7 +94,8 @@ module FnordMetric
     puts(msg); exit!
   end
 
-  def self.run(opts={})
+  def self.run
+    opts = (defined?(@@server_configuration) && @@server_configuration) || {}
     start_em(opts) 
   rescue Exception => e
     log "!!! eventmachine died, restarting... #{e.message}"
