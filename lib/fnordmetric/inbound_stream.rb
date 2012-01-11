@@ -1,3 +1,4 @@
+require 'securerandom'
 class FnordMetric::InboundStream < EventMachine::Connection 
 
   @@opts = nil
@@ -43,7 +44,7 @@ class FnordMetric::InboundStream < EventMachine::Connection
   end
 
   def get_next_uuid
-    rand(9999999999999999999).to_s # FIXME
+    SecureRandom.uuid
   end
 
   def close_connection?
