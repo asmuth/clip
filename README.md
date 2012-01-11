@@ -305,6 +305,8 @@ Contributors
 + Marco Borromeo (http://github.com/mborromeo)
 + Leo Lou (http://github.com/l4u)
 + Andy Lindeman (http://github.com/alindeman)
++ Jurriaan Pruis (http://github.com/jurriaan)
++ Kacper Bielecki (http://github.com/kazjote)
 
 To contribute, please fork this repository, make your changes and run the specs, commit them to your github repository and send me a pull request.
 

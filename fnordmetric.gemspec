@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "fnordmetric"
-  s.version = "0.5.9"
+  s.version = "0.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = "2012-01-04"
+  s.date = "2012-01-11"
   s.description = "FnordMetric is a Ruby Event-Tracking gem on steroids"
   s.email = "paul@paulasmuth.com"
   s.extra_rdoc_files = [
