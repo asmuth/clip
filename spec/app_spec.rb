@@ -334,6 +334,38 @@ describe "app" do
       JSON.parse(last_response.body)["events"].length.should == 1
     end
 
+    it "should render all events for a single session key" do
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now,
+        :_session => "max_session",
+        :_eid => "124234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now,
+        :_session => "kate_session",
+        :_eid => "12235234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now,
+        :_session => "kate_session",
+        :_eid => "124234234"
+      )
+      @namespace.ready!(@redis_wrap).announce(
+        :_time => @now,
+        :_eid => "124234234"
+      )
+      max_session_key = Digest::MD5.hexdigest "max_session"
+      kate_session_key = Digest::MD5.hexdigest "kate_session"
+
+      get "/foospace/events?session_key=#{max_session_key}"
+      events = JSON.parse(last_response.body)["events"]
+      events.length.should == 1
+
+      get "/foospace/events?session_key=#{kate_session_key}"
+      events = JSON.parse(last_response.body)["events"]
+      events.length.should == 2
+    end
+
     it "should render a list of event types" do
       @namespace.ready!(@redis_wrap).announce(
         :_type => "fn0rd",

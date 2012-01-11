@@ -777,10 +777,11 @@ var FnordMetric = (function(){
       });
     };
 
-    function loadEventHistory(event_type){
+    function loadEventHistory(params){
       feedInnerElem.html('');
       $.ajax({
-        url: FnordMetric.p + '/' + currentNamespace+'/events?type='+event_type,
+        url: FnordMetric.p + '/' + currentNamespace+'/events',
+        data: params,
         success: function(_data, _status){
           var data = JSON.parse(_data).events;
           for(var n=data.length; n >= 0; n--){
@@ -813,14 +814,19 @@ var FnordMetric = (function(){
       });
     };
 
+    function setCheckboxesCheckedState(types_state, sessions_state) {
+      $('.event_type_list .event_type input').attr('checked', types_state);
+      $('.session_list .session input').attr('checked', sessions_state);
+    }
+
     function addEventType(type, display){
       typeListElem.append(
         $('<li class="event_type"></li>').append(
           $('<span class="history"></span>').html('history')
           .click(function(){
-            $('.event_type_list .event_type input').attr('checked', false);
+            setCheckboxesCheckedState(true, true);
             $('input', $(this).parent()).attr('checked', true);
-            updateEventFilter(); loadEventHistory(type);
+            updateEventFilter(); loadEventHistory({type: type});
           })
         ).append(
           $('<input type="checkbox" />').attr('checked', true)
@@ -960,6 +966,13 @@ var FnordMetric = (function(){
             $('<span class="name"></span>').html(session_name)
           ).append(
             $('<span class="time"></span>').html(session_time)
+          ).append(
+            $('<span class="history"></span>').html('history')
+            .click(function(){
+              setCheckboxesCheckedState(true, false);
+              $('input', $(this).parent()).attr('checked', true);
+              updateEventFilter(); loadEventHistory({session_key: session_data["session_key"]});
+            })
           ).attr('data-session', session_data["session_key"])
         );
 

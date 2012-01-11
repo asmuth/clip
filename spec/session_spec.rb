@@ -212,8 +212,8 @@ describe FnordMetric::Session do
       @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "fnord")
       sess = Session.find(sesshash, @opts)
       sess.fetch_event_ids!
-      sess.event_ids[0].should == "fnord"
-      sess.event_ids[1].should == "shmoo"
+      sess.event_ids.should include("shmoo")
+      sess.event_ids.should include("fnord")
     end
 
     def create_session(sesskey, sesstime, sessdata)        
