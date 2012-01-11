@@ -739,7 +739,7 @@ var FnordMetric = (function(){
     ).append(listElem);
 
     var eventsPolledUntil = false;
-    var eventsFilter = [];
+    var eventsFilter = {uncheckedTypes: [], checkedSessions: []};
     var sessionData = {};
     var pollRunning = true;
 
@@ -777,10 +777,11 @@ var FnordMetric = (function(){
       });
     };
 
-    function loadEventHistory(event_type){
+    function loadEventHistory(params){
       feedInnerElem.html('');
       $.ajax({
-        url: FnordMetric.p + '/' + currentNamespace+'/events?type='+event_type,
+        url: FnordMetric.p + '/' + currentNamespace+'/events',
+        data: params,
         success: function(_data, _status){
           var data = JSON.parse(_data).events;
           for(var n=data.length; n >= 0; n--){
@@ -813,14 +814,19 @@ var FnordMetric = (function(){
       });
     };
 
+    function setCheckboxesCheckedState(types_state, sessions_state) {
+      $('.event_type_list .event_type input').attr('checked', types_state);
+      $('.session_list .session input').attr('checked', sessions_state);
+    }
+
     function addEventType(type, display){
       typeListElem.append(
         $('<li class="event_type"></li>').append(
           $('<span class="history"></span>').html('history')
           .click(function(){
-            $('.event_type_list .event_type input').attr('checked', false);
+            setCheckboxesCheckedState(true, true);
             $('input', $(this).parent()).attr('checked', true);
-            updateEventFilter(); loadEventHistory(type);
+            updateEventFilter(); loadEventHistory({type: type});
           })
         ).append(
           $('<input type="checkbox" />').attr('checked', true)
@@ -838,7 +844,15 @@ var FnordMetric = (function(){
           _unchecked_types.push($(v).attr('rel'));
         }
       });
-      eventsFilter = _unchecked_types;
+      eventsFilter.uncheckedTypes = _unchecked_types;
+
+      var _checked_sessions = [];
+      $('ul.session_list li.session').each(function(i,v){
+        if($('input', v).attr('checked')){
+          _checked_sessions.push($(v).data().session);
+        }
+      });
+      eventsFilter.checkedSessions = _checked_sessions;
     }
 
     function doEventsPoll(){
@@ -854,18 +868,40 @@ var FnordMetric = (function(){
       return (function(_data, _status){
         var data = JSON.parse(_data)
         var events = data.events;
-        var timout = 1000;
+        var timeout = 1000;
         var maxevents = 200;
+        var passesFiltering = function(event_data) {
+          var passes_type_filtering = false;
+          var passes_session_filtering = false;
+          if(eventsFilter.uncheckedTypes.indexOf(event_data._type) == -1) {
+            if(parseInt(v._time)<=eventsPolledUntil) {
+              passes_type_filtering = true;
+            }
+          }
+          if(!passes_type_filtering) return false;
+
+          if(eventsFilter.checkedSessions.length == 0){
+            return true; // No filter set - show all events
+          } else {
+            if(event_data._session_key){
+              if(eventsFilter.checkedSessions.indexOf(event_data._session_key) >= 0){
+                return true; // Filter set and match
+              } else {
+                return false; // Filter set but no match
+              }
+            } else {
+              return false; // Filter set but event is not associated with session
+            }
+          }
+        }
+
         if(events.length > 0){
-          timeout = 200;
           eventsPolledUntil = parseInt(events[0]._time)-1;
         }
 	      for(var n=events.length-1; n >= 0; n--){
 	        var v = events[n];
-          if(eventsFilter.indexOf(v._type) == -1){
-            if(parseInt(v._time)<=eventsPolledUntil){
-              renderEvent(v);
-            }
+          if(passesFiltering(v)) {
+            renderEvent(v);
           }
         };
         var elems = $("p", feedInnerElem);
@@ -873,13 +909,17 @@ var FnordMetric = (function(){
           $(elems[n]).remove();
         }
         if(pollRunning){
-          window.setTimeout(doEventsPoll(), timout);
+          window.setTimeout(doEventsPoll(), timeout);
         }
       });
     };
 
     function updateSession(session_data){
-      sessionData[session_data.session_key] = session_data;
+      var session_key = session_data.session_key;
+      if(!sessionData[session_key]){
+        updateEventFilter()
+      }
+      sessionData[session_key] = session_data;
       renderSession(session_data);
     }
 
@@ -919,11 +959,20 @@ var FnordMetric = (function(){
 
         listElem.append(
           $('<li class="session"></li>').append(
+            $('<input type="checkbox" />').click(function(){ updateEventFilter(); })
+          ).append(
             $('<div class="picture"></div>').html(session_picture)
           ).append(
             $('<span class="name"></span>').html(session_name)
           ).append(
             $('<span class="time"></span>').html(session_time)
+          ).append(
+            $('<span class="history"></span>').html('history')
+            .click(function(){
+              setCheckboxesCheckedState(true, false);
+              $('input', $(this).parent()).attr('checked', true);
+              updateEventFilter(); loadEventHistory({session_key: session_data["session_key"]});
+            })
           ).attr('data-session', session_data["session_key"])
         );
 

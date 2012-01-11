@@ -97,6 +97,8 @@ class FnordMetric::App < Sinatra::Base
 
     events = if params[:type] 
       current_namespace.events(:by_type, :type => params[:type])
+    elsif params[:session_key]
+      current_namespace.events(:by_session_key, :session_key => params[:session_key])
     else 
       find_opts = { :limit => 100 }
       find_opts.merge!(:since => params[:since].to_i+1) if params[:since]
