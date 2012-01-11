@@ -615,6 +615,24 @@ FnordMetric.namespace :ulm do
 
 end
 
+FnordMetric.server_configuration = {
+  :redis_url => "redis://localhost:6379",
+  :redis_prefix => "fnordmetric",
+  :inbound_stream => ["0.0.0.0", "1337"],
+  :web_interface => ["0.0.0.0", "4242"],
+  :start_worker => true,
+  :print_stats => 3,
+
+  # events that aren't processed after 2 min get dropped
+  :event_queue_ttl => 120,
+
+  # event data is kept for one month
+  :event_data_ttl => 3600*24*30,
+
+  # session data is kept for one month
+  :session_data_ttl => 3600*24*30
+}
+
 #task :setup do
 #  @fm_opts = {:web_interface => ["0.0.0.0", "2323"]} if ENV['DEV']
 #end
