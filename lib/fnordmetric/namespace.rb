@@ -77,6 +77,7 @@ class FnordMetric::Namespace
   def events(_ids, opts={})
     return FnordMetric::Event.all(extend_opts(opts)) if _ids == :all
     return FnordMetric::Event.by_type(opts.delete(:type), extend_opts(opts)) if _ids == :by_type
+    return FnordMetric::Event.by_session_key(opts.delete(:session_key), extend_opts(opts)) if _ids == :by_session_key
   end
 
   def method_missing(m, *args, &block)

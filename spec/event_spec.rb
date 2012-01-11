@@ -1,4 +1,5 @@
 require ::File.expand_path('../spec_helper.rb', __FILE__)
+require 'irb'
 
 describe FnordMetric::Event do
 
@@ -114,6 +115,48 @@ describe FnordMetric::Event do
       )
       Event.by_type('fn0rd', @opts).length.should == 2
       Event.by_type('f00bar', @opts).length.should == 1
+    end
+
+    describe "looking by session_key" do
+      let(:namespace) do
+        options = {:redis_prefix => "fnordmetric-test", :session_data_ttl => 1}
+        Namespace.new(:ns123, options)
+      end
+
+      let(:events_data) do
+        [[1, "max_session"], [2, "kate_session"], [3, "kate_session"], [12345678, nil]]
+      end
+
+      let(:kate_session_key) { Digest::MD5.hexdigest "kate_session" }
+      let(:events) { Event.by_session_key kate_session_key, @opts }
+
+      before do
+        created_events_data.each do |(event_id, session)|
+          event_data = { :_time => @now + event_id, :_eid => event_id }
+          event_data[:_session] = session if session
+          namespace.ready!(@redis_wrap).announce event_data
+        end
+      end
+
+      context "when events are added in ascending time order" do
+        let(:created_events_data) { events_data }
+
+        it "should find correct events" do
+          ["2","3"].each {|id| events.map(&:id).should include(id) }
+        end
+
+        it "should have correct order" do
+          events.map(&:id).should == ["3","2"]
+        end
+      end
+
+      context "when events are added in descending time order" do
+        let(:created_events_data) { events_data.reverse }
+
+        it "should have correct order" do
+          events.map(&:id).should == ["3","2"]
+        end
+      end
     end
 
     def create_event(event_id, event_data)
