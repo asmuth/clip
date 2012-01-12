@@ -21,7 +21,7 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 Getting Started
 ---------------
 
-Copy `doc/ulm_stats.rb` (that's the configuration from the screenshots and screencast) or the simple example from below to `my_stats_app.rb`.
+Copy `doc/full_example.rb` (that's the configuration from the screenshots and screencast) or the simple example from below to `my_stats_app.rb`.
 
 Simple Example: this will listen for json-events with `type=unicorn_seen` and render a timeline-plot showing the number of received events per hour.
 
@@ -167,7 +167,7 @@ BarsWidget
 Examples
 --------
 
-+ doc/ulm_stats.rb
++ doc/full_example.rb
 
 
 ## Full Example ##
