@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# This is an RVM Project .rvmrc file, used to automatically load the ruby
+# development environment upon cd'ing into the directory
+
+# First we specify our desired <ruby>[@<gemset>], the @gemset name is optional.
+ruby_string="ruby-1.9.2-p290"
+gemset_name="fnordmetric"
+
+if rvm list strings | grep -q "${ruby_string}" ; then
+
+  # Load or create the specified environment
+  if [[ -d "${rvm_path:-$HOME/.rvm}/environments" \
+    && -s "${rvm_path:-$HOME/.rvm}/environments/${ruby_string}@${gemset_name}" ]] ; then
+    \. "${rvm_path:-$HOME/.rvm}/environments/${ruby_string}@${gemset_name}"
+  else
+    rvm --create "${ruby_string}@${gemset_name}"
+  fi
+
+  (
+    # Ensure that Bundler is installed, install it if it is not.
+    if ! command -v bundle ; then
+      gem install bundler --no-rdoc --no-ri
+    fi
+    
+    # Bundle while redcing excess noise.
+    bundle | grep -iv 'using' | grep -v 'complete' | sed '/^$/d'
+  ) & disown
+
+else
+
+  # Notify the user to install the desired interpreter before proceeding.
+  echo "${ruby_string} was not found, please run 'rvm install ${ruby_string}' and then cd back into the project directory."
+
+fi
