@@ -23,9 +23,10 @@
     #wrap
       #tabs
         %ul
-          %li.active.sessions
-            .picto.piechart
-            Active Users
+          - if @opts[:show_active_users] || true
+            %li.active.sessions
+              .picto.piechart
+              Active Users
 
           -current_namespace.dashboards.each do |key,dashboard|
             %li.dashboard{:rel => dashboard.token}
