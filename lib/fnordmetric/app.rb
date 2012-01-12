@@ -12,7 +12,7 @@ class FnordMetric::App < Sinatra::Base
 
   set :haml, :format => :html5 
   set :views, ::File.expand_path('../../../haml', __FILE__)
-  set :public, ::File.expand_path('../../../pub', __FILE__)
+  set :public_folder, ::File.expand_path('../../../pub', __FILE__)
 
   def initialize(namespaces, opts)
     @namespaces = {}
