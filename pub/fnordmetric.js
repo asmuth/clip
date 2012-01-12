@@ -947,7 +947,7 @@ var FnordMetric = (function(){
 
       } else {
 
-        var session_picture = $('<img width="18" />');
+        var session_picture = $('<img width="25" />');
 
         if(!session_name){
           session_name = session_data["session_key"].substr(0,15)

@@ -110,8 +110,8 @@ ul.session_list{ list-style-type:none; margin:0; padding:9px 16px 0 11px; }
 ul.session_list li{ color:#0A0A0A; height:32px; overflow:hidden; line-height:18px; padding:4px; }
 ul.session_list li:hover{ background:#eee; cursor:pointer; }
 ul.session_list li input{ float: left; margin-right: 7px; }
-ul.session_list li .picture{ height:18px; width:18px; float:left; background:#333; overflow:hidden; }
-ul.session_list li .name{ float:left; width:120px; overflow:hidden; margin-left:10px; font-size:12px; }
+ul.session_list li .picture{ height:25px; width:25px; float:left; background:#333; overflow:hidden; }
+ul.session_list li .name{ float:left; width:115px; overflow:hidden; margin-left:10px; font-size:12px; }
 ul.session_list li .time{ float:right; width:40px; overflow:hidden; text-align:right; font-size:10px; }
 ul.session_list li .history{ float:right; color:#999; font-size:10px; line-height: 12px;}
 ul.session_list li .history:hover{ color:#333; text-decoration:underline; }
