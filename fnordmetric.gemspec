@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fnordmetric}
-  s.version = "0.6.2"
+  s.version = "0.6.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
@@ -62,7 +62,6 @@ Gem::Specification.new do |s|
     "pub/fnordmetric.css",
     "pub/fnordmetric.js",
     "pub/loader.gif",
-    "pub/sprite.png",
     "pub/vendor/highcharts.js",
     "pub/vendor/jquery-1.6.1.min.js",
     "spec/api_spec.rb",
@@ -72,6 +71,7 @@ Gem::Specification.new do |s|
     "spec/event_spec.rb",
     "spec/gauge_modifiers_spec.rb",
     "spec/gauge_spec.rb",
+    "spec/inbound_stream_spec.rb",
     "spec/namespace_spec.rb",
     "spec/session_spec.rb",
     "spec/spec_helper.rb",
@@ -91,6 +91,7 @@ Gem::Specification.new do |s|
     "spec/event_spec.rb",
     "spec/gauge_modifiers_spec.rb",
     "spec/gauge_spec.rb",
+    "spec/inbound_stream_spec.rb",
     "spec/namespace_spec.rb",
     "spec/session_spec.rb",
     "spec/spec_helper.rb",

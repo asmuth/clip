@@ -75,7 +75,7 @@ Installation
 
 or in your Gemfile:
 
-    gem 'fnordmetric', '~> 0.5'
+    gem 'fnordmetric', '>= 0.6.3'
 
 
 Documentation
@@ -342,19 +342,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Todos
 -----
 
-* funnel-widget
-* combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
-* timeline_widget: 'compare mode': compate gauge to yesterday
-* numbers_widget: handle decreasing vals
-* make listen-ports configurable
-* referal tracking fu (parse googlequeries)  
-* trend detection
-* opt_event options: :increment => gauge_name
-* preconfigured default-dashboard (like google analytics)
-* pagview+ref-tracking via js-tracking-pixel 
-* table/gauge-list-widget (with mini-stats!)
-* prune the namespace-sessions-timline (remove event_ids older than x)
-* prune the namespace-event-types-list (trim to max items)
-* timelinewidget + numberswidget => should use redis hmget
-* get multiple metrics in a single http get
-* `{ _namespace: myns }` field 
++ combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
++ timeline_widget: 'compare mode': compare gauge to yesterday
++ numbers_widget: handle decreasing vals
++ opt_event options: :increment => gauge_name
++ prune the namespace-sessions-timline (remove event_ids older than x)
++ prune the namespace-event-types-list (trim to max items)
++ the funnel-widget
++ timelinewidget + numberswidget => should use redis hmget
++ get multiple metrics in a single http get
++ the `{ _namespace: myns }` field 
