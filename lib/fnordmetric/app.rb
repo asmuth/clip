@@ -3,6 +3,12 @@
 class FnordMetric::App < Sinatra::Base
 
   @@sessions = Hash.new
+  @@public_files = {
+    "fnordmetric.css" => "text/css",
+    "fnordmetric.js" => "application/x-javascript",
+    "vendor/jquery-1.6.1.min.js" => "application/x-javascript",
+    "vendor/highcharts.js" => "application/x-javascript"
+  }
 
   Encoding.default_external = Encoding::UTF_8
 
@@ -11,8 +17,7 @@ class FnordMetric::App < Sinatra::Base
   enable :session
 
   set :haml, :format => :html5
-  set :views, ::File.expand_path('../../../haml', __FILE__)
-  set :public_folder, ::File.expand_path('../../../pub', __FILE__)
+  set :views, ::File.expand_path('../../../haml', __FILE__)  
 
   def initialize(namespaces, opts)
     @namespaces = {}
@@ -126,6 +131,12 @@ class FnordMetric::App < Sinatra::Base
     track_event((8**32).to_s(36), parse_params(params))
   end
 
+  @@public_files.each do |public_file, public_file_type|
+    get "/#{public_file}" do
+      content_type(public_file_type)
+      ::File.open(::File.expand_path("../../../pub/#{public_file}", __FILE__)).read
+    end
+  end
 private
 
   def parse_params(hash)
