@@ -4,7 +4,7 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 .shown{ display: block; }
 .hidden{ display: none; }
 
-.topbar{ height:38px; background:#24272c; position:fixed; top:0px; width:100%;}
+.topbar{ height:38px; background:#24272c; position:fixed; top:0px; width:100%; z-index: 1}
 .topbar ul { list-style-type:none; margin:0; }
 .topbar ul li { padding: 5px 10px 5px 10px; background-color:#3b3e45; display:inline; height:38px; line-height:38px; border-radius:3px; margin-right:5px;}
 .topbar ul li a { color:#ccc; font-size:13px; text-decoration:none; }
