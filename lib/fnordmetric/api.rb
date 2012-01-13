@@ -2,7 +2,7 @@ require 'securerandom'
 class FnordMetric::API
   @@opts = nil
   def initialize opts
-    @@opts = FnordMetric.default_options opts
+    @@opts = FnordMetric.default_options(opts)
     connect
   end
   
@@ -11,8 +11,9 @@ class FnordMetric::API
     @redis = Redis.connect(:url => @@opts[:redis_url])
   end
   
-  def event event_data
-    push_event get_next_uuid, event_data
+  def event(event_data)
+    event_data = event_data.to_json if event_data.is_a?(Hash)
+    push_event(get_next_uuid, event_data)
   end
 
   def disconnect
@@ -23,7 +24,7 @@ class FnordMetric::API
   
   def push_event(event_id, event_data)    
     prefix = @@opts[:redis_prefix]
-    @redis.hincrby "#{prefix}-testdata",             "events_received", 1
+    @redis.hincrby "#{prefix}-testdata",          "events_received", 1
     @redis.hincrby "#{prefix}-stats",             "events_received", 1
     @redis.set     "#{prefix}-event-#{event_id}", event_data
     @redis.lpush   "#{prefix}-queue",             event_id       
