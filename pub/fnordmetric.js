@@ -959,8 +959,6 @@ var FnordMetric = (function(){
 
         listElem.append(
           $('<li class="session"></li>').append(
-            $('<input type="checkbox" />').click(function(){ updateEventFilter(); })
-          ).append(
             $('<div class="picture"></div>').html(session_picture)
           ).append(
             $('<span class="name"></span>').html(session_name)
@@ -969,9 +967,9 @@ var FnordMetric = (function(){
           ).append(
             $('<span class="history"></span>').html('history')
             .click(function(){
-              setCheckboxesCheckedState(true, false);
-              $('input', $(this).parent()).attr('checked', true);
-              updateEventFilter(); loadEventHistory({session_key: session_data["session_key"]});
+              setCheckboxesCheckedState(true, false);              
+              updateEventFilter(); 
+              loadEventHistory({session_key: session_data["session_key"]});
             })
           ).attr('data-session', session_data["session_key"])
         );
@@ -1002,16 +1000,22 @@ var FnordMetric = (function(){
       event_time.html(formatTimeOfDay(event_data._time));
 
       if(event_data._session_key && event_data._session_key.length > 0){
+        var __session_key = event_data._session_key;
+        var load_usersession = (function(){
+          loadEventHistory({session_key: __session_key});
+        });
         if(session_data=sessionData[event_data._session_key]){
           if(session_data._name){
             event_props.append(
-              $('<strong></strong>').html(session_data._name)
+              $('<strong></strong>').html(session_data._name).css({
+                'cursor': 'pointer'
+              }).click(load_usersession)
             );
           }
           if(session_data._picture){
             event_picture.append(
               $('<img width="40" />').attr('src', session_data._picture)
-            )
+            ).click(load_usersession);
           }
         }
       }
