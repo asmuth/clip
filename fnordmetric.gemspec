@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fnordmetric}
-  s.version = "0.6.1"
+  s.version = "0.6.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = %q{2012-01-12}
+  s.date = %q{2012-01-13}
   s.description = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.email = %q{paul@paulasmuth.com}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "haml/app.haml",
     "haml/widget.haml",
     "lib/fnordmetric.rb",
+    "lib/fnordmetric/api.rb",
     "lib/fnordmetric/app.rb",
     "lib/fnordmetric/average_metric.rb",
     "lib/fnordmetric/bars_widget.rb",
@@ -64,6 +65,7 @@ Gem::Specification.new do |s|
     "pub/sprite.png",
     "pub/vendor/highcharts.js",
     "pub/vendor/jquery-1.6.1.min.js",
+    "spec/api_spec.rb",
     "spec/app_spec.rb",
     "spec/context_spec.rb",
     "spec/dashboard_spec.rb",
@@ -79,9 +81,10 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/paulasmuth/fnordmetric}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.test_files = [
+    "spec/api_spec.rb",
     "spec/app_spec.rb",
     "spec/context_spec.rb",
     "spec/dashboard_spec.rb",
