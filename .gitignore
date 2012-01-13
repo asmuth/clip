@@ -3,3 +3,4 @@ rdoc
 .bundle
 pkg
 db/*.sqlite
+.rvmrc
