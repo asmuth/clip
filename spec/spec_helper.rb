@@ -14,6 +14,9 @@ require "fnordmetric"
 require "eventmachine"
 require 'em-hiredis'
 
+def EM.defer; yield; end
+def EM.next_tick; yield; end
+
 class RedisWrap
 
   def initialize(redis, callbackable=true)

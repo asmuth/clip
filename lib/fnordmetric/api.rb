@@ -12,8 +12,17 @@ class FnordMetric::API
   end
   
   def event(event_data)
-    event_data = event_data.to_json if event_data.is_a?(Hash)
-    push_event(get_next_uuid, event_data)
+    begin
+      if event_data.is_a?(Hash)
+        event_data = event_data.to_json  
+      else
+        JSON.parse(event_data) # void ;)
+      end
+    rescue JSON::ParserError
+      FnordMetric.log("event_lost: can't parse json")
+    else
+      push_event(get_next_uuid, event_data)
+    end
   end
 
   def disconnect
@@ -23,7 +32,7 @@ class FnordMetric::API
   private 
   
   def push_event(event_id, event_data)    
-    prefix = @@opts[:redis_prefix]
+    prefix = @@opts[:redis_prefix]    
     @redis.hincrby "#{prefix}-testdata",          "events_received", 1
     @redis.hincrby "#{prefix}-stats",             "events_received", 1
     @redis.set     "#{prefix}-event-#{event_id}", event_data

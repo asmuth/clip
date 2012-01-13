@@ -6,7 +6,11 @@ class FnordMetric::InboundStream < EventMachine::Connection
     EM.start_server(*opts[:inbound_stream], self)    
   end
 
-  def receive_data(chunk)        
+  def self.options(opts)
+    @@opts = opts
+  end
+
+  def receive_data(chunk)     
     @buffer << chunk         
     EM.defer{ next_event }
   end
