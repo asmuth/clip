@@ -144,6 +144,7 @@ module FnordMetric
 
 end
 
+require "fnordmetric/api"
 require "fnordmetric/inbound_stream"
 require "fnordmetric/worker"
 require "fnordmetric/widget"
