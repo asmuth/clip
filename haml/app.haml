@@ -2,7 +2,7 @@
 %html
 
   %head
-    %title Fnordmetric Dashboard
+    %title=current_namespace.title
 
     %script(type="text/javascript" src="#{path_prefix}/vendor/jquery-1.6.1.min.js")
     %script(type="text/javascript" src="#{path_prefix}/vendor/highcharts.js")
@@ -18,14 +18,15 @@
       %ul
         -namespaces.each do |key,namespace|
           %li{:class => namespace.token == current_namespace.token ? 'active' : nil}
-            %a{:href=>"/#{namespace.token}"}=h namespace.token
+            %a{:href=>"/#{namespace.token}"}=h namespace.title
 
     #wrap
       #tabs
         %ul
-          %li.active.sessions
-            .picto.piechart
-            Active Users
+          - if current_namespace.active_users_available
+            %li.active.sessions
+              .picto.piechart
+              Active Users
 
           -current_namespace.dashboards.each do |key,dashboard|
             %li.dashboard{:rel => dashboard.token}
@@ -64,6 +65,10 @@
     resizeViewport();
     $(window).resize(resizeViewport);
 
+    if(!#{current_namespace.active_users_available.to_s}) {
+      $('#tabs li:first').trigger('click');
+    }
+    
     if(window.location.hash){
       $('#tabs li.dashboard[rel="'+window.location.hash.slice(1)+'"]').trigger('click');
     }
