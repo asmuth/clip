@@ -8,6 +8,8 @@ require 'sinatra/base'
 require 'haml'
 require 'thin'
 
+require "fnordmetric/version"
+
 module FnordMetric
 
   @@namespaces = {}
