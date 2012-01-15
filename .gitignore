@@ -4,3 +4,4 @@ rdoc
 pkg
 db/*.sqlite
 .rvmrc
+Gemfile.lock
