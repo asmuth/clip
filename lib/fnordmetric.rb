@@ -1,4 +1,3 @@
-require 'rubygems'
 require "eventmachine"
 require 'em-hiredis'
 require 'redis'
