@@ -357,4 +357,4 @@ Todos
 + the funnel-widget
 + timelinewidget + numberswidget => should use redis hmget
 + get multiple metrics in a single http get
-+ ~~the `{ _namespace: myns }` field~~
++ the `{ _namespace: myns }` field
