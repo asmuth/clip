@@ -325,7 +325,8 @@ Contributors
 + Leo Lou (http://github.com/l4u)
 + Andy Lindeman (http://github.com/alindeman)
 + Jurriaan Pruis (http://github.com/jurriaan)
-+ Kacper Bielecki (http://github.com/kazjote)
++ John Murray (http://github.com/JohnMurray)
++ Lars Gierth (http://github.com/lgierth)
 
 To contribute, please fork this repository, make your changes and run the specs, commit them to your github repository and send me a pull request.
 
@@ -355,6 +356,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Todos
 -----
 
++ readme: user_data (_session), import/log/_time, data expiration
 + combine/calculation gauges via opts_gauge({}, &block) (+calculate ctr)
 + timeline_widget: 'compare mode': compare gauge to yesterday
 + numbers_widget: handle decreasing vals
@@ -364,4 +366,3 @@ Todos
 + the funnel-widget
 + timelinewidget + numberswidget => should use redis hmget
 + get multiple metrics in a single http get
-+ the `{ _namespace: myns }` field
