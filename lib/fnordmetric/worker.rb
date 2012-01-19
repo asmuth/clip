@@ -74,7 +74,9 @@ class FnordMetric::Worker
   end
 
   def parse_json(data)
-    Yajl::Parser.new(:symbolize_keys => true).parse(data)
+    event = Yajl::Parser.new(:symbolize_keys => true).parse(data)
+    event[:_namespace] = event[:_namespace].to_sym if event[:_namespace]
+    event
   end
 
 end
