@@ -325,6 +325,7 @@ Contributors
 + Leo Lou (http://github.com/l4u)
 + Andy Lindeman (http://github.com/alindeman)
 + Jurriaan Pruis (http://github.com/jurriaan)
++ Kacper Bielecki (http://github.com/kazjote)
 + John Murray (http://github.com/JohnMurray)
 + Lars Gierth (http://github.com/lgierth)
 
