@@ -1,4 +1,3 @@
-require 'rubygems'
 require "eventmachine"
 require 'em-hiredis'
 require 'redis'
@@ -7,6 +6,8 @@ require 'yajl'
 require 'sinatra/base'
 require 'haml'
 require 'thin'
+
+require "fnordmetric/version"
 
 module FnordMetric
 
