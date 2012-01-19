@@ -104,6 +104,13 @@ redis.expire("fnordmetric-event-#{my_uuid}", 60)
 redis.lpush("fnordmetric-queue", uuid) 
 ```
 
+The Ruby way: Using the API.
+
+```ruby
+api = FnordMetric::API.new({})
+api.event({:_type => "unicorn_seen"})
+```
+
 ----
 
 ### Special Events ###
