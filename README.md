@@ -121,6 +121,12 @@ redis.lpush("fnordmetric-queue", uuid)
 
 ----
 
+### Assigning Events to a Namespace ###
+
+```js
+{ "_type": "unicorn_seen", "_namespace":  "myapp" }
+```
+
 ### Event Handlers ###
 
 Call these methods from the event-handler block
@@ -351,4 +357,4 @@ Todos
 + the funnel-widget
 + timelinewidget + numberswidget => should use redis hmget
 + get multiple metrics in a single http get
-+ the `{ _namespace: myns }` field 
++ the `{ _namespace: myns }` field
