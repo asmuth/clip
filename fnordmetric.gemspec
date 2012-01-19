@@ -5,17 +5,18 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fnordmetric}
-  s.version = "0.6.3"
+  s.version = "0.6.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Paul Asmuth"]
-  s.date = %q{2012-01-13}
+  s.date = %q{2012-01-19}
   s.description = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.email = %q{paul@paulasmuth.com}
   s.extra_rdoc_files = [
     "README.md"
   ]
   s.files = [
+    ".rspec",
     ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
@@ -81,7 +82,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/paulasmuth/fnordmetric}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.test_files = [
     "spec/api_spec.rb",
@@ -119,7 +120,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<delorean>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
     else
       s.add_dependency(%q<bson_ext>, [">= 1.4.0"])
@@ -138,7 +138,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<delorean>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
     end
   else
@@ -158,7 +157,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<delorean>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
   end
 end
