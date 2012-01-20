@@ -31,7 +31,6 @@ class FnordMetric::InboundStream < EventMachine::Connection
     return true if @events.empty?
     @events_buffered -= 1
     @api.event(@events.pop)
-    close_connection?
     EM.next_tick(&method(:push_next_event))    
   end
 

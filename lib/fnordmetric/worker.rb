@@ -7,7 +7,8 @@ class FnordMetric::Worker
   end
 
   def ready!
-    @redis = EM::Hiredis.connect(@opts[:redis_url])
+    @async_redis = EM::Hiredis.connect(@opts[:redis_url])
+    @sync_redis = Redis.new(:url => @opts[:redis_url])
     tick
   end
 
@@ -19,12 +20,12 @@ class FnordMetric::Worker
   end
 
   def tick
-    @redis.blpop(queue_key, 0).callback do |list, event_id|           
-      @redis.get(event_key(event_id)).callback do |event_data|                     
+    @async_redis.blpop(queue_key, 0).callback do |list, event_id|           
+      @async_redis.get(event_key(event_id)).callback do |event_data|                     
         process_event(event_id, event_data) if event_data        
         FnordMetric.log("event_lost: event_data not found for event-id '#{event_id}'") unless event_data
         EM.next_tick(&method(:tick))      
-        @redis.hincrby(stats_key, :events_processed, 1)
+        @async_redis.hincrby(stats_key, :events_processed, 1)
       end
     end
   end
@@ -58,15 +59,15 @@ class FnordMetric::Worker
   end
 
   def announce_event(event)   
-    namespace(event[:_namespace]).ready!(@redis).announce(event)
+    namespace(event[:_namespace]).ready!(@sync_redis).announce(event)
   end
 
   def expire_event(event_id)
-    @redis.expire(event_key(event_id), @opts[:event_data_ttl])
+    @sync_redis.expire(event_key(event_id), @opts[:event_data_ttl])
   end
 
   def publish_event(event)    
-    @redis.publish(pubsub_key, event[:_eid])    
+    @sync_redis.publish(pubsub_key, event[:_eid])    
   end
 
   def namespace(key)

@@ -5,7 +5,7 @@ describe FnordMetric::GaugeModifiers do
   before(:all) do    
     @now = Time.utc(1992,01,13,5,23,23).to_i    
     @redis = Redis.new
-    @redis_wrap = RedisWrap.new(@redis)
+    @redis_wrap = RedisWrap.new(@redis, false)
   end
 
   before(:each) do
