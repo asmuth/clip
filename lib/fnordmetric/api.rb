@@ -7,7 +7,6 @@ class FnordMetric::API
   end
   
   def connect
-    @redis = @@opts[:redis] if @@opts[:redis]
     @redis = Redis.connect(:url => @@opts[:redis_url])
   end
   
