@@ -3,19 +3,19 @@ FnordMetric
 
 FnordMetric is a highly configurable (and pretty fast) realtime app/event tracking thing based on ruby eventmachine and redis. You define your own plotting and counting functions as ruby blocks!
 
-[ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
+[ ![Build status - Travis-ci][3] ][4]
 
-[SCREENCAST](http://www.screenr.com/KiJs): the FnordMetric-instance we use to track our social dating app.
+[SCREENCAST][2]: the FnordMetric-instance we use to track our social dating app.
 
 ----
 
 FnordMetric keeps track of your data and draws nice timeline plots.
 
-[ ![Nice timeline plots](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png) ](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png)
+[ ![Nice timeline plots][5] ][6]
 
 FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
 
-[ ![Live dashboard](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png) ](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png)
+[ ![Live dashboard][7] ][8]
 
 
 Getting Started
@@ -101,7 +101,7 @@ event = { :_type => "unicorn_seen" }.to_json
 
 redis.set("fnordmetric-event-#{my_uuid}", event)
 redis.expire("fnordmetric-event-#{my_uuid}", 60)
-redis.lpush("fnordmetric-queue", uuid) 
+redis.lpush("fnordmetric-queue", uuid)
 ```
 
 The Ruby way: Using the API.
@@ -329,7 +329,10 @@ Contributors
 + John Murray (http://github.com/JohnMurray)
 + Lars Gierth (http://github.com/lgierth)
 
-To contribute, please fork this repository, make your changes and run the specs, commit them to your github repository and send me a pull request.
+To contribute, please fork this repository, make your changes and run the 
+specs, commit them to your github repository and send me a pull request.
+Need help, head on over to our [Google Groups][1]  page to discuss any ideas
+that you might have.
 
 
 License
@@ -367,3 +370,14 @@ Todos
 + the funnel-widget
 + timelinewidget + numberswidget => should use redis hmget
 + get multiple metrics in a single http get
+
+
+
+  [1]: http://groups.google.com/group/fnordmetric
+  [2]: http://www.screenr.com/KiJs
+  [3]: https://secure.travis-ci.org/paulasmuth/fnordmetric.png
+  [4]: http://travis-ci.org/paulasmuth/fnordmetric
+  [5]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png
+  [6]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png
+  [7]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png
+  [8]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png
