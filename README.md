@@ -1,7 +1,9 @@
 FnordMetric
 ===========
 
-FnordMetric is a highly configurable (and pretty fast) realtime app/event tracking thing based on ruby eventmachine and redis. You define your own plotting and counting functions as ruby blocks!
+FnordMetric is a highly configurable (and pretty fast) realtime app/event 
+tracking thing based on ruby eventmachine and redis. You define your own 
+plotting and counting functions as ruby blocks!
 
 [ ![Build status - Travis-ci][3] ][4]
 
@@ -13,7 +15,8 @@ FnordMetric keeps track of your data and draws nice timeline plots.
 
 [ ![Nice timeline plots][5] ][6]
 
-FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
+FnordMetric gives you a live dashboard, that shows who is using your app in 
+realtime. You can select a single user and follow them step by step.
 
 [ ![Live dashboard][7] ][8]
 
@@ -21,9 +24,11 @@ FnordMetric gives you a live dashboard, that shows who is using your app in real
 Getting Started
 ---------------
 
-Copy `doc/full_example.rb` (that's the configuration from the screenshots and screencast) or the simple example from below to `my_stats_app.rb`.
+Copy `doc/full_example.rb` (that's the configuration from the screenshots 
+and screencast) or the simple example from below to `my_stats_app.rb`.
 
-Simple Example: this will listen for json-events with `type=unicorn_seen` and render a timeline-plot showing the number of received events per hour.
+Simple Example: this will listen for json-events with `type=unicorn_seen` 
+and render a timeline-plot showing the number of received events per hour.
 
 ```ruby
 require "fnordmetric"
@@ -89,7 +94,8 @@ The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
     curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
 
-The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
+The easy way: Stream one ore more newline-seperated json encoded events 
+through a tcp connection.
 
     echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
 
@@ -139,16 +145,21 @@ api.event({:_type => "unicorn_seen"})
 Call these methods from the event-handler block
 
     incr(gauge_name, value=1): 
-      Increment the given (two-dimensional) gauge by value at the tick specified by event-time
+      Increment the given (two-dimensional) gauge by value 
+      at the tick specified by event-time
 
     incr_field(gauge_name, field_name, value=1): 
-      Increment the given field on a three-dimensional gauge by value at the tick specified by event-time
+      Increment the given field on a three-dimensional gauge 
+      by value at the tick specified by event-time
 
     set_value(gauge_name, value)
-      Set the given (two-dimensional) to value at the tick specified by event-time (overwrite existing value)
+      Set the given (two-dimensional) to value at the tick 
+      specified by event-time (overwrite existing value)
 
     set_field(gauge_name, field_name, value)
-      Set the given  field on a three-dimensional gauge to value at the tick specified by event-time (overwrite existing value)
+      Set the given  field on a three-dimensional gauge to 
+      value at the tick specified by event-time (overwrite 
+      existing value)
 
 ----
 
@@ -250,9 +261,11 @@ FnordMetric.namespace :myapp do
     incr :events_total
   end
 
-  # on every event like { "_type": "_pageview", "_session": "sbz7jset", "url": "/page2" }
+  # on every event like
+  # { "_type": "_pageview", "_session": "sbz7jset", "url": "/page2" }
   event :_pageview do
-    # increment the daily_uniques gauge by 1 if session_key hasn't been seen in this tick yet
+    # increment the daily_uniques gauge by 1 if session_key hasn't been seen 
+    # in this tick yet
     incr :pageviews_daily_unique
     # increment the pageviews_per_url_daily gauge by 1 where key = 'page2'
     incr_field :pageviews_per_url_daily, data[:url]
@@ -275,8 +288,9 @@ FnordMetric.namespace :myapp do
     :autoupdate => 30
   }
 
- # draw the values of the messages_sent and messages_read gauge at the current tick, three ticks ago, and
- # the sum of the last 10 ticks, auto-refresh every 20s
+ # draw the values of the messages_sent and messages_read gauge at the current 
+ # tick, three ticks ago, and the sum of the last 10 ticks, auto-refresh every 
+ # 20s
  widget 'Overview', {
     :title => "Messages Sent / Read",
     :type => :numbers,
@@ -286,7 +300,8 @@ FnordMetric.namespace :myapp do
     :gauges => [ :messages_sent, :messages_read ]
   }
 
-  # draw a list of the most visited urls (url, visits + percentage), auto-refresh every 20s
+  # draw a list of the most visited urls (url, visits + percentage), 
+  # auto-refresh every 20s
   widget 'Overview', {
     :title => "Top Pages",
     :type => :toplist,
