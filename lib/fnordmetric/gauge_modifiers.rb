@@ -13,10 +13,23 @@ module FnordMetric::GaugeModifiers
   end
 
   def incr_tick(gauge, value)
-    if gauge.progressive?      
+    if gauge.progressive?
       @redis.incrby(gauge.key(:head), value).callback do |head|
-        @redis.hsetnx(gauge.key, gauge.tick_at(time), head).callback do |_new|
-          @redis.hincrby(gauge.key, gauge.tick_at(time), value) unless _new
+        _head_tick = gauge.tick_at(time)
+        @redis.hsetnx(gauge.key, _head_tick, head).callback do |_new|
+          if _new
+            @redis.get gauge.key(:head_tick) do |_last_head_tick|
+              unless _last_head_tick.blank?
+                if _last_head_tick.to_i + gauge.tick.to_i < _head_tick.to_i
+                  _ticks_range = ((_last_head_tick.to_i)...(_head_tick.to_i)).step(gauge.tick)
+                  @redis.hmset gauge.key, *(_ticks_range[1..-1].map{|_t| [_t, head]}.flatten)
+                end
+              end
+            end
+            @redis.set(gauge.key(:head_tick), _head_tick)
+          else
+            @redis.hincrby(gauge.key, gauge.tick_at(time), value)
+          end
         end
       end
     else
