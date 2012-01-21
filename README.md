@@ -1,29 +1,34 @@
 FnordMetric
 ===========
 
-FnordMetric is a highly configurable (and pretty fast) realtime app/event tracking thing based on ruby eventmachine and redis. You define your own plotting and counting functions as ruby blocks!
+FnordMetric is a highly configurable (and pretty fast) realtime app/event 
+tracking thing based on ruby eventmachine and redis. You define your own 
+plotting and counting functions as ruby blocks!
 
-[ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
+[ ![Build status - Travis-ci][3] ][4]
 
-[SCREENCAST](http://www.screenr.com/KiJs): the FnordMetric-instance we use to track our social dating app.
+[SCREENCAST][2]: the FnordMetric-instance we use to track our social dating app.
 
 ----
 
 FnordMetric keeps track of your data and draws nice timeline plots.
 
-[ ![Nice timeline plots](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png) ](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png)
+[ ![Nice timeline plots][5] ][6]
 
-FnordMetric gives you a live dashboard, that shows who is using your app in realtime. You can select a single user and follow them step by step.
+FnordMetric gives you a live dashboard, that shows who is using your app in 
+realtime. You can select a single user and follow them step by step.
 
-[ ![Live dashboard](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png) ](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png)
+[ ![Live dashboard][7] ][8]
 
 
 Getting Started
 ---------------
 
-Copy `doc/full_example.rb` (that's the configuration from the screenshots and screencast) or the simple example from below to `my_stats_app.rb`.
+Copy `doc/full_example.rb` (that's the configuration from the screenshots 
+and screencast) or the simple example from below to `my_stats_app.rb`.
 
-Simple Example: this will listen for json-events with `type=unicorn_seen` and render a timeline-plot showing the number of received events per hour.
+Simple Example: this will listen for json-events with `type=unicorn_seen` 
+and render a timeline-plot showing the number of received events per hour.
 
 ```ruby
 require "fnordmetric"
@@ -89,7 +94,8 @@ The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
     curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
 
-The easy way: Stream one ore more newline-seperated json encoded events through a tcp connection.
+The easy way: Stream one ore more newline-seperated json encoded events 
+through a tcp connection.
 
     echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
 
@@ -101,7 +107,7 @@ event = { :_type => "unicorn_seen" }.to_json
 
 redis.set("fnordmetric-event-#{my_uuid}", event)
 redis.expire("fnordmetric-event-#{my_uuid}", 60)
-redis.lpush("fnordmetric-queue", uuid) 
+redis.lpush("fnordmetric-queue", uuid)
 ```
 
 The Ruby way: Using the API.
@@ -139,16 +145,21 @@ api.event({:_type => "unicorn_seen"})
 Call these methods from the event-handler block
 
     incr(gauge_name, value=1): 
-      Increment the given (two-dimensional) gauge by value at the tick specified by event-time
+      Increment the given (two-dimensional) gauge by value 
+      at the tick specified by event-time
 
     incr_field(gauge_name, field_name, value=1): 
-      Increment the given field on a three-dimensional gauge by value at the tick specified by event-time
+      Increment the given field on a three-dimensional gauge 
+      by value at the tick specified by event-time
 
     set_value(gauge_name, value)
-      Set the given (two-dimensional) to value at the tick specified by event-time (overwrite existing value)
+      Set the given (two-dimensional) to value at the tick 
+      specified by event-time (overwrite existing value)
 
     set_field(gauge_name, field_name, value)
-      Set the given  field on a three-dimensional gauge to value at the tick specified by event-time (overwrite existing value)
+      Set the given  field on a three-dimensional gauge to 
+      value at the tick specified by event-time (overwrite 
+      existing value)
 
 ----
 
@@ -250,9 +261,11 @@ FnordMetric.namespace :myapp do
     incr :events_total
   end
 
-  # on every event like { "_type": "_pageview", "_session": "sbz7jset", "url": "/page2" }
+  # on every event like
+  # { "_type": "_pageview", "_session": "sbz7jset", "url": "/page2" }
   event :_pageview do
-    # increment the daily_uniques gauge by 1 if session_key hasn't been seen in this tick yet
+    # increment the daily_uniques gauge by 1 if session_key hasn't been seen 
+    # in this tick yet
     incr :pageviews_daily_unique
     # increment the pageviews_per_url_daily gauge by 1 where key = 'page2'
     incr_field :pageviews_per_url_daily, data[:url]
@@ -275,8 +288,9 @@ FnordMetric.namespace :myapp do
     :autoupdate => 30
   }
 
- # draw the values of the messages_sent and messages_read gauge at the current tick, three ticks ago, and
- # the sum of the last 10 ticks, auto-refresh every 20s
+ # draw the values of the messages_sent and messages_read gauge at the current 
+ # tick, three ticks ago, and the sum of the last 10 ticks, auto-refresh every 
+ # 20s
  widget 'Overview', {
     :title => "Messages Sent / Read",
     :type => :numbers,
@@ -286,7 +300,8 @@ FnordMetric.namespace :myapp do
     :gauges => [ :messages_sent, :messages_read ]
   }
 
-  # draw a list of the most visited urls (url, visits + percentage), auto-refresh every 20s
+  # draw a list of the most visited urls (url, visits + percentage), 
+  # auto-refresh every 20s
   widget 'Overview', {
     :title => "Top Pages",
     :type => :toplist,
@@ -329,7 +344,10 @@ Contributors
 + John Murray (http://github.com/JohnMurray)
 + Lars Gierth (http://github.com/lgierth)
 
-To contribute, please fork this repository, make your changes and run the specs, commit them to your github repository and send me a pull request.
+To contribute, please fork this repository, make your changes and run the 
+specs, commit them to your github repository and send me a pull request.
+Need help, head on over to our [Google Groups][1]  page to discuss any ideas
+that you might have.
 
 
 License
@@ -367,3 +385,14 @@ Todos
 + the funnel-widget
 + timelinewidget + numberswidget => should use redis hmget
 + get multiple metrics in a single http get
+
+
+
+  [1]: http://groups.google.com/group/fnordmetric
+  [2]: http://www.screenr.com/KiJs
+  [3]: https://secure.travis-ci.org/paulasmuth/fnordmetric.png
+  [4]: http://travis-ci.org/paulasmuth/fnordmetric
+  [5]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png
+  [6]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png
+  [7]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png
+  [8]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png
