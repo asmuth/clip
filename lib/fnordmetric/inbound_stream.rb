@@ -12,7 +12,7 @@ class FnordMetric::InboundStream < EventMachine::Connection
 
   def receive_data(chunk)     
     @buffer << chunk         
-    EM.defer{ next_event }
+    next_event
   end
 
   def next_event
@@ -31,7 +31,6 @@ class FnordMetric::InboundStream < EventMachine::Connection
     return true if @events.empty?
     @events_buffered -= 1
     @api.event(@events.pop)
-    close_connection?
     EM.next_tick(&method(:push_next_event))    
   end
 
@@ -44,7 +43,7 @@ class FnordMetric::InboundStream < EventMachine::Connection
     @events_buffered = 0
     @streaming = true
     @buffer = ""
-    @events = []          
+    @events = []
   end
 
   def unbind
