@@ -57,7 +57,6 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   bson_ext (>= 1.4.0)
-  bundler (~> 1.0.0)
   delorean
   em-hiredis
   eventmachine
