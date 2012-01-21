@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency "activesupport"
 
   s.add_development_dependency "delorean"
-  s.add_development_dependency "rspec", "~> 2.6.0"
+  s.add_development_dependency "rspec", "~> 2.8.0"
   s.add_development_dependency "shoulda"
 
   s.files         = `git ls-files`.split("\n") - [".gitignore", ".rspec", ".travis.yml"]

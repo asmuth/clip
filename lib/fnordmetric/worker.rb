@@ -24,7 +24,7 @@ class FnordMetric::Worker
       if event_id
         @redis.get(event_key(event_id)).callback do |event_data|                     
           process_event(event_id, event_data) if event_data        
-          FnordMetric.log("event_lost: event_data not found for event-id '#{event_id}'") unless event_data
+          FnordMetric.log("event_lost: event_data not found for event-id '#{event_id}' - maybe expired?") unless event_data
           @redis.hincrby(stats_key, :events_processed, 1)
         end
       end
