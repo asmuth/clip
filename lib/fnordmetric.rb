@@ -5,7 +5,7 @@ require "active_support/core_ext"
 require 'yajl'
 require 'sinatra/base'
 require 'haml'
-require 'thin'
+require 'rack/server'
 
 module FnordMetric
 
@@ -26,6 +26,7 @@ module FnordMetric
 
     opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
     opts[:web_interface] ||= ["0.0.0.0", "4242"]
+    opts[:web_interface_server] ||= "thin"
 
     opts[:start_worker] ||= true
     opts[:print_stats] ||= 3
@@ -51,14 +52,16 @@ module FnordMetric
       app = embedded(opts)
 
       if opts[:web_interface]
-        begin
-          Thin::Server.start(*opts[:web_interface], app)
-          log "listening on http##{opts[:web_interface].join(":")}"
-        rescue Exception => e
-          log "cant start FnordMetric::App. port in use?"
+        server = opts[:web_interface_server].downcase
+        unless ["thin", "hatetepe"].include? server
+          raise "Need an EventMachine webserver, but #{server} isn't"
         end
-      end
 
+        host, port = *opts[:web_interface]
+        Rack::Server.start :app => app, :server => server,
+                           :Host => host, :Port => port
+        log "listening on http://#{host}:#{port}"
+      end
     end
   end
 
