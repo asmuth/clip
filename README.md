@@ -163,10 +163,6 @@ Call these methods from the event-handler block
 
 ----
 
-### Options: Gauges ###
-
-----
-
 ### Options: Widgets ###
 
 + `[autoupdate]` auto-refresh the timeline every n secs (0 turns autoupdate off)
@@ -185,8 +181,13 @@ BarsWidget
 
 ----
 
-### JSON API ###
 
+Ressources
+----------
+
++ [A simple PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
++ [First steps with FnordMetrics (C#) (Blog/Howto)](http://johnmurray.io/log/2012/01/19/FnordMetrics-and-C%23.md)
++ [The "fnordmetric" google group](http://groups.google.com/group/fnordmetric)
 
 Examples
 --------
