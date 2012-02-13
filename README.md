@@ -94,10 +94,10 @@ The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
     curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
 
-The easy way: Stream one ore more newline-seperated json encoded events 
-through a tcp connection.
+The easy way: Stream one or more newline-seperated json encoded events 
+through a udp connection.
 
-    echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
+    echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc -u localhost 2323
 
 The fast way: Add your event directly to the redis-based queue.
 
