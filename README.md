@@ -188,6 +188,8 @@ Ressources
 + [A simple PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
 + [First steps with FnordMetrics (C#) (Blog/Howto)](http://johnmurray.io/log/2012/01/19/FnordMetrics-and-C%23.md)
 + [The "fnordmetric" google group](http://groups.google.com/group/fnordmetric)
++ [Readme + HowTo in russian (habrahabr.ru)](habrahabr.ru/blogs/ruby/139041/)
+
 
 Examples
 --------
