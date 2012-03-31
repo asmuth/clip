@@ -11,11 +11,15 @@ var FnordMetric = (function(){
   }
 
   function formatTimeOfDay(_time){
-    var time = new Date();
-    time.setTime(_time*1000);
-    return decPrint(time.getHours()) + ':' +
-           decPrint(time.getMinutes()) + ':' +
-           decPrint(time.getSeconds());
+    if(_time === null) {
+      return "";
+    } else {
+      var time = new Date();
+      time.setTime(_time*1000);
+      return decPrint(time.getHours()) + ':' +
+             decPrint(time.getMinutes()) + ':' +
+             decPrint(time.getSeconds());
+    }
   }
 
   function formatTimeRange(range){
