@@ -20,37 +20,33 @@ module FnordMetric
   def self.server_configuration=(configuration)
     @@server_configuration = configuration
   end
-  
-  def self.default_options(opts)
 
-    opts[:redis_url] ||= "redis://localhost:6379"
-    opts[:redis_prefix] ||= "fnordmetric"
-
-    opts[:inbound_stream] ||= ["0.0.0.0", "1337"]
-    opts[:web_interface] ||= ["0.0.0.0", "4242"]
-    opts[:web_interface_server] ||= "thin"
-
-    opts[:start_worker] ||= true
-    opts[:print_stats] ||= 3
-
-    # events that aren't processed after 2 min get dropped
-    opts[:event_queue_ttl] ||= 120
-
-    # event data is kept for one month
-    opts[:event_data_ttl] ||= 3600*24*30
-
-    # session data is kept for one month
-    opts[:session_data_ttl] ||= 3600*24*30
-
-    opts
+  def self.default_options(opts = {})
+    {
+      :redis_url => "redis://localhost:6379",
+      :redis_prefix => "fnordmetric",
+      :inbound_stream => ["0.0.0.0", "1337"],
+      :web_interface => ["0.0.0.0", "4242"],
+      :web_interface_server => "thin",
+      :start_worker => true,
+      :print_stats => 3,
+      :event_queue_ttl => 120,
+      :event_data_ttl => 3600*24*30,
+      :session_data_ttl => 3600*24*30
+    }.merge(opts)
   end
 
-  def self.start_em(opts)
+  def self.options(opts = {})
+    default_options(@@server_configuration || {}).merge(opts)
+  end
+
+  def self.start_em(opts = {})
     EM.run do
 
       trap("TERM", &method(:shutdown))
       trap("INT",  &method(:shutdown))
 
+      opts = options(opts)
       app = embedded(opts)
 
       if opts[:web_interface]
@@ -78,10 +74,10 @@ module FnordMetric
 
   def self.run
     opts = (defined?(@@server_configuration) && @@server_configuration) || {}
-    start_em(opts) 
+    start_em(opts)
   rescue Exception => e
     log "!!! eventmachine died, restarting... #{e.message}"
-    sleep(1); run 
+    sleep(1); run
   end
 
   def self.shutdown
@@ -113,7 +109,7 @@ module FnordMetric
   # `:inbound_stream` starts the TCP interface
   # `:print_stats`    periodicaly prints worker stats
   def self.embedded(opts={})
-    opts = default_options(opts)
+    opts = options(opts)
     app  = nil
 
     if opts[:rack_app] or opts[:web_interface]
