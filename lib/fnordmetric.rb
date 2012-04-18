@@ -73,8 +73,7 @@ module FnordMetric
   end
 
   def self.run
-    opts = (defined?(@@server_configuration) && @@server_configuration) || {}
-    start_em(opts)
+    start_em
   rescue Exception => e
     log "!!! eventmachine died, restarting... #{e.message}"
     sleep(1); run
