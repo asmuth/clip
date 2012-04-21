@@ -105,8 +105,8 @@ The fast way: Add your event directly to the redis-based queue.
 uuid = (8**32).to_s(36)
 event = { :_type => "unicorn_seen" }.to_json
 
-redis.set("fnordmetric-event-#{my_uuid}", event)
-redis.expire("fnordmetric-event-#{my_uuid}", 60)
+redis.set("fnordmetric-event-#{uuid}", event)
+redis.expire("fnordmetric-event-#{uuid}", 60)
 redis.lpush("fnordmetric-queue", uuid)
 ```
 
