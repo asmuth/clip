@@ -178,6 +178,31 @@ var FnordMetric = (function(){
 
   };
 
+	var htmlWidget = function(){
+		function render(opts){
+
+      opts.elem.append(
+        $('<div class="headbar small"></div>').html(opts.title)
+      ).css({
+        'marginBottom': 20,
+        'overflow': 'hidden'
+      });
+			
+			var container = $('<div></div>')
+        .addClass('html_container')
+				.html(opts.html);
+			
+			opts.elem.append(container);
+		}
+		
+		function updateValues(opts){}
+		function updatedisplay(opts, diff_factor){}
+	
+		return {
+			render: render
+		};
+	}
+
   var numbersWidget = function(){
 
 
@@ -603,7 +628,6 @@ var FnordMetric = (function(){
     };
 
   };
-
 
   var pieWidget = function(){
 
@@ -1078,6 +1102,7 @@ var FnordMetric = (function(){
       if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
       if(widget.klass=='ToplistWidget'){ toplistWidget().render(widget); }
       if(widget.klass=='PieWidget'){ pieWidget().render(widget); }
+			if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
     };
 
     function resizeWidget(wkey){
