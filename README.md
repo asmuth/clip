@@ -70,7 +70,7 @@ Log all incoming events:
 
 This is the easiest way to submit an event:
 
-    echo "{\"_type\": \"unicorn_seen\"}" | nc localhost 1337
+    echo "{\"_type\": \"unicorn_seen\"}" | nc -u -w1 localhost 1337
 
 
 Installation
@@ -94,10 +94,10 @@ The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
     curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
 
-The easy way: Stream one ore more newline-seperated json encoded events 
-through a tcp connection.
+The easy way: Stream one or more newline-seperated json encoded events 
+through a udp connection.
 
-    echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
+    echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc -u -w1 localhost 1337
 
 The fast way: Add your event directly to the redis-based queue.
 

@@ -105,7 +105,7 @@ module FnordMetric
 
   # returns a Rack app which can be mounted under any path.
   # `:start_worker`   starts a worker
-  # `:inbound_stream` starts the TCP interface
+  # `:inbound_stream` starts the UDP interface
   # `:print_stats`    periodicaly prints worker stats
   def self.embedded(opts={})
     opts = options(opts)
@@ -124,7 +124,7 @@ module FnordMetric
       if opts[:inbound_stream]
         begin
           inbound_stream = InboundStream.start(opts)
-          log "listening on tcp##{opts[:inbound_stream].join(":")}"
+          log "listening on udp##{opts[:inbound_stream].join(":")}"
         rescue
           log "cant start FnordMetric::InboundStream. port in use?"
         end
