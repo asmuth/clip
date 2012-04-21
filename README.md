@@ -347,6 +347,8 @@ Contributors
 + Kacper Bielecki (http://github.com/kazjote)
 + John Murray (http://github.com/JohnMurray)
 + Lars Gierth (http://github.com/lgierth)
++ Ross Kaffenberger (http://github.com/rossta)
++ Kunal Modi (http://github.com/kunalmodi)
 
 To contribute, please fork this repository, make your changes and run the 
 specs, commit them to your github repository and send me a pull request.
