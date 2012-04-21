@@ -1,4 +1,4 @@
-!!!	
+!!!
 %html
 
   %head
@@ -18,7 +18,7 @@
       %ul
         -namespaces.each do |key,namespace|
           %li{:class => namespace.token == current_namespace.token ? 'active' : nil}
-            %a{:href=>"/#{namespace.token}"}=h namespace.title
+            %a{:href=> "#{path_prefix}/#{namespace.token}"}=h namespace.title
 
     #wrap
       #tabs
@@ -35,7 +35,7 @@
 
       #viewport
         .viewport_inner.clearfix
-            
+
 
 :javascript
   $(document).ready(function(){
@@ -56,9 +56,9 @@
       $(this).addClass('active').siblings().removeClass('active');
     });
 
-    function resizeViewport(){ 
+    function resizeViewport(){
       var viewport_width = window.innerWidth-220
-      $('#viewport').width(viewport_width); 
+      $('#viewport').width(viewport_width);
       FnordMetric.resizeView();
     }
 
@@ -68,7 +68,7 @@
     if(!#{current_namespace.active_users_available.to_s}) {
       $('#tabs li:first').trigger('click');
     }
-    
+
     if(window.location.hash){
       $('#tabs li.dashboard[rel="'+window.location.hash.slice(1)+'"]').trigger('click');
     }
