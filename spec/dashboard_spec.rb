@@ -1,3 +1,4 @@
+# encoding: utf-8
 require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Dashboard do
@@ -18,6 +19,11 @@ describe FnordMetric::Dashboard do
   it "should build the correct token if the dashboard name contains whitespaces" do
     dashboard = FnordMetric::Dashboard.new(:title => 'My!F00bar Dash_board'){ |dash| }
     dashboard.token.should == 'MyF00barDash_board'
+  end
+
+  it "should build the correct token if the dashboard name contains non-english characters" do
+    dashboard = FnordMetric::Dashboard.new(:title => 'Новая статистика!'){ |dash| }
+    dashboard.token.should_not be_empty
   end
 
   it "should add a widget" do
