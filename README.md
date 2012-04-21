@@ -188,7 +188,7 @@ Resources
 + [PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
 + [Python API for FnordMetric (github.com/sholiday/pyfnordmetric)](https://github.com/sholiday/pyfnordmetric)
 + [FnordMetric and C (Blog/Howto)](http://johnmurray.io/log/2012/01/19/FnordMetrics-and-C%23.md)
-
++ [FnordMetric HowTo in russian](http://www.pvsm.ru/ruby/2723)
 + [The "fnordmetric" google group](http://groups.google.com/group/fnordmetric)
 
 
