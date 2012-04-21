@@ -17,7 +17,9 @@ class FnordMetric::Dashboard
   end
 
   def token
-    title.to_s.gsub(/[\W]/, '')
+    token = title.to_s.gsub(/[\W]/, '')
+    token = Digest::SHA1.hexdigest(title.to_s) if token.empty?
+    token
   end
 
   def to_json
