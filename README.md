@@ -182,7 +182,7 @@ BarsWidget
 ----
 
 
-Ressources
+Resources
 ----------
 
 + [PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
