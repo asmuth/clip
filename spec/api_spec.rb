@@ -17,7 +17,7 @@ describe FnordMetric::Event do
       :redis_prefix => "fnordmetric-test",
       :redis => @redis
     }  
-    @api = API.new @opts
+    @api = FnordMetric::API.new @opts
   end
 
   describe "creating events using API" do
@@ -32,7 +32,7 @@ describe FnordMetric::Event do
         :_time => @now
       }.to_json
       event_id = @api.event(json_string)
-      event = Event.find(event_id, @opts)
+      event = FnordMetric::Event.find(event_id, @opts)
       event.type.should == "Fn0rd123"
     end
 
@@ -41,7 +41,7 @@ describe FnordMetric::Event do
         :_type => "Fn0rd234", 
         :_time => @now
       )
-      event = Event.find(event_id, @opts)
+      event = FnordMetric::Event.find(event_id, @opts)
       event.type.should == "Fn0rd234"
     end
 
