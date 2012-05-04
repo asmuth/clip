@@ -25,7 +25,7 @@ describe FnordMetric::Session do
     end
 
     it "should add a new session on intialize" do        
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :session_data_ttl => 10,
@@ -35,7 +35,7 @@ describe FnordMetric::Session do
     end
 
     it "should add a new session on intialize and hash the session token" do               
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :session_data_ttl => 10,
@@ -45,7 +45,7 @@ describe FnordMetric::Session do
     end
 
     it "should add a new session on intialize and set the timestamp as score" do               
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :session_data_ttl => 10,
@@ -57,7 +57,7 @@ describe FnordMetric::Session do
     it "should update the timestamp on a existing session" do     
       @redis.zadd(@sessions, @now-10, @md5_key)
       @redis.zscore(@sessions, @md5_key).to_i.should == @now-10
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :session_data_ttl => 10,
@@ -67,7 +67,7 @@ describe FnordMetric::Session do
     end
 
     it "should add the event_id to the session-event set on a new session" do               
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => @event, 
         :session_data_ttl => 10,
@@ -82,7 +82,7 @@ describe FnordMetric::Session do
         :_type => "_set_name", 
         :name => "Horst Mayer"
       )            
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :session_data_ttl => 10,
@@ -97,7 +97,7 @@ describe FnordMetric::Session do
         :_type => "_set_picture", 
         :url => "http://myhost/mypic.jpg"
       )
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :session_data_ttl => 10,
@@ -113,7 +113,7 @@ describe FnordMetric::Session do
         :fnord => "blubb", 
         :foobar => "123"
       )
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :session_data_ttl => 10,
@@ -130,7 +130,7 @@ describe FnordMetric::Session do
         :fnord => "blubb", 
         :foobar => "123"
       )
-      Session.create(
+      FnordMetric::Session.create(
         :namespace_prefix => @namespace,
         :event => event_data,
         :session_data_ttl => 10,
@@ -159,24 +159,24 @@ describe FnordMetric::Session do
     it "should find all sessions" do
       create_session("sess533", @now, {})
       create_session("sess343", @now, {})
-      Session.all(@opts).length.should == 2
+      FnordMetric::Session.all(@opts).length.should == 2
     end
 
     it "should find all sessions and return session objects" do
       create_session("sess523", @now, {})
-      Session.all(@opts).first.should be_a(FnordMetric::Session)
+      FnordMetric::Session.all(@opts).first.should be_a(FnordMetric::Session)
     end
 
     it "should find a session and return a session object" do
       create_session("sess223", @now, {})
-      sess = Session.find(Digest::MD5.hexdigest("sess223"), @opts)
+      sess = FnordMetric::Session.find(Digest::MD5.hexdigest("sess223"), @opts)
       sess.should be_a(FnordMetric::Session)
       sess.session_key.should == Digest::MD5.hexdigest("sess223")
     end
 
     it "should find a sessions and return a session object with data" do
       create_session("sess123", @now, { :fnord => "blubb" })
-      sess = Session.find(Digest::MD5.hexdigest("sess123"), @opts)  
+      sess = FnordMetric::Session.find(Digest::MD5.hexdigest("sess123"), @opts)  
       sess.fetch_data!    
       sess.data(:fnord).should == "blubb"
     end
@@ -184,7 +184,7 @@ describe FnordMetric::Session do
     it "should not include special attributes in data" do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess173", @now, event_data)
-      sess = Session.find(Digest::MD5.hexdigest("sess173"), @opts)      
+      sess = FnordMetric::Session.find(Digest::MD5.hexdigest("sess173"), @opts)      
       sess.fetch_data!
       sess.data(:_name).should == nil
       sess.data(:_picture).should == nil
@@ -193,7 +193,7 @@ describe FnordMetric::Session do
     it "should find a session and return a session object with picture" do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess163", @now, event_data)
-      sess = Session.find(Digest::MD5.hexdigest("sess163"), @opts)      
+      sess = FnordMetric::Session.find(Digest::MD5.hexdigest("sess163"), @opts)      
       sess.fetch_data!
       sess.picture.should == "http://myhost/mypic.jpg"
     end
@@ -201,7 +201,7 @@ describe FnordMetric::Session do
     it "should find a session and return a session object with name" do
       event_data = { :_name => "Horst Mayer", :_picture => "http://myhost/mypic.jpg" }
       create_session("sess143", @now, event_data)
-      sess = Session.find(Digest::MD5.hexdigest("sess143"), @opts)      
+      sess = FnordMetric::Session.find(Digest::MD5.hexdigest("sess143"), @opts)      
       sess.fetch_data!
       sess.name.should == "Horst Mayer"
     end
@@ -210,7 +210,7 @@ describe FnordMetric::Session do
       sesshash = create_session("sess923", @now, {})
       @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "shmoo")       
       @redis_wrap.zadd("#{@namespace}-session-#{sesshash}-events", @now, "fnord")
-      sess = Session.find(sesshash, @opts)
+      sess = FnordMetric::Session.find(sesshash, @opts)
       sess.fetch_event_ids!
       sess.event_ids.should include("shmoo")
       sess.event_ids.should include("fnord")

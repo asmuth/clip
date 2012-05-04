@@ -97,8 +97,8 @@ class FnordMetric::Session
   end
 
   def add_event_data(event)
-    event.each do |key,value|
-      add_data(key, value) unless key[0]=="_"
+    event.each do |key, value|
+      add_data(key, value) unless key.to_s.starts_with?("_")
     end
   end
 
@@ -109,7 +109,7 @@ class FnordMetric::Session
   def fetch_data!
     @data = Hash.new
     @redis.hgetall(redis_key(:data)).each do |key, value|    
-      if key[0]=="_" 
+      if key.to_s.starts_with?("_")
         fetch_meta_key(key, value)
       else      
         @data[key.intern] = value 
