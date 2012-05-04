@@ -1077,6 +1077,8 @@ var FnordMetric = (function(){
 
     function load(_viewport){
       viewport = _viewport.html('');
+      viewport.append('<div class="navbar"></div>');
+
       $.ajax({
         url: FnordMetric.p + '/' + currentNamespace+'/dashboard/'+dashboard_name,
         success: function(resp, status){
