@@ -7,7 +7,10 @@ class FnordMetric::App < Sinatra::Base
     "fnordmetric.css" => "text/css",
     "fnordmetric.js" => "application/x-javascript",
     "vendor/jquery-1.6.1.min.js" => "application/x-javascript",
-    "vendor/highcharts.js" => "application/x-javascript"
+    "vendor/highcharts.js" => "application/x-javascript",
+    "img/list.png" => "image/png",
+    "img/list_active.png" => "image/png",
+    "img/list_hover.png" => "image/png"
   }
 
   if RUBY_VERSION =~ /1.9.\d/
@@ -17,7 +20,7 @@ class FnordMetric::App < Sinatra::Base
   enable :session
 
   set :haml, :format => :html5
-  set :views, ::File.expand_path('../../../haml', __FILE__)  
+  set :views, ::File.expand_path('../../../haml', __FILE__)
 
   def initialize(namespaces, opts)
     @namespaces = {}

@@ -1,5 +1,5 @@
 body, html{ height:100%; padding:0px;}
-body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
+body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
 
 .shown{ display: block; }
 .hidden{ display: none; }
@@ -11,23 +11,80 @@ body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 .topbar ul li a:hover { color:#fff; }
 .topbar ul li.active a { color:#fff; }
 
-#wrap{ margin:25px 20px; }
+#sidebar{ width:220px; position:fixed; height:100%; margin-top:30px; }
 
-#tabs{ width:150px; position:fixed; height:100%; margin-top:70px; }
-#tabs ul{ list-style-type:none; padding:0; margin:0; width:156px;}
-#tabs ul li{ height:34px; line-height:35px; cursor:pointer; color:#ccc; font-size:13px; border-radius:3px; margin-bottom:5px; }
-#tabs ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:35px; }
-#tabs ul li .picto{ margin-top:10px; margin-right:7px; }
-#tabs ul li:hover, #tabs ul li:hover:after{ color:#fff; }
-#tabs ul li:hover .picto{ opacity:1; }
+#sidebar ul{
+  margin:0;
+  padding:0;
+}
+
+#sidebar ul li{
+  height:50px;
+  background:url('/img/list.png');
+  cursor:pointer;
+  list-style-type:none;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+#sidebar ul li.active, 
+#sidebar ul li.active:hover{
+  background:url('img/list_active.png');
+}
+
+#sidebar ul li:hover{
+  background:url('img/list_hover.png');
+}
+
+#sidebar ul li .title{
+  color:#fff;
+  font-weight:500;
+  font-size:13px;
+  line-height:20px;
+  padding-top:6px;
+  display:block;
+}
+
+
+#sidebar ul li .picto{
+  float:left;
+  height:50px;
+  width:38px;
+  margin:0 17px 0 12px;
+  background:url('img/picto_gauge.png') no-repeat center 12px;
+}
+
+#sidebar ul li .meta{
+  color:#fff;
+  font-weight:500;
+  font-size:11px;
+  line-height:16px;
+  padding-left:3px;
+  display:block;
+  color:#999;
+}
+
+#sidebar ul li .meta strong{
+  font-weight:500;
+  color:#ccc;
+}
+
+
+#vtabs{ width:150px; position:fixed; height:100%; margin-top:70px; }
+#vtabs ul{ list-style-type:none; padding:0; margin:0; width:156px;}
+#vtabs ul li{ height:34px; line-height:35px; cursor:pointer; color:#ccc; font-size:13px; border-radius:3px; margin-bottom:5px; }
+#vtabs ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:35px; }
+#vtabs ul li .picto{ margin-top:10px; margin-right:7px; }
+#vtabs ul li:hover, #vtabs ul li:hover:after{ color:#fff; }
+#vtabs ul li:hover .picto{ opacity:1; }
 
 .picto{ display:block; height:14px; width:14px; float:left; opacity:0.7; }
 .picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
-#viewport{ float:left; margin-left:150px; margin-top:30px; border-radius:3px; min-width:790px; }
-#viewport .viewport_inner{ margin:6px; background:#fff; min-height:1200px; border-radius:2px; }
+#viewport{ float:left; margin-left:220px; border-radius:3px; min-width:790px; }
+#viewport .viewport_inner{ margin:6px; background:#fff; min-height:1200px; border-radius:2px; margin-top:0; }
 
-#viewport, #tabs ul li:hover, #tabs ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
+#viewport, #vtabs ul li:hover, #vtabs ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
 
 .widget{ min-height:100px; border-right:1px solid #ececec; float:left; }
 .widget.full_width{ border-right:none; }

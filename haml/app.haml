@@ -21,17 +21,24 @@
             %a{:href=> "#{path_prefix}/#{namespace.token}"}=h namespace.title
 
     #wrap
-      #tabs
+      #sidebar
         %ul
           - if current_namespace.active_users_available
             %li.active.sessions
-              .picto.piechart
-              Active Users
+              %span.picto.piechart
+              %span.title Active Users
+              %span.meta 
+                %strong Fnord
+                Fnord
 
           -current_namespace.dashboards.each do |key,dashboard|
             %li.dashboard{:rel => dashboard.token}
-              .picto.piechart
-              =h dashboard.title
+              %span.picto.piechart
+              %span.title= h dashboard.title
+              %span.meta 
+                %strong Fnord
+                Fnord
+              
 
       #viewport
         .viewport_inner.clearfix
@@ -57,7 +64,7 @@
     });
 
     function resizeViewport(){
-      var viewport_width = window.innerWidth-220
+      var viewport_width = window.innerWidth - 220
       $('#viewport').width(viewport_width);
       FnordMetric.resizeView();
     }
