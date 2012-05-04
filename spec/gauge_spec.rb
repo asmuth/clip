@@ -93,7 +93,7 @@ describe FnordMetric::Gauge do
     it "should retrieve a gauge value at the current tick"
 
     it "should call the value calculation block and return the result" do
-      @gauge.value_at(@now){ |v| v.to_i + 123 }.should == 177
+      @gauge.value_at(@now){ |v, t| v.to_i + 123 }.should == 177
     end
 
     it "should return the correct value_at per session" do
@@ -166,7 +166,7 @@ describe FnordMetric::Gauge do
     end
 
     it "should receive gauge values with custom calculation for multiple ticks" do  
-      @gauge.values_at([@now, @now+8]){ |val|
+      @gauge.values_at([@now, @now+8]){ |val, time|
         val.to_i + 30
       }.should == {
         695280200 => 84,
@@ -230,7 +230,7 @@ describe FnordMetric::Gauge do
     end
 
     it "should call the value calculation block and return the result" do
-      vals = @gauge.field_values_at(1323691200){ |v| v.to_i + 123 }
+      vals = @gauge.field_values_at(1323691200){ |v, t| v.to_i + 123 }
       vals.should be_a(Array)
       vals.length.should == 2
       vals[0].should == ["uberfoo", 146]
