@@ -125,7 +125,7 @@ module FnordMetric
       if opts[:inbound_stream]
         begin
           inbound_stream = InboundStream.start(opts)
-          log "listening on tcp##{opts[:inbound_stream].join(":")}"
+          log "listening on tcp://#{opts[:inbound_stream].join(":")}"
         rescue
           log "cant start FnordMetric::InboundStream. port in use?"
         end
