@@ -28,25 +28,25 @@ describe FnordMetric::Gauge do
   end
 
   it "should raise an error when initialize without key" do
-  	lambda{ 
-	    FnordMetric::Gauge.new({:key_prefix => "foo"}) 
-	  }.should raise_error(KeyError)
+    lambda{ 
+      FnordMetric::Gauge.new({:key_prefix => "foo"}) 
+    }.should raise_error(KeyError)
   end
 
   it "should raise an error when initialize without key_prefix" do
-  	lambda{ 
-	    FnordMetric::Gauge.new({:key => "foo"}) 
-	  }.should raise_error(KeyError)
+    lambda{ 
+      FnordMetric::Gauge.new({:key => "foo"}) 
+    }.should raise_error(KeyError)
   end
 
   it "should generate the correct key without append" do
-  	gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
-  	gauge.key.should == "fnordmetrics-myns-gauge-mygauge-23"
+    gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
+    gauge.key.should == "fnordmetrics-myns-gauge-mygauge-23"
   end
 
   it "should generate the correct key with append" do
-  	gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
-  	gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
+    gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
+    gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
   end
 
   describe "ticks" do
