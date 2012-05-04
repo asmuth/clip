@@ -49,17 +49,17 @@
 
     FnordMetric.init('#{current_namespace.token}', $('.viewport_inner'));
 
-    $('#tabs li.dashboard').click(function(){
+    $('#sidebar li.dashboard').click(function(){
       FnordMetric.renderDashboard($(this).attr('rel'));
       window.location.hash = $(this).attr('rel');
     });
 
-    $('#tabs li.sessions').click(function(){
+    $('#sidebar li.sessions').click(function(){
       FnordMetric.renderSessionView();
       window.location.hash = '';
     });
 
-    $('#tabs li').click(function(){
+    $('#sidebar li').click(function(){
       $(this).addClass('active').siblings().removeClass('active');
     });
 

@@ -10,7 +10,8 @@ class FnordMetric::App < Sinatra::Base
     "vendor/highcharts.js" => "application/x-javascript",
     "img/list.png" => "image/png",
     "img/list_active.png" => "image/png",
-    "img/list_hover.png" => "image/png"
+    "img/list_hover.png" => "image/png",
+    "img/picto_gauge.png" => "image/png"
   }
 
   if RUBY_VERSION =~ /1.9.\d/
