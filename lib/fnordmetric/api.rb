@@ -1,4 +1,3 @@
-require 'securerandom'
 class FnordMetric::API
   @@opts = nil
 
@@ -42,6 +41,6 @@ class FnordMetric::API
   end
 
   def get_next_uuid
-    SecureRandom.uuid
+    rand(8**32).to_s(36)
   end
 end
