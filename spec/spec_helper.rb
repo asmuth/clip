@@ -36,3 +36,7 @@ class RedisWrap
   end
 
 end
+
+def key_error_klass
+  RUBY_VERSION =~ /1.9.\d/ ? KeyError : IndexError
+end

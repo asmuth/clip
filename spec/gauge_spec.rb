@@ -29,14 +29,14 @@ describe FnordMetric::Gauge do
 
   it "should raise an error when initialize without key" do
     lambda{ 
-      FnordMetric::Gauge.new({:key_prefix => "foo"}) 
-    }.should raise_error(KeyError)
+      FnordMetric::Gauge.new({:key_prefix => "foo"})
+    }.should raise_error(key_error_klass)
   end
 
   it "should raise an error when initialize without key_prefix" do
     lambda{ 
-      FnordMetric::Gauge.new({:key => "foo"}) 
-    }.should raise_error(KeyError)
+      FnordMetric::Gauge.new({:key => "foo"})
+    }.should raise_error(key_error_klass)
   end
 
   it "should generate the correct key without append" do
