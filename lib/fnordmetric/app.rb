@@ -10,9 +10,9 @@ class FnordMetric::App < Sinatra::Base
     "vendor/highcharts.js" => "application/x-javascript"
   }
 
-  Encoding.default_external = Encoding::UTF_8
-
-  #use Rack::Reloader, 0
+  if RUBY_VERSION =~ /1.9.\d/
+    Encoding.default_external = Encoding::UTF_8
+  end
 
   enable :session
 

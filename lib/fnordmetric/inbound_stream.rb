@@ -3,7 +3,7 @@ class FnordMetric::InboundStream < EventMachine::Connection
 
   def self.start(opts)
     @@opts = opts
-    EM.start_server(*opts[:inbound_stream], self)    
+    EM.start_server(*(opts[:inbound_stream] << self))
   end
 
   def self.options(opts)

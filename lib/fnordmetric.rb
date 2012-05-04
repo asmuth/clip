@@ -7,6 +7,7 @@ require 'sinatra/base'
 require 'haml'
 require 'rack/server'
 
+require "fnordmetric/ext"
 require "fnordmetric/version"
 
 module FnordMetric
