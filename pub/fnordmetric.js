@@ -1,10 +1,7 @@
 var FnordMetric = (function(){
 
   var canvasElem = false;
-
-  var currentNamespace = false;
   var currentView = false;
-  var currentWidgetUID=23;
 
   function decPrint(val){
     return (val < 10 ? '0'+val : val);
@@ -96,10 +93,6 @@ var FnordMetric = (function(){
     }
   }
 
-  function getNextWidgetUID(){
-    return (currentWidgetUID += 1);
-  }
-
  var toplistWidget = function(){
 
     function render(opts){
@@ -154,7 +147,7 @@ var FnordMetric = (function(){
         if(!gkey){ gkey = current_gauge; }
         current_gauge = gkey;
         if(!silent){ $('.toplist_inner', opts.elem).addClass('loading'); }
-        var _url = FnordMetric.p + '/' + currentNamespace + '/gauge/' + gkey;
+        var _url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + gkey;
         $.get(_url, function(_resp){
           var resp = JSON.parse(_resp);
           renderGauge(gkey, resp);
@@ -290,7 +283,7 @@ var FnordMetric = (function(){
         var _sum = parseInt($(this).attr('data-sum'));
         var num = this;
         var at = parseInt(new Date().getTime()/1000);
-        var url = FnordMetric.p + '/' + currentNamespace + '/gauge/' + $(this).attr('rel');
+        var url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + $(this).attr('rel');
         if(_sum > 0){
           url += '?at='+(at-_sum)+'-'+at+'&sum=true';
         } else {
@@ -339,178 +332,12 @@ var FnordMetric = (function(){
 
   };
 
-  var timelineWidget = function(){
-
-    function render(opts){
-
-      var widget_uid = getNextWidgetUID();
-      var chart=false;
-      var max_y=0;
-
-      function redrawWithRange(first_time, silent){
-        if(!silent){ $(opts.elem).css('opacity', 0.5); }
-        redrawDatepicker();
-        var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;
-        //chart.series = [];
-        max_y=0;
-        //metrics_completed = 0;
-        $(opts.gauges).each(function(i,gauge){
-          $.ajax({
-            url: FnordMetric.p + '/' + currentNamespace +'/gauge/'+gauge+_query,
-            success: redrawGauge(first_time, gauge)
-          });
-        });
-      }
-
-      function redrawGauge(first_time, gauge){
-        return (function(json){
-          var raw_data = JSON.parse(json);
-          var series_data = [];
-
-          for(p in raw_data){
-            series_data.push([parseInt(p)*1000, raw_data[p]||0]);
-            max_y = Math.max(max_y, raw_data[p]);
-          }
-
-          if(!first_time){
-            chart.get('series-'+gauge).setData(series_data);
-          } else {
-            chart.addSeries({
-              name: opts.gauge_titles[gauge],
-              data: series_data,
-              id: 'series-'+gauge
-            });
-          }
-
-          chart.yAxis[0].setExtremes(0,max_y);
-          chart.redraw();
-
-          // shown on the *first* gauge load
-          $(opts.elem).css('opacity', 1);
-        });
-      }
-
-      function redrawDatepicker(){
-        $('.datepicker', opts.elem).html(
-          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) +
-          '&nbsp;&dash;&nbsp;' +
-          Highcharts.dateFormat('%d.%m.%y %H:%M', parseInt(opts.end_timestamp)*1000)
-        );
-      }
-
-      function moveRange(direction){
-        v = opts.tick*direction*8;
-        opts.start_timestamp += v;
-        opts.end_timestamp += v;
-        redrawWithRange();
-      }
-
-      function drawLayout(){
-        $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
-          $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('refresh')).click(
-            function(){ redrawWithRange(); }
-          )
-        ).append(
-          $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
-            function(){ moveRange(1); }
-          )
-        ).append(
-          $('<div></div>').attr('class', 'datepicker')
-        ).append(
-          $('<div></div>').attr('class', 'button').append($('<span></span>').html('&larr;')).click(
-            function(){ moveRange(-1); }
-          )
-        ).append(
-          $('<h2></h2>').html(opts.title)
-        ) ).append(
-          $('<div></div>').attr('id', 'container-'+widget_uid).css({
-            height: 256,
-            marginBottom: 20,
-            overflow: 'hidden'
-          })
-        );
-      }
-
-      function drawChart(){
-        chart = new Highcharts.Chart({
-          chart: {
-            renderTo: 'container-'+widget_uid,
-            defaultSeriesType: opts.plot_style,
-            height: 270
-          },
-          series: [],
-          title: { text: '' },
-          xAxis: {
-            type: 'datetime',
-            tickInterval: opts.tick * 1000,
-            title: (opts.x_title||''),
-            labels: { step: 2 }
-          },
-          yAxis: {
-            title: (opts.y_title||''),
-            min: 0,
-            max: 1000
-          },
-          legend: {
-            layout: 'horizontal',
-            align: 'top',
-            verticalAlign: 'top',
-            x: -5,
-            y: -3,
-            margin: 25,
-            borderWidth: 0
-          },
-          plotOptions: {
-            line: {
-              shadow: false,
-              lineWidth: 3
-            }
-          }
-        });
-      }
-
-      drawLayout();
-      drawChart();
-
-      redrawWithRange(true);
-
-      if(opts.autoupdate){
-        var secs = parseInt(opts.autoupdate);
-        if(secs > 0){
-
-          var autoupdate_interval = window.setInterval(function(){
-            if(
-              (parseInt(new Date().getTime()/1000) - opts.end_timestamp) >
-              (opts.include_current ? 0 : opts.tick)
-            ){
-              opts.end_timestamp += opts.tick;
-              opts.start_timestamp += opts.tick;
-            }
-
-            redrawWithRange(false, true);
-          }, secs*1000);
-
-          $('body').bind('fm_dashboard_close', function(){
-            window.clearInterval(autoupdate_interval);
-          });
-
-        }
-      };
-
-    }
-
-    return {
-      render: render
-    };
-
-  };
-
 
   var barsWidget = function(){
 
     function render(opts){
 
-      var widget_uid = getNextWidgetUID();
+      var widget_uid = FnordMetric.util.getNextWidgetUID();
       var chart=false;
       var max_y=0;
 
@@ -519,7 +346,7 @@ var FnordMetric = (function(){
         max_y=0;
         $(opts.gauges).each(function(i,gauge){
           $.ajax({
-            url: FnordMetric.p + '/' + currentNamespace +'/gauge/'+gauge,
+            url: FnordMetric.p + '/' + FnordMetric.currentNamespace +'/gauge/'+gauge,
             success: redrawGauge(first_time, gauge)
           });
         });
@@ -637,7 +464,7 @@ var FnordMetric = (function(){
 
     function render(opts){
 
-      var widget_uid = getNextWidgetUID();
+      var widget_uid = FnordMetric.util.getNextWidgetUID();
       var chart=false;
 
       function redraw(first_time, silent){
@@ -647,7 +474,7 @@ var FnordMetric = (function(){
         var at = parseInt(new Date().getTime()/1000);
         $(opts.gauges).each(function(i,gauge){
           $.ajax({
-            url: FnordMetric.p + '/' + currentNamespace+'/gauge/'+gauge+'?at='+at,
+            url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/gauge/'+gauge+'?at='+at,
             success: function(_resp){
               var resp = JSON.parse(_resp);
               gauges_left -= 1;
@@ -799,7 +626,7 @@ var FnordMetric = (function(){
     function doSessionPoll(){
       return (function(){
         $.ajax({
-          url: FnordMetric.p + '/' + currentNamespace+'/sessions',
+          url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/sessions',
           success: callbackSessionPoll()
         });
       });
@@ -808,7 +635,7 @@ var FnordMetric = (function(){
     function loadEventHistory(params){
       feedInnerElem.html('');
       $.ajax({
-        url: FnordMetric.p + '/' + currentNamespace+'/events',
+        url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/events',
         data: params,
         success: function(_data, _status){
           var data = JSON.parse(_data).events;
@@ -830,7 +657,7 @@ var FnordMetric = (function(){
 
     function loadEventTypes(){
       $.ajax({
-        url: FnordMetric.p + '/' + currentNamespace+'/event_types',
+        url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/event_types',
         success: function(_data){
           var data = JSON.parse(_data);
           $(data.types).each(function(i,v){
@@ -886,7 +713,7 @@ var FnordMetric = (function(){
     function doEventsPoll(){
       return (function(){
         $.ajax({
-          url: FnordMetric.p + '/' + currentNamespace+'/events?since='+eventsPolledUntil,
+          url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/events?since='+eventsPolledUntil,
           success: callbackEventsPoll()
         });
       });
@@ -1070,79 +897,8 @@ var FnordMetric = (function(){
   });
 
 
-  var dashboardView = (function(dashboard_name){
-
-    var widgets = [];
-    var viewport = null;
-
-    function load(_viewport){
-      viewport = _viewport.html('');
-      viewport.append('<div class="navbar"></div>');
-
-      $.ajax({
-        url: FnordMetric.p + '/' + currentNamespace+'/dashboard/'+dashboard_name,
-        success: function(resp, status){
-          var conf = JSON.parse(resp);
-          renderWidgets(conf.widgets);
-        }
-      });
-    };
-
-    function renderWidgets(_widgets){
-      for(wkey in _widgets){
-        var widget = _widgets[wkey];
-        widget["elem"] = $('<div class="widget"></div>');
-        widgets[wkey] = widget;
-        viewport.append(widget.elem);
-        resizeWidget(wkey);
-        renderWidget(wkey);
-      };
-      resize();
-    };
-
-    function renderWidget(wkey){
-      var widget = widgets[wkey];
-      /* argh... */
-      if(widget.klass=='TimelineWidget'){ timelineWidget().render(widget); }
-      if(widget.klass=='BarsWidget'){ barsWidget().render(widget); }
-      if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
-      if(widget.klass=='ToplistWidget'){ toplistWidget().render(widget); }
-      if(widget.klass=='PieWidget'){ pieWidget().render(widget); }
-			if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
-    };
-
-    function resizeWidget(wkey){
-      var widget = widgets[wkey];
-      var wwperc = widgets[wkey].width;
-      if(!wwperc){ wwperc = 100; }
-      var wwidth = viewport.width() * (wwperc/100.0);
-      if(wwperc==100){
-        widgets[wkey].elem.addClass('full_width');
-      } else { wwidth -= 1; }
-      widget.elem.width(wwidth);
-    }
-
-    function resize(){
-      for(wkey in widgets){
-        resizeWidget(wkey);
-      };
-    };
-
-    function close(){
-      $('body').trigger('fm_dashboard_close');
-    };
-
-    return {
-      load: load,
-      resize: resize,
-      close: close
-    };
-
-  });
-
-
   function renderDashboard(_dash){
-    loadView(dashboardView(_dash));
+    loadView(FnordMetric.views.dashboardView(_dash));
   };
 
   function renderSessionView(){
@@ -1166,16 +922,22 @@ var FnordMetric = (function(){
 
   function init(_namespace, _canvasElem){
     canvasElem = _canvasElem;
-    currentNamespace = _namespace;
+    FnordMetric.currentNamespace = _namespace;
     loadView(sessionView());
   };
 
   return {
-    p: '',
     renderDashboard: renderDashboard,
     renderSessionView: renderSessionView,
     resizeView: resizeView,
-    init: init
+    init: init,
+    p: '',
+    currentNamespace: false,
+    currentWidgetUID: 23,
+    ui: {},
+    views: {},
+    widgets: {},
+    util: {}
   };
 
 })();

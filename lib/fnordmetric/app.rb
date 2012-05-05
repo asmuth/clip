@@ -6,6 +6,13 @@ class FnordMetric::App < Sinatra::Base
   @@public_files = {
     "fnordmetric.css" => "text/css",
     "fnordmetric.js" => "application/x-javascript",
+    "fnordmetric.ui.js" => "application/x-javascript",
+    "fnordmetric.util.js" => "application/x-javascript",
+    "fnordmetric.dashboard_view.js" => "application/x-javascript",
+    "fnordmetric.overview_view.js" => "application/x-javascript",
+    "fnordmetric.session_view.js" => "application/x-javascript",
+    "fnordmetric.timeline_widget.js" => "application/x-javascript",
+    "fnordmetric.numbers_widget.js" => "application/x-javascript",
     "vendor/jquery-1.6.1.min.js" => "application/x-javascript",
     "vendor/highcharts.js" => "application/x-javascript",
     "img/list.png" => "image/png",

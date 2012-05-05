@@ -8,6 +8,10 @@
     %script(type="text/javascript" src="#{path_prefix}/vendor/highcharts.js")
 
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.js")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric.util.js")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric.ui.js")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric.timeline_widget.js")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric.dashboard_view.js")
     %link(type="text/css" rel="stylesheet" href="#{path_prefix}/fnordmetric.css")
 
     :javascript
@@ -23,8 +27,15 @@
     #wrap
       #sidebar
         %ul
+
+          %li.active.overview
+            %span.picto.piechart
+            %span.title Dashboard
+            %span.meta 
+              %strong 3.6k events/s
+          
           - if current_namespace.active_users_available
-            %li.active.sessions
+            %li.sessions
               %span.picto.piechart
               %span.title Active Users
               %span.meta 
@@ -35,6 +46,14 @@
             %li.dashboard{:rel => dashboard.token}
               %span.picto.piechart
               %span.title= h dashboard.title
+              %span.meta 
+                %strong Fnord
+                Fnord
+
+          -current_namespace.gauges.each do |key,gauge|
+            %li.gauge{:rel => gauge.name}
+              %span.picto.piechart
+              %span.title= h gauge.title
               %span.meta 
                 %strong Fnord
                 Fnord
