@@ -20,9 +20,12 @@ class FnordMetric::Namespace
     self
   end
 
-  def announce(event)                  
-    announce_to_timeline(event)
-    announce_to_typelist(event)
+  def announce(event)
+    
+    if active_users_available
+      announce_to_timeline(event)
+      announce_to_typelist(event)
+    end
     
     if event[:_session]
       event[:_session_key] = announce_to_session(event).session_key 
@@ -48,6 +51,8 @@ class FnordMetric::Namespace
   end
 
   def announce_to_timeline(event)
+    puts 'test'
+    log 'test'
     timeline_key = key_prefix(:timeline)
     @redis.zadd(timeline_key, event[:_time], event[:_eid])
   end
