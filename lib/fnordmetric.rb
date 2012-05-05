@@ -13,6 +13,7 @@ require "fnordmetric/version"
 module FnordMetric
 
   @@namespaces = {}
+  @@server_configuration = nil
 
   def self.namespace(key=nil, &block)
     @@namespaces[key] = block
