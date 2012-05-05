@@ -68,7 +68,7 @@ class FnordMetric::Worker
   end
 
   def publish_event(event)    
-    @redis.publish(pubsub_key, event[:_eid])    
+    @redis.publish(pubsub_key, event.to_json)
   end
 
   def namespace(key)
