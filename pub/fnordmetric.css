@@ -1,5 +1,5 @@
 body, html{ height:100%; padding:0px;}
-body{ background:#2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
+body{ background:url('/img/head.png') 0 -21px repeat-x fixed #2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
 
 .shown{ display: block; }
 .hidden{ display: none; }
@@ -11,7 +11,7 @@ body{ background:#2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 .topbar ul li a:hover { color:#fff; }
 .topbar ul li.active a { color:#fff; }
 
-#sidebar{ width:220px; position:fixed; margin-top:30px; }
+#sidebar{ width:220px; position:fixed; margin-top:48px; }
 
 #sidebar ul{
   margin:0;
@@ -70,8 +70,9 @@ body{ background:#2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; fo
 }
 
 .navbar{
-  height:45px;
-  background:url('/img/head.png');
+  height:49px;
+  background:url('/img/navbar.png');
+  margin-bottom:100px;
 }
 
 #vtabs{ width:150px; position:fixed; height:100%; margin-top:70px; }
