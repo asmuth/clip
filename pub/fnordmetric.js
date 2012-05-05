@@ -3,96 +3,6 @@ var FnordMetric = (function(){
   var canvasElem = false;
   var currentView = false;
 
-  function decPrint(val){
-    return (val < 10 ? '0'+val : val);
-  }
-
-  function formatTimeOfDay(_time){
-    if(_time === null) {
-      return "";
-    } else {
-      var time = new Date();
-      time.setTime(_time*1000);
-      return decPrint(time.getHours()) + ':' +
-             decPrint(time.getMinutes()) + ':' +
-             decPrint(time.getSeconds());
-    }
-  }
-
-  function formatTimeRange(range){
-    if (range < 60){
-      return parseInt(range) + ' sec';
-    } else if(range<3600){
-      return parseInt(range/60) + ' min';
-    } else if(range==3600){
-      return '1 hour';
-    } else if(range<(3600*24)){
-      return parseInt(range/3600) + ' hours';
-    } else if(range==(3600*24)){
-      return '1 day';
-    } else {
-      return parseInt(range/(3600*24)) + ' days';
-    }
-  }
-
-  function formatTimeSince(time){
-    var now = new Date().getTime()/1000;
-    var since = now - time;
-    return formatTimeRange(since);
-  }
-
-  function formatOffset(offset, next_offset){
-    if((offset == 0) && (next_offset==(3600*24))){
-      return 'today';
-    } if((offset == 0) && (next_offset==3600)){
-      return 'this hour';
-    } else if(offset == 0){
-      return 'last ' + formatTimeRange(next_offset||0);
-    } else if(offset==(3600*24)){
-      return 'yesterday';
-    } else if(offset==3600){
-      return 'last hour';
-    } else {
-      return formatTimeRange(offset) + ' ago';
-    }
-  }
-
-  function formatValue(value){
-    if(value < 10){
-      return value.toFixed(2);
-    } else if(value > 1000){
-      return (value/1000.0).toFixed(1) + "k";
-    } else {
-      return value.toFixed(0);
-    }
-  }
-
-  function formatTimeValue(value){
-    if (value < 60){
-      return parseFloat(value).toFixed(1) + 's';
-    } else if(value<3600){
-      return parseFloat(value/60).toFixed(1) + 'm';
-    } else if(value<(3600*24)){
-      return parseFloat(value/3600).toFixed(1) + 'h';
-    } else {
-      return parseFloat(value/(3600*24)).toFixed(1) + 'd';
-    }
-  }
-
-  function formatPercentValue(value){
-    return value + '%';  
-  }
-
-  function formatGaugeValue(gauge_key, value){
-    if(gauge_key.slice(0,8) === '__time__'){
-      return formatTimeValue(value);
-    } else if(gauge_key.slice(0,11) === '__percent__'){
-      return formatPercentValue(value);
-    } else {
-      return formatValue(value);
-    }
-  }
-
  var toplistWidget = function(){
 
     function render(opts){
@@ -160,7 +70,7 @@ var FnordMetric = (function(){
           var _perc  = (parseInt(gdata.values[n][1]) / parseFloat(gdata.count))*100;
           var _item = $('<div class="toplist_item"><div class="title"></div><div class="value"></div><div class="percent"></div></div>');
           $('.title', _item).html(gdata.values[n][0]);
-          $('.value', _item).html(formatGaugeValue(gkey, parseInt(gdata.values[n][1])));
+          $('.value', _item).html(FnordMetric.util.formatGaugeValue(gkey, parseInt(gdata.values[n][1])));
           $('.percent', _item).html(_perc.toFixed(1) + '%');
           _elem.append(_item);
         });
@@ -245,7 +155,7 @@ var FnordMetric = (function(){
               .attr('data-sum', _sum)
               .attr('data',0)
               .append(
-                $('<span></span>').addClass('desc').html(formatOffset(_off, _nextoff))
+                $('<span></span>').addClass('desc').html(FnordMetric.util.formatOffset(_off, _nextoff))
               )
               .append(
                 $('<span></span>').addClass('value').html(0)
@@ -316,7 +226,7 @@ var FnordMetric = (function(){
           var new_val = current_val+diff;
           if(new_val > target_val){ new_val = target_val; }
           $(this).attr('data-current', new_val);
-          $('.value', this).html(formatGaugeValue($(this).attr('rel'), new_val));
+          $('.value', this).html(FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val));
         }
       });
       if(still_running){
@@ -578,331 +488,12 @@ var FnordMetric = (function(){
   };
 
 
-  var sessionView = (function(){
-
-    var listElem = $('<ul class="session_list"></ul>');
-    var feedInnerElem = $('<ul class="feed_inner"></ul>');
-    var typeListElem  = $('<ul class="event_type_list"></ul>');
-    var filterElem = $('<div class="events_sidebar"></div>').html(
-      $('<div class="headbar small"></div>').html('Event Types')
-    ).append(typeListElem);
-    var feedElem = $('<div class="sessions_feed"></div>').html(
-      $('<div class="headbar small"></div>').html('Event Feed')
-    ).append(feedInnerElem);
-    var sideElem = $('<div class="sessions_sidebar"></div>').html(
-      $('<div class="headbar small"></div>').html('Active Users')
-    ).append(listElem);
-
-    var eventsPolledUntil = false;
-    var eventsFilter = {uncheckedTypes: [], checkedSessions: []};
-    var sessionData = {};
-    var pollRunning = true;
-
-    function load(elem){
-      eventsPolledUntil = parseInt(new Date().getTime()/10000);
-      elem.html('')
-        .append(filterElem)
-        .append(feedElem)
-        .append(sideElem);
-      startPoll();
-      loadEventTypes();
-    };
-
-    function resize(_width, _height){
-      $('.sessions_feed').width(_width-452);
-    };
-
-    function startPoll(){
-      (doSessionPoll())();
-      (doEventsPoll())();
-      sessionView.session_poll = window.setInterval(doSessionPoll(), 1000);
-    };
-
-    function stopPoll(){
-      pollRunning = false;
-      window.clearInterval(sessionView.session_poll);
-    }
-
-    function doSessionPoll(){
-      return (function(){
-        $.ajax({
-          url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/sessions',
-          success: callbackSessionPoll()
-        });
-      });
-    };
-
-    function loadEventHistory(params){
-      feedInnerElem.html('');
-      $.ajax({
-        url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/events',
-        data: params,
-        success: function(_data, _status){
-          var data = JSON.parse(_data).events;
-          for(var n=data.length; n >= 0; n--){
-            if(data[n]){ renderEvent(data[n]); }
-          }
-        }
-      });
-    }
-
-    function callbackSessionPoll(){
-      return (function(_data, _status){
-        $.each(JSON.parse(_data).sessions, function(i,v){
-          updateSession(v);
-        });
-        sortSessions();
-      });
-    };
-
-    function loadEventTypes(){
-      $.ajax({
-        url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/event_types',
-        success: function(_data){
-          var data = JSON.parse(_data);
-          $(data.types).each(function(i,v){
-            if((v.length > 0) && (v.slice(0,5)!='_set_')){
-              addEventType(v,v);
-            }
-          });
-        }
-      });
-    };
-
-    function setCheckboxesCheckedState(types_state, sessions_state) {
-      $('.event_type_list .event_type input').attr('checked', types_state);
-      $('.session_list .session input').attr('checked', sessions_state);
-    }
-
-    function addEventType(type, display){
-      typeListElem.append(
-        $('<li class="event_type"></li>').append(
-          $('<span class="history"></span>').html('history')
-          .click(function(){
-            setCheckboxesCheckedState(true, true);
-            $('input', $(this).parent()).attr('checked', true);
-            updateEventFilter(); loadEventHistory({type: type});
-          })
-        ).append(
-          $('<input type="checkbox" />').attr('checked', true)
-          .click(function(){ updateEventFilter(); })
-        ).append(
-          $('<span></span>').html(display)
-        ).attr('rel', type)
-      );
-    }
-
-    function updateEventFilter(){
-      var _unchecked_types = [];
-      $('ul.event_type_list li.event_type').each(function(i,v){
-        if(!$('input', v).attr('checked')){
-          _unchecked_types.push($(v).attr('rel'));
-        }
-      });
-      eventsFilter.uncheckedTypes = _unchecked_types;
-
-      var _checked_sessions = [];
-      $('ul.session_list li.session').each(function(i,v){
-        if($('input', v).attr('checked')){
-          _checked_sessions.push($(v).data().session);
-        }
-      });
-      eventsFilter.checkedSessions = _checked_sessions;
-    }
-
-    function doEventsPoll(){
-      return (function(){
-        $.ajax({
-          url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/events?since='+eventsPolledUntil,
-          success: callbackEventsPoll()
-        });
-      });
-    };
-
-    function callbackEventsPoll(){
-      return (function(_data, _status){
-        var data = JSON.parse(_data)
-        var events = data.events;
-        var timeout = 1000;
-        var maxevents = 200;
-        var passesFiltering = function(event_data) {
-          var passes_type_filtering = false;
-          var passes_session_filtering = false;
-          if(eventsFilter.uncheckedTypes.indexOf(event_data._type) == -1) {
-            if(parseInt(v._time)<=eventsPolledUntil) {
-              passes_type_filtering = true;
-            }
-          }
-          if(!passes_type_filtering) return false;
-
-          if(eventsFilter.checkedSessions.length == 0){
-            return true; // No filter set - show all events
-          } else {
-            if(event_data._session_key){
-              if(eventsFilter.checkedSessions.indexOf(event_data._session_key) >= 0){
-                return true; // Filter set and match
-              } else {
-                return false; // Filter set but no match
-              }
-            } else {
-              return false; // Filter set but event is not associated with session
-            }
-          }
-        }
-
-        if(events.length > 0){
-          eventsPolledUntil = parseInt(events[0]._time)-1;
-        }
-	      for(var n=events.length-1; n >= 0; n--){
-	        var v = events[n];
-          if(passesFiltering(v)) {
-            renderEvent(v);
-          }
-        };
-        var elems = $("p", feedInnerElem);
-        for(var n=maxevents; n < elems.length; n++){
-          $(elems[n]).remove();
-        }
-        if(pollRunning){
-          window.setTimeout(doEventsPoll(), timeout);
-        }
-      });
-    };
-
-    function updateSession(session_data){
-      var session_key = session_data.session_key;
-      if(!sessionData[session_key]){
-        updateEventFilter()
-      }
-      sessionData[session_key] = session_data;
-      renderSession(session_data);
-    }
-
-    function sortSessions(){
-      console.log("fixme: sort and splice to 100");
-    }
-
-    function renderSession(session_data){
-
-      var session_name = session_data["_name"];
-      var session_time = formatTimeSince(session_data["_updated_at"]);
-      var session_elem = $('li[data-session='+session_data["session_key"]+']:first');
-
-      if(session_elem.length>0){
-
-        if(session_data["_picture"] && (session_data["_picture"].length > 1)){
-          $('.picture img', session_elem).attr('src', session_data["_picture"])
-        }
-
-        if(session_name){
-          $('.name', session_elem).html(session_name);
-        }
-
-        $('.time', session_elem).html(session_time);
-
-      } else {
-
-        var session_picture = $('<img width="25" />');
-
-        if(!session_name){
-          session_name = session_data["session_key"].substr(0,15)
-        };
-
-        if(session_data["_picture"]){
-          session_picture.attr('src', session_data["_picture"]);
-        };
-
-        listElem.append(
-          $('<li class="session"></li>').append(
-            $('<div class="picture"></div>').html(session_picture)
-          ).append(
-            $('<span class="name"></span>').html(session_name)
-          ).append(
-            $('<span class="time"></span>').html(session_time)
-          ).append(
-            $('<span class="history"></span>').html('history')
-            .click(function(){
-              setCheckboxesCheckedState(true, false);              
-              updateEventFilter(); 
-              loadEventHistory({session_key: session_data["session_key"]});
-            })
-          ).attr('data-session', session_data["session_key"])
-        );
-
-      }
-    };
-
-    function renderEvent(event_data){
-      var event_time = $('<span class="time"></span>');
-      var event_message = $('<span class="message"></span>');
-      var event_props = $('<span class="properties"></span>');
-      var event_picture = $('<div class="picture"></picture>');
-
-      var event_type = event_data._type;
-
-      if(!event_type){ return true; }
-
-      if(event_data._message){
-        event_message.html(event_data._message);
-      } else if(event_type=="_pageview"){
-        event_message.html("Pageview: " + event_data.url);
-      } else if(event_type.substr(0,5) == '_set_'){
-        return true; /* dont render */
-      } else {
-        event_message.html(event_type);
-      }
-
-      event_time.html(formatTimeOfDay(event_data._time));
-
-      if(event_data._session_key && event_data._session_key.length > 0){
-        var __session_key = event_data._session_key;
-        var load_usersession = (function(){
-          loadEventHistory({session_key: __session_key});
-        });
-        if(session_data=sessionData[event_data._session_key]){
-          if(session_data._name){
-            event_props.append(
-              $('<strong></strong>').html(session_data._name).css({
-                'cursor': 'pointer'
-              }).click(load_usersession)
-            );
-          }
-          if(session_data._picture){
-            event_picture.append(
-              $('<img width="40" />').attr('src', session_data._picture)
-            ).click(load_usersession);
-          }
-        }
-      }
-
-      feedInnerElem.prepend(
-        $('<li class="feed_event"></li>')
-        .append(event_time)
-        .append(event_picture)
-        .append(event_message)
-        .append(event_props)
-      );
-    }
-
-    function close(){
-      stopPoll();
-    };
-
-    return {
-      load: load,
-      resize: resize,
-      close: close
-    };
-
-  });
-
-
   function renderDashboard(_dash){
     loadView(FnordMetric.views.dashboardView(_dash));
   };
 
   function renderSessionView(){
-    loadView(sessionView());
+    loadView(FnordMetric.views.sessionView());
   }
 
   function loadView(_view){
@@ -923,7 +514,7 @@ var FnordMetric = (function(){
   function init(_namespace, _canvasElem){
     canvasElem = _canvasElem;
     FnordMetric.currentNamespace = _namespace;
-    loadView(sessionView());
+    loadView(FnordMetric.views.sessionView());
   };
 
   return {
