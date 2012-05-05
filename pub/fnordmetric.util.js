@@ -37,7 +37,7 @@ FnordMetric.util.formatTimeRange = function(range){
 FnordMetric.util.formatTimeSince = function(time){
   var now = new Date().getTime()/1000;
   var since = now - time;
-  return formatTimeRange(since);
+  return FnordMetric.util.formatTimeRange(since);
 }
 
 FnordMetric.util.formatOffset = function(offset, next_offset){
@@ -46,13 +46,13 @@ FnordMetric.util.formatOffset = function(offset, next_offset){
   } if((offset == 0) && (next_offset==3600)){
     return 'this hour';
   } else if(offset == 0){
-    return 'last ' + formatTimeRange(next_offset||0);
+    return 'last ' + FnordMetric.util.formatTimeRange(next_offset||0);
   } else if(offset==(3600*24)){
     return 'yesterday';
   } else if(offset==3600){
     return 'last hour';
   } else {
-    return formatTimeRange(offset) + ' ago';
+    return FnordMetric.util.formatTimeRange(offset) + ' ago';
   }
 }
 
@@ -84,10 +84,10 @@ FnordMetric.util.formatPercentValue = function(value){
 
 FnordMetric.util.formatGaugeValue = function(gauge_key, value){
   if(gauge_key.slice(0,8) === '__time__'){
-    return formatTimeValue(value);
+    return FnordMetric.util.ormatTimeValue(value);
   } else if(gauge_key.slice(0,11) === '__percent__'){
-    return formatPercentValue(value);
+    return FnordMetric.util.formatPercentValue(value);
   } else {
-    return formatValue(value);
+    return FnordMetric.util.formatValue(value);
   }
 }
