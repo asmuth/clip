@@ -11,6 +11,11 @@ var FnordMetric = (function(){
     loadView(FnordMetric.views.sessionView());
   }
 
+  function renderOverviewView(){
+    loadView(FnordMetric.views.overviewView());
+  }
+
+
   function loadView(_view){
     if(currentView){ currentView.close(); }
     canvasElem.html('loading!');
@@ -29,12 +34,13 @@ var FnordMetric = (function(){
   function init(_namespace, _canvasElem){
     canvasElem = _canvasElem;
     FnordMetric.currentNamespace = _namespace;
-    loadView(FnordMetric.views.sessionView());
+    renderOverviewView();
   };
 
   return {
     renderDashboard: renderDashboard,
     renderSessionView: renderSessionView,
+    renderOverviewView: renderOverviewView,
     resizeView: resizeView,
     init: init,
     p: '',

@@ -16,6 +16,7 @@
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.pie_widget.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.toplist_widget.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.html_widget.js")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric.overview_view.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.dashboard_view.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.session_view.js")
     %link(type="text/css" rel="stylesheet" href="#{path_prefix}/fnordmetric.css")
@@ -40,13 +41,13 @@
             %span.meta 
               %strong 3.6k events/s
           
-          - if current_namespace.active_users_available
-            %li.sessions
-              %span.picto.piechart
-              %span.title Active Users
-              %span.meta 
-                %strong Fnord
-                Fnord
+          / - if current_namespace.active_users_available
+          /   %li.sessions
+          /     %span.picto.piechart
+          /     %span.title Active Users
+          /     %span.meta 
+          /       %strong Fnord
+          /       Fnord
 
           -current_namespace.dashboards.each do |key,dashboard|
             %li.dashboard{:rel => dashboard.token}
@@ -81,6 +82,11 @@
 
     $('#sidebar li.sessions').click(function(){
       FnordMetric.renderSessionView();
+      window.location.hash = '';
+    });
+
+    $('#sidebar li.overview').click(function(){
+      FnordMetric.renderOverviewView();
       window.location.hash = '';
     });
 
