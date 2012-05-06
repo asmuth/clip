@@ -10,6 +10,14 @@ require 'rack/server'
 require "fnordmetric/ext"
 require "fnordmetric/version"
 
+
+# TODO
+#  -> navbar: add buttons
+#  -> numeric-gauge view: add number
+#  -> timeline-widget: tick button active states
+#
+#
+#
 # ROADMAP
 #
 # core 
