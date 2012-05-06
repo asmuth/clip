@@ -1,4 +1,4 @@
-class FnordMetric::InboundStream < EventMachine::Connection 
+class FnordMetric::InboundStream < EventMachine::Connection
   @@opts = nil
 
   def self.start(opts)
@@ -10,8 +10,8 @@ class FnordMetric::InboundStream < EventMachine::Connection
     @@opts = opts
   end
 
-  def receive_data(chunk)     
-    @buffer << chunk         
+  def receive_data(chunk)
+    @buffer << chunk
     next_event
   end
 
@@ -19,12 +19,12 @@ class FnordMetric::InboundStream < EventMachine::Connection
     read_next_event
     push_next_event
   end
-  
+
   def read_next_event
     while (event = @buffer.slice!(/^(.*)\n/))
       @events_buffered += 1
       @events << event
-    end 
+    end
   end
 
   def push_next_event
@@ -32,11 +32,11 @@ class FnordMetric::InboundStream < EventMachine::Connection
     @events_buffered -= 1
     @api.event(@events.pop)
     close_connection?
-    EM.next_tick(&method(:push_next_event))    
+    EM.next_tick(&method(:push_next_event))
   end
 
   def close_connection?
-    @api.disconnect unless @streaming || (@events_buffered!=0) 
+    @api.disconnect unless @streaming || (@events_buffered!=0)
   end
 
   def post_init
