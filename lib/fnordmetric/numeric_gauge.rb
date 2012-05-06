@@ -25,8 +25,23 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def incr(*args)
-    raise "fubar"
-    puts "inrcrement called: #{args.inspect}"
+    if args.size == 0 || (args.size == 1 && args.first.is_a?(Fixnum))
+      incr_series(*args.unshift(:_default))
+    elsif args.size == 1 || (args.size == 2 && args.last.is_a?(Fixnum))
+      incr_series(*args)
+    else
+      raise "invalid arguments for incr: #{args.inspect}"
+    end
+  end
+
+  def incr_series(series, value = 1)
+    if (series == :_default) && @opts[:series].size > 1
+      raise "don't know which series to increment - available: #{series}"
+    elsif series == :_default
+      series = @opts[:series].first
+    end
+
+    puts "increment #{series} by #{value}"
   end
 
 end
