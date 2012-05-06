@@ -89,6 +89,19 @@ h3{
   background:url('/img/navbar.png');
 }
 
+.navbar h1{
+  text-align:center;
+  color:#525252;
+  font-weight:500;
+  line-height:49px;
+  font-size:16px;
+}
+
+.navbar h1 a.current{
+  color:#333;
+  font-weight:700;
+}
+
 .navbar + h1{
   margin-top:22px;
 }
@@ -235,6 +248,7 @@ ul.ui_tabs{
   margin-top:30px;
   font-size:13px;
   margin-bottom:-1px;
+  padding-left:16px;
 }
 
 ul.ui_tabs li{

@@ -33,6 +33,10 @@ require "fnordmetric/version"
 #
 #
 #
+# timeline_widget
+#   -> show last interval (cmp. w/ yesterday)
+#
+#
 # wiki
 #
 #  -> getting started
