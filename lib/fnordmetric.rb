@@ -205,6 +205,7 @@ module FnordMetric
 end
 
 require "fnordmetric/api"
+require "fnordmetric/udp_client"
 require "fnordmetric/inbound_stream"
 require "fnordmetric/worker"
 require "fnordmetric/widget"
