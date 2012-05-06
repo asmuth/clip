@@ -15,6 +15,9 @@ require "fnordmetric/version"
 #  -> navbar: add buttons
 #  -> numeric-gauge view: add number
 #  -> timeline-widget: tick button active states
+#  -> port numbers style from scala-experiment
+#  -> fix logger
+#  -> udp api on 0.7
 #
 #
 #
