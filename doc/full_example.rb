@@ -15,14 +15,14 @@ FnordMetric.namespace :ulm do
   gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
   gauge :winks_sent, :tick => 1.day.to_i, :title => "Winks sent"
 
-  gauge :pageviews_per_url_daily, 
-    :tick => 1.day.to_i, 
-    :title => "Daily Pageviews per URL", 
+  gauge :pageviews_per_url_daily,
+    :tick => 1.day.to_i,
+    :title => "Daily Pageviews per URL",
     :three_dimensional => true
 
-  gauge :pageviews_per_url_monthly, 
-    :tick => 30.days.to_i, 
-    :title => "Monthly Pageviews per URL", 
+  gauge :pageviews_per_url_monthly,
+    :tick => 30.days.to_i,
+    :title => "Monthly Pageviews per URL",
     :three_dimensional => true
 
   event :_pageview do
@@ -124,8 +124,8 @@ FnordMetric.namespace :ulm do
     :width => 67,
     :autoupdate => 30,
     :gauges => [
-      :skip_votes, :yes_votes, 
-      :maybe_votes, :winks_sent, :messages_sent, :messages_read, 
+      :skip_votes, :yes_votes,
+      :maybe_votes, :winks_sent, :messages_sent, :messages_read,
     ]
   }
 
@@ -235,7 +235,7 @@ FnordMetric.namespace :ulm do
     if %w(ry201112a ry201112b ry201112_ref).include?(data[:campaign_key])
       incr :rockyou1_requests
     end
-  end  
+  end
 
   widget 'Campaigns', {
     :title => "RockYou (1) - PPI vs. Requests vs. Refs",
@@ -263,38 +263,38 @@ FnordMetric.namespace :ulm do
 
 
 
-  gauge :abtest_sidebar_btn_totals, 
-    :tick => 36000.days.to_i, 
-    :title => "(A/B) sidebar_btn: Totals", 
+  gauge :abtest_sidebar_btn_totals,
+    :tick => 36000.days.to_i,
+    :title => "(A/B) sidebar_btn: Totals",
     :three_dimensional => true
 
-  gauge :abtest_sidebar_btn_daily, 
-    :tick => 1.day.to_i, 
-    :title => "(A/B) sidebar_btn: Daily", 
+  gauge :abtest_sidebar_btn_daily,
+    :tick => 1.day.to_i,
+    :title => "(A/B) sidebar_btn: Daily",
     :three_dimensional => true
 
-  gauge :abtest_sidebar_btn_leute_treffen, 
-    :tick => 1.day.to_i, 
+  gauge :abtest_sidebar_btn_leute_treffen,
+    :tick => 1.day.to_i,
     :title => "leute_treffen"
 
-  gauge :abtest_sidebar_btn_jetzt_losflirten, 
-    :tick => 1.day.to_i, 
+  gauge :abtest_sidebar_btn_jetzt_losflirten,
+    :tick => 1.day.to_i,
     :title => "jetzt_losflirten"
 
-  gauge :abtest_sidebar_btn_dates_finden, 
-    :tick => 1.day.to_i, 
+  gauge :abtest_sidebar_btn_dates_finden,
+    :tick => 1.day.to_i,
     :title => "dates_finden"
 
-  gauge :abtest_sidebar_btn_leute_treffen_monthly, 
-    :tick => 1.month.to_i, 
+  gauge :abtest_sidebar_btn_leute_treffen_monthly,
+    :tick => 1.month.to_i,
     :title => "leute_treffen"
 
-  gauge :abtest_sidebar_btn_jetzt_losflirten_monthly, 
-    :tick => 1.month.to_i, 
+  gauge :abtest_sidebar_btn_jetzt_losflirten_monthly,
+    :tick => 1.month.to_i,
     :title => "jetzt_losflirten"
 
-  gauge :abtest_sidebar_btn_dates_finden_monthly, 
-    :tick => 1.month.to_i, 
+  gauge :abtest_sidebar_btn_dates_finden_monthly,
+    :tick => 1.month.to_i,
     :title => "dates_finden"
 
 
@@ -428,46 +428,46 @@ FnordMetric.namespace :ulm do
   end
 
 
-  gauge :competitors_badoo_mau, 
+  gauge :competitors_badoo_mau,
     :tick => 1.day.to_i,
     :title => "Badoo (MAU)"
 
-  gauge :competitors_badoo_dau, 
+  gauge :competitors_badoo_dau,
     :tick => 1.day.to_i,
     :title => "Badoo (DAU)"
 
-  gauge :competitors_zoosk_mau, 
+  gauge :competitors_zoosk_mau,
     :tick => 1.day.to_i,
     :title => "zoosk (MAU)"
 
-  gauge :competitors_zoosk_dau, 
+  gauge :competitors_zoosk_dau,
     :tick => 1.day.to_i,
     :title => "zoosk (DAU)"
 
-  gauge :competitors_areyouinterested_mau, 
+  gauge :competitors_areyouinterested_mau,
     :tick => 1.day.to_i,
     :title => "areyouinterested (MAU)"
 
-  gauge :competitors_areyouinterested_dau, 
+  gauge :competitors_areyouinterested_dau,
     :tick => 1.day.to_i,
     :title => "areyouinterested (DAU)"
 
-  gauge :competitors_onetwolike_mau, 
+  gauge :competitors_onetwolike_mau,
     :tick => 1.day.to_i,
     :title => "onetwolike (MAU)"
 
-  gauge :competitors_onetwolike_dau, 
+  gauge :competitors_onetwolike_dau,
     :tick => 1.day.to_i,
     :title => "onetwolike (DAU)"
 
-  gauge :competitors_kizzle_mau, 
+  gauge :competitors_kizzle_mau,
     :tick => 1.day.to_i,
     :title => "kizzle (MAU)"
 
-  gauge :competitors_kizzle_dau, 
+  gauge :competitors_kizzle_dau,
     :tick => 1.day.to_i,
     :title => "kizzle (DAU)"
-  
+
   event :competition_data do
     set_value(:competitors_badoo_mau, data[:badoo_mau]) if data[:badoo_mau]
     set_value(:competitors_badoo_dau, data[:badoo_dau]) if data[:badoo_dau]
@@ -557,7 +557,7 @@ FnordMetric.namespace :ulm do
   gauge :events_per_hour, :tick => 1.hour.to_i
   gauge :events_per_second, :tick => 1
   gauge :votes_per_second, :tick => 1
-  
+
   event :"*" do
     incr :events_per_minute
     incr :events_per_hour

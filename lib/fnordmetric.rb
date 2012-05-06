@@ -83,6 +83,7 @@ module FnordMetric
       :redis_url => "redis://localhost:6379",
       :redis_prefix => "fnordmetric",
       :inbound_stream => ["0.0.0.0", "1337"],
+      :inbound_protocol => :tcp,
       :web_interface => ["0.0.0.0", "4242"],
       :web_interface_server => "thin",
       :start_worker => true,
@@ -180,11 +181,12 @@ module FnordMetric
       end
 
       if opts[:inbound_stream]
+        inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
         begin
-          inbound_stream = InboundStream.start(opts)
-          log "listening on tcp://#{opts[:inbound_stream].join(":")}"
+          inbound_stream = inbound_class.start(opts)
+          log "listening on #{opts[:inbound_protocol]}://#{opts[:inbound_stream].join(":")}"
         rescue
-          log "cant start FnordMetric::InboundStream. port in use?"
+          log "cant start #{inbound_class.name}. port in use?"
         end
       end
 
@@ -204,6 +206,7 @@ end
 require "fnordmetric/api"
 require "fnordmetric/udp_client"
 require "fnordmetric/inbound_stream"
+require "fnordmetric/inbound_datagram"
 require "fnordmetric/worker"
 require "fnordmetric/widget"
 require "fnordmetric/timeline_widget"
