@@ -10,6 +10,50 @@ require 'rack/server'
 require "fnordmetric/ext"
 require "fnordmetric/version"
 
+# ROADMAP
+#
+# core 
+#  -> store per-session-data
+#  -> callback on session-flush
+#
+# numeric_gauge
+#   -> multi-series  
+#   -> multi-interval
+#   -> time-distribution
+#   -> moving avg.
+#   -> realtime view
+#   -> formatter: num, time, currency
+#
+#
+# distribution_gauge
+#
+#
+#
+#
+# toplist_gauge
+#
+#
+#
+# wiki
+#
+#  -> getting started
+#  -> gagues pages
+#  -> sending data pages
+#    -> tcp, udp, http, apis
+#    -> events containing user data
+#    -> pre-defined fields (_session etc)
+#    -> pre-defined events (_incr, _observe etc)
+#  -> configurin fnordmetric
+#    -> configuration options
+#    -> running embedded
+#    -> running standalone
+#  -> event handler pages
+#    -> pre-defined event-fields
+#    -> incrementing multiple gauges per event
+#    -> storing data per session
+#    -> end-of-session callback
+#  -> building custom dashboards
+
 module FnordMetric
 
   @@namespaces = {}
