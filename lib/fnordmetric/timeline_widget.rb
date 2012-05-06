@@ -7,7 +7,8 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
       :autoupdate => (@opts[:autoupdate] || 60),
       :include_current => !!@opts[:include_current],
       :plot_style => (@opts[:plot_style] || 'line'),
-      :render_target => @opts[:render_target]
+      :render_target => @opts[:render_target],
+      :height => @opts[:height]
     ).tap do |dat|
       dat.merge!(
         :gauges => gauges.map(&:name),

@@ -64,7 +64,8 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
           :_gauges => @opts[:series].map{ |s| "#{name}++count-#{s}" },
           :_gauge_titles => Hash[@opts[:series].map{ |s| ["#{name}++count-#{s}", s] }],
           :autoupdate => 5,
-          :include_current => true
+          :include_current => true,
+          :height => 350
         ).data,
       }
     )

@@ -6,6 +6,8 @@ FnordMetric.widgets.timelineWidget = function(){
     var chart=false;
     var max_y=0;
 
+    if (!opts.height){ opts.height = 250; }
+
     function redrawWithRange(first_time, silent){
       if(!silent){ $(opts.elem).css('opacity', 0.5); }
 
@@ -108,7 +110,7 @@ FnordMetric.widgets.timelineWidget = function(){
         $('<h2></h2>').html(opts.title)
       ) ).append(
         $('<div></div>').attr('id', 'container-'+widget_uid).css({
-          height: 256,
+          height: opts.height + 6,
           marginBottom: 20,
           overflow: 'hidden'
         })
@@ -132,7 +134,7 @@ FnordMetric.widgets.timelineWidget = function(){
         chart: {
           renderTo: 'container-'+widget_uid,
           defaultSeriesType: opts.plot_style,
-          height: 270
+          height: opts.height + 20
         },
         series: [],
         title: { text: '' },
