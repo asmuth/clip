@@ -19,7 +19,8 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
       dat.merge!(
         :gauges => @opts[:_gauges],
         :gauge_titles => @opts[:_gauge_titles],
-        :tick => @opts[:ticks].first
+        :tick => @opts[:ticks].first,
+        :ticks => @opts[:ticks]
       ) unless has_tick?
     end
   end

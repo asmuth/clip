@@ -62,7 +62,9 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
           :render_target => ".numgauge_widget_total_timeline",
           :ticks => @opts[:ticks],
           :_gauges => @opts[:series].map{ |s| "#{name}++count-#{s}" },
-          :_gauge_titles => Hash[@opts[:series].map{ |s| ["#{name}++count-#{s}", s] }]
+          :_gauge_titles => Hash[@opts[:series].map{ |s| ["#{name}++count-#{s}", s] }],
+          :autoupdate => 5,
+          :include_current => true
         ).data,
       }
     )

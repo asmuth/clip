@@ -64,11 +64,29 @@ FnordMetric.widgets.timelineWidget = function(){
       );
     }
 
+    function updateRange(){
+      if(
+        (parseInt(new Date().getTime()/1000) - opts.end_timestamp) >
+        (opts.include_current ? 0 : opts.tick)
+      ){
+        opts.end_timestamp += opts.tick;
+        opts.start_timestamp += opts.tick;
+      }
+    }
+
     function moveRange(direction){
       v = opts.tick*direction*8;
       opts.start_timestamp += v;
       opts.end_timestamp += v;
       redrawWithRange();
+    }
+
+    function changeTick(new_tick){
+      opts.tick = parseInt($(this).attr('data-tick'));
+      opts.start_timestamp = null;
+      opts.end_timestamp = null;
+      drawChart();
+      redrawWithRange(true);
     }
 
     function drawLayout(){
@@ -83,7 +101,7 @@ FnordMetric.widgets.timelineWidget = function(){
       ).append(
         $('<div></div>').attr('class', 'datepicker')
       ).append(
-        $('<div></div>').attr('class', 'button').append($('<span></span>').html('&larr;')).click(
+        $('<div></div>').attr('class', 'button ml').append($('<span></span>').html('&larr;')).click(
           function(){ moveRange(-1); }
         )
       ).append(
@@ -95,6 +113,18 @@ FnordMetric.widgets.timelineWidget = function(){
           overflow: 'hidden'
         })
       );
+
+      if(opts.ticks){
+        for(__tick in opts.ticks){
+          var _tick = opts.ticks[__tick];
+          $('.headbar', opts.elem).append(
+            $('<div></div>').attr('class', 'button tick').append($('<span></span>')
+              .html(FnordMetric.util.formatTimeRange(_tick)))
+              .attr('data-tick', _tick)
+              .click(changeTick)  
+          );
+        }
+      }
     }
 
     function drawChart(){
@@ -135,6 +165,7 @@ FnordMetric.widgets.timelineWidget = function(){
       });
     }
 
+    updateRange();
     drawLayout();
     drawChart();
 
@@ -145,14 +176,7 @@ FnordMetric.widgets.timelineWidget = function(){
       if(secs > 0){
 
         var autoupdate_interval = window.setInterval(function(){
-          if(
-            (parseInt(new Date().getTime()/1000) - opts.end_timestamp) >
-            (opts.include_current ? 0 : opts.tick)
-          ){
-            opts.end_timestamp += opts.tick;
-            opts.start_timestamp += opts.tick;
-          }
-
+          updateRange();
           redrawWithRange(false, true);
         }, secs*1000);
 
