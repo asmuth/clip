@@ -29,12 +29,20 @@ share_examples_for FnordMetric::GaugeLike do
 
   it "should generate the correct key without append" do
     gauge = @gauge_klass.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
-    gauge.key.should == "fnordmetrics-myns-gauge-mygauge-23"
+    if [@gauge_klass, @gauge_klass.superclass].include?(FnordMetric::MultiGauge)
+      gauge.key.should == "fnordmetrics-myns-multigauge-mygauge"
+    else
+      gauge.key.should == "fnordmetrics-myns-gauge-mygauge-23"
+    end
   end
 
   it "should generate the correct key with append" do
     gauge = @gauge_klass.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
-    gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
+    if [@gauge_klass, @gauge_klass.superclass].include?(FnordMetric::MultiGauge)
+      gauge.key(:fnord).should == "fnordmetrics-myns-multigauge-mygauge-fnord"
+    else
+      gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
+    end
   end
 
   it "should add redis" do
