@@ -18,8 +18,6 @@ require "fnordmetric/version"
 #  -> minimize/pack js
 #
 # numeric_gauge
-#   -> multi-series  
-#   -> multi-interval
 #   -> time-distribution
 #   -> moving avg.
 #   -> realtime view

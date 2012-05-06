@@ -21,6 +21,13 @@ class FnordMetric::MultiGauge
     @opts[:redis] = _redis
   end
 
+  def render
+    {
+      :template => "--- not yet implemented ---",
+      :widgets => {}
+    }
+  end
+
   def method_missing(method, *args, &block)
     if (m = method.to_s.match(/cmd_([a-zA-Z_]+)/))
       method = m[1]
