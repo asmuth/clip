@@ -23,7 +23,7 @@ class FnordMetric::Context
     @redis = redis
     @event = event    
     proxy.instance_eval(&@block)
-  rescue e
+  rescue Exception => e
     raise e if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
   end
@@ -38,6 +38,9 @@ class FnordMetric::Context
     else
       send(method, *args, &block)
     end
+  rescue Exception => e
+    raise e if ENV['FNORDMETRIC_ENV'] == 'test'
+    puts "error: #{e.message}"
   end
 
 private

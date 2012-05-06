@@ -25,6 +25,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def incr(*args)
+    raise "fubar"
     puts "inrcrement called: #{args.inspect}"
   end
 
