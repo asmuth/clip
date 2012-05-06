@@ -52,13 +52,37 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     end
   end
 
+  def render
+    super.merge(
+      :template => render_template(:numeric_gauge),
+      :widgets => {
+        :total_timeline => FnordMetric::TimelineWidget.new(
+          :title => "FNORDFNORD",
+          :multi_tick => true,
+          :render_target => ".numgauge_widget_total_timeline",
+          :ticks => @opts[:ticks],
+          :_gauges => @opts[:series].map{ |s| "#{name}++count-#{s}" },
+          :_gauge_titles => Hash[@opts[:series].map{ |s| ["#{name}++count-#{s}", s] }]
+        ).data,
+      }
+    )
+  end
+
+  def fetch_gauge(series, tick)
+    if series.starts_with?("count-")
+      series_count_gauges[series[6..-1].to_sym][tick]
+    end.tap do |gauge|
+      gauge.try(:add_redis, @opts[:redis])
+    end
+  end
+
 private
 
   def series_count_gauges
     @series_gauges ||= Hash[@opts[:series].map do |series|
       [series, Hash[@opts[:ticks].map do |tick|
         [tick.to_i, FnordMetric::Gauge.new(
-          :key => "#{series}-#{tick}", 
+          :key => "count-#{series}", 
           :key_prefix => key,
           :tick => tick.to_i,
         )]

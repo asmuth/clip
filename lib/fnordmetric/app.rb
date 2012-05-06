@@ -88,7 +88,17 @@ class FnordMetric::App < Sinatra::Base
 
   get '/:namespace/gauge/:name' do
 
-    gauge = current_namespace.gauges.fetch(params[:name].intern)
+    gauge = if params[:name].include?("++")
+      parts = params[:name].split("++")
+      current_namespace.gauges[parts.first.to_sym].fetch_gauge(parts.last, params[:tick].to_i)
+    else
+      current_namespace.gauges[params[:name].to_sym]
+    end
+
+    if !gauge
+      status 404
+      return ""
+    end
 
     data = if gauge.three_dimensional?
       _t = (params[:at] || Time.now).to_i

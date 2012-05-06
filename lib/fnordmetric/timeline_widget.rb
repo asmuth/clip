@@ -4,15 +4,24 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
     @series_colors = ["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
 
     super.merge(
-      :gauges => gauges.map(&:name),
-      :gauge_titles => gauge_titles,
-      :start_timestamp => ticks.first,
-      :end_timestamp => ticks.last,
       :autoupdate => (@opts[:autoupdate] || 60),
       :include_current => !!@opts[:include_current],
       :plot_style => (@opts[:plot_style] || 'line'),
-      :tick => tick
-    )
+      :render_target => @opts[:render_target]
+    ).tap do |dat|
+      dat.merge!(
+        :gauges => gauges.map(&:name),
+        :gauge_titles => gauge_titles,
+        :start_timestamp => ticks.first,
+        :end_timestamp => ticks.last,
+        :tick => tick
+      ) if has_tick?
+      dat.merge!(
+        :gauges => @opts[:_gauges],
+        :gauge_titles => @opts[:_gauge_titles],
+        :tick => @opts[:ticks].first
+      ) unless has_tick?
+    end
   end
 
   def gauge_titles
@@ -24,7 +33,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
   end
 
   def has_tick?
-    true
+    @opts[:multi_tick] ? false : true
   end
 
 end

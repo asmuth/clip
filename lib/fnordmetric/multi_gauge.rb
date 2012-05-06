@@ -23,6 +23,7 @@ class FnordMetric::MultiGauge
 
   def render
     {
+      :title => title,
       :template => "--- not yet implemented ---",
       :widgets => {}
     }
@@ -39,6 +40,13 @@ class FnordMetric::MultiGauge
     end
     puts "error: method '#{method}' missing"
     raise NoMethodError.new(method)
+  end
+
+private
+
+  def render_template(template_name)
+    tpl = File.read(::File.expand_path("../../../haml/#{template_name}.haml", __FILE__))
+    Haml::Engine.new(tpl).render
   end
 
 end

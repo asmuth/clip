@@ -8,8 +8,15 @@ FnordMetric.widgets.timelineWidget = function(){
 
     function redrawWithRange(first_time, silent){
       if(!silent){ $(opts.elem).css('opacity', 0.5); }
+
+      if(!opts.start_timestamp || !opts.end_timestamp){
+        opts.end_timestamp = parseInt(new Date().getTime() / 1000);
+        opts.start_timestamp = opts.end_timestamp - (opts.tick * 30);
+      }
+
       redrawDatepicker();
-      var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp;
+
+      var _query = '?at='+opts.start_timestamp+'-'+opts.end_timestamp + '&tick=' + opts.tick;
       //chart.series = [];
       max_y=0;
       //metrics_completed = 0;
