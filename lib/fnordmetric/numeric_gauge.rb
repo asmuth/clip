@@ -57,7 +57,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :template => render_template(:numeric_gauge),
       :widgets => {
         :total_timeline => FnordMetric::TimelineWidget.new(
-          :title => "FNORDFNORD",
+          :title => "Totals",
           :multi_tick => true,
           :render_target => ".numgauge_widget_total_timeline",
           :ticks => @opts[:ticks],

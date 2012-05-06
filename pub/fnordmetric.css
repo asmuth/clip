@@ -224,3 +224,40 @@ ul.event_type_list li .history:hover{ color:#333; text-decoration:underline; }
 }
  
 .highcharts-series circle{ stroke-width:1px; }
+
+ul.ui_tabs{
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  height:36px;
+  display:block;
+  width:100%;
+  margin-top:30px;
+  font-size:13px;
+  margin-bottom:-1px;
+}
+
+ul.ui_tabs li{
+  float:left;
+}
+
+ul.ui_tabs li a{
+  display:block;
+  height:35px;
+  line-height:36px;
+  border-top:1px solid none;
+  padding:0 25px;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  color:#666;
+  font-weight:500;
+  text-decoration:none;
+}
+
+ul.ui_tabs li.active a{
+  border: 1px solid #D0D0D0;
+  border-bottom:none;
+  color:#333;
+  background:#f4f4f4;
+}
+
