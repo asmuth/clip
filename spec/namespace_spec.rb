@@ -2,7 +2,6 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Namespace do
 
-
   before(:all) do
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
@@ -10,13 +9,12 @@ describe FnordMetric::Namespace do
 
   before(:each) do
     @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
+    @namespace = FnordMetric::Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
   end
 
-  describe "instance methods" do
+  it "should generate the correct redis prefix"
 
-    before(:each) do
-      @namespace = FnordMetric::Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
-    end
+  describe "instance methods" do
 
     it "should create a new dashboard if a widget is added" do
       @namespace.widget("MyFooDash", nil)
@@ -33,17 +31,33 @@ describe FnordMetric::Namespace do
 
   end
 
+  describe "registering gauges" do
 
-  it "should generate the correct redis prefix"
+    it "should register a simple gauge" do
+      @namespace.gauge(:fugauge, {:fnord => 23})
+      @namespace.gauges[:fugauge].should be_a(FnordMetric::Gauge) 
+    end
 
-  it "should register a gauge"
-  it "should register a gauge and pass options"
+    it "should register a simple gauge and pass options" do
+      @namespace.gauge(:fugauge2, {:fnord => 23})
+      @namespace.gauges[:fugauge2].instance_variable_get(:@opts).should include({:fnord => 23})
+      @namespace.gauges[:fugauge2].instance_variable_get(:@opts).should include({:key => :fugauge2})
+    end
+
+    it "should register a multi gauge" do
+      @namespace.numeric_gauge(:multigauge, {:fnord => 23})
+      @namespace.gauges[:multigauge].should be_a(FnordMetric::NumericGauge) 
+    end
+
+    it "should register a multi gauge and pass options" do
+      @namespace.numeric_gauge(:multigauge2, {:fnord => 42})
+      @namespace.gauges[:multigauge2].instance_variable_get(:@opts).should include({:fnord => 42})
+      @namespace.gauges[:multigauge2].instance_variable_get(:@opts).should include({:key => :multigauge2})
+    end
+
+  end
 
   describe "registering event handlers" do
-
-    before(:each) do
-      @namespace = FnordMetric::Namespace.new(:myns_213, :redis_prefix => "fnordmetric")
-    end
 
     it "should register an event handler" do
       @namespace.handlers.length.should == 0
