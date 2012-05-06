@@ -15,6 +15,7 @@ require "fnordmetric/version"
 # core 
 #  -> store per-session-data
 #  -> callback on session-flush
+#  -> minimize/pack js
 #
 # numeric_gauge
 #   -> multi-series  

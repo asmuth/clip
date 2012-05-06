@@ -9,6 +9,7 @@ class FnordMetric::App < Sinatra::Base
     "fnordmetric.ui.js" => "application/x-javascript",
     "fnordmetric.util.js" => "application/x-javascript",
     "fnordmetric.dashboard_view.js" => "application/x-javascript",
+    "fnordmetric.gauge_view.js" => "application/x-javascript",
     "fnordmetric.overview_view.js" => "application/x-javascript",
     "fnordmetric.session_view.js" => "application/x-javascript",
     "fnordmetric.timeline_widget.js" => "application/x-javascript",

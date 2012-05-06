@@ -17,6 +17,7 @@
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.toplist_widget.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.html_widget.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.overview_view.js")
+    %script(type="text/javascript" src="#{path_prefix}/fnordmetric.gauge_view.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.dashboard_view.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.session_view.js")
     %link(type="text/css" rel="stylesheet" href="#{path_prefix}/fnordmetric.css")
@@ -58,6 +59,7 @@
                 Fnord
 
           -current_namespace.gauges.each do |key,gauge|
+            - next unless gauge.is_a?(FnordMetric::MultiGauge)
             %li.gauge{:rel => gauge.name}
               %span.picto.piechart
               %span.title= h gauge.title
@@ -75,9 +77,16 @@
 
     FnordMetric.init('#{current_namespace.token}', $('.viewport_inner'));
 
+    // fixpaul: move to FnordMetric.views.sidebar
+
     $('#sidebar li.dashboard').click(function(){
       FnordMetric.renderDashboard($(this).attr('rel'));
       window.location.hash = $(this).attr('rel');
+    });
+
+    $('#sidebar li.gauge').click(function(){
+      FnordMetric.renderGauge($(this).attr('rel'));
+      window.location.hash = 'gauge/' + $(this).attr('rel');
     });
 
     $('#sidebar li.sessions').click(function(){

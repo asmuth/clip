@@ -5,7 +5,11 @@ var FnordMetric = (function(){
 
   function renderDashboard(_dash){
     loadView(FnordMetric.views.dashboardView(_dash));
-  };
+  }
+
+  function renderGauge(_gauge){
+    loadView(FnordMetric.views.gaugeView(_gauge));
+  }
 
   function renderSessionView(){
     loadView(FnordMetric.views.sessionView());
@@ -14,7 +18,6 @@ var FnordMetric = (function(){
   function renderOverviewView(){
     loadView(FnordMetric.views.overviewView());
   }
-
 
   function loadView(_view){
     if(currentView){ currentView.close(); }
@@ -39,6 +42,7 @@ var FnordMetric = (function(){
 
   return {
     renderDashboard: renderDashboard,
+    renderGauge: renderGauge,
     renderSessionView: renderSessionView,
     renderOverviewView: renderOverviewView,
     resizeView: resizeView,
