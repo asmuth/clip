@@ -26,6 +26,7 @@ class FnordMetric::Context
   rescue Exception => e
     raise e if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
+    puts e.backtrace.push("").join("\n") if ENV['FNORDMETRIC_ENV'] == 'dev'
   end
 
   def proxy
@@ -34,13 +35,14 @@ class FnordMetric::Context
 
   def dispatch(method, *args, &block)
     if args.size > 0 && multi_gauge?(args.first)
-      @opts[:gauges][args.delete_at(0)].send(:"cmd_#{method}", *args, &block)
+      @opts[:gauges][args.delete_at(0)].send(:"cmd_#{method}", *args.unshift(self), &block)
     else
       send(method, *args, &block)
     end
   rescue Exception => e
     raise e if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
+    puts e.backtrace.push("\n").join("\n") if ENV['FNORDMETRIC_ENV'] == 'dev'
   end
 
 private

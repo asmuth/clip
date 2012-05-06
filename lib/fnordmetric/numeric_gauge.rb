@@ -25,23 +25,45 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def incr(*args)
+    ctx = args.delete_at(0)
+
     if args.size == 0 || (args.size == 1 && args.first.is_a?(Fixnum))
-      incr_series(*args.unshift(:_default))
+      incr_series(ctx, *args.unshift(:_default))
     elsif args.size == 1 || (args.size == 2 && args.last.is_a?(Fixnum))
-      incr_series(*args)
+      incr_series(ctx, *args)
     else
       raise "invalid arguments for incr: #{args.inspect}"
     end
   end
 
-  def incr_series(series, value = 1)
+  def incr_series(ctx, series, value = 1)
     if (series == :_default) && @opts[:series].size > 1
       raise "don't know which series to increment - available: #{series}"
     elsif series == :_default
       series = @opts[:series].first
     end
 
-    puts "increment #{series} by #{value}"
+    unless @opts[:series].include?(series)
+      raise "unknown series: #{series}"
+    end
+
+    series_count_gauges[series].values.each do |gauge|
+      ctx.incr(gauge, value)
+    end
+  end
+
+private
+
+  def series_count_gauges
+    @series_gauges ||= Hash[@opts[:series].map do |series|
+      [series, Hash[@opts[:ticks].map do |tick|
+        [tick.to_i, FnordMetric::Gauge.new(
+          :key => "#{series}-#{tick}", 
+          :key_prefix => key,
+          :tick => tick.to_i,
+        )]
+      end]]
+    end]
   end
 
 end
