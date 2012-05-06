@@ -6,8 +6,8 @@ FnordMetric.views.overviewView = function(){
     viewport = _viewport.html('');
 
     viewport.append('<div class="navbar"></div>');
-    viewport.append('<h1>Gross Search Volume</h1>');
-    viewport.append('<h3>Gross Search Volume</h3>');
+    viewport.append('<h1>Application Overview</h1>');
+    viewport.append('<h3>Welcome to FnordMetric :)</h3>');
 
     // $.ajax({
     //   url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/dashboard/'+dashboard_name,

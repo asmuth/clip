@@ -204,24 +204,9 @@ require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_calculations"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
+require "fnordmetric/multi_gauge"
+require "fnordmetric/numeric_gauge"
 require "fnordmetric/session"
 require "fnordmetric/app"
 require "fnordmetric/dashboard"
 require "fnordmetric/event"
-
-
-#require "fnordmetric/metric_api"
-
-
-#require "fnordmetric/cache"
-#require "fnordmetric/report"
-#require "fnordmetric/metric"
-#require "fnordmetric/average_metric"
-#require "fnordmetric/count_metric"
-#require "fnordmetric/combine_metric"
-#require "fnordmetric/sum_metric"
-#require "fnordmetric/widget"
-
-#
-#require "fnordmetric/funnel_widget"
-

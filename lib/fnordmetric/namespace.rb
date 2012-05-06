@@ -3,6 +3,7 @@ class FnordMetric::Namespace
   attr_reader :handlers, :gauges, :opts, :key, :dashboards
 
   @@opts = [:event, :gauge, :widget, :set_title, :active_users_available]
+  @@multi_gauges = [:numeric_gauge]
 
   def initialize(key, opts)    
     @gauges = Hash.new
@@ -91,6 +92,7 @@ class FnordMetric::Namespace
   end
 
   def method_missing(m, *args, &block)
+    return send(:opt_multigauge, *args.unshift(m), &block) if @@multi_gauges.include?(m)
     raise "unknown option: #{m}" unless @@opts.include?(m)
     send(:"opt_#{m}", *args, &block)
   end
@@ -114,6 +116,12 @@ class FnordMetric::Namespace
   def opt_gauge(gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
     @gauges[gauge_key] ||= FnordMetric::Gauge.new(opts)   
+  end
+
+  def opt_multigauge(gauge_type, gauge_key, opts={})
+    opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
+    klass = "FnordMetric::#{gauge_type.to_s.camelize}"
+    @gauges[gauge_key] ||= klass.constantize.new(opts)   
   end
 
   def opt_widget(dashboard, widget)

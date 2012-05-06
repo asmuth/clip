@@ -1,0 +1,4 @@
+class FnordMetric::MultiGauge
+
+
+end
