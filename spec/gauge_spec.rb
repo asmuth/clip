@@ -6,48 +6,14 @@ describe FnordMetric::Gauge do
     @now = Time.utc(1992,01,13,5,23,23).to_i    
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis, false)
+    @gauge_klass = FnordMetric::Gauge
   end
 
   before(:each) do
     @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
   end
 
-  it "should remember its own name" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"}) 
-    gauge.name.should == "fnordgauge"
-  end
-
-  it "should return its key as title if none specified" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"}) 
-    gauge.title.should == "fnordgauge"
-  end
-
-  it "should return its title as title if none specified" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge", :title => "Fnord Gauge"}) 
-    gauge.title.should == "Fnord Gauge"
-  end
-
-  it "should raise an error when initialize without key" do
-    lambda{ 
-      FnordMetric::Gauge.new({:key_prefix => "foo"})
-    }.should raise_error(key_error_klass)
-  end
-
-  it "should raise an error when initialize without key_prefix" do
-    lambda{ 
-      FnordMetric::Gauge.new({:key => "foo"})
-    }.should raise_error(key_error_klass)
-  end
-
-  it "should generate the correct key without append" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
-    gauge.key.should == "fnordmetrics-myns-gauge-mygauge-23"
-  end
-
-  it "should generate the correct key with append" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
-    gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
-  end
+  it_should_behave_like FnordMetric::GaugeLike
 
   describe "ticks" do
 
