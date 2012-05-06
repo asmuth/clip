@@ -45,12 +45,12 @@ describe FnordMetric::Namespace do
     end
 
     it "should register a multi gauge" do
-      @namespace.numeric_gauge(:multigauge, {:fnord => 23})
+      @namespace.numeric_gauge(:multigauge, {:fnord => 23, :ticks => [1.hour], :series => ["fnord"]})
       @namespace.gauges[:multigauge].should be_a(FnordMetric::NumericGauge) 
     end
 
     it "should register a multi gauge and pass options" do
-      @namespace.numeric_gauge(:multigauge2, {:fnord => 42})
+      @namespace.numeric_gauge(:multigauge2, {:fnord => 42, :ticks => [1.hour], :series => ["fnord"]})
       @namespace.gauges[:multigauge2].instance_variable_get(:@opts).should include({:fnord => 42})
       @namespace.gauges[:multigauge2].instance_variable_get(:@opts).should include({:key => :multigauge2})
     end
