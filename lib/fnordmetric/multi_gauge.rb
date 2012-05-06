@@ -21,4 +21,16 @@ class FnordMetric::MultiGauge
     @opts[:redis] = _redis
   end
 
+  def method_missing(method, *args, &block)
+    if (m = method.to_s.match(/cmd_([a-zA-Z_]+)/))
+      method = m[1]
+      unless @cmds.try(:include?, method.to_sym)
+        puts "error: unknown command: #{method}"  
+      else
+        send(method, *args, &block)
+      end
+    end
+    puts "error: unknown command: #{method}"
+  end
+
 end

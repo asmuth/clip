@@ -2,6 +2,18 @@ class FnordMetric::Context
 
   include FnordMetric::GaugeModifiers
 
+  class Proxy
+
+    def initialize(_ref)
+      @ref = _ref
+    end
+
+    def method_missing(method, *args, &block)
+      @ref.dispatch(method, *args, &block)
+    end
+
+  end
+
   def initialize(opts, block)
     @block = block
     @opts = opts    
@@ -10,10 +22,22 @@ class FnordMetric::Context
   def call(event, redis)
     @redis = redis
     @event = event    
-    self.instance_eval(&@block)
+    proxy.instance_eval(&@block)
   rescue Exception => e
     raise e  if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
+  end
+
+  def proxy
+    @proxy ||= Proxy.new(self)
+  end
+
+  def dispatch(method, *args, &block)
+    if args.size > 0 && multi_gauge?(args.first)
+      @opts[:gauges][args.delete_at(0)].send(:"cmd_#{method}", args, &block)
+    else
+      send(method, *args, &block)
+    end
   end
 
 private
@@ -35,6 +59,10 @@ private
   end
 
 protected
+  
+  def multi_gauge?(_gauge)
+    @opts[:gauges].has_key?(_gauge) && @opts[:gauges][_gauge].is_a?(FnordMetric::MultiGauge)
+  end
 
   def fetch_gauge(_gauge)
     _gauge.is_a?(FnordMetric::Gauge) ? _gauge : @opts[:gauges].fetch(_gauge)
