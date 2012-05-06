@@ -23,8 +23,8 @@ class FnordMetric::Context
     @redis = redis
     @event = event    
     proxy.instance_eval(&@block)
-  rescue Exception => e
-    raise e  if ENV['FNORDMETRIC_ENV'] == 'test'
+  rescue e
+    raise e if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
   end
 
@@ -34,7 +34,7 @@ class FnordMetric::Context
 
   def dispatch(method, *args, &block)
     if args.size > 0 && multi_gauge?(args.first)
-      @opts[:gauges][args.delete_at(0)].send(:"cmd_#{method}", args, &block)
+      @opts[:gauges][args.delete_at(0)].send(:"cmd_#{method}", *args, &block)
     else
       send(method, *args, &block)
     end

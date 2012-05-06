@@ -25,12 +25,13 @@ class FnordMetric::MultiGauge
     if (m = method.to_s.match(/cmd_([a-zA-Z_]+)/))
       method = m[1]
       unless @cmds.try(:include?, method.to_sym)
-        puts "error: unknown command: #{method}"  
+        return !!(puts "error: unknown command: #{method}")
       else
-        send(method, *args, &block)
+        return send(method, *args, &block)
       end
     end
-    puts "error: unknown command: #{method}"
+    puts "error: method '#{method}' missing"
+    raise NoMethodError.new(method)
   end
 
 end

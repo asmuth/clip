@@ -1,6 +1,8 @@
 class FnordMetric::NumericGauge < FnordMetric::MultiGauge
 
   def initialize(opts)
+    @cmds = [:incr]
+
     super(opts)
 
     if !opts[:series].is_a?(Array) || opts[:series].size == 0
@@ -20,6 +22,10 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     if opts[:series].size != opts[:series].uniq.size
       raise "numeric_gauge #{opts[:key]}: series are not unique"
     end
+  end
+
+  def incr(*args)
+    puts "inrcrement called: #{args.inspect}"
   end
 
 end
