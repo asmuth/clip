@@ -37,4 +37,10 @@ share_examples_for FnordMetric::GaugeLike do
     gauge.key(:fnord).should == "fnordmetrics-myns-gauge-mygauge-23-fnord"
   end
 
+  it "should add redis" do
+    gauge = @gauge_klass.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23})
+    gauge.add_redis("FNORD")
+    gauge.instance_variable_get(:"@opts")[:redis].should == "FNORD"
+  end
+
 end
