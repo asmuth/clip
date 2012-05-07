@@ -12,6 +12,10 @@ class FnordMetric::MultiGauge
   def title
     @opts[:title] || name
   end
+
+  def key_nouns
+    @opts[:key_nouns] || ["Key", "Keys"]
+  end
   
   def key(_append=nil)
     [@opts[:key_prefix], "multigauge", name, _append].flatten.compact.join("-")
@@ -46,7 +50,7 @@ private
 
   def render_template(template_name)
     tpl = File.read(::File.expand_path("../../../haml/#{template_name}.haml", __FILE__))
-    Haml::Engine.new(tpl).render
+    Haml::Engine.new(tpl).render(binding)
   end
 
 end

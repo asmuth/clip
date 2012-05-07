@@ -115,7 +115,7 @@ class FnordMetric::Namespace
 
   def opt_gauge(gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
-    @gauges[gauge_key] ||= FnordMetric::Gauge.new(opts)   
+    @gauges[gauge_key] ||= FnordMetric::Gauge.new(opts)  
   end
 
   def opt_multigauge(gauge_type, gauge_key, opts={})

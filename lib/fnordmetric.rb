@@ -15,6 +15,7 @@ require "fnordmetric/version"
 #  -> numeric-gauge view: add numbers
 #  -> timeline-widget: tick button active states
 #  -> port numbers style from scala-experiment
+#  -> implement noun option for nicer headlines
 #
 #
 # ROADMAP
@@ -30,18 +31,16 @@ require "fnordmetric/version"
 #   -> realtime view
 #   -> formatter: num, time, currency
 #
-#
-# distribution_gauge
-#
-#
-#
-#
 # toplist_gauge
-#
+#   -> trending keys
 #
 #
 # timeline_widget
 #   -> show last interval (cmp. w/ yesterday)
+#
+#
+# distribution_gauge
+#
 #
 #
 # wiki

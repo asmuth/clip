@@ -16,6 +16,10 @@ class FnordMetric::Widget
     @opts[:title]
   end
 
+  def key_nouns
+    @opts[:key_nouns] || ["Key", "Keys"]
+  end
+
   def token
     token = title.to_s.gsub(/[\W]/, '').downcase
     token = Digest::SHA1.hexdigest(title.to_s) if token.empty?

@@ -49,7 +49,7 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
       :template => render_template(:toplist_gauge),
       :widgets => {
         :total_timeline => FnordMetric::TimelineWidget.new(
-          :title => "Totals",
+          :title => "Top #{@opts[:show_top_n]} #{key_nouns.last}",
           :multi_tick => true,
           :render_target => ".toplgauge_widget_topx_timeline",
           :ticks => @opts[:ticks],
@@ -59,13 +59,14 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
           :height => 350
         ).data,
         :total_toplist => FnordMetric::ToplistWidget.new(
-          :title => "Toplist",
+          :title => "Top #{key_nouns.last}",
           :multi_tick => true,
           :render_target => ".toplgauge_widget_topx_toplist",
           :ticks => @opts[:ticks],
           :tick => @opts[:ticks].first,
           :gauges => [count_gauges[@opts[:ticks].first]],
           :_gauges => ["#{name}++count"],
+          :key_nouns => key_nouns,
           :height => 350
         ).data
       }
