@@ -6,7 +6,7 @@ class FnordMetric::InboundDatagram < EventMachine::Connection
 
   def self.start(opts)
     self.opts = opts
-    EM.open_datagram_socket(*opts[:inbound_stream], self, opts)
+    EM.open_datagram_socket(*(opts[:inbound_stream] << self << opts))
   end
 
   def receive_data(event)
