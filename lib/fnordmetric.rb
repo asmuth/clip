@@ -184,7 +184,7 @@ module FnordMetric
         inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
         begin
           inbound_stream = inbound_class.start(opts)
-          log "listening on #{opts[:inbound_protocol]}://#{opts[:inbound_stream].join(":")}"
+          log "listening on #{opts[:inbound_protocol]}://#{opts[:inbound_stream][0..1].join(":")}"
         rescue
           log "cant start #{inbound_class.name}. port in use?"
         end
