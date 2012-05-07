@@ -118,7 +118,6 @@
 
     if(window.location.hash){
       if(!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
-        console.log('dash');
         $('#sidebar li.dashboard[rel="'+window.location.hash.slice(11)+'"]').trigger('click');
       } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
         $('#sidebar li.gauge[rel="'+window.location.hash.slice(7)+'"]').click();

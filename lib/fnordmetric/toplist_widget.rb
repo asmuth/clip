@@ -7,6 +7,7 @@ class FnordMetric::ToplistWidget < FnordMetric::Widget
       :autoupdate => (@opts[:autoupdate] || 0),
       :render_target => @opts[:render_target],
       :ticks => @opts[:ticks],
+      :click_callback => @opts[:click_callback],
       :tick => tick
     ).tap do |dat|
       dat.merge!(

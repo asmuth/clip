@@ -15,6 +15,14 @@ h3{
   font-weight:500;
 }
 
+a.link{
+  color:#2281CF;
+  text-decoration:none;
+}
+
+a.link:hover{
+  text-decoration:underline;
+}
 
 .shown{ display: block; }
 .hidden{ display: none; }

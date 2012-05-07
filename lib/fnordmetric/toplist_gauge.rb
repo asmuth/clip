@@ -67,6 +67,7 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
           :gauges => [count_gauges[@opts[:ticks].first]],
           :_gauges => ["#{name}++count"],
           :key_nouns => key_nouns,
+          :click_callback => "function(w){ $('.toplgauge_tabs').trigger('open_tab.per-key', w); }",
           :height => 350
         ).data
       }
@@ -75,7 +76,6 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
 
   def fetch_gauge(name, tick)
     if name == "count"
-      puts "YEAH: #{tick} #{count_gauges.inspect}"
       count_gauges[tick]
     elsif name.starts_with?("series-")
       series_gauges[name[7..-1].to_sym][tick.to_i]

@@ -38,6 +38,9 @@ require "fnordmetric/version"
 # timeline_widget
 #   -> show last interval (cmp. w/ yesterday)
 #
+# toplist_widget
+#   -> multi-interval + range-selector
+#
 #
 # distribution_gauge
 #
