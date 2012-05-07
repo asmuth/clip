@@ -209,10 +209,9 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .headbar .button{
   margin:8px 0px; height:16px; float:right; display:block;
   margin-right:-1px;
-  background:#eee; 
   border:1px solid #999;
   border-bottom-color:#888;
-  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .1); 
+  box-shadow: 0 1px 0 #fff; 
   cursor:pointer;
   border-radius:3px;
   font-size: 11px;
@@ -223,10 +222,26 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
   text-decoration:none;
   vertical-align:top;
   white-space:nowrap;
+  background:url('/img/navbar_btn.png');
 }
 
-.headbar .button:hover, .headbar.button.active{background:#ddd;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
+.headbar .button:hover, .headbar.button.active{background:#e8e8e8;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
 
+.headbar .button:active{ background:#ddd; }
+
+.headbar .btn_group .button{
+  border-radius:0;
+}
+
+.headbar .btn_group .button:last-child{
+  border-top-left-radius:3px;
+  border-bottom-left-radius:3px;
+}
+
+.headbar .btn_group .button:first-child{
+  border-top-right-radius:3px;
+  border-bottom-right-radius:3px;
+}
 
 .numbers_container, .number{ float:left; width:60px; }
 .number{ padding-right:20px; margin-right:6px; }
@@ -308,6 +323,11 @@ ul.ui_tabs li a{
   color:#666;
   font-weight:500;
   text-decoration:none;
+}
+
+
+ul.ui_tabs li a:hover{
+  color:#333;
 }
 
 ul.ui_tabs li.active a{

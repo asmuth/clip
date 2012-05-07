@@ -117,9 +117,10 @@ FnordMetric.widgets.timelineWidget = function(){
       );
 
       if(opts.ticks){
+        $('.headbar', opts.elem).append('<div class="tick_btns btn_group"></div>');
         for(__tick in opts.ticks){
           var _tick = opts.ticks[__tick];
-          $('.headbar', opts.elem).append(
+          $('.tick_btns', opts.elem).append(
             $('<div></div>').attr('class', 'button tick').append($('<span></span>')
               .html(FnordMetric.util.formatTimeRange(_tick)))
               .attr('data-tick', _tick)
