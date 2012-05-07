@@ -26,6 +26,7 @@ require "fnordmetric/version"
 #  -> put images into one sprite
 #  -> remove params from log
 #  -> toplist_widget per_keyword: show multiple keywords
+#  -> proper garbage collection
 #
 #
 # numeric_gauge
