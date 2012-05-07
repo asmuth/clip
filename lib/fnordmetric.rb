@@ -12,18 +12,21 @@ require "fnordmetric/version"
 
 
 # TODO
-#  -> numeric-gauge view: add numbers
 #  -> timeline-widget: tick button active states
 #  -> port numbers style from scala-experiment
-#  -> implement noun option for nicer headlines
-#
-#
-# ROADMAP
-#
-# core 
+#  -> gauge api: render with add. offset
+#  -> toplist-widget: tick+range selector
+#  -> toplist-widget: display trends
+#  -> timeline-widget: compare with yesterday
+#  -> numeric-gauge view: add numbers
 #  -> store per-session-data
 #  -> callback on session-flush
+#  -> backport sidebar css from 0.7?
 #  -> minimize/pack js
+#  -> put images into one sprite
+#  -> remove params from log
+#  -> toplist_widget per_keyword: show multiple keywords
+#
 #
 # numeric_gauge
 #   -> time-distribution

@@ -1,5 +1,6 @@
 Whats new in 1.0?
 
   -> improved ui
-  -> multi-gauges: numeric_gauge (multiple ticks, multiple series)
+  -> numeric_gauge (multiple ticks, multiple series)
+  -> toplist_gauge (mutlitple ticks, trends)
   -> fnordmetric:announce redis pusub event-data instead of event_id
