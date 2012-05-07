@@ -14,7 +14,12 @@ module FnordMetric::GaugeCalculations
 
   def value_at(time, opts={}, &block)
     _t = tick_at(time)
-    _v = redis.hget(key, _t)
+
+    _v = if respond_to?(:_value_at)
+      _value_at(key, _t)
+    else
+      redis.hget(key, _t)
+    end
 
     calculate_value(_v, _t, opts, block)
   end
@@ -22,7 +27,11 @@ module FnordMetric::GaugeCalculations
   def values_at(times, opts={}, &block)
     times = times.map{ |_t| tick_at(_t) }
     Hash.new.tap do |ret|
-      redis.hmget(key, *times).each_with_index do |_v, _n|
+      if respond_to?(:_values_at)
+        _values_at(times, opts={}, &block)
+      else
+        redis.hmget(key, *times)
+      end.each_with_index do |_v, _n|
         _t = times[_n]
         ret[_t] = calculate_value(_v, _t, opts, block)
       end
