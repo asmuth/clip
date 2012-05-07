@@ -3,7 +3,7 @@ class FnordMetric::Namespace
   attr_reader :handlers, :gauges, :opts, :key, :dashboards
 
   @@opts = [:event, :gauge, :widget, :set_title, :active_users_available]
-  @@multi_gauges = [:numeric_gauge]
+  @@multi_gauges = [:numeric_gauge, :toplist_gauge]
 
   def initialize(key, opts)    
     @gauges = Hash.new

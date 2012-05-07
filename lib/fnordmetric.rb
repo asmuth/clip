@@ -12,8 +12,7 @@ require "fnordmetric/version"
 
 
 # TODO
-#  -> navbar: add buttons
-#  -> numeric-gauge view: add number
+#  -> numeric-gauge view: add numbers
 #  -> timeline-widget: tick button active states
 #  -> port numbers style from scala-experiment
 #
@@ -222,6 +221,7 @@ require "fnordmetric/context"
 require "fnordmetric/gauge"
 require "fnordmetric/multi_gauge"
 require "fnordmetric/numeric_gauge"
+require "fnordmetric/toplist_gauge"
 require "fnordmetric/session"
 require "fnordmetric/app"
 require "fnordmetric/dashboard"
