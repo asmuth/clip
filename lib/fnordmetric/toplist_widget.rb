@@ -3,8 +3,15 @@ class FnordMetric::ToplistWidget < FnordMetric::Widget
   def data
     super.merge(
       :gauges => data_gauges,
-      :autoupdate => (@opts[:autoupdate] || 0)
-    )
+      :autoupdate => (@opts[:autoupdate] || 0),
+      :render_target => @opts[:render_target],
+      :ticks => @opts[:ticks],
+      :tick => tick
+    ).tap do |dat|
+      dat.merge!(
+        :gauges => @opts[:_gauges]
+      ) if dat[:ticks]
+    end
   end
 
   def data_gauges

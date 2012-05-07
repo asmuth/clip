@@ -21,6 +21,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
         :gauges => @opts[:_gauges],
         :gauge_titles => @opts[:_gauge_titles],
         :tick => @opts[:ticks].first,
+        :key_prefix => @opts[:key_prefix],
         :ticks => @opts[:ticks]
       ) unless has_tick?
     end

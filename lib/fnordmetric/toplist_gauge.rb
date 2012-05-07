@@ -1,6 +1,6 @@
 class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
 
-  class TopxProxyGauge < FnordMetric::Gauge
+  class SeriesProxyGauge < FnordMetric::Gauge
 
     def _value_at(_t)
       redis.zscore(tick_key(_t), @opts[:key]).to_i
@@ -15,7 +15,6 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
     end
 
   end
-
 
   def initialize(opts)
     @cmds = [:observe]
@@ -54,9 +53,19 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
           :multi_tick => true,
           :render_target => ".toplgauge_widget_topx_timeline",
           :ticks => @opts[:ticks],
-          :_gauges => topx_values.map{ |s| "#{name}++topx-#{s}" },
-          :_gauge_titles => Hash[topx_values.map{ |s| ["#{name}++topx-#{s}", s] }],
+          :_gauges => series_values.map{ |s| "#{name}++series-#{s}" },
+          :_gauge_titles => Hash[series_values.map{ |s| ["#{name}++series-#{s}", s] }],
           :include_current => true,
+          :height => 350
+        ).data,
+        :total_toplist => FnordMetric::ToplistWidget.new(
+          :title => "Toplist",
+          :multi_tick => true,
+          :render_target => ".toplgauge_widget_topx_toplist",
+          :ticks => @opts[:ticks],
+          :tick => @opts[:ticks].first,
+          :gauges => [count_gauges[@opts[:ticks].first]],
+          :_gauges => ["#{name}++count"],
           :height => 350
         ).data
       }
@@ -65,9 +74,10 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
 
   def fetch_gauge(name, tick)
     if name == "count"
+      puts "YEAH: #{tick} #{count_gauges.inspect}"
       count_gauges[tick]
-    elsif name.starts_with?("topx-")
-      topx_gauges[name[5..-1].to_sym][tick.to_i]
+    elsif name.starts_with?("series-")
+      series_gauges[name[7..-1].to_sym][tick.to_i]
     end.tap do |gauge|
       gauge.try(:add_redis, @opts[:redis])
     end
@@ -86,17 +96,17 @@ private
     end]
   end
 
-  def topx_values
+  def series_values
     biggest_tick = @opts[:ticks].map(&:to_i).sort.last
     rkey = count_gauges[biggest_tick].tick_key(Time.now.to_i)
     res = @opts[:redis].zrevrangebyscore(rkey, "+inf", 0, :limit => [0, @opts[:show_top_n]]) 
     res.map(&:to_sym)
   end
 
-  def topx_gauges
+  def series_gauges
     Hash.new do |h, k|
       h[k] = Hash[@opts[:ticks].map do |_t|
-        [_t.to_i, TopxProxyGauge.new(
+        [_t.to_i, SeriesProxyGauge.new(
           :key => k,
           :key_prefix => key,
           :tick => _t.to_i

@@ -1,8 +1,13 @@
 FnordMetric.widgets.toplistWidget = function(){
 
-  function render(opts){
+  var opts;
+
+  function render(_opts){
+    opts = _opts;
 
     var current_gauge = false;
+
+    if (!opts.tick){ opts.tick = opts.ticks[0]; }
 
     var headbar = $('<div class="headbar"></div>').append(
       $('<h2></h2>').html(opts.title)
@@ -15,25 +20,29 @@ FnordMetric.widgets.toplistWidget = function(){
       $('<div class="toplist_inner"></div>')
     );
 
-    var first = true;
-    for(k in opts.gauges){
-      headbar.append(
-        $('<div></div>')
-          .attr('class', 'button mr')
-          .attr('rel', k)
-          .append(
-            $('<span></span>').html(opts.gauges[k].title)
-          ).click(function(){
-            loadGauge($(this).attr('rel'));
-          }
-        )
-      );
-      if(first){
-        first = false;
-        loadGauge(k);
+    if(!opts.ticks){
+      var first = true;
+      for(k in opts.gauges){
+        headbar.append(
+          $('<div></div>')
+            .attr('class', 'button mr')
+            .attr('rel', k)
+            .append(
+              $('<span></span>').html(opts.gauges[k].title)
+            ).click(function(){
+              loadGauge($(this).attr('rel'));
+            }
+          )
+        );
+        if(first){
+          first = false;
+          loadGauge(k);
+        }
       }
+    } else {
+      loadGauge(opts.gauges[0], true);
     }
-
+    
     if(opts.autoupdate){
       var secs = parseInt(opts.autoupdate);
       if(secs > 0){
@@ -53,8 +62,10 @@ FnordMetric.widgets.toplistWidget = function(){
       current_gauge = gkey;
       if(!silent){ $('.toplist_inner', opts.elem).addClass('loading'); }
       var _url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + gkey;
+      if(opts.tick){ _url += ("?tick=" + opts.tick); }
       $.get(_url, function(_resp){
         var resp = JSON.parse(_resp);
+        console.log(_resp);
         renderGauge(gkey, resp);
       })
     }
