@@ -4,8 +4,8 @@
     %a(href="#" onclick="toplgaugeDisplayOverview();") Overview
   %li.per_key
     %a(href="#" onclick="toplgaugeDisplayPerKeyOverview();") Per #{key_nouns.first}
-  %li
-    %a(href="#") Trending
+  %li.distribution
+    %a(href="#" onclick="toplgaugeDisplayDistribution();") Distribution
 
 
 %div.toplgauge_keysearch(style="display:none;")
@@ -24,6 +24,9 @@
   %div.toplgauge_widget_perkey_timeline
 
 
+.toplgauge_tab.distribution(style="display:none;")
+  %div.toplgauge_widget_topx_distribution
+
 :javascript
 
   function toplgaugeDisplayOverview(){
@@ -33,6 +36,23 @@
     $(".toplgauge_keysearch").hide();
     $(".toplgauge_widget_topx_toplist").show();
   }
+
+  function toplgaugeDisplayDistribution(){
+    $(".toplgauge_tab").hide().filter(".distribution").show();
+    $(".toplgauge_tabs li").removeClass('active').filter(".distribution").addClass('active');
+    $(".toplgauge_widget_topx_distribution").html("");
+
+    $(".toplgauge_keysearch").hide();
+      FnordMetric.widgets.barsWidget().render({
+      elem: $(".toplgauge_widget_topx_distribution"),
+      gauges: ["#{name}++count"],
+      gauge_titles: {"#{name}++count": "Fnord"},
+      title: "#{key_nouns.first} Distribution",
+      ticks: #{@opts[:ticks].map(&:to_i).inspect},
+      tick: #{@opts[:ticks].first.to_i}
+    });
+  }
+
 
   function toplgaugeDisplayPerKeyOverview(){
     $(".toplgauge_tabs li").removeClass('active').filter(".per_key").addClass('active');
@@ -66,3 +86,6 @@
   $('.toplgauge_tabs').bind('open_tab.per-key', function(o, a){
     toplgaugeDisplayPerKey(a);
   });
+
+
+  

@@ -9,11 +9,14 @@ FnordMetric.widgets.barsWidget = function(){
     function redraw(first_time, silent){
       if(!silent){ $(opts.elem).css('opacity', 0.5); }
       max_y=0;
-      $(opts.gauges).each(function(i,gauge){
-        $.ajax({
-          url: FnordMetric.p + '/' + FnordMetric.currentNamespace +'/gauge/'+gauge,
-          success: redrawGauge(first_time, gauge)
-        });
+
+      var gauge = opts.gauges[0];
+      var _url = FnordMetric.p + '/' + FnordMetric.currentNamespace +'/gauge/'+gauge;
+      if(opts.tick){ _url += ("?tick=" + opts.tick); }
+
+      $.ajax({
+        url: _url,
+        success: redrawGauge(first_time, gauge)
       });
     }
 
