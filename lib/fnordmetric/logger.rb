@@ -12,10 +12,6 @@ class FnordMetric::Logger
 
         dump_file.write(event+"\n")
         dump_file.flush
-
-        print "\033[1;34m" 
-        print event
-        print "\033[0m\n"             
       end
     end
 
