@@ -27,27 +27,24 @@ require "fnordmetric/version"
 #  -> remove params from log
 #  -> toplist_widget per_keyword: show multiple keywords
 #  -> proper garbage collection
-#
+#  -> gauge overview page (a'la github graphs landing)
+#  -> gauge online vs offline status
 #
 # numeric_gauge
-#   -> time-distribution
-#   -> moving avg.
+#   -> time-distribution/punchcard
+#   -> moving avg. etc / bezier fu
 #   -> realtime view
 #   -> formatter: num, time, currency
+#   -> opts: average, average_by, unique_by, enable_histogram, enable_punchard, enable_stddeviation
 #
 # toplist_gauge
 #   -> trending keys
-#
 #
 # timeline_widget
 #   -> show last interval (cmp. w/ yesterday)
 #
 # toplist_widget
 #   -> multi-interval + range-selector
-#
-#
-# distribution_gauge
-#
 #
 #
 # wiki
