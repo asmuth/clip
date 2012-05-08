@@ -72,8 +72,16 @@ module FnordMetric
   @@namespaces = {}
   @@server_configuration = nil
 
-  @chan_feed     = EM::Channel.new
-  @chan_upstream = EM::Channel.new
+  @@chan_feed     = EM::Channel.new
+  @@chan_upstream = EM::Channel.new
+
+  def self.chan_feed
+    @@chan_feed 
+  end
+
+  def self.chan_upstream
+    @@chan_upstream 
+  end
 
   def self.namespace(key=nil, &block)
     @@namespaces[key] = block
@@ -112,10 +120,7 @@ module FnordMetric
       opts = options(opts)
       app = embedded(opts)
 
-      @backend = FnordMetric::RedisBackend.new({
-        :chan_feed     => @chan_feed,
-        :chan_upstream => @chan_upstream
-      }.merge(opts))
+      @backend = FnordMetric::RedisBackend.new(opts)
 
       if opts[:web_interface]
         server = opts[:web_interface_server].downcase
@@ -246,6 +251,7 @@ require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_calculations"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
+require "fnordmetric/remote_gauge"
 require "fnordmetric/multi_gauge"
 require "fnordmetric/numeric_gauge"
 require "fnordmetric/toplist_gauge"

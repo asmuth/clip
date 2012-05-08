@@ -8,8 +8,7 @@ class FnordMetric::WebSocket
   def initialize(opts)
     @opts = {
       :host => "0.0.0.0", 
-      :port => 8080, 
-      :debug => true
+      :port => 8080
     }.merge(opts)
 
     start_websocket
@@ -21,7 +20,9 @@ private
     EventMachine::WebSocket.start(@opts) do |socket|
       socket.onopen do
 
-        sid = @opts[:chan_feed].subscribe do |messsage| 
+        subscribed_channles = []
+
+        sid = FnordMetric.chan_feed.subscribe do |messsage| 
           socket.send(messsage.to_json)
         end
         
@@ -31,12 +32,12 @@ private
           rescue
           else
             message["_eid"] ||= (8**64).to_s(36)
-            @opts[:chan_upstream].push(message)
+            FnordMetric.chan_upstream.push(message)
           end
         end
 
         socket.onclose do
-          @opts[:chan_feed].unsubscribe(sid)
+          FnordMetric.chan_feed.unsubscribe(sid)
         end
 
       end

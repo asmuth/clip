@@ -2,6 +2,7 @@ var FnordMetric = (function(){
 
   var canvasElem = false;
   var currentView = false;
+  var gaugeLoadRunning = false;
 
   var socket;
 
@@ -10,7 +11,17 @@ var FnordMetric = (function(){
   }
 
   function renderGauge(_gauge){
+    gaugeLoadRunning = false;
+    console.log('render!!!')
     loadView(FnordMetric.views.gaugeView(_gauge));
+  }
+
+  function renderGaugeAsync(_gauge){
+    gaugeLoadRunning = true;
+    socket.send(JSON.stringify({
+      "_channel": _gauge,
+      "_class": "render_request"
+    }))
   }
 
   function renderSessionView(){
@@ -48,8 +59,13 @@ var FnordMetric = (function(){
     renderOverviewView();
   };
 
-  function socketMessage(event){
-    console.log("Message: " + event.data);
+  function socketMessage(raw){
+    console.log("Message: " + raw.data);
+    var evt = JSON.parse(raw.data);
+
+    if((evt._class == "render_response") && gaugeLoadRunning){
+      renderGauge(evt._channel);
+    }
   }
 
   function socketOpen(){
@@ -63,7 +79,7 @@ var FnordMetric = (function(){
 
   return {
     renderDashboard: renderDashboard,
-    renderGauge: renderGauge,
+    renderGauge: renderGaugeAsync,
     renderSessionView: renderSessionView,
     renderOverviewView: renderOverviewView,
     resizeView: resizeView,
