@@ -10,10 +10,9 @@ var FnordMetric = (function(){
     loadView(FnordMetric.views.dashboardView(_dash));
   }
 
-  function renderGauge(_gauge){
+  function renderGauge(_gauge, gauge_conf){
     gaugeLoadRunning = false;
-    console.log('render!!!')
-    loadView(FnordMetric.views.gaugeView(_gauge));
+    loadView(FnordMetric.views.gaugeView(_gauge, gauge_conf));
   }
 
   function renderGaugeAsync(_gauge){
@@ -64,7 +63,7 @@ var FnordMetric = (function(){
     var evt = JSON.parse(raw.data);
 
     if((evt._class == "render_response") && gaugeLoadRunning){
-      renderGauge(evt._channel);
+      renderGauge(evt._channel, evt.payload);
     }
   }
 

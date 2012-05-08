@@ -1,4 +1,4 @@
-FnordMetric.views.gaugeView = (function(gauge_name){
+FnordMetric.views.gaugeView = (function(gauge_name, conf){
   var widgets = [];
   var viewport = null;
 
@@ -10,28 +10,22 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     viewport.append('<h3>Loading...</h3>');
     viewport.append('<div class="gauge_viewport loading"></div>');
 
-    $.ajax({
-      url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/mgauge/'+gauge_name,
-      success: function(resp, status){
-        var conf = JSON.parse(resp);
-        $('h1', viewport).html(conf.title);
-        $('h3', viewport).html(conf.title);
-        $('.gauge_viewport', viewport).html(conf.template);
-        $('.gauge_viewport', viewport).removeClass('loading');
+    $('h1', viewport).html(conf.title);
+    $('h3', viewport).html(conf.title);
+    $('.gauge_viewport', viewport).html(conf.template);
+    $('.gauge_viewport', viewport).removeClass('loading');
 
-        FnordMetric.ui.navbar($('.navbar', viewport), {
-          breadcrumb: [ 
-            ["Fnord", "/group/fnord"],
-            [conf.title, "/gauge/"+gauge_name]
-          ],
-          buttons: [
-            ["Export Data", function(){ alert(23); }]
-          ]
-        });
-
-        renderWidgets(conf.widgets);
-      }
+    FnordMetric.ui.navbar($('.navbar', viewport), {
+      breadcrumb: [ 
+        ["Fnord", "/group/fnord"],
+        [conf.title, "/gauge/"+gauge_name]
+      ],
+      buttons: [
+        ["Export Data", function(){ alert(23); }]
+      ]
     });
+
+    renderWidgets(conf.widgets);
   };
 
 

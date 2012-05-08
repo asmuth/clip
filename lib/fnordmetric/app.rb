@@ -117,12 +117,6 @@ class FnordMetric::App < Sinatra::Base
     data.to_json
   end
 
-  get '/:namespace/mgauge/:name' do
-    gauge = current_namespace.gauges.fetch(params[:name].intern)
-    raise "is a simple gauge" unless gauge.is_a?(FnordMetric::MultiGauge)
-    gauge.render.to_json
-  end
-
   get '/:namespace/sessions' do
 
     sessions = current_namespace.sessions(:all, :limit => 100).map do |session|
