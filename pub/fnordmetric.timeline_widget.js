@@ -2,12 +2,13 @@
 FnordMetric.widgets._timelineWidget = function(){
 
     var widget_uid = FnordMetric.util.getNextWidgetUID();
-    var width, height, canvas, series, opts;
-    var xtick = 30;
+    var width, height, canvas, series, opts, xtick;
+    var xticks = 30;
   
     var series_paths = {};
+    var series_values = {};
 
-    var xpadding = 100;
+    var xpadding = 30;
 
     function render(_opts){
       opts = _opts;
@@ -15,32 +16,34 @@ FnordMetric.widgets._timelineWidget = function(){
 
       if(!opts.start_timestamp || !opts.end_timestamp){
         opts.end_timestamp = parseInt(new Date().getTime() / 1000);
-        opts.start_timestamp = opts.end_timestamp - (opts.tick * 30);
+        opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
       }
 
-      console.log('render');
+      opts.series = opts.gauges;
 
       drawLayout(opts);
-      updateRange();
-      redrawDatepicker();
 
-      series = opts.series;
+      width = opts.elem.width() - (xpadding * 2) - 15;
+      height = opts.height || 240;
+      xtick = width / (xticks - 1);
+      canvas = Raphael('container-'+widget_uid, width+(2*xpadding), height+30);
+
+      for (ind in opts.series){
+        series_values[opts.series[ind]] = {};
+      }
+
+      updateRange();
+      updateChart();
+
 
       //var width = elem_inner.width();
-      width = opts.elem.width();
-      height = opts.height || 240;
-      canvas = Raphael('container-'+widget_uid, width, height+30);
-
-      width -= (xpadding * 2);
+    
+     
 
 //    var label_mod = Math.ceil((labels.length/10));
 //    var max = false; // each series has an individual y scale...
       
-      //$(series).each(function(n,_series){
-        drawSeries('fnord', [1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5]);
-      //});
 
-      canvas.drawGrid(0, 0, width, height, 1, 6, "#ececec");
       
     }
 
@@ -49,7 +52,24 @@ FnordMetric.widgets._timelineWidget = function(){
     }
 
     function updateChart(){
+      var _ticks = [];
+      var _last = opts.end_timestamp;
+      var _delta = (_last -  opts.start_timestamp) / xticks;
+
+      for(sind in opts.series){
+        var _sdata = [];
+
+        for(var n=0; n < xticks; n++){
+          var _t = (parseInt(_last / opts.tick) * opts.tick);
+          _sdata.push(series_values[opts.series[sind]][_t] || 0);
+          _last -= _delta;
+        }
+
+        drawSeries(opts.series[sind], _sdata);
+      }
+
       redrawDatepicker();
+      canvas.drawGrid(0, 0, width+(2*xpadding), height, 1, 6, "#ececec");
     }
 
     function drawSeries(series, series_data){
@@ -58,7 +78,7 @@ FnordMetric.widgets._timelineWidget = function(){
         var path_string = "";
         var _max;
         var _color = '0066CC';
-
+        
         if (series_paths[series]){
           for(ind in series_paths[series]){ 
             series_paths[series][ind].remove();
@@ -68,6 +88,7 @@ FnordMetric.widgets._timelineWidget = function(){
         series_paths[series] = [];
 
         if(!_max){ _max = Math.max.apply(Math, series_data)*1.1; }
+        if(_max < 1){ _max = 1; }
 
         $(series_data).each(function(i,v){    
 
@@ -140,7 +161,7 @@ FnordMetric.widgets._timelineWidget = function(){
           }).toBack()
         );
 
-        path_string += "L"+width+","+height+" L"+xpadding+","+height+" Z";
+        path_string += "L"+(width+xpadding)+","+height+" L"+xpadding+","+height+" Z";
 
         series_paths[series].push(
           canvas.path(path_string).attr({
