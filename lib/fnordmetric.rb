@@ -112,6 +112,11 @@ module FnordMetric
       opts = options(opts)
       app = embedded(opts)
 
+      @backend = FnordMetric::RedisBackend.new({
+        :chan_feed     => @chan_feed,
+        :chan_upstream => @chan_upstream
+      }.merge(opts))
+
       if opts[:web_interface]
         server = opts[:web_interface_server].downcase
 
@@ -220,6 +225,9 @@ module FnordMetric
   end
 
 end
+
+
+require "fnordmetric/backends/redis_backend"
 
 require "fnordmetric/api"
 require "fnordmetric/udp_client"
