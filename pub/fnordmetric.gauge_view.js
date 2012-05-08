@@ -43,7 +43,7 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   function renderWidget(wkey){
     var widget = widgets[wkey];
     /* argh... */
-    if(widget.klass=='TimelineWidget'){ FnordMetric.widgets.timelineWidget().render(widget); }
+    if(widget.klass=='TimelineWidget'){ FnordMetric.widgets._timelineWidget().render(widget); }
     if(widget.klass=='BarsWidget'){ FnordMetric.widgets.barsWidget().render(widget); }
     if(widget.klass=='NumbersWidget'){ FnordMetric.widgets.numbersWidget().render(widget); }
     if(widget.klass=='ToplistWidget'){ FnordMetric.widgets.toplistWidget().render(widget); }

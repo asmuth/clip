@@ -20,6 +20,8 @@ class FnordMetric::App < Sinatra::Base
     "fnordmetric.html_widget.js" => "application/x-javascript",
     "vendor/jquery-1.6.1.min.js" => "application/x-javascript",
     "vendor/highcharts.js" => "application/x-javascript",
+    "vendor/raphael.min.js" => "application/x-javascript",
+    "vendor/raphael.util.js" => "application/x-javascript",
     "img/list.png" => "image/png",
     "img/list_active.png" => "image/png",
     "img/list_hover.png" => "image/png",

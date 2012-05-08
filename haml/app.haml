@@ -7,6 +7,10 @@
     %script(type="text/javascript" src="#{path_prefix}/vendor/jquery-1.6.1.min.js")
     %script(type="text/javascript" src="#{path_prefix}/vendor/highcharts.js")
 
+    %script(type="text/javascript" src="#{path_prefix}/vendor/raphael.min.js")
+    %script(type="text/javascript" src="#{path_prefix}/vendor/raphael.util.js")
+
+
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.util.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.ui.js")
@@ -116,6 +120,7 @@
       $('#tabs li:first').trigger('click');
     }
 
+    window.setTimeout(function(){
     if(window.location.hash){
       if(!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
         $('#sidebar li.dashboard[rel="'+window.location.hash.slice(11)+'"]').trigger('click');
@@ -123,6 +128,7 @@
         $('#sidebar li.gauge[rel="'+window.location.hash.slice(7)+'"]').click();
       }
     }
+    }, 200);
 
   });
 
