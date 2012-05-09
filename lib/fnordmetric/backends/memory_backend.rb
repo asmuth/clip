@@ -25,7 +25,7 @@ class FnordMetric::MemoryBackend
 private
 
   def channel
-    $fm_channel ||= EM::Channel.new
+    FnordMetric.firehose
   end
 
 end

@@ -3,8 +3,7 @@ class FnordMetric::Acceptor
   def initialize(opts)
     @opts = opts
 
-    $fnordmetric ||= []
-    $fnordmetric << self
+    FnordMetric.register(self)
   end
 
   def initialized   

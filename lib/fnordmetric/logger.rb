@@ -4,8 +4,7 @@ class FnordMetric::Logger
     @opts = opts
     opts.fetch(:file)
 
-    $fnordmetric ||= []
-    $fnordmetric << self
+    FnordMetric.register(self)
   end
 
   def initialized 

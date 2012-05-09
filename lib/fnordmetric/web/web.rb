@@ -13,8 +13,7 @@ class FnordMetric::Web
     @opts[:host]   ||= "0.0.0.0"
     @opts[:port]   ||= "4242"
 
-    $fnordmetric ||= []
-    $fnordmetric << self
+    FnordMetric.register(self)
   end
 
   def initialized   

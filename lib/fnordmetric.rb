@@ -13,6 +13,9 @@ require "fnordmetric/version"
 module FnordMetric
 
   @@options = nil
+  @@pool = []
+
+  @@firehose = EM::Channel.new
 
   def self.backend
     FnordMetric::RedisBackend.new(options)
@@ -24,6 +27,14 @@ module FnordMetric
 
   def self.options=(opts)
     @@options = opts
+  end
+
+  def self.register(obj)
+    @@pool.push(obj)
+  end
+
+  def self.firehose
+    @@firehose
   end
 
   def self.default_options(opts = {})
@@ -71,7 +82,7 @@ module FnordMetric
       trap("INT",  &method(:shutdown))
 
       EM.next_tick do
-        ($fnordmetric || []).map(&:initialized)
+        (@@pool || []).map(&:initialized)
       end
 
     end
