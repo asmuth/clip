@@ -113,6 +113,7 @@ var FnordMetric = (function(){
     console.log("Message: " + raw.data);
     var evt = JSON.parse(raw.data);
 
+
     if((evt._class == "render_response") && gaugeLoadRunning){
       renderGauge(evt._channel, evt.payload);
     } else if((evt._class == "discover_response")){

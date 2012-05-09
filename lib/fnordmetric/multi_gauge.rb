@@ -35,7 +35,9 @@ private
     payload = {
       :title => title,
       :gauge_key => name,
-      :widgets => Hash[@widgets.map{|k,w|[k,w.opts]}]
+      :widgets => Hash[@widgets.map{ |k,w|
+        [k, w.opts.merge(:channel => name)]
+      }]
     }
 
     respond(

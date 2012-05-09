@@ -23,8 +23,9 @@ class FnordMetric::RemoteGauge
 private
 
   def _react(ev)
+    puts ev.inspect
     return discover!(ev) if ev["_class"] == "discover_request"
-    react(ev) if ev["_sender"] != @uuid
+    react(ev) if (ev["_channel"] == name.to_s) && ev["_sender"] != @uuid
   end
 
   def discover!(event)
