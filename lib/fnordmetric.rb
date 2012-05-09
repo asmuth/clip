@@ -74,15 +74,10 @@ module FnordMetric
   @@namespaces = {}
   @@server_configuration = nil
 
-  @@chan_feed     = EM::Channel.new
-  @@chan_upstream = EM::Channel.new
+  @@firehose    = EM::Channel.new
 
-  def self.chan_feed
-    @@chan_feed 
-  end
-
-  def self.chan_upstream
-    @@chan_upstream 
+  def self.backend
+    FnordMetric::RedisBackend.new(options)
   end
 
   def self.namespace(key=nil, &block)
@@ -122,8 +117,6 @@ module FnordMetric
       opts = options(opts)
       app = embedded(opts)
 
-      @backend = FnordMetric::RedisBackend.new(opts)
-
       if opts[:web_interface]
         server = opts[:web_interface_server].downcase
 
@@ -142,9 +135,7 @@ module FnordMetric
         
         FnordMetric::WebSocket.new(
           :host => host, 
-          :port => (port.to_i+1),
-          :chan_upstream => @chan_upstream,
-          :chan_feed => @chan_feed
+          :port => (port.to_i+1)
         ) && log("listening on ws://#{host}:#{port.to_i+1}")
 
       end
@@ -205,10 +196,12 @@ module FnordMetric
     end
 
     EM.next_tick do
-      if opts[:start_worker]
-        worker = Worker.new(@@namespaces.clone, opts)
-        worker.ready!
-      end
+
+      # FIXPAUL: this is re-instantiating all gauges. why?
+      #if opts[:start_worker]
+      #  worker = Worker.new(@@namespaces.clone, opts)
+      #  worker.ready!
+      #end
 
       if opts[:inbound_stream]
         inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
@@ -235,6 +228,7 @@ end
 
 
 require "fnordmetric/backends/redis_backend"
+require "fnordmetric/backends/memory_backend"
 
 require "fnordmetric/api"
 require "fnordmetric/udp_client"

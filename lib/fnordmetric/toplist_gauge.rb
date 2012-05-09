@@ -32,6 +32,10 @@ class FnordMetric::ToplistGauge < FnordMetric::MultiGauge
     end
   end
 
+  def react(event)
+
+  end
+
   def observe(*args)
     ctx = args.delete_at(0)
 

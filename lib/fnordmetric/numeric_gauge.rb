@@ -30,18 +30,24 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def process!(event)
+    sleep 2
     resp = if event["widget"] == "total_timeline"
       event.merge(
         :values => Hash[series_count_gauges.map do |_skey, _series|
           gauge = fetch_gauge(_series[event["tick"].to_i])
-          vals = gauge.values_at(event["ticks"]) rescue {}
+          vals = {}
+          event["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 } 
+          vals.merge!(gauge.values_at(event["ticks"]))
           [_skey, vals]
         end]
       )
     end
 
     if resp
-      resp.merge!("_class" => "response")
+      resp.merge!(
+        "_class" => "response",
+        "_sender" => @uuid
+      )
       resp.delete("ticks")
       respond(resp)
     end
