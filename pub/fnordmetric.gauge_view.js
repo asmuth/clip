@@ -1,5 +1,6 @@
 FnordMetric.views.gaugeView = (function(gauge_name, conf){
   var widgets = [];
+  var widget_objs = {};
   var viewport = null;
 
   function load(_viewport){
@@ -28,6 +29,14 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
     renderWidgets(conf.widgets);
   };
 
+  function announce(evt){
+    if(evt._class == "response"){
+      for(_wkey in widgets){
+        widget_objs[_wkey].announce(evt);
+      }  
+    }
+    
+  }
 
   function renderWidgets(_widgets){
     for(wkey in _widgets){
@@ -40,15 +49,17 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
     resize();
   };
 
-  function renderWidget(wkey){
+  function renderWidget(wkey, _w){
     var widget = widgets[wkey];
     /* argh... */
-    if(widget.klass=='TimelineWidget'){ FnordMetric.widgets._timelineWidget().render(widget); }
-    if(widget.klass=='BarsWidget'){ FnordMetric.widgets.barsWidget().render(widget); }
-    if(widget.klass=='NumbersWidget'){ FnordMetric.widgets.numbersWidget().render(widget); }
-    if(widget.klass=='ToplistWidget'){ FnordMetric.widgets.toplistWidget().render(widget); }
-    if(widget.klass=='PieWidget'){ FnordMetric.widgets.pieWidget().render(widget); }
-    if(widget.klass=="HtmlWidget") { FnordMetric.widgets.htmlWidget().render(widget); }
+    if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets._timelineWidget(); }
+    if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
+    if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
+    if(widget.klass=='ToplistWidget'){ _w = FnordMetric.widgets.toplistWidget(); }
+    if(widget.klass=='PieWidget'){ _w = FnordMetric.widgets.pieWidget(); }
+    if(widget.klass=="HtmlWidget") { _w = FnordMetric.widgets.htmlWidget(); }
+    if(_w){ _w.render(widget); }
+    widget_objs[wkey] = _w;
   };
 
   function resizeWidget(wkey){
@@ -75,6 +86,7 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   return {
     load: load,
     resize: resize,
+    announce: announce,
     close: close
   };
 

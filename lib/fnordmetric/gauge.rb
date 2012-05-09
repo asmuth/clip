@@ -56,7 +56,11 @@ class FnordMetric::Gauge
   end
 
   def add_redis(_redis)
-    @opts[:redis] = _redis
+    @redis = _redis
+  end
+
+  def redis
+    @redis || @opts[:redis]
   end
 
   def ticks_in(r)

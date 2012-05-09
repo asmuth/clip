@@ -17,10 +17,10 @@ var FnordMetric = (function(){
 
   function renderGaugeAsync(_gauge){
     gaugeLoadRunning = true;
-    socket.send(JSON.stringify({
+    publish({
       "_channel": _gauge,
       "_class": "render_request"
-    }))
+    })
   }
 
   function renderSessionView(){
@@ -58,18 +58,23 @@ var FnordMetric = (function(){
     renderOverviewView();
   };
 
+  function publish(obj){
+    socket.send(JSON.stringify(obj));
+  }
+
   function socketMessage(raw){
     console.log("Message: " + raw.data);
     var evt = JSON.parse(raw.data);
 
     if((evt._class == "render_response") && gaugeLoadRunning){
       renderGauge(evt._channel, evt.payload);
+    } else {
+      if(currentView){ currentView.announce(evt); }
     }
   }
 
   function socketOpen(){
     console.log("connected...");
-    socket.send(JSON.stringify({ "fnord": "bar" }));
   }
 
   function socketClose(){
@@ -83,6 +88,7 @@ var FnordMetric = (function(){
     renderOverviewView: renderOverviewView,
     resizeView: resizeView,
     init: init,
+    publish: publish,
     p: '',
     socket: socket,
     currentNamespace: false,

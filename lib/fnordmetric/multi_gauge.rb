@@ -27,13 +27,10 @@ class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
     @opts[:redis] = _redis
   end
 
-  def react(event)
-    render! if event["_class"] == "render_request"
-  end
-
   def render
     {
       :title => title,
+      :gauge_key => name,
       :template => "--- not yet implemented ---",
       :widgets => {}
     }

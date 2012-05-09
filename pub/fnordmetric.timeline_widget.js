@@ -4,6 +4,7 @@ FnordMetric.widgets._timelineWidget = function(){
     var widget_uid = FnordMetric.util.getNextWidgetUID();
     var width, height, canvas, series, opts, xtick;
     var xticks = 30;
+    var running_request = false;
   
     var series_paths = {};
     var series_values = {};
@@ -13,13 +14,6 @@ FnordMetric.widgets._timelineWidget = function(){
     function render(_opts){
       opts = _opts;
       //if(!silent){ $(opts.elem).css('opacity', 0.5); }
-
-      if(!opts.start_timestamp || !opts.end_timestamp){
-        opts.end_timestamp = parseInt(new Date().getTime() / 1000);
-        opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
-      }
-
-      opts.series = opts.gauges;
 
       drawLayout(opts);
 
@@ -35,41 +29,80 @@ FnordMetric.widgets._timelineWidget = function(){
       updateRange();
       updateChart();
 
-
-      //var width = elem_inner.width();
-    
-     
-
-//    var label_mod = Math.ceil((labels.length/10));
-//    var max = false; // each series has an individual y scale...
-      
-
-      
+      canvas.drawGrid(0, 0, width+(2*xpadding), height, 1, 6, "#ececec");
     }
 
+    function announce(evt){
+      if(evt.widget == opts.widget_key){
+        if((evt._class == "response") && (evt.cmd == "series_data")){
+          running_request = false;
+          updateSeriesData(evt.tick, evt.values);
+          updateChart();
+        }
+      }
+    }
+
+    function requestValues(_tick, times){
+      if(times.length > 0){
+        if(!running_request){
+          running_request = (new Date).getTime();
+          requestValuesAsync(_tick, times);
+        }
+      }
+    }
+
+    function requestValuesAsync(_tick, times){
+      FnordMetric.publish({
+        "_class": "request",
+        "_channel": opts.channel,
+        "cmd": "series_data",
+        "tick": _tick, 
+        "ticks": times,
+        "widget": opts.widget_key
+      })    
+    }
+
+
     function changeTick(){
-      
+      opts.tick = parseInt($(this).attr('data-tick'));
+      opts.start_timestamp = null;
+      opts.end_timestamp = null;
+      updateRange();
+      redrawDatepicker();
+      updateChart();
+    }
+
+    function updateSeriesData(_tick, values){
+      for(_series in values){
+        for(_t in values[_series]){
+          series_values[_series][_tick+"+"+_t] = values[_series][_t];
+        }
+      }
     }
 
     function updateChart(){
       var _ticks = [];
-      var _last = opts.end_timestamp;
-      var _delta = (_last -  opts.start_timestamp) / xticks;
-
+      var _miss = [];
+      
       for(sind in opts.series){
+        var _last = opts.end_timestamp;
+        var _delta = (_last -  opts.start_timestamp) / xticks;
         var _sdata = [];
 
         for(var n=0; n < xticks; n++){
           var _t = (parseInt(_last / opts.tick) * opts.tick);
-          _sdata.push(series_values[opts.series[sind]][_t] || 0);
+          var _v = series_values[opts.series[sind]][opts.tick+"+"+_t];
+          if((!_v) && (_miss.indexOf(_t) == -1)){ _miss.push(_t); }
+          _sdata.push(_v || 0);
           _last -= _delta;
         }
 
         drawSeries(opts.series[sind], _sdata);
       }
 
+      requestValues(opts.tick, _miss);
+
       redrawDatepicker();
-      canvas.drawGrid(0, 0, width+(2*xpadding), height, 1, 6, "#ececec");
     }
 
     function drawSeries(series, series_data){
@@ -111,7 +144,6 @@ FnordMetric.widgets._timelineWidget = function(){
               "stroke-width": 1, 
             }).toBack()
           );
-
 
           var htrgt = canvas.rect(p_x - 20, p_y - 20, 40, 40).attr({
             stroke: "none", 
@@ -179,13 +211,13 @@ FnordMetric.widgets._timelineWidget = function(){
         )
       ).append(
         $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
-          function(){ moveRange(1); }
+          function(){ moveRange(-1); }
         )
       ).append(
         $('<div></div>').attr('class', 'datepicker')
       ).append(
         $('<div></div>').attr('class', 'button ml').append($('<span></span>').html('&larr;')).click(
-          function(){ moveRange(-1); }
+          function(){ moveRange(1); }
         )
       ).append(
         $('<h2></h2>').html(opts.title)
@@ -220,6 +252,16 @@ FnordMetric.widgets._timelineWidget = function(){
     }
 
     function updateRange(){
+      if(!opts.tick){
+        opts.tick = opts.ticks[0];
+      }
+
+      if(!opts.start_timestamp || !opts.end_timestamp){
+        opts.end_timestamp = parseInt(new Date().getTime() / 1000);
+        opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
+      }
+
+
       if(
         (parseInt(new Date().getTime()/1000) - opts.end_timestamp) >
         (opts.include_current ? 0 : opts.tick)
@@ -238,7 +280,8 @@ FnordMetric.widgets._timelineWidget = function(){
 
 
     return {
-      render: render  
+      render: render,
+      announce: announce
     }
 
 };
