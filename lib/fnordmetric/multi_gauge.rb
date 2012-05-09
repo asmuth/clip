@@ -49,7 +49,8 @@ private
 
     if @widgets.has_key?(ev["widget_key"])
       respond(@widgets[ev["widget_key"]].react(ev).merge(
-        :_class => "widget_response"
+        :_class => "widget_response",
+        :widget_key => ev["widget_key"]
       ))
     end
   end

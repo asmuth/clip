@@ -1,4 +1,4 @@
-class FnordMetric::TimelineWidget  < FnordMetric::Widget
+class FnordMetric::TimelineWidget < FnordMetric::Widget
   
   @@series_colors = ["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
   
@@ -8,6 +8,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
 
     {
       :tick => ev["tick"],
+      :cmd => "series_data",
       :values => Hash[@opts[:series].map{ |skey|
         vals =  call_handler(:values_at, skey, ev["ticks"], ev["tick"]) 
         ev["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 }
