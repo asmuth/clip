@@ -21,7 +21,8 @@ class FnordMetric::RedisBackend
   end
 
   def publish(message)
-    @pub_redis.publish(@redis_channel, message.to_json)
+    out = message.is_a?(String) ? message : message.to_json
+    @pub_redis.publish(@redis_channel, out)
   end
 
   def hangup

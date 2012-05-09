@@ -189,7 +189,6 @@ module FnordMetric
   end
 
   def self.standalone
-    require "fnordmetric/logger"
     require "fnordmetric/standalone"
   end
 
@@ -244,6 +243,7 @@ require "fnordmetric/acceptors/tcp_acceptor"
 require "fnordmetric/acceptors/udp_acceptor"
 
 require "fnordmetric/acceptor"
+require "fnordmetric/logger"
 
 require "fnordmetric/api"
 require "fnordmetric/udp_client"

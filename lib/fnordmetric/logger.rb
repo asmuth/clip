@@ -1,29 +1,37 @@
 class FnordMetric::Logger
 
-  def self.start(logfile_path)    
-    require 'json'
+  def initialize(opts)
+    @opts = opts
+    opts.fetch(:file)
+
+    $fnordmetric ||= []
+    $fnordmetric << self
+  end
+
+  def initialized 
+    logfile_path = @opts[:file]
+
     events = Queue.new
     dump_file = File.open(logfile_path, 'a+')
 
     fetcher = Thread.new do
-      redis = Redis.new
       loop do
         event = events.pop
 
-        dump_file.write(event+"\n")
+        dump_file.write(event.to_json+"\n")
         dump_file.flush
       end
     end
 
     listener = Thread.new do  
-      redis = Redis.new
-      redis.subscribe("fnordmetric-announce") do |on|
-        on.message do |channel, event|
-          events << event
-        end
+      backend = FnordMetric.backend
+      backend.subscribe do |event|
+        events << event
       end
     end
 
+    FnordMetric.log "logging to #{logfile_path}"
+    
     listener.join
   end
 
