@@ -116,6 +116,9 @@ require "fnordmetric/acceptors/udp_acceptor"
 
 require "fnordmetric/gauges/numeric_gauge"
 
+require "fnordmetric/widgets/widget"
+require "fnordmetric/widgets/timeline_widget"
+
 require "fnordmetric/web/web"
 require "fnordmetric/web/namespace"
 require "fnordmetric/web/app"
@@ -126,14 +129,14 @@ require "fnordmetric/web/session"
 
 require "fnordmetric/logger"
 
+
  # require "fnordmetric/context"
 
 # require "fnordmetric/api"
 # require "fnordmetric/udp_client"
 # require "fnordmetric/worker"
 
-# require "fnordmetric/widget"
-# require "fnordmetric/timeline_widget"
+# require "fnordmetric/"
 # require "fnordmetric/numbers_widget"
 # require "fnordmetric/bars_widget"
 # require "fnordmetric/toplist_widget"

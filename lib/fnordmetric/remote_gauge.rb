@@ -13,7 +13,7 @@ class FnordMetric::RemoteGauge
   	@backend.subscribe do |message|
       if message["_sender"] != @uuid 
         message["__to_self"] = (message["_channel"] == name.to_s)
-        react(message)
+        _react(message)
       end
     end
   end
@@ -25,10 +25,9 @@ class FnordMetric::RemoteGauge
 
 private
 
-  def react(ev)
-    render!       if ev["_class"] == "render_request" && ev["__to_self"]
-    discover!(ev) if ev["_class"] == "discover_request"
-    process!(ev)  if ev["_class"] == "request"
+  def _react(ev)
+    return discover!(ev) if ev["_class"] == "discover_request"
+    react(ev)
   end
 
   def discover!(event)

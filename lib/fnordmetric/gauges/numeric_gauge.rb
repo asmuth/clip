@@ -2,7 +2,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
 
   def initialize(opts)
     @cmds = [:incr]
-
+    
     super(opts)
 
     if !opts[:series].is_a?(Array) || opts[:series].size == 0
@@ -22,8 +22,26 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     if opts[:series].size != opts[:series].uniq.size
       raise "numeric_gauge #{opts[:key]}: series are not unique"
     end
+
+
+    @overview_timeline = timeline_widget(
+      :tab => "Overview",
+      :title => "Totals",
+      :render_target => ".viewport_inner",
+      :ticks => @opts[:ticks],
+      :series => @opts[:series],
+      :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
+      :include_current => true,
+      :height => 350
+    )
+
+    @overview_timeline.on(:values_at) do |_times, _tick|
+      Hash[_times.map{ |_t| [_t, 23] }]
+    end
+
   end
 
+ 
   def announce(event)
     sleep 2
     resp = if event["widget"] == "total_timeline"
@@ -76,27 +94,6 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     end
   end
 
-  def render
-    super.merge(
-      :template => render_template(:numeric_gauge),
-      :widgets => {
-        :total_timeline => {
-          :width => 100,
-          :klass => "TimelineWidget",
-          :title => "Totals",
-          :multi_tick => true,
-          :render_target => ".numgauge_widget_total_timeline",
-          :ticks => @opts[:ticks],
-          :series => @opts[:series],
-          :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
-          :include_current => true,
-          :channel => name,
-          :widget_key => "total_timeline",
-          :height => 350
-        }
-      }
-    )
-  end
 
   def fetch_gauge(series, tick = nil)
     if series.is_a?(FnordMetric::Gauge)

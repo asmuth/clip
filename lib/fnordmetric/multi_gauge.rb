@@ -3,6 +3,7 @@ class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
   def initialize(opts)
     opts.fetch(:key)
     @opts = opts
+    @widgets = {}
 
     FnordMetric.register(self)
   end
@@ -23,40 +24,39 @@ class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
     ["FIXPAUL-KEYPREFIX", "multigauge", name, _append].flatten.compact.join("-")
   end
 
-  def render
-    {
-      :title => title,
-      :gauge_key => name,
-      :template => "--- not yet implemented ---",
-      :widgets => {}
-    }
+  def react(ev)
+    render! if ev["_class"] == "render_request" && ev["__to_self"]
+    #process!(ev)  if ev["_class"] == "widget_request"
   end
 
   def render!
     respond(
       :_class => "render_response", 
-      :payload => render
+      :payload => {
+        :title => title,
+        :gauge_key => name,
+        :widgets => Hash[@widgets.map{|k,w|[k,w.opts]}]
+      }
     )
-  end
-
-  def method_missing(method, *args, &block)
-    if (m = method.to_s.match(/cmd_([a-zA-Z_]+)/))
-      method = m[1]
-      unless @cmds.try(:include?, method.to_sym)
-        return !!(puts "error: unknown command: #{method}")
-      else
-        return send(method, *args, &block)
-      end
-    end
-    puts "error: method '#{method}' missing"
-    raise NoMethodError.new(method)
   end
 
 private
 
-  def render_template(template_name)
-    tpl = File.read(::File.expand_path("../../../haml/#{template_name}.haml", __FILE__))
-    Haml::Engine.new(tpl).render(binding)
+  def widget(klass, opts)
+    opts[:gauge_key] ||= name
+
+    [
+      "FnordMetric",
+      "#{klass.to_s.capitalize}Widget"
+    ].join("::").constantize.new(opts).tap do |w|
+      @widgets[w.key] = w
+    end
+  end
+
+  %w(timeline).each do |wid|
+    define_method("#{wid}_widget") do |options|
+      widget(wid, options)
+    end
   end
 
 end
