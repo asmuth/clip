@@ -12,10 +12,6 @@ class FnordMetric::Logger
 
         dump_file.write(event+"\n")
         dump_file.flush
-
-        print "\033[1;34m" 
-        print event
-        print "\033[0m\n"             
       end
     end
 
@@ -32,21 +28,19 @@ class FnordMetric::Logger
   end
 
   def self.import(logfile_path)
-    redis = Redis.new
+    expire = FnordMetric.options[:event_queue_ttl]
+    redis  = Redis.new
+
     dump_file = File.open(logfile_path, 'r')
+    num_lines = %x{wc -l #{logfile_path}}.to_i
+    puts "importing #{num_lines} events..."
 
-    puts "reading #{logfile_path}..."
-    dump_lines = dump_file.read.split("\n")
-
-    puts "importing #{dump_lines.length} events..."
-    pre_uuid = rand(999999999999999999999)
-    log_every = (dump_lines.length / 150)
-    dump_lines.each_with_index do |line,n|
-      puts "#{n}/#{dump_lines.length} (#{((n/dump_lines.length.to_f)*100).to_i}%)" if n%log_every==0
-      my_uuid = "#{pre_uuid}-#{n}"
-      redis.set("fnordmetric-event-#{my_uuid}", line)
-      redis.lpush("fnordmetric-queue", my_uuid) 
-      redis.expire("fnordmetric-event-#{my_uuid}", 3600*12)
+    dump_file.each_with_log(num_lines) do |line, ind|
+      (8**64).to_s(36).tap do |uuid|
+        redis.set    "fnordmetric-event-#{uuid}", line
+        redis.lpush  "fnordmetric-queue"        , uuid
+        redis.expire "fnordmetric-event-#{uuid}", expire
+      end
     end
   end
 
