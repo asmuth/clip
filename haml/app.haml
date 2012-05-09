@@ -2,15 +2,11 @@
 %html
 
   %head
-    %title=current_namespace.title
-
+    %title= "FnordMetric"
     %script(type="text/javascript" src="#{path_prefix}/vendor/jquery-1.6.1.min.js")
     %script(type="text/javascript" src="#{path_prefix}/vendor/highcharts.js")
-
     %script(type="text/javascript" src="#{path_prefix}/vendor/raphael.min.js")
     %script(type="text/javascript" src="#{path_prefix}/vendor/raphael.util.js")
-
-
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.util.js")
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.ui.js")
@@ -26,110 +22,10 @@
     %script(type="text/javascript" src="#{path_prefix}/fnordmetric.session_view.js")
     %link(type="text/css" rel="stylesheet" href="#{path_prefix}/fnordmetric.css")
 
-    :javascript
-      FnordMetric.p = '#{path_prefix}';
-
-  %body
-    .topbar{:class => namespaces.count > 1 ? 'shown' : 'hidden'}
-      %ul
-        -namespaces.each do |key,namespace|
-          %li{:class => namespace.token == current_namespace.token ? 'active' : nil}
-            %a{:href=> "#{path_prefix}/#{namespace.token}"}=h namespace.title
-
-    #wrap
-      #sidebar
-        %ul
-
-          %li.active.overview
-            %span.picto.piechart
-            %span.title Dashboard
-            %span.meta 
-              %strong 3.6k events/s
-          
-          / - if current_namespace.active_users_available
-          /   %li.sessions
-          /     %span.picto.piechart
-          /     %span.title Active Users
-          /     %span.meta 
-          /       %strong Fnord
-          /       Fnord
-
-          -current_namespace.dashboards.each do |key,dashboard|
-            %li.dashboard{:rel => dashboard.token}
-              %span.picto.piechart
-              %span.title= h dashboard.title
-              %span.meta 
-                %strong Fnord
-                Fnord
-
-          -current_namespace.gauges.each do |key,gauge|
-            - next unless gauge.is_a?(FnordMetric::MultiGauge)
-            %li.gauge{:rel => gauge.name}
-              %span.picto.piechart
-              %span.title= h gauge.title
-              %span.meta 
-                %strong Fnord
-                Fnord
-              
-
-      #viewport
-        .viewport_inner.clearfix
-
-
+%body
 :javascript
   $(document).ready(function(){
-
-    FnordMetric.init('#{current_namespace.token}', $('.viewport_inner'), 'ws://localhost:4243');
-
-    // fixpaul: move to FnordMetric.views.sidebar
-
-    $('#sidebar li.dashboard').click(function(){
-      FnordMetric.renderDashboard($(this).attr('rel'));
-      window.location.hash = $(this).attr('rel');
-    });
-
-    $('#sidebar li.gauge').click(function(){
-      FnordMetric.renderGauge($(this).attr('rel'));
-      window.location.hash = 'gauge/' + $(this).attr('rel');
-    });
-
-    $('#sidebar li.sessions').click(function(){
-      FnordMetric.renderSessionView();
-      window.location.hash = '';
-    });
-
-    $('#sidebar li.overview').click(function(){
-      FnordMetric.renderOverviewView();
-      window.location.hash = '';
-    });
-
-    $('#sidebar li').click(function(){
-      $(this).addClass('active').siblings().removeClass('active');
-    });
-
-    function resizeViewport(){
-      var viewport_width = window.innerWidth - 220
-      $('#viewport').width(viewport_width);
-      FnordMetric.resizeView();
-    }
-
-    resizeViewport();
-    $(window).resize(resizeViewport);
-
-    if(!#{current_namespace.active_users_available.to_s}) {
-      $('#tabs li:first').trigger('click');
-    }
-
-    window.setTimeout(function(){
-    if(window.location.hash){
-      if(!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
-        $('#sidebar li.dashboard[rel="'+window.location.hash.slice(11)+'"]').trigger('click');
-      } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
-        $('#sidebar li.gauge[rel="'+window.location.hash.slice(7)+'"]').click();
-      }
-    }
-    }, 200);
-
+    FnordMetric.init($('body'), 'ws://localhost:4243');
   });
 
 

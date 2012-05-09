@@ -77,7 +77,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
-  	redirect "#{path_prefix}/#{@namespaces.keys.first}"
+  	::File.open(::File.expand_path("../../../../pub/fnordmetric.html", __FILE__)).read
   end
 
   get '/:namespace' do

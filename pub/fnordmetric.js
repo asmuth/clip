@@ -3,6 +3,7 @@ var FnordMetric = (function(){
   var canvasElem = false;
   var currentView = false;
   var gaugeLoadRunning = false;
+  var gauges = {};
 
   var socket;
 
@@ -13,6 +14,40 @@ var FnordMetric = (function(){
   function renderGauge(_gauge, gauge_conf){
     gaugeLoadRunning = false;
     loadView(FnordMetric.views.gaugeView(_gauge, gauge_conf));
+  }
+
+  function renderSidebar(){
+    $('#sidebar ul').html();
+
+    for(gkey in gauges){
+      $('#sidebar ul').append($('<li class="gauge">')
+        .attr('rel', gkey)
+        .append('<span class="picto piechart">')
+        .append($('<span class="title">').html(gauges[gkey].title))
+        .append('<span class="meta">'));
+    }
+
+    $('#sidebar li.dashboard').click(function(){
+      FnordMetric.renderDashboard($(this).attr('rel'));
+      window.location.hash = $(this).attr('rel');
+    });
+
+    $('#sidebar li.gauge').click(function(){
+      FnordMetric.renderGauge($(this).attr('rel'));
+      window.location.hash = 'gauge/' + $(this).attr('rel');
+    });
+
+    $('#sidebar li').click(function(){
+      $(this).addClass('active').siblings().removeClass('active');
+    });
+
+  }
+
+  function addGauge(msg){
+    if(!gauges[msg.gauge_key]){
+      gauges[msg.gauge_key] = {};
+      renderSidebar();
+    }
   }
 
   function renderGaugeAsync(_gauge){
@@ -40,22 +75,34 @@ var FnordMetric = (function(){
   };
 
   function resizeView(){
+    var viewport_width = window.innerWidth - 220
+    $('#viewport').width(viewport_width);
     currentView.resize(
       canvasElem.innerWidth(),
       canvasElem.innerHeight()
     );
   };
 
-  function init(_namespace, _canvasElem, _sock_addr){
-    canvasElem = _canvasElem;
-    FnordMetric.currentNamespace = _namespace;
+
+  function init(_canvasElem, _sock_addr){
+    canvasElem = $("<div class='viewport_inner'>");
+    canvasElem.addClass('clearfix');
 
     socket = new WebSocket(_sock_addr);
     socket.onmessage = socketMessage;
     socket.onclose = socketClose;
     socket.onopen = socketOpen;
 
-    renderOverviewView();
+    var _wrap_elem = $("<div id='wrap'>")
+        .append($("<div id='sidebar'>").append('<ul>'))
+        .append($("<div id='viewport'>").append(canvasElem));
+
+    _canvasElem.html(_wrap_elem);
+
+    $(window).resize(resizeView);
+    window.setTimeout(navigateViaHash, 200);
+    
+    resizeView();
   };
 
   function publish(obj){
@@ -68,6 +115,8 @@ var FnordMetric = (function(){
 
     if((evt._class == "render_response") && gaugeLoadRunning){
       renderGauge(evt._channel, evt.payload);
+    } else if((evt._class == "discover_response")){
+      addGauge(evt);
     } else {
       if(currentView){ currentView.announce(evt); }
     }
@@ -75,10 +124,21 @@ var FnordMetric = (function(){
 
   function socketOpen(){
     console.log("connected...");
+    publish({"_class": "discover_request"});
   }
 
   function socketClose(){
     console.log("socket closed"); 
+  }
+
+  function navigateViaHash(){
+    if(window.location.hash){
+      if(!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
+        $('#sidebar li.dashboard[rel="'+window.location.hash.slice(11)+'"]').trigger('click');
+      } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
+        $('#sidebar li.gauge[rel="'+window.location.hash.slice(7)+'"]').click();
+      }
+    }
   }
 
   return {
