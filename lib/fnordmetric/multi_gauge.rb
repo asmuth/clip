@@ -1,10 +1,10 @@
 class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
 
   def initialize(opts)
-    opts.fetch(:key) && opts.fetch(:key_prefix)
+    opts.fetch(:key)
     @opts = opts
 
-    super(opts)
+    FnordMetric.register(self)
   end
 
   def name
@@ -20,11 +20,7 @@ class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
   end
   
   def key(_append=nil)
-    [@opts[:key_prefix], "multigauge", name, _append].flatten.compact.join("-")
-  end
-
-  def add_redis(_redis)
-    @opts[:redis] = _redis
+    ["FIXPAUL-KEYPREFIX", "multigauge", name, _append].flatten.compact.join("-")
   end
 
   def render

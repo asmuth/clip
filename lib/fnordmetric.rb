@@ -88,23 +88,6 @@ module FnordMetric
     end
   end
 
-  def self.connect_redis(redis_url)
-    EM::Hiredis.connect(redis_url)
-  end
-
-  def self.print_stats(opts, redis) # FIXME: refactor this mess
-    keys = [:events_received, :events_processed]
-    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|
-      redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
-        data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}
-        log "#{data_human.join(", ")}, queue_length: #{queue_length}"
-      end
-    end
-  end
-
-
-
-
   # LEGACY / BACKWARDS COMPATBILE STUFF
 
   def self.server_configuration=(configuration)
@@ -115,42 +98,14 @@ module FnordMetric
     FnordMetric::Web.namespace(*args, &block)
   end
 
-
-
-  def self.standalone
-    require "fnordmetric/standalone"
-  end
-
-  # returns a Rack app which can be mounted under any path.
-  # `:start_worker`   starts a worker
-  # `:inbound_stream` starts the TCP interface
-  # `:print_stats`    periodicaly prints worker stats
-  def self.embedded(opts={})
-    opts = options(opts)
-    app  = nil
-
-    EM.next_tick do
-
-      # FIXPAUL: this is re-instantiating all gauges. why?
-      #if opts[:start_worker]
-      #  worker = Worker.new(@@namespaces.clone, opts)
-      #  worker.ready!
-      #end
-
-      if opts[:print_stats]
-        redis = connect_redis(opts[:redis_url])
-        EM::PeriodicTimer.new(opts[:print_stats]) do
-          print_stats(opts, redis)
-        end
-      end
-
-    end
-
-    app
-  end
-
 end
 
+
+require "fnordmetric/gauge_modifiers"
+require "fnordmetric/gauge_calculations"
+require "fnordmetric/gauge"
+require "fnordmetric/remote_gauge"
+require "fnordmetric/multi_gauge"
 
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
@@ -158,6 +113,8 @@ require "fnordmetric/backends/memory_backend"
 require "fnordmetric/acceptors/acceptor"
 require "fnordmetric/acceptors/tcp_acceptor"
 require "fnordmetric/acceptors/udp_acceptor"
+
+require "fnordmetric/gauges/numeric_gauge"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/namespace"
@@ -169,9 +126,7 @@ require "fnordmetric/web/session"
 
 require "fnordmetric/logger"
 
-
-
-
+ # require "fnordmetric/context"
 
 # require "fnordmetric/api"
 # require "fnordmetric/udp_client"
@@ -186,12 +141,6 @@ require "fnordmetric/logger"
 # require "fnordmetric/html_widget"
 
 # require "fnordmetric/namespace"
-# require "fnordmetric/gauge_modifiers"
-# require "fnordmetric/gauge_calculations"
-# require "fnordmetric/context"
-# require "fnordmetric/gauge"
 
-# require "fnordmetric/remote_gauge"
-# require "fnordmetric/multi_gauge"
 # require "fnordmetric/numeric_gauge"
 # require "fnordmetric/toplist_gauge"

@@ -1,5 +1,12 @@
 
 
+gauge discovery:
+
+  { "_class":"discover_request"}
+  { "_class":"discover_response", "gauge_key":"gauge123" }
+
+
+
 
 render a gauge (request):
 

@@ -24,12 +24,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     end
   end
 
-  def react(event)
-    render! if event["_class"] == "render_request"
-    process!(event) if event["_class"] == "request"
-  end
-
-  def process!(event)
+  def announce(event)
     sleep 2
     resp = if event["widget"] == "total_timeline"
       event.merge(
