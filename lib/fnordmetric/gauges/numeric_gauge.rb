@@ -35,36 +35,14 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :height => 350
     )
 
-    @overview_timeline.on(:values_at) do |_times, _tick|
-      Hash[_times.map{ |_t| [_t, 23] }]
+    @overview_timeline.on(:values_at) do |_series, _ticks, _tick|
+      Hash[_ticks.map{ |_t| [_t, 23] }]
     end
+
 
   end
 
- 
-  def announce(event)
-    sleep 2
-    resp = if event["widget"] == "total_timeline"
-      event.merge(
-        :values => Hash[series_count_gauges.map do |_skey, _series|
-          gauge = fetch_gauge(_series[event["tick"].to_i])
-          vals = {}
-          event["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 } 
-          vals.merge!(gauge.values_at(event["ticks"]))
-          [_skey, vals]
-        end]
-      )
-    end
 
-    if resp
-      resp.merge!(
-        "_class" => "response",
-        "_sender" => @uuid
-      )
-      resp.delete("ticks")
-      respond(resp)
-    end
-  end
 
   def incr(*args)
     ctx = args.delete_at(0)
@@ -91,17 +69,6 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
 
     series_count_gauges[series].values.each do |gauge|
       ctx.incr(gauge, value)
-    end
-  end
-
-
-  def fetch_gauge(series, tick = nil)
-    if series.is_a?(FnordMetric::Gauge)
-      series
-    elsif series.starts_with?("count-")
-      series_count_gauges[series[6..-1].to_sym][tick]
-    end.tap do |gauge|
-      gauge.try(:add_redis, @opts[:redis])
     end
   end
 

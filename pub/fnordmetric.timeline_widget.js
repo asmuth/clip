@@ -54,12 +54,12 @@ FnordMetric.widgets._timelineWidget = function(){
     function requestValuesAsync(_tick, times){
       console.log('request');
       FnordMetric.publish({
-        "_class": "request",
+        "_class": "widget_request",
         "_channel": opts.channel,
-        "cmd": "series_data",
+        "cmd": "values_at",
         "tick": _tick, 
         "ticks": times,
-        "widget": opts.widget_key
+        "widget_key": opts.widget_key
       })
     }
 

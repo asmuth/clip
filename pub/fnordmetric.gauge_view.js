@@ -30,7 +30,7 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   };
 
   function announce(evt){
-    if(evt._class == "response"){
+    if(evt._class == "widget_response"){
       for(_wkey in widgets){
         widget_objs[_wkey].announce(evt);
       }  
@@ -41,7 +41,9 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   function renderWidgets(_widgets){
     for(wkey in _widgets){
       var widget = _widgets[wkey];
-      widget["elem"] = $(widget["render_target"], viewport);
+      //widget["elem"] = $(widget["render_target"], viewport);
+      widget["elem"] = $('<div class="widget"></div>');
+      $('.viewport_inner').append(widget["elem"]);
       widgets[wkey] = widget;
       resizeWidget(wkey);
       renderWidget(wkey);

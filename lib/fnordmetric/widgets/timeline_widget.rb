@@ -1,42 +1,19 @@
 class FnordMetric::TimelineWidget  < FnordMetric::Widget
+  
+  @@series_colors = ["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
+  
+  def react(ev)
+    ev["ticks"] = ev["ticks"].map(&:to_i) if ev["ticks"]
+    ev["tick"] = ev["tick"].to_i if ev["tick"]
 
-  def data
-    @series_colors = ["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
-
-    super.merge(
-      :autoupdate => (@opts[:autoupdate] || 60),
-      :include_current => !!@opts[:include_current],
-      :plot_style => (@opts[:plot_style] || 'line'),
-      :render_target => @opts[:render_target],
-      :height => @opts[:height]
-    ).tap do |dat|
-      dat.merge!(
-        :gauges => gauges.map(&:name),
-        :gauge_titles => gauge_titles,
-        :start_timestamp => ticks.first,
-        :end_timestamp => ticks.last,
-        :tick => tick
-      ) if has_tick?
-      dat.merge!(
-        :gauges => @opts[:_gauges],
-        :gauge_titles => @opts[:_gauge_titles],
-        :tick => @opts[:ticks].first,
-        :key_prefix => @opts[:key_prefix],
-        :ticks => @opts[:ticks]
-      ) unless has_tick?
-    end
-  end
-
-  def gauge_titles
-    {}.tap do |_hash|
-      gauges.each do |gauge|
-        _hash.merge!(gauge.name => gauge.title)
-      end
-    end
-  end
-
-  def has_tick?
-    @opts[:multi_tick] ? false : true
-  end
+    {
+      :tick => ev["tick"],
+      :values => Hash[@opts[:series].map{ |skey|
+        vals =  call_handler(:values_at, skey, ev["ticks"], ev["tick"]) 
+        ev["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 }
+        [skey, vals]
+      }]
+    }
+  end  
 
 end
