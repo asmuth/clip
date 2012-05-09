@@ -48,6 +48,8 @@ require "fnordmetric/version"
 #
 # geo_distribution_gauge
 #
+#  distribution gauge
+#
 #
 # wiki
 #
@@ -88,6 +90,10 @@ module FnordMetric
     @@server_configuration = configuration
   end
 
+  def self.options=(configuration)
+    @@server_configuration = configuration
+  end
+
   def self.default_options(opts = {})
     {
       :redis_url => "redis://localhost:6379",
@@ -108,40 +114,6 @@ module FnordMetric
     default_options(@@server_configuration || {}).merge(opts)
   end
 
-  def self.start_em(opts = {})
-    EM.run do
-
-      trap("TERM", &method(:shutdown))
-      trap("INT",  &method(:shutdown))
-
-      opts = options(opts)
-      app = embedded(opts)
-
-      if opts[:web_interface]
-        server = opts[:web_interface_server].downcase
-
-        unless ["thin", "hatetepe"].include? server
-          raise "Need an EventMachine webserver, but #{server} isn't"
-        end
-
-        host, port = *opts[:web_interface]
-
-        Rack::Server.start(
-          :app => app,
-          :server => server,
-          :Host => host, 
-          :Port => port
-        ) && log("listening on http://#{host}:#{port}")
-        
-        FnordMetric::WebSocket.new(
-          :host => host, 
-          :port => (port.to_i+1)
-        ) && log("listening on ws://#{host}:#{port.to_i+1}")
-
-      end
-    end
-  end
-
   def self.log(msg)
     puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{msg}"
   end
@@ -159,9 +131,47 @@ module FnordMetric
     sleep(1); run
   end
 
-  def self.shutdown
+  def self.shutdown(fnord=nil)
     log "shutting down, byebye"
     EM.stop
+  end
+
+  def self.start_em
+    EM.run do
+
+      trap("TERM", &method(:shutdown))
+      trap("INT",  &method(:shutdown))
+
+      EM.next_tick do
+        ($fnordmetric || []).map(&:initialized)
+      end
+
+      # opts = options(opts)
+      # app = embedded(opts)
+
+      # if opts[:web_interface]
+      #   server = opts[:web_interface_server].downcase
+
+      #   unless ["thin", "hatetepe"].include? server
+      #     raise "Need an EventMachine webserver, but #{server} isn't"
+      #   end
+
+      #   host, port = *opts[:web_interface]
+
+      #   Rack::Server.start(
+      #     :app => app,
+      #     :server => server,
+      #     :Host => host, 
+      #     :Port => port
+      #   ) && log("listening on http://#{host}:#{port}")
+        
+      #   FnordMetric::WebSocket.new(
+      #     :host => host, 
+      #     :port => (port.to_i+1)
+      #   ) && log("listening on ws://#{host}:#{port.to_i+1}")
+
+      # end
+    end
   end
 
   def self.connect_redis(redis_url)
@@ -229,6 +239,11 @@ end
 
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
+
+require "fnordmetric/acceptors/tcp_acceptor"
+require "fnordmetric/acceptors/udp_acceptor"
+
+require "fnordmetric/acceptor"
 
 require "fnordmetric/api"
 require "fnordmetric/udp_client"
