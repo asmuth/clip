@@ -34,7 +34,7 @@ FnordMetric.widgets._timelineWidget = function(){
 
     function announce(evt){
       if(evt.widget_key == opts.widget_key){
-        if((evt._class == "widget_response") && (evt.cmd == "series_data")){
+        if((evt._class == "widget_response") && (evt.cmd == "values_at")){
           running_request = false;
           updateSeriesData(evt.tick, evt.values);
           updateChart();

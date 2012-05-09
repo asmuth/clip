@@ -8,7 +8,7 @@ class FnordMetric::TimelineWidget < FnordMetric::Widget
 
     {
       :tick => ev["tick"],
-      :cmd => "series_data",
+      :cmd => "values_at",
       :values => Hash[@opts[:series].map{ |skey|
         vals =  call_handler(:values_at, skey, ev["ticks"], ev["tick"]) 
         ev["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 }
@@ -16,5 +16,11 @@ class FnordMetric::TimelineWidget < FnordMetric::Widget
       }]
     }
   end  
+
+  def opts
+    super.tap do |o|
+      o[:series_titles] ||= Hash[o[:series].map{|s| [s, s]}]
+    end
+  end
 
 end

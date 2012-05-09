@@ -114,6 +114,7 @@ require "fnordmetric/acceptors/acceptor"
 require "fnordmetric/acceptors/tcp_acceptor"
 require "fnordmetric/acceptors/udp_acceptor"
 
+require "fnordmetric/gauges/dummy_gauge"
 require "fnordmetric/gauges/numeric_gauge"
 
 require "fnordmetric/widgets/widget"
