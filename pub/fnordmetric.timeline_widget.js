@@ -52,6 +52,7 @@ FnordMetric.widgets._timelineWidget = function(){
     }
 
     function requestValuesAsync(_tick, times){
+      console.log('request');
       FnordMetric.publish({
         "_class": "request",
         "_channel": opts.channel,
@@ -59,7 +60,7 @@ FnordMetric.widgets._timelineWidget = function(){
         "tick": _tick, 
         "ticks": times,
         "widget": opts.widget_key
-      })    
+      })
     }
 
 
@@ -92,7 +93,7 @@ FnordMetric.widgets._timelineWidget = function(){
         for(var n=0; n < xticks; n++){
           var _t = (parseInt(_last / opts.tick) * opts.tick);
           var _v = series_values[opts.series[sind]][opts.tick+"+"+_t];
-          if((!_v) && (_miss.indexOf(_t) == -1)){ _miss.push(_t); }
+          if((_v === undefined) && (_miss.indexOf(_t) == -1)){ _miss.push(_t); }
           _sdata.push(_v || 0);
           _last -= _delta;
         }
@@ -100,7 +101,8 @@ FnordMetric.widgets._timelineWidget = function(){
         drawSeries(opts.series[sind], _sdata);
       }
 
-      requestValues(opts.tick, _miss);
+      if(_miss.length > 0)
+        requestValues(opts.tick, _miss);
 
       redrawDatepicker();
     }

@@ -11,6 +11,10 @@ class FnordMetric::WebSocket
       :port => 8080
     }.merge(opts)
 
+    @backend = FnordMetric.backend
+
+    @uuid = "websocket-#{get_uuid}"
+
     start_websocket
   end
 
@@ -22,8 +26,12 @@ private
 
         subscribed_channles = []
 
-        sid = FnordMetric.chan_feed.subscribe do |messsage| 
-          socket.send(messsage.to_json)
+        @backend.subscribe do |_message| 
+          message = JSON.parse(_message)
+          if message["_sender"] != @uuid
+            puts "WEBSOCKET-SEND: #{message.inspect}"
+            socket.send(message.to_json)
+          end
         end
         
         socket.onmessage do |message|
@@ -31,17 +39,23 @@ private
             message = JSON.parse(message)
           rescue
           else
-            message["_eid"] ||= (8**64).to_s(36)
-            FnordMetric.chan_upstream.push(message)
+            puts "WEBSOCKET-RECEIVED: #{message.inspect}"
+            message["_eid"] ||= get_uuid
+            message["_sender"] = @uuid
+            @backend.publish(message)
           end
         end
 
         socket.onclose do
-          FnordMetric.chan_feed.unsubscribe(sid)
+          @backend.hangup
         end
 
       end
     end
+  end
+
+  def get_uuid
+    rand(8**64).to_s(36)
   end
 
 end

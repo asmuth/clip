@@ -1,16 +1,17 @@
 class FnordMetric::RemoteGauge
 
   def initialize(opts)
-  	FnordMetric.chan_upstream.subscribe do |message|
-  	  react(message) if message["_channel"] == name.to_s
-    end
+  	#FnordMetric.firehose.subscribe do |message|
+    #  puts "RECEIVED: #{message.inspect}"
+  	#  react(message) if message["_channel"] == name.to_s
+    #end
   end
 
   def name
     raise NotYetImplementedError
   end
 
-  def react
+  def react(event)
     raise NotYetImplementedError
   end
 
@@ -18,7 +19,7 @@ private
 
   def respond(message)
   	message["_channel"] ||= name
-  	FnordMetric.chan_upstream.push(message)
+  	#FnordMetric.firehose.push(message)
   end
 
 end

@@ -25,6 +25,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def react(event)
+    puts "REACT TO: #{event.inspect}"
     render! if event["_class"] == "render_request"
     process!(event) if event["_class"] == "request"
   end
@@ -34,7 +35,9 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       event.merge(
         :values => Hash[series_count_gauges.map do |_skey, _series|
           gauge = fetch_gauge(_series[event["tick"].to_i])
-          vals = gauge.values_at(event["ticks"]) rescue {}
+          vals = {}
+          event["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 } 
+          vals.merge!(gauge.values_at(event["ticks"]))
           [_skey, vals]
         end]
       )
