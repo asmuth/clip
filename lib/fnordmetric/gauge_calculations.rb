@@ -69,8 +69,4 @@ module FnordMetric::GaugeCalculations
     (redis.get(tick_key(time, :count))||0).to_i
   end
 
-  def redis
-    @opts[:redis]
-  end
-
 end

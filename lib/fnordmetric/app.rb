@@ -20,6 +20,8 @@ class FnordMetric::App < Sinatra::Base
     "fnordmetric.html_widget.js" => "application/x-javascript",
     "vendor/jquery-1.6.1.min.js" => "application/x-javascript",
     "vendor/highcharts.js" => "application/x-javascript",
+    "vendor/raphael.min.js" => "application/x-javascript",
+    "vendor/raphael.util.js" => "application/x-javascript",
     "img/list.png" => "image/png",
     "img/list_active.png" => "image/png",
     "img/list_hover.png" => "image/png",
@@ -115,12 +117,6 @@ class FnordMetric::App < Sinatra::Base
     end
 
     data.to_json
-  end
-
-  get '/:namespace/mgauge/:name' do
-    gauge = current_namespace.gauges.fetch(params[:name].intern)
-    raise "is a simple gauge" unless gauge.is_a?(FnordMetric::MultiGauge)
-    gauge.render.to_json
   end
 
   get '/:namespace/sessions' do

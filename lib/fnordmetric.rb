@@ -72,6 +72,12 @@ module FnordMetric
   @@namespaces = {}
   @@server_configuration = nil
 
+  @@firehose    = EM::Channel.new
+
+  def self.backend
+    FnordMetric::RedisBackend.new(options)
+  end
+
   def self.namespace(key=nil, &block)
     @@namespaces[key] = block
   end
@@ -111,14 +117,25 @@ module FnordMetric
 
       if opts[:web_interface]
         server = opts[:web_interface_server].downcase
+
         unless ["thin", "hatetepe"].include? server
           raise "Need an EventMachine webserver, but #{server} isn't"
         end
 
         host, port = *opts[:web_interface]
-        Rack::Server.start :app => app, :server => server,
-                           :Host => host, :Port => port
-        log "listening on http://#{host}:#{port}"
+
+        Rack::Server.start(
+          :app => app,
+          :server => server,
+          :Host => host, 
+          :Port => port
+        ) && log("listening on http://#{host}:#{port}")
+        
+        FnordMetric::WebSocket.new(
+          :host => host, 
+          :port => (port.to_i+1)
+        ) && log("listening on ws://#{host}:#{port.to_i+1}")
+
       end
     end
   end
@@ -177,10 +194,12 @@ module FnordMetric
     end
 
     EM.next_tick do
-      if opts[:start_worker]
-        worker = Worker.new(@@namespaces.clone, opts)
-        worker.ready!
-      end
+
+      # FIXPAUL: this is re-instantiating all gauges. why?
+      #if opts[:start_worker]
+      #  worker = Worker.new(@@namespaces.clone, opts)
+      #  worker.ready!
+      #end
 
       if opts[:inbound_stream]
         inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
@@ -205,6 +224,10 @@ module FnordMetric
 
 end
 
+
+require "fnordmetric/backends/redis_backend"
+require "fnordmetric/backends/memory_backend"
+
 require "fnordmetric/api"
 require "fnordmetric/udp_client"
 require "fnordmetric/inbound_stream"
@@ -222,10 +245,12 @@ require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_calculations"
 require "fnordmetric/context"
 require "fnordmetric/gauge"
+require "fnordmetric/remote_gauge"
 require "fnordmetric/multi_gauge"
 require "fnordmetric/numeric_gauge"
 require "fnordmetric/toplist_gauge"
 require "fnordmetric/session"
 require "fnordmetric/app"
+require "fnordmetric/websocket"
 require "fnordmetric/dashboard"
 require "fnordmetric/event"

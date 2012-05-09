@@ -1,8 +1,10 @@
-class FnordMetric::MultiGauge
+class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
 
   def initialize(opts)
     opts.fetch(:key) && opts.fetch(:key_prefix)
     @opts = opts
+
+    super(opts)
   end
 
   def name
@@ -28,9 +30,17 @@ class FnordMetric::MultiGauge
   def render
     {
       :title => title,
+      :gauge_key => name,
       :template => "--- not yet implemented ---",
       :widgets => {}
     }
+  end
+
+  def render!
+    respond(
+      :_class => "render_response", 
+      :payload => render
+    )
   end
 
   def method_missing(method, *args, &block)

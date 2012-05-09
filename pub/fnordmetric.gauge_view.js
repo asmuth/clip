@@ -1,5 +1,6 @@
-FnordMetric.views.gaugeView = (function(gauge_name){
+FnordMetric.views.gaugeView = (function(gauge_name, conf){
   var widgets = [];
+  var widget_objs = {};
   var viewport = null;
 
   function load(_viewport){
@@ -10,30 +11,32 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     viewport.append('<h3>Loading...</h3>');
     viewport.append('<div class="gauge_viewport loading"></div>');
 
-    $.ajax({
-      url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/mgauge/'+gauge_name,
-      success: function(resp, status){
-        var conf = JSON.parse(resp);
-        $('h1', viewport).html(conf.title);
-        $('h3', viewport).html(conf.title);
-        $('.gauge_viewport', viewport).html(conf.template);
-        $('.gauge_viewport', viewport).removeClass('loading');
+    $('h1', viewport).html(conf.title);
+    $('h3', viewport).html(conf.title);
+    $('.gauge_viewport', viewport).html(conf.template);
+    $('.gauge_viewport', viewport).removeClass('loading');
 
-        FnordMetric.ui.navbar($('.navbar', viewport), {
-          breadcrumb: [ 
-            ["Fnord", "/group/fnord"],
-            [conf.title, "/gauge/"+gauge_name]
-          ],
-          buttons: [
-            ["Export Data", function(){ alert(23); }]
-          ]
-        });
-
-        renderWidgets(conf.widgets);
-      }
+    FnordMetric.ui.navbar($('.navbar', viewport), {
+      breadcrumb: [ 
+        ["Fnord", "/group/fnord"],
+        [conf.title, "/gauge/"+gauge_name]
+      ],
+      buttons: [
+        ["Export Data", function(){ alert(23); }]
+      ]
     });
+
+    renderWidgets(conf.widgets);
   };
 
+  function announce(evt){
+    if(evt._class == "response"){
+      for(_wkey in widgets){
+        widget_objs[_wkey].announce(evt);
+      }  
+    }
+    
+  }
 
   function renderWidgets(_widgets){
     for(wkey in _widgets){
@@ -46,15 +49,17 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     resize();
   };
 
-  function renderWidget(wkey){
+  function renderWidget(wkey, _w){
     var widget = widgets[wkey];
     /* argh... */
-    if(widget.klass=='TimelineWidget'){ FnordMetric.widgets.timelineWidget().render(widget); }
-    if(widget.klass=='BarsWidget'){ FnordMetric.widgets.barsWidget().render(widget); }
-    if(widget.klass=='NumbersWidget'){ FnordMetric.widgets.numbersWidget().render(widget); }
-    if(widget.klass=='ToplistWidget'){ FnordMetric.widgets.toplistWidget().render(widget); }
-    if(widget.klass=='PieWidget'){ FnordMetric.widgets.pieWidget().render(widget); }
-    if(widget.klass=="HtmlWidget") { FnordMetric.widgets.htmlWidget().render(widget); }
+    if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets._timelineWidget(); }
+    if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
+    if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
+    if(widget.klass=='ToplistWidget'){ _w = FnordMetric.widgets.toplistWidget(); }
+    if(widget.klass=='PieWidget'){ _w = FnordMetric.widgets.pieWidget(); }
+    if(widget.klass=="HtmlWidget") { _w = FnordMetric.widgets.htmlWidget(); }
+    if(_w){ _w.render(widget); }
+    widget_objs[wkey] = _w;
   };
 
   function resizeWidget(wkey){
@@ -81,6 +86,7 @@ FnordMetric.views.gaugeView = (function(gauge_name){
   return {
     load: load,
     resize: resize,
+    announce: announce,
     close: close
   };
 

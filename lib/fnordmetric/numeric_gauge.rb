@@ -24,6 +24,35 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     end
   end
 
+  def react(event)
+    render! if event["_class"] == "render_request"
+    process!(event) if event["_class"] == "request"
+  end
+
+  def process!(event)
+    sleep 2
+    resp = if event["widget"] == "total_timeline"
+      event.merge(
+        :values => Hash[series_count_gauges.map do |_skey, _series|
+          gauge = fetch_gauge(_series[event["tick"].to_i])
+          vals = {}
+          event["ticks"].each{ |_tick| vals[_tick.to_i] ||= 0 } 
+          vals.merge!(gauge.values_at(event["ticks"]))
+          [_skey, vals]
+        end]
+      )
+    end
+
+    if resp
+      resp.merge!(
+        "_class" => "response",
+        "_sender" => @uuid
+      )
+      resp.delete("ticks")
+      respond(resp)
+    end
+  end
+
   def incr(*args)
     ctx = args.delete_at(0)
 
@@ -56,22 +85,28 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     super.merge(
       :template => render_template(:numeric_gauge),
       :widgets => {
-        :total_timeline => FnordMetric::TimelineWidget.new(
+        :total_timeline => {
+          :width => 100,
+          :klass => "TimelineWidget",
           :title => "Totals",
           :multi_tick => true,
           :render_target => ".numgauge_widget_total_timeline",
           :ticks => @opts[:ticks],
-          :_gauges => @opts[:series].map{ |s| "#{name}++count-#{s}" },
-          :_gauge_titles => Hash[@opts[:series].map{ |s| ["#{name}++count-#{s}", s] }],
+          :series => @opts[:series],
+          :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
           :include_current => true,
+          :channel => name,
+          :widget_key => "total_timeline",
           :height => 350
-        ).data,
+        }
       }
     )
   end
 
-  def fetch_gauge(series, tick)
-    if series.starts_with?("count-")
+  def fetch_gauge(series, tick = nil)
+    if series.is_a?(FnordMetric::Gauge)
+      series
+    elsif series.starts_with?("count-")
       series_count_gauges[series[6..-1].to_sym][tick]
     end.tap do |gauge|
       gauge.try(:add_redis, @opts[:redis])
