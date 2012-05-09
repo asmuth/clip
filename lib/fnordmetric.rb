@@ -46,6 +46,8 @@ require "fnordmetric/version"
 # toplist_widget
 #   -> multi-interval + range-selector
 #
+# geo_distribution_gauge
+#
 #
 # wiki
 #
