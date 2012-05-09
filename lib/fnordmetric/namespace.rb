@@ -121,6 +121,7 @@ class FnordMetric::Namespace
   def opt_multigauge(gauge_type, gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
     klass = "FnordMetric::#{gauge_type.to_s.camelize}"
+    @gauges[gauge_key].try(:hangup)
     @gauges[gauge_key] ||= klass.constantize.new(opts)   
   end
 

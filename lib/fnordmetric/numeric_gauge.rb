@@ -25,12 +25,12 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def react(event)
-    puts "REACT TO: #{event.inspect}"
     render! if event["_class"] == "render_request"
     process!(event) if event["_class"] == "request"
   end
 
   def process!(event)
+    sleep 2
     resp = if event["widget"] == "total_timeline"
       event.merge(
         :values => Hash[series_count_gauges.map do |_skey, _series|
@@ -44,7 +44,10 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     end
 
     if resp
-      resp.merge!("_class" => "response")
+      resp.merge!(
+        "_class" => "response",
+        "_sender" => @uuid
+      )
       resp.delete("ticks")
       respond(resp)
     end

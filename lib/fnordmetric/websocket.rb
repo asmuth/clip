@@ -26,10 +26,8 @@ private
 
         subscribed_channles = []
 
-        @backend.subscribe do |_message| 
-          message = JSON.parse(_message)
+        @backend.subscribe do |message| 
           if message["_sender"] != @uuid
-            puts "WEBSOCKET-SEND: #{message.inspect}"
             socket.send(message.to_json)
           end
         end
@@ -38,8 +36,8 @@ private
           begin
             message = JSON.parse(message)
           rescue
+            puts "websocket: invalid json"
           else
-            puts "WEBSOCKET-RECEIVED: #{message.inspect}"
             message["_eid"] ||= get_uuid
             message["_sender"] = @uuid
             @backend.publish(message)

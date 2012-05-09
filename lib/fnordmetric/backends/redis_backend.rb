@@ -1,18 +1,22 @@
 class FnordMetric::RedisBackend
 
   def initialize(opts)
-    @callback = nil
     @redis_channel = opts[:redis_prefix]
-
-  	@sub_redis = EM::Hiredis.connect(opts[:redis_url])
+    @redis = EM::Hiredis.connect(opts[:redis_url])
     @pub_redis = EM::Hiredis.connect(opts[:redis_url])
 
-    @sub_redis.subscribe(@redis_channel)
+    @redis.subscribe(@redis_channel)
   end
 
   def subscribe(&block)
-    @sub_redis.on(:message) do |chan, message|
-      block.call(message)
+    @redis.on(:message) do |chan, raw|
+      begin
+        message = JSON.parse(raw)
+      rescue
+        puts "redisbackend: received invalid json"
+      else
+        block.call(message)
+      end
     end
   end
 
@@ -21,8 +25,7 @@ class FnordMetric::RedisBackend
   end
 
   def hangup
-    @pub_redis.close
-    @sub_redis.close
+    @redis.close
   end
 
 end

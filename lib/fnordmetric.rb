@@ -194,10 +194,12 @@ module FnordMetric
     end
 
     EM.next_tick do
-      if opts[:start_worker]
-        worker = Worker.new(@@namespaces.clone, opts)
-        worker.ready!
-      end
+
+      # FIXPAUL: this is re-instantiating all gauges. why?
+      #if opts[:start_worker]
+      #  worker = Worker.new(@@namespaces.clone, opts)
+      #  worker.ready!
+      #end
 
       if opts[:inbound_stream]
         inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
@@ -224,6 +226,7 @@ end
 
 
 require "fnordmetric/backends/redis_backend"
+require "fnordmetric/backends/memory_backend"
 
 require "fnordmetric/api"
 require "fnordmetric/udp_client"

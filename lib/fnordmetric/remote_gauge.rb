@@ -1,10 +1,14 @@
 class FnordMetric::RemoteGauge
 
   def initialize(opts)
-  	#FnordMetric.firehose.subscribe do |message|
-    #  puts "RECEIVED: #{message.inspect}"
-  	#  react(message) if message["_channel"] == name.to_s
-    #end
+    @backend = FnordMetric.backend
+    @uuid = "gauge-#{rand(8**64).to_s(36)}"
+
+  	@backend.subscribe do |message|
+      if message["_sender"] != @uuid && message["_channel"] == name.to_s
+        react(message)
+      end
+    end
   end
 
   def name
@@ -15,10 +19,16 @@ class FnordMetric::RemoteGauge
     raise NotYetImplementedError
   end
 
+  def hangup
+    @backend.hangup
+    @backend = nil
+  end
+
 private
 
   def respond(message)
   	message["_channel"] ||= name
+    @backend.publish(message)
   	#FnordMetric.firehose.push(message)
   end
 
