@@ -10,88 +10,20 @@ require 'rack/server'
 require "fnordmetric/ext"
 require "fnordmetric/version"
 
-
-# TODO
-#  -> timeline-widget: tick button active states
-#  -> port numbers style from scala-experiment
-#  -> gauge api: render with add. offset
-#  -> toplist-widget: tick+range selector
-#  -> toplist-widget: display trends
-#  -> timeline-widget: compare with yesterday
-#  -> numeric-gauge view: add numbers
-#  -> store per-session-data
-#  -> callback on session-flush
-#  -> backport sidebar css from 0.7?
-#  -> minimize/pack js
-#  -> put images into one sprite
-#  -> remove params from log
-#  -> toplist_widget per_keyword: show multiple keywords
-#  -> proper garbage collection
-#  -> gauge overview page (a'la github graphs landing)
-#  -> gauge online vs offline status
-#
-# numeric_gauge
-#   -> time-distribution/punchcard
-#   -> moving avg. etc / bezier fu
-#   -> realtime view
-#   -> formatter: num, time, currency
-#   -> opts: average, average_by, unique_by, enable_histogram, enable_punchard, enable_stddeviation
-#
-# toplist_gauge
-#   -> trending keys
-#
-# timeline_widget
-#   -> show last interval (cmp. w/ yesterday)
-#
-# toplist_widget
-#   -> multi-interval + range-selector
-#
-# geo_distribution_gauge
-#
-#  distribution gauge
-#
-#
-# wiki
-#
-#  -> getting started
-#  -> gagues pages
-#  -> sending data pages
-#    -> tcp, udp, http, apis
-#    -> events containing user data
-#    -> pre-defined fields (_session etc)
-#    -> pre-defined events (_incr, _observe etc)
-#  -> configurin fnordmetric
-#    -> configuration options
-#    -> running embedded
-#    -> running standalone
-#  -> event handler pages
-#    -> pre-defined event-fields
-#    -> incrementing multiple gauges per event
-#    -> storing data per session
-#    -> end-of-session callback
-#  -> building custom dashboards
-
 module FnordMetric
 
-  @@namespaces = {}
-  @@server_configuration = nil
-
-  @@firehose    = EM::Channel.new
+  @@options = nil
 
   def self.backend
     FnordMetric::RedisBackend.new(options)
   end
 
-  def self.namespace(key=nil, &block)
-    @@namespaces[key] = block
+  def self.options(opts = {})
+    default_options(@@options || {}).merge(opts)
   end
 
-  def self.server_configuration=(configuration)
-    @@server_configuration = configuration
-  end
-
-  def self.options=(configuration)
-    @@server_configuration = configuration
+  def self.options=(opts)
+    @@options = opts
   end
 
   def self.default_options(opts = {})
@@ -108,10 +40,6 @@ module FnordMetric
       :event_data_ttl => 3600*24*30,
       :session_data_ttl => 3600*24*30
     }.merge(opts)
-  end
-
-  def self.options(opts = {})
-    default_options(@@server_configuration || {}).merge(opts)
   end
 
   def self.log(msg)
@@ -146,31 +74,6 @@ module FnordMetric
         ($fnordmetric || []).map(&:initialized)
       end
 
-      # opts = options(opts)
-      # app = embedded(opts)
-
-      # if opts[:web_interface]
-      #   server = opts[:web_interface_server].downcase
-
-      #   unless ["thin", "hatetepe"].include? server
-      #     raise "Need an EventMachine webserver, but #{server} isn't"
-      #   end
-
-      #   host, port = *opts[:web_interface]
-
-      #   Rack::Server.start(
-      #     :app => app,
-      #     :server => server,
-      #     :Host => host, 
-      #     :Port => port
-      #   ) && log("listening on http://#{host}:#{port}")
-        
-      #   FnordMetric::WebSocket.new(
-      #     :host => host, 
-      #     :port => (port.to_i+1)
-      #   ) && log("listening on ws://#{host}:#{port.to_i+1}")
-
-      # end
     end
   end
 
@@ -188,6 +91,21 @@ module FnordMetric
     end
   end
 
+
+
+
+  # LEGACY / BACKWARDS COMPATBILE STUFF
+
+  def self.server_configuration=(configuration)
+    self.options=(configuration)
+  end
+
+  def self.namespace(*args, &block)
+    FnordMetric::Web.namespace(*args, &block)
+  end
+
+
+
   def self.standalone
     require "fnordmetric/standalone"
   end
@@ -200,10 +118,6 @@ module FnordMetric
     opts = options(opts)
     app  = nil
 
-    if opts[:rack_app] or opts[:web_interface]
-      app = FnordMetric::App.new(@@namespaces.clone, opts)
-    end
-
     EM.next_tick do
 
       # FIXPAUL: this is re-instantiating all gauges. why?
@@ -212,22 +126,13 @@ module FnordMetric
       #  worker.ready!
       #end
 
-      if opts[:inbound_stream]
-        inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
-        begin
-          inbound_stream = inbound_class.start(opts)
-          log "listening on #{opts[:inbound_protocol]}://#{opts[:inbound_stream][0..1].join(":")}"
-        rescue
-          log "cant start #{inbound_class.name}. port in use?"
-        end
-      end
-
       if opts[:print_stats]
         redis = connect_redis(opts[:redis_url])
         EM::PeriodicTimer.new(opts[:print_stats]) do
           print_stats(opts, redis)
         end
       end
+
     end
 
     app
@@ -239,35 +144,43 @@ end
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
 
+require "fnordmetric/acceptors/acceptor"
 require "fnordmetric/acceptors/tcp_acceptor"
 require "fnordmetric/acceptors/udp_acceptor"
 
-require "fnordmetric/acceptor"
+require "fnordmetric/web/web"
+require "fnordmetric/web/namespace"
+require "fnordmetric/web/app"
+require "fnordmetric/web/websocket"
+require "fnordmetric/web/event"
+require "fnordmetric/web/dashboard"
+require "fnordmetric/web/session"
+
 require "fnordmetric/logger"
 
-require "fnordmetric/api"
-require "fnordmetric/udp_client"
-require "fnordmetric/inbound_stream"
-require "fnordmetric/inbound_datagram"
-require "fnordmetric/worker"
-require "fnordmetric/widget"
-require "fnordmetric/timeline_widget"
-require "fnordmetric/numbers_widget"
-require "fnordmetric/bars_widget"
-require "fnordmetric/toplist_widget"
-require "fnordmetric/pie_widget"
-require "fnordmetric/html_widget"
-require "fnordmetric/namespace"
-require "fnordmetric/gauge_modifiers"
-require "fnordmetric/gauge_calculations"
-require "fnordmetric/context"
-require "fnordmetric/gauge"
-require "fnordmetric/remote_gauge"
-require "fnordmetric/multi_gauge"
-require "fnordmetric/numeric_gauge"
-require "fnordmetric/toplist_gauge"
-require "fnordmetric/session"
-require "fnordmetric/app"
-require "fnordmetric/websocket"
-require "fnordmetric/dashboard"
-require "fnordmetric/event"
+
+
+
+
+# require "fnordmetric/api"
+# require "fnordmetric/udp_client"
+# require "fnordmetric/worker"
+
+# require "fnordmetric/widget"
+# require "fnordmetric/timeline_widget"
+# require "fnordmetric/numbers_widget"
+# require "fnordmetric/bars_widget"
+# require "fnordmetric/toplist_widget"
+# require "fnordmetric/pie_widget"
+# require "fnordmetric/html_widget"
+
+# require "fnordmetric/namespace"
+# require "fnordmetric/gauge_modifiers"
+# require "fnordmetric/gauge_calculations"
+# require "fnordmetric/context"
+# require "fnordmetric/gauge"
+
+# require "fnordmetric/remote_gauge"
+# require "fnordmetric/multi_gauge"
+# require "fnordmetric/numeric_gauge"
+# require "fnordmetric/toplist_gauge"

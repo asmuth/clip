@@ -1,0 +1,61 @@
+
+
+# TODO
+#  -> timeline-widget: tick button active states
+#  -> port numbers style from scala-experiment
+#  -> gauge api: render with add. offset
+#  -> toplist-widget: tick+range selector
+#  -> toplist-widget: display trends
+#  -> timeline-widget: compare with yesterday
+#  -> numeric-gauge view: add numbers
+#  -> store per-session-data
+#  -> callback on session-flush
+#  -> backport sidebar css from 0.7?
+#  -> minimize/pack js
+#  -> put images into one sprite
+#  -> remove params from log
+#  -> toplist_widget per_keyword: show multiple keywords
+#  -> proper garbage collection
+#  -> gauge overview page (a'la github graphs landing)
+#  -> gauge online vs offline status
+#
+# numeric_gauge
+#   -> time-distribution/punchcard
+#   -> moving avg. etc / bezier fu
+#   -> realtime view
+#   -> formatter: num, time, currency
+#   -> opts: average, average_by, unique_by, enable_histogram, enable_punchard, enable_stddeviation
+#
+# toplist_gauge
+#   -> trending keys
+#
+# timeline_widget
+#   -> show last interval (cmp. w/ yesterday)
+#
+# toplist_widget
+#   -> multi-interval + range-selector
+#
+# geo_distribution_gauge
+#
+#  distribution gauge
+#
+#
+# wiki
+#
+#  -> getting started
+#  -> gagues pages
+#  -> sending data pages
+#    -> tcp, udp, http, apis
+#    -> events containing user data
+#    -> pre-defined fields (_session etc)
+#    -> pre-defined events (_incr, _observe etc)
+#  -> configurin fnordmetric
+#    -> configuration options
+#    -> running embedded
+#    -> running standalone
+#  -> event handler pages
+#    -> pre-defined event-fields
+#    -> incrementing multiple gauges per event
+#    -> storing data per session
+#    -> end-of-session callback
+#  -> building custom dashboards

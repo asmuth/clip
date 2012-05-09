@@ -31,8 +31,6 @@ class FnordMetric::Logger
     end
 
     FnordMetric.log "logging to #{logfile_path}"
-    
-    listener.join
   end
 
   def self.import(logfile_path)
