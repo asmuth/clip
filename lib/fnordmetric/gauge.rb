@@ -1,6 +1,7 @@
 class FnordMetric::Gauge
   
   include FnordMetric::GaugeCalculations
+  include FnordMetric::GaugeModifiers
 
   def initialize(opts)
     opts.fetch(:key) && opts.fetch(:key_prefix)
@@ -55,12 +56,12 @@ class FnordMetric::Gauge
     !!@opts[:average]
   end
 
-  def add_redis(_redis)
-    @redis = _redis
+  def redis
+    @redis ||= EM::Hiredis.connect(FnordMetric.options[:redis_url]) # FIXPAUL
   end
 
-  def redis
-    @redis || @opts[:redis]
+  def sync_redis
+    @sync_redis ||= Redis.new # FIXPAUL
   end
 
   def ticks_in(r)

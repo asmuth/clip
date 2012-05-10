@@ -21,8 +21,18 @@ class FnordMetric::RedisBackend
   end
 
   def publish(message)
-    out = message.is_a?(String) ? message : message.to_json
-    @pub_redis.publish(@redis_channel, out)
+    if message.is_a?(String)
+      begin
+        message = JSON.parse(message)
+      rescue
+        puts "redisbackend: published invalid json"
+      end
+    end
+
+    message["_time"] ||= Time.now.to_i
+    message["_channel"] ||= "inbound"
+    
+    @pub_redis.publish(@redis_channel, message.to_json)
   end
 
   def hangup

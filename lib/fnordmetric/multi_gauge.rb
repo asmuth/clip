@@ -21,12 +21,13 @@ class FnordMetric::MultiGauge < FnordMetric::RemoteGauge
   end
   
   def key(_append=nil)
-    ["FIXPAUL-KEYPREFIX", "multigauge", name, _append].flatten.compact.join("-")
+    [FnordMetric.options[:redis_prefix], "multigauge", name, _append].flatten.compact.join("-")
   end
 
-  def react(ev)
-    render_self!       if ev["_class"] == "render_request"
-    render_widget!(ev) if ev["_class"] == "widget_request"
+  def _react(ev)
+    return render_self!       if ev["_class"] == "render_request"
+    return render_widget!(ev) if ev["_class"] == "widget_request"
+    react(ev)
   end
 
 private

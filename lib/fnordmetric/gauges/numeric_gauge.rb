@@ -16,40 +16,26 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     )
 
     @overview_timeline.on(:values_at) do |_series, _ticks, _tick|
-      Hash[_ticks.map{ |_t| [_t, 23] }]
+      series_count_gauges[_series][_tick].values_at(_ticks)
     end
 
   end
 
-  def incr(*args)
-    ctx = args.delete_at(0)
-
-    if args.size == 0 || (args.size == 1 && args.first.is_a?(Fixnum))
-      incr_series(ctx, *args.unshift(:_default))
-    elsif args.size == 1 || (args.size == 2 && args.last.is_a?(Fixnum))
-      incr_series(ctx, *args)
-    else
-      raise "invalid arguments for incr: #{args.inspect}"
-    end
-  end
-
-  def incr_series(ctx, series, value = 1)
-    if (series == :_default) && @opts[:series].size > 1
-      raise "don't know which series to increment - available: #{series}"
-    elsif series == :_default
-      series = @opts[:series].first
-    end
-
-    unless @opts[:series].include?(series)
-      raise "unknown series: #{series}"
-    end
-
-    series_count_gauges[series].values.each do |gauge|
-      ctx.incr(gauge, value)
+  def react(event)
+    if event["_class"] == "incrby"
+      series = event["series"]
+      series ||= @opts[:series][0] if @opts[:series].size == 1
+      incr_series(series.to_sym, event["_time"], event["value"])
     end
   end
 
 private
+
+  def incr_series(series, time, value = 1)
+    series_count_gauges[series].values.each do |gauge|
+      gauge.incr(time, value)
+    end
+  end
 
   def series_count_gauges
     @series_gauges ||= Hash[@opts[:series].map do |series|

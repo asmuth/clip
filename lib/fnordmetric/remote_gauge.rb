@@ -11,7 +11,7 @@ class FnordMetric::RemoteGauge
     FnordMetric.log "gauge '#{name}' started"
 
   	@backend.subscribe do |message|
-      _react(message)
+      __react(message)
     end
   end
 
@@ -22,10 +22,9 @@ class FnordMetric::RemoteGauge
 
 private
 
-  def _react(ev)
-    puts ev.inspect
+  def __react(ev)
     return discover!(ev) if ev["_class"] == "discover_request"
-    react(ev) if (ev["_channel"] == name.to_s) && ev["_sender"] != @uuid
+    _react(ev) if (ev["_channel"] == name.to_s) && ev["_sender"] != @uuid
   end
 
   def discover!(event)
