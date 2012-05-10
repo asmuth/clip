@@ -1,5 +1,6 @@
 FnordMetric.widgets._numbersWidget = function(){
 
+  var max_per_row = 6;
   var opts;
 
   function render(_opts){
@@ -46,7 +47,14 @@ FnordMetric.widgets._numbersWidget = function(){
     }
 
     requestValues();
+  }
 
+  function resize(){
+    $('.numbers_container', opts.elem).each(function(i, e){
+      var num_numbers = $('.number', e).length;
+      if(num_numbers > max_per_row){ num_numbers = max_per_row; }
+      $(e).css('width', (num_numbers * 95)+'px');
+    });
   }
 
   function requestValues(){
@@ -79,7 +87,8 @@ FnordMetric.widgets._numbersWidget = function(){
 
       velem.attr('data', values[vkey].value)      
     }
-    updateDisplay(4)
+    resize();
+    updateDisplay(4);
   }
 
   function announce(ev){

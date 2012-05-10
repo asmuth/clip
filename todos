@@ -6,6 +6,9 @@
 -> value correlation / scatter plot (2d) gauge
 etc.
 
+-> numbers_widget: count down
+-> timeline+numbers_widget: colored labels for series
+
 # TODO
 #  -> timeline-widget: tick button active states
 #  -> port numbers style from scala-experiment
