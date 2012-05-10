@@ -22,7 +22,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
   end
 
   def react(event)
-    if event["_class"] == "incrby"
+    if event["_class"] == "incrby" || event["_class"] == "incr"
       series = event["series"]
       series ||= @opts[:series][0] if @opts[:series].size == 1
       incr_series(series.to_sym, event["_time"], event["value"])
