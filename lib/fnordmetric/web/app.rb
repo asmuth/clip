@@ -77,7 +77,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
-  	::File.open(::File.expand_path("../../../../pub/fnordmetric.html", __FILE__)).read
+  	::File.open(::File.expand_path("../../../../web/fnordmetric.html", __FILE__)).read
   end
 
   get '/:namespace' do
@@ -165,7 +165,7 @@ class FnordMetric::App < Sinatra::Base
   @@public_files.each do |public_file, public_file_type|
     get "/#{public_file}" do
       content_type(public_file_type)
-      ::File.open(::File.expand_path("../../../../pub/#{public_file}", __FILE__)).read
+      ::File.open(::File.expand_path("../../../../web/#{public_file}", __FILE__)).read
     end
   end
 private
