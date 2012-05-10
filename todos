@@ -6,10 +6,10 @@
 -> timeline-widget: render with add. offset / cmp. w/yesterday
 -> timeline-widget: synchronize ticks
 
-
 -> show notification when connection lost
 -> reconnect on disconnect
 -> only push selected events on websocket
+-> channel-subscription layer
 
 -> realtime gauge (medium, fast, insane) (5,10,15min avg)
 -> punchcard gauge

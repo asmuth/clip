@@ -1,7 +1,7 @@
 FnordMetric.widgets.realtimeValueWidget = function(){
 
     var widget_uid = FnordMetric.util.getNextWidgetUID();
-    var width, height, canvas,  opts;
+    var width, height, canvas,  opts, max;
 
     var xpadding = 20;
     var ypadding = 20;
@@ -10,7 +10,8 @@ FnordMetric.widgets.realtimeValueWidget = function(){
     var bcolor  = '#06C';
 
     var bars = [];
-    var max = 1;
+
+    var tick = false;
 
     var next_values = [];
     var next_value_interval = false;
@@ -20,7 +21,7 @@ FnordMetric.widgets.realtimeValueWidget = function(){
 
       drawLayout();
 
-      width = opts.elem.width() - (xpadding * 2) - 15;
+      width = opts.elem.width() - (xpadding * 2) - 15 - 250;
       height = opts.height || 240;
       //xtick = width / (xticks - 1);
 
@@ -34,6 +35,15 @@ FnordMetric.widgets.realtimeValueWidget = function(){
       for(var n=parseInt(width / bmargin); n > 0; n--){
         drawValue(false, n-1);
       }
+
+      changeTick(opts.ticks[0]);
+    }
+
+    function changeTick(_tick){
+      tick = _tick;
+      canvas.selectAll('.valuebar').remove();
+      next_values = [];
+      max = 1;
     }
 
     function nextValue(value){
@@ -100,7 +110,9 @@ FnordMetric.widgets.realtimeValueWidget = function(){
 
     function announce(evt){
       if((evt._class == "widget_push") && (evt.cmd == "value")){
-        nextValueAsync(parseInt(evt.value));
+        if(evt.values[tick]){
+          nextValueAsync(parseFloat(evt.values[tick]));  
+        }        
       }
       if(evt.widget_key == opts.widget_key){
 
@@ -119,14 +131,16 @@ FnordMetric.widgets.realtimeValueWidget = function(){
       );
 
       if(opts.ticks){
-        $('.headbar', opts.elem).append('<div class="tick_btns btn_group"></div>');
+        $('.headbar', opts.elem).append('<div class="tick_btns btn_group" style="margin-right:17px;"></div>');
         for(__tick in opts.ticks){
           var _tick = opts.ticks[__tick];
           $('.tick_btns', opts.elem).append(
             $('<div></div>').attr('class', 'button tick').append($('<span></span>')
               .html(FnordMetric.util.formatTimeRange(_tick)))
               .attr('data-tick', _tick)
-              .click(changeTick)  
+              .click(function(){ 
+                changeTick($(this).attr('data-tick')); 
+              })  
           );
         }
       }
