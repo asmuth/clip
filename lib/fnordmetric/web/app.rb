@@ -18,6 +18,7 @@ class FnordMetric::App < Sinatra::Base
     "fnordmetric.toplist_widget.js" => "application/x-javascript",
     "fnordmetric.pie_widget.js" => "application/x-javascript",
     "fnordmetric.html_widget.js" => "application/x-javascript",
+    "vendor/d3.v2.js" => "application/x-javascript",
     "vendor/jquery-1.6.1.min.js" => "application/x-javascript",
     "vendor/highcharts.js" => "application/x-javascript",
     "vendor/raphael.min.js" => "application/x-javascript",

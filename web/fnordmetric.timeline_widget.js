@@ -15,12 +15,24 @@ FnordMetric.widgets._timelineWidget = function(){
       opts = _opts;
       //if(!silent){ $(opts.elem).css('opacity', 0.5); }
 
+      if(!opts.draw_points){
+        opts.draw_points = true;
+      }
+
       drawLayout(opts);
 
       width = opts.elem.width() - (xpadding * 2) - 15;
       height = opts.height || 240;
       xtick = width / (xticks - 1);
-      canvas = Raphael('container-'+widget_uid, width+(2*xpadding), height+30);
+
+      canvas = d3.select('#container-'+widget_uid)
+        .append("svg:svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      canvas.selectAll("*").remove();
+
+      //canvas = Raphael('container-'+widget_uid, width+(2*xpadding), height+30);
 
       for (ind in opts.series){
         series_values[opts.series[ind]] = {};
@@ -29,7 +41,7 @@ FnordMetric.widgets._timelineWidget = function(){
       updateRange();
       updateChart();
 
-      canvas.drawGrid(0, 0, width+(2*xpadding), height, 1, 6, "#ececec");
+      //canvas.drawGrid(0, 0, width+(2*xpadding), height, 1, 6, "#ececec");
     }
 
     function announce(evt){
@@ -139,71 +151,88 @@ FnordMetric.widgets._timelineWidget = function(){
           //   });
           // }
 
-          series_paths[series].push(
-            canvas.circle(p_x, p_y, 4).attr({
-              fill: _color,
-              stroke: '#fff',
-              "stroke-width": 1, 
-            }).toBack()
-          );
+          if(opts.draw_points){
+            series_paths[series].push(canvas
+              .append("svg:circle")
+              .attr("cx", p_x)
+              .attr("cy", p_y)
+              .attr("stroke-width", "1px")
+              .attr("stroke", "#fff")
+              .attr("fill", _color)
+              .attr("fill-opacity", 1)
+              .attr("r", 4)
+            );
+          }
 
-          var htrgt = canvas.rect(p_x - 20, p_y - 20, 40, 40).attr({
-            stroke: "none", 
-            fill: "#fff", 
-            opacity: 0
-          }).toFront();
 
-          series_paths[series].push(htrgt);
 
-          (function(htrgt, series_paths){
+          // var htrgt = canvas.rect(p_x - 20, p_y - 20, 40, 40).attr({
+          //   stroke: "none", 
+          //   fill: "#fff", 
+          //   opacity: 0
+          // }).toFront();
 
-            var t_y = p_y + 9;
-            var ttt = canvas.text(p_x, t_y+10, v).attr({
-              font: '12px Helvetica, Arial',
-              fill: "#fff",
-              opacity: 0
-            });
+          //series_paths[series].push(htrgt);
+
+          // (function(htrgt, series_paths){
+
+          //   var t_y = p_y + 9;
+          //   var ttt = canvas.text(p_x, t_y+10, v).attr({
+          //     font: '12px Helvetica, Arial',
+          //     fill: "#fff",
+          //     opacity: 0
+          //   });
             
-            var tttb = ttt.getBBox();
-            var ttw = tttb.width+20;
-            var tt = canvas.rect(p_x-(ttw/2), t_y, ttw, 22, 5).attr({
-              stroke: "none",
-              fill: "#000",
-              opacity: 0
-            }).toBack();
+          //   var tttb = ttt.getBBox();
+          //   var ttw = tttb.width+20;
+          //   var tt = canvas.rect(p_x-(ttw/2), t_y, ttw, 22, 5).attr({
+          //     stroke: "none",
+          //     fill: "#000",
+          //     opacity: 0
+          //   }).toBack();
 
-            series_paths[series].push(tt);
-            series_paths[series].push(ttt);
+          //   series_paths[series].push(tt);
+          //   series_paths[series].push(ttt);
 
-            $(htrgt[0]).hover(function(){
-              tt.animate({ opacity: 0.8 }, 300);
-              ttt.animate({ opacity: 0.8 }, 300);
-            }, function(){
-              tt.animate({ opacity: 0 }, 300);
-              ttt.animate({ opacity: 0 }, 300);
-            });
+          //   $(htrgt[0]).hover(function(){
+          //     tt.animate({ opacity: 0.8 }, 300);
+          //     ttt.animate({ opacity: 0.8 }, 300);
+          //   }, function(){
+          //     tt.animate({ opacity: 0 }, 300);
+          //     ttt.animate({ opacity: 0 }, 300);
+          //   });
 
-          })(htrgt, series_paths);
+          // })(htrgt, series_paths);
 
         });
 
-        series_paths[series].push(
-          canvas.path(path_string).attr({
-            stroke: _color, 
-            "stroke-width": 3, 
-            "stroke-linejoin": 'round'
-          }).toBack()
+
+        series_paths[series].push(canvas.append("svg:path")
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 3)
+          .attr("d", path_string)
         );
 
-        path_string += "L"+(width+xpadding)+","+height+" L"+xpadding+","+height+" Z";
+         
 
-        series_paths[series].push(
-          canvas.path(path_string).attr({
-            stroke: "none", 
-            fill: _color, 
-            opacity: 0.1
-          }).toBack()
-        );
+        // series_paths[series].push(
+        //   canvas.path(path_string).attr({
+        //     stroke: _color, 
+        //     "stroke-width": 3, 
+        //     "stroke-linejoin": 'round'
+        //   }).toBack()
+        // );
+
+        // path_string += "L"+(width+xpadding)+","+height+" L"+xpadding+","+height+" Z";
+
+        // series_paths[series].push(
+        //   canvas.path(path_string).attr({
+        //     stroke: "none", 
+        //     fill: _color, 
+        //     opacity: 0.1
+        //   }).toBack()
+        // );
     }
 
     function drawLayout(opts){
