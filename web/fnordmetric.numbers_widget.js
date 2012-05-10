@@ -89,7 +89,7 @@ FnordMetric.widgets._numbersWidget = function(){
       velem.attr('data', values[vkey].value)      
     }
     resize();
-    updateDisplay(4);
+    FnordMetric.util.updateNumbers($(opts.elem), 4);
   }
 
   function announce(ev){
@@ -100,31 +100,6 @@ FnordMetric.widgets._numbersWidget = function(){
     }
   }
 
-  function updateDisplay(diff_factor){
-    var still_running = false;
-    $('.number', $(opts.elem)).each(function(){
-      var target_val = parseFloat($(this).attr('data'));
-      var current_val = parseFloat($(this).attr('data-current'));
-      if(!current_val){ current_val=0; }
-      if(!target_val){ target_val=0; }
-      var diff = (target_val-current_val)/diff_factor;
-      if((diff > 0) && (diff < 1)){ diff=1; }
-      if((diff < 0) && (diff > -1)){ diff=-1; }
-      if(target_val != current_val){
-        still_running = true;
-        var new_val = current_val+diff;
-        if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
-        if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
-        $(this).attr('data-current', new_val);
-        $('.value', this).html(FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val));
-      }
-    });
-    if(still_running){
-      (function(df){
-        window.setTimeout(function(){ updateDisplay(df); }, 30);
-      })(diff_factor);
-    }
-  }
 
   return {
     render: render,
