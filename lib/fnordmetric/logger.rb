@@ -4,9 +4,8 @@ class FnordMetric::Logger
     expire = FnordMetric.options[:event_queue_ttl]
     redis  = Redis.new
  
-    if @opts[:channels]
-      @opts[:channels] = @opts[:channels].map(&:to_s) 
-    end
+    @opts[:channels] ||= []
+    @opts[:channels] = @opts[:channels].map(&:to_s) 
 
     dump_file = File.open(logfile_path, 'r')
     num_lines = %x{wc -l #{logfile_path}}.to_i
