@@ -1,6 +1,10 @@
-FnordMetric.widgets.numbersWidget = function(){
+FnordMetric.widgets._numbersWidget = function(){
 
-  function render(opts){
+  var opts;
+
+  function render(_opts){
+
+    opts = _opts;
 
     opts.elem.append(
       $('<div class="headbar small"></div>').html(opts.title)
@@ -9,46 +13,20 @@ FnordMetric.widgets.numbersWidget = function(){
       'overflow': 'hidden'
     });
 
-    for(k in opts.gauges){
-      var gtick = parseInt(opts.gauges[k].tick);
-      var gtitle = opts.gauges[k].title;
+    if(!opts.series_titles){
+      opts.series_titles = {};
+    }
+
+    for(k in opts.series){
+
+      if (!opts.series_titles[opts.series[k]]){
+        opts.series_titles[opts.series[k]] = opts.series[k];
+      }
 
       var container = $('<div></div>')
         .addClass('numbers_container')
-        .addClass('size_'+opts.offsets.length)
-        .attr('rel', k)
-        .append(
-          $('<div></div>')
-            .addClass('title')
-            .html(gtitle)
-        );
-
-
-      $(opts.offsets).each(function(n, offset){
-        var _off, _nextoff, _sum;
-        if (offset[0]=="s"){
-          _off = 0;
-          _sum = _nextoff = (gtick * parseInt(offset.slice(1)));
-        } else {
-          _sum = 0;
-          _off = offset*gtick;
-          _nextoff = gtick;
-        }
-        container.append(
-          $('<div></div>')
-            .addClass('number')
-            .attr('rel', k)
-            .attr('data-offset', _off)
-            .attr('data-sum', _sum)
-            .attr('data',0)
-            .append(
-              $('<span></span>').addClass('desc').html(FnordMetric.util.formatOffset(_off, _nextoff))
-            )
-            .append(
-              $('<span></span>').addClass('value').html(0)
-            )
-          );
-      });
+        .attr('rel', opts.series[k])
+        .append($('<div class="title">').html(opts.series_titles[opts.series[k]]));
 
       opts.elem.append(container);
     }
@@ -58,49 +36,61 @@ FnordMetric.widgets.numbersWidget = function(){
       if(secs > 0){
 
         var autoupdate_interval = window.setInterval(function(){
-          updateValues(opts);
+          requestValues();
         }, secs*1000);
 
         $('body').bind('fm_dashboard_close', function(){
           window.clearInterval(autoupdate_interval);
         });
-
       }
+    }
 
-    };
-
-    updateValues(opts);
+    requestValues();
 
   }
 
-  function updateValues(opts){
-    var values = $('.number', $(opts.elem));
-    var values_pending = values.length;
-    values.each(function(){
-      var _sum = parseInt($(this).attr('data-sum'));
-      var num = this;
-      var at = parseInt(new Date().getTime()/1000);
-      var url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + $(this).attr('rel');
-      if(_sum > 0){
-        url += '?at='+(at-_sum)+'-'+at+'&sum=true';
-      } else {
-        at -= parseInt($(this).attr('data-offset'));
-        url += '?at='+at;
-      }
-
-      $.get(url, function(_resp){
-        var resp = JSON.parse(_resp);
-        for(_k in resp){
-          $(num).attr('data', (resp[_k]||0));
-        }
-        if((values_pending -= 1)==0){
-          updateDisplay(opts, 4);
-        }
-      });
-    });
+  function requestValues(){
+    for(k in opts.series){
+      FnordMetric.publish({
+        "_class": "widget_request",
+        "_channel": opts.channel,
+        "cmd": "values_for",
+        "series": opts.series[k],
+        "widget_key": opts.widget_key
+      })
+    }
   }
 
-  function updateDisplay(opts, diff_factor){
+  function renderValues(series, values){
+    for(vkey in values){
+      if(!values[vkey].desc){ values[vkey].desc = vkey; }
+
+      var celem = $('.numbers_container[rel="'+series+'"]', opts.elem)
+      var velem = $('.number[rel="'+vkey+'"]', celem);
+
+      if (velem.length == 0){
+        velem = $('<div></div>')
+          .addClass('number')
+          .attr('rel', vkey)
+          .append($('<span class="desc">').html(values[vkey].desc))
+          .append($('<span class="value">').html(0))
+        celem.append(velem);
+      }
+
+      velem.attr('data', values[vkey].value)      
+    }
+    updateDisplay(4)
+  }
+
+  function announce(ev){
+    if(ev.widget_key == opts.widget_key){
+      if((ev._class == "widget_response") && (ev.cmd == "values_for")){
+        renderValues(ev.series, ev.values)
+      }
+    }
+  }
+
+  function updateDisplay(diff_factor){
     var still_running = false;
     $('.number', $(opts.elem)).each(function(){
       var target_val = parseFloat($(this).attr('data'));
@@ -118,13 +108,14 @@ FnordMetric.widgets.numbersWidget = function(){
     });
     if(still_running){
       (function(df){
-        window.setTimeout(function(){ updateDisplay(opts, df); }, 30);
+        window.setTimeout(function(){ updateDisplay(df); }, 30);
       })(diff_factor);
     }
   }
 
   return {
-    render: render
+    render: render,
+    announce: announce
   };
 
 };

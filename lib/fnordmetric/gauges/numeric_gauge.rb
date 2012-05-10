@@ -6,28 +6,27 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     validate_series!
     validate_ticks!
 
-    @overview_timeline = timeline_widget(
-      :tab => "Overview",
-      :title => "Totals",
-      :ticks => @opts[:ticks],
-      :series => @opts[:series],
-      :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
-      :height => 350
-    )
-
-    @overview_timeline.on(:values_at) do |_series, _ticks, _tick|
-      series_count_metrics[_series][_tick].values_at(_ticks)
-    end
-
     timeline_widget(
-      :tab => "Overview 2",
-      :title => "Totals Random",
+      :tab => "Overview",
+      :title => "Total #{key_nouns.last}",
       :ticks => @opts[:ticks],
       :series => @opts[:series],
       :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
       :height => 350
     ).on(:values_at) do |_series, _ticks, _tick|
       series_count_metrics[_series][_tick].values_at(_ticks)
+    end
+
+    numbers_widget(
+      :tab => "Overview",
+      :title => "Total #{key_nouns.last}",
+      :series => @opts[:series],
+      :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
+    ).on(:values_for) do |_series|
+      {
+        :fnord => { :value => 123 },
+        :fubar => { :value => 123 }
+      }
     end
 
   end

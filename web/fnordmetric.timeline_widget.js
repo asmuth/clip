@@ -1,4 +1,3 @@
-
 FnordMetric.widgets._timelineWidget = function(){
 
     var widget_uid = FnordMetric.util.getNextWidgetUID();

@@ -67,7 +67,7 @@ private
     end
   end
 
-  %w(timeline).each do |wid|
+  %w(timeline numbers).each do |wid|
     define_method("#{wid}_widget") do |options|
       widget(wid, options)
     end

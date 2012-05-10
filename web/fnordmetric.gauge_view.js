@@ -81,7 +81,6 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   function renderWidgets(_widgets){
     for(wkey in _widgets){
       var widget = _widgets[wkey];
-      //widget["elem"] = $(widget["render_target"], viewport);
       widget["elem"] = $('<div class="widget"></div>');
       $('.tab[data-tab="' + widget.tab + '"]', '.viewport_inner').append(widget["elem"]);
       widgets[wkey] = widget;
@@ -95,8 +94,9 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
     var widget = widgets[wkey];
     /* argh... */
     if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets._timelineWidget(); }
+    if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets._numbersWidget(); }
+    
     if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
-    if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
     if(widget.klass=='ToplistWidget'){ _w = FnordMetric.widgets.toplistWidget(); }
     if(widget.klass=='PieWidget'){ _w = FnordMetric.widgets.pieWidget(); }
     if(widget.klass=="HtmlWidget") { _w = FnordMetric.widgets.htmlWidget(); }
