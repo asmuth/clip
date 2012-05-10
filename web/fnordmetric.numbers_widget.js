@@ -1,6 +1,6 @@
 FnordMetric.widgets._numbersWidget = function(){
 
-  var max_per_row = 6;
+  var max_per_row = 8;
   var opts;
 
   function render(_opts){

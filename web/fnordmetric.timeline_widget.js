@@ -2,7 +2,7 @@ FnordMetric.widgets._timelineWidget = function(){
 
     var widget_uid = FnordMetric.util.getNextWidgetUID();
     var width, height, canvas, series, opts, xtick;
-    var xticks = 30;
+    var xticks = 100;
     var running_request = false;
   
     var series_paths = {};
@@ -14,6 +14,7 @@ FnordMetric.widgets._timelineWidget = function(){
       opts = _opts;
       //if(!silent){ $(opts.elem).css('opacity', 0.5); }
 
+      if(opts.xticks){ xticks = opts.xticks; }
       if(!opts.draw_points){ opts.draw_points = true; }
       if(!opts.draw_path){ opts.draw_path = true; }
       if(!opts.draw_ygrid){ opts.draw_ygrid = true; }
@@ -107,6 +108,8 @@ FnordMetric.widgets._timelineWidget = function(){
     function updateChart(){
       var _ticks = [];
       var _miss = [];
+      var _max = [];
+      var _rndr = [];
       
       for(sind in opts.series){
         var _last = opts.start_timestamp + opts.tick;
@@ -121,7 +124,15 @@ FnordMetric.widgets._timelineWidget = function(){
           _last += _delta;
         }
 
-        drawSeries(opts.series[sind], _sdata);
+        _max.push(Math.max.apply(Math, _sdata));       
+        _rndr.push([opts.series[sind], _sdata]);
+      }
+
+      _max = Math.max.apply(Math, _max)*1.1;
+      if(_max == 0){ _max = 1; }
+
+      for(rind in _rndr){
+        drawSeries(_rndr[rind][0], _rndr[rind][1], _max);
       }
 
       if(_miss.length > 0)
@@ -135,15 +146,14 @@ FnordMetric.widgets._timelineWidget = function(){
         series_values[_series] = {};
       }
 
-      updateRange(true);
+      updateRange();
       updateChart();
     }
 
-    function drawSeries(series, series_data){
+    function drawSeries(series, series_data, _max){
       
         //var path_string = "M0,"+height;
         var path_string = "";
-        var _max;
         var _color = '0066CC';
         
         if (series_paths[series]){
@@ -306,8 +316,12 @@ FnordMetric.widgets._timelineWidget = function(){
 
     function moveRange(direction){
       v = opts.tick*direction*8;
-      opts.start_timestamp += v;
-      opts.end_timestamp += v;
+
+      if(((opts.end_timestamp + v)*1000) < new Date().getTime()){
+        opts.start_timestamp += v;
+        opts.end_timestamp += v;  
+      }
+
       updateChart();
     }
 

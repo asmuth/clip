@@ -1,4 +1,12 @@
 
+-> numbers_widget: count down
+-> timeline+numbers_widget: colored labels for series
+-> timeline-widget: moving avg option
+-> timeline-widget: tick button active states
+-> timeline-widget: render with add. offset / cmp. w/yesterday
+-> timeline-widget: synchronize ticks
+
+
 -> realtime gauge (medium, fast, insane) (5,10,15min avg)
 -> punchcard gauge
 -> active users gauge
@@ -6,17 +14,12 @@
 -> value correlation / scatter plot (2d) gauge
 etc.
 
--> numbers_widget: count down
--> timeline+numbers_widget: colored labels for series
 
-# TODO
-#  -> timeline-widget: tick button active states
-#  -> port numbers style from scala-experiment
-#  -> gauge api: render with add. offset
-#  -> toplist-widget: tick+range selector
-#  -> toplist-widget: display trends
-#  -> timeline-widget: compare with yesterday
-#  -> numeric-gauge view: add numbers
+
+
+# -> port numbers style from scala-experiment
+# -> toplist-widget: tick+range selector
+# -> toplist-widget: display trends
 #  -> store per-session-data
 #  -> callback on session-flush
 #  -> backport sidebar css from 0.7?
