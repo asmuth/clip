@@ -23,10 +23,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :series => @opts[:series],
       :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
     ).on(:values_for) do |_series|
-      {
-        :fnord => { :value => 123 },
-        :fubar => { :value => 123 }
-      }
+      render_series_numbers(_series.to_sym)
     end
 
   end
@@ -38,6 +35,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       incr_series(series.to_sym, event["_time"], event["value"])
     end
   end
+
 
 private
 
@@ -57,6 +55,22 @@ private
         )]
       end]]
     end]
+  end
+
+      
+  def render_series_numbers(series)
+    _t = Time.now.to_i
+
+    {}.tap do |out|
+      @opts[:ticks].each do |tick|
+        out["#{tick}-now"]  = { 
+          :value => series_count_metrics[series][tick].value_at(_t) 
+        }
+        out["#{tick}-last"] = { 
+          :value => series_count_metrics[series][tick].value_at(_t-tick) 
+        }
+      end
+    end
   end
 
 end
