@@ -1,4 +1,4 @@
-FnordMetric.widgets._timelineWidget = function(){
+FnordMetric.widgets.timelineWidget = function(){
 
     var widget_uid = FnordMetric.util.getNextWidgetUID();
     var width, height, canvas, series, opts, xtick;

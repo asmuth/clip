@@ -120,10 +120,12 @@ require "fnordmetric/acceptors/udp_acceptor"
 
 require "fnordmetric/gauges/dummy_gauge"
 require "fnordmetric/gauges/numeric_gauge"
+require "fnordmetric/gauges/realtime_gauge"
 
 require "fnordmetric/widgets/widget"
 require "fnordmetric/widgets/timeline_widget"
 require "fnordmetric/widgets/numbers_widget"
+require "fnordmetric/widgets/realtime_value_widget"
 
 require "fnordmetric/metrics/redis_metric_calculations"
 require "fnordmetric/metrics/redis_metric_modifiers"

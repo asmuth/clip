@@ -7,6 +7,10 @@
 -> timeline-widget: synchronize ticks
 
 
+-> show notification when connection lost
+-> reconnect on disconnect
+-> only push selected events on websocket
+
 -> realtime gauge (medium, fast, insane) (5,10,15min avg)
 -> punchcard gauge
 -> active users gauge

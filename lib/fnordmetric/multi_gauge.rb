@@ -61,13 +61,13 @@ private
 
     [
       "FnordMetric",
-      "#{klass.to_s.capitalize}Widget"
+      "#{klass.to_s.camelize}Widget"
     ].join("::").constantize.new(opts).tap do |w|
       @widgets[w.key] = w
     end
   end
 
-  %w(timeline numbers).each do |wid|
+  %w(timeline numbers realtime_value realtime_feed).each do |wid|
     define_method("#{wid}_widget") do |options|
       widget(wid, options)
     end

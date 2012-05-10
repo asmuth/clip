@@ -3,8 +3,6 @@ class FnordMetric::DummyGauge < FnordMetric::MultiGauge
   def initialize(opts)   
     super(opts)
 
-    @started = Time.now.to_i
-
     ticks  = [1.day, 1.hour] 
     series = [:fnord, :bar, :fu]
 
@@ -25,14 +23,13 @@ class FnordMetric::DummyGauge < FnordMetric::MultiGauge
       :autoupdate => 1
     ).on(:values_for) do |_series|
       {
-        :fnord => { :value => 23 + rand(50 * running_since) },
-        :fubar => { :value => 23 + rand(50 * running_since) }
+        :fnord => { :value => 23 + rand(50) },
+        :fubar => { :value => 23 + rand(50) }
       }
     end
   end
 
-  def running_since
-    Time.now.to_i - @started
+  def react(event)
   end
 
 end

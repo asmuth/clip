@@ -93,8 +93,9 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   function renderWidget(wkey, _w){
     var widget = widgets[wkey];
     /* argh... */
-    if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets._timelineWidget(); }
-    if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets._numbersWidget(); }
+    if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets.timelineWidget(); }
+    if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
+    if(widget.klass=='RealtimeValueWidget'){ _w = FnordMetric.widgets.realtimeValueWidget(); }
     
     if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
     if(widget.klass=='ToplistWidget'){ _w = FnordMetric.widgets.toplistWidget(); }

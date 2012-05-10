@@ -14,6 +14,7 @@ class FnordMetric::App < Sinatra::Base
     "fnordmetric.session_view.js" => "application/x-javascript",
     "fnordmetric.timeline_widget.js" => "application/x-javascript",
     "fnordmetric.numbers_widget.js" => "application/x-javascript",
+    "fnordmetric.realtime_value_widget.js" => "application/x-javascript",
     "fnordmetric.bars_widget.js" => "application/x-javascript",
     "fnordmetric.toplist_widget.js" => "application/x-javascript",
     "fnordmetric.pie_widget.js" => "application/x-javascript",
