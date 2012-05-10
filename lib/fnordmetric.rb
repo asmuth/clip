@@ -104,6 +104,8 @@ end
 
 require "fnordmetric/remote_gauge"
 require "fnordmetric/multi_gauge"
+require "fnordmetric/event_handler"
+
 
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
