@@ -38,7 +38,13 @@ FnordMetric.widgets.realtimeValueWidget = function(){
 
     function nextValue(value){
       if (value > max){
+        var old_max = max;
         max = value * 1.2;
+        canvas.selectAll('.valuebar').each(function(){
+          var theight = parseInt($(this).attr('height'))*(old_max/max);
+          $(this).attr("y", height-(ypadding*2)-theight)
+          $(this).attr("height", theight);
+        });
       }
 
       drawValue(value);
@@ -59,7 +65,7 @@ FnordMetric.widgets.realtimeValueWidget = function(){
           next_value_interval = window.setInterval(function(){
             var _v = next_values.pop();
             if(!!_v){ nextValue(_v); }
-          }, 60);  
+          }, 20);  
         }
       }   
     }

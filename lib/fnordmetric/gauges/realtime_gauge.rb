@@ -1,6 +1,6 @@
 class FnordMetric::RealtimeGauge < FnordMetric::MultiGauge
 
-  def initialize(opts)   
+  def initialize(opts)
     super(opts)
     @started = Time.now.to_i
 
@@ -10,9 +10,17 @@ class FnordMetric::RealtimeGauge < FnordMetric::MultiGauge
     )
   end
 
+  def initialized
+    super
+
+    timer1 = EventMachine::PeriodicTimer.new(0.01) do
+      respond(:_class => "widget_push", :cmd => "value", :value => running_since)
+    end
+  end
+
   def react(event)
     if event["_class"] == "observe"
-      respond(:_class => "widget_push", :cmd => "value", :value => rand(23))
+      
     end
   end
 
