@@ -12,7 +12,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :ticks => @opts[:ticks],
       :series => @opts[:series],
       :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
-      :autoupdate => 1,
+      :autoupdate => 10,
       :height => 350
     ).on(:values_at) do |_series, _ticks, _tick|
       series_count_metrics[_series][_tick].values_at(_ticks)
@@ -23,7 +23,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :title => "Total #{key_nouns.last}",
       :series => @opts[:series],
       :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
-      :autoupdate => 1
+      :autoupdate => 2
     ).on(:values_for) do |_series|
       render_series_numbers(_series.to_sym)
     end

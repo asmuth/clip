@@ -106,12 +106,15 @@ FnordMetric.widgets._numbersWidget = function(){
       var target_val = parseFloat($(this).attr('data'));
       var current_val = parseFloat($(this).attr('data-current'));
       if(!current_val){ current_val=0; }
+      if(!target_val){ target_val=0; }
       var diff = (target_val-current_val)/diff_factor;
-      if(diff < 1){ diff=1; }
-      if(target_val > current_val){
+      if((diff > 0) && (diff < 1)){ diff=1; }
+      if((diff < 0) && (diff > -1)){ diff=-1; }
+      if(target_val != current_val){
         still_running = true;
         var new_val = current_val+diff;
-        if(new_val > target_val){ new_val = target_val; }
+        if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
+        if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
         $(this).attr('data-current', new_val);
         $('.value', this).html(FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val));
       }
