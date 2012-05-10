@@ -41,7 +41,7 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   };
 
   function announce(evt){
-    if(evt._class == "widget_response"){
+    if((evt._class == "widget_response") || (evt._class == "widget_push")){
       for(_wkey in widgets){
         widget_objs[_wkey].announce(evt);
       }  

@@ -11,7 +11,9 @@ class FnordMetric::RealtimeGauge < FnordMetric::MultiGauge
   end
 
   def react(event)
-    #puts event.inspect
+    if event["_class"] == "observe"
+      respond(:_class => "widget_push", :cmd => "value", :value => rand(23))
+    end
   end
 
   def running_since
