@@ -12,6 +12,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :ticks => @opts[:ticks],
       :series => @opts[:series],
       :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
+      :autoupdate => 1,
       :height => 350
     ).on(:values_at) do |_series, _ticks, _tick|
       series_count_metrics[_series][_tick].values_at(_ticks)
