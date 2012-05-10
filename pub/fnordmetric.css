@@ -1,5 +1,5 @@
 body, html{ height:100%; padding:0px;}
-body{ background:url('/img/head.png') 0 -21px repeat-x fixed #2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
+body{ background:url('img/head.png') 0 -21px repeat-x fixed #2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
 
 h1{
   font-size:24px;
@@ -43,7 +43,7 @@ a.link:hover{
 
 #sidebar ul li{
   height:50px;
-  background:url('/img/list.png');
+  background:url('img/list.png');
   cursor:pointer;
   list-style-type:none;
   overflow:hidden;
@@ -74,7 +74,7 @@ a.link:hover{
   height:50px;
   width:38px;
   margin:0 17px 0 12px;
-  background:url('/img/picto_gauge.png') no-repeat center 12px;
+  background:url('img/picto_gauge.png') no-repeat center 12px;
 }
 
 #sidebar ul li .meta{
@@ -94,7 +94,7 @@ a.link:hover{
 
 .navbar{
   height:49px;
-  background:url('/img/navbar.png');
+  background:url('img/navbar.png');
 }
 
 .navbar h1{
@@ -116,7 +116,7 @@ a.link:hover{
   float:right;
   line-height:25px;
   height:25px;
-  background:url('/img/navbar_btn.png');
+  background:url('img/navbar_btn.png');
   margin-right:30px;
   padding:0 20px;
   margin-top:12px;
@@ -230,7 +230,7 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
   text-decoration:none;
   vertical-align:top;
   white-space:nowrap;
-  background:url('/img/navbar_btn.png');
+  background:url('img/navbar_btn.png');
 }
 
 .headbar .button:hover, .headbar.button.active{background:#e8e8e8;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
