@@ -1,7 +1,9 @@
 
--> realtime gauge (medium, fast, insane)
--> active users gauge
+-> realtime gauge (medium, fast, insane) (5,10,15min avg)
 -> punchcard gauge
+-> active users gauge
+-> linux health gauge
+-> value correlation / scatter plot (2d) gauge
 etc.
 
 # TODO
