@@ -19,6 +19,17 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       series_count_metrics[_series][_tick].values_at(_ticks)
     end
 
+    timeline_widget(
+      :tab => "Overview 2",
+      :title => "Totals Random",
+      :ticks => @opts[:ticks],
+      :series => @opts[:series],
+      :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
+      :height => 350
+    ).on(:values_at) do |_series, _ticks, _tick|
+      series_count_metrics[_series][_tick].values_at(_ticks)
+    end
+
   end
 
   def react(event)
