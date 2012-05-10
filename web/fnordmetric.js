@@ -20,6 +20,8 @@ var FnordMetric = (function(){
     $('#sidebar ul').html();
 
     for(gkey in gauges){
+      if(!gauges[gkey].title){ gauges[gkey].title = gkey; }
+
       $('#sidebar ul').append($('<li class="gauge">')
         .attr('rel', gkey)
         .append('<span class="picto piechart">')
