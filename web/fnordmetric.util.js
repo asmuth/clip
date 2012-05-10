@@ -44,18 +44,26 @@ FnordMetric.util.formatTimeRange = function(range){
 }
 
 FnordMetric.util.formatTimeRangePre = function(range, offset){
+  if(!offset){ offset=0; }
   if((offset == 0) && (range==(3600*24))){
     return 'today';
-  } if((offset == 0) && (range==3600)){
-    return 'this hour';
-  } else if(offset == 0){
-    return 'last ' + FnordMetric.util.formatTimeRange(offset||0);
   } else if((offset==-1) && (range==3600*24)){
     return 'yesterday';
+  } else if((offset == 0) && (range==3600)){
+    return 'this hour';
   } else if((offset==-1) && (range==3600)){
     return 'last hour';
-  } else {
-    return FnordMetric.util.formatTimeRange(range) + ' ago';
+  } else if((offset == 0) && (range==60)){
+    return 'this minute';
+  } else if((offset==-1) && (range==60)){
+    return 'last minute';
+  } else if(offset==0) {
+    return "this " + FnordMetric.util.formatTimeRange(range);
+  } else if(offset==-1) {
+    return "last " + FnordMetric.util.formatTimeRange(range);
+  } else{
+    return FnordMetric.util.formatTimeRange(range) + " (-" + 
+    FnordMetric.util.formatTimeRange(range * (offset*-1)) + ")";
   }
 }
 
