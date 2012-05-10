@@ -1,7 +1,7 @@
-class FnordMetric::Gauge
+class FnordMetric::RedisMetric
   
-  include FnordMetric::GaugeCalculations
-  include FnordMetric::GaugeModifiers
+  include FnordMetric::RedisMetricCalculations
+  include FnordMetric::RedisMetricModifiers
 
   def initialize(opts)
     opts.fetch(:key) && opts.fetch(:key_prefix)

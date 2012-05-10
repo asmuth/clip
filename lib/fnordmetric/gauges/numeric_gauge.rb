@@ -16,7 +16,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
     )
 
     @overview_timeline.on(:values_at) do |_series, _ticks, _tick|
-      series_count_gauges[_series][_tick].values_at(_ticks)
+      series_count_metrics[_series][_tick].values_at(_ticks)
     end
 
   end
@@ -32,15 +32,15 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
 private
 
   def incr_series(series, time, value = 1)
-    series_count_gauges[series].values.each do |gauge|
-      gauge.incr(time, value)
+    series_count_metrics[series].values.each do |metric|
+      metric.incr(time, value)
     end
   end
 
-  def series_count_gauges
+  def series_count_metrics
     @series_gauges ||= Hash[@opts[:series].map do |series|
       [series, Hash[@opts[:ticks].map do |tick|
-        [tick.to_i, FnordMetric::Gauge.new(
+        [tick.to_i, FnordMetric::RedisMetric.new(
           :key => "count-#{series}", 
           :key_prefix => key,
           :tick => tick.to_i,

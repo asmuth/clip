@@ -101,9 +101,7 @@ module FnordMetric
 end
 
 
-require "fnordmetric/gauge_modifiers"
-require "fnordmetric/gauge_calculations"
-require "fnordmetric/gauge"
+
 require "fnordmetric/remote_gauge"
 require "fnordmetric/multi_gauge"
 
@@ -119,6 +117,10 @@ require "fnordmetric/gauges/numeric_gauge"
 
 require "fnordmetric/widgets/widget"
 require "fnordmetric/widgets/timeline_widget"
+
+require "fnordmetric/metrics/redis_metric_calculations"
+require "fnordmetric/metrics/redis_metric_modifiers"
+require "fnordmetric/metrics/redis_metric"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/namespace"
