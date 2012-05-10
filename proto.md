@@ -16,6 +16,19 @@ GAUGE OVERLAY PROTOCOL
 
 
 
+LOGGER
+
+    options
+       :file, :channels
+
+
+
+
+ACCEPTOR
+
+    options
+       :protocol, :host, :port
+
 
 
 
