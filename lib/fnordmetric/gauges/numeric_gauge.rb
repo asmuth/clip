@@ -22,6 +22,7 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
       :title => "Total #{key_nouns.last}",
       :series => @opts[:series],
       :series_titles => Hash[@opts[:series].map{|s| [s, s]}],
+      :autoupdate => 1
     ).on(:values_for) do |_series|
       render_series_numbers(_series.to_sym)
     end
@@ -39,7 +40,11 @@ class FnordMetric::NumericGauge < FnordMetric::MultiGauge
 
 private
 
-  def incr_series(series, time, value = 1)
+  def incr_series(series, time, value)
+    value = value.to_i == 0 ? 1 : value.to_i
+    unless series_count_metrics[series]
+      return FnordMetric.error("gauge '#{name}' -> unknown series: #{series}")
+    end
     series_count_metrics[series].values.each do |metric|
       metric.incr(time, value)
     end
@@ -64,10 +69,12 @@ private
     {}.tap do |out|
       @opts[:ticks].each do |tick|
         out["#{tick}-now"]  = { 
-          :value => series_count_metrics[series][tick].value_at(_t) 
+          :value => series_count_metrics[series][tick].value_at(_t),
+          :desc  => "$formatTimeRangePre(#{tick}, 0)"
         }
         out["#{tick}-last"] = { 
-          :value => series_count_metrics[series][tick].value_at(_t-tick) 
+          :value => series_count_metrics[series][tick].value_at(_t-tick),
+          :desc  => "$formatTimeRangePre(#{tick}, -1)"
         }
       end
     end

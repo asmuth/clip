@@ -30,7 +30,7 @@ class FnordMetric::RedisBackend
     end
 
     message["_time"] ||= Time.now.to_i
-    message["_channel"] ||= "inbound"
+    message["_channel"] ||= (message[:_channel] || "inbound") # FIXPAUL HACK!!! ;)
     
     @pub_redis.publish(@redis_channel, message.to_json)
   end

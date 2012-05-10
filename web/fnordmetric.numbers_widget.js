@@ -75,12 +75,13 @@ FnordMetric.widgets._numbersWidget = function(){
 
       var celem = $('.numbers_container[rel="'+series+'"]', opts.elem)
       var velem = $('.number[rel="'+vkey+'"]', celem);
+      var vdesc = FnordMetric.util.format(values[vkey].desc);
 
       if (velem.length == 0){
         velem = $('<div></div>')
           .addClass('number')
           .attr('rel', vkey)
-          .append($('<span class="desc">').html(values[vkey].desc))
+          .append($('<span class="desc">').html(vdesc))
           .append($('<span class="value">').html(0))
         celem.append(velem);
       }

@@ -6,6 +6,15 @@ FnordMetric.util.decPrint = function(val){
   return (val < 10 ? '0'+val : val);
 }
 
+FnordMetric.util.format = function(str){
+  if(str.substring(0, 1) == "$"){
+    str = "FnordMetric.util."+str.substring(1)
+    return eval(str);
+  } else {
+    return str;
+  }
+}
+
 FnordMetric.util.formatTimeOfDay = function(_time){
   if(_time === null) {
     return "";
@@ -31,6 +40,22 @@ FnordMetric.util.formatTimeRange = function(range){
     return '1 day';
   } else {
     return parseInt(range/(3600*24)) + ' days';
+  }
+}
+
+FnordMetric.util.formatTimeRangePre = function(range, offset){
+  if((offset == 0) && (range==(3600*24))){
+    return 'today';
+  } if((offset == 0) && (range==3600)){
+    return 'this hour';
+  } else if(offset == 0){
+    return 'last ' + FnordMetric.util.formatTimeRange(offset||0);
+  } else if((offset==-1) && (range==3600*24)){
+    return 'yesterday';
+  } else if((offset==-1) && (range==3600)){
+    return 'last hour';
+  } else {
+    return FnordMetric.util.formatTimeRange(range) + ' ago';
   }
 }
 

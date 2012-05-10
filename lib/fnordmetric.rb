@@ -57,6 +57,10 @@ module FnordMetric
     puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{msg}"
   end
 
+  def self.error(msg)
+    log "[ERROR] #{msg}"
+  end
+
   def self.error!(msg)
     raise msg if ENV['FNORDMETRIC_ENV'] == 'test'
     puts(msg); exit!

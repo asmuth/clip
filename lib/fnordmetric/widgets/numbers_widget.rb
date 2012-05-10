@@ -1,8 +1,6 @@
 class FnordMetric::NumbersWidget < FnordMetric::Widget
 
   def react(ev)
-    puts "numbers widget #{ev}"
-
     {
       :cmd => "values_for",
       :series => ev["series"],

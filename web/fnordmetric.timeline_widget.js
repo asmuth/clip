@@ -96,7 +96,7 @@ FnordMetric.widgets._timelineWidget = function(){
       var _miss = [];
       
       for(sind in opts.series){
-        var _last = opts.start_timestamp;
+        var _last = opts.start_timestamp + opts.tick;
         var _delta = (opts.end_timestamp - _last) / xticks;
         var _sdata = [];
 
