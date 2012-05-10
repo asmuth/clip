@@ -1,4 +1,8 @@
 
+-> realtime gauge (medium, fast, insane)
+-> active users gauge
+-> punchcard gauge
+etc.
 
 # TODO
 #  -> timeline-widget: tick button active states
