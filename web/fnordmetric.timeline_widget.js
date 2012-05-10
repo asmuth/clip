@@ -15,9 +15,10 @@ FnordMetric.widgets._timelineWidget = function(){
       opts = _opts;
       //if(!silent){ $(opts.elem).css('opacity', 0.5); }
 
-      if(!opts.draw_points){
-        opts.draw_points = true;
-      }
+      if(!opts.draw_points){ opts.draw_points = true; }
+      if(!opts.draw_path){ opts.draw_path = true; }
+      if(!opts.draw_ygrid){ opts.draw_ygrid = true; }
+      if(!opts.draw_xgrid){ opts.draw_xgrid = true; }
 
       drawLayout(opts);
 
@@ -27,12 +28,10 @@ FnordMetric.widgets._timelineWidget = function(){
 
       canvas = d3.select('#container-'+widget_uid)
         .append("svg:svg")
-        .attr("width", width)
-        .attr("height", height);
+        .attr("width", width+(2*xpadding))
+        .attr("height", height+30);
 
       canvas.selectAll("*").remove();
-
-      //canvas = Raphael('container-'+widget_uid, width+(2*xpadding), height+30);
 
       for (ind in opts.series){
         series_values[opts.series[ind]] = {};
@@ -98,8 +97,8 @@ FnordMetric.widgets._timelineWidget = function(){
       var _miss = [];
       
       for(sind in opts.series){
-        var _last = opts.end_timestamp;
-        var _delta = (_last -  opts.start_timestamp) / xticks;
+        var _last = opts.start_timestamp;
+        var _delta = (opts.end_timestamp - _last) / xticks;
         var _sdata = [];
 
         for(var n=0; n < xticks; n++){
@@ -107,7 +106,7 @@ FnordMetric.widgets._timelineWidget = function(){
           var _v = series_values[opts.series[sind]][opts.tick+"+"+_t];
           if((_v === undefined) && (_miss.indexOf(_t) == -1)){ _miss.push(_t); }
           _sdata.push(_v || 0);
-          _last -= _delta;
+          _last += _delta;
         }
 
         drawSeries(opts.series[sind], _sdata);
@@ -206,33 +205,26 @@ FnordMetric.widgets._timelineWidget = function(){
 
         });
 
+        if(opts.draw_path){
+          series_paths[series].push(canvas.append("svg:path")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 3)
+            .attr("d", path_string)
+          );
+        }
 
-        series_paths[series].push(canvas.append("svg:path")
-          .attr("fill", "none")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", 3)
-          .attr("d", path_string)
-        );
+        if(opts.draw_area){
+          // path_string += "L"+(width+xpadding)+","+height+" L"+xpadding+","+height+" Z";
 
-         
-
-        // series_paths[series].push(
-        //   canvas.path(path_string).attr({
-        //     stroke: _color, 
-        //     "stroke-width": 3, 
-        //     "stroke-linejoin": 'round'
-        //   }).toBack()
-        // );
-
-        // path_string += "L"+(width+xpadding)+","+height+" L"+xpadding+","+height+" Z";
-
-        // series_paths[series].push(
-        //   canvas.path(path_string).attr({
-        //     stroke: "none", 
-        //     fill: _color, 
-        //     opacity: 0.1
-        //   }).toBack()
-        // );
+          // series_paths[series].push(
+          //   canvas.path(path_string).attr({
+          //     stroke: "none", 
+          //     fill: _color, 
+          //     opacity: 0.1
+          //   }).toBack()
+          // );
+        }
     }
 
     function drawLayout(opts){
@@ -242,13 +234,13 @@ FnordMetric.widgets._timelineWidget = function(){
         )
       ).append(
         $('<div></div>').attr('class', 'button mr').append($('<span></span>').html('&rarr;')).click(
-          function(){ moveRange(-1); }
+          function(){ moveRange(1); }
         )
       ).append(
         $('<div></div>').attr('class', 'datepicker')
       ).append(
         $('<div></div>').attr('class', 'button ml').append($('<span></span>').html('&larr;')).click(
-          function(){ moveRange(1); }
+          function(){ moveRange(-1); }
         )
       ).append(
         $('<h2></h2>').html(opts.title)

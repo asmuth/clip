@@ -37,7 +37,7 @@ TIMELINEWIDGET
     options
 
         :title, :tab, :ticks, :series, :series_titles, :include_current, :height
-        :draw_points
+        :draw_points, draw_path, draw_ygrid, draw_xgrid
 
 
     handlers
