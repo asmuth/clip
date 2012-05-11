@@ -81,7 +81,7 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   function renderWidgets(_widgets){
     for(wkey in _widgets){
       var widget = _widgets[wkey];
-      widget["elem"] = $('<div class="widget"></div>');
+      widget["elem"] = $('<div class="widget"></div>').addClass(widget.klass);
       $('.tab[data-tab="' + widget.tab + '"]', '.viewport_inner').append(widget["elem"]);
       widgets[wkey] = widget;
       resizeWidget(wkey);

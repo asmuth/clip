@@ -12,6 +12,7 @@ class FnordMetric::RealtimeGauge < FnordMetric::MultiGauge
     realtime_value_widget(
       :tab => "Overview",
       :title => "Realtime #{key_nouns.last}",
+      :desc => "#{key_nouns.last} / Second",
       :ticks => @opts[:ticks]
     )
 

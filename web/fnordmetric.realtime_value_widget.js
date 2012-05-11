@@ -1,7 +1,7 @@
 FnordMetric.widgets.realtimeValueWidget = function(){
 
     var xpadding = 20;
-    var ypadding = 20;
+    var ypadding = 10;
     var bmargin = 6;
     var bwidth  = 5;
     var bcolor  = '#06C';
@@ -22,13 +22,13 @@ FnordMetric.widgets.realtimeValueWidget = function(){
       drawLayout();
 
       width = opts.elem.width() - (xpadding * 2) - 15 - 250;
-      height = opts.height || 240;
+      height = opts.height || 210;
       //xtick = width / (xticks - 1);
 
       canvas = d3.select('#container-'+widget_uid)
         .append("svg:svg")
         .attr("width", width+(2*xpadding))
-        .attr("height", height+30);
+        .attr("height", height);
 
       canvas.selectAll("*").remove();
 
@@ -72,7 +72,10 @@ FnordMetric.widgets.realtimeValueWidget = function(){
     }
 
     function nextValueAsync(value){
-      if(value != undefined){ next_values.unshift(value); }
+      if(value != undefined){ 
+        next_values.unshift(value); 
+        $('.big_number .value', opts.elem).html(FnordMetric.util.formatValue(value));
+      }
       if(next_values.length > 0){
         if(!next_value_interval){
           next_value_interval = window.setInterval(function(){
@@ -139,8 +142,8 @@ FnordMetric.widgets.realtimeValueWidget = function(){
             .addClass('big_number number')
             .attr('data-current', 0)
             .attr('data', 0)
+            .append($('<span class="desc">').html(opts.desc))
             .append($('<span class="value">'))
-            .append($('<span class="desc">').html('fu'))
         )
       );
 

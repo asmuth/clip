@@ -346,3 +346,17 @@ ul.ui_tabs li.active a{
 }
 
 .gauge_viewport{ margin-top:30px; }
+
+
+.widget.RealtimeValueWidget .big_number{
+  float:right;
+  margin-right:30px;
+  width:200px;
+  text-align:center;
+  margin-top:70px;
+}
+
+.widget.RealtimeValueWidget .big_number .value{
+  line-height:80px;
+  font-size:58px;
+}
