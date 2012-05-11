@@ -1,20 +1,20 @@
 FnordMetric.widgets.realtimeValueWidget = function(){
 
-    var widget_uid = FnordMetric.util.getNextWidgetUID();
-    var width, height, canvas,  opts, max;
-
     var xpadding = 20;
     var ypadding = 20;
     var bmargin = 6;
     var bwidth  = 5;
     var bcolor  = '#06C';
+    var zero_height = 5;
 
+
+    var widget_uid = FnordMetric.util.getNextWidgetUID();
+    var width, height, canvas,  opts, max;
     var bars = [];
-
     var tick = false;
-
     var next_values = [];
     var next_value_interval = false;
+
 
     function render(_opts){
       opts = _opts;
@@ -32,11 +32,11 @@ FnordMetric.widgets.realtimeValueWidget = function(){
 
       canvas.selectAll("*").remove();
 
-      for(var n=parseInt(width / bmargin); n > 0; n--){
-        drawValue(false, n-1);
-      }
-
       changeTick(opts.ticks[0]);
+
+      for(var n=parseInt(width / bmargin); n > 0; n--){
+        drawValue(0, n-1);
+      }
     }
 
     function changeTick(_tick){
@@ -52,6 +52,7 @@ FnordMetric.widgets.realtimeValueWidget = function(){
         max = value * 1.2;
         canvas.selectAll('.valuebar').each(function(){
           var theight = parseInt($(this).attr('height'))*(old_max/max);
+          if(theight < zero_height){ theight = zero_height; }
           $(this).attr("y", height-(ypadding*2)-theight)
           $(this).attr("height", theight);
         });
@@ -71,12 +72,12 @@ FnordMetric.widgets.realtimeValueWidget = function(){
     }
 
     function nextValueAsync(value){
-      if(value){ next_values.unshift(value); }
+      if(value != undefined){ next_values.unshift(value); }
       if(next_values.length > 0){
         if(!next_value_interval){
           next_value_interval = window.setInterval(function(){
             var _v = next_values.pop();
-            if(!!_v){ nextValue(_v); }
+            if(_v != undefined){ nextValue(_v); }
           }, 20);  
         }
       }   
@@ -96,9 +97,13 @@ FnordMetric.widgets.realtimeValueWidget = function(){
         var theight = (height-(ypadding*4)) * (value/max);
         var fillc = bcolor;
       } else {
-        var theight = 5;
+        var theight = zero_height;
         var fillc = '#ddd';
       }  
+
+      if(theight < zero_height){
+        theight = zero_height;
+      }
       
       bars.unshift(canvas
         .append("svg:rect")
@@ -108,16 +113,16 @@ FnordMetric.widgets.realtimeValueWidget = function(){
         .attr("fill", fillc)
         .attr("width", bwidth)
         .attr("height", theight));
+
     }
 
     function announce(evt){
       if((evt._class == "widget_push") && (evt.cmd == "value")){
         if(evt.values[tick]){
           nextValueAsync(parseFloat(evt.values[tick]));  
+        } else {
+          nextValueAsync(0);
         }        
-      }
-      if(evt.widget_key == opts.widget_key){
-
       }
     }
 
