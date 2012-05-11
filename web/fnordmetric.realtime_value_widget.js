@@ -33,10 +33,6 @@ FnordMetric.widgets.realtimeValueWidget = function(){
       canvas.selectAll("*").remove();
 
       changeTick(opts.ticks[0]);
-
-      for(var n=parseInt(width / bmargin); n > 0; n--){
-        drawValue(0, n-1);
-      }
     }
 
     function changeTick(_tick){
@@ -44,6 +40,10 @@ FnordMetric.widgets.realtimeValueWidget = function(){
       canvas.selectAll('.valuebar').remove();
       next_values = [];
       max = 1;
+
+      for(var n=parseInt(width / bmargin); n > 0; n--){
+        drawValue(0, n-1);
+      }
     }
 
     function nextValue(value){
@@ -134,7 +134,14 @@ FnordMetric.widgets.realtimeValueWidget = function(){
           height: opts.height + 6,
           marginBottom: 20,
           overflow: 'hidden'
-        })
+        }).append(
+          $('<div></div>')
+            .addClass('big_number number')
+            .attr('data-current', 0)
+            .attr('data', 0)
+            .append($('<span class="value">'))
+            .append($('<span class="desc">').html('fu'))
+        )
       );
 
       if(opts.ticks){
