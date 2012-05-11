@@ -20,6 +20,7 @@ class FnordMetric::RealtimeGauge < FnordMetric::MultiGauge
       :title => "Realtime #{key_nouns.last}",
       :series => [key_nouns.last],
       :autoupdate => 1,
+      :dont_animate => true,
       :width => 30
     ).on(:values_for) do |_series|
       Hash[@opts[:ticks].map do |_tick|

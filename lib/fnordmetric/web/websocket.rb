@@ -27,7 +27,11 @@ private
         subscribed_channles = []
 
         @backend.subscribe do |message| 
-          if message["_sender"] != @uuid
+          if message["_sender"] != @uuid &&
+            (message["_class"] == "widget_response" ||
+             message["_class"] == "widget_push" ||
+             message["_class"] == "discover_response" ||
+             message["_class"] == "render_response")
             socket.send(message.to_json)
           end
         end

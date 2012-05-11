@@ -112,9 +112,7 @@ var FnordMetric = (function(){
   }
 
   function socketMessage(raw){
-    console.log("Message: " + raw.data);
     var evt = JSON.parse(raw.data);
-
 
     if((evt._class == "render_response") && gaugeLoadRunning){
       renderGauge(evt._channel, evt.payload);

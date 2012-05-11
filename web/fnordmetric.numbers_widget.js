@@ -86,10 +86,19 @@ FnordMetric.widgets.numbersWidget = function(){
         celem.append(velem);
       }
 
-      velem.attr('data', values[vkey].value)      
+      if(!!opts.dont_animate){
+        velem.attr('data', values[vkey].value) 
+        $('.value', velem).html(FnordMetric.util.formatGaugeValue(vkey, values[vkey].value));
+      } else {
+        velem.attr('data', values[vkey].value)      
+      }
     }
+    
     resize();
-    FnordMetric.util.updateNumbers($(opts.elem), 4);
+
+    if(!opts.dont_animate){
+      FnordMetric.util.updateNumbers($(opts.elem), 4);
+    }
   }
 
   function announce(ev){

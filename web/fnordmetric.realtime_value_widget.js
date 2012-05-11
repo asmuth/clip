@@ -60,7 +60,9 @@ FnordMetric.widgets.realtimeValueWidget = function(){
       drawValue(value);
 
       canvas.selectAll('.valuebar').each(function(){
-        $(this).attr("x",  parseInt($(this).attr('x'))-bmargin);
+        var new_x = parseInt($(this).attr('x'))-bmargin;
+        if(new_x < 5){ new_x = 5; }
+        $(this).attr("x",  new_x);
       });
 
       pruneValues();
