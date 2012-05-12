@@ -34,7 +34,8 @@ class FnordQuery::Query
     end
   end
 
-  def matches?(event)
+  def matches?(_event)
+    event = filter_flatten(_event)
     @filters.all? do |filter|
       if event[filter[0]].nil?
         false
@@ -106,35 +107,40 @@ private
   def eval_filter(arg)
     arg.gsub!("\\'", "\x7") # FIXPAUL: hack! ;)
     key_regex = "([^ ]+)"
+    key_clean = lambda{ |s| 
+      s.gsub("\x7", "'")
+       .gsub(/([^\\])\./){ |m| m[0] + "\x06" }
+       .gsub('\\.', ".") 
+    }
     if m = arg.match(/^#{key_regex} *= *'([^']*)'$/)
-      @filters << [m[1].gsub("\x7", "'"), :equals, m[2]]
+      @filters << [key_clean[m[1]], :equals, m[2]]
     elsif m = arg.match(/^#{key_regex} *= *([0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :equals, m[2].to_i]
+      @filters << [key_clean[m[1]], :equals, m[2].to_i]
     elsif m = arg.match(/^#{key_regex} *= *([0-9]+\.[0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :equals, m[2].to_f]
+      @filters << [key_clean[m[1]], :equals, m[2].to_f]
     elsif m = arg.match(/^#{key_regex} *< *([0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :less_than, m[2].to_i]
+      @filters << [key_clean[m[1]], :less_than, m[2].to_i]
     elsif m = arg.match(/^#{key_regex} *< *([0-9]+\.[0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :less_than, m[2].to_f]
+      @filters << [key_clean[m[1]], :less_than, m[2].to_f]
     elsif m = arg.match(/^#{key_regex} *> *([0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :greater_than, m[2].to_i]
+      @filters << [key_clean[m[1]], :greater_than, m[2].to_i]
     elsif m = arg.match(/^#{key_regex} *> *([0-9]+\.[0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :greater_than, m[2].to_f]
+      @filters << [key_clean[m[1]], :greater_than, m[2].to_f]
     elsif m = arg.match(/^#{key_regex} *~ *([0-9]+)-([0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :range_include, (m[2].to_i..m[3].to_i)]
+      @filters << [key_clean[m[1]], :range_include, (m[2].to_i..m[3].to_i)]
     elsif m = arg.match(/^#{key_regex} *~ *([0-9]+\.[0-9]+)-([0-9]+\.[0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :range_include, (m[2].to_f..m[3].to_f)]
+      @filters << [key_clean[m[1]], :range_include, (m[2].to_f..m[3].to_f)]
     elsif m = arg.match(/^#{key_regex} *& *(([0-9]+),)+([0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :list_include, m[2..-1].map(&:to_i)]
+      @filters << [key_clean[m[1]], :list_include, m[2..-1].map(&:to_i)]
     elsif m = arg.match(/^#{key_regex} *& *(([0-9]+\.[0-9]+),)+([0-9]+\.[0-9]+)$/)
-      @filters << [m[1].gsub("\x7", "'"), :list_include, m[2..-1].map(&:to_f)]
+      @filters << [key_clean[m[1]], :list_include, m[2..-1].map(&:to_f)]
     elsif m = arg.match(/^#{key_regex} *& *('[^']*',)+'[^']*'$/)
-      @filters << [m[1].gsub("\x7", "'"), :list_include, arg
+      @filters << [key_clean[m[1]], :list_include, arg
         .match(/^#{key_regex} *& *(.*)/)[2].scan(/'([^']*)',?/).map do |x|
           x.first.gsub("\x7", "'")
       end.to_a]
     elsif m = arg.match(/^#{key_regex}$/)
-      @filters << [m[1].gsub("\x7", "'"), :exists, nil]
+      @filters << [key_clean[m[1]], :exists, nil]
     else
       raise InvalidQueryError.new("invalid filter: filter(#{arg})")
     end
@@ -144,6 +150,12 @@ private
     return :now     if str == "now"
     return str.to_i if str =~ /^[0-9]+$/
     raise InvalidQueryError.new("invalid time: #{str}")
+  end
+
+  def filter_flatten(hash, prefix = [])
+    Hash[hash.inject([]) do |m, (k,v)| 
+      m + (v.is_a?(Hash) ? filter_flatten(v, (prefix+[k])).to_a : [[(prefix+[k])*"\x06",v]])
+    end]
   end
     
 end
