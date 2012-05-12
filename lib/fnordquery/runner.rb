@@ -45,20 +45,42 @@ class FnordQuery::Runner
       puts "error: no backend specified"
     end
 
-    #backend = @opts...
+    @task = nil
 
     if @opts[:task].first == "query"
       begin
-        query = FnordQuery::Query.new(@opts[:task].last)
+        @task =  FnordQuery::Query.new(@opts[:task].last)
       rescue FnordQuery::Query::InvalidQueryError => e
-        puts e.to_s
-        exit!(1)
+        puts e.to_s; exit!(1)
       end
-      puts query.inspect
+      puts @task.inspect
+    end
+
+    EM.run do
+
+      trap("TERM", &method(:shutdown))
+      trap("INT",  &method(:shutdown))
+
+      @backend = get_backend(*@opts[:backend])
+
+      EM.next_tick do
+        @task.execute(self, @backend)
+      end
+
     end
   end
 
 private
+
+  def shutdown(graceful = false)
+    puts "shutting down, byebye" unless graceful
+    EM.stop
+  end
+
+  def get_backend(klass, opts)
+    klass[0] = klass[0].upcase
+    FnordQuery.const_get("#{klass}Backend").new(opts)
+  end
 
   def print_usage
     print_version

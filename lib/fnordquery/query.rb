@@ -6,9 +6,10 @@ class FnordQuery::Query
   X_EXTRACT  = /(([a-z]+)\(([^\)]*)\))/
   FUNCTIONS  = %w(filter since until stream)
 
-  attr_accessor :since, :until, :filters
+  attr_accessor :raw, :since, :until, :filters
 
   def initialize(str)
+    @raw = str
     @filters = []
 
     unless str.match(X_VALIDATE)
@@ -17,6 +18,16 @@ class FnordQuery::Query
 
     str.scan(X_EXTRACT) do |part|
       eval_part(*part[1..-1])
+    end
+  end
+
+  def execute(runner, backend)
+    puts backend.inspect
+    backend.on_finish do
+      runner.send(:shutdown, true)
+    end
+    backend.subscribe(self) do
+
     end
   end
 

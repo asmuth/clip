@@ -4,7 +4,11 @@ class FnordQuery::RedisBackend
   	@opts = opts
   end
 
-  def subscribe(opts, &block)
+  def subscribe(query, &block)
+
+  end
+
+  def on_finish(&block)
 
   end
 
