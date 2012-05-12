@@ -1,10 +1,14 @@
 class FnordQuery::Query
   
+  class InvalidQueryError < StandardError; end
+
   X_VALIDATE = /^(([a-z]+\([^\)]*\)) *)+$/
   X_EXTRACT  = /(([a-z]+)\(([^\)]*)\))/
 
   def initialize(str)
-  	raise "Invalid Query: #{str}" unless str.match(X_VALIDATE)
+  	unless str.match(X_VALIDATE)
+  	  raise InvalidQueryError.new("Invalid Query: #{str}") 
+  	end
   end
 
 end  

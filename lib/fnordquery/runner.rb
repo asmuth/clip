@@ -7,7 +7,7 @@ class FnordQuery::Runner
 
     tasks    = %w(query web udp tcp exec)
     backends = %w(redis fyrehose)
-    shorts   = { redis: :r, fyrehose: :x }
+    shorts   = { redis: :r, fyrehose: :x, query: :q }
 
     OptionParser.new do |opts|
       opts.on("-h", "--help") do
@@ -47,7 +47,14 @@ class FnordQuery::Runner
 
     #backend = @opts...
 
-
+    if @opts[:task].first == "query"
+      begin
+        query = FnordQuery::Query.new(@opts[:task].last)
+      rescue FnordQuery::Query::InvalidQueryError => e
+        puts e.to_s
+        exit!(1)
+      end
+    end
   end
 
 private
@@ -63,26 +70,26 @@ private
 
   def print_help
     help = <<-EOH
-    Usage: fnordquery [OPTIONS...]
-    -r <address>      use redis backend
-    -x <address>      use fyrehose backend
+      Usage: fnordquery [OPTIONS...]
+        -r <address>      use redis backend
+        -x <address>      use fyrehose backend
 
-    --web <address>   start web interface
-    --tcp <address>   listen on tcp for events
-    --udp <address>   listen on udp for events
-    --query <query>   print all matching events 
-    --exec <file>     run this file
+        --web <address>   start web interface
+        --tcp <address>   listen on tcp for events
+        --udp <address>   listen on udp for events
+        --query <query>   print all matching events 
+        --exec <file>     run this file
     EOH
 
     examples = <<-EOH
-    Examples:
-    fnordquery -f --emit "FILTER(_channel = 'fnord')"  
-    fnordquery -r localhost:6379 --udp 0.0.0.0:2323
-    fnordquery -r --web 0.0.0.0:8080
+      Examples:
+        fnordquery -f --emit "FILTER(_channel = 'fnord')"  
+        fnordquery -r localhost:6379 --udp 0.0.0.0:2323
+        fnordquery -r --web 0.0.0.0:8080
     EOH
 
-    puts [help.lstrip, nil]
-    puts [examples.lstrip, nil]
+    puts [help.lstrip.gsub(/^ {6}/, ""), nil]
+    puts [examples.lstrip.gsub(/^ {6}/, ""), nil]
     puts "http://github.com/paulasmuth/fnordquery"
   end
 
