@@ -1,0 +1,33 @@
+
+fixed attributes:
+
+  _time
+  _eid
+  _volatile
+
+
+attribute types:
+
+  -> string_categorical
+  -> numeric_categorical
+  -> numeric
+  -> string
+
+
+
+
+categorical_top_k (top keywords)
+categorical_correlation (keyword correlation)
+categorical_crosstab (chanels x filters)
+categorical_uniqueness (zipfs law)
+
+cluster_cardinality (number of searches per session)
+cluster_repetition (search term repetition per session)
+
+numeric_timeseries (numer of searches)
+numeric_distribution (price/age dist, w. variance/dispersion and stuff)
+numeric_correlation (numeric dependency)
+
+retention_analysis
+
+click through?
