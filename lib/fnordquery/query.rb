@@ -36,12 +36,12 @@ class FnordQuery::Query
 
   def matches?(event)
     @filters.all? do |filter|
-      if !event[filter[0]]
+      if event[filter[0]].nil?
         false
       elsif filter[1] == :equals && filter[2].is_a?(String)
-        event[filter[0]] == filter[2]
+        event[filter[0]].to_s == filter[2]
       elsif filter[1] == :list_include && filter[2].first.is_a?(String)
-        filter[2].include?(event[filter[0]])
+        filter[2].include?(event[filter[0]].to_s)
       elsif filter[1] == :exists
         !!event[filter[0]]
       elsif !(event[filter[0]].to_s.match(/^[0-9]+(.[0-9]+)?$/))
