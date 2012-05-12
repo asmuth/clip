@@ -5,7 +5,7 @@ class FnordQuery::RedisBackend
   end
 
   def subscribe(query, &block)
-
+    puts "subscribe: #{query.inspect}"
   end
 
   def on_finish(&block)

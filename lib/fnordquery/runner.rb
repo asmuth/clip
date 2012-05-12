@@ -53,18 +53,26 @@ class FnordQuery::Runner
       rescue FnordQuery::Query::InvalidQueryError => e
         puts e.to_s; exit!(1)
       end
-      puts @task.inspect
     end
+
+    if %w(tcp udp).include?(@opts[:task].first)
+      @task = FnordQuery::Acceptor.new(
+        :protocol => @opts[:task].first.to_sym,
+        :listen   => @opts[:task].last.split(":")
+      )
+    end
+
+    puts @task.inspect
 
     EM.run do
 
       trap("TERM", &method(:shutdown))
       trap("INT",  &method(:shutdown))
 
-      @backend = get_backend(*@opts[:backend])
+      backend = get_backend(*@opts[:backend])
 
       EM.next_tick do
-        @task.execute(self, @backend)
+        @task.execute(self, backend)
       end
 
     end
@@ -79,7 +87,7 @@ private
 
   def get_backend(klass, opts)
     klass[0] = klass[0].upcase
-    FnordQuery.const_get("#{klass}Backend").new(opts)
+    [FnordQuery.const_get("#{klass}Backend"), opts]
   end
 
   def print_usage

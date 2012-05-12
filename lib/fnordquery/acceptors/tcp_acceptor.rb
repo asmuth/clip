@@ -40,7 +40,7 @@ class FnordQuery::TCPAcceptor < EventMachine::Connection
   end
 
   def post_init
-    @backend = @opts[:backend_klass].new(@opts[:backend_options])
+    @backend = @@opts[:backend][0].new(@@opts[:backend][1])
     @events_buffered = 0
     @streaming = true
     @buffer = ""

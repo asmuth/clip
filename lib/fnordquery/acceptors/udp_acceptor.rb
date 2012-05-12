@@ -27,7 +27,7 @@ class FnordQuery::UDPAcceptor < EventMachine::Connection
   end
 
   def backend
-    @backend ||= @opts[:backend_klass].new(@opts[:backend_options])
+    @backend ||= @opts[:backend][0].new(@opts[:backend][1])
   end
 
   def events

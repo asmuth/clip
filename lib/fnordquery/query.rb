@@ -21,8 +21,8 @@ class FnordQuery::Query
     end
   end
 
-  def execute(runner, backend)
-    puts backend.inspect
+  def execute(runner, _backend)
+    backend = _backend[0].new(_backend[1])
     backend.on_finish do
       runner.send(:shutdown, true)
     end
