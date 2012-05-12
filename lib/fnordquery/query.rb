@@ -4,13 +4,59 @@ class FnordQuery::Query
 
   X_VALIDATE = /^(([a-z]+\([^\)]*\)) *)+$/
   X_EXTRACT  = /(([a-z]+)\(([^\)]*)\))/
+  FUNCTIONS  = %w(filter since until stream)
+
+  attr_accessor :since, :until, :filters
 
   def initialize(str)
-  	unless str.match(X_VALIDATE)
-  	  raise InvalidQueryError.new("Invalid Query: #{str}") 
-  	end
+    @filters = []
+
+    unless str.match(X_VALIDATE)
+      raise InvalidQueryError.new("invalid query: #{str}") 
+    end
+
+    str.scan(X_EXTRACT) do |part|
+      eval_part(*part[1..-1])
+    end
   end
 
+private
+
+  def eval_part(func, arg) 
+    unless FUNCTIONS.include?(func)
+      raise InvalidQueryError.new("unknown function: ... #{func}(#{arg}) ...") 
+    end
+    send("eval_#{func}", arg)
+  end
+
+  def eval_stream(arg)
+    unless arg == ""
+      raise InvalidQueryError.new("too many arguments: ... stream(#{arg}) ...") 
+    end
+    unless @until.nil?
+      raise InvalidQueryError.new("until specified twice: ... stream(#{arg}) ...")  
+    end
+    @until = :stream
+  end
+
+  def eval_since(arg)
+    unless @since.nil?
+      raise InvalidQueryError.new("since specified twice: ... since(#{arg}) ...")  
+    end
+    @since = parse_time(arg)
+  end
+
+  def eval_until(arg)
+    unless @until.nil?
+      raise InvalidQueryError.new("since specified twice: ... until(#{arg}) ...")  
+    end
+    @until = parse_time(arg)
+  end
+
+  def parse_time(str)
+    str.to_i # FIXPAUL validate
+  end
+    
 end  
 
 #   filter(KEY = VALUE)

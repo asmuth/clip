@@ -54,6 +54,7 @@ class FnordQuery::Runner
         puts e.to_s
         exit!(1)
       end
+      puts query.inspect
     end
   end
 
