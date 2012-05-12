@@ -20,15 +20,22 @@ class FnordQuery::RedisBackend
       end
     end
     if query.since != :now
-      # playback
-      if query.until != :stream
-        # call on_finish
+      q_until = query.until.is_a?(Symbol)? Time.now.to_i : query.until 
+      puts "zrangebyscore #{@prefix} #{query.since} #{q_until}"
+      @redis.zrangebyscore(@prefix, query.since, q_until) do |res|
+        res.each do |event|
+          block.call(event) if query.matches?(event)
+        end
+        if query.until != :stream
+          on_finish
+        end
       end
     end
   end
 
-  def on_finish(&block)
-
+  def on_finish(&block)    
+    return @on_finish = block if block_given?
+    @on_finish.call() if @on_finish
   end
 
   def publish(message, opts={})

@@ -19,6 +19,9 @@ class FnordQuery::Query
     str.scan(X_EXTRACT) do |part|
       eval_part(*part[1..-1])
     end
+
+    @since ||= :now
+    @until ||= :now
   end
 
   def execute(runner, _backend)
@@ -63,13 +66,16 @@ private
 
   def eval_until(arg)
     unless @until.nil?
-      raise InvalidQueryError.new("since specified twice: ... until(#{arg}) ...")  
+      raise InvalidQueryError.new("since specified twice: ... until(#{arg}) ...")
     end
     @until = parse_time(arg)
   end
 
   def parse_time(str)
-    str.to_i # FIXPAUL validate
+    return :now     if str == "now"
+    return :stream  if str == "stream"
+    return str.to_i if str =~ /^[0-9]+$/
+    raise InvalidQueryError.new("invalid time: #{str}")
   end
     
 end  
