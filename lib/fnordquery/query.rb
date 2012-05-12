@@ -72,7 +72,7 @@ private
   end
 
   def eval_filter(arg)
-    arg.gsub!("\\'", "@!!!!!@") # FIXPAUL: hack! ;)
+    arg.gsub!("\\'", "\x7") # FIXPAUL: hack! ;)
     if m = arg.match(/^([a-zA-Z_-]+) *= *'(.*)'$/)
       @filters << [m[1], :equals, m[2]]
     elsif m = arg.match(/^([a-zA-Z_-]+) *= *([0-9]+)$/)
@@ -97,7 +97,7 @@ private
       @filters << [m[1], :list_include, m[2..-1].map(&:to_f)]
     elsif m = arg.match(/^([a-zA-Z_-]+) *& *('[^']*',)+'[^']*'$/)
       lst = arg.match(/^([a-zA-Z_-]+) *& *(.*)/)[2].scan(/'([^']*)',?/).map do |x|
-        x.first.gsub("@!!!!!@", "'")
+        x.first.gsub("\x7", "'")
       end
       @filters << [m[1], :list_include, lst.to_a]
     elsif m = arg.match(/^([a-zA-Z_-]+)$/)
