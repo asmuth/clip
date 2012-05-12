@@ -26,9 +26,13 @@ class FnordQuery::Query
     backend.on_finish do
       runner.send(:shutdown, true)
     end
-    backend.subscribe(self) do
-
+    backend.subscribe(self) do |event|
+      puts event.inspect
     end
+  end
+
+  def matches?(event)
+    true
   end
 
 private

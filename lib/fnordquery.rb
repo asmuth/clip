@@ -1,6 +1,7 @@
 module FnordQuery; end
 
 require "eventmachine"
+require "json"
 
 require "fnordquery/backends/redis_backend"
 require "fnordquery/acceptor"
