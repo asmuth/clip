@@ -3,7 +3,7 @@ class FnordQuery::RedisBackend
   require "em-hiredis"
 
   def initialize(opts={})
-  	@opts = opts
+    @opts = opts
     @prefix = "fnordquery"
 
     @channel   = EM::Channel.new
@@ -39,7 +39,7 @@ class FnordQuery::RedisBackend
   end
 
   def publish(message, opts={})
-  	if message.is_a?(String)
+    if message.is_a?(String)
       begin
         message = JSON.parse(message)
       rescue

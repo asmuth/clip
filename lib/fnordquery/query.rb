@@ -71,6 +71,42 @@ private
     @until = parse_time(arg)
   end
 
+  def eval_filter(arg)
+    arg.gsub!("\\'", "@!!!!!@") # FIXPAUL: hack! ;)
+    if m = arg.match(/^([a-zA-Z_-]+) *= *'(.*)'$/)
+      @filters << [m[1], :equals, m[2]]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *= *([0-9]+)$/)
+      @filters << [m[1], :equals, m[2].to_i]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *= *([0-9]+\.[0-9]+)$/)
+      @filters << [m[1], :equals, m[2].to_f]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *< *([0-9]+)$/)
+      @filters << [m[1], :less_than, m[2].to_i]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *< *([0-9]+\.[0-9]+)$/)
+      @filters << [m[1], :less_than, m[2].to_f]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *> *([0-9]+)$/)
+      @filters << [m[1], :greater_than, m[2].to_i]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *> *([0-9]+\.[0-9]+)$/)
+      @filters << [m[1], :greater_than, m[2].to_f]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *~ *([0-9]+)-([0-9]+)$/)
+      @filters << [m[1], :range_include, (m[2].to_i..m[3].to_i)]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *~ *([0-9]+\.[0-9]+)-([0-9]+\.[0-9]+)$/)
+      @filters << [m[1], :range_include, (m[2].to_f..m[3].to_f)]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *& *(([0-9]+),)+([0-9]+)$/)
+      @filters << [m[1], :list_include, m[2..-1].map(&:to_i)]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *& *(([0-9]+\.[0-9]+),)+([0-9]+\.[0-9]+)$/)
+      @filters << [m[1], :list_include, m[2..-1].map(&:to_f)]
+    elsif m = arg.match(/^([a-zA-Z_-]+) *& *('[^']*',)+'[^']*'$/)
+      lst = arg.match(/^([a-zA-Z_-]+) *& *(.*)/)[2].scan(/'([^']*)',?/).map do |x|
+        x.first.gsub("@!!!!!@", "'")
+      end
+      @filters << [m[1], :list_include, lst.to_a]
+    elsif m = arg.match(/^([a-zA-Z_-]+)$/)
+      @filters << [m[1], :exists, nil]
+    else
+      raise InvalidQueryError.new("invalid filter: filter(#{arg})")
+    end
+  end
+
   def parse_time(str)
     return :now     if str == "now"
     return str.to_i if str =~ /^[0-9]+$/

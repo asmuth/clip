@@ -1,0 +1,18 @@
+{
+  "klass": "NumericTimeseriesReport",
+  "since": 1336836558,
+  "until": 1336876558,
+  "config": {
+    "ticks": [10, 30, 60],
+    "series": {
+      "with_filter": {
+        "title": "Searches with Filter",
+        "query": "filter(_type = 'search_with_filter')"
+      },
+      "without_filter": {
+        "title": "Searches with Filter",
+        "query": "filter(_type = 'search_without_filter')"
+      }
+    }
+  }
+}

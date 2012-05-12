@@ -49,7 +49,7 @@ class FnordQuery::Runner
 
     if @opts[:task].first == "query"
       begin
-        @task =  FnordQuery::Query.new(@opts[:task].last)
+        @task = FnordQuery::Query.new(@opts[:task].last)
       rescue FnordQuery::Query::InvalidQueryError => e
         puts e.to_s; exit!(1)
       end
