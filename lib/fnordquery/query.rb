@@ -149,6 +149,7 @@ private
   def parse_time(str)
     return :now     if str == "now"
     return str.to_i if str =~ /^[0-9]+$/
+    return (Time.now.to_i - str[1..-1].to_i) if str =~ /^-[0-9]+$/
     raise InvalidQueryError.new("invalid time: #{str}")
   end
 
