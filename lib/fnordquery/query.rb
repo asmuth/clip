@@ -73,28 +73,9 @@ private
 
   def parse_time(str)
     return :now     if str == "now"
-    return :stream  if str == "stream"
     return str.to_i if str =~ /^[0-9]+$/
     raise InvalidQueryError.new("invalid time: #{str}")
   end
     
-end  
-
-#   filter(KEY = VALUE)
-#   filter(KEY < MAX)
-#   filter(KEY > MIN)
-#   filter(KEY ~ MIN-MAX)
-#   filter(KEY & ONE,TWO,THREE...)
-#   filter(KEY)
-#   since(TIMESTAMP)
-#   since(now)
-#   until(TIMESTAMP)
-#   until(now)
-#   stream()
-#
-#   filter(channel = 'dawanda-firehose') since(0) until(now)
-#   filter(channel = 'dawanda-firehose') since(now) stream()
-#   filter(channel & 'dawanda-firehose','dawanda-searchfeed') since(now) stream()
-
-
+end
 
