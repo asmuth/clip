@@ -35,7 +35,39 @@ class FnordQuery::Query
   end
 
   def matches?(event)
-    true
+    @filters.all? do |filter|
+      if !event[filter[0]]
+        false
+      elsif filter[1] == :equals && filter[2].is_a?(String)
+        event[filter[0]] == filter[2]
+      elsif filter[1] == :list_include && filter[2].first.is_a?(String)
+        filter[2].include?(event[filter[0]])
+      elsif filter[1] == :exists
+        !!event[filter[0]]
+      elsif !(event[filter[0]].to_s.match(/^[0-9]+(.[0-9]+)?$/))
+        false
+      elsif filter[1] == :equals && filter[2].is_a?(Fixnum)
+        event[filter[0]].to_i == filter[2]
+      elsif filter[1] == :equals && filter[2].is_a?(Float)
+        event[filter[0]].to_f == filter[2]
+      elsif filter[1] == :less_than && filter[2].is_a?(Integer)
+        event[filter[0]].to_i < filter[2]
+      elsif filter[1] == :less_than && filter[2].is_a?(Float)
+        event[filter[0]].to_f < filter[2]
+      elsif filter[1] == :greater_than && filter[2].is_a?(Integer)
+        event[filter[0]].to_i > filter[2]
+      elsif filter[1] == :greater_than && filter[2].is_a?(Float)
+        event[filter[0]].to_f > filter[2]
+      elsif filter[1] == :range_include && filter[2].is_a?(Range)
+        filter[2].include?(event[filter[0]].to_f)
+      elsif filter[1] == :list_include && filter[2].first.is_a?(Integer)
+        filter[2].include?(event[filter[0]].to_i)
+      elsif filter[1] == :list_include && filter[2].first.is_a?(Float)
+        filter[2].include?(event[filter[0]].to_f)
+      else
+        false
+      end
+    end
   end
 
 private

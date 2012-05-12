@@ -23,8 +23,14 @@ class FnordQuery::RedisBackend
       q_until = query.until.is_a?(Symbol)? Time.now.to_i : query.until 
       puts "zrangebyscore #{@prefix} #{query.since} #{q_until}"
       @redis.zrangebyscore(@prefix, query.since, q_until) do |res|
-        res.each do |event|
-          block.call(event) if query.matches?(event)
+        res.each do |raw|
+          begin
+            event = JSON.parse(raw)
+          rescue
+             puts "redisbackend: read invalid json"
+          else
+            block.call(event) if query.matches?(event)
+          end
         end
         if query.until != :stream
           on_finish
