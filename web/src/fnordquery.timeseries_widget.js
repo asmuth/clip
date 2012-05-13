@@ -8,114 +8,66 @@ fnordquery.widgets.timeseries_widget = function(){
 
       draw_layout();
 
-      width = opts.elem.width();
-      height = opts.height || 350;
-
-      canvas = d3.select('#container-'+widget_uid)
-        .append("svg:svg")
-        .attr("width", width)
-        .attr("height", height);
+      width = opts.elem.width() - 65;
+      height = opts.height || 400;
 
       //for (ind in opts.series){
 
-        
-        var seriesData = [ [], [], [], [], [], [], [], [], [] ];
-        var random = new Rickshaw.Fixtures.RandomData(150);
-
-        for (var i = 0; i < 150; i++) {
-          random.addData(seriesData);
-        }
-
-
-        var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
 
         var graph = new Rickshaw.Graph( {
-          element: document.getElementById("chart"),
-          width: 1630,
-          height: 500,
-          renderer: 'area',
+          element: $('.container', opts.elem)[0],
+          width: width,
+          height: height,
+          renderer: 'line',
           stroke: true,
-          series: [
-            {
-              color: palette.color(),
-              data: seriesData[0],
-              name: 'Moscow'
-            }, {
-              color: palette.color(),
-              data: seriesData[1],
-              name: 'Shanghai'
-            }, {
-              color: palette.color(),
-              data: seriesData[2],
-              name: 'Amsterdam'
-            }, {
-              color: palette.color(),
-              data: seriesData[3],
-              name: 'Paris'
-            }, {
-              color: palette.color(),
-              data: seriesData[4],
-              name: 'Tokyo'
-            }, {
-              color: palette.color(),
-              data: seriesData[5],
-              name: 'London'
-            }, {
-              color: palette.color(),
-              data: seriesData[6],
-              name: 'New York'
-            }
-          ]
+          series: opts.series,
         } );
 
         graph.render();
 
         var hoverDetail = new Rickshaw.Graph.HoverDetail( {
           graph: graph
-        } );
+        });
 
         var legend = new Rickshaw.Graph.Legend( {
           graph: graph,
           element: document.getElementById('legend')
-        } );
+        });
 
         var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
           graph: graph,
           legend: legend
-        } );
+        });
 
         var order = new Rickshaw.Graph.Behavior.Series.Order( {
           graph: graph,
           legend: legend
-        } );
+        });
 
         var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
           graph: graph,
           legend: legend
-        } );
+        });
 
         var smoother = new Rickshaw.Graph.Smoother( {
           graph: graph,
           element: $('#smoother')
-        } );
-
-        var ticksTreatment = 'glow';
+        });
 
         var xAxis = new Rickshaw.Graph.Axis.Time( {
           graph: graph,
-          ticksTreatment: ticksTreatment
-        } );
+          ticksTreatment: 'glow'
+        });
 
         xAxis.render();
 
         var yAxis = new Rickshaw.Graph.Axis.Y( {
           graph: graph,
           tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-          ticksTreatment: ticksTreatment
+          ticksTreatment: 'glow'
         } );
 
         yAxis.render();
-
 
     }
 
@@ -128,12 +80,13 @@ fnordquery.widgets.timeseries_widget = function(){
         )
         .append(
           $('<div></div>')
-            .attr('id', 'container-'+widget_uid).css({
-              height: opts.height + 6,
-              marginBottom: 20,
-              overflow: 'hidden'
-            })
+            .addClass('container')
+            .css({
+              height: opts.height,
+              margin: '50px 30px 40px 30px',
+           })
         );
+        
 
       // if(opts.ticks){
       //   $('.headbar', opts.elem).append('<div class="tick_btns btn_group"></div>');

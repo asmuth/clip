@@ -2,7 +2,6 @@ body, html{ height:100%; padding:0px;}
 body{ background:url('img/head.png') 0 -21px repeat-x fixed #2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
 
 body.inner{ background:#fff; }
-
 h1{
   font-size:24px;
   color:#333;
@@ -348,3 +347,15 @@ ul.ui_tabs li.active a{
 }
 
 .gauge_viewport{ margin-top:30px; }
+
+
+.rickshaw_graph .y_ticks path { stroke:#fff; }
+.rickshaw_graph .y_grid .tick { stroke:#ddd; }
+
+.rickshaw_graph .x_tick {
+  border-left: none;
+}
+
+.rickshaw_graph .x_tick.glow .title, .rickshaw_graph .y_ticks.glow text{
+  font-size:14px;
+}

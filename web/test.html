@@ -90,10 +90,24 @@
 
 </div>
 
+<div class="widget NumbersWidget" style="margin-bottom: 20px; overflow-x: hidden; overflow-y: hidden; width:1700px;"><div class="headbar small">Realtime Queries</div><div class="numbers_container" rel="Queries" style="width: 380px; "><div class="title">Queries</div><div class="number" rel="3" data="2.6666666666666665"><span class="desc">3sec avg.</span><span class="value">2.67</span></div><div class="number" rel="5" data="3.2"><span class="desc">5sec avg.</span><span class="value">3.20</span></div><div class="number" rel="15" data="3.4000000000000004"><span class="desc">15sec avg.</span><span class="value">3.40</span></div><div class="number" rel="30" data="3.3666666666666667"><span class="desc">30sec avg.</span><span class="value">3.37</span></div></div></div>
+
 <script>
   fnordquery.widgets.timeseries_widget().render({
     title: "Fnord!!!!",
-    elem: $('.mywidget')
+    elem: $('.mywidget'),
+    series:[
+      {
+        color: '#0066CC',
+        name: "fnord",
+        data: [ 
+          { x: 1336873946, y: 40 }, 
+          { x: 1336874946, y: 49 }, 
+          { x: 1336875946, y: 38 }, 
+          { x: 1336876946, y: 30 }, 
+          { x: 1336877946, y: 32 } ]
+      }
+    ]
   })
 </script>
 
