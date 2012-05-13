@@ -3,9 +3,11 @@ class FnordQuery::Web
   def initialize(opts)
     @opts = opts
 
-    @opts[:server] ||= "thin"
-    @opts[:host]   ||= "0.0.0.0"
-    @opts[:port]   ||= "4242"
+    listen = @opts[:listen]
+
+    @opts[:server] ||= @opts[:web_server] || "thin"
+    @opts[:host]   ||= (listen ? listen[0] : nil) || "0.0.0.0"
+    @opts[:port]   ||= (listen ? listen[1] : nil) || "4242"
   end
 
   def execute(runner, backend)

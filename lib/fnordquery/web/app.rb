@@ -8,8 +8,9 @@ class FnordQuery::Web::App < Sinatra::Base
 
   enable :session
 
-  #set :haml, :format => :html5
-  #set :views, ::File.expand_path('../../../../haml', __FILE__)
+  set :haml, :format => :html5
+  set :views, ::File.expand_path('../../../../web/haml', __FILE__)
+  set :public_folder, ::File.expand_path('../../../../web', __FILE__)
 
   def initialize(opts)
     @opts = opts
@@ -26,7 +27,7 @@ class FnordQuery::Web::App < Sinatra::Base
   end
 
   get '/' do
-  	'hello'
+  	render :haml, :app
   end
 
 end

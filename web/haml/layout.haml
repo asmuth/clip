@@ -11,4 +11,4 @@
       %script{:src => "src/fnordquery.timeseries_widget.js", :type => "text/javascript"}
       %link{:href => "fnordquery.css", :rel => "stylesheet", :type => "text/css"}
   %body.inner
-    =@render_inner
+    =@render_inner || yield
