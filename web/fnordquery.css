@@ -238,6 +238,8 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 
 .headbar .button:active{ background:#ddd; }
 
+.headbar .btn_group.mr{ margin-right:17px; }
+
 .headbar .btn_group .button{
   border-radius:0;
 }
@@ -350,7 +352,7 @@ ul.ui_tabs li.active a{
 
 
 .rickshaw_graph .y_ticks path { stroke:#fff; }
-.rickshaw_graph .y_grid .tick { stroke:#ddd; }
+.rickshaw_graph .y_grid .tick { stroke:rgba(0,0,0,.1); }
 
 .rickshaw_graph .x_tick {
   border-left: none;

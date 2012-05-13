@@ -18,7 +18,9 @@ fnordquery.widgets.timeseries_widget = function(){
           element: $('.container', opts.elem)[0],
           width: width,
           height: height,
-          renderer: 'line',
+          renderer: 'stack',
+          offset: 'wiggle',
+          interpolation: 'cardinal',
           stroke: true,
           series: opts.series,
         } );
@@ -75,8 +77,56 @@ fnordquery.widgets.timeseries_widget = function(){
       $(opts.elem)
         .append(
           $('<div></div>')
-            .attr('class', 'headbar')
-            .append($('<h2></h2>').html(opts.title)) 
+            .addClass('headbar')
+            .append($('<h2></h2>').html(opts.title))
+            .append(
+              $('<div class="btn_group mr"></div>')
+              .append(
+                $('<div></div>')
+                  .addClass('button')
+                  .append($('<span>').html('Flow'))
+                  .attr('data', 'line')
+                  .click(change_style)
+              )
+              .append(
+                $('<div></div>')
+                  .addClass('button')
+                  .append($('<span>').html('Stack'))
+                  .attr('data', 'line')
+                  .click(change_style)
+              )
+              .append(
+                $('<div></div>')
+                  .addClass('button')
+                  .append($('<span>').html('Area'))
+                  .attr('data', 'line')
+                  .click(change_style)
+              )
+              .append(
+                $('<div></div>')
+                  .addClass('button')
+                  .append($('<span>').html('Line'))
+                  .attr('data', 'line')
+                  .click(change_style)
+              )
+            )
+            .append(
+              $('<div class="btn_group mr"></div>')
+              .append(
+                $('<div></div>')
+                  .addClass('button mr')
+                  .append($('<span>').html('Off'))
+                  .attr('data', 'line')
+                  .click(change_style)
+              )
+              .append(
+                $('<div></div>')
+                  .addClass('button')
+                  .append($('<span>').html('On'))
+                  .attr('data', 'line')
+                  .click(change_style)
+              )
+            )
         )
         .append(
           $('<div></div>')
@@ -84,23 +134,20 @@ fnordquery.widgets.timeseries_widget = function(){
             .css({
               height: opts.height,
               margin: '50px 30px 40px 30px',
-           })
+            })
         );
         
 
       // if(opts.ticks){
-      //   $('.headbar', opts.elem).append('<div class="tick_btns btn_group"></div>');
+      //   $('.headbar', opts.elem);
       //   for(__tick in opts.ticks){
       //     var _tick = opts.ticks[__tick];
-      //     $('.tick_btns', opts.elem).append(
-      //       $('<div></div>').attr('class', 'button tick').append($('<span></span>')
-      //         .html(FnordMetric.util.formatTimeRange(_tick)))
-      //         .attr('data-tick', _tick)
-      //         .click(changeTick)  
-      //     );
+      //     $('.tick_btns', opts.elem)
       //   }
       // }
     }
+
+    function change_style(){}
 
 
 
