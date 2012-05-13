@@ -2,17 +2,17 @@
   "klass": "NumericTimeseriesReport",
   "since": 1336873946,
   "until": 1336879946,
-  "config": {
-    "ticks": [10, 30, 60],
-    "series": {
-      "with_filter": {
-        "title": "Searches with Filter",
-        "query": "filter(_type = 'search_with_filter')"
-      },
-      "without_filter": {
-        "title": "Searches with Filter",
-        "query": "filter(_type = 'search_without_filter')"
-      }
+  "query": "filter(_type & 'search_with_filter','search_without_filter')",
+  "series": {
+    "with_filter": {
+      "title": "Searches with Filter",
+      "query": "filter(_type = 'search_with_filter')",
+      "multisample_key": false
+    },
+    "without_filter": {
+      "title": "Searches with Filter",
+      "query": "filter(_type = 'search_without_filter')",
+      "multisample_key": false
     }
   }
 }
