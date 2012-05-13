@@ -6,39 +6,28 @@
     <script src='vendor/jquery-ui.min.js' type='text/javascript'></script>
     <script src='vendor/d3.v2.js' type='text/javascript'></script>
     <script src='vendor/rickshaw.js' type='text/javascript'></script>
-
-    <script src='fnordquery.js' type='text/javascript'></script>
     <link href='vendor/rickshaw.css' rel='stylesheet' type='text/css'>
+
+    <script src='src/fnordquery.js' type='text/javascript'></script>
+    <script src='src/fnordquery.timeseries_widget.js' type='text/javascript'></script>
     <link href='fnordquery.css' rel='stylesheet' type='text/css'>
   </head>
 </html>
 <body class="inner">
 
-<h1>Live Search Queries</h1>
-<h3>Live Search Queries</h3>
+<h1>Gross Search Volume</h1>
+<h3>NumericTimeseries Report</h3>
 
 <ul class="ui_tabs tabs">
   <li data-tab="Overview" class="active"><a href="#">Overview</a></li>
 </ul>
 
-<div class="widget RealtimeValueWidget full_width" style="width: 1688px; ">
-  <div class="headbar">
-    <h2>Realtime Queries</h2>
-    <div class="tick_btns btn_group" style="margin-right:17px;">
-      <div class="button tick" data-tick="3"><span>3 sec</span></div>
-      <div class="button tick" data-tick="5"><span>5 sec</span></div>
-      <div class="button tick" data-tick="15"><span>15 sec</span></div>
-      <div class="button tick" data-tick="30"><span>30 sec</span></div>
-    </div>
-  </div>
-</div>
-
+<div class="mywidget"></div>
 
 
 <div id="content">
 
-  <form id="side_panel">
-
+  <form id="side_panel" style="display:none;">
     <section><div id="legend"></div></section>
     <section>
       <div id="renderer_form" class="toggler">
@@ -102,104 +91,10 @@
 </div>
 
 <script>
-
-var seriesData = [ [], [], [], [], [], [], [], [], [] ];
-var random = new Rickshaw.Fixtures.RandomData(150);
-
-for (var i = 0; i < 150; i++) {
-  random.addData(seriesData);
-}
-
-var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
-
-var graph = new Rickshaw.Graph( {
-  element: document.getElementById("chart"),
-  width: 1630,
-  height: 500,
-  renderer: 'area',
-  stroke: true,
-  series: [
-    {
-      color: palette.color(),
-      data: seriesData[0],
-      name: 'Moscow'
-    }, {
-      color: palette.color(),
-      data: seriesData[1],
-      name: 'Shanghai'
-    }, {
-      color: palette.color(),
-      data: seriesData[2],
-      name: 'Amsterdam'
-    }, {
-      color: palette.color(),
-      data: seriesData[3],
-      name: 'Paris'
-    }, {
-      color: palette.color(),
-      data: seriesData[4],
-      name: 'Tokyo'
-    }, {
-      color: palette.color(),
-      data: seriesData[5],
-      name: 'London'
-    }, {
-      color: palette.color(),
-      data: seriesData[6],
-      name: 'New York'
-    }
-  ]
-} );
-
-graph.render();
-
-var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-  graph: graph
-} );
-
-var legend = new Rickshaw.Graph.Legend( {
-  graph: graph,
-  element: document.getElementById('legend')
-} );
-
-var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
-  graph: graph,
-  legend: legend
-} );
-
-var order = new Rickshaw.Graph.Behavior.Series.Order( {
-  graph: graph,
-  legend: legend
-} );
-
-var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
-  graph: graph,
-  legend: legend
-} );
-
-var smoother = new Rickshaw.Graph.Smoother( {
-  graph: graph,
-  element: $('#smoother')
-} );
-
-var ticksTreatment = 'glow';
-
-var xAxis = new Rickshaw.Graph.Axis.Time( {
-  graph: graph,
-  ticksTreatment: ticksTreatment
-} );
-
-xAxis.render();
-
-var yAxis = new Rickshaw.Graph.Axis.Y( {
-  graph: graph,
-  tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-  ticksTreatment: ticksTreatment
-} );
-
-yAxis.render();
-
-
+  fnordquery.widgets.timeseries_widget().render({
+    title: "Fnord!!!!",
+    elem: $('.mywidget')
+  })
 </script>
 
 </body>
