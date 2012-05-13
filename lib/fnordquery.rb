@@ -3,6 +3,10 @@ module FnordQuery; end
 require "eventmachine"
 require "json"
 require "haml"
+require "sinatra"
+
+require "fnordquery/web/web"
+require "fnordquery/web/app"
 
 require "fnordquery/backends/redis_backend"
 require "fnordquery/acceptor"

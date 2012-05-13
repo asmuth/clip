@@ -12,29 +12,37 @@ class FnordQuery::Runner
     shorts      = { redis: :r, fyrehose: :x, query: :q }
 
     OptionParser.new do |opts|
+
       opts.on("-h", "--help") do
         print_usage
         exit!
       end
+
       opts.on("-v", "--version") do
         print_version
         exit!
       end
+
       opts.on("--force") do
         @task_opts.merge!(:force => true) 
       end
+
       opts.on("-p [PATH]", "--path [PATH]") do |path|
         @task_opts.merge!(:path => path) 
       end
+
       %w(since until).each do |key|
         opts.on("--#{key} [ARG]") do |arg|
           @task_opts.merge!(key.to_sym => arg)
         end
       end
+
       { :task => tasks, :backend => backends }.each do |lkey, list|
         list.each do |key|
+
           okeys = ["--#{key} [ARG]"]
           okeys << "-#{shorts[key.to_sym]} [ARG]" if shorts[key.to_sym]
+
           opts.on(*(okeys << String)) do |arg|
             unless arg
               puts "error: missing argument: --#{key}"
@@ -51,8 +59,10 @@ class FnordQuery::Runner
             end
             @opts[lkey] = [key, arg]
           end
+          
         end
       end
+
     end.parse!
 
     if [@opts[:task], @opts[:backend]].compact.size == 0
@@ -80,6 +90,12 @@ class FnordQuery::Runner
     if %w(tcp udp).include?(@opts[:task].first)
       @task = FnordQuery::Acceptor.new(
         :protocol => @opts[:task].first.to_sym,
+        :listen   => @opts[:task].last.split(":")
+      )
+    end
+
+    if @opts[:task].first == "web"
+      @task = FnordQuery::Web.new(
         :listen   => @opts[:task].last.split(":")
       )
     end
