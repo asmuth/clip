@@ -47,6 +47,8 @@ fnordquery.views.report = (function(report_token){
 
     if(avail_intervals.length > 0){
       load_interval(avail_intervals[0]);
+    } else {
+      open_interval_modal();
     }
   }
 
