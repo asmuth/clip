@@ -33,6 +33,14 @@ class FnordQuery::Web::App < Sinatra::Base
   	render :haml, :app
   end
 
+  get '/index.json' do
+    { 
+      :reports => @reports.map{ |rtoken, report| 
+        { :token => rtoken, :title => report.title }
+      }
+    }.to_json
+  end
+
   get '/report/:token.json' do
     if @reports.has_key?(params[:token])
       @reports[params[:token]].to_json

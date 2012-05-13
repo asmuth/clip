@@ -32,6 +32,14 @@ class FnordQuery::ReportManager
     @opts[:available_intervals].keys.include?(interval)
   end
 
+  def token
+    @opts["token"]
+  end
+
+  def title
+    @opts["token"]
+  end
+
   def to_json
     @opts.to_json
   end

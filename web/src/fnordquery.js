@@ -2,6 +2,7 @@ var fnordquery = (function(){
 
   var canvasElem = false;
   var currentView = false;
+  var index = null;
 
   // var socket;
 
@@ -26,6 +27,39 @@ var fnordquery = (function(){
     // );
   };
 
+  function render_sidebar(){
+    var ul = $('<ul>');
+
+    $(index.reports).each(function(){
+      ul.append($('<li class="report">')
+        .attr('data', this.token)
+        .append(
+          $('<a href="#">')
+            .html(this.title)
+            .attr('data', this.token)
+            .click(load_report)
+        )
+      )  
+    });
+
+    $("#sidebar").html(ul);
+  }
+
+  function load_index(){
+    $.ajax({
+      type: 'get',
+      url: '/index.json',
+      success: function(raw){
+        index = JSON.parse(raw);
+        render_sidebar();
+      }
+    })
+  }
+
+  function load_report(){ 
+   load(fnordquery.views.report($(this).attr('data')));
+  }
+
 
   function init(){
     canvasElem = $("<div class='viewport_inner'>");
@@ -42,6 +76,8 @@ var fnordquery = (function(){
         .append($("<div class='modal_backdrop'>").hide());
 
     $("body").html(wrap_elem);
+
+    load_index();
 
     $(window).resize(resizeView);
     window.setTimeout(navigateViaHash, 200);
