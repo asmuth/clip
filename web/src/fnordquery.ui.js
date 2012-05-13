@@ -44,4 +44,5 @@ fnordquery.ui.modal = function(opts){
 
   $("#viewport").append(dialog_elem);
   dialog_elem.show().addClass('visible');
+  $('.modal_backdrop').show().addClass('visible');
 }

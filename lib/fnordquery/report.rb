@@ -11,15 +11,15 @@ class FnordQuery::Report
 private
 
   def render_haml(in_file, out_file)
-    in_file = ::File.expand_path("../../../web/haml/#{in_file}.haml", __FILE__)
-    haml_engine = Haml::Engine.new(File.read(in_file))
-    @render_inner = haml_engine.render(binding)
-    layout_file = ::File.expand_path("../../../web/haml/layout.haml", __FILE__)
-    haml_engine = Haml::Engine.new(File.read(layout_file))
+    puts ">> rendering: #{::File.join(basedir, out_file)}"
+
+    haml_engine = Haml::Engine.new(File.read(
+      File.expand_path("../../../web/haml/#{in_file}.haml", __FILE__)
+    ))
+
     File.open(::File.join(basedir, out_file), "w+") do |f|
       f.write(haml_engine.render(binding))
-    end
-    puts ">> rendered: #{::File.join(basedir, out_file)}"
+    end    
   end
 
   def basedir

@@ -42,5 +42,16 @@ class FnordQuery::Web::App < Sinatra::Base
     end
   end
 
+  get '/report/:token/:interval' do
+    if @reports[params[:token]] && 
+       @reports[params[:token]].interval_available?(params[:interval])
+      @render_inner = File.read(@reports[params[:token]].report_dir(params[:interval], 'report.html'))
+      render :haml, :layout
+    else
+      status 404
+      "not found"
+    end
+  end
+
 end
 

@@ -7,6 +7,16 @@ fnordquery.views.report = (function(report_token){
     viewport.html('');
     viewport.append('<div class="navbar"></div>');
 
+    viewport.append(
+      $('<iframe>')
+        .attr("frameborder", "none")
+        .attr("scrolling", "no")
+        .attr("height", 1500)
+        .attr("width", "100%")
+        .css("marginTop", "49px")
+        .hide()
+    );
+
     $.ajax({
       type: 'get',
       url: '/report/' + report_token + '.json',
@@ -31,9 +41,21 @@ fnordquery.views.report = (function(report_token){
 
     });
 
-    fnordquery.ui.modal({
-      height: 700
-    })
+    // fnordquery.ui.modal({
+    //   height: 700
+    // })
+
+    var avail_intervals = Object.keys(opts.available_intervals);
+
+    if(avail_intervals.length > 0){
+      load_interval(avail_intervals[0]);
+    }
+  }
+
+  function load_interval(interval){
+    $('iframe', viewport)
+      .attr('src', '/report/'+report_token+'/'+interval)
+      .show();
   }
 
 

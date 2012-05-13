@@ -28,11 +28,15 @@ class FnordQuery::ReportManager
     end
   end
 
+  def interval_available?(interval)
+    @opts[:available_intervals].keys.include?(interval)
+  end
+
   def to_json
     @opts.to_json
   end
 
-private
+#private
    
   def reports_dir(*args)
     self.class.reports_dir(@opts, *args)

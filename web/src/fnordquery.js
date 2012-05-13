@@ -38,7 +38,8 @@ var fnordquery = (function(){
 
     var wrap_elem = $("<div id='wrap'>")
         .append($("<div id='sidebar'>").append('<ul>'))
-        .append($("<div id='viewport'>").append(canvasElem));
+        .append($("<div id='viewport'>").append(canvasElem))
+        .append($("<div class='modal_backdrop'>").hide());
 
     $("body").html(wrap_elem);
 

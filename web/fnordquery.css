@@ -1,7 +1,8 @@
 body, html{ height:100%; padding:0px;}
 body{ background:url('img/head.png') 0 -21px repeat-x fixed #2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
 
-body.inner{ background:#fff; }
+body.inner{ background:#fff; margin-right:10px; }
+
 h1{
   font-size:24px;
   color:#333;
@@ -410,7 +411,7 @@ position: relative;
   background-color: #000000;
   position: fixed;
   top: 0;
-  left: 0;
+  left: 225px;
   right: 0;
   bottom: 0;
   z-index: 10000;
@@ -423,17 +424,17 @@ position: relative;
 }
 
 .modal_backdrop.visible {
-  filter: alpha(opacity=80);
-  -khtml-opacity: 0.8;
-  -moz-opacity: 0.8;
-  opacity: 0.8;
+  filter: alpha(opacity=10);
+  -khtml-opacity: 0.1;
+  -moz-opacity: 0.1;
+  opacity: 0.1;
 }
 
 .modal {
   position: absolute;
   left: 225px;
   z-index: 11000;
-  background-color: #eee;
+  background-color: #fff;
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.3);
 
@@ -463,4 +464,8 @@ position: relative;
 
 .modal_inner{ 
   margin:15px 20px 3px 20px;
+}
+
+.report_view{
+  margin-top:25px;
 }
