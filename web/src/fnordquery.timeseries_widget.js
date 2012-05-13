@@ -1,34 +1,47 @@
 fnordquery.widgets.timeseries_widget = function(){
 
+    /*
+      options:
+        
+        height: 430
+        default_cardinal: true/false
+        default_style: line/area/stack/flow
+        series
+    */
+
     var widget_uid = "fnord-" + parseInt(Math.random()*99990000);
-    var width, height, opts, graph;
+    var width, height, opts, graph, gconfig;
+
+    var cardinal = true;
 
     //["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
 
     function render(_opts){
       opts = _opts;
 
+      if(!opts.default_style){ opts.default_style = 'line'; }
+      if(!opts.default_cardinal){ opts.default_cardinal = true; }
+
       draw_layout();
 
       width = opts.elem.width() - 50;
       height = opts.height || 430;
 
-      graph = new Rickshaw.Graph( {
+      gconfig = {
         element: $('.container', opts.elem)[0],
         width: width,
         height: height,
-        renderer: 'stack',
-        offset: 'wiggle',
-        interpolation: 'cardinal',
+        interpolation: (opts.default_cardinal ? 'cardinal' : 'linear'),
         stroke: true,
         series: opts.series,
-        padding: {
-          top: 0.1,
-          bottom: 0.15
-        }
-      });
+        padding: { top: 0.1, bottom: 0.15 }
+      }
 
-      graph.render();
+      graph = new Rickshaw.Graph(gconfig);
+
+      $('.button[data="'+opts.default_style+'"]')
+        .addClass('active')
+        .trigger('click');
 
       var legend = new Rickshaw.Graph.Legend({
         graph: graph,
@@ -61,7 +74,48 @@ fnordquery.widgets.timeseries_widget = function(){
       }).render();
     }
 
-    function change_style(){}
+    function toggle_cardinal(){
+      if($(this).hasClass('active')){ return false; }
+      $(this).addClass('active').siblings().removeClass('active');
+
+      if(cardinal === true){
+        cardinal = false;
+        gconfig.interpolation = 'linear';
+      } else {
+        cardinal = true;
+        gconfig.interpolation = 'cardinal';
+      }
+
+      graph.configure(gconfig);
+      graph.render();
+    }
+
+    function change_style(){
+      $(this).addClass('active').siblings().removeClass('active');
+
+      if($(this).attr('data') == 'line'){
+        gconfig.renderer = 'line';
+        gconfig.offset = 'value';
+      }
+
+      if($(this).attr('data') == 'area'){
+        gconfig.renderer = 'area';
+        gconfig.offset = 'value';
+      }
+
+      if($(this).attr('data') == 'stack'){
+        gconfig.renderer = 'stack';
+        gconfig.offset = 'value';
+      }
+
+      if($(this).attr('data') == 'flow'){
+        gconfig.renderer = 'stack';
+        gconfig.offset = 'wiggle';
+      }
+
+      graph.configure(gconfig);
+      graph.render();
+    }
 
     function draw_layout(){
       $(opts.elem)
@@ -75,21 +129,21 @@ fnordquery.widgets.timeseries_widget = function(){
                 $('<div></div>')
                   .addClass('button')
                   .append($('<span>').html('Flow'))
-                  .attr('data', 'line')
+                  .attr('data', 'flow')
                   .click(change_style)
               )
               .append(
                 $('<div></div>')
                   .addClass('button')
                   .append($('<span>').html('Stack'))
-                  .attr('data', 'line')
+                  .attr('data', 'stack')
                   .click(change_style)
               )
               .append(
                 $('<div></div>')
                   .addClass('button')
                   .append($('<span>').html('Area'))
-                  .attr('data', 'line')
+                  .attr('data', 'area')
                   .click(change_style)
               )
               .append(
@@ -105,16 +159,18 @@ fnordquery.widgets.timeseries_widget = function(){
               .append(
                 $('<div></div>')
                   .addClass('button mr')
+                  .addClass(opts.default_cardinal ? '' : 'active')
                   .append($('<span>').html('Off'))
-                  .attr('data', 'line')
-                  .click(change_style)
+                  .attr('data', 'cardinal-off')
+                  .click(toggle_cardinal)
               )
               .append(
                 $('<div></div>')
                   .addClass('button')
+                  .addClass(opts.default_cardinal ? 'active' : '')
                   .append($('<span>').html('On'))
-                  .attr('data', 'line')
-                  .click(change_style)
+                  .attr('data', 'cardinal-on')
+                  .click(toggle_cardinal)
               )
             )
         )

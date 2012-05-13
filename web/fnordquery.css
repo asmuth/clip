@@ -234,7 +234,9 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
   background:url('img/navbar_btn.png');
 }
 
-.headbar .button:hover, .headbar.button.active{background:#e8e8e8;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
+.headbar .button:hover{background:#e8e8e8;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
+
+ .headbar .button.active{background:#e3e3e3;border-bottom-color:#999;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .05)}
 
 .headbar .button:active{ background:#ddd; }
 
