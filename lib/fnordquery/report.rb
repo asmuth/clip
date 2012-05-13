@@ -1,0 +1,4 @@
+class FnordQuery::Report
+
+
+end

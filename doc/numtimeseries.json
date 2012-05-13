@@ -1,7 +1,7 @@
 {
   "klass": "NumericTimeseriesReport",
-  "since": 1336836558,
-  "until": 1336876558,
+  "since": 1336873946,
+  "until": 1336879946,
   "config": {
     "ticks": [10, 30, 60],
     "series": {

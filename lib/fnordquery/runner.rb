@@ -5,9 +5,10 @@ class FnordQuery::Runner
   def initialize
     @opts = {}
 
-    tasks    = %w(query web udp tcp exec)
-    backends = %w(redis fyrehose)
-    shorts   = { redis: :r, fyrehose: :x, query: :q }
+    tasks       = %w(query web udp tcp exec)
+    backends    = %w(redis fyrehose)
+    executables = %w(CategoricalTopKReport NumericTimeseriesReport)
+    shorts      = { redis: :r, fyrehose: :x, query: :q }
 
     OptionParser.new do |opts|
       opts.on("-h", "--help") do
@@ -39,10 +40,13 @@ class FnordQuery::Runner
 
     if [@opts[:task], @opts[:backend]].compact.size == 0
       print_usage
+      exit!(1)
     elsif @opts[:task].nil?
       puts "error: no task given"
+      exit!(1)
     elsif @opts[:backend].nil?
       puts "error: no backend specified"
+      exit!(1)
     end
 
     @task = nil
@@ -60,6 +64,15 @@ class FnordQuery::Runner
         :protocol => @opts[:task].first.to_sym,
         :listen   => @opts[:task].last.split(":")
       )
+    end
+
+    if @opts[:task].first == "exec"
+      execcfg = JSON.parse(File.open(@opts[:task].last).read)
+      if !execcfg["klass"] || !executables.include?(execcfg["klass"])
+        puts "error: unknown executable: #{execcfg["klass"]}"
+        exit!(1)
+      end
+      @task = FnordQuery.const_get(execcfg["klass"]).new(execcfg)
     end
 
     puts @task.inspect
