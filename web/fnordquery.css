@@ -35,7 +35,7 @@ a.link:hover{
 .topbar ul li a:hover { color:#fff; }
 .topbar ul li.active a { color:#fff; }
 
-#sidebar{ width:220px; position:fixed; margin-top:48px; }
+#sidebar{ width:220px; position:fixed; background:#3B3E45; height:1500px; }
 
 #sidebar ul{
   margin:0;
@@ -96,6 +96,8 @@ a.link:hover{
 .navbar{
   height:49px;
   background:url('img/navbar.png');
+  position:absolute;
+  z-index: 11004;
 }
 
 .navbar h1{
@@ -168,8 +170,8 @@ color:#000;
 .picto{ display:block; height:14px; width:14px; float:left; opacity:0.7; }
 .picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
-#viewport{ float:left; margin-left:220px; border-radius:3px; min-width:790px; }
-#viewport .viewport_inner{ margin:0 6px; background:#fff; min-height:1200px; border-radius:2px; }
+#viewport{ float:left; margin-left:220px; min-width:790px; }
+#viewport .viewport_inner{ margin:0 6px; background:#fff; min-height:1200px; }
 
 #viewport, #vtabs ul li:hover, #vtabs ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
 
@@ -397,4 +399,68 @@ position: relative;
   color:#333;
   position:relative;
   top:-1px;
+}
+
+
+
+
+
+
+.modal_backdrop {
+  background-color: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  opacity: 0;
+  -webkit-transition: opacity .3s linear, top .3s ease-out;
+  -moz-transition: opacity .3s linear, top .3s ease-out;
+  -ms-transition: opacity .3s linear, top .3s ease-out;
+  -o-transition: opacity .3s linear, top .3s ease-out;
+  transition: opacity .3s linear, top .3s ease-out;
+}
+
+.modal_backdrop.visible {
+  filter: alpha(opacity=80);
+  -khtml-opacity: 0.8;
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+}
+
+.modal {
+  position: absolute;
+  left: 225px;
+  z-index: 11000;
+  background-color: #eee;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+
+  height:500px;
+
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+
+  -webkit-transition: opacity .3s linear, top .3s ease-out;
+  -moz-transition: opacity .3s linear, top .3s ease-out;
+  -ms-transition: opacity .3s linear, top .3s ease-out;
+  -o-transition: opacity .3s linear, top .3s ease-out;
+  transition: opacity .3s linear, top .3s ease-out;
+  top: -500px;
+}
+
+.modal.visible {
+  top: 40px;
+}
+
+.modal_inner{ 
+  margin:15px 20px 3px 20px;
 }

@@ -95,9 +95,9 @@ class FnordQuery::Runner
     end
 
     if @opts[:task].first == "web"
-      @task = FnordQuery::Web.new(
+      @task = FnordQuery::Web.new({
         :listen   => @opts[:task].last.split(":")
-      )
+      }.merge(@task_opts))
     end
 
     if @opts[:task].first == "exec"

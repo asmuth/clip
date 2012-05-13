@@ -14,6 +14,9 @@ class FnordQuery::Web::App < Sinatra::Base
 
   def initialize(opts)
     @opts = opts
+
+    @reports = FnordQuery::ReportManager.load(@opts)
+    
     super(nil)
   end
 
@@ -28,6 +31,15 @@ class FnordQuery::Web::App < Sinatra::Base
 
   get '/' do
   	render :haml, :app
+  end
+
+  get '/report/:token.json' do
+    if @reports.has_key?(params[:token])
+      @reports[params[:token]].to_json
+    else
+      status 404
+      "not found"
+    end
   end
 
 end

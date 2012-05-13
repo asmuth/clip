@@ -1,12 +1,7 @@
-#sidebar
-#viewport{:style => "width: 1700px; "}
-  .viewport_inner.clearfix
-    .navbar{:style => "margin-bottom:24px;"}
-      %a.button Dropdown: Range selector / cached ranges
-      %a.button Configure
-      %a.button.back «
-      %h1
-        %a.current Gross Search Volume
-        \ 
-        %a (07.05.12-15.05.12)
-    %iframe{:frameborder => "none", :height => "1500", :scrolling => "no", :src => "report.html", :width => "100%"}
+//%iframe{:frameborder => "none", :height => "1500", :scrolling => "no", :src => "report.html", :width => "100%"}
+%script{:src => "src/fnordquery.report_view.js", :type => "text/javascript"}
+
+
+:javascript
+  fnordquery.init();
+  fnordquery.load(fnordquery.views.report('gross_search_volume'));
