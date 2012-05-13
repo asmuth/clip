@@ -1,17 +1,17 @@
 {
   "klass": "NumericTimeseriesReport",
   "title": "Gross Search Volume",
-  "since": 1336873946,
-  "until": 1336879946,
+  "since": 1336873977,
+  "until": 1336874946,
   "query": "filter(_type & 'search_with_filter','search_without_filter')",
   "series": {
     "with_filter": {
-      "title": "Searches with Filter",
+      "name": "Searches with Filter",
       "query": "filter(_type = 'search_with_filter')",
       "multisample_key": false
     },
     "without_filter": {
-      "title": "Searches with Filter",
+      "name": "Searches with Filter",
       "query": "filter(_type = 'search_without_filter')",
       "multisample_key": false
     }

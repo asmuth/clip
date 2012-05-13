@@ -29,23 +29,7 @@
     title: "Fnord!!!!",
     elem: $('.mywidget'),
     default_style: 'stack',
-    series:[{
-      color: '#CD645A',
-      name: "Fnord",
-      data: sampler()
-    },{
-      color: '#2F635E',
-      name: "fnord",
-      data: sampler()
-    },{
-      color: '#42436B',
-      name: "fnord",
-      data: sampler()
-    },{
-      color: '#FACE4F',
-      name: "fnord",
-      data: sampler()
-    }]
+    series: #{@series_render.to_json}
   });
 
   function sampler(){
