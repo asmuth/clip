@@ -28,8 +28,15 @@ var fnordquery = (function(){
   };
 
   function render_sidebar(){
+    $("#sidebar").html();
+    
     var ul = $('<ul>');
+    ul.append('<li><a href="#">Dashboard</a></li>');
 
+    $("#sidebar").append('<div class="ul_head">General</div>');
+    $("#sidebar").append(ul);
+
+    ul = $('<ul>');
     $(index.reports).each(function(){
       ul.append($('<li class="report">')
         .attr('data', this.token)
@@ -41,8 +48,8 @@ var fnordquery = (function(){
         )
       )  
     });
-
-    $("#sidebar").html(ul);
+    $("#sidebar").append('<div class="ul_head">Reports</div>');
+    $("#sidebar").append(ul);
   }
 
   function load_index(){

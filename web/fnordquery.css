@@ -36,7 +36,7 @@ a.link:hover{
 .topbar ul li a:hover { color:#fff; }
 .topbar ul li.active a { color:#fff; }
 
-#sidebar{ width:220px; position:fixed; background:#3B3E45; height:1500px; }
+#sidebar{ width:220px; position:fixed; background:#3B3E45; height:1500px; padding-top:35px; }
 .navbar{
   height:49px;
   background:url('img/navbar.png');
@@ -406,10 +406,11 @@ position: relative;
   margin-top:25px;
 }
 
-#sidebar ul{ list-style-type:none; padding:0; margin:0; margin-top:60px; }
-#sidebar ul li{ height:26px; line-height:26px; cursor:pointer; font-size:12px; }
+#sidebar .ul_head{ margin-top:30px; color:#ccc; font-weight:bold; text-transform:uppercase; padding-left:20px; font-size:11px; margin-bottom:5px; }
+#sidebar ul{ list-style-type:none; padding:0; margin:0; }
+#sidebar ul li{ height:28px; line-height:28px; cursor:pointer; font-size:13px; }
 #sidebar ul li a{ color:#ccc; text-decoration:none; padding-left:20px; }
-#sidebar ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:24px; }
+#sidebar ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:27px; }
 #sidebar ul li .picto{ margin-top:10px; margin-right:7px; }
 #sidebar ul li:hover, #tabs ul li:hover:after{ color:#fff; }
 #sidebar ul li:hover .picto{ opacity:1; }
