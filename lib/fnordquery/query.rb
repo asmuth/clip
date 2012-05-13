@@ -42,7 +42,6 @@ class FnordQuery::Query
       elsif filter[1] == :equals && filter[2].is_a?(String)
         event[filter[0]].to_s == filter[2]
       elsif filter[1] == :not_equals && filter[2].is_a?(String)
-        puts "NOT EQUALS #{[event[filter[0]].to_s, filter[2]].inspect}"
         event[filter[0]].to_s != filter[2]
       elsif filter[1] == :list_include && filter[2].first.is_a?(String)
         filter[2].include?(event[filter[0]].to_s)

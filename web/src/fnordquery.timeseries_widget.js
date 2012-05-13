@@ -62,15 +62,12 @@ fnordquery.widgets.timeseries_widget = function(){
         legend: legend
       });
 
-      new Rickshaw.Graph.Axis.Time( {
+      new Rickshaw.Graph.Axis.Time({
         graph: graph,
-        ticksTreatment: 'glow'
       }).render();
 
-      new Rickshaw.Graph.Axis.Y( {
+      new Rickshaw.Graph.Axis.Y({
         graph: graph,
-        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-        ticksTreatment: 'glow'
       }).render();
     }
 

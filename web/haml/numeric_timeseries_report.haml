@@ -31,12 +31,3 @@
     default_style: 'stack',
     series: #{@series_render.to_json}
   });
-
-  function sampler(){
-    var arr=[];
-    var start = 1336873946;
-    for(var n=0; n < 150; n++){
-      arr.push({ x: (start + n), y: (23 + (Math.random()*5)) })
-    }
-    return arr;
-  }

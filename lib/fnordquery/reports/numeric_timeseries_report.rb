@@ -40,7 +40,6 @@ class FnordQuery::NumericTimeseriesReport < FnordQuery::Report
 
       @series_queries.each do |skey, squery|
         if squery.matches?(event)
-          puts event.inspect
   	      (event["_time"]-@tick..event["_time"]).to_a.reverse.detect do |t|
   	  	    if @series_timelines[skey].has_key?(t)
               @series_timelines[skey][t] += 1
@@ -57,7 +56,9 @@ private
   def render_result
     @series_render = @opts["series"].map do |skey, sopts|
       {
-        :data  => @series_timelines[skey].map { |t,v| { :x => t, :y => v } },
+        :data  => @series_timelines[skey].map { |t,v| 
+          { :x => t, :y => v } 
+        }.reverse,
         :name  => sopts["name"],
         :color => sopts["color"]
       }

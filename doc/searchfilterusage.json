@@ -1,8 +1,8 @@
 {
   "klass": "NumericTimeseriesReport",
   "title": "Search Filter Usage",
-  "since": 1336873977,
-  "until": 1336874946,
+  "since": 1336855399,
+  "until": 1336901781,
   "query": "filter(_type & 'search_with_filter','search_without_filter')",
   "series": {
     "price": {
