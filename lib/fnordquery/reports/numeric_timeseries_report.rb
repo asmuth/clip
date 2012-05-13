@@ -40,7 +40,7 @@ class FnordQuery::NumericTimeseriesReport < FnordQuery::Report
 
       @series_queries.each do |skey, squery|
         if squery.matches?(event)
-          #puts event.inspect
+          puts event.inspect
   	      (event["_time"]-@tick..event["_time"]).to_a.reverse.detect do |t|
   	  	    if @series_timelines[skey].has_key?(t)
               @series_timelines[skey][t] += 1

@@ -11,7 +11,7 @@
       "multisample_key": false
     },
     "without_filter": {
-      "name": "Searches with Filter",
+      "name": "Searches without Filter",
       "query": "filter(_type = 'search_without_filter')",
       "multisample_key": false
     }

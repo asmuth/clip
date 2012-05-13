@@ -41,6 +41,9 @@ class FnordQuery::Query
         false
       elsif filter[1] == :equals && filter[2].is_a?(String)
         event[filter[0]].to_s == filter[2]
+      elsif filter[1] == :not_equals && filter[2].is_a?(String)
+        puts "NOT EQUALS #{[event[filter[0]].to_s, filter[2]].inspect}"
+        event[filter[0]].to_s != filter[2]
       elsif filter[1] == :list_include && filter[2].first.is_a?(String)
         filter[2].include?(event[filter[0]].to_s)
       elsif filter[1] == :exists
@@ -51,6 +54,10 @@ class FnordQuery::Query
         event[filter[0]].to_i == filter[2]
       elsif filter[1] == :equals && filter[2].is_a?(Float)
         event[filter[0]].to_f == filter[2]
+      elsif filter[1] == :not_equals && filter[2].is_a?(Fixnum)
+        event[filter[0]].to_i != filter[2]
+      elsif filter[1] == :not_equals && filter[2].is_a?(Float)
+        event[filter[0]].to_f != filter[2]
       elsif filter[1] == :less_than && filter[2].is_a?(Integer)
         event[filter[0]].to_i < filter[2]
       elsif filter[1] == :less_than && filter[2].is_a?(Float)
@@ -118,6 +125,12 @@ private
       @filters << [key_clean[m[1]], :equals, m[2].to_i]
     elsif m = arg.match(/^#{key_regex} *= *([0-9]+\.[0-9]+)$/)
       @filters << [key_clean[m[1]], :equals, m[2].to_f]
+    elsif m = arg.match(/^#{key_regex} *! *'([^']*)'$/)
+      @filters << [key_clean[m[1]], :not_equals, m[2]]
+    elsif m = arg.match(/^#{key_regex} *! *([0-9]+)$/)
+      @filters << [key_clean[m[1]], :not_equals, m[2].to_i]
+    elsif m = arg.match(/^#{key_regex} *! *([0-9]+\.[0-9]+)$/)
+      @filters << [key_clean[m[1]], :not_equals, m[2].to_f]
     elsif m = arg.match(/^#{key_regex} *< *([0-9]+)$/)
       @filters << [key_clean[m[1]], :less_than, m[2].to_i]
     elsif m = arg.match(/^#{key_regex} *< *([0-9]+\.[0-9]+)$/)
