@@ -1,77 +1,67 @@
 fnordquery.widgets.timeseries_widget = function(){
 
     var widget_uid = "fnord-" + parseInt(Math.random()*99990000);
-    var width, height, opts;
+    var width, height, opts, graph;
+
+    //["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
 
     function render(_opts){
       opts = _opts;
 
       draw_layout();
 
-      width = opts.elem.width() - 65;
-      height = opts.height || 400;
+      width = opts.elem.width() - 50;
+      height = opts.height || 430;
 
-      //for (ind in opts.series){
+      graph = new Rickshaw.Graph( {
+        element: $('.container', opts.elem)[0],
+        width: width,
+        height: height,
+        renderer: 'stack',
+        offset: 'wiggle',
+        interpolation: 'cardinal',
+        stroke: true,
+        series: opts.series,
+        padding: {
+          top: 0.1,
+          bottom: 0.15
+        }
+      });
 
+      graph.render();
 
-        var graph = new Rickshaw.Graph( {
-          element: $('.container', opts.elem)[0],
-          width: width,
-          height: height,
-          renderer: 'stack',
-          offset: 'wiggle',
-          interpolation: 'cardinal',
-          stroke: true,
-          series: opts.series,
-        } );
+      var legend = new Rickshaw.Graph.Legend({
+        graph: graph,
+        element: $('.legend', opts.elem)[0]
+      });
 
-        graph.render();
+      hoverDetail = new Rickshaw.Graph.HoverDetail( {
+        graph: graph
+      });
 
-        var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-          graph: graph
-        });
+      shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+        graph: graph,
+        legend: legend
+      });
 
-        var legend = new Rickshaw.Graph.Legend( {
-          graph: graph,
-          element: document.getElementById('legend')
-        });
+      highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+        graph: graph,
+        legend: legend
+      });
 
-        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
-          graph: graph,
-          legend: legend
-        });
+      new Rickshaw.Graph.Axis.Time( {
+        graph: graph,
+        ticksTreatment: 'glow'
+      }).render();
 
-        var order = new Rickshaw.Graph.Behavior.Series.Order( {
-          graph: graph,
-          legend: legend
-        });
-
-        var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
-          graph: graph,
-          legend: legend
-        });
-
-        var smoother = new Rickshaw.Graph.Smoother( {
-          graph: graph,
-          element: $('#smoother')
-        });
-
-        var xAxis = new Rickshaw.Graph.Axis.Time( {
-          graph: graph,
-          ticksTreatment: 'glow'
-        });
-
-        xAxis.render();
-
-        var yAxis = new Rickshaw.Graph.Axis.Y( {
-          graph: graph,
-          tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-          ticksTreatment: 'glow'
-        } );
-
-        yAxis.render();
-
+      new Rickshaw.Graph.Axis.Y( {
+        graph: graph,
+        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+        ticksTreatment: 'glow'
+      }).render();
     }
+
+    function change_style(){}
 
     function draw_layout(){
       $(opts.elem)
@@ -130,26 +120,20 @@ fnordquery.widgets.timeseries_widget = function(){
         )
         .append(
           $('<div></div>')
+            .addClass('legend')
+            .css({
+              margin: '10px 30px 0 30px',
+            })
+        )
+        .append(
+          $('<div></div>')
             .addClass('container')
             .css({
               height: opts.height,
-              margin: '50px 30px 40px 30px',
+              margin: '0 23px 50px 23px',
             })
         );
-        
-
-      // if(opts.ticks){
-      //   $('.headbar', opts.elem);
-      //   for(__tick in opts.ticks){
-      //     var _tick = opts.ticks[__tick];
-      //     $('.tick_btns', opts.elem)
-      //   }
-      // }
     }
-
-    function change_style(){}
-
-
 
     return {
       render: render
