@@ -2,7 +2,7 @@
   "klass": "ReportBuilder",
   "token": "search_filter_usage",
   "type": "NumericTimeseriesReport",
-  "title": "Gross Search Volume",
+  "title": "Search Filter Usage",
   "query": "filter(_type & 'search_with_filter','search_without_filter')",
   "series": {
     "price": {

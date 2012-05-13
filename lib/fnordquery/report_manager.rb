@@ -37,7 +37,7 @@ class FnordQuery::ReportManager
   end
 
   def title
-    @opts["token"]
+    @opts["title"]
   end
 
   def to_json

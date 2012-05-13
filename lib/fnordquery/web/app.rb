@@ -33,6 +33,11 @@ class FnordQuery::Web::App < Sinatra::Base
   	render :haml, :app
   end
 
+  get '/reload' do
+    @reports = FnordQuery::ReportManager.load(@opts)
+    "ok"
+  end
+
   get '/index.json' do
     { 
       :reports => @reports.map{ |rtoken, report| 

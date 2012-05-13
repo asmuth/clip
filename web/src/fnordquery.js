@@ -33,11 +33,11 @@ var fnordquery = (function(){
     $(index.reports).each(function(){
       ul.append($('<li class="report">')
         .attr('data', this.token)
+        .click(load_report)
         .append(
           $('<a href="#">')
             .html(this.title)
             .attr('data', this.token)
-            .click(load_report)
         )
       )  
     });
@@ -58,6 +58,9 @@ var fnordquery = (function(){
 
   function load_report(){ 
    load(fnordquery.views.report($(this).attr('data')));
+   $(this).closest('li')
+     .addClass('active').siblings()
+     .removeClass('active');
   }
 
 
