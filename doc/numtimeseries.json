@@ -1,5 +1,6 @@
 {
   "klass": "NumericTimeseriesReport",
+  "title": "Gross Search Volume",
   "since": 1336873946,
   "until": 1336879946,
   "query": "filter(_type & 'search_with_filter','search_without_filter')",

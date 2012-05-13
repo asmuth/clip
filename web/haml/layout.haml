@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %title FnordQuery
+    %script{:src => "vendor/jquery-1.6.2.min.js", :type => "text/javascript"}
+    %script{:src => "vendor/jquery-ui.min.js", :type => "text/javascript"}
+    %script{:src => "vendor/d3.v2.js", :type => "text/javascript"}
+    %script{:src => "vendor/rickshaw.js", :type => "text/javascript"}
+    %link{:href => "vendor/rickshaw.css", :rel => "stylesheet", :type => "text/css"}
+      %script{:src => "src/fnordquery.js", :type => "text/javascript"}
+      %script{:src => "src/fnordquery.timeseries_widget.js", :type => "text/javascript"}
+      %link{:href => "fnordquery.css", :rel => "stylesheet", :type => "text/css"}
+  %body.inner
+    =@render_inner

@@ -1,6 +1,7 @@
 class FnordQuery::NumericTimeseriesReport < FnordQuery::Report
 
   def execute(runner, _backend)
+  	super
   	backend = _backend[0].new(_backend[1])
 
   	t_since = @opts["since"].to_i
@@ -35,7 +36,7 @@ class FnordQuery::NumericTimeseriesReport < FnordQuery::Report
 private
 
   def render_result
-  	puts @timeline.inspect
+  	render_haml(:numeric_timeseries_report, 'report.html')
   end
 
 end
