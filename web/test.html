@@ -31,30 +31,34 @@
   fnordquery.widgets.timeseries_widget().render({
     title: "Fnord!!!!",
     elem: $('.mywidget'),
-    default_style: 'flow',
-    series:[
-      {
-        color: '#CD645A',
-        name: "Fnord",
-        data: [ 
-          { x: 1336873946, y: 40 }, 
-          { x: 1336874946, y: 49 }, 
-          { x: 1336875946, y: 38 }, 
-          { x: 1336876946, y: 30 }, 
-          { x: 1336877946, y: 32 } ]
-      },
-      {
-        color: '#42436B',
-        name: "fnord",
-        data: [ 
-          { x: 1336873946, y: 23 }, 
-          { x: 1336874946, y: 54 }, 
-          { x: 1336875946, y: 36 }, 
-          { x: 1336876946, y: 43 }, 
-          { x: 1336877946, y: 19 } ]
-      }
-    ]
-  })
+    default_style: 'stack',
+    series:[{
+      color: '#CD645A',
+      name: "Fnord",
+      data: sampler()
+    },{
+      color: '#2F635E',
+      name: "fnord",
+      data: sampler()
+    },{
+      color: '#42436B',
+      name: "fnord",
+      data: sampler()
+    },{
+      color: '#FACE4F',
+      name: "fnord",
+      data: sampler()
+    }]
+  });
+
+  function sampler(){
+    var arr=[];
+    var start = 1336873946;
+    for(var n=0; n < 150; n++){
+      arr.push({ x: (start + n), y: (23 + (Math.random()*5)) })
+    }
+    return arr;
+  }
 </script>
 
 </body>

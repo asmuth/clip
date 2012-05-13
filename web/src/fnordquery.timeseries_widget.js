@@ -98,13 +98,8 @@ fnordquery.widgets.timeseries_widget = function(){
         gconfig.offset = 'value';
       }
 
-      if($(this).attr('data') == 'area'){
-        gconfig.renderer = 'area';
-        gconfig.offset = 'value';
-      }
-
       if($(this).attr('data') == 'stack'){
-        gconfig.renderer = 'stack';
+        gconfig.renderer = 'area';
         gconfig.offset = 'value';
       }
 
@@ -137,13 +132,6 @@ fnordquery.widgets.timeseries_widget = function(){
                   .addClass('button')
                   .append($('<span>').html('Stack'))
                   .attr('data', 'stack')
-                  .click(change_style)
-              )
-              .append(
-                $('<div></div>')
-                  .addClass('button')
-                  .append($('<span>').html('Area'))
-                  .attr('data', 'area')
                   .click(change_style)
               )
               .append(
