@@ -1,8 +1,8 @@
 {
-  "klass": "NumericTimeseriesReport",
+  "klass": "ReportBuilder",
+  "token": "gross_search_volume",
+  "type": "NumericTimeseriesReport",
   "title": "Gross Search Volume",
-  "since": 1336855399,
-  "until": 1336901781,
   "query": "filter(_type & 'search_with_filter','search_without_filter')",
   "series": {
     "with_filter": {

@@ -23,7 +23,7 @@ private
   end
 
   def basedir
-  	'./web/'
+  	@opts[:basedir]
   end
 
 end

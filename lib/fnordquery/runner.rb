@@ -4,10 +4,11 @@ class FnordQuery::Runner
 
   def initialize
     @opts = {}
+    @task_opts = {}
 
     tasks       = %w(query web udp tcp exec)
     backends    = %w(redis fyrehose)
-    executables = %w(CategoricalTopKReport NumericTimeseriesReport)
+    executables = %w(ReportBuilder CategoricalTopKReport NumericTimeseriesReport)
     shorts      = { redis: :r, fyrehose: :x, query: :q }
 
     OptionParser.new do |opts|
@@ -18,6 +19,17 @@ class FnordQuery::Runner
       opts.on("-v", "--version") do
         print_version
         exit!
+      end
+      opts.on("--force") do
+        @task_opts.merge!(:force => true) 
+      end
+      opts.on("-p [PATH]", "--path [PATH]") do |path|
+        @task_opts.merge!(:path => path) 
+      end
+      %w(since until).each do |key|
+        opts.on("--#{key} [ARG]") do |arg|
+          @task_opts.merge!(key.to_sym => arg)
+        end
       end
       { :task => tasks, :backend => backends }.each do |lkey, list|
         list.each do |key|
@@ -31,6 +43,11 @@ class FnordQuery::Runner
             if @opts[lkey]
               puts "error: only one of #{list.join(", ")} can be given"
               exit!(1)
+            end
+            if lkey == :backend
+              @task_opts[:opt_str] = [
+                @task_opts[:opt_str], "--#{key} #{arg}"
+              ].compact.flatten
             end
             @opts[lkey] = [key, arg]
           end
@@ -50,6 +67,7 @@ class FnordQuery::Runner
     end
 
     @task = nil
+    @task_opts[:path] ||= '/tmp/fnordquery/'
 
     if @opts[:task].first == "query"
       begin
@@ -72,10 +90,10 @@ class FnordQuery::Runner
         puts "error: unknown executable: #{execcfg["klass"]}"
         exit!(1)
       end
+      execcfg[:basedir] ||= File.expand_path("../", @opts[:task].last)
+      execcfg.merge!(@task_opts)
       @task = FnordQuery.const_get(execcfg["klass"]).new(execcfg)
     end
-
-    puts @task.inspect
 
     EM.run do
 
@@ -117,6 +135,7 @@ private
       Usage: fnordquery [OPTIONS...]
         -r <address>      use redis backend
         -x <address>      use fyrehose backend
+        -p <path>         set basedir (/tmp/fnordquery)
 
         --web <address>   start web interface
         --tcp <address>   listen on tcp for events
@@ -127,7 +146,7 @@ private
 
     examples = <<-EOH
       Examples:
-        fnordquery -f --emit "FILTER(_channel = 'fnord')"  
+        fnordquery -f --query "FILTER(_channel = 'fnord')"  
         fnordquery -r localhost:6379 --udp 0.0.0.0:2323
         fnordquery -r --web 0.0.0.0:8080
     EOH

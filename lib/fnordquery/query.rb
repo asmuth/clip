@@ -159,6 +159,10 @@ private
   end
 
   def parse_time(str)
+    self.class.parse_time(str)
+  end
+
+  def self.parse_time(str)
     return :now     if str == "now"
     return str.to_i if str =~ /^[0-9]+$/
     return (Time.now.to_i - str[1..-1].to_i) if str =~ /^-[0-9]+$/
