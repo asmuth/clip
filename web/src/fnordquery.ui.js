@@ -23,6 +23,7 @@ fnordquery.ui.navbar = function(elem, opts){
   for(ind in opts.buttons){
     var btn = $('<a>')
       .addClass('button')
+      .click(opts.buttons[ind][1])
       .html(opts.buttons[ind][0]);
     elem.prepend(btn);
   }
@@ -40,9 +41,17 @@ fnordquery.ui.modal = function(opts){
       "marginLeft": (($("#viewport").width() - width) / 2),
       "display": "none"
     });
-    
+
+  if(opts.content){
+    dialog_elem.html(opts.content);
+  }    
 
   $("#viewport").append(dialog_elem);
   dialog_elem.show().addClass('visible');
   $('.modal_backdrop').show().addClass('visible');
+}
+
+fnordquery.ui.close_modal = function(elem){
+  $(elem).closest('.modal').removeClass('visible').fadeOut();
+  $('.modal_backdrop').removeClass('visible').fadeOut();
 }

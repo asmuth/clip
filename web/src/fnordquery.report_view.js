@@ -36,20 +36,40 @@ fnordquery.views.report = (function(report_token){
         [opts.title, "/report/"+report_token]
       ],
       buttons: [
-        ["Export Data", function(){ alert(23); }]
+        ["Select timerange (fixme: dropdown)", function(){ 
+          open_interval_modal();
+        }]
       ]
 
     });
-
-    // fnordquery.ui.modal({
-    //   height: 700
-    // })
 
     var avail_intervals = Object.keys(opts.available_intervals);
 
     if(avail_intervals.length > 0){
       load_interval(avail_intervals[0]);
     }
+  }
+
+  function open_interval_modal(){
+    var interval_list = $('<ul>');
+
+    for(interval in opts.available_intervals){
+      interval_list.append(
+        $('<li>')
+        .html($('<a href="#">')
+        .html(interval)
+        .attr('data', interval)
+        .click(function(){ 
+          load_interval($(this).attr('data'));
+          fnordquery.ui.close_modal(this);
+        }))
+      );
+    }
+
+    fnordquery.ui.modal({
+      height: 700,
+      content: interval_list
+    });
   }
 
   function load_interval(interval){
