@@ -1,3 +1,4 @@
+-> gauges + gauge pipelining
 -> restrict to minimum screen size!
 -> refactor timerseries fu in numtimeseries into "timeseries gauge"
 -> categorical topk -> toplist-sidebar -> search field on top

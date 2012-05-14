@@ -4,7 +4,7 @@ class FnordQuery::NumericTimeseriesReport < FnordQuery::Report
     super
     backend = _backend[0].new(_backend[1])
 
-    colors = ["#CD645A", "#2F635E", "#FACE4F", "#42436B"]
+    colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
 
     t_since = @opts["since"].to_i
     t_until = @opts["until"].to_i

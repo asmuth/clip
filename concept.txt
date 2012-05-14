@@ -1,23 +1,7 @@
+fnordquery
+==========
 
-fixed attributes:
-
-  _time
-  _eid
-  _volatile
-
-
-attribute types:
-
-  -> string_categorical
-  -> numeric_categorical
-  -> numeric
-  -> string
-
-
-
-
-# examples:
-./bin/fnordquery -r localhost:1234 --query "
+fnordquery analyzes streams of usage/traffic/activity/etc-data. you feed in json-objects ("events") and it spits out pretty reports. the only schema-wise requirement is that each event contains a "_time" key.
 
 
 categorical_correlation (keyword correlation)
