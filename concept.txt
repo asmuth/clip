@@ -3,6 +3,8 @@ fnordquery
 
 fnordquery analyzes streams of usage/traffic/activity/etc-data. you feed in json-objects ("events") and it spits out pretty reports. the only schema-wise requirement is that each event contains a "_time" key.
 
+fnordquery requires a fyrehose backend.
+
 
 categorical_correlation (keyword correlation)
 categorical_crosstab (chanels x filters)
