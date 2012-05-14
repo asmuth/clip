@@ -4,3 +4,4 @@
 -> auto-runner/cron for reports (daily, weekly etc)
 -> toplist: little progress-bar style percent gauges
 -> timeseries widget: cardinal on/off switch should be skeudomorph / sliding switch :)
+-> realtime viewer / explorer with embed function (!) :)
