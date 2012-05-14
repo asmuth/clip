@@ -2,3 +2,5 @@
 -> categorical topk -> toplist-sidebar -> search field on top
 -> interval-modal: sort by interval "daily / weekly / various" reports
 -> auto-runner/cron for reports (daily, weekly etc)
+-> toplist: little progress-bar style percent gauges
+-> timeseries widget: cardinal on/off switch should be skeudomorph / sliding switch :)
