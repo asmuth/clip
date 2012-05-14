@@ -117,13 +117,14 @@ color:#000;
 .widget .inner{ margin:20px; }
 /*.widget .headbar{ margin-bottom:30px; }*/
 
-.toplist_inner{ min-height:300px; }
-.toplist_inner.loading{ opacity:0.5; background:url('/loader.gif') no-repeat center center;  }
+.ui_toplist{ min-height:300px; }
+.ui_toplist.loading{ opacity:0.5; background:url('/loader.gif') no-repeat center center;  }
 
-.toplist_item{ border-bottom:1px solid #dedede; height:42px; }
-.toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
-.toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; color:#333; width:70px; color:#666; }
-.toplist_item .percent{ float:right; line-height:42px; margin-right:20px; font-size:18px; font-weight:bold; color:#333; width:70px; }
+.ui_toplist .toplist_item{ border-bottom:1px solid #dedede; height:42px; }
+.ui_toplist .toplist_item:hover{ background:#fff; }
+.ui_toplist .toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
+.ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; color:#333; width:70px; color:#666; }
+.ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:20px; font-size:18px; font-weight:bold; color:#333; width:70px; }
 
 .headbar {
 
@@ -414,3 +415,9 @@ position: relative;
 #sidebar ul li .picto{ margin-top:10px; margin-right:7px; }
 #sidebar ul li:hover, #tabs ul li:hover:after{ color:#fff; }
 #sidebar ul li:hover .picto{ opacity:1; }
+
+.ui_sidebar_toplist{ 
+  border-right: 1px solid #DDD;
+  min-height: 1000px;
+  background: #EEE;
+}
