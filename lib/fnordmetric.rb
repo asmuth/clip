@@ -139,7 +139,7 @@ require "fnordmetric/acceptors/udp_acceptor"
 
 
 require "fnordmetric/gauges/dummy_gauge"
-require "fnordmetric/gauges/numeric_gauge"
+require "fnordmetric/gauges/numeric_timeseries_gauge"
 require "fnordmetric/gauges/realtime_gauge"
 
 require "fnordmetric/widgets/widget"

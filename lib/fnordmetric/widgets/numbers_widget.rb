@@ -1,12 +1,12 @@
 class FnordMetric::NumbersWidget < FnordMetric::Widget
 
-  def react(ev)
-    {
-      :cmd => "values_for",
-      :series => ev["series"],
-      :values => call_handler(:values_for, ev["series"]) 
-    }
-  end  
+  def data
+    super.merge(
+      :series => gauges.map(&:name),
+      :offsets => (@opts[:offsets] || [0, 1, "s30"]),
+      :autoupdate => (@opts[:autoupdate] || 0)
+    )
+  end
 
   def has_tick?
     false

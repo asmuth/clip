@@ -7,6 +7,8 @@ FnordMetric.widgets.numbersWidget = function(){
 
     opts = _opts;
 
+    console.log(opts);
+
     opts.elem.append(
       $('<div class="headbar small"></div>').html(opts.title)
     ).css({
@@ -63,7 +65,7 @@ FnordMetric.widgets.numbersWidget = function(){
         "_class": "widget_request",
         "_channel": opts.channel,
         "cmd": "values_for",
-        "series": opts.series[k],
+        "gauges": opts.series[k],
         "widget_key": opts.widget_key
       })
     }

@@ -37,6 +37,7 @@ private
         end
         
         socket.onmessage do |message|
+          puts "received: #{message}"
           begin
             message = JSON.parse(message)
           rescue
