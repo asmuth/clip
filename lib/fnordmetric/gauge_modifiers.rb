@@ -1,4 +1,4 @@
-module FnordMetric::RedisMetricModifiers
+module FnordMetric::GaugeModifiers
 
   def incr(time, value=1)
     assure_two_dimensional!(self)

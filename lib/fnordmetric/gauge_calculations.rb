@@ -1,4 +1,4 @@
-module FnordMetric::RedisMetricCalculations
+module FnordMetric::GaugeCalculations
 
   @@avg_per_session_proc = proc{ |_v, _t|
     (_v.to_f / (sync_redis.get(tick_key(_t, :"sessions-count"))||1).to_i)

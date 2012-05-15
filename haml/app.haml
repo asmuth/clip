@@ -1,0 +1,35 @@
+!!!
+%html
+  %head
+    %title FnordMetric
+    %script{:src => "vendor/jquery-1.6.1.min.js", :type => "text/javascript"}
+    %script{:src => "vendor/highcharts.js", :type => "text/javascript"}
+    %script{:src => "vendor/raphael.min.js", :type => "text/javascript"}
+    %script{:src => "vendor/raphael.util.js", :type => "text/javascript"}
+    %script{:src => "vendor/d3.v2.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.util.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.ui.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.timeline_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.numbers_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.bars_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.pie_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.toplist_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.html_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.realtime_value_widget.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.overview_view.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.gauge_view.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.dashboard_view.js", :type => "text/javascript"}
+    %script{:src => "fnordmetric.session_view.js", :type => "text/javascript"}
+    %link{:href => "fnordmetric.css", :rel => "stylesheet", :type => "text/css"}
+%body
+:javascript
+  //
+    $(document).ready(function(){
+      window.setTimeout(function(){
+        console.log(1);
+        FnordMetric.renderDashboard('TrafficChannels');
+      }, 300);
+      FnordMetric.init($('body'), '#{current_namespace.token}', 'ws://localhost:4243');
+    });
+  //

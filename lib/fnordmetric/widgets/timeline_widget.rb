@@ -23,4 +23,14 @@ class FnordMetric::TimelineWidget < FnordMetric::Widget
     end
   end
 
+  def data
+    super.merge(
+      :ticks => [30]
+    )
+  end
+
+  def has_tick?
+    false
+  end
+
 end

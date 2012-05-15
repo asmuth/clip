@@ -8,4 +8,8 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
     }
   end  
 
+  def has_tick?
+    false
+  end
+  
 end

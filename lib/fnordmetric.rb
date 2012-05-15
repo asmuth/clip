@@ -123,7 +123,10 @@ end
 require "fnordmetric/remote_gauge"
 require "fnordmetric/multi_gauge"
 require "fnordmetric/event_handler"
-
+require "fnordmetric/gauge_calculations"
+require "fnordmetric/gauge_modifiers"
+require "fnordmetric/gauge"
+require "fnordmetric/context"
 
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
@@ -131,6 +134,9 @@ require "fnordmetric/backends/memory_backend"
 require "fnordmetric/acceptors/acceptor"
 require "fnordmetric/acceptors/tcp_acceptor"
 require "fnordmetric/acceptors/udp_acceptor"
+
+
+
 
 require "fnordmetric/gauges/dummy_gauge"
 require "fnordmetric/gauges/numeric_gauge"
@@ -141,9 +147,6 @@ require "fnordmetric/widgets/timeline_widget"
 require "fnordmetric/widgets/numbers_widget"
 require "fnordmetric/widgets/realtime_value_widget"
 
-require "fnordmetric/metrics/redis_metric_calculations"
-require "fnordmetric/metrics/redis_metric_modifiers"
-require "fnordmetric/metrics/redis_metric"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/namespace"
@@ -164,9 +167,9 @@ require "fnordmetric/logger"
 
 # require "fnordmetric/"
 # require "fnordmetric/numbers_widget"
-# require "fnordmetric/bars_widget"
-# require "fnordmetric/toplist_widget"
-# require "fnordmetric/pie_widget"
+ require "fnordmetric/bars_widget"
+ require "fnordmetric/toplist_widget"
+ require "fnordmetric/pie_widget"
 # require "fnordmetric/html_widget"
 
 # require "fnordmetric/namespace"

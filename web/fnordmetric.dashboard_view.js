@@ -9,6 +9,7 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
       $.ajax({
         url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/dashboard/'+dashboard_name,
         success: function(resp, status){
+          console.log(resp);
           var conf = JSON.parse(resp);
           renderWidgets(conf.widgets);
         }
