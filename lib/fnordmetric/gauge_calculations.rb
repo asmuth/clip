@@ -49,7 +49,11 @@ module FnordMetric::GaugeCalculations
     opts[:max_fields] ||= @opts[:max_fields] ||= 25
     opts[:discard_others] ||= @opts[:discard_others] ||= false
 
-    all_values = redis.zrevrange(tick_key(time), 0, -1, :withscores => true).in_groups_of(2)
+    all_values = redis.zrevrange(tick_key(time), 0, -1, :withscores => true)
+
+    unless Redis::VERSION =~ /^3.0/
+      all_values = all_values.in_groups_of(2)
+    end
     rv = []
 
     # if all fields are requested
