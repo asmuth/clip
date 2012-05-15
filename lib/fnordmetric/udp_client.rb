@@ -10,9 +10,9 @@ class FnordMetric::UDPClient
       if event_data.is_a?(Hash)
         event_data = event_data.to_json
       else
-        JSON.parse(event_data) # void ;)
+        MultiJson.decode(event_data) # void ;)
       end
-    rescue JSON::ParserError
+    rescue MultiJson::DecodeError
       FnordMetric.log("event_lost: can't parse json")
     else
       @sock.send(event_data, 0)

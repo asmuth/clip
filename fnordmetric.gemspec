@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.description = %q{FnordMetric is a Ruby Event-Tracking gem on steroids}
   s.licenses    = ["MIT"]
-  
+
   s.add_dependency "bson_ext", ">= 1.4.0"
   s.add_dependency "sinatra", ">= 1.2.6"
   s.add_dependency "redis", ">= 2.2.2"
@@ -24,10 +24,11 @@ Gem::Specification.new do |s|
   s.add_dependency "haml"
   s.add_dependency "rack"
   s.add_dependency "rack-test"
-  s.add_dependency "yajl-ruby"
+  s.add_dependency "multi_json"
   s.add_dependency "thin"
   s.add_dependency "activesupport"
 
+  s.add_development_dependency "oj"
   s.add_development_dependency "delorean"
   s.add_development_dependency "rspec", "~> 2.8.0"
   s.add_development_dependency "shoulda"
