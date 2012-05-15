@@ -1,5 +1,6 @@
 FnordMetric.views.dashboardView = (function(dashboard_name){
     var widgets = [];
+    var widget_objs = {};
     var viewport = null;
 
     function load(_viewport){
@@ -28,16 +29,24 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
       resize();
     };
 
-    function renderWidget(wkey){
+    function renderWidget(wkey, _w){
       var widget = widgets[wkey];
+      if(!widget["widget_key"]){ widget["widget_key"] = wkey; }
       /* argh... */
-      if(widget.klass=='TimelineWidget'){ FnordMetric.widgets.timelineWidget().render(widget); }
-      if(widget.klass=='BarsWidget'){ FnordMetric.widgets.barsWidget().render(widget); }
-      if(widget.klass=='NumbersWidget'){ FnordMetric.widgets.numbersWidget().render(widget); }
-      if(widget.klass=='ToplistWidget'){ FnordMetric.widgets.toplistWidget().render(widget); }
-      if(widget.klass=='PieWidget'){ FnordMetric.widgets.pieWidget().render(widget); }
-			if(widget.klass=="HtmlWidget") { FnordMetric.widgets.htmlWidget().render(widget); }
-    };
+      if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets.timelineWidget(); }
+      if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
+      if(widget.klass=='RealtimeValueWidget'){ _w = FnordMetric.widgets.realtimeValueWidget(); }
+      
+      if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
+      if(widget.klass=='ToplistWidget'){ _w = FnordMetric.widgets.toplistWidget(); }
+      if(widget.klass=='PieWidget'){ _w = FnordMetric.widgets.pieWidget(); }
+      if(widget.klass=="HtmlWidget") { _w = FnordMetric.widgets.htmlWidget(); }
+
+      if(_w){ 
+        _w.render(widget);
+        widget_objs[wkey] = _w;
+      }    
+    }
 
     function resizeWidget(wkey){
       var widget = widgets[wkey];
@@ -60,9 +69,18 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
       $('body').trigger('fm_dashboard_close');
     };
 
+    function announce(evt){
+      if((evt.class == "widget_response") || (evt.class == "widget_push")){
+        for(wkey in widget_objs){
+          widget_objs[wkey].announce(evt);
+        }  
+      }
+    }
+
     return {
       load: load,
       resize: resize,
+      announce: announce,
       close: close
     };
 

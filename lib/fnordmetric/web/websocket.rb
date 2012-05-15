@@ -12,6 +12,7 @@ class FnordMetric::WebSocket
     }.merge(opts)
 
     @backend = FnordMetric.backend
+    @reactor = FnordMetric::Reactor.new
 
     @uuid = "websocket-#{get_uuid}"
 
@@ -24,18 +25,6 @@ private
     EventMachine::WebSocket.start(@opts) do |socket|
       socket.onopen do
 
-        subscribed_channles = []
-
-        @backend.subscribe do |message| 
-          if message["_sender"] != @uuid &&
-            (message["_class"] == "widget_response" ||
-             message["_class"] == "widget_push" ||
-             message["_class"] == "discover_response" ||
-             message["_class"] == "render_response")
-            socket.send(message.to_json)
-          end
-        end
-        
         socket.onmessage do |message|
           puts "received: #{message}"
           begin
@@ -45,12 +34,10 @@ private
           else
             message["_eid"] ||= get_uuid
             message["_sender"] = @uuid
-            @backend.publish(message)
+            if msg = @reactor.execute(message) # FIXPAUL
+              socket.send(msg.to_json)
+            end
           end
-        end
-
-        socket.onclose do
-          @backend.hangup
         end
 
       end

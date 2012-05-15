@@ -43,14 +43,9 @@ class FnordMetric::App < Sinatra::Base
   set :views, ::File.expand_path('../../../../web/haml', __FILE__)
 
   def initialize(opts)
-    @namespaces = FnordMetric.namespaces.clone
+    @namespaces = FnordMetric.namespaces
     @redis = Redis.connect(:url => opts[:redis_url])
     @opts = opts
-    namespaces.each do |key, block|
-      @namespaces[key] = FnordMetric::Namespace.new(key, opts.clone)
-      @namespaces[key].instance_eval(&block)
-      @namespaces[key].ready!(@redis.clone)
-    end
     super(nil)
   end
 
