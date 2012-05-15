@@ -17,7 +17,7 @@ class FnordMetric::App < Sinatra::Base
   enable :session
 
   set :haml, :format => :html5
-  set :views, ::File.expand_path('../../../haml', __FILE__)  
+  set :views, ::File.expand_path('../../../haml', __FILE__)
 
   def initialize(namespaces, opts)
     @namespaces = {}
@@ -56,7 +56,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
-  	redirect "#{path_prefix}/#{@namespaces.keys.first}"
+    redirect "#{path_prefix}/#{@namespaces.keys.first}"
   end
 
   get '/:namespace' do
@@ -72,18 +72,22 @@ class FnordMetric::App < Sinatra::Base
 
     gauge = current_namespace.gauges.fetch(params[:name].intern)
 
-    data = if gauge.three_dimensional?
+    if gauge.three_dimensional?
       _t = (params[:at] || Time.now).to_i
-      { :count => gauge.field_values_total(_t), :values => gauge.field_values_at(_t) }
+      data = { :count => gauge.field_values_total(_t), :values => gauge.field_values_at(_t) }
+
     elsif params[:at] && params[:at] =~ /^[0-9]+$/
-      { (_t = gauge.tick_at(params[:at].to_i)) => gauge.value_at(_t) }
+      data = { (_t = gauge.tick_at(params[:at].to_i)) => gauge.value_at(_t) }
+
     elsif params[:at] && params[:at] =~ /^([0-9]+)-([0-9]+)$/
       _range = params[:at].split("-").map(&:to_i)
       _values = gauge.values_in(_range.first.._range.last)
-      params[:sum] ? { :sum => _values.values.compact.map(&:to_i).sum } : _values
+      data = params[:sum] ? { :sum => _values.values.compact.map(&:to_i).sum } : _values
+
     else
-      { (_t = gauge.tick_at(Time.now.to_i-gauge.tick)) => gauge.value_at(_t) }
+      data = { (_t = gauge.tick_at(Time.now.to_i-gauge.tick)) => gauge.value_at(_t) }
     end
+
 
     data.to_json
   end
@@ -104,7 +108,7 @@ class FnordMetric::App < Sinatra::Base
       current_namespace.events(:by_type, :type => params[:type])
     elsif params[:session_key]
       current_namespace.events(:by_session_key, :session_key => params[:session_key])
-    else 
+    else
       find_opts = { :limit => 100 }
       find_opts.merge!(:since => params[:since].to_i+1) if params[:since]
       current_namespace.events(:all, find_opts)
