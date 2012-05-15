@@ -182,8 +182,8 @@ var FnordMetric = (function(){
 
   };
 
-	var htmlWidget = function(){
-		function render(opts){
+  var htmlWidget = function(){
+    function render(opts){
 
       opts.elem.append(
         $('<div class="headbar small"></div>').html(opts.title)
@@ -192,20 +192,20 @@ var FnordMetric = (function(){
         'overflow': 'hidden'
       });
 
-			var container = $('<div></div>')
+      var container = $('<div></div>')
         .addClass('html_container')
-				.html(opts.html);
+        .html(opts.html);
 
-			opts.elem.append(container);
-		}
+      opts.elem.append(container);
+    }
 
-		function updateValues(opts){}
-		function updatedisplay(opts, diff_factor){}
+    function updateValues(opts){}
+    function updatedisplay(opts, diff_factor){}
 
-		return {
-			render: render
-		};
-	}
+    return {
+      render: render
+    };
+  }
 
   var numbersWidget = function(){
 
@@ -926,8 +926,8 @@ var FnordMetric = (function(){
         if(events.length > 0){
           eventsPolledUntil = parseInt(events[0]._time)-1;
         }
-	      for(var n=events.length-1; n >= 0; n--){
-	        var v = events[n];
+        for(var n=events.length-1; n >= 0; n--){
+          var v = events[n];
           if(passesFiltering(v)) {
             renderEvent(v);
           }
@@ -1106,7 +1106,7 @@ var FnordMetric = (function(){
       if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
       if(widget.klass=='ToplistWidget'){ toplistWidget().render(widget); }
       if(widget.klass=='PieWidget'){ pieWidget().render(widget); }
-			if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
+      if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
     };
 
     function resizeWidget(wkey){
