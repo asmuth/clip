@@ -1,0 +1,12 @@
+-> gauges + gauge pipelining
+-> restrict to minimum screen size!
+-> refactor timerseries fu in numtimeseries into "timeseries gauge"
+-> categorical topk -> toplist-sidebar -> search field on top
+-> interval-modal: sort by interval "daily / weekly / various" reports
+-> auto-runner/cron for reports (daily, weekly etc)
+-> toplist: little progress-bar style percent gauges
+-> timeseries widget: cardinal on/off switch should be skeudomorph / sliding switch :)
+-> realtime viewer / explorer with embed function (!) like statsd :)
+-> hacking/advanced: adding data without going through fnordquery. 
+-> hacking/advanced: editing the report json files
+-> mongodb store! (+ require redis only when using redis store)
