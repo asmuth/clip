@@ -2,39 +2,39 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::Gauge do
 
-  before(:all) do    
-    @now = Time.utc(1992,01,13,5,23,23).to_i    
+  before(:all) do
+    @now = Time.utc(1992,01,13,5,23,23).to_i
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis, false)
   end
 
   before(:each) do
-    @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
+    @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }
   end
 
   it "should remember its own name" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"}) 
+    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"})
     gauge.name.should == "fnordgauge"
   end
 
   it "should return its key as title if none specified" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"}) 
+    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge"})
     gauge.title.should == "fnordgauge"
   end
 
   it "should return its title as title if none specified" do
-    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge", :title => "Fnord Gauge"}) 
+    gauge = FnordMetric::Gauge.new({:key_prefix => "foo", :key => "fnordgauge", :title => "Fnord Gauge"})
     gauge.title.should == "Fnord Gauge"
   end
 
   it "should raise an error when initialize without key" do
-    lambda{ 
+    lambda{
       FnordMetric::Gauge.new({:key_prefix => "foo"})
     }.should raise_error(key_error_klass)
   end
 
   it "should raise an error when initialize without key_prefix" do
-    lambda{ 
+    lambda{
       FnordMetric::Gauge.new({:key => "foo"})
     }.should raise_error(key_error_klass)
   end
@@ -73,12 +73,12 @@ describe FnordMetric::Gauge do
   describe "value retrival" do
 
     before(:each) do
-      @gauge_key = "fnordmetric-myns-gauge-mygauge_966-10"    
+      @gauge_key = "fnordmetric-myns-gauge-mygauge_966-10"
       @redis.hset(@gauge_key, "695280200", "54")
       @redis.hset(@gauge_key, "695280210", "123")
       @gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :key => "mygauge_966",
         :redis => @redis
       })
@@ -100,8 +100,8 @@ describe FnordMetric::Gauge do
       @redis.hset(@gauge_key, "695280200", "76")
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       _gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :key => "mygauge_966",
         :unique => true,
         :redis => @redis
@@ -113,8 +113,8 @@ describe FnordMetric::Gauge do
       @redis.hset(@gauge_key, "695280200", "76")
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       _gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :key => "mygauge_966",
         :unique => true,
         :average => true,
@@ -130,14 +130,14 @@ describe FnordMetric::Gauge do
       }
     end
 
-    it "should receive gauge values per session for multiple ticks" do  
+    it "should receive gauge values per session for multiple ticks" do
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       @redis.set(@gauge_key+"-695280210-sessions-count", "8")
       @redis.hset(@gauge_key, "695280200", "76")
       @redis.hset(@gauge_key, "695280210", "56")
       _gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :key => "mygauge_966",
         :unique => true,
         :redis => @redis
@@ -148,12 +148,12 @@ describe FnordMetric::Gauge do
       }
     end
 
-    it "should receive gauge values per session for multiple ticks with avg" do  
+    it "should receive gauge values per session for multiple ticks with avg" do
       @redis.set(@gauge_key+"-695280200-sessions-count", "23")
       @redis.set(@gauge_key+"-695280210-sessions-count", "8")
       _gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :key => "mygauge_966",
         :unique => true,
         :average => true,
@@ -165,7 +165,7 @@ describe FnordMetric::Gauge do
       }
     end
 
-    it "should receive gauge values with custom calculation for multiple ticks" do  
+    it "should receive gauge values with custom calculation for multiple ticks" do
       @gauge.values_at([@now, @now+8]){ |val, time|
         val.to_i + 30
       }.should == {
@@ -182,21 +182,21 @@ describe FnordMetric::Gauge do
     end
 
   end
-  
+
   describe "three-dim value retrival" do
 
     before(:each) do
       @gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :three_dimensional => true,
         :key => "mygauge_966",
         :redis => @redis
       })
-      @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }  
+      @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) }
       @gauge_key = "fnordmetric-myns-gauge-mygauge_966-10-1323691200"
-      @redis.zadd(@gauge_key, 18, "fnordyblubb")  
-      @redis.zadd(@gauge_key, 23, "uberfoo")  
+      @redis.zadd(@gauge_key, 18, "fnordyblubb")
+      @redis.zadd(@gauge_key, 23, "uberfoo")
       @redis.set(@gauge_key+"-count", 41)
     end
 
@@ -211,16 +211,28 @@ describe FnordMetric::Gauge do
       @gauge.field_values_total(1323691200).should == 41
     end
 
-    it "should retrieve max 50 fields per default" do
+    it "should retrieve max 25 fields per default" do
       70.times{ |n| @redis.zadd(@gauge_key, 23, "field#{n}") }
+
       @gauge.field_values_at(1323691200).should be_a(Array)
-      @gauge.field_values_at(1323691200).length.should == 50
+      @gauge.field_values_at(1323691200).length.should == 26
+      @gauge.field_values_at(1323691200).last.first.should == 'Others'
     end
 
-    it "should retrieve more than 50 fields if requested" do
+    it "should discard other fields if requested" do
       70.times{ |n| @redis.zadd(@gauge_key, 23, "field#{n}") }
+
+      @gauge.field_values_at(1323691200, :discard_others => true).should be_a(Array)
+      @gauge.field_values_at(1323691200, :discard_others => true).length.should == 25
+      @gauge.field_values_at(1323691200, :discard_others => true).last.first.should_not == 'Others'
+    end
+
+    it "should retrieve more than 25 fields if requested" do
+      70.times{ |n| @redis.zadd(@gauge_key, 23, "field#{n}") }
+
       @gauge.field_values_at(1323691200, :max_fields => 60).should be_a(Array)
-      @gauge.field_values_at(1323691200, :max_fields => 60).length.should == 60
+      @gauge.field_values_at(1323691200, :max_fields => 60).length.should == 61
+      @gauge.field_values_at(1323691200, :max_fields => 60).last.first.should == 'Others'
     end
 
     it "should retrieve all fields if requested" do
@@ -240,8 +252,8 @@ describe FnordMetric::Gauge do
     it "should return the correct field_values per session with avg" do
       @redis.set(@gauge_key+"-sessions-count", "3")
       @gauge = FnordMetric::Gauge.new({
-        :tick => 10, 
-        :key_prefix => "fnordmetric-myns", 
+        :tick => 10,
+        :key_prefix => "fnordmetric-myns",
         :three_dimensional => true,
         :unique => true,
         :average => true,
