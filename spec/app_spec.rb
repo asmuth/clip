@@ -30,9 +30,9 @@ describe "app" do
   end
 
   it "should redirect to the first namespace" do
-  	get "/"
-  	last_response.status.should == 302
-  	last_response.location.should == "http://example.org/foospace"
+    get "/"
+    last_response.status.should == 302
+    last_response.location.should == "http://example.org/foospace"
   end
 
   it "should render the namespace" do
@@ -46,8 +46,8 @@ describe "app" do
         widget 'Blubb', nil
       }
     }, @opts)
-  	get "/foospace"
-  	last_response.status.should == 200
+    get "/foospace"
+    last_response.status.should == 200
     last_response.body.should include("Blubb")
   end
 
@@ -410,9 +410,9 @@ describe "app" do
 
     it "should return 400 if no type is provided" do
       pending("fix this")
-    	post "/events", :fnord => "foobar"
-    	last_response.status.should == 400
-    	last_response.body.should == "please specify the event_type"
+      post "/events", :fnord => "foobar"
+      last_response.status.should == 400
+      last_response.body.should == "please specify the event_type"
     end
 
   end
