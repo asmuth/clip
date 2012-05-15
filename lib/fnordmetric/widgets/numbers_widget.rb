@@ -1,8 +1,6 @@
 class FnordMetric::NumbersWidget < FnordMetric::Widget
 
   def self.execute(namespace, event)
-    puts "XEAFFFFH -> #{namespace.gauges.has_key?(event["gauge"].to_sym)} - #{event}"
-
     resp = if event["cmd"] == "values_for"
       execute_values_for(namespace.gauges[event["gauge"].to_sym], event) 
     end
@@ -18,17 +16,24 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
   def self.execute_values_for(gauge, event)
     _t = Time.now.to_i
 
-    puts "FUUUU #{gauge.inspect}"
-
     values = {}.tap do |out|
-      out["#{gauge.name}-now"]  = { 
-        :value => gauge.value_at(_t),
-        :desc  => "$formatTimeRangePre(#{gauge.tick}, 0)"
-      }
-      out["#{gauge.name}-last"]  = { 
-        :value => gauge.value_at(_t-gauge.tick),
-        :desc  => "$formatTimeRangePre(#{gauge.tick}, -1)"
-      }
+      event["offsets"].each do |off|
+        if off.to_s.starts_with?("s")
+          offset = 0
+          span = (gauge.tick * off.to_s[1..-1].to_i)
+          values = gauge.values_in((_t-span).._t+gauge.tick)
+          value = values.values.compact.map(&:to_i).sum
+        else
+          offset = off.to_i * gauge.tick
+          span = gauge.tick
+          value = gauge.value_at(_t-offset)
+        end
+
+        out["#{gauge.name}-#{offset}-#{span}"]  = { 
+          :value => value,
+          :desc  => "$formatOffset(#{offset}, #{span})"
+        }
+      end
     end
 
     { "cmd" => "values_for", 
@@ -40,7 +45,7 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
     super.merge(
       :series => gauges.map(&:name),
       :offsets => (@opts[:offsets] || [0, 1, "s30"]),
-      :autoupdate => (@opts[:autoupdate] || 0)
+      :autoupdate => (@opts[:autoupdate] || 1)
     )
   end
 

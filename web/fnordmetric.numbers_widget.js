@@ -35,6 +35,7 @@ FnordMetric.widgets.numbersWidget = function(){
     }
 
     if(opts.autoupdate){
+      console.log("AUTOUPDATE: " + opts.autoupdate)
       var secs = parseInt(opts.autoupdate);
       if(secs > 0){
 
@@ -68,6 +69,7 @@ FnordMetric.widgets.numbersWidget = function(){
         "channel": opts.channel,
         "cmd": "values_for",
         "gauge": opts.series[k],
+        "offsets": opts.offsets,
         "widget_key": opts.widget_key
       })
     }
