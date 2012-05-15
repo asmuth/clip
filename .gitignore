@@ -7,3 +7,4 @@ db/*.sqlite
 Gemfile.lock
 fnordmetric-*.gem
 bin/
+*.swp
