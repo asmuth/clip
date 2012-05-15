@@ -3,6 +3,7 @@ var FnordMetric = (function(){
   var canvasElem = false;
   var currentView = false;
   var gaugeLoadRunning = false;
+  var currentNamespace = false;
   var gauges = {};
 
   var socket;
@@ -86,7 +87,9 @@ var FnordMetric = (function(){
   };
 
 
-  function init(_canvasElem, _sock_addr){
+  function init(_canvasElem, _namespace, _sock_addr){
+    this.currentNamespace = _namespace;
+
     canvasElem = $("<div class='viewport_inner'>");
     canvasElem.addClass('clearfix');
 
@@ -152,7 +155,7 @@ var FnordMetric = (function(){
     publish: publish,
     p: '',
     socket: socket,
-    currentNamespace: false,
+    currentNamespace: null,
     currentWidgetUID: 23,
     ui: {},
     views: {},

@@ -1,11 +1,5 @@
 class FnordMetric::Web
 
-  @@namespaces = {}
-
-  def self.namespace(key=nil, &block)
-    @@namespaces[key] = block
-  end
-
   def initialize(opts)
     @opts = opts
 

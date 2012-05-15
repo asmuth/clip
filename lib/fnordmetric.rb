@@ -17,6 +17,16 @@ module FnordMetric
 
   @@firehose = EM::Channel.new
 
+  @@namespaces = {}
+
+  def self.namespace(key=nil, &block)
+    @@namespaces[key] = block
+  end
+
+  def self.namespaces
+    @@namespaces
+  end
+
   def self.backend
     FnordMetric::RedisBackend.new(options)
   end
@@ -92,14 +102,18 @@ module FnordMetric
     end
   end
 
-  # LEGACY / BACKWARDS COMPATBILE STUFF
-
   def self.server_configuration=(configuration)
+    puts "DEPRECATION WARNING - FIXPAUL"
     self.options=(configuration)
   end
 
-  def self.namespace(*args, &block)
-    FnordMetric::Web.namespace(*args, &block)
+  def self.standalone
+    puts "DEPRECATION WARNING - FIXPAUL"
+    FnordMetric::Web.new(
+      :host => options[:web_interface][0],
+      :port => options[:web_interface][1]
+    )
+    start_em
   end
 
 end
