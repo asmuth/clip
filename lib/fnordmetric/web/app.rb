@@ -40,7 +40,7 @@ class FnordMetric::App < Sinatra::Base
   enable :session
 
   set :haml, :format => :html5
-  set :views, ::File.expand_path('../../../../haml', __FILE__)
+  set :views, ::File.expand_path('../../../../web/haml', __FILE__)
 
   def initialize(opts)
     @namespaces = FnordMetric.namespaces.clone
@@ -79,7 +79,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   get '/' do
-  	::File.open(::File.expand_path("../../../../web/fnordmetric.html", __FILE__)).read
+    redirect "#{path_prefix}/#{@namespaces.keys.first}"
   end
 
   get '/:namespace' do
