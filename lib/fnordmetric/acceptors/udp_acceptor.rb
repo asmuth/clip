@@ -7,6 +7,8 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
   def self.start(opts)
     self.opts = opts
 
+    @backend = @opts[:backend][0].new(@opts[:backend][1])
+
     EM.open_datagram_socket(*(opts[:listen] << self << opts))
   end
 
@@ -23,11 +25,7 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
   end
 
   def unbind
-    backend.hangup
-  end
-
-  def backend
-    @backend ||= FnordMetric.backend
+    #backend.hangup
   end
 
   def events

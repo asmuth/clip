@@ -36,11 +36,12 @@ class FnordMetric::TCPAcceptor < EventMachine::Connection
   end
 
   def close_connection?
-    @backend.hangup unless @streaming || (@events_buffered!=0)
+    #@backend.hangup unless @streaming || (@events_buffered!=0)
   end
 
   def post_init
-    @backend = FnordMetric.backend
+    puts options.inspect
+    @backend = options[:backend][0].new(options[:backend][1])
     @events_buffered = 0
     @streaming = true
     @buffer = ""

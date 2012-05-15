@@ -42,7 +42,7 @@ class FnordMetric::App < Sinatra::Base
   set :haml, :format => :html5
   set :views, ::File.expand_path('../../../../haml', __FILE__)
 
-  def initialize(namespaces, opts)
+  def initialize(opts)
     @namespaces = {}
     @redis = Redis.connect(:url => opts[:redis_url])
     @opts = opts

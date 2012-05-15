@@ -18,7 +18,7 @@ class FnordMetric::Web
 
   def initialized   
     server = @opts[:server].downcase
-    app = FnordMetric::App.new(@@namespaces.clone, @opts)
+    app = FnordMetric::App.new(@opts)
 
     unless ["thin", "hatetepe"].include? server
       raise "Need an EventMachine webserver, but #{server} isn't"
