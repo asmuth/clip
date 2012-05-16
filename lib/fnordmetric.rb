@@ -8,8 +8,8 @@ require 'haml'
 require 'rack/server'
 
 # dev requires
-require 'awesome_print'
-require 'debugger'
+#require 'awesome_print'
+#require 'debugger'
 
 require "fnordmetric/ext"
 require "fnordmetric/version"
