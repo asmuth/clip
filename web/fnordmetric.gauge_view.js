@@ -33,11 +33,6 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
         ["Export Data", function(){ alert(23); }]
       ]
     });
-
-    renderTabs();
-    renderWidgets(conf.widgets);
-
-    renderTab(tabs[0]);
   };
 
   function announce(evt){
@@ -46,36 +41,6 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
         widget_objs[_wkey].announce(evt);
       }  
     }
-  }
-
-  function renderTabs(){
-    var tab_elem = $('<ul>').addClass('ui_tabs tabs');
-    viewport.append(tab_elem);
-    for(ind in tabs){
-
-      tab_elem.append($('<li>')
-        .attr('data-tab', tabs[ind])
-        .append($('<a href="#">')
-          .html(tabs[ind])
-          .click(function(){ renderTab($(this).html()); })
-        )
-      )
-
-      viewport.append($('<div>')
-        .addClass('tab')
-        .attr('data-tab', tabs[ind])
-        .css('display', 'none')
-      )
-
-    }
-  }
-
-  function renderTab(tab_name){
-    $('.tab', viewport).hide()
-      .filter('.tab[data-tab="' + tab_name + '"]').show();
-
-    $('ul.tabs li', viewport).removeClass('active')
-      .filter('li[data-tab="' + tab_name + '"]').addClass('active');
   }
       
   function renderWidgets(_widgets){

@@ -42,6 +42,7 @@ a.link:hover{
   background:url('img/navbar.png');
   position:absolute;
   z-index: 11004;
+  top:0;
 }
 
 .navbar h1{

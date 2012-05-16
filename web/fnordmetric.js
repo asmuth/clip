@@ -56,8 +56,8 @@ var FnordMetric = (function(){
   function renderGaugeAsync(_gauge){
     gaugeLoadRunning = true;
     publish({
-      "_channel": _gauge,
-      "_class": "render_request"
+      "gauge": _gauge,
+      "type": "render_request"
     })
   }
 
@@ -120,8 +120,8 @@ var FnordMetric = (function(){
   function socketMessage(raw){
     var evt = JSON.parse(raw.data);
 
-    if((evt._class == "render_response") && gaugeLoadRunning){
-      // renderGauge(evt._channel, evt.payload);
+    if((evt.type == "render_response") && gaugeLoadRunning){
+      renderGauge(evt.gauge, evt.payload);
     } else if((evt.type == "discover_response")){
       console.log(["ADDGAUGE", evt]);
       addGauge(evt);

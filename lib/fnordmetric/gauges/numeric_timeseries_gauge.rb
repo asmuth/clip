@@ -1,4 +1,4 @@
-class FnordMetric::NumericTimeseriesGauge < FnordMetric::MultiGauge
+class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
 
   #def execute(runner, _backend)
     # super
@@ -50,6 +50,10 @@ class FnordMetric::NumericTimeseriesGauge < FnordMetric::MultiGauge
 
     # end
   #end
+
+  def renderable?
+    true
+  end
 
 private
 

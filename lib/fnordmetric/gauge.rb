@@ -72,4 +72,8 @@ class FnordMetric::Gauge
     values_at(ticks_in(range))
   end
 
+  def renderable?
+    false
+  end
+
 end
