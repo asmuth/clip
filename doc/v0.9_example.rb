@@ -11,6 +11,18 @@ FnordMetric.namespace :ulm do
   gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
   gauge :winks_sent, :tick => 1.day.to_i, :title => "Winks sent"
 
+
+  gauge :gross_search_volume,
+    :type => :numeric_timeseries,
+    :tick => 30.seconds,
+    :group => "Search",
+    :title => "Gross Search Volume",
+    :key_nouns => ["Search", "Searches"],
+    :series => [:without_filter, :with_filter]
+    #:enable_punchcard => true,
+    #:enable_realtime => true
+
+
   widget 'Overview', {
     :title => "Yes/No/Skip-Votes",
     :type => :timeline,
@@ -22,7 +34,6 @@ FnordMetric.namespace :ulm do
     :type => :numbers,
     :gauges => [:skip_votes, :yes_votes, :maybe_votes]
   }
-
 
   widget 'Overview', {
     :title => "Messages sent/read",
