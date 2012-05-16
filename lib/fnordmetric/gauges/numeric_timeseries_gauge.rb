@@ -1,7 +1,6 @@
 class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
 
-  #def execute(runner, _backend)
-    # super
+  def render(namespace, event)
     # backend = _backend[0].new(_backend[1])
 
     # colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
@@ -49,7 +48,9 @@ class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
     #   end
 
     # end
-  #end
+
+    "fnord!!!!!!"
+  end
 
   def renderable?
     true

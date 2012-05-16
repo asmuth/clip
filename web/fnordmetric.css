@@ -109,7 +109,7 @@ color:#000;
 .picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
 #viewport{ float:left; margin-left:220px; min-width:790px; }
-#viewport .viewport_inner{ margin:0 6px; background:#fff; min-height:1200px; }
+#viewport .viewport_inner{ margin:0 6px; background:#fff; min-height:1200px; padding-top:1px; }
 
 #viewport, #sidebar ul li:hover, #sidebar ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
 
@@ -291,6 +291,7 @@ ul.ui_tabs li.active a{
   background:#f4f4f4;
 }
 
+h1.head{ margin-top:70px; }
 .gauge_viewport{ margin-top:30px; }
 
 

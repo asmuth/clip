@@ -76,4 +76,8 @@ class FnordMetric::Gauge
     false
   end
 
+  def render_to_event(*args)
+    { :title => name, :html => render(*args) }
+  end
+
 end

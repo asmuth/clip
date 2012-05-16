@@ -10,7 +10,7 @@ class FnordMetric::Reactor
     messages << discover(ns) if event["type"] == "discover_request"
     messages << widget(ns, event) if event["type"] == "widget_request"
     messages << gauge(ns, event) if event["type"] == "render_request"
-    messages.flatten.each{ |m| socket.send(m.to_json) }
+    messages.flatten.each{ |m| socket.send(m.to_json) if m }
   end
 
 private
@@ -20,9 +20,13 @@ private
   end
 
   def gauge(namespace, event)
-    { "type" => "render_response", "gauge" => event["gauge"], "payload" => {
-      "title" => "fnord"
-    } }
+    return false unless gauge = namespace.gauges[event["gauge"].to_sym]
+
+    {
+      :type    => "render_response",
+      :gauge   => gauge.name,
+      :payload => gauge.render_to_event(namespace, event)
+    }
   end
 
   def discover(namespace)
