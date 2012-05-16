@@ -8,15 +8,10 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
     viewport = _viewport;
     viewport.html('');
     viewport.append('<div class="navbar"></div>');
-    viewport.append('<h1 class="head">' + gauge_name + '</h1>');
-    viewport.append('<h3>Loading...</h3>');
 
     viewport.append(
       $('<div class="gauge_viewport"></div>').html(conf.html)
     );
-
-    $('h1', viewport).html(conf.title);
-    $('h3', viewport).html(conf.title);
 
     for(_wkey in conf.widgets){
       if(!conf.widgets[_wkey].tab){
@@ -41,7 +36,7 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
   function close(){
     $('body').trigger('fm_dashboard_close');
   }
-  
+
   function resize(){
     
   }

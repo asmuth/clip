@@ -49,7 +49,7 @@ class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
 
     # end
 
-    "fnord!!!!!!"
+    render_haml(:numeric_timeseries_gauge, 'report.html')
   end
 
   def renderable?
@@ -68,7 +68,7 @@ private
   #       :color => sopts["color"]
   #     }
   #   end
-  #   render_haml(:numeric_timeseries_report, 'report.html')
+  #  
   # end
 
 end

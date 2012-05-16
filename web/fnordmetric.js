@@ -40,6 +40,8 @@ var FnordMetric = (function(){
         FnordMetric.renderGauge($(this).attr('data-token'));
         window.location.hash = 'gauge/' + $(this).attr('data-token');
       }
+
+      return false;
     });
 
   }

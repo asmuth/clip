@@ -1,6 +1,6 @@
 .report_view
 
-  %h1= @opts["title"]
+  %h1= @opts[:title]
   %h3 NumericTimeseries Report
   %ul.ui_tabs.tabs
     %li.active{"data-tab" => "Overview"}
@@ -26,11 +26,10 @@
         %span.value 3.37
 
       
-:javascript
 
-  fnordquery.widgets.timeseries_widget().render({
-    title: "Fnord!!!!",
-    elem: $('.mywidget'),
-    default_style: 'flow',
-    series: #{@series_render.to_json}
-  });
+  / fnordquery.widgets.timeseries_widget().render({
+  /   title: "Fnord!!!!",
+  /   elem: $('.mywidget'),
+  /   default_style: 'flow',
+  /   series: #{@series_render.to_json}
+  / });

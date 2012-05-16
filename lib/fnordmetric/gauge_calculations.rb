@@ -12,6 +12,14 @@ module FnordMetric::GaugeCalculations
     (_v.to_f / (sync_redis.get(tick_key(_t, :"value-count"))||1).to_i)
   }
 
+  def ticks_in(r)
+    (((r.last-r.first)/tick.to_f).ceil+1).times.map{ |n| tick_at(r.first + tick*(n-1)) }
+  end
+
+  def values_in(range)
+    values_at(ticks_in(range))
+  end
+  
   def value_at(time, opts={}, &block)
     _t = tick_at(time)
 

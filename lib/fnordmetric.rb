@@ -128,6 +128,8 @@ require "fnordmetric/namespace"
 require "fnordmetric/session"
 require "fnordmetric/gauge_calculations"
 require "fnordmetric/gauge_modifiers"
+require "fnordmetric/gauge_validations"
+require "fnordmetric/gauge_rendering"
 require "fnordmetric/gauge"
 require "fnordmetric/context"
 
