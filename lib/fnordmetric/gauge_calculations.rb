@@ -46,7 +46,7 @@ module FnordMetric::GaugeCalculations
   end
 
   def field_values_at(time, opts={}, &block)
-    opts[:max_fields] ||= 50
+    opts[:max_fields] ||= @opts[:max_fields] || 50
     redis.zrevrange(
       tick_key(time), 
       0, opts[:max_fields]-1, 
