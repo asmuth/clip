@@ -23,10 +23,9 @@
     %script{:src => "fnordmetric.session_view.js", :type => "text/javascript"}
     %link{:href => "vendor/rickshaw.css", :rel => "stylesheet", :type => "text/css"}
     %link{:href => "fnordmetric.css", :rel => "stylesheet", :type => "text/css"}
-%body
+  %body
+
 :javascript
-  //
-    $(document).ready(function(){
-      FnordMetric.init($('body'), '#{current_namespace.token}', 'ws://localhost:4243');
-    });
-  //
+  $(document).ready(function(){
+    FnordMetric.init($('body'), '#{current_namespace.token}', 'ws://localhost:4243');
+  });

@@ -1,4 +1,4 @@
-FnordMetric.widgets.timeseries_widget().render({
+FnordMetric.widgets.timeseriesWidget().render({
   title: "Fnord!!!!",
   elem: $('.mywidget'),
   default_style: 'flow',

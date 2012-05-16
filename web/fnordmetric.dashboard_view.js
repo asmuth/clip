@@ -33,7 +33,7 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
       var widget = widgets[wkey];
       if(!widget["widget_key"]){ widget["widget_key"] = wkey; }
       /* argh... */
-      if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets.timelineWidget(); }
+      if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets.timeseriesWidget(); }
       if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
       if(widget.klass=='RealtimeValueWidget'){ _w = FnordMetric.widgets.realtimeValueWidget(); }
       

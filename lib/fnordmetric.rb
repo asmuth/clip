@@ -143,6 +143,12 @@ require "fnordmetric/web/dashboard"
 
 
 
+require "fnordmetric/widgets/widget"
+require "fnordmetric/widgets/timeseries_widget"
+require "fnordmetric/widgets/numbers_widget"
+
+
+
 
 
 
@@ -173,9 +179,6 @@ require "fnordmetric/gauges/dummy_gauge"
 require "fnordmetric/gauges/numeric_timeseries_gauge"
 require "fnordmetric/gauges/realtime_gauge"
 
-require "fnordmetric/widgets/widget"
-require "fnordmetric/widgets/timeline_widget"
-require "fnordmetric/widgets/numbers_widget"
 require "fnordmetric/widgets/realtime_value_widget"
 
 

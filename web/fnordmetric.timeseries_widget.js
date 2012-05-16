@@ -1,4 +1,4 @@
-FnordMetric.widgets.timeseries_widget = function(){
+FnordMetric.widgets.timeseriesWidget = function(){
 
     /*
       options:
@@ -14,8 +14,6 @@ FnordMetric.widgets.timeseries_widget = function(){
 
     var cardinal = true;
 
-    //["#FACE4F", "#42436B", "#CD645A", "#2F635E"]
-
     function render(_opts){
       opts = _opts;
 
@@ -26,6 +24,8 @@ FnordMetric.widgets.timeseries_widget = function(){
 
       width = opts.elem.width() - 50;
       height = opts.height || 430;
+
+      console.log(_opts);
 
       gconfig = {
         element: $('.container', opts.elem)[0],
@@ -176,8 +176,13 @@ FnordMetric.widgets.timeseries_widget = function(){
         );
     }
 
+    function announce(){
+      
+    }
+    
     return {
-      render: render
+      render: render,
+      announce: announce
     }
 
 };
