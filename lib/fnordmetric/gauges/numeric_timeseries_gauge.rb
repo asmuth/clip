@@ -49,7 +49,10 @@ class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
 
     # end
 
-    render_haml(:numeric_timeseries_gauge, 'report.html')
+    {
+      :html => render_haml(:numeric_timeseries_gauge),
+      :exec => render_file('fnordmetric.numeric_timeseries_gauge.js')
+    }
   end
 
   def renderable?

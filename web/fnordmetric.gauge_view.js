@@ -9,18 +9,11 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
     viewport.html('');
     viewport.append('<div class="navbar"></div>');
 
+    console.log(conf);
+
     viewport.append(
       $('<div class="gauge_viewport"></div>').html(conf.html)
     );
-
-    for(_wkey in conf.widgets){
-      if(!conf.widgets[_wkey].tab){
-        conf.widgets[_wkey].tab = "Overview"
-      }
-      if(tabs.indexOf(conf.widgets[_wkey].tab) == -1){ 
-        tabs.push(conf.widgets[_wkey].tab)
-      }
-    }  
 
     FnordMetric.ui.navbar($('.navbar', viewport), {
       breadcrumb: [ 
@@ -31,10 +24,13 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
         ["Export Data", function(){ alert(23); }]
       ]
     });
+
+    if(conf.exec){
+      eval(conf.exec); 
+    }
   }
 
   function close(){
-    $('body').trigger('fm_dashboard_close');
   }
 
   function resize(){
