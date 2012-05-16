@@ -12,14 +12,6 @@ FnordMetric.namespace :ulm do
   gauge :winks_sent, :tick => 1.day.to_i, :title => "Winks sent"
 
   widget 'Overview', {
-    :title => "User-Activity",
-    :type => :timeline,
-    :width => 67,
-    :autoupdate => 30,
-    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
-  }
-
-  widget 'Overview', {
     :title => "Yes/No/Skip-Votes",
     :type => :timeline,
     :gauges => [:skip_votes, :yes_votes, :maybe_votes]
@@ -44,6 +36,14 @@ FnordMetric.namespace :ulm do
     :gauges => [:messages_sent, :messages_read, :winks_sent]
   }
   
+  widget 'Overview', {
+    :title => "User-Activity",
+    :type => :timeline,
+    :width => 67,
+    :autoupdate => 30,
+    :gauges => [:skip_votes, :yes_votes, :maybe_votes]
+  }
+
 end
 
 FnordMetric.options = {

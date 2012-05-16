@@ -18,37 +18,37 @@ var FnordMetric = (function(){
   }
 
   function renderSidebar(){
-    $('#sidebar ul').html();
+    $('#sidebar ul').html('');
 
     for(gkey in gauges){
       if(!gauges[gkey].title){ gauges[gkey].title = gkey; }
 
       $('#sidebar ul').append($('<li class="gauge">')
-        .attr('rel', gkey)
+        .attr('data-token', gkey)
+        .attr('data-view', gauges[gkey].view_type)
         .append('<span class="picto piechart">')
-        .append($('<span class="title">').html(gauges[gkey].title))
-        .append('<span class="meta">'));
+        .append($('<a href="#" class="title">').html(gauges[gkey].title)));
     }
-
-    $('#sidebar li.dashboard').click(function(){
-      FnordMetric.renderDashboard($(this).attr('rel'));
-      window.location.hash = $(this).attr('rel');
-    });
-
-    $('#sidebar li.gauge').click(function(){
-      FnordMetric.renderGauge($(this).attr('rel'));
-      window.location.hash = 'gauge/' + $(this).attr('rel');
-    });
 
     $('#sidebar li').click(function(){
       $(this).addClass('active').siblings().removeClass('active');
+
+      if($(this).attr('data-view') == "dashboard"){
+        FnordMetric.renderDashboard($(this).attr('data-token'));
+        window.location.hash = $(this).attr('data-token');  
+      } else if($(this).attr('data-view') == "gauge"){ 
+        FnordMetric.renderGauge($(this).attr('data-token'));
+        window.location.hash = 'gauge/' + $(this).attr('data-token');
+      }
     });
 
   }
 
   function addGauge(msg){
     if(!gauges[msg.gauge_key]){
-      gauges[msg.gauge_key] = {};
+      gauges[msg.gauge_key] = {
+        "view_type": msg.view
+      };
       renderSidebar();
     }
   }
@@ -111,6 +111,9 @@ var FnordMetric = (function(){
   };
 
   function publish(obj){
+    if(!obj.namespace){ 
+      obj.namespace = FnordMetric.currentNamespace; 
+    }
     socket.send(JSON.stringify(obj));
   }
 
@@ -118,8 +121,9 @@ var FnordMetric = (function(){
     var evt = JSON.parse(raw.data);
 
     if((evt._class == "render_response") && gaugeLoadRunning){
-      renderGauge(evt._channel, evt.payload);
-    } else if((evt._class == "discover_response")){
+      // renderGauge(evt._channel, evt.payload);
+    } else if((evt.type == "discover_response")){
+      console.log(["ADDGAUGE", evt]);
       addGauge(evt);
     } else {
       if(currentView){ currentView.announce(evt); }
@@ -128,7 +132,7 @@ var FnordMetric = (function(){
 
   function socketOpen(){
     console.log("connected...");
-    publish({"_class": "discover_request"});
+    publish({"type": "discover_request"});
   }
 
   function socketClose(){

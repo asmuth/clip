@@ -34,9 +34,7 @@ private
           else
             message["_eid"] ||= get_uuid
             message["_sender"] = @uuid
-            if msg = @reactor.execute(message) # FIXPAUL
-              socket.send(msg.to_json)
-            end
+            msg = @reactor.execute(socket, message) # FIXPAUL
           end
         end
 
