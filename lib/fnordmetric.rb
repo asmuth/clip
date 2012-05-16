@@ -134,6 +134,7 @@ require "fnordmetric/gauge"
 require "fnordmetric/context"
 
 require "fnordmetric/web/web"
+require "fnordmetric/web/app_helpers"
 require "fnordmetric/web/app"
 require "fnordmetric/web/websocket"
 require "fnordmetric/web/reactor"
