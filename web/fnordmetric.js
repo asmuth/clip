@@ -125,7 +125,6 @@ var FnordMetric = (function(){
     if((evt.type == "render_response") && gaugeLoadRunning){
       renderGauge(evt.gauge, evt.payload);
     } else if((evt.type == "discover_response")){
-      console.log(["ADDGAUGE", evt]);
       addGauge(evt);
     } else {
       if(currentView){ currentView.announce(evt); }

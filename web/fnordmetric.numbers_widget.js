@@ -7,8 +7,6 @@ FnordMetric.widgets.numbersWidget = function(){
 
     opts = _opts;
 
-    console.log(opts);
-
     opts.elem.append(
       $('<div class="headbar small"></div>').html(opts.title)
     ).css({
@@ -35,7 +33,6 @@ FnordMetric.widgets.numbersWidget = function(){
     }
 
     if(opts.autoupdate){
-      console.log("AUTOUPDATE: " + opts.autoupdate)
       var secs = parseInt(opts.autoupdate);
       if(secs > 0){
 
@@ -108,7 +105,6 @@ FnordMetric.widgets.numbersWidget = function(){
   }
 
   function announce(ev){
-    console.log(ev);
     if(ev.widget_key == opts.widget_key){
       if((ev.class == "widget_response") && (ev.cmd == "values_for")){
         renderValues(ev.series, ev.values)

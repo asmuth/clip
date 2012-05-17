@@ -25,8 +25,6 @@ FnordMetric.widgets.timeseriesWidget = function(){
       width = opts.elem.width() - 50;
       height = opts.height || 430;
 
-      console.log(_opts);
-
       gconfig = {
         element: $('.container', opts.elem)[0],
         width: width,

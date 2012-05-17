@@ -9,7 +9,6 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
     viewport.html('');
     viewport.append('<div class="navbar"></div>');
 
-    console.log(conf);
 
     viewport.append(
       $('<div class="gauge_viewport"></div>').html(conf.html)
