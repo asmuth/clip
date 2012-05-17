@@ -409,6 +409,10 @@ position: relative;
   margin-top:70px;
 }
 
+.dashboard_view{
+  margin-top:47px;
+}
+
 #sidebar .ul_head{ margin-top:30px; color:#ccc; font-weight:bold; text-transform:uppercase; padding-left:20px; font-size:11px; margin-bottom:5px; }
 #sidebar ul{ list-style-type:none; padding:0; margin:0; }
 #sidebar ul li{ height:28px; line-height:28px; cursor:pointer; font-size:13px; }

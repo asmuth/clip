@@ -6,6 +6,18 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
     function load(_viewport){
       viewport = _viewport.html('');
       viewport.append('<div class="navbar"></div>');
+      viewport.append('<div class="dashboard_view"></div>');
+
+      FnordMetric.ui.navbar($('.navbar', viewport), {
+        breadcrumb: [ 
+          ["Dashboard", "/group/fnord"],
+          [dashboard_name, "/dashboard/"+dashboard_name]
+        ],
+        buttons: [
+          ["Export Data", function(){ alert(23); }]
+        ]
+      });
+
 
       $.ajax({
         url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/dashboard/'+dashboard_name,
@@ -21,7 +33,7 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
         var widget = _widgets[wkey];
         widget["elem"] = $('<div class="widget"></div>');
         widgets[wkey] = widget;
-        viewport.append(widget.elem);
+        $('.dashboard_view', viewport).append(widget.elem);
         resizeWidget(wkey);
         renderWidget(wkey);
       };
