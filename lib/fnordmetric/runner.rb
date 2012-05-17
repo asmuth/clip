@@ -1,4 +1,4 @@
-class FnordQuery::Runner
+class FnordMetric::Runner
 
   require "optparse"
 

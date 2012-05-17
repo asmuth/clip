@@ -1,7 +1,0 @@
-#!/usr/bin/env ruby
-$: << ::File.expand_path('../../lib', __FILE__)
-
-require "fnordquery"
-require "fnordquery/runner"
-
-FnordQuery::Runner.new
