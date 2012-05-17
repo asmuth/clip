@@ -1,6 +1,13 @@
 $: << ::File.expand_path("../../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
+FnordMetric.options = {
+  :event_queue_ttl  => 10, # all data that isn't processed within 10s is discarded to prevent memory overruns
+  :event_data_ttl   => 10,
+  :session_data_ttl => 1,  # we don't care about session data for now
+  :redis_prefix => "fnordmetric-dawanda" 
+}
+
 FnordMetric.namespace :ulm do
 
   gauge :skip_votes, :tick => 1.day.to_i, :title => "Skip-Votes"
@@ -61,4 +68,13 @@ FnordMetric.options = {
   :print_stats => 3
 }
 
-FnordMetric.standalone
+FnordMetric::Logger.new(
+  :file => '/home/paul/fnordmetric.log',
+  :channels => ["dawanda-firehose"]
+)
+
+FnordMetric::Web.new(:port => 4242)
+
+FnordMetric::Acceptor.new(:protocol => :tcp, :port => 2323)
+
+FnordMetric.run

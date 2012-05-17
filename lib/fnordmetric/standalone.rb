@@ -1,40 +1,20 @@
-require 'rake'
-require 'redis'
+_opts = FnordMetric.options
 
-task :run do  
-  FnordMetric.run
+if _opts[:web_interface]
+  FnordMetric::Web.new(
+    :host => _opts[:web_interface][0],
+    :port => _opts[:web_interface][1]
+  )
 end
 
-task :worker do
-  FnordMetric.server_configuration = {
-    :web_interface  => false,
-    :inbound_stream => false,
-    :start_worker   => true
-  }
-  FnordMetric.run
+if _opts[:inbound_stream]
+  FnordMetric::Acceptor.new(
+    :protocol => _opts[:inbound_protocol],
+    :host => _opts[:inbound_stream][0],
+    :port => _opts[:inbound_stream][1]
+  )
 end
 
-task :log do
-  FnordMetric::Logger.start(dump_file_path)
+if _opts[:start_worker]
+  FnordMetric::Worker.new()
 end
-
-task :import do
-  FnordMetric::Logger.import(dump_file_path)
-end
-
-task :help do
-  puts "usage: #{$0} {run|worker|log|import} [DUMP_FILE=fm_dump.json]"
-end
-
-task :default => :help
-
-def dump_file_path
-  if ENV["DUMP_FILE"].blank?
-    Rake::Task[:help].execute; exit!
-  else
-    ::File.expand_path(ENV["DUMP_FILE"], ::File.dirname($0))
-  end
-end
-
-Rake.application.init('fnordmetric')
-Rake.application.top_level

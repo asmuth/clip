@@ -114,18 +114,7 @@ module FnordMetric
 
   def self.standalone
     puts "DEPRECATION WARNING - FIXPAUL"
-
-    FnordMetric::Web.new(
-      :host => options[:web_interface][0],
-      :port => options[:web_interface][1]
-    )
-
-    FnordMetric::Acceptor.new(
-      :protocol => options[:inbound_protocol],
-      :host => options[:inbound_stream][0],
-      :port => options[:inbound_stream][1]
-    )
-
+    require "fnordmetric/standalone"
     start_em
   end
 
@@ -142,6 +131,7 @@ require "fnordmetric/gauge"
 require "fnordmetric/context"
 
 require "fnordmetric/api"
+require "fnordmetric/worker"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/app_helpers"
