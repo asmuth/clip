@@ -1,41 +1,37 @@
 class FnordMetric::Worker
 
-  def initialize(namespaces, opts)        
-    @namespaces = {}
-    @opts = opts
-    configure(namespaces)
+  def initialize
+    @namespaces = FnordMetric.namespaces
+    @opts = FnordMetric.options
+
+    FnordMetric.register(self)
   end
 
-  def ready!
-    @redis = EM::Hiredis.connect(@opts[:redis_url])
+  def initialized
+    FnordMetric.log("worker started")
     tick
   end
 
-  def configure(namespaces)   
-    namespaces.each do |key, block|
-      @namespaces[key] = FnordMetric::Namespace.new(key, @opts.clone)
-      @namespaces[key].instance_eval(&block)
-    end
-  end
-
   def tick
-    @redis.blpop(queue_key, 1).callback do |list, event_id|           
+    redis.blpop(queue_key, 1).callback do |list, event_id|           
       EM.next_tick(&method(:tick))
       if event_id
-        @redis.get(event_key(event_id)).callback do |event_data|                     
+        redis.get(event_key(event_id)).callback do |event_data|                     
           process_event(event_id, event_data) if event_data        
           FnordMetric.log("event_lost: event_data not found for event-id '#{event_id}' - maybe expired?") unless event_data
-          @redis.hincrby(stats_key, :events_processed, 1)
+          redis.hincrby(stats_key, :events_processed, 1)
         end
       end
     end
   end
 
   def process_event(event_id, event_data)
-    EM.defer do      
+    puts "OUTER #{event_data}"
+    EM.next_tick do      
       parse_json(event_data).tap do |event|                
         event[:_time] ||= Time.now.to_i
         event[:_eid] = event_id
+        puts "INNER"
         announce_event(event)
         publish_event(event)        
         expire_event(event_id)       
@@ -59,16 +55,16 @@ class FnordMetric::Worker
     [@opts[:redis_prefix], 'stats'].join("-")
   end
 
-  def announce_event(event)   
-    namespace(event[:_namespace]).ready!(@redis).announce(event)
+  def announce_event(event)
+    namespace(event[:_namespace]).ready!(redis).announce(event)
   end
 
   def expire_event(event_id)
-    @redis.expire(event_key(event_id), @opts[:event_data_ttl])
+    redis.expire(event_key(event_id), @opts[:event_data_ttl])
   end
 
   def publish_event(event)    
-    @redis.publish(pubsub_key, event.to_json)
+    redis.publish(pubsub_key, event.to_json)
   end
 
   def namespace(key)
@@ -79,6 +75,10 @@ class FnordMetric::Worker
     event = Yajl::Parser.new(:symbolize_keys => true).parse(data)
     event[:_namespace] = event[:_namespace].to_sym if event[:_namespace]
     event
+  end
+
+  def redis
+    @redis ||= EM::Hiredis.connect(FnordMetric.options[:redis_url]) # FIXPAUL
   end
 
 end

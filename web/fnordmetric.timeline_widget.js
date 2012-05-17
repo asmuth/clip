@@ -76,7 +76,6 @@ FnordMetric.widgets.timelineWidget = function(){
     }
 
     function requestValuesAsync(_tick, times){
-      console.log('request');
       FnordMetric.publish({
         "_class": "widget_request",
         "_channel": opts.channel,

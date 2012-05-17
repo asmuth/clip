@@ -24,7 +24,12 @@ module FnordMetric
   end
 
   def self.namespaces
-    @@namespaces
+    {}.tap do |_namespaces|
+      @@namespaces.each do |key, block|
+        _namespaces[key] = FnordMetric::Namespace.new(key, options.clone)
+        _namespaces[key].instance_eval(&block)
+      end
+    end
   end
 
   def self.backend
@@ -109,24 +114,56 @@ module FnordMetric
 
   def self.standalone
     puts "DEPRECATION WARNING - FIXPAUL"
-    FnordMetric::Web.new(
-      :host => options[:web_interface][0],
-      :port => options[:web_interface][1]
-    )
+    require "fnordmetric/standalone"
     start_em
   end
 
 end
 
 
+require "fnordmetric/namespace"
+require "fnordmetric/session"
+require "fnordmetric/gauge_calculations"
+require "fnordmetric/gauge_modifiers"
+require "fnordmetric/gauge_validations"
+require "fnordmetric/gauge_rendering"
+require "fnordmetric/gauge"
+require "fnordmetric/context"
+
+require "fnordmetric/api"
+require "fnordmetric/worker"
+
+require "fnordmetric/web/web"
+require "fnordmetric/web/app_helpers"
+require "fnordmetric/web/app"
+require "fnordmetric/web/websocket"
+require "fnordmetric/web/reactor"
+require "fnordmetric/web/event"
+require "fnordmetric/web/dashboard"
+
+
+
+require "fnordmetric/widgets/widget"
+require "fnordmetric/widgets/timeseries_widget"
+require "fnordmetric/widgets/numbers_widget"
+
+
+
+
+
+
+
+require "fnordmetric/logger"
+
+
 
 require "fnordmetric/remote_gauge"
 require "fnordmetric/multi_gauge"
 require "fnordmetric/event_handler"
-require "fnordmetric/gauge_calculations"
-require "fnordmetric/gauge_modifiers"
-require "fnordmetric/gauge"
-require "fnordmetric/context"
+
+
+
+
 
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
@@ -139,24 +176,11 @@ require "fnordmetric/acceptors/udp_acceptor"
 
 
 require "fnordmetric/gauges/dummy_gauge"
-require "fnordmetric/gauges/numeric_gauge"
+require "fnordmetric/gauges/numeric_timeseries_gauge"
 require "fnordmetric/gauges/realtime_gauge"
 
-require "fnordmetric/widgets/widget"
-require "fnordmetric/widgets/timeline_widget"
-require "fnordmetric/widgets/numbers_widget"
 require "fnordmetric/widgets/realtime_value_widget"
 
-
-require "fnordmetric/web/web"
-require "fnordmetric/web/namespace"
-require "fnordmetric/web/app"
-require "fnordmetric/web/websocket"
-require "fnordmetric/web/event"
-require "fnordmetric/web/dashboard"
-require "fnordmetric/web/session"
-
-require "fnordmetric/logger"
 
 
  # require "fnordmetric/context"

@@ -1,0 +1,27 @@
+.report_view
+
+  %h1= @opts[:title]
+  %h3 NumericTimeseries Report
+  %ul.ui_tabs.tabs
+    %li.active{"data-tab" => "Overview"}
+      %a{:href => "#"} Overview
+
+  .mywidget
+
+  .widget.NumbersWidget{:style => "margin-bottom: 20px; overflow-x: hidden; overflow-y: hidden; width:1700px;"}
+    .headbar.small1= @opts["title"]
+    .numbers_container{:rel => "Queries", :style => "width: 380px; "}
+      .title Queries
+      .number{:data => "2.6666666666666665", :rel => "3"}
+        %span.desc 3sec avg.
+        %span.value 2.67
+      .number{:data => "3.2", :rel => "5"}
+        %span.desc 5sec avg.
+        %span.value 3.20
+      .number{:data => "3.4000000000000004", :rel => "15"}
+        %span.desc 15sec avg.
+        %span.value 3.40
+      .number{:data => "3.3666666666666667", :rel => "30"}
+        %span.desc 30sec avg.
+        %span.value 3.37
+

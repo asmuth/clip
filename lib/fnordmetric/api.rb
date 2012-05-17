@@ -1,7 +1,8 @@
 class FnordMetric::API
+
   @@opts = nil
 
-  def initialize opts
+  def initialize(opts={})
     @@opts = FnordMetric.default_options(opts)
     connect
   end

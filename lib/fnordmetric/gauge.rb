@@ -2,6 +2,8 @@ class FnordMetric::Gauge
   
   include FnordMetric::GaugeCalculations
   include FnordMetric::GaugeModifiers
+  include FnordMetric::GaugeValidations
+  include FnordMetric::GaugeRendering
 
   def initialize(opts)
     opts.fetch(:key) && opts.fetch(:key_prefix)
@@ -62,14 +64,6 @@ class FnordMetric::Gauge
 
   def sync_redis
     @sync_redis ||= Redis.new # FIXPAUL
-  end
-
-  def ticks_in(r)
-    (((r.last-r.first)/tick.to_f).ceil+1).times.map{ |n| tick_at(r.first + tick*(n-1)) }
-  end
-
-  def values_in(range)
-    values_at(ticks_in(range))
   end
 
 end

@@ -60,10 +60,13 @@ FnordMetric.widgets.numbersWidget = function(){
   function requestValues(){
     for(k in opts.series){
       FnordMetric.publish({
-        "_class": "widget_request",
-        "_channel": opts.channel,
+        "namespace": FnordMetric.currentNamespace,
+        "type": "widget_request",
+        "klass": "NumbersWidget",
+        "channel": opts.channel,
         "cmd": "values_for",
-        "series": opts.series[k],
+        "gauge": opts.series[k],
+        "offsets": opts.offsets,
         "widget_key": opts.widget_key
       })
     }
@@ -103,7 +106,7 @@ FnordMetric.widgets.numbersWidget = function(){
 
   function announce(ev){
     if(ev.widget_key == opts.widget_key){
-      if((ev._class == "widget_response") && (ev.cmd == "values_for")){
+      if((ev.class == "widget_response") && (ev.cmd == "values_for")){
         renderValues(ev.series, ev.values)
       }
     }
