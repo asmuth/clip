@@ -13,7 +13,7 @@ module FnordMetric::GaugeCalculations
   }
 
   @@median_per_count_proc = proc { |_v, _t|
-    res = (redis.get(tick_key(_t, :"value-count"))||1).sort
+    res = (redis.get(tick_key(_t, :"value-count"))||[1]).sort
     res[res.size / 2]
   }
 
