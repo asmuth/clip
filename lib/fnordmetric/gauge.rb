@@ -51,6 +51,10 @@ class FnordMetric::Gauge
     !!@opts[:average]
   end
 
+  def median?
+    !!@opts[:median]
+  end
+
   def add_redis(_redis)
     @opts[:redis] = _redis
   end

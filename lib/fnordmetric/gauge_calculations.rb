@@ -12,6 +12,11 @@ module FnordMetric::GaugeCalculations
     (_v.to_f / (redis.get(tick_key(_t, :"value-count"))||1).to_i)
   }
 
+  @@median_per_count_proc = proc { |_v, _t|
+    res = (redis.get(tick_key(_t, :"value-count"))||1).sort
+    res[res.size / 2]
+  }
+
   def value_at(time, opts={}, &block)
     _t = tick_at(time)
     _v = redis.hget(key, _t)
@@ -37,6 +42,7 @@ module FnordMetric::GaugeCalculations
     block = @@avg_per_count_proc if average?
     #block = @@count_per_session_proc if unique?
     block = @@avg_per_session_proc if unique? && average?
+    block = @@median_per_count_proc if median?
 
     if block
       instance_exec(_v, _t, &block)
