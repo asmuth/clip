@@ -7,8 +7,6 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
   def self.start(opts)
     self.opts = opts
 
-    @backend = @opts[:backend][0].new(@opts[:backend][1])
-
     EM.open_datagram_socket(*(opts[:listen] << self << opts))
   end
 
@@ -20,7 +18,7 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
   def push_next_event
     return true if events.empty?
     ev = @events.pop
-    backend.publish(ev)
+    apu.event(ev)
     EM.next_tick(&method(:push_next_event))
   end
 
@@ -32,4 +30,7 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
     @events ||= []
   end
 
+  def api
+    @api ||= FnordMetric::API.new
+  end
 end

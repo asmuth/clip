@@ -30,7 +30,7 @@ class FnordMetric::TCPAcceptor < EventMachine::Connection
   def push_next_event
     return true if @events.empty?
     @events_buffered -= 1
-    @backend.publish(@events.pop)
+    api.event(@events.pop)
     close_connection?
     EM.next_tick(&method(:push_next_event))
   end
@@ -40,8 +40,6 @@ class FnordMetric::TCPAcceptor < EventMachine::Connection
   end
 
   def post_init
-    puts options.inspect
-    @backend = options[:backend][0].new(options[:backend][1])
     @events_buffered = 0
     @streaming = true
     @buffer = ""
@@ -51,5 +49,9 @@ class FnordMetric::TCPAcceptor < EventMachine::Connection
   def unbind
     @streaming = false
     close_connection?
+  end
+
+  def api
+    @api ||= FnordMetric::API.new
   end
 end
