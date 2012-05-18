@@ -1,6 +1,8 @@
 
 -> hashwithindifferentaccess
 
+-> FnordMetric::Timeseries (min/max, values, punchcard, to_histogram etc)
+
 -> timeseries-gauge/widget: set resolution via "tick buttons" 
 -> timeseries-gauge: realtime tab w/ moving average
 -> timeseries-widget: render with stroke=3 + points if xticks < 100

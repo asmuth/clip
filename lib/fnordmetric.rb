@@ -156,6 +156,8 @@ require "fnordmetric/widget"
 require "fnordmetric/widgets/timeseries_widget"
 require "fnordmetric/widgets/numbers_widget"
 
+require "fnordmetric/histogram"
+
 
 
 

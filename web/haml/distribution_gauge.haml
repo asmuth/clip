@@ -7,3 +7,36 @@
     %li.active{"data-tab" => "Overview"}
       %a{:href => "#"} Overview
 
+
+  .headbar
+    %h2 Histogram
+
+  %div(style="float:right; width:300px;")
+    .clearfix
+      .numbers_container
+        .number
+          %span.desc Minimum
+          %span.value= @histogram.min
+        .number
+          %span.desc Maximum
+          %span.value= @histogram.max
+    .clearfix
+      .numbers_container
+        .number
+          %span.desc Average
+          %span.value= 0
+        .number
+          %span.desc Median
+          %span.value= 0
+
+    .clearfix
+      .numbers_container
+        .number
+          %span.desc Mean
+          %span.value= 0
+        .number
+          %span.desc Mode
+          %span.value= 0
+
+  %div(style="position:absolute; left:250px; background:#ccc; right:300px; margin-top:20px; height:320px;")
+    = @histogram.histogram(@opts[:histogram]).inspect

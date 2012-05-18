@@ -38,6 +38,10 @@ class FnordMetric::Gauge
     key([(progressive? ? :progressive : tick_at(_time).to_s), _append])
   end
 
+  def tick_keys(_range, _append=nil)
+    ticks_in(_range).map{ |_t| tick_key(_t, _append) }
+  end
+
   def two_dimensional?
     !@opts[:three_dimensional]
   end
