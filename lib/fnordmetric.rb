@@ -123,15 +123,23 @@ end
 
 require "fnordmetric/namespace"
 require "fnordmetric/session"
+require "fnordmetric/api"
+require "fnordmetric/worker"
+
+require "fnordmetric/logger"
+
 require "fnordmetric/gauge_calculations"
 require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_validations"
 require "fnordmetric/gauge_rendering"
 require "fnordmetric/gauge"
+
 require "fnordmetric/context"
 
-require "fnordmetric/api"
-require "fnordmetric/worker"
+require "fnordmetric/remote_gauge"
+require "fnordmetric/multi_gauge"
+require "fnordmetric/gauges/timeseries_gauge"
+require "fnordmetric/gauges/realtime_gauge"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/app_helpers"
@@ -141,7 +149,9 @@ require "fnordmetric/web/reactor"
 require "fnordmetric/web/event"
 require "fnordmetric/web/dashboard"
 
-
+require "fnordmetric/acceptors/acceptor"
+require "fnordmetric/acceptors/tcp_acceptor"
+require "fnordmetric/acceptors/udp_acceptor"
 
 require "fnordmetric/widgets/widget"
 require "fnordmetric/widgets/timeseries_widget"
@@ -153,37 +163,14 @@ require "fnordmetric/widgets/numbers_widget"
 
 
 
-require "fnordmetric/logger"
 
-
-
-require "fnordmetric/remote_gauge"
-require "fnordmetric/multi_gauge"
 require "fnordmetric/event_handler"
-
-
-
-
-
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
-
-require "fnordmetric/acceptors/acceptor"
-require "fnordmetric/acceptors/tcp_acceptor"
-require "fnordmetric/acceptors/udp_acceptor"
-
-
-
-
-require "fnordmetric/gauges/dummy_gauge"
-require "fnordmetric/gauges/numeric_timeseries_gauge"
-require "fnordmetric/gauges/realtime_gauge"
-
 require "fnordmetric/widgets/realtime_value_widget"
 
 
-
- # require "fnordmetric/context"
+# require "fnordmetric/context"
 
 # require "fnordmetric/api"
 # require "fnordmetric/udp_client"

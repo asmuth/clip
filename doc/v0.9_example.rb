@@ -20,7 +20,7 @@ FnordMetric.namespace :ulm do
 
 
   gauge :gross_search_volume,
-    :type => :numeric_timeseries,
+    :type => :timeseries,
     :tick => 30.seconds,
     :group => "Search",
     :title => "Gross Search Volume",

@@ -1,4 +1,4 @@
-class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
+class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
   def render(namespace, event)
     # backend = _backend[0].new(_backend[1])
@@ -50,8 +50,8 @@ class FnordMetric::NumericTimeseriesGauge < FnordMetric::Gauge
     # end
 
     {
-      :html => render_haml(:numeric_timeseries_gauge),
-      :exec => render_file('fnordmetric.numeric_timeseries_gauge.js')
+      :html => render_haml(:timeseries_gauge),
+      :exec => render_file('fnordmetric.views.timeseries_gauge.js')
     }
   end
 
