@@ -27,7 +27,8 @@ class FnordMetric::Worker
 
   def process_event(event_id, event_data)
     EM.next_tick do      
-      parse_json(event_data).tap do |event|                
+      event = parse_json(event_data)
+      if event
         event[:_time] ||= Time.now.to_i
         event[:_eid] = event_id
         announce_event(event)
@@ -73,6 +74,8 @@ class FnordMetric::Worker
     event = Yajl::Parser.new(:symbolize_keys => true).parse(data)
     event[:_namespace] = event[:_namespace].to_sym if event[:_namespace]
     event
+  rescue Yajl::ParseError => e
+    FnordMetric.error "invalid json: #{e.to_s}"; false
   end
 
   def redis

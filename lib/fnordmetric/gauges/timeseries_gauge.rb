@@ -2,17 +2,19 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
   def render(namespace, event)
     interval = parse_interval(event["interval"])
+    colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
 
-    # colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
-    # @opts["series"][skey]["color"] ||= colors.unshift(colors.pop).first
+    @series_colors = Hash[series_gauges.map do |k,g| 
+      [k, colors.unshift(colors.pop).first]
+    end]
 
     @series_render = series_gauges.map do |series, gauge|
       {
         :name  => series,
-        :color => "#0066cc",
+        :color => @series_colors[series],
         :data  => gauge.values_in(interval).to_a
           .sort{ |a,b| a[0] <=> b[0] }
-          .map { |t,v| { :x => t, :y => v||0 } }.reverse
+          .map { |t,v| { :x => t, :y => v.to_i } }
       }
     end
 
