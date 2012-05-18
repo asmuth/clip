@@ -1,15 +1,6 @@
-.report_view
-
-  %h1= @opts[:title]
-  %h3 Toplist Gauge
-
-  %ul.ui_tabs.toplgauge_tabs
-    %li.active.overview
-      %a(href="#" onclick="toplgaugeDisplayOverview();") Overview
+%div(style="margin-top:47px;")
 
   .widget_toplist.ui_sidebar_toplist.resizable(data-width="40")
-    .headbar
-      %h2= @opts[:title]
 
     .ui_toplist
       .toplist_item
@@ -47,7 +38,7 @@
   });
 
   FnordMetric.util.updateNumbers('.report_view', 4);
-  FnordMetric.ui.resizable('.report_view');
+  FnordMetric.ui.resizable('#viewport');
 
 
 :javascript
