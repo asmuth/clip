@@ -119,6 +119,7 @@ FnordMetric.util.formatPercentValue = function(value){
 }
 
 FnordMetric.util.formatGaugeValue = function(gauge_key, value){
+  if(!gauge_key){ gauge_key = ""; }
   if(gauge_key.slice(0,8) === '__time__'){
     return FnordMetric.util.formatTimeValue(value);
   } else if(gauge_key.slice(0,11) === '__percent__'){

@@ -6,31 +6,27 @@
     %li.active{"data-tab" => "Overview"}
       %a{:href => "#"} Overview
 
-  .mywidget
 
-  .widget.NumbersWidget{:style => "margin-bottom: 20px; overflow-x: hidden; overflow-y: hidden; width:1700px;"}
-    .headbar.small1= @opts["title"]
-    .numbers_container{:rel => "Queries", :style => "width: 380px; "}
-      .title Queries
-      .number{:data => "2.6666666666666665", :rel => "3"}
-        %span.desc 3sec avg.
-        %span.value 2.67
-      .number{:data => "3.2", :rel => "5"}
-        %span.desc 5sec avg.
-        %span.value 3.20
-      .number{:data => "3.4000000000000004", :rel => "15"}
-        %span.desc 15sec avg.
-        %span.value 3.40
-      .number{:data => "3.3666666666666667", :rel => "30"}
-        %span.desc 30sec avg.
-        %span.value 3.37
+  .widget_timeseries
+
+  .headbar.small= @opts[:title]
+  - @series_numbers.each do |series, nums|
+    %div
+      .numbers_container
+        .title= series
+
+        .number{:data => nums[:total], :"data-current" => 0}
+          %span.desc Total
+          %span.value 0
 
 
 :gaugejs
 
   FnordMetric.widgets.timeseriesWidget().render({
     title: "Fnord!!!!",
-    elem: $('.mywidget'),
-    default_style: 'flow',
+    elem: $('.widget_timeseries'),
+    default_style: 'stack',
     series: #{@series_render.to_json}
   });
+
+  FnordMetric.util.updateNumbers('.report_view', 4);

@@ -8,11 +8,19 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
       [k, colors.unshift(colors.pop).first]
     end]
 
+    @series_numbers = Hash.new{ |h,k| h[k]={} }
+
     @series_render = series_gauges.map do |series, gauge|
+      gauge_vals = gauge.values_in(interval).to_a
+
+      @series_numbers[series][:total] = gauge_vals.inject(0) do |s, (t, v)|
+        s += v.to_i
+      end
+
       {
         :name  => series,
         :color => @series_colors[series],
-        :data  => gauge.values_in(interval).to_a
+        :data  => gauge_vals
           .sort{ |a,b| a[0] <=> b[0] }
           .map { |t,v| { :x => t, :y => v.to_i } }
       }
