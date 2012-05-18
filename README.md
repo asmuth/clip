@@ -8,19 +8,11 @@ plotting and counting functions as ruby blocks!
 [ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
 
 
-[DOCUMENTATION](http://fnordmetric.io/): Full documentation on fnordmetric.io
-[SCREENCAST][2]: the FnordMetric-instance we use to track our social dating app.
+http://fnordmetric.io/
 
-----
 
-FnordMetric keeps track of your data and draws nice timeline plots.
+[ ![Screenshot](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview3.png) ][http://fnordmetric.io/]
 
-[ ![Nice timeline plots][5] ][6]
-
-FnordMetric gives you a live dashboard, that shows who is using your app in 
-realtime. You can select a single user and follow them step by step.
-
-[ ![Live dashboard][7] ][8]
 
 
 Getting Started
@@ -143,7 +135,3 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   [2]: http://www.screenr.com/KiJs
   [3]: https://secure.travis-ci.org/paulasmuth/fnordmetric.png
   [4]: http://travis-ci.org/paulasmuth/fnordmetric
-  [5]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png
-  [6]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview1.png
-  [7]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png
-  [8]: https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview2.png
