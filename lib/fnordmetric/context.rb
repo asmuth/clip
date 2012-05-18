@@ -45,6 +45,10 @@ class FnordMetric::Context
     puts e.backtrace.push("\n").join("\n") if ENV['FNORDMETRIC_ENV'] == 'dev'
   end
 
+  def redis_exec(*args)
+    @redis.send(*args)
+  end
+
 private
 
   def session_key

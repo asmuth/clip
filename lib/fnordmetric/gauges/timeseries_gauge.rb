@@ -30,7 +30,8 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
   end
 
   def execute(cmd, context, *args)
-    incr_series(context, *args) if cmd == :incr
+    return incr_series(context, *args) if cmd == :incr
+    FnordMetric.error("gauge '#{name}': unknown command: #{cmd}")
   end
 
   def renderable?

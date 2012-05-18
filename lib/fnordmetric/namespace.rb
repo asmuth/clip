@@ -28,11 +28,15 @@ class FnordMetric::Namespace
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
-    [
+    res = [
       @handlers[event[:_type].to_s],
       @handlers["*"]
     ].flatten.compact.each do |context| 
       context.call(event, @redis) 
+    end.size
+
+    if res == 0
+      FnordMetric.error("no handler for event-type: #{event[:_type]}")
     end
 
     self
