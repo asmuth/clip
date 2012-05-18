@@ -6,39 +6,48 @@
   %ul.ui_tabs.toplgauge_tabs
     %li.active.overview
       %a(href="#" onclick="toplgaugeDisplayOverview();") Overview
-    %li.distribution
-      %a(href="#" onclick="toplgaugeDisplayDistribution();") Distribution
 
+  .widget_toplist.ui_sidebar_toplist.resizable(data-width="40")
+    .headbar
+      %h2= @opts[:title]
 
-  .headbar
-    %h2= @opts[:title]
-
-  .widget_toplist.ui_sidebar_toplist(style="width:600px;")
     .ui_toplist
       .toplist_item
         .title /matches
         .value 36
         .percent 73.5%
 
+  .widget_keystats.resizable(data-width="60")
+    .widget_item_timeseries
 
-  %div.toplgauge_keysearch(style="display:none;")
-    .headbar
-      %h2 Search for a #{key_nouns.first}
-    %div(style="margin:16px;")
-      here be dragons
+    .headbar.small Totals
+    %div
+      .numbers_container
+        .title= "Fnord"
 
-
-  .toplgauge_tab.overview
-    %div.toplgauge_widget_topx_timeline
-    %div.toplgauge_widget_topx_toplist
-
-
-  .toplgauge_tab.per_key(style="display:none;")
-    %div.toplgauge_widget_perkey_timeline
+        .number{:data => 23, :"data-current" => 0}
+          %span.desc Total
+          %span.value 0
 
 
-  .toplgauge_tab.distribution(style="display:none;")
-    %div.toplgauge_widget_topx_distribution
+
+:gaugejs
+
+  FnordMetric.widgets.timeseriesWidget().render({
+    title: "",
+    elem: $('.widget_item_timeseries'),
+    height: 320,
+    default_style: 'line',
+    series: [{
+      name: "Fnord",
+      color: "#0066CC",
+      data: [{x:1, y:1},{x:2, y:2},{x:4, y:8},{x:6, y:32}]
+    }]
+  });
+
+  FnordMetric.util.updateNumbers('.report_view', 4);
+
+
 
 :javascript
 
@@ -96,5 +105,5 @@
     toplgaugeDisplayPerKey(a);
   });
 
-
+  FnordMetric.ui.resizable('.report_view');
   

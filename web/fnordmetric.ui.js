@@ -55,3 +55,14 @@ FnordMetric.ui.close_modal = function(elem){
   $(elem).closest('.modal').removeClass('visible').fadeOut();
   $('.modal_backdrop').removeClass('visible').fadeOut();
 }
+
+FnordMetric.ui.resizable = function(elem){
+  $('.resizable', $(elem)).each(function(){
+    var wwperc = parseInt($(this).attr('data-width'));
+    if (!wwperc || (wwperc < 1)){ wwperc = 100; }
+    var wwidth = $('#viewport').width() * (wwperc/100.0);
+    if(wwperc==100){ $(this).addClass('full_width'); } 
+    else { wwidth -= 10; $(this).css('float', 'left'); }
+    $(this).width(wwidth);
+  });
+}

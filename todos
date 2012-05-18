@@ -17,6 +17,8 @@
 -> caching
 -> use rack websocket instead of em websocket
 
+-> body min-size
+
 -> split up fnordmetric.namespace block into multiple files
 -> show notification when connection lost
 -> reconnect on disconnect
