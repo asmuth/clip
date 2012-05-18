@@ -136,10 +136,7 @@ require "fnordmetric/gauge"
 
 require "fnordmetric/context"
 
-require "fnordmetric/remote_gauge"
-require "fnordmetric/multi_gauge"
 require "fnordmetric/gauges/timeseries_gauge"
-require "fnordmetric/gauges/realtime_gauge"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/app_helpers"
@@ -160,30 +157,10 @@ require "fnordmetric/widgets/numbers_widget"
 
 
 
-
-
-
-
 require "fnordmetric/event_handler"
 require "fnordmetric/backends/redis_backend"
 require "fnordmetric/backends/memory_backend"
 require "fnordmetric/widgets/realtime_value_widget"
-
-
-# require "fnordmetric/context"
-
-# require "fnordmetric/api"
-# require "fnordmetric/udp_client"
-# require "fnordmetric/worker"
-
-# require "fnordmetric/"
-# require "fnordmetric/numbers_widget"
- require "fnordmetric/bars_widget"
- require "fnordmetric/toplist_widget"
- require "fnordmetric/pie_widget"
-# require "fnordmetric/html_widget"
-
-# require "fnordmetric/namespace"
-
-# require "fnordmetric/numeric_gauge"
-# require "fnordmetric/toplist_gauge"
+require "fnordmetric/bars_widget"
+require "fnordmetric/toplist_widget"
+require "fnordmetric/pie_widget"
