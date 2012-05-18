@@ -2,7 +2,6 @@ var FnordMetric = (function(){
 
   var canvasElem = false;
   var currentView = false;
-  var gaugeLoadRunning = false;
   var currentNamespace = false;
   var gauges = {};
 
@@ -12,9 +11,8 @@ var FnordMetric = (function(){
     loadView(FnordMetric.views.dashboardView(_dash));
   }
 
-  function renderGauge(_gauge, gauge_conf){
-    gaugeLoadRunning = false;
-    loadView(FnordMetric.views.gaugeView(_gauge, gauge_conf));
+  function renderGauge(_gauge){
+    loadView(FnordMetric.views.gaugeView(_gauge));
   }
 
   function renderSidebar(){
@@ -53,14 +51,6 @@ var FnordMetric = (function(){
       };
       renderSidebar();
     }
-  }
-
-  function renderGaugeAsync(_gauge){
-    gaugeLoadRunning = true;
-    publish({
-      "gauge": _gauge,
-      "type": "render_request"
-    })
   }
 
   function renderSessionView(){
@@ -122,9 +112,7 @@ var FnordMetric = (function(){
   function socketMessage(raw){
     var evt = JSON.parse(raw.data);
 
-    if((evt.type == "render_response") && gaugeLoadRunning){
-      renderGauge(evt.gauge, evt.payload);
-    } else if((evt.type == "discover_response")){
+    if((evt.type == "discover_response")){
       addGauge(evt);
     } else {
       if(currentView){ currentView.announce(evt); }
@@ -152,7 +140,7 @@ var FnordMetric = (function(){
 
   return {
     renderDashboard: renderDashboard,
-    renderGauge: renderGaugeAsync,
+    renderGauge: renderGauge,
     renderSessionView: renderSessionView,
     renderOverviewView: renderOverviewView,
     resizeView: resizeView,

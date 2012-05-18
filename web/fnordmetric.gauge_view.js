@@ -1,18 +1,17 @@
-FnordMetric.views.gaugeView = (function(gauge_name, conf){
+FnordMetric.views.gaugeView = (function(gauge_name){
   var widgets = [];
   var widget_objs = {};
   var viewport = null;
   var tabs = [];
+  var conf = {};
 
   function load(_viewport){
     viewport = _viewport;
     viewport.html('');
     viewport.append('<div class="navbar"></div>');
+    viewport.append($('<div class="gauge_viewport"></div>'));
 
-
-    viewport.append(
-      $('<div class="gauge_viewport"></div>').html(conf.html)
-    );
+    conf.title = gauge_name;
 
     FnordMetric.ui.navbar($('.navbar', viewport), {
       breadcrumb: [ 
@@ -20,25 +19,82 @@ FnordMetric.views.gaugeView = (function(gauge_name, conf){
         [conf.title, "/gauge/"+gauge_name]
       ],
       buttons: [
+        ["SELECT TIMERANGE (FIXPAUL)", function(){ open_interval_modal(); }],
         ["Export Data", function(){ alert(23); }]
       ]
     });
 
-    if(conf.exec){
-      eval(conf.exec); 
-    }
+    var now = (new Date()).getTime();
+    var init_interval = now + "-" + (now-(3600*24));
+    load_interval(init_interval);
   }
 
   function close(){
+
   }
 
-
   function resize(){   
+
+  }
+
+  function announce(evt){
+    if ((evt.gauge != gauge_name) ||
+       (evt.type != "render_response") ||
+       (!evt.payload)){ return true; }
+
+    console.log(evt.payload);
+
+    if(evt.payload.html){
+      $('.gauge_viewport', viewport)
+        .html(evt.payload.html); 
+    }
+
+    if(evt.payload.exec){
+      eval(evt.payload.exec); 
+    }
+  }
+
+  function open_interval_modal(){
+    var interval_list = $('<ul>');
+    var now = (new Date()).getTime();
+
+    for(n=0; n < 10; n++){
+      var interval = now;
+      now -= 3600;
+      interval += "-" + now;
+      interval_list.append(
+        $('<li>')
+          .html($('<a href="#">')
+          .html(interval)
+          .attr('data', interval)
+          .click(function(){ 
+            load_interval($(this).attr('data'));
+            FnordMetric.ui.close_modal(this);
+          }))
+      );
+    }
+
+    FnordMetric.ui.modal({
+      height: 700,
+      content: interval_list
+    });
+  }
+
+  function load_interval(interval){
+    $('.gauge_viewport', viewport)
+      .html("");
+
+    FnordMetric.publish({
+      "gauge": gauge_name,
+      "type": "render_request",
+      "interval": interval
+    })
   }
 
   return {
     load: load,
     resize: resize,
+    announce: announce,
     close: close
   };
 
