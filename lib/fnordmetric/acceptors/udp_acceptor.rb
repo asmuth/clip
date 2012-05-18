@@ -31,6 +31,6 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
   end
 
   def api
-    @api ||= FnordMetric::API.new
+    @api ||= FnordMetric::API.new(FnordMetric.options)
   end
 end
