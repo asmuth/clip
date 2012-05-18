@@ -23,7 +23,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
       draw_layout();
 
       width = opts.elem.width() - 50;
-      height = opts.height || 430;
+      height = opts.height || 240;
 
       gconfig = {
         element: $('.container', opts.elem)[0],
@@ -32,7 +32,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
         interpolation: (opts.default_cardinal ? 'cardinal' : 'linear'),
         stroke: true,
         series: opts.series,
-        padding: { top: 0.1, bottom: 0.15 }
+        padding: { top: 0.1, bottom: 0 }
       }
 
       apply_style(opts.default_style);
@@ -149,7 +149,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
             .addClass('container')
             .css({
               height: opts.height,
-              margin: '0 23px 50px 23px',
+              margin: '0 23px 25px 23px',
             })
         );
       
