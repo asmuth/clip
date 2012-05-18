@@ -3,7 +3,7 @@ class FnordMetric::Namespace
   attr_reader :handlers, :gauges, :opts, :key, :dashboards
 
   @@opts = [:event, :gauge, :widget, :set_title, :active_users_available]
-  @@multi_gauges = [:numeric_gauge, :toplist_gauge]
+  @@multi_gauges = [:timeseries_gauge, :toplist_gauge]
 
   def initialize(key, opts)    
     @gauges = Hash.new
@@ -121,7 +121,6 @@ class FnordMetric::Namespace
   def opt_multigauge(gauge_type, gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
     klass = "FnordMetric::#{gauge_type.to_s.camelize}"
-    @gauges[gauge_key].try(:hangup)
     @gauges[gauge_key] ||= klass.constantize.new(opts)   
   end
 

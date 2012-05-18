@@ -19,8 +19,7 @@ FnordMetric.namespace :ulm do
   gauge :winks_sent, :tick => 1.day.to_i, :title => "Winks sent"
 
 
-  gauge :gross_search_volume,
-    :type => :timeseries,
+  timeseries_gauge :gross_search_volume,
     :tick => 30.seconds,
     :group => "Search",
     :title => "Gross Search Volume",

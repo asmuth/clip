@@ -1,6 +1,10 @@
 Whats new in 1.0?
 
   -> improved ui
-  -> numeric_gauge (multiple ticks, multiple series)
-  -> toplist_gauge (mutlitple ticks, trends)
+  -> highcharts is dead, long live d3.js :)
+  -> websockets instead of ajax
+  -> multi-gauges: timeseries, toplist, realtime
+  -> splitted up code into acceptor, web, worker etc.
+  -> splitted up javascript code
+  -> refactorings, no server-side rendering
   -> fnordmetric:announce redis pusub event-data instead of event_id
