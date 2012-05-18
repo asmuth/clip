@@ -45,7 +45,7 @@ FnordMetric.standalone
 
 This is the easiest way to submit an event:
 
-    echo "{\"_type\": \"unicorn_seen\"}" | nc localhost 1337
+    echo '{"_type": "unicorn_seen"}' | nc localhost 1337
 
 
 
