@@ -153,7 +153,7 @@ require "fnordmetric/acceptors/acceptor"
 require "fnordmetric/acceptors/tcp_acceptor"
 require "fnordmetric/acceptors/udp_acceptor"
 
-require "fnordmetric/widgets/widget"
+require "fnordmetric/widget"
 require "fnordmetric/widgets/timeseries_widget"
 require "fnordmetric/widgets/numbers_widget"
 
