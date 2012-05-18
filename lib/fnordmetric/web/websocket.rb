@@ -11,7 +11,6 @@ class FnordMetric::WebSocket
       :port => 8080
     }.merge(opts)
 
-    @backend = FnordMetric.backend
     @reactor = FnordMetric::Reactor.new
 
     @uuid = "websocket-#{get_uuid}"
