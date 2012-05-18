@@ -9,11 +9,11 @@ class FnordMetric::Worker
 
   def initialized
     FnordMetric.log("worker started")
-    tick
+    EM.next_tick(&method(:tick))
   end
 
   def tick
-    redis.blpop(queue_key, 1).callback do |list, event_id|           
+    redis.blpop(queue_key, 1).callback do |list, event_id|
       EM.next_tick(&method(:tick))
       if event_id
         redis.get(event_key(event_id)).callback do |event_data|                     
@@ -26,12 +26,10 @@ class FnordMetric::Worker
   end
 
   def process_event(event_id, event_data)
-    puts "OUTER #{event_data}"
     EM.next_tick do      
       parse_json(event_data).tap do |event|                
         event[:_time] ||= Time.now.to_i
         event[:_eid] = event_id
-        puts "INNER"
         announce_event(event)
         publish_event(event)        
         expire_event(event_id)       

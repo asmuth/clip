@@ -55,11 +55,33 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     }
   end
 
+  def execute(cmd, context, *args)
+    incr_series(context, *args) if cmd == :incr
+  end
+
   def renderable?
     true
   end
 
 private
+
+  def incr_series(context, series, value)
+    unless series_gauges[series.to_sym]
+      return FnordMetric.error("gauge '#{name}': unknown series: #{series}")
+    end
+
+    context.incr(series_gauges[series.to_sym], value)
+  end
+
+  def series_gauges
+    @series_gauges ||= Hash[@opts[:series].map do |series|
+      [series, FnordMetric::Gauge.new(
+        :key => "count-#{series}", 
+        :key_prefix => key,
+        :tick => tick.to_i,
+      )]
+    end]
+  end
 
   # def render_result
   #   @series_render = @opts["series"].map do |skey, sopts|
@@ -117,29 +139,7 @@ end
 #   end
 
 
-# private
 
-#   def incr_series(series, time, value)
-#     value = value.to_i == 0 ? 1 : value.to_i
-#     unless series_count_metrics[series]
-#       return FnordMetric.error("gauge '#{name}' -> unknown series: #{series}")
-#     end
-#     series_count_metrics[series].values.each do |metric|
-#       metric.incr(time, value)
-#     end
-#   end
-
-#   def series_count_metrics
-#     @series_gauges ||= Hash[@opts[:series].map do |series|
-#       [series, Hash[@opts[:ticks].map do |tick|
-#         [tick.to_i, FnordMetric::RedisMetric.new(
-#           :key => "count-#{series}", 
-#           :key_prefix => key,
-#           :tick => tick.to_i,
-#         )]
-#       end]]
-#     end]
-#   end
 
       
 #   def render_series_numbers(series)

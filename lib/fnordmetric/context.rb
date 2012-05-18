@@ -34,8 +34,8 @@ class FnordMetric::Context
   end
 
   def dispatch(method, *args, &block)
-    if args.size > 0 && multi_gauge?(args.first)
-      @opts[:gauges][args.delete_at(0)].send(:"cmd_#{method}", *args.unshift(self), &block)
+    if args.size > 0 && @opts[:gauges][args[0]].try(:renderable?)
+      @opts[:gauges][args.delete_at(0)].execute(method, *args.unshift(self), &block)
     else
       send(method, *args, &block)
     end
@@ -65,10 +65,6 @@ private
 
 protected
   
-  def multi_gauge?(_gauge)
-    @opts[:gauges].has_key?(_gauge) && @opts[:gauges][_gauge].is_a?(FnordMetric::MultiGauge)
-  end
-
   def fetch_gauge(_gauge)
     _gauge.is_a?(FnordMetric::Gauge) ? _gauge : @opts[:gauges].fetch(_gauge)
   rescue
