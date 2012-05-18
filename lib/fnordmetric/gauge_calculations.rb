@@ -17,7 +17,9 @@ module FnordMetric::GaugeCalculations
   end
 
   def values_in(range)
-    values_at(ticks_in(range))
+    ticks = ticks_in(range)
+    ticks << tick_at(range.last) if ticks.size == 0
+    values_at(ticks)
   end
   
   def value_at(time, opts={}, &block)
@@ -46,9 +48,9 @@ module FnordMetric::GaugeCalculations
     end
   end
 
-  def values_in(range, opts={}, &block)
-    values_at((tick_at(range.first)..range.last).step(tick))
-  end
+  # def values_in(range, opts={}, &block)
+  #   values_at((tick_at(range.first)..range.last).step(tick))
+  # end
 
   def calculate_value(_v, _t, opts, block)
     block = @@avg_per_count_proc if average?

@@ -1,23 +1,14 @@
 class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
   def render(namespace, event)
-    # backend = _backend[0].new(_backend[1])
-
     # colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
 
-    # t_since = @opts["since"].to_i
-    # t_until = @opts["until"].to_i
+    @interval = parse_interval(event["interval"])
 
-    # @tick = (t_until - t_since) / 150
-
-    # @series_timelines = Hash.new
-    # @series_queries = Hash.new
-
-    # timeline = Hash[149.times.inject([t_until]) do |a, n|
-    #   a + [a.first - n*@tick]
-    # end.map do |t|
-    #   [t, 0]
-    # end]
+    series_gauges.each do |series, gauge|
+      puts @interval.inspect
+      puts gauge.values_in(@interval).inspect
+    end
 
     # @opts["series"].each do |skey, series|
     #   @opts["series"][skey]["color"] ||= colors.unshift(colors.pop).first
@@ -33,20 +24,6 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     # backend.on_finish do
     #   render_result
     #   runner.send(:shutdown, true)
-    # end
-
-    # backend.subscribe(query) do |event|
-
-    #   @series_queries.each do |skey, squery|
-    #     if squery.matches?(event)
-    #       (event["_time"]-@tick..event["_time"]).to_a.reverse.detect do |t|
-    #         if @series_timelines[skey].has_key?(t)
-    #           @series_timelines[skey][t] += 1
-    #         end
-    #       end
-    #     end
-    #   end
-
     # end
 
     {

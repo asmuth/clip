@@ -56,7 +56,7 @@ FnordMetric.views.gaugeView = (function(gauge_name){
 
   function open_interval_modal(){
     var interval_list = $('<ul>');
-    var now = (new Date()).getTime();
+    var now = parseInt((new Date()).getTime() / 1000);
 
     for(n=0; n < 10; n++){
       var interval = now;

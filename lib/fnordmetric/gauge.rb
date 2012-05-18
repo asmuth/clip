@@ -11,7 +11,7 @@ class FnordMetric::Gauge
   end
 
   def tick
-    (@opts[:tick] || 3600).to_i
+    (@opts[:tick] || @opts[:resolution] || 3600).to_i
   end
 
   def tick_at(time)    
