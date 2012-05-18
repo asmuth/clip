@@ -47,7 +47,8 @@ var FnordMetric = (function(){
   function addGauge(msg){
     if(!gauges[msg.gauge_key]){
       gauges[msg.gauge_key] = {
-        "view_type": msg.view
+        "view_type": msg.view,
+        "title": msg.title
       };
       renderSidebar();
     }

@@ -35,7 +35,7 @@ private
     end,
     namespace.gauges.map do |gauge_key, gauge|
       next unless gauge.renderable?
-      { "type" => "discover_response", "gauge_key" => gauge_key, "view" => "gauge" }
+      { "type" => "discover_response", "gauge_key" => gauge_key, "title" => gauge.title, "view" => "gauge" }
     end.compact]
   end
 
