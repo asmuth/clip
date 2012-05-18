@@ -65,20 +65,17 @@ Documentation
 Please visit http://fnordmetric.io/ for the full documentation.
 
 
-Pre-defined Gauges
-------------------
-
-    here be dragons
-
-
 Resources
 ----------
 
 + [PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
 + [Python API for FnordMetric (github.com/sholiday/pyfnordmetric)](https://github.com/sholiday/pyfnordmetric)
-+ [FnordMetric and C (Blog/Howto)](http://johnmurray.io/log/2012/01/19/FnordMetrics-and-C%23.md)
-+ [FnordMetric HowTo in russian](http://www.pvsm.ru/ruby/2723)
-+ [The "fnordmetric" google group](http://groups.google.com/group/fnordmetric)
++ [Another Ruby API for FnordMetric](https://github.com/savonarola/fnordmetric-client)
++ [Beanstalk Monitoring with FnordMetric](https://github.com/sholiday/fnordstalk)
++ [Blog: Monitor your Python App With FnordMetric](http://stephenholiday.com/articles/2012/monitor-your-python-app-with-fnordmetric/)
++ [Blog: FnordMetric and C (Blog/Howto)](http://johnmurray.io/log/2012/01/19/FnordMetrics-and-C%23.md)
++ [Blog: FnordMetric HowTo (russian)](http://www.pvsm.ru/ruby/2723)
++ [The "FnordMetric" google group](http://groups.google.com/group/fnordmetric)
 
 
 Full Example
