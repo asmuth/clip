@@ -1,31 +1,44 @@
+.report_view
 
-%ul.ui_tabs.toplgauge_tabs
-  %li.active.overview
-    %a(href="#" onclick="toplgaugeDisplayOverview();") Overview
-  %li.per_key
-    %a(href="#" onclick="toplgaugeDisplayPerKeyOverview();") Per #{key_nouns.first}
-  %li.distribution
-    %a(href="#" onclick="toplgaugeDisplayDistribution();") Distribution
+  %h1= @opts[:title]
+  %h3 NumericTimeseries Report
+
+  %ul.ui_tabs.toplgauge_tabs
+    %li.active.overview
+      %a(href="#" onclick="toplgaugeDisplayOverview();") Overview
+    %li.distribution
+      %a(href="#" onclick="toplgaugeDisplayDistribution();") Distribution
 
 
-%div.toplgauge_keysearch(style="display:none;")
   .headbar
-    %h2 Search for a #{key_nouns.first}
-  %div(style="margin:16px;")
-    here be dragons
+    %h2= @opts[:title]
+
+  .widget_toplist.ui_sidebar_toplist(style="width:600px;")
+    .ui_toplist
+      .toplist_item
+        .title /matches
+        .value 36
+        .percent 73.5%
 
 
-.toplgauge_tab.overview
-  %div.toplgauge_widget_topx_timeline
-  %div.toplgauge_widget_topx_toplist
+  %div.toplgauge_keysearch(style="display:none;")
+    .headbar
+      %h2 Search for a #{key_nouns.first}
+    %div(style="margin:16px;")
+      here be dragons
 
 
-.toplgauge_tab.per_key(style="display:none;")
-  %div.toplgauge_widget_perkey_timeline
+  .toplgauge_tab.overview
+    %div.toplgauge_widget_topx_timeline
+    %div.toplgauge_widget_topx_toplist
 
 
-.toplgauge_tab.distribution(style="display:none;")
-  %div.toplgauge_widget_topx_distribution
+  .toplgauge_tab.per_key(style="display:none;")
+    %div.toplgauge_widget_perkey_timeline
+
+
+  .toplgauge_tab.distribution(style="display:none;")
+    %div.toplgauge_widget_topx_distribution
 
 :javascript
 
@@ -47,9 +60,7 @@
       elem: $(".toplgauge_widget_topx_distribution"),
       gauges: ["#{name}++count"],
       gauge_titles: {"#{name}++count": "Fnord"},
-      title: "#{key_nouns.first} Distribution",
-      ticks: #{@opts[:ticks].map(&:to_i).inspect},
-      tick: #{@opts[:ticks].first.to_i}
+      title: "#{key_nouns.first} Distribution"
     });
   }
 
@@ -77,9 +88,7 @@
       elem: $(".toplgauge_widget_perkey_timeline"),
       gauges: [_gkey],
       gauge_titles: _gtitles,
-      title: "#{key_nouns.first}: " + key,
-      ticks: #{@opts[:ticks].map(&:to_i).inspect},
-      tick: #{@opts[:ticks].first.to_i}
+      title: "#{key_nouns.first}: " + key
     });
   }
 

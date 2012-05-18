@@ -1,8 +1,15 @@
 
+-> hashwithindifferentaccess
+
 -> timeseries-gauge/widget: set resolution via "tick buttons" 
 -> timeseries-gauge: realtime tab w/ moving average
 -> timeseries-widget: render with stroke=3 + points if xticks < 100
 -> timeseries-widget: tooltip -> show key noun
+
+-> fix bars widget
+-> fix pie widget
+-> fix html widget
+-> fix toplist widget
 
 -> split up fnordmetric.namespace block into multiple files
 -> show notification when connection lost
