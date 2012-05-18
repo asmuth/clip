@@ -1,61 +1,30 @@
 
--> numbers_widget: count down
--> timeline+numbers_widget: colored labels for series
--> timeline-widget: moving avg option
--> timeline-widget: tick button active states
--> timeline-widget: render with add. offset / cmp. w/yesterday
--> timeline-widget: synchronize ticks
-
+-> split up fnordmetric.namespace block into multiple files
 -> show notification when connection lost
 -> reconnect on disconnect
--> only push selected events on websocket
--> channel-subscription layer
-
 -> realtime gauge (medium, fast, insane) (5,10,15min avg)
+-> timeline+numbers_widget: colored labels for series
+-> timeline-widget: moving avg option
+-> timeline-widget: render with add. offset / cmp. w/yesterday
+-> toplist-widget: display trends
+-> toplist_widget per_keyword: show multiple keywords
 -> punchcard gauge
 -> active users gauge
 -> linux health gauge
 -> value correlation / scatter plot (2d) gauge
-etc.
+-> port numbers style from scala-experiment
+-> store per-session-data
+-> callback on session-flush
+-> minimize/pack js
+-> put images into one sprite
+-> proper garbage collection
+-> gauge overview page (a'la github graphs landing)
+-> formatter: num, time, currency
+-> timeseries opts: average, average_by, unique_by, enable_histogram, enable_punchard, enable_stddeviation
+-> geo_distribution_gauge
+-> distribution/frequency gauge
 
 
-
-
-# -> port numbers style from scala-experiment
-# -> toplist-widget: tick+range selector
-# -> toplist-widget: display trends
-#  -> store per-session-data
-#  -> callback on session-flush
-#  -> backport sidebar css from 0.7?
-#  -> minimize/pack js
-#  -> put images into one sprite
-#  -> remove params from log
-#  -> toplist_widget per_keyword: show multiple keywords
-#  -> proper garbage collection
-#  -> gauge overview page (a'la github graphs landing)
-#  -> gauge online vs offline status
-#
-# numeric_gauge
-#   -> time-distribution/punchcard
-#   -> moving avg. etc / bezier fu
-#   -> realtime view
-#   -> formatter: num, time, currency
-#   -> opts: average, average_by, unique_by, enable_histogram, enable_punchard, enable_stddeviation
-#
-# toplist_gauge
-#   -> trending keys
-#
-# timeline_widget
-#   -> show last interval (cmp. w/ yesterday)
-#
-# toplist_widget
-#   -> multi-interval + range-selector
-#
-# geo_distribution_gauge
-#
-#  distribution gauge
-#
-#
 # wiki
 #
 #  -> getting started
