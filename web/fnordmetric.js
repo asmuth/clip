@@ -16,7 +16,10 @@ var FnordMetric = (function(){
   }
 
   function renderSidebar(){
-    $('#sidebar ul').html('');
+    $('#sidebar')
+      .html('')
+      .append('<div class="ul_head">Gauges</div>')
+      .append('<ul>')
 
     for(gkey in gauges){
       if(!gauges[gkey].title){ gauges[gkey].title = gkey; }
@@ -92,7 +95,7 @@ var FnordMetric = (function(){
     socket.onopen = socketOpen;
 
     var _wrap_elem = $("<div id='wrap'>")
-        .append($("<div id='sidebar'>").append('<ul>'))
+        .append($("<div id='sidebar'>"))
         .append($("<div id='viewport'>").append(canvasElem));
 
     _canvasElem.html(_wrap_elem);
