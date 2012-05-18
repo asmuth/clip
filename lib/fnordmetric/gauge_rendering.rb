@@ -10,16 +10,18 @@ module FnordMetric::GaugeRendering
 
 private
 
+  def render_page(in_file)
+    exec_js = []
+    content = render_haml(in_file)
+    content.scan(/<FNORDMETRIC-GAUGEJS>(.*)<\/FNORDMETRIC-GAUGEJS>/m){ |x| exec_js << x }
+    content.gsub!(/<FNORDMETRIC-GAUGEJS>(.*)<\/FNORDMETRIC-GAUGEJS>/m, "")
+    { :html => content, :exec => exec_js.flatten * "" }
+  end
+
   def render_haml(in_file)
     haml_engine = Haml::Engine.new(File.read(
       File.expand_path("../../../web/haml/#{in_file}.haml", __FILE__)
     )).render(binding) 
-  end
-
-  def render_file(in_file)
-    File.read(
-      File.expand_path("../../../web/#{in_file}", __FILE__)
-    )
   end
 
   def parse_interval(interval_str)

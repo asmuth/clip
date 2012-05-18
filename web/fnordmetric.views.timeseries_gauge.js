@@ -7,5 +7,5 @@ FnordMetric.widgets.timeseriesWidget().render({
     name: "fnord",
     color: "0f0"
   }]
-  //series: #{@series_render.to_json}
+  series: #{@series_render.to_json}
 });  

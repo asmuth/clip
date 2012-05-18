@@ -1,35 +1,22 @@
 class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
   def render(namespace, event)
+    interval = parse_interval(event["interval"])
+
     # colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
+    # @opts["series"][skey]["color"] ||= colors.unshift(colors.pop).first
 
-    @interval = parse_interval(event["interval"])
-
-    series_gauges.each do |series, gauge|
-      puts @interval.inspect
-      puts gauge.values_in(@interval).inspect
+    @series_render = series_gauges.map do |series, gauge|
+      {
+        :name  => series,
+        :color => "#0066cc",
+        :data  => gauge.values_in(interval).to_a
+          .sort{ |a,b| a[0] <=> b[0] }
+          .map { |t,v| { :x => t, :y => v||0 } }.reverse
+      }
     end
 
-    # @opts["series"].each do |skey, series|
-    #   @opts["series"][skey]["color"] ||= colors.unshift(colors.pop).first
-    #   @series_timelines[skey] = timeline.dup
-    #   @series_queries[skey] = FnordQuery::Query.new("#{series["query"]}")
-    # end
-
-    # query = FnordQuery::Query.new("#{@opts["query"]} since(#{t_since}) until(#{t_until})")
-
-    # puts "tick: #{@tick}"
-    # puts "time: #{Time.at(t_since).to_s}-#{Time.at(t_until).to_s}"
-
-    # backend.on_finish do
-    #   render_result
-    #   runner.send(:shutdown, true)
-    # end
-
-    {
-      :html => render_haml(:timeseries_gauge),
-      :exec => render_file('fnordmetric.views.timeseries_gauge.js')
-    }
+    render_page(:timeseries_gauge)
   end
 
   def execute(cmd, context, *args)
@@ -59,19 +46,6 @@ private
       )]
     end]
   end
-
-  # def render_result
-  #   @series_render = @opts["series"].map do |skey, sopts|
-  #     {
-  #       :data  => @series_timelines[skey].map { |t,v| 
-  #         { :x => t, :y => v } 
-  #       }.reverse,
-  #       :name  => sopts["name"],
-  #       :color => sopts["color"]
-  #     }
-  #   end
-  #  
-  # end
 
 end
 

@@ -12,6 +12,14 @@ module Enumerable
 
 end
 
+module Haml::Filters::Gaugejs
+  include Haml::Filters::Base
+
+  def render(text)
+    "<FNORDMETRIC-GAUGEJS>#{text}</FNORDMETRIC-GAUGEJS>"
+  end
+end
+
 class Symbol
   alias :intern :to_sym
 end
