@@ -139,6 +139,7 @@ require "fnordmetric/context"
 require "fnordmetric/gauges/timeseries_gauge"
 require "fnordmetric/gauges/toplist_gauge"
 require "fnordmetric/gauges/distribution_gauge"
+require "fnordmetric/gauges/eventfeed_gauge"
 
 require "fnordmetric/web/web"
 require "fnordmetric/web/app_helpers"
