@@ -443,3 +443,7 @@ position: relative;
   min-height: 1000px;
   background: #EEE;
 }
+
+.ui_sidebar_toplist .toplist_item.active{
+  margin-right:-1px;
+}

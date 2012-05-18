@@ -17,6 +17,7 @@
         .value 36
         .percent 73.5%
 
+
   .widget_keystats.resizable(data-width="60")
     .widget_item_timeseries
 
@@ -46,7 +47,7 @@
   });
 
   FnordMetric.util.updateNumbers('.report_view', 4);
-
+  FnordMetric.ui.resizable('.report_view');
 
 
 :javascript
@@ -105,5 +106,4 @@
     toplgaugeDisplayPerKey(a);
   });
 
-  FnordMetric.ui.resizable('.report_view');
   

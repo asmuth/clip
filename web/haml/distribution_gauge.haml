@@ -8,10 +8,10 @@
       %a{:href => "#"} Overview
 
 
-  .headbar
-    %h2 Histogram
+  .widget_histogram_bars.resizable(data-width="80")
 
-  %div(style="float:right; width:300px;")
+  .resizable(data-width="20")
+    .headbar
     .clearfix
       .numbers_container
         .number
@@ -38,5 +38,16 @@
           %span.desc Mode
           %span.value= 0
 
-  %div(style="position:absolute; left:250px; background:#ccc; right:300px; margin-top:20px; height:320px;")
-    = @histogram.histogram(@opts[:histogram]).inspect
+:gaugejs
+
+  FnordMetric.widgets.barsWidget().render({
+    title: "Fnord!!!!",
+    elem: $('.widget_histogram_bars'),
+    height: 320,
+    values: #{@histogram.histogram(@opts[:histogram]).map{ |r,v| [r.first, v] }.to_json}
+  });
+
+  FnordMetric.ui.resizable('.report_view');
+
+
+  
