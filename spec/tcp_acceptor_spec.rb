@@ -1,16 +1,16 @@
 require ::File.expand_path('../spec_helper.rb', __FILE__)
 
-describe FnordMetric::InboundStream do
+describe FnordMetric::TCPAcceptor do
 
   before(:all) do
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
-    FnordMetric::InboundStream.options(
+    FnordMetric::TCPAcceptor.options(
       :redis_url => "redis://localhost:6379",
       :redis_prefix => "fnordmetric-test",
       :event_queue_ttl => 120
     )
-    @inbound_stream = FnordMetric::InboundStream.new(nil)
+    @inbound_stream = FnordMetric::TCPAcceptor.new(nil)
   end
 
   describe "pushing new events" do

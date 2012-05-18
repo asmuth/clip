@@ -1,13 +1,13 @@
 require ::File.expand_path('../spec_helper.rb', __FILE__)
 
-describe FnordMetric::InboundDatagram do
+describe FnordMetric::UDPAcceptor do
 
-  let(:inbound_datagram) { FnordMetric::InboundDatagram.new(nil) }
+  let(:inbound_datagram) { FnordMetric::UDPAcceptor.new(nil) }
 
   before(:all) do
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
-    FnordMetric::InboundDatagram.opts = {
+    FnordMetric::UDPAcceptor.opts = {
       :redis_url => "redis://localhost:6379",
       :redis_prefix => "fnordmetric-test",
       :event_queue_ttl => 120
