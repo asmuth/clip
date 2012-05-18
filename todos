@@ -11,6 +11,8 @@
 -> fix html widget
 -> fix toplist widget
 
+-> caching
+
 -> split up fnordmetric.namespace block into multiple files
 -> show notification when connection lost
 -> reconnect on disconnect
