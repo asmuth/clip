@@ -1,4 +1,8 @@
 
+-> timeseries-gauge/widget: set resolution via "tick buttons" 
+-> timeseries-gauge: realtime tab w/ moving average
+-> timeseries-widget: render with stroke=3 + points if xticks < 100
+
 -> split up fnordmetric.namespace block into multiple files
 -> show notification when connection lost
 -> reconnect on disconnect
