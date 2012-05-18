@@ -11,7 +11,7 @@ plotting and counting functions as ruby blocks!
 http://fnordmetric.io/
 
 
-[ ![Screenshot](https://raw.github.com/paulasmuth/fnordmetric/master/doc/preview3.png) ][http://fnordmetric.io/]
+[ ![Screenshot](https://github.com/paulasmuth/fnordmetric2/raw/v1.0/doc/preview3.png) ][http://fnordmetric.io/]
 
 
 
