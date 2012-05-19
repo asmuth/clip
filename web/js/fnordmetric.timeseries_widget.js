@@ -322,7 +322,8 @@ FnordMetric.widgets.timeseriesWidget = function(){
         opts.end_timestamp += v;  
       }
 
-      updateChart();
+      redrawDatepicker();
+      requestValuesAsync();
     }
 
     return {
