@@ -1134,8 +1134,13 @@ Rickshaw.Graph.Axis.Y = function(args) {
 		this.graph = args.graph;
 		this.orientation = args.orientation || 'right';
 
-		var pixelsPerTick = 75;
-		this.ticks = args.ticks || Math.floor(this.graph.height / pixelsPerTick);
+        var pixelsPerTick = 45;
+
+		if(Math.floor(this.graph.height / pixelsPerTick) > 6){
+			pixelsPerTick = Math.floor(this.graph.height / 6);
+		}
+		
+		this.ticks = args.ticks || Math.floor(this.graph.height / pixelsPerTick);		
 		this.tickSize = args.tickSize || 4;
 		this.ticksTreatment = args.ticksTreatment || 'plain';
 
@@ -1206,6 +1211,8 @@ Rickshaw.Graph.Axis.Y = function(args) {
 			.attr("class", ["y_ticks", this.ticksTreatment].join(" "))
 			.attr("transform", transform)
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize))
+
+		console.log(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize));
 
 		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width;
 
@@ -2212,10 +2219,8 @@ Rickshaw.Graph.Renderer.Area = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 		if (!series.path) return;
 
 		d3.select(series.path).select('.area')
-			.attr('opacity', '0.7')
+			.attr('opacity', '0.65')
 			.attr('fill', series.color);
-
-		console.log(fm_opts.stroke_width);
 
 		d3.select(series.path).select('.line')
 			.attr('fill', 'none')

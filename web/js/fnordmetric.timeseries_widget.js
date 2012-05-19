@@ -75,17 +75,17 @@ FnordMetric.widgets.timeseriesWidget = function(){
     function apply_style(style){
        if(style == 'line'){
         gconfig.renderer = 'line';
-        gconfig.offset = 'value';
+        gconfig.offset = 'zero';
       }
 
       if(style == 'area'){
         gconfig.renderer = 'area';
-        gconfig.offset = 'value';
+        gconfig.offset = 'zero';
       }
 
       if(style == 'flow'){
         gconfig.renderer = 'stack';
-        gconfig.offset = 'wiggle';
+        gconfig.offset = 'silhouette';
       }
     }
 

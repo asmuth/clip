@@ -358,8 +358,8 @@ position: relative;
 }
 
 
-
-
+.rickshaw_graph .y_grid .tick { stroke:rgba(0,0,0,.15); stroke-dasharray:0; }
+.rickshaw_graph .y_ticks text { fill:#333333; }
 
 
 .modal_backdrop {
