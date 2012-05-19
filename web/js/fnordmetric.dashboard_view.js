@@ -14,10 +14,9 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
           [dashboard_name, "/dashboard/"+dashboard_name]
         ],
         buttons: [
-          ["Export Data", function(){ alert(23); }]
+          ["New Dashboard", function(){ alert('here be dragons'); }]
         ]
       });
-
 
       $.ajax({
         url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/dashboard/'+dashboard_name,
