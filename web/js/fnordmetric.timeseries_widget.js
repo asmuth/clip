@@ -303,12 +303,12 @@ FnordMetric.widgets.timeseriesWidget = function(){
       var _now = parseInt(new Date().getTime() / 1000);
 
       if((opts.autoupdate) && 
-        ((_now - opts.end_timestamp) < ((opts.tick*opts.autoupdate) + 5))){
+        ((_now - opts.end_timestamp) < ((opts.tick*(opts.autoupdate+1)) + 5))){
         force = true;
       }
 
       if(!opts.start_timestamp || !opts.end_timestamp || !!force){
-        opts.end_timestamp = _now;
+        opts.end_timestamp = _now + opts.tick;
         opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
       }
     }

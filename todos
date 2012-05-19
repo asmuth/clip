@@ -14,6 +14,9 @@
 -> fix html widget
 -> fix toplist widget
 
+-> timeseries-widget: moving average option
+-> numbers-widget: moving average option
+ 
 -> caching
 -> use rack websocket instead of em websocket
 
