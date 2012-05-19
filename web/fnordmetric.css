@@ -210,6 +210,8 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 
 .numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block;font-weight:400; }
 
+.numbers_container.numbers_pad_bottom .number{ padding-bottom:19px; }
+.numbers_container.numbers_pad_bottom{ border-bottom:none; }
 
 ul.session_list{ list-style-type:none; margin:0; padding:9px 16px 0 11px; }
 ul.session_list li{ color:#0A0A0A; height:32px; overflow:hidden; line-height:18px; padding:4px; }

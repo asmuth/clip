@@ -42,8 +42,6 @@ FnordMetric.views.gaugeView = (function(gauge_name){
        (evt.type != "render_response") ||
        (!evt.payload)){ return true; }
 
-    console.log(evt.payload);
-
     if(evt.payload.html){
       $('.gauge_viewport', viewport)
         .html(evt.payload.html); 

@@ -7,36 +7,40 @@
     %li.active{"data-tab" => "Overview"}
       %a{:href => "#"} Overview
 
+  .headbar
+    %h2 Histogram: #{@opts[:title]}
 
-  .widget_histogram_bars.resizable(data-width="80")
-
-  .resizable(data-width="20")
-    .headbar
+  .resizable.right(data-width="40" style="border-left:1px solid #ddd; height:500px;")
     .clearfix
-      .numbers_container
+      %h2(style="margin:20px 0 -3px 20px;") Value Distribution
+      .numbers_container.resizable.numbers_pad_bottom(data-width="50")
         .number
           %span.desc Minimum
           %span.value= @histogram.min
         .number
           %span.desc Maximum
           %span.value= @histogram.max
-    .clearfix
-      .numbers_container
         .number
           %span.desc Average
           %span.value= 0
         .number
           %span.desc Median
           %span.value= 0
-
-    .clearfix
-      .numbers_container
         .number
           %span.desc Mean
           %span.value= 0
         .number
           %span.desc Mode
           %span.value= 0
+
+
+  .widget_histogram_bars.resizable(data-width="60")
+
+  .resizable(data-width="60")
+
+    .headbar.small
+      Standard Deviation
+
 
 
 :gaugejs
@@ -48,6 +52,7 @@
     color: "#{FnordMetric::COLORS.last}",
     elem: $('.widget_histogram_bars'),
     height: 320,
+    no_headbar: true,
     values: #{@histogram.histogram(@opts[:histogram]).map{ |r,v| [r.to_s, v] }.to_json}
   });
 

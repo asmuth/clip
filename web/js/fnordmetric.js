@@ -96,6 +96,7 @@ var FnordMetric = (function(){
   function resizeView(){
     var viewport_width = window.innerWidth - 220
     $('#viewport').width(viewport_width);
+    FnordMetric.ui.resizable('.viewport_inner');
     currentView.resize(
       canvasElem.innerWidth(),
       canvasElem.innerHeight()

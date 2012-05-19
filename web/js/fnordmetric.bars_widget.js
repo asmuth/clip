@@ -35,20 +35,22 @@ FnordMetric.widgets.barsWidget = function(){
 
 
     function draw_layout(){
-      $(opts.elem)
-        .append(
+      if(!opts.no_headbar){
+        $(opts.elem).append(
           $('<div></div>')
             .addClass('headbar')
             .append($('<h2></h2>').html(opts.title))
-        )
-        .append(
-          $('<div></div>')
-            .addClass('container')
-            .css({
-              height: opts.height,
-              margin: '0 23px 25px 23px',
-            })
         );
+      }
+
+      $(opts.elem).append(
+        $('<div></div>')
+          .addClass('container')
+          .css({
+            height: opts.height,
+            margin: '20px 23px 25px 23px',
+          })
+      );
       
       if(opts.async_chart){
         $('.headbar', opts.elem).prepend(

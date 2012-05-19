@@ -60,9 +60,11 @@ FnordMetric.ui.resizable = function(elem){
   $('.resizable', $(elem)).each(function(){
     var wwperc = parseInt($(this).attr('data-width'));
     if (!wwperc || (wwperc < 1)){ wwperc = 100; }
-    var wwidth = $('#viewport').width() * (wwperc/100.0);
+    var wwidth = $('.viewport_inner').width() * (wwperc/100.0);
     if(wwperc==100){ $(this).addClass('full_width'); } 
-    else { wwidth -= 10; $(this).css('float', 'left'); }
+    else if($(this).hasClass('right')) { $(this).css('float', 'right'); }
+    else { $(this).css('float', 'left'); }
+    $(this).css('overflow', 'hidden');
     $(this).width(wwidth);
   });
 }
