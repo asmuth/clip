@@ -15,8 +15,6 @@ module FnordMetric
   @@options = nil
   @@pool = []
 
-  @@firehose = EM::Channel.new
-
   @@namespaces = {}
 
   def self.namespace(key=nil, &block)
@@ -145,9 +143,7 @@ require "fnordmetric/acceptors/udp_acceptor"
 require "fnordmetric/widget"
 require "fnordmetric/widgets/timeseries_widget"
 require "fnordmetric/widgets/numbers_widget"
-
-
-
-require "fnordmetric/bars_widget"
-require "fnordmetric/toplist_widget"
-require "fnordmetric/pie_widget"
+require "fnordmetric/widgets/bars_widget"
+require "fnordmetric/widgets/toplist_widget"
+require "fnordmetric/widgets/pie_widget"
+require "fnordmetric/widgets/html_widget"
