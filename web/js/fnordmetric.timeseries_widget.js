@@ -181,9 +181,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
           var autoupdate_interval = window.setInterval(function(){          
-             updateRange();
-             redrawDatepicker();
-             requestValuesAsync();
+             updateChart(false, true);
           }, secs*1000);
 
           $('body').bind('fm_dashboard_close', function(){
