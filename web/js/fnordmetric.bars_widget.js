@@ -27,6 +27,7 @@ FnordMetric.widgets.barsWidget = function(){
       if(opts.async_chart){
         updateChart();
       } else {
+        if(!opts.values){ opts.values = [[0,0],[1,0]]; }
         values = opts.values;
         renderChart();
       }

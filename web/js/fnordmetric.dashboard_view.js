@@ -83,7 +83,9 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
     function announce(evt){
       if((evt.class == "widget_response") || (evt.class == "widget_push")){
         for(wkey in widget_objs){
-          widget_objs[wkey].announce(evt);
+          if(widget_objs[wkey].announce){ 
+            widget_objs[wkey].announce(evt)
+          }
         }  
       }
     }

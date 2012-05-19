@@ -3,7 +3,6 @@ class FnordMetric::ToplistWidget < FnordMetric::Widget
   def data
     super.merge(
       :gauges => data_gauges,
-      :key_nouns => key_nouns,
       :autoupdate => (@opts[:autoupdate] || 0),
       :render_target => @opts[:render_target],
       :ticks => @opts[:ticks],
