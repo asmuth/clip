@@ -51,7 +51,8 @@ var FnordMetric = (function(){
     }
 
     $('#sidebar li').click(function(){
-      $(this).addClass('active').siblings().removeClass('active');
+      $('#sidebar li').removeClass('active');
+      $(this).addClass('active');
 
       if($(this).attr('data-view') == "dashboard"){
         FnordMetric.renderDashboard($(this).attr('data-token'));
