@@ -12,9 +12,10 @@ FnordMetric.widgets.barsWidget = function(){
       if(!opts.default_cardinal){ opts.default_cardinal = true; }
 
       draw_layout();
-
-      width = opts.elem.width() - 50;
-      height = opts.height || 240;
+      
+      $(opts.elem)
+        .addClass('resize_listener')
+        .bind('fm_resize', renderChart);
 
       gconfig = {
         element: $('.container', opts.elem)[0],
@@ -71,6 +72,12 @@ FnordMetric.widgets.barsWidget = function(){
     }
 
     function renderChart(){
+      width = opts.elem.width() - 50;
+      height = opts.height || 240;
+
+      gconfig.width = width;
+      gconfig.height = height;
+
       $(gconfig.element).html("");
 
       gconfig.series = [{

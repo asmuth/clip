@@ -94,13 +94,18 @@ var FnordMetric = (function(){
   };
 
   function resizeView(){
-    var viewport_width = window.innerWidth - 220
+    var viewport_width = window.innerWidth - 220;
+    if(viewport_width < 780){ viewport_width=780; }
     $('#viewport').width(viewport_width);
+    $('.navbar').width(viewport_width);
     FnordMetric.ui.resizable('.viewport_inner');
-    currentView.resize(
-      canvasElem.innerWidth(),
-      canvasElem.innerHeight()
-    );
+    if(currentView){
+      currentView.resize(
+        canvasElem.innerWidth(),
+        canvasElem.innerHeight()
+      );  
+    }
+    $(".resize_listener").trigger('fm_resize');
   };
 
 

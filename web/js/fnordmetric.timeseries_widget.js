@@ -24,18 +24,17 @@ FnordMetric.widgets.timeseriesWidget = function(){
 
       draw_layout();
 
-      width = opts.elem.width() - 50;
-      height = opts.height || 240;
-
       gconfig = {
         element: $('.container', opts.elem)[0],
-        width: width,
-        height: height,
         interpolation: (opts.default_cardinal ? 'cardinal' : 'linear'),
         stroke: true,
         series: opts.series,
         padding: { top: 0.1, bottom: 0 }
       }
+
+      $(opts.elem)
+        .addClass('resize_listener')
+        .bind('fm_resize', renderChart);
 
       apply_style(opts.default_style);
 
@@ -192,6 +191,12 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function renderChart(){
+      width = opts.elem.width() - 50;
+      height = opts.height || 240;
+
+      gconfig.width = width;
+      gconfig.height = height;
+
       $(gconfig.element).html("");
       $(".rickshaw_legend", opts.elem).html("");
 
