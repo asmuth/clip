@@ -10,9 +10,10 @@ FnordMetric.widgets.timeseriesWidget = function(){
     */
 
     var widget_uid = "fnord-" + parseInt(Math.random()*99990000);
-    var width, height, opts, graph, gconfig, xticks, legend, hoverDetail, shelving, highlighter;
+    var width, height, opts, graph, gconfig, legend, hoverDetail, shelving, highlighter;
 
     var cardinal = true;
+    var xticks   = 30;
 
     function render(_opts){
       opts = _opts;
@@ -299,8 +300,15 @@ FnordMetric.widgets.timeseriesWidget = function(){
         opts.tick = opts.ticks[0];
       }
 
+      var _now = parseInt(new Date().getTime() / 1000);
+
+      if((opts.autoupdate) && 
+        ((_now - opts.end_timestamp) < ((opts.tick*opts.autoupdate) + 5))){
+        force = true;
+      }
+
       if(!opts.start_timestamp || !opts.end_timestamp || !!force){
-        opts.end_timestamp = parseInt(new Date().getTime() / 1000);
+        opts.end_timestamp = _now;
         opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
       }
     }
