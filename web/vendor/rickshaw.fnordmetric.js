@@ -1134,7 +1134,7 @@ Rickshaw.Graph.Axis.Y = function(args) {
 		this.graph = args.graph;
 		this.orientation = args.orientation || 'right';
 
-        var pixelsPerTick = 45;
+        var pixelsPerTick = 60;
 
 		if(Math.floor(this.graph.height / pixelsPerTick) > 6){
 			pixelsPerTick = Math.floor(this.graph.height / 6);
@@ -1211,8 +1211,6 @@ Rickshaw.Graph.Axis.Y = function(args) {
 			.attr("class", ["y_ticks", this.ticksTreatment].join(" "))
 			.attr("transform", transform)
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize))
-
-		console.log(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize));
 
 		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width;
 
