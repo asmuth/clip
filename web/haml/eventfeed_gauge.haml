@@ -1,5 +1,19 @@
 %div(style="margin-top:47px;")
   .events_sidebar
+    .headbar.small Settings
+    %ul.event_type_list
+      %li.event_type{:rel => "avg_user_data"}
+        %input{:checked => "checked", :type => "checkbox"}
+          %span Enable pictures
+      %li.event_type{:rel => "avg_user_data"}
+        %input{:checked => "checked", :type => "checkbox"}
+          %span Enable usernames
+      %li.event_type{:rel => "avg_user_data"}
+        %input{:checked => "checked", :type => "checkbox"}
+          %span Only with session
+    
+
+    .headbar.small Types
     %ul.event_type_list
       %li.event_type{:rel => "avg_user_data"}
         %span.history history
@@ -62,6 +76,7 @@
         %span.properties
     
   .sessions_sidebar
+    %ul.event_type_list
     %ul.session_list
       %li.session{"data-session" => "a002e08506fcb46a0248a88f2edf699f"}
         .picture
