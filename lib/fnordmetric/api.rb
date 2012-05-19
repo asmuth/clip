@@ -33,7 +33,6 @@ class FnordMetric::API
 
   def push_event(event_id, event_data)
     prefix = @@opts[:redis_prefix]
-    @redis.hincrby "#{prefix}-testdata",          "events_received", 1
     @redis.hincrby "#{prefix}-stats",             "events_received", 1
     @redis.set     "#{prefix}-event-#{event_id}", event_data
     @redis.lpush   "#{prefix}-queue",             event_id
