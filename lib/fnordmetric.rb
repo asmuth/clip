@@ -26,6 +26,7 @@ module FnordMetric
       @@namespaces.each do |key, block|
         _namespaces[key] = FnordMetric::Namespace.new(key, options.clone)
         _namespaces[key].instance_eval(&block)
+        _namespaces[key].instance_eval(&FnordMetric::DEFAULT_PROC)
       end
     end
   end
@@ -130,6 +131,7 @@ require "fnordmetric/session"
 require "fnordmetric/api"
 require "fnordmetric/worker"
 require "fnordmetric/logger"
+require "fnordmetric/defaults"
 require "fnordmetric/web/web"
 require "fnordmetric/web/app_helpers"
 require "fnordmetric/web/app"

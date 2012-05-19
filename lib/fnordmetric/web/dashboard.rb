@@ -16,6 +16,10 @@ class FnordMetric::Dashboard
     @options[:title]
   end
 
+  def group
+    @opts[:group] || "Dashboards"
+  end
+
   def token
     token = title.to_s.gsub(/[\W]/, '')
     token = Digest::SHA1.hexdigest(title.to_s) if token.empty?

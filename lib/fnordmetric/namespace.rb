@@ -1,14 +1,15 @@
 class FnordMetric::Namespace
   
-  attr_reader :handlers, :gauges, :opts, :key, :dashboards
+  attr_reader :handlers, :gauges, :opts, :key, :dashboards, :flags
 
-  @@opts = [:event, :gauge, :widget, :set_title, :active_users_available]
+  @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview]
   @@multi_gauges = [:timeseries_gauge, :toplist_gauge, :distribution_gauge, :eventfeed_gauge]
 
   def initialize(key, opts)    
     @gauges = Hash.new
     @dashboards = Hash.new
     @handlers = Hash.new
+    @flags = Hash.new
     @title = key
     @active_users_available = true
     @opts = opts
@@ -100,12 +101,16 @@ class FnordMetric::Namespace
     send(:"opt_#{m}", *args, &block)
   end
 
-  def hide_active_users
-    @active_users_available = false
+  def opt_hide_active_users
+    @flags[:hide_active_users] = true
+  end
+
+  def opt_hide_overview
+    @flags[:hide_overview] = true
   end
   
-  def set_title(key)
-    @title = key
+  def opt_set_title(title)
+    @title = title
   end
   
   def opt_event(event_type, opts={}, &block)    
@@ -145,6 +150,13 @@ class FnordMetric::Namespace
       :redis_prefix => @opts[:redis_prefix],
       :redis => @redis
     )
+  end
+
+  def to_json
+    flags.merge(
+      :token => token,
+      :title => title
+    ).to_json
   end
 
 end

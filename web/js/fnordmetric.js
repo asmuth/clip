@@ -4,8 +4,7 @@ var FnordMetric = (function(){
   var currentView = false;
   var currentNamespace = false;
   var gauges = {};
-
-  var socket;
+  var socket, conf;
 
   function renderDashboard(_dash){
     loadView(FnordMetric.views.dashboardView(_dash));
@@ -15,16 +14,36 @@ var FnordMetric = (function(){
     loadView(FnordMetric.views.gaugeView(_gauge));
   }
 
+  function renderSidebarGroup(grname){
+    var ul = $("<ul>")
+      .attr('data-group', grname);
+
+    $('#sidebar')
+      .append('<div class="ul_head">' + grname + '</div>')
+      .append(ul);
+
+    return ul;
+  }
+  
   function renderSidebar(){
     $('#sidebar')
-      .html('')
-      .append('<div class="ul_head">Gauges</div>')
-      .append('<ul>')
+      .html('');
+
+    if(!conf.hide_overview){
+      renderSidebarGroup('Overview')
+        .append($('<li class="overview">')
+          .append('<span class="picto piechart">')
+          .append($('<a href="#" class="title">').html('App Overview')));
+    }
 
     for(gkey in gauges){
+      if(!gauges[gkey].group){ gauges[gkey].group = 'Gauges'; }
       if(!gauges[gkey].title){ gauges[gkey].title = gkey; }
 
-      $('#sidebar ul').append($('<li class="gauge">')
+      var ul = $('#sidebar ul[data-group="' + gauges[gkey].group + '"]');
+      if(ul.length == 0){ ul = renderSidebarGroup(gauges[gkey].group); }
+
+      ul.append($('<li class="gauge">')
         .attr('data-token', gkey)
         .attr('data-view', gauges[gkey].view_type)
         .append('<span class="picto piechart">')
@@ -51,7 +70,8 @@ var FnordMetric = (function(){
     if(!gauges[msg.gauge_key]){
       gauges[msg.gauge_key] = {
         "view_type": msg.view,
-        "title": msg.title
+        "title": msg.title,
+        "group": msg.group
       };
       renderSidebar();
     }
@@ -83,13 +103,16 @@ var FnordMetric = (function(){
   };
 
 
-  function init(_canvasElem, _namespace, _sock_addr){
-    this.currentNamespace = _namespace;
+  function init(_conf){
+    conf = _conf;
+    this.currentNamespace = _conf.token;
+
+    if(conf.title){ $('title').html(conf.title); }
 
     canvasElem = $("<div class='viewport_inner'>");
     canvasElem.addClass('clearfix');
 
-    socket = new WebSocket(_sock_addr);
+    socket = new WebSocket("ws://localhost:4243");
     socket.onmessage = socketMessage;
     socket.onclose = socketClose;
     socket.onopen = socketOpen;
@@ -98,7 +121,7 @@ var FnordMetric = (function(){
         .append($("<div id='sidebar'>"))
         .append($("<div id='viewport'>").append(canvasElem));
 
-    _canvasElem.html(_wrap_elem);
+    $('#app').html(_wrap_elem);
 
     $(window).resize(resizeView);
     window.setTimeout(navigateViaHash, 200);
