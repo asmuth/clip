@@ -63,7 +63,7 @@ FnordMetric.ui.resizable = function(elem){
     var wwidth = $('.viewport_inner').width() * (wwperc/100.0);
     if(wwperc==100){ $(this).addClass('full_width'); } 
     else if($(this).hasClass('right')) { $(this).css('float', 'right'); }
-    else { $(this).css('float', 'left'); }
+    else { wwidth -= 1; $(this).css('float', 'left'); }
     $(this).css('overflow', 'hidden');
     $(this).width(wwidth);
   });

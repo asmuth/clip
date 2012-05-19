@@ -237,11 +237,6 @@
 .rickshaw_legend:hover {
 	z-index: 10;
 }
-.rickshaw_legend .swatch {
-	width: 10px;
-	height: 10px;
-	border: 1px solid rgba(0, 0, 0, 0.2);
-}
 .rickshaw_legend .line {
 	clear: both;
 	line-height: 140%;

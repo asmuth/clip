@@ -17,6 +17,11 @@ h3{
   font-weight:500;
 }
 
+hr{
+  border:none;
+  border-top:1px solid #ddd;  
+}
+
 a.link{
   color:#2281CF;
   text-decoration:none;
@@ -208,7 +213,11 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .numbers_container.size_4{ width:358px; }
 .numbers_container.size_5{ width:450px; }
 
-.numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block;font-weight:400; }
+.numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block; 
+font-weight:400; }
+.numbers_container .title.with_swatch{ margin-bottom:4px; }
+.numbers_container .title.with_swatch span{ padding-left:20px; }
+.numbers_container .title .swatch{ display:block; float:left; position:absolute; margin-top:3px; margin-right:5px; }
 
 .numbers_container.numbers_pad_bottom .number{ padding-bottom:19px; }
 .numbers_container.numbers_pad_bottom{ border-bottom:none; }
@@ -447,4 +456,11 @@ position: relative;
 
 .ui_sidebar_toplist .toplist_item.active{
   margin-right:-1px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius:2px;
 }

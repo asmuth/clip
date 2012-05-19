@@ -14,18 +14,33 @@
 
   .widget_timeseries
 
-  .headbar.small= @opts[:title]
-  - @series_numbers.each do |series, nums|
-    %div
-      .numbers_container
-        .title= series
+  .resizable(data-width="25" style="border-right:1px solid #ddd;")
+    .headbar.small Realtime
+    %br
+    %br
+    %br
+
+  .resizable(data-width="40" style="border-right:1px solid #ddd;")
+    .headbar.small Series Values
+    - @series_numbers.each do |series, nums|
+      .clearfix.numbers_container(style="width:auto; float:none; margin-right:20px;")
+        .title.with_swatch
+          .swatch(style="background:#{@series_colors[series]};")
+          %span= series
 
         .number{:data => nums[:total], :"data-current" => 0}
           %span.desc Total
           %span.value 0
 
 
+  .resizable(data-width="35")
+    .headbar.small Series Weights
+
+
 :gaugejs
+
+  FnordMetric.ui.resizable('.report_view');
+  FnordMetric.util.updateNumbers('.report_view', 4);
 
   FnordMetric.widgets.timeseriesWidget().render({
     title: "Fnord!!!!",
@@ -34,5 +49,3 @@
     default_style: 'stack',
     series: #{@series_render.to_json}
   });
-
-  FnordMetric.util.updateNumbers('.report_view', 4);

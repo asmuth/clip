@@ -6,6 +6,8 @@
   %ul.ui_tabs.tabs
     %li.active{"data-tab" => "Overview"}
       %a{:href => "#"} Overview
+    %li{"data-tab" => "Overview"}
+      %a{:href => "#"} Histograms
 
   .headbar
     %h2 Histogram: #{@opts[:title]}
@@ -33,13 +35,18 @@
           %span.desc Mode
           %span.value= 0
 
+    %hr
+
+    .clearfix
+      %h2(style="margin:20px 0 -3px 20px;") Standard Deviation
+
 
   .widget_histogram_bars.resizable(data-width="60")
 
   .resizable(data-width="60")
 
     .headbar.small
-      Standard Deviation
+      Average, Min and Max over Time
 
 
 
