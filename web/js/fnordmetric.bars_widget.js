@@ -18,7 +18,7 @@ FnordMetric.widgets.barsWidget = function(){
 
       gconfig = {
         element: $('.container', opts.elem)[0],
-        renderer: "line",
+        renderer: "bar",
         width: width,
         height: height,
         padding: { top: 0.1, bottom: 0 }

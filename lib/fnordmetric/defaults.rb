@@ -1,4 +1,4 @@
-FnordMetric::COLORS = ["#406ea5", "#aa4643", "#83a145"].reverse
+FnordMetric::COLORS = ["#4572a7", "#aa4643", "#89a54e", "#80699b", "#3d96ae", "#db843d"].reverse
 
 FnordMetric::DEFAULT_PROC = lambda{ |arg|
 

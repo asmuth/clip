@@ -2031,7 +2031,42 @@ Rickshaw.Graph.Renderer.Stack = Rickshaw.Class.create( Rickshaw.Graph.Renderer, 
 			.y0( function(d) { return graph.y(d.y0) } )
 			.y1( function(d) { return graph.y(d.y + d.y0) } )
 			.interpolate(this.graph.interpolation).tension(this.tension);
-	}
+	},
+
+	render: function() {
+		var graph = this.graph;
+
+		graph.vis.selectAll('*').remove();
+
+		var nodes = graph.vis.selectAll("path")
+			.data(this.graph.stackedData)
+			.enter().append("svg:path")
+			.attr("d", this.seriesPathFactory());
+
+		var i = 0;
+		graph.series.forEach( function(series) {
+			if (series.disabled) return;
+			series.path = nodes[0][i++];
+			this._styleSeries(series);
+		}, this );
+	},
+
+	_styleSeries: function(series, fm_opts) {
+
+		var fill = this.fill ? series.color : 'none';
+		var stroke = this.stroke ? series.color : 'none';
+
+		series.path.setAttribute('fill', d3.interpolateRgb(fill, 'white')(0.125))
+		series.path.setAttribute('stroke', stroke);
+		if (fm_opts){
+			series.path.setAttribute('stroke-width', fm_opts.stroke_width);
+		} else {
+			series.path.setAttribute('stroke-width', this.strokeWidth);
+		}
+		series.path.setAttribute('class', series.className);
+	},
+
+
 } );
 
 Rickshaw.namespace('Rickshaw.Graph.Renderer.Bar');
@@ -2103,7 +2138,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 				.attr("height", function(d) { return graph.y.magnitude(d.y) });
 
 			Array.prototype.forEach.call(nodes[0], function(n) {
-				n.setAttribute('fill', d3.interpolateRgb(series.color, 'white')(0.25));
+				n.setAttribute('fill', series.color);
 			} );
 
 			if (this.unstack) barXOffset += seriesBarWidth;
