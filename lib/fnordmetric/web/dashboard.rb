@@ -17,7 +17,7 @@ class FnordMetric::Dashboard
   end
 
   def group
-    @opts[:group] || "Dashboards"
+    @options[:group] || "Dashboards"
   end
 
   def token

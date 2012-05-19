@@ -167,7 +167,27 @@ FnordMetric.widgets.timeseriesWidget = function(){
             .addClass('button')
             .append($('<span></span>').html('&rarr;'))
             .click(function(){ moveRange(1); })
+        ).prepend(
+          $('<div class="refresh_btn"></div>')
+            .addClass('button ml')
+            .append($('<span></span>').html('refresh'))
+            .click(function(){ requestValuesAsync(); })
         );
+      }
+
+      if((opts.autoupdate) && (opts.async_chart)){
+        var secs = parseInt(opts.autoupdate);
+        if(secs > 0){
+          var autoupdate_interval = window.setInterval(function(){          
+             updateRange();
+             redrawDatepicker();
+             requestValuesAsync();
+          }, secs*1000);
+
+          $('body').bind('fm_dashboard_close', function(){
+            window.clearInterval(autoupdate_interval);
+          });
+        }
       }
     }
 
@@ -204,6 +224,10 @@ FnordMetric.widgets.timeseriesWidget = function(){
         graph: graph,
       }).render();
 
+      if(!gconfig.renderer){
+        gconfig.renderer = "line";
+      }
+
       graph.configure(gconfig);
       graph.render();
     }
@@ -214,7 +238,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
         if((evt.class == "widget_response") && (evt.cmd == "values_at")){
           running_request = false;
           $(opts.elem).css('opacity', 1); 
-          updateSeriesData(evt.gauges);
+          updateSeriesData(evt.gauges);          
         }
       }
     }
