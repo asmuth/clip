@@ -43,13 +43,6 @@ FnordMetric.widgets.barsWidget = function(){
         )
         .append(
           $('<div></div>')
-            .addClass('legend')
-            .css({
-              margin: '10px 30px 0 30px',
-            })
-        )
-        .append(
-          $('<div></div>')
             .addClass('container')
             .css({
               height: opts.height,
@@ -77,7 +70,6 @@ FnordMetric.widgets.barsWidget = function(){
 
     function renderChart(){
       $(gconfig.element).html("");
-      $(".rickshaw_legend", opts.elem).html("");
 
       gconfig.series = [{
         name: opts.title,
@@ -85,8 +77,6 @@ FnordMetric.widgets.barsWidget = function(){
         data: []
       }];
 
-      console.log(values);
-      
       for(var n=0; n < values.length; n++){
         gconfig.series[0].data.push({
           x: n,
@@ -96,11 +86,6 @@ FnordMetric.widgets.barsWidget = function(){
       }
 
       graph = new Rickshaw.Graph(gconfig);
-
-      legend = new Rickshaw.Graph.Legend({
-        graph: graph,
-        element: $('.legend', opts.elem)[0]
-      });
 
       new Rickshaw.Graph.Axis.Y({
         graph: graph,

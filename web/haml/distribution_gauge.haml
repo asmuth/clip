@@ -38,14 +38,13 @@
           %span.desc Mode
           %span.value= 0
 
-=@histogram.histogram(@opts[:histogram])
 
 :gaugejs
 
   FnordMetric.ui.resizable('.report_view');
 
   FnordMetric.widgets.barsWidget().render({
-    title: "Fnord!!!!",
+    title: "Histogram: Number of #{key_nouns.last}",
     color: "#{FnordMetric::COLORS.last}",
     elem: $('.widget_histogram_bars'),
     height: 320,
