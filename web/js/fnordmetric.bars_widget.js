@@ -14,6 +14,7 @@ FnordMetric.widgets.barsWidget = function(){
       draw_layout();
 
       width = opts.elem.width() - 50;
+      console.log(width);
       height = opts.height || 240;
 
       gconfig = {
@@ -80,14 +81,15 @@ FnordMetric.widgets.barsWidget = function(){
       $(".rickshaw_legend", opts.elem).html("");
 
       gconfig.series = [{
-        name: "Fnord",
-        color: "#0066CC",
+        name: opts.title,
+        color: opts.color,
         data: []
       }];
 
       for(var n=0; n < values.length; n++){
         gconfig.series[0].data.push({
-          x: values[n][0],
+          x: n,
+          label: values[n][0],
           y: values[n][1]
         });
       }
@@ -98,24 +100,6 @@ FnordMetric.widgets.barsWidget = function(){
         graph: graph,
         element: $('.legend', opts.elem)[0]
       });
-
-      hoverDetail = new Rickshaw.Graph.HoverDetail( {
-        graph: graph
-      });
-
-      shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
-        graph: graph,
-        legend: legend
-      });
-
-      highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-        graph: graph,
-        legend: legend
-      });
-
-      new Rickshaw.Graph.Axis.Time({
-        graph: graph,
-      }).render();
 
       new Rickshaw.Graph.Axis.Y({
         graph: graph,

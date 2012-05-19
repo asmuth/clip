@@ -40,14 +40,16 @@
 
 :gaugejs
 
+  FnordMetric.ui.resizable('.report_view');
+
   FnordMetric.widgets.barsWidget().render({
     title: "Fnord!!!!",
+    color: "#{FnordMetric::COLORS.last}",
     elem: $('.widget_histogram_bars'),
     height: 320,
     values: #{@histogram.histogram(@opts[:histogram]).map{ |r,v| [r.first, v] }.to_json}
   });
 
-  FnordMetric.ui.resizable('.report_view');
 
 
   

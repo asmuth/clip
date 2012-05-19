@@ -1442,6 +1442,10 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 		
 		var element = this.element = document.createElement('div');
 		element.className = 'detail';
+
+		if(args.no_detail){
+		  element.className = 'detail no_detail';	
+		}
 		
 		this.visible = true;
 		graph.element.appendChild(element);
@@ -2078,7 +2082,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 	defaults: function($super) {
 
 		var defaults = Rickshaw.extend( $super(), {
-			gapSize: 0.05,
+			gapSize: 0.10,
 			unstack: false,
 		} );
 
@@ -2089,6 +2093,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 	initialize: function($super, args) {
 		args = args || {};
 		this.gapSize = args.gapSize || this.gapSize;
+		this.xPadding = args.xPadding || 50;
 		$super(args);
 	},
 
@@ -2103,14 +2108,15 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 	},
 
 	barWidth: function() {
-
 		var stackedData = this.graph.stackedData || this.graph.stackData();
 		var data = stackedData.slice(-1).shift();
 
 		var frequentInterval = this._frequentInterval();
 		var barWidth = this.graph.x(data[0].x + frequentInterval.magnitude * (1 - this.gapSize)); 
 
-		return barWidth;
+		console.log(stackedData);
+
+		return ((this.graph.width - (this.xPadding * 2)) / data.length);
 	},
 
 	render: function() {
@@ -2129,19 +2135,25 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 
 			if (series.disabled) return;
 
+			var xpad = this.xPadding;
+
+			var seriesBarDrawWidth =  parseInt(seriesBarWidth * (1 - this.gapSize));
+
+			if(parseInt(seriesBarWidth) == seriesBarDrawWidth){
+				seriesBarDrawWidth -= 1;
+			}
+
 			var nodes = graph.vis.selectAll("path")
 				.data(series.stack)
 				.enter().append("svg:rect")
-				.attr("x", function(d) { return graph.x(d.x) + barXOffset })
+				.attr("x", function(d) { return xpad + (d.x * seriesBarWidth) })
 				.attr("y", function(d) { return graph.y(d.y0 + d.y) })
-				.attr("width", seriesBarWidth)
+				.attr("width", seriesBarDrawWidth)
 				.attr("height", function(d) { return graph.y.magnitude(d.y) });
 
 			Array.prototype.forEach.call(nodes[0], function(n) {
 				n.setAttribute('fill', series.color);
 			} );
-
-			if (this.unstack) barXOffset += seriesBarWidth;
 
 		}, this );
 	},
