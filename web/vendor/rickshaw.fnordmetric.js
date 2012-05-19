@@ -1882,14 +1882,18 @@ Rickshaw.Graph.Renderer = Rickshaw.Class.create( {
 		}, this );
 	},
 
-	_styleSeries: function(series) {
+	_styleSeries: function(series, fm_opts) {
 
 		var fill = this.fill ? series.color : 'none';
 		var stroke = this.stroke ? series.color : 'none';
 
 		series.path.setAttribute('fill', fill);
 		series.path.setAttribute('stroke', stroke);
-		series.path.setAttribute('stroke-width', this.strokeWidth);
+		if (fm_opts){
+			series.path.setAttribute('stroke-width', fm_opts.stroke_width);
+		} else {
+			series.path.setAttribute('stroke-width', this.strokeWidth);
+		}
 		series.path.setAttribute('class', series.className);
 	},
 
@@ -1961,7 +1965,41 @@ Rickshaw.Graph.Renderer.Line = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 			.x( function(d) { return graph.x(d.x) } )
 			.y( function(d) { return graph.y(d.y) } )
 			.interpolate(this.graph.interpolation).tension(this.tension);
-	}
+	},
+
+
+	render: function() {
+
+		if(this.graph.stackedData[0].length < 42){
+			var fm_opts = { stroke_width: 3, draw_points: true };
+		} else if(this.graph.stackedData[0].length < 99){
+			var fm_opts = { stroke_width: 2, draw_points: false };
+		} else {
+			var fm_opts = { stroke_width: 1, draw_points: false };
+		}
+
+		var graph = this.graph;
+
+		graph.vis.selectAll('*').remove();
+
+		var nodes = graph.vis.selectAll("path")
+			.data(this.graph.stackedData)
+			.enter().append("svg:path")
+			.attr("d", this.seriesPathFactory());
+
+		if(fm_opts.draw_points){
+			console.log("FIXPAUL: timeseries widget -° draw points!");
+		}
+
+		var i = 0;
+		graph.series.forEach( function(series) {
+			if (series.disabled) return;
+			series.path = nodes[0][i++];
+			this._styleSeries(series, fm_opts);
+		}, this );
+
+	},
+
 } );
 
 Rickshaw.namespace('Rickshaw.Graph.Renderer.Stack');
@@ -2060,7 +2098,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 				.attr("height", function(d) { return graph.y.magnitude(d.y) });
 
 			Array.prototype.forEach.call(nodes[0], function(n) {
-				n.setAttribute('fill', series.color);
+				n.setAttribute('fill', d3.interpolateRgb(series.color, 'white')(0.25));
 			} );
 
 			if (this.unstack) barXOffset += seriesBarWidth;
@@ -2141,6 +2179,12 @@ Rickshaw.Graph.Renderer.Area = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 
 		graph.vis.selectAll('*').remove();
 
+		if(this.graph.stackedData[0].length < 42){
+			var fm_opts = { stroke_width: 3 };
+		} else {
+			var fm_opts = { stroke_width: 1 };
+		}
+
 		var nodes = graph.vis.selectAll("path")
 			.data(this.graph.stackedData)
 			.enter().insert("svg:g", 'g');
@@ -2159,23 +2203,24 @@ Rickshaw.Graph.Renderer.Area = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 		graph.series.forEach( function(series) {
 			if (series.disabled) return;
 			series.path = nodes[0][i++];
-			this._styleSeries(series);
+			this._styleSeries(series, fm_opts);
 		}, this );
 	},
 
-	_styleSeries: function(series) {
+	_styleSeries: function(series, fm_opts) {
 
 		if (!series.path) return;
 
 		d3.select(series.path).select('.area')
+			.attr('opacity', '0.7')
 			.attr('fill', series.color);
 
-		if (this.stroke) {
-			d3.select(series.path).select('.line')
-				.attr('fill', 'none')
-				.attr('stroke', series.stroke || d3.interpolateRgb(series.color, 'black')(0.125))
-				.attr('stroke-width', this.strokeWidth);
-		}
+		console.log(fm_opts.stroke_width);
+
+		d3.select(series.path).select('.line')
+			.attr('fill', 'none')
+			.attr('stroke', d3.interpolateRgb(series.color, 'white')(0.125))
+			.attr('stroke-width', fm_opts.stroke_width);
 
 		if (series.className) {
 			series.path.setAttribute('class', series.className);

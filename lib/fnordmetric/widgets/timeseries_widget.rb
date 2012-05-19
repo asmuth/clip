@@ -34,8 +34,8 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
   end
 
   def series
-    colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
-
+    colors = FnordMetric::COLORS.dup
+    
     gauges.map do |gauge|
       { 
         :name => gauge.name, 

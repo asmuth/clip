@@ -22,6 +22,8 @@
 
 -> body min-size
 
+-> gauge: garbage-collection via hash-chunking + expiry
+
 -> split up fnordmetric.namespace block into multiple files
 -> show notification when connection lost
 -> reconnect on disconnect

@@ -2,7 +2,7 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
   def render(namespace, event)
     interval = parse_interval(event["interval"])
-    colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
+    colors = FnordMetric::COLORS.dup
 
     @series_colors = Hash[series_gauges.map do |k,g| 
       [k, colors.unshift(colors.pop).first]

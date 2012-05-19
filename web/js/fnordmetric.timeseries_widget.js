@@ -18,6 +18,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     function render(_opts){
       opts = _opts;
 
+      if(opts.default_style == "areaspline"){ opts.default_style = 'area'; }
       if(!opts.default_style){ opts.default_style = 'line'; }
       if(!opts.default_cardinal){ opts.default_cardinal = true; }
 
@@ -77,7 +78,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
         gconfig.offset = 'value';
       }
 
-      if(style == 'stack'){
+      if(style == 'area'){
         gconfig.renderer = 'area';
         gconfig.offset = 'value';
       }
@@ -106,8 +107,8 @@ FnordMetric.widgets.timeseriesWidget = function(){
               .append(
                 $('<div></div>')
                   .addClass('button')
-                  .append($('<span>').html('Stack'))
-                  .attr('data', 'stack')
+                  .append($('<span>').html('Area'))
+                  .attr('data', 'area')
                   .click(change_style)
               )
               .append(
@@ -261,7 +262,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
       gconfig.series = [];
 
       for(var ind = 0; ind < dgauges.length; ind++){
-        
+       
         gconfig.series.push({
           name: dgauges[ind].key,
           color: opts.series[ind].color,
