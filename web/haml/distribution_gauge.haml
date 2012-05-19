@@ -38,6 +38,8 @@
           %span.desc Mode
           %span.value= 0
 
+=@histogram.histogram(@opts[:histogram])
+
 :gaugejs
 
   FnordMetric.ui.resizable('.report_view');
@@ -47,7 +49,7 @@
     color: "#{FnordMetric::COLORS.last}",
     elem: $('.widget_histogram_bars'),
     height: 320,
-    values: #{@histogram.histogram(@opts[:histogram]).map{ |r,v| [r.first, v] }.to_json}
+    values: #{@histogram.histogram(@opts[:histogram]).map{ |r,v| [r.to_s, v] }.to_json}
   });
 
 

@@ -14,14 +14,13 @@ FnordMetric.widgets.barsWidget = function(){
       draw_layout();
 
       width = opts.elem.width() - 50;
-      console.log(width);
       height = opts.height || 240;
 
       gconfig = {
         element: $('.container', opts.elem)[0],
         renderer: "bar",
         width: width,
-        height: height,
+        height: height - 20,
         padding: { top: 0.1, bottom: 0 }
       }
 
@@ -86,6 +85,8 @@ FnordMetric.widgets.barsWidget = function(){
         data: []
       }];
 
+      console.log(values);
+      
       for(var n=0; n < values.length; n++){
         gconfig.series[0].data.push({
           x: n,

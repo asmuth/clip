@@ -2114,8 +2114,6 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 		var frequentInterval = this._frequentInterval();
 		var barWidth = this.graph.x(data[0].x + frequentInterval.magnitude * (1 - this.gapSize)); 
 
-		console.log(stackedData);
-
 		return ((this.graph.width - (this.xPadding * 2)) / data.length);
 	},
 
@@ -2150,6 +2148,23 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 				.attr("y", function(d) { return graph.y(d.y0 + d.y) })
 				.attr("width", seriesBarDrawWidth)
 				.attr("height", function(d) { return graph.y.magnitude(d.y) });
+
+		
+		    var sdata = series.stack;
+			for(var ind=0; ind < sdata.length; ind++){
+				$(graph.element).append(
+				  $("<div>")
+				    .css("position", "absolute")
+				    .css("color", "#666")
+				    .css("width", seriesBarWidth)
+				    .css("textAlign", "center")
+				    .css("marginTop", "5px")
+				    .css("marginLeft", xpad + (sdata[ind].x * seriesBarWidth))
+				    .css("y", graph.height)
+				    .html(sdata[ind].label)
+				);
+				//
+			}
 
 			Array.prototype.forEach.call(nodes[0], function(n) {
 				n.setAttribute('fill', series.color);
