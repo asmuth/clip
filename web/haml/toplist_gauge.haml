@@ -1,7 +1,21 @@
-%div(style="margin-top:47px;")
+.report_view
+
+  %h1= @opts[:title]
+  %h3 Toplist Gauge
+
+  %ul.ui_tabs.tabs
+    %li.active{"data-tab" => "Overview"}
+      %a{:href => "#"} Overview
+    %li{"data-tab" => "Compate"}
+      %a{:href => "#"} Compare
+    %li{"data-tab" => "Trending"}
+      %a{:href => "#"} Trending
+    %li{"data-tab" => "Export"}
+      %a{:href => "#"} Export
+
 
   .widget_toplist.ui_sidebar_toplist.resizable(data-width="40")
-
+    .headbar
     .ui_toplist
       .toplist_item
         .title /matches
@@ -25,6 +39,9 @@
 
 :gaugejs
 
+  FnordMetric.util.updateNumbers('.report_view', 4);
+  FnordMetric.ui.resizable('#viewport');
+
   FnordMetric.widgets.timeseriesWidget().render({
     title: "",
     elem: $('.widget_item_timeseries'),
@@ -36,9 +53,6 @@
       data: [{x:1, y:1},{x:2, y:2},{x:4, y:8},{x:6, y:32}]
     }]
   });
-
-  FnordMetric.util.updateNumbers('.report_view', 4);
-  FnordMetric.ui.resizable('#viewport');
 
 
 :javascript
