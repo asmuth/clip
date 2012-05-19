@@ -1,0 +1,136 @@
+FnordMetric v1.0
+================
+
+
+ROADMAP
+-------
+
+  > Core: Backend
+    - FnordMetric::Timeseries (min/max, values, punchcard, to_histogram etc)
+    - split up fnordmetric.namespace block into multiple files
+    - caching
+    - use rack websocket instead of em websocket
+    - gauge garbage-collection
+    - store per-session-data
+    - callback on session-flush
+    - fix specs
+    - new full_example.rb
+
+
+  > Core: Frontend
+    - show notification when connection lost
+    - reconnect on disconnect
+    - gauge-view: interval selection dropdown
+    - overview view: gauge list (a'la github graphs landing)
+    - overview view: num active users, system stats
+    - fix pie widget
+    - fix html widget
+    - fix toplist widget
+    - formatter: num, time, currency, percent, time_of_day
+    - fix hash-history fu
+    - minimize/pack js
+    - put images into one sprite
+    - nice empty states
+
+ 
+  > Eventfeed Gauge
+    - fix
+
+
+  > Timeseries Gauge
+    - timeseries-gauge/widget: set resolution via "tick buttons" 
+    - timeseries-gauge: realtime tab w/ moving average
+    - timeseries-widget: tooltip -> show key noun
+    - timeseries-gauge: calculate option (sum, average, progressive_sum)
+    - timeseries-gauge: incr_counter / incr_divisor for avg
+    - timeseries-gauge: overview realtime gauge
+    - timeseries-gauge: overview series weights
+    - timeseries-gauge: overview all numbers
+    - timeseries-gauge: punchcards
+    - timeseries-gauge: cmp. w/yesterday option
+    - display trends
+
+
+  > Distribution Gauge
+    - render std. deviation
+    - render max/min/avg over time
+    - display trends
+
+
+  > Toplist Gauge
+    - here be dragons
+    - display trends
+    - show multiple keywords
+
+
+  > Timeseries Widget
+    - timeseries-widget: cardinal on/off should be skeuomorph
+    - timeseries-widget: moving average/smoothing option
+
+
+
+CHANGELOG
+---------
+  
+  > improved ui
+  > highcharts is dead, long live d3.js :)
+  > websockets instead of ajax
+  > new gauges: timeseries, toplist, distribution (anti-repetition!)
+  > new widget: ...
+  > splitted up code into acceptor, web, worker etc.
+  > splitted up javascript code
+  > refactorings, no server-side rendering
+  > less ram usage / garbage collection / single tick
+  > fnordmetric:announce redis pusub event-data instead of event_id
+
+
+
+
+WIKI
+----
+
+  > fnordmetric
+    > sending data 
+      - _type, _time field mandatory
+      - tcp, udp, redis, http
+      - events containing user data (_session, _name)
+      - _namespace
+    > running fnordmetric
+      - standalone
+      - standalone w/ multiple workers
+      - configuration options
+
+  > event handlers
+    - data, time, session etc methods
+    - storing data in the session
+    - end-of-session callback
+
+  > gauges
+    > timeseries gauge
+      - calculate-option: count, sum, progressive_sum, avg
+      - incr / incr_counter / incr_divisor
+    > toplist gauge
+    > distribution gauge
+
+  > custom dashboards
+    - here be dragons
+
+  > examples
+    - full_example.rb
+
+  > hacking
+    - here be dragons
+
+
+
+
+
+IDEAS
+-----
+
+  > value correlation / scatter plot (2d) gauge
+  > geo_distribution_gauge
+  > correlation_gauge (2- or n-dimensional?)
+  > wordnet_gauge (graph-gauge?)
+
+
