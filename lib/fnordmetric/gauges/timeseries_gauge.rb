@@ -12,6 +12,8 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
       @calculate = @opts[:calculate].to_sym
     end 
 
+    @calculate ||= :sum
+
     if @calculate == :average
       @calculate_proc = lambda{ |c,d| d > 0 ? (c/d.to_f).round(2) : 0 }
     else
