@@ -41,17 +41,15 @@ class FnordMetric::Histogram < Hash
 private
 
   def histogram_windows(windows)
+    _min = min 
     _max = max
-    _min = min
 
-    window = (_max - _min) / windows.to_f
+    return [(0..1)] if (_max-_min == 0)
 
-    (windows - 1).times.inject([(0..min)]) do |a,w| 
-      a << (a[-1].last..a.last.last+window)
-    end.tap do |wins|
-      wins.delete_at(0)
-      wins[-1] = (wins[-1].first.._max)
-    end
+    windows.times
+      .inject((_min.._max)
+      .step(((_max-_min)/windows.to_f)).to_a << _max){ |a,n| 
+        a[n]=(a[n]..a[n+1]); a }.take(windows)
   end
 
 end

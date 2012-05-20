@@ -62,7 +62,7 @@
     elem: $('.widget_histogram_bars'),
     height: 320,
     no_headbar: true,
-    values: #{@histogram.json_histogram(12)}
+    values: #{@histogram.json_histogram([12, @histogram.max || 1].min)}
   });
 
 
