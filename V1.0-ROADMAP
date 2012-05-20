@@ -39,17 +39,18 @@ ROADMAP
 
 
   > Timeseries Gauge
-    - timeseries-gauge/widget: set resolution via "tick buttons" 
+    X timeseries-gauge/widget: set resolution via "tick buttons" 
     - timeseries-gauge: realtime tab w/ moving average
     - timeseries-widget: tooltip -> show key noun
     - timeseries-gauge: calculate option (sum, average, progressive_sum)
-    - timeseries-gauge: incr_counter / incr_divisor for avg
+    X timeseries-gauge: incr_counter / incr_divisor for avg
     - timeseries-gauge: overview realtime gauge
     - timeseries-gauge: overview series weights
     - timeseries-gauge: overview all numbers
     - timeseries-gauge: punchcards
     - timeseries-gauge: cmp. w/yesterday option
     - display trends
+    - restrict to max resolution
 
 
   > Distribution Gauge

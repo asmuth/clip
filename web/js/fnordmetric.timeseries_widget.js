@@ -10,7 +10,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     */
 
     var widget_uid = "fnord-" + parseInt(Math.random()*99990000);
-    var width, height, opts, graph, gconfig, legend, hoverDetail, shelving, highlighter;
+    var width, height, opts, graph, gconfig, legend, hoverDetail, shelving, highlighter, resolution;
 
     var cardinal = true;
     var xticks   = 30;
@@ -85,6 +85,14 @@ FnordMetric.widgets.timeseriesWidget = function(){
       if(style == 'flow'){
         gconfig.renderer = 'stack';
         gconfig.offset = 'silhouette';
+      }
+    }
+
+    function apply_resolution(){
+      if(!resolution){ resolution = opts.series_resolutions[0]; }
+
+      for(ind in gconfig.series){
+        gconfig.series[ind].data = gconfig.series[ind]["data"+resolution];
       }
     }
 
@@ -176,6 +184,22 @@ FnordMetric.widgets.timeseriesWidget = function(){
         );
       }
 
+      if(opts.series_resolutions){
+        $('.headbar', opts.elem).append('<div class="tick_btns btn_group"></div>');
+        for(ind in opts.series_resolutions){
+          var _tick = opts.series_resolutions[ind];
+          $('.tick_btns', opts.elem).append(
+            $('<div></div>').attr('class', 'button tick').append($('<span></span>')
+              .html(FnordMetric.util.formatTimeRange(_tick)))
+              .attr('data-tick', _tick)
+              .click(function(){ 
+                resolution = $(this).attr('data-tick'); 
+                renderChart();
+              })  
+          );
+        }
+      }
+
       if((opts.autoupdate) && (opts.async_chart)){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
@@ -199,6 +223,10 @@ FnordMetric.widgets.timeseriesWidget = function(){
 
       $(gconfig.element).html("");
       $(".rickshaw_legend", opts.elem).html("");
+
+      if(opts.series_resolutions){
+        apply_resolution();
+      }
 
       graph = new Rickshaw.Graph(gconfig);
 

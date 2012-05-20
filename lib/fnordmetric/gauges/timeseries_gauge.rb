@@ -18,6 +18,7 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     colors = FnordMetric::COLORS.dup
 
     @series = Hash.new
+    @zooms  = [tick, FnordMetric::TICKS.select{ |t| t > tick }].flatten.uniq
     
     @opts[:series].each do |series|
       ts = FnordMetric::Timeseries.new
@@ -28,13 +29,10 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
       @series[series] = { 
         :color => colors.unshift(colors.pop).first,
-        :data => [ ts.timeseries(interval, 3600), ts.timeseries(interval, tick) ],
+        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(interval, int) ] }],
         :data_block => lambda{ |c,d| c }
       }
     end
-
-    @series_render = []
-    @series_numbers = []
 
     render_page(:timeseries_gauge)
   end

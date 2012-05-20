@@ -1,6 +1,6 @@
 .report_view
 
-  %h1= @opts[:title]
+  %h1= @opts[:title] || @opts[:key]
   %h3 Timeseries Gauge
 
   %ul.ui_tabs.tabs
@@ -24,7 +24,7 @@
 
   .resizable(data-width="40" style="border-right:1px solid #ddd;")
     .headbar.small Series Values
-    - @series_numbers.each do |series, nums|
+    - [].each do |series, nums|
       .clearfix.numbers_container(style="width:auto; float:none; margin-right:20px;")
         .title.with_swatch
           .swatch(style="background:#{@series_colors[series]};")
@@ -39,17 +39,20 @@
     .headbar.small Series Weights
 
 
+
 :gaugejs
 
   FnordMetric.ui.resizable('.report_view');
   FnordMetric.util.updateNumbers('.report_view', 4);
 
   FnordMetric.widgets.timeseriesWidget().render({
-    title: "Fnord!!!!",
+    title: "#{key_nouns.last}",
     elem: $('.widget_timeseries'),
     height: 420,
     default_style: 'stack',
+    series_resolutions: #{@zooms.to_json},
     series: [#{@series.map{ |k,s| 
-      "{ name: #{k.to_json}, color: '#{s[:color]}', data: #{s[:data][0].to_json(&s[:data_block])} }" 
+      dat = s[:data].map{ |k,d| "data#{k}: #{d.to_json(&s[:data_block])}" }
+      "{ name: #{k.to_json}, color: '#{s[:color]}', #{dat * ","} }" 
     } * ","}]
   });
