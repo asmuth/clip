@@ -18,8 +18,8 @@ class FnordMetric::Gauge
     tick * 10 # FIXPAUL!
   end
 
-  def tick_at(time)    
-    (time/tick.to_f).floor*tick
+  def tick_at(time, _tick=tick)    
+    (time/_tick.to_f).floor*_tick
   end
 
   def name
@@ -51,7 +51,7 @@ class FnordMetric::Gauge
   end
 
   def retention_key(_time, _append=nil)
-    key([((_time/retention.to_f).floor*retention).to_s, _append])
+    key([tick_at(_time, retention).to_s, _append])
   end
 
   def two_dimensional?

@@ -12,8 +12,8 @@ module FnordMetric::GaugeCalculations
     (_v.to_f / (sync_redis.get(tick_key(_t, :"value-count"))||1).to_i)
   }
 
-  def ticks_in(r)
-    (((r.last-r.first)/tick.to_f).ceil+1).times.map{ |n| tick_at(r.first + tick*(n-1)) }
+  def ticks_in(r, _tick=tick)
+    (((r.last-r.first)/_tick.to_f).ceil+1).times.map{ |n| tick_at(r.first + _tick*(n-1), _tick) }
   end
 
   def values_in(range)
@@ -73,6 +73,17 @@ module FnordMetric::GaugeCalculations
 
   def field_values_total(time)
     (sync_redis.get(tick_key(time, :count))||0).to_i
+  end
+
+  def fraction_values_in(range)
+    Hash.new{ |h,k| h[k] = [0,0] }.tap do |vals|
+      ticks_in(range, retention).each do |_tick|
+        sync_redis.hgetall(retention_key(_tick)).each do |k, v|
+          kx = k.split("-")
+          vals[kx.first.to_i][kx.last == "divisor" ? 1 : 0] += v.to_f
+        end
+      end
+    end
   end
 
 end

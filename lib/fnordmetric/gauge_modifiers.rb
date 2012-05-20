@@ -87,6 +87,10 @@ module FnordMetric::GaugeModifiers
     at = ctx.send(:time)
     value = parse_numeric(value)
 
+    if prog
+      raise "FIXPAUL: not yet implemented: progressive fraction gauges"
+    end
+
     ctx.redis_exec(:hincrby, retention_key(at), "#{tick_at(at)}-#{part}", value).callback do 
       ctx.redis_exec :expire,  retention_key(at)
     end

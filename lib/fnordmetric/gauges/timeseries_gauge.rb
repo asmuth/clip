@@ -17,28 +17,32 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     interval = parse_interval(event["interval"])
     colors = FnordMetric::COLORS.dup
 
-    @series =  Hash[@opts[:series].map do |series|
-      [series, {
-        :color => colors.unshift(colors.pop).first,
-        :timeseries => FnordMetric::Timeseries.new
-      }]
-    end]
-
-    @series_render = series_gauges.map do |series, gauge|
-      gauge_vals = gauge.values_in(interval).to_a
-
-      @series_numbers[series][:total] = gauge_vals.inject(0) do |s, (t, v)|
-        s += v.to_i
-      end
-
-      {
-        :name  => series,
-        :color => @series_colors[series],
-        :data  => gauge_vals
-          .sort{ |a,b| a[0] <=> b[0] }
-          .map { |t,v| { :x => t, :y => v.to_i } }
-      }
+    @series = Hash.new
+    
+    @opts[:series].each do |series|
+      @series[series] = { :color => colors.unshift(colors.pop).first }
     end
+
+    puts fraction_values_in(interval).inspect
+
+    @series_render = []
+    @series_numbers = []
+
+    # @series_render = series_gauges.map do |series, gauge|
+    #   gauge_vals = gauge.values_in(interval).to_a
+
+    #   @series_numbers[series][:total] = gauge_vals.inject(0) do |s, (t, v)|
+    #     s += v.to_i
+    #   end
+
+    #   {
+    #     :name  => series,
+    #     :color => @series_colors[series],
+    #     :data  => gauge_vals
+    #       .sort{ |a,b| a[0] <=> b[0] }
+    #       .map { |t,v| { :x => t, :y => v.to_i } }
+    #   }
+    # end
 
     render_page(:timeseries_gauge)
   end
@@ -65,8 +69,10 @@ private
     if @calculate == :average
       incr_dividend(ctx, series_name, value)
       incr_divisor(ctx, series_name, 1)
-    else
+    elsif @calculate == :sum
       incr_dividend(ctx, series_name, value)
+    elsif @calculate == :progressive_sum
+      incr_dividend(ctx, series_name, value, true)
     end
   end
 
