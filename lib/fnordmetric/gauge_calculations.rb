@@ -80,7 +80,7 @@ module FnordMetric::GaugeCalculations
       ticks_in(range, retention).each do |_tick|
         sync_redis.hgetall(retention_key(_tick)).each do |k, v|
           kx = k.split("-")
-          vals[kx.first.to_i][kx.last == "divisor" ? 1 : 0] += v.to_f
+          vals[kx.first.to_i][kx.last == "denominator" ? 1 : 0] += v.to_f
         end
       end
     end

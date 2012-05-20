@@ -40,10 +40,10 @@ ROADMAP
 
   > Timeseries Gauge
     X timeseries-gauge/widget: set resolution via "tick buttons" 
+    X timeseries-gauge: calculate option (sum, average, progressive_sum)
+    X timeseries-gauge: incr_counter / incr_denominator for avg
     - timeseries-gauge: realtime tab w/ moving average
-    - timeseries-widget: tooltip -> show key noun
-    - timeseries-gauge: calculate option (sum, average, progressive_sum)
-    X timeseries-gauge: incr_counter / incr_divisor for avg
+    - timeseries-widget: tooltip -> show key noun   
     - timeseries-gauge: overview realtime gauge
     - timeseries-gauge: overview series weights
     - timeseries-gauge: overview all numbers
@@ -110,7 +110,7 @@ WIKI
   > gauges
     > timeseries gauge
       - calculate-option: count, sum, progressive_sum, avg
-      - incr / incr_counter / incr_divisor
+      - incr / incr_counter / incr_denominator
     > toplist gauge
     > distribution gauge
 

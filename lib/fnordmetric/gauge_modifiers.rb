@@ -72,12 +72,12 @@ module FnordMetric::GaugeModifiers
     @redis.zadd(gauge.tick_key(time), value, field_name)
   end
 
-  def incr_dividend(ctx, series_name=:default, value=1, prog=false)
-    incr_fraction(ctx, series_name, :dividend, value, prog)
+  def incr_numerator(ctx, series_name=:default, value=1, prog=false)
+    incr_fraction(ctx, series_name, :numerator, value, prog)
   end
 
-  def incr_divisor(ctx, series_name=:default, value=1, prog=false)
-    incr_fraction(ctx, series_name, :divisor, value, prog)
+  def incr_denominator(ctx, series_name=:default, value=1, prog=false)
+    incr_fraction(ctx, series_name, :denominator, value, prog)
   end
 
   def incr_fraction(ctx, series_name, part, value, prog)

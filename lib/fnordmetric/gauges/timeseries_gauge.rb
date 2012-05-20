@@ -44,8 +44,8 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
   def execute(cmd, context, *args)
     return incr(context, *args) if cmd == :incr
-    return incr_dividend(context, *args) if cmd == :incr_dividend
-    return incr_divisor(context, *args) if cmd == :incr_divisor
+    return incr_numerator(context, *args) if cmd == :incr_numerator
+    return incr_denominator(context, *args) if cmd == :incr_denominator
 
     FnordMetric.error("gauge '#{name}': unknown command: #{cmd}")
   end
@@ -62,12 +62,12 @@ private
 
   def incr(ctx, series_name = :default, value = 1)
     if @calculate == :average
-      incr_dividend(ctx, series_name, value)
-      incr_divisor(ctx, series_name, 1)
+      incr_numerator(ctx, series_name, value)
+      incr_denominator(ctx, series_name, 1)
     elsif @calculate == :sum
-      incr_dividend(ctx, series_name, value)
+      incr_numerator(ctx, series_name, value)
     elsif @calculate == :progressive_sum
-      incr_dividend(ctx, series_name, value, true)
+      incr_numerator(ctx, series_name, value, true)
     end
   end
 

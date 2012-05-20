@@ -5,16 +5,16 @@ class FnordMetric::Timeseries
     @timeline.merge!(timeline)
   end
 
-  def incr_fraction(time, dividend, divisor)
-  	incr_dividend(time, dividend) if dividend
-  	incr_divisor(time, divisor) if divisor
+  def incr_fraction(time, numerator, denominator)
+  	incr_numerator(time, numerator) if numerator
+  	incr_denominator(time, denominator) if denominator
   end
 
-  def incr_dividend(time, value)
+  def incr_numerator(time, value)
   	@timeline[time.to_i][0] += value
   end
 
-  def incr_divisor(time, value)
+  def incr_denominator(time, value)
     @timeline[time.to_i][-1] ||= 0
     @timeline[time.to_i][-1] += value
   end
