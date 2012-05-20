@@ -31,7 +31,7 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     @opts[:series].each do |series|
       ts = FnordMetric::Timeseries.new
 
-      fraction_values_in(interval).each do |time, frac|
+      fraction_values_in(interval, series).each do |time, frac|
         ts.incr_fraction(time, *frac)
       end
 

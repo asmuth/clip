@@ -75,10 +75,10 @@ module FnordMetric::GaugeCalculations
     (sync_redis.get(tick_key(time, :count))||0).to_i
   end
 
-  def fraction_values_in(range)
+  def fraction_values_in(range, _append=nil)
     Hash.new{ |h,k| h[k] = [0,0] }.tap do |vals|
       ticks_in(range, retention).each do |_tick|
-        sync_redis.hgetall(retention_key(_tick)).each do |k, v|
+        sync_redis.hgetall(retention_key(_tick, _append)).each do |k, v|
           kx = k.split("-")
           vals[kx.first.to_i][kx.last == "denominator" ? 1 : 0] += v.to_f
         end

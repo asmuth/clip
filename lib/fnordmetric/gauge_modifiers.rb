@@ -91,8 +91,8 @@ module FnordMetric::GaugeModifiers
       raise "FIXPAUL: not yet implemented: progressive fraction gauges"
     end
 
-    ctx.redis_exec(:hincrby, retention_key(at), "#{tick_at(at)}-#{part}", value).callback do 
-      ctx.redis_exec :expire,  retention_key(at)
+    ctx.redis_exec(:hincrby, retention_key(at, series_name), "#{tick_at(at)}-#{part}", value).callback do 
+      ctx.redis_exec :expire,  retention_key(at, series_name)
     end
   end
   
