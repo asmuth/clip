@@ -20,29 +20,21 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     @series = Hash.new
     
     @opts[:series].each do |series|
-      @series[series] = { :color => colors.unshift(colors.pop).first }
-    end
+      ts = FnordMetric::Timeseries.new
 
-    puts fraction_values_in(interval).inspect
+      fraction_values_in(interval).each do |time, frac|
+        ts.incr_fraction(time, *frac)
+      end
+
+      @series[series] = { 
+        :color => colors.unshift(colors.pop).first,
+        :data => [ ts.timeseries(interval, 3600), ts.timeseries(interval, tick) ],
+        :data_block => lambda{ |c,d| c }
+      }
+    end
 
     @series_render = []
     @series_numbers = []
-
-    # @series_render = series_gauges.map do |series, gauge|
-    #   gauge_vals = gauge.values_in(interval).to_a
-
-    #   @series_numbers[series][:total] = gauge_vals.inject(0) do |s, (t, v)|
-    #     s += v.to_i
-    #   end
-
-    #   {
-    #     :name  => series,
-    #     :color => @series_colors[series],
-    #     :data  => gauge_vals
-    #       .sort{ |a,b| a[0] <=> b[0] }
-    #       .map { |t,v| { :x => t, :y => v.to_i } }
-    #   }
-    # end
 
     render_page(:timeseries_gauge)
   end

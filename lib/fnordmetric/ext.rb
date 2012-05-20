@@ -23,3 +23,11 @@ end
 class Symbol
   alias :intern :to_sym
 end
+
+class Range
+
+  def size
+    self.last - self.first
+  end
+
+end

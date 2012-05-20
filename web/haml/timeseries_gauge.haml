@@ -49,5 +49,7 @@
     elem: $('.widget_timeseries'),
     height: 420,
     default_style: 'stack',
-    series: #{@series_render.to_json}
+    series: [#{@series.map{ |k,s| 
+      "{ name: #{k.to_json}, color: '#{s[:color]}', data: #{s[:data][0].to_json(&s[:data_block])} }" 
+    } * ","}]
   });
