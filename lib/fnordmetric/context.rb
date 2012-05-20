@@ -76,7 +76,7 @@ protected
   end
 
   def error!(msg)
-    FnordMetric.error!(msg)
+    FnordMetric.error(msg)
   end
 
 

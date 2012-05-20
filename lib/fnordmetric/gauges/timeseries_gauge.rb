@@ -1,14 +1,28 @@
 class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
+  def initialize(opts)
+    super(opts)
+    
+    @opts[:series] = @opts[:series].map(&:to_sym)
+
+    @calculate = if @opts[:calculate]
+      unless [:sum, :average, :progressive_sum].include?(@opts[:calculate].to_sym)
+        raise "unknown calculate option: #{@opts[:calculate]}"
+      end
+      @opts[:calculate].to_sym
+    end || :sum
+  end
+
   def render(namespace, event)
     interval = parse_interval(event["interval"])
     colors = FnordMetric::COLORS.dup
 
-    @series_colors = Hash[series_gauges.map do |k,g| 
-      [k, colors.unshift(colors.pop).first]
+    @series =  Hash[@opts[:series].map do |series|
+      [series, {
+        :color => colors.unshift(colors.pop).first,
+        :timeseries => FnordMetric::Timeseries.new
+      }]
     end]
-
-    @series_numbers = Hash.new{ |h,k| h[k]={} }
 
     @series_render = series_gauges.map do |series, gauge|
       gauge_vals = gauge.values_in(interval).to_a
@@ -30,7 +44,10 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
   end
 
   def execute(cmd, context, *args)
-    return incr_series(context, *args) if cmd == :incr
+    return incr(context, *args) if cmd == :incr
+    return incr_dividend(context, *args) if cmd == :incr_dividend
+    return incr_divisor(context, *args) if cmd == :incr_divisor
+
     FnordMetric.error("gauge '#{name}': unknown command: #{cmd}")
   end
 
@@ -38,24 +55,19 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     true
   end
 
-private
-
-  def incr_series(context, series, value)
-    unless series_gauges[series.to_sym]
-      return FnordMetric.error("gauge '#{name}': unknown series: #{series}")
-    end
-
-    context.incr(series_gauges[series.to_sym], value)
+  def has_series?
+    true
   end
 
-  def series_gauges
-    @series_gauges ||= Hash[@opts[:series].map do |series|
-      [series, FnordMetric::Gauge.new(
-        :key => "count-#{series}", 
-        :key_prefix => key,
-        :tick => tick.to_i,
-      )]
-    end]
+private
+
+  def incr(ctx, series_name = :default, value = 1)
+    if @calculate == :average
+      incr_dividend(ctx, series_name, value)
+      incr_divisor(ctx, series_name, 1)
+    else
+      incr_dividend(ctx, series_name, value)
+    end
   end
 
 end

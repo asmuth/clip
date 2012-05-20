@@ -68,7 +68,7 @@ module FnordMetric
   end
 
   def self.error(msg)
-    log "[ERROR] #{msg}"
+    log "[ERROR] #{msg}"; nil
   end
 
   def self.error!(msg)

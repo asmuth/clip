@@ -14,6 +14,10 @@ class FnordMetric::Gauge
     (@opts[:tick] || @opts[:resolution] || 3600).to_i
   end
 
+  def retention
+    tick * 10 # FIXPAUL!
+  end
+
   def tick_at(time)    
     (time/tick.to_f).floor*tick
   end
@@ -46,6 +50,10 @@ class FnordMetric::Gauge
     ticks_in(_range).map{ |_t| tick_key(_t, _append) }
   end
 
+  def retention_key(_time, _append=nil)
+    key([((_time/retention.to_f).floor*retention).to_s, _append])
+  end
+
   def two_dimensional?
     !@opts[:three_dimensional]
   end
@@ -66,6 +74,10 @@ class FnordMetric::Gauge
     !!@opts[:average]
   end
 
+  def has_series?
+    false
+  end
+
   def redis
     @redis ||= EM::Hiredis.connect(FnordMetric.options[:redis_url]) # FIXPAUL
   end
@@ -74,4 +86,8 @@ class FnordMetric::Gauge
     @sync_redis ||= Redis.new # FIXPAUL
   end
 
+  def error!(msg)
+    FnordMetric.error(msg)
+  end
+  
 end
