@@ -5,12 +5,18 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     
     @opts[:series] = @opts[:series].map(&:to_sym)
 
-    @calculate = if @opts[:calculate]
+    if @opts[:calculate]
       unless [:sum, :average, :progressive_sum].include?(@opts[:calculate].to_sym)
         raise "unknown calculate option: #{@opts[:calculate]}"
       end
-      @opts[:calculate].to_sym
-    end || :sum
+      @calculate = @opts[:calculate].to_sym
+    end 
+
+    if @calculate == :average
+      @calculate_proc = lambda{ |c,d| d > 0 ? (c/d.to_f).round(2) : 0 }
+    else
+      @calculate_proc = lambda{ |c,d| c }
+    end
   end
 
   def render(namespace, event)
@@ -18,7 +24,7 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     colors = FnordMetric::COLORS.dup
 
     @series = Hash.new
-    @zooms  = [tick, FnordMetric::TICKS.select{ |t| t > tick }].flatten.uniq
+    @zooms  = FnordMetric::TICKS[tick, interval.size]
     
     @opts[:series].each do |series|
       ts = FnordMetric::Timeseries.new
@@ -29,8 +35,7 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
       @series[series] = { 
         :color => colors.unshift(colors.pop).first,
-        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(interval, int) ] }],
-        :data_block => lambda{ |c,d| c }
+        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(interval, int) ] }]
       }
     end
 

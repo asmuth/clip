@@ -52,7 +52,7 @@
     default_style: 'stack',
     series_resolutions: #{@zooms.to_json},
     series: [#{@series.map{ |k,s| 
-      dat = s[:data].map{ |k,d| "data#{k}: #{d.to_json(&s[:data_block])}" }
+      dat = s[:data].map{ |k,d| "data#{k}: #{d.to_json(&@calculate_proc)}" }
       "{ name: #{k.to_json}, color: '#{s[:color]}', #{dat * ","} }" 
     } * ","}]
   });

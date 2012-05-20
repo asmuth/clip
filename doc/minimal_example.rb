@@ -4,7 +4,7 @@ require "fnordmetric"
 FnordMetric.namespace :fn do
 
   timeseries_gauge :unicorns_seen,
-    :tick => 4.seconds,
+    :tick => 30.seconds,
     :calculate => :average,
     :series => [:num_unicorns]
 
