@@ -45,7 +45,7 @@
 
   .widget_histogram_bars.resizable(data-width="60")
 
-  .resizable(data-width="60")
+  .resizable(data-width="60" style="margin-top:10px;")
 
     .headbar.small
       Average, Min and Max over Time
@@ -62,7 +62,7 @@
     elem: $('.widget_histogram_bars'),
     height: 320,
     no_headbar: true,
-    values: #{@histogram.histogram(@opts[:histogram]).map{ |r,v| [r.to_s, v] }.to_json}
+    values: #{@histogram.json_histogram(12)}
   });
 
 

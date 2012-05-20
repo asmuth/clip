@@ -30,16 +30,28 @@ class FnordMetric::Histogram < Hash
     end
   end
 
+  def json_histogram(windows)
+    histogram(windows).to_a.sort do |a, b|
+      a[0].first <=> b[0].first
+    end.map do |r, v|
+      ["#{r.first.round(1).to_s}-#{r.last.round(1).to_s}", v.to_i]
+    end.to_json
+  end
+
 private
 
   def histogram_windows(windows)
-    window = (max - min) / windows
+    _max = max
+    _min = min
 
-    (windows - 1).times.inject([min]) do |a,w| 
-      a << a.last + window
-    end.map do |swindow|
-      (swindow..(swindow+window))
-    end    
+    window = (_max - _min) / windows.to_f
+
+    (windows - 1).times.inject([(0..min)]) do |a,w| 
+      a << (a[-1].last..a.last.last+window)
+    end.tap do |wins|
+      wins.delete_at(0)
+      wins[-1] = (wins[-1].first.._max)
+    end
   end
 
 end

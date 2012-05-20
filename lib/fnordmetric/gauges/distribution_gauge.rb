@@ -4,14 +4,13 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
     interval = parse_interval(event["interval"])
     colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
 
-    @opts[:histogram] = (@opts[:histogram] || 20).to_i
     #@num_min =
     #@num_max =
 
     @histogram = FnordMetric::Histogram.new
 
     tick_keys(interval, :histogram).each do |tkey|
-      sync_redis.hgetall(tkey).each do |_val, _count|
+      sync_redis.hgetall(tkey).each do |_val, _count|        
         @histogram[_val] += _count.to_i
       end
     end
