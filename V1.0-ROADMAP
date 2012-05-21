@@ -6,7 +6,6 @@ ROADMAP
 -------
 
   > Core: Backend
-    - FnordMetric::Timeseries (min/max, values, punchcard, to_histogram etc)
     - split up fnordmetric.namespace block into multiple files
     - caching
     - use rack websocket instead of em websocket
@@ -39,9 +38,8 @@ ROADMAP
 
 
   > Timeseries Gauge
-    X timeseries-gauge/widget: set resolution via "tick buttons" 
-    X timeseries-gauge: calculate option (sum, average, progressive_sum)
-    X timeseries-gauge: incr_counter / incr_denominator for avg
+    - progressive_sum
+    - restrict to max resolution
     - timeseries-gauge: realtime tab w/ moving average
     - timeseries-widget: tooltip -> show key noun   
     - timeseries-gauge: overview realtime gauge
@@ -50,7 +48,6 @@ ROADMAP
     - timeseries-gauge: punchcards
     - timeseries-gauge: cmp. w/yesterday option
     - display trends
-    - restrict to max resolution
 
 
   > Distribution Gauge
@@ -67,7 +64,6 @@ ROADMAP
 
   > Timeseries Widget
     - timeseries-widget: cardinal on/off should be skeuomorph
-    - timeseries-widget: moving average/smoothing option
 
 
 
