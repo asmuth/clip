@@ -14,16 +14,18 @@
     /   %a{:href => "#"} Export
 
 
-  .widget_toplist.ui_sidebar_toplist.resizable(data-width="40")
+  .widget_toplist.ui_sidebar_toplist.resizable(data-width="55")
     .headbar
+      %h2 Top 50 #{key_nouns.last}
     .ui_toplist
-      .toplist_item
-        .title /matches
-        .value 36
-        .percent 73.5%
+      -50.times do
+        .toplist_item
+          .title keyword
+          .value 36
+          .percent 73.5%
 
 
-  .widget_keystats.resizable(data-width="60")
+  .widget_keystats.resizable(data-width="45")
     .widget_item_timeseries
 
     .headbar.small Totals
@@ -49,8 +51,8 @@
     default_style: 'line',
     series: [{
       name: "Fnord",
-      color: "#0066CC",
-      data: [{x:1, y:1},{x:2, y:2},{x:4, y:8},{x:6, y:32}]
+      color: "#{FnordMetric::COLORS.last}",
+      data: [{x:0, y:0},{x:1, y:0}]
     }]
   });
 
