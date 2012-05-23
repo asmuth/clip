@@ -46,7 +46,7 @@ var FnordMetric = (function(){
       ul.append($('<li class="gauge">')
         .attr('data-token', gkey)
         .attr('data-view', gauges[gkey].view_type)
-        .append('<span class="picto piechart">')
+        .append('<i class="icon-bar-chart">')
         .append($('<a href="#" class="title">').html(gauges[gkey].title)));
     }
 
