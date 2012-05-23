@@ -30,4 +30,11 @@ private
     (match[1].to_i..match[2].to_i)
   end
 
+  # FIXPAUL: move to apphelper or something
+  def fancy_timerange(range)
+    [range.first, range.last].map do |time|
+      Time.at(time).strftime("%d.%m.%y %H:%M")
+    end
+  end
+
 end

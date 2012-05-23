@@ -18,10 +18,8 @@ FnordMetric.views.gaugeView = (function(gauge_name){
         ["Fnord", "/group/fnord"],
         [conf.title, "/gauge/"+gauge_name]
       ],
-      buttons: [
-        ["SELECT TIMERANGE (FIXPAUL)", function(){ open_interval_modal(); }],
-        ["Export Data", function(){ alert(23); }]
-      ]
+      buttons: [],
+      datepicker: true
     });
 
     var now = parseInt((new Date()).getTime() / 1000);

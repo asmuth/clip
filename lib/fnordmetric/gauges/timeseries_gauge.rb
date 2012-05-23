@@ -22,22 +22,22 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
   end
 
   def render(namespace, event)
-    interval = parse_interval(event["interval"])
+    @interval = parse_interval(event["interval"])
     colors = FnordMetric::COLORS.dup
 
     @series = Hash.new
-    @zooms  = FnordMetric::TICKS[tick, interval.size]
+    @zooms  = FnordMetric::TICKS[tick, @interval.size]
     
     @opts[:series].each do |series|
       ts = FnordMetric::Timeseries.new
 
-      fraction_values_in(interval, series).each do |time, frac|
+      fraction_values_in(@interval, series).each do |time, frac|
         ts.incr_fraction(time, *frac)
       end
 
       @series[series] = { 
         :color => colors.unshift(colors.pop).first,
-        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(interval, int) ] }]
+        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(@interval, int) ] }]
       }
     end
 

@@ -2,7 +2,17 @@ FnordMetric v1.0
 ================
 
 
-ROADMAP
+BACKLOG
+-------
+
+- gauge-view: interval selection dropdown 
+- interval selection top like gh.com/graphs/commit-activity) 52w history
+- fix pie widget
+- fix hash-history fu
+
+
+
+BACKLOG
 -------
 
   > Core: Backend
@@ -18,15 +28,11 @@ ROADMAP
 
 
   > Core: Frontend
-    - gauge-view: interval selection dropdown 
-    - interval selection top like gh.com/graphs/commit-activity) 52w history
     - overview view: gauge list (a'la github graphs landing)
     - overview view: num active users, system stats
-    - fix pie widget
     - fix html widget
     - fix toplist widget
     - formatter: num, time, currency, percent, time_of_day
-    - fix hash-history fu
     - minimize/pack js
     - put images into one sprite
     - nice empty states
@@ -34,6 +40,10 @@ ROADMAP
  
   > Eventfeed Gauge
     - fix
+
+
+  > Timeseries Widget
+    - timeseries-widget: cardinal on/off should be skeuomorph
 
 
   > Timeseries Gauge
@@ -52,17 +62,19 @@ ROADMAP
   > Distribution Gauge
     - render std. deviation
     - render max/min/avg over time
+    - histograms tab
+    - export tab
     - display trends
 
 
   > Toplist Gauge
-    - here be dragons
-    - display trends
+    - trending tab / display trends
+    - compare tab
+    - export tab
     - show multiple keywords
 
 
-  > Timeseries Widget
-    - timeseries-widget: cardinal on/off should be skeuomorph
+
 
 
 

@@ -22,10 +22,16 @@ FnordMetric.ui.navbar = function(elem, opts){
 
   for(ind in opts.buttons){
     var btn = $('<a>')
-      .addClass('button')
+      .addClass('button navbutton')
       .click(opts.buttons[ind][1])
       .html(opts.buttons[ind][0]);
     elem.prepend(btn);
+  }
+
+  if(opts.datepicker){
+    elem.prepend(
+      $('<a class="button datepicker mr">')
+        .html('<div class="date">22.05.12 15:00 &nbsp;&mdash;&nbsp; 23.05.12 15:00</div><i class="icon-calendar"></i>'));  
   }
 
 }

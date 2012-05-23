@@ -105,8 +105,39 @@ color:#000;
   background:#ddd;
 }
 
+.navbar a.button.datepicker{
+  padding-left:0;
+  padding-right:10px;
+}
+
+.navbar a.button.datepicker .date{
+  background: white;
+  padding: 0 13px;
+  border-right: 1px solid #DDD;
+  box-shadow: 0 0 2px #ddd inset;
+  font-style:italic;
+  display:inline-block;
+  margin-right:10px;
+}
+
+.navbar a.button.datepicker i{
+  font-size: 17px;
+  float: right;
+  margin-top: 0px;
+}
+
 .navbar + h1{
   margin-top:22px;
+}
+
+.navbar .button.navbutton{
+  padding-right:13px;
+}
+
+.navbar .navbutton i{
+  margin-left:-7px;
+  margin-right:6px;
+  display:inline-block;
 }
 
 

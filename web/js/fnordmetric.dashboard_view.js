@@ -14,7 +14,7 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
           [dashboard_name, "/dashboard/"+dashboard_name]
         ],
         buttons: [
-          ["New Dashboard", function(){ alert('here be dragons'); }]
+          ["<i class='icon-refresh'></i>Refresh", function(){ load(viewport); }]
         ]
       });
 
