@@ -13,6 +13,8 @@ FnordMetric.options = {
 
 FnordMetric.namespace :myapp do
 
+  hide_overview
+  hide_active_users
 
   timeseries_gauge :number_of_signups,
     :title => "Number of Signups",
