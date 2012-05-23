@@ -119,14 +119,11 @@ var FnordMetric = (function(){
     canvasElem = $("<div class='viewport_inner'>");
     canvasElem.addClass('clearfix');
 
-    socket = new WebSocket("ws://localhost:4243");
-    socket.onmessage = socketMessage;
-    socket.onclose = socketClose;
-    socket.onopen = socketOpen;
-
     var _wrap_elem = $("<div id='wrap'>")
         .append($("<div id='sidebar'>"))
         .append($("<div id='viewport'>").append(canvasElem));
+
+    connect();
 
     $('#app').html(_wrap_elem);
 
@@ -135,6 +132,13 @@ var FnordMetric = (function(){
     
     resizeView();
   };
+
+  function connect(){
+    socket = new WebSocket("ws://localhost:4243");
+    socket.onmessage = socketMessage;
+    socket.onclose = socketClose;
+    socket.onopen = socketOpen;
+  }
 
   function publish(obj){
     if(!obj.namespace){ 
@@ -156,10 +160,26 @@ var FnordMetric = (function(){
   function socketOpen(){
     console.log("connected...");
     publish({"type": "discover_request"});
+    $('.flash_msg_over').fadeOut(function(){ $(this).remove(); }); 
   }
 
   function socketClose(){
     console.log("socket closed"); 
+
+    if($('.flash_msg_over').length == 0){
+      $(viewport)
+        .append($("<div class='flash_msg_over'>")
+          .append($("<div class='inner'>")
+            .append('<h1>Oopsiedaisy, lost the connection...</h1>')
+            .append('<h2>Reconnecting to server...</h2>')
+            .append('<div class="loader_white">')));
+      
+      window.setTimeout(function(){
+        $('.flash_msg_over').addClass('visible');  
+      }, 20);
+    }
+
+    window.setTimeout(connect, 1000); 
   }
 
   function navigateViaHash(){

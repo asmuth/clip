@@ -27,6 +27,9 @@
   %body
     #app
 
+    #preload(style="visibility:hidden;")
+      %img(src="/img/loader_white.gif")
+
 :javascript
   $(document).ready(function(){
     FnordMetric.init(#{current_namespace.to_json});

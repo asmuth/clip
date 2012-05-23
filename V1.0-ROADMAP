@@ -18,8 +18,6 @@ ROADMAP
 
 
   > Core: Frontend
-    - show notification when connection lost
-    - reconnect on disconnect
     - gauge-view: interval selection dropdown 
     - interval selection top like gh.com/graphs/commit-activity) 52w history
     - overview view: gauge list (a'la github graphs landing)
