@@ -7,6 +7,7 @@ ROADMAP
 
   > Core: Backend
     - split up fnordmetric.namespace block into multiple files
+    - special events (incr, observe etc)
     - caching
     - use rack websocket instead of em websocket
     - gauge garbage-collection
