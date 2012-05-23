@@ -319,11 +319,10 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function redrawDatepicker(){
-      // dateFormat('%d.%m.%y %H:%M', parseInt(opts.start_timestamp)*1000) +
       $('.datepicker', opts.elem).html(
-        opts.start_timestamp +
+        FnordMetric.util.dateFormat(opts.start_timestamp) +
         '&nbsp;&dash;&nbsp;' +
-        opts.end_timestamp
+        FnordMetric.util.dateFormat(opts.end_timestamp)
       );
     }
 

@@ -157,3 +157,12 @@ FnordMetric.util.updateNumbers = function(trgt_elem, diff_factor){
       })(trgt_elem, diff_factor);
     }
   }
+
+  FnordMetric.util.dateFormat = function(timestamp){
+    var t = new Date(timestamp*1000);
+    return FnordMetric.util.decPrint(t.getDate())      + "." + 
+           FnordMetric.util.decPrint((t.getMonth()+1)) + "." + 
+           FnordMetric.util.decPrint(t.getFullYear())  + " " +
+           FnordMetric.util.decPrint(t.getHours())     + ":" +
+           FnordMetric.util.decPrint(t.getMinutes())   + " ";
+  }

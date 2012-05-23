@@ -18,7 +18,7 @@ class FnordMetric::UDPAcceptor < EventMachine::Connection
   def push_next_event
     return true if events.empty?
     ev = @events.pop
-    apu.event(ev)
+    api.event(ev)
     EM.next_tick(&method(:push_next_event))
   end
 
