@@ -6,3 +6,5 @@ db/*.sqlite
 .rvmrc
 Gemfile.lock
 fnordmetric-*.gem
+bin/
+*.swp

@@ -1,5 +1,5 @@
 class FnordMetric::Gauge
-  
+
   include FnordMetric::GaugeCalculations
 
   def initialize(opts)
@@ -11,7 +11,7 @@ class FnordMetric::Gauge
     (@opts[:tick] || 3600).to_i
   end
 
-  def tick_at(time)    
+  def tick_at(time)
     (time/tick.to_f).floor*tick
   end
 
@@ -22,7 +22,7 @@ class FnordMetric::Gauge
   def title
     @opts[:title] || name
   end
-  
+
   def key(_append=nil)
     [@opts[:key_prefix], "gauge", name, tick, _append].flatten.compact.join("-")
   end
@@ -49,6 +49,10 @@ class FnordMetric::Gauge
 
   def average?
     !!@opts[:average]
+  end
+
+  def median?
+    !!@opts[:median]
   end
 
   def add_redis(_redis)

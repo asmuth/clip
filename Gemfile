@@ -2,5 +2,8 @@ source :rubygems
 
 gemspec
 
+gem 'awesome_print'
+gem 'debugger'
+
 gem "rake"
-gem "yajl-ruby", :git => "git://github.com/brianmario/yajl-ruby.git"
+gem 'oj'

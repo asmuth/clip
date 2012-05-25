@@ -1,16 +1,16 @@
 module FnordMetric
-  class Event  
+  class Event
 
     attr_accessor :time, :type, :event_id
 
     #def self.track!(event_type, event_data)
     #end
 
-    def self.all(opts)    
+    def self.all(opts)
       range_opts = { :withscores => true }
       range_opts.merge!(:limit => [0,opts[:limit]]) if opts[:limit]
       opts[:redis].zrevrangebyscore(
-        "#{opts[:namespace_prefix]}-timeline", 
+        "#{opts[:namespace_prefix]}-timeline",
         '+inf', opts[:since]||'0',
         range_opts
       ).in_groups_of(2).map do |event_id, ts|
@@ -21,7 +21,7 @@ module FnordMetric
 
     def self.by_type(_type, opts)
       opts[:redis].lrange(
-        "#{opts[:namespace_prefix]}-type-#{_type}", 
+        "#{opts[:namespace_prefix]}-type-#{_type}",
         0, 200).map do |event_id|
         next if event_id.blank?
         find(event_id, opts).tap{ |e| }
@@ -47,7 +47,7 @@ module FnordMetric
     end
 
     def fetch!
-      @data = JSON.parse(fetch_json).tap do |event|
+      @data = MultiJson.decode(fetch_json).tap do |event|
         @type = event.delete("_type")
       end
     end
@@ -67,7 +67,7 @@ module FnordMetric
     def id
       @event_id
     end
-    
+
     def data(key=nil)
       key ? @data[key.to_s] : @data
     end
@@ -76,7 +76,7 @@ module FnordMetric
 
     def to_json
       @data.merge!(
-        :_type => @type, 
+        :_type => @type,
         :_session_key => session_key,
         :_eid => @event_id,
         :_time => @time

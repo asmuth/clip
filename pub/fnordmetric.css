@@ -1,5 +1,5 @@
 body, html{ height:100%; padding:0px;}
-body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; }
+body{ background:#3b3e45; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Gotham Narrow", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .shown{ display: block; }
 .hidden{ display: none; }
@@ -73,10 +73,10 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .headbar .button{
   margin:8px 0px; height:16px; float:right; display:block;
   margin-right:-1px;
-  background:#eee; 
+  background:#eee;
   border:1px solid #999;
   border-bottom-color:#888;
-  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .1); 
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .1);
   cursor:pointer;
   border-radius:3px;
   font-size: 11px;
@@ -141,5 +141,5 @@ ul.event_type_list li .history:hover{ color:#333; text-decoration:underline; }
   line-height: 0;
   height: 0;
 }
- 
+
 .highcharts-series circle{ stroke-width:1px; }
