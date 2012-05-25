@@ -5,7 +5,7 @@ module FnordMetric::GaugeModifiers
     assure_two_dimensional!(gauge)
     if gauge.unique?
       incr_uniq(gauge, value)
-    elsif gauge.average? || gauge.median?
+    elsif gauge.average? #|| gauge.median?
       incr_avg(gauge, value)
     else
       incr_tick(gauge, value)
