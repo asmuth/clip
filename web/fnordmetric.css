@@ -19,7 +19,7 @@ h3{
 
 hr{
   border:none;
-  border-top:1px solid #ddd;  
+  border-top:1px solid #ddd;
 }
 
 a.link{
@@ -197,7 +197,7 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
   margin-right:-1px;
   border:1px solid #999;
   border-bottom-color:#888;
-  box-shadow: 0 1px 0 #fff; 
+  box-shadow: 0 1px 0 #fff;
   cursor:pointer;
   border-radius:3px;
   font-size: 11px;
@@ -244,7 +244,7 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 .numbers_container.size_4{ width:358px; }
 .numbers_container.size_5{ width:450px; }
 
-.numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block; 
+.numbers_container .title{ padding:4px 0 1px 0; color:#333; font-size:14px; display:block;
 font-weight:400; }
 .numbers_container .title.with_swatch{ margin-bottom:4px; }
 .numbers_container .title.with_swatch span{ padding-left:20px; }
@@ -288,7 +288,7 @@ ul.event_type_list li .history:hover{ color:#333; text-decoration:underline; }
   line-height: 0;
   height: 0;
 }
- 
+
 .highcharts-series circle{ stroke-width:1px; }
 
 ul.ui_tabs{
@@ -365,7 +365,7 @@ h1.head{ margin-top:70px; }
 }
 
 .rickshaw_legend {
-font-family: Arial;
+font-family: "Gotham Narrow", Helvetica, sans-serif;
 font-size: 12px;
 color: #333;
 background: none;
@@ -380,7 +380,7 @@ position: relative;
 }
 
 .rickshaw_legend li.line{
-   float:left; 
+   float:left;
    clear:none;
    padding-right:0;
 }
@@ -458,7 +458,7 @@ position: relative;
   top: 40px;
 }
 
-.modal_inner{ 
+.modal_inner{
   margin:15px 20px 3px 20px;
 }
 
@@ -480,7 +480,7 @@ position: relative;
 #sidebar ul li:hover .picto{ opacity:1; }
 #sidebar ul li.active i, #sidebar ul li.active a{ color:#eee; }
 
-.ui_sidebar_toplist{ 
+.ui_sidebar_toplist{
   border-right: 1px solid #DDD;
 }
 
@@ -521,7 +521,7 @@ position: relative;
 .loader_white{
   height: 32px;
   width: 32px;
-  background: url('/img/loader_white.gif') no-repeat center center;  
+  background: url('/img/loader_white.gif') no-repeat center center;
 }
 
 
