@@ -1,5 +1,14 @@
 body, html{ height:100%; padding:0px;}
-body{ background:url('img/head.png') 0 -21px repeat-x fixed #2E3133; color:#333; margin:0; padding:0; overflow-y:scroll; font: 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom:30px; overflow-x:hidden; }
+body {
+  background: url('img/head.png') 0 -21px repeat-x fixed #2E3133;
+  color:#333;
+  margin:0;
+  padding:0;
+  overflow-y:scroll;
+  font: 12px/20px "Gotham Narrow" "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding-bottom:30px;
+  overflow-x:hidden;
+}
 
 body.inner{ background:#fff; margin-right:10px; }
 
