@@ -1,8 +1,8 @@
 FnordMetric
 ===========
 
-FnordMetric is a highly configurable (and pretty fast) realtime app/event 
-tracking thing based on ruby eventmachine and redis. You define your own 
+FnordMetric is a highly configurable (and pretty fast) realtime app/event
+tracking thing based on ruby eventmachine and redis. You define your own
 plotting and counting functions as ruby blocks!
 
 [ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
@@ -15,7 +15,7 @@ FnordMetric keeps track of your data and draws nice timeline plots.
 
 [ ![Nice timeline plots][5] ][6]
 
-FnordMetric gives you a live dashboard, that shows who is using your app in 
+FnordMetric gives you a live dashboard, that shows who is using your app in
 realtime. You can select a single user and follow them step by step.
 
 [ ![Live dashboard][7] ][8]
@@ -24,10 +24,10 @@ realtime. You can select a single user and follow them step by step.
 Getting Started
 ---------------
 
-Copy `doc/full_example.rb` (that's the configuration from the screenshots 
+Copy `doc/full_example.rb` (that's the configuration from the screenshots
 and screencast) or the simple example from below to `my_stats_app.rb`.
 
-Simple Example: this will listen for json-events with `type=unicorn_seen` 
+Simple Example: this will listen for json-events with `type=unicorn_seen`
 and render a timeline-plot showing the number of received events per hour.
 
 ```ruby
@@ -36,21 +36,21 @@ require "fnordmetric"
 FnordMetric.namespace :myapp do
 
 # numeric (delta) gauge, 1-hour tick
-gauge :unicorns_seen_per_hour, 
-  :tick => 1.hour.to_i, 
+gauge :unicorns_seen_per_hour,
+  :tick => 1.hour.to_i,
   :title => "Unicorns seenper Hour"
 
 # on every event like { _type: 'unicorn_seen' }
 event(:unicorn_seen) do
   # increment the unicorns_seen_per_hour gauge by 1
-  incr :unicorns_seen_per_hour 
+  incr :unicorns_seen_per_hour
 end
 
 # draw a timeline showing the gauges value, auto-refresh every 2s
 widget 'Overview', {
   :title => "Unicorn-Sightings per Hour",
   :type => :timeline,
-  :gauges => :unicorns_seen_per_hour,  
+  :gauges => :unicorns_seen_per_hour,
   :include_current => true,
   :autoupdate => 2
 }
@@ -92,9 +92,9 @@ The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
     POST http://localhost:2323/events _type=unicorn_seen
 
-    curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
+    curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events
 
-The easy way: Stream one ore more newline-seperated json encoded events 
+The easy way: Stream one ore more newline-seperated json encoded events
 through a tcp connection.
 
     echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
@@ -144,21 +144,21 @@ api.event({:_type => "unicorn_seen"})
 
 Call these methods from the event-handler block
 
-    incr(gauge_name, value=1): 
-      Increment the given (two-dimensional) gauge by value 
+    incr(gauge_name, value=1):
+      Increment the given (two-dimensional) gauge by value
       at the tick specified by event-time
 
-    incr_field(gauge_name, field_name, value=1): 
-      Increment the given field on a three-dimensional gauge 
+    incr_field(gauge_name, field_name, value=1):
+      Increment the given field on a three-dimensional gauge
       by value at the tick specified by event-time
 
     set_value(gauge_name, value)
-      Set the given (two-dimensional) to value at the tick 
+      Set the given (two-dimensional) to value at the tick
       specified by event-time (overwrite existing value)
 
     set_field(gauge_name, field_name, value)
-      Set the given  field on a three-dimensional gauge to 
-      value at the tick specified by event-time (overwrite 
+      Set the given  field on a three-dimensional gauge to
+      value at the tick specified by event-time (overwrite
       existing value)
 
 ----
@@ -166,10 +166,11 @@ Call these methods from the event-handler block
 ### Options: Widgets ###
 
 + `[autoupdate]` auto-refresh the timeline every n secs (0 turns autoupdate off)
++ `[plot_options]` Options passed in straight to Highchart
 
 TimelineWidget
 
-+ `[plot_style]` one of: line, areaspline
++ `[plot_style]` one of: line, areaspline, area, spline
 + `[include_current]` show the current tick?
 + `[ticks]` number of ticks to show (defaults to 24/30)
 
@@ -207,56 +208,56 @@ FnordMetric.namespace :myapp do
 
   # Set a custom namespace title, if you want one
   # set_title "Emails sent"
-  
+
   # Hide the "Active Users" tab, if you want
   # hide_active_users
 
   # numeric (delta) gauge, 1-hour tick
-  gauge :messages_sent, 
-    :tick => 1.hour.to_i, 
+  gauge :messages_sent,
+    :tick => 1.hour.to_i,
     :title => "Messages (sent) per Hour"
 
   # numeric (delta) gauge, 1-hour tick
-  gauge :messages_read, 
-    :tick => 1.hour.to_i, 
+  gauge :messages_read,
+    :tick => 1.hour.to_i,
     :title => "Messages (read) per Hour"
 
   # numeric (progressive) gauge, 1-hour tick
-  gauge :events_total, 
-    :tick => 1.day.to_i, 
+  gauge :events_total,
+    :tick => 1.day.to_i,
     :progressive => true,
     :title => "Events (total)"
 
   # numeric (delta) gauge, increments uniquely by session_key
-  gauge :pageviews_daily_unique, 
-    :tick => 1.day.to_i, 
-    :unique => true, 
+  gauge :pageviews_daily_unique,
+    :tick => 1.day.to_i,
+    :unique => true,
     :title => "Unique Visits (Daily)"
 
   # numeric (delta) gauge, increments uniquely by session_key, returns average
-  gauge :avg_age_per_session, 
-    :tick => 1.day.to_i, 
+  gauge :avg_age_per_session,
+    :tick => 1.day.to_i,
     :unique => true,
     :average => true,
     :title => "Avg. User Age"
 
   # three-dimensional (delta) gauge (time->key->value)
-  gauge :pageviews_per_url_daily, 
-    :tick => 1.day.to_i, 
-    :title => "Daily Pageviews per URL", 
+  gauge :pageviews_per_url_daily,
+    :tick => 1.day.to_i,
+    :title => "Daily Pageviews per URL",
     :three_dimensional => true
 
 
   # on every event like { "_type": "message_sent" }
   event(:message_sent) do
     # increment the messages_sent gauge by 1
-    incr :messages_sent 
+    incr :messages_sent
   end
 
   # on every event like { "_type": "message_read" }
-  event(:message_read) do 
+  event(:message_read) do
     # increment the messages_read gauge by 1
-    incr :messages_read 
+    incr :messages_read
   end
 
   # on _every_ event
@@ -268,7 +269,7 @@ FnordMetric.namespace :myapp do
   # on every event like
   # { "_type": "_pageview", "_session": "sbz7jset", "url": "/page2" }
   event :_pageview do
-    # increment the daily_uniques gauge by 1 if session_key hasn't been seen 
+    # increment the daily_uniques gauge by 1 if session_key hasn't been seen
     # in this tick yet
     incr :pageviews_daily_unique
     # increment the pageviews_per_url_daily gauge by 1 where key = 'page2'
@@ -276,10 +277,10 @@ FnordMetric.namespace :myapp do
   end
 
   # on every event like { "_type": "_my_set_age", "my_age_field": "23" }
-  event(:my_set_age) do 
-    # add the value of my_set_age to the avg_age_per_session gauge if session_key 
+  event(:my_set_age) do
+    # add the value of my_set_age to the avg_age_per_session gauge if session_key
     # hasn't been seen in this tick yet
-    incr :avg_age_per_session, data[:my_age_field] 
+    incr :avg_age_per_session, data[:my_age_field]
   end
 
   # draw a timeline showing the pageviews_daily_unique, auto-refresh every 30s
@@ -292,8 +293,8 @@ FnordMetric.namespace :myapp do
     :autoupdate => 30
   }
 
- # draw the values of the messages_sent and messages_read gauge at the current 
- # tick, three ticks ago, and the sum of the last 10 ticks, auto-refresh every 
+ # draw the values of the messages_sent and messages_read gauge at the current
+ # tick, three ticks ago, and the sum of the last 10 ticks, auto-refresh every
  # 20s
  widget 'Overview', {
     :title => "Messages Sent / Read",
@@ -304,7 +305,7 @@ FnordMetric.namespace :myapp do
     :gauges => [ :messages_sent, :messages_read ]
   }
 
-  # draw a list of the most visited urls (url, visits + percentage), 
+  # draw a list of the most visited urls (url, visits + percentage),
   # auto-refresh every 20s
   widget 'Overview', {
     :title => "Top Pages",
@@ -350,7 +351,7 @@ Contributors
 + Ross Kaffenberger (http://github.com/rossta)
 + Kunal Modi (http://github.com/kunalmodi)
 
-To contribute, please fork this repository, make your changes and run the 
+To contribute, please fork this repository, make your changes and run the
 specs, commit them to your github repository and send me a pull request.
 Need help, head on over to our [Google Groups][1]  page to discuss any ideas
 that you might have.
@@ -363,7 +364,7 @@ Copyright (c) 2011 Paul Asmuth
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
-"Software"), to use, copy and modify copies of the Software, subject 
+"Software"), to use, copy and modify copies of the Software, subject
 to the following conditions:
 
 The above copyright notice and this permission notice shall be
