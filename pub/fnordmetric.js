@@ -368,7 +368,7 @@ var FnordMetric = (function(){
           var series_data = [];
 
           for(p in raw_data){
-            series_data.push([parseInt(p)*1000, raw_data[p]||0]);
+            series_data.push([parseInt(p)*1000, parseFloat(raw_data[p])||0]);
             max_y = Math.max(max_y, raw_data[p]);
           }
 
@@ -446,11 +446,7 @@ var FnordMetric = (function(){
             title: (opts.x_title||''),
             labels: { step: 2 }
           },
-          yAxis: {
-            title: (opts.y_title||''),
-            min: 0,
-            max: 1000
-          },
+          yAxis: { title: (opts.y_title||'') },
           legend: {
             layout: 'horizontal',
             align: 'top',
