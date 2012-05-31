@@ -11,6 +11,7 @@ class FnordMetric::TimelineWidget  < FnordMetric::Widget
       :autoupdate => (@opts[:autoupdate] || 60),
       :include_current => !!@opts[:include_current],
       :plot_style => (@opts[:plot_style] || 'line'),
+      :plot_options => (@opts[:plot_options]) || {},
       :tick => tick
     )
   end

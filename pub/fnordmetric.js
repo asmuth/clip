@@ -382,7 +382,9 @@ var FnordMetric = (function(){
             });
           }
 
-          chart.yAxis[0].setExtremes(0,max_y);
+          if (opts.plot_style != 'area')
+            chart.yAxis[0].setExtremes(0, max_y);
+
           chart.redraw();
 
           // shown on the *first* gauge load
@@ -432,6 +434,12 @@ var FnordMetric = (function(){
       }
 
       function drawChart(){
+        var plotOptions = { line: { shadow: false, lineWidth: 3 } };
+
+        if (opts.plot_options) {
+          plotOptions = opts.plot_options;
+        }
+
         chart = new Highcharts.Chart({
           chart: {
             renderTo: 'container-'+widget_uid,
@@ -456,12 +464,7 @@ var FnordMetric = (function(){
             margin: 25,
             borderWidth: 0
           },
-          plotOptions: {
-            line: {
-              shadow: false,
-              lineWidth: 3
-            }
-          }
+          plotOptions: plotOptions
         });
       }
 
