@@ -166,3 +166,63 @@ FnordMetric.util.dateFormat = function(timestamp){
          FnordMetric.util.decPrint(t.getHours())     + ":" +
          FnordMetric.util.decPrint(t.getMinutes())   + " ";
 }
+
+FnordMetric.util.format = function(elem){
+  $('.ui_trend, .ui_value', $(elem)).each(function(){
+
+    if($(this).attr('data-value')){
+      $(this).html(FnordMetric.util.formatGaugeValue('', parseFloat($(this).attr('data-value'))));
+    }
+
+    else if($(this).attr('data-percent')){
+      $(this).html(FnordMetric.util.formatGaugeValue('__percent__', parseFloat($(this).attr('data-percent'))));
+    }
+
+    else if($(this).attr('data-time')){
+      $(this).html(FnordMetric.util.formatGaugeValue('__time__', parseFloat($(this).attr('data-time'))));
+    }
+
+    else if($(this).attr('data-euro')){
+      $(this).html(FnordMetric.util.formatGaugeValue('__euro__', parseFloat($(this).attr('data-euro'))));
+    }
+
+    else if($(this).attr('data-dollar')){
+      $(this).html(FnordMetric.util.formatGaugeValue('__dollar__', parseFloat($(this).attr('data-dolar'))));
+    }
+
+
+    else if($(this).attr('data-date')){
+      $(this).html(FnordMetric.util.dateFormat(parseInt($(this).attr('data-date'))));
+    }
+
+    else if($(this).attr('data-trend')){
+      var delta = parseFloat($(this).attr('data-trend'));
+      var deg   = 0;
+
+      if(delta > 0){
+        $(this).css('color', '#2B2');  
+        $(this).html('+' + delta);
+        deg = -45;
+      } else if (delta < 0){
+        $(this).css('color', '#B22');  
+        $(this).html(delta);
+        deg = 45; 
+      } else {
+        $(this).css('color', '#555');  
+        $(this).html(delta);
+      }
+
+      $(this).append(
+        $('<i class="icon icon-arrow-right">').css({
+          'marginLeft': '0.5em',
+          'display': 'block',
+          'font-size': '90%',
+          'float': 'right',
+          '-webkit-transform': 'rotate('+deg+'deg)',
+          '-moz-transform': 'rotate('+deg+'deg)'
+        })
+      )  
+    }
+   
+  });
+}
