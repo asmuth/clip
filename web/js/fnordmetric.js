@@ -26,6 +26,12 @@ var FnordMetric = (function(){
   }
   
   function renderSidebar(){
+    var prev_active = false;
+
+    if($('#sidebar li.active').length > 0){
+      prev_active = $('#sidebar li.active:first').attr('data-token');
+    }
+
     $('#sidebar')
       .html('');
 
@@ -50,21 +56,28 @@ var FnordMetric = (function(){
         .append($('<a href="#" class="title">').html(gauges[gkey].title)));
     }
 
-    $('#sidebar li').click(function(){
-      $('#sidebar li').removeClass('active');
-      $(this).addClass('active');
+    $('#sidebar li').click(sidebarClick);
 
-      if($(this).attr('data-view') == "dashboard"){
-        FnordMetric.renderDashboard($(this).attr('data-token'));
-        window.location.hash = $(this).attr('data-token');  
-      } else if($(this).attr('data-view') == "gauge"){ 
-        FnordMetric.renderGauge($(this).attr('data-token'));
-        window.location.hash = 'gauge/' + $(this).attr('data-token');
-      }
+    if(prev_active){
+      $('#sidebar li[data-token="'+prev_active+'"]').addClass('active');
+    }
+  }
 
-      return false;
-    });
+  function sidebarClick(){
+    $('#sidebar li').removeClass('active');
+    $(this).addClass('active');
 
+    if($(this).attr('data-view') == "dashboard"){
+      FnordMetric.renderDashboard($(this).attr('data-token'));
+      window.location.hash = 'dashboard/' + $(this).attr('data-token');  
+    } else if($(this).attr('data-view') == "gauge"){ 
+      FnordMetric.renderGauge($(this).attr('data-token'));
+      window.location.hash = 'gauge/' + $(this).attr('data-token');
+    }
+
+    $(this).addClass('active');
+
+    return false;
   }
 
   function addGauge(msg){
@@ -74,7 +87,12 @@ var FnordMetric = (function(){
         "title": msg.title,
         "group": msg.group
       };
+
       renderSidebar();
+
+      if(!currentView){
+        sidebarClick.apply($('#sidebar li:first'));
+      }
     }
   }
 
@@ -186,9 +204,9 @@ var FnordMetric = (function(){
   function navigateViaHash(){
     if(window.location.hash){
       if(!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
-        $('#sidebar li.dashboard[rel="'+window.location.hash.slice(11)+'"]').trigger('click');
+        $('#sidebar li.dashboard[data-token="'+window.location.hash.slice(11)+'"]').trigger('click');
       } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
-        $('#sidebar li.gauge[rel="'+window.location.hash.slice(7)+'"]').click();
+        $('#sidebar li.gauge[data-token="'+window.location.hash.slice(7)+'"]').click();
       }
     }
   }
