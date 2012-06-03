@@ -12,17 +12,17 @@
     /   %a{:href => "#"} Export
 
 
-  .resizable.right.resize_min_full_height(data-width="40" style="border-left:1px solid #ddd;")
-    .headbar
-      %h2 Standard Deviation
+  .headbar
+    %h2 Histogram: #{@opts[:title]}
 
+  .widget_histogram_bars
+  %br
+
+
+  .resizable.right.resize_min_full_height(data-width="40" style="border-left:1px solid #ddd;")
+    .headbar.small Standard Deviation
 
   .resizable(data-width="60")
-    .headbar
-      %h2 Histogram: #{@opts[:title]}
-
-    .widget_histogram_bars
-    %br
 
     .clearfix
       .headbar.small Value Distribution

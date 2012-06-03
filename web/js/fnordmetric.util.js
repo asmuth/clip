@@ -35,23 +35,23 @@ FnordMetric.util.formatTimeRange = function(range){
 }
 
 FnordMetric.util.formatTimeRangePre = function(range, offset){
-  if(!offset){ offset=0; }
+  if(!offset){ offset=0; } else { offset=parseInt(offset); }
   if((offset == 0) && (range==(3600*24))){
-    return 'today';
+    return 'Today';
   } else if((offset==-1) && (range==3600*24)){
-    return 'yesterday';
+    return 'Yesterday';
   } else if((offset == 0) && (range==3600)){
-    return 'this hour';
+    return 'This hour';
   } else if((offset==-1) && (range==3600)){
-    return 'last hour';
+    return 'Last hour';
   } else if((offset == 0) && (range==60)){
-    return 'this minute';
+    return 'This minute';
   } else if((offset==-1) && (range==60)){
-    return 'last minute';
+    return 'Last minute';
   } else if(offset==0) {
-    return "this " + FnordMetric.util.formatTimeRange(range);
+    return "This " + FnordMetric.util.formatTimeRange(range);
   } else if(offset==-1) {
-    return "last " + FnordMetric.util.formatTimeRange(range);
+    return "Last " + FnordMetric.util.formatTimeRange(range);
   } else{
     return FnordMetric.util.formatTimeRange(range) + " (-" + 
     FnordMetric.util.formatTimeRange(range * (offset*-1)) + ")";
@@ -66,15 +66,15 @@ FnordMetric.util.formatTimeSince = function(time){
 
 FnordMetric.util.formatOffset = function(offset, next_offset){
   if((offset == 0) && (next_offset==(3600*24))){
-    return 'today';
+    return 'Today';
   } if((offset == 0) && (next_offset==3600)){
-    return 'this hour';
+    return 'This hour';
   } else if(offset == 0){
-    return 'last ' + FnordMetric.util.formatTimeRange(next_offset||0);
+    return 'Last ' + FnordMetric.util.formatTimeRange(next_offset||0);
   } else if(offset==(3600*24)){
-    return 'yesterday';
+    return 'Yesterday';
   } else if(offset==3600){
-    return 'last hour';
+    return 'Last hour';
   } else {
     return FnordMetric.util.formatTimeRange(offset) + ' ago';
   }
@@ -188,6 +188,15 @@ FnordMetric.util.format = function(elem){
       $(this).html(FnordMetric.util.formatGaugeValue('__dollar__', parseFloat($(this).attr('data-dolar'))));
     }
 
+    else if($(this).attr('data-timerange-offset')){
+      $(this).html(FnordMetric.util.formatTimeRangePre(
+        parseInt($(this).attr('data-timerange-offset')),
+        $(this).attr('data-offset')
+      ));
+    }
+    else if($(this).attr('data-timerange')){
+      $(this).html(FnordMetric.util.formatTimeRange(parseInt($(this).attr('data-timerange'))));
+    }
 
     else if($(this).attr('data-date')){
       $(this).html(FnordMetric.util.dateFormat(parseInt($(this).attr('data-date'))));

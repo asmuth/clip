@@ -95,7 +95,7 @@ input[type="search"], input[type="text"]{
 table{ width:100%; }
 table td, th{ text-align:left; border-bottom:1px solid #dedede; height:42px; }
 table tr td:first-child{ padding-left:15px; }
-
+table th{ background:#efefef; }
 
 .shown{ display: block; }
 .hidden{ display: none; }
@@ -226,13 +226,16 @@ color:#000;
 .widget .inner{ margin:20px; }
 /*.widget .headbar{ margin-bottom:30px; }*/
 
+.ui_value.large{ font-size:18px; font-weight:bold; color:#333; }
+.ui_value.left{ float:left; }
+
 .ui_toplist{ min-height:300px; }
 .ui_toplist.loading{ opacity:0.5; background:url('/loader.gif') no-repeat center center;  }
 
 .ui_toplist .toplist_item{ border-bottom:1px solid #dedede; height:42px; display:block; }
 .ui_toplist .toplist_item:hover{ background:#fff; }
 .ui_toplist .toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
-.ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; color:#333; width:70px; color:#666; }
+.ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; width:70px; color:#666; }
 .ui_toplist .toplist_item .value.large{ width:110px; }
 .ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:30px; font-size:18px; font-weight:bold; color:#333; width:120px; white-space:nowrap; overflow:hidden; }
 
@@ -661,6 +664,10 @@ margin-top: 60px;
   line-height:23px;  
   padding:0 5px;
   border-radius:3px;
+}
+
+.ui_trend.left{
+  float:left;
 }
 
 .ui_item_trending{
