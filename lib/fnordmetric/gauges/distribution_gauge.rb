@@ -11,29 +11,34 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
     @values = []
 
     @mmm_timeseries = Hash.new do |h,k| 
-      h[k] = { :min => (1.0/0), :max => 0, :avg => [] }
+      h[k] = { :min => nil, :max => 0, :avg => [] }
     end
 
-    tick_keys(interval, :histogram).each do |tkey|
+    ticks_in(interval).each do |_tick|
+      tkey = tick_key(_tick, :histogram)
+
       sync_redis.hgetall(tkey).each do |_val, _count|        
         _count = _count.to_f
+        _val = _val.to_f
 
         @histogram[_val] += _count
-        @values << _count
+        @values << _val
 
-        if _count < @mmm_timeseries[tkey][:min]
-          @mmm_timeseries[tkey][:min] = _count
+        if !@mmm_timeseries[_tick][:min] || (_val < @mmm_timeseries[_tick][:min])
+          @mmm_timeseries[_tick][:min] = _val
         end
 
-        if _count > @mmm_timeseries[tkey][:max]
-          @mmm_timeseries[tkey][:max] = _count
+        if _val > @mmm_timeseries[_tick][:max]
+          @mmm_timeseries[_tick][:max] = _val
         end
 
-        @mmm_timeseries[tkey][:avg] << _count
+        @mmm_timeseries[_tick][:avg] << _val
       end
-
-      @mmm_timeseries[tkey][:avg] = @mmm_timeseries[tkey][:avg].average
     end
+
+    @mmm_timeseries_arr = @mmm_timeseries.to_a
+      .map{ |k,v| [k, Hash[v.map{ |vk, vv| [vk, (vv.is_a?(Numeric) || vv.is_a?(Array)) ? vv : 0 ] }]] }
+      .sort{ |a,b| a.first.to_i <=> b.first.to_i}
 
     render_page(:distribution_gauge)
   end

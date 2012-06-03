@@ -130,9 +130,13 @@ FnordMetric.widgets.realtimeValueWidget = function(){
     }
 
     function drawLayout(){
-      $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
-        $('<h2></h2>').html(opts.title)
-      ) ).append(
+      if(!opts.no_headbar){
+        $(opts.elem).append( $('<div></div>').attr('class', 'headbar').append(
+          $('<h2></h2>').html(opts.title)
+        ));
+      }
+ 
+      $(opts.elem).append(
         $('<div></div>').attr('id', 'container-'+widget_uid).css({
           height: opts.height + 6,
           marginBottom: 20,

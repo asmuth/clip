@@ -97,8 +97,8 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function draw_layout(){
-      $(opts.elem)
-        .append(
+     if(!opts.no_headbar){
+        $(opts.elem).append(
           $('<div></div>')
             .addClass('headbar')
             .append($('<h2></h2>').html(opts.title))
@@ -146,6 +146,9 @@ FnordMetric.widgets.timeseriesWidget = function(){
               )
             )
         )
+      }
+
+      $(opts.elem)
         .append(
           $('<div></div>')
             .addClass('legend')
