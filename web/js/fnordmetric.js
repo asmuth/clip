@@ -90,8 +90,10 @@ var FnordMetric = (function(){
 
       renderSidebar();
 
-      if(!currentView){
+      if(!currentView && (window.location.hash.length < 2)){
         sidebarClick.apply($('#sidebar li:first'));
+      } else if(!currentView){      
+        navigateViaHash();
       }
     }
   }
@@ -145,10 +147,7 @@ var FnordMetric = (function(){
     connect();
 
     $('#app').html(_wrap_elem);
-
-    $(window).resize(resizeView);
-    window.setTimeout(navigateViaHash, 200);
-    
+    $(window).resize(resizeView);    
     resizeView();
   };
 

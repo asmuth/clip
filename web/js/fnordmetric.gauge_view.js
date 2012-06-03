@@ -18,7 +18,9 @@ FnordMetric.views.gaugeView = (function(gauge_name){
         ["Fnord", "/group/fnord"],
         [conf.title, "/gauge/"+gauge_name]
       ],
-      buttons: [],
+      buttons: [
+        ["<i class='icon-refresh'></i>Refresh", function(){ load(viewport); }]
+      ],
       datepicker: true
     });
 
