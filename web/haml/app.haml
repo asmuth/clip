@@ -26,9 +26,9 @@
     %link{:href => "/fnordmetric.css", :rel => "stylesheet", :type => "text/css"}
 
   %body
-    #app
+    #app.clearfix(style="overflow:hidden;")
 
-    #preload(style="visibility:hidden;")
+    #preload
       %img(src="/img/loader_white.gif")
 
 :javascript

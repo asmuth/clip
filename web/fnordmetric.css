@@ -6,7 +6,6 @@ body {
   padding:0;
   overflow-y:scroll;
   font: 12px/20px "Gotham Narrow" "Helvetica Neue", Helvetica, Arial, sans-serif;
-  padding-bottom:30px;
   overflow-x:hidden;
 }
 
@@ -213,7 +212,7 @@ color:#000;
 .picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
 #viewport{ float:left; margin-left:220px; min-width:790px; }
-#viewport .viewport_inner{ margin:0 6px; background:#fff; min-height:1200px; padding-top:1px; }
+#viewport .viewport_inner{ margin:0 6px; background:#fff; padding-top:1px; padding-bottom:1px; }
 
 #viewport, #sidebar ul li:hover, #sidebar ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
 
@@ -683,3 +682,5 @@ margin-top: 60px;
 }
 
 .numbers_container .ui_trend{ font-size:16px; float:left; white-space:nowrap; }
+
+#preload{ visibility:hidden; position:absolute; height:0px; width:0px; overflow:hidden; }

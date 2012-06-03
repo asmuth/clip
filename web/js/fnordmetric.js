@@ -127,7 +127,8 @@ var FnordMetric = (function(){
       );  
     }
     $('.resize_full_height').height(window.innerHeight-40);
-    $('.resize_min_full_height').css('minHeight', window.innerHeight-40);
+    $('#viewport .viewport_inner').css('minHeight', window.innerHeight-2);
+    $('.resize_min_full_height').css('minHeight', window.innerHeight-2);
     $(".resize_listener").trigger('fm_resize');
   };
 
