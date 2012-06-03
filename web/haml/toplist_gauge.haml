@@ -22,10 +22,10 @@
         %h2 Top #{key_nouns.last}
       .ui_toplist.clickable
         .searchbar
-          %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;" onchange="toplgaugeSeach($(this).val());" onkeyup="toplgaugeSeach($(this).val());")
+          %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;" onchange="toplgaugeSeach($(this).val());" onkeyup="toplgaugeSeach($(this).val());" onclick="toplgaugeSeach($(this).val());")
 
         - @toplist.toplist(top_k).each_with_index do |(item, score), ind|
-          .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}" style="#{ind > 99 ? 'display:none;' : nil}")
+          .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}" style="#{ind > 49 ? 'display:none;' : nil}" class="#{ind > 49 ? nil : :initial}")
             .title= item
             .value= score
             .percent
@@ -134,68 +134,15 @@
 
 
   function toplgaugeSeach(item){
-    console.log("fu: " + item);
-  }
+    $('.widget_toplist .toplist_item').hide();
 
-
-
-
-
-
-
-
-
-
-  function toplgaugeDisplayOverview(){
-    $(".toplgauge_tab").hide().filter(".overview").show();
-    $(".toplgauge_tabs li").removeClass('active').filter(".overview").addClass('active');
-    $(".toplgauge_widget_topx_timeline").show();
-    $(".toplgauge_keysearch").hide();
-    $(".toplgauge_widget_topx_toplist").show();
-  }
-
-  function toplgaugeDisplayDistribution(){
-    $(".toplgauge_tab").hide().filter(".distribution").show();
-    $(".toplgauge_tabs li").removeClass('active').filter(".distribution").addClass('active');
-    $(".toplgauge_widget_topx_distribution").html("");
-
-    $(".toplgauge_keysearch").hide();
-      FnordMetric.widgets.barsWidget().render({
-      elem: $(".toplgauge_widget_topx_distribution"),
-      gauges: ["#{name}++count"],
-      gauge_titles: {"#{name}++count": "Fnord"},
-      title: "#{key_nouns.first} Distribution"
-    });
-  }
-
-
-  function toplgaugeDisplayPerKeyOverview(){
-    $(".toplgauge_tabs li").removeClass('active').filter(".per_key").addClass('active');
-    $(".toplgauge_tab").hide().filter(".overview").show();
-    $(".toplgauge_widget_topx_timeline").hide();
-    $(".toplgauge_keysearch").show();
-    $(".toplgauge_widget_topx_toplist").show();
-  }
-
-  function toplgaugeDisplayPerKey(key){
-    $('.toplgauge_widget_perkey_timeline').html('');
-    $(".toplgauge_tabs li").removeClass('active').filter(".per_key").addClass('active');
-    $(".toplgauge_tab").hide().filter(".per_key").show();
-    $(".toplgauge_keysearch").hide();
-
+    if(item.length < 2){
+      $('.widget_toplist .toplist_item.initial').show();
+    } else {
+      $('.widget_toplist .toplist_item[data-item^="'+item+'"]').show();
+    }
     
-    var _gkey = "#{name}++series-"+key;
-    var _gtitles = {};
-    _gtitles[_gkey] = key;
-
-    FnordMetric.widgets.timelineWidget().render({
-      elem: $(".toplgauge_widget_perkey_timeline"),
-      gauges: [_gkey],
-      gauge_titles: _gtitles,
-      title: "#{key_nouns.first}: " + key
-    });
   }
-
 
 
   
