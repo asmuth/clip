@@ -32,7 +32,7 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
           @mmm_timeseries[_tick][:max] = _val
         end
 
-        @mmm_timeseries[_tick][:avg] << _val
+        @mmm_timeseries[_tick][:avg] += [_val] * _count
       end
     end
 

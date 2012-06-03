@@ -81,17 +81,17 @@
     series: [      
       { 
         name: 'Max',
-        color: "#{FnordMetric::COLORS[-2]}",
+        color: "#{FnordMetric::COLORS[-1]}",
         data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:max]} }.to_json}
       },
       { 
         name: 'Min',
-        color: "#{FnordMetric::COLORS[-3]}",
+        color: "#{FnordMetric::COLORS[-1]}",
         data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:min]} }.to_json}
       },
       { 
         name: 'Mean',
-        color: "#{FnordMetric::COLORS[-1]}",
+        color: "#{FnordMetric::COLORS[-2]}",
         data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:avg].average} }.to_json}
       }
     ]
