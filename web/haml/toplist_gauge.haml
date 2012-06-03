@@ -15,9 +15,9 @@
 
 
 
-  .widget_toplist.ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
+  .ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
     
-    .toplgauge_tab.overview
+    .widget_toplist.toplgauge_tab.overview
       .headbar
         %h2 Top #{key_nouns.last}
       .ui_toplist.clickable
@@ -27,9 +27,10 @@
         - @toplist.toplist(top_k).each_with_index do |(item, score), ind|
           .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}" style="#{ind > 49 ? 'display:none;' : nil}" class="#{ind > 49 ? nil : :initial}")
             .title= item
-            .value= score
+            .value
+              %span.ui_value{:"data-value" => score }
             .percent
-              = @toplist.percentage(item).round(1).to_s + "%"
+              %span.ui_value{:"data-percent" => @toplist.percentage(item).round(1) }
               %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
               
 
@@ -40,7 +41,10 @@
       .ui_toplist.clickable
         .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="stoff")
           .title stoff
-          .value= @toplist.value("stoff").to_s + " / " + @toplist.percentage("stoff").round(1).to_s + "%"
+          .value.large
+            %span.ui_value{:"data-value" => @toplist.value("stoff") }
+            = " / "
+            %span.ui_value{:"data-percent" => @toplist.percentage("stoff").round(1) }
 
           .trend
             %span.ui_trend(data-trend="2.3")
@@ -71,7 +75,7 @@
 
   FnordMetric.util.updateNumbers('.report_view', 4);
 
-  FnordMetric.ui.trends('.report_view');
+  FnordMetric.ui.format('.report_view');
   FnordMetric.ui.resizable('#viewport');
 
 
