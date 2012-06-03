@@ -852,11 +852,11 @@ Rickshaw.Fixtures.Time = function() {
 	};
 
 	this.formatDate = function(d) {
-		return d.toUTCString().match(/, (\w+ \w+ \w+)/)[1];
+		return d.toLocaleString().match(/, (\w+ \w+ \w+)/)[1];
 	};
 
 	this.formatTime = function(d) {
-		return d.toUTCString().match(/(\d+:\d+):/)[1];
+		return d.toLocaleString().match(/(\d+:\d+):/)[1];
 	};
 
 	this.ceil = function(time, unit) {
@@ -1433,7 +1433,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 		var graph = this.graph = args.graph;
 
 		this.xFormatter = args.xFormatter || function(x) {
-			return new Date( x * 1000 ).toUTCString();
+			return new Date( x * 1000 ).toLocaleString();
 		};
 
 		this.yFormatter = args.yFormatter || function(y) {
