@@ -14,28 +14,39 @@
     /   %a{:href => "#"} Export
 
 
-  .widget_toplist.ui_sidebar_toplist.resizable(data-width="55")
+  .widget_toplist.ui_sidebar_toplist.resizable.resize_full_height(data-width="55")
     .headbar
-      %h2 Top 50 #{key_nouns.last}
+      %h2 Top #{key_nouns.last}
     .ui_toplist
-      - @toplist.each do |item, score|
-        .toplist_item
+      .searchbar
+        %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;")
+      - @toplist.toplist.each do |item, score|
+        .toplist_item(onclick="toplgaugeSelectItem(this);" data-item="#{item}")
           .title= item
           .value= score
           .percent 73.5%
 
 
-  .widget_keystats.resizable(data-width="45")
-    .widget_item_timeseries
+  .widget_keystats.resize_full_height.resizable(data-width="45")
+    .empty_state.resize_full_height
+      .headbar
 
-    .headbar.small Totals
-    %div
-      .numbers_container
-        .title= "Fnord"
+      %div(style="font-weight:bold; font-size:16px; color:#aaa; text-align:center; margin-top:50%;")
+        %i.icon.icon-arrow-left
+        &nbsp; Please select something
 
-        .number{:data => 23, :"data-current" => 0}
-          %span.desc Total
-          %span.value 0
+
+    .keystats(style="display:none;")
+      .widget_item_timeseries
+
+      .headbar.small Totals
+      %div
+        .numbers_container
+          .title= "Fnord"
+
+          .number{:data => 23, :"data-current" => 0}
+            %span.desc Total
+            %span.value 0
 
 
 
@@ -55,6 +66,13 @@
       data: [{x:0, y:0},{x:1, y:0}]
     }]
   });
+
+  function toplgaugeSelectItem(item){
+    alert($(item).attr('data-item'));
+  }
+
+
+
 
 
 :javascript

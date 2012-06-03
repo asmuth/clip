@@ -106,6 +106,7 @@ var FnordMetric = (function(){
         canvasElem.innerHeight()
       );  
     }
+    $('.resize_full_height').height(window.innerHeight-40);
     $(".resize_listener").trigger('fm_resize');
   };
 

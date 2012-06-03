@@ -2,17 +2,13 @@ class FnordMetric::ToplistGauge < FnordMetric::Gauge
 
   def render(namespace, event)
     interval = parse_interval(event["interval"])
-
-    #@toplist = FnordMetric::Toplist.new
+    @toplist = FnordMetric::Toplist.new
 
     ticks_in(interval).each do |_tick|
-      puts field_values_at(_tick, 
-        :limit => top_k, 
-        :append => :toplist
-      ).inspect
+      field_values_at(_tick, :limit => top_k, :append => :toplist).each do |item, count|
+        @toplist.incr_item(_tick, item, count)
+      end
     end    
-
-    @toplist = {}
 
     render_page(:toplist_gauge)
   end
@@ -29,8 +25,6 @@ class FnordMetric::ToplistGauge < FnordMetric::Gauge
 private
 
   def observe(ctx, item)
-    puts "YAY"
-
     at = ctx.send(:time)
     ctx.redis_exec :zincrby, tick_key(at, :toplist), 1, item
     ctx.redis_exec :incrby, tick_key(at, :total), 1

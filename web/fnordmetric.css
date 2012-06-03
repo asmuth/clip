@@ -40,6 +40,59 @@ a.link:hover{
   text-decoration:underline;
 }
 
+button,
+input,
+select,
+textarea {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
+
+button,
+input {
+  *overflow: visible;
+  line-height: normal;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+
+input[type="search"] {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+  -webkit-appearance: textfield;
+}
+
+input[type="search"]::-webkit-search-decoration{
+  -webkit-appearance: none;
+}
+
+input[type="search"], input[type="text"]{
+  border:1px solid #cecece;
+  background:#fff;
+  border-radius:3px;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 8px;
+  color: #333;
+  font-size: 14px;
+  box-shadow: 0 0 2px 1px rgba(0,0,0,0.1) inset;
+}
+
+
 .shown{ display: block; }
 .hidden{ display: none; }
 
@@ -171,6 +224,10 @@ color:#000;
 .ui_toplist .toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
 .ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; color:#333; width:70px; color:#666; }
 .ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:20px; font-size:18px; font-weight:bold; color:#333; width:70px; }
+
+.ui_toplist .searchbar{ background: #EFEFEF; border-bottom: 1px solid #DDD; padding:10px 17px; }
+
+
 
 .headbar {
 

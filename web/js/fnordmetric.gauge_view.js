@@ -48,6 +48,8 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     if(evt.payload.exec){
       eval(evt.payload.exec); 
     }
+
+    FnordMetric.resizeView();
   }
 
   function open_interval_modal(){

@@ -6,8 +6,11 @@ BACKLOG
 -------
 
 - gauge-view: interval selection dropdown 
-- interval selection top like gh.com/graphs/commit-activity) 52w history
 - fix pie widget
+- use rack websocket instead of em websocket
+- store per-session-data
+- callback on session-flush
+- split up fnordmetric.namespace block into multiple files
 - fix hash-history fu
 
 
@@ -16,13 +19,9 @@ BACKLOG
 -------
 
   > Core: Backend
-    - split up fnordmetric.namespace block into multiple files
     - special events (incr, observe etc)
     - caching
-    - use rack websocket instead of em websocket
     - gauge garbage-collection
-    - store per-session-data
-    - callback on session-flush
     - fix specs
     - new full_example.rb
 
