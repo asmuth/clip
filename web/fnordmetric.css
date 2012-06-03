@@ -225,14 +225,39 @@ color:#000;
 .ui_toplist{ min-height:300px; }
 .ui_toplist.loading{ opacity:0.5; background:url('/loader.gif') no-repeat center center;  }
 
-.ui_toplist .toplist_item{ border-bottom:1px solid #dedede; height:42px; }
+.ui_toplist .toplist_item{ border-bottom:1px solid #dedede; height:42px; display:block; }
 .ui_toplist .toplist_item:hover{ background:#fff; }
 .ui_toplist .toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
 .ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; color:#333; width:70px; color:#666; }
 .ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:20px; font-size:18px; font-weight:bold; color:#333; width:70px; }
 
-.ui_toplist .searchbar{ background: #EFEFEF; border-bottom: 1px solid #DDD; padding:10px 17px; }
+.ui_toplist .searchbar{ background:#efefef; border-bottom: 1px solid #DDD; padding:10px 17px; }
+.ui_toplist.clickable .toplist_item:hover{ background:#efefef; cursor:pointer; }
 
+.ui_toplist.clickable .toplist_item.active{ 
+background: #7bb2ff; /* Old browsers */
+background: -moz-linear-gradient(top, #7bb2ff 0%, #609ff8 44%, #4089ee 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7bb2ff), color-stop(44%,#609ff8), color-stop(100%,#4089ee)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+background: -o-linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+background: -ms-linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+background: linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+
+border-top:1px solid #5F94DE;
+border-bottom:1px solid #4E7DBF;
+
+margin-top:-1px;
+
+line-height:41px;
+
+box-shadow:0 1px 1px rgba(255,255,255,0.5) inset;
+}
+
+.ui_toplist.clickable .toplist_item.active .title,
+.ui_toplist.clickable .toplist_item.active .value,
+.ui_toplist.clickable .toplist_item.active .percent {
+  color:#fff;
+}
 
 
 .headbar {

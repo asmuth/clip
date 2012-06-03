@@ -17,11 +17,11 @@
   .widget_toplist.ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
     .headbar
       %h2 Top #{key_nouns.last}
-    .ui_toplist
+    .ui_toplist.clickable
       .searchbar
         %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;")
       - @toplist.toplist.each do |item, score|
-        .toplist_item(onclick="toplgaugeSelectItem(this);" data-item="#{item}")
+        .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}")
           .title= item
           .value= score
           .percent= @toplist.percentage(item).round(1).to_s + "%"
@@ -67,15 +67,16 @@
     }]
   });
 
-  function toplgaugeSelectItem(item){
-    alert($(item).attr('data-item'));
+
+:javascript
+
+  function toplgaugeSelectItem(){
+    $(this).addClass('active')
+      .siblings().removeClass('active');
   }
 
 
 
-
-
-:javascript
 
   function toplgaugeDisplayOverview(){
     $(".toplgauge_tab").hide().filter(".overview").show();
