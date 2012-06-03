@@ -1,7 +1,7 @@
 class FnordMetric::DistributionGauge < FnordMetric::Gauge
 
   def render(namespace, event)
-    interval = parse_interval(event["interval"])
+    @interval = parse_interval(event["interval"])
     colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
 
     #@num_min =
@@ -14,7 +14,7 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
       h[k] = { :min => nil, :max => 0, :avg => [] }
     end
 
-    ticks_in(interval).each do |_tick|
+    ticks_in(@interval).each do |_tick|
       tkey = tick_key(_tick, :histogram)
 
       sync_redis.hgetall(tkey).each do |_val, _count|        

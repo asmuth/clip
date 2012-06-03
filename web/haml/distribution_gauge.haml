@@ -1,7 +1,7 @@
 .report_view
 
   %h1= @opts[:title]
-  %h3 Distribution Gauge
+  %h3= (fancy_timerange(@interval) * " &nbsp;&mdash;&nbsp; ")
   
   %ul.ui_tabs.tabs
     %li.active{"data-tab" => "Overview"}

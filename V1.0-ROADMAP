@@ -9,15 +9,14 @@ BACKLOG
 - store per-session-data
 - callback on session-flush
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
-- fix pie widget
-- timeseries gauge: restrict to max resolution
-- timeseries-gauge: overview series weights
 - timeseries-gauge: overview all numbers
-- timeseries-gauge: punchcards
 - timeseries-gauge: trends
 - timeseries-widget: tooltip -> show key noun   
 - timeseries-widget: select sane default tick + tickbtn active states
+- fix pie widget
+- timeseries-gauge: overview series weights
 - timeseries-widget: cardinal on/off should be skeuomorph
+- timeseries-gauge: punchcards
 - distgauge: render std. deviation
 - use rack websocket instead of em websocket
 - caching
@@ -29,6 +28,7 @@ BACKLOG
 - fix toplist widget
 - fix specs
 - incr_fraction: implement progressive
+- timeseries gauge: restrict to max resolution
 - fix session view
 - new readme
 - new full_example.rb
