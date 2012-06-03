@@ -16,23 +16,25 @@
 
   .widget_timeseries
 
-  .resizable(data-width="25" style="border-right:1px solid #ddd;")
-    .headbar.small Realtime
-    %br
-    %br
-    %br
-
-  .resizable(data-width="40" style="border-right:1px solid #ddd;")
+  .resizable(data-width="65" style="border-right:1px solid #ddd;")
     .headbar.small Series Values
-    - [].each do |series, nums|
-      .clearfix.numbers_container(style="width:auto; float:none; margin-right:20px;")
-        .title.with_swatch
-          .swatch(style="background:#{@series_colors[series]};")
-          %span= series
 
-        .number{:data => nums[:total], :"data-current" => 0}
-          %span.desc Total
-          %span.value 0
+    %table
+      %tr
+        %th
+        -@series.each do |series, sopts|
+          %th
+            %span.swatch(style="background:#{sopts[:color]}; display:inline-block;")
+            %span= series  
+      %tr
+        %td Today
+        -@series.each do |series, sopts|
+          %td= 0
+      %tr
+        %td Today
+        -@series.each do |series, sopts|
+          %td= 0
+
 
 
   .resizable(data-width="35")

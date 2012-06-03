@@ -92,6 +92,11 @@ input[type="search"], input[type="text"]{
 }
 
 
+table{ width:100%; }
+table td, th{ text-align:left; border-bottom:1px solid #dedede; height:42px; }
+table tr td:first-child{ padding-left:15px; }
+
+
 .shown{ display: block; }
 .hidden{ display: none; }
 
