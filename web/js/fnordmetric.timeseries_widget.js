@@ -89,7 +89,23 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function apply_resolution(){
-      if(!resolution){ resolution = opts.series_resolutions[0]; }
+      if(!resolution){ 
+        var trgt_resolution = 50;
+        var best_resolution = false;
+
+        for(ind in opts.series_resolutions){
+          var _diff = Math.abs(
+            trgt_resolution - 
+            (opts.timespan /  opts.series_resolutions[ind])
+          );
+
+          if((!best_resolution) || (_diff < best_resolution)){
+            best_resolution = opts.series_resolutions[ind];  
+          }
+        }
+        
+        resolution = best_resolution; 
+      }
 
       for(ind in gconfig.series){
         gconfig.series[ind].data = gconfig.series[ind]["data"+resolution];

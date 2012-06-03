@@ -51,6 +51,7 @@
     height: 420,
     default_style: 'stack',
     series_resolutions: #{@zooms.to_json},
+    timespan: #{@interval.size},
     series: [#{@series.map{ |k,s| 
       dat = s[:data].map{ |k,d| "data#{k}: #{d.to_json(&@calculate_proc)}" }
       "{ name: #{k.to_json}, color: '#{s[:color]}', #{dat * ","} }" 
