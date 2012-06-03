@@ -18,10 +18,10 @@
     .headbar
       %h2 Top 50 #{key_nouns.last}
     .ui_toplist
-      -50.times do
+      - @toplist.each do |item, score|
         .toplist_item
-          .title keyword
-          .value 36
+          .title= item
+          .value= score
           .percent 73.5%
 
 
