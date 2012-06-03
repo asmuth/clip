@@ -44,4 +44,12 @@
       @timelines[item][times.first])
   end
 
+  def trending(take = 100)
+    @toplist.to_a.map{ |k,v| 
+      [k, trend(k)]
+    }.sort{ |a,b|
+      b.last <=> a.last
+    }[0..(take-1)]
+  end
+
 end

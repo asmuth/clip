@@ -115,7 +115,14 @@ FnordMetric.util.formatTimeValue = function(value){
 }
 
 FnordMetric.util.formatPercentValue = function(value){
-  return value + '%';  
+  value = parseFloat(value);
+  if(value < 10){
+    return value.toFixed(2) + '%';    
+  } else if(value < 100){
+    return value.toFixed(1) + '%';    
+  } else {
+    return '100%';
+  }
 }
 
 FnordMetric.util.formatGaugeValue = function(gauge_key, value){

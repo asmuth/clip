@@ -6,10 +6,10 @@
   %ul.ui_tabs.toplgauge_tabs
     %li.active{"data-tab" => "Overview", :onclick=>"toplgaugeTabClick.apply(this);"}
       %a{:href => "#"} Overview
-    / %li{"data-tab" => "Compate"}
-    /   %a{:href => "#"} Compare
     %li{"data-tab" => "Trending", :onclick=>"toplgaugeTabClick.apply(this);"}
       %a{:href => "#"} Trending
+    / %li{"data-tab" => "Compate"}
+    /   %a{:href => "#"} Compare
     / %li{"data-tab" => "Export"}
     /   %a{:href => "#"} Export
 
@@ -30,7 +30,7 @@
             .value
               %span.ui_value{:"data-value" => score }
             .percent
-              %span.ui_value{:"data-percent" => @toplist.percentage(item).round(1) }
+              %span.ui_value{:"data-percent" => @toplist.percentage(item) }
               %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
               
 
@@ -39,15 +39,18 @@
         %h2 Trending #{key_nouns.last}
 
       .ui_toplist.clickable
-        .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="stoff")
-          .title stoff
-          .value.large
-            %span.ui_value{:"data-value" => @toplist.value("stoff") }
-            = " / "
-            %span.ui_value{:"data-percent" => @toplist.percentage("stoff").round(1) }
+        - @toplist.trending(50).each do |item, trend|
 
-          .trend
-            %span.ui_trend(data-trend="2.3")
+          .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}")
+            .title= item
+            .value.large
+              %span.ui_value{:"data-value" => @toplist.value(item) }
+              = " / "
+              %span.ui_value{:"data-percent" => @toplist.percentage(item) }
+
+            .trend
+              %span.ui_trend(data-trend="#{trend.round(1)}")
+
 
 
   .widget_keystats.resize_full_height.resizable(data-width="45")
@@ -75,7 +78,7 @@
 
   FnordMetric.util.updateNumbers('.report_view', 4);
   FnordMetric.util.format('.report_view');
-  
+
   FnordMetric.ui.resizable('#viewport');
 
 
