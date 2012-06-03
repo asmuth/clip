@@ -53,6 +53,7 @@ class FnordMetric::Timeseries
       .sort{ |a,b| a.first <=> b.first }
       .map{ |t,v| value_at(t) }
 
+    return 0 if rvals.size == 0
     (rvals.last - rvals.first).to_f / rvals.first
   end
 
