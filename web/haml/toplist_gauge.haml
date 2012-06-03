@@ -14,7 +14,7 @@
     /   %a{:href => "#"} Export
 
 
-  .widget_toplist.ui_sidebar_toplist.resizable.resize_full_height(data-width="55")
+  .widget_toplist.ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
     .headbar
       %h2 Top #{key_nouns.last}
     .ui_toplist
@@ -24,7 +24,7 @@
         .toplist_item(onclick="toplgaugeSelectItem(this);" data-item="#{item}")
           .title= item
           .value= score
-          .percent 73.5%
+          .percent= @toplist.percentage(item).round(1).to_s + "%"
 
 
   .widget_keystats.resize_full_height.resizable(data-width="45")

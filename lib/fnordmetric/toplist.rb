@@ -1,6 +1,6 @@
 class FnordMetric::Toplist
 
-  attr_accessor :toplist, :timelines, :total
+  attr_accessor :timelines, :total
 
   def initialize(timeline = {})
     @total   = 0
@@ -15,6 +15,21 @@ class FnordMetric::Toplist
     @toplist[item] += value.to_f
     @timelines[item][time] += value.to_f
     @total += value.to_f
+  end
+
+  def prepare!
+    @toplist_arr = @toplist.to_a.sort do |a,b|
+      b.last <=> a.last
+    end
+  end
+
+  def toplist(take = 100)
+    prepare! unless @toplist_arr
+    @toplist_arr[0..(take-1)]
+  end
+
+  def percentage(item)
+    (@toplist[item].to_f / total.to_f) * 100.0
   end
 
 end
