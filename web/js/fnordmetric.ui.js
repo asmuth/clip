@@ -95,9 +95,9 @@ FnordMetric.ui.trends = function(elem){
 
     $(this).append(
       $('<i class="icon icon-arrow-right">').css({
-        'marginLeft': '3px',
+        'marginLeft': '0.5em',
         'display': 'block',
-        'font-size': '10px',
+        'font-size': '90%',
         'float': 'right',
         '-webkit-transform': 'rotate('+deg+'deg)',
         '-moz-transform': 'rotate('+deg+'deg)'

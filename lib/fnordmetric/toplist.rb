@@ -32,9 +32,13 @@
     (@toplist[item].to_f / total.to_f) * 100.0
   end
 
+  def value(item)
+    @toplist[item].to_f
+  end
+
   def trend(item)
     times = @timelines[item].keys.sort
-    
+
     ((@timelines[item][times.last] - 
       @timelines[item][times.first]) /
       @timelines[item][times.first])

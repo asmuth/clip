@@ -27,7 +27,6 @@ BACKLOG
 - distgauge: render std. deviation
 - distgauge: render max/min/avg over time
 - distgauge: display trends
-- toplgauge: display rank
 - caching
 - gauge garbage-collection
 - fix html widget

@@ -3,30 +3,46 @@
   %h1= @opts[:title]
   %h3 Toplist Gauge
 
-  %ul.ui_tabs.tabs
-    %li.active{"data-tab" => "Overview"}
+  %ul.ui_tabs.toplgauge_tabs
+    %li.active{"data-tab" => "Overview", :onclick=>"toplgaugeTabClick.apply(this);"}
       %a{:href => "#"} Overview
     / %li{"data-tab" => "Compate"}
     /   %a{:href => "#"} Compare
-    %li{"data-tab" => "Trending"}
+    %li{"data-tab" => "Trending", :onclick=>"toplgaugeTabClick.apply(this);"}
       %a{:href => "#"} Trending
     / %li{"data-tab" => "Export"}
     /   %a{:href => "#"} Export
 
 
+
   .widget_toplist.ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
-    .headbar
-      %h2 Top #{key_nouns.last}
-    .ui_toplist.clickable
-      .searchbar
-        %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;")
-      - @toplist.toplist.each do |item, score|
-        .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}")
-          .title= item
-          .value= score
-          .percent
-            = @toplist.percentage(item).round(1).to_s + "%"
-            %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
+    
+    .toplgauge_tab.overview
+      .headbar
+        %h2 Top #{key_nouns.last}
+      .ui_toplist.clickable
+        .searchbar
+          %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;")
+        - @toplist.toplist.each do |item, score|
+          .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}")
+            .title= item
+            .value= score
+            .percent
+              = @toplist.percentage(item).round(1).to_s + "%"
+              %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
+              
+
+    .toplgauge_tab.trending(style="display:none;")
+      .headbar
+        %h2 Trending #{key_nouns.last}
+
+      .ui_toplist.clickable
+        .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="stoff")
+          .title stoff
+          .value= @toplist.value("stoff").to_s + " / " + @toplist.percentage("stoff").round(1).to_s + "%"
+
+          .trend
+            %span.ui_trend(data-trend="2.3")
 
 
   .widget_keystats.resize_full_height.resizable(data-width="45")
@@ -78,6 +94,25 @@
     $(this).addClass('active')
       .siblings().removeClass('active');
   }
+
+  function toplgaugeTabClick(){
+    if($(this).attr('data-tab') == "Overview"){
+      $('.toplgauge_tab').hide().filter('.overview').show();
+    } else if($(this).attr('data-tab') == "Trending"){
+      $('.toplgauge_tab').hide().filter('.trending').show();
+    }
+
+    $('.toplgauge_tabs li').removeClass('active');
+    $(this).addClass('active');
+  }
+
+
+
+
+
+
+
+
 
 
 
@@ -132,8 +167,6 @@
     });
   }
 
-  $('.toplgauge_tabs').bind('open_tab.per-key', function(o, a){
-    toplgaugeDisplayPerKey(a);
-  });
+
 
   
