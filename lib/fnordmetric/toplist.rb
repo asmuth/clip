@@ -39,9 +39,9 @@
   def trend(item)
     times = @timelines[item].keys.sort
 
-    ((@timelines[item][times.last] - 
-      @timelines[item][times.first]) /
-      @timelines[item][times.first])
+    (@timelines[item][times.last] - 
+    @timelines[item][times.first]) / 
+    @timelines[item][times.first]
   end
 
   def rank(item)
