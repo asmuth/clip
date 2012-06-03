@@ -11,7 +11,7 @@ BACKLOG
 - store per-session-data
 - callback on session-flush
 - split up fnordmetric.namespace block into multiple files
-
+- report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 
 
 BACKLOG
@@ -35,15 +35,19 @@ BACKLOG
     - put images into one sprite
     - nice empty states
 
+
+  > Distribution Gauge
+    - render std. deviation
+    - render max/min/avg over time
+    - histograms tab
+    - display trends
+
+
+  > Toplist Gauge
+    - trending tab / display trends
+    - compare tab
+
  
-  > Eventfeed Gauge
-    - fix
-
-
-  > Timeseries Widget
-    - timeseries-widget: cardinal on/off should be skeuomorph
-
-
   > Timeseries Gauge
     - progressive_sum
     - restrict to max resolution
@@ -57,21 +61,12 @@ BACKLOG
     - display trends
 
 
-  > Distribution Gauge
-    - render std. deviation
-    - render max/min/avg over time
-    - histograms tab
-    - export tab
-    - display trends
+  > Eventfeed Gauge
+    - fix
 
 
-  > Toplist Gauge
-    - trending tab / display trends
-    - compare tab
-    - export tab
-    - show multiple keywords
-
-
+  > Timeseries Widget
+    - timeseries-widget: cardinal on/off should be skeuomorph
 
 
 
