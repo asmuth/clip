@@ -12,84 +12,38 @@ BACKLOG
 - callback on session-flush
 - split up fnordmetric.namespace block into multiple files
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
-
-
-BACKLOG
--------
-
-  > Core: Backend
-    - special events (incr, observe etc)
-    - caching
-    - gauge garbage-collection
-    - fix specs
-    - new full_example.rb
-
-
-  > Core: Frontend
-    - overview view: gauge list (a'la github graphs landing)
-    - overview view: num active users, system stats
-    - fix html widget
-    - fix toplist widget
-    - formatter: num, time, currency, percent, time_of_day
-    - minimize/pack js
-    - put images into one sprite
-    - nice empty states
-
-
-  > Distribution Gauge
-    - render std. deviation
-    - render max/min/avg over time
-    - histograms tab
-    - display trends
-
-
-  > Toplist Gauge
-    - display rank
-    - tabs: compare, trends
-
- 
-  > Timeseries Gauge
-    - progressive_sum
-    - restrict to max resolution
-    - timeseries-gauge: realtime tab w/ moving average
-    - timeseries-widget: tooltip -> show key noun   
-    - timeseries-gauge: overview realtime gauge
-    - timeseries-gauge: overview series weights
-    - timeseries-gauge: overview all numbers
-    - timeseries-gauge: punchcards
-    - timeseries-gauge: cmp. w/yesterday option
-    - display trends
-
-
-  > Eventfeed Gauge
-    - fix
-
-
-  > Timeseries Widget
-    - timeseries-widget: cardinal on/off should be skeuomorph
+- overview view: gauge list (a'la github graphs landing)
+- overview view: num active users, system stats (realtime widget)
+- formatter: num, time, currency, percent, time_of_day
+- minimize/pack js
+- put images into one sprite
+- nice empty states
+- timeseries gauge: restrict to max resolution
+- timeseries-gauge: overview series weights
+- timeseries-gauge: overview all numbers
+- timeseries-gauge: punchcards
+- timeseries-gauge: trends
+- timeseries-widget: tooltip -> show key noun   
+- distgauge: render std. deviation
+- distgauge: render max/min/avg over time
+- distgauge: display trends
+- toplgauge: display rank
+- caching
+- gauge garbage-collection
+- fix html widget
+- fix toplist widget
+- fix specs
+- incr_fraction: implement progressive
+- timeseries-widget: cardinal on/off should be skeuomorph
+- fix session view
+- new readme
+- new full_example.rb
 
 
 
 
-CHANGELOG
----------
-  
-  > improved ui
-  > highcharts is dead, long live d3.js :)
-  > websockets instead of ajax
-  > new gauges: timeseries, toplist, distribution (anti-repetition!)
-  > new widget: ...
-  > splitted up code into acceptor, web, worker etc.
-  > splitted up javascript code
-  > refactorings, no server-side rendering
-  > less ram usage / garbage collection / single tick
-  > fnordmetric:announce redis pusub event-data instead of event_id
-
-
-
-
-WIKI
-----
+README
+------
 
   > fnordmetric
     > sending data 
@@ -130,9 +84,31 @@ WIKI
 IDEAS
 -----
 
-  > value correlation / scatter plot (2d) gauge
+  > special events (incr, observe etc)
+  > distgauge: histograms tab
+  > toplgauge: tabs: compare
+  > timeseries-gauge: cmp. w/yesterday option
   > geo_distribution_gauge
-  > correlation_gauge (2- or n-dimensional?)
-  > wordnet_gauge (graph-gauge?)
+  > value correlation / scatter plot (2d) gauge
 
+
+
+
+CHANGELOG
+---------
+  
+  > improved ui
+  > highcharts is dead, long live d3.js :)
+  > websockets instead of ajax
+  > new gauges are variable interval!
+  > new gauges: timeseries, toplist, distribution (anti-repetition!)
+  > timeseries gauge: fraction api
+  > new things: trends, punchards, stdeviation etc
+  > splitted up code into acceptor, web, worker etc.
+  > splitted up javascript code
+  > refactorings, no server-side rendering
+  > less ram usage / garbage collection / single tick
+  > fnordmetric:announce redis pusub event-data instead of event_id
+  > config in multiple files
+  > per session data / callback on session flush
 
