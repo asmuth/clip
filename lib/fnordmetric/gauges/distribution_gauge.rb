@@ -8,11 +8,31 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
     #@num_max =
 
     @histogram = FnordMetric::Histogram.new
+    @values = []
+
+    @mmm_timeseries = Hash.new do |h,k| 
+      h[k] = { :min => (1.0/0), :max => 0, :avg => [] }
+    end
 
     tick_keys(interval, :histogram).each do |tkey|
       sync_redis.hgetall(tkey).each do |_val, _count|        
-        @histogram[_val] += _count.to_i
+        _count = _count.to_f
+
+        @histogram[_val] += _count
+        @values << _count
+
+        if _count < @mmm_timeseries[tkey][:min]
+          @mmm_timeseries[tkey][:min] = _count
+        end
+
+        if _count > @mmm_timeseries[tkey][:max]
+          @mmm_timeseries[tkey][:max] = _count
+        end
+
+        @mmm_timeseries[tkey][:avg] << _count
       end
+
+      @mmm_timeseries[tkey][:avg] = @mmm_timeseries[tkey][:avg].average
     end
 
     render_page(:distribution_gauge)

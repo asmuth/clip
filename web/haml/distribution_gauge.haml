@@ -14,28 +14,28 @@
   .headbar
     %h2 Histogram: #{@opts[:title]}
 
-  .resizable.right(data-width="40" style="border-left:1px solid #ddd; height:500px;")
+  .resizable.right.resize_min_full_height(data-width="40" style="border-left:1px solid #ddd;")
     .clearfix
       %h2(style="margin:20px 0 -3px 20px;") Value Distribution
       .numbers_container.resizable.numbers_pad_bottom(data-width="50")
         .number
+          %span.desc Mean (Avg.)
+          %span.value.ui_value{:"data-value" => @values.mean }
+        .number
           %span.desc Minimum
-          %span.value= @histogram.min
+          %span.value.ui_value{:"data-value" => @values.min }
         .number
           %span.desc Maximum
-          %span.value= @histogram.max
-        .number
-          %span.desc Mean (Average)
-          %span.value= 0
+          %span.value.ui_value{:"data-value" => @values.max }
         .number
           %span.desc Median
-          %span.value= 0
+          %span.value.ui_value{:"data-value" => @values.median }
         .number
           %span.desc Range
-          %span.value= 0
+          %span.value.ui_value{:"data-value" => @values.range }
         .number
           %span.desc Mode
-          %span.value= 0
+          %span.value.ui_value{:"data-value" => @values.mode }
 
     %hr
 
@@ -43,18 +43,20 @@
       %h2(style="margin:20px 0 -3px 20px;") Standard Deviation
 
 
-  .widget_histogram_bars.resizable(data-width="60")
+  .resizable(data-width="60")
+    .widget_histogram_bars
 
-  .resizable(data-width="60" style="margin-top:10px;")
+    %div(style="margin-top:10px;")
 
-    .headbar.small
-      Average, Min and Max over Time
+      .headbar.small
+        Mean, Min and Max over Time
 
 
 
 :gaugejs
 
   FnordMetric.ui.resizable('.report_view');
+  FnordMetric.util.format('.report_view');
 
   FnordMetric.widgets.barsWidget().render({
     title: "Histogram: Number of #{key_nouns.last}",

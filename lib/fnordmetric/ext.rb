@@ -31,3 +31,25 @@ class Range
   end
 
 end
+
+class Array
+
+  def mean
+    inject(&:+).to_f / size
+  end
+
+  alias :average :mean
+
+  def median
+    42 # FIXPAUL!
+  end
+
+  def range
+    42 # FIXPAUL!
+  end
+
+  def mode
+    42 # FIXPAUL!
+  end
+  
+end
