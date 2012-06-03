@@ -66,12 +66,21 @@
       .widget_item_timeseries
       .headbar.small
 
-      .numbers_container
+      .numbers_container(style="width:auto; border-bottom:none;")
         .title
-        / .number{:data => 23, :"data-current" => 0}
-        /   %span.desc Total
-        /   %span.value 0
-
+        .number.total
+          %span.desc Total
+          %span.value.ui_value
+        .number.percent
+          %span.desc Percent
+          %span.value.ui_value
+        .number.delta
+          %span.desc Delta
+          %span.value
+            .ui_trend
+        .number.rank
+          %span.desc Rank
+          %span.value
 
 
 :gaugejs
@@ -87,6 +96,14 @@
   var toplist_gauge_timeseries = #{@toplist.timelines.to_json};
   var toplist_gauge_ticks = #{@all_ticks.sort.to_json};
 
+  var toplist_gauge_numbers = #{Hash[@toplist.toplist(top_k).map{ |k,t| 
+    [k, { :total => t, 
+          :percent => @toplist.percentage(k),
+          :rank => @toplist.rank(k),
+          :delta => @toplist.trend(k) }]
+  }].to_json};
+
+
   function toplgaugeSelectItem(){
     var item_key = $(this).attr('data-item');
 
@@ -94,7 +111,6 @@
       .siblings().removeClass('active');
 
     $('.widget_keystats .widget_item_timeseries').html('');
-
     $('.widget_keystats .keystats').show();
     $('.widget_keystats .empty_state').hide();
 
@@ -103,6 +119,20 @@
 
     $('.widget_keystats .headbar.small')
       .html("#{key_nouns.first}: " + item_key);
+
+    $('.widget_keystats .number.total .ui_value')
+      .attr('data-value', toplist_gauge_numbers[item_key].total);
+
+    $('.widget_keystats .number.percent .ui_value')
+      .attr('data-percent', toplist_gauge_numbers[item_key].percent);
+
+    $('.widget_keystats .number.delta .ui_trend')
+      .attr('data-trend', toplist_gauge_numbers[item_key].delta);
+
+    $('.widget_keystats .number.rank .value')
+      .html('#' + toplist_gauge_numbers[item_key].rank);
+
+    FnordMetric.util.format('.widget_keystats .keystats');
 
     var series_data = [];
 

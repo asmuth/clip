@@ -44,6 +44,12 @@
       @timelines[item][times.first])
   end
 
+  def rank(item)
+    prepare! unless @toplist_arr
+
+    @toplist_arr.index([item, value(item)]) + 1
+  end
+
   def trending(take = 100)
     @toplist.to_a.map{ |k,v| 
       [k, trend(k)]

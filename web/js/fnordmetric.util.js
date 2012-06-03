@@ -199,11 +199,11 @@ FnordMetric.util.format = function(elem){
 
       if(delta > 0){
         $(this).css('color', '#2B2');  
-        $(this).html('+' + delta);
+        $(this).html('+' + delta.toFixed(1));
         deg = -45;
       } else if (delta < 0){
         $(this).css('color', '#B22');  
-        $(this).html(delta);
+        $(this).html(delta.toFixed(1));
         deg = 45; 
       } else {
         $(this).css('color', '#555');  

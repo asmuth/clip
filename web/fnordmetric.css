@@ -681,3 +681,5 @@ margin-top: 60px;
   margin-right: 10px;
   color: #999;
 }
+
+.numbers_container .ui_trend{ font-size:16px; float:left; white-space:nowrap; }
