@@ -37,7 +37,8 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
       @series[series] = { 
         :color => colors.unshift(colors.pop).first,
-        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(@interval, int) ] }]
+        :data => Hash[@zooms.map{ |int| [int, ts.timeseries(@interval, int) ] }],
+        :timeseries => ts
       }
     end
 

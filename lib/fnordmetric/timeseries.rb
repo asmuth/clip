@@ -40,6 +40,34 @@ class FnordMetric::Timeseries
     FnordMetric::Timeseries.new(res)
   end
 
+  def sum(range = (ticks.first..ticks.last))
+    @timeline
+      .inject(0){ |s,(t,v)| s + (range.include?(t) ? value_at(t) : 0) }
+  end
+
+  def trend(range = (ticks.first..ticks.last))
+    range ||= (ticks.first..ticks.last)    
+
+    rvals = @timeline.to_a
+      .select{ |t,v| range.include?(t) }
+      .sort{ |a,b| a.first <=> b.first }
+      .map{ |t,v| value_at(t) }
+
+    (rvals.last - rvals.first).to_f / rvals.first
+  end
+
+  def ticks
+    @timeline.keys.sort
+  end
+
+  def value_at(time)
+    if @timeline[time][1].to_i > 0
+      @timeline[time][0] / @timeline[time][1].to_f
+    else
+      @timeline[time][0]
+    end    
+  end
+
   def to_json(&block)
     @timeline.to_a
       .sort{ |a,b| a[0] <=> b[0] }

@@ -26,6 +26,13 @@
           %th(style="padding-top:4px")
             %span.swatch(style="background:#{sopts[:color]}; display:inline-block;")
             %span= series  
+      
+      %tr
+        %td Total (<span class="ui_value" data-timerange="#{@interval.size}"></span>)
+        -@series.each do |series, sopts|
+          %td
+            .ui_value.large.left{:"data-value" => sopts[:timeseries].sum, :style => "min-width:70px;"}
+            .ui_trend.left{:style => "margin-left:5px", :"data-trend" =>  sopts[:timeseries].trend}
 
       -FnordMetric::TICKS[tick, @interval.size].each do |zoom|
         %tr
@@ -33,17 +40,9 @@
             .ui_value{:"data-timerange-offset" => zoom, :"data-offset" => -1}
           -@series.each do |series, sopts|
             %td
-              .ui_value.large.left{:"data-value" => 23}
-              .ui_trend.left{:style => "margin-left:5px", :"data-trend" => 1}
-
-      %tr
-        %td 
-          Total (<span class="ui_value" data-timerange="#{@interval.size}"></span>)
-
-        -@series.each do |series, sopts|
-          %td
-            .ui_value.large.left{:"data-value" => 23}
-            .ui_trend.left{:style => "margin-left:5px", :"data-trend" => 1}
+              -srange = ((@interval.last-zoom)..@interval.last)
+              .ui_value.large.left{:"data-value" => sopts[:timeseries].sum(srange), :style => "width:70px;"}
+              .ui_trend.left{:style => "margin-left:5px", :"data-trend" => sopts[:timeseries].trend(srange)}
 
 
 
