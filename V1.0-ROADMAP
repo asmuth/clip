@@ -34,6 +34,7 @@ BACKLOG
 - fix specs
 - incr_fraction: implement progressive
 - timeseries-widget: cardinal on/off should be skeuomorph
+- timeseries-widget: select sane default tick + tickbtn active states
 - fix session view
 - new readme
 - new full_example.rb

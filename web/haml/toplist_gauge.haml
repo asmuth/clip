@@ -51,20 +51,18 @@
 
       %div(style="font-weight:bold; font-size:16px; color:#aaa; text-align:center; margin-top:50%;")
         %i.icon.icon-arrow-left
-        &nbsp; Please select something
+        &nbsp; Please select an item
 
 
     .keystats(style="display:none;")
       .widget_item_timeseries
+      .headbar.small
 
-      .headbar.small Totals
-      %div
-        .numbers_container
-          .title= "Fnord"
-
-          .number{:data => 23, :"data-current" => 0}
-            %span.desc Total
-            %span.value 0
+      .numbers_container
+        .title
+        / .number{:data => 23, :"data-current" => 0}
+        /   %span.desc Total
+        /   %span.value 0
 
 
 
@@ -75,25 +73,48 @@
   FnordMetric.ui.trends('.report_view');
   FnordMetric.ui.resizable('#viewport');
 
-  FnordMetric.widgets.timeseriesWidget().render({
-    title: "",
-    elem: $('.widget_item_timeseries'),
-    height: 320,
-    default_style: 'line',
-    series: [{
-      name: "Fnord",
-      color: "#{FnordMetric::COLORS.last}",
-      data: [{x:0, y:0},{x:1, y:0}]
-    }]
-  });
-
 
 :javascript
 
+  var toplist_gauge_timeseries = #{@toplist.timelines.to_json};
+
   function toplgaugeSelectItem(){
+    var item_key = $(this).attr('data-item');
+
     $(this).addClass('active')
       .siblings().removeClass('active');
+
+    $('.widget_keystats .widget_item_timeseries').html('');
+
+    $('.widget_keystats .keystats').show();
+    $('.widget_keystats .empty_state').hide();
+
+    $('.widget_keystats .numbers_container .title')
+      .html(item_key);
+
+    $('.widget_keystats .headbar.small')
+      .html("#{key_nouns.first}: " + item_key);
+
+    var series_data = [];
+
+    for(_time in toplist_gauge_timeseries[item_key]){
+      series_data.push({x: parseInt(_time), y: parseFloat(toplist_gauge_timeseries[item_key][_time])});
+    }
+
+    FnordMetric.widgets.timeseriesWidget().render({
+      title: "#{key_nouns.first}: " + item_key,
+      elem: $('.widget_item_timeseries'),
+      height: 320,
+      default_style: 'line',
+      series: [{
+        name: item_key,
+        color: "#{FnordMetric::COLORS.last}",
+        data: series_data
+      }]
+    });
+
   }
+
 
   function toplgaugeTabClick(){
     if($(this).attr('data-tab') == "Overview"){
