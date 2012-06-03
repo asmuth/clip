@@ -2135,18 +2135,24 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 
 			var xpad = this.xPadding;
 
-			var seriesBarDrawWidth =  parseInt(seriesBarWidth * (1 - this.gapSize));
+			var seriesBarDrawWidth = Math.min(60,
+			  parseInt(seriesBarWidth * (1 - this.gapSize)));
 
 			if(parseInt(seriesBarWidth) == seriesBarDrawWidth){
 				seriesBarDrawWidth -= 1;
 			}
 
+			var seriesBarDrawPadding = (seriesBarWidth - seriesBarDrawWidth) / 2;
+
 			var nodes = graph.vis.selectAll("path")
 				.data(series.stack)
 				.enter().append("svg:rect")
-				.attr("x", function(d) { return xpad + (d.x * seriesBarWidth) })
+				.attr("x", function(d) { return xpad + (d.x * seriesBarWidth) + seriesBarDrawPadding })
 				.attr("y", function(d) { return graph.y(d.y0 + d.y) })
 				.attr("width", seriesBarDrawWidth)
+				.attr("stroke", "#000")
+				.attr("stroke-width", "1px")
+				.attr("stroke-opacity", "0.6")
 				.attr("height", function(d) { return graph.y.magnitude(d.y) });
 
 		
