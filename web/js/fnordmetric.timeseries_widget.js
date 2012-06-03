@@ -110,6 +110,11 @@ FnordMetric.widgets.timeseriesWidget = function(){
       for(ind in gconfig.series){
         gconfig.series[ind].data = gconfig.series[ind]["data"+resolution];
       }
+
+      $('.button.tick', opts.elem)
+        .removeClass('active')
+        .filter('[data-tick="'+resolution+'"]')
+        .addClass('active');
     }
 
     function draw_layout(){

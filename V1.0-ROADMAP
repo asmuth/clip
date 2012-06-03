@@ -12,7 +12,6 @@ BACKLOG
 - timeseries-gauge: overview all numbers
 - timeseries-gauge: trends
 - timeseries-widget: tooltip -> show key noun   
-- timeseries-widget: select sane default tick + tickbtn active states
 - fix pie widget
 - timeseries-gauge: overview series weights
 - timeseries-widget: cardinal on/off should be skeuomorph
