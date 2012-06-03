@@ -22,7 +22,7 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
         _val = _val.to_f
 
         @histogram[_val] += _count
-        @values << _val
+        @values += [_val] * _count
 
         if !@mmm_timeseries[_tick][:min] || (_val < @mmm_timeseries[_tick][:min])
           @mmm_timeseries[_tick][:min] = _val

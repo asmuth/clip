@@ -41,15 +41,16 @@ class Array
   alias :average :mean
 
   def median
-    42 # FIXPAUL!
+    (_sorted = self.dup.sort)[_sorted.size/2]
   end
 
   def range
-    42 # FIXPAUL!
+    max - min
   end
 
   def mode
-    42 # FIXPAUL!
+    inject({}){ |h,v| h[v] = h[v].to_i+1; h }.to_a
+    .sort{ |a,b| b.last <=> a.last }[0][0]
   end
   
 end
