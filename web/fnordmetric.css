@@ -229,7 +229,8 @@ color:#000;
 .ui_toplist .toplist_item:hover{ background:#fff; }
 .ui_toplist .toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
 .ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; color:#333; width:70px; color:#666; }
-.ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:20px; font-size:18px; font-weight:bold; color:#333; width:70px; }
+.ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:30px; font-size:18px; font-weight:bold; color:#333; width:110px; white-space:nowrap; }
+.ui_toplist .toplist_item .ui_trend{ margin-top:10px; }
 
 .ui_toplist .searchbar{ background:#efefef; border-bottom: 1px solid #DDD; padding:10px 17px; }
 .ui_toplist.clickable .toplist_item:hover{ background:#efefef; cursor:pointer; }
@@ -639,4 +640,16 @@ margin-top: 60px;
 .flash_msg_over .loader_white{
   width:auto;
   margin-top:26px;
+}
+
+
+.ui_trend{
+  float:right;
+  font-size:11px;
+  font-weight:bold;
+  background:rgba(255,255,255,0.9);
+  height:22px;
+  line-height:23px;  
+  padding:0 5px;
+  border-radius:3px;
 }

@@ -74,3 +74,34 @@ FnordMetric.ui.resizable = function(elem){
     $(this).width(wwidth);
   });
 }
+
+FnordMetric.ui.trends = function(elem){
+  $('.ui_trend', $(elem)).each(function(){
+    var delta = parseFloat($(this).attr('data-trend'));
+    var deg   = 0;
+
+    if(delta > 0){
+      $(this).css('color', '#2B2');  
+      $(this).html('+' + delta);
+      deg = -45;
+    } else if (delta < 0){
+      $(this).css('color', '#B22');  
+      $(this).html(delta);
+      deg = 45; 
+    } else {
+      $(this).css('color', '#555');  
+      $(this).html(delta);
+    }
+
+    $(this).append(
+      $('<i class="icon icon-arrow-right">').css({
+        'marginLeft': '3px',
+        'display': 'block',
+        'font-size': '10px',
+        'float': 'right',
+        '-webkit-transform': 'rotate('+deg+'deg)',
+        '-moz-transform': 'rotate('+deg+'deg)'
+      })
+    )
+  });
+}

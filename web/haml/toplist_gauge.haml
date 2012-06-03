@@ -24,7 +24,9 @@
         .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}")
           .title= item
           .value= score
-          .percent= @toplist.percentage(item).round(1).to_s + "%"
+          .percent
+            = @toplist.percentage(item).round(1).to_s + "%"
+            %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
 
 
   .widget_keystats.resize_full_height.resizable(data-width="45")
@@ -53,6 +55,8 @@
 :gaugejs
 
   FnordMetric.util.updateNumbers('.report_view', 4);
+
+  FnordMetric.ui.trends('.report_view');
   FnordMetric.ui.resizable('#viewport');
 
   FnordMetric.widgets.timeseriesWidget().render({

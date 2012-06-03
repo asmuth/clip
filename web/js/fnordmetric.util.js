@@ -130,39 +130,39 @@ FnordMetric.util.formatGaugeValue = function(gauge_key, value){
 }
 
 FnordMetric.util.updateNumbers = function(trgt_elem, diff_factor){
-    var still_running = false;
-    if(!diff_factor){ diff_factor = 4; }
-    $('.number', $(trgt_elem)).each(function(){
-      var target_val = parseFloat($(this).attr('data'));
-      var current_val = parseFloat($(this).attr('data-current'));
-      if(!current_val){ current_val=0; }
-      if(!target_val){ target_val=0; }
-      var diff = (target_val-current_val)/diff_factor;
-      if((diff > 0) && (diff < 1)){ diff=1; }
-      if((diff < 0) && (diff > -1)){ diff=-1; }
-      if(target_val != current_val){
-        still_running = true;
-        var new_val = current_val+diff;
-        if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
-        if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
-        $(this).attr('data-current', new_val);
-        $('.value', this).html(FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val));
-      }
-    });
-    if(still_running){
-      (function(te, df){
-        window.setTimeout(function(){ 
-          FnordMetric.util.updateNumbers(te, df); 
-        }, 30);
-      })(trgt_elem, diff_factor);
+  var still_running = false;
+  if(!diff_factor){ diff_factor = 4; }
+  $('.number', $(trgt_elem)).each(function(){
+    var target_val = parseFloat($(this).attr('data'));
+    var current_val = parseFloat($(this).attr('data-current'));
+    if(!current_val){ current_val=0; }
+    if(!target_val){ target_val=0; }
+    var diff = (target_val-current_val)/diff_factor;
+    if((diff > 0) && (diff < 1)){ diff=1; }
+    if((diff < 0) && (diff > -1)){ diff=-1; }
+    if(target_val != current_val){
+      still_running = true;
+      var new_val = current_val+diff;
+      if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
+      if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
+      $(this).attr('data-current', new_val);
+      $('.value', this).html(FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val));
     }
+  });
+  if(still_running){
+    (function(te, df){
+      window.setTimeout(function(){ 
+        FnordMetric.util.updateNumbers(te, df); 
+      }, 30);
+    })(trgt_elem, diff_factor);
   }
+}
 
-  FnordMetric.util.dateFormat = function(timestamp){
-    var t = new Date(timestamp*1000);
-    return FnordMetric.util.decPrint(t.getDate())      + "." + 
-           FnordMetric.util.decPrint((t.getMonth()+1)) + "." + 
-           FnordMetric.util.decPrint(t.getFullYear())  + " " +
-           FnordMetric.util.decPrint(t.getHours())     + ":" +
-           FnordMetric.util.decPrint(t.getMinutes())   + " ";
-  }
+FnordMetric.util.dateFormat = function(timestamp){
+  var t = new Date(timestamp*1000);
+  return FnordMetric.util.decPrint(t.getDate())      + "." + 
+         FnordMetric.util.decPrint((t.getMonth()+1)) + "." + 
+         FnordMetric.util.decPrint(t.getFullYear())  + " " +
+         FnordMetric.util.decPrint(t.getHours())     + ":" +
+         FnordMetric.util.decPrint(t.getMinutes())   + " ";
+}
