@@ -11,6 +11,8 @@ class FnordMetric::ToplistGauge < FnordMetric::Gauge
         @toplist.incr_item(_tick, item, count)
       end
     end    
+  
+    @toplist.total = @all_ticks.inject(0){ |s,t| s + sync_redis.get(tick_key(t, :total)).to_i }
 
     render_page(:toplist_gauge)
   end
@@ -31,6 +33,7 @@ private
     ctx.redis_exec :zincrby, tick_key(at, :toplist), 1, item
     ctx.redis_exec :incrby, tick_key(at, :total), 1
     ctx.redis_exec :zremrangebyrank, tick_key(at, :toplist), 0, -top_k
+    ctx.redis_exec :expire, tick_key(at, :toplist), retention
   end
 
   def top_k

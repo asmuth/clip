@@ -78,7 +78,7 @@ FnordMetric.widgets.numbersWidget = function(){
 
       var celem = $('.numbers_container[rel="'+series+'"]', opts.elem)
       var velem = $('.number[rel="'+vkey+'"]', celem);
-      var vdesc = FnordMetric.util.format(values[vkey].desc);
+      var vdesc = FnordMetric.util.evilFormat(values[vkey].desc);
 
       if (velem.length == 0){
         velem = $('<div></div>')

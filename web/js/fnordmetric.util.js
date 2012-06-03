@@ -6,15 +6,6 @@ FnordMetric.util.decPrint = function(val){
   return (val < 10 ? '0'+val : val);
 }
 
-FnordMetric.util.format = function(str){
-  if(str.substring(0, 1) == "$"){
-    str = "FnordMetric.util."+str.substring(1)
-    return eval(str);
-  } else {
-    return str;
-  }
-}
-
 FnordMetric.util.formatTimeOfDay = function(_time){
   if(_time === null) {
     return "";
@@ -232,4 +223,13 @@ FnordMetric.util.format = function(elem){
     }
    
   });
+}
+
+FnordMetric.util.evilFormat = function(str){
+  if(str.substring(0, 1) == "$"){
+    str = "FnordMetric.util."+str.substring(1)
+    return eval(str);
+  } else {
+    return str;
+  }
 }
