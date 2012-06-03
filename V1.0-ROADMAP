@@ -6,40 +6,37 @@ BACKLOG
 -------
 
 - gauge-view: interval selection dropdown 
-- fix pie widget
-- use rack websocket instead of em websocket
 - store per-session-data
 - callback on session-flush
-- split up fnordmetric.namespace block into multiple files
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
-- overview view: gauge list (a'la github graphs landing)
-- overview view: num active users, system stats (realtime widget)
-- formatter: num, time, currency, percent, time_of_day
-- minimize/pack js
-- put images into one sprite
-- nice empty states
+- fix pie widget
 - timeseries gauge: restrict to max resolution
 - timeseries-gauge: overview series weights
 - timeseries-gauge: overview all numbers
 - timeseries-gauge: punchcards
 - timeseries-gauge: trends
 - timeseries-widget: tooltip -> show key noun   
+- timeseries-widget: select sane default tick + tickbtn active states
+- timeseries-widget: cardinal on/off should be skeuomorph
 - distgauge: render std. deviation
-- distgauge: render max/min/avg over time
-- distgauge: display trends
+- use rack websocket instead of em websocket
 - caching
+- overview view: gauge list (a'la github graphs landing)
+- overview view: num active users, system stats (realtime widget)
 - gauge garbage-collection
+- split up fnordmetric.namespace block into multiple files
 - fix html widget
 - fix toplist widget
 - fix specs
 - incr_fraction: implement progressive
-- timeseries-widget: cardinal on/off should be skeuomorph
-- timeseries-widget: select sane default tick + tickbtn active states
 - fix session view
 - new readme
 - new full_example.rb
+- formatter: num, time, currency, percent, time_of_day
 - favicon (F)
-
+- minimize/pack js + css
+- put images into one sprite
+- nice empty states
 
 
 
