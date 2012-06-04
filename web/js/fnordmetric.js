@@ -85,6 +85,7 @@ var FnordMetric = (function(){
       gauges[msg.gauge_key] = {
         "view_type": msg.view,
         "title": msg.title,
+        "tick": msg.tick,
         "group": msg.group
       };
 
@@ -154,7 +155,9 @@ var FnordMetric = (function(){
   };
 
   function connect(){
-    socket = new WebSocket("ws://localhost:4243");
+    var socket_url = document.location.hostname + ":" + (parseInt(document.location.port)+1);
+
+    socket = new WebSocket("ws://" + socket_url);
     socket.onmessage = socketMessage;
     socket.onclose = socketClose;
     socket.onopen = socketOpen;
@@ -227,7 +230,8 @@ var FnordMetric = (function(){
     ui: {},
     views: {},
     widgets: {},
-    util: {}
+    util: {},
+    gauges: gauges
   };
 
 })();
