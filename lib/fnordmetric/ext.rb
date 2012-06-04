@@ -35,22 +35,30 @@ end
 class Array
 
   def mean
+    return 0 if empty?
     inject(&:+).to_f / size
   end
 
   alias :average :mean
 
   def median
+    return 0 if empty?
     (_sorted = self.dup.sort)[_sorted.size/2]
   end
 
   def range
+    return 0 if empty?
     max - min
   end
 
   def mode
+    return 0 if empty?
     inject({}){ |h,v| h[v] = h[v].to_i+1; h }.to_a
     .sort{ |a,b| b.last <=> a.last }[0][0]
   end
   
+  def emtpy
+    self.size == 0
+  end
+
 end
