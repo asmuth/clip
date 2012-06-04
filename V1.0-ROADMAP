@@ -6,8 +6,6 @@ BACKLOG
 -------
 
 - password protection
-- store per-session-data
-- callback on session-flush
 - use rack websocket instead of em websocket
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
@@ -21,7 +19,6 @@ BACKLOG
 - caching
 - overview view: gauge list (a'la github graphs landing)
 - overview view: num active users, system stats (realtime widget)
-- gauge garbage-collection
 - split up fnordmetric.namespace block into multiple files
 - fix html widget
 - fix toplist widget
@@ -107,5 +104,4 @@ CHANGELOG
   > less ram usage / garbage collection / single tick
   > fnordmetric:announce redis pusub event-data instead of event_id
   > config in multiple files
-  > per session data / callback on session flush
 
