@@ -4,7 +4,7 @@ class FnordMetric::ToplistGauge < FnordMetric::Gauge
     @interval = parse_interval(event["interval"])
 
     @toplist = FnordMetric::Toplist.new
-    @all_ticks = ticks_in(@interval)
+    @all_ticks = ticks_in(@interval, tick, 1)
 
     @all_ticks.each do |_tick|
       field_values_at(_tick, :limit => top_k, :append => :toplist).each do |item, count|

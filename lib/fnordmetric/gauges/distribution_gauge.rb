@@ -14,7 +14,7 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
       h[k] = { :min => nil, :max => 0, :avg => [] }
     end
 
-    ticks_in(@interval).each do |_tick|
+    ticks_in(@interval, tick, 1).each do |_tick|
       tkey = tick_key(_tick, :histogram)
 
       sync_redis.hgetall(tkey).each do |_val, _count|        
