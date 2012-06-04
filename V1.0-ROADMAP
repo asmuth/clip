@@ -10,6 +10,7 @@ BACKLOG
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 
+- distgauge: valuerange-option (dangerous!)
 - timeseries-widget: tooltip -> show key noun   
 - fix pie widget
 - timeseries-gauge: overview series weights
