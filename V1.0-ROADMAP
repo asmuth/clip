@@ -5,17 +5,19 @@ FnordMetric v1.0
 BACKLOG
 -------
 
-- gauge-view: interval selection dropdown 
+- password protection
 - store per-session-data
 - callback on session-flush
+- use rack websocket instead of em websocket
+- gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
+
 - timeseries-widget: tooltip -> show key noun   
 - fix pie widget
 - timeseries-gauge: overview series weights
 - timeseries-widget: cardinal on/off should be skeuomorph
 - timeseries-gauge: punchcards
 - distgauge: render std. deviation
-- use rack websocket instead of em websocket
 - caching
 - overview view: gauge list (a'la github graphs landing)
 - overview view: num active users, system stats (realtime widget)
