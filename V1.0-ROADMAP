@@ -6,7 +6,6 @@ BACKLOG
 -------
 
 - password protection
-- use rack websocket instead of em websocket
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 
