@@ -7,7 +7,8 @@ class FnordMetric::ToplistGauge < FnordMetric::Gauge
     @all_ticks = ticks_in(@interval, tick, 1)
 
     @all_ticks.each do |_tick|
-      field_values_at(_tick, :limit => top_k, :append => :toplist).each do |item, count|
+      field_values_at(_tick, :limit => top_k, :append => :toplist).each do |*args|
+        item, count = args.flatten[0..1] # what the fnord... ~paul
         @toplist.incr_item(_tick, item, count)
       end
     end    
