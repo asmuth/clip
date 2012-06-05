@@ -5,7 +5,8 @@ FnordMetric v1.0
 BACKLOG
 -------
 
-- password protection
+- enable websockets in ha
+
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 
