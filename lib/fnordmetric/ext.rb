@@ -62,3 +62,14 @@ class Array
   end
 
 end
+
+class Thin::Connection
+
+  alias :pre_process_orig :pre_process
+
+  def pre_process
+    @request.env['async.connection'] = self
+    pre_process_orig
+  end
+
+end

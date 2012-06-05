@@ -5,7 +5,10 @@ require "active_support/core_ext"
 require 'yajl'
 require 'sinatra/base'
 require 'haml'
+require 'json'
+require "thin"
 require 'rack/server'
+require 'rack/websocket'
 
 require "fnordmetric/ext"
 require "fnordmetric/version"
