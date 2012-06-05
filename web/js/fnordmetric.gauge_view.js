@@ -25,7 +25,9 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     });
 
     var now = parseInt((new Date()).getTime() / 1000);
-    var init_interval = (now-(FnordMetric.gauges[gauge_name].tick*24)) + "-" + now;
+    //var init_interval = (now-(FnordMetric.gauges[gauge_name].tick*24)) + "-" + now;
+    var init_interval = (now-(3600*24)) + "-" + now;
+
 
     load_interval(init_interval);
   }
