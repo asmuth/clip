@@ -6,7 +6,6 @@ BACKLOG
 -------
 
 - gauge-view: interval selection dropdown 
-- histogram longtail cap
 - async report generation / cache heatup
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 - caching

@@ -21,7 +21,8 @@ class FnordMetric::Histogram < Hash
   end
 
   def histogram(windows)
-    Hash[histogram_windows(windows).map{ |w| [w,0] }].tap do |histo|
+    windows = histogram_windows(windows) unless windows.is_a?(Array)
+    Hash[windows.map{ |w| [w,0] }].tap do |histo|
       self.each do |k,v|
         histo.detect do |win, wval|          
           histo[win] += v if win.include?(k)

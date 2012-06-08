@@ -67,7 +67,7 @@
     elem: $('.widget_histogram_bars'),
     height: 320,
     no_headbar: true,
-    values: #{@histogram.json_histogram([23, @histogram.max || 1].min)}
+    values: #{@histogram.json_histogram(@histogram_mode)}
   });
 
 
