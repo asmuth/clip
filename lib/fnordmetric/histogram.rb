@@ -35,7 +35,8 @@ class FnordMetric::Histogram < Hash
     histogram(windows).to_a.sort do |a, b|
       a[0].first <=> b[0].first
     end.map do |r, v|
-      ["#{r.first.round(1).to_s}-#{r.last.round(1).to_s}", v.to_i]
+      [r.size == 1.0 ? r.first.to_s :
+        "#{r.first.round(1).to_s}-#{r.last.round(1).to_s}", v.to_i]
     end.to_json
   end
 
