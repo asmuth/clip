@@ -51,7 +51,7 @@ module FnordMetric::GaugeCalculations
       tick_key(time), 
       0, opts[:max_fields]-1, 
       :withscores => true
-    ).in_groups_of(2).map do |key, val|
+    ).map do |key, val|
       [key, calculate_value(val, time, opts, block)]
     end
   end
