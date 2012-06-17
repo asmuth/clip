@@ -151,8 +151,6 @@ FnordMetric.views.sessionView = (function(){
         success: callbackEventsPoll()
       });*/
 
-      console.log("pub", eventsPolledUntil);
-
       FnordMetric.publish({
         "type": "active_users_request",
         "since": eventsPolledUntil
@@ -162,57 +160,57 @@ FnordMetric.views.sessionView = (function(){
   };
 
   function announce(evt){
+    if (evt.type == "active_users_response")
+      callbackEventsPoll(evt);
+
     console.log(evt);
   }
 
-  function callbackEventsPoll(){
-    return (function(_data, _status){
-      var data = JSON.parse(_data)
-      var events = data.events;
-      var timeout = 1000;
-      var maxevents = 200;
-      var passesFiltering = function(event_data) {
-        var passes_type_filtering = false;
-        var passes_session_filtering = false;
-        if(eventsFilter.uncheckedTypes.indexOf(event_data._type) == -1) {
-          if(parseInt(v._time)<=eventsPolledUntil) {
-            passes_type_filtering = true;
-          }
+  function callbackEventsPoll(data){
+    var events = data.events;
+    var timeout = 1000;
+    var maxevents = 200;
+    var passesFiltering = function(event_data) {
+      var passes_type_filtering = false;
+      var passes_session_filtering = false;
+      if(eventsFilter.uncheckedTypes.indexOf(event_data._type) == -1) {
+        if(parseInt(v._time)<=eventsPolledUntil) {
+          passes_type_filtering = true;
         }
-        if(!passes_type_filtering) return false;
+      }
+      if(!passes_type_filtering) return false;
 
-        if(eventsFilter.checkedSessions.length == 0){
-          return true; // No filter set - show all events
-        } else {
-          if(event_data._session_key){
-            if(eventsFilter.checkedSessions.indexOf(event_data._session_key) >= 0){
-              return true; // Filter set and match
-            } else {
-              return false; // Filter set but no match
-            }
+      if(eventsFilter.checkedSessions.length == 0){
+        return true; // No filter set - show all events
+      } else {
+        if(event_data._session_key){
+          if(eventsFilter.checkedSessions.indexOf(event_data._session_key) >= 0){
+            return true; // Filter set and match
           } else {
-            return false; // Filter set but event is not associated with session
+            return false; // Filter set but no match
           }
+        } else {
+          return false; // Filter set but event is not associated with session
         }
       }
+    }
 
-      if(events.length > 0){
-        eventsPolledUntil = parseInt(events[0]._time)-1;
+    if(events.length > 0){
+      eventsPolledUntil = parseInt(events[0]._time)-1;
+    }
+    for(var n=events.length-1; n >= 0; n--){
+      var v = events[n];
+      if(passesFiltering(v)) {
+        renderEvent(v);
       }
-      for(var n=events.length-1; n >= 0; n--){
-        var v = events[n];
-        if(passesFiltering(v)) {
-          renderEvent(v);
-        }
-      };
-      var elems = $("p", feedInnerElem);
-      for(var n=maxevents; n < elems.length; n++){
-        $(elems[n]).remove();
-      }
-      if(pollRunning){
-        window.setTimeout(doEventsPoll(), timeout);
-      }
-    });
+    };
+    var elems = $("p", feedInnerElem);
+    for(var n=maxevents; n < elems.length; n++){
+      $(elems[n]).remove();
+    }
+    if(pollRunning){
+      window.setTimeout(doEventsPoll(), timeout);
+    }
   };
 
   function updateSession(session_data){

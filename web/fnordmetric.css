@@ -374,7 +374,7 @@ ul.session_list li .history{ float:right; color:#999; font-size:10px; line-heigh
 ul.session_list li .history:hover{ color:#333; text-decoration:underline; }
 
 .sessions_feed{ min-width:300px; min-height:100px; float:left; }
-.sessions_feed ul.feed_inner{ margin:5px 15px; min-height:100px; padding:0px; }
+.sessions_feed ul.feed_inner{ margin:5px 15px; min-height:100px; padding:0px; padding-top:47px; }
 .sessions_feed ul.feed_inner li{ list-style-type:none; border-bottom:1px solid #e2e2e2; min-height:54px; }
 .sessions_feed ul.feed_inner li .message{ font-size:12px; line-height:19px; padding-top:9px; display:block; }
 .sessions_feed ul.feed_inner li .properties{ margin-left:50px; font-size:10px; display:block; color:#555; }
