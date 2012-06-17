@@ -852,7 +852,12 @@ Rickshaw.Fixtures.Time = function() {
 	};
 
 	this.formatDate = function(d) {
-		return d.toLocaleString().match(/, (\w+ \w+ \w+)/)[1];
+		var exp = d.toLocaleString().match(/^(\w+ \w+ \w+)/);
+
+    if (exp)
+      return exp[1];
+
+    return 0;
 	};
 
 	this.formatTime = function(d) {
