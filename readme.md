@@ -322,6 +322,9 @@ Contributors
 + Lars Gierth (http://github.com/lgierth)
 + Ross Kaffenberger (http://github.com/rossta)
 + Kunal Modi (http://github.com/kunalmodi)
++ Michael Fairchild (http://github.com/fairchild)
++ James Cox (http://github.com/imajes)
++ Pieter Noordhuis (http://github.com/pietern)
 
 To contribute, please fork this repository, make your changes and run the 
 specs, commit them to your github repository and send me a pull request.
