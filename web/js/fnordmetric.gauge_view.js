@@ -90,12 +90,34 @@ FnordMetric.views.gaugeView = (function(gauge_name){
           padding: '12px 20px 10px 20px'
         })
         .append('<a class="button dark" style="height:30px; float:right; margin:1px; line-height:30px;">OK</a>')
-        .append('<input class="input ropen" style="width:100px;" placeholder="DD.MM.YYYY" />')
-        .append('<input class="input lopen" style="width:50px;" placeholder="HH:MM" />')
+        .append('<input class="input ropen start_date" style="width:100px;" placeholder="DD.MM.YYYY" />')
+        .append('<input class="input lopen start_time" style="width:50px;" placeholder="HH:MM" />')
         .append('<span style="margin:0 15px; color:#999;">&mdash;</span>')
-        .append('<input class="input ropen" style="width:100px;" placeholder="DD.MM.YYYY" />')
-        .append('<input class="input lopen" style="width:50px;" placeholder="HH:MM" />')
+        .append('<input class="input ropen end_date" style="width:100px;" placeholder="DD.MM.YYYY" />')
+        .append('<input type="text" class="input lopen end_time" style="width:50px;" placeholder="HH:MM" />')
     );
+
+    $.mask.definitions['~']='[0-5]';
+    $.mask.definitions['%']='[0-2]';
+    $.mask.definitions['$']='[0-2]';
+    $.mask.definitions['#']='[0-3]';
+
+    $('.start_date', modal)
+      .mask("#9.$9.2099")
+      .val(FnordMetric.util.dateFormat(start_timestamp).split(" ")[0]);
+
+    $('.start_time', modal)
+      .mask("%9:~9")
+      .val(FnordMetric.util.dateFormat(start_timestamp).split(" ")[1]);
+
+    $('.end_date', modal)
+      .mask("#9.$9.2099")
+      .val(FnordMetric.util.dateFormat(end_timestamp).split(" ")[0]);
+
+    $('.end_time', modal)
+      .mask("%9:~9")
+      .val(FnordMetric.util.dateFormat(end_timestamp).split(" ")[1]);
+
 
     /*for(n=0; n < 10; n++){
       var interval = now;
