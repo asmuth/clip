@@ -2,8 +2,8 @@ FnordMetric v1.0
 ================
 
 
-BACKLOG
--------
+TODO
+----
 
 - gauge-view: interval selection dropdown 
 - async report generation / cache heatup
@@ -11,20 +11,21 @@ BACKLOG
 - caching
 
 - fix pie widget
-- namespace picker in sidebar
-- distgauge: render std. deviation
-- timeseries-gauge: overview series weights
-- timeseries-widget: cardinal on/off should be skeuomorph
-- timeseries-gauge: punchcards
-- overview view: gauge list (a'la github graphs landing)
-- overview view: num active users, system stats (realtime widget)
-- split up fnordmetric.namespace block into multiple files
 - fix html widget
 - fix toplist widget
-- fix specs
-- incr_fraction: implement progressive
-- timeseries gauge: restrict to max resolution
+- timeseries-widget: cardinal on/off should be skeuomorph
+
+- namespace picker in sidebar
 - fix session view
+- split up fnordmetric.namespace block into multiple files
+- distgauge: render std. deviation
+- timeseries-gauge: overview series weights
+- timeseries-gauge: punchcards
+- incr_fraction: implement progressive
+- overview view: gauge list (a'la github graphs landing)
+- overview view: num active users, system stats (realtime widget)
+- timeseries gauge: restrict to max resolution
+- fix specs
 - new readme
 - new full_example.rb
 - formatter: num, time, currency, percent, time_of_day

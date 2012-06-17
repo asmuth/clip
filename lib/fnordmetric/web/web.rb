@@ -13,7 +13,7 @@ class FnordMetric::Web
   def initialized
     server = @opts[:server].downcase
 
-    middleware_stack = @opts[:use]
+    middleware_stack = @opts[:use] || []
 
     websocket = FnordMetric::WebSocket.new
     webapp    = FnordMetric::App.new(@opts)
@@ -25,7 +25,7 @@ class FnordMetric::Web
       map "/stream" do
         run websocket
       end
-      
+
       map "/" do
         middleware_stack.each do |middleware| 
           use(*middleware[0..1], &middleware[2])
