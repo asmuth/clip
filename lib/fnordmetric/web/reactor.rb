@@ -20,6 +20,7 @@ private
     messages << discover(ns) if event["type"] == "discover_request"
     messages << widget(ns, event) if event["type"] == "widget_request"
     messages << gauge(ns, event) if event["type"] == "render_request"
+    messages << active_users(ns, event) if event["type"] == "active_users_request"
     messages.flatten.compact
   end
 
@@ -47,6 +48,14 @@ private
       { "type" => "discover_response", "gauge_key" => gauge_key, "view" => "gauge",
         "title" => gauge.title, "group" => gauge.group, "tick" => gauge.tick }
     end.compact]
+  end
+
+  def active_users(namespace, event)
+    puts "FUBAR"
+
+    {
+      :type => "active_users_response"
+    }
   end
 
 end

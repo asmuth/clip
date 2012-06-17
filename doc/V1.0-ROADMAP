@@ -12,6 +12,7 @@ TODO
 - timeseries-widget: cardinal on/off should be skeuomorph
 - proper cmdline output (status?)
 - caching
+- fix specs
 
 - namespace picker in sidebar
 - split up fnordmetric.namespace block into multiple files
@@ -21,7 +22,6 @@ TODO
 - timeseries-gauge: punchcards
 - incr_fraction: implement progressive
 - timeseries gauge: restrict to max resolution
-- fix specs
 - formatter: num, time, currency, percent, time_of_day
 - minimize/pack js + css
 - put images into one sprite
@@ -34,8 +34,8 @@ TODO
 
 
 
-README
-------
+WIKI
+----
 
   > fnordmetric
     > sending data 

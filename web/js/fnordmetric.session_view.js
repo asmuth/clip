@@ -58,16 +58,16 @@ FnordMetric.views.sessionView = (function(){
 
   function doSessionPoll(){
     return (function(){
-      $.ajax({
+      /*$.ajax({
         url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/sessions',
         success: callbackSessionPoll()
-      });
+      });*/
     });
   };
 
   function loadEventHistory(params){
     feedInnerElem.html('');
-    $.ajax({
+    /*$.ajax({
       url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/events',
       data: params,
       success: function(_data, _status){
@@ -76,7 +76,7 @@ FnordMetric.views.sessionView = (function(){
           if(data[n]){ renderEvent(data[n]); }
         }
       }
-    });
+    });*/
   }
 
   function callbackSessionPoll(){
@@ -89,7 +89,7 @@ FnordMetric.views.sessionView = (function(){
   };
 
   function loadEventTypes(){
-    $.ajax({
+    /*$.ajax({
       url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/event_types',
       success: function(_data){
         var data = JSON.parse(_data);
@@ -99,7 +99,7 @@ FnordMetric.views.sessionView = (function(){
           }
         });
       }
-    });
+    });*/
   };
 
   function setCheckboxesCheckedState(types_state, sessions_state) {
@@ -145,12 +145,25 @@ FnordMetric.views.sessionView = (function(){
 
   function doEventsPoll(){
     return (function(){
-      $.ajax({
+
+      /*$.ajax({
         url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/events?since='+eventsPolledUntil,
         success: callbackEventsPoll()
+      });*/
+
+      console.log("pub", eventsPolledUntil);
+
+      FnordMetric.publish({
+        "type": "active_users_request",
+        "since": eventsPolledUntil
       });
+
     });
   };
+
+  function announce(evt){
+    console.log(evt);
+  }
 
   function callbackEventsPoll(){
     return (function(_data, _status){
@@ -324,6 +337,7 @@ FnordMetric.views.sessionView = (function(){
   return {
     load: load,
     resize: resize,
+    announce: announce,
     close: close
   };
 
