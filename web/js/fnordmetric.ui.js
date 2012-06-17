@@ -65,8 +65,15 @@ FnordMetric.ui.modal = function(opts){
 }
 
 FnordMetric.ui.close_modal = function(elem){
-  $(elem).closest('.modal').removeClass('visible').fadeOut();
-  $('.modal', $(elem)).removeClass('visible').fadeOut();
+  var m = $('.modal', $(elem));
+  m.push($(elem).closest('.modal'));
+
+  m.removeClass('visible');
+
+  window.setTimeout(function(){
+    m.remove();
+  }, 500);
+
   $('.modal_backdrop').removeClass('visible').fadeOut();
 }
 

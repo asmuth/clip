@@ -76,6 +76,31 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     FnordMetric.resizeView();
   }
 
+  function interval_modal_done(modal){
+    var _sdate = $('.start_date', modal).val().match('([0-9]{2})\.([0-9]{2})\.([0-9]{4})')
+    var _stime = $('.start_time', modal).val().match('([0-9]{2}):([0-9]{2})')
+    var _edate = $('.end_date', modal).val().match('([0-9]{2})\.([0-9]{2})\.([0-9]{4})')
+    var _etime = $('.end_time', modal).val().match('([0-9]{2}):([0-9]{2})')
+
+    if (_sdate && _stime && _edate && _etime){
+      var sd = new Date();
+      var ed = new Date();
+      sd.setHours(parseInt(_stime[1]), parseInt(_stime[2]), 0);
+      sd.setFullYear(parseInt(_sdate[3]), parseInt(_sdate[2])-1, parseInt(_sdate[1]));
+      ed.setHours(parseInt(_etime[1]), parseInt(_etime[2]), 0);
+      ed.setFullYear(parseInt(_edate[3]), parseInt(_edate[2])-1, parseInt(_edate[1]));
+
+      if (sd && ed && (ed.getTime() > sd.getTime())) {
+        start_timestamp = parseInt(sd.getTime() / 1000);
+        end_timestamp   = parseInt(ed.getTime() / 1000);
+
+        load_interval();
+        FnordMetric.ui.close_modal('body');
+      }
+
+    }
+  }
+
   function open_interval_modal(){
     var modal = $('<div>');
 
@@ -97,25 +122,36 @@ FnordMetric.views.gaugeView = (function(gauge_name){
         .append('<input type="text" class="input lopen end_time" style="width:50px;" placeholder="HH:MM" />')
     );
 
+    var enter_catcher = function(e){
+      if (e.which == 13) interval_modal_done(modal);
+    }
+
     $.mask.definitions['~']='[0-5]';
     $.mask.definitions['%']='[0-2]';
     $.mask.definitions['$']='[0-2]';
     $.mask.definitions['#']='[0-3]';
 
+    $('.button', modal)
+      .click(function(){ interval_modal_done(modal) });
+
     $('.start_date', modal)
       .mask("#9.$9.2099")
+      .keypress(enter_catcher)
       .val(FnordMetric.util.dateFormat(start_timestamp).split(" ")[0]);
 
     $('.start_time', modal)
       .mask("%9:~9")
+      .keypress(enter_catcher)
       .val(FnordMetric.util.dateFormat(start_timestamp).split(" ")[1]);
 
     $('.end_date', modal)
       .mask("#9.$9.2099")
+      .keypress(enter_catcher)
       .val(FnordMetric.util.dateFormat(end_timestamp).split(" ")[0]);
 
     $('.end_time', modal)
       .mask("%9:~9")
+      .keypress(enter_catcher)
       .val(FnordMetric.util.dateFormat(end_timestamp).split(" ")[1]);
 
 
