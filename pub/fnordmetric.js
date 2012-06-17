@@ -368,7 +368,7 @@ var FnordMetric = (function(){
           var series_data = [];
 
           for(p in raw_data){
-            series_data.push([parseInt(p)*1000, raw_data[p]||0]);
+            series_data.push([parseInt(p)*1000, parseFloat(raw_data[p])||0]);
             max_y = Math.max(max_y, raw_data[p]);
           }
 
@@ -382,7 +382,9 @@ var FnordMetric = (function(){
             });
           }
 
-          chart.yAxis[0].setExtremes(0,max_y);
+          if (opts.plot_style != 'area')
+            chart.yAxis[0].setExtremes(0, max_y);
+
           chart.redraw();
 
           // shown on the *first* gauge load
@@ -432,6 +434,12 @@ var FnordMetric = (function(){
       }
 
       function drawChart(){
+        var plotOptions = { line: { shadow: false, lineWidth: 3 } };
+
+        if (opts.plot_options) {
+          plotOptions = opts.plot_options;
+        }
+
         chart = new Highcharts.Chart({
           chart: {
             renderTo: 'container-'+widget_uid,
@@ -446,11 +454,7 @@ var FnordMetric = (function(){
             title: (opts.x_title||''),
             labels: { step: 2 }
           },
-          yAxis: {
-            title: (opts.y_title||''),
-            min: 0,
-            max: 1000
-          },
+          yAxis: { title: (opts.y_title||'') },
           legend: {
             layout: 'horizontal',
             align: 'top',
@@ -460,12 +464,7 @@ var FnordMetric = (function(){
             margin: 25,
             borderWidth: 0
           },
-          plotOptions: {
-            line: {
-              shadow: false,
-              lineWidth: 3
-            }
-          }
+          plotOptions: plotOptions
         });
       }
 
