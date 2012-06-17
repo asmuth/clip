@@ -83,7 +83,7 @@ class FnordMetric::Gauge
   end
 
   def sync_redis
-    @sync_redis ||= Redis.new # FIXPAUL
+    @sync_redis ||= FnordMetric.mk_redis # FIXPAUL
   end
 
   def error!(msg)

@@ -75,7 +75,7 @@ module FnordMetric
     def id
       @event_id
     end
-    
+
     def data(key=nil)
       key ? @data[key.to_s] : @data
     end

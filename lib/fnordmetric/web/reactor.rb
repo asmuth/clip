@@ -1,6 +1,7 @@
 class FnordMetric::Reactor
 
   def initialize
+    @redis = FnordMetric.mk_redis
     @namespaces = FnordMetric.namespaces
   end
 

@@ -45,7 +45,6 @@ class FnordMetric::App < Sinatra::Base
     track_event((8**32).to_s(36), parse_params(params))
   end
 
-
   # FIXPAUL move to websockets
   get '/:namespace/dashboard/:dashboard' do
     dashboard = current_namespace.dashboards.fetch(params[:dashboard])

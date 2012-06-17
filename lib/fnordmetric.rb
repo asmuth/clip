@@ -46,8 +46,11 @@ module FnordMetric
     @@pool.push(obj)
   end
 
-  def self.firehose
-    @@firehose
+  def self.mk_redis
+    host, port = options[:redis_url].gsub("redis://", "").split(":")
+    redis_opts = { :host => host }
+    redis_opts.merge!(:port => port) if port
+    Redis.new(redis_opts)
   end
 
   def self.default_options(opts = {})
