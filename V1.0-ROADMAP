@@ -8,13 +8,12 @@ TODO
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 - caching
-
 - timeseries-widget: cardinal on/off should be skeuomorph
-- namespace picker in sidebar
 - fix session view
-- split up fnordmetric.namespace block into multiple files
 - proper cmdline output (status?)
 
+- namespace picker in sidebar
+- split up fnordmetric.namespace block into multiple files
 - pie widget (+ fix for old first)
 - distgauge: render std. deviation
 - timeseries-gauge: overview series weights
