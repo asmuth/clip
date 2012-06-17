@@ -123,6 +123,7 @@ FnordMetric.namespace :myapp do
     end
   end
 
+
   # OLD DSL (will be supported forever, allows finer-grained control)
 
   gauge :events_per_hour, :tick => 1.hour
