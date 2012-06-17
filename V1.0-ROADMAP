@@ -6,7 +6,6 @@ TODO
 ----
 
 - gauge-view: interval selection dropdown 
-- async report generation / cache heatup
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 - caching
 
@@ -30,6 +29,7 @@ TODO
 - put images into one sprite
 - nice empty states
 
+- async report generation / cache heatup
 - favicon (F)
 - overview view: gauge list (a'la github graphs landing)
 - overview view: num active users, system stats (realtime widget)
