@@ -5,13 +5,13 @@ FnordMetric v1.0
 TODO
 ----
 
+- fix session view
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
-- caching
-- fix session view
 
 - timeseries-widget: cardinal on/off should be skeuomorph
 - proper cmdline output (status?)
+- caching
 
 - namespace picker in sidebar
 - split up fnordmetric.namespace block into multiple files
