@@ -852,7 +852,7 @@ Rickshaw.Fixtures.Time = function() {
 	};
 
 	this.formatDate = function(d) {
-		var exp = d.toLocaleString().match(/^(\w+ \w+ \w+)/);
+    var exp = FnordMetric.util.dateFormat(d.getTime()).match(/^([0-9]+\.[0-9]+)/);
 
     if (exp)
       return exp[1];
@@ -1438,7 +1438,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 		var graph = this.graph = args.graph;
 
 		this.xFormatter = args.xFormatter || function(x) {
-			return new Date( x * 1000 ).toLocaleString();
+      return FnordMetric.util.dateFormat(x);
 		};
 
 		this.yFormatter = args.yFormatter || function(y) {
