@@ -7,16 +7,13 @@ FnordMetric.widgets.htmlWidget = function(){
       'marginBottom': 20,
       'overflow': 'hidden'
     });
-    
+
     var container = $('<div></div>')
       .addClass('html_container')
       .html(opts.html);
-    
+
     opts.elem.append(container);
   }
-  
-  function updateValues(opts){}
-  function updatedisplay(opts, diff_factor){}
 
   return {
     render: render

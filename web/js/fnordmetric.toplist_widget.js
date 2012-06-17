@@ -8,7 +8,6 @@ FnordMetric.widgets.toplistWidget = function(){
     var current_gauge = false;
 
     /* if (!opts.tick){ opts.tick = opts.ticks[0]; } */
-    return this;
 
     var headbar = $('<div class="headbar"></div>').append(
       $('<h2></h2>').html(opts.title)
@@ -20,6 +19,8 @@ FnordMetric.widgets.toplistWidget = function(){
     }).append(
       $('<div class="toplist_inner"></div>')
     );
+
+    return this;
 
     if(!opts.ticks){
       var first = true;
