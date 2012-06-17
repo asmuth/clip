@@ -2,6 +2,8 @@ FnordMetric.widgets.pieWidget = function(){
 
   function render(opts){
 
+    return drawLayout();
+
     var widget_uid = FnordMetric.util.getNextWidgetUID();
     var chart=false;
 
@@ -38,7 +40,7 @@ FnordMetric.widgets.pieWidget = function(){
         ]);
       }
 
-      chart = new Highcharts.Chart({
+      /*chart = new Highcharts.Chart({
         chart: {
           renderTo: 'container-'+widget_uid,
           defaultSeriesType: 'pie',
@@ -78,7 +80,7 @@ FnordMetric.widgets.pieWidget = function(){
             data: series_data
           }
         ]
-      });
+      });*/
 
       //chart.redraw();
       $(opts.elem).css('opacity', 1);
