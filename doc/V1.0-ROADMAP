@@ -5,8 +5,6 @@ FnordMetric v1.0
 TODO
 ----
 
-- gauge-view: interval selection dropdown 
-
 - timeseries-widget: cardinal on/off should be skeuomorph
 - proper cmdline output (status?)
 - caching

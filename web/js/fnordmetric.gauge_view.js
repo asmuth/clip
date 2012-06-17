@@ -15,7 +15,8 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     viewport.append($('<div class="gauge_viewport"></div>'));
 
     conf.title = gauge_name;
-    tick = Math.max(3600, FnordMetric.gauges[gauge_name].tick);
+    tick = FnordMetric.gauges[gauge_name].tick
+    ctick = Math.max(3600, tick);
 
     FnordMetric.ui.navbar($('.navbar', viewport), {
       breadcrumb: [ 
@@ -30,7 +31,7 @@ FnordMetric.views.gaugeView = (function(gauge_name){
 
     var now = parseInt((new Date()).getTime() / 1000);
 
-    start_timestamp = atTick((now-(tick*24)));
+    start_timestamp = atTick((now-(ctick*24)));
     end_timestamp   = atTick(now);
 
     updateDatepicker();
@@ -38,7 +39,7 @@ FnordMetric.views.gaugeView = (function(gauge_name){
   }
 
   function atTick(t){
-    return (Math.ceil(t / tick) * tick);
+    return (Math.ceil(t / ctick) * ctick);
   }
 
   function close(){
@@ -107,6 +108,31 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     var interval_list = $('<ul>');
     var now = parseInt((new Date()).getTime() / 1000);
 
+    var enter_catcher = function(e){
+      if (e.which == 13) interval_modal_done(modal);
+    }
+
+    var offset_opener = function(e){
+      var now = parseInt((new Date()).getTime() / 1000);
+
+      if($(this).attr('data-offset-off')){
+        now -= eval($(this).attr('data-offset-off'));
+      }
+
+      var off = eval($(this).attr('data-offset'));
+
+      if (off > ctick) {
+        start_timestamp = atTick((now-(off)));
+        end_timestamp   = atTick(now);
+      } else {
+        start_timestamp = now-off;
+        end_timestamp   = now;
+      }
+
+      load_interval();
+      FnordMetric.ui.close_modal('body');
+    }
+
     modal.append(
       $('<div>')
         .css({
@@ -120,11 +146,39 @@ FnordMetric.views.gaugeView = (function(gauge_name){
         .append('<span style="margin:0 15px; color:#999;">&mdash;</span>')
         .append('<input class="input ropen end_date" style="width:100px;" placeholder="DD.MM.YYYY" />')
         .append('<input type="text" class="input lopen end_time" style="width:50px;" placeholder="HH:MM" />')
-    );
+      ).append($('<div style="padding:15px 20px;" class="offset_links ui_fancylinks">'));
 
-    var enter_catcher = function(e){
-      if (e.which == 13) interval_modal_done(modal);
+    if (tick < 300){
+      $('.offset_links', modal)
+        .append('<b>Just now</b>')
+        .append('<a data-offset="5*60">Last 5 Minutes</a> ')
+        .append('<a data-offset="10*60">Last 10 Minutes</a> ')
+        .append('<a data-offset="15*60">Last 15 Minutes</a> ')
+        .append('<a data-offset="30*60">Last 30 Minutes</a> ')
+        .append('<a data-offset="45*60">Last 45 Minutes</a><br /><br />');
     }
+
+    if (tick < 4000){
+      $('.offset_links', modal)
+      .append('<b>Hourly</b>')
+      .append('<a data-offset="3600">Last Hour</a> ')
+      .append('<a data-offset="3600*3">Last 3 Hours</a> ')
+      .append('<a data-offset="3600*6">Last 6 Hours</a> ')
+      .append('<a data-offset="3600*12">Last 12 Hours</a> ')
+      .append('<a data-offset="3600*18">Last 18 Hours</a><br /><br />');
+    }
+
+    $('.offset_links', modal)
+      .append('<b>Daily</b>')
+      .append('<a data-offset="3600*24">Today</a>, ')
+      .append('<a data-offset="3600*24" data-offset-off="3600*24">Yesterday</a> ')
+      .append('<a data-offset="3600*3*24">Last 3 Days</a> ')
+      .append('<a data-offset="3600*7*24">Last 7 Days</a> ')
+      .append('<a data-offset="3600*7*24*14">Last 14 Days</a> ')
+      .append('<a data-offset="3600*7*24*30">Last 30 Days</a> ');
+
+    $('.offset_links a', modal)
+      .click(offset_opener);
 
     $.mask.definitions['~']='[0-5]';
     $.mask.definitions['%']='[0-2]';
@@ -171,7 +225,7 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     }*/
 
     FnordMetric.ui.modal({
-      height: 340,
+      height: 280,
       max_width: 570,
       content: modal
     });
