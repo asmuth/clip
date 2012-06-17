@@ -1,13 +1,10 @@
 FnordMetric.widgets.toplistWidget = function(){
 
   var opts;
+  var current_gauge = false;
 
   function render(_opts){
     opts = _opts;
-
-    var current_gauge = false;
-
-    /* if (!opts.tick){ opts.tick = opts.ticks[0]; } */
 
     var headbar = $('<div class="headbar"></div>').append(
       $('<h2></h2>').html(opts.title)
@@ -43,7 +40,6 @@ FnordMetric.widgets.toplistWidget = function(){
       loadGauge(opts.gauges[0], true);
     }
 
-    /*
     if(opts.autoupdate){
       var secs = parseInt(opts.autoupdate);
       if(secs > 0){
@@ -58,21 +54,6 @@ FnordMetric.widgets.toplistWidget = function(){
       }
     };
 
-  */
-
-  }
-
-  function requestValuesAsync(){
-    FnordMetric.publish({
-      "type": "widget_request",
-      "klass": "ToplistWidget",
-      "gauges": opts.gauges,
-      "cmd": "values_for",
-      "since": opts.start_timestamp,
-      "until": opts.end_timestamp,
-      "tick": opts.tick,
-      "widget_key": opts.widget_key
-    })
   }
 
   function loadGauge(gkey, silent){
@@ -83,9 +64,6 @@ FnordMetric.widgets.toplistWidget = function(){
 
     if(!silent)
         $('.toplist_inner', opts.elem).addClass('loading');
-
-    var _url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + gkey;
-    if(opts.tick){ _url += ("?tick=" + opts.tick); }
 
     FnordMetric.publish({
       "type": "widget_request",

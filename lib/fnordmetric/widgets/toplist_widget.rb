@@ -1,11 +1,16 @@
 class FnordMetric::ToplistWidget < FnordMetric::Widget
 
   def self.execute(namespace, event)
+    t = Time.now.to_i
+
+    return false unless event["gauge"]
+
     resp = if event["cmd"] == "values_for"
       {
         :cmd => :values_for,
         :gauge => event["gauge"],
-        :values => execute_values_for(namespace.gauges[event["gauge"].to_sym], Time.now.to_i)
+        :values => execute_values_for(namespace.gauges[event["gauge"].to_sym], t),
+        :count  => namespace.gauges[event["gauge"].to_sym].field_values_total(t)
       }
     end
 
