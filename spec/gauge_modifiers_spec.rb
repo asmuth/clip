@@ -294,7 +294,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
-      @redis.zscore(gauge_key, "whoopwhoop").should == "13"
+      @redis.zscore(gauge_key, "whoopwhoop").to_f.should == 13.0
       @redis.get(gauge_key+"-count").should == "1"
     end
 
@@ -311,7 +311,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now }
         context.call(event, @redis_wrap)
       end
-      @redis.zscore(gauge_key, "whoopwhoop").should == "5"
+      @redis.zscore(gauge_key, "whoopwhoop").to_f.should == 5.0
       @redis.get(gauge_key+"-count").should == "7"
     end
 
@@ -328,7 +328,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :myfield => "fnordybar" }
         context.call(event, @redis_wrap)
       end
-      @redis.zscore(gauge_key, "fnordybar").should == "16"
+      @redis.zscore(gauge_key, "fnordybar").to_f.should == 16.0
     end
 
     it "should increment_unique a three-dim gauge" do  
@@ -346,7 +346,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
-      @redis.zscore(gauge_key, "mykey").should == "84"
+      @redis.zscore(gauge_key, "mykey").to_f.should == 84.0
       @redis.get(gauge_key+"-sessions-count").should == "6"
       @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
     end
@@ -367,7 +367,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
-      @redis.zscore(gauge_key, "otherkey").should == "54"
+      @redis.zscore(gauge_key, "otherkey").to_f.should == 54.0
       @redis.get(gauge_key+"-sessions-count").should == "5"
       @redis.smembers(gauge_key+"-sessions").should == ["mysesskey"]
     end
@@ -397,7 +397,7 @@ describe "increment three-dimensional gagues" do
     it "should set a value on a two-dim gauge" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_1463-10-695280200"
       @redis.zadd(gauge_key, 65, "asdasdkey")
-      @redis.zscore(gauge_key, "asdasdkey").should == "65"
+      @redis.zscore(gauge_key, "asdasdkey").to_f.should == 65.0
       create_gauge_context({
         :key => "mygauge_1463",
         :three_dimensional => true,
@@ -408,7 +408,7 @@ describe "increment three-dimensional gagues" do
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap)
       end
-      @redis.zscore(gauge_key, "asdasdkey").should == "23"
+      @redis.zscore(gauge_key, "asdasdkey").to_f.should == 23.0
     end
 
   end

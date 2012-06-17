@@ -9,13 +9,21 @@ module FnordMetric
     def self.all(opts)    
       range_opts = { :withscores => true }
       range_opts.merge!(:limit => [0,opts[:limit]]) if opts[:limit]
-      opts[:redis].zrevrangebyscore(
+      events = opts[:redis].zrevrangebyscore(
         "#{opts[:namespace_prefix]}-timeline", 
         '+inf', opts[:since]||'0',
         range_opts
-      ).in_groups_of(2).map do |event_id, ts|
+      )
+
+      unless events.first.is_a?(Array)
+        events = events.in_groups_of(2).map do |event_id, ts|
+          [event_id, Float(ts)]
+        end
+      end
+
+      events.map do |event_id, ts|
         next if event_id.blank?
-        find(event_id, opts).tap{ |e| e.time = ts }
+        find(event_id, opts).tap{ |e| e.time = "%.f" % ts }
       end
     end
 
