@@ -8,10 +8,9 @@ plotting and counting functions as ruby blocks!
 [ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
 
 
-http://fnordmetric.io/
+[Full Documentation](http://github.com/paulasmuth/fnordmetric/wiki)
 
-
-[ ![Screenshot](https://github.com/paulasmuth/fnordmetric2/raw/v1.0/doc/preview3.png) ](http://fnordmetric.io/)
+[ ![Screenshot](https://github.com/paulasmuth/fnordmetric2/raw/v1.0/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
 
@@ -62,7 +61,7 @@ or in your Gemfile:
 Documentation
 -------------
 
-Please visit http://fnordmetric.io/ for the full documentation.
+    here be dragons
 
 
 Resources
@@ -87,6 +86,8 @@ Full Example
 
 Contributors
 ------------
+
+(One patch or more)
 
 + Simon Menke (http://github.com/fd)
 + Bruno Michel (http://github.com/nono)
