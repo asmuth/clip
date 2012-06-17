@@ -9,6 +9,8 @@ plotting and counting functions as ruby blocks!
 
 [SCREENCAST][2]: the FnordMetric-instance we use to track our social dating app.
 
+[FnordMetric v1.0 unstable/alpha release](http://github.com/paulasmuth/fnordmetric/tree/v1.0-alpha) **important: if you want to contribute, please do so on the v1.0 branch**
+
 ----
 
 FnordMetric keeps track of your data and draws nice timeline plots.
@@ -80,7 +82,7 @@ Installation
 
 or in your Gemfile:
 
-    gem 'fnordmetric', '>= 0.6.3'
+    gem 'fnordmetric', '~> 0.7.5'
 
 
 Documentation
