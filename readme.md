@@ -309,6 +309,8 @@ FnordMetric.run
 Contributors
 ------------
 
+http://github.com/paulasmuth/fnordmetric/graphs/contributors
+
 (One patch or more)
 
 + Simon Menke (http://github.com/fd)
