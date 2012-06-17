@@ -9,7 +9,6 @@ TODO
 - proper cmdline output (status?)
 - caching
 - fix specs
-
 - namespace picker in sidebar
 - split up fnordmetric.namespace block into multiple files
 - pie widget (+ fix for old first)
@@ -22,12 +21,7 @@ TODO
 - minimize/pack js + css
 - put images into one sprite
 - nice empty states
-
-- async report generation / cache heatup
 - favicon (F)
-- overview view: gauge list (a'la github graphs landing)
-- overview view: num active users, system stats (realtime widget)
-
 
 
 WIKI
@@ -72,6 +66,8 @@ WIKI
 IDEAS
 -----
 
+  > overview view: gauge list (a'la github graphs landing)
+  > overview view: num active users, system stats (realtime widget)
   > special events (incr, observe etc)
   > distgauge: histograms tab
   > toplgauge: tabs: compare
