@@ -141,9 +141,9 @@ FnordMetric.widgets.barsWidget = function(){
 
     function redrawDatepicker(){
       $('.datepicker', opts.elem).html(
-        opts.start_timestamp +
+        FnordMetric.util.dateFormat(opts.start_timestamp) +
         '&nbsp;&dash;&nbsp;' +
-        opts.end_timestamp
+        FnordMetric.util.dateFormat(opts.end_timestamp)
       );
     }
 
