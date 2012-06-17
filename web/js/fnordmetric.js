@@ -118,6 +118,7 @@ var FnordMetric = (function(){
   }
 
   function loadView(_view){
+    FnordMetric.ui.close_modal('body');
     if(currentView){ currentView.close(); }
     canvasElem.html('loading!');
     currentView = _view;

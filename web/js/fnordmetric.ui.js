@@ -37,6 +37,7 @@ FnordMetric.ui.navbar = function(elem, opts){
 }
 
 FnordMetric.ui.modal = function(opts){
+  FnordMetric.ui.close_modal('body');
   width = $("#viewport").width() * 0.8;
 
   if (opts.max_width)
@@ -65,6 +66,7 @@ FnordMetric.ui.modal = function(opts){
 
 FnordMetric.ui.close_modal = function(elem){
   $(elem).closest('.modal').removeClass('visible').fadeOut();
+  $('.modal', $(elem)).removeClass('visible').fadeOut();
   $('.modal_backdrop').removeClass('visible').fadeOut();
 }
 

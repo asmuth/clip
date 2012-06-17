@@ -77,10 +77,27 @@ FnordMetric.views.gaugeView = (function(gauge_name){
   }
 
   function open_interval_modal(){
+    var modal = $('<div>');
+
     var interval_list = $('<ul>');
     var now = parseInt((new Date()).getTime() / 1000);
 
-    for(n=0; n < 10; n++){
+    modal.append(
+      $('<div>')
+        .css({
+          background: '#f2f2f2',
+          borderBottom: "1px solid #ddd",
+          padding: '12px 20px 10px 20px'
+        })
+        .append('<a class="button dark" style="height:30px; float:right; margin:1px; line-height:30px;">OK</a>')
+        .append('<input class="input ropen" style="width:100px;" placeholder="DD.MM.YYYY" />')
+        .append('<input class="input lopen" style="width:50px;" placeholder="HH:MM" />')
+        .append('<span style="margin:0 15px; color:#999;">&mdash;</span>')
+        .append('<input class="input ropen" style="width:100px;" placeholder="DD.MM.YYYY" />')
+        .append('<input class="input lopen" style="width:50px;" placeholder="HH:MM" />')
+    );
+
+    /*for(n=0; n < 10; n++){
       var interval = now;
       now -= 3600;
       interval += "-" + now;
@@ -93,12 +110,12 @@ FnordMetric.views.gaugeView = (function(gauge_name){
             select_interval($(this).attr('data'))
           }))
       );
-    }
+    }*/
 
     FnordMetric.ui.modal({
-      height: 400,
-      max_width: 900,
-      content: interval_list
+      height: 340,
+      max_width: 570,
+      content: modal
     });
   }
 
