@@ -16,6 +16,8 @@ TODO
 - namespace picker in sidebar
 - fix session view
 - split up fnordmetric.namespace block into multiple files
+- proper cmdline output (status?)
+
 - distgauge: render std. deviation
 - timeseries-gauge: overview series weights
 - timeseries-gauge: punchcards

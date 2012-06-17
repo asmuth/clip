@@ -17,10 +17,8 @@ FnordMetric.widgets.toplistWidget = function(){
       'marginBottom': 20,
       'overflow': 'hidden'
     }).append(
-      $('<div class="toplist_inner"></div>')
+      $('<div class="toplist_inner ui_toplist"></div>')
     );
-
-    return this;
 
     if(!opts.ticks){
       var first = true;
@@ -44,7 +42,8 @@ FnordMetric.widgets.toplistWidget = function(){
     } else {
       loadGauge(opts.gauges[0], true);
     }
-    
+
+    /*
     if(opts.autoupdate){
       var secs = parseInt(opts.autoupdate);
       if(secs > 0){
@@ -59,46 +58,77 @@ FnordMetric.widgets.toplistWidget = function(){
       }
     };
 
-    function loadGauge(gkey, silent){
-      if(!gkey){ gkey = current_gauge; }
-      current_gauge = gkey;
-      if(!silent){ $('.toplist_inner', opts.elem).addClass('loading'); }
-      var _url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + gkey;
-      if(opts.tick){ _url += ("?tick=" + opts.tick); }
-      $.get(_url, function(_resp){
-        var resp = JSON.parse(_resp);
-        renderGauge(gkey, resp);
-      })
-    }
-
-    function renderGauge(gkey, gdata){
-      var _elem = $('.toplist_inner', opts.elem).removeClass('loading').html('');
-      $(gdata.values).each(function(n, _gd){
-        var _perc  = (parseInt(gdata.values[n][1]) / parseFloat(gdata.count))*100;
-        var _item = $('<div class="toplist_item"><div class="title"></div><div class="value"></div><div class="percent"></div></div>');
-
-        if(opts.click_callback){
-          var lelem = $('<a href="#" class="link">').html(gdata.values[n][0]);
-          var lclbck; eval("lclbck="+opts.click_callback)
-          lelem.attr('data-key', gdata.values[n][0]);
-          lelem.click(function(){ lclbck($(this).attr('data-key')); return false; });
-          $('.title', _item).html(lelem)
-        } else {
-          $('.title', _item).html(gdata.values[n][0]);  
-        }
-        
-
-        $('.value', _item).html(FnordMetric.util.formatGaugeValue(gkey, parseInt(gdata.values[n][1])));
-        $('.percent', _item).html(_perc.toFixed(1) + '%');
-        _elem.append(_item);
-      });
-    }
+  */
 
   }
 
+  function requestValuesAsync(){
+    FnordMetric.publish({
+      "type": "widget_request",
+      "klass": "ToplistWidget",
+      "gauges": opts.gauges,
+      "cmd": "values_for",
+      "since": opts.start_timestamp,
+      "until": opts.end_timestamp,
+      "tick": opts.tick,
+      "widget_key": opts.widget_key
+    })
+  }
+
+  function loadGauge(gkey, silent){
+    if(!gkey)
+      gkey = current_gauge;
+
+    current_gauge = gkey;
+
+    if(!silent)
+        $('.toplist_inner', opts.elem).addClass('loading');
+
+    var _url = FnordMetric.p + '/' + FnordMetric.currentNamespace + '/gauge/' + gkey;
+    if(opts.tick){ _url += ("?tick=" + opts.tick); }
+
+    FnordMetric.publish({
+      "type": "widget_request",
+      "klass": "ToplistWidget",
+      "gauge": current_gauge,
+      "cmd": "values_for",
+      "tick": opts.tick,
+      "widget_key": opts.widget_key
+    });
+  }
+
+  function renderGauge(gkey, gdata){
+    var _elem = $('.toplist_inner', opts.elem).removeClass('loading').html('');
+    $(gdata.values).each(function(n, _gd){
+      var _perc  = (parseInt(gdata.values[n][1]) / parseFloat(gdata.count))*100;
+      var _item = $('<div class="toplist_item"><div class="title"></div><div class="value"></div><div class="percent"></div></div>');
+
+      if(opts.click_callback){
+        var lelem = $('<a href="#" class="link">').html(gdata.values[n][0]);
+        var lclbck; eval("lclbck="+opts.click_callback)
+        lelem.attr('data-key', gdata.values[n][0]);
+        lelem.click(function(){ lclbck($(this).attr('data-key')); return false; });
+        $('.title', _item).html(lelem)
+      } else {
+        $('.title', _item).html(gdata.values[n][0]);  
+      }
+
+      $('.value', _item).html(FnordMetric.util.formatGaugeValue(gkey, parseInt(gdata.values[n][1])));
+      $('.percent', _item).html(_perc.toFixed(1) + '%');
+      _elem.append(_item);
+    });
+  }
+
+  function announce(evt){
+
+    if((evt.widget_key == opts.widget_key) && ((evt.class == "widget_response") && (evt.cmd == "values_for")))
+        renderGauge(evt.gauge, evt);
+
+  }
 
   return {
-    render: render
+    render: render,
+    announce: announce
   };
 
 };
