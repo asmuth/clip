@@ -5,15 +5,5 @@ FnordMetric::TICKS = lambda{ |tick, span| [tick, 60, 300, 1200, 3600, 86400]
   .uniq }
 
 
-FnordMetric::DEFAULT_PROC = lambda{ |arg|
-
-  unless flags[:hide_active_users]
-
-    eventfeed_gauge :active_users,
-      :title => "Active Users",
-      :group => "Overview"
-
-  end
-
-}
+FnordMetric::DEFAULT_PROC = lambda{ |arg| }
 
