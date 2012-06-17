@@ -696,3 +696,41 @@ margin-top: 60px;
 .numbers_container .ui_trend{ font-size:16px; float:left; white-space:nowrap; }
 
 #preload{ visibility:hidden; position:absolute; height:0px; width:0px; overflow:hidden; }
+
+ul.ui_numbers{
+  list-style-type:none;
+  margin:15px 25px;
+}
+
+ul.ui_numbers li{
+  float:left;
+  height:40px;
+  margin-right:20px;
+  margin-left:10px;
+}
+
+ul.ui_numbers li .val{
+  float:left;
+  font-size: 33px;
+  font-weight: bold;
+  color: #333;
+}
+
+ul.ui_numbers li .title{
+  float:left;
+  font-size: 12px;
+  font-weight: normal;
+  color: #999;
+  width: 77px;
+  line-height: 13px;
+  margin-top: -3px;
+  margin-left: 9px;
+}
+
+ul.ui_numbers li.twoline .title{
+  float:none; margin-left:0px; width:100px; font-weight:normal; font-size:11px; margin-top:-7px; margin-bottom:1px;
+}
+
+ul.ui_numbers li.twoline .val{
+  font-size:16px;
+}

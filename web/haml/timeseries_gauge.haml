@@ -1,5 +1,19 @@
 .report_view
 
+  %ul.ui_numbers(style="float:right;")
+    %li
+      .val 123
+      .title Number of Samples
+    %li
+      .val 123
+      .title Number of Samples
+    %li
+      .val 123
+      .title Number of Samples
+    %li.twoline
+      .title Time Range
+      .val= (fancy_timerange(@interval) * " - ")
+
   %h1= @opts[:title] || @opts[:key]
   %h3= (fancy_timerange(@interval) * " &nbsp;&mdash;&nbsp; ")
 
@@ -25,8 +39,8 @@
         -@series.each do |series, sopts|
           %th(style="padding-top:4px")
             %span.swatch(style="background:#{sopts[:color]}; display:inline-block;")
-            %span= series  
-      
+            %span= series
+
       %tr
         %td Total (<span class="ui_value" data-timerange="#{@interval.size}"></span>)
         -@series.each do |series, sopts|
