@@ -35,12 +35,12 @@ var FnordMetric = (function(){
     $('#sidebar')
       .html('');
 
-    if(!conf.hide_overview){
+    /*if(!conf.hide_overview){
       renderSidebarGroup('Overview')
         .append($('<li class="overview">')
           .append('<span class="picto piechart">')
           .append($('<a href="#" class="title">').html('App Overview')));
-    }
+    }*/
 
     for(gkey in gauges){
       if(!gauges[gkey].group){ gauges[gkey].group = 'Gauges'; }

@@ -22,17 +22,18 @@ TODO
 - timeseries-gauge: overview series weights
 - timeseries-gauge: punchcards
 - incr_fraction: implement progressive
-- overview view: gauge list (a'la github graphs landing)
-- overview view: num active users, system stats (realtime widget)
 - timeseries gauge: restrict to max resolution
 - fix specs
 - new readme
 - new full_example.rb
 - formatter: num, time, currency, percent, time_of_day
-- favicon (F)
 - minimize/pack js + css
 - put images into one sprite
 - nice empty states
+
+- favicon (F)
+- overview view: gauge list (a'la github graphs landing)
+- overview view: num active users, system stats (realtime widget)
 
 
 
@@ -90,7 +91,7 @@ IDEAS
 
 CHANGELOG
 ---------
-  
+
   > improved ui
   > highcharts is dead, long live d3.js :)
   > websockets instead of ajax
