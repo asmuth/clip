@@ -580,12 +580,12 @@ position: relative;
   margin-top:47px;
 }
 
-#sidebar .ul_head{ margin-top:30px; color:#ccc; font-weight:bold; text-transform:uppercase; padding-left:17px; font-size:11px; margin-bottom:5px; }
+#sidebar .ul_head{ margin-top:30px; color:#ccc; font-weight:bold; text-transform:uppercase; padding-left:25px; font-size:11px; margin-bottom:5px; }
 #sidebar ul{ list-style-type:none; padding:0; margin:0; }
-#sidebar ul li{ height:28px; line-height:28px; cursor:pointer; font-size:13px; padding-left:17px; }
+#sidebar ul li{ height:28px; line-height:28px; cursor:pointer; font-size:13px; padding-left:25px; }
 #sidebar ul li a{ color:#ccc; text-decoration:none; }
 /*#sidebar ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:27px; }*/
-#sidebar ul li i{ margin-right: 5px; color: #AAA; font-size: 11px; position: relative; left: -2px; top: -1px; }
+#sidebar ul li i{ margin-right: 5px; color: #AAA; font-size: 11px; position: relative; left: -2px; top: -1px; display:none; }
 #sidebar ul li:hover, #tabs ul li:hover:after{ color:#fff; }
 #sidebar ul li:hover .picto{ opacity:1; }
 #sidebar ul li.active i, #sidebar ul li.active a{ color:#eee; }

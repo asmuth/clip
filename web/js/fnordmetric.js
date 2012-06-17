@@ -47,7 +47,6 @@ var FnordMetric = (function(){
     if(!conf.hide_active_users){
       renderSidebarGroup('Overview')
         .append($('<li class="overview">')
-          .append('<span class="picto piechart">')
           .append($('<a href="#" class="title">').html('Active Users'))
           .click(function(){ renderSessionView(); }));
     }
