@@ -53,7 +53,7 @@ Installation
 
 or in your Gemfile:
 
-    gem 'fnordmetric', '>= 0.6.3'
+    gem 'fnordmetric', '>= 0.9.6'
 
 
 Documentation
@@ -122,6 +122,7 @@ FnordMetric.namespace :myapp do
       incr :number_of_signups, :via_twitter, 1
     end
   end
+
 
   # OLD DSL (will be supported forever, allows finer-grained control)
 
