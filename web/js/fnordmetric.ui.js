@@ -30,7 +30,7 @@ FnordMetric.ui.navbar = function(elem, opts){
   if(opts.datepicker){
     elem.append(
       $('<a class="button datepicker">')
-        .html('<div class="date">22.05.12 15:00 &nbsp;&mdash;&nbsp; 23.05.12 15:00</div><i class="icon-calendar"></i>'));  
+        .html('<div class="date">&nbsp;</div><i class="icon-calendar"></i>'));  
   }
 
   elem.append(head);

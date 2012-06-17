@@ -4,6 +4,9 @@ FnordMetric.views.gaugeView = (function(gauge_name){
   var viewport = null;
   var tabs = [];
   var conf = {};
+  var tick;
+
+  var start_timestamp, end_timestamp;
 
   function load(_viewport){
     viewport = _viewport;
@@ -12,6 +15,7 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     viewport.append($('<div class="gauge_viewport"></div>'));
 
     conf.title = gauge_name;
+    tick = Math.max(3600, FnordMetric.gauges[gauge_name].tick);
 
     FnordMetric.ui.navbar($('.navbar', viewport), {
       breadcrumb: [ 
@@ -25,19 +29,32 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     });
 
     var now = parseInt((new Date()).getTime() / 1000);
-    //var init_interval = (now-(FnordMetric.gauges[gauge_name].tick*24)) + "-" + now;
-    var init_interval = (now-(3600*24)) + "-" + now;
 
+    start_timestamp = atTick((now-(tick*24)));
+    end_timestamp   = atTick(now);
 
-    load_interval(init_interval);
+    updateDatepicker();
+    load_interval();
+  }
+
+  function atTick(t){
+    return (Math.ceil(t / tick) * tick);
   }
 
   function close(){
 
   }
 
-  function resize(){   
+  function resize(){
 
+  }
+
+  function updateDatepicker(){
+    $(".navbar .datepicker .date", viewport).html(
+      FnordMetric.util.dateFormat(start_timestamp) +
+      '&nbsp;&dash;&nbsp;' +
+      FnordMetric.util.dateFormat(end_timestamp)
+    );
   }
 
   function announce(evt){
@@ -83,14 +100,14 @@ FnordMetric.views.gaugeView = (function(gauge_name){
     });
   }
 
-  function load_interval(interval){
+  function load_interval(){
     $('.gauge_viewport', viewport)
       .html("");
 
     FnordMetric.publish({
       "gauge": gauge_name,
       "type": "render_request",
-      "interval": interval
+      "interval": start_timestamp + "-" + end_timestamp
     })
   }
 
