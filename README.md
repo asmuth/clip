@@ -53,7 +53,7 @@ Installation
 
 or in your Gemfile:
 
-    gem 'fnordmetric', '>= 0.6.3'
+    gem 'fnordmetric', '>= 0.9.6'
 
 
 Documentation
