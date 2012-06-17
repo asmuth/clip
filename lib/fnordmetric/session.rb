@@ -1,21 +1,21 @@
 class FnordMetric::Session
- 
+
   attr_accessor :updated_at, :name, :picture
 
   @@meta_attributes = %w(name picture)
 
-  def self.create(opts)        
+  def self.create(opts)
     redis = opts.fetch(:redis)
-    event = opts[:event]   
+    event = opts[:event]
 
     hash = Digest::MD5.hexdigest(event[:_session])
     set_key = "#{opts[:namespace_prefix]}-session"
 
     self.new(hash).tap do |session|
-      session.add_redis(redis, set_key)      
-      session.add_event(event)    
+      session.add_redis(redis, set_key)
+      session.add_event(event)
       session.expire(opts[:session_data_ttl])
-    end    
+    end
   end
 
   def self.find(session_key, opts)

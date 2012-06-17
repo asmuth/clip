@@ -5,7 +5,6 @@ FnordMetric v1.0
 TODO
 ----
 
-- fix session view
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 

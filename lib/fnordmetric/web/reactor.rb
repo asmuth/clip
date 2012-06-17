@@ -64,9 +64,23 @@ private
       namespace.events(:all, find_opts)
     end
 
+    sessions = namespace.sessions(:all, :limit => 100).map do |session|
+      session.fetch_data!
+      session.to_json
+    end
+
+    types_key = namespace.key_prefix("type-")
+    types = if event["first_poll"]
+      @redis.keys("#{types_key}*").map{ |k| k.gsub(types_key,'') }
+    else
+      []
+    end
+
     {
       :type => "active_users_response",
-      :events => events.map(&:to_json)
+      :sessions => sessions,
+      :events => events.map(&:to_json),
+      :types => types
     }
   end
 

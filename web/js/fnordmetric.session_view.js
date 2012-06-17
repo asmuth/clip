@@ -5,7 +5,7 @@ FnordMetric.views.sessionView = (function(){
   var typeListElem  = $('<ul class="event_type_list"></ul>');
 
   var filterElem = $('<div class="events_sidebar"></div>')
-    .append("<div class='headbar small'>Types</div>")
+    .append("<div class='headbar small'>Event Types</div>")
     .append(typeListElem);
 
   var feedElem = $('<div class="sessions_feed"></div>').append(feedInnerElem);
@@ -15,6 +15,7 @@ FnordMetric.views.sessionView = (function(){
   var eventsFilter = {uncheckedTypes: [], checkedSessions: []};
   var sessionData = {};
   var pollRunning = true;
+  var first_poll  = true;
 
   function load(elem){
     eventsPolledUntil = parseInt(new Date().getTime()/10000);
@@ -62,6 +63,7 @@ FnordMetric.views.sessionView = (function(){
         url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/sessions',
         success: callbackSessionPoll()
       });*/
+      sortSessions();
     });
   };
 
@@ -88,18 +90,13 @@ FnordMetric.views.sessionView = (function(){
     });
   };
 
-  function loadEventTypes(){
-    /*$.ajax({
-      url: FnordMetric.p + '/' + FnordMetric.currentNamespace+'/event_types',
-      success: function(_data){
-        var data = JSON.parse(_data);
-        $(data.types).each(function(i,v){
-          if((v.length > 0) && (v.slice(0,5)!='_set_')){
-            addEventType(v,v);
-          }
-        });
+  function loadEventTypes(data){
+    typeListElem.html('');
+    $(data).each(function(i,v){
+      if((v.length > 0) && (v.slice(0,5)!='_set_')){
+        addEventType(v,v);
       }
-    });*/
+    });
   };
 
   function setCheckboxesCheckedState(types_state, sessions_state) {
@@ -153,17 +150,21 @@ FnordMetric.views.sessionView = (function(){
 
       FnordMetric.publish({
         "type": "active_users_request",
+        "first_poll": first_poll,
         "since": eventsPolledUntil
       });
+
+      first_poll = false;
 
     });
   };
 
   function announce(evt){
-    if (evt.type == "active_users_response")
+    if (evt.type == "active_users_response"){
       callbackEventsPoll(evt);
-
-    console.log(evt);
+      $(evt.sessions).each(function(){ updateSession(this); });
+      if(evt.types.length > 0){ loadEventTypes(evt.types); }
+    }
   }
 
   function callbackEventsPoll(data){
@@ -223,7 +224,7 @@ FnordMetric.views.sessionView = (function(){
   }
 
   function sortSessions(){
-    console.log("fixme: sort and splice to 100");
+    console.log("fixpaul: sort and splice to 100");
   }
 
   function renderSession(session_data){
