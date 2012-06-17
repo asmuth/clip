@@ -1,8 +1,26 @@
 .report_view
 
+  %ul.ui_numbers(style="float:right;")
+    %li
+      .val
+        %span.ui_value(data-value="#{@samples}")
+      .title Number of Samples
+    %li
+      .val
+        %span.ui_value(data-value="#{@values.mean}")
+      .title Total Value Mean
+    %li
+      .val
+        %span.ui_value(data-value="#{@values.median}")
+      .title Total Value Median
+    %li.twoline
+      .title Time Range
+      .val= (fancy_timerange(@interval) * " - ")
+
+
   %h1= @opts[:title]
-  %h3= (fancy_timerange(@interval) * " &nbsp;&mdash;&nbsp; ")
-  
+  %h3 Numeric Distribution Gauge
+
   %ul.ui_tabs.tabs
     %li.active{"data-tab" => "Overview"}
       %a{:href => "#"} Overview
@@ -50,7 +68,7 @@
           %span.desc Mode
           %span.value.ui_value{:"data-value" => @values.mode }
 
-    
+
     .headbar
       %h2 Mean, Min and Max over Time
     .widget_mmm_timeseries

@@ -1,7 +1,16 @@
 .report_view
 
-  %h1= @opts[:title]
-  %h3= (fancy_timerange(@interval) * " &nbsp;&mdash;&nbsp; ")
+  %ul.ui_numbers(style="float:right;")
+    %li
+      .val
+        %span.ui_value(data-value="#{@toplist.total}")
+      .title Number of Samples
+    %li.twoline
+      .title Time Range
+      .val= (fancy_timerange(@interval) * " - ")
+
+  %h1= @opts[:title] || @opts[:key]
+  %h3 Toplist Gauge
 
   %ul.ui_tabs.toplgauge_tabs
     %li.active{"data-tab" => "Overview", :onclick=>"toplgaugeTabClick.apply(this);"}
@@ -16,7 +25,7 @@
 
 
   .ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
-    
+
     .widget_toplist.toplgauge_tab.overview
       .headbar
         %h2 Top #{key_nouns.last}
@@ -32,7 +41,7 @@
             .percent
               %span.ui_value{:"data-percent" => @toplist.percentage(item) }
               %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
-              
+
 
     .toplgauge_tab.trending(style="display:none;")
       .headbar

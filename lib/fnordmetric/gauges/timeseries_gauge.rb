@@ -27,11 +27,14 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
 
     @series = Hash.new
     @zooms  = FnordMetric::TICKS[tick, @interval.size]
-    
+
+    @total = 0
+
     @opts[:series].each do |series|
       ts = FnordMetric::Timeseries.new
 
       fraction_values_in(@interval, series).each do |time, frac|
+        @total += frac.first # FIXPAUL
         ts.incr_fraction(time, *frac)
       end
 

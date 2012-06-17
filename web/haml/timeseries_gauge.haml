@@ -2,20 +2,15 @@
 
   %ul.ui_numbers(style="float:right;")
     %li
-      .val 123
-      .title Number of Samples
-    %li
-      .val 123
-      .title Number of Samples
-    %li
-      .val 123
+      .val
+        %span.ui_value(data-value="#{@total}")
       .title Number of Samples
     %li.twoline
       .title Time Range
       .val= (fancy_timerange(@interval) * " - ")
 
   %h1= @opts[:title] || @opts[:key]
-  %h3= (fancy_timerange(@interval) * " &nbsp;&mdash;&nbsp; ")
+  %h3 Numeric Timeseries Gauge
 
   %ul.ui_tabs.tabs
     %li.active{"data-tab" => "Overview"}

@@ -12,6 +12,8 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
     @histogram = FnordMetric::Histogram.new
     @values = []
 
+    @samples = 0
+
     @mmm_timeseries = Hash.new do |h,k| 
       h[k] = { :min => nil, :max => 0, :avg => [] }
     end
@@ -22,6 +24,8 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
       sync_redis.hgetall(tkey).each do |_val, _count|        
         _count = _count.to_f
         _val = _val.to_f * @opts[:value_scale]
+
+        @samples += _count
 
         @histogram[_val] += _count
         @values += [_val] * _count
@@ -69,7 +73,7 @@ private
       value = value.to_i
     elsif value.is_a?(String) && value.match(/[0-9]+(\.|,)[0-9]+/)
       value = value.to_f
-    end    
+    end
 
     unless value.is_a?(Float) || value.is_a?(Fixnum)
       return FnordMetric.error("gauge '#{name}': observe called with non-numerical value: #{value}")
