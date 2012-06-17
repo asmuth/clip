@@ -8,8 +8,6 @@ plotting and counting functions as ruby blocks!
 [ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
 
 
-[Full Documentation](http://github.com/paulasmuth/fnordmetric/wiki)
-
 [ ![Screenshot](https://github.com/paulasmuth/fnordmetric2/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
