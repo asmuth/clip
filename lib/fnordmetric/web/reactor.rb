@@ -7,7 +7,9 @@ class FnordMetric::Reactor
   def execute(*args)
     execute_unsafe(*args)
   rescue Exception => e
-    FnordMetric.error("reactor crashed: " + e.to_s); []
+    FnordMetric.error("reactor crashed: " + e.to_s) 
+    puts (e.backtrace * "\n") if ENV["FNORDMETRIC_ENV"] == "dev"
+    []
   end
 
 private
