@@ -62,12 +62,19 @@ module FnordMetric::GaugeCalculations
 
   def field_values_at(time, opts={}, &block)
     opts[:limit] ||= (opts[:max_fields] || 50)
-    sync_redis.zrevrange(
+
+    res = sync_redis.zrevrange(
       tick_key(time, opts[:append]), 
       0, opts[:limit]-1, 
       :withscores => true
     ).in_groups_of(2).map do |key, val|
       [key, calculate_value(val, time, opts, block)]
+    end
+
+    if res.first.is_a?(Array) && res.first.first.is_a?(Array)
+      res[0]
+    else
+      res
     end
   end
 

@@ -86,9 +86,9 @@ FnordMetric.widgets.barsWidget = function(){
         data: []
       }];
 
-      if (values.length == 0) {
+
+      if (values.length == 0)
         values.push(["No data yet",1]);
-      }
 
       for(var n=0; n < values.length; n++){
         gconfig.series[0].data.push({
