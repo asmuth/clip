@@ -155,9 +155,7 @@ var FnordMetric = (function(){
   };
 
   function connect(){
-    var socket_url = document.location.hostname + ":" + (parseInt(document.location.port)+1);
-
-    socket = new WebSocket("ws://" + socket_url);
+    socket = new WebSocket("ws://" + document.location.host + '/stream');
     socket.onmessage = socketMessage;
     socket.onclose = socketClose;
     socket.onopen = socketOpen;

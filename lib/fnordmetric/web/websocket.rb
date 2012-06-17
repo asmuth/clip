@@ -1,42 +1,32 @@
 require "eventmachine"
-require "em-websocket"
+require 'rack/websocket'
 require "em-hiredis"
 require "json"
 
-class FnordMetric::WebSocket
+class FnordMetric::WebSocket < Rack::WebSocket::Application
 
-  def initialize(opts)
-    @opts = {
-      :host => "0.0.0.0", 
-      :port => 8080
-    }.merge(opts)
+  def initialize
+    super
 
     @reactor = FnordMetric::Reactor.new
-
     @uuid = "websocket-#{get_uuid}"
-
-    start_websocket
   end
 
-private
+  def on_open(env)
+    # socket openened :)
+  end
 
-  def start_websocket
-    EventMachine::WebSocket.start(@opts) do |socket|
-      socket.onopen do
+  def on_message(env, message)
+    begin
+      message = JSON.parse(message)
+    rescue
+      puts "websocket: invalid json"
+    else
+      message["_eid"] ||= get_uuid
+      message["_sender"] = @uuid
 
-        socket.onmessage do |message|
-          #puts "received: #{message}"
-          begin
-            message = JSON.parse(message)
-          rescue
-            puts "websocket: invalid json"
-          else
-            message["_eid"] ||= get_uuid
-            message["_sender"] = @uuid
-            msg = @reactor.execute(socket, message) # FIXPAUL
-          end
-        end
-
+      @reactor.execute(self, message).each do |m|
+        send_data m.to_json
       end
     end
   end

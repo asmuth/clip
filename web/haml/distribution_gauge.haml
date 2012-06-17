@@ -39,10 +39,10 @@
         .number
           %span.desc Median
           %span.value.ui_value{:"data-value" => @values.median }
-        .number
-          %span.desc Trend
-          %span.value
-            .ui_trend{:"data-trend" => (@mmm_timeseries_arr[0][-1][:avg].mean / (@mmm_timeseries_arr[-1][-1][:avg].mean - @mmm_timeseries_arr[0][-1][:avg].mean) rescue 0) }
+        / .number
+        /   %span.desc Trend
+        /   %span.value
+        /     .ui_trend{:"data-trend" => (@mmm_timeseries_arr[0][-1][:avg].mean / (@mmm_timeseries_arr[-1][-1][:avg].mean - @mmm_timeseries_arr[0][-1][:avg].mean) rescue 0) }
         .number
           %span.desc Range
           %span.value.ui_value{:"data-value" => @values.range }
@@ -67,7 +67,7 @@
     elem: $('.widget_histogram_bars'),
     height: 320,
     no_headbar: true,
-    values: #{@histogram.json_histogram([23, @histogram.max || 1].min)}
+    values: #{@histogram.json_histogram(@histogram_mode)}
   });
 
 

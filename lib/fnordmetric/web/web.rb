@@ -10,9 +10,30 @@ class FnordMetric::Web
     FnordMetric.register(self)
   end
 
-  def initialized   
+  def initialized
     server = @opts[:server].downcase
-    app = FnordMetric::App.new(@opts)
+
+    middleware_stack = @opts[:use]
+
+    websocket = FnordMetric::WebSocket.new
+    webapp    = FnordMetric::App.new(@opts)
+
+    dispatch  = Rack::Builder.app do
+      use Rack::CommonLogger
+      use Rack::ShowExceptions
+
+      map "/stream" do
+        run websocket
+      end
+      
+      map "/" do
+        middleware_stack.each do |middleware| 
+          use(*middleware[0..1], &middleware[2])
+        end
+
+        run webapp
+      end
+    end
 
     unless ["thin", "hatetepe"].include? server
       raise "Need an EventMachine webserver, but #{server} isn't"
@@ -22,16 +43,11 @@ class FnordMetric::Web
     port = @opts[:port]
 
     Rack::Server.start(
-      :app => app,
+      :app => dispatch,
       :server => server,
       :Host => host, 
       :Port => port
     ) && FnordMetric.log("listening on http://#{host}:#{port}")
-        
-    FnordMetric::WebSocket.new(
-      :host => host, 
-      :port => (port.to_i+1)
-    ) && FnordMetric.log("listening on ws://#{host}:#{port.to_i+1}")
   end
 
 end
