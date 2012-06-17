@@ -9,6 +9,7 @@ TODO
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 - caching
 - fix session view
+
 - timeseries-widget: cardinal on/off should be skeuomorph
 - proper cmdline output (status?)
 

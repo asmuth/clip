@@ -37,15 +37,20 @@ var FnordMetric = (function(){
     $('#sidebar')
       .html('');
 
-    if(!conf.hide_active_users)
-      renderSidebarGroup('Overview');
-
     /*if(!conf.hide_overview){
       renderSidebarGroup('Overview')
         .append($('<li class="overview">')
           .append('<span class="picto piechart">')
           .append($('<a href="#" class="title">').html('App Overview')));
     }*/
+
+    if(!conf.hide_active_users){
+      renderSidebarGroup('Overview')
+        .append($('<li class="overview">')
+          .append('<span class="picto piechart">')
+          .append($('<a href="#" class="title">').html('Active Users'))
+          .click(function(){ renderSessionView(); }));
+    }
 
     for(gkey in gauges){
       if(!gauges[gkey].group){ gauges[gkey].group = 'Gauges'; }
@@ -105,6 +110,7 @@ var FnordMetric = (function(){
   }
 
   function renderSessionView(){
+    window.location.hash = 'active_users';
     loadView(FnordMetric.views.sessionView());
   }
 
@@ -199,7 +205,7 @@ var FnordMetric = (function(){
             .append('<h1>Oopsiedaisy, lost the connection...</h1>')
             .append('<h2>Reconnecting to server...</h2>')
             .append('<div class="loader_white">')));
-      
+
       window.setTimeout(function(){
         $('.flash_msg_over').addClass('visible');  
       }, 20);
@@ -215,7 +221,10 @@ var FnordMetric = (function(){
         elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(11)+'"]');
       } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
         elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(7)+'"]');
+      } else if(window.location.hash == "#active_users") {
+        renderSessionView();
       }
+
       if (elem.length > 0) {
         navigatedViaHash = true;
         elem.click();

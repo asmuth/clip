@@ -3,15 +3,13 @@ FnordMetric.views.sessionView = (function(){
   var listElem = $('<ul class="session_list"></ul>');
   var feedInnerElem = $('<ul class="feed_inner"></ul>');
   var typeListElem  = $('<ul class="event_type_list"></ul>');
-  var filterElem = $('<div class="events_sidebar"></div>').html(
-    $('<div class="headbar small"></div>').html('Event Types')
-  ).append(typeListElem);
-  var feedElem = $('<div class="sessions_feed"></div>').html(
-    $('<div class="headbar small"></div>').html('Event Feed')
-  ).append(feedInnerElem);
-  var sideElem = $('<div class="sessions_sidebar"></div>').html(
-    $('<div class="headbar small"></div>').html('Active Users')
-  ).append(listElem);
+
+  var filterElem = $('<div class="events_sidebar"></div>')
+    .append("<div class='headbar small'>Types</div>")
+    .append(typeListElem);
+
+  var feedElem = $('<div class="sessions_feed"></div>').append(feedInnerElem);
+  var sideElem = $('<div class="sessions_sidebar"></div>').append(listElem);
 
   var eventsPolledUntil = false;
   var eventsFilter = {uncheckedTypes: [], checkedSessions: []};
@@ -20,10 +18,25 @@ FnordMetric.views.sessionView = (function(){
 
   function load(elem){
     eventsPolledUntil = parseInt(new Date().getTime()/10000);
+
     elem.html('')
-      .append(filterElem)
+      .append('<div class="navbar"></div>');
+
+    FnordMetric.ui.navbar($('.navbar', viewport), {
+      breadcrumb: [
+        ["Fnord", "/group/fnord"],
+        ["Active Users", "/active_users"]
+      ],
+      buttons: [
+        ["<i class='icon-refresh'></i>Refresh", function(){  }]
+      ]
+    });
+
+    elem
+      .append(filterElem.css('marginTop', '47px'))
       .append(feedElem)
       .append(sideElem);
+
     startPoll();
     loadEventTypes();
   };

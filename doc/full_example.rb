@@ -3,8 +3,8 @@ require "fnordmetric"
 
 FnordMetric.namespace :myapp do
 
-  hide_overview
-  hide_active_users
+  # hide_overview
+  # hide_active_users
 
 
   # NEW DSL (v1.0 upwards)
