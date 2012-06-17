@@ -45,17 +45,17 @@ FnordMetric.views.dashboardView = (function(dashboard_name){
       /* argh... */
       if(widget.klass=='TimelineWidget'){ _w = FnordMetric.widgets.timeseriesWidget(); }
       if(widget.klass=='NumbersWidget'){ _w = FnordMetric.widgets.numbersWidget(); }
-      if(widget.klass=='RealtimeValueWidget'){ _w = FnordMetric.widgets.realtimeValueWidget(); }
-      
-      if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
+
       if(widget.klass=='ToplistWidget'){ _w = FnordMetric.widgets.toplistWidget(); }
+
+      if(widget.klass=='BarsWidget'){ _w = FnordMetric.widgets.barsWidget(); }
       if(widget.klass=='PieWidget'){ _w = FnordMetric.widgets.pieWidget(); }
       if(widget.klass=="HtmlWidget") { _w = FnordMetric.widgets.htmlWidget(); }
 
       if(_w){ 
         _w.render(widget);
         widget_objs[wkey] = _w;
-      }    
+      }
     }
 
     function resizeWidget(wkey){

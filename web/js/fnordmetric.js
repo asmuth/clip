@@ -6,6 +6,8 @@ var FnordMetric = (function(){
   var gauges = {};
   var socket, conf;
 
+  var navigatedViaHash = false;
+
   function renderDashboard(_dash){
     loadView(FnordMetric.views.dashboardView(_dash));
   }
@@ -96,7 +98,7 @@ var FnordMetric = (function(){
 
       if(!currentView && (window.location.hash.length < 2)){
         sidebarClick.apply($('#sidebar li:first'));
-      } else if(!currentView){      
+      } else if(!navigatedViaHash){
         navigateViaHash();
       }
     }
@@ -207,11 +209,16 @@ var FnordMetric = (function(){
   }
 
   function navigateViaHash(){
-    if(window.location.hash){
-      if(!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
-        $('#sidebar li.dashboard[data-token="'+window.location.hash.slice(11)+'"]').trigger('click');
+    if (window.location.hash){
+      var elem = null;
+      if (!!window.location.hash.match(/^#dashboard\/[a-zA-Z_0-9-]+$/)) {
+        elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(11)+'"]');
       } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
-        $('#sidebar li.gauge[data-token="'+window.location.hash.slice(7)+'"]').click();
+        elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(7)+'"]');
+      }
+      if (elem.length > 0) {
+        navigatedViaHash = true;
+        elem.click();
       }
     }
   }
