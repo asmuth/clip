@@ -6,14 +6,19 @@ module FnordMetric
     #def self.track!(event_type, event_data)
     #end
 
-    def self.all(opts)    
+    def self.all(opts)
+      opts[:limit] ||= 100
+
       range_opts = { :withscores => true }
       range_opts.merge!(:limit => [0,opts[:limit]]) if opts[:limit]
+
       events = opts[:redis].zrevrangebyscore(
         "#{opts[:namespace_prefix]}-timeline", 
         '+inf', opts[:since]||'0',
         range_opts
       )
+
+      events = events[0..opts[:limit] - 1]
 
       unless events.first.is_a?(Array)
         events = events.in_groups_of(2).map do |event_id, ts|

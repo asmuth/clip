@@ -222,10 +222,11 @@ var FnordMetric = (function(){
       } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
         elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(7)+'"]');
       } else if(window.location.hash == "#active_users") {
+        navigatedViaHash = true;
         renderSessionView();
       }
 
-      if (elem.length > 0) {
+      if (elem && (elem.length > 0)) {
         navigatedViaHash = true;
         elem.click();
       }

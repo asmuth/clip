@@ -194,9 +194,9 @@ end
 
 FnordMetric.options = {
   :event_queue_ttl  => 10, # all data that isn't processed within 10s is discarded to prevent memory overruns
-  :event_data_ttl   => 10,
+  :event_data_ttl   => 3600, # event data is stored for one hours (needed for the active users view)
   :session_data_ttl => 1,  # we don't care about session data for now
-  :redis_prefix => "fnordmetric" 
+  :redis_prefix => "fnordmetric"
 }
 
 def start_example_data_generator

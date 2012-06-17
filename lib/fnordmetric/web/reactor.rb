@@ -52,10 +52,21 @@ private
   end
 
   def active_users(namespace, event)
-    puts "FUBAR"
+    namespace.ready!(@redis)
+
+    events = if event["filter_by_type"]
+      namespace.events(:by_type, :type => event["type"])
+    elsif event["filter_by_session_key"]
+      namespace.events(:by_session_key, :session_key => params["session_key"])
+    else
+      find_opts = { :limit => 100 }
+      find_opts.merge!(:since => event["since"].to_i+1) if event["since"]
+      namespace.events(:all, find_opts)
+    end
 
     {
-      :type => "active_users_response"
+      :type => "active_users_response",
+      :events => events.map(&:to_json)
     }
   end
 
