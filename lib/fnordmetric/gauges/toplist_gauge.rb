@@ -11,8 +11,8 @@ class FnordMetric::ToplistGauge < FnordMetric::Gauge
         item, count = args.flatten[0..1] # what the fnord... ~paul
         @toplist.incr_item(_tick, item, count)
       end
-    end    
-  
+    end
+
     @toplist.total = @all_ticks.inject(0){ |s,t| s + sync_redis.get(tick_key(t, :total)).to_i }
 
     render_page(:toplist_gauge)
