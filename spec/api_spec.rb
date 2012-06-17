@@ -5,30 +5,30 @@ describe FnordMetric::Event do
   include FnordMetric
 
   before(:all) do
-    @now = Time.utc(1992,01,13,5,23,23).to_i   
+    @now = Time.utc(1992,01,13,5,23,23).to_i
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
 
-    @namespace = "fnordmetric-test-ns1234-api" 
+    @namespace = "fnordmetric-test-ns1234-api"
     @timeline = "#{@namespace}-timeline"
 
-    @opts = {         
+    @opts = {
       :namespace_prefix => "#{@namespace}",
       :redis_prefix => "fnordmetric-test",
       :redis => @redis
-    }  
+    }
     @api = FnordMetric::API.new @opts
   end
 
   describe "creating events using API" do
 
-    before(:each) do        
-      @redis.keys("fnordmetric-test-*").each { |k| @redis.del(k) }     
+    before(:each) do
+      @redis.keys("fnordmetric-test-*").each { |k| @redis.del(k) }
     end
 
     it "should create an event from a (json-)string" do
       json_string = {
-        :_type => "Fn0rd123", 
+        :_type => "Fn0rd123",
         :_time => @now
       }.to_json
       event_id = @api.event(json_string)
@@ -38,12 +38,22 @@ describe FnordMetric::Event do
 
     it "should create an event from a hash" do
       event_id = @api.event(
-        :_type => "Fn0rd234", 
+        :_type => "Fn0rd234",
         :_time => @now
       )
       event = FnordMetric::Event.find(event_id, @opts)
       event.type.should == "Fn0rd234"
     end
 
+  end
+end
+
+describe FnordMetric::API do
+  describe 'new api object' do
+    it 'use option from FnordMetric.option' do
+      FnordMetric.should_receive(:options).and_return(double('options'))
+      FnordMetric::API.any_instance.should_receive(:connect)
+      api = FnordMetric::API.new({})
+    end
   end
 end
