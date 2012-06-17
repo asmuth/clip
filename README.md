@@ -10,7 +10,7 @@ plotting and counting functions as ruby blocks!
 
 [Full Documentation](http://github.com/paulasmuth/fnordmetric/wiki)
 
-[ ![Screenshot](https://github.com/paulasmuth/fnordmetric2/raw/v1.0/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
+[ ![Screenshot](https://github.com/paulasmuth/fnordmetric2/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
 
