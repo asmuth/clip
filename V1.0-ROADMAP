@@ -11,6 +11,7 @@ BACKLOG
 - caching
 
 - fix pie widget
+- namespace picker in sidebar
 - distgauge: render std. deviation
 - timeseries-gauge: overview series weights
 - timeseries-widget: cardinal on/off should be skeuomorph
