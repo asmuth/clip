@@ -8,8 +8,8 @@ TODO
 - gauge-view: interval selection dropdown 
 - report: print number of samples, interval-size on topright via scalaexp-buttonstyle
 - caching
-- timeseries-widget: cardinal on/off should be skeuomorph
 - fix session view
+- timeseries-widget: cardinal on/off should be skeuomorph
 - proper cmdline output (status?)
 
 - namespace picker in sidebar
@@ -21,8 +21,6 @@ TODO
 - incr_fraction: implement progressive
 - timeseries gauge: restrict to max resolution
 - fix specs
-- new readme
-- new full_example.rb
 - formatter: num, time, currency, percent, time_of_day
 - minimize/pack js + css
 - put images into one sprite
