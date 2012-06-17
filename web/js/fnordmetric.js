@@ -35,6 +35,9 @@ var FnordMetric = (function(){
     $('#sidebar')
       .html('');
 
+    if(!conf.hide_active_users)
+      renderSidebarGroup('Overview');
+
     /*if(!conf.hide_overview){
       renderSidebarGroup('Overview')
         .append($('<li class="overview">')
