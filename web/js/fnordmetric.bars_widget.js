@@ -52,7 +52,7 @@ FnordMetric.widgets.barsWidget = function(){
             margin: '10px 23px 25px 23px',
           })
       );
-      
+
       if(opts.async_chart){
         $('.headbar', opts.elem).prepend(
           $('<div></div>')
@@ -85,6 +85,10 @@ FnordMetric.widgets.barsWidget = function(){
         color: opts.color,
         data: []
       }];
+
+      if (values.length == 0) {
+        values.push(["No data yet",1]);
+      }
 
       for(var n=0; n < values.length; n++){
         gconfig.series[0].data.push({
