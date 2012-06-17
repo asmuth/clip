@@ -54,7 +54,9 @@ FnordMetric.views.gaugeView = (function(gauge_name){
       FnordMetric.util.dateFormat(start_timestamp) +
       '&nbsp;&dash;&nbsp;' +
       FnordMetric.util.dateFormat(end_timestamp)
-    );
+    ).parent().click(function(){
+      open_interval_modal();
+    });
   }
 
   function announce(evt){
@@ -87,17 +89,25 @@ FnordMetric.views.gaugeView = (function(gauge_name){
           .html($('<a href="#">')
           .html(interval)
           .attr('data', interval)
-          .click(function(){ 
-            load_interval($(this).attr('data'));
-            FnordMetric.ui.close_modal(this);
+          .click(function(){
+            select_interval($(this).attr('data'))
           }))
       );
     }
 
     FnordMetric.ui.modal({
-      height: 700,
+      height: 400,
+      max_width: 900,
       content: interval_list
     });
+  }
+
+  function select_interval(inter){
+    start_timestamp = parseInt(inter.split("-")[0]);
+    end_timestamp = parseInt(inter.split("-")[1]);
+    updateDatepicker();
+    load_interval();
+    FnordMetric.ui.close_modal(this);
   }
 
   function load_interval(){

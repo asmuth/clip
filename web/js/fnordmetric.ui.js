@@ -39,6 +39,9 @@ FnordMetric.ui.navbar = function(elem, opts){
 FnordMetric.ui.modal = function(opts){
   width = $("#viewport").width() * 0.8;
 
+  if (opts.max_width)
+    width = Math.min(opts.max_width, width);
+
   var dialog_elem = $('<div class="modal">')
     .append($('<div class="modal_inner">'))
     .css({
@@ -48,9 +51,12 @@ FnordMetric.ui.modal = function(opts){
       "display": "none"
     });
 
-  if(opts.content){
+
+  if (opts.max_width)
+    dialog_elem.css('maxWidth', opts.max_width);
+
+  if (opts.content)
     dialog_elem.html(opts.content);
-  }    
 
   $("#viewport").append(dialog_elem);
   dialog_elem.show().addClass('visible');
