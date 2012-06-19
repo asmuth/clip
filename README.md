@@ -96,7 +96,7 @@ The slow way: HTTP-Post the json event to the fnordmetric webinterface.
 
     curl -X POST -d "_type=unicorn_seen" http://localhost:4242/events 
 
-The easy way: Stream one ore more newline-seperated json encoded events 
+The easy way: Stream one or more newline-seperated json encoded events 
 through a tcp connection.
 
     echo "\{\"_type\": \"unicorn_seen\"\}\n" | nc localhost 2323
