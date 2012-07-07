@@ -16,15 +16,53 @@ module FnordMetric::GaugeCalculations
     _t = tick_at(time)
     _v = redis.hget(key, _t)
 
-    calculate_value(_v, _t, opts, block)
+    _ret = calculate_value(_v, _t, opts, block)
+
+    if progressive? && _ret.blank?
+      _head_tick = redis.get key(:head_tick)
+      unless _head_tick.blank?
+        _head_tick = _head_tick.to_i
+        unless _head_tick.blank?
+          _head_value = redis.get key(:head)
+          if _head_tick > _t.to_i
+            _ret = 0
+          else
+            _ret = _head_value
+          end
+        end
+      end
+    end
+
+    _ret
   end
 
   def values_at(times, opts={}, &block)
     times = times.map{ |_t| tick_at(_t) }
     Hash.new.tap do |ret|
-      redis.hmget(key, *times).each_with_index do |_v, _n|
-        _t = times[_n]
-        ret[_t] = calculate_value(_v, _t, opts, block)
+
+      if progressive?
+        _head_tick = redis.get key(:head_tick)
+        unless _head_tick.blank?
+          _head_tick  = _head_tick.to_i
+          _head_value = redis.get key(:head)
+        end
+        redis.hmget(key, *times).each_with_index do |_v, _n|
+          _t = times[_n]
+          ret[_t] = calculate_value(_v, _t, opts, block)
+
+          if !_head_tick.blank? && ret[_t].blank?
+            if _head_tick > _t.to_i
+              ret[_t] = 0
+            else
+              ret[_t] = _head_value
+            end
+          end
+        end
+      else
+        redis.hmget(key, *times).each_with_index do |_v, _n|
+          _t = times[_n]
+          ret[_t] = calculate_value(_v, _t, opts, block)
+        end
       end
     end
   end
