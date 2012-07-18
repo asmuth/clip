@@ -8,7 +8,7 @@
 
     @timelines = Hash.new do |h,k|
       h[k] = Hash.new{ |h,k| h[k] = 0 }
-    end    
+    end
   end
 
   def incr_item(time, item, value)

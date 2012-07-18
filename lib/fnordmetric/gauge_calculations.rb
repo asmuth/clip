@@ -63,7 +63,7 @@ module FnordMetric::GaugeCalculations
   def field_values_at(time, opts={}, &block)
     opts[:max_fields] ||= 50
     field_values = sync_redis.zrevrange(
-      tick_key(time),
+      tick_key(time, opts[:append]),
       0, opts[:max_fields]-1,
       :withscores => true
     )
