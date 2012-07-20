@@ -5,23 +5,25 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
     colors = ["#2F635E", "#606B36", "#727070", "#936953", "#CD645A", "#FACE4F", "#42436B"]
 
     @opts[:value_scale] ||= 1
+    @opts[:precision]   ||= 1
 
     #@num_min =
     #@num_max =
 
     @histogram = FnordMetric::Histogram.new
     @values = []
+    @histogram.set_opts(@opts)
 
     @samples = 0
 
-    @mmm_timeseries = Hash.new do |h,k| 
+    @mmm_timeseries = Hash.new do |h,k|
       h[k] = { :min => nil, :max => 0, :avg => [] }
     end
 
     ticks_in(@interval, tick, 1).each do |_tick|
       tkey = tick_key(_tick, :histogram)
 
-      sync_redis.hgetall(tkey).each do |_val, _count|        
+      sync_redis.hgetall(tkey).each do |_val, _count|
         _count = _count.to_f
         _val = _val.to_f * @opts[:value_scale]
 
