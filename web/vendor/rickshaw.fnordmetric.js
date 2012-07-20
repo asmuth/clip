@@ -2183,13 +2183,15 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
       } );
 
 
+      var total = $('.ui_numbers .samples').data('value');
       $('.widget_histogram_bars .tooltip').remove();
       $('.widget_histogram_bars rect').each(function(hist_i) {
+        var percentage = Math.round(sdata[hist_i].y * 1000 / total) / 10;
         var left = parseInt($(this).offset().left);
         var top = parseInt($(this).offset().top) - 23;
         var tooltip = '<div class="tooltip" data-hist-id="' + hist_i
           + '" style="left:' + left + 'px; top: ' + top + 'px">'
-          + sdata[hist_i].y + '</div>';
+          + sdata[hist_i].y + ' (' + percentage + '%)' + '</div>';
         $(this).parents('.widget_histogram_bars:first').append(tooltip);
         $(this).attr('data-id', hist_i);
       });

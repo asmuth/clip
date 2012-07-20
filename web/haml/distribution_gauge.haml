@@ -3,7 +3,7 @@
   %ul.ui_numbers(style="float:right;")
     %li
       .val
-        %span.ui_value(data-value="#{@samples}")
+        %span.ui_value.samples(data-value="#{@samples}")
       .title Number of Samples
     %li
       .val
@@ -96,18 +96,18 @@
     no_headbar: true,
     default_style: 'line',
     series_resolutions: #{@zooms.to_json},
-    series: [      
-      { 
+    series: [
+      {
         name: 'Max',
         color: "#{FnordMetric::COLORS[-1]}",
         data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:max]} }.to_json}
       },
-      { 
+      {
         name: 'Min',
         color: "#{FnordMetric::COLORS[-1]}",
         data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:min]} }.to_json}
       },
-      { 
+      {
         name: 'Mean',
         color: "#{FnordMetric::COLORS[-2]}",
         data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:avg].average} }.to_json}
@@ -115,4 +115,4 @@
     ]
   });
 
-  
+
