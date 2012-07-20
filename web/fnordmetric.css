@@ -251,7 +251,7 @@ a.button.dark:active{
 .ui_toplist .searchbar{ background:#efefef; border-bottom: 1px solid #DDD; padding:10px 17px; }
 .ui_toplist.clickable .toplist_item:hover{ background:#efefef; cursor:pointer; }
 
-.ui_toplist.clickable .toplist_item.active{ 
+.ui_toplist.clickable .toplist_item.active{
 background: #7bb2ff; /* Old browsers */
 background: -moz-linear-gradient(top, #7bb2ff 0%, #609ff8 44%, #4089ee 100%);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7bb2ff), color-stop(44%,#609ff8), color-stop(100%,#4089ee)); /* Chrome,Safari4+ */
@@ -665,7 +665,7 @@ margin-top: 60px;
   font-weight:bold;
   background:rgba(255,255,255,0.9);
   height:22px;
-  line-height:23px;  
+  line-height:23px;
   padding:0 5px;
   border-radius:3px;
 }
@@ -677,7 +677,7 @@ margin-top: 60px;
 .ui_item_trending{
   width: 250px;
   margin: 10px 20px;
-  float: left;  
+  float: left;
   border-bottom:1px solid #ddd;
   padding:10px;
 }
@@ -783,4 +783,20 @@ input.input.lopen{
 .ui_fancylinks a:hover{
   color:#333;
   border-bottom:1px solid #999;
+}
+
+.widget_histogram_bars .tooltip {
+  font-size: 12px;
+  color: #fff;
+  text-shadow: #000 1px 1px 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.9);
+  border-radius: 3px;
+  padding: 0px 4px;
+  margin: 2px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  position: absolute;
+  display: none;
 }
