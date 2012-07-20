@@ -800,3 +800,6 @@ input.input.lopen{
   position: absolute;
   display: none;
 }
+.widget_histogram_bars rect:hover {
+  opacity: 0.9;
+}
