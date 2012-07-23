@@ -13,12 +13,7 @@ class FnordMetric::TimeseriesGauge < FnordMetric::Gauge
     end 
 
     @calculate ||= :sum
-
-    if @calculate == :average
-      @calculate_proc = lambda{ |c,d| d > 0 ? (c/d.to_f).round(2) : 0 }
-    else
-      @calculate_proc = lambda{ |c,d| c }
-    end
+    @calculate_proc = lambda{ |c,d| d > 0 ? (c/d.to_f).round(2) : c }
   end
 
   def render(namespace, event)
