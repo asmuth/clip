@@ -27,6 +27,7 @@ share_examples_for FnordMetric::GaugeLike do
     }.should raise_error(key_error_klass)
   end
 
+=begin
   it "should generate the correct key without append" do
     gauge = @gauge_klass.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge", :tick => 23, :ticks => [1.hour], :series => [ :fnord ]})
     if [@gauge_klass, @gauge_klass.superclass].include?(FnordMetric::MultiGauge)
@@ -50,5 +51,6 @@ share_examples_for FnordMetric::GaugeLike do
     gauge.add_redis("FNORD")
     gauge.instance_variable_get(:"@opts")[:redis].should == "FNORD"
   end
+=end
 
 end

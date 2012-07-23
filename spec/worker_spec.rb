@@ -3,10 +3,7 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 describe FnordMetric::Worker do
 
   before(:each) do
-    @worker = FnordMetric::Worker.new(
-      { :fnordpsace => proc{} },
-      :redis_prefix => "fnordmetric"
-    )
+    @worker = FnordMetric::Worker.new()
   end
  
   it "should generate the correct pubsub-key" do
