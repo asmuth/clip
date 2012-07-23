@@ -1,0 +1,118 @@
+.report_view
+
+  %ul.ui_numbers(style="float:right;")
+    %li
+      .val
+        %span.ui_value.samples(data-value="#{@samples}")
+      .title Number of Samples
+    %li
+      .val
+        %span.ui_value(data-value="#{@values.mean}")
+      .title Total Value Mean
+    %li
+      .val
+        %span.ui_value(data-value="#{@values.median}")
+      .title Total Value Median
+    %li.twoline
+      .title Time Range
+      .val= (fancy_timerange(@interval) * " - ")
+
+
+  %h1= @opts[:title]
+  %h3 Numeric Distribution Gauge
+
+  %ul.ui_tabs.tabs
+    %li.active{"data-tab" => "Overview"}
+      %a{:href => "#"} Overview
+    / %li{"data-tab" => "Overview"}
+    /   %a{:href => "#"} Histograms
+    / %li{"data-tab" => "Export"}
+    /   %a{:href => "#"} Export
+
+
+  .headbar
+    %h2 Histogram: #{@opts[:title]}
+
+  .widget_histogram_bars
+  %br
+
+
+  .resizable.right.resize_min_full_height(data-width="40" style="border-left:1px solid #ddd;")
+    .headbar.small Standard Deviation
+
+  .resizable(data-width="60")
+
+    .clearfix
+      .headbar.small Value Distribution
+      .numbers_container.resizable.numbers_pad_bottom(data-width="50")
+        .number
+          %span.desc Mean (Avg.)
+          %span.value.ui_value{:"data-value" => @values.mean }
+        .number
+          %span.desc Minimum
+          %span.value.ui_value{:"data-value" => @values.min }
+        .number
+          %span.desc Maximum
+          %span.value.ui_value{:"data-value" => @values.max }
+        .number
+          %span.desc Median
+          %span.value.ui_value{:"data-value" => @values.median }
+        / .number
+        /   %span.desc Trend
+        /   %span.value
+        /     .ui_trend{:"data-trend" => (@mmm_timeseries_arr[0][-1][:avg].mean / (@mmm_timeseries_arr[-1][-1][:avg].mean - @mmm_timeseries_arr[0][-1][:avg].mean) rescue 0) }
+        .number
+          %span.desc Range
+          %span.value.ui_value{:"data-value" => @values.range }
+        .number
+          %span.desc Mode
+          %span.value.ui_value{:"data-value" => @values.mode }
+
+
+    .headbar
+      %h2 Mean, Min and Max over Time
+    .widget_mmm_timeseries
+
+
+:gaugejs
+
+  FnordMetric.ui.resizable('.report_view');
+  FnordMetric.util.format('.report_view');
+
+  FnordMetric.widgets.barsWidget().render({
+    title: "Histogram: Number of #{key_nouns.last}",
+    color: "#{FnordMetric::COLORS.last}",
+    elem: $('.widget_histogram_bars'),
+    height: 320,
+    no_headbar: true,
+    values: #{@histogram.json_histogram(@histogram_mode)}
+  });
+
+
+  FnordMetric.widgets.timeseriesWidget().render({
+    title: "#{key_nouns.last}",
+    elem: $('.widget_mmm_timeseries'),
+    height: 260,
+    no_headbar: true,
+    default_style: 'line',
+    series_resolutions: #{@zooms.to_json},
+    series: [
+      {
+        name: 'Max',
+        color: "#{FnordMetric::COLORS[-1]}",
+        data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:max]} }.to_json}
+      },
+      {
+        name: 'Min',
+        color: "#{FnordMetric::COLORS[-1]}",
+        data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:min]} }.to_json}
+      },
+      {
+        name: 'Mean',
+        color: "#{FnordMetric::COLORS[-2]}",
+        data: #{@mmm_timeseries_arr.map{|t,v| {:x=>t.to_i,:y=>v[:avg].average} }.to_json}
+      }
+    ]
+  });
+
+

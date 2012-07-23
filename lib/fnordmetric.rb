@@ -5,22 +5,52 @@ require "active_support/core_ext"
 require 'yajl'
 require 'sinatra/base'
 require 'haml'
+require 'json'
+require "thin"
 require 'rack/server'
+require 'rack/websocket'
 
 require "fnordmetric/ext"
 require "fnordmetric/version"
 
 module FnordMetric
 
+  @@options = nil
+  @@pool = []
+
   @@namespaces = {}
-  @@server_configuration = nil
 
   def self.namespace(key=nil, &block)
     @@namespaces[key] = block
   end
 
-  def self.server_configuration=(configuration)
-    @@server_configuration = configuration
+  def self.namespaces
+    {}.tap do |_namespaces|
+      @@namespaces.each do |key, block|
+        _namespaces[key] = FnordMetric::Namespace.new(key, options.clone)
+        _namespaces[key].instance_eval(&block)
+        _namespaces[key].instance_eval(&FnordMetric::DEFAULT_PROC)
+      end
+    end
+  end
+
+  def self.options(opts = {})
+    default_options(@@options || {}).merge(opts)
+  end
+
+  def self.options=(opts)
+    @@options = opts
+  end
+
+  def self.register(obj)
+    @@pool.push(obj)
+  end
+
+  def self.mk_redis
+    host, port = options[:redis_url].gsub("redis://", "").split(":")
+    redis_opts = { :host => host }
+    redis_opts.merge!(:port => port) if port
+    Redis.new(redis_opts)
   end
 
   def self.default_options(opts = {})
@@ -39,35 +69,12 @@ module FnordMetric
     }.merge(opts)
   end
 
-  def self.options(opts = {})
-    default_options(@@server_configuration || {}).merge(opts)
-  end
-
-  def self.start_em(opts = {})
-    EM.run do
-
-      trap("TERM", &method(:shutdown))
-      trap("INT",  &method(:shutdown))
-
-      opts = options(opts)
-      app = embedded(opts)
-
-      if opts[:web_interface]
-        server = opts[:web_interface_server].downcase
-        unless ["thin", "hatetepe"].include? server
-          raise "Need an EventMachine webserver, but #{server} isn't"
-        end
-
-        host, port = *opts[:web_interface]
-        Rack::Server.start :app => app, :server => server,
-                           :Host => host, :Port => port
-        log "listening on http://#{host}:#{port}"
-      end
-    end
-  end
-
   def self.log(msg)
     puts "[#{Time.now.strftime("%y-%m-%d %H:%M:%S")}] #{msg}"
+  end
+
+  def self.error(msg)
+    log "[ERROR] #{msg}"; nil
   end
 
   def self.error!(msg)
@@ -83,106 +90,69 @@ module FnordMetric
     sleep(1); run
   end
 
-  def self.shutdown
+  def self.shutdown(fnord=nil)
     log "shutting down, byebye"
     EM.stop
   end
 
-  def self.connect_redis(redis_url)
-    EM::Hiredis.connect(redis_url)
+  def self.start_em
+    EM.run do
+
+      trap("TERM", &method(:shutdown))
+      trap("INT",  &method(:shutdown))
+
+      EM.next_tick do
+        (@@pool || []).map(&:initialized)
+      end
+
+    end
   end
 
-  def self.print_stats(opts, redis) # FIXME: refactor this mess
-    keys = [:events_received, :events_processed]
-    redis.llen("#{opts[:redis_prefix]}-queue") do |queue_length|
-      redis.hmget("#{opts[:redis_prefix]}-stats", *keys) do |data|
-        data_human = keys.size.times.map{|n|"#{keys[n]}: #{data[n]}"}
-        log "#{data_human.join(", ")}, queue_length: #{queue_length}"
-      end
-    end
+  def self.server_configuration=(configuration)
+    puts "DEPRECATION WARNING - FIXPAUL"
+    self.options=(configuration)
   end
 
   def self.standalone
-    require "fnordmetric/logger"
+    puts "DEPRECATION WARNING - FIXPAUL"
     require "fnordmetric/standalone"
-  end
-
-  # returns a Rack app which can be mounted under any path.
-  # `:start_worker`   starts a worker
-  # `:inbound_stream` starts the TCP interface
-  # `:print_stats`    periodicaly prints worker stats
-  def self.embedded(opts={})
-    opts = options(opts)
-    app  = nil
-
-    if opts[:rack_app] or opts[:web_interface]
-      app = FnordMetric::App.new(@@namespaces.clone, opts)
-    end
-
-    EM.next_tick do
-      if opts[:start_worker]
-        worker = Worker.new(@@namespaces.clone, opts)
-        worker.ready!
-      end
-
-      if opts[:inbound_stream]
-        inbound_class = opts[:inbound_protocol] == :udp ? InboundDatagram : InboundStream
-        begin
-          inbound_stream = inbound_class.start(opts)
-          log "listening on #{opts[:inbound_protocol]}##{opts[:inbound_stream].join(":")}"
-        rescue
-          log "cant start #{inbound_class.name}. port in use?"
-        end
-      end
-
-      if opts[:print_stats]
-        redis = connect_redis(opts[:redis_url])
-        EM::PeriodicTimer.new(opts[:print_stats]) do
-          print_stats(opts, redis)
-        end
-      end
-    end
-
-    app
+    start_em
   end
 
 end
 
-require "fnordmetric/api"
-require "fnordmetric/udp_client"
-require "fnordmetric/inbound_stream"
-require "fnordmetric/inbound_datagram"
-require "fnordmetric/worker"
-require "fnordmetric/widget"
-require "fnordmetric/timeline_widget"
-require "fnordmetric/numbers_widget"
-require "fnordmetric/bars_widget"
-require "fnordmetric/toplist_widget"
-require "fnordmetric/pie_widget"
-require "fnordmetric/html_widget"
-require "fnordmetric/namespace"
-require "fnordmetric/gauge_modifiers"
 require "fnordmetric/gauge_calculations"
-require "fnordmetric/context"
+require "fnordmetric/gauge_modifiers"
+require "fnordmetric/gauge_validations"
+require "fnordmetric/gauge_rendering"
 require "fnordmetric/gauge"
+require "fnordmetric/gauges/timeseries_gauge"
+require "fnordmetric/gauges/toplist_gauge"
+require "fnordmetric/gauges/distribution_gauge"
+require "fnordmetric/context"
+require "fnordmetric/histogram"
+require "fnordmetric/timeseries"
+require "fnordmetric/toplist"
+require "fnordmetric/namespace"
 require "fnordmetric/session"
-require "fnordmetric/app"
-require "fnordmetric/dashboard"
-require "fnordmetric/event"
-
-
-#require "fnordmetric/metric_api"
-
-
-#require "fnordmetric/cache"
-#require "fnordmetric/report"
-#require "fnordmetric/metric"
-#require "fnordmetric/average_metric"
-#require "fnordmetric/count_metric"
-#require "fnordmetric/combine_metric"
-#require "fnordmetric/sum_metric"
-#require "fnordmetric/widget"
-
-#
-#require "fnordmetric/funnel_widget"
-
+require "fnordmetric/api"
+require "fnordmetric/worker"
+require "fnordmetric/logger"
+require "fnordmetric/defaults"
+require "fnordmetric/web/web"
+require "fnordmetric/web/app_helpers"
+require "fnordmetric/web/app"
+require "fnordmetric/web/websocket"
+require "fnordmetric/web/reactor"
+require "fnordmetric/web/event"
+require "fnordmetric/web/dashboard"
+require "fnordmetric/acceptors/acceptor"
+require "fnordmetric/acceptors/tcp_acceptor"
+require "fnordmetric/acceptors/udp_acceptor"
+require "fnordmetric/widget"
+require "fnordmetric/widgets/timeseries_widget"
+require "fnordmetric/widgets/numbers_widget"
+require "fnordmetric/widgets/bars_widget"
+require "fnordmetric/widgets/toplist_widget"
+require "fnordmetric/widgets/pie_widget"
+require "fnordmetric/widgets/html_widget"

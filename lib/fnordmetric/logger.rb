@@ -1,57 +1,63 @@
 class FnordMetric::Logger
 
-  def self.start(logfile_path)    
-    require 'json'
-    event_ids = Queue.new
+  def self.import(logfile_path)
+    expire = FnordMetric.options[:event_queue_ttl]
+    redis  = Redis.new
+ 
+    @opts[:channels] ||= []
+    @opts[:channels] = @opts[:channels].map(&:to_s) 
+
+    dump_file = File.open(logfile_path, 'r')
+    num_lines = %x{wc -l #{logfile_path}}.to_i
+    puts "importing #{num_lines} events..."
+
+    dump_file.each_with_log(num_lines) do |line, ind|
+      (8**64).to_s(36).tap do |uuid|
+        redis.set    "fnordmetric-event-#{uuid}", line
+        redis.lpush  "fnordmetric-queue"        , uuid
+        redis.expire "fnordmetric-event-#{uuid}", expire
+      end
+    end
+  end
+
+  def initialize(opts)
+    @opts = opts
+    opts.fetch(:file)
+
+    FnordMetric.register(self)
+  end
+
+  def initialized 
+    logfile_path = @opts[:file]
+
+    events = Queue.new
     dump_file = File.open(logfile_path, 'a+')
 
     fetcher = Thread.new do
-      redis = Redis.new
       loop do
-        event_id = event_ids.pop
-        event_data = redis.get("fnordmetric-event-#{event_id}")        
-        event_hash = JSON.parse(event_data) rescue next
+        event = events.pop
 
-        event_hash.merge!(:_time => Time.now.to_i)
-
-        dump_file.write(event_hash.to_json+"\n")
+        dump_file.write(event.to_json+"\n")
         dump_file.flush
-
-        print "\033[1;34m" 
-        print event_hash.inspect
-        print "\033[0m\n"             
       end
     end
 
     listener = Thread.new do  
-      redis = Redis.new
-      redis.subscribe("fnordmetric-announce") do |on|
-        on.message do |channel, event_id|      
-          event_ids << event_id
-        end
+      backend = FnordMetric.backend
+      backend.subscribe do |event|
+        events << event if log_channel?(event["_channel"])
       end
     end
 
-    fetcher.join
+    FnordMetric.log "logging to #{logfile_path}"
   end
 
-  def self.import(logfile_path)
-    redis = Redis.new
-    dump_file = File.open(logfile_path, 'r')
 
-    puts "reading #{logfile_path}..."
-    dump_lines = dump_file.read.split("\n")
+private
 
-    puts "importing #{dump_lines.length} events..."
-    pre_uuid = rand(999999999999999999999)
-    log_every = (dump_lines.length / 150)
-    dump_lines.each_with_index do |line,n|
-      puts "#{n}/#{dump_lines.length} (#{((n/dump_lines.length.to_f)*100).to_i}%)" if n%log_every==0
-      my_uuid = "#{pre_uuid}-#{n}"
-      redis.set("fnordmetric-event-#{my_uuid}", line)
-      redis.lpush("fnordmetric-queue", my_uuid) 
-      redis.expire("fnordmetric-event-#{my_uuid}", 3600*12)
-    end
+  def log_channel?(channel)
+    return !!@opts[:channels] if !channel
+    @opts[:channels].include?(channel.to_s)
   end
 
 end

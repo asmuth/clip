@@ -1,38 +1,43 @@
 class FnordMetric::Namespace
   
-  attr_reader :handlers, :gauges, :opts, :key, :dashboards
+  attr_reader :handlers, :gauges, :opts, :key, :dashboards, :flags
 
-  @@opts = [:event, :gauge, :widget, :set_title, :active_users_available]
+  @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview]
+  @@multi_gauges = [:timeseries_gauge, :toplist_gauge, :distribution_gauge]
 
-  def initialize(key, opts)    
+  def initialize(key, opts)
     @gauges = Hash.new
     @dashboards = Hash.new
     @handlers = Hash.new
+    @flags = Hash.new
     @title = key
     @active_users_available = true
     @opts = opts
-    @key = key      
+    @key = key
   end
 
   def ready!(redis)
     @redis = redis
-    @gauges.map{ |k,g| g.add_redis(@redis) }
     self
   end
 
-  def announce(event)                  
+  def announce(event)
     announce_to_timeline(event)
     announce_to_typelist(event)
-    
+
     if event[:_session]
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
-    [
+    res = [
       @handlers[event[:_type].to_s],
       @handlers["*"]
-    ].flatten.compact.each do |context| 
-      context.call(event, @redis) 
+    ].flatten.compact.each do |context|
+      context.call(event, @redis)
+    end.size
+
+    if res == 0
+      FnordMetric.error("no handler for event-type: #{event[:_type]}")
     end
 
     self
@@ -40,11 +45,11 @@ class FnordMetric::Namespace
 
   def announce_to_session(event)
     FnordMetric::Session.create(@opts.clone.merge(
-      :namespace_key => @key, 
+      :namespace_key => @key,
       :namespace_prefix => key_prefix,
       :redis => @redis,
       :event => event
-    )) 
+    ))
   end
 
   def announce_to_timeline(event)
@@ -65,15 +70,15 @@ class FnordMetric::Namespace
   def token
     @key
   end
-  
+
   def title
     @title
   end
-  
+
   def active_users_available
     @active_users_available
   end
-  
+
   def dashboards(name=nil)
     return @dashboards unless name
     dash = FnordMetric::Dashboard.new(:title => name)
@@ -91,29 +96,41 @@ class FnordMetric::Namespace
   end
 
   def method_missing(m, *args, &block)
+    return send(:opt_multigauge, *args.unshift(m), &block) if @@multi_gauges.include?(m)
     raise "unknown option: #{m}" unless @@opts.include?(m)
     send(:"opt_#{m}", *args, &block)
   end
 
-  def hide_active_users
-    @active_users_available = false
+  def opt_hide_active_users
+    @flags[:hide_active_users] = true
   end
-  
-  def set_title(key)
-    @title = key
+
+  def opt_hide_overview
+    @flags[:hide_overview] = true
   end
-  
+
+  def opt_set_title(title)
+    @title = title
+  end
+
   def opt_event(event_type, opts={}, &block)    
     opts.merge!(:redis => @redis, :gauges => @gauges)   
     FnordMetric::Context.new(opts, block).tap do |context|
       @handlers[event_type.to_s] ||= []
       @handlers[event_type.to_s] << context
-    end      
+    end
   end
 
   def opt_gauge(gauge_key, opts={})
     opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
-    @gauges[gauge_key] ||= FnordMetric::Gauge.new(opts)   
+    klass = "FnordMetric::#{(opts[:type] || "").to_s.camelize}Gauge".constantize
+    @gauges[gauge_key] ||= klass.new(opts)
+  end
+
+  def opt_multigauge(gauge_type, gauge_key, opts={})
+    opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
+    klass = "FnordMetric::#{gauge_type.to_s.camelize}"
+    @gauges[gauge_key] ||= klass.constantize.new(opts)   
   end
 
   def opt_widget(dashboard, widget)
@@ -133,6 +150,13 @@ class FnordMetric::Namespace
       :redis_prefix => @opts[:redis_prefix],
       :redis => @redis
     )
+  end
+
+  def to_json
+    flags.merge(
+      :token => token,
+      :title => title
+    ).to_json
   end
 
 end

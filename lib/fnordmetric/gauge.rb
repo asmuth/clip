@@ -1,6 +1,9 @@
 class FnordMetric::Gauge
   
   include FnordMetric::GaugeCalculations
+  include FnordMetric::GaugeModifiers
+  include FnordMetric::GaugeValidations
+  include FnordMetric::GaugeRendering
 
   def initialize(opts)
     opts.fetch(:key) && opts.fetch(:key_prefix)
@@ -8,11 +11,15 @@ class FnordMetric::Gauge
   end
 
   def tick
-    (@opts[:tick] || 3600).to_i
+    (@opts[:tick] || @opts[:resolution] || 3600).to_i
   end
 
-  def tick_at(time)    
-    (time/tick.to_f).floor*tick
+  def retention
+    tick * 10 # FIXPAUL!
+  end
+
+  def tick_at(time, _tick=tick)    
+    (time/_tick.to_f).floor*_tick
   end
 
   def name
@@ -22,6 +29,14 @@ class FnordMetric::Gauge
   def title
     @opts[:title] || name
   end
+
+  def group
+    @opts[:group] || "Gauges"
+  end
+
+  def key_nouns
+    @opts[:key_nouns] || ["Key", "Keys"]
+  end
   
   def key(_append=nil)
     [@opts[:key_prefix], "gauge", name, tick, _append].flatten.compact.join("-")
@@ -29,6 +44,14 @@ class FnordMetric::Gauge
 
   def tick_key(_time, _append=nil)
     key([(progressive? ? :progressive : tick_at(_time).to_s), _append])
+  end
+
+  def tick_keys(_range, _append=nil)
+    ticks_in(_range).map{ |_t| tick_key(_t, _append) }
+  end
+
+  def retention_key(_time, _append=nil)
+    key([tick_at(_time, retention).to_s, _append])
   end
 
   def two_dimensional?
@@ -51,16 +74,20 @@ class FnordMetric::Gauge
     !!@opts[:average]
   end
 
-  def add_redis(_redis)
-    @opts[:redis] = _redis
+  def has_series?
+    false
   end
 
-  def ticks_in(r)
-    (((r.last-r.first)/tick.to_f).ceil+1).times.map{ |n| tick_at(r.first + tick*(n-1)) }
+  def redis
+    @redis ||= EM::Hiredis.connect(FnordMetric.options[:redis_url]) # FIXPAUL
   end
 
-  def values_in(range)
-    values_at(ticks_in(range))
+  def sync_redis
+    @sync_redis ||= FnordMetric.mk_redis # FIXPAUL
   end
 
+  def error!(msg)
+    FnordMetric.error(msg)
+  end
+  
 end

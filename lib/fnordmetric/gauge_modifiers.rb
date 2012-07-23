@@ -72,5 +72,72 @@ module FnordMetric::GaugeModifiers
     @redis.zadd(gauge.tick_key(time), value, field_name)
   end
 
+  def incr_numerator(ctx, series_name=:default, value=1, prog=false)
+    incr_fraction(ctx, series_name, :numerator, value, prog)
+  end
+
+  def incr_denominator(ctx, series_name=:default, value=1, prog=false)
+    incr_fraction(ctx, series_name, :denominator, value, prog)
+  end
+
+  def incr_fraction(ctx, series_name, part, value, prog)
+    return unless series_name = assure_series_exists!(series_name)
+    assure_has_series!
+
+    at = ctx.send(:time)
+    value = parse_numeric(value)
+
+    if prog
+      raise "FIXPAUL: not yet implemented: progressive fraction gauges"
+    end
+
+    ctx.redis_exec(:hincrby, retention_key(at, series_name), "#{tick_at(at)}-#{part}", value).callback do 
+      ctx.redis_exec :expire,  retention_key(at, series_name)
+    end
+  end
+  
+  def assure_has_series!
+    return true if has_series?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with series gauges" 
+  end
+
+  def assure_two_dimensional!(gauge)
+    return true if gauge.two_dimensional?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with 2-dimensional gauges" 
+  end
+
+  def assure_three_dimensional!(gauge)
+    return true unless gauge.two_dimensional?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with 3-dimensional gauges" 
+  end
+
+  def assure_non_progressive!(gauge)
+    return true unless gauge.progressive?
+    error! "error: #{caller[0].split(" ")[-1]} can only be used with non-progressive gauges" 
+  end
+
+  def assure_series_exists!(series_name)
+    if series_name == :default && @opts[:series].size > 1
+      error! "gauge '#{name}': don't know which series to increment"
+    elsif series_name == :default
+      return @opts[:series].first
+    elsif !series_name.respond_to?(:to_sym) || !@opts[:series].include?(series_name.to_sym)
+      error! "gauge '#{name}': unknown series: #{series_name}"
+    else 
+      return series_name
+    end
+  end
+
+  def parse_numeric(val)
+    if val.is_a?(Numeric)
+      return val
+    elsif val.is_a?(String) && val.match(/[0-9]+/)
+      val.to_i
+    elsif val.is_a?(String) && val.match(/[0-9]+(\.|,)[0-9]+/)
+      val.to_f
+    else
+      error! "gauge '#{name}': incr called with non-numerical value: #{val}"
+    end
+  end
 
 end

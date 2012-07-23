@@ -3,6 +3,7 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 include Rack::Test::Methods
 include FnordMetric
 
+=begin
 describe "app" do
 
   before(:all) do
@@ -482,3 +483,4 @@ describe "app" do
   end
 
 end
+=end

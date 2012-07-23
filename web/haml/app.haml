@@ -1,0 +1,38 @@
+!!!
+%html
+  %head
+    %title FnordMetric
+    %script{:src => "/vendor/jquery-1.6.2.min.js", :type => "text/javascript"}
+    %script{:src => "/vendor/jquery-ui.min.js", :type => "text/javascript"}
+    %script{:src => "/vendor/jquery.maskedinput.js", :type => "text/javascript"}
+    %script{:src => "/vendor/d3.v2.js", :type => "text/javascript"}
+    %script{:src => "/vendor/rickshaw.fnordmetric.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.util.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.ui.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.timeline_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.numbers_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.bars_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.pie_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.toplist_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.html_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.realtime_value_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.timeseries_widget.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.overview_view.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.gauge_view.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.dashboard_view.js", :type => "text/javascript"}
+    %script{:src => "/js/fnordmetric.session_view.js", :type => "text/javascript"}
+    %link{:href => "/vendor/rickshaw.css", :rel => "stylesheet", :type => "text/css"}
+    %link{:href => "/vendor/font-awesome/css/font-awesome.css", :rel => "stylesheet", :type => "text/css"}
+    %link{:href => "/fnordmetric.css", :rel => "stylesheet", :type => "text/css"}
+
+  %body
+    #app.clearfix(style="overflow:hidden;")
+
+    #preload
+      %img(src="/img/loader_white.gif")
+
+:javascript
+  $(document).ready(function(){
+    FnordMetric.init(#{current_namespace.to_json});
+  });

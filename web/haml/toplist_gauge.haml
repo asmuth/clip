@@ -1,0 +1,194 @@
+.report_view
+
+  %ul.ui_numbers(style="float:right;")
+    %li
+      .val
+        %span.ui_value(data-value="#{@toplist.total}")
+      .title Number of Samples
+    %li.twoline
+      .title Time Range
+      .val= (fancy_timerange(@interval) * " - ")
+
+  %h1= @opts[:title] || @opts[:key]
+  %h3 Toplist Gauge
+
+  %ul.ui_tabs.toplgauge_tabs
+    %li.active{"data-tab" => "Overview", :onclick=>"toplgaugeTabClick.apply(this);"}
+      %a{:href => "#"} Overview
+    %li{"data-tab" => "Trending", :onclick=>"toplgaugeTabClick.apply(this);"}
+      %a{:href => "#"} Trending
+    / %li{"data-tab" => "Compate"}
+    /   %a{:href => "#"} Compare
+    / %li{"data-tab" => "Export"}
+    /   %a{:href => "#"} Export
+
+
+
+  .ui_sidebar_toplist.resizable.resize_min_full_height(data-width="55")
+
+    .widget_toplist.toplgauge_tab.overview
+      .headbar
+        %h2 Top #{key_nouns.last}
+      .ui_toplist.clickable
+        .searchbar
+          %input(type="search" placeholder="Search..." style="width:95%; margin-top:1px; height:36px; line-height:36px;" onchange="toplgaugeSeach($(this).val());" onkeyup="toplgaugeSeach($(this).val());" onclick="toplgaugeSeach($(this).val());")
+
+        - @toplist.toplist(top_k).each_with_index do |(item, score), ind|
+          .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}" style="#{ind > 49 ? 'display:none;' : nil}" class="#{ind > 49 ? nil : :initial}")
+            .title= item
+            .value
+              %span.ui_value{:"data-value" => score }
+            .percent
+              %span.ui_value{:"data-percent" => @toplist.percentage(item) }
+              %span.ui_trend{ :"data-trend" => @toplist.trend(item).round(1) }
+
+
+    .toplgauge_tab.trending(style="display:none;")
+      .headbar
+        %h2 Trending #{key_nouns.last}
+
+      .ui_toplist.clickable
+        - @toplist.trending(50).each do |item, trend|
+
+          .toplist_item(onclick="toplgaugeSelectItem.apply(this); return false;" data-item="#{item}")
+            .title= item
+            .value.large
+              %span.ui_value{:"data-value" => @toplist.value(item) }
+              = " / "
+              %span.ui_value{:"data-percent" => @toplist.percentage(item) }
+
+            .trend
+              %span.ui_trend(data-trend="#{trend.round(1)}")
+
+
+
+  .widget_keystats.resize_full_height.resizable(data-width="45")
+    .empty_state.resize_full_height
+      .headbar
+
+      %div(style="font-weight:bold; font-size:16px; color:#aaa; text-align:center; margin-top:50%;")
+        %i.icon.icon-arrow-left
+        &nbsp; Please select an item
+
+
+    .keystats(style="display:none;")
+      .widget_item_timeseries
+      .headbar.small
+
+      .numbers_container(style="width:auto; border-bottom:none;")
+        .title
+        .number.total
+          %span.desc Total
+          %span.value.ui_value
+        .number.percent
+          %span.desc Percent
+          %span.value.ui_value
+        .number.delta
+          %span.desc Delta
+          %span.value
+            .ui_trend
+        .number.rank
+          %span.desc Rank
+          %span.value
+
+
+:gaugejs
+
+  FnordMetric.util.updateNumbers('.report_view', 4);
+  FnordMetric.util.format('.report_view');
+
+  FnordMetric.ui.resizable('#viewport');
+
+
+:javascript
+
+  var toplist_gauge_timeseries = #{@toplist.timelines.to_json};
+  var toplist_gauge_ticks = #{@all_ticks.sort.to_json};
+
+  var toplist_gauge_numbers = #{Hash[@toplist.toplist(top_k).map{ |k,t|
+    [k, { :total => t,
+          :percent => @toplist.percentage(k),
+          :rank => @toplist.rank(k),
+          :delta => @toplist.trend(k) }]
+    }].to_json};
+
+
+  function toplgaugeSelectItem(){
+    var item_key = $(this).attr('data-item');
+
+    $(this).addClass('active')
+      .siblings().removeClass('active');
+
+    $('.widget_keystats .widget_item_timeseries').html('');
+    $('.widget_keystats .keystats').show();
+    $('.widget_keystats .empty_state').hide();
+
+    $('.widget_keystats .numbers_container .title')
+      .html(item_key);
+
+    $('.widget_keystats .headbar.small')
+      .html("#{key_nouns.first}: " + item_key);
+
+    $('.widget_keystats .number.total .ui_value')
+      .attr('data-value', toplist_gauge_numbers[item_key].total);
+
+    $('.widget_keystats .number.percent .ui_value')
+      .attr('data-percent', toplist_gauge_numbers[item_key].percent);
+
+    $('.widget_keystats .number.delta .ui_trend')
+      .attr('data-trend', toplist_gauge_numbers[item_key].delta);
+
+    $('.widget_keystats .number.rank .value')
+      .html('#' + toplist_gauge_numbers[item_key].rank);
+
+    FnordMetric.util.format('.widget_keystats .keystats');
+
+    var series_data = [];
+
+    for(ind in toplist_gauge_ticks){
+      var _time = toplist_gauge_ticks[ind];
+      var _val  = toplist_gauge_timeseries[item_key][_time];
+      if(!_val){ _val = 0; }
+      series_data.push({x: parseInt(_time), y: parseFloat(_val)});
+    }
+
+    FnordMetric.widgets.timeseriesWidget().render({
+      title: "#{key_nouns.first}: " + item_key,
+      elem: $('.widget_item_timeseries'),
+      height: 320,
+      default_style: 'line',
+      series: [{
+        name: item_key,
+        color: "#{FnordMetric::COLORS.last}",
+        data: series_data
+      }]
+    });
+
+  }
+
+
+  function toplgaugeTabClick(){
+    if($(this).attr('data-tab') == "Overview"){
+      $('.toplgauge_tab').hide().filter('.overview').show();
+    } else if($(this).attr('data-tab') == "Trending"){
+      $('.toplgauge_tab').hide().filter('.trending').show();
+    }
+
+    $('.toplgauge_tabs li').removeClass('active');
+    $(this).addClass('active');
+  }
+
+
+  function toplgaugeSeach(item){
+    $('.widget_toplist .toplist_item').hide();
+
+    if(item.length < 2){
+      $('.widget_toplist .toplist_item.initial').show();
+    } else {
+      $('.widget_toplist .toplist_item[data-item^="'+item+'"]').show();
+    }
+    
+  }
+
+
+  

@@ -13,6 +13,10 @@ require "fnordmetric"
 require "eventmachine"
 require 'em-hiredis'
 
+$: << ::File.expand_path('../../spec', __FILE__)
+module FnordMetric::GaugeLike; end
+require "gauge_like_shared"
+
 def EM.defer; yield; end
 def EM.next_tick; yield; end
 

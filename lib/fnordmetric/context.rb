@@ -2,6 +2,18 @@ class FnordMetric::Context
 
   include FnordMetric::GaugeModifiers
 
+  class Proxy
+
+    def initialize(_ref)
+      @ref = _ref
+    end
+
+    def method_missing(method, *args, &block)
+      @ref.dispatch(method, *args, &block)
+    end
+
+  end
+
   def initialize(opts, block)
     @block = block
     @opts = opts    
@@ -10,10 +22,31 @@ class FnordMetric::Context
   def call(event, redis)
     @redis = redis
     @event = event    
-    self.instance_eval(&@block)
+    proxy.instance_eval(&@block)
   rescue Exception => e
-    raise e  if ENV['FNORDMETRIC_ENV'] == 'test'
+    raise e if ENV['FNORDMETRIC_ENV'] == 'test'
     puts "error: #{e.message}"
+    puts e.backtrace.push("").join("\n") if ENV['FNORDMETRIC_ENV'] == 'dev'
+  end
+
+  def proxy
+    @proxy ||= Proxy.new(self)
+  end
+
+  def dispatch(method, *args, &block)
+    if args.size > 0 && @opts[:gauges][args[0]].try(:renderable?)
+      @opts[:gauges][args.delete_at(0)].execute(method, *args.unshift(self), &block)
+    else
+      send(method, *args, &block)
+    end
+  rescue Exception => e
+    raise e if ENV['FNORDMETRIC_ENV'] == 'test'
+    puts "error: #{e.message}"
+    puts e.backtrace.push("\n").join("\n") if ENV['FNORDMETRIC_ENV'] == 'dev'
+  end
+
+  def redis_exec(*args)
+    @redis.send(*args)
   end
 
 private
@@ -35,7 +68,7 @@ private
   end
 
 protected
-
+  
   def fetch_gauge(_gauge)
     _gauge.is_a?(FnordMetric::Gauge) ? _gauge : @opts[:gauges].fetch(_gauge)
   rescue
@@ -43,23 +76,9 @@ protected
   end
 
   def error!(msg)
-    FnordMetric.error!(msg)
+    FnordMetric.error(msg)
   end
 
-  def assure_two_dimensional!(gauge)
-    return true if gauge.two_dimensional?
-    error! "error: #{caller[0].split(" ")[-1]} can only be used with 2-dimensional gauges" 
-  end
-
-  def assure_three_dimensional!(gauge)
-    return true unless gauge.two_dimensional?
-    error! "error: #{caller[0].split(" ")[-1]} can only be used with 3-dimensional gauges" 
-  end
-
-  def assure_non_progressive!(gauge)
-    return true unless gauge.progressive?
-    error! "error: #{caller[0].split(" ")[-1]} can only be used with non-progressive gauges" 
-  end
 
 end
     

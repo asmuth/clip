@@ -1,0 +1,80 @@
+.report_view
+
+  %ul.ui_numbers(style="float:right;")
+    %li
+      .val
+        %span.ui_value(data-value="#{@total}")
+      .title Number of Samples
+    %li.twoline
+      .title Time Range
+      .val= (fancy_timerange(@interval) * " - ")
+
+  %h1= @opts[:title] || @opts[:key]
+  %h3 Numeric Timeseries Gauge
+
+  %ul.ui_tabs.tabs
+    %li.active{"data-tab" => "Overview"}
+      %a{:href => "#"} Overview
+    %li{"data-tab" => "Punchcards"}
+      %a{:href => "#"} Punchcards
+    / %li{"data-tab" => "Realtime"}
+    /   %a{:href => "#"} Realtime
+    / %li{"data-tab" => "Export"}
+    /   %a{:href => "#"} Export
+
+
+  .widget_timeseries
+
+  .resizable(data-width="65" style="border-right:1px solid #ddd;")
+    .headbar.small Series Values
+
+    %table(cellspacing="0")
+      %tr
+        %th
+        -@series.each do |series, sopts|
+          %th(style="padding-top:4px")
+            %span.swatch(style="background:#{sopts[:color]}; display:inline-block;")
+            %span= series
+
+      %tr
+        %td Total (<span class="ui_value" data-timerange="#{@interval.size}"></span>)
+        -@series.each do |series, sopts|
+          %td
+            .ui_value.large.left{:"data-value" => sopts[:timeseries].sum, :style => "min-width:70px;"}
+            .ui_trend.left{:style => "margin-left:5px", :"data-trend" =>  sopts[:timeseries].trend}
+
+      -FnordMetric::TICKS[tick, @interval.size].each do |zoom|
+        %tr
+          %td
+            .ui_value{:"data-timerange-offset" => zoom, :"data-offset" => -1}
+          -@series.each do |series, sopts|
+            %td
+              -srange = ((@interval.last-zoom)..@interval.last)
+              .ui_value.large.left{:"data-value" => sopts[:timeseries].sum(srange), :style => "width:70px;"}
+              .ui_trend.left{:style => "margin-left:5px", :"data-trend" => sopts[:timeseries].trend(srange)}
+
+
+
+  .resizable(data-width="35")
+    .headbar.small Series Weights
+
+
+
+:gaugejs
+
+  FnordMetric.ui.resizable('.report_view');
+  FnordMetric.util.updateNumbers('.report_view', 4);
+  FnordMetric.util.format('.report_view');
+
+  FnordMetric.widgets.timeseriesWidget().render({
+    title: "#{key_nouns.last}",
+    elem: $('.widget_timeseries'),
+    height: 420,
+    default_style: 'stack',
+    series_resolutions: #{@zooms.to_json},
+    timespan: #{@interval.size},
+    series: [#{@series.map{ |k,s| 
+      dat = s[:data].map{ |k,d| "data#{k}: #{d.to_json(&@calculate_proc)}" }
+      "{ name: #{k.to_json}, color: '#{s[:color]}', #{dat * ","} }" 
+    } * ","}]
+  });
