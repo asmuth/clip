@@ -50,9 +50,10 @@ class FnordMetric::DistributionGauge < FnordMetric::Gauge
       @histogram_mode = [23, @histogram.max || 1].min
     end
 
-    @mmm_timeseries_arr = @mmm_timeseries.to_a
-      .map{ |k,v| [k, Hash[v.map{ |vk, vv| [vk, (vv.is_a?(Numeric) || vv.is_a?(Array)) ? vv : 0 ] }]] }
-      .sort{ |a,b| a.first.to_i <=> b.first.to_i}
+    @mmm_timeseries_arr = @mmm_timeseries.
+      to_a.
+      map{ |k,v| [k, Hash[v.map{ |vk, vv| [vk, (vv.is_a?(Numeric) || vv.is_a?(Array)) ? vv : 0 ] }]] }.
+      sort{ |a,b| a.first.to_i <=> b.first.to_i}
 
     render_page(:distribution_gauge)
   end

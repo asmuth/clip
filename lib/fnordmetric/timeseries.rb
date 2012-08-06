@@ -41,17 +41,17 @@ class FnordMetric::Timeseries
   end
 
   def sum(range = (ticks.first..ticks.last))
-    @timeline
-      .inject(0){ |s,(t,v)| s + (range.include?(t) ? value_at(t) : 0) }
+    @timeline.inject(0){ |s,(t,v)| s + (range.include?(t) ? value_at(t) : 0) }
   end
 
   def trend(range = (ticks.first..ticks.last))
     range ||= (ticks.first..ticks.last)    
 
-    rvals = @timeline.to_a
-      .select{ |t,v| range.include?(t) }
-      .sort{ |a,b| a.first <=> b.first }
-      .map{ |t,v| value_at(t) }
+    rvals = @timeline.
+      to_a.
+      select{ |t,v| range.include?(t) }.
+      sort{ |a,b| a.first <=> b.first }.
+      map{ |t,v| value_at(t) }
 
     return 0 if rvals.size == 0
     (rvals.last - rvals.first).to_f / rvals.first
@@ -70,10 +70,11 @@ class FnordMetric::Timeseries
   end
 
   def to_json(&block)
-    @timeline.to_a
-      .sort{ |a,b| a[0] <=> b[0] }
-      .map { |t,v| { :x => t, :y => block.call(*v), :v0 => v[0], :v1 => v[1] } }
-      .to_json
+    @timeline.
+      to_a.
+      sort{ |a,b| a[0] <=> b[0] }.
+      map { |t,v| { :x => t, :y => block.call(*v), :v0 => v[0], :v1 => v[1] } }.
+      to_json
   end
 
 end
