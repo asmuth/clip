@@ -26,7 +26,7 @@ FnordMetric.namespace :myapp do
   # timeline+plot and punchcard
   timeseries_gauge :unicorns_seen_per_hour, 
     :resolution => 5.minutes,
-    :title => "Unicorns seenper Hour",
+    :title => "Unicorns seen per Hour",
     :punchcard => true
 
   # on every event like { _type: 'unicorn_seen' }
