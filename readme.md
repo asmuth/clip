@@ -26,7 +26,7 @@ FnordMetric.namespace :myapp do
   # timeline+plot and punchcard
   timeseries_gauge :unicorns_seen_per_hour, 
     :resolution => 5.minutes,
-    :title => "Unicorns seenper Hour",
+    :title => "Unicorns seen per Hour",
     :punchcard => true
 
   # on every event like { _type: 'unicorn_seen' }
@@ -93,7 +93,7 @@ FnordMetric.namespace :myapp do
   timeseries_gauge :number_of_signups,
     :group => "My Group",
     :title => "Number of Signups",
-    :key_nouns => ["Singup", "Signups"],
+    :key_nouns => ["Signup", "Signups"],
     :series => [:via_twitter, :via_facebook],
     :resolution => 2.minutes
 
@@ -139,7 +139,7 @@ FnordMetric.namespace :myapp do
 
   gauge :pageviews_daily_unique, :tick => 1.day.to_i, :unique => true, :title => "Unique Visits (Daily)"
   gauge :pageviews_hourly_unique, :tick => 1.hour.to_i, :unique => true, :title => "Unique Visits (Hourly)"
-  gauge :pageviews_monthly_unique, :tick => 40.days.to_i, :unique => true, :title => "Unique Visits (Month)"
+  gauge :pageviews_monthly_unique, :tick => 40.days.to_i, :unique => true, :title => "Unique Visits (Monthly)"
 
   gauge :messages_sent, :tick => 1.day.to_i, :title => "Messages (sent)"
   gauge :messages_read, :tick => 1.day.to_i, :title => "Messages (read)"
@@ -184,7 +184,7 @@ FnordMetric.namespace :myapp do
 
 
   widget 'TechStats', {
-    :title => "Events/Second",
+    :title => "Events per Second",
     :type => :timeline,
     :width => 50,
     :gauges => :events_per_second,
@@ -241,7 +241,6 @@ FnordMetric.namespace :myapp do
     :order_by => :field,
     :gauges => [ :age_distribution_male_monthly ]
   }
-
 
   widget 'Demography', {
     :title => "Age Distribution: Female Users",
