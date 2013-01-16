@@ -47,10 +47,7 @@ module FnordMetric
   end
 
   def self.mk_redis
-    host, port = options[:redis_url].gsub("redis://", "").split(":")
-    redis_opts = { :host => host }
-    redis_opts.merge!(:port => port) if port
-    Redis.new(redis_opts)
+    Redis.new(:url => options[:redis_url])
   end
 
   def self.default_options(opts = {})
