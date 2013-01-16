@@ -5,7 +5,7 @@ body {
   margin:0;
   padding:0;
   overflow-y:scroll;
-  font: 12px/20px "Gotham Narrow" "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 12px/20px "Gotham Narrow", "Helvetica Neue", Helvetica, Arial, sans-serif;
   overflow-x:hidden;
 }
 
