@@ -53,8 +53,8 @@ class Array
 
   def mode
     return 0 if empty?
-    inject({}){ |h,v| h[v] = h[v].to_i+1; h }.to_a
-    .sort{ |a,b| b.last <=> a.last }[0][0]
+    inject({}){ |h,v| h[v] = h[v].to_i+1; h }.to_a.
+      sort{ |a,b| b.last <=> a.last }[0][0]
   end
   
   def emtpy
