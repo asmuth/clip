@@ -3,7 +3,6 @@ Todos
 
   → bugfix: widgets w/o gauges
   → bugfix: gauge titles
-  → fyrehose acceptor
   → fancy topbar daterange picker for legacy dashboards
   → exceptions gauge
   → option to turn off per-widget daterangepicker (makes them smaller)
@@ -17,4 +16,6 @@ Todos
 Done
 ====
 
+  → added :scale_by option for gauges
+  → added fyrehose acceptor
   → explicit dashboard initialization with options -> dashboard grouping
