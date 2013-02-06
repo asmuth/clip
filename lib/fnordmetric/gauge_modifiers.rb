@@ -1,6 +1,7 @@
 module FnordMetric::GaugeModifiers
 
   def incr(gauge_name, value=1)
+    value = value.to_i
     gauge = fetch_gauge(gauge_name)
     assure_two_dimensional!(gauge)
     if gauge.unique? 
@@ -13,7 +14,7 @@ module FnordMetric::GaugeModifiers
   end
 
   def incr_tick(gauge, value)
-    if gauge.progressive?      
+    if gauge.progressive?
       @redis.incrby(gauge.key(:head), value).callback do |head|
         @redis.hsetnx(gauge.key, gauge.tick_at(time), head).callback do |_new|
           @redis.hincrby(gauge.key, gauge.tick_at(time), value) unless _new
