@@ -2,7 +2,7 @@ class FnordMetric::Namespace
   
   attr_reader :handlers, :gauges, :opts, :key, :dashboards, :flags
 
-  @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview]
+  @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview, :dashboard]
   @@multi_gauges = [:timeseries_gauge, :toplist_gauge, :distribution_gauge]
 
   def initialize(key, opts)
@@ -79,9 +79,9 @@ class FnordMetric::Namespace
     @active_users_available
   end
 
-  def dashboards(name=nil)
+  def dashboards(name=nil, opts = {})
     return @dashboards unless name
-    dash = FnordMetric::Dashboard.new(:title => name)
+    dash = FnordMetric::Dashboard.new(opts.merge(:title => name))
     @dashboards[dash.token.to_s] ||= dash
   end
 
@@ -136,6 +136,10 @@ class FnordMetric::Namespace
   def opt_widget(dashboard, widget)
     widget = build_widget(widget) if widget.is_a?(Hash)
     dashboards(dashboard).add_widget(widget)
+  end
+
+  def opt_dashboard(dashboard, opts)
+    dashboards(dashboard, opts)
   end
 
   def build_widget(opts)
