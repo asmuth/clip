@@ -82,7 +82,7 @@ FnordMetric.util.formatOffset = function(offset, next_offset){
 
 FnordMetric.util.formatValue = function(value){
   if(value < 10){
-    return value.toFixed(2);
+    return value.toFixed(1);
   }
   if(value < 100){
     return value.toFixed(1);
