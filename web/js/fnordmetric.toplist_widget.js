@@ -10,12 +10,16 @@ FnordMetric.widgets.toplistWidget = function(){
       $('<h2></h2>').html(opts.title)
     );
 
+    var __elem = $('<div class="toplist_inner ui_toplist"></div>');
+
+    if (opts.no_min_height) {
+      __elem.css('minHeight', '0');
+    }
+
     opts.elem.append(headbar).css({
       'marginBottom': 20,
       'overflow': 'hidden'
-    }).append(
-      $('<div class="toplist_inner ui_toplist"></div>')
-    );
+    }).append(__elem);
 
     if(!opts.ticks){
       var first = true;
