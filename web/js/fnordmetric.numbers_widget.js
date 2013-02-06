@@ -15,19 +15,15 @@ FnordMetric.widgets.numbersWidget = function(){
     });
 
     if(!opts.series_titles){
-      opts.series_titles = {};
+      opts.series_titles = opts.series;
     }
 
     for(k in opts.series){
 
-      if (!opts.series_titles[opts.series[k]]){
-        opts.series_titles[opts.series[k]] = opts.series[k];
-      }
-
       var container = $('<div></div>')
         .addClass('numbers_container')
         .attr('rel', opts.series[k])
-        .append($('<div class="title">').html(opts.series_titles[opts.series[k]]));
+        .append($('<div class="title">').html(opts.series_titles[k]));
 
       opts.elem.append(container);
     }

@@ -26,7 +26,7 @@ var FnordMetric = (function(){
 
     return ul;
   }
-  
+
   function renderSidebar(){
     var prev_active = false;
 

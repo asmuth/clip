@@ -100,11 +100,11 @@ FnordMetric.widgets.timeseriesWidget = function(){
           );
 
           if((!best_resolution) || (_diff < best_resolution)){
-            best_resolution = opts.series_resolutions[ind];  
+            best_resolution = opts.series_resolutions[ind];
           }
         }
-        
-        resolution = best_resolution; 
+
+        resolution = best_resolution;
       }
 
       for(ind in gconfig.series){
@@ -185,7 +185,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
               margin: '0 23px 25px 23px',
             })
         );
-      
+
       if(opts.async_chart){
         $('.headbar', opts.elem).prepend(
           $('<div></div>')
@@ -227,7 +227,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
       if((opts.autoupdate) && (opts.async_chart)){
         var secs = parseInt(opts.autoupdate);
         if(secs > 0){
-          var autoupdate_interval = window.setInterval(function(){          
+          var autoupdate_interval = window.setInterval(function(){
              updateChart(false, true);
           }, secs*1000);
 
@@ -294,8 +294,8 @@ FnordMetric.widgets.timeseriesWidget = function(){
       if(evt.widget_key == opts.widget_key){
         if((evt.class == "widget_response") && (evt.cmd == "values_at")){
           running_request = false;
-          $(opts.elem).css('opacity', 1); 
-          updateSeriesData(evt.gauges);          
+          $(opts.elem).css('opacity', 1);
+          updateSeriesData(evt.gauges);
         }
       }
     }
@@ -317,13 +317,13 @@ FnordMetric.widgets.timeseriesWidget = function(){
       gconfig.series = [];
 
       for(var ind = 0; ind < dgauges.length; ind++){
-       
+
         gconfig.series.push({
-          name: dgauges[ind].key,
+          name: dgauges[ind].title,
           color: opts.series[ind].color,
           data: []
         });
-        
+
         for(_time in dgauges[ind].vals){
           gconfig.series[ind].data.push(
             { x: parseInt(_time), y: parseInt(dgauges[ind].vals[_time] || 0) }
@@ -336,7 +336,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function updateChart(first_time, silent){
-      if(!silent){ $(opts.elem).css('opacity', 0.5); }    
+      if(!silent){ $(opts.elem).css('opacity', 0.5); }
       updateRange();
       redrawDatepicker();
       requestValuesAsync();

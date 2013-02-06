@@ -5,8 +5,9 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
       {
         :cmd => :values_at,
         :gauges => event["gauges"].map{ |gkey|
-          vals = namespace.gauges[gkey.to_sym].values_in(event["since"]..event["until"])
-          { :key => gkey, :vals => vals }
+          _gauge = namespace.gauges[gkey.to_sym]
+          vals = _gauge.values_in(event["since"]..event["until"])
+          { :key => gkey, :vals => vals, :title => _gauge.title }
         }
       }
     end
@@ -19,7 +20,7 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
     )
   end
 
-  def data    
+  def data
     super.merge(
       :series => series,
       :gauges => gauges.map(&:name),
@@ -35,10 +36,11 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
 
   def series
     colors = FnordMetric::COLORS.dup
-    
+
     gauges.map do |gauge|
-      { 
-        :name => gauge.name, 
+      {
+        :name => gauge.name,
+        :title => gauge.title,
         :data => [{:x => ticks.first, :y => 0}], 
         :color => colors.unshift(colors.pop).first 
       }
