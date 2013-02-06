@@ -8,6 +8,7 @@ Todos
   → simple gauge explorer (style like active users) + iframe snippet generator
   → hooks for custom css, js
   → linux/server monitor gauge (http://www.crunchbase.com/assets/images/original/0010/3221/103221v2.png)+ 
+  → icons for sidear
   → big screen view
   → alerts
   → make it responsive
@@ -15,7 +16,7 @@ Todos
 Done
 ====
 
-  → added :scale_by option for gauges
+  → gauge human_titles, units, scale_by
   → added fyrehose acceptor
   → explicit dashboard initialization with options -> dashboard grouping
-  → bugfix: gauge titles
+  → bugfix: lot's of small bugfixes

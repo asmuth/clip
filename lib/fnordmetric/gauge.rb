@@ -34,6 +34,10 @@ class FnordMetric::Gauge
     @opts[:group] || "Gauges"
   end
 
+  def unit
+    @opts[:unit]
+  end
+
   def key_nouns
     @opts[:key_nouns] || ["Key", "Keys"]
   end

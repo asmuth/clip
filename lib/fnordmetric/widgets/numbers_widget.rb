@@ -45,6 +45,7 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
     super.merge(
       :series => gauges.map(&:name),
       :series_titles => gauges.map(&:title),
+      :series_units => Hash[gauges.map{ |g| [g.name, g.unit] }],
       :offsets => (@opts[:offsets] || [0, 1, "s30"]),
       :autoupdate => (@opts[:autoupdate] || 60)
     )

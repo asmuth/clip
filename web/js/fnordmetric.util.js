@@ -144,7 +144,9 @@ FnordMetric.util.updateNumbers = function(trgt_elem, diff_factor){
       if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
       if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
       $(this).attr('data-current', new_val);
-      $('.value', this).html(FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val));
+      var val_txt = FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val);
+      if ($(this).attr('data-unit')){ val_txt += $(this).attr('data-unit'); }
+      $('.value', this).html(val_txt);
     }
   });
   if(still_running){

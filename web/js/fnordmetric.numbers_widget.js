@@ -82,6 +82,11 @@ FnordMetric.widgets.numbersWidget = function(){
           .attr('rel', vkey)
           .append($('<span class="desc">').html(vdesc))
           .append($('<span class="value">').html(0))
+
+        if (opts.series_units[series]) {
+          velem.attr("data-unit", opts.series_units[series]);
+        }
+
         celem.append(velem);
       }
 
