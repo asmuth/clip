@@ -6,11 +6,13 @@ class FnordMetric::ToplistWidget < FnordMetric::Widget
     return false unless event["gauge"]
 
     resp = if event["cmd"] == "values_for"
+      vals = execute_values_for(namespace.gauges[event["gauge"].to_sym], t)
+
       {
         :cmd => :values_for,
         :gauge => event["gauge"],
-        :values => execute_values_for(namespace.gauges[event["gauge"].to_sym], t),
-        :count  => namespace.gauges[event["gauge"].to_sym].field_values_total(t)
+        :values => vals,
+        :count  => vals.inject(0){ |m, (k,c)| m + c }
       }
     end
 
