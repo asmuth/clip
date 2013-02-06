@@ -6,11 +6,15 @@ class FnordMetric::Acceptor
     FnordMetric.register(self)
   end
 
-  def initialized   
-    inbound_class = if @opts[:protocol] == :udp 
+  def initialized
+    inbound_class = if @opts[:protocol] == :udp
       FnordMetric::UDPAcceptor
-    else
+    elsif @opts[:protocol] == :tcp
       FnordMetric::TCPAcceptor
+    elsif @opts[:protocol] == :fyrehose
+      FnordMetric::FyrehoseAcceptor
+    else
+      raise "unknown protocol: #{@opts[:protocol]}"
     end
 
     @opts[:listen] = [
@@ -21,8 +25,9 @@ class FnordMetric::Acceptor
     begin
       inbound_stream = inbound_class.start(@opts)
       FnordMetric.log "listening on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}"
-    #rescue
-    #  FnordMetric.log "cant start #{inbound_class.name}. port in use?"
+    rescue Exception => e
+      raise e if ENV["FNORDMETRIC_ENV"] == "dev"
+      FnordMetric.log "cant start #{inbound_class.name} on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}. port in use?"
     end
   end
 
