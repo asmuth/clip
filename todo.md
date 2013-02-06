@@ -13,3 +13,8 @@ Todos
   → big screen view
   → alerts
   → make it responsive
+
+Done
+====
+
+  → explicit dashboard initialization with options -> dashboard grouping

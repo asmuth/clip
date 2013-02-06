@@ -53,7 +53,7 @@ FnordMetric.widgets.numbersWidget = function(){
     $('.numbers_container', opts.elem).each(function(i, e){
       var num_numbers = $('.number', e).length;
       if(num_numbers > max_per_row){ num_numbers = max_per_row; }
-      $(e).css('width', (num_numbers * 95)+'px');
+      $(e).css('width', (num_numbers * 90)+'px');
     });
   }
 
@@ -90,13 +90,13 @@ FnordMetric.widgets.numbersWidget = function(){
       }
 
       if(!!opts.dont_animate){
-        velem.attr('data', values[vkey].value) 
+        velem.attr('data', values[vkey].value)
         $('.value', velem).html(FnordMetric.util.formatGaugeValue(vkey, values[vkey].value));
       } else {
-        velem.attr('data', values[vkey].value)      
+        velem.attr('data', values[vkey].value)
       }
     }
-    
+
     resize();
 
     if(!opts.dont_animate){
