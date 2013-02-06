@@ -77,7 +77,9 @@ FnordMetric.widgets.toplistWidget = function(){
 
   function renderGauge(gkey, gdata){
     var _elem = $('.toplist_inner', opts.elem).removeClass('loading').html('');
+    var n = 0;
     $(gdata.values).each(function(n, _gd){
+      if (opts.limit && ((n += 1) > opts.limit)) { return; }
       var _perc  = (parseInt(gdata.values[n][1]) / parseFloat(gdata.count))*100;
       var _item = $('<div class="toplist_item"><div class="title"></div><div class="value"></div><div class="percent"></div></div>');
 

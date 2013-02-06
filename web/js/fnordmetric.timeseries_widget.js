@@ -364,7 +364,6 @@ FnordMetric.widgets.timeseriesWidget = function(){
 
       if(!opts.start_timestamp || !opts.end_timestamp || !!force){
         opts.end_timestamp = _now + opts.tick;
-        console.log(xticks);
         opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
       }
     }

@@ -40,7 +40,8 @@ class FnordMetric::ToplistWidget < FnordMetric::Widget
       :ticks => @opts[:ticks],
       :click_callback => @opts[:click_callback],
       :async_chart => true,
-      :tick => tick
+      :tick => tick,
+      :limit => @opts[:limit]
     ).tap do |dat|
       dat.merge!(
         :gauges => @opts[:_gauges]
