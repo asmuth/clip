@@ -10,3 +10,6 @@ Todos
   → simple gauge explorer (style like active users) + iframe snippet generator
   → hooks for custom css, js
   → linux/server monitor gauge (http://www.crunchbase.com/assets/images/original/0010/3221/103221v2.png)+ 
+  → big screen view
+  → alerts
+  → make it responsive
