@@ -2002,7 +2002,6 @@ Rickshaw.Graph.Renderer.Line = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
       .attr("d", this.seriesPathFactory());
 
     if(fm_opts.draw_points){
-      console.log("FIXPAUL: timeseries widget -° draw points!");
     }
 
     var i = 0;

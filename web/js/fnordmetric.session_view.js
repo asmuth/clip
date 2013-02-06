@@ -224,7 +224,6 @@ FnordMetric.views.sessionView = (function(){
   }
 
   function sortSessions(){
-    console.log("fixpaul: sort and splice to 100");
   }
 
   function renderSession(session_data){

@@ -105,7 +105,6 @@ FnordMetric.widgets.toplistWidget = function(){
 
   function announce(evt){
 
-    console.log(evt);
     if((evt.widget_key == opts.widget_key) && ((evt.class == "widget_response") && (evt.cmd == "values_for")))
         renderGauge(evt.gauge, evt);
 
