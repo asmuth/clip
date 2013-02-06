@@ -77,9 +77,9 @@ FnordMetric.widgets.toplistWidget = function(){
 
   function renderGauge(gkey, gdata){
     var _elem = $('.toplist_inner', opts.elem).removeClass('loading').html('');
-    var n = 0;
+    var i = 0;
     $(gdata.values).each(function(n, _gd){
-      if (opts.limit && ((n += 1) > opts.limit)) { return; }
+      if (opts.limit && ((i += 1) > opts.limit)) { return; }
       var _perc  = (parseInt(gdata.values[n][1]) / parseFloat(gdata.count))*100;
       var _item = $('<div class="toplist_item"><div class="title"></div><div class="value"></div><div class="percent"></div></div>');
 
@@ -90,7 +90,7 @@ FnordMetric.widgets.toplistWidget = function(){
         lelem.click(function(){ lclbck($(this).attr('data-key')); return false; });
         $('.title', _item).html(lelem)
       } else {
-        $('.title', _item).html(gdata.values[n][0]);  
+        $('.title', _item).html(gdata.values[n][0]);
       }
 
       $('.value', _item).html(FnordMetric.util.formatGaugeValue(gkey, parseInt(gdata.values[n][1])));
@@ -101,6 +101,7 @@ FnordMetric.widgets.toplistWidget = function(){
 
   function announce(evt){
 
+    console.log(evt);
     if((evt.widget_key == opts.widget_key) && ((evt.class == "widget_response") && (evt.cmd == "values_for")))
         renderGauge(evt.gauge, evt);
 
