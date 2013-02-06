@@ -2,7 +2,6 @@ FnordMetric.widgets.timeseriesWidget = function(){
 
     /*
       options:
-        
         height: 430
         default_cardinal: true/false
         default_style: line/area/stack/flow
@@ -21,6 +20,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
       if(opts.default_style == "areaspline"){ opts.default_style = 'area'; }
       if(!opts.default_style){ opts.default_style = 'line'; }
       if(!opts.default_cardinal){ opts.default_cardinal = true; }
+      if(opts.xticks){ xticks = opts.xticks; }
 
       draw_layout();
 
@@ -364,6 +364,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
 
       if(!opts.start_timestamp || !opts.end_timestamp || !!force){
         opts.end_timestamp = _now + opts.tick;
+        console.log(xticks);
         opts.start_timestamp = opts.end_timestamp - (opts.tick * xticks);
       }
     }

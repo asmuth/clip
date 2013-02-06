@@ -4,7 +4,7 @@ FnordMetric.widgets.timelineWidget = function(){
     var width, height, canvas, series, opts, xtick;
     var xticks = 100;
     var running_request = false;
-  
+
     var series_paths = {};
     var series_values = {};
 

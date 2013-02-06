@@ -26,6 +26,7 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
       :gauges => gauges.map(&:name),
       :start_timestamp => ticks.first,
       :end_timestamp => ticks.last,
+      :xticks => (@opts[:xticks] || 30),
       :autoupdate => (@opts[:autoupdate] || 60),
       :include_current => !!@opts[:include_current],
       :default_style => (@opts[:plot_style] || 'line'),
