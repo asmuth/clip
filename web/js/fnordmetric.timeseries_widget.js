@@ -19,7 +19,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
 
       if(opts.default_style == "areaspline"){ opts.default_style = 'area'; }
       if(!opts.default_style){ opts.default_style = 'line'; }
-      if(!opts.default_cardinal){ opts.default_cardinal = true; }
+      if(!opts.default_cardinal){ opts.default_cardinal = false; }
       if(opts.xticks){ xticks = opts.xticks; }
 
       draw_layout();
