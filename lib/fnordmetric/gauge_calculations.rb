@@ -52,12 +52,18 @@ module FnordMetric::GaugeCalculations
     block = @@avg_per_count_proc if average?
     #block = @@count_per_session_proc if unique?
     block = @@avg_per_session_proc if unique? && average?
-    
-    if block
+
+    calc = if block
       instance_exec(_v, _t, &block)
     else
       _v
     end
+
+    if calc && @opts[:scale_by]
+      calc = calc.to_f * @opts[:scale_by].to_f
+    end
+
+    calc
   end
 
   def field_values_at(time, opts={}, &block)
