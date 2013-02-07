@@ -24,17 +24,18 @@ FnordMetric.widgets.toplistWidget = function(){
     if(!opts.ticks){
       var first = true;
       for(k in opts.gauges){
-        headbar.append(
-          $('<div></div>')
-            .attr('class', 'button mr')
-            .attr('rel', k)
-            .append(
-              $('<span></span>').html(opts.gauges[k].title)
-            ).click(function(){
-              loadGauge($(this).attr('rel'));
-            }
-          )
-        );
+        if (opts.gauges.length > 1)
+          headbar.append(
+            $('<div></div>')
+              .attr('class', 'button mr')
+              .attr('rel', k)
+              .append(
+                $('<span></span>').html(opts.gauges[k].title)
+              ).click(function(){
+                loadGauge($(this).attr('rel'));
+              }
+            )
+          );
         if(first){
           first = false;
           loadGauge(k);
