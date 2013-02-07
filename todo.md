@@ -2,6 +2,7 @@ Todos
 =====
 
   → bugfix: widgets w/o gauges
+  → amqp acceptor
   → bignumberwidget
   → exceptions gauge
   → fancy topbar daterange picker for legacy dashboards
@@ -10,6 +11,7 @@ Todos
   → hooks for custom css, js
   → linux/server monitor gauge (http://www.crunchbase.com/assets/images/original/0010/3221/103221v2.png)+ 
   → icons for sidear
+  → alerts
   → make it responsive
 
 Done
