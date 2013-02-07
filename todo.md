@@ -12,12 +12,13 @@ Todos
   → hooks for custom css, js
   → linux/server monitor gauge (http://www.crunchbase.com/assets/images/original/0010/3221/103221v2.png)+ 
   → icons for sidear
+  → alerts
   → make it responsive
 
 Done
 ====
 
   → gauge human_titles, units, scale_by
-  → added fyrehose acceptor
+  → added amqp acceptor, fyrehose acceptor
   → explicit dashboard initialization with options -> dashboard grouping
   → bugfix: lot's of small bugfixes
