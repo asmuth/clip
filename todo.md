@@ -2,6 +2,8 @@ Todos
 =====
 
   → bugfix: widgets w/o gauges
+  → stomp acceptor
+  → js api (<div data-gauge="...">)
   → bignumberwidget
   → exceptions gauge
   → fancy topbar daterange picker for legacy dashboards
