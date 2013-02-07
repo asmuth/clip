@@ -15,6 +15,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     var xticks   = 30;
 
     function render(_opts){
+      console.log(_opts);
       opts = _opts;
 
       if(opts.default_style == "areaspline"){ opts.default_style = 'area'; }

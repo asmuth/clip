@@ -6,7 +6,8 @@ var FnordMetric = (function(){
     '/js/fnordmetric.js',
     '/js/fnordmetric.util.js',
     '/js/fnordmetric.ui.js',
-    '/js/fnordmetric.timeline_widget.js'
+    '/js/fnordmetric.timeline_widget.js',
+    '/js/fnordmetric.js_api.js'
   ];
 
   var setup = function(opts){
@@ -15,7 +16,8 @@ var FnordMetric = (function(){
       return;
     }
 
-    this.ext_opts = opts;
+    FnordMetric.currentNamespace = opts.namespace;
+    FnordMetric.ws_addr = "ws://" + opts.address + "/stream";
 
     for (n=0; n < require.length; n++)
       document.write('<script type="text/javascript" src="' + (
@@ -24,12 +26,7 @@ var FnordMetric = (function(){
 
 
   return {
-    ext_opts: null,
     setup: setup
   };
 
 }());
-
-
-
-document.write()

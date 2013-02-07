@@ -3,13 +3,21 @@ var FnordMetric = (function(pre_init){
   var canvasElem = false;
   var currentView = false;
   var currentNamespace = false;
+  var ws_addr = null;
+  var js_api = false;
   var gauges = {};
   var socket, conf;
 
   var navigatedViaHash = false;
 
-  if (typeof pre_init != 'null') {
-    setup_ext(pre_init.ext_opts);
+  if (typeof pre_init != 'undefined') {
+    currentNamespace = pre_init.currentNamespace;
+    ws_addr = pre_init.ws_addr;
+    $(document).ready(function(){
+      FnordMetric.js_api.init();
+      js_api = FnordMetric.js_api;
+      connect();
+    });
   }
 
   function renderDashboard(_dash){
@@ -148,7 +156,6 @@ var FnordMetric = (function(pre_init){
     $(".resize_listener").trigger('fm_resize');
   };
 
-
   function init(_conf){
     conf = _conf;
     this.currentNamespace = _conf.token;
@@ -170,19 +177,18 @@ var FnordMetric = (function(pre_init){
     resizeView();
   };
 
-  function setup_ext(_conf){
-    conf = _conf;
-    this.currentNamespace = _conf.token;
-    FnordMetric.ws_addr = "ws://" + _conf.address + "/stream";
-
-    connect();
-  };
-
   function connect(){
     socket = new WebSocket(FnordMetric.ws_addr);
-    socket.onmessage = socketMessage;
-    socket.onclose = socketClose;
-    socket.onopen = socketOpen;
+
+    if (js_api == false) {
+      socket.onmessage = socketMessage;
+      socket.onclose = socketClose;
+      socket.onopen = socketOpen;
+    } else {
+      socket.onmessage = js_api.socketMessage;
+      socket.onclose = js_api.socketClose;
+      socket.onopen = js_api.socketOpen;
+    }
   }
 
   function publish(obj){
@@ -204,31 +210,27 @@ var FnordMetric = (function(pre_init){
 
   function socketOpen(){
     console.log("[FnordMetric] connected...");
-    if (typeof pre_init == 'null') {
-      publish({"type": "discover_request"});
-      $('.flash_msg_over').fadeOut(function(){ $(this).remove(); });
-    }
+    publish({"type": "discover_request"});
+    $('.flash_msg_over').fadeOut(function(){ $(this).remove(); });
   }
 
   function socketClose(){
     console.log("[FnordMetric] socket closed"); 
 
-    if (typeof pre_init == 'null') {
-      if($('.flash_msg_over').length == 0){
-        $(viewport)
-          .append($("<div class='flash_msg_over'>")
-            .append($("<div class='inner'>")
-              .append('<h1>Oopsiedaisy, lost the connection...</h1>')
-              .append('<h2>Reconnecting to server...</h2>')
-              .append('<div class="loader_white">')));
+    if($('.flash_msg_over').length == 0){
+      $(viewport)
+        .append($("<div class='flash_msg_over'>")
+          .append($("<div class='inner'>")
+            .append('<h1>Oopsiedaisy, lost the connection...</h1>')
+            .append('<h2>Reconnecting to server...</h2>')
+            .append('<div class="loader_white">')));
 
-        window.setTimeout(function(){
-          $('.flash_msg_over').addClass('visible');  
-        }, 20);
-      }
+      window.setTimeout(function(){
+        $('.flash_msg_over').addClass('visible');  
+      }, 20);
     }
 
-    window.setTimeout(connect, 1000); 
+    window.setTimeout(connect, 1000);
   }
 
   function navigateViaHash(){
@@ -260,8 +262,8 @@ var FnordMetric = (function(pre_init){
     publish: publish,
     p: '',
     socket: socket,
-    currentNamespace: null,
-    ws_addr: null,
+    currentNamespace: currentNamespace,
+    ws_addr: ws_addr,
     currentWidgetUID: 23,
     ui: {},
     views: {},
