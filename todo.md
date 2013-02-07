@@ -2,7 +2,6 @@ Todos
 =====
 
   → bugfix: widgets w/o gauges
-  → amqp acceptor
   → bignumberwidget
   → exceptions gauge
   → fancy topbar daterange picker for legacy dashboards
@@ -18,6 +17,6 @@ Done
 ====
 
   → gauge human_titles, units, scale_by
-  → added fyrehose acceptor
+  → added amqp acceptor, fyrehose acceptor
   → explicit dashboard initialization with options -> dashboard grouping
   → bugfix: lot's of small bugfixes

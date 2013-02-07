@@ -13,6 +13,8 @@ class FnordMetric::Acceptor
       FnordMetric::TCPAcceptor
     elsif @opts[:protocol] == :fyrehose
       FnordMetric::FyrehoseAcceptor
+    elsif @opts[:protocol] == :amqp
+      FnordMetric::AMQPAcceptor
     else
       raise "unknown protocol: #{@opts[:protocol]}"
     end
@@ -24,7 +26,11 @@ class FnordMetric::Acceptor
 
     begin
       inbound_stream = inbound_class.start(@opts)
-      FnordMetric.log "listening on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}"
+      if inbound_class == FnordMetric::AMQPAcceptor
+        FnordMetric.log "connected to #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}"
+      else
+        FnordMetric.log "listening on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}"
+      end
     rescue Exception => e
       raise e if ENV["FNORDMETRIC_ENV"] == "dev"
       FnordMetric.log "cant start #{inbound_class.name} on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}. port in use?"
