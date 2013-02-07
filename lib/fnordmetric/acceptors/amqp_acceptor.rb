@@ -3,7 +3,7 @@ class FnordMetric::AMQPAcceptor
   def self.start(opts)
     begin
       require "amqp"
-    rescue
+    rescue LoadError
       FnordMetric.error("require 'amqp' failed, you need the amqp gem")
       exit 1
     end
@@ -47,6 +47,10 @@ class FnordMetric::AMQPAcceptor
 
   def api
     @api ||= FnordMetric::API.new(FnordMetric.options)
+  end
+
+  def self.outbound?
+    true
   end
 
 end

@@ -2,7 +2,6 @@ Todos
 =====
 
   → bugfix: widgets w/o gauges
-  → stomp acceptor
   → js api (<div data-gauge="...">)
   → bignumberwidget
   → exceptions gauge
@@ -19,6 +18,6 @@ Done
 ====
 
   → gauge human_titles, units, scale_by
-  → added amqp acceptor, fyrehose acceptor
+  → added stomp acceptor, amqp acceptor, fyrehose acceptor
   → explicit dashboard initialization with options -> dashboard grouping
   → bugfix: lot's of small bugfixes
