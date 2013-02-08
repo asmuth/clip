@@ -2,7 +2,6 @@
 Todo
 ====
 
-  → bugfix: widgets w/o gauges
   → icons for sidebar
   → simple gauge explorer (style like active users) + html5 api snippet generator
 
@@ -36,9 +35,9 @@ Changelog
     → added stomp acceptor, amqp acceptor, fyrehose acceptor
     → explicit dashboard initialization with options -> dashboard grouping
     → bugfix: lots of small bugfixes
-    → improved ui
 
   1.0.0
+    → improved ui
     → highcharts is dead, long live d3.js :)
     → websockets instead of ajax
     → new gauges are variable interval!
