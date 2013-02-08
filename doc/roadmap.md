@@ -1,9 +1,6 @@
-FnordMetric v1.0
-================
 
-
-Todos
-=====
+Todo
+====
 
   → bugfix: widgets w/o gauges
   → simple gauge explorer (style like active users) + iframe snippet generator
@@ -14,6 +11,7 @@ Todos
 
 Backlog
 =======
+
   → bignumberwidget
   → fancy topbar daterange picker for legacy dashboards
   → make fnordmetric responsive
@@ -31,14 +29,31 @@ Backlog
   → nice empty states
 
 
-Done
-====
+Changelog
+=========
 
-  → js api (<div data-gauge="...">)
-  → gauge human_titles, units, scale_by
-  → added stomp acceptor, amqp acceptor, fyrehose acceptor
-  → explicit dashboard initialization with options -> dashboard grouping
-  → bugfix: lot's of small bugfixes
+  1.1.0
+    → js api (<div data-gauge="...">)
+    → gauge human_titles, units, scale_by
+    → added stomp acceptor, amqp acceptor, fyrehose acceptor
+    → explicit dashboard initialization with options -> dashboard grouping
+    → bugfix: lots of small bugfixes
+    → improved ui
+
+  1.0.0
+    → highcharts is dead, long live d3.js :)
+    → websockets instead of ajax
+    → new gauges are variable interval!
+    → new gauges: timeseries, toplist, distribution (anti-repetition!)
+    → timeseries gauge: fraction api
+    → new things: trends, punchards, stdeviation etc
+    → splitted up code into acceptor, web, worker etc.
+    → splitted up javascript code
+    → refactorings, no server-side rendering
+    → less ram usage / garbage collection / single tick
+    → fnordmetric:announce redis pusub event-data instead of event_id
+    → config in multiple files
+
 
 
 Wiki
@@ -107,37 +122,4 @@ Wiki
 
 
 
-
-
-IDEAS
------
-
-  > overview view: gauge list (a'la github graphs landing)
-  > overview view: num active users, system stats (realtime widget)
-  > special events (incr, observe etc)
-  > distgauge: histograms tab
-  > toplgauge: tabs: compare
-  > timeseries-gauge: cmp. w/yesterday option
-  > geo_distribution_gauge
-  > value correlation / scatter plot (2d) gauge
-
-
-
-
-CHANGELOG
----------
-
-  > improved ui
-  > highcharts is dead, long live d3.js :)
-  > websockets instead of ajax
-  > new gauges are variable interval!
-  > new gauges: timeseries, toplist, distribution (anti-repetition!)
-  > timeseries gauge: fraction api
-  > new things: trends, punchards, stdeviation etc
-  > splitted up code into acceptor, web, worker etc.
-  > splitted up javascript code
-  > refactorings, no server-side rendering
-  > less ram usage / garbage collection / single tick
-  > fnordmetric:announce redis pusub event-data instead of event_id
-  > config in multiple files
 
