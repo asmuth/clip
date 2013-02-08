@@ -14,7 +14,6 @@ var FnordMetric = (function(pre_init){
     currentNamespace = pre_init.currentNamespace;
     ws_addr = pre_init.ws_addr;
     $(document).ready(function(){
-      FnordMetric.js_api.init();
       js_api = FnordMetric.js_api;
       connect();
     });

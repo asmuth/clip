@@ -3,12 +3,42 @@ FnordMetric.js_api = (function(){
   var timer = null;
   var update_interval = 1000;
 
+  var widgets = [];
+
   function init() {
-    console.log("yeah");
+    $("div[data-fnordmetric]").each(function(n, e){
+      var elem = $(e);
+
+      var widget = FnordMetric.widgets.timeseriesWidget();
+
+      widget.render({
+        elem: elem,
+        async_chart: true,
+        autoupdate: 1,
+        default_cardinal: false,
+        default_style: "line",
+        end_timestamp: 1360281926,
+        include_current: true,
+        klass: "TimelineWidget",
+        gauges: ["user_logins"],
+        series: [
+          { "color": "#4572a7", "data": [{x:0, y:0}], name: "user_logins" }
+        ],
+        start_timestamp: 1360263926,
+        tick: 60,
+        title: "Login and Signup",
+        widget_key: "loginandsignup",
+        width: 75,
+        xticks: 300
+      });
+
+      widgets.push(widget);
+    });
   }
 
   function socketOpen(){
     console.log("[FnordMetric] connected...");
+    init();
     timer = window.setInterval(poll, update_interval);
   }
 
@@ -24,6 +54,8 @@ FnordMetric.js_api = (function(){
 
     console.log("[FnordMetric] socket msg");
     console.log(evt);
+    for (n = 0; n < widgets.length; n++)
+      widgets[n].announce(evt);
   }
 
   function poll() {

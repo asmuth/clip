@@ -311,7 +311,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
         "since": opts.start_timestamp,
         "until": opts.end_timestamp,
         "widget_key": opts.widget_key
-      })
+      });
     }
 
     function updateSeriesData(dgauges){
