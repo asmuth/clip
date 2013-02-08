@@ -9,58 +9,67 @@ FnordMetric.js_api = (function(){
     $("div[data-fnordmetric]").each(function(n, e){
       var elem = $(e);
 
-      var widget = FnordMetric.widgets.timeseriesWidget();
+      if (elem.attr("data-fnordmetric") == "timeseries") {
+        var widget = FnordMetric.widgets.timeseriesWidget();
+        var gauges = elem.attr("data-gauges").split(",");
+        var colors = elem.attr("data-colors");
+        if (colors) { colors = colors.split(",") } else { colors = []; }
+        var series = [];
 
-      widget.render({
-        elem: elem,
-        async_chart: true,
-        autoupdate: 1,
-        default_cardinal: false,
-        default_style: "line",
-        end_timestamp: 1360281926,
-        include_current: true,
-        klass: "TimelineWidget",
-        gauges: ["user_logins"],
-        series: [
-          { "color": "#4572a7", "data": [{x:0, y:0}], name: "user_logins" }
-        ],
-        start_timestamp: 1360263926,
-        tick: 60,
-        title: "Login and Signup",
-        widget_key: "loginandsignup",
-        width: 100,
-        xticks: 300,
-        ext: true
-      });
+        var wstyle = elem.attr("data-style");
+        if (!wstyle) { wstlye = "line"; }
 
-      widgets.push(widget);
+        var wupdate = elem.attr("data-autoupdate");
+        if (!wupdate) { wupdate = 60; }
+        wupdate = parseInt(wupdate, 10);
+
+        var wrange = elem.attr("data-time-range");
+        if (!wrange) { wrange = 3600; }
+        wrange = parseInt(wrange, 10);
+
+        $(gauges).each(function(i, gname){
+          var gcolor = colors[i];
+          if (!gcolor) { gcolor = "#4572a7"; }
+          series.push(
+            { "color": gcolor, "data": [{x:0, y:0}], name: gname });
+        });
+
+        widget.render({
+          elem: elem,
+          async_chart: true,
+          include_current: true,
+          width: 100,
+          ext: true,
+          gauges: gauges,
+          series: series,
+          default_cardinal: false,
+          default_style: wstyle,
+          autoupdate: wupdate,
+          trange: wrange,
+          widget_key: "loginandsignup",
+        });
+
+        widgets.push(widget);
+      }
+
     });
   }
 
   function socketOpen(){
     console.log("[FnordMetric] connected...");
     init();
-    timer = window.setInterval(poll, update_interval);
   }
 
   function socketClose(){
     console.log("[FnordMetric] socket closed");
-    if (timer) window.clearInterval(timer);
-    timer = null;
     window.setTimeout(FnordMetric.connect, 1000);
   }
 
   function socketMessage(raw){
     var evt = JSON.parse(raw.data);
 
-    console.log("[FnordMetric] socket msg");
-    console.log(evt);
     for (n = 0; n < widgets.length; n++)
       widgets[n].announce(evt);
-  }
-
-  function poll() {
-    console.log("yeah");
   }
 
   return {

@@ -15,7 +15,6 @@ FnordMetric.widgets.timeseriesWidget = function(){
     var xticks   = 30;
 
     function render(_opts){
-      console.log(_opts);
       opts = _opts;
 
       if(opts.default_style == "areaspline"){ opts.default_style = 'area'; }
@@ -352,11 +351,17 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function updateRange(force){
+      var _now = parseInt(new Date().getTime() / 1000);
+
+      if (opts.ext) {
+        opts.end_timestamp = _now;
+        opts.start_timestamp = _now - opts.trange;
+        return;
+      }
+
       if(!opts.tick){
         opts.tick = opts.ticks[0];
       }
-
-      var _now = parseInt(new Date().getTime() / 1000);
 
       if((opts.autoupdate) && 
         ((_now - opts.end_timestamp) < ((opts.tick*(opts.autoupdate+1)) + 5))){
