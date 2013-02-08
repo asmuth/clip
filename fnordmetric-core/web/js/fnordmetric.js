@@ -46,11 +46,23 @@ var FnordMetric = (function(){
           .append($('<a href="#" class="title">').html('App Overview')));
     }*/
 
-    if(!conf.hide_active_users){
-      renderSidebarGroup('Overview')
+    var sidebar_overview;
+
+    if (!conf.hide_active_users || !conf.hide_gauge_explorer)
+      sidebar_overview = renderSidebarGroup('Overview');
+
+    if (!conf.hide_gauge_explorer) {
+      sidebar_overview
         .append($('<li class="overview">')
-          .append($('<a href="#" class="title">').html('Active Users'))
-          .click(function(){ renderSessionView(); }));
+        .append($('<a href="#" class="title">').html('Gauge Explorer'))
+        .click(function(){ renderGaugeExplorer(); }));
+    }
+
+    if (!conf.hide_active_users) {
+      sidebar_overview
+        .append($('<li class="overview">')
+        .append($('<a href="#" class="title">').html('Active Users'))
+        .click(function(){ renderSessionView(); }));
     }
 
     for(gkey in gauges){
@@ -113,6 +125,11 @@ var FnordMetric = (function(){
   function renderSessionView(){
     window.location.hash = 'active_users';
     loadView(FnordMetric.views.sessionView());
+  }
+
+  function renderGaugeExplorer(){
+    window.location.hash = 'gauge_explorer';
+    loadView(FnordMetric.views.gaugeExplorer());
   }
 
   function renderOverviewView(){
@@ -230,6 +247,9 @@ var FnordMetric = (function(){
         elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(11)+'"]');
       } else if (!!window.location.hash.match(/^#gauge\/[a-zA-Z_0-9-]+$/)){
         elem = $('#sidebar li.gauge[data-token="'+window.location.hash.slice(7)+'"]');
+      } else if(window.location.hash == "#gauge_explorer") {
+        navigatedViaHash = true;
+        renderGaugeExplorer();
       } else if(window.location.hash == "#active_users") {
         navigatedViaHash = true;
         renderSessionView();

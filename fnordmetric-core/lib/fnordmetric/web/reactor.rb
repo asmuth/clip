@@ -22,6 +22,7 @@ private
     messages << widget(ns, event) if event["type"] == "widget_request"
     messages << gauge(ns, event) if event["type"] == "render_request"
     messages << active_users(ns, event) if event["type"] == "active_users_request"
+    messages << gauge_list(ns, event) if event["type"] == "gauge_list_request"
 
     messages.flatten.compact.map do |m|
       m["namespace"] = event["namespace"]; m
@@ -92,6 +93,20 @@ private
       :sessions => sessions,
       :events => events.map(&:to_json),
       :types => types
+    }
+  end
+
+  def gauge_list(namespace, event)
+    gauges = namespace.gauges.map do |name, gauge|
+      {
+        "key" => gauge.name,
+        "title" => gauge.title
+      }
+    end
+
+    {
+      :type   => "gauge_list_response",
+      :gauges => gauges
     }
   end
 

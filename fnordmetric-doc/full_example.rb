@@ -5,7 +5,7 @@ FnordMetric.namespace :myapp do
 
   # hide_overview
   # hide_active_users
-
+  # hide_gauge_explorer
 
   # NEW DSL (v1.0 upwards)
 

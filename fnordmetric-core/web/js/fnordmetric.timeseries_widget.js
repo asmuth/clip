@@ -353,6 +353,9 @@ FnordMetric.widgets.timeseriesWidget = function(){
     function updateRange(force){
       var _now = parseInt(new Date().getTime() / 1000);
 
+      if (opts.no_update_range)
+        return;
+
       if (opts.ext) {
         opts.end_timestamp = _now;
         opts.start_timestamp = _now - opts.trange;

@@ -2,7 +2,9 @@ class FnordMetric::Namespace
   
   attr_reader :handlers, :gauges, :opts, :key, :dashboards, :flags
 
-  @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview, :dashboard]
+  @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview,
+            :hide_gauge_explorer, :dashboard]
+
   @@multi_gauges = [:timeseries_gauge, :toplist_gauge, :distribution_gauge]
 
   def initialize(key, opts)
@@ -12,6 +14,7 @@ class FnordMetric::Namespace
     @flags = Hash.new
     @title = key
     @active_users_available = true
+    @gauge_explorer_available = true
     @opts = opts
     @key = key
   end
@@ -78,7 +81,11 @@ class FnordMetric::Namespace
   end
 
   def active_users_available
-    @active_users_available
+    !!@active_users_available
+  end
+
+  def gauge_explorer_available
+    !!@active_users_available
   end
 
   def dashboards(name=nil, opts = {})
@@ -105,6 +112,10 @@ class FnordMetric::Namespace
 
   def opt_hide_active_users
     @flags[:hide_active_users] = true
+  end
+
+  def opt_hide_gauge_explorer
+    @flags[:hide_gauge_explorer] = true
   end
 
   def opt_hide_overview
