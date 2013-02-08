@@ -1,4 +1,4 @@
-.rickshaw_graph .y_ticks path { stroke:#fff; }
+.rickshaw_graph .y_ticks path { stroke:none; }
 .rickshaw_graph .y_grid .tick { stroke:rgba(0,0,0,.1); }
 
 .rickshaw_graph .x_tick {
