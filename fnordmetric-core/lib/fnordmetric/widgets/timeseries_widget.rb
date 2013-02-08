@@ -15,7 +15,7 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
     return false unless resp
 
     resp.merge(
-      :class => "widget_response",
+      :type => "widget_response",
       :widget_key => event["widget_key"]
     )
   end
@@ -42,8 +42,8 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
       {
         :name => gauge.name,
         :title => gauge.title,
-        :data => [{:x => ticks.first, :y => 0}], 
-        :color => colors.unshift(colors.pop).first 
+        :data => [{:x => ticks.first, :y => 0}],
+        :color => colors.unshift(colors.pop).first
       }
     end
   end

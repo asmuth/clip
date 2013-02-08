@@ -13,7 +13,7 @@ Timeseries Data
     {
       "namespace":"loveos",
       "type":"widget_request",
-      "klass":"TimeseriesWidget",
+      "klass":"generic",
       "cmd":"values_at",
       "gauges":["user_logins", "user_logins_failed"],
       "since":1360317470,
@@ -23,6 +23,23 @@ Timeseries Data
 
   response:
 
+    {
+      "namespace": "loveos",
+      "type": "widget_response",
+      "cmd": "values_at",
+      "gauges": [
+        {
+          "key": "useronline_total",
+          "title": "Useronline (total)",
+          "vals": {
+            1360326670: 123,
+            1360326680: 123,
+            1360326690: 123
+          }
+        }
+      ],
+      "widget_key": 123123123123,
+    }
 
 
 Single Value

@@ -107,8 +107,8 @@ FnordMetric.widgets.numbersWidget = function(){
 
   function announce(ev){
     if(ev.widget_key == opts.widget_key){
-      if((ev.class == "widget_response") && (ev.cmd == "values_for")){
-        renderValues(ev.series, ev.values)
+      if((ev.type == "widget_response") && (ev.cmd == "values_for")){
+        renderValues(ev.gauge, ev.values)
       }
     }
   }

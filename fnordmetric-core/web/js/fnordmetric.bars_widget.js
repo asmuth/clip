@@ -111,7 +111,7 @@ FnordMetric.widgets.barsWidget = function(){
 
     function announce(evt){
       if(evt.widget_key == opts.widget_key){
-        if((evt.class == "widget_response") && (evt.cmd == "values_for")){
+        if((evt.type == "widget_response") && (evt.cmd == "values_for")){
           running_request = false;
           $(opts.elem).css('opacity', 1); 
           values = evt.values;

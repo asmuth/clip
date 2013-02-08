@@ -52,13 +52,13 @@ FnordMetric.widgets.timelineWidget = function(){
           });
         }
       }
-      
+
       //canvas.drawGrid(0, 0, width+(2*xpadding), height, 1, 6, "#ececec");
     }
 
     function announce(evt){
       if(evt.widget_key == opts.widget_key){
-        if((evt._class == "widget_response") && (evt.cmd == "values_at")){
+        if((evt.type == "widget_response") && (evt.cmd == "values_at")){
           running_request = false;
           updateSeriesData(evt.tick, evt.values);
           updateChart();

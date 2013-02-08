@@ -19,7 +19,7 @@ class FnordMetric::ToplistWidget < FnordMetric::Widget
     return false unless resp
 
     resp.merge(
-      :class => "widget_response",
+      :type => "widget_response",
       :widget_key => event["widget_key"]
     )
   end

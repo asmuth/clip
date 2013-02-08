@@ -2,6 +2,7 @@
 Todo
 ====
 
+  → websocket proto: klass=>generic for timeseries/numbers
   → icons for sidebar
   → simple gauge explorer (style like active users) + html5 api snippet generator
 
