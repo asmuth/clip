@@ -38,6 +38,8 @@ FnordMetric.js_api = (function(){
             { "color": gcolor, "data": [{x:0, y:0}], name: gname });
         });
 
+        wkey = FnordMetric.util.getNextWidgetUID();
+
         widget.render({
           elem: elem,
           async_chart: true,
@@ -51,7 +53,7 @@ FnordMetric.js_api = (function(){
           default_style: wstyle,
           autoupdate: wupdate,
           trange: wrange,
-          widget_key: "loginandsignup",
+          widget_key: wkey
         });
 
         widgets.push(widget);
