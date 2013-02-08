@@ -1,4 +1,4 @@
-var FnordMetric = (function(pre_init){
+var FnordMetric = (function(){
 
   var canvasElem = false;
   var currentView = false;
@@ -9,15 +9,6 @@ var FnordMetric = (function(pre_init){
   var socket, conf;
 
   var navigatedViaHash = false;
-
-  if (typeof pre_init != 'undefined') {
-    currentNamespace = pre_init.currentNamespace;
-    ws_addr = pre_init.ws_addr;
-    $(document).ready(function(){
-      js_api = FnordMetric.js_api;
-      connect();
-    });
-  }
 
   function renderDashboard(_dash){
     loadView(FnordMetric.views.dashboardView(_dash));
@@ -251,6 +242,21 @@ var FnordMetric = (function(pre_init){
     }
   }
 
+  var setup = function(opts){
+    if (typeof $ == 'undefined') {
+      console.log("error: FnordMetric requires jQuery 1.6.2+");
+      return;
+    }
+
+    FnordMetric.currentNamespace = opts.namespace;
+    FnordMetric.ws_addr = "ws://" + opts.address + "/stream";
+
+    $(document).ready(function(){
+      js_api = FnordMetric.js_api;
+      connect();
+    });
+  }
+
   return {
     renderDashboard: renderDashboard,
     renderGauge: renderGauge,
@@ -259,6 +265,7 @@ var FnordMetric = (function(pre_init){
     resizeView: resizeView,
     init: init,
     publish: publish,
+    setup: setup,
     p: '',
     socket: socket,
     currentNamespace: currentNamespace,
@@ -271,4 +278,4 @@ var FnordMetric = (function(pre_init){
     gauges: gauges
   };
 
-})(FnordMetric);
+})();
