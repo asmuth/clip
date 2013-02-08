@@ -8,7 +8,7 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
     return false unless resp
 
     resp.merge(
-      :class => "widget_response",
+      :type => "widget_response",
       :widget_key => event["widget_key"]
     )
   end
@@ -36,8 +36,8 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
       end
     end
 
-    { "cmd" => "values_for", 
-      "series" => gauge.name, 
+    { "cmd" => "values_for",
+      "gauge" => gauge.name,
       "values" => values }
   end
 

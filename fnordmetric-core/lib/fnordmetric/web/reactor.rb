@@ -22,10 +22,16 @@ private
     messages << widget(ns, event) if event["type"] == "widget_request"
     messages << gauge(ns, event) if event["type"] == "render_request"
     messages << active_users(ns, event) if event["type"] == "active_users_request"
-    messages.flatten.compact
+
+    m = messages.flatten.compact.map do |m|
+      m["namespace"] = event["namespace"]; m
+    end
+    puts m.inspect
+    m
   end
 
   def widget(namespace, event)
+    puts event.inspect
     "FnordMetric::#{event["klass"]}".constantize.execute(namespace, event) # FIXPAUL
   end
 
