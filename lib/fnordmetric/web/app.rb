@@ -22,11 +22,11 @@ class FnordMetric::App < Sinatra::Base
     include FnordMetric::AppHelpers
   end
 
-  def initialize(opts)
-    @opts = opts
+  def initialize(opts = {})
+    @opts = FnordMetric.default_options(opts)
 
     @namespaces = FnordMetric.namespaces
-    @redis = Redis.connect(:url => opts[:redis_url])
+    @redis = Redis.connect(:url => @opts[:redis_url])
 
     super(nil)
   end
