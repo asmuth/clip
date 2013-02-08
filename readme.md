@@ -69,7 +69,8 @@ Check out the docs in [the wiki](http://github.com/paulasmuth/fnordmetric/wiki) 
 
 ### More Resources
 
-+ [PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
++ [PHP API for FnordMetric (use TCP) (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
++ [PHP API for FnordMetric directly into Redis (github.com/votintsev/fnordmetric-php-redis)](https://github.com/votintsev/fnordmetric-php-redis)
 + [Python API for FnordMetric (github.com/sholiday/pyfnordmetric)](https://github.com/sholiday/pyfnordmetric)
 + [Another Ruby API for FnordMetric](https://github.com/savonarola/fnordmetric-client)
 + [Beanstalk Monitoring with FnordMetric](https://github.com/sholiday/fnordstalk)
@@ -289,7 +290,7 @@ def start_example_data_generator
     loop do
       api.event(:_type => :signup, :referrer => (rand(3) == 1 ? :twitter : :facebook))
       api.event(:_type => :search, :keyword => (%w(Donau Dampf Schiff Fahrts Kaptitaens Muetzen Staender).shuffle[0..2] * ""))
-      api.event(:_type => :user_demography, :age => rand(15..85), :gender => (rand(2)==1 ? :female : :male) )
+      api.event(:_type => :user_demography, :age => [*15..85].sample, :gender => (rand(2)==1 ? :female : :male) )
       sleep (rand(10)/10.to_f)
     end
   end
