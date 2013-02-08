@@ -6,8 +6,41 @@ FnordMetric.js_api = (function(){
   var widgets = [];
 
   function init() {
-    $("div[data-fnordmetric]").each(function(n, e){
+    $("*[data-fnordmetric]").each(function(n, e){
       var elem = $(e);
+      var wkey = FnordMetric.util.getNextWidgetUID();
+
+      var wupdate = elem.attr("data-autoupdate");
+      if (!wupdate) { wupdate = 60; }
+      wupdate = parseInt(wupdate, 10);
+
+      if (elem.attr("data-fnordmetric") == "counter") {
+        var gauge = elem.attr("data-gauge");
+        var offset = elem.attr("data-time-range");
+        if (!offset){ offset = 0; }
+
+        widgets.push({
+          announce: function(evt) {
+            if (evt.widget_key == wkey) {
+              for (k in evt.values) {
+                elem.attr("data", evt.values[k].value);
+                FnordMetric.util.updateNumbers(elem, null, true);
+              }
+            }
+          }
+        });
+
+        window.setInterval(function(){
+          FnordMetric.publish({
+            "type": "widget_request",
+            "klass": "NumbersWidget",
+            "cmd": "values_for",
+            "gauge": gauge,
+            "offsets": [offset],
+            "widget_key": wkey
+          })
+        }, wupdate * 1000);
+      }
 
       if (elem.attr("data-fnordmetric") == "timeseries") {
         var widget = FnordMetric.widgets.timeseriesWidget();
@@ -23,10 +56,6 @@ FnordMetric.js_api = (function(){
         if (!wheight) { wheight = 240; }
         wheight = parseInt(wheight, 10);
 
-        var wupdate = elem.attr("data-autoupdate");
-        if (!wupdate) { wupdate = 60; }
-        wupdate = parseInt(wupdate, 10);
-
         var wrange = elem.attr("data-time-range");
         if (!wrange) { wrange = 3600; }
         wrange = parseInt(wrange, 10);
@@ -37,8 +66,6 @@ FnordMetric.js_api = (function(){
           series.push(
             { "color": gcolor, "data": [{x:0, y:0}], name: gname });
         });
-
-        wkey = FnordMetric.util.getNextWidgetUID();
 
         widget.render({
           elem: elem,

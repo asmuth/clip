@@ -127,10 +127,12 @@ FnordMetric.util.formatGaugeValue = function(gauge_key, value){
   }
 }
 
-FnordMetric.util.updateNumbers = function(trgt_elem, diff_factor){
+FnordMetric.util.updateNumbers = function(trgt_elem, diff_factor, single){
   var still_running = false;
   if(!diff_factor){ diff_factor = 4; }
-  $('.number', $(trgt_elem)).each(function(){
+  var elems = [];
+  if (single) { elems = [trgt_elem]; } else { elems = $('.number', $(trgt_elem)); }
+  $(elems).each(function(){
     var target_val = parseFloat($(this).attr('data'));
     var current_val = parseFloat($(this).attr('data-current'));
     if(!current_val){ current_val=0; }
@@ -146,15 +148,15 @@ FnordMetric.util.updateNumbers = function(trgt_elem, diff_factor){
       $(this).attr('data-current', new_val);
       var val_txt = FnordMetric.util.formatGaugeValue($(this).attr('rel'), new_val);
       if ($(this).attr('data-unit')){ val_txt += $(this).attr('data-unit'); }
-      $('.value', this).html(val_txt);
+      if (single) { $(this).html(val_txt); } else { $('.value', this).html(val_txt); }
     }
   });
   if(still_running){
-    (function(te, df){
+    (function(te, df, sg){
       window.setTimeout(function(){ 
-        FnordMetric.util.updateNumbers(te, df); 
+        FnordMetric.util.updateNumbers(te, df, sg); 
       }, 30);
-    })(trgt_elem, diff_factor);
+    })(trgt_elem, diff_factor, single);
   }
 }
 
