@@ -3,10 +3,8 @@ Todo
 ====
 
   → bugfix: widgets w/o gauges
-  → simple gauge explorer (style like active users) + iframe snippet generator
-  → linux/server monitor gauge (http://www.crunchbase.com/assets/images/original/0010/3221/103221v2.png)+ 
-  → exceptions gauge
   → icons for sidebar
+  → simple gauge explorer (style like active users) + html5 api snippet generator
 
 
 Backlog
@@ -59,9 +57,34 @@ Changelog
 Wiki
 ====
 
+  The FnordMetric core deals with processing data. There are two basic concepts:
+  events and gauges.
+
+  An Event is a piece of data that is sent to FnordMetric through one of the various
+  sources. This event is a JSON Object / Hash with almost no constraints on the schema.
+
+  A Gauge is a primitive data store for a numerical value over time (basically a counter
+  with history). Gauges can be used in different modes like sum, average, max/min, etcetara.
+
+  You write event handlers in ruby that get invoked per incoming event and modify (increment,
+  set, etcetera) gauges.
+
+  FnordMetric offers ways to display these gauges:
+
+  FnordMetric Embed (recommended): FnordMetric Embed is a JavaScript library that provides a HTML5 API
+  which lets you plugin realtime data and timeseries graphs into any webpage without having
+  to write any code. This gives you a lot of flexiblitiy as you can control the complete
+  layout and style with HTML and CSS. You can FnordMetric Embed as a white label solution
+  to power your customer analytics apps.
+
+  FnordMetric Frontend: FnordMetric Frontend is a ruby driven web interface for FnordMetric. It offers
+  a ruby DSL and a collection of UI widgets to define custom dashboards. You can also write your own
+  widgets or views on top of a ruby api.
+
+
   FnordMetric Core
 
-    > disambiguation: Concepts && Two ways to use: web interface vs. embed (like graphite)
+    > disambiguation: Concepts
     > quick start
 
     > sending data 
