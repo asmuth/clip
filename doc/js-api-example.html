@@ -4,8 +4,24 @@
     <title>FnordMetric</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+    <style type="text/css">
+      body{ background:#111; }
+      body.dark .rickshaw_legend li.line .label{ color:#fff; }
+      body.dark .rickshaw_graph .y_grid .tick { stroke:rgba(255,255,255,.15); stroke-dasharray:0; }
+      body.dark .rickshaw_graph .y_ticks text { fill:#ffffff; }
+      body.dark .rickshaw_graph .x_tick .title { color:#ffffff; }
+    </style>
   </head>
-  <body>
+  <body class="dark">
+
+    <div
+      data-fnordmetric="timeseries"
+      data-style="flow"
+      data-height="240"
+      data-time-range="16000"
+      data-autoupdate="10"
+      data-gauges="useronline_total"
+      style="width:600px; float:left;"></div>
 
     <div
       data-fnordmetric="timeseries"
@@ -15,7 +31,7 @@
       data-autoupdate="10"
       data-gauges="user_logins,user_logins_failed"
       data-colors="#00ff00,#ff0000"
-      style="width:600px; border:1px solid #ccc;"></div>
+      style="width:600px; float:left;"></div>
 
     <script src='http://localhost:8080/js/fnordmetric.ext.js' type='text/javascript'></script>
 
