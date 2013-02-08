@@ -1,17 +1,12 @@
 var FnordMetric = (function(){
 
   var require = [
-    '/vendor/d3.v2.js',
-    '/vendor/rickshaw.fnordmetric.js',
+    '/js/d3.fnordmetric.js',
+    '/js/rickshaw.fnordmetric.js',
     '/js/fnordmetric.js',
     '/js/fnordmetric.util.js',
     '/js/fnordmetric.timeseries_widget.js',
     '/js/fnordmetric.js_api.js'
-  ];
-
-  var require_css = [
-    '/vendor/rickshaw.css',
-    '/fnordmetric.rickshaw.css'
   ];
 
   var setup = function(opts){
@@ -26,10 +21,6 @@ var FnordMetric = (function(){
     for (n=0; n < require.length; n++)
       document.write('<script type="text/javascript" src="' + (
         "http://" + opts.address + require[n]) + '"></script>');
-
-    for (n=0; n < require_css.length; n++)
-      document.write('<link type="text/css" rel="stylesheet" href="' + (
-        "http://" + opts.address + require_css[n]) + '" />');
   }
 
 

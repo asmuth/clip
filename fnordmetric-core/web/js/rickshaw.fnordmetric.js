@@ -404,7 +404,7 @@ FnordMetricRickshaw.Graph = function(args) {
     this.setSize({ width: args.width, height: args.height });
 
     this.element.classList.add('rickshaw_graph');
-    this.vis = d3.select(this.element)
+    this.vis = fnord3.select(this.element)
       .append("svg:svg")
       .attr('width', this.width)
       .attr('height', this.height);
@@ -477,10 +477,10 @@ FnordMetricRickshaw.Graph = function(args) {
 
     var domain = this.renderer.domain();
 
-    this.x = d3.scale.linear().domain(domain.x).range([0, this.width]);
+    this.x = fnord3.scale.linear().domain(domain.x).range([0, this.width]);
 
-    this.y = d3.scale.linear().domain(domain.y).range([this.height, 0]);
-    this.y.magnitude = d3.scale.linear().domain(domain.y).range([0, this.height]);
+    this.y = fnord3.scale.linear().domain(domain.y).range([this.height, 0]);
+    this.y.magnitude = fnord3.scale.linear().domain(domain.y).range([0, this.height]);
 
   };
 
@@ -508,7 +508,7 @@ FnordMetricRickshaw.Graph = function(args) {
       data = entry.f.apply(self, [data]);
     } );
 
-    var layout = d3.layout.stack();
+    var layout = fnord3.layout.stack();
     layout.offset( self.offset );
 
     var stackedData = layout(data);
@@ -616,7 +616,7 @@ FnordMetricRickshaw.Fixtures.Color = function() {
     '#e7cbe6',
     '#d8aad6',
     '#a888c2',
-    '#9dc2d3',
+    '#9dc2fnord3',
     '#649eb9',
     '#387aa3'
   ].reverse();
@@ -653,11 +653,11 @@ FnordMetricRickshaw.Fixtures.Color = function() {
     '#86ad6e',
     '#a1bc5e',
     '#b8d954',
-    '#d3e04e',
+    '#fnord3e04e',
     '#ccad2a',
     '#cc8412',
     '#c1521d',
-    '#ad3821',
+    '#afnord3821',
     '#8a1010',
     '#681717',
     '#531e1e',
@@ -675,7 +675,7 @@ FnordMetricRickshaw.Fixtures.Color = function() {
     '#7d5836',
     '#963b20',
     '#7c2626',
-    '#491d37',
+    '#491fnord37',
     '#2f254a'
   ].reverse();
 
@@ -1152,7 +1152,7 @@ FnordMetricRickshaw.Graph.Axis.Y = function(args) {
     if (args.element) {
 
       this.element = args.element;
-      this.vis = d3.select(args.element)
+      this.vis = fnord3.select(args.element)
         .append("svg:svg")
         .attr('class', 'rickshaw_graph y_axis');
 
@@ -1200,7 +1200,7 @@ FnordMetricRickshaw.Graph.Axis.Y = function(args) {
 
     if (this.graph.height !== this._renderHeight) this.setSize({ auto: true });
 
-    var axis = d3.svg.axis().scale(this.graph.y).orient(this.orientation);
+    var axis = fnord3.svg.axis().scale(this.graph.y).orient(this.orientation);
     axis.tickFormat( args.tickFormat || function(y) { return y } );
 
     if (this.orientation == 'left') {
@@ -1247,7 +1247,7 @@ FnordMetricRickshaw.Graph.Behavior.Series.Highlight = function(args) {
       self.legend.lines.forEach( function(line) {
         if (l === line) return;
         colorSafe[line.series.name] = colorSafe[line.series.name] || line.series.color;
-        line.series.color = d3.interpolateRgb(line.series.color, d3.rgb('#d8d8d8'))(0.8).toString();
+        line.series.color = fnord3.interpolateRgb(line.series.color, fnord3.rgb('#d8d8d8'))(0.8).toString();
       } );
 
       self.graph.update();
@@ -1487,7 +1487,7 @@ FnordMetricRickshaw.Graph.HoverDetail = FnordMetricRickshaw.Class.create({
 
     var topSeriesData = stackedData.slice(-1).shift();
 
-    var domainIndexScale = d3.scale.linear()
+    var domainIndexScale = fnord3.scale.linear()
       .domain([topSeriesData[0].x, topSeriesData.slice(-1).shift().x])
       .range([0, topSeriesData.length]);
 
@@ -1863,8 +1863,8 @@ FnordMetricRickshaw.Graph.Renderer = FnordMetricRickshaw.Class.create( {
     xMin -= (xMax - xMin) * this.padding.left;
     xMax += (xMax - xMin) * this.padding.right;
 
-    var yMin = this.graph.min === 'auto' ? d3.min( values ) : this.graph.min || 0;
-    var yMax = this.graph.max || d3.max( values );
+    var yMin = this.graph.min === 'auto' ? fnord3.min( values ) : this.graph.min || 0;
+    var yMax = this.graph.max || fnord3.max( values );
 
     if (this.graph.min === 'auto' || yMin < 0) {
       yMin -= (yMax - yMin) * this.padding.bottom;
@@ -1975,7 +1975,7 @@ FnordMetricRickshaw.Graph.Renderer.Line = FnordMetricRickshaw.Class.create( Fnor
 
     var graph = this.graph;
 
-    return d3.svg.line()
+    return fnord3.svg.line()
       .x( function(d) { return graph.x(d.x) } )
       .y( function(d) { return graph.y(d.y) } )
       .interpolate(this.graph.interpolation).tension(this.tension);
@@ -2034,7 +2034,7 @@ FnordMetricRickshaw.Graph.Renderer.Stack = FnordMetricRickshaw.Class.create( Fno
 
     var graph = this.graph;
 
-    return d3.svg.area()
+    return fnord3.svg.area()
       .x( function(d) { return graph.x(d.x) } )
       .y0( function(d) { return graph.y(d.y0) } )
       .y1( function(d) { return graph.y(d.y + d.y0) } )
@@ -2064,7 +2064,7 @@ FnordMetricRickshaw.Graph.Renderer.Stack = FnordMetricRickshaw.Class.create( Fno
     var fill = this.fill ? series.color : 'none';
     var stroke = this.stroke ? series.color : 'none';
 
-    series.path.setAttribute('fill', d3.interpolateRgb(fill, 'white')(0.125))
+    series.path.setAttribute('fill', fnord3.interpolateRgb(fill, 'white')(0.125))
     series.path.setAttribute('stroke', stroke);
     if (fm_opts){
       series.path.setAttribute('stroke-width', fm_opts.stroke_width);
@@ -2257,7 +2257,7 @@ FnordMetricRickshaw.Graph.Renderer.Area = FnordMetricRickshaw.Class.create( Fnor
 
     var graph = this.graph;
 
-    return d3.svg.area()
+    return fnord3.svg.area()
       .x( function(d) { return graph.x(d.x) } )
       .y0( function(d) { return graph.y(d.y0) } )
       .y1( function(d) { return graph.y(d.y + d.y0) } )
@@ -2268,7 +2268,7 @@ FnordMetricRickshaw.Graph.Renderer.Area = FnordMetricRickshaw.Class.create( Fnor
 
     var graph = this.graph;
 
-    return d3.svg.line()
+    return fnord3.svg.line()
       .x( function(d) { return graph.x(d.x) } )
       .y( function(d) { return graph.y(d.y + d.y0) } )
       .interpolate(graph.interpolation).tension(this.tension);
@@ -2312,13 +2312,13 @@ FnordMetricRickshaw.Graph.Renderer.Area = FnordMetricRickshaw.Class.create( Fnor
 
     if (!series.path) return;
 
-    d3.select(series.path).select('.area')
+    fnord3.select(series.path).select('.area')
       .attr('opacity', '0.65')
       .attr('fill', series.color);
 
-    d3.select(series.path).select('.line')
+    fnord3.select(series.path).select('.line')
       .attr('fill', 'none')
-      .attr('stroke', d3.interpolateRgb(series.color, 'white')(0.125))
+      .attr('stroke', fnord3.interpolateRgb(series.color, 'white')(0.125))
       .attr('stroke-width', fm_opts.stroke_width);
 
     if (series.className) {
