@@ -57,35 +57,76 @@ Changelog
 Wiki
 ====
 
+  FnordMetric is a framework for collecting and displaying timseries data. It is split up into
+  three components:
+
+
+  FnordMetric UI
+  --------------
+
+  FnordMetric UI is a HTML5 / JavaScript API that lets you plugin realtime data and timeseries
+  graphs into any webpage without having to write a single line of code. It gives you maximum
+  flexiblitiy as you can control the complete layout and style with HTML and CSS. FnordMetric UI
+  uses WebSockets to communicate with the backend. There are two backend implementations:
+  FnordMetric Classic (ruby + redis) or FnordMetric Enterprise (JVM). You can use FnordMetric UI
+  as a white label solution to power your custom realtime analytics apps.
+
+
+  FnordMetric Classic
+  -------------------
+
+  FnordMetric Classic offers a ruby DSL for processing data streams and manipulating gauges that
+  get stored in redis. It includes a collection of pre-made UI widgets which you can use to build
+  beautiful web dashboards within minutes. You can also use the FnordMetric UI HTML5 API to display
+  the data on another website or build highly customized / white label views.
+
+
+  FnordMetric Enterprise
+  ----------------------
+
+  FnordMetric Enterprise is a JVM based timeseries database which serves as a backend for FnordMetric
+  UI. It does not offer it's own user interface.
+
+
+
+  The basic concept in FnordMetric is called a "gauge". A Gauge is a primitive data store for a numerical value over
+  time. A gauge has two dimensions: Value und Time. Gauges can be used in different modes like sum,
+  average, max/min, etcetara.
+
   The FnordMetric core deals with processing data. There are two basic concepts:
   events and gauges.
 
   An Event is a piece of data that is sent to FnordMetric through one of the various
   sources. This event is a JSON Object / Hash with almost no constraints on the schema.
 
-  A Gauge is a primitive data store for a numerical value over time (basically a counter
-  with history). Gauges can be used in different modes like sum, average, max/min, etcetara.
-
   You write event handlers in ruby that get invoked per incoming event and modify (increment,
   set, etcetera) gauges.
 
-  FnordMetric offers ways to display these gauges:
-
-  FnordMetric Embed (recommended): FnordMetric Embed is a JavaScript library that provides a HTML5 API
-  which lets you plugin realtime data and timeseries graphs into any webpage without having
-  to write any code. This gives you a lot of flexiblitiy as you can control the complete
-  layout and style with HTML and CSS. You can FnordMetric Embed as a white label solution
-  to power your customer analytics apps.
-
-  FnordMetric Frontend: FnordMetric Frontend is a ruby driven web interface for FnordMetric. It offers
-  a ruby DSL and a collection of UI widgets to define custom dashboards. You can also write your own
-  widgets or views on top of a ruby api.
 
 
-  FnordMetric Core
 
-    > disambiguation: Concepts
-    > quick start
+
+  FnordMetric UI
+
+    > getting started
+
+    > api reference
+      - counters
+      - timeseries
+
+    > examples
+      - date / time controls
+      - example_1.html
+
+
+  FnordMetric Enterprises
+
+    > getting started
+
+
+  FnordMetric Classic
+
+    > getting started
 
     > sending data 
       - _type, _time field mandatory
@@ -105,44 +146,30 @@ Wiki
 
    > gauge api
      - two vs three dimensional
-     - incr, incr_field etc.
 
+  > custom dashboards
+    - overview
+   - incr, incr_field etc.
 
-  FnordMetric Embed
+  > widgets
+    - timerseries widget
+    - numbers widget
+    - bars widget
 
-    > quickstart
+  > plugins
+    > active users dashboard
+    > gauge explorer
+    > timeseries gauge
+      - calculate-option: count, sum, progressive_sum, avg
+      - incr / incr_counter / incr_denominator
+    > toplist gauge
+    > distribution gauge
 
-    > api reference
-      - counters
-      - timeseries
+  > hacking
+    - custom views / widgets
 
-    > examples
-      - full_example.rb
-
-
-  FnordMetric Frontend
-
-    > custom dashboards
-      - overview
-
-    > widgets
-      - timerseries widget
-      - numbers widget
-      - bars widget
-
-    > pre-made gauges
-      > timeseries gauge
-        - calculate-option: count, sum, progressive_sum, avg
-        - incr / incr_counter / incr_denominator
-      > toplist gauge
-      > distribution gauge
-
-    > hacking
-      - custom views / widgets
-
-    > examples
-      - full_example.rb
-
+  > examples
+    - full_example.rb
 
 
 
