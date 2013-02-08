@@ -290,7 +290,7 @@ def start_example_data_generator
     loop do
       api.event(:_type => :signup, :referrer => (rand(3) == 1 ? :twitter : :facebook))
       api.event(:_type => :search, :keyword => (%w(Donau Dampf Schiff Fahrts Kaptitaens Muetzen Staender).shuffle[0..2] * ""))
-      api.event(:_type => :user_demography, :age => rand(15..85), :gender => (rand(2)==1 ? :female : :male) )
+      api.event(:_type => :user_demography, :age => [*15..85].sample, :gender => (rand(2)==1 ? :female : :male) )
       sleep (rand(10)/10.to_f)
     end
   end
