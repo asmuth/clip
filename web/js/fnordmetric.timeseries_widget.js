@@ -119,7 +119,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function draw_layout(){
-     if(!opts.no_headbar){
+     if(!opts.ext && !opts.no_headbar){
         $(opts.elem).append(
           $('<div></div>')
             .addClass('headbar')
@@ -187,7 +187,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
             })
         );
 
-      if(opts.async_chart){
+      if(!opts.ext && opts.async_chart){
         $('.headbar', opts.elem).prepend(
           $('<div></div>')
             .addClass('button ml')

@@ -28,8 +28,9 @@ FnordMetric.js_api = (function(){
         tick: 60,
         title: "Login and Signup",
         widget_key: "loginandsignup",
-        width: 75,
-        xticks: 300
+        width: 100,
+        xticks: 300,
+        ext: true
       });
 
       widgets.push(widget);
