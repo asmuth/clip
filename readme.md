@@ -69,7 +69,8 @@ Check out the docs in [the wiki](http://github.com/paulasmuth/fnordmetric/wiki) 
 
 ### More Resources
 
-+ [PHP API for FnordMetric (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
++ [PHP API for FnordMetric (use TCP) (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
++ [PHP API for FnordMetric directly into Redis (github.com/votintsev/fnordmetric-php-redis)](https://github.com/votintsev/fnordmetric-php-redis)
 + [Python API for FnordMetric (github.com/sholiday/pyfnordmetric)](https://github.com/sholiday/pyfnordmetric)
 + [Another Ruby API for FnordMetric](https://github.com/savonarola/fnordmetric-client)
 + [Beanstalk Monitoring with FnordMetric](https://github.com/sholiday/fnordstalk)
