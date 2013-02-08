@@ -19,6 +19,10 @@ FnordMetric.js_api = (function(){
         var wstyle = elem.attr("data-style");
         if (!wstyle) { wstlye = "line"; }
 
+        var wheight = elem.attr("data-height");
+        if (!wheight) { wheight = 240; }
+        wheight = parseInt(wheight, 10);
+
         var wupdate = elem.attr("data-autoupdate");
         if (!wupdate) { wupdate = 60; }
         wupdate = parseInt(wupdate, 10);
@@ -39,6 +43,7 @@ FnordMetric.js_api = (function(){
           async_chart: true,
           include_current: true,
           width: 100,
+          height: wheight,
           ext: true,
           gauges: gauges,
           series: series,
