@@ -98,9 +98,9 @@ FnordMetric.widgets.barsWidget = function(){
         });
       }
 
-      graph = new Rickshaw.Graph(gconfig);
+      graph = new FnordMetricRickshaw.Graph(gconfig);
 
-      new Rickshaw.Graph.Axis.Y({
+      new FnordMetricRickshaw.Graph.Axis.Y({
         graph: graph,
       }).render();
 

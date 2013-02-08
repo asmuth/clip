@@ -252,32 +252,32 @@ FnordMetric.widgets.timeseriesWidget = function(){
         apply_resolution();
       }
 
-      graph = new Rickshaw.Graph(gconfig);
+      graph = new FnordMetricRickshaw.Graph(gconfig);
 
-      legend = new Rickshaw.Graph.Legend({
+      legend = new FnordMetricRickshaw.Graph.Legend({
         graph: graph,
         element: $('.legend', opts.elem)[0]
       });
 
-      hoverDetail = new Rickshaw.Graph.HoverDetail( {
+      hoverDetail = new FnordMetricRickshaw.Graph.HoverDetail( {
         graph: graph
       });
 
-      shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+      shelving = new FnordMetricRickshaw.Graph.Behavior.Series.Toggle({
         graph: graph,
         legend: legend
       });
 
-      highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+      highlighter = new FnordMetricRickshaw.Graph.Behavior.Series.Highlight({
         graph: graph,
         legend: legend
       });
 
-      new Rickshaw.Graph.Axis.Time({
+      new FnordMetricRickshaw.Graph.Axis.Time({
         graph: graph,
       }).render();
 
-      new Rickshaw.Graph.Axis.Y({
+      new FnordMetricRickshaw.Graph.Axis.Y({
         graph: graph,
       }).render();
 

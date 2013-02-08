@@ -1,4 +1,4 @@
-Rickshaw = {
+FnordMetricRickshaw = {
 
   namespace: function(namespace, obj) {
 
@@ -7,7 +7,7 @@ Rickshaw = {
     // for rudimentary compatibility w/ node
     var root = typeof global != 'undefined' ? global : window;
 
-    var parent = root.Rickshaw;
+    var parent = root.FnordMetricRickshaw;
 
     for(var i = 1, length = parts.length; i < length; i++) {
       currentPart = parts[i];
@@ -235,10 +235,10 @@ if (globalContext.exports) {
 else {
   globalContext.Class = Class;
 }
-})(Rickshaw);
-Rickshaw.namespace('Rickshaw.Compat.ClassList');
+})(FnordMetricRickshaw);
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Compat.ClassList');
 
-Rickshaw.Compat.ClassList = function() {
+FnordMetricRickshaw.Compat.ClassList = function() {
 
   /* adapted from http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
 
@@ -369,11 +369,11 @@ Rickshaw.Compat.ClassList = function() {
 };
 
 if ( (typeof RICKSHAW_NO_COMPAT !== "undefined" && !RICKSHAW_NO_COMPAT) || typeof RICKSHAW_NO_COMPAT === "undefined") {
-  new Rickshaw.Compat.ClassList();
+  new FnordMetricRickshaw.Compat.ClassList();
 }
-Rickshaw.namespace('Rickshaw.Graph');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph');
 
-Rickshaw.Graph = function(args) {
+FnordMetricRickshaw.Graph = function(args) {
 
   this.element = args.element;
   this.series = args.series;
@@ -385,7 +385,7 @@ Rickshaw.Graph = function(args) {
     max: undefined,
   };
 
-  Rickshaw.keys(this.defaults).forEach( function(k) {
+  FnordMetricRickshaw.keys(this.defaults).forEach( function(k) {
     this[k] = args[k] || this.defaults[k];
   }, this );
 
@@ -410,11 +410,11 @@ Rickshaw.Graph = function(args) {
       .attr('height', this.height);
 
     var renderers = [
-      Rickshaw.Graph.Renderer.Stack,
-      Rickshaw.Graph.Renderer.Line,
-      Rickshaw.Graph.Renderer.Bar,
-      Rickshaw.Graph.Renderer.Area,
-      Rickshaw.Graph.Renderer.ScatterPlot
+      FnordMetricRickshaw.Graph.Renderer.Stack,
+      FnordMetricRickshaw.Graph.Renderer.Line,
+      FnordMetricRickshaw.Graph.Renderer.Bar,
+      FnordMetricRickshaw.Graph.Renderer.Area,
+      FnordMetricRickshaw.Graph.Renderer.ScatterPlot
     ];
 
     renderers.forEach( function(r) {
@@ -428,7 +428,7 @@ Rickshaw.Graph = function(args) {
 
   this.validateSeries = function(series) {
 
-    if (!(series instanceof Array) && !(series instanceof Rickshaw.Series)) {
+    if (!(series instanceof Array) && !(series instanceof FnordMetricRickshaw.Series)) {
       var seriesSignature = Object.prototype.toString.apply(series);
       throw "series is not an array: " + seriesSignature;
     }
@@ -451,7 +451,7 @@ Rickshaw.Graph = function(args) {
 
       if (pointsCount && s.data.length != pointsCount) {
         throw "series cannot have differing numbers of points: " +
-          pointsCount + " vs " + s.data.length + "; see Rickshaw.Series.zeroFill()";
+          pointsCount + " vs " + s.data.length + "; see FnordMetricRickshaw.Series.zeroFill()";
       }
 
       var dataTypeX = typeof s.data[0].x;
@@ -559,7 +559,7 @@ Rickshaw.Graph = function(args) {
       this.setSize(args);
     }
 
-    Rickshaw.keys(this.defaults).forEach( function(k) {
+    FnordMetricRickshaw.keys(this.defaults).forEach( function(k) {
       this[k] = args[k] || this.defaults[k];
     }, this );
 
@@ -598,9 +598,9 @@ Rickshaw.Graph = function(args) {
 
   this.initialize(args);
 };
-Rickshaw.namespace('Rickshaw.Fixtures.Color');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Fixtures.Color');
 
-Rickshaw.Fixtures.Color = function() {
+FnordMetricRickshaw.Fixtures.Color = function() {
 
   this.schemes = {};
 
@@ -757,9 +757,9 @@ Rickshaw.Fixtures.Color = function() {
     '#999900'
   ];
 };
-Rickshaw.namespace('Rickshaw.Fixtures.RandomData');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Fixtures.RandomData');
 
-Rickshaw.Fixtures.RandomData = function(timeInterval) {
+FnordMetricRickshaw.Fixtures.RandomData = function(timeInterval) {
 
   var addData;
   timeInterval = timeInterval || 1;
@@ -789,9 +789,9 @@ Rickshaw.Fixtures.RandomData = function(timeInterval) {
   }
 };
 
-Rickshaw.namespace('Rickshaw.Fixtures.Time');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Fixtures.Time');
 
-Rickshaw.Fixtures.Time = function() {
+FnordMetricRickshaw.Fixtures.Time = function() {
 
   var tzOffset = new Date().getTimezoneOffset() * 60;
 
@@ -879,9 +879,9 @@ Rickshaw.Fixtures.Time = function() {
     return Math.ceil(time / unit.seconds) * unit.seconds;
   };
 };
-Rickshaw.namespace('Rickshaw.Fixtures.Number');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Fixtures.Number');
 
-Rickshaw.Fixtures.Number.formatKMBT = function(y) {
+FnordMetricRickshaw.Fixtures.Number.formatKMBT = function(y) {
   if (y >= 1000000000000)   { return y / 1000000000000 + "T" }
   else if (y >= 1000000000) { return y / 1000000000 + "B" }
   else if (y >= 1000000)    { return y / 1000000 + "M" }
@@ -891,7 +891,7 @@ Rickshaw.Fixtures.Number.formatKMBT = function(y) {
   else                      { return y }
 };
 
-Rickshaw.Fixtures.Number.formatBase1024KMGTP = function(y) {
+FnordMetricRickshaw.Fixtures.Number.formatBase1024KMGTP = function(y) {
     if (y >= 1125899906842624)  { return y / 1125899906842624 + "P" }
     else if (y >= 1099511627776){ return y / 1099511627776 + "T" }
     else if (y >= 1073741824)   { return y / 1073741824 + "G" }
@@ -901,11 +901,11 @@ Rickshaw.Fixtures.Number.formatBase1024KMGTP = function(y) {
     else if (y == 0)            { return '' }
     else                        { return y }
 };
-Rickshaw.namespace("Rickshaw.Color.Palette");
+FnordMetricRickshaw.namespace("FnordMetricRickshaw.Color.Palette");
 
-Rickshaw.Color.Palette = function(args) {
+FnordMetricRickshaw.Color.Palette = function(args) {
 
-  var color = new Rickshaw.Fixtures.Color();
+  var color = new FnordMetricRickshaw.Fixtures.Color();
 
   args = args || {};
   this.schemes = {};
@@ -917,9 +917,9 @@ Rickshaw.Color.Palette = function(args) {
     return this.scheme[key] || this.scheme[this.runningIndex++] || '#808080';
   };
 };
-Rickshaw.namespace('Graph.Ajax');
+FnordMetricRickshaw.namespace('Graph.Ajax');
 
-Rickshaw.Graph.Ajax = function(args) {
+FnordMetricRickshaw.Graph.Ajax = function(args) {
 
   var self = this;
   this.dataURL = args.dataURL;
@@ -964,7 +964,7 @@ Rickshaw.Graph.Ajax = function(args) {
         args.series = data;
       }
 
-      self.graph = new Rickshaw.Graph(args);
+      self.graph = new FnordMetricRickshaw.Graph(args);
       self.graph.render();
 
       if (typeof args.onComplete == 'function') {
@@ -974,9 +974,9 @@ Rickshaw.Graph.Ajax = function(args) {
   } );
 };
 
-Rickshaw.namespace('Rickshaw.Graph.Annotate');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Annotate');
 
-Rickshaw.Graph.Annotate = function(args) {
+FnordMetricRickshaw.Graph.Annotate = function(args) {
 
   var graph = this.graph = args.graph;
   this.elements = { timeline: args.element };
@@ -994,7 +994,7 @@ Rickshaw.Graph.Annotate = function(args) {
 
   this.update = function() {
 
-    Rickshaw.keys(self.data).forEach( function(time) {
+    FnordMetricRickshaw.keys(self.data).forEach( function(time) {
 
       var annotation = self.data[time];
       var left = self.graph.x(time);
@@ -1042,9 +1042,9 @@ Rickshaw.Graph.Annotate = function(args) {
 
   this.graph.onUpdate( function() { self.update() } );
 };
-Rickshaw.namespace('Rickshaw.Graph.Axis.Time');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Axis.Time');
 
-Rickshaw.Graph.Axis.Time = function(args) {
+FnordMetricRickshaw.Graph.Axis.Time = function(args) {
 
   var self = this;
 
@@ -1053,7 +1053,7 @@ Rickshaw.Graph.Axis.Time = function(args) {
   this.ticksTreatment = args.ticksTreatment || 'plain';
   this.fixedTimeUnit = args.timeUnit;
 
-  var time = new Rickshaw.Fixtures.Time();
+  var time = new FnordMetricRickshaw.Fixtures.Time();
 
   this.appropriateTimeUnit = function() {
 
@@ -1127,9 +1127,9 @@ Rickshaw.Graph.Axis.Time = function(args) {
   this.graph.onUpdate( function() { self.render() } );
 };
 
-Rickshaw.namespace('Rickshaw.Graph.Axis.Y');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Axis.Y');
 
-Rickshaw.Graph.Axis.Y = function(args) {
+FnordMetricRickshaw.Graph.Axis.Y = function(args) {
 
   var self = this;
   var berthRate = 0.10;
@@ -1230,9 +1230,9 @@ Rickshaw.Graph.Axis.Y = function(args) {
   this.initialize(args);
 };
 
-Rickshaw.namespace('Rickshaw.Graph.Behavior.Series.Highlight');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Behavior.Series.Highlight');
 
-Rickshaw.Graph.Behavior.Series.Highlight = function(args) {
+FnordMetricRickshaw.Graph.Behavior.Series.Highlight = function(args) {
 
   this.graph = args.graph;
   this.legend = args.legend;
@@ -1274,9 +1274,9 @@ Rickshaw.Graph.Behavior.Series.Highlight = function(args) {
   }
 
 };
-Rickshaw.namespace('Rickshaw.Graph.Behavior.Series.Order');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Behavior.Series.Order');
 
-Rickshaw.Graph.Behavior.Series.Order = function(args) {
+FnordMetricRickshaw.Graph.Behavior.Series.Order = function(args) {
 
   this.graph = args.graph;
   this.legend = args.legend;
@@ -1310,9 +1310,9 @@ Rickshaw.Graph.Behavior.Series.Order = function(args) {
     self.legend.element.style.height = h;
   } );
 };
-Rickshaw.namespace('Rickshaw.Graph.Behavior.Series.Toggle');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Behavior.Series.Toggle');
 
-Rickshaw.Graph.Behavior.Series.Toggle = function(args) {
+FnordMetricRickshaw.Graph.Behavior.Series.Toggle = function(args) {
 
   this.graph = args.graph;
   this.legend = args.legend;
@@ -1429,9 +1429,9 @@ Rickshaw.Graph.Behavior.Series.Toggle = function(args) {
   this.updateBehaviour = function () { this._addBehavior() };
 
 };
-Rickshaw.namespace('Rickshaw.Graph.HoverDetail');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.HoverDetail');
 
-Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
+FnordMetricRickshaw.Graph.HoverDetail = FnordMetricRickshaw.Class.create({
 
   initialize: function(args) {
 
@@ -1641,9 +1641,9 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
   }
 });
 
-Rickshaw.namespace('Rickshaw.Graph.JSONP');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.JSONP');
 
-Rickshaw.Graph.JSONP = function(args) {
+FnordMetricRickshaw.Graph.JSONP = function(args) {
 
   var self = this;
   this.dataURL = args.dataURL;
@@ -1687,7 +1687,7 @@ Rickshaw.Graph.JSONP = function(args) {
         args.series = data;
       }
 
-      self.graph = new Rickshaw.Graph(args);
+      self.graph = new FnordMetricRickshaw.Graph(args);
       self.graph.render();
 
       if (typeof args.onComplete == 'function') {
@@ -1697,9 +1697,9 @@ Rickshaw.Graph.JSONP = function(args) {
   } );
 };
 
-Rickshaw.namespace('Rickshaw.Graph.Legend');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Legend');
 
-Rickshaw.Graph.Legend = function(args) {
+FnordMetricRickshaw.Graph.Legend = function(args) {
 
   var element = this.element = args.element;
   var graph = this.graph = args.graph;
@@ -1759,9 +1759,9 @@ Rickshaw.Graph.Legend = function(args) {
 
   } );
 };
-Rickshaw.namespace('Rickshaw.Graph.RangeSlider');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.RangeSlider');
 
-Rickshaw.Graph.RangeSlider = function(args) {
+FnordMetricRickshaw.Graph.RangeSlider = function(args) {
 
   var element = this.element = args.element;
   var graph = this.graph = args.graph;
@@ -1814,14 +1814,14 @@ Rickshaw.Graph.RangeSlider = function(args) {
   } );
 };
 
-Rickshaw.namespace("Rickshaw.Graph.Renderer");
+FnordMetricRickshaw.namespace("FnordMetricRickshaw.Graph.Renderer");
 
-Rickshaw.Graph.Renderer = Rickshaw.Class.create( {
+FnordMetricRickshaw.Graph.Renderer = FnordMetricRickshaw.Class.create( {
 
   initialize: function(args) {
     this.graph = args.graph;
     this.tension = args.tension || this.tension;
-    this.graph.unstacker = this.graph.unstacker || new Rickshaw.Graph.Unstacker( { graph: this.graph } );
+    this.graph.unstacker = this.graph.unstacker || new FnordMetricRickshaw.Graph.Unstacker( { graph: this.graph } );
     this.configure(args);
   },
 
@@ -1915,7 +1915,7 @@ Rickshaw.Graph.Renderer = Rickshaw.Class.create( {
 
     args = args || {};
 
-    Rickshaw.keys(this.defaults()).forEach( function(key) {
+    FnordMetricRickshaw.keys(this.defaults()).forEach( function(key) {
 
       if (!args.hasOwnProperty(key)) {
         this[key] = this[key] || this.graph[key] || this.defaults()[key];
@@ -1924,7 +1924,7 @@ Rickshaw.Graph.Renderer = Rickshaw.Class.create( {
 
       if (typeof this.defaults()[key] == 'object') {
 
-        Rickshaw.keys(this.defaults()[key]).forEach( function(k) {
+        FnordMetricRickshaw.keys(this.defaults()[key]).forEach( function(k) {
 
           this[key][k] =
             args[key][k] !== undefined ? args[key][k] :
@@ -1956,15 +1956,15 @@ Rickshaw.Graph.Renderer = Rickshaw.Class.create( {
   }
 } );
 
-Rickshaw.namespace('Rickshaw.Graph.Renderer.Line');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Renderer.Line');
 
-Rickshaw.Graph.Renderer.Line = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
+FnordMetricRickshaw.Graph.Renderer.Line = FnordMetricRickshaw.Class.create( FnordMetricRickshaw.Graph.Renderer, {
 
   name: 'line',
 
   defaults: function($super) {
 
-    return Rickshaw.extend( $super(), {
+    return FnordMetricRickshaw.extend( $super(), {
       unstack: true,
       fill: false,
       stroke: true
@@ -2015,15 +2015,15 @@ Rickshaw.Graph.Renderer.Line = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 
 } );
 
-Rickshaw.namespace('Rickshaw.Graph.Renderer.Stack');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Renderer.Stack');
 
-Rickshaw.Graph.Renderer.Stack = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
+FnordMetricRickshaw.Graph.Renderer.Stack = FnordMetricRickshaw.Class.create( FnordMetricRickshaw.Graph.Renderer, {
 
   name: 'stack',
 
   defaults: function($super) {
 
-    return Rickshaw.extend( $super(), {
+    return FnordMetricRickshaw.extend( $super(), {
       fill: true,
       stroke: false,
       unstack: false,
@@ -2077,15 +2077,15 @@ Rickshaw.Graph.Renderer.Stack = Rickshaw.Class.create( Rickshaw.Graph.Renderer, 
 
 } );
 
-Rickshaw.namespace('Rickshaw.Graph.Renderer.Bar');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Renderer.Bar');
 
-Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
+FnordMetricRickshaw.Graph.Renderer.Bar = FnordMetricRickshaw.Class.create( FnordMetricRickshaw.Graph.Renderer, {
 
   name: 'bar',
 
   defaults: function($super) {
 
-    var defaults = Rickshaw.extend( $super(), {
+    var defaults = FnordMetricRickshaw.extend( $super(), {
       gapSize: 0.10,
       unstack: false,
     } );
@@ -2222,7 +2222,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 
     var frequentInterval = { count: 0 };
 
-    Rickshaw.keys(intervalCounts).forEach( function(i) {
+    FnordMetricRickshaw.keys(intervalCounts).forEach( function(i) {
       if (frequentInterval.count < intervalCounts[i]) {
 
         frequentInterval = {
@@ -2238,15 +2238,15 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
   }
 } );
 
-Rickshaw.namespace('Rickshaw.Graph.Renderer.Area');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Renderer.Area');
 
-Rickshaw.Graph.Renderer.Area = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
+FnordMetricRickshaw.Graph.Renderer.Area = FnordMetricRickshaw.Class.create( FnordMetricRickshaw.Graph.Renderer, {
 
   name: 'area',
 
   defaults: function($super) {
 
-    return Rickshaw.extend( $super(), {
+    return FnordMetricRickshaw.extend( $super(), {
       unstack: false,
       fill: false,
       stroke: false
@@ -2327,15 +2327,15 @@ Rickshaw.Graph.Renderer.Area = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
   }
 } );
 
-Rickshaw.namespace('Rickshaw.Graph.Renderer.ScatterPlot');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Renderer.ScatterPlot');
 
-Rickshaw.Graph.Renderer.ScatterPlot = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
+FnordMetricRickshaw.Graph.Renderer.ScatterPlot = FnordMetricRickshaw.Class.create( FnordMetricRickshaw.Graph.Renderer, {
 
   name: 'scatterplot',
 
   defaults: function($super) {
 
-    return Rickshaw.extend( $super(), {
+    return FnordMetricRickshaw.extend( $super(), {
       unstack: true,
       fill: true,
       stroke: false,
@@ -2372,9 +2372,9 @@ Rickshaw.Graph.Renderer.ScatterPlot = Rickshaw.Class.create( Rickshaw.Graph.Rend
     }, this );
   }
 } );
-Rickshaw.namespace('Rickshaw.Graph.Smoother');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Smoother');
 
-Rickshaw.Graph.Smoother = function(args) {
+FnordMetricRickshaw.Graph.Smoother = function(args) {
 
   this.graph = args.graph;
   this.element = args.element;
@@ -2439,9 +2439,9 @@ Rickshaw.Graph.Smoother = function(args) {
   }
 };
 
-Rickshaw.namespace('Rickshaw.Graph.Unstacker');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Graph.Unstacker');
 
-Rickshaw.Graph.Unstacker = function(args) {
+FnordMetricRickshaw.Graph.Unstacker = function(args) {
 
   this.graph = args.graph;
   var self = this;
@@ -2463,15 +2463,15 @@ Rickshaw.Graph.Unstacker = function(args) {
   } );
 };
 
-Rickshaw.namespace('Rickshaw.Series');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Series');
 
-Rickshaw.Series = Rickshaw.Class.create( Array, {
+FnordMetricRickshaw.Series = FnordMetricRickshaw.Class.create( Array, {
 
   initialize: function (data, palette, options) {
 
     options = options || {}
 
-    this.palette = new Rickshaw.Color.Palette(palette);
+    this.palette = new FnordMetricRickshaw.Color.Palette(palette);
 
     this.timeBase = typeof(options.timeBase) === 'undefined' ?
       Math.floor(new Date().getTime() / 1000) :
@@ -2511,7 +2511,7 @@ Rickshaw.Series = Rickshaw.Class.create( Array, {
 
     var index = this.getIndex();
 
-    Rickshaw.keys(data).forEach( function(name) {
+    FnordMetricRickshaw.keys(data).forEach( function(name) {
       if (! this.itemByName(name)) {
         this.addItem({ name: name });
       }
@@ -2593,7 +2593,7 @@ Rickshaw.Series = Rickshaw.Class.create( Array, {
   }
 } );
 
-Rickshaw.Series.zeroFill = function(series) {
+FnordMetricRickshaw.Series.zeroFill = function(series) {
 
   var x;
   var i = 0;
@@ -2617,9 +2617,9 @@ Rickshaw.Series.zeroFill = function(series) {
     i++;
   }
 };
-Rickshaw.namespace('Rickshaw.Series.FixedDuration');
+FnordMetricRickshaw.namespace('FnordMetricRickshaw.Series.FixedDuration');
 
-Rickshaw.Series.FixedDuration = Rickshaw.Class.create(Rickshaw.Series, {
+FnordMetricRickshaw.Series.FixedDuration = FnordMetricRickshaw.Class.create(FnordMetricRickshaw.Series, {
 
   initialize: function (data, palette, options) {
 
@@ -2633,7 +2633,7 @@ Rickshaw.Series.FixedDuration = Rickshaw.Class.create(Rickshaw.Series, {
       throw new Error('FixedDuration series requires maxDataPoints');
     }
 
-    this.palette = new Rickshaw.Color.Palette(palette);
+    this.palette = new FnordMetricRickshaw.Color.Palette(palette);
     this.timeBase = typeof(options.timeBase) === 'undefined' ? Math.floor(new Date().getTime() / 1000) : options.timeBase;
     this.setTimeInterval(options.timeInterval);
 

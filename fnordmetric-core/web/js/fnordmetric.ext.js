@@ -5,7 +5,6 @@ var FnordMetric = (function(){
     '/vendor/rickshaw.fnordmetric.js',
     '/js/fnordmetric.js',
     '/js/fnordmetric.util.js',
-    '/js/fnordmetric.ui.js',
     '/js/fnordmetric.timeseries_widget.js',
     '/js/fnordmetric.js_api.js'
   ];
