@@ -303,7 +303,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     function requestValuesAsync(){
       FnordMetric.publish({
         "type": "widget_request",
-        "klass": "TimeseriesWidget",
+        "klass": "generic",
         "gauges": opts.gauges,
         "cmd": "values_at",
         "tick": opts.tick, 

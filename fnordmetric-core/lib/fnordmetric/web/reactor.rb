@@ -23,16 +23,21 @@ private
     messages << gauge(ns, event) if event["type"] == "render_request"
     messages << active_users(ns, event) if event["type"] == "active_users_request"
 
-    m = messages.flatten.compact.map do |m|
+    messages.flatten.compact.map do |m|
       m["namespace"] = event["namespace"]; m
     end
-    puts m.inspect
-    m
   end
 
   def widget(namespace, event)
-    puts event.inspect
-    "FnordMetric::#{event["klass"]}".constantize.execute(namespace, event) # FIXPAUL
+    klass = if event["klass"] == "generic" && event["cmd"] == "values_for"
+      FnordMetric::NumbersWidget
+    elsif event["klass"] == "generic" && event["cmd"] == "values_at"
+      FnordMetric::TimeseriesWidget
+    else
+      "FnordMetric::#{event["klass"]}".constantize
+    end
+
+    klass.execute(namespace, event)
   end
 
   def gauge(namespace, event)

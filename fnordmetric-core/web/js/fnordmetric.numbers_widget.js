@@ -58,7 +58,7 @@ FnordMetric.widgets.numbersWidget = function(){
       FnordMetric.publish({
         "namespace": FnordMetric.currentNamespace,
         "type": "widget_request",
-        "klass": "NumbersWidget",
+        "klass": "generic",
         "channel": opts.channel,
         "cmd": "values_for",
         "gauge": opts.series[k],
