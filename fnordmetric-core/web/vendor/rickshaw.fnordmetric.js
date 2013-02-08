@@ -1284,7 +1284,7 @@ Rickshaw.Graph.Behavior.Series.Order = function(args) {
   var self = this;
 
   $(function() {
-    $(self.legend.list).sortable( {
+    /*$(self.legend.list).sortable( {
       containment: 'parent',
       tolerance: 'pointer',
       update: function( event, ui ) {
@@ -1300,7 +1300,7 @@ Rickshaw.Graph.Behavior.Series.Order = function(args) {
 
         self.graph.update();
       }
-    } );
+    } );*/
     $(self.legend.list).disableSelection();
   });
 
@@ -1384,7 +1384,7 @@ Rickshaw.Graph.Behavior.Series.Toggle = function(args) {
 
   if (this.legend) {
 
-                $(this.legend.list).sortable( {
+                /*$(this.legend.list).sortable( {
                         start: function(event, ui) {
                                 ui.item.bind('no.onclick',
                                         function(event) {
@@ -1397,7 +1397,7 @@ Rickshaw.Graph.Behavior.Series.Toggle = function(args) {
                                         ui.item.unbind('no.onclick');
                                 }, 250);
                         }
-                })
+                })*/
 
     this.legend.lines.forEach( function(l) {
       self.addAnchor(l);

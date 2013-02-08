@@ -21,11 +21,6 @@ var FnordMetric = (function(){
       return;
     }
 
-    if (typeof $.ui == 'undefined') {
-      console.log("error: FnordMetric requires jQuery UI");
-      return;
-    }
-
     FnordMetric.currentNamespace = opts.namespace;
     FnordMetric.ws_addr = "ws://" + opts.address + "/stream";
 
