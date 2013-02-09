@@ -49,11 +49,15 @@ var FnordMetric = (function(){
     elem.attr('data-widget-key', widget_key);
 
     widgets[widget_key] = FnordMetric.widgets[widget_type](elem);
+    widgets[widget_key].init();
   }
 
   function onSocketMessage(raw) {
-    var evt = JSON.parse(raw.data);
+    var n, evt = JSON.parse(raw.data);
     console.log(evt);
+
+    if (evt.widget_key && widgets[evt.widget_key])
+      widgets[evt.widget_key].send(evt);
   }
 
   function onSocketOpen() {

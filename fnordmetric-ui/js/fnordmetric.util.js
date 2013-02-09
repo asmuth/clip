@@ -47,35 +47,3 @@ FnordMetric.util.formatPercentValue = function(value){
 FnordMetric.util.generateUUID = function (){
   return Math.floor((1 + Math.random()) * 0x1000000).toString(16);
 }
-
-FnordMetric.util.updateCounter = function(trgt_elem, diff_factor){
-  var still_running = false;
-  if(!diff_factor){ diff_factor = 4; }
-  $([trgt_elem]).each(function(){
-    var target_val = parseFloat($(this).attr('data-value'));
-    var current_val = parseFloat($(this).attr('data-current'));
-    if(!current_val){ current_val=0; }
-    if(!target_val){ target_val=0; }
-    var diff = (target_val-current_val)/diff_factor;
-    if((diff > 0) && (diff < 1)){ diff=1; }
-    if((diff < 0) && (diff > -1)){ diff=-1; }
-    if(target_val != current_val){
-      still_running = true;
-      var new_val = current_val+diff;
-      if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
-      if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
-      $(this).attr('data-current', new_val);
-      var val_txt = FnordMetric.util.formatValue(new_val);
-      if ($(this).attr('data-unit')){ val_txt += $(this).attr('data-unit'); }
-      $(this).html(val_txt);
-    }
-  });
-  if(still_running){
-    (function(te, df, sg){
-      window.setTimeout(function(){ 
-        FnordMetric.util.updateCounter(te, df, sg); 
-      }, 30);
-    })(trgt_elem, diff_factor);
-  }
-}
-
