@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FnordMetric</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <link href='http://localhost:4242/fnordmetric-ui.css' type='text/css' rel='stylesheet' />
+    <script src='http://localhost:4242/fnordmetric-ui.js' type='text/javascript'></script>
+  </head>
+  <body class="dark">
+
+    <span
+      data-fnordmetric="counter"
+      data-gauge="unicorns_seen"
+      data-autoupdate="1"
+      >0</span>
+
+    <script>
+      FnordMetric.setup({
+        "address":   "localhost:4242",
+        "namespace": "myapp"
+      });
+    </script>
+
+  </body>
+</html>
+
+
