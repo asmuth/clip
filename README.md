@@ -17,7 +17,7 @@ Getting Started
 ---------------
 
 Simple Example: this will listen for json-events with `type=unicorn_seen` 
-and render a timeline-plot showing the number of received events per hour.
+and render a timeline-plot showing the number of received events per minute.
 
 ```ruby
 require "fnordmetric"
