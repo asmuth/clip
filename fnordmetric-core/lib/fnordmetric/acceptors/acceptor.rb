@@ -28,7 +28,7 @@ class FnordMetric::Acceptor
 
     begin
       inbound_stream = inbound_class.start(@opts)
-      if inbound_class.outbound?
+      if inbound_class.respond_to?(:outbound?) && inbound_class.outbound?
         FnordMetric.log "connected to #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}"
       else
         FnordMetric.log "listening on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}"
@@ -37,10 +37,6 @@ class FnordMetric::Acceptor
       raise e if ENV["FNORDMETRIC_ENV"] == "dev"
       FnordMetric.log "cant start #{inbound_class.name} on #{@opts[:protocol]}://#{@opts[:listen][0..1].join(":")}. port in use?"
     end
-  end
-
-  def self.outboud?
-    false
   end
 
 end

@@ -36,4 +36,8 @@ class FnordMetric::FyrehoseAcceptor
     @api ||= FnordMetric::API.new(FnordMetric.options)
   end
 
+  def self.outboud?
+    true
+  end
+
 end

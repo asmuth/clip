@@ -54,4 +54,5 @@ class FnordMetric::TCPAcceptor < EventMachine::Connection
   def api
     @api ||= FnordMetric::API.new(FnordMetric.options)
   end
+
 end
