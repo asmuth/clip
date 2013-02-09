@@ -390,7 +390,6 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function set_timerange(s, e){
-      console.log(s, e);
       opts.start_timestamp = s;
       opts.end_timestamp = e;
       redrawDatepicker();

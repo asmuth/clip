@@ -146,10 +146,13 @@ var FnordMetric = (function(){
   };
 
   function resizeView(){
-    var viewport_width = window.innerWidth - 220;
-    if(viewport_width < 780){ viewport_width=780; }
-    $('#viewport').width(viewport_width);
-    $('.navbar').width(viewport_width);
+    if (!conf.no_resize_viewport) {
+      var viewport_width = window.innerWidth - 220;
+      if(viewport_width < 780){ viewport_width=780; }
+      $('#viewport').width(viewport_width);
+      $('.navbar').width(viewport_width);
+    }
+
     FnordMetric.ui.resizable('.viewport_inner');
     if(currentView){
       currentView.resize(
@@ -166,7 +169,12 @@ var FnordMetric = (function(){
   function init(_conf){
     conf = _conf;
     this.currentNamespace = _conf.token;
-    this.ws_addr = "ws://" + document.location.host + '/stream';
+
+    if (conf.address) {
+      this.ws_addr = "ws://" + conf.address + '/stream';
+    } else {
+      this.ws_addr = "ws://" + document.location.host + '/stream';
+    }
 
     if(conf.title){ $('title').html(conf.title); }
 
@@ -217,7 +225,10 @@ var FnordMetric = (function(){
 
   function socketOpen(){
     console.log("[FnordMetric] connected...");
-    publish({"type": "discover_request"});
+
+    if (!conf.no_discovery)
+      publish({"type": "discover_request"});
+
     $('.flash_msg_over').fadeOut(function(){ $(this).remove(); });
   }
 
@@ -282,7 +293,9 @@ var FnordMetric = (function(){
     renderGauge: renderGauge,
     renderSessionView: renderSessionView,
     renderOverviewView: renderOverviewView,
+    renderGaugeExplorer: renderGaugeExplorer,
     resizeView: resizeView,
+    loadView: loadView,
     init: init,
     publish: publish,
     setup: setup,
