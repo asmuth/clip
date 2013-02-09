@@ -186,7 +186,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
             })
         );
 
-      if(!opts.ext && opts.async_chart){
+      if(!opts.ext && opts.async_chart && !opts.no_datepicker){
         $('.headbar', opts.elem).prepend(
           $('<div></div>')
             .addClass('button ml')
@@ -389,9 +389,18 @@ FnordMetric.widgets.timeseriesWidget = function(){
       requestValuesAsync();
     }
 
+    function set_timerange(s, e){
+      console.log(s, e);
+      opts.start_timestamp = s;
+      opts.end_timestamp = e;
+      redrawDatepicker();
+      requestValuesAsync();
+    }
+
     return {
       render: render,
-      announce: announce
+      announce: announce,
+      set_timerange: set_timerange
     }
 
 };

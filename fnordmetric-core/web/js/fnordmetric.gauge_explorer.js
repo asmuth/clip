@@ -1,14 +1,33 @@
 FnordMetric.views.gaugeExplorer = (function(){
 
-  var elem, widget, gauge_list;
+  var elem, widget, gauge_list, widget_inst;
+  var start_timestamp, end_timestamp, time_range;
   var currentGauge;
+  var autoupdate_timer;
+
+  var time_range = 3600;
+  var default_time_ranges = [
+    ["5m", 300],
+    ["15m", 900],
+    ["30m", 1800],
+    ["1h", 3600],
+    ["2h", 3600 * 2],
+    ["6h", 3600 * 6],
+    ["12h", 3600 * 12],
+    ["24h", 3600 * 24],
+    ["48h", 3600 * 48]
+  ];
 
   function load(_elem){
     elem = _elem;
 
     elem.html('<div class="navbar"></div><div class="ge_controlpanel">' +
-     '<label>Select a Gauge</label><select class="ge_gauge_picker"></select>' +
-     '</div><div class="widget_viewport"></div>');
+       '<label>Select a Gauge</label><select class="ge_gauge_picker"></select>' +
+     '</div><div class="ge_controlpanel" style="border-right:none;">' +
+       '<label>Select the Timerange</label><a class="button datepicker_sa"><div class="date">&nbsp;</div>' +
+       '<i class="icon-calendar"></i></a>' +
+     '</div><div class="ge_controlpanel ge_timerange_links" style="border-right:none;">Recent Data: </div>' +
+     '<div style="clear:both;" class="widget_viewport"></div>');
 
     FnordMetric.ui.navbar($('.navbar', elem), {
       breadcrumb: [
@@ -16,8 +35,7 @@ FnordMetric.views.gaugeExplorer = (function(){
       ],
       buttons: [
         ["<i class='icon-refresh'></i>Refresh", function(){ load(elem); }]
-      ],
-      datepicker: true
+      ]
     });
 
     currentGauge = {
@@ -25,37 +43,67 @@ FnordMetric.views.gaugeExplorer = (function(){
       title: "Fnord"
     };
 
+    $(default_time_ranges).each(function(i, tr){
+      $('.ge_timerange_links', elem).append(
+        $('<a>')
+          .attr('href', '#')
+          .attr('data-timerange', tr[1])
+          .click(function(){
+            time_range = parseInt($(this).attr('data-timerange'), 10);
+            autoupdate();
+            return false; 
+          })
+          .html(tr[0]));
+    });
+
+    autoupdate();
     render();
     requestGaugeInfoAsync();
+
+    autoupdate_timer = window.setInterval(autoupdate, 1000);
   };
 
+  function autoupdate() {
+    end_timestamp = (new Date()).getTime() / 1000;
+    start_timestamp = end_timestamp - time_range;
+
+    if (widget)
+      widget.set_timerange(start_timestamp, end_timestamp);
+
+    $(".datepicker_sa .date", elem).html(
+      FnordMetric.util.dateFormat(start_timestamp) +
+      '&nbsp;&dash;&nbsp;' +
+      FnordMetric.util.dateFormat(end_timestamp)
+    )
+  }
+
   function render() {
-    console.log(currentGauge);
     $(".widget_viewport", elem).html('');
     widget = FnordMetric.widgets.timeseriesWidget();
 
     var gauges = [currentGauge.key];
     var series = [{
-      "color": "#00ff00",
+      "color": "#4572a7",
       "data": [{x:0, y:0}],
       name: currentGauge.key,
       title: currentGauge.title
     }];
 
-    widget.render({
+    widget_inst = widget.render({
       elem: $(".widget_viewport", elem),
+      title: currentGauge.title,
       async_chart: true,
-      start_timestamp: ((new Date()).getTime() - 3600),
-      end_timestamp: ((new Date()).getTime()),
+      start_timestamp: start_timestamp,
+      end_timestamp: end_timestamp,
       include_current: true,
       width: 100,
-      height: (window.innerHeight - 400),
+      height: (window.innerHeight - 300),
       gauges: gauges,
       series: series,
       default_cardinal: false,
       default_style: "line",
-      autoupdate: 10,
-      tick: 10,
+      no_update_range: true,
+      no_datepicker: true,
       widget_key: "gauge_explorer"
     });
   }
@@ -100,6 +148,7 @@ FnordMetric.views.gaugeExplorer = (function(){
   }
 
   function close(){
+    window.clearInterval(autoupdate_timer);
   };
 
   return {
