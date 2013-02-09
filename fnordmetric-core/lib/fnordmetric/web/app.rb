@@ -22,6 +22,11 @@ class FnordMetric::App < Sinatra::Base
     include FnordMetric::AppHelpers
   end
 
+  %w(fnordmetric-ui.js fnordmetric-ui.css fnordmetric-core.css fnordmetric-core.js).each do |f|
+    next if ::File.exists?(::File.expand_path("../../../../web/#{f}", __FILE__))
+    raise "error: file 'web/#{f}' does not exist, please run build.sh in web/"
+  end
+
   def initialize(opts = {})
     @opts = FnordMetric.default_options(opts)
 

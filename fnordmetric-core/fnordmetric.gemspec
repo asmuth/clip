@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "shoulda"
 
   s.files         = `git ls-files`.split("\n") - [".gitignore", ".rspec", ".travis.yml"]
+  s.files         += ["web/fnordmetric-ui.js", "web/fnordmetric-ui.css", "web/fnordmetric-core.js", "web/fnordmetric-core.css"]
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
