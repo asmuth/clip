@@ -288,6 +288,10 @@ var FnordMetric = (function(){
     });
   }
 
+  var get_conf = function(){
+    return conf;
+  }
+
   return {
     renderDashboard: renderDashboard,
     renderGauge: renderGauge,
@@ -308,7 +312,8 @@ var FnordMetric = (function(){
     views: {},
     widgets: {},
     util: {},
-    gauges: gauges
+    gauges: gauges,
+    get_conf: get_conf
   };
 
 })();

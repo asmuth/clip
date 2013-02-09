@@ -23,10 +23,11 @@ FnordMetric.views.gaugeExplorer = (function(){
 
     elem.html('<div class="navbar"></div><div class="ge_controlpanel">' +
        '<label>Select a Gauge</label><select class="ge_gauge_picker"></select>' +
+     '<div class="ge_meta">Type to autocomplete...</div>' +
      '</div><div class="ge_controlpanel" style="border-right:none;">' +
-       '<label>Select the Timerange</label><a class="button datepicker_sa"><div class="date">&nbsp;</div>' +
+       '<label>Select the Timerange</label><a class="button datepicker_sa"><div class="date" style="width:300px;">&nbsp;</div>' +
        '<i class="icon-calendar"></i></a>' +
-     '</div><div class="ge_controlpanel ge_timerange_links" style="border-right:none;">Recent Data: </div>' +
+     '<div class="ge_timerange_links ge_meta">Recent Data: </div></div>' +
      '<div style="clear:both;" class="widget_viewport"></div>');
 
     FnordMetric.ui.navbar($('.navbar', elem), {
@@ -89,6 +90,11 @@ FnordMetric.views.gaugeExplorer = (function(){
       title: currentGauge.title
     }];
 
+    var wheight = FnordMetric.get_conf().gauge_explorer_widget_height;
+
+    if (!wheight)
+      wheight = window.innerHeight - 300;
+
     widget_inst = widget.render({
       elem: $(".widget_viewport", elem),
       title: currentGauge.title,
@@ -97,7 +103,7 @@ FnordMetric.views.gaugeExplorer = (function(){
       end_timestamp: end_timestamp,
       include_current: true,
       width: 100,
-      height: (window.innerHeight - 300),
+      height: wheight,
       gauges: gauges,
       series: series,
       default_cardinal: false,

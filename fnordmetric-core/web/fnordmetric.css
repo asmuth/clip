@@ -221,7 +221,7 @@ a.button.datepicker_sa .date {
 }
 
 a.button.datepicker_sa i {
-  margin-top:5px;
+  margin-top:7px;
 }
 
 .navbar + h1{
@@ -470,7 +470,7 @@ ul.ui_tabs li.active a{
   border: 1px solid #D0D0D0;
   border-bottom:none;
   color:#333;
-  background:#f4f4f4;
+  background-color: #F4F4F4;
 }
 
 .gauge_viewport{ margin-top:30px; }
@@ -781,8 +781,7 @@ input.input.lopen{
 }
 
 .ge_controlpanel {
-  margin-top:45px;
-  height:65px;
+  height:85px;
   padding:20px;
   float:left;
   border-right:1px solid #efefef;
@@ -842,21 +841,19 @@ input.input.lopen{
   box-shadow: 0 0 2px #ddd inset;
 }
 
-.ge_timerange_links {
-  padding-top:45px;
+.ge_meta {
   height:35px;
   line-height:37px;
   color:#999;
-  margin-left:-25px;
 }
 
-.ge_timerange_links a {
+.ge_meta a {
   margin-left: 10px;
-  font-size:120%;
+  font-size:110%;
   color:#06c;
   text-decoration:none;
 }
 
-.ge_timerange_links a:hover {
+.ge_meta a:hover {
   text-decoration:underline;
 }
