@@ -1,6 +1,7 @@
 var FnordMetric = (function(){
 
-  var ws_addr, socket, current_namespace;
+  var wsAddress, socket, currentNamespace;
+  var widgets = {};
 
   function setup(opts) {
     if (typeof $ == 'undefined') {
@@ -8,8 +9,8 @@ var FnordMetric = (function(){
       return;
     }
 
-    current_namespace = opts.namespace;
-    ws_addr = "ws://" + opts.address + "/stream";
+    currentNamespace = opts.namespace;
+    wsAddress = "ws://" + opts.address + "/stream";
 
     $(document).ready(function(){
       connect();
@@ -17,33 +18,47 @@ var FnordMetric = (function(){
   }
 
   function connect() {
-    socket = new WebSocket(ws_addr);
-    socket.onmessage = on_socket_message;
-    socket.onclose = on_socket_close;
-    socket.onopen = on_socket_open;
+    socket = new WebSocket(wsAddress);
+    socket.onmessage = onSocketMessage;
+    socket.onclose = onSocketClose;
+    socket.onopen = onSocketOpen;
   }
 
   function publish(obj) {
     if (!obj.namespace)
-      obj.namespace = current_namespace;
+      obj.namespace = currentNamespace;
 
     socket.send(JSON.stringify(obj));
   }
 
   function refresh(elem) {
-    
+    var elem = $(elem);
+
+    var widget_key = elem.attr('data-widget-key');
+    var widget_type = elem.attr('data-fnordmetric');
+
+    if (!widget_type)
+      return console.log("[FnordMetric] element is missing the data-fnordmetric attribute");
+
+    if (widget_key && widgets[widget_key]) {
+      widgets[widget_key].destroy();
+      delete widgets[widget_key];
+    }
+
+    var widget = FnordMetric.widgets[widget_type]();
+    console.log(widget);
   }
 
-  function on_socket_message(raw) {
+  function onSocketMessage(raw) {
     var evt = JSON.parse(raw.data);
     console.log(evt);
   }
 
-  function on_socket_open() {
+  function onSocketOpen() {
     console.log("[FnordMetric] connected...");
   }
 
-  function on_socket_close() {
+  function onSocketClose() {
     console.log("[FnordMetric] socket closed"); 
     window.setTimeout(connect, 1000);
   }
