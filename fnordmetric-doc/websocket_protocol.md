@@ -53,7 +53,7 @@ Single Value
       "klass": "generic",
       "cmd": "values_for",
       "gauge": "order_sum",
-      "offsets": ["s3600"],
+      "at": "-5h",
       "widget_key": 123123123
     }
 
