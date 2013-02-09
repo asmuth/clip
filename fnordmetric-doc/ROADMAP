@@ -2,13 +2,12 @@
 Todo
 ====
 
-  → simple gauge explorer (style like active users) + html5 api snippet generator
-  → icons for sidebar
 
 
 Backlog
 =======
 
+  → icons for sidebar
   → bignumberwidget
   → fancy topbar daterange picker for legacy dashboards
   → make fnordmetric responsive
@@ -28,6 +27,11 @@ Backlog
 
 Changelog
 =========
+
+  1.1.1
+    → simple gauge explorer (style like active users) + html5 api snippet generator
+    → new file structure
+    → better namespacing for javascript
 
   1.1.0
     → js api (<div data-gauge="...">)
