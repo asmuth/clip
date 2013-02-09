@@ -1,4 +1,4 @@
-.rickshaw_graph .detail {
+.fnordmetric_graph .detail {
   pointer-events: none;
   position: absolute;
   top: 0;
@@ -11,13 +11,13 @@
   -o-transition: opacity 0.25s linear;
   -webkit-transition: opacity 0.25s linear;
 }
-.rickshaw_graph .detail.inactive {
+.fnordmetric_graph .detail.inactive {
   opacity: 0;
 }
-.rickshaw_graph .detail .item.active {
+.fnordmetric_graph .detail .item.active {
   opacity: 1;
 }
-.rickshaw_graph .detail .x_label {
+.fnordmetric_graph .detail .x_label {
   font-family: "Gotham Narrow", Helvetica, Arial, sans-serif;
   border-radius: 3px;
   padding: 6px;
@@ -28,7 +28,7 @@
   background: white;
   white-space: nowrap;
 }
-.rickshaw_graph .detail .item {
+.fnordmetric_graph .detail .item {
   position: absolute;
   z-index: 2;
   border-radius: 3px;
@@ -43,18 +43,18 @@
   margin-top: -1em;
   white-space: nowrap;
 }
-.rickshaw_graph .detail .item.active {
+.fnordmetric_graph .detail .item.active {
   opacity: 1;
   background: rgba(0, 0, 0, 0.8);
 }
-.rickshaw_graph .detail .item:before {
+.fnordmetric_graph .detail .item:before {
   content: "\25c2";
   position: absolute;
   left: -0.5em;
   color: rgba(0, 0, 0, 0.7);
   width: 0;
 }
-.rickshaw_graph .detail .dot {
+.fnordmetric_graph .detail .dot {
   width: 4px;
   height: 4px;
   margin-left: -4px;
@@ -68,22 +68,22 @@
   display: none;
   background-clip: padding-box;
 }
-.rickshaw_graph .detail .dot.active {
+.fnordmetric_graph .detail .dot.active {
   display: block;
 }
 /* graph */
 
-.rickshaw_graph {
+.fnordmetric_graph {
   position: relative;
 }
-.rickshaw_graph svg {
+.fnordmetric_graph svg {
   display: block;
   overflow: hidden;
 }
 
 /* ticks */
 
-.rickshaw_graph .x_tick {
+.fnordmetric_graph .x_tick {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -91,7 +91,7 @@
   border-left: 1px dotted rgba(0, 0, 0, 0.2);
   pointer-events: none;
 }
-.rickshaw_graph .x_tick .title {
+.fnordmetric_graph .x_tick .title {
   position: absolute;
   font-size: 12px;
   font-family: "Gotham Narrow", Helvetica, Arial, sans-serif;
@@ -118,7 +118,7 @@
   border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.25);
 }
-.rickshaw_graph .annotation_line {
+.fnordmetric_graph .annotation_line {
   position: absolute;
   top: 0;
   bottom: -6px;
@@ -126,7 +126,7 @@
   border-left: 2px solid rgba(0, 0, 0, 0.3);
   display: none;
 }
-.rickshaw_graph .annotation_line.active {
+.fnordmetric_graph .annotation_line.active {
   display: block;
 }
 .rickshaw_annotation_timeline .annotation .content {
@@ -168,36 +168,36 @@
   display: block;
   z-index: 50;
 }
-.rickshaw_graph .y_axis {
+.fnordmetric_graph .y_axis {
   fill: none;
 }
-.rickshaw_graph .y_ticks .tick {
+.fnordmetric_graph .y_ticks .tick {
   stroke: rgba(0, 0, 0, 0.16);
   stroke-width: 2px;
   shape-rendering: crisp-edges;
   pointer-events: none;
 }
-.rickshaw_graph .y_grid .tick {
+.fnordmetric_graph .y_grid .tick {
   z-index: -1;
   stroke: rgba(0, 0, 0, 0.20);
   stroke-width: 1px;
   stroke-dasharray: 1 1;
 }
-.rickshaw_graph .y_grid path {
+.fnordmetric_graph .y_grid path {
   fill: none;
   stroke: none;
 }
-.rickshaw_graph .y_ticks path {
+.fnordmetric_graph .y_ticks path {
   fill: none;
   stroke: #808080;
 }
-.rickshaw_graph .y_ticks text {
+.fnordmetric_graph .y_ticks text {
   opacity: 0.5;
   font-size: 12px;
   pointer-events: none;
 }
-.rickshaw_graph .x_tick.glow .title,
-.rickshaw_graph .y_ticks.glow text {
+.fnordmetric_graph .x_tick.glow .title,
+.fnordmetric_graph .y_ticks.glow text {
   fill: black;
   color: black;
   text-shadow:
@@ -210,8 +210,8 @@
     -1px 0px 0 rgba(255, 255, 255, 0.1),
     -1px -1px 0 rgba(255, 255, 255, 0.1);
 }
-.rickshaw_graph .x_tick.inverse .title,
-.rickshaw_graph .y_ticks.inverse text {
+.fnordmetric_graph .x_tick.inverse .title,
+.fnordmetric_graph .y_ticks.inverse text {
   fill: white;
   color: white;
   text-shadow:
@@ -224,7 +224,7 @@
     -1px 0px 0 rgba(0, 0, 0, 0.8),
     -1px -1px 0 rgba(0, 0, 0, 0.8);
 }
-.rickshaw_legend {
+.fnordmetric_legend {
   font-family: "Gotham Narrow", Helvetica, Arial;
   font-size: 12px;
   color: white;
@@ -234,68 +234,68 @@
   border-radius: 2px;
   position: relative;
 }
-.rickshaw_legend:hover {
+.fnordmetric_legend:hover {
   z-index: 10;
 }
-.rickshaw_legend .line {
+.fnordmetric_legend .line {
   clear: both;
   line-height: 140%;
   padding-right: 15px;
 }
-.rickshaw_legend .line .swatch {
+.fnordmetric_legend .line .swatch {
   display: inline-block;
   margin-right: 3px;
   border-radius: 2px;
 }
-.rickshaw_legend .label {
+.fnordmetric_legend .label {
   white-space: nowrap;
   display: inline;
 }
-.rickshaw_legend .action:hover {
+.fnordmetric_legend .action:hover {
   opacity: 0.6;
 }
-.rickshaw_legend .action {
+.fnordmetric_legend .action {
   margin-right: 0.2em;
   font-size: 10px;
   opacity: 0.2;
   cursor: pointer;
   font-size: 14px;
 }
-.rickshaw_legend .line.disabled {
+.fnordmetric_legend .line.disabled {
   opacity: 0.4;
 }
-.rickshaw_legend ul {
+.fnordmetric_legend ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   margin: 2px;
   cursor: pointer;
 }
-.rickshaw_legend li {
+.fnordmetric_legend li {
   padding: 0 0 0 2px;
   min-width: 80px;
   white-space: nowrap;
 }
-.rickshaw_legend li:hover {
+.fnordmetric_legend li:hover {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 3px;
 }
-.rickshaw_legend li:active {
+.fnordmetric_legend li:active {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
 }
-.rickshaw_graph .y_ticks path { stroke:none; }
-.rickshaw_graph .y_grid .tick { stroke:rgba(0,0,0,.1); }
+.fnordmetric_graph .y_ticks path { stroke:none; }
+.fnordmetric_graph .y_grid .tick { stroke:rgba(0,0,0,.1); }
 
-.rickshaw_graph .x_tick {
+.fnordmetric_graph .x_tick {
   border-left: none;
 }
 
-.rickshaw_graph .x_tick.glow .title, .rickshaw_graph .y_ticks.glow text{
+.fnordmetric_graph .x_tick.glow .title, .rickshaw_graph .y_ticks.glow text{
   font-size:14px;
 }
 
-.rickshaw_legend {
+.fnordmetric_legend {
 font-family: "Gotham Narrow", Helvetica, sans-serif;
 font-size: 12px;
 color: #333;
@@ -306,23 +306,23 @@ border-radius: 2px;
 position: relative;
 }
 
-.rickshaw_legend .ui-sortable {
+.fnordmetric_legend .ui-sortable {
   margin-left:-10px;
 }
 
-.rickshaw_legend li.line{
+.fnordmetric_legend li.line{
    float:left;
    clear:none;
    padding-right:0;
 }
 
-.rickshaw_legend a.action{
+.fnordmetric_legend a.action{
   margin-right:5px;
   display:none;
 }
 
 
-.rickshaw_legend li.line .label{
+.fnordmetric_legend li.line .label{
   font.size:14px;
   margin-left:5px;
   color:#333;
@@ -331,6 +331,6 @@ position: relative;
 }
 
 
-.rickshaw_graph .y_grid .tick { stroke:rgba(0,0,0,.15); stroke-dasharray:0; }
-.rickshaw_graph .y_ticks text { fill:#333333; }
+.fnordmetric_graph .y_grid .tick { stroke:rgba(0,0,0,.15); stroke-dasharray:0; }
+.fnordmetric_graph .y_ticks text { fill:#333333; }
 

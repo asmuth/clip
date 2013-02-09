@@ -14,9 +14,9 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
   end
 
   def self.execute_values_for(gauge, event)
-    if at = event["at"]
-      _t = Time.now.to_i
+    _t = Time.now.to_i
 
+    if at = event["at"]
       value = if at =~ /sum\((.+)\)/
         vals = gauge.values_in(FnordMetric::Util.parse_time($1).._t+gauge.tick)
         vals.values.compact.map(&:to_f).inject(&:+)

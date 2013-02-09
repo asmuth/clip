@@ -1,4 +1,4 @@
-var FnordMetric = (function(){
+var FnordMetric = (function(pre){
 
   var wsAddress, socket, currentNamespace;
   var widgets = {};
@@ -80,4 +80,4 @@ var FnordMetric = (function(){
     refresh: refresh
   };
 
-})();
+})(FnordMetric);

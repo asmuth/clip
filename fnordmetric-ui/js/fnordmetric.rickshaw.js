@@ -9,7 +9,7 @@ FnordMetric.rickshaw = {
     // for rudimentary compatibility w/ node
     var root = typeof global != 'undefined' ? global : window;
 
-    var parent = root.FnordMetric.rickshaw;
+    var parent = root.FnordMetric;
 
     for(var i = 1, length = parts.length; i < length; i++) {
       currentPart = parts[i];
@@ -405,7 +405,7 @@ FnordMetric.rickshaw.Graph = function(args) {
 
     this.setSize({ width: args.width, height: args.height });
 
-    this.element.classList.add('rickshaw_graph');
+    this.element.classList.add('fnordmetric_graph');
     this.vis = fnord3.select(this.element)
       .append("svg:svg")
       .attr('width', this.width)
@@ -600,196 +600,6 @@ FnordMetric.rickshaw.Graph = function(args) {
 
   this.initialize(args);
 };
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Fixtures.Color');
-
-FnordMetric.rickshaw.Fixtures.Color = function() {
-
-  this.schemes = {};
-
-  this.schemes.spectrum14 = [
-    '#ecb796',
-    '#dc8f70',
-    '#b2a470',
-    '#92875a',
-    '#716c49',
-    '#d2ed82',
-    '#bbe468',
-    '#a1d05d',
-    '#e7cbe6',
-    '#d8aad6',
-    '#a888c2',
-    '#9dc2fnord3',
-    '#649eb9',
-    '#387aa3'
-  ].reverse();
-
-  this.schemes.spectrum2000 = [
-    '#57306f',
-    '#514c76',
-    '#646583',
-    '#738394',
-    '#6b9c7d',
-    '#84b665',
-    '#a7ca50',
-    '#bfe746',
-    '#e2f528',
-    '#fff726',
-    '#ecdd00',
-    '#d4b11d',
-    '#de8800',
-    '#de4800',
-    '#c91515',
-    '#9a0000',
-    '#7b0429',
-    '#580839',
-    '#31082b'
-  ];
-
-  this.schemes.spectrum2001 = [
-    '#2f243f',
-    '#3c2c55',
-    '#4a3768',
-    '#565270',
-    '#6b6b7c',
-    '#72957f',
-    '#86ad6e',
-    '#a1bc5e',
-    '#b8d954',
-    '#fnord3e04e',
-    '#ccad2a',
-    '#cc8412',
-    '#c1521d',
-    '#afnord3821',
-    '#8a1010',
-    '#681717',
-    '#531e1e',
-    '#3d1818',
-    '#320a1b'
-  ];
-
-  this.schemes.classic9 = [
-    '#423d4f',
-    '#4a6860',
-    '#848f39',
-    '#a2b73c',
-    '#ddcb53',
-    '#c5a32f',
-    '#7d5836',
-    '#963b20',
-    '#7c2626',
-    '#491fnord37',
-    '#2f254a'
-  ].reverse();
-
-  this.schemes.httpStatus = {
-    503: '#ea5029',
-    502: '#d23f14',
-    500: '#bf3613',
-    410: '#efacea',
-    409: '#e291dc',
-    403: '#f457e8',
-    408: '#e121d2',
-    401: '#b92dae',
-    405: '#f47ceb',
-    404: '#a82a9f',
-    400: '#b263c6',
-    301: '#6fa024',
-    302: '#87c32b',
-    307: '#a0d84c',
-    304: '#28b55c',
-    200: '#1a4f74',
-    206: '#27839f',
-    201: '#52adc9',
-    202: '#7c979f',
-    203: '#a5b8bd',
-    204: '#c1cdd1'
-  };
-
-  this.schemes.colorwheel = [
-    '#b5b6a9',
-    '#858772',
-    '#785f43',
-    '#96557e',
-    '#4682b4',
-    '#65b9ac',
-    '#73c03a',
-    '#cb513a'
-  ].reverse();
-
-  this.schemes.cool = [
-    '#5e9d2f',
-    '#73c03a',
-    '#4682b4',
-    '#7bc3b8',
-    '#a9884e',
-    '#c1b266',
-    '#a47493',
-    '#c09fb5'
-  ];
-
-  this.schemes.munin = [
-    '#00cc00',
-    '#0066b3',
-    '#ff8000',
-    '#ffcc00',
-    '#330099',
-    '#990099',
-    '#ccff00',
-    '#ff0000',
-    '#808080',
-    '#008f00',
-    '#00487d',
-    '#b35a00',
-    '#b38f00',
-    '#6b006b',
-    '#8fb300',
-    '#b30000',
-    '#bebebe',
-    '#80ff80',
-    '#80c9ff',
-    '#ffc080',
-    '#ffe680',
-    '#aa80ff',
-    '#ee00cc',
-    '#ff8080',
-    '#666600',
-    '#ffbfff',
-    '#00ffcc',
-    '#cc6699',
-    '#999900'
-  ];
-};
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Fixtures.RandomData');
-
-FnordMetric.rickshaw.Fixtures.RandomData = function(timeInterval) {
-
-  var addData;
-  timeInterval = timeInterval || 1;
-
-  var lastRandomValue = 200;
-
-  var timeBase = Math.floor(new Date().getTime() / 1000);
-
-  this.addData = function(data) {
-
-    var randomValue = Math.random() * 100 + 15 + lastRandomValue;
-    var index = data[0].length;
-
-    var counter = 1;
-
-    data.forEach( function(series) {
-      var randomVariance = Math.random() * 20;
-      var v = randomValue / 25  + counter++
-        + (Math.cos((index * counter * 11) / 960) + 2) * 15
-        + (Math.cos(index / 7) + 2) * 7
-        + (Math.cos(index / 17) + 2) * 1;
-
-      series.push( { x: (index * timeInterval) + timeBase, y: v + randomVariance } );
-    } );
-
-    lastRandomValue = randomValue * .85;
-  }
-};
 
 FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Fixtures.Time');
 
@@ -919,131 +729,6 @@ FnordMetric.rickshaw.Color.Palette = function(args) {
     return this.scheme[key] || this.scheme[this.runningIndex++] || '#808080';
   };
 };
-FnordMetric.rickshaw.namespace('Graph.Ajax');
-
-FnordMetric.rickshaw.Graph.Ajax = function(args) {
-
-  var self = this;
-  this.dataURL = args.dataURL;
-
-  $.ajax( {
-    url: this.dataURL,
-    complete: function(response, status) {
-
-      if (status === 'error') {
-        console.log("error loading dataURL: " + this.dataURL);
-      }
-
-      var data = JSON.parse(response.responseText);
-
-      if (typeof args.onData === 'function') {
-        var processedData = args.onData(data);
-        data = processedData;
-      }
-
-      if (args.series) {
-
-        args.series.forEach( function(s) {
-
-          var seriesKey = s.key || s.name;
-          if (!seriesKey) throw "series needs a key or a name";
-
-          data.forEach( function(d) {
-
-            var dataKey = d.key || d.name;
-            if (!dataKey) throw "data needs a key or a name";
-
-            if (seriesKey == dataKey) {
-              var properties = ['color', 'name', 'data'];
-              properties.forEach( function(p) {
-                s[p] = s[p] || d[p];
-              } );
-            }
-          } );
-        } );
-
-      } else {
-        args.series = data;
-      }
-
-      self.graph = new FnordMetric.rickshaw.Graph(args);
-      self.graph.render();
-
-      if (typeof args.onComplete == 'function') {
-        args.onComplete(self);
-      }
-    }
-  } );
-};
-
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Annotate');
-
-FnordMetric.rickshaw.Graph.Annotate = function(args) {
-
-  var graph = this.graph = args.graph;
-  this.elements = { timeline: args.element };
-
-  var self = this;
-
-  this.data = {};
-
-  this.elements.timeline.classList.add('rickshaw_annotation_timeline');
-
-  this.add = function(time, content) {
-    self.data[time] = self.data[time] || {'boxes': []};
-    self.data[time].boxes.push({content: content});
-  };
-
-  this.update = function() {
-
-    FnordMetric.rickshaw.keys(self.data).forEach( function(time) {
-
-      var annotation = self.data[time];
-      var left = self.graph.x(time);
-
-      if (left < 0 || left > self.graph.x.range()[1]) {
-        if (annotation.element) {
-          annotation.element.style.display = 'none';
-        }
-        return;
-      }
-
-      if (!annotation.element) {
-        var element = annotation.element = document.createElement('div');
-        element.classList.add('annotation');
-        this.elements.timeline.appendChild(element);
-        element.addEventListener('click', function(e) {
-          element.classList.toggle('active');
-          annotation.line.classList.toggle('active');
-        }, false);
-
-      }
-
-      annotation.element.style.left = left + 'px';
-      annotation.element.style.display = 'block';
-
-      annotation.boxes.forEach( function(box) {
-
-        var element = box.element;
-
-        if (!element) {
-          element = box.element = document.createElement('div');
-          element.classList.add('content');
-          element.innerHTML = box.content;
-          annotation.element.appendChild(element);
-
-          annotation.line = document.createElement('div');
-          annotation.line.classList.add('annotation_line');
-          self.graph.element.appendChild(annotation.line);
-        }
-
-        annotation.line.style.left = left + 'px';
-      } );
-    }, this );
-  };
-
-  this.graph.onUpdate( function() { self.update() } );
-};
 FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Axis.Time');
 
 FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
@@ -1099,7 +784,8 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
   this.render = function() {
 
     this.elements.forEach( function(e) {
-      e.parentNode.removeChild(e);
+      if (e.parentNode)
+        e.parentNode.removeChild(e);
     } );
 
     this.elements = [];
@@ -1156,7 +842,7 @@ FnordMetric.rickshaw.Graph.Axis.Y = function(args) {
       this.element = args.element;
       this.vis = fnord3.select(args.element)
         .append("svg:svg")
-        .attr('class', 'rickshaw_graph y_axis');
+        .attr('class', 'fnordmetric_graph y_axis');
 
       this.element = this.vis[0][0];
       this.element.style.position = 'relative';
@@ -1275,42 +961,6 @@ FnordMetric.rickshaw.Graph.Behavior.Series.Highlight = function(args) {
     } );
   }
 
-};
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Behavior.Series.Order');
-
-FnordMetric.rickshaw.Graph.Behavior.Series.Order = function(args) {
-
-  this.graph = args.graph;
-  this.legend = args.legend;
-
-  var self = this;
-
-  $(function() {
-    /*$(self.legend.list).sortable( {
-      containment: 'parent',
-      tolerance: 'pointer',
-      update: function( event, ui ) {
-        var series = [];
-        $(self.legend.list).find('li').each( function(index, item) {
-          if (!item.series) return;
-          series.push(item.series);
-        } );
-
-        for (var i = self.graph.series.length - 1; i >= 0; i--) {
-          self.graph.series[i] = series.shift();
-        }
-
-        self.graph.update();
-      }
-    } );*/
-    $(self.legend.list).disableSelection();
-  });
-
-  //hack to make jquery-ui sortable behave
-  this.graph.onUpdate( function() {
-    var h = window.getComputedStyle(self.legend.element).height;
-    self.legend.element.style.height = h;
-  } );
 };
 FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Behavior.Series.Toggle');
 
@@ -1643,62 +1293,6 @@ FnordMetric.rickshaw.Graph.HoverDetail = FnordMetric.rickshaw.Class.create({
   }
 });
 
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.JSONP');
-
-FnordMetric.rickshaw.Graph.JSONP = function(args) {
-
-  var self = this;
-  this.dataURL = args.dataURL;
-
-  $.ajax( {
-    url: this.dataURL,
-    dataType: 'jsonp',
-    success: function(data, status, response) {
-
-      if (status === 'error') {
-        console.log("error loading dataURL: " + this.dataURL);
-      }
-
-      if (typeof args.onData === 'function') {
-        var processedData = args.onData(data);
-        data = processedData;
-      }
-
-      if (args.series) {
-
-        args.series.forEach( function(s) {
-
-          var seriesKey = s.key || s.name;
-          if (!seriesKey) throw "series needs a key or a name";
-
-          data.forEach( function(d) {
-
-            var dataKey = d.key || d.name;
-            if (!dataKey) throw "data needs a key or a name";
-
-            if (seriesKey == dataKey) {
-              var properties = ['color', 'name', 'data'];
-              properties.forEach( function(p) {
-                s[p] = s[p] || d[p];
-              } );
-            }
-          } );
-        } );
-
-      } else {
-        args.series = data;
-      }
-
-      self.graph = new FnordMetric.rickshaw.Graph(args);
-      self.graph.render();
-
-      if (typeof args.onComplete == 'function') {
-        args.onComplete(self);
-      }
-    }
-  } );
-};
-
 FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Legend');
 
 FnordMetric.rickshaw.Graph.Legend = function(args) {
@@ -1708,7 +1302,7 @@ FnordMetric.rickshaw.Graph.Legend = function(args) {
 
   var self = this;
 
-  element.classList.add('rickshaw_legend');
+  element.classList.add('fnordmetric_legend');
 
   var list = this.list = document.createElement('ul');
   element.appendChild(list);
@@ -1761,61 +1355,6 @@ FnordMetric.rickshaw.Graph.Legend = function(args) {
 
   } );
 };
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.RangeSlider');
-
-FnordMetric.rickshaw.Graph.RangeSlider = function(args) {
-
-  var element = this.element = args.element;
-  var graph = this.graph = args.graph;
-
-  $( function() {
-    $(element).slider( {
-
-      range: true,
-      min: graph.dataDomain()[0],
-      max: graph.dataDomain()[1],
-      values: [
-        graph.dataDomain()[0],
-        graph.dataDomain()[1],
-      ],
-      slide: function( event, ui ) {
-
-        graph.window.xMin = ui.values[0];
-        graph.window.xMax = ui.values[1];
-        graph.update();
-
-        // if we're at an extreme, stick there
-        if (graph.dataDomain()[0] == ui.values[0]) {
-          graph.window.xMin = undefined;
-        }
-        if (graph.dataDomain()[1] == ui.values[1]) {
-          graph.window.xMax = undefined;
-        }
-      }
-    } );
-  } );
-
-  element[0].style.width = graph.width + 'px';
-
-  graph.onUpdate( function() {
-
-    var values = $(element).slider('option', 'values');
-
-    $(element).slider('option', 'min', graph.dataDomain()[0]);
-    $(element).slider('option', 'max', graph.dataDomain()[1]);
-
-    if (graph.window.xMin == undefined) {
-      values[0] = graph.dataDomain()[0];
-    }
-    if (graph.window.xMax == undefined) {
-      values[1] = graph.dataDomain()[1];
-    }
-
-    $(element).slider('option', 'values', values);
-
-  } );
-};
-
 FnordMetric.rickshaw.namespace("FnordMetric.rickshaw.Graph.Renderer");
 
 FnordMetric.rickshaw.Graph.Renderer = FnordMetric.rickshaw.Class.create( {
@@ -2594,108 +2133,3 @@ FnordMetric.rickshaw.Series = FnordMetric.rickshaw.Class.create( Array, {
     }
   }
 } );
-
-FnordMetric.rickshaw.Series.zeroFill = function(series) {
-
-  var x;
-  var i = 0;
-
-  var data = series.map( function(s) { return s.data } );
-
-  while ( i < Math.max.apply(null, data.map( function(d) { return d.length } )) ) {
-
-    x = Math.min.apply( null,
-      data
-        .filter(function(d) { return d[i] })
-        .map(function(d) { return d[i].x })
-    );
-
-    data.forEach( function(d) {
-      if (!d[i] || d[i].x != x) {
-        d.splice(i, 0, { x: x, y: 0 });
-      }
-    } );
-
-    i++;
-  }
-};
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Series.FixedDuration');
-
-FnordMetric.rickshaw.Series.FixedDuration = FnordMetric.rickshaw.Class.create(FnordMetric.rickshaw.Series, {
-
-  initialize: function (data, palette, options) {
-
-    var options = options || {}
-
-    if (typeof(options.timeInterval) === 'undefined') {
-      throw new Error('FixedDuration series requires timeInterval');
-    }
-
-    if (typeof(options.maxDataPoints) === 'undefined') {
-      throw new Error('FixedDuration series requires maxDataPoints');
-    }
-
-    this.palette = new FnordMetric.rickshaw.Color.Palette(palette);
-    this.timeBase = typeof(options.timeBase) === 'undefined' ? Math.floor(new Date().getTime() / 1000) : options.timeBase;
-    this.setTimeInterval(options.timeInterval);
-
-    if (this[0] && this[0].data && this[0].data.length) {
-      this.currentSize = this[0].data.length;
-      this.currentIndex = this[0].data.length;
-    } else {
-      this.currentSize  = 0;
-      this.currentIndex = 0;
-    }
-
-    this.maxDataPoints = options.maxDataPoints;
-
-
-    if (data && (typeof(data) == "object") && (data instanceof Array)) {
-      data.forEach( function (item) { this.addItem(item) }, this );
-      this.currentSize  += 1;
-      this.currentIndex += 1;
-    }
-
-    // reset timeBase for zero-filled values if needed
-    this.timeBase -= (this.maxDataPoints - this.currentSize) * this.timeInterval;
-
-    // zero-fill up to maxDataPoints size if we don't have that much data yet
-    if ((typeof(this.maxDataPoints) !== 'undefined') && (this.currentSize < this.maxDataPoints)) {
-      for (var i = this.maxDataPoints - this.currentSize - 1; i > 0; i--) {
-        this.currentSize  += 1;
-        this.currentIndex += 1;
-        this.forEach( function (item) {
-          item.data.unshift({ x: ((i-1) * this.timeInterval || 1) + this.timeBase, y: 0, i: i });
-        }, this );
-      }
-    }
-  },
-
-  addData: function($super, data) {
-
-    $super(data)
-
-    this.currentSize += 1;
-    this.currentIndex += 1;
-
-    if (this.maxDataPoints !== undefined) {
-      while (this.currentSize > this.maxDataPoints) {
-        this.dropData();
-      }
-    }
-  },
-
-  dropData: function() {
-
-    this.forEach(function(item) {
-      item.data.splice(0, 1);
-    } );
-
-    this.currentSize -= 1;
-  },
-
-  getIndex: function () {
-    return this.currentIndex;
-  }
-} );
-

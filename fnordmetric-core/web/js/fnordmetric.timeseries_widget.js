@@ -246,38 +246,38 @@ FnordMetric.widgets.timeseriesWidget = function(){
       gconfig.height = height;
 
       $(gconfig.element).html("");
-      $(".rickshaw_legend", opts.elem).html("");
+      $(".fnordmetric_legend", opts.elem).html("");
 
       if(opts.series_resolutions){
         apply_resolution();
       }
 
-      graph = new FnordMetricRickshaw.Graph(gconfig);
+      graph = new FnordMetric.rickshaw.Graph(gconfig);
 
-      legend = new FnordMetricRickshaw.Graph.Legend({
+      legend = new FnordMetric.rickshaw.Graph.Legend({
         graph: graph,
         element: $('.legend', opts.elem)[0]
       });
 
-      hoverDetail = new FnordMetricRickshaw.Graph.HoverDetail( {
+      hoverDetail = new FnordMetric.rickshaw.Graph.HoverDetail( {
         graph: graph
       });
 
-      shelving = new FnordMetricRickshaw.Graph.Behavior.Series.Toggle({
+      shelving = new FnordMetric.rickshaw.Graph.Behavior.Series.Toggle({
         graph: graph,
         legend: legend
       });
 
-      highlighter = new FnordMetricRickshaw.Graph.Behavior.Series.Highlight({
+      highlighter = new FnordMetric.rickshaw.Graph.Behavior.Series.Highlight({
         graph: graph,
         legend: legend
       });
 
-      new FnordMetricRickshaw.Graph.Axis.Time({
+      new FnordMetric.rickshaw.Graph.Axis.Time({
         graph: graph,
       }).render();
 
-      new FnordMetricRickshaw.Graph.Axis.Y({
+      new FnordMetric.rickshaw.Graph.Axis.Y({
         graph: graph,
       }).render();
 

@@ -1,4 +1,4 @@
-var FnordMetric = (function(){
+var FnordMetric = (function(pre_init){
 
   var canvasElem = false;
   var currentView = false;
@@ -313,7 +313,8 @@ var FnordMetric = (function(){
     widgets: {},
     util: {},
     gauges: gauges,
-    get_conf: get_conf
+    get_conf: get_conf,
+    rickshaw: pre_init.rickshaw
   };
 
-})();
+})(FnordMetric);
