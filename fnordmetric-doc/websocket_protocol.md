@@ -11,7 +11,7 @@ Timeseries Data
   request:
 
     {
-      "namespace":"loveos",
+      "namespace":"fnordmetric",
       "type":"widget_request",
       "klass":"generic",
       "cmd":"values_at",
@@ -24,7 +24,7 @@ Timeseries Data
   response:
 
     {
-      "namespace": "loveos",
+      "namespace": "fnordmetric",
       "type": "widget_response",
       "cmd": "values_at",
       "gauges": [
@@ -48,9 +48,9 @@ Single Value
   request:
 
     {
-      "namespace": "loveos",
-      "type": "widget_request",
+      "namespace": "fnordmetric",
       "klass": "generic",
+      "type": "widget_request",
       "cmd": "values_for",
       "gauge": "order_sum",
       "at": "-5h",
@@ -60,7 +60,7 @@ Single Value
   response:
 
     {
-      "namespace":"loveos",
+      "namespace":"fnordmetric",
       "type":"widget_response",
       "cmd": "values_for",
       "gauge": "order_sum",
