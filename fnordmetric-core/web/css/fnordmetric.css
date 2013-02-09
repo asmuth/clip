@@ -260,7 +260,7 @@ a.button.datepicker_sa i {
 .ui_value.left{ float:left; }
 
 .ui_toplist{ min-height:300px; }
-.ui_toplist.loading{ opacity:0.5; background:url('/loader.gif') no-repeat center center;  }
+.ui_toplist.loading{ opacity:0.5; background:url('/img/loader.gif') no-repeat center center;  }
 
 .ui_toplist .toplist_item{ border-bottom:1px solid #dedede; height:42px; display:block; }
 .ui_toplist .toplist_item:hover{ background:#fff; }

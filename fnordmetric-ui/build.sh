@@ -1,3 +1,5 @@
+#!/bin/bash
+
 (
   echo "/* this is an automatically generated file, don't modify it... */"
   cat js/d3.fnordmetric.js
@@ -7,4 +9,7 @@
   cat js/fnordmetric.widgets.counter.js
 ) > fnordmetric-ui.js
 
-cp fnordmetric-ui.js ../fnordmetric-core/web/fnordmetric-ui.js
+(
+  echo "/* this is an automatically generated file, don't modify it... */"
+  cat css/fnordmetric.graph.css
+) > fnordmetric-ui.css
