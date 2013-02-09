@@ -50,35 +50,6 @@ class FnordMetric::App < Sinatra::Base
     track_event((8**32).to_s(36), parse_params(params))
   end
 
-  get '/fnordmetric-ui.js' do
-    files = [
-      '/js/d3.fnordmetric.js',
-      '/js/rickshaw.fnordmetric.js',
-      '/js/fnordmetric.js',
-      '/js/fnordmetric.util.js',
-      '/js/fnordmetric.timeseries_widget.js',
-      '/js/fnordmetric.js_api.js'
-    ]
-
-    unless ENV["FNORDMETRIC_ENV"] == "dev"
-      merged_js = @merged_js_cached
-    end
-
-    unless merged_js
-      merged_js = ""
-
-      files.each do |file|
-        file = ::File.expand_path("../../../../web#{file}", __FILE__)
-        merged_js += IO.read(file)
-      end
-
-      @merged_js_cached = merged_js
-    end
-
-    content_type "application/javascript"
-    merged_js
-  end
-
   # FIXPAUL move to websockets
   get '/:namespace/dashboard/:dashboard' do
     dashboard = current_namespace.dashboards.fetch(params[:dashboard])

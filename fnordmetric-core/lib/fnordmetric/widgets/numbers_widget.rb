@@ -24,8 +24,7 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
         vals = gauge.values_in(FnordMetric::Util.parse_time($1).._t+gauge.tick)
         vals.values.compact.map(&:to_f).inject(&:+) / vals.size.to_f
       else
-        at = [_t-gauge.tick, FnordMetric::Util.parse_time(at)]
-        gauge.value_at(at.min).to_i
+        gauge.value_at(FnordMetric::Util.parse_time(at)).to_i
       end
 
       return({
