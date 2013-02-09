@@ -14,7 +14,25 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
   end
 
   def self.execute_values_for(gauge, event)
-    _t = Time.now.to_i
+    if at = event["at"]
+      _t = Time.now.to_i
+
+      value = if at =~ /sum\((.+)\)/
+        vals = gauge.values_in(FnordMetric::Util.parse_time($1).._t+gauge.tick)
+        vals.values.compact.map(&:to_f).inject(&:+)
+      elsif at =~ /avg\((.+)\)/
+        vals = gauge.values_in(FnordMetric::Util.parse_time($1).._t+gauge.tick)
+        vals.values.compact.map(&:to_f).inject(&:+) / vals.size.to_f
+      else
+        gauge.value_at(FnordMetric::Util.parse_time(at)).to_i
+      end
+
+      return({
+        "cmd" => "values_for",
+        "at" => event["at"],
+        "gauge" => gauge.name,
+        "value" => value })
+    end
 
     values = {}.tap do |out|
       event["offsets"].each do |off|

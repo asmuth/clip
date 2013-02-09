@@ -64,11 +64,8 @@ Single Value
       "type":"widget_response",
       "cmd": "values_for",
       "gauge": "order_sum",
-      "values": {
-        "order_sum-0-216000": {
-          "value": 21964
-        }
-      },
+      "at": "-5h",
+      "value": 123,
       "widget_key": 123123123
     }
 

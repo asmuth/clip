@@ -6,7 +6,7 @@ if (typeof FnordMetric.widgets == 'undefined')
 
 
 FnordMetric.widgets.counter = function(elem){
-  var gauge, offset, refresh_timer, refresh_interval;
+  var gauge, at, refresh_timer, refresh_interval;
   var widget_key = elem.attr("data-widget-key");
 
   function init() {
@@ -15,8 +15,8 @@ FnordMetric.widgets.counter = function(elem){
     if (!gauge)
       return console.log("[FnordMetric] element is missing the data-gauge attribute");
 
-    offset = elem.attr('data-offset');
-    if (!offset) offset = 0;
+    at = elem.attr('data-at');
+    if (!at) at = "now";
 
     requestDataAsync();
 
@@ -29,12 +29,7 @@ FnordMetric.widgets.counter = function(elem){
   }
 
   function send(evt) {
-    for (vkey in evt.values)
-      updateValue(evt.values[vkey].value);
-  }
-
-  function updateValue(val) {
-    elem.attr('data-value', val);
+    elem.attr('data-value', evt.value);
     updateDisplay();
   }
 
@@ -44,7 +39,7 @@ FnordMetric.widgets.counter = function(elem){
       "klass": "generic",
       "cmd": "values_for",
       "gauge": gauge,
-      "offsets": [offset],
+      "at": at,
       "widget_key": widget_key
     })
   }
