@@ -45,8 +45,10 @@ var FnordMetric = (function(){
       delete widgets[widget_key];
     }
 
-    var widget = FnordMetric.widgets[widget_type]();
-    console.log(widget);
+    widget_key = FnordMetric.util.generateUUID();
+    elem.attr('data-widget-key', widget_key);
+
+    widgets[widget_key] = FnordMetric.widgets[widget_type](elem);
   }
 
   function onSocketMessage(raw) {
@@ -56,6 +58,11 @@ var FnordMetric = (function(){
 
   function onSocketOpen() {
     console.log("[FnordMetric] connected...");
+
+    $("*[data-fnordmetric]").each(function(n, e){
+      if (!$(e).attr('data-widget-key'))
+        refresh(e);
+    });
   }
 
   function onSocketClose() {

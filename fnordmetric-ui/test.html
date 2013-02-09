@@ -13,16 +13,12 @@
 
     <span data-fnordmetric="counter" data-value="123" id="my_counter">0</span>
     <script>
-      /*$(document).ready(function(){
-        FnordMetric.init({
-          token: "loveos",
-          address:"localhost:8080",
-          gauge_explorer_widget_height: 400,
-          no_discovery: true,
-          no_resize_viewport: true,
+      $(document).ready(function(){
+        FnordMetric.setup({
+          namespace: "loveos",
+          address: "localhost:8080",
         });
-        FnordMetric.renderGaugeExplorer();
-      });*/
+      });
     </script>
   </body>
 </html>

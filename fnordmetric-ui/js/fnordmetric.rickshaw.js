@@ -1,3 +1,5 @@
+/* this is a modified version of shutterstock's rickshaw.js (MIT license like FnordMetric) */
+
 FnordMetric.rickshaw = {
 
   namespace: function(namespace, obj) {

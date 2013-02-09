@@ -44,6 +44,10 @@ FnordMetric.util.formatPercentValue = function(value){
   }
 }
 
+FnordMetric.util.generateUUID = function (){
+  return Math.floor((1 + Math.random()) * 0x1000000).toString(16);
+}
+
 FnordMetric.util.updateCounter = function(trgt_elem, diff_factor){
   var still_running = false;
   if(!diff_factor){ diff_factor = 4; }
