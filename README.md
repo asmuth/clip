@@ -16,41 +16,34 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 Getting Started
 ---------------
 
-Simple Example: this will listen for json-events with `type=unicorn_seen` 
-and render a timeline-plot showing the number of received events per hour.
+Simple Example: this will render a timeline-plot showing the number of
+sales per minute.
 
 ```ruby
 require "fnordmetric"
 
 FnordMetric.namespace :myapp do
 
-  # a gauge is basically a counter 
-  gauge :unicorns_seen,
-    :tick => 1.minute.to_i,
-    :title => "Unicorns per Minute" 
-
   # render a timeseries graph
-  widget 'Unicorns',
-    :title => "Unicorns per Minute",
-    :gauges => [:unicorns_seen],
+  widget 'Sales',
+    :title => "Sales per Minute",
+    :gauges => [:sales_per_minute],
     :type => :timeline,
     :width => 100,
     :autoupdate => 10
-
-  # this code is called for every incoming event with type = 'unicorn_seen'
-  event(:unicorn_seen) do
-    # increment the unicorns_seen_per_hour gauge by 1
-    incr :unicorns_seen
-  end
 
 end
 
 FnordMetric.standalone
 ```
 
-This is the easiest way to submit an event is using `netcat` from the commandline:
+The easiest way to submit an event (i.e. a piece of data) is using `netcat` from the commandline:
 
-    echo '{"_type": "unicorn_seen"}' | nc localhost 1337
+    echo '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' | nc localhost 1337
+
+or you can use the HTTP API:
+
+    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' http://localhost:4242/event
 
 
 FnordMetric offers a HTML5 / JavaScript API to plug the realtime data into any webpage:
@@ -61,8 +54,9 @@ FnordMetric offers a HTML5 / JavaScript API to plug the realtime data into any w
 
 <span
   data-fnordmetric="counter"
-  data-gauge="unicorns_seen"
+  data-gauge="sales_per_minute"
   data-autoupdate="1"
+  data-unit="€"
   >0</span>
 
 <script>
