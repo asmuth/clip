@@ -1,7 +1,6 @@
 class FnordMetric::TimeseriesWidget < FnordMetric::Widget
 
   def self.execute(namespace, event)
-    puts event.inspect
     resp = if event["cmd"] == "values_at"
       {
         :cmd => :values_at,
@@ -10,7 +9,11 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
           unless _gauge
             return { :error => "gauge not found: #{gkey}" }
           end
-          vals = _gauge.values_in(event["since"]..event["until"])
+
+          t_since = FnordMetric::Util.parse_time(event["since"].to_s)
+          t_until = FnordMetric::Util.parse_time(event["until"].to_s)
+
+          vals = _gauge.values_in(t_since..t_until)
           { :key => gkey, :vals => vals, :title => _gauge.title }
         }
       }

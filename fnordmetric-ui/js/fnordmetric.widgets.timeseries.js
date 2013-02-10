@@ -25,6 +25,12 @@ FnordMetric.widgets.timeseries = function(elem){
     if (!elem.attr('data-gauges'))
       return console.log("[FnordMetric] element is missing the data-gauges attribute");
 
+    if (!elem.attr('data-since'))
+      return console.log("[FnordMetric] element is missing the data-since attribute");
+
+    if (!elem.attr('data-until'))
+      return console.log("[FnordMetric] element is missing the data-since attribute");
+
     gauges = elem.attr("data-gauges").split(",");
 
     if (elem.attr('data-colors'))
@@ -178,8 +184,8 @@ FnordMetric.widgets.timeseries = function(elem){
       "gauges": gauges,
       "cmd": "values_at",
       "tick": 30,
-      "since": (((new Date()).getTime() / 1000)- 3600),
-      "until": ((new Date()).getTime() / 1000),
+      "since": elem.attr("data-since"),
+      "until": elem.attr("data-until"),
       "widget_key": widget_key
     });
   }
