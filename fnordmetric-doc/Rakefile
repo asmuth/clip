@@ -57,25 +57,17 @@ class DocApp < Sinatra::Base
     render_with_layout
   end
 
-  get "/documentation" do
-    renderer = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(:no_link => true))
-    @doc_yield = renderer.render(gfm(IO.read(
-      File.join(BASEDIR, "src/index.md"))))
-    @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/documentation.erb')))
-    render_with_layout
+  ["/documentation", "/documentation/*"].each do |route|
+    get route do
+      params[:splat] ||= ["index"]
+      renderer = Redcarpet::Markdown.new(
+        Redcarpet::Render::HTML.new(:no_link => true))
+      @doc_yield = renderer.render(gfm(IO.read(
+        File.join(BASEDIR, "src/#{params[:splat] * "/"}.md"))))
+      @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/documentation.erb')))
+      render_with_layout
+    end
   end
-
-=begin
-  get '/*' do
-    @route = params[:splat].first
-    renderer = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(:no_link => true))
-    @yield = renderer.render(gfm(IO.read(
-      File.join(BASEDIR, "target/src/#{@route}.md"))))
-    render_with_layout
-  end
-=end
 
   def render_with_layout
     render :erb, IO.read(File.join(BASEDIR, 'web/layout.erb'))
@@ -107,6 +99,10 @@ task :render do
   target = File.join(BASEDIR, "target")
 
   routes = ["/", "/documentation"]
+
+  CONFIG["sitemap"].values.flatten.each do |page|
+    routes << "/documentation#{page["url"]}"
+  end
 
   routes.each do |path|
     puts "  + #{path}"

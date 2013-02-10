@@ -2,29 +2,25 @@
   <div class="headbar">Documentation</div>
   <div id="navigation">
     <ul>
-      <li><a href="#">Getting Started</a></li>
+      <li><a href="/documentation">Overview</a></li>
     </ul>
-    <a class="nav_title">FnordMetric UI</a>
-    <ul>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-    </ul>
-    <a class="nav_title">FnordMetric Classic</a>
-    <ul>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-    </ul>
-    <a class="nav_title">FnordMetric Enterprise</a>
-    <ul>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-      <li><a href="#">Getting Started</a></li>
-    </ul>
+
+    <% [
+      ["FnordMetric UI", "fnordmetric_ui"],
+      ["FnordMetric Classic", "fnordmetric_classic"],
+      ["FnordMetric Enterprise", "fnordmetric_enterprise"]
+    ].each do |(title, key)| %>
+      <a class="nav_title"><%= title %></a>
+      <ul>
+        <% CONFIG["sitemap"][key].each do |page| %>
+          <li>
+            <a href="/documentation<%= page["url"] %>">
+              <%= page["title"] %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
 
   <div id="documentation">
