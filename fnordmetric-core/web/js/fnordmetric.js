@@ -87,7 +87,6 @@ var FnordMetric = (function(pre_init){
   }
 
   function sidebarClick(){
-    console.log("clicjed");
     $('#sidebar li').removeClass('active');
     $(this).addClass('active');
 
@@ -315,7 +314,8 @@ var FnordMetric = (function(pre_init){
     util: {},
     gauges: gauges,
     get_conf: get_conf,
-    rickshaw: pre_init.rickshaw
+    rickshaw: pre_init.rickshaw,
+    util: pre_init.util
   };
 
 })(FnordMetric);
