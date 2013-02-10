@@ -44,6 +44,15 @@ FnordMetric.util.formatPercentValue = function(value){
   }
 }
 
+FnordMetric.util.dateFormat = function(timestamp){
+  var t = new Date(timestamp*1000);
+  return FnordMetric.util.decPrint(t.getDate())      + "." + 
+         FnordMetric.util.decPrint((t.getMonth()+1)) + "." + 
+         FnordMetric.util.decPrint(t.getFullYear())  + " " +
+         FnordMetric.util.decPrint(t.getHours())     + ":" +
+         FnordMetric.util.decPrint(t.getMinutes())   + " ";
+}
+
 FnordMetric.util.generateUUID = function (){
   return Math.floor((1 + Math.random()) * 0x1000000).toString(16);
 }
