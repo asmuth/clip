@@ -38,7 +38,7 @@ sitemap:
       url: "/classic_gauges"
     -
       title: "Examples"
-      url: "/classic_gauges"
+      url: "/classic_examples"
     -
       title: "Hacking"
       url: "/classic_gauges"
