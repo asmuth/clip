@@ -1,0 +1,117 @@
+require "rubygems"
+require "bundler"
+
+Bundler.setup
+Bundler.require
+
+BASEDIR = File.expand_path("../", __FILE__)
+CONFIG = YAML.load(IO.read(File.join(BASEDIR, "config.yml")))
+
+require "rack/test"
+require "sinatra/base"
+require "sinatra_static"
+require "redcarpet"
+require 'digest/md5'
+
+def gfm(text)
+  return text
+  # Extract pre blocks
+  extractions = {}
+  text.gsub!(%r{<pre>.*?</pre>}m) do |match|
+    md5 = Digest::MD5.hexdigest(match)
+    extractions[md5] = match
+    "{gfm-extraction-#{md5}}"
+  end
+
+  # prevent foo_bar_baz from ending up with an italic word in the middle
+  text.gsub!(/(^(?! {4}|\t)\w+_\w+_\w[\w_]*)/) do |x|
+    x.gsub('_', '\_') if x.split('').sort.to_s[0..1] == '__'
+  end
+
+  # in very clear cases, let newlines become <br /> tags
+  text.gsub!(/^[\w\<][^\n]*\n+/) do |x|
+    x =~ /\n{2}/ ? x : (x.strip!; x << "  \n")
+  end
+
+  # Insert pre block extractions
+  text.gsub!(/\{gfm-extraction-([0-9a-f]{32})\}/) do
+    "\n\n" + extractions[$1]
+  end
+
+  text
+end
+
+class DocApp < Sinatra::Base
+
+  set :public_folder, File.join(BASEDIR, 'web/assets')
+  set :environment, :test
+  set :raise_errors, true
+
+  helpers do
+    include Rack::Utils
+    alias_method :h, :escape_html
+  end
+
+  get "/" do
+    @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/index.erb')))
+    render_with_layout
+  end
+
+=begin
+  get '/*' do
+    @route = params[:splat].first
+    renderer = Redcarpet::Markdown.new(
+      Redcarpet::Render::HTML.new(:no_link => true))
+    @yield = renderer.render(gfm(IO.read(
+      File.join(BASEDIR, "target/src/#{@route}.md"))))
+    render_with_layout
+  end
+=end
+
+  def render_with_layout
+    render :erb, IO.read(File.join(BASEDIR, 'web/layout.erb'))
+  end
+
+end
+
+desc "clean"
+task :clean do
+  puts "Cleaning up..."
+  %x{rm -rf #{BASEDIR}/target}
+end
+
+desc "build"
+task :build do
+  puts "-"*50
+  puts "ProTip (TM):\n    $ cd target && python -m SimpleHTTPServer 9090"
+  puts "-"*50
+  puts nil
+
+  puts "+ Build: FnordMetric Documentation"
+  Rake::Task["render"].invoke
+  puts "+ Build complete :)"
+end
+
+task :render do
+  puts "+ Rendering Markdown to HTML"
+  builder = SinatraStatic.new(DocApp)
+  target = File.join(BASEDIR, "target")
+
+  routes = ["/"]
+
+  routes.each do |path|
+    puts "  + #{path}"
+    builder.send(:build_path, path, target)
+  end
+
+  puts "+ Copying Assets"
+  %x{cp -R #{BASEDIR}/web/assets/* #{BASEDIR}/target}
+end
+
+task :default do
+  puts "usage: rake [command]"
+  puts <<-EOU
+  build     # build the static html docs
+  clean     # delete all generated files
+  EOU
+end
