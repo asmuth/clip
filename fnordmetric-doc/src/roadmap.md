@@ -60,38 +60,6 @@ Changelog
 Wiki
 ====
 
-  FnordMetric is a framework for collecting and displaying timseries data. It is split up into
-  three components:
-
-
-  FnordMetric UI
-  --------------
-
-  FnordMetric UI is a HTML5 / JavaScript API that lets you plugin realtime data and timeseries
-  graphs into any webpage without having to write a single line of code. It gives you maximum
-  flexiblitiy as you can control the complete layout and style with HTML and CSS. FnordMetric UI
-  uses WebSockets to communicate with the backend. There are two backend implementations:
-  FnordMetric Classic (ruby + redis) or FnordMetric Enterprise (JVM). You can use FnordMetric UI
-  as a white label solution to power your custom realtime analytics apps.
-
-
-  FnordMetric Classic
-  -------------------
-
-  FnordMetric Classic offers a ruby DSL for processing data streams and manipulating gauges that
-  get stored in redis. It includes a collection of pre-made UI widgets which you can use to build
-  beautiful web dashboards within minutes. You can also use the FnordMetric UI HTML5 API to display
-  the data on another website or build highly customized / white label views.
-
-
-  FnordMetric Enterprise
-  ----------------------
-
-  FnordMetric Enterprise is a JVM based timeseries database which serves as a backend for FnordMetric
-  UI. It does not offer it's own user interface.
-
-
-
   The basic concept in FnordMetric is called a "gauge". A Gauge is a primitive data store for a numerical value over
   time. A gauge has two dimensions: Value und Time. Gauges can be used in different modes like sum,
   average, max/min, etcetara.
