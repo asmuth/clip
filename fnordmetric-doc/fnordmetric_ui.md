@@ -1,22 +1,38 @@
 
+ + refresh
+ + resize
+ + customize style -> css (ex. dark)
+
 
 Timeseries
 ----------
 
   data-fnordmetric
-    must be "timeseries"
+    must be "timeseries" (mandatory)
 
   data-gauges
-    comma seperated list of gauges to be dispalyed
+    comma seperated list of gauges to be dispalyed (mandatory)
 
-  data-graph-style
-    render style (either line, area or flow)
+  data-since, data-until
+    these attributes specify the time range to be displayed. they may be a
+    unix timestamp, a time definition like "-3hours" (3 hours ago), "-45m"
+    (45m ago) or "-3600" (3600 seconds = 1 hour ago) or "now". To e.g. display
+    the last two hours of data use: data-since="-2hours" data-until="now"
+
+  data-colors
+    comma seperated list of series / gauge colors (optional)
+
+  data-height
+    height of the chart (default is 240px)
+
+  data-chart-style
+    render style (either line, area or flow), default is "line"
 
   data-cardinal
-    use cardinal splines (values are "on" or "off")
+    use cardinal splines (values are "on" or "off"), default is "off"
 
   data-autoupdate
-    refresh this chart every N seconds
+    refresh this chart every N seconds, default is no autorefresh
 
 
 

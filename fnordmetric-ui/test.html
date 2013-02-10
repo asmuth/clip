@@ -12,10 +12,10 @@
     <link href='./css/fnordmetric.graph.css' type='text/css' rel='stylesheet' />
     <style type="text/css">
       body{ background:#111; }
-      body.dark .rickshaw_legend li.line .label{ color:#fff; }
-      body.dark .rickshaw_graph .y_grid .tick { stroke:rgba(255,255,255,.15); stroke-dasharray:0; }
-      body.dark .rickshaw_graph .y_ticks text { fill:#ffffff; }
-      body.dark .rickshaw_graph .x_tick .title { color:#ffffff; }
+      body.dark .fnordmetric_legend li.line .label{ color:#fff; }
+      body.dark .fnordmetric_graph .y_grid .tick { stroke:rgba(255,255,255,.15); stroke-dasharray:0; }
+      body.dark .fnordmetric_graph .y_ticks text { fill:#ffffff; }
+      body.dark .fnordmetric_graph .x_tick .title { color:#ffffff; }
     </style>
   </head>
   <body class="dark">
@@ -50,31 +50,37 @@
 
     <div
       data-fnordmetric="timeseries"
-      data-style="line"
+      data-chart-style="line"
       data-height="240"
       data-time-range="16000"
       data-autoupdate="10"
       data-gauges="order_sum"
-      style="width:600px; float:left;"></div>
+      style="width:600px; "></div>
 
     <div
       data-fnordmetric="timeseries"
-      data-style="area"
+      data-chart-style="area"
       data-height="240"
-      data-time-range="16000"
       data-autoupdate="10"
       data-gauges="user_logins,user_logins_failed"
       data-colors="#00ff00,#ff0000"
-      style="width:600px; float:left;"></div>
+      style="width:600px; "></div>
 
     <div
       data-fnordmetric="timeseries"
-      data-style="flow"
+      data-chart-style="area"
       data-height="240"
-      data-time-range="16000"
+      data-autoupdate="10"
+      data-gauges="user_logins,user_logins_failed"
+      style=""></div>
+
+    <div
+      data-fnordmetric="timeseries"
+      data-chart-style="flow"
+      data-height="300"
       data-autoupdate="10"
       data-gauges="useronline_total"
-      style="width:600px; float:left;"></div>
+      style="width:600px; "></div>
 
     <script>
       FnordMetric.setup({

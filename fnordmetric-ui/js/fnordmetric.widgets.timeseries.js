@@ -5,22 +5,35 @@ if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
 FnordMetric.widgets.timeseries = function(elem){
-  var graph, gauges, gconfig, legend, hoverDetail, shelving,
-      highlighter, refresh_timer, series, height, colors;
+  var graph, gauges, colors, gconfig, legend, hoverDetail, shelving,
+      highlighter, refresh_timer, series, height;
+
+  var default_colors = ["#db843d", "#3d96ae", "#80699b", "#89a54e",
+                         "#aa4643", "#4572a7"]
 
   var widget_key = elem.attr("data-widget-key");
 
   function init() {
     renderLayout();
 
-    gauges = ["useronline_total"];
-    colors = ["#00ff00"]
+    if (!elem.attr('data-gauges'))
+      return console.log("[FnordMetric] element is missing the data-gauges attribute");
+
+    gauges = elem.attr("data-gauges").split(",");
+
+    if (elem.attr('data-colors'))
+      colors = elem.attr("data-colors").split(",");
+    else
+      colors = [];
+
+    for (n = 0; n < gauges.length; n++)
+      if (!colors[n]) colors[n] = default_colors.pop();
 
     gconfig = {
       element: $('.fnordmetric_container', elem)[0],
       padding: { top: 0.1, bottom: 0 },
       stroke: true
-    }
+    };
 
     if (elem.attr('data-cardinal') == "on") {
       gconfig.interpolation = 'cardinal';
@@ -28,12 +41,12 @@ FnordMetric.widgets.timeseries = function(elem){
       gconfig.interpolation = 'linear';
     }
 
-    if (elem.attr('data-graph-style') == 'area') {
+    if (elem.attr('data-chart-style') == 'area') {
       gconfig.renderer = 'area';
       gconfig.offset = 'zero';
     }
 
-    else if (elem.attr('data-graph-style') == 'flow') {
+    else if (elem.attr('data-chart-style') == 'flow') {
       gconfig.renderer = 'stack';
       gconfig.offset = 'silhouette';
     }
@@ -43,9 +56,12 @@ FnordMetric.widgets.timeseries = function(elem){
       gconfig.offset = 'zero';
     }
 
-    height = 240;
-    resize();
+    if (elem.attr('data-height'))
+      height = parseInt(elem.attr('data-height'), 10);
+    else
+      height = 240;
 
+    resize();
     requestDataAsync();
 
     if (refresh_interval = elem.attr('data-autoupdate'))
