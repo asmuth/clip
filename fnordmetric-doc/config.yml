@@ -5,15 +5,18 @@ sitemap:
 
   fnordmetric_ui:
     -
-      title: "Getting started"
+      title: "Getting Started"
       url: "/ui_index"
 
   fnordmetric_classic:
     -
-      title: "Getting started"
+      title: "Getting Started"
       url: "/classic_index"
+    -
+      title: "Gauges"
+      url: "/classic_gauges"
 
   fnordmetric_enterprise:
     -
-      title: "Getting started"
+      title: "Getting Started"
       url: "/ui_index"

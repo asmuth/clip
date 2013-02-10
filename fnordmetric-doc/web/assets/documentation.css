@@ -151,8 +151,8 @@ hr {
 }
 
 #navigation ul li {
-  font-size: 12px;
-  line-height:23px;
+  font-size: 14px;
+  line-height:26px;
 }
 
 #navigation ul li a {
@@ -208,4 +208,57 @@ hr {
 
 #documentation a:hover {
   text-decoration: underline;
+}
+
+code {
+  padding: 2px 5px;
+  font-family: "Monaco", monospace;
+  background-color: #f8f8f8;
+  border: 1px solid #cacaca;
+  border-radius: 3px;
+  text-shadow: 0 1px 0 #fff;
+  overflow: auto;
+  font-size:12px;
+}
+
+pre code {
+  padding: 10px 15px;
+}
+
+pre {
+  margin-bottom: 25px;
+}
+
+hr.space {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table td, table th {
+  padding: 6px 13px;
+  border: 1px solid #ccc;
+}
+
+table th {
+  font-weight: 600;
+  color: #333;
+}
+
+table th i {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+table tr:nth-child(2) {
+  background-color: #f8f8f8;
+}
+
+table td p {
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
