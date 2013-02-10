@@ -54,7 +54,9 @@ var FnordMetric = (function(pre){
 
   function onSocketMessage(raw) {
     var n, evt = JSON.parse(raw.data);
-    console.log(evt);
+
+    if (evt.error)
+      return console.log("[FnordMetric] error: " + evt.error);
 
     if (evt.widget_key && widgets[evt.widget_key])
       widgets[evt.widget_key].send(evt);

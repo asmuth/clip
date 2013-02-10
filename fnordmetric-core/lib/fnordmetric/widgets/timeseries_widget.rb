@@ -7,6 +7,9 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
         :cmd => :values_at,
         :gauges => event["gauges"].map{ |gkey|
           _gauge = namespace.gauges[gkey.to_sym]
+          unless _gauge
+            return { :error => "gauge not found: #{gkey}" }
+          end
           vals = _gauge.values_in(event["since"]..event["until"])
           { :key => gkey, :vals => vals, :title => _gauge.title }
         }
