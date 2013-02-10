@@ -8,7 +8,7 @@ average, max/min, etcetara.
 
 ### Create gauges on the fly
 
-The easiest way to submit data to FnordMetric are zero-config gauges. These
+The easiest way to submit data to FnordMetric is to use zero-config gauges. These
 are very similar to counters in Statsd: you don't have to create the gauges
 upfront, they are automatically created as you send events. These events have
 to follow a strict schema:
