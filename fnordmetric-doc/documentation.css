@@ -19,8 +19,8 @@ h1, h2, h3, h4, h5, h6 {
 
 h1, h2, h3 { line-height: 40px; }
 h1 { font-size: 38.5px; }
-h2 { font-size: 31.5px; }
-h3 { font-size: 24.5px; }
+h2 { font-size: 26.5px; }
+h3 { font-size: 17.5px; }
 h4 { font-size: 17.5px; }
 h5 { font-size: 14px; }
 h6 { font-size: 11.9px; }
@@ -30,8 +30,12 @@ hr {
   border-top: 1px solid #222;
 }
 
-#wrap{
+#wrap {
   width:850px; margin:auto;
+}
+
+#wrap.large {
+  width: 915px;
 }
 
 .jumbotron {
@@ -92,4 +96,104 @@ hr {
   line-height:30px;
   margin-top:7px;
   margin-left:25px;
+}
+
+.headbar {
+  height:36px;
+  background-color: #F4F4F4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: -moz-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: -o-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: linear-gradient(top, #f4f4f4, #e9e9e9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f4f4f4', EndColorStr='#e9e9e9');
+  padding: 0 25px;
+  border-bottom: 1px solid #C9C9C9;
+  border-top: 1px solid #d0d0d0;
+  line-height:29px;
+  color: #333;
+  font-size:14px;
+  line-height:35px;
+  font-weight:bold;
+  margin:0;
+  text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
+  -moz-text-shadow: 1px 0px 2px rgba(255,255,255,1);
+  -webkit-text-shadow: 1px 0px 2px rgba(255,255,255,1);
+  overflow:hidden;
+}
+
+#navigation {
+  height:1200px;
+  width:210px;
+  border-right:1px solid #c7c9cc;
+  background:#f4f4f4;
+  padding-top:15px;
+  float:left;
+}
+
+#navigation ul {
+  list-style-type:none;
+  margin: 0;
+  padding: 0 0 0 20px;
+}
+
+#navigation ul li {
+  font-size: 12px;
+  line-height:23px;
+}
+
+#navigation ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+#navigation ul li a:hover {
+  text-decoration: underline;
+}
+
+#navigation a.nav_title {
+  display:block;
+  text-transform: uppercase;
+  font-family: Arial,sans-serif;
+  font-weight: bold;
+  font-size: 11px;
+  margin: 20px 0 8px 0;
+  padding: 15px 0 0 22px;
+  border-top: 1px white solid;
+  box-shadow: 0 -1px 0 #d7dbe6;
+  color:#666;
+}
+
+#documentation {
+  width:620px;
+  padding: 25px 40px;
+  float:left;
+  color: #333;
+  font-size: 14px;
+  line-height:24px;
+}
+
+#documentation_wrap {
+  min-height:600px;
+  border-radius:5px; background:#fff; border:1px solid #ddd; border-top:none; box-shadow:0 0 5px #000; overflow:hidden; width:920px;
+}
+
+#documentation h3 {
+  margin-top: 25px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+#documentation p {
+  margin-top: 4px;
+}
+
+#documentation a {
+  color: #06c;
+  text-decoration: none;
+}
+
+#documentation a:hover {
+  text-decoration: underline;
 }
