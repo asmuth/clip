@@ -5,18 +5,51 @@ sitemap:
 
   fnordmetric_ui:
     -
-      title: "Getting Started"
+      title: "Introduction"
       url: "/ui_index"
+    -
+      title: "API Reference"
+      url: "/ui_html5_api"
+    -
+      title: "Examples"
+      url: "/ui_examples"
 
   fnordmetric_classic:
     -
       title: "Getting Started"
       url: "/classic_index"
     -
+      title: "Running FnordMetric"
+      url: "/classic_gauges"
+    -
+      title: "Sending Data"
+      url: "/classic_gauges"
+    -
       title: "Gauges"
       url: "/classic_gauges"
+    -
+      title: "Event Handlers"
+      url: "/classic_gauges"
+    -
+      title: "Custom Dashboards"
+      url: "/classic_gauges"
+    -
+      title: "Plugins"
+      url: "/classic_gauges"
+    -
+      title: "Examples"
+      url: "/classic_gauges"
+    -
+      title: "Hacking"
+      url: "/classic_gauges"
+
 
   fnordmetric_enterprise:
     -
       title: "Getting Started"
       url: "/ui_index"
+    -
+      title: "HTTP API"
+      url: "/ui_index"
+
+

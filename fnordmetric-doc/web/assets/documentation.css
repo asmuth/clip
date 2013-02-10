@@ -138,8 +138,6 @@ hr {
 #navigation {
   height:1200px;
   width:210px;
-  border-right:1px solid #c7c9cc;
-  background:#f4f4f4;
   padding-top:15px;
   float:left;
 }
@@ -152,7 +150,7 @@ hr {
 
 #navigation ul li {
   font-size: 14px;
-  line-height:26px;
+  line-height:30px;
 }
 
 #navigation ul li a {
@@ -184,11 +182,21 @@ hr {
   color: #333;
   font-size: 14px;
   line-height:24px;
+  border-left:1px solid #c7c9cc;
+  background:#fff;
+  padding-bottom:70px;
+  min-height:1200px;
 }
 
 #documentation_wrap {
   min-height:600px;
-  border-radius:5px; background:#fff; border:1px solid #ddd; border-top:none; box-shadow:0 0 5px #000; overflow:hidden; width:920px;
+  border-radius:5px;
+  border:1px solid #ddd;
+  border-top:none;
+  box-shadow:0 0 5px #000;
+  overflow:hidden;
+  width:920px;
+  background:#f4f4f4;
 }
 
 #documentation h3 {
@@ -223,6 +231,7 @@ code {
 
 pre code {
   padding: 10px 15px;
+  display: block;
 }
 
 pre {
@@ -247,6 +256,8 @@ table td, table th {
 table th {
   font-weight: 600;
   color: #333;
+  vertical-align:top;
+  width: 125px;
 }
 
 table th i {
