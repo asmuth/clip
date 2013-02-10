@@ -28,6 +28,9 @@ Timeseries
   data-chart-style
     render style (either line, area or flow), default is "line"
 
+  data-legend
+    display a legend? (values are "on" or "off"), default is "on"
+
   data-cardinal
     use cardinal splines (values are "on" or "off"), default is "off"
 

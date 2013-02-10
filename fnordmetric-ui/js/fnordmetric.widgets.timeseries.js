@@ -6,14 +6,20 @@ if (typeof FnordMetric.widgets == 'undefined')
 
 FnordMetric.widgets.timeseries = function(elem){
   var graph, gauges, colors, gconfig, legend, hoverDetail, shelving,
-      highlighter, refresh_timer, series, height;
+      highlighter, refresh_timer, series, height, display_legend,
+      widget_key;
 
   var default_colors = ["#db843d", "#3d96ae", "#80699b", "#89a54e",
                          "#aa4643", "#4572a7"]
 
-  var widget_key = elem.attr("data-widget-key");
-
   function init() {
+    widget_key = elem.attr("data-widget-key");
+
+    if (elem.attr('data-legend') == "off")
+      display_legend = false;
+    else
+      display_legend = true;
+
     renderLayout();
 
     if (!elem.attr('data-gauges'))
@@ -73,34 +79,38 @@ FnordMetric.widgets.timeseries = function(elem){
   }
 
   function renderLayout() {
-    $(elem)
-      .append(
+    if (display_legend)
+      $(elem).append(
         $('<div></div>')
           .addClass('fnordmetric_container_legend')
           .css({
             margin: '10px 30px 0 30px',
           })
-      )
-      .append(
-        $('<div></div>')
-          .addClass('fnordmetric_container')
-          .css({
-            height: height,
-            margin: '0 23px 25px 23px',
-          })
       );
+
+    $(elem).append(
+      $('<div></div>')
+        .addClass('fnordmetric_container')
+        .css({
+          height: height,
+          margin: '0 23px 25px 23px',
+        })
+    );
   }
 
   function renderChart() {
     $(gconfig.element).html("");
-    $(".fnordmetric_legend", elem).html("");
+
+    if (display_legend)
+      $(".fnordmetric_legend", elem).html("");
 
     graph = new FnordMetric.rickshaw.Graph(gconfig);
 
-    legend = new FnordMetric.rickshaw.Graph.Legend({
-      graph: graph,
-      element: $('.fnordmetric_container_legend', elem)[0]
-    });
+    if (display_legend)
+      legend = new FnordMetric.rickshaw.Graph.Legend({
+        graph: graph,
+        element: $('.fnordmetric_container_legend', elem)[0]
+      });
 
     hoverDetail = new FnordMetric.rickshaw.Graph.HoverDetail( {
       graph: graph
