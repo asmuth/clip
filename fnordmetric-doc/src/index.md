@@ -14,6 +14,8 @@ uses WebSockets to communicate with the backend. There are two backend implement
 FnordMetric Classic (ruby + redis) or FnordMetric Enterprise (JVM). You can use FnordMetric UI
 as a white label solution to power your custom realtime analytics apps.
 
+<a href="/documentation/ui_index">Getting Started with FnordMetric UI &rarr;</a>
+
 
 ### FnordMetric Classic
 
@@ -22,8 +24,12 @@ get stored in redis. It includes a collection of pre-made UI widgets which you c
 beautiful web dashboards within minutes. You can also use the FnordMetric UI HTML5 API to display
 the data on another website or build highly customized / white label views.
 
+<a href="/documentation/classic_index">Getting Started with FnordMetric Classic &rarr;</a>
+
 
 ### FnordMetric Enterprise
 
 FnordMetric Enterprise is a JVM based timeseries database which serves as a backend for FnordMetric
 UI. It does not offer it's own user interface.
+
+<a href="/documentation/ep_index">Getting Started with FnordMetric Enterprise &rarr;</a>

@@ -7,9 +7,6 @@ sitemap:
     -
       title: "Getting started"
       url: "/ui_index"
-    -
-      title: "Websocket Protocol"
-      url: "/websocket_protocol"
 
   fnordmetric_classic:
     -
