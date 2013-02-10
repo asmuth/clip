@@ -54,14 +54,14 @@ var FnordMetric = (function(pre_init){
     if (!conf.hide_gauge_explorer) {
       sidebar_overview
         .append($('<li class="overview">')
-        .append($('<a href="#" class="title">').html('Gauge Explorer'))
+        .append($('<a href="#" class="title">').html('<i class="icon-bar-chart"></i> Gauge Explorer'))
         .click(function(){ renderGaugeExplorer(); }));
     }
 
     if (!conf.hide_active_users) {
       sidebar_overview
         .append($('<li class="overview">')
-        .append($('<a href="#" class="title">').html('Active Users'))
+        .append($('<a href="#" class="title">').html('<i class="icon icon-group"></i> Active Users'))
         .click(function(){ renderSessionView(); }));
     }
 
@@ -75,7 +75,7 @@ var FnordMetric = (function(pre_init){
       ul.append($('<li class="gauge">')
         .attr('data-token', gkey)
         .attr('data-view', gauges[gkey].view_type)
-        .append('<i class="icon-folder-close">')
+        .append('<i class="icon-arrow-right">')
         .append($('<a href="#" class="title">').html(gauges[gkey].title)));
     }
 

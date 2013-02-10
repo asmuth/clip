@@ -22,7 +22,7 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
         vals.values.compact.map(&:to_f).inject(&:+)
       elsif at =~ /avg\((.+)\)/
         vals = gauge.values_in(FnordMetric::Util.parse_time($1).._t+gauge.tick)
-        vals.values.compact.map(&:to_f).inject(&:+) / vals.size.to_f
+        (vals.values.compact.map(&:to_f).inject(&:+) || 0) / vals.size.to_f
       else
         gauge.value_at(FnordMetric::Util.parse_time(at)).to_i
       end
