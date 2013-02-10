@@ -87,15 +87,27 @@ hr {
   color:#777;
 }
 
-#header h1 { font-size:23.5px; margin-bottom:25px; }
+#header h1 { 
+  font-size:23.5px;
+  margin-bottom:25px;
+}
 
-#header a {
+#header h1 a {
+  color:#fff;
+  text-decoration:none;
+}
+
+#header a.menu {
   float:right;
   color:#fff;
   text-decoration:none;
-  line-height:30px;
-  margin-top:7px;
+  line-height:26px;
+  margin-top:9px;
   margin-left:25px;
+}
+
+#header a.menu:hover {
+  border-bottom: 1px solid #666;
 }
 
 .headbar {
