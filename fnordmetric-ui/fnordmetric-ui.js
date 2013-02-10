@@ -11654,6 +11654,167 @@ if (typeof FnordMetric == 'undefined')
 if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
+FnordMetric.widgets.timeseries = function(elem){
+    var graph, gauges, gconfig, legend, hoverDetail, shelving,
+        highlighter;
+
+    var widget_key = elem.attr("data-widget-key");
+
+    function init() {
+      drawLayout();
+
+      gconfig = {
+        element: $('.fnordmetric_container', elem)[0],
+        padding: { top: 0.1, bottom: 0 },
+        stroke: true,
+        series: opts.series
+      }
+
+      if(elem.attr('data-cardinal') == "on") {
+        gconfig.interpolation = 'cardinal';
+      } else {
+        gconfig.interpolation = 'linear';
+      }
+
+      if (elem.attr('data-graph-style') == 'area'){
+        gconfig.renderer = 'area';
+        gconfig.offset = 'zero';
+      }
+
+      else if (elem.attr('data-graph-style') == 'flow') {
+        gconfig.renderer = 'stack';
+        gconfig.offset = 'silhouette';
+      }
+
+      else {
+        gconfig.renderer = 'line';
+        gconfig.offset = 'zero';
+      }
+
+
+      gconfig.width = elem.width() - 50;
+      gconfig.height = 240;
+
+      /*var secs = parseInt(opts.autoupdate);
+      if(secs > 0){
+        var autoupdate_interval = window.setInterval(function(){
+           updateChart(false, true);
+        }, secs*1000);
+
+        $('body').bind('fm_dashboard_close', function(){
+          window.clearInterval(autoupdate_interval);
+        });
+      }*/
+
+    }
+
+    function renderLayout() {
+      $(elem)
+        .append(
+          $('<div></div>')
+            .addClass('fnordmetric_container_legend')
+            .css({
+              margin: '10px 30px 0 30px',
+            })
+        )
+        .append(
+          $('<div></div>')
+            .addClass('fnordmetric_container')
+            .css({
+              height: opts.height,
+              margin: '0 23px 25px 23px',
+            })
+        );
+    }
+
+    function renderChart() {
+      $(gconfig.element).html("");
+      $(".fnordmetric_legend", elem).html("");
+
+      graph = new FnordMetricRickshaw.Graph(gconfig);
+
+      legend = new FnordMetricRickshaw.Graph.Legend({
+        graph: graph,
+        element: $('.fnordmetric_container_legend', elem)[0]
+      });
+
+      hoverDetail = new FnordMetricRickshaw.Graph.HoverDetail( {
+        graph: graph
+      });
+
+      shelving = new FnordMetricRickshaw.Graph.Behavior.Series.Toggle({
+        graph: graph,
+        legend: legend
+      });
+
+      highlighter = new FnordMetricRickshaw.Graph.Behavior.Series.Highlight({
+        graph: graph,
+        legend: legend
+      });
+
+      new FnordMetricRickshaw.Graph.Axis.Time({
+        graph: graph,
+      }).render();
+
+      new FnordMetricRickshaw.Graph.Axis.Y({
+        graph: graph,
+      }).render();
+
+      if(!gconfig.renderer){
+        gconfig.renderer = "line";
+      }
+
+      graph.configure(gconfig);
+      graph.render();
+    }
+
+    function send(evt) {
+      gconfig.series = [];
+
+      for(var ind = 0; ind < dgauges.length; ind++){
+
+        gconfig.series.push({
+          name: dgauges[ind].title,
+          color: opts.series[ind].color,
+          data: []
+        });
+
+        for(_time in dgauges[ind].vals){
+          gconfig.series[ind].data.push(
+            { x: parseInt(_time), y: parseInt(dgauges[ind].vals[_time] || 0) }
+          );
+        }
+
+      }
+
+      renderChart();
+    }
+
+    function requestDataAsync() {
+      FnordMetric.publish({
+        "type": "widget_request",
+        "klass": "generic",
+        "gauges": gauges,
+        "cmd": "values_at",
+        "tick": 30,
+        "since": (new Date()).getTime - 3600,
+        "until": (new Date()).getTime,
+        "widget_key": widget_key
+      });
+    }
+
+    return {
+      init: init,
+      send: send,
+      destroy: destroy
+    };
+
+};
+if (typeof FnordMetric == 'undefined')
+  FnordMetric = {};
+
+if (typeof FnordMetric.widgets == 'undefined')
+  FnordMetric.widgets = {};
 
 FnordMetric.widgets.counter = function(elem){
   var gauge, at, refresh_timer, refresh_interval;

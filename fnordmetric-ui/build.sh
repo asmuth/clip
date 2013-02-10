@@ -6,6 +6,7 @@
   cat js/fnordmetric.js
   cat js/fnordmetric.rickshaw.js
   cat js/fnordmetric.util.js
+  cat js/fnordmetric.widgets.timeseries.js
   cat js/fnordmetric.widgets.counter.js
 ) > fnordmetric-ui.js
 

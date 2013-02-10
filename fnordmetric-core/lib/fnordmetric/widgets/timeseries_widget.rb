@@ -1,6 +1,7 @@
 class FnordMetric::TimeseriesWidget < FnordMetric::Widget
 
   def self.execute(namespace, event)
+    puts event.inspect
     resp = if event["cmd"] == "values_at"
       {
         :cmd => :values_at,

@@ -1,5 +1,24 @@
 
 
+Timeseries
+----------
+
+  data-fnordmetric
+    must be "timeseries"
+
+  data-gauges
+    comma seperated list of gauges to be dispalyed
+
+  data-graph-style
+    render style (either line, area or flow)
+
+  data-cardinal
+    use cardinal splines (values are "on" or "off")
+
+  data-autoupdate
+    refresh this chart every N seconds
+
+
 
 Counters
 --------

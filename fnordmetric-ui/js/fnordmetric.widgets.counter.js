@@ -4,7 +4,6 @@ if (typeof FnordMetric == 'undefined')
 if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
-
 FnordMetric.widgets.counter = function(elem){
   var gauge, at, refresh_timer, refresh_interval;
   var widget_key = elem.attr("data-widget-key");
