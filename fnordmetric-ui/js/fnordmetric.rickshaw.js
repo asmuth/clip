@@ -415,8 +415,7 @@ FnordMetric.rickshaw.Graph = function(args) {
       FnordMetric.rickshaw.Graph.Renderer.Stack,
       FnordMetric.rickshaw.Graph.Renderer.Line,
       FnordMetric.rickshaw.Graph.Renderer.Bar,
-      FnordMetric.rickshaw.Graph.Renderer.Area,
-      FnordMetric.rickshaw.Graph.Renderer.ScatterPlot
+      FnordMetric.rickshaw.Graph.Renderer.Area
     ];
 
     renderers.forEach( function(r) {
@@ -601,118 +600,6 @@ FnordMetric.rickshaw.Graph = function(args) {
   this.initialize(args);
 };
 
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Fixtures.Time');
-
-FnordMetric.rickshaw.Fixtures.Time = function() {
-
-  var tzOffset = new Date().getTimezoneOffset() * 60;
-
-  var self = this;
-
-  this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-  this.units = [
-    {
-      name: 'decade',
-      seconds: 86400 * 365.25 * 10,
-      formatter: function(d) { return (parseInt(d.getUTCFullYear() / 10) * 10) }
-    }, {
-      name: 'year',
-      seconds: 86400 * 365.25,
-      formatter: function(d) { return d.getUTCFullYear() }
-    }, {
-      name: 'month',
-      seconds: 86400 * 30.5,
-      formatter: function(d) { return self.months[d.getUTCMonth()] }
-    }, {
-      name: 'week',
-      seconds: 86400 * 7,
-      formatter: function(d) { return self.formatDate(d) }
-    }, {
-      name: 'day',
-      seconds: 86400,
-      formatter: function(d) { return d.getUTCDate() }
-    }, {
-      name: '6 hour',
-      seconds: 3600 * 6,
-      formatter: function(d) { return self.formatTime(d) }
-    }, {
-      name: 'hour',
-      seconds: 3600,
-      formatter: function(d) { return self.formatTime(d) }
-    }, {
-      name: '15 minute',
-      seconds: 60 * 15,
-      formatter: function(d) { return self.formatTime(d) }
-    }, {
-      name: 'minute',
-      seconds: 60,
-      formatter: function(d) { return d.getUTCMinutes() }
-    }, {
-      name: '15 second',
-      seconds: 15,
-      formatter: function(d) { return d.getUTCSeconds() + 's' }
-    }, {
-      name: 'second',
-      seconds: 1,
-      formatter: function(d) { return d.getUTCSeconds() + 's' }
-    }
-  ];
-
-  this.unit = function(unitName) {
-    return this.units.filter( function(unit) { return unitName == unit.name } ).shift();
-  };
-
-  this.formatDate = function(d) {
-    var exp = FnordMetric.util.dateFormat(d.getTime()).match(/^([0-9]+\.[0-9]+)/);
-
-    if (exp)
-      return exp[1];
-
-    return 0;
-  };
-
-  this.formatTime = function(d) {
-    return d.toLocaleString().match(/(\d+:\d+):/)[1];
-  };
-
-  this.ceil = function(time, unit) {
-
-    if (unit.name == 'month') {
-      var nearFuture = new Date((time + unit.seconds - 1) * 1000);
-      return new Date(nearFuture.getUTCFullYear(), nearFuture.getUTCMonth() + 1, 1, 0, 0, 0, 0).getTime() / 1000;
-    }
-
-    if (unit.name == 'year') {
-      var nearFuture = new Date((time + unit.seconds - 1) * 1000);
-      return new Date(nearFuture.getUTCFullYear(), 1, 1, 0, 0, 0, 0).getTime() / 1000;
-    }
-
-    return Math.ceil(time / unit.seconds) * unit.seconds;
-  };
-};
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Fixtures.Number');
-
-FnordMetric.rickshaw.Fixtures.Number.formatKMBT = function(y) {
-  if (y >= 1000000000000)   { return y / 1000000000000 + "T" }
-  else if (y >= 1000000000) { return y / 1000000000 + "B" }
-  else if (y >= 1000000)    { return y / 1000000 + "M" }
-  else if (y >= 1000)       { return y / 1000 + "K" }
-  else if (y < 1 && y > 0)  { return y.toFixed(2) }
-  else if (y == 0)          { return '' }
-  else                      { return y }
-};
-
-FnordMetric.rickshaw.Fixtures.Number.formatBase1024KMGTP = function(y) {
-    if (y >= 1125899906842624)  { return y / 1125899906842624 + "P" }
-    else if (y >= 1099511627776){ return y / 1099511627776 + "T" }
-    else if (y >= 1073741824)   { return y / 1073741824 + "G" }
-    else if (y >= 1048576)      { return y / 1048576 + "M" }
-    else if (y >= 1024)         { return y / 1024 + "K" }
-    else if (y < 1 && y > 0)    { return y.toFixed(2) }
-    else if (y == 0)            { return '' }
-    else                        { return y }
-};
 FnordMetric.rickshaw.namespace("FnordMetric.rickshaw.Color.Palette");
 
 FnordMetric.rickshaw.Color.Palette = function(args) {
@@ -740,12 +627,17 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
   this.ticksTreatment = args.ticksTreatment || 'plain';
   this.fixedTimeUnit = args.timeUnit;
 
-  var time = new FnordMetric.rickshaw.Fixtures.Time();
-
   this.appropriateTimeUnit = function() {
-
     var unit;
-    var units = time.units;
+    var units = [
+      { seconds: (86400) },
+      { seconds: (3600 * 6) },
+      { seconds: (3600) },
+      { seconds: (60 * 15) },
+      { seconds: (60) },
+      { seconds: (15) },
+      { seconds: (1) }
+    ]
 
     var domain = this.graph.x.domain();
     var rangeSeconds = domain[1] - domain[0];
@@ -756,7 +648,7 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
       }
     } );
 
-    return (unit || time.units[time.units.length - 1]);
+    return (unit || units[time.units.length - 1]);
   };
 
   this.tickOffsets = function() {
@@ -772,7 +664,7 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
 
     for (var i = 0; i < count; i++) {
 
-      tickValue = time.ceil(runningTick, unit);
+      tickValue = (Math.ceil(runningTick / unit.seconds) * unit.seconds);
       runningTick = tickValue + unit.seconds / 2;
 
       offsets.push( { value: tickValue, unit: unit } );
@@ -803,7 +695,7 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
 
       var title = document.createElement('div');
       title.classList.add('title');
-      title.innerHTML = o.unit.formatter(new Date(o.value * 1000));
+      title.innerHTML = FnordMetric.util.dateFormat(o.value);
       element.appendChild(title);
 
       self.graph.element.appendChild(element);
@@ -1035,22 +927,6 @@ FnordMetric.rickshaw.Graph.Behavior.Series.Toggle = function(args) {
   };
 
   if (this.legend) {
-
-                /*$(this.legend.list).sortable( {
-                        start: function(event, ui) {
-                                ui.item.bind('no.onclick',
-                                        function(event) {
-                                                event.preventDefault();
-                                        }
-                                );
-                        },
-                        stop: function(event, ui) {
-                                setTimeout(function(){
-                                        ui.item.unbind('no.onclick');
-                                }, 250);
-                        }
-                })*/
-
     this.legend.lines.forEach( function(l) {
       self.addAnchor(l);
     } );
@@ -1867,118 +1743,6 @@ FnordMetric.rickshaw.Graph.Renderer.Area = FnordMetric.rickshaw.Class.create( Fn
     }
   }
 } );
-
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Renderer.ScatterPlot');
-
-FnordMetric.rickshaw.Graph.Renderer.ScatterPlot = FnordMetric.rickshaw.Class.create( FnordMetric.rickshaw.Graph.Renderer, {
-
-  name: 'scatterplot',
-
-  defaults: function($super) {
-
-    return FnordMetric.rickshaw.extend( $super(), {
-      unstack: true,
-      fill: true,
-      stroke: false,
-      padding:{ top: 0.01, right: 0.01, bottom: 0.01, left: 0.01 },
-      dotSize: 4
-    } );
-  },
-
-  initialize: function($super, args) {
-    $super(args);
-  },
-
-  render: function() {
-
-    var graph = this.graph;
-
-    graph.vis.selectAll('*').remove();
-
-    graph.series.forEach( function(series) {
-
-      if (series.disabled) return;
-
-      var nodes = graph.vis.selectAll("path")
-        .data(series.stack)
-        .enter().append("svg:circle")
-        .attr("cx", function(d) { return graph.x(d.x) })
-        .attr("cy", function(d) { return graph.y(d.y) })
-        .attr("r", this.dotSize);
-
-      Array.prototype.forEach.call(nodes[0], function(n) {
-        n.setAttribute('fill', series.color);
-      } );
-
-    }, this );
-  }
-} );
-FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Smoother');
-
-FnordMetric.rickshaw.Graph.Smoother = function(args) {
-
-  this.graph = args.graph;
-  this.element = args.element;
-
-  var self = this;
-
-  this.aggregationScale = 1;
-
-  if (this.element) {
-
-    $( function() {
-      $(self.element).slider( {
-        min: 1,
-        max: 100,
-        slide: function( event, ui ) {
-          self.setScale(ui.value);
-          self.graph.update();
-        }
-      } );
-    } );
-  }
-
-  self.graph.stackData.hooks.data.push( {
-    name: 'smoother',
-    orderPosition: 50,
-    f: function(data) {
-
-      var aggregatedData = [];
-
-      data.forEach( function(seriesData) {
-
-        var aggregatedSeriesData = [];
-
-        while (seriesData.length) {
-
-          var avgX = 0, avgY = 0;
-          var slice = seriesData.splice(0, self.aggregationScale);
-
-          slice.forEach( function(d) {
-            avgX += d.x / slice.length;
-            avgY += d.y / slice.length;
-          } );
-
-          aggregatedSeriesData.push( { x: avgX, y: avgY } );
-        }
-
-        aggregatedData.push(aggregatedSeriesData);
-      } );
-
-      return aggregatedData;
-    }
-  } );
-
-  this.setScale = function(scale) {
-
-    if (scale < 1) {
-      throw "scale out of range: " + scale;
-    }
-
-    this.aggregationScale = scale;
-    this.graph.update();
-  }
-};
 
 FnordMetric.rickshaw.namespace('FnordMetric.rickshaw.Graph.Unstacker');
 
