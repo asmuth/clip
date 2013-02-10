@@ -7,7 +7,6 @@ Todo
 Backlog
 =======
 
-  → icons for sidebar
   → bignumberwidget
   → fancy topbar daterange picker for legacy dashboards
   → make fnordmetric responsive
@@ -29,6 +28,7 @@ Changelog
 =========
 
   1.1.1
+    → icons for sidebar
     → simple gauge explorer (style like active users) + html5 api snippet generator
     → new file structure
     → better namespacing for javascript

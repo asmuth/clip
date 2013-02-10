@@ -565,7 +565,7 @@ h1.head{ margin-top:70px; }
 #sidebar ul li{ height:28px; line-height:28px; cursor:pointer; font-size:13px; padding-left:25px; }
 #sidebar ul li a{ color:#ccc; text-decoration:none; }
 /*#sidebar ul li:after{ content:'›'; display:block; float:right; margin-right:15px; color:#ccc; font-size:16px; line-height:27px; }*/
-#sidebar ul li i{ margin-right: 1px; color: #AAA; font-size: 11px; position: relative; left: -2px; top: -1px; }
+#sidebar ul li i{ margin-right: 1px; color: #AAA; font-size: 11px; position: relative; left: -2px; top: -1px; display:none; }
 #sidebar ul li:hover, #tabs ul li:hover:after{ color:#fff; }
 #sidebar ul li:hover .picto{ opacity:1; }
 #sidebar ul li.active i, #sidebar ul li.active a{ color:#eee; }

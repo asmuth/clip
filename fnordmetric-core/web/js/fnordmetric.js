@@ -87,6 +87,7 @@ var FnordMetric = (function(pre_init){
   }
 
   function sidebarClick(){
+    console.log("clicjed");
     $('#sidebar li').removeClass('active');
     $(this).addClass('active');
 
@@ -115,10 +116,10 @@ var FnordMetric = (function(pre_init){
       renderSidebar();
 
       if(!currentView && (window.location.hash.length < 2)){
-        sidebarClick.apply($('#sidebar li:first'));
-      } else if(!navigatedViaHash){
-        navigateViaHash();
+        window.location.hash = "gauge_explorer";
       }
+
+      navigateViaHash();
     }
   }
 

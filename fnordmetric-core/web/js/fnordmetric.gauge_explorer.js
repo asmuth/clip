@@ -39,11 +39,6 @@ FnordMetric.views.gaugeExplorer = (function(){
       ]
     });
 
-    currentGauge = {
-      key: "useronline_total",
-      title: "Fnord"
-    };
-
     $(default_time_ranges).each(function(i, tr){
       $('.ge_timerange_links', elem).append(
         $('<a>')
@@ -79,6 +74,8 @@ FnordMetric.views.gaugeExplorer = (function(){
   }
 
   function render() {
+    if (!currentGauge) return;
+
     $(".widget_viewport", elem).html('');
     widget = FnordMetric.widgets.timeseriesWidget();
 
