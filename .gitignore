@@ -1,8 +1,0 @@
-coverage
-rdoc
-.bundle
-pkg
-db/*.sqlite
-.rvmrc
-Gemfile.lock
-fnordmetric-*.gem
