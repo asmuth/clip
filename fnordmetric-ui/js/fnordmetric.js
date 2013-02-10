@@ -52,6 +52,12 @@ var FnordMetric = (function(pre){
     widgets[widget_key].init();
   }
 
+  function resize() {
+    for (widget_key in widgets)
+      if (widgets[widget_key].resize)
+        widgets[widget_key].resize();
+  }
+
   function onSocketMessage(raw) {
     var n, evt = JSON.parse(raw.data);
 
@@ -79,7 +85,8 @@ var FnordMetric = (function(pre){
   return {
     setup: setup,
     publish: publish,
-    refresh: refresh
+    refresh: refresh,
+    resize: resize
   };
 
 })(FnordMetric);

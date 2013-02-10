@@ -67,7 +67,6 @@ FnordMetric.widgets.timeseries = function(elem){
     else
       height = 240;
 
-    resize();
     requestDataAsync();
 
     if (refresh_interval = elem.attr('data-autoupdate'))
@@ -99,6 +98,9 @@ FnordMetric.widgets.timeseries = function(elem){
   }
 
   function renderChart() {
+    gconfig.width = elem.width() - 50;
+    gconfig.height = height;
+
     $(gconfig.element).html("");
 
     if (display_legend)
@@ -143,8 +145,7 @@ FnordMetric.widgets.timeseries = function(elem){
   }
 
   function resize() {
-    gconfig.width = elem.width() - 50;
-    gconfig.height = height;
+    requestDataAsync();
   }
 
   function send(evt) {
@@ -192,7 +193,8 @@ FnordMetric.widgets.timeseries = function(elem){
   return {
     init: init,
     send: send,
-    destroy: destroy
+    destroy: destroy,
+    resize: resize
   };
 
 };
