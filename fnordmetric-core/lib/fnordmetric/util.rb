@@ -5,9 +5,9 @@ class FnordMetric::Util
 
     if (str == "now")
       Time.now.to_i
-    elsif str =~ /^[0-9]+$/
-      str.to_i
-    elsif str =~ /^-([0-9]+)$/
+    elsif str =~ /^([0-9]+(?:\.[0-9]+)?)$/
+      $1.to_i
+    elsif str =~ /^-([0-9]+(?:\.[0-9]+)?)$/
       Time.now.to_i - $1.to_i
     elsif str =~ /^-([0-9]+(?:\.[0-9]+)?)s(ec(ond)?(s?))?$/
       Time.now.to_i - $1.to_f
