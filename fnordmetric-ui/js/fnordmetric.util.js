@@ -46,11 +46,28 @@ FnordMetric.util.formatPercentValue = function(value){
 
 FnordMetric.util.dateFormat = function(timestamp){
   var t = new Date(timestamp*1000);
-  return FnordMetric.util.decPrint(t.getDate())      + "." + 
-         FnordMetric.util.decPrint((t.getMonth()+1)) + "." + 
-         FnordMetric.util.decPrint(t.getFullYear())  + " " +
+  return FnordMetric.util.decPrint(t.getFullYear())  + "/" +
+         FnordMetric.util.decPrint((t.getMonth()+1)) + "/" + 
+         FnordMetric.util.decPrint(t.getDate())      + " " + 
          FnordMetric.util.decPrint(t.getHours())     + ":" +
          FnordMetric.util.decPrint(t.getMinutes())   + " ";
+}
+
+FnordMetric.util.dateFormatWithRange = function(timestamp, range){
+  var t = new Date(timestamp*1000);
+
+  if (range >= (3600 * 24))
+    return FnordMetric.util.decPrint((t.getMonth()+1)) + "/" + 
+           FnordMetric.util.decPrint(t.getDate())      + " " + 
+           FnordMetric.util.decPrint(t.getHours())     + ":" +
+           FnordMetric.util.decPrint(t.getMinutes());
+  else if (range >= 900)
+    return FnordMetric.util.decPrint(t.getHours())     + ":" +
+           FnordMetric.util.decPrint(t.getMinutes());
+  else
+    return FnordMetric.util.decPrint(t.getHours())     + ":" +
+           FnordMetric.util.decPrint(t.getMinutes())   + ":" +
+           FnordMetric.util.decPrint(t.getSeconds());
 }
 
 FnordMetric.util.generateUUID = function (){

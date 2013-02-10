@@ -674,7 +674,6 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
   };
 
   this.render = function() {
-
     this.elements.forEach( function(e) {
       if (e.parentNode)
         e.parentNode.removeChild(e);
@@ -683,6 +682,8 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
     this.elements = [];
 
     var offsets = this.tickOffsets();
+    var domain = this.graph.x.domain();
+    var rangeSeconds = domain[1] - domain[0];
 
     offsets.forEach( function(o) {
 
@@ -695,7 +696,7 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
 
       var title = document.createElement('div');
       title.classList.add('title');
-      title.innerHTML = FnordMetric.util.dateFormat(o.value);
+      title.innerHTML = FnordMetric.util.dateFormatWithRange(o.value, rangeSeconds);
       element.appendChild(title);
 
       self.graph.element.appendChild(element);
