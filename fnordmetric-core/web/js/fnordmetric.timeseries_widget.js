@@ -336,7 +336,7 @@ FnordMetric.widgets.timeseriesWidget = function(){
     }
 
     function updateChart(first_time, silent){
-      if(!silent){ $(opts.elem).css('opacity', 0.5); }
+      if(!silent){ $(opts.elem).css('opacity', 0.7); }
       updateRange();
       redrawDatepicker();
       requestValuesAsync();

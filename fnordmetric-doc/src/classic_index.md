@@ -40,7 +40,7 @@ The easiest way to submit an event (i.e. a piece of data) is using `netcat` from
 
 or you can use the HTTP API:
 
-    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' http://localhost:4242/event
+    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' http://localhost:4242/events
 
 
 ### Gauges

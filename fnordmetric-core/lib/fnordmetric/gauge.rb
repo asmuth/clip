@@ -93,5 +93,5 @@ class FnordMetric::Gauge
   def error!(msg)
     FnordMetric.error(msg)
   end
-  
+
 end

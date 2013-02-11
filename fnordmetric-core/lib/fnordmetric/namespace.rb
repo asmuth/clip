@@ -165,7 +165,9 @@ class FnordMetric::Namespace
   end
 
   def build_widget(opts)
-    _gauges = [opts[:gauges]].flatten.map{ |g| @gauges.fetch(g) }
+    _gauges = [opts[:gauges]].flatten.map do |g|
+      @gauges[g] || ZeroConfigGauge.new(g, self)
+    end
     widget_klass = "FnordMetric::#{opts.fetch(:type).to_s.capitalize}Widget"
     widget_klass.constantize.new(opts.merge(:gauges => _gauges))
   end
