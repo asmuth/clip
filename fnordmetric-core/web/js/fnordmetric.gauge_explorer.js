@@ -118,7 +118,6 @@ FnordMetric.views.gaugeExplorer = (function(){
   };
 
   function announce(evt){
-    console.log(evt);
     if (evt.type == "widget_response" && widget)
       widget.announce(evt);
 
