@@ -648,7 +648,7 @@ FnordMetric.rickshaw.Graph.Axis.Time = function(args) {
       }
     } );
 
-    return (unit || units[time.units.length - 1]);
+    return (unit || units[units.length - 1]);
   };
 
   this.tickOffsets = function() {
