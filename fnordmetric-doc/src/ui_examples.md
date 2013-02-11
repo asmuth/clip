@@ -1,9 +1,14 @@
 FnordMetric UI Examples
 -----------------------
 
-here be dragons
+If you want to add examples, blogs or clients, please send a pull
+request for this page on github.
+
+
+### Examples
 
 + link
++ custom date / time controls
 + link
 
 

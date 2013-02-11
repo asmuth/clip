@@ -49,6 +49,8 @@ There are a few high level widgets which have different semantics. FIXPAUL: expl
 ### TimeSeriesGauge
 
 here be dragons
+- calculate-option: count, sum, progressive_sum, avg
+- incr / incr_counter / incr_denominator
 
 
 ### DistributionGauge

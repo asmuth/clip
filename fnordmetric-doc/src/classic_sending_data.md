@@ -11,7 +11,8 @@ There is a small number of keys which have a special meaning, all of them
 are prefixed with an underscore:
 
     fixpaul: special key table
-
+    - events containing user data (_session, _name)
+    - _namespace
 
 
 You can choose between a variety of ways to submit these events to FnordMetric:
