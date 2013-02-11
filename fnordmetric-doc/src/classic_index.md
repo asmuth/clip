@@ -30,4 +30,4 @@ The canonical way to submit data is the HTTP + JSON api, this will report a sing
     curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute" }' http://localhost:4242/events
 
 
-<img src="/img/simple_example_screen.png" width="630" style="box-shadow:0 0 8px rgba(0,0,0,.4); />
+<img src="/img/simple_example_screen.png" width="630" style="box-shadow:0 0 8px rgba(0,0,0,.4);" />
