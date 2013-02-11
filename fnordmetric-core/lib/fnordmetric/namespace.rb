@@ -1,5 +1,5 @@
 class FnordMetric::Namespace
-  
+
   attr_reader :handlers, :gauges, :opts, :key, :dashboards, :flags
 
   @@opts = [:event, :gauge, :widget, :set_title, :hide_active_users, :hide_overview,
@@ -10,22 +10,19 @@ class FnordMetric::Namespace
   def initialize(key, opts)
     @gauges = Hash.new
     @dashboards = Hash.new
+    @handlers = Hash.new.with_indifferent_access
     @flags = Hash.new
     @title = key
     @active_users_available = true
     @gauge_explorer_available = true
     @opts = opts
     @key = key
-
-    @handlers = Hash.new.with_indifferent_access
-
-    FnordMetric::ZERO_CONFIG_TYPES.each do |type|
-      opt_event(type, &FnordMetric::ZERO_CONFIG_HANDLER)
-    end
   end
 
-  def ready!(redis)
+  def ready!(redis, sync_redis = nil)
     @redis = redis
+    @sync_redis = sync_redis
+    load_gauges
     self
   end
 
@@ -39,11 +36,17 @@ class FnordMetric::Namespace
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
+    if FnordMetric::ZERO_CONFIG_TYPES.include?(event[:_type].to_sym)
+      ctx = FnordMetric::Context.new(opts, FnordMetric::ZERO_CONFIG_HANDLER)
+      ctx.call(event, @redis, self)
+      return self
+    end
+
     res = [
       @handlers[event[:_type].to_s],
       @handlers["*"]
     ].flatten.compact.each do |context|
-      context.call(event, @redis)
+      context.call(event, @redis, self)
     end.size
 
     if res == 0
@@ -132,7 +135,6 @@ class FnordMetric::Namespace
   end
 
   def opt_event(event_type, opts={}, &block)
-    opts.merge!(:redis => @redis, :gauges => @gauges, :namespace => self)
     FnordMetric::Context.new(opts, block).tap do |context|
       @handlers[event_type.to_s] ||= []
       @handlers[event_type.to_s] << context
@@ -140,7 +142,9 @@ class FnordMetric::Namespace
   end
 
   def opt_gauge(gauge_key, opts={})
-    opts.merge!(:key => gauge_key, :key_prefix => key_prefix)
+    opts.merge!(:key => gauge_key)
+    store_gauge(gauge_key, opts) if opts[:zero_config]
+    opts.merge!(:key_prefix => key_prefix)
     klass = "FnordMetric::#{(opts[:type] || "").to_s.camelize}Gauge".constantize
     @gauges[gauge_key] ||= klass.new(opts)
   end
@@ -164,6 +168,22 @@ class FnordMetric::Namespace
     _gauges = [opts[:gauges]].flatten.map{ |g| @gauges.fetch(g) }
     widget_klass = "FnordMetric::#{opts.fetch(:type).to_s.capitalize}Widget"
     widget_klass.constantize.new(opts.merge(:gauges => _gauges))
+  end
+
+  def store_gauge(gauge_key, opts)
+    gaugelist_key = key_prefix("zero-config-gauges")
+    sync_redis.hset(gaugelist_key, gauge_key, opts.to_json)
+  end
+
+  def load_gauges
+    gaugelist_key = key_prefix("zero-config-gauges")
+    sync_redis.hgetall(gaugelist_key).each do |gauge_key, gauge_opts|
+      opt_gauge(gauge_key.to_sym, JSON.parse(gauge_opts).symbolize_keys)
+    end
+  end
+
+  def sync_redis
+    @sync_redis || @redis
   end
 
   def extend_opts(opts)

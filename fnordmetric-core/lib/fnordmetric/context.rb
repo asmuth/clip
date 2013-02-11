@@ -19,9 +19,10 @@ class FnordMetric::Context
     @opts = opts
   end
 
-  def call(event, redis)
+  def call(event, redis, namespace)
     @redis = redis
     @event = event
+    @namespace = namespace
     proxy.instance_eval(&@block)
   rescue Exception => e
     raise e if ENV['FNORDMETRIC_ENV'] == 'test'
@@ -34,12 +35,12 @@ class FnordMetric::Context
   end
 
   def namespace
-    @opts[:namespace]
+    @namespace
   end
 
   def dispatch(method, *args, &block)
-    if args.size > 0 && @opts[:gauges][args[0]].try(:renderable?)
-      @opts[:gauges][args.delete_at(0)].execute(method, *args.unshift(self), &block)
+    if args.size > 0 && gauges[args[0]].try(:renderable?)
+      gauges[args.delete_at(0)].execute(method, *args.unshift(self), &block)
     else
       send(method, *args, &block)
     end
@@ -75,10 +76,14 @@ private
     @event[:_type].to_sym
   end
 
+  def gauges
+    @namespace.gauges
+  end
+
 protected
 
   def fetch_gauge(_gauge)
-    _gauge.is_a?(FnordMetric::Gauge) ? _gauge : @opts[:gauges].fetch(_gauge)
+    _gauge.is_a?(FnordMetric::Gauge) ? _gauge : gauges.fetch(_gauge)
   rescue
     error! "error: gauge '#{_gauge}' is undefined"
   end

@@ -62,12 +62,12 @@ describe FnordMetric::Namespace do
   describe "registering event handlers" do
 
     it "should register an event handler" do
-      @namespace.handlers.length.should == ZERO_CONFIG_TYPES.size
+      @namespace.handlers.length.should == 0
       @namespace.event(:foobar){}
       @namespace.event(:fnordbar){}
       @namespace.handlers["foobar"].length.should == 1
       @namespace.handlers["fnordbar"].length.should == 1
-      @namespace.handlers.length.should == ZERO_CONFIG_TYPES.size + 2
+      @namespace.handlers.length.should == 2
     end
 
     it "should register an event handler and create a context"
@@ -82,8 +82,8 @@ describe FnordMetric::Namespace do
     FnordMetric::Session.should_receive(:create).and_return(SessionMock.new)
     FnordMetric::Namespace.new(
       :myns_213, 
-      :redis_prefix => "fnordmetric"      
-    ).ready!(@redis_wrap).announce(
+      :redis_prefix => "fnordmetric"
+    ).ready!(@redis_wrap, @redis).announce(
       :_time => Time.now.to_i,
       :_type => "foobar", 
       :_session => "sess213"
@@ -93,11 +93,11 @@ describe FnordMetric::Namespace do
   it "should add the event to the namespace-event-type-list" do
     FnordMetric::Namespace.new(
       :myns_215, 
-      :redis_prefix => "fnordmetric"      
-    ).ready!(@redis_wrap).announce(
+      :redis_prefix => "fnordmetric"
+    ).ready!(@redis_wrap, @redis).announce(
       :_eid => "35r2423",
-      :_time => Time.now.to_i, 
-      :_type => "fnordbar", 
+      :_time => Time.now.to_i,
+      :_type => "fnordbar",
       :_session => "sess213"
     )
     event_ids = @redis.lrange("fnordmetric-myns_215-type-fnordbar", 0, -1)

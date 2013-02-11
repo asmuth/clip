@@ -6,24 +6,24 @@ describe FnordMetric::Event do
   include FnordMetric
 
   before(:all) do
-    @now = Time.utc(1992,01,13,5,23,23).to_i   
+    @now = Time.utc(1992,01,13,5,23,23).to_i
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
 
-    @namespace = "fnordmetric-test-ns123" 
+    @namespace = "fnordmetric-test-ns123"
     @timeline = "#{@namespace}-timeline"
 
-    @opts = {         
+    @opts = {
       :namespace_prefix => "#{@namespace}",
       :redis_prefix => "fnordmetric-test",
       :redis => @redis
-    }  
+    }
   end
 
   describe "finding events" do
 
-    before(:each) do        
-      @redis.keys("fnordmetric-test-*").each { |k| @redis.del(k) }     
+    before(:each) do
+      @redis.keys("fnordmetric-test-*").each { |k| @redis.del(k) }
     end
 
     it "should find all events" do
@@ -101,15 +101,15 @@ describe FnordMetric::Event do
 
     it "should find all events by type" do
       namespace = Namespace.new(:ns123, :redis_prefix => "fnordmetric-test")
-      namespace.ready!(@redis_wrap).announce(
+      namespace.ready!(@redis_wrap, @redis).announce(
         :_type => "fn0rd",
         :_time => @now
       )
-      namespace.ready!(@redis_wrap).announce(
+      namespace.ready!(@redis_wrap, @redis).announce(
         :_type => "f00bar",
         :_time => @now
       )
-      namespace.ready!(@redis_wrap).announce(
+      namespace.ready!(@redis_wrap, @redis).announce(
         :_type => "fn0rd",
         :_time => @now
       )
@@ -132,9 +132,9 @@ describe FnordMetric::Event do
 
       before do
         created_events_data.each do |(event_id, session)|
-          event_data = { :_time => @now + event_id, :_eid => event_id }
+          event_data = { :_time => @now + event_id, :_eid => event_id, :_type => "fnord" }
           event_data[:_session] = session if session
-          namespace.ready!(@redis_wrap).announce event_data
+          namespace.ready!(@redis_wrap, @redis).announce event_data
         end
       end
 

@@ -6,6 +6,9 @@ describe FnordMetric::GaugeModifiers do
     @now = Time.utc(1992,01,13,5,23,23).to_i
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
+    @namespace = FnordMetric::Namespace.new(:myns_213,
+      :redis_prefix => "fnordmetric")
+    @namespace.ready!(@redis_wrap, @redis)
   end
 
   before(:each) do
@@ -14,12 +17,6 @@ describe FnordMetric::GaugeModifiers do
   end
 
   describe "increment zero-config gauges" do
-
-    before(:each) do
-      @namespace = FnordMetric::Namespace.new(:myns_213,
-        :redis_prefix => "fnordmetric")
-      @namespace.ready!(@redis_wrap)
-    end
 
     it "should create and increment zero-config gauges" do
       @namespace.announce(
@@ -120,7 +117,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_234, 1)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "13"
     end
@@ -135,7 +132,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_224, 5)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "23"
     end
@@ -150,13 +147,12 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_253, data[:myval].to_i)  
       }).tap do |context|      
         event = { :_time => @now, :myval => "25" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "36"
     end
 
   end
-  
 
   describe "increment progressive gauges" do
 
@@ -172,7 +168,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_123, 1)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "24"
       @redis.get(gauge_key+"-head").should == "24"
@@ -190,7 +186,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_125, 5)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "27"
       @redis.get(gauge_key+"-head").should == "27"
@@ -208,7 +204,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_128, 3)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "20"
       @redis.get(gauge_key+"-head").should == "20"
@@ -226,7 +222,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_121, 6)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "25"
       @redis.get(gauge_key+"-head").should == "25"
@@ -243,7 +239,7 @@ describe FnordMetric::GaugeModifiers do
       }).tap do |context|      
         event = { :_time => @now }
         lambda{
-          context.call(event, @redis_wrap)
+          context.call(event, @redis_wrap, @namespace)
         }.should raise_error(RuntimeError)
       end
     end
@@ -264,7 +260,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_917, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "84"
       @redis.get(gauge_key+"-695280200-value-count").should == "6"
@@ -286,7 +282,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_963, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "84"
       @redis.get(gauge_key+"-695280200-sessions-count").should == "6"
@@ -306,7 +302,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_966, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "54"
       @redis.get(gauge_key+"-695280200-sessions-count").should == "5"
@@ -325,7 +321,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_966, 30)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "54"
       @redis.get(gauge_key+"-695280200-sessions-count").should == "5"
@@ -346,7 +342,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_963, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "84"
       @redis.get(gauge_key+"-progressive-sessions-count").should == "6"
@@ -367,7 +363,7 @@ describe FnordMetric::GaugeModifiers do
         incr(:mygauge_966, 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "54"
       @redis.get(gauge_key+"-progressive-sessions-count").should == "5"
@@ -389,7 +385,7 @@ describe "increment three-dimensional gagues" do
         incr_field(:mygauge_434, "whoopwhoop", 1)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.zscore(gauge_key, "whoopwhoop").to_f.should == 13.0
       @redis.get(gauge_key+"-count").should == "1"
@@ -406,7 +402,7 @@ describe "increment three-dimensional gagues" do
         incr_field(:mygauge_634, "whoopwhoop", 5)  
       }).tap do |context|      
         event = { :_time => @now }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.zscore(gauge_key, "whoopwhoop").to_f.should == 5.0
       @redis.get(gauge_key+"-count").should == "7"
@@ -423,7 +419,7 @@ describe "increment three-dimensional gagues" do
         incr_field(:mygauge_634, data[:myfield], 5)  
       }).tap do |context|      
         event = { :_time => @now, :myfield => "fnordybar" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.zscore(gauge_key, "fnordybar").to_f.should == 16.0
     end
@@ -441,7 +437,7 @@ describe "increment three-dimensional gagues" do
         incr_field(:mygauge_1263, "mykey", 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.zscore(gauge_key, "mykey").to_f.should == 84.0
       @redis.get(gauge_key+"-sessions-count").should == "6"
@@ -462,7 +458,7 @@ describe "increment three-dimensional gagues" do
         incr_field(:mygauge_1266, "otherkey", 30)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.zscore(gauge_key, "otherkey").to_f.should == 54.0
       @redis.get(gauge_key+"-sessions-count").should == "5"
@@ -485,7 +481,7 @@ describe "increment three-dimensional gagues" do
         set_value(:mygauge_5463, 17)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "17"
     end
@@ -503,7 +499,7 @@ describe "increment three-dimensional gagues" do
         set_field(:mygauge_1463, "asdasdkey", 23)  
       }).tap do |context|      
         event = { :_time => @now, :_session_key => "mysesskey" }
-        context.call(event, @redis_wrap)
+        context.call(event, @redis_wrap, @namespace)
       end
       @redis.zscore(gauge_key, "asdasdkey").to_f.should == 23.0
     end
@@ -518,10 +514,9 @@ private
   def create_gauge_context(opts, block)
     gauge = FnordMetric::Gauge.new({
       :key_prefix => "fnordmetrics-myns"
-    }.merge(opts))      
-    FnordMetric::Context.new({
-      :gauges => { opts[:key].intern => gauge }
-    }, block)
+    }.merge(opts))
+    @namespace.instance_variable_set(:"@gauges", { opts[:key].intern => gauge })
+    FnordMetric::Context.new({}, block)
   end
 
 

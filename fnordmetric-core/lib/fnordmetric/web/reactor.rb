@@ -52,6 +52,8 @@ private
   end
 
   def discover(namespace)
+    namespace.ready!(@redis)
+
     [namespace.dashboards.map do |dash_key, dash|
       { "type" => "discover_response", "gauge_key" => dash_key, "view" => "dashboard",
         "group" => dash.group }

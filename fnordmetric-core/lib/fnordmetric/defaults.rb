@@ -31,7 +31,8 @@ FnordMetric::ZERO_CONFIG_HANDLER = proc {
   else
     namespace.opt_gauge(gauge_key,
       :tick => data[:flush_interval].to_i,
-      :average => (type == :_avg))
+      :average => (type == :_avg),
+      :zero_config => true)
   end
 
   case type

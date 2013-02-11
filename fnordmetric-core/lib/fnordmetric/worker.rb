@@ -55,7 +55,7 @@ class FnordMetric::Worker
   end
 
   def announce_event(event)
-    namespace(event[:_namespace]).ready!(redis).announce(event)
+    namespace(event[:_namespace]).ready!(redis, sync_redis).announce(event)
   end
 
   def expire_event(event_id)
@@ -80,6 +80,10 @@ class FnordMetric::Worker
 
   def redis
     @redis ||= EM::Hiredis.connect(FnordMetric.options[:redis_url]) # FIXPAUL
+  end
+
+  def sync_redis
+    @sync_redis ||= FnordMetric.mk_redis
   end
 
 end

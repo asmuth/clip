@@ -42,6 +42,7 @@ class FnordMetric::App < Sinatra::Base
 
   get '/:namespace' do
     pass unless current_namespace
+    current_namespace.ready!(@redis)
     haml :app
   end
 

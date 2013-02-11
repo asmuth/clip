@@ -2,6 +2,7 @@ require "fnordmetric"
 
 FnordMetric.namespace :myapp do
 
+=begin
   # render a timeseries graph
   widget 'Sales',
     :title => "Sales per Minute",
@@ -9,6 +10,7 @@ FnordMetric.namespace :myapp do
     :type => :timeline,
     :width => 100,
     :autoupdate => 10
+=end
 
 end
 
