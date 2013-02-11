@@ -21,7 +21,7 @@ describe FnordMetric::GaugeModifiers do
       @namespace.ready!(@redis_wrap)
     end
 
-    it "should create and increment a zero-config gauge by 1" do
+    it "should create and increment zero-config gauges" do
       @namespace.announce(
         :_type => "_incr",
         :_eid  => 1234,
@@ -46,6 +46,64 @@ describe FnordMetric::GaugeModifiers do
       )
 
       @redis.hget(gauge_key, "1360584960").should == "53"
+      @namespace.gauges[:"sales-per-second"].value_at(1360584961).should == "53"
+    end
+
+    it "should create and set zero-config gauges" do
+      @namespace.announce(
+        :_type => "_set",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 123,
+        :gauge => "sales-per-second-set",
+        :flush_interval => 10
+      )
+
+      @namespace.gauges[:"sales-per-second-set"].should be_a(Gauge)
+
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-set-10"
+      @redis.hget(gauge_key, "1360584960").should == "123"
+
+      @namespace.announce(
+        :_type => "_set",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 555,
+        :gauge => "sales-per-second-set",
+        :flush_interval => 10
+      )
+
+      @redis.hget(gauge_key, "1360584960").should == "555"
+      @namespace.gauges[:"sales-per-second-set"].value_at(1360584961).should == "555"
+    end
+
+    it "should create and increment-average zero-config gauges" do
+      @namespace.announce(
+        :_type => "_avg",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 5,
+        :gauge => "sales-per-second-avg",
+        :flush_interval => 10
+      )
+
+      @namespace.gauges[:"sales-per-second-avg"].should be_a(Gauge)
+      @namespace.gauges[:"sales-per-second-avg"].average?.should be_true
+
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-avg-10"
+      @redis.hget(gauge_key, "1360584960").should == "5"
+
+      @namespace.announce(
+        :_type => "_avg",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 10,
+        :gauge => "sales-per-second-avg",
+        :flush_interval => 10
+      )
+
+      @redis.hget(gauge_key, "1360584960").should == "15"
+      @namespace.gauges[:"sales-per-second-avg"].value_at(1360584961).should == 7.5
     end
 
   end

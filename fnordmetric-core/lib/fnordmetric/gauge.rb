@@ -41,7 +41,7 @@ class FnordMetric::Gauge
   def key_nouns
     @opts[:key_nouns] || ["Key", "Keys"]
   end
-  
+
   def key(_append=nil)
     [@opts[:key_prefix], "gauge", name, tick, _append].flatten.compact.join("-")
   end

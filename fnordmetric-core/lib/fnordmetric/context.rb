@@ -71,6 +71,10 @@ private
     @event[:_time].to_i
   end
 
+  def type
+    @event[:_type].to_sym
+  end
+
 protected
 
   def fetch_gauge(_gauge)

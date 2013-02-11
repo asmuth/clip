@@ -19,8 +19,8 @@ class FnordMetric::Namespace
 
     @handlers = Hash.new.with_indifferent_access
 
-    ZERO_CONFIG_TYPES.each do |type|
-      opt_event(type, &ZERO_CONFIG_HANDLER)
+    FnordMetric::ZERO_CONFIG_TYPES.each do |type|
+      opt_event(type, &FnordMetric::ZERO_CONFIG_HANDLER)
     end
   end
 

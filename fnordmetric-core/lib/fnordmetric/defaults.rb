@@ -6,7 +6,7 @@ FnordMetric::TICKS = lambda{ |tick, span| [tick, 60, 300, 1200, 3600, 86400]
 
 FnordMetric::DEFAULT_PROC = lambda{ |arg| }
 
-FnordMetric::ZERO_CONFIG_TYPES = [:_incr, :_decr, :_avg, :_min, :_max]
+FnordMetric::ZERO_CONFIG_TYPES = [:_incr, :_decr, :_avg, :_min, :_max, :_set]
 
 FnordMetric::ZERO_CONFIG_HANDLER = proc {
   if data[:gauge]
@@ -30,8 +30,26 @@ FnordMetric::ZERO_CONFIG_HANDLER = proc {
     namespace.gauges[gauge_key]
   else
     namespace.opt_gauge(gauge_key,
-      :tick => data[:flush_interval].to_i)
+      :tick => data[:flush_interval].to_i,
+      :average => (type == :_avg))
   end
 
-  incr_tick gauge, data[:value]
+  case type
+
+    when :_set
+      set_value gauge, data[:value]
+
+    when :_incr
+      incr_tick gauge, data[:value]
+
+    when :_decr
+      FnordMetric.error("_decr is not yet implemented")
+
+    when :_avg
+      incr_avg gauge, data[:value]
+
+    when :_min, :_max
+      FnordMetric.error("_min/_max is not yet implemented")
+
+  end
 }

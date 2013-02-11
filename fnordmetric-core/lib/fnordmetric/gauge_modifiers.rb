@@ -25,7 +25,7 @@ module FnordMetric::GaugeModifiers
         @redis.hincrby(gauge.key, gauge.tick_at(time), value)
       end
     end
-  end  
+  end
 
   def incr_uniq(gauge, value, field_name=nil)
     return false if session_key.blank?
@@ -59,7 +59,7 @@ module FnordMetric::GaugeModifiers
     @redis.zincrby(gauge.tick_key(time), value, field_name).callback do
       @redis.incrby(gauge.tick_key(time, :count), 1)
     end
-  end  
+  end
 
   def set_value(gauge_name, value)
     gauge = fetch_gauge(gauge_name)
