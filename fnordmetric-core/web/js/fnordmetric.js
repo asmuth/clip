@@ -39,13 +39,6 @@ var FnordMetric = (function(pre_init){
     $('#sidebar')
       .html('');
 
-    /*if(!conf.hide_overview){
-      renderSidebarGroup('Overview')
-        .append($('<li class="overview">')
-          .append('<span class="picto piechart">')
-          .append($('<a href="#" class="title">').html('App Overview')));
-    }*/
-
     var sidebar_overview;
 
     if (!conf.hide_active_users || !conf.hide_gauge_explorer)
@@ -188,7 +181,8 @@ var FnordMetric = (function(pre_init){
     connect();
 
     $('#app').html(_wrap_elem);
-    $(window).resize(resizeView);    
+    $(document).ready(renderSidebar);
+    $(window).resize(resizeView);
     resizeView();
   };
 
