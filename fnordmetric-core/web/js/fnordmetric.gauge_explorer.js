@@ -62,7 +62,7 @@ FnordMetric.views.gaugeExplorer = (function(){
   };
 
   function autoupdate() {
-    end_timestamp = (new Date()).getTime() / 1000;
+    end_timestamp = ((new Date()).getTime() / 1000) + 60;
     start_timestamp = end_timestamp - time_range;
 
     if (widget)
