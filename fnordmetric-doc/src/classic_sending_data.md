@@ -1,19 +1,13 @@
 Sending Data
 ------------
 
-FnordMetric operates on an input stream of "events". These events are JSON
-objects (arbitrary hashmaps). A event may look like this:
+The basic unit of input data in FnordMetric is called an event. These events
+are JSON objects (arbitrary hashmaps)  A event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
 
-
-There is a small number of keys which have a special meaning, all of them
-are prefixed with an underscore:
-
-    fixpaul: special key table
-    - events containing user data (_session, _name)
-    - _namespace
-
+This page describes how to send these events to FnordMetric. To read more
+about the semantics of the events please see Events and Gauges (FIXPAUL)
 
 You can choose between a variety of ways to submit these events to FnordMetric:
 
