@@ -1,8 +1,8 @@
 Widgets
 -------
 
-FnordMetric includes a collection of UI widgets to display gauge data. You
-can use these widgets with a simple ruby DSL.
+FnordMetric includes a collection of UI widgets to display the data /
+content of gauges. There is a simple ruby DSL to use these widgets.
 
 _Example: Render a timeseries line chart on dashboard "Sales"_
 
