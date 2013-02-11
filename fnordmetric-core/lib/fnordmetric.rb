@@ -62,7 +62,8 @@ module FnordMetric
       :print_stats => 3,
       :event_queue_ttl => 120,
       :event_data_ttl => 3600*24*30,
-      :session_data_ttl => 3600*24*30
+      :session_data_ttl => 3600*24*30,
+      :default_flush_interval => 10
     }.merge(opts)
   end
 
