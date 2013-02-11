@@ -30,6 +30,7 @@ the data on another website or build highly customized / white label views.
 ### FnordMetric Enterprise
 
 FnordMetric Enterprise is a JVM based timeseries database which serves as a backend for FnordMetric
-UI. It does not offer it's own user interface.
+UI. It can handle thousands of gauges and years worth of historical data. It also includes some
+advanced features like CSV Export.
 
-<a href="/documentation/ep_index">Getting Started with FnordMetric Enterprise &rarr;</a>
+<i style="color:#999;">FnordMetric Enterprise is currently in private beta</i>
