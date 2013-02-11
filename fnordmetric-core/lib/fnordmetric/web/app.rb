@@ -47,6 +47,7 @@ class FnordMetric::App < Sinatra::Base
   end
 
   post '/events' do
+    params = JSON.parse(request.body.read) unless params
     halt 400, 'please specify the event_type (_type)' unless params["_type"]
     track_event((8**32).to_s(36), parse_params(params))
   end
