@@ -99,6 +99,8 @@ private
   end
 
   def gauge_list(namespace, event)
+    namespace.ready!(@redis)
+
     gauges = namespace.gauges.map do |name, gauge|
       {
         "key" => gauge.name,

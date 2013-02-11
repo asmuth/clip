@@ -858,3 +858,11 @@ input.input.lopen{
 .ge_meta a:hover {
   text-decoration:underline;
 }
+
+.ge_empty {
+  display: block;
+  text-align: center;
+  line-height: 400px;
+  font-size: 16px;
+  color: #666;
+}

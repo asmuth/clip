@@ -117,8 +117,6 @@
         input.tooltip({
           tooltipClass: "ui-state-highlight"
         });
-
-        select.trigger("value_changed");
       },
  
       _destroy: function() {

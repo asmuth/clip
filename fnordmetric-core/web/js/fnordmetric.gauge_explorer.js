@@ -3,7 +3,7 @@ FnordMetric.views.gaugeExplorer = (function(){
   var elem, widget, gauge_list, widget_inst;
   var start_timestamp, end_timestamp, time_range;
   var currentGauge;
-  var autoupdate_timer;
+  var autoupdate_timer, autodiscover_timer;
 
   var time_range = 3600;
   var default_time_ranges = [
@@ -22,13 +22,14 @@ FnordMetric.views.gaugeExplorer = (function(){
     elem = _elem;
 
     elem.html('<div class="navbar"></div><div class="ge_controlpanel">' +
-       '<label>Select a Gauge</label><select class="ge_gauge_picker"></select>' +
+       '<label>Select a Gauge</label><select class="ge_gauge_picker">' + 
+       '<option selected=selected>Please select a gauge...</option></select>' +
      '<div class="ge_meta">Type to autocomplete...</div>' +
      '</div><div class="ge_controlpanel" style="border-right:none;">' +
        '<label>Select the Timerange</label><a class="button datepicker_sa"><div class="date" style="width:300px;">&nbsp;</div>' +
        '<i class="icon-calendar"></i></a>' +
      '<div class="ge_timerange_links ge_meta">Recent Data: </div></div>' +
-     '<div style="clear:both;" class="widget_viewport"></div>');
+     '<div style="clear:both;" class="widget_viewport"><div class="headbar"><h2>Please select a gauge...</h2></div><i class="ge_empty">Please select a gauge...</i></div>');
 
     FnordMetric.ui.navbar($('.navbar', elem), {
       breadcrumb: [
@@ -56,6 +57,7 @@ FnordMetric.views.gaugeExplorer = (function(){
     render();
     requestGaugeInfoAsync();
 
+    autodiscover_timer = window.setInterval(requestGaugeInfoAsync, 5000);
     autoupdate_timer = window.setInterval(autoupdate, 1000);
   };
 
@@ -116,31 +118,38 @@ FnordMetric.views.gaugeExplorer = (function(){
   };
 
   function announce(evt){
+    console.log(evt);
     if (evt.type == "widget_response" && widget)
       widget.announce(evt);
 
     if (evt.type == "gauge_list_response"){
       $('.ge_gauge_picker', elem).html();
       gauge_list = {};
+      var changed = false;
 
       $(evt.gauges).each(function(n, gauge){
-        var gauge_title = gauge.title + ' [' + gauge.key + ']';
+        if (typeof gauge_list[gauge.key] == 'undefined') {
+          var gauge_title = gauge.title + ' [' + gauge.key + ']';
 
-        gauge_list[gauge.key] = {
-          "key": gauge.key, 
-          "title": gauge.title
-        };
+          gauge_list[gauge.key] = {
+            "key": gauge.key, 
+            "title": gauge.title
+          };
 
-        $('.ge_gauge_picker', elem).append(
-          '<option value=' + gauge.key + '>' + gauge_title + '</option>');
+          $('.ge_gauge_picker', elem).append(
+            '<option value=' + gauge.key + '>' + gauge_title + '</option>');
+
+          changed = true;
+        }
       });
 
-      $('.ge_gauge_picker', elem)
-        .bind('value_changed', function(){
-          currentGauge = gauge_list[$(this).val()];
-          render();
-        })
-        .combobox();
+      if (changed || evt.gauges.length == 0)
+        $('.ge_gauge_picker', elem)
+          .bind('value_changed', function(){
+            currentGauge = gauge_list[$(this).val()];
+            render();
+          })
+          .combobox();
     }
   }
 
@@ -152,6 +161,7 @@ FnordMetric.views.gaugeExplorer = (function(){
 
   function close(){
     window.clearInterval(autoupdate_timer);
+    window.clearInterval(autodiscover_timer);
   };
 
   return {
