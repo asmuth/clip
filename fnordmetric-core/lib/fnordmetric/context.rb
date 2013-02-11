@@ -16,12 +16,12 @@ class FnordMetric::Context
 
   def initialize(opts, block)
     @block = block
-    @opts = opts    
+    @opts = opts
   end
 
   def call(event, redis)
     @redis = redis
-    @event = event    
+    @event = event
     proxy.instance_eval(&@block)
   rescue Exception => e
     raise e if ENV['FNORDMETRIC_ENV'] == 'test'
@@ -31,6 +31,10 @@ class FnordMetric::Context
 
   def proxy
     @proxy ||= Proxy.new(self)
+  end
+
+  def namespace
+    @opts[:namespace]
   end
 
   def dispatch(method, *args, &block)
@@ -56,7 +60,7 @@ private
   end
 
   def data
-  	@event
+    @event
   end
 
   def key(gauge)
@@ -68,7 +72,7 @@ private
   end
 
 protected
-  
+
   def fetch_gauge(_gauge)
     _gauge.is_a?(FnordMetric::Gauge) ? _gauge : @opts[:gauges].fetch(_gauge)
   rescue
@@ -81,4 +85,3 @@ protected
 
 
 end
-    

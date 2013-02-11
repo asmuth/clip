@@ -10,13 +10,18 @@ class FnordMetric::Namespace
   def initialize(key, opts)
     @gauges = Hash.new
     @dashboards = Hash.new
-    @handlers = Hash.new
     @flags = Hash.new
     @title = key
     @active_users_available = true
     @gauge_explorer_available = true
     @opts = opts
     @key = key
+
+    @handlers = Hash.new.with_indifferent_access
+
+    ZERO_CONFIG_TYPES.each do |type|
+      opt_event(type, &ZERO_CONFIG_HANDLER)
+    end
   end
 
   def ready!(redis)
@@ -126,8 +131,8 @@ class FnordMetric::Namespace
     @title = title
   end
 
-  def opt_event(event_type, opts={}, &block)    
-    opts.merge!(:redis => @redis, :gauges => @gauges)   
+  def opt_event(event_type, opts={}, &block)
+    opts.merge!(:redis => @redis, :gauges => @gauges, :namespace => self)
     FnordMetric::Context.new(opts, block).tap do |context|
       @handlers[event_type.to_s] ||= []
       @handlers[event_type.to_s] << context

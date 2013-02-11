@@ -2,14 +2,52 @@ require ::File.expand_path('../spec_helper.rb', __FILE__)
 
 describe FnordMetric::GaugeModifiers do
 
-  before(:all) do    
-    @now = Time.utc(1992,01,13,5,23,23).to_i    
+  before(:all) do
+    @now = Time.utc(1992,01,13,5,23,23).to_i
     @redis = Redis.new
     @redis_wrap = RedisWrap.new(@redis)
   end
 
   before(:each) do
-    @redis.keys("fnordmetrics-myns*").each { |k| @redis.del(k) }  
+    @redis.keys("fnordmetrics-myns*").each { |k| @redis.del(k) }
+    @redis.keys("fnordmetric-myns*").each { |k| @redis.del(k) } 
+  end
+
+  describe "increment zero-config gauges" do
+
+    before(:each) do
+      @namespace = FnordMetric::Namespace.new(:myns_213,
+        :redis_prefix => "fnordmetric")
+      @namespace.ready!(@redis_wrap)
+    end
+
+    it "should create and increment a zero-config gauge by 1" do
+      @namespace.announce(
+        :_type => "_incr",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 42,
+        :gauge => "sales-per-second",
+        :flush_interval => 10
+      )
+
+      @namespace.gauges[:"sales-per-second"].should be_a(Gauge)
+
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-10"
+      @redis.hget(gauge_key, "1360584960").should == "42"
+
+      @namespace.announce(
+        :_type => "_incr",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 11,
+        :gauge => "sales-per-second",
+        :flush_interval => 10
+      )
+
+      @redis.hget(gauge_key, "1360584960").should == "53"
+    end
+
   end
 
   describe "increment non-progressive gauges" do
@@ -425,7 +463,7 @@ private
     }.merge(opts))      
     FnordMetric::Context.new({
       :gauges => { opts[:key].intern => gauge }
-    }, block) 
+    }, block)
   end
 
 

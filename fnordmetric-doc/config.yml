@@ -25,7 +25,7 @@ sitemap:
       title: "Sending Data"
       url: "/classic_sending_data"
     -
-      title: "Gauges"
+      title: "Events and Gauges"
       url: "/classic_gauges"
     -
       title: "Event Handlers"
