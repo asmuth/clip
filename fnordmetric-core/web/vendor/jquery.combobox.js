@@ -84,6 +84,7 @@
 
         input.click(function(){
           input.select();
+          input.autocomplete( "search", "" );
         });
 
         $( "<a>" )
