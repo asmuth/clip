@@ -151,6 +151,13 @@ are prefixed with an underscore:
 
 FIXPAUL gauge options reference
 
+#### Average Gauges
+
+#### Progressive Gauges
+
+#### Three-dimensional Gauges
+
+
 
 ### API Reference
 
