@@ -2,6 +2,9 @@
 Todo
 ====
 
+  → implement smooth first start with zero config gauges (nice empty states)
+  → implement, _decr, _max, _min for zero config gauges
+
 
 
 Backlog
