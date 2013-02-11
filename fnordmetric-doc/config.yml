@@ -20,36 +20,36 @@ sitemap:
       url: "/classic_index"
     -
       title: "Running FnordMetric"
-      url: "/classic_gauges"
+      url: "/classic_running_fm"
     -
       title: "Sending Data"
-      url: "/classic_gauges"
+      url: "/classic_sending_data"
     -
       title: "Gauges"
       url: "/classic_gauges"
     -
       title: "Event Handlers"
-      url: "/classic_gauges"
+      url: "/classic_event_handlers"
     -
-      title: "Custom Dashboards"
-      url: "/classic_gauges"
+      title: "Widgets"
+      url: "/classic_widgets"
     -
       title: "Plugins"
-      url: "/classic_gauges"
+      url: "/classic_plugins"
     -
       title: "Examples"
       url: "/classic_examples"
     -
       title: "Hacking"
-      url: "/classic_gauges"
+      url: "/classic_hacking"
 
 
-  fnordmetric_enterprise:
-    -
-      title: "Getting Started"
-      url: "/ui_index"
-    -
-      title: "HTTP API"
-      url: "/ui_index"
+  #fnordmetric_enterprise:
+  #  -
+  #    title: "Getting Started"
+  #    url: "/ui_index"
+  #  -
+  #    title: "HTTP API"
+  #    url: "/ui_index"
 
 

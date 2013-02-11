@@ -75,7 +75,8 @@ task :render do
   builder = SinatraStatic.new(DocApp)
   target = File.join(BASEDIR, "target")
 
-  routes = ["/", "/documentation"]
+  routes = %w{/ /documentation /documentation/support
+    /documentation/license /documentation/downloads}
 
   CONFIG["sitemap"].values.flatten.each do |page|
     routes << "/documentation#{page["url"]}"
