@@ -21,5 +21,9 @@ here be dragons
 
 ### Redis Memory usage
 
-...disable active users
+...disable active users, larger flush_timeout
 
+
+### StatsD interoparability
+
+...

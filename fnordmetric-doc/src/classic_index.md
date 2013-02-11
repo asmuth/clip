@@ -2,7 +2,8 @@ Getting Started
 ---------------
 
 This will guide you through setting up a simple dashboard that displays the number of
-sales per minute.
+sales per minute. It assumes that you have ruby and a redis server on port 6379 running
+on your machine.
 
 We start by installing FnordMetric through rubygems:
 

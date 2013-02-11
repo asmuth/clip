@@ -2,17 +2,17 @@
 Todo
 ====
 
-  → doc: events and gauges
-  → doc: getting started, backport to readme
   → doc: all fnordmetric options in running
   → doc: all gauge opts in events and gauges
+  → doc: full api ref in events and gauges
   → doc: widgets
   → doc: plugins
-  → doc: ui getting started
-  → doc: a few sentences about the widgets in api ref
   → doc: screenshots
+  → doc: ui: screen
   → doc: examples on frontpage
+  → doc: backport to readme
   → doc: support, license, downloads
+
   → implement, _decr, _max, _min for zero config gauges
   → gauge explorer: fix gauges multiple times in select dropdown
 
