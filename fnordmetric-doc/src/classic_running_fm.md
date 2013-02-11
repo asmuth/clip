@@ -67,7 +67,9 @@ _Example: This will start a worker_
     FnordMetric::Worker.new
 
 
-### Redis Configuration
+### Configuration
+
+fixpaul: fnordmetric config
 
 fixpaul: redis config
 

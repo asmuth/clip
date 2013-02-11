@@ -39,9 +39,12 @@ here be dragons
 here be dragons
 
 
+<br />
+<br />
 
-High-Level Widgets
-------------------
+
+Complex Widgets
+---------------
 
 There are a few high level widgets which have different semantics. FIXPAUL: explain...
 
