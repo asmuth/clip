@@ -158,6 +158,10 @@ hr {
   color: #333;
 }
 
+#navigation ul li.active a {
+  font-weight: bold;
+}
+
 #navigation ul li a:hover {
   text-decoration: underline;
 }
@@ -176,7 +180,7 @@ hr {
 }
 
 #documentation {
-  width:620px;
+  width:629px;
   padding: 25px 40px;
   float:left;
   color: #333;

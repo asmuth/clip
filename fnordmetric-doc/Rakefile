@@ -34,13 +34,19 @@ class DocApp < Sinatra::Base
     render_with_layout
   end
 
+  get "/screenshots" do
+    @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/screenshots.erb')))
+    render_with_layout
+  end
+
   ["/documentation", "/documentation/*"].each do |route|
     get route do
       params[:splat] ||= ["index"]
+      @route = "/#{params[:splat] * "/"}"
       renderer = Redcarpet::Markdown.new(
         Redcarpet::Render::HTML.new(:no_link => true))
       @doc_yield = renderer.render(gfm(IO.read(
-        File.join(BASEDIR, "src/#{params[:splat] * "/"}.md"))))
+        File.join(BASEDIR, "src#{@route}.md"))))
       @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/documentation.erb')))
       render_with_layout
     end
@@ -76,7 +82,7 @@ task :render do
   target = File.join(BASEDIR, "target")
 
   routes = %w{/ /documentation /documentation/support
-    /documentation/license /documentation/downloads}
+    /documentation/license /documentation/downloads /screenshots}
 
   CONFIG["sitemap"].values.flatten.each do |page|
     routes << "/documentation#{page["url"]}"
