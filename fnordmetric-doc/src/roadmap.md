@@ -2,6 +2,18 @@
 Todo
 ====
 
+  → implement default flush_interval for gauges
+  → doc: events and gauges
+  → doc: getting started, backport to readme
+  → doc: all fnordmetric options in running
+  → doc: all gauge opts in events and gauges
+  → doc: widgets
+  → doc: plugins
+  → doc: ui getting started
+  → doc: a few sentences about the widgets in api ref
+  → doc: screenshots
+  → doc: examples on frontpage
+  → doc: support, license, downloads
   → implement, _decr, _max, _min for zero config gauges
   → gauge explorer: fix gauges multiple times in select dropdown
 
@@ -24,7 +36,6 @@ Backlog
   → formatter: num, time, currency, percent, time_of_day
   → minimize/pack js + css
   → put images into one sprite
-  → nice empty states
 
 
 Changelog
