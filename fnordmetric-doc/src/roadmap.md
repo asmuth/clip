@@ -3,6 +3,7 @@ Todo
 ====
 
   → implement, _decr, _max, _min for zero config gauges
+  → gauge explorer: fix gauges multiple times in select dropdown
 
 
 
