@@ -1,11 +1,18 @@
-Event Handler
--------------
+Events and Gauges
+-----------------
 
-The basic unit of input data in FnordMetric is called an event. These events
-are JSON objects (arbitrary hashmaps) A event may look like this:
+An Event is a piece of input data that is sent to FnordMetric through one of the various
+sources. These events are JSON objects (arbitrary hashmaps) with almost no contraints on
+the schema. A event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
 
+This pages describes the semantics of these events. More information about the various
+ways to submit these events to FnordMetric (HTTP, TCP/UDP, etc.) please see Sending Data
+FIXPAUL.
+
+
+### Predefined events
 
 Some events have a special format and meaning (like "increment this counter by 4"
 or "add this sample to the average query time gauge"). You can just send these
@@ -15,6 +22,8 @@ _Example: increment something by four_
 
     ...
 
+
+### Custom Events
 
 You can also send completely custom events and write a piece of ruby code that
 processes them. In this case the only requirement is that the event has a
@@ -27,13 +36,13 @@ _Example: send a "user signed up" event and increment two gauges_
     fnord...
 
 
-
 There is a small number of keys which have a special meaning, all of them
 are prefixed with an underscore:
 
     fixpaul: special key table
     - events containing user data (_session, _name)
     - _namespace
+
 
 ### Gauges
 
@@ -50,13 +59,13 @@ upfront, they are automatically created as you send events. These events have
 to follow a strict schema:
 <hr class="space" />
 
-Example: _Increment the gauge `sales-per-second` by 4, gauge resolution is 1 second._
+Example: _Increment the gauge `sales-per-second` by 4_
 
-    { "_type": "_incr", "value": 4, "gauge": "sales-per-second", "flush_interval": 1 }
+    { "_type": "_incr", "value": 4, "gauge": "sales-per-second" }
 
-Example: _Sample average request time (this sample: 42ms), gauge resolution is 10 seconds._
+Example: _Sample average request time (this sample: 42ms), gauge resolution is 1 second._
 
-    { "_type": "_avg", "value": 42, "gauge": "avg-request-time", "flush_interval": 10 }
+    { "_type": "_avg", "value": 42, "gauge": "avg-request-time", "flush_interval": 1 }
 
 
 Valid keys for these events are:
@@ -79,14 +88,17 @@ Valid keys for these events are:
     </td>
   </tr>
   <tr>
-    <th><b>flush_interval</b> <i>(mandatory)</i></th>
+    <th><b>flush_interval</b></i></th>
     <td>
-      interval in which the value of this gauge is persisted. this is basically the
-      gauge's resolution.
+      interval in which the value of this gauge is persisted in seconds. this is
+      basically the gauge's resolution. the flush interval controls how much memory
+      a gauge uses (smaller flush_intervals use more memory)
+      the default is 10 seconds
     </td>
   </tr>
 </table>
 <br />
+
 
 ### Create gauges by hand
 
