@@ -3,7 +3,7 @@ class ZeroConfigGauge
   class EmtpyGauge
 
     def self.tick
-      60
+      FnordMetric.options[:default_flush_interval]
     end
 
     def self.retention

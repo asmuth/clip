@@ -22,9 +22,14 @@ describe FnordMetric::Gauge do
       gauge.tick.should == 23
     end
 
+    it "should return the correct tick if configured with flush_interval" do
+      gauge = FnordMetric::Gauge.new({:flush_interval => 42, :key_prefix => "fnordmetrics-myns", :key => "mygauge"})
+      gauge.tick.should == 42
+    end
+
     it "should return the default tick if none configured" do
       gauge = FnordMetric::Gauge.new({:key_prefix => "fnordmetrics-myns", :key => "mygauge"})
-      gauge.tick.should == 3600
+      gauge.tick.should == FnordMetric.options[:default_flush_interval]
     end
 
     it "should return the correct tick_at" do

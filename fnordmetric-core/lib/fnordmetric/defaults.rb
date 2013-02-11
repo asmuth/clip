@@ -16,11 +16,6 @@ FnordMetric::ZERO_CONFIG_HANDLER = proc {
     next
   end
 
-  unless data[:flush_interval]
-    FnordMetric.error("missing key for zero config event: flush_interval")
-    next
-  end
-
   unless data[:value]
     FnordMetric.error("missing key for zero config event: value")
     next
@@ -30,7 +25,7 @@ FnordMetric::ZERO_CONFIG_HANDLER = proc {
     namespace.gauges[gauge_key]
   else
     namespace.opt_gauge(gauge_key,
-      :tick => data[:flush_interval].to_i,
+      :flush_interval => data[:flush_interval],
       :average => (type == :_avg),
       :zero_config => true)
   end

@@ -2,7 +2,6 @@
 Todo
 ====
 
-  → implement default flush_interval for gauges
   → doc: events and gauges
   → doc: getting started, backport to readme
   → doc: all fnordmetric options in running
