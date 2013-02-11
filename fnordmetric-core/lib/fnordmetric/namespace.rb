@@ -11,12 +11,14 @@ class FnordMetric::Namespace
     @gauges = Hash.new
     @dashboards = Hash.new
     @handlers = Hash.new.with_indifferent_access
-    @flags = Hash.new
     @title = key
-    @active_users_available = true
-    @gauge_explorer_available = true
     @opts = opts
     @key = key
+
+    @flags = {
+      :hide_active_users => (FnordMetric.options[:enable_active_users] == false),
+      :hide_gauge_explorer => (FnordMetric.options[:enable_gauge_explorer] == false)
+    }
   end
 
   def ready!(redis, sync_redis = nil)
@@ -27,7 +29,7 @@ class FnordMetric::Namespace
   end
 
   def announce(event)
-    if active_users_available
+    if !@flags[:hide_active_users]
       announce_to_timeline(event)
       announce_to_typelist(event)
     end
@@ -86,14 +88,6 @@ class FnordMetric::Namespace
 
   def title
     @title
-  end
-
-  def active_users_available
-    !!@active_users_available
-  end
-
-  def gauge_explorer_available
-    !!@active_users_available
   end
 
   def dashboards(name=nil, opts = {})
