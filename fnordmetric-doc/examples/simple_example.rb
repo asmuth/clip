@@ -12,8 +12,4 @@ FnordMetric.namespace :myapp do
 
 end
 
-FnordMetric.options = {
-  :enable_gauge_explorer => false
-}
-
 FnordMetric.standalone
