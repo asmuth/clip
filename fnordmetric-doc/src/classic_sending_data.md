@@ -17,15 +17,46 @@ are prefixed with an underscore:
 
 You can choose between a variety of ways to submit these events to FnordMetric:
 
-
 ### HTTP API
 
-here be dragons
+The canonical way to submit events is using JSON + HTTP POST. Assuming your
+FnordMetric Web Interface is running on port 4242, the URL of the api endpoint
+is:
+
+    POST http://localhost:4242/events
+
+_Example: send a test event with cURL_
+
+    curl -X POST -d '{ "_type": "test" }' localhost:4242/events
 
 
 ### TCP / UDP API
 
-here be dragons
+FnordMetric includes a TCP and a UDP Listener. They allow you to stream events
+with minimal overhead, and in the case of UDP in a "fire and forget" fashion.
+
+The Protocol is quite simple: One JSON Object per line. The JSON Object itself
+is not allowed to include newlines (the JSON spec forbids this aswell).
+
+With TCP you simply open a connection and start streaming events seperated by
+newline. With UDP you can include one or more events in a packet, also seperated
+by newline.
+
+A Frame looks like this
+
+    { "_type": "event_fnord", ... }\n
+    { "_type": "event_fu", ... }\n
+    { "_type": "event_bar", ... }\n
+
+Start the TCP or UDP Acceptor in your FnordMetric config (see [Running FnordMetric](/documentation/classic_running_fm))
+
+_Example: start a TCP Accepor on port 2323_
+
+    FnordMetric::Acceptor.new(:protocol => :tcp, :port => 2323)
+
+_Example: send a single event over TCP with netcat_
+
+    echo '{ "_type": "test" }' | nc localhost 2323
 
 
 ### Redis API
@@ -61,6 +92,6 @@ here be dragons
 
 ### Client Libraries
 
-There are a number of client libraries for FnordMetric for Ruby, PHP, Pythin, C#,
-etcetera. [List of clients](/documentation/examples)
+There are a number of client libraries for FnordMetric for Ruby, PHP, Pythin, C# and
+more. [List of available clients](/documentation/classic_examples)
 
