@@ -75,7 +75,7 @@ Valid keys for these events are:
 <br /><br />
 
 
-#### Predefined Events: _set_name, _set_picture
+#### Predefined Events: _set_name, _set_picture, _pageview
 
 These events allow you the set a picture and display name for a visitor / user. They
 require a `_session` key to identify a particular user session (FnordMetric allows
