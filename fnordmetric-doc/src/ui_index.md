@@ -32,7 +32,8 @@ on port 4242) and save this to a fil `my_dashboard.html`
 
 
 We will display on counter "total revenue in the last hour" on our page. First we
-have to connect to the FnordMetric Backend using WebSockets:
+have to connect to the FnordMetric Backend using WebSockets (_Make sure you set the
+correct namespace, it's "myapp" in the example_):
 
     <script>
       FnordMetric.setup({
@@ -53,7 +54,7 @@ sales in the last hour. And update every second:
       data-at="sum(-1hour)"
       data-gauge="total_sales_in_euro"
       data-autoupdate="1"
-      data-unit="€"
+      data-unit="$"
       >0</span>
 
 
@@ -61,9 +62,9 @@ Now open my_dashboard.html in the browser of your choice. You should see a
 page displaying "0". It's a good idea to open the JavaScript / Inspector
 console of your browser as FnordMetric UI will print error messages using `console.log`
 
-The last step is to start sending data. This will report one sale of 29.99€:
+The last step is to start sending data. This will report one sale of 29€:
 
-    curl -X POST -d '{ "_type": "_incr", "value": 29.99, "gauge": "total_sales_per_minute" }' http://localhost:4242/events
+    curl -X POST -d '{ "_type": "_incr", "value": 29, "gauge": "total_sales_in_euro" }' http://localhost:4242/events
 
 
 For fun and profit, we can display a timeseries graph of sales in the last 10 minutes with this snippet:

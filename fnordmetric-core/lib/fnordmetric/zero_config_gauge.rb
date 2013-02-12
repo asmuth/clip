@@ -27,16 +27,16 @@ class FnordMetric::ZeroConfigGauge
     case type
 
       when :_set
-        set_value gauge, data[:value]
+        set_value gauge, data[:value].to_i
 
       when :_incr
-        incr_tick gauge, data[:value]
+        incr_tick gauge, data[:value].to_i
 
       when :_decr
         FnordMetric.error("_decr is not yet implemented")
 
       when :_avg
-        incr_avg gauge, data[:value]
+        incr_avg gauge, data[:value].to_i
 
       when :_min, :_max
         FnordMetric.error("_min/_max is not yet implemented")

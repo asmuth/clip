@@ -174,7 +174,9 @@ class FnordMetric::Namespace
   def load_gauges
     gaugelist_key = key_prefix("zero-config-gauges")
     sync_redis.hgetall(gaugelist_key).each do |gauge_key, gauge_opts|
-      opt_gauge(gauge_key.to_sym, JSON.parse(gauge_opts).symbolize_keys)
+      gopts = JSON.parse(gauge_opts).symbolize_keys
+      gopts.delete(:zero_config)
+      opt_gauge(gauge_key.to_sym, gopts)
     end
   end
 
