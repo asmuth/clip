@@ -5,7 +5,7 @@ if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
 FnordMetric.widgets.counter = function(elem){
-  var gauge, at, refresh_timer, refresh_interval;
+  var gauge, at, scale_by, refresh_timer, refresh_interval;
   var widget_key = elem.attr("data-widget-key");
 
   function init() {
@@ -16,6 +16,11 @@ FnordMetric.widgets.counter = function(elem){
 
     at = elem.attr('data-at');
     if (!at) at = "now";
+
+    if (scale_by = elem.attr('data-scale-by'))
+      scale_by = parseFloat(elem.attr('data-scale-by'));
+    else
+      scale_by = 1;
 
     requestDataAsync();
 
@@ -66,7 +71,7 @@ FnordMetric.widgets.counter = function(elem){
       if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
       if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
 
-      var val_txt = FnordMetric.util.formatValue(new_val);
+      var val_txt = FnordMetric.util.formatValue(new_val * scale_by);
 
       if (elem.attr('data-unit'))
         val_txt += elem.attr('data-unit');

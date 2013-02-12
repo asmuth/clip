@@ -63,6 +63,13 @@ These are the valid html attributes for counters:
     </td>
   </tr>
   <tr>
+    <th>data-scale-by</th>
+    <td>
+      multiply the value with a constant before displaying it (e.g. if you are reporting data
+      as cents, but want to display them as dollar/euro, use `data-scale-by="0.01"`
+    </td>
+  </tr>
+  <tr>
     <th>data-autoupdate</th>
     <td>
       refresh this value every N seconds
