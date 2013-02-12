@@ -11,12 +11,14 @@ class FnordMetric::Namespace
     @gauges = Hash.new
     @dashboards = Hash.new
     @handlers = Hash.new.with_indifferent_access
-    @flags = Hash.new
     @title = key
-    @active_users_available = true
-    @gauge_explorer_available = true
     @opts = opts
     @key = key
+
+    @flags = {
+      :hide_active_users => (FnordMetric.options[:enable_active_users] == false),
+      :hide_gauge_explorer => (FnordMetric.options[:enable_gauge_explorer] == false)
+    }
   end
 
   def ready!(redis, sync_redis = nil)
@@ -27,7 +29,7 @@ class FnordMetric::Namespace
   end
 
   def announce(event)
-    if active_users_available
+    if !@flags[:hide_active_users]
       announce_to_timeline(event)
       announce_to_typelist(event)
     end
@@ -36,8 +38,8 @@ class FnordMetric::Namespace
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
-    if FnordMetric::ZERO_CONFIG_TYPES.include?(event[:_type].to_sym)
-      ctx = FnordMetric::Context.new(opts, FnordMetric::ZERO_CONFIG_HANDLER)
+    if FnordMetric::ZeroConfigGauge::TYPES.include?(event[:_type].to_sym)
+      ctx = FnordMetric::Context.new(opts, FnordMetric::ZeroConfigGauge::Handler)
       ctx.call(event, @redis, self)
       return self
     end
@@ -86,14 +88,6 @@ class FnordMetric::Namespace
 
   def title
     @title
-  end
-
-  def active_users_available
-    !!@active_users_available
-  end
-
-  def gauge_explorer_available
-    !!@active_users_available
   end
 
   def dashboards(name=nil, opts = {})
@@ -166,7 +160,7 @@ class FnordMetric::Namespace
 
   def build_widget(opts)
     _gauges = [opts[:gauges]].flatten.map do |g|
-      @gauges[g] || ZeroConfigGauge.new(g, self)
+      @gauges[g] || FnordMetric::ZeroConfigGauge.new(g, self)
     end
     widget_klass = "FnordMetric::#{opts.fetch(:type).to_s.capitalize}Widget"
     widget_klass.constantize.new(opts.merge(:gauges => _gauges))
@@ -180,7 +174,9 @@ class FnordMetric::Namespace
   def load_gauges
     gaugelist_key = key_prefix("zero-config-gauges")
     sync_redis.hgetall(gaugelist_key).each do |gauge_key, gauge_opts|
-      opt_gauge(gauge_key.to_sym, JSON.parse(gauge_opts).symbolize_keys)
+      gopts = JSON.parse(gauge_opts).symbolize_keys
+      gopts.delete(:zero_config)
+      opt_gauge(gauge_key.to_sym, gopts)
     end
   end
 

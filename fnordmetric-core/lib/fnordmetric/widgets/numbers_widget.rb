@@ -14,6 +14,10 @@ class FnordMetric::NumbersWidget < FnordMetric::Widget
   end
 
   def self.execute_values_for(gauge, event)
+    unless gauge
+      return { "error" => "gauge not found..." }
+    end
+
     _t = Time.now.to_i
 
     if at = event["at"]

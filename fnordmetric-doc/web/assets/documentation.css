@@ -21,7 +21,7 @@ h1, h2, h3 { line-height: 40px; }
 h1 { font-size: 38.5px; }
 h2 { font-size: 26.5px; }
 h3 { font-size: 17.5px; }
-h4 { font-size: 17.5px; }
+h4 { font-size: 14px; }
 h5 { font-size: 14px; }
 h6 { font-size: 11.9px; }
 
@@ -276,4 +276,42 @@ table tr:nth-child(2) {
 table td p {
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+.shadow {
+  box-shadow:0 0 8px rgba(0,0,0,.4);
+}
+
+pre.dark {
+  margin:0;
+  padding:0;
+}
+
+pre.dark code {
+  background: #222;
+  border: 1px solid #444;
+  min-height: 240px;
+  text-shadow: none;
+  font: 16px / 26px monospace;
+}
+
+.code_snippets {
+  width:400px; float:left;
+}
+
+.code_snippets .title {
+  text-align: left;
+  font-size: 16px;
+}
+
+.code_snippets a.link {
+  color: #fff;
+  text-decoration: none;
+  float: right;
+  position:relative;
+  top:-18px;
+}
+
+.code_snippets a.link:hover {
+  text-decoration: underline;
 }

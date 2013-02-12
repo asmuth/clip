@@ -5,9 +5,9 @@
       <li class="<%= @route == "/index" ? :active : nil %>">
         <a href="/documentation">Overview</a>
       </li>
-      <li class="<%= @route == "/downloads" ? :active : nil %>">
+      <!--<li class="<%= @route == "/downloads" ? :active : nil %>">
         <a href="/documentation/downloads">Downloads</a>
-      </li>
+      </li>-->
       <li class="<%= @route == "/support" ? :active : nil %>">
         <a href="/documentation/support">Support</a>
       </li>
@@ -17,8 +17,8 @@
     </ul>
 
     <% [
-      ["FnordMetric UI", "fnordmetric_ui"],
-      ["FnordMetric Classic", "fnordmetric_classic"]
+      ["FnordMetric Classic", "fnordmetric_classic"],
+      ["FnordMetric UI", "fnordmetric_ui"]
     ].each do |(title, key)| %>
       <a class="nav_title"><%= title %></a>
       <ul>

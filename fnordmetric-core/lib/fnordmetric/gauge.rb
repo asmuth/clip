@@ -11,7 +11,8 @@ class FnordMetric::Gauge
   end
 
   def tick
-    (@opts[:tick] || @opts[:resolution] || 3600).to_i
+    (@opts[:tick] || @opts[:resolution] || @opts[:flush_interval] ||
+      FnordMetric.options[:default_flush_interval]).to_i
   end
 
   def retention

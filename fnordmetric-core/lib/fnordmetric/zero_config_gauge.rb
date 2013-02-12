@@ -1,9 +1,53 @@
-class ZeroConfigGauge
+class FnordMetric::ZeroConfigGauge
+
+  TYPES = [:_incr, :_decr, :_avg, :_min, :_max, :_set]
+
+  Handler = proc do
+    if data[:gauge]
+      gauge_key = data[:gauge].to_sym
+    else
+      FnordMetric.error("missing key for zero config event: gauge")
+      next
+    end
+
+    unless data[:value]
+      FnordMetric.error("missing key for zero config event: value")
+      next
+    end
+
+    gauge = if namespace.gauges.has_key?(gauge_key)
+      namespace.gauges[gauge_key]
+    else
+      namespace.opt_gauge(gauge_key,
+        :flush_interval => data[:flush_interval],
+        :average => (type == :_avg),
+        :zero_config => true)
+    end
+
+    case type
+
+      when :_set
+        set_value gauge, data[:value].to_i
+
+      when :_incr
+        incr_tick gauge, data[:value].to_i
+
+      when :_decr
+        FnordMetric.error("_decr is not yet implemented")
+
+      when :_avg
+        incr_avg gauge, data[:value].to_i
+
+      when :_min, :_max
+        FnordMetric.error("_min/_max is not yet implemented")
+
+    end
+  end
 
   class EmtpyGauge
 
     def self.tick
-      60
+      FnordMetric.options[:default_flush_interval]
     end
 
     def self.retention

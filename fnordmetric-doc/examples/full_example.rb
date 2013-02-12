@@ -1,4 +1,3 @@
-$: << ::File.expand_path("../../../fnordmetric/lib/", __FILE__)
 require "fnordmetric"
 
 FnordMetric.namespace :myapp do

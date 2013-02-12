@@ -25,12 +25,12 @@ describe FnordMetric::GaugeModifiers do
         :_time => 1360584960,
         :value => 42,
         :gauge => "sales-per-second",
-        :flush_interval => 10
+        :flush_interval => 20
       )
 
       @namespace.gauges[:"sales-per-second"].should be_a(Gauge)
 
-      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-10"
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-20"
       @redis.hget(gauge_key, "1360584960").should == "42"
 
       @namespace.announce(
@@ -39,11 +39,26 @@ describe FnordMetric::GaugeModifiers do
         :_time => 1360584960,
         :value => 11,
         :gauge => "sales-per-second",
-        :flush_interval => 10
+        :flush_interval => 20
       )
 
       @redis.hget(gauge_key, "1360584960").should == "53"
       @namespace.gauges[:"sales-per-second"].value_at(1360584961).should == "53"
+    end
+
+    it "should create and increment zero-config gauges with the default flush interval" do
+      @namespace.announce(
+        :_type => "_incr",
+        :_eid  => 1234,
+        :_time => 1360584960,
+        :value => 42,
+        :gauge => "sales-per-second-default"
+      )
+
+      @namespace.gauges[:"sales-per-second-default"].should be_a(Gauge)
+
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-default-10"
+      @redis.hget(gauge_key, "1360584960").should == "42"
     end
 
     it "should create and set zero-config gauges" do

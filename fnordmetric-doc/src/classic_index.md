@@ -1,22 +1,19 @@
 Getting Started
 ---------------
 
-The basic concept in FnordMetric is called a "gauge". A Gauge is a primitive data store for a numerical value over
-time. A gauge has two dimensions: Value und Time. Gauges can be used in different modes like sum,
-average, max/min, etcetara.
+This will guide you through setting up a simple dashboard that displays the number of
+sales per minute. It assumes that you have ruby and a redis server on port 6379 running
+on your machine.
 
-The FnordMetric core deals with processing data. There are two basic concepts:
-events and gauges.
-
-An Event is a piece of data that is sent to FnordMetric through one of the various
-sources. This event is a JSON Object / Hash with almost no constraints on the schema.
-
-You can install FnordMetric Classic by runing
+We start by installing FnordMetric through rubygems:
 
     gem install fnordmetric
 
+FnordMetric is based on ruby eventmachine and needs to run in a seperate ruby process.
+The preferred way to start it is to create a ruby file (where you put your DSL statements)
+and execute it (more about that in [Running FnordMetric](/documentation/classic_running_fm))
 
-Simple Example: this will render a timeline-plot showing the number of sales per minute.
+Save this to a file `my_fnordmetric.rb`
 
     require "fnordmetric"
 
@@ -28,27 +25,57 @@ Simple Example: this will render a timeline-plot showing the number of sales per
         :gauges => [:sales_per_minute],
         :type => :timeline,
         :width => 100,
-        :autoupdate => 10
+        :autoupdate => 1
 
     end
 
     FnordMetric.standalone
 
-The easiest way to submit an event (i.e. a piece of data) is using `netcat` from the commandline:
+This defines a FnordMetric namespace "myapp". You can think of the namespace as the whole
+dashboard as you will probably use only one namespace. Namespaces can be used to seperate
+users if you are deploying FnordMetric as a white-label solution to your customers.
 
-    echo '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' | nc localhost 1337
+Everything that is inside the block passed to `FnordMetric#myapp` is your custom configuration.
+This is where all DSL statements go.
 
-or you can use the HTTP API:
+In this case we created one timeseries chart on the dashboard "Sales" that will display
+the number of sales_per_minute and auto-refresh every second.
 
-    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' http://localhost:4242/events
+You should now be able to start the dashboard on http://localhost:4242/ (default) by running:
 
-
-### Gauges
-
-here be dragons
+    $ ruby my_fnordmetric.rb
 
 
-### Event Handlers
+Now we can start sending data to FnordMetric. In FnordMetric, a piecce of input data is called
+"event". An event is a JSON object (a arbitrary hashmap). The canonical way to submit events is
+the HTTP API, this will report a single sale:
 
-You write event handlers in ruby that get invoked per incoming event and modify (increment,
-set, etcetera) gauges.
+    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute" }' http://localhost:4242/events
+
+There are various other ways to submit events to FnordMetric (more information in [Sending Data](/documentation/classic_sending_data)).
+
+The "_incr" event we use is a special predefined event that creates a gauge (if it doesn't exist
+already) and increments it. (You can also define custom events, more about that in [Events and Gauges](/documentation/classic_event_handlers)).
+
+A "gauge" in FnordMetric is basically a bucket that stores a numerical value. It has has two
+dimensions: time and value. Each gauge is identified by a uniqe key (here: "sales_per_minute").
+
+The value of a gauge is periodically aggregated and persisted into redis. Since we didn't explicitly
+define the aggregation interval (`flush_interval`) the default of 10s will be used for our
+sales_per_minute gauge.
+
+Gauges can be used in different modes: They can act as simple counters with an increment and
+a decrement operation, but you can also use them to record the mean / average or the max/min
+value (more about that in [Events and Gauges](/documentation/classic_event_handlers)).
+
+
+If you navigate to http://localhost:4242/ you should see this:
+
+<img src="/img/simple_example_screen.png" width="630" class="shadow" />
+
+
+You now have a running FnordMetric application. There is a lot more you can do with FnordMetric:
+
+  + Check out the [Full Ruby DSL Example](/documentation/examples/fm_classic_full_example)
+  + [List of UI Widgets](/documentation/classic_widgets)
+  + Read more about [Events and Gauges](/documentation/classic_event_handlers)

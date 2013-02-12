@@ -7,9 +7,10 @@ request for this page on github.
 
 ### Examples
 
-+ link
-+ custom date / time controls
-+ link
+_If you want to add examples, blogs or clients, please send a pull request for this page on github._
+
+
+<!-- here be dragons: how to implement custom date / time controls -->
 
 
 ### Customizing the widgets

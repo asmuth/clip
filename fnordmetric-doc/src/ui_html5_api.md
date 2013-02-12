@@ -21,7 +21,8 @@ FnordMetric UI requires jQuery 1.6.2+
 
 ### Reference: Counters
 
-Counters are span or div elements. Example:
+Counters are span or div elements. They are updated to contain the value of
+the gauge at one point in time as plain text. Example:
 
     <span
       data-fnordetric="counter"
@@ -29,7 +30,11 @@ Counters are span or div elements. Example:
       data-at="now"
       >0</span>
 
-These are the valid html attributes:
+If the value of `my_gauge` this element is updated to:
+
+    <span data-fnordmetric... >23</span>
+
+These are the valid html attributes for counters:
 
 <table>
   <tr>
@@ -75,8 +80,9 @@ These are the valid html attributes:
 
 ### Reference: Timeseries
 
-Counters div elements. The chart will auto-size itself to the size of the
-container div. The height has to be configured manually (default is 240px):
+Timeseries widgets are div elements. They act as container elements for timeseries
+charts. The chart will auto-size itself to the width of the container div, but the
+height has to be configured manually (default is 240px):
 
     <div
       data-fnordetric="timeseries"

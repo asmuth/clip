@@ -2,8 +2,25 @@
 Todo
 ====
 
+  → doc: all fnordmetric options in running
+  → doc: examples pages
+  → doc: example: age distribution
+  → doc: backport to readme
+  → doc: support, license, downloads
+  → doc: screenshots
+  → doc: hacking
+  → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
+  → doc: syntax highlighting
+
+  Show HN: Open-Source framwork for beautiful real-time dashboards
+
+  → doc: document all widget options
+  → doc: sending data: stomp + amqp
+
+
   → implement, _decr, _max, _min for zero config gauges
   → gauge explorer: fix gauges multiple times in select dropdown
+  → doc: distribution, toplist and timeseries gauge
 
 
 
@@ -22,9 +39,7 @@ Backlog
   → incr_fraction: implement progressive
   → timeseries gauge: restrict to max resolution
   → formatter: num, time, currency, percent, time_of_day
-  → minimize/pack js + css
   → put images into one sprite
-  → nice empty states
 
 
 Changelog

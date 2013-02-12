@@ -1,19 +1,15 @@
 Sending Data
 ------------
 
-FnordMetric operates on an input stream of "events". These events are JSON
-objects (arbitrary hashmaps). A event may look like this:
+An Event is a piece of input data that is sent to FnordMetric through one of the various
+sources. These events are JSON objects (arbitrary hashmaps) with almost no contraints on
+the schema. A event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
 
 
-There is a small number of keys which have a special meaning, all of them
-are prefixed with an underscore:
-
-    fixpaul: special key table
-    - events containing user data (_session, _name)
-    - _namespace
-
+This page describes how to send these events to FnordMetric. To read more
+about the semantics of the events please see Events and Gauges (FIXPAUL)
 
 You can choose between a variety of ways to submit these events to FnordMetric:
 
@@ -79,19 +75,8 @@ _Example: push event 123123 to the internal redis queue with a ttl of 10 minutes
     expire  "fnordmetric-event-123123"  "600"
 
 
-
-### AMQP
-
-here be dragons
-
-
-### STOMP
-
-here be dragons
-
-
 ### Client Libraries
 
-There are a number of client libraries for FnordMetric for Ruby, PHP, Pythin, C# and
+There are a number of client libraries for FnordMetric for Ruby, PHP, Python, C# and
 more. [List of available clients](/documentation/classic_examples)
 

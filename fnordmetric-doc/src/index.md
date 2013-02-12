@@ -32,7 +32,8 @@ You can use FnordMetric UI as a white label solution to power your custom realti
 ### FnordMetric Enterprise
 
 FnordMetric Enterprise is a JVM based timeseries database which serves as a backend for FnordMetric
-UI. It can handle thousands of gauges and years worth of historical data. 
+UI. It can handle thousands of gauges and years worth of historical data. It does not depend on a
+backend store like redis; it can be run in standalone mode or persist to an external database.
 
 FnordMetric Enterprise includes some advanced features like Hadoop Integration and CSV Export.
 
