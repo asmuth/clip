@@ -71,7 +71,7 @@ value (more about that in [Events and Gauges](/documentation/classic_event_handl
 
 If you navigate to http://localhost:4242/ you should see this:
 
-<img src="/img/simple_example_screen.png" width="630" style="box-shadow:0 0 8px rgba(0,0,0,.4);" />
+<img src="/img/simple_example_screen.png" width="630" class="shadow" />
 
 
 You now have a running FnordMetric application. There is a lot more you can do with FnordMetric, read about that in [Events and Gauges](/documentation/classic_event_handlers)), [Widgets](/documentation/classic_widgets)) and [Examples](/documentation/classic_examples)).

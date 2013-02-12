@@ -80,7 +80,7 @@ For fun and profit, we can display a timeseries graph of sales in the last 10 mi
 
 Now your dashboard should look like this:
 
-    FIXPAUL: screenshot
+<img src="/img/fnordmetric_ui_example_screen.png" width="630" class="shadow" />
 
 
 #### But wait, my dashboard is white?
