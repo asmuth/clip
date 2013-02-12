@@ -82,9 +82,14 @@ require a `_session` key to identify a particular user session (FnordMetric allo
 you to track what a specific user is doing, more about that in Sessions FIXPAUL). The
 picture and name are displayed e.g. in the "Active Users" Plugin (FIXPAUL)
 
-    { "_type": "_set_name", "_session": "A7697BA0939C02E ", "name": "Teddy Tester" }
+    // track a pageview
+    { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
 
-FIXPAUL: Reference
+    // set the user name
+    { "_type": "_set_name", "name": "Tingle Tangle Bob", "_session": "mysessiontoken" }
+
+    // set the user picture
+    { "_type": "_set_picture", "url": "http://myhost/123.jpg", "_session": "mysessiontoken" }
 
 
 ### Custom Events
@@ -142,33 +147,222 @@ event:
 There is a small number of keys which have a special meaning, all of them
 are prefixed with an underscore:
 
-    fixpaul: special key table
-    - events containing user data (_session, _name)
-    - _namespace
-
+<table>
+  <tr>
+    <th>_type <i>(mandatory)</i></th>
+    <td>
+      the type of this event. this key is the only one that is mandatory as it is used to
+      look up the correct event handler.
+    </td>
+  </tr>
+  <tr>
+    <th>_time</th>
+    <td>
+      contains the time at which this event was recorded as a unix timestamp. you can
+      retroactively add events by setting this to a value in the past. (this field is optional)
+    </td>
+  </tr>
+  <tr>
+    <th>_session</th>
+    <td>
+      contains the session id of the user that triggered this event (optional)
+    </td>
+  </tr>
+  <tr>
+    <th>_namespace</th>
+    <td>
+      sets the namespace for this event (optional, you only need this if you have more than
+      one namespace)
+    </td>
+  </tr>
+</table>
 
 ### Gauges
 
-FIXPAUL gauge options reference
+The normal gauge is just a counter that you can increment or decrement. But there
+are other modes to use gauges:
 
 #### Average Gauges
 
-#### Progressive Gauges
+One common is case is that you dont want to sum up your samples but to calculate
+the mean / average. For example to record the "average response time". You can
+do this by setting the `:average` key to true:
+
+_Example: measure the average response time, this sample: 42ms_
+
+    gauge :average_response_time_in_ms,
+      :average => true
+
+    event :request_finished
+      incr :average_response_time_in_ms, 42
+    end
+
+
+#### Progressive / Cumulative Gauges
+
+Sometimes you want to record a value not per-time but the total. For example "total
+signed up users since launch". You can use progressive / cumulative gauges to do this,
+just set the `:progressive` key to true:
+
+_Example: record a signup_
+
+    gauge :total_signups_since_launch,
+      :progressive => true
+
+    event :signup do
+      incr :total_signups_since_launch 1
+    end
+
 
 #### Three-dimensional Gauges
 
+While regular gauges have two dimensions (value and time) you can also have three dimensional
+gauges (label, value and time) to record things like "clicks per category". These three dimensional
+gauges basically act like a associative map were each entry is a simple two dimensional gauge.
+
+_Example: record 2 clicks in the category 'fashion'_
+
+    gauge :clicks_per_category,
+      :three_dimensional => true
+
+    event :click do
+      incr_field :three_dimensional, 'fashion', 1
+    end
 
 
-### API Reference
+#### All options
 
-#### Accessing the Event Data
-  - data, time, etc
+This is the full list of valid configuration options for gauges:
 
-#### incr, etcetera
+<table>
+  <tr>
+    <th>title</i></th>
+    <td>
+      sets the title of this gauge (optional)
+    </td>
+  </tr>
+  <tr>
+    <th><b>flush_interval</b></i></th>
+    <td>
+      interval in which the value of this gauge is aggregated persisted in seconds.
+      this is basically the gauge's granularity / resolution. the flush interval
+      controls how much memory a gauge uses (smaller flush_intervals use more memory)
+      the default is 10 seconds
+    </td>
+  </tr>
+  <tr>
+    <th>average</i></th>
+    <td>
+      if set to true, this gauge will record the average value (see above)
+    </td>
+  </tr>
+  <tr>
+    <th>progressive</i></th>
+    <td>
+      if set to true, this gauge will record the cumulative value (see above)
+    </td>
+  </tr>
+  <tr>
+    <th>three_dimensional</i></th>
+    <td>
+      if set to true, this gauge acts as a associative map of counters (see above)
+    </td>
+  </tr>
+</table>
+<br /><br />
 
-#### Sessions
-FnordMetric allows you to track what a specific user is doing
-  - storing data in the session
-  - end of session callback
-  - set_name/picture => above
 
+
+### Event Handler API
+
+This is the list of methods that are available from within an event handler
+(you can of course also use any custom ruby code)
+
+#### Accessing the event data
+
+When called from inside of an event handler, these methods return
+the data / time / type of the current event.
+
+<table style="margin-bottom:15px;">
+  <tr>
+    <th>data <i>=> Hash</i></th>
+    <td>
+      returns the event as a ruby hash. all keys are symbolized (e.g. <br /> `{ :_type => "my_event" ... }`
+    </td>
+  </tr>
+  <tr>
+    <th>time <i>=> Int</i></th>
+    <td>
+      return the time this event was registered at as a unix timestamp / integer
+    </td>
+  </tr>
+  <tr>
+    <th>type <i>=> Symbol</i></th>
+    <td>
+      returns the type of this event as a symbol (the content of the "_type" key)
+    </td>
+  </tr>
+  <tr>
+    <th>session_key <i>=> String or nil</i></th>
+    <td>
+      returns the session id of this event if set (the content of the "_session" key)
+    </td>
+  </tr>
+</table>
+
+_Example:_
+
+    >> data
+    => { :_type => "my_event", :my_value => 123 }
+
+    >> time
+    => 1360623178
+
+
+<br />
+#### Manipulating gauges
+
+These methods allow manipulation of gauges. The time / bucket to modify
+is automatically inferred from the content of the `_time` key.
+
+<table style="margin-bottom:15px;">
+  <tr>
+    <th>incr(gauge, value = 1)</th>
+    <td>
+      increments the gauge by `value`. if the gauge is configured to be average / mean it records the value as one sample.
+    </td>
+  </tr>
+  <tr>
+    <th>incr_field(gauge, field, value = 1)</th>
+    <td>
+      can only be used on three-dimensional gauges. increments the label / field of the gauge by `value`.
+    </td>
+  </tr>
+  <tr>
+    <th>set_value(gauge, value)</th>
+    <td>
+      sets the value of this gauge to `value`
+    </td>
+  </tr>
+  <tr>
+    <th>set_field(gauge, field, value)</th>
+    <td>
+      can only be used on three-dimensional gauges. sets the value of this label / field of this gauge to `value`
+    </td>
+  </tr>
+</table>
+
+_Examples:_
+
+    # increment the gauge 'total_sales' by 4
+    incr :total_sales, 4
+
+    # set the gauge 'users_online' to 5321
+    set_value :users_online, 5321
+
+    # increment the label 'clothing' on the three dimensional gauge 'top_categories' by 2
+    incr :top_categories, 'clothing', 2
+
+<br />
+
+Fore more information check out the [Full Ruby DSL Example](/documentation/examples/fm_classic_full_example)

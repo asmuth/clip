@@ -2,17 +2,19 @@
 Todo
 ====
 
-  → doc: all fnordmetric options in running
-  → doc: all gauge opts in events and gauges
-  → doc: full api ref in events and gauges
   → doc: widgets
   → doc: examples on frontpage
+  → doc: all fnordmetric options in running
   → doc: sending data: stomp + amqp
+  → doc: examples pages
 
   → doc: backport to readme
   → doc: support, license, downloads
   → doc: screenshots
   → doc: hacking
+
+  → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
+  → doc: syntax highlighting
 
   → implement, _decr, _max, _min for zero config gauges
   → gauge explorer: fix gauges multiple times in select dropdown
@@ -35,7 +37,6 @@ Backlog
   → incr_fraction: implement progressive
   → timeseries gauge: restrict to max resolution
   → formatter: num, time, currency, percent, time_of_day
-  → minimize/pack js + css
   → put images into one sprite
 
 
