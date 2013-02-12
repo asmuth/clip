@@ -56,11 +56,12 @@ This will report a single sale:
 There are various other ways to submit events to FnordMetric (more information in [the documentation](http://fnordmetric.io/documentation)).
 
 
+### HTML5 API
 
-FnordMetric offers a HTML5 / JavaScript API that allows you to plug real-time
-data and charts into any website without having to write code. This is achieved
-by including a JavaScript library and using data-* attributes on html elements
-to declare the widgets.
+FnordMetric offers a HTML5 / JavaScript API (called _FnordMetric UI_) that allows
+you to plug real-time data and charts into any website without having to write code.
+This is achieved by including a JavaScript library and using data-* attributes on
+html elements to declare the widgets.
 
 ```html
 <link href='http://localhost:4242/fnordmetric-ui.css' type='text/css' rel='stylesheet' />
