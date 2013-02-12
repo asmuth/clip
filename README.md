@@ -36,9 +36,9 @@ FnordMetric.namespace :myapp do
     :autoupdate => 1
 
 end
-```
 
 FnordMetric.standalone
+```
 
 In this case we created one timeseries chart on the dashboard "Sales" that will display
 the number of sales_per_minute and auto-refresh every second.
