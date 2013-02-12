@@ -2,7 +2,6 @@
 Todo
 ====
 
-  → doc: widgets
   → doc: examples on frontpage
   → doc: all fnordmetric options in running
   → doc: sending data: stomp + amqp
@@ -15,6 +14,12 @@ Todo
 
   → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
   → doc: syntax highlighting
+
+  Show HN: Open-Source framwork for beautiful real-time dashboards
+
+  → doc: example: age distribution
+  → doc: document all widget options
+
 
   → implement, _decr, _max, _min for zero config gauges
   → gauge explorer: fix gauges multiple times in select dropdown
