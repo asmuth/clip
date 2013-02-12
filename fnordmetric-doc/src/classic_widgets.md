@@ -16,52 +16,25 @@ _Example: Render a timeseries line chart on dashboard "Sales"_
 
 ### TimelineWidget
 
-here be dragons
+<img src="/img/widget_timeseries.png" width="600" />
 
 
 ### NumbersWidget
 
-here be dragons
+<img src="/img/widget_numbers.png" width="500" />
 
 
 ### BarsWidget
 
-here be dragons
+<img src="/img/widget_bars.png" width="600" />
 
 
 ### ToplistWidget
 
-here be dragons
+<img src="/img/widget_toplist.png" width="500" />
 
 
 ### HTMLWidget
-
-here be dragons
-
-
-<br />
-<br />
-
-
-Complex Widgets
----------------
-
-There are a few high level widgets which have different semantics. FIXPAUL: explain...
-
-
-### TimeSeriesGauge
-
-here be dragons
-- calculate-option: count, sum, progressive_sum, avg
-- incr / incr_counter / incr_denominator
-
-
-### DistributionGauge
-
-here be dragons
-
-
-### ToplistGauge
 
 here be dragons
 
