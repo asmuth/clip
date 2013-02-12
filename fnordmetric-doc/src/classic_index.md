@@ -74,4 +74,8 @@ If you navigate to http://localhost:4242/ you should see this:
 <img src="/img/simple_example_screen.png" width="630" class="shadow" />
 
 
-You now have a running FnordMetric application. There is a lot more you can do with FnordMetric, read about that in [Events and Gauges](/documentation/classic_event_handlers)), [Widgets](/documentation/classic_widgets)) and [Examples](/documentation/classic_examples)).
+You now have a running FnordMetric application. There is a lot more you can do with FnordMetric:
+
+  + Check out the [Full Ruby DSL Example](/documentation/examples/fm_classic_full_example)
+  + [List of UI Widgets](/documentation/classic_widgets)
+  + Read more about [Events and Gauges](/documentation/classic_event_handlers)
