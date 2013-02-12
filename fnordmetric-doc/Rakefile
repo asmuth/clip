@@ -15,11 +15,19 @@ require 'digest/md5'
 
 def md_pre(text)
   text.gsub!(/`([^`]+)`/, '<code>\1</code>')
+
+  text.gsub!(/( *){{{([^}]+)}}}/) do |m|
+    IO.read(File.join(BASEDIR, $2)).split("\n").map do |l|
+      "#{$1}#{l}"
+    end.join("\n")
+  end
+
   text
 end
 
 def md_post(html)
   html.gsub!('<pre><code>', '<pre class="prettyprint"><code>')
+  html
 end
 
 class DocApp < Sinatra::Base
@@ -86,7 +94,9 @@ task :render do
   target = File.join(BASEDIR, "target")
 
   routes = %w{/ /documentation /documentation/support
-    /documentation/license /documentation/downloads /screenshots}
+    /documentation/license /documentation/downloads /screenshots
+    /documentation/examples/fm_classic_simple_example
+    /documentation/examples/fm_classic_full_example}
 
   CONFIG["sitemap"].values.flatten.each do |page|
     routes << "/documentation#{page["url"]}"
