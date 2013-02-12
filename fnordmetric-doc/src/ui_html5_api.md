@@ -70,6 +70,12 @@ These are the valid html attributes for counters:
     </td>
   </tr>
   <tr>
+    <th>data-round-to</th>
+    <td>
+      force rounding this value to the specified precision. e.g. 0 for integer / no floating point and 3 for three digits after the dot/comma.
+    </td>
+  </tr>
+  <tr>
     <th>data-autoupdate</th>
     <td>
       refresh this value every N seconds

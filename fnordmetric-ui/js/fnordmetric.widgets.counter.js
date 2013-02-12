@@ -71,7 +71,11 @@ FnordMetric.widgets.counter = function(elem){
       if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
       if((diff < 0) && (new_val < target_val)){ new_val = target_val; }
 
-      var val_txt = FnordMetric.util.formatValue(new_val * scale_by);
+      if (elem.attr('data-round-to'))
+        var val_txt = FnordMetric.util.formatValue(new_val * scale_by,
+          parseInt(elem.attr('data-round-to'), 10));
+      else
+        var val_txt = FnordMetric.util.formatValue(new_val * scale_by);
 
       if (elem.attr('data-unit'))
         val_txt += elem.attr('data-unit');
