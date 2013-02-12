@@ -3,7 +3,6 @@ Todo
 ====
 
   → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
-  → doc: all fnordmetric options in running
 
   Show HN: Open-Source framwork for beautiful real-time dashboards
 

@@ -81,6 +81,18 @@ The valid configuration options are:
 
 <table>
   <tr>
+    <th>redis_url</th>
+    <td>
+      you redis server address. default is `redis://localhost:6379`
+    </td>
+  </tr>
+  <tr>
+    <th>redis_prefix</th>
+    <td>
+      FnordMetric prefixes all keys it saves in redis. The default prefix is `fnordmetric`
+    </td>
+  </tr>
+  <tr>
     <th>default_flush_interval</th>
     <td>
       default gauge flush interval, default value is 10 seconds
@@ -98,18 +110,28 @@ The valid configuration options are:
       enable the gauge explorer plugin, default value is true
     </td>
   </tr>
+  <tr>
+    <th>event_queue_ttl</th>
+    <td>
+      this controls how long events are allowed to stay in the internal queue
+      before being processed (events that are not processed in this timeframe
+      are lost). the default is 2 minutes.
+    </td>
+  </tr>
+  <tr>
+    <th>event_data_ttl</th>
+    <td>
+      this controls how long event data is kept in redis. you can use this
+      to drastically lower redis memory usage. the default is 30 days.
+    </td>
+  </tr>
+  <tr>
+    <th>session_data_ttl</th>
+    <td>
+      this controls how long user sessions are saved in redis (this
+      option is void if you disable the active_users plugin). the default is
+      30 days.
+    </td>
+  </tr>
 </table>
 <br />
-
-
-      :redis_url => "redis://localhost:6379",
-      :redis_prefix => "fnordmetric",
-      :inbound_stream => ["0.0.0.0", "1337"],
-      :inbound_protocol => :tcp,
-      :web_interface => ["0.0.0.0", "4242"],
-      :web_interface_server => "thin",
-      :start_worker => true,
-      :print_stats => 3,
-      :event_queue_ttl => 120,
-      :event_data_ttl => 3600*24*30,
-      :session_data_ttl => 3600*24*30
