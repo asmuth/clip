@@ -290,7 +290,7 @@ pre.dark {
 pre.dark code {
   background: #222;
   border: 1px solid #444;
-  min-height: 230px;
+  min-height: 240px;
   text-shadow: none;
   font: 16px / 26px monospace;
 }
