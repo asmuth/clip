@@ -2,18 +2,17 @@
 Todo
 ====
 
-  → doc: all fnordmetric options in running
+  → doc: syntax highlighting
   → doc: examples pages
-  → doc: example: age distribution
   → doc: backport to readme
   → doc: support, license, downloads
-  → doc: screenshots
-  → doc: hacking
   → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
-  → doc: syntax highlighting
+  → doc: all fnordmetric options in running
 
   Show HN: Open-Source framwork for beautiful real-time dashboards
 
+  → doc: example: age distribution
+  → doc: hacking
   → doc: document all widget options
   → doc: sending data: stomp + amqp
 
