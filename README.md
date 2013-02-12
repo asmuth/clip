@@ -22,21 +22,23 @@ and execute it (more about that in [the documentation](http://fnordmetric.io/doc
 
 Save this to `my_fnordmetric.rb`
 
-    require "fnordmetric"
+```ruby
+require "fnordmetric"
 
-    FnordMetric.namespace :myapp do
+FnordMetric.namespace :myapp do
 
-      # render a timeseries graph
-      widget 'Sales',
-        :title => "Sales per Minute",
-        :gauges => [:sales_per_minute],
-        :type => :timeline,
-        :width => 100,
-        :autoupdate => 1
+  # render a timeseries graph
+  widget 'Sales',
+    :title => "Sales per Minute",
+    :gauges => [:sales_per_minute],
+    :type => :timeline,
+    :width => 100,
+    :autoupdate => 1
 
-    end
+end
+```
 
-    FnordMetric.standalone
+FnordMetric.standalone
 
 In this case we created one timeseries chart on the dashboard "Sales" that will display
 the number of sales_per_minute and auto-refresh every second.
