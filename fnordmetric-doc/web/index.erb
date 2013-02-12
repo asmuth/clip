@@ -6,9 +6,47 @@
 
 <div style="height:530px;">
   <div style="box-shadow:0 -5px 190px 15px rgba(255,255,255,0.24); width:798px; margin-left:24px; height:495px;"></div>
-  <img src="/img/preview3.png" style="width:850px; position:relative; top:-512px;" />
+  <a href="/documentation"><img src="/img/preview3.png" style="width:850px; position:relative; top:-512px;" /></a>
 </div>
 
 <p class="biglink"><a href="http://railscasts.com/episodes/378-fnordmetric" target="_blank">Watch the Screencast on Railscasts.com</a></p>
-<hr />
+<hr style="margin-bottom:55px;" />
 
+<div class="code_snippets" style="margin-right:50px;">
+  <div class="title">Render a Timeseries Chart with the HTML5 API</div>
+  <pre class="dark">
+    <code>
+  &lt;div
+    data-fnordmetric="timeseries"
+    data-since="-10minutes"
+    data-until="now"
+    data-gauges="total_sales_in_euro"
+    data-autoupdate="1"
+    &gt;&lt;/div&gt;
+    </code>
+  </pre>
+  <a href="/documentation/ui_index" class="link">Getting Started with the HTML 5 API &rarr;</a>
+</div>
+<div class="code_snippets">
+
+  <div class="title">Render a Timeseries Chart with the Ruby DSL</div>
+  <pre class="dark">
+    <code>
+  widget 'Sales',
+    :title =&gt; "Sales per Minute",
+    :gauges =&gt; [:sales_per_minute],
+    :type =&gt; :timeline,
+    :width =&gt; 100,
+    :autoupdate =&gt; 1
+    </code>
+  </pre>
+  <a href="/documentation/classic_index" class="link">Getting Started with the Ruby DSL &rarr;</a>
+</div>
+
+<br style="clear:both;" />
+
+<div class="biglink" style="margin-top:70px;">
+  <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
+    Watch FnordMetric on Github &rarr;
+  </a>
+</div>

@@ -75,17 +75,6 @@ _Example: push event 123123 to the internal redis queue with a ttl of 10 minutes
     expire  "fnordmetric-event-123123"  "600"
 
 
-
-### AMQP
-
-here be dragons
-
-
-### STOMP
-
-here be dragons
-
-
 ### Client Libraries
 
 There are a number of client libraries for FnordMetric for Ruby, PHP, Python, C# and

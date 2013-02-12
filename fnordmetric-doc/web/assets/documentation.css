@@ -281,3 +281,37 @@ table td p {
 .shadow {
   box-shadow:0 0 8px rgba(0,0,0,.4);
 }
+
+pre.dark {
+  margin:0;
+  padding:0;
+}
+
+pre.dark code {
+  background: #222;
+  border: 1px solid #444;
+  min-height: 230px;
+  text-shadow: none;
+  font: 16px / 26px monospace;
+}
+
+.code_snippets {
+  width:400px; float:left;
+}
+
+.code_snippets .title {
+  text-align: left;
+  font-size: 16px;
+}
+
+.code_snippets a.link {
+  color: #fff;
+  text-decoration: none;
+  float: right;
+  position:relative;
+  top:-18px;
+}
+
+.code_snippets a.link:hover {
+  text-decoration: underline;
+}

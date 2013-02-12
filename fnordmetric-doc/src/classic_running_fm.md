@@ -69,12 +69,15 @@ _Example: This will start a worker_
 
 ### Configuration
 
-FIXPAUL!
+You set configuration options by calling the `FnordMetric#options=` method
+before starting FnordMetric. To set e.g. a different redis url than localhost
+use:
 
     FnordMetric.options = {
-      ...
+      :redis_url => "redis://my_redis_server.domain.com:6379"
     }
 
+The valid configuration options are:
 
 <table>
   <tr>
