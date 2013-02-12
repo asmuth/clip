@@ -14,7 +14,7 @@ Classic and FnordMetric Enterprise, but you can [download a copy here](http://gi
 
 FnordMetric UI requires jQuery 1.6.2+. We set up the basic HTML structure (this
 assumes you have either FnordMetric Classic or FnordMetric Enterprise running
-on port 4242) and save this to a fil `my_dashboard.html`
+on port 4242) and save this to a file `my_dashboard.html`
 
     <!DOCTYPE html>
     <html>
@@ -30,8 +30,8 @@ on port 4242) and save this to a fil `my_dashboard.html`
     </html>
 
 
-We will display on counter "total revenue in the last hour" on our page. First we
-have to connect to the FnordMetric Backend using WebSockets (_Make sure you set the
+We will display one counter "total sales in the last hour" on our page. To do that we
+first have to connect to the FnordMetric Backend using WebSockets (_Make sure you set the
 correct namespace, it's "myapp" in the example_):
 
     <script>
@@ -44,8 +44,8 @@ correct namespace, it's "myapp" in the example_):
 _Note: When using FnordMetric Enterprise the namespace is always "fnordmetric"_
 
 Now the FnordMetric UI library is loaded and we can plug widgets into the page
-using HTML5 elements. Let's start with a simple counter that display the sum of
-sales in the last hour. And update every second:
+using HTML5 elements. Let's start with a simple counter that displays the sum of
+sales in the last hour and updates itself every second:
 
     Total Sales in the last hour:
     <span
@@ -57,7 +57,7 @@ sales in the last hour. And update every second:
       >0</span>
 
 
-Now open my_dashboard.html in the browser of your choice. You should see a
+If you open `my_dashboard.html` in your browser, You should see a
 page displaying "0". It's a good idea to open the JavaScript / Inspector
 console of your browser as FnordMetric UI will print error messages using `console.log`
 
@@ -80,11 +80,11 @@ For fun and profit, we can display a timeseries graph of sales in the last 10 mi
 Now your dashboard should look like this:
 
 <img src="/img/fnordmetric_ui_example_screen.png" width="630" class="shadow" />
-
+<br />
 
 #### But wait, my dashboard is white?
 
-Yes, I skipped this part to make the getting started a bit shorter. The example above
+Yes, I skipped this part to make the into a bit shorter. The example above
 uses a "custom" styesheet. Since all widgets are rendered with HTML5 + SVG (d3.js) you
 can control the style with CSS.
 

@@ -1,17 +1,17 @@
 Events and Gauges
 -----------------
 
-A "gauge" in FnordMetric is basically a bucket that stoes a numerical value. It has has two
+A "gauge" in FnordMetric is basically a bucket that stores a numerical value. It has has two
 dimensions: time and value. Each gauge is identified by a uniqe key (for example
-"number_of_singups_per_minute"). The value of a gauge is periodically aggregated and persisted
+`number_of_singups_per_minute`). The value of a gauge is periodically aggregated and persisted
 into redis.
 
 Gauges can be used in different modes: They can act as simple counters with an increment and
-a decrement operation, but you can also use them to record the mean / average or the max/min
+a decrement operation, but you can also use them to record the mean/average or the max/min
 value.
 
 An Event is a piece of input data that is sent to FnordMetric through one of the various
-sources. These events are JSON objects (arbitrary hashmaps) with almost no contraints on
+sources. These events are JSON objects (arbitrary associative maps) with almost no contraints on
 the schema. A event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
@@ -109,10 +109,11 @@ one action but only want to send one piece of data from your app to FnordMetric.
 
 #### Example: send a "user logged in up" event and increment two gauges
 
-First we need to create a gauge. When using the predefined _incr, _decr, etc.. events
+First we need to create a gauge. When using the predefined events (like `\_incr` and `\_avg`)
 gauges are created on-the-fly, but when writing custom event handlers we need to do
-this by hand. We create a gauge that stores the number of logins with a granularity (`flush_interval`)
-of 1 minute and a another gauge that stores the number of total conversions per day.
+this by hand. We create a gauge that stores the number of logins with a granularity
+of 1 minute (this is called the `flush_interval`) and a another gauge that stores the number
+of total conversions per day.
 
     gauge :logins_per_minute,
       :tick => 1.minute.to_i,

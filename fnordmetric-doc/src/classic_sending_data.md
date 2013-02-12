@@ -3,7 +3,7 @@ Sending Data
 
 An Event is a piece of input data that is sent to FnordMetric through one of the various
 sources. These events are JSON objects (arbitrary hashmaps) with almost no contraints on
-the schema. A event may look like this:
+the schema. An event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
 
@@ -11,7 +11,6 @@ the schema. A event may look like this:
 This page describes how to send these events to FnordMetric. To read more
 about the semantics of the events please see [Events and Gauges](/documentation/classic_event_handlers)
 
-You can choose between a variety of ways to submit these events to FnordMetric:
 
 ### HTTP API
 
@@ -70,7 +69,7 @@ This example assumes you have `redis_prefix` set to the default value
 
 _Example: push event 123123 to the internal redis queue with a ttl of 10 minutes__
 
-    set     "fnotmetric-event-123123"   "{ \"_type\": \"test\" }"
+    set     "fnordmetric-event-123123"   "{ \"_type\": \"test\" }"
     lpush   "fnordmetric-queue"         "123"
     expire  "fnordmetric-event-123123"  "600"
 
