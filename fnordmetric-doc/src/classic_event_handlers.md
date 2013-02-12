@@ -63,6 +63,12 @@ Valid keys for these events are:
     </td>
   </tr>
   <tr>
+    <th><b>value</b> <i>(mandatory)</i></th>
+    <td>
+      the value as integer
+    </td>
+  </tr>
+  <tr>
     <th><b>flush_interval</b></i></th>
     <td>
       interval in which the value of this gauge is aggregated persisted in seconds.
