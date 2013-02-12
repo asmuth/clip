@@ -16,6 +16,10 @@ require 'digest/md5'
 def md_pre(text)
   text.gsub!(/`([^`]+)`/, '<code>\1</code>')
 
+  text.gsub!(/(^(?! {4}|\t)\w+_\w+_\w[\w_]*)/) do |x|
+    x.gsub('_', '\_') if x.split('').sort.to_s[0..1] == '__'
+  end
+
   text.gsub!(/( *){{{([^}]+)}}}/) do |m|
     IO.read(File.join(BASEDIR, $2)).split("\n").map do |l|
       "#{$1}#{l}"

@@ -2,10 +2,9 @@
 Todo
 ====
 
-  → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
-
   Show HN: Open-Source framwork for beautiful real-time dashboards
 
+  → make fnordmetric products italic
   → doc: example: age distribution
   → doc: hacking
   → doc: document all widget options
