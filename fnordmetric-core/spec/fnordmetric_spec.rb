@@ -7,7 +7,7 @@ describe FnordMetric do
     opts = FnordMetric.default_options
     opts[:redis_url].should eq("redis://localhost:6379")
     opts[:redis_prefix].should eq("fnordmetric")
-    opts[:inbound_stream].should eq(["0.0.0.0", "1337"])
+    opts[:inbound_stream].should eq(nil)
     opts[:web_interface].should eq(["0.0.0.0", "4242"])
     opts[:web_interface_server].should eq("thin")
     opts[:start_worker].should be_true
