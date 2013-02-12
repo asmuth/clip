@@ -16,37 +16,49 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 Getting Started
 ---------------
 
-Simple Example: this will render a timeline-plot showing the number of
-sales per minute.
+FnordMetric is based on ruby eventmachine and needs to run in a seperate ruby process.
+The preferred way to start it is to create a ruby file (where you put your DSL statements)
+and execute it (more about that in [the documentation](http://fnordmetric.io/documentation))
 
-```ruby
-require "fnordmetric"
+Save this to `my_fnordmetric.rb`
 
-FnordMetric.namespace :myapp do
+    require "fnordmetric"
 
-  # render a timeseries graph
-  widget 'Sales',
-    :title => "Sales per Minute",
-    :gauges => [:sales_per_minute],
-    :type => :timeline,
-    :width => 100,
-    :autoupdate => 10
+    FnordMetric.namespace :myapp do
 
-end
+      # render a timeseries graph
+      widget 'Sales',
+        :title => "Sales per Minute",
+        :gauges => [:sales_per_minute],
+        :type => :timeline,
+        :width => 100,
+        :autoupdate => 1
 
-FnordMetric.standalone
-```
+    end
 
-The easiest way to submit an event (i.e. a piece of data) is using `netcat` from the commandline:
+    FnordMetric.standalone
 
-    echo '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' | nc localhost 1337
+In this case we created one timeseries chart on the dashboard "Sales" that will display
+the number of sales_per_minute and auto-refresh every second.
 
-or you can use the HTTP API:
+You should now be able to start the dashboard on http://localhost:4242/ (default) by running:
 
-    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute", "flush_interval": 60 }' http://localhost:4242/event
+    $ ruby my_fnordmetric.rb
 
 
-FnordMetric offers a HTML5 / JavaScript API to plug the realtime data into any webpage:
+Now we can start sending data to FnordMetric. The canonical way to submit data is the HTTP API.
+This will report a single sale:
+
+    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute" }' http://localhost:4242/events
+
+There are various other ways to submit events to FnordMetric (more information in [the documentation](http://fnordmetric.io/documentation)).
+
+
+
+FnordMetric offers a HTML5 / JavaScript API that allows you to plug real-time
+data and charts into any website without having to write code. This is achieved
+by including a JavaScript library and using data-* attributes on html elements
+to declare the widgets.
 
 ```html
 <link href='http://localhost:4242/fnordmetric-ui.css' type='text/css' rel='stylesheet' />
@@ -67,6 +79,7 @@ FnordMetric offers a HTML5 / JavaScript API to plug the realtime data into any w
 </script>
 ```
 
+
 Installation
 ------------
 
@@ -81,21 +94,6 @@ Documentation
 -------------
 
 You can find the full FnordMetric Documentation at http://fnordmetric.io/
-
-+ [Blog: Monitor your Python App With FnordMetric](http://stephenholiday.com/articles/2012/monitor-your-python-app-with-fnordmetric/)
-+ [Blog: FnordMetric and C (Blog/Howto)](http://johnmurray.io/log/2012/01/19/FnordMetrics-and-C%23.md)
-+ [Blog: FnordMetric HowTo (russian)](http://www.pvsm.ru/ruby/2723)
-+ [RailsCast: FnordMetric (378)](http://railscasts.com/episodes/378-fnordmetric)
-
-
-### More Resources
-
-+ [PHP API for FnordMetric (use TCP) (github.com/leemachin/fnordmetric-php-api)](https://github.com/leemachin/fnordmetric-php-api)
-+ [PHP API for FnordMetric directly into Redis (github.com/votintsev/fnordmetric-php-redis)](https://github.com/votintsev/fnordmetric-php-redis)
-+ [Python API for FnordMetric (github.com/sholiday/pyfnordmetric)](https://github.com/sholiday/pyfnordmetric)
-+ [Another Ruby API for FnordMetric](https://github.com/savonarola/fnordmetric-client)
-+ [Beanstalk Monitoring with FnordMetric](https://github.com/sholiday/fnordstalk)
-+ [The "FnordMetric" google group](http://groups.google.com/group/fnordmetric)
 
 
 Contributors

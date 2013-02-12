@@ -2,9 +2,6 @@
 Todo
 ====
 
-  → doc: examples pages
-  → doc: backport to readme
-  → doc: support, license, downloads
   → doc: fix fixpauls, make fnordmetric products italic, spellcheck, fix markdown underscores
   → doc: all fnordmetric options in running
 
