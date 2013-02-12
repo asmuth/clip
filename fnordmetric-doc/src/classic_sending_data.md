@@ -9,7 +9,7 @@ the schema. A event may look like this:
 
 
 This page describes how to send these events to FnordMetric. To read more
-about the semantics of the events please see Events and Gauges (FIXPAUL)
+about the semantics of the events please see [Events and Gauges](/documentation/classic_event_handlers)
 
 You can choose between a variety of ways to submit these events to FnordMetric:
 

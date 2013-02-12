@@ -85,8 +85,8 @@ Valid keys for these events are:
 
 These events allow you the set a picture and display name for a visitor / user. They
 require a `_session` key to identify a particular user session (FnordMetric allows
-you to track what a specific user is doing, more about that in Sessions FIXPAUL). The
-picture and name are displayed e.g. in the "Active Users" Plugin (FIXPAUL)
+you to track what a specific user is doing). The picture and name are displayed e.g.
+in the [Active Users Plugin](/documentation/classic_plugins)
 
     // track a pageview
     { "_type": "_pageview", "url": "/blob/my_super_seo_article", "_session": "mysessiontoken" }
@@ -129,8 +129,7 @@ custom, this is just an example):
 
 We tell FnordMetric what to do with this event by writing an event handler: (FnordMetric
 uses the `_type` key to lookup theevent handler). There a are a few DSL methods like `data`
-and `incr` that we can use to access the event data and mofiy gauges. More info about that
-in the Reference FIXPAUL.
+and `incr` that we can use to access the event data and mofiy gauges (more about that below).
 
     event :login do
       puts "user #{data[:user_name]} logged in"

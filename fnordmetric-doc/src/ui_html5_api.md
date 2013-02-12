@@ -10,8 +10,7 @@ by including a JavaScript library and using data-* attributes on html
 elements to declare the widgets.
 
 The javascript library `fnordmetric-ui.js` is bundled with FnordMetric
-Classic and FnordMetric Enterprise, but you can download a copy here (FIXPAUL)
-if you want to include it in your project.
+Classic and FnordMetric Enterprise, but you can [download a copy here](http://github.com/paulasmuth/fnordmetric/tree/master/fnordmetric-ui) if you want to include it in your project.
 
 FnordMetric UI requires jQuery 1.6.2+
 
