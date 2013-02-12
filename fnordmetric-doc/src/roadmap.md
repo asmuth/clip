@@ -6,12 +6,13 @@ Todo
   → doc: all gauge opts in events and gauges
   → doc: full api ref in events and gauges
   → doc: widgets
-  → doc: plugins
-  → doc: screenshots
-  → doc: ui: screen
   → doc: examples on frontpage
+  → doc: sending data: stomp + amqp
+
   → doc: backport to readme
   → doc: support, license, downloads
+  → doc: screenshots
+  → doc: hacking
 
   → implement, _decr, _max, _min for zero config gauges
   → gauge explorer: fix gauges multiple times in select dropdown

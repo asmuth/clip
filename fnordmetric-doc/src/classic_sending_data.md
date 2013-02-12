@@ -88,6 +88,6 @@ here be dragons
 
 ### Client Libraries
 
-There are a number of client libraries for FnordMetric for Ruby, PHP, Pythin, C# and
+There are a number of client libraries for FnordMetric for Ruby, PHP, Python, C# and
 more. [List of available clients](/documentation/classic_examples)
 
