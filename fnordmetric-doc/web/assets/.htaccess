@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} !^fnordmetric\.io$ [NC]
+RewriteRule ^/(.*) http://fnordmetric.io/$1 [R=permanent]
