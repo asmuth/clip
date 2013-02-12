@@ -13,9 +13,13 @@ require "sinatra_static"
 require "redcarpet"
 require 'digest/md5'
 
-def gfm(text)
+def md_pre(text)
   text.gsub!(/`([^`]+)`/, '<code>\1</code>')
   text
+end
+
+def md_post(html)
+  html.gsub!('<pre><code>', '<pre class="prettyprint"><code>')
 end
 
 class DocApp < Sinatra::Base
@@ -45,8 +49,8 @@ class DocApp < Sinatra::Base
       @route = "/#{params[:splat] * "/"}"
       renderer = Redcarpet::Markdown.new(
         Redcarpet::Render::HTML.new(:no_link => true))
-      @doc_yield = renderer.render(gfm(IO.read(
-        File.join(BASEDIR, "src#{@route}.md"))))
+      @doc_yield = md_post(renderer.render(md_pre(IO.read(
+        File.join(BASEDIR, "src#{@route}.md")))))
       @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/documentation.erb')))
       render_with_layout
     end

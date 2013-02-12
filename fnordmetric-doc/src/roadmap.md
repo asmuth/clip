@@ -2,7 +2,6 @@
 Todo
 ====
 
-  → doc: syntax highlighting
   → doc: examples pages
   → doc: backport to readme
   → doc: support, license, downloads
