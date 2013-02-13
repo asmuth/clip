@@ -16,8 +16,9 @@ StatsD+Graphite (it is a lot faster, see Benchmarks).
 ### Semantics
 
 There are three basic operations: `add_sample`, `value_at` and `values_in` that
-add a sample to a measurement, retrieve the measurement value at a specified time,
-or retrieve all aggregated measurement values in a specified time interval.
+add a sample to an ongoing measurement, retrieve the measurement value at a
+specified time, or retrieve all aggregated measurement values in a specified time
+interval.
 
 The measurement method is implicitly specified by the key; all keys need to end
 with one of the method postfixes. For example `my_key.sum` or `my_key.avg` for
