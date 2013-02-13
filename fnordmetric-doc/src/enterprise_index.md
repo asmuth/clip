@@ -26,7 +26,7 @@ sum and average measurements.
 
 ### Usage Example
 
-Example: sample three response times and then receive the current average response time:
+Example: sample three values and then receive the current average value:
 
     >> SAMPLE my_application.response_time.avg 23
     << OK
@@ -36,6 +36,23 @@ Example: sample three response times and then receive the current average respon
     << OK
     >> VALUE_AT my_application.response_time.avg NOW
     << 27.3
+
+
+
+### In-memory vs. disk storage
+
+FnordMetric Enterprise stores the values as 64bit double precision floats.
+
+The default flush timeout is 10 seconds, that means per default every key
+uses 0.065 MB of memory per day or 0.4 MB per week. The default setting is
+to keep the last 4 weeks of data in-memory.
+
+That means with only 4GB of ram, you could access the last month of data of
+2500 counters/measurements with 10 second granularity without ever hitting a
+HDD.
+
+All requests that can not be served from memory are read from disk with one
+sequential read.
 
 
 
