@@ -35,6 +35,8 @@ FnordMetric Enterprise is a JVM based timeseries database which serves as a back
 UI. It can handle thousands of gauges and years worth of historical data. It does not depend on a
 backend store like redis; it can be run in standalone mode or persist to an external database.
 
-FnordMetric Enterprise includes some advanced features like Hadoop Integration and CSV Export.
+FnordMetric Enterprise features disk persistence, a HTTP, TCP and UDP API, native WebSockets support
+and CSV/JSON Export. FnordMetric Enterprise can be used as a drop-in replacement for StatsD+Graphite
+(it is a lot faster, see Benchmarks).
 
 <i style="color:#999;">FnordMetric Enterprise is currently in private beta</i>
