@@ -140,6 +140,12 @@ These are the valid html attributes:
     </td>
   </tr>
   <tr>
+    <th>data-y-max</th>
+    <td>
+    highest value on the y axis (default is none)
+    </td>
+  </tr>
+  <tr>
     <th>data-chart-style</th>
     <td>
     render style (either line, area or flow), default is "line"
