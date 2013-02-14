@@ -36,9 +36,9 @@ sitemap:
     -
       title: "Examples"
       url: "/classic_examples"
-    #-
-    #  title: "Hacking"
-    #  url: "/classic_hacking"
+    -
+      title: "Hacking"
+      url: "/classic_hacking"
 
 
   #fnordmetric_enterprise:
