@@ -38,6 +38,12 @@ class FnordMetric::Namespace
       event[:_session_key] = announce_to_session(event).session_key 
     end
 
+    if event[:_type].to_sym == :_enterprise
+      ctx = FnordMetric::Context.new(opts, FnordMetric::Enterprise::CompatibilityHandler)
+      ctx.call(event, @redis, self)
+      return self
+    end
+
     if FnordMetric::ZeroConfigGauge::TYPES.include?(event[:_type].to_sym)
       ctx = FnordMetric::Context.new(opts, FnordMetric::ZeroConfigGauge::Handler)
       ctx.call(event, @redis, self)

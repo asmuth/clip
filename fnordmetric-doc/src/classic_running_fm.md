@@ -133,5 +133,12 @@ The valid configuration options are:
       30 days.
     </td>
   </tr>
+  <tr>
+    <th>http_websocket_only</th>
+    <td>
+      if set to true, the http server (thin) will accept websocket connections, but
+      will not start the web interface
+    </td>
+  </tr>
 </table>
 <br />

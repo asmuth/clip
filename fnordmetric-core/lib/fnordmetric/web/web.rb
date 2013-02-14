@@ -16,7 +16,12 @@ class FnordMetric::Web
     middleware_stack = @opts[:use] || []
 
     websocket = FnordMetric::WebSocket.new
-    webapp    = FnordMetric::App.new(@opts)
+
+    webapp = if FnordMetric.options[:http_websocket_only]
+      lambda { |env| [204, {}, [""]] }
+    else
+      FnordMetric::App.new(@opts)
+    end
 
     dispatch  = Rack::Builder.app do
       use Rack::CommonLogger
@@ -33,6 +38,7 @@ class FnordMetric::Web
 
         run webapp
       end
+
     end
 
     unless ["thin", "hatetepe"].include? server
