@@ -13,7 +13,7 @@ class FnordMetric::WebSocket < Rack::WebSocket::Application
   end
 
   def on_open(env)
-    # socket openened :)
+    @reactor.ready!
   end
 
   def on_message(env, message)
