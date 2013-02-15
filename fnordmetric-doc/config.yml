@@ -46,9 +46,6 @@ sitemap:
       title: "Introduction"
       url: "/enterprise_index"
     -
-      title: "Usage"
-      url: "/enterprise_usage"
-    -
       title: "Deployment"
       url: "/enterprise_deployment"
     -
@@ -57,6 +54,12 @@ sitemap:
     -
       title: "TCP/UDP API"
       url: "/enterprise_tcp_udp_api"
+    -
+      title: "Configuration"
+      url: "/enterprise_usage"
+    -
+      title: "Clients"
+      url: "/enterprise_usage"
     -
       title: "Examples"
       url: "/enterprise_examples"

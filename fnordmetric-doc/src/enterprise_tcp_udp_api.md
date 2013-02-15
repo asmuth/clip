@@ -3,9 +3,24 @@ TCP, UDP, WebSockets API
 
 protocol is line based, neither request nor response are allowed to
 contain \n characters, but both request and response have to end with
-a newline (\n) character. you can put multiple lines in one udp packet.
-the protocol does not support multiplexing/pipelining.
+a newline (\n) character.
 
+#### TCP / WebSockets:
+
+there is no handshake, you can just open the connection and start sending
+commands. the protocol does not support multiplexing/pipelining: after every
+newline-terminated command you send you have to read one line from the socket.
+
+websocket connections also speak the tcp protocol after the connection upgrade
+
+the generic error response is
+
+    ERROR something went wrong\n
+
+
+#### UDP:
+
+you can put multiple lines in one udp packet.
 example udp packet that increments four counters:
 
     SAMPLE my_counter1.sum-3600 123\n
@@ -13,7 +28,6 @@ example udp packet that increments four counters:
     SAMPLE my_counter3.sum-3600 789\n
 
 
-Available Commands:
 
 ### Command: SAMPLE
 
