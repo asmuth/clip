@@ -40,7 +40,7 @@ module FnordMetric::GaugeModifiers
   end
 
   def incr_avg(gauge, value)
-    @redis.incr(gauge.tick_key(time, :"value-count")).callback do
+    @redis.hincrby(gauge.key(:"mean-counts"), gauge.tick_at(time), 1).callback do
       incr_tick(gauge, value)
     end
   end

@@ -311,19 +311,19 @@ describe FnordMetric::GaugeModifiers do
     it "should increment_unique a non-progressive gauge" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_917-10"    
       @redis.hset(gauge_key, "695280200", "54")
-      @redis.set(gauge_key+"-695280200-value-count", 5)
+      @redis.hset(gauge_key + "-mean-counts", "695280200", "5")
       create_gauge_context({
-        :key => "mygauge_917", 
+        :key => "mygauge_917",
         :average => true,
         :tick => 10
       }, proc{ 
-        incr(:mygauge_917, 30)  
-      }).tap do |context|      
+        incr(:mygauge_917, 30)
+      }).tap do |context|
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "84"
-      @redis.get(gauge_key+"-695280200-value-count").should == "6"
+      @redis.hget(gauge_key + "-mean-counts", "695280200").should == "6"
     end
 
   end
