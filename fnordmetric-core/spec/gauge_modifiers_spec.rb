@@ -120,6 +120,51 @@ describe FnordMetric::GaugeModifiers do
 
   end
 
+
+  describe "increment enterprise backwards compatibility gauges" do
+
+    it "should create and increment enterprise comaptibility gauges: delta" do
+      @namespace.announce(
+        :_type => "_enterprise", :_time => 1360584960, :_eid  => 1234,
+        :_cmd   => "SAMPLE sales-per-second-delta-20 42")
+
+      @namespace.gauges[:"sales-per-second-delta-20"].should be_a(Gauge)
+
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-delta-20-20"
+      puts gauge_key
+      @redis.hget(gauge_key, "1360584960").should == "42"
+
+      @namespace.announce(
+        :_type => "_enterprise", :_time => 1360584960, :_eid  => 1234,
+        :_cmd   => "SAMPLE sales-per-second-delta-20 11")
+
+
+      @redis.hget(gauge_key, "1360584960").should == "53"
+      @namespace.gauges[:"sales-per-second-delta-20"].value_at(1360584961).should == "53"
+    end
+
+    it "should create and increment enterprise comaptibility gauges: mean" do
+      @namespace.announce(
+        :_type => "_enterprise", :_time => 1360584960, :_eid  => 1234,
+        :_cmd   => "SAMPLE sales-per-second-mean-10 5")
+
+      @namespace.gauges[:"sales-per-second-mean-10"].should be_a(Gauge)
+
+      gauge_key = "fnordmetric-myns_213-gauge-sales-per-second-mean-10-10"
+      @redis.hget(gauge_key, "1360584960").should == "5"
+
+      @namespace.announce(
+        :_type => "_enterprise", :_time => 1360584960, :_eid  => 1234,
+        :_cmd   => "SAMPLE sales-per-second-mean-10 10")
+
+
+      @redis.hget(gauge_key, "1360584960").should == "15"
+      @namespace.gauges[:"sales-per-second-mean-10"].value_at(1360584961).should == 7.5
+    end
+
+
+  end
+
   describe "increment non-progressive gauges" do
 
     it "should increment a non-progressive gauge by 1" do
@@ -266,19 +311,19 @@ describe FnordMetric::GaugeModifiers do
     it "should increment_unique a non-progressive gauge" do  
       gauge_key = "fnordmetrics-myns-gauge-mygauge_917-10"    
       @redis.hset(gauge_key, "695280200", "54")
-      @redis.set(gauge_key+"-695280200-value-count", 5)
+      @redis.hset(gauge_key + "-mean-counts", "695280200", "5")
       create_gauge_context({
-        :key => "mygauge_917", 
+        :key => "mygauge_917",
         :average => true,
         :tick => 10
       }, proc{ 
-        incr(:mygauge_917, 30)  
-      }).tap do |context|      
+        incr(:mygauge_917, 30)
+      }).tap do |context|
         event = { :_time => @now, :_session_key => "mysesskey" }
         context.call(event, @redis_wrap, @namespace)
       end
       @redis.hget(gauge_key, "695280200").should == "84"
-      @redis.get(gauge_key+"-695280200-value-count").should == "6"
+      @redis.hget(gauge_key + "-mean-counts", "695280200").should == "6"
     end
 
   end

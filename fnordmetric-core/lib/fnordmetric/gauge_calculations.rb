@@ -21,17 +21,18 @@ module FnordMetric::GaugeCalculations
     ticks << tick_at(range.last) if ticks.size == 0
     values_at(ticks)
   end
-  
+
   def value_at(time, opts={}, &block)
     _t = tick_at(time)
 
     _v = if respond_to?(:_value_at)
       _value_at(key, _t)
     else
+      _c = sync_redis.hget(key(:"mean-counts"), _t)
       sync_redis.hget(key, _t)
     end
 
-    calculate_value(_v, _t, opts, block)
+    calculate_value(_v, _t, opts, block, _c)
   end
 
   def values_at(times, opts={}, &block)
@@ -40,20 +41,22 @@ module FnordMetric::GaugeCalculations
       if respond_to?(:_values_at)
         _values_at(times, opts={}, &block)
       else
+        ret_counts = sync_redis.hmget(key(:"mean-counts"), *times)
         sync_redis.hmget(key, *times)
       end.each_with_index do |_v, _n|
         _t = times[_n]
-        ret[_t] = calculate_value(_v, _t, opts, block)
+        _c = ret_counts ? ret_counts[_n] : nil
+        ret[_t] = calculate_value(_v, _t, opts, block, _c)
       end
     end
   end
 
-  def calculate_value(_v, _t, opts, block)
-    block = @@avg_per_count_proc if average?
-    #block = @@count_per_session_proc if unique?
+  def calculate_value(_v, _t, opts, block, _c = nil)
     block = @@avg_per_session_proc if unique? && average?
 
-    calc = if block
+    calc = if average? && _c
+      (_v.to_f / (_c||1).to_i)
+    elsif block
       instance_exec(_v, _t, &block)
     else
       _v

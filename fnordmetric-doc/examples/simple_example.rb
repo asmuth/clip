@@ -12,10 +12,4 @@ FnordMetric.namespace :myapp do
 
 end
 
-FnordMetric.options = {
-  :inbound_stream => ["0.0.0.0",2323],
-  :inbound_protocol => :tcp
-}
-
 FnordMetric.standalone
-

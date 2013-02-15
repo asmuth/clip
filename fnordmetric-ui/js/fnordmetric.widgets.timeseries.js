@@ -47,6 +47,13 @@ FnordMetric.widgets.timeseries = function(elem){
       stroke: true
     };
 
+
+    if (elem.attr('data-y-max')) {
+      gconfig.max = parseFloat(elem.attr('data-y-max'));
+    } else {
+      delete gconfig.max;
+    }
+
     if (elem.attr('data-cardinal') == "on") {
       gconfig.interpolation = 'cardinal';
     } else {

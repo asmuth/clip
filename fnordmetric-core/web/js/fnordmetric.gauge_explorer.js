@@ -20,6 +20,7 @@ FnordMetric.views.gaugeExplorer = (function(){
 
   function load(_elem){
     elem = _elem;
+    gauge_list = {};
 
     elem.html('<div class="navbar"></div><div class="ge_controlpanel">' +
        '<label>Select a Gauge</label><select class="ge_gauge_picker">' + 
@@ -123,7 +124,6 @@ FnordMetric.views.gaugeExplorer = (function(){
 
     if (evt.type == "gauge_list_response"){
       $('.ge_gauge_picker', elem).html();
-      gauge_list = {};
       var changed = false;
 
       $(evt.gauges).each(function(n, gauge){

@@ -2,7 +2,13 @@ class FnordMetric::Reactor
 
   def initialize
     @redis = FnordMetric.mk_redis
-    @namespaces = FnordMetric.namespaces
+    @namespaces = FnordMetric.namespaces.dup
+  end
+
+  def ready!
+    @namespaces.each do |key, ns|
+      ns.ready!(@redis)
+    end
   end
 
   def execute(*args)
