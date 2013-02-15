@@ -1,17 +1,28 @@
-package com.fnordmetric.enterprise.FnordMetric
+// FnordMetric Enterprise
+//   (c) 2011-2013 Paul Asmuth <paul@paulasmuth.com>
+//
+// Licensed under the MIT License (the "License"); you may not use this
+// file except in compliance with the License. You may obtain a copy of
+// the License at: http://opensource.org/licenses/MIT
+
+package com.fnordmetric.enterprise
 
 import java.util.Locale
 import java.util.Date
 import java.text.DateFormat
 import java.io.File
-import scala.collection.mutable.HashMap;
+import scala.collection.mutable.HashMap
 
-object SQLTap{
+object FnordMetric {
 
   val VERSION = "v0.0.1"
 
   val CONFIG  = HashMap[Symbol,String]()
-  var DEFAULTS = HashMap[Symbol, String]()
+
+  var DEFAULTS = HashMap[Symbol, String](
+    'http_threads      -> "4",
+    'websocket_threads -> "4"
+  )
 
   var debug = false
   var verbose = false
@@ -26,6 +37,12 @@ object SQLTap{
 
       else if(args(n) == "--http-threads")
         { CONFIG += (('http_threads, args(n+1))); n += 2 }
+
+      else if(args(n) == "--websocket")
+        { CONFIG += (('websocket_port, args(n+1))); n += 2 }
+
+      else if(args(n) == "--websocket-threads")
+        { CONFIG += (('websocket_threads, args(n+1))); n += 2 }
 
       else if((args(n) == "-d") || (args(n) == "--debug"))
         { debug = true; n += 1 }
@@ -50,7 +67,15 @@ object SQLTap{
   }
 
   def boot = try {
-    SQLTap.log("Booting...")
+    FnordMetric.log("Booting...")
+
+    val websocket_threads = CONFIG('websocket_threads).toInt
+    val websocket_port = CONFIG.getOrElse('websocket_port, "0")
+      .asInstanceOf[String].toInt
+
+    val websocket = if (websocket_port > 0)
+      new HTTPServer(websocket_port, websocket_threads, new WebSocketHandler)
+
   } catch {
     case e: Exception => exception(e, true)
   }
@@ -64,12 +89,15 @@ object SQLTap{
   def usage(show_banner: Boolean = true) = {
     if (show_banner) banner()
 
-    println("usage: fnordmetric-server [options]                                        ")
-    println("  --http            <port>    start http server on this port               ")
-    println("  --http-threads    <num>     number of http worker-threads (default: 4)   ")
-    println("  -h, --help                  you're reading it...                         ")
-    println("  -d, --debug                 debug mode                                   ")
-    println("  -v, --verbose               verbose mode                                 ")
+    println("usage: fnordmetric-server [options]                                            ")
+    println("  --http               <port>   start http server on this port                 ")
+    println("  --http-threads       <num>    number of http worker-threads (default: 4)     ")
+    println("  --websocket          <port>   start websocket server on this port            ")
+    println("  --websocket-threads  <num>    number of websocket worker-threads (default: 4)")
+    println("  --admin              <port>   start http admin web interface on this port    ")
+    println("  -h, --help                    you're reading it...                           ")
+    println("  -d, --debug                   debug mode                                     ")
+    println("  -v, --verbose                 verbose mode                                   ")
   }
 
 
