@@ -8,7 +8,7 @@ module FnordMetric::Enterprise
       next
     end
 
-    if m = cmd.match(/^SAMPLE (.*)(delta|mean)-([0-9]+) ([0-9]+)$/)
+    if m = cmd.match(/^SAMPLE (.*)(delta|mean|sum)-([0-9]+) ([0-9]+)$/)
       gauge_type = m[2].to_sym
       gauge_tick = m[3].to_i
       gauge_key = :"#{m[1]}#{gauge_type}-#{gauge_tick}"
@@ -29,7 +29,7 @@ module FnordMetric::Enterprise
 
     case gauge_type
 
-      when :delta
+      when :delta, :sum
         incr gauge, op_value
 
       when :mean
