@@ -5,7 +5,7 @@ sitemap:
 
   fnordmetric_ui:
     -
-      title: "Introduction"
+      title: "Getting Started"
       url: "/ui_index"
     -
       title: "API Reference"
@@ -41,12 +41,24 @@ sitemap:
     #  url: "/classic_hacking"
 
 
-  #fnordmetric_enterprise:
-  #  -
-  #    title: "Getting Started"
-  #    url: "/ui_index"
-  #  -
-  #    title: "HTTP API"
-  #    url: "/ui_index"
+  fnordmetric_enterprise:
+    -
+      title: "Introduction"
+      url: "/enterprise_index"
+    -
+      title: "Usage"
+      url: "/enterprise_usage"
+    -
+      title: "Deployment"
+      url: "/enterprise_deployment"
+    -
+      title: "HTTP API"
+      url: "/enterprise_http_api"
+    -
+      title: "TCP/UDP API"
+      url: "/enterprise_tcp_udp_api"
+    -
+      title: "Examples"
+      url: "/enterprise_examples"
 
 
