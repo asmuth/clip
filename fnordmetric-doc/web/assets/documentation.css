@@ -315,3 +315,7 @@ pre.dark code {
 .code_snippets a.link:hover {
   text-decoration: underline;
 }
+
+#documentation pre + h3 {
+  margin-top:55px;
+}

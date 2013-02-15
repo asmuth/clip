@@ -13,51 +13,60 @@ example udp packet that increments four counters:
     SAMPLE my_counter3.sum-3600 789\n
 
 
-### Available commands:
+Available Commands:
 
-blah
-
-
-#### SAMPLE
+### Command: SAMPLE
 
 samples/adds a value to a metric
 
-format: SAMPLE [metric] [value]
-response: "OK"
+*Format:*
 
-example:
+    SAMPLE [metric] [value]
+
+*Response:*
+
+    "OK"
+
+*Example:*
 
     >> SAMPLE my_application.response_time.avg-30 23
     << OK
 
 
-
-#### VALUE_AT
+### Command: VALUE_AT
 
 retrieves the value of a metric at one point in time
 
-format: VALUE_AT [metric] [at]
-response: Float
+*Format:*
 
-example:
+    VALUE_AT [metric] [at]
+
+*Response:*
+
+    Float
+
+*Example:*
 
      >> VALUE_AT my_application.response_time.avg-30 -20min
      << 17.42
 
 
+### Command: VALUES_IN
 
-#### VALUES_IN
+Retrieves all values of a metric in a time interval
 
-retrieves all values of a metric in a time interval
+*Format:*
 
-format: VALUE_AT [metric] [from] [until]
-response: Comma-seperated Timestamp:Float tuples
+    VALUE_AT [metric] [from] [until]
 
-example:
+*Response:*
+
+    Comma-seperated Timestamp:Float tuples
+
+*Example:*
 
      >> VALUE_AT my_application.response_time.avg-30 -5min now
      << 1360804571:4233.52,1360804581:4312.36,1360804591:6323.12,
-
 
 
 
