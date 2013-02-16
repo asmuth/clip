@@ -49,3 +49,4 @@ http://github.com/paulasmuth/fnordmetric/graphs/contributors
 + James Cox (http://github.com/imajes)
 + Pieter Noordhuis (http://github.com/pietern)
 + Tadas Ščerbinskas (http://github.com/tadassce)
++ Sebastian Korfmann (http://github.com/skorfmann)

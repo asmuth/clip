@@ -121,6 +121,7 @@ http://github.com/paulasmuth/fnordmetric/graphs/contributors
 + James Cox (http://github.com/imajes)
 + Pieter Noordhuis (http://github.com/pietern)
 + Tadas Ščerbinskas (http://github.com/tadassce)
++ Sebastian Korfmann (http://github.com/skorfmann)
 
 To contribute, please fork this repository, make your changes and run the 
 specs, commit them to your github repository and send me a pull request.
