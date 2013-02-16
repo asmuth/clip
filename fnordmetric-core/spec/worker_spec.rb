@@ -20,11 +20,19 @@ describe FnordMetric::Worker do
     worker.stats_key.should == "fnordmetric-stats"
   end
 
-  it "should add a namespace"  
-  it "should add a namespace and pass options"  
-  it "should add a namespace and the key"  
+  context "configurable options" do
+    let(:worker) { FnordMetric::Worker.new(:redis_prefix => "fnordmetric-special") }
+
+    it "should include redis prefix" do
+      worker.pubsub_key.should == "fnordmetric-special-announce"
+    end
+  end
+
+  it "should add a namespace"
+  it "should add a namespace and pass options"
+  it "should add a namespace and the key"
   it "should add a namespace and instance_eval the block"
-      
+
   it "should find a namespace by key"
   it "should find the namespace default namespace without key"
 
