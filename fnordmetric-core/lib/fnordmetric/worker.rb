@@ -1,8 +1,8 @@
 class FnordMetric::Worker
 
-  def initialize
+  def initialize(opts = {})
     @namespaces = FnordMetric.namespaces
-    @opts = FnordMetric.options
+    @opts = FnordMetric.options(opts)
 
     FnordMetric.register(self)
   end
