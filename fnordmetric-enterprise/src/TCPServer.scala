@@ -1,10 +1,11 @@
-package com.fnordmetric.enterprise
 // FnordMetric Enterprise
 //   (c) 2011-2013 Paul Asmuth <paul@paulasmuth.com>
 //
 // Licensed under the MIT License (the "License"); you may not use this
 // file except in compliance with the License. You may obtain a copy of
 // the License at: http://opensource.org/licenses/MIT
+
+package com.fnordmetric.enterprise
 
 import java.net.InetSocketAddress
 import java.util.concurrent._
@@ -38,6 +39,7 @@ class TCPServer(port: Int, threads: Int) {
 
       pipeline.addLast("decoder", new StringDecoder)
       pipeline.addLast("eccoder", new StringEncoder)
+      pipeline.addLast("handler", new TCPHandler)
 
       pipeline
     }
