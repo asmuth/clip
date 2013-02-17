@@ -1,3 +1,4 @@
+
 // FnordMetric Enterprise
 //   (c) 2011-2013 Paul Asmuth <paul@paulasmuth.com>
 //
@@ -7,8 +8,8 @@
 
 package com.fnordmetric.enterprise
 
-trait AbstractInstruction {
+class SampleInstruction(key: String, mode: String, flush_interval: String, value: String) extends AbstractInstruction {
 
-  def execute : String
+  def execute : String = "OK"
 
 }

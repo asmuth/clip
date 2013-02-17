@@ -9,7 +9,16 @@ package com.fnordmetric.enterprise
 
 object InstructionFactory {
 
-  def parse(str: String) : AbstractInstruction =
-    new AbstractInstruction
+  val X_SAMPLE = """^SAMPLE (.*)(delta|mean|sum)-([0-9]+) ([0-9]+\.?[0-9]+)$""".r
+
+  def parse(str: String) : AbstractInstruction = str match {
+
+    case X_SAMPLE(key, mode, flush_interval, value) =>
+      new SampleInstruction(key, mode, flush_interval, value)
+
+    case _ =>
+      new ErrorInstruction("invalid command")
+
+  }
 
 }

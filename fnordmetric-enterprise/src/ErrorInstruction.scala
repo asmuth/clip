@@ -7,8 +7,8 @@
 
 package com.fnordmetric.enterprise
 
-trait AbstractInstruction {
+class ErrorInstruction(err: String) extends AbstractInstruction {
 
-  def execute : String
+  def execute : String = "ERROR " + err
 
 }
