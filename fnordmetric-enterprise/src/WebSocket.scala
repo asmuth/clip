@@ -11,14 +11,19 @@ import org.eclipse.jetty.websocket.WebSocket.Connection
 
 class WebSocket extends org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
 
-  def onOpen(conn: Connection) =
+  var endpoint : Connection = null
+
+  def onOpen(conn: Connection) = {
+    endpoint = conn
     FnordMetric.log_debug("[WebSocket] connection opened")
+  }
 
   def onClose(code: Int, message: String) =
     FnordMetric.log_debug("[WebSocket] connection closed")
 
   def onMessage(message: String) {
-    println("received: " + message);
+    val ins = InstructionFactory.parse(message)
+    endpoint.sendMessage(ins.execute);
   }
 
 
