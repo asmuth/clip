@@ -48,4 +48,4 @@ Requests that can not be served from memory require one sequential disk read.
 + much much more scalable
 + highly customizable with css
 + requires only a single deployment
-
++ i18n (proper timezones in graphs due to in browser rendering etc)

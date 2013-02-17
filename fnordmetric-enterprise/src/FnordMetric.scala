@@ -21,7 +21,9 @@ object FnordMetric {
 
   var DEFAULTS = HashMap[Symbol, String](
     'http_threads      -> "4",
-    'websocket_threads -> "4"
+    'websocket_threads -> "4",
+    'tcp_threads       -> "4",
+    'udp_threads       -> "4"
   )
 
   var debug = false
@@ -43,6 +45,18 @@ object FnordMetric {
 
       else if(args(n) == "--websocket-threads")
         { CONFIG += (('websocket_threads, args(n+1))); n += 2 }
+
+      else if(args(n) == "--tcp")
+        { CONFIG += (('tcp_port, args(n+1))); n += 2 }
+
+      else if(args(n) == "--tcp-threads")
+        { CONFIG += (('tcp_threads, args(n+1))); n += 2 }
+
+      else if(args(n) == "--udp")
+        { CONFIG += (('udp_port, args(n+1))); n += 2 }
+
+      else if(args(n) == "--udp-threads")
+        { CONFIG += (('udp_threads, args(n+1))); n += 2 }
 
       else if((args(n) == "-d") || (args(n) == "--debug"))
         { debug = true; n += 1 }
@@ -69,12 +83,16 @@ object FnordMetric {
   def boot = try {
     FnordMetric.log("Booting...")
 
-    val websocket_threads = CONFIG('websocket_threads).toInt
-    val websocket_port = CONFIG.getOrElse('websocket_port, "0")
-      .asInstanceOf[String].toInt
+    val ws_server = if (CONFIG contains 'websocket_port)
+      new HTTPServer(
+        CONFIG('websocket_port).toInt,
+        CONFIG('websocket_threads).toInt,
+        new WebSocketHandler)
 
-    val websocket = if (websocket_port > 0)
-      new HTTPServer(websocket_port, websocket_threads, new WebSocketHandler)
+    val tcp_server = if (CONFIG contains 'tcp_port)
+      new TCPServer(
+        CONFIG('tcp_port).toInt,
+        CONFIG('tcp_threads).toInt)
 
   } catch {
     case e: Exception => exception(e, true)
