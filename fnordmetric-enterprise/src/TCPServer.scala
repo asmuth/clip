@@ -29,6 +29,8 @@ class TCPServer(port: Int, threads: Int) {
   bootstrap.setPipelineFactory(new TCPServerPipelineFactory)
   bootstrap.bind(new InetSocketAddress(port))
 
+  FnordMetric.log("Listening on tcp://0.0.0.0:" + port)
+
   class TCPServerPipelineFactory extends ChannelPipelineFactory {
 
     override def getPipeline : ChannelPipeline = {
