@@ -7,12 +7,9 @@
 
 package com.fnordmetric.enterprise
 
-class SampleInstruction(key: String, mode: String, flush_interval: String, value: String) extends AbstractInstruction {
+object BucketFactory {
 
-  def execute : String = {
-    val bucket_key = BucketKey(key, mode, flush_interval)
-    val bucket = BucketFactory.find_or_create_bucket(bucket_key)
-    "OK"
-  }
+  def find_or_create_bucket(key: BucketKey) =
+    null
 
 }
