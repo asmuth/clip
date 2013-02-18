@@ -34,7 +34,15 @@ object BucketFactory {
     val flush_timeout = java.lang.Double.parseDouble(key.flush_timeout).
       longValue * 1000
 
-    new SumBucket(flush_timeout)
+    key.mode match {
+
+      case "sum" =>
+        return new SumBucket(flush_timeout)
+
+      case "mean" =>
+        return new MeanBucket(flush_timeout)
+
+    }
   }
 
 }

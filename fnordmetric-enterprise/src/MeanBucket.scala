@@ -1,4 +1,4 @@
-// FnordMetric Enterprise
+
 //   (c) 2011-2013 Paul Asmuth <paul@paulasmuth.com>
 //
 // Licensed under the MIT License (the "License"); you may not use this
@@ -7,16 +7,24 @@
 
 package com.fnordmetric.enterprise
 
-class SumBucket(_flush_timeout: Long) extends AbstractBucket {
+class MeanBucket(_flush_timeout: Long) extends AbstractBucket {
   val flush_timeout = _flush_timeout
-  var tmp : Double = 0
+  var tmp_sum : Double = 0
+  var tmp_cnt : Int = 0
 
   def sample(value: Double) : Unit = {
-    tmp += value; println("val: " + tmp) }
+    tmp_sum += value
+    tmp_cnt += 1
+  }
 
   def flush : Double = {
-    val res = tmp
-    tmp = 0.toDouble
+    val res = if (tmp_cnt == 0)
+      0
+    else
+      tmp_sum / tmp_cnt
+
+    tmp_sum = 0.toDouble
+    tmp_cnt = 0
 
     println("flush: " + res)
     res
