@@ -7,8 +7,8 @@
 
 package com.fnordmetric.enterprise
 
-class MeanBucket(_flush_timeout: Long) extends AbstractBucket {
-  val flush_timeout = _flush_timeout
+class MeanBucket(_key: BucketKey) extends AbstractBucket {
+  val key = _key
   var tmp_sum : Double = 0
   var tmp_cnt : Int = 0
 

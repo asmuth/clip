@@ -7,19 +7,9 @@
 
 package com.fnordmetric.enterprise
 
-class SumBucket(_key: BucketKey) extends AbstractBucket {
-  val key = _key
-  var tmp : Double = 0
+object StorageAdapter {
 
-  def sample(value: Double) : Unit = {
-    tmp += value; println("val: " + tmp) }
-
-  def flush : Double = {
-    val res = tmp
-    tmp = 0.toDouble
-
-    println("flush: " + res)
-    res
-  }
+  def store(key: BucketKey, time: Long, value: Double) =
+    println("flush", key, time, value)
 
 }

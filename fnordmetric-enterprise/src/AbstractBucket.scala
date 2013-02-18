@@ -7,11 +7,11 @@
 
 package com.fnordmetric.enterprise
 
-case class BucketKey(key: String, mode: String, flush_timeout: String)
+case class BucketKey(key: String, mode: String, flush_interval: Long)
 
 trait AbstractBucket {
 
-  val flush_timeout : Long
+  val key : BucketKey
   var next_flush : Long = 0
 
   def sample(value: Double) : Unit
@@ -24,7 +24,9 @@ trait AbstractBucket {
       next_flush = now
 
     while (next_flush <= now) {
-      flush; next_flush += flush_timeout
+      StorageAdapter.store(key, next_flush, flush)
+
+      next_flush += key.flush_interval
     }
 
     sample(value)

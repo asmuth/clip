@@ -14,7 +14,9 @@ object InstructionFactory {
   def parse(str: String) : AbstractInstruction = str match {
 
     case X_SAMPLE(key, mode, flush_interval, value) =>
-      new SampleInstruction(key, mode, flush_interval, value)
+      new SampleInstruction(BucketKey(key, mode,
+        java.lang.Double.parseDouble(flush_interval).longValue * 1000),
+        java.lang.Double.parseDouble(value))
 
     case _ =>
       new ErrorInstruction("invalid command")

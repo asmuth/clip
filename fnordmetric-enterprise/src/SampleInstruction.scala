@@ -7,14 +7,10 @@
 
 package com.fnordmetric.enterprise
 
-class SampleInstruction(key: String, mode: String, flush_interval: String, value: String) extends AbstractInstruction {
+class SampleInstruction(key: BucketKey, value: Double) extends AbstractInstruction {
 
   def execute : String = {
-    val bucket = BucketFactory.find_or_create_bucket(
-      BucketKey(key, mode, flush_interval))
-
-    bucket.sample_and_flush(java.lang.Double.parseDouble(value))
-
+    BucketFactory.find_or_create_bucket(key).sample_and_flush(value)
     "OK"
   }
 
