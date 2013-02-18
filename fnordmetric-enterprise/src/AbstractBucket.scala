@@ -25,7 +25,6 @@ trait AbstractBucket {
 
     while (next_flush <= now) {
       StorageAdapter.store(key, next_flush, flush)
-
       next_flush += key.flush_interval
     }
 
