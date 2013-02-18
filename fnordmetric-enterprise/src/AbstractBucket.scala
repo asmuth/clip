@@ -17,7 +17,7 @@ trait AbstractBucket {
   def sample(value: Double) : Unit
   def flush() : Double
 
-  def sample_and_flush(value: Double) = {
+  def sample_and_flush(value: Double) = this.synchronized {
     val now = FnordMetric.now
 
     if (next_flush == 0)
