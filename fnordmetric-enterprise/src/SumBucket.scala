@@ -7,14 +7,14 @@
 
 package com.fnordmetric.enterprise
 
-class SumBucket extends AbstractBucket {
-
+class SumBucket(_flush_timeout: Long) extends AbstractBucket {
+  val flush_timeout = _flush_timeout
   var tmp : Double = 0
 
-  def sample(value: Double) : Unit =
-    tmp += value
+  def sample(value: Double) : Unit = {
+    tmp += value; println("val: " + tmp) }
 
   def flush : Double =
-    { val res = tmp; tmp = 0; res }
+    { val res = tmp; tmp = 0; println("flush: " + res); res }
 
 }

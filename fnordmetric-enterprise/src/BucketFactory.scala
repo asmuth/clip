@@ -31,7 +31,10 @@ object BucketFactory {
   }
 
   def create_bucket(key: BucketKey) : AbstractBucket = {
-    new SumBucket
+    val flush_timeout = java.lang.Double.parseDouble(key.flush_timeout).
+      longValue * 1000
+
+    new SumBucket(flush_timeout)
   }
 
 }

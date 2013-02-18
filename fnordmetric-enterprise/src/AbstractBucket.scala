@@ -11,7 +11,23 @@ case class BucketKey(key: String, mode: String, flush_timeout: String)
 
 trait AbstractBucket {
 
+  val flush_timeout : Long
+  var next_flush : Long = 0
+
   def sample(value: Double) : Unit
   def flush() : Double
+
+  def sample_and_flush(value: Double) = {
+    val now = FnordMetric.now
+
+    if (next_flush == 0)
+      next_flush = now
+
+    while (next_flush <= now) {
+      flush; next_flush += flush_timeout
+    }
+
+    sample(value)
+  }
 
 }

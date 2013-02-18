@@ -119,6 +119,10 @@ object FnordMetric {
   }
 
 
+  def now : Long =
+    System.nanoTime / 1000000
+
+
   def log(msg: String) = {
     val now = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, Locale.FRANCE)
     println("[" + now.format(new Date()) + "] " + msg)
