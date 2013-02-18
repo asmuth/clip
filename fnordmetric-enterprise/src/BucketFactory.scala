@@ -7,9 +7,31 @@
 
 package com.fnordmetric.enterprise
 
+import java.util.concurrent.ConcurrentHashMap
+
 object BucketFactory {
 
-  def find_or_create_bucket(key: BucketKey) =
-    null
+  val buckets = new ConcurrentHashMap[BucketKey, AbstractBucket]()
+
+  def find_or_create_bucket(key: BucketKey) : AbstractBucket = {
+    var bucket : AbstractBucket = buckets.get(key)
+
+    if (bucket == null) {
+      buckets.synchronized {
+        bucket = buckets.get(key)
+
+        if (bucket == null) {
+          bucket = create_bucket(key)
+          buckets.put(key, bucket)
+        }
+      }
+    }
+
+    bucket
+  }
+
+  def create_bucket(key: BucketKey) : AbstractBucket = {
+    new SumBucket
+  }
 
 }

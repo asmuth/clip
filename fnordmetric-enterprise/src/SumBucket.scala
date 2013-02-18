@@ -7,11 +7,14 @@
 
 package com.fnordmetric.enterprise
 
-case class BucketKey(key: String, mode: String, flush_timeout: String)
+class SumBucket extends AbstractBucket {
 
-trait AbstractBucket {
+  var tmp : Double = 0
 
-  def sample(value: Double) : Unit
-  def flush() : Double
+  def sample(value: Double) : Unit =
+    tmp += value
+
+  def flush : Double =
+    { val res = tmp; tmp = 0; res }
 
 }
