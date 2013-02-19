@@ -7,35 +7,42 @@
 
 package com.fnordmetric.enterprise
 
-class RingBuffer[T: Manifest] {
-
-  private var capacity : Int = 20
-  var start    : Int = 0
-  var end      : Int = 0
-
-  var backend = new Array[T](capacity)
+class RingBuffer[T: Manifest](capacity: Int) {
+  private val backend  = new Array[T](capacity)
+  private var size     : Int = 0
+  private var position : Int = 0
 
   // appends a new item to the ringbuffer, if the ring buffer is full,
   // the oldest item is pushed out
   def push(item: T) : Unit = {
     backend.synchronized {
-      var nxt = (end + 1) % capacity
+      position = (position + 1) % capacity
 
-      end = nxt
+      if (size < capacity)
+        size += 1
 
-      if (end == start)
-        start += 1
+      backend(position) = item
     }
-
-    backend(end) = item
   }
 
-  // retrieves items from the list buffer by walking the list buffer in
-  // reverse chronological order (from most recent to oldest item) and
-  // applying a lambda function to each item. all items until the first
-  // item for which the lambda function returns false are returned.
-  def retrieve(exit: (T => Boolean)) : List[T] =
-    null
+  // retrieves the last max items from the list buffer by walking the list
+  // buffer in reverse chronological order (from most recent to oldest)
+  def retrieve(max: Int = 0) : List[T] = {
+    val cap = scala.math.min(size,
+      if (max == 0) capacity else max)
 
+    val lst = new Array[T](cap)
+
+    backend.synchronized {
+      (0 until cap).foreach {
+        n => lst(n) = backend(index_at(n))
+      }
+    }
+
+    lst.toList
+  }
+
+  private def index_at(ind: Int) : Int =
+    (((position - ind) % capacity) + capacity) % capacity
 
 }
