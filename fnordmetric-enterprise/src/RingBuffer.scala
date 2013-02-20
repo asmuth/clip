@@ -8,41 +8,54 @@
 package com.fnordmetric.enterprise
 
 class RingBuffer[T: Manifest](capacity: Int) {
-  private val backend  = new Array[T](capacity)
-  private var size     : Int = 0
-  private var position : Int = 0
+  private val backend = new Array[T](capacity)
 
-  // appends a new item to the ringbuffer, if the ring buffer is full,
-  // the oldest item is pushed out
+  private var end   : Int = -1
+  private var start : Int = 0
+
+  // the numer of elements that this ring buffer currently contains
+  var size  : Int = 0
+
+  // appends a new item. is_full must be called before appending to check if
+  // the ringbuffer is already full
   def push(item: T) : Unit = {
-    backend.synchronized {
-      position = (position + 1) % capacity
+    if (size == capacity)
+      throw new Exception("ring buffer is full")
 
-      if (size < capacity)
-        size += 1
+    size += 1
 
-      backend(position) = item
-    }
+    end = (end + 1) % capacity
+    backend(end) = item
   }
 
-  // retrieves the last max items from the list buffer by walking the list
-  // buffer in reverse chronological order (from most recent to oldest)
-  def retrieve(max: Int = 0) : List[T] = {
-    val cap = scala.math.min(size,
-      if (max == 0) capacity else max)
+  // retrieves the first max items from the ring buffer by walking the ring
+  // buffer in chronological order (from oldest to most recent)
+  def head(max: Int) : List[T] = {
+    val lst = new Array[T](scala.math.min(size, max))
 
-    val lst = new Array[T](cap)
-
-    backend.synchronized {
-      (0 until cap).foreach {
-        n => lst(n) = backend(index_at(n))
-      }
-    }
+    for (ind <- (0 until lst.size))
+      lst(ind) = backend((start + ind) % capacity)
 
     lst.toList
   }
 
-  private def index_at(ind: Int) : Int =
-    (((position - ind) % capacity) + capacity) % capacity
+  // retrieves the last max items from the ring buffer by walking the ring
+  // buffer in reverse chronological order (from most recent to oldest)
+  def tail(max: Int) : List[T] = {
+    val lst = new Array[T](scala.math.min(size, max))
+
+    for (ind <- (0 until lst.size))
+      lst(ind) = backend((
+        ((end - ind) % capacity) + capacity) % capacity)
+
+    lst.toList
+  }
+
+  // Removes the first num items from the start of the ring buffer (oldest
+  // items get removed first)
+  def seek(num: Int) = {
+    start = (start + num) % capacity
+    size -= num
+  }
 
 }
