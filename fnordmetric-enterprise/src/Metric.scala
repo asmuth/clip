@@ -7,11 +7,14 @@
 
 package com.fnordmetric.enterprise
 
-class SampleInstruction(key: MetricKey, value: Double) extends AbstractInstruction {
+case class MetricKey(key: String, mode: String, flush_interval: Long)
 
-  def execute : String = {
-    MetricFactory.get_metric(key).sample(value)
-    "OK"
+class Metric {
+
+  def sample(value: Double) = this.synchronized {
+  /*flush...
+    sample(value)*/
+    println("........", value)
   }
 
 }

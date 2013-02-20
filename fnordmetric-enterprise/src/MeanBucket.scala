@@ -7,8 +7,7 @@
 
 package com.fnordmetric.enterprise
 
-class MeanBucket(_key: BucketKey) extends AbstractBucket {
-  val key = _key
+class MeanBucket extends AbstractBucket {
   var tmp_sum : Double = 0
   var tmp_cnt : Int = 0
 

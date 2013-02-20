@@ -7,8 +7,7 @@
 
 package com.fnordmetric.enterprise
 
-class SumBucket(_key: BucketKey) extends AbstractBucket {
-  val key = _key
+class SumBucket extends AbstractBucket {
   var tmp : Double = 0
 
   def sample(value: Double) : Unit = {

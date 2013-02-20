@@ -7,28 +7,23 @@
 
 package com.fnordmetric.enterprise
 
-case class BucketKey(key: String, mode: String, flush_interval: Long)
-
 trait AbstractBucket {
 
-  val key : BucketKey
   var next_flush : Long = 0
 
   def sample(value: Double) : Unit
   def flush() : Double
 
-  def sample_and_flush(value: Double) = this.synchronized {
+  def flush_every(interval: Long, proc: (Long, Double) => Unit) = {
     val now = FnordMetric.now
 
     if (next_flush == 0)
       next_flush = now
 
     while (next_flush <= now) {
-      StorageAdapter.store(key, next_flush, flush)
-      next_flush += key.flush_interval
+      proc(next_flush, flush)
+      next_flush += interval
     }
-
-    sample(value)
   }
 
 }

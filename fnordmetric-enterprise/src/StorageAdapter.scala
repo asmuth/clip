@@ -9,7 +9,7 @@ package com.fnordmetric.enterprise
 
 object StorageAdapter {
 
-  def store(key: BucketKey, time: Long, value: Double) =
-    println("flush", key, time, value)
+  //def store(key: BucketKey, time: Long, value: Double) =
+  //  println("flush", key, time, value)
 
 }
