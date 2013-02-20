@@ -9,12 +9,20 @@ package com.fnordmetric.enterprise
 
 case class MetricKey(key: String, mode: String, flush_interval: Long)
 
-class Metric {
+class Metric(key: MetricKey) {
+  val bucket = BucketFactory.new_bucket(key.mode)
+  var rbuf = new RingBuffer[Double](10)
 
   def sample(value: Double) = this.synchronized {
-  /*flush...
-    sample(value)*/
-    println("........", value)
+    bucket.flush_every(key.flush_interval, (
+      (time, value) => flush(time, value) ))
+
+    bucket.sample(value)
+  }
+
+  def flush(time: Long, value: Double) = this.synchronized {
+    rbuf.push(value)
+    println("RINGBUF", rbuf.tail(10))
   }
 
 }

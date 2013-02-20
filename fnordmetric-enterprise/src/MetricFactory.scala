@@ -22,17 +22,13 @@ object MetricFactory {
         metric = metric_map.getOrElse(key, null)
 
         if (metric == null) {
-          metric = new_metric(key)
+          metric = new Metric(key)
           metric_map += ((key, metric))
         }
       }
     }
 
     metric
-  }
-
-  def new_metric(key: MetricKey) : Metric = {
-    new Metric
   }
 
 }
