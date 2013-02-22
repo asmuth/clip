@@ -38,14 +38,14 @@ class Metric(key: MetricKey) {
     }
 
     rbuf.push(((time, value)))
-    println("RINGBUF", rbuf.tail(10))
+    //println("RINGBUF", rbuf.tail(10))
   }
 
   // tries to persist as much data from the in memory ring buffer to disk
   // as possible but doesnt remove it from the buffer yet
   def flush_rbuf = this.synchronized {
     val flush_range = rbuf.size - rbuf_seek_pos
-    println("RBUF_FLUSH", rbuf.tail(flush_range))
+    //println("RBUF_FLUSH", rbuf.tail(flush_range))
     rbuf_seek_pos += flush_range
   }
 

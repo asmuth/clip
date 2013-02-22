@@ -10,14 +10,12 @@ package com.fnordmetric.enterprise
 class SumBucket extends AbstractBucket {
   var tmp : Double = 0
 
-  def sample(value: Double) : Unit = {
-    tmp += value; println("val: " + tmp) }
+  def sample(value: Double) : Unit =
+    tmp += value
 
   def flush : Double = {
     val res = tmp
     tmp = 0.toDouble
-
-    println("flush: " + res)
     res
   }
 

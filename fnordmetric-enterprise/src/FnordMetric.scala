@@ -34,38 +34,41 @@ object FnordMetric {
 
     while (n < args.length) {
 
-      if(args(n) == "--http")
+      if (args(n) == "--http")
         { CONFIG += (('http_port, args(n+1))); n += 2 }
 
-      else if(args(n) == "--http-threads")
+      else if (args(n) == "--http-threads")
         { CONFIG += (('http_threads, args(n+1))); n += 2 }
 
-      else if(args(n) == "--websocket")
+      else if (args(n) == "--websocket")
         { CONFIG += (('websocket_port, args(n+1))); n += 2 }
 
-      else if(args(n) == "--websocket-threads")
+      else if (args(n) == "--websocket-threads")
         { CONFIG += (('websocket_threads, args(n+1))); n += 2 }
 
-      else if(args(n) == "--tcp")
+      else if (args(n) == "--tcp")
         { CONFIG += (('tcp_port, args(n+1))); n += 2 }
 
-      else if(args(n) == "--tcp-threads")
+      else if (args(n) == "--tcp-threads")
         { CONFIG += (('tcp_threads, args(n+1))); n += 2 }
 
-      else if(args(n) == "--udp")
+      else if (args(n) == "--udp")
         { CONFIG += (('udp_port, args(n+1))); n += 2 }
 
-      else if(args(n) == "--udp-threads")
+      else if (args(n) == "--udp-threads")
         { CONFIG += (('udp_threads, args(n+1))); n += 2 }
 
-      else if((args(n) == "-d") || (args(n) == "--debug"))
+      else if ((args(n) == "-d") || (args(n) == "--debug"))
         { debug = true; n += 1 }
 
-      else if((args(n) == "-v") || (args(n) == "--verbose"))
+      else if ((args(n) == "-v") || (args(n) == "--verbose"))
         { verbose = true; n += 1 }
 
-      else if((args(n) == "-h") || (args(n) == "--help"))
+      else if ((args(n) == "-h") || (args(n) == "--help"))
         return usage(true)
+
+      else if (args(n) == "--benchmark")
+        return Benchmark.run
 
       else {
         println("error: invalid option: " + args(n) + "\n")
