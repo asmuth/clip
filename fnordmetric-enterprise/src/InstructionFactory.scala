@@ -9,7 +9,7 @@ package com.fnordmetric.enterprise
 
 object InstructionFactory {
 
-  val X_SAMPLE = """^SAMPLE (.*)(delta|mean|sum)-([0-9]+) ([0-9]+\.?[0-9]+)$""".r
+  val X_SAMPLE = """^SAMPLE (.*)(mean|sum)-([0-9]+) ([0-9]+\.?[0-9]*)$""".r
 
   def parse(str: String) : AbstractInstruction = str match {
 
