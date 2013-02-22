@@ -13,7 +13,7 @@ object Benchmark {
     print_title("Metric#sample")
     for (n <- List(200000, 1000000, 5000000))
       for (t <- List(1, 4, 16))
-      bm_metric(n, t)
+        bm_metric(n, t)
 
   }
 
