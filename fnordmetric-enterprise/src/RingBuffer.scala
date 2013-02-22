@@ -58,4 +58,8 @@ class RingBuffer[T: Manifest](capacity: Int) {
     size -= num
   }
 
+  // Returns the remaning number of free slots in the ringbuffer
+  def remaining : Int =
+    capacity - size
+
 }
