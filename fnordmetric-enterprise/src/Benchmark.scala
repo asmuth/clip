@@ -12,33 +12,48 @@ object Benchmark {
   def run : Unit = {
     print_title("Metric#sample")
     for (n <- List(200000, 1000000, 5000000))
-      for (t <- List(1, 2, 4, 8, 16, 32, 64))
+      for (t <- List(1, 4, 16))
       bm_metric(n, t)
 
   }
 
-  private def bm_metric(samples: Int, threads: Int) : Unit = {
-    val preheat = 10
-    val tests = 100
-
-    val tdiff = (0.toLong /: (1 to tests + preheat)) ((s, n) => {
-      val metric = new Metric(
-        MetricKey("fnord", "sum", 1.toLong))
-
-      val t0 = FnordMetric.now
-
-      for (n <- (1 to samples))
-        metric.sample(23)
-
-      if (n < preheat)
-        0
-      else
-        s + (FnordMetric.now - t0)
-    })
-
+  private def bm_metric(samples: Int, threads: Int) : Unit =
     print_res(samples + " values, " + threads + " thread(s)",
-      tdiff / tests)
+      mean_with_preheat(50, 10, (() => {
+
+        val metric = new Metric(
+          MetricKey("fnord", "sum", 1.toLong))
+
+        measure(() => {
+          in_parallel(threads, (() => {
+
+            for (n <- (1 to (samples / threads)))
+              metric.sample(23)
+
+          }))
+        })
+      })))
+
+
+  private def measure(proc: => Function0[Unit]) : Long = {
+    val tstart = FnordMetric.now
+    proc()
+    FnordMetric.now - tstart
   }
+
+  private def mean_with_preheat(tests: Int, preheat: Int, proc:  Function0[Long]) : Long =
+    ((0.toLong /: (1 to tests + preheat)) ((s, n) => {
+      val v = proc()
+      if (n < preheat) 0 else s + v
+    }) / (tests + preheat))
+
+
+  private def in_parallel(threads: Int, proc: Function0[Unit]) : Unit =
+    ((1 to threads) map (n => {
+      val t = new Thread { override def run = { proc() }}
+      t.start; t
+    })) map { t => t.join }
+
 
   // HACK !!! ;)
   private def print_res(title: String, tdiff: Long) =
