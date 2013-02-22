@@ -11,7 +11,7 @@ case class MetricKey(key: String, mode: String, flush_interval: Long)
 
 class Metric(key: MetricKey) {
   val bucket = BucketFactory.new_bucket(key.mode)
-  var rbuf = new RingBuffer[Double](10)
+  var rbuf = new RingBuffer[(Long, Double)](10)
   var rbuf_seek_pos = 0
 
   // adds a value to this metric
@@ -37,7 +37,7 @@ class Metric(key: MetricKey) {
       rbuf_seek_pos -= 1
     }
 
-    rbuf.push(value)
+    rbuf.push(((time, value)))
     println("RINGBUF", rbuf.tail(10))
   }
 
