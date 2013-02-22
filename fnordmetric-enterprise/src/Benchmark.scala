@@ -11,30 +11,40 @@ object Benchmark {
 
   def run : Unit = {
     print_title("Metric#sample")
-    for (n <- List(1000, 10000, 1000000))
+    for (n <- List(200000, 1000000, 5000000))
       for (t <- List(1, 2, 4, 8, 16, 32, 64))
       bm_metric(n, t)
 
   }
 
   private def bm_metric(samples: Int, threads: Int) : Unit = {
-    val metric = new Metric(
-      MetricKey("fnord", "sum", 1.toLong))
+    val preheat = 10
+    val tests = 100
 
-    val t0 = FnordMetric.now
+    val tdiff = (0.toLong /: (1 to tests + preheat)) ((s, n) => {
+      val metric = new Metric(
+        MetricKey("fnord", "sum", 1.toLong))
 
-    for (n <- (1 to samples))
-      metric.sample(23)
+      val t0 = FnordMetric.now
 
-    val t1 = FnordMetric.now
-    print_res(samples + " values, " + threads + " thread(s)", t0, t1)
+      for (n <- (1 to samples))
+        metric.sample(23)
+
+      if (n < preheat)
+        0
+      else
+        s + (FnordMetric.now - t0)
+    })
+
+    print_res(samples + " values, " + threads + " thread(s)",
+      tdiff / tests)
   }
 
   // HACK !!! ;)
-  private def print_res(title: String, t0: Long, t1: Long) =
+  private def print_res(title: String, tdiff: Long) =
     println("  * " + title +
       (("" /: (1 to (30 - title.length)))((m,c) => m + " ")) + " => " +
-      (t1-t0) + "ms")
+      tdiff + "ms")
 
   // HACK !!! ;)
   private def print_title(title: String) =
