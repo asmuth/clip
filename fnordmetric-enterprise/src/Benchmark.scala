@@ -10,6 +10,13 @@ package com.fnordmetric.enterprise
 object Benchmark {
 
   def run : Unit = {
+
+    print_title("MetricFactory#get_metric")
+    for (n <- List(10000, 50000, 100000))
+      for (t <- List(1, 16, 64))
+        bm_metric_factory(n, t)
+
+
     print_title("Metric#sample")
     for (n <- List(200000, 1000000, 5000000))
       for (t <- List(1, 4, 16))
@@ -32,6 +39,20 @@ object Benchmark {
 
           }))
         })
+      })))
+
+
+  private def bm_metric_factory(metrics: Int, threads: Int) : Unit =
+    print_res(metrics + " metrics, " + threads + " thread(s)",
+      mean_with_preheat(50, 10, (() => {
+        measure(() => {
+          in_parallel(threads, (() => {
+            for (x <- (0 to 100))
+              MetricFactory.get_metric(MetricKey(
+                "benchmark-metric" + (scala.math.random * metrics).toInt,
+                "sum", 1.toLong))
+          }))
+        }) / 100
       })))
 
 
@@ -63,7 +84,7 @@ object Benchmark {
 
   // HACK !!! ;)
   private def print_title(title: String) =
-    println(title + "\n" +
+    println("\n\n" + title + "\n" +
       (("" /: (1 to (title.length)))((m,c) => m + "=")) + "\n")
 
 }
