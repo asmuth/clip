@@ -11,6 +11,9 @@ import java.util.Locale
 import java.util.Date
 import java.text.DateFormat
 import java.io.File
+import java.io.RandomAccessFile
+import java.nio.channels.FileChannel
+import java.nio.channels.FileLock
 import scala.collection.mutable.HashMap
 
 object FnordMetric {
@@ -23,11 +26,14 @@ object FnordMetric {
     'http_threads      -> "4",
     'websocket_threads -> "4",
     'tcp_threads       -> "4",
-    'udp_threads       -> "4"
+    'udp_threads       -> "4",
+    'swap_prefix -> "/tmp/fnordmetric"
   )
 
   var debug = false
   var verbose = false
+
+  var flock : FileLock = null
 
   def main(args: Array[String]) : Unit = {
     var n = 0
@@ -86,6 +92,13 @@ object FnordMetric {
   def boot = try {
     FnordMetric.log("Booting...")
 
+    flock = new RandomAccessFile(
+      new File(FnordMetric.CONFIG('swap_prefix), "server.lck"),
+        "rw").getChannel.tryLock
+
+    if (flock == null)
+      error("cannot aquire server.lck", true)
+
     val tcp_server = if (CONFIG contains 'tcp_port)
       new TCPServer(
         CONFIG('tcp_port).toInt,
@@ -136,7 +149,7 @@ object FnordMetric {
     log("[ERROR] " + msg)
 
     if (fatal)
-      System.exit(1)
+      exit(1)
   }
 
 
@@ -152,7 +165,15 @@ object FnordMetric {
       log_debug(line.toString)
 
     if (fatal)
-      System.exit(1)
+      exit(1)
+  }
+
+
+  def exit(code: Int) = {
+    if (flock != null)
+      flock.release
+
+    System.exit(code)
   }
 
 }
