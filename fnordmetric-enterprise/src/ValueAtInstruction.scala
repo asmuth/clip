@@ -10,8 +10,13 @@ package com.fnordmetric.enterprise
 class ValueAtInstruction(key: MetricKey, time: Long) extends AbstractInstruction {
 
   def execute : String = {
-    MetricFactory.get_metric(key)
-    "OKFNORD"
+    val metric = MetricFactory.get_metric(key)
+    val value = metric.value_at(time * 1000).getOrElse(null)
+
+    if (value == null)
+      "null"
+    else
+      value.toString
   }
 
 }

@@ -85,7 +85,7 @@ class Metric(key: MetricKey) {
     var rbuf_pos = 0
 
     // search our rbuf snapshot backwards
-    while (rbuf_pos > 0 && rbuf_pos < rbuf_snap.size) {
+    while (rbuf_pos >= 0 && rbuf_pos < rbuf_snap.size) {
       val cur = rbuf_snap(rbuf_pos)
 
       // since the snapshot is not atomic, we need to check if we hit
@@ -105,7 +105,7 @@ class Metric(key: MetricKey) {
         rbuf_pos = -1
 
       // continues only if we didn't hit the buffer wrap
-      if (rbuf_pos > 0) {
+      if (rbuf_pos >= 0) {
 
         // check if we found the start of the range yet
         if (cur._1 <= time0 && ((cur._1 >= time1) || time1 == 0)) {
@@ -122,6 +122,9 @@ class Metric(key: MetricKey) {
 
         }
       }
+
+      if (rbuf_pos >= 0)
+        rbuf_pos += 1
     }
 
     // exit if we have already seen the whole time range and don't need to

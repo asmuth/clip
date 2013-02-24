@@ -10,8 +10,10 @@ package com.fnordmetric.enterprise
 class ValuesInInstruction(key: MetricKey, time0: Long, time1: Long) extends AbstractInstruction {
 
   def execute : String = {
-    MetricFactory.get_metric(key)
-    "OKIDOKI"
+    val metric = MetricFactory.get_metric(key)
+    val values = metric.values_in(time1 * 1000, time0 * 1000)
+
+    values.toString
   }
 
 }
