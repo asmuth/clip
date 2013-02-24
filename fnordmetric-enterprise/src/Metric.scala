@@ -16,11 +16,10 @@ class Metric(key: MetricKey) {
   var rbuf_seek_pos = 0
 
   // adds a value to this metric
-  def sample(value: Double) = {
-    this.synchronized {
-      bucket.flush_every(key.flush_interval, (
-        (time, value) => flush_bucket(time, value) ))
-    }
+  def sample(value: Double) = this.synchronized {
+
+    bucket.flush_every(key.flush_interval, (
+      (time, value) => flush_bucket(time, value) ))
 
     bucket.sample(value)
   }
