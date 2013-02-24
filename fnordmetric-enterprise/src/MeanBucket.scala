@@ -25,7 +25,6 @@ class MeanBucket extends AbstractBucket {
     tmp_sum = 0.toDouble
     tmp_cnt = 0
 
-    println("flush: " + res)
     res
   }
 

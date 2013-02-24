@@ -97,12 +97,12 @@ class Metric(key: MetricKey) {
 
       // if we are already beyond time1 we can exit
       if (time1 != 0 && (cur._1 < time1))
-        rbuf_pos = -1
+        return lst.toList
 
       // if we are only looking for a single value and already beyond time0
       // plus flush_interval and didnt find a value yet, we can exit
       if (time1 == 0 && (cur._1 < (time0 - key.flush_interval)))
-        rbuf_pos = -1
+        return lst.toList
 
       // continues only if we didn't hit the buffer wrap
       if (rbuf_pos >= 0) {
@@ -118,7 +118,7 @@ class Metric(key: MetricKey) {
 
           // if we are looking only for a single value we can exit now
           if (time1 == 0)
-            rbuf_pos = -1
+            return lst.toList
 
         }
       }
@@ -131,6 +131,9 @@ class Metric(key: MetricKey) {
     // search the swapfile anymore
     if (rbuf_last <= time1)
       return lst.toList
+
+    // FIXPAUL: cache swapfile start and end time to avoid fs rountrips if
+    // the swapfile search can't return any results
 
     // FIXPAUL: here be dragons -> search in swapfile
     println("SEARCH_SWPFILE")
