@@ -78,18 +78,23 @@ class Metric(key: MetricKey) {
     val lst = ListBuffer[(Long, Double)]()
     var found_start : Long = 0
 
-    // FIXPAUL: skip!
+    // FIXPAUL: skip n flush_intervals if time0 is older than now, maybe
+    // skip rbuf_search completely
 
+    // FIXPAUL: do this without snapshotting the ringbuffer
     val rbuf_snap = rbuf.tail(rbuf.size)
+
     var rbuf_last : Long = java.lang.Long.MAX_VALUE
     var rbuf_pos = 0
 
-    // search our rbuf snapshot backwards
+    // search the ring buffer backwards without synchronization. the basic
+    // assumption here is, that the system time will only progress forward.
+    // if the system time jumps backwards this will race
     while (rbuf_pos >= 0 && rbuf_pos < rbuf_snap.size) {
       val cur = rbuf_snap(rbuf_pos)
 
-      // since the snapshot is not atomic, we need to check if we hit
-      // rbuf wrap and exit if so
+      // since this is not synchronized, we need to check if we hit the
+      // rbuf wrapping point and exit if so.
       if (cur._1 < rbuf_last)
         rbuf_last = cur._1
       else
