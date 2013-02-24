@@ -88,8 +88,8 @@ class Metric(key: MetricKey) {
     var rbuf_pos = 0
 
     // search the ring buffer backwards without synchronization. the basic
-    // assumption here is, that the system time will only progress forward.
-    // if the system time jumps backwards this will race
+    // assumption here is that the system time will only progress forward.
+    // if the system time should jump backwards this would race
     while (rbuf_pos >= 0 && rbuf_pos < rbuf_snap.size) {
       val cur = rbuf_snap(rbuf_pos)
 
