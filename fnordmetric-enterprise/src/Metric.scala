@@ -101,7 +101,7 @@ class Metric(key: MetricKey) {
 
       // if we are only looking for a single value and already beyond time0
       // plus flush_interval and didnt find a value yet, we can exit
-      if (time1 == 0 && (cur._1 < (time0 + key.flush_interval)))
+      if (time1 == 0 && (cur._1 < (time0 - key.flush_interval)))
         rbuf_pos = -1
 
       // continues only if we didn't hit the buffer wrap
