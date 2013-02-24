@@ -61,7 +61,7 @@ retrieves the value of a metric at one point in time
 
 *Example:*
 
-     >> VALUE_AT my_application.response_time.avg-30 -20min
+     >> VALUE_AT my_application.response_time.avg-30 1382341536
      << 17.42
 
 
@@ -79,7 +79,7 @@ Retrieves all values of a metric in a time interval
 
 *Example:*
 
-     >> VALUE_AT my_application.response_time.avg-30 -5min now
+     >> VALUE_AT my_application.response_time.avg-30 13823534644 13823414323
      << 1360804571:4233.52,1360804581:4312.36,1360804591:6323.12,
 
 
