@@ -11,6 +11,7 @@ case class MetricKey(key: String, mode: String, flush_interval: Long)
 
 class Metric(key: MetricKey) {
   val bucket = BucketFactory.new_bucket(key.mode)
+  val swap = new SwapFile(key)
   var rbuf = new RingBuffer[(Long, Double)](1000)
   var rbuf_seek_pos = 0
 
@@ -40,14 +41,19 @@ class Metric(key: MetricKey) {
     }
 
     rbuf.push(((time, value)))
-    //println("RINGBUF", rbuf.tail(10))
+
+    flush_rbuf // FIXPAUL: remove me
   }
 
   // tries to persist as much data from the in memory ring buffer to disk
   // as possible but doesnt remove it from the buffer yet
   def flush_rbuf = this.synchronized {
     val flush_range = rbuf.size - rbuf_seek_pos
-    //println("RBUF_FLUSH", rbuf.tail(flush_range))
+
+    for (sample <- rbuf.tail(flush_range))
+      swap.put(sample._1, sample._2)
+
+    swap.flush
     rbuf_seek_pos += flush_range
   }
 

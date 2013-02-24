@@ -14,6 +14,8 @@ import java.nio.ByteOrder
 
 class SwapFile(metric_key: MetricKey) {
 
+  var write_pos = 0
+
   val file_name = "metric-" + metric_key.key +
     metric_key.mode + "-" + metric_key.flush_interval
 
@@ -35,8 +37,9 @@ class SwapFile(metric_key: MetricKey) {
   }
 
   def flush : Unit = {
-    file.seek(file.length)
+    file.seek(write_pos)
     file.write(buffer.array)
+    write_pos += 18
     buffer.rewind
   }
 
