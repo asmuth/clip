@@ -25,6 +25,8 @@ class SwapFile(metric_key: MetricKey) {
   val buffer = ByteBuffer.allocate(512)
   buffer.order(ByteOrder.BIG_ENDIAN)
 
+  // adds a new (time, value) tuple to be written to the swap file
+  // but does not write it yet. this method is not thread safe!
   def put(time: Long, value: Double) : Unit = {
     val bvalue = java.lang.Double.doubleToLongBits(value)
 
@@ -36,9 +38,14 @@ class SwapFile(metric_key: MetricKey) {
     buffer.putLong(bvalue)
   }
 
+  // fluhes the queued writes from the buffer to disk. this method
+  // is not thread safe!
   def flush : Unit = {
-    file.seek(write_pos)
-    file.write(buffer.array)
+    file.synchronized {
+      file.seek(write_pos)
+      file.write(buffer.array)
+    }
+
     write_pos += 18
     buffer.rewind
   }

@@ -57,7 +57,7 @@ retrieves the value of a metric at one point in time
 
 *Response:*
 
-    Float
+    Float or "null"
 
 *Example:*
 
@@ -75,7 +75,7 @@ Retrieves all values of a metric in a time interval
 
 *Response:*
 
-    Comma-seperated Timestamp:Float tuples
+    Comma-seperated Timestamp:Float tuples or "null"
 
 *Example:*
 
