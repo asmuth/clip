@@ -138,6 +138,7 @@ class Metric(key: MetricKey) {
       return lst.toList
 
     // start searching the swapfile backwards from the last write position
+    var swap_chunk = ListBuffer[(Long, Double)]()
     var swap_pos = swap.write_pos
 
     // we skip at least as many values as we've already seen in the rbuf. but
@@ -146,18 +147,19 @@ class Metric(key: MetricKey) {
     swap_pos -= (rbuf_seek_pos * swap.BLOCK_SIZE)
 
     while (swap_pos > 0) {
-      println("LOAD_SWAP")
-      var nxt = ListBuffer[(Long, Double)]()
+      swap_chunk.clear
 
       // load the next chunk of samples from the swapfile
-      swap_pos = swap.load_chunk(swap_pos, nxt)
+      swap_pos = swap.load_chunk(swap_pos, swap_chunk)
 
-      for (cur <- nxt)
+      for (cur <- swap_chunk) {
 
         // skip if we already saw this sample in the rbuf search
         if (cur._1 < rbuf_last) {
           println("LOAD_SWAP", cur)
         }
+
+      }
     }
 
     lst.toList

@@ -56,7 +56,7 @@ class SwapFile(metric_key: MetricKey) {
 
   // reads a chunk of of values from the swapfile at position into
   // the specified destionation list buffer
-  def load_chunk(position: Int, dest: ListBuffer[(Long, Double)]) : Int = {
+  def load_chunk(position: Int, dst: ListBuffer[(Long, Double)]) : Int = {
     var read_pos = 0
     println("load_chunk", position)
 
@@ -80,13 +80,20 @@ class SwapFile(metric_key: MetricKey) {
       }
     }
 
-    println(javax.xml.bind.DatatypeConverter.printHexBinary(buffer.array))
+    read_pos = chunk_size - BLOCK_SIZE
 
-    buffer.limit(chunk_size)
+    while (read_pos >= 0) {
+      buffer.position(read_pos)
 
-    while (buffer.remaining > 0) {
-      // FIXPAUL: load the next chunk into lst
-      println(buffer.getShort, buffer.getLong, buffer.getLong)
+      if (buffer.getShort != 0x1717) {
+        FnordMetric.error("file corrupted: " + file_name, false)
+        return position - chunk_size
+      }
+
+      dst += ((buffer.getLong,
+        java.lang.Double.longBitsToDouble(buffer.getLong)))
+
+      read_pos -= BLOCK_SIZE
     }
 
     position - chunk_size
