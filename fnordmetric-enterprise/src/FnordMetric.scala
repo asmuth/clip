@@ -34,7 +34,6 @@ object FnordMetric {
   val number_format = new DecimalFormat("0.#####")
 
   var debug = false
-  var verbose = false
 
   var flock : FileLock = null
 
@@ -69,9 +68,6 @@ object FnordMetric {
 
       else if ((args(n) == "-d") || (args(n) == "--debug"))
         { debug = true; n += 1 }
-
-      else if ((args(n) == "-v") || (args(n) == "--verbose"))
-        { verbose = true; n += 1 }
 
       else if ((args(n) == "-h") || (args(n) == "--help"))
         return usage(true)
@@ -145,7 +141,6 @@ object FnordMetric {
     println("  --admin              <port>   start http admin web interface on this port    ")
     println("  -h, --help                    you're reading it...                           ")
     println("  -d, --debug                   debug mode                                     ")
-    println("  -v, --verbose                 verbose mode                                   ")
   }
 
 

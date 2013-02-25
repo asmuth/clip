@@ -58,8 +58,8 @@ class SwapFile(metric_key: MetricKey) {
     buffer.rewind
   }
 
-  // reads a chunk of of values from the swapfile at position into
-  // the specified destionation list buffer
+  // reads a chunk of of values from the swapfile at position into the
+  // specified destionation list buffer. this method is thread safe
   def load_chunk(position: Int, dst: ListBuffer[(Long, Double)]) : Int = {
     var read_pos = 0
 
