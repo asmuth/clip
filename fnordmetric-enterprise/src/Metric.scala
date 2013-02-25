@@ -19,18 +19,19 @@ class Metric(key: MetricKey) {
 
   // adds a value to the metric's bucket and tries to flush the bucket
   def sample(value: Double) = this.synchronized {
-
-    // call flush_bucket with the returned aggregated value for every
-    // flush_interval since the last call to flush_every
-    bucket.flush_every(key.flush_interval, (
-      (time, value) => flush_bucket(time, value) ))
-
     bucket.sample(value)
+    flush_bucket
   }
 
   // adds an aggregated value to the in memory ring buffer after it has
   // been flushed from the bucket
-  private def flush_bucket(time: Long, value: Double) = {
+  def flush_bucket : Unit = {
+    val nxt = bucket.flush_every(key.flush_interval)
+
+    // flush_every returns null if the current flush interval is not over
+    // yet (makes this method idempotent)
+    if (nxt == null)
+      return
 
     // if the ring buffer is already full we need to clear up a slot
     if (rbuf.remaining == 0) {
@@ -53,7 +54,7 @@ class Metric(key: MetricKey) {
 
     // now at least one slot in the ring buffer is free so we can just
     // push our sample
-    rbuf.push(((time, value)))
+    rbuf.push(nxt)
 
     flush_rbuf // FIXPAUL: remove me
   }
