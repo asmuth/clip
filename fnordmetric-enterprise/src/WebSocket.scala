@@ -21,10 +21,11 @@ class WebSocket extends org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
   def onClose(code: Int, message: String) =
     FnordMetric.log_debug("[WebSocket] connection closed")
 
-  def onMessage(message: String) {
+  def onMessage(message: String) = try {
     val ins = InstructionFactory.parse(message)
     endpoint.sendMessage(ins.execute);
+  } catch {
+    case e: Exception => FnordMetric.exception(e, false)
   }
-
 
 }

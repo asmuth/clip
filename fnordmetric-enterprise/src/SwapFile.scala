@@ -11,10 +11,14 @@ import java.io.RandomAccessFile
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import scala.collection.mutable.ListBuffer
 
 class SwapFile(metric_key: MetricKey) {
-
   var write_pos = 0
+
+  // each sample is 18 bytes big (2 bytes header, 8 bytes time and
+  // 8 bytes value as double precision ieee 754 float)
+  val BLOCK_SIZE = 18
 
   val file_name = "metric-" + metric_key.key +
     metric_key.mode + "-" + metric_key.flush_interval
@@ -30,7 +34,7 @@ class SwapFile(metric_key: MetricKey) {
   def put(time: Long, value: Double) : Unit = {
     val bvalue = java.lang.Double.doubleToLongBits(value)
 
-    if (buffer.remaining < 18)
+    if (buffer.remaining < BLOCK_SIZE)
       flush
 
     buffer.putShort(0x1717)
@@ -46,8 +50,45 @@ class SwapFile(metric_key: MetricKey) {
       file.write(buffer.array)
     }
 
-    write_pos += 18
+    write_pos += BLOCK_SIZE
     buffer.rewind
+  }
+
+  // reads a chunk of of values from the swapfile at position into
+  // the specified destionation list buffer
+  def load_chunk(position: Int, dest: ListBuffer[(Long, Double)]) : Int = {
+    var read_pos = 0
+    println("load_chunk", position)
+
+    // we read the data back in 540 byte blocks (30 samples per block)
+    var chunk_size = BLOCK_SIZE * 30
+    val chunk = ByteBuffer.allocate(chunk_size)
+
+    if (position < chunk_size)
+      chunk_size = position
+
+    // read the next chunk into memory
+    while (read_pos < chunk_size - 1) {
+
+      // we need to seek before every read as calls to load_chunk don't
+      // have to be synchronized with writes
+      file.synchronized {
+        file.seek(position - chunk_size)
+
+        read_pos += file.read(buffer.array, read_pos,
+          chunk_size - read_pos - 1)
+      }
+    }
+
+    while (read_pos >= BLOCK_SIZE) {
+      read_pos -= BLOCK_SIZE
+      buffer.position(read_pos)
+
+      // FIXPAUL: load the next chunk into lst
+      println(buffer.getShort)
+    }
+
+    position - chunk_size
   }
 
 }

@@ -14,7 +14,7 @@ case class MetricKey(key: String, mode: String, flush_interval: Long)
 class Metric(key: MetricKey) {
   val bucket = BucketFactory.new_bucket(key.mode)
   val swap = new SwapFile(key)
-  var rbuf = new RingBuffer[(Long, Double)](1000)
+  var rbuf = new RingBuffer[(Long, Double)](10)
   var rbuf_seek_pos = 0
 
   // adds a value to the metric's bucket and tries to flush the bucket
@@ -137,11 +137,28 @@ class Metric(key: MetricKey) {
     if (rbuf_last <= time1)
       return lst.toList
 
-    // FIXPAUL: cache swapfile start and end time to avoid fs rountrips if
-    // the swapfile search can't return any results
+    // start searching the swapfile backwards from the last write position
+    var swap_pos = swap.write_pos
 
-    // FIXPAUL: here be dragons -> search in swapfile
-    println("SEARCH_SWPFILE")
+    // we skip at least as many values as we've already seen in the rbuf. but
+    // since this is not synchronized we might still load a few samples that
+    // we have already seen
+    swap_pos -= (rbuf_seek_pos * swap.BLOCK_SIZE)
+
+    while (swap_pos > 0) {
+      println("LOAD_SWAP")
+      var nxt = ListBuffer[(Long, Double)]()
+
+      // load the next chunk of samples from the swapfile
+      swap_pos = swap.load_chunk(swap_pos, nxt)
+
+      for (cur <- nxt)
+
+        // skip if we already saw this sample in the rbuf search
+        if (cur._1 < rbuf_last) {
+          println("LOAD_SWAP", cur)
+        }
+    }
 
     lst.toList
   }
