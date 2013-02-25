@@ -16,13 +16,17 @@ trait AbstractBucket {
 
   def flush_every(interval: Long, proc: (Long, Double) => Unit) = {
     val now = FnordMetric.now
+    var triggered = (next_flush == 0)
 
-    if (next_flush == 0)
+    if (triggered)
       next_flush = now
 
     while (next_flush <= now) {
-      proc(next_flush, flush)
+      if (!triggered)
+        proc(next_flush, flush)
+
       next_flush += interval
+      triggered = true
     }
   }
 
