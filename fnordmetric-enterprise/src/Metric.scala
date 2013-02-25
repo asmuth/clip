@@ -76,7 +76,6 @@ class Metric(key: MetricKey) {
   // note that time0 > time1! this method is threadsafe
   def values_in(time0: Long, time1: Long) : List[(Long, Double)] = {
     val lst = ListBuffer[(Long, Double)]()
-    var found_start : Long = 0
 
     // FIXPAUL: skip n flush_intervals if time0 is older than now, maybe
     // skip rbuf_search completely
@@ -118,9 +117,6 @@ class Metric(key: MetricKey) {
           // collect all matching items
           lst += cur
 
-          if (found_start == 0)
-            found_start = cur._1
-
           // if we are looking only for a single value we can exit now
           if (time1 == 0)
             return lst.toList
@@ -147,7 +143,6 @@ class Metric(key: MetricKey) {
     swap_pos -= (rbuf_seek_pos * swap.BLOCK_SIZE)
 
     while (swap_pos > 0) {
-      swap_chunk.clear
 
       // load the next chunk of samples from the swapfile
       swap_pos = swap.load_chunk(swap_pos, swap_chunk)
@@ -157,9 +152,31 @@ class Metric(key: MetricKey) {
         // skip if we already saw this sample in the rbuf search
         if (cur._1 < rbuf_last) {
           println("LOAD_SWAP", cur)
-        }
 
+          // if we are already beyond time1 we can exit
+          if (time1 != 0 && (cur._1 < time1))
+            return lst.toList
+
+          // if we are only looking for a single value and already beyond time0
+          // plus flush_interval and didnt find a value yet, we can exit
+          if (time1 == 0 && (cur._1 < (time0 - key.flush_interval)))
+            return lst.toList
+
+          // check if we found the start of the range yet
+          if (cur._1 <= time0 && ((cur._1 >= time1) || time1 == 0)) {
+
+            // collect all matching items
+            lst += cur
+
+            // if we are looking only for a single value we can exit now
+            if (time1 == 0)
+              return lst.toList
+
+          }
+        }
       }
+
+      swap_chunk.clear
     }
 
     lst.toList
