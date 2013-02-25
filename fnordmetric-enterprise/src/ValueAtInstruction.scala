@@ -16,7 +16,7 @@ class ValueAtInstruction(key: MetricKey, time: Long) extends AbstractInstruction
     if (value == null)
       "null"
     else
-      value.toString
+      FnordMetric.number_format.format(value)
   }
 
 }

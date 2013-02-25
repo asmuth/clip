@@ -29,7 +29,6 @@ class SwapFile(metric_key: MetricKey) {
     FnordMetric.CONFIG('swap_prefix), file_name), "rwd")
 
   var write_pos = file.length.toInt
-  println(write_pos)
 
   // adds a new (time, value) tuple to be written to the swap file
   // but does not write it yet. this method is not thread safe!

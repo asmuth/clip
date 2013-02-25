@@ -14,6 +14,7 @@ import java.io.File
 import java.io.RandomAccessFile
 import java.nio.channels.FileChannel
 import java.nio.channels.FileLock
+import java.text.DecimalFormat
 import scala.collection.mutable.HashMap
 
 object FnordMetric {
@@ -29,6 +30,8 @@ object FnordMetric {
     'udp_threads       -> "4",
     'swap_prefix -> "/tmp/fnordmetric"
   )
+
+  val number_format = new DecimalFormat("0.#####")
 
   var debug = false
   var verbose = false

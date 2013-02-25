@@ -12,8 +12,20 @@ class ValuesInInstruction(key: MetricKey, time0: Long, time1: Long) extends Abst
   def execute : String = {
     val metric = MetricFactory.get_metric(key)
     val values = metric.values_in(time1 * 1000, time0 * 1000)
+    val resp = new StringBuffer
 
-    values.toString
+    for (ind <- (0 until values.size)) {
+      resp.append(values(ind)._1)
+      resp.append(":")
+
+      resp.append(FnordMetric.number_format.format((
+        values(ind)._2)))
+
+      if (ind < values.size - 1)
+        resp.append(" ")
+    }
+
+    resp.toString
   }
 
 }
