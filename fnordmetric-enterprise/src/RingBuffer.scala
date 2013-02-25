@@ -16,8 +16,8 @@ class RingBuffer[T: Manifest](capacity: Int) {
   // the numer of elements that this ring buffer currently contains
   var size  : Int = 0
 
-  // appends a new item. is_full must be called before appending to check if
-  // the ringbuffer is already full
+  // appends a new item. the remaining number of free slots must be checked
+  // before appending
   def push(item: T) : Unit = {
     if (size == capacity)
       throw new Exception("ring buffer is full")
@@ -51,14 +51,14 @@ class RingBuffer[T: Manifest](capacity: Int) {
     lst.toList
   }
 
-  // Removes the first num items from the start of the ring buffer (oldest
+  // removes the first num items from the start of the ring buffer (oldest
   // items get removed first)
   def seek(num: Int) = {
     start = (start + num) % capacity
     size -= num
   }
 
-  // Returns the remaning number of free slots in the ringbuffer
+  // returns the remaning number of free slots in the ringbuffer
   def remaining : Int =
     capacity - size
 
