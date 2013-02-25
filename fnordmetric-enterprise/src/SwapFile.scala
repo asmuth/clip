@@ -80,12 +80,13 @@ class SwapFile(metric_key: MetricKey) {
       }
     }
 
-    while (read_pos >= BLOCK_SIZE) {
-      read_pos -= BLOCK_SIZE
-      buffer.position(read_pos)
+    println(javax.xml.bind.DatatypeConverter.printHexBinary(buffer.array))
 
+    buffer.limit(chunk_size)
+
+    while (buffer.remaining > 0) {
       // FIXPAUL: load the next chunk into lst
-      println(buffer.getShort)
+      println(buffer.getShort, buffer.getLong, buffer.getLong)
     }
 
     position - chunk_size
