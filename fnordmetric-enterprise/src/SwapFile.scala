@@ -14,6 +14,7 @@ import java.nio.ByteOrder
 import scala.collection.mutable.ListBuffer
 
 class SwapFile(metric_key: MetricKey) {
+  var last_flush : Long = 0
 
   val buffer = ByteBuffer.allocate(512)
   buffer.order(ByteOrder.BIG_ENDIAN)
@@ -46,6 +47,8 @@ class SwapFile(metric_key: MetricKey) {
   // fluhes the queued writes from the buffer to disk. this method
   // is not thread safe!
   def flush : Unit = {
+    last_flush = FnordMetric.now
+
     file.synchronized {
       file.seek(write_pos)
       file.write(buffer.array, 0, buffer.position)
