@@ -102,8 +102,8 @@ object FnordMetric {
     if (flock == null)
       error("cannot aquire server.lck", true)
 
-    val bg_thread = new BackgroundThread
-    bg_thread.start
+    val sched = new Scheduler
+    sched.start
 
     if (CONFIG contains 'http)
       error("FIXPAUL: not yet implemented: http-server", true)

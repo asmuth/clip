@@ -7,16 +7,16 @@
 
 package com.fnordmetric.enterprise
 
-class BackgroundThread extends Thread {
+class Scheduler extends Thread {
 
   val TICK = 10
 
-  // this runs in the background and tries to invoke some flushes in
-  // the background. it is not neccessary for the liveliness of the
-  // application that each iteration of the loop finishes in a fixed
-  // time interval. even if this thread dies completely all data will
-  // be correctly recorded, but the last sample on each metric won't
-  // be flushed until new data arrives
+  // this runs in the background and tries to invoke some flushes. it
+  // is not neccessary for the liveliness of the application that each
+  // iteration of the loop finishes in a fixed time interval. even if
+  // this thread dies completely all data will be correctly recorded,
+  // only the last sample on each metric won't be flushed until new data
+  // arrives
   override def run : Unit =
     while (true) next
 
