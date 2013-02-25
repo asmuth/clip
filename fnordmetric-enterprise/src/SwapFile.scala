@@ -14,7 +14,9 @@ import java.nio.ByteOrder
 import scala.collection.mutable.ListBuffer
 
 class SwapFile(metric_key: MetricKey) {
-  var write_pos = 0
+
+  val buffer = ByteBuffer.allocate(512)
+  buffer.order(ByteOrder.BIG_ENDIAN)
 
   // each sample is 18 bytes big (2 bytes header, 8 bytes time and
   // 8 bytes value as double precision ieee 754 float)
@@ -26,8 +28,8 @@ class SwapFile(metric_key: MetricKey) {
   val file = new RandomAccessFile(new File(
     FnordMetric.CONFIG('swap_prefix), file_name), "rwd")
 
-  val buffer = ByteBuffer.allocate(512)
-  buffer.order(ByteOrder.BIG_ENDIAN)
+  var write_pos = file.length.toInt
+  println(write_pos)
 
   // adds a new (time, value) tuple to be written to the swap file
   // but does not write it yet. this method is not thread safe!
@@ -47,7 +49,7 @@ class SwapFile(metric_key: MetricKey) {
   def flush : Unit = {
     file.synchronized {
       file.seek(write_pos)
-      file.write(buffer.array)
+      file.write(buffer.array, 0, buffer.position)
     }
 
     write_pos += BLOCK_SIZE
