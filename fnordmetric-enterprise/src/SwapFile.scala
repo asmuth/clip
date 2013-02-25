@@ -75,7 +75,7 @@ class SwapFile(metric_key: MetricKey) {
       file.synchronized {
         file.seek(position - chunk_size)
 
-        read_pos += file.read(buffer.array, read_pos,
+        read_pos += file.read(chunk.array, read_pos,
           chunk_size - read_pos - 1)
       }
     }
@@ -83,15 +83,15 @@ class SwapFile(metric_key: MetricKey) {
     read_pos = chunk_size - BLOCK_SIZE
 
     while (read_pos >= 0) {
-      buffer.position(read_pos)
+      chunk.position(read_pos)
 
-      if (buffer.getShort != 0x1717) {
+      if (chunk.getShort != 0x1717) {
         FnordMetric.error("file corrupted: " + file_name, false)
         return position - chunk_size
       }
 
-      dst += ((buffer.getLong,
-        java.lang.Double.longBitsToDouble(buffer.getLong)))
+      dst += ((chunk.getLong,
+        java.lang.Double.longBitsToDouble(chunk.getLong)))
 
       read_pos -= BLOCK_SIZE
     }
