@@ -28,7 +28,7 @@ class Metric(key: MetricKey) {
 
   // adds an aggregated value to the in memory ring buffer after it has
   // been flushed from the bucket
-  def flush_bucket : Unit = {
+  def flush_bucket : Unit = this.synchronized {
     val nxt = bucket.flush_every(key.flush_interval)
 
     // indicate to the background thread that this metric has pending data
@@ -62,6 +62,9 @@ class Metric(key: MetricKey) {
     // now at least one slot in the ring buffer is free so we can just
     // push our sample
     rbuf.push(nxt)
+
+    // mark this metric as "no pending flushes"
+    flush_interest = 0
   }
 
   // tries to persist as much data from the in memory ring buffer to disk
@@ -75,9 +78,6 @@ class Metric(key: MetricKey) {
 
     // mark the range as "read to be overwritten
     rbuf_seek_pos += flush_range
-
-    // mark this metric as "no pending flushes"
-    flush_interest = 0
   }
 
   // returns this metrics value at time0 if a value was recorded at that
