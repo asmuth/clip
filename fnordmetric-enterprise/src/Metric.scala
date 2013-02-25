@@ -45,7 +45,7 @@ class Metric(key: MetricKey) {
       if (rbuf_seek_pos < 1)
         throw new Exception("flush_rbuf failed")
 
-      // Mark the next value in the rbuf as ready to be overwritten. The
+      // mark the next value in the rbuf as ready to be overwritten. The
       // order of these statements is significant!
       rbuf_seek_pos -= 1
       rbuf.seek(1)
@@ -170,7 +170,6 @@ class Metric(key: MetricKey) {
 
         // skip if we already saw this sample in the rbuf search
         if (cur._1 < rbuf_last) {
-          println("LOAD_SWAP", cur)
 
           // if we are already beyond time1 we can exit
           if (time1 != 0 && (cur._1 < time1))

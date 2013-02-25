@@ -4,3 +4,4 @@
 + warm up ring buffers on start
 + accept millisecond timestamps
 + background rbuf_flush thread every N seconds
++ rbuf size in time

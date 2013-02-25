@@ -59,7 +59,6 @@ class SwapFile(metric_key: MetricKey) {
   // the specified destionation list buffer
   def load_chunk(position: Int, dst: ListBuffer[(Long, Double)]) : Int = {
     var read_pos = 0
-    println("load_chunk", position)
 
     // we read the data back in 540 byte blocks (30 samples per block)
     var chunk_size = BLOCK_SIZE * 30

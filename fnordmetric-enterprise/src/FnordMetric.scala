@@ -102,16 +102,25 @@ object FnordMetric {
     if (flock == null)
       error("cannot aquire server.lck", true)
 
-    val tcp_server = if (CONFIG contains 'tcp_port)
-      new TCPServer(
-        CONFIG('tcp_port).toInt,
-        CONFIG('tcp_threads).toInt)
+
+    if (CONFIG contains 'http)
+      error("FIXPAUL: not yet implemented: http-server", true)
 
     val ws_server = if (CONFIG contains 'websocket_port)
       new HTTPServer(
         CONFIG('websocket_port).toInt,
         CONFIG('websocket_threads).toInt,
         new WebSocketHandler)
+
+    val tcp_server = if (CONFIG contains 'tcp_port)
+      new TCPServer(
+        CONFIG('tcp_port).toInt,
+        CONFIG('tcp_threads).toInt)
+
+    val udp_server = if (CONFIG contains 'udp_port)
+      new UDPServer(
+        CONFIG('udp_port).toInt,
+        CONFIG('udp_threads).toInt)
 
   } catch {
     case e: Exception => exception(e, true)
