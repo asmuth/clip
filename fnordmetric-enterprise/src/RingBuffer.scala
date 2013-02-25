@@ -51,6 +51,12 @@ class RingBuffer[T: Manifest](capacity: Int) {
     lst.toList
   }
 
+  // retrieves one item from the ring buffer at offset by walking the ring
+  // buffer starting at position in reverse chronological order (from most
+  // recent to oldest)
+  def at(position: Int, offset: Int) : T =
+    backend((((position - offset) % capacity) + capacity) % capacity)
+
   // removes the first num items from the start of the ring buffer (oldest
   // items get removed first)
   def seek(num: Int) = {
@@ -58,8 +64,12 @@ class RingBuffer[T: Manifest](capacity: Int) {
     size -= num
   }
 
-  // returns the remaning number of free slots in the ringbuffer
+  // returns the remaning number of free slots in the ring buffer
   def remaining : Int =
     capacity - size
+
+  // returns a curser to the current end position of the ring buffer
+  def cursor : Int =
+    end
 
 }

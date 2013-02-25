@@ -99,13 +99,13 @@ class Metric(key: MetricKey) {
     // we may have to load one more value from the swapfile instead from
     // the in memory ring buffer
     val rbuf_snap_len = rbuf.size
-    val rbuf_snap_pos = rbuf.position
+    val rbuf_snap_pos = rbuf.cursor
 
     // search the ring buffer backwards without synchronization. the basic
     // assumption here is that the system time will only progress forward.
     // if the system time should jump backwards this would race
-    while (rbuf_pos >= 0 && rbuf_pos < rbuf_snap.size) {
-      val cur = rbuf_snap(rbuf_pos)
+    while (rbuf_pos >= 0 && rbuf_pos < rbuf_snap_len) {
+      val cur = rbuf.at(rbuf_snap_pos, rbuf_pos)
 
       // since this is not synchronized, we need to check if we hit the
       // rbuf wrapping point and exit if so. this code would race if the
