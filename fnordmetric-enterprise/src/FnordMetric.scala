@@ -19,7 +19,7 @@ import scala.collection.mutable.HashMap
 
 object FnordMetric {
 
-  val VERSION = "v0.0.1"
+  val VERSION = "v0.0.2"
 
   val CONFIG  = HashMap[Symbol,String]()
 
