@@ -1,4 +1,3 @@
-
 // FnordMetric Enterprise
 //   (c) 2011-2013 Paul Asmuth <paul@paulasmuth.com>
 //

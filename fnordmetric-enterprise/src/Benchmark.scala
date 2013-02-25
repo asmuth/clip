@@ -10,11 +10,22 @@ package com.fnordmetric.enterprise
 object Benchmark {
 
   def run : Unit = {
+    FnordMetric.DEFAULTS.foreach(d =>
+      FnordMetric.CONFIG += d)
 
     print_title("MetricFactory#get_metric")
-    for (n <- List(10000, 50000, 100000))
-      for (t <- List(1, 16, 64))
-        bm_metric_factory(n, t)
+    for (t <- List(1, 16, 64))
+      bm_metric_factory(1000, t)
+
+    print_title("Metric#values_in")
+    for (n <- List(10L, 60L, 180L, 3600L, 84600L))
+      for (t <- List(1, 4, 16, 64))
+        bm_metric_values_in(n, t)
+
+    print_title("Metric#value_at")
+    for (n <- List(10L, 60L, 180L, 3600L, 84600L))
+      for (t <- List(1, 4, 16, 64))
+        bm_metric_value_at(n, t)
 
 
     print_title("Metric#sample")
@@ -42,9 +53,45 @@ object Benchmark {
       })))
 
 
+  private def bm_metric_values_in(range: Long, threads: Int) : Unit =
+    print_res(range + " seconds, " + threads + " thread(s)",
+      mean_with_preheat(50, 10, (() => {
+
+        val metric = new Metric(
+          MetricKey("fnord", "sum", 1.toLong))
+
+        measure(() => {
+          in_parallel(threads, (() => {
+
+            for (n <- (1 to 100))
+              metric.values_in(metric.bucket.next_flush, metric.bucket.next_flush - range)
+
+          }))
+        }) / 100
+      })))
+
+
+  private def bm_metric_value_at(ago: Long, threads: Int) : Unit =
+    print_res(ago + " seconds, " + threads + " thread(s)",
+      mean_with_preheat(50, 10, (() => {
+
+        val metric = new Metric(
+          MetricKey("fnord", "sum", 1.toLong))
+
+        measure(() => {
+          in_parallel(threads, (() => {
+
+            for (n <- (1 to 100))
+              metric.value_at(metric.bucket.next_flush - ago)
+
+          }))
+        }) / 100
+      })))
+
+
   private def bm_metric_factory(metrics: Int, threads: Int) : Unit =
     print_res(metrics + " metrics, " + threads + " thread(s)",
-      mean_with_preheat(50, 10, (() => {
+      mean_with_preheat(30, 10, (() => {
         measure(() => {
           in_parallel(threads, (() => {
             for (x <- (0 to 100))
@@ -57,16 +104,16 @@ object Benchmark {
 
 
   private def measure(proc: => Function0[Unit]) : Long = {
-    val tstart = FnordMetric.now
+    val tstart = System.nanoTime
     proc()
-    FnordMetric.now - tstart
+    System.nanoTime - tstart
   }
 
   private def mean_with_preheat(tests: Int, preheat: Int, proc:  Function0[Long]) : Long =
     ((0.toLong /: (1 to tests + preheat)) ((s, n) => {
       val v = proc()
       if (n < preheat) 0 else s + v
-    }) / (tests + preheat))
+    }) / tests)
 
 
   private def in_parallel(threads: Int, proc: Function0[Unit]) : Unit =
@@ -80,7 +127,7 @@ object Benchmark {
   private def print_res(title: String, tdiff: Long) =
     println("  * " + title +
       (("" /: (1 to (30 - title.length)))((m,c) => m + " ")) + " => " +
-      tdiff + "ms")
+      (tdiff/1000000.0) + "ms")
 
   // HACK !!! ;)
   private def print_title(title: String) =

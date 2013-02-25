@@ -23,7 +23,7 @@ class Scheduler extends Thread {
   private def next : Unit = {
     val now = FnordMetric.now
 
-    // search for metrics with a pending flush interest and fush them
+    // search for metrics with a pending flush interest and flush them
     // if the now > flush_interest
     for (metric <- MetricFactory.metric_map)
       if (metric._2.flush_interest > 0 && metric._2.flush_interest <= now)
