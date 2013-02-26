@@ -1,9 +1,8 @@
 FnordMetric
 ===========
 
-FnordMetric is a highly configurable (and pretty fast) realtime app/event 
-tracking thing based on [ruby eventmachine](http://rubyeventmachine.com/) and [redis](http://redis.io/). You define your own 
-plotting and counting functions as ruby blocks! [See it in action! (RailsCasts)](http://railscasts.com/episodes/378-fnordmetric)
+FnordMetric is a framework for collecting and visualizing timeseries data. It enables
+you to build beautiful real-time analytics dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/)
 
@@ -12,91 +11,50 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 [ ![Screenshot](https://github.com/paulasmuth/fnordmetric/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
+### FnordMetric Enterprise
 
-Getting Started
----------------
+FnordMetric Enterprise is a JVM-based timeseries database. It's a key-value store
+(much like redis or memcached) where each key holds a "measurement". There are
+different measurement methods like sum, mean, min/max, 90th percentile, etc. You
+continuously add data to these keys/measurements which is aggregated and periodically
+persisted.
 
-FnordMetric is based on ruby eventmachine and needs to run in a seperate ruby process.
-The preferred way to start it is to create a ruby file (where you put your DSL statements)
-and execute it (more about that in [the documentation](http://fnordmetric.io/documentation))
+FnordMetric Enterprise features disk persistence, a HTTP, TCP and UDP API, native
+WebSockets support, CSV/JSON Export and a turnkey-ready HTML5 visualization solution
+(FnordMetric UI). FnordMetric Enterprise can be used as a drop-in replacement for
+StatsD+Graphite (it is a lot faster, see Benchmarks).
 
-Save this to `my_fnordmetric.rb`
-
-```ruby
-require "fnordmetric"
-
-FnordMetric.namespace :myapp do
-
-  # render a timeseries graph
-  widget 'Sales',
-    :title => "Sales per Minute",
-    :gauges => [:sales_per_minute],
-    :type => :timeline,
-    :width => 100,
-    :autoupdate => 1
-
-end
-
-FnordMetric.standalone
-```
-
-In this case we created one timeseries chart on the dashboard "Sales" that will display
-the number of sales_per_minute and auto-refresh every second.
-
-You should now be able to start the dashboard on http://localhost:4242/ (default) by running:
-
-    $ ruby my_fnordmetric.rb
+[Getting Started with FnordMetric Enterprise](http://fnordmetric.io/documentation/enterprise_index)
 
 
-Now we can start sending data to FnordMetric. The canonical way to submit data is the HTTP API.
-This will report a single sale:
+### FnordMetric UI
 
-    curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute" }' http://localhost:4242/events
+FnordMetric UI is a HTML5 API that lets you plug realtime data and charts into any webpage
+without writing a single line of code. It gives you maximum flexiblitiy as you have full
+control over layout and style with HTML and CSS.
 
-There are various other ways to submit events to FnordMetric (more information in [the documentation](http://fnordmetric.io/documentation)).
+FnordMetric UI uses WebSockets to communicate with a backend server. There are two backend
+implementations: FnordMetric Classic (ruby + redis) and FnordMetric Enterprise (JVM). You can use
+FnordMetric UI as a white label solution to power your custom realtime analytics apps.
 
-
-### HTML5 API
-
-FnordMetric offers a HTML5 / JavaScript API (called _FnordMetric UI_) that allows
-you to plug real-time data and charts into any website without having to write code.
-This is achieved by including a JavaScript library and using data-* attributes on
-html elements to declare the widgets.
-
-```html
-<link href='http://localhost:4242/fnordmetric-ui.css' type='text/css' rel='stylesheet' />
-<script src='http://localhost:4242/fnordmetric-ui.js' type='text/javascript'></script>
-
-<span
-  data-fnordmetric="counter"
-  data-gauge="sales_per_minute"
-  data-autoupdate="1"
-  data-unit="€"
-  >0</span>
-
-<script>
-  FnordMetric.setup({
-    "address":   "localhost:4242",
-    "namespace": "myapp"
-  });
-</script>
-```
+[Getting Started with FnordMetric UI](http://fnordmetric.io/documentation/ui_index)
 
 
-Installation
-------------
+### FnordMetric Classic
 
-    gem install fnordmetric
+FnordMetric Classic is powered by ruby and redis. It offers a ruby DSL for processing data
+streams and building beautiful web dashboards from a collection of turnkey-ready UI widgets.
+You define your own plotting and aggregation methods as ruby blocks.  [See it in action! (RailsCasts)](http://railscasts.com/episodes/378-fnordmetric)
 
-or in your Gemfile:
+[Getting Started with FnordMetric Classic](http://fnordmetric.io/documentation/classic_index)
 
-    gem 'fnordmetric', '>= 1.0.0'
 
 
 Documentation
 -------------
 
 You can find the full FnordMetric Documentation at http://fnordmetric.io/
+
 
 
 Contributors
