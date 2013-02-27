@@ -17,5 +17,5 @@ We offer paid commercial support, please contact us.
 
 To contribute, please fork this repository, make your changes and run the 
 specs, commit them to your github repository and send me a pull request.
-Need help, head on over to our [Google Groups][1]  page to discuss any ideas
+Need help, head on over to our [Google Groups](http://groups.google.com/group/fnordmetric) page to discuss any ideas
 that you might have.

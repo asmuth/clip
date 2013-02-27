@@ -2,7 +2,7 @@ Sending Data
 ------------
 
 An Event is a piece of input data that is sent to FnordMetric through one of the various
-sources. These events are JSON objects (arbitrary hashmaps) with almost no contraints on
+sources. These events are JSON objects (arbitrary hashmaps) with almost no constraints on
 the schema. An event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
@@ -30,11 +30,11 @@ _Example: send a test event with cURL_
 FnordMetric includes a TCP and a UDP Listener. They allow you to stream events
 with minimal overhead, and in the case of UDP in a "fire and forget" fashion.
 
-The Protocol is quite simple: One JSON Object per line. The JSON Object itself
-is not allowed to include newlines (the JSON spec forbids this aswell).
+The protocol is quite simple: One JSON object per line. The JSON object itself
+is not allowed to include newlines (the JSON spec forbids this as well).
 
-With TCP you simply open a connection and start streaming events seperated by
-newline. With UDP you can include one or more events in a packet, also seperated
+With TCP you simply open a connection and start streaming events separated by
+newline. With UDP you can include one or more events in a packet, also separated
 by newline.
 
 A Frame looks like this
@@ -45,7 +45,7 @@ A Frame looks like this
 
 Start the TCP or UDP Acceptor in your FnordMetric config (see [Running FnordMetric](/documentation/classic_running_fm))
 
-_Example: start a TCP Accepor on port 2323_
+_Example: start a TCP Acceptor on port 2323_
 
     FnordMetric::Acceptor.new(:protocol => :tcp, :port => 2323)
 

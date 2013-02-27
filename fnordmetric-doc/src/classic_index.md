@@ -9,7 +9,7 @@ We start by installing FnordMetric through rubygems:
 
     gem install fnordmetric
 
-FnordMetric is based on ruby eventmachine and needs to run in a seperate ruby process.
+FnordMetric is based on ruby eventmachine and needs to run in a separate ruby process.
 The preferred way to start it is to create a ruby file (where you put your DSL statements)
 and execute it (more about that in [Running FnordMetric](/documentation/classic_running_fm))
 
@@ -32,37 +32,36 @@ Save this to a file `my_fnordmetric.rb`
     FnordMetric.standalone
 
 This defines a FnordMetric namespace "myapp". You can think of the namespace as the whole
-dashboard as you will probably use only one namespace. Namespaces can be used to seperate
+dashboard as you will probably use only one namespace. Namespaces can be used to separate
 users if you are deploying FnordMetric as a white-label solution to your customers.
 
 Everything that is inside the block passed to `FnordMetric#myapp` is your custom configuration.
 This is where all DSL statements go.
 
 In this case we created one timeseries chart on the dashboard "Sales" that will display
-the number of sales_per_minute and auto-refresh every second.
+the number of `sales\_per\_minute` and auto-refresh every second.
 
 You should now be able to start the dashboard on http://localhost:4242/ (default) by running:
 
     $ ruby my_fnordmetric.rb
 
 
-Now we can start sending data to FnordMetric. In FnordMetric, a piecce of input data is called
-"event". An event is a JSON object (a arbitrary hashmap). The canonical way to submit events is
-the HTTP API, this will report a single sale:
+Now we can start sending data to FnordMetric. In FnordMetric, a piece of input data is called
+"event". An event is a JSON object (an arbitrary hashmap). The canonical way to submit events is
+the HTTP API. This will report a single sale:
 
     curl -X POST -d '{ "_type": "_incr", "value": 1, "gauge": "sales_per_minute" }' http://localhost:4242/events
 
 There are various other ways to submit events to FnordMetric (more information in [Sending Data](/documentation/classic_sending_data)).
 
-The "_incr" event we use is a special predefined event that creates a gauge (if it doesn't exist
-already) and increments it. (You can also define custom events, more about that in [Events and Gauges](/documentation/classic_event_handlers)).
+The "_incr" event we use is a special predefined event that creates a gauge (if it doesn't already exist) and increments it. (You can also define custom events, more about that in [Events and Gauges](/documentation/classic_event_handlers)).
 
 A "gauge" in FnordMetric is basically a bucket that stores a numerical value. It has has two
-dimensions: time and value. Each gauge is identified by a uniqe key (here: "sales_per_minute").
+dimensions: time and value. Each gauge is identified by a uniqe key (here: "sales\_per\_minute").
 
 The value of a gauge is periodically aggregated and persisted into redis. Since we didn't explicitly
-define the aggregation interval (`flush_interval`) the default of 10s will be used for our
-sales_per_minute gauge.
+define the aggregation interval (`flush\_interval`) the default of 10s will be used for our
+`sales\_per\_minute` gauge.
 
 Gauges can be used in different modes: They can act as simple counters with an increment and
 a decrement operation, but you can also use them to record the mean / average or the max/min

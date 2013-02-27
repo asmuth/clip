@@ -28,8 +28,8 @@ You can easily split up your config into multiple files like this:
 
 ### Redis Memory usage
 
-If you want to reduce redis memory you can do it by using larger
-flush_timeouts. Apart from that there are two few low hanging
+If you want to reduce redis memory usage you can do it by using larger
+flush_timeouts. Apart from that there are two low hanging
 fruits:
 
 **Disable active users plugin**

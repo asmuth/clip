@@ -16,9 +16,9 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 Getting Started
 ---------------
 
-FnordMetric is based on ruby eventmachine and needs to run in a seperate ruby process.
+FnordMetric is based on ruby eventmachine and needs to run in a separate ruby process.
 The preferred way to start it is to create a ruby file (where you put your DSL statements)
-and execute it (more about that in [the documentation](http://fnordmetric.io/documentation))
+and execute it (more about that in [the documentation](http://fnordmetric.io/documentation)).
 
 Save this to `my_fnordmetric.rb`
 

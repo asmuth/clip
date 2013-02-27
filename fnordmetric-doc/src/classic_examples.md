@@ -6,8 +6,8 @@ request for this page on github.
 
 ### Examples
 
-+ [Simple Example](/documentation/examples/fm_classic_simple_example) - Minimal Example to get started
-+ [Full Ruby DSL Example](/documentation/examples/fm_classic_full_example) - This Example show almost everything the DSL can do and has an example data generator included
++ [Simple Example](/documentation/examples/fm_classic_simple_example) - Minimal example to get started.
++ [Full Ruby DSL Example](/documentation/examples/fm_classic_full_example) - This example show almost everything the DSL can do and has an example data generator included.
 
 
 ### Screencasts
