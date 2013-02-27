@@ -115,7 +115,7 @@ These are the valid html attributes:
   <tr>
     <th>data-gauges <i>(mandatory)</i></th>
     <td>
-      comma seperated list of gauges to be dispalyed (mandatory)
+      comma separated list of gauges to be dispalyed (mandatory)
     </td>
   </tr>
   <tr>
@@ -130,7 +130,7 @@ These are the valid html attributes:
   <tr>
     <th>data-colors</th>
     <td>
-      comma seperated list of series / gauge colors (optional)
+      comma separated list of series / gauge colors (optional)
     </td>
   </tr>
   <tr>
