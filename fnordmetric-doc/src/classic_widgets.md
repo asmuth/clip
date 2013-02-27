@@ -27,31 +27,31 @@ Valid options:
   <tr>
     <th>type <i>(mandatory)</i></th>
     <td>
-      the type of this widget. must be `:timeline`
+      The type of this widget. Must be `:timeline`.
     </td>
   </tr>
   <tr>
     <th>gauges <i>(mandatory)</i></th>
     <td>
-      array of symbols, each symbol is a gauge name to display. e.g. `[:gauge1, :gauge2]`
+      Array of symbols, each symbol is a gauge name to display. e.g. `[:gauge1, :gauge2]`
     </td>
   </tr>
   <tr>
     <th>title</th>
     <td>
-      the title of this widget (default: no title)
+      The title of this widget (default: no title).
     </td>
   </tr>
   <tr>
     <th>width</th>
     <td>
-      the width of this widget in percent of the viewport (default: 100)
+      The width of this widget in percent of the viewport (default: 100).
     </td>
   </tr>
   <tr>
     <th>autoupdate</th>
     <td>
-      refresh the contents of this widget every N seconds (default: none)
+      Refresh the contents of this widget every N seconds (default: none).
     </td>
   </tr>
 </table>
@@ -69,39 +69,39 @@ Valid options:
   <tr>
     <th>type <i>(mandatory)</i></th>
     <td>
-      the type of this widget. must be `:numbers`
+      The type of this widget. Must be `:numbers`.
     </td>
   </tr>
   <tr>
     <th>gauges <i>(mandatory)</i></th>
     <td>
-      array of symbols, each symbol is a gauge name to display. e.g. `[:gauge1, :gauge2]`
+      Array of symbols, each symbol is a gauge name to display. e.g. `[:gauge1, :gauge2]`
     </td>
   </tr>
   <tr>
     <th>offsets <i>(mandatory)</i></th>
     <td>
-      array of integer offsets at which the gauges are displayed. if the gauges
+      Array of integer offsets at which the gauges are displayed. If the gauges
       resolution is 1 minute, then `[1,5,10]` will display the gauges values 1, 5
-      and 10 minutes ago.<br />there is a hack to display the sum of an offset.
-      to display e.g. the sum of all values of the last 5 minutes, set this to `["s5"]`</td>
+      and 10 minutes ago.<br />There is a hack to display the sum of an offset.
+      To display e.g. the sum of all values of the last 5 minutes, set this to `["s5"]`.</td>
   </tr>
   <tr>
     <th>title</th>
     <td>
-      the title of this widget (default: no title)
+      The title of this widget (default: no title).
     </td>
   </tr>
   <tr>
     <th>width</th>
     <td>
-      the width of this widget in percent of the viewport (default: 100)
+      The width of this widget in percent of the viewport (default: 100).
     </td>
   </tr>
   <tr>
     <th>autoupdate</th>
     <td>
-      refresh the contents of this widget every N seconds (default: none)
+      Refresh the contents of this widget every N seconds (default: none).
     </td>
   </tr>
 </table>
@@ -133,19 +133,19 @@ Valid options:
   <tr>
     <th>title</th>
     <td>
-      the title of this widget (default: no title)
+      The title of this widget (default: no title).
     </td>
   </tr>
   <tr>
     <th>width</th>
     <td>
-      the width of this widget in percent of the viewport (default: 100)
+      The width of this widget in percent of the viewport (default: 100).
     </td>
   </tr>
   <tr>
     <th>autoupdate</th>
     <td>
-      refresh the contents of this widget every N seconds (default: none)
+      Refresh the contents of this widget every N seconds (default: none).
     </td>
   </tr>
 </table>
@@ -163,31 +163,31 @@ Valid options:
   <tr>
     <th>type <i>(mandatory)</i></th>
     <td>
-      the type of this widget. must be `:timeline`
+      The type of this widget. Must be `:timeline`.
     </td>
   </tr>
   <tr>
     <th>gauges <i>(mandatory)</i></th>
     <td>
-      array of symbols, each symbol is a gauge name to display. e.g. `[:gauge1, :gauge2]`. the gauges must to be three dimensional
+      Array of symbols, each symbol is a gauge name to display. e.g. `[:gauge1, :gauge2]`. The gauges must to be three dimensional.
     </td>
   </tr>
   <tr>
     <th>title</th>
     <td>
-      the title of this widget (default: no title)
+      The title of this widget (default: no title).
     </td>
   </tr>
   <tr>
     <th>width</th>
     <td>
-      the width of this widget in percent of the viewport (default: 100)
+      The width of this widget in percent of the viewport (default: 100).
     </td>
   </tr>
   <tr>
     <th>autoupdate</th>
     <td>
-      refresh the contents of this widget every N seconds (default: none)
+      Refresh the contents of this widget every N seconds (default: none).
     </td>
   </tr>
 </table>
@@ -202,13 +202,13 @@ include external charts in a FnordMetric dashboard.
   <tr>
     <th>type <i>(mandatory)</i></th>
     <td>
-      the type of this widget. must be `:html`
+      The type of this widget. Must be `:html`.
     </td>
   </tr>
   <tr>
     <th>html/th>
     <td>
-      the html to render
+      The html to render.
     </td>
   </tr>
 </table>

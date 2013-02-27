@@ -1,22 +1,22 @@
 Events and Gauges
 -----------------
 
-A "gauge" in FnordMetric is basically a bucket that stores a numerical value. It has has two
+A gauge in FnordMetric is basically a bucket that stores a numerical value. It has has two
 dimensions: time and value. Each gauge is identified by a uniqe key (for example
-`number_of_singups_per_minute`). The value of a gauge is periodically aggregated and persisted
+`number\_of\_singups\_per\_minute`). The value of a gauge is periodically aggregated and persisted
 into redis.
 
 Gauges can be used in different modes: They can act as simple counters with an increment and
-a decrement operation, but you can also use them to record the mean/average or the max/min
+a decrement operation. But you can also use them to record the mean/average or the max/min
 value.
 
 An Event is a piece of input data that is sent to FnordMetric through one of the various
-sources. These events are JSON objects (arbitrary associative maps) with almost no contraints on
-the schema. A event may look like this:
+sources. Events are JSON objects (arbitrary associative maps) with almost no constraints on
+the schema. An event may look like this:
 
     { "_type": "sale", "product_id": 534221, "purchase_value": 2999 }
 
-You can find more information about the various ways to submit these events to FnordMetric
+You can find more information about the various ways to submit events to FnordMetric
 (HTTP, TCP/UDP, etc.) in [Sending Data](/documentation/classic_sending_data)
 
 
@@ -30,7 +30,7 @@ and FnordMetric will know what to do.
 
 #### Predefined Events: _incr, _decr, _set, _avg, _min, _max
 
-These events increment, decrement or set counters or add a sample to a mean/avg, min or max
+These events increment, decrement or set counters or add a sample to a mean/avg or min/max
 value gauge. You don't have to create the gauges upfront, they are automatically created
 as you send events (if they don't exist yet).
 
@@ -49,9 +49,9 @@ Valid keys for these events are:
   <tr>
     <th><b>_type</b> <i>(mandatory)</i></th>
     <td>
-      the operation to perform
+      The operation to perform.
 
-      <p>allowed values are `_incr`, `_decr` and `_set` to
+      <p>Allowed values are `_incr`, `_decr` and `_set` to
       increment, decrement and set counters and `_avg`, `_min`, `_max` to sample
       average, minimum or maximum values.</p>
     </td>
@@ -59,31 +59,31 @@ Valid keys for these events are:
   <tr>
     <th><b>gauge</b> <i>(mandatory)</i></th>
     <td>
-      name of the gauge. if it does not exist it will be created.
+      Name of the gauge. If it does not exist it will be created.
     </td>
   </tr>
   <tr>
     <th><b>value</b> <i>(mandatory)</i></th>
     <td>
-      the value as integer
+      The value as integer.
     </td>
   </tr>
   <tr>
     <th><b>flush_interval</b></i></th>
     <td>
-      interval in which the value of this gauge is aggregated persisted in seconds.
-      this is basically the gauge's granularity / resolution. the flush interval
-      controls how much memory a gauge uses (smaller flush_intervals use more memory)
-      the default is 10 seconds
+      Interval in which the value of this gauge is aggregated and persisted in seconds.
+      This is basically the gauge's granularity / resolution. The flush interval
+      controls how much memory a gauge uses (smaller flush_intervals use more memory).
+      The default is 10 seconds.
     </td>
   </tr>
 </table>
 <br /><br />
 
 
-#### Predefined Events: _set_name, _set_picture, _pageview
+#### Predefined Events: \_set\_name, \_set\_picture, _pageview
 
-These events allow you the set a picture and display name for a visitor / user. They
+These events allow you to set a picture and display a name for a visitor / user. They
 require a `_session` key to identify a particular user session (FnordMetric allows
 you to track what a specific user is doing). The picture and name are displayed e.g.
 in the [Active Users Plugin](/documentation/classic_plugins)
@@ -107,7 +107,7 @@ In this case the only requirement is that the event has a `_type` key, which is 
 to identify the correct event handler. This is useful if you want to perform more than
 one action but only want to send one piece of data from your app to FnordMetric.
 
-#### Example: send a "user logged in up" event and increment two gauges
+#### Example: send a "user logged in" event and increment two gauges
 
 First we need to create a gauge. When using the predefined events (like `\_incr` and `\_avg`)
 gauges are created on-the-fly, but when writing custom event handlers we need to do
@@ -128,9 +128,9 @@ custom, this is just an example):
 
     { "_type": "login", "user_id": 1231, "user_name": "Teddy Tester" }
 
-We tell FnordMetric what to do with this event by writing an event handler: (FnordMetric
-uses the `_type` key to lookup theevent handler). There a are a few DSL methods like `data`
-and `incr` that we can use to access the event data and mofiy gauges (more about that below).
+We tell FnordMetric what to do with this event by writing an event handler (FnordMetric
+uses the `_type` key to look up the event handler). There a are a few DSL methods like `data`
+and `incr` that we can use to access the events data and modify gauges (more about that below).
 
     event :login do
       puts "user #{data[:user_name]} logged in"
@@ -157,28 +157,28 @@ are prefixed with an underscore:
   <tr>
     <th>_type <i>(mandatory)</i></th>
     <td>
-      the type of this event. this key is the only one that is mandatory as it is used to
+      The type of this event. This key is the only one that is mandatory as it is used to
       look up the correct event handler.
     </td>
   </tr>
   <tr>
     <th>_time</th>
     <td>
-      contains the time at which this event was recorded as a unix timestamp. you can
-      retroactively add events by setting this to a value in the past. (this field is optional)
+      Contains the time at which this event was recorded as a unix timestamp. You can
+      retroactively add events by setting this to a value in the past (this field is optional).
     </td>
   </tr>
   <tr>
     <th>_session</th>
     <td>
-      contains the session id of the user that triggered this event (optional)
+      Contains the session id of the user that triggered this event (optional).
     </td>
   </tr>
   <tr>
     <th>_namespace</th>
     <td>
-      sets the namespace for this event (optional, you only need this if you have more than
-      one namespace)
+      Sets the namespace for this event (optional, you only need this if you have more than
+      one namespace).
     </td>
   </tr>
 </table>
@@ -188,9 +188,9 @@ are prefixed with an underscore:
 The normal gauge is just a counter that you can increment or decrement. But there
 are other modes to use gauges:
 
-#### Average Gauges
+#### Average / Mean Gauges
 
-One common is case is that you dont want to sum up your samples but to calculate
+One common case is that you don't want to sum up your samples but to calculate
 the mean / average. For example to record the "average response time". You can
 do this by setting the `:average` key to true:
 
@@ -206,8 +206,7 @@ _Example: measure the average response time, this sample: 42ms_
 
 #### Progressive / Cumulative Gauges
 
-Sometimes you want to record a value not per-time but the total. For example "total
-signed up users since launch". You can use progressive / cumulative gauges to do this,
+Sometimes you want don't want to record a value per-time but the total. For example "total users signed up since launch". You can use progressive / cumulative gauges to do this,
 just set the `:progressive` key to true:
 
 _Example: record a signup_
@@ -244,34 +243,34 @@ This is the full list of valid configuration options for gauges:
   <tr>
     <th>title</i></th>
     <td>
-      sets the title of this gauge (optional)
+      Sets the title of this gauge (optional).
     </td>
   </tr>
   <tr>
     <th><b>flush_interval</b></i></th>
     <td>
-      interval in which the value of this gauge is aggregated persisted in seconds.
-      this is basically the gauge's granularity / resolution. the flush interval
+      Interval in which the value of this gauge is aggregated and persisted in seconds.
+      this is basically the gauge's granularity / resolution. The flush interval
       controls how much memory a gauge uses (smaller flush_intervals use more memory)
-      the default is 10 seconds
+      the default is 10 seconds.
     </td>
   </tr>
   <tr>
     <th>average</i></th>
     <td>
-      if set to true, this gauge will record the average value (see above)
+      If set to true, this gauge will record the average value (see above).
     </td>
   </tr>
   <tr>
     <th>progressive</i></th>
     <td>
-      if set to true, this gauge will record the cumulative value (see above)
+      If set to true, this gauge will record the cumulative value (see above).
     </td>
   </tr>
   <tr>
     <th>three_dimensional</i></th>
     <td>
-      if set to true, this gauge acts as a associative map of counters (see above)
+      If set to true, this gauge acts as a associative map of counters (see above).
     </td>
   </tr>
 </table>
@@ -293,25 +292,25 @@ the data / time / type of the current event.
   <tr>
     <th>data <i>=> Hash</i></th>
     <td>
-      returns the event as a ruby hash. all keys are symbolized (e.g. <br /> `{ :_type => "my_event" ... }`
+      Returns the event as a ruby hash. All keys are symbolized (e.g. <br /> `{ :_type => "my_event" ... }`.
     </td>
   </tr>
   <tr>
     <th>time <i>=> Int</i></th>
     <td>
-      return the time this event was registered at as a unix timestamp / integer
+      Returns the time this event was registered at as a unix timestamp / integer.
     </td>
   </tr>
   <tr>
     <th>type <i>=> Symbol</i></th>
     <td>
-      returns the type of this event as a symbol (the content of the "_type" key)
+      Returns the type of this event as a symbol (the content of the "_type" key).
     </td>
   </tr>
   <tr>
     <th>session_key <i>=> String or nil</i></th>
     <td>
-      returns the session id of this event if set (the content of the "_session" key)
+      Returns the session id of this event if set (the content of the "_session" key).
     </td>
   </tr>
 </table>
@@ -334,25 +333,25 @@ is automatically inferred from the content of the `_time` key.
   <tr>
     <th>incr(gauge, value = 1)</th>
     <td>
-      increments the gauge by `value`. if the gauge is configured to be average / mean it records the value as one sample.
+      Increments the gauge by `value`. If the gauge is configured to be average / mean it records the value as one sample.
     </td>
   </tr>
   <tr>
     <th>incr_field(gauge, field, value = 1)</th>
     <td>
-      can only be used on three-dimensional gauges. increments the label / field of the gauge by `value`.
+      Can only be used on three-dimensional gauges. Increments the label / field of the gauge by `value`.
     </td>
   </tr>
   <tr>
     <th>set_value(gauge, value)</th>
     <td>
-      sets the value of this gauge to `value`
+      Sets the value of this gauge to `value`.
     </td>
   </tr>
   <tr>
     <th>set_field(gauge, field, value)</th>
     <td>
-      can only be used on three-dimensional gauges. sets the value of this label / field of this gauge to `value`
+      Can only be used on three-dimensional gauges. Sets the value of this label / field of this gauge to `value`.
     </td>
   </tr>
 </table>
