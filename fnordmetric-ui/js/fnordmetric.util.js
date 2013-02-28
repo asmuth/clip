@@ -9,27 +9,20 @@ FnordMetric.util.decPrint = function(val){
 }
 
 FnordMetric.util.formatValue = function(value, round_to){
-  if(value < 10){
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(1);
+  if (typeof round_to == 'undefined') {
+    round_to = 1;
   }
-  if(value < 100){
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(1);
-  } else if(value > 1000){
-    if (typeof round_to != 'undefined')
-      return (value/1000.0).toFixed(round_to) + "k";
-    else
-      return (value/1000.0).toFixed(1) + "k";
+
+  if (value < 10) {
+    return value.toFixed(round_to);
+  } else if (value < 100) {
+    return value.toFixed(round_to);
+  } else if (value > 1000000) {
+    return (value / 1000000.0).toFixed(round_to) + "m";
+  } else if (value > 1000) {
+    return (value / 1000.0).toFixed(round_to) + "k";
   } else {
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(0);
+    return value.toFixed(round_to);
   }
 }
 
