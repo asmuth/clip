@@ -325,7 +325,6 @@ _Example:_
     => 1360623178
 
 
-<br />
 #### Manipulating gauges
 
 These methods allow manipulation of gauges. The time / bucket to modify
