@@ -145,7 +145,7 @@ object FnordMetric {
 
 
   def now : Long =
-    System.nanoTime / 1000000
+    System.currentTimeMillis
 
 
   def log(msg: String) = {

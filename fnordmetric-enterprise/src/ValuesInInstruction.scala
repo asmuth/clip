@@ -14,6 +14,9 @@ class ValuesInInstruction(key: MetricKey, time0: Long, time1: Long) extends Abst
     val values = metric.values_in(time1 * 1000, time0 * 1000)
     val resp = new StringBuffer
 
+    if (values.size == 0)
+      return "null"
+
     for (ind <- (0 until values.size)) {
       resp.append(values(ind)._1)
       resp.append(":")
