@@ -13,6 +13,7 @@ case class MetricKey(key: String, mode: String, flush_interval: Long)
 
 class Metric(key: MetricKey) {
   var flush_interest : Long = 0
+  var next_disk_sync : Long = 0
 
   val bucket = BucketFactory.new_bucket(key.mode)
   val swap = new SwapFile(key)
@@ -47,7 +48,7 @@ class Metric(key: MetricKey) {
       // use, we need to flush some. this flushes as much data to disk as
       // possible and marks it as "ready for removal"
       if (rbuf_seek_pos < 1)
-        flush_rbuf
+        flush_rbuf()
 
       // exit if we couldn't free up any slots (this should never happen)
       if (rbuf_seek_pos < 1)
@@ -69,15 +70,19 @@ class Metric(key: MetricKey) {
 
   // tries to persist as much data from the in memory ring buffer to disk
   // as possible but doesnt remove it from the buffer yet
-  def flush_rbuf = this.synchronized {
+  def flush_rbuf(force_sync: Boolean = false) = this.synchronized {
     val flush_range = rbuf.size - rbuf_seek_pos
 
     // copy the flushable items from the rbuf to the swapfile
     for (sample <- rbuf.tail(flush_range))
       swap.put(sample._1, sample._2)
 
-    // mark the range as "read to be overwritten
+    // mark the range as "ready to be overwritten"
     rbuf_seek_pos += flush_range
+
+    // force syncing the data to disk if requested
+    if (force_sync)
+      swap.flush
   }
 
   // returns this metrics value at time0 if a value was recorded at that
