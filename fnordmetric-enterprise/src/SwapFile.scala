@@ -88,7 +88,7 @@ class SwapFile(metric_key: MetricKey) {
     while (read_pos >= 0) {
       chunk.position(read_pos)
 
-      if (chunk.getShort != 0x1717) {
+      if (chunk.getShort != 0x1717 && read_pos != 0) {
         FnordMetric.error("file corrupted: " + file_name, false)
         return position - chunk_size
       }
