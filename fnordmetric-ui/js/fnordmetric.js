@@ -1,7 +1,8 @@
 var FnordMetric = (function(pre){
 
-  var wsAddress, socket, currentNamespace;
-  var widgets = {};
+  var wsAddress, socket, currentNamespace,
+     widgets = {},
+     enterprise = false;
 
   function setup(opts) {
     if (typeof $ == 'undefined') {
@@ -18,7 +19,11 @@ var FnordMetric = (function(pre){
   }
 
   function connect() {
-    socket = new WebSocket(wsAddress);
+    if (enterprise)
+      socket = new WebSocket(wsAddress, "fnordmetric_enterprise");
+    else
+      socket = new WebSocket(wsAddress);
+
     socket.onmessage = onSocketMessage;
     socket.onclose = onSocketClose;
     socket.onopen = onSocketOpen;
@@ -77,9 +82,15 @@ var FnordMetric = (function(pre){
     });
   }
 
-  function onSocketClose() {
-    console.log("[FnordMetric] socket closed"); 
-    window.setTimeout(connect, 1000);
+  function onSocketClose(e) {
+    if (e.code = 1003 && e.reason == "fnordmetric_enterprise") {
+      console.log("[FnordMetric] switching to fnordmetric enterprise protocol")
+      enterprise = true;
+      window.setTimeout(connect, 100);
+    } else {
+      console.log("[FnordMetric] socket closed");
+      window.setTimeout(connect, 1000);
+    }
   }
 
   return {
