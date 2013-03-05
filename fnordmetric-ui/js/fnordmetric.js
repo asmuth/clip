@@ -147,7 +147,7 @@ var FnordMetric = (function(pre){
             if (parts[0] != "null")
               for (ind in parts) {
                 var tuple = parts[ind].split(":");
-                tuple[0] = parseInt(tuple[0], 10) / 1000;
+                tuple[0] = parseInt(parseInt(tuple[0], 10) / 1000, 10);
                 vals[tuple[0]] = tuple[1];
               }
 

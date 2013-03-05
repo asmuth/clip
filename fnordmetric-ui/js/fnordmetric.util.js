@@ -111,6 +111,21 @@ FnordMetric.util.parseTime = function(str) {
 }
 
 FnordMetric.util.zeroFill = function(obj) {
-  console.log("FIXPAUL", obj);
+  var ticks = {};
+
+  for (key in obj)
+    for (tick in obj[key])
+      ticks[tick] = 1;
+
+  ticks = Object.keys(ticks);
+
+  if (ticks.length == 0)
+    ticks.push(0);
+
+  for (key in obj)
+    for (ind in ticks)
+      if (typeof obj[key][ticks[ind]] == 'undefined')
+        obj[key][ticks[ind]] = 0;
+
   return obj;
 }
