@@ -109,3 +109,8 @@ FnordMetric.util.parseTime = function(str) {
     console.log("[FnordMetric] invalid time specifiation: " + str);
   }
 }
+
+FnordMetric.util.zeroFill = function(obj) {
+  console.log("FIXPAUL", obj);
+  return obj;
+}

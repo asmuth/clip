@@ -2,6 +2,8 @@ var FnordMetric = (function(pre){
 
   var wsAddress, socket, currentNamespace,
      continuations = {},
+     continuation = false,
+     stack = [],
      widgets = {},
      enterprise = false;
 
@@ -71,6 +73,16 @@ var FnordMetric = (function(pre){
       if (data.substr(0,5) == "ERROR")
         return console.log("[FnordMetric] error: " + data.substr(6));
 
+      else if (continuation) {
+        continuation(data);
+        continuation = false;
+
+        if (stack.length > 0) {
+          var nxt = stack.shift();
+          execute(nxt[0], nxt[1])
+        }
+      }
+
     } else {
       var n, evt = JSON.parse(raw.data);
 
@@ -110,13 +122,46 @@ var FnordMetric = (function(pre){
     }
   }
 
+  function execute(cmd, cb) {
+    if (continuation === false) {
+      socket.send(cmd);
+      continuation = cb;
+    } else {
+      stack.push([cmd, cb]);
+    }
+  }
+
   function values_in(gauges, since, until, callback) {
     if (enterprise) {
-      continuation = function() {
-        console.log("FFFUBAR", this);
+      var all_resp = {};
+
+      function values_in_fetch_next() {
+        var this_resp = gauges.shift();
+
+        execute(
+          "VALUESIN " + this_resp + " " + since + " " + until,
+          function(resp) {
+            var vals = {},
+                parts = resp.split(" ");
+
+            if (parts[0] != "null")
+              for (ind in parts) {
+                var tuple = parts[ind].split(":");
+                tuple[0] = parseInt(tuple[0], 10) / 1000;
+                vals[tuple[0]] = tuple[1];
+              }
+
+            all_resp[this_resp] = vals;
+
+            if (gauges.length == 0)
+              callback.apply(FnordMetric.util.zeroFill(all_resp));
+            else
+              values_in_fetch_next();
+          }
+        );
       }
 
-      socket.send("VALUESIN " + gauges.first + " " + since + " " + until);
+      values_in_fetch_next();
     }
 
     else {
@@ -145,7 +190,12 @@ var FnordMetric = (function(pre){
 
   function value_at(gauge, at, callback) {
     if (enterprise) {
-
+      execute(
+        "VALUEAT " + gauge + " " + at,
+        function(resp) {
+          callback.apply({ "value": eval(resp) });
+        }
+      );
     }
 
     else {
