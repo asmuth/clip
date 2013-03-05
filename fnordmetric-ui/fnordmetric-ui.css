@@ -1,0 +1,282 @@
+/* this is an automatically generated file, don't modify it... */
+.fnordmetric_graph .detail {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.1);
+  bottom: 0;
+  width: 1px;
+  transition: opacity 0.25s linear;
+  -moz-transition: opacity 0.25s linear;
+  -o-transition: opacity 0.25s linear;
+  -webkit-transition: opacity 0.25s linear;
+}
+
+.fnordmetric_graph .detail.inactive {
+  opacity: 0;
+}
+
+.fnordmetric_graph .detail .item.active {
+  opacity: 1;
+}
+
+.fnordmetric_graph .detail .x_label {
+  font-family: "Gotham Narrow", Helvetica, Arial, sans-serif;
+  border-radius: 3px;
+  padding: 6px;
+  opacity: 0.5;
+  border: 1px solid #e0e0e0;
+  font-size: 12px;
+  position: absolute;
+  background: white;
+  white-space: nowrap;
+}
+
+.fnordmetric_graph .detail .item {
+  position: absolute;
+  z-index: 2;
+  border-radius: 3px;
+  padding: 0.25em;
+  font-size: 12px;
+  font-family: "Gotham Narrow", Helvetica, Arial, sans-serif;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  margin-left: 1em;
+  margin-top: -1em;
+  white-space: nowrap;
+}
+
+.fnordmetric_graph .detail .item.active {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.fnordmetric_graph .detail .item:before {
+  content: "\25c2";
+  position: absolute;
+  left: -0.5em;
+  color: rgba(0, 0, 0, 0.7);
+  width: 0;
+}
+
+.fnordmetric_graph .detail .dot {
+  width: 4px;
+  height: 4px;
+  margin-left: -4px;
+  margin-top: -3px;
+  border-radius: 5px;
+  position: absolute;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+  background: white;
+  border-width: 2px;
+  border-style: solid;
+  display: none;
+  background-clip: padding-box;
+}
+
+.fnordmetric_graph .detail .dot.active {
+  display: block;
+}
+
+.fnordmetric_graph {
+  position: relative;
+}
+
+.fnordmetric_graph svg {
+  display: block;
+  overflow: hidden;
+}
+
+.fnordmetric_graph .x_tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0px;
+  border-left: 1px dotted rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.fnordmetric_graph .x_tick .title {
+  position: absolute;
+  font-size: 12px;
+  font-family: "Gotham Narrow", Helvetica, Arial, sans-serif;
+  opacity: 0.5;
+  white-space: nowrap;
+  margin-left: 3px;
+  bottom: 1px;
+}
+
+.fnordmetric_graph .y_axis {
+  fill: none;
+}
+
+.fnordmetric_graph .y_ticks .tick {
+  stroke: rgba(0, 0, 0, 0.16);
+  stroke-width: 2px;
+  shape-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+.fnordmetric_graph .y_grid .tick {
+  z-index: -1;
+  stroke: rgba(0, 0, 0, 0.20);
+  stroke-width: 1px;
+  stroke-dasharray: 1 1;
+}
+
+.fnordmetric_graph .y_grid path {
+  fill: none;
+  stroke: none;
+}
+
+.fnordmetric_graph .y_ticks path {
+  fill: none;
+  stroke: #808080;
+}
+
+.fnordmetric_graph .y_ticks text {
+  opacity: 0.5;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.fnordmetric_graph .x_tick.glow .title,
+.fnordmetric_graph .y_ticks.glow text {
+  fill: black;
+  color: black;
+  text-shadow:
+    -1px 1px 0 rgba(255, 255, 255, 0.1),
+    1px -1px 0 rgba(255, 255, 255, 0.1),
+    1px 1px 0 rgba(255, 255, 255, 0.1),
+    0px 1px 0 rgba(255, 255, 255, 0.1),
+    0px -1px 0 rgba(255, 255, 255, 0.1),
+    1px 0px 0 rgba(255, 255, 255, 0.1),
+    -1px 0px 0 rgba(255, 255, 255, 0.1),
+    -1px -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.fnordmetric_graph .x_tick.inverse .title,
+.fnordmetric_graph .y_ticks.inverse text {
+  fill: white;
+  color: white;
+  text-shadow:
+    -1px 1px 0 rgba(0, 0, 0, 0.8),
+    1px -1px 0 rgba(0, 0, 0, 0.8),
+    1px 1px 0 rgba(0, 0, 0, 0.8),
+    0px 1px 0 rgba(0, 0, 0, 0.8),
+    0px -1px 0 rgba(0, 0, 0, 0.8),
+    1px 0px 0 rgba(0, 0, 0, 0.8),
+    -1px 0px 0 rgba(0, 0, 0, 0.8),
+    -1px -1px 0 rgba(0, 0, 0, 0.8);
+}
+
+.fnordmetric_graph .y_ticks path { stroke:none; }
+.fnordmetric_graph .y_grid .tick { stroke:rgba(0,0,0,.1); }
+
+.fnordmetric_graph .x_tick {
+  border-left: none;
+}
+
+.fnordmetric_graph .x_tick.glow .title, .rickshaw_graph .y_ticks.glow text{
+  font-size:14px;
+}
+
+.fnordmetric_graph .y_grid .tick { stroke:rgba(0,0,0,.15); stroke-dasharray:0; }
+.fnordmetric_graph .y_ticks text { fill:#333333; }
+
+.fnordmetric_legend {
+  font-family: "Gotham Narrow", Helvetica, Arial;
+  font-size: 12px;
+  color: #333;
+  display: inline-block;
+  padding: 0;
+  border-radius: 2px;
+  position: relative;
+}
+
+.fnordmetric_legend .ui-sortable {
+  margin-left:-10px;
+}
+
+.fnordmetric_legend li.line{
+   float:left;
+   clear:none;
+   padding-right:0;
+}
+
+.fnordmetric_legend a.action{
+  margin-right:5px;
+  display:none;
+}
+
+
+.fnordmetric_legend li.line .label{
+  font.size:14px;
+  margin-left:5px;
+  color:#333;
+  position:relative;
+  top:-1px;
+}
+
+.fnordmetric_legend:hover {
+  z-index: 10;
+}
+.fnordmetric_legend .line {
+  clear: both;
+  line-height: 140%;
+  padding-right: 15px;
+}
+
+.fnordmetric_legend li {
+  margin-right:10px;
+}
+
+.fnordmetric_legend .line .swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius:2px;
+  display: inline-block;
+  margin-right: 3px;
+  border-radius: 2px;
+}
+.fnordmetric_legend .label {
+  white-space: nowrap;
+  display: inline;
+}
+.fnordmetric_legend .action:hover {
+  opacity: 0.6;
+}
+.fnordmetric_legend .action {
+  margin-right: 0.2em;
+  font-size: 10px;
+  opacity: 0.2;
+  cursor: pointer;
+  font-size: 14px;
+}
+.fnordmetric_legend .line.disabled {
+  opacity: 0.4;
+}
+.fnordmetric_legend ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin: 2px;
+  cursor: pointer;
+}
+.fnordmetric_legend li {
+  padding: 0 0 0 2px;
+  min-width: 80px;
+  white-space: nowrap;
+}
+.fnordmetric_legend li:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+.fnordmetric_legend li:active {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}

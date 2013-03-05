@@ -20,93 +20,28 @@
   </head>
   <body class="dark">
 
-
-        <div class="value large" data-fnordmetric="counter" data-gauge="orders_sum" data-at="sum(-1hour)" data-autopudate="1" data-unit="&euro;" data-scale-by="0.01" data-round-to="0" style="color:#fff; font-size:48px;">0</div>
-
     <span
       data-fnordmetric="counter"
-      data-gauge="useronline_total"
+      data-gauge="fubar-sum-10"
       data-autoupdate="1"
-      data-at="-5seconds"
-      data-unit="users online"
-      style="float:left;padding:30px; line-height:60px; color:#fff; font-size:24px;">0</span>
-
-    <span
-      data-fnordmetric="counter"
-      data-gauge="useronline_total"
-      data-autoupdate="1"
-      data-at="avg(-2hours)"
-      data-unit="users online"
-      style="float:left;padding:30px; line-height:60px; color:#fff; font-size:24px;">0</span>
-
-    &mdash;
-
-    <span
-      data-fnordmetric="counter"
-      data-gauge="order_sum"
-      data-autoupdate="1"
-      data-at="sum(-1hour)"
-      data-unit="&euro; order sum (last hour)"
+      data-at="-30"
+      data-unit="fubar"
       style="float:left;color:#fff; font-size:24px;">0</span>
-
-    <br />
-    <br />
 
     <div
       data-fnordmetric="timeseries"
       data-chart-style="line"
       data-height="400"
-      data-since="-1h"
+      data-since="-10m"
       data-until="now"
       data-autoupdate="10"
-      data-gauges="identity_requests_per_second"
+      data-gauges="fubar-sum-10"
       style="float:left;width:900px; "></div>
-
-    <div
-      data-fnordmetric="timeseries"
-      data-chart-style="line"
-      data-height="240"
-      data-since="-4h"
-      data-until="now"
-      data-legend="off"
-      data-autoupdate="10"
-      data-gauges="order_sum"
-      style="float:left;width:600px; "></div>
-
-    <div
-      data-fnordmetric="timeseries"
-      data-chart-style="area"
-      data-height="240"
-      data-autoupdate="10"
-      data-since="-1h"
-      data-until="now"
-      data-gauges="user_logins,user_logins_failed"
-      data-colors="#00ff00,#ff0000"
-      style="float:left;width:600px; "></div>
-
-    <div
-      data-fnordmetric="timeseries"
-      data-height="240"
-      data-autoupdate="10"
-      data-since="-2h"
-      data-until="now"
-      data-gauges="user_logins,user_logins_failed"
-      style="float:left; width:500px;"></div>
-
-    <div
-      data-fnordmetric="timeseries"
-      data-chart-style="flow"
-      data-height="300"
-      data-autoupdate="10"
-      data-gauges="useronline_total"
-      data-since="-15minutes"
-      data-until="now"
-      style="float:left;width:600px; "></div>
 
     <script>
       FnordMetric.setup({
-        "address":   "localhost:8080",
-        "namespace": "loveos"
+        "address":   "localhost:4242",
+        "namespace": "myapp"
       });
     </script>
 

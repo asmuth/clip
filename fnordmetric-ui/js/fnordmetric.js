@@ -86,7 +86,7 @@ var FnordMetric = (function(pre){
     if (e.code = 1003 && e.reason == "fnordmetric_enterprise") {
       console.log("[FnordMetric] switching to fnordmetric enterprise protocol")
       enterprise = true;
-      window.setTimeout(connect, 100);
+      window.setTimeout(connect, 10);
     } else {
       console.log("[FnordMetric] socket closed");
       window.setTimeout(connect, 1000);
