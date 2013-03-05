@@ -82,6 +82,30 @@ FnordMetric.util.dateFormatWithRange = function(timestamp, range){
            FnordMetric.util.decPrint(t.getSeconds());
 }
 
-FnordMetric.util.generateUUID = function (){
+FnordMetric.util.generateUUID = function () {
   return Math.floor((1 + Math.random()) * 0x1000000).toString(16);
+}
+
+FnordMetric.util.parseTime = function(str) {
+  var res,
+      now = parseInt(((new Date()).getTime() / 1000), 10),
+      str = str.toLowerCase();
+
+  if (str == "now") {
+    return now;
+  } else if ((res = str.match( /^([0-9]+)$/)) != null) {
+    return parseInt(res[1], 10);
+  } else if ((res = str.match( /^-([0-9]+)$/)) != null) {
+    return (now - parseInt(res[1], 10));
+  } else if ((res = str.match( /^-([0-9]+)s(ec(ond)?(s?))?$/)) != null) {
+    return (now - parseInt(res[1], 10));
+  } else if ((res = str.match( /^-([0-9]+(?:\.[0-9]+)?)m(in(ute)?(s?))?$/)) != null) {
+    return parseInt(now - (parseFloat(res[1]) * 60), 10);
+  } else if ((res = str.match( /^-([0-9]+(?:\.[0-9]+)?)h(our(s?))?$/)) != null) {
+    return parseInt(now - (parseFloat(res[1]) * 3600), 10);
+  } else if ((res = str.match( /^-([0-9]+(?:\.[0-9]+)?)d(ay(s?))?$/)) != null) {
+    return parseInt(now - (parseFloat(res[1]) * 86400), 10);
+  } else {
+    console.log("[FnordMetric] invalid time specifiation: " + str);
+  }
 }

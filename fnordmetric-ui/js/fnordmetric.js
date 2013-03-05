@@ -65,16 +65,24 @@ var FnordMetric = (function(pre){
   }
 
   function onSocketMessage(raw) {
-    var n, evt = JSON.parse(raw.data);
+    if (enterprise) {
+      var data = raw.data;
 
-    if (evt.error)
-      return console.log("[FnordMetric] error: " + evt.error);
+      if (data.substr(0,5) == "ERROR")
+        return console.log("[FnordMetric] error: " + data.substr(6));
 
-    if (evt.widget_key && continuations[evt.widget_key])
-      continuations[evt.widget_key].apply(evt);
+    } else {
+      var n, evt = JSON.parse(raw.data);
 
-    else if (evt.widget_key && widgets[evt.widget_key])
-      widgets[evt.widget_key].send(evt);
+      if (evt.error)
+        return console.log("[FnordMetric] error: " + evt.error);
+
+      if (evt.widget_key && continuations[evt.widget_key])
+        continuations[evt.widget_key].apply(evt);
+
+      else if (evt.widget_key && widgets[evt.widget_key])
+        widgets[evt.widget_key].send(evt);
+    }
   }
 
   function onSocketOpen() {
@@ -90,6 +98,11 @@ var FnordMetric = (function(pre){
     if (e.code = 1003 && e.reason == "fnordmetric_enterprise") {
       console.log("[FnordMetric] switching to fnordmetric enterprise protocol")
       enterprise = true;
+
+      $("*[data-fnordmetric]").each(function(n, e){
+        $(e).attr('data-widget-key', null)
+      });
+
       window.setTimeout(connect, 10);
     } else {
       console.log("[FnordMetric] socket closed");
@@ -99,7 +112,11 @@ var FnordMetric = (function(pre){
 
   function values_in(gauges, since, until, callback) {
     if (enterprise) {
+      continuation = function() {
+        console.log("FFFUBAR", this);
+      }
 
+      socket.send("VALUESIN " + gauges.first + " " + since + " " + until);
     }
 
     else {
