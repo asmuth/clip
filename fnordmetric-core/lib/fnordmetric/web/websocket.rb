@@ -29,6 +29,9 @@ class FnordMetric::WebSocket < Rack::WebSocket::Application
         send_data m.to_json
       end
     end
+  rescue Exception => e
+    FnordMetric.error("[WebSocket] #{e.to_s}")
+    puts e.backtrace.join("\n")
   end
 
   def get_uuid
