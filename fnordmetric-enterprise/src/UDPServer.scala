@@ -20,7 +20,7 @@ class UDPServer(port: Int, threads: Int){
   val buffer = new Array[Byte](buffer_size)
   val packet = new DatagramPacket(buffer, buffer_size)
 
-  FnordMetric.log("Listening on tcp://0.0.0.0:" + port)
+  FnordMetric.log("Listening on udp://0.0.0.0:" + port)
 
   while (true) {
     sock.receive(packet)
