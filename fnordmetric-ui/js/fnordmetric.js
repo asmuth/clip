@@ -1,6 +1,7 @@
 var FnordMetric = (function(pre){
 
   var wsAddress, socket, currentNamespace,
+     continuations = {},
      widgets = {},
      enterprise = false;
 
@@ -69,7 +70,10 @@ var FnordMetric = (function(pre){
     if (evt.error)
       return console.log("[FnordMetric] error: " + evt.error);
 
-    if (evt.widget_key && widgets[evt.widget_key])
+    if (evt.widget_key && continuations[evt.widget_key])
+      continuations[evt.widget_key].apply(evt);
+
+    else if (evt.widget_key && widgets[evt.widget_key])
       widgets[evt.widget_key].send(evt);
   }
 
@@ -93,11 +97,65 @@ var FnordMetric = (function(pre){
     }
   }
 
+  function values_in(gauges, since, until, callback) {
+    if (enterprise) {
+
+    }
+
+    else {
+      var txid = FnordMetric.util.generateUUID();
+
+      continuations[txid] = function(){
+        var result = {};
+
+        for (ind in this.gauges)
+          result[this.gauges[ind].key] = this.gauges[ind].vals;
+
+        callback.apply(result);
+      }
+
+      FnordMetric.publish({
+        "type": "widget_request",
+        "klass": "generic",
+        "gauges": gauges,
+        "cmd": "values_at",
+        "since": since,
+        "until": until,
+        "widget_key": txid
+      });
+    }
+  }
+
+  function value_at(gauge, at, callback) {
+    if (enterprise) {
+
+    }
+
+    else {
+      var txid = FnordMetric.util.generateUUID();
+
+      continuations[txid] = function(){
+        callback.apply({ "value": this.value });
+      }
+
+      FnordMetric.publish({
+        "type": "widget_request",
+        "klass": "generic",
+        "cmd": "values_for",
+        "gauge": gauge,
+        "at": at,
+        "widget_key": txid
+      })
+    }
+  }
+
   return {
     setup: setup,
     publish: publish,
     refresh: refresh,
-    resize: resize
+    resize: resize,
+    value_at: value_at,
+    values_in: values_in
   };
 
 })(FnordMetric);

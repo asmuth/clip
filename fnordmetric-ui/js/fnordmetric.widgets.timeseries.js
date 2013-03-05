@@ -185,15 +185,31 @@ FnordMetric.widgets.timeseries = function(elem){
   }
 
   function requestDataAsync() {
-    FnordMetric.publish({
-      "type": "widget_request",
-      "klass": "generic",
-      "gauges": gauges,
-      "cmd": "values_at",
-      "tick": 30,
-      "since": elem.attr("data-since"),
-      "until": elem.attr("data-until"),
-      "widget_key": widget_key
+    var since = elem.attr("data-since"),
+        until = elem.attr("data-until");
+
+    FnordMetric.values_in(gauges, since, until, function(){
+
+      var gauges = Object.keys(this)
+      gconfig.series = [];
+
+      for (ind in gauges) {
+        var gauge = gauges[ind];
+
+        gconfig.series.push({
+          name: gauge,
+          color: colors[ind],
+          data: []
+        });
+
+        for(_time in this[gauge]){
+          gconfig.series[ind].data.push(
+            { x: parseInt(_time), y: parseInt(this[gauge][_time] || 0) }
+          );
+        }
+      }
+
+      renderChart();
     });
   }
 
