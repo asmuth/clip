@@ -38,14 +38,12 @@ FnordMetric.widgets.counter = function(elem){
   }
 
   function requestDataAsync() {
-    FnordMetric.publish({
-      "type": "widget_request",
-      "klass": "generic",
-      "cmd": "values_for",
-      "gauge": gauge,
-      "at": at,
-      "widget_key": widget_key
-    })
+    var _at = FnordMetric.util.parseTime(at);
+
+    FnordMetric.value_at(gauge, (_at + ""), function(){
+      elem.attr('data-value', this.value);
+      updateDisplay();
+    });
   }
 
   function destroy() {

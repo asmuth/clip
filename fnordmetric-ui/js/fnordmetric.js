@@ -1,7 +1,11 @@
 var FnordMetric = (function(pre){
 
-  var wsAddress, socket, currentNamespace;
-  var widgets = {};
+  var wsAddress, socket, currentNamespace,
+     continuations = {},
+     continuation = false,
+     stack = [],
+     widgets = {},
+     enterprise = false;
 
   function setup(opts) {
     if (typeof $ == 'undefined') {
@@ -18,7 +22,11 @@ var FnordMetric = (function(pre){
   }
 
   function connect() {
-    socket = new WebSocket(wsAddress);
+    if (enterprise)
+      socket = new WebSocket(wsAddress, "fnordmetric_enterprise");
+    else
+      socket = new WebSocket(wsAddress);
+
     socket.onmessage = onSocketMessage;
     socket.onclose = onSocketClose;
     socket.onopen = onSocketOpen;
@@ -59,13 +67,34 @@ var FnordMetric = (function(pre){
   }
 
   function onSocketMessage(raw) {
-    var n, evt = JSON.parse(raw.data);
+    if (enterprise) {
+      var data = raw.data;
 
-    if (evt.error)
-      return console.log("[FnordMetric] error: " + evt.error);
+      if (data.substr(0,5) == "ERROR")
+        return console.log("[FnordMetric] error: " + data.substr(6));
 
-    if (evt.widget_key && widgets[evt.widget_key])
-      widgets[evt.widget_key].send(evt);
+      else if (continuation) {
+        continuation(data);
+        continuation = false;
+
+        if (stack.length > 0) {
+          var nxt = stack.shift();
+          execute(nxt[0], nxt[1])
+        }
+      }
+
+    } else {
+      var n, evt = JSON.parse(raw.data);
+
+      if (evt.error)
+        return console.log("[FnordMetric] error: " + evt.error);
+
+      if (evt.widget_key && continuations[evt.widget_key])
+        continuations[evt.widget_key].apply(evt);
+
+      else if (evt.widget_key && widgets[evt.widget_key])
+        widgets[evt.widget_key].send(evt);
+    }
   }
 
   function onSocketOpen() {
@@ -77,16 +106,123 @@ var FnordMetric = (function(pre){
     });
   }
 
-  function onSocketClose() {
-    console.log("[FnordMetric] socket closed"); 
-    window.setTimeout(connect, 1000);
+  function onSocketClose(e) {
+    if (e.code = 1003 && e.reason == "fnordmetric_enterprise") {
+      console.log("[FnordMetric] switching to fnordmetric enterprise protocol")
+      enterprise = true;
+
+      $("*[data-fnordmetric]").each(function(n, e){
+        $(e).attr('data-widget-key', null)
+      });
+
+      window.setTimeout(connect, 10);
+    } else {
+      console.log("[FnordMetric] socket closed");
+      window.setTimeout(connect, 1000);
+    }
+  }
+
+  function execute(cmd, cb) {
+    if (continuation === false) {
+      socket.send(cmd);
+      continuation = cb;
+    } else {
+      stack.push([cmd, cb]);
+    }
+  }
+
+  function values_in(gauges, since, until, callback) {
+    if (enterprise) {
+      var all_resp = {};
+
+      function values_in_fetch_next() {
+        var this_resp = gauges.shift();
+
+        execute(
+          "VALUESIN " + this_resp + " " + since + " " + until,
+          function(resp) {
+            var vals = {},
+                parts = resp.split(" ");
+
+            if (parts[0] != "null")
+              for (ind in parts) {
+                var tuple = parts[ind].split(":");
+                tuple[0] = parseInt(parseInt(tuple[0], 10) / 1000, 10);
+                vals[tuple[0]] = tuple[1];
+              }
+
+            all_resp[this_resp] = vals;
+
+            if (gauges.length == 0)
+              callback.apply(FnordMetric.util.zeroFill(all_resp));
+            else
+              values_in_fetch_next();
+          }
+        );
+      }
+
+      values_in_fetch_next();
+    }
+
+    else {
+      var txid = FnordMetric.util.generateUUID();
+
+      continuations[txid] = function(){
+        var result = {};
+
+        for (ind in this.gauges)
+          result[this.gauges[ind].key] = this.gauges[ind].vals;
+
+        callback.apply(result);
+      }
+
+      FnordMetric.publish({
+        "type": "widget_request",
+        "klass": "generic",
+        "gauges": gauges,
+        "cmd": "values_at",
+        "since": since,
+        "until": until,
+        "widget_key": txid
+      });
+    }
+  }
+
+  function value_at(gauge, at, callback) {
+    if (enterprise) {
+      execute(
+        "VALUEAT " + gauge + " " + at,
+        function(resp) {
+          callback.apply({ "value": eval(resp) });
+        }
+      );
+    }
+
+    else {
+      var txid = FnordMetric.util.generateUUID();
+
+      continuations[txid] = function(){
+        callback.apply({ "value": this.value });
+      }
+
+      FnordMetric.publish({
+        "type": "widget_request",
+        "klass": "generic",
+        "cmd": "values_for",
+        "gauge": gauge,
+        "at": at,
+        "widget_key": txid
+      })
+    }
   }
 
   return {
     setup: setup,
     publish: publish,
     refresh: refresh,
-    resize: resize
+    resize: resize,
+    value_at: value_at,
+    values_in: values_in
   };
 
 })(FnordMetric);

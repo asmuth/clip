@@ -33,7 +33,7 @@ class SwapFile(metric_key: MetricKey) {
 
   // adds a new (time, value) tuple to be written to the swap file
   // but does not write it yet. this method is not thread safe!
-  def put(time: Long, value: Double) : Unit = {
+  def put(time: Long, value: Double) : Unit = this.synchronized {
     val bvalue = java.lang.Double.doubleToLongBits(value)
 
     if (buffer.remaining < BLOCK_SIZE)
@@ -46,8 +46,11 @@ class SwapFile(metric_key: MetricKey) {
 
   // fluhes the queued writes from the buffer to disk. this method
   // is not thread safe!
-  def flush : Unit = {
+  def flush : Unit = this.synchronized {
     last_flush = FnordMetric.now
+
+    if (buffer.position < BLOCK_SIZE)
+      return
 
     file.synchronized {
       file.seek(write_pos)
@@ -75,12 +78,19 @@ class SwapFile(metric_key: MetricKey) {
 
       // we need to seek before every read as calls to load_chunk don't
       // have to be synchronized with writes
-      file.synchronized {
+      val nxt_read = file.synchronized {
         file.seek(position - chunk_size)
 
-        read_pos += file.read(chunk.array, read_pos,
+        file.read(chunk.array, read_pos,
           chunk_size - read_pos - 1)
       }
+
+      if (nxt_read >= 0)
+        read_pos += nxt_read
+      else
+        // this should never happen
+        FnordMetric.error("end of file reached while reading " + file_name, false)
+
     }
 
     read_pos = chunk_size - BLOCK_SIZE

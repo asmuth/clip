@@ -22,8 +22,12 @@ class FnordMetric::Reactor
 private
 
   def execute_unsafe(socket, event, messages = [])
-    return false unless event["namespace"]
-    return false unless ns = @namespaces[event["namespace"].to_sym]
+    return [] unless event["namespace"]
+
+    unless ns = @namespaces[event["namespace"].to_sym]
+      return([{ "error" => "invalid namespace: #{event["namespace"]}" }])
+    end
+
     messages << discover(ns) if event["type"] == "discover_request"
     messages << widget(ns, event) if event["type"] == "widget_request"
     messages << gauge(ns, event) if event["type"] == "render_request"

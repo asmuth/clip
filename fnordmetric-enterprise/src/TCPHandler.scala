@@ -20,7 +20,7 @@ class TCPHandler extends SimpleChannelUpstreamHandler {
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent) {
-    FnordMetric.error("[TCP] Exception: " + e.getCause, false)
+    FnordMetric.exception(e.getCause, false)
     e.getChannel.close()
   }
 

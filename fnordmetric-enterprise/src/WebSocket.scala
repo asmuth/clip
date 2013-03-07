@@ -13,8 +13,12 @@ class WebSocket extends org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
 
   var endpoint : Connection = null
 
-  def onOpen(conn: Connection) = {
+  def onOpen(conn: Connection) : Unit = {
     endpoint = conn
+
+    if (conn.getProtocol == null || conn.getProtocol != "fnordmetric_enterprise")
+      return conn.close(1003, "fnordmetric_enterprise")
+
     FnordMetric.log_debug("[WebSocket] connection opened")
   }
 

@@ -4,7 +4,7 @@ name := "FnordMetric Enterprise"
 
 organization := "com.paulasmuth"
 
-version := "0.0.4"
+version := "0.0.5"
 
 mainClass in (Compile, run) := Some("com.fnordmetric.enterprise.FnordMetric")
 
