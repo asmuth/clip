@@ -135,8 +135,11 @@ var FnordMetric = (function(pre){
     if (enterprise) {
       var all_resp = {};
 
-      function values_in_fetch_next() {
+      function values_in_fetch_next(gauges) {
         var this_resp = gauges.shift();
+
+        if (typeof this_resp == 'undefined')
+          return;
 
         execute(
           "VALUESIN " + this_resp + " " + since + " " + until,
@@ -156,12 +159,12 @@ var FnordMetric = (function(pre){
             if (gauges.length == 0)
               callback.apply(FnordMetric.util.zeroFill(all_resp));
             else
-              values_in_fetch_next();
+              values_in_fetch_next(gauges);
           }
         );
       }
 
-      values_in_fetch_next();
+      values_in_fetch_next(gauges);
     }
 
     else {
