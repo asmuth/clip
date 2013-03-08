@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 gem "sinatra", "1.3.3"
 gem "sinatra-static", "0.1.1"
