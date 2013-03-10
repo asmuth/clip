@@ -38,9 +38,7 @@ FnordMetric.widgets.counter = function(elem){
   }
 
   function requestDataAsync() {
-    var _at = FnordMetric.util.parseTime(at);
-
-    FnordMetric.value_at(gauge, (_at + ""), function(){
+    FnordMetric.value_at(gauge, (at + ""), function(){
       elem.attr('data-value', this.value);
       updateDisplay();
     });

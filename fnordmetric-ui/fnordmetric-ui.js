@@ -11830,8 +11830,8 @@ FnordMetric.widgets.timeseries = function(elem){
   }
 
   function requestDataAsync() {
-    var since = FnordMetric.util.parseTime(elem.attr("data-since")),
-        until = FnordMetric.util.parseTime(elem.attr("data-until"));
+    var since = elem.attr("data-since"),
+        until = elem.attr("data-until");
 
     FnordMetric.values_in(gauges, since, until, function(){
       var gauges = Object.keys(this)
@@ -11911,9 +11911,7 @@ FnordMetric.widgets.counter = function(elem){
   }
 
   function requestDataAsync() {
-    var _at = FnordMetric.util.parseTime(at);
-
-    FnordMetric.value_at(gauge, (_at + ""), function(){
+    FnordMetric.value_at(gauge, (at + ""), function(){
       elem.attr('data-value', this.value);
       updateDisplay();
     });

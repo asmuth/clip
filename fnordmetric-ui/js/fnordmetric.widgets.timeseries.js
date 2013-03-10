@@ -185,8 +185,8 @@ FnordMetric.widgets.timeseries = function(elem){
   }
 
   function requestDataAsync() {
-    var since = FnordMetric.util.parseTime(elem.attr("data-since")),
-        until = FnordMetric.util.parseTime(elem.attr("data-until"));
+    var since = elem.attr("data-since"),
+        until = elem.attr("data-until");
 
     FnordMetric.values_in(gauges, since, until, function(){
       var gauges = Object.keys(this)
