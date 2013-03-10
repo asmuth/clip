@@ -12,21 +12,28 @@ class ValuesInInstruction(key: MetricKey, time0: Long, time1: Long) extends Abst
   def execute : String = {
     val metric = MetricFactory.get_metric(key)
     val values = metric.values_in(time1 * 1000, time0 * 1000)
-    val resp = new StringBuffer
+
+    // we estimate that every tuple will need around 25 byte in its
+    // ascii representation
+    val resp = new StringBuffer(values.size * 25)
 
     if (values.size == 0)
       return "null"
 
-    for (ind <- (0 until values.size)) {
-      resp.append(values(ind)._1)
+    values.foreach { cur =>
+      resp.append(cur._1)
       resp.append(":")
 
-      resp.append(FnordMetric.number_format.format((
-        values(ind)._2)))
+      resp.append(FnordMetric.number_format.format(cur._2))
 
-      if (ind < values.size - 1)
-        resp.append(" ")
+      // if this is the last item, we write an extra whitespace
+      // character as checking for the last item would be expensive
+      resp.append(" ")
     }
+
+    // we have to remove the last whitespace as the if statement
+    // in the loop would be to expensive
+    resp.setLength(resp.length - 1)
 
     resp.toString
   }

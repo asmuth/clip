@@ -66,8 +66,8 @@ class SwapFile(metric_key: MetricKey) {
   def load_chunk(position: Int, dst: ListBuffer[(Long, Double)]) : Int = {
     var read_pos = 0
 
-    // we read the data back in 540 byte blocks (30 samples per block)
-    var chunk_size = BLOCK_SIZE * 30
+    // we read the data back in 65535 byte blocks (3640 samples per block)
+    var chunk_size = BLOCK_SIZE * 3640
     val chunk = ByteBuffer.allocate(chunk_size)
 
     if (position < chunk_size)
