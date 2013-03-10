@@ -11,7 +11,7 @@ class ValuesInInstruction(key: MetricKey, time0: Long, time1: Long) extends Abst
 
   def execute : String = {
     val metric = MetricFactory.get_metric(key)
-    val values = metric.values_in(time1 * 1000, time0 * 1000)
+    val values = metric.values_in(time1, time0)
 
     // we estimate that every tuple will need around 25 byte in its
     // ascii representation

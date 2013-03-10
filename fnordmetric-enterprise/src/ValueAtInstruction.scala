@@ -11,7 +11,7 @@ class ValueAtInstruction(key: MetricKey, time: Long) extends AbstractInstruction
 
   def execute : String = {
     val metric = MetricFactory.get_metric(key)
-    val value = metric.value_at(time * 1000).getOrElse(null)
+    val value = metric.value_at(time).getOrElse(null)
 
     if (value == null)
       "null"
