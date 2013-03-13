@@ -2,6 +2,7 @@
 Todo
 ====
 
+  → fnordmetric-enterprise: start without /tmp/fnordmetric
   → fnordmetric-enterprise: admin interface
   → fnordmetric-enterprise: csv export
   → fnordmetric-ui: sum & avg in client
