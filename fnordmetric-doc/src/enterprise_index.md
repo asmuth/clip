@@ -3,7 +3,7 @@ FnordMetric Enterprise
 
 FnordMetric Enterprise is a key-value store (much like redis or memcached) where each
 key holds a "metric". There are different metric types like sum, mean, min/max, 90th
-percentile, etcetra. You continuously add data to these keys/metrics which is aggregated
+percentile, etcetera. You continuously add data to these keys/metrics which is aggregated
 and periodically persisted.
 
 ### Installation
