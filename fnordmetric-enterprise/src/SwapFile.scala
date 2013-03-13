@@ -23,7 +23,7 @@ class SwapFile(metric_key: MetricKey) {
   // 8 bytes value as double precision ieee 754 float)
   val BLOCK_SIZE = 18
 
-  val file_name = "metric-" + metric_key.key +
+  val file_name = "fnordmetric-" + metric_key.key +
     metric_key.mode + "-" + metric_key.flush_interval
 
   val file = new RandomAccessFile(new File(

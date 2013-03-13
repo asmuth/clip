@@ -2,12 +2,11 @@
 Todo
 ====
 
-  → fnordmetric-doc: proper screenshot in enterprise index
-  → fnordmetric-enterprise: start without /tmp/fnordmetric
   → fnordmetric-enterprise: admin interface
-  → fnordmetric-enterprise: csv export
+  → fnordmetric-doc: proper screenshot in enterprise index
   → fnordmetric-ui: sum & avg in client
   → fnordmetric-doc: enterprise deployment (init script, puppet)
+  → fnordmetric-enterprise: csv export
 
 
 Next

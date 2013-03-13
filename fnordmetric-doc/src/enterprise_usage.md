@@ -13,7 +13,7 @@ FnordMetric Enterprise is configures using command line options. The valid optio
   <tr>
     <td>--tcp-threads <i>num_threads</i></th>
     <td>
-      Number of worker threads for the TCP server.
+      Number of worker threads for the TCP server. (default: 4)
     </td>
   </tr>
   <tr>
@@ -25,7 +25,7 @@ FnordMetric Enterprise is configures using command line options. The valid optio
   <tr>
     <td>--udp-threads <i>num_threads</i></th>
     <td>
-      Number of worker threads for the UDP server.
+      Number of worker threads for the UDP server. (default: 4)
     </td>
   </tr>
   <tr>
@@ -37,7 +37,7 @@ FnordMetric Enterprise is configures using command line options. The valid optio
   <tr>
     <td>--websocket-threads <i>num_threads</i></th>
     <td>
-      Number of worker threads for the WebSocket server.
+      Number of worker threads for the WebSocket server. (default: 4)
     </td>
   </tr>
   <tr>
@@ -49,13 +49,19 @@ FnordMetric Enterprise is configures using command line options. The valid optio
   <tr>
     <td>--http-threads <i>num_threads</i></th>
     <td>
-      Number of worker threads for the HTTP server.
+      Number of worker threads for the HTTP server. (default: 4)
     </td>
   </tr>
   <tr>
     <td>--admin <i>port</i></th>
     <td>
       Start the Admin interface on this port.
+    </td>
+  </tr>
+  <tr>
+    <td>--swapdir <i>path</i></th>
+    <td>
+      Directory in which FnordMetric will store the metric peristence files on disk (default: /tmp)
     </td>
   </tr>
   <tr>

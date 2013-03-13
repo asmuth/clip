@@ -28,7 +28,7 @@ object FnordMetric {
     'websocket_threads -> "4",
     'tcp_threads       -> "4",
     'udp_threads       -> "4",
-    'swap_prefix -> "/tmp/fnordmetric"
+    'swap_prefix       -> "/tmp"
   )
 
   val number_format = new DecimalFormat("0.#####")
@@ -66,6 +66,9 @@ object FnordMetric {
       else if (args(n) == "--udp-threads")
         { CONFIG += (('udp_threads, args(n+1))); n += 2 }
 
+      else if (args(n) == "--swapdir")
+        { CONFIG += (('swap_prefix, args(n+1))); n += 2 }
+
       else if ((args(n) == "-d") || (args(n) == "--debug"))
         { debug = true; n += 1 }
 
@@ -89,14 +92,17 @@ object FnordMetric {
   }
 
   def boot = try {
+    FnordMetric.log("FnordMetric Enterprise " + VERSION + " (c) 2013 Paul Asmuth")
+
     FnordMetric.log("Booting...")
+    FnordMetric.log("    swapdir: " + FnordMetric.CONFIG('swap_prefix))
 
     flock = new RandomAccessFile(
-      new File(FnordMetric.CONFIG('swap_prefix), "server.lck"),
+      new File(FnordMetric.CONFIG('swap_prefix), "fnordmetric_server.lck"),
         "rw").getChannel.tryLock
 
     if (flock == null)
-      error("cannot aquire server.lck", true)
+      error("cannot aquire fnordmetric_server.lck", true)
 
     val sched = new Scheduler
     sched.start
@@ -134,11 +140,16 @@ object FnordMetric {
     if (show_banner) banner()
 
     println("usage: fnordmetric-server [options]                                            ")
-    println("  --http               <port>   start http server on this port                 ")
-    println("  --http-threads       <num>    number of http worker-threads (default: 4)     ")
+    println("  --tcp-threads        <num>    number of tcp worker-threads (default: 4)      ")
+    println("  --tcp                <port>   start tcp server on this port                  ")
+    println("  --udp-threads        <num>    number of udp worker-threads (default: 4)      ")
+    println("  --udp                <port>   start udp server on this port                  ")
     println("  --websocket          <port>   start websocket server on this port            ")
     println("  --websocket-threads  <num>    number of websocket worker-threads (default: 4)")
+    println("  --http               <port>   start http server on this port                 ")
+    println("  --http-threads       <num>    number of http worker-threads (default: 4)     ")
     println("  --admin              <port>   start http admin web interface on this port    ")
+    println("  --swapdir            <path>   store the metric persistence files here (default: /tmp)")
     println("  -h, --help                    you're reading it...                           ")
     println("  -d, --debug                   debug mode                                     ")
   }
