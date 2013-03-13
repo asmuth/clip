@@ -1,4 +1,4 @@
 Usage
 -----
 
-here be dragons
+FnordMetric Enterprise is configures using command line options:

@@ -1,51 +1,46 @@
 FnordMetric Enterprise
 ----------------------
 
-FnordMetric Enterprise is a JVM-based timeseries database. It's a key-value store
-(much like redis or memcached) where each key holds a "measurement". There are
-different measurement methods like sum, mean, min/max, 90th percentile, etc. You
-continuously add data to these keys/measurements which is aggregated and periodically
-persisted.
+FnordMetric Enterprise is a key-value store (much like redis or memcached) where each
+key holds a "metric". There are different metric types like sum, mean, min/max, 90th
+percentile, etcetra. You continuously add data to these keys/metrics which is aggregated
+and periodically persisted.
 
-FnordMetric Enterprise features disk persistence, a HTTP, TCP and UDP API, native
-WebSockets support, CSV/JSON Export and a turnkey-ready HTML5 visualization solution
-(FnordMetric UI). FnordMetric Enterprise can be used as a drop-in replacement for
-StatsD+Graphite (it is a lot faster, see Benchmarks).
+FnordMetric Enterprise features a TCP/UDP, HTTP and WebSocket API, CSV/JSON Export and a
+turnkey-ready HTML5 visualization solution ([FnordMetric UI](/documentation/ui_index)).
+It can be used as a drop-in replacement for StatsD+Graphite.
 
 
 ### Semantics
 
-There are three basic operations: `add_sample`, `value_at` and `values_in` that
-add a sample to an ongoing measurement, retrieve the measurement value at a
-specified time, or retrieve all aggregated measurement values in a specified time
-interval.
+There are three basic operations: `add\_sample`, `value\_at` and `values\_in`.
+`add\_sample` adds a sample to a metric, `value\_at` retrieves the measured value at
+a specified time and `values\_in` retrieves all aggregated measured values in a specified
+time interval.
 
-The measurement method and flush_interval are implicitly specified by the key;
-all keys have to be postfixed with "$method-$flush_timeout". For example if
-you want a key "response_time" to operate in average/mean mode and flush every 60
-seconds, use the key `response_time-mean-60`, for a key "total_clicks" that
-aggregates/sums a value and flushes every hour, you could use "total_clicks.sum-3600"
+The metric type and interval are implicitly specified by the metric key; all keys have to
+end with "$type-$interval".
 
+For example: if you want a metric `response\_time` to record the average/mean of all sampled
+values in an aggregation interval of 60 seconds, use the key `response\_time-mean-60`. For a
+metric `total\_clicks` that sums up all measuements in one-hour intervals, you could use
+`total_clicks.sum-3600`
 
-### In-memory vs. disk storage
-
-FnordMetric Enterprise stores the values as 64bit double precision floats.
-
-With an example flush timeout of 10 seconds, one metric uses 0.065 MB of
-memory per day or 0.4 MB per week. The default ring buffer size is x,.
-
-That means with only 4GB of ram, you could access the last month of data of
-2500 counters/measurements with 10 second granularity all from the in-memory
-ringbuffers (without ever hitting a HDD).
-
-Requests that can not be served from memory require one sequential disk read.
+You can find a list of all metric types and the [full API Reference here](/documentation/fnordmetric_api_reference/)
 
 
-### FnordMetric Enterprise vs. StatsD
+### Installation
 
-+ allows for flush intervals as low as one second
-+ rendered in the browser, interactive
-+ much much more scalable
-+ highly customizable with css
-+ requires only a single deployment
-+ i18n (proper timezones in graphs due to in browser rendering etc)
+Installing FnordMetric Enterprise is straightforward. Download the latest release
+[here](/documentation/downloads) and run the jarfile with this command:
+
+    java -jar FnordMetric-Enterprise-v1.2.7.jar --tcp 8922 --udp 8922 --websocket 8080
+
+This will start FnordMetric, listen on UDP and TCP port 8922 and start a WebSocket
+server in port 8080.
+
+
+### Getting Started
+
+...
+

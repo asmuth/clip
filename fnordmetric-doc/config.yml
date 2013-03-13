@@ -43,25 +43,22 @@ sitemap:
 
   fnordmetric_enterprise:
     -
-      title: "Introduction"
+      title: "Getting Started"
       url: "/enterprise_index"
     -
-      title: "Deployment"
-      url: "/enterprise_deployment"
-    -
-      title: "HTTP API"
-      url: "/enterprise_http_api"
-    -
-      title: "TCP/UDP API"
-      url: "/enterprise_tcp_udp_api"
+      title: "API Reference"
+      url: "/enterprise_api_reference"
+    #-
+    #  title: "HTTP API"
+    #  url: "/enterprise_http_api"
     -
       title: "Configuration"
       url: "/enterprise_usage"
-    -
-      title: "Clients"
-      url: "/enterprise_usage"
-    -
-      title: "Examples"
-      url: "/enterprise_examples"
+    #-
+    #  title: "Clients"
+    #  url: "/enterprise_usage"
+    #-
+    #  title: "Examples"
+    #  url: "/enterprise_examples"
 
 
