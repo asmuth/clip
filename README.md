@@ -4,7 +4,7 @@ FnordMetric
 FnordMetric is a framework for collecting and visualizing timeseries data. It enables
 you to build beautiful real-time analytics dashboards within minutes.
 
-Documentation: [fnordmetric.io](http://fnordmetric.io/)
+Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
 [ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
 

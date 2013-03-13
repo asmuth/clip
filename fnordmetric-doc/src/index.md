@@ -1,8 +1,8 @@
 FnordMetric v1.2.8 Documentation
 --------------------------------
 
-FnordMetric is a framework for stream data processing and visualization on
-real-time analytics dashboards. It is split up into three components:
+FnordMetric is a framework for collecting and visualizing timeseries data. It enables
+you to build beautiful real-time analytics dashboards within minutes.
 
 ### FnordMetric UI
 
