@@ -119,6 +119,7 @@ task :render do
   puts "+ Copying Assets"
   %x{cp -R #{BASEDIR}/web/assets/* #{BASEDIR}/target}
   %x{cp -R #{BASEDIR}/web/assets/.htaccess #{BASEDIR}/target}
+  %x{cp -R #{BASEDIR}/downloads #{BASEDIR}/target/}
 end
 
 task :default do

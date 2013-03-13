@@ -51,7 +51,7 @@ There are also [other ways to connect to FnordMetric Enterprise](/documentation/
 You should now be able to navigate to the admin interface on http://localhost:8081/ in your
 browser and see something like this:
 
-<img src="/img/fnordmetric_ui_example_screen.png" width="630" class="shadow" />
+<img src="/img/simple_example_screen.png" width="630" class="shadow" />
 <br />
 
 We can retrieve the measured data in a similar way. This will e.g. retrieve the measured mean
