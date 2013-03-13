@@ -1,7 +1,7 @@
 Configuration
 -------------
 
-FnordMetric Enterprise is configures using command line options. The valid options are:
+FnordMetric Enterprise is configured using command line options. The valid options are:
 
 <table>
   <tr>
