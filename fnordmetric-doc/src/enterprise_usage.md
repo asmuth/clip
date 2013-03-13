@@ -1,7 +1,18 @@
 Configuration
 -------------
 
-FnordMetric Enterprise is configured using command line options. The valid options are:
+FnordMetric Enterprise is configured using command line options.
+
+**Example**:
+
+    java -jar FnordMetric-Enterprise-v1.2.7.jar --tcp 8922 --websocket 8080 --admin 8081
+
+This will start FnordMetric, listen on TCP port 8922, start a WebSocket server on port
+8080 and start the admin interface on port 8081.
+
+### Options
+
+The valid options are:
 
 <table>
   <tr>
@@ -72,10 +83,3 @@ FnordMetric Enterprise is configured using command line options. The valid optio
   </tr>
 </table>
 <br />
-
-**Example**:
-
-    java -jar FnordMetric-Enterprise-v1.2.7.jar --tcp 8922 --websocket 8080 --admin 8081
-
-This will start FnordMetric, listen on TCP port 8922, start a WebSocket server on port
-8080 and start the admin interface on port 8081.
