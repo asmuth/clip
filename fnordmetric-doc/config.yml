@@ -48,9 +48,9 @@ sitemap:
     -
       title: "API Reference"
       url: "/enterprise_api_reference"
-    #-
-    #  title: "HTTP API"
-    #  url: "/enterprise_http_api"
+    -
+      title: "HTTP API"
+      url: "/enterprise_http_api"
     -
       title: "Configuration"
       url: "/enterprise_usage"

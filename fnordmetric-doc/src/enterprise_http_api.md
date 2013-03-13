@@ -1,7 +1,7 @@
 HTTP API
 --------
 
-FIXPAUL: blah blah
+FnordMetric Enterprise offers a HTTP API to add and retrieve measurement data.
 
 ### GET /metric/:key
 
@@ -19,16 +19,16 @@ Parameters:
   <tr>
     <th>since / until</th>
     <td>
-      when the since and until parameters are set, all values in the supplied time
-      interval are returned. values can be a timestamp or a timespec like... since/until
-      are mutually exclusive with at
+      When the since and until parameters are set, all values in the supplied time
+      interval are returned.  since/until are mutually exclusive with at.
+      Possible values are strings like "now", "-30min" or "-6h". You can find the <a href="/documentation/enterprise_api_reference"/>full documentation for this time format here</a>
     </td>
   </tr>
   <tr>
     <th>at</th>
     <td>
-      if set, returns a single value at this point in time. content can be a timestamp
-      or a timespec like -3m... mutually exclusive with since/until
+      if set, returns a single value at this point in time. at is mutually exclusive with since/until
+      Possible values are strings like "now", "-30min" or "-6h". You can find the <a href="/documentation/enterprise_api_reference"/>full documentation for this time format here</a>
     </td>
   </tr>
   <tr>
