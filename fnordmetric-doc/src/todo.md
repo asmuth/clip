@@ -2,6 +2,7 @@
 Todo
 ====
 
+  → fnordmetric-enterprise: make number of in-memory ticks configurable
   → fnordmetric-enterprise: admin interface
   → fnordmetric-doc: proper screenshot in enterprise index
   → fnordmetric-ui: sum & avg in client
