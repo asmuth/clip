@@ -9515,6 +9515,9 @@ var FnordMetric = (function(pre){
   }
 
   function values_in(gauges, since, until, callback) {
+    var tsince = FnordMetric.util.parseTime(since),
+        tuntil = FnordMetric.util.parseTime(until);
+
     if (enterprise) {
       var all_resp = {};
 
@@ -9524,27 +9527,25 @@ var FnordMetric = (function(pre){
         if (typeof this_resp == 'undefined')
           return;
 
-        execute(
-          "VALUESIN " + this_resp + " " + since + " " + until,
-          function(resp) {
-            var vals = {},
-                parts = resp.split(" ");
+        var cmd = "VALUESIN " + this_resp + " " + since + " " + until;
 
-            if (parts[0] != "null")
-              for (ind in parts) {
-                var tuple = parts[ind].split(":");
-                tuple[0] = parseInt(parseInt(tuple[0], 10) / 1000, 10);
-                vals[tuple[0]] = tuple[1];
-              }
+        execute(cmd, function(resp) {
+          var vals = {},
+              parts = resp.split(" ");
 
-            all_resp[this_resp] = vals;
+          if (parts[0] != "null")
+            for (ind in parts) {
+              var tuple = parts[ind].split(":");
+              vals[parseInt(parseInt(tuple[0], 10) / 1000, 10)] = tuple[1];
+            }
 
-            if (gauges.length == 0)
-              callback.apply(FnordMetric.util.zeroFill(all_resp));
-            else
-              values_in_fetch_next(gauges);
-          }
-        );
+          all_resp[this_resp] = vals;
+
+          if (gauges.length == 0)
+            callback.apply(FnordMetric.util.zeroFill(all_resp, tsince, tuntil));
+          else
+            values_in_fetch_next(gauges);
+        });
       }
 
       values_in_fetch_next(gauges);
@@ -11624,22 +11625,56 @@ FnordMetric.util.parseTime = function(str) {
   }
 }
 
-FnordMetric.util.zeroFill = function(obj) {
-  var ticks = {};
+FnordMetric.util.zeroFill = function(obj, since, until) {
+  var ticks = []
 
-  for (key in obj)
-    for (tick in obj[key])
-      ticks[tick] = 1;
+  for (key in obj) {
+    for (tick in obj[key]) {
+      var t = parseInt(tick, 10);
 
-  ticks = Object.keys(ticks);
+      if (ticks.indexOf(t) == -1)
+        ticks.push(t);
+     }
+  }
 
   if (ticks.length == 0)
     ticks.push(0);
 
-  for (key in obj)
-    for (ind in ticks)
+  ticks.sort();
+
+  for (key in obj) {
+    var m = /-([0-9]+)$/.exec(key);
+    var tl = -1;
+    var ts = -1;
+
+    if (m != null)
+      ts = parseInt(m[1], 10);
+
+    if (typeof since != "undefined")
+      tl = since + ts;
+
+    for (ind in ticks) {
+      if (ts > 0 && tl > 0) {
+        while (ticks[ind] - tl > ts) {
+          tl += ts;
+          obj[key][tl] = 0;
+        }
+      }
+
+      tl = ticks[ind];
+
       if (typeof obj[key][ticks[ind]] == 'undefined')
         obj[key][ticks[ind]] = 0;
+    }
+
+    if (typeof until != "undefined") {
+      while (tl < until - ts) {
+        tl += ts;
+        obj[key][tl] = 0;
+      }
+    }
+
+  }
 
   return obj;
 }

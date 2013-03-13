@@ -132,6 +132,9 @@ var FnordMetric = (function(pre){
   }
 
   function values_in(gauges, since, until, callback) {
+    var tsince = FnordMetric.util.parseTime(since),
+        tuntil = FnordMetric.util.parseTime(until);
+
     if (enterprise) {
       var all_resp = {};
 
@@ -141,27 +144,25 @@ var FnordMetric = (function(pre){
         if (typeof this_resp == 'undefined')
           return;
 
-        execute(
-          "VALUESIN " + this_resp + " " + since + " " + until,
-          function(resp) {
-            var vals = {},
-                parts = resp.split(" ");
+        var cmd = "VALUESIN " + this_resp + " " + since + " " + until;
 
-            if (parts[0] != "null")
-              for (ind in parts) {
-                var tuple = parts[ind].split(":");
-                tuple[0] = parseInt(parseInt(tuple[0], 10) / 1000, 10);
-                vals[tuple[0]] = tuple[1];
-              }
+        execute(cmd, function(resp) {
+          var vals = {},
+              parts = resp.split(" ");
 
-            all_resp[this_resp] = vals;
+          if (parts[0] != "null")
+            for (ind in parts) {
+              var tuple = parts[ind].split(":");
+              vals[parseInt(parseInt(tuple[0], 10) / 1000, 10)] = tuple[1];
+            }
 
-            if (gauges.length == 0)
-              callback.apply(FnordMetric.util.zeroFill(all_resp));
-            else
-              values_in_fetch_next(gauges);
-          }
-        );
+          all_resp[this_resp] = vals;
+
+          if (gauges.length == 0)
+            callback.apply(FnordMetric.util.zeroFill(all_resp, tsince, tuntil));
+          else
+            values_in_fetch_next(gauges);
+        });
       }
 
       values_in_fetch_next(gauges);

@@ -110,22 +110,56 @@ FnordMetric.util.parseTime = function(str) {
   }
 }
 
-FnordMetric.util.zeroFill = function(obj) {
-  var ticks = {};
+FnordMetric.util.zeroFill = function(obj, since, until) {
+  var ticks = []
 
-  for (key in obj)
-    for (tick in obj[key])
-      ticks[tick] = 1;
+  for (key in obj) {
+    for (tick in obj[key]) {
+      var t = parseInt(tick, 10);
 
-  ticks = Object.keys(ticks);
+      if (ticks.indexOf(t) == -1)
+        ticks.push(t);
+     }
+  }
 
   if (ticks.length == 0)
     ticks.push(0);
 
-  for (key in obj)
-    for (ind in ticks)
+  ticks.sort();
+
+  for (key in obj) {
+    var m = /-([0-9]+)$/.exec(key);
+    var tl = -1;
+    var ts = -1;
+
+    if (m != null)
+      ts = parseInt(m[1], 10);
+
+    if (typeof since != "undefined")
+      tl = since + ts;
+
+    for (ind in ticks) {
+      if (ts > 0 && tl > 0) {
+        while (ticks[ind] - tl > ts) {
+          tl += ts;
+          obj[key][tl] = 0;
+        }
+      }
+
+      tl = ticks[ind];
+
       if (typeof obj[key][ticks[ind]] == 'undefined')
         obj[key][ticks[ind]] = 0;
+    }
+
+    if (typeof until != "undefined") {
+      while (tl < until - ts) {
+        tl += ts;
+        obj[key][tl] = 0;
+      }
+    }
+
+  }
 
   return obj;
 }
