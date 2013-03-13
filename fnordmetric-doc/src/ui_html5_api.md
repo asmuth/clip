@@ -58,7 +58,7 @@ These are the valid html attributes for counters:
       e.g. "sum(-3hours)" which will give you the sum of the last three hours.</p>
       <p>You can also get a average of the last x measurements by setting this to
       e.g. "avg(-3hours)" which will give you the average of the last three hours.</p>
-      The Default is "now". You can find the <a href="/documentation/fnordmetric_api_reference"/>full documentation for this time format here</a>
+      The Default is "now". You can find the <a href="/documentation/enterprise_api_reference"/>full documentation for this time format here</a>
     </td>
   </tr>
   <tr>
@@ -125,7 +125,7 @@ These are the valid html attributes:
       unix timestamp, a time definition like "-3hours" (3 hours ago), "-45m"
       (45m ago) or "-3600" (3600 seconds = 1 hour ago) or "now". To e.g. display
       the last two hours of data use: data-since="-2hours" data-until="now".
-      You can find the <a href="/documentation/fnordmetric_api_reference"/>full documentation for this time format here</a>
+      You can find the <a href="/documentation/enterprise_api_reference"/>full documentation for this time format here</a>
     </td>
   </tr>
   <tr>

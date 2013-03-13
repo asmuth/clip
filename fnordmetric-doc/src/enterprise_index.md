@@ -27,7 +27,7 @@ values in an aggregation interval of 60 seconds, you'd use the key `response\_ti
 interval: 60s). For a metric `total\_clicks` that sums up all measuements in one-hour intervals, you would use
 `total_clicks.sum-3600` (type: sum, interval: 3600s)
 
-You can find a list of all metric types and the [full API Reference here](/documentation/fnordmetric_api_reference/)
+You can find a list of all metric types and the [full API Reference here](/documentation/enterprise_api_reference/)
 
 
 ### Getting Started
@@ -45,7 +45,7 @@ FnordMetric Enterprise will automatically create the metric if it doesnt exist y
     $ echo "SAMPLE myapp.response_time-mean-10" | nc localhost 9222
     OK
 
-There are also [other ways to connect to FnordMetric Enterprise](/documentation/fnordmetric_api_reference/)
+There are also [other ways to connect to FnordMetric Enterprise](/documentation/enterprise_api_reference/)
 (e.g. WebSockets, UDP, HTTP).
 
 You should now be able to navigate to the admin interface on http://localhost:8081/ in your
@@ -55,13 +55,13 @@ browser and see something like this:
 <br />
 
 We can retrieve the measured data in a similar way. This will e.g. retrieve the measured mean
-response times for the last hour ([see a full list of commands here](/documentation/fnordmetric_api_reference/))
+response times for the last hour ([see a full list of commands here](/documentation/enterprise_api_reference/))
 
     $ echo "VALUESIN myapp.response_time-mean-10 -1h now" | nc localhost 9222
     1360804571:4233.52 1360804581:4312.36 1360804591:6323.12
 
 
 You now have a running FnordMetric application. There is a lot more you can do: Checkout out
-the [full API Reference here](/documentation/fnordmetric_api_reference/) or [read more
+the [full API Reference here](/documentation/enterprise_api_reference/) or [read more
 about FnordMetric UI](/documentation/ui_index), a JavaScript / HTML5 library that you can use
 to plug in the data into any webpage within seconds.
