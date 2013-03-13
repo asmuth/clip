@@ -1,4 +1,4 @@
-FnordMetric v1.1.2 Documentation
+FnordMetric v1.2.8 Documentation
 --------------------------------
 
 FnordMetric is a framework for stream data processing and visualization on
