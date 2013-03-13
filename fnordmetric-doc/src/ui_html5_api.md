@@ -58,7 +58,7 @@ These are the valid html attributes for counters:
       e.g. "sum(-3hours)" which will give you the sum of the last three hours.</p>
       <p>You can also get a average of the last x measurements by setting this to
       e.g. "avg(-3hours)" which will give you the average of the last three hours.</p>
-      <p>The Default is "now".</p>
+      The Default is "now". You can find the <a href="/documentation/fnordmetric_api_reference"/>full documentation for this time format here</a>
     </td>
   </tr>
   <tr>
@@ -124,7 +124,8 @@ These are the valid html attributes:
       these attributes specify the time range to be displayed. they may be a
       unix timestamp, a time definition like "-3hours" (3 hours ago), "-45m"
       (45m ago) or "-3600" (3600 seconds = 1 hour ago) or "now". To e.g. display
-      the last two hours of data use: data-since="-2hours" data-until="now"
+      the last two hours of data use: data-since="-2hours" data-until="now".
+      You can find the <a href="/documentation/fnordmetric_api_reference"/>full documentation for this time format here</a>
     </td>
   </tr>
   <tr>
@@ -196,3 +197,24 @@ Example: Resize all widgets
 
     FnordMetric.resize();
 
+
+
+### JavaScript API
+
+FnordMetric UI provides a JavaScript API to retrieve metric values.
+
+**FnordMetric#value_at(metrics, time, callback)**
+
+Retrieves the measured value of a metric at a specific point in time. [See here](/documentation/enterprise_api_reference)
+for more information about the time format.
+
+    >> FnordMetric.value_at(["response_time-mean-30"], "now", function(){ console.log(this); })
+    << {value: 2122.55581}
+
+**FnordMetric#values_in(metrics, since, until, callback)**
+
+Retrieves all measured values of a metric in a specific time interval. [See here](/documentation/enterprise_api_reference)
+for more information about the time format.
+
+    >> FnordMetric.values_in(["response_time-mean-30"], "-2h", "now", function(){ console.log(this); })
+    << { "response_time-mean-30": {1363188688: "2036.83876", 1363188718: "2049.7485", 1363188748: "2283.37632"} }
