@@ -269,9 +269,17 @@ table th i {
   font-size: 12px;
 }
 
-table tr:nth-child(2) {
-  background-color: #f8f8f8;
-}
+table tr:nth-child(2) { background-color: #f8f8f8; }
+table tr:nth-child(4) { background-color: #f8f8f8; }
+table tr:nth-child(6) { background-color: #f8f8f8; }
+table tr:nth-child(8) { background-color: #f8f8f8; }
+table tr:nth-child(10) { background-color: #f8f8f8; }
+table tr:nth-child(12) { background-color: #f8f8f8; }
+table tr:nth-child(16) { background-color: #f8f8f8; }
+table tr:nth-child(18) { background-color: #f8f8f8; }
+table tr:nth-child(20) { background-color: #f8f8f8; }
+table tr:nth-child(22) { background-color: #f8f8f8; }
+table tr:nth-child(24) { background-color: #f8f8f8; }
 
 table td p {
   margin-bottom: 0;

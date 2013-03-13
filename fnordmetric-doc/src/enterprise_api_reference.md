@@ -2,40 +2,23 @@ API Reference
 -------------
 
 There are three basic operations: `add\_sample`, `value\_at` and `values\_in`.
-`add\_sample` adds a sample to a metric, `value\_at` retrieves the measured value at
-a specified time and `values\_in` retrieves all aggregated measured values in a specified
-time interval.
 
-The metric type and interval are implicitly specified by the metric key; all keys have to
++ `add\_sample` adds a sample to a metric
++ `value\_at` retrieves the measured value at a specified time
++ `values\_in` retrieves all aggregated measured values in a specified time interval
+
+A metrics type and interval are implicitly specified by the metrics key; all keys have to
 end with "$type-$interval".
 
 For example: if you want a metric `response\_time` to record the average/mean of all sampled
-values in an aggregation interval of 60 seconds, use the key `response\_time-mean-60`. For a
-metric `total\_clicks` that sums up all measuements in one-hour intervals, you could use
+values in an aggregation interval of 60 seconds, use the key `response\_time-mean-60`.
+For a metric `total\_clicks` that sums up all measuements in one-hour intervals, you could use
 `total_clicks.sum-3600`
-
-These are all metric types that are currently supported:
-
-<table>
-  <tr>
-    <th>sum</th>
-    <td>
-      Records the sum of all sampled values in an interval. <i>e.g. total_sales-sum-60</i>
-    </td>
-  </tr>
-  <tr>
-    <th>mean</th>
-    <td>
-      Records the mean / average of all sampled values in an interval. <i>e.g response_time-mean-60</i>
-    </td>
-  </tr>
-</table>
-
 
 ### Protocol
 
 FnordMetric Enteprise offers a simple US-ASCII text-based interface. It is a very simple
-line-based serial request/response protocol. Requests may contain all ASCII characters
+line-based serial request/response protocol. Requests may contain only ASCII characters
 and must end with a newline (`\n`). Responses are also simple ASCII formatted numbers,
 seperated with whitespaces and colons. Responses also always end with a newline character.
 
@@ -76,7 +59,7 @@ will never contain a newline character).
     ERROR something went wrong\n
 
 
-#### UDP:
+#### UDP
 
 When you are using UDP as the transport layer you won't receive any responses. Therefore the only
 command that works over UDP is "sample". Note that UDP doesn't guarantee delivery.
@@ -91,11 +74,71 @@ Example UDP packet that increments three counters:
     SAMPLE my_counter3.sum-3600 789\n
 
 
+### Metric Types
+
+These are all metric types that are currently supported:
+
+<table>
+  <tr>
+    <th>sum</th>
+    <td>
+      Records the sum of all sampled values in an interval. <i>e.g. total_sales-sum-60</i>
+    </td>
+  </tr>
+  <tr>
+    <th>mean</th>
+    <td>
+      Records the mean / average of all sampled values in an interval. <i>e.g response_time-mean-60</i>
+    </td>
+  </tr>
+</table>
+<br />
+
 
 ### Time format
 
-  here be dragons
+Allowed time formats are for example `-5h` (5 hours ago), `-30min` (30 minutes ago),
+`now` (now) and `1363208342` (a unix timestamp).
 
+<table>
+  <tr>
+    <td>now</td>
+    <td>
+      now
+    </td>
+  </tr>
+  <tr>
+    <td><i>unix timestamp</i></td>
+    <td>
+      time at tdat timestamp (e.g. "1363208342")
+    </td>
+  </tr>
+  <tr>
+    <td>-60, -30s, -45sec, -120seconds, ...</td>
+    <td>
+      x seconds ago
+    </td>
+  </tr>
+  <tr>
+    <td>-5m, -15min, -1minute, -120minutes</td>
+    <td>
+      x seconds ago
+    </td>
+  </tr>
+  <tr>
+    <td>-24h, -72hours, -12hour, ...</td>
+    <td>
+      x hours ago
+    </td>
+  </tr>
+  <tr>
+    <td>-7d, -1day, -14days, ...</td>
+    <td>
+      x days ago
+    </td>
+  </tr>
+</table>
+<br />
 
 
 ### Commands
