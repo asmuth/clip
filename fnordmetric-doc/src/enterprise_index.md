@@ -8,8 +8,8 @@ and periodically persisted.
 
 ### Installation
 
-Installing FnordMetric Enterprise is straightforward. Download the latest release
-[here](/documentation/downloads) and run the jarfile with this command:
+Installing FnordMetric Enterprise is straightforward. [Download the latest release
+here](/documentation/downloads) and run the jarfile with this command:
 
     java -jar FnordMetric-Enterprise-v1.2.7.jar --tcp 8922 --websocket 8080 --admin 8081
 
