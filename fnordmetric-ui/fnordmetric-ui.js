@@ -11637,9 +11637,6 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
      }
   }
 
-  if (ticks.length == 0)
-    ticks.push(0);
-
   ticks.sort();
 
   for (key in obj) {
