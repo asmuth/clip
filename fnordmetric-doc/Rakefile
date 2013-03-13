@@ -122,10 +122,15 @@ task :render do
   %x{cp -R #{BASEDIR}/downloads #{BASEDIR}/target/}
 end
 
+task :publish do
+  exec "rsync -vr target/ fnordmetric.io:fnordmetric.io"
+end
+
 task :default do
   puts "usage: rake [command]"
   puts <<-EOU
   build     # build the static html docs
   clean     # delete all generated files
+  publish   # publish to fnordmetric.io
   EOU
 end
