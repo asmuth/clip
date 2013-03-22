@@ -2,6 +2,8 @@
   <head>
     <title>FnordMetric Enterprise</title>
     <link href="web.css" rel="stylesheet" type="text/css" />
+    <link href="../../fnordmetric-ui/fnordmetric-ui.css" rel="stylesheet" type="text/css" />
+    <script src="../../fnordmetric-ui/fnordmetric-ui.js" type="text/javascript"></script>
   </head>
   <body>
     <div class="navbar">
@@ -52,10 +54,6 @@
             <a class="button navbutton">XML</a>
           </div>
         </div>
-
-        <div class="ge_controlpanel_section" style="border-right:none;">
-          <label>Stats</label>
-        </div>
       </div>
 
       <div class="headbar">
@@ -68,5 +66,11 @@
       </div>
 
     </div>
+
+    <script type="text/javascript">
+      FnordMetric.setup({
+        "address": "localhost:8080"
+      });
+    </script>
   </body>
 </html>
