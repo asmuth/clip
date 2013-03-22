@@ -5,10 +5,9 @@ body {
   padding:0;
   overflow-y:scroll;
   font: 12px/20px "Gotham Narrow", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  overflow-x:hidden;
+  overflow:hidden;
+  padding-top:39px;
 }
-
-body.inner{ background:#fff; margin-right:10px; }
 
 h1{
   font-size:24px;
@@ -97,21 +96,35 @@ table tr td:first-child{ padding-left:15px; }
 table th{ background:#efefef; }
 
 .navbar{
-  height:49px;
+  height:38px;
   background:url('img/navbar.png');
+  z-index:999;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  border-bottom:1px solid #aaa;
+}
+
+.navbar a {
+  float:right;
+  line-height:41px;
+  margin-right:20px;
+  text-decoration:none;
+  color:#06c;
+}
+
+.navbar a:hover {
+  text-decoration:underline;
 }
 
 .navbar h1{
-  text-align:center;
   color:#525252;
   font-weight:500;
-  line-height:49px;
+  line-height:38px;
   font-size:16px;
-}
-
-.navbar h1 a.current{
   color:#333;
-  font-weight:700;
+  font-weight:600;
 }
 
 a.button{
@@ -229,13 +242,9 @@ a.button.datepicker_sa i {
 }
 
 .picto{ display:block; height:14px; width:14px; float:left; opacity:0.7; }
-.picto.piechart{ background-position:-42px -173px; width:9px; margin-right:5px; }
 
 #viewport{ float:left; margin-left:220px; min-width:790px; }
 #viewport .viewport_inner{ margin:0 6px; background:#fff; padding-top:1px; padding-bottom:1px; }
-
-#viewport, #sidebar ul li:hover, #sidebar ul li.active{ background:#24272c; box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4); }
-
 
 .headbar {
 
@@ -308,4 +317,150 @@ text-shadow: 1px 0px 2px rgba(255, 255, 255, 1);
 }
 
 
+#sidebar{
+  position:absolute;
+  width:20%;
+  box-sizing:border-box;
+  height:100%;
+  background:#f7f7f7;
+  box-shadow:0 0 3px 1px rgba(0,0,0,.3);
+}
 
+#pane{
+  margin-left:20%;
+  width:80%;
+  box-sizing:border-box;
+  height:100%;
+  border-left:1px solid #ddd;
+}
+
+ul.ui_tabs{
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  height:36px;
+  display:block;
+  width:100%;
+  margin-top:30px;
+  font-size:13px;
+  margin-bottom:-1px;
+  padding-left:16px;
+  overflow:hidden;
+}
+
+ul.ui_tabs li{
+  float:left;
+}
+
+ul.ui_tabs li a{
+  display:block;
+  height:35px;
+  line-height:36px;
+  border-top:1px solid none;
+  padding:0 25px;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  color:#666;
+  font-weight:500;
+  text-decoration:none;
+}
+
+
+ul.ui_tabs li a:hover{
+  color:#333;
+}
+
+ul.ui_tabs li.active a{
+  border: 1px solid #D0D0D0;
+  border-bottom:none;
+  color:#333;
+  background-color: #F4F4F4;
+}
+
+
+.ge_controlpanel {
+  height:105px;
+  background:#f8f8f8;
+}
+
+.ge_controlpanel_section {
+  height:65px;
+  padding:20px;
+  float:left;
+  border-right:1px dotted #ddd;
+}
+
+.ge_controlpanel label{
+  font-weight:bold;
+  display:block;
+  margin-bottom:5px;
+}
+
+.ge_meta {
+  height:35px;
+  line-height:37px;
+  color:#999;
+}
+
+.ge_meta a {
+  margin-left: 10px;
+  font-size:110%;
+  color:#06c;
+  text-decoration:none;
+}
+
+.ge_empty {
+  display: block;
+  text-align: center;
+  line-height: 400px;
+  font-size: 16px;
+  color: #666;
+}
+
+.searchbar{ background:#efefef; border-bottom: 1px solid #DDD; padding:10px 17px; background:#fff; }
+.searchbar input{ width:100%; margin-left:-10px; height:34px; line-height:34px; }
+
+.ui_toplist{ min-height:300px; padding:0; margin:0; }
+.ui_toplist.loading{ opacity:0.5; background:url('/img/loader.gif') no-repeat center center;  }
+
+.ui_toplist li{ border-bottom:1px solid #dedede; height:30px; display:block; font-size:13px; line-height:31px; padding:0 10px; }
+.ui_toplist li:hover{ background:#e8e8e8; cursor:pointer; }
+
+.ui_toplist li.active{
+  background: #7bb2ff; /* Old browsers */
+  background: -moz-linear-gradient(top, #7bb2ff 0%, #609ff8 44%, #4089ee 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7bb2ff), color-stop(44%,#609ff8), color-stop(100%,#4089ee)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+  background: -o-linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+  background: -ms-linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+  background: linear-gradient(top, #7bb2ff 0%,#609ff8 44%,#4089ee 100%);
+
+  border-top:1px solid #5F94DE;
+  border-bottom:1px solid #4E7DBF;
+
+  margin-top:-1px;
+
+  box-shadow:0 1px 1px rgba(255,255,255,0.5) inset;
+  color:#fff;
+}
+
+
+.ge_controlpanel .buttons{
+  background:url('img/navbar.png');
+  height:27px;
+  padding:5px;
+  border-radius:4px;
+  border:1px solid #aaa;
+}
+
+.ge_controlpanel .button.navbutton{
+  padding-left:10px;
+  padding-right:10px;
+  margin-top:0;
+  margin-left:0;
+  margin-right:10px;
+}
+
+.ge_controlpanel .button.navbutton:first-child{
+  margin-right:0;
+}

@@ -5,23 +5,67 @@
   </head>
   <body>
     <div class="navbar">
-      <a class="button navbutton">
-        <i class="icon-refresh"></i> Refresh
-      </a>
-      <a class="button back">
-        &laquo;
-      </a>
+      <a href="#">Settings</a>
+      <a href="#">Documentation</a>
       <h1>
-        <a class="current">
-          FnordMetric Enterprise
-          <span style="font-weight:normal; font-size:80%; margin-left:5px;">v1.2.8</span>
-        </a>
+        FnordMetric Enterprise
+        <span style="font-weight:normal; font-size:80%; margin-left:5px;">v1.2.8</span>
       </h1>
     </div>
+
     <div id="sidebar">
-      fnord
+      <div class="searchbar">
+        <input placeholder="Search..."  type="search">
+      </div>
+
+      <ul class="ui_toplist">
+        <li class="active">SchiffDonauMuetzen</li>
+        <li>SchiffDonauMuetzen</li>
+        <li>SchiffDonauMuetzen</li>
+        <li>SchiffDonauMuetzen</li>
+        <li>SchiffDonauMuetzen</li>
+      </ul>
     </div>
+
     <div id="pane">
+      <div class="ge_controlpanel">
+        <div class="ge_controlpanel_section" style="border-right:none; padding-right:0;">
+          <label>Select the Timerange</label>
+          <a class="button datepicker_sa">
+            <div class="date" style="width:300px;">&nbsp;</div>
+          <i class="icon-calendar"></i>
+          </a>
+        </div>
+
+        <div class="ge_controlpanel_section">
+          <label>...or a Recent Interval</label>
+          <a class="button datepicker_sa">
+            <div class="date" style="width:100px;">&nbsp;</div>
+          </a>
+        </div>
+
+        <div class="ge_controlpanel_section">
+          <label>Export as...</label>
+          <div class="buttons">
+            <a class="button navbutton">CSV</a>
+            <a class="button navbutton">JSON</a>
+            <a class="button navbutton">XML</a>
+          </div>
+        </div>
+
+        <div class="ge_controlpanel_section" style="border-right:none;">
+          <label>Stats</label>
+        </div>
+      </div>
+
+      <div class="headbar">
+        <a class="button mr">Fnord</a>
+        <h2>fnord.bar.mymetric</h2>
+      </div>
+
+      <div style="clear:both;" class="widget_viewport">
+        <i class="ge_empty">Please select a gauge...</i>
+      </div>
 
     </div>
   </body>
