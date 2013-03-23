@@ -421,7 +421,7 @@ ul.ui_tabs li.active a{
 .searchbar input{ width:100%; margin-left:-10px; height:34px; line-height:34px; }
 
 .ui_toplist{ min-height:300px; padding:0; margin:0; }
-.ui_toplist.loading{ opacity:0.5; background:url('/img/loader.gif') no-repeat center center;  }
+.ui_toplist.loading{ opacity:0.5; background:url('img/loader.gif') no-repeat center center;  }
 
 .ui_toplist li{ border-bottom:1px solid #dedede; height:30px; display:block; font-size:13px; line-height:31px; padding:0 10px; }
 .ui_toplist li:hover{ background:#e8e8e8; cursor:pointer; }

@@ -4,6 +4,7 @@
     <link href="web.css" rel="stylesheet" type="text/css" />
     <link href="../../fnordmetric-ui/fnordmetric-ui.css" rel="stylesheet" type="text/css" />
     <script src="../../fnordmetric-ui/fnordmetric-ui.js" type="text/javascript"></script>
+    <script src="jQuery-1.6.2.min.js" type="text/javascript"></script>
   </head>
   <body>
     <div class="navbar">
@@ -17,15 +18,10 @@
 
     <div id="sidebar">
       <div class="searchbar">
-        <input placeholder="Search..."  type="search">
+        <input placeholder="Search..."  type="search" onKeyUp="FnordMetric.enterprise_ui.renderMetricList();" onChange="FnordMetric.enterprise_ui.renderMetricList();" />
       </div>
 
-      <ul class="ui_toplist">
-        <li class="active">SchiffDonauMuetzen</li>
-        <li>SchiffDonauMuetzen</li>
-        <li>SchiffDonauMuetzen</li>
-        <li>SchiffDonauMuetzen</li>
-        <li>SchiffDonauMuetzen</li>
+      <ul class="ui_toplist loading" id="metric_list">
       </ul>
     </div>
 
@@ -68,9 +64,57 @@
     </div>
 
     <script type="text/javascript">
+
       FnordMetric.setup({
         "address": "localhost:8080"
       });
+
+
+      FnordMetric.enterprise_ui = (function(){
+        var metric_list = false;
+            update_metric_list_timer = false;
+
+        function updateMetricList() {
+          FnordMetric.execute("LIST", function(d){
+            if (metric_list == false) {
+              window.clearInterval(update_metric_list_interval);
+              update_metric_list_interval = window.setInterval(updateMetricList, 2000);
+              $("#metric_list").removeClass("loading");
+            }
+
+            metric_list = d.split(" ");
+            renderMetricList();
+          });
+        }
+
+        function renderMetricList() {
+          var ul = $("#metric_list");
+          ul.html("");
+
+          var search_prefix = $(".searchbar input:first").val();
+
+          for (ind in metric_list) {
+            if (ind > 100)
+              break;
+
+            var match = search_prefix == "" ? true : false;
+
+            if (!match)
+              match = (metric_list[ind].substring(0, search_prefix.length) == search_prefix);
+
+            if (match)
+              ul.append($("<li>").html(metric_list[ind]));
+          }
+        }
+
+
+        update_metric_list_interval = window.setInterval(updateMetricList, 200);
+
+        return {
+          renderMetricList: renderMetricList
+        };
+
+      })();
     </script>
   </body>
 </html>
