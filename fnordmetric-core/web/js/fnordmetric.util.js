@@ -18,22 +18,6 @@ FnordMetric.util.formatTimeOfDay = function(_time){
   }
 }
 
-FnordMetric.util.formatTimeRange = function(range){
-  if (range < 60){
-    return parseInt(range) + ' sec';
-  } else if(range<3600){
-    return parseInt(range/60) + ' min';
-  } else if(range==3600){
-    return '1 hour';
-  } else if(range<(3600*24)){
-    return parseInt(range/3600) + ' hours';
-  } else if(range==(3600*24)){
-    return '1 day';
-  } else {
-    return parseInt(range/(3600*24)) + ' days';
-  }
-}
-
 FnordMetric.util.formatTimeRangePre = function(range, offset){
   if(!offset){ offset=0; } else { offset=parseInt(offset); }
   if((offset == 0) && (range==(3600*24))){
