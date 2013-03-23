@@ -38,6 +38,9 @@ object InstructionFactory {
       parseTime(time))
     }
 
+    case "LIST" =>
+      new ListInstruction()
+
     case _ =>
       new ErrorInstruction("invalid command")
 
