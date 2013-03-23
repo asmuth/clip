@@ -38,7 +38,7 @@
         <div class="ge_controlpanel">
           <div class="ge_controlpanel_section" style="border-right:none; padding-right:0;">
             <label>Select the Timerange</label>
-            <a class="button datepicker_sa">
+            <a class="button datepicker datepicker_sa">
               <div class="date" style="width:300px;">&nbsp;</div>
             <i class="icon-calendar"></i>
             </a>
@@ -46,7 +46,7 @@
 
           <div class="ge_controlpanel_section">
             <label>...or a Recent Interval</label>
-            <a class="button datepicker_sa">
+            <a class="button intervalpicker datepicker_sa">
               <div class="date" style="width:100px;">&nbsp;</div>
             </a>
           </div>
@@ -152,11 +152,15 @@
         function updateExplorerView() {
           var metric = $("#explorer_metric");
 
-          $(".datepicker_sa .date").html(
-            FnordMetric.util.dateFormat(explorer_from) +
+          $(".datepicker .date").html(
+            FnordMetric.util.dateFormat(FnordMetric.util.parseTime(explorer_from)) +
             '&nbsp;&dash;&nbsp;' +
-            FnordMetric.util.dateFormat(explorer_until)
+            FnordMetric.util.dateFormat(FnordMetric.util.parseTime(explorer_until))
           );
+
+          $(".intervalpicker .date").html(
+            FnordMetric.util.formatTimeRange(FnordMetric.util.parseTime(
+              explorer_until) - FnordMetric.util.parseTime(explorer_from)));
 
           $("#drawing_mode_btns .button").removeClass('active')
             .filter("*[data-val='" + explorer_drawing_mode + "']").addClass('active');
