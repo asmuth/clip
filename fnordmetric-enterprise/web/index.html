@@ -62,13 +62,17 @@
         </div>
 
         <div class="headbar">
-          <a class="button mr">Fnord</a>
+          <div class="btn_group" id="drawing_mode_btns">
+            <a class="button" data-val="line" onclick="FnordMetric.enterprise_ui.selectDrawingMode('line');">Line</a>
+            <a class="button" data-val="area" onclick="FnordMetric.enterprise_ui.selectDrawingMode('area');">Area</a>
+            <a class="button" data-val="flow" onclick="FnordMetric.enterprise_ui.selectDrawingMode('flow');">Flow</a>
+          </div>
           <h2></h2>
         </div>
 
         <div style="clear:both;" class="widget_viewport">
           <i class="ge_empty">Please select a gauge...</i>
-          <div id="explorer_metric" data-fnordmetric="timeseries"></div>
+          <div id="explorer_metric" data-fnordmetric="timeseries" data-legend="off"></div>
         </div>
 
       </div>
@@ -85,8 +89,9 @@
       FnordMetric.enterprise_ui = (function(){
         var metric_list = false,
             current_metric = null,
-            explorer_until = null,
-            explorer_from = null,
+            explorer_until = "now",
+            explorer_from = "-2h",
+            explorer_drawing_mode = "line",
             update_metric_list_timer = false;
 
         function updateMetricList() {
@@ -141,18 +146,25 @@
 
           $(".headbar h2").html(current_metric);
 
-          explorer_from = "-2h";
-          explorer_until = "now";
-
           updateExplorerView();
         }
 
         function updateExplorerView() {
           var metric = $("#explorer_metric");
 
+          $(".datepicker_sa .date").html(
+            FnordMetric.util.dateFormat(explorer_from) +
+            '&nbsp;&dash;&nbsp;' +
+            FnordMetric.util.dateFormat(explorer_until)
+          );
+
+          $("#drawing_mode_btns .button").removeClass('active')
+            .filter("*[data-val='" + explorer_drawing_mode + "']").addClass('active');
+
           metric.attr("data-gauges", current_metric);
           metric.attr("data-since", explorer_from);
           metric.attr("data-until", explorer_until);
+          metric.attr("data-chart-style", explorer_drawing_mode);
 
           resizeView();
         }
@@ -165,12 +177,18 @@
           FnordMetric.refresh(metric);
         }
 
+        function selectDrawingMode(mode) {
+          explorer_drawing_mode = mode;
+          updateExplorerView();
+        }
+
         update_metric_list_interval = window.setInterval(updateMetricList, 200);
 
         $(window).resize(resizeView);
 
         return {
-          renderMetricList: renderMetricList
+          renderMetricList: renderMetricList,
+          selectDrawingMode: selectDrawingMode
         };
 
       })();

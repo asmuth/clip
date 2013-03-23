@@ -464,3 +464,5 @@ ul.ui_tabs li.active a{
 .ge_controlpanel .button.navbutton:first-child{
   margin-right:0;
 }
+
+.widget_viewport{ padding-top:25px; }
