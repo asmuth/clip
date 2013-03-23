@@ -9617,6 +9617,7 @@ var FnordMetric = (function(pre){
     publish: publish,
     refresh: refresh,
     resize: resize,
+    execute: execute,
     value_at: value_at,
     values_in: values_in
   };
