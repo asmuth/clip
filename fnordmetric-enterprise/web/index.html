@@ -18,7 +18,7 @@
 
     <div id="sidebar">
       <div class="searchbar">
-        <input placeholder="Search..."  type="search" onKeyUp="FnordMetric.enterprise_ui.renderMetricList();" onChange="FnordMetric.enterprise_ui.renderMetricList();" />
+        <input placeholder="Search..." type="search" onKeyUp="FnordMetric.enterprise_ui.renderMetricList();" onChange="FnordMetric.enterprise_ui.renderMetricList();" />
       </div>
 
       <ul class="ui_toplist loading" id="metric_list">
@@ -26,39 +26,51 @@
     </div>
 
     <div id="pane">
-      <div class="ge_controlpanel">
-        <div class="ge_controlpanel_section" style="border-right:none; padding-right:0;">
-          <label>Select the Timerange</label>
-          <a class="button datepicker_sa">
-            <div class="date" style="width:300px;">&nbsp;</div>
-          <i class="icon-calendar"></i>
-          </a>
-        </div>
 
-        <div class="ge_controlpanel_section">
-          <label>...or a Recent Interval</label>
-          <a class="button datepicker_sa">
-            <div class="date" style="width:100px;">&nbsp;</div>
-          </a>
+      <div id="dashboard">
+        <div style="clear:both;" class="widget_viewport">
+          <i class="ge_empty">Fnord!</i>
         </div>
+      </div>
 
-        <div class="ge_controlpanel_section">
-          <label>Export as...</label>
-          <div class="buttons">
-            <a class="button navbutton">CSV</a>
-            <a class="button navbutton">JSON</a>
-            <a class="button navbutton">XML</a>
+      <div id="explorer" style="display:none;">
+
+        <div class="ge_controlpanel">
+          <div class="ge_controlpanel_section" style="border-right:none; padding-right:0;">
+            <label>Select the Timerange</label>
+            <a class="button datepicker_sa">
+              <div class="date" style="width:300px;">&nbsp;</div>
+            <i class="icon-calendar"></i>
+            </a>
+          </div>
+
+          <div class="ge_controlpanel_section">
+            <label>...or a Recent Interval</label>
+            <a class="button datepicker_sa">
+              <div class="date" style="width:100px;">&nbsp;</div>
+            </a>
+          </div>
+
+          <div class="ge_controlpanel_section">
+            <label>Export as...</label>
+            <div class="buttons">
+              <a class="button navbutton">CSV</a>
+              <a class="button navbutton">JSON</a>
+              <a class="button navbutton">XML</a>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="headbar">
-        <a class="button mr">Fnord</a>
-        <h2>fnord.bar.mymetric</h2>
-      </div>
+        <div class="headbar">
+          <a class="button mr">Fnord</a>
+          <h2></h2>
+        </div>
 
-      <div style="clear:both;" class="widget_viewport">
-        <i class="ge_empty">Please select a gauge...</i>
+        <div style="clear:both;" class="widget_viewport">
+          <i class="ge_empty">Please select a gauge...</i>
+          <div id="explorer_metric" data-fnordmetric="timeseries"></div>
+        </div>
+
       </div>
 
     </div>
@@ -71,7 +83,10 @@
 
 
       FnordMetric.enterprise_ui = (function(){
-        var metric_list = false;
+        var metric_list = false,
+            current_metric = null,
+            explorer_until = null,
+            explorer_from = null,
             update_metric_list_timer = false;
 
         function updateMetricList() {
@@ -102,13 +117,57 @@
             if (!match)
               match = (metric_list[ind].substring(0, search_prefix.length) == search_prefix);
 
-            if (match)
-              ul.append($("<li>").html(metric_list[ind]));
+            if (match) {
+              var elem = $("<li>").html(metric_list[ind]).click(selectMetric)
+
+              if (metric_list[ind] == current_metric)
+                elem.addClass("active");
+
+              ul.append(elem);
+            }
           }
         }
 
+        function selectMetric(){
+          current_metric = $(this).html();
+          renderExplorer();
+          renderMetricList();
+        }
+
+        function renderExplorer(){
+          $("#dashboard").hide();
+          $("#explorer").show();
+          $(".ge_empty").remove();
+
+          $(".headbar h2").html(current_metric);
+
+          explorer_from = "-2h";
+          explorer_until = "now";
+
+          updateExplorerView();
+        }
+
+        function updateExplorerView() {
+          var metric = $("#explorer_metric");
+
+          metric.attr("data-gauges", current_metric);
+          metric.attr("data-since", explorer_from);
+          metric.attr("data-until", explorer_until);
+
+          resizeView();
+        }
+
+        function resizeView() {
+          var metric = $("#explorer_metric");
+
+          metric.attr("data-height", window.innerHeight - 230);
+
+          FnordMetric.refresh(metric);
+        }
 
         update_metric_list_interval = window.setInterval(updateMetricList, 200);
+
+        $(window).resize(resizeView);
 
         return {
           renderMetricList: renderMetricList
