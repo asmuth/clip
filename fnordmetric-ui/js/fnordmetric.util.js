@@ -140,7 +140,8 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
     for (tick in obj[key]) {
       var t = parseInt(tick, 10);
 
-      if (ticks.indexOf(t) == -1)
+
+      if (obj[key][t] > 0 && ticks.indexOf(t) == -1)
         ticks.push(t);
      }
   }
@@ -168,8 +169,18 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
 
       tl = ticks[ind];
 
-      if (typeof obj[key][ticks[ind]] == 'undefined')
-        obj[key][ticks[ind]] = 0;
+      if (typeof obj[key][ticks[ind]] == 'undefined') {
+        var lv = 0;
+        var lv_t = 0;
+
+        for (n_lv_t in obj[key]) {
+          if (n_lv_t > lv_t && n_lv_t < ticks[ind]) {
+            lv = obj[key][n_lv_t]
+          }
+        }
+
+        obj[key][ticks[ind]] = lv;
+      }
     }
 
     if (typeof until != "undefined") {
