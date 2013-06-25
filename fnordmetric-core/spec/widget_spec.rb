@@ -96,10 +96,10 @@ describe FnordMetric::Widget do
       :gauges => [@gauge2]
     ) 
     Delorean.time_travel_to(Time.utc(1992,01,13,18,23,23)) do
-      Time.at(widget.ticks[0]).utc.should == Time.utc(1992,01,12,18,00)
-      Time.at(widget.ticks[1]).utc.should == Time.utc(1992,01,12,19,00)
-      Time.at(widget.ticks[-1]).utc.should == Time.utc(1992,01,13,18,00)
-      Time.at(widget.ticks[-2]).utc.should == Time.utc(1992,01,13,17,00)
+      Time.at(widget.ticks.to_a[0]).utc.should == Time.utc(1992,01,12,18,00)
+      Time.at(widget.ticks.to_a[1]).utc.should == Time.utc(1992,01,12,19,00)
+      Time.at(widget.ticks.to_a[-1]).utc.should == Time.utc(1992,01,13,18,00)
+      Time.at(widget.ticks.to_a[-2]).utc.should == Time.utc(1992,01,13,17,00)
     end
   end
 
