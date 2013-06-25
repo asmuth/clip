@@ -11944,7 +11944,7 @@ if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
 FnordMetric.widgets.counter = function(elem){
-  var gauge, at, scale_by, refresh_timer, refresh_interval;
+  var gauge, at, scale_by, refresh_timer, refresh_interval, firstUpdate;
   var widget_key = elem.attr("data-widget-key");
 
   function init() {
@@ -11953,7 +11953,9 @@ FnordMetric.widgets.counter = function(elem){
     if (!gauge)
       return console.log("[FnordMetric] element is missing the data-gauge attribute");
 
+    firstUpdate = true;
     at = elem.attr('data-at');
+
     if (!at) at = "now";
 
     if (scale_by = elem.attr('data-scale-by'))
@@ -12000,7 +12002,11 @@ FnordMetric.widgets.counter = function(elem){
     if((diff > 0) && (diff < 1)){ diff=1; }
     if((diff < 0) && (diff > -1)){ diff=-1; }
 
-    if(target_val != current_val){
+    if(firstUpdate || target_val != current_val){
+      if (firstUpdate) {
+        firstUpdate = false
+      }
+      
       var new_val = current_val + diff;
 
       if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
