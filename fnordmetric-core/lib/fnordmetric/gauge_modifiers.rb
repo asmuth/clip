@@ -93,7 +93,7 @@ module FnordMetric::GaugeModifiers
     end
 
     ctx.redis_exec(:hincrby, retention_key(at, series_name), "#{tick_at(at)}-#{part}", value).callback do 
-      ctx.redis_exec :expire,  retention_key(at, series_name)
+      ctx.redis_exec :expire,  retention_key(at, series_name), retention
     end
   end
   

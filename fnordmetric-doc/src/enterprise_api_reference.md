@@ -210,3 +210,19 @@ for the time format.
 
 
 
+#### LIST
+
+Retrieves a list of all metric keys.
+
+*Format:*
+
+    LIST
+
+*Response:*
+
+    white space seperated keys
+
+*Example:*
+
+    >> LIST
+    << mykey-sum-10 fnord-mean-60 myapp.response-time-mean-10

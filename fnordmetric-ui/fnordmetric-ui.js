@@ -9390,7 +9390,7 @@ fnord3.time.scale.utc = function() {
 
 var FnordMetric = (function(pre){
 
-  var version = "1.2.8";
+  var version = "1.2.9";
 
   var wsAddress, socket, currentNamespace,
      continuations = {},
@@ -9460,11 +9460,11 @@ var FnordMetric = (function(pre){
 
   function onSocketMessage(raw) {
     if (enterprise) {
-
       var data = raw.data;
 
       if (data.substr(0,5) == "ERROR")
         return console.log("[FnordMetric] error: " + data.substr(6));
+
       else if (continuation) {
         continuation(data);
         continuation = false;
@@ -9542,12 +9542,11 @@ var FnordMetric = (function(pre){
           var vals = {},
               parts = resp.split(" ");
 
-          if (parts[0] != "null") {
+          if (parts[0] != "null")
             for (ind in parts) {
               var tuple = parts[ind].split(":");
               vals[parseInt(parseInt(tuple[0], 10) / 1000, 10)] = tuple[1];
             }
-          }
 
           all_resp[this_resp] = vals;
 
@@ -9618,6 +9617,7 @@ var FnordMetric = (function(pre){
     publish: publish,
     refresh: refresh,
     resize: resize,
+    execute: execute,
     value_at: value_at,
     values_in: values_in
   };
@@ -11540,28 +11540,37 @@ FnordMetric.util.decPrint = function(val){
   return (val < 10 ? '0'+val : val);
 }
 
-FnordMetric.util.formatValue = function(value, round_to){
-  if(value < 10){
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(1);
-  }
-  if(value < 100){
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(1);
-  } else if(value > 1000){
-    if (typeof round_to != 'undefined')
-      return (value/1000.0).toFixed(round_to) + "k";
-    else
-      return (value/1000.0).toFixed(1) + "k";
+FnordMetric.util.formatTimeRange = function(range){
+  if (range < 60){
+    return parseInt(range) + ' sec';
+  } else if(range<3600){
+    return parseInt(range/60) + ' min';
+  } else if(range==3600){
+    return '1 hour';
+  } else if(range<(3600*24)){
+    return parseInt(range/3600) + ' hours';
+  } else if(range==(3600*24)){
+    return '1 day';
   } else {
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(0);
+    return parseInt(range/(3600*24)) + ' days';
+  }
+}
+
+FnordMetric.util.formatValue = function(value, round_to){
+  if (typeof round_to == 'undefined') {
+    round_to = 1;
+  }
+
+  if (value < 10) {
+    return value.toFixed(round_to);
+  } else if (value < 100) {
+    return value.toFixed(round_to);
+  } else if (value > 1000000) {
+    return (value / 1000000.0).toFixed(round_to) + "m";
+  } else if (value > 1000) {
+    return (value / 1000.0).toFixed(round_to) + "k";
+  } else {
+    return value.toFixed(round_to);
   }
 }
 
@@ -11654,9 +11663,6 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
      }
   }
 
-  //if (ticks.length == 0)
-    //ticks.push(0);
-
   ticks.sort();
 
   for (key in obj) {
@@ -11670,6 +11676,8 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
     if (typeof since != "undefined")
       tl = since + ts;
 
+    var lv = 0;
+
     for (ind in ticks) {
       if (ts > 0 && tl > 0) {
         while (ticks[ind] - tl > ts) {
@@ -11681,7 +11689,9 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
       tl = ticks[ind];
 
       if (typeof obj[key][ticks[ind]] == 'undefined')
-        obj[key][ticks[ind]] = 0;
+        obj[key][ticks[ind]] = lv;
+      else
+        lv = obj[key][ticks[ind]];
     }
 
     if (typeof until != "undefined") {
@@ -11907,7 +11917,7 @@ FnordMetric.widgets.timeseries = function(elem){
 
         for(_time in this[gauge]){
           gconfig.series[ind].data.push(
-            { x: parseInt(_time), y: parseFloat(this[gauge][_time] || 0) }
+            { x: parseInt(_time), y: parseInt(this[gauge][_time] || 0) }
           );
         }
       }
@@ -11944,7 +11954,7 @@ if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
 FnordMetric.widgets.counter = function(elem){
-  var gauge, at, scale_by, refresh_timer, refresh_interval, firstUpdate;
+  var gauge, at, scale_by, refresh_timer, refresh_interval;
   var widget_key = elem.attr("data-widget-key");
 
   function init() {
@@ -11953,9 +11963,7 @@ FnordMetric.widgets.counter = function(elem){
     if (!gauge)
       return console.log("[FnordMetric] element is missing the data-gauge attribute");
 
-    firstUpdate = true;
     at = elem.attr('data-at');
-
     if (!at) at = "now";
 
     if (scale_by = elem.attr('data-scale-by'))
@@ -12002,11 +12010,7 @@ FnordMetric.widgets.counter = function(elem){
     if((diff > 0) && (diff < 1)){ diff=1; }
     if((diff < 0) && (diff > -1)){ diff=-1; }
 
-    if(firstUpdate || target_val != current_val){
-      if (firstUpdate) {
-        firstUpdate = false
-      }
-      
+    if(target_val != current_val){
       var new_val = current_val + diff;
 
       if((diff > 0) && (new_val > target_val)){ new_val = target_val; }

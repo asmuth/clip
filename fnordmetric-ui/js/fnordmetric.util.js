@@ -15,28 +15,37 @@ FnordMetric.util.decPrint = function(val){
   return (val < 10 ? '0'+val : val);
 }
 
-FnordMetric.util.formatValue = function(value, round_to){
-  if(value < 10){
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(1);
-  }
-  if(value < 100){
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(1);
-  } else if(value > 1000){
-    if (typeof round_to != 'undefined')
-      return (value/1000.0).toFixed(round_to) + "k";
-    else
-      return (value/1000.0).toFixed(1) + "k";
+FnordMetric.util.formatTimeRange = function(range){
+  if (range < 60){
+    return parseInt(range) + ' sec';
+  } else if(range<3600){
+    return parseInt(range/60) + ' min';
+  } else if(range==3600){
+    return '1 hour';
+  } else if(range<(3600*24)){
+    return parseInt(range/3600) + ' hours';
+  } else if(range==(3600*24)){
+    return '1 day';
   } else {
-    if (typeof round_to != 'undefined')
-      return value.toFixed(round_to);
-    else
-      return value.toFixed(0);
+    return parseInt(range/(3600*24)) + ' days';
+  }
+}
+
+FnordMetric.util.formatValue = function(value, round_to){
+  if (typeof round_to == 'undefined') {
+    round_to = 1;
+  }
+
+  if (value < 10) {
+    return value.toFixed(round_to);
+  } else if (value < 100) {
+    return value.toFixed(round_to);
+  } else if (value > 1000000) {
+    return (value / 1000000.0).toFixed(round_to) + "m";
+  } else if (value > 1000) {
+    return (value / 1000.0).toFixed(round_to) + "k";
+  } else {
+    return value.toFixed(round_to);
   }
 }
 
@@ -129,9 +138,6 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
      }
   }
 
-  if (ticks.length == 0)
-    ticks.push(0);
-
   ticks.sort();
 
   for (key in obj) {
@@ -145,6 +151,8 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
     if (typeof since != "undefined")
       tl = since + ts;
 
+    var lv = 0;
+
     for (ind in ticks) {
       if (ts > 0 && tl > 0) {
         while (ticks[ind] - tl > ts) {
@@ -156,7 +164,9 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
       tl = ticks[ind];
 
       if (typeof obj[key][ticks[ind]] == 'undefined')
-        obj[key][ticks[ind]] = 0;
+        obj[key][ticks[ind]] = lv;
+      else
+        lv = obj[key][ticks[ind]];
     }
 
     if (typeof until != "undefined") {

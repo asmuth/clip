@@ -1,0 +1,201 @@
+<html>
+  <head>
+    <title>FnordMetric Enterprise</title>
+    <link href="web.css" rel="stylesheet" type="text/css" />
+    <link href="../../fnordmetric-ui/fnordmetric-ui.css" rel="stylesheet" type="text/css" />
+    <script src="../../fnordmetric-ui/fnordmetric-ui.js" type="text/javascript"></script>
+    <script src="jQuery-1.6.2.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="#">Settings</a>
+      <a href="#">Documentation</a>
+      <h1>
+        FnordMetric Enterprise
+        <span style="font-weight:normal; font-size:80%; margin-left:5px;">v1.2.8</span>
+      </h1>
+    </div>
+
+    <div id="sidebar">
+      <div class="searchbar">
+        <input placeholder="Search..." type="search" onKeyUp="FnordMetric.enterprise_ui.renderMetricList();" onChange="FnordMetric.enterprise_ui.renderMetricList();" />
+      </div>
+
+      <ul class="ui_toplist loading" id="metric_list">
+      </ul>
+    </div>
+
+    <div id="pane">
+
+      <div id="dashboard">
+        <div style="clear:both;" class="widget_viewport">
+          <i class="ge_empty">Fnord!</i>
+        </div>
+      </div>
+
+      <div id="explorer" style="display:none;">
+
+        <div class="ge_controlpanel">
+          <div class="ge_controlpanel_section" style="border-right:none; padding-right:0;">
+            <label>Select the Timerange</label>
+            <a class="button datepicker datepicker_sa">
+              <div class="date" style="width:300px;">&nbsp;</div>
+            <i class="icon-calendar"></i>
+            </a>
+          </div>
+
+          <div class="ge_controlpanel_section">
+            <label>...or a Recent Interval</label>
+            <a class="button intervalpicker datepicker_sa">
+              <div class="date" style="width:100px;">&nbsp;</div>
+            </a>
+          </div>
+
+          <div class="ge_controlpanel_section">
+            <label>Export as...</label>
+            <div class="buttons">
+              <a class="button navbutton">CSV</a>
+              <a class="button navbutton">JSON</a>
+              <a class="button navbutton">XML</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="headbar">
+          <div class="btn_group" id="drawing_mode_btns">
+            <a class="button" data-val="line" onclick="FnordMetric.enterprise_ui.selectDrawingMode('line');">Line</a>
+            <a class="button" data-val="area" onclick="FnordMetric.enterprise_ui.selectDrawingMode('area');">Area</a>
+            <a class="button" data-val="flow" onclick="FnordMetric.enterprise_ui.selectDrawingMode('flow');">Flow</a>
+          </div>
+          <h2></h2>
+        </div>
+
+        <div style="clear:both;" class="widget_viewport">
+          <i class="ge_empty">Please select a gauge...</i>
+          <div id="explorer_metric" data-fnordmetric="timeseries" data-legend="off"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+      FnordMetric.setup({
+        "address": "localhost:8080"
+      });
+
+
+      FnordMetric.enterprise_ui = (function(){
+        var metric_list = false,
+            current_metric = null,
+            explorer_until = "now",
+            explorer_from = "-2h",
+            explorer_drawing_mode = "line",
+            update_metric_list_timer = false;
+
+        function updateMetricList() {
+          FnordMetric.execute("LIST", function(d){
+            if (metric_list == false) {
+              window.clearInterval(update_metric_list_interval);
+              update_metric_list_interval = window.setInterval(updateMetricList, 2000);
+              $("#metric_list").removeClass("loading");
+            }
+
+            metric_list = d.split(" ");
+            renderMetricList();
+          });
+        }
+
+        function renderMetricList() {
+          var ul = $("#metric_list");
+          ul.html("");
+
+          var search_prefix = $(".searchbar input:first").val();
+
+          for (ind in metric_list) {
+            if (ind > 100)
+              break;
+
+            var match = search_prefix == "" ? true : false;
+
+            if (!match)
+              match = (metric_list[ind].substring(0, search_prefix.length) == search_prefix);
+
+            if (match) {
+              var elem = $("<li>").html(metric_list[ind]).click(selectMetric)
+
+              if (metric_list[ind] == current_metric)
+                elem.addClass("active");
+
+              ul.append(elem);
+            }
+          }
+        }
+
+        function selectMetric(){
+          current_metric = $(this).html();
+          renderExplorer();
+          renderMetricList();
+        }
+
+        function renderExplorer(){
+          $("#dashboard").hide();
+          $("#explorer").show();
+          $(".ge_empty").remove();
+
+          $(".headbar h2").html(current_metric);
+
+          updateExplorerView();
+        }
+
+        function updateExplorerView() {
+          var metric = $("#explorer_metric");
+
+          $(".datepicker .date").html(
+            FnordMetric.util.dateFormat(FnordMetric.util.parseTime(explorer_from)) +
+            '&nbsp;&dash;&nbsp;' +
+            FnordMetric.util.dateFormat(FnordMetric.util.parseTime(explorer_until))
+          );
+
+          $(".intervalpicker .date").html(
+            FnordMetric.util.formatTimeRange(FnordMetric.util.parseTime(
+              explorer_until) - FnordMetric.util.parseTime(explorer_from)));
+
+          $("#drawing_mode_btns .button").removeClass('active')
+            .filter("*[data-val='" + explorer_drawing_mode + "']").addClass('active');
+
+          metric.attr("data-gauges", current_metric);
+          metric.attr("data-since", explorer_from);
+          metric.attr("data-until", explorer_until);
+          metric.attr("data-chart-style", explorer_drawing_mode);
+
+          resizeView();
+        }
+
+        function resizeView() {
+          var metric = $("#explorer_metric");
+
+          metric.attr("data-height", window.innerHeight - 230);
+
+          FnordMetric.refresh(metric);
+        }
+
+        function selectDrawingMode(mode) {
+          explorer_drawing_mode = mode;
+          updateExplorerView();
+        }
+
+        update_metric_list_interval = window.setInterval(updateMetricList, 200);
+
+        $(window).resize(resizeView);
+
+        return {
+          renderMetricList: renderMetricList,
+          selectDrawingMode: selectDrawingMode
+        };
+
+      })();
+    </script>
+  </body>
+</html>

@@ -7,7 +7,7 @@
 
 var FnordMetric = (function(pre){
 
-  var version = "1.2.8";
+  var version = "1.2.9";
 
   var wsAddress, socket, currentNamespace,
      continuations = {},
@@ -234,6 +234,7 @@ var FnordMetric = (function(pre){
     publish: publish,
     refresh: refresh,
     resize: resize,
+    execute: execute,
     value_at: value_at,
     values_in: values_in
   };
