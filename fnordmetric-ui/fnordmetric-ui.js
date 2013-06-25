@@ -9460,11 +9460,11 @@ var FnordMetric = (function(pre){
 
   function onSocketMessage(raw) {
     if (enterprise) {
+
       var data = raw.data;
 
       if (data.substr(0,5) == "ERROR")
         return console.log("[FnordMetric] error: " + data.substr(6));
-
       else if (continuation) {
         continuation(data);
         continuation = false;
@@ -9542,11 +9542,12 @@ var FnordMetric = (function(pre){
           var vals = {},
               parts = resp.split(" ");
 
-          if (parts[0] != "null")
+          if (parts[0] != "null") {
             for (ind in parts) {
               var tuple = parts[ind].split(":");
               vals[parseInt(parseInt(tuple[0], 10) / 1000, 10)] = tuple[1];
             }
+          }
 
           all_resp[this_resp] = vals;
 
@@ -11653,8 +11654,8 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
      }
   }
 
-  if (ticks.length == 0)
-    ticks.push(0);
+  //if (ticks.length == 0)
+    //ticks.push(0);
 
   ticks.sort();
 
@@ -11906,7 +11907,7 @@ FnordMetric.widgets.timeseries = function(elem){
 
         for(_time in this[gauge]){
           gconfig.series[ind].data.push(
-            { x: parseInt(_time), y: parseInt(this[gauge][_time] || 0) }
+            { x: parseInt(_time), y: parseFloat(this[gauge][_time] || 0) }
           );
         }
       }
