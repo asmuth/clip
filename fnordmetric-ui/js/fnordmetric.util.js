@@ -151,6 +151,8 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
     if (typeof since != "undefined")
       tl = since + ts;
 
+    var lv = 0;
+
     for (ind in ticks) {
       if (ts > 0 && tl > 0) {
         while (ticks[ind] - tl > ts) {
@@ -162,7 +164,9 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
       tl = ticks[ind];
 
       if (typeof obj[key][ticks[ind]] == 'undefined')
-        obj[key][ticks[ind]] = 0;
+        obj[key][ticks[ind]] = lv;
+      else
+        lv = obj[key][ticks[ind]];
     }
 
     if (typeof until != "undefined") {
