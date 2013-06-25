@@ -9460,11 +9460,11 @@ var FnordMetric = (function(pre){
 
   function onSocketMessage(raw) {
     if (enterprise) {
+
       var data = raw.data;
 
       if (data.substr(0,5) == "ERROR")
         return console.log("[FnordMetric] error: " + data.substr(6));
-
       else if (continuation) {
         continuation(data);
         continuation = false;
@@ -9542,11 +9542,12 @@ var FnordMetric = (function(pre){
           var vals = {},
               parts = resp.split(" ");
 
-          if (parts[0] != "null")
+          if (parts[0] != "null") {
             for (ind in parts) {
               var tuple = parts[ind].split(":");
               vals[parseInt(parseInt(tuple[0], 10) / 1000, 10)] = tuple[1];
             }
+          }
 
           all_resp[this_resp] = vals;
 
@@ -11653,8 +11654,8 @@ FnordMetric.util.zeroFill = function(obj, since, until) {
      }
   }
 
-  if (ticks.length == 0)
-    ticks.push(0);
+  //if (ticks.length == 0)
+    //ticks.push(0);
 
   ticks.sort();
 
@@ -11906,7 +11907,7 @@ FnordMetric.widgets.timeseries = function(elem){
 
         for(_time in this[gauge]){
           gconfig.series[ind].data.push(
-            { x: parseInt(_time), y: parseInt(this[gauge][_time] || 0) }
+            { x: parseInt(_time), y: parseFloat(this[gauge][_time] || 0) }
           );
         }
       }
@@ -11943,7 +11944,7 @@ if (typeof FnordMetric.widgets == 'undefined')
   FnordMetric.widgets = {};
 
 FnordMetric.widgets.counter = function(elem){
-  var gauge, at, scale_by, refresh_timer, refresh_interval;
+  var gauge, at, scale_by, refresh_timer, refresh_interval, firstUpdate;
   var widget_key = elem.attr("data-widget-key");
 
   function init() {
@@ -11952,7 +11953,9 @@ FnordMetric.widgets.counter = function(elem){
     if (!gauge)
       return console.log("[FnordMetric] element is missing the data-gauge attribute");
 
+    firstUpdate = true;
     at = elem.attr('data-at');
+
     if (!at) at = "now";
 
     if (scale_by = elem.attr('data-scale-by'))
@@ -11999,7 +12002,11 @@ FnordMetric.widgets.counter = function(elem){
     if((diff > 0) && (diff < 1)){ diff=1; }
     if((diff < 0) && (diff > -1)){ diff=-1; }
 
-    if(target_val != current_val){
+    if(firstUpdate || target_val != current_val){
+      if (firstUpdate) {
+        firstUpdate = false
+      }
+      
       var new_val = current_val + diff;
 
       if((diff > 0) && (new_val > target_val)){ new_val = target_val; }
