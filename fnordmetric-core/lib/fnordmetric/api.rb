@@ -4,7 +4,11 @@ class FnordMetric::API
 
   def initialize(opts={})
     @@opts = FnordMetric.default_options(opts)
-    connect
+    if @@opts[:redis]
+      @redis = @@opts.delete :redis
+    else
+      connect
+    end
   end
 
   def connect
