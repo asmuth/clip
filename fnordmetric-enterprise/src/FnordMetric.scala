@@ -19,7 +19,7 @@ import scala.collection.mutable.HashMap
 
 object FnordMetric {
 
-  val VERSION = "v1.2.8"
+  val VERSION = "v1.2.9"
 
   val CONFIG  = HashMap[Symbol,String]()
 
@@ -68,6 +68,9 @@ object FnordMetric {
 
       else if (args(n) == "--swapdir")
         { CONFIG += (('swap_prefix, args(n+1))); n += 2 }
+
+      else if (args(n) == "--aofile")
+        { CONFIG += (('aofile, args(n+1))); n += 2 }
 
       else if ((args(n) == "-d") || (args(n) == "--debug"))
         { debug = true; n += 1 }
@@ -150,6 +153,7 @@ object FnordMetric {
     println("  --http-threads       <num>    number of http worker-threads (default: 4)     ")
     println("  --admin              <port>   start http admin web interface on this port    ")
     println("  --swapdir            <path>   store the metric persistence files here (default: /tmp)")
+    println("  --aofile             <path>   write an append only ASCII logfile containing the measured values")
     println("  -h, --help                    you're reading it...                           ")
     println("  -d, --debug                   debug mode                                     ")
   }
