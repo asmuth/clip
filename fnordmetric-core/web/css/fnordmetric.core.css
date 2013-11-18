@@ -267,7 +267,7 @@ a.button.datepicker_sa i {
 .ui_toplist .toplist_item .title{ float:left; line-height:42px; margin-left:20px; font-size:13px; color:#333; }
 .ui_toplist .toplist_item .value{ float:right; line-height:42px; margin-right:20px; font-size:13px; font-weight:bold; width:70px; color:#666; }
 .ui_toplist .toplist_item .value.large{ width:110px; }
-.ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:30px; font-size:18px; font-weight:bold; color:#333; width:80px; white-space:nowrap; overflow:hidden; }
+.ui_toplist .toplist_item .percent{ float:right; line-height:42px; margin-right:30px; font-size:18px; font-weight:bold; color:#333; width:120px; white-space:nowrap; overflow:hidden; }
 
 .ui_toplist .toplist_item .trend{ float:right; line-height:42px; margin-right:30px; font-size:18px; font-weight:bold; color:#333; width:70px; white-space:nowrap; }
 
