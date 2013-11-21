@@ -62,7 +62,7 @@ class Metric(key: MetricKey) {
 
     // now at least one slot in the ring buffer is free so we can just
     // push our sample
-    rbuf.push(nxt)
+    push_next_value(nxt)
 
     // mark this metric as "no pending flushes"
     flush_interest = 0
@@ -211,6 +211,15 @@ class Metric(key: MetricKey) {
     }
 
     lst.toList
+  }
+
+  // record the final value after each aggregation period
+  def push_next_value(value: (Long, Double)) : Unit = {
+    // push to the in memory ring buffer
+    rbuf.push(value)
+
+    // write to the append only file
+    AOFile.append(key, value._1, value._2)
   }
 
 }

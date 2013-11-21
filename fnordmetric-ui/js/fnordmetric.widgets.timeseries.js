@@ -210,7 +210,7 @@ FnordMetric.widgets.timeseries = function(elem){
 
         for(_time in this[gauge]){
           gconfig.series[ind].data.push(
-            { x: parseInt(_time), y: parseInt(this[gauge][_time] || 0) }
+            { x: parseInt(_time), y: parseFloat(this[gauge][_time] || 0) }
           );
         }
       }

@@ -6,7 +6,7 @@ You can find the complete [source code on Github](http://github.com/paulasmuth/f
 
 <h4 style="margin-top:25px;">FnordMetric UI</h4>
 
-+ [Download FnordMetric UI v1.2.8 (latest)](/downloads/fnordmetric-ui-1.2.8.tar) (.tar, 340k) <br /> MD5: ab65a450ee87816fa0559b9bb397dcd4
++ [Download FnordMetric UI v1.2.9 (latest)](/downloads/fnordmetric-ui-1.2.9.tar) (.tar, 340k) <br /> MD5: cd4eb89d9a0353840d5f343690e4ff2e
 
 
 <h4 style="margin-top:25px;">FnordMetric Enterprise</h4>
@@ -16,4 +16,4 @@ You can find the complete [source code on Github](http://github.com/paulasmuth/f
 
 <h4 style="margin-top:25px;">FnordMetric Classic</h4>
 
-+ [Download FnordMetric Classic v1.2.7 (latest)](/downloads/fnordmetric-1.2.7.gem) (.gem, 537k) <br /> MD5: bb94de7a92496643e8ff6a8a12724e4e 
++ [Download FnordMetric Classic v1.2.9 (latest)](/downloads/fnordmetric-1.2.9.gem) (.gem, 537k) <br /> MD5: 5c22b23332089847d8cd2f7fed98ac62
