@@ -20,6 +20,10 @@ class ListInstruction extends AbstractInstruction {
       out.append(" ")
     }
 
+    if (out.length < 1) {
+      out.append("null ")
+    }
+
     out.setLength(out.length - 1)
     out.toString
   }
