@@ -206,7 +206,7 @@ include external charts in a FnordMetric dashboard.
     </td>
   </tr>
   <tr>
-    <th>html/th>
+    <th>html</th>
     <td>
       The html to render.
     </td>
