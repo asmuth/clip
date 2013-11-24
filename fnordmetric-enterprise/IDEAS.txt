@@ -24,11 +24,11 @@ others: opentsdb, kairosdb, graphite, tempodb, cube
   [ ] individual y axis
   [ ] stacked / unstacked
   [ ] line / area / flow
+  [ ] downsampling / rollup window
 
 [metric #n]
 
    aggregation: sum/mean/max/min/distinct/median/xxpercentile/stddev
-   downsampling / rollup window
    timeshift
 
 
