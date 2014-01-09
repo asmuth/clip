@@ -24,6 +24,7 @@ class FnordMetric::Logger
     @namespaces = FnordMetric.namespaces
     @opts = FnordMetric.options(opts)
     opts.fetch(:file)
+    @channels = @opts[:channels] || []
 
     FnordMetric.register(self)
   end
@@ -63,8 +64,8 @@ private
   end
 
   def log_channel?(channel)
-    return !!@opts[:channels] if !channel
-    @opts[:channels].include?(channel.to_s)
+    return @channels.empty? if !channel
+    @channels.include?(channel.to_s)
   end
 
 end
