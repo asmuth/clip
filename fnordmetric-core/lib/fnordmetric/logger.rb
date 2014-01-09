@@ -21,7 +21,6 @@ class FnordMetric::Logger
   end
 
   def initialize(opts)
-    @namespaces = FnordMetric.namespaces
     @opts = FnordMetric.options(opts)
     opts.fetch(:file)
     @channels = @opts[:channels] || []
