@@ -15,6 +15,24 @@
 
 namespace fnordmetric {
 
+class FileBackendCursor : public IStorageCursor {
+public:
+
+  FileBackendCursor() {}
+  virtual uint64_t seekTo(uint64_t position) override {}
+  virtual uint64_t seekToFirst() override {}
+  virtual uint64_t seekToLast() override {}
+  virtual size_t read(
+    size_t n,
+    std::vector<std::tuple<uint64_t, const std::vector<uint8_t>>>* destination)
+    override {}
+
+  virtual uint64_t appendRow(const std::vector<uint8_t>& data) override {
+    printf("write row in filebackend: %lu\n", data.size());
+  }
+
+};
+
 class FileBackend : public IStorageBackend {
 public:
 
@@ -23,7 +41,8 @@ public:
 
   static std::unique_ptr<FileBackend> openFile(const std::string& filename);
 
-  virtual IStorageCursor getCursor(IMetric metric) override;
+  virtual std::unique_ptr<IStorageCursor> getCursor(
+      const IMetricKey& metric_key) override;
 
 };
 

@@ -16,9 +16,10 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
   return std::unique_ptr<FileBackend>(backend);
 }
 
-IStorageCursor FileBackend::getCursor(IMetric metric) {
+std::unique_ptr<IStorageCursor> FileBackend::getCursor(const IMetricKey& metric_key) {
+  printf("get cursor for metric: %s\n", metric_key.getKeyString().c_str());
 
+  return std::unique_ptr<FileBackendCursor>(new FileBackendCursor());
 }
-
 
 }

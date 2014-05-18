@@ -11,10 +11,13 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <memory>
 #include "dimension.h"
 #include "serialize.h"
 
 namespace fnordmetric {
+
+class IStorageCursor;
 
 class MetricDescription {
 public:
@@ -33,6 +36,10 @@ public:
       unit_(unit),
       description_(description) {}
 
+  const std::string& getName() const {
+    return name_;
+  }
+
 protected:
 
   std::string name_;
@@ -46,10 +53,10 @@ class IMetric {
 public:
 
   explicit IMetric(
-      Agent* agent,
+      std::unique_ptr<IStorageCursor>&& cursor,
       const MetricDescription& description,
       const std::vector<IDimension>& dimensions) :
-      agent_(agent),
+      cursor_(std::move(cursor)),
       description_(description),
       dimensions_(dimensions) {}
 
@@ -61,9 +68,41 @@ public:
 
 protected:
 
-  const Agent* agent_;
+  void recordSample(const std::vector<uint8_t>& row) const;
+  const std::unique_ptr<IStorageCursor> cursor_;
   const MetricDescription description_;
   const std::vector<IDimension> dimensions_;
+
+};
+
+class IMetricKey {
+public:
+
+  const std::string& getKeyString() const {
+    return key_str_;
+  }
+
+protected:
+
+  std::string key_str_;
+
+};
+
+template <typename... D>
+class MetricKey : public IMetricKey {
+public:
+
+  MetricKey(const MetricDescription& description, D... dimensions) {
+    const IDimension dims[] = {dimensions...};
+    int num_dimensions = sizeof(dims) / sizeof(IDimension);
+
+    key_str_.append(description.getName());
+
+    for (int i = 0; i < num_dimensions; ++i) {
+      key_str_.append("-");
+      //unpacked.push_back(packed[i]);
+    }
+  }
 
 };
 
@@ -75,21 +114,22 @@ class Metric : public IMetric {
 public:
 
   explicit Metric(
-      Agent* agent,
+      std::unique_ptr<IStorageCursor>&& cursor,
       const MetricDescription& description,
       const D... dimensions) :
-      IMetric(agent, description, unpackDimensions(dimensions...)) {}
+      IMetric(std::move(cursor), description, unpackDimensions(dimensions...)) {}
 
   Metric(const Metric& copy) = delete;
 
   void recordSample(const typename D::ValueType... values) const {
     std::vector<uint8_t> sample;
     fnordmetric::serialize::toBytesV(&sample, values...);
+    IMetric::recordSample(sample);
   }
 
 protected:
 
-  // FIXPAUL there must be some better way to do this...
+ // FIXPAUL there must be some better way to do this...
   std::vector<IDimension> unpackDimensions(D... dimensions) {
     const IDimension packed[] = {dimensions...};
     std::vector<IDimension> unpacked;
