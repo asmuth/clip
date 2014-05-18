@@ -5,12 +5,17 @@
  * Licensed under the MIT license (see LICENSE).
  */
 #include <stdlib.h>
-#include <cstdio>
+#include <stdio.h>
+#include <assert.h>
 #include "metric.h"
 #include "agent.h"
+#include "filebackend.h"
 
 int main() {
-  fnordmetric::Agent agent("my_fnordmetric_agent");
+  auto backend = fnordmetric::FileBackend::openFile("/tmp/fm-test.db");
+  assert(backend.get() != nullptr);
+
+  fnordmetric::Agent agent("my_fnordmetric_agent", std::move(backend));
 
   auto metric = agent.newMetric(
       fnordmetric::MetricDescription("my_metric", "kg", "blah blah"),

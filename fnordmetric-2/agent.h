@@ -9,6 +9,7 @@
 
 #include <memory>
 #include "metric.h"
+#include "storagebackend.h"
 
 namespace fnordmetric {
 
@@ -18,7 +19,12 @@ namespace fnordmetric {
 class Agent {
 public:
 
-  Agent(const std::string& name) : name_(name) {}
+  Agent(
+    const std::string& name,
+    std::unique_ptr<IStorageBackend>&& storage_backend) :
+    name_(name),
+    storage_backend_(std::move(storage_backend)) {}
+
   Agent(const Agent& copy) = delete;
 
   template <typename... D>
@@ -40,6 +46,7 @@ protected:
 
   std::string name_;
   std::vector<std::shared_ptr<const IMetric>> metrics_;
+  std::unique_ptr<IStorageBackend> storage_backend_;
 
 };
 
