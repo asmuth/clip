@@ -7,6 +7,9 @@
 #ifndef _FNORDMETRIC_DIMENSION_H
 #define _FNORDMETRIC_DIMENSION_H
 
+#include <stdlib.h>
+#include <string>
+
 namespace fnordmetric {
 class Agent;
 
@@ -23,6 +26,12 @@ public:
       type_(type),
       name_(name) {}
 
+
+  virtual ~IDimension() {}
+
+  const std::string& getName() const {
+    return name_;
+  }
 
 protected:
 
