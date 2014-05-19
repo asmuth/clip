@@ -12,10 +12,8 @@
 #include "filebackend.h"
 
 int main() {
-  auto backend = fnordmetric::FileBackend::openFile("/tmp/fm-test.db");
-  assert(backend.get() != nullptr);
-
-  fnordmetric::Agent agent("my_fnordmetric_agent", std::move(backend));
+  fnordmetric::Agent agent("my_fnordmetric_agent",
+    fnordmetric::FileBackend::openFile("/tmp/fm-test.db"));
 
   auto metric = agent.newMetric(
       fnordmetric::MetricDescription("my_metric", "kg", "blah blah"),

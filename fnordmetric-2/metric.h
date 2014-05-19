@@ -92,10 +92,15 @@ template <typename... D>
 class MetricKey : public IMetricKey {
 public:
 
-  MetricKey(const MetricDescription& description, D... dimensions) {
+  MetricKey(
+      const std::string& agent_name,
+      const MetricDescription& description,
+      D... dimensions) {
     const IDimension dims[] = {dimensions...};
     int num_dimensions = sizeof(dims) / sizeof(IDimension);
 
+    key_str_.append(agent_name);
+    key_str_.append("-");
     key_str_.append(description.getName());
 
     for (int i = 0; i < num_dimensions; ++i) {
