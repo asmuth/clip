@@ -17,9 +17,9 @@ class IDimension {
 public:
 
   enum kDimensionType {
-    INT64 = 0,
-    IEE754 = 1,
-    STRING = 2
+    INT64  = 'I',
+    IEE754 = 'F',
+    STRING = 'S'
   };
 
   IDimension(kDimensionType type, const std::string& name) :
@@ -33,11 +33,14 @@ public:
     return name_;
   }
 
+  kDimensionType getTypeId() const {
+    return type_;
+  }
+
 protected:
 
-  kDimensionType type_;
+  kDimensionType type_; // FIXPAUL REMOVE ME
   std::string name_;
-
 };
 
 

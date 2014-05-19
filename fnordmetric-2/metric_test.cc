@@ -17,13 +17,13 @@ void testMetricKeyGeneration() {
   fnordmetric::MetricKey<
       fnordmetric::IntegerDimension,
       fnordmetric::IntegerDimension> metric_key(
-      "fnord-agent",
       metric_description,
       fnordmetric::IntegerDimension("foo"),
       fnordmetric::IntegerDimension("bar"));
 
   printf("key: %s\n", metric_key.getKeyString().c_str());
-  assert(metric_key.getKeyString() == "fnord-agent-mymetric-Ifoo-Ibar");
+
+  assert(metric_key.getKeyString() == "83d2f71c457206bf-Ia9f37ed7-I76b77d1a");
 }
 
 void testRecordSample() {

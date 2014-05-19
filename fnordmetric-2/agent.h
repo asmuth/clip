@@ -31,10 +31,7 @@ public:
   std::shared_ptr<const Metric<D...>> newMetric(
       const MetricDescription& description,
       const D... dimensions) {
-    MetricKey<D...> metric_key(name_, description, dimensions...);
-
     auto metric = std::make_shared<const Metric<D...>>(
-        storage_backend_->getCursor(metric_key),
         description,
         dimensions...);
 

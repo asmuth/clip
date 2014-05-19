@@ -9,11 +9,15 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdint.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <sstream>
 #include <memory>
 #include "dimension.h"
 #include "serialize.h"
+#include "fnv.h"
 
 namespace fnordmetric {
 
@@ -48,33 +52,6 @@ protected:
 
 };
 
-
-class IMetric {
-public:
-
-  explicit IMetric(
-      std::unique_ptr<IStorageCursor>&& cursor,
-      const MetricDescription& description,
-      const std::vector<IDimension>& dimensions) :
-      cursor_(std::move(cursor)),
-      description_(description),
-      dimensions_(dimensions) {}
-
-  virtual ~IMetric() {};
-
-  const std::vector<IDimension>& getDimensions() const {
-    return dimensions_;
-  }
-
-protected:
-
-  void recordSample(const std::vector<uint8_t>& row) const;
-  const std::unique_ptr<IStorageCursor> cursor_;
-  const MetricDescription description_;
-  const std::vector<IDimension> dimensions_;
-
-};
-
 class IMetricKey {
 public:
 
@@ -84,7 +61,8 @@ public:
 
 protected:
 
-  std::string key_str_;
+  IMetricKey(const std::string& key_str) : key_str_(key_str) {}
+  const std::string key_str_;
 
 };
 
@@ -93,26 +71,74 @@ class MetricKey : public IMetricKey {
 public:
 
   MetricKey(
-      const std::string& agent_name,
+      const MetricDescription& description,
+      D... dimensions) :
+      IMetricKey(buildKeyString(description, dimensions...)) {}
+
+protected:
+
+  std::string buildKeyString(
       const MetricDescription& description,
       D... dimensions) {
-    const IDimension dims[] = {dimensions...};
-    int num_dimensions = sizeof(dims) / sizeof(IDimension);
+    std::stringstream ss;
+    FNV<uint64_t> fnv;
 
-    key_str_.append(agent_name);
-    key_str_.append("-");
-    key_str_.append(description.getName());
+    ss << std::hex << fnv.hash(description.getName());
 
-    for (int i = 0; i < num_dimensions; ++i) {
-      key_str_.append("-");
-      //unpacked.push_back(packed[i]);
-    }
+    buildKeyString(&ss, dimensions...);
+    return ss.str();
   }
+
+  template<typename... T>
+  void buildKeyString(std::stringstream* ss, IDimension head, T... tail) {
+    FNV<uint32_t> fnv;
+
+    *ss << '-' << 
+        static_cast<char>(head.getTypeId()) <<
+        std::hex << fnv.hash(head.getName());
+
+    buildKeyString(ss, tail...);
+  }
+
+  void buildKeyString(std::stringstream* ss) {}
 
 };
 
+
+class IMetric {
+public:
+
+  explicit IMetric(
+      std::unique_ptr<IStorageCursor>&& cursor,
+      const IMetricKey& metric_key,
+      const MetricDescription& description,
+      const std::vector<IDimension>& dimensions) :
+      cursor_(std::move(cursor)),
+      metric_key_(metric_key),
+      description_(description),
+      dimensions_(dimensions) {}
+
+  virtual ~IMetric() {};
+
+  const std::vector<IDimension>& getDimensions() const {
+    return dimensions_;
+  }
+
+  const IMetricKey& getMetricKey() const {
+    return metric_key_;
+  }
+
+protected:
+
+  void recordSample(const std::vector<uint8_t>& row) const;
+  const std::unique_ptr<IStorageCursor> cursor_;
+  const IMetricKey metric_key_;
+  const MetricDescription description_;
+  const std::vector<IDimension> dimensions_;
+};
+
 /**
- * Multidimensional metric
+ * Multidimensional metric (maybe call localmetric?)
  */
 template <typename... D>
 class Metric : public IMetric {
@@ -122,7 +148,11 @@ public:
       std::unique_ptr<IStorageCursor>&& cursor,
       const MetricDescription& description,
       const D... dimensions) :
-      IMetric(std::move(cursor), description, unpackDimensions(dimensions...)) {}
+      IMetric(
+          std::move(cursor),
+          MetricKey<D...>(description, dimensions...),
+          description,
+          unpackDimensions(dimensions...)) {}
 
   Metric(const Metric& copy) = delete;
 
