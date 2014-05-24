@@ -16,14 +16,13 @@ void testStreamKeyGeneration() {
 
   fnordmetric::StreamKey<
       fnordmetric::IntegerField,
-      fnordmetric::IntegerField> stream_key(
+      fnordmetric::FloatField> stream_key(
       "mymetric",
       fnordmetric::IntegerField("foo"),
-      fnordmetric::IntegerField("bar"));
+      fnordmetric::FloatField("bar"));
 
   printf("key: %s\n", stream_key.getKeyString().c_str());
-
-  assert(stream_key.getKeyString() == "83d2f71c457206bf-Ia9f37ed7-I76b77d1a");
+  assert(stream_key.getKeyString() == "83d2f71c457206bf-Ia9f37ed7-F76b77d1a");
 }
 
 void testAppendRecord() {
@@ -32,9 +31,9 @@ void testAppendRecord() {
   auto stream = agent.newStream(
       "mystream",
       fnordmetric::IntegerField("count"),
-      fnordmetric::IntegerField("fnord"));
+      fnordmetric::FloatField("fnord"));
 
-  stream->appendRecord(123, 123.4f);
+  stream->appendRecord(42, 23.5);
 }
 
 int main() {

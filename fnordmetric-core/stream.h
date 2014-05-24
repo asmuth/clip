@@ -128,7 +128,6 @@ public:
 
   void appendRecord(const typename T::ValueType&... values) const {
     Record<T...> record(values...);
-    //fnordmetric::serialize::toBytesV(&sample, values...);
     IStream::appendRecord(record);
   }
 

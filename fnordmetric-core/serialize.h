@@ -18,9 +18,6 @@ template<typename T>
 void toBytes(const T& value, std::vector<uint8_t>* destination);
 
 template<typename T>
-T fromBytes(std::vector<uint8_t>::const_iterator* cursor);
-
-template<typename T>
 void toBytesV(std::vector<uint8_t>* destination, T value) {
   toBytes(value, destination);
 }
@@ -30,6 +27,9 @@ void toBytesV(std::vector<uint8_t>* destination, T value, D... tail) {
   toBytes(value, destination);
   toBytesV(destination, tail...);
 }
+
+template<typename T>
+T fromBytes(std::vector<uint8_t>::const_iterator* cursor);
 
 }
 }

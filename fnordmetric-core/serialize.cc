@@ -18,6 +18,10 @@ void toBytes<int64_t>(const int64_t& value, std::vector<uint8_t>* destination) {
   printf("serialize int..\n");
 }
 
+template<>
+void toBytes<double>(const double& value, std::vector<uint8_t>* destination) {
+  printf("serialize double..\n");
+}
 
 }
 }

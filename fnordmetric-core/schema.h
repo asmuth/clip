@@ -76,12 +76,16 @@ protected:
 
 };
 
-
 class IntegerField : public IField {
 public:
   IntegerField(const std::string& name) : IField(IField::INT64, name) {}
-
   typedef int64_t ValueType;
+};
+
+class FloatField : public IField {
+public:
+  FloatField(const std::string& name) : IField(IField::IEE754, name) {}
+  typedef double ValueType;
 };
 
 }
