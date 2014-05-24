@@ -13,9 +13,35 @@
 
 namespace fnordmetric {
 
+const std::string& IStreamKey::getKeyString() const {
+  return key_str_;
+}
+
+IStream::IStream(
+    const IStreamKey& key,
+    const ISchema& schema,
+    //const MetricDescription& description,
+    std::unique_ptr<IStorageCursor>&& cursor) :
+    key_(key),
+    schema_(schema),
+    //description_(description),
+    cursor_(std::move(cursor)) {}
+
+const ISchema& IStream::getSchema() const {
+  return schema_;
+}
+
+const IStreamKey& IStream::getKey() const {
+  return key_;
+}
+
+std::unique_ptr<IStorageCursor> IStream::getCursor() const {
+  return cursor_->clone();
+}
+
 void IStream::appendRecord(const IRecordWriter& record) const {
   assert(cursor_.get() != nullptr);
   cursor_->appendRow(record.toBytes());
 }
-
+  
 }

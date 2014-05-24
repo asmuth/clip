@@ -28,109 +28,41 @@ namespace fnordmetric {
  */
 class MemoryBackend : public IStorageBackend {
 public:
+
+  /**
+   * Allocate a new MemoryBackend
+   */
+  static std::unique_ptr<MemoryBackend> New();
+
+  typedef
+    std::function<void (const uint8_t* data, size_t len, uint64_t time)>
+    GetRowCB;
+
   class Cursor : public IStorageCursor {
   public:
-
-    Cursor(const std::shared_ptr<std::vector<IStorageCursor::RowType>>& data) :
-        data_(data),
-        pos_(-1) {}
-
-    virtual uint64_t seekTo(uint64_t position) override {
-      // FIXPAUL implement me
-    }
-
-    virtual uint64_t seekToFirst() override {
-      if (data_->size() > 0) {
-        pos_ = 0;
-        return std::get<0>(data_->at(pos_));
-      } else {
-        return 0;
-      }
-    }
-
-    virtual uint64_t seekToLast() override {
-      if (data_->size() > 0) {
-        pos_ = data_->size() - 1;
-        return std::get<0>(data_->at(pos_));
-      } else {
-        return 0;
-      }
-    }
-
-    typedef
-        std::function<void (const uint8_t* data, size_t len, uint64_t time)>
-        GetRowCB;
-
-    virtual void getRow(const GetRowCB& func) const override {
-      if (pos_ < 0 || pos_ >= data_->size()) {
-        return;
-      }
-
-      auto row = data_->at(pos_);
-      auto data = std::get<1>(row).data();
-      auto len = std::get<1>(row).size();
-      auto time = std::get<0>(row);
-
-      func(data, len, time);
-    }
-
-    virtual bool next() {
-      if (pos_ < data_->size() - 1) {
-        ++pos_;
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    virtual uint64_t appendRow(const std::vector<uint8_t>& data) override {
-      uint64_t now = WallClock::getUnixMillis();
-      data_->emplace_back(std::make_pair(now, data));
-      printf("append_row time=%llu, size=%lu\n", now, data.size());
-      return now;
-    }
-
-    virtual std::unique_ptr<IStorageCursor> clone() const override {
-      return std::unique_ptr<IStorageCursor>(new Cursor(data_, pos_));
-    }
-
+    Cursor(const std::shared_ptr<std::vector<IStorageCursor::RowType>>& data);
+    virtual uint64_t seekTo(uint64_t position) override;
+    virtual uint64_t seekToFirst() override;
+    virtual uint64_t seekToLast() override;
+    virtual void getRow(const GetRowCB& func) const override;
+    virtual bool next();
+    virtual uint64_t appendRow(const std::vector<uint8_t>& data) override;
+    virtual std::unique_ptr<IStorageCursor> clone() const override;
   protected:
     Cursor(
         const std::shared_ptr<std::vector<IStorageCursor::RowType>>& data,
-        int pos) :
-        data_(data),
-        pos_(pos) {}
-
+        int pos);
     const std::shared_ptr<std::vector<IStorageCursor::RowType>> data_;
     int pos_;
   };
 
-  MemoryBackend() : IStorageBackend() {}
   MemoryBackend(const MemoryBackend& copy) = delete;
 
-  static std::unique_ptr<MemoryBackend> New() {
-    return std::unique_ptr<MemoryBackend>(new MemoryBackend());
-  }
-
   virtual std::unique_ptr<IStorageCursor> getCursor(
-      const std::string& key) override {
-    std::unique_ptr<IStorageCursor> cursor_ptr;
-    auto iter = streams_.find(key);
-
-    if (iter == streams_.end()) {
-      std::shared_ptr<std::vector<IStorageCursor::RowType>> data_ptr(
-        new std::vector<IStorageCursor::RowType>());
-
-      streams_.insert(std::make_pair(key, data_ptr));
-      cursor_ptr.reset(new Cursor(data_ptr));
-    } else {
-      cursor_ptr.reset(new Cursor(iter->second));
-    }
-
-    return cursor_ptr;
-  }
+      const std::string& key) override;
 
 protected:
+  MemoryBackend() : IStorageBackend() {}
   std::unordered_map<
       std::string,
       std::shared_ptr<std::vector<IStorageCursor::RowType>>> streams_;

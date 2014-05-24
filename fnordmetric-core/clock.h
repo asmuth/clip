@@ -9,27 +9,13 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#include <sys/time.h>
 
 namespace fnordmetric {
 
 class WallClock {
 public:
-
-  static uint64_t getUnixMillis() {
-    struct timeval tv;
-
-    gettimeofday(&tv, NULL);
-    return tv.tv_sec * 1000u + tv.tv_usec / 1000u;
-  }
-
-  static uint64_t getUnixMicros() {
-    struct timeval tv;
-
-    gettimeofday(&tv, NULL);
-    return tv.tv_sec * 1000000u + tv.tv_usec;
-  }
-
+  static uint64_t getUnixMillis();
+  static uint64_t getUnixMicros();
 };
 
 }
