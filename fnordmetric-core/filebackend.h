@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Licensed under the MIT license (see LICENSE).
  */
@@ -42,7 +42,7 @@ public:
   static std::unique_ptr<FileBackend> openFile(const std::string& filename);
 
   virtual std::unique_ptr<IStorageCursor> getCursor(
-      const IMetricKey& metric_key) override;
+      const std::string& key) override;
 
 };
 

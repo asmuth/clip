@@ -1,6 +1,6 @@
 /**
- * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ * This file is part of the "FnordStream" project
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Licensed under the MIT license (see LICENSE).
  */
@@ -8,7 +8,7 @@
 #define _FNORDMETRIC_AGENT_H
 
 #include <memory>
-#include "metric.h"
+#include "stream.h"
 #include "storagebackend.h"
 
 namespace fnordmetric {
@@ -26,25 +26,31 @@ public:
     storage_backend_(std::move(storage_backend)) {}
 
   Agent(const Agent& copy) = delete;
+  Agent& operator=(const Agent& copy) = delete;
 
-  template <typename... D>
-  std::shared_ptr<const Metric<D...>> newMetric(
-      const MetricDescription& description,
-      const D... dimensions) {
-    auto metric = std::make_shared<const Metric<D...>>(
-        description,
-        dimensions...);
+  template <typename... T>
+  std::shared_ptr<const Stream<T...>> newStream(
+      const std::string& name,
+      //const StreamDescription& description,
+      const T... fields) {
+    StreamKey<T...> key(name, fields...);
+    Schema<T...> schema(fields...);
+
+    auto cursor = storage_backend_->getCursor(key.getKeyString());
+    auto stream = std::make_shared<const Stream<T...>>(
+        key,
+        schema,
+        std::move(cursor));
 
     // FIXPAUL make threadsafe!
-    metrics_.push_back(metric);
-
-    return metric;
+    streams_.push_back(stream);
+    return stream;
   }
 
 protected:
 
   std::string name_;
-  std::vector<std::shared_ptr<const IMetric>> metrics_;
+  std::vector<std::shared_ptr<const IStream>> streams_;
   std::unique_ptr<IStorageBackend> storage_backend_;
 
 };

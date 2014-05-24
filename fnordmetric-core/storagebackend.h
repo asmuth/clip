@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Licensed under the MIT license (see LICENSE).
  */
@@ -11,7 +11,6 @@
 #include <stdint.h>
 #include <vector>
 #include <tuple>
-#include "metric.h"
 
 namespace fnordmetric {
 
@@ -75,8 +74,7 @@ public:
   IStorageBackend(const IStorageBackend& copy) = delete;
   virtual ~IStorageBackend() {}
 
-  virtual std::unique_ptr<IStorageCursor> getCursor(
-      const IMetricKey& metric_key) = 0;
+  virtual std::unique_ptr<IStorageCursor> getCursor(const std::string& key) = 0;
 
 };
 
