@@ -40,12 +40,22 @@ void testAppendRecord() {
 
   cursor->seekToLast();
   cursor->getRow([&called] (const uint8_t* data, size_t len, uint64_t time) {
-    called = true;
-    assert(len == 10);
+    fnordmetric::RecordReader reader(data, len);
+    assert(len == 18);
     assert(fnordmetric::WallClock::getUnixMillis() - time < 10);
+    int64_t count;
+    double fnord;
+    assert(reader.readInteger(&count));
+    assert(reader.readFloat(&fnord));
+    assert(count == 42);
+    assert(fnord == 23.5);
+    called = true;
   });
 
   assert(called);
+  assert(cursor->next() == false);
+  stream->appendRecord(42, 23.5);
+  assert(cursor->next() == true);
 }
 
 int main() {

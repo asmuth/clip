@@ -100,7 +100,7 @@ public:
     return cursor_->clone();
   }
 
-  void appendRecord(const IRecord& record) const;
+  void appendRecord(const IRecordWriter& record) const;
 
 protected:
 
@@ -129,7 +129,7 @@ public:
   Stream& operator=(const Stream& copy) = delete;
 
   void appendRecord(const typename T::ValueType&... values) const {
-    Record<T...> record(values...);
+    RecordWriter<T...> record(values...);
     IStream::appendRecord(record);
   }
 

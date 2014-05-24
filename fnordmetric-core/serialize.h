@@ -14,11 +14,6 @@
 namespace fnordmetric {
 namespace serialize {
 
-enum kTypePrefix {
-  INT64  = 'I',
-  IEE754 = 'F',
-  STRING = 'S'
-};
 
 template<typename T>
 void toBytes(const T& value, std::vector<uint8_t>* destination);

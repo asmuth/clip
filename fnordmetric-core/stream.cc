@@ -13,7 +13,7 @@
 
 namespace fnordmetric {
 
-void IStream::appendRecord(const IRecord& record) const {
+void IStream::appendRecord(const IRecordWriter& record) const {
   assert(cursor_.get() != nullptr);
   cursor_->appendRow(record.toBytes());
 }

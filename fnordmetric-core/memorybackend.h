@@ -20,9 +20,9 @@ namespace fnordmetric {
 /**
  * Memory Storage Backend for testing
  *
- * This will allocate new memory for ever record and never free any of it until
- * destroyed. Also the implementation of seek is O(n). Don't use this except for
- * testing purposes!
+ * This will allocate new memory for every record and never free any of it until
+ * it gets destroyed. Also the implementation of seek is O(n) and nothing in here
+ * is threadsafe. Don't use this except for testing purposes!
  *
  * See "storagebackend.h" for extended documentation.
  */
@@ -75,7 +75,12 @@ public:
     }
 
     virtual bool next() {
-      return false;
+      if (pos_ < data_->size() - 1) {
+        ++pos_;
+        return true;
+      } else {
+        return false;
+      }
     }
 
     virtual uint64_t appendRow(const std::vector<uint8_t>& data) override {

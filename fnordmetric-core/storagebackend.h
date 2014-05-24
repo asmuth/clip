@@ -86,9 +86,10 @@ public:
    * scope! The reason why this takes a callback function rather than returning
    * a pointer to the data directly is that this allows implementations to
    * return a reference to the internal storage of the data. If this method
-   * would retunr a direct pointer all implementations would be forced to copy
-   * the data before returning if they ever wanted to free their internal
-   * storage again.
+   * would return a direct pointer to the data all implementations would be
+   * forced to copy the data before returning if they ever wanted to free their
+   * internal storage again (let aside smart pointer trickery or an explicit
+   * free mechanism that would needlessly complicate things)
    */
   virtual void getRow(const std::function<void (const uint8_t* data,
       size_t len, uint64_t time)>& func) const = 0;
