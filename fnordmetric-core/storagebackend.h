@@ -13,6 +13,8 @@
 
 namespace fnordmetric {
 
+class IStorageCursor;
+
 /**
  * A storage backend stores an arbitrary number of 'streams'. A stream consists
  * of rows. Each row is a <time, data> tuple where time is the time at which the
@@ -90,6 +92,11 @@ public:
    * Returns the UTC millisecond timestamp at which the row was inserted.
    */
   virtual uint64_t appendRow(const std::vector<uint8_t>& data) = 0;
+
+  /**
+   * Returns a clone of this storage cursor
+   */
+  virtual std::unique_ptr<IStorageCursor> clone() const = 0;
 
 };
 

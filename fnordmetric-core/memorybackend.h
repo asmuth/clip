@@ -69,7 +69,17 @@ public:
       return now;
     }
 
+    virtual std::unique_ptr<IStorageCursor> clone() const override {
+      return std::unique_ptr<IStorageCursor>(new Cursor(data_, pos_));
+    }
+
   protected:
+    Cursor(
+        const std::shared_ptr<std::vector<IStorageCursor::RowType>>& data,
+        int pos) :
+        data_(data),
+        pos_(pos) {}
+
     const std::shared_ptr<std::vector<IStorageCursor::RowType>> data_;
     int pos_;
   };

@@ -16,11 +16,10 @@
 #include <memory>
 #include "schema.h"
 #include "record.h"
+#include "storagebackend.h"
 #include "fnv.h"
 
 namespace fnordmetric {
-
-class IStorageCursor;
 
 class IStreamKey {
 public:
@@ -95,6 +94,10 @@ public:
 
   const IStreamKey& getKey() const {
     return key_;
+  }
+
+  std::unique_ptr<IStorageCursor> getCursor() const {
+    return cursor_->clone();
   }
 
   void appendRecord(const IRecord& record) const;

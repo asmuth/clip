@@ -34,6 +34,10 @@ void testAppendRecord() {
       fnordmetric::FloatField("fnord"));
 
   stream->appendRecord(42, 23.5);
+
+  auto cursor = stream->getCursor();
+  cursor->seekToLast();
+
 }
 
 int main() {
