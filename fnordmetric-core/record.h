@@ -22,12 +22,10 @@ public:
   }
 
   void appendField(double value) {
-    printf("append double!");
     fnordmetric::serialize::toBytes(value, &bytes_);
   }
 
   void appendField(int64_t value) {
-    printf("append field!");
     fnordmetric::serialize::toBytes(value, &bytes_);
   }
 

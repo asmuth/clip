@@ -33,7 +33,6 @@ public:
 
 protected:
   explicit IStreamKey(const std::string& key_str) : key_str_(key_str) {}
-
   const std::string key_str_;
 };
 

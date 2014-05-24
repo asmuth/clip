@@ -21,7 +21,7 @@ void testStreamKeyGeneration() {
       fnordmetric::IntegerField("foo"),
       fnordmetric::FloatField("bar"));
 
-  printf("key: %s\n", stream_key.getKeyString().c_str());
+  //printf("key=%s\n", stream_key.getKeyString().c_str());
   assert(stream_key.getKeyString() == "83d2f71c457206bf-Ia9f37ed7-F76b77d1a");
 }
 

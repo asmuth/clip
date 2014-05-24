@@ -13,6 +13,32 @@
 
 namespace fnordmetric {
 
+/**
+ * A storage backend stores an arbitrary number of 'streams'. A stream consists
+ * of rows. Each row is a <time, data> tuple where time is the time at which the
+ * row was inserted into the stream and data is a binary string. Streams are
+ * append only. Each stream is identified by a unique string key.
+ */
+class IStorageBackend {
+public:
+  IStorageBackend(const IStorageBackend& copy) = delete;
+  IStorageBackend& operator=(const IStorageBackend& copy) = delete;
+  virtual ~IStorageBackend() {}
+
+  /**
+   * Get a cursor for a stream with a specified key
+   */
+  virtual std::unique_ptr<IStorageCursor> getCursor(const std::string& key) = 0;
+
+protected:
+  IStorageBackend() {}
+};
+
+
+/**
+ * A storage cursor is a stateful iterator for a single stream. It can be used
+ * to read rows from and append rows to the stream.
+ */
 class IStorageCursor {
 public:
   typedef std::pair<uint64_t, const std::vector<uint8_t>> RowType;
@@ -47,7 +73,7 @@ public:
 
   /**
    * Read up to N rows from the stream. Advances the cursor by the number of rows
-   * that were read an returns the number of rows that were read. Returns 0 if
+   * that were read and returns the number of rows that were read. Returns 0 if
    * the end of the stream was reached.
    *
    * The method returns tuples where the first item is the UTC millisecond
@@ -64,17 +90,6 @@ public:
    * Returns the UTC millisecond timestamp at which the row was inserted.
    */
   virtual uint64_t appendRow(const std::vector<uint8_t>& data) = 0;
-
-};
-
-class IStorageBackend {
-public:
-
-  IStorageBackend() {}
-  IStorageBackend(const IStorageBackend& copy) = delete;
-  virtual ~IStorageBackend() {}
-
-  virtual std::unique_ptr<IStorageCursor> getCursor(const std::string& key) = 0;
 
 };
 

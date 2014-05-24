@@ -23,10 +23,11 @@ namespace fnordmetric {
  * This will allocate new memory for ever record and never free any of it until
  * destroyed. Also the implementation of seek is O(n). Don't use this except for
  * testing purposes!
+ *
+ * See "storagebackend.h" for extended documentation.
  */
 class MemoryBackend : public IStorageBackend {
 public:
-
   class Cursor : public IStorageCursor {
   public:
 
@@ -62,9 +63,9 @@ public:
       override {}
 
     virtual uint64_t appendRow(const std::vector<uint8_t>& data) override {
-      printf("write row in memorybackend: %lu\n", data.size());
-      uint64_t now = WallClock::getUnixMicros();
+      uint64_t now = WallClock::getUnixMillis();
       data_->emplace_back(std::make_pair(now, data));
+      printf("append_row time=%llu, size=%lu\n", now, data.size());
       return now;
     }
 

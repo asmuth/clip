@@ -9,19 +9,14 @@
 
 #include <stdlib.h>
 #include <string>
+#include "serialize.h"
 
 namespace fnordmetric {
 class Agent;
 
 class IField {
 public:
-  enum kFieldType {
-    INT64  = 'I',
-    IEE754 = 'F',
-    STRING = 'S'
-  };
-
-  IField(kFieldType type, const std::string& name) :
+  IField(serialize::kTypePrefix type, const std::string& name) :
       type_(type),
       name_(name) {}
 
@@ -29,12 +24,12 @@ public:
     return name_;
   }
 
-  kFieldType getTypeId() const {
+  serialize::kTypePrefix getTypeId() const {
     return type_;
   }
 
 protected:
-  kFieldType type_; // FIXPAUL REMOVE ME
+  serialize::kTypePrefix type_; // FIXPAUL REMOVE ME
   std::string name_;
 };
 
@@ -78,13 +73,13 @@ protected:
 
 class IntegerField : public IField {
 public:
-  IntegerField(const std::string& name) : IField(IField::INT64, name) {}
+  IntegerField(const std::string& name) : IField(serialize::INT64, name) {}
   typedef int64_t ValueType;
 };
 
 class FloatField : public IField {
 public:
-  FloatField(const std::string& name) : IField(IField::IEE754, name) {}
+  FloatField(const std::string& name) : IField(serialize::IEE754, name) {}
   typedef double ValueType;
 };
 
