@@ -36,8 +36,16 @@ void testAppendRecord() {
   stream->appendRecord(42, 23.5);
 
   auto cursor = stream->getCursor();
-  cursor->seekToLast();
+  bool called = false;
 
+  cursor->seekToLast();
+  cursor->getRow([&called] (const uint8_t* data, size_t len, uint64_t time) {
+    called = true;
+    assert(len == 10);
+    assert(fnordmetric::WallClock::getUnixMillis() - time < 10);
+  });
+
+  assert(called);
 }
 
 int main() {

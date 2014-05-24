@@ -57,10 +57,26 @@ public:
       }
     }
 
-    virtual size_t read(
-      size_t n,
-      std::vector<IStorageCursor::RowType>* destination)
-      override {}
+    typedef
+        std::function<void (const uint8_t* data, size_t len, uint64_t time)>
+        GetRowCB;
+
+    virtual void getRow(const GetRowCB& func) const override {
+      if (pos_ < 0 || pos_ >= data_->size()) {
+        return;
+      }
+
+      auto row = data_->at(pos_);
+      auto data = std::get<1>(row).data();
+      auto len = std::get<1>(row).size();
+      auto time = std::get<0>(row);
+
+      func(data, len, time);
+    }
+
+    virtual bool next() {
+      return false;
+    }
 
     virtual uint64_t appendRow(const std::vector<uint8_t>& data) override {
       uint64_t now = WallClock::getUnixMillis();

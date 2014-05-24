@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <vector>
+#include <functional>
 
 namespace fnordmetric {
 
@@ -74,20 +75,33 @@ public:
   virtual uint64_t seekToLast() = 0;
 
   /**
-   * Read up to N rows from the stream. Advances the cursor by the number of rows
-   * that were read and returns the number of rows that were read. Returns 0 if
-   * the end of the stream was reached.
+   * Get the row the cursor is currently pointing to. If the cursor points to a
+   * valid row this method will call the provided callack function with these
+   * arguments:
+   *   - data: the pointer to the rows data
+   *   - len: the rows length in bytes
+   *   - time: the rows insert time in UTC milliseconds
    *
-   * The method returns tuples where the first item is the UTC millisecond
-   * timestamp at which the row was written and the second item is the row as
-   * a binary string.
+   * Note that the data pointer is only valid within the callback function's
+   * scope! The reason why this takes a callback function rather than returning
+   * a pointer to the data directly is that this allows implementations to
+   * return a reference to the internal storage of the data. If this method
+   * would retunr a direct pointer all implementations would be forced to copy
+   * the data before returning if they ever wanted to free their internal
+   * storage again.
    */
-  virtual size_t read(
-    size_t n,
-    std::vector<RowType>* destination) = 0;
+  virtual void getRow(const std::function<void (const uint8_t* data,
+      size_t len, uint64_t time)>& func) const = 0;
 
   /**
-   * Append a new row to the very end of the currenly opened stream
+   * Try to advance the cursor by one row. Returns true if the cursor was
+   * advanced successfully and returns false if the end of stream was reached.
+   */
+  virtual bool next() = 0;
+
+  /**
+   * Append a new row to the very end of the currenly opened stream. This will
+   * seek to the end of the stream and then write a row.
    *
    * Returns the UTC millisecond timestamp at which the row was inserted.
    */
