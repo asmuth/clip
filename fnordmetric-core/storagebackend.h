@@ -10,12 +10,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <vector>
-#include <tuple>
 
 namespace fnordmetric {
 
 class IStorageCursor {
 public:
+  typedef std::pair<uint64_t, const std::vector<uint8_t>> RowType;
 
   IStorageCursor() {}
   virtual ~IStorageCursor() {}
@@ -56,7 +56,7 @@ public:
    */
   virtual size_t read(
     size_t n,
-    std::vector<std::tuple<uint64_t, const std::vector<uint8_t>>>* destination) = 0;
+    std::vector<RowType>* destination) = 0;
 
   /**
    * Append a new row to the very end of the currenly opened stream

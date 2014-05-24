@@ -22,35 +22,6 @@ namespace fnordmetric {
 
 class IStorageCursor;
 
-/*
-class MetricDescription {
-public:
-
-  MetricDescription(const std::string& name) : name_(name) {}
-
-  MetricDescription(const std::string& name, const std::string& unit) :
-      name_(name),
-      unit_(unit) {}
-
-  MetricDescription(
-      const std::string& name,
-      const std::string& unit,
-      const std::string& description) :
-      name_(name),
-      unit_(unit),
-      description_(description) {}
-
-  const std::string& getName() const {
-    return name_;
-  }
-
-protected:
-  std::string name_;
-  std::string unit_;
-  std::string description_;
-};
-*/
-
 class IStreamKey {
 public:
 
