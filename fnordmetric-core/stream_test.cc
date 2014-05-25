@@ -9,7 +9,8 @@
 #include <assert.h>
 #include "stream.h"
 #include "agent.h"
-#include "memorybackend.h"
+#include "clock.h"
+#include "filebackend/filebackend.h"
 
 void testStreamKeyGeneration() {
   //fnordmetric::StreamDescription metric_description("mymetric", "kg", "blah");
@@ -26,7 +27,8 @@ void testStreamKeyGeneration() {
 }
 
 void testAppendRecord() {
-  fnordmetric::Agent agent("myagent", fnordmetric::MemoryBackend::New());
+  fnordmetric::Agent agent("myagent",
+    fnordmetric::filebackend::FileBackend::openFile("/tmp/fu.test"));
 
   auto stream = agent.newStream(
       "mystream",
