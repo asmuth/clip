@@ -29,27 +29,29 @@ public:
     uint64_t used;
   };
 
-  PageManager(size_t end_pos_, size_t block_size);
-
   /**
    * Request a page from the page manager
    */
-  const Page getPage(size_t min_size) {
-
-  }
+  const Page getPage(size_t min_size);
 
   /**
    * Return a page to the pagemanager. Adds this page to the freelist
    */
-  void yieldPage(const Page& page) {
-
-  }
+  void yieldPage(const Page& page);
 
 protected:
+  PageManager(size_t end_pos_, size_t block_size);
+
   /**
    * Index of the first unused byte in the file
    */
   size_t end_pos_;
+
+  /**
+   * Optimal block size for the underlying file
+   */
+  const size_t block_size_;
+
 };
 
 }

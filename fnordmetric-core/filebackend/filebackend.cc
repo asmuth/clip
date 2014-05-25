@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include "filebackend.h"
 #include "cursor.h"
+#include "streamref.h"
+#include "pagemanager.h"
 
 namespace fnordmetric {
 namespace filebackend {
@@ -74,9 +76,28 @@ StreamRef::StreamRef(
 
 
 
-PageManager(size_t end_pos_, size_t block_size) :
+PageManager::PageManager(size_t end_pos, size_t block_size) :
   end_pos_(end_pos), block_size_(block_size) {}
 
+
+// FIXPAUL hold lock!
+const PageManager::Page PageManager::getPage(size_t min_size) {
+  PageManager::Page page;
+
+  uint64_t num_blocks = (min_size + block_size_ - 1) / block_size_;
+
+  // FIXPAUL check freelist
+  page.offset = end_pos_;
+  page.size   = num_blocks * block_size_;
+  page.used   = 0;
+  end_pos_   += page.size;
+
+  return page;
+}
+
+void PageManager::yieldPage(const PageManager::Page& page) {
+
+}
 
 }
 }
