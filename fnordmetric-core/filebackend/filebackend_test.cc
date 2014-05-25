@@ -74,9 +74,8 @@ public:
     assert(page3.used == 0);
 
     page_manager.yieldPage(page2);
-
-    auto page4 = page_manager.getPage(3000);
-    assert(page_manager.end_pos_ == 1228);
+    auto page4 = page_manager.getPage(4000);
+    assert(page_manager.end_pos_ == 12288);
     assert(page4.offset == 4096);
     assert(page4.size == 8192);
     assert(page4.used == 0);

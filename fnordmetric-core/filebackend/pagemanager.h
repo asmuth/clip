@@ -43,6 +43,15 @@ protected:
   PageManager(size_t end_pos_, size_t block_size);
 
   /**
+   * Try to find a free page with a size larger than or equal to min_size
+   *
+   * Returns true if a matching free page was found and returns the page into
+   * the destination parameter. Returns false if no matching page was found and
+   * does not change the destination parameter.
+   */
+  bool findFreePage(size_t min_size, Page* destination);
+
+  /**
    * Index of the first unused byte in the file
    */
   size_t end_pos_;
@@ -51,6 +60,13 @@ protected:
    * Optimal block size for the underlying file
    */
   const size_t block_size_;
+
+  /**
+   * Page free list
+   *
+   * tuple is (size, offset)
+   */
+  std::vector<std::pair<uint64_t, uint64_t>> freelist_;
 
 };
 
