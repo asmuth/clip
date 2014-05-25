@@ -8,10 +8,14 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <algorithm>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
 #include "filebackend.h"
 #include "cursor.h"
 #include "streamref.h"
 #include "pagemanager.h"
+#include "assert.h"
 
 namespace fnordmetric {
 namespace filebackend {
@@ -75,16 +79,20 @@ StreamRef::StreamRef(
     stream_id_(stream_id),
     stream_key_(stream_key) {}
 
-
-
 PageManager::PageManager(size_t end_pos, size_t block_size) :
-  end_pos_(end_pos), block_size_(block_size) {}
+  end_pos_(end_pos),
+  block_size_(block_size) {}
 
+PageManager::PageManager(const PageManager&& move) :
+  end_pos_(move.end_pos_),
+  block_size_(move.block_size_),
+  freelist_(std::move(move.freelist_)) {}
 
 // FIXPAUL hold lock!
 PageManager::Page PageManager::allocPage(size_t min_size) {
   PageManager::Page page;
 
+  /* align the request size to the next largest block boundary */
   uint64_t min_size_aligned =
       ((min_size + block_size_ - 1) / block_size_) * block_size_;
 
@@ -118,23 +126,125 @@ bool PageManager::findFreePage(size_t min_size, Page* destination) {
   return false;
 }
 
-MmapPageManager::MmappedPage::MmappedPage(
-    const PageManager::Page __page,
-    const MmapPageManager* __manager,
-    const uint8_t* __data) :
-    page(__page),
-    manager(__manager),
-    data(__data),
-    refs(0) {}
+MmapPageManager::MmapPageManager(int fd, PageManager&& page_manager) :
+  fd_(fd),
+  page_manager_(std::move(page_manager)),
+  current_mapping_(nullptr) {}
+
+
+MmapPageManager::~MmapPageManager() {
+  if (current_mapping_ != nullptr) {
+    current_mapping_->decrRefs();
+  }
+}
+
+MmapPageManager* MmapPageManager::openFile(int fd) {
+  struct stat fd_stat;
+
+  assert(fd > 0);
+  if (fstat(fd, &fd_stat) < 0) {
+    perror("fstat() failed");
+    return nullptr;
+  }
+
+  off_t fd_len = lseek(fd, 0, SEEK_END);
+  if (fd_len < 0) {
+    perror("lseek() failed");
+    return nullptr;
+  }
+
+  PageManager page_manager(fd_len, fd_stat.st_blksize);
+
+  return new MmapPageManager(fd, std::move(page_manager));
+}
+
+MmapPageManager::MmappedPageRef MmapPageManager::allocPage(size_t min_size) {
+  auto page = page_manager_.allocPage( min_size);
+  uint64_t last_byte = page.offset + page.size;
+
+  ftruncate(fd_, last_byte); // FIXPAUL truncate in chunks + error checking
+  return MmappedPageRef(page, getMmapedFile(last_byte));
+}
+
+MmapPageManager::MmappedFile* MmapPageManager::getMmapedFile(uint64_t last_byte) {
+  // FIXPAUL: get mutex
+
+  if (current_mapping_ == nullptr || last_byte > current_mapping_->size) {
+    /* align mmap size to the next larger block boundary */
+    uint64_t mmap_size =
+        ((last_byte + kMmapSizeMultiplier - 1) / kMmapSizeMultiplier) *
+        kMmapSizeMultiplier;
+
+    int fd = dup(fd_);
+    if (fd < 0) {
+      perror("dup() failed");
+      abort(); // FIXPAUL
+    }
+
+    void* addr = mmap(
+        nullptr,
+        mmap_size,
+        PROT_WRITE | PROT_READ,
+        MAP_SHARED,
+        fd,
+        0);
+
+    if (addr == MAP_FAILED) {
+      perror("mmap() failed");
+      abort(); // FIXPAUL
+    }
+
+    if (current_mapping_ != nullptr) {
+      current_mapping_->decrRefs();
+    }
+
+    current_mapping_ = new MmappedFile(addr, mmap_size, fd);
+  }
+
+  return current_mapping_;
+}
+
+MmapPageManager::MmappedFile::MmappedFile(
+  void* __data,
+  const size_t __size,
+  const int __fd) :
+  data(__data),
+  size(__size),
+  fd(__fd),
+  refs(1) {}
 
 // FIXPAUL: locking!
-MmapPageManager::MmappedPageRef::MmappedPageRef(MmappedPage* __ptr) :
-    ptr(__ptr) {
-  ++(ptr->refs);
+void MmapPageManager::MmappedFile::incrRefs() {
+  ++refs;
+}
+
+// FIXPAUL: locking!
+void MmapPageManager::MmappedFile::decrRefs() {
+  if (--refs == 0) {
+    munmap(data, size);
+    close(fd);
+    free(this);
+  }
+}
+
+MmapPageManager::MmappedPageRef::MmappedPageRef(
+    const PageManager::Page& __page,
+    MmappedFile* __file) :
+    page(__page),
+    file(__file) {
+  file->incrRefs();
 }
 
 MmapPageManager::MmappedPageRef::~MmappedPageRef() {
-  --(ptr->refs);
+  file->decrRefs();
+}
+
+void* MmapPageManager::MmappedPageRef::operator->() const {
+  return file->data;
+}
+
+void* MmapPageManager::MmappedPageRef::operator*() const {
+  return file->data;
 }
 
 }

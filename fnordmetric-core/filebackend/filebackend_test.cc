@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <sys/fcntl.h>
 #include "filebackend.h"
 #include "pagemanager.h"
 
@@ -21,6 +22,7 @@ public:
     testStreamIdAssignment();
     testStreamRefCreation();
     testPageManager();
+    testMmapPageManager();
   }
 
   void testStreamIdAssignment() {
@@ -55,7 +57,6 @@ public:
     PageManager page_manager(0, 4096);
 
     auto page1 = page_manager.allocPage(3000);
-    printf("page size: %llu\n", page1.size);
     assert(page_manager.end_pos_ == 4096);
     assert(page1.offset == 0);
     assert(page1.size == 4096);
@@ -75,6 +76,28 @@ public:
     assert(page_manager.end_pos_ == 12288);
     assert(page4.offset == 4096);
     assert(page4.size == 8192);
+  }
+
+  void testMmapPageManager() {
+    int fd = open("/tmp/__fnordmetric_testMmapPageManager",
+        O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
+
+    assert(fd > 0);
+    auto page_manager = MmapPageManager::openFile(fd);
+
+    auto page1 = page_manager->allocPage(3000);
+    assert(page1.page.offset == 0);
+    assert(page1.page.size == 4096);
+
+    auto mfile1 = page_manager->getMmapedFile(3000);
+    auto mfile2 = page_manager->getMmapedFile(304200);
+    assert(mfile1->size == 1048576);
+    assert(mfile1->data == mfile2->data);
+    auto mfile3 = page_manager->getMmapedFile(1048577);
+    assert(mfile3->size == 1048576 * 2);
+    assert(mfile3->data != mfile2->data);
+
+    delete page_manager;
   }
 
 };

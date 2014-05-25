@@ -28,6 +28,11 @@ public:
     uint64_t size;
   };
 
+  PageManager(size_t end_pos_, size_t block_size);
+  PageManager(const PageManager& copy) = delete;
+  PageManager& operator=(const PageManager& copy) = delete;
+  PageManager(const PageManager&& move);
+
   /**
    * Request a new page from the page manager
    */
@@ -39,7 +44,6 @@ public:
   void freePage(const Page& page);
 
 protected:
-  PageManager(size_t end_pos_, size_t block_size);
 
   /**
    * Try to find a free page with a size larger than or equal to min_size
@@ -66,60 +70,72 @@ protected:
    * tuple is (size, offset)
    */
   std::vector<std::pair<uint64_t, uint64_t>> freelist_;
-
 };
 
 class MmapPageManager {
   friend class FileBackendTest;
-public:
-  struct MmappedPage {
-    const PageManager::Page page;
-    const MmapPageManager* manager;
-    const uint8_t* data;
+protected:
+  struct MmappedFile {
+    void* data;
+    const size_t size;
+    const int fd;
     size_t refs;
-    MmappedPage(
-        const PageManager::Page __page,
-        const MmapPageManager* __manager,
-        const uint8_t* __data);
-    MmappedPage(const MmappedPage& copy) = delete;
-    MmappedPage& operator=(const MmappedPage& copy) = delete;
+    MmappedFile(void* __data, const size_t __size, const int __fd);
+    void incrRefs();
+    void decrRefs();
   };
 
+public:
+  /**
+   * Size of the initially create mmaping in bytes. All mmapings will be a
+   * multiple of this size!
+   */
+  static const size_t kMmapSizeMultiplier = 1048576; /* 1 MB */
+
   struct MmappedPageRef {
-    MmappedPage* ptr;
-    MmappedPageRef(MmappedPage* __ptr);
+    const PageManager::Page page;
+    MmappedFile* file;
+    MmappedPageRef(const PageManager::Page& __page, MmappedFile* __file);
     ~MmappedPageRef();
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
+    void* operator->() const;
+    void* operator*() const;
+    MmappedPageRef(const MmappedPageRef&& move);
   };
 
   /**
    * Create a new mmap page manager and hand over ownership of the provided
    * filedescriptor.
    */
-  MmapPageManager(int fd);
+  static MmapPageManager* openFile(int fd);
+
+  MmapPageManager(const MmapPageManager& copy) = delete;
+  MmapPageManager& operator=(const MmapPageManager& copy) = delete;
+  ~MmapPageManager();
 
   /**
-   * Request a new page and a pointer to the pages data mapped into memory.
+   * Request a new page to be mapped into memory. Returns a smart pointer.
    */
   MmappedPageRef allocPage(size_t min_size);
 
   /**
-   * Request a an exisiting page to be mapped into memory. Every requested page
-   * must be returned with yieldpage eventually
+   * Request an exisiting page to be mapped into memory. Returns a smart pointer.
    */
-  MmappedPageRef getPage(size_t min_size);
-
-  /**
-   * Return a page to the pagemanager. Adds this page to the freelist
-   */
-  //void freePage(const Page& page) override;
+  MmappedPageRef getPage(uint64_t offset, size_t size);
 
 protected:
+  explicit MmapPageManager(int fd, PageManager&& page_manager);
 
-  //void unmmapPage();
+  /**
+   * Returns a mmap()ed memory region backend by the managed file spans until
+   * at least last_byte
+   */
+  MmappedFile* getMmapedFile(uint64_t last_byte);
 
-  std::unordered_map<uint64_t, MmapedPage*> mapped_pages_;
+  const int fd_;
+  PageManager page_manager_;
+  MmappedFile* current_mapping_;
 };
 
 }
