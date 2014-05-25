@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <sys/fcntl.h>
+#include <unistd.h>
 #include "filebackend.h"
 #include "pagemanager.h"
 
@@ -23,31 +24,36 @@ public:
     testStreamRefCreation();
     testPageManager();
     testMmapPageManager();
+    testOpenFile();
   }
 
   void testStreamIdAssignment() {
-    FileBackend backend;
+    auto backend = fnordmetric::filebackend::FileBackend::openFile(
+        "/tmp/__fnordmetric_testStreamIdAssignment");
+
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
     std::string key2 = "83d2f71c457216bf-Ia9f37ed7-F76b77d1a";
 
-    assert(backend.getStreamId(key1) == 1);
-    assert(backend.getStreamId(key2) == 2);
-    assert(backend.getStreamId(key1) == 1);
-    assert(backend.getStreamId(key2) == 2);
+    assert(backend->getStreamId(key1) == 1);
+    assert(backend->getStreamId(key2) == 2);
+    assert(backend->getStreamId(key1) == 1);
+    assert(backend->getStreamId(key2) == 2);
   }
 
   void testStreamRefCreation() {
-    FileBackend backend;
+    auto backend = fnordmetric::filebackend::FileBackend::openFile(
+        "/tmp/__fnordmetric_testStreamRefCreation");
+
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
     std::string key2 = "83d2f71c457216bf-Ia9f37ed7-F76b77d1a";
-    auto ref1 = backend.getStreamRef(key1);
+    auto ref1 = backend->getStreamRef(key1);
     assert(ref1.get() != nullptr);
-    auto ref2 = backend.getStreamRef(key1);
+    auto ref2 = backend->getStreamRef(key1);
     assert(ref1.get() == ref2.get());
-    auto ref3 = backend.getStreamRef(key2);
+    auto ref3 = backend->getStreamRef(key2);
     assert(ref1.get() != ref3.get());
     assert(ref2.get() != ref3.get());
-    auto ref4 = backend.getStreamRef(key2);
+    auto ref4 = backend->getStreamRef(key2);
     assert(ref1.get() != ref4.get());
     assert(ref2.get() != ref4.get());
     assert(ref3.get() == ref4.get());
@@ -83,7 +89,7 @@ public:
         O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
 
     assert(fd > 0);
-    auto page_manager = MmapPageManager::openFile(fd);
+    auto page_manager = new MmapPageManager(fd, 0);
 
     auto mfile1 = page_manager->getMmapedFile(3000);
     auto mfile2 = page_manager->getMmapedFile(304200);
@@ -96,6 +102,13 @@ public:
     mfile2->decrRefs();
 
     delete page_manager;
+    close(fd);
+  }
+
+  void testOpenFile() {
+    auto filebackend = fnordmetric::filebackend::FileBackend::openFile(
+        "/tmp/__fnordmetric_testOpenFile");
+    assert(filebackend.get() != nullptr);
   }
 
 };

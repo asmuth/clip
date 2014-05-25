@@ -104,12 +104,8 @@ public:
     MmappedPageRef(const MmappedPageRef&& move);
   };
 
-  /**
-   * Create a new mmap page manager and hand over ownership of the provided
-   * filedescriptor.
-   */
-  static MmapPageManager* openFile(int fd);
-
+  explicit MmapPageManager(int fd, size_t len);
+  MmapPageManager(MmapPageManager&& move);
   MmapPageManager(const MmapPageManager& copy) = delete;
   MmapPageManager& operator=(const MmapPageManager& copy) = delete;
   ~MmapPageManager();
@@ -120,7 +116,6 @@ public:
   MmappedPageRef getPage(const PageManager::Page& page);
 
 protected:
-  explicit MmapPageManager(int fd, size_t len);
 
   /**
    * Returns a mmap()ed memory region backend by the managed file spans until
@@ -128,7 +123,7 @@ protected:
    */
   MmappedFile* getMmapedFile(uint64_t last_byte);
 
-  const int fd_;
+  int fd_;
   size_t file_size_;
   MmappedFile* current_mapping_;
 };

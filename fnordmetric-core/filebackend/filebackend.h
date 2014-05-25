@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include "../storagebackend.h"
 #include "streamref.h"
+#include "pagemanager.h"
 
 /**
  * A file-backed, threadsafe storage backend for FnordMetric. This backend
@@ -105,7 +106,9 @@ public:
       const std::string& key) override;
 
 protected:
-  FileBackend();
+  FileBackend(
+      PageManager&& page_manager,
+      MmapPageManager&& MmapPageManager);
 
   /**
    * Retrieve the stream ref for the specified stream id
@@ -132,6 +135,8 @@ protected:
    */
   uint64_t max_stream_id_;
 
+  PageManager page_manager_;
+  MmapPageManager mmap_manager_;
 };
 
 }

@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <sys/fcntl.h>
+#include <unistd.h>
 #include "filebackend.h"
 #include "cursor.h"
 #include "streamref.h"
@@ -20,10 +22,44 @@
 namespace fnordmetric {
 namespace filebackend {
 
-FileBackend::FileBackend() : max_stream_id_(0), IStorageBackend() {}
+FileBackend::FileBackend(
+    PageManager&& page_manager,
+    MmapPageManager&& mmap_manager) :
+    page_manager_(std::move(page_manager)),
+    mmap_manager_(std::move(mmap_manager)),
+    max_stream_id_(0),
+    IStorageBackend() {}
 
 std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) {
-  auto backend = new FileBackend();
+  FileBackend* ptr = nullptr;
+
+  int fd = open(filename.c_str(), O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+  if (fd < 0) {
+    perror("open() failed");
+    return std::unique_ptr<FileBackend>(nullptr);
+  }
+
+  struct stat fd_stat;
+  if (fstat(fd, &fd_stat) < 0) {
+    perror("fstat() failed");
+    return std::unique_ptr<FileBackend>(nullptr);
+  }
+
+  off_t fd_len = lseek(fd, 0, SEEK_END);
+  if (fd_len < 0) {
+    perror("lseek() failed");
+    return std::unique_ptr<FileBackend>(nullptr);
+  }
+
+  MmapPageManager mmap_manager(fd, fd_len);
+
+  // FIXPAUL last used page should be from log
+  size_t last_used_byte = 0;
+
+  auto backend = new FileBackend(
+      PageManager(last_used_byte, fd_stat.st_blksize),
+      std::move(mmap_manager));
+
   return std::unique_ptr<FileBackend>(backend);
 }
 
@@ -127,36 +163,23 @@ bool PageManager::findFreePage(size_t min_size, Page* destination) {
 }
 
 MmapPageManager::MmapPageManager(int fd, size_t len) :
-  fd_(fd),
-  file_size_(len),
-  current_mapping_(nullptr) {}
+    fd_(fd),
+    file_size_(len),
+    current_mapping_(nullptr) {}
 
+MmapPageManager::MmapPageManager(MmapPageManager&& move) :
+    fd_(move.fd_),
+    file_size_(move.file_size_),
+    current_mapping_(move.current_mapping_) {
+  move.fd_ = -1;
+  move.file_size_ = 0;
+  move.current_mapping_ = nullptr;
+}
 
 MmapPageManager::~MmapPageManager() {
   if (current_mapping_ != nullptr) {
     current_mapping_->decrRefs();
   }
-}
-
-MmapPageManager* MmapPageManager::openFile(int fd) {
-  struct stat fd_stat;
-
-  //assert(fd > 0);
-  //if (fstat(fd, &fd_stat) < 0) {
-  //  perror("fstat() failed");
-  //  return nullptr;
-  //}
-
-  off_t fd_len = lseek(fd, 0, SEEK_END);
-  if (fd_len < 0) {
-    perror("lseek() failed");
-    return nullptr;
-  }
-
-  // FIXPAUL last used page should be from log
-  //PageManager page_manager(0, fd_stat.st_blksize);
-
-  return new MmapPageManager(fd, fd_len);
 }
 
 MmapPageManager::MmappedPageRef MmapPageManager::getPage(
