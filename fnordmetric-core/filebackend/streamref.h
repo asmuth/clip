@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include "pagemanager.h"
 
 namespace fnordmetric {
 namespace filebackend {
@@ -21,14 +22,33 @@ namespace filebackend {
  */
 class StreamRef {
 public:
+  struct PageAlloc {
+    PageManager::Page page;
+    size_t used; /* number of used bytes in the page */
+    uint64_t t0; /* time of the first row in the page */
+    uint64_t t1; /* time of the last row in the page */
+  };
+
+  struct __attribute__((__packed__)) RowHeader {
+    uint64_t time;
+    uint64_t size;
+    uint8_t data[];
+  };
+
   explicit StreamRef(
+      FileBackend* backed,
       uint64_t stream_id,
       const std::string& stream_key);
 
   StreamRef(const StreamRef& copy) = delete;
   StreamRef& operator=(const StreamRef& copy) = delete;
 
+  void appendRow(const std::vector<uint8_t>& data);
+
 protected:
+  std::vector<PageAlloc> pages_;
+
+  FileBackend* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;
 };

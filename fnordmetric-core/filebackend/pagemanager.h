@@ -96,12 +96,13 @@ public:
     const PageManager::Page page;
     MmappedFile* file;
     MmappedPageRef(const PageManager::Page& __page, MmappedFile* __file);
-    ~MmappedPageRef();
+    MmappedPageRef(MmappedPageRef&& move);
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
+    ~MmappedPageRef();
     void* operator->() const;
     void* operator*() const;
-    MmappedPageRef(const MmappedPageRef&& move);
+    template<typename T> T* structAt(size_t position);
   };
 
   explicit MmapPageManager(int fd, size_t len);
@@ -127,6 +128,16 @@ protected:
   size_t file_size_;
   MmappedFile* current_mapping_;
 };
+
+
+/**
+ * IMPLEMENTATION
+ */
+template<typename T>
+T* MmapPageManager::MmappedPageRef::structAt(size_t position) {
+  return (T*) (((char *) file->data) + position);
+}
+
 
 }
 }

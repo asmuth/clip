@@ -13,11 +13,12 @@
 #include <sys/mman.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
+#include <assert.h>
 #include "filebackend.h"
 #include "cursor.h"
 #include "streamref.h"
 #include "pagemanager.h"
-#include "assert.h"
+#include "../clock.h"
 
 namespace fnordmetric {
 namespace filebackend {
@@ -73,7 +74,7 @@ std::shared_ptr<StreamRef> FileBackend::getStreamRef(const std::string& key) {
   auto iter = stream_refs_.find(stream_id);
 
   if (iter == stream_refs_.end()) {
-    std::shared_ptr<StreamRef> stream_ref(new StreamRef(stream_id, key));
+    std::shared_ptr<StreamRef> stream_ref(new StreamRef(this, stream_id, key));
     stream_refs_.insert(std::make_pair(stream_id, stream_ref));
     return stream_ref;
   } else {
@@ -106,14 +107,60 @@ uint64_t Cursor::seekToLast() {}
 void Cursor::getRow(const std::function<void (const uint8_t* data,
     size_t len, uint64_t time)>& func) const {}
 bool Cursor::next() {}
-uint64_t Cursor::appendRow(const std::vector<uint8_t>& data) {}
+
+uint64_t Cursor::appendRow(const std::vector<uint8_t>& data) {
+  stream_ref_->appendRow(data);
+}
+
 std::unique_ptr<IStorageCursor> Cursor::clone() const {}
 
 StreamRef::StreamRef(
+    FileBackend* backend,
     uint64_t stream_id,
     const std::string& stream_key) :
+    backend_(backend),
     stream_id_(stream_id),
     stream_key_(stream_key) {}
+
+// FIXPAUL hold append lock
+void StreamRef::appendRow(const std::vector<uint8_t>& data) {
+  uint64_t time = WallClock::getUnixMillis();
+  size_t row_size = data.size() + 16;
+
+  if (pages_.size() == 0) {
+    PageAlloc alloc;
+    // FIXPAUL estimate size
+    alloc.page = backend_->page_manager_.allocPage(data.size() * 100);
+    alloc.used = 0;
+    alloc.t0   = time;
+    alloc.t1   = time;
+
+    pages_.push_back(std::move(alloc));
+    // FIXPAUL log: first page
+  }
+
+  if (pages_.back().used + row_size > pages_.back().page.size) {
+    PageAlloc alloc;
+    // FIXPAUL estimate size
+    alloc.page = backend_->page_manager_.allocPage(data.size() * 100);
+    alloc.used = 0;
+    alloc.t0   = time;
+    alloc.t1   = time;
+
+    pages_.push_back(std::move(alloc));
+    // FIXPAUL log: page finish
+    // FIXPAUL log: new page
+  }
+
+  auto mmaped = backend_->mmap_manager_.getPage(pages_.back().page);
+
+  RowHeader* row = mmaped.structAt<RowHeader>(pages_.back().used);
+  row->time = time;
+  row->size = data.size();
+  memcpy(row->data, data.data(), row->size);
+
+  pages_.back().used += row_size;
+}
 
 PageManager::PageManager(size_t end_pos, size_t block_size) :
   end_pos_(end_pos),
@@ -143,6 +190,7 @@ PageManager::Page PageManager::allocPage(size_t min_size) {
 }
 
 // FIXPAUL: proper freelist implementation
+// FIXPAUL hold lock!
 void PageManager::freePage(const PageManager::Page& page) {
   freelist_.emplace_back(std::make_pair(page.size, page.offset));
 }
@@ -182,6 +230,7 @@ MmapPageManager::~MmapPageManager() {
   }
 }
 
+// FIXPAUL hold lock!
 MmapPageManager::MmappedPageRef MmapPageManager::getPage(
     const PageManager::Page& page) {
   uint64_t last_byte = page.offset + page.size;
@@ -260,6 +309,13 @@ MmapPageManager::MmappedPageRef::MmappedPageRef(
     page(__page),
     file(__file) {
   file->incrRefs();
+}
+
+MmapPageManager::MmappedPageRef::MmappedPageRef(
+    MmapPageManager::MmappedPageRef&& move) :
+    page(move.page),
+    file(move.file) {
+  move.file = nullptr;
 }
 
 MmapPageManager::MmappedPageRef::~MmappedPageRef() {

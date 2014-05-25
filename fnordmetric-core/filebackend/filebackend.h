@@ -13,7 +13,6 @@
 #include <memory>
 #include <unordered_map>
 #include "../storagebackend.h"
-#include "streamref.h"
 #include "pagemanager.h"
 
 /**
@@ -76,7 +75,10 @@
 namespace fnordmetric {
 namespace filebackend {
 
+class StreamRef;
+
 class FileBackend : public IStorageBackend {
+  friend class StreamRef;
   friend class FileBackendTest;
 public:
   FileBackend(const FileBackend& copy) = delete;
