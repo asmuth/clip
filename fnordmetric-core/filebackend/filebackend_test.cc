@@ -85,17 +85,15 @@ public:
     assert(fd > 0);
     auto page_manager = MmapPageManager::openFile(fd);
 
-    auto page1 = page_manager->allocPage(3000);
-    assert(page1.page.offset == 0);
-    assert(page1.page.size == 4096);
-
     auto mfile1 = page_manager->getMmapedFile(3000);
     auto mfile2 = page_manager->getMmapedFile(304200);
     assert(mfile1->size == 1048576);
-    assert(mfile1->data == mfile2->data);
+    assert(mfile1 == mfile2);
+    mfile2->incrRefs();
     auto mfile3 = page_manager->getMmapedFile(1048577);
     assert(mfile3->size == 1048576 * 2);
-    assert(mfile3->data != mfile2->data);
+    assert(mfile3 != mfile2);
+    mfile2->decrRefs();
 
     delete page_manager;
   }

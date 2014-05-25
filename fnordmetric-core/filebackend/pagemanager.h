@@ -115,17 +115,12 @@ public:
   ~MmapPageManager();
 
   /**
-   * Request a new page to be mapped into memory. Returns a smart pointer.
+   * Request a page to be mapped into memory. Returns a smart pointer.
    */
-  MmappedPageRef allocPage(size_t min_size);
-
-  /**
-   * Request an exisiting page to be mapped into memory. Returns a smart pointer.
-   */
-  MmappedPageRef getPage(uint64_t offset, size_t size);
+  MmappedPageRef getPage(const PageManager::Page& page);
 
 protected:
-  explicit MmapPageManager(int fd, PageManager&& page_manager);
+  explicit MmapPageManager(int fd, size_t len);
 
   /**
    * Returns a mmap()ed memory region backend by the managed file spans until
@@ -134,7 +129,7 @@ protected:
   MmappedFile* getMmapedFile(uint64_t last_byte);
 
   const int fd_;
-  PageManager page_manager_;
+  size_t file_size_;
   MmappedFile* current_mapping_;
 };
 

@@ -126,9 +126,9 @@ bool PageManager::findFreePage(size_t min_size, Page* destination) {
   return false;
 }
 
-MmapPageManager::MmapPageManager(int fd, PageManager&& page_manager) :
+MmapPageManager::MmapPageManager(int fd, size_t len) :
   fd_(fd),
-  page_manager_(std::move(page_manager)),
+  file_size_(len),
   current_mapping_(nullptr) {}
 
 
@@ -141,11 +141,11 @@ MmapPageManager::~MmapPageManager() {
 MmapPageManager* MmapPageManager::openFile(int fd) {
   struct stat fd_stat;
 
-  assert(fd > 0);
-  if (fstat(fd, &fd_stat) < 0) {
-    perror("fstat() failed");
-    return nullptr;
-  }
+  //assert(fd > 0);
+  //if (fstat(fd, &fd_stat) < 0) {
+  //  perror("fstat() failed");
+  //  return nullptr;
+  //}
 
   off_t fd_len = lseek(fd, 0, SEEK_END);
   if (fd_len < 0) {
@@ -153,22 +153,26 @@ MmapPageManager* MmapPageManager::openFile(int fd) {
     return nullptr;
   }
 
-  PageManager page_manager(fd_len, fd_stat.st_blksize);
+  // FIXPAUL last used page should be from log
+  //PageManager page_manager(0, fd_stat.st_blksize);
 
-  return new MmapPageManager(fd, std::move(page_manager));
+  return new MmapPageManager(fd, fd_len);
 }
 
-MmapPageManager::MmappedPageRef MmapPageManager::allocPage(size_t min_size) {
-  auto page = page_manager_.allocPage( min_size);
+MmapPageManager::MmappedPageRef MmapPageManager::getPage(
+    const PageManager::Page& page) {
   uint64_t last_byte = page.offset + page.size;
+  // FIXPAUL: get mutex
 
-  ftruncate(fd_, last_byte); // FIXPAUL truncate in chunks + error checking
+  if (last_byte > file_size_) {
+    ftruncate(fd_, last_byte); // FIXPAUL truncate in chunks + error checking
+    file_size_ = last_byte;
+  }
+
   return MmappedPageRef(page, getMmapedFile(last_byte));
 }
 
 MmapPageManager::MmappedFile* MmapPageManager::getMmapedFile(uint64_t last_byte) {
-  // FIXPAUL: get mutex
-
   if (current_mapping_ == nullptr || last_byte > current_mapping_->size) {
     /* align mmap size to the next larger block boundary */
     uint64_t mmap_size =
@@ -223,7 +227,7 @@ void MmapPageManager::MmappedFile::decrRefs() {
   if (--refs == 0) {
     munmap(data, size);
     close(fd);
-    free(this);
+    delete this;
   }
 }
 
