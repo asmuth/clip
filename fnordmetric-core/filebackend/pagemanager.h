@@ -26,18 +26,17 @@ public:
   struct Page {
     uint64_t offset;
     uint64_t size;
-    uint64_t used;
   };
 
   /**
-   * Request a page from the page manager
+   * Request a new page from the page manager
    */
-  const Page getPage(size_t min_size);
+  Page allocPage(size_t min_size);
 
   /**
    * Return a page to the pagemanager. Adds this page to the freelist
    */
-  void yieldPage(const Page& page);
+  void freePage(const Page& page);
 
 protected:
   PageManager(size_t end_pos_, size_t block_size);
@@ -68,6 +67,59 @@ protected:
    */
   std::vector<std::pair<uint64_t, uint64_t>> freelist_;
 
+};
+
+class MmapPageManager {
+  friend class FileBackendTest;
+public:
+  struct MmappedPage {
+    const PageManager::Page page;
+    const MmapPageManager* manager;
+    const uint8_t* data;
+    size_t refs;
+    MmappedPage(
+        const PageManager::Page __page,
+        const MmapPageManager* __manager,
+        const uint8_t* __data);
+    MmappedPage(const MmappedPage& copy) = delete;
+    MmappedPage& operator=(const MmappedPage& copy) = delete;
+  };
+
+  struct MmappedPageRef {
+    MmappedPage* ptr;
+    MmappedPageRef(MmappedPage* __ptr);
+    ~MmappedPageRef();
+    MmappedPageRef(const MmappedPageRef& copy) = delete;
+    MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
+  };
+
+  /**
+   * Create a new mmap page manager and hand over ownership of the provided
+   * filedescriptor.
+   */
+  MmapPageManager(int fd);
+
+  /**
+   * Request a new page and a pointer to the pages data mapped into memory.
+   */
+  MmappedPageRef allocPage(size_t min_size);
+
+  /**
+   * Request a an exisiting page to be mapped into memory. Every requested page
+   * must be returned with yieldpage eventually
+   */
+  MmappedPageRef getPage(size_t min_size);
+
+  /**
+   * Return a page to the pagemanager. Adds this page to the freelist
+   */
+  //void freePage(const Page& page) override;
+
+protected:
+
+  //void unmmapPage();
+
+  std::unordered_map<uint64_t, MmapedPage*> mapped_pages_;
 };
 
 }

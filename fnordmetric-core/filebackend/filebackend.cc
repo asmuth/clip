@@ -82,7 +82,7 @@ PageManager::PageManager(size_t end_pos, size_t block_size) :
 
 
 // FIXPAUL hold lock!
-const PageManager::Page PageManager::getPage(size_t min_size) {
+PageManager::Page PageManager::allocPage(size_t min_size) {
   PageManager::Page page;
 
   uint64_t min_size_aligned =
@@ -91,7 +91,7 @@ const PageManager::Page PageManager::getPage(size_t min_size) {
   if (!findFreePage(min_size_aligned, &page)) {
     page.offset = end_pos_;
     page.size   = min_size_aligned;
-    page.used   = 0;
+    //page.used   = 0;
     end_pos_   += page.size;
   }
 
@@ -99,7 +99,7 @@ const PageManager::Page PageManager::getPage(size_t min_size) {
 }
 
 // FIXPAUL: proper freelist implementation
-void PageManager::yieldPage(const PageManager::Page& page) {
+void PageManager::freePage(const PageManager::Page& page) {
   freelist_.emplace_back(std::make_pair(page.size, page.offset));
 }
 
@@ -109,13 +109,32 @@ bool PageManager::findFreePage(size_t min_size, Page* destination) {
     if (std::get<0>(*iter) >= min_size) {
       destination->offset = std::get<1>(*iter);
       destination->size   = std::get<0>(*iter);
-      destination->used   = 0;
+      //destination->used   = 0;
       freelist_.erase(iter);
       return true;
     }
   }
 
   return false;
+}
+
+MmapPageManager::MmappedPage::MmappedPage(
+    const PageManager::Page __page,
+    const MmapPageManager* __manager,
+    const uint8_t* __data) :
+    page(__page),
+    manager(__manager),
+    data(__data),
+    refs(0) {}
+
+// FIXPAUL: locking!
+MmapPageManager::MmappedPageRef::MmappedPageRef(MmappedPage* __ptr) :
+    ptr(__ptr) {
+  ++(ptr->refs);
+}
+
+MmapPageManager::MmappedPageRef::~MmappedPageRef() {
+  --(ptr->refs);
 }
 
 }

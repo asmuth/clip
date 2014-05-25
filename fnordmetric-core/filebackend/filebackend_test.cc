@@ -54,31 +54,27 @@ public:
   void testPageManager() {
     PageManager page_manager(0, 4096);
 
-    auto page1 = page_manager.getPage(3000);
+    auto page1 = page_manager.allocPage(3000);
     printf("page size: %llu\n", page1.size);
     assert(page_manager.end_pos_ == 4096);
     assert(page1.offset == 0);
     assert(page1.size == 4096);
-    assert(page1.used == 0);
-    page_manager.yieldPage(page1);
+    page_manager.freePage(page1);
 
-    auto page2 = page_manager.getPage(8000);
+    auto page2 = page_manager.allocPage(8000);
     assert(page_manager.end_pos_ == 12288);
     assert(page2.offset == 4096);
     assert(page2.size == 8192);
-    assert(page2.used == 0);
 
-    auto page3 = page_manager.getPage(3000);
+    auto page3 = page_manager.allocPage(3000);
     assert(page3.offset == 0);
     assert(page3.size == 4096);
-    assert(page3.used == 0);
 
-    page_manager.yieldPage(page2);
-    auto page4 = page_manager.getPage(4000);
+    page_manager.freePage(page2);
+    auto page4 = page_manager.allocPage(4000);
     assert(page_manager.end_pos_ == 12288);
     assert(page4.offset == 4096);
     assert(page4.size == 8192);
-    assert(page4.used == 0);
   }
 
 };

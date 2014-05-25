@@ -38,11 +38,9 @@
     PAGE             ::= ( LOG_PAGE | DATA_PAGE )
 
     PAGE_HEADER      ::= PAGE_SIZE
-                         PAGE_USED
                          PAGE_FLAGS
 
     PAGE_SIZE        ::= <uint64_t>         ; size of the page in bytes
-    PAGE_USED        ::= <uint64_t>         ; number of used byte in the page
     PAGE_FLAGS       ::= <uint64_t>         ; page flags
     PAGE_PTR         ::= <uint64_t>         ; page offset in the file
 
