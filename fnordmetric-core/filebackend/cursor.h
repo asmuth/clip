@@ -20,7 +20,7 @@ namespace filebackend {
  * This is an internal class. For usage instructions and extended documentation
  * please refer to "storagebackend.h" and "filebackend.h"
  */
-class Cursor : public IStorageCursor {
+class Cursor : public IBackend::IStreamCursor {
 public:
   explicit Cursor(std::shared_ptr<StreamRef> stream_ref);
   Cursor(const Cursor& copy) = delete;
@@ -32,8 +32,7 @@ public:
   virtual void getRow(const std::function<void (const uint8_t* data,
       size_t len, uint64_t time)>& func) const override;
   virtual bool next() override;
-  virtual uint64_t appendRow(const std::vector<uint8_t>& data) override;
-  virtual std::unique_ptr<IStorageCursor> clone() const override;
+
 protected:
   std::shared_ptr<StreamRef> stream_ref_;
 };

@@ -77,7 +77,7 @@ namespace filebackend {
 
 class StreamRef;
 
-class FileBackend : public IStorageBackend {
+class FileBackend : public IBackend {
   friend class StreamRef;
   friend class FileBackendTest;
 public:
@@ -100,11 +100,7 @@ public:
    */
   void setMaxPageSize(size_t bytes);
 
-  /**
-   * Retrieve a storage cursor for a stream. See "storagebackend.h" for extended
-   * documentation.
-   */
-  virtual std::unique_ptr<IStorageCursor> getCursor(
+  virtual std::unique_ptr<IStreamDescriptor> openStream(
       const std::string& key) override;
 
 protected:

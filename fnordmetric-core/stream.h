@@ -47,19 +47,19 @@ public:
       const IStreamKey& key,
       const ISchema& schema,
       //const MetricDescription& description,
-      std::unique_ptr<IStorageCursor>&& cursor);
+      std::unique_ptr<IBackend::IStreamDescriptor>&& stream_descriptor);
 
   IStream(const IStream& copy) = delete;
   IStream& operator=(const IStream& copy) = delete;
 
   const ISchema& getSchema() const;
   const IStreamKey& getKey() const;
-  std::unique_ptr<IStorageCursor> getCursor() const;
+  std::unique_ptr<IBackend::IStreamCursor> getCursor() const;
 
   void appendRecord(const IRecordWriter& record) const;
 
 protected:
-  const std::unique_ptr<IStorageCursor> cursor_;
+  const std::unique_ptr<IBackend::IStreamDescriptor> stream_descriptor_;
   const IStreamKey key_;
   //const MetricDescription description_;
   const ISchema schema_;
@@ -73,7 +73,7 @@ public:
       const IStreamKey& key,
       const Schema<T...>& schema,
       //const MetricDescription& description,
-      std::unique_ptr<IStorageCursor>&& cursor);
+      std::unique_ptr<IBackend::IStreamDescriptor>&& stream_descriptor);
 
   Stream(const Stream& copy) = delete;
   Stream& operator=(const Stream& copy) = delete;

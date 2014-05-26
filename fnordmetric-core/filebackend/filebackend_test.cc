@@ -110,10 +110,10 @@ public:
         "/tmp/__fnordmetric_testOpenFile");
     assert(filebackend.get() != nullptr);
 
-    auto cursor = filebackend->getCursor("mystream");
+    auto streamdesc = filebackend->openStream("mystream");
     std::vector<uint8_t> data = {0x0a, 0x0a, 0x0a, 0x0a};
-    cursor->appendRow(data);
-    cursor->appendRow(data);
+    streamdesc->appendRow(data);
+    streamdesc->appendRow(data);
   }
 
 };

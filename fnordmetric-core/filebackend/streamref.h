@@ -43,7 +43,7 @@ public:
   StreamRef(const StreamRef& copy) = delete;
   StreamRef& operator=(const StreamRef& copy) = delete;
 
-  void appendRow(const std::vector<uint8_t>& data);
+  uint64_t appendRow(const std::vector<uint8_t>& data);
 
 protected:
   std::vector<PageAlloc> pages_;
@@ -51,6 +51,21 @@ protected:
   FileBackend* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;
+};
+
+/**
+ * This is an internal class. For usage instructions and extended documentation
+ * please refer to "storagebackend.h" and "filebackend.h"
+ */
+class StreamDescriptor : public IBackend::IStreamDescriptor {
+public:
+  explicit StreamDescriptor(std::shared_ptr<StreamRef> stream_ref);
+  StreamDescriptor(const StreamDescriptor& copy) = delete;
+  StreamDescriptor& operator=(const StreamDescriptor& copy) = delete;
+  uint64_t appendRow(const std::vector<uint8_t>& data) override;
+  std::unique_ptr<IBackend::IStreamCursor> getCursor() override;
+protected:
+  std::shared_ptr<StreamRef> stream_ref_;
 };
 
 }

@@ -28,8 +28,7 @@ FileBackend::FileBackend(
     MmapPageManager&& mmap_manager) :
     page_manager_(std::move(page_manager)),
     mmap_manager_(std::move(mmap_manager)),
-    max_stream_id_(0),
-    IStorageBackend() {}
+    max_stream_id_(0) {}
 
 std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) {
   FileBackend* ptr = nullptr;
@@ -64,8 +63,10 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
   return std::unique_ptr<FileBackend>(backend);
 }
 
-std::unique_ptr<IStorageCursor> FileBackend::getCursor(const std::string& key) {
-  return std::unique_ptr<Cursor>(new Cursor(getStreamRef(key)));
+std::unique_ptr<IBackend::IStreamDescriptor> FileBackend::openStream(
+    const std::string& key) {
+  return std::unique_ptr<IBackend::IStreamDescriptor>(
+      new StreamDescriptor(getStreamRef(key)));
 }
 
 // FIXPAUL locking!
@@ -108,12 +109,6 @@ void Cursor::getRow(const std::function<void (const uint8_t* data,
     size_t len, uint64_t time)>& func) const {}
 bool Cursor::next() {}
 
-uint64_t Cursor::appendRow(const std::vector<uint8_t>& data) {
-  stream_ref_->appendRow(data);
-}
-
-std::unique_ptr<IStorageCursor> Cursor::clone() const {}
-
 StreamRef::StreamRef(
     FileBackend* backend,
     uint64_t stream_id,
@@ -123,7 +118,7 @@ StreamRef::StreamRef(
     stream_key_(stream_key) {}
 
 // FIXPAUL hold append lock
-void StreamRef::appendRow(const std::vector<uint8_t>& data) {
+uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   uint64_t time = WallClock::getUnixMillis();
   size_t row_size = data.size() + 16;
 
@@ -153,14 +148,26 @@ void StreamRef::appendRow(const std::vector<uint8_t>& data) {
   }
 
   auto mmaped = backend_->mmap_manager_.getPage(pages_.back().page);
-
   RowHeader* row = mmaped.structAt<RowHeader>(pages_.back().used);
   row->time = time;
   row->size = data.size();
   memcpy(row->data, data.data(), row->size);
-
   pages_.back().used += row_size;
+
+  return time;
 }
+
+StreamDescriptor::StreamDescriptor(std::shared_ptr<StreamRef> stream_ref) :
+  stream_ref_(stream_ref) {}
+
+uint64_t StreamDescriptor::appendRow(const std::vector<uint8_t>& data) {
+  return stream_ref_->appendRow(data);
+}
+
+std::unique_ptr<IBackend::IStreamCursor>StreamDescriptor::getCursor() {
+  return std::unique_ptr<Cursor>(new Cursor(stream_ref_));
+}
+
 
 PageManager::PageManager(size_t end_pos, size_t block_size) :
   end_pos_(end_pos),
@@ -228,6 +235,8 @@ MmapPageManager::~MmapPageManager() {
   if (current_mapping_ != nullptr) {
     current_mapping_->decrRefs();
   }
+
+  close(fd_);
 }
 
 // FIXPAUL hold lock!
