@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
-#include "../storagebackend.h"
+#include "../backend.h"
 
 namespace fnordmetric {
 namespace filebackend {

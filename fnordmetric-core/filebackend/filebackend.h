@@ -12,7 +12,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
-#include "../storagebackend.h"
+#include "../backend.h"
 #include "pagemanager.h"
 
 /**

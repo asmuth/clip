@@ -16,7 +16,7 @@
 #include <memory>
 #include "schema.h"
 #include "record.h"
-#include "storagebackend.h"
+#include "backend.h"
 
 namespace fnordmetric {
 

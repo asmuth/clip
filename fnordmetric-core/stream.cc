@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include "stream.h"
-#include "storagebackend.h"
 
 namespace fnordmetric {
 

@@ -47,7 +47,6 @@ public:
 
 protected:
   std::vector<PageAlloc> pages_;
-
   FileBackend* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;
