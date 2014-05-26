@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include "../backend.h"
 #include "pagemanager.h"
+#include "log.h"
 
 /**
  * A file-backed, threadsafe storage backend for FnordMetric. This backend
@@ -24,43 +25,36 @@
  *
  *
     FILE             ::= FILE_HEADER
-                         *( PAGE | PADDING )
+                         *( PAGE )
 
-    FILE_HEADER      ::= MAGIC_BYTES        ; magic bytes
-                         VERSION            ; version number
+    FILE_HEADER      ::= <8 Bytes 0x17>     ; magic bytes
+                         <uint64_t>         ; version number
                          PAGE_PTR           ; pointer to first log page
-
-    MAGIC_BYTES      ::= <8 Bytes 0x17>     ; magic bytes
-    PADDING          ::= <N Bytes 0x0>      ; zero byte padding
-    VERSION          ::= <uint64_t>         ; file version number
-    UNIX_MILLIS      ::= <uint64_t>         ; unix millisecond timestamp
 
     PAGE             ::= ( LOG_PAGE | DATA_PAGE )
 
-    PAGE_HEADER      ::= PAGE_SIZE
-                         PAGE_FLAGS
+    PAGE_PTR         ::= <uint64_t>         ; page offset in the file in bytes
+                         <uint64_t>         ; size of the page in bytes
 
-    PAGE_SIZE        ::= <uint64_t>         ; size of the page in bytes
-    PAGE_FLAGS       ::= <uint64_t>         ; page flags
-    PAGE_PTR         ::= <uint64_t>         ; page offset in the file
-
-    LOG_PAGE         ::= PAGE_HEADER
-                         *( LOG_ENTRY )
+    LOG_PAGE         ::= *( LOG_ENTRY )
 
     LOG_ENTRY        ::= ( LOG_ENTRY_NEXT | LOG_ENTRY_ALLOC | LOG_ENTRY_FREE )
 
-    LOG_ENTRY_NEXT   ::= LOG_ENTRY_TYPE     ; 0x01
+    LOG_ENTRY_NEXT   ::= LOG_ENTRY_CHECKSUM
+                         LOG_ENTRY_TYPE     ; 0x01
                          LOG_ENTRY_LENGTH   ; 0x08
                          PAGE_PTR           ; pointer to next log page
 
-    LOG_ENTRY_ALLOC  ::= LOG_ENTRY_TYPE     ; 0x02
+    LOG_ENTRY_ALLOC  ::= LOG_ENTRY_CHECKSUM
+                         LOG_ENTRY_TYPE     ; 0x02
                          LOG_ENTRY_LENGTH   ; variable
                          PAGE_PTR           ; pointer to the data page
                          UNIX_MILLIS        ; timestamp of the page's first row
                          STREAM_ID
                          [ STREAM_KEY ]     ; length = LOG_ENTRY_LENGTH - 16
 
-    LOG_ENTRY_FREE   ::= LOG_ENTRY_TYPE     ; 0x03
+    LOG_ENTRY_FREE   ::= LOG_ENTRY_CHECKSUM
+                         LOG_ENTRY_TYPE     ; 0x03
                          LOG_ENTRY_LENGTH   ; 0x10
                          PAGE_PTR           ; pointer to the free'd page
                          PAGE_SIZE          ; size of the freed page
@@ -68,6 +62,7 @@
     DATA_PAGE         ::= PAGE_HEADER
                          *( STREAM_ROW )
 
+    UNIX_MILLIS      ::= <uint64_t>         ; unix millisecond timestamp
     STREAM_ID        ::= <uint64_t>         ; unique stream id
     STREAM_KEY       ::= <string>           ; unique stream key
 
@@ -81,8 +76,35 @@ class FileBackend : public IBackend {
   friend class StreamRef;
   friend class FileBackendTest;
 public:
+  struct __attribute__((__packed__)) FileHeader {
+    uint64_t magic;
+    uint64_t version;
+    uint64_t first_log_page_offset;
+    uint64_t first_log_page_size;
+  };
+
   FileBackend(const FileBackend& copy) = delete;
   FileBackend& operator=(const FileBackend& copy) = delete;
+
+  /**
+   * Min. number of bytes to reserve for the file header
+   */
+  static const uint64_t kMinReservedHeaderSize = 512;
+
+  /**
+   * Min. log page size
+   */
+  static const uint64_t kMinLogPageSize = 512;
+
+  /**
+   * File magic bytes
+   */
+  static const uint64_t kFileMagicBytes = 0x1717171717171717;
+
+  /**
+   * File format version number
+   */
+  static const uint64_t kFileVersion = 1;
 
   /**
    * Instantiate a new file backend with a path to the file.
@@ -105,8 +127,9 @@ public:
 
 protected:
   FileBackend(
-      PageManager&& page_manager,
-      MmapPageManager&& MmapPageManager);
+      std::shared_ptr<Log> log,
+      std::shared_ptr<PageManager> page_manager,
+      std::shared_ptr<MmapPageManager> mmap_manager);
 
   /**
    * Retrieve the stream ref for the specified stream id
@@ -133,8 +156,9 @@ protected:
    */
   uint64_t max_stream_id_;
 
-  PageManager page_manager_;
-  MmapPageManager mmap_manager_;
+  const std::shared_ptr<Log> log_;
+  const std::shared_ptr<PageManager> page_manager_;
+  const std::shared_ptr<MmapPageManager> mmap_manager_;
 };
 
 }

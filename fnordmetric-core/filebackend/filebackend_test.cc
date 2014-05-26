@@ -20,10 +20,10 @@ public:
   FileBackendTest() {}
 
   void run() {
-    testStreamIdAssignment();
-    testStreamRefCreation();
-    testPageManager();
-    testMmapPageManager();
+    //testStreamIdAssignment();
+    //testStreamRefCreation();
+    //testPageManager();
+    //testMmapPageManager();
     testOpenFile();
   }
 
@@ -106,17 +106,24 @@ public:
   }
 
   void testOpenFile() {
+    {
+      auto filebackend = fnordmetric::filebackend::FileBackend::openFile(
+          "/tmp/__fnordmetric_testOpenFile");
+      assert(filebackend.get() != nullptr);
+
+      auto streamdesc = filebackend->openStream("mystream");
+      std::vector<uint8_t> data = {
+          0x01, 0x02, 0x03, 0x04,
+          0x05, 0x06, 0x07, 0x08
+      };
+
+      streamdesc->appendRow(data);
+      streamdesc->appendRow(data);
+    }
+
     auto filebackend = fnordmetric::filebackend::FileBackend::openFile(
         "/tmp/__fnordmetric_testOpenFile");
     assert(filebackend.get() != nullptr);
-
-    auto streamdesc = filebackend->openStream("mystream");
-    std::vector<uint8_t> data = {
-        0x01, 0x02, 0x03, 0x04,
-        0x05, 0x06, 0x07, 0x08
-    };
-    streamdesc->appendRow(data);
-    streamdesc->appendRow(data);
   }
 
 };

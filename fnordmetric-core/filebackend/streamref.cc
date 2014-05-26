@@ -32,7 +32,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   if (pages_.size() == 0) {
     PageAlloc alloc;
     // FIXPAUL estimate size
-    alloc.page = backend_->page_manager_.allocPage(data.size() * 100);
+    alloc.page = backend_->page_manager_->allocPage(data.size() * 100);
     alloc.used = 0;
     alloc.t0   = time;
     alloc.t1   = time;
@@ -44,7 +44,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   if (pages_.back().used + row_size > pages_.back().page.size) {
     PageAlloc alloc;
     // FIXPAUL estimate size
-    alloc.page = backend_->page_manager_.allocPage(data.size() * 100);
+    alloc.page = backend_->page_manager_->allocPage(data.size() * 100);
     alloc.used = 0;
     alloc.t0   = time;
     alloc.t1   = time;
@@ -54,7 +54,8 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     // FIXPAUL log: new page
   }
 
-  auto mmaped = backend_->mmap_manager_.getPage(pages_.back().page);
+  printf("mmap page for writing @ %llu\n", pages_.back().page.offset);
+  auto mmaped = backend_->mmap_manager_->getPage(pages_.back().page);
   RowHeader* row = mmaped.structAt<RowHeader>(pages_.back().used);
   row->time = time;
   row->size = data.size();

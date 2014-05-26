@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include <assert.h>
 #include "../backend.h"
 
 namespace fnordmetric {
@@ -135,7 +136,8 @@ protected:
  */
 template<typename T>
 T* MmapPageManager::MmappedPageRef::structAt(size_t position) {
-  return (T*) (((char *) file->data) + position);
+  assert(position < page.size);
+  return (T*) (((char *) file->data) + page.offset + position);
 }
 
 

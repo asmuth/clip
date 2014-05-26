@@ -17,13 +17,16 @@
 #include "cursor.h"
 #include "streamref.h"
 #include "pagemanager.h"
+#include "log.h"
 
 namespace fnordmetric {
 namespace filebackend {
 
 FileBackend::FileBackend(
-    PageManager&& page_manager,
-    MmapPageManager&& mmap_manager) :
+    std::shared_ptr<Log> log,
+    std::shared_ptr<PageManager> page_manager,
+    std::shared_ptr<MmapPageManager> mmap_manager) :
+    log_(std::move(log)),
     page_manager_(std::move(page_manager)),
     mmap_manager_(std::move(mmap_manager)),
     max_stream_id_(0) {}
@@ -49,16 +52,65 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     return std::unique_ptr<FileBackend>(nullptr);
   }
 
-  MmapPageManager mmap_manager(fd, fd_len);
+  auto mmap_manager = std::shared_ptr<MmapPageManager>(
+      new MmapPageManager(fd, fd_len));
 
-  // FIXPAUL last used page should be from log
-  size_t last_used_byte = 0;
+  /* create new file */
+  if (fd_len == 0) {
+    auto page_manager = std::shared_ptr<PageManager>(
+        new PageManager(0, fd_stat.st_blksize));
+    auto header_page = page_manager->allocPage(kMinReservedHeaderSize);
+    auto header_mmap = mmap_manager->getPage(header_page);
 
-  auto backend = new FileBackend(
-      PageManager(last_used_byte, fd_stat.st_blksize),
-      std::move(mmap_manager));
+    auto first_log_page = page_manager->allocPage(kMinLogPageSize);
+    auto file_header = header_mmap.structAt<FileHeader>(0);
+    file_header->magic = kFileMagicBytes;
+    file_header->version = kFileVersion;
+    file_header->first_log_page_offset = first_log_page.offset;
+    file_header->first_log_page_size   = first_log_page.size;
+    // FIXPAUL fsync header
 
-  return std::unique_ptr<FileBackend>(backend);
+    auto log = std::shared_ptr<Log>(
+        new Log(first_log_page, page_manager, mmap_manager));
+
+    auto backend = new FileBackend(log, page_manager, mmap_manager);
+    return std::unique_ptr<FileBackend>(backend);
+  }
+
+  /* open existing file */
+  if (fd_len >= kMinReservedHeaderSize) {
+    PageManager::Page header_page = {.offset=0, .size=kMinReservedHeaderSize};
+    auto header_mmap = mmap_manager->getPage(header_page);
+    auto file_header = header_mmap.structAt<FileHeader>(0);
+
+    if (file_header->magic != kFileMagicBytes) {
+      fprintf(stderr, "invalid file\n"); // FIXPAUL
+      return std::unique_ptr<FileBackend>(nullptr);
+    }
+
+    if (file_header->version != kFileVersion) {
+      fprintf(stderr, "invalid file version\n"); // FIXPAUL
+      return std::unique_ptr<FileBackend>(nullptr);
+    }
+
+    PageManager::Page first_log_page;
+    first_log_page.offset = file_header->first_log_page_offset;
+    first_log_page.size = file_header->first_log_page_size;
+    Log::Snapshot log_snapshot;
+    Log::import(mmap_manager, first_log_page, &log_snapshot);
+
+    auto page_manager = std::shared_ptr<PageManager>(
+        new PageManager(log_snapshot.last_used_byte, fd_stat.st_blksize));
+
+    auto log = std::shared_ptr<Log>(
+        new Log(log_snapshot, page_manager, mmap_manager));
+
+    auto backend = new FileBackend(log, page_manager, mmap_manager);
+    return std::unique_ptr<FileBackend>(backend);
+  }
+
+  fprintf(stderr, "invalid file\n"); // FIXPAUL
+  return std::unique_ptr<FileBackend>(nullptr);
 }
 
 std::unique_ptr<IBackend::IStreamDescriptor> FileBackend::openStream(
