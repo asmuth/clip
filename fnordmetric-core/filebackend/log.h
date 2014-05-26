@@ -22,6 +22,30 @@ namespace filebackend {
  * This is an internal class. For usage instructions and extended documentation
  * please refer to "storagebackend.h" and "filebackend.h"
  */
+class LogReader {
+public:
+  struct Snapshot {
+    std::vector<PageManager::Page> free_pages;
+    std::vector<std::shared_ptr<StreamRef>> streams;
+    PageManager::Page current_log_page;
+    uint64_t current_log_page_offset;
+    uint64_t last_used_byte;
+  };
+
+  LogReader(
+      std::shared_ptr<MmapPageManager> mmap_manager,
+      const PageManager::Page& first_log_page);
+
+  /**
+   * Import the log. Returns a snapshot of the imported log
+   */
+  void import(Snapshot* snapshot);
+
+protected:
+  std::shared_ptr<MmapPageManager> mmap_manager_;
+  PageManager::Page current_page_;
+};
+
 class Log {
   friend class FileBackendTest;
 public:
@@ -44,24 +68,8 @@ public:
     ALLOC_ENTRY = 0x01
   };
 
-  struct Snapshot {
-    std::vector<PageManager::Page> free_pages;
-    std::vector<std::shared_ptr<StreamRef>> streams;
-    PageManager::Page current_log_page;
-    uint64_t current_log_page_offset;
-    uint64_t last_used_byte;
-  };
-
-  /**
-   * Import the log. Returns a snapshot of the imported log
-   */
-  static void import(
-      std::shared_ptr<MmapPageManager> mmap_manager,
-      const PageManager::Page& first_log_page,
-      Snapshot* snapshot);
-
   explicit Log(
-      const Snapshot& snapshot,
+      const LogReader::Snapshot& snapshot,
       std::shared_ptr<PageManager> page_manager,
       std::shared_ptr<MmapPageManager> mmap_manager);
 
@@ -85,7 +93,6 @@ protected:
   PageManager::Page current_page_;
   uint64_t current_page_offset_;
 };
-
 
 }
 }

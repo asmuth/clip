@@ -96,8 +96,9 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     PageManager::Page first_log_page;
     first_log_page.offset = file_header->first_log_page_offset;
     first_log_page.size = file_header->first_log_page_size;
-    Log::Snapshot log_snapshot;
-    Log::import(mmap_manager, first_log_page, &log_snapshot);
+    LogReader log_reader(mmap_manager, first_log_page);
+    LogReader::Snapshot log_snapshot;
+    log_reader.import(&log_snapshot);
 
     std::shared_ptr<PageManager> page_manager(
         new PageManager(log_snapshot.last_used_byte, fd_stat.st_blksize));

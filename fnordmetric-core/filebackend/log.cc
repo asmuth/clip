@@ -11,9 +11,29 @@
 namespace fnordmetric {
 namespace filebackend {
 
+LogReader::LogReader(
+    std::shared_ptr<MmapPageManager> mmap_manager,
+    const PageManager::Page& first_log_page) :
+    mmap_manager_(std::move(mmap_manager)),
+    current_page_(first_log_page) {}
+
+void LogReader::import(Snapshot* snapshot) {
+  printf("import!\n");
+  for (;;)
+    auto mmaped_offset = current_page_.offset;
+    auto mmaped = mmap_manager_->getPage(current_page_);
+    size_t offset = 0;
+
+    while (current_page_.offset == mapped_offset) {
+      if (!importNextEntry(*mmaped, current_page_.size, &offset, snapshot)) {
+        return;
+      }
+    }
+  }
+}
 
 Log::Log(
-    const Snapshot& snapshot,
+    const LogReader::Snapshot& snapshot,
     std::shared_ptr<PageManager> page_manager,
     std::shared_ptr<MmapPageManager> mmap_manager) :
     page_manager_(page_manager),
@@ -30,16 +50,6 @@ Log::Log(
     current_page_(first_log_page),
     current_page_offset_(0) {}
 
-void Log::import(
-    std::shared_ptr<MmapPageManager> mmap_manager,
-    const PageManager::Page& first_log_page,
-    Snapshot* snapshot) {
-  PageManager::Page current_page(first_log_page);
-  uint64_t cur;
-
-  printf("import...\n");
-}
-
 void Log::appendEntry(Log::AllocEntry entry) {
   entry.hdr.length = sizeof(AllocEntry) - sizeof(EntryHeader);
   entry.hdr.type = ALLOC_ENTRY;
@@ -49,6 +59,7 @@ void Log::appendEntry(Log::AllocEntry entry) {
 }
 
 void Log::appendEntry(Log::AllocEntry entry, const std::string& stream_key) {
+  assert(stream_key.size() < 0xffff);
   entry.hdr.length = sizeof(AllocEntry) - sizeof(EntryHeader);
   entry.hdr.length += stream_key.size();
   entry.hdr.type = ALLOC_ENTRY;
@@ -77,7 +88,6 @@ void Log::appendEntry(uint8_t* data, size_t length) {
   memcpy(mmaped.structAt<char>(current_page_offset_), data, length);
   current_page_offset_ += length;
 }
-
 
 }
 }
