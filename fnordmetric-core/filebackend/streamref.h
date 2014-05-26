@@ -16,6 +16,9 @@
 namespace fnordmetric {
 namespace filebackend {
 
+class FileBackend;
+class Cursor;
+
 /**
  * This is an internal class. For usage instructions and extended documentation
  * please refer to "storagebackend.h" and "filebackend.h"

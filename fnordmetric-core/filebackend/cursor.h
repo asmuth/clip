@@ -16,6 +16,8 @@
 namespace fnordmetric {
 namespace filebackend {
 
+class StreamRef;
+
 /**
  * This is an internal class. For usage instructions and extended documentation
  * please refer to "storagebackend.h" and "filebackend.h"
