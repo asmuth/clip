@@ -37,8 +37,14 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     alloc.t0   = time;
     alloc.t1   = time;
 
+    Log::AllocEntry log_entry;
+    log_entry.page_offset = alloc.page.offset;
+    log_entry.page_size = alloc.page.size;
+    log_entry.page_first_row_time = time;
+    log_entry.stream_id = stream_id_;
+    backend_->log_->appendEntry(log_entry, stream_key_);
+
     pages_.push_back(std::move(alloc));
-    // FIXPAUL log: first page
   }
 
   if (pages_.back().used + row_size > pages_.back().page.size) {
@@ -49,9 +55,14 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     alloc.t0   = time;
     alloc.t1   = time;
 
+    Log::AllocEntry log_entry;
+    log_entry.page_offset = alloc.page.offset;
+    log_entry.page_size = alloc.page.size;
+    log_entry.page_first_row_time = time;
+    log_entry.stream_id = stream_id_;
+    backend_->log_->appendEntry(log_entry);
+
     pages_.push_back(std::move(alloc));
-    // FIXPAUL log: page finish
-    // FIXPAUL log: new page
   }
 
   printf("mmap page for writing @ %llu\n", pages_.back().page.offset);

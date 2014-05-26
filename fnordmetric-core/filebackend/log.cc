@@ -40,5 +40,44 @@ void Log::import(
   printf("import...\n");
 }
 
+void Log::appendEntry(Log::AllocEntry entry) {
+  entry.hdr.length = sizeof(AllocEntry) - sizeof(EntryHeader);
+  entry.hdr.type = ALLOC_ENTRY;
+  //entry.hdr.checksum = ;
+
+  appendEntry((uint8_t *) &entry, sizeof(AllocEntry));
+}
+
+void Log::appendEntry(Log::AllocEntry entry, const std::string& stream_key) {
+  entry.hdr.length = sizeof(AllocEntry) - sizeof(EntryHeader);
+  entry.hdr.length += stream_key.size();
+  entry.hdr.type = ALLOC_ENTRY;
+  //entry.hdr.checksum = ;
+
+  size_t tmp_len = sizeof(AllocEntry) + stream_key.size();
+  uint8_t* tmp = (uint8_t *) malloc(tmp_len);
+  assert(tmp);
+
+  memcpy(tmp, &entry, sizeof(AllocEntry));
+  memcpy(tmp + sizeof(AllocEntry), stream_key.c_str(), stream_key.size());
+
+  appendEntry(tmp, tmp_len);
+  free(tmp);
+}
+
+// FIXPAUL lock!
+void Log::appendEntry(uint8_t* data, size_t length) {
+  printf("append to log, %llu\n", current_page_.offset);
+
+  if (current_page_offset_ + length >= current_page_.size) {
+    // FIXPAUL
+  }
+
+  auto mmaped = mmap_manager_->getPage(current_page_);
+  memcpy(mmaped.structAt<char>(current_page_offset_), data, length);
+  current_page_offset_ += length;
+}
+
+
 }
 }

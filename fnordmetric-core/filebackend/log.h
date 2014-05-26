@@ -25,6 +25,25 @@ namespace filebackend {
 class Log {
   friend class FileBackendTest;
 public:
+  struct __attribute__((__packed__)) EntryHeader {
+    uint64_t checksum;
+    uint16_t type;
+    uint16_t length;
+  };
+
+  struct __attribute__((__packed__)) AllocEntry {
+    EntryHeader hdr;
+    uint64_t page_offset;
+    uint64_t page_size;
+    uint64_t page_first_row_time;
+    uint64_t stream_id;
+    char stream_key[];
+  };
+
+  enum kEntryTypes {
+    ALLOC_ENTRY = 0x01
+  };
+
   struct Snapshot {
     std::vector<PageManager::Page> free_pages;
     std::vector<std::shared_ptr<StreamRef>> streams;
@@ -55,8 +74,12 @@ public:
   Log& operator=(const Log& copy) = delete;
   Log(const Log&& move);
 
+  void appendEntry(AllocEntry entry);
+  void appendEntry(AllocEntry entry, const std::string& stream_key);
 
 protected:
+  void appendEntry(uint8_t* data, size_t length);
+
   std::shared_ptr<PageManager> page_manager_;
   std::shared_ptr<MmapPageManager> mmap_manager_;
   PageManager::Page current_page_;

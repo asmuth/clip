@@ -52,12 +52,12 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     return std::unique_ptr<FileBackend>(nullptr);
   }
 
-  auto mmap_manager = std::shared_ptr<MmapPageManager>(
+  std::shared_ptr<MmapPageManager> mmap_manager(
       new MmapPageManager(fd, fd_len));
 
   /* create new file */
   if (fd_len == 0) {
-    auto page_manager = std::shared_ptr<PageManager>(
+    std::shared_ptr<PageManager> page_manager(
         new PageManager(0, fd_stat.st_blksize));
     auto header_page = page_manager->allocPage(kMinReservedHeaderSize);
     auto header_mmap = mmap_manager->getPage(header_page);
@@ -67,10 +67,10 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     file_header->magic = kFileMagicBytes;
     file_header->version = kFileVersion;
     file_header->first_log_page_offset = first_log_page.offset;
-    file_header->first_log_page_size   = first_log_page.size;
-    // FIXPAUL fsync header
+    file_header->first_log_page_size = first_log_page.size;
+    // FIXPAUL msync header
 
-    auto log = std::shared_ptr<Log>(
+    std::shared_ptr<Log> log(
         new Log(first_log_page, page_manager, mmap_manager));
 
     auto backend = new FileBackend(log, page_manager, mmap_manager);
@@ -99,10 +99,10 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     Log::Snapshot log_snapshot;
     Log::import(mmap_manager, first_log_page, &log_snapshot);
 
-    auto page_manager = std::shared_ptr<PageManager>(
+    std::shared_ptr<PageManager> page_manager(
         new PageManager(log_snapshot.last_used_byte, fd_stat.st_blksize));
 
-    auto log = std::shared_ptr<Log>(
+    std::shared_ptr<Log> log(
         new Log(log_snapshot, page_manager, mmap_manager));
 
     auto backend = new FileBackend(log, page_manager, mmap_manager);
