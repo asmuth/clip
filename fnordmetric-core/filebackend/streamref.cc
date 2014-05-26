@@ -10,6 +10,7 @@
 #include "filebackend.h"
 #include "cursor.h"
 #include "../clock.h"
+#include "../fnv.h"
 
 namespace fnordmetric {
 namespace filebackend {
@@ -25,8 +26,9 @@ StreamRef::StreamRef(
 // FIXPAUL hold append lock
 uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   uint64_t time = WallClock::getUnixMillis();
-  size_t row_size = data.size() + 16;
+  size_t row_size = data.size() + sizeof(RowHeader);
 
+  printf("row-size: %llu, %llu\n", row_size, data.size());
   if (pages_.size() == 0) {
     PageAlloc alloc;
     // FIXPAUL estimate size
@@ -57,9 +59,17 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   row->time = time;
   row->size = data.size();
   memcpy(row->data, data.data(), row->size);
+  row->computeChecksum();
   pages_.back().used += row_size;
 
   return time;
+}
+
+void StreamRef::RowHeader::computeChecksum() {
+  FNV<uint64_t> fnv;
+  checksum = fnv.hash(
+      (uint8_t *) (((char* ) this) + sizeof(checksum)),
+      size + sizeof(time) + sizeof(size));
 }
 
 StreamDescriptor::StreamDescriptor(std::shared_ptr<StreamRef> stream_ref) :

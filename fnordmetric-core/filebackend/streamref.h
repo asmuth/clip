@@ -25,6 +25,7 @@ class Cursor;
  */
 class StreamRef {
 public:
+  // FIXPAUL reader writer lock on page alloc?
   struct PageAlloc {
     PageManager::Page page;
     size_t used; /* number of used bytes in the page */
@@ -33,9 +34,11 @@ public:
   };
 
   struct __attribute__((__packed__)) RowHeader {
+    uint64_t checksum;
     uint64_t time;
     uint64_t size;
     uint8_t data[];
+    void computeChecksum();
   };
 
   explicit StreamRef(
