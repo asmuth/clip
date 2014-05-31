@@ -16,40 +16,7 @@ namespace fnordmetric {
 
 class IBackend {
 public:
-  class IStreamDescriptor;
   class IStreamCursor;
-
-  /**
-   * Open or create the stream with the specified key
-   */
-  virtual std::unique_ptr<IStreamDescriptor> openStream(
-      const std::string& key) = 0;
-
-  /**
-   * A stream descriptor is a handle to a single stream. It can be used to
-   * append rows to the stream and to receive a cursor for reading from the
-   * stream.
-   */
-  class IStreamDescriptor {
-  public:
-
-    /**
-     * Append a new row to the very end of the opened stream. Returns the UTC 
-     * millisecond timestamp at which the row was inserted.
-     */
-    virtual uint64_t appendRow(const std::vector<uint8_t>& data) = 0;
-
-    /**
-     * Return a cursor to this stream for reading. The initial position of the
-     * cursor is undefined.
-     */
-    virtual std::unique_ptr<IStreamCursor> getCursor() = 0;
-
-    IStreamDescriptor() {}
-    IStreamDescriptor(const IStreamDescriptor& copy) = delete;
-    IStreamDescriptor& operator=(const IStreamDescriptor& copy) = delete;
-    virtual ~IStreamDescriptor() {}
-  };
 
   /**
    * A storage cursor is a stateful iterator for a single stream. It can be used

@@ -111,14 +111,9 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
   return std::unique_ptr<Database>(nullptr);
 }
 
-std::unique_ptr<IBackend::IStreamDescriptor> Database::openStream(
-    const std::string& key) {
-  return std::unique_ptr<IBackend::IStreamDescriptor>(
-      new StreamDescriptor(getStreamRef(key)));
-}
-
 // FIXPAUL locking!
-std::shared_ptr<StreamRef> Database::getStreamRef(const std::string& key) {
+std::shared_ptr<StreamRef> Database::openStream(
+    const std::string& key) {
   auto stream_id = getStreamId(key);
   auto iter = stream_refs_.find(stream_id);
 

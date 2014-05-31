@@ -20,11 +20,11 @@ IStream::IStream(
     const IStreamKey& key,
     const ISchema& schema,
     //const MetricDescription& description,
-    std::unique_ptr<IBackend::IStreamDescriptor>&& stream_descriptor) :
+    std::shared_ptr<database::StreamRef> stream_ref) :
     key_(key),
     schema_(schema),
     //description_(description),
-    stream_descriptor_(std::move(stream_descriptor)) {}
+    stream_ref_(std::move(stream_ref)) {}
 
 const ISchema& IStream::getSchema() const {
   return schema_;
@@ -34,12 +34,8 @@ const IStreamKey& IStream::getKey() const {
   return key_;
 }
 
-std::unique_ptr<IBackend::IStreamCursor> IStream::getCursor() const {
-  return stream_descriptor_->getCursor();
-}
-
 void IStream::appendRecord(const IRecordWriter& record) const {
-  stream_descriptor_->appendRow(record.toBytes());
+  stream_ref_->appendRow(record.toBytes());
 }
 
 }

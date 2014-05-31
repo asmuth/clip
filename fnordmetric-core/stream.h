@@ -17,6 +17,7 @@
 #include "schema.h"
 #include "record.h"
 #include "backend.h"
+#include "database/streamref.h"
 
 namespace fnordmetric {
 
@@ -47,19 +48,18 @@ public:
       const IStreamKey& key,
       const ISchema& schema,
       //const MetricDescription& description,
-      std::unique_ptr<IBackend::IStreamDescriptor>&& stream_descriptor);
+      std::shared_ptr<database::StreamRef> stream_ref);
 
   IStream(const IStream& copy) = delete;
   IStream& operator=(const IStream& copy) = delete;
 
   const ISchema& getSchema() const;
   const IStreamKey& getKey() const;
-  std::unique_ptr<IBackend::IStreamCursor> getCursor() const;
 
   void appendRecord(const IRecordWriter& record) const;
 
 protected:
-  const std::unique_ptr<IBackend::IStreamDescriptor> stream_descriptor_;
+  const std::shared_ptr<database::StreamRef> stream_ref_;
   const IStreamKey key_;
   //const MetricDescription description_;
   const ISchema schema_;
@@ -73,7 +73,7 @@ public:
       const IStreamKey& key,
       const Schema<T...>& schema,
       //const MetricDescription& description,
-      std::unique_ptr<IBackend::IStreamDescriptor>&& stream_descriptor);
+      std::shared_ptr<database::StreamRef> stream_ref);
 
   Stream(const Stream& copy) = delete;
   Stream& operator=(const Stream& copy) = delete;

@@ -46,14 +46,14 @@ public:
 
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
     std::string key2 = "83d2f71c457216bf-Ia9f37ed7-F76b77d1a";
-    auto ref1 = backend->getStreamRef(key1);
+    auto ref1 = backend->openStream(key1);
     assert(ref1.get() != nullptr);
-    auto ref2 = backend->getStreamRef(key1);
+    auto ref2 = backend->openStream(key1);
     assert(ref1.get() == ref2.get());
-    auto ref3 = backend->getStreamRef(key2);
+    auto ref3 = backend->openStream(key2);
     assert(ref1.get() != ref3.get());
     assert(ref2.get() != ref3.get());
-    auto ref4 = backend->getStreamRef(key2);
+    auto ref4 = backend->openStream(key2);
     assert(ref1.get() != ref4.get());
     assert(ref2.get() != ref4.get());
     assert(ref3.get() == ref4.get());

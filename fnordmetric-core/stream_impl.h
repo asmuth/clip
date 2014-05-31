@@ -60,12 +60,12 @@ Stream<T...>::Stream(
     const IStreamKey& key,
     const Schema<T...>& schema,
     //const MetricDescription& description,
-    std::unique_ptr<IBackend::IStreamDescriptor>&& stream_descriptor) :
+    std::shared_ptr<database::StreamRef> stream_ref) :
     IStream(
         key,
         schema,
         //description,
-        std::move(stream_descriptor)) {}
+        std::move(stream_ref)) {}
 
 template <typename... T>
 void Stream<T...>::appendRecord(const typename T::ValueType&... values) const {

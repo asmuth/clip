@@ -49,17 +49,17 @@ class Log {
   friend class DatabaseTest;
 public:
   struct __attribute__((__packed__)) EntryHeader {
-    uint64_t checksum;
+    uint32_t checksum;
     uint16_t type;
     uint16_t length;
   };
 
   struct __attribute__((__packed__)) AllocEntry {
     EntryHeader hdr;
+    uint32_t stream_id;
     uint64_t page_offset;
-    uint64_t page_size;
+    uint32_t page_size;
     uint64_t page_first_row_time;
-    uint64_t stream_id;
     char stream_key[];
   };
 

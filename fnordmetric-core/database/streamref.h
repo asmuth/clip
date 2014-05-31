@@ -20,8 +20,9 @@ class Database;
 class Cursor;
 
 /**
- * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "database.h"
+ * A stream descriptor is a handle to a single stream. It can be used to
+ * append rows to the stream and to receive a cursor for reading from the
+ * stream.
  */
 class StreamRef {
 public:
@@ -29,14 +30,13 @@ public:
   struct PageAlloc {
     PageManager::Page page;
     size_t used; /* number of used bytes in the page */
-    uint64_t t0; /* time of the first row in the page */
-    uint64_t t1; /* time of the last row in the page */
+    uint64_t time; /* time of the first row in the page */
   };
 
   struct __attribute__((__packed__)) RowHeader {
-    uint64_t checksum;
+    uint32_t checksum;
+    uint32_t size;
     uint64_t time;
-    uint64_t size;
     uint8_t data[];
     void computeChecksum();
   };
@@ -49,28 +49,23 @@ public:
   StreamRef(const StreamRef& copy) = delete;
   StreamRef& operator=(const StreamRef& copy) = delete;
 
+  /**
+   * Append a new row to the very end of the opened stream. Returns the UTC 
+   * millisecond timestamp at which the row was inserted.
+   */
   uint64_t appendRow(const std::vector<uint8_t>& data);
+
+  /**
+   * Return a cursor to this stream for reading. The initial position of the
+   * cursor is undefined.
+   */
+  std::unique_ptr<Cursor> getCursor();
 
 protected:
   std::vector<PageAlloc> pages_;
   Database* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;
-};
-
-/**
- * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "database.h"
- */
-class StreamDescriptor : public IBackend::IStreamDescriptor {
-public:
-  explicit StreamDescriptor(std::shared_ptr<StreamRef> stream_ref);
-  StreamDescriptor(const StreamDescriptor& copy) = delete;
-  StreamDescriptor& operator=(const StreamDescriptor& copy) = delete;
-  uint64_t appendRow(const std::vector<uint8_t>& data) override;
-  std::unique_ptr<IBackend::IStreamCursor> getCursor() override;
-protected:
-  std::shared_ptr<StreamRef> stream_ref_;
 };
 
 }

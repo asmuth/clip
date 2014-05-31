@@ -33,8 +33,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     // FIXPAUL estimate size
     alloc.page = backend_->page_manager_->allocPage(data.size() * 100);
     alloc.used = 0;
-    alloc.t0   = time;
-    alloc.t1   = time;
+    alloc.time = time;
 
     Log::AllocEntry log_entry;
     log_entry.page_offset = alloc.page.offset;
@@ -51,8 +50,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     // FIXPAUL estimate size
     alloc.page = backend_->page_manager_->allocPage(data.size() * 100);
     alloc.used = 0;
-    alloc.t0   = time;
-    alloc.t1   = time;
+    alloc.time = time;
 
     Log::AllocEntry log_entry;
     log_entry.page_offset = alloc.page.offset;
@@ -76,21 +74,10 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
 }
 
 void StreamRef::RowHeader::computeChecksum() {
-  FNV<uint64_t> fnv;
+  FNV<uint32_t> fnv;
   checksum = fnv.hash(
       (uint8_t *) (((char* ) this) + sizeof(checksum)),
-      size + sizeof(time) + sizeof(size));
-}
-
-StreamDescriptor::StreamDescriptor(std::shared_ptr<StreamRef> stream_ref) :
-  stream_ref_(stream_ref) {}
-
-uint64_t StreamDescriptor::appendRow(const std::vector<uint8_t>& data) {
-  return stream_ref_->appendRow(data);
-}
-
-std::unique_ptr<IBackend::IStreamCursor>StreamDescriptor::getCursor() {
-  return std::unique_ptr<Cursor>(new Cursor(stream_ref_));
+      size + sizeof(RowHeader) - sizeof(checksum));
 }
 
 }

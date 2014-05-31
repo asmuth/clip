@@ -39,7 +39,7 @@
     PAGE             ::= ( LOG_PAGE | DATA_PAGE )
 
     PAGE_PTR         ::= <uint64_t>         ; page offset in the file in bytes
-                         <uint64_t>         ; size of the page in bytes
+                         <uint32_t>         ; size of the page in bytes
 
     LOG_PAGE         ::= *( LOG_ENTRY )
 
@@ -77,7 +77,7 @@ namespace database {
 
 class StreamRef;
 
-class Database : public IBackend {
+class Database {
   friend class StreamRef;
   friend class DatabaseTest;
 public:
@@ -117,6 +117,11 @@ public:
   static std::unique_ptr<Database> openFile(const std::string& filename);
 
   /**
+   * Open or create the stream with the specified key
+   */
+  virtual std::shared_ptr<StreamRef> openStream(const std::string& key);
+
+  /**
    * Set the target page size in number of rows. Default: 1024
    */
   void setTargetRowsPerPage(size_t bytes);
@@ -127,18 +132,10 @@ public:
    */
   void setMaxPageSize(size_t bytes);
 
-  virtual std::unique_ptr<IStreamDescriptor> openStream(
-      const std::string& key) override;
-
 protected:
   Database(
       std::shared_ptr<Log> log,
       std::shared_ptr<PageManager> page_manager);
-
-  /**
-   * Retrieve the stream ref for the specified stream id
-   */
-  std::shared_ptr<StreamRef> getStreamRef(const std::string& key);
 
   /**
    * Retrieve the stream id for a specified string stream key
