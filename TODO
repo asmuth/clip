@@ -1,0 +1,51 @@
+
+SELECT
+  [FIELDS]
+FROM
+  [STREAMS]
+WHERE
+  [CONDITIONS]
+FROM
+  [FROM_TIME]
+UNITL
+  [UNTIL_TIME]
+GROUP BY
+  [GROUP EXPR]
+ALIGN BY
+  INTERPOLATION;
+
+You can run it as a standalone timerseries database or as a network of distributed
+data collection agents. SQL Syntax, statsd support, c++, bindings for x,z,y jadda
+jadda
+
+
+-> Concepts: Stream, Agents vs Server, Retention Policy
+
+-> functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
+              holtwinters
+
+-> msync safety mode: relaxed (consistent but might loose data), conservative
+                      (msync async) and paranoid (msync sync)
+-> UI menu: query / streams
+-> streams: local/remote. disk usage, replication status, retention, etc
+-> query ui: tabs for: html req equivalent, html embed, etc
+-> query safety mode: on/off (check row checksums)
+-> malloc page manager
+-> example: log every http req, select http error rate
+-> renice query threads in agents?
+-> annotations / deploy lines?
+-> push query down into backend
+-> drop-in statsd adapter :)
+-> agents that run queries on external data sources (e.g. logfiles)
+-> newrelic-like agents that auto-export streams on demand
+-> on demand streams :)
+-> nagios adapter for alerting
+-> http interface? (need to bundle lotsa resources)
+-> query cache! :)
+-> stream replication
+-> optimized for seeks over time ranges
+-> row compression / page compression?
+-> interactive query UI generates embed html snippets
+-> generate embed snippets from ruby api -> rails helper plugin
+-> execute multiple queries in parallel in the ui -> get multiple timeseries
+   and tables (tabs)
