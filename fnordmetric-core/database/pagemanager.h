@@ -25,7 +25,10 @@ class PageManager {
   friend class FileBackendTest;
 public:
   struct Page {
-    uint64_t offset;
+    union {
+      uint64_t offset;
+      void* ptr;
+    };
     uint64_t size;
   };
 

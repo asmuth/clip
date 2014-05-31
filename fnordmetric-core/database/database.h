@@ -17,6 +17,11 @@
 #include "log.h"
 
 /**
+ * A storage backend stores an arbitrary number of 'streams'. A stream consists
+ * of rows. Each row is a <time, data> tuple where time is the time at which the
+ * row was inserted into the stream and data is a binary string. Streams are
+ * append only. Each stream is identified by a unique string key.
+ *
  * A file-backed, threadsafe storage backend for FnordMetric. This backend
  * multiplexes an arbitrary number of stream into a single log-structured file.
  *

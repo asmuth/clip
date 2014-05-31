@@ -14,12 +14,6 @@
 
 namespace fnordmetric {
 
-/**
- * A storage backend stores an arbitrary number of 'streams'. A stream consists
- * of rows. Each row is a <time, data> tuple where time is the time at which the
- * row was inserted into the stream and data is a binary string. Streams are
- * append only. Each stream is identified by a unique string key.
- */
 class IBackend {
 public:
   class IStreamDescriptor;
@@ -104,12 +98,12 @@ public:
      *
      * Note that the data pointer is only valid within the callback function's
      * scope! The reason why this takes a callback function rather than returning
-     * a pointer to the data directly is that this allows implementations to
-     * return a reference to the internal storage of the data. If this method
-     * would return a direct pointer to the data all implementations would be
-     * forced to copy the data before returning if they ever wanted to free their
-     * internal storage again (let aside smart pointer trickery or an explicit
-     * free mechanism that would needlessly complicate things)
+     * a pointer to the data directly is that this allows us to return a reference
+     * to the internal storage of the data. If this method would return a direct
+     * pointer to the data all we'd be forced to copy the data before returning
+     * if we ever want to free our internal storage again (let aside smart pointer
+     * trickery or an explicit free mechanism that would needlessly complicate
+     * things)
      */
     virtual void getRow(const std::function<void (const uint8_t* data,
         size_t len, uint64_t time)>& func) const = 0;
