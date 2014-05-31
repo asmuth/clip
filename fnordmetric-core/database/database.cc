@@ -66,9 +66,7 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     file_header->first_log_page_size = first_log_page.size;
     // FIXPAUL msync header
 
-    std::shared_ptr<Log> log(
-        new Log(first_log_page, page_manager));
-
+    std::shared_ptr<Log> log(new Log(first_log_page, page_manager));
     return std::unique_ptr<Database>(new Database(log, page_manager));
   }
 
@@ -95,6 +93,7 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     LogSnapshot log_snapshot;
     log_reader.import(&log_snapshot);
 
+    printf("imported log...\n");
     std::shared_ptr<PageManager> page_manager_imported(new MmapPageManager(
         dup(fd),
         fd_len,

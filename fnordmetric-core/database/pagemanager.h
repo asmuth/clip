@@ -35,7 +35,7 @@ public:
     uint64_t size;
   };
 
-  class PageRef {
+  struct PageRef {
   public:
     PageRef(const Page& page);
     PageRef(const PageRef& copy) = delete;
@@ -43,7 +43,6 @@ public:
     virtual ~PageRef();
     void* operator*() const;
     template<typename T> T* structAt(size_t position) const;
-  protected:
     virtual void* getPtr() const = 0;
     const PageManager::Page page_;
   };

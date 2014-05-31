@@ -34,6 +34,17 @@ public:
   void import(LogSnapshot* snapshot);
 
 protected:
+
+  /**
+   * Import a single log entry. Returns true if there might be another entry
+   * in the log and returns false when the last entry was read
+   */
+  bool importNextEntry(
+      const PageManager::PageRef* mmapped,
+      size_t mmaped_size,
+      size_t* offset,
+      LogSnapshot* destination);
+
   std::shared_ptr<PageManager> page_manager_;
   PageManager::Page current_page_;
 };
@@ -52,7 +63,8 @@ public:
   struct __attribute__((__packed__)) EntryHeader {
     uint32_t checksum;
     uint16_t type;
-    uint16_t length;
+    uint16_t size;
+    uint32_t computeChecksum();
   };
 
   struct __attribute__((__packed__)) AllocEntry {

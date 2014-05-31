@@ -6,7 +6,9 @@
  */
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include "log.h"
+#include "../fnv.h"
 
 namespace fnordmetric {
 namespace database {
@@ -18,17 +20,49 @@ LogReader::LogReader(
     current_page_(first_log_page) {}
 
 void LogReader::import(LogSnapshot* snapshot) {
-  //for (;;) {
+  for (;;) {
     auto mmapped_offset = current_page_.offset;
+    auto mmapped_size = current_page_.size;
     auto mmapped = page_manager_->getPage(current_page_);
     size_t offset = 0;
 
-    //while (current_page_.offset == mmapped_offset) {
-    //  if (!importNextEntry(*mmapped, current_page_.size, &offset, snapshot)) {
-    //    return;
-    //  }
-    //}
-  //}
+    while (current_page_.offset == mmapped_offset) {
+      if (!importNextEntry(mmapped.get(), mmapped_size, &offset, snapshot)) {
+        return;
+      }
+    }
+  }
+}
+
+bool LogReader::importNextEntry(
+    const PageManager::PageRef* mmapped,
+    size_t mmaped_size,
+    size_t* offset,
+    LogSnapshot* destination) {
+  size_t header_size = sizeof(Log::EntryHeader);
+
+  if (*offset + header_size >= mmaped_size) {
+    return false;
+  }
+
+  auto entry_header = mmapped->structAt<Log::EntryHeader>(*offset);
+  size_t entry_size = header_size + entry_header->size;
+
+  if (entry_header->size == 0 || *offset + entry_size >= mmaped_size) {
+    return false;
+  }
+
+  if (entry_header->checksum != entry_header->computeChecksum()) {
+    fprintf(stderr, "warning: invalid checksum for log entry @ 0x%" PRIx64 "\n",
+        mmapped->page_.offset + *offset);
+
+    return false;
+  }
+
+  printf("import log @ %p, len: %u\n", entry_header, entry_header->size);
+
+  *offset += entry_size;
+  return true;
 }
 
 Log::Log(
@@ -46,7 +80,7 @@ Log::Log(
     current_page_offset_(0) {}
 
 void Log::appendEntry(Log::AllocEntry entry) {
-  entry.hdr.length = sizeof(AllocEntry) - sizeof(EntryHeader);
+  entry.hdr.size = sizeof(AllocEntry) - sizeof(EntryHeader);
   entry.hdr.type = ALLOC_ENTRY;
   //entry.hdr.checksum = ;
 
@@ -55,15 +89,14 @@ void Log::appendEntry(Log::AllocEntry entry) {
 
 void Log::appendEntry(Log::AllocEntry entry, const std::string& stream_key) {
   assert(stream_key.size() < 0xffff);
-  entry.hdr.length = sizeof(AllocEntry) - sizeof(EntryHeader);
-  entry.hdr.length += stream_key.size();
+  entry.hdr.size = sizeof(AllocEntry) - sizeof(EntryHeader);
+  entry.hdr.size += stream_key.size();
   entry.hdr.type = ALLOC_ENTRY;
-  //entry.hdr.checksum = ;
+  entry.hdr.checksum = entry.hdr.computeChecksum();
 
   size_t tmp_len = sizeof(AllocEntry) + stream_key.size();
   uint8_t* tmp = (uint8_t *) malloc(tmp_len);
   assert(tmp);
-
   memcpy(tmp, &entry, sizeof(AllocEntry));
   memcpy(tmp + sizeof(AllocEntry), stream_key.c_str(), stream_key.size());
 
@@ -81,6 +114,14 @@ void Log::appendEntry(uint8_t* data, size_t length) {
   auto dst = mmaped->structAt<char>(current_page_offset_);
   memcpy(dst, data, length);
   current_page_offset_ += length;
+}
+
+uint32_t Log::EntryHeader::computeChecksum() {
+  FNV<uint32_t> fnv;
+
+  return fnv.hash(
+      (uint8_t *) (((char* ) this) + sizeof(checksum)),
+      size + sizeof(EntryHeader) - sizeof(checksum));
 }
 
 }
