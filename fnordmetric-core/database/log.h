@@ -9,9 +9,10 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 #include <string>
 #include <memory>
-#include <assert.h>
+#include <vector>
 #include "streamref.h"
 
 namespace fnordmetric {

@@ -9,10 +9,10 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 #include <string>
 #include <memory>
-#include <assert.h>
-#include "../backend.h"
+#include <vector>
 
 namespace fnordmetric {
 namespace database {
