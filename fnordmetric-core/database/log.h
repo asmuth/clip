@@ -25,7 +25,7 @@ struct LogSnapshot {
     StreamState(uint32_t stream_id);
     uint64_t stream_id_;
     std::string stream_key_;
-    std::vector<StreamRef::PageAlloc> pages_;
+    std::vector<std::shared_ptr<PageAlloc>> pages_;
   };
   std::vector<PageManager::Page> free_pages;
   std::vector<StreamState> streams;
@@ -112,6 +112,11 @@ protected:
    * Import a single log entry
    */
   void importLogEntry(const Log::EntryHeader* entry);
+
+  /**
+   * Count the number of used byte in a page
+   */
+  void countPageUsedBytes(std::shared_ptr<PageAlloc> page);
 
   std::unordered_map<uint32_t, LogSnapshot::StreamState*> streams_;
   const std::shared_ptr<PageManager> page_manager_;

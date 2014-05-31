@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include <atomic>
 #include "pagemanager.h"
 
 namespace fnordmetric {
@@ -19,6 +20,22 @@ namespace database {
 class Database;
 class Cursor;
 
+// FIXPAUL reader writer lock on page alloc?
+struct PageAlloc {
+  PageAlloc(const PageManager::Page& page, uint64_t time);
+  const PageManager::Page page_;
+  std::atomic_size_t used_; /* number of used bytes in the page */
+  const uint64_t time_; /* time of the first row in the page */
+};
+
+struct __attribute__((__packed__)) RowHeader {
+  uint32_t checksum;
+  uint32_t size;
+  uint64_t time;
+  uint8_t data[];
+  uint32_t computeChecksum();
+};
+
 /**
  * A stream descriptor is a handle to a single stream. It can be used to
  * append rows to the stream and to receive a cursor for reading from the
@@ -26,22 +43,8 @@ class Cursor;
  */
 class StreamRef {
   friend class DatabaseTest;
+  friend class Cursor;
 public:
-  // FIXPAUL reader writer lock on page alloc?
-  struct PageAlloc {
-    PageManager::Page page;
-    size_t used; /* number of used bytes in the page */
-    uint64_t time; /* time of the first row in the page */
-  };
-
-  struct __attribute__((__packed__)) RowHeader {
-    uint32_t checksum;
-    uint32_t size;
-    uint64_t time;
-    uint8_t data[];
-    void computeChecksum();
-  };
-
   explicit StreamRef(
       Database* backed,
       uint64_t stream_id,
@@ -51,7 +54,7 @@ public:
       Database* backed,
       uint64_t stream_id,
       const std::string& stream_key,
-      std::vector<PageAlloc>&& pages);
+      std::vector<std::shared_ptr<PageAlloc>>&& pages);
 
   StreamRef(const StreamRef& copy) = delete;
   StreamRef& operator=(const StreamRef& copy) = delete;
@@ -69,7 +72,9 @@ public:
   std::unique_ptr<Cursor> getCursor();
 
 protected:
-  std::vector<PageAlloc> pages_;
+
+  std::vector<std::shared_ptr<PageAlloc>> pages_;
+  std::atomic_size_t num_pages_;
   Database* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;

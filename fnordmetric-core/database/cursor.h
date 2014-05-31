@@ -11,11 +11,14 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include "pagemanager.h"
 
 namespace fnordmetric {
 namespace database {
 
 class StreamRef;
+struct PageAlloc;
+struct RowHeader;
 
 /**
  * A storage cursor is a stateful iterator for a single stream. It can be used
@@ -23,7 +26,7 @@ class StreamRef;
  */
 class Cursor {
 public:
-  explicit Cursor(std::shared_ptr<StreamRef> stream_ref);
+  explicit Cursor(const StreamRef* stream_ref);
   Cursor(const Cursor& copy) = delete;
   Cursor& operator=(const Cursor& copy) = delete;
 
@@ -79,7 +82,13 @@ public:
       size_t len, uint64_t time)>& func) const;
 
 protected:
-  std::shared_ptr<StreamRef> stream_ref_;
+  const RowHeader* getCurrentRow();
+  const StreamRef* stream_ref_;
+  std::shared_ptr<const PageAlloc> current_page_;
+  std::unique_ptr<PageManager::PageRef> current_page_ref_;
+  uint64_t current_page_offset_;
+  size_t current_page_index_;
+  PageManager* page_manager_;
 };
 
 }

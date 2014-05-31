@@ -22,15 +22,29 @@ LogReader::LogReader(
     destination_(destination) {}
 
 void LogReader::import() {
-  for (;;) {
+  bool running = true;
+
+  while (running) {
     auto mmapped_offset = current_page_.offset;
     auto mmapped = page_manager_->getPage(current_page_);
     size_t offset = 0;
 
+    destination_->current_log_page = current_page_;
+
     while (current_page_.offset == mmapped_offset) {
-      if (!importNextEntry(mmapped.get(), current_page_.size, &offset)) {
-        return;
+      running = importNextEntry(mmapped.get(), current_page_.size, &offset);
+
+      if (running) {
+        destination_->current_log_page_offset = offset;
+      } else {
+        break;
       }
+    }
+  }
+
+  for (auto& stream : destination_->streams) {
+    if (stream.pages_.size() > 0) {
+      countPageUsedBytes(stream.pages_.back());
     }
   }
 }
@@ -87,11 +101,12 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
         stream_state = iter->second;
       }
 
-      StreamRef::PageAlloc page;
-      page.page.offset = alloc_entry->page_offset;
-      page.page.size = alloc_entry->page_size;
-      page.time = alloc_entry->page_first_row_time;
-      stream_state->pages_.push_back(page);
+      PageManager::Page page;
+      page.offset = alloc_entry->page_offset;
+      page.size = alloc_entry->page_size;
+
+      auto alloc = new PageAlloc(page, alloc_entry->page_first_row_time);
+      stream_state->pages_.push_back(std::shared_ptr<PageAlloc>(alloc));
       break;
     }
 
@@ -101,12 +116,42 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
   };
 }
 
+void LogReader::countPageUsedBytes(std::shared_ptr<PageAlloc> page) {
+  size_t offset = 0;
+  size_t max = page->page_.size - sizeof(Log::EntryHeader) - 1;
+  auto mmapped = page_manager_->getPage(page->page_);
+
+  printf("count used btes @ %llu\n", page->page_.offset);
+  while (offset < max) {
+    auto row = mmapped->structAt<RowHeader>(offset);
+    auto row_size = sizeof(RowHeader) + row->size;
+    //printf("probe row @ %llu.%llu -- size %llu\n", page->page_.offset, offset, row->time);
+
+    if (row->size == 0 || row->time == 0) {
+      return;
+    }
+
+    if (offset + row_size >= page->page_.size) {
+      return;
+    }
+
+    if (row->checksum != row->computeChecksum()) {
+      return;
+    }
+
+    offset += row_size;
+    page->used_ = offset;
+  }
+}
+
 Log::Log(
     const LogSnapshot& snapshot,
     std::shared_ptr<PageManager> page_manager) :
     page_manager_(page_manager),
     current_page_(snapshot.current_log_page),
-    current_page_offset_(snapshot.current_log_page_offset) {}
+    current_page_offset_(snapshot.current_log_page_offset) {
+      printf("re-open log @ %llu\n", current_page_offset_);
+      }
 
 Log::Log(
     const PageManager::Page& first_log_page,

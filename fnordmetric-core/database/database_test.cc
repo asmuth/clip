@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include "database.h"
 #include "pagemanager.h"
+#include "cursor.h"
 
 namespace fnordmetric {
 namespace database {
@@ -114,6 +115,7 @@ public:
 
   void testOpenFile() {
     uint32_t stream_id;
+    std::vector<uint64_t> insert_times;
     std::vector<uint8_t> data = {
         0x01, 0x02, 0x03, 0x04,
         0x05, 0x06, 0x07, 0x08
@@ -123,18 +125,32 @@ public:
       auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile");
       assert(database.get() != nullptr);
-      auto streamdesc = database->openStream("mystream");
-      stream_id = streamdesc->stream_id_;
-      streamdesc->appendRow(data);
-      streamdesc->appendRow(data);
+      auto stream = database->openStream("mystream");
+      stream_id = stream->stream_id_;
+      for (int i = 10; i > 0; i--) {
+        insert_times.push_back(stream->appendRow(data));
+      }
+      assert(database->max_stream_id_ == stream_id);
+      auto cursor = stream->getCursor();
+      assert(cursor->seekToFirst() == insert_times[0]);
+      for (int i = 0; i < insert_times.size() - 1; ++i) {
+        assert(cursor->next());
+      }
+      assert(cursor->next() == false);
     }
 
     auto database = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testOpenFile");
     assert(database.get() != nullptr);
     assert(database->max_stream_id_ == stream_id);
-    auto streamdesc = database->openStream("mystream");
-    assert(stream_id == streamdesc->stream_id_);
+    auto stream = database->openStream("mystream");
+    assert(stream_id == stream->stream_id_);
+    auto cursor = stream->getCursor();
+    assert(cursor->seekToFirst() == insert_times[0]);
+    for (int i = 0; i < insert_times.size() - 1; ++i) {
+      assert(cursor->next());
+    }
+    assert(cursor->next() == false);
   }
 
 };

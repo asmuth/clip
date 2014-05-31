@@ -78,6 +78,7 @@ class StreamRef;
 
 class Database {
   friend class StreamRef;
+  friend class Cursor;
   friend class DatabaseTest;
 public:
   struct __attribute__((__packed__)) FileHeader {
