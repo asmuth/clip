@@ -20,6 +20,7 @@ namespace fnordmetric {
 namespace database {
 
 struct LogSnapshot {
+  LogSnapshot();
   struct StreamState {
     StreamState(uint32_t stream_id);
     uint64_t stream_id_;
@@ -28,6 +29,7 @@ struct LogSnapshot {
   };
   std::vector<PageManager::Page> free_pages;
   std::vector<StreamState> streams;
+  uint32_t max_stream_id;
   PageManager::Page current_log_page;
   uint64_t current_log_page_offset;
   uint64_t last_used_byte;

@@ -75,9 +75,14 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
         destination_->streams.emplace_back(alloc_entry->stream_id);
         stream_state = &destination_->streams.back();
         streams_[alloc_entry->stream_id] = stream_state;
+
         size_t key_len = alloc_entry->hdr.size -
             (sizeof(Log::AllocEntry) - sizeof(Log::EntryHeader));
         stream_state->stream_key_.insert(0, alloc_entry->stream_key, key_len);
+
+        if (alloc_entry->stream_id > destination_->max_stream_id) {
+          destination_->max_stream_id = alloc_entry->stream_id;
+        }
       } else {
         stream_state = iter->second;
       }
@@ -152,6 +157,8 @@ uint32_t Log::EntryHeader::computeChecksum() {
       (uint8_t *) (((char* ) this) + sizeof(checksum)),
       size + sizeof(EntryHeader) - sizeof(checksum));
 }
+
+LogSnapshot::LogSnapshot() : max_stream_id(0) {}
 
 LogSnapshot::StreamState::StreamState(uint32_t stream_id) :
   stream_id_(stream_id) {}

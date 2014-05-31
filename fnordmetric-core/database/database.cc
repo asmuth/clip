@@ -29,6 +29,24 @@ Database::Database(
     page_manager_(std::move(page_manager)),
     max_stream_id_(0) {}
 
+Database::Database(
+    LogSnapshot& log_snapshot,
+    std::shared_ptr<Log> log,
+    std::shared_ptr<PageManager> page_manager) :
+    log_(std::move(log)),
+    page_manager_(std::move(page_manager)),
+    max_stream_id_(log_snapshot.max_stream_id) {
+  for(auto& stream : log_snapshot.streams) {
+    auto stream_ref = std::shared_ptr<StreamRef>(new StreamRef(
+       this,
+       stream.stream_id_,
+       stream.stream_key_,
+       std::move(stream.pages_)));
+    stream_ids_[stream.stream_key_] = stream.stream_id_;
+    stream_refs_[stream.stream_id_] = stream_ref;
+  }
+}
+
 std::unique_ptr<Database> Database::openFile(const std::string& filename) {
   Database* ptr = nullptr;
 
@@ -102,7 +120,8 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     std::shared_ptr<Log> log(
         new Log(log_snapshot, page_manager_imported));
 
-    return std::unique_ptr<Database>(new Database(log, page_manager));
+    return std::unique_ptr<Database>(
+        new Database(log_snapshot, log, page_manager));
   }
 
   fprintf(stderr, "invalid file\n"); // FIXPAUL

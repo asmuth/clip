@@ -23,6 +23,16 @@ StreamRef::StreamRef(
     stream_id_(stream_id),
     stream_key_(stream_key) {}
 
+StreamRef::StreamRef(
+    Database* backend,
+    uint64_t stream_id,
+    const std::string& stream_key,
+    std::vector<PageAlloc>&& pages) :
+    backend_(backend),
+    stream_id_(stream_id),
+    stream_key_(stream_key),
+    pages_(std::move(pages)) {}
+
 // FIXPAUL hold append lock
 uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   uint64_t time = WallClock::getUnixMillis();

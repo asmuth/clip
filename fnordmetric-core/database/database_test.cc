@@ -113,17 +113,18 @@ public:
   }
 
   void testOpenFile() {
+    uint32_t stream_id;
+    std::vector<uint8_t> data = {
+        0x01, 0x02, 0x03, 0x04,
+        0x05, 0x06, 0x07, 0x08
+    };
+
     {
       auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile");
       assert(database.get() != nullptr);
-
       auto streamdesc = database->openStream("mystream");
-      std::vector<uint8_t> data = {
-          0x01, 0x02, 0x03, 0x04,
-          0x05, 0x06, 0x07, 0x08
-      };
-
+      stream_id = streamdesc->stream_id_;
       streamdesc->appendRow(data);
       streamdesc->appendRow(data);
     }
@@ -131,6 +132,9 @@ public:
     auto database = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testOpenFile");
     assert(database.get() != nullptr);
+    assert(database->max_stream_id_ == stream_id);
+    auto streamdesc = database->openStream("mystream");
+    assert(stream_id == streamdesc->stream_id_);
   }
 
 };

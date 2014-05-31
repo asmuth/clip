@@ -25,6 +25,7 @@ class Cursor;
  * stream.
  */
 class StreamRef {
+  friend class DatabaseTest;
 public:
   // FIXPAUL reader writer lock on page alloc?
   struct PageAlloc {
@@ -45,6 +46,12 @@ public:
       Database* backed,
       uint64_t stream_id,
       const std::string& stream_key);
+
+  explicit StreamRef(
+      Database* backed,
+      uint64_t stream_id,
+      const std::string& stream_key,
+      std::vector<PageAlloc>&& pages);
 
   StreamRef(const StreamRef& copy) = delete;
   StreamRef& operator=(const StreamRef& copy) = delete;

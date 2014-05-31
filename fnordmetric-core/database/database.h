@@ -133,6 +133,11 @@ public:
 
 protected:
   Database(
+      LogSnapshot& log_snapshot,
+      std::shared_ptr<Log> log,
+      std::shared_ptr<PageManager> page_manager);
+
+  Database(
       std::shared_ptr<Log> log,
       std::shared_ptr<PageManager> page_manager);
 

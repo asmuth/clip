@@ -1,4 +1,14 @@
 
+-> import stream page used bytes properly
+-> import freelist properly
+
+-> MmapPageManager, MallocPageManager
+-> InMemoryDatabase, FileBackedDatabase
+-> proper row header with crc
+-> fixed len rows
+-> rowreader
+
+
 SELECT
   [FIELDS]
 FROM
@@ -26,6 +36,9 @@ jadda
 
 -> msync safety mode: relaxed (consistent but might loose data), conservative
                       (msync async) and paranoid (msync sync)
+
+-> implicit fields: time, agent, offset
+
 -> UI menu: query / streams
 -> streams: local/remote. disk usage, replication status, retention, etc
 -> query ui: tabs for: html req equivalent, html embed, etc
