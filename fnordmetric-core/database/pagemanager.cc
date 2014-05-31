@@ -20,7 +20,9 @@ PageManager::PageManager(size_t block_size) :
 
 PageManager::PageManager(size_t block_size, const LogSnapshot& log_snapshot) :
   block_size_(block_size),
-  end_pos_(log_snapshot.last_used_byte) {}
+  end_pos_(log_snapshot.last_used_byte) {
+    printf("new pagemanager with end pos: %llu\n", end_pos_);
+  }
 
 PageManager::PageManager(const PageManager&& move) :
   end_pos_(move.end_pos_),

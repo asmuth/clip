@@ -118,6 +118,7 @@ protected:
    */
   void countPageUsedBytes(std::shared_ptr<PageAlloc> page);
 
+  void setLastUsedByte(uint64_t index);
   std::unordered_map<uint32_t, LogSnapshot::StreamState*> streams_;
   const std::shared_ptr<PageManager> page_manager_;
   PageManager::Page current_page_;

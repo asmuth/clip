@@ -24,6 +24,8 @@ LogReader::LogReader(
 void LogReader::import() {
   bool running = true;
 
+  destination_->last_used_byte = current_page_.offset + current_page_.size;
+
   while (running) {
     auto mmapped_offset = current_page_.offset;
     auto mmapped = page_manager_->getPage(current_page_);
@@ -107,6 +109,7 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
 
       auto alloc = new PageAlloc(page, alloc_entry->page_first_row_time);
       stream_state->pages_.push_back(std::shared_ptr<PageAlloc>(alloc));
+      setLastUsedByte(page.offset + page.size);
       break;
     }
 
@@ -141,6 +144,12 @@ void LogReader::countPageUsedBytes(std::shared_ptr<PageAlloc> page) {
 
     offset += row_size;
     page->used_ = offset;
+  }
+}
+
+void LogReader::setLastUsedByte(uint64_t index) {
+  if (index > destination_->last_used_byte) {
+    destination_->last_used_byte = index;
   }
 }
 
