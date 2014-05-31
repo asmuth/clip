@@ -60,7 +60,14 @@ public:
   }
 
   void testPageManager() {
-    PageManager page_manager(0, 4096);
+    class ConcreteTestPageManager : public PageManager {
+    public:
+      ConcreteTestPageManager() : PageManager(4096) {}
+      std::unique_ptr<PageRef> getPage(const PageManager::Page& page) override {
+        return std::unique_ptr<PageRef>(nullptr);
+      }
+    };
+    ConcreteTestPageManager page_manager;
 
     auto page1 = page_manager.allocPage(3000);
     assert(page_manager.end_pos_ == 4096);
@@ -89,7 +96,7 @@ public:
         O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
 
     assert(fd > 0);
-    auto page_manager = new MmapPageManager(fd, 0);
+    auto page_manager = new MmapPageManager(fd, 0, 4096);
 
     auto mfile1 = page_manager->getMmapedFile(3000);
     auto mfile2 = page_manager->getMmapedFile(304200);

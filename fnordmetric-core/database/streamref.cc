@@ -28,7 +28,6 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   uint64_t time = WallClock::getUnixMillis();
   size_t row_size = data.size() + sizeof(RowHeader);
 
-  printf("row-size: %llu, %llu\n", row_size, data.size());
   if (pages_.size() == 0) {
     PageAlloc alloc;
     // FIXPAUL estimate size
@@ -65,9 +64,8 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     pages_.push_back(std::move(alloc));
   }
 
-  printf("mmap page for writing @ %llu\n", pages_.back().page.offset);
-  auto mmaped = backend_->mmap_manager_->getPage(pages_.back().page);
-  RowHeader* row = mmaped.structAt<RowHeader>(pages_.back().used);
+  auto mmaped = backend_->page_manager_->getPage(pages_.back().page);
+  RowHeader* row = mmaped->structAt<RowHeader>(pages_.back().used);
   row->time = time;
   row->size = data.size();
   memcpy(row->data, data.data(), row->size);

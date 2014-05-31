@@ -12,7 +12,6 @@
 #include <string>
 #include <memory>
 #include <assert.h>
-#include "pagemanager.h"
 #include "streamref.h"
 
 namespace fnordmetric {
@@ -24,26 +23,26 @@ namespace database {
  */
 class LogReader {
 public:
-  struct Snapshot {
-    std::vector<PageManager::Page> free_pages;
-    std::vector<std::shared_ptr<StreamRef>> streams;
-    PageManager::Page current_log_page;
-    uint64_t current_log_page_offset;
-    uint64_t last_used_byte;
-  };
-
   LogReader(
-      std::shared_ptr<MmapPageManager> mmap_manager,
+      std::shared_ptr<PageManager> page_manager,
       const PageManager::Page& first_log_page);
 
   /**
    * Import the log. Returns a snapshot of the imported log
    */
-  void import(Snapshot* snapshot);
+  void import(LogSnapshot* snapshot);
 
 protected:
-  std::shared_ptr<MmapPageManager> mmap_manager_;
+  std::shared_ptr<PageManager> page_manager_;
   PageManager::Page current_page_;
+};
+
+struct LogSnapshot {
+  std::vector<PageManager::Page> free_pages;
+  std::vector<std::shared_ptr<StreamRef>> streams;
+  PageManager::Page current_log_page;
+  uint64_t current_log_page_offset;
+  uint64_t last_used_byte;
 };
 
 class Log {
@@ -69,14 +68,12 @@ public:
   };
 
   explicit Log(
-      const LogReader::Snapshot& snapshot,
-      std::shared_ptr<PageManager> page_manager,
-      std::shared_ptr<MmapPageManager> mmap_manager);
+      const LogSnapshot& snapshot,
+      std::shared_ptr<PageManager> page_manager);
 
   explicit Log(
       const PageManager::Page& first_log_page,
-      std::shared_ptr<PageManager> page_manager,
-      std::shared_ptr<MmapPageManager> mmap_manager);
+      std::shared_ptr<PageManager> page_manager);
 
   Log(const Log& copy) = delete;
   Log& operator=(const Log& copy) = delete;
@@ -89,7 +86,6 @@ protected:
   void appendEntry(uint8_t* data, size_t length);
 
   std::shared_ptr<PageManager> page_manager_;
-  std::shared_ptr<MmapPageManager> mmap_manager_;
   PageManager::Page current_page_;
   uint64_t current_page_offset_;
 };

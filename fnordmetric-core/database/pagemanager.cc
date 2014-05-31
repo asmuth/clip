@@ -9,13 +9,18 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include "pagemanager.h"
+#include "log.h"
 
 namespace fnordmetric {
 namespace database {
 
-PageManager::PageManager(size_t end_pos, size_t block_size) :
-  end_pos_(end_pos),
+PageManager::PageManager(size_t block_size) :
+  end_pos_(0),
   block_size_(block_size) {}
+
+PageManager::PageManager(size_t block_size, const LogSnapshot& log_snapshot) :
+  block_size_(block_size),
+  end_pos_(log_snapshot.last_used_byte) {}
 
 PageManager::PageManager(const PageManager&& move) :
   end_pos_(move.end_pos_),
@@ -61,12 +66,33 @@ bool PageManager::findFreePage(size_t min_size, Page* destination) {
   return false;
 }
 
-MmapPageManager::MmapPageManager(int fd, size_t len) :
+PageManager::PageRef::PageRef(const PageManager::Page& page) :
+    page_(page) {}
+
+void* PageManager::PageRef::operator*() const {
+  return getPtr();
+}
+
+PageManager::PageRef::~PageRef() {};
+
+MmapPageManager::MmapPageManager(int fd, size_t len, size_t block_size) :
+    PageManager(block_size),
+    fd_(fd),
+    file_size_(len),
+    current_mapping_(nullptr) {}
+
+MmapPageManager::MmapPageManager(
+    int fd,
+    size_t len,
+    size_t block_size,
+    const LogSnapshot& log_snapshot) :
+    PageManager(block_size, log_snapshot),
     fd_(fd),
     file_size_(len),
     current_mapping_(nullptr) {}
 
 MmapPageManager::MmapPageManager(MmapPageManager&& move) :
+    PageManager(std::move(move)),
     fd_(move.fd_),
     file_size_(move.file_size_),
     current_mapping_(move.current_mapping_) {
@@ -84,7 +110,7 @@ MmapPageManager::~MmapPageManager() {
 }
 
 // FIXPAUL hold lock!
-MmapPageManager::MmappedPageRef MmapPageManager::getPage(
+std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
     const PageManager::Page& page) {
   uint64_t last_byte = page.offset + page.size;
   // FIXPAUL: get mutex
@@ -94,7 +120,8 @@ MmapPageManager::MmappedPageRef MmapPageManager::getPage(
     file_size_ = last_byte;
   }
 
-  return MmappedPageRef(page, getMmapedFile(last_byte));
+  return std::unique_ptr<PageManager::PageRef>(
+      new MmappedPageRef(page, getMmapedFile(last_byte)));
 }
 
 MmapPageManager::MmappedFile* MmapPageManager::getMmapedFile(uint64_t last_byte) {
@@ -157,30 +184,27 @@ void MmapPageManager::MmappedFile::decrRefs() {
 }
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
-    const PageManager::Page& __page,
-    MmappedFile* __file) :
-    page(__page),
-    file(__file) {
-  file->incrRefs();
+    const PageManager::Page& page,
+    MmappedFile* file) :
+    PageRef(page),
+    file_(file) {
+
+  file_->incrRefs();
 }
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     MmapPageManager::MmappedPageRef&& move) :
-    page(move.page),
-    file(move.file) {
-  move.file = nullptr;
+    PageRef(move.page_),
+    file_(move.file_) {
+  move.file_ = nullptr;
+}
+
+void* MmapPageManager::MmappedPageRef::getPtr() const {
+  return file_->data;
 }
 
 MmapPageManager::MmappedPageRef::~MmappedPageRef() {
-  file->decrRefs();
-}
-
-void* MmapPageManager::MmappedPageRef::operator->() const {
-  return file->data;
-}
-
-void* MmapPageManager::MmappedPageRef::operator*() const {
-  return file->data;
+  file_->decrRefs();
 }
 
 }

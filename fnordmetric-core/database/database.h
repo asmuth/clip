@@ -133,8 +133,7 @@ public:
 protected:
   Database(
       std::shared_ptr<Log> log,
-      std::shared_ptr<PageManager> page_manager,
-      std::shared_ptr<MmapPageManager> mmap_manager);
+      std::shared_ptr<PageManager> page_manager);
 
   /**
    * Retrieve the stream ref for the specified stream id
@@ -163,7 +162,6 @@ protected:
 
   const std::shared_ptr<Log> log_;
   const std::shared_ptr<PageManager> page_manager_;
-  const std::shared_ptr<MmapPageManager> mmap_manager_;
 };
 
 }

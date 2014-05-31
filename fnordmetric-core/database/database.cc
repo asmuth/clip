@@ -24,11 +24,9 @@ namespace database {
 
 Database::Database(
     std::shared_ptr<Log> log,
-    std::shared_ptr<PageManager> page_manager,
-    std::shared_ptr<MmapPageManager> mmap_manager) :
+    std::shared_ptr<PageManager> page_manager) :
     log_(std::move(log)),
     page_manager_(std::move(page_manager)),
-    mmap_manager_(std::move(mmap_manager)),
     max_stream_id_(0) {}
 
 std::unique_ptr<Database> Database::openFile(const std::string& filename) {
@@ -52,18 +50,16 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     return std::unique_ptr<Database>(nullptr);
   }
 
-  std::shared_ptr<MmapPageManager> mmap_manager(
-      new MmapPageManager(fd, fd_len));
+  std::shared_ptr<MmapPageManager> page_manager(
+      new MmapPageManager(fd, fd_len, fd_stat.st_blksize));
 
   /* create new file */
   if (fd_len == 0) {
-    std::shared_ptr<PageManager> page_manager(
-        new PageManager(0, fd_stat.st_blksize));
     auto header_page = page_manager->allocPage(kMinReservedHeaderSize);
-    auto header_mmap = mmap_manager->getPage(header_page);
-
+    auto header_mmap = page_manager->getPage(header_page);
     auto first_log_page = page_manager->allocPage(kMinLogPageSize);
-    auto file_header = header_mmap.structAt<FileHeader>(0);
+    auto file_header = header_mmap->structAt<FileHeader>(0);
+
     file_header->magic = kFileMagicBytes;
     file_header->version = kFileVersion;
     file_header->first_log_page_offset = first_log_page.offset;
@@ -71,17 +67,16 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     // FIXPAUL msync header
 
     std::shared_ptr<Log> log(
-        new Log(first_log_page, page_manager, mmap_manager));
+        new Log(first_log_page, page_manager));
 
-    auto backend = new Database(log, page_manager, mmap_manager);
-    return std::unique_ptr<Database>(backend);
+    return std::unique_ptr<Database>(new Database(log, page_manager));
   }
 
   /* open existing file */
   if (fd_len >= kMinReservedHeaderSize) {
     PageManager::Page header_page = {.offset=0, .size=kMinReservedHeaderSize};
-    auto header_mmap = mmap_manager->getPage(header_page);
-    auto file_header = header_mmap.structAt<FileHeader>(0);
+    auto header_mmap = page_manager->getPage(header_page);
+    auto file_header = header_mmap->structAt<FileHeader>(0);
 
     if (file_header->magic != kFileMagicBytes) {
       fprintf(stderr, "invalid file\n"); // FIXPAUL
@@ -96,18 +91,20 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     PageManager::Page first_log_page;
     first_log_page.offset = file_header->first_log_page_offset;
     first_log_page.size = file_header->first_log_page_size;
-    LogReader log_reader(mmap_manager, first_log_page);
-    LogReader::Snapshot log_snapshot;
+    LogReader log_reader(page_manager, first_log_page);
+    LogSnapshot log_snapshot;
     log_reader.import(&log_snapshot);
 
-    std::shared_ptr<PageManager> page_manager(
-        new PageManager(log_snapshot.last_used_byte, fd_stat.st_blksize));
+    std::shared_ptr<PageManager> page_manager_imported(new MmapPageManager(
+        dup(fd),
+        fd_len,
+        fd_stat.st_blksize,
+        log_snapshot));
 
     std::shared_ptr<Log> log(
-        new Log(log_snapshot, page_manager, mmap_manager));
+        new Log(log_snapshot, page_manager_imported));
 
-    auto backend = new Database(log, page_manager, mmap_manager);
-    return std::unique_ptr<Database>(backend);
+    return std::unique_ptr<Database>(new Database(log, page_manager));
   }
 
   fprintf(stderr, "invalid file\n"); // FIXPAUL

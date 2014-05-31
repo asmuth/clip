@@ -12,16 +12,15 @@ namespace fnordmetric {
 namespace database {
 
 LogReader::LogReader(
-    std::shared_ptr<MmapPageManager> mmap_manager,
+    std::shared_ptr<PageManager> page_manager,
     const PageManager::Page& first_log_page) :
-    mmap_manager_(std::move(mmap_manager)),
+    page_manager_(std::move(page_manager)),
     current_page_(first_log_page) {}
 
-void LogReader::import(Snapshot* snapshot) {
-  printf("import!\n");
+void LogReader::import(LogSnapshot* snapshot) {
   //for (;;) {
     auto mmapped_offset = current_page_.offset;
-    auto mmapped = mmap_manager_->getPage(current_page_);
+    auto mmapped = page_manager_->getPage(current_page_);
     size_t offset = 0;
 
     //while (current_page_.offset == mmapped_offset) {
@@ -33,20 +32,16 @@ void LogReader::import(Snapshot* snapshot) {
 }
 
 Log::Log(
-    const LogReader::Snapshot& snapshot,
-    std::shared_ptr<PageManager> page_manager,
-    std::shared_ptr<MmapPageManager> mmap_manager) :
+    const LogSnapshot& snapshot,
+    std::shared_ptr<PageManager> page_manager) :
     page_manager_(page_manager),
-    mmap_manager_(mmap_manager),
     current_page_(snapshot.current_log_page),
     current_page_offset_(snapshot.current_log_page_offset) {}
 
 Log::Log(
     const PageManager::Page& first_log_page,
-    std::shared_ptr<PageManager> page_manager,
-    std::shared_ptr<MmapPageManager> mmap_manager) :
+    std::shared_ptr<PageManager> page_manager) :
     page_manager_(page_manager),
-    mmap_manager_(mmap_manager),
     current_page_(first_log_page),
     current_page_offset_(0) {}
 
@@ -78,14 +73,13 @@ void Log::appendEntry(Log::AllocEntry entry, const std::string& stream_key) {
 
 // FIXPAUL lock!
 void Log::appendEntry(uint8_t* data, size_t length) {
-  printf("append to log, %llu\n", current_page_.offset);
-
   if (current_page_offset_ + length >= current_page_.size) {
     // FIXPAUL
   }
 
-  auto mmaped = mmap_manager_->getPage(current_page_);
-  memcpy(mmaped.structAt<char>(current_page_offset_), data, length);
+  auto mmaped = page_manager_->getPage(current_page_);
+  auto dst = mmaped->structAt<char>(current_page_offset_);
+  memcpy(dst, data, length);
   current_page_offset_ += length;
 }
 

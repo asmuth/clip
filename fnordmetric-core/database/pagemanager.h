@@ -17,6 +17,8 @@
 namespace fnordmetric {
 namespace database {
 
+struct LogSnapshot;
+
 /**
  * This is an internal class. For usage instructions and extended documentation
  * please refer to "storagebackend.h" and "database.h"
@@ -24,6 +26,7 @@ namespace database {
 class PageManager {
   friend class DatabaseTest;
 public:
+
   struct Page {
     union {
       uint64_t offset;
@@ -32,7 +35,21 @@ public:
     uint64_t size;
   };
 
-  PageManager(size_t end_pos_, size_t block_size);
+  class PageRef {
+  public:
+    PageRef(const Page& page);
+    PageRef(const PageRef& copy) = delete;
+    PageRef& operator=(const PageRef& copy) = delete;
+    virtual ~PageRef();
+    void* operator*() const;
+    template<typename T> T* structAt(size_t position) const;
+  protected:
+    virtual void* getPtr() const = 0;
+    const PageManager::Page page_;
+  };
+
+  PageManager(size_t block_size);
+  PageManager(size_t block_size, const LogSnapshot& log_snapshot);
   PageManager(const PageManager& copy) = delete;
   PageManager& operator=(const PageManager& copy) = delete;
   PageManager(const PageManager&& move);
@@ -40,12 +57,17 @@ public:
   /**
    * Request a new page from the page manager
    */
-  Page allocPage(size_t min_size);
+  virtual Page allocPage(size_t min_size);
 
   /**
    * Return a page to the pagemanager. Adds this page to the freelist
    */
-  void freePage(const Page& page);
+  virtual void freePage(const Page& page);
+
+  /**
+   * Request a page to be mapped into memory. Returns a smart pointer.
+   */
+  virtual std::unique_ptr<PageRef> getPage(const PageManager::Page& page) = 0;
 
 protected:
 
@@ -76,7 +98,7 @@ protected:
   std::vector<std::pair<uint64_t, uint64_t>> freelist_;
 };
 
-class MmapPageManager {
+class MmapPageManager : public PageManager {
   friend class DatabaseTest;
 protected:
   struct MmappedFile {
@@ -96,20 +118,33 @@ public:
    */
   static const size_t kMmapSizeMultiplier = 1048576; /* 1 MB */
 
-  struct MmappedPageRef {
-    const PageManager::Page page;
-    MmappedFile* file;
-    MmappedPageRef(const PageManager::Page& __page, MmappedFile* __file);
+  class MmappedPageRef : public PageManager::PageRef {
+  public:
+    MmappedPageRef(const PageManager::Page& page, MmappedFile* file);
     MmappedPageRef(MmappedPageRef&& move);
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
     ~MmappedPageRef();
-    void* operator->() const;
-    void* operator*() const;
-    template<typename T> T* structAt(size_t position);
+  protected:
+    void* getPtr() const override;
+    MmappedFile* file_;
   };
 
-  explicit MmapPageManager(int fd, size_t len);
+  /**
+   * Create a new mmap page manager for a new file
+   */
+  explicit MmapPageManager(int fd, size_t len, size_t block_size);
+
+  /**
+   * Create a new mmap page manager for a file where some pages are already
+   * allocaed
+   */
+  explicit MmapPageManager(
+      int fd,
+      size_t len,
+      size_t block_size,
+      const LogSnapshot& log_snapshot);
+
   MmapPageManager(MmapPageManager&& move);
   MmapPageManager(const MmapPageManager& copy) = delete;
   MmapPageManager& operator=(const MmapPageManager& copy) = delete;
@@ -118,7 +153,8 @@ public:
   /**
    * Request a page to be mapped into memory. Returns a smart pointer.
    */
-  MmappedPageRef getPage(const PageManager::Page& page);
+  std::unique_ptr<PageManager::PageRef> getPage(
+      const PageManager::Page& page) override;
 
 protected:
 
@@ -138,9 +174,9 @@ protected:
  * IMPLEMENTATION
  */
 template<typename T>
-T* MmapPageManager::MmappedPageRef::structAt(size_t position) {
-  assert(position < page.size);
-  return (T*) (((char *) file->data) + page.offset + position);
+T* PageManager::PageRef::structAt(size_t position) const {
+  assert(position < page_.size);
+  return (T*) (((char *) getPtr()) + page_.offset + position);
 }
 
 
