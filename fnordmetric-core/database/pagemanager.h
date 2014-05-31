@@ -15,14 +15,14 @@
 #include "../backend.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 /**
  * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "filebackend.h"
+ * please refer to "storagebackend.h" and "database.h"
  */
 class PageManager {
-  friend class FileBackendTest;
+  friend class DatabaseTest;
 public:
   struct Page {
     union {
@@ -77,7 +77,7 @@ protected:
 };
 
 class MmapPageManager {
-  friend class FileBackendTest;
+  friend class DatabaseTest;
 protected:
   struct MmappedFile {
     void* data;

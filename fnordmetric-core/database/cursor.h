@@ -14,13 +14,13 @@
 #include "../backend.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 class StreamRef;
 
 /**
  * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "filebackend.h"
+ * please refer to "storagebackend.h" and "database.h"
  */
 class Cursor : public IBackend::IStreamCursor {
 public:

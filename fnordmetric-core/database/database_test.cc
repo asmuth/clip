@@ -9,15 +9,15 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
-#include "filebackend.h"
+#include "database.h"
 #include "pagemanager.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
-class FileBackendTest {
+class DatabaseTest {
 public:
-  FileBackendTest() {}
+  DatabaseTest() {}
 
   void run() {
     //testStreamIdAssignment();
@@ -28,7 +28,7 @@ public:
   }
 
   void testStreamIdAssignment() {
-    auto backend = fnordmetric::filebackend::FileBackend::openFile(
+    auto backend = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testStreamIdAssignment");
 
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
@@ -41,7 +41,7 @@ public:
   }
 
   void testStreamRefCreation() {
-    auto backend = fnordmetric::filebackend::FileBackend::openFile(
+    auto backend = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testStreamRefCreation");
 
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
@@ -107,11 +107,11 @@ public:
 
   void testOpenFile() {
     {
-      auto filebackend = fnordmetric::filebackend::FileBackend::openFile(
+      auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile");
-      assert(filebackend.get() != nullptr);
+      assert(database.get() != nullptr);
 
-      auto streamdesc = filebackend->openStream("mystream");
+      auto streamdesc = database->openStream("mystream");
       std::vector<uint8_t> data = {
           0x01, 0x02, 0x03, 0x04,
           0x05, 0x06, 0x07, 0x08
@@ -121,9 +121,9 @@ public:
       streamdesc->appendRow(data);
     }
 
-    auto filebackend = fnordmetric::filebackend::FileBackend::openFile(
+    auto database = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testOpenFile");
-    assert(filebackend.get() != nullptr);
+    assert(database.get() != nullptr);
   }
 
 };
@@ -132,7 +132,7 @@ public:
 }
 
 int main() {
-  fnordmetric::filebackend::FileBackendTest test;
+  fnordmetric::database::DatabaseTest test;
   test.run();
   printf("all tests passed! :)\n");
 }

@@ -9,7 +9,7 @@
 #include "log.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 LogReader::LogReader(
     std::shared_ptr<MmapPageManager> mmap_manager,
@@ -19,17 +19,17 @@ LogReader::LogReader(
 
 void LogReader::import(Snapshot* snapshot) {
   printf("import!\n");
-  for (;;)
-    auto mmaped_offset = current_page_.offset;
-    auto mmaped = mmap_manager_->getPage(current_page_);
+  //for (;;) {
+    auto mmapped_offset = current_page_.offset;
+    auto mmapped = mmap_manager_->getPage(current_page_);
     size_t offset = 0;
 
-    while (current_page_.offset == mapped_offset) {
-      if (!importNextEntry(*mmaped, current_page_.size, &offset, snapshot)) {
-        return;
-      }
-    }
-  }
+    //while (current_page_.offset == mmapped_offset) {
+    //  if (!importNextEntry(*mmapped, current_page_.size, &offset, snapshot)) {
+    //    return;
+    //  }
+    //}
+  //}
 }
 
 Log::Log(

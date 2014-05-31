@@ -13,16 +13,16 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include <assert.h>
-#include "filebackend.h"
+#include "database.h"
 #include "cursor.h"
 #include "streamref.h"
 #include "pagemanager.h"
 #include "log.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
-FileBackend::FileBackend(
+Database::Database(
     std::shared_ptr<Log> log,
     std::shared_ptr<PageManager> page_manager,
     std::shared_ptr<MmapPageManager> mmap_manager) :
@@ -31,25 +31,25 @@ FileBackend::FileBackend(
     mmap_manager_(std::move(mmap_manager)),
     max_stream_id_(0) {}
 
-std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) {
-  FileBackend* ptr = nullptr;
+std::unique_ptr<Database> Database::openFile(const std::string& filename) {
+  Database* ptr = nullptr;
 
   int fd = open(filename.c_str(), O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
   if (fd < 0) {
     perror("open() failed");
-    return std::unique_ptr<FileBackend>(nullptr);
+    return std::unique_ptr<Database>(nullptr);
   }
 
   struct stat fd_stat;
   if (fstat(fd, &fd_stat) < 0) {
     perror("fstat() failed");
-    return std::unique_ptr<FileBackend>(nullptr);
+    return std::unique_ptr<Database>(nullptr);
   }
 
   off_t fd_len = lseek(fd, 0, SEEK_END);
   if (fd_len < 0) {
     perror("lseek() failed");
-    return std::unique_ptr<FileBackend>(nullptr);
+    return std::unique_ptr<Database>(nullptr);
   }
 
   std::shared_ptr<MmapPageManager> mmap_manager(
@@ -73,8 +73,8 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     std::shared_ptr<Log> log(
         new Log(first_log_page, page_manager, mmap_manager));
 
-    auto backend = new FileBackend(log, page_manager, mmap_manager);
-    return std::unique_ptr<FileBackend>(backend);
+    auto backend = new Database(log, page_manager, mmap_manager);
+    return std::unique_ptr<Database>(backend);
   }
 
   /* open existing file */
@@ -85,12 +85,12 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
 
     if (file_header->magic != kFileMagicBytes) {
       fprintf(stderr, "invalid file\n"); // FIXPAUL
-      return std::unique_ptr<FileBackend>(nullptr);
+      return std::unique_ptr<Database>(nullptr);
     }
 
     if (file_header->version != kFileVersion) {
       fprintf(stderr, "invalid file version\n"); // FIXPAUL
-      return std::unique_ptr<FileBackend>(nullptr);
+      return std::unique_ptr<Database>(nullptr);
     }
 
     PageManager::Page first_log_page;
@@ -106,22 +106,22 @@ std::unique_ptr<FileBackend> FileBackend::openFile(const std::string& filename) 
     std::shared_ptr<Log> log(
         new Log(log_snapshot, page_manager, mmap_manager));
 
-    auto backend = new FileBackend(log, page_manager, mmap_manager);
-    return std::unique_ptr<FileBackend>(backend);
+    auto backend = new Database(log, page_manager, mmap_manager);
+    return std::unique_ptr<Database>(backend);
   }
 
   fprintf(stderr, "invalid file\n"); // FIXPAUL
-  return std::unique_ptr<FileBackend>(nullptr);
+  return std::unique_ptr<Database>(nullptr);
 }
 
-std::unique_ptr<IBackend::IStreamDescriptor> FileBackend::openStream(
+std::unique_ptr<IBackend::IStreamDescriptor> Database::openStream(
     const std::string& key) {
   return std::unique_ptr<IBackend::IStreamDescriptor>(
       new StreamDescriptor(getStreamRef(key)));
 }
 
 // FIXPAUL locking!
-std::shared_ptr<StreamRef> FileBackend::getStreamRef(const std::string& key) {
+std::shared_ptr<StreamRef> Database::getStreamRef(const std::string& key) {
   auto stream_id = getStreamId(key);
   auto iter = stream_refs_.find(stream_id);
 
@@ -135,7 +135,7 @@ std::shared_ptr<StreamRef> FileBackend::getStreamRef(const std::string& key) {
 }
 
 // FIXPAUL must hold lock to call!
-uint64_t FileBackend::getStreamId(const std::string& stream_key) {
+uint64_t Database::getStreamId(const std::string& stream_key) {
   auto iter = stream_ids_.find(stream_key);
 
   if (iter == stream_ids_.end()) {

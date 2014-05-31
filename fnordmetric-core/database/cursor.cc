@@ -9,7 +9,7 @@
 #include "cursor.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 Cursor::Cursor(std::shared_ptr<StreamRef> stream_ref) :
     stream_ref_(stream_ref) {}

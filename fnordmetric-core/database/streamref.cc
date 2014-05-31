@@ -7,16 +7,16 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "streamref.h"
-#include "filebackend.h"
+#include "database.h"
 #include "cursor.h"
 #include "../clock.h"
 #include "../fnv.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 StreamRef::StreamRef(
-    FileBackend* backend,
+    Database* backend,
     uint64_t stream_id,
     const std::string& stream_key) :
     backend_(backend),

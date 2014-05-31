@@ -73,13 +73,13 @@
 
 */
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 class StreamRef;
 
-class FileBackend : public IBackend {
+class Database : public IBackend {
   friend class StreamRef;
-  friend class FileBackendTest;
+  friend class DatabaseTest;
 public:
   struct __attribute__((__packed__)) FileHeader {
     uint64_t magic;
@@ -88,8 +88,8 @@ public:
     uint64_t first_log_page_size;
   };
 
-  FileBackend(const FileBackend& copy) = delete;
-  FileBackend& operator=(const FileBackend& copy) = delete;
+  Database(const Database& copy) = delete;
+  Database& operator=(const Database& copy) = delete;
 
   /**
    * Min. number of bytes to reserve for the file header
@@ -114,7 +114,7 @@ public:
   /**
    * Instantiate a new file backend with a path to the file.
    */
-  static std::unique_ptr<FileBackend> openFile(const std::string& filename);
+  static std::unique_ptr<Database> openFile(const std::string& filename);
 
   /**
    * Set the target page size in number of rows. Default: 1024
@@ -131,7 +131,7 @@ public:
       const std::string& key) override;
 
 protected:
-  FileBackend(
+  Database(
       std::shared_ptr<Log> log,
       std::shared_ptr<PageManager> page_manager,
       std::shared_ptr<MmapPageManager> mmap_manager);

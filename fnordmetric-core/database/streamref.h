@@ -14,14 +14,14 @@
 #include "pagemanager.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
-class FileBackend;
+class Database;
 class Cursor;
 
 /**
  * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "filebackend.h"
+ * please refer to "storagebackend.h" and "database.h"
  */
 class StreamRef {
 public:
@@ -42,7 +42,7 @@ public:
   };
 
   explicit StreamRef(
-      FileBackend* backed,
+      Database* backed,
       uint64_t stream_id,
       const std::string& stream_key);
 
@@ -53,14 +53,14 @@ public:
 
 protected:
   std::vector<PageAlloc> pages_;
-  FileBackend* backend_;
+  Database* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;
 };
 
 /**
  * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "filebackend.h"
+ * please refer to "storagebackend.h" and "database.h"
  */
 class StreamDescriptor : public IBackend::IStreamDescriptor {
 public:

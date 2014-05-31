@@ -16,11 +16,11 @@
 #include "streamref.h"
 
 namespace fnordmetric {
-namespace filebackend {
+namespace database {
 
 /**
  * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "filebackend.h"
+ * please refer to "storagebackend.h" and "database.h"
  */
 class LogReader {
 public:
@@ -47,7 +47,7 @@ protected:
 };
 
 class Log {
-  friend class FileBackendTest;
+  friend class DatabaseTest;
 public:
   struct __attribute__((__packed__)) EntryHeader {
     uint64_t checksum;
