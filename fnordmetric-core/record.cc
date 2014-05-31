@@ -10,7 +10,7 @@
 
 namespace fnordmetric {
 
-void IRecordWriter::appendField(double value) {
+void RecordWriter::appendField(double value) {
   bytes_.emplace_back(schema::IEE754);
   bytes_.emplace_back(0);
   bytes_.emplace_back(0);
@@ -22,7 +22,7 @@ void IRecordWriter::appendField(double value) {
   bytes_.emplace_back(0);
 }
 
-void IRecordWriter::appendField(int64_t value) {
+void RecordWriter::appendField(int64_t value) {
   int64_t local_value = value;
   uint8_t bytes[8];
   memcpy(bytes, &local_value, 8);
@@ -37,7 +37,7 @@ void IRecordWriter::appendField(int64_t value) {
   bytes_.emplace_back(bytes[7]);
 }
 
-const std::vector<uint8_t>& IRecordWriter::toBytes() const {
+const std::vector<uint8_t>& RecordWriter::toBytes() const {
   return bytes_;
 }
 

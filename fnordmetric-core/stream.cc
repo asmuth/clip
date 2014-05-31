@@ -12,13 +12,13 @@
 
 namespace fnordmetric {
 
-const std::string& IStreamKey::getKeyString() const {
+const std::string& StreamKey::getKeyString() const {
   return key_str_;
 }
 
-IStream::IStream(
-    const IStreamKey& key,
-    const ISchema& schema,
+Stream::Stream(
+    const StreamKey& key,
+    const Schema& schema,
     //const MetricDescription& description,
     std::shared_ptr<database::StreamRef> stream_ref) :
     key_(key),
@@ -26,15 +26,15 @@ IStream::IStream(
     //description_(description),
     stream_ref_(std::move(stream_ref)) {}
 
-const ISchema& IStream::getSchema() const {
+const Schema& Stream::getSchema() const {
   return schema_;
 }
 
-const IStreamKey& IStream::getKey() const {
+const StreamKey& Stream::getKey() const {
   return key_;
 }
 
-void IStream::appendRecord(const IRecordWriter& record) const {
+void Stream::appendRecord(const RecordWriter& record) const {
   stream_ref_->appendRow(record.toBytes());
 }
 

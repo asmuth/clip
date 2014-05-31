@@ -10,21 +10,21 @@
 
 namespace fnordmetric {
 
-IField::IField(schema::kFieldType type, const std::string& name) :
+Field::Field(schema::kFieldType type, const std::string& name) :
       type_(type),
       name_(name) {}
 
-const std::string& IField::getName() const {
+const std::string& Field::getName() const {
   return name_;
 }
 
-schema::kFieldType IField::getTypeId() const {
+schema::kFieldType Field::getTypeId() const {
   return type_;
 }
 
-ISchema::ISchema(const std::vector<IField>& fields) : fields_(fields) {}
+Schema::Schema(const std::vector<Field>& fields) : fields_(fields) {}
 
-const std::vector<IField>& ISchema::getFields() const {
+const std::vector<Field>& Schema::getFields() const {
   return fields_;
 }
 

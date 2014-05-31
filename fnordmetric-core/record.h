@@ -24,9 +24,9 @@ protected:
   size_t pos_;
 };
 
-class IRecordWriter {
+class RecordWriter {
 public:
-  explicit IRecordWriter() {}
+  explicit RecordWriter(const Schema& schema);
   void appendField(double value);
   void appendField(int64_t value);
   const std::vector<uint8_t>& toBytes() const;
@@ -35,9 +35,9 @@ protected:
 };
 
 template<typename... T>
-class RecordWriter : public IRecordWriter {
+class TypedRecordWriter : public RecordWriter {
 public:
-  explicit RecordWriter(const typename T::ValueType&... values);
+  explicit TypedRecordWriter(const typename T::ValueType&... values);
 protected:
   template<typename T1> void appendFields(T1 head);
   template<typename T1, typename... T2> void appendFields(T1 head, T2... tail);

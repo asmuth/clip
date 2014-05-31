@@ -19,7 +19,7 @@ class StreamRef;
 
 /**
  * A storage cursor is a stateful iterator for a single stream. It can be used
- * to read rows from and append rows to the stream.
+ * to read rows from the stream.
  */
 class Cursor {
 public:

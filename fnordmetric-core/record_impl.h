@@ -10,19 +10,20 @@
 namespace fnordmetric {
 
 template<typename... T>
-RecordWriter<T...>::RecordWriter(const typename T::ValueType&... values) {
+TypedRecordWriter<T...>::TypedRecordWriter(
+    const typename T::ValueType&... values) {
   appendFields(values...);
 }
 
 template<typename... T>
 template<typename T1>
-void RecordWriter<T...>::appendFields(T1 head) {
+void TypedRecordWriter<T...>::appendFields(T1 head) {
   appendField(head);
 }
 
 template<typename... T>
 template <typename T1, typename... T2>
-void RecordWriter<T...>::appendFields(T1 head, T2... tail) {
+void TypedRecordWriter<T...>::appendFields(T1 head, T2... tail) {
   appendField(head);
   appendFields(tail...);
 }

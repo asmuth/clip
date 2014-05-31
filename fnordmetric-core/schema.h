@@ -21,41 +21,41 @@ enum kFieldType {
 };
 }
 
-class IField {
+class Field {
 public:
-  IField(schema::kFieldType type, const std::string& name);
   const std::string& getName() const;
   schema::kFieldType getTypeId() const;
 protected:
+  Field(schema::kFieldType type, const std::string& name);
   schema::kFieldType type_; // FIXPAUL REMOVE ME
   std::string name_;
 };
 
-class ISchema {
+class Schema {
 public:
-  explicit ISchema(const std::vector<IField>& fields);
-  const std::vector<IField>& getFields() const;
+  explicit Schema(const std::vector<Field>& fields);
+  const std::vector<Field>& getFields() const;
 protected:
-  const std::vector<IField> fields_;
+  const std::vector<Field> fields_;
 };
 
 template <typename... T>
-class Schema : public ISchema {
+class TypedSchema : public Schema {
 public:
-  explicit Schema(const T... fields);
+  explicit TypedSchema(const T... fields);
 protected:
-  std::vector<IField> unpackFields(T... fields);
+  std::vector<Field> unpackFields(T... fields);
 };
 
-class IntegerField : public IField {
+class IntegerField : public Field {
 public:
-  IntegerField(const std::string& name) : IField(schema::INT64, name) {}
+  IntegerField(const std::string& name) : Field(schema::INT64, name) {}
   typedef int64_t ValueType;
 };
 
-class FloatField : public IField {
+class FloatField : public Field {
 public:
-  FloatField(const std::string& name) : IField(schema::IEE754, name) {}
+  FloatField(const std::string& name) : Field(schema::IEE754, name) {}
   typedef double ValueType;
 };
 

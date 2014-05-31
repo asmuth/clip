@@ -19,13 +19,13 @@
 namespace fnordmetric {
 
 template <typename... T>
-StreamKey<T...>::StreamKey(
+TypedStreamKey<T...>::TypedStreamKey(
     const std::string& name,
     T... fields) :
-    IStreamKey(buildKeyString(name, fields...)) {}
+    StreamKey(buildKeyString(name, fields...)) {}
 
 template <typename... T>
-std::string StreamKey<T...>::buildKeyString(
+std::string TypedStreamKey<T...>::buildKeyString(
     const std::string& name,
     T... fields) {
   std::stringstream ss;
@@ -39,9 +39,9 @@ std::string StreamKey<T...>::buildKeyString(
 
 template <typename... T>
 template<typename... T1>
-void StreamKey<T...>::buildKeyString(
+void TypedStreamKey<T...>::buildKeyString(
     std::stringstream* ss,
-    IField head, T1... tail) {
+    Field head, T1... tail) {
   FNV<uint32_t> fnv;
 
   *ss << '-' << 
@@ -52,25 +52,26 @@ void StreamKey<T...>::buildKeyString(
 }
 
 template <typename... T>
-void StreamKey<T...>::buildKeyString(std::stringstream* ss) {}
+void TypedStreamKey<T...>::buildKeyString(std::stringstream* ss) {}
 
 
 template <typename... T>
-Stream<T...>::Stream(
-    const IStreamKey& key,
-    const Schema<T...>& schema,
+TypedStream<T...>::TypedStream(
+    const StreamKey& key,
+    const TypedSchema<T...>& schema,
     //const MetricDescription& description,
     std::shared_ptr<database::StreamRef> stream_ref) :
-    IStream(
+    Stream(
         key,
         schema,
         //description,
         std::move(stream_ref)) {}
 
 template <typename... T>
-void Stream<T...>::appendRecord(const typename T::ValueType&... values) const {
-  RecordWriter<T...> record(values...);
-  IStream::appendRecord(record);
+void TypedStream<T...>::appendRecord
+    (const typename T::ValueType&... values) const {
+  TypedRecordWriter<T...> record(values...);
+  Stream::appendRecord(record);
 }
 
 }

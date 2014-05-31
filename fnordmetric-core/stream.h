@@ -20,62 +20,62 @@
 
 namespace fnordmetric {
 
-class IStreamKey {
+class StreamKey {
 public:
   //explicit IStreamKey(const std:string& name, const ISchema& schema);
   const std::string& getKeyString() const;
 protected:
-  explicit IStreamKey(const std::string& key_str) : key_str_(key_str) {}
+  explicit StreamKey(const std::string& key_str) : key_str_(key_str) {}
   const std::string key_str_;
 };
 
 template <typename... T>
-class StreamKey : public IStreamKey {
+class TypedStreamKey : public StreamKey {
 public:
-  explicit StreamKey(const std::string& name, T... fields);
+  explicit TypedStreamKey(const std::string& name, T... fields);
 protected:
   std::string buildKeyString(const std::string& name, T... fields);
   template<typename... T1>
-  void buildKeyString(std::stringstream* ss, IField head, T1... tail);
+  void buildKeyString(std::stringstream* ss, Field head, T1... tail);
   void buildKeyString(std::stringstream* ss);
 };
 
-class IStream {
-public:
-
-  explicit IStream(
-      const IStreamKey& key,
-      const ISchema& schema,
-      //const MetricDescription& description,
-      std::shared_ptr<database::StreamRef> stream_ref);
-
-  IStream(const IStream& copy) = delete;
-  IStream& operator=(const IStream& copy) = delete;
-
-  const ISchema& getSchema() const;
-  const IStreamKey& getKey() const;
-
-  void appendRecord(const IRecordWriter& record) const;
-
-protected:
-  const std::shared_ptr<database::StreamRef> stream_ref_;
-  const IStreamKey key_;
-  //const MetricDescription description_;
-  const ISchema schema_;
-};
-
-template <typename... T>
-class Stream : public IStream {
+class Stream {
 public:
 
   explicit Stream(
-      const IStreamKey& key,
-      const Schema<T...>& schema,
+      const StreamKey& key,
+      const Schema& schema,
       //const MetricDescription& description,
       std::shared_ptr<database::StreamRef> stream_ref);
 
   Stream(const Stream& copy) = delete;
   Stream& operator=(const Stream& copy) = delete;
+
+  const Schema& getSchema() const;
+  const StreamKey& getKey() const;
+
+  void appendRecord(const RecordWriter& record) const;
+
+protected:
+  const std::shared_ptr<database::StreamRef> stream_ref_;
+  const StreamKey key_;
+  //const MetricDescription description_;
+  const Schema schema_;
+};
+
+template <typename... T>
+class TypedStream : public Stream {
+public:
+
+  explicit TypedStream(
+      const StreamKey& key,
+      const TypedSchema<T...>& schema,
+      //const MetricDescription& description,
+      std::shared_ptr<database::StreamRef> stream_ref);
+
+  TypedStream(const TypedStream& copy) = delete;
+  TypedStream& operator=(const TypedStream& copy) = delete;
 
   void appendRecord(const typename T::ValueType&... values) const;
 };

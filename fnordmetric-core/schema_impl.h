@@ -13,14 +13,15 @@
 namespace fnordmetric {
 
 template<typename... T>
-Schema<T...>::Schema(const T... fields) : ISchema(unpackFields(fields...)) {}
+TypedSchema<T...>::TypedSchema(const T... fields) : 
+    Schema(unpackFields(fields...)) {}
 
 // FIXPAUL there must be some better way to do this...
 template<typename... T>
-std::vector<IField> Schema<T...>::unpackFields(T... fields) {
-  std::vector<IField> unpacked;
-  const IField packed[] = {fields...};
-  int num_fields = sizeof(packed) / sizeof(IField);
+std::vector<Field> TypedSchema<T...>::unpackFields(T... fields) {
+  std::vector<Field> unpacked;
+  const Field packed[] = {fields...};
+  int num_fields = sizeof(packed) / sizeof(Field);
 
   for (int i = 0; i < num_fields; ++i) {
     unpacked.push_back(packed[i]);
