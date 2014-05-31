@@ -89,11 +89,10 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     PageManager::Page first_log_page;
     first_log_page.offset = file_header->first_log_page_offset;
     first_log_page.size = file_header->first_log_page_size;
-    LogReader log_reader(page_manager, first_log_page);
     LogSnapshot log_snapshot;
-    log_reader.import(&log_snapshot);
+    LogReader log_reader(page_manager, first_log_page, &log_snapshot);
+    log_reader.import();
 
-    printf("imported log...\n");
     std::shared_ptr<PageManager> page_manager_imported(new MmapPageManager(
         dup(fd),
         fd_len,

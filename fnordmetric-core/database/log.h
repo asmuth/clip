@@ -13,45 +13,21 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <unordered_map>
 #include "streamref.h"
 
 namespace fnordmetric {
 namespace database {
 
-/**
- * This is an internal class. For usage instructions and extended documentation
- * please refer to "storagebackend.h" and "database.h"
- */
-class LogReader {
-public:
-  LogReader(
-      std::shared_ptr<PageManager> page_manager,
-      const PageManager::Page& first_log_page);
-
-  /**
-   * Import the log. Returns a snapshot of the imported log
-   */
-  void import(LogSnapshot* snapshot);
-
-protected:
-
-  /**
-   * Import a single log entry. Returns true if there might be another entry
-   * in the log and returns false when the last entry was read
-   */
-  bool importNextEntry(
-      const PageManager::PageRef* mmapped,
-      size_t mmaped_size,
-      size_t* offset,
-      LogSnapshot* destination);
-
-  std::shared_ptr<PageManager> page_manager_;
-  PageManager::Page current_page_;
-};
-
 struct LogSnapshot {
+  struct StreamState {
+    StreamState(uint32_t stream_id);
+    uint64_t stream_id_;
+    std::string stream_key_;
+    std::vector<StreamRef::PageAlloc> pages_;
+  };
   std::vector<PageManager::Page> free_pages;
-  std::vector<std::shared_ptr<StreamRef>> streams;
+  std::vector<StreamState> streams;
   PageManager::Page current_log_page;
   uint64_t current_log_page_offset;
   uint64_t last_used_byte;
@@ -101,6 +77,44 @@ protected:
   std::shared_ptr<PageManager> page_manager_;
   PageManager::Page current_page_;
   uint64_t current_page_offset_;
+};
+
+/**
+ * This is an internal class. For usage instructions and extended documentation
+ * please refer to "storagebackend.h" and "database.h"
+ */
+class LogReader {
+public:
+  LogReader(
+      std::shared_ptr<PageManager> page_manager,
+      const PageManager::Page& first_log_page,
+      LogSnapshot* destination);
+
+  /**
+   * Import the log. Returns a snapshot of the imported log
+   */
+  void import();
+
+protected:
+
+  /**
+   * Import a single log entry. Returns true if there might be another entry
+   * in the log and returns false when the last entry was read
+   */
+  bool importNextEntry(
+      const PageManager::PageRef* mmapped,
+      size_t mmaped_size,
+      size_t* offset);
+
+  /**
+   * Import a single log entry
+   */
+  void importLogEntry(const Log::EntryHeader* entry);
+
+  std::unordered_map<uint32_t, LogSnapshot::StreamState*> streams_;
+  const std::shared_ptr<PageManager> page_manager_;
+  PageManager::Page current_page_;
+  LogSnapshot* destination_;
 };
 
 }
