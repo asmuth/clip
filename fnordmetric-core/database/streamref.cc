@@ -44,7 +44,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     auto page = backend_->page_manager_->allocPage(data.size() * 100);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
-    Log::AllocEntry log_entry;
+    Log::PageAllocEntry log_entry;
     log_entry.page_offset = alloc->page_.offset;
     log_entry.page_size = alloc->page_.size;
     log_entry.page_first_row_time = time;
@@ -61,14 +61,26 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
     auto page = backend_->page_manager_->allocPage(data.size() * 100);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
-    // FIXPAUL: msync old page, then write old page finish
+    auto old_page = pages_.back();
+    // FIXPAUL: msync old page
 
-    Log::AllocEntry log_entry;
-    log_entry.page_offset = alloc->page_.offset;
-    log_entry.page_size = alloc->page_.size;
-    log_entry.page_first_row_time = time;
-    log_entry.stream_id = stream_id_;
-    backend_->log_->appendEntry(log_entry);
+    {
+      Log::PageFinishEntry log_entry;
+      log_entry.page_offset = old_page->page_.offset;
+      log_entry.page_size = old_page->page_.size;
+      log_entry.page_used = old_page->used_;
+      log_entry.stream_id = stream_id_;
+      backend_->log_->appendEntry(log_entry);
+    }
+
+    {
+      Log::PageAllocEntry log_entry;
+      log_entry.page_offset = alloc->page_.offset;
+      log_entry.page_size = alloc->page_.size;
+      log_entry.page_first_row_time = time;
+      log_entry.stream_id = stream_id_;
+      backend_->log_->appendEntry(log_entry);
+    }
 
     pages_.push_back(std::move(alloc));
     // FIXPAUL mem barrier

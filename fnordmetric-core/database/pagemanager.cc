@@ -16,7 +16,7 @@ namespace database {
 
 PageManager::PageManager(size_t block_size) :
   end_pos_(0),
-  block_size_(block_size) {}
+  block_size_(block_size) { printf("new pagemanager @ 0\n"); }
 
 PageManager::PageManager(size_t block_size, const LogSnapshot& log_snapshot) :
   block_size_(block_size),
@@ -44,6 +44,8 @@ PageManager::Page PageManager::allocPage(size_t min_size) {
     end_pos_   += page.size;
   }
 
+
+  printf("alloc page @ %llu\n", page.offset);
   return page;
 }
 

@@ -121,16 +121,20 @@ public:
         0x05, 0x06, 0x07, 0x08
     };
 
-    {
+    for (int j = 0; j < 5; ++j) {
       auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile");
       assert(database.get() != nullptr);
       auto stream = database->openStream("mystream");
-      stream_id = stream->stream_id_;
-      for (int i = 10; i > 0; i--) {
-        insert_times.push_back(stream->appendRow(data));
+      if (j == 0) {
+        stream_id = stream->stream_id_;
+      } else {
+        assert(stream_id == stream->stream_id_);
       }
       assert(database->max_stream_id_ == stream_id);
+      for (int i = 1000; i > 0; i--) {
+        insert_times.push_back(stream->appendRow(data));
+      }
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);
       for (int i = 0; i < insert_times.size() - 1; ++i) {
@@ -138,19 +142,6 @@ public:
       }
       assert(cursor->next() == false);
     }
-
-    auto database = fnordmetric::database::Database::openFile(
-        "/tmp/__fnordmetric_testOpenFile");
-    assert(database.get() != nullptr);
-    assert(database->max_stream_id_ == stream_id);
-    auto stream = database->openStream("mystream");
-    assert(stream_id == stream->stream_id_);
-    auto cursor = stream->getCursor();
-    assert(cursor->seekToFirst() == insert_times[0]);
-    for (int i = 0; i < insert_times.size() - 1; ++i) {
-      assert(cursor->next());
-    }
-    assert(cursor->next() == false);
   }
 
 };

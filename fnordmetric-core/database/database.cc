@@ -121,7 +121,7 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
         new Log(log_snapshot, page_manager_imported));
 
     return std::unique_ptr<Database>(
-        new Database(log_snapshot, log, page_manager));
+        new Database(log_snapshot, log, page_manager_imported));
   }
 
   fprintf(stderr, "invalid file\n"); // FIXPAUL

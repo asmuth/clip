@@ -45,7 +45,7 @@ public:
     uint32_t computeChecksum();
   };
 
-  struct __attribute__((__packed__)) AllocEntry {
+  struct __attribute__((__packed__)) PageAllocEntry {
     EntryHeader hdr;
     uint32_t stream_id;
     uint64_t page_offset;
@@ -54,8 +54,24 @@ public:
     char stream_key[];
   };
 
+  struct __attribute__((__packed__)) PageFinishEntry {
+    EntryHeader hdr;
+    uint32_t stream_id;
+    uint64_t page_offset;
+    uint32_t page_size;
+    uint32_t page_used;
+  };
+
+  struct __attribute__((__packed__)) PageFreeEntry {
+    EntryHeader hdr;
+    uint64_t page_offset;
+    uint32_t page_size;
+  };
+
   enum kEntryTypes {
-    ALLOC_ENTRY = 0x01
+    PAGE_ALLOC_ENTRY = 0x01,
+    PAGE_FINISH_ENTRY = 0x02,
+    PAGE_FREE_ENTRY = 0x03
   };
 
   explicit Log(
@@ -70,8 +86,10 @@ public:
   Log& operator=(const Log& copy) = delete;
   Log(const Log&& move);
 
-  void appendEntry(AllocEntry entry);
-  void appendEntry(AllocEntry entry, const std::string& stream_key);
+  void appendEntry(PageAllocEntry entry);
+  void appendEntry(PageAllocEntry entry, const std::string& stream_key);
+  void appendEntry(PageFinishEntry entry);
+  void appendEntry(PageFreeEntry entry);
 
 protected:
   void appendEntry(uint8_t* data, size_t length);

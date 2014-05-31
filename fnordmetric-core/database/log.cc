@@ -82,8 +82,8 @@ bool LogReader::importNextEntry(
 void LogReader::importLogEntry(const Log::EntryHeader* entry) {
   switch (entry->type) {
 
-    case Log::ALLOC_ENTRY: {
-      auto alloc_entry = (Log::AllocEntry *) entry;
+    case Log::PAGE_ALLOC_ENTRY: {
+      auto alloc_entry = (Log::PageAllocEntry *) entry;
       auto iter = streams_.find(alloc_entry->stream_id);
       LogSnapshot::StreamState* stream_state;
 
@@ -93,7 +93,7 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
         streams_[alloc_entry->stream_id] = stream_state;
 
         size_t key_len = alloc_entry->hdr.size -
-            (sizeof(Log::AllocEntry) - sizeof(Log::EntryHeader));
+            (sizeof(Log::PageAllocEntry) - sizeof(Log::EntryHeader));
         stream_state->stream_key_.insert(0, alloc_entry->stream_key, key_len);
 
         if (alloc_entry->stream_id > destination_->max_stream_id) {
@@ -110,6 +110,23 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
       auto alloc = new PageAlloc(page, alloc_entry->page_first_row_time);
       stream_state->pages_.push_back(std::shared_ptr<PageAlloc>(alloc));
       setLastUsedByte(page.offset + page.size);
+      break;
+    }
+
+    case Log::PAGE_FINISH_ENTRY: {
+      auto finish_entry = (Log::PageFinishEntry *) entry;
+      auto iter = streams_.find(finish_entry->stream_id);
+
+      if (iter != streams_.end()) {
+        auto stream_state = iter->second;
+        if (stream_state->pages_.back()->page_.offset ==
+            finish_entry->page_offset) {
+          stream_state->pages_.back()->used_ = finish_entry->page_used;
+          break;
+        }
+      }
+
+      fprintf(stderr, "warning: unexpected PAGE_FINISH log entry\n");
       break;
     }
 
@@ -169,24 +186,36 @@ Log::Log(
     current_page_(first_log_page),
     current_page_offset_(0) {}
 
-void Log::appendEntry(Log::AllocEntry entry) {
-  entry.hdr.size = sizeof(AllocEntry) - sizeof(EntryHeader);
-  entry.hdr.type = ALLOC_ENTRY;
-  appendEntry((uint8_t *) &entry, sizeof(AllocEntry));
+void Log::appendEntry(Log::PageAllocEntry entry) {
+  entry.hdr.size = sizeof(PageAllocEntry) - sizeof(EntryHeader);
+  entry.hdr.type = PAGE_ALLOC_ENTRY;
+  appendEntry((uint8_t *) &entry, sizeof(PageAllocEntry));
 }
 
-void Log::appendEntry(Log::AllocEntry entry, const std::string& stream_key) {
+void Log::appendEntry(Log::PageAllocEntry entry, const std::string& stream_key) {
   assert(stream_key.size() < 0xffff);
-  entry.hdr.size = sizeof(AllocEntry) - sizeof(EntryHeader);
+  entry.hdr.size = sizeof(PageAllocEntry) - sizeof(EntryHeader);
   entry.hdr.size += stream_key.size();
-  entry.hdr.type = ALLOC_ENTRY;
-  size_t tmp_len = sizeof(AllocEntry) + stream_key.size();
+  entry.hdr.type = PAGE_ALLOC_ENTRY;
+  size_t tmp_len = sizeof(PageAllocEntry) + stream_key.size();
   uint8_t* tmp = (uint8_t *) malloc(tmp_len);
   assert(tmp);
-  memcpy(tmp, &entry, sizeof(AllocEntry));
-  memcpy(tmp + sizeof(AllocEntry), stream_key.c_str(), stream_key.size());
+  memcpy(tmp, &entry, sizeof(PageAllocEntry));
+  memcpy(tmp + sizeof(PageAllocEntry), stream_key.c_str(), stream_key.size());
   appendEntry(tmp, tmp_len);
   free(tmp);
+}
+
+void Log::appendEntry(Log::PageFinishEntry entry) {
+  entry.hdr.size = sizeof(PageFinishEntry) - sizeof(EntryHeader);
+  entry.hdr.type = PAGE_FINISH_ENTRY;
+  appendEntry((uint8_t *) &entry, sizeof(PageFinishEntry));
+}
+
+void Log::appendEntry(Log::PageFreeEntry entry) {
+  entry.hdr.size = sizeof(PageFreeEntry) - sizeof(EntryHeader);
+  entry.hdr.type = PAGE_FREE_ENTRY;
+  appendEntry((uint8_t *) &entry, sizeof(PageFreeEntry));
 }
 
 // FIXPAUL lock!
