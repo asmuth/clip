@@ -13,9 +13,11 @@
 namespace fnordmetric {
 namespace database {
 
-Cursor::Cursor(const StreamRef* stream_ref) :
+Cursor::Cursor(
+    StreamRef* stream_ref,
+    std::shared_ptr<PageManager> page_manager) :
     stream_ref_(stream_ref),
-    page_manager_(stream_ref_->backend_->page_manager_.get()),
+    page_manager_(page_manager),
     current_page_index_(0),
     current_page_offset_(0),
     current_page_(nullptr),
@@ -25,18 +27,22 @@ uint64_t Cursor::seekTo(uint64_t position) {
 
 }
 
-// FIXPAUL lock
 uint64_t Cursor::seekToFirst() {
-  // FIXPAUL mem barrier
-  size_t num_pages = stream_ref_->num_pages_.load();
-  if (num_pages > 0) {
-    current_page_ = stream_ref_->pages_.at(0);
-    current_page_ref_ = page_manager_->getPage(current_page_->page_);
-    current_page_offset_ = 0;
-    current_page_index_ = 0;
-    return getCurrentRow()->time;
-  } else {
+  /* try to seek to the first page */
+  stream_ref_->accessPages([this]
+      (const std::vector<std::shared_ptr<PageAlloc>>& stream_pages) {
+    if (stream_pages.size() > 0) {
+      this->current_page_ = stream_pages.at(0);
+      this->current_page_offset_ = 0;
+      this->current_page_index_ = 0;
+    }
+  });
+
+  if (current_page_.get() == nullptr) {
     return 0;
+  } else {
+    current_page_ref_ = page_manager_->getPage(current_page_->page_);
+    return getCurrentRow()->time;
   }
 }
 
@@ -57,19 +63,25 @@ bool Cursor::next() {
     return true;
   }
 
+  auto old_page_index = current_page_index_;
+
   /* try to advance to the next page */
-  size_t num_pages = stream_ref_->num_pages_.load();
+  stream_ref_->accessPages([this]
+      (const std::vector<std::shared_ptr<PageAlloc>>& stream_pages) {
+    if (this->current_page_index_ + 1 < stream_pages.size()) {
+      this->current_page_index_++;
+      this->current_page_ = stream_pages.at(current_page_index_);
+      this->current_page_offset_ = 0;
+    }
+  });
 
-  if (current_page_index_ + 1 >= num_pages) {
+  if (current_page_index_ == old_page_index) {
     return false;
+  } else {
+    current_page_ref_ = page_manager_->getPage(current_page_->page_);
+    // FIXPAUL mem barrier
+    return true;
   }
-
-  current_page_index_++;
-  current_page_ = stream_ref_->pages_.at(current_page_index_);
-  current_page_ref_ = page_manager_->getPage(current_page_->page_);
-  current_page_offset_ = 0;
-  // FIXPAUL mem barrier
-  return true;
 }
 
 const RowHeader* Cursor::getCurrentRow() {

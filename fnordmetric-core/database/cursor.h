@@ -30,7 +30,10 @@ struct RowHeader;
  */
 class Cursor {
 public:
-  explicit Cursor(const StreamRef* stream_ref);
+  explicit Cursor(
+      StreamRef* stream_ref,
+      std::shared_ptr<PageManager> page_manager);
+
   Cursor(const Cursor& copy) = delete;
   Cursor& operator=(const Cursor& copy) = delete;
 
@@ -87,12 +90,12 @@ public:
 
 protected:
   const RowHeader* getCurrentRow();
-  const StreamRef* stream_ref_;
+  StreamRef* stream_ref_;
   std::shared_ptr<const PageAlloc> current_page_;
   std::unique_ptr<PageManager::PageRef> current_page_ref_;
   uint64_t current_page_offset_;
   size_t current_page_index_;
-  PageManager* page_manager_;
+  std::shared_ptr<PageManager> page_manager_;
 };
 
 }

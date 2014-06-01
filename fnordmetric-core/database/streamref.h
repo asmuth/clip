@@ -12,6 +12,7 @@
 #include <string>
 #include <memory>
 #include <atomic>
+#include <mutex>
 #include "pagemanager.h"
 #include "../record.h"
 
@@ -46,7 +47,6 @@ struct __attribute__((__packed__)) RowHeader {
  */
 class StreamRef {
   friend class DatabaseTest;
-  friend class Cursor;
 public:
   explicit StreamRef(
       Database* backed,
@@ -78,12 +78,21 @@ public:
    */
   std::unique_ptr<Cursor> getCursor();
 
+  /**
+   * Access the StreamRefs internal page storage (do not call this method unless
+   * you know what you are doing)
+   */
+  void accessPages(std::function<void(
+      const std::vector<std::shared_ptr<PageAlloc>>&)> func);
+
 protected:
   uint64_t appendRow(const void* data, size_t size);
   // this is suboptimal as it will force us to do random memory accesses when
   // trying to binary search over the pages first row times
   std::vector<std::shared_ptr<PageAlloc>> pages_;
   std::atomic_size_t num_pages_;
+  std::mutex pages_mutex_;
+
   Database* backend_;
   const uint64_t stream_id_;
   const std::string stream_key_;

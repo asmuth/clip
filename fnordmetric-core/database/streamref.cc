@@ -111,7 +111,14 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
 }
 
 std::unique_ptr<Cursor> StreamRef::getCursor() {
-  return std::unique_ptr<Cursor>(new Cursor(this));
+  return std::unique_ptr<Cursor>(new Cursor(this, backend_->page_manager_));
+}
+
+void StreamRef::accessPages(std::function<void(
+    const std::vector<std::shared_ptr<PageAlloc>>&)> func) {
+  pages_mutex_.lock();
+  func(pages_);
+  pages_mutex_.unlock();
 }
 
 uint32_t RowHeader::computeChecksum() {
