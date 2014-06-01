@@ -23,6 +23,10 @@ struct RowHeader;
 /**
  * A storage cursor is a stateful iterator for a single stream. It can be used
  * to read rows from the stream.
+ *
+ * A cursor object is not threadsafe! If you want to use a cursor from multiple
+ * threads you must take care to synchronize access in such a way that no two
+ * threads call any method on the cursor object at the same time!
  */
 class Cursor {
 public:

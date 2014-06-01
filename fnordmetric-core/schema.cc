@@ -10,6 +10,8 @@
 
 namespace fnordmetric {
 
+Schema::Schema(const std::vector<Field>& fields) : fields_(fields) {}
+
 Field::Field(schema::kFieldType type, const std::string& name) :
       type_(type),
       name_(name) {}
@@ -21,12 +23,5 @@ const std::string& Field::getName() const {
 schema::kFieldType Field::getTypeId() const {
   return type_;
 }
-
-Schema::Schema(const std::vector<Field>& fields) : fields_(fields) {}
-
-const std::vector<Field>& Schema::getFields() const {
-  return fields_;
-}
-
 
 }

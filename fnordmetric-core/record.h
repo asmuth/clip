@@ -24,23 +24,69 @@ protected:
   size_t pos_;
 };
 
+/**
+ * A record writer is a stateful object that can be used to serialize one or
+ * more records of the same schame. It must be initialized with a schema and
+ * will allocate some memory to store a single record internally.
+ *
+ * The record data is build up by calling the respective setField method for
+ * each field that is defined by the schema. You must take care to call the
+ * correct setField method for each field, i.e. the one that matches the type
+ * that is defined in the schema.
+ *
+ * After all fields are set you can call toBytes to retrieve a pointer to the
+ * binary representation of the record. The returned pointer is valid until the
+ * RecordWriter object is destructed or setField() or reset() is called.
+ *
+ * To write multiple records with the same RecordWriter object, call the reset()
+ * method after each record.
+ *
+ * A record writer is not threadsafe! If you want to use it with multiple
+ * threads you must take care to synchronize access in such a way that no two
+ * threads call any method on the record writer object at the same time!
+ */
 class RecordWriter {
 public:
   explicit RecordWriter(const Schema& schema);
-  void appendField(double value);
-  void appendField(int64_t value);
-  const std::vector<uint8_t>& toBytes() const;
+  ~RecordWriter();
+
+  /**
+   * Set the n'th field (as defined by the schema) of the record to value. This
+   * method will assert if the type of the n'th field (as defined by the schema)
+   * is not a fnordmetric::IntegerField! Field indices are zero based.
+   */
+  void setIntegerField(size_t field_index, int64_t value);
+
+  /**
+   * Set the n'th field (as defined by the schema) of the record to value. This
+   * method will assert if the type of the n'th field (as defined by the schema)
+   * is not a fnordmetric::FloatField! Field indices are zero based.
+   */
+  void setFloatField(size_t field_index, double value);
 
   /**
    * Returns a pointer to the raw binary representation of this record. The
    * returned pointer is valid until the RecordWriter object is destructed or
-   * setField is called.
+   * setField() or reset() is called.
    */
   void toBytes(const void** data, size_t* size) const;
 
+  /**
+   * Reset the record writer so that a new record can be written.
+   */
+  void reset();
+
 protected:
-  std::vector<uint8_t> bytes_;
+  void* alloc_;
+  size_t alloc_size_;
+  size_t min_size_;
+  size_t last_byte_;
+  std::vector<size_t> field_offsets_;
+#ifndef NDEBUG
+  std::vector<size_t> field_types_;
+#endif
 };
+
 
 template<typename... T>
 class TypedRecordWriter : public RecordWriter {

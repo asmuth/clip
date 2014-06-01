@@ -6,40 +6,59 @@
  */
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 #include "record.h"
 
 namespace fnordmetric {
 
-void RecordWriter::appendField(double value) {
-  bytes_.emplace_back(schema::IEE754);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
-  bytes_.emplace_back(0);
+// FIXPAUL implement size hints so that varlen data can be pre-malloced here
+// instead of realloc()ing later
+RecordWriter::RecordWriter(const Schema& schema) : last_byte_(0) {
+  for (const auto& field : schema.fields_) {
+    field_offsets_.push_back(last_byte_);
+    last_byte_ += schema::kFieldTypesSize[field.getTypeId()];
+#ifndef NDEBUG
+    field_types_.push_back(field.getTypeId());
+#endif
+  }
+
+  min_size_ = last_byte_;
+  alloc_ = malloc(last_byte_);
+  alloc_size_ = last_byte_;
+  assert(alloc_); // FIXPAUL
+  memset(alloc_, 0, alloc_size_);
+
+  //printf("static record data size: %lu\n", last_byte_);
 }
 
-void RecordWriter::appendField(int64_t value) {
+RecordWriter::~RecordWriter() {
+  if (alloc_ != nullptr) {
+    free(alloc_);
+  }
+}
+
+void RecordWriter::setFloatField(size_t field_index,  double value) {
+  assert(field_index < field_offsets_.size());
+  void* dst = ((char *) alloc_) + field_offsets_[field_index];
+#ifndef NDEBUG
+  assert(field_types_[field_index] == schema::IEE754);
+#endif
+}
+
+// endianess
+void RecordWriter::setIntegerField(size_t field_index, int64_t value) {
   int64_t local_value = value;
-  uint8_t bytes[8];
-  memcpy(bytes, &local_value, 8);
-  bytes_.emplace_back(schema::INT64);
-  bytes_.emplace_back(bytes[0]);
-  bytes_.emplace_back(bytes[1]);
-  bytes_.emplace_back(bytes[2]);
-  bytes_.emplace_back(bytes[3]);
-  bytes_.emplace_back(bytes[4]);
-  bytes_.emplace_back(bytes[5]);
-  bytes_.emplace_back(bytes[6]);
-  bytes_.emplace_back(bytes[7]);
+  assert(field_index < field_offsets_.size());
+  void* dst = ((char *) alloc_) + field_offsets_[field_index];
+#ifndef NDEBUG
+  assert(field_types_[field_index] == schema::INT64);
+#endif
+  //memcpy(dst, &local_value, 8);
 }
 
 void RecordWriter::toBytes(const void** data, size_t* size) const {
-  *data = bytes_.data();
-  *size = bytes_.size();
+  *data = alloc_;
+  *size = alloc_size_;
 }
 
 RecordReader::RecordReader(const uint8_t* data, size_t len) :

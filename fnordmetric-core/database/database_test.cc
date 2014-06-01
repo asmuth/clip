@@ -120,10 +120,12 @@ public:
     //printf("TEST: File backed database insert, reopen, read\n");
     uint32_t stream_id;
     std::vector<uint64_t> insert_times;
-    std::vector<uint8_t> data = {
-        0x01, 0x02, 0x03, 0x04,
-        0x05, 0x06, 0x07, 0x08
-    };
+    std::vector<Field> fields = {
+        fnordmetric::IntegerField("sequence_num"),
+        fnordmetric::IntegerField("test1")};
+    Schema schema(fields);
+
+    int rows_written = 0;
 
     for (int j = 0; j < 50; ++j) {
       auto database = fnordmetric::database::Database::openFile(
@@ -137,7 +139,10 @@ public:
       }
       assert(database->max_stream_id_ == stream_id);
       for (int i = (j + 1) * 1000; i > 0; i--) {
-        insert_times.push_back(stream->appendRow(data.data(), data.size()));
+        RecordWriter record(schema);
+        record.setIntegerField(0, ++rows_written);
+        record.setIntegerField(1, 1337);
+        insert_times.push_back(stream->appendRow(record));
       }
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);

@@ -41,6 +41,8 @@ struct __attribute__((__packed__)) RowHeader {
  * A stream descriptor is a handle to a single stream. It can be used to
  * append rows to the stream and to receive a cursor for reading from the
  * stream.
+ *
+ * The appendRow and getCursor methods on the descriptor are threadsafe.
  */
 class StreamRef {
   friend class DatabaseTest;
@@ -63,12 +65,16 @@ public:
   /**
    * Append a new row to the very end of the opened stream. Returns the UTC
    * millisecond timestamp at which the row was inserted.
+   *
+   * This is threadsafe.
    */
   uint64_t appendRow(const RecordWriter& row);
 
   /**
    * Return a cursor to this stream for reading. The initial position of the
    * cursor is undefined.
+   *
+   * This is threadsafe
    */
   std::unique_ptr<Cursor> getCursor();
 

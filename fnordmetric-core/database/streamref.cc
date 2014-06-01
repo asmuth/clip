@@ -38,17 +38,18 @@ uint64_t StreamRef::appendRow(const RecordWriter& record) {
   const void* data;
   size_t size;
   record.toBytes(&data, &size);
-  appendRow(data, size);
+  return appendRow(data, size);
 }
 
 // FIXPAUL hold append lock
 uint64_t StreamRef::appendRow(const void* data, size_t size) {
   uint64_t time = WallClock::getUnixMillis();
   size_t row_size = size + sizeof(RowHeader);
+  assert(size > 0);
 
   if (num_pages_ == 0) {
     // FIXPAUL estimate size
-    auto page = backend_->page_manager_->allocPage(size * 100);
+    auto page = backend_->page_manager_->allocPage(row_size * 100);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
     Log::PageAllocEntry log_entry;
@@ -63,9 +64,9 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
     num_pages_++;
   }
 
-  if (pages_.back()->used_ + row_size > pages_.back()->page_.size) {
+  if (pages_.back()->used_ + row_size >= pages_.back()->page_.size) {
     // FIXPAUL estimate size
-    auto page = backend_->page_manager_->allocPage(size * 100);
+    auto page = backend_->page_manager_->allocPage(row_size * 100);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
     auto old_page = pages_.back();

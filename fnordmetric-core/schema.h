@@ -12,14 +12,51 @@
 #include <vector>
 
 namespace fnordmetric {
+class Field;
 
+/**
+ * Define the Field types
+ */
 namespace schema {
 enum kFieldType {
-  INT64  = 'I',
-  IEE754 = 'F',
-  STRING = 'S'
+  INT64  = 0,
+  IEE754 = 1,
+  STRING = 2
 };
+
+static const char kFieldTypesHuman[] = {
+  'I', /* Integer */
+  'F', /* Float */
+  'S'  /* String */
+};
+
+static const size_t kFieldTypesSize[] = {
+  8, /* Integer */
+  8, /* Float */
+  8  /* String */
+};
+
 }
+
+/**
+ * A schema is an ordered flat list of fields. Each field consists of a type and
+ * a name. The type can be one of Integer, Float, String and the name must be a
+ * string. Nested fields are not supported. Schemas are immutable.
+ */
+class Schema {
+public:
+
+  /**
+   * Initialize a new schema with the specified fields
+   */
+  explicit Schema(const std::vector<Field>& fields);
+
+  /**
+   * The field list of this schema
+   */
+  const std::vector<Field> fields_;
+
+};
 
 class Field {
 public:
@@ -29,14 +66,6 @@ protected:
   Field(schema::kFieldType type, const std::string& name);
   schema::kFieldType type_; // FIXPAUL REMOVE ME
   std::string name_;
-};
-
-class Schema {
-public:
-  explicit Schema(const std::vector<Field>& fields);
-  const std::vector<Field>& getFields() const;
-protected:
-  const std::vector<Field> fields_;
 };
 
 template <typename... T>
