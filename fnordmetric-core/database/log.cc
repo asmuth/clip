@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <inttypes.h>
 #include <algorithm>
 #include "log.h"
