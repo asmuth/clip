@@ -12,7 +12,9 @@
 #include <assert.h>
 #include <string>
 #include <memory>
+#include <mutex>
 #include <vector>
+#include <atomic>
 
 namespace fnordmetric {
 namespace database {
@@ -95,19 +97,25 @@ protected:
    * tuple is (size, offset)
    */
   std::vector<std::pair<uint64_t, uint64_t>> freelist_;
+
+  std::mutex mutex_;
 };
 
 class MmapPageManager : public PageManager {
   friend class DatabaseTest;
 protected:
-  struct MmappedFile {
-    void* data;
-    const size_t size;
-    const int fd;
-    size_t refs;
+  class MmappedFile {
+  public:
     MmappedFile(void* __data, const size_t __size, const int __fd);
+    MmappedFile(const MmappedFile& copy) = delete;
+    MmappedFile& operator=(const MmappedFile& copy) = delete;
+    void* const data;
+    const size_t size;
     void incrRefs();
     void decrRefs();
+  protected:
+    const int fd;
+    std::atomic_int refs;
   };
 
 public:
@@ -166,6 +174,7 @@ protected:
   int fd_;
   size_t file_size_;
   MmappedFile* current_mapping_;
+  std::mutex mmap_mutex_;
 };
 
 

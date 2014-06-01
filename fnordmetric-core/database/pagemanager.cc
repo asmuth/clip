@@ -27,7 +27,6 @@ PageManager::PageManager(const PageManager&& move) :
   block_size_(move.block_size_),
   freelist_(std::move(move.freelist_)) {}
 
-// FIXPAUL hold lock!
 PageManager::Page PageManager::allocPage(size_t min_size) {
   PageManager::Page page;
 
@@ -35,19 +34,22 @@ PageManager::Page PageManager::allocPage(size_t min_size) {
   uint64_t min_size_aligned =
       ((min_size + block_size_ - 1) / block_size_) * block_size_;
 
+  mutex_.lock();
   if (!findFreePage(min_size_aligned, &page)) {
     page.offset = end_pos_;
     page.size   = min_size_aligned;
     end_pos_   += page.size;
   }
+  mutex_.unlock();
 
   return page;
 }
 
 // FIXPAUL: proper freelist implementation
-// FIXPAUL hold lock!
 void PageManager::freePage(const PageManager::Page& page) {
+  mutex_.lock();
   freelist_.emplace_back(std::make_pair(page.size, page.offset));
+  mutex_.unlock();
 }
 
 // FIXPAUL: proper freelist implementation
@@ -108,19 +110,21 @@ MmapPageManager::~MmapPageManager() {
   close(fd_);
 }
 
-// FIXPAUL hold lock!
 std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
     const PageManager::Page& page) {
   uint64_t last_byte = page.offset + page.size;
-  // FIXPAUL: get mutex
+
+  mmap_mutex_.lock();
 
   if (last_byte > file_size_) {
     ftruncate(fd_, last_byte); // FIXPAUL truncate in chunks + error checking
     file_size_ = last_byte;
   }
 
-  return std::unique_ptr<PageManager::PageRef>(
-      new MmappedPageRef(page, getMmapedFile(last_byte)));
+  auto page_ref = new MmappedPageRef(page, getMmapedFile(last_byte));
+  mmap_mutex_.unlock();
+
+  return std::unique_ptr<PageManager::PageRef>(page_ref);
 }
 
 MmapPageManager::MmappedFile* MmapPageManager::getMmapedFile(uint64_t last_byte) {
@@ -168,14 +172,13 @@ MmapPageManager::MmappedFile::MmappedFile(
   fd(__fd),
   refs(1) {}
 
-// FIXPAUL: locking!
 void MmapPageManager::MmappedFile::incrRefs() {
-  ++refs;
+  refs++;
 }
 
-// FIXPAUL: locking!
 void MmapPageManager::MmappedFile::decrRefs() {
-  if (--refs == 0) {
+  if (refs.fetch_sub(1) == 1) {
+    assert(refs.load() == 0);
     munmap(data, size);
     close(fd);
     delete this;
