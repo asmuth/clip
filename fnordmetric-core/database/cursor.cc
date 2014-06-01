@@ -59,7 +59,7 @@ bool Cursor::next() {
 
   if (new_offset < current_page_->used_.load()) {
     current_page_offset_ = new_offset;
-    // FIXPAUL mem barrier if tail page
+    // FIXPAUL mem barrier if tail page / still mutable
     return true;
   }
 

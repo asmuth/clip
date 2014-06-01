@@ -49,6 +49,9 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
   size_t row_size = size + sizeof(RowHeader);
   assert(size > 0);
 
+  append_mutex_.lock();
+  pages_mutex_.lock();
+
   if (num_pages_ == 0) {
     // FIXPAUL estimate size
     auto page = backend_->page_manager_->allocPage(row_size * 100);
@@ -62,7 +65,6 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
     backend_->log_->appendEntry(log_entry, stream_key_);
 
     pages_.push_back(std::move(alloc));
-    // FIXPAUL mem barrier
     num_pages_++;
   }
 
@@ -93,11 +95,13 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
     }
 
     pages_.push_back(std::move(alloc));
-    // FIXPAUL mem barrier
     num_pages_++;
   }
 
   auto page = pages_.back();
+
+  pages_mutex_.unlock();
+
   auto mmaped = backend_->page_manager_->getPage(page->page_);
   RowHeader* row = mmaped->structAt<RowHeader>(page->used_.load());
   row->time = time;
@@ -106,6 +110,8 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
   row->checksum = row->computeChecksum();
   // FIXPAUL mem barrier
   page->used_ += row_size;
+
+  append_mutex_.unlock();
 
   return time;
 }

@@ -92,6 +92,7 @@ protected:
   std::vector<std::shared_ptr<PageAlloc>> pages_;
   std::atomic_size_t num_pages_;
   std::mutex pages_mutex_;
+  std::mutex append_mutex_;
 
   Database* backend_;
   const uint64_t stream_id_;
