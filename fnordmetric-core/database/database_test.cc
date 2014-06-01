@@ -122,7 +122,7 @@ public:
   void testOpenFile() {
     //printf("TEST: File backed database insert, reopen, read\n");
     uint32_t stream_id;
-    std::vector<uint64_t> insert_times;
+    std::vector<fnordmetric::database::StreamPosition> insert_times;
     std::vector<Field> fields = {
         fnordmetric::IntegerField("sequence_num"),
         fnordmetric::IntegerField("test1"),
@@ -151,16 +151,21 @@ public:
         record_writer.setIntegerField(0, ++rows_written);
         record_writer.setIntegerField(1, 1337);
         record_writer.setStringField(2, "fnordbar", 8);
-        insert_times.push_back(stream->appendRow(record_writer));
+        auto new_row_pos = stream->appendRow(record_writer);
+        if (insert_times.size() > 0) {
+          assert(
+              new_row_pos.logical_offset > insert_times.back().logical_offset);
+        }
+        insert_times.push_back(new_row_pos);
         record_writer.reset();
       }
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);
-
       RecordReader record_reader(schema);
       for (int i = 0; i < insert_times.size() - 1; ++i) {
         auto row = cursor->getCurrentRow();
-        assert(row->time == insert_times[i]);
+        assert(cursor->getCurrentPosition() == insert_times[i]);
+        assert(row->time == insert_times[i].unix_millis);
         assert(cursor->next());
         assert(record_reader.getIntegerField(row->data, 0) == i+1);
         assert(record_reader.getIntegerField(row->data, 1) == 1337);

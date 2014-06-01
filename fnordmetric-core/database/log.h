@@ -52,6 +52,7 @@ public:
     uint64_t page_offset;
     uint32_t page_size;
     uint64_t page_first_row_time;
+    uint64_t page_logical_offset;
     char stream_key[];
   };
 

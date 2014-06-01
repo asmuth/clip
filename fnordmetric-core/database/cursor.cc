@@ -23,11 +23,12 @@ Cursor::Cursor(
     current_page_(nullptr),
     current_page_ref_(nullptr) {}
 
-uint64_t Cursor::seekTo(uint64_t position) {
-
+StreamPosition Cursor::seekToTime(uint64_t position) {
+  // FIXPAUL
+  return getCurrentPosition();
 }
 
-uint64_t Cursor::seekToFirst() {
+StreamPosition Cursor::seekToFirst() {
   /* try to seek to the first page */
   stream_ref_->accessPages([this]
       (const std::vector<std::shared_ptr<PageAlloc>>& stream_pages) {
@@ -39,14 +40,21 @@ uint64_t Cursor::seekToFirst() {
   });
 
   if (current_page_.get() == nullptr) {
-    return 0;
+    StreamPosition pos;
+    pos.unix_millis = 0;
+    pos.logical_offset = 0;
+    pos.next_offset = 0;
+    return pos;
   } else {
     current_page_ref_ = page_manager_->getPage(current_page_->page_);
-    return getCurrentRow()->time;
+    return getCurrentPosition();
   }
 }
 
-uint64_t Cursor::seekToLast() {}
+StreamPosition Cursor::seekToLast() {
+  // FIXPAUL
+  return getCurrentPosition();
+}
 
 bool Cursor::next() {
   if (current_page_.get() == nullptr) {
@@ -92,6 +100,21 @@ const RowHeader* Cursor::getCurrentRow() const {
     // FIXPAUL verify checksum
     return row;
   }
+}
+
+StreamPosition Cursor::getCurrentPosition() const {
+  StreamPosition pos;
+  if (current_page_.get() == nullptr) {
+    pos.unix_millis = 0;
+    pos.logical_offset = 0;
+    pos.next_offset = 0;
+  } else {
+    auto row = current_page_ref_->structAt<RowHeader>(current_page_offset_);
+    pos.unix_millis = row->time;
+    pos.logical_offset = current_page_->logical_offset_ + current_page_offset_;
+    pos.next_offset = pos.logical_offset + row->size + sizeof(RowHeader);
+  }
+  return pos;
 }
 
 }

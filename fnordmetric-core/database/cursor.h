@@ -19,6 +19,7 @@ namespace database {
 class StreamRef;
 struct PageAlloc;
 struct RowHeader;
+struct StreamPosition;
 
 /**
  * A storage cursor is a stateful iterator for a single stream. It can be used
@@ -41,26 +42,31 @@ public:
    * Seek to the first row in the stream with an insert time later or equal to
    * position. Position must be a UTC millisecond timestamp.
    *
-   * Returns the UTC millisecond timestamp of the row the cursor is pointing to
-   * after the seek operation.
+   * Returns the position of the cursor after the seek operation.
    */
-  uint64_t seekTo(uint64_t position);
+  StreamPosition seekToTime(uint64_t unix_millis);
+
+  /**
+   * Seek to the first row in the stream with a logical offset larger than or
+   * equal to offset.
+   *
+   * Returns the position of the cursor after the seek operation.
+   */
+  StreamPosition seekToOffset(uint64_t unix_millis);
 
   /**
    * Seek to the first row in the stream.
    *
-   * Returns the UTC millisecond timestamp of the row the cursor is pointing to
-   * after the seek operation.
+   * Returns the position of the cursor after the seek operation.
    */
-  uint64_t seekToFirst();
+  StreamPosition seekToFirst();
 
   /**
    * Seek to the last row in the stream.
    *
-   * Returns the UTC millisecond timestamp of the row the cursor is pointing to
-   * after the seek operation.
+   * Returns the position of the cursor after the seek operation.
    */
-  uint64_t seekToLast();
+  StreamPosition seekToLast();
 
   /**
    * Try to advance the cursor by one row. Returns true if the cursor was
@@ -76,6 +82,11 @@ public:
    * or next method is called on the cursor!
    */
   const RowHeader* getCurrentRow() const;
+
+  /**
+   * Get the current stream position
+   */
+  StreamPosition getCurrentPosition() const;
 
 protected:
   StreamRef* stream_ref_;

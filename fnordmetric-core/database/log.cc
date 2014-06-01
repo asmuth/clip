@@ -109,8 +109,10 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
       PageManager::Page page;
       page.offset = alloc_entry->page_offset;
       page.size = alloc_entry->page_size;
-
-      auto alloc = new PageAlloc(page, alloc_entry->page_first_row_time);
+      auto alloc = new PageAlloc(
+          page,
+          alloc_entry->page_first_row_time,
+          alloc_entry->page_logical_offset);
       stream_state->pages_.push_back(std::shared_ptr<PageAlloc>(alloc));
       setLastUsedByte(page.offset + page.size);
       break;

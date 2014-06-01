@@ -23,11 +23,22 @@ class Database;
 class Cursor;
 
 struct PageAlloc {
-  PageAlloc(const PageManager::Page& page, uint64_t time);
+  PageAlloc(
+      const PageManager::Page& page,
+      uint64_t time,
+      uint64_t logical_offset);
   const PageManager::Page page_;
   std::atomic_size_t used_; /* number of used bytes in the page */
   std::atomic_size_t num_rows_; /* number of rows in the page */
   const uint64_t time_; /* time of the first row in the page */
+  const uint64_t logical_offset_; /* logical offset of the page */
+};
+
+struct StreamPosition {
+  uint64_t unix_millis;
+  uint64_t logical_offset;
+  uint64_t next_offset;
+  bool operator==(const StreamPosition& other);
 };
 
 struct __attribute__((__packed__)) RowHeader {
@@ -67,9 +78,9 @@ public:
    * Append a new row to the very end of the opened stream. Returns the UTC
    * millisecond timestamp at which the row was inserted.
    *
-   * This is threadsafe.
+   * This method is threadsafe.
    */
-  uint64_t appendRow(const RecordWriter& row);
+  StreamPosition appendRow(const RecordWriter& row);
 
   /**
    * Return a cursor to this stream for reading. The initial position of the
@@ -88,7 +99,7 @@ protected:
   void accessPages(std::function<void(
       const std::vector<std::shared_ptr<PageAlloc>>&)> func);
 
-  uint64_t appendRow(const void* data, size_t size);
+  StreamPosition appendRow(const void* data, size_t size);
   uint64_t estimatePageSize(size_t last_page_avg_size, size_t row_size) const;
 
   // this is suboptimal as it will force us to do random memory accesses when
