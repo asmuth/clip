@@ -142,6 +142,22 @@ public:
   static const uint64_t kFileVersion = 1;
 
   /**
+   * Target page size in number of rows. Default: 16384 rows
+   */
+  static size_t kTargetRowsPerPage;
+
+  /**
+   * Preferred maximum page size (soft limit). Default: 4MB
+   */
+  static size_t kMaxPageSizeSoft;
+
+  /**
+   * Maximum allowed page size (hard limit). Note that now single row may be
+   * larger than the maximum page size. Default: 32MB
+   */
+  static size_t kMaxPageSizeHard;
+
+  /**
    * Instantiate a new file backend with a path to the file.
    */
   static std::unique_ptr<Database> openFile(
@@ -153,17 +169,6 @@ public:
    * This method is threadsafe.
    */
   virtual std::shared_ptr<StreamRef> openStream(const std::string& key);
-
-  /**
-   * Set the target page size in number of rows. Default: 1024
-   */
-  void setTargetRowsPerPage(size_t bytes);
-
-  /**
-   * Set the maximum allowed page size. Note that now single row may be larger
-   * than the default page size. Default: 32Mb
-   */
-  void setMaxPageSize(size_t bytes);
 
 protected:
   Database(

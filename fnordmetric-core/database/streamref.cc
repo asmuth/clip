@@ -52,8 +52,8 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
   pages_mutex_.lock();
 
   if (num_pages_ == 0) {
-    // FIXPAUL estimate size
-    auto page = backend_->page_manager_->allocPage(row_size * 100);
+    auto estimated_page_size = estimatePageSize(row_size, row_size);
+    auto page = backend_->page_manager_->allocPage(estimated_page_size);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
     Log::PageAllocEntry log_entry;
@@ -68,8 +68,10 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
   }
 
   if (pages_.back()->used_ + row_size >= pages_.back()->page_.size) {
-    // FIXPAUL estimate size
-    auto page = backend_->page_manager_->allocPage(row_size * 100);
+    assert(pages_.back()->num_rows_.load() > 0);
+    auto last_page_avg_size = pages_.back()->used_ / pages_.back()->num_rows_;
+    auto estimated_page_size = estimatePageSize(last_page_avg_size, row_size);
+    auto page = backend_->page_manager_->allocPage(estimated_page_size);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
     auto old_page = pages_.back();
@@ -109,6 +111,7 @@ uint64_t StreamRef::appendRow(const void* data, size_t size) {
   row->checksum = row->computeChecksum();
   // FIXPAUL mem barrier
   page->used_ += row_size;
+  page->num_rows_++;
 
   append_mutex_.unlock();
 
@@ -126,6 +129,14 @@ void StreamRef::accessPages(std::function<void(
   pages_mutex_.unlock();
 }
 
+uint64_t StreamRef::estimatePageSize(
+    size_t last_page_avg_size,
+    size_t row_size) const {
+  assert(row_size < Database::kMaxPageSizeHard); // FIXPAUL
+  size_t target = last_page_avg_size * Database::kTargetRowsPerPage;
+  return std::max(std::min(target, Database::kMaxPageSizeSoft), row_size * 2);
+}
+
 uint32_t RowHeader::computeChecksum() {
   FNV<uint32_t> fnv;
   return fnv.hash(
@@ -136,7 +147,8 @@ uint32_t RowHeader::computeChecksum() {
 PageAlloc::PageAlloc(const PageManager::Page& page, uint64_t time) :
     page_(page),
     time_(time),
-    used_(0) {}
+    used_(0),
+    num_rows_(0) { }
 
 }
 }

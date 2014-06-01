@@ -22,6 +22,10 @@
 namespace fnordmetric {
 namespace database {
 
+size_t Database::kTargetRowsPerPage = 16384;
+size_t Database::kMaxPageSizeSoft = 4194304;
+size_t Database::kMaxPageSizeHard = 33554432;
+
 Database::Database(
     std::shared_ptr<Log> log,
     std::shared_ptr<PageManager> page_manager,

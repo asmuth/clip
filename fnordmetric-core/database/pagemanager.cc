@@ -117,7 +117,7 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
   mmap_mutex_.lock();
 
   if (last_byte > file_size_) {
-    ftruncate(fd_, last_byte); // FIXPAUL truncate in chunks + error checking
+    ftruncate(fd_, last_byte); // FIXPAUL check errors
     file_size_ = last_byte;
   }
 

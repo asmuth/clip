@@ -170,6 +170,7 @@ void LogReader::countPageUsedBytes(std::shared_ptr<PageAlloc> page) {
 
     offset += row_size;
     page->used_ = offset;
+    page->num_rows_++;
   }
 }
 

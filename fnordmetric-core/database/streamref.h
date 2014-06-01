@@ -26,6 +26,7 @@ struct PageAlloc {
   PageAlloc(const PageManager::Page& page, uint64_t time);
   const PageManager::Page page_;
   std::atomic_size_t used_; /* number of used bytes in the page */
+  std::atomic_size_t num_rows_; /* number of rows in the page */
   const uint64_t time_; /* time of the first row in the page */
 };
 
@@ -86,6 +87,8 @@ public:
 
 protected:
   uint64_t appendRow(const void* data, size_t size);
+  uint64_t estimatePageSize(size_t last_page_avg_size, size_t row_size) const;
+
   // this is suboptimal as it will force us to do random memory accesses when
   // trying to binary search over the pages first row times
   std::vector<std::shared_ptr<PageAlloc>> pages_;
