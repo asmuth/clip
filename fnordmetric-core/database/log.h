@@ -68,11 +68,23 @@ public:
     uint32_t page_size;
   };
 
+  struct __attribute__((__packed__)) NextPageEntry {
+    EntryHeader hdr;
+    uint64_t page_offset;
+    uint32_t page_size;
+  };
+
   enum kEntryTypes {
     PAGE_ALLOC_ENTRY = 0x01,
     PAGE_FINISH_ENTRY = 0x02,
-    PAGE_FREE_ENTRY = 0x03
+    PAGE_FREE_ENTRY = 0x03,
+    NEXT_PAGE_ENTRY = 0x04
   };
+
+  /**
+   * Min. log page size
+   */
+  static const uint64_t kMinLogPageSize;
 
   explicit Log(
       const LogSnapshot& snapshot,

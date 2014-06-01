@@ -75,7 +75,7 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
   if (fd_len == 0) {
     auto header_page = page_manager->allocPage(kMinReservedHeaderSize);
     auto header_mmap = page_manager->getPage(header_page);
-    auto first_log_page = page_manager->allocPage(kMinLogPageSize);
+    auto first_log_page = page_manager->allocPage(Log::kMinLogPageSize);
     auto file_header = header_mmap->structAt<FileHeader>(0);
 
     file_header->magic = kFileMagicBytes;

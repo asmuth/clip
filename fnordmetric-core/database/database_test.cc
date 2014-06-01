@@ -114,6 +114,7 @@ public:
   }
 
   void testOpenFile() {
+    //printf("TEST: File backed database insert, reopen, read\n");
     uint32_t stream_id;
     std::vector<uint64_t> insert_times;
     std::vector<uint8_t> data = {
@@ -121,7 +122,7 @@ public:
         0x05, 0x06, 0x07, 0x08
     };
 
-    for (int j = 0; j < 5; ++j) {
+    for (int j = 0; j < 50; ++j) {
       auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile");
       assert(database.get() != nullptr);
@@ -132,7 +133,7 @@ public:
         assert(stream_id == stream->stream_id_);
       }
       assert(database->max_stream_id_ == stream_id);
-      for (int i = 1000; i > 0; i--) {
+      for (int i = (j + 1) * 1000; i > 0; i--) {
         insert_times.push_back(stream->appendRow(data));
       }
       auto cursor = stream->getCursor();

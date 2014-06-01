@@ -89,7 +89,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
 
   auto page = pages_.back();
   auto mmaped = backend_->page_manager_->getPage(page->page_);
-  RowHeader* row = mmaped->structAt<RowHeader>(page->used_);
+  RowHeader* row = mmaped->structAt<RowHeader>(page->used_.load());
   row->time = time;
   row->size = data.size();
   memcpy(row->data, data.data(), row->size);

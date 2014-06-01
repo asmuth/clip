@@ -16,13 +16,11 @@ namespace database {
 
 PageManager::PageManager(size_t block_size) :
   end_pos_(0),
-  block_size_(block_size) { printf("new pagemanager @ 0\n"); }
+  block_size_(block_size) {}
 
 PageManager::PageManager(size_t block_size, const LogSnapshot& log_snapshot) :
   block_size_(block_size),
-  end_pos_(log_snapshot.last_used_byte) {
-    printf("new pagemanager with end pos: %llu\n", end_pos_);
-  }
+  end_pos_(log_snapshot.last_used_byte) {}
 
 PageManager::PageManager(const PageManager&& move) :
   end_pos_(move.end_pos_),
@@ -40,12 +38,9 @@ PageManager::Page PageManager::allocPage(size_t min_size) {
   if (!findFreePage(min_size_aligned, &page)) {
     page.offset = end_pos_;
     page.size   = min_size_aligned;
-    //page.used   = 0;
     end_pos_   += page.size;
   }
 
-
-  printf("alloc page @ %llu\n", page.offset);
   return page;
 }
 

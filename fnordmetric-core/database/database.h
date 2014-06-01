@@ -97,11 +97,6 @@ public:
   static const uint64_t kMinReservedHeaderSize = 512;
 
   /**
-   * Min. log page size
-   */
-  static const uint64_t kMinLogPageSize = 512;
-
-  /**
    * File magic bytes
    */
   static const uint64_t kFileMagicBytes = 0x1717171717171717;

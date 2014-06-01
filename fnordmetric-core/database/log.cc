@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <algorithm>
 #include "log.h"
 #include "../fnv.h"
 
@@ -32,6 +33,7 @@ void LogReader::import() {
     size_t offset = 0;
 
     destination_->current_log_page = current_page_;
+    destination_->current_log_page_offset = offset;
 
     while (current_page_.offset == mmapped_offset) {
       running = importNextEntry(mmapped.get(), current_page_.size, &offset);
@@ -74,8 +76,8 @@ bool LogReader::importNextEntry(
     return false;
   }
 
-  importLogEntry(entry_header);
   *offset += entry_size;
+  importLogEntry(entry_header);
   return true;
 }
 
@@ -130,6 +132,14 @@ void LogReader::importLogEntry(const Log::EntryHeader* entry) {
       break;
     }
 
+    case Log::NEXT_PAGE_ENTRY: {
+      auto next_entry = (Log::NextPageEntry *) entry;
+      current_page_.offset = next_entry->page_offset;
+      current_page_.size = next_entry->page_size;
+      setLastUsedByte(current_page_.offset + current_page_.size);
+      break;
+    }
+
     default:
       fprintf(stderr, "warning: invalid log entry type %i\n", entry->type);
 
@@ -141,11 +151,9 @@ void LogReader::countPageUsedBytes(std::shared_ptr<PageAlloc> page) {
   size_t max = page->page_.size - sizeof(Log::EntryHeader) - 1;
   auto mmapped = page_manager_->getPage(page->page_);
 
-  printf("count used btes @ %llu\n", page->page_.offset);
   while (offset < max) {
     auto row = mmapped->structAt<RowHeader>(offset);
     auto row_size = sizeof(RowHeader) + row->size;
-    //printf("probe row @ %llu.%llu -- size %llu\n", page->page_.offset, offset, row->time);
 
     if (row->size == 0 || row->time == 0) {
       return;
@@ -170,14 +178,14 @@ void LogReader::setLastUsedByte(uint64_t index) {
   }
 }
 
+const uint64_t Log::kMinLogPageSize = 512;
+
 Log::Log(
     const LogSnapshot& snapshot,
     std::shared_ptr<PageManager> page_manager) :
     page_manager_(page_manager),
     current_page_(snapshot.current_log_page),
-    current_page_offset_(snapshot.current_log_page_offset) {
-      printf("re-open log @ %llu\n", current_page_offset_);
-      }
+    current_page_offset_(snapshot.current_log_page_offset) {}
 
 Log::Log(
     const PageManager::Page& first_log_page,
@@ -220,17 +228,41 @@ void Log::appendEntry(Log::PageFreeEntry entry) {
 
 // FIXPAUL lock!
 void Log::appendEntry(uint8_t* data, size_t length) {
-  auto entry = (Log::EntryHeader*) data;
-  entry->checksum = entry->computeChecksum();
+  uint64_t reserved_length = length + sizeof(Log::NextPageEntry);
 
-  if (current_page_offset_ + length >= current_page_.size) {
-    // FIXPAUL
+  /* allocate a new page if the current one is full */
+  if (current_page_offset_ + reserved_length >= current_page_.size) {
+    assert(current_page_offset_ + sizeof(Log::NextPageEntry) <=
+        current_page_.size);
+
+    auto next_page_size = std::max(kMinLogPageSize, reserved_length);
+    auto next_page = page_manager_->allocPage(next_page_size);
+
+    Log::NextPageEntry log_entry;
+    log_entry.page_offset = next_page.offset;
+    log_entry.page_size = next_page.size;
+    log_entry.hdr.size = sizeof(Log::NextPageEntry) - sizeof(Log::EntryHeader);
+    log_entry.hdr.type = NEXT_PAGE_ENTRY;
+    log_entry.hdr.checksum = log_entry.hdr.computeChecksum();
+
+    auto mmaped = page_manager_->getPage(current_page_);
+    auto dst = mmaped->structAt<char>(current_page_offset_);
+    memcpy(dst, (char *) &log_entry, sizeof(Log::NextPageEntry));
+    current_page_offset_ += sizeof(Log::NextPageEntry);
+
+    current_page_ = next_page;
+    current_page_offset_ = 0;
   }
 
+  /* memcpy the entry into the current page */
+  auto entry = (Log::EntryHeader*) data;
+  entry->checksum = entry->computeChecksum();
   auto mmaped = page_manager_->getPage(current_page_);
   auto dst = mmaped->structAt<char>(current_page_offset_);
   memcpy(dst, data, length);
   current_page_offset_ += length;
+
+  // FIXPAUL msync
 }
 
 uint32_t Log::EntryHeader::computeChecksum() {
