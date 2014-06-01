@@ -13,6 +13,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <mutex>
 #include <unordered_map>
 #include "streamref.h"
 
@@ -105,7 +106,7 @@ public:
 
 protected:
   void appendEntry(uint8_t* data, size_t length);
-
+  std::mutex append_mutex_;
   std::shared_ptr<PageManager> page_manager_;
   PageManager::Page current_page_;
   uint64_t current_page_offset_;

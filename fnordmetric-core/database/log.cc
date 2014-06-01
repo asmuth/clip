@@ -227,9 +227,10 @@ void Log::appendEntry(Log::PageFreeEntry entry) {
   appendEntry((uint8_t *) &entry, sizeof(PageFreeEntry));
 }
 
-// FIXPAUL lock!
 void Log::appendEntry(uint8_t* data, size_t length) {
   uint64_t reserved_length = length + sizeof(Log::NextPageEntry);
+
+  append_mutex_.lock();
 
   /* allocate a new page if the current one is full */
   if (current_page_offset_ + reserved_length >= current_page_.size) {
@@ -264,6 +265,7 @@ void Log::appendEntry(uint8_t* data, size_t length) {
   current_page_offset_ += length;
 
   // FIXPAUL msync
+  append_mutex_.unlock();
 }
 
 uint32_t Log::EntryHeader::computeChecksum() {
