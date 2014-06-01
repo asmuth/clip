@@ -52,8 +52,28 @@ StreamPosition Cursor::seekToFirst() {
 }
 
 StreamPosition Cursor::seekToLast() {
-  // FIXPAUL
-  return getCurrentPosition();
+  /* try to seek to the last page */
+  stream_ref_->accessPages([this]
+      (const std::vector<std::shared_ptr<PageAlloc>>& stream_pages) {
+    if (stream_pages.size() > 0) {
+      this->current_page_ = stream_pages.back();
+      this->current_page_offset_ = 0;
+      this->current_page_index_ = 0;
+    }
+  });
+
+  if (current_page_.get() == nullptr) {
+    StreamPosition pos;
+    pos.unix_millis = 0;
+    pos.logical_offset = 0;
+    pos.next_offset = 0;
+    return pos;
+  } else {
+    /* seek to the last row in the page */
+    current_page_ref_ = page_manager_->getPage(current_page_->page_);
+    while(next()) {}
+    return getCurrentPosition();
+  }
 }
 
 bool Cursor::next() {
@@ -87,7 +107,6 @@ bool Cursor::next() {
     return false;
   } else {
     current_page_ref_ = page_manager_->getPage(current_page_->page_);
-    // FIXPAUL mem barrier
     return true;
   }
 }

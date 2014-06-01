@@ -12,8 +12,6 @@
 
 namespace fnordmetric {
 
-// FIXPAUL implement size hints so that varlen data can be pre-malloced here
-// instead of realloc()ing later
 RecordWriter::RecordWriter(
     const Schema& schema,
     size_t buffer_size_hint /* = 65536 */) :
@@ -31,8 +29,6 @@ RecordWriter::RecordWriter(
   alloc_ = malloc(alloc_size_);
   assert(alloc_); // FIXPAUL
   memset(alloc_, 0, alloc_size_);
-
-  //printf("static record data size: %lu\n", last_byte_);
 }
 
 RecordWriter::~RecordWriter() {
