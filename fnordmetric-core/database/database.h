@@ -123,6 +123,7 @@ public:
 
   Database(const Database& copy) = delete;
   Database& operator=(const Database& copy) = delete;
+  ~Database();
 
   /**
    * Min. number of bytes to reserve for the file header

@@ -103,6 +103,7 @@ public:
         O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
 
     assert(fd > 0);
+    unlink("/tmp/__fnordmetric_testMmapPageManager");
     auto page_manager = new MmapPageManager(fd, 0, 4096);
 
     auto mfile1 = page_manager->getMmapedFile(3000);

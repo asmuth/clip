@@ -51,6 +51,9 @@ Database::Database(
   }
 }
 
+Database::~Database() {
+}
+
 std::unique_ptr<Database> Database::openFile(
     const std::string& filename,
     uint64_t flags /* = MODE_CONSERVATIVE */) {
@@ -77,6 +80,10 @@ std::unique_ptr<Database> Database::openFile(
   if (fd_len < 0) {
     perror("lseek() failed");
     return std::unique_ptr<Database>(nullptr);
+  }
+
+  if ((flags & FILE_AUTODELETE) > 0) {
+    unlink(filename.c_str());
   }
 
   std::shared_ptr<MmapPageManager> page_manager(
