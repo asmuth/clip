@@ -88,6 +88,12 @@ public:
   typedef double ValueType;
 };
 
+class StringField : public Field {
+public:
+  StringField(const std::string& name) : Field(schema::STRING, name) {}
+  typedef std::string ValueType;
+};
+
 }
 #include "schema_impl.h"
 #endif

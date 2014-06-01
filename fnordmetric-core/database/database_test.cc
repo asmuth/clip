@@ -125,7 +125,8 @@ public:
     std::vector<uint64_t> insert_times;
     std::vector<Field> fields = {
         fnordmetric::IntegerField("sequence_num"),
-        fnordmetric::IntegerField("test1")};
+        fnordmetric::IntegerField("test1"),
+        fnordmetric::StringField("test2")};
     Schema schema(fields);
 
     int rows_written = 0;
@@ -150,6 +151,7 @@ public:
         RecordWriter record(schema);
         record.setIntegerField(0, ++rows_written);
         record.setIntegerField(1, 1337);
+        record.setStringField(2, "fnordbar", 8);
         insert_times.push_back(stream->appendRow(record));
       }
       auto cursor = stream->getCursor();
@@ -162,6 +164,11 @@ public:
         assert(cursor->next());
         assert(record_reader.getIntegerField(row->data, 0) == i+1);
         assert(record_reader.getIntegerField(row->data, 1) == 1337);
+        char* str;
+        size_t str_len;
+        record_reader.getStringField(row->data, 2, &str, &str_len);
+        assert(str_len == 8);
+        assert(strncmp(str, "fnordbar", str_len) == 0);
       }
       assert(cursor->next() == false);
     }

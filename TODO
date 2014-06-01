@@ -1,7 +1,7 @@
 
+-> msync
 -> import freelist properly
 -> MmapPageManager, MallocPageManager, InMemoryDatabase, FileBackedDatabase
--> rowreader
 -> crc32 instead of fnc32 for checksums?
 
 
@@ -40,7 +40,14 @@ jadda
 -> query ui: tabs for: html req equivalent, html embed, etc
 -> query safety mode: on/off (check row checksums)
 -> malloc page manager
--> example: log every http req, select http error rate
+-> example:
+  * getting started standalone:
+     * create http_reqs stream with statuscode, count
+     * select select http error rate
+  * getting started distributed
+     * agents have metrics with http req time distribution and url
+     * graph global req time distribution
+     * graph 90th percentile req time per agent
 -> renice query threads in agents?
 -> annotations / deploy lines?
 -> push query down into backend

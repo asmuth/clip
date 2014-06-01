@@ -24,8 +24,21 @@ namespace fnordmetric {
 class RecordReader {
 public:
   explicit RecordReader(const Schema& schema);
+
   int64_t getIntegerField(const void* record, size_t field_index) const;
-  double getFloatField(const void* reord, size_t field_index) const;
+
+  double getFloatField(const void* record, size_t field_index) const;
+
+  /**
+   * The returned pointer has the same lifetime as the record pointer that
+   * was passed in
+   */
+  void getStringField(
+      const void* record,
+      size_t field_index,
+      char** string_ptr,
+      size_t* string_len) const;
+
 protected:
   std::vector<size_t> field_offsets_;
 #ifndef NDEBUG
@@ -75,6 +88,19 @@ public:
   void setFloatField(size_t field_index, double value);
 
   /**
+   * Set the n'th field (as defined by the schema) of the record to the string
+   * pointed to by value_ptr. This method will assert if the type of the n'th
+   * field (as defined by the schema) is not a fnordmetric::FloatField! This
+   * method will also assert if you call it more than once for the same record.
+   * It is legal to call this method again only after you called reset(). Field
+   * indices are zero based.
+   */
+  void setStringField(
+      size_t field_index,
+      const char* value_ptr,
+      size_t value_len);
+
+  /**
    * Returns a pointer to the raw binary representation of this record. The
    * returned pointer is valid until the RecordWriter object is destructed or
    * setField() or reset() is called.
@@ -87,6 +113,7 @@ public:
   void reset();
 
 protected:
+  uint32_t allocVarlen(uint32_t size);
   void* alloc_;
   size_t alloc_size_;
   size_t min_size_;
