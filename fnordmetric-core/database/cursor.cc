@@ -23,6 +23,41 @@ Cursor::Cursor(
     current_page_(nullptr),
     current_page_ref_(nullptr) {}
 
+StreamPosition Cursor::seekToTime(uint64_t unix_millis) {
+  /* try to seek to the page containing that timestamp */
+  stream_ref_->accessPages([this, &unix_millis]
+      (const std::vector<std::shared_ptr<PageAlloc>>& stream_pages) {
+    // FIXPAUL do a binary search!
+    for (int i = stream_pages.size() - 1; i >= 0; i--) {
+      if (stream_pages[i]->time_ <= unix_millis) {
+        this->current_page_ = stream_pages.at(i);
+        this->current_page_offset_ = 0;
+        this->current_page_index_ = 0;
+        break;
+      }
+    }
+  });
+
+  if (current_page_.get() == nullptr) {
+    StreamPosition pos;
+    pos.unix_millis = 0;
+    pos.logical_offset = 0;
+    pos.next_offset = 0;
+    return pos;
+  }
+
+  current_page_ref_ = page_manager_->getPage(current_page_->page_);
+
+  /* seek to target time */
+  while (next()) {
+    if (getCurrentRow()->time >= unix_millis) {
+      break;
+    }
+  }
+
+  return getCurrentPosition();
+}
+
 StreamPosition Cursor::seekToLogicalOffset(uint64_t logical_offset) {
   /* try to seek to the page containing that logical_offset */
   stream_ref_->accessPages([this, &logical_offset]

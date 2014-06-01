@@ -13,6 +13,7 @@
 #include "database.h"
 #include "pagemanager.h"
 #include "cursor.h"
+#include "../clock.h"
 
 namespace fnordmetric {
 namespace database {
@@ -131,11 +132,12 @@ public:
     Schema schema(fields);
 
     int rows_written = 0;
+    size_t base_time = WallClock::getUnixMillis();
 
     for (int j = 0; j < 50; ++j) {
       int flags = database::MODE_CONSERVATIVE;
       if (j == 0) { flags |= database::FILE_TRUNCATE; }
-      //if (j == 49) { flags |= database::FILE_AUTODELETE; }
+      if (j == 49) { flags |= database::FILE_AUTODELETE; }
       auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile",
           flags);
@@ -149,10 +151,11 @@ public:
       assert(database->max_stream_id_ == stream_id);
       RecordWriter record_writer(schema);
       for (int i = (j + 1) * 1000; i > 0; i--) {
+        auto insert_time = base_time + rows_written;
         record_writer.setIntegerField(0, ++rows_written);
         record_writer.setIntegerField(1, 1337);
         record_writer.setStringField(2, "fnordbar", 8);
-        auto new_row_pos = stream->appendRow(record_writer);
+        auto new_row_pos = stream->appendRow(record_writer, insert_time);
         if (insert_times.size() > 0) {
           assert(
               new_row_pos.logical_offset > insert_times.back().logical_offset);
@@ -169,6 +172,9 @@ public:
       test_pos = cursor->seekToLogicalOffset(
           insert_times[test_index].logical_offset + 1);
       assert(test_pos == insert_times[test_index + 1]);
+      assert(cursor->seekToFirst() == insert_times[0]);
+      test_pos = cursor->seekToTime(insert_times[test_index].unix_millis);
+      assert(test_pos == insert_times[test_index]);
       assert(cursor->seekToFirst() == insert_times[0]);
       RecordReader record_reader(schema);
       for (int i = 0; i < insert_times.size() - 1; ++i) {

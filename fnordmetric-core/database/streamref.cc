@@ -40,15 +40,33 @@ StreamPosition StreamRef::appendRow(const RecordWriter& record) {
   const void* data;
   size_t size;
   record.toBytes(&data, &size);
-  return appendRow(data, size);
+  append_mutex_.lock();
+  uint64_t time = WallClock::getUnixMillis();
+  auto pos = appendRow(data, size, time);
+  append_mutex_.unlock();
+  return pos;
 }
 
-StreamPosition StreamRef::appendRow(const void* data, size_t size) {
-  uint64_t time = WallClock::getUnixMillis();
+StreamPosition StreamRef::appendRow(
+    const RecordWriter& record,
+    uint64_t time) {
+  const void* data;
+  size_t size;
+  // FIXPAUL check that time goes forward
+  record.toBytes(&data, &size);
+  append_mutex_.lock();
+  auto pos = appendRow(data, size, time);
+  append_mutex_.unlock();
+  return pos;
+}
+
+StreamPosition StreamRef::appendRow(
+    const void* data,
+    size_t size,
+    uint64_t time) {
   size_t row_size = size + sizeof(RowHeader);
   assert(size > 0);
 
-  append_mutex_.lock();
   pages_mutex_.lock();
 
   if (num_pages_ == 0) {
@@ -121,8 +139,6 @@ StreamPosition StreamRef::appendRow(const void* data, size_t size) {
   // FIXPAUL mem barrier
   page->used_ += row_size;
   page->num_rows_++;
-
-  append_mutex_.unlock();
 
   return pos;
 }

@@ -83,6 +83,16 @@ public:
   StreamPosition appendRow(const RecordWriter& row);
 
   /**
+   * Append a new row to the very end of the opened stream with an explicit
+   * insert time. This should only be used for importing data as the insert
+   * time must be monotonically increasing.
+   *
+   * This method is threadsafe but you need to make sure that insert_time is
+   * monotonically increasing.
+   */
+  StreamPosition appendRow(const RecordWriter& row, uint64_t insert_time);
+
+  /**
    * Return a cursor to this stream for reading. The initial position of the
    * cursor is undefined.
    *
@@ -99,7 +109,7 @@ protected:
   void accessPages(std::function<void(
       const std::vector<std::shared_ptr<PageAlloc>>&)> func);
 
-  StreamPosition appendRow(const void* data, size_t size);
+  StreamPosition appendRow(const void* data, size_t size, uint64_t time);
   uint64_t estimatePageSize(size_t last_page_avg_size, size_t row_size) const;
 
   // this is suboptimal as it will force us to do random memory accesses when
