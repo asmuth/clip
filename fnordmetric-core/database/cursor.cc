@@ -194,11 +194,9 @@ bool Cursor::next() {
 const RowHeader* Cursor::getCurrentRow() const {
   if (current_page_.get() == nullptr) {
     return nullptr;
-  } else {
-    auto row = current_page_ref_->structAt<RowHeader>(current_page_offset_);
-    // FIXPAUL verify checksum
-    return row;
   }
+
+  return current_page_ref_->structAt<RowHeader>(current_page_offset_);
 }
 
 StreamPosition Cursor::getCurrentPosition() const {

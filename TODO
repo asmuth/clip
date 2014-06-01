@@ -3,7 +3,8 @@
 -> import freelist properly
 -> MmapPageManager, MallocPageManager, InMemoryDatabase, FileBackedDatabase
 -> crc32 instead of fnc32 for checksums?
-
+-> file lock on open
+-> proper error handling
 
 SELECT
   [FIELDS]
