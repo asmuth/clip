@@ -146,13 +146,13 @@ public:
         assert(stream_id == stream->stream_id_);
       }
       assert(database->max_stream_id_ == stream_id);
-      // FIXPAUL reuse record writer
+      RecordWriter record_writer(schema);
       for (int i = (j + 1) * 1000; i > 0; i--) {
-        RecordWriter record(schema);
-        record.setIntegerField(0, ++rows_written);
-        record.setIntegerField(1, 1337);
-        record.setStringField(2, "fnordbar", 8);
-        insert_times.push_back(stream->appendRow(record));
+        record_writer.setIntegerField(0, ++rows_written);
+        record_writer.setIntegerField(1, 1337);
+        record_writer.setStringField(2, "fnordbar", 8);
+        insert_times.push_back(stream->appendRow(record_writer));
+        record_writer.reset();
       }
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);

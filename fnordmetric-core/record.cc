@@ -92,6 +92,11 @@ uint32_t RecordWriter::allocVarlen(uint32_t size) {
   return offset;
 }
 
+void RecordWriter::reset() {
+  memset(alloc_, 0, alloc_size_);
+  last_byte_ = min_size_;
+}
+
 RecordReader::RecordReader(const Schema& schema) : data_(nullptr) {
   size_t last_byte = 0;
   for (const auto& field : schema.fields_) {
