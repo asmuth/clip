@@ -84,12 +84,15 @@ bool Cursor::next() {
   }
 }
 
-const RowHeader* Cursor::getCurrentRow() {
-  return current_page_ref_->structAt<RowHeader>(current_page_offset_);
+const RowHeader* Cursor::getCurrentRow() const {
+  if (current_page_.get() == nullptr) {
+    return nullptr;
+  } else {
+    auto row = current_page_ref_->structAt<RowHeader>(current_page_offset_);
+    // FIXPAUL verify checksum
+    return row;
+  }
 }
-
-void Cursor::getRow(const std::function<void (const uint8_t* data,
-    size_t len, uint64_t time)>& func) const {}
 
 }
 }

@@ -153,7 +153,11 @@ public:
       }
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);
+
+      //RecordReader record_reader(schema);
       for (int i = 0; i < insert_times.size() - 1; ++i) {
+        auto row = cursor->getCurrentRow();
+        assert(row->time == insert_times[i]);
         assert(cursor->next());
       }
       assert(cursor->next() == false);

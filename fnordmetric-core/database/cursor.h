@@ -70,26 +70,14 @@ public:
 
   /**
    * Get the row the cursor is currently pointing to. If the cursor points to a
-   * valid row this method will call the provided callack function with these
-   * arguments:
-   *   - data: the pointer to the rows data
-   *   - len: the rows length in bytes
-   *   - time: the rows insert time in UTC milliseconds
+   * valid row this method will return a pointer to that row.
    *
-   * Note that the data pointer is only valid within the callback function's
-   * scope! The reason why this takes a callback function rather than returning
-   * a pointer to the data directly is that this allows us to return a reference
-   * to the internal storage of the data. If this method would return a direct
-   * pointer to the data all we'd be forced to copy the data before returning
-   * if we ever want to free our internal storage again (let aside smart pointer
-   * trickery or an explicit free mechanism that would needlessly complicate
-   * things)
+   * The returned pointer is valid until the cursor is destroyed or any seek
+   * or next method is called on the cursor!
    */
-  void getRow(const std::function<void (const uint8_t* data,
-      size_t len, uint64_t time)>& func) const;
+  const RowHeader* getCurrentRow() const;
 
 protected:
-  const RowHeader* getCurrentRow();
   StreamRef* stream_ref_;
   std::shared_ptr<const PageAlloc> current_page_;
   std::unique_ptr<PageManager::PageRef> current_page_ref_;
