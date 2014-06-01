@@ -33,7 +33,8 @@ public:
 
   void testStreamIdAssignment() {
     auto backend = fnordmetric::database::Database::openFile(
-        "/tmp/__fnordmetric_testStreamIdAssignment");
+        "/tmp/__fnordmetric_testStreamIdAssignment",
+        database::MODE_CONSERVATIVE | database::FILE_TRUNCATE);
 
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
     std::string key2 = "83d2f71c457216bf-Ia9f37ed7-F76b77d1a";
@@ -46,7 +47,9 @@ public:
 
   void testStreamRefCreation() {
     auto backend = fnordmetric::database::Database::openFile(
-        "/tmp/__fnordmetric_testStreamRefCreation");
+        "/tmp/__fnordmetric_testStreamRefCreation",
+        database::MODE_CONSERVATIVE | database::FILE_TRUNCATE |
+        database::FILE_AUTODELETE);
 
     std::string key1 = "83d2f71c457206bf-Ia9f37ed7-F76b77d1a";
     std::string key2 = "83d2f71c457216bf-Ia9f37ed7-F76b77d1a";
@@ -128,8 +131,12 @@ public:
     int rows_written = 0;
 
     for (int j = 0; j < 50; ++j) {
+      int flags = database::MODE_CONSERVATIVE;
+      if (j == 0) { flags |= database::FILE_TRUNCATE; }
+      if (j == 49) { flags |= database::FILE_AUTODELETE; }
       auto database = fnordmetric::database::Database::openFile(
-          "/tmp/__fnordmetric_testOpenFile");
+          "/tmp/__fnordmetric_testOpenFile",
+          flags);
       assert(database.get() != nullptr);
       auto stream = database->openStream("mystream");
       if (j == 0) {

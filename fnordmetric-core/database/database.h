@@ -76,6 +76,39 @@ namespace database {
 
 class StreamRef;
 
+enum kDatabaseFlags {
+  /**
+   * Safety modes. The database will be consistent in all cases, but depending
+   * on the safety mode you might loose more or less data.
+   */
+  MODE_RELAXED = 0,
+  MODE_CONSERVATIVE = 10, /* MSYNC_ASYNC | ENABLE_ROW_CHECKSUMS */
+  MODE_PARANOID = 12, /* MSYNC_SYNC | ENABLE_ROW_CHECKSUMS */
+
+  /**
+   * Msync modes
+   */
+  MYSNC_ASYNC = 2,
+  MYSNC_SYNC = 4,
+
+  /**
+   * Verify checksums when scanning over rows. Slows down everthing by a bit
+   * but protects against file corruption
+   */
+  ENABLE_ROW_CHECKSUMS = 8,
+
+  /**
+   * Truncate the file when opening it
+   */
+  FILE_TRUNCATE = 32,
+
+  /**
+   * Delete the file when the database is closed (the database object is
+   * destroyed)
+   */
+  FILE_AUTODELETE = 64
+};
+
 class Database {
   friend class StreamRef;
   friend class Cursor;
@@ -109,7 +142,9 @@ public:
   /**
    * Instantiate a new file backend with a path to the file.
    */
-  static std::unique_ptr<Database> openFile(const std::string& filename);
+  static std::unique_ptr<Database> openFile(
+      const std::string& filename,
+      uint64_t flags = MODE_CONSERVATIVE);
 
   /**
    * Open or create the stream with the specified key
@@ -131,11 +166,13 @@ protected:
   Database(
       LogSnapshot& log_snapshot,
       std::shared_ptr<Log> log,
-      std::shared_ptr<PageManager> page_manager);
+      std::shared_ptr<PageManager> page_manager,
+      uint64_t flags);
 
   Database(
       std::shared_ptr<Log> log,
-      std::shared_ptr<PageManager> page_manager);
+      std::shared_ptr<PageManager> page_manager,
+      uint64_t flags);
 
   /**
    * Retrieve the stream id for a specified string stream key
@@ -159,6 +196,7 @@ protected:
 
   const std::shared_ptr<Log> log_;
   const std::shared_ptr<PageManager> page_manager_;
+  uint64_t flags_;
 };
 
 }

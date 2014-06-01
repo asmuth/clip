@@ -24,18 +24,22 @@ namespace database {
 
 Database::Database(
     std::shared_ptr<Log> log,
-    std::shared_ptr<PageManager> page_manager) :
+    std::shared_ptr<PageManager> page_manager,
+    uint64_t flags) :
     log_(std::move(log)),
     page_manager_(std::move(page_manager)),
-    max_stream_id_(0) {}
+    max_stream_id_(0),
+    flags_(flags) {}
 
 Database::Database(
     LogSnapshot& log_snapshot,
     std::shared_ptr<Log> log,
-    std::shared_ptr<PageManager> page_manager) :
+    std::shared_ptr<PageManager> page_manager,
+    uint64_t flags) :
     log_(std::move(log)),
     page_manager_(std::move(page_manager)),
-    max_stream_id_(log_snapshot.max_stream_id) {
+    max_stream_id_(log_snapshot.max_stream_id),
+    flags_(flags) {
   for(auto& stream : log_snapshot.streams) {
     auto stream_ref = std::shared_ptr<StreamRef>(new StreamRef(
        this,
@@ -47,10 +51,17 @@ Database::Database(
   }
 }
 
-std::unique_ptr<Database> Database::openFile(const std::string& filename) {
+std::unique_ptr<Database> Database::openFile(
+    const std::string& filename,
+    uint64_t flags /* = MODE_CONSERVATIVE */) {
   Database* ptr = nullptr;
 
-  int fd = open(filename.c_str(), O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+  int open_flags = O_CREAT | O_RDWR;
+  if ((flags & FILE_TRUNCATE) > 0) {
+    open_flags |= O_TRUNC;
+  }
+
+  int fd = open(filename.c_str(), open_flags, S_IRUSR | S_IWUSR);
   if (fd < 0) {
     perror("open() failed");
     return std::unique_ptr<Database>(nullptr);
@@ -85,7 +96,7 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
     // FIXPAUL msync header
 
     std::shared_ptr<Log> log(new Log(first_log_page, page_manager));
-    return std::unique_ptr<Database>(new Database(log, page_manager));
+    return std::unique_ptr<Database>(new Database(log, page_manager, flags));
   }
 
   /* open existing file */
@@ -121,7 +132,7 @@ std::unique_ptr<Database> Database::openFile(const std::string& filename) {
         new Log(log_snapshot, page_manager_imported));
 
     return std::unique_ptr<Database>(
-        new Database(log_snapshot, log, page_manager_imported));
+        new Database(log_snapshot, log, page_manager_imported, flags));
   }
 
   fprintf(stderr, "invalid file\n"); // FIXPAUL
