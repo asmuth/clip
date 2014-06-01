@@ -54,7 +54,7 @@ void RecordWriter::setIntegerField(size_t field_index, int64_t value) {
 #ifndef NDEBUG
   assert(field_types_[field_index] == schema::INT64);
 #endif
-  //memcpy(dst, &local_value, 8);
+  memcpy(dst, &local_value, 8);
 }
 
 void RecordWriter::toBytes(const void** data, size_t* size) const {
@@ -62,29 +62,26 @@ void RecordWriter::toBytes(const void** data, size_t* size) const {
   *size = alloc_size_;
 }
 
-RecordReader::RecordReader(const uint8_t* data, size_t len) :
-    data_(data),
-    len_(len),
-    pos_(0) {}
-
-bool RecordReader::readInteger(int64_t* destination) {
-  int64_t value;
-  if (pos_ + 9 > len_ || data_[pos_] != schema::INT64) {
-    return false;
+RecordReader::RecordReader(const Schema& schema) : data_(nullptr) {
+  size_t last_byte = 0;
+  for (const auto& field : schema.fields_) {
+    field_offsets_.push_back(last_byte);
+    last_byte += schema::kFieldTypesSize[field.getTypeId()];
+#ifndef NDEBUG
+    field_types_.push_back(field.getTypeId());
+#endif
   }
-
-  memcpy(destination, data_ + pos_ + 1, 8);
-  pos_ += 9;
-  return true;
 }
 
-bool RecordReader::readFloat(double* destination) {
-  if (pos_ + 9 > len_ || data_[pos_] != schema::IEE754) {
-    return false;
-  }
-
-  *destination = 23.5;
-  return true;
+int64_t RecordReader::getIntegerField(
+    const void* data,
+    size_t field_index) const {
+  assert(field_index < field_offsets_.size());
+  auto src = (int64_t *) (((char *) data) + field_offsets_[field_index]);
+#ifndef NDEBUG
+  assert(field_types_[field_index] == schema::INT64);
+#endif
+  return *src;
 }
 
 }

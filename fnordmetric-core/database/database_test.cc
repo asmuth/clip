@@ -133,7 +133,7 @@ public:
     for (int j = 0; j < 50; ++j) {
       int flags = database::MODE_CONSERVATIVE;
       if (j == 0) { flags |= database::FILE_TRUNCATE; }
-      if (j == 49) { flags |= database::FILE_AUTODELETE; }
+      //if (j == 49) { flags |= database::FILE_AUTODELETE; }
       auto database = fnordmetric::database::Database::openFile(
           "/tmp/__fnordmetric_testOpenFile",
           flags);
@@ -145,6 +145,7 @@ public:
         assert(stream_id == stream->stream_id_);
       }
       assert(database->max_stream_id_ == stream_id);
+      // FIXPAUL reuse record writer
       for (int i = (j + 1) * 1000; i > 0; i--) {
         RecordWriter record(schema);
         record.setIntegerField(0, ++rows_written);
@@ -154,11 +155,13 @@ public:
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);
 
-      //RecordReader record_reader(schema);
+      RecordReader record_reader(schema);
       for (int i = 0; i < insert_times.size() - 1; ++i) {
         auto row = cursor->getCurrentRow();
         assert(row->time == insert_times[i]);
         assert(cursor->next());
+        assert(record_reader.getIntegerField(row->data, 0) == i+1);
+        assert(record_reader.getIntegerField(row->data, 1) == 1337);
       }
       assert(cursor->next() == false);
     }

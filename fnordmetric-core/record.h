@@ -13,20 +13,30 @@
 
 namespace fnordmetric {
 
+/**
+ * A record writer is a stateful object that can be used to unserialize one or
+ * more records of the same schema.
+ *
+ * FIXPAUL documentation
+ *
+ * All methods on a record reader are threadsafe.
+ */
 class RecordReader {
 public:
-  RecordReader(const uint8_t* data, size_t len);
-  bool readInteger(int64_t* destination);
-  bool readFloat(double* destination);
+  explicit RecordReader(const Schema& schema);
+  int64_t getIntegerField(const void* record, size_t field_index) const;
+  double getFloatField(const void* reord, size_t field_index) const;
 protected:
-  const uint8_t* data_;
-  size_t len_;
-  size_t pos_;
+  std::vector<size_t> field_offsets_;
+#ifndef NDEBUG
+  std::vector<size_t> field_types_;
+#endif
+  const void* data_;
 };
 
 /**
  * A record writer is a stateful object that can be used to serialize one or
- * more records of the same schame. It must be initialized with a schema and
+ * more records of the same schema. It must be initialized with a schema and
  * will allocate some memory to store a single record internally.
  *
  * The record data is build up by calling the respective setField method for

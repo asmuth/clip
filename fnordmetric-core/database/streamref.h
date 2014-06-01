@@ -47,6 +47,7 @@ struct __attribute__((__packed__)) RowHeader {
  */
 class StreamRef {
   friend class DatabaseTest;
+  friend class Cursor;
 public:
   explicit StreamRef(
       Database* backed,
@@ -78,6 +79,8 @@ public:
    */
   std::unique_ptr<Cursor> getCursor();
 
+protected:
+
   /**
    * Access the StreamRefs internal page storage (do not call this method unless
    * you know what you are doing)
@@ -85,7 +88,6 @@ public:
   void accessPages(std::function<void(
       const std::vector<std::shared_ptr<PageAlloc>>&)> func);
 
-protected:
   uint64_t appendRow(const void* data, size_t size);
   uint64_t estimatePageSize(size_t last_page_avg_size, size_t row_size) const;
 
