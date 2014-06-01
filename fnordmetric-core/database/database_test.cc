@@ -16,6 +16,9 @@
 namespace fnordmetric {
 namespace database {
 
+// TODO test freelist serialization / after file reloads
+// TODO test in memory db
+
 class DatabaseTest {
 public:
   DatabaseTest() {}
@@ -23,8 +26,8 @@ public:
   void run() {
     //testStreamIdAssignment();
     //testStreamRefCreation();
-    //testPageManager();
-    //testMmapPageManager();
+    testPageManager();
+    testMmapPageManager();
     testOpenFile();
   }
 
@@ -134,7 +137,7 @@ public:
       }
       assert(database->max_stream_id_ == stream_id);
       for (int i = (j + 1) * 1000; i > 0; i--) {
-        insert_times.push_back(stream->appendRow(data));
+        insert_times.push_back(stream->appendRow(data.data(), data.size()));
       }
       auto cursor = stream->getCursor();
       assert(cursor->seekToFirst() == insert_times[0]);

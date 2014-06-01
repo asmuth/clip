@@ -13,6 +13,7 @@
 #include <memory>
 #include <atomic>
 #include "pagemanager.h"
+#include "../record.h"
 
 namespace fnordmetric {
 namespace database {
@@ -60,10 +61,10 @@ public:
   StreamRef& operator=(const StreamRef& copy) = delete;
 
   /**
-   * Append a new row to the very end of the opened stream. Returns the UTC 
+   * Append a new row to the very end of the opened stream. Returns the UTC
    * millisecond timestamp at which the row was inserted.
    */
-  uint64_t appendRow(const std::vector<uint8_t>& data);
+  uint64_t appendRow(const RecordWriter& row);
 
   /**
    * Return a cursor to this stream for reading. The initial position of the
@@ -72,7 +73,9 @@ public:
   std::unique_ptr<Cursor> getCursor();
 
 protected:
-
+  uint64_t appendRow(const void* data, size_t size);
+  // this is suboptimal as it will force us to do random memory accesses when
+  // trying to binary search over the pages first row times
   std::vector<std::shared_ptr<PageAlloc>> pages_;
   std::atomic_size_t num_pages_;
   Database* backend_;

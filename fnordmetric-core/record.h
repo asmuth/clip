@@ -30,6 +30,14 @@ public:
   void appendField(double value);
   void appendField(int64_t value);
   const std::vector<uint8_t>& toBytes() const;
+
+  /**
+   * Returns a pointer to the raw binary representation of this record. The
+   * returned pointer is valid until the RecordWriter object is destructed or
+   * setField is called.
+   */
+  void toBytes(const void** data, size_t* size) const;
+
 protected:
   std::vector<uint8_t> bytes_;
 };

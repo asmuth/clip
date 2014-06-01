@@ -34,14 +34,21 @@ StreamRef::StreamRef(
     pages_(std::move(pages)),
     num_pages_(pages_.size()) {}
 
+uint64_t StreamRef::appendRow(const RecordWriter& record) {
+  const void* data;
+  size_t size;
+  record.toBytes(&data, &size);
+  appendRow(data, size);
+}
+
 // FIXPAUL hold append lock
-uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
+uint64_t StreamRef::appendRow(const void* data, size_t size) {
   uint64_t time = WallClock::getUnixMillis();
-  size_t row_size = data.size() + sizeof(RowHeader);
+  size_t row_size = size + sizeof(RowHeader);
 
   if (num_pages_ == 0) {
     // FIXPAUL estimate size
-    auto page = backend_->page_manager_->allocPage(data.size() * 100);
+    auto page = backend_->page_manager_->allocPage(size * 100);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
     Log::PageAllocEntry log_entry;
@@ -58,7 +65,7 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
 
   if (pages_.back()->used_ + row_size > pages_.back()->page_.size) {
     // FIXPAUL estimate size
-    auto page = backend_->page_manager_->allocPage(data.size() * 100);
+    auto page = backend_->page_manager_->allocPage(size * 100);
     auto alloc = std::shared_ptr<PageAlloc>(new PageAlloc(page, time));
 
     auto old_page = pages_.back();
@@ -91,8 +98,8 @@ uint64_t StreamRef::appendRow(const std::vector<uint8_t>& data) {
   auto mmaped = backend_->page_manager_->getPage(page->page_);
   RowHeader* row = mmaped->structAt<RowHeader>(page->used_.load());
   row->time = time;
-  row->size = data.size();
-  memcpy(row->data, data.data(), row->size);
+  row->size = size;
+  memcpy(row->data, data, size);
   row->checksum = row->computeChecksum();
   // FIXPAUL mem barrier
   page->used_ += row_size;

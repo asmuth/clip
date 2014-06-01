@@ -37,8 +37,9 @@ void RecordWriter::appendField(int64_t value) {
   bytes_.emplace_back(bytes[7]);
 }
 
-const std::vector<uint8_t>& RecordWriter::toBytes() const {
-  return bytes_;
+void RecordWriter::toBytes(const void** data, size_t* size) const {
+  *data = bytes_.data();
+  *size = bytes_.size();
 }
 
 RecordReader::RecordReader(const uint8_t* data, size_t len) :

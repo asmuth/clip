@@ -35,7 +35,7 @@ const StreamKey& Stream::getKey() const {
 }
 
 void Stream::appendRecord(const RecordWriter& record) const {
-  stream_ref_->appendRow(record.toBytes());
+  stream_ref_->appendRow(record);
 }
 
 }
