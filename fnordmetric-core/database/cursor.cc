@@ -23,8 +23,53 @@ Cursor::Cursor(
     current_page_(nullptr),
     current_page_ref_(nullptr) {}
 
-StreamPosition Cursor::seekToTime(uint64_t position) {
-  // FIXPAUL
+StreamPosition Cursor::seekToLogicalOffset(uint64_t logical_offset) {
+  /* try to seek to the page containing that logical_offset */
+  stream_ref_->accessPages([this, &logical_offset]
+      (const std::vector<std::shared_ptr<PageAlloc>>& stream_pages) {
+    // FIXPAUL do a binary search!
+    for (int i = stream_pages.size() - 1; i >= 0; i--) {
+      if (stream_pages[i]->logical_offset_ <= logical_offset) {
+        this->current_page_ = stream_pages.at(i);
+        this->current_page_offset_ = 0;
+        this->current_page_index_ = 0;
+        break;
+      }
+    }
+  });
+
+  if (current_page_.get() == nullptr) {
+    StreamPosition pos;
+    pos.unix_millis = 0;
+    pos.logical_offset = 0;
+    pos.next_offset = 0;
+    return pos;
+  }
+
+  current_page_ref_ = page_manager_->getPage(current_page_->page_);
+
+  /* fast path for exact offset match */
+  current_page_offset_ = logical_offset - current_page_->logical_offset_;
+  if (current_page_offset_ < current_page_->used_.load()) {
+    auto row = current_page_ref_->structAt<RowHeader>(current_page_offset_);
+    auto row_end = current_page_offset_ + row->size + sizeof(RowHeader);
+
+    if (row_end <= current_page_->used_.load()) {
+      if (row->computeChecksum() == row->checksum) {
+        return getCurrentPosition();
+      }
+    }
+  }
+
+  /* seek to target offset fallback */
+  current_page_offset_ = 0;
+  while (next()) {
+    auto cur_loff = current_page_->logical_offset_ + current_page_offset_;
+    if (cur_loff >= logical_offset) {
+      break;
+    }
+  }
+
   return getCurrentPosition();
 }
 

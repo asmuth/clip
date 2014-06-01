@@ -162,6 +162,13 @@ public:
       }
       auto cursor = stream->getCursor();
       assert(cursor->seekToLast() == insert_times.back());
+      auto test_index = insert_times.size() / 2;
+      auto test_pos = cursor->seekToLogicalOffset(
+          insert_times[test_index].logical_offset);
+      assert(test_pos == insert_times[test_index]);
+      test_pos = cursor->seekToLogicalOffset(
+          insert_times[test_index].logical_offset + 1);
+      assert(test_pos == insert_times[test_index + 1]);
       assert(cursor->seekToFirst() == insert_times[0]);
       RecordReader record_reader(schema);
       for (int i = 0; i < insert_times.size() - 1; ++i) {

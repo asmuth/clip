@@ -52,7 +52,7 @@ public:
    *
    * Returns the position of the cursor after the seek operation.
    */
-  StreamPosition seekToOffset(uint64_t unix_millis);
+  StreamPosition seekToLogicalOffset(uint64_t logical_offset);
 
   /**
    * Seek to the first row in the stream.
