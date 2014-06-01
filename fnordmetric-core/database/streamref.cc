@@ -22,7 +22,8 @@ StreamRef::StreamRef(
     const std::string& stream_key) :
     backend_(backend),
     stream_id_(stream_id),
-    stream_key_(stream_key) {}
+    stream_key_(stream_key),
+    num_pages_(0) {}
 
 StreamRef::StreamRef(
     Database* backend,
