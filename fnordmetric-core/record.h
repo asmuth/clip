@@ -70,7 +70,10 @@ protected:
  */
 class RecordWriter {
 public:
-  explicit RecordWriter(const Schema& schema);
+  explicit RecordWriter(
+      const Schema& schema,
+      size_t buffer_size_hint = 65536);
+
   ~RecordWriter();
 
   /**

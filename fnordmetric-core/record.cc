@@ -14,7 +14,10 @@ namespace fnordmetric {
 
 // FIXPAUL implement size hints so that varlen data can be pre-malloced here
 // instead of realloc()ing later
-RecordWriter::RecordWriter(const Schema& schema) : last_byte_(0) {
+RecordWriter::RecordWriter(
+    const Schema& schema,
+    size_t buffer_size_hint /* = 65536 */) :
+    last_byte_(0) {
   for (const auto& field : schema.fields_) {
     field_offsets_.push_back(last_byte_);
     last_byte_ += schema::kFieldTypesSize[field.getTypeId()];
@@ -24,8 +27,8 @@ RecordWriter::RecordWriter(const Schema& schema) : last_byte_(0) {
   }
 
   min_size_ = last_byte_;
-  alloc_ = malloc(last_byte_);
-  alloc_size_ = last_byte_;
+  alloc_size_ = std::max(buffer_size_hint, last_byte_);
+  alloc_ = malloc(alloc_size_);
   assert(alloc_); // FIXPAUL
   memset(alloc_, 0, alloc_size_);
 
@@ -82,7 +85,6 @@ uint32_t RecordWriter::allocVarlen(uint32_t size) {
   uint32_t offset = last_byte_;
   last_byte_ += size;
 
-  // FIXPAUL realloc in larger increments
   if (last_byte_ > alloc_size_) {
     alloc_size_ = last_byte_;
     alloc_ = realloc(alloc_, alloc_size_);
