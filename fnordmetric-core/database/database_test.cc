@@ -101,7 +101,6 @@ public:
   void testMmapPageManager() {
     int fd = open("/tmp/__fnordmetric_testMmapPageManager",
         O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
-
     assert(fd > 0);
     unlink("/tmp/__fnordmetric_testMmapPageManager");
     auto page_manager = new MmapPageManager(fd, 0, 4096);

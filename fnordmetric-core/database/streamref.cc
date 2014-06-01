@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include "streamref.h"
 #include "database.h"
 #include "cursor.h"
