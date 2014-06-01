@@ -22,7 +22,6 @@ namespace database {
 class Database;
 class Cursor;
 
-// FIXPAUL reader writer lock on page alloc?
 struct PageAlloc {
   PageAlloc(const PageManager::Page& page, uint64_t time);
   const PageManager::Page page_;

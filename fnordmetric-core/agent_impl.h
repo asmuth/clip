@@ -20,6 +20,7 @@ std::shared_ptr<const Stream<T...>> Agent::newStream(
     const std::string& name,
     //const StreamDescription& description,
     const T... fields) {
+  streams_mutex_.lock();
   StreamKey<T...> key(name, fields...);
   Schema<T...> schema(fields...);
 
@@ -29,8 +30,8 @@ std::shared_ptr<const Stream<T...>> Agent::newStream(
       schema,
       std::move(cursor));
 
-  // FIXPAUL make threadsafe!
   streams_.push_back(stream);
+  streams_mutex_.unlock();
   return stream;
 }
 

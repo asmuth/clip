@@ -43,7 +43,6 @@ uint64_t StreamRef::appendRow(const RecordWriter& record) {
   return appendRow(data, size);
 }
 
-// FIXPAUL hold append lock
 uint64_t StreamRef::appendRow(const void* data, size_t size) {
   uint64_t time = WallClock::getUnixMillis();
   size_t row_size = size + sizeof(RowHeader);

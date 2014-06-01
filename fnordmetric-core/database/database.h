@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include <mutex>
 #include <unordered_map>
 #include "pagemanager.h"
 #include "log.h"
@@ -148,7 +149,8 @@ public:
       uint64_t flags = MODE_CONSERVATIVE);
 
   /**
-   * Open or create the stream with the specified key
+   * Open or create the stream with the specified key.
+   * This method is threadsafe.
    */
   virtual std::shared_ptr<StreamRef> openStream(const std::string& key);
 
@@ -189,6 +191,7 @@ protected:
    * Holds all the StreamRefs
    */
   std::unordered_map<uint64_t, std::shared_ptr<StreamRef>> stream_refs_;
+  std::mutex stream_refs_mutex_;
 
   /**
    * Highest used stream_id

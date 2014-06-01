@@ -7,7 +7,9 @@
 #ifndef _FNORDMETRIC_AGENT_H
 #define _FNORDMETRIC_AGENT_H
 
+#include <stdlib.h>
 #include <memory>
+#include <mutex>
 #include "stream.h"
 #include "storagebackend.h"
 
@@ -35,6 +37,7 @@ public:
 protected:
   std::string name_;
   std::vector<std::shared_ptr<const IStream>> streams_;
+  std::mutex streams_mutex_;
   std::unique_ptr<IStorageBackend> storage_backend_;
 };
 

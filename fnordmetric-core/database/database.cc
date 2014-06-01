@@ -146,22 +146,24 @@ std::unique_ptr<Database> Database::openFile(
   return std::unique_ptr<Database>(nullptr);
 }
 
-// FIXPAUL locking!
 std::shared_ptr<StreamRef> Database::openStream(
     const std::string& key) {
+  stream_refs_mutex_.lock();
   auto stream_id = getStreamId(key);
   auto iter = stream_refs_.find(stream_id);
 
   if (iter == stream_refs_.end()) {
     std::shared_ptr<StreamRef> stream_ref(new StreamRef(this, stream_id, key));
     stream_refs_.insert(std::make_pair(stream_id, stream_ref));
+    stream_refs_mutex_.unlock();
     return stream_ref;
   } else {
-    return iter->second;
+    auto stream_ref = iter->second;
+    stream_refs_mutex_.unlock();
+    return stream_ref;
   }
 }
 
-// FIXPAUL must hold lock to call!
 uint64_t Database::getStreamId(const std::string& stream_key) {
   auto iter = stream_ids_.find(stream_key);
 
