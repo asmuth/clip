@@ -180,6 +180,10 @@ uint64_t Database::getStreamId(const std::string& stream_key) {
   }
 }
 
+void Database::executeQuery(query::Query* query) {
+
+}
+
 
 }
 }

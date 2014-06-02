@@ -14,6 +14,7 @@
 #include "pagemanager.h"
 #include "cursor.h"
 #include "../clock.h"
+#include "../query/query.h"
 
 namespace fnordmetric {
 namespace database {
@@ -134,7 +135,8 @@ public:
     int rows_written = 0;
     size_t base_time = WallClock::getUnixMillis();
 
-    for (int j = 0; j < 50; ++j) {
+    //for (int j = 0; j < 50; ++j) {
+    for (int j = 0; j < 5; ++j) {
       int flags = database::MODE_CONSERVATIVE;
       if (j == 0) { flags |= database::FILE_TRUNCATE; }
       if (j == 49) { flags |= database::FILE_AUTODELETE; }
@@ -191,6 +193,8 @@ public:
         assert(strncmp(str, "fnordbar", str_len) == 0);
       }
       assert(cursor->next() == false);
+      query::Query query("SELECT count(*) FROM mystream");
+      database->executeQuery(&query);
     }
   }
 

@@ -73,8 +73,10 @@
 
 */
 namespace fnordmetric {
+namespace query {
+class Query;
+}
 namespace database {
-
 class StreamRef;
 
 enum kDatabaseFlags {
@@ -165,10 +167,15 @@ public:
       uint64_t flags = MODE_CONSERVATIVE);
 
   /**
+   * Execute a query
+   */
+  void executeQuery(query::Query* query);
+
+  /**
    * Open or create the stream with the specified key.
    * This method is threadsafe.
    */
-  virtual std::shared_ptr<StreamRef> openStream(const std::string& key);
+  std::shared_ptr<StreamRef> openStream(const std::string& key);
 
 protected:
   Database(
