@@ -9,13 +9,17 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include "../stream.h"
 
 namespace fnordmetric {
 namespace query {
 
 class Query {
 public:
-  explicit Query(const std::string& query_string);
+  explicit Query(
+      const std::string& query_string,
+      const IStreamRepository& stream_repo);
+
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);

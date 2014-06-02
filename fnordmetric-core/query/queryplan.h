@@ -21,28 +21,31 @@ namespace query {
  * Internal query scan modes:
  *
  * SCAN_LOCKSTEP
- *   Scan one or more streams in lockstep and return some data
+ *   Scan one or more streams in lockstep and return some data.
  *
  * SCAN_SERIAL
  *   Scan one or more streams in serial order (scan one stream in full, then
- *   scan the next stream) and return some data
+ *   scan the next stream) and return some data.
  *
  * AGGREGATE_TIME_WINDOW
- *   Scan one or more streams in lockstep and aggregate results per time window
+ *   Scan one or more streams in lockstep and aggregate results at the end of
+ *   every time window
  *
  * AGGREGATE_LOCKSTEP
  *   Scan one or more streams in lockstep and aggregate results after all
  *   streams were scanned.
  *
  * AGGREGATE_SERIAL
- *   Scan one or more streams in serial order (scan one stream in full, then
- *   scan the next stream) and aggregate results after all streams were scanned.
+ *   Scan and aggregate one or more streams in serial order (scan one stream in
+ *   full, aggregate, then scan the next stream).
  *
  */
 enum kQueryScanMode {
   SCAN_LOCKSTEP = 1,
-  SCAN_TIME_WINDOW = 2,
-  SCAN_SERIAL = 3
+  SCAN_SERIAL = 2,
+  AGGREGATE_TIME_WINDOW = 3,
+  AGGREGATE_LOCKSTEP = 4,
+  AGGREGATE_SERIAL = 5
 };
 
 /**
@@ -50,7 +53,7 @@ enum kQueryScanMode {
  * single query.
  *
  * Please not that since a QueryPlan will hold cursor objects to all streams
- * for the duration of its lifetime it should be create immideately before a
+ * for the duration of its lifetime it should be create immediately before a
  * query is executed and destroyed as soon as the execution has finished.
  */
 class QueryPlan {

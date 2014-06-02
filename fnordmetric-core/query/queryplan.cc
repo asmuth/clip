@@ -26,7 +26,7 @@ QueryPlan::QueryPlan(
 
 
 kQueryScanMode QueryPlan::selectScanMode(const Query* query) const {
-  return SCAN_TIME_WINDOW; // FIXPAUL
+  return AGGREGATE_TIME_WINDOW; // FIXPAUL
 }
 
 }

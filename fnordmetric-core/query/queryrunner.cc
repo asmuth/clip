@@ -29,21 +29,27 @@ void QueryRunner::executeQuery(const QueryPlan& query_plan, Query* query) {
   switch (query_plan.scan_mode_) {
 
     case SCAN_LOCKSTEP:
+    case AGGREGATE_LOCKSTEP:
       // scanInLockStep(query_plan, query);
       break;
 
-    case SCAN_TIME_WINDOW:
+    case AGGREGATE_TIME_WINDOW:
       scanWithTimeWindow(query_plan, query);
       break;
 
     case SCAN_SERIAL:
+    case AGGREGATE_SERIAL:
       // scanSerial(query_plan, query);
       break;
 
   };
 }
 
-void scanWithTimeWindow(const QueryPlan& query_plan, Query* query) {
+void QueryRunner::scanWithTimeWindow(
+    const QueryPlan& query_plan,
+    Query* query) {
+  uint64_t current_window;
+  uint64_t window_size = 60;
 
 }
 

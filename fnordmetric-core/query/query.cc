@@ -10,7 +10,9 @@
 namespace fnordmetric {
 namespace query {
 
-Query::Query(const std::string& query_string) {
+Query::Query(
+    const std::string& query_string,
+    const IStreamRepository& stream_repo) {
 }
 
 const std::vector<std::string>& Query::getStreams() {

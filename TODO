@@ -53,12 +53,6 @@ SELECT
   GROUP BY TIME_WINDOW(5 minutes);
 -- AGGREGATE_TIME_WINDOW
 
--- SELECT http error rate from one metric for yesterday in 5 min windows
-
-
--- SELECT http error rate from one metric for yesterday gross
-
-
 -- SELECT top 10 slowest pages yesterday by 90th percentile latency
 SELECT
   url, percentile(90, latency) as 90thpercentile_latency
@@ -66,8 +60,6 @@ SELECT
   WHERE time > 24hours
   GROUP BY url
   ORDER BY 90thpercentile_latency DESC
-  LIMIT 10;
-
 -- SELECT all pages yesterday with a 90th percentile latency > 1000ms
 SELECT
   url, percentile(90, latency) as 90thpercentile_latency
@@ -84,13 +76,17 @@ SELECT
   WHERE url IN ("/mypage1", "/mypage2", "/mypage3")
   GROUP BY TIME_WINDOW(5minutes), url;
 
--- JOIN two streams on a non time parameter
-
 -- COUNT number of events per time period
 SELECT count(*) FROM metric GROUP BY TIME_WINDOW(5minutes);
 
--- where with logical offset
+-- SELECT holtwinters forecast for a metric value
+SELECT real_value, holtwinters_forecast(real_value)
+  FROM metric
+  WHERE time > -24hours AND time < +24hours;
 
+-- JOIN two streams on a non time parameter
+-- SELECT http error rate from one metric for yesterday in 5 min windows
+-- SELECT http error rate from one metric for yesterday gross
 
 
 -> Concepts: Stream, Agents vs Server, Retention Policy
