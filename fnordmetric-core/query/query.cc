@@ -13,5 +13,10 @@ namespace query {
 Query::Query(const std::string& query_string) {
 }
 
+const std::vector<std::string>& Query::getStreams() {
+  static std::vector<std::string> tmpstreams = {"mystream"};
+  return tmpstreams; // FIXPAUL
+}
+
 }
 }

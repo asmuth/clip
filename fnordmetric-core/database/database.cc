@@ -18,6 +18,8 @@
 #include "streamref.h"
 #include "pagemanager.h"
 #include "log.h"
+#include "../query/queryplan.h"
+#include "../query/queryrunner.h"
 
 namespace fnordmetric {
 namespace database {
@@ -181,7 +183,8 @@ uint64_t Database::getStreamId(const std::string& stream_key) {
 }
 
 void Database::executeQuery(query::Query* query) {
-
+  query::QueryPlan query_plan(query, this);
+  query::QueryRunner::executeQuery(query_plan, query);
 }
 
 
