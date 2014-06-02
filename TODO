@@ -6,24 +6,33 @@
 -> file lock on open
 -> proper error handling
 
-SELECT
-  [FIELDS]
-FROM
-  [STREAMS]
-WHERE
-  [CONDITIONS]
-FROM
-  [FROM_TIME]
-UNITL
-  [UNTIL_TIME]
-GROUP BY
-  [GROUP EXPR]
-ALIGN BY
-  INTERPOLATION;
-
 You can run it as a standalone timerseries database or as a network of distributed
 data collection agents. SQL Syntax, statsd support, c++, bindings for x,z,y jadda
 jadda
+
+FnordMetric is heavily optimized for sequential queries and aggregations over
+time ranges. This means running something like "give me the slowest pages by
+90th percentile latency for every 10 minute window in the last 3 days" is pretty
+fast, whereas something like "give me a whole stream with thousands of rows but
+reorder it by some custom" field is better suited for a regular database.
+
+- streaming queries that output a continiously changing dataset
+- standing queries (< streaming queries) that output the data into a new stream
+  as it is generated
+- streaming queries can't have: order by -- can they?
+- no sub-query support! (if you need sub queries what you are trying to do is
+probably better suited for a regular database anyway)
+
+Execution Flow:
+
+  {
+     Scan+Filter,
+     Aggregate
+  }
+  Having
+  Re-Order
+  Limit, Offset
+
 
 -- Select number of http error codes in the last hour
 SELECT http_status, count(http_status) from http_requests
@@ -35,29 +44,50 @@ SELECT http_status, count(http_status) from http_requests
 SELECT percentile(latency, 90) from latency_metric WHERE time > -24hours;
 -- SCAN_LOCKSTEP
 
--- SELECT error rate with two metrics
+-- SELECT error rate with two metrics and a 5 min window
 SELECT
+  time,
   ((delta(succesful_requests.count) / delta(errors.count)) * 100) as error_rate,
-  FROM
-    successful_requests,
-    errors
+  FROM successful_requests, errors
+  WHERE time > -24hours
   GROUP BY TIME_WINDOW(5 minutes);
+-- AGGREGATE_TIME_WINDOW
 
--- SELECT slowest page yesterday
+-- SELECT http error rate from one metric for yesterday in 5 min windows
 
--- SELECT http error rate from one metric
+
+-- SELECT http error rate from one metric for yesterday gross
+
+
+-- SELECT top 10 slowest pages yesterday by 90th percentile latency
+SELECT
+  url, percentile(90, latency) as 90thpercentile_latency
+  FROM request_log
+  WHERE time > 24hours
+  GROUP BY url
+  ORDER BY 90thpercentile_latency DESC
+  LIMIT 10;
+
+-- SELECT all pages yesterday with a 90th percentile latency > 1000ms
+SELECT
+  url, percentile(90, latency) as 90thpercentile_latency
+  FROM request_log
+  WHERE time > 24hours
+  GROUP BY url
+  HAVING 90thpercentile_latency > 1000;
+
+-- SELECT 90thpercentile page latency for three pages in 5 min windows
+SELECT
+  time, url, percentile(90, latency) as 90thpercentile_latency
+  FROM request_log
+  WHERE time > 24hours
+  WHERE url IN ("/mypage1", "/mypage2", "/mypage3")
+  GROUP BY TIME_WINDOW(5minutes), url;
 
 -- JOIN two streams on a non time parameter
 
-   SELECT http_code, time
-      FROM http_requests
-
--- GROUP on time + another field
-
 -- COUNT number of events per time period
-SELECT count(*) FROM metric GROUP BY
-
--- limit, offset;
+SELECT count(*) FROM metric GROUP BY TIME_WINDOW(5minutes);
 
 -- where with logical offset
 
