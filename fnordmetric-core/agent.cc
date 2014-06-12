@@ -14,7 +14,12 @@ std::unique_ptr<query::Query> Agent::executeQuery(
     const std::string& query_string) const {
   std::unique_ptr<query::Query> query(new query::Query(query_string, *this));
 
-  return std::unique_ptr<query::Query>(nullptr);
+  return query;
+}
+
+std::shared_ptr<Stream> Agent::findStreamByName(
+    const std::string& stream_name) const {
+  //return std::shared_ptr<Stream>(nullptr);
 }
 
 }

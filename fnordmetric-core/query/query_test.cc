@@ -10,10 +10,11 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
-#include "../agent.h"
-#include "../clock.h"
-#include "../query/query.h"
-#include "../database/database.h"
+#include "queryparser.h"
+//#include "../agent.h"
+//#include "../clock.h"
+//#include "../query/query.h"
+//#include "../database/database.h"
 
 namespace fnordmetric {
 namespace query {
@@ -23,9 +24,18 @@ public:
   QueryTest() {}
 
   void run() {
-    testQuery();
+    testQueryParser();
   }
 
+  void testQueryParser() {
+    QueryParser parser;
+    const char* test_qry = " SELECT  fnord,sum(blah) from fubar wHeRe 1= 1;";
+    auto bytes_consumed = parser.parse(test_qry, strlen(test_qry));
+    assert(bytes_consumed == strlen(test_qry));
+  }
+
+
+/*
   Agent getAgent() {
     auto database = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testQuery",
@@ -35,7 +45,8 @@ public:
 
     return Agent("testagent", std::move(database));
   }
-
+*/
+/*
   void testQuery() {
     auto agent = getAgent();
     auto stream = agent.openStream(
@@ -44,7 +55,7 @@ public:
     auto raw_stream = agent.database_->openStream(
         stream->getKey().getKeyString());
 
-    /* insert test records */
+    / * insert test records * /
     auto base_time = WallClock::getUnixMillis();
     RecordWriter record_writer(stream->getSchema());
     for (int i = 0; i < 1000; ++i) {
@@ -53,10 +64,10 @@ public:
       raw_stream->appendRow(record_writer, base_time + i);
     }
 
-    /* test query 1 */
+    / * test query 1 * /
     auto results = agent.executeQuery("SELECT time, seq FROM mystream;");
   }
-
+*/
 };
 
 }
