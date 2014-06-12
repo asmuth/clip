@@ -30,7 +30,11 @@ void QueryParser::tokenize(
     const char* end,
     std::vector<Token>* token_list) {
 next:
-  char escape_char = 0;
+  char quote_char = 0;
+
+  if (token_list->size() > 0) {
+    token_list->back().debugPrint();
+  }
 
   /* skip whitespace */
   while (**cur == ' ' && *cur < end) {
@@ -78,24 +82,32 @@ next:
       goto next;
     }
 
-    case '"': {
+    case '"':
+    case '\'':
+    case '`':
+      quote_char = **cur;
       (*cur)++;
-      escape_char = '"';
       /* fallthrough */
-    }
   }
 
   /* string tokens */
   Token token(T_STRING, *cur);
 
-  if (escape_char) {
-    // FIXPAUL allow escape characters!
-    while (**cur != escape_char && *cur < end) {
-      token.len++;
+  if (quote_char) {
+    int escape_level = 0;
+    while (*cur < end) {
+      if (**cur == quote_char) {
+        if (escape_level % 2 == 0) break;
+      } else if (**cur == '\\') {
+        escape_level++;
+      } else {
+        escape_level = 0;
+      }
       (*cur)++;
+      token.len++;
     }
-
-    escape_char = 0;
+    (*cur)++;
+    quote_char = 0;
   } else {
     while (
         **cur != ' ' &&
