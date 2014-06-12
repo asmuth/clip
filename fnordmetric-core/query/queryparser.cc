@@ -11,101 +11,119 @@
 namespace fnordmetric {
 namespace query {
 
-// FIXPAUL too many token copies!
 size_t QueryParser::parse(const char* query, size_t len) {
-  ParserState state = {
-    .end = query + len,
-    .cur = query
-  };
+  const char* cur = query;
+  const char* end = cur + len;
 
   std::vector<Token> token_list;
+  tokenize(&cur, end, &token_list_);
 
-  while (state.cur < state.end) {
-    consumeWhitespace(&state);
-    auto token = consumeNextToken(&state);
+  for (const auto& token : token_list) {
     token.debugPrint();
-    token_list.push_back(token);
   }
 
-  return state.cur - query;
+  return cur - query;
 }
 
-/*
-QueryParser::Token QueryParser::consumeVerb(ParserState* state) {
-  consumeWhitespace(state);
+void QueryParser::tokenize(
+    const char** cur,
+    const char* end,
+    std::vector<Token>* token_list) {
+next:
+  char escape_char = 0;
 
-  auto verb = consumeToken(state);
-  // FIXPAUL clean this up
-  verb.debugPrint();
-  if (verb == "SELECT") {
-    //  
+  /* skip whitespace */
+  while (**cur == ' ' && *cur < end) {
+    (*cur)++;
   }
 
-  while (consumeField()) {
-
+  if (*cur >= end) {
+    return;
   }
 
-  auto from = consumeFromClause();
-}
-*/
-
-void QueryParser::consumeWhitespace(ParserState* state) {
-  while (*state->cur == ' ') {
-    state->cur++;
-  }
-}
-
-QueryParser::Token QueryParser::consumeNextToken(ParserState* state) {
-  switch (*state->cur) {
-
+  /* single character tokens */
+  switch (**cur) {
     case ',': {
-      return Token(T_COMMA, state->cur++);
+      token_list->emplace_back(T_COMMA, (*cur)++);
+      goto next;
     }
 
     case ';': {
-      return Token(T_SEMICOLON, state->cur++);
+      token_list->emplace_back(T_SEMICOLON, (*cur)++);
+      return;
     }
 
     case '.': {
-      return Token(T_DOT, state->cur++);
+      token_list->emplace_back(T_DOT, (*cur)++);
+      goto next;
     }
 
     case '(': {
-      return Token(T_LPAREN, state->cur++);
+      token_list->emplace_back(T_LPAREN, (*cur)++);
+      goto next;
     }
 
     case ')': {
-      return Token(T_RPAREN, state->cur++);
+      token_list->emplace_back(T_RPAREN, (*cur)++);
+      goto next;
     }
 
     case '=': {
-      return Token(T_EQUAL, state->cur++);
+      token_list->emplace_back(T_EQUAL, (*cur)++);
+      goto next;
     }
 
+    case '+': {
+      token_list->emplace_back(T_PLUS, (*cur)++);
+      goto next;
+    }
+
+    case '"': {
+      (*cur)++;
+      escape_char = '"';
+      /* fallthrough */
+    }
   }
 
-  Token token(T_STRING, state->cur);
+  /* string tokens */
+  Token token(T_STRING, *cur);
 
-  while (
-      *state->cur != ' ' &&
-      *state->cur != ',' &&
-      *state->cur != ';' &&
-      *state->cur != '(' &&
-      *state->cur != ')' &&
-      *state->cur != '=') {
-    token.len++;
-    state->cur++;
+  if (escape_char) {
+    // FIXPAUL allow escape characters!
+    while (**cur != escape_char && *cur < end) {
+      token.len++;
+      (*cur)++;
+    }
+
+    escape_char = 0;
+  } else {
+    while (
+        **cur != ' ' &&
+        **cur != ',' &&
+        **cur != '.' &&
+        **cur != ';' &&
+        **cur != '(' &&
+        **cur != ')' &&
+        **cur != '=' &&
+        **cur != '+' &&
+        *cur < end) {
+      token.len++;
+      (*cur)++;
+    }
+
+    if (token == "SELECT") {
+      token_list->emplace_back(T_SELECT, token.addr);
+      goto next;
+    }
+
+    if (token == "FROM") {
+      token_list->emplace_back(T_FROM, token.addr);
+      goto next;
+    }
   }
 
-  if (token == "SELECT") {
-    return Token(T_SELECT, token.addr);
-  }
-
-  if (token == "FROM") {
-    return Token(T_FROM, token.addr);
-  }
-
-  return token;
+  token_list->push_back(token);
+  goto next; // poor mans tail recursion optimization
 }
 
 QueryParser::Token::Token(kTokenType token_type, const char* token_addr) :
@@ -114,7 +132,7 @@ QueryParser::Token::Token(kTokenType token_type, const char* token_addr) :
     len(0) {}
 
 // FIXPAUL!!
-void QueryParser::Token::debugPrint() {
+void QueryParser::Token::debugPrint() const {
   switch (type) {
 
     case T_SELECT:
@@ -158,12 +176,16 @@ void QueryParser::Token::debugPrint() {
       printf("T_EQUAL\n");
       break;
 
+    case T_PLUS:
+      printf("T_PLUS\n");
+      break;
+
   }
 }
 
 
 // FIXPAUL: case insensitive check
-bool QueryParser::Token::operator==(const std::string& string) {
+bool QueryParser::Token::operator==(const std::string& string) const {
   if (this->len != string.size()) {
     return false;
   }
