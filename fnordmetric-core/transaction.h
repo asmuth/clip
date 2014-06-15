@@ -84,12 +84,14 @@ public:
   /**
    * Commit this transaction.
    */
-  virtual bool commit();
+  bool commit();
 
   /**
    * Rollback this transaction.
    */
-  virtual bool rollback();
+  bool rollback();
+
+  const std::vector<DocumentRef*>& getDirtyDocuments() const;
 
 protected:
   int running_;

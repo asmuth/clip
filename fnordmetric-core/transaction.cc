@@ -26,24 +26,43 @@ Transaction::~Transaction() {
 
 DocumentRef* Transaction::createDocument() {
   auto docref = new DocumentRef(collection_);
-
   dirty_documents_.push_back(docref);
   return docref;
 }
 
 bool Transaction::commit() {
+  if (!running_) {
+    return false;
+  }
+
+  bool ret = collection_->commitTransaction(this);
+
   for (const auto docref : dirty_documents_) {
     delete docref;
   }
+
+  running_ = 0;
+  return ret;
 }
 
 bool Transaction::rollback() {
+  if (!running_) {
+    return false;
+  }
+
   for (const auto docref : dirty_documents_) {
     if (docref->isDirty()) {
       docref->revert();
     }
     delete docref;
   }
+
+  running_ = 0;
+  return true;
+}
+
+const std::vector<DocumentRef*>& Transaction::getDirtyDocuments() const {
+  return dirty_documents_;
 }
 
 }

@@ -103,6 +103,12 @@ public:
   std::unique_ptr<fnordmetric::Collection::Snapshot> getSnapshot() override;
 
   /**
+   * Commit a transaction on this collection. Do not call this directly unless
+   * you know what you are doing. Use Transaction#commit instead
+   */
+  bool commitTransaction(const Transaction* transaction) override;
+
+  /**
    * Sync the log to disk. Makes all changes until this point durable and blocks
    * on what is essentialy an fsync()
    */
@@ -129,6 +135,7 @@ protected:
   std::shared_ptr<PageIndex> page_index_;
   std::mutex page_index_mutex_;
   std::mutex commit_mutex_;
+  std::mutex sync_mutex_;
 };
 
 }

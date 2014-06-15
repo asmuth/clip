@@ -19,6 +19,7 @@ namespace fnordmetric {
 
 class Database;
 class Cursor;
+class DocumentRef;
 
 struct PageAlloc {
   PageAlloc(
@@ -49,9 +50,10 @@ struct __attribute__((__packed__)) RowHeader {
 class PageIndex {
   friend class DatabaseTest;
 public:
-  PageIndex(const PageManager::Page& index_page) {}
+  PageIndex(const PageManager::Page& index_page);
   PageIndex(const PageIndex& copy) = delete;
   PageIndex& operator=(const PageIndex& copy) = delete;
+  ~PageIndex();
 
   /**
    * Access the StreamRefs internal page storage (do not call this method unless
@@ -60,14 +62,13 @@ public:
   void accessPages(std::function<void(
       const std::vector<std::shared_ptr<PageAlloc>>&)> func);
 
+  void appendDocument(const DocumentRef* document);
+
+  PageIndex* clone();
+
 protected:
 
-  uint64_t estimatePageSize(size_t last_page_avg_size, size_t row_size) const;
-
-  // this is suboptimal as it will force us to do random memory accesses when
-  // trying to binary search over the pages first row times
-  std::vector<std::shared_ptr<PageAlloc>> pages_;
-  size_t num_pages_;
+  PageManager::Page index_page_;
 };
 
 }

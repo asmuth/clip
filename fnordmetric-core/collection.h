@@ -105,6 +105,12 @@ public:
   std::unique_ptr<Transaction> startTransaction();
 
   /**
+   * Commit a transaction on this collection. Do not call this directly unless
+   * you know what you are doing. Use Transaction#commit instead
+   */
+  virtual bool commitTransaction(const Transaction* transaction) = 0;
+
+  /**
    * Get a snapshot of this collection
    */
   virtual std::unique_ptr<Snapshot> getSnapshot() = 0;
