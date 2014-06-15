@@ -17,9 +17,6 @@
 #include <atomic>
 
 namespace fnordmetric {
-namespace database {
-
-struct LogSnapshot;
 
 /**
  * This is an internal class. For usage instructions and extended documentation
@@ -50,7 +47,7 @@ public:
   };
 
   PageManager(size_t block_size);
-  PageManager(size_t block_size, const LogSnapshot& log_snapshot);
+  //PageManager(size_t block_size, const LogSnapshot& log_snapshot);
   PageManager(const PageManager& copy) = delete;
   PageManager& operator=(const PageManager& copy) = delete;
   PageManager(const PageManager&& move);
@@ -146,11 +143,11 @@ public:
    * Create a new mmap page manager for a file where some pages are already
    * allocaed
    */
-  explicit MmapPageManager(
-      int fd,
-      size_t len,
-      size_t block_size,
-      const LogSnapshot& log_snapshot);
+  //explicit MmapPageManager(
+  //    int fd,
+  //    size_t len,
+  //    size_t block_size);
+      //const LogSnapshot& log_snapshot);
 
   MmapPageManager(MmapPageManager&& move);
   MmapPageManager(const MmapPageManager& copy) = delete;
@@ -188,6 +185,5 @@ T* PageManager::PageRef::structAt(size_t position) const {
 }
 
 
-}
 }
 #endif

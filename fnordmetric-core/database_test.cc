@@ -10,13 +10,12 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
-#include "database.h"
+#include "collection.h"
 #include "pagemanager.h"
-#include "cursor.h"
-#include "../clock.h"
+//#include "cursor.h"
+//#include "clock.h"
 
 namespace fnordmetric {
-namespace database {
 
 // TODO test freelist serialization / after file reloads
 // TODO test in memory db
@@ -30,9 +29,10 @@ public:
     //testStreamRefCreation();
     testPageManager();
     testMmapPageManager();
-    testOpenFile();
+    testAOCollection();
   }
 
+/*
   void testStreamIdAssignment() {
     auto backend = fnordmetric::database::Database::openFile(
         "/tmp/__fnordmetric_testStreamIdAssignment",
@@ -67,6 +67,7 @@ public:
     assert(ref2.get() != ref4.get());
     assert(ref3.get() == ref4.get());
   }
+*/
 
   void testPageManager() {
     class ConcreteTestPageManager : public PageManager {
@@ -121,7 +122,11 @@ public:
     close(fd);
   }
 
-  void testOpenFile() {
+  void testAOCollection() {
+    auto collection = fnordmetric::Collection::openFile(
+        "/tmp/__fnordmetric_testAOCollection",
+        Collection::FILE_TRUNCATE);
+/*
     //printf("TEST: File backed database insert, reopen, read\n");
     uint32_t stream_id;
     std::vector<fnordmetric::database::StreamPosition> insert_times;
@@ -192,15 +197,15 @@ public:
       }
       assert(cursor->next() == false);
     }
+*/
   }
 
 };
 
 }
-}
 
 int main() {
-  fnordmetric::database::DatabaseTest test;
+  fnordmetric::DatabaseTest test;
   test.run();
   printf("all tests passed! :)\n");
 }
