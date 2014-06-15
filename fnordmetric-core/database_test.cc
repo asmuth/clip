@@ -123,8 +123,15 @@ public:
   }
 
   void testAOCollection() {
-    auto collection = fnordmetric::Collection::openFile(
+    std::vector<Field> fields = {
+        fnordmetric::IntegerField("sequence_num"),
+        fnordmetric::IntegerField("test1"),
+        fnordmetric::StringField("test2")};
+    Schema schema(fields);
+
+    auto collection = fnordmetric::Collection::createPersistentCollection(
         "/tmp/__fnordmetric_testAOCollection",
+        schema,
         Collection::FILE_TRUNCATE);
 /*
     //printf("TEST: File backed database insert, reopen, read\n");
@@ -139,7 +146,8 @@ public:
     int rows_written = 0;
     size_t base_time = WallClock::getUnixMillis();
 
-    for (int j = 0; j < 50; ++j) {
+    //for (int j = 0; j < 50; ++j) {
+    for (int j = 0; j < 5; ++j) {
       int flags = database::MODE_CONSERVATIVE;
       if (j == 0) { flags |= database::FILE_TRUNCATE; }
       if (j == 49) { flags |= database::FILE_AUTODELETE; }
@@ -196,6 +204,8 @@ public:
         assert(strncmp(str, "fnordbar", str_len) == 0);
       }
       assert(cursor->next() == false);
+      query::Query query("SELECT count(*) FROM mystream");
+      database->executeQuery(&query);
     }
 */
   }
