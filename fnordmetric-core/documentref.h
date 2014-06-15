@@ -4,34 +4,37 @@
  *
  * Licensed under the MIT license (see LICENSE).
  */
-#ifndef _FNORDMETRIC_CURSOR_H
-#define _FNORDMETRIC_CURSOR_H
+#ifndef _FNORDMETRIC_DOCUMENTREF_H
+#define _FNORDMETRIC_DOCUMENTREF_H
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
 #include <memory>
-#include "pagemanager.h"
 
 namespace fnordmetric {
+class PageManager;
+class Collection;
 
 /**
- * A storage cursor is a stateful iterator for a single dollection.
- *
  */
-class Cursor {
+class DocumentRef {
 public:
 
-  Cursor(const Cursor& copy) = delete;
-  Cursor& operator=(const Cursor& copy) = delete;
-  virtual ~Cursor();
-
   /**
-   * Try to advance the cursor by n documents. Returns the number of documents
-   * the cursor was advanced by
+   * Create a new DocumentRef for an empty document
    */
-  virtual size_t advanceBy(size_t n) = 0;
+  explicit DocumentRef(Collection* collection);
+
+  void revert();
+  bool isDirty();
+
+  DocumentRef(const DocumentRef& copy) = delete;
+  DocumentRef& operator=(const DocumentRef& copy) = delete;
+
 
 protected:
+  Collection* collection_;
+  int dirty_;
   //StreamRef* stream_ref_;
   //std::shared_ptr<const PageAlloc> current_page_;
   //std::unique_ptr<PageManager::PageRef> current_page_ref_;

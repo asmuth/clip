@@ -10,20 +10,27 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "schema.h"
+#include "collection.h"
 
 namespace fnordmetric {
+class DocumentRef;
+class Cursor;
+class Collection;
+
+typedef uint64_t DocumentKey;
 
 /**
- * Neither transaction nor cursor are threadsafe! You must serialize access to
- * individual instances of these classes!
+ * A transaction object is not threadsafe! If you want to use a cursor from
+ * multiple threads you must take care to synchronize access in such a way that
+ * no two threads call any method on the cursor object at the same time!
  */
 class Transaction {
+public:
 
   /**
-   * Create a new transaction. This method should not be called directly but
-   * through Collection#startTransaction
+   * Start a new transaction on the given collection
    */
-  Transaction(std::unique_ptr<Cursor>&& cursor);
+  Transaction(Collection* collection);
 
   Transaction(const Transaction& copy) = delete;
   Transaction& operator=(const Transaction& copy) = delete;
@@ -34,22 +41,61 @@ class Transaction {
   ~Transaction();
 
   /**
-   * Return the implicit cursor of this transaction
+   * Return a cursor for the collection this transaction is running on and seek
+   * to the first document with a key larger than or equal to the specified key.
+   *
+   * The returned cursor is only valid within this transaction until it is
+   * committed or rolled back.
    */
-  Cursor* getCursor();
+  std::unique_ptr<Cursor> getCursor(const DocumentKey& key);
+
+  /**
+   * Return a pointer to the document the cursor is currently pointing to.
+   *
+   * The returned pointer is valid until the transaction is committed or rolled
+   * back.
+   */
+  //virtual DocumentRef* getDocument(const Cursor* cursor) = 0;
+
+  /**
+   * Get the document with the specified document key
+   *
+   * The returned pointer is valid until the transaction is committed or rolled
+   * back.
+   */
+  DocumentRef* getDocument(const DocumentKey& key);
+
+  /**
+   * Create a new document
+   *
+   * The returned pointer is valid until the transaction is committed or rolled
+   * back.
+   */
+  DocumentRef* createDocument();
+
+  /**
+   * Get or create the document with the specified document key
+   *
+   * The returned pointer is valid until the transaction is committed or rolled
+   * back.
+   */
+  DocumentRef* getOrCreateDocument(const DocumentKey& key);
 
   /**
    * Commit this transaction.
    */
-  bool commit();
+  virtual bool commit();
 
   /**
    * Rollback this transaction.
    */
-  bool rollback();
+  virtual bool rollback();
 
 protected:
-  const std::unique_ptr<Cursor> cursor_;
+  int running_;
+  Collection* const collection_;
+  std::unique_ptr<Collection::Snapshot> snapshot_;
+  std::vector<DocumentRef*> dirty_documents_; /* hrhr ;) */
 };
 
 }

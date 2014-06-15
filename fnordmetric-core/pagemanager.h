@@ -27,10 +27,9 @@ class PageManager {
 public:
 
   struct Page {
-    union {
-      uint64_t offset;
-      void* ptr;
-    };
+    Page(uint64_t offset_, uint64_t size_);
+    Page();
+    uint64_t offset;
     uint64_t size;
   };
 

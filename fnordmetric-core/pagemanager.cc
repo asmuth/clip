@@ -65,6 +65,12 @@ bool PageManager::findFreePage(size_t min_size, Page* destination) {
   return false;
 }
 
+PageManager::Page::Page(uint64_t offset_, uint64_t size_) :
+    offset(offset_),
+    size(size_) {}
+
+PageManager::Page::Page() : offset(0), size(0) {}
+
 PageManager::PageRef::PageRef(const PageManager::Page& page) :
     page_(page) {}
 

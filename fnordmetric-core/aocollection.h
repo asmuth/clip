@@ -12,19 +12,13 @@
 #include <string>
 #include <memory>
 #include <mutex>
-#include <unordered_map>
 #include "pagemanager.h"
-#include "log.h"
+#include "collection.h"
+#include "cursor.h"
+#include "transaction.h"
+#include "pageindex.h"
 
 /**
- * A storage backend stores an arbitrary number of 'streams'. A stream consists
- * of rows. Each row is a <time, data> tuple where time is the time at which the
- * row was inserted into the stream and data is a binary string. Streams are
- * append only. Each stream is identified by a unique string key.
- *
- * A file-backed, threadsafe storage backend for FnordMetric. This backend
- * multiplexes an arbitrary number of stream into a single log-structured file.
- *
  *
  * eBNF:
  *
@@ -76,9 +70,27 @@ namespace fnordmetric {
 
 class AOCollection : public Collection {
 public:
+  static const uint16_t CollectionTypeId = 0x01;
+  static uint64_t kInitialIndexPageSize;
+
+  /**
+   * Constructor for a new collection
+   */
+  AOCollection(
+      const Schema& schema,
+      std::shared_ptr<PageManager> page_manager);
+
+  /**
+   * Constructor for an exisiting collection
+   */
+  AOCollection(
+      const Schema& schema,
+      PageManager::Page root_page,
+      std::shared_ptr<PageManager> page_manager);
+
   AOCollection(const AOCollection& copy) = delete;
   AOCollection& operator=(const AOCollection& copy) = delete;
-  ~AOCollection();
+  ~AOCollection() override;
 
   /**
    * Target page size in number of rows. Default: 16384 rows
@@ -86,10 +98,37 @@ public:
   static size_t kTargetRowsPerPage;
 
   /**
-   * Start a new transaction on this collection
+   * Get a snapshot of this collection
    */
-  std::unique_ptr<Transaction> startTransaction() override;
+  std::unique_ptr<fnordmetric::Collection::Snapshot> getSnapshot() override;
 
+  /**
+   * Sync the log to disk. Makes all changes until this point durable and blocks
+   * on what is essentialy an fsync()
+   */
+  void sync() override;
+
+protected:
+
+  /**
+   * Refer to the interface documentation in "collection.h"
+   */
+  class Snapshot : public fnordmetric::Collection::Snapshot {
+  public:
+    std::unique_ptr<Cursor> getCursor(const DocumentKey& key) override;
+  };
+
+  /**
+   * Refer to the interface documentation in "cursor.h"
+   */
+  class Cursor : public fnordmetric::Cursor {
+  public:
+    size_t advanceBy(size_t n) override;
+  };
+
+  std::shared_ptr<PageIndex> page_index_;
+  std::mutex page_index_mutex_;
+  std::mutex commit_mutex_;
 };
 
 }

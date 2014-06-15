@@ -11,7 +11,9 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include "collection.h"
+#include "aocollection.h"
 #include "pagemanager.h"
+#include "transaction.h"
 //#include "cursor.h"
 //#include "clock.h"
 
@@ -129,10 +131,14 @@ public:
         fnordmetric::StringField("test2")};
     Schema schema(fields);
 
-    auto collection = fnordmetric::Collection::createPersistentCollection(
+    auto collection = Collection::createPersistentCollection<AOCollection>(
         "/tmp/__fnordmetric_testAOCollection",
         schema,
         Collection::FILE_TRUNCATE);
+
+    auto tx = collection->startTransaction();
+    auto docref = tx->createDocument();
+  printf("constructed...\n");
 /*
     //printf("TEST: File backed database insert, reopen, read\n");
     uint32_t stream_id;
