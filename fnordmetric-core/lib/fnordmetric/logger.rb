@@ -21,8 +21,9 @@ class FnordMetric::Logger
   end
 
   def initialize(opts)
-    @opts = opts
+    @opts = FnordMetric.options(opts)
     opts.fetch(:file)
+    @channels = @opts[:channels] || []
 
     FnordMetric.register(self)
   end
@@ -33,7 +34,7 @@ class FnordMetric::Logger
     events = Queue.new
     dump_file = File.open(logfile_path, 'a+')
 
-    fetcher = Thread.new do
+    Thread.new do
       loop do
         event = events.pop
 
@@ -42,11 +43,9 @@ class FnordMetric::Logger
       end
     end
 
-    listener = Thread.new do  
-      backend = FnordMetric.backend
-      backend.subscribe do |event|
-        events << event if log_channel?(event["_channel"])
-      end
+    redis.pubsub.subscribe(pubsub_key) do |data|
+      event = JSON.parse(data)
+      events << event if log_channel?(event["_channel"])
     end
 
     FnordMetric.log "logging to #{logfile_path}"
@@ -55,9 +54,17 @@ class FnordMetric::Logger
 
 private
 
+  def pubsub_key
+    [@opts[:redis_prefix], 'announce'].join("-")
+  end
+
+  def redis
+    @redis ||= EM::Hiredis.connect(FnordMetric.options[:redis_url])
+  end
+
   def log_channel?(channel)
-    return !!@opts[:channels] if !channel
-    @opts[:channels].include?(channel.to_s)
+    return @channels.empty? if !channel
+    @channels.include?(channel.to_s)
   end
 
 end
