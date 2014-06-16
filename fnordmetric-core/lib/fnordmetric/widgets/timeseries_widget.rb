@@ -32,7 +32,7 @@ class FnordMetric::TimeseriesWidget < FnordMetric::Widget
       :series => series,
       :gauges => gauges.map(&:name),
       :start_timestamp => ticks.first,
-      :end_timestamp => ticks.last,
+      :end_timestamp => ticks.to_a.last,
       :xticks => (@opts[:xticks] || 30),
       :autoupdate => (@opts[:autoupdate] || 60),
       :include_current => !!@opts[:include_current],
