@@ -17,7 +17,6 @@
 
 namespace fnordmetric {
 
-//size_t Database::kTargetRowsPerPage = 16384;
 //size_t Database::kMaxPageSizeSoft = 4194304;
 //size_t Database::kMaxPageSizeHard = 33554432;
 
@@ -25,10 +24,12 @@ uint64_t AOCollection::kInitialIndexPageSize = 65535;
 
 AOCollection::AOCollection(
     const Schema& schema,
-    std::shared_ptr<PageManager> page_manager) :
+    std::shared_ptr<PageManager> page_manager,
+    std::unique_ptr<IDSequence> seq) :
     Collection(schema, page_manager),
-    page_index_(std::shared_ptr<PageIndex>(
-        new PageIndex(PageManager::Page(0,0)))) {}
+    page_index_(std::shared_ptr<PageIndex>(new PageIndex(page_manager))),
+    seq_(std::move(seq)),
+    last_key_(0) {}
 
 AOCollection::~AOCollection() {
   sync();
@@ -40,78 +41,77 @@ std::unique_ptr<fnordmetric::Collection::Snapshot> AOCollection::getSnapshot() {
 }
 
 bool AOCollection::commitTransaction(const Transaction* transaction) {
-  std::vector<PageAlloc> dirty_pages;
-
   commit_mutex_.lock();
-  if (page_index_.getNumPages() > 0) {
-    dirty_pages->push_back(*page_index->getLastPage());
-  }
+  auto index = page_index_->clone();
 
   for (auto docref : transaction->getDirtyDocuments()) {
-    if (!docref->isDirty()) {
-      delete docref;
-      continue;
-    }
+    if (docref->isDirty()) {
+      auto key = docref->getDocumentKey();
+      if (!key.isIntKey()) {
+        printf("error: unsupported key type\n"); // FIXPAUL
+        goto rollback_tx;
+      }
 
-    // FIXPAUL check that sequence number is increasing, assign seq num/time etc
-    // FIXPAUL if error, revert and free all remaining docrefs and free the index
-    // copy if existing!
-    appendDocument(docref, &dirty_pages);
+      if (key.getIntKey() == 0) {
+        uint64_t next_key = seq_->getNext(last_key_);
+        docref->setDocumentKey(DocumentKey(next_key));
+        last_key_ = next_key;
+      } else if (key.getIntKey() <= last_key_) {
+        printf("error: keys must be monotonically increasing\n"); // FIXPAUL
+        goto rollback_tx;
+      }
+
+      appendDocument(docref, index);
+    }
   }
 
+commit_tx:
   printf("commit!");
-  page_index->commitChanges(dirty_pages);
+  page_index_mutex_.lock();
+  page_index_ = std::shared_ptr<PageIndex>(index);
+  page_index_mutex_.unlock();
   commit_mutex_.unlock();
+  return true;
+
+rollback_tx:
+  // FIXPAUL if error free the index copy!
+  commit_mutex_.unlock();
+  return false;
 }
 
 void AOCollection::appendDocument(
     const DocumentRef* docref,
-    std::vector<PageAlloc*>* dirty_pages) {
+    PageIndex* index) {
   char* data;
-  size_t size;
-  docref->getBinary(&data, &size);
-  uint64_t key = 1235;
+  size_t size = 100;
+  //docref->getBinary(&data, &size);
+  uint64_t key = docref->getDocumentKey().getIntKey();
+  assert(key > 0);
 
   size_t row_size = size + sizeof(DocHeader);
   assert(size > 0);
 
-  if (dirty_pages->size() == 0) {
-    auto estimated_page_size = estimatePageSize(row_size, row_size);
-    auto page = page_manager_->allocPage(estimated_page_size);
-    auto alloc = new PageAlloc(page, key);
-    dirty_pages->push_back(alloc);
-  }
+  auto index_ref = index->getIndexPageEntryForInsert(row_size);
+  auto page_ref = page_manager_->getPage(
+      PageManager::Page(index_ref->offset, index_ref->size));
 
-  auto last_page = pages_.back();
-  if (last_page->used_ + row_size >= last_page->page_.size) {
-    assert(last_page->num_rows_.load() > 0);
-    auto last_page_avg_size = last_page->used_ / last_page->num_rows_;
-    auto estimated_page_size = estimatePageSize(last_page_avg_size, row_size);
-    auto page = page_manager_->allocPage(estimated_page_size);
-    auto alloc = new PageAlloc(page, time, logical_offset));
-    pages_.push_back(alloc);
-  }
-
-  auto alloc = pages_.back();
-  auto mmaped = page_manager_->getPage(alloc->page_);
-  DocHeader* row = mmaped->structAt<RowHeader>(alloc->used_);
-  //row->time = time;
-  //row->size = size;
+  DocHeader* document = page_ref->structAt<DocHeader>(index_ref->used);
+  document->key = key;
+  document->size = size;
   //memcpy(row->data, data, size);
   //row->checksum = row->computeChecksum();
 
-  //alloc->first_key = key;
-  alloc->used_ += row_size;
-  page->num_rows_++;
-
-  return pos;
+  if (index_ref->first_key == 0) {
+    index_ref->first_key = key;
+  }
+  index_ref->used += row_size;
 }
+
 void AOCollection::sync() {
   sync_mutex_.lock();
 
   // capture free page list
-
-  auto index_page = page_index_.snapshot();
+  auto index = getPageIndex();
   // MYSYNC SYNC WHOLE FILE
   //writeRootPage(index_page);
 
@@ -119,8 +119,16 @@ void AOCollection::sync() {
   sync_mutex_.unlock();
 }
 
+std::shared_ptr<PageIndex> AOCollection::getPageIndex() const {
+  page_index_mutex_.lock();
+  auto index = page_index_;
+  page_index_mutex_.unlock();
+  return index;
+}
+
 std::unique_ptr<Cursor> AOCollection::Snapshot::getCursor(
     const DocumentKey& key) {
+  assert(0);
 }
 
 //Document* AOCollection::Transaction::getDocument(

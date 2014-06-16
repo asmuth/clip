@@ -68,6 +68,8 @@
 */
 namespace fnordmetric {
 
+class IDSequence;
+
 class AOCollection : public Collection {
 public:
   static const uint16_t CollectionTypeId = 0x01;
@@ -78,7 +80,8 @@ public:
    */
   AOCollection(
       const Schema& schema,
-      std::shared_ptr<PageManager> page_manager);
+      std::shared_ptr<PageManager> page_manager,
+      std::unique_ptr<IDSequence> seq);
 
   /**
    * Constructor for an exisiting collection
@@ -91,11 +94,6 @@ public:
   AOCollection(const AOCollection& copy) = delete;
   AOCollection& operator=(const AOCollection& copy) = delete;
   ~AOCollection() override;
-
-  /**
-   * Target page size in number of rows. Default: 16384 rows
-   */
-  static size_t kTargetRowsPerPage;
 
   /**
    * Get a snapshot of this collection
@@ -116,6 +114,14 @@ public:
 
 protected:
 
+  struct __attribute__((__packed__)) DocHeader {
+    uint32_t checksum;
+    uint32_t size;
+    uint64_t key;
+    uint8_t data[];
+    uint32_t computeChecksum();
+  };
+
   /**
    * Refer to the interface documentation in "collection.h"
    */
@@ -132,10 +138,15 @@ protected:
     size_t advanceBy(size_t n) override;
   };
 
+  void appendDocument(const DocumentRef* docref,PageIndex* index);
+  std::shared_ptr<PageIndex> getPageIndex() const;
+
+  uint64_t last_key_;
   std::shared_ptr<PageIndex> page_index_;
-  std::mutex page_index_mutex_;
+  mutable std::mutex page_index_mutex_;
   std::mutex commit_mutex_;
   std::mutex sync_mutex_;
+  std::unique_ptr<IDSequence> seq_;
 };
 
 }

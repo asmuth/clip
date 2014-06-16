@@ -10,8 +10,11 @@
 
 namespace fnordmetric {
 
-DocumentRef::DocumentRef(Collection* collection) :
+DocumentRef::DocumentRef(
+    Collection* collection,
+    const DocumentKey& key) :
     collection_(collection),
+    key_(key),
     dirty_(1) {}
 
 void DocumentRef::revert() {
@@ -20,6 +23,14 @@ void DocumentRef::revert() {
 
 bool DocumentRef::isDirty() {
   return dirty_ == 1;
+}
+
+void DocumentRef::setDocumentKey(const DocumentKey& key) {
+  key_ = key;
+}
+
+const DocumentKey& DocumentRef::getDocumentKey() const {
+  return key_;
 }
 
 }

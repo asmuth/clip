@@ -21,15 +21,6 @@ class Database;
 class Cursor;
 class DocumentRef;
 
-struct PageAlloc {
-  PageAlloc(
-      const PageManager::Page& page,
-      uint64_t first_key);
-  const PageManager::Page page_;
-  uint64_t used_; /* number of used bytes in the page */
-  const uint64_t first_key_; /* key of the first document in the page */
-};
-
 /*
 struct StreamPosition {
   uint64_t unix_millis;
@@ -39,18 +30,31 @@ struct StreamPosition {
 };
 */
 
-struct __attribute__((__packed__)) RowHeader {
-  uint32_t checksum;
-  uint32_t size;
-  uint64_t time;
-  uint8_t data[];
-  uint32_t computeChecksum();
-};
-
 class PageIndex {
   friend class DatabaseTest;
 public:
-  PageIndex(const PageManager::Page& index_page);
+  PageIndex(std::shared_ptr<PageManager> page_manager);
+
+  PageIndex(
+      std::shared_ptr<PageManager> page_manager,
+      const PageManager::Page& index_page,
+      uint32_t used);
+
+  struct __attribute__((__packed__)) IndexPageEntry {
+    uint64_t offset;
+    uint64_t first_key;
+    uint32_t size;
+    uint32_t used;
+  };
+
+  //static const size_t kInitialIndexPageSize = sizeof(IndexPageEntry) * 64;
+  static const size_t kInitialIndexPageSize = sizeof(IndexPageEntry) * 1;
+
+  /**
+   * Target page size in number of rows. Default: 16384 rows
+   */
+  static size_t kTargetRowsPerPage;
+
   PageIndex(const PageIndex& copy) = delete;
   PageIndex& operator=(const PageIndex& copy) = delete;
   ~PageIndex();
@@ -59,16 +63,24 @@ public:
    * Access the StreamRefs internal page storage (do not call this method unless
    * you know what you are doing)
    */
-  void accessPages(std::function<void(
-      const std::vector<std::shared_ptr<PageAlloc>>&)> func);
+  //void accessPages(std::function<void(
+  //    const std::vector<std::shared_ptr<IndexPageEntry>>&)> func);
 
-  void appendDocument(const DocumentRef* document);
+  IndexPageEntry* getIndexPageEntryForInsert(size_t bytes);
 
   PageIndex* clone();
 
+  size_t getNumPages() const;
+
 protected:
 
+  uint32_t used_;
+
+  IndexPageEntry* appendPage(const PageManager::Page& page);
+
+  const std::shared_ptr<PageManager> page_manager_;
   PageManager::Page index_page_;
+  std::unique_ptr<PageManager::PageRef> index_page_ref_;
 };
 
 }

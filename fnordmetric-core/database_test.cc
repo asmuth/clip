@@ -138,9 +138,13 @@ public:
 
     auto tx = collection->startTransaction();
     auto docref = tx->createDocument();
+    auto docref1 = tx->createDocument();
+    auto docref2 = tx->createDocument();
+    auto docref3 = tx->createDocument();
     tx->commit();
-    printf("committed...\n");
-    collection->sync();
+    //printf("committed...\n");
+    //collection->sync();
+    //printf("synced...\n");
 /*
     //printf("TEST: File backed database insert, reopen, read\n");
     uint32_t stream_id;

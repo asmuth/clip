@@ -11,13 +11,12 @@
 #include <stdint.h>
 #include "schema.h"
 #include "collection.h"
+#include "documentkey.h"
 
 namespace fnordmetric {
 class DocumentRef;
 class Cursor;
 class Collection;
-
-typedef uint64_t DocumentKey;
 
 /**
  * A transaction object is not threadsafe! If you want to use a cursor from
@@ -71,7 +70,7 @@ public:
    * The returned pointer is valid until the transaction is committed or rolled
    * back.
    */
-  DocumentRef* createDocument();
+  DocumentRef* createDocument(const DocumentKey& key = DocumentKey(0));
 
   /**
    * Get or create the document with the specified document key

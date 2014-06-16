@@ -24,8 +24,8 @@ Transaction::~Transaction() {
   }
 }
 
-DocumentRef* Transaction::createDocument() {
-  auto docref = new DocumentRef(collection_);
+DocumentRef* Transaction::createDocument(const DocumentKey& key ) {
+  auto docref = new DocumentRef(collection_, key);
   dirty_documents_.push_back(docref);
   return docref;
 }
@@ -40,6 +40,10 @@ bool Transaction::commit() {
   for (const auto docref : dirty_documents_) {
     delete docref;
   }
+
+  // if (sync_mode == SYNC)
+  // collection_->sync();
+  // FIXPAUL MAX SYNC AGE!
 
   running_ = 0;
   return ret;

@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include "documentkey.h"
 
 namespace fnordmetric {
 class PageManager;
@@ -23,7 +24,7 @@ public:
   /**
    * Create a new DocumentRef for an empty document
    */
-  explicit DocumentRef(Collection* collection);
+  explicit DocumentRef(Collection* collection, const DocumentKey& key);
 
   void revert();
   bool isDirty();
@@ -31,8 +32,11 @@ public:
   DocumentRef(const DocumentRef& copy) = delete;
   DocumentRef& operator=(const DocumentRef& copy) = delete;
 
+  void setDocumentKey(const DocumentKey& key);
+  const DocumentKey& getDocumentKey() const;
 
 protected:
+  DocumentKey key_;
   Collection* collection_;
   int dirty_;
   //StreamRef* stream_ref_;

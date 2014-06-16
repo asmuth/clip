@@ -11,11 +11,12 @@
 #include <stdint.h>
 #include "schema.h"
 #include "pagemanager.h"
+#include "idsequence.h"
 
 namespace fnordmetric {
 class Transaction;
 class Cursor;
-typedef uint64_t DocumentKey;
+class DocumentKey;
 
 /**
  * All methods on a collection instance are threadsafe.
@@ -211,7 +212,8 @@ std::unique_ptr<Collection> Collection::createPersistentCollection(
   file_header->root_page_size = 0;
   // FIXPAUL msync header
 
-  return std::unique_ptr<Collection>(new T(schema, page_manager));
+  std::unique_ptr<IDSequence> seq(new UnixMillisecondIDSequence());
+  return std::unique_ptr<Collection>(new T(schema, page_manager, std::move(seq)));
 
   /* open existing file */
   /*if (fd_len >= kMinReservedHeaderSize) {
