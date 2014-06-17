@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#include "schema.h"
 #include "collection.h"
 #include "documentkey.h"
 
@@ -17,6 +16,7 @@ namespace fnordmetric {
 class DocumentRef;
 class Cursor;
 class Collection;
+class Snapshot;
 
 /**
  * A transaction object is not threadsafe! If you want to use a cursor from
@@ -27,9 +27,9 @@ class Transaction {
 public:
 
   /**
-   * Start a new transaction on the given collection
+   * Start a new transaction
    */
-  Transaction(Collection* collection);
+  Transaction(std::unique_ptr<Snapshot> snapshot);
 
   Transaction(const Transaction& copy) = delete;
   Transaction& operator=(const Transaction& copy) = delete;
@@ -38,23 +38,6 @@ public:
    * A transaction auto-rollbacks on destruction if it was not comitted
    */
   ~Transaction();
-
-  /**
-   * Return a cursor for the collection this transaction is running on and seek
-   * to the first document with a key larger than or equal to the specified key.
-   *
-   * The returned cursor is only valid within this transaction until it is
-   * committed or rolled back.
-   */
-  std::unique_ptr<Cursor> getCursor(const DocumentKey& key);
-
-  /**
-   * Return a pointer to the document the cursor is currently pointing to.
-   *
-   * The returned pointer is valid until the transaction is committed or rolled
-   * back.
-   */
-  //virtual DocumentRef* getDocument(const Cursor* cursor) = 0;
 
   /**
    * Get the document with the specified document key
@@ -90,12 +73,26 @@ public:
    */
   bool rollback();
 
+  /**
+   * Return a cursor for the collection this transaction is running on and seek
+   * to the first document with a key larger than or equal to the specified key.
+   *
+   * The returned cursor is only valid within this transaction until it is
+   * committed or rolled back.
+   */
+  std::unique_ptr<Cursor> getCursor(const DocumentKey& key);
+
+  /**
+   * Return a list of all documents that have been touched in this transaction.
+   *
+   * The returned pointers are only valid within this transaction until it is
+   * committed or rolled back.
+   */
   const std::vector<DocumentRef*>& getDirtyDocuments() const;
 
 protected:
   int running_;
-  Collection* const collection_;
-  std::unique_ptr<Collection::Snapshot> snapshot_;
+  std::unique_ptr<Snapshot> snapshot_;
   std::vector<DocumentRef*> dirty_documents_; /* hrhr ;) */
 };
 

@@ -24,7 +24,7 @@ public:
   /**
    * Create a new DocumentRef for an empty document
    */
-  explicit DocumentRef(Collection* collection, const DocumentKey& key);
+  explicit DocumentRef(const DocumentKey& key);
 
   void revert();
   bool isDirty();
@@ -35,9 +35,10 @@ public:
   void setDocumentKey(const DocumentKey& key);
   const DocumentKey& getDocumentKey() const;
 
+  void getScratchpad(char** data, size_t* size) const;
+
 protected:
   DocumentKey key_;
-  Collection* collection_;
   int dirty_;
   //StreamRef* stream_ref_;
   //std::shared_ptr<const PageAlloc> current_page_;

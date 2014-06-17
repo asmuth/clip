@@ -11,9 +11,7 @@
 namespace fnordmetric {
 
 DocumentRef::DocumentRef(
-    Collection* collection,
     const DocumentKey& key) :
-    collection_(collection),
     key_(key),
     dirty_(1) {}
 
@@ -31,6 +29,12 @@ void DocumentRef::setDocumentKey(const DocumentKey& key) {
 
 const DocumentKey& DocumentRef::getDocumentKey() const {
   return key_;
+}
+
+void DocumentRef::getScratchpad(char** data, size_t* size) const {
+  static char scratch[] = "fnord";
+  *data = scratch;
+  *size = sizeof(scratch);
 }
 
 }

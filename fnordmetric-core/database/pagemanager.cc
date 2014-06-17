@@ -114,6 +114,12 @@ MmapPageManager::~MmapPageManager() {
   close(fd_);
 }
 
+void MmapPageManager::fsync() const {
+  if (current_mapping_ != nullptr) {
+    msync(current_mapping_, file_size_, MS_SYNC);
+  }
+}
+
 std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
     const PageManager::Page& page) {
   uint64_t last_byte = page.offset + page.size;

@@ -43,6 +43,7 @@ std::unique_ptr<fnordmetric::Collection::Snapshot> AOCollection::getSnapshot() {
 bool AOCollection::commitTransaction(const Transaction* transaction) {
   commit_mutex_.lock();
   auto index = page_index_->clone();
+  bool rollback = false;
 
   for (auto docref : transaction->getDirtyDocuments()) {
     if (docref->isDirty()) {
@@ -83,28 +84,35 @@ void AOCollection::appendDocument(
     const DocumentRef* docref,
     PageIndex* index) {
   char* data;
-  size_t size = 100;
-  //docref->getBinary(&data, &size);
+  size_t size;
+  /* get document body */
+  docref->getScratchpad(&data, &size);
+  size_t envelope_size = size + sizeof(DocHeader);
+  assert(size > 0);
+
+  /* get document key */
   uint64_t key = docref->getDocumentKey().getIntKey();
   assert(key > 0);
 
-  size_t row_size = size + sizeof(DocHeader);
-  assert(size > 0);
+  /* retrieve the page for inserting */
+  auto index_ref = index->getIndexPageEntryForInsert(envelope_size);
+  PageManager::Page page(index_ref->offset, index_ref->size);
+  auto page_ref = page_manager_->getPage(page);
 
-  auto index_ref = index->getIndexPageEntryForInsert(row_size);
-  auto page_ref = page_manager_->getPage(
-      PageManager::Page(index_ref->offset, index_ref->size));
-
+  /* copy metadata into document header */
   DocHeader* document = page_ref->structAt<DocHeader>(index_ref->used);
   document->key = key;
   document->size = size;
-  //memcpy(row->data, data, size);
+
+  /* copy document body and compute checksum*/
+  memcpy(document->data, data, size);
   //row->checksum = row->computeChecksum();
 
   if (index_ref->first_key == 0) {
     index_ref->first_key = key;
   }
-  index_ref->used += row_size;
+
+  index_ref->used += envelope_size;
 }
 
 void AOCollection::sync() {
@@ -112,7 +120,7 @@ void AOCollection::sync() {
 
   // capture free page list
   auto index = getPageIndex();
-  // MYSYNC SYNC WHOLE FILE
+  page_manager_->fsync();
   //writeRootPage(index_page);
 
   // release freed pages

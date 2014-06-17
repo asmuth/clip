@@ -10,7 +10,7 @@
 
 namespace fnordmetric {
 
-size_t PageIndex::kTargetRowsPerPage = 16384;
+size_t PageIndex::kTargetRowsPerPage = 1024;
 
 PageIndex::PageIndex(std::shared_ptr<PageManager> page_manager) :
     page_manager_(page_manager),
@@ -43,6 +43,10 @@ PageIndex::IndexPageEntry* PageIndex::getIndexPageEntryForInsert(size_t bytes) {
         used_ - sizeof(IndexPageEntry));
     estimated_page_size += last_page->used;
     estimated_page_size /= 2;
+  }
+
+  if (estimated_page_size < bytes) {
+    estimated_page_size = bytes;
   }
 
   auto page = page_manager_->allocPage(estimated_page_size);

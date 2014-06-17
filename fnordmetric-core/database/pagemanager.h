@@ -66,6 +66,11 @@ public:
    */
   virtual std::unique_ptr<PageRef> getPage(const PageManager::Page& page) = 0;
 
+  /**
+   * Fsync() the page contents if this is a file backed page manager
+   */
+  virtual void fsync() const = 0;
+
 protected:
 
   /**
@@ -158,6 +163,11 @@ public:
    */
   std::unique_ptr<PageManager::PageRef> getPage(
       const PageManager::Page& page) override;
+
+  /**
+   * Msync() the whole managed file
+   */
+  void fsync() const override;
 
 protected:
 

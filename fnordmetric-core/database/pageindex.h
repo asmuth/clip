@@ -29,7 +29,14 @@ struct StreamPosition {
   bool operator==(const StreamPosition& other);
 };
 */
-
+/**
+ * This should be a linked list of smaller index blocks so that the COW overhead
+ * is fixed...
+ *
+ * Pages should be removed via deletePage() and then a compact() (which rebuilds
+ * the list into a two node list with one short node holding the most recent
+ * pages for fast committing and one long node holding all older pages
+ */
 class PageIndex {
   friend class DatabaseTest;
 public:
@@ -47,8 +54,7 @@ public:
     uint32_t used;
   };
 
-  //static const size_t kInitialIndexPageSize = sizeof(IndexPageEntry) * 64;
-  static const size_t kInitialIndexPageSize = sizeof(IndexPageEntry) * 1;
+  static const size_t kInitialIndexPageSize = sizeof(IndexPageEntry) * 4;
 
   /**
    * Target page size in number of rows. Default: 16384 rows

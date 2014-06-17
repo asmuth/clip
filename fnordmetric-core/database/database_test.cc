@@ -11,7 +11,6 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include "collection.h"
-#include "aocollection.h"
 #include "pagemanager.h"
 #include "transaction.h"
 //#include "cursor.h"
@@ -78,6 +77,7 @@ public:
       std::unique_ptr<PageRef> getPage(const PageManager::Page& page) override {
         return std::unique_ptr<PageRef>(nullptr);
       }
+      void fsync() const {}
     };
     ConcreteTestPageManager page_manager;
 
@@ -125,23 +125,16 @@ public:
   }
 
   void testAOCollection() {
-    std::vector<Field> fields = {
-        fnordmetric::IntegerField("sequence_num"),
-        fnordmetric::IntegerField("test1"),
-        fnordmetric::StringField("test2")};
-    Schema schema(fields);
-
-    auto collection = Collection::createPersistentCollection<AOCollection>(
+    auto collection = Collection::createPersistentCollection(
         "/tmp/__fnordmetric_testAOCollection",
-        schema,
         Collection::FILE_TRUNCATE);
 
-    auto tx = collection->startTransaction();
-    auto docref = tx->createDocument();
-    auto docref1 = tx->createDocument();
-    auto docref2 = tx->createDocument();
-    auto docref3 = tx->createDocument();
-    tx->commit();
+    //auto tx = collection->startTransaction();
+    //auto docref = tx->createDocument();
+    //auto docref1 = tx->createDocument();
+    //auto docref2 = tx->createDocument();
+    //auto docref3 = tx->createDocument();
+    //tx->commit();
     //printf("committed...\n");
     //collection->sync();
     //printf("synced...\n");
