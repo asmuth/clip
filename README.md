@@ -1,6 +1,9 @@
 FnordMetric
 ===========
 
+### Seeking a new maintainer. [![Project Status](http://stillmaintained.com/images/searching.png)](http://stillmaintained.com/paulasmuth/fnordmetric)
+
+
 FnordMetric is a framework for collecting and visualizing timeseries data. It enables
 you to build beautiful real-time analytics dashboards within minutes.
 
