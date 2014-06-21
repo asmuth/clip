@@ -27,7 +27,8 @@ public:
     T_RPAREN,
     T_EQUAL,
     T_PLUS,
-    T_ASTERISK
+    T_ASTERISK,
+    T_AS
   };
 
   Token(kTokenType token_type);

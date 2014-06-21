@@ -27,9 +27,12 @@ public:
 
   void run() {
     testTokenizerSimple();
+    testTokenizerEscaping();
+    testTokenizerAsClause();
     testSelectMustBeFirstAssert();
     testSelectWildcard();
     testSelectTableWildcard();
+    testSelectDerivedColumn();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -73,75 +76,101 @@ public:
     assert(from == ASTNode::T_FROM);
   }
 
+  void testSelectDerivedColumn() {
+    auto parser = parseTestQuery("SELECT somecol FROM sometable;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt == ASTNode::T_SELECT);
+    assert(stmt.getChildren().size() == 2);
+    const auto& sl = stmt.getChildren()[0];
+    assert(sl == ASTNode::T_SELECT_LIST);
+    assert(sl.getChildren().size() == 1);
+    const auto& derived = sl.getChildren()[0];
+    assert(derived == ASTNode::T_DERIVED_COLUMN);
+    assert(derived.getChildren().size() == 1);
+    const auto& from = stmt.getChildren()[1];
+    assert(from == ASTNode::T_FROM);
+  }
+
   void testSelectMustBeFirstAssert() {
     auto parser = parseTestQuery("GROUP BY SELECT");
     assert(parser.getErrors().size() == 1);
     assert(parser.getErrors()[0].type == QueryParser::ERR_UNEXPECTED_TOKEN);
   }
 
-  void testTokenizerSimple() {
-    {
-      auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
-          "= 'fnor\\'dbar' + 123;");
-      const auto& tl = parser.token_list_;
-      assert(tl.size() == 17);
-      assert(tl[0].type_ == Token::T_SELECT);
-      assert(tl[1].type_ == Token::T_STRING);
-      assert(tl[1] == "fnord");
-      assert(tl[2].type_ == Token::T_COMMA);
-      assert(tl[3].type_ == Token::T_STRING);
-      assert(tl[3] == "sum");
-      assert(tl[4].type_ == Token::T_LPAREN);
-      assert(tl[5].type_ == Token::T_STRING);
-      assert(tl[5] == "blah");
-      assert(tl[6].type_ == Token::T_RPAREN);
-      assert(tl[7].type_ == Token::T_FROM);
-      assert(tl[8].type_ == Token::T_STRING);
-      assert(tl[8] == "fubar");
-      assert(tl[9].type_ == Token::T_STRING);
-      assert(tl[9] == "blah");
-      assert(tl[10].type_ == Token::T_DOT);
-      assert(tl[11].type_ == Token::T_STRING);
-      assert(tl[11] == "id");
-      assert(tl[12].type_ == Token::T_EQUAL);
-      assert(tl[13].type_ == Token::T_STRING);
-      //assert(tl[13] == "fnord'bar"); // FIXPAUL
-      assert(tl[14].type_ == Token::T_PLUS);
-      assert(tl[15].type_ == Token::T_STRING);
-      assert(tl[15] == "123");
-      assert(tl[16].type_ == Token::T_SEMICOLON);
-    }
+  void testTokenizerEscaping() {
+    auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
+        "= 'fnor\\'dbar' + 123;");
+    const auto& tl = parser.token_list_;
+    assert(tl.size() == 17);
+    assert(tl[0].type_ == Token::T_SELECT);
+    assert(tl[1].type_ == Token::T_STRING);
+    assert(tl[1] == "fnord");
+    assert(tl[2].type_ == Token::T_COMMA);
+    assert(tl[3].type_ == Token::T_STRING);
+    assert(tl[3] == "sum");
+    assert(tl[4].type_ == Token::T_LPAREN);
+    assert(tl[5].type_ == Token::T_STRING);
+    assert(tl[5] == "blah");
+    assert(tl[6].type_ == Token::T_RPAREN);
+    assert(tl[7].type_ == Token::T_FROM);
+    assert(tl[8].type_ == Token::T_STRING);
+    assert(tl[8] == "fubar");
+    assert(tl[9].type_ == Token::T_STRING);
+    assert(tl[9] == "blah");
+    assert(tl[10].type_ == Token::T_DOT);
+    assert(tl[11].type_ == Token::T_STRING);
+    assert(tl[11] == "id");
+    assert(tl[12].type_ == Token::T_EQUAL);
+    assert(tl[13].type_ == Token::T_STRING);
+    //assert(tl[13] == "fnord'bar"); // FIXPAUL
+    assert(tl[14].type_ == Token::T_PLUS);
+    assert(tl[15].type_ == Token::T_STRING);
+    assert(tl[15] == "123");
+    assert(tl[16].type_ == Token::T_SEMICOLON);
+  }
 
-    {
-      auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
-          "= \"fn'o=,rdbar\" + 123;");
-      auto tl = &parser.token_list_;
-      assert((*tl)[0].type_ == Token::T_SELECT);
-      assert((*tl)[1].type_ == Token::T_STRING);
-      assert((*tl)[1] == "fnord");
-      assert((*tl)[2].type_ == Token::T_COMMA);
-      assert((*tl)[3].type_ == Token::T_STRING);
-      assert((*tl)[3] == "sum");
-      assert((*tl)[4].type_ == Token::T_LPAREN);
-      assert((*tl)[5].type_ == Token::T_STRING);
-      assert((*tl)[5] == "blah");
-      assert((*tl)[6].type_ == Token::T_RPAREN);
-      assert((*tl)[7].type_ == Token::T_FROM);
-      assert((*tl)[8].type_ == Token::T_STRING);
-      assert((*tl)[8] == "fubar");
-      assert((*tl)[9].type_ == Token::T_STRING);
-      assert((*tl)[9] == "blah");
-      assert((*tl)[10].type_ == Token::T_DOT);
-      assert((*tl)[11].type_ == Token::T_STRING);
-      assert((*tl)[11] == "id");
-      assert((*tl)[12].type_ == Token::T_EQUAL);
-      assert((*tl)[13].type_ == Token::T_STRING);
-      assert((*tl)[13] == "fn'o=,rdbar");
-      assert((*tl)[14].type_ == Token::T_PLUS);
-      assert((*tl)[15].type_ == Token::T_STRING);
-      assert((*tl)[15] == "123");
-      assert((*tl)[16].type_ == Token::T_SEMICOLON);
-    }
+  void testTokenizerSimple() {
+    auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
+        "= \"fn'o=,rdbar\" + 123;");
+    auto tl = &parser.token_list_;
+    assert((*tl)[0].type_ == Token::T_SELECT);
+    assert((*tl)[1].type_ == Token::T_STRING);
+    assert((*tl)[1] == "fnord");
+    assert((*tl)[2].type_ == Token::T_COMMA);
+    assert((*tl)[3].type_ == Token::T_STRING);
+    assert((*tl)[3] == "sum");
+    assert((*tl)[4].type_ == Token::T_LPAREN);
+    assert((*tl)[5].type_ == Token::T_STRING);
+    assert((*tl)[5] == "blah");
+    assert((*tl)[6].type_ == Token::T_RPAREN);
+    assert((*tl)[7].type_ == Token::T_FROM);
+    assert((*tl)[8].type_ == Token::T_STRING);
+    assert((*tl)[8] == "fubar");
+    assert((*tl)[9].type_ == Token::T_STRING);
+    assert((*tl)[9] == "blah");
+    assert((*tl)[10].type_ == Token::T_DOT);
+    assert((*tl)[11].type_ == Token::T_STRING);
+    assert((*tl)[11] == "id");
+    assert((*tl)[12].type_ == Token::T_EQUAL);
+    assert((*tl)[13].type_ == Token::T_STRING);
+    assert((*tl)[13] == "fn'o=,rdbar");
+    assert((*tl)[14].type_ == Token::T_PLUS);
+    assert((*tl)[15].type_ == Token::T_STRING);
+    assert((*tl)[15] == "123");
+    assert((*tl)[16].type_ == Token::T_SEMICOLON);
+  }
+
+  void testTokenizerAsClause() {
+    auto parser = parseTestQuery(" SELECT fnord As blah from");
+    auto tl = &parser.token_list_;
+    assert((*tl)[0].type_ == Token::T_SELECT);
+    assert((*tl)[1].type_ == Token::T_STRING);
+    assert((*tl)[1] == "fnord");
+    assert((*tl)[2].type_ == Token::T_AS);
+    assert((*tl)[3].type_ == Token::T_STRING);
+    assert((*tl)[3] == "blah");
   }
 
 /*

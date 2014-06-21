@@ -22,6 +22,7 @@ public:
     T_SELECT,
     T_SELECT_LIST,
     T_ALL,
+    T_DERIVED_COLUMN,
     T_FROM,
   };
 

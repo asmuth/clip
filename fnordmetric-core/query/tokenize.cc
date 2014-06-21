@@ -128,6 +128,11 @@ next:
 
   Token token(Token::T_STRING, begin, len);
 
+  if (token == "AS") {
+    token_list->emplace_back(Token::T_AS);
+    goto next;
+  }
+
   if (token == "SELECT") {
     token_list->emplace_back(Token::T_SELECT);
     goto next;
