@@ -20,6 +20,7 @@ class QueryParser {
 public:
   enum kParserErrorType {
     ERR_UNEXPECTED_TOKEN,
+    ERR_INTERNAL_ERROR,
   };
 
   struct ParserError {
@@ -46,7 +47,8 @@ protected:
   void parseSelectSublist(ASTNode* select_node);
   ASTNode* parseValueExpression();
   ASTNode* parsePrefixOpExpression();
-  ASTNode* parseInfixOpExpression(ASTNode* lhs);
+  ASTNode* parseInfixOpExpression(ASTNode* lhs, Token* op);
+  Token* parseInfixOperator();
 
   bool assertExpectation(Token::kTokenType);
   void addError(kParserErrorType type, const char* msg);

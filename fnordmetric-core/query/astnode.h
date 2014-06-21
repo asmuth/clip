@@ -26,7 +26,9 @@ public:
     T_FROM,
     T_COLUMN_NAME,
     T_VALUE_EXPR,
-    T_NEGATE_EXPR
+    T_NEGATE_EXPR,
+    T_ADD_EXPR,
+    T_LITERAL
   };
 
   ASTNode(kASTNodeType type);

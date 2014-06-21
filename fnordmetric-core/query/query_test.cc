@@ -25,7 +25,18 @@ class QueryTest {
 public:
   QueryTest() {}
 
+  /*
+    SELECT concat(fnord + 5, -somefunc(myotherfield)) + (123 * 4)
+    SELECT -sum(fnord) + (123 * 4)
+    SELECT (-blah + sum(fnord) / (123 * 4)) as myfield
+    select true;
+    select !(true);
+    select NOT true;
+  */
+
   void run() {
+    testSimpleValueExpression();
+    /*
     testTokenizerSimple();
     testTokenizerEscaping();
     testTokenizerAsClause();
@@ -34,12 +45,41 @@ public:
     testSelectTableWildcard();
     testSelectDerivedColumn();
     testSelectDerivedColumnWithAsClause();
+    */
   }
 
   QueryParser parseTestQuery(const char* query) {
     QueryParser parser;
     parser.parse(query, strlen(query));
     return parser;
+  }
+
+  void testSimpleValueExpression() {
+    auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
+    //auto parser = parseTestQuery("SELECT -(5 * sum(4,3)) FROM sometable;");
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(*stmt == ASTNode::T_SELECT);
+    assert(stmt->getChildren().size() == 2);
+    const auto& sl = stmt->getChildren()[0];
+    assert(*sl == ASTNode::T_SELECT_LIST);
+    assert(sl->getChildren().size() == 1);
+    auto derived = sl->getChildren()[0];
+    assert(*derived == ASTNode::T_DERIVED_COLUMN);
+    assert(derived->getChildren().size() == 1);
+    auto expr = derived->getChildren()[0];
+    assert(*expr == ASTNode::T_ADD_EXPR);
+    assert(expr->getChildren().size() == 2);
+    assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+    assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+    assert(*expr->getChildren()[0]->getToken() == "23");
+    assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+    assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+    assert(*expr->getChildren()[1]->getToken() == "5.123");
+    const auto& from = stmt->getChildren()[1];
+    assert(*from == ASTNode::T_FROM);
   }
 
   void testSelectWildcard() {

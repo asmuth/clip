@@ -49,63 +49,60 @@ Token::~Token() {
 
 // FIXPAUL!!
 void Token::debugPrint() const {
-  switch (type_) {
+  if (len_ == 0) {
+    printf("%s\n", getTypeName(type_));
+  } else {
+    char buf[1024];
+    assert(len_ < sizeof(buf));
+    memcpy(buf, data_, len_);
+    buf[len_] = 0;
+    printf("%s(%s)\n", getTypeName(type_), buf);
+  }
+}
 
+const char* Token::getTypeName(kTokenType type) {
+  switch (type) {
     case T_SELECT:
-      printf("T_SELECT\n");
-      break;
+      return "T_SELECT";
 
     case T_FROM:
-      printf("T_FROM\n");
-      break;
+      return "T_FROM";
 
     case T_COMMA:
-      printf("T_COMMA\n");
-      break;
+      return "T_COMMA";
 
     case T_DOT:
-      printf("T_DOT\n");
-      break;
+      return "T_DOT";
 
     case T_SEMICOLON:
-      printf("T_SEMICOLON\n");
-      break;
+      return "T_SEMICOLON";
 
     case T_LPAREN:
-      printf("T_LPAREN\n");
-      break;
+      return "T_LPAREN";
 
     case T_RPAREN:
-      printf("T_RPAREN\n");
-      break;
+      return "T_RPAREN";
 
     case T_EQUAL:
-      printf("T_EQUAL\n");
-      break;
+      return "T_EQUAL";
 
     case T_PLUS:
-      printf("T_PLUS\n");
-      break;
+      return "T_PLUS";
+
+    case T_MINUS:
+      return "T_PLUS";
 
     case T_ASTERISK:
-      printf("T_ASTERISK\n");
-      break;
+      return "T_ASTERISK";
 
     case T_NOT:
-      printf("T_NOT\n");
-      break;
+      return "T_NOT";
 
-    case T_STRING:
-    case T_IDENTIFIER: {
-      char buf[1024];
-      assert(len_ < sizeof(buf));
-      memcpy(buf, data_, len_);
-      buf[len_] = 0;
-      printf("T_%s(%s)\n",
-          type_ == T_STRING ? "STRING" : "IDENTIFIER",
-          buf);
-      break;
-    }
+    case T_NUMERIC:
+      return "T_NUMERIC";
+
+    default:
+      return "T_UNKNOWN_TOKEN";
   }
 }
 

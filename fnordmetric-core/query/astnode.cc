@@ -70,6 +70,15 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_VALUE_EXPR:
       printf("- VALUE_EXPR\n");
       break;
+    case T_LITERAL:
+      printf("- LITERAL\n");
+      break;
+    case T_NEGATE_EXPR:
+      printf("- NEGATE_EXPR\n");
+      break;
+    case T_ADD_EXPR:
+      printf("- ADD_EXPR\n");
+      break;
   }
 
   for (const auto child : children_) {

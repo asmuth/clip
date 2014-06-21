@@ -83,7 +83,15 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
 
   /* derived_col AS col_name */
   auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
-  derived->appendChild(parseValueExpression());
+  auto value_expr = parseValueExpression();
+
+  if (value_expr == nullptr) {
+    addError(ERR_UNEXPECTED_TOKEN, "expected value expression");
+    // free value_expr
+    return;
+  }
+
+  derived->appendChild(value_expr);
 
   if (*cur_token_ == Token::T_AS) {
     consumeToken();
@@ -97,28 +105,36 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
 
 
 ASTNode* QueryParser::parseValueExpression() {
-  auto expr = parsePrefixOpExpression();
+  auto lhs = parsePrefixOpExpression();
 
-  //for (;;) {
+  if (lhs == nullptr) {
+    return nullptr;
+  }
 
-    //lhs = parseInfixOpExpression(lhs);
-  //}
-
-  return expr;
+  for (;;) {
+    auto op = parseInfixOperator();
+    if (op == nullptr) {
+      return lhs;
+    } else {
+      lhs = parseInfixOpExpression(lhs, op);
+    }
+  }
 }
 
 ASTNode* QueryParser::parsePrefixOpExpression() {
-  ASTNode* expr = nullptr;
+  printf("parsePrexixOpExpr\n");
+  cur_token_->debugPrint();
 
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
     case Token::T_LPAREN: {
       consumeToken();
-      expr = parseValueExpression();
+      auto expr = parseValueExpression();
       if (assertExpectation(Token::T_RPAREN)) {
         consumeToken();
       }
+      return expr;
     }
 
     /* prefix ~ ? */
@@ -127,19 +143,68 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
     case Token::T_BANG:
     case Token::T_MINUS:
     case Token::T_NOT: {
-      consumeToken();
-      expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
+      printf("negate..\n");
+      auto expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
       expr->appendChild(parseValueExpression());
+      consumeToken();
       return expr;
     }
-  }
 
-  return expr;
+    case Token::T_NUMERIC: {
+      auto expr = new ASTNode(ASTNode::T_LITERAL);
+      expr->setToken(cur_token_);
+      consumeToken();
+      return expr;
+    }
+
+    default:
+      return nullptr;
+
+  }
+}
+Token* QueryParser::parseInfixOperator() {
+  printf("parseInfixOperator\n");
+  cur_token_->debugPrint();
+
+  switch (cur_token_->getType()) {
+
+    case Token::T_MINUS:
+    case Token::T_PLUS: {
+      auto op = cur_token_;
+      consumeToken();
+      return op;
+    }
+
+    default:
+      return nullptr;
+  }
+}
+
+ASTNode* QueryParser::parseInfixOpExpression(ASTNode* lhs, Token* op) {
+  auto rhs = parseValueExpression();
+
+  switch (op->getType()) {
+
+    case Token::T_PLUS: {
+      auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
+      expr->appendChild(lhs);
+      expr->appendChild(rhs);
+      return expr;
+    }
+
+    /* we should never get here unless a case is missing in the switch */
+    default: {
+      addError(ERR_INTERNAL_ERROR, "internal error while parsing the query in"
+          "QueryParser::parseInfixOpExpression");
+      return nullptr;
+    }
+
+  }
 }
 
 bool QueryParser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
-    addError(ERR_UNEXPECTED_TOKEN, "unexpected token, expected T_SELECT");
+    addError(ERR_UNEXPECTED_TOKEN, "unexpected token, expected ...");
     return false;
   }
 
@@ -149,6 +214,7 @@ bool QueryParser::assertExpectation(Token::kTokenType expectation) {
 void QueryParser::addError(kParserErrorType type, const char* msg) {
   ParserError error;
   error.type = type;
+  fprintf(stderr, "[ERROR] %s\n", msg);
   errors_.push_back(error);
 }
 

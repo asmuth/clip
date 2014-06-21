@@ -46,6 +46,7 @@ public:
   bool operator==(const std::string& string) const;
   bool operator==(kTokenType type) const;
   kTokenType getType() const;
+  static const char* getTypeName(kTokenType type);
   void debugPrint() const;
 
 protected:
