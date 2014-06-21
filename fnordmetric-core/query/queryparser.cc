@@ -106,23 +106,23 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
 
 
 ASTNode* QueryParser::parseValueExpression() {
-  auto lhs = parsePrefixOpExpression();
+  auto lhs = parseLHSExpression();
 
   if (lhs == nullptr) {
     return nullptr;
   }
 
   for (;;) {
-    auto op = parseInfixOperator();
-    if (op == nullptr) {
+    auto expr = parseBinaryExpression(lhs);
+    if (expr == nullptr) {
       return lhs;
     } else {
-      lhs = parseInfixOpExpression(lhs, op);
+      lhs = expr;
     }
   }
 }
 
-ASTNode* QueryParser::parsePrefixOpExpression() {
+ASTNode* QueryParser::parseLHSExpression() {
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
@@ -147,6 +147,7 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
       return expr;
     }
 
+    /* literal expression */
     case Token::T_NUMERIC:
     case Token::T_STRING: {
       auto expr = new ASTNode(ASTNode::T_LITERAL);
@@ -155,6 +156,7 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
       return expr;
     }
 
+    /* column name or method call */
     case Token::T_IDENTIFIER: {
       auto expr = new ASTNode(ASTNode::T_COLUMN_NAME);
       expr->setToken(cur_token_);
@@ -167,14 +169,14 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
 
   }
 }
-Token* QueryParser::parseInfixOperator() {
+
+ASTNode* QueryParser::parseBinaryExpression(ASTNode* lhs) {
   switch (cur_token_->getType()) {
 
-    case Token::T_MINUS:
+    /* add expression */
     case Token::T_PLUS: {
-      auto op = cur_token_;
       consumeToken();
-      return op;
+      return addExpr(lhs, parseValueExpression());
     }
 
     default:
@@ -182,26 +184,11 @@ Token* QueryParser::parseInfixOperator() {
   }
 }
 
-ASTNode* QueryParser::parseInfixOpExpression(ASTNode* lhs, Token* op) {
-  auto rhs = parseValueExpression();
-
-  switch (op->getType()) {
-
-    case Token::T_PLUS: {
-      auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
-      expr->appendChild(lhs);
-      expr->appendChild(rhs);
-      return expr;
-    }
-
-    /* we should never get here unless a case is missing in the switch */
-    default: {
-      addError(ERR_INTERNAL_ERROR, "internal error while parsing the query in"
-          "QueryParser::parseInfixOpExpression");
-      return nullptr;
-    }
-
-  }
+ASTNode* QueryParser::addExpr(ASTNode* lhs, ASTNode* rhs) {
+  auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(rhs);
+  return expr;
 }
 
 bool QueryParser::assertExpectation(Token::kTokenType expectation) {

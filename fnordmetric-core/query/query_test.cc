@@ -42,7 +42,6 @@ public:
     testSelectWildcard();
     testSelectTableWildcard();
     testSelectDerivedColumn();
-    //testSelectDerivedColumnWithAsClause();
     testSimpleValueExpression();
     testNegatedValueExpression();
   }
@@ -167,30 +166,6 @@ public:
     assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_NAME);
     assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[1]->getToken() == "another");
-    const auto& from = stmt->getChildren()[1];
-    assert(*from == ASTNode::T_FROM);
-  }
-
-  void testSelectDerivedColumnWithAsClause() {
-    auto parser = parseTestQuery("SELECT somecol AS fnord FROM sometable;");
-    assert(parser.getErrors().size() == 0);
-    assert(parser.getStatements().size() == 1);
-    const auto& stmt = parser.getStatements()[0];
-    assert(*stmt == ASTNode::T_SELECT);
-    assert(stmt->getChildren().size() == 2);
-    const auto& sl = stmt->getChildren()[0];
-    assert(*sl == ASTNode::T_SELECT_LIST);
-    assert(sl->getChildren().size() == 1);
-    const auto& derived = sl->getChildren()[0];
-    assert(*derived == ASTNode::T_DERIVED_COLUMN);
-    assert(derived->getChildren().size() == 2);
-    const auto& expr = derived->getChildren()[0];
-    assert(*expr == ASTNode::T_VALUE_EXPR);
-    const auto& alias = derived->getChildren()[1];
-    assert(*alias == ASTNode::T_COLUMN_NAME);
-    assert(alias->getToken() != nullptr);
-    assert(*alias->getToken() == Token::T_STRING);
-    assert(*alias->getToken() == "fnord");
     const auto& from = stmt->getChildren()[1];
     assert(*from == ASTNode::T_FROM);
   }

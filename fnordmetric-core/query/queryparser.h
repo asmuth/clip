@@ -46,9 +46,10 @@ protected:
   void parseSelect();
   void parseSelectSublist(ASTNode* select_node);
   ASTNode* parseValueExpression();
-  ASTNode* parsePrefixOpExpression();
-  ASTNode* parseInfixOpExpression(ASTNode* lhs, Token* op);
-  Token* parseInfixOperator();
+  ASTNode* parseLHSExpression();
+  ASTNode* parseBinaryExpression(ASTNode* lhs);
+
+  ASTNode* addExpr(ASTNode* lhs, ASTNode* rhs);
 
   bool assertExpectation(Token::kTokenType);
   void addError(kParserErrorType type, const char* msg);
