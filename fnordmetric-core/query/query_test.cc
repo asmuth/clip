@@ -26,24 +26,43 @@ public:
   QueryTest() {}
 
   void run() {
-    testQueryParser();
-    testSelectMustBeFirstAssert();
+    //testQueryParser();
+    //testSelectMustBeFirstAssert();
+    testSelectWildcard();
+  }
+
+  QueryParser parseTestQuery(const char* query) {
+    QueryParser parser;
+    parser.parse(query, strlen(query));
+    return parser;
+  }
+
+  void testSelectWildcard() {
+    auto parser = parseTestQuery("SELECT mytable.* FROM sometable;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.statements_.size() == 1);
+    const auto& stmt = parser.statements_[0];
+    assert(stmt->select_lists.size() == 1);
+    const auto& sl = stmt->select_lists[0];
+    assert(sl != nullptr);
+    assert(sl->select_sublists.size() == 1);
+    const auto& ssl = sl->select_sublists[0];
+    assert(ssl != nullptr);
+    assert(ssl->is_wildcard == true);
+    assert(ssl->wildcard.table_name_token = 1);
+    assert(parser.token_list_[ssl->wildcard.table_name_token] == "mytable");
   }
 
   void testSelectMustBeFirstAssert() {
-    QueryParser parser;
-    const char* test_qry = "GROUP BY SELECT";
-    parser.parse(test_qry, strlen(test_qry));
+    auto parser = parseTestQuery("GROUP BY SELECT");
     assert(parser.getErrors().size() == 1);
     assert(parser.getErrors()[0].type == QueryParser::ERR_UNEXPECTED_TOKEN);
   }
 
   void testQueryParser() {
     {
-      QueryParser parser;
-      const char* test_qry = " SELECT  fnord,sum(blah) from fubar blah.id = 'fnor\\'dbar' + 123;";
-      auto bytes_consumed = parser.parse(test_qry, strlen(test_qry));
-      //assert(bytes_consumed == strlen(test_qry));
+      auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
+          "= 'fnor\\'dbar' + 123;");
       const auto& tl = parser.token_list_;
       assert(tl.size() == 17);
       assert(tl[0].type_ == Token::T_SELECT);
@@ -74,12 +93,9 @@ public:
     }
 
     {
-      QueryParser parser;
-      const char* test_qry = " SELECT  fnord,sum(blah) from fubar blah.id = \"fn'o=,rdbar\" + 123;";
-      auto bytes_consumed = parser.parse(test_qry, strlen(test_qry));
-      //assert(bytes_consumed == strlen(test_qry));
+      auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
+          "= \"fn'o=,rdbar\" + 123;");
       auto tl = &parser.token_list_;
-
       assert((*tl)[0].type_ == Token::T_SELECT);
       assert((*tl)[1].type_ == Token::T_STRING);
       assert((*tl)[1] == "fnord");

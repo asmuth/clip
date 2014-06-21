@@ -1,0 +1,12 @@
+<query>          ::=
+    SELECT <select list> <table expression>
+
+<select list>    ::=
+    <asterisk> | <select sublist> [ { <comma> <select sublist> }... ]
+
+<select sublist> ::=
+    <derived column> | <table name> <period> <asterisk>
+
+<derived column> ::=
+    <value expression> [ [ AS ] <column name> ]
+

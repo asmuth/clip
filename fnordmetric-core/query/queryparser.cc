@@ -17,52 +17,76 @@ size_t QueryParser::parse(const char* query, size_t len) {
   const char* end = cur + len;
 
   tokenizeQuery(&cur, end, &token_list_);
-
-  for (const auto& token : token_list_) {
-    //token.debugPrint();
-  }
-
   if (token_list_.size() == 0) {
     return 0; // FIXPAUL return error...
   }
 
   cur_token_ = token_list_.begin();
-  parseSelect();
+  statements_.push_back(parseSelect());
 
   return errors_.size() == 0;
 }
 
-void QueryParser::parseSelect() {
+std::unique_ptr<SelectASTNode> QueryParser::parseSelect() {
   assertExpectation(Token::T_SELECT);
   consumeToken();
 
   // FIXPAUL parse SET_QUANTIFIER (distinct, all...)
+  std::unique_ptr<SelectASTNode> node(new SelectASTNode());
+  node->select_lists.push_back(parseSelectList());
 
-  parseSelectList();
+  return node;
 }
 
-void QueryParser::parseSelectList() {
+std::unique_ptr<SelectListASTNode> QueryParser::parseSelectList() {
+  std::unique_ptr<SelectListASTNode> node(new SelectListASTNode());
+
   if (*cur_token_ == Token::T_ASTERISK) {
-    return; // AsteriskSelectListAstNode
+    node->is_wildcard = true;
+    return node;
+  } else {
+    node->is_wildcard = false;
   }
 
-next_sublist:
-  parseSelectSublist();
+  for (;;) {
+    node->select_sublists.push_back(parseSelectSublist());
 
-  if (*cur_token_ == Token::T_COMMA) {
-    consumeToken();
-    goto next_sublist;
+    if (*cur_token_ == Token::T_COMMA) {
+      consumeToken();
+    } else {
+      break;
+    }
   }
+
+  return node;
 }
 
-void QueryParser::parseSelectSublist() {
+std::unique_ptr<SelectSublistASTNode> QueryParser::parseSelectSublist() {
+  std::unique_ptr<SelectSublistASTNode> sublist(new SelectSublistASTNode());
 
+  /* table_name.* */
+  if (cur_token_ + 3 < token_list_.end() &&
+      cur_token_[0] == Token::T_STRING &&
+      cur_token_[1] == Token::T_DOT &&
+      cur_token_[2] == Token::T_ASTERISK) {
+    sublist->is_wildcard = true;
+    //sublist->wildcard.table_name = cur_token_->getPtr(); // HACK !!! ;)
+    return sublist;
+  }
+
+  /* derived_col AS col_name */
+  {
+    return sublist;
+  }
 }
 
 bool QueryParser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
     addError(ERR_UNEXPECTED_TOKEN, "unexpected token, expected T_SELECT");
+    return false;
   }
+
+  return true;
 }
 
 void QueryParser::addError(kParserErrorType type, const char* msg) {
