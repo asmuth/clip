@@ -29,6 +29,9 @@ public:
     T_VALUE_EXPR,
     T_NEGATE_EXPR,
     T_ADD_EXPR,
+    T_SUB_EXPR,
+    T_MUL_EXPR,
+    T_DIV_EXPR,
     T_LITERAL,
     T_METHOD_CALL
   };

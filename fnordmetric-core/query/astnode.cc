@@ -82,6 +82,15 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_ADD_EXPR:
       printf("- ADD_EXPR\n");
       break;
+    case T_SUB_EXPR:
+      printf("- SUB_EXPR\n");
+      break;
+    case T_MUL_EXPR:
+      printf("- MUL_EXPR\n");
+      break;
+    case T_DIV_EXPR:
+      printf("- DIV_EXPR\n");
+      break;
     case T_METHOD_CALL:
       printf("- METHOD_CALL\n");
       break;

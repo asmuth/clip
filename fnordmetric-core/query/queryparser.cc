@@ -216,6 +216,24 @@ ASTNode* QueryParser::readBinaryExpression(ASTNode* lhs) {
       return addExpr(lhs, readValueExpression());
     }
 
+    /* subtract expression */
+    case Token::T_MINUS: {
+      consumeToken();
+      return subExpr(lhs, readValueExpression());
+    }
+
+    /* multiply expression */
+    case Token::T_ASTERISK: {
+      consumeToken();
+      return mulExpr(lhs, readValueExpression());
+    }
+
+    /* division expression */
+    case Token::T_SLASH: {
+      consumeToken();
+      return divExpr(lhs, readValueExpression());
+    }
+
     default:
       return nullptr;
   }
@@ -223,6 +241,27 @@ ASTNode* QueryParser::readBinaryExpression(ASTNode* lhs) {
 
 ASTNode* QueryParser::addExpr(ASTNode* lhs, ASTNode* rhs) {
   auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(rhs);
+  return expr;
+}
+
+ASTNode* QueryParser::subExpr(ASTNode* lhs, ASTNode* rhs) {
+  auto expr = new ASTNode(ASTNode::T_SUB_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(rhs);
+  return expr;
+}
+
+ASTNode* QueryParser::mulExpr(ASTNode* lhs, ASTNode* rhs) {
+  auto expr = new ASTNode(ASTNode::T_MUL_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(rhs);
+  return expr;
+}
+
+ASTNode* QueryParser::divExpr(ASTNode* lhs, ASTNode* rhs) {
+  auto expr = new ASTNode(ASTNode::T_DIV_EXPR);
   expr->appendChild(lhs);
   expr->appendChild(rhs);
   return expr;

@@ -51,6 +51,9 @@ protected:
   ASTNode* readBinaryExpression(ASTNode* lhs);
 
   ASTNode* addExpr(ASTNode* lhs, ASTNode* rhs);
+  ASTNode* subExpr(ASTNode* lhs, ASTNode* rhs);
+  ASTNode* mulExpr(ASTNode* lhs, ASTNode* rhs);
+  ASTNode* divExpr(ASTNode* lhs, ASTNode* rhs);
 
   bool assertExpectation(Token::kTokenType expectation);
   void addError(kParserErrorType type, const char* msg);

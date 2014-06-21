@@ -46,6 +46,7 @@ public:
     testSimpleValueExpression();
     testNegatedValueExpression();
     testMethodCallValueExpression();
+    testComplexQuery1();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -313,6 +314,37 @@ public:
     assert((*tl)[2].type_ == Token::T_AS);
     assert((*tl)[3].type_ == Token::T_IDENTIFIER);
     assert((*tl)[3] == "blah");
+  }
+
+
+  void testComplexQuery1() {
+    auto parser = parseTestQuery(
+      "SELECT"
+      "   l_orderkey,"
+      "   sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
+      "   o_orderdate,"
+      "   o_shippriority"
+      "FROM"
+      "   customer,"
+      "   orders,"
+      "   lineitem"
+      "WHERE"
+      "  c_mktsegment = 'FURNITURE' AND"
+      "  c_custkey = o_custkey AND"
+      "  l_orderkey = o_orderkey AND"
+      "  o_orderdate < \"2013-12-21\" AND"
+      "  l_shipdate > \"2014-01-06\""
+      "GROUP BY"
+      "  l_orderkey,"
+      "  o_orderdate,"
+      "  o_shippriority"
+      "ORDER BY"
+      "  revenue,"
+      "  o_orderdate;");
+
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
   }
 
 /*

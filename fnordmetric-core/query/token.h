@@ -31,6 +31,7 @@ public:
     T_PLUS,
     T_MINUS,
     T_ASTERISK,
+    T_SLASH,
     T_AS,
     T_NOT,
     T_TRUE,
