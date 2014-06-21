@@ -10,9 +10,6 @@
 #include <string>
 #include <vector>
 #include "query.h"
-#include "../record.h"
-#include "../database/database.h"
-#include "../database/cursor.h"
 
 namespace fnordmetric {
 namespace query {
