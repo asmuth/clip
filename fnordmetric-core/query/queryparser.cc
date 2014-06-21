@@ -19,6 +19,7 @@ size_t QueryParser::parse(const char* query, size_t len) {
   const char* end = cur + len;
 
   tokenizeQuery(&cur, end, &token_list_);
+
   if (token_list_.size() == 0) {
     return 0; // FIXPAUL return error...
   }
@@ -140,15 +141,22 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
     case Token::T_BANG:
     case Token::T_MINUS:
     case Token::T_NOT: {
-      printf("negate..\n");
       consumeToken();
       auto expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
       expr->appendChild(parseValueExpression());
       return expr;
     }
 
-    case Token::T_NUMERIC: {
+    case Token::T_NUMERIC:
+    case Token::T_STRING: {
       auto expr = new ASTNode(ASTNode::T_LITERAL);
+      expr->setToken(cur_token_);
+      consumeToken();
+      return expr;
+    }
+
+    case Token::T_IDENTIFIER: {
+      auto expr = new ASTNode(ASTNode::T_COLUMN_NAME);
       expr->setToken(cur_token_);
       consumeToken();
       return expr;

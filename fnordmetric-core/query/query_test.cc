@@ -35,10 +35,6 @@ public:
   */
 
   void run() {
-    testSimpleValueExpression();
-    testNegatedValueExpression();
-
-    /*
     testTokenizerSimple();
     testTokenizerEscaping();
     testTokenizerAsClause();
@@ -46,8 +42,9 @@ public:
     testSelectWildcard();
     testSelectTableWildcard();
     testSelectDerivedColumn();
-    testSelectDerivedColumnWithAsClause();
-    */
+    //testSelectDerivedColumnWithAsClause();
+    testSimpleValueExpression();
+    testNegatedValueExpression();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -84,7 +81,6 @@ public:
 
   void testNegatedValueExpression() {
     auto parser = parseTestQuery("SELECT -(23 + 5.123) AS fucol FROM tbl;");
-    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -152,7 +148,7 @@ public:
   }
 
   void testSelectDerivedColumn() {
-    auto parser = parseTestQuery("SELECT somecol FROM sometable;");
+    auto parser = parseTestQuery("SELECT somecol AS another FROM sometable;");
     parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
@@ -164,9 +160,13 @@ public:
     assert(sl->getChildren().size() == 1);
     const auto& derived = sl->getChildren()[0];
     assert(*derived == ASTNode::T_DERIVED_COLUMN);
-    assert(derived->getChildren().size() == 1);
-    const auto& expr = derived->getChildren()[0];
-    assert(*expr == ASTNode::T_VALUE_EXPR);
+    assert(derived->getChildren().size() == 2);
+    assert(*derived->getChildren()[0] == ASTNode::T_COLUMN_NAME);
+    assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
+    assert(*derived->getChildren()[0]->getToken() == "somecol");
+    assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_NAME);
+    assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
+    assert(*derived->getChildren()[1]->getToken() == "another");
     const auto& from = stmt->getChildren()[1];
     assert(*from == ASTNode::T_FROM);
   }
@@ -249,7 +249,6 @@ public:
     assert((*tl)[6].type_ == Token::T_RPAREN);
     assert((*tl)[7].type_ == Token::T_FROM);
     assert((*tl)[8].type_ == Token::T_IDENTIFIER);
-    (*tl)[8].debugPrint();
     assert((*tl)[8] == "fubar");
     assert((*tl)[9].type_ == Token::T_IDENTIFIER);
     assert((*tl)[9] == "blah");

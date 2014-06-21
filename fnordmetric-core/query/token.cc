@@ -68,6 +68,9 @@ const char* Token::getTypeName(kTokenType type) {
     case T_FROM:
       return "T_FROM";
 
+    case T_AS:
+      return "T_AS";
+
     case T_COMMA:
       return "T_COMMA";
 
@@ -90,7 +93,7 @@ const char* Token::getTypeName(kTokenType type) {
       return "T_PLUS";
 
     case T_MINUS:
-      return "T_PLUS";
+      return "T_MINUS";
 
     case T_ASTERISK:
       return "T_ASTERISK";
@@ -100,6 +103,9 @@ const char* Token::getTypeName(kTokenType type) {
 
     case T_NUMERIC:
       return "T_NUMERIC";
+
+    case T_IDENTIFIER:
+      return "T_IDENTIFIER";
 
     default:
       return "T_UNKNOWN_TOKEN";
