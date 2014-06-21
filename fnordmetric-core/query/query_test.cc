@@ -26,9 +26,10 @@ public:
   QueryTest() {}
 
   void run() {
-    //testQueryParser();
-    //testSelectMustBeFirstAssert();
+    testTokenizerSimple();
+    testSelectMustBeFirstAssert();
     testSelectWildcard();
+    testSelectTableWildcard();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -38,19 +39,25 @@ public:
   }
 
   void testSelectWildcard() {
-    auto parser = parseTestQuery("SELECT mytable.* FROM sometable;");
+    auto parser = parseTestQuery("SELECT * FROM sometable;");
     assert(parser.getErrors().size() == 0);
     assert(parser.statements_.size() == 1);
     const auto& stmt = parser.statements_[0];
-    assert(stmt->select_lists.size() == 1);
-    const auto& sl = stmt->select_lists[0];
+    assert(stmt->is_wildcard == true);
+  }
+
+  void testSelectTableWildcard() {
+    auto parser = parseTestQuery("SELECT mytablex.* FROM sometable;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.statements_.size() == 1);
+    const auto& stmt = parser.statements_[0];
+    assert(stmt->is_wildcard == false);
+    assert(stmt->select_list.size() == 1);
+    const auto& sl = stmt->select_list[0];
     assert(sl != nullptr);
-    assert(sl->select_sublists.size() == 1);
-    const auto& ssl = sl->select_sublists[0];
-    assert(ssl != nullptr);
-    assert(ssl->is_wildcard == true);
-    assert(ssl->wildcard.table_name_token = 1);
-    assert(parser.token_list_[ssl->wildcard.table_name_token] == "mytable");
+    assert(sl->is_table_wildcard == true);
+    assert(sl->sublist.table_wildcard_name != nullptr);
+    assert(*sl->sublist.table_wildcard_name == "mytablex");
   }
 
   void testSelectMustBeFirstAssert() {
@@ -59,7 +66,7 @@ public:
     assert(parser.getErrors()[0].type == QueryParser::ERR_UNEXPECTED_TOKEN);
   }
 
-  void testQueryParser() {
+  void testTokenizerSimple() {
     {
       auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
           "= 'fnor\\'dbar' + 123;");

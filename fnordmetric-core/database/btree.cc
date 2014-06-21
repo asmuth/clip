@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
 #include "btree.h"
 
 namespace fnordmetric {
@@ -19,8 +20,13 @@ BTree::BTree(uint16_t branch_factor) :
 }
 
 void BTree::insert(uint64_t key) {
-  if (root_is_leaf_ && root_->used < branch_factor_) {
-    return insertIntoNode(root_, key);
+  if (root_is_leaf_) {
+    if (root_->used < branch_factor_) {
+      return insertIntoNode(root_, key);
+    } else {
+      /* split root node */
+      assert(0);
+    }
   }
 }
 

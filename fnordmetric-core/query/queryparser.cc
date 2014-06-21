@@ -21,7 +21,8 @@ size_t QueryParser::parse(const char* query, size_t len) {
     return 0; // FIXPAUL return error...
   }
 
-  cur_token_ = token_list_.begin();
+  cur_token_ = token_list_.data();
+  token_list_end_ = cur_token_ + token_list_.size();
   statements_.push_back(parseSelect());
 
   return errors_.size() == 0;
@@ -33,48 +34,45 @@ std::unique_ptr<SelectASTNode> QueryParser::parseSelect() {
 
   // FIXPAUL parse SET_QUANTIFIER (distinct, all...)
   std::unique_ptr<SelectASTNode> node(new SelectASTNode());
-  node->select_lists.push_back(parseSelectList());
 
-  return node;
-}
-
-std::unique_ptr<SelectListASTNode> QueryParser::parseSelectList() {
-  std::unique_ptr<SelectListASTNode> node(new SelectListASTNode());
-
+  /* select list */
   if (*cur_token_ == Token::T_ASTERISK) {
     node->is_wildcard = true;
-    return node;
+    consumeToken();
   } else {
     node->is_wildcard = false;
-  }
 
-  for (;;) {
-    node->select_sublists.push_back(parseSelectSublist());
+    for (;;) {
+      node->select_list.push_back(parseSelectSublist());
 
-    if (*cur_token_ == Token::T_COMMA) {
-      consumeToken();
-    } else {
-      break;
+      if (*cur_token_ == Token::T_COMMA) {
+        consumeToken();
+      } else {
+        break;
+      }
     }
   }
 
   return node;
 }
 
-std::unique_ptr<SelectSublistASTNode> QueryParser::parseSelectSublist() {
-  std::unique_ptr<SelectSublistASTNode> sublist(new SelectSublistASTNode());
+std::unique_ptr<SelectListASTNode> QueryParser::parseSelectSublist() {
+  std::unique_ptr<SelectListASTNode> sublist(new SelectListASTNode());
 
   /* table_name.* */
-  if (cur_token_ + 3 < token_list_.end() &&
+  if (cur_token_ + 3 < token_list_end_ &&
       cur_token_[0] == Token::T_STRING &&
       cur_token_[1] == Token::T_DOT &&
       cur_token_[2] == Token::T_ASTERISK) {
-    sublist->is_wildcard = true;
-    //sublist->wildcard.table_name = cur_token_->getPtr(); // HACK !!! ;)
+    sublist->is_table_wildcard = true;
+    sublist->sublist.table_wildcard_name = cur_token_;
     return sublist;
+  } else {
+    sublist->is_table_wildcard = false;
   }
 
   /* derived_col AS col_name */
+  parseValueExpression()
   {
     return sublist;
   }

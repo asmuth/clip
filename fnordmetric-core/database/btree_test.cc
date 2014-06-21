@@ -18,6 +18,7 @@ public:
 
   void run() {
     testInsertIntoRoot();
+    testRootPageSplit();
   }
 
   void testInsertIntoRoot() {
@@ -32,6 +33,19 @@ public:
     for (int i=0; i < b-1; ++i) {
       assert(btree.root_->leaf[i].key == i);
     }
+    assert(btree.root_ == root_node);
+  };
+
+  void testRootPageSplit() {
+    uint16_t b = 128;
+    BTree btree(b);
+    auto root_node = btree.root_;
+    assert(root_node != nullptr);
+    for (int i=0; i < (b-1) * 2; ++i) {
+      btree.insert(i);
+    }
+    assert(btree.root_ != root_node);
+    assert(btree.root_->used == 2);
   };
 
 };

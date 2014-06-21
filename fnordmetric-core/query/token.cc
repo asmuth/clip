@@ -67,15 +67,6 @@ void Token::debugPrint() const {
       printf("T_DOT\n");
       break;
 
-    case T_STRING: {
-      char buf[1024];
-      assert(len_ < sizeof(buf));
-      memcpy(buf, data_, len_);
-      buf[len_] = 0;
-      printf("T_STRING(%s)\n", buf);
-      break;
-    }
-
     case T_SEMICOLON:
       printf("T_SEMICOLON\n");
       break;
@@ -96,6 +87,18 @@ void Token::debugPrint() const {
       printf("T_PLUS\n");
       break;
 
+    case T_ASTERISK:
+      printf("T_ASTERISK\n");
+      break;
+
+    case T_STRING: {
+      char buf[1024];
+      assert(len_ < sizeof(buf));
+      memcpy(buf, data_, len_);
+      buf[len_] = 0;
+      printf("T_STRING(%s)\n", buf);
+      break;
+    }
   }
 }
 

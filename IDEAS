@@ -1,0 +1,173 @@
+
+FnordMetric is a tool that lets you to:
+
+  - Analyze data from different sources using a SQL query language
+  - Rapidly create visualizations from SQL query results using a web UI or the
+    command line interface
+  - Plug these visualizations into any webpage to build fancy dashboards
+
+FnordMetric can read its data from a number of sources:
+
+  - A MySQL Database
+  - A CSV File
+  - An agent/sensor library that you can link into your binaries to export
+    data directly from your code
+  - A statsd compatible datasource
+
+
+Fnordbase is a key/value store where values are (nested) documents with a fixed
+schema. A FnordBase instance holds multiple collection that each consist of a
+number of documents.
+
+things it does:
+
+  - full ACID transactions with snapshot isolation within a any collection
+  - fast primary key lookups and range scans for all collection typrs
+  - fast document reads and modifications for all collection types
+  - fast inserts into append only collections
+  - fast backups
+  - concurrent transactions on the same connection/session
+
+things it doesnt do yet:
+
+  - fast inserts and updates into random-insert collectionts
+  - replication and sharding
+  - secondary indexes
+  - queries
+  - concurrent queries on the same connection/session
+
+things it doesn't do:
+
+  - distributed transactions
+  - cross-collection transactions
+
+
+
+- soft sync limit + hard sync limit
+- group commit / commit train (AsyncCommit)
+
+benchmark:
+
+  - in-memory commit into append only
+
+Every collection has a fix document schema and can either be in-memory or persisted to disk.
+FnordBase supports three kinds of collections:
+
+  - HashMap based. Every document is indexed by a variable length byte string that may or may
+    not be unique. Documents are mutable and might be inserted or updated in random order.
+
+  - Sequence based (append only). Every document is indexed by a monotonically increasing
+    sequence number. Sequence numbers are guaranteed to be unique. Sequence based collections
+    are append only and documents are immutable.
+
+  - Time based. Similar to sequence based but the key is a microsecond timestamp instead of
+    a sequence number and multiple documents with the same timestamp may exist.
+
+
+A document consists of a number of (possibly nested fields) similar to a json document. These
+are the supported field types:
+
+  - Integer
+  - Float
+  - String
+  - Blob
+  - Document
+  - List[Document]
+  - Map[Key, Document]
+  - SortedMap[Key, Document]
+
+You can import and export documents and whole documents from/to xml. Document schemas are also
+commonly defined in XML.
+
+
+RPCs:
+
+# Collection Management
+
+GetCollectionInfo(collection)
+CreateCollection(collection, type, persistence, schema)
+MigrateCollection(collection, schema)
+DestroyCollection(collection)
+
+# Cursor
+
+SeekTo(tx_id, position)
+OpenCurrent(tx_id, doc_id)
+AdvanceBy(count)
+GetBatch(max_size)
+
+# Transaction Management
+
+StartTransaction(collection, tx_id)
+
+    Start a transaction on a collection
+
+CommitTransaction(tx_id)
+  
+    Commit the currently running transaction. Must always be called after a transaction
+    was started regardless if the document was modified or not.
+
+GetDocument(tx_id)
+CreateDocument()
+GetOrCreateDocument()
+
+GetInteger(doc_id, field_name)
+SetInteger(doc_id, field_name)
+IncrementInteger(doc_id, field_name)
+DecrementInteger(doc_id, field_name)
+
+GetSubDocument(doc_id, field_name, dst_doc_id)
+
+ListGetLength(doc_id, field_name)
+ListGetByIndex(doc_id, field_name, dst_doc_id)
+ListAppend(doc_id, field_name, dst_doc_id)
+
+
+http://influxdb.com
+
+ACID per document
+mget
+
+indices
+support hyperloglog
+
+optimized for ssds (relies on fast random reads but does mostly sequential writes)
+
+-> update has an option: RECLAIM_SPACE vs APPEND_ONLY(fast)
+
+-> documents are copy on write, mvcc
+-> transcations are single document only
+-> index as copy on write btree
+-> tagged logging
+
+<schema name="">
+  <integer name="" />
+</schema>
+
+
+$doc = collection.findOrCreate(key)
+
+commit $doc
+
+mvcc
+ttl on docs
+backupsi
+reference types! / links (intra-document)
+
+time indexes
+numeric range indexes
+geo indexes
+
+change/expire notifications
+
+fdb uc: zsh history log
+fdb uc: http://skydb.io/guide/
+fdb uc: exception log / airbrake
+fdb uc: fnordmetric
+fdb uc: minhash recos
+fdb uc: normal cf recos
+fdb uc: reco user / session tracking
+fdb uc: log/event style data
+fdb uc: chat application    
+fdb uc: rack trace like calltracing
+fdb uc: tagged logging

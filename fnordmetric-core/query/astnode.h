@@ -14,26 +14,20 @@ namespace fnordmetric {
 namespace query {
 
 struct DerivedColumnASTNode {
-  size_t column_name_token;
-};
-
-struct WildcardSelectSublistASTNode {
-  size_t table_name_token;
-};
-
-union SelectSublistASTNode {
-  bool is_wildcard;
-  WildcardSelectSublistASTNode wildcard;
-  DerivedColumnASTNode derived;
+  Token* column_name;
 };
 
 struct SelectListASTNode {
-  bool is_wildcard;
-  std::vector<std::unique_ptr<SelectSublistASTNode>> select_sublists;
+  bool is_table_wildcard;
+  union {
+    Token* table_wildcard_name;
+    DerivedColumnASTNode derived;
+  } sublist;
 };
 
 struct SelectASTNode {
-  std::vector<std::unique_ptr<SelectListASTNode>> select_lists;
+  bool is_wildcard;
+  std::vector<std::unique_ptr<SelectListASTNode>> select_list;
 };
 
 }
