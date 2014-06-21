@@ -6,7 +6,7 @@
  */
 #include <stdlib.h>
 #include <assert.h>
-#include "queryparser.h"
+#include "tokenize.h"
 
 namespace fnordmetric {
 namespace query {
@@ -18,9 +18,6 @@ void tokenizeQuery(
   char quote_char = 0;
 
 next:
-  if (token_list->size() > 0) {
-    token_list->back().debugPrint();
-  }
 
   /* skip whitespace */
   while (**cur == ' ' && *cur < end) {
@@ -75,6 +72,12 @@ next:
       goto next;
     }
 
+    case '*': {
+      token_list->emplace_back(Token::T_ASTERISK);
+      (*cur)++;
+      goto next;
+    }
+
     case '"':
     case '\'':
     case '`':
@@ -117,6 +120,7 @@ next:
       **cur != ')' &&
       **cur != '=' &&
       **cur != '+' &&
+      **cur != '*' &&
       *cur < end) {
     len++;
     (*cur)++;

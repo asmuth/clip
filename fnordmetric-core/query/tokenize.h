@@ -7,6 +7,7 @@
 #ifndef _FNORDMETRIC_QUERY_TOKENIZE_H
 #define _FNORDMETRIC_QUERY_TOKENIZE_H
 #include <vector>
+#include "token.h"
 
 namespace fnordmetric {
 namespace query {

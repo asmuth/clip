@@ -108,5 +108,9 @@ bool Token::operator==(const std::string& string) const {
   return strncasecmp(this->data_, string.c_str(), string.size()) == 0;
 }
 
+bool Token::operator==(kTokenType type) const {
+  return type_ == type;
+}
+
 }
 }

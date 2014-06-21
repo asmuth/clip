@@ -26,7 +26,8 @@ public:
     T_LPAREN,
     T_RPAREN,
     T_EQUAL,
-    T_PLUS
+    T_PLUS,
+    T_ASTERISK
   };
 
   Token(kTokenType token_type);
@@ -36,6 +37,7 @@ public:
 
   Token& operator=(const Token& copy) = delete;
   bool operator==(const std::string& string) const;
+  bool operator==(kTokenType type) const;
   void debugPrint() const;
 
 protected:
