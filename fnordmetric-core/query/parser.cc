@@ -270,6 +270,9 @@ ASTNode* Parser::divExpr(ASTNode* lhs, ASTNode* rhs) {
 bool Parser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
     addError(ERR_UNEXPECTED_TOKEN, "unexpected token, expected ...");
+    printf("got: %s, expected: %s\n",
+        Token::getTypeName(cur_token_->getType()),
+        Token::getTypeName(expectation));
     return false;
   }
 

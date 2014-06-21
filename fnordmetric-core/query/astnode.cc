@@ -47,54 +47,59 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
 
   switch (type_) {
     case T_ALL:
-      printf("- ALL\n");
+      printf("- ALL");
       break;
     case T_ROOT:
       printf("\r");
       break;
     case T_SELECT:
-      printf("- SELECT\n");
+      printf("- SELECT");
       break;
     case T_SELECT_LIST:
-      printf("- SELECT_LIST\n");
+      printf("- SELECT_LIST");
       break;
     case T_FROM:
-      printf("- FROM\n");
+      printf("- FROM");
       break;
     case T_DERIVED_COLUMN:
-      printf("- DERIVED_COLUMN\n");
+      printf("- DERIVED_COLUMN");
       break;
     case T_COLUMN_NAME:
-      printf("- COLUMN_NAME\n");
+      printf("- COLUMN_NAME");
       break;
     case T_TABLE_NAME:
-      printf("- TABLE_NAME\n");
+      printf("- TABLE_NAME");
       break;
     case T_VALUE_EXPR:
-      printf("- VALUE_EXPR\n");
+      printf("- VALUE_EXPR");
       break;
     case T_LITERAL:
-      printf("- LITERAL\n");
+      printf("- LITERAL");
       break;
     case T_NEGATE_EXPR:
-      printf("- NEGATE_EXPR\n");
+      printf("- NEGATE_EXPR");
       break;
     case T_ADD_EXPR:
-      printf("- ADD_EXPR\n");
+      printf("- ADD_EXPR");
       break;
     case T_SUB_EXPR:
-      printf("- SUB_EXPR\n");
+      printf("- SUB_EXPR");
       break;
     case T_MUL_EXPR:
-      printf("- MUL_EXPR\n");
+      printf("- MUL_EXPR");
       break;
     case T_DIV_EXPR:
-      printf("- DIV_EXPR\n");
+      printf("- DIV_EXPR");
       break;
     case T_METHOD_CALL:
-      printf("- METHOD_CALL\n");
+      printf("- METHOD_CALL");
       break;
   }
+
+  if (token_ != nullptr) {
+    printf(" [%s]", Token::getTypeName(token_->getType()));
+  }
+  printf("\n");
 
   for (const auto child : children_) {
     child->debugPrint(indent + 1);
