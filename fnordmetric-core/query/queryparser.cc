@@ -122,9 +122,6 @@ ASTNode* QueryParser::parseValueExpression() {
 }
 
 ASTNode* QueryParser::parsePrefixOpExpression() {
-  printf("parsePrexixOpExpr\n");
-  cur_token_->debugPrint();
-
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
@@ -144,9 +141,9 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
     case Token::T_MINUS:
     case Token::T_NOT: {
       printf("negate..\n");
+      consumeToken();
       auto expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
       expr->appendChild(parseValueExpression());
-      consumeToken();
       return expr;
     }
 
@@ -163,9 +160,6 @@ ASTNode* QueryParser::parsePrefixOpExpression() {
   }
 }
 Token* QueryParser::parseInfixOperator() {
-  printf("parseInfixOperator\n");
-  cur_token_->debugPrint();
-
   switch (cur_token_->getType()) {
 
     case Token::T_MINUS:
