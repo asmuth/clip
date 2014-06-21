@@ -67,6 +67,9 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_COLUMN_NAME:
       printf("- COLUMN_NAME\n");
       break;
+    case T_TABLE_NAME:
+      printf("- TABLE_NAME\n");
+      break;
     case T_VALUE_EXPR:
       printf("- VALUE_EXPR\n");
       break;
@@ -78,6 +81,9 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
       break;
     case T_ADD_EXPR:
       printf("- ADD_EXPR\n");
+      break;
+    case T_METHOD_CALL:
+      printf("- METHOD_CALL\n");
       break;
   }
 

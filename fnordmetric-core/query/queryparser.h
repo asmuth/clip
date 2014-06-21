@@ -43,17 +43,34 @@ public:
 
 protected:
 
-  void parseSelect();
-  void parseSelectSublist(ASTNode* select_node);
-  ASTNode* parseValueExpression();
-  ASTNode* parseLHSExpression();
-  ASTNode* parseBinaryExpression(ASTNode* lhs);
+  void readSelect();
+  void readSelectSublist(ASTNode* select_node);
+  ASTNode* readValueExpression();
+  ASTNode* readLHSExpression();
+  ASTNode* readMethodCall();
+  ASTNode* readBinaryExpression(ASTNode* lhs);
 
   ASTNode* addExpr(ASTNode* lhs, ASTNode* rhs);
 
-  bool assertExpectation(Token::kTokenType);
+  bool assertExpectation(Token::kTokenType expectation);
   void addError(kParserErrorType type, const char* msg);
-  inline void consumeToken() { cur_token_++; }
+
+  inline Token* consumeToken() {
+    auto token = cur_token_;
+    cur_token_++;
+    return token;
+  }
+
+  inline void expectAndConsume(Token::kTokenType expectation) {
+    if (assertExpectation(expectation)) {
+      consumeToken();
+    }
+  }
+
+  inline bool lookahead(size_t n, Token::kTokenType expectation) const {
+    return cur_token_ + n < token_list_end_ &&
+        cur_token_[n].getType() == expectation;
+  }
 
   std::vector<Token> token_list_;
   Token* cur_token_;

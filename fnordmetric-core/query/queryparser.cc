@@ -26,12 +26,12 @@ size_t QueryParser::parse(const char* query, size_t len) {
 
   cur_token_ = token_list_.data();
   token_list_end_ = cur_token_ + token_list_.size();
-  parseSelect();
+  readSelect();
 
   return errors_.size() == 0;
 }
 
-void QueryParser::parseSelect() {
+void QueryParser::readSelect() {
   /* SELECT */
   auto select = root_.appendChild(ASTNode::T_SELECT);
   if (!assertExpectation(Token::T_SELECT)) {
@@ -41,7 +41,7 @@ void QueryParser::parseSelect() {
   }
 
   /* DISTINCT/ALL */
-  // FIXPAUL parse SET_QUANTIFIER (distinct, all...)
+  // FIXPAUL read SET_QUANTIFIER (distinct, all...)
 
   /* select list */
   auto select_list = select->appendChild(ASTNode::T_SELECT_LIST);
@@ -50,7 +50,7 @@ void QueryParser::parseSelect() {
     consumeToken();
   } else {
     for (;;) {
-      parseSelectSublist(select_list);
+      readSelectSublist(select_list);
 
       if (*cur_token_ == Token::T_COMMA) {
         consumeToken();
@@ -70,7 +70,7 @@ void QueryParser::parseSelect() {
 
 }
 
-void QueryParser::parseSelectSublist(ASTNode* select_list) {
+void QueryParser::readSelectSublist(ASTNode* select_list) {
   /* table_name.* */
   if (cur_token_ + 3 < token_list_end_ &&
       cur_token_[0] == Token::T_IDENTIFIER &&
@@ -84,7 +84,7 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
 
   /* derived_col AS col_name */
   auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
-  auto value_expr = parseValueExpression();
+  auto value_expr = readValueExpression();
 
   if (value_expr == nullptr) {
     addError(ERR_UNEXPECTED_TOKEN, "expected value expression");
@@ -105,15 +105,15 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
 }
 
 
-ASTNode* QueryParser::parseValueExpression() {
-  auto lhs = parseLHSExpression();
+ASTNode* QueryParser::readValueExpression() {
+  auto lhs = readLHSExpression();
 
   if (lhs == nullptr) {
     return nullptr;
   }
 
   for (;;) {
-    auto expr = parseBinaryExpression(lhs);
+    auto expr = readBinaryExpression(lhs);
     if (expr == nullptr) {
       return lhs;
     } else {
@@ -122,13 +122,13 @@ ASTNode* QueryParser::parseValueExpression() {
   }
 }
 
-ASTNode* QueryParser::parseLHSExpression() {
+ASTNode* QueryParser::readLHSExpression() {
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
     case Token::T_LPAREN: {
       consumeToken();
-      auto expr = parseValueExpression();
+      auto expr = readValueExpression();
       if (assertExpectation(Token::T_RPAREN)) {
         consumeToken();
       }
@@ -143,11 +143,13 @@ ASTNode* QueryParser::parseLHSExpression() {
     case Token::T_NOT: {
       consumeToken();
       auto expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
-      expr->appendChild(parseValueExpression());
+      expr->appendChild(readValueExpression());
       return expr;
     }
 
     /* literal expression */
+    case Token::T_TRUE:
+    case Token::T_FALSE:
     case Token::T_NUMERIC:
     case Token::T_STRING: {
       auto expr = new ASTNode(ASTNode::T_LITERAL);
@@ -156,9 +158,30 @@ ASTNode* QueryParser::parseLHSExpression() {
       return expr;
     }
 
-    /* column name or method call */
     case Token::T_IDENTIFIER: {
-      auto expr = new ASTNode(ASTNode::T_COLUMN_NAME);
+      ASTNode* expr = nullptr;
+
+      if (cur_token_ + 1 < token_list_end_ &&
+          cur_token_[1].getType() == Token::T_DOT) {
+        /* table_name.column_name */
+        auto table_name = new ASTNode(ASTNode::T_TABLE_NAME);
+        table_name->setToken(cur_token_);
+        consumeToken();
+        consumeToken();
+        if (assertExpectation(Token::T_IDENTIFIER)) {
+          auto col_name = table_name->appendChild(ASTNode::T_COLUMN_NAME);
+          col_name->setToken(cur_token_);
+          consumeToken();
+        }
+        return table_name;
+      }
+
+      if (lookahead(1, Token::T_LPAREN)) {
+        return readMethodCall();
+      }
+
+      /* simple column name */
+      expr = new ASTNode(ASTNode::T_COLUMN_NAME);
       expr->setToken(cur_token_);
       consumeToken();
       return expr;
@@ -170,13 +193,27 @@ ASTNode* QueryParser::parseLHSExpression() {
   }
 }
 
-ASTNode* QueryParser::parseBinaryExpression(ASTNode* lhs) {
+ASTNode* QueryParser::readMethodCall() {
+  auto expr = new ASTNode(ASTNode::T_METHOD_CALL);
+  expr->setToken(consumeToken());
+
+  /* read arguments */
+  do {
+    consumeToken();
+    expr->appendChild(readValueExpression());
+  } while (*cur_token_ == Token::T_COMMA);
+
+  expectAndConsume(Token::T_RPAREN);
+  return expr;
+}
+
+ASTNode* QueryParser::readBinaryExpression(ASTNode* lhs) {
   switch (cur_token_->getType()) {
 
     /* add expression */
     case Token::T_PLUS: {
       consumeToken();
-      return addExpr(lhs, parseValueExpression());
+      return addExpr(lhs, readValueExpression());
     }
 
     default:
@@ -203,7 +240,7 @@ bool QueryParser::assertExpectation(Token::kTokenType expectation) {
 void QueryParser::addError(kParserErrorType type, const char* msg) {
   ParserError error;
   error.type = type;
-  fprintf(stderr, "[ERROR] %s\n", msg);
+  //fprintf(stderr, "[ERROR] %s\n", msg);
   errors_.push_back(error);
 }
 

@@ -25,10 +25,12 @@ public:
     T_DERIVED_COLUMN,
     T_FROM,
     T_COLUMN_NAME,
+    T_TABLE_NAME,
     T_VALUE_EXPR,
     T_NEGATE_EXPR,
     T_ADD_EXPR,
-    T_LITERAL
+    T_LITERAL,
+    T_METHOD_CALL
   };
 
   ASTNode(kASTNodeType type);

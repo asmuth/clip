@@ -42,8 +42,10 @@ public:
     testSelectWildcard();
     testSelectTableWildcard();
     testSelectDerivedColumn();
+    testSelectDerivedColumnWithTableName();
     testSimpleValueExpression();
     testNegatedValueExpression();
+    testMethodCallValueExpression();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -74,6 +76,39 @@ public:
     assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
     assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
     assert(*expr->getChildren()[1]->getToken() == "5.123");
+    const auto& from = stmt->getChildren()[1];
+    assert(*from == ASTNode::T_FROM);
+  }
+
+  void testMethodCallValueExpression() {
+    auto parser = parseTestQuery("SELECT 1 + sum(23, 4 + 1) FROM sometable;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(*stmt == ASTNode::T_SELECT);
+    assert(stmt->getChildren().size() == 2);
+    const auto& sl = stmt->getChildren()[0];
+    assert(*sl == ASTNode::T_SELECT_LIST);
+    assert(sl->getChildren().size() == 1);
+    auto derived = sl->getChildren()[0];
+    assert(*derived == ASTNode::T_DERIVED_COLUMN);
+    assert(derived->getChildren().size() == 1);
+    auto expr = derived->getChildren()[0];
+    assert(*expr == ASTNode::T_ADD_EXPR);
+    assert(expr->getChildren().size() == 2);
+    assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+    assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+    assert(*expr->getChildren()[0]->getToken() == "1");
+    auto mcall = expr->getChildren()[1];
+    assert(*mcall == ASTNode::T_METHOD_CALL);
+    assert(*mcall->getToken() == Token::T_IDENTIFIER);
+    assert(*mcall->getToken() == "sum");
+    assert(mcall->getChildren().size() == 2);
+    assert(*mcall->getChildren()[0] == ASTNode::T_LITERAL);
+    assert(*mcall->getChildren()[0]->getToken() == Token::T_NUMERIC);
+    assert(*mcall->getChildren()[0]->getToken() == "23");
+    assert(*mcall->getChildren()[1] == ASTNode::T_ADD_EXPR);
+    assert(mcall->getChildren()[1]->getChildren().size() == 2);
     const auto& from = stmt->getChildren()[1];
     assert(*from == ASTNode::T_FROM);
   }
@@ -148,7 +183,6 @@ public:
 
   void testSelectDerivedColumn() {
     auto parser = parseTestQuery("SELECT somecol AS another FROM sometable;");
-    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -163,6 +197,37 @@ public:
     assert(*derived->getChildren()[0] == ASTNode::T_COLUMN_NAME);
     assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[0]->getToken() == "somecol");
+    assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_NAME);
+    assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
+    assert(*derived->getChildren()[1]->getToken() == "another");
+    const auto& from = stmt->getChildren()[1];
+    assert(*from == ASTNode::T_FROM);
+  }
+
+  void testSelectDerivedColumnWithTableName() {
+    auto parser = parseTestQuery("SELECT tbl.col AS another FROM sometable;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(*stmt == ASTNode::T_SELECT);
+    assert(stmt->getChildren().size() == 2);
+    const auto& sl = stmt->getChildren()[0];
+    assert(*sl == ASTNode::T_SELECT_LIST);
+    assert(sl->getChildren().size() == 1);
+    const auto& derived = sl->getChildren()[0];
+    assert(*derived == ASTNode::T_DERIVED_COLUMN);
+    assert(derived->getChildren().size() == 2);
+    auto tbl = derived->getChildren()[0];
+    assert(*tbl == ASTNode::T_TABLE_NAME);
+    assert(*tbl->getToken() == Token::T_IDENTIFIER);
+    assert(*tbl->getToken() == "tbl");
+    assert(tbl->getChildren().size() == 1);
+    auto col = tbl->getChildren()[0];
+    assert(*col->getToken() == Token::T_IDENTIFIER);
+    assert(*col->getToken() == "col");
+    assert(*derived->getChildren()[0] == ASTNode::T_TABLE_NAME);
+    assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
+    assert(*derived->getChildren()[0]->getToken() == "tbl");
     assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_NAME);
     assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[1]->getToken() == "another");
