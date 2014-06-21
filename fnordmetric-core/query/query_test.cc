@@ -13,10 +13,6 @@
 #include "parser.h"
 #include "token.h"
 #include "tokenize.h"
-//#include "../agent.h"
-//#include "../clock.h"
-//#include "../query/query.h"
-//#include "../database/database.h"
 
 namespace fnordmetric {
 namespace query {
@@ -112,18 +108,34 @@ public:
   }
 
   void testArithmeticValueExpressionPrecedence() {
-    auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
-    assert(parser.getErrors().size() == 0);
-    assert(parser.getStatements().size() == 1);
-    auto expr = parser.getStatements()[0]
-        ->getChildren()[0]->getChildren()[0]->getChildren()[0];
-    assert(*expr == ASTNode::T_ADD_EXPR);
-    assert(expr->getChildren().size() == 2);
-    assert(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
-    assert(expr->getChildren()[0]->getChildren().size() == 2);
-    assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
-    assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
-    assert(*expr->getChildren()[1]->getToken() == "3");
+    {
+      auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
+      assert(parser.getErrors().size() == 0);
+      assert(parser.getStatements().size() == 1);
+      auto expr = parser.getStatements()[0]
+          ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+      assert(*expr == ASTNode::T_ADD_EXPR);
+      assert(expr->getChildren().size() == 2);
+      assert(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
+      assert(expr->getChildren()[0]->getChildren().size() == 2);
+      assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+      assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+      assert(*expr->getChildren()[1]->getToken() == "3");
+    }
+    {
+      auto parser = parseTestQuery("SELECT 1 + 2 * 3;");
+      assert(parser.getErrors().size() == 0);
+      assert(parser.getStatements().size() == 1);
+      auto expr = parser.getStatements()[0]
+          ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+      assert(*expr == ASTNode::T_ADD_EXPR);
+      assert(expr->getChildren().size() == 2);
+      assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+      assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+      assert(*expr->getChildren()[0]->getToken() == "1");
+      assert(*expr->getChildren()[1] == ASTNode::T_MUL_EXPR);
+      assert(expr->getChildren()[1]->getChildren().size() == 2);
+    }
   }
 
   void testMethodCallValueExpression() {

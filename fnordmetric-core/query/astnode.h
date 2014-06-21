@@ -33,7 +33,9 @@ public:
     T_MUL_EXPR,
     T_DIV_EXPR,
     T_LITERAL,
-    T_METHOD_CALL
+    T_METHOD_CALL,
+    T_MOD_EXPR,
+    T_POW_EXPR,
   };
 
   ASTNode(kASTNodeType type);

@@ -37,6 +37,7 @@ public:
     9, <<, >>
     8, &
     7, |
+    // not implemented below here
     6, = (comparison), <=>, >=, >, <=, <, <>, !=, IS, LIKE, REGEXP, IN
     5, BETWEEN, CASE, WHEN, THEN, ELSE
     4, NOT
@@ -71,6 +72,8 @@ protected:
   ASTNode* subExpr(ASTNode* lhs, int precedence);
   ASTNode* mulExpr(ASTNode* lhs, int precedence);
   ASTNode* divExpr(ASTNode* lhs, int precedence);
+  ASTNode* modExpr(ASTNode* lhs, int precedence);
+  ASTNode* powExpr(ASTNode* lhs, int precedence);
 
   bool assertExpectation(Token::kTokenType expectation);
   void addError(kParserErrorType type, const char* msg);

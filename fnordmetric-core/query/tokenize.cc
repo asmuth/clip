@@ -97,6 +97,36 @@ next:
       goto next;
     }
 
+    case '^': {
+      token_list->emplace_back(Token::T_CIRCUMFLEX);
+      (*cur)++;
+      goto next;
+    }
+
+    case '~': {
+      token_list->emplace_back(Token::T_TILDE);
+      (*cur)++;
+      goto next;
+    }
+
+    case '%': {
+      token_list->emplace_back(Token::T_PERCENT);
+      (*cur)++;
+      goto next;
+    }
+
+    case '&': {
+      token_list->emplace_back(Token::T_AMPERSAND);
+      (*cur)++;
+      goto next;
+    }
+
+    case '|': {
+      token_list->emplace_back(Token::T_PIPE);
+      (*cur)++;
+      goto next;
+    }
+
     /* numeric literals */
     case '0':
     case '1':
@@ -164,6 +194,11 @@ next:
       **cur != '*' &&
       **cur != '!' &&
       **cur != '/' &&
+      **cur != '^' &&
+      **cur != '~' &&
+      **cur != '%' &&
+      **cur != '&' &&
+      **cur != '|' &&
       *cur < end) {
     len++;
     (*cur)++;
@@ -198,6 +233,26 @@ next:
 
   if (token == "FROM") {
     token_list->emplace_back(Token::T_FROM);
+    goto next;
+  }
+
+  if (token == "DIV") {
+    token_list->emplace_back(Token::T_DIV);
+    goto next;
+  }
+
+  if (token == "MOD") {
+    token_list->emplace_back(Token::T_MOD);
+    goto next;
+  }
+
+  if (token == "<<") {
+    token_list->emplace_back(Token::T_LSHIFT);
+    goto next;
+  }
+
+  if (token == ">>") {
+    token_list->emplace_back(Token::T_RSHIFT);
     goto next;
   }
 

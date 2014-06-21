@@ -36,7 +36,16 @@ public:
     T_NOT,
     T_TRUE,
     T_FALSE,
-    T_BANG
+    T_BANG,
+    T_CIRCUMFLEX,
+    T_TILDE,
+    T_PERCENT,
+    T_DIV,
+    T_MOD,
+    T_AMPERSAND,
+    T_PIPE,
+    T_LSHIFT,
+    T_RSHIFT
   };
 
   Token(kTokenType token_type);

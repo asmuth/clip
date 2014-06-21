@@ -228,10 +228,23 @@ ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
 
     /* division expression */
     case Token::T_SLASH:
+    case Token::T_DIV:
       return divExpr(lhs, precedence);
+
+    /* modulo expression */
+    case Token::T_PERCENT:
+    case Token::T_MOD:
+      return modExpr(lhs, precedence);
+
+    /* exponentiation expression */
+    case Token::T_CIRCUMFLEX:
+      return powExpr(lhs, precedence);
+
+    // FIXPAUL: lshift, rshift, ampersand, pipe, tilde
 
     default:
       return nullptr;
+
   }
 }
 
@@ -282,6 +295,32 @@ ASTNode* Parser::divExpr(ASTNode* lhs, int precedence) {
   }
 
   auto expr = new ASTNode(ASTNode::T_DIV_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(readValueExpression(11));
+  return expr;
+}
+
+ASTNode* Parser::modExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 11) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto expr = new ASTNode(ASTNode::T_MOD_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(readValueExpression(11));
+  return expr;
+}
+
+ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 12) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto expr = new ASTNode(ASTNode::T_POW_EXPR);
   expr->appendChild(lhs);
   expr->appendChild(readValueExpression(11));
   return expr;
