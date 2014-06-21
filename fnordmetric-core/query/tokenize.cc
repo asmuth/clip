@@ -91,6 +91,23 @@ next:
       goto next;
     }
 
+    /* numeric literals */
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9': {
+      const char* begin = *cur;
+      for (; (**cur >= '0' && **cur <= '9') || **cur == '.'; (*cur)++);
+      token_list->emplace_back(Token::T_NUMERIC, begin, *cur - begin);
+      goto next;
+    }
+
     case '`':
       string_type = Token::T_IDENTIFIER;
       /* fallthrough */

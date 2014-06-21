@@ -129,7 +129,7 @@ public:
 
   void testTokenizerEscaping() {
     auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
-        "= 'fnor\\'dbar' + 123;");
+        "= 'fnor\\'dbar' + 123.5;");
     const auto& tl = parser.token_list_;
     assert(tl.size() == 17);
     assert(tl[0].type_ == Token::T_SELECT);
@@ -154,8 +154,8 @@ public:
     assert(tl[13].type_ == Token::T_STRING);
     //assert(tl[13] == "fnord'bar"); // FIXPAUL
     assert(tl[14].type_ == Token::T_PLUS);
-    assert(tl[15].type_ == Token::T_IDENTIFIER);
-    assert(tl[15] == "123");
+    assert(tl[15].type_ == Token::T_NUMERIC);
+    assert(tl[15] == "123.5");
     assert(tl[16].type_ == Token::T_SEMICOLON);
   }
 
@@ -186,7 +186,7 @@ public:
     assert((*tl)[13].type_ == Token::T_STRING);
     assert((*tl)[13] == "fn'o=,rdbar");
     assert((*tl)[14].type_ == Token::T_PLUS);
-    assert((*tl)[15].type_ == Token::T_IDENTIFIER);
+    assert((*tl)[15].type_ == Token::T_NUMERIC);
     assert((*tl)[15] == "123");
     assert((*tl)[16].type_ == Token::T_SEMICOLON);
   }

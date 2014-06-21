@@ -23,6 +23,7 @@ public:
     T_DOT,
     T_IDENTIFIER,
     T_STRING,
+    T_NUMERIC,
     T_SEMICOLON,
     T_LPAREN,
     T_RPAREN,
