@@ -21,24 +21,30 @@ public:
     T_FROM,
     T_COMMA,
     T_DOT,
+    T_IDENTIFIER,
     T_STRING,
     T_SEMICOLON,
     T_LPAREN,
     T_RPAREN,
     T_EQUAL,
     T_PLUS,
+    T_MINUS,
     T_ASTERISK,
-    T_AS
+    T_AS,
+    T_NOT,
+    T_TRUE,
+    T_FALSE,
+    T_BANG
   };
 
   Token(kTokenType token_type);
   Token(kTokenType token_type, const char* data, size_t size);
   Token(const Token& copy);
   ~Token();
-
   Token& operator=(const Token& copy) = delete;
   bool operator==(const std::string& string) const;
   bool operator==(kTokenType type) const;
+  kTokenType getType() const;
   void debugPrint() const;
 
 protected:

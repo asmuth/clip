@@ -91,15 +91,26 @@ void Token::debugPrint() const {
       printf("T_ASTERISK\n");
       break;
 
-    case T_STRING: {
+    case T_NOT:
+      printf("T_NOT\n");
+      break;
+
+    case T_STRING:
+    case T_IDENTIFIER: {
       char buf[1024];
       assert(len_ < sizeof(buf));
       memcpy(buf, data_, len_);
       buf[len_] = 0;
-      printf("T_STRING(%s)\n", buf);
+      printf("T_%s(%s)\n",
+          type_ == T_STRING ? "STRING" : "IDENTIFIER",
+          buf);
       break;
     }
   }
+}
+
+Token::kTokenType Token::getType() const {
+  return type_;
 }
 
 bool Token::operator==(const std::string& string) const {

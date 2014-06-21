@@ -72,7 +72,7 @@ void QueryParser::parseSelect() {
 void QueryParser::parseSelectSublist(ASTNode* select_list) {
   /* table_name.* */
   if (cur_token_ + 3 < token_list_end_ &&
-      cur_token_[0] == Token::T_STRING &&
+      cur_token_[0] == Token::T_IDENTIFIER &&
       cur_token_[1] == Token::T_DOT &&
       cur_token_[2] == Token::T_ASTERISK) {
     auto select_all = select_list->appendChild(ASTNode::T_ALL);
@@ -82,7 +82,43 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
   }
 
   /* derived_col AS col_name */
-  //parseValueExpression()
+  auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
+  parseValueExpression(derived);
+
+  if (*cur_token_ == Token::T_AS) {
+    consumeToken();
+    if (assertExpectation(Token::T_IDENTIFIER)) {
+      auto column_name = derived->appendChild(ASTNode::T_COLUMN_NAME);
+      column_name->setToken(cur_token_);
+      consumeToken();
+    }
+  }
+}
+
+void QueryParser::parseValueExpression(ASTNode* parent) {
+  switch (cur_token_->getType()) {
+
+    /* negated value expression */
+    case Token::T_BANG:
+    case Token::T_MINUS:
+    case Token::T_NOT: {
+      consumeToken();
+      auto expr = parent->appendChild(ASTNode::T_NEGATE_EXPR);
+      parseValueExpression(expr);
+      return;
+    }
+
+    /* parenthesized value expression */
+    case Token::T_LPAREN: {
+      consumeToken();
+      parseValueExpression(parent);
+      if (assertExpectation(Token::T_RPAREN)) {
+        consumeToken();
+      }
+      return;
+    }
+
+  }
 }
 
 bool QueryParser::assertExpectation(Token::kTokenType expectation) {
@@ -107,6 +143,12 @@ const std::vector<QueryParser::ParserError>& QueryParser::getErrors() const {
 const std::vector<ASTNode>& QueryParser::getStatements() const {
   return root_.getChildren();
 }
+
+void QueryParser::debugPrint() const {
+  printf("[ AST ]\n");
+  root_.debugPrint(2);
+}
+
 
 }
 }

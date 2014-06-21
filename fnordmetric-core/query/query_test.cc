@@ -33,6 +33,7 @@ public:
     testSelectWildcard();
     testSelectTableWildcard();
     testSelectDerivedColumn();
+    testSelectDerivedColumnWithAsClause();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -70,7 +71,7 @@ public:
     const auto& all = sl.getChildren()[0];
     assert(all == ASTNode::T_ALL);
     assert(all.getToken() != nullptr);
-    assert(*all.getToken() == Token::T_STRING);
+    assert(*all.getToken() == Token::T_IDENTIFIER);
     assert(*all.getToken() == "mytablex");
     const auto& from = stmt.getChildren()[1];
     assert(from == ASTNode::T_FROM);
@@ -78,6 +79,7 @@ public:
 
   void testSelectDerivedColumn() {
     auto parser = parseTestQuery("SELECT somecol FROM sometable;");
+    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -89,6 +91,32 @@ public:
     const auto& derived = sl.getChildren()[0];
     assert(derived == ASTNode::T_DERIVED_COLUMN);
     assert(derived.getChildren().size() == 1);
+    const auto& expr = derived.getChildren()[0];
+    assert(expr == ASTNode::T_VALUE_EXPR);
+    const auto& from = stmt.getChildren()[1];
+    assert(from == ASTNode::T_FROM);
+  }
+
+  void testSelectDerivedColumnWithAsClause() {
+    auto parser = parseTestQuery("SELECT somecol AS fnord FROM sometable;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt == ASTNode::T_SELECT);
+    assert(stmt.getChildren().size() == 2);
+    const auto& sl = stmt.getChildren()[0];
+    assert(sl == ASTNode::T_SELECT_LIST);
+    assert(sl.getChildren().size() == 1);
+    const auto& derived = sl.getChildren()[0];
+    assert(derived == ASTNode::T_DERIVED_COLUMN);
+    assert(derived.getChildren().size() == 2);
+    const auto& expr = derived.getChildren()[0];
+    assert(expr == ASTNode::T_VALUE_EXPR);
+    const auto& alias = derived.getChildren()[1];
+    assert(alias == ASTNode::T_COLUMN_NAME);
+    assert(alias.getToken() != nullptr);
+    assert(*alias.getToken() == Token::T_STRING);
+    assert(*alias.getToken() == "fnord");
     const auto& from = stmt.getChildren()[1];
     assert(from == ASTNode::T_FROM);
   }
@@ -105,59 +133,60 @@ public:
     const auto& tl = parser.token_list_;
     assert(tl.size() == 17);
     assert(tl[0].type_ == Token::T_SELECT);
-    assert(tl[1].type_ == Token::T_STRING);
+    assert(tl[1].type_ == Token::T_IDENTIFIER);
     assert(tl[1] == "fnord");
     assert(tl[2].type_ == Token::T_COMMA);
-    assert(tl[3].type_ == Token::T_STRING);
+    assert(tl[3].type_ == Token::T_IDENTIFIER);
     assert(tl[3] == "sum");
     assert(tl[4].type_ == Token::T_LPAREN);
-    assert(tl[5].type_ == Token::T_STRING);
+    assert(tl[5].type_ == Token::T_IDENTIFIER);
     assert(tl[5] == "blah");
     assert(tl[6].type_ == Token::T_RPAREN);
     assert(tl[7].type_ == Token::T_FROM);
-    assert(tl[8].type_ == Token::T_STRING);
+    assert(tl[8].type_ == Token::T_IDENTIFIER);
     assert(tl[8] == "fubar");
-    assert(tl[9].type_ == Token::T_STRING);
+    assert(tl[9].type_ == Token::T_IDENTIFIER);
     assert(tl[9] == "blah");
     assert(tl[10].type_ == Token::T_DOT);
-    assert(tl[11].type_ == Token::T_STRING);
+    assert(tl[11].type_ == Token::T_IDENTIFIER);
     assert(tl[11] == "id");
     assert(tl[12].type_ == Token::T_EQUAL);
     assert(tl[13].type_ == Token::T_STRING);
     //assert(tl[13] == "fnord'bar"); // FIXPAUL
     assert(tl[14].type_ == Token::T_PLUS);
-    assert(tl[15].type_ == Token::T_STRING);
+    assert(tl[15].type_ == Token::T_IDENTIFIER);
     assert(tl[15] == "123");
     assert(tl[16].type_ == Token::T_SEMICOLON);
   }
 
   void testTokenizerSimple() {
-    auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
-        "= \"fn'o=,rdbar\" + 123;");
+    auto parser = parseTestQuery(" SELECT  fnord,sum(`blah-field`) from fubar"
+        " blah.id= \"fn'o=,rdbar\" + 123;");
     auto tl = &parser.token_list_;
     assert((*tl)[0].type_ == Token::T_SELECT);
-    assert((*tl)[1].type_ == Token::T_STRING);
+    assert((*tl)[1].type_ == Token::T_IDENTIFIER);
     assert((*tl)[1] == "fnord");
     assert((*tl)[2].type_ == Token::T_COMMA);
-    assert((*tl)[3].type_ == Token::T_STRING);
+    assert((*tl)[3].type_ == Token::T_IDENTIFIER);
     assert((*tl)[3] == "sum");
     assert((*tl)[4].type_ == Token::T_LPAREN);
-    assert((*tl)[5].type_ == Token::T_STRING);
-    assert((*tl)[5] == "blah");
+    assert((*tl)[5].type_ == Token::T_IDENTIFIER);
+    assert((*tl)[5] == "blah-field");
     assert((*tl)[6].type_ == Token::T_RPAREN);
     assert((*tl)[7].type_ == Token::T_FROM);
-    assert((*tl)[8].type_ == Token::T_STRING);
+    assert((*tl)[8].type_ == Token::T_IDENTIFIER);
+    (*tl)[8].debugPrint();
     assert((*tl)[8] == "fubar");
-    assert((*tl)[9].type_ == Token::T_STRING);
+    assert((*tl)[9].type_ == Token::T_IDENTIFIER);
     assert((*tl)[9] == "blah");
     assert((*tl)[10].type_ == Token::T_DOT);
-    assert((*tl)[11].type_ == Token::T_STRING);
+    assert((*tl)[11].type_ == Token::T_IDENTIFIER);
     assert((*tl)[11] == "id");
     assert((*tl)[12].type_ == Token::T_EQUAL);
     assert((*tl)[13].type_ == Token::T_STRING);
     assert((*tl)[13] == "fn'o=,rdbar");
     assert((*tl)[14].type_ == Token::T_PLUS);
-    assert((*tl)[15].type_ == Token::T_STRING);
+    assert((*tl)[15].type_ == Token::T_IDENTIFIER);
     assert((*tl)[15] == "123");
     assert((*tl)[16].type_ == Token::T_SEMICOLON);
   }
@@ -166,10 +195,10 @@ public:
     auto parser = parseTestQuery(" SELECT fnord As blah from");
     auto tl = &parser.token_list_;
     assert((*tl)[0].type_ == Token::T_SELECT);
-    assert((*tl)[1].type_ == Token::T_STRING);
+    assert((*tl)[1].type_ == Token::T_IDENTIFIER);
     assert((*tl)[1] == "fnord");
     assert((*tl)[2].type_ == Token::T_AS);
-    assert((*tl)[3].type_ == Token::T_STRING);
+    assert((*tl)[3].type_ == Token::T_IDENTIFIER);
     assert((*tl)[3] == "blah");
   }
 

@@ -24,6 +24,9 @@ public:
     T_ALL,
     T_DERIVED_COLUMN,
     T_FROM,
+    T_COLUMN_NAME,
+    T_VALUE_EXPR,
+    T_NEGATE_EXPR
   };
 
   ASTNode(kASTNodeType type);
@@ -32,7 +35,7 @@ public:
   const std::vector<ASTNode>& getChildren() const;
   void setToken(const Token* token);
   const Token* getToken() const;
-  void debugPrint() const;
+  void debugPrint(int indent = 0) const;
 
 protected:
   const kASTNodeType type_;

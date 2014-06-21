@@ -38,10 +38,13 @@ public:
   const std::vector<ParserError>& getErrors() const;
   const std::vector<ASTNode>& getStatements() const;
 
+  void debugPrint() const;
+
 protected:
 
   void parseSelect();
   void parseSelectSublist(ASTNode* select_node);
+  void parseValueExpression(ASTNode* expr);
 
   bool assertExpectation(Token::kTokenType);
   void addError(kParserErrorType type, const char* msg);

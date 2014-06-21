@@ -16,6 +16,7 @@ void tokenizeQuery(
     const char* end,
     std::vector<Token>* token_list) {
   char quote_char = 0;
+  Token::kTokenType string_type = Token::T_STRING;
 
 next:
 
@@ -72,15 +73,30 @@ next:
       goto next;
     }
 
+    case '-': {
+      token_list->emplace_back(Token::T_MINUS);
+      (*cur)++;
+      goto next;
+    }
+
     case '*': {
       token_list->emplace_back(Token::T_ASTERISK);
       (*cur)++;
       goto next;
     }
 
+    case '!': {
+      token_list->emplace_back(Token::T_BANG);
+      (*cur)++;
+      goto next;
+    }
+
+    case '`':
+      string_type = Token::T_IDENTIFIER;
+      /* fallthrough */
+
     case '"':
     case '\'':
-    case '`':
       quote_char = **cur;
       (*cur)++;
       /* fallthrough */
@@ -105,12 +121,13 @@ next:
       len++;
     }
     (*cur)++;
+    token_list->emplace_back(string_type, begin, len);
     quote_char = 0;
-    token_list->emplace_back(Token::T_STRING, begin, len);
+    string_type = Token::T_STRING;
     goto next;
   }
 
-  /* keywords and unquoted strings (i.e table, field names) */
+  /* keywords and identifiers (i.e table, field names) */
   while (
       **cur != ' ' &&
       **cur != ',' &&
@@ -120,16 +137,33 @@ next:
       **cur != ')' &&
       **cur != '=' &&
       **cur != '+' &&
+      **cur != '-' &&
       **cur != '*' &&
+      **cur != '!' &&
       *cur < end) {
     len++;
     (*cur)++;
   }
 
-  Token token(Token::T_STRING, begin, len);
+  Token token(Token::T_IDENTIFIER, begin, len);
 
   if (token == "AS") {
     token_list->emplace_back(Token::T_AS);
+    goto next;
+  }
+
+  if (token == "NOT") {
+    token_list->emplace_back(Token::T_NOT);
+    goto next;
+  }
+
+  if (token == "TRUE") {
+    token_list->emplace_back(Token::T_TRUE);
+    goto next;
+  }
+
+  if (token == "FALSE") {
+    token_list->emplace_back(Token::T_TRUE);
     goto next;
   }
 

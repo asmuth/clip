@@ -36,8 +36,41 @@ const Token* ASTNode::getToken() const {
   return token_;
 }
 
-void ASTNode::debugPrint() const {
+void ASTNode::debugPrint(int indent /* = 0 */) const {
+  for (int i = 0; i < indent - 2; i++) {
+    printf("  ");
+  }
 
+  switch (type_) {
+    case T_ALL:
+      printf("- ALL\n");
+      break;
+    case T_ROOT:
+      printf("\r");
+      break;
+    case T_SELECT:
+      printf("- SELECT\n");
+      break;
+    case T_SELECT_LIST:
+      printf("- SELECT_LIST\n");
+      break;
+    case T_FROM:
+      printf("- FROM\n");
+      break;
+    case T_DERIVED_COLUMN:
+      printf("- DERIVED_COLUMN\n");
+      break;
+    case T_COLUMN_NAME:
+      printf("- COLUMN_NAME\n");
+      break;
+    case T_VALUE_EXPR:
+      printf("- VALUE_EXPR\n");
+      break;
+  }
+
+  for (const auto& child : children_) {
+    child.debugPrint(indent + 1);
+  }
 }
 
 }
