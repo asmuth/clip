@@ -83,7 +83,7 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
 
   /* derived_col AS col_name */
   auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
-  parseValueExpression(derived);
+  derived->appendChild(parseValueExpression());
 
   if (*cur_token_ == Token::T_AS) {
     consumeToken();
@@ -95,30 +95,46 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
   }
 }
 
-void QueryParser::parseValueExpression(ASTNode* parent) {
+
+ASTNode* QueryParser::parseValueExpression() {
+  auto expr = parsePrefixOpExpression();
+
+  //for (;;) {
+
+    //lhs = parseInfixOpExpression(lhs);
+  //}
+
+  return expr;
+}
+
+ASTNode* QueryParser::parsePrefixOpExpression() {
+  ASTNode* expr = nullptr;
+
   switch (cur_token_->getType()) {
+
+    /* parenthesized value expression */
+    case Token::T_LPAREN: {
+      consumeToken();
+      expr = parseValueExpression();
+      if (assertExpectation(Token::T_RPAREN)) {
+        consumeToken();
+      }
+    }
+
+    /* prefix ~ ? */
 
     /* negated value expression */
     case Token::T_BANG:
     case Token::T_MINUS:
     case Token::T_NOT: {
       consumeToken();
-      auto expr = parent->appendChild(ASTNode::T_NEGATE_EXPR);
-      parseValueExpression(expr);
-      return;
+      expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
+      expr->appendChild(parseValueExpression());
+      return expr;
     }
-
-    /* parenthesized value expression */
-    case Token::T_LPAREN: {
-      consumeToken();
-      parseValueExpression(parent);
-      if (assertExpectation(Token::T_RPAREN)) {
-        consumeToken();
-      }
-      return;
-    }
-
   }
+
+  return expr;
 }
 
 bool QueryParser::assertExpectation(Token::kTokenType expectation) {
@@ -140,7 +156,7 @@ const std::vector<QueryParser::ParserError>& QueryParser::getErrors() const {
   return errors_;
 }
 
-const std::vector<ASTNode>& QueryParser::getStatements() const {
+const std::vector<ASTNode*>& QueryParser::getStatements() const {
   return root_.getChildren();
 }
 

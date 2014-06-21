@@ -32,7 +32,8 @@ public:
   ASTNode(kASTNodeType type);
   bool operator==(kASTNodeType type) const;
   ASTNode* appendChild(ASTNode::kASTNodeType type);
-  const std::vector<ASTNode>& getChildren() const;
+  void appendChild(ASTNode* node);
+  const std::vector<ASTNode*>& getChildren() const;
   void setToken(const Token* token);
   const Token* getToken() const;
   void debugPrint(int indent = 0) const;
@@ -40,7 +41,7 @@ public:
 protected:
   const kASTNodeType type_;
   const Token* token_;
-  std::vector<ASTNode> children_;
+  std::vector<ASTNode*> children_;
 };
 
 

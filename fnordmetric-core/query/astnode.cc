@@ -19,12 +19,16 @@ bool ASTNode::operator==(kASTNodeType type) const {
 }
 
 ASTNode* ASTNode::appendChild(ASTNode::kASTNodeType type) {
-  children_.emplace_back(type);
-  // FIXPAUL slightly hacky but safe as we only recurse down the tree
-  return children_.data() + (children_.size() - 1);
+  auto child = new ASTNode(type);
+  children_.push_back(child);
+  return child;
 }
 
-const std::vector<ASTNode>& ASTNode::getChildren() const {
+void ASTNode::appendChild(ASTNode* node) {
+  children_.push_back(node);
+}
+
+const std::vector<ASTNode*>& ASTNode::getChildren() const {
   return children_;
 }
 
@@ -68,8 +72,8 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
       break;
   }
 
-  for (const auto& child : children_) {
-    child.debugPrint(indent + 1);
+  for (const auto child : children_) {
+    child->debugPrint(indent + 1);
   }
 }
 

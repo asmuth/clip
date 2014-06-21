@@ -1,16 +1,35 @@
-<query>          ::=
+<query>            ::=
     SELECT <select list> <table expression>
 
-<select list>    ::=
+<select list>      ::=
     <asterisk>
   | <select sublist> [ { <comma> <select sublist> }... ]
 
-<select sublist> ::=
+<select sublist>   ::=
     <derived column>
   | <table name> <period> <asterisk>
 
-<derived column> ::=
+<derived column>   ::=
     <value expression> [ [ AS ] <column name> ]
+
+<table expression> ::=
+    <from clause> [ <where clause> ] [ <group by clause> ] [ <having clause> ]
+
+
+
+
+
+
+
+<value expression>    ::=
+    <parenthesized value expression>
+  | <nonparenthesized value expression primary>
+
+
+
+
+
+
 
 <value expression>            ::=
     <numeric value expression>
@@ -28,11 +47,15 @@
   | <numeric value expression> <plus sign> <term>
   | <numeric value expression> <minus sign> <term>
 
-<term>    ::= 
-         <factor>
-     |     <term> <asterisk> <factor>
-     |     <term> <solidus> <factor>
+<term>                        ::=
+    <factor>
+  | <term> <asterisk> <factor>
+  | <term> <solidus> <factor>
 
-<factor>    ::=   [ <sign> ] <numeric primary>
+<factor>                      ::=
+    [ <sign> ] <numeric primary>
 
+<numeric primary>    ::= 
+    <value expression primary>
+  | <numeric value function>
 
