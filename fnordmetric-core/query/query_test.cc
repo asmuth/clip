@@ -44,6 +44,8 @@ public:
     testSelectDerivedColumn();
     testSelectDerivedColumnWithTableName();
     testSimpleValueExpression();
+    testArithmeticValueExpression();
+    testArithmeticValueExpressionParens();
     testNegatedValueExpression();
     testMethodCallValueExpression();
     testComplexQuery1();
@@ -79,6 +81,37 @@ public:
     assert(*expr->getChildren()[1]->getToken() == "5.123");
     const auto& from = stmt->getChildren()[1];
     assert(*from == ASTNode::T_FROM);
+  }
+
+  void testArithmeticValueExpression() {
+    auto parser = parseTestQuery("SELECT 1 + 2 / 3;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    auto expr = parser.getStatements()[0]
+        ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+    assert(*expr == ASTNode::T_ADD_EXPR);
+    assert(expr->getChildren().size() == 2);
+    assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+    assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+    assert(*expr->getChildren()[0]->getToken() == "1");
+    assert(*expr->getChildren()[1] == ASTNode::T_DIV_EXPR);
+    assert(expr->getChildren()[1]->getChildren().size() == 2);
+  }
+
+  void testArithmeticValueExpressionParens() {
+    auto parser = parseTestQuery("SELECT (1 * 2) + 3;");
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    auto expr = parser.getStatements()[0]
+        ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+    assert(*expr == ASTNode::T_ADD_EXPR);
+    assert(expr->getChildren().size() == 2);
+    assert(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
+    assert(expr->getChildren()[0]->getChildren().size() == 2);
+    assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+    assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+    assert(*expr->getChildren()[1]->getToken() == "3");
   }
 
   void testMethodCallValueExpression() {

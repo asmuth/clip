@@ -91,6 +91,12 @@ next:
       goto next;
     }
 
+    case '/': {
+      token_list->emplace_back(Token::T_SLASH);
+      (*cur)++;
+      goto next;
+    }
+
     /* numeric literals */
     case '0':
     case '1':
@@ -157,6 +163,7 @@ next:
       **cur != '-' &&
       **cur != '*' &&
       **cur != '!' &&
+      **cur != '/' &&
       *cur < end) {
     len++;
     (*cur)++;

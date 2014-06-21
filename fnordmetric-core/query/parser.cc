@@ -60,6 +60,10 @@ void Parser::readSelect() {
     }
   }
 
+  if (*cur_token_ == Token::T_SEMICOLON) {
+    return;
+  }
+
   /* FROM */
   auto from = select->appendChild(ASTNode::T_FROM);
   if (!assertExpectation(Token::T_FROM)) {
