@@ -28,6 +28,23 @@ public:
     const char* msg;
   };
 
+  /* precedence table
+    14, !
+    13, - (unary minus), ~ (unary bit inversion)
+    12, ^
+    11, *, /, DIV, %, MOD
+    10, -, +
+    9, <<, >>
+    8, &
+    7, |
+    6, = (comparison), <=>, >=, >, <=, <, <>, !=, IS, LIKE, REGEXP, IN
+    5, BETWEEN, CASE, WHEN, THEN, ELSE
+    4, NOT
+    3, &&, AND
+    2, XOR
+    1, ||, OR
+  */
+
   Parser();
 
   /**
@@ -45,15 +62,15 @@ protected:
 
   void readSelect();
   void readSelectSublist(ASTNode* select_node);
-  ASTNode* readValueExpression();
+  ASTNode* readValueExpression(int precedence = 0);
   ASTNode* readLHSExpression();
   ASTNode* readMethodCall();
-  ASTNode* readBinaryExpression(ASTNode* lhs);
+  ASTNode* readBinaryExpression(ASTNode* lhs, int precedence);
 
-  ASTNode* addExpr(ASTNode* lhs, ASTNode* rhs);
-  ASTNode* subExpr(ASTNode* lhs, ASTNode* rhs);
-  ASTNode* mulExpr(ASTNode* lhs, ASTNode* rhs);
-  ASTNode* divExpr(ASTNode* lhs, ASTNode* rhs);
+  ASTNode* addExpr(ASTNode* lhs, int precedence);
+  ASTNode* subExpr(ASTNode* lhs, int precedence);
+  ASTNode* mulExpr(ASTNode* lhs, int precedence);
+  ASTNode* divExpr(ASTNode* lhs, int precedence);
 
   bool assertExpectation(Token::kTokenType expectation);
   void addError(kParserErrorType type, const char* msg);

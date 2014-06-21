@@ -109,7 +109,7 @@ void Parser::readSelectSublist(ASTNode* select_list) {
 }
 
 
-ASTNode* Parser::readValueExpression() {
+ASTNode* Parser::readValueExpression(int precedence /* = 0 */) {
   auto lhs = readLHSExpression();
 
   if (lhs == nullptr) {
@@ -117,7 +117,7 @@ ASTNode* Parser::readValueExpression() {
   }
 
   for (;;) {
-    auto expr = readBinaryExpression(lhs);
+    auto expr = readBinaryExpression(lhs, precedence);
     if (expr == nullptr) {
       return lhs;
     } else {
@@ -211,63 +211,79 @@ ASTNode* Parser::readMethodCall() {
   return expr;
 }
 
-ASTNode* Parser::readBinaryExpression(ASTNode* lhs) {
+ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
   switch (cur_token_->getType()) {
 
     /* add expression */
-    case Token::T_PLUS: {
-      consumeToken();
-      return addExpr(lhs, readValueExpression());
-    }
+    case Token::T_PLUS:
+      return addExpr(lhs, precedence);
 
     /* subtract expression */
-    case Token::T_MINUS: {
-      consumeToken();
-      return subExpr(lhs, readValueExpression());
-    }
+    case Token::T_MINUS:
+      return subExpr(lhs, precedence);
 
     /* multiply expression */
-    case Token::T_ASTERISK: {
-      consumeToken();
-      return mulExpr(lhs, readValueExpression());
-    }
+    case Token::T_ASTERISK:
+      return mulExpr(lhs, precedence);
 
     /* division expression */
-    case Token::T_SLASH: {
-      consumeToken();
-      return divExpr(lhs, readValueExpression());
-    }
+    case Token::T_SLASH:
+      return divExpr(lhs, precedence);
 
     default:
       return nullptr;
   }
 }
 
-ASTNode* Parser::addExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 10) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
   auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
   expr->appendChild(lhs);
-  expr->appendChild(rhs);
+  expr->appendChild(readValueExpression(10));
   return expr;
 }
 
-ASTNode* Parser::subExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::subExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 10) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
   auto expr = new ASTNode(ASTNode::T_SUB_EXPR);
   expr->appendChild(lhs);
-  expr->appendChild(rhs);
+  expr->appendChild(readValueExpression(10));
   return expr;
 }
 
-ASTNode* Parser::mulExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::mulExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 11) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
   auto expr = new ASTNode(ASTNode::T_MUL_EXPR);
   expr->appendChild(lhs);
-  expr->appendChild(rhs);
+  expr->appendChild(readValueExpression(11));
   return expr;
 }
 
-ASTNode* Parser::divExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::divExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 11) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
   auto expr = new ASTNode(ASTNode::T_DIV_EXPR);
   expr->appendChild(lhs);
-  expr->appendChild(rhs);
+  expr->appendChild(readValueExpression(11));
   return expr;
 }
 

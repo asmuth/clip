@@ -26,9 +26,6 @@ public:
   QueryTest() {}
 
   /*
-    SELECT concat(fnord + 5, -somefunc(myotherfield)) + (123 * 4)
-    SELECT -sum(fnord) + (123 * 4)
-    SELECT (-blah + sum(fnord) / (123 * 4)) as myfield
     select true;
     select !(true);
     select NOT true;
@@ -46,9 +43,10 @@ public:
     testSimpleValueExpression();
     testArithmeticValueExpression();
     testArithmeticValueExpressionParens();
+    testArithmeticValueExpressionPrecedence();
     testNegatedValueExpression();
     testMethodCallValueExpression();
-    testComplexQuery1();
+    testComplexQueries();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -100,7 +98,21 @@ public:
 
   void testArithmeticValueExpressionParens() {
     auto parser = parseTestQuery("SELECT (1 * 2) + 3;");
-    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    auto expr = parser.getStatements()[0]
+        ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+    assert(*expr == ASTNode::T_ADD_EXPR);
+    assert(expr->getChildren().size() == 2);
+    assert(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
+    assert(expr->getChildren()[0]->getChildren().size() == 2);
+    assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+    assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+    assert(*expr->getChildren()[1]->getToken() == "3");
+  }
+
+  void testArithmeticValueExpressionPrecedence() {
+    auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     auto expr = parser.getStatements()[0]
@@ -350,34 +362,42 @@ public:
   }
 
 
-  void testComplexQuery1() {
-    auto parser = parseTestQuery(
-      "  SELECT"
-      "     l_orderkey,"
-      "     sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
-      "     o_orderdate,"
-      "     o_shippriority"
-      "  FROM;"
-      "     customer,"
-      "     orders,"
-      "     lineitem "
-      "  WHERE"
-      "    c_mktsegment = 'FURNITURE' AND"
-      "    c_custkey = o_custkey AND"
-      "    l_orderkey = o_orderkey AND"
-      "    o_orderdate < \"2013-12-21\" AND"
-      "    l_shipdate > \"2014-01-06\""
-      "  GROUP BY"
-      "    l_orderkey,"
-      "    o_orderdate,"
-      "    o_shippriority"
-      "  ORDER BY"
-      "    revenue,"
-      "    o_orderdate;");
+  void testComplexQueries() {
+    std::vector<const char*> queries;
+    queries.push_back("SELECT -sum(fnord) + (123 * 4);");
+    queries.push_back("SELECT (-blah + sum(fnord) / (123 * 4)) as myfield;");
+    queries.push_back(
+        "SELECT concat(fnord + 5, -somefunc(myotherfield)) + (123 * 4);");
+    queries.push_back(
+        "  SELECT"
+        "     l_orderkey,"
+        "     sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
+        "     o_orderdate,"
+        "     o_shippriority"
+        "  FROM;"
+        "     customer,"
+        "     orders,"
+        "     lineitem "
+        "  WHERE"
+        "    c_mktsegment = 'FURNITURE' AND"
+        "    c_custkey = o_custkey AND"
+        "    l_orderkey = o_orderkey AND"
+        "    o_orderdate < \"2013-12-21\" AND"
+        "    l_shipdate > \"2014-01-06\""
+        "  GROUP BY"
+        "    l_orderkey,"
+        "    o_orderdate,"
+        "    o_shippriority"
+        "  ORDER BY"
+        "    revenue,"
+        "    o_orderdate;");
 
-    parser.debugPrint();
-    assert(parser.getErrors().size() == 0);
-    assert(parser.getStatements().size() == 1);
+    for (auto query : queries) {
+      auto parser = parseTestQuery(query);
+      //parser.debugPrint();
+      assert(parser.getErrors().size() == 0);
+      assert(parser.getStatements().size() == 1);
+    }
   }
 
 };
