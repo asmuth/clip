@@ -27,18 +27,21 @@ public:
     const char* msg;
   };
 
+  QueryParser();
+
   /**
    * Parse a SQL Query from the input string. Returns true on success and false
    * if an error occurred.
    */
   size_t parse(const char* query, size_t len);
 
-  const std::vector<ParserError>& getErrors();
+  const std::vector<ParserError>& getErrors() const;
+  const std::vector<ASTNode>& getStatements() const;
 
 protected:
 
-  std::unique_ptr<SelectASTNode> parseSelect();
-  std::unique_ptr<SelectListASTNode> parseSelectSublist();
+  void parseSelect();
+  void parseSelectSublist(ASTNode* select_node);
 
   bool assertExpectation(Token::kTokenType);
   void addError(kParserErrorType type, const char* msg);
@@ -48,7 +51,7 @@ protected:
   Token* cur_token_;
   Token* token_list_end_;
   std::vector<ParserError> errors_;
-  std::vector<std::unique_ptr<SelectASTNode>> statements_;
+  ASTNode root_;
 };
 
 }

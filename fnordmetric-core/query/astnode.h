@@ -13,22 +13,28 @@
 namespace fnordmetric {
 namespace query {
 
-struct DerivedColumnASTNode {
-  Token* column_name;
+class ASTNode {
+  friend class QueryTest;
+public:
+  enum kASTNodeType {
+    T_ROOT,
+    T_SELECT,
+    T_SELECT_LIST,
+    T_ALL,
+    T_FROM,
+  };
+
+  ASTNode(kASTNodeType type);
+  bool operator==(kASTNodeType type) const;
+  ASTNode* appendChild(ASTNode::kASTNodeType type);
+  const std::vector<ASTNode>& getChildren() const;
+  void debugPrint() const;
+
+protected:
+  const kASTNodeType type_;
+  std::vector<ASTNode> children_;
 };
 
-struct SelectListASTNode {
-  bool is_table_wildcard;
-  union {
-    Token* table_wildcard_name;
-    DerivedColumnASTNode derived;
-  } sublist;
-};
-
-struct SelectASTNode {
-  bool is_wildcard;
-  std::vector<std::unique_ptr<SelectListASTNode>> select_list;
-};
 
 }
 }

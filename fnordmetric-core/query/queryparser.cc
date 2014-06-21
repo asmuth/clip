@@ -12,6 +12,8 @@
 namespace fnordmetric {
 namespace query {
 
+QueryParser::QueryParser() : root_(ASTNode::T_ROOT) {}
+
 size_t QueryParser::parse(const char* query, size_t len) {
   const char* cur = query;
   const char* end = cur + len;
@@ -23,27 +25,29 @@ size_t QueryParser::parse(const char* query, size_t len) {
 
   cur_token_ = token_list_.data();
   token_list_end_ = cur_token_ + token_list_.size();
-  statements_.push_back(parseSelect());
+  parseSelect();
 
   return errors_.size() == 0;
 }
 
-std::unique_ptr<SelectASTNode> QueryParser::parseSelect() {
-  assertExpectation(Token::T_SELECT);
-  consumeToken();
+void QueryParser::parseSelect() {
+  if (!assertExpectation(Token::T_SELECT)) {
+    return;
+  } else {
+    consumeToken();
+  }
 
   // FIXPAUL parse SET_QUANTIFIER (distinct, all...)
-  std::unique_ptr<SelectASTNode> node(new SelectASTNode());
+  auto select = root_.appendChild(ASTNode::T_SELECT);
+  auto select_list = select->appendChild(ASTNode::T_SELECT_LIST);
 
   /* select list */
   if (*cur_token_ == Token::T_ASTERISK) {
-    node->is_wildcard = true;
+    select_list->appendChild(ASTNode::T_ALL);
     consumeToken();
   } else {
-    node->is_wildcard = false;
-
     for (;;) {
-      node->select_list.push_back(parseSelectSublist());
+      parseSelectSublist(select_list);
 
       if (*cur_token_ == Token::T_COMMA) {
         consumeToken();
@@ -53,29 +57,21 @@ std::unique_ptr<SelectASTNode> QueryParser::parseSelect() {
     }
   }
 
-  return node;
 }
 
-std::unique_ptr<SelectListASTNode> QueryParser::parseSelectSublist() {
-  std::unique_ptr<SelectListASTNode> sublist(new SelectListASTNode());
-
+void QueryParser::parseSelectSublist(ASTNode* select_list) {
   /* table_name.* */
   if (cur_token_ + 3 < token_list_end_ &&
       cur_token_[0] == Token::T_STRING &&
       cur_token_[1] == Token::T_DOT &&
       cur_token_[2] == Token::T_ASTERISK) {
-    sublist->is_table_wildcard = true;
-    sublist->sublist.table_wildcard_name = cur_token_;
-    return sublist;
-  } else {
-    sublist->is_table_wildcard = false;
+    //sublist->is_table_wildcard = true;
+    //sublist->sublist.table_wildcard_name = cur_token_;
+    return;
   }
 
   /* derived_col AS col_name */
-  parseValueExpression()
-  {
-    return sublist;
-  }
+  //parseValueExpression()
 }
 
 bool QueryParser::assertExpectation(Token::kTokenType expectation) {
@@ -93,8 +89,12 @@ void QueryParser::addError(kParserErrorType type, const char* msg) {
   errors_.push_back(error);
 }
 
-const std::vector<QueryParser::ParserError>& QueryParser::getErrors() {
+const std::vector<QueryParser::ParserError>& QueryParser::getErrors() const {
   return errors_;
+}
+
+const std::vector<ASTNode>& QueryParser::getStatements() const {
+  return root_.getChildren();
 }
 
 }
