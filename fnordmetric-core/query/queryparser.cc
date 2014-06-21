@@ -31,17 +31,19 @@ size_t QueryParser::parse(const char* query, size_t len) {
 }
 
 void QueryParser::parseSelect() {
+  /* SELECT */
+  auto select = root_.appendChild(ASTNode::T_SELECT);
   if (!assertExpectation(Token::T_SELECT)) {
     return;
   } else {
     consumeToken();
   }
 
+  /* DISTINCT/ALL */
   // FIXPAUL parse SET_QUANTIFIER (distinct, all...)
-  auto select = root_.appendChild(ASTNode::T_SELECT);
-  auto select_list = select->appendChild(ASTNode::T_SELECT_LIST);
 
   /* select list */
+  auto select_list = select->appendChild(ASTNode::T_SELECT_LIST);
   if (*cur_token_ == Token::T_ASTERISK) {
     select_list->appendChild(ASTNode::T_ALL);
     consumeToken();
@@ -57,6 +59,14 @@ void QueryParser::parseSelect() {
     }
   }
 
+  /* FROM */
+  auto from = select->appendChild(ASTNode::T_FROM);
+  if (!assertExpectation(Token::T_FROM)) {
+    return;
+  } else {
+    consumeToken();
+  }
+
 }
 
 void QueryParser::parseSelectSublist(ASTNode* select_list) {
@@ -65,8 +75,9 @@ void QueryParser::parseSelectSublist(ASTNode* select_list) {
       cur_token_[0] == Token::T_STRING &&
       cur_token_[1] == Token::T_DOT &&
       cur_token_[2] == Token::T_ASTERISK) {
-    //sublist->is_table_wildcard = true;
-    //sublist->sublist.table_wildcard_name = cur_token_;
+    auto select_all = select_list->appendChild(ASTNode::T_ALL);
+    select_all->setToken(cur_token_);
+    cur_token_ += 3;
     return;
   }
 

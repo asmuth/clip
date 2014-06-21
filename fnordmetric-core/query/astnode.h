@@ -12,6 +12,7 @@
 
 namespace fnordmetric {
 namespace query {
+class Token;
 
 class ASTNode {
   friend class QueryTest;
@@ -28,10 +29,13 @@ public:
   bool operator==(kASTNodeType type) const;
   ASTNode* appendChild(ASTNode::kASTNodeType type);
   const std::vector<ASTNode>& getChildren() const;
+  void setToken(const Token* token);
+  const Token* getToken() const;
   void debugPrint() const;
 
 protected:
   const kASTNodeType type_;
+  const Token* token_;
   std::vector<ASTNode> children_;
 };
 

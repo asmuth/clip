@@ -29,7 +29,7 @@ public:
     testTokenizerSimple();
     testSelectMustBeFirstAssert();
     testSelectWildcard();
-    //testSelectTableWildcard();
+    testSelectTableWildcard();
   }
 
   QueryParser parseTestQuery(const char* query) {
@@ -44,22 +44,35 @@ public:
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
     assert(stmt == ASTNode::T_SELECT);
+    assert(stmt.getChildren().size() == 2);
+    const auto& sl = stmt.getChildren()[0];
+    assert(sl == ASTNode::T_SELECT_LIST);
+    assert(sl.getChildren().size() == 1);
+    assert(sl.getChildren()[0] == ASTNode::T_ALL);
+    assert(sl.getChildren()[0].getToken() == nullptr);
+    const auto& from = stmt.getChildren()[1];
+    assert(from == ASTNode::T_FROM);
   }
-/*
+
   void testSelectTableWildcard() {
     auto parser = parseTestQuery("SELECT mytablex.* FROM sometable;");
     assert(parser.getErrors().size() == 0);
-    assert(parser.statements_.size() == 1);
-    const auto& stmt = parser.statements_[0];
-    assert(stmt->is_wildcard == false);
-    assert(stmt->select_list.size() == 1);
-    const auto& sl = stmt->select_list[0];
-    assert(sl != nullptr);
-    assert(sl->is_table_wildcard == true);
-    assert(sl->sublist.table_wildcard_name != nullptr);
-    assert(*sl->sublist.table_wildcard_name == "mytablex");
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt == ASTNode::T_SELECT);
+    assert(stmt.getChildren().size() == 2);
+    const auto& sl = stmt.getChildren()[0];
+    assert(sl == ASTNode::T_SELECT_LIST);
+    assert(sl.getChildren().size() == 1);
+    const auto& all = sl.getChildren()[0];
+    assert(all == ASTNode::T_ALL);
+    assert(all.getToken() != nullptr);
+    assert(*all.getToken() == Token::T_STRING);
+    assert(*all.getToken() == "mytablex");
+    const auto& from = stmt.getChildren()[1];
+    assert(from == ASTNode::T_FROM);
   }
-*/
+
   void testSelectMustBeFirstAssert() {
     auto parser = parseTestQuery("GROUP BY SELECT");
     assert(parser.getErrors().size() == 1);

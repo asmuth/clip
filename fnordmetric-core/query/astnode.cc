@@ -7,11 +7,12 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "astnode.h"
+#include "token.h"
 
 namespace fnordmetric {
 namespace query {
 
-ASTNode::ASTNode(kASTNodeType type) : type_(type) {}
+ASTNode::ASTNode(kASTNodeType type) : type_(type), token_(nullptr) {}
 
 bool ASTNode::operator==(kASTNodeType type) const {
   return type_ == type;
@@ -25,6 +26,14 @@ ASTNode* ASTNode::appendChild(ASTNode::kASTNodeType type) {
 
 const std::vector<ASTNode>& ASTNode::getChildren() const {
   return children_;
+}
+
+void ASTNode::setToken(const Token* token) {
+  token_ = token;
+}
+
+const Token* ASTNode::getToken() const {
+  return token_;
 }
 
 void ASTNode::debugPrint() const {
