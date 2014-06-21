@@ -6,15 +6,15 @@
  */
 #include <stdlib.h>
 #include <assert.h>
-#include "queryparser.h"
+#include "parser.h"
 #include "tokenize.h"
 
 namespace fnordmetric {
 namespace query {
 
-QueryParser::QueryParser() : root_(ASTNode::T_ROOT) {}
+Parser::Parser() : root_(ASTNode::T_ROOT) {}
 
-size_t QueryParser::parse(const char* query, size_t len) {
+size_t Parser::parse(const char* query, size_t len) {
   const char* cur = query;
   const char* end = cur + len;
 
@@ -31,7 +31,7 @@ size_t QueryParser::parse(const char* query, size_t len) {
   return errors_.size() == 0;
 }
 
-void QueryParser::readSelect() {
+void Parser::readSelect() {
   /* SELECT */
   auto select = root_.appendChild(ASTNode::T_SELECT);
   if (!assertExpectation(Token::T_SELECT)) {
@@ -70,7 +70,7 @@ void QueryParser::readSelect() {
 
 }
 
-void QueryParser::readSelectSublist(ASTNode* select_list) {
+void Parser::readSelectSublist(ASTNode* select_list) {
   /* table_name.* */
   if (cur_token_ + 3 < token_list_end_ &&
       cur_token_[0] == Token::T_IDENTIFIER &&
@@ -105,7 +105,7 @@ void QueryParser::readSelectSublist(ASTNode* select_list) {
 }
 
 
-ASTNode* QueryParser::readValueExpression() {
+ASTNode* Parser::readValueExpression() {
   auto lhs = readLHSExpression();
 
   if (lhs == nullptr) {
@@ -122,7 +122,7 @@ ASTNode* QueryParser::readValueExpression() {
   }
 }
 
-ASTNode* QueryParser::readLHSExpression() {
+ASTNode* Parser::readLHSExpression() {
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
@@ -193,7 +193,7 @@ ASTNode* QueryParser::readLHSExpression() {
   }
 }
 
-ASTNode* QueryParser::readMethodCall() {
+ASTNode* Parser::readMethodCall() {
   auto expr = new ASTNode(ASTNode::T_METHOD_CALL);
   expr->setToken(consumeToken());
 
@@ -207,7 +207,7 @@ ASTNode* QueryParser::readMethodCall() {
   return expr;
 }
 
-ASTNode* QueryParser::readBinaryExpression(ASTNode* lhs) {
+ASTNode* Parser::readBinaryExpression(ASTNode* lhs) {
   switch (cur_token_->getType()) {
 
     /* add expression */
@@ -239,35 +239,35 @@ ASTNode* QueryParser::readBinaryExpression(ASTNode* lhs) {
   }
 }
 
-ASTNode* QueryParser::addExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::addExpr(ASTNode* lhs, ASTNode* rhs) {
   auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
   expr->appendChild(lhs);
   expr->appendChild(rhs);
   return expr;
 }
 
-ASTNode* QueryParser::subExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::subExpr(ASTNode* lhs, ASTNode* rhs) {
   auto expr = new ASTNode(ASTNode::T_SUB_EXPR);
   expr->appendChild(lhs);
   expr->appendChild(rhs);
   return expr;
 }
 
-ASTNode* QueryParser::mulExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::mulExpr(ASTNode* lhs, ASTNode* rhs) {
   auto expr = new ASTNode(ASTNode::T_MUL_EXPR);
   expr->appendChild(lhs);
   expr->appendChild(rhs);
   return expr;
 }
 
-ASTNode* QueryParser::divExpr(ASTNode* lhs, ASTNode* rhs) {
+ASTNode* Parser::divExpr(ASTNode* lhs, ASTNode* rhs) {
   auto expr = new ASTNode(ASTNode::T_DIV_EXPR);
   expr->appendChild(lhs);
   expr->appendChild(rhs);
   return expr;
 }
 
-bool QueryParser::assertExpectation(Token::kTokenType expectation) {
+bool Parser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
     addError(ERR_UNEXPECTED_TOKEN, "unexpected token, expected ...");
     return false;
@@ -276,22 +276,22 @@ bool QueryParser::assertExpectation(Token::kTokenType expectation) {
   return true;
 }
 
-void QueryParser::addError(kParserErrorType type, const char* msg) {
+void Parser::addError(kParserErrorType type, const char* msg) {
   ParserError error;
   error.type = type;
-  //fprintf(stderr, "[ERROR] %s\n", msg);
+  fprintf(stderr, "[ERROR] %s\n", msg);
   errors_.push_back(error);
 }
 
-const std::vector<QueryParser::ParserError>& QueryParser::getErrors() const {
+const std::vector<Parser::ParserError>& Parser::getErrors() const {
   return errors_;
 }
 
-const std::vector<ASTNode*>& QueryParser::getStatements() const {
+const std::vector<ASTNode*>& Parser::getStatements() const {
   return root_.getChildren();
 }
 
-void QueryParser::debugPrint() const {
+void Parser::debugPrint() const {
   printf("[ AST ]\n");
   root_.debugPrint(2);
 }

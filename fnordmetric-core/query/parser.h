@@ -15,7 +15,7 @@
 namespace fnordmetric {
 namespace query {
 
-class QueryParser {
+class Parser {
   friend class QueryTest;
 public:
   enum kParserErrorType {
@@ -28,7 +28,7 @@ public:
     const char* msg;
   };
 
-  QueryParser();
+  Parser();
 
   /**
    * Parse a SQL Query from the input string. Returns true on success and false

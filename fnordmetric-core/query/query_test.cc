@@ -10,7 +10,7 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
-#include "queryparser.h"
+#include "parser.h"
 #include "token.h"
 #include "tokenize.h"
 //#include "../agent.h"
@@ -49,8 +49,8 @@ public:
     testComplexQuery1();
   }
 
-  QueryParser parseTestQuery(const char* query) {
-    QueryParser parser;
+  Parser parseTestQuery(const char* query) {
+    Parser parser;
     parser.parse(query, strlen(query));
     return parser;
   }
@@ -239,7 +239,7 @@ public:
   void testSelectMustBeFirstAssert() {
     auto parser = parseTestQuery("GROUP BY SELECT");
     assert(parser.getErrors().size() == 1);
-    assert(parser.getErrors()[0].type == QueryParser::ERR_UNEXPECTED_TOKEN);
+    assert(parser.getErrors()[0].type == Parser::ERR_UNEXPECTED_TOKEN);
   }
 
   void testTokenizerEscaping() {
@@ -324,7 +324,7 @@ public:
       "   sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
       "   o_orderdate,"
       "   o_shippriority"
-      "FROM"
+      "FROM;"
       "   customer,"
       "   orders,"
       "   lineitem"
@@ -347,39 +347,6 @@ public:
     assert(parser.getStatements().size() == 1);
   }
 
-/*
-  Agent getAgent() {
-    auto database = fnordmetric::database::Database::openFile(
-        "/tmp/__fnordmetric_testQuery",
-        database::MODE_CONSERVATIVE |
-        database::FILE_TRUNCATE |
-        database::FILE_AUTODELETE);
-
-    return Agent("testagent", std::move(database));
-  }
-*/
-/*
-  void testQuery() {
-    auto agent = getAgent();
-    auto stream = agent.openStream(
-        "mystream",
-        fnordmetric::IntegerField("seq"));
-    auto raw_stream = agent.database_->openStream(
-        stream->getKey().getKeyString());
-
-    / * insert test records * /
-    auto base_time = WallClock::getUnixMillis();
-    RecordWriter record_writer(stream->getSchema());
-    for (int i = 0; i < 1000; ++i) {
-      record_writer.setIntegerField(0, i);
-      record_writer.reset();
-      raw_stream->appendRow(record_writer, base_time + i);
-    }
-
-    / * test query 1 * /
-    auto results = agent.executeQuery("SELECT time, seq FROM mystream;");
-  }
-*/
 };
 
 }
