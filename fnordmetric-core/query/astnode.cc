@@ -40,11 +40,15 @@ const Token* ASTNode::getToken() const {
   return token_;
 }
 
+ASTNode::kASTNodeType ASTNode::getType() const {
+  return type_;
+}
+
 ASTNode* ASTNode::deepCopy() const {
   auto copy = new ASTNode(type_);
 
   if (token_ != nullptr) {
-    copy->setToken(token_);
+    copy->setToken(new Token(*token_));
   }
 
   for (const auto child : children_) {

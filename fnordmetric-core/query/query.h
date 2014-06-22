@@ -28,6 +28,7 @@ public:
   bool execute();
 
 protected:
+
   std::unique_ptr<Executable> executable_;
 };
 

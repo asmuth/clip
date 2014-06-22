@@ -60,6 +60,7 @@ public:
   const std::vector<ASTNode*>& getChildren() const;
   void setToken(const Token* token);
   const Token* getToken() const;
+  kASTNodeType getType() const;
 
   ASTNode* deepCopy() const;
 

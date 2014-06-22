@@ -20,6 +20,25 @@ class Executable {
 public:
   virtual ~Executable() {}
   virtual void execute() = 0;
+protected:
+  void expr(ASTNode* expr) {
+    printf("execute expression %p\n", expr);
+
+    expr->debugPrint(2);
+    switch (expr->getType()) {
+      case ASTNode::T_ADD_EXPR:
+        return addExpr(expr);
+
+      default:
+        assert(0); // FIXPAUL
+    };
+  }
+
+  void addExpr(ASTNode* expr) {
+    auto args = expr->getChildren();
+    assert(args.size() == 2);
+    printf("addexpr\n");
+  }
 };
 
 class TablelessSelect : public Executable {
@@ -43,10 +62,15 @@ public:
     }
   }
 
-
   void execute() override {
-    printf("execute!\n");
+    for (const auto& col : columns_) {
+      printf("execute col=%s\n",
+          col.first.c_str(),
+          expr(col.second));
+    }
   }
+
+
 protected:
   std::vector<std::pair<std::string, ASTNode*>> columns_;
 };
