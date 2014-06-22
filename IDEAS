@@ -15,6 +15,10 @@ FnordMetric can read its data from a number of sources:
   - A statsd compatible datasource
 
 
+-> (literal) expression evaluation optimizer [constant folding, pre-parsing of
+    literals, constexpr folding]
+
+
 Fnordbase is a key/value store where values are (nested) documents with a fixed
 schema. A FnordBase instance holds multiple collection that each consist of a
 number of documents.
