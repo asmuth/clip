@@ -644,6 +644,9 @@ public:
     const auto& results = query->getResults();
     results.debugPrint();
     assert(results.getNumRows() == 10);
+    const auto& row = results.getRow(0);
+    assert(row[0]->getInteger() == 56);
+    assert(row[1]->getInteger() == 46);
   }
 
 };
