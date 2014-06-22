@@ -23,12 +23,6 @@ class QueryTest {
 public:
   QueryTest() {}
 
-  /*
-    select true;
-    select !(true);
-    select NOT true;
-  */
-
   void run() {
     testTokenizerSimple();
     testTokenizerEscaping();
@@ -511,7 +505,15 @@ public:
   }
 
   void testSelectOnlyQuery() {
-    auto query = Query::parse("SELECT 13 + 2 * 5 as fnord;");
+    auto query = Query::parse(
+        "  SELECT"
+        "    13 + 2 * 5 as fnord,"
+        //"    6 ^ 6 ^ 6 as fubar,"
+        "    13 * 2 + -5 as baz,"
+        "    true as one,"
+        "    !(true) as two,"
+        "    NOT NOT true as three;");
+
     query->execute();
     const auto& results = query->getResults();
     results.debugPrint();

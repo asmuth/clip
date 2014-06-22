@@ -42,8 +42,8 @@ public:
           char c = (i == 0 || i == w - 1) ? '+' : '-';
           printf("%c", c);
         }
-        printf("\n");
       }
+      printf("\n");
     };
 
     auto print_row = [this, &col_widths] (const std::vector<std::string>& row) {

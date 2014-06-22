@@ -21,11 +21,13 @@ public:
   enum kSValueType {
     T_STRING,
     T_FLOAT,
-    T_INTEGER
+    T_INTEGER,
+    T_BOOL
   };
 
   explicit SValue(int64_t integer_value);
   explicit SValue(double float_value);
+  explicit SValue(bool bool_value);
   explicit SValue(const char* str_value, size_t len, bool copy);
   SValue(const SValue& copy);
   SValue& operator=(const SValue& copy) = delete;
@@ -34,6 +36,7 @@ public:
   kSValueType getType() const;
   int64_t getInteger() const;
   double getFloat() const;
+  bool getBool() const;
   std::string toString() const;
 
   static SValue* fromToken(const Token* token);
@@ -43,6 +46,7 @@ protected:
   union {
     int64_t t_integer;
     double t_float;
+    bool t_bool;
     struct {
       const char* begin;
       const char* end;

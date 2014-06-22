@@ -23,6 +23,10 @@ SValue::SValue(double float_value) : type_(T_FLOAT) {
   data_.t_float = float_value;
 }
 
+SValue::SValue(bool bool_value) : type_(T_BOOL) {
+  data_.t_bool = bool_value;
+}
+
 SValue::~SValue() {}
 
 SValue::kSValueType SValue::getType() const {
@@ -38,6 +42,12 @@ double SValue::getFloat() const {
   assert(type_ == T_FLOAT);
   return data_.t_float;
 }
+
+bool SValue::getBool() const {
+  assert(type_ == T_BOOL);
+  return data_.t_bool;
+}
+
 
 std::string SValue::toString() const {
   char buf[512];
@@ -58,6 +68,19 @@ std::string SValue::toString() const {
       break;
     }
 
+    case T_BOOL: {
+      static const auto true_str = "true";
+      static const auto false_str = "false";
+      if (getBool()) {
+        str = true_str;
+        len = sizeof(true_str);
+      } else {
+        str = false_str;
+        len = sizeof(false_str);
+      }
+      break;
+    }
+
   }
 
   return std::string(str, len);
@@ -74,7 +97,14 @@ SValue* SValue::fromToken(const Token* token) {
       }
     }
 
+    case Token::T_TRUE:
+      return new SValue(true);
+
+    case Token::T_FALSE:
+      return new SValue(false);
+
     default:
+      assert(0);
       return nullptr;
 
   }
