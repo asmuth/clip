@@ -18,16 +18,13 @@ Planner::Planner(ASTNode* select_statement) :
     executable_(plan(select_statement)) {}
 
 Executable* Planner::plan(ASTNode* ast) {
-  return planTablelessSelect(ast);
-}
+  Executable* exec = nullptr;
 
-Executable* Planner::planTablelessSelect(ASTNode* ast) {
-  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() != 1) {
-    return nullptr;
+  if ((exec = TablelessSelect::build(ast)) != nullptr) {
+    return exec;
   }
 
-  return new TablelessSelect(ast->getChildren()[0]);
-  printf("is tableless select!\n");
+  assert(0); // FIXPAUL cant build queryplan
 }
 
 std::unique_ptr<Executable> Planner::getExecutable() {

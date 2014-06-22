@@ -74,7 +74,7 @@ SValue* Executable::negExpr(ASTNode* e) {
   assert(0); // FIXPAUL
 }
 
-#define ARITHMETIC_EXPR_IMPL(name, op)                                            \
+#define ARITHMETIC_EXPR_IMPL(name, op)                                        \
   SValue* Executable::name(ASTNode* e) {                                      \
     auto args = e->getChildren();                                             \
     assert(args.size() == 2);                                                 \

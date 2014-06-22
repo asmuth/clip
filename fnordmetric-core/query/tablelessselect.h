@@ -20,7 +20,15 @@ namespace query {
 class TablelessSelect : public Executable {
 public:
 
-  TablelessSelect(ASTNode* select_list) {
+  static TablelessSelect* build(ASTNode* ast) {
+    if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() != 1) {
+      return nullptr;
+    }
+
+    auto select_list = ast->getChildren()[0];
+    std::vector<std::string> columns;
+    std::vector<std::unique_ptr<ASTNode>> expressions;
+
     for (auto col : select_list->getChildren()) {
       assert(*col == ASTNode::T_DERIVED_COLUMN); // FIXPAUL
       auto derived = col->getChildren();
@@ -30,11 +38,19 @@ public:
         assert(*derived[1] == ASTNode::T_COLUMN_NAME); // FIXPAUL
         auto colname_token = derived[1]->getToken();
         assert(colname_token && *colname_token == Token::T_IDENTIFIER);
-        columns_.emplace_back(colname_token->getString());
-        expressions_.emplace_back(derived[0]->deepCopy());
+        columns.emplace_back(colname_token->getString());
+        expressions.emplace_back(derived[0]->deepCopy());
       }
     }
+
+    return new TablelessSelect(std::move(columns), std::move(expressions));
   }
+
+  TablelessSelect(
+      std::vector<std::string>&& columns,
+      std::vector<std::unique_ptr<ASTNode>>&& expressions) :
+      columns_(std::move(columns)),
+      expressions_(std::move(expressions)) {}
 
   void execute() override {
     std::vector<std::unique_ptr<SValue>> row;
@@ -59,8 +75,8 @@ public:
   }
 
 protected:
-  std::vector<std::string> columns_;
-  std::vector<std::unique_ptr<ASTNode>> expressions_;
+  const std::vector<std::string> columns_;
+  const std::vector<std::unique_ptr<ASTNode>> expressions_;
 };
 
 }
