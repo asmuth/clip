@@ -15,6 +15,10 @@
 namespace fnordmetric {
 namespace query {
 
+/**
+ * todo: subqueries, limit/offset, join, union
+ */
+
 class Parser {
   friend class QueryTest;
 public:
@@ -70,6 +74,9 @@ protected:
 
   ASTNode* fromClause();
   ASTNode* whereClause();
+  ASTNode* groupByClause();
+  ASTNode* havingClause();
+  ASTNode* orderByClause();
   ASTNode* tableName();
 
   ASTNode* eqExpr(ASTNode* lhs, int precedence);

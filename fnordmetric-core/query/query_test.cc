@@ -44,6 +44,8 @@ public:
     testMethodCallValueExpression();
     testFromList();
     testWhereClause();
+    testGroupByClause();
+    testOrderByClause();
     testComplexQueries();
   }
 
@@ -326,6 +328,33 @@ public:
     assert(*where == ASTNode::T_WHERE);
     assert(where->getChildren().size() == 1);
     assert(*where->getChildren()[0] == ASTNode::T_OR_EXPR);
+  }
+
+  void testGroupByClause() {
+    auto parser = parseTestQuery("select count(x), y from t GROUP BY x;");
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 3);
+    const auto& where = stmt->getChildren()[2];
+    assert(*where == ASTNode::T_GROUP_BY);
+    assert(where->getChildren().size() == 1);
+    assert(*where->getChildren()[0] == ASTNode::T_COLUMN_NAME);
+  }
+
+  void testOrderByClause() {
+    auto parser = parseTestQuery("select a FROM t ORDER BY a DESC;");
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 3);
+    const auto& order_by = stmt->getChildren()[2];
+    assert(*order_by == ASTNode::T_ORDER_BY);
+    assert(order_by->getChildren().size() == 1);
+    assert(*order_by->getChildren()[0] == ASTNode::T_SORT_SPEC);
+    assert(*order_by->getChildren()[0]->getToken() == Token::T_DESC);
   }
 
   void testTokenizerEscaping() {

@@ -223,6 +223,18 @@ void Parser::readSelect() {
   if (where != nullptr) {
     select->appendChild(where);
   }
+
+  /* GROUP BY clause */
+  auto group = groupByClause();
+  if (group != nullptr) {
+    select->appendChild(group);
+  }
+
+  /* ORDER BY */
+  auto order = orderByClause();
+  if (order != nullptr) {
+    select->appendChild(order);
+  }
 }
 
 void Parser::readSelectSublist(ASTNode* select_list) {
@@ -281,6 +293,48 @@ ASTNode* Parser::whereClause() {
 
   auto clause = new ASTNode(ASTNode::T_WHERE);
   clause->appendChild(readValueExpression());
+  return clause;
+}
+
+ASTNode* Parser::groupByClause() {
+  if (!consumeIf(Token::T_GROUP)) {
+    return nullptr;
+  }
+
+  expectAndConsume(Token::T_BY);
+
+  auto clause = new ASTNode(ASTNode::T_GROUP_BY);
+
+  do {
+    clause->appendChild(readValueExpression());
+  } while (consumeIf(Token::T_COMMA));
+
+  return clause;
+}
+
+ASTNode* Parser::orderByClause() {
+  if (!consumeIf(Token::T_ORDER)) {
+    return nullptr;
+  }
+
+  expectAndConsume(Token::T_BY);
+
+  auto clause = new ASTNode(ASTNode::T_ORDER_BY);
+
+  do {
+    auto spec = clause->appendChild(ASTNode::T_SORT_SPEC);
+    spec->appendChild(readValueExpression());
+    switch (cur_token_->getType()) {
+      case Token::T_ASC:
+      case Token::T_DESC:
+        spec->setToken(consumeToken());
+        break;
+      default:
+        printf("!!!\n");
+        return nullptr; // fixpaul add error and free clause
+    }
+  } while (consumeIf(Token::T_COMMA));
+
   return clause;
 }
 

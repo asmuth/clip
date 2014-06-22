@@ -211,6 +211,16 @@ next:
     goto next;
   }
 
+  if (token == "ASC") {
+    token_list->emplace_back(Token::T_ASC);
+    goto next;
+  }
+
+  if (token == "DESC") {
+    token_list->emplace_back(Token::T_DESC);
+    goto next;
+  }
+
   if (token == "NOT") {
     token_list->emplace_back(Token::T_NOT);
     goto next;
@@ -238,6 +248,21 @@ next:
 
   if (token == "WHERE") {
     token_list->emplace_back(Token::T_WHERE);
+    goto next;
+  }
+
+  if (token == "GROUP") {
+    token_list->emplace_back(Token::T_GROUP);
+    goto next;
+  }
+
+  if (token == "ORDER") {
+    token_list->emplace_back(Token::T_ORDER);
+    goto next;
+  }
+
+  if (token == "BY") {
+    token_list->emplace_back(Token::T_BY);
     goto next;
   }
 

@@ -31,6 +31,9 @@ public:
     T_ALL,
     T_FROM,
     T_WHERE,
+    T_GROUP_BY,
+    T_ORDER_BY,
+    T_SORT_SPEC,
 
     T_EQ_EXPR,
     T_NEQ_EXPR,

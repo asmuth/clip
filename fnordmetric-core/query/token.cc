@@ -68,8 +68,23 @@ const char* Token::getTypeName(kTokenType type) {
     case T_FROM:
       return "T_FROM";
 
+    case T_WHERE:
+      return "T_WHERE";
+
+    case T_GROUP:
+      return "T_GROUP";
+
+    case T_BY:
+      return "T_GROUP";
+
     case T_AS:
       return "T_AS";
+
+    case T_ASC:
+      return "T_ASC";
+
+    case T_DESC:
+      return "T_DESC";
 
     case T_COMMA:
       return "T_COMMA";
