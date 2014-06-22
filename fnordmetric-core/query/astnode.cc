@@ -27,6 +27,11 @@ ASTNode* ASTNode::appendChild(ASTNode::kASTNodeType type) {
   return child;
 }
 
+void ASTNode::removeChild(size_t index) {
+  //delete children_[index];
+  children_.erase(children_.begin() + index);
+}
+
 void ASTNode::appendChild(ASTNode* node) {
   children_.push_back(node);
 }

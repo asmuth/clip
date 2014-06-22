@@ -27,31 +27,32 @@ public:
   QueryTest() {}
 
   void run() {
-    testTokenizerSimple();
-    testTokenizerEscaping();
-    testTokenizerAsClause();
-    testSelectMustBeFirstAssert();
-    testSelectWildcard();
-    testSelectTableWildcard();
-    testSelectDerivedColumn();
-    testSelectDerivedColumnWithTableName();
-    testSimpleValueExpression();
-    testArithmeticValueExpression();
-    testArithmeticValueExpressionParens();
-    testArithmeticValueExpressionPrecedence();
-    testNegatedValueExpression();
-    testMethodCallValueExpression();
-    testFromList();
-    testWhereClause();
-    testGroupByClause();
-    testOrderByClause();
-    testHavingClause();
-    testLimitClause();
-    testLimitOffsetClause();
-    testComplexQueries();
-    testSelectOnlyQuery();
-    testSimpleTableScanQuery();
-    testTableScanWhereQuery();
+    //testTokenizerSimple();
+    //testTokenizerEscaping();
+    //testTokenizerAsClause();
+    //testSelectMustBeFirstAssert();
+    //testSelectWildcard();
+    //testSelectTableWildcard();
+    //testSelectDerivedColumn();
+    //testSelectDerivedColumnWithTableName();
+    //testSimpleValueExpression();
+    //testArithmeticValueExpression();
+    //testArithmeticValueExpressionParens();
+    //testArithmeticValueExpressionPrecedence();
+    //testNegatedValueExpression();
+    //testMethodCallValueExpression();
+    //testFromList();
+    //testWhereClause();
+    //testGroupByClause();
+    //testOrderByClause();
+    //testHavingClause();
+    //testLimitClause();
+    //testLimitOffsetClause();
+    //testComplexQueries();
+    //testSelectOnlyQuery();
+    //testSimpleTableScanQuery();
+    //testTableScanWhereQuery();
+    testTableScanWhereLimitQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -616,6 +617,33 @@ public:
 
     const auto& results = query->getResults();
     assert(results.getNumRows() == 51);
+  }
+
+  void testTableScanWhereLimitQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTableRef()));
+
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT"
+        "    one + 1 as fnord,"
+        "    two"
+        "  FROM"
+        "    testtable"
+        "  WHERE"
+        "    one > two or one = 3"
+        "  LIMIT 10 OFFSET 5;",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
+    const auto& results = query->getResults();
+    results.debugPrint();
+    assert(results.getNumRows() == 10);
   }
 
 };

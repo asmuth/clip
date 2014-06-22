@@ -59,6 +59,7 @@ public:
   bool operator==(kASTNodeType type) const;
   ASTNode* appendChild(ASTNode::kASTNodeType type);
   void appendChild(ASTNode* node);
+  void removeChild(size_t index);
   const std::vector<ASTNode*>& getChildren() const;
   void setToken(const Token* token);
   const Token* getToken() const;

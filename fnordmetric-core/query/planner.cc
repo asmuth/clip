@@ -12,6 +12,7 @@
 #include "tablelessselect.h"
 #include "tablescan.h"
 #include "tablerepository.h"
+#include "limitclause.h"
 
 namespace fnordmetric {
 namespace query {
@@ -23,6 +24,12 @@ Executable* planQuery(ASTNode* ast, TableRepository* repo) {
   // joins
   // table scan
 
+  /* internal nodes: multi table query (joins), order, aggregation, limit */
+  if ((exec = LimitClause::build(ast, repo)) != nullptr) {
+    return exec;
+  }
+
+  /* leaf nodes: table scan, tableless select */
   if ((exec = TableScan::build(ast, repo)) != nullptr) {
     return exec;
   }
