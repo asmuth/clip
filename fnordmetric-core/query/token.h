@@ -19,6 +19,7 @@ public:
   enum kTokenType {
     T_SELECT,
     T_FROM,
+    T_WHERE,
     T_COMMA,
     T_DOT,
     T_IDENTIFIER,

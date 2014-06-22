@@ -43,6 +43,7 @@ public:
     testNegatedValueExpression();
     testMethodCallValueExpression();
     testFromList();
+    testWhereClause();
     testComplexQueries();
   }
 
@@ -312,6 +313,17 @@ public:
     assert(*from->getChildren()[0]->getToken() == "tbl1");
     assert(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
     assert(*from->getChildren()[1]->getToken() == "tbl2");
+  }
+
+  void testWhereClause() {
+    auto parser = parseTestQuery("SELECT x FROM t WHERE a=1;");
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 3);
+    const auto& where = stmt->getChildren()[2];
+    assert(*where == ASTNode::T_WHERE);
   }
 
   void testTokenizerEscaping() {

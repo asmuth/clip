@@ -21,6 +21,8 @@
 <from clause>      ::=
     FROM <table name> [ { <comma> <table name> }... ]
 
+<where clause>     ::=  
+    WHERE <search condition>
 
 // my brains explode defining this in bnf :(
 <value expression> ::= ???

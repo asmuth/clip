@@ -61,6 +61,9 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_FROM:
       printf("- FROM");
       break;
+    case T_WHERE:
+      printf("- WHERE");
+      break;
     case T_DERIVED_COLUMN:
       printf("- DERIVED_COLUMN");
       break;

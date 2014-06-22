@@ -69,7 +69,7 @@ protected:
   ASTNode* readBinaryExpression(ASTNode* lhs, int precedence);
 
   ASTNode* fromClause();
-
+  ASTNode* whereClause();
   ASTNode* tableName();
 
   ASTNode* addExpr(ASTNode* lhs, int precedence);
@@ -86,6 +86,15 @@ protected:
     auto token = cur_token_;
     cur_token_++;
     return token;
+  }
+
+  inline bool consumeIf(Token::kTokenType expectation) {
+    if (*cur_token_ == expectation) {
+      consumeToken();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   inline void expectAndConsume(Token::kTokenType expectation) {

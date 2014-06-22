@@ -24,6 +24,7 @@ public:
     T_ALL,
     T_DERIVED_COLUMN,
     T_FROM,
+    T_WHERE,
     T_COLUMN_NAME,
     T_TABLE_NAME,
     T_VALUE_EXPR,

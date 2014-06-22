@@ -236,6 +236,11 @@ next:
     goto next;
   }
 
+  if (token == "WHERE") {
+    token_list->emplace_back(Token::T_WHERE);
+    goto next;
+  }
+
   if (token == "DIV") {
     token_list->emplace_back(Token::T_DIV);
     goto next;

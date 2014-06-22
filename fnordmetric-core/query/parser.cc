@@ -206,6 +206,11 @@ void Parser::readSelect() {
   /* FROM clause */
   select->appendChild(fromClause());
 
+  /* WHERE clause */
+  auto where = whereClause();
+  if (where != nullptr) {
+    select->appendChild(where);
+  }
 }
 
 void Parser::readSelectSublist(ASTNode* select_list) {
@@ -254,6 +259,16 @@ ASTNode* Parser::fromClause() {
     clause->appendChild(tableName());
   } while (*cur_token_ == Token::T_COMMA);
 
+  return clause;
+}
+
+ASTNode* Parser::whereClause() {
+  if (!consumeIf(Token::T_WHERE)) {
+    return nullptr;
+  }
+
+  auto clause = new ASTNode(ASTNode::T_WHERE);
+  clause->appendChild(readValueExpression());
   return clause;
 }
 
