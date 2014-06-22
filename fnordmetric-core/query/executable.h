@@ -46,7 +46,11 @@ protected:
 
   SValue* negExpr(ASTNode* e);
   SValue* addExpr(ASTNode* e);
+  SValue* subExpr(ASTNode* e);
   SValue* mulExpr(ASTNode* e);
+  SValue* divExpr(ASTNode* e);
+  SValue* modExpr(ASTNode* e);
+  SValue* powExpr(ASTNode* e);
 
   RowSink* target_;
 };

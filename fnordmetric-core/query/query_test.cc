@@ -508,8 +508,8 @@ public:
     auto query = Query::parse(
         "  SELECT"
         "    13 + 2 * 5 as fnord,"
-        //"    6 ^ 6 ^ 6 as fubar,"
-        "    13 * 2 + -5 as baz,"
+        "    2 ^ 2 ^ 3 as fubar,"
+        "    13 * (8 % 3) + -5 as baz,"
         "    true as one,"
         "    !(true) as two,"
         "    NOT NOT true as three;");

@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include <string.h>
 #include "executable.h"
 
@@ -27,8 +28,20 @@ SValue* Executable::expr(ASTNode* e) {
     case ASTNode::T_ADD_EXPR:
       return addExpr(e);
 
+    case ASTNode::T_SUB_EXPR:
+      return subExpr(e);
+
     case ASTNode::T_MUL_EXPR:
       return mulExpr(e);
+
+    case ASTNode::T_DIV_EXPR:
+      return divExpr(e);
+
+    case ASTNode::T_MOD_EXPR:
+      return modExpr(e);
+
+    case ASTNode::T_POW_EXPR:
+      return powExpr(e);
 
     case ASTNode::T_LITERAL:
       assert(e->getToken() != nullptr);
@@ -49,34 +62,61 @@ SValue* Executable::negExpr(ASTNode* e) {
     return nullptr;
   }
 
-  SValue* result = nullptr;
   switch(val->getType()) {
-
-    case SValue::T_INTEGER: {
-      result = new SValue(val->getInteger() * -1);
-      break;
-    }
-
-    case SValue::T_FLOAT: {
-      result = new SValue(val->getFloat() * -1.0f);
-      break;
-    }
-
-    case SValue::T_BOOL: {
-      result = new SValue(!val->getBool());
-      break;
-    }
-
+    case SValue::T_INTEGER:
+      return new SValue(val->getInteger() * -1);
+    case SValue::T_FLOAT:
+      return new SValue(val->getFloat() * -1.0f);
+    case SValue::T_BOOL:
+      return new SValue(!val->getBool());
   }
 
-  if (result == nullptr) {
-    assert(0); // FIXPAUL
-  } else {
-    return result;
-  }
+  assert(0); // FIXPAUL
 }
 
-SValue* Executable::addExpr(ASTNode* e) {
+#define ARITHMETIC_EXPR_IMPL(name, op)                                            \
+  SValue* Executable::name(ASTNode* e) {                                      \
+    auto args = e->getChildren();                                             \
+    assert(args.size() == 2);                                                 \
+    std::unique_ptr<SValue> lhs(expr(args[0]));                               \
+    std::unique_ptr<SValue> rhs(expr(args[1]));                               \
+                                                                              \
+    if (lhs.get() == nullptr || rhs.get() == nullptr) {                       \
+      return nullptr;                                                         \
+    }                                                                         \
+                                                                              \
+    switch(lhs->getType()) {                                                  \
+      case SValue::T_INTEGER:                                                 \
+        switch(rhs->getType()) {                                              \
+          case SValue::T_INTEGER:                                             \
+            return new SValue((int64_t) (                                     \
+                lhs->getInteger() op rhs->getInteger()));                     \
+          case SValue::T_FLOAT:                                               \
+            return new SValue((double) (                                      \
+                lhs->getInteger() op rhs->getFloat()));                       \
+        }                                                                     \
+        break;                                                                \
+      case SValue::T_FLOAT:                                                   \
+        switch(rhs->getType()) {                                              \
+          case SValue::T_INTEGER:                                             \
+            return new SValue((double) (                                      \
+                lhs->getFloat() op rhs->getInteger()));                       \
+          case SValue::T_FLOAT:                                               \
+            return new SValue((double) (                                      \
+                lhs->getFloat() op rhs->getFloat()));                         \
+        }                                                                     \
+        break;                                                                \
+    }                                                                         \
+                                                                              \
+    assert(0);                                                                \
+  }
+
+ARITHMETIC_EXPR_IMPL(addExpr, +)
+ARITHMETIC_EXPR_IMPL(subExpr, -)
+ARITHMETIC_EXPR_IMPL(mulExpr, *)
+ARITHMETIC_EXPR_IMPL(divExpr, /)
+
+SValue* Executable::modExpr(ASTNode* e) {
   auto args = e->getChildren();
   assert(args.size() == 2);
 
@@ -87,26 +127,29 @@ SValue* Executable::addExpr(ASTNode* e) {
     return nullptr;
   }
 
-  SValue* result = nullptr;
   switch(lhs->getType()) {
-
-    case SValue::T_INTEGER: {
+    case SValue::T_INTEGER:
       switch(rhs->getType()) {
-        case SValue::T_INTEGER: {
-          result = new SValue(lhs->getInteger() + rhs->getInteger());
-        }
+        case SValue::T_INTEGER:
+          return new SValue((int64_t) (lhs->getInteger() % rhs->getInteger()));
+        case SValue::T_FLOAT:
+          return new SValue(fmod(lhs->getInteger(), rhs->getFloat()));
       }
-    }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(fmod(lhs->getFloat(), rhs->getInteger()));
+        case SValue::T_FLOAT:
+          return new SValue(fmod(lhs->getFloat(), rhs->getFloat()));
+      }
+      break;
   }
 
-  if (result == nullptr) {
-    assert(0); // FIXPAUL
-  } else {
-    return result;
-  }
+  assert(0); // FIXPAUL
 }
 
-SValue* Executable::mulExpr(ASTNode* e) {
+SValue* Executable::powExpr(ASTNode* e) {
   auto args = e->getChildren();
   assert(args.size() == 2);
 
@@ -117,25 +160,27 @@ SValue* Executable::mulExpr(ASTNode* e) {
     return nullptr;
   }
 
-  SValue* result = nullptr;
   switch(lhs->getType()) {
-
-    case SValue::T_INTEGER: {
+    case SValue::T_INTEGER:
       switch(rhs->getType()) {
-        case SValue::T_INTEGER: {
-          result = new SValue(lhs->getInteger() * rhs->getInteger());
-        }
+        case SValue::T_INTEGER:
+          return new SValue((int64_t) pow(lhs->getInteger(), rhs->getInteger()));
+        case SValue::T_FLOAT:
+          return new SValue((double) pow(lhs->getInteger(), rhs->getFloat()));
       }
-    }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue((double) pow(lhs->getFloat(), rhs->getInteger()));
+        case SValue::T_FLOAT:
+          return new SValue((double) pow(lhs->getFloat(), rhs->getFloat()));
+      }
+      break;
   }
 
-  if (result == nullptr) {
-    assert(0); // FIXPAUL
-  } else {
-    return result;
-  }
+  assert(0); // FIXPAUL
 }
-
 
 }
 }
