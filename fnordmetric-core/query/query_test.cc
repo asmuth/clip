@@ -42,6 +42,7 @@ public:
     testArithmeticValueExpressionPrecedence();
     testNegatedValueExpression();
     testMethodCallValueExpression();
+    testFromList();
     testComplexQueries();
   }
 
@@ -299,6 +300,20 @@ public:
     assert(parser.getErrors()[0].type == Parser::ERR_UNEXPECTED_TOKEN);
   }
 
+  void testFromList() {
+    auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    const auto& from = stmt->getChildren()[1];
+    assert(*from == ASTNode::T_FROM);
+    assert(from->getChildren().size() == 2);
+    assert(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
+    assert(*from->getChildren()[0]->getToken() == "tbl1");
+    assert(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
+    assert(*from->getChildren()[1]->getToken() == "tbl2");
+  }
+
   void testTokenizerEscaping() {
     auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
         "= 'fnor\\'dbar' + 123.5;");
@@ -386,7 +401,7 @@ public:
         "     sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
         "     o_orderdate,"
         "     o_shippriority"
-        "  FROM;"
+        "  FROM"
         "     customer,"
         "     orders,"
         "     lineitem "

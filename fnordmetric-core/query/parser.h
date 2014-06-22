@@ -68,6 +68,10 @@ protected:
   ASTNode* readMethodCall();
   ASTNode* readBinaryExpression(ASTNode* lhs, int precedence);
 
+  ASTNode* fromClause();
+
+  ASTNode* tableName();
+
   ASTNode* addExpr(ASTNode* lhs, int precedence);
   ASTNode* subExpr(ASTNode* lhs, int precedence);
   ASTNode* mulExpr(ASTNode* lhs, int precedence);

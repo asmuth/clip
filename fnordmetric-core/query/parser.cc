@@ -31,84 +31,6 @@ size_t Parser::parse(const char* query, size_t len) {
   return errors_.size() == 0;
 }
 
-void Parser::readSelect() {
-  /* SELECT */
-  auto select = root_.appendChild(ASTNode::T_SELECT);
-  if (!assertExpectation(Token::T_SELECT)) {
-    return;
-  } else {
-    consumeToken();
-  }
-
-  /* DISTINCT/ALL */
-  // FIXPAUL read SET_QUANTIFIER (distinct, all...)
-
-  /* select list */
-  auto select_list = select->appendChild(ASTNode::T_SELECT_LIST);
-  if (*cur_token_ == Token::T_ASTERISK) {
-    select_list->appendChild(ASTNode::T_ALL);
-    consumeToken();
-  } else {
-    for (;;) {
-      readSelectSublist(select_list);
-
-      if (*cur_token_ == Token::T_COMMA) {
-        consumeToken();
-      } else {
-        break;
-      }
-    }
-  }
-
-  if (*cur_token_ == Token::T_SEMICOLON) {
-    return;
-  }
-
-  /* FROM */
-  auto from = select->appendChild(ASTNode::T_FROM);
-  if (!assertExpectation(Token::T_FROM)) {
-    return;
-  } else {
-    consumeToken();
-  }
-
-}
-
-void Parser::readSelectSublist(ASTNode* select_list) {
-  /* table_name.* */
-  if (cur_token_ + 3 < token_list_end_ &&
-      cur_token_[0] == Token::T_IDENTIFIER &&
-      cur_token_[1] == Token::T_DOT &&
-      cur_token_[2] == Token::T_ASTERISK) {
-    auto select_all = select_list->appendChild(ASTNode::T_ALL);
-    select_all->setToken(cur_token_);
-    cur_token_ += 3;
-    return;
-  }
-
-  /* derived_col AS col_name */
-  auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
-  auto value_expr = readValueExpression();
-
-  if (value_expr == nullptr) {
-    addError(ERR_UNEXPECTED_TOKEN, "expected value expression");
-    // free value_expr
-    return;
-  }
-
-  derived->appendChild(value_expr);
-
-  if (*cur_token_ == Token::T_AS) {
-    consumeToken();
-    if (assertExpectation(Token::T_IDENTIFIER)) {
-      auto column_name = derived->appendChild(ASTNode::T_COLUMN_NAME);
-      column_name->setToken(cur_token_);
-      consumeToken();
-    }
-  }
-}
-
-
 ASTNode* Parser::readValueExpression(int precedence /* = 0 */) {
   auto lhs = readLHSExpression();
 
@@ -247,6 +169,104 @@ ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
 
   }
 }
+
+void Parser::readSelect() {
+  /* SELECT */
+  auto select = root_.appendChild(ASTNode::T_SELECT);
+  if (!assertExpectation(Token::T_SELECT)) {
+    return;
+  } else {
+    consumeToken();
+  }
+
+  /* DISTINCT/ALL */
+  // FIXPAUL read SET_QUANTIFIER (distinct, all...)
+
+  /* select list */
+  auto select_list = select->appendChild(ASTNode::T_SELECT_LIST);
+  if (*cur_token_ == Token::T_ASTERISK) {
+    select_list->appendChild(ASTNode::T_ALL);
+    consumeToken();
+  } else {
+    for (;;) {
+      readSelectSublist(select_list);
+
+      if (*cur_token_ == Token::T_COMMA) {
+        consumeToken();
+      } else {
+        break;
+      }
+    }
+  }
+
+  if (*cur_token_ == Token::T_SEMICOLON) {
+    return;
+  }
+
+  /* FROM clause */
+  select->appendChild(fromClause());
+
+}
+
+void Parser::readSelectSublist(ASTNode* select_list) {
+  /* table_name.* */
+  if (cur_token_ + 3 < token_list_end_ &&
+      cur_token_[0] == Token::T_IDENTIFIER &&
+      cur_token_[1] == Token::T_DOT &&
+      cur_token_[2] == Token::T_ASTERISK) {
+    auto select_all = select_list->appendChild(ASTNode::T_ALL);
+    select_all->setToken(cur_token_);
+    cur_token_ += 3;
+    return;
+  }
+
+  /* derived_col AS col_name */
+  auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
+  auto value_expr = readValueExpression();
+
+  if (value_expr == nullptr) {
+    addError(ERR_UNEXPECTED_TOKEN, "expected value expression");
+    // free value_expr
+    return;
+  }
+
+  derived->appendChild(value_expr);
+
+  if (*cur_token_ == Token::T_AS) {
+    consumeToken();
+    if (assertExpectation(Token::T_IDENTIFIER)) {
+      auto column_name = derived->appendChild(ASTNode::T_COLUMN_NAME);
+      column_name->setToken(cur_token_);
+      consumeToken();
+    }
+  }
+}
+
+ASTNode* Parser::fromClause() {
+  if (!assertExpectation(Token::T_FROM)) {
+    return nullptr;
+  }
+
+  auto clause = new ASTNode(ASTNode::T_FROM);
+
+  do {
+    consumeToken();
+    clause->appendChild(tableName());
+  } while (*cur_token_ == Token::T_COMMA);
+
+  return clause;
+}
+
+ASTNode* Parser::tableName() {
+  if (!assertExpectation(Token::T_IDENTIFIER)) {
+    return nullptr;
+  }
+
+  auto name = new ASTNode(ASTNode::T_TABLE_NAME);
+  name->setToken(consumeToken());
+  return name;
+}
+
 
 ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
   if (precedence < 10) {
