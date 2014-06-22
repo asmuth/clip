@@ -77,6 +77,9 @@ const char* Token::getTypeName(kTokenType type) {
     case T_BY:
       return "T_GROUP";
 
+    case T_HAVING:
+      return "T_HAVING";
+
     case T_AS:
       return "T_AS";
 

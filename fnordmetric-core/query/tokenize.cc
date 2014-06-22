@@ -266,6 +266,11 @@ next:
     goto next;
   }
 
+  if (token == "HAVING") {
+    token_list->emplace_back(Token::T_HAVING);
+    goto next;
+  }
+
   if (token == "AND") {
     token_list->emplace_back(Token::T_AND);
     goto next;

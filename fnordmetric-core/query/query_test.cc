@@ -46,6 +46,7 @@ public:
     testWhereClause();
     testGroupByClause();
     testOrderByClause();
+    testHavingClause();
     testComplexQueries();
   }
 
@@ -332,7 +333,6 @@ public:
 
   void testGroupByClause() {
     auto parser = parseTestQuery("select count(x), y from t GROUP BY x;");
-    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -345,7 +345,6 @@ public:
 
   void testOrderByClause() {
     auto parser = parseTestQuery("select a FROM t ORDER BY a DESC;");
-    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -355,6 +354,19 @@ public:
     assert(order_by->getChildren().size() == 1);
     assert(*order_by->getChildren()[0] == ASTNode::T_SORT_SPEC);
     assert(*order_by->getChildren()[0]->getToken() == Token::T_DESC);
+  }
+
+  void testHavingClause() {
+    auto parser = parseTestQuery("select a FROM t HAVING 1=1;");
+    parser.debugPrint();
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 3);
+    const auto& having = stmt->getChildren()[2];
+    assert(*having == ASTNode::T_HAVING);
+    assert(having->getChildren().size() == 1);
+    assert(*having->getChildren()[0] == ASTNode::T_EQ_EXPR);
   }
 
   void testTokenizerEscaping() {

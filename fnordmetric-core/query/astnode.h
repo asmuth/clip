@@ -34,6 +34,7 @@ public:
     T_GROUP_BY,
     T_ORDER_BY,
     T_SORT_SPEC,
+    T_HAVING,
 
     T_EQ_EXPR,
     T_NEQ_EXPR,

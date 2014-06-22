@@ -230,6 +230,12 @@ void Parser::readSelect() {
     select->appendChild(group);
   }
 
+  /* HAVING clause */
+  auto having = havingClause();
+  if (having != nullptr) {
+    select->appendChild(having);
+  }
+
   /* ORDER BY */
   auto order = orderByClause();
   if (order != nullptr) {
@@ -309,6 +315,16 @@ ASTNode* Parser::groupByClause() {
     clause->appendChild(readValueExpression());
   } while (consumeIf(Token::T_COMMA));
 
+  return clause;
+}
+
+ASTNode* Parser::havingClause() {
+  if (!consumeIf(Token::T_HAVING)) {
+    return nullptr;
+  }
+
+  auto clause = new ASTNode(ASTNode::T_HAVING);
+  clause->appendChild(readValueExpression());
   return clause;
 }
 

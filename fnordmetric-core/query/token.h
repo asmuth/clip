@@ -23,6 +23,7 @@ public:
     T_GROUP,
     T_ORDER,
     T_BY,
+    T_HAVING,
     T_ASC,
     T_DESC,
     T_COMMA,
