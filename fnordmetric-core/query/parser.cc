@@ -236,10 +236,16 @@ void Parser::readSelect() {
     select->appendChild(having);
   }
 
-  /* ORDER BY */
+  /* ORDER BY clause */
   auto order = orderByClause();
   if (order != nullptr) {
     select->appendChild(order);
+  }
+
+  /* LIMIT clause */
+  auto limit = limitClause();
+  if (limit != nullptr) {
+    select->appendChild(limit);
   }
 }
 
@@ -350,6 +356,29 @@ ASTNode* Parser::orderByClause() {
         return nullptr; // fixpaul add error and free clause
     }
   } while (consumeIf(Token::T_COMMA));
+
+  return clause;
+}
+
+ASTNode* Parser::limitClause() {
+  if (!consumeIf(Token::T_LIMIT)) {
+    return nullptr;
+  }
+
+  ASTNode* clause;
+  if (!assertExpectation(Token::T_NUMERIC)) {
+    return nullptr;
+  } else {
+    clause = new ASTNode(ASTNode::T_LIMIT);
+    clause->setToken(consumeToken());
+  }
+
+  if (consumeIf(Token::T_OFFSET)) {
+    if (assertExpectation(Token::T_NUMERIC)) {
+      auto offset = clause->appendChild(ASTNode::T_OFFSET);
+      offset->setToken(consumeToken());
+    }
+  }
 
   return clause;
 }

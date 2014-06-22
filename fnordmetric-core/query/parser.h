@@ -77,6 +77,8 @@ protected:
   ASTNode* groupByClause();
   ASTNode* havingClause();
   ASTNode* orderByClause();
+  ASTNode* limitClause();
+
   ASTNode* tableName();
 
   ASTNode* eqExpr(ASTNode* lhs, int precedence);

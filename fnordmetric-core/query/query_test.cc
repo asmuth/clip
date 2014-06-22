@@ -47,6 +47,8 @@ public:
     testGroupByClause();
     testOrderByClause();
     testHavingClause();
+    testLimitClause();
+    testLimitOffsetClause();
     testComplexQueries();
   }
 
@@ -320,7 +322,6 @@ public:
 
   void testWhereClause() {
     auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
-    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -358,7 +359,6 @@ public:
 
   void testHavingClause() {
     auto parser = parseTestQuery("select a FROM t HAVING 1=1;");
-    parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
     const auto& stmt = parser.getStatements()[0];
@@ -367,6 +367,32 @@ public:
     assert(*having == ASTNode::T_HAVING);
     assert(having->getChildren().size() == 1);
     assert(*having->getChildren()[0] == ASTNode::T_EQ_EXPR);
+  }
+
+  void testLimitClause() {
+    auto parser = parseTestQuery("select a FROM t LIMIT 10;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 3);
+    const auto& limit = stmt->getChildren()[2];
+    assert(*limit == ASTNode::T_LIMIT);
+    assert(limit->getChildren().size() == 0);
+    assert(*limit->getToken() == "10");
+  }
+
+  void testLimitOffsetClause() {
+    auto parser = parseTestQuery("select a FROM t LIMIT 10 OFFSET 23;");
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 3);
+    const auto& limit = stmt->getChildren()[2];
+    assert(*limit == ASTNode::T_LIMIT);
+    assert(limit->getChildren().size() == 1);
+    assert(*limit->getToken() == "10");
+    assert(*limit->getChildren()[0] == ASTNode::T_OFFSET);
+    assert(*limit->getChildren()[0]->getToken() == "23");
   }
 
   void testTokenizerEscaping() {
@@ -476,7 +502,6 @@ public:
 
     for (auto query : queries) {
       auto parser = parseTestQuery(query);
-      //parser.debugPrint();
       assert(parser.getErrors().size() == 0);
       assert(parser.getStatements().size() == 1);
     }

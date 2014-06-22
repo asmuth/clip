@@ -70,6 +70,9 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_ORDER_BY:
       printf("- ORDER_BY");
       break;
+    case T_HAVING:
+      printf("- HAVING");
+      break;
     case T_SORT_SPEC:
       printf("- SORT_SPEC");
       break;

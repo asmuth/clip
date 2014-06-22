@@ -24,6 +24,8 @@ public:
     T_ORDER,
     T_BY,
     T_HAVING,
+    T_LIMIT,
+    T_OFFSET,
     T_ASC,
     T_DESC,
     T_COMMA,

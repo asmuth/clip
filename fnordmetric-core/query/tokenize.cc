@@ -281,6 +281,16 @@ next:
     goto next;
   }
 
+  if (token == "LIMIT") {
+    token_list->emplace_back(Token::T_LIMIT);
+    goto next;
+  }
+
+  if (token == "OFFSET") {
+    token_list->emplace_back(Token::T_OFFSET);
+    goto next;
+  }
+
   if (token == "DIV") {
     token_list->emplace_back(Token::T_DIV);
     goto next;

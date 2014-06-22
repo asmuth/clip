@@ -35,6 +35,8 @@ public:
     T_ORDER_BY,
     T_SORT_SPEC,
     T_HAVING,
+    T_LIMIT,
+    T_OFFSET,
 
     T_EQ_EXPR,
     T_NEQ_EXPR,
