@@ -31,7 +31,7 @@ public:
     return rows_.size();
   }
 
-  const std::vector<std::unique_ptr<SValue>>& getRow(size_t index) const {
+  const std::vector<SValue*>& getRow(size_t index) const {
     assert(index < rows_.size());
     return rows_[index];
   }
@@ -40,9 +40,10 @@ public:
     return columns_;
   }
 
-  void addRow(std::vector<std::unique_ptr<SValue>>&& row) override {
+  bool nextRow(std::vector<SValue*> row) override {
     assert(row.size() == columns_.size());
     rows_.emplace_back(std::move(row));
+    return true;
   }
 
   void debugPrint() const {
@@ -90,7 +91,7 @@ public:
 
 protected:
   std::vector<std::string> columns_;
-  std::vector<std::vector<std::unique_ptr<SValue>>> rows_;
+  std::vector<std::vector<SValue*>> rows_;
 };
 
 }

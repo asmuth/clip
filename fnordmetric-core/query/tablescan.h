@@ -103,29 +103,37 @@ public:
     }
 
     return new TableScan(
+        tbl_ref,
         std::move(columns),
-        std::move(expressions));
+        std::move(expressions),
+        std::move(where_expr));
   }
 
   TableScan(
+      TableRef* tbl_ref,
       std::vector<std::string>&& columns,
-      std::vector<std::unique_ptr<ASTNode>>&& expressions) :
+      std::vector<std::unique_ptr<ASTNode>>&& expressions,
+      std::unique_ptr<ASTNode>&& where_expr) :
+      tbl_ref_(tbl_ref),
       columns_(std::move(columns)),
-      expressions_(std::move(expressions)) {}
+      expressions_(std::move(expressions)),
+      where_expr_(std::move(where_expr)) {}
 
   void execute() override {
-    /*
-    std::vector<std::unique_ptr<SValue>> row;
-
-    for (int i = 0; i < columns_.size(); ++i) {
-      row.emplace_back(expr(expressions_[i].get()));
-    }
-
-    emitRow(std::move(row));
-    */
+    tbl_ref_->executeScan(this);
   }
 
-  void addRow(std::vector<std::unique_ptr<SValue>>&& row) override {
+  bool nextRow(std::vector<SValue*> row) override {
+    setCurrentRow(&row);
+    std::vector<SValue*> out_row;
+
+    // FIXPAUL check where cond
+
+    for (int i = 0; i < columns_.size(); ++i) {
+      out_row.emplace_back(expr(expressions_[i].get()));
+    }
+
+    return emitRow(out_row);
   }
 
   size_t getNumCols() const override {
@@ -163,8 +171,10 @@ protected:
     }
   }
 
+  TableRef* const tbl_ref_;
   const std::vector<std::string> columns_;
   const std::vector<std::unique_ptr<ASTNode>> expressions_;
+  const std::unique_ptr<ASTNode> where_expr_;
 };
 
 }

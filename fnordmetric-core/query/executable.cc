@@ -44,7 +44,14 @@ SValue* Executable::expr(ASTNode* e) {
       assert(e->getToken() != nullptr);
       return SValue::fromToken(e->getToken());
 
+    case ASTNode::T_RESOLVED_COLUMN:
+      assert(e->getResolvedSymbol() >= 0);
+      assert(cur_row_->size() > e->getResolvedSymbol());
+      return (*cur_row_)[e->getResolvedSymbol()];
+
     default:
+      printf("error: cant execute expression\n");
+      e->debugPrint();
       assert(0); // FIXPAUL
   };
 }

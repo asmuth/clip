@@ -16,6 +16,7 @@
 #include "query.h"
 #include "executable.h"
 #include "tableref.h"
+#include "tablescan.h"
 #include "tablerepository.h"
 
 namespace fnordmetric {
@@ -550,6 +551,19 @@ public:
       if (name == "three") return 2;
       return -1;
     }
+    void executeScan(TableScan* scan) override {
+      int64_t one = 0;
+      int64_t two = 100;
+      for (int i = two; i > 0; --i) {
+        std::vector<SValue*> row;
+        row.emplace_back(new SValue(++one));
+        row.emplace_back(new SValue(two--));
+        row.emplace_back(new SValue((int64_t) (i % 2 ? 10 : 20)));
+        if (!scan->nextRow(row)) {
+          return;
+        }
+      }
+    }
   };
 
   void testSimpleTableScanQuery() {
@@ -559,7 +573,7 @@ public:
 
     std::vector<std::unique_ptr<Query>> dst;
     Query::parse(
-        "  SELECT one, two FROM testtable",
+        "  SELECT one + 50, two FROM testtable",
         &repo,
         &dst);
 
@@ -568,22 +582,14 @@ public:
     query->execute();
 
     const auto& results = query->getResults();
-    assert(results.getNumColumns() == 6);
-    assert(results.getNumRows() == 1);
-    const auto& cols = results.getColumns();
-    assert(cols[0] == "fnord");
-    assert(cols[1] == "fubar");
-    assert(cols[2] == "baz");
-    assert(cols[3] == "one");
-    assert(cols[4] == "two");
-    assert(cols[5] == "three");
-    const auto& row = results.getRow(0);
-    assert(row[0]->getInteger() == 23);
-    assert(row[1]->getInteger() == 256);
-    assert(row[2]->getInteger() == 21);
-    assert(row[3]->getBool() == true);
-    assert(row[4]->getBool() == false);
-    assert(row[5]->getBool() == true);
+    assert(results.getNumColumns() == 2);
+    assert(results.getNumRows() == 100);
+
+    for (int i = 0; i<100; ++i) {
+      const auto& row = results.getRow(i);
+      assert(row[0]->getInteger() == 51 + i);
+      assert(row[1]->getInteger() == 100 - i);
+    }
   }
 
   void testTableScanWhereQuery() {

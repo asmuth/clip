@@ -12,11 +12,13 @@
 
 namespace fnordmetric {
 namespace query {
+class TableScan;
 
 class TableRef {
 public:
   virtual ~TableRef() {}
   virtual int getColumnIndex(const std::string& name) = 0;
+  virtual void executeScan(TableScan* scan) = 0;
 protected:
 };
 

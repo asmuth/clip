@@ -56,7 +56,7 @@ public:
       expressions_(std::move(expressions)) {}
 
   void execute() override {
-    std::vector<std::unique_ptr<SValue>> row;
+    std::vector<SValue*> row;
 
     for (int i = 0; i < columns_.size(); ++i) {
       row.emplace_back(expr(expressions_[i].get()));
@@ -69,7 +69,7 @@ public:
     return columns_.size();
   }
 
-  void addRow(std::vector<std::unique_ptr<SValue>>&& row) override {
+  bool nextRow(std::vector<SValue*> row) override {
     assert(0);
   }
 

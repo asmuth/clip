@@ -19,7 +19,7 @@ namespace query {
 
 class RowSink {
 public:
-  virtual void addRow(std::vector<std::unique_ptr<SValue>>&& row) = 0;
+  virtual bool nextRow(std::vector<SValue*> row) = 0;
 };
 
 class Executable : public RowSink {
@@ -37,9 +37,13 @@ public:
 
 protected:
 
-  void emitRow(std::vector<std::unique_ptr<SValue>>&& row) {
+  void setCurrentRow(std::vector<SValue*>* row) {
+    cur_row_ = row;
+  }
+
+  bool emitRow(std::vector<SValue*> row) {
     assert(target_ != nullptr);
-    target_->addRow(std::move(row));
+    return target_->nextRow(row);
   }
 
   SValue* expr(ASTNode* e);
@@ -53,6 +57,7 @@ protected:
   SValue* powExpr(ASTNode* e);
 
   RowSink* target_;
+  std::vector<SValue*>* cur_row_;
 };
 
 }
