@@ -8,6 +8,7 @@
 #include <string.h>
 #include <memory>
 #include "query.h"
+#include "executable.h"
 
 namespace fnordmetric {
 namespace query {

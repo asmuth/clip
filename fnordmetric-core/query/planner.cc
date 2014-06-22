@@ -8,6 +8,8 @@
 #include <assert.h>
 #include "planner.h"
 #include "astnode.h"
+#include "executable.h"
+#include "tablelessselect.h"
 
 namespace fnordmetric {
 namespace query {
@@ -26,6 +28,13 @@ Executable* Planner::planTablelessSelect(ASTNode* ast) {
 
   return new TablelessSelect(ast->getChildren()[0]);
   printf("is tableless select!\n");
+}
+
+std::unique_ptr<Executable> Planner::getExecutable() {
+  assert(executable_ != nullptr);
+  auto ptr = std::unique_ptr<Executable>(executable_);
+  executable_ = nullptr;
+  return ptr;
 }
 
 }

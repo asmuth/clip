@@ -14,6 +14,7 @@
 #include "token.h"
 #include "tokenize.h"
 #include "query.h"
+#include "executable.h"
 
 namespace fnordmetric {
 namespace query {
