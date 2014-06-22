@@ -17,7 +17,7 @@ namespace query {
 
 class Query {
 public:
-  static Query* Query::parse(const char* query_string);
+  static Query* parse(const char* query_string);
   explicit Query(ASTNode* select_statement);
 
   Query(const Query& copy) = delete;

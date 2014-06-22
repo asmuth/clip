@@ -70,6 +70,12 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_ORDER_BY:
       printf("- ORDER_BY");
       break;
+    case T_LIMIT:
+      printf("- LIMIT");
+      break;
+    case T_OFFSET:
+      printf("- OFFSET");
+      break;
     case T_HAVING:
       printf("- HAVING");
       break;
@@ -94,6 +100,12 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_EQ_EXPR:
       printf("- EQ_EXPR");
       break;
+    case T_LT_EXPR:
+      printf("- LT_EXPR");
+      break;
+    case T_GT_EXPR:
+      printf("- GT_EXPR");
+      break;
     case T_NEQ_EXPR:
       printf("- NEQ_EXPR");
       break;
@@ -114,6 +126,12 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
       break;
     case T_DIV_EXPR:
       printf("- DIV_EXPR");
+      break;
+    case T_MOD_EXPR:
+      printf("- MOD_EXPR");
+      break;
+    case T_POW_EXPR:
+      printf("- POW_EXPR");
       break;
     case T_METHOD_CALL:
       printf("- METHOD_CALL");

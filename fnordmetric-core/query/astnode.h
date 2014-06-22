@@ -40,6 +40,8 @@ public:
 
     T_EQ_EXPR,
     T_NEQ_EXPR,
+    T_LT_EXPR,
+    T_GT_EXPR,
     T_AND_EXPR,
     T_OR_EXPR,
     T_NEGATE_EXPR,

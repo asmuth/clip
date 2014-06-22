@@ -14,7 +14,7 @@ namespace query {
 Query* Query::parse(const char* query_string) {
   Parser parser;
   parser.parse(query_string, strlen(query_string));
-  parser.debugPrint();
+  //parser.debugPrint();
 
   return new Query(parser.getStatements()[0]); // FIXPAUL
 }
@@ -22,6 +22,7 @@ Query* Query::parse(const char* query_string) {
 Query::Query(ASTNode* select_statement) : query_plan_(select_statement) {}
 
 bool Query::execute() {
+  return true;
 }
 
 

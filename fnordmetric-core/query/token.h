@@ -56,7 +56,9 @@ public:
     T_AMPERSAND,
     T_PIPE,
     T_LSHIFT,
-    T_RSHIFT
+    T_RSHIFT,
+    T_LT,
+    T_GT
   };
 
   Token(kTokenType token_type);

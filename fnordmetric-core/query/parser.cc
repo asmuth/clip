@@ -135,9 +135,17 @@ ASTNode* Parser::methodCall() {
 ASTNode* Parser::binaryExpr(ASTNode* lhs, int precedence) {
   switch (cur_token_->getType()) {
 
-    /* euqals expression */
+    /* equals expression */
     case Token::T_EQUAL:
       return eqExpr(lhs, precedence);
+
+    /* less than expression */
+    case Token::T_LT:
+      return ltExpr(lhs, precedence);
+
+    /* less than expression */
+    case Token::T_GT:
+      return gtExpr(lhs, precedence);
 
     /* and expression */
     case Token::T_AND:
@@ -403,6 +411,32 @@ ASTNode* Parser::eqExpr(ASTNode* lhs, int precedence) {
   }
 
   auto e = new ASTNode(ASTNode::T_EQ_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(6));
+  return e;
+}
+
+ASTNode* Parser::ltExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 6) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto e = new ASTNode(ASTNode::T_LT_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(6));
+  return e;
+}
+
+ASTNode* Parser::gtExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 6) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto e = new ASTNode(ASTNode::T_GT_EXPR);
   e->appendChild(lhs);
   e->appendChild(expr(6));
   return e;

@@ -29,29 +29,29 @@ public:
   */
 
   void run() {
-    testTokenizerSimple();
-    testTokenizerEscaping();
-    testTokenizerAsClause();
-    testSelectMustBeFirstAssert();
-    testSelectWildcard();
-    testSelectTableWildcard();
-    testSelectDerivedColumn();
-    testSelectDerivedColumnWithTableName();
-    testSimpleValueExpression();
-    testArithmeticValueExpression();
-    testArithmeticValueExpressionParens();
-    testArithmeticValueExpressionPrecedence();
-    testNegatedValueExpression();
-    testMethodCallValueExpression();
-    testFromList();
-    testWhereClause();
-    testGroupByClause();
-    testOrderByClause();
-    testHavingClause();
-    testLimitClause();
-    testLimitOffsetClause();
+    //testTokenizerSimple();
+    //testTokenizerEscaping();
+    //testTokenizerAsClause();
+    //testSelectMustBeFirstAssert();
+    //testSelectWildcard();
+    //testSelectTableWildcard();
+    //testSelectDerivedColumn();
+    //testSelectDerivedColumnWithTableName();
+    //testSimpleValueExpression();
+    //testArithmeticValueExpression();
+    //testArithmeticValueExpressionParens();
+    //testArithmeticValueExpressionPrecedence();
+    //testNegatedValueExpression();
+    //testMethodCallValueExpression();
+    //testFromList();
+    //testWhereClause();
+    //testGroupByClause();
+    //testOrderByClause();
+    //testHavingClause();
+    //testLimitClause();
+    //testLimitOffsetClause();
     testComplexQueries();
-    testSelectOnlyQuery();
+    //testSelectOnlyQuery();
   }
 
   Parser parseTestQuery(const char* query) {

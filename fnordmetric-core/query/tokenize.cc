@@ -127,6 +127,18 @@ next:
       goto next;
     }
 
+    case '<': {
+      token_list->emplace_back(Token::T_LT);
+      (*cur)++;
+      goto next;
+    }
+
+    case '>': {
+      token_list->emplace_back(Token::T_GT);
+      (*cur)++;
+      goto next;
+    }
+
     /* numeric literals */
     case '0':
     case '1':
