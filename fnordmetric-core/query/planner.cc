@@ -12,7 +12,21 @@
 namespace fnordmetric {
 namespace query {
 
-Planner::Planner(ASTNode* select_statement) {}
+Planner::Planner(ASTNode* select_statement) :
+    executable_(plan(select_statement)) {}
+
+Executable* Planner::plan(ASTNode* ast) {
+  return planTablelessSelect(ast);
+}
+
+Executable* Planner::planTablelessSelect(ASTNode* ast) {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() != 1) {
+    return nullptr;
+  }
+
+  return new TablelessSelect(ast->getChildren()[0]);
+  printf("is tableless select!\n");
+}
 
 }
 }

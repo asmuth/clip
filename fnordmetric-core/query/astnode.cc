@@ -40,6 +40,20 @@ const Token* ASTNode::getToken() const {
   return token_;
 }
 
+ASTNode* ASTNode::deepCopy() const {
+  auto copy = new ASTNode(type_);
+
+  if (token_ != nullptr) {
+    copy->setToken(token_);
+  }
+
+  for (const auto child : children_) {
+    copy->appendChild(child->deepCopy());
+  }
+
+  return copy;
+}
+
 void ASTNode::debugPrint(int indent /* = 0 */) const {
   for (int i = 0; i < indent - 2; i++) {
     printf("  ");

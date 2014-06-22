@@ -147,5 +147,13 @@ bool Token::operator==(kTokenType type) const {
   return type_ == type;
 }
 
+const std::string Token::getString() const {
+  if (len_ == 0) {
+    return std::string();
+  } else {
+    return std::string(data_, len_);
+  }
+}
+
 }
 }

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <memory>
 #include "parser.h"
 #include "planner.h"
 
@@ -17,9 +18,9 @@ namespace query {
 
 class Query {
 public:
-  static Query* parse(const char* query_string);
-  explicit Query(ASTNode* select_statement);
+  static std::unique_ptr<Query> parse(const char* query_string);
 
+  explicit Query(std::unique_ptr<Executable>&& executable);
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);
@@ -27,7 +28,7 @@ public:
   bool execute();
 
 protected:
-  Planner query_plan_;
+  std::unique_ptr<Executable> executable_;
 };
 
 }

@@ -70,6 +70,7 @@ public:
   bool operator==(kTokenType type) const;
   kTokenType getType() const;
   static const char* getTypeName(kTokenType type);
+  const std::string getString() const;
   void debugPrint() const;
 
 protected:

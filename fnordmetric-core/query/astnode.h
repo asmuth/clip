@@ -60,6 +60,9 @@ public:
   const std::vector<ASTNode*>& getChildren() const;
   void setToken(const Token* token);
   const Token* getToken() const;
+
+  ASTNode* deepCopy() const;
+
   void debugPrint(int indent = 0) const;
 
 protected:
