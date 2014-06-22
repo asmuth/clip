@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "parser.h"
-#include "planner.h"
+#include "resultlist.h"
 
 namespace fnordmetric {
 namespace query {
@@ -26,10 +25,11 @@ public:
   Query(Query&& move);
 
   bool execute();
+  const ResultList& getResults();
 
 protected:
-
   std::unique_ptr<Executable> executable_;
+  ResultList results_;
 };
 
 }

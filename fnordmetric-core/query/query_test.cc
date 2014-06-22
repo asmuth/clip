@@ -510,10 +510,12 @@ public:
     }
   }
 
-
   void testSelectOnlyQuery() {
     auto query = Query::parse("SELECT 13 + 2 * 5 as fnord;");
     query->execute();
+    const auto& results = query->getResults();
+    results.debugPrint();
+    //assert(results.getNumColumns() == 1);
   }
 
 };

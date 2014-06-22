@@ -8,6 +8,8 @@
 #include <string.h>
 #include <memory>
 #include "query.h"
+#include "parser.h"
+#include "planner.h"
 #include "executable.h"
 
 namespace fnordmetric {
@@ -24,14 +26,19 @@ std::unique_ptr<Query> Query::parse(const char* query_string) {
 }
 
 Query::Query(std::unique_ptr<Executable>&& executable) :
-    executable_(std::move(executable)) {}
+    executable_(std::move(executable)),
+    results_(executable_->getColumns()) {}
 
 bool Query::execute() {
   printf("execute=%p\n", executable_.get());
+  executable_->setTarget(&results_);
   executable_->execute();
   return true;
 }
 
+const ResultList& Query::getResults() {
+  return results_;
+}
 
 }
 }

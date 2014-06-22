@@ -59,6 +59,10 @@ public:
     return data_.t_integer;
   }
 
+  std::string toString() const {
+    return "blah";
+  }
+
 protected:
   kSValueType type_;
   union {

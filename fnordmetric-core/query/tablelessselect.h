@@ -30,25 +30,37 @@ public:
         assert(*derived[1] == ASTNode::T_COLUMN_NAME); // FIXPAUL
         auto colname_token = derived[1]->getToken();
         assert(colname_token && *colname_token == Token::T_IDENTIFIER);
-
-        columns_.push_back(std::make_pair(
-            colname_token->getString(),
-            derived[0]->deepCopy()));
+        columns_.emplace_back(colname_token->getString());
+        expressions_.emplace_back(derived[0]->deepCopy());
       }
     }
   }
 
   void execute() override {
-    for (const auto& col : columns_) {
-      std::unique_ptr<SValue> value(expr(col.second));
+    std::vector<std::unique_ptr<SValue>> row;
 
-      printf("execute col=%s=%i\n",col.first.c_str(), value->getInteger());
+    for (int i = 0; i < columns_.size(); ++i) {
+      row.emplace_back(expr(expressions_[i].get()));
     }
+
+    emitRow(std::move(row));
   }
 
+  size_t getNumCols() const override {
+    return columns_.size();
+  }
+
+  void addRow(std::vector<std::unique_ptr<SValue>>&& row) override {
+    assert(0);
+  }
+
+  const std::vector<std::string>& getColumns() const override {
+    return columns_;
+  }
 
 protected:
-  std::vector<std::pair<std::string, ASTNode*>> columns_;
+  std::vector<std::string> columns_;
+  std::vector<std::unique_ptr<ASTNode>> expressions_;
 };
 
 }

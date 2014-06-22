@@ -17,11 +17,30 @@
 namespace fnordmetric {
 namespace query {
 
-class Executable {
+class RowSink {
 public:
-  virtual ~Executable() {}
+  virtual void addRow(std::vector<std::unique_ptr<SValue>>&& row) = 0;
+};
+
+class Executable : public RowSink {
+public:
+  Executable();
+  virtual ~Executable();
   virtual void execute() = 0;
+
+  virtual size_t getNumCols() const = 0;
+  virtual const std::vector<std::string>& getColumns() const = 0;
+
+  void setTarget(RowSink* target) {
+    target_ = target;
+  }
+
 protected:
+
+  void emitRow(std::vector<std::unique_ptr<SValue>>&& row) {
+    assert(target_ != nullptr);
+    target_->addRow(std::move(row));
+  }
 
   SValue* expr(ASTNode* e) {
     printf("execute expression %p\n", e);
@@ -103,6 +122,7 @@ protected:
     }
   }
 
+  RowSink* target_;
 };
 
 }
