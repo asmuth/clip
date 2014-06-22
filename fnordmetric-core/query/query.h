@@ -9,28 +9,25 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "../stream.h"
+#include "parser.h"
+#include "planner.h"
 
 namespace fnordmetric {
 namespace query {
 
 class Query {
 public:
-  explicit Query(
-      const std::string& query_string,
-      const IStreamRepository& stream_repo);
+  static Query* Query::parse(const char* query_string);
+  explicit Query(ASTNode* select_statement);
 
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);
 
-  /**
-   * Get the list of streams this query wants scan over
-   */
-  const std::vector<std::string>& getStreams();
+  bool execute();
 
 protected:
-
+  Planner query_plan_;
 };
 
 }

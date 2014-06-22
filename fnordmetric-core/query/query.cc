@@ -5,20 +5,25 @@
  * Licensed under the MIT license (see LICENSE).
  */
 #include <stdlib.h>
+#include <string.h>
 #include "query.h"
 
 namespace fnordmetric {
 namespace query {
 
-Query::Query(
-    const std::string& query_string,
-    const IStreamRepository& stream_repo) {
+Query* Query::parse(const char* query_string) {
+  Parser parser;
+  parser.parse(query_string, strlen(query_string));
+  parser.debugPrint();
+
+  return new Query(parser.getStatements()[0]); // FIXPAUL
 }
 
-const std::vector<std::string>& Query::getStreams() {
-  static std::vector<std::string> tmpstreams = {"mystream"};
-  return tmpstreams; // FIXPAUL
+Query::Query(ASTNode* select_statement) : query_plan_(select_statement) {}
+
+bool Query::execute() {
 }
+
 
 }
 }

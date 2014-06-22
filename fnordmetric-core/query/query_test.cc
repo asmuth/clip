@@ -13,6 +13,7 @@
 #include "parser.h"
 #include "token.h"
 #include "tokenize.h"
+#include "query.h"
 
 namespace fnordmetric {
 namespace query {
@@ -50,6 +51,7 @@ public:
     testLimitClause();
     testLimitOffsetClause();
     testComplexQueries();
+    testSelectOnlyQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -505,6 +507,11 @@ public:
       assert(parser.getErrors().size() == 0);
       assert(parser.getStatements().size() == 1);
     }
+  }
+
+
+  void testSelectOnlyQuery() {
+    auto query = Query::parse("SELECT 13 + 2 * 5 as fnord;");
   }
 
 };

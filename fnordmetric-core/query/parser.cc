@@ -87,8 +87,7 @@ ASTNode* Parser::unaryExpr() {
     case Token::T_IDENTIFIER: {
       ASTNode* expr = nullptr;
 
-      if (cur_token_ + 1 < token_list_end_ &&
-          cur_token_[1].getType() == Token::T_DOT) {
+      if (lookahead(1, Token::T_DOT)) {
         /* table_name.column_name */
         auto table_name = new ASTNode(ASTNode::T_TABLE_NAME);
         table_name->setToken(cur_token_);
