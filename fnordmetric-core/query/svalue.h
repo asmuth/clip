@@ -24,10 +24,7 @@ public:
     T_INTEGER
   };
 
-  explicit SValue(int64_t integer_value) : type_(T_INTEGER) {
-    data_.t_integer = integer_value;
-  }
-
+  explicit SValue(int64_t integer_value);
   explicit SValue(double float_value);
   explicit SValue(const char* str_value, size_t len, bool copy);
   SValue(const SValue& copy);
@@ -40,7 +37,11 @@ public:
     switch (token->getType()) {
 
       case Token::T_NUMERIC: {
-        return new SValue((int64_t) 123);
+        if (token->isDouble()) {
+          return new SValue(token->getDouble());
+        } else {
+          return new SValue(token->getInteger());
+        }
       }
 
       default:

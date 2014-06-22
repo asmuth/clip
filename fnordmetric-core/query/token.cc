@@ -147,6 +147,25 @@ bool Token::operator==(kTokenType type) const {
   return type_ == type;
 }
 
+int64_t Token::getInteger() const {
+  int64_t value = 0;
+
+  for(int i = 0; i < len_; ++i) {
+    value *= 10;
+    value += data_[i] - '0';
+  }
+
+  return value;
+}
+
+bool Token::isDouble() const {
+  return false;
+}
+
+double Token::getDouble() const {
+  return 23.5f;
+}
+
 const std::string Token::getString() const {
   if (len_ == 0) {
     return std::string();
