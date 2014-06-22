@@ -75,7 +75,7 @@ public:
       }
 
       if (derived.size() == 2) {
-        assert(*derived[1] == ASTNode::T_COLUMN_NAME); // FIXPAUL
+        assert(*derived[1] == ASTNode::T_COLUMN_ALIAS); // FIXPAUL
         auto colname_token = derived[1]->getToken();
         assert(colname_token && *colname_token == Token::T_IDENTIFIER);
         columns.emplace_back(colname_token->getString());
@@ -127,13 +127,24 @@ public:
     setCurrentRow(&row);
     std::vector<SValue*> out_row;
 
-    // FIXPAUL check where cond
+    auto pred_bool = true;
+    auto continue_bool = true;
 
-    for (int i = 0; i < columns_.size(); ++i) {
-      out_row.emplace_back(expr(expressions_[i].get()));
+    if (where_expr_.get() != nullptr) {
+      auto pred = expr(where_expr_.get());
+      pred_bool = pred->getBool();
+      delete pred;
     }
 
-    return emitRow(out_row);
+    if (pred_bool) {
+      for (int i = 0; i < columns_.size(); ++i) {
+        out_row.emplace_back(expr(expressions_[i].get()));
+      }
+
+      continue_bool = emitRow(out_row);
+    }
+
+    return continue_bool;
   }
 
   size_t getNumCols() const override {

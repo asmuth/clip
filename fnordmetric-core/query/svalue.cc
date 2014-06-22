@@ -27,6 +27,17 @@ SValue::SValue(bool bool_value) : type_(T_BOOL) {
   data_.t_bool = bool_value;
 }
 
+SValue::SValue(const SValue& copy) : type_(copy.type_) {
+  switch (type_) {
+    case T_INTEGER:
+      data_.t_integer = copy.data_.t_integer;
+      break;
+    case T_FLOAT:
+      data_.t_float = copy.data_.t_float;
+      break;
+  }
+}
+
 SValue::~SValue() {}
 
 SValue::kSValueType SValue::getType() const {

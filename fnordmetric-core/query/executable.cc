@@ -19,8 +19,23 @@ Executable::~Executable() {}
 SValue* Executable::expr(ASTNode* e) {
   switch (e->getType()) {
 
+    case ASTNode::T_EQ_EXPR:
+      return eqExpr(e);
+
+    case ASTNode::T_AND_EXPR:
+      return andExpr(e);
+
+    case ASTNode::T_OR_EXPR:
+      return orExpr(e);
+
     case ASTNode::T_NEGATE_EXPR:
       return negExpr(e);
+
+    case ASTNode::T_LT_EXPR:
+      return ltExpr(e);
+
+    case ASTNode::T_GT_EXPR:
+      return gtExpr(e);
 
     case ASTNode::T_ADD_EXPR:
       return addExpr(e);
@@ -47,13 +62,96 @@ SValue* Executable::expr(ASTNode* e) {
     case ASTNode::T_RESOLVED_COLUMN:
       assert(e->getResolvedSymbol() >= 0);
       assert(cur_row_->size() > e->getResolvedSymbol());
-      return (*cur_row_)[e->getResolvedSymbol()];
+      return new SValue(*(*cur_row_)[e->getResolvedSymbol()]);
 
     default:
       printf("error: cant execute expression\n");
       e->debugPrint();
       assert(0); // FIXPAUL
   };
+}
+
+SValue* Executable::eqExpr(ASTNode* e) {
+  auto args = e->getChildren();
+  assert(args.size() == 2);
+
+  std::unique_ptr<SValue> lhs(expr(args[0]));
+  std::unique_ptr<SValue> rhs(expr(args[1]));
+
+  if (lhs.get() == nullptr || rhs.get() == nullptr) {
+    return nullptr;
+  }
+
+  switch(lhs->getType()) {
+    case SValue::T_INTEGER:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(lhs->getInteger() == rhs->getInteger());
+        case SValue::T_FLOAT:
+          return new SValue(lhs->getInteger() == rhs->getFloat());
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(lhs->getFloat() == rhs->getInteger());
+        case SValue::T_FLOAT:
+          return new SValue(lhs->getFloat() == rhs->getFloat());
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  assert(0); // FIXPAUL
+}
+
+SValue* Executable::andExpr(ASTNode* e) {
+  auto args = e->getChildren();
+  assert(args.size() == 2);
+
+  std::unique_ptr<SValue> lhs(expr(args[0]));
+  std::unique_ptr<SValue> rhs(expr(args[1]));
+
+  if (lhs.get() == nullptr || rhs.get() == nullptr) {
+    return nullptr;
+  }
+
+  switch(lhs->getType()) {
+    case SValue::T_BOOL:
+      switch(rhs->getType()) {
+        case SValue::T_BOOL:
+          return new SValue(lhs->getBool() && rhs->getBool());
+      }
+  }
+
+  assert(0); // FIXPAUL
+}
+
+SValue* Executable::orExpr(ASTNode* e) {
+  auto args = e->getChildren();
+  assert(args.size() == 2);
+
+  std::unique_ptr<SValue> lhs(expr(args[0]));
+  std::unique_ptr<SValue> rhs(expr(args[1]));
+
+  if (lhs.get() == nullptr || rhs.get() == nullptr) {
+    return nullptr;
+  }
+
+  switch(lhs->getType()) {
+    case SValue::T_BOOL:
+      switch(rhs->getType()) {
+        case SValue::T_BOOL:
+          return new SValue(lhs->getBool() || rhs->getBool());
+      }
+  }
+
+  assert(0); // FIXPAUL
 }
 
 SValue* Executable::negExpr(ASTNode* e) {
@@ -79,6 +177,85 @@ SValue* Executable::negExpr(ASTNode* e) {
 
   assert(0); // FIXPAUL
 }
+
+SValue* Executable::ltExpr(ASTNode* e) {
+  auto args = e->getChildren();
+  assert(args.size() == 2);
+
+  std::unique_ptr<SValue> lhs(expr(args[0]));
+  std::unique_ptr<SValue> rhs(expr(args[1]));
+
+  if (lhs.get() == nullptr || rhs.get() == nullptr) {
+    return nullptr;
+  }
+
+  switch(lhs->getType()) {
+    case SValue::T_INTEGER:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(lhs->getInteger() < rhs->getInteger());
+        case SValue::T_FLOAT:
+          return new SValue(lhs->getInteger() < rhs->getFloat());
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(lhs->getFloat() < rhs->getInteger());
+        case SValue::T_FLOAT:
+          return new SValue(lhs->getFloat() < rhs->getFloat());
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  assert(0); // FIXPAUL
+}
+
+SValue* Executable::gtExpr(ASTNode* e) {
+  auto args = e->getChildren();
+  assert(args.size() == 2);
+
+  std::unique_ptr<SValue> lhs(expr(args[0]));
+  std::unique_ptr<SValue> rhs(expr(args[1]));
+
+  if (lhs.get() == nullptr || rhs.get() == nullptr) {
+    return nullptr;
+  }
+
+  switch(lhs->getType()) {
+    case SValue::T_INTEGER:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(lhs->getInteger() > rhs->getInteger());
+        case SValue::T_FLOAT:
+          return new SValue(lhs->getInteger() > rhs->getFloat());
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          return new SValue(lhs->getFloat() > rhs->getInteger());
+        case SValue::T_FLOAT:
+          return new SValue(lhs->getFloat() > rhs->getFloat());
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  assert(0); // FIXPAUL
+}
+
 
 #define ARITHMETIC_EXPR_IMPL(name, op)                                        \
   SValue* Executable::name(ASTNode* e) {                                      \

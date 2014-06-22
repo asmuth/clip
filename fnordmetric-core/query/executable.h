@@ -47,8 +47,12 @@ protected:
   }
 
   SValue* expr(ASTNode* e);
-
+  SValue* eqExpr(ASTNode* e);
+  SValue* andExpr(ASTNode* e);
+  SValue* orExpr(ASTNode* e);
   SValue* negExpr(ASTNode* e);
+  SValue* gtExpr(ASTNode* e);
+  SValue* ltExpr(ASTNode* e);
   SValue* addExpr(ASTNode* e);
   SValue* subExpr(ASTNode* e);
   SValue* mulExpr(ASTNode* e);
