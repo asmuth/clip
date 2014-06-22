@@ -17,9 +17,6 @@ Executable::Executable() : target_(nullptr) {}
 Executable::~Executable() {}
 
 SValue* Executable::expr(ASTNode* e) {
-  printf("execute expression %p\n", e);
-
-  e->debugPrint(2);
   switch (e->getType()) {
 
     case ASTNode::T_NEGATE_EXPR:
@@ -69,6 +66,8 @@ SValue* Executable::negExpr(ASTNode* e) {
       return new SValue(val->getFloat() * -1.0f);
     case SValue::T_BOOL:
       return new SValue(!val->getBool());
+    default:
+      break;
   }
 
   assert(0); // FIXPAUL
@@ -94,6 +93,8 @@ SValue* Executable::negExpr(ASTNode* e) {
           case SValue::T_FLOAT:                                               \
             return new SValue((double) (                                      \
                 lhs->getInteger() op rhs->getFloat()));                       \
+          default:                                                            \
+            break;                                                            \
         }                                                                     \
         break;                                                                \
       case SValue::T_FLOAT:                                                   \
@@ -104,8 +105,12 @@ SValue* Executable::negExpr(ASTNode* e) {
           case SValue::T_FLOAT:                                               \
             return new SValue((double) (                                      \
                 lhs->getFloat() op rhs->getFloat()));                         \
+          default:                                                            \
+            break;                                                            \
         }                                                                     \
         break;                                                                \
+      default:                                                                \
+        break;                                                               \
     }                                                                         \
                                                                               \
     assert(0);                                                                \
@@ -134,6 +139,8 @@ SValue* Executable::modExpr(ASTNode* e) {
           return new SValue((int64_t) (lhs->getInteger() % rhs->getInteger()));
         case SValue::T_FLOAT:
           return new SValue(fmod(lhs->getInteger(), rhs->getFloat()));
+        default:
+          break;
       }
       break;
     case SValue::T_FLOAT:
@@ -142,7 +149,11 @@ SValue* Executable::modExpr(ASTNode* e) {
           return new SValue(fmod(lhs->getFloat(), rhs->getInteger()));
         case SValue::T_FLOAT:
           return new SValue(fmod(lhs->getFloat(), rhs->getFloat()));
+        default:
+          break;
       }
+      break;
+    default:
       break;
   }
 
@@ -167,6 +178,8 @@ SValue* Executable::powExpr(ASTNode* e) {
           return new SValue((int64_t) pow(lhs->getInteger(), rhs->getInteger()));
         case SValue::T_FLOAT:
           return new SValue((double) pow(lhs->getInteger(), rhs->getFloat()));
+        default:
+          break;
       }
       break;
     case SValue::T_FLOAT:
@@ -175,7 +188,11 @@ SValue* Executable::powExpr(ASTNode* e) {
           return new SValue((double) pow(lhs->getFloat(), rhs->getInteger()));
         case SValue::T_FLOAT:
           return new SValue((double) pow(lhs->getFloat(), rhs->getFloat()));
+        default:
+          break;
       }
+      break;
+    default:
       break;
   }
 

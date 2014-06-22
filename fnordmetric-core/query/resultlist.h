@@ -23,7 +23,25 @@ public:
   ResultList(const ResultList& copy) = delete;
   ResultList& operator=(const ResultList& copy) = delete;
 
+  size_t getNumColumns() const {
+    return columns_.size();
+  }
+
+  size_t getNumRows() const {
+    return rows_.size();
+  }
+
+  const std::vector<std::unique_ptr<SValue>>& getRow(size_t index) const {
+    assert(index < rows_.size());
+    return rows_[index];
+  }
+
+  const std::vector<std::string>& getColumns() const {
+    return columns_;
+  }
+
   void addRow(std::vector<std::unique_ptr<SValue>>&& row) override {
+    assert(row.size() == columns_.size());
     rows_.emplace_back(std::move(row));
   }
 

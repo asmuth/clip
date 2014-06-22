@@ -516,8 +516,22 @@ public:
 
     query->execute();
     const auto& results = query->getResults();
-    results.debugPrint();
-    //assert(results.getNumColumns() == 1);
+    assert(results.getNumColumns() == 6);
+    assert(results.getNumRows() == 1);
+    const auto& cols = results.getColumns();
+    assert(cols[0] == "fnord");
+    assert(cols[1] == "fubar");
+    assert(cols[2] == "baz");
+    assert(cols[3] == "one");
+    assert(cols[4] == "two");
+    assert(cols[5] == "three");
+    const auto& row = results.getRow(0);
+    assert(row[0]->getInteger() == 23);
+    assert(row[1]->getInteger() == 256);
+    assert(row[2]->getInteger() == 21);
+    assert(row[3]->getBool() == true);
+    assert(row[4]->getBool() == false);
+    assert(row[5]->getBool() == true);
   }
 
 };
