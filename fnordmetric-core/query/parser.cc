@@ -282,13 +282,14 @@ ASTNode* Parser::selectSublist() {
 
   derived->appendChild(value_expr);
 
-  if (*cur_token_ == Token::T_AS) {
+  if (consumeIf(Token::T_AS)) {
+    assertExpectation(Token::T_IDENTIFIER);
+  }
+
+  if (*cur_token_ == Token::T_IDENTIFIER) {
+    auto column_name = derived->appendChild(ASTNode::T_COLUMN_NAME);
+    column_name->setToken(cur_token_);
     consumeToken();
-    if (assertExpectation(Token::T_IDENTIFIER)) {
-      auto column_name = derived->appendChild(ASTNode::T_COLUMN_NAME);
-      column_name->setToken(cur_token_);
-      consumeToken();
-    }
   }
 
   return derived;

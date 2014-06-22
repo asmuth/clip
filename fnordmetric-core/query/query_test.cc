@@ -510,7 +510,7 @@ public:
         "    13 + 2 * 5 as fnord,"
         "    2 ^ 2 ^ 3 as fubar,"
         "    13 * (8 % 3) + -5 as baz,"
-        "    true as one,"
+        "    true one,"
         "    !(true) as two,"
         "    NOT NOT true as three;");
 
