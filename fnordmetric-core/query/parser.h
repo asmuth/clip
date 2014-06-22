@@ -65,13 +65,14 @@ public:
 
 protected:
 
+  ASTNode* expr(int precedence = 0);
+  ASTNode* unaryExpr();
+  ASTNode* binaryExpr(ASTNode* lhs, int precedence);
+  ASTNode* methodCall();
+
   ASTNode* selectStatement();
   ASTNode* selectSublist();
-
-  ASTNode* expr(int precedence = 0);
-  ASTNode* exprLHS();
-  ASTNode* methodCall();
-  ASTNode* binaryExpr(ASTNode* lhs, int precedence);
+  ASTNode* tableName();
 
   ASTNode* fromClause();
   ASTNode* whereClause();
@@ -79,8 +80,6 @@ protected:
   ASTNode* havingClause();
   ASTNode* orderByClause();
   ASTNode* limitClause();
-
-  ASTNode* tableName();
 
   ASTNode* eqExpr(ASTNode* lhs, int precedence);
   ASTNode* neqExpr(ASTNode* lhs, int precedence);

@@ -32,7 +32,7 @@ size_t Parser::parse(const char* query, size_t len) {
 }
 
 ASTNode* Parser::expr(int precedence /* = 0 */) {
-  auto lhs = exprLHS();
+  auto lhs = unaryExpr();
 
   if (lhs == nullptr) {
     return nullptr;
@@ -48,7 +48,7 @@ ASTNode* Parser::expr(int precedence /* = 0 */) {
   }
 }
 
-ASTNode* Parser::exprLHS() {
+ASTNode* Parser::unaryExpr() {
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
