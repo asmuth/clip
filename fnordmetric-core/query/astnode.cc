@@ -12,7 +12,10 @@
 namespace fnordmetric {
 namespace query {
 
-ASTNode::ASTNode(kASTNodeType type) : type_(type), token_(nullptr) {}
+ASTNode::ASTNode(kASTNodeType type) :
+    type_(type),
+    token_(nullptr),
+    resolved_(-1) {}
 
 bool ASTNode::operator==(kASTNodeType type) const {
   return type_ == type;
@@ -42,6 +45,18 @@ const Token* ASTNode::getToken() const {
 
 ASTNode::kASTNodeType ASTNode::getType() const {
   return type_;
+}
+
+void ASTNode::setType(kASTNodeType type) {
+  type_ = type;
+}
+
+uint64_t ASTNode::getResolvedSymbol() const {
+  return resolved_;
+}
+
+void ASTNode::setResolvedSymbol(uint64_t resolved) {
+  resolved_ = resolved;
 }
 
 ASTNode* ASTNode::deepCopy() const {

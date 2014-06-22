@@ -15,6 +15,8 @@
 #include "tokenize.h"
 #include "query.h"
 #include "executable.h"
+#include "tableref.h"
+#include "tablerepository.h"
 
 namespace fnordmetric {
 namespace query {
@@ -47,6 +49,7 @@ public:
     testLimitOffsetClause();
     testComplexQueries();
     testSelectOnlyQuery();
+    testSimpleTableScanQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -201,7 +204,7 @@ public:
     assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
     assert(*expr->getChildren()[1]->getToken() == "5.123");
     auto col_name = derived->getChildren()[1];
-    assert(*col_name == ASTNode::T_COLUMN_NAME);
+    assert(*col_name == ASTNode::T_COLUMN_ALIAS);
     assert(*col_name->getToken() == Token::T_IDENTIFIER);
     assert(*col_name->getToken() == "fucol");
     const auto& from = stmt->getChildren()[1];
@@ -259,7 +262,7 @@ public:
     assert(*derived->getChildren()[0] == ASTNode::T_COLUMN_NAME);
     assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[0]->getToken() == "somecol");
-    assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_NAME);
+    assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_ALIAS);
     assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[1]->getToken() == "another");
     const auto& from = stmt->getChildren()[1];
@@ -290,7 +293,7 @@ public:
     assert(*derived->getChildren()[0] == ASTNode::T_TABLE_NAME);
     assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[0]->getToken() == "tbl");
-    assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_NAME);
+    assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_ALIAS);
     assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
     assert(*derived->getChildren()[1]->getToken() == "another");
     const auto& from = stmt->getChildren()[1];
@@ -505,16 +508,105 @@ public:
   }
 
   void testSelectOnlyQuery() {
-    auto query = Query::parse(
+    TableRepository repo;
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
         "  SELECT"
         "    13 + 2 * 5 as fnord,"
         "    2 ^ 2 ^ 3 as fubar,"
         "    13 * (8 % 3) + -5 as baz,"
         "    true one,"
         "    !(true) as two,"
-        "    NOT NOT true as three;");
+        "    NOT NOT true as three;",
+        &repo,
+        &dst);
 
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
     query->execute();
+    const auto& results = query->getResults();
+    assert(results.getNumColumns() == 6);
+    assert(results.getNumRows() == 1);
+    const auto& cols = results.getColumns();
+    assert(cols[0] == "fnord");
+    assert(cols[1] == "fubar");
+    assert(cols[2] == "baz");
+    assert(cols[3] == "one");
+    assert(cols[4] == "two");
+    assert(cols[5] == "three");
+    const auto& row = results.getRow(0);
+    assert(row[0]->getInteger() == 23);
+    assert(row[1]->getInteger() == 256);
+    assert(row[2]->getInteger() == 21);
+    assert(row[3]->getBool() == true);
+    assert(row[4]->getBool() == false);
+    assert(row[5]->getBool() == true);
+  }
+
+  class TestTableRef : public TableRef {
+    int getColumnIndex(const std::string& name) override {
+      if (name == "one") return 0;
+      if (name == "two") return 1;
+      if (name == "three") return 2;
+      return -1;
+    }
+  };
+
+  void testSimpleTableScanQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTableRef()));
+
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT one, two FROM testtable",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
+    const auto& results = query->getResults();
+    assert(results.getNumColumns() == 6);
+    assert(results.getNumRows() == 1);
+    const auto& cols = results.getColumns();
+    assert(cols[0] == "fnord");
+    assert(cols[1] == "fubar");
+    assert(cols[2] == "baz");
+    assert(cols[3] == "one");
+    assert(cols[4] == "two");
+    assert(cols[5] == "three");
+    const auto& row = results.getRow(0);
+    assert(row[0]->getInteger() == 23);
+    assert(row[1]->getInteger() == 256);
+    assert(row[2]->getInteger() == 21);
+    assert(row[3]->getBool() == true);
+    assert(row[4]->getBool() == false);
+    assert(row[5]->getBool() == true);
+  }
+
+  void testTableScanWhereQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTableRef()));
+
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT"
+        "    one + 1 as fnord,"
+        "    two"
+        "  FROM"
+        "    testtable"
+        "  WHERE"
+        "    one > two or one = 3;",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
     const auto& results = query->getResults();
     assert(results.getNumColumns() == 6);
     assert(results.getNumRows() == 1);

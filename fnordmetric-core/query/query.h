@@ -14,10 +14,14 @@
 
 namespace fnordmetric {
 namespace query {
+class TableRepository;
 
 class Query {
 public:
-  static std::unique_ptr<Query> parse(const char* query_string);
+  static bool parse(
+      const char* query_string,
+      TableRepository* repo,
+      std::vector<std::unique_ptr<Query>>* destination);
 
   explicit Query(std::unique_ptr<Executable>&& executable);
   Query(const Query& copy) = delete;

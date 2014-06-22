@@ -11,18 +11,30 @@
 #include "parser.h"
 #include "planner.h"
 #include "executable.h"
+#include "tablerepository.h"
 
 namespace fnordmetric {
 namespace query {
 
-std::unique_ptr<Query> Query::parse(const char* query_string) {
+bool Query::parse(
+    const char* query_string,
+    TableRepository* repo,
+    std::vector<std::unique_ptr<Query>>* destination) {
   Parser parser;
   parser.parse(query_string, strlen(query_string));
-  //parser.debugPrint();
 
-  Planner plan(parser.getStatements()[0]); // FIXPAUL
-  auto query = new Query(plan.getExecutable()); 
-  return std::unique_ptr<Query>(query);
+  for (auto stmt : parser.getStatements()) {
+    auto query_plan = planQuery(stmt, repo);
+
+    if (query_plan == nullptr) {
+      return false;
+    }
+
+    destination->emplace_back(
+        new Query(std::unique_ptr<Executable>(query_plan)));
+  }
+
+  return true;
 }
 
 Query::Query(std::unique_ptr<Executable>&& executable) :

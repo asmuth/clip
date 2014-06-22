@@ -32,14 +32,17 @@ public:
     for (auto col : select_list->getChildren()) {
       assert(*col == ASTNode::T_DERIVED_COLUMN); // FIXPAUL
       auto derived = col->getChildren();
-      assert(derived.size() == 2); // FIXPAUL
+
+      expressions.emplace_back(derived[0]->deepCopy());
 
       if (derived.size() == 2) {
-        assert(*derived[1] == ASTNode::T_COLUMN_NAME); // FIXPAUL
+        assert(*derived[1] == ASTNode::T_COLUMN_ALIAS);
         auto colname_token = derived[1]->getToken();
         assert(colname_token && *colname_token == Token::T_IDENTIFIER);
         columns.emplace_back(colname_token->getString());
-        expressions.emplace_back(derived[0]->deepCopy());
+      } else {
+
+        columns.emplace_back("unnamed");
       }
     }
 

@@ -287,7 +287,7 @@ ASTNode* Parser::selectSublist() {
   }
 
   if (*cur_token_ == Token::T_IDENTIFIER) {
-    auto column_name = derived->appendChild(ASTNode::T_COLUMN_NAME);
+    auto column_name = derived->appendChild(ASTNode::T_COLUMN_ALIAS);
     column_name->setToken(cur_token_);
     consumeToken();
   }

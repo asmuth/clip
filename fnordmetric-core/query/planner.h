@@ -16,19 +16,9 @@
 namespace fnordmetric {
 namespace query {
 class Executable;
+class TableRepository;
 
-class Planner {
-public:
-  Planner(ASTNode* select_statement);
-  Planner(const Planner& copy) = delete;
-  Planner& operator=(const Planner& copy) = delete;
-  std::unique_ptr<Executable> getExecutable();
-
-protected:
-  Executable* plan(ASTNode*);
-  Executable* planTablelessSelect(ASTNode*);
-  Executable* executable_;
-};
+Executable* planQuery(ASTNode* select_statement, TableRepository* repo);
 
 }
 }
