@@ -26,20 +26,20 @@ size_t Parser::parse(const char* query, size_t len) {
 
   cur_token_ = token_list_.data();
   token_list_end_ = cur_token_ + token_list_.size();
-  readSelect();
+  root_.appendChild(selectStatement());
 
   return errors_.size() == 0;
 }
 
-ASTNode* Parser::readValueExpression(int precedence /* = 0 */) {
-  auto lhs = readLHSExpression();
+ASTNode* Parser::expr(int precedence /* = 0 */) {
+  auto lhs = exprLHS();
 
   if (lhs == nullptr) {
     return nullptr;
   }
 
   for (;;) {
-    auto expr = readBinaryExpression(lhs, precedence);
+    auto expr = binaryExpr(lhs, precedence);
     if (expr == nullptr) {
       return lhs;
     } else {
@@ -48,17 +48,17 @@ ASTNode* Parser::readValueExpression(int precedence /* = 0 */) {
   }
 }
 
-ASTNode* Parser::readLHSExpression() {
+ASTNode* Parser::exprLHS() {
   switch (cur_token_->getType()) {
 
     /* parenthesized value expression */
     case Token::T_LPAREN: {
       consumeToken();
-      auto expr = readValueExpression();
+      auto e = expr();
       if (assertExpectation(Token::T_RPAREN)) {
         consumeToken();
       }
-      return expr;
+      return e;
     }
 
     /* prefix ~ ? */
@@ -68,9 +68,9 @@ ASTNode* Parser::readLHSExpression() {
     case Token::T_MINUS:
     case Token::T_NOT: {
       consumeToken();
-      auto expr = new ASTNode(ASTNode::T_NEGATE_EXPR);
-      expr->appendChild(readValueExpression());
-      return expr;
+      auto e = new ASTNode(ASTNode::T_NEGATE_EXPR);
+      e->appendChild(expr());
+      return e;
     }
 
     /* literal expression */
@@ -78,10 +78,10 @@ ASTNode* Parser::readLHSExpression() {
     case Token::T_FALSE:
     case Token::T_NUMERIC:
     case Token::T_STRING: {
-      auto expr = new ASTNode(ASTNode::T_LITERAL);
-      expr->setToken(cur_token_);
+      auto e = new ASTNode(ASTNode::T_LITERAL);
+      e->setToken(cur_token_);
       consumeToken();
-      return expr;
+      return e;
     }
 
     case Token::T_IDENTIFIER: {
@@ -103,7 +103,7 @@ ASTNode* Parser::readLHSExpression() {
       }
 
       if (lookahead(1, Token::T_LPAREN)) {
-        return readMethodCall();
+        return methodCall();
       }
 
       /* simple column name */
@@ -119,21 +119,21 @@ ASTNode* Parser::readLHSExpression() {
   }
 }
 
-ASTNode* Parser::readMethodCall() {
-  auto expr = new ASTNode(ASTNode::T_METHOD_CALL);
-  expr->setToken(consumeToken());
+ASTNode* Parser::methodCall() {
+  auto e = new ASTNode(ASTNode::T_METHOD_CALL);
+  e->setToken(consumeToken());
 
   /* read arguments */
   do {
     consumeToken();
-    expr->appendChild(readValueExpression());
+    e->appendChild(expr());
   } while (*cur_token_ == Token::T_COMMA);
 
   expectAndConsume(Token::T_RPAREN);
-  return expr;
+  return e;
 }
 
-ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
+ASTNode* Parser::binaryExpr(ASTNode* lhs, int precedence) {
   switch (cur_token_->getType()) {
 
     /* euqals expression */
@@ -182,14 +182,15 @@ ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
   }
 }
 
-void Parser::readSelect() {
+ASTNode* Parser::selectStatement() {
   /* SELECT */
-  auto select = root_.appendChild(ASTNode::T_SELECT);
   if (!assertExpectation(Token::T_SELECT)) {
-    return;
+    return nullptr;
   } else {
     consumeToken();
   }
+
+  auto select = new ASTNode(ASTNode::T_SELECT);
 
   /* DISTINCT/ALL */
   // FIXPAUL read SET_QUANTIFIER (distinct, all...)
@@ -201,7 +202,7 @@ void Parser::readSelect() {
     consumeToken();
   } else {
     for (;;) {
-      readSelectSublist(select_list);
+      select_list->appendChild(selectSublist());
 
       if (*cur_token_ == Token::T_COMMA) {
         consumeToken();
@@ -212,7 +213,7 @@ void Parser::readSelect() {
   }
 
   if (*cur_token_ == Token::T_SEMICOLON) {
-    return;
+    return select;
   }
 
   /* FROM clause */
@@ -247,28 +248,29 @@ void Parser::readSelect() {
   if (limit != nullptr) {
     select->appendChild(limit);
   }
+
+  return select;
 }
 
-void Parser::readSelectSublist(ASTNode* select_list) {
+ASTNode* Parser::selectSublist() {
   /* table_name.* */
-  if (cur_token_ + 3 < token_list_end_ &&
-      cur_token_[0] == Token::T_IDENTIFIER &&
-      cur_token_[1] == Token::T_DOT &&
-      cur_token_[2] == Token::T_ASTERISK) {
-    auto select_all = select_list->appendChild(ASTNode::T_ALL);
+  if (lookahead(0, Token::T_IDENTIFIER) &&
+      lookahead(1, Token::T_DOT) &&
+      lookahead(2, Token::T_ASTERISK)) {
+    auto select_all = new ASTNode(ASTNode::T_ALL);
     select_all->setToken(cur_token_);
     cur_token_ += 3;
-    return;
+    return select_all;
   }
 
   /* derived_col AS col_name */
-  auto derived = select_list->appendChild(ASTNode::T_DERIVED_COLUMN);
-  auto value_expr = readValueExpression();
+  auto derived = new ASTNode(ASTNode::T_DERIVED_COLUMN);
+  auto value_expr = expr();
 
   if (value_expr == nullptr) {
     addError(ERR_UNEXPECTED_TOKEN, "expected value expression");
-    // free value_expr
-    return;
+    delete derived;
+    return nullptr;
   }
 
   derived->appendChild(value_expr);
@@ -281,6 +283,8 @@ void Parser::readSelectSublist(ASTNode* select_list) {
       consumeToken();
     }
   }
+
+  return derived;
 }
 
 ASTNode* Parser::fromClause() {
@@ -304,7 +308,7 @@ ASTNode* Parser::whereClause() {
   }
 
   auto clause = new ASTNode(ASTNode::T_WHERE);
-  clause->appendChild(readValueExpression());
+  clause->appendChild(expr());
   return clause;
 }
 
@@ -318,7 +322,7 @@ ASTNode* Parser::groupByClause() {
   auto clause = new ASTNode(ASTNode::T_GROUP_BY);
 
   do {
-    clause->appendChild(readValueExpression());
+    clause->appendChild(expr());
   } while (consumeIf(Token::T_COMMA));
 
   return clause;
@@ -330,7 +334,7 @@ ASTNode* Parser::havingClause() {
   }
 
   auto clause = new ASTNode(ASTNode::T_HAVING);
-  clause->appendChild(readValueExpression());
+  clause->appendChild(expr());
   return clause;
 }
 
@@ -345,15 +349,14 @@ ASTNode* Parser::orderByClause() {
 
   do {
     auto spec = clause->appendChild(ASTNode::T_SORT_SPEC);
-    spec->appendChild(readValueExpression());
+    spec->appendChild(expr());
     switch (cur_token_->getType()) {
       case Token::T_ASC:
       case Token::T_DESC:
         spec->setToken(consumeToken());
         break;
       default:
-        printf("!!!\n");
-        return nullptr; // fixpaul add error and free clause
+        break;
     }
   } while (consumeIf(Token::T_COMMA));
 
@@ -400,10 +403,10 @@ ASTNode* Parser::eqExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_EQ_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(6));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_EQ_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(6));
+  return e;
 }
 
 ASTNode* Parser::andExpr(ASTNode* lhs, int precedence) {
@@ -413,10 +416,10 @@ ASTNode* Parser::andExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_AND_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(3));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_AND_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(3));
+  return e;
 }
 
 ASTNode* Parser::orExpr(ASTNode* lhs, int precedence) {
@@ -426,10 +429,10 @@ ASTNode* Parser::orExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_OR_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(1));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_OR_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(1));
+  return e;
 }
 
 ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
@@ -439,10 +442,10 @@ ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_ADD_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(10));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_ADD_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(10));
+  return e;
 }
 
 ASTNode* Parser::subExpr(ASTNode* lhs, int precedence) {
@@ -452,10 +455,10 @@ ASTNode* Parser::subExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_SUB_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(10));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_SUB_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(10));
+  return e;
 }
 
 ASTNode* Parser::mulExpr(ASTNode* lhs, int precedence) {
@@ -465,10 +468,10 @@ ASTNode* Parser::mulExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_MUL_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(11));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_MUL_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(11));
+  return e;
 }
 
 ASTNode* Parser::divExpr(ASTNode* lhs, int precedence) {
@@ -478,10 +481,10 @@ ASTNode* Parser::divExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_DIV_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(11));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_DIV_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(11));
+  return e;
 }
 
 ASTNode* Parser::modExpr(ASTNode* lhs, int precedence) {
@@ -491,10 +494,10 @@ ASTNode* Parser::modExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_MOD_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(11));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_MOD_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(11));
+  return e;
 }
 
 ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
@@ -504,10 +507,10 @@ ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
-  auto expr = new ASTNode(ASTNode::T_POW_EXPR);
-  expr->appendChild(lhs);
-  expr->appendChild(readValueExpression(11));
-  return expr;
+  auto e = new ASTNode(ASTNode::T_POW_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(expr(11));
+  return e;
 }
 
 bool Parser::assertExpectation(Token::kTokenType expectation) {

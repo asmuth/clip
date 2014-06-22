@@ -65,12 +65,13 @@ public:
 
 protected:
 
-  void readSelect();
-  void readSelectSublist(ASTNode* select_node);
-  ASTNode* readValueExpression(int precedence = 0);
-  ASTNode* readLHSExpression();
-  ASTNode* readMethodCall();
-  ASTNode* readBinaryExpression(ASTNode* lhs, int precedence);
+  ASTNode* selectStatement();
+  ASTNode* selectSublist();
+
+  ASTNode* expr(int precedence = 0);
+  ASTNode* exprLHS();
+  ASTNode* methodCall();
+  ASTNode* binaryExpr(ASTNode* lhs, int precedence);
 
   ASTNode* fromClause();
   ASTNode* whereClause();
