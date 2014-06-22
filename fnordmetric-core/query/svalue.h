@@ -29,39 +29,14 @@ public:
   explicit SValue(const char* str_value, size_t len, bool copy);
   SValue(const SValue& copy);
   SValue& operator=(const SValue& copy) = delete;
+  ~SValue();
 
-  ~SValue() {
-  }
+  kSValueType getType() const;
+  int64_t getInteger() const;
+  double getFloat() const;
+  std::string toString() const;
 
-  static SValue* fromToken(const Token* token) {
-    switch (token->getType()) {
-
-      case Token::T_NUMERIC: {
-        if (token->isDouble()) {
-          return new SValue(token->getDouble());
-        } else {
-          return new SValue(token->getInteger());
-        }
-      }
-
-      default:
-        return nullptr;
-
-    }
-  }
-
-  kSValueType getType() const {
-    return type_;
-  }
-
-  int64_t getInteger() const {
-    assert(type_ == T_INTEGER);
-    return data_.t_integer;
-  }
-
-  std::string toString() const {
-    return "blah";
-  }
+  static SValue* fromToken(const Token* token);
 
 protected:
   kSValueType type_;
