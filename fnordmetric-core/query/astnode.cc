@@ -73,14 +73,23 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
     case T_TABLE_NAME:
       printf("- TABLE_NAME");
       break;
-    case T_VALUE_EXPR:
-      printf("- VALUE_EXPR");
-      break;
     case T_LITERAL:
       printf("- LITERAL");
       break;
     case T_NEGATE_EXPR:
       printf("- NEGATE_EXPR");
+      break;
+    case T_EQ_EXPR:
+      printf("- EQ_EXPR");
+      break;
+    case T_NEQ_EXPR:
+      printf("- NEQ_EXPR");
+      break;
+    case T_AND_EXPR:
+      printf("- AND_EXPR");
+      break;
+    case T_OR_EXPR:
+      printf("- OR_EXPR");
       break;
     case T_ADD_EXPR:
       printf("- ADD_EXPR");

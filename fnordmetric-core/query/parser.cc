@@ -136,6 +136,18 @@ ASTNode* Parser::readMethodCall() {
 ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
   switch (cur_token_->getType()) {
 
+    /* euqals expression */
+    case Token::T_EQUAL:
+      return eqExpr(lhs, precedence);
+
+    /* and expression */
+    case Token::T_AND:
+      return andExpr(lhs, precedence);
+
+    /* or expression */
+    case Token::T_OR:
+      return orExpr(lhs, precedence);
+
     /* add expression */
     case Token::T_PLUS:
       return addExpr(lhs, precedence);
@@ -162,7 +174,7 @@ ASTNode* Parser::readBinaryExpression(ASTNode* lhs, int precedence) {
     case Token::T_CIRCUMFLEX:
       return powExpr(lhs, precedence);
 
-    // FIXPAUL: lshift, rshift, ampersand, pipe, tilde
+    // FIXPAUL: lshift, rshift, ampersand, pipe, tilde, noq, and, or
 
     default:
       return nullptr;
@@ -282,6 +294,44 @@ ASTNode* Parser::tableName() {
   return name;
 }
 
+ASTNode* Parser::eqExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 6) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto expr = new ASTNode(ASTNode::T_EQ_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(readValueExpression(6));
+  return expr;
+}
+
+ASTNode* Parser::andExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 3) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto expr = new ASTNode(ASTNode::T_AND_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(readValueExpression(3));
+  return expr;
+}
+
+ASTNode* Parser::orExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 1) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto expr = new ASTNode(ASTNode::T_OR_EXPR);
+  expr->appendChild(lhs);
+  expr->appendChild(readValueExpression(1));
+  return expr;
+}
 
 ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
   if (precedence < 10) {

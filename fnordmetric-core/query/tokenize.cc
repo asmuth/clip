@@ -241,6 +241,16 @@ next:
     goto next;
   }
 
+  if (token == "AND") {
+    token_list->emplace_back(Token::T_AND);
+    goto next;
+  }
+
+  if (token == "OR") {
+    token_list->emplace_back(Token::T_OR);
+    goto next;
+  }
+
   if (token == "DIV") {
     token_list->emplace_back(Token::T_DIV);
     goto next;

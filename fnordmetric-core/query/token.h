@@ -28,6 +28,8 @@ public:
     T_SEMICOLON,
     T_LPAREN,
     T_RPAREN,
+    T_AND,
+    T_OR,
     T_EQUAL,
     T_PLUS,
     T_MINUS,

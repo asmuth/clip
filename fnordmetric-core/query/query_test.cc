@@ -316,7 +316,7 @@ public:
   }
 
   void testWhereClause() {
-    auto parser = parseTestQuery("SELECT x FROM t WHERE a=1;");
+    auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
     parser.debugPrint();
     assert(parser.getErrors().size() == 0);
     assert(parser.getStatements().size() == 1);
@@ -324,6 +324,8 @@ public:
     assert(stmt->getChildren().size() == 3);
     const auto& where = stmt->getChildren()[2];
     assert(*where == ASTNode::T_WHERE);
+    assert(where->getChildren().size() == 1);
+    assert(*where->getChildren()[0] == ASTNode::T_OR_EXPR);
   }
 
   void testTokenizerEscaping() {

@@ -72,6 +72,11 @@ protected:
   ASTNode* whereClause();
   ASTNode* tableName();
 
+  ASTNode* eqExpr(ASTNode* lhs, int precedence);
+  ASTNode* neqExpr(ASTNode* lhs, int precedence);
+  ASTNode* andExpr(ASTNode* lhs, int precedence);
+  ASTNode* orExpr(ASTNode* lhs, int precedence);
+
   ASTNode* addExpr(ASTNode* lhs, int precedence);
   ASTNode* subExpr(ASTNode* lhs, int precedence);
   ASTNode* mulExpr(ASTNode* lhs, int precedence);

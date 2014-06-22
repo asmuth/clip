@@ -19,22 +19,28 @@ class ASTNode {
 public:
   enum kASTNodeType {
     T_ROOT,
+
+    T_LITERAL,
+    T_METHOD_CALL,
+    T_COLUMN_NAME,
+    T_TABLE_NAME,
+    T_DERIVED_COLUMN,
+
     T_SELECT,
     T_SELECT_LIST,
     T_ALL,
-    T_DERIVED_COLUMN,
     T_FROM,
     T_WHERE,
-    T_COLUMN_NAME,
-    T_TABLE_NAME,
-    T_VALUE_EXPR,
+
+    T_EQ_EXPR,
+    T_NEQ_EXPR,
+    T_AND_EXPR,
+    T_OR_EXPR,
     T_NEGATE_EXPR,
     T_ADD_EXPR,
     T_SUB_EXPR,
     T_MUL_EXPR,
     T_DIV_EXPR,
-    T_LITERAL,
-    T_METHOD_CALL,
     T_MOD_EXPR,
     T_POW_EXPR,
   };
