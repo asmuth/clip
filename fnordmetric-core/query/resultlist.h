@@ -40,9 +40,13 @@ public:
     return columns_;
   }
 
-  bool nextRow(std::vector<SValue*> row) override {
-    assert(row.size() == columns_.size());
-    rows_.emplace_back(std::move(row));
+  bool nextRow(SValue* row, int row_len) override {
+    assert(row_len == columns_.size());
+    std::vector<SValue*> row_vec;
+    for (int i = 0; i < row_len; ++i) {
+      row_vec.push_back(row + i);
+    }
+    rows_.emplace_back(row_vec);
     return true;
   }
 

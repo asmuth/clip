@@ -15,11 +15,6 @@ namespace query {
 class SymbolTableEntry;
 class SValue;
 
-struct ResolvedSymbol {
-  SValue* (*call_)(void**, int, SValue**);
-  void* scratchpad;
-};
-
 void registerSymbol(const std::string& symbol, const SymbolTableEntry* entry);
 const SymbolTableEntry* lookupSymbol(const std::string& symbol);
 
@@ -28,17 +23,18 @@ public:
 
   SymbolTableEntry(
       const std::string& symbol,
-      SValue* (*method)(void**, int, SValue**),
+      void (*method)(void**, int, SValue*, SValue*),
       bool is_aggregate);
 
-  inline SValue* call(void** scratchpad, int argc, SValue** argv) const {
-    call_(scratchpad, argc, argv);
+  inline void call(void** scratchpad, int argc, SValue* argv, SValue* out) const {
+    call_(scratchpad, argc, argv, out);
   }
 
   bool isAggregate() const;
+  void (*getFnPtr() const)(void**, int, SValue*, SValue*);
 
 protected:
-  SValue* (*call_)(void**, int, SValue**);
+  void (*call_)(void**, int, SValue*, SValue*);
   const bool is_aggregate_;
 };
 

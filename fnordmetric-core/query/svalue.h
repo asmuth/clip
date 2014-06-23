@@ -32,7 +32,7 @@ public:
   explicit SValue(bool bool_value);
   explicit SValue(const char* str_value, size_t len, bool copy);
   SValue(const SValue& copy);
-  SValue& operator=(const SValue& copy) = delete;
+  SValue& operator=(const SValue& copy);
   ~SValue();
 
   static std::string makeUniqueKey(const std::vector<SValue*>& arr, size_t len);

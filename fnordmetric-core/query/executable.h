@@ -19,7 +19,7 @@ namespace query {
 
 class RowSink {
 public:
-  virtual bool nextRow(std::vector<SValue*> row) = 0;
+  virtual bool nextRow(SValue* row, int row_len) = 0;
 };
 
 class Executable : public RowSink {
@@ -41,9 +41,9 @@ protected:
     cur_row_ = row;
   }
 
-  bool emitRow(std::vector<SValue*> row) {
+  bool emitRow(SValue* row, int row_len) {
     assert(target_ != nullptr);
-    return target_->nextRow(row);
+    return target_->nextRow(row, row_len);
   }
 
   SValue* expr(ASTNode* e);

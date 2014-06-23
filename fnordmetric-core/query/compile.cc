@@ -14,7 +14,7 @@
 namespace fnordmetric {
 namespace query {
 
-Instruction* compileAST(ASTNode* ast) {
+CompiledExpression* compileAST(ASTNode* ast) {
   switch (ast->getType()) {
 
     case ASTNode::T_SELECT_LIST:
@@ -72,11 +72,12 @@ Instruction* compileAST(ASTNode* ast) {
 }
 
 
-Instruction* compileSelectList(ASTNode* select_list) {
-  auto root = new Instruction();
+CompiledExpression* compileSelectList(ASTNode* select_list) {
+  auto root = new CompiledExpression();
   root->type = X_MULTI;
-  root->call_ = nullptr;
+  root->call = nullptr;
   root->arg0 = nullptr;
+  root->next  = nullptr;
 
   auto cur = &root->child;
   for (auto col : select_list->getChildren()) {
@@ -90,9 +91,18 @@ Instruction* compileSelectList(ASTNode* select_list) {
   return root;
 }
 
-Instruction* compileOperator(const std::string& name, ASTNode* ast) {
-  auto op = new Instruction();
+CompiledExpression* compileOperator(const std::string& name, ASTNode* ast) {
+  auto symbol = lookupSymbol(name);
+  ast->debugPrint();
+  printf("%s'''\n", name.c_str());
+  assert(symbol != nullptr);
+
+  auto op = new CompiledExpression();
   op->type = X_CALL;
+  op->call = symbol->getFnPtr();
+  op->arg0 = nullptr;
+  op->child = nullptr;
+  op->next  = nullptr;
 
   auto cur = &op->child;
   for (auto e : ast->getChildren()) {
@@ -104,11 +114,14 @@ Instruction* compileOperator(const std::string& name, ASTNode* ast) {
   return op;
 }
 
-Instruction* compileLiteral(ASTNode* ast) {
+CompiledExpression* compileLiteral(ASTNode* ast) {
   assert(ast->getToken() != nullptr);
-  auto ins = new Instruction();
+  auto ins = new CompiledExpression();
   ins->type = X_LITERAL;
+  ins->call = nullptr;
   ins->arg0 = SValue::fromToken(ast->getToken());
+  ins->child = nullptr;
+  ins->next  = nullptr;
   return ins;
 }
 

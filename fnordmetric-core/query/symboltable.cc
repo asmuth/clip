@@ -28,7 +28,7 @@ const SymbolTableEntry* lookupSymbol(const std::string& symbol) {
 
 SymbolTableEntry::SymbolTableEntry(
     const std::string& symbol,
-    SValue* (*method)(void**, int, SValue**),
+    void (*method)(void**, int, SValue*, SValue*),
     bool is_aggregate) :
     call_(method),
     is_aggregate_(is_aggregate) {
@@ -38,6 +38,10 @@ SymbolTableEntry::SymbolTableEntry(
 
 bool SymbolTableEntry::isAggregate() const {
   return is_aggregate_;
+}
+
+void (*SymbolTableEntry::getFnPtr() const)(void**, int, SValue*, SValue*) {
+  return call_;
 }
 
 }

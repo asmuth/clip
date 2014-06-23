@@ -39,6 +39,10 @@ SValue::SValue(const SValue& copy) {
   memcpy(&data_, &copy.data_, sizeof(data_));
 }
 
+SValue& SValue::operator=(const SValue& copy) {
+  memcpy(&data_, &copy.data_, sizeof(data_));
+}
+
 SValue::~SValue() {}
 
 SValue::kSValueType SValue::getType() const {

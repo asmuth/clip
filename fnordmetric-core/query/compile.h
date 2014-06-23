@@ -14,25 +14,25 @@ namespace query {
 class ASTNode;
 class SValue;
 
-enum kInstructionType {
+enum kCompiledExpressionType {
   X_CALL,
   X_LITERAL,
   X_INPUT,
   X_MULTI
 };
 
-struct Instruction {
-  kInstructionType type;
-  SValue* (*call_)(void**, int, SValue**);
+struct CompiledExpression {
+  kCompiledExpressionType type;
+  void (*call)(void**, int, SValue*, SValue*);
   void* arg0;
-  Instruction* next;
-  Instruction* child;
+  CompiledExpression* next;
+  CompiledExpression* child;
 };
 
-Instruction* compileAST(ASTNode* ast);
-Instruction* compileSelectList(ASTNode* select_list);
-Instruction* compileOperator(const std::string& name, ASTNode* ast);
-Instruction* compileLiteral(ASTNode* ast);
+CompiledExpression* compileAST(ASTNode* ast);
+CompiledExpression* compileSelectList(ASTNode* select_list);
+CompiledExpression* compileOperator(const std::string& name, ASTNode* ast);
+CompiledExpression* compileLiteral(ASTNode* ast);
 
 }
 }

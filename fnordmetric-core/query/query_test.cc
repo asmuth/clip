@@ -563,11 +563,11 @@ public:
       int64_t one = 0;
       int64_t two = 100;
       for (int i = two; i > 0; --i) {
-        std::vector<SValue*> row;
-        row.emplace_back(new SValue(++one));
-        row.emplace_back(new SValue(two--));
-        row.emplace_back(new SValue((int64_t) (i % 2 ? 10 : 20)));
-        if (!scan->nextRow(row)) {
+        std::vector<SValue> row;
+        row.emplace_back(SValue(++one));
+        row.emplace_back(SValue(two--));
+        row.emplace_back(SValue((int64_t) (i % 2 ? 10 : 20)));
+        if (!scan->nextRow(row.data(), row.size())) {
           return;
         }
       }
@@ -583,11 +583,11 @@ public:
     }
     void executeScan(TableScan* scan) override {
       for (int i = 10; i > 0; --i) {
-        std::vector<SValue*> row;
-        row.emplace_back(new SValue((int64_t) i));
-        row.emplace_back(new SValue((int64_t) (i * 2)));
-        row.emplace_back(new SValue((int64_t) (i % 2 ? 100 : 200)));
-        if (!scan->nextRow(row)) {
+        std::vector<SValue> row;
+        row.emplace_back(SValue((int64_t) i));
+        row.emplace_back(SValue((int64_t) (i * 2)));
+        row.emplace_back(SValue((int64_t) (i % 2 ? 100 : 200)));
+        if (!scan->nextRow(row.data(), row.size())) {
           return;
         }
       }

@@ -123,7 +123,8 @@ public:
     tbl_ref_->executeScan(this);
   }
 
-  bool nextRow(std::vector<SValue*> row) override {
+  bool nextRow(SValue* row, int row_len) override {
+    /*
     setCurrentRow(&row);
     std::vector<SValue*> out_row;
 
@@ -145,6 +146,7 @@ public:
     }
 
     return continue_bool;
+    */
   }
 
   size_t getNumCols() const override {

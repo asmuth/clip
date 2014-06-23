@@ -11,7 +11,7 @@
 namespace fnordmetric {
 namespace query {
 
-static SValue* countExpr(void** scratchpad, int argc, SValue** argv) {
+static void countExpr(void** scratchpad, int argc, SValue** argv, SValue* out) {
 
 }
 

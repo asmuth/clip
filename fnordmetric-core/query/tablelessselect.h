@@ -14,6 +14,7 @@
 #include "astnode.h"
 #include "executable.h"
 #include "compile.h"
+#include "execute.h"
 
 namespace fnordmetric {
 namespace query {
@@ -27,52 +28,47 @@ public:
     }
 
     auto select_list = ast->getChildren()[0];
-    std::vector<std::string> columns;
-    std::vector<std::unique_ptr<ASTNode>> expressions;
-
     auto expr = compileAST(select_list);
-    assert(0);
+
+    /* column names */
+    std::vector<std::string> column_names;
     for (auto col : select_list->getChildren()) {
       assert(*col == ASTNode::T_DERIVED_COLUMN); // FIXPAUL
       auto derived = col->getChildren();
-
-      expressions.emplace_back(derived[0]->deepCopy());
 
       if (derived.size() == 2) {
         assert(*derived[1] == ASTNode::T_COLUMN_ALIAS);
         auto colname_token = derived[1]->getToken();
         assert(colname_token && *colname_token == Token::T_IDENTIFIER);
-        columns.emplace_back(colname_token->getString());
+        column_names.emplace_back(colname_token->getString());
       } else {
-
-        columns.emplace_back("unnamed");
+        column_names.emplace_back("unnamed");
       }
     }
 
-    return new TablelessSelect(std::move(columns), std::move(expressions));
+    return new TablelessSelect(std::move(column_names), expr);
   }
 
   TablelessSelect(
       std::vector<std::string>&& columns,
-      std::vector<std::unique_ptr<ASTNode>>&& expressions) :
+      CompiledExpression* expression) :
       columns_(std::move(columns)),
-      expressions_(std::move(expressions)) {}
+      expression_(expression) {}
 
   void execute() override {
-    std::vector<SValue*> row;
+    SValue row[128];
+    int row_len;
 
-    for (int i = 0; i < columns_.size(); ++i) {
-      row.emplace_back(expr(expressions_[i].get()));
-    }
+    executeExpression(expression_, 0, nullptr, &row_len, row);
 
-    emitRow(std::move(row));
+    emitRow(row, row_len);
   }
 
   size_t getNumCols() const override {
     return columns_.size();
   }
 
-  bool nextRow(std::vector<SValue*> row) override {
+  bool nextRow(SValue* row, int row_len) override {
     assert(0);
   }
 
@@ -82,7 +78,7 @@ public:
 
 protected:
   const std::vector<std::string> columns_;
-  const std::vector<std::unique_ptr<ASTNode>> expressions_;
+  CompiledExpression* expression_;
 };
 
 }
