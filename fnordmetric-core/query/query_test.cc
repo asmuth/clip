@@ -27,32 +27,33 @@ public:
   QueryTest() {}
 
   void run() {
-    //testTokenizerSimple();
-    //testTokenizerEscaping();
-    //testTokenizerAsClause();
-    //testSelectMustBeFirstAssert();
-    //testSelectWildcard();
-    //testSelectTableWildcard();
-    //testSelectDerivedColumn();
-    //testSelectDerivedColumnWithTableName();
-    //testSimpleValueExpression();
-    //testArithmeticValueExpression();
-    //testArithmeticValueExpressionParens();
-    //testArithmeticValueExpressionPrecedence();
-    //testNegatedValueExpression();
-    //testMethodCallValueExpression();
-    //testFromList();
-    //testWhereClause();
-    //testGroupByClause();
-    //testOrderByClause();
-    //testHavingClause();
-    //testLimitClause();
-    //testLimitOffsetClause();
-    //testComplexQueries();
-    //testSelectOnlyQuery();
-    //testSimpleTableScanQuery();
-    //testTableScanWhereQuery();
+    testTokenizerSimple();
+    testTokenizerEscaping();
+    testTokenizerAsClause();
+    testSelectMustBeFirstAssert();
+    testSelectWildcard();
+    testSelectTableWildcard();
+    testSelectDerivedColumn();
+    testSelectDerivedColumnWithTableName();
+    testSimpleValueExpression();
+    testArithmeticValueExpression();
+    testArithmeticValueExpressionParens();
+    testArithmeticValueExpressionPrecedence();
+    testNegatedValueExpression();
+    testMethodCallValueExpression();
+    testFromList();
+    testWhereClause();
+    testGroupByClause();
+    testOrderByClause();
+    testHavingClause();
+    testLimitClause();
+    testLimitOffsetClause();
+    testComplexQueries();
+    testSelectOnlyQuery();
+    testSimpleTableScanQuery();
+    testTableScanWhereQuery();
     testTableScanWhereLimitQuery();
+    testTableScanGroupByQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -568,6 +569,26 @@ public:
     }
   };
 
+  class TestTable2Ref : public TableRef {
+    int getColumnIndex(const std::string& name) override {
+      if (name == "one") return 0;
+      if (name == "two") return 1;
+      if (name == "three") return 2;
+      return -1;
+    }
+    void executeScan(TableScan* scan) override {
+      for (int i = 10; i > 0; --i) {
+        std::vector<SValue*> row;
+        row.emplace_back(new SValue((int64_t) i));
+        row.emplace_back(new SValue((int64_t) (i * 2)));
+        row.emplace_back(new SValue((int64_t) (i % 2 ? 100 : 200)));
+        if (!scan->nextRow(row)) {
+          return;
+        }
+      }
+    }
+  };
+
   void testSimpleTableScanQuery() {
     TableRepository repo;
     repo.addTableRef("testtable",
@@ -634,6 +655,39 @@ public:
         "  WHERE"
         "    one > two or one = 3"
         "  LIMIT 10 OFFSET 5;",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
+    const auto& results = query->getResults();
+    assert(results.getNumRows() == 10);
+    const auto& row = results.getRow(0);
+    assert(row[0]->getInteger() == 56);
+    assert(row[1]->getInteger() == 46);
+  }
+
+  // select count(*), one, two, three from testtable2 group by case three when
+  // 200 then 100 else 100 end;
+
+  void testTableScanGroupByQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT"
+        "    one,"
+        "    two,"
+        "    three"
+        "  FROM"
+        "    testtable"
+        "  GROUP BY"
+        "    three, "
+        "    two % 8;",
         &repo,
         &dst);
 

@@ -13,6 +13,7 @@
 #include "tablescan.h"
 #include "tablerepository.h"
 #include "limitclause.h"
+#include "groupby.h"
 
 namespace fnordmetric {
 namespace query {
@@ -20,12 +21,12 @@ namespace query {
 Executable* planQuery(ASTNode* ast, TableRepository* repo) {
   Executable* exec = nullptr;
 
-  // multi backend query
-  // joins
-  // table scan
-
   /* internal nodes: multi table query (joins), order, aggregation, limit */
   if ((exec = LimitClause::build(ast, repo)) != nullptr) {
+    return exec;
+  }
+
+  if ((exec = GroupBy::build(ast, repo)) != nullptr) {
     return exec;
   }
 
