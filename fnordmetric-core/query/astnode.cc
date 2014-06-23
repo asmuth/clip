@@ -15,7 +15,7 @@ namespace query {
 ASTNode::ASTNode(kASTNodeType type) :
     type_(type),
     token_(nullptr),
-    resolved_(-1) {}
+    id_(-1) {}
 
 bool ASTNode::operator==(kASTNodeType type) const {
   return type_ == type;
@@ -60,12 +60,12 @@ void ASTNode::setType(kASTNodeType type) {
   type_ = type;
 }
 
-uint64_t ASTNode::getResolvedSymbol() const {
-  return resolved_;
+uint64_t ASTNode::getID() const {
+  return id_;
 }
 
-void ASTNode::setResolvedSymbol(uint64_t resolved) {
-  resolved_ = resolved;
+void ASTNode::setID(uint64_t id) {
+  id_ = id;
 }
 
 ASTNode* ASTNode::deepCopy() const {

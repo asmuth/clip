@@ -169,7 +169,7 @@ protected:
       }
 
       node->setType(ASTNode::T_RESOLVED_COLUMN);
-      node->setResolvedSymbol(col_index);
+      node->setID(col_index);
       return true;
     } else {
       for (const auto& child : node->getChildren()) {

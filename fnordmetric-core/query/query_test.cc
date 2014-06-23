@@ -54,6 +54,7 @@ public:
     testTableScanWhereQuery();
     testTableScanWhereLimitQuery();
     testTableScanGroupByQuery();
+    testTableScanGroupByCountQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -680,7 +681,35 @@ public:
     std::vector<std::unique_ptr<Query>> dst;
     Query::parse(
         "  SELECT"
-        // "    one,"
+        "    one,"
+        "    two,"
+        "    three"
+        "  FROM"
+        "    testtable"
+        "  GROUP BY"
+        "    three, "
+        "    two % 8;",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
+    const auto& results = query->getResults();
+    assert(results.getNumRows() == 4);
+  }
+
+  void testTableScanGroupByCountQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT"
+        "    count(one),"
+        "    one,"
         "    two,"
         "    three"
         "  FROM"
@@ -697,10 +726,7 @@ public:
 
     const auto& results = query->getResults();
     results.debugPrint();
-    assert(results.getNumRows() == 10);
-    const auto& row = results.getRow(0);
-    assert(row[0]->getInteger() == 56);
-    assert(row[1]->getInteger() == 46);
+    assert(results.getNumRows() == 4);
   }
 
 };

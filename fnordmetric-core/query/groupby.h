@@ -14,6 +14,7 @@
 #include "astnode.h"
 #include "executable.h"
 #include "grouper.h"
+#include "symboltable.h"
 
 namespace fnordmetric {
 namespace query {
@@ -47,6 +48,10 @@ public:
       auto child_sl = new ASTNode(ASTNode::T_SELECT_LIST);
       auto select_list = ast->getChildren()[0]->deepCopy();
       rewriteAST(select_list, child_sl);
+
+      /* resolve aggregate method */
+      auto symbol_table = new SymbolTable();
+      resolveMethodCalls(select_list, symbol_table, true);
 
       /* copy all group expressions and resolve fields */
       std::vector<ASTNode*> group_exprs;
@@ -167,7 +172,7 @@ protected:
       }
 
       node->setType(ASTNode::T_RESOLVED_COLUMN);
-      node->setResolvedSymbol(col_index);
+      node->setID(col_index);
       return true;
     } else {
       for (const auto& child : node->getChildren()) {
@@ -180,6 +185,41 @@ protected:
     }
   }
 
+  static bool resolveMethodCalls(
+      ASTNode* node,
+      SymbolTable* symbol_table,
+      bool allow_aggregate) {
+    if (node->getType() == ASTNode::T_METHOD_CALL) {
+      if (!resolveMethodCall(node, symbol_table, allow_aggregate)) {
+        return false;
+      }
+    } else {
+      for (const auto& child : node->getChildren()) {
+        if (!resolveMethodCalls(child, symbol_table, allow_aggregate)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  static bool resolveMethodCall(
+      ASTNode* node,
+      SymbolTable* symbol_table,
+      bool allow_aggregate) {
+    auto method_name = node->getToken();
+    assert(method_name && *method_name == Token::T_IDENTIFIER);
+
+    auto method_id = symbol_table->lookup(method_name->getString(), true);
+    if (method_id < 0) {
+      fprintf(stderr, "error: cant resolve method %s\n",
+          method_name->getString().c_str());
+    }
+
+    node->setType(ASTNode::T_RESOLVED_METHOD_CALL);
+    node->setID(method_id);
+  }
 
   std::vector<ASTNode*> output_expressions_;
   std::vector<std::string> columns_;

@@ -60,9 +60,9 @@ SValue* Executable::expr(ASTNode* e) {
       return SValue::fromToken(e->getToken());
 
     case ASTNode::T_RESOLVED_COLUMN:
-      assert(e->getResolvedSymbol() >= 0);
-      assert(cur_row_->size() > e->getResolvedSymbol());
-      return new SValue(*(*cur_row_)[e->getResolvedSymbol()]);
+      assert(e->getID() >= 0);
+      assert(cur_row_->size() > e->getID());
+      return new SValue(*(*cur_row_)[e->getID()]);
 
     default:
       printf("error: cant execute expression\n");

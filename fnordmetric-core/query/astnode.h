@@ -22,6 +22,7 @@ public:
 
     T_LITERAL,
     T_METHOD_CALL,
+    T_RESOLVED_METHOD_CALL,
     T_COLUMN_NAME,
     T_COLUMN_ALIAS,
     T_RESOLVED_COLUMN,
@@ -66,8 +67,10 @@ public:
   const Token* getToken() const;
   kASTNodeType getType() const;
   void setType(kASTNodeType type);
-  uint64_t getResolvedSymbol() const;
-  void setResolvedSymbol(uint64_t resolved);
+  //uint64_t getResolvedSymbol() const;
+  //void setResolvedSymbol(uint64_t resolved);
+  uint64_t getID() const;
+  void setID(uint64_t id);
 
   ASTNode* deepCopy() const;
 
@@ -76,7 +79,7 @@ public:
 protected:
   kASTNodeType type_;
   const Token* token_;
-  int64_t resolved_;
+  int64_t id_;
   std::vector<ASTNode*> children_;
 };
 
