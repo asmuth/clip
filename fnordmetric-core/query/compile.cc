@@ -94,8 +94,6 @@ CompiledExpression* compileSelectList(ASTNode* select_list) {
 
 CompiledExpression* compileOperator(const std::string& name, ASTNode* ast) {
   auto symbol = lookupSymbol(name);
-  ast->debugPrint();
-  printf("%s'''\n", name.c_str());
   assert(symbol != nullptr);
 
   auto op = new CompiledExpression();
