@@ -680,7 +680,7 @@ public:
     std::vector<std::unique_ptr<Query>> dst;
     Query::parse(
         "  SELECT"
-        "    one,"
+        // "    one,"
         "    two,"
         "    three"
         "  FROM"

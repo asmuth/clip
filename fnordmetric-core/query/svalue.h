@@ -22,9 +22,11 @@ public:
     T_STRING,
     T_FLOAT,
     T_INTEGER,
-    T_BOOL
+    T_BOOL,
+    T_UNDEFINED
   };
 
+  explicit SValue();
   explicit SValue(int64_t integer_value);
   explicit SValue(double float_value);
   explicit SValue(bool bool_value);
@@ -32,6 +34,9 @@ public:
   SValue(const SValue& copy);
   SValue& operator=(const SValue& copy) = delete;
   ~SValue();
+
+  static std::string makeUniqueKey(const std::vector<SValue*>& arr, size_t len);
+  static std::vector<SValue*> loadFromKey(const std::string& key);
 
   kSValueType getType() const;
   int64_t getInteger() const;
@@ -42,16 +47,17 @@ public:
   static SValue* fromToken(const Token* token);
 
 protected:
-  kSValueType type_;
-  union {
-    int64_t t_integer;
-    double t_float;
-    bool t_bool;
-    struct {
-      const char* begin;
-      const char* end;
-      bool owned;
-    } t_string;
+  struct {
+    kSValueType type;
+    union {
+      int64_t t_integer;
+      double t_float;
+      bool t_bool;
+      struct {
+        const char* ptr;
+        uint32_t size;
+      } t_string;
+    } u;
   } data_;
 };
 

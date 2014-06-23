@@ -36,6 +36,10 @@ void ASTNode::appendChild(ASTNode* node) {
   children_.push_back(node);
 }
 
+void ASTNode::appendChild(ASTNode* node, size_t index) {
+  children_.insert(children_.begin() + index, node);
+}
+
 const std::vector<ASTNode*>& ASTNode::getChildren() const {
   return children_;
 }
