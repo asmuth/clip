@@ -12,7 +12,7 @@
 #include "tablelessselect.h"
 #include "tablescan.h"
 #include "tablerepository.h"
-//#include "limitclause.h"
+#include "limitclause.h"
 //#include "groupby.h"
 
 namespace fnordmetric {
@@ -22,9 +22,9 @@ Executable* planQuery(ASTNode* ast, TableRepository* repo) {
   Executable* exec = nullptr;
 
   /* internal nodes: multi table query (joins), order, aggregation, limit */
-  //if ((exec = LimitClause::build(ast, repo)) != nullptr) {
-  //  return exec;
-  //}
+  if ((exec = LimitClause::build(ast, repo)) != nullptr) {
+    return exec;
+  }
 
   //if ((exec = GroupBy::build(ast, repo)) != nullptr) {
   //  return exec;

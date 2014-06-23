@@ -51,9 +51,9 @@ public:
     testComplexQueries();
     testSelectOnlyQuery();
     testSimpleTableScanQuery();
-    /*
     testTableScanWhereQuery();
     testTableScanWhereLimitQuery();
+    /*
     testTableScanGroupByQuery();
     testTableScanGroupByCountQuery();
     */

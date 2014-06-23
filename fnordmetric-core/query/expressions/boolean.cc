@@ -113,5 +113,83 @@ void negExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
 
 static SymbolTableEntry __neg_symbol("neg", &negExpr, false);
 
+void ltExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+  assert(argc == 2);
+  SValue* lhs = argv;
+  SValue* rhs = argv + 1;
+
+  switch(lhs->getType()) {
+    case SValue::T_INTEGER:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          *out = SValue(lhs->getInteger() < rhs->getInteger());
+          return;
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getInteger() < rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          *out = SValue(lhs->getFloat() < rhs->getInteger());
+          return;
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getFloat() < rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  assert(0);
+}
+
+static SymbolTableEntry __lt_symbol("lt", &ltExpr, false);
+
+void gtExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+  assert(argc == 2);
+  SValue* lhs = argv;
+  SValue* rhs = argv + 1;
+
+  switch(lhs->getType()) {
+    case SValue::T_INTEGER:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          *out = SValue(lhs->getInteger() > rhs->getInteger());
+          return;
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getInteger() > rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->getType()) {
+        case SValue::T_INTEGER:
+          *out = SValue(lhs->getFloat() > rhs->getInteger());
+          return;
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getFloat() > rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  assert(0); // FIXPAUL
+}
+
+static SymbolTableEntry __gt_symbol("gt", &gtExpr, false);
+
 }
 }

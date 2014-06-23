@@ -78,7 +78,7 @@ public:
     return child_->getNumCols();
   }
 
-  bool nextRow(std::vector<SValue*> row) override {
+  bool nextRow(SValue* row, int row_len) override {
     if (counter_++ < offset_) {
       return true;
     }
@@ -87,7 +87,7 @@ public:
       return false;
     }
 
-    emitRow(row);
+    emitRow(row, row_len);
     return true;
   }
 
