@@ -27,7 +27,6 @@ public:
   QueryTest() {}
 
   void run() {
-    /*
     testTokenizerSimple();
     testTokenizerEscaping();
     testTokenizerAsClause();
@@ -50,10 +49,9 @@ public:
     testLimitClause();
     testLimitOffsetClause();
     testComplexQueries();
-    */
     testSelectOnlyQuery();
-    /*
     testSimpleTableScanQuery();
+    /*
     testTableScanWhereQuery();
     testTableScanWhereLimitQuery();
     testTableScanGroupByQuery();
@@ -534,6 +532,7 @@ public:
     const auto& query = dst[0];
     query->execute();
     const auto& results = query->getResults();
+    results.debugPrint();
     assert(results.getNumColumns() == 6);
     assert(results.getNumRows() == 1);
     const auto& cols = results.getColumns();
@@ -610,6 +609,7 @@ public:
     query->execute();
 
     const auto& results = query->getResults();
+    results.debugPrint();
     assert(results.getNumColumns() == 2);
     assert(results.getNumRows() == 100);
 

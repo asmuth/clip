@@ -19,12 +19,13 @@ bool executeExpression(
     int* outc,
     SValue* outv) {
   int argc = 0;
-  SValue argv[32];
-  printf("exec\n");
+  SValue argv[8];
 
   /* execute children */
   for (auto cur = expr->child; cur != nullptr; cur = cur->next) {
-    int out_len = sizeof(argv) / sizeof(SValue);
+    assert(argc < sizeof(argv) / sizeof(SValue));
+
+    int out_len = 0;
     if (!executeExpression(cur, row_len, row, &out_len, argv + argc)) {
       return false;
     }
@@ -51,6 +52,14 @@ bool executeExpression(
     case X_MULTI: {
       *outc = argc;
       memcpy(outv, argv, sizeof(SValue) * argc);
+      return true;
+    }
+
+    case X_INPUT: {
+      uint64_t index = (uint64_t) expr->arg0;
+      assert(index < row_len);
+      *outv = row[index];
+      *outc = 1;
       return true;
     }
 

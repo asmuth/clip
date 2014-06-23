@@ -33,6 +33,7 @@ CompiledExpression* compileAST(ASTNode* ast);
 CompiledExpression* compileSelectList(ASTNode* select_list);
 CompiledExpression* compileOperator(const std::string& name, ASTNode* ast);
 CompiledExpression* compileLiteral(ASTNode* ast);
+CompiledExpression* compileColumnReference(ASTNode* ast);
 
 }
 }

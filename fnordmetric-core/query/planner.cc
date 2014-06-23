@@ -10,7 +10,7 @@
 #include "astnode.h"
 #include "executable.h"
 #include "tablelessselect.h"
-//#include "tablescan.h"
+#include "tablescan.h"
 #include "tablerepository.h"
 //#include "limitclause.h"
 //#include "groupby.h"
@@ -31,9 +31,9 @@ Executable* planQuery(ASTNode* ast, TableRepository* repo) {
   //}
 
   /* leaf nodes: table scan, tableless select */
-  //if ((exec = TableScan::build(ast, repo)) != nullptr) {
-  //  return exec;
-  //}
+  if ((exec = TableScan::build(ast, repo)) != nullptr) {
+    return exec;
+  }
 
   if ((exec = TablelessSelect::build(ast)) != nullptr) {
     return exec;

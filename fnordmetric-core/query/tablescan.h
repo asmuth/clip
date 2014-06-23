@@ -14,6 +14,8 @@
 #include "astnode.h"
 #include "executable.h"
 #include "tablerepository.h"
+#include "compile.h"
+#include "execute.h"
 
 namespace fnordmetric {
 namespace query {
@@ -55,37 +57,33 @@ public:
     }
 
     /* get select list */
-    ASTNode* select_list = ast->getChildren()[0];
-    assert(select_list);
-    if (!(*select_list == ASTNode::T_SELECT_LIST)) {
+    assert(*ast->getChildren()[0] == ASTNode::T_SELECT_LIST);
+    auto select_list = ast->getChildren()[0];
+
+    /* resolve column references and compile ast */
+    if (!resolveColumns(select_list, tbl_ref)) {
       return nullptr;
     }
+    auto select_expr = compileAST(select_list);
 
-    std::vector<std::string> columns;
-    std::vector<std::unique_ptr<ASTNode>> expressions;
-
+    /* column names */
+    std::vector<std::string> column_names;
     for (auto col : select_list->getChildren()) {
       assert(*col == ASTNode::T_DERIVED_COLUMN); // FIXPAUL
       auto derived = col->getChildren();
-      auto e = derived[0]->deepCopy();
-      expressions.emplace_back(e);
-
-      if (!resolveColumns(e, tbl_ref)) {
-        return nullptr;
-      }
 
       if (derived.size() == 2) {
-        assert(*derived[1] == ASTNode::T_COLUMN_ALIAS); // FIXPAUL
+        assert(*derived[1] == ASTNode::T_COLUMN_ALIAS);
         auto colname_token = derived[1]->getToken();
         assert(colname_token && *colname_token == Token::T_IDENTIFIER);
-        columns.emplace_back(colname_token->getString());
+        column_names.emplace_back(colname_token->getString());
       } else {
-        columns.emplace_back("unnamed"); // FIXPAULL
+        column_names.emplace_back("unnamed");
       }
     }
 
     /* get where expression */
-    std::unique_ptr<ASTNode> where_expr(nullptr);
+    CompiledExpression* where_expr = nullptr;
     if (ast->getChildren().size() > 2) {
       ASTNode* where_clause = ast->getChildren()[2];
       assert(where_clause);
@@ -94,59 +92,55 @@ public:
       }
 
       assert(where_clause->getChildren().size() == 1);
-      auto e = where_clause->getChildren()[0]->deepCopy();
-      where_expr.reset(e);
+      auto e = where_clause->getChildren()[0];
 
       if (!resolveColumns(e, tbl_ref)) {
         return nullptr;
       }
+
+      where_expr = compileAST(e);
     }
 
     return new TableScan(
         tbl_ref,
-        std::move(columns),
-        std::move(expressions),
-        std::move(where_expr));
+        std::move(column_names),
+        select_expr,
+        where_expr);
   }
 
   TableScan(
       TableRef* tbl_ref,
       std::vector<std::string>&& columns,
-      std::vector<std::unique_ptr<ASTNode>>&& expressions,
-      std::unique_ptr<ASTNode>&& where_expr) :
+      CompiledExpression* select_expr,
+      CompiledExpression* where_expr):
       tbl_ref_(tbl_ref),
       columns_(std::move(columns)),
-      expressions_(std::move(expressions)),
-      where_expr_(std::move(where_expr)) {}
+      select_expr_(select_expr),
+      where_expr_(where_expr) {}
 
   void execute() override {
     tbl_ref_->executeScan(this);
   }
 
   bool nextRow(SValue* row, int row_len) override {
-    /*
-    setCurrentRow(&row);
-    std::vector<SValue*> out_row;
-
     auto pred_bool = true;
     auto continue_bool = true;
 
-    if (where_expr_.get() != nullptr) {
-      auto pred = expr(where_expr_.get());
-      pred_bool = pred->getBool();
-      delete pred;
+    SValue out[128]; // FIXPAUL
+    int out_len;
+
+    if (where_expr_ != nullptr) {
+      executeExpression(where_expr_, row_len, row, &out_len, out);
+      assert(out_len == 1);
+      pred_bool = out[0].getBool();
     }
 
     if (pred_bool) {
-      for (int i = 0; i < columns_.size(); ++i) {
-        out_row.emplace_back(expr(expressions_[i].get()));
-      }
-
-      continue_bool = emitRow(out_row);
+      executeExpression(select_expr_, row_len, row, &out_len, out);
+      continue_bool = emitRow(out, out_len);
     }
 
     return continue_bool;
-    */
   }
 
   size_t getNumCols() const override {
@@ -186,8 +180,9 @@ protected:
 
   TableRef* const tbl_ref_;
   const std::vector<std::string> columns_;
-  const std::vector<std::unique_ptr<ASTNode>> expressions_;
-  const std::unique_ptr<ASTNode> where_expr_;
+  CompiledExpression* const select_expr_;
+  CompiledExpression* const where_expr_;
+
 };
 
 }

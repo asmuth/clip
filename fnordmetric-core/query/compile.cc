@@ -59,7 +59,8 @@ CompiledExpression* compileAST(ASTNode* ast) {
     case ASTNode::T_LITERAL:
       return compileLiteral(ast);
 
-    //case ASTNode::T_RESOLVED_COLUMN:
+    case ASTNode::T_RESOLVED_COLUMN:
+      return compileColumnReference(ast);
     //  assert(e->getID() >= 0);
     //  assert(cur_row_->size() > e->getID());
     //  return new SValue(*(*cur_row_)[e->getID()]);
@@ -120,6 +121,16 @@ CompiledExpression* compileLiteral(ASTNode* ast) {
   ins->type = X_LITERAL;
   ins->call = nullptr;
   ins->arg0 = SValue::fromToken(ast->getToken());
+  ins->child = nullptr;
+  ins->next  = nullptr;
+  return ins;
+}
+
+CompiledExpression* compileColumnReference(ASTNode* ast) {
+  auto ins = new CompiledExpression();
+  ins->type = X_INPUT;
+  ins->call = nullptr;
+  ins->arg0 = (void *) ast->getID();
   ins->child = nullptr;
   ins->next  = nullptr;
   return ins;

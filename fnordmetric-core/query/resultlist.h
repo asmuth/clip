@@ -44,7 +44,7 @@ public:
     assert(row_len == columns_.size());
     std::vector<SValue*> row_vec;
     for (int i = 0; i < row_len; ++i) {
-      row_vec.push_back(row + i);
+      row_vec.push_back(new SValue(row[i]));
     }
     rows_.emplace_back(row_vec);
     return true;
