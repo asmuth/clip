@@ -26,21 +26,6 @@ const SymbolTableEntry* lookupSymbol(const std::string& symbol) {
   }
 }
 
-int SymbolTable::lookup(const std::string& symbol, bool allow_aggregate) {
-  auto entry = lookupSymbol(symbol);
-
-  if (!entry->isAggregate()) {
-    for (int i=0; i < table_.size(); ++i) {
-      if (table_[i].first == entry) {
-        return i;
-      }
-    }
-  }
-
-  table_.emplace_back(entry, nullptr);
-  return table_.size() - 1;
-}
-
 SymbolTableEntry::SymbolTableEntry(
     const std::string& symbol,
     SValue* (*method)(void**, int, SValue**),

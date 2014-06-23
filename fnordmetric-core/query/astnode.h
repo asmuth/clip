@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include "symboltable.h"
 
 namespace fnordmetric {
 namespace query {
@@ -22,7 +23,7 @@ public:
 
     T_LITERAL,
     T_METHOD_CALL,
-    T_RESOLVED_METHOD_CALL,
+    T_RESOLVED_CALL,
     T_COLUMN_NAME,
     T_COLUMN_ALIAS,
     T_RESOLVED_COLUMN,
@@ -67,8 +68,6 @@ public:
   const Token* getToken() const;
   kASTNodeType getType() const;
   void setType(kASTNodeType type);
-  //uint64_t getResolvedSymbol() const;
-  //void setResolvedSymbol(uint64_t resolved);
   uint64_t getID() const;
   void setID(uint64_t id);
 

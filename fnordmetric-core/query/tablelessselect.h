@@ -13,6 +13,7 @@
 #include "token.h"
 #include "astnode.h"
 #include "executable.h"
+#include "compile.h"
 
 namespace fnordmetric {
 namespace query {
@@ -29,6 +30,8 @@ public:
     std::vector<std::string> columns;
     std::vector<std::unique_ptr<ASTNode>> expressions;
 
+    auto expr = compileAST(select_list);
+    assert(0);
     for (auto col : select_list->getChildren()) {
       assert(*col == ASTNode::T_DERIVED_COLUMN); // FIXPAUL
       auto derived = col->getChildren();

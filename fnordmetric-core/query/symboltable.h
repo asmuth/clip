@@ -15,19 +15,13 @@ namespace query {
 class SymbolTableEntry;
 class SValue;
 
+struct ResolvedSymbol {
+  SValue* (*call_)(void**, int, SValue**);
+  void* scratchpad;
+};
+
 void registerSymbol(const std::string& symbol, const SymbolTableEntry* entry);
 const SymbolTableEntry* lookupSymbol(const std::string& symbol);
-
-class SymbolTable {
-public:
-  int lookup(const std::string& symbol, bool allow_aggregate);
-  SValue* call(int id, int argc, SValue** argv);
-  SValue* callSetup(int id, int argc, SValue** argv);
-  SValue* callLoop(int id, int argc, SValue** argv);
-  SValue* callRet(int id);
-protected:
-  std::vector<std::pair<const SymbolTableEntry*, void*>> table_;
-};
 
 class SymbolTableEntry {
 public:

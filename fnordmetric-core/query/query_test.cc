@@ -27,6 +27,7 @@ public:
   QueryTest() {}
 
   void run() {
+    /*
     testTokenizerSimple();
     testTokenizerEscaping();
     testTokenizerAsClause();
@@ -49,12 +50,15 @@ public:
     testLimitClause();
     testLimitOffsetClause();
     testComplexQueries();
+    */
     testSelectOnlyQuery();
+    /*
     testSimpleTableScanQuery();
     testTableScanWhereQuery();
     testTableScanWhereLimitQuery();
     testTableScanGroupByQuery();
     testTableScanGroupByCountQuery();
+    */
   }
 
   Parser parseTestQuery(const char* query) {
