@@ -15,6 +15,7 @@
 #include "executable.h"
 #include "grouper.h"
 #include "symboltable.h"
+#include "compile.h"
 
 namespace fnordmetric {
 namespace query {
@@ -49,15 +50,12 @@ public:
       auto select_list = ast->getChildren()[0]->deepCopy();
       rewriteAST(select_list, child_sl);
 
-      /* resolve aggregate method */
-      resolveMethodCalls(select_list, true);
-
       /* copy all group expressions and resolve fields */
-      std::vector<ASTNode*> group_exprs;
+      ASTNode group_exprs(ASTNode::T_GROUP_BY);
       for (const auto& group_expr : child->getChildren()) {
         auto e = group_expr->deepCopy();
         rewriteAST(e, child_sl);
-        group_exprs.emplace_back(e);
+        group_exprs.appendChild(e);
       }
 
       /* copy ast for child and swap out select lists*/
@@ -74,13 +72,21 @@ public:
         }
       }
 
-      /* resolve aggregation functions */
-      child_ast->debugPrint(2);
-      select_list->debugPrint(2);
+      /* compile select and group expressions */
+      auto select_expr = compileAST(select_list);
+      auto group_expr = compileAST(&group_exprs);
+      //child_ast->debugPrint(2);
+      //select_list->debugPrint(2);
+
+      std::vector<std::string> column_names;
+      for (const auto& col : select_list->getChildren()) {
+        column_names.push_back("unnamed");
+      }
 
       return new GroupBy(
-          select_list,
-          group_exprs,
+          std::move(column_names),
+          select_expr,
+          group_expr,
           planQuery(child_ast, repo));
     }
 
@@ -88,18 +94,15 @@ public:
   }
 
   GroupBy(
-      ASTNode* select_list,
-      std::vector<ASTNode*> group_exprs,
+      std::vector<std::string>&& columns,
+      CompiledExpression* select_expr,
+      CompiledExpression* group_expr,
       Executable* child) :
-      select_list_(select_list),
-      group_exprs_(group_exprs),
+      columns_(std::move(columns)),
+      select_expr_(select_expr),
+      group_expr_(group_expr),
       child_(child) {
     child->setTarget(this);
-
-    for (const auto& col : select_list_->getChildren()) {
-      output_expressions_.push_back(col->getChildren()[0]);
-      columns_.push_back("unnamed");
-    }
   }
 
   void execute() override {
@@ -107,33 +110,24 @@ public:
 
     for (auto& pair : groups_) {
       auto& group = pair.second;
-      setCurrentRow(&group.row);
-
-      std::vector<SValue*> row;
-      for (const auto& e : output_expressions_) {
-        row.emplace_back(expr(e));
-      }
-
-      emitRow(row);
+      //emitRow(row);
     }
   }
 
-  bool nextRow(std::vector<SValue*> row) override {
-    setCurrentRow(&row);
+  bool nextRow(SValue* row, int row_len) override {
+    SValue out[128]; // FIXPAUL
+    int out_len;
 
-    /* execute group expressions */
-    std::vector<SValue*> key;
-    for (const auto& e : group_exprs_) {
-      key.push_back(expr(e));
+    if (group_expr_ != nullptr) {
+      executeExpression(group_expr_, row_len, row, &out_len, out);
     }
 
     /* stringify expression results into group key */
-    SValue** row_ptr = key.data();
-    auto key_str = SValue::makeUniqueKey(key, key.size());
+    auto key_str = SValue::makeUniqueKey(out, out_len);
 
     auto group = groups_.find(key_str);
     if (group == groups_.end()) {
-      groups_[key_str].row = row;
+      //groups_[key_str].row = row;
     } else {
       // discard value...
     }
@@ -184,6 +178,7 @@ protected:
     }
   }
 
+/*
   static bool resolveMethodCalls(
       ASTNode* node,
       bool allow_aggregate) {
@@ -222,17 +217,17 @@ protected:
       return false;
     }
 
-    node->setType(ASTNode::T_RESOLVED_CALL);
-    node->setResolvedSymbol(method->getResolvedSymbol());
     return true;
   }
 
-  std::vector<ASTNode*> output_expressions_;
+*/
+
   std::vector<std::string> columns_;
-  std::unordered_map<std::string, Group> groups_;
-  ASTNode* select_list_;
-  std::vector<ASTNode*> group_exprs_;
+  CompiledExpression* select_expr_;
+  CompiledExpression* group_expr_;
   Executable* child_;
+
+  std::unordered_map<std::string, Group> groups_;
 };
 
 }

@@ -20,6 +20,9 @@ CompiledExpression* compileAST(ASTNode* ast) {
     case ASTNode::T_SELECT_LIST:
       return compileSelectList(ast);
 
+    case ASTNode::T_GROUP_BY:
+      return compileChildren(ast);
+
     case ASTNode::T_EQ_EXPR:
       return compileOperator("eq", ast);
 
@@ -61,9 +64,6 @@ CompiledExpression* compileAST(ASTNode* ast) {
 
     case ASTNode::T_RESOLVED_COLUMN:
       return compileColumnReference(ast);
-    //  assert(e->getID() >= 0);
-    //  assert(cur_row_->size() > e->getID());
-    //  return new SValue(*(*cur_row_)[e->getID()]);
 
     default:
       printf("error: cant compile expression\n");
@@ -85,6 +85,23 @@ CompiledExpression* compileSelectList(ASTNode* select_list) {
     assert(*col == ASTNode::T_DERIVED_COLUMN);
     assert(col->getChildren().size() > 0);
     auto next = compileAST(col->getChildren()[0]);
+    *cur = next;
+    cur = &next->next;
+  }
+
+  return root;
+}
+
+CompiledExpression* compileChildren(ASTNode* parent) {
+  auto root = new CompiledExpression();
+  root->type = X_MULTI;
+  root->call = nullptr;
+  root->arg0 = nullptr;
+  root->next  = nullptr;
+
+  auto cur = &root->child;
+  for (auto child : parent->getChildren()) {
+    auto next = compileAST(child);
     *cur = next;
     cur = &next->next;
   }

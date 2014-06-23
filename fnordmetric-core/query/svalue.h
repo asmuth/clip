@@ -35,8 +35,7 @@ public:
   SValue& operator=(const SValue& copy);
   ~SValue();
 
-  static std::string makeUniqueKey(const std::vector<SValue*>& arr, size_t len);
-  static std::vector<SValue*> loadFromKey(const std::string& key);
+  static std::string makeUniqueKey(SValue* arr, size_t len);
 
   kSValueType getType() const;
   int64_t getInteger() const;

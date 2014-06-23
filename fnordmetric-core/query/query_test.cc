@@ -53,10 +53,8 @@ public:
     testSimpleTableScanQuery();
     testTableScanWhereQuery();
     testTableScanWhereLimitQuery();
-    /*
     testTableScanGroupByQuery();
     testTableScanGroupByCountQuery();
-    */
   }
 
   Parser parseTestQuery(const char* query) {

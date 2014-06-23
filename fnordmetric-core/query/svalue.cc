@@ -64,33 +64,15 @@ bool SValue::getBool() const {
   return data_.u.t_bool;
 }
 
-std::string SValue::makeUniqueKey(
-    const std::vector<SValue*>& arr,
-    size_t len) {
+std::string SValue::makeUniqueKey(SValue* arr, size_t len) {
   size_t buf_len = sizeof(data_) * len;
   char* buf = static_cast<char*>(alloca(buf_len));
 
   for (int i = 0; i < len; ++i) {
-    memcpy(buf + i * sizeof(data_), &arr[i]->data_, sizeof(data_));
+    memcpy(buf + i * sizeof(data_), &arr[i].data_, sizeof(data_));
   }
 
   return std::string(buf, buf_len);
-}
-
-std::vector<SValue*> SValue::loadFromKey(const std::string& key) {
-  std::vector<SValue*> values;
-  const char* buf = key.data();
-  size_t len = key.size();
-
-  assert(key.size() % sizeof(data_) == 0);
-
-  for (size_t off = 0; off < len; off += sizeof(data_)) {
-    auto svalue = new SValue();
-    memcpy(&svalue->data_, &buf[off], sizeof(data_));
-    values.push_back(svalue);
-  }
-
-  return values;
 }
 
 std::string SValue::toString() const {

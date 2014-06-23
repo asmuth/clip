@@ -13,7 +13,7 @@
 #include "tablescan.h"
 #include "tablerepository.h"
 #include "limitclause.h"
-//#include "groupby.h"
+#include "groupby.h"
 
 namespace fnordmetric {
 namespace query {
@@ -26,9 +26,9 @@ Executable* planQuery(ASTNode* ast, TableRepository* repo) {
     return exec;
   }
 
-  //if ((exec = GroupBy::build(ast, repo)) != nullptr) {
-  //  return exec;
-  //}
+  if ((exec = GroupBy::build(ast, repo)) != nullptr) {
+    return exec;
+  }
 
   /* leaf nodes: table scan, tableless select */
   if ((exec = TableScan::build(ast, repo)) != nullptr) {
