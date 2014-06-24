@@ -88,7 +88,6 @@ int EventLoop::poll() {
   }
 
   return num_events;
-  printf("polling...\n");
 }
 
 void EventLoop::loop() {

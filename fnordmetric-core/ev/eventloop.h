@@ -19,7 +19,8 @@ public:
   };
 
   class CallbackInterface {
-    public: virtual void onEvent(
+  public:
+    virtual void onEvent(
         EventLoop* loop,
         int fd,
         kInterestType interest) = 0;
