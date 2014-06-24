@@ -6,7 +6,7 @@
  */
 #ifndef _FNORDMETRIC_EV_ACCEPTOR_H
 #define _FNORDMETRIC_EV_ACCEPTOR_H
-#include <stdlib.h>
+#include <functional>
 
 namespace fnordmetric {
 namespace ev {
@@ -17,7 +17,10 @@ public:
 
   void listen(int port);
 
+  void setHandler(std::function<void (int)> handler);
+
 protected:
+  std::function<void (int)> handler_;
   volatile bool running_;
 };
 

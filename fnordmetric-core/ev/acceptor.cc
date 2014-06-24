@@ -20,6 +20,10 @@ namespace ev {
 
 Acceptor::Acceptor() : running_(true) {}
 
+void Acceptor::setHandler(std::function<void (int)> handler) {
+  handler_ = handler;
+}
+
 void Acceptor::listen(int port) {
   struct sockaddr_in server_addr;
   server_addr.sin_family = AF_INET;
@@ -77,6 +81,7 @@ void Acceptor::listen(int port) {
       continue;
     }
 
+    handler_(fd);
   }
 }
 

@@ -9,7 +9,11 @@
 #include "ev/acceptor.h"
 
 int main(int argc, char** argv) {
-  printf("hello fnordmetric!\n");
   fnordmetric::ev::Acceptor acceptor;
+
+  acceptor.setHandler([] (int fd) {
+    printf("got con %i\n", fd);
+  });
+
   acceptor.listen(8080);
 }
