@@ -14,56 +14,59 @@
 namespace fnordmetric {
 namespace query {
 
-CompiledExpression* compileAST(ASTNode* ast) {
+CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
   switch (ast->getType()) {
 
     case ASTNode::T_SELECT_LIST:
-      return compileSelectList(ast);
+      return compileSelectList(ast, scratchpad_len);
 
     case ASTNode::T_GROUP_BY:
-      return compileChildren(ast);
+      return compileChildren(ast, scratchpad_len);
 
     case ASTNode::T_EQ_EXPR:
-      return compileOperator("eq", ast);
+      return compileOperator("eq", ast, scratchpad_len);
 
     case ASTNode::T_AND_EXPR:
-      return compileOperator("and", ast);
+      return compileOperator("and", ast, scratchpad_len);
 
     case ASTNode::T_OR_EXPR:
-      return compileOperator("or", ast);
+      return compileOperator("or", ast, scratchpad_len);
 
     case ASTNode::T_NEGATE_EXPR:
-      return compileOperator("neg", ast);
+      return compileOperator("neg", ast, scratchpad_len);
 
     case ASTNode::T_LT_EXPR:
-      return compileOperator("lt", ast);
+      return compileOperator("lt", ast, scratchpad_len);
 
     case ASTNode::T_GT_EXPR:
-      return compileOperator("gt", ast);
+      return compileOperator("gt", ast, scratchpad_len);
 
     case ASTNode::T_ADD_EXPR:
-      return compileOperator("add", ast);
+      return compileOperator("add", ast, scratchpad_len);
 
     case ASTNode::T_SUB_EXPR:
-      return compileOperator("sub", ast);
+      return compileOperator("sub", ast, scratchpad_len);
 
     case ASTNode::T_MUL_EXPR:
-      return compileOperator("mul", ast);
+      return compileOperator("mul", ast, scratchpad_len);
 
     case ASTNode::T_DIV_EXPR:
-      return compileOperator("div", ast);
+      return compileOperator("div", ast, scratchpad_len);
 
     case ASTNode::T_MOD_EXPR:
-      return compileOperator("mod", ast);
+      return compileOperator("mod", ast, scratchpad_len);
 
     case ASTNode::T_POW_EXPR:
-      return compileOperator("pow", ast);
+      return compileOperator("pow", ast, scratchpad_len);
 
     case ASTNode::T_LITERAL:
       return compileLiteral(ast);
 
     case ASTNode::T_RESOLVED_COLUMN:
       return compileColumnReference(ast);
+
+    case ASTNode::T_METHOD_CALL:
+      return compileMethodCall(ast, scratchpad_len);
 
     default:
       printf("error: cant compile expression\n");
@@ -73,7 +76,9 @@ CompiledExpression* compileAST(ASTNode* ast) {
 }
 
 
-CompiledExpression* compileSelectList(ASTNode* select_list) {
+CompiledExpression* compileSelectList(
+    ASTNode* select_list,
+    size_t* scratchpad_len) {
   auto root = new CompiledExpression();
   root->type = X_MULTI;
   root->call = nullptr;
@@ -84,7 +89,7 @@ CompiledExpression* compileSelectList(ASTNode* select_list) {
   for (auto col : select_list->getChildren()) {
     assert(*col == ASTNode::T_DERIVED_COLUMN);
     assert(col->getChildren().size() > 0);
-    auto next = compileAST(col->getChildren()[0]);
+    auto next = compileAST(col->getChildren()[0], scratchpad_len);
     *cur = next;
     cur = &next->next;
   }
@@ -92,7 +97,7 @@ CompiledExpression* compileSelectList(ASTNode* select_list) {
   return root;
 }
 
-CompiledExpression* compileChildren(ASTNode* parent) {
+CompiledExpression* compileChildren(ASTNode* parent, size_t* scratchpad_len) {
   auto root = new CompiledExpression();
   root->type = X_MULTI;
   root->call = nullptr;
@@ -101,7 +106,7 @@ CompiledExpression* compileChildren(ASTNode* parent) {
 
   auto cur = &root->child;
   for (auto child : parent->getChildren()) {
-    auto next = compileAST(child);
+    auto next = compileAST(child, scratchpad_len);
     *cur = next;
     cur = &next->next;
   }
@@ -109,7 +114,10 @@ CompiledExpression* compileChildren(ASTNode* parent) {
   return root;
 }
 
-CompiledExpression* compileOperator(const std::string& name, ASTNode* ast) {
+CompiledExpression* compileOperator(
+    const std::string& name,
+    ASTNode* ast,
+    size_t* scratchpad_len) {
   auto symbol = lookupSymbol(name);
   assert(symbol != nullptr);
 
@@ -122,7 +130,7 @@ CompiledExpression* compileOperator(const std::string& name, ASTNode* ast) {
 
   auto cur = &op->child;
   for (auto e : ast->getChildren()) {
-    auto next = compileAST(e);
+    auto next = compileAST(e, scratchpad_len);
     *cur = next;
     cur = &next->next;
   }
@@ -149,6 +157,35 @@ CompiledExpression* compileColumnReference(ASTNode* ast) {
   ins->child = nullptr;
   ins->next  = nullptr;
   return ins;
+}
+
+CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len) {
+  assert(ast->getToken() != nullptr);
+  assert(*ast->getToken() == Token::T_IDENTIFIER);
+
+  auto symbol = lookupSymbol(ast->getToken()->getString());
+  if (symbol == nullptr) {
+    fprintf(stderr,
+        "error: cannot resolve symbol: %s\n",
+        ast->getToken()->getString().c_str());
+    assert(0); // FIXPAUL
+  }
+
+  auto op = new CompiledExpression();
+  op->type = X_CALL;
+  op->call = symbol->getFnPtr();
+  op->arg0 = nullptr;
+  op->child = nullptr;
+  op->next  = nullptr;
+
+  auto cur = &op->child;
+  for (auto e : ast->getChildren()) {
+    auto next = compileAST(e, scratchpad_len);
+    *cur = next;
+    cur = &next->next;
+  }
+
+  return op;
 }
 
 }

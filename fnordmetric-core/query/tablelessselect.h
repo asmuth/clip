@@ -28,7 +28,11 @@ public:
     }
 
     auto select_list = ast->getChildren()[0];
-    auto expr = compileAST(select_list);
+
+    /* compile ast */
+    size_t scratchpad_len = 0;
+    auto expr = compileAST(select_list, &scratchpad_len);
+    assert(scratchpad_len == 0);
 
     /* column names */
     std::vector<std::string> column_names;

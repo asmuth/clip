@@ -699,6 +699,7 @@ public:
     query->execute();
 
     const auto& results = query->getResults();
+    results.debugPrint();
     assert(results.getNumRows() == 4);
   }
 

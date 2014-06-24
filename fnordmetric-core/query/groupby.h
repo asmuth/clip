@@ -23,10 +23,6 @@ namespace query {
 class GroupBy : public Executable {
 public:
 
-  struct Group {
-    std::vector<SValue*> row;
-  };
-
   static GroupBy* build(ASTNode* ast, TableRepository* repo) {
     if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
       return nullptr;
@@ -73,8 +69,13 @@ public:
       }
 
       /* compile select and group expressions */
-      auto select_expr = compileAST(select_list);
-      auto group_expr = compileAST(&group_exprs);
+      size_t select_scratchpad_len = 0;
+      auto select_expr = compileAST(select_list, &select_scratchpad_len);
+      printf("SCRATCHPAD LEN: %lu\n", select_scratchpad_len);
+
+      size_t group_scratchpad_len = 0;
+      auto group_expr = compileAST(&group_exprs, &group_scratchpad_len);
+      assert(group_scratchpad_len == 0);
       //child_ast->debugPrint(2);
       //select_list->debugPrint(2);
 
@@ -108,9 +109,13 @@ public:
   void execute() override {
     child_->execute();
 
+    SValue out[128]; // FIXPAUL
+    int out_len;
+
     for (auto& pair : groups_) {
-      auto& group = pair.second;
-      //emitRow(row);
+      const auto& row = pair.second.row;
+      executeExpression(select_expr_, row.size(), row.data(), &out_len, out);
+      emitRow(out, out_len);
     }
   }
 
@@ -127,7 +132,11 @@ public:
 
     auto group = groups_.find(key_str);
     if (group == groups_.end()) {
-      //groups_[key_str].row = row;
+      std::vector<SValue> row_vec;
+      for (int i = 0; i < row_len; i++) {
+        row_vec.push_back(row[i]);
+      }
+      groups_[key_str].row = row_vec;
     } else {
       // discard value...
     }
@@ -144,6 +153,10 @@ public:
   }
 
 protected:
+
+  struct Group {
+    std::vector<SValue> row;
+  };
 
   static bool rewriteAST(ASTNode* node, ASTNode* target_select_list) {
     if (node->getType() == ASTNode::T_COLUMN_NAME) {

@@ -64,7 +64,11 @@ public:
     if (!resolveColumns(select_list, tbl_ref)) {
       return nullptr;
     }
-    auto select_expr = compileAST(select_list);
+
+    /* compile select expression */
+    size_t select_scratchpad_len = 0;
+    auto select_expr = compileAST(select_list, &select_scratchpad_len);
+    assert(select_scratchpad_len == 0);
 
     /* column names */
     std::vector<std::string> column_names;
@@ -98,7 +102,9 @@ public:
         return nullptr;
       }
 
-      where_expr = compileAST(e);
+      size_t where_scratchpad_len = 0;
+      where_expr = compileAST(e, &where_scratchpad_len);
+      assert(where_scratchpad_len == 0);
     }
 
     return new TableScan(

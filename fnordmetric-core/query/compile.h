@@ -29,12 +29,24 @@ struct CompiledExpression {
   CompiledExpression* child;
 };
 
-CompiledExpression* compileAST(ASTNode* ast);
-CompiledExpression* compileSelectList(ASTNode* select_list);
-CompiledExpression* compileOperator(const std::string& name, ASTNode* ast);
+CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len);
+
+CompiledExpression* compileSelectList(
+    ASTNode* select_list, 
+    size_t* scratchpad_len);
+
+CompiledExpression* compileOperator(
+    const std::string& name,
+    ASTNode* ast,
+    size_t* scratchpad_len);
+
 CompiledExpression* compileLiteral(ASTNode* ast);
+
 CompiledExpression* compileColumnReference(ASTNode* ast);
-CompiledExpression* compileChildren(ASTNode* ast);
+
+CompiledExpression* compileChildren(ASTNode* ast, size_t* scratchpad_len);
+
+CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len);
 
 }
 }
