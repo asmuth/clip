@@ -56,6 +56,7 @@ public:
     testTableScanGroupByQuery();
     testTableScanGroupByCountQuery();
     testTableScanGroupBySumQuery();
+    testTableScanGroupWithoutGroupClause();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -769,7 +770,29 @@ public:
     }
   }
 
+  void testTableScanGroupWithoutGroupClause() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTable2Ref()));
 
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT"
+        "    sum(one)"
+        "  FROM"
+        "    testtable;",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
+    const auto& results = query->getResults();
+    results.debugPrint();
+    assert(results.getNumRows() == 1);
+    assert(results.getRow(0)[0]->getInteger() == 55);
+  }
 
 };
 
