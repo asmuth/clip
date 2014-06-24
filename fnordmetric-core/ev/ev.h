@@ -4,12 +4,11 @@
 // Licensed under the MIT License (the "License"); you may not use this
 // file except in compliance with the License. You may obtain a copy of
 // the License at: http://opensource.org/licenses/MIT
+#include <unistd.h>
+#include <fcntl.h>
+#ifndef FNORDMETRIC_EV_EV_H
+#define FNORDMETRIC_EV_EV_H
 
-#ifndef EV_H
-#define EV_H
-
-#define EV_READABLE 1
-#define EV_WRITEABLE 2
 
 typedef struct {
   int   watch;

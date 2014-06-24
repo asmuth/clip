@@ -14,17 +14,14 @@
 #include <string.h>
 #include <errno.h>
 #include "acceptor.h"
+#include "eventloop.h"
 
 namespace fnordmetric {
 namespace ev {
 
-Acceptor::Acceptor() : running_(true) {}
+Acceptor::Acceptor(EventLoop* ev_loop) : ev_loop_(ev_loop) {}
 
-void Acceptor::setHandler(std::function<void (int)> handler) {
-  handler_ = handler;
-}
-
-void Acceptor::listen(int port) {
+void Acceptor::listen(int port, std::function<void (int)> handler) {
   struct sockaddr_in server_addr;
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -68,21 +65,37 @@ void Acceptor::listen(int port) {
     return;
   }
 
-  while (running_) {
-    int fd = accept(ssock, NULL, NULL);
+  int flags = fcntl(ssock, F_GETFL, 0);
+  flags = flags | O_NONBLOCK;
 
-    if (!running_) {
-      close(fd);
-      break;
-    }
-
-    if (fd == -1) {
-      perror("accept failed");
-      continue;
-    }
-
-    handler_(fd);
+  if (fcntl(ssock, F_SETFL, flags) != 0) {
+    fprintf(stderr, "fnctl() failed\n");
   }
+
+  auto handler_ptr = new HandlerRef(ssock, handler);
+  ev_loop_->watch(ssock, EventLoop::EV_READABLE, handler_ptr);
+  handlers_.emplace_back(handler_ptr);
+}
+
+Acceptor::HandlerRef::HandlerRef(
+    int ssock,
+    std::function<void (int)> handler) :
+    ssock_(ssock),
+    handler_(handler) {}
+
+void Acceptor::HandlerRef::onEvent(
+    EventLoop* loop,
+    int fd,
+    EventLoop::kInterestType ev) {
+  int conn_fd = accept(ssock_, NULL, NULL);
+
+  if (conn_fd == -1) {
+    perror("accept failed");
+    return;
+  }
+
+  handler_(conn_fd);
+  loop->watch(fd, EventLoop::EV_READABLE, this);
 }
 
 }

@@ -7,21 +7,30 @@
 #ifndef _FNORDMETRIC_EV_ACCEPTOR_H
 #define _FNORDMETRIC_EV_ACCEPTOR_H
 #include <functional>
+#include <memory>
+#include <vector>
+#include "eventloop.h"
 
 namespace fnordmetric {
 namespace ev {
 
 class Acceptor {
 public:
-  Acceptor();
-
-  void listen(int port);
-
-  void setHandler(std::function<void (int)> handler);
+  Acceptor(EventLoop* ev_loop);
+  void listen(int port, std::function<void (int)> handler);
 
 protected:
-  std::function<void (int)> handler_;
-  volatile bool running_;
+  class HandlerRef : public EventLoop::CallbackInterface {
+  public:
+    HandlerRef(int ssock, std::function<void (int)> handler);
+    void onEvent(EventLoop* loop, int fd, EventLoop::kInterestType ev) override;
+  protected:
+    int ssock_;
+    std::function<void (int)> handler_;
+  };
+
+  EventLoop* ev_loop_;
+  std::vector<std::unique_ptr<HandlerRef>> handlers_;
 };
 
 

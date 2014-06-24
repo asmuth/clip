@@ -7,13 +7,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ev/acceptor.h"
+#include "ev/eventloop.h"
 
 int main(int argc, char** argv) {
-  fnordmetric::ev::Acceptor acceptor;
+  fnordmetric::ev::EventLoop ev_loop;
+  fnordmetric::ev::Acceptor acceptor(&ev_loop);
 
-  acceptor.setHandler([] (int fd) {
-    printf("got con %i\n", fd);
+  auto handler = [] (int fd) {
+    printf("got con 8080 %i\n", fd);
+  };
+
+  acceptor.listen(8080, handler);
+  acceptor.listen(8081,  [] (int fd) {
+    printf("got con 8081 %i\n", fd);
   });
 
-  acceptor.listen(8080);
+  ev_loop.loop();
 }
