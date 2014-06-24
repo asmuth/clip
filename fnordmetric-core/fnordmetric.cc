@@ -9,18 +9,22 @@
 #include "ev/acceptor.h"
 #include "ev/eventloop.h"
 
+class ConnCb : public fnordmetric::ev::Acceptor::CallbackInterface {
+  void onConnection(int fd) override {
+    printf("got con %i\n", fd);
+  }
+};
+
 int main(int argc, char** argv) {
   fnordmetric::ev::EventLoop ev_loop;
   fnordmetric::ev::Acceptor acceptor(&ev_loop);
 
   auto handler = [] (int fd) {
-    printf("got con 8080 %i\n", fd);
   };
 
-  acceptor.listen(8080, handler);
-  acceptor.listen(8081,  [] (int fd) {
-    printf("got con 8081 %i\n", fd);
-  });
+  ConnCb cb;
+  acceptor.listen(8080, &cb);
+  acceptor.listen(8081, &cb);
 
   ev_loop.loop();
 }

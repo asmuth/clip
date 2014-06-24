@@ -6,7 +6,6 @@
  */
 #ifndef _FNORDMETRIC_EV_ACCEPTOR_H
 #define _FNORDMETRIC_EV_ACCEPTOR_H
-#include <functional>
 #include <memory>
 #include <vector>
 #include "eventloop.h"
@@ -16,17 +15,23 @@ namespace ev {
 
 class Acceptor {
 public:
+  class CallbackInterface {
+  public:
+    virtual void onConnection(int fd) = 0;
+  };
+
   Acceptor(EventLoop* ev_loop);
-  void listen(int port, std::function<void (int)> handler);
+  void listen(int port, CallbackInterface* handler);
 
 protected:
   class HandlerRef : public EventLoop::CallbackInterface {
   public:
-    HandlerRef(int ssock, std::function<void (int)> handler);
+    HandlerRef(int ssock, Acceptor::CallbackInterface* handler);
+    ~HandlerRef();
     void onEvent(EventLoop* loop, int fd, EventLoop::kInterestType ev) override;
   protected:
     int ssock_;
-    std::function<void (int)> handler_;
+    Acceptor::CallbackInterface* handler_;
   };
 
   EventLoop* ev_loop_;

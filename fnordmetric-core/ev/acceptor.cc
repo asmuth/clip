@@ -21,7 +21,7 @@ namespace ev {
 
 Acceptor::Acceptor(EventLoop* ev_loop) : ev_loop_(ev_loop) {}
 
-void Acceptor::listen(int port, std::function<void (int)> handler) {
+void Acceptor::listen(int port, CallbackInterface* handler) {
   struct sockaddr_in server_addr;
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -79,9 +79,13 @@ void Acceptor::listen(int port, std::function<void (int)> handler) {
 
 Acceptor::HandlerRef::HandlerRef(
     int ssock,
-    std::function<void (int)> handler) :
+    Acceptor::CallbackInterface* handler) :
     ssock_(ssock),
     handler_(handler) {}
+
+Acceptor::HandlerRef::~HandlerRef() {
+  close(ssock_);
+}
 
 void Acceptor::HandlerRef::onEvent(
     EventLoop* loop,
@@ -94,7 +98,7 @@ void Acceptor::HandlerRef::onEvent(
     return;
   }
 
-  handler_(conn_fd);
+  handler_->onConnection(conn_fd);
   loop->watch(fd, EventLoop::EV_READABLE, this);
 }
 
