@@ -71,7 +71,6 @@ public:
       /* compile select and group expressions */
       size_t select_scratchpad_len = 0;
       auto select_expr = compileAST(select_list, &select_scratchpad_len);
-      printf("SCRATCHPAD LEN: %lu\n", select_scratchpad_len);
 
       size_t group_scratchpad_len = 0;
       auto group_expr = compileAST(&group_exprs, &group_scratchpad_len);
@@ -210,49 +209,6 @@ protected:
     }
   }
 
-/*
-  static bool resolveMethodCalls(
-      ASTNode* node,
-      bool allow_aggregate) {
-    if (node->getType() == ASTNode::T_METHOD_CALL) {
-      if (!resolveMethodCall(node, allow_aggregate)) {
-        return false;
-      }
-    } else {
-      for (const auto& child : node->getChildren()) {
-        if (!resolveMethodCalls(child, allow_aggregate)) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-
-  static bool resolveMethodCall(
-      ASTNode* node,
-      bool allow_aggregate) {
-    auto method_name = node->getToken();
-    assert(method_name && *method_name == Token::T_IDENTIFIER);
-
-    auto method = lookupSymbol(method_name->getString());
-
-    if (!allow_aggregate && method->isAggregate()) {
-      fprintf(stderr, "error: unexpected aggregate method %s\n",
-          method_name->getString().c_str());
-      return false;
-    }
-
-    if (method == nullptr) {
-      fprintf(stderr, "error: cant resolve method %s\n",
-          method_name->getString().c_str());
-      return false;
-    }
-
-    return true;
-  }
-
-*/
 
   std::vector<std::string> columns_;
   CompiledExpression* select_expr_;

@@ -55,6 +55,7 @@ public:
     testTableScanWhereLimitQuery();
     testTableScanGroupByQuery();
     testTableScanGroupByCountQuery();
+    testTableScanGroupBySumQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -726,16 +727,49 @@ public:
     assert(dst.size() == 1);
     const auto& query = dst[0];
     query->execute();
-
     const auto& results = query->getResults();
-    results.debugPrint();
+
     int sum = 0;
-    for (int i = 0; i<100; ++i) {
+    for (int i = 0; i < results.getNumRows(); ++i) {
       const auto& row = results.getRow(i);
       sum += row[0]->getInteger();
     }
     assert(sum == 10);
   }
+
+  void testTableScanGroupBySumQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+    std::vector<std::unique_ptr<Query>> dst;
+    Query::parse(
+        "  SELECT"
+        "    sum(one),"
+        "    three"
+        "  FROM"
+        "    testtable"
+        "  GROUP BY"
+        "    three;",
+        &repo,
+        &dst);
+
+    assert(dst.size() == 1);
+    const auto& query = dst[0];
+    query->execute();
+
+    const auto& results = query->getResults();
+    results.debugPrint();
+    assert(results.getNumRows() == 2);
+    for (int i = 0; i<2; ++i) {
+      const auto& row = results.getRow(i);
+      assert(
+        (row[0]->getInteger() == 25 && row[1]->getInteger() == 100) ||
+        (row[0]->getInteger() == 30 && row[1]->getInteger() == 200));
+    }
+  }
+
+
 
 };
 
