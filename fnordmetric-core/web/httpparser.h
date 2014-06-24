@@ -3,7 +3,7 @@
  *   Copyright (c) 2009-2014 Christian Parpart
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
- * This file is based on "HttpMessageParser.h" from the x0 web server project
+ * This file is based on "HTTPParser.h" from the x0 web server project
  * by Christian Parpart <trapni@gmail.com> (http://www.xzero.io/).
  *
  * Licensed under the MIT license (see LICENSE).
@@ -11,27 +11,20 @@
 #ifndef sw_x0_message_processor_h
 #define sw_x0_message_processor_h (1)
 
-#include <x0/Buffer.h>
-#include <x0/io/ChainFilter.h>
-#include <x0/LogMessage.h>
-#include <x0/Defines.h>
-#include <x0/Api.h>
-
 #include <system_error>
 #include <functional>
+#include <string>
 #include <cctype>
+#include <assert.h>
 
-//! \addtogroup http
-//@{
-
-namespace x0 {
+namespace fnordmetric {
+namespace web {
 
 /**
- * \class HttpMessageParser
+ * \class HTTPParser
  * \brief implements an HTTP/1.1 (request/response) message parser and processor
  */
-class X0_API HttpMessageParser
-{
+class HTTPParser {
 public:
     //! defines whether to parse HTTP requests, responses, or plain messages.
     enum ParseMode { // {{{
@@ -107,30 +100,57 @@ public:
         CONTENT_CHUNK_LF3
     }; // }}}
 
-public:
-    virtual bool onMessageBegin(const BufferRef& method, const BufferRef& entity, int versionMajor, int versionMinor);
-    virtual bool onMessageBegin(int versionMajor, int versionMinor, int code, const BufferRef& text);
-    virtual bool onMessageBegin();
-    virtual bool onMessageHeader(const BufferRef& name, const BufferRef& value);
-    virtual bool onMessageHeaderEnd();
-    virtual bool onMessageContent(const BufferRef& chunk);
-    virtual bool onMessageEnd();
-    virtual void onProtocolError(const BufferRef& chunk, size_t offset);
+    class BufferRef {
+    public:
+      BufferRef() : data_(nullptr), size_(0) {}
+      BufferRef(char* data, size_t size) : data_(data), size_(size) {}
+      BufferRef(const BufferRef& copy) : data_(copy.data_), size_(copy.size_) {}
+      inline void clear() { size_ = 0; }
+      inline size_t size() const { return size_; }
+      inline char* data() const { return data_; }
+      inline bool empty() const { return size_ == 0; }
+      inline char* cbegin() const { return data_; }
+      inline char* cend() const { return data_ + size_; }
+      inline void shr(ssize_t value = 1) { size_ += value; }
+      int toInt() const;
+      BufferRef ref(size_t offset, size_t count) const;
+      BufferRef ref(size_t offset) const;
+      static bool iequals(const BufferRef& a, const BufferRef& b);
+      static bool iequals(const BufferRef& a, const std::string& b);
+    protected:
+      char* data_;
+      size_t size_;
+    };
+
+    bool onMessageBegin(
+        const BufferRef& method,
+        const BufferRef& entity,
+        int versionMajor,
+        int versionMinor);
+
+    bool onMessageBegin(
+        int versionMajor,
+        int versionMinor,
+        int code,
+        const BufferRef& text);
+
+    bool onMessageBegin();
+    bool onMessageHeader(const BufferRef& name, const BufferRef& value);
+    bool onMessageHeaderEnd();
+    bool onMessageContent(const BufferRef& chunk);
+    bool onMessageEnd();
+    void onProtocolError(const BufferRef& chunk, size_t offset);
 
     bool isProcessingHeader() const;
     bool isProcessingBody() const;
     bool isContentExpected() const;
 
-    virtual void log(LogMessage&& msg) = 0;
-
-public:
-    explicit HttpMessageParser(ParseMode mode);
-    virtual ~HttpMessageParser() {}
+    explicit HTTPParser(ParseMode mode);
+    virtual ~HTTPParser() {}
 
     State state() const;
     const char *state_str() const;
 
-    size_t parseFragment(const BufferRef& chunk, size_t* nparsed = nullptr);
 
     ssize_t contentLength() const;
     bool isChunked() const { return chunked_; }
@@ -138,13 +158,13 @@ public:
     virtual void reset();
 
 private:
+    size_t parseFragment(const BufferRef& chunk, size_t* nparsed = nullptr);
     static inline bool isChar(char value);
     static inline bool isControl(char value);
     static inline bool isSeparator(char value);
     static inline bool isToken(char value);
     static inline bool isText(char value);
 
-private:
     // lexer constants
     enum {
         CR = 0x0D,
@@ -178,19 +198,18 @@ private:
     // body
     bool chunked_;      //!< whether or not request content is chunked encoded
     ssize_t contentLength_; //!< content length of whole content or current chunk
-    ChainFilter filters_; //!< filters to apply to the message body before forwarding to the callback.
 };
 
-} // namespace x0
+}
+}
 
-//@}
 
-// {{{ inlines
-namespace x0 {
+namespace fnordmetric {
+namespace web {
 
 /*! represents the current parser-state this HTTP message processor is in.
  */
-inline enum HttpMessageParser::State HttpMessageParser::state() const
+inline enum HTTPParser::State HTTPParser::state() const
 {
     return state_;
 }
@@ -212,13 +231,11 @@ inline enum HttpMessageParser::State HttpMessageParser::state() const
  * the length to be processed. (HTTP/1.0 reply messages e.g. do not
  * contain a hint about the content-length.
  */
-inline ssize_t HttpMessageParser::contentLength() const
-{
+inline ssize_t HTTPParser::contentLength() const {
     return contentLength_;
 }
 
-inline bool HttpMessageParser::isProcessingHeader() const
-{
+inline bool HTTPParser::isProcessingHeader() const {
     // XXX should we include request-line and status-line here, too?
     switch (state_) {
         case HEADER_NAME_BEGIN:
@@ -235,8 +252,7 @@ inline bool HttpMessageParser::isProcessingHeader() const
     }
 }
 
-inline bool HttpMessageParser::isProcessingBody() const
-{
+inline bool HTTPParser::isProcessingBody() const {
     switch (state_) {
         case CONTENT_BEGIN:
         case CONTENT:
@@ -254,17 +270,13 @@ inline bool HttpMessageParser::isProcessingBody() const
     }
 }
 
-inline bool HttpMessageParser::isContentExpected() const
-{
+inline bool HTTPParser::isContentExpected() const {
     return contentLength_ > 0
         || chunked_
         || (contentLength_ < 0 && mode_ != REQUEST);
 }
 
-} // namespace x0
-
-#undef TRACE
-
-// }}}
+}
+}
 
 #endif

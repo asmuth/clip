@@ -20,6 +20,11 @@ public:
   WebTest() {}
 
   void run() {
+    testHTTPParser();
+  }
+
+  void testHTTPParser() {
+    HTTPParser parser(HTTPParser::REQUEST);
     printf("testing!\n");
   }
 
