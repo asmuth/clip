@@ -136,13 +136,13 @@ public:
     int out_len;
 
     if (where_expr_ != nullptr) {
-      executeExpression(where_expr_, row_len, row, &out_len, out);
+      executeExpression(where_expr_, nullptr, row_len, row, &out_len, out);
       assert(out_len == 1);
       pred_bool = out[0].getBool();
     }
 
     if (pred_bool) {
-      executeExpression(select_expr_, row_len, row, &out_len, out);
+      executeExpression(select_expr_, nullptr, row_len, row, &out_len, out);
       continue_bool = emitRow(out, out_len);
     }
 

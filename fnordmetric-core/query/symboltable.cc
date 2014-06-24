@@ -28,20 +28,29 @@ const SymbolTableEntry* lookupSymbol(const std::string& symbol) {
 
 SymbolTableEntry::SymbolTableEntry(
     const std::string& symbol,
-    void (*method)(void**, int, SValue*, SValue*),
-    bool is_aggregate) :
+    void (*method)(void*, int, SValue*, SValue*),
+    size_t scratchpad_size) :
     call_(method),
-    is_aggregate_(is_aggregate) {
+    scratchpad_size_(scratchpad_size) {
   assert(global_symbols_.find(symbol) == global_symbols_.end());
   global_symbols_[symbol] = this;
 }
 
+SymbolTableEntry::SymbolTableEntry(
+    const std::string& symbol,
+    void (*method)(void*, int, SValue*, SValue*)) :
+    SymbolTableEntry(symbol, method, 0) {}
+
 bool SymbolTableEntry::isAggregate() const {
-  return is_aggregate_;
+  return scratchpad_size_ > 0;
 }
 
-void (*SymbolTableEntry::getFnPtr() const)(void**, int, SValue*, SValue*) {
+void (*SymbolTableEntry::getFnPtr() const)(void*, int, SValue*, SValue*) {
   return call_;
+}
+
+size_t SymbolTableEntry::getScratchpadSize() const {
+  return scratchpad_size_;
 }
 
 }

@@ -109,13 +109,9 @@ public:
   void execute() override {
     child_->execute();
 
-    SValue out[128]; // FIXPAUL
-    int out_len;
-
     for (auto& pair : groups_) {
-      const auto& row = pair.second.row;
-      executeExpression(select_expr_, row.size(), row.data(), &out_len, out);
-      emitRow(out, out_len);
+      auto& row = pair.second.row;
+      emitRow(row.data(), row.size());
     }
   }
 
@@ -123,23 +119,23 @@ public:
     SValue out[128]; // FIXPAUL
     int out_len;
 
+    /* execute group expression */
     if (group_expr_ != nullptr) {
-      executeExpression(group_expr_, row_len, row, &out_len, out);
+      executeExpression(group_expr_, nullptr, row_len, row, &out_len, out);
     }
 
     /* stringify expression results into group key */
     auto key_str = SValue::makeUniqueKey(out, out_len);
 
-    auto group = groups_.find(key_str);
-    if (group == groups_.end()) {
-      std::vector<SValue> row_vec;
-      for (int i = 0; i < row_len; i++) {
-        row_vec.push_back(row[i]);
-      }
-      groups_[key_str].row = row_vec;
-    } else {
-      // discard value...
+    /* execute select expresion and save results */
+    executeExpression(select_expr_, nullptr, row_len, row, &out_len, out);
+    std::vector<SValue> row_vec;
+    for (int i = 0; i < out_len; i++) {
+      row_vec.push_back(out[i]);
     }
+
+    /* update group */
+    groups_[key_str].row = row_vec;
 
     return true;
   }

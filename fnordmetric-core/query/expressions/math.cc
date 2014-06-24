@@ -13,7 +13,7 @@
 namespace fnordmetric {
 namespace query {
 
-void addExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -50,9 +50,9 @@ void addExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __add_symbol("add", &addExpr, false);
+static SymbolTableEntry __add_symbol("add", &addExpr);
 
-void mulExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -89,9 +89,9 @@ void mulExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __mul_symbol("mul", &mulExpr, false);
+static SymbolTableEntry __mul_symbol("mul", &mulExpr);
 
-void modExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -128,9 +128,9 @@ void modExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __mod_symbol("mod", &modExpr, false);
+static SymbolTableEntry __mod_symbol("mod", &modExpr);
 
-void powExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -167,7 +167,7 @@ void powExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __pow_symbol("pow", &powExpr, false);
+static SymbolTableEntry __pow_symbol("pow", &powExpr);
 
 }
 }

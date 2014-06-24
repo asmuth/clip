@@ -13,7 +13,7 @@
 namespace fnordmetric {
 namespace query {
 
-void eqExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -50,9 +50,9 @@ void eqExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __eq_symbol("eq", &eqExpr, false);
+static SymbolTableEntry __eq_symbol("eq", &eqExpr);
 
-void andExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -69,9 +69,9 @@ void andExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __and_symbol("and", &andExpr, false);
+static SymbolTableEntry __and_symbol("and", &andExpr);
 
-void orExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -88,9 +88,9 @@ void orExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __or_symbol("or", &orExpr, false);
+static SymbolTableEntry __or_symbol("or", &orExpr);
 
-void negExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 1);
   SValue* val = argv;
 
@@ -111,9 +111,9 @@ void negExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __neg_symbol("neg", &negExpr, false);
+static SymbolTableEntry __neg_symbol("neg", &negExpr);
 
-void ltExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -150,9 +150,9 @@ void ltExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __lt_symbol("lt", &ltExpr, false);
+static SymbolTableEntry __lt_symbol("lt", &ltExpr);
 
-void gtExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
@@ -189,7 +189,7 @@ void gtExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0); // FIXPAUL
 }
 
-static SymbolTableEntry __gt_symbol("gt", &gtExpr, false);
+static SymbolTableEntry __gt_symbol("gt", &gtExpr);
 
 }
 }

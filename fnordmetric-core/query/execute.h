@@ -15,6 +15,7 @@ class SValue;
 
 bool executeExpression(
     CompiledExpression* expr,
+    void* scratchpad,
     int argc,
     const SValue* argv,
     int* outc,

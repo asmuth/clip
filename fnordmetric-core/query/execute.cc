@@ -14,6 +14,7 @@ namespace query {
 
 bool executeExpression(
     CompiledExpression* expr,
+    void* scratchpad,
     int row_len,
     const SValue* row,
     int* outc,
@@ -26,7 +27,13 @@ bool executeExpression(
     assert(argc < sizeof(argv) / sizeof(SValue));
 
     int out_len = 0;
-    if (!executeExpression(cur, row_len, row, &out_len, argv + argc)) {
+    if (!executeExpression(
+        cur,
+        scratchpad,
+        row_len,
+        row,
+        &out_len,
+        argv + argc)) {
       return false;
     }
 
@@ -38,7 +45,11 @@ bool executeExpression(
   switch (expr->type) {
 
     case X_CALL: {
-      expr->call(&expr->arg0, argc, argv, outv);
+      void* this_scratchpad = nullptr;
+      if (scratchpad != nullptr) {
+        this_scratchpad = ((char *) scratchpad) + ((size_t) (expr->arg0));
+      }
+      expr->call(this_scratchpad, argc, argv, outv);
       *outc = 1;
       return true;
     }

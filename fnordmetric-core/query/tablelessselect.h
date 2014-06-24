@@ -63,7 +63,7 @@ public:
     SValue row[128]; // FIXPAUL
     int row_len;
 
-    executeExpression(expression_, 0, nullptr, &row_len, row);
+    executeExpression(expression_, nullptr, 0, nullptr, &row_len, row);
     emitRow(row, row_len);
   }
 

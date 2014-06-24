@@ -178,6 +178,11 @@ CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len) {
   op->child = nullptr;
   op->next  = nullptr;
 
+  if (symbol->isAggregate()) {
+    op->arg0 = (void *) *scratchpad_len;
+    *scratchpad_len += symbol->getScratchpadSize();
+  }
+
   auto cur = &op->child;
   for (auto e : ast->getChildren()) {
     auto next = compileAST(e, scratchpad_len);

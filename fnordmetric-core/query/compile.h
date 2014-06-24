@@ -23,7 +23,7 @@ enum kCompiledExpressionType {
 
 struct CompiledExpression {
   kCompiledExpressionType type;
-  void (*call)(void**, int, SValue*, SValue*);
+  void (*call)(void*, int, SValue*, SValue*);
   void* arg0;
   CompiledExpression* next;
   CompiledExpression* child;

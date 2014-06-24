@@ -11,14 +11,14 @@
 namespace fnordmetric {
 namespace query {
 
-static void countExpr(void** scratchpad, int argc, SValue* argv, SValue* out) {
+static void countExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   *out = SValue((int64_t) 23);
 }
 
 static SymbolTableEntry __count_symbol(
     "count",
     &countExpr,
-    true);
+    sizeof(uint64_t));
 
 }
 }

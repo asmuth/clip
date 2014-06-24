@@ -23,19 +23,24 @@ public:
 
   SymbolTableEntry(
       const std::string& symbol,
-      void (*method)(void**, int, SValue*, SValue*),
-      bool is_aggregate);
+      void (*method)(void*, int, SValue*, SValue*));
 
-  inline void call(void** scratchpad, int argc, SValue* argv, SValue* out) const {
+  SymbolTableEntry(
+      const std::string& symbol,
+      void (*method)(void*, int, SValue*, SValue*),
+      size_t scratchpad_size);
+
+  inline void call(void* scratchpad, int argc, SValue* argv, SValue* out) const {
     call_(scratchpad, argc, argv, out);
   }
 
   bool isAggregate() const;
-  void (*getFnPtr() const)(void**, int, SValue*, SValue*);
+  void (*getFnPtr() const)(void*, int, SValue*, SValue*);
+  size_t getScratchpadSize() const;
 
 protected:
-  void (*call_)(void**, int, SValue*, SValue*);
-  const bool is_aggregate_;
+  void (*call_)(void*, int, SValue*, SValue*);
+  const size_t scratchpad_size_;
 };
 
 }
