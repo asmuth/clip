@@ -729,7 +729,12 @@ public:
 
     const auto& results = query->getResults();
     results.debugPrint();
-    assert(results.getNumRows() == 4);
+    int sum = 0;
+    for (int i = 0; i<100; ++i) {
+      const auto& row = results.getRow(i);
+      sum += row[0]->getInteger();
+    }
+    assert(sum == 10);
   }
 
 };
