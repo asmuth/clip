@@ -1,4 +1,57 @@
 
+
+Simple example: make bar chart from simple select * from ...;
+
+
+
+-- import gdp_per_country.csv as table gdp_per_country
+IMPORT gdp_per_country FROM "gdp_per_country.csv";
+-- country,gdp
+-- usa,1000
+-- uk,9000
+-- ..
+
+-- draw a simple bar chart
+DRAW BAR CHART
+  WITH STYLE ...;
+
+-- draw gdp of the top 10 countries
+SERIES "gdp per country" FROM
+  SELECT gbp, country FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
+  -- WITH gdp AS X and country as Y;
+
+Another example:
+
+Draw a few latency distributions for multiple loadtest experiments sourced from
+multiple csv files.
+
+
+To make that last query more interesting lets say we put all our test results
+into a single file with an additional "experiment" columns and try to recreate
+the same chart:
+
+-- load a csv file with per request logs from a load test
+IMPORT loadtests FROM "myfile.csv";
+
+-- draw a graph of qps vs 90thpercentile, one series for each experiment
+
+
+-- time,url,experiment,runtime
+
+DRAW LINE CHART;
+
+SERIES experiment FROM
+  SELECT experiment, count(*) as qps, nth_percentile(runtime) as latency
+    FROM loadtests
+    GROUP BY experiment, time_window(time, 1s);
+
+
+Examples page with examples left: query, right: output and link to examples/
+folder with source data!
+
+eMail contributers and long time followers "FnordMetric <3 username"
+
+
 -> msync
 -> import freelist properly
 -> MmapPageManager, MallocPageManager, InMemoryDatabase, FileBackedDatabase

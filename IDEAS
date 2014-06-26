@@ -1,4 +1,8 @@
 
+There are three ways to use FnordMetric.
+  + Execute queries and build charts from the command line
+  + web interface
+  + language libraries
 
 Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
 can refer to nonaggregated columns not named in the GROUP BY clause. If you use
