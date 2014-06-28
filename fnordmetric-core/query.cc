@@ -8,19 +8,18 @@
 #include <string.h>
 #include <memory>
 #include "query.h"
-#include "parser.h"
-#include "queryplan.h"
-#include "executable.h"
-#include "tablerepository.h"
-#include "seriesstatement.h"
-#include "drawstatement.h"
-#include "../drawable.h"
+#include "query/parser.h"
+#include "query/queryplan.h"
+#include "query/executable.h"
+#include "query/tablerepository.h"
+#include "query/seriesstatement.h"
+#include "query/drawstatement.h"
+#include "drawable.h"
 
 namespace fnordmetric {
-namespace query {
 
-Query::Query(const char* query_string, TableRepository* repo) {
-  Parser parser;
+Query::Query(const char* query_string, query::TableRepository* repo) {
+  query::Parser parser;
 
   if (!parser.parse(query_string, strlen(query_string))) {
     fprintf(stderr, "parser error\n");
@@ -28,10 +27,10 @@ Query::Query(const char* query_string, TableRepository* repo) {
 
   for (auto stmt : parser.getStatements()) {
     switch (stmt->getType()) {
-      case ASTNode::T_SELECT:
-      case ASTNode::T_DRAW:
-      case ASTNode::T_SERIES:
-        addSelectStatement(stmt, repo);
+      case query::ASTNode::T_SELECT:
+      case query::ASTNode::T_DRAW:
+      case query::ASTNode::T_SERIES:
+        addStatement(stmt, repo);
         break;
       default:
         assert(0 == 777);
@@ -39,26 +38,23 @@ Query::Query(const char* query_string, TableRepository* repo) {
   }
 }
 
-bool Query::execute() {
-  ResultList* result = results_.data();
-
+bool Query::execute(TableRenderTarget* target) {
   for (const auto& stmt : statements_) {
-    stmt->setTarget(result);
+    target->addHeader(stmt->getColumns());
+    stmt->setTarget(target);
     stmt->execute();
-    result++;
   }
 
   return true;
 }
 
-bool Query::execute(std::vector<std::unique_ptr<Drawable>>* dst) {
+bool Query::execute(ChartRenderTarget* target) {
   Drawable* drawable;
 
   for (const auto& stmt : statements_) {
-    auto draw_stmt = dynamic_cast<DrawStatement*>(stmt.get());
+    auto draw_stmt = dynamic_cast<query::DrawStatement*>(stmt.get());
     if (draw_stmt != nullptr) {
       drawable = makeDrawable(draw_stmt);
-      dst->emplace_back(drawable);
       continue;
     }
 
@@ -66,7 +62,7 @@ bool Query::execute(std::vector<std::unique_ptr<Drawable>>* dst) {
       continue;
     }
 
-    auto series_stmt = dynamic_cast<SeriesStatement*>(stmt.get());
+    auto series_stmt = dynamic_cast<query::SeriesStatement*>(stmt.get());
     if (series_stmt != nullptr) {
       series_stmt->execute();
       for (const auto& series : series_stmt->getSeries()) {
@@ -78,27 +74,24 @@ bool Query::execute(std::vector<std::unique_ptr<Drawable>>* dst) {
   return true;
 }
 
-Drawable* Query::makeDrawable(DrawStatement* stmt) {
+Drawable* Query::makeDrawable(query::DrawStatement* stmt) {
   return new Drawable();
   //switch (stmt->getType()) {
   //  case DrawStatement::T_BAR_CHART:
   //}
 }
-const ResultList& Query::getResults(size_t statement_index) {
-  return results_[statement_index];
-}
 
-bool Query::addSelectStatement(ASTNode* statement, TableRepository* repo) {
-  auto query_plan = QueryPlan::buildQueryPlan(statement, repo);
+bool Query::addStatement(
+    query::ASTNode* statement,
+    query::TableRepository* repo) {
+  auto query_plan = query::QueryPlan::buildQueryPlan(statement, repo);
   if (query_plan == nullptr) {
     fprintf(stderr, "error: cant build statement\n");
     return false;
   }
 
   statements_.emplace_back(query_plan);
-  results_.emplace_back(query_plan->getColumns());
   return true;
 }
 
-}
 }

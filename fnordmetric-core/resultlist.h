@@ -10,16 +10,14 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "executable.h"
+#include "rendertarget.h"
+#include "query/svalue.h"
 
 namespace fnordmetric {
-namespace query {
 
-class ResultList : public RowSink {
+class ResultList : public TableRenderTarget {
 public:
-  ResultList(const std::vector<std::string>& columns) :
-      columns_(columns) {}
-
+  ResultList() {}
   ResultList(const ResultList& copy) = delete;
   ResultList& operator=(const ResultList& copy) = delete;
 
@@ -35,7 +33,7 @@ public:
     return rows_.size();
   }
 
-  const std::vector<SValue*>& getRow(size_t index) const {
+  const std::vector<std::string>& getRow(size_t index) const {
     assert(index < rows_.size());
     return rows_[index];
   }
@@ -44,14 +42,16 @@ public:
     return columns_;
   }
 
-  bool nextRow(SValue* row, int row_len) override {
-    assert(row_len == columns_.size());
-    std::vector<SValue*> row_vec;
-    for (int i = 0; i < row_len; ++i) {
-      row_vec.push_back(new SValue(row[i]));
-    }
-    rows_.emplace_back(row_vec);
-    return true;
+  void addHeader(const std::vector<std::string>& columns) override {
+    columns_ = columns;
+  }
+
+  void addRow() override {
+    rows_.emplace_back();
+  }
+
+  void addColumn(const std::string& value) override {
+    rows_.back().push_back(value);
   }
 
   void debugPrint() const {
@@ -88,20 +88,15 @@ public:
     print_row(columns_);
     print_hsep();
     for (const auto& row : rows_) {
-      std::vector<std::string> str_row;
-      for (const auto& value : row) {
-        str_row.push_back(value->toString());
-      }
-      print_row(str_row);
+      print_row(row);
     }
     print_hsep();
   }
 
 protected:
   std::vector<std::string> columns_;
-  std::vector<std::vector<SValue*>> rows_;
+  std::vector<std::vector<std::string>> rows_;
 };
 
-}
 }
 #endif

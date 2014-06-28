@@ -60,6 +60,7 @@ public:
 
   const std::vector<ParserError>& getErrors() const;
   const std::vector<ASTNode*>& getStatements() const;
+  const std::vector<Token>& getTokenList() const;
 
   void debugPrint() const;
 

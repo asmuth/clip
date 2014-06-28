@@ -10,6 +10,7 @@
 #include "astnode.h"
 #include "symboltable.h"
 #include "svalue.h"
+#include "token.h"
 
 namespace fnordmetric {
 namespace query {

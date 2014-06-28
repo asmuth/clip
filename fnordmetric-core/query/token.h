@@ -14,7 +14,6 @@ namespace fnordmetric {
 namespace query {
 
 class Token {
-  friend class QueryTest;
 public:
   enum kTokenType {
     T_SELECT,

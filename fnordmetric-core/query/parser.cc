@@ -639,6 +639,10 @@ const std::vector<ASTNode*>& Parser::getStatements() const {
   return root_.getChildren();
 }
 
+const std::vector<Token>& Parser::getTokenList() const {
+  return token_list_;
+}
+
 void Parser::debugPrint() const {
   printf("[ AST ]\n");
   root_.debugPrint(2);

@@ -10,11 +10,10 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "token.h"
-#include "astnode.h"
 
 namespace fnordmetric {
 namespace query {
+class Token;
 
 class SValue {
 public:

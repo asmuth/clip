@@ -12,7 +12,6 @@
 #include "seriesdefinition.h"
 
 namespace fnordmetric {
-namespace query {
 
 class Drawable {
 public:
@@ -25,6 +24,5 @@ protected:
   std::vector<SeriesDefinition*> series_;
 };
 
-}
 }
 #endif

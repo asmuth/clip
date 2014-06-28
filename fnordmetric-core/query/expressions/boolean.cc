@@ -9,6 +9,7 @@
 #include <math.h>
 #include <string.h>
 #include "../svalue.h"
+#include "../symboltable.h"
 
 namespace fnordmetric {
 namespace query {

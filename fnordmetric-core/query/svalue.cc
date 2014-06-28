@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include "svalue.h"
+#include "token.h"
 
 namespace fnordmetric {
 namespace query {

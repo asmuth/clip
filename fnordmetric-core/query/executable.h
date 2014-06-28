@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include "svalue.h"
 #include "token.h"
 #include "astnode.h"
-#include "svalue.h"
 
 namespace fnordmetric {
 namespace query {
