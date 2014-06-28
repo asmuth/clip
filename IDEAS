@@ -1,4 +1,8 @@
 
+The FnordMetric query language is a superset of SQL99 (SELECT statements only).
+It supports all the operations you would expect in your standard SQL database
+like GROUP BY or HAVING statements and joins.
+
 There are three ways to use FnordMetric.
   + Execute queries and build charts from the command line
   + web interface

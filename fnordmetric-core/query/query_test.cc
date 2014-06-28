@@ -517,7 +517,8 @@ public:
   void testSelectOnlyQuery() {
     TableRepository repo;
     std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+
+    auto query = Query(
         "  SELECT"
         "    13 + 2 * 5 as fnord,"
         "    2 ^ 2 ^ 3 as fubar,"
@@ -525,13 +526,10 @@ public:
         "    true one,"
         "    !(true) as two,"
         "    NOT NOT true as three;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     results.debugPrint();
     assert(results.getNumColumns() == 6);
     assert(results.getNumRows() == 1);
@@ -598,17 +596,12 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTableRef()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT one + 50, two FROM testtable",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     results.debugPrint();
     assert(results.getNumColumns() == 2);
     assert(results.getNumRows() == 100);
@@ -625,8 +618,7 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTableRef()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT"
         "    one + 1 as fnord,"
         "    two"
@@ -634,14 +626,10 @@ public:
         "    testtable"
         "  WHERE"
         "    one > two or one = 3;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     assert(results.getNumRows() == 51);
   }
 
@@ -650,8 +638,7 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTableRef()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT"
         "    one + 1 as fnord,"
         "    two"
@@ -660,14 +647,10 @@ public:
         "  WHERE"
         "    one > two or one = 3"
         "  LIMIT 10 OFFSET 5;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     assert(results.getNumRows() == 10);
     const auto& row = results.getRow(0);
     assert(row[0]->getInteger() == 56);
@@ -682,8 +665,7 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTable2Ref()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT"
         "    one,"
         "    two,"
@@ -693,14 +675,10 @@ public:
         "  GROUP BY"
         "    three, "
         "    two % 8;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     results.debugPrint();
     assert(results.getNumRows() == 4);
   }
@@ -710,8 +688,7 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTable2Ref()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT"
         "    count(one),"
         "    one,"
@@ -722,14 +699,10 @@ public:
         "  GROUP BY"
         "    three, "
         "    two % 8;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-    const auto& results = query->getResults();
-
+    const auto& results = query.getResults(0);
     int sum = 0;
     for (int i = 0; i < results.getNumRows(); ++i) {
       const auto& row = results.getRow(i);
@@ -743,8 +716,7 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTable2Ref()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT"
         "    sum(one),"
         "    three"
@@ -752,14 +724,10 @@ public:
         "    testtable"
         "  GROUP BY"
         "    three;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     results.debugPrint();
     assert(results.getNumRows() == 2);
     for (int i = 0; i<2; ++i) {
@@ -775,20 +743,15 @@ public:
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTable2Ref()));
 
-    std::vector<std::unique_ptr<Query>> dst;
-    Query::parse(
+    auto query = Query(
         "  SELECT"
         "    sum(one)"
         "  FROM"
         "    testtable;",
-        &repo,
-        &dst);
+        &repo);
+    query.execute();
 
-    assert(dst.size() == 1);
-    const auto& query = dst[0];
-    query->execute();
-
-    const auto& results = query->getResults();
+    const auto& results = query.getResults(0);
     results.debugPrint();
     assert(results.getNumRows() == 1);
     assert(results.getRow(0)[0]->getInteger() == 55);

@@ -18,22 +18,17 @@ class TableRepository;
 
 class Query {
 public:
-  static bool parse(
-      const char* query_string,
-      TableRepository* repo,
-      std::vector<std::unique_ptr<Query>>* destination);
-
-  explicit Query(std::unique_ptr<Executable>&& executable);
+  explicit Query(const char* query_string, TableRepository* repo);
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);
 
   bool execute();
-  const ResultList& getResults();
+  const ResultList& getResults(size_t statement_index);
 
 protected:
-  std::unique_ptr<Executable> executable_;
-  ResultList results_;
+  std::vector<std::unique_ptr<Executable>> statements_;
+  std::vector<ResultList> results_;
 };
 
 }

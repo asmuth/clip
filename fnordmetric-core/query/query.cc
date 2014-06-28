@@ -16,10 +16,7 @@
 namespace fnordmetric {
 namespace query {
 
-bool Query::parse(
-    const char* query_string,
-    TableRepository* repo,
-    std::vector<std::unique_ptr<Query>>* destination) {
+Query::Query(const char* query_string, TableRepository* repo) {
   Parser parser;
   parser.parse(query_string, strlen(query_string));
 
@@ -27,29 +24,28 @@ bool Query::parse(
     auto query_plan = QueryPlan::buildQueryPlan(stmt, repo);
 
     if (query_plan == nullptr) {
-      return false;
+      // FIXPAUL: add error
     }
 
-    destination->emplace_back(
-        new Query(std::unique_ptr<Executable>(query_plan)));
+    statements_.emplace_back(query_plan);
+    results_.emplace_back(query_plan->getColumns());
+  }
+}
+
+bool Query::execute() {
+  ResultList* result = results_.data();
+
+  for (const auto& stmt : statements_) {
+    stmt->setTarget(result);
+    stmt->execute();
+    result++;
   }
 
   return true;
 }
 
-Query::Query(std::unique_ptr<Executable>&& executable) :
-    executable_(std::move(executable)),
-    results_(executable_->getColumns()) {}
-
-bool Query::execute() {
-  printf("execute=%p\n", executable_.get());
-  executable_->setTarget(&results_);
-  executable_->execute();
-  return true;
-}
-
-const ResultList& Query::getResults() {
-  return results_;
+const ResultList& Query::getResults(size_t statement_index) {
+  return results_[statement_index];
 }
 
 }

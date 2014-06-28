@@ -23,6 +23,10 @@ public:
   ResultList(const ResultList& copy) = delete;
   ResultList& operator=(const ResultList& copy) = delete;
 
+  ResultList(ResultList&& move) :
+      columns_(std::move(move.columns_)),
+      rows_(std::move(move.rows_)) {}
+
   size_t getNumColumns() const {
     return columns_.size();
   }
