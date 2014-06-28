@@ -1,5 +1,11 @@
 
 
+
+SERIES series_definition [AXES column_list]
+  FROM select_statement;
+
+
+
 As the first simple example we will create a bar chart that displays gross
 domestic product per country and looks like this:
 

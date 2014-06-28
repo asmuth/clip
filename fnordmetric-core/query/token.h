@@ -58,7 +58,8 @@ public:
     T_LSHIFT,
     T_RSHIFT,
     T_LT,
-    T_GT
+    T_GT,
+    T_SERIES
   };
 
   Token(kTokenType token_type);

@@ -216,6 +216,7 @@ next:
     (*cur)++;
   }
 
+  // FIXPAUL this should be a hashmap/trie lookup!
   Token token(Token::T_IDENTIFIER, begin, len);
 
   if (token == "AS") {
@@ -250,6 +251,11 @@ next:
 
   if (token == "SELECT") {
     token_list->emplace_back(Token::T_SELECT);
+    goto next;
+  }
+
+  if (token == "SERIES") {
+    token_list->emplace_back(Token::T_SERIES);
     goto next;
   }
 

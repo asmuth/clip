@@ -70,9 +70,11 @@ protected:
   ASTNode* binaryExpr(ASTNode* lhs, int precedence);
   ASTNode* methodCall();
 
+  ASTNode* statement();
   ASTNode* selectStatement();
   ASTNode* selectSublist();
   ASTNode* tableName();
+  ASTNode* seriesStatement();
 
   ASTNode* fromClause();
   ASTNode* whereClause();
@@ -113,9 +115,12 @@ protected:
     }
   }
 
-  inline void expectAndConsume(Token::kTokenType expectation) {
+  inline bool expectAndConsume(Token::kTokenType expectation) {
     if (assertExpectation(expectation)) {
       consumeToken();
+      return true;
+    } else {
+      return false;
     }
   }
 

@@ -27,7 +27,11 @@ public:
   const ResultList& getResults(size_t statement_index);
 
 protected:
+
+  bool addSelectStatement(ASTNode* statement, TableRepository* repo);
+
   std::vector<std::unique_ptr<Executable>> statements_;
+  //std::vector<std::unique_ptr<Drawable>> drawables_;
   std::vector<ResultList> results_;
 };
 

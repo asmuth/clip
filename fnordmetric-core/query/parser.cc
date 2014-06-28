@@ -26,7 +26,10 @@ size_t Parser::parse(const char* query, size_t len) {
 
   cur_token_ = token_list_.data();
   token_list_end_ = cur_token_ + token_list_.size();
-  root_.appendChild(selectStatement());
+
+  while (cur_token_ < token_list_end_ && errors_.size() == 0) {
+    root_.appendChild(statement());
+  }
 
   return errors_.size() == 0;
 }
@@ -189,15 +192,23 @@ ASTNode* Parser::binaryExpr(ASTNode* lhs, int precedence) {
   }
 }
 
-ASTNode* Parser::selectStatement() {
-  /* SELECT */
-  if (!assertExpectation(Token::T_SELECT)) {
-    return nullptr;
-  } else {
-    consumeToken();
+ASTNode* Parser::statement() {
+  switch (cur_token_->getType()) {
+    case Token::T_SELECT:
+      return selectStatement();
+    case Token::T_SERIES:
+      return seriesStatement();
   }
 
+  addError(
+      ERR_UNEXPECTED_TOKEN,
+      "expected one of SELECT, IMPORT, SERIES or DRAW\n");
+  return nullptr;
+}
+
+ASTNode* Parser::selectStatement() {
   auto select = new ASTNode(ASTNode::T_SELECT);
+  consumeToken();
 
   /* DISTINCT/ALL */
   // FIXPAUL read SET_QUANTIFIER (distinct, all...)
@@ -219,12 +230,10 @@ ASTNode* Parser::selectStatement() {
     }
   }
 
-  if (*cur_token_ == Token::T_SEMICOLON) {
-    return select;
-  }
-
   /* FROM clause */
-  select->appendChild(fromClause());
+  if (!(*cur_token_ == Token::T_SEMICOLON)) {
+    select->appendChild(fromClause());
+  }
 
   /* WHERE clause */
   auto where = whereClause();
@@ -256,7 +265,31 @@ ASTNode* Parser::selectStatement() {
     select->appendChild(limit);
   }
 
+  if (*cur_token_ == Token::T_SEMICOLON) {
+    consumeToken();
+    return select;
+  }
+
   return select;
+}
+
+ASTNode* Parser::seriesStatement() {
+  auto series = new ASTNode(ASTNode::T_SERIES);
+  consumeToken();
+
+  if (lookahead(0, Token::T_STRING)) {
+    auto name = series->appendChild(ASTNode::T_SERIES_NAME);
+    name->setToken(consumeToken());
+  } else {
+    series->appendChild(expr());
+  }
+
+  if (!expectAndConsume(Token::T_FROM)) {
+    return nullptr;
+  }
+
+  series->appendChild(selectStatement());
+  return series;
 }
 
 ASTNode* Parser::selectSublist() {

@@ -49,6 +49,7 @@ public:
     testLimitClause();
     testLimitOffsetClause();
     testComplexQueries();
+    testSeriesStatement();
     testSelectOnlyQuery();
     testSimpleTableScanQuery();
     testTableScanWhereQuery();
@@ -512,6 +513,26 @@ public:
       assert(parser.getErrors().size() == 0);
       assert(parser.getStatements().size() == 1);
     }
+  }
+
+  void testSeriesStatement() {
+    auto parser = parseTestQuery(
+        "  SERIES \"myseries\" FROM"
+        "    SELECT * FROM tbl;");
+
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 2);
+    assert(*stmt == ASTNode::T_SERIES);
+
+    const auto& name = stmt->getChildren()[0];
+    assert(*name == ASTNode::T_SERIES_NAME);
+    assert(*name->getToken() == "myseries");
+
+    const auto& select = stmt->getChildren()[1];
+    assert(*select == ASTNode::T_SELECT);
+    assert(select->getChildren().size() == 2);
   }
 
   void testSelectOnlyQuery() {
