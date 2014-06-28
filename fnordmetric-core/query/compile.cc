@@ -15,6 +15,7 @@ namespace fnordmetric {
 namespace query {
 
 CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
+  assert(ast != nullptr);
   switch (ast->getType()) {
 
     case ASTNode::T_SELECT_LIST:
