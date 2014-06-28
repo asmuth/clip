@@ -14,6 +14,7 @@
 #include "tablerepository.h"
 #include "limitclause.h"
 #include "groupby.h"
+#include "symboltable.h"
 
 namespace fnordmetric {
 namespace query {
@@ -26,8 +27,7 @@ Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
     return exec;
   }
 
-  if (hasGroupByClause(ast)) {
-    printf("build group by!\n");
+  if (hasGroupByClause(ast) || hasAggregationInSelectList(ast)) {
     return buildGroupBy(ast, repo);
   }
 
@@ -50,6 +50,36 @@ bool QueryPlan::hasGroupByClause(ASTNode* ast) {
 
   for (const auto& child : ast->getChildren()) {
     if (child->getType() == ASTNode::T_GROUP_BY) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool QueryPlan::hasAggregationInSelectList(ASTNode* ast) {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
+    return false;
+  }
+
+  auto select_list = ast->getChildren()[0];
+  assert(select_list->getType() == ASTNode::T_SELECT_LIST);
+
+  return hasAggregationExpression(select_list);
+}
+
+bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
+  if (ast->getType() == ASTNode::T_METHOD_CALL) {
+    assert(ast->getToken() != nullptr);
+    auto symbol = lookupSymbol(ast->getToken()->getString());
+    assert(symbol != nullptr); // FIXPAUL!!!!
+    if (symbol->isAggregate()) {
+      return true;
+    }
+  }
+
+  for (const auto& child : ast->getChildren()) {
+    if (hasAggregationExpression(child)) {
       return true;
     }
   }

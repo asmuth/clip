@@ -21,12 +21,33 @@ class TableRepository;
 class QueryPlan {
 public:
 
+  /* Build a query plan for the provided SELECT staement */
   static Executable* buildQueryPlan(
       ASTNode* select_statement, TableRepository* repo);
 
 protected:
 
+  /**
+   * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
+   * otherwise false
+   */
   static bool hasGroupByClause(ASTNode* ast);
+
+  /**
+   * Returns true if the ast is a SELECT statement with a select list that
+   * contains at least one aggregation expression, otherwise false.
+   */
+  static bool hasAggregationInSelectList(ASTNode* ast);
+
+  /**
+   * Walks the ast recursively and returns true if at least one aggregation
+   * expression was found, otherwise false.
+   */
+  static bool hasAggregationExpression(ASTNode* ast);
+
+  /**
+   * Build a group by query plan node for a SELECT statement that has a GROUP
+   * BY clause */
   static Executable* buildGroupBy(ASTNode* ast, TableRepository* repo);
 
   /**
