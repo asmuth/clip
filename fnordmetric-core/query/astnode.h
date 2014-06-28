@@ -62,6 +62,7 @@ public:
 
   ASTNode(kASTNodeType type);
   bool operator==(kASTNodeType type) const;
+  bool operator==(const ASTNode& other) const;
   ASTNode* appendChild(ASTNode::kASTNodeType type);
   void appendChild(ASTNode* node);
   void appendChild(ASTNode* node, size_t index);

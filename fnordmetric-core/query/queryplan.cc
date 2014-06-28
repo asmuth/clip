@@ -96,8 +96,11 @@ bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
 Executable* QueryPlan::buildSeriesStatement(
     ASTNode* ast,
     TableRepository* repo) {
-  /* build nested select statement */
-  auto select = buildQueryPlan(ast->getChildren()[1], repo);
+  auto select_ast = ast->getChildren()[1];
+  assert(select_ast->getChildren().size() > 0);
+  assert(select_ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
+  auto child_sl = select_ast->getChildren()[0];
+  size_t num_axes = child_sl->getChildren().size();
 
   /* build or copy name expression */
   ASTNode* name = ast->getChildren()[0];
@@ -107,7 +110,11 @@ Executable* QueryPlan::buildSeriesStatement(
     name->setToken(token);
   } else {
     name = name->deepCopy();
+    buildInternalSelectList(name, child_sl);
   }
+
+  /* build nested select statement */
+  auto select = buildQueryPlan(ast->getChildren()[1], repo);
 
   /* compile name expression */
   size_t scratchpad_len = 0;
@@ -117,8 +124,8 @@ Executable* QueryPlan::buildSeriesStatement(
   /* resolve output column names */
   std::vector<std::string> column_names;
   column_names.push_back("series");
-  for (const auto& col : select->getColumns()) {
-    column_names.push_back(col);
+  for (int i = 0; i < num_axes && i < select->getColumns().size(); ++i) {
+    column_names.push_back(select->getColumns()[i]);
   }
 
   return new SeriesStatement(

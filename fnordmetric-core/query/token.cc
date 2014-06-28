@@ -147,6 +147,22 @@ bool Token::operator==(kTokenType type) const {
   return type_ == type;
 }
 
+bool Token::operator==(const Token& other) const {
+  if (type_ != other.type_) {
+    return false;
+  }
+
+  if (len_ != other.len_) {
+    return false;
+  }
+
+  if (len_ > 0) {
+    return memcmp(data_, other.data_, len_) == 0;
+  } else {
+    return true;
+  }
+}
+
 int64_t Token::getInteger() const {
   int64_t value = 0;
 

@@ -44,7 +44,8 @@ public:
     assert(out_len == 1);
 
     /* pass through the remainder of the row */
-    for (int i = 0; i < row_len; ++i) {
+    assert(row_len >= columns_.size() - 1);
+    for (int i = 0; i < columns_.size() - 1; ++i) {
       out[out_len++] = row[i];
     }
 

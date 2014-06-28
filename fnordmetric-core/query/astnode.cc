@@ -21,6 +21,18 @@ bool ASTNode::operator==(kASTNodeType type) const {
   return type_ == type;
 }
 
+bool ASTNode::operator==(const ASTNode& other) const {
+  if (type_ != other.type_) {
+    return false;
+  }
+
+  if (token_ == nullptr) {
+    return other.token_ == nullptr;
+  } else {
+    return *token_ == *other.token_;
+  }
+}
+
 ASTNode* ASTNode::appendChild(ASTNode::kASTNodeType type) {
   auto child = new ASTNode(type);
   children_.push_back(child);

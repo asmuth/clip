@@ -89,6 +89,8 @@ SValue& SValue::operator=(const SValue& copy) {
       break;
 
   }
+
+  return *this;
 }
 
 SValue::~SValue() {

@@ -67,6 +67,7 @@ public:
   Token(const Token& copy);
   ~Token();
   Token& operator=(const Token& copy) = delete;
+  bool operator==(const Token& other) const;
   bool operator==(const std::string& string) const;
   bool operator==(kTokenType type) const;
   kTokenType getType() const;
