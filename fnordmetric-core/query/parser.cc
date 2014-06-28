@@ -198,6 +198,8 @@ ASTNode* Parser::statement() {
       return selectStatement();
     case Token::T_SERIES:
       return seriesStatement();
+    case Token::T_DRAW:
+      return drawStatement();
   }
 
   addError(
@@ -267,7 +269,6 @@ ASTNode* Parser::selectStatement() {
 
   if (*cur_token_ == Token::T_SEMICOLON) {
     consumeToken();
-    return select;
   }
 
   return select;
@@ -291,6 +292,37 @@ ASTNode* Parser::seriesStatement() {
   series->appendChild(selectStatement());
   return series;
 }
+
+ASTNode* Parser::drawStatement() {
+  auto draw = new ASTNode(ASTNode::T_DRAW);
+  consumeToken();
+
+  switch (cur_token_->getType()) {
+    case Token::T_BAR:
+      draw->setToken(consumeToken());
+      break;
+
+    default:
+      addError(
+          ERR_UNEXPECTED_TOKEN,
+          "expected one of BAR, LINE, AREA\n");
+      return nullptr;
+  }
+
+  if (!expectAndConsume(Token::T_CHART)) {
+    return nullptr;
+  }
+
+  // FIXPAUL parse params
+
+  if (*cur_token_ == Token::T_SEMICOLON) {
+    consumeToken();
+  }
+
+  return draw;
+}
+
+
 
 ASTNode* Parser::selectSublist() {
   /* table_name.* */

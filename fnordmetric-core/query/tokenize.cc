@@ -34,7 +34,7 @@ next:
     case ';': {
       token_list->emplace_back(Token::T_SEMICOLON);
       (*cur)++;
-      return;
+      goto next;
     }
 
     case ',': {
@@ -306,6 +306,31 @@ next:
 
   if (token == "OFFSET") {
     token_list->emplace_back(Token::T_OFFSET);
+    goto next;
+  }
+
+  if (token == "DRAW") {
+    token_list->emplace_back(Token::T_DRAW);
+    goto next;
+  }
+
+  if (token == "BAR") {
+    token_list->emplace_back(Token::T_BAR);
+    goto next;
+  }
+
+  if (token == "LINE") {
+    token_list->emplace_back(Token::T_LINE);
+    goto next;
+  }
+
+  if (token == "AREA") {
+    token_list->emplace_back(Token::T_AREA);
+    goto next;
+  }
+
+  if (token == "CHART") {
+    token_list->emplace_back(Token::T_CHART);
     goto next;
   }
 

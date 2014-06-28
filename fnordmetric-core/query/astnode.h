@@ -57,7 +57,8 @@ public:
     T_POW_EXPR,
 
     T_SERIES,
-    T_SERIES_NAME
+    T_SERIES_NAME,
+    T_DRAW
   };
 
   ASTNode(kASTNodeType type);

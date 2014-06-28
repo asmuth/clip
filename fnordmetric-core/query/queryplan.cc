@@ -16,6 +16,7 @@
 #include "groupby.h"
 #include "symboltable.h"
 #include "seriesstatement.h"
+#include "drawstatement.h"
 
 namespace fnordmetric {
 namespace query {
@@ -26,6 +27,11 @@ Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   /* series statement */
   if (ast->getType() == ASTNode::T_SERIES) {
     return buildSeriesStatement(ast, repo);
+  }
+
+  /* draw statement */
+  if (ast->getType() == ASTNode::T_DRAW) {
+    return buildDrawStatement(ast);
   }
 
   /* internal nodes: multi table query (joins), order, aggregation, limit */
@@ -92,6 +98,27 @@ bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
 
   return false;
 }
+
+Executable* QueryPlan::buildDrawStatement(ASTNode* ast) {
+  DrawStatement::kDrawStatementType type;
+  switch (ast->getToken()->getType()) {
+    case Token::T_BAR:
+      type = DrawStatement::T_BAR_CHART;
+      break;
+    case Token::T_LINE:
+      type = DrawStatement::T_LINE_CHART;
+      break;
+    case Token::T_AREA:
+      type = DrawStatement::T_AREA_CHART;
+      break;
+    default:
+      assert(888 == 0); // FIXPAUL add error
+      return nullptr;
+  }
+
+  return new DrawStatement(type);
+}
+
 
 Executable* QueryPlan::buildSeriesStatement(
     ASTNode* ast,

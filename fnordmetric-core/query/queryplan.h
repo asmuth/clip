@@ -27,6 +27,7 @@ public:
 
 protected:
 
+  static Executable* buildDrawStatement(ASTNode* ast);
   static Executable* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
 
   /**

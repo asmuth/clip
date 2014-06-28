@@ -61,6 +61,7 @@ public:
     testTableScanGroupWithoutGroupClause();
     testNamedSeriesQuery();
     testDerivedSeriesQuery();
+    testRenderSeriesQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -811,7 +812,6 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumRows() == 10);
     assert(results.getNumColumns() == 3);
     for (int i = 0; i < results.getNumRows(); ++i) {
@@ -837,13 +837,33 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumRows() == 10);
     assert(results.getNumColumns() == 3);
     for (int i = 0; i < results.getNumRows(); ++i) {
       const auto& row = results.getRow(i);
       assert(atoi(row[0]->getString().c_str()) == row[1]->getInteger() * 5);
     }
+  }
+
+
+  void testRenderSeriesQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+    auto query = Query(
+        "  DRAW BAR CHART;"
+        ""
+        "  SERIES \"myseries\" FROM"
+        "    SELECT"
+        "      one, two"
+        "    FROM"
+        "      testtable;",
+        &repo);
+
+    std::vector<std::unique_ptr<Drawable>> drawables;
+    query.execute(&drawables);
+    assert(drawables.size() == 1);
   }
 
 };

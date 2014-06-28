@@ -11,10 +11,12 @@
 #include <vector>
 #include <memory>
 #include "resultlist.h"
+#include "../drawable.h"
 
 namespace fnordmetric {
 namespace query {
 class TableRepository;
+class DrawStatement;
 
 class Query {
 public:
@@ -24,11 +26,15 @@ public:
   Query(Query&& move);
 
   bool execute();
+  bool execute(std::vector<std::unique_ptr<Drawable>>* dst);
+
   const ResultList& getResults(size_t statement_index);
 
 protected:
 
   bool addSelectStatement(ASTNode* statement, TableRepository* repo);
+  bool addDrawStatement(ASTNode* statement);
+  Drawable* makeDrawable(DrawStatement* stmt);
 
   std::vector<std::unique_ptr<Executable>> statements_;
   //std::vector<std::unique_ptr<Drawable>> drawables_;

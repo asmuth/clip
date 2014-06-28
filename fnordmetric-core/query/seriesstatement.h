@@ -8,6 +8,8 @@
 #define _FNORDMETRIC_QUERY_SERIESSTATEMENT_H
 #include <stdlib.h>
 #include <assert.h>
+#include "compile.h"
+#include "execute.h"
 #include "../seriesdefinition.h"
 
 namespace fnordmetric {
@@ -61,7 +63,6 @@ public:
         &out_len,
         out);
     assert(out_len == 1);
-    // FIXPAUL cast series name to string
 
     const auto& series_name = out[0].toString();
     const auto& series_iter = series_.find(series_name);
@@ -73,11 +74,11 @@ public:
       series = series_iter->second;
     }
 
-    // execute series definition expressions
+    // FIXPAUL execute series property expressions
     // FIXPAUL: optimization -- execute all non aggregate exprs only on last row
     // FIXPAUL: optimization -- set props only on last row
 
-    /* pass through the remainder of the row */
+    /* add the row to the series */
     std::vector<SValue> datum;
     assert(row_len >= columns_.size() - 1);
     for (int i = 0; i < columns_.size() - 1; ++i) {
@@ -93,6 +94,16 @@ public:
 
   const std::vector<std::string>& getColumns() const override {
     return columns_;
+  }
+
+  const std::vector<SeriesDefinition*> getSeries() const {
+    std::vector<SeriesDefinition*> series_list;
+
+    for (const auto& pair : series_) {
+      series_list.push_back(pair.second);
+    }
+
+    return series_list;
   }
 
 protected:
