@@ -6,7 +6,7 @@
  */
 #include <stdlib.h>
 #include <assert.h>
-#include "planner.h"
+#include "queryplan.h"
 #include "astnode.h"
 #include "executable.h"
 #include "tablelessselect.h"
@@ -18,7 +18,7 @@
 namespace fnordmetric {
 namespace query {
 
-Executable* planQuery(ASTNode* ast, TableRepository* repo) {
+Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   Executable* exec = nullptr;
 
   /* internal nodes: multi table query (joins), order, aggregation, limit */

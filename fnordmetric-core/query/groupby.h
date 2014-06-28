@@ -30,6 +30,7 @@ public:
 
     assert(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
 
+    /* search for a group by clause */
     for (const auto& child : ast->getChildren()) {
       int limit = 0;
       int offset = 0;
@@ -88,7 +89,7 @@ public:
           select_expr,
           group_expr,
           select_scratchpad_len,
-          planQuery(child_ast, repo));
+          QueryPlan::buildQueryPlan(child_ast, repo));
     }
 
     return nullptr;

@@ -9,7 +9,7 @@
 #include <memory>
 #include "query.h"
 #include "parser.h"
-#include "planner.h"
+#include "queryplan.h"
 #include "executable.h"
 #include "tablerepository.h"
 
@@ -24,7 +24,7 @@ bool Query::parse(
   parser.parse(query_string, strlen(query_string));
 
   for (auto stmt : parser.getStatements()) {
-    auto query_plan = planQuery(stmt, repo);
+    auto query_plan = QueryPlan::buildQueryPlan(stmt, repo);
 
     if (query_plan == nullptr) {
       return false;

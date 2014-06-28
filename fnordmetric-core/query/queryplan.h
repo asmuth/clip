@@ -18,7 +18,13 @@ namespace query {
 class Executable;
 class TableRepository;
 
-Executable* planQuery(ASTNode* select_statement, TableRepository* repo);
+class QueryPlan {
+public:
+
+  static Executable* buildQueryPlan(
+      ASTNode* select_statement, TableRepository* repo);
+
+};
 
 }
 }

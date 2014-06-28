@@ -56,7 +56,7 @@ public:
         }
       }
 
-      return new LimitClause(limit, offset, planQuery(new_ast, repo));
+      return new LimitClause(limit, offset, QueryPlan::buildQueryPlan(new_ast, repo));
     }
 
     return nullptr;
