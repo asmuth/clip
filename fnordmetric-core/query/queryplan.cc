@@ -15,6 +15,7 @@
 #include "limitclause.h"
 #include "groupby.h"
 #include "symboltable.h"
+#include "seriesstatement.h"
 
 namespace fnordmetric {
 namespace query {
@@ -95,8 +96,10 @@ bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
 Executable* QueryPlan::buildSeriesStatement(
     ASTNode* ast,
     TableRepository* repo) {
+  /* build nested select statement */
   auto select = buildQueryPlan(ast->getChildren()[1], repo);
 
+  /* build or copy name expression */
   ASTNode* name = ast->getChildren()[0];
   if (name->getType() == ASTNode::T_SERIES_NAME) {
     auto token = new Token(*name->getToken());
@@ -106,11 +109,22 @@ Executable* QueryPlan::buildSeriesStatement(
     name = name->deepCopy();
   }
 
-  size_t scratchpad_len;
+  /* compile name expression */
+  size_t scratchpad_len = 0;
   auto name_expr = compileAST(name, &scratchpad_len);
   assert(scratchpad_len == 0); // FIXPAUL!
 
-  return select;
+  /* resolve output column names */
+  std::vector<std::string> column_names;
+  column_names.push_back("series");
+  for (const auto& col : select->getColumns()) {
+    column_names.push_back(col);
+  }
+
+  return new SeriesStatement(
+      std::move(column_names),
+      name_expr,
+      select);
 }
 
 Executable* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {

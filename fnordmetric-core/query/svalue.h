@@ -42,6 +42,7 @@ public:
   int64_t getInteger() const;
   double getFloat() const;
   bool getBool() const;
+  const std::string getString() const;
   std::string toString() const;
 
   static SValue* fromToken(const Token* token);

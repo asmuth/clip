@@ -30,6 +30,7 @@ SValue::SValue(const std::string& string_value) {
       data_.u.t_string.ptr,
       string_value.c_str(),
       data_.u.t_string.len);
+
 }
 
 SValue::SValue(int64_t integer_value) : SValue() {
@@ -69,8 +70,6 @@ SValue::SValue(const SValue& copy) {
 }
 
 SValue& SValue::operator=(const SValue& copy) {
-  memcpy(&data_, &copy.data_, sizeof(data_));
-
   // FIXPAUL free old string!
 
   switch (copy.data_.type) {
@@ -115,6 +114,11 @@ bool SValue::getBool() const {
   return data_.u.t_bool;
 }
 
+const std::string SValue::getString() const {
+  assert(data_.type == T_STRING);
+  return std::string(data_.u.t_string.ptr, data_.u.t_string.len);
+}
+
 std::string SValue::makeUniqueKey(SValue* arr, size_t len) {
   size_t buf_len = sizeof(data_) * len;
   char* buf = static_cast<char*>(alloca(buf_len));
@@ -156,6 +160,16 @@ std::string SValue::toString() const {
         len = sizeof(false_str);
       }
       break;
+    }
+
+    case T_STRING: {
+      return getString();
+    }
+
+    case T_UNDEFINED: {
+      static const auto undef_str = "undefined";
+      str = undef_str;
+      len = sizeof(undef_str);
     }
 
   }

@@ -813,6 +813,12 @@ public:
     results.debugPrint();
     assert(results.getNumRows() == 10);
     assert(results.getNumColumns() == 3);
+    for (int i = 0; i < results.getNumRows(); ++i) {
+      const auto& row = results.getRow(i);
+      assert(row[0]->getString() == "myseries");
+      assert(row[1]->getInteger() == 10 - i);
+      assert(row[2]->getInteger() == 20 - i * 2);
+    }
   }
 
 };
