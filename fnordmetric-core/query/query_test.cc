@@ -842,9 +842,7 @@ public:
     assert(results.getNumColumns() == 3);
     for (int i = 0; i < results.getNumRows(); ++i) {
       const auto& row = results.getRow(i);
-      assert(row[0]->getInteger() == (10 - i) * 5);
-      assert(row[1]->getInteger() == 10 - i);
-      assert(row[2]->getInteger() == 20 - i * 2);
+      assert(atoi(row[0]->getString().c_str()) == row[1]->getInteger() * 5);
     }
   }
 

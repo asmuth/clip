@@ -1,9 +1,44 @@
 
+Ways to contribute:
+  + report bugs or suggest new features
+  + suggest or implement new options for existing charts or new chart types
+  + add a new default stylesheet (requires css knowledge)
+  + add some new features to the query engine (requires c++ knowledge)
+  + add a new query backend (requires c++ knowledge)
+  + add a new language binding (requires minimal c++ knowledge)
+  + add a new render target (requires c++ knowledge)
+  + many more! improve all the things :)
+
+If you need any help or guidance please contact the mailing list.
+
+This is how you run a development build and the tests:
+   ....
 
 
-SERIES series_definition [AXES column_list]
-  FROM select_statement;
+DRAW {BAR|LINE|AREA} CHART
+  [SHOWXAXIS {BOTTOM|TOP|BOTH|ON|OFF}]
+  [SHOWYAXIS {LEFT|RIGHT|BOTH|ON|OFF}]
 
+SERIES
+    series_name_expr
+    [AXIS expr AS {X|Y|Z} [, expr AS {X|Y|Z}...]]
+    [XSCALE min_expr, max_expr]
+    [YSCALE min_expr, max_expr]
+    [ZSCALE min_expr, max_expr]
+    [COLOR color_expr]
+    FROM select_statement;
+
+SELECT
+    [ALL | DISTINCT | DISTINCTROW ]
+    select_expr [, select_expr ...]
+    [FROM table_references
+    [WHERE where_condition]
+    [GROUP BY {col_name | expr | position}
+      [ASC | DESC], ...]
+    [HAVING where_condition]
+    [ORDER BY {col_name | expr | position}
+      [ASC | DESC], ...]
+    [LIMIT {[offset,] row_count | row_count OFFSET offset}];
 
 
 As the first simple example we will create a bar chart that displays gross
@@ -103,6 +138,32 @@ SERIES experiment FROM
 
 
 
+
+-- draw a graph with explicit axis definition
+DRAW LINE CHART;
+
+SERIES experiment XAXIS fu YAXIS bar FROM
+  SELECT fu, bar FROM table1;
+
+
+-- draw a graph with different y scales per series
+DRAW LINE CHART;
+
+SERIES experiment YSCALE 0, 100 FROM
+  SELECT x, y FROM table1;
+
+SERIES experiment YSCALE 0, 500 FROM
+  SELECT x, y FROM table2;
+
+
+-- draw a graph with dynamic YSCALE
+DRAW LINE CHART;
+
+SERIES experiment YSCALE 0, max(y) * 1.5 FROM
+  SELECT x, y FROM table1;
+
+SERIES experiment YSCALE 0, max(y) * 1.5 FROM
+  SELECT x, y FROM table2;
 
 
 Examples page with examples left: query, right: output and link to examples/

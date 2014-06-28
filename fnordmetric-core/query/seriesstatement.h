@@ -8,6 +8,7 @@
 #define _FNORDMETRIC_QUERY_SERIESSTATEMENT_H
 #include <stdlib.h>
 #include <assert.h>
+#include "../seriesdefinition.h"
 
 namespace fnordmetric {
 namespace query {
@@ -27,6 +28,24 @@ public:
 
   void execute() override {
     child_->execute();
+
+    if (target_ != nullptr) {
+      for (auto& pair : series_) {
+        auto& series = pair.second;
+        SValue series_name(pair.first);
+
+        for (const auto& row : series->getData()) {
+          std::vector<SValue> out;
+          out.emplace_back(series_name);
+
+          for (const auto& col : row) {
+            out.emplace_back(col);
+          }
+
+          emitRow(out.data(), out.size());
+        }
+      }
+    }
   }
 
   bool nextRow(SValue* row, int row_len) override {
@@ -42,14 +61,29 @@ public:
         &out_len,
         out);
     assert(out_len == 1);
+    // FIXPAUL cast series name to string
 
-    /* pass through the remainder of the row */
-    assert(row_len >= columns_.size() - 1);
-    for (int i = 0; i < columns_.size() - 1; ++i) {
-      out[out_len++] = row[i];
+    const auto& series_name = out[0].toString();
+    const auto& series_iter = series_.find(series_name);
+    SeriesDefinition* series;
+    if (series_iter == series_.end()) {
+      series = new SeriesDefinition(series_name);
+      series_[series_name] = series;
+    } else {
+      series = series_iter->second;
     }
 
-    emitRow(out, out_len);
+    // execute series definition expressions
+    // FIXPAUL: optimization -- execute all non aggregate exprs only on last row
+    // FIXPAUL: optimization -- set props only on last row
+
+    /* pass through the remainder of the row */
+    std::vector<SValue> datum;
+    assert(row_len >= columns_.size() - 1);
+    for (int i = 0; i < columns_.size() - 1; ++i) {
+      datum.emplace_back(row[i]);
+    }
+    series->addDatum(std::move(datum));
     return true;
   }
 
@@ -62,7 +96,7 @@ public:
   }
 
 protected:
-
+  std::unordered_map<std::string, SeriesDefinition*> series_;
   std::vector<std::string> columns_;
   CompiledExpression* name_expr_;
   Executable* child_;
