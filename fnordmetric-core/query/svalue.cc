@@ -20,6 +20,18 @@ SValue::SValue() {
   data_.type = T_UNDEFINED;
 }
 
+SValue::SValue(const std::string& string_value) {
+  data_.type = T_STRING;
+  data_.u.t_string.len = string_value.size();
+  data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
+  assert(data_.u.t_string.ptr != nullptr);
+
+  memcpy(
+      data_.u.t_string.ptr,
+      string_value.c_str(),
+      data_.u.t_string.len);
+}
+
 SValue::SValue(int64_t integer_value) : SValue() {
   data_.type = T_INTEGER;
   data_.u.t_integer = integer_value;
@@ -36,14 +48,53 @@ SValue::SValue(bool bool_value) : SValue() {
 }
 
 SValue::SValue(const SValue& copy) {
-  memcpy(&data_, &copy.data_, sizeof(data_));
+  switch (copy.data_.type) {
+
+    case T_STRING:
+      data_.type = T_STRING;
+      data_.u.t_string.len = copy.data_.u.t_string.len;
+      data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
+      assert(data_.u.t_string.ptr != nullptr);
+      memcpy(
+          data_.u.t_string.ptr,
+          copy.data_.u.t_string.ptr,
+          data_.u.t_string.len);
+
+    default:
+      memcpy(&data_, &copy.data_, sizeof(data_));
+      break;
+
+  }
+
 }
 
 SValue& SValue::operator=(const SValue& copy) {
   memcpy(&data_, &copy.data_, sizeof(data_));
+
+  // FIXPAUL free old string!
+
+  switch (copy.data_.type) {
+
+    case T_STRING:
+      data_.type = T_STRING;
+      data_.u.t_string.len = copy.data_.u.t_string.len;
+      data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
+      assert(data_.u.t_string.ptr != nullptr);
+      memcpy(
+          data_.u.t_string.ptr,
+          copy.data_.u.t_string.ptr,
+          data_.u.t_string.len);
+
+    default:
+      memcpy(&data_, &copy.data_, sizeof(data_));
+      break;
+
+  }
 }
 
-SValue::~SValue() {}
+SValue::~SValue() {
+  // FIXPAUL free string!
+}
 
 SValue::kSValueType SValue::getType() const {
   return data_.type;
@@ -128,6 +179,9 @@ SValue* SValue::fromToken(const Token* token) {
 
     case Token::T_FALSE:
       return new SValue(false);
+
+    case Token::T_STRING:
+      return new SValue(token->getString());
 
     default:
       assert(0);

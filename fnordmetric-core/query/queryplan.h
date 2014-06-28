@@ -27,6 +27,8 @@ public:
 
 protected:
 
+  static Executable* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
+
   /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
    * otherwise false
@@ -47,7 +49,8 @@ protected:
 
   /**
    * Build a group by query plan node for a SELECT statement that has a GROUP
-   * BY clause */
+   * BY clause
+   */
   static Executable* buildGroupBy(ASTNode* ast, TableRepository* repo);
 
   /**

@@ -27,6 +27,7 @@ public:
   };
 
   explicit SValue();
+  explicit SValue(const std::string& string_value);
   explicit SValue(int64_t integer_value);
   explicit SValue(double float_value);
   explicit SValue(bool bool_value);
@@ -53,8 +54,8 @@ protected:
       double t_float;
       bool t_bool;
       struct {
-        const char* ptr;
-        uint32_t size;
+        char* ptr;
+        uint32_t len;
       } t_string;
     } u;
   } data_;

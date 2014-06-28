@@ -50,6 +50,7 @@ public:
     testLimitOffsetClause();
     testComplexQueries();
     testSeriesStatement();
+    testDerivedSeriesStatement();
     testSelectOnlyQuery();
     testSimpleTableScanQuery();
     testTableScanWhereQuery();
@@ -58,6 +59,7 @@ public:
     testTableScanGroupByCountQuery();
     testTableScanGroupBySumQuery();
     testTableScanGroupWithoutGroupClause();
+    testNamedSeriesQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -535,6 +537,26 @@ public:
     assert(select->getChildren().size() == 2);
   }
 
+  void testDerivedSeriesStatement() {
+    auto parser = parseTestQuery(
+        "  SERIES fnord FROM"
+        "    SELECT fnord, blah FROM tbl;");
+
+    assert(parser.getErrors().size() == 0);
+    assert(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    assert(stmt->getChildren().size() == 2);
+    assert(*stmt == ASTNode::T_SERIES);
+
+    const auto& expr = stmt->getChildren()[0];
+    assert(*expr == ASTNode::T_COLUMN_NAME);
+    assert(*expr->getToken() == "fnord");
+
+    const auto& select = stmt->getChildren()[1];
+    assert(*select == ASTNode::T_SELECT);
+    assert(select->getChildren().size() == 2);
+  }
+
   void testSelectOnlyQuery() {
     TableRepository repo;
     std::vector<std::unique_ptr<Query>> dst;
@@ -551,7 +573,6 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumColumns() == 6);
     assert(results.getNumRows() == 1);
     const auto& cols = results.getColumns();
@@ -623,7 +644,6 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumColumns() == 2);
     assert(results.getNumRows() == 100);
 
@@ -700,7 +720,6 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumRows() == 4);
   }
 
@@ -749,7 +768,6 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumRows() == 2);
     for (int i = 0; i<2; ++i) {
       const auto& row = results.getRow(i);
@@ -773,9 +791,28 @@ public:
     query.execute();
 
     const auto& results = query.getResults(0);
-    results.debugPrint();
     assert(results.getNumRows() == 1);
     assert(results.getRow(0)[0]->getInteger() == 55);
+  }
+
+  void testNamedSeriesQuery() {
+    TableRepository repo;
+    repo.addTableRef("testtable",
+        std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+    auto query = Query(
+        "  SERIES \"myseries\" FROM"
+        "    SELECT"
+        "      one, two"
+        "    FROM"
+        "      testtable;",
+        &repo);
+    query.execute();
+
+    const auto& results = query.getResults(0);
+    results.debugPrint();
+    assert(results.getNumRows() == 10);
+    assert(results.getNumColumns() == 3);
   }
 
 };

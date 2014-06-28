@@ -22,6 +22,11 @@ namespace query {
 Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   Executable* exec = nullptr;
 
+  /* series statement */
+  if (ast->getType() == ASTNode::T_SERIES) {
+    return buildSeriesStatement(ast, repo);
+  }
+
   /* internal nodes: multi table query (joins), order, aggregation, limit */
   if ((exec = LimitClause::build(ast, repo)) != nullptr) {
     return exec;
@@ -85,6 +90,27 @@ bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
   }
 
   return false;
+}
+
+Executable* QueryPlan::buildSeriesStatement(
+    ASTNode* ast,
+    TableRepository* repo) {
+  auto select = buildQueryPlan(ast->getChildren()[1], repo);
+
+  ASTNode* name = ast->getChildren()[0];
+  if (name->getType() == ASTNode::T_SERIES_NAME) {
+    auto token = new Token(*name->getToken());
+    name = new ASTNode(ASTNode::T_LITERAL);
+    name->setToken(token);
+  } else {
+    name = name->deepCopy();
+  }
+
+  size_t scratchpad_len;
+  auto name_expr = compileAST(name, &scratchpad_len);
+  assert(scratchpad_len == 0); // FIXPAUL!
+
+  return select;
 }
 
 Executable* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {

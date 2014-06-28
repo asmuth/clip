@@ -25,6 +25,9 @@ Query::Query(const char* query_string, TableRepository* repo) {
       case ASTNode::T_SELECT:
         addSelectStatement(stmt, repo);
         break;
+      case ASTNode::T_SERIES:
+        addSelectStatement(stmt, repo);
+        break;
       default:
         assert(0 == 777);
     }
