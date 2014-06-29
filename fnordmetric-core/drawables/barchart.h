@@ -34,6 +34,8 @@ public:
     O_HORIZONTAL
   };
 
+  static const double kBarPadding = 0.2f; // FIXPAUL make configurable
+
   BarChart();
 
   void draw(ChartRenderTarget* target) override;

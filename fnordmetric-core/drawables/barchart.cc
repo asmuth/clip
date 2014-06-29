@@ -95,12 +95,12 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
   }
 
   /* calculate bar width and padding */
-  double bar_padding_ratio = 0.1f; // FIXPAUL make configurable
-  auto bar_width = (inner_width_ / data_.size()) * (1.0f - bar_padding_ratio);
-  auto bar_padding = (inner_width_ / data_.size()) * (bar_padding_ratio * 0.5f);
+  auto bar_width = (inner_width_ / data_.size()) * (1.0f - kBarPadding);
+  auto bar_padding = (inner_width_ / data_.size()) * (kBarPadding * 0.5f);
+  bar_width -= bar_padding / data_.size() * 2;
 
   /* draw the bars */
-  auto draw_x = padding_left_;
+  auto draw_x = padding_left_ + bar_padding;
   auto draw_width = bar_width;
   for (const auto& bar : data_) {
     for (const auto& y_val : bar.ys) {

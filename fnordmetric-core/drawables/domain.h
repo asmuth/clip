@@ -36,6 +36,10 @@ public:
     return (value - min_value_) / (max_value_ - min_value_);
   }
 
+  double valueAt(double index) const {
+    return min_value_ + (max_value_ - min_value_) * index;
+  }
+
 protected:
   double min_value_;
   double max_value_;
