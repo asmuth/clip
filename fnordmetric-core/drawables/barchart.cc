@@ -12,12 +12,11 @@
 /**
  * todo:
  *  - labels inside/outside
- *  - calculate domain
  */
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_VERTICAL),
+    orientation_(O_HORIZONTAL),
     stacked_(false) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
@@ -37,8 +36,48 @@ void BarChart::draw(ChartRenderTarget* target) {
 }
 
 void BarChart::prepareData() {
-  /* setup our value domain */
-  y_domain = Domain(0, 40, false);
+  // FIXPAUL: assert that y axis is numeric!
+
+  /* calculate our domain*/
+  if (stacked_) {
+    /* count the number of bars */
+    int num_bars = 0;
+    for (const auto& series : getSeries()) {
+      if (series->getData().size() > num_bars) {
+        num_bars = series->getData().size();
+      }
+    }
+
+    /* find the largest stack */
+    double y_domain_max = 0.0f;
+    for (int i = 0; i < num_bars; ++i) {
+      int sum = 0;
+      for (const auto& series : getSeries()) {
+        if (i < series->getData().size()) {
+          sum += series->getData()[i][1].getFloat();
+        }
+      }
+      if (sum > y_domain_max) {
+        y_domain_max = sum;
+      }
+    }
+    y_domain = Domain(0, y_domain_max, false);
+  } else {
+    double y_domain_min = 0.0f;
+    double y_domain_max = 0.0f;
+    for (const auto& series : getSeries()) {
+      for (const auto& datum : series->getData()) {
+        auto v = datum[1].getFloat();
+        if (v < y_domain_min) {
+          y_domain_min = v;
+        }
+        if (v > y_domain_max) {
+          y_domain_max = v;
+        }
+      }
+    }
+    y_domain = Domain(y_domain_min, y_domain_max, false);
+  }
 
   for (const auto& series : getSeries()) {
     // FIXPAUL this could be O(N) but is O(N*2)

@@ -126,6 +126,10 @@ int64_t SValue::getInteger() const {
 }
 
 double SValue::getFloat() const {
+  if (data_.type == T_INTEGER) {
+    return data_.u.t_integer;
+  }
+
   assert(data_.type == T_FLOAT);
   return data_.u.t_float;
 }
