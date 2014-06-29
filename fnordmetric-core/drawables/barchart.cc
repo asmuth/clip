@@ -12,7 +12,7 @@
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_VERTICAL) {}
+    orientation_(O_HORIZONTAL) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
   prepareData();
@@ -116,7 +116,41 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
 }
 
 void BarChart::drawHorizontalBars(ChartRenderTarget* target) {
+  if (show_axis_[LEFT]) {
+    drawLeftAxis(target, &y_domain);
+  }
 
+  if (show_axis_[RIGHT]) {
+    drawRightAxis(target, &y_domain);
+  }
+
+  if (show_axis_[BOTTOM]) {
+    drawBottomAxis(target, &y_domain);
+  }
+
+  if (show_axis_[TOP]) {
+    drawTopAxis(target, &y_domain);
+  }
+
+  /* calculate bar width and padding */
+  auto bar_height = (inner_height_ / data_.size()) * (1.0f - kBarPadding);
+  auto bar_padding = (inner_height_ / data_.size()) * (kBarPadding * 0.5f);
+  bar_height -= bar_padding / data_.size() * 2;
+
+  /* draw the bars */
+  auto draw_y = padding_top_ + bar_padding;
+  auto draw_height = bar_height;
+  for (const auto& bar : data_) {
+    for (const auto& y_val : bar.ys) {
+      auto y_min = y_val.first;
+      auto y_max = y_val.second;
+      auto draw_x = padding_left_ + y_min * inner_width_;
+      auto draw_width = (y_max - y_min) * inner_width_;
+      draw_y += bar_padding;
+      target->drawRect(draw_x, draw_y, draw_width, draw_height);
+      draw_y += bar_height + bar_padding;
+    }
+  }
 }
 
 }
