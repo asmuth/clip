@@ -39,16 +39,28 @@ static const std::string kStyleSheetDefault = R"(
     font-size: 11pt;
   }
 
-  .chart.bar rect.color1, .chart.bar rect {
-    fill: steelblue;
+  .chart.bar rect.color6, .chart.bar rect {
+    fill: #db843d;
   }
 
-  .chart.bar rect.color2 {
-    fill: orange;
+  .chart.bar rect.color5 {
+    fill: #3d96ae;
+  }
+
+  .chart.bar rect.color4 {
+    fill: #80699b;
   }
 
   .chart.bar rect.color3 {
-    fill: lightgreen;
+    fill: #89a54e;
+  }
+
+  .chart.bar rect.color2 {
+    fill: #aa4643;
+  }
+
+  .chart.bar rect.color1 {
+    fill: #4572a7;
   }
 
   .chart.bar.vertical .axis.left .stroke,
