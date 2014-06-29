@@ -125,7 +125,7 @@ protected:
           "tick");
 
       target->drawText(
-          domain->labelAt(tick),
+          domain->labelAt(1.0f - tick),
           padding_left_ - (kTickLength * 2),
           tick_y,
           "end",
@@ -172,7 +172,7 @@ protected:
           "tick");
 
       target->drawText(
-          domain->labelAt(tick),
+          domain->labelAt(1.0f - tick),
           (width_ - padding_right_) + (kTickLength * 2),
           tick_y,
           "start",

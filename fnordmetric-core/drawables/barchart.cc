@@ -12,7 +12,7 @@
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_HORIZONTAL) {}
+    orientation_(O_VERTICAL) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
   prepareData();
@@ -34,7 +34,7 @@ void BarChart::draw(ChartRenderTarget* target) {
 
 void BarChart::prepareData() {
   /* setup our value domain */
-  y_domain = Domain(0, 50, false);
+  y_domain = Domain(-10, 40, false);
 
   for (const auto& series : getSeries()) {
     // FIXPAUL this could be O(N) but is O(N*2)
@@ -66,11 +66,11 @@ std::pair<double, double> BarChart::scaleValue(
   switch (value->getType()) {
     case query::SValue::T_INTEGER:
       return std::pair<double, double>(
-          0.0f,
+          domain->scale(0.0f),
           domain->scale(value->getInteger()));
     case query::SValue::T_FLOAT:
       return std::pair<double, double>(
-          0.0f,
+          domain->scale(0.0f),
           domain->scale(value->getFloat()));
     default:
       assert(0); // FIXPAUL
