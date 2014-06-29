@@ -47,7 +47,8 @@ public:
       double x,
       double y,
       double width,
-      double height) = 0;
+      double height,
+      const std::string& class_name) = 0;
 
   virtual void drawLine(
       double x1,

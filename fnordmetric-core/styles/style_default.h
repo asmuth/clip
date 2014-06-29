@@ -12,10 +12,6 @@
 namespace fnordmetric {
 
 static const std::string kStyleSheetDefault = R"(
-  .chart rect {
-    fill: steelblue;
-  }
-
   .chart text {
     font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font: 10pt sans-serif;
@@ -41,6 +37,18 @@ static const std::string kStyleSheetDefault = R"(
 
   .axis .title {
     font-size: 11pt;
+  }
+
+  .chart.bar rect.color1, .chart.bar rect {
+    fill: steelblue;
+  }
+
+  .chart.bar rect.color2 {
+    fill: orange;
+  }
+
+  .chart.bar rect.color3 {
+    fill: lightgreen;
   }
 
   .chart.bar.vertical .axis.left .stroke,

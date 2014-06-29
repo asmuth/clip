@@ -373,6 +373,12 @@ protected:
     return series_;
   }
 
+  std::string colorName(int index) const {
+    char buf[16];
+    int len = snprintf(buf, sizeof(buf), "color%i", index + 1);
+    return std::string(buf, len);
+  }
+
   int width_;
   int height_;
   int padding_top_;

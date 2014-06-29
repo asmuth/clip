@@ -106,7 +106,7 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
       auto y_max = y_val.second;
       auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
       auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
-      target->drawRect(draw_x, draw_y, draw_width, draw_height);
+      target->drawRect(draw_x, draw_y, draw_width, draw_height, colorName(0));
     }
 
     /* multi series stacked */
@@ -128,7 +128,8 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
             draw_x_multi,
             draw_y,
             draw_width_multi * (1.0f - kBarPadding * 0.5f),
-            draw_height);
+            draw_height,
+            colorName(1));
         draw_x_multi += (draw_width_multi * (1.0f + kBarPadding * 0.5f));
       }
     }
@@ -182,7 +183,7 @@ void BarChart::drawHorizontalBars(ChartRenderTarget* target) {
       auto y_max = y_val.second;
       auto draw_x = padding_left_ + y_min * inner_width_;
       auto draw_width = (y_max - y_min) * inner_width_;
-      target->drawRect(draw_x, draw_y, draw_width, draw_height);
+      target->drawRect(draw_x, draw_y, draw_width, draw_height, colorName(0));
     }
 
     /* multi series stacked */
@@ -204,7 +205,8 @@ void BarChart::drawHorizontalBars(ChartRenderTarget* target) {
             draw_x,
             draw_y_multi,
             draw_width,
-            draw_height_multi * (1.0f - kBarPadding * 0.5f));
+            draw_height_multi * (1.0f - kBarPadding * 0.5f),
+            colorName(i));
         draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
       }
     }

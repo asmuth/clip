@@ -48,13 +48,15 @@ public:
       double x,
       double y,
       double width,
-      double height) override {
+      double height,
+      const std::string& class_name) override {
     appendLine(
-        "<rect x='%f' y='%f' width='%f' height='%f'></rect>\n",
+        "<rect x='%f' y='%f' width='%f' height='%f' class='%s'></rect>\n",
         x,
         y,
         width,
-        height);
+        height,
+        class_name.c_str());
   }
 
   void drawLine(
