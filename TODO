@@ -21,7 +21,11 @@ This is how you run a development build and the tests:
 DRAW {BAR|LINE|AREA} CHART
   [TITLE title [subtitle]]
   [XAXIS {BOTTOM|TOP|BOTH|AUTO|OFF}
-      [LABEL label]
+      [TITLE title]
+      [SCALE min_expr, max_expr]
+      [LOGARITHMIC]]
+  [YAXIS {LEFT|RIGHT|BOTH|AUTO|OFF}
+      [TITLE title]
       [SCALE min_expr, max_expr]
       [LOGARITHMIC]]
   [STACKED {ON|OFF}]

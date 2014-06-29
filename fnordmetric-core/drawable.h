@@ -27,6 +27,8 @@ public:
 
   static const int kNumTicks = 6; // FIXPAUL make configurable;
   static const int kTickLength = 5; // FIXPAUL make configurable
+  static const int kAxisLabelLength = 30.0f; // FIXPAUL make configurable
+  static const int kAxisTitleLength = 30.0f; // FIXPAUL make configurable
 
   Drawable() :
       width_(800),
@@ -39,6 +41,10 @@ public:
     show_axis_[RIGHT] = true;
     show_axis_[BOTTOM] = true;
     show_axis_[LEFT] = true;
+    axis_title_[TOP] = "top axis";
+    axis_title_[RIGHT] = "right axis";
+    axis_title_[BOTTOM] = "bottom axis";
+    axis_title_[LEFT] = "left axis";
   }
 
   void addSeries(SeriesDefinition* series) {
@@ -48,19 +54,31 @@ public:
   virtual void draw(ChartRenderTarget* target) {
     /* calculate axis paddings */
     if (show_axis_[TOP]) {
-      padding_top_ += 50.0f; // FIXPAUL
+      padding_top_ += kAxisLabelLength;
+      if (axis_title_[TOP].size() > 0) {
+        padding_top_ += kAxisTitleLength;
+      }
     }
 
     if (show_axis_[RIGHT]) {
-      padding_right_ += 50.0f; // FIXPAUL
+      padding_right_ += kAxisLabelLength;
+      if (axis_title_[RIGHT].size() > 0) {
+        padding_right_ += kAxisTitleLength;
+      }
     }
 
     if (show_axis_[BOTTOM]) {
-      padding_bottom_ += 50.0f; // FIXPAUL
+      padding_bottom_ += kAxisLabelLength;
+      if (axis_title_[BOTTOM].size() > 0) {
+        padding_bottom_ += kAxisTitleLength;
+      }
     }
 
     if (show_axis_[LEFT]) {
-      padding_left_ += 50.0f; // FIXPAUL
+      padding_left_ += kAxisLabelLength;
+      if (axis_title_[LEFT].size() > 0) {
+        padding_left_ += kAxisTitleLength;
+      }
     }
 
     /* calculate inner viewport size */
@@ -72,6 +90,8 @@ protected:
 
   void drawLeftAxis(ChartRenderTarget* target, Domain* domain) {
     target->beginGroup("axis left");
+
+    /* draw stroke */
     target->drawLine(
         padding_left_,
         padding_top_,
@@ -79,6 +99,19 @@ protected:
         padding_top_ + inner_height_,
         "stroke");
 
+    /* draw title */
+    if (axis_title_[LEFT].size() > 0) {
+      target->drawText(
+          axis_title_[LEFT],
+          padding_left_ - kAxisLabelLength - kAxisTitleLength * 0.5f,
+          padding_top_ + inner_height_ * 0.5f,
+          "middle",
+          "middle",
+          "title",
+          270);
+    }
+
+    /* draw ticks */
     for (int i=0; i < kNumTicks; i++) {
       auto tick = (double) i / (kNumTicks - 1);
       auto tick_y = padding_top_ + inner_height_ * tick;
@@ -89,6 +122,61 @@ protected:
           padding_left_ - kTickLength,
           tick_y,
           "tick");
+
+      target->drawText(
+          "Tick",
+          padding_left_ - (kTickLength * 2),
+          tick_y,
+          "end",
+          "middle",
+          "label");
+    }
+
+    target->finishGroup();
+  }
+
+  void drawRightAxis(ChartRenderTarget* target, Domain* domain) {
+    target->beginGroup("axis right");
+
+    /* draw stroke */
+    target->drawLine(
+        width_ - padding_right_,
+        padding_top_,
+        width_ - padding_right_,
+        padding_top_ + inner_height_,
+        "stroke");
+
+    /* draw title */
+    if (axis_title_[RIGHT].size() > 0) {
+      target->drawText(
+          axis_title_[RIGHT],
+          (width_ - padding_right_) + kAxisLabelLength + kAxisTitleLength * 0.5f,
+          padding_top_ + inner_height_ * 0.5f,
+          "middle",
+          "middle",
+          "title",
+          270);
+    }
+
+    /* draw ticks */
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      auto tick_y = padding_top_ + inner_height_ * tick;
+
+      target->drawLine(
+          (width_ - padding_right_),
+          tick_y,
+          (width_ - padding_right_) + kTickLength,
+          tick_y,
+          "tick");
+
+      target->drawText(
+          "Tick",
+          (width_ - padding_right_) + (kTickLength * 2),
+          tick_y,
+          "start",
+          "middle",
+          "label");
     }
 
     target->finishGroup();
@@ -96,12 +184,48 @@ protected:
 
   void drawBottomAxis(ChartRenderTarget* target, Domain* domain) {
     target->beginGroup("axis bottom");
+
+    /* draw stroke */
     target->drawLine(
         padding_left_,
         padding_top_ + inner_height_,
         padding_left_ + inner_width_,
         padding_top_ + inner_height_,
         "stroke");
+
+    /* draw title */
+    if (axis_title_[BOTTOM].size() > 0) {
+      target->drawText(
+          axis_title_[BOTTOM],
+          padding_left_ + inner_width_ * 0.5f,
+          padding_top_ + inner_height_ + kAxisLabelLength +
+              kAxisTitleLength * 0.5f,
+          "middle",
+          "middle",
+          "title");
+    }
+
+    /* draw ticks */
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      auto tick_x = padding_left_ + inner_width_ * tick;
+
+      target->drawLine(
+          tick_x,
+          padding_top_ + inner_height_,
+          tick_x,
+          padding_top_ + inner_height_ + kTickLength,
+          "tick");
+
+      target->drawText(
+          "Tick",
+          tick_x,
+          padding_top_ + inner_height_ + kAxisLabelLength * 0.5f,
+          "middle",
+          "middle",
+          "label");
+    }
+
     target->finishGroup();
   }
 
@@ -116,6 +240,7 @@ protected:
   int padding_bottom_;
   int padding_left_;
   bool show_axis_[4];
+  std::string axis_title_[4];
   double inner_width_;
   double inner_height_;
 private:

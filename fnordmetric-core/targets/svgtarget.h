@@ -58,6 +58,40 @@ public:
         class_name.c_str());
   }
 
+  void drawText(
+      const std::string& text,
+      double x,
+      double y,
+      const std::string& halign,
+      const std::string& valign,
+      const std::string& class_name,
+      double rotate = 0.0f) override {
+    char transform[256];
+
+    if (rotate == 0.0f) {
+      *transform = 0;
+    } else {
+      snprintf(
+          transform,
+          sizeof(transform),
+          "transform='translate(0,0) rotate(%f %f %f)'",
+          rotate,
+          x,
+          y);
+    }
+
+    appendLine(
+        "<text x='%f' y='%f' style='text-anchor:%s; dominant-baseline:%s;' "
+            "class='%s' %s>%s</text>\n",
+        x,
+        y,
+        halign.c_str(),
+        valign.c_str(),
+        class_name.c_str(),
+        transform,
+        text.c_str());
+  }
+
   void beginGroup(const std::string& class_name) override {
     appendLine("<g class='%s'>\n", class_name.c_str());
     indent_++;

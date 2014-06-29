@@ -82,6 +82,10 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
     drawLeftAxis(target, &y_domain);
   }
 
+  if (show_axis_[RIGHT]) {
+    drawRightAxis(target, &y_domain);
+  }
+
   if (show_axis_[BOTTOM]) {
     drawBottomAxis(target, &y_domain);
   }

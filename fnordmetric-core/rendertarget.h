@@ -52,6 +52,16 @@ public:
       double y2,
       const std::string& class_name) = 0;
 
+  virtual void drawText(
+      const std::string& text,
+      double x,
+      double y,
+      const std::string& halign,
+      const std::string& valign,
+      const std::string& class_name,
+      double rotate = 0.0f) = 0;
+
+
 };
 
 
