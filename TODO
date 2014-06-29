@@ -29,7 +29,10 @@ bar chart examples:
   * multiseries unstacked
   * multiseries stacked
   * histogram
+  * multiple y axis
 
+--> multiple y axis!
+--> legend!
 
 --- sparklines? (multi svg output)
 --- multi chart types in one chart --- overdraw?
@@ -47,11 +50,11 @@ DRAW {BAR|LINE|AREA} CHART
       [LOGARITHMIC]]
   [STACKED {ON|OFF}]
   [ORIENTATION {HORIZONTAL|VERTICAL}]
-  [LABELS {INSIDE|OUTSIDE|AUTO|OFF} [ROTATE] [color]]
+  [LABELS {INSIDE|OUTSIDE|AUTO|OFF}]
 
 SERIES
     series_name_expr
-    [AXIS expr AS {X|Y|Z} [SCALE min_expr, max_expr]]
+    [AXIS expr AS {X|Y|Z} [SCALE min_expr, max_expr] [LOGARITHMIC]]
     [COLOR color_expr]
     [LABEL label_expr]
     FROM select_statement;
