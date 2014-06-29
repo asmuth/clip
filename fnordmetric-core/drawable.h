@@ -82,6 +82,22 @@ public:
       }
     }
 
+    if (padding_top_ < kAxisLabelHeight * 0.5f) {
+      padding_top_ = kAxisLabelHeight * 0.5f;
+    }
+
+    if (padding_right_ < kAxisLabelWidth * 0.5f) {
+      padding_right_ = kAxisLabelWidth * 0.5f;
+    }
+
+    if (padding_bottom_ < kAxisLabelHeight * 0.5f) {
+      padding_bottom_ = kAxisLabelHeight * 0.5f;
+    }
+
+    if (padding_left_ < kAxisLabelWidth * 0.5f) {
+      padding_left_ = kAxisLabelWidth * 0.5f;
+    }
+
     /* calculate inner viewport size */
     inner_width_ = width_ - (padding_left_ + padding_right_);
     inner_height_ = height_ - (padding_top_ + padding_bottom_);

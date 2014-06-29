@@ -42,6 +42,10 @@ static const std::string kStyleSheetDefault = R"(
   .axis .title {
     font-size: 11pt;
   }
+
+  .chart.bar .axis.left .stroke, .chart.bar .axis.left .tick {
+    display: none;
+  }
 )";
 
 }

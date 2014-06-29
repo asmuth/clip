@@ -23,8 +23,16 @@ public:
     for(int __i = 0; __i < indent_ * 2; ++__i) printf(" "); \
     printf(__VA_ARGS__); }
 
-  void beginChart(int width, int height) {
-    appendLine("<svg class='chart' width='%i' height='%i'>\n", width, height);
+  void beginChart(
+      int width,
+      int height,
+      const std::string& class_name) {
+    appendLine(
+        "<svg width='%i' height='%i' class='%s'>\n",
+        width,
+        height,
+        class_name.c_str());
+
     indent_ ++;
     appendLine("<style type='text/css'>\n");
     appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());

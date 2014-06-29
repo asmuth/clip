@@ -16,7 +16,7 @@ BarChart::BarChart() :
 
 void BarChart::draw(ChartRenderTarget* target) {
   prepareData();
-  target->beginChart(width_, height_);
+  target->beginChart(width_, height_, "chart bar");
   Drawable::draw(target);
 
   /* draw the bars */
