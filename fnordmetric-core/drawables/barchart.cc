@@ -18,7 +18,7 @@
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_VERTICAL),
+    orientation_(O_HORIZONTAL),
     stacked_(false) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
