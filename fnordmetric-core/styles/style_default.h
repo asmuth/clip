@@ -43,8 +43,10 @@ static const std::string kStyleSheetDefault = R"(
     font-size: 11pt;
   }
 
-  .chart.bar .axis.left .stroke, .chart.bar .axis.left .tick,
-  .chart.bar .axis.right .stroke, .chart.bar .axis.right .tick {
+  .chart.bar.vertical .axis.left .stroke,
+  .chart.bar.vertical .axis.left .tick,
+  .chart.bar.vertical .axis.right .stroke,
+  .chart.bar.vertical .axis.right .tick {
     display: none;
   }
 )";
