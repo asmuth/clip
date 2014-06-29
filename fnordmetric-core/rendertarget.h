@@ -33,14 +33,24 @@ public:
 class ChartRenderTarget {
 public:
 
+  virtual void beginChart(int width, int height) = 0;
+  virtual void finishChart() = 0;
+
+  virtual void beginGroup(const std::string& class_name) = 0;
+  virtual void finishGroup() = 0;
+
   virtual void drawRect(
       double x,
       double y,
       double width,
       double height) = 0;
 
-  virtual void beginChart(int width, int height) = 0;
-  virtual void finishChart() = 0;
+  virtual void drawLine(
+      double x1,
+      double y1,
+      double x2,
+      double y2,
+      const std::string& class_name) = 0;
 
 };
 

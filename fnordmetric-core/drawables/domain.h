@@ -14,6 +14,8 @@ namespace fnordmetric {
 class Domain {
 public:
 
+  Domain() : Domain(0, 0, false) {}
+
   Domain(
     double min_value,
     double max_value,
@@ -35,9 +37,9 @@ public:
   }
 
 protected:
-  const double min_value_;
-  const double max_value_;
-  const bool is_logarithmic_;
+  double min_value_;
+  double max_value_;
+  bool is_logarithmic_;
 };
 
 }

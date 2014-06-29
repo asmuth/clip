@@ -53,15 +53,8 @@ protected:
       const Domain* domain) const;
 
   kBarChartOrientation orientation_;
-  int width_;
-  int height_;
-  int padding_top_;
-  int padding_left_;
-  int padding_bottom_;
-  int padding_right_;
-  double inner_width_;
-  double inner_height_;
   std::vector<BarData> data_;
+  Domain y_domain;
 };
 
 }

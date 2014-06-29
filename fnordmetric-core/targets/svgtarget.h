@@ -43,6 +43,30 @@ public:
         height);
   }
 
+  void drawLine(
+      double x1,
+      double y1,
+      double x2,
+      double y2,
+      const std::string& class_name) override {
+    appendLine(
+        "<line x1='%f' y1='%f' x2='%f' y2='%f' class='%s' />\n",
+        x1,
+        y1,
+        x2,
+        y2,
+        class_name.c_str());
+  }
+
+  void beginGroup(const std::string& class_name) override {
+    appendLine("<g class='%s'>\n", class_name.c_str());
+    indent_++;
+  }
+
+  void finishGroup() override {
+    indent_--;
+    appendLine("</g\n");
+  }
 
 protected:
 

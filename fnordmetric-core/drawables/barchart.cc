@@ -12,22 +12,12 @@
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_VERTICAL),
-    width_(800),
-    height_(400),
-    padding_top_(0),
-    padding_left_(0),
-    padding_bottom_(0),
-    padding_right_(0) {}
+    orientation_(O_VERTICAL) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
   prepareData();
-
-  /* how much space do we have to draw all the bars? */
-  inner_width_ = width_ - (padding_left_ + padding_right_);
-  inner_height_ = height_ - (padding_top_ + padding_bottom_);
-
   target->beginChart(width_, height_);
+  Drawable::draw(target);
 
   /* draw the bars */
   switch (orientation_) {
@@ -44,7 +34,7 @@ void BarChart::draw(ChartRenderTarget* target) {
 
 void BarChart::prepareData() {
   /* setup our value domain */
-  Domain y_domain(0, 50, false);
+  y_domain = Domain(0, 50, false);
 
   for (const auto& series : getSeries()) {
     // FIXPAUL this could be O(N) but is O(N*2)
@@ -88,6 +78,14 @@ std::pair<double, double> BarChart::scaleValue(
 }
 
 void BarChart::drawVerticalBars(ChartRenderTarget* target) {
+  if (show_axis_[LEFT]) {
+    drawLeftAxis(target, &y_domain);
+  }
+
+  if (show_axis_[BOTTOM]) {
+    drawBottomAxis(target, &y_domain);
+  }
+
   /* calculate bar width and padding */
   double bar_padding_ratio = 0.1f; // FIXPAUL make configurable
   auto bar_width = (inner_width_ / data_.size()) * (1.0f - bar_padding_ratio);
