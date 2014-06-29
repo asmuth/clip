@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include "../rendertarget.h"
+#include "../styles/style_default.h"
 
 namespace fnordmetric {
 
@@ -23,6 +24,10 @@ public:
   void beginChart(int width, int height) {
     appendLine("<svg class='chart' width='%i' height='%i'>\n", width, height);
     indent_++;
+    appendLine("<style type='text/css'>\n");
+    appendLine("<![CDATA[\n%s]]>\n", kStyleSheetDefault.c_str());
+    indent_--;
+    appendLine("</style>\n");
   }
 
   void finishChart() {

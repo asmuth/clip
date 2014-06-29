@@ -103,10 +103,10 @@ protected:
     if (axis_title_[LEFT].size() > 0) {
       target->drawText(
           axis_title_[LEFT],
-          padding_left_ - kAxisLabelLength - kAxisTitleLength * 0.5f,
+          padding_left_ - kAxisLabelLength - kAxisTitleLength,
           padding_top_ + inner_height_ * 0.5f,
           "middle",
-          "middle",
+          "text-before-edge",
           "title",
           270);
     }
