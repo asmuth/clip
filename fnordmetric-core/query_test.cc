@@ -862,6 +862,18 @@ public:
         "    SELECT"
         "      one, two"
         "    FROM"
+        "      testtable;"
+        ""
+        "  series \"otherseries\" from"
+        "    select"
+        "      one, two + 5"
+        "    from"
+        "      testtable;"
+        ""
+        "  series \"fuseries\" from"
+        "    select"
+        "      one, two + 3"
+        "    from"
         "      testtable;",
         &repo);
 

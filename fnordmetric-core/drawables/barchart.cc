@@ -9,10 +9,17 @@
 #include "barchart.h"
 #include "domain.h"
 
+/**
+ * todo:
+ *  - stacked
+ *  - labels inside/outside
+ *  - calculate domain
+ */
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_VERTICAL) {}
+    orientation_(O_HORIZONTAL),
+    stacked_(false) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
   prepareData();
@@ -91,13 +98,41 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
   auto draw_width = bar_width;
   for (const auto& bar : data_) {
     draw_x += bar_padding;
-    for (const auto& y_val : bar.ys) {
+
+    /* single series */
+    if (getSeries().size() == 1) {
+      auto& y_val = bar.ys[0];
       auto y_min = y_val.first;
       auto y_max = y_val.second;
       auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
       auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
       target->drawRect(draw_x, draw_y, draw_width, draw_height);
     }
+
+    /* multi series stacked */
+    else if (stacked_) {
+    }
+
+    /* multi series unstacked */
+    else {
+      auto num_series = getSeries().size();
+      auto draw_x_multi = draw_x;
+      auto draw_width_multi = draw_width / num_series;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        auto y_min = y_val.first;
+        auto y_max = y_val.second;
+        auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
+        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
+        target->drawRect(
+            draw_x_multi,
+            draw_y,
+            draw_width_multi * (1.0f - kBarPadding * 0.5f),
+            draw_height);
+        draw_x_multi += (draw_width_multi * (1.0f + kBarPadding * 0.5f));
+      }
+    }
+
     x_labels.push_back(std::make_pair((
         draw_x - padding_left_ + bar_width * 0.5f) / inner_width_,
         format::svalueToHuman(bar.x)));
@@ -139,13 +174,41 @@ void BarChart::drawHorizontalBars(ChartRenderTarget* target) {
   auto draw_height = bar_height;
   for (const auto& bar : data_) {
     draw_y += bar_padding;
-    for (const auto& y_val : bar.ys) {
+
+    /* single series */
+    if (getSeries().size() == 1) {
+      auto& y_val = bar.ys[0];
       auto y_min = y_val.first;
       auto y_max = y_val.second;
       auto draw_x = padding_left_ + y_min * inner_width_;
       auto draw_width = (y_max - y_min) * inner_width_;
       target->drawRect(draw_x, draw_y, draw_width, draw_height);
     }
+
+    /* multi series stacked */
+    else if (stacked_) {
+    }
+
+    /* multi series unstacked */
+    else {
+      auto num_series = getSeries().size();
+      auto draw_y_multi = draw_y;
+      auto draw_height_multi = draw_height / num_series;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        auto y_min = y_val.first;
+        auto y_max = y_val.second;
+        auto draw_x = padding_left_ + y_min * inner_width_;
+        auto draw_width = (y_max - y_min) * inner_width_;
+        target->drawRect(
+            draw_x,
+            draw_y_multi,
+            draw_width,
+            draw_height_multi * (1.0f - kBarPadding * 0.5f));
+        draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
+      }
+    }
+
     y_labels.push_back(std::make_pair((
         draw_y - padding_top_ + bar_height * 0.5f) / inner_height_,
         format::svalueToHuman(bar.x)));

@@ -14,6 +14,20 @@ If you need any help or guidance please contact the mailing list.
 This is how you run a development build and the tests:
    ....
 
+
+
+bar chart examples:
+  * horizontal
+  * vertical
+  * horizontal with labels outside
+  * horizontal with labels inside
+  * vertical with negative values
+  * zero-centered horizontal ranges
+  * multiseries unstacked
+  * multiseries stacked
+  * histogram
+
+
 --- sparklines? (multi svg output)
 --- multi chart types in one chart --- overdraw?
 --- pie, scatter, gauges, heatmaps, boxplot, error bars

@@ -55,6 +55,7 @@ protected:
       const Domain* domain) const;
 
   kBarChartOrientation orientation_;
+  bool stacked_;
   std::vector<BarData> data_;
   Domain y_domain;
 };
