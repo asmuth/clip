@@ -8,6 +8,7 @@
 #define _FNORDMETRIC_DOMAIN_H
 #include <stdlib.h>
 #include <assert.h>
+#include "../format.h"
 
 namespace fnordmetric {
 
@@ -38,6 +39,10 @@ public:
 
   double valueAt(double index) const {
     return min_value_ + (max_value_ - min_value_) * index;
+  }
+
+  std::string labelAt(double index) {
+    return format::numberToHuman(valueAt(index));
   }
 
 protected:

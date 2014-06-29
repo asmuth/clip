@@ -12,7 +12,6 @@
 #include "seriesdefinition.h"
 #include "rendertarget.h"
 #include "drawables/domain.h"
-#include "format.h"
 
 namespace fnordmetric {
 
@@ -126,7 +125,7 @@ protected:
           "tick");
 
       target->drawText(
-          format::numberToHuman(domain->valueAt(tick)),
+          domain->labelAt(tick),
           padding_left_ - (kTickLength * 2),
           tick_y,
           "end",
@@ -173,7 +172,7 @@ protected:
           "tick");
 
       target->drawText(
-          format::numberToHuman(domain->valueAt(tick)),
+          domain->labelAt(tick),
           (width_ - padding_right_) + (kTickLength * 2),
           tick_y,
           "start",
@@ -219,7 +218,7 @@ protected:
           "tick");
 
       target->drawText(
-          format::numberToHuman(domain->valueAt(tick)),
+          domain->labelAt(tick),
           tick_x,
           padding_top_ - kAxisLabelHeight * 0.5f,
           "middle",
@@ -265,7 +264,7 @@ protected:
           "tick");
 
       target->drawText(
-          format::numberToHuman(domain->valueAt(tick)),
+          domain->labelAt(tick),
           tick_x,
           padding_top_ + inner_height_ + kAxisLabelHeight * 0.5f,
           "middle",
