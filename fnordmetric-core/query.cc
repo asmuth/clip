@@ -15,6 +15,7 @@
 #include "query/seriesstatement.h"
 #include "query/drawstatement.h"
 #include "drawable.h"
+#include "drawables/barchart.h"
 
 namespace fnordmetric {
 
@@ -49,7 +50,7 @@ bool Query::execute(TableRenderTarget* target) {
 }
 
 bool Query::execute(ChartRenderTarget* target) {
-  Drawable* drawable;
+  Drawable* drawable = nullptr;
 
   for (const auto& stmt : statements_) {
     auto draw_stmt = dynamic_cast<query::DrawStatement*>(stmt.get());
@@ -71,14 +72,22 @@ bool Query::execute(ChartRenderTarget* target) {
     }
   }
 
+  if (drawable == nullptr) {
+    // FIXPAUL add error no drawables defined
+  } else {
+    drawable->draw(target);
+  }
+
   return true;
 }
 
 Drawable* Query::makeDrawable(query::DrawStatement* stmt) {
-  return new Drawable();
-  //switch (stmt->getType()) {
-  //  case DrawStatement::T_BAR_CHART:
-  //}
+  switch (stmt->getType()) {
+    case query::DrawStatement::T_BAR_CHART:
+      return new BarChart();
+    default:
+      assert(0); // FIXPAUL
+  }
 }
 
 bool Query::addStatement(

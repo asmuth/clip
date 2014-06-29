@@ -19,6 +19,7 @@
 #include "query/tablescan.h"
 #include "query/tablerepository.h"
 #include "resultlist.h"
+#include "targets/svgtarget.h"
 
 namespace fnordmetric {
 using namespace fnordmetric::query;
@@ -862,8 +863,8 @@ public:
         "      testtable;",
         &repo);
 
-    //query.execute(&drawables);
-    //assert(drawables.size() == 1);
+    SVGTarget target;
+    query.execute(&target);
   }
 
 };

@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <vector>
 #include "seriesdefinition.h"
+#include "rendertarget.h"
 
 namespace fnordmetric {
 
@@ -20,7 +21,14 @@ public:
     series_.push_back(series);
   }
 
+  virtual void draw(ChartRenderTarget* target) = 0;
+
 protected:
+  const std::vector<SeriesDefinition*>& getSeries() const {
+    return series_;
+  }
+
+private:
   std::vector<SeriesDefinition*> series_;
 };
 
