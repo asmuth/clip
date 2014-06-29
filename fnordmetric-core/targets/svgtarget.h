@@ -19,14 +19,15 @@ public:
 
   SVGTarget() : indent_(0) {}
 
-#define appendLine(...) printf(__VA_ARGS__);
+#define appendLine(...) { \
+    for(int __i = 0; __i < indent_ * 2; ++__i) printf(" "); \
+    printf(__VA_ARGS__); }
 
   void beginChart(int width, int height) {
     appendLine("<svg class='chart' width='%i' height='%i'>\n", width, height);
-    indent_++;
+    indent_ ++;
     appendLine("<style type='text/css'>\n");
-    appendLine("<![CDATA[\n%s]]>\n", kStyleSheetDefault.c_str());
-    indent_--;
+    appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());
     appendLine("</style>\n");
   }
 
