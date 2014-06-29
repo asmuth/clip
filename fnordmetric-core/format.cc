@@ -19,5 +19,10 @@ std::string numberToHuman(double value) {
   return std::string(buf, len);
 }
 
+std::string svalueToHuman(const query::SValue& value) {
+  return value.toString();
+}
+
+
 }
 }

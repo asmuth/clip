@@ -4,14 +4,16 @@
  *
  * Licensed under the MIT license (see LICENSE).
  */
-#include <string.h>
 #ifndef _FNORDMETRIC_FORMAT_H
 #define _FNORDMETRIC_FORMAT_H
+#include <string.h>
+#include "query/svalue.h"
 
 namespace fnordmetric {
 namespace format {
 
 std::string numberToHuman(double value);
+std::string svalueToHuman(const query::SValue& value);
 
 }
 }

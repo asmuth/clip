@@ -12,7 +12,7 @@
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_HORIZONTAL) {}
+    orientation_(O_VERTICAL) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
   prepareData();
@@ -98,12 +98,14 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
       auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
       target->drawRect(draw_x, draw_y, draw_width, draw_height);
     }
+    x_labels.push_back(std::make_pair((
+        draw_x - padding_left_ + bar_width * 0.5f) / inner_width_,
+        format::svalueToHuman(bar.x)));
     draw_x += bar_width + bar_padding;
     x_ticks.push_back((draw_x - padding_left_) / inner_width_);
   }
   x_ticks.back() = 1.0f;
 
-  for (const auto tick : x_ticks) printf("tick: %f\n", tick);
   if (show_axis_[LEFT]) {
     drawLeftAxis(target, &y_domain);
   }
@@ -144,9 +146,13 @@ void BarChart::drawHorizontalBars(ChartRenderTarget* target) {
       auto draw_width = (y_max - y_min) * inner_width_;
       target->drawRect(draw_x, draw_y, draw_width, draw_height);
     }
+    y_labels.push_back(std::make_pair((
+        draw_y - padding_top_ + bar_height * 0.5f) / inner_height_,
+        format::svalueToHuman(bar.x)));
     draw_y += bar_height + bar_padding;
     y_ticks.push_back((draw_y - padding_top_) / inner_height_);
   }
+  y_ticks.back() = 1.0f;
 
   if (show_axis_[LEFT]) {
     drawLeftAxis(target, y_ticks, y_labels);
