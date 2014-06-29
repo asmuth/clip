@@ -42,10 +42,6 @@ public:
     show_axis_[RIGHT] = false;
     show_axis_[BOTTOM] = true;
     show_axis_[LEFT] = true;
-    axis_title_[TOP] = "top axis";
-    axis_title_[RIGHT] = "right axis";
-    axis_title_[BOTTOM] = "bottom axis";
-    axis_title_[LEFT] = "left axis";
   }
 
   void addSeries(SeriesDefinition* series) {
