@@ -105,7 +105,10 @@ public:
 
 protected:
 
-  void drawLeftAxis(ChartRenderTarget* target, Domain* domain) {
+  void drawLeftAxis(
+      ChartRenderTarget* target,
+      std::vector<double>& ticks,
+      std::vector<std::pair<double, std::string>>& labels) {
     target->beginGroup("axis left");
 
     /* draw stroke */
@@ -129,8 +132,7 @@ protected:
     }
 
     /* draw ticks */
-    for (int i=0; i < kNumTicks; i++) {
-      auto tick = (double) i / (kNumTicks - 1);
+    for (const auto& tick : ticks) {
       auto tick_y = padding_top_ + inner_height_ * tick;
 
       target->drawLine(
@@ -139,9 +141,14 @@ protected:
           padding_left_ - kTickLength,
           tick_y,
           "tick");
+    }
+
+    /* draw labels */
+    for (const auto& label : labels) {
+      auto tick_y = padding_top_ + inner_height_ * label.first;
 
       target->drawText(
-          domain->labelAt(1.0f - tick),
+          label.second,
           padding_left_ - (kTickLength * 2),
           tick_y,
           "end",
@@ -152,7 +159,23 @@ protected:
     target->finishGroup();
   }
 
-  void drawRightAxis(ChartRenderTarget* target, Domain* domain) {
+  void drawLeftAxis(ChartRenderTarget* target, Domain* domain) {
+    std::vector<double> ticks;
+    std::vector<std::pair<double, std::string>> labels;
+
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      ticks.push_back(tick);
+      labels.push_back(std::make_pair(tick, domain->labelAt(1.0f - tick)));
+    }
+
+    drawLeftAxis(target, ticks, labels);
+  }
+
+  void drawRightAxis(
+      ChartRenderTarget* target,
+      std::vector<double>& ticks,
+      std::vector<std::pair<double, std::string>>& labels) {
     target->beginGroup("axis right");
 
     /* draw stroke */
@@ -176,8 +199,7 @@ protected:
     }
 
     /* draw ticks */
-    for (int i=0; i < kNumTicks; i++) {
-      auto tick = (double) i / (kNumTicks - 1);
+    for (const auto& tick : ticks) {
       auto tick_y = padding_top_ + inner_height_ * tick;
 
       target->drawLine(
@@ -186,9 +208,14 @@ protected:
           (width_ - padding_right_) + kTickLength,
           tick_y,
           "tick");
+    }
+
+    /* draw labels */
+    for (const auto& label : labels) {
+      auto tick_y = padding_top_ + inner_height_ * label.first;
 
       target->drawText(
-          domain->labelAt(1.0f - tick),
+          label.second,
           (width_ - padding_right_) + (kTickLength * 2),
           tick_y,
           "start",
@@ -199,7 +226,23 @@ protected:
     target->finishGroup();
   }
 
-  void drawTopAxis(ChartRenderTarget* target, Domain* domain) {
+  void drawRightAxis(ChartRenderTarget* target, Domain* domain) {
+    std::vector<double> ticks;
+    std::vector<std::pair<double, std::string>> labels;
+
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      ticks.push_back(tick);
+      labels.push_back(std::make_pair(tick, domain->labelAt(1.0f - tick)));
+    }
+
+    drawRightAxis(target, ticks, labels);
+  }
+
+  void drawTopAxis(
+      ChartRenderTarget* target,
+      std::vector<double>& ticks,
+      std::vector<std::pair<double, std::string>>& labels) {
     target->beginGroup("axis top");
 
     /* draw stroke */
@@ -222,8 +265,7 @@ protected:
     }
 
     /* draw ticks */
-    for (int i=0; i < kNumTicks; i++) {
-      auto tick = (double) i / (kNumTicks - 1);
+    for (const auto& tick : ticks) {
       auto tick_x = padding_left_ + inner_width_ * tick;
 
       target->drawLine(
@@ -232,9 +274,13 @@ protected:
           tick_x,
           padding_top_ - kTickLength,
           "tick");
+    }
 
+    /* draw labels */
+    for (const auto& label : labels) {
+      auto tick_x = padding_left_ + inner_width_ * label.first;
       target->drawText(
-          domain->labelAt(tick),
+          label.second,
           tick_x,
           padding_top_ - kAxisLabelHeight * 0.5f,
           "middle",
@@ -245,7 +291,23 @@ protected:
     target->finishGroup();
   }
 
-  void drawBottomAxis(ChartRenderTarget* target, Domain* domain) {
+  void drawTopAxis(ChartRenderTarget* target, Domain* domain) {
+    std::vector<double> ticks;
+    std::vector<std::pair<double, std::string>> labels;
+
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      ticks.push_back(tick);
+      labels.push_back(std::make_pair(tick, domain->labelAt(tick)));
+    }
+
+    drawTopAxis(target, ticks, labels);
+  }
+
+  void drawBottomAxis(
+      ChartRenderTarget* target,
+      std::vector<double>& ticks,
+      std::vector<std::pair<double, std::string>>& labels) {
     target->beginGroup("axis bottom");
 
     /* draw stroke */
@@ -268,8 +330,7 @@ protected:
     }
 
     /* draw ticks */
-    for (int i=0; i < kNumTicks; i++) {
-      auto tick = (double) i / (kNumTicks - 1);
+    for (const auto& tick : ticks) {
       auto tick_x = padding_left_ + inner_width_ * tick;
 
       target->drawLine(
@@ -278,9 +339,13 @@ protected:
           tick_x,
           padding_top_ + inner_height_ + kTickLength,
           "tick");
+    }
 
+    /* draw labels */
+    for (const auto& label : labels) {
+      auto tick_x = padding_left_ + inner_width_ * label.first;
       target->drawText(
-          domain->labelAt(tick),
+          label.second,
           tick_x,
           padding_top_ + inner_height_ + kAxisLabelHeight * 0.5f,
           "middle",
@@ -289,6 +354,19 @@ protected:
     }
 
     target->finishGroup();
+  }
+
+  void drawBottomAxis(ChartRenderTarget* target, Domain* domain) {
+    std::vector<double> ticks;
+    std::vector<std::pair<double, std::string>> labels;
+
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      ticks.push_back(tick);
+      labels.push_back(std::make_pair(tick, domain->labelAt(tick)));
+    }
+
+    drawBottomAxis(target, ticks, labels);
   }
 
   const std::vector<SeriesDefinition*>& getSeries() const {
