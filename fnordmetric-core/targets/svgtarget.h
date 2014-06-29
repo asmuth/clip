@@ -30,6 +30,20 @@ public:
     appendLine("</svg>\n");
   }
 
+  void drawRect(
+      double x,
+      double y,
+      double width,
+      double height) override {
+    appendLine(
+        "<rect x='%f' y='%f' width='%f' height='%f'></rect>\n",
+        x,
+        y,
+        width,
+        height);
+  }
+
+
 protected:
 
   int indent_;

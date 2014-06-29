@@ -14,11 +14,16 @@ If you need any help or guidance please contact the mailing list.
 This is how you run a development build and the tests:
    ....
 
+--- sparklines? (multi svg output)
+--- multi chart types in one chart --- overdraw?
+--- pie, scatter, gauges, heatmaps, boxplot, error bars
 
 DRAW {BAR|LINE|AREA} CHART
   [TITLE title [subtitle]]
-  [XAXIS {BOTTOM|TOP|BOTH|AUTO|OFF} [label]]
-  [YAXIS {LEFT|RIGHT|BOTH|AUTO|OFF} [label]]
+  [XAXIS {BOTTOM|TOP|BOTH|AUTO|OFF}
+      [LABEL label]
+      [SCALE min_expr, max_expr]
+      [LOGARITHMIC]]
   [STACKED {ON|OFF}]
   [ORIENTATION {HORIZONTAL|VERTICAL}]
   [LABELS {INSIDE|OUTSIDE|AUTO|OFF} [ROTATE] [color]]

@@ -9,8 +9,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../drawable.h"
+#include "domain.h"
 
 namespace fnordmetric {
+class Domain;
 
 /**
  *
@@ -38,12 +40,17 @@ public:
 
 protected:
 
+  void drawVerticalBars(ChartRenderTarget* target, Domain* y_domain);
   void drawHorizontalBars(ChartRenderTarget* target);
 
   kBarChartOrientation orientation_;
-  bool show_bar_values_;
   int width_;
   int height_;
+
+  int padding_top_;
+  int padding_left_;
+  int padding_bottom_;
+  int padding_right_;
 };
 
 }
