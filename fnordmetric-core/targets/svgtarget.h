@@ -65,7 +65,7 @@ public:
 
   void finishGroup() override {
     indent_--;
-    appendLine("</g\n");
+    appendLine("</g>\n");
   }
 
 protected:

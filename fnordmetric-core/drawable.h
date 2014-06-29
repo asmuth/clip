@@ -25,6 +25,9 @@ public:
     LEFT = 3
   };
 
+  static const int kNumTicks = 6; // FIXPAUL make configurable;
+  static const int kTickLength = 5; // FIXPAUL make configurable
+
   Drawable() :
       width_(800),
       height_(400),
@@ -75,6 +78,19 @@ protected:
         padding_left_,
         padding_top_ + inner_height_,
         "stroke");
+
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      auto tick_y = padding_top_ + inner_height_ * tick;
+
+      target->drawLine(
+          padding_left_,
+          tick_y,
+          padding_left_ - kTickLength,
+          tick_y,
+          "tick");
+    }
+
     target->finishGroup();
   }
 
