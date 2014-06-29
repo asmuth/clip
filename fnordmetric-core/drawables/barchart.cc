@@ -21,13 +21,18 @@ BarChart::BarChart() :
     padding_right_(0) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
-  Domain y_domain(0, 50, false);
+  prepareData();
+
+  /* how much space do we have to draw all the bars? */
+  inner_width_ = width_ - (padding_left_ + padding_right_);
+  inner_height_ = height_ - (padding_top_ + padding_bottom_);
 
   target->beginChart(width_, height_);
 
+  /* draw the bars */
   switch (orientation_) {
     case O_VERTICAL:
-      drawVerticalBars(target, &y_domain);
+      drawVerticalBars(target);
       break;
     case O_HORIZONTAL:
       drawHorizontalBars(target);
@@ -37,36 +42,70 @@ void BarChart::draw(ChartRenderTarget* target) {
   target->finishChart();
 }
 
-void BarChart::drawVerticalBars(ChartRenderTarget* target, Domain* y_domain) {
-  /* how much space do we have to draw all the bars? */
-  int width = width_ - (padding_left_ + padding_right_);
-  int height = height_ - (padding_top_ + padding_bottom_);
+void BarChart::prepareData() {
+  /* setup our value domain */
+  Domain y_domain(0, 50, false);
 
-  /* find the number of bars we need to draw */
-  int num_bars = 0;
   for (const auto& series : getSeries()) {
-    auto series_len = series->getData().size();
-    if (series_len > num_bars) {
-      num_bars = series_len;
+    // FIXPAUL this could be O(N) but is O(N*2)
+    for (const auto& datum : series->getData()) {
+      const auto& x_val = datum[0];
+      const auto& y_val = datum[1];
+
+      BarData* bar_data = nullptr;
+      for (auto& candidate : data_) {
+        if (candidate.x == x_val) {
+          bar_data = &candidate;
+        }
+      }
+
+      if (bar_data == nullptr) {
+        data_.emplace_back();
+        bar_data = &data_.back();
+        bar_data->x = x_val;
+      }
+
+      bar_data->ys.push_back(scaleValue(&y_val, &y_domain));
     }
   }
+}
 
+std::pair<double, double> BarChart::scaleValue(
+    const query::SValue* value,
+    const Domain* domain) const {
+  switch (value->getType()) {
+    case query::SValue::T_INTEGER:
+      return std::pair<double, double>(
+          0.0f,
+          domain->scale(value->getInteger()));
+    case query::SValue::T_FLOAT:
+      return std::pair<double, double>(
+          0.0f,
+          domain->scale(value->getFloat()));
+    default:
+      assert(0); // FIXPAUL
+  }
+}
+
+void BarChart::drawVerticalBars(ChartRenderTarget* target) {
   /* calculate bar width and padding */
   double bar_padding_ratio = 0.1f; // FIXPAUL make configurable
-  auto bar_width = (width / num_bars) * (1.0f - bar_padding_ratio);
-  auto bar_padding = (width / num_bars) * (bar_padding_ratio * 0.5f);
+  auto bar_width = (inner_width_ / data_.size()) * (1.0f - bar_padding_ratio);
+  auto bar_padding = (inner_width_ / data_.size()) * (bar_padding_ratio * 0.5f);
 
   /* draw the bars */
   auto draw_x = padding_left_;
   auto draw_width = bar_width;
-  for (int i = 0; i < num_bars; ++i) {
-    auto y_min = y_domain->scale(i);
-    auto y_max = y_domain->scale(3 * i + 1);
-    auto draw_y = padding_top_ + ((1.0f - y_max) * height);
-    auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * height;
-    draw_x += bar_padding;
-    target->drawRect(draw_x, draw_y, draw_width, draw_height);
-    draw_x += bar_width + bar_padding;
+  for (const auto& bar : data_) {
+    for (const auto& y_val : bar.ys) {
+      auto y_min = y_val.first;
+      auto y_max = y_val.second;
+      auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
+      auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
+      draw_x += bar_padding;
+      target->drawRect(draw_x, draw_y, draw_width, draw_height);
+      draw_x += bar_width + bar_padding;
+    }
   }
 }
 

@@ -94,6 +94,24 @@ SValue& SValue::operator=(const SValue& copy) {
   return *this;
 }
 
+bool SValue::operator==(const SValue& other) const {
+  if (data_.type != other.data_.type) {
+    return false;
+  }
+
+  switch (data_.type) {
+    case T_STRING:
+      return memcmp(
+          data_.u.t_string.ptr,
+          other.data_.u.t_string.ptr,
+          data_.u.t_string.len) == 0;
+
+    default:
+      return memcmp(&data_, &other.data_, sizeof(data_)) == 0;
+
+  }
+}
+
 SValue::~SValue() {
   // FIXPAUL free string!
 }

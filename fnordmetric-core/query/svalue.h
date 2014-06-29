@@ -33,6 +33,7 @@ public:
   explicit SValue(const char* str_value, size_t len, bool copy);
   SValue(const SValue& copy);
   SValue& operator=(const SValue& copy);
+  bool operator==(const SValue& other) const;
   ~SValue();
 
   static std::string makeUniqueKey(SValue* arr, size_t len);

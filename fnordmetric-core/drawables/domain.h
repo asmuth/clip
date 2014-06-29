@@ -22,7 +22,7 @@ public:
     max_value_(max_value),
     is_logarithmic_(is_logarithmic) {}
 
-  double scale(double value) {
+  double scale(double value) const {
     if (value <= min_value_) {
       return 0.0f;
     }
