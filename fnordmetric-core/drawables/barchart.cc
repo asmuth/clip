@@ -11,14 +11,13 @@
 
 /**
  * todo:
- *  - stacked
  *  - labels inside/outside
  *  - calculate domain
  */
 namespace fnordmetric {
 
 BarChart::BarChart() :
-    orientation_(O_HORIZONTAL),
+    orientation_(O_VERTICAL),
     stacked_(false) {}
 
 void BarChart::draw(ChartRenderTarget* target) {
@@ -111,6 +110,16 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
 
     /* multi series stacked */
     else if (stacked_) {
+      double y_min = 0.0f;
+      double y_max = 0.0f;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        y_max += y_val.second - y_val.first;
+        auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
+        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
+        target->drawRect(draw_x, draw_y, draw_width, draw_height, colorName(i));
+        y_min += y_val.second - y_val.first;
+      }
     }
 
     /* multi series unstacked */
@@ -188,6 +197,16 @@ void BarChart::drawHorizontalBars(ChartRenderTarget* target) {
 
     /* multi series stacked */
     else if (stacked_) {
+      double y_min = 0.0f;
+      double y_max = 0.0f;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        y_max += y_val.second - y_val.first;
+        auto draw_x = padding_left_ + y_min * inner_width_;
+        auto draw_width = (y_max - y_min) * inner_width_;
+        target->drawRect(draw_x, draw_y, draw_width, draw_height, colorName(i));
+        y_min += y_val.second - y_val.first;
+      }
     }
 
     /* multi series unstacked */
