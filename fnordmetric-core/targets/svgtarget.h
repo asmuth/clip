@@ -15,6 +15,24 @@ namespace fnordmetric {
 
 class SVGTarget : public ChartRenderTarget {
 public:
+
+  SVGTarget() : indent_(0) {}
+
+#define appendLine(...) printf(__VA_ARGS__);
+
+  void beginChart(int width, int height) {
+    appendLine("<svg class='chart' width='%i' height='%i'>\n", width, height);
+    indent_++;
+  }
+
+  void finishChart() {
+    indent_--;
+    appendLine("</svg>\n");
+  }
+
+protected:
+
+  int indent_;
 };
 
 

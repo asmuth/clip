@@ -16,16 +16,18 @@ This is how you run a development build and the tests:
 
 
 DRAW {BAR|LINE|AREA} CHART
-  [SHOWXAXIS {BOTTOM|TOP|BOTH|ON|OFF}]
-  [SHOWYAXIS {LEFT|RIGHT|BOTH|ON|OFF}]
+  [TITLE title [subtitle]]
+  [XAXIS {BOTTOM|TOP|BOTH|AUTO|OFF} [label]]
+  [YAXIS {LEFT|RIGHT|BOTH|AUTO|OFF} [label]]
+  [STACKED {ON|OFF}]
+  [ORIENTATION {HORIZONTAL|VERTICAL}]
+  [LABELS {INSIDE|OUTSIDE|AUTO|OFF} [ROTATE] [color]]
 
 SERIES
     series_name_expr
-    [AXIS expr AS {X|Y|Z} [, expr AS {X|Y|Z}...]]
-    [XSCALE min_expr, max_expr]
-    [YSCALE min_expr, max_expr]
-    [ZSCALE min_expr, max_expr]
+    [AXIS expr AS {X|Y|Z} [SCALE min_expr, max_expr]]
     [COLOR color_expr]
+    [LABEL label_expr]
     FROM select_statement;
 
 SELECT

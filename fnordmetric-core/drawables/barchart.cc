@@ -10,8 +10,26 @@
 
 namespace fnordmetric {
 
+BarChart::BarChart() :
+    orientation_(O_HORIZONTAL),
+    show_labels_(true),
+    width_(800),
+    height_(400) {}
+
 void BarChart::draw(ChartRenderTarget* target) {
-  printf("draw bar chart\n");
+  target->beginChart(420, 120);
+
+  switch (orientation_) {
+    case O_HORIZONTAL:
+      drawHorizontalBars(target);
+      break;
+  }
+
+  target->finishChart();
+}
+
+void drawHorizontalBars(ChartRenderTarget* target) {
+
 }
 
 }

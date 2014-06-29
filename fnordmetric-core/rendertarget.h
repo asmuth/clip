@@ -33,6 +33,8 @@ public:
 class ChartRenderTarget {
 public:
 
+  virtual void beginChart(int width, int height) = 0;
+  virtual void finishChart() = 0;
 
 };
 
