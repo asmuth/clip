@@ -90,6 +90,10 @@ void BarChart::drawVerticalBars(ChartRenderTarget* target) {
     drawBottomAxis(target, &y_domain);
   }
 
+  if (show_axis_[TOP]) {
+    drawTopAxis(target, &y_domain);
+  }
+
   /* calculate bar width and padding */
   double bar_padding_ratio = 0.1f; // FIXPAUL make configurable
   auto bar_width = (inner_width_ / data_.size()) * (1.0f - bar_padding_ratio);

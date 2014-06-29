@@ -27,12 +27,13 @@ public:
 
   static const int kNumTicks = 6; // FIXPAUL make configurable;
   static const int kTickLength = 5; // FIXPAUL make configurable
-  static const int kAxisLabelLength = 30.0f; // FIXPAUL make configurable
-  static const int kAxisTitleLength = 30.0f; // FIXPAUL make configurable
+  static const int kAxisLabelHeight = 35.0f; // FIXPAUL make configurable
+  static const int kAxisLabelWidth = 50.0f; // FIXPAUL make configurable
+  static const int kAxisTitleLength = 20.0f; // FIXPAUL make configurable
 
   Drawable() :
-      width_(800),
-      height_(400),
+      width_(1024),
+      height_(500),
       padding_top_(0),
       padding_right_(0),
       padding_bottom_(0),
@@ -54,28 +55,28 @@ public:
   virtual void draw(ChartRenderTarget* target) {
     /* calculate axis paddings */
     if (show_axis_[TOP]) {
-      padding_top_ += kAxisLabelLength;
+      padding_top_ += kAxisLabelHeight;
       if (axis_title_[TOP].size() > 0) {
         padding_top_ += kAxisTitleLength;
       }
     }
 
     if (show_axis_[RIGHT]) {
-      padding_right_ += kAxisLabelLength;
+      padding_right_ += kAxisLabelWidth;
       if (axis_title_[RIGHT].size() > 0) {
         padding_right_ += kAxisTitleLength;
       }
     }
 
     if (show_axis_[BOTTOM]) {
-      padding_bottom_ += kAxisLabelLength;
+      padding_bottom_ += kAxisLabelHeight;
       if (axis_title_[BOTTOM].size() > 0) {
         padding_bottom_ += kAxisTitleLength;
       }
     }
 
     if (show_axis_[LEFT]) {
-      padding_left_ += kAxisLabelLength;
+      padding_left_ += kAxisLabelWidth;
       if (axis_title_[LEFT].size() > 0) {
         padding_left_ += kAxisTitleLength;
       }
@@ -103,7 +104,7 @@ protected:
     if (axis_title_[LEFT].size() > 0) {
       target->drawText(
           axis_title_[LEFT],
-          padding_left_ - kAxisLabelLength - kAxisTitleLength,
+          padding_left_ - kAxisLabelWidth - kAxisTitleLength,
           padding_top_ + inner_height_ * 0.5f,
           "middle",
           "text-before-edge",
@@ -150,7 +151,7 @@ protected:
     if (axis_title_[RIGHT].size() > 0) {
       target->drawText(
           axis_title_[RIGHT],
-          (width_ - padding_right_) + kAxisLabelLength + kAxisTitleLength * 0.5f,
+          (width_ - padding_right_) + kAxisLabelWidth + kAxisTitleLength * 0.5f,
           padding_top_ + inner_height_ * 0.5f,
           "middle",
           "middle",
@@ -182,6 +183,52 @@ protected:
     target->finishGroup();
   }
 
+  void drawTopAxis(ChartRenderTarget* target, Domain* domain) {
+    target->beginGroup("axis top");
+
+    /* draw stroke */
+    target->drawLine(
+        padding_left_,
+        padding_top_,
+        padding_left_ + inner_width_,
+        padding_top_,
+        "stroke");
+
+    /* draw title */
+    if (axis_title_[TOP].size() > 0) {
+      target->drawText(
+          axis_title_[TOP],
+          padding_left_ + inner_width_ * 0.5f,
+          padding_top_ - kAxisLabelHeight - kAxisTitleLength,
+          "middle",
+          "text-before-edge",
+          "title");
+    }
+
+    /* draw ticks */
+    for (int i=0; i < kNumTicks; i++) {
+      auto tick = (double) i / (kNumTicks - 1);
+      auto tick_x = padding_left_ + inner_width_ * tick;
+
+      target->drawLine(
+          tick_x,
+          padding_top_,
+          tick_x,
+          padding_top_ - kTickLength,
+          "tick");
+
+      target->drawText(
+          "Tick",
+          tick_x,
+          padding_top_ - kAxisLabelHeight * 0.5f,
+          "middle",
+          "middle",
+          "label");
+    }
+
+    target->finishGroup();
+  }
+
   void drawBottomAxis(ChartRenderTarget* target, Domain* domain) {
     target->beginGroup("axis bottom");
 
@@ -198,10 +245,9 @@ protected:
       target->drawText(
           axis_title_[BOTTOM],
           padding_left_ + inner_width_ * 0.5f,
-          padding_top_ + inner_height_ + kAxisLabelLength +
-              kAxisTitleLength * 0.5f,
+          padding_top_ + inner_height_ + kAxisLabelHeight + kAxisTitleLength,
           "middle",
-          "middle",
+          "no-change",
           "title");
     }
 
@@ -220,7 +266,7 @@ protected:
       target->drawText(
           "Tick",
           tick_x,
-          padding_top_ + inner_height_ + kAxisLabelLength * 0.5f,
+          padding_top_ + inner_height_ + kAxisLabelHeight * 0.5f,
           "middle",
           "middle",
           "label");
