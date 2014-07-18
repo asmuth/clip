@@ -10,33 +10,31 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "drawable.h"
-#include "rendertarget.h"
 
 namespace fnordmetric {
 namespace query {
 class TableRepository;
 class DrawStatement;
-}
+class ASTNode;
+class Executable;
+class AbstractResultList;
 
 class Query {
 public:
-  explicit Query(const char* query_string, query::TableRepository* repo);
+  explicit Query(const char* query_string, TableRepository* repo);
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);
 
-  bool execute(TableRenderTarget* target);
-  bool execute(ChartRenderTarget* target);
+  bool execute(AbstractResultList* target);
 
 protected:
-  bool addStatement(
-      query::ASTNode* statement,
-      query::TableRepository* repo);
+  bool addStatement(ASTNode* statement, TableRepository* repo);
 
-  Drawable* makeDrawable(query::DrawStatement* stmt);
-  std::vector<std::unique_ptr<query::Executable>> statements_;
+  //Drawable* makeDrawable(query::DrawStatement* stmt);
+  std::vector<std::unique_ptr<Executable>> statements_;
 };
 
+}
 }
 #endif

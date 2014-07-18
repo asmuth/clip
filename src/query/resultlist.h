@@ -10,12 +10,16 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "rendertarget.h"
 #include "query/svalue.h"
 
 namespace fnordmetric {
+namespace query {
 
-class ResultList : public TableRenderTarget {
+class AbstractResultList {
+
+};
+
+class ResultList : public AbstractResultList {
 public:
   ResultList() {}
   ResultList(const ResultList& copy) = delete;
@@ -42,15 +46,15 @@ public:
     return columns_;
   }
 
-  void addHeader(const std::vector<std::string>& columns) override {
+  void addHeader(const std::vector<std::string>& columns) {
     columns_ = columns;
   }
 
-  void addRow() override {
+  void addRow() {
     rows_.emplace_back();
   }
 
-  void addColumn(const std::string& value) override {
+  void addColumn(const std::string& value) {
     rows_.back().push_back(value);
   }
 
@@ -98,5 +102,6 @@ protected:
   std::vector<std::vector<std::string>> rows_;
 };
 
+}
 }
 #endif

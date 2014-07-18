@@ -6,4 +6,34 @@ cmake_minimum_required(VERSION 2.6)
 project(fnordmetric)
 enable_testing()
 
-add_subdirectory(fnordmetric-core)
+set(FNORDMETRIC_SOURCES
+    src/format.cc)
+
+set(FNORDMETRIC_QUERY_SOURCES
+    ${FNORDMETRIC_SOURCES}
+    src/query/query.cc
+    src/query/astnode.cc
+    src/query/compile.cc
+    src/query/executable.cc
+    src/query/execute.cc
+    src/query/grouper.cc
+    src/query/parser.cc
+    src/query/queryplan.cc
+    src/query/svalue.cc
+    src/query/symboltable.cc
+    src/query/token.cc
+    src/query/tokenize.cc
+    src/query/expressions/aggregate.cc
+    src/query/expressions/boolean.cc
+    src/query/expressions/math.cc)
+
+include_directories(./src)
+set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+
+# add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
+
+add_executable(query-test
+    ${FNORDMETRIC_QUERY_SOURCES}
+    src/query/query_test.cc)
+
+add_test(QueryTest query-test)

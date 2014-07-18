@@ -11,7 +11,7 @@
 #include <vector>
 #include "seriesdefinition.h"
 #include "rendertarget.h"
-#include "drawables/domain.h"
+#include "ui/domain.h"
 
 namespace fnordmetric {
 

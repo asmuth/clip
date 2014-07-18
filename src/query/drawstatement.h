@@ -10,7 +10,7 @@
 #include <assert.h>
 #include "compile.h"
 #include "execute.h"
-#include "../drawable.h"
+//#include "../drawable.h"
 
 namespace fnordmetric {
 namespace query {

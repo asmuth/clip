@@ -14,10 +14,9 @@
 #include "query/tablerepository.h"
 #include "query/seriesstatement.h"
 #include "query/drawstatement.h"
-#include "drawable.h"
-#include "drawables/barchart.h"
 
 namespace fnordmetric {
+namespace query {
 
 Query::Query(const char* query_string, query::TableRepository* repo) {
   query::Parser parser;
@@ -39,6 +38,7 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
   }
 }
 
+/*
 bool Query::execute(TableRenderTarget* target) {
   for (const auto& stmt : statements_) {
     target->addHeader(stmt->getColumns());
@@ -48,7 +48,9 @@ bool Query::execute(TableRenderTarget* target) {
 
   return true;
 }
+*/
 
+/*
 bool Query::execute(ChartRenderTarget* target) {
   Drawable* drawable = nullptr;
 
@@ -89,6 +91,7 @@ Drawable* Query::makeDrawable(query::DrawStatement* stmt) {
       assert(0); // FIXPAUL
   }
 }
+*/
 
 bool Query::addStatement(
     query::ASTNode* statement,
@@ -103,4 +106,5 @@ bool Query::addStatement(
   return true;
 }
 
+}
 }

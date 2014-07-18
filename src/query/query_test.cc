@@ -19,7 +19,6 @@
 #include "query/tablescan.h"
 #include "query/tablerepository.h"
 #include "resultlist.h"
-#include "targets/svgtarget.h"
 
 namespace fnordmetric {
 using namespace fnordmetric::query;
@@ -29,7 +28,6 @@ public:
   QueryTest() {}
 
   void run() {
-    /*
     testTokenizerSimple();
     testTokenizerEscaping();
     testTokenizerAsClause();
@@ -64,8 +62,6 @@ public:
     testTableScanGroupWithoutGroupClause();
     testNamedSeriesQuery();
     testDerivedSeriesQuery();
-    */
-    testRenderSeriesQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -851,6 +847,7 @@ public:
 
 
   void testRenderSeriesQuery() {
+    /*
     TableRepository repo;
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTable2Ref()));
@@ -879,6 +876,7 @@ public:
 
     SVGTarget target;
     query.execute(&target);
+    */
   }
 
 };
