@@ -13,9 +13,12 @@ namespace ui {
 class RenderTarget;
 
 class Drawable {
-protected:
+  friend class Canvas;
+public:
 
   virtual ~Drawable() {}
+
+protected:
 
   virtual void render(
       RenderTarget* target,
