@@ -32,14 +32,14 @@ public:
     //testCanvasWithAllMultiAxis();
     //testCanvasWithMultiLeftAxis();
     //testCanvasWithAxisFromNumericalDomain();
-    //testSimpleBarChart();
-    //testMultiSeriesBarChart();
-    //testStackedBarChart();
-    //testHorizontalBarChart();
-    //testHorizontalMultiSeriesBarChart();
-    //testHorizontalStackedBarChart();
-    //testRangeBarChart();
-    //testHorizontalRangeBarChart();
+    testSimpleBarChart();
+    testMultiSeriesBarChart();
+    testStackedBarChart();
+    testHorizontalBarChart();
+    testHorizontalMultiSeriesBarChart();
+    testHorizontalStackedBarChart();
+    testRangeBarChart();
+    testHorizontalRangeBarChart();
     testSimplePointChart();
     testVariableSizePointChart();
   }

@@ -139,6 +139,7 @@ protected:
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
   std::vector<BarData> data_;
   int num_series_;
+  std::vector<std::string> series_colors_;
 };
 
 }
