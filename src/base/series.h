@@ -37,5 +37,29 @@ protected:
   const std::string name_;
 };
 
+template <typename X, typename Y, typename Z>
+class Series3D {
+public:
+
+  Series3D(const std::string& name) :
+      name_(name) {}
+
+  void addDatum(X x, Y y, Z z) {
+    data_.emplace_back(x, y, z);
+  }
+
+  const std::string& getName() const {
+    return name_;
+  }
+
+  const std::vector<std::tuple<X, Y, Z>>& getData() const {
+    return data_;
+  }
+
+protected:
+  std::vector<std::tuple<X, Y, Z>> data_;
+  const std::string name_;
+};
+
 }
 #endif

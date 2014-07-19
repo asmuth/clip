@@ -24,19 +24,21 @@ public:
   UITest() {}
 
   void run() {
-    //testCanvasWithLeftAxis();
-    //testCanvasWithLeftAxisAndTitle();
-    //testCanvasWithLeftAndBottomAxis();
-    //testCanvasWithAllAxis();
-    //testCanvasWithAllMultiAxis();
-    //testCanvasWithMultiLeftAxis();
-    //testCanvasWithAxisFromNumericalDomain();
-    //testSimpleBarChart();
-    //testMultiSeriesBarChart();
+    testCanvasWithLeftAxis();
+    testCanvasWithLeftAxisAndTitle();
+    testCanvasWithLeftAndBottomAxis();
+    testCanvasWithAllAxis();
+    testCanvasWithAllMultiAxis();
+    testCanvasWithMultiLeftAxis();
+    testCanvasWithAxisFromNumericalDomain();
+    testSimpleBarChart();
+    testMultiSeriesBarChart();
     testStackedBarChart();
-    //testHorizontalBarChart();
-    //testHorizontalMultiSeriesBarChart();
-    //testHorizontalStackedBarChart();
+    testHorizontalBarChart();
+    testHorizontalMultiSeriesBarChart();
+    testHorizontalStackedBarChart();
+    testRangeBarChart();
+    testHorizontalRangeBarChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -482,6 +484,92 @@ public:
     auto svg = canvas.renderSVG();
   }
 
+  void testHorizontalStackedBarChart() {
+    Series2D<std::string, double> series1("myseries1");
+    series1.addDatum("A", 40);
+    series1.addDatum("B", 35);
+    series1.addDatum("C", 30);
+    series1.addDatum("D", 25);
+    series1.addDatum("E", 20);
+    series1.addDatum("F", 15);
+
+    Series2D<std::string, double> series2("myseries2");
+    series2.addDatum("A", 23);
+    series2.addDatum("B", 65);
+    series2.addDatum("C", 43);
+    series2.addDatum("D", 12);
+    series2.addDatum("E", 54);
+    series2.addDatum("F", 31);
+
+    ui::Canvas canvas;
+    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_HORIZONTAL, true);
+    bar_chart->addSeries(&series1);
+    bar_chart->addSeries(&series2);
+    bar_chart->addAxis(AxisDefinition::TOP);
+    bar_chart->addAxis(AxisDefinition::RIGHT);
+    bar_chart->addAxis(AxisDefinition::BOTTOM);
+    bar_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
+
+  void testRangeBarChart() {
+    Series3D<std::string, double, double> series1("myseries1");
+    series1.addDatum("A", -40, +40);
+    series1.addDatum("B", -35, +35);
+    series1.addDatum("C", -30, +30);
+    series1.addDatum("D", -25, +25);
+    series1.addDatum("E", -20, +20);
+    series1.addDatum("F", -15, +15);
+
+    Series3D<std::string, double, double> series2("myseries2");
+    series2.addDatum("A", -23, +23);
+    series2.addDatum("B", -65, +65);
+    series2.addDatum("C", -43, +43);
+    series2.addDatum("D", -12, +12);
+    series2.addDatum("E", -54, +54);
+    series2.addDatum("F", -31, +31);
+
+    ui::Canvas canvas;
+    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_HORIZONTAL);
+    bar_chart->addSeries(&series1);
+    bar_chart->addSeries(&series2);
+    bar_chart->addAxis(AxisDefinition::TOP);
+    bar_chart->addAxis(AxisDefinition::RIGHT);
+    bar_chart->addAxis(AxisDefinition::BOTTOM);
+    bar_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
+
+  void testHorizontalRangeBarChart() {
+    Series3D<std::string, double, double> series1("myseries1");
+    series1.addDatum("A", -40, +40);
+    series1.addDatum("B", -35, +35);
+    series1.addDatum("C", -30, +30);
+    series1.addDatum("D", -25, +25);
+    series1.addDatum("E", -20, +20);
+    series1.addDatum("F", -15, +15);
+
+    Series3D<std::string, double, double> series2("myseries2");
+    series2.addDatum("A", -23, +23);
+    series2.addDatum("B", -65, +65);
+    series2.addDatum("C", -43, +43);
+    series2.addDatum("D", -12, +12);
+    series2.addDatum("E", -54, +54);
+    series2.addDatum("F", -31, +31);
+
+    ui::Canvas canvas;
+    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_HORIZONTAL);
+    bar_chart->addSeries(&series1);
+    bar_chart->addSeries(&series2);
+    bar_chart->addAxis(AxisDefinition::TOP);
+    bar_chart->addAxis(AxisDefinition::RIGHT);
+    bar_chart->addAxis(AxisDefinition::BOTTOM);
+    bar_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
 
 };
 
