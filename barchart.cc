@@ -99,8 +99,6 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
   }
 }
 
-
-
 void BarChart::render(
     RenderTarget* target,
     int width,

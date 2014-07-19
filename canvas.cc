@@ -25,6 +25,9 @@ void Canvas::render(RenderTarget* target) const {
 
   target->beginChart(width_, height_, "chart bar horizontal");
   renderAxes(target, &padding);
+  for (const auto& drawable : drawables_) {
+    drawable->render(target, width_, height_, &padding);
+  }
   target->finishChart();
 }
 

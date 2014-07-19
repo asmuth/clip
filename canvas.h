@@ -10,6 +10,7 @@
 #include <string>
 #include <tuple>
 #include "axisdefinition.h"
+#include "drawable.h"
 
 namespace fnordmetric {
 class SeriesDefinition;
@@ -32,6 +33,7 @@ public:
   template <typename ChartType, typename... Args>
   ChartType* addChart(Args... args) {
     auto drawable = new ChartType(this, args...);
+    drawables_.emplace_back(drawable);
     return drawable;
   }
 
@@ -146,7 +148,7 @@ protected:
   int width_;
   int height_;
   std::vector<std::unique_ptr<AxisDefinition>> axes_;
-  std::vector<SeriesDefinition*> series_;
+  std::vector<std::unique_ptr<Drawable>> drawables_;
 };
 
 }
