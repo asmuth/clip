@@ -13,7 +13,9 @@
 #include "query/svalue.h"
 
 namespace fnordmetric {
+namespace ui {
 
+/*
 class TableRenderTarget : public query::RowSink {
 public:
   virtual void addHeader(const std::vector<std::string>& columns) = 0;
@@ -29,8 +31,9 @@ public:
   }
 
 };
+*/
 
-class ChartRenderTarget {
+class RenderTarget {
 public:
 
   virtual void beginChart(
@@ -70,5 +73,6 @@ public:
 };
 
 
+}
 }
 #endif
