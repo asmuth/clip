@@ -158,8 +158,24 @@ void LineChart::render(
 
   target->beginGroup("lines");
 
+  for (const auto& line : lines_) {
+    std::vector<std::pair<double, double>> coords;
+    for (const auto& point : line.points) {
+      coords.emplace_back(
+          padding_left + x_domain->scale(point.first) * inner_width,
+          padding_top + (1.0 - y_domain->scale(point.second)) * inner_height);
+    }
+
+    target->drawPath(
+      coords,
+      line.style,
+      line.width,
+      line.color,
+      "line");
+  }
+
 /*
-  for (const auto& point : points_) {
+  for (const auto& point : ) {
     auto draw_x = padding_left + x_domain->scale(point.x) * inner_width;
     auto draw_y = padding_top + (1.0 - y_domain->scale(point.y)) * inner_height;
 

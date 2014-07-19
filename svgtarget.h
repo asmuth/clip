@@ -20,9 +20,11 @@ public:
 
   SVGTarget() : indent_(0) {}
 
+#define append(...) { printf(__VA_ARGS__); }
+
 #define appendLine(...) { \
     for(int __i = 0; __i < indent_ * 2; ++__i) printf(" "); \
-    printf(__VA_ARGS__); }
+    append(__VA_ARGS__); }
 
   void beginChart(
       int width,
@@ -132,6 +134,26 @@ public:
         y,
         point_size,
         class_str.c_str());
+  }
+
+   void drawPath(
+      const std::vector<std::pair<double, double>>& points,
+      const std::string& line_style,
+      double line_width,
+      const std::string& color,
+      const std::string& class_name = "") override {
+    std::string class_str(class_name);
+    class_str += " ";
+    class_str += color;
+
+    appendLine("<path class='%s' d='", class_str.c_str());
+
+    for (int i = 0; i < points.size(); ++i) {
+      append(i == 0 ? "M" : "L");
+      append("%f %f ", points[i].first, points[i].second);
+    }
+
+    append("' />\n");
   }
 
   void beginGroup(const std::string& class_name) override {

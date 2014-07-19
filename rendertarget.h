@@ -60,6 +60,13 @@ public:
       const std::string& color,
       const std::string& class_name = "") = 0;
 
+  virtual void drawPath(
+      const std::vector<std::pair<double, double>>& points,
+      const std::string& line_style,
+      double line_width,
+      const std::string& color,
+      const std::string& class_name = "") = 0;
+
 };
 
 
