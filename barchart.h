@@ -87,7 +87,7 @@ public:
    *
    * @param series the series to add. does not transfer ownership
    */
-  //void addSeries(Series2D<std::string, double, double>* series);
+  void addSeries(Series3D<std::string, double, double>* series);
 
   /**
    * Add a (x: double, y: double, z: double) series. This will draw one bar for
@@ -96,7 +96,7 @@ public:
    *
    * @param series the series to add. does not transfer ownership
    */
-  //void addSeries(Series3D<double, double, double>* series);
+  void addSeries(Series3D<double, double, double>* series);
 
   /**
    * Add an axis to the chart. This method should only be called after all

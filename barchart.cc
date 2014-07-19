@@ -49,10 +49,37 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
       bar_data->x = x_val;
     }
 
-    bar_data->ys.emplace_back(0, y_val);   //scaleValue(&y_val, &y_domain));
+    bar_data->ys.emplace_back(0, y_val);
   }
 
   num_series_++;
+}
+
+void BarChart::addSeries(Series3D<std::string, double, double>* series) {
+  for (const auto& point : series->getData()) {
+    const auto& x_val = std::get<0>(point);
+    const auto& y_val = std::get<1>(point);
+    const auto& z_val = std::get<2>(point);
+
+    BarData* bar_data = nullptr;
+
+    for (auto& candidate : data_) {
+      if (candidate.x == x_val) {
+        bar_data = &candidate;
+      }
+    }
+
+    if (bar_data == nullptr) {
+      data_.emplace_back();
+      bar_data = &data_.back();
+      bar_data->x = x_val;
+    }
+
+    bar_data->ys.emplace_back(y_val, z_val);
+  }
+
+  num_series_++;
+
 }
 
 AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
@@ -118,10 +145,11 @@ NumericalDomain* BarChart::getValueDomain() const {
 }
 
 NumericalDomain* BarChart::newValueDomain() const {
+  double y_domain_min = 0.0f;
+  double y_domain_max = 0.0f;
+
   /* calculate our domain*/
   if (stacked_) {
-    double y_domain_max = 0.0f;
-
     for (const auto& group : data_) {
       int sum = 0;
       for (const auto& y : group.ys) {
@@ -132,16 +160,7 @@ NumericalDomain* BarChart::newValueDomain() const {
         y_domain_max = sum;
       }
     }
-
-    if (y_domain_max > 0) {
-      y_domain_max *= 1.1;
-    }
-
-    return new NumericalDomain(0, y_domain_max, false);
   } else {
-    double y_domain_min = 0.0f;
-    double y_domain_max = 0.0f;
-
     for (const auto& group : data_) {
       for (const auto& y : group.ys) {
         if (y.first < y_domain_min) {
@@ -158,13 +177,25 @@ NumericalDomain* BarChart::newValueDomain() const {
         }
       }
     }
-
-    if (y_domain_max > 0) {
-      y_domain_max *= 1.1;
-    }
-
-    return new NumericalDomain(y_domain_min, y_domain_max, false);
   }
+
+  if (y_domain_max > 0) {
+    y_domain_max *= 1.1;
+  }
+
+  if (y_domain_max < 0) {
+    y_domain_max *= 0.9;
+  }
+
+  if (y_domain_min > 0) {
+    y_domain_max *= 0.9;
+  }
+
+  if (y_domain_min < 0) {
+    y_domain_min *= 1.1;
+  }
+
+  return new NumericalDomain(y_domain_min, y_domain_max, false);
 }
 
 AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
