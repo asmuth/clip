@@ -26,25 +26,26 @@ public:
   UITest() {}
 
   void run() {
-    //testCanvasWithLeftAxis();
-    //testCanvasWithLeftAxisAndTitle();
-    //testCanvasWithLeftAndBottomAxis();
-    //testCanvasWithAllAxis();
-    //testCanvasWithAllMultiAxis();
-    //testCanvasWithMultiLeftAxis();
-    //testCanvasWithAxisFromNumericalDomain();
-    //testSimpleBarChart();
-    //testMultiSeriesBarChart();
-    //testStackedBarChart();
-    //testHorizontalBarChart();
-    //testHorizontalMultiSeriesBarChart();
-    //testHorizontalStackedBarChart();
-    //testRangeBarChart();
-    //testHorizontalRangeBarChart();
-    //testSimplePointChart();
-    //testVariableSizePointChart();
-    //testSimpleLineChart();
+    testCanvasWithLeftAxis();
+    testCanvasWithLeftAxisAndTitle();
+    testCanvasWithLeftAndBottomAxis();
+    testCanvasWithAllAxis();
+    testCanvasWithAllMultiAxis();
+    testCanvasWithMultiLeftAxis();
+    testCanvasWithAxisFromNumericalDomain();
+    testSimpleBarChart();
+    testMultiSeriesBarChart();
+    testStackedBarChart();
+    testHorizontalBarChart();
+    testHorizontalMultiSeriesBarChart();
+    testHorizontalStackedBarChart();
+    testRangeBarChart();
+    testHorizontalRangeBarChart();
+    testSimplePointChart();
+    testVariableSizePointChart();
+    testSimpleLineChart();
     testPointLineChart();
+    testMultiChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -652,8 +653,11 @@ public:
     series2.addDatum(40, 18);
     series2.addDatum(50, 21);
 
+    ui::NumericalDomain x_domain(10, 50, false);
+    ui::NumericalDomain y_domain(0, 50, false);
+
     ui::Canvas canvas;
-    auto line_chart = canvas.addChart<LineChart>();
+    auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
     line_chart->addSeries(&series1);
     line_chart->addSeries(&series2);
     line_chart->addAxis(AxisDefinition::TOP);
@@ -695,6 +699,68 @@ public:
     auto point_chart = canvas.addChart<PointChart>(&x_domain, &y_domain);
     point_chart->addSeries(&series1, "circle", 4);
     point_chart->addSeries(&series2, "circle", 4);
+
+    auto svg = canvas.renderSVG();
+  }
+
+  void testMultiChart() {
+    Series2D<double, double> series1("myseries1");
+    series1.addDatum(10, 34);
+    series1.addDatum(15, 38);
+    series1.addDatum(20, 43);
+    series1.addDatum(30, 33);
+    series1.addDatum(40, 21);
+    series1.addDatum(50, 33);
+
+    Series2D<double, double> series2("myseries1");
+    series2.addDatum(10, 19);
+    series2.addDatum(15, 18);
+    series2.addDatum(20, 22);
+    series2.addDatum(30, 23);
+    series2.addDatum(40, 18);
+    series2.addDatum(50, 21);
+
+    Series2D<std::string, double> series3("myseries");
+    series3.addDatum("A", 34);
+    series3.addDatum("B", 38);
+    series3.addDatum("C", 43);
+    series3.addDatum("D", 33);
+    series3.addDatum("E", 21);
+    series3.addDatum("F", 33);
+
+    Series2D<std::string, double> series4("myseries");
+    series4.addDatum("A", 19);
+    series4.addDatum("B", 18);
+    series4.addDatum("C", 22);
+    series4.addDatum("D", 23);
+    series4.addDatum("E", 18);
+    series4.addDatum("F", 21);
+
+    ui::NumericalDomain x_domain(10, 50, false);
+    ui::NumericalDomain y_domain(0, 50, false);
+    ui::NumericalDomain bar_domain(0, 300, false);
+
+    ui::Canvas canvas;
+
+    auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
+    line_chart->addSeries(&series1);
+    line_chart->addSeries(&series2);
+    line_chart->addAxis(AxisDefinition::TOP)->setTitle("x1");
+    line_chart->addAxis(AxisDefinition::LEFT)->setTitle("y1");
+
+    auto point_chart = canvas.addChart<PointChart>(&x_domain, &y_domain);
+    point_chart->addSeries(&series1, "circle", 4);
+    point_chart->addSeries(&series2, "circle", 4);
+
+    auto bar_chart = canvas.addChart<BarChart>(
+        BarChart::O_VERTICAL,
+        false,
+        &bar_domain);
+
+    bar_chart->addSeries(&series3);
+    bar_chart->addSeries(&series4);
+    bar_chart->addAxis(AxisDefinition::RIGHT)->setTitle("x2");
+    bar_chart->addAxis(AxisDefinition::BOTTOM)->setTitle("y2");
 
     auto svg = canvas.renderSVG();
   }
