@@ -32,6 +32,7 @@ set(FNORDMETRIC_UI_SOURCES
     src/ui/axisdefinition.cc
     src/ui/barchart.cc
     src/ui/canvas.cc
+    src/ui/linechart.cc
     src/ui/pointchart.cc)
 
 include_directories(./src)

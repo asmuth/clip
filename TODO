@@ -44,6 +44,7 @@ point chart examples:
 --- sparklines? (multi svg output)
 --- axis expr can be a tuple!!. e.g for error bars or area
 --- middle axis!
+--- TimeDomain!
 
 BEGIN CHART [TITLE title [subtitle]];
 
