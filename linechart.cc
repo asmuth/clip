@@ -28,11 +28,13 @@ LineChart::LineChart(
 void LineChart::addSeries(
       Series2D<double, double>* series,
       double line_width /* = kDefaultLineWidth */,
+      bool smooth /* = false */,
       const std::string& line_style /* = kDefaultLineStyle */) {
   Line line;
   line.color = seriesColor(series);
   line.width = line_width;
   line.style = line_style;
+  line.smooth = smooth;
 
   for (const auto& spoint : series->getData()) {
     line.points.emplace_back(std::get<0>(spoint), std::get<1>(spoint));
@@ -170,24 +172,10 @@ void LineChart::render(
       coords,
       line.style,
       line.width,
+      line.smooth,
       line.color,
       "line");
   }
-
-/*
-  for (const auto& point : ) {
-    auto draw_x = padding_left + x_domain->scale(point.x) * inner_width;
-    auto draw_y = padding_top + (1.0 - y_domain->scale(point.y)) * inner_height;
-
-    target->drawPoint(
-      draw_x,
-      draw_y,
-      point.type,
-      point.size,
-      point.color,
-      "point");
-  }
-*/
 
   target->finishGroup();
 }
