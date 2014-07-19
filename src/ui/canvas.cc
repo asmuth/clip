@@ -90,6 +90,10 @@ void Canvas::renderAxes(
     std::get<3>(*padding) += kAxisLabelWidth * 0.5f;
   }
 
+  for (const auto& placement : top) {
+    renderTopAxis(target, placement.second, padding, placement.first);
+  }
+
   for (const auto& placement : right) {
     renderRightAxis(target, placement.second, padding, placement.first);
   }
@@ -102,6 +106,71 @@ void Canvas::renderAxes(
     renderLeftAxis(target, placement.second, padding, placement.first);
   }
 }
+
+void Canvas::renderTopAxis(
+    RenderTarget* target,
+    AxisDefinition* axis,
+    std::tuple<int, int, int, int>* padding,
+    int top) const {
+  int padding_left = std::get<3>(*padding);
+  int inner_width = width_ - std::get<1>(*padding) - padding_left;
+
+  top += kAxisPadding;
+  target->beginGroup("axis bottom");
+
+  /* draw title */
+  if (axis->hasTitle()) {
+    target->drawText(
+        axis->getTitle(),
+        padding_left + inner_width* 0.5f,
+        top,
+        "middle",
+        "text-before-edge",
+        "title");
+
+    top += kAxisTitleLength;
+  }
+
+  /* draw labels */
+  if (axis->hasLabels()) {
+    top += kAxisLabelHeight; // FIXPAUL: calculate label width?
+
+    for (const auto& label : axis->getLabels()) {
+      auto tick_x = padding_left + inner_width * label.first;
+
+      target->drawText(
+          label.second,
+          tick_x,
+          top - (kTickLength * 2),
+          "middle",
+          "text-after-edge",
+          "label");
+    }
+  }
+
+  /* draw ticks */
+  for (const auto& tick : axis->getTicks()) {
+    auto tick_x = padding_left + inner_width * tick;
+
+    target->drawLine(
+        tick_x,
+        top,
+        tick_x,
+        top + kTickLength,
+        "tick");
+  }
+
+  /* draw stroke */
+  target->drawLine(
+      padding_left,
+      top,
+      padding_left + inner_width,
+      top,
+      "stroke");
+
+  target->finishGroup();
+}
+
 
 void Canvas::renderRightAxis(
     RenderTarget* target,
