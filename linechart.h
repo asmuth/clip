@@ -4,8 +4,8 @@
  *
  * Licensed under the MIT license (see LICENSE).
  */
-#ifndef _FNORDMETRIC_POINTCHART_H
-#define _FNORDMETRIC_POINTCHART_H
+#ifndef _FNORDMETRIC_LINECHART_H
+#define _FNORDMETRIC_LINECHART_H
 #include <stdlib.h>
 #include <assert.h>
 #include "../base/series.h"
@@ -23,47 +23,37 @@ class Domain;
  *
  * OPTIONS
  *
- *   point_style = {dot,square}, default: horizontal
- *   point_size = default: 5
+ *   line_style = {solid,dashed}, default: solid
+ *   line_width = default: 2
  *
  */
-class PointChart : public Drawable {
+class LineChart : public Drawable {
 public:
-  static double kDefaultPointSize;
-  static char kDefaultPointType[];
+  static double kDefaultLineWidth;
+  static char kDefaultLineStyle[];
 
   /**
-   * Create a new point chart
+   * Create a new line chart
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    * @param x_domain the x domain. does not transfer ownership
    * @param y_domain the y domain. does not transfer ownership
    */
-  PointChart(
+  LineChart(
       Canvas* canvas,
       NumericalDomain* x_domain = nullptr,
       NumericalDomain* y_domain = nullptr);
 
   /**
-   * Add a (x: string, y: double) series. This will draw one point for each
-   * point in the series.
+   * Add a (x: string, y: double) series. This will draw one connected line
+   * through all points in the series
    *
    * @param series the series to add. does not transfer ownership
    */
   void addSeries(
       Series2D<double, double>* series,
-      const std::string& point_type = kDefaultPointType,
-      double point_size = kDefaultPointSize);
-
-  /**
-   * Add a (x: string, y: double, z: double) series. This will draw one point
-   * for each point in the series with size Z.
-   *
-   * @param series the series to add. does not transfer ownership
-   */
-  void addSeries(
-      Series3D<double, double, double>* series,
-      const std::string& point_type = kDefaultPointType);
+      double line_width = kDefaultLineWidth,
+      const std::string& line_style = kDefaultLineStyle);
 
   /**
    * Add an axis to the chart. This method should only be called after all
@@ -87,11 +77,10 @@ protected:
       int height,
       std::tuple<int, int, int, int>* padding) const override;
 
-  struct Point {
-    double x;
-    double y;
-    double size;
-    std::string type;
+  struct Line {
+    std::vector<std::pair<double, double>> points;
+    double width;
+    std::string style;
     std::string color;
   };
 
@@ -99,7 +88,7 @@ protected:
   NumericalDomain* x_domain_;
   NumericalDomain* y_domain_;
   int num_series_;
-  std::vector<Point> points_;
+  std::vector<Line> lines_;
   mutable std::unique_ptr<NumericalDomain> x_domain_auto_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
 };

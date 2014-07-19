@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "ui/axisdefinition.h"
 #include "ui/barchart.h"
+#include "ui/linechart.h"
 #include "ui/pointchart.h"
 #include "ui/canvas.h"
 #include "ui/domain.h"
@@ -32,16 +33,17 @@ public:
     //testCanvasWithAllMultiAxis();
     //testCanvasWithMultiLeftAxis();
     //testCanvasWithAxisFromNumericalDomain();
-    testSimpleBarChart();
-    testMultiSeriesBarChart();
-    testStackedBarChart();
-    testHorizontalBarChart();
-    testHorizontalMultiSeriesBarChart();
-    testHorizontalStackedBarChart();
-    testRangeBarChart();
-    testHorizontalRangeBarChart();
-    testSimplePointChart();
-    testVariableSizePointChart();
+    //testSimpleBarChart();
+    //testMultiSeriesBarChart();
+    //testStackedBarChart();
+    //testHorizontalBarChart();
+    //testHorizontalMultiSeriesBarChart();
+    //testHorizontalStackedBarChart();
+    //testRangeBarChart();
+    //testHorizontalRangeBarChart();
+    //testSimplePointChart();
+    //testVariableSizePointChart();
+    testSimpleLineChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -631,6 +633,37 @@ public:
 
     auto svg = canvas.renderSVG();
   }
+
+  void testSimpleLineChart() {
+    Series2D<double, double> series1("myseries1");
+    series1.addDatum(10, 34);
+    series1.addDatum(15, 38);
+    series1.addDatum(20, 43);
+    series1.addDatum(30, 33);
+    series1.addDatum(40, 21);
+    series1.addDatum(50, 33);
+
+    Series2D<double, double> series2("myseries1");
+    series2.addDatum(10, 19);
+    series2.addDatum(15, 18);
+    series2.addDatum(20, 22);
+    series2.addDatum(30, 23);
+    series2.addDatum(40, 18);
+    series2.addDatum(50, 21);
+
+    ui::Canvas canvas;
+    auto point_chart = canvas.addChart<LineChart>();
+    point_chart->addSeries(&series1);
+    point_chart->addSeries(&series2);
+    point_chart->addAxis(AxisDefinition::TOP);
+    point_chart->addAxis(AxisDefinition::RIGHT);
+    point_chart->addAxis(AxisDefinition::BOTTOM);
+    point_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
+
+
 
 };
 

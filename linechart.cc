@@ -1,0 +1,180 @@
+
+/**
+ * This file is part of the "FnordMetric" project
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *
+ * Licensed under the MIT license (see LICENSE).
+ */
+#include <stdlib.h>
+#include "canvas.h"
+#include "linechart.h"
+#include "rendertarget.h"
+
+namespace fnordmetric {
+namespace ui {
+
+double LineChart::kDefaultLineWidth = 2.0f;
+char LineChart::kDefaultLineStyle[] = "solid";
+
+LineChart::LineChart(
+    Canvas* canvas,
+    NumericalDomain* x_domain /* = nullptr */,
+    NumericalDomain* y_domain /* = nullptr */) :
+    canvas_(canvas),
+    x_domain_(x_domain),
+    y_domain_(x_domain),
+    num_series_(0) {}
+
+void LineChart::addSeries(
+      Series2D<double, double>* series,
+      double line_width /* = kDefaultLineWidth */,
+      const std::string& line_style /* = kDefaultLineStyle */) {
+  Line line;
+  line.color = seriesColor(series);
+  line.width = line_width;
+  line.style = line_style;
+
+  for (const auto& spoint : series->getData()) {
+    line.points.emplace_back(std::get<0>(spoint), std::get<1>(spoint));
+  }
+
+  lines_.emplace_back(line);
+}
+
+AxisDefinition* LineChart::addAxis(AxisDefinition::kPosition position) {
+  switch (position) {
+    case AxisDefinition::TOP:
+      return canvas_->addAxis(position, getXDomain());
+
+    case AxisDefinition::RIGHT:
+      return canvas_->addAxis(position, getYDomain());
+
+    case AxisDefinition::BOTTOM:
+      return canvas_->addAxis(position, getXDomain());
+
+    case AxisDefinition::LEFT:
+      return canvas_->addAxis(position, getYDomain());
+  }
+}
+
+NumericalDomain* LineChart::getXDomain() const {
+  if (x_domain_ != nullptr) {
+    return x_domain_;
+  }
+
+  if (x_domain_auto_.get() == nullptr) {
+    double x_min = 0.0f;
+    double x_max = 0.0f;
+
+    for (const auto& line : lines_) {
+      for (const auto& point : line.points) {
+        if (point.first > x_max) {
+          x_max = point.first;
+        }
+        if (point.first < x_min) {
+          x_min = point.first;
+        }
+      }
+    }
+
+    if (x_max > 0) {
+      x_max *= 1.1;
+    }
+
+    if (x_max < 0) {
+      x_max *= 0.9;
+    }
+
+    if (x_min > 0) {
+      x_min *= 0.9;
+    }
+
+    if (x_min < 0) {
+      x_min *= 1.1;
+    }
+
+    x_domain_auto_.reset(new NumericalDomain(x_min, x_max, false));
+  }
+
+  return x_domain_auto_.get();
+}
+
+NumericalDomain* LineChart::getYDomain() const {
+  if (y_domain_ != nullptr) {
+    return y_domain_;
+  }
+
+  if (y_domain_auto_.get() == nullptr) {
+    double y_min = 0.0f;
+    double y_max = 0.0f;
+
+    for (const auto& line : lines_) {
+      for (const auto& point : line.points) {
+        if (point.second > y_max) {
+          y_max = point.second;
+        }
+        if (point.second < y_min) {
+          y_min = point.second;
+        }
+      }
+    }
+
+    if (y_max > 0) {
+      y_max *= 1.1;
+    }
+
+    if (y_max < 0) {
+      y_max *= 0.9;
+    }
+
+    if (y_min > 0) {
+      y_min *= 0.9;
+    }
+
+    if (y_min < 0) {
+      y_min *= 1.1;
+    }
+
+    y_domain_auto_.reset(new NumericalDomain(y_min, y_max, false));
+  }
+
+
+  return y_domain_auto_.get();
+}
+
+void LineChart::render(
+    RenderTarget* target,
+    int width,
+    int height,
+    std::tuple<int, int, int, int>* padding) const {
+  auto padding_top = std::get<0>(*padding);
+  auto padding_right = std::get<1>(*padding);
+  auto padding_bottom = std::get<2>(*padding);
+  auto padding_left = std::get<3>(*padding);
+  auto inner_width = width - padding_right - padding_left;
+  auto inner_height = height - padding_top - padding_bottom;
+  auto x_domain = getXDomain();
+  auto y_domain = getYDomain();
+
+  target->beginGroup("lines");
+
+/*
+  for (const auto& point : points_) {
+    auto draw_x = padding_left + x_domain->scale(point.x) * inner_width;
+    auto draw_y = padding_top + (1.0 - y_domain->scale(point.y)) * inner_height;
+
+    target->drawPoint(
+      draw_x,
+      draw_y,
+      point.type,
+      point.size,
+      point.color,
+      "point");
+  }
+*/
+
+  target->finishGroup();
+}
+
+}
+}
