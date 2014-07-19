@@ -19,6 +19,7 @@ class RenderTarget;
 class Canvas {
 public:
   // static const int kNumTicks = 6; // FIXPAUL make configurable;
+  static const int kAxisPadding = 5; // FIXPAUL make configurable
   static const int kTickLength = 5; // FIXPAUL make configurable
   static const int kAxisLabelHeight = 35.0f; // FIXPAUL make configurable
   static const int kAxisLabelWidth = 50.0f; // FIXPAUL make configurable
@@ -64,6 +65,21 @@ protected:
       std::tuple<int, int, int, int>* padding) const;
 
   /**
+   * Render a bottom axis
+   *
+   * @param target the render target
+   * @param axis the axis definition
+   * @param padding the padding state
+   * @param bottom the bottom padding for this axis
+   */
+  void renderBottomAxis(
+      RenderTarget* target,
+      AxisDefinition* axis,
+      std::tuple<int, int, int, int>* padding,
+      int bottom) const;
+
+
+  /**
    * Render a left axis
    *
    * @param target the render target
@@ -77,10 +93,8 @@ protected:
       std::tuple<int, int, int, int>* padding,
       int left) const;
 
-  bool baked_;
   int width_;
   int height_;
-
   std::vector<std::unique_ptr<AxisDefinition>> axes_;
   std::vector<SeriesDefinition*> series_;
 };

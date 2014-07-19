@@ -41,6 +41,11 @@ public:
   void addTick(double tick_position);
 
   /**
+   * Returns the ticks of this axis
+   */
+  const std::vector<double>& getTicks() const;
+
+  /**
    * Add a label to this axis
    *
    * @param label_position the position of the label (0.0-1.0)
@@ -52,6 +57,11 @@ public:
    * Returns the labels of this axis
    */
   const std::vector<std::pair<double, std::string>>& getLabels() const;
+
+  /**
+   * Returns true if this axis has labels, false otherwise
+   */
+  bool hasLabels() const;
 
   /**
    * Return the position/placement of this axis
