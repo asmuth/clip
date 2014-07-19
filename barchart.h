@@ -53,11 +53,13 @@ public:
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    * @param orientation one of {O_HORIZNTAL,O_VERTICAL}. default is horizontal
+   * @param stack groups?
    * @param the y/value domain. does not transfer ownership
    */
   BarChart(
       Canvas* canvas,
       kBarChartOrientation orientation = O_HORIZONTAL,
+      bool stacked = false,
       NumericalDomain* y_domain = nullptr);
 
   /**
@@ -109,6 +111,10 @@ public:
 
 protected:
 
+  NumericalDomain* getValueDomain() const;
+  NumericalDomain* newValueDomain() const;
+  AxisDefinition* newLabelAxis(AxisDefinition::kPosition position) const;
+
   void render(
       RenderTarget* target,
       int width,
@@ -127,10 +133,6 @@ protected:
       int height,
       std::tuple<int, int, int, int>* padding) const;
 
-  NumericalDomain* getValueDomain() const;
-  NumericalDomain* newValueDomain() const;
-  AxisDefinition* newLabelAxis(AxisDefinition::kPosition position) const;
-
   struct BarData {
     std::string x;
     std::vector<std::pair<double, double>> ys;
@@ -138,9 +140,9 @@ protected:
 
   Canvas* canvas_;
   kBarChartOrientation orientation_;
+  bool stacked_;
   NumericalDomain* y_domain_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
-  bool stacked_;
   std::vector<BarData> data_;
   int num_series_;
 };
