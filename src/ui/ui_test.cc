@@ -50,6 +50,7 @@ public:
     testSimpleAreaChart();
     testRangeAreaChart();
     testMultiRangeAreaChart();
+    testMultiRangeAreaLineChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -801,12 +802,12 @@ public:
     ui::NumericalDomain y_domain(-50, 50, false);
 
     ui::Canvas canvas;
-    auto aread_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
-    aread_chart->addSeries(&series1, "solid", 2, "circle", 4);
-    aread_chart->addAxis(AxisDefinition::TOP);
-    aread_chart->addAxis(AxisDefinition::RIGHT);
-    aread_chart->addAxis(AxisDefinition::BOTTOM);
-    aread_chart->addAxis(AxisDefinition::LEFT);
+    auto area_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
+    area_chart->addSeries(&series1, "solid", 2, "circle", 4);
+    area_chart->addAxis(AxisDefinition::TOP);
+    area_chart->addAxis(AxisDefinition::RIGHT);
+    area_chart->addAxis(AxisDefinition::BOTTOM);
+    area_chart->addAxis(AxisDefinition::LEFT);
 
     auto svg = canvas.renderSVG();
   }
@@ -832,13 +833,57 @@ public:
     ui::NumericalDomain y_domain(-50, 50, false);
 
     ui::Canvas canvas;
-    auto aread_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
-    aread_chart->addSeries(&series1);
-    aread_chart->addSeries(&series2);
-    aread_chart->addAxis(AxisDefinition::TOP);
-    aread_chart->addAxis(AxisDefinition::RIGHT);
-    aread_chart->addAxis(AxisDefinition::BOTTOM);
-    aread_chart->addAxis(AxisDefinition::LEFT);
+    auto area_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
+    area_chart->addSeries(&series1);
+    area_chart->addSeries(&series2);
+    area_chart->addAxis(AxisDefinition::TOP);
+    area_chart->addAxis(AxisDefinition::RIGHT);
+    area_chart->addAxis(AxisDefinition::BOTTOM);
+    area_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
+
+  void testMultiRangeAreaLineChart() {
+    Series3D<double, double, double> series1("myseries1");
+    series1.addDatum(10, -34, 34);
+    series1.addDatum(15, -30, 38);
+    series1.addDatum(20, -20, 43);
+    series1.addDatum(30, -24, 33);
+    series1.addDatum(40, -18, 21);
+    series1.addDatum(50, -32, 33);
+
+    Series3D<double, double, double> series2("myseries2");
+    series2.addDatum(10, -24, 31);
+    series2.addDatum(15, -20, 33);
+    series2.addDatum(20, -15, 38);
+    series2.addDatum(30, -20, 27);
+    series2.addDatum(40, -7, 13);
+    series2.addDatum(50, -18, 30);
+
+    Series2D<double, double> series3("myseries3");
+    series3.addDatum(10, 4);
+    series3.addDatum(15, 8);
+    series3.addDatum(20, 13);
+    series3.addDatum(30, 2);
+    series3.addDatum(40, 1);
+    series3.addDatum(50, 9);
+    series3.setColor("black");
+
+    ui::NumericalDomain x_domain(10, 50, false);
+    ui::NumericalDomain y_domain(-50, 50, false);
+
+    ui::Canvas canvas;
+    auto area_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
+    area_chart->addSeries(&series1);
+    area_chart->addSeries(&series2);
+    area_chart->addAxis(AxisDefinition::TOP);
+    area_chart->addAxis(AxisDefinition::RIGHT);
+    area_chart->addAxis(AxisDefinition::BOTTOM);
+    area_chart->addAxis(AxisDefinition::LEFT);
+
+    auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
+    line_chart->addSeries(&series3, "solid", 2, "circle", 4);
 
     auto svg = canvas.renderSVG();
   }

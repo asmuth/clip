@@ -41,7 +41,7 @@ static const std::string kStyleSheetDefault = R"(
 
   .chart .line {
     fill: none;
-    stroke: #db843d;
+    stroke: #000;
   }
 
   .chart .area {
@@ -51,7 +51,17 @@ static const std::string kStyleSheetDefault = R"(
   .chart .bar,
   .chart .point,
   .chart .area {
+    fill: #000;
+  }
+
+  .chart .bar.color6,
+  .chart .point.color6,
+  .chart .area.color6 {
     fill: #db843d;
+  }
+
+  .chart .lines .line.color6 {
+    strok: #db843d;
   }
 
   .chart .bar.color5,
