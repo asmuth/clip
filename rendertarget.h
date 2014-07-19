@@ -28,13 +28,6 @@ public:
   virtual void beginGroup(const std::string& class_name) = 0;
   virtual void finishGroup() = 0;
 
-  virtual void drawRect(
-      double x,
-      double y,
-      double width,
-      double height,
-      const std::string& class_name) = 0;
-
   virtual void drawLine(
       double x1,
       double y1,
@@ -56,7 +49,16 @@ public:
       double y,
       const std::string& point_type,
       double point_size,
-      const std::string& class_name) = 0;
+      const std::string& color,
+      const std::string& class_name = "") = 0;
+
+  virtual void drawRect(
+      double x,
+      double y,
+      double width,
+      double height,
+      const std::string& color,
+      const std::string& class_name = "") = 0;
 
 };
 
