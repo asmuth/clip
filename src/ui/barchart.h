@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "domain.h"
+#include "drawable.h"
 #include "../base/series.h"
 
 namespace fnordmetric {
@@ -37,7 +38,7 @@ class Canvas;
  *   label_color        = color
  *
  */
-class BarChart {
+class BarChart : public Drawable {
 public:
   enum kBarChartOrientation {
     O_VERTICAL,
@@ -94,19 +95,24 @@ public:
    */
   //void addSeries(Series3D<double, double, double>* series);
 
-  //void draw(ChartRenderTarget* target) override;
-
 protected:
-  /*
-  struct BarData {
-    query::SValue x;
-    std::vector<std::pair<double, double>> ys;
-  };
-*/
+
+  void render(
+      RenderTarget* target,
+      int width,
+      int height,
+      std::tuple<int, int, int, int>* padding) const override;
 
   //void drawVerticalBars(RenderTarget* target);
   //void drawHorizontalBars(RenderTarget* target);
-  void prepareData();
+
+  NumericalDomain* getValueDomain() const;
+  NumericalDomain* calculateValueDomain() const;
+
+  struct BarData {
+    std::string x;
+    std::vector<std::pair<double, double>> ys;
+  };
 
   //std::pair<double, double> scaleValue(
   //    const query::SValue* value, 
@@ -114,8 +120,9 @@ protected:
 
   kBarChartOrientation orientation_;
   NumericalDomain* y_domain_;
+  mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
   bool stacked_;
-  //std::vector<Series2D*> series_;
+  std::vector<BarData> data_;
 };
 
 }
