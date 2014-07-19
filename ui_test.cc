@@ -531,13 +531,13 @@ public:
     series2.addDatum("F", -31, +31);
 
     ui::Canvas canvas;
-    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_HORIZONTAL);
+    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_VERTICAL);
     bar_chart->addSeries(&series1);
     bar_chart->addSeries(&series2);
     bar_chart->addAxis(AxisDefinition::TOP);
     bar_chart->addAxis(AxisDefinition::RIGHT);
     bar_chart->addAxis(AxisDefinition::BOTTOM);
-    bar_chart->addAxis(AxisDefinition::LEFT);
+    bar_chart->addAxis(AxisDefinition::LEFT)->setTitle("myaxis");
 
     auto svg = canvas.renderSVG();
   }
@@ -565,7 +565,7 @@ public:
     bar_chart->addSeries(&series2);
     bar_chart->addAxis(AxisDefinition::TOP);
     bar_chart->addAxis(AxisDefinition::RIGHT);
-    bar_chart->addAxis(AxisDefinition::BOTTOM);
+    bar_chart->addAxis(AxisDefinition::BOTTOM)->setTitle("myaxis");
     bar_chart->addAxis(AxisDefinition::LEFT);
 
     auto svg = canvas.renderSVG();
