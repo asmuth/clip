@@ -28,7 +28,7 @@ void PointChart::addSeries(
       Series2D<double, double>* series,
       const std::string& point_type /* = kDefaultPointType */,
       double point_size /* = kDefaultPointSize */) {
-  std::string color = "color0";
+  const auto& color = seriesColor(series);
 
   for (const auto& spoint : series->getData()) {
     Point point;
@@ -44,7 +44,7 @@ void PointChart::addSeries(
 void PointChart::addSeries(
     Series3D<double, double, double>* series,
     const std::string& point_type /* = kDefaultPointType */) {
-  std::string color = "color0";
+  std::string color = seriesColor(series);
 
   for (const auto& spoint : series->getData()) {
     Point point;

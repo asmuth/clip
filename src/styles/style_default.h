@@ -39,27 +39,28 @@ static const std::string kStyleSheetDefault = R"(
     font-size: 11pt;
   }
 
-  .chart.bar rect.color6, .chart.bar rect {
+  .chart .bars .bar,
+  .chart .points .point {
     fill: #db843d;
   }
 
-  .chart.bar rect.color5 {
+  .chart .bars .bar.color5, .chart .points .point.color5 {
     fill: #3d96ae;
   }
 
-  .chart.bar rect.color4 {
+  .chart .bars .bar.color4, .chart .points .point.color4 {
     fill: #80699b;
   }
 
-  .chart.bar rect.color3 {
+  .chart .bars .bar.color3, .chart .points .point.color3 {
     fill: #89a54e;
   }
 
-  .chart.bar rect.color2 {
+  .chart .bars .bar.color2, .chart .points .point.color2 {
     fill: #aa4643;
   }
 
-  .chart.bar rect.color1 {
+  .chart .bars .bar.color1, .chart .points .point.color1 {
     fill: #4572a7;
   }
 
