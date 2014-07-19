@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
+#include "ui/areachart.h"
 #include "ui/axisdefinition.h"
 #include "ui/barchart.h"
 #include "ui/linechart.h"
@@ -26,26 +27,27 @@ public:
   UITest() {}
 
   void run() {
-    testCanvasWithLeftAxis();
-    testCanvasWithLeftAxisAndTitle();
-    testCanvasWithLeftAndBottomAxis();
-    testCanvasWithAllAxis();
-    testCanvasWithAllMultiAxis();
-    testCanvasWithMultiLeftAxis();
-    testCanvasWithAxisFromNumericalDomain();
-    testSimpleBarChart();
-    testMultiSeriesBarChart();
-    testStackedBarChart();
-    testHorizontalBarChart();
-    testHorizontalMultiSeriesBarChart();
-    testHorizontalStackedBarChart();
-    testRangeBarChart();
-    testHorizontalRangeBarChart();
-    testSimplePointChart();
-    testVariableSizePointChart();
-    testSimpleLineChart();
-    testPointLineChart();
-    testMultiChart();
+    //testCanvasWithLeftAxis();
+    //testCanvasWithLeftAxisAndTitle();
+    //testCanvasWithLeftAndBottomAxis();
+    //testCanvasWithAllAxis();
+    //testCanvasWithAllMultiAxis();
+    //testCanvasWithMultiLeftAxis();
+    //testCanvasWithAxisFromNumericalDomain();
+    //testSimpleBarChart();
+    //testMultiSeriesBarChart();
+    //testStackedBarChart();
+    //testHorizontalBarChart();
+    //testHorizontalMultiSeriesBarChart();
+    //testHorizontalStackedBarChart();
+    //testRangeBarChart();
+    //testHorizontalRangeBarChart();
+    //testSimplePointChart();
+    //testVariableSizePointChart();
+    //testSimpleLineChart();
+    //testPointLineChart();
+    //testMultiChart();
+    testSimpleAreaChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -765,9 +767,28 @@ public:
     auto svg = canvas.renderSVG();
   }
 
+  void testSimpleAreaChart() {
+    Series2D<double, double> series1("myseries1");
+    series1.addDatum(10, 34);
+    series1.addDatum(15, 38);
+    series1.addDatum(20, 43);
+    series1.addDatum(30, 33);
+    series1.addDatum(40, 21);
+    series1.addDatum(50, 33);
 
+    ui::NumericalDomain x_domain(10, 50, false);
+    ui::NumericalDomain y_domain(0, 50, false);
 
+    ui::Canvas canvas;
+    auto line_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
+    line_chart->addSeries(&series1);
+    line_chart->addAxis(AxisDefinition::TOP);
+    line_chart->addAxis(AxisDefinition::RIGHT);
+    line_chart->addAxis(AxisDefinition::BOTTOM);
+    line_chart->addAxis(AxisDefinition::LEFT);
 
+    auto svg = canvas.renderSVG();
+  }
 
 };
 

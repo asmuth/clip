@@ -29,6 +29,7 @@ set(FNORDMETRIC_QUERY_SOURCES
 
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
+    src/ui/areachart.cc
     src/ui/axisdefinition.cc
     src/ui/barchart.cc
     src/ui/canvas.cc
