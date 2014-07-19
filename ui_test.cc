@@ -363,6 +363,7 @@ public:
     ui::Canvas canvas;
     ui::BarChart bar_chart(&canvas);
     bar_chart.addSeries(&series);
+    bar_chart.addAxis(AxisDefinition::LEFT);
 
     auto svg = canvas.renderSVG();
   }

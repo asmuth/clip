@@ -8,14 +8,15 @@
 #define _FNORDMETRIC_BARCHART_H
 #include <stdlib.h>
 #include <assert.h>
+#include "../base/series.h"
+#include "axisdefinition.h"
 #include "domain.h"
 #include "drawable.h"
-#include "../base/series.h"
 
 namespace fnordmetric {
 namespace ui {
-class Domain;
 class Canvas;
+class Domain;
 
 /**
  * This draws a horizontal or vertical bar/column chart. For two dimensional
@@ -95,6 +96,17 @@ public:
    */
   //void addSeries(Series3D<double, double, double>* series);
 
+  /**
+   * Add an axis to the chart. This method should only be called after all
+   * series have been added to the chart.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * @param position the position/placement of the axis
+   */
+   AxisDefinition* addAxis(AxisDefinition::kPosition position);
+
 protected:
 
   void render(
@@ -106,6 +118,7 @@ protected:
   //void drawVerticalBars(RenderTarget* target);
   //void drawHorizontalBars(RenderTarget* target);
 
+  NumericalDomain* getLabelDomain() const;
   NumericalDomain* getValueDomain() const;
   NumericalDomain* calculateValueDomain() const;
 
@@ -118,9 +131,12 @@ protected:
   //    const query::SValue* value, 
   //    const Domain* domain) const;
 
+  Canvas* canvas_;
   kBarChartOrientation orientation_;
   NumericalDomain* y_domain_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
+  mutable std::unique_ptr<NumericalDomain> label_domain_auto_;
+  mutable std::unique_ptr<NumericalDomain> label_domain_;
   bool stacked_;
   std::vector<BarData> data_;
 };

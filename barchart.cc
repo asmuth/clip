@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "barchart.h"
+#include "canvas.h"
 #include "domain.h"
 
 /**
@@ -20,6 +21,7 @@ BarChart::BarChart(
     Canvas* canvas,
     NumericalDomain* y_domain /* = nullptr */,
     kBarChartOrientation orientation /* = O_HORIZONTAL */) :
+    canvas_(canvas),
     orientation_(orientation),
     y_domain_(y_domain) {}
 
@@ -47,6 +49,58 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
   }
 }
 
+AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
+  switch (position) {
+
+    case AxisDefinition::TOP:
+      switch (orientation_) {
+        case O_VERTICAL:
+          return canvas_->addAxis(position, getLabelDomain());
+          break;
+        case O_HORIZONTAL:
+          return canvas_->addAxis(position, getValueDomain());
+          break;
+      }
+      break;
+
+    case AxisDefinition::RIGHT:
+      switch (orientation_) {
+        case O_VERTICAL:
+          return canvas_->addAxis(position, getValueDomain());
+          break;
+        case O_HORIZONTAL:
+          return canvas_->addAxis(position, getLabelDomain());
+          break;
+      }
+      break;
+
+    case AxisDefinition::BOTTOM:
+      switch (orientation_) {
+        case O_VERTICAL:
+          return canvas_->addAxis(position, getLabelDomain());
+          break;
+        case O_HORIZONTAL:
+          return canvas_->addAxis(position, getValueDomain());
+          break;
+      }
+      break;
+
+    case AxisDefinition::LEFT:
+      switch (orientation_) {
+        case O_VERTICAL:
+          return canvas_->addAxis(position, getValueDomain());
+          break;
+        case O_HORIZONTAL:
+          return canvas_->addAxis(position, getLabelDomain());
+          break;
+      }
+      break;
+
+  }
+}
+
+
+
 void BarChart::render(
     RenderTarget* target,
     int width,
@@ -60,6 +114,14 @@ void BarChart::render(
       //drawHorizontalBars(target);
       break;
   }
+}
+
+CategoricalDomain* BarChart::getLabelDomain() const {
+  if (label_domain_auto_.get() == nullptr) {
+    label_domain_auto_.reset(calculateLabelDomain());
+  }
+
+  return label_domain_auto_.get();
 }
 
 NumericalDomain* BarChart::getValueDomain() const {
