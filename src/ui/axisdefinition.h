@@ -49,9 +49,24 @@ public:
   void addLabel(double label_position, const std::string& label_text);
 
   /**
+   * Returns the labels of this axis
+   */
+  const std::vector<std::pair<double, std::string>>& getLabels() const;
+
+  /**
    * Return the position/placement of this axis
    */
   kPosition getPosition() const;
+
+  /**
+   * Set the title for this axis
+   */
+  void setTitle(const std::string& title);
+
+  /**
+   * Get the title for this axis
+   */
+  const std::string& getTitle();
 
   /**
    * Returns true if the title of this axis is a string with len > 0 and false

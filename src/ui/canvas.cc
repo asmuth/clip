@@ -23,7 +23,7 @@ Canvas::Canvas() :
 void Canvas::render(RenderTarget* target) const {
   std::tuple<int, int, int, int> padding;
 
-  target->beginChart(width_, height_, "fnord");
+  target->beginChart(width_, height_, "chart bar horizontal");
   renderAxes(target, &padding);
   target->finishChart();
 }
@@ -99,29 +99,37 @@ void Canvas::renderLeftAxis(
     AxisDefinition* axis,
     std::tuple<int, int, int, int>* padding,
     int left) const {
+  int padding_top = std::get<0>(*padding);
+  int inner_height = height_ - std::get<2>(*padding) - padding_top;
+
   target->beginGroup("axis left");
 
-  left += kAxisTitleLength;
-
-  /* draw stroke */
-  target->drawLine(
-      left,
-      std::get<0>(*padding),
-      left,
-      height_ - std::get<2>(*padding),
-      "stroke");
-
   /* draw title */
-  /*if (axis_title_[LEFT].size() > 0) {
+  if (axis->hasTitle()) {
     target->drawText(
-        axis_title_[LEFT],
-        padding_left_ - kAxisLabelWidth - kAxisTitleLength,
-        padding_top_ + inner_height_ * 0.5f,
+        axis->getTitle(),
+        left,
+        padding_top + inner_height * 0.5f,
         "middle",
         "text-before-edge",
         "title",
         270);
-  }*/
+
+    left += kAxisTitleLength;
+  }
+
+  /* draw labels */
+  for (const auto& label : axis->getLabels()) {
+    auto tick_y = padding_top + inner_height * label.first;
+
+    target->drawText(
+        label.second,
+        left - (kTickLength * 2),
+        tick_y,
+        "end",
+        "middle",
+        "label");
+  }
 
   /* draw ticks */
   /* for (const auto& tick : ticks) {
@@ -136,20 +144,13 @@ void Canvas::renderLeftAxis(
   }
   */
 
-  /* draw labels */
-  /*
-  for (const auto& label : labels) {
-    auto tick_y = padding_top_ + inner_height_ * label.first;
-
-    target->drawText(
-        label.second,
-        padding_left_ - (kTickLength * 2),
-        tick_y,
-        "end",
-        "middle",
-        "label");
-  }
-  */
+  /* draw stroke */
+  target->drawLine(
+      left,
+      padding_top,
+      left,
+      padding_top + inner_height,
+      "stroke");
 
   target->finishGroup();
 }
