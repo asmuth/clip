@@ -30,14 +30,8 @@ class Domain;
  *
  * OPTIONS
  *
- *   height             = int
- *   width              = int
  *   orientation        = {horizontal,vertical}, default: horizontal
  *   stacked            = {on,off}, default: off
- *   show_labels        = {inside,outside,auto,off}, default: auto
- *   rotate_labels      = {on,off,auto}, default: auto
- *   label_color        = color
- *
  */
 class BarChart : public Drawable {
 public:

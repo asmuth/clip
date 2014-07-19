@@ -45,7 +45,7 @@ must haves
 -- stacked??!
 
 --- axis expr can be a tuple!!. e.g for error bars or area
-
+--- middle axis!
 
 BEGIN CHART [TITLE title [subtitle]];
 

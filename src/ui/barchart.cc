@@ -89,45 +89,33 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
       switch (orientation_) {
         case O_VERTICAL:
           return newLabelAxis(position);
-          break;
         case O_HORIZONTAL:
           return canvas_->addAxis(position, getValueDomain());
-          break;
       }
-      break;
 
     case AxisDefinition::RIGHT:
       switch (orientation_) {
         case O_VERTICAL:
           return canvas_->addAxis(position, getValueDomain());
-          break;
         case O_HORIZONTAL:
           return newLabelAxis(position);
-          break;
       }
-      break;
 
     case AxisDefinition::BOTTOM:
       switch (orientation_) {
         case O_VERTICAL:
           return newLabelAxis(position);
-          break;
         case O_HORIZONTAL:
           return canvas_->addAxis(position, getValueDomain());
-          break;
       }
-      break;
 
     case AxisDefinition::LEFT:
       switch (orientation_) {
         case O_VERTICAL:
           return canvas_->addAxis(position, getValueDomain());
-          break;
         case O_HORIZONTAL:
           return newLabelAxis(position);
-          break;
       }
-      break;
 
   }
 }
