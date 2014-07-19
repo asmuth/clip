@@ -238,25 +238,21 @@ void BarChart::renderHorizontalBars(
 
     /* multi series unstacked */
     else {
-      /*
-      auto num_series = getSeries().size();
       auto draw_y_multi = draw_y;
-      auto draw_height_multi = draw_height / num_series;
+      auto draw_height_multi = draw_height / num_series_;
       for (int i = 0; i < bar.ys.size(); i++) {
-        auto& y_val = bar.ys[i];
-        auto y_min = y_val.first;
-        auto y_max = y_val.second;
-        auto draw_x = padding_left_ + y_min * inner_width_;
-        auto draw_width = (y_max - y_min) * inner_width_;
+      auto y_min = y_domain->scale(bar.ys[i].first);
+      auto y_max = y_domain->scale(bar.ys[i].second);
+        auto draw_x = padding_left + y_min * inner_width;
+        auto draw_width = (y_max - y_min) * inner_width;
         target->drawRect(
             draw_x,
             draw_y_multi,
             draw_width,
             draw_height_multi * (1.0f - kBarPadding * 0.5f),
-            colorName(i));
+            "color0");
         draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
       }
-      */
     }
 
     draw_y += bar_height + bar_padding;
