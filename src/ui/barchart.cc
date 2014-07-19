@@ -176,7 +176,7 @@ NumericalDomain* BarChart::newValueDomain() const {
   }
 
   if (y_domain_min > 0) {
-    y_domain_max *= 0.9;
+    y_domain_min *= 0.9;
   }
 
   if (y_domain_min < 0) {

@@ -29,6 +29,8 @@ class Domain;
  */
 class PointChart : public Drawable {
 public:
+  constexpr static const double kDefaultPointSize = 3.0f;
+
   /**
    * Create a new bar chart with an explicit y domain
    *
@@ -89,6 +91,7 @@ protected:
   NumericalDomain* x_domain_;
   NumericalDomain* y_domain_;
   int num_series_;
+  double point_size_;
   std::vector<Point> points_;
   mutable std::unique_ptr<NumericalDomain> x_domain_auto_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "canvas.h"
 #include "pointchart.h"
+#include "rendertarget.h"
 
 namespace fnordmetric {
 namespace ui {
@@ -18,18 +19,27 @@ PointChart::PointChart(
     canvas_(canvas),
     x_domain_(x_domain),
     y_domain_(x_domain),
-    num_series_(0) {}
+    num_series_(0),
+    point_size_(kDefaultPointSize) {}
 
 void PointChart::addSeries(Series2D<double, double>* series) {
   for (const auto& spoint : series->getData()) {
     Point point;
     point.x = std::get<0>(spoint);
     point.y = std::get<1>(spoint);
+    point.size = point_size_;
     points_.emplace_back(point);
   }
 }
 
 void PointChart::addSeries(Series3D<double, double, double>* series) {
+  for (const auto& spoint : series->getData()) {
+    Point point;
+    point.x = std::get<0>(spoint);
+    point.y = std::get<1>(spoint);
+    point.size = std::get<2>(spoint);
+    points_.emplace_back(point);
+  }
 }
 
 AxisDefinition* PointChart::addAxis(AxisDefinition::kPosition position) {
@@ -66,6 +76,22 @@ NumericalDomain* PointChart::getXDomain() const {
       }
     }
 
+    if (x_max > 0) {
+      x_max *= 1.1;
+    }
+
+    if (x_max < 0) {
+      x_max *= 0.9;
+    }
+
+    if (x_min > 0) {
+      x_min *= 0.9;
+    }
+
+    if (x_min < 0) {
+      x_min *= 1.1;
+    }
+
     x_domain_auto_.reset(new NumericalDomain(x_min, x_max, false));
   }
 
@@ -90,6 +116,22 @@ NumericalDomain* PointChart::getYDomain() const {
       }
     }
 
+    if (y_max > 0) {
+      y_max *= 1.1;
+    }
+
+    if (y_max < 0) {
+      y_max *= 0.9;
+    }
+
+    if (y_min > 0) {
+      y_min *= 0.9;
+    }
+
+    if (y_min < 0) {
+      y_min *= 1.1;
+    }
+
     y_domain_auto_.reset(new NumericalDomain(y_min, y_max, false));
   }
 
@@ -102,8 +144,30 @@ void PointChart::render(
     int width,
     int height,
     std::tuple<int, int, int, int>* padding) const {
+  auto padding_top = std::get<0>(*padding);
+  auto padding_right = std::get<1>(*padding);
+  auto padding_bottom = std::get<2>(*padding);
+  auto padding_left = std::get<3>(*padding);
+  auto inner_width = width - padding_right - padding_left;
+  auto inner_height = height - padding_top - padding_bottom;
+  auto x_domain = getXDomain();
+  auto y_domain = getYDomain();
+
+  target->beginGroup("points");
+
   for (const auto& point : points_) {
+    auto draw_x = padding_left + x_domain->scale(point.x) * inner_width;
+    auto draw_y = padding_top + (1.0 - y_domain->scale(point.y)) * inner_height;
+
+    target->drawPoint(
+      draw_x,
+      draw_y,
+      "dot",
+      point.size,
+      "point");
   }
+
+  target->finishGroup();
 }
 
 }

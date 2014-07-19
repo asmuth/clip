@@ -15,24 +15,6 @@
 namespace fnordmetric {
 namespace ui {
 
-/*
-class TableRenderTarget : public query::RowSink {
-public:
-  virtual void addHeader(const std::vector<std::string>& columns) = 0;
-  virtual void addRow() = 0;
-  virtual void addColumn(const std::string& value) = 0;
-
-  bool nextRow(query::SValue* row, int row_len) {
-    addRow();
-    for (int i = 0; i < row_len; ++i) {
-      addColumn(row[i].toString());
-    }
-    return true;
-  }
-
-};
-*/
-
 class RenderTarget {
 public:
 
@@ -69,6 +51,12 @@ public:
       const std::string& class_name,
       double rotate = 0.0f) = 0;
 
+  virtual void drawPoint(
+      double x,
+      double y,
+      const std::string& point_type,
+      double point_size,
+      const std::string& class_name) = 0;
 
 };
 

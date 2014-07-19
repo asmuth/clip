@@ -41,6 +41,7 @@ public:
     //testRangeBarChart();
     //testHorizontalRangeBarChart();
     testSimplePointChart();
+    testVariableSizePointChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -589,6 +590,35 @@ public:
     series2.addDatum(-30, 19);
     series2.addDatum(-40, -25);
     series2.addDatum(-50, -33);
+
+    ui::Canvas canvas;
+    auto point_chart = canvas.addChart<PointChart>();
+    point_chart->addSeries(&series1);
+    point_chart->addSeries(&series2);
+    point_chart->addAxis(AxisDefinition::TOP);
+    point_chart->addAxis(AxisDefinition::RIGHT);
+    point_chart->addAxis(AxisDefinition::BOTTOM);
+    point_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
+
+  void testVariableSizePointChart() {
+    Series3D<double, double, double> series1("myseries1");
+    series1.addDatum(10, 34, 5);
+    series1.addDatum(15, -18, 23);
+    series1.addDatum(20, 43, 11);
+    series1.addDatum(30, -19, 9);
+    series1.addDatum(40, 25, 14);
+    series1.addDatum(50, 33, 8);
+
+    Series3D<double, double, double> series2("myseries1");
+    series2.addDatum(-10, 34, 5);
+    series2.addDatum(-15, 18, 8);
+    series2.addDatum(-20, -4, 23);
+    series2.addDatum(-30, 19, 2);
+    series2.addDatum(-40, -25, 4);
+    series2.addDatum(-50, -23, 17);
 
     ui::Canvas canvas;
     auto point_chart = canvas.addChart<PointChart>();

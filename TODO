@@ -31,19 +31,17 @@ bar chart examples:
   * histogram
   * multiple y axis
 
-
-must haves
-  * multiple y axis!
-  * stacking
+point chart examples:
+  * single 2d series
+  * point types, size
+  * multi 2d series
+  * multi 3d series
+  * negative values
+  * middle axis
 
 --> legend!
-
+--- pie, scatter, bubble, gauges, heatmaps, boxplot, error bars 
 --- sparklines? (multi svg output)
---- multi chart types in one chart --- overdraw?
---- pie, scatter, gauges, heatmaps, boxplot, error bars
-
--- stacked??!
-
 --- axis expr can be a tuple!!. e.g for error bars or area
 --- middle axis!
 
