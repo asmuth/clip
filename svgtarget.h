@@ -109,6 +109,22 @@ public:
         text.c_str());
   }
 
+  void drawPoint(
+      double x,
+      double y,
+      const std::string& point_type,
+      double point_size,
+      const std::string& class_name) override {
+
+    /* point_type: circle */
+    appendLine(
+        "<circle cx='%f' cy='%f' r='%f' class='%s' />\n", 
+        x,
+        y,
+        point_size,
+        class_name.c_str());
+  }
+
   void beginGroup(const std::string& class_name) override {
     appendLine("<g class='%s'>\n", class_name.c_str());
     indent_++;
