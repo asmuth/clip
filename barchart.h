@@ -57,8 +57,8 @@ public:
    */
   BarChart(
       Canvas* canvas,
-      NumericalDomain* y_domain = nullptr,
-      kBarChartOrientation orientation = O_HORIZONTAL);
+      kBarChartOrientation orientation = O_HORIZONTAL,
+      NumericalDomain* y_domain = nullptr);
 
   /**
    * Add a (x: string, y: double) series. This will draw one bar for each point
@@ -118,9 +118,9 @@ protected:
   //void drawVerticalBars(RenderTarget* target);
   //void drawHorizontalBars(RenderTarget* target);
 
-  NumericalDomain* getLabelDomain() const;
   NumericalDomain* getValueDomain() const;
-  NumericalDomain* calculateValueDomain() const;
+  NumericalDomain* newValueDomain() const;
+  AxisDefinition* newLabelAxis(AxisDefinition::kPosition position) const;
 
   struct BarData {
     std::string x;
@@ -135,8 +135,6 @@ protected:
   kBarChartOrientation orientation_;
   NumericalDomain* y_domain_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
-  mutable std::unique_ptr<NumericalDomain> label_domain_auto_;
-  mutable std::unique_ptr<NumericalDomain> label_domain_;
   bool stacked_;
   std::vector<BarData> data_;
 };

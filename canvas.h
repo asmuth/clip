@@ -27,6 +27,15 @@ public:
   Canvas();
 
   /**
+   * FIXPAUL documentation
+   */
+  template <typename ChartType, typename... Args>
+  ChartType* addChart(Args... args) {
+    auto drawable = new ChartType(this, args...);
+    return drawable;
+  }
+
+  /**
    * Add an axis to this canvas. Usually axes are not specified manually using
    * this method but through one of the Chart subclasses. However it is safe
    * to call this method to explicitly define a custom axis.
