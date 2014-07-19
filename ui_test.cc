@@ -43,7 +43,8 @@ public:
     //testHorizontalRangeBarChart();
     //testSimplePointChart();
     //testVariableSizePointChart();
-    testSimpleLineChart();
+    //testSimpleLineChart();
+    testPointLineChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -652,16 +653,53 @@ public:
     series2.addDatum(50, 21);
 
     ui::Canvas canvas;
-    auto point_chart = canvas.addChart<LineChart>();
-    point_chart->addSeries(&series1);
-    point_chart->addSeries(&series2);
-    point_chart->addAxis(AxisDefinition::TOP);
-    point_chart->addAxis(AxisDefinition::RIGHT);
-    point_chart->addAxis(AxisDefinition::BOTTOM);
-    point_chart->addAxis(AxisDefinition::LEFT);
+    auto line_chart = canvas.addChart<LineChart>();
+    line_chart->addSeries(&series1);
+    line_chart->addSeries(&series2);
+    line_chart->addAxis(AxisDefinition::TOP);
+    line_chart->addAxis(AxisDefinition::RIGHT);
+    line_chart->addAxis(AxisDefinition::BOTTOM);
+    line_chart->addAxis(AxisDefinition::LEFT);
 
     auto svg = canvas.renderSVG();
   }
+
+  void testPointLineChart() {
+    Series2D<double, double> series1("myseries1");
+    series1.addDatum(10, 34);
+    series1.addDatum(15, 38);
+    series1.addDatum(20, 43);
+    series1.addDatum(30, 33);
+    series1.addDatum(40, 21);
+    series1.addDatum(50, 33);
+
+    Series2D<double, double> series2("myseries1");
+    series2.addDatum(10, 19);
+    series2.addDatum(15, 18);
+    series2.addDatum(20, 22);
+    series2.addDatum(30, 23);
+    series2.addDatum(40, 18);
+    series2.addDatum(50, 21);
+
+    ui::NumericalDomain x_domain(10, 50, false);
+    ui::NumericalDomain y_domain(0, 50, false);
+
+    ui::Canvas canvas;
+
+    auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
+    line_chart->addSeries(&series1);
+    line_chart->addSeries(&series2);
+    line_chart->addAxis(AxisDefinition::BOTTOM);
+    line_chart->addAxis(AxisDefinition::LEFT);
+
+    auto point_chart = canvas.addChart<PointChart>(&x_domain, &y_domain);
+    point_chart->addSeries(&series1, "circle", 4);
+    point_chart->addSeries(&series2, "circle", 4);
+
+    auto svg = canvas.renderSVG();
+  }
+
+
 
 
 
