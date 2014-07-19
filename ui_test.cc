@@ -31,7 +31,8 @@ public:
     //testCanvasWithAllMultiAxis();
     //testCanvasWithMultiLeftAxis();
     //testCanvasWithAxisFromNumericalDomain();
-    testSimpleBarChart();
+    //testSimpleBarChart();
+    testMultiSeriesBarChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -363,6 +364,35 @@ public:
     ui::Canvas canvas;
     auto bar_chart = canvas.addChart<BarChart>(BarChart::O_VERTICAL);
     bar_chart->addSeries(&series);
+    bar_chart->addAxis(AxisDefinition::TOP);
+    bar_chart->addAxis(AxisDefinition::RIGHT);
+    bar_chart->addAxis(AxisDefinition::BOTTOM);
+    bar_chart->addAxis(AxisDefinition::LEFT);
+
+    auto svg = canvas.renderSVG();
+  }
+
+  void testMultiSeriesBarChart() {
+    Series2D<std::string, double> series1("myseries1");
+    series1.addDatum("A", 34);
+    series1.addDatum("B", 18);
+    series1.addDatum("C", 43);
+    series1.addDatum("D", 19);
+    series1.addDatum("E", 25);
+    series1.addDatum("F", 33);
+
+    Series2D<std::string, double> series2("myseries2");
+    series2.addDatum("A", 23);
+    series2.addDatum("B", 65);
+    series2.addDatum("C", 43);
+    series2.addDatum("D", 12);
+    series2.addDatum("E", 54);
+    series2.addDatum("F", 31);
+
+    ui::Canvas canvas;
+    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_VERTICAL);
+    bar_chart->addSeries(&series1);
+    bar_chart->addSeries(&series2);
     bar_chart->addAxis(AxisDefinition::TOP);
     bar_chart->addAxis(AxisDefinition::RIGHT);
     bar_chart->addAxis(AxisDefinition::BOTTOM);
