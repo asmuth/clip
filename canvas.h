@@ -18,7 +18,6 @@ class RenderTarget;
 
 class Canvas {
 public:
-  // static const int kNumTicks = 6; // FIXPAUL make configurable;
   static const int kAxisPadding = 5; // FIXPAUL make configurable
   static const int kTickLength = 5; // FIXPAUL make configurable
   static const int kAxisLabelHeight = 35.0f; // FIXPAUL make configurable
@@ -26,6 +25,21 @@ public:
   static const int kAxisTitleLength = 20.0f; // FIXPAUL make configurable
 
   Canvas();
+
+  /**
+   * Add an axis to this canvas. Usually axes are not specified manually using
+   * this method but through one of the Chart subclasses. However it is safe
+   * to call this method to explicitly define a custom axis.
+   *
+   * The returned pointer is owned by the canvas instance and must not be freed
+   * by the caller.
+   *
+   * @param axis_position the position of the new axis
+   * @param domain the domain. does not transfer ownership
+   */
+  AxisDefinition* addAxis(
+      AxisDefinition::kPosition axis_position,
+      Domain* domain);
 
   /**
    * Add an axis to this canvas. Usually axes are not specified manually using
