@@ -51,8 +51,8 @@ public:
       bool stacked = false);
 
   /**
-   * Add a (x: string, y: double) series. This will draw with height 0 to y
-   * for each x
+   * Add a (x: string, y: double) series. This will draw an area that covers
+   * the surface between height 0 and y for each x.
    *
    * @param series the series to add. does not transfer ownership
    * @param border_style the border style
@@ -64,6 +64,26 @@ public:
    */
   void addSeries(
       Series2D<double, double>* series,
+      const std::string& border_style = kDefaultBorderStyle,
+      double border_width = kDefaultBorderWidth,
+      const std::string& point_style = kDefaultPointStyle,
+      double point_size = kDefaultPointSize,
+      bool smooth = false);
+
+  /**
+   * Add a (x: string, y: double, z: double) series. This will draw an area that
+   * covers the surface between height y and z for each x.
+   *
+   * @param series the series to add. does not transfer ownership
+   * @param border_style the border style
+   * @param border_width the line width
+   * @param point_style the point style
+   * @param point_width the point size
+   * @param smooth smooth this area?
+   * @param line_style the line style ({solid,dashed})
+   */
+  void addSeries(
+      Series3D<double, double, double>* series,
       const std::string& border_style = kDefaultBorderStyle,
       double border_width = kDefaultBorderWidth,
       const std::string& point_style = kDefaultPointStyle,

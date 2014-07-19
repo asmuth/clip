@@ -24,17 +24,17 @@ AreaChart::AreaChart(
     bool stacked /* = false */) :
     canvas_(canvas),
     x_domain_(x_domain),
-    y_domain_(x_domain),
+    y_domain_(y_domain),
     stacked_(stacked),
     num_series_(0) {}
 
 void AreaChart::addSeries(
-      Series2D<double, double>* series,
-      const std::string& border_style /* = kDefaultBorderStyle */,
-      double border_width /* = kDefaultBorderWidth */,
-      const std::string& point_style /* = kDefaultPointStyle */,
-      double point_size /* = kDefaultPointSize */,
-      bool smooth /* = false */) {
+    Series2D<double, double>* series,
+    const std::string& border_style /* = kDefaultBorderStyle */,
+    double border_width /* = kDefaultBorderWidth */,
+    const std::string& point_style /* = kDefaultPointStyle */,
+    double point_size /* = kDefaultPointSize */,
+    bool smooth /* = false */) {
   Area area;
   area.color = seriesColor(series);
   area.border_style = border_style;
@@ -46,6 +46,32 @@ void AreaChart::addSeries(
   // FIXPAUL: stacked
   for (const auto& spoint : series->getData()) {
     area.points.emplace_back(std::get<0>(spoint), 0, std::get<1>(spoint));
+  }
+
+  areas_.emplace_back(area);
+}
+
+void AreaChart::addSeries(
+    Series3D<double, double, double>* series,
+    const std::string& border_style /* = kDefaultBorderStyle */,
+    double border_width /* = kDefaultBorderWidth */,
+    const std::string& point_style /* = kDefaultPointStyle */,
+    double point_size /* = kDefaultPointSize */,
+    bool smooth /* = false */) {
+  Area area;
+  area.color = seriesColor(series);
+  area.border_style = border_style;
+  area.border_width = border_width;
+  area.point_style = point_style;
+  area.point_size = point_size;
+  area.smooth = smooth;
+
+  // FIXPAUL: stacked
+  for (const auto& spoint : series->getData()) {
+    area.points.emplace_back(
+        std::get<0>(spoint),
+        std::get<1>(spoint),
+        std::get<2>(spoint));
   }
 
   areas_.emplace_back(area);
@@ -171,6 +197,7 @@ void AreaChart::render(
   for (const auto& area : areas_) {
     std::vector<std::pair<double, double>> area_coords;
     std::vector<std::pair<double, double>> border_top_coords;
+    std::vector<std::pair<double, double>> border_bottom_coords;
     std::vector<std::pair<double, double>> point_coords;
 
     for (int i = 0; i < area.points.size(); ++i) {
@@ -195,38 +222,48 @@ void AreaChart::render(
       area_coords.emplace_back(draw_x, draw_y1);
 
       if (std::get<1>(point) != 0) {
-        border_top_coords.emplace_back(draw_x, draw_y1);
+        border_bottom_coords.emplace_back(draw_x, draw_y1);
         point_coords.emplace_back(draw_x, draw_y1);
       }
     }
 
     target->drawPath(
-      area_coords,
-      "fill",
-      area.border_style == "none" ? 0 : area.border_width,
-      area.smooth,
-      area.color,
-      "area");
+        area_coords,
+        "fill",
+        area.border_style == "none" ? 0 : area.border_width,
+        area.smooth,
+        area.color,
+        "area");
 
     if (area.border_style != "none") {
       target->drawPath(
-        border_top_coords,
-        area.border_style,
-        area.border_width,
-        area.smooth,
-        area.color,
-        "line");
+          border_top_coords,
+          area.border_style,
+          area.border_width,
+          area.smooth,
+          area.color,
+          "line");
+
+      if (border_bottom_coords.size() > 0) {
+        target->drawPath(
+            border_bottom_coords,
+            area.border_style,
+            area.border_width,
+            area.smooth,
+            area.color,
+            "line");
+      }
     }
 
     if (area.point_style != "none") {
       for (const auto &point : point_coords) {
         target->drawPoint(
-          point.first,
-          point.second,
-          area.point_style,
-          area.point_size,
-          area.color,
-          "point");
+            point.first,
+            point.second,
+            area.point_style,
+            area.point_size,
+            area.color,
+            "point");
       }
     }
   }

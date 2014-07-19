@@ -21,7 +21,7 @@ PointChart::PointChart(
     NumericalDomain* y_domain /* = nullptr */) :
     canvas_(canvas),
     x_domain_(x_domain),
-    y_domain_(x_domain),
+    y_domain_(y_domain),
     num_series_(0) {}
 
 void PointChart::addSeries(
