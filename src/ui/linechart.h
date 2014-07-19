@@ -49,10 +49,14 @@ public:
    * through all points in the series
    *
    * @param series the series to add. does not transfer ownership
+   * @param line_width the line widht
+   * @param smooth smooth this line?
+   * @param line_style the line style ({solid,dashed})
    */
   void addSeries(
       Series2D<double, double>* series,
       double line_width = kDefaultLineWidth,
+      bool smooth = false,
       const std::string& line_style = kDefaultLineStyle);
 
   /**
@@ -82,6 +86,7 @@ protected:
     double width;
     std::string style;
     std::string color;
+    bool smooth;
   };
 
   Canvas* canvas_;

@@ -140,17 +140,26 @@ public:
       const std::vector<std::pair<double, double>>& points,
       const std::string& line_style,
       double line_width,
+      bool smooth,
       const std::string& color,
       const std::string& class_name = "") override {
     std::string class_str(class_name);
     class_str += " ";
     class_str += color;
 
-    appendLine("<path class='%s' d='", class_str.c_str());
+    appendLine(
+        "<path stroke-width='%f' class='%s' d='",
+        line_width,
+        class_str.c_str());
 
     for (int i = 0; i < points.size(); ++i) {
-      append(i == 0 ? "M" : "L");
-      append("%f %f ", points[i].first, points[i].second);
+      if (i == 0) {
+        append("M%f %f ", points[i].first, points[i].second);
+      } else if (smooth) {
+        append("L%f %f ", points[i].first, points[i].second);
+      } else {
+        append("L%f %f ", points[i].first, points[i].second);
+      }
     }
 
     append("' />\n");

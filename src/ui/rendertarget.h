@@ -64,6 +64,7 @@ public:
       const std::vector<std::pair<double, double>>& points,
       const std::string& line_style,
       double line_width,
+      bool smooth,
       const std::string& color,
       const std::string& class_name = "") = 0;
 
