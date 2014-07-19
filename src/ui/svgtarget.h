@@ -9,12 +9,13 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include "../rendertarget.h"
-#include "../styles/style_default.h"
+#include "rendertarget.h"
+#include "styles/style_default.h"
 
 namespace fnordmetric {
+namespace ui {
 
-class SVGTarget : public ChartRenderTarget {
+class SVGTarget : public RenderTarget {
 public:
 
   SVGTarget() : indent_(0) {}
@@ -124,5 +125,6 @@ protected:
 };
 
 
+}
 }
 #endif

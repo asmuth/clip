@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
+#include "ui/axisdefinition.h"
 #include "ui/canvas.h"
 
 namespace fnordmetric {
@@ -21,14 +22,22 @@ public:
 
   void run() {
     testCanvasWithAxes();
-    printf("here be dragons\n");
   }
 
   void testCanvasWithAxes() {
     ui::Canvas canvas;
 
+    auto axis_left = canvas.addAxis(ui::AxisDefinition::LEFT);
+    axis_left->setTitle("my axis");
+    axis_left->addTick(0.0);
+    axis_left->addTick(0.2);
+    axis_left->addTick(0.4);
+    axis_left->addTick(0.6);
+    axis_left->addTick(0.8);
+    axis_left->addTick(1.0);
+
     auto svg = canvas.renderSVG();
-    printf("svg data: %s", svg.c_str());
+    //printf("svg data: %s", svg.c_str());
   }
 
   void testSimpleBarChart() {
@@ -49,5 +58,5 @@ public:
 int main() {
   fnordmetric::UITest test;
   test.run();
-  printf("all tests passed! :)\n");
+  //printf("all tests passed! :)\n");
 }

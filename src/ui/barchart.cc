@@ -32,7 +32,6 @@ void BarChart::draw(ChartRenderTarget* target) {
       break;
   }
 
-  target->finishChart();
 }
 
 void BarChart::prepareData() {
@@ -121,7 +120,6 @@ std::pair<double, double> BarChart::scaleValue(
 }
 
 void BarChart::drawVerticalBars(ChartRenderTarget* target) {
-  target->beginChart(width_, height_, "chart bar vertical");
   Drawable::draw(target);
 
   /* calculate bar width and padding */
