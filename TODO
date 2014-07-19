@@ -39,6 +39,7 @@ point chart examples:
   * negative values
   * middle axis
 
+--- stacked area charts
 --> legend!
 --- pie, scatter, bubble, gauges, heatmaps, boxplot, error bars 
 --- sparklines? (multi svg output)
