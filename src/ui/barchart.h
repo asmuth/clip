@@ -120,8 +120,12 @@ protected:
       int width,
       int height,
       std::tuple<int, int, int, int>* padding) const;
-  //void drawVerticalBars(RenderTarget* target);
-  //void drawHorizontalBars(RenderTarget* target);
+
+  void renderHorizontalBars(
+      RenderTarget* target,
+      int width,
+      int height,
+      std::tuple<int, int, int, int>* padding) const;
 
   NumericalDomain* getValueDomain() const;
   NumericalDomain* newValueDomain() const;
@@ -131,10 +135,6 @@ protected:
     std::string x;
     std::vector<std::pair<double, double>> ys;
   };
-
-  //std::pair<double, double> scaleValue(
-  //    const query::SValue* value, 
-  //    const Domain* domain) const;
 
   Canvas* canvas_;
   kBarChartOrientation orientation_;

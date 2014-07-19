@@ -113,7 +113,7 @@ void BarChart::render(
       renderVerticalBars(target, width, height, padding);
       break;
     case O_HORIZONTAL:
-      //drawHorizontalBars(target);
+      renderHorizontalBars(target, width, height, padding);
       break;
   }
 }
@@ -136,7 +136,6 @@ void BarChart::renderVerticalBars(
 
   /* draw the bars */
   std::vector<double> x_ticks = {0.0f};
-  //std::vector<std::pair<double, std::string>> x_labels;
   auto draw_x = padding_left + bar_padding;
   auto draw_width = bar_width;
   auto y_domain = getValueDomain();
@@ -186,6 +185,81 @@ void BarChart::renderVerticalBars(
     }
 
     draw_x += bar_width + bar_padding;
+  }
+}
+void BarChart::renderHorizontalBars(
+    RenderTarget* target,
+    int width,
+    int height,
+    std::tuple<int, int, int, int>* padding) const {
+  /* calculate bar width and padding */
+  auto padding_top = std::get<0>(*padding);
+  auto padding_right = std::get<1>(*padding);
+  auto padding_bottom = std::get<2>(*padding);
+  auto padding_left = std::get<3>(*padding);
+  auto inner_width = width - padding_right - padding_left;
+  auto inner_height = height - padding_top - padding_bottom;
+  auto bar_height = (inner_height / data_.size()) * (1.0f - kBarPadding);
+  auto bar_padding = (inner_height / data_.size()) * (kBarPadding * 0.5f);
+  bar_height -= bar_padding / data_.size() * 2;
+
+  /* draw the bars */
+  std::vector<double> y_ticks = {0.0f};
+  std::vector<std::pair<double, std::string>> y_labels;
+  auto draw_y = padding_top + bar_padding;
+  auto draw_height = bar_height;
+  auto y_domain = getValueDomain();
+  for (const auto& bar : data_) {
+    draw_y += bar_padding;
+
+    /* single series */
+    if (num_series_ == 1) {
+      auto& y_val = bar.ys[0];
+      auto y_min = y_domain->scale(bar.ys[0].first);
+      auto y_max = y_domain->scale(bar.ys[0].second);
+      auto draw_x = padding_left + y_min * inner_width;
+      auto draw_width = (y_max - y_min) * inner_width;
+      target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
+    }
+
+    /* multi series stacked */
+    /*else if (stacked_) {
+      double y_min = 0.0f;
+      double y_max = 0.0f;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        y_max += y_val.second - y_val.first;
+        auto draw_x = padding_left_ + y_min * inner_width_;
+        auto draw_width = (y_max - y_min) * inner_width_;
+        target->drawRect(draw_x, draw_y, draw_width, draw_height, colorName(i));
+        y_min += y_val.second - y_val.first;
+      }
+    }*/
+
+    /* multi series unstacked */
+    else {
+      /*
+      auto num_series = getSeries().size();
+      auto draw_y_multi = draw_y;
+      auto draw_height_multi = draw_height / num_series;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        auto y_min = y_val.first;
+        auto y_max = y_val.second;
+        auto draw_x = padding_left_ + y_min * inner_width_;
+        auto draw_width = (y_max - y_min) * inner_width_;
+        target->drawRect(
+            draw_x,
+            draw_y_multi,
+            draw_width,
+            draw_height_multi * (1.0f - kBarPadding * 0.5f),
+            colorName(i));
+        draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
+      }
+      */
+    }
+
+    draw_y += bar_height + bar_padding;
   }
 }
 
@@ -259,6 +333,7 @@ NumericalDomain* BarChart::newValueDomain() const {
 AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
     const {
   auto axis = canvas_->addAxis(position);
+  axis->addTick(0.0f);
 
   auto bar_width = (1.0 / data_.size()) * (1.0f - kBarPadding);
   auto bar_padding = (1.0 / data_.size()) * (kBarPadding * 0.5f);
@@ -267,13 +342,25 @@ AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
   auto draw_x = bar_padding;
   for (int i = 0; i < data_.size(); ++i) {
     draw_x += bar_padding;
-    axis->addLabel(draw_x + bar_width * 0.5f, data_[i].x);
+
+    switch (orientation_) {
+      case O_VERTICAL:
+        axis->addLabel(draw_x + bar_width * 0.5f, data_[i].x);
+        break;
+      case O_HORIZONTAL:
+        axis->addLabel(
+            draw_x + bar_width * 0.5f,
+            data_[data_.size() - 1 - i].x);
+        break;
+    }
+
     draw_x += bar_width + bar_padding;
     if (i < data_.size() - 1) {
       axis->addTick(draw_x);
     }
   }
 
+  axis->addTick(1.0f);
   return axis;
 }
 
