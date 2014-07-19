@@ -11,8 +11,10 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include "ui/axisdefinition.h"
+#include "ui/barchart.h"
 #include "ui/canvas.h"
 #include "ui/domain.h"
+#include "base/series.h"
 
 namespace fnordmetric {
 using namespace fnordmetric::ui;
@@ -28,7 +30,8 @@ public:
     //testCanvasWithAllAxis();
     //testCanvasWithAllMultiAxis();
     //testCanvasWithMultiLeftAxis();
-    testCanvasWithAxisFromNumericalDomain();
+    //testCanvasWithAxisFromNumericalDomain();
+    testSimpleBarChart();
   }
 
   void testCanvasWithLeftAxis() {
@@ -349,14 +352,19 @@ public:
   }
 
   void testSimpleBarChart() {
-    //ui::Canvas canvas;
-    //ui::BarChart bar_chart(&canvas);
+    Series2D<std::string, double> series("myseries");
+    series.addDatum("A", 34);
+    series.addDatum("B", 18);
+    series.addDatum("C", 43);
+    series.addDatum("D", 19);
+    series.addDatum("E", 25);
+    series.addDatum("F", 33);
 
-    //Series test_series;
-    //bar_chart.addSeries(test_series);
+    ui::Canvas canvas;
+    ui::BarChart bar_chart(&canvas);
+    bar_chart.addSeries(&series);
 
-    //auto svg = canvas.renderSVG();
-    //printf("svg data: %s", svg.c_str());
+    auto svg = canvas.renderSVG();
   }
 
 };
