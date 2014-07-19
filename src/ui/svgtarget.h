@@ -50,14 +50,19 @@ public:
       double y,
       double width,
       double height,
+      const std::string& color,
       const std::string& class_name) override {
+    std::string class_str(class_name);
+    class_str += " ";
+    class_str += color;
+
     appendLine(
         "<rect x='%f' y='%f' width='%f' height='%f' class='%s'></rect>\n",
         x,
         y,
         width,
         height,
-        class_name.c_str());
+        class_str.c_str());
   }
 
   void drawLine(
@@ -114,7 +119,11 @@ public:
       double y,
       const std::string& point_type,
       double point_size,
+      const std::string& color,
       const std::string& class_name) override {
+    std::string class_str(class_name);
+    class_str += " ";
+    class_str += color;
 
     /* point_type: circle */
     appendLine(
@@ -122,7 +131,7 @@ public:
         x,
         y,
         point_size,
-        class_name.c_str());
+        class_str.c_str());
   }
 
   void beginGroup(const std::string& class_name) override {

@@ -29,7 +29,8 @@ class Domain;
  */
 class PointChart : public Drawable {
 public:
-  constexpr static const double kDefaultPointSize = 3.0f;
+  static double kDefaultPointSize;
+  static char kDefaultPointType[];
 
   /**
    * Create a new bar chart with an explicit y domain
@@ -49,7 +50,10 @@ public:
    *
    * @param series the series to add. does not transfer ownership
    */
-  void addSeries(Series2D<double, double>* series);
+  void addSeries(
+      Series2D<double, double>* series,
+      const std::string& point_type = kDefaultPointType,
+      double point_size = kDefaultPointSize);
 
   /**
    * Add a (x: string, y: double, z: double) series. This will draw one point
@@ -57,7 +61,9 @@ public:
    *
    * @param series the series to add. does not transfer ownership
    */
-  void addSeries(Series3D<double, double, double>* series);
+  void addSeries(
+      Series3D<double, double, double>* series,
+      const std::string& point_type = kDefaultPointType);
 
   /**
    * Add an axis to the chart. This method should only be called after all
@@ -85,13 +91,14 @@ protected:
     double x;
     double y;
     double size;
+    std::string type;
+    std::string color;
   };
 
   Canvas* canvas_;
   NumericalDomain* x_domain_;
   NumericalDomain* y_domain_;
   int num_series_;
-  double point_size_;
   std::vector<Point> points_;
   mutable std::unique_ptr<NumericalDomain> x_domain_auto_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
