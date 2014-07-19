@@ -19,8 +19,8 @@ namespace ui {
 
 BarChart::BarChart(
     Canvas* canvas,
-    NumericalDomain* y_domain /* = nullptr */,
-    kBarChartOrientation orientation /* = O_HORIZONTAL */) :
+    kBarChartOrientation orientation /* = O_HORIZONTAL */,
+    NumericalDomain* y_domain /* = nullptr */) :
     canvas_(canvas),
     orientation_(orientation),
     y_domain_(y_domain) {}
@@ -55,7 +55,7 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
     case AxisDefinition::TOP:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, getLabelDomain());
+          return newLabelAxis(position);
           break;
         case O_HORIZONTAL:
           return canvas_->addAxis(position, getValueDomain());
@@ -69,7 +69,7 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
           return canvas_->addAxis(position, getValueDomain());
           break;
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, getLabelDomain());
+          return newLabelAxis(position);
           break;
       }
       break;
@@ -77,7 +77,7 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
     case AxisDefinition::BOTTOM:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, getLabelDomain());
+          return newLabelAxis(position);
           break;
         case O_HORIZONTAL:
           return canvas_->addAxis(position, getValueDomain());
@@ -91,7 +91,7 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
           return canvas_->addAxis(position, getValueDomain());
           break;
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, getLabelDomain());
+          return newLabelAxis(position);
           break;
       }
       break;
@@ -116,27 +116,19 @@ void BarChart::render(
   }
 }
 
-CategoricalDomain* BarChart::getLabelDomain() const {
-  if (label_domain_auto_.get() == nullptr) {
-    label_domain_auto_.reset(calculateLabelDomain());
-  }
-
-  return label_domain_auto_.get();
-}
-
 NumericalDomain* BarChart::getValueDomain() const {
   if (y_domain_ != nullptr) {
     return y_domain_;
   }
 
   if (y_domain_auto_.get() == nullptr) {
-    y_domain_auto_.reset(calculateValueDomain());
+    y_domain_auto_.reset(newValueDomain());
   }
 
   return y_domain_auto_.get();
 }
 
-NumericalDomain* BarChart::calculateValueDomain() const {
+NumericalDomain* BarChart::newValueDomain() const {
   /* calculate our domain*/
   if (stacked_) {
     /*
@@ -185,6 +177,19 @@ NumericalDomain* BarChart::calculateValueDomain() const {
 
     return new NumericalDomain(y_domain_min, y_domain_max, false);
   }
+}
+
+AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
+    const {
+  auto axis = canvas_->addAxis(position);
+
+  for (int i = data_.size() - 1; i >= 0; --i) {
+    auto tick = (1.0 / data_.size()) * i;
+    axis->addTick(tick);
+    axis->addLabel(tick, data_[i].x);
+  }
+
+  return axis;
 }
 
 }

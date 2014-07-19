@@ -361,9 +361,12 @@ public:
     series.addDatum("F", 33);
 
     ui::Canvas canvas;
-    ui::BarChart bar_chart(&canvas);
-    bar_chart.addSeries(&series);
-    bar_chart.addAxis(AxisDefinition::LEFT);
+    auto bar_chart = canvas.addChart<BarChart>(BarChart::O_VERTICAL);
+    bar_chart->addSeries(&series);
+    bar_chart->addAxis(AxisDefinition::TOP);
+    bar_chart->addAxis(AxisDefinition::RIGHT);
+    bar_chart->addAxis(AxisDefinition::BOTTOM);
+    bar_chart->addAxis(AxisDefinition::LEFT);
 
     auto svg = canvas.renderSVG();
   }

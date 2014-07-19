@@ -20,16 +20,16 @@ public:
   virtual ~Domain() {}
 
   /**
-   * Returns the "ticks" of this domain
-   */
-  virtual std::vector<double> getTicks() const = 0;
-
-  /**
    * Returns the label at the specified tick/index
    *
    * @param index the index/tick
    */
   virtual std::string labelAt(double index) const = 0;
+
+  /**
+   * Returns the "ticks" of this domain
+   */
+  virtual std::vector<double> getTicks() const = 0;
 
 };
 
@@ -81,6 +81,8 @@ public:
 
     return ticks;
   }
+
+
 
 protected:
   double min_value_;
