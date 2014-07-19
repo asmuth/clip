@@ -59,7 +59,7 @@ public:
       Series2D<double, double>* series,
       const std::string& line_style = kDefaultLineStyle,
       double line_width = kDefaultLineWidth,
-      const std::string& point_style = kDefaultLineStyle,
+      const std::string& point_style = kDefaultPointStyle,
       double point_size = kDefaultPointSize,
       bool smooth = false);
 

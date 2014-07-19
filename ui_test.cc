@@ -27,26 +27,26 @@ public:
   UITest() {}
 
   void run() {
-    //testCanvasWithLeftAxis();
-    //testCanvasWithLeftAxisAndTitle();
-    //testCanvasWithLeftAndBottomAxis();
-    //testCanvasWithAllAxis();
-    //testCanvasWithAllMultiAxis();
-    //testCanvasWithMultiLeftAxis();
-    //testCanvasWithAxisFromNumericalDomain();
-    //testSimpleBarChart();
-    //testMultiSeriesBarChart();
-    //testStackedBarChart();
-    //testHorizontalBarChart();
-    //testHorizontalMultiSeriesBarChart();
-    //testHorizontalStackedBarChart();
-    //testRangeBarChart();
-    //testHorizontalRangeBarChart();
-    //testSimplePointChart();
-    //testVariableSizePointChart();
-    //testSimpleLineChart();
+    testCanvasWithLeftAxis();
+    testCanvasWithLeftAxisAndTitle();
+    testCanvasWithLeftAndBottomAxis();
+    testCanvasWithAllAxis();
+    testCanvasWithAllMultiAxis();
+    testCanvasWithMultiLeftAxis();
+    testCanvasWithAxisFromNumericalDomain();
+    testSimpleBarChart();
+    testMultiSeriesBarChart();
+    testStackedBarChart();
+    testHorizontalBarChart();
+    testHorizontalMultiSeriesBarChart();
+    testHorizontalStackedBarChart();
+    testRangeBarChart();
+    testHorizontalRangeBarChart();
+    testSimplePointChart();
+    testVariableSizePointChart();
+    testSimpleLineChart();
     testPointLineChart();
-    //testMultiChart();
+    testMultiChart();
     testSimpleAreaChart();
   }
 

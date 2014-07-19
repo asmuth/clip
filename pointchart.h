@@ -30,7 +30,7 @@ class Domain;
 class PointChart : public Drawable {
 public:
   static double kDefaultPointSize;
-  static char kDefaultPointType[];
+  static char kDefaultPointStyle[];
 
   /**
    * Create a new point chart
@@ -52,7 +52,7 @@ public:
    */
   void addSeries(
       Series2D<double, double>* series,
-      const std::string& point_type = kDefaultPointType,
+      const std::string& point_style = kDefaultPointStyle,
       double point_size = kDefaultPointSize);
 
   /**
@@ -63,7 +63,7 @@ public:
    */
   void addSeries(
       Series3D<double, double, double>* series,
-      const std::string& point_type = kDefaultPointType);
+      const std::string& point_style = kDefaultPointStyle);
 
   /**
    * Add an axis to the chart. This method should only be called after all

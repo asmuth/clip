@@ -13,7 +13,7 @@ namespace fnordmetric {
 namespace ui {
 
 double PointChart::kDefaultPointSize = 3.0f;
-char PointChart::kDefaultPointType[] = "circle";
+char PointChart::kDefaultPointStyle[] = "circle";
 
 PointChart::PointChart(
     Canvas* canvas,
@@ -26,7 +26,7 @@ PointChart::PointChart(
 
 void PointChart::addSeries(
       Series2D<double, double>* series,
-      const std::string& point_type /* = kDefaultPointType */,
+      const std::string& point_style /* = kDefaultPointStyle */,
       double point_size /* = kDefaultPointSize */) {
   const auto& color = seriesColor(series);
 
@@ -35,7 +35,7 @@ void PointChart::addSeries(
     point.x = std::get<0>(spoint);
     point.y = std::get<1>(spoint);
     point.size = point_size;
-    point.type = point_type; // FIXPAUL too many copies
+    point.type = point_style; // FIXPAUL too many copies
     point.color = color; // FIXPAUL too many copies
     points_.emplace_back(point);
   }
@@ -43,7 +43,7 @@ void PointChart::addSeries(
 
 void PointChart::addSeries(
     Series3D<double, double, double>* series,
-    const std::string& point_type /* = kDefaultPointType */) {
+    const std::string& point_style /* = kDefaultPointStyle */) {
   std::string color = seriesColor(series);
 
   for (const auto& spoint : series->getData()) {
@@ -51,7 +51,7 @@ void PointChart::addSeries(
     point.x = std::get<0>(spoint);
     point.y = std::get<1>(spoint);
     point.size = std::get<2>(spoint);
-    point.type = point_type; // FIXPAUL too many copies
+    point.type = point_style; // FIXPAUL too many copies
     point.color = color; // FIXPAUL too many copies
     points_.emplace_back(point);
   }
