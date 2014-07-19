@@ -17,4 +17,5 @@ if [[ "$1" == "clean" ]]; then
   exit 0
 fi
 
-cd build && cmake . && make
+mkdir -p build/test
+cd build && cmake .. && make

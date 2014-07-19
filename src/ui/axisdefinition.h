@@ -12,6 +12,7 @@
 
 namespace fnordmetric {
 namespace ui {
+class Domain;
 
 class AxisDefinition {
 public:
@@ -34,6 +35,14 @@ public:
   AxisDefinition(kPosition axis_position);
 
   /**
+   * Create a new axis definition from a domain
+   *
+   * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
+   * @param domain the domain. does not transfer ownership
+   */
+  AxisDefinition(kPosition axis_position, Domain* domain);
+
+  /**
    * Add a "tick" to this axis
    *
    * @param tick_position the position of the tick (0.0-1.0)
@@ -52,6 +61,11 @@ public:
    * @param label_text the label text
    */
   void addLabel(double label_position, const std::string& label_text);
+
+  /**
+   * Removes the labels from this axis
+   */
+  void removeLabels();
 
   /**
    * Returns the labels of this axis

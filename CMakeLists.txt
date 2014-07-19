@@ -6,7 +6,8 @@ cmake_minimum_required(VERSION 2.6)
 project(fnordmetric)
 enable_testing()
 
-set(FNORDMETRIC_SOURCES)
+set(FNORDMETRIC_SOURCES
+    src/util/format.cc)
 
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_SOURCES}

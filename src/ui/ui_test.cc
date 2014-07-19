@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "ui/axisdefinition.h"
 #include "ui/canvas.h"
+#include "ui/domain.h"
 
 namespace fnordmetric {
 using namespace fnordmetric::ui;
@@ -25,8 +26,9 @@ public:
     //testCanvasWithLeftAxisAndTitle();
     //testCanvasWithLeftAndBottomAxis();
     //testCanvasWithAllAxis();
-    testCanvasWithAllMultiAxis();
+    //testCanvasWithAllMultiAxis();
     //testCanvasWithMultiLeftAxis();
+    testCanvasWithAxisFromNumericalDomain();
   }
 
   void testCanvasWithLeftAxis() {
@@ -336,6 +338,15 @@ public:
   }
 
 
+  void testCanvasWithAxisFromNumericalDomain() {
+    ui::Canvas canvas;
+
+    NumericalDomain domain(0, 100);
+    auto axis1 = canvas.addAxis(ui::AxisDefinition::LEFT, &domain);
+    axis1->setTitle("numerical domain");
+
+    auto svg = canvas.renderSVG();
+  }
 
   void testSimpleBarChart() {
     //ui::Canvas canvas;

@@ -12,15 +12,20 @@
 #include "format.h"
 
 namespace fnordmetric {
+namespace util {
 namespace format {
 
 std::string numberToHuman(double value) {
   char buf[256];
-  size_t len;
+  size_t len = 0;
 
   auto abs_value = fabs(value);
 
-  if (abs_value < 1){
+  if (abs_value == 0){
+    len = snprintf(buf, sizeof(buf), "0");
+  }
+
+  else if (abs_value < 1){
     len = snprintf(buf, sizeof(buf), "%.2f", value);
   }
 
@@ -36,13 +41,13 @@ std::string numberToHuman(double value) {
     len = snprintf(buf, sizeof(buf), "%.1fk", value / 1000);
   }
 
+  else {
+    len = snprintf(buf, sizeof(buf), "%.0f", value);
+  }
+
   return std::string(buf, len);
 }
 
-std::string svalueToHuman(const query::SValue& value) {
-  return value.toString();
 }
-
-
 }
 }

@@ -5,12 +5,24 @@
  * Licensed under the MIT license (see LICENSE).
  */
 #include "axisdefinition.h"
+#include "domain.h"
 
 namespace fnordmetric {
 namespace ui {
 
-AxisDefinition::AxisDefinition(kPosition axis_position) :
+AxisDefinition::AxisDefinition(
+    kPosition axis_position) :
     position_(axis_position) {}
+
+AxisDefinition::AxisDefinition(
+    kPosition axis_position,
+    Domain* domain) :
+    position_(axis_position),
+    ticks_(domain->getTicks()) {
+  for (auto tick : ticks_) {
+    addLabel(tick, domain->labelAt(tick));
+  }
+}
 
 void AxisDefinition::addTick(double tick_position) {
   ticks_.push_back(tick_position);
@@ -26,6 +38,9 @@ void AxisDefinition::addLabel(
   labels_.emplace_back(label_position, label_text);
 }
 
+void AxisDefinition::removeLabels() {
+  labels_.clear();
+}
 
 const std::vector<std::pair<double, std::string>>& AxisDefinition::getLabels()
     const {

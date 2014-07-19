@@ -10,11 +10,13 @@
 #include "query/svalue.h"
 
 namespace fnordmetric {
+namespace util {
 namespace format {
 
 std::string numberToHuman(double value);
 std::string svalueToHuman(const query::SValue& value);
 
+}
 }
 }
 #endif
