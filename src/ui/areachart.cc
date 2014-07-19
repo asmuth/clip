@@ -170,25 +170,34 @@ void AreaChart::render(
 
   for (const auto& area : areas_) {
     std::vector<std::pair<double, double>> area_coords;
+    std::vector<std::pair<double, double>> border_top_coords;
+    std::vector<std::pair<double, double>> point_coords;
 
     for (int i = 0; i < area.points.size(); ++i) {
       const auto& point = area.points[i];
       auto scaled_x = x_domain->scale(std::get<0>(point));
       auto scaled_y2 = 1.0 - y_domain->scale(std::get<2>(point));
+      auto draw_x = padding_left + scaled_x * inner_width;
+      auto draw_y2 = padding_top + scaled_y2 * inner_height;
 
-      area_coords.emplace_back(
-          padding_left + scaled_x * inner_width,
-          padding_top + scaled_y2 * inner_height);
+      area_coords.emplace_back(draw_x, draw_y2);
+      border_top_coords.emplace_back(draw_x, draw_y2);
+      point_coords.emplace_back(draw_x, draw_y2);
     }
 
     for (int i = area.points.size() - 1; i >= 0; --i) {
       const auto& point = area.points[i];
       auto scaled_x = x_domain->scale(std::get<0>(point));
       auto scaled_y1 = 1.0 - y_domain->scale(std::get<1>(point));
+      auto draw_x = padding_left + scaled_x * inner_width;
+      auto draw_y1 = padding_top + scaled_y1 * inner_height;
 
-      area_coords.emplace_back(
-          padding_left + scaled_x * inner_width,
-          padding_top + scaled_y1 * inner_height);
+      area_coords.emplace_back(draw_x, draw_y1);
+
+      if (std::get<1>(point) != 0) {
+        border_top_coords.emplace_back(draw_x, draw_y1);
+        point_coords.emplace_back(draw_x, draw_y1);
+      }
     }
 
     target->drawPath(
@@ -198,6 +207,28 @@ void AreaChart::render(
       area.smooth,
       area.color,
       "area");
+
+    if (area.border_style != "none") {
+      target->drawPath(
+        border_top_coords,
+        area.border_style,
+        area.border_width,
+        area.smooth,
+        area.color,
+        "line");
+    }
+
+    if (area.point_style != "none") {
+      for (const auto &point : point_coords) {
+        target->drawPoint(
+          point.first,
+          point.second,
+          area.point_style,
+          area.point_size,
+          area.color,
+          "point");
+      }
+    }
   }
 
   target->finishGroup();

@@ -39,17 +39,24 @@ static const std::string kStyleSheetDefault = R"(
     font-size: 11pt;
   }
 
-  .chart .lines .line {
+  .chart .line {
     fill: none;
     stroke: #db843d;
   }
 
-  .chart .bars .bar,
-  .chart .points .point {
+  .chart .area {
+    opacity: 0.8;
+  }
+
+  .chart .bar,
+  .chart .point,
+  .chart .area {
     fill: #db843d;
   }
 
-  .chart .bars .bar.color5, .chart .points .point.color5 {
+  .chart .bar.color5,
+  .chart .point.color5,
+  .chart .area.color5 {
     fill: #3d96ae;
   }
 
@@ -57,35 +64,43 @@ static const std::string kStyleSheetDefault = R"(
     stroke: #3d96ae;
   }
 
-  .chart .bars .bar.color4, .chart .points .point.color4 {
+  .chart .bar.color4,
+  .chart .point.color4,
+  .chart .area.color4 {
     fill: #80699b;
   }
 
-  .chart .lines .line.color4 {
+  .chart .line.color4 {
     stroke: #80699b;
   }
 
-  .chart .bars .bar.color3, .chart .points .point.color3 {
+  .chart .bar.color3,
+  .chart .point.color3,
+  .chart .area.color3 {
     fill: #89a54e;
   }
 
-  .chart .lines .line.color3 {
+  .chart .line.color3 {
     stroke: #89a54e;
   }
 
-  .chart .bars .bar.color2, .chart .points .point.color2 {
+  .chart .bar.color2,
+  .chart .point.color2,
+  .chart .area.color2 {
     fill: #aa4643;
   }
 
-  .chart .lines .line.color2 {
+  .chart .line.color2 {
     stroke: #aa4643;
   }
 
-  .chart .bars .bar.color1, .chart .points .point.color1 {
+  .chart .bar.color1,
+  .chart .point.color1,
+  .chart .area.color1 {
     fill: #4572a7;
   }
 
-  .chart .lines .line.color1 {
+  .chart .line.color1 {
     stroke: #4572a7;
   }
 

@@ -781,7 +781,7 @@ public:
 
     ui::Canvas canvas;
     auto line_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
-    line_chart->addSeries(&series1);
+    line_chart->addSeries(&series1, "solid", 2, "circle", 4);
     line_chart->addAxis(AxisDefinition::TOP);
     line_chart->addAxis(AxisDefinition::RIGHT);
     line_chart->addAxis(AxisDefinition::BOTTOM);
