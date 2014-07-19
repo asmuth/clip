@@ -90,13 +90,81 @@ void Canvas::renderAxes(
     std::get<3>(*padding) += kAxisLabelWidth * 0.5f;
   }
 
-  for (const auto& placement : left) {
-    renderLeftAxis(target, placement.second, padding, placement.first);
+  for (const auto& placement : right) {
+    renderRightAxis(target, placement.second, padding, placement.first);
   }
 
   for (const auto& placement : bottom) {
     renderBottomAxis(target, placement.second, padding, placement.first);
   }
+
+  for (const auto& placement : left) {
+    renderLeftAxis(target, placement.second, padding, placement.first);
+  }
+}
+
+void Canvas::renderRightAxis(
+    RenderTarget* target,
+    AxisDefinition* axis,
+    std::tuple<int, int, int, int>* padding,
+    int right) const {
+  int padding_top = std::get<0>(*padding);
+  int inner_height = height_ - std::get<2>(*padding) - padding_top;
+
+  right += kAxisPadding;
+  target->beginGroup("axis right");
+
+  /* draw title */
+  if (axis->hasTitle()) {
+    right += kAxisTitleLength;
+    target->drawText(
+        axis->getTitle(),
+        width_ - right,
+        padding_top + inner_height * 0.5f,
+        "middle",
+        "text-before-edge",
+        "title",
+        270);
+  }
+
+  /* draw labels */
+  if (axis->hasLabels()) {
+    right += kAxisLabelWidth; // FIXPAUL: calculate label width?
+
+    for (const auto& label : axis->getLabels()) {
+      auto tick_y = padding_top + inner_height * (1.0 - label.first);
+
+      target->drawText(
+          label.second,
+          width_ - right + (kTickLength * 2),
+          tick_y,
+          "start",
+          "middle",
+          "label");
+    }
+  }
+
+  /* draw ticks */
+  for (const auto& tick : axis->getTicks()) {
+    auto tick_y = padding_top + inner_height * (1.0 - tick);
+
+    target->drawLine(
+        width_ - right,
+        tick_y,
+        width_ - right - kTickLength,
+        tick_y,
+        "tick");
+  }
+
+  /* draw stroke */
+  target->drawLine(
+      width_ - right,
+      padding_top,
+      width_ - right,
+      padding_top + inner_height,
+      "stroke");
+
+  target->finishGroup();
 }
 
 void Canvas::renderBottomAxis(

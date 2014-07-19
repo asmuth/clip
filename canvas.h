@@ -65,6 +65,34 @@ protected:
       std::tuple<int, int, int, int>* padding) const;
 
   /**
+   * Render a top axis
+   *
+   * @param target the render target
+   * @param axis the axis definition
+   * @param padding the padding state
+   * @param top the top padding for this axis
+   */
+  void renderTopAxis(
+      RenderTarget* target,
+      AxisDefinition* axis,
+      std::tuple<int, int, int, int>* padding,
+      int top) const;
+
+  /**
+   * Render a right axis
+   *
+   * @param target the render target
+   * @param axis the axis definition
+   * @param padding the padding state
+   * @param right the right padding for this axis
+   */
+  void renderRightAxis(
+      RenderTarget* target,
+      AxisDefinition* axis,
+      std::tuple<int, int, int, int>* padding,
+      int right) const;
+
+  /**
    * Render a bottom axis
    *
    * @param target the render target
@@ -77,7 +105,6 @@ protected:
       AxisDefinition* axis,
       std::tuple<int, int, int, int>* padding,
       int bottom) const;
-
 
   /**
    * Render a left axis
