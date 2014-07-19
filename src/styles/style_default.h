@@ -39,6 +39,11 @@ static const std::string kStyleSheetDefault = R"(
     font-size: 11pt;
   }
 
+  .chart .lines .line {
+    fill: none;
+    stroke: #db843d;
+  }
+
   .chart .bars .bar,
   .chart .points .point {
     fill: #db843d;
@@ -48,20 +53,40 @@ static const std::string kStyleSheetDefault = R"(
     fill: #3d96ae;
   }
 
+  .chart .lines .line.color5 {
+    stroke: #3d96ae;
+  }
+
   .chart .bars .bar.color4, .chart .points .point.color4 {
     fill: #80699b;
+  }
+
+  .chart .lines .line.color4 {
+    stroke: #80699b;
   }
 
   .chart .bars .bar.color3, .chart .points .point.color3 {
     fill: #89a54e;
   }
 
+  .chart .lines .line.color3 {
+    stroke: #89a54e;
+  }
+
   .chart .bars .bar.color2, .chart .points .point.color2 {
     fill: #aa4643;
   }
 
+  .chart .lines .line.color2 {
+    stroke: #aa4643;
+  }
+
   .chart .bars .bar.color1, .chart .points .point.color1 {
     fill: #4572a7;
+  }
+
+  .chart .lines .line.color1 {
+    stroke: #4572a7;
   }
 
   .chart.bar.vertical .axis.left .stroke,
