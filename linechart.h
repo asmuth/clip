@@ -29,8 +29,10 @@ class Domain;
  */
 class LineChart : public Drawable {
 public:
-  static double kDefaultLineWidth;
   static char kDefaultLineStyle[];
+  static double kDefaultLineWidth;
+  static char kDefaultPointStyle[];
+  static double kDefaultPointSize;
 
   /**
    * Create a new line chart
@@ -55,9 +57,11 @@ public:
    */
   void addSeries(
       Series2D<double, double>* series,
+      const std::string& line_style = kDefaultLineStyle,
       double line_width = kDefaultLineWidth,
-      bool smooth = false,
-      const std::string& line_style = kDefaultLineStyle);
+      const std::string& point_style = kDefaultLineStyle,
+      double point_size = kDefaultPointSize,
+      bool smooth = false);
 
   /**
    * Add an axis to the chart. This method should only be called after all
@@ -83,8 +87,10 @@ protected:
 
   struct Line {
     std::vector<std::pair<double, double>> points;
-    double width;
-    std::string style;
+    std::string line_style;
+    double line_width;
+    std::string point_style;
+    double point_size;
     std::string color;
     bool smooth;
   };

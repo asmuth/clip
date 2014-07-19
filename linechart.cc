@@ -13,8 +13,10 @@
 namespace fnordmetric {
 namespace ui {
 
-double LineChart::kDefaultLineWidth = 2.0f;
 char LineChart::kDefaultLineStyle[] = "solid";
+double LineChart::kDefaultLineWidth = 2.0f;
+char LineChart::kDefaultPointStyle[] = "none";
+double LineChart::kDefaultPointSize = 3.0f;
 
 LineChart::LineChart(
     Canvas* canvas,
@@ -27,13 +29,17 @@ LineChart::LineChart(
 
 void LineChart::addSeries(
       Series2D<double, double>* series,
+      const std::string& line_style /* = kDefaultLineStyle */,
       double line_width /* = kDefaultLineWidth */,
-      bool smooth /* = false */,
-      const std::string& line_style /* = kDefaultLineStyle */) {
+      const std::string& point_style /* = kDefaultLineStyle */,
+      double point_size /* = kDefaultPointsize */,
+      bool smooth /* = false */) {
   Line line;
   line.color = seriesColor(series);
-  line.width = line_width;
-  line.style = line_style;
+  line.line_style = line_style;
+  line.line_width = line_width;
+  line.point_style = point_style;
+  line.point_size = point_size;
   line.smooth = smooth;
 
   for (const auto& spoint : series->getData()) {
@@ -162,6 +168,7 @@ void LineChart::render(
 
   for (const auto& line : lines_) {
     std::vector<std::pair<double, double>> coords;
+
     for (const auto& point : line.points) {
       coords.emplace_back(
           padding_left + x_domain->scale(point.first) * inner_width,
@@ -170,11 +177,23 @@ void LineChart::render(
 
     target->drawPath(
       coords,
-      line.style,
-      line.width,
+      line.line_style,
+      line.line_width,
       line.smooth,
       line.color,
       "line");
+
+    if (line.point_style != "none") {
+      for (const auto& point : coords) {
+        target->drawPoint(
+          point.first,
+          point.second,
+          line.point_style,
+          line.point_size,
+          line.color,
+          "point");
+      }
+    }
   }
 
   target->finishGroup();

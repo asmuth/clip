@@ -45,7 +45,7 @@ public:
     //testSimplePointChart();
     //testVariableSizePointChart();
     //testSimpleLineChart();
-    //testPointLineChart();
+    testPointLineChart();
     //testMultiChart();
     testSimpleAreaChart();
   }
@@ -693,14 +693,10 @@ public:
     ui::Canvas canvas;
 
     auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
-    line_chart->addSeries(&series1);
-    line_chart->addSeries(&series2);
+    line_chart->addSeries(&series1, "solid", 2, "circle", 4);
+    line_chart->addSeries(&series2, "solid", 2, "circle", 4);
     line_chart->addAxis(AxisDefinition::BOTTOM);
     line_chart->addAxis(AxisDefinition::LEFT);
-
-    auto point_chart = canvas.addChart<PointChart>(&x_domain, &y_domain);
-    point_chart->addSeries(&series1, "circle", 4);
-    point_chart->addSeries(&series2, "circle", 4);
 
     auto svg = canvas.renderSVG();
   }
