@@ -7,6 +7,8 @@
 #ifndef _FNORDMETRIC_SERIES_H
 #define _FNORDMETRIC_SERIES_H
 #include <stdlib.h>
+#include <string>
+#include <vector>
 
 namespace fnordmetric {
 
