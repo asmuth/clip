@@ -24,7 +24,8 @@ BarChart::BarChart(
     NumericalDomain* y_domain /* = nullptr */) :
     canvas_(canvas),
     orientation_(orientation),
-    y_domain_(y_domain) {}
+    y_domain_(y_domain),
+    num_series_(0) {}
 
 
 void BarChart::addSeries(Series2D<std::string, double>* series) {
@@ -48,6 +49,8 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
 
     bar_data->ys.emplace_back(0, y_val);   //scaleValue(&y_val, &y_domain));
   }
+
+  num_series_++;
 }
 
 AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
@@ -141,13 +144,13 @@ void BarChart::renderVerticalBars(
     draw_x += bar_padding;
 
     /* single series */
-    //if (getSeries().size() == 1) {
+    if (num_series_ == 1) {
       auto y_min = y_domain->scale(bar.ys[0].first);
       auto y_max = y_domain->scale(bar.ys[0].second);
       auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
       auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
       target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
-    //}
+    }
 
     /* multi series stacked */
     /*else if (stacked_) {
@@ -164,34 +167,26 @@ void BarChart::renderVerticalBars(
     }*/
 
     /* multi series unstacked */
-    /*else {
-      auto num_series = getSeries().size();
+    else {
       auto draw_x_multi = draw_x;
-      auto draw_width_multi = draw_width / num_series;
+      auto draw_width_multi = draw_width / (double) num_series_;
       for (int i = 0; i < bar.ys.size(); i++) {
-        auto& y_val = bar.ys[i];
-        auto y_min = y_val.first;
-        auto y_max = y_val.second;
-        auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
-        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
+      auto y_min = y_domain->scale(bar.ys[i].first);
+      auto y_max = y_domain->scale(bar.ys[i].second);
+        auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
+        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
         target->drawRect(
             draw_x_multi,
             draw_y,
             draw_width_multi * (1.0f - kBarPadding * 0.5f),
             draw_height,
-            colorName(i));
+            "color0");
         draw_x_multi += (draw_width_multi * (1.0f + kBarPadding * 0.5f));
       }
-    }*/
+    }
 
-    //x_labels.push_back(std::make_pair((
-    //    draw_x - padding_left_ + bar_width * 0.5f) / inner_width_,
-    //    format::svalueToHuman(bar.x)));
     draw_x += bar_width + bar_padding;
-    //x_ticks.push_back((draw_x - padding_left_) / inner_width_);
   }
-
-  //x_ticks.back() = 1.0f;
 }
 
 NumericalDomain* BarChart::getValueDomain() const {
