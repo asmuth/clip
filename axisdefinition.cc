@@ -22,8 +22,22 @@ void AxisDefinition::addLabel(
   labels_.emplace_back(label_position, label_text);
 }
 
+
+const std::vector<std::pair<double, std::string>>& AxisDefinition::getLabels()
+    const {
+  return labels_;
+}
+
 AxisDefinition::kPosition AxisDefinition::getPosition() const {
   return position_;
+}
+
+const std::string& AxisDefinition::getTitle() {
+  return title_;
+}
+
+void AxisDefinition::setTitle(const std::string& title) {
+  title_ = title;
 }
 
 bool AxisDefinition::hasTitle() const {
