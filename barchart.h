@@ -115,6 +115,11 @@ protected:
       int height,
       std::tuple<int, int, int, int>* padding) const override;
 
+  void renderVerticalBars(
+      RenderTarget* target,
+      int width,
+      int height,
+      std::tuple<int, int, int, int>* padding) const;
   //void drawVerticalBars(RenderTarget* target);
   //void drawHorizontalBars(RenderTarget* target);
 

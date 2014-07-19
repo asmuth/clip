@@ -9,6 +9,7 @@
 #include "barchart.h"
 #include "canvas.h"
 #include "domain.h"
+#include "rendertarget.h"
 
 /**
  * todo:
@@ -106,12 +107,91 @@ void BarChart::render(
     std::tuple<int, int, int, int>* padding) const {
   switch (orientation_) {
     case O_VERTICAL:
-      //drawVerticalBars(target);
+      renderVerticalBars(target, width, height, padding);
       break;
     case O_HORIZONTAL:
       //drawHorizontalBars(target);
       break;
   }
+}
+
+void BarChart::renderVerticalBars(
+    RenderTarget* target,
+    int width,
+    int height,
+    std::tuple<int, int, int, int>* padding) const {
+  /* calculate bar width and padding */
+  auto padding_top = std::get<0>(*padding);
+  auto padding_right = std::get<1>(*padding);
+  auto padding_bottom = std::get<2>(*padding);
+  auto padding_left = std::get<3>(*padding);
+  auto inner_width = width - padding_right - padding_left;
+  auto inner_height = height - padding_top - padding_bottom;
+  auto bar_width = (inner_width / data_.size()) * (1.0f - kBarPadding);
+  auto bar_padding = (inner_width / data_.size()) * (kBarPadding * 0.5f);
+  bar_width -= bar_padding / data_.size() * 2;
+
+  /* draw the bars */
+  std::vector<double> x_ticks = {0.0f};
+  //std::vector<std::pair<double, std::string>> x_labels;
+  auto draw_x = padding_left + bar_padding;
+  auto draw_width = bar_width;
+  auto y_domain = getValueDomain();
+  for (const auto& bar : data_) {
+    draw_x += bar_padding;
+
+    /* single series */
+    //if (getSeries().size() == 1) {
+      auto y_min = y_domain->scale(bar.ys[0].first);
+      auto y_max = y_domain->scale(bar.ys[0].second);
+      auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
+      auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
+      target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
+    //}
+
+    /* multi series stacked */
+    /*else if (stacked_) {
+      double y_min = 0.0f;
+      double y_max = 0.0f;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        y_max += y_val.second - y_val.first;
+        auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
+        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
+        target->drawRect(draw_x, draw_y, draw_width, draw_height, colorName(i));
+        y_min += y_val.second - y_val.first;
+      }
+    }*/
+
+    /* multi series unstacked */
+    /*else {
+      auto num_series = getSeries().size();
+      auto draw_x_multi = draw_x;
+      auto draw_width_multi = draw_width / num_series;
+      for (int i = 0; i < bar.ys.size(); i++) {
+        auto& y_val = bar.ys[i];
+        auto y_min = y_val.first;
+        auto y_max = y_val.second;
+        auto draw_y = padding_top_ + ((1.0f - y_max) * inner_height_);
+        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height_;
+        target->drawRect(
+            draw_x_multi,
+            draw_y,
+            draw_width_multi * (1.0f - kBarPadding * 0.5f),
+            draw_height,
+            colorName(i));
+        draw_x_multi += (draw_width_multi * (1.0f + kBarPadding * 0.5f));
+      }
+    }*/
+
+    //x_labels.push_back(std::make_pair((
+    //    draw_x - padding_left_ + bar_width * 0.5f) / inner_width_,
+    //    format::svalueToHuman(bar.x)));
+    draw_x += bar_width + bar_padding;
+    //x_ticks.push_back((draw_x - padding_left_) / inner_width_);
+  }
+
+  //x_ticks.back() = 1.0f;
 }
 
 NumericalDomain* BarChart::getValueDomain() const {
@@ -173,6 +253,10 @@ NumericalDomain* BarChart::newValueDomain() const {
       }
     }
 
+    if (y_domain_max > 0) {
+      y_domain_max *= 1.1;
+    }
+
     return new NumericalDomain(y_domain_min, y_domain_max, false);
   }
 }
@@ -181,10 +265,18 @@ AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
     const {
   auto axis = canvas_->addAxis(position);
 
-  for (int i = data_.size() - 1; i >= 0; --i) {
-    auto tick = (1.0 / data_.size()) * i;
-    axis->addTick(tick);
-    axis->addLabel(tick, data_[i].x);
+  auto bar_width = (1.0 / data_.size()) * (1.0f - kBarPadding);
+  auto bar_padding = (1.0 / data_.size()) * (kBarPadding * 0.5f);
+  bar_width -= bar_padding / data_.size() * 2;
+
+  auto draw_x = bar_padding;
+  for (int i = 0; i < data_.size(); ++i) {
+    draw_x += bar_padding;
+    axis->addLabel(draw_x + bar_width * 0.5f, data_[i].x);
+    draw_x += bar_width + bar_padding;
+    if (i < data_.size() - 1) {
+      axis->addTick(draw_x);
+    }
   }
 
   return axis;
