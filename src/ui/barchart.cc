@@ -31,6 +31,8 @@ BarChart::BarChart(
 
 
 void BarChart::addSeries(Series2D<std::string, double>* series) {
+  series_colors_.emplace_back(seriesColor(series));
+
   for (const auto& point : series->getData()) {
     const auto& x_val = std::get<0>(point);
     const auto& y_val = std::get<1>(point);
@@ -56,6 +58,8 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
 }
 
 void BarChart::addSeries(Series3D<std::string, double, double>* series) {
+  series_colors_.emplace_back(seriesColor(series));
+
   for (const auto& point : series->getData()) {
     const auto& x_val = std::get<0>(point);
     const auto& y_val = std::get<1>(point);
@@ -227,10 +231,14 @@ void BarChart::render(
     std::tuple<int, int, int, int>* padding) const {
   switch (orientation_) {
     case O_VERTICAL:
+      target->beginGroup("bars vertical");
       renderVerticalBars(target, width, height, padding);
+      target->finishGroup();
       break;
     case O_HORIZONTAL:
+      target->beginGroup("bars horizontal");
       renderHorizontalBars(target, width, height, padding);
+      target->finishGroup();
       break;
   }
 }
@@ -265,7 +273,13 @@ void BarChart::renderVerticalBars(
       auto y_max = y_domain->scale(bar.ys[0].second);
       auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
       auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
-      target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
+      target->drawRect(
+          draw_x,
+          draw_y,
+          draw_width,
+          draw_height,
+          series_colors_[0],
+          "bar");
     }
 
     /* multi series stacked */
@@ -279,7 +293,15 @@ void BarChart::renderVerticalBars(
             ((1.0f - y_domain->scale(y_max)) * inner_height);
         auto draw_height = (1.0f - ((1.0f - y_domain->scale(y_max)) +
             y_domain->scale(y_min))) * inner_height;
-        target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
+
+        target->drawRect(
+            draw_x,
+            draw_y,
+            draw_width,
+            draw_height,
+            series_colors_[i],
+            "bar");
+
         y_min += y_val.second - y_val.first;
       }
     }
@@ -293,12 +315,15 @@ void BarChart::renderVerticalBars(
       auto y_max = y_domain->scale(bar.ys[i].second);
         auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
         auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
+
         target->drawRect(
             draw_x_multi,
             draw_y,
             draw_width_multi * (1.0f - kBarPadding * 0.5f),
             draw_height,
-            "color0");
+            series_colors_[i],
+            "bar");
+
         draw_x_multi += (draw_width_multi * (1.0f + kBarPadding * 0.5f));
       }
     }
@@ -338,7 +363,14 @@ void BarChart::renderHorizontalBars(
       auto y_max = y_domain->scale(bar.ys[0].second);
       auto draw_x = padding_left + y_min * inner_width;
       auto draw_width = (y_max - y_min) * inner_width;
-      target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
+
+      target->drawRect(
+          draw_x,
+          draw_y,
+          draw_width,
+          draw_height, 
+          series_colors_[0],
+          "bar");
     }
 
     /* multi series stacked */
@@ -350,7 +382,15 @@ void BarChart::renderHorizontalBars(
         y_max += y_val.second - y_val.first;
         auto draw_x = padding_left + y_domain->scale(y_min) * inner_width;
         auto draw_width = y_domain->scale(y_max - y_min) * inner_width;
-        target->drawRect(draw_x, draw_y, draw_width, draw_height, "color0");
+
+        target->drawRect(
+            draw_x,
+            draw_y,
+            draw_width,
+            draw_height,
+            series_colors_[i],
+            "bar");
+
         y_min += y_val.second - y_val.first;
       }
     }
@@ -364,12 +404,15 @@ void BarChart::renderHorizontalBars(
       auto y_max = y_domain->scale(bar.ys[i].second);
         auto draw_x = padding_left + y_min * inner_width;
         auto draw_width = (y_max - y_min) * inner_width;
+
         target->drawRect(
             draw_x,
             draw_y_multi,
             draw_width,
             draw_height_multi * (1.0f - kBarPadding * 0.5f),
-            "color0");
+            series_colors_[i],
+            "bar");
+
         draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
       }
     }
