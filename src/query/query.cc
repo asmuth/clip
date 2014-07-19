@@ -8,12 +8,14 @@
 #include <string.h>
 #include <memory>
 #include "query.h"
+// #include "query/drawstatement.h"
+#include "query/executable.h"
 #include "query/parser.h"
 #include "query/queryplan.h"
-#include "query/executable.h"
+#include "query/resultlist.h"
+// #include "query/seriesstatement.h"
 #include "query/tablerepository.h"
-#include "query/seriesstatement.h"
-#include "query/drawstatement.h"
+#include "query/resultlist.h"
 
 namespace fnordmetric {
 namespace query {
@@ -38,17 +40,15 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
   }
 }
 
-/*
-bool Query::execute(TableRenderTarget* target) {
+bool Query::execute(AbstractResultList* target) {
   for (const auto& stmt : statements_) {
-    target->addHeader(stmt->getColumns());
-    stmt->setTarget(target);
-    stmt->execute();
+    //target->addHeader(stmt->getColumns());
+    //stmt->setTarget(target);
+    //stmt->execute();
   }
 
   return true;
 }
-*/
 
 /*
 bool Query::execute(ChartRenderTarget* target) {

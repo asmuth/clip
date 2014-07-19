@@ -31,32 +31,42 @@ bar chart examples:
   * histogram
   * multiple y axis
 
---> multiple y axis!
+
+must haves
+  * multiple y axis!
+  * stacking
+
 --> legend!
 
 --- sparklines? (multi svg output)
 --- multi chart types in one chart --- overdraw?
 --- pie, scatter, gauges, heatmaps, boxplot, error bars
 
-DRAW {BAR|LINE|AREA} CHART
-  [TITLE title [subtitle]]
-  [XAXIS {BOTTOM|TOP|BOTH|AUTO|OFF}
-      [TITLE title]
-      [SCALE min_expr, max_expr]
-      [LOGARITHMIC]]
-  [YAXIS {LEFT|RIGHT|BOTH|AUTO|OFF}
-      [TITLE title]
-      [SCALE min_expr, max_expr]
-      [LOGARITHMIC]]
-  [STACKED {ON|OFF}]
-  [ORIENTATION {HORIZONTAL|VERTICAL}]
-  [LABELS {INSIDE|OUTSIDE|AUTO|OFF}]
+-- stacked??!
 
-SERIES
+--- axis expr can be a tuple!!. e.g for error bars or area
+
+
+BEGIN CHART [TITLE title [subtitle]];
+
+DRAW {LINES|LINES|BARS|POINTS|LINESPOINTS}
     series_name_expr
-    [AXIS expr AS {X|Y|Z} [SCALE min_expr, max_expr] [LOGARITHMIC]]
+    [XAXIS expr
+        [DISPLAY {TOP|BOTTOM|BOTH|OFF}]
+        [TITLE title]
+        [SCALE min_expr, max_expr]
+        [LOGARITHMIC]]
+    [YAXIS expr
+        [DISPLAY {LEFT|RIGHT|BOTH|OFF}]
+        [TITLE title]
+        [SCALE min_expr, max_expr]
+        [LOGARITHMIC]]
+    [LABELS label_expr [{INSIDE|OUTSIDE}]];
+    [ORIENTATION {HORIZONTAL|VERTICAL}]
+    [STACKED {ON|OFF}]
     [COLOR color_expr]
-    [LABEL label_expr]
+    [LINESTYLE linestyle_expr]
+    [POINTSTYLE pointstyle_expr]
     FROM select_statement;
 
 SELECT
@@ -160,9 +170,9 @@ the same chart:
 IMPORT loadtests FROM "myfile.csv";
 
 -- draw a graph of qps vs 90thpercentile, one series for each experiment
-DRAW LINE CHART;
+BEGIN CHART;
 
-SERIES experiment FROM
+DRAW LINES experiment FROM
   SELECT experiment, count(*) as qps, nth_percentile(runtime) as latency
     FROM loadtests
     GROUP BY experiment, time_window(time, 1s);

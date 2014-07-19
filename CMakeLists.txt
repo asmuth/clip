@@ -6,8 +6,7 @@ cmake_minimum_required(VERSION 2.6)
 project(fnordmetric)
 enable_testing()
 
-set(FNORDMETRIC_SOURCES
-    src/format.cc)
+set(FNORDMETRIC_SOURCES)
 
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_SOURCES}
@@ -27,13 +26,22 @@ set(FNORDMETRIC_QUERY_SOURCES
     src/query/expressions/boolean.cc
     src/query/expressions/math.cc)
 
+set(FNORDMETRIC_UI_SOURCES
+    ${FNORDMETRIC_SOURCES}
+    src/ui/canvas.cc)
+
 include_directories(./src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
 
-add_executable(query-test
+add_test(QueryTest test/query-test)
+add_executable(test/query-test
     ${FNORDMETRIC_QUERY_SOURCES}
     src/query/query_test.cc)
 
-add_test(QueryTest query-test)
+
+add_test(QueryTest test/ui-test)
+add_executable(test/ui-test
+    ${FNORDMETRIC_UI_SOURCES}
+    src/ui/ui_test.cc)

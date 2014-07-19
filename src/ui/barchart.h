@@ -12,6 +12,7 @@
 #include "domain.h"
 
 namespace fnordmetric {
+namespace ui {
 class Domain;
 
 /**

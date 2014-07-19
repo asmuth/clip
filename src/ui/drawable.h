@@ -18,18 +18,13 @@ namespace fnordmetric {
 class Drawable {
 public:
 
-  enum kPositions {
-    TOP = 0,
-    RIGHT = 1,
-    BOTTOM = 2,
-    LEFT = 3
-  };
-
+/*
   static const int kNumTicks = 6; // FIXPAUL make configurable;
   static const int kTickLength = 5; // FIXPAUL make configurable
   static const int kAxisLabelHeight = 35.0f; // FIXPAUL make configurable
   static const int kAxisLabelWidth = 50.0f; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20.0f; // FIXPAUL make configurable
+*/
 
   Drawable() :
       width_(1024),
