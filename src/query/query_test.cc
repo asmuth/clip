@@ -852,6 +852,8 @@ public:
         std::unique_ptr<TableRef>(new TestTable2Ref()));
 
     auto query = Query(
+        "  BEGIN BAR CHART;"
+        ""
         "  CREATE SERIES WITH"
         "    SELECT"
         "      one, two"

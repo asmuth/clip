@@ -76,6 +76,7 @@ protected:
   ASTNode* selectSublist();
   ASTNode* tableName();
   ASTNode* createStatement();
+  ASTNode* beginStatement();
 
   ASTNode* fromClause();
   ASTNode* whereClause();

@@ -125,7 +125,6 @@ Executable* QueryPlan::buildSeriesStatement(
     TableRepository* repo) {
   auto select_ast = ast->getChildren()[0];
   assert(*select_ast == ASTNode::T_SELECT);
-    printf("exec\n");
 
   /* build nested select statement */
   auto select = buildQueryPlan(select_ast, repo);

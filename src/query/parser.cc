@@ -198,8 +198,8 @@ ASTNode* Parser::statement() {
       return selectStatement();
     case Token::T_CREATE:
       return createStatement();
-    //case Token::T_BEGIN:
-    //  return beginStatement();
+    case Token::T_BEGIN:
+      return beginStatement();
   }
 
   addError(
@@ -296,8 +296,8 @@ ASTNode* Parser::createStatement() {
   return nullptr;
 }
 
-/*
-ASTNode* Parser::drawStatement() {
+
+ASTNode* Parser::beginStatement() {
   auto draw = new ASTNode(ASTNode::T_DRAW);
   consumeToken();
 
@@ -317,16 +317,14 @@ ASTNode* Parser::drawStatement() {
     return nullptr;
   }
 
-  // FIXPAUL parse params
-
-  if (*cur_token_ == Token::T_SEMICOLON) {
-    consumeToken();
+  if (consumeIf(Token::T_WITH)) {
+    draw->appendChild(selectStatement());
+  } else {
+    consumeIf(Token::T_SEMICOLON);
   }
 
   return draw;
 }
-
-*/
 
 ASTNode* Parser::selectSublist() {
   /* table_name.* */
