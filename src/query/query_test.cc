@@ -858,7 +858,7 @@ public:
         ""
         "  CREATE SERIES WITH"
         "    SELECT"
-        "      one, two"
+        "      one AS x, two AS y"
         "    FROM"
         "      testtable;",
  /*       ""
@@ -876,6 +876,8 @@ public:
         &repo);
 
     query.execute();
+    auto chart = query.getChart(0);
+    chart->renderSVG();
   }
 
 };

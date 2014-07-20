@@ -57,6 +57,13 @@ public:
 
   void execute(ui::Canvas* canvas);
 
+  template <typename T>
+  void executeDrawable(T* drawable) {
+    for (const auto& series_stmt : series_stmts_) {
+      series_stmt->executeDrawable(drawable);
+    }
+  }
+
 protected:
   std::vector<SeriesStatement*> series_stmts_;
   //std::vector<AxisStatement*> axis_stmts_;

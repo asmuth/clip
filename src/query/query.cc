@@ -85,6 +85,11 @@ ResultList* Query::getResultList(size_t index) const {
   return results_[index].get();
 }
 
+ui::Canvas* Query::getChart(size_t index) const {
+  assert(index < charts_.size()); // FIXPAUL
+  return charts_[index].get();
+}
+
 /*
 bool Query::execute(ChartRenderTarget* target) {
   Drawable* drawable = nullptr;

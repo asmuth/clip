@@ -92,6 +92,11 @@ public:
    */
   void addSeries(Series3D<double, double, double>* series);
 
+  void addSeries(Series* series) {
+    fprintf(stderr, "error: unsupported series type for barchart\n");
+    throw std::string("unsupported series type for barchart");
+  }
+
   /**
    * Add an axis to the chart. This method should only be called after all
    * series have been added to the chart.

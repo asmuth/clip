@@ -37,6 +37,7 @@ protected:
 template <typename X, typename Y>
 class Series2D : public Series {
 public:
+  Series2D() : Series2D("unnamed") {}
   Series2D(const std::string& name) : Series(name) {}
 
   void addDatum(X x, Y y) {
@@ -54,6 +55,7 @@ protected:
 template <typename X, typename Y, typename Z>
 class Series3D : public Series {
 public:
+  Series3D() : Series3D("unnamed") {}
   Series3D(const std::string& name) : Series(name) {}
 
   void addDatum(X x, Y y, Z z) {

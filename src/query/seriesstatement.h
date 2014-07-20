@@ -10,7 +10,7 @@
 #include <assert.h>
 #include "compile.h"
 #include "execute.h"
-#include "../seriesdefinition.h"
+#include "../base/series.h"
 
 namespace fnordmetric {
 namespace query {
@@ -28,10 +28,102 @@ public:
 
   void execute() override {}
 
-  bool nextRow(SValue* row, int row_len) override {
-    SValue out[128]; // FIXPAUL
-    int out_len = 0;
+  template <typename T>
+  void executeDrawable(T* drawable) {
+    child_->execute();
 
+    if (rows_.size() == 0) {
+      return;
+    }
+
+    int x_ind = -1;
+    int y_ind = -1;
+    int z_ind = -1;
+
+    const auto& cols = getColumns();
+    for (int i = 0; i < getNumCols(); ++i) {
+      const auto& col = cols[i];
+
+      if (col == "x" || col == "X") {
+        x_ind = i;
+        continue;
+      }
+
+      if (col == "y" || col == "Y") {
+        y_ind = i;
+        continue;
+      }
+
+      if (col == "z" || col == "Z") {
+        z_ind = i;
+        continue;
+      }
+    }
+
+    bool is_2d = x_ind >= 0 && y_ind >= 0;
+    bool is_3d = z_ind >= 0 && is_2d;
+
+    if (is_3d) {
+
+    } else if (is_2d) {
+      switch (rows_[0][x_ind].getType()) {
+        case SValue::T_FLOAT:
+        case SValue::T_INTEGER:
+        case SValue::T_BOOL:
+          switch (rows_[0][y_ind].getType()) {
+            case SValue::T_FLOAT:
+            case SValue::T_INTEGER:
+            case SValue::T_BOOL:
+              return executeSeries<T, Series2D<double, double>>(drawable);
+
+            case SValue::T_STRING:
+              return executeSeries<T, Series2D<double, std::string>>(drawable);
+
+            case SValue::T_UNDEFINED:
+              break;
+          }
+
+        case SValue::T_STRING:
+          switch (rows_[0][y_ind].getType()) {
+            case SValue::T_FLOAT:
+            case SValue::T_INTEGER:
+            case SValue::T_BOOL:
+              return executeSeries<T, Series2D<std::string, double>>(drawable);
+
+            case SValue::T_STRING:
+              return executeSeries<T, Series2D<std::string, std::string>>(
+                  drawable);
+
+            case SValue::T_UNDEFINED:
+              break;
+          }
+
+        case SValue::T_UNDEFINED:
+          break;
+      }
+
+      throw std::string("undefined SValue");
+    } else {
+      throw std::string("error: not enough dimensions");
+    }
+  }
+
+  template <typename T, typename S>
+  void executeSeries(T* drawable) {
+    auto series = new S();
+    drawable->addSeries(series);
+  }
+
+  bool nextRow(SValue* row, int row_len) override {
+    rows_.emplace_back();
+
+    if (row_len != columns_.size()) {
+      throw std::string("invalid row size");
+    }
+
+    for (int i = 0; i < row_len; ++i) {
+      rows_.back().emplace_back(row[i]);
+    }
     /*
     executeExpression(
         name_expr_,
@@ -76,6 +168,7 @@ public:
 
 protected:
   std::vector<std::string> columns_;
+  std::vector<std::vector<SValue>> rows_;
   Executable* child_;
 };
 
