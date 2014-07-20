@@ -196,15 +196,15 @@ ASTNode* Parser::statement() {
   switch (cur_token_->getType()) {
     case Token::T_SELECT:
       return selectStatement();
-    case Token::T_SERIES:
-      return seriesStatement();
-    case Token::T_DRAW:
-      return drawStatement();
+    case Token::T_CREATE:
+      return createStatement();
+    //case Token::T_BEGIN:
+    //  return beginStatement();
   }
 
   addError(
       ERR_UNEXPECTED_TOKEN,
-      "expected one of SELECT, IMPORT, SERIES or DRAW\n");
+      "expected one of SELECT, CREATE or BEGIN\n");
   return nullptr;
 }
 
@@ -274,25 +274,29 @@ ASTNode* Parser::selectStatement() {
   return select;
 }
 
-ASTNode* Parser::seriesStatement() {
-  auto series = new ASTNode(ASTNode::T_SERIES);
+ASTNode* Parser::createStatement() {
   consumeToken();
 
-  if (lookahead(0, Token::T_STRING)) {
-    auto name = series->appendChild(ASTNode::T_SERIES_NAME);
-    name->setToken(consumeToken());
-  } else {
-    series->appendChild(expr());
+  switch (cur_token_->getType()) {
+    case Token::T_SERIES:
+      consumeToken();
+      if (cur_token_->getType() == Token::T_WITH) {
+        consumeToken();
+        auto series = new ASTNode(ASTNode::T_SERIES);
+        series->appendChild(selectStatement());
+        return series;
+      }
+
+    default:
+      addError(
+          ERR_UNEXPECTED_TOKEN,
+          "expected one of SERIES, AXIS\n");
   }
 
-  if (!expectAndConsume(Token::T_FROM)) {
-    return nullptr;
-  }
-
-  series->appendChild(selectStatement());
-  return series;
+  return nullptr;
 }
 
+/*
 ASTNode* Parser::drawStatement() {
   auto draw = new ASTNode(ASTNode::T_DRAW);
   consumeToken();
@@ -322,7 +326,7 @@ ASTNode* Parser::drawStatement() {
   return draw;
 }
 
-
+*/
 
 ASTNode* Parser::selectSublist() {
   /* table_name.* */
@@ -628,6 +632,7 @@ void Parser::addError(kParserErrorType type, const char* msg) {
   ParserError error;
   error.type = type;
   fprintf(stderr, "[ERROR] %s\n", msg);
+  throw std::string(msg, strlen(msg)); // FIXPAUL
   errors_.push_back(error);
 }
 

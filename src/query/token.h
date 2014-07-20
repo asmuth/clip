@@ -59,11 +59,13 @@ public:
     T_LT,
     T_GT,
     T_SERIES,
-    T_DRAW,
+    T_BEGIN,
     T_BAR,
     T_LINE,
     T_AREA,
-    T_CHART
+    T_CHART,
+    T_CREATE,
+    T_WITH
   };
 
   Token(kTokenType token_type);

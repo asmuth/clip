@@ -52,27 +52,34 @@ point chart examples:
 --- middle axis!
 --- TimeDomain!
 
-BEGIN CHART [TITLE title [subtitle]];
+BEGIN BAR CHART WITH
+  SELECT
+    axpr as title  expr
+  subtitle = expr;
+  [orientation = {HORIZONTAL|VERTICAL}]
+  [stacked = [TRUE|FALSE]]
+  [labels = [{INSIDE|OUTSIDE|OFF}]];
+  [FROM select_statement];
 
-DRAW {LINES|LINES|BARS|POINTS|LINESPOINTS}
-    series_name_expr
-    [XAXIS expr
-        [DISPLAY {TOP|BOTTOM|BOTH|OFF}]
-        [TITLE title]
-        [SCALE min_expr, max_expr]
-        [LOGARITHMIC]]
-    [YAXIS expr
-        [DISPLAY {LEFT|RIGHT|BOTH|OFF}]
-        [TITLE title]
-        [SCALE min_expr, max_expr]
-        [LOGARITHMIC]]
-    [LABELS label_expr [{INSIDE|OUTSIDE}]];
-    [ORIENTATION {HORIZONTAL|VERTICAL}]
-    [STACKED {ON|OFF}]
-    [COLOR color_expr]
-    [LINESTYLE linestyle_expr]
-    [POINTSTYLE pointstyle_expr]
-    FROM select_statement;
+CREATE AXIS
+  position = {TOP|RIGHT|BOTTOM|BOTH|LEFT}
+  title = expr
+  min = expr
+  max = expr
+  logarithmic = expr
+  [FROM select_statement];
+
+CREATE SERIES
+  name = expr
+  x = expr
+  y = expr
+  z = expr
+  label = expr
+  linestyle = expr
+  pointstyle = expr
+  color = expr
+  [FROM select_statement];
+
 
 SELECT
     [ALL | DISTINCT | DISTINCTROW ]
@@ -110,11 +117,11 @@ We can create the chart pictured above with this sql query"
   IMPORT gdp_per_country FROM "gdp_per_country.csv";
 
   -- draw a simple bar chart
-  DRAW BAR CHART;
+  BEGIN BAR CHART;
 
   -- draw gdp of the top 10 countries
-  SERIES "gdp per country" FROM
-    SELECT gbp, country FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
+  CREATE SERIES WITH
+    SELECT "gdp per country" as name gbp as x, country as y FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
 
 
 Now lets add a custom style and axis deinitions:
@@ -154,12 +161,12 @@ Lets add another experiment as a second series in the chart:
   IMPORT experiment1 FROM "experiment_1.csv";
   IMPORT experiment2 FROM "experiment_2.csv";
 
-  DRAW LINE CHART;
+  BEGIN LINES;
 
-  SERIES "experiment1" FROM
-    SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
-      FROM experiment1
-      GROUP BY time_window(time, 1s);
+  CREATE SERIES WITH SELECT
+    "experiment1" as title, count(*) as x, nth_percentile(runtime, 90) as y
+    FROM experiment1
+    GROUP BY time_window(time, 1s);
 
   SERIES "experiment2" FROM
     SELECT count(*) as qps, nth_percentile(runtime, 90) as latency

@@ -20,10 +20,8 @@ public:
 
   SeriesStatement(
       std::vector<std::string>&& columns,
-      CompiledExpression* name_expr,
       Executable* child) :
       columns_(std::move(columns)),
-      name_expr_(name_expr),
       child_(child) {
     child->setTarget(this);
   }
@@ -54,7 +52,7 @@ public:
     SValue out[128]; // FIXPAUL
     int out_len = 0;
 
-    /* execute name expresion and prepend name to row */
+    /*
     executeExpression(
         name_expr_,
         nullptr,
@@ -78,13 +76,13 @@ public:
     // FIXPAUL: optimization -- execute all non aggregate exprs only on last row
     // FIXPAUL: optimization -- set props only on last row
 
-    /* add the row to the series */
     std::vector<SValue> datum;
     assert(row_len >= columns_.size() - 1);
     for (int i = 0; i < columns_.size() - 1; ++i) {
       datum.emplace_back(row[i]);
     }
     series->addDatum(std::move(datum));
+    */
     return true;
   }
 

@@ -309,8 +309,18 @@ next:
     goto next;
   }
 
-  if (token == "DRAW") {
-    token_list->emplace_back(Token::T_DRAW);
+  if (token == "CREATE") {
+    token_list->emplace_back(Token::T_CREATE);
+    goto next;
+  }
+
+  if (token == "WITH") {
+    token_list->emplace_back(Token::T_WITH);
+    goto next;
+  }
+
+  if (token == "BEGIN") {
+    token_list->emplace_back(Token::T_BEGIN);
     goto next;
   }
 

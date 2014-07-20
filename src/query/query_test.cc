@@ -28,40 +28,41 @@ public:
   QueryTest() {}
 
   void run() {
-    testTokenizerSimple();
-    testTokenizerEscaping();
-    testTokenizerAsClause();
-    testSelectMustBeFirstAssert();
-    testSelectWildcard();
-    testSelectTableWildcard();
-    testSelectDerivedColumn();
-    testSelectDerivedColumnWithTableName();
-    testSimpleValueExpression();
-    testArithmeticValueExpression();
-    testArithmeticValueExpressionParens();
-    testArithmeticValueExpressionPrecedence();
-    testNegatedValueExpression();
-    testMethodCallValueExpression();
-    testFromList();
-    testWhereClause();
-    testGroupByClause();
-    testOrderByClause();
-    testHavingClause();
-    testLimitClause();
-    testLimitOffsetClause();
-    testComplexQueries();
-    testSeriesStatement();
-    testDerivedSeriesStatement();
-    testSelectOnlyQuery();
-    testSimpleTableScanQuery();
-    testTableScanWhereQuery();
-    testTableScanWhereLimitQuery();
-    testTableScanGroupByQuery();
-    testTableScanGroupByCountQuery();
-    testTableScanGroupBySumQuery();
-    testTableScanGroupWithoutGroupClause();
-    testNamedSeriesQuery();
-    testDerivedSeriesQuery();
+    //testTokenizerSimple();
+    //testTokenizerEscaping();
+    //testTokenizerAsClause();
+    //testSelectMustBeFirstAssert();
+    //testSelectWildcard();
+    //testSelectTableWildcard();
+    //testSelectDerivedColumn();
+    //testSelectDerivedColumnWithTableName();
+    //testSimpleValueExpression();
+    //testArithmeticValueExpression();
+    //testArithmeticValueExpressionParens();
+    //testArithmeticValueExpressionPrecedence();
+    //testNegatedValueExpression();
+    //testMethodCallValueExpression();
+    //testFromList();
+    //testWhereClause();
+    //testGroupByClause();
+    //testOrderByClause();
+    //testHavingClause();
+    //testLimitClause();
+    //testLimitOffsetClause();
+    //testComplexQueries();
+    //testSeriesStatement();
+    //testDerivedSeriesStatement();
+    //testSelectOnlyQuery();
+    //testSimpleTableScanQuery();
+    //testTableScanWhereQuery();
+    //testTableScanWhereLimitQuery();
+    //testTableScanGroupByQuery();
+    //testTableScanGroupByCountQuery();
+    //testTableScanGroupBySumQuery();
+    //testTableScanGroupWithoutGroupClause();
+    //testNamedSeriesQuery();
+    //testDerivedSeriesQuery();
+    testSimpleDrawQuery();
   }
 
   Parser parseTestQuery(const char* query) {
@@ -845,38 +846,32 @@ public:
     }
   }
 
-
-  void testRenderSeriesQuery() {
-    /*
+  void testSimpleDrawQuery() {
     TableRepository repo;
     repo.addTableRef("testtable",
         std::unique_ptr<TableRef>(new TestTable2Ref()));
 
     auto query = Query(
-        "  DRAW BAR CHART;"
-        ""
-        "  SERIES \"myseries\" FROM"
+        "  CREATE SERIES WITH"
         "    SELECT"
         "      one, two"
         "    FROM"
-        "      testtable;"
-        ""
-        "  series \"otherseries\" from"
-        "    select"
-        "      one, two + 5"
-        "    from"
-        "      testtable;"
-        ""
-        "  series \"fuseries\" from"
-        "    select"
-        "      one, two + 3"
-        "    from"
         "      testtable;",
+ /*       ""
+        "  CREATE SERIES WITH"
+        "    select"
+        "      one as x, two + 5 as y"
+        "    from"
+        "      testtable;"
+        ""
+        "  CREATE SERIES WITH"
+        "    select"
+        "      one as x, two + 3 as y"
+        "    from"
+        "      testtable;",*/
         &repo);
 
-    SVGTarget target;
-    query.execute(&target);
-    */
+    query.execute();
   }
 
 };

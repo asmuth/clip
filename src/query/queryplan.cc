@@ -123,41 +123,21 @@ Executable* QueryPlan::buildDrawStatement(ASTNode* ast) {
 Executable* QueryPlan::buildSeriesStatement(
     ASTNode* ast,
     TableRepository* repo) {
-  auto select_ast = ast->getChildren()[1];
-  assert(select_ast->getChildren().size() > 0);
-  assert(select_ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
-  auto child_sl = select_ast->getChildren()[0];
-  size_t num_axes = child_sl->getChildren().size();
-
-  /* build or copy name expression */
-  ASTNode* name = ast->getChildren()[0];
-  if (name->getType() == ASTNode::T_SERIES_NAME) {
-    auto token = new Token(*name->getToken());
-    name = new ASTNode(ASTNode::T_LITERAL);
-    name->setToken(token);
-  } else {
-    name = name->deepCopy();
-    buildInternalSelectList(name, child_sl);
-  }
+  auto select_ast = ast->getChildren()[0];
+  assert(*select_ast == ASTNode::T_SELECT);
+    printf("exec\n");
 
   /* build nested select statement */
-  auto select = buildQueryPlan(ast->getChildren()[1], repo);
-
-  /* compile name expression */
-  size_t scratchpad_len = 0;
-  auto name_expr = compileAST(name, &scratchpad_len);
-  assert(scratchpad_len == 0); // FIXPAUL!
+  auto select = buildQueryPlan(select_ast, repo);
 
   /* resolve output column names */
   std::vector<std::string> column_names;
-  column_names.push_back("series");
-  for (int i = 0; i < num_axes && i < select->getColumns().size(); ++i) {
-    column_names.push_back(select->getColumns()[i]);
+  for (const auto& col : select->getColumns()) {
+    column_names.emplace_back(col);
   }
 
   return new SeriesStatement(
       std::move(column_names),
-      name_expr,
       select);
 }
 

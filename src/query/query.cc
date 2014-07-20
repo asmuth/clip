@@ -30,7 +30,6 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
   for (auto stmt : parser.getStatements()) {
     switch (stmt->getType()) {
       case query::ASTNode::T_SELECT:
-      case query::ASTNode::T_DRAW:
       case query::ASTNode::T_SERIES:
         addStatement(stmt, repo);
         break;
