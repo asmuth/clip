@@ -1,5 +1,159 @@
 ---
 
+examples:
+
+  -
+    title: "Line Charts"
+    dir: "linecharts"
+    examples:
+      -
+        title: "Simple line chart"
+        file: "horizontal_bars"
+        url: "/linecharts/simple_lines"
+      -
+        title: "Lines with points"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Lines with time domain"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Multiple Y Axis"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Line and Point styles"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Lines with error bars"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Lines with legend"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Axis styles"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+
+  -
+    title: "Area Charts"
+    dir: "areacharts"
+    examples:
+      -
+        title: "Simple area chart"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Areas with borders/points"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Stacked areas"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Area ranges"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Areas with lines"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+
+  -
+    title: "Bar Charts"
+    dir: "barcharts"
+    examples:
+      -
+        title: "Horizontal bar chart"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Vertical bar chart"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Multiple series, unstacked"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Multiple series, stacked"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Bars with negative values"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Horizontal range bars"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Histogram"
+        file: "horizontal_bars"
+      -
+        title: "Bars with lines"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Bars with labels"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+
+  -
+    title: "Point/Bubble Charts"
+    dir: "barcharts"
+    examples:
+      -
+        title: "Simple point chart"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "3D bubble chart"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Multiple point series"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Points with labels"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Points with middle axis"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+
+  -
+    title: "Custom styles"
+    dir: "styles"
+    examples:
+      -
+        title: "Default Style"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+      -
+        title: "Dark Style"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+
+  -
+    title: "Dashboards"
+    dir: "dashboards"
+    examples:
+      -
+        title: "Web application"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
+
+#  * horizontal with labels outside
+#  * horizontal with labels inside
+#  * multiple y axis
 
 sitemap:
 

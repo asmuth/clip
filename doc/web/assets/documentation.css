@@ -160,7 +160,6 @@ hr {
   width:210px;
   padding-top:15px;
   position: absolute;
-  margin-left: -210px;
 }
 
 #navigation ul {
@@ -202,14 +201,14 @@ hr {
 
 #documentation {
   padding: 25px 40px;
-  float:left;
   color: #333;
   font-size: 14px;
   line-height:24px;
   border-left:1px solid #c7c9cc;
   background:#fff;
   padding-bottom:70px;
-  min-height:1200px;
+  margin-left: 210px;
+  min-height:1400px;
 }
 
 #documentation_wrap {
@@ -221,7 +220,6 @@ hr {
   overflow:hidden;
   max-width:1200px;
   background:#f4f4f4;
-  padding-left: 210px;
 }
 
 #documentation h3 {
@@ -362,4 +360,47 @@ pre.dark code {
   border-top: 1px solid rgba(255,255,255,0.3);
   border-bottom: 1px solid rgba(255,255,255,0.3);
   box-shadow: 0 0 2px rgba(0,0,0,1.0);
+}
+
+.example_frame {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin: 15px 0;
+  padding: 10px 0;
+}
+
+#documentation p.breadcrumb {
+  margin-bottom: 40px;
+  font-size: 90%;
+  margin-top: -5px;
+}
+
+.optbar {
+  margin-top: 10px;
+}
+
+.optbar a {
+  margin-left: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#documentation .optbar a:hover {
+  text-decoration: none;
+  background:#06c;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+#documentation .optbar a.active {
+  background:#333;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.optbar, .optbar h4 {
+  line-height: 36px;
+  display: inline-block;
 }

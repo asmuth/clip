@@ -58,6 +58,25 @@ class DocApp < Sinatra::Base
     render_with_layout
   end
 
+  get "/examples" do
+    @title = "Examples"
+    @route = "/index"
+    @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/examples.erb')))
+    render_with_layout
+  end
+
+  get "/examples/*" do
+    params[:splat] ||= ["index"]
+    @route = "/#{params[:splat] * "/"}"
+    @example = CONFIG["examples"]
+        .map { |g| g["examples"].map{ |e| e.merge("group" => g) } }
+        .flatten
+        .find { |e| e["url"] == @route }
+    @title = "Examples"
+    @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/examples.erb')))
+    render_with_layout
+  end
+
   ["/documentation", "/documentation/*"].each do |route|
     get route do
       params[:splat] ||= ["index"]
@@ -104,13 +123,25 @@ task :render do
   builder = SinatraStatic.new(DocApp)
   target = File.join(BASEDIR, "target")
 
-  routes = %w{/ /documentation /documentation/support
-    /documentation/license /documentation/downloads /screenshots
+  routes = %w{
+    /
+    /examples
+    /documentation
+    /documentation/support
+    /documentation/license
+    /documentation/downloads
     /documentation/examples/fm_classic_simple_example
-    /documentation/examples/fm_classic_full_example}
+    /documentation/examples/fm_classic_full_example
+    /screenshots}
 
   CONFIG["sitemap"].values.flatten.each do |page|
     routes << "/documentation#{page["url"]}"
+  end
+
+  CONFIG["examples"].each do |example_group|
+    example_group["examples"].each do |example|
+        routes << "/examples#{example["url"]}"
+    end
   end
 
   routes.each do |path|
