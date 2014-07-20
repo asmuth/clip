@@ -54,6 +54,41 @@ hr {
   line-height: 30px;
 }
 
+.leadtext {
+  width: 450px;
+  float: left;
+}
+
+.leadtext p {
+  color: #aaa;
+  font-size: 115%;
+  line-height: 155%;
+}
+
+.leadtext a.button {
+  line-height: 48px;
+  height: 48px;
+  display: block;
+  border: 1px solid #444;
+  color: #ccc;
+  border-radius: 5px;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 115%;
+  margin-top: 30px;
+  width: 360px;
+  cursor: pointer;
+}
+
+.leadtext a.button:hover {
+  border: 1px solid #666;
+  background: #25292b;
+}
+
+.leadtext a.button.first {
+  margin-top: 50px;
+}
+
 .biglink {
   text-align:center;
   margin-bottom: 50px;
