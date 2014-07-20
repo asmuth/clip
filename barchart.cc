@@ -57,6 +57,33 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
   num_series_++;
 }
 
+void BarChart::addSeries(Series2D<double, double>* series) {
+  series_colors_.emplace_back(seriesColor(series));
+
+  for (const auto& point : series->getData()) {
+    const auto& x_val = "p"; // FIXPAUL
+    const auto& y_val = std::get<1>(point);
+
+    BarData* bar_data = nullptr;
+
+    for (auto& candidate : data_) {
+      if (candidate.x == x_val) {
+        bar_data = &candidate;
+      }
+    }
+
+    if (bar_data == nullptr) {
+      data_.emplace_back();
+      bar_data = &data_.back();
+      bar_data->x = x_val;
+    }
+
+    bar_data->ys.emplace_back(0, y_val);
+  }
+
+  num_series_++;
+}
+
 void BarChart::addSeries(Series3D<std::string, double, double>* series) {
   series_colors_.emplace_back(seriesColor(series));
 
