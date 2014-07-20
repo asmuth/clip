@@ -1,4 +1,8 @@
 
+rename:
+  canvas -> chart
+  resultlist -> table
+
 Ways to contribute:
   + report bugs or suggest new features
   + suggest or implement new options for existing charts or new chart types

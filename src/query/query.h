@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "../ui/canvas.h"
 
 namespace fnordmetric {
 namespace query {
@@ -17,7 +18,7 @@ class TableRepository;
 class DrawStatement;
 class ASTNode;
 class Executable;
-class AbstractResultList;
+class ResultList;
 
 class Query {
 public:
@@ -26,13 +27,50 @@ public:
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);
 
-  bool execute(AbstractResultList* target);
+  /**
+   * Execute the query. This may raise an exception.
+   */
+  void execute();
+
+  /**
+   * Get the number of result lists
+   */
+  size_t getNumResultLists() const;
+
+  /**
+   * Get the nth result list of the query. Raises an exception if no such
+   * result list exists
+   *
+   * The returned pointer is owned by the query instance and must not be freed
+   * by the caller!
+   *
+   * @param index the requested result list index
+   */
+  ResultList* getResultList(size_t index) const;
+
+  /**
+   * Get the number of charts
+   */
+  size_t getNumChart() const;
+
+  /**
+   * Get the nth chart result of the query. Raises an exception if no such
+   * chart exists
+   *
+   * The returned pointer is owned by the query instance and must not be freed
+   * by the caller!
+   *
+   * @param index the requested chart index
+   */
+  ui::Canvas* getChart(size_t index) const;
 
 protected:
   bool addStatement(ASTNode* statement, TableRepository* repo);
 
   //Drawable* makeDrawable(query::DrawStatement* stmt);
   std::vector<std::unique_ptr<Executable>> statements_;
+  std::vector<std::unique_ptr<ResultList>> results_;
+  std::vector<std::unique_ptr<ui::Canvas>> charts_;
 };
 
 }

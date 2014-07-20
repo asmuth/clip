@@ -40,14 +40,17 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
   }
 }
 
-bool Query::execute(AbstractResultList* target) {
+void Query::execute() {
   for (const auto& stmt : statements_) {
     //target->addHeader(stmt->getColumns());
     //stmt->setTarget(target);
     //stmt->execute();
   }
+}
 
-  return true;
+ResultList* Query::getResultList(size_t index) const {
+  assert(index < results_.size()); // FIXPAUL
+  return results_[index].get();
 }
 
 /*

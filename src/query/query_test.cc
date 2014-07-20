@@ -573,18 +573,18 @@ public:
         "    NOT NOT true as three;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumColumns() == 6);
-    assert(results.getNumRows() == 1);
-    const auto& cols = results.getColumns();
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumColumns() == 6);
+    assert(results->getNumRows() == 1);
+    const auto& cols = results->getColumns();
     assert(cols[0] == "fnord");
     assert(cols[1] == "fubar");
     assert(cols[2] == "baz");
     assert(cols[3] == "one");
     assert(cols[4] == "two");
     assert(cols[5] == "three");
-    const auto& row = results.getRow(0);
+    const auto& row = results->getRow(0);
     assert(row[0] == "23");
     assert(row[1] == "256");
     assert(row[2] == "21");
@@ -644,13 +644,13 @@ public:
         "  SELECT one + 50, two FROM testtable",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumColumns() == 2);
-    assert(results.getNumRows() == 100);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumColumns() == 2);
+    assert(results->getNumRows() == 100);
 
     for (int i = 0; i<100; ++i) {
-      const auto& row = results.getRow(i);
+      const auto& row = results->getRow(i);
       assert(atoi(row[0].c_str()) == 51 + i);
       assert(atoi(row[1].c_str()) == 100 - i);
     }
@@ -671,9 +671,9 @@ public:
         "    one > two or one = 3;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 51);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 51);
   }
 
   void testTableScanWhereLimitQuery() {
@@ -692,10 +692,10 @@ public:
         "  LIMIT 10 OFFSET 5;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 10);
-    const auto& row = results.getRow(0);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 10);
+    const auto& row = results->getRow(0);
     assert(row[0] == "56");
     assert(row[1] == "46");
   }
@@ -720,9 +720,9 @@ public:
         "    two % 8;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 4);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 4);
   }
 
   void testTableScanGroupByCountQuery() {
@@ -743,11 +743,11 @@ public:
         "    two % 8;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
+    query.execute();
+    auto results = query.getResultList(0);
     int sum = 0;
-    for (int i = 0; i < results.getNumRows(); ++i) {
-      const auto& row = results.getRow(i);
+    for (int i = 0; i < results->getNumRows(); ++i) {
+      const auto& row = results->getRow(i);
       sum += atoi(row[0].c_str());
     }
     assert(sum == 10);
@@ -768,11 +768,11 @@ public:
         "    three;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 2);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 2);
     for (int i = 0; i<2; ++i) {
-      const auto& row = results.getRow(i);
+      const auto& row = results->getRow(i);
       assert(
         (atoi(row[0].c_str()) == 25 && atoi(row[1].c_str()) == 100) ||
         (atoi(row[0].c_str()) == 30 && atoi(row[1].c_str()) == 200));
@@ -791,10 +791,10 @@ public:
         "    testtable;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 1);
-    assert(results.getRow(0)[0] == "55");
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 1);
+    assert(results->getRow(0)[0] == "55");
   }
 
   void testNamedSeriesQuery() {
@@ -810,12 +810,12 @@ public:
         "      testtable;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 10);
-    assert(results.getNumColumns() == 3);
-    for (int i = 0; i < results.getNumRows(); ++i) {
-      const auto& row = results.getRow(i);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 10);
+    assert(results->getNumColumns() == 3);
+    for (int i = 0; i < results->getNumRows(); ++i) {
+      const auto& row = results->getRow(i);
       assert(row[0] == "myseries");
       assert(atoi(row[1].c_str()) == 10 - i);
       assert(atoi(row[2].c_str()) == 20 - i * 2);
@@ -835,12 +835,12 @@ public:
         "      testtable;",
         &repo);
 
-    ResultList results;
-    query.execute(&results);
-    assert(results.getNumRows() == 10);
-    assert(results.getNumColumns() == 3);
-    for (int i = 0; i < results.getNumRows(); ++i) {
-      const auto& row = results.getRow(i);
+    query.execute();
+    auto results = query.getResultList(0);
+    assert(results->getNumRows() == 10);
+    assert(results->getNumColumns() == 3);
+    for (int i = 0; i < results->getNumRows(); ++i) {
+      const auto& row = results->getRow(i);
       assert(atoi(row[0].c_str()) == atoi(row[1].c_str()) * 5);
     }
   }
