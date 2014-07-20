@@ -60,6 +60,7 @@ public:
   template <typename T>
   void executeDrawable(T* drawable) {
     for (const auto& series_stmt : series_stmts_) {
+  printf("execute!");
       series_stmt->executeDrawable(drawable);
     }
   }

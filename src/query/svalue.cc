@@ -229,5 +229,13 @@ SValue* SValue::fromToken(const Token* token) {
   }
 }
 
+template<> double SValue::getValue<double>() const {
+  return 3;
+}
+
+template<> std::string SValue::getValue<std::string>() const {
+  return "fnord";
+}
+
 }
 }

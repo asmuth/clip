@@ -12,10 +12,9 @@ namespace fnordmetric {
 namespace query {
 
 void DrawStatement::execute(ui::Canvas* canvas) {
-  printf("execute!");
   switch (type_) {
     case T_BAR_CHART:
-      return executeDrawable(new ui::BarChart(canvas));
+      return executeDrawable(canvas->addChart<ui::BarChart>());
   }
 }
 

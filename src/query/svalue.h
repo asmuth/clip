@@ -38,6 +38,7 @@ public:
 
   static std::string makeUniqueKey(SValue* arr, size_t len);
 
+  template <typename T> T getValue() const;
   kSValueType getType() const;
   int64_t getInteger() const;
   double getFloat() const;

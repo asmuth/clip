@@ -74,10 +74,16 @@ public:
             case SValue::T_FLOAT:
             case SValue::T_INTEGER:
             case SValue::T_BOOL:
-              return executeSeries<T, Series2D<double, double>>(drawable);
+              return executeSeries<T, double, double>(
+                  drawable,
+                  x_ind,
+                  y_ind);
 
             case SValue::T_STRING:
-              return executeSeries<T, Series2D<double, std::string>>(drawable);
+              return executeSeries<T, double, std::string>(
+                  drawable,
+                  x_ind,
+                  y_ind);
 
             case SValue::T_UNDEFINED:
               break;
@@ -88,11 +94,16 @@ public:
             case SValue::T_FLOAT:
             case SValue::T_INTEGER:
             case SValue::T_BOOL:
-              return executeSeries<T, Series2D<std::string, double>>(drawable);
+              return executeSeries<T, std::string, double>(
+                  drawable,
+                  x_ind,
+                  y_ind);
 
             case SValue::T_STRING:
-              return executeSeries<T, Series2D<std::string, std::string>>(
-                  drawable);
+              return executeSeries<T, std::string, std::string>(
+                  drawable,
+                  x_ind,
+                  y_ind);
 
             case SValue::T_UNDEFINED:
               break;
@@ -108,9 +119,15 @@ public:
     }
   }
 
-  template <typename T, typename S>
-  void executeSeries(T* drawable) {
-    auto series = new S();
+  template <typename T, typename D1, typename D2>
+  void executeSeries(T* drawable, int x_ind, int y_ind) {
+    auto series = new Series2D<D1, D2>();
+    for (const auto& row : rows_) {
+      series->addDatum(
+          row[x_ind].getValue<D1>(),
+          row[x_ind].getValue<D2>());
+    }
+
     drawable->addSeries(series);
   }
 

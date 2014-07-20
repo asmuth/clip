@@ -256,6 +256,10 @@ void BarChart::render(
     int width,
     int height,
     std::tuple<int, int, int, int>* padding) const {
+  if (data_.size() == 0) {
+    throw std::string("render without data");
+  }
+
   switch (orientation_) {
     case O_VERTICAL:
       target->beginGroup("bars vertical");
