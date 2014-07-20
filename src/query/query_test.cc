@@ -886,5 +886,5 @@ public:
 int main() {
   fnordmetric::QueryTest test;
   test.run();
-  //printf("all tests passed! :)\n");
+  printf("all tests passed! :)\n");
 }

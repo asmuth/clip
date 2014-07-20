@@ -15,11 +15,7 @@
 namespace fnordmetric {
 namespace query {
 
-class AbstractResultList {
-
-};
-
-class ResultList : public AbstractResultList {
+class ResultList : public RowSink {
 public:
   ResultList() {}
   ResultList(const ResultList& copy) = delete;
@@ -56,6 +52,14 @@ public:
 
   void addColumn(const std::string& value) {
     rows_.back().push_back(value);
+  }
+
+  bool nextRow(query::SValue* row, int row_len) override {
+    addRow();
+    for (int i = 0; i < row_len; ++i) {
+      addColumn(row[i].toString());
+    }
+    return true;
   }
 
   void debugPrint() const {

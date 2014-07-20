@@ -42,9 +42,11 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
 
 void Query::execute() {
   for (const auto& stmt : statements_) {
-    //target->addHeader(stmt->getColumns());
-    //stmt->setTarget(target);
-    //stmt->execute();
+    auto target = new ResultList();
+    target->addHeader(stmt->getColumns());
+    stmt->setTarget(target);
+    stmt->execute();
+    results_.emplace_back(target);
   }
 }
 
