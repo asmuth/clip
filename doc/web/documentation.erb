@@ -1,47 +1,61 @@
-<div id="documentation_wrap">
-  <div class="headbar">Documentation</div>
-  <div id="navigation">
-    <ul>
-      <li class="<%= @route == "/index" ? :active : nil %>">
-        <a href="/documentation">Overview</a>
-      </li>
-      <li class="<%= @route == "/downloads" ? :active : nil %>">
-        <a href="/documentation/downloads">Downloads</a>
-      </li>
-      <li class="<%= @route == "/support" ? :active : nil %>">
-        <a href="/documentation/support">Support</a>
-      </li>
-      <li class="<%= @route == "/license" ? :active : nil %>">
-        <a href="/documentation/license">License</a>
-      </li>
-    </ul>
+<div class="colorstripe"></div>
+<div class="colorbg">
+  <div id="wrap" class="<%= @doc_yield ? :large : nil %>" style="padding-top:25px;">
+    <div id="header">
+      <a class="menu" href="/documentation/support">Support</a>
+      <a class="menu" href="http://github.com/paulasmuth/fnordmetric" target="_blank">Github</a>
+      <a class="menu" href="/screenshots">Screenshots</a>
+      <a class="menu" href="/documentation">Documentation</a>
+      <h1><a href="/">FnordMetric</a></h1>
+    </div>
 
-    <% [
-      ["FnordMetric UI", "fnordmetric_ui"],
-      ["FnordMetric Enterprise", "fnordmetric_enterprise"],
-      ["FnordMetric Classic", "fnordmetric_classic"]
-    ].each do |(title, key)| %>
-      <a class="nav_title"><%= title %></a>
-      <ul>
-        <% CONFIG["sitemap"][key].each do |page| %>
-          <li class="<%= @route == page["url"] ? :active : nil %>">
-            <a href="/documentation<%= page["url"] %>">
-              <%= page["title"] %>
-            </a>
+    <div id="documentation_wrap">
+      <div id="navigation">
+        <ul>
+          <li class="<%= @route == "/index" ? :active : nil %>">
+            <a href="/documentation">Overview</a>
           </li>
+          <li class="<%= @route == "/downloads" ? :active : nil %>">
+            <a href="/documentation/downloads">Downloads</a>
+          </li>
+          <li class="<%= @route == "/support" ? :active : nil %>">
+            <a href="/documentation/support">Support</a>
+          </li>
+          <li class="<%= @route == "/license" ? :active : nil %>">
+            <a href="/documentation/license">License</a>
+          </li>
+        </ul>
+
+        <% [
+          ["FnordMetric UI", "fnordmetric_ui"],
+          ["FnordMetric Enterprise", "fnordmetric_enterprise"],
+          ["FnordMetric Classic", "fnordmetric_classic"]
+        ].each do |(title, key)| %>
+          <a class="nav_title"><%= title %></a>
+          <ul>
+            <% CONFIG["sitemap"][key].each do |page| %>
+              <li class="<%= @route == page["url"] ? :active : nil %>">
+                <a href="/documentation<%= page["url"] %>">
+                  <%= page["title"] %>
+                </a>
+              </li>
+            <% end %>
+          </ul>
         <% end %>
-      </ul>
-    <% end %>
-  </div>
+      </div>
 
-  <div id="documentation">
-    <%= @doc_yield %>
-  </div>
+      <!--<div class="headbar">Documentation</div>-->
 
+      <div id="documentation">
+        <%= @doc_yield %>
+      </div>
+
+    </div>
+  </div>
+  <div class="biglink" style="margin-top:70px;">
+    <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
+      Watch FnordMetric on Github &rarr;
+    </a>
+  </div>
 </div>
 
-<div class="biglink" style="margin-top:70px;">
-  <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
-    Watch FnordMetric on Github &rarr;
-  </a>
-</div>

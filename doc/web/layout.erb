@@ -9,23 +9,13 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   </head>
   <body onload="prettyPrint();">
+    <%= @yield %>
 
-    <div id="wrap" class="<%= @doc_yield ? :large : nil %>" style="padding-top:25px;">
-      <div id="header">
-        <a class="menu" href="/documentation/support">Support</a>
-        <a class="menu" href="http://github.com/paulasmuth/fnordmetric" target="_blank">Github</a>
-        <a class="menu" href="/screenshots">Screenshots</a>
-        <a class="menu" href="/documentation">Documentation</a>
-        <h1><a href="/">FnordMetric</a></h1>
-      </div>
-
-      <%= @yield %>
-
+    <!--
       <div id="footer">
         built in berlin with ♥  by <a href="http://paulasmuth.com">paul asmuth</a>
       </div>
-    </div>
-
+    -->
     <script type="text/javascript">
 
       var _gaq = _gaq || [];

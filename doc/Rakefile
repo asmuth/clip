@@ -48,6 +48,7 @@ class DocApp < Sinatra::Base
 
   get "/" do
     @yield = render(:erb, IO.read(File.join(BASEDIR, 'web/index.erb')))
+    @body_classes = "colorbg"
     render_with_layout
   end
 

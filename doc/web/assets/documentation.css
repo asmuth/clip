@@ -3,8 +3,9 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #fff;
-  background-color: #111;
+  background-color: #fff;
+  color: #333;
+  background: #0d0d0d;
   /*text-shadow:0 0 1px #000;*/
 }
 
@@ -31,21 +32,19 @@ hr {
 }
 
 #wrap {
-  width:850px; margin:auto;
-}
-
-#wrap.large {
-  width: 915px;
+  max-width:1200px;
+  height: auto;
+  margin:auto;
 }
 
 .jumbotron {
   margin: 60px 0;
-  text-align: center;
+  color: #fff;
 }
 
 .jumbotron h1 {
-  font-size: 72px;
-  line-height: 1;
+  font-size: 58px;
+  line-height: 1.2;
 }
 
 .lead {
@@ -70,8 +69,21 @@ hr {
   border-bottom: 1px solid #666;
 }
 
-#header {
-  border-bottom: 1px solid #222;
+
+.colorbg {
+  height: 750px;
+  overflow: visible;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#2e3336), to(#0d0d0d));
+  background-image: -webkit-linear-gradient(top, #2e3336, #0d0d0d);
+  background-image: -moz-linear-gradient(top, #2e3336, #0d0d0d);
+  background-image: -ms-linear-gradient(top, #2e3336, #0d0d0d);
+  background-image: -o-linear-gradient(top, #2e3336, #0d0d0d);
+  background-image: linear-gradient(top, #2e3336, #0d0d0d);
+}
+
+.colorbg.intro {
+  overflow: hidden;
+  border-bottom: 1px solid #ddd;
 }
 
 #footer {
@@ -93,17 +105,25 @@ hr {
 }
 
 #header h1 a {
-  color:#fff;
+  color:#333;
   text-decoration:none;
+}
+
+.colorbg #header h1 a {
+  color: #fff;
 }
 
 #header a.menu {
   float:right;
-  color:#fff;
+  color:#333;
   text-decoration:none;
   line-height:26px;
   margin-top:9px;
   margin-left:25px;
+}
+
+.colorbg #header a.menu {
+  color: #fff;
 }
 
 #header a.menu:hover {
@@ -139,7 +159,8 @@ hr {
   height:1200px;
   width:210px;
   padding-top:15px;
-  float:left;
+  position: absolute;
+  margin-left: -210px;
 }
 
 #navigation ul {
@@ -180,7 +201,6 @@ hr {
 }
 
 #documentation {
-  width:629px;
   padding: 25px 40px;
   float:left;
   color: #333;
@@ -197,10 +217,11 @@ hr {
   border-radius:5px;
   border:1px solid #ddd;
   border-top:none;
-  box-shadow:0 0 5px #000;
+  box-shadow:0 0 2px rgba(0,0,0,.1);
   overflow:hidden;
-  width:920px;
+  max-width:1200px;
   background:#f4f4f4;
+  padding-left: 210px;
 }
 
 #documentation h3 {
@@ -326,4 +347,19 @@ pre.dark code {
 
 #documentation pre + h3 {
   margin-top:55px;
+}
+
+.colorstripe {
+  height: 5px;
+  background-image: -webkit-linear-gradient(
+      left,
+      #4c75a5,
+      #4c75a5 33%,
+      #9e4f49 33%,
+      #9e4f49 66%,
+      #909f50 66%);
+  background-size: 60px 5px;
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 0 2px rgba(0,0,0,1.0);
 }
