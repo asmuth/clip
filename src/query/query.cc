@@ -8,12 +8,12 @@
 #include <string.h>
 #include <memory>
 #include "query.h"
-// #include "query/drawstatement.h"
+#include "query/drawstatement.h"
 #include "query/executable.h"
 #include "query/parser.h"
 #include "query/queryplan.h"
 #include "query/resultlist.h"
-// #include "query/seriesstatement.h"
+#include "query/seriesstatement.h"
 #include "query/tablerepository.h"
 #include "query/resultlist.h"
 
@@ -31,6 +31,7 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
     switch (stmt->getType()) {
       case query::ASTNode::T_SELECT:
       case query::ASTNode::T_SERIES:
+      case query::ASTNode::T_AXIS:
       case query::ASTNode::T_DRAW:
         addStatement(stmt, repo);
         break;
@@ -41,12 +42,41 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
 }
 
 void Query::execute() {
+  std::vector<std::vector<DrawStatement*>> draw_statements;
+  DrawStatement* current_draw_statement = nullptr;
+  draw_statements.emplace_back();
+
   for (const auto& stmt : statements_) {
+    auto draw_stmt = dynamic_cast<query::DrawStatement*>(stmt.get());
+    if (draw_stmt != nullptr) {
+      current_draw_statement = draw_stmt;
+      draw_statements.back().push_back(draw_stmt);
+      continue;
+    }
+
+    auto series_stmt = dynamic_cast<query::SeriesStatement*>(stmt.get());
+    if (series_stmt != nullptr) {
+      if (current_draw_statement == nullptr) {
+        throw std::string("SERIES without BEGIN CHART");
+      }
+
+      current_draw_statement->addSeriesStatement(series_stmt);
+      continue;
+    }
+
     auto target = new ResultList();
     target->addHeader(stmt->getColumns());
     stmt->setTarget(target);
     stmt->execute();
     results_.emplace_back(target);
+  }
+
+  for (const auto& draw_group : draw_statements) {
+    auto chart = new ui::Canvas();
+    for (const auto& draw_stmt : draw_group) {
+      draw_stmt->execute(chart);
+    }
+    charts_.emplace_back(chart);
   }
 }
 
@@ -60,11 +90,6 @@ bool Query::execute(ChartRenderTarget* target) {
   Drawable* drawable = nullptr;
 
   for (const auto& stmt : statements_) {
-    auto draw_stmt = dynamic_cast<query::DrawStatement*>(stmt.get());
-    if (draw_stmt != nullptr) {
-      drawable = makeDrawable(draw_stmt);
-      continue;
-    }
 
     if (drawable == nullptr) {
       continue;

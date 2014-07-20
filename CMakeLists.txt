@@ -9,24 +9,6 @@ enable_testing()
 set(FNORDMETRIC_SOURCES
     src/util/format.cc)
 
-set(FNORDMETRIC_QUERY_SOURCES
-    ${FNORDMETRIC_SOURCES}
-    src/query/query.cc
-    src/query/astnode.cc
-    src/query/compile.cc
-    src/query/executable.cc
-    src/query/execute.cc
-    src/query/grouper.cc
-    src/query/parser.cc
-    src/query/queryplan.cc
-    src/query/svalue.cc
-    src/query/symboltable.cc
-    src/query/token.cc
-    src/query/tokenize.cc
-    src/query/expressions/aggregate.cc
-    src/query/expressions/boolean.cc
-    src/query/expressions/math.cc)
-
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
     src/ui/areachart.cc
@@ -35,6 +17,25 @@ set(FNORDMETRIC_UI_SOURCES
     src/ui/canvas.cc
     src/ui/linechart.cc
     src/ui/pointchart.cc)
+
+set(FNORDMETRIC_QUERY_SOURCES
+    ${FNORDMETRIC_UI_SOURCES}
+    src/query/query.cc
+    src/query/astnode.cc
+    src/query/compile.cc
+    src/query/drawstatement.cc
+    src/query/executable.cc
+    src/query/execute.cc
+    src/query/expressions/aggregate.cc
+    src/query/expressions/boolean.cc
+    src/query/expressions/math.cc
+    src/query/grouper.cc
+    src/query/parser.cc
+    src/query/queryplan.cc
+    src/query/svalue.cc
+    src/query/symboltable.cc
+    src/query/token.cc
+    src/query/tokenize.cc)
 
 include_directories(./src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")

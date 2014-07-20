@@ -286,6 +286,14 @@ ASTNode* Parser::createStatement() {
         series->appendChild(selectStatement());
         return series;
       }
+    case Token::T_AXIS:
+      consumeToken();
+      if (cur_token_->getType() == Token::T_WITH) {
+        consumeToken();
+        auto series = new ASTNode(ASTNode::T_AXIS);
+        series->appendChild(selectStatement());
+        return series;
+      }
 
     default:
       addError(

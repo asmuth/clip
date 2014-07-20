@@ -29,6 +29,7 @@ protected:
 
   static Executable* buildDrawStatement(ASTNode* ast);
   static Executable* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
+  static Executable* buildAxisStatement(ASTNode* ast, TableRepository* repo);
 
   /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,

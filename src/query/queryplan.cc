@@ -8,6 +8,7 @@
 #include <assert.h>
 #include "queryplan.h"
 #include "astnode.h"
+#include "axisstatement.h"
 #include "executable.h"
 #include "tablelessselect.h"
 #include "tablescan.h"
@@ -27,6 +28,11 @@ Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   /* series statement */
   if (ast->getType() == ASTNode::T_SERIES) {
     return buildSeriesStatement(ast, repo);
+  }
+
+  /* axis statement */
+  if (ast->getType() == ASTNode::T_AXIS) {
+    return buildAxisStatement(ast, repo);
   }
 
   /* draw statement */
@@ -136,6 +142,26 @@ Executable* QueryPlan::buildSeriesStatement(
   }
 
   return new SeriesStatement(
+      std::move(column_names),
+      select);
+}
+
+Executable* QueryPlan::buildAxisStatement(
+    ASTNode* ast,
+    TableRepository* repo) {
+  auto select_ast = ast->getChildren()[0];
+  assert(*select_ast == ASTNode::T_SELECT);
+
+  /* build nested select statement */
+  auto select = buildQueryPlan(select_ast, repo);
+
+  /* resolve output column names */
+  std::vector<std::string> column_names;
+  for (const auto& col : select->getColumns()) {
+    column_names.emplace_back(col);
+  }
+
+  return new AxisStatement(
       std::move(column_names),
       select);
 }

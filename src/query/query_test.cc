@@ -854,6 +854,8 @@ public:
     auto query = Query(
         "  BEGIN BAR CHART;"
         ""
+        "  CREATE AXIS WITH SELECT 'left' AS position;"
+        ""
         "  CREATE SERIES WITH"
         "    SELECT"
         "      one, two"

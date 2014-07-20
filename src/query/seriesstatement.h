@@ -26,27 +26,7 @@ public:
     child->setTarget(this);
   }
 
-  void execute() override {
-    child_->execute();
-
-    if (target_ != nullptr) {
-      for (auto& pair : series_) {
-        auto& series = pair.second;
-        SValue series_name(pair.first);
-
-        for (const auto& row : series->getData()) {
-          std::vector<SValue> out;
-          out.emplace_back(series_name);
-
-          for (const auto& col : row) {
-            out.emplace_back(col);
-          }
-
-          emitRow(out.data(), out.size());
-        }
-      }
-    }
-  }
+  void execute() override {}
 
   bool nextRow(SValue* row, int row_len) override {
     SValue out[128]; // FIXPAUL
@@ -94,20 +74,8 @@ public:
     return columns_;
   }
 
-  const std::vector<SeriesDefinition*> getSeries() const {
-    std::vector<SeriesDefinition*> series_list;
-
-    for (const auto& pair : series_) {
-      series_list.push_back(pair.second);
-    }
-
-    return series_list;
-  }
-
 protected:
-  std::unordered_map<std::string, SeriesDefinition*> series_;
   std::vector<std::string> columns_;
-  CompiledExpression* name_expr_;
   Executable* child_;
 };
 

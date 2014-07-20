@@ -58,6 +58,7 @@ public:
 
     T_SERIES,
     T_SERIES_NAME,
+    T_AXIS,
     T_DRAW
   };
 

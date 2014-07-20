@@ -65,7 +65,8 @@ public:
     T_AREA,
     T_CHART,
     T_CREATE,
-    T_WITH
+    T_WITH,
+    T_AXIS
   };
 
   Token(kTokenType token_type);

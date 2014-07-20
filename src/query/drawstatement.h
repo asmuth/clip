@@ -10,9 +10,13 @@
 #include <assert.h>
 #include "compile.h"
 #include "execute.h"
-//#include "../drawable.h"
+#include "executable.h"
+#include "seriesstatement.h"
 
 namespace fnordmetric {
+namespace ui {
+class Canvas;
+}
 namespace query {
 
 class DrawStatement : public Executable {
@@ -28,9 +32,7 @@ public:
       kDrawStatementType type) :
       type_(type) {}
 
-  void execute() override {
-    // FIXPAUL execute prop list
-  }
+  void execute() override {}
 
   bool nextRow(SValue* row, int row_len) override {
     assert(0);
@@ -49,7 +51,15 @@ public:
     return type_;
   }
 
+  void addSeriesStatement(SeriesStatement* series_stmt) {
+    series_stmts_.push_back(series_stmt);
+  }
+
+  void execute(ui::Canvas* canvas);
+
 protected:
+  std::vector<SeriesStatement*> series_stmts_;
+  //std::vector<AxisStatement*> axis_stmts_;
   kDrawStatementType type_;
 };
 

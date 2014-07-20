@@ -319,6 +319,11 @@ next:
     goto next;
   }
 
+  if (token == "AXIS") {
+    token_list->emplace_back(Token::T_AXIS);
+    goto next;
+  }
+
   if (token == "BEGIN") {
     token_list->emplace_back(Token::T_BEGIN);
     goto next;
