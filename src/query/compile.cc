@@ -121,6 +121,11 @@ CompiledExpression* compileOperator(
     ASTNode* ast,
     size_t* scratchpad_len) {
   auto symbol = lookupSymbol(name);
+
+  if (symbol == nullptr) {
+    fprintf(stderr, "symbol not found!: %s\n", name.c_str());
+  }
+
   assert(symbol != nullptr);
 
   auto op = new CompiledExpression();

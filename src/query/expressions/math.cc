@@ -51,7 +51,7 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(0);
 }
 
-static SymbolTableEntry __add_symbol("add", &addExpr);
+SymbolTableEntry __add_symbol("add", &addExpr);
 
 void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);

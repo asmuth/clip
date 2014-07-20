@@ -8,6 +8,7 @@
 #include <string.h>
 #include <memory>
 #include "query.h"
+#include "query/axisstatement.h"
 #include "query/drawstatement.h"
 #include "query/executable.h"
 #include "query/parser.h"
@@ -61,6 +62,16 @@ void Query::execute() {
       }
 
       current_draw_statement->addSeriesStatement(series_stmt);
+      continue;
+    }
+
+    auto axis_stmt = dynamic_cast<query::AxisStatement*>(stmt.get());
+    if (axis_stmt != nullptr) {
+      if (current_draw_statement == nullptr) {
+        throw std::string("AXIS without BEGIN CHART");
+      }
+
+      current_draw_statement->addAxisStatement(axis_stmt);
       continue;
     }
 

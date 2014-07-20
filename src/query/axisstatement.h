@@ -11,6 +11,7 @@
 #include "compile.h"
 #include "execute.h"
 #include "executable.h"
+#include "../ui/axisdefinition.h"
 
 namespace fnordmetric {
 namespace query {
@@ -38,6 +39,13 @@ public:
 
   const std::vector<std::string>& getColumns() const override {
     return columns_;
+  }
+
+  template <typename T>
+  void executeDrawable(T* drawable) {
+    child_->execute();
+    drawable->addAxis(ui::AxisDefinition::LEFT); // FIPXAUL
+    drawable->addAxis(ui::AxisDefinition::BOTTOM); // FIPXAUL
   }
 
 protected:

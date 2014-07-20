@@ -12,6 +12,7 @@
 #include "execute.h"
 #include "executable.h"
 #include "seriesstatement.h"
+#include "axisstatement.h"
 
 namespace fnordmetric {
 namespace ui {
@@ -55,19 +56,26 @@ public:
     series_stmts_.push_back(series_stmt);
   }
 
+  void addAxisStatement(AxisStatement* axis_stmt) {
+    axis_stmts_.push_back(axis_stmt);
+  }
+
   void execute(ui::Canvas* canvas);
 
   template <typename T>
   void executeDrawable(T* drawable) {
     for (const auto& series_stmt : series_stmts_) {
-  printf("execute!");
       series_stmt->executeDrawable(drawable);
+    }
+
+    for (const auto& axis_stmt : axis_stmts_) {
+      axis_stmt->executeDrawable(drawable);
     }
   }
 
 protected:
   std::vector<SeriesStatement*> series_stmts_;
-  //std::vector<AxisStatement*> axis_stmts_;
+  std::vector<AxisStatement*> axis_stmts_;
   kDrawStatementType type_;
 };
 

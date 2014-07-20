@@ -8,6 +8,7 @@
 #define _FNORDMETRIC_QUERY_SERIESSTATEMENT_H
 #include <stdlib.h>
 #include <assert.h>
+#include <unordered_map>
 #include "compile.h"
 #include "execute.h"
 #include "../base/series.h"
@@ -39,6 +40,7 @@ public:
     int x_ind = -1;
     int y_ind = -1;
     int z_ind = -1;
+    int name_ind = -1;
 
     const auto& cols = getColumns();
     for (int i = 0; i < getNumCols(); ++i) {
@@ -57,6 +59,10 @@ public:
       if (col == "z" || col == "Z") {
         z_ind = i;
         continue;
+      }
+
+      if (strncasecmp(col.c_str(), "name", 4) == 0) {
+        name_ind = i;
       }
     }
 
@@ -77,13 +83,15 @@ public:
               return executeSeries<T, double, double>(
                   drawable,
                   x_ind,
-                  y_ind);
+                  y_ind,
+                  name_ind);
 
             case SValue::T_STRING:
               return executeSeries<T, double, std::string>(
                   drawable,
                   x_ind,
-                  y_ind);
+                  y_ind,
+                  name_ind);
 
             case SValue::T_UNDEFINED:
               break;
@@ -97,13 +105,15 @@ public:
               return executeSeries<T, std::string, double>(
                   drawable,
                   x_ind,
-                  y_ind);
+                  y_ind,
+                  name_ind);
 
             case SValue::T_STRING:
               return executeSeries<T, std::string, std::string>(
                   drawable,
                   x_ind,
-                  y_ind);
+                  y_ind,
+                  name_ind);
 
             case SValue::T_UNDEFINED:
               break;
@@ -120,12 +130,45 @@ public:
   }
 
   template <typename T, typename D1, typename D2>
-  void executeSeries(T* drawable, int x_ind, int y_ind) {
-    auto series = new Series2D<D1, D2>();
+  void executeSeries(T* drawable, int x_ind, int y_ind, int name_ind) {
+    std::unordered_map<std::string, Series2D<D1, D2>*> series_map;
+    std::vector<Series2D<D1, D2>*> series_list;
+
+    for (const auto& row : rows_) {
+      std::string name = "unnamed";
+
+      if (name_ind >= 0) {
+        name = row[name_ind].getValue<std::string>();
+      }
+
+      Series2D<D1, D2>* series = nullptr;
+      const auto& series_iter = series_map.find(name);
+      if (series_iter == series_map.end()) {
+        series = new Series2D<D1, D2>(name);
+        series_map[name] = series;
+        series_list.push_back(series);
+      } else {
+        series = series_iter->second;
+      }
+
+      series->addDatum(
+          row[x_ind].getValue<D1>(),
+          row[y_ind].getValue<D2>());
+    }
+
+    for (auto series : series_list) {
+      drawable->addSeries(series);
+    }
+  }
+
+  template <typename T, typename D1, typename D2, typename D3>
+  void executeSeries(T* drawable, int x_ind, int y_ind, int z_ind) {
+    auto series = new Series3D<D1, D2, D3>();
     for (const auto& row : rows_) {
       series->addDatum(
           row[x_ind].getValue<D1>(),
-          row[x_ind].getValue<D2>());
+          row[y_ind].getValue<D2>(),
+          row[z_ind].getValue<D3>());
     }
 
     drawable->addSeries(series);

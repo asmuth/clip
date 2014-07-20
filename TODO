@@ -51,6 +51,7 @@ point chart examples:
 --- axis expr can be a tuple!!. e.g for error bars or area
 --- middle axis!
 --- TimeDomain!
+--- max interpolation gap -> draw as missing data
 
 BEGIN BAR CHART WITH
   SELECT

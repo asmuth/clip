@@ -51,7 +51,13 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
       bar_data->x = x_val;
     }
 
-    bar_data->ys.emplace_back(0, y_val);
+    if (bar_data->ys.size() < num_series_ + 1) {
+      for (int i = bar_data->ys.size(); i < num_series_; ++i) {
+        bar_data->ys.emplace_back(0, 0);
+      }
+
+      bar_data->ys.emplace_back(0, y_val);
+    }
   }
 
   num_series_++;
@@ -61,7 +67,7 @@ void BarChart::addSeries(Series2D<double, double>* series) {
   series_colors_.emplace_back(seriesColor(series));
 
   for (const auto& point : series->getData()) {
-    const auto& x_val = "p"; // FIXPAUL
+    const auto& x_val = util::format::numberToHuman(std::get<0>(point)); // FIXPAUL
     const auto& y_val = std::get<1>(point);
 
     BarData* bar_data = nullptr;
@@ -78,7 +84,13 @@ void BarChart::addSeries(Series2D<double, double>* series) {
       bar_data->x = x_val;
     }
 
-    bar_data->ys.emplace_back(0, y_val);
+    if (bar_data->ys.size() < num_series_ + 1) {
+      for (int i = bar_data->ys.size(); i < num_series_; ++i) {
+        bar_data->ys.emplace_back(0, 0);
+      }
+
+      bar_data->ys.emplace_back(0, y_val);
+    }
   }
 
   num_series_++;
@@ -106,11 +118,16 @@ void BarChart::addSeries(Series3D<std::string, double, double>* series) {
       bar_data->x = x_val;
     }
 
-    bar_data->ys.emplace_back(y_val, z_val);
+    if (bar_data->ys.size() < num_series_ + 1) {
+      for (int i = bar_data->ys.size(); i < num_series_; ++i) {
+        bar_data->ys.emplace_back(0, 0);
+      }
+
+      bar_data->ys.emplace_back(y_val, z_val);
+    }
   }
 
   num_series_++;
-
 }
 
 AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
