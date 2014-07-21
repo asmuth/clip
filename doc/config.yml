@@ -156,6 +156,117 @@ examples:
 #  * multiple y axis
 
 sitemap:
+  getting_started:
+    title: "Using FnordMetric"
+    pages:
+      -
+        title: "Installation"
+        url: "/query_language/reference"
+      -
+        title: "Getting Started"
+        url: "/query_language/reference"
+      -
+        title: "Commandline Interface"
+        url: "/query_language/reference"
+      -
+        title: "Web Interface"
+        url: "/query_language/reference"
+
+
+  query_language:
+    title: "Query Language"
+    pages:
+      -
+        title: "Introduction"
+        url: "/query_language/overview"
+      -
+        title: "Data Sources"
+        url: "/query_language/reference"
+      -
+        title: "Chart Types"
+        url: "/query_language/reference"
+      -
+        title: "Axis styles"
+        url: "/query_language/reference"
+      -
+        title: "Legend styles"
+        url: "/query_language/reference"
+      -
+        title: "Point and Line styles"
+        url: "/query_language/reference"
+      -
+        title: "Multiple Domains"
+        url: "/query_language/reference"
+      -
+        title: "Combining Charts"
+        url: "/query_language/reference"
+
+  charts:
+    title: "Chart Types"
+    pages:
+      -
+        title: "Line Charts"
+        url: "/query_language/reference"
+      -
+        title: "Point Charts"
+        url: "/query_language/reference"
+      -
+        title: "Area Charts"
+        url: "/query_language/reference"
+      -
+        title: "Bar Charts"
+        url: "/query_language/reference"
+
+  data_sources:
+    title: "Data Sources"
+    pages:
+      -
+        title: "Query from CSV"
+        url: "/query_language/reference"
+      -
+        title: "Query from MySQL"
+        url: "/query_language/reference"
+      -
+        title: "Query from statsd"
+        url: "/query_language/reference"
+
+  cpp_api:
+    title: "C++ API"
+    pages:
+      -
+        title: "Introduction"
+        url: "/query_language/reference"
+      -
+        title: "API Reference"
+        url: "/query_language/reference"
+      -
+        title: "Examples"
+        url: "/query_language/reference"
+
+  dashboards:
+    title: "Building Dashboards"
+    pages:
+      -
+        title: "Dashboards"
+        url: "/query_language/reference"
+      -
+        title: "HTML5 API Reference"
+        url: "/query_language/reference"
+      -
+        title: "Examples"
+        url: "/query_language/reference"
+
+  hacking:
+    title: "Hacking"
+    pages:
+      -
+        title: "Contributing"
+        url: "/enterprise_api_reference"
+      -
+        title: "Old Documentation"
+        url: "/enterprise_usage"
+
+sitemap_leacy:
 
   fnordmetric_ui:
     -
@@ -208,11 +319,5 @@ sitemap:
     -
       title: "HTTP API"
       url: "/enterprise_http_api"
-    #-
-    #  title: "Clients"
-    #  url: "/enterprise_usage"
-    #-
-    #  title: "Examples"
-    #  url: "/enterprise_examples"
 
 

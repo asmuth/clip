@@ -81,10 +81,12 @@ class DocApp < Sinatra::Base
     get route do
       params[:splat] ||= ["index"]
       @route = "/#{params[:splat] * "/"}"
-
-      page = CONFIG["sitemap"].values.flatten.find{ |p| p["url"] == @route }
+      page = CONFIG["sitemap"]
+          .map{ |_, t| t["pages"]}
+          .flatten
+          .find{ |p| p["url"] == @route }
+      raise "can't find doc page for: #{@route}" if page.nil?
       @title = "#{page["title"]} | Documentation" if page
-
       renderer = Redcarpet::Markdown.new(
         Redcarpet::Render::HTML.new(:no_link => true))
       @doc_yield = md_post(renderer.render(md_pre(IO.read(
@@ -126,21 +128,17 @@ task :render do
   routes = %w{
     /
     /examples
-    /documentation
-    /documentation/support
-    /documentation/license
-    /documentation/downloads
-    /documentation/examples/fm_classic_simple_example
-    /documentation/examples/fm_classic_full_example
     /screenshots}
 
-  CONFIG["sitemap"].values.flatten.each do |page|
-    routes << "/documentation#{page["url"]}"
+  CONFIG["sitemap"].each do |_, topic|
+    topic["pages"].each do |page|
+      routes << "/documentation#{page["url"]}"
+    end
   end
 
   CONFIG["examples"].each do |example_group|
     example_group["examples"].each do |example|
-        routes << "/examples#{example["url"]}"
+      routes << "/examples#{example["url"]}"
     end
   end
 
