@@ -10,16 +10,20 @@
 #include <unordered_map>
 #include "symboltable.h"
 
-
 namespace fnordmetric {
 namespace query {
 
-static std::unordered_map<std::string, const SymbolTableEntry*> global_symbols_;
+static std::unordered_map<std::string, const SymbolTableEntry*>*
+  __globalSymbolTable() {
+  static std::unordered_map<std::string, const SymbolTableEntry*> symbols;
+  return &symbols;
+}
+
 
 const SymbolTableEntry* lookupSymbol(const std::string& symbol) {
-  auto iter = global_symbols_.find(symbol);
+  auto iter = __globalSymbolTable()->find(symbol);
 
-  if (iter == global_symbols_.end()) {
+  if (iter == __globalSymbolTable()->end()) {
     return nullptr;
   } else {
     return iter->second;
@@ -32,8 +36,8 @@ SymbolTableEntry::SymbolTableEntry(
     size_t scratchpad_size) :
     call_(method),
     scratchpad_size_(scratchpad_size) {
-  assert(global_symbols_.find(symbol) == global_symbols_.end());
-  global_symbols_[symbol] = this;
+  assert(__globalSymbolTable()->find(symbol) == __globalSymbolTable()->end());
+  (*__globalSymbolTable())[symbol] = this;
 }
 
 SymbolTableEntry::SymbolTableEntry(
