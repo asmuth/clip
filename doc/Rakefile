@@ -81,10 +81,14 @@ class DocApp < Sinatra::Base
     get route do
       params[:splat] ||= ["index"]
       @route = "/#{params[:splat] * "/"}"
-      page = CONFIG["sitemap"]
-          .map{ |_, t| t["pages"]}
-          .flatten
-          .find{ |p| p["url"] == @route }
+      page = if @route == "/index"
+        { "title" => "Documentation" }
+      else
+        CONFIG["sitemap"]
+            .map{ |_, t| t["pages"]}
+            .flatten
+            .find{ |p| p["url"] == @route }
+      end
       raise "can't find doc page for: #{@route}" if page.nil?
       @title = "#{page["title"]} | Documentation" if page
       renderer = Redcarpet::Markdown.new(
@@ -127,6 +131,7 @@ task :render do
 
   routes = %w{
     /
+    /documentation
     /examples
     /screenshots}
 

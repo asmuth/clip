@@ -89,6 +89,21 @@ hr {
   margin-top: 50px;
 }
 
+
+@media (max-width: 1260px) {
+  #wrap {
+    margin:0 30px;
+  }
+
+  .jumbotron {
+    text-align: center;
+  }
+
+  .leadtext {
+    display: none;
+  }
+}
+
 .biglink {
   text-align:center;
   margin-bottom: 50px;
