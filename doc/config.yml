@@ -180,11 +180,30 @@ sitemap:
         title: "Introduction"
         url: "/query_language/overview"
       -
+        title: "Drawing Charts"
+        url: "/query_language/reference"
+      -
+        title: "Defining Series"
+        url: "/query_language/reference"
+      -
         title: "Data Sources"
         url: "/query_language/reference"
       -
-        title: "Chart Types"
+        title: "Time-based Aggregations"
         url: "/query_language/reference"
+      -
+        title: "Built-in Functions"
+        url: "/query_language/reference"
+      -
+        title: "Syntax Reference"
+        url: "/query_language/reference"
+      -
+        title: "Example Queries"
+        url: "/query_language/reference"
+
+  charts:
+    title: "Custom Charts"
+    pages:
       -
         title: "Axis styles"
         url: "/query_language/reference"
@@ -194,16 +213,6 @@ sitemap:
       -
         title: "Point and Line styles"
         url: "/query_language/reference"
-      -
-        title: "Multiple Domains"
-        url: "/query_language/reference"
-      -
-        title: "Combining Charts"
-        url: "/query_language/reference"
-
-  charts:
-    title: "Chart Types"
-    pages:
       -
         title: "Line Charts"
         url: "/query_language/reference"
@@ -215,6 +224,21 @@ sitemap:
         url: "/query_language/reference"
       -
         title: "Bar Charts"
+        url: "/query_language/reference"
+      -
+        title: "Combining Charts"
+        url: "/query_language/reference"
+      -
+        title: "Timeseries Data"
+        url: "/query_language/reference"
+      -
+        title: "Multiple Domains"
+        url: "/query_language/reference"
+      -
+        title: "Interactive Charts"
+        url: "/query_language/reference"
+      -
+        title: "Styles / Themes"
         url: "/query_language/reference"
 
   data_sources:
