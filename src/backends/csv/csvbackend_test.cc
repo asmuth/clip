@@ -25,6 +25,7 @@ TEST_CASE(CSVFileTest, TestOpenFile, [] () {
 });
 
 TEST_CASE(CSVFileTest, TestInvalidFileName, [] () {
+  EXPECT(1 == 2);
   //auto csv_file = CSVFile::openFile("test/fixtures/invalid.csv");
   //assert(csv_file.get() != nullptr);
 });

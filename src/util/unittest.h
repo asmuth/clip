@@ -13,17 +13,27 @@ namespace fnordmetric {
 namespace util {
 
 #define UNIT_TEST(T) \
-  static fnordmetric::util::UnitTest T(#T); \
-  int main() { \
-    auto& t = T; \
-    return t.run(); \
-  }
+    static fnordmetric::util::UnitTest T(#T); \
+    int main() { \
+      auto& t = T; \
+      return t.run(); \
+    }
 
 #define TEST_CASE(T, N, L) \
-  static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, L);
+    static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, L);
+
+
+#define EXPECT(E) \
+    if (!(E)) { \
+      throw RUNTIME_EXCEPTION( \
+          &typeid(fnordmetric::util::UnitTest), \
+          fnordmetric::util::UnitTest::kExpectationFailed, \
+          "expectation failed: %s", #E); \
+    } \
 
 class UnitTest {
 public:
+  static const int kExpectationFailed = 0;
 
   class TestCase {
   public:
