@@ -17,6 +17,10 @@ class CSVFile {
   friend class CSVBackendTest;
 public:
 
+  enum ErrorCodes {
+    ERR_CANNOT_OPEN_FILE = 1000
+  };
+
   /**
    * Open a new csv file from the provided file path. Throws an exception if
    * the file cannot be opened.
