@@ -18,7 +18,8 @@ std::unique_ptr<CSVFile> CSVFile::openFile(const std::string& file_path) {
 
   if (fd < 1) {
     throw RUNTIME_EXCEPTION_ERRNO(
-        ERR_CANNOT_OPEN_FILE,
+        &typeid(CSVFile),
+        ERR_CSV_CANNOT_OPEN_FILE,
         "error opening file '%s'",
         fp);
   }

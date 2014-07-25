@@ -13,6 +13,7 @@ namespace fnordmetric {
 namespace util {
 
 RuntimeException::RuntimeException(
+    const void* namespace_id,
     int type_id,
     const char* type_human,
     const char* file,
@@ -21,6 +22,7 @@ RuntimeException::RuntimeException(
     int posix_errno,
     const char* message,
     ...) :
+    namespace_id_(namespace_id),
     type_id_(type_id),
     type_human_(type_human),
     file_(file),

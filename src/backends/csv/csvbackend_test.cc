@@ -26,7 +26,7 @@ public:
   }
 
   void testOpenFile() {
-    auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csv");
+    auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csxv");
     assert(csv_file.get() != nullptr);
     assert(csv_file->fd_ > 0);
   }

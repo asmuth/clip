@@ -18,7 +18,7 @@ class CSVFile {
 public:
 
   enum ErrorCodes {
-    ERR_CANNOT_OPEN_FILE = 1000
+    ERR_CSV_CANNOT_OPEN_FILE = 4000
   };
 
   /**
@@ -29,6 +29,9 @@ public:
    */
   static std::unique_ptr<CSVFile> openFile(const std::string& file_path);
 
+  CSVFile(const CSVFile& other) = delete;
+  CSVFile& operator=(const CSVFile& other) = delete;
+
   /**
    * Create a new CSVFile instance with the provided filedescriptor. The csv
    * file takes ownership of the fd and will close() it when destructed.
@@ -36,9 +39,6 @@ public:
    * @param fd a valid an opened fd, transfers ownership and closes on destruct
    */
   explicit CSVFile(int fd);
-
-  CSVFile(const CSVFile& other) = delete;
-  CSVFile& operator=(const CSVFile& other) = delete;
 
 protected:
   int fd_;
