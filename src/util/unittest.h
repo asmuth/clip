@@ -23,13 +23,36 @@ namespace util {
     static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, L);
 
 
-#define EXPECT(E) \
-    if (!(E)) { \
+#define EXPECT(X) \
+    if (!(X)) { \
       throw RUNTIME_EXCEPTION( \
           &typeid(fnordmetric::util::UnitTest), \
           fnordmetric::util::UnitTest::kExpectationFailed, \
-          "expectation failed: %s", #E); \
-    } \
+          "expectation failed: %s", #X); \
+    }
+
+#define EXPECT_EXCEPTION(E, L) \
+    { \
+      bool raised = false; \
+      try { \
+        L(); \
+      } catch (fnordmetric::util::RuntimeException e) { \
+        raised = true; \
+        auto msg = e.getMessage().c_str(); \
+        if (strcmp(msg, E) != 0) { \
+          throw RUNTIME_EXCEPTION( \
+              &typeid(fnordmetric::util::UnitTest), \
+              fnordmetric::util::UnitTest::kExpectationFailed, \
+              "excepted exception '%s' but got '%s'", E, msg); \
+        } \
+      } \
+      if (!raised) { \
+        throw RUNTIME_EXCEPTION( \
+            &typeid(fnordmetric::util::UnitTest), \
+            fnordmetric::util::UnitTest::kExpectationFailed, \
+            "excepted exception '%s' but got no exception", E); \
+      } \
+    }
 
 class UnitTest {
 public:

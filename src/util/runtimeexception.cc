@@ -58,5 +58,9 @@ void RuntimeException::debugPrint() const {
       line_);
 }
 
+std::string RuntimeException::getMessage() const {
+  return std::string(message_);
+}
+
 }
 }

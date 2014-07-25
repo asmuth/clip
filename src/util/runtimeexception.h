@@ -8,6 +8,7 @@
 #define _FNORDMETRIC_UTIL_RUNTIMEXCEPTION_H
 #include <errno.h>
 #include <exception>
+#include <string>
 
 #define __RUNTIME_EXCEPTION(N, T, E, ...) \
     fnordmetric::util::RuntimeException( \
@@ -44,6 +45,8 @@ public:
       ...);
 
   void debugPrint() const;
+
+  std::string getMessage() const;
 
 private:
   const void* namespace_id_;

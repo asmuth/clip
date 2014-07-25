@@ -25,9 +25,13 @@ TEST_CASE(CSVFileTest, TestOpenFile, [] () {
 });
 
 TEST_CASE(CSVFileTest, TestInvalidFileName, [] () {
-  EXPECT(1 == 2);
-  //auto csv_file = CSVFile::openFile("test/fixtures/invalid.csv");
-  //assert(csv_file.get() != nullptr);
+  auto errmsg = "error opening file 'test/fixtures/invalid.csv': "
+      "No such file or directory";
+
+  EXPECT_EXCEPTION(errmsg, [] () {
+    auto csv_file = CSVFile::openFile("test/fixtures/invalid.csv");
+    EXPECT(csv_file.get() != nullptr);
+  });
 });
 
 /*
