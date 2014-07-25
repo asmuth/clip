@@ -12,7 +12,11 @@
 namespace fnordmetric {
 namespace csv_backend {
 
-std::unique_ptr<CSVFile> CSVFile::openFile(const std::string& file_path) {
+std::unique_ptr<CSVFile> CSVFile::openFile(
+    const std::string& file_path,
+    char column_seperator /* = ',' */,
+    char row_seperator /* = '\n' */,
+    char quote_char /* = '"' */) {
   auto fp = file_path.c_str();
   int fd = open(fp, O_RDONLY);
 
@@ -28,8 +32,17 @@ std::unique_ptr<CSVFile> CSVFile::openFile(const std::string& file_path) {
   return std::unique_ptr<CSVFile>(csv_file);
 }
 
-CSVFile::CSVFile(int fd) : fd_(fd) {
+CSVFile::CSVFile(
+    int fd,
+    char column_seperator /* = ',' */,
+    char row_seperator /* = '\n' */,
+    char quote_char /* = '"' */) :
+    fd_(fd) {
   assert(fd > 0);
+}
+
+void CSVFile::readNextRow(std::vector<std::string>* target) {
+
 }
 
 }

@@ -37,10 +37,10 @@ RuntimeException::RuntimeException(
     pos = 0;
   }
 
-  if (errno > 0) {
+  if (posix_errno > 0) {
     snprintf(message_ + pos, sizeof(message_) - pos, ": ");
     pos += 2;
-    strerror_r(errno, message_ + pos, sizeof(message_) - pos);
+    strerror_r(posix_errno, message_ + pos, sizeof(message_) - pos);
   }
 }
 

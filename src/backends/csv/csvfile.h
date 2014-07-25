@@ -28,7 +28,11 @@ public:
    *
    * @param file_path the path to the csv file
    */
-  static std::unique_ptr<CSVFile> openFile(const std::string& file_path);
+  static std::unique_ptr<CSVFile> openFile(
+      const std::string& file_path,
+      char column_seperator = ',',
+      char row_seperator = '\n',
+      char quote_char = '"');
 
   CSVFile(const CSVFile& other) = delete;
   CSVFile& operator=(const CSVFile& other) = delete;
@@ -39,7 +43,16 @@ public:
    *
    * @param fd a valid an opened fd, transfers ownership and closes on destruct
    */
-  explicit CSVFile(int fd);
+  explicit CSVFile(
+      int fd,
+      char column_seperator = ',',
+      char row_seperator = '\n',
+      char quote_char = '"');
+
+  /**
+   * Read the next row from the csv file
+   */
+  void readNextRow(std::vector<std::string>* target);
 
 protected:
   int fd_;

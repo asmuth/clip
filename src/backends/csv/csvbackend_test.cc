@@ -34,6 +34,17 @@ TEST_CASE(CSVFileTest, TestInvalidFileName, [] () {
   });
 });
 
+TEST_CASE(CSVFileTest, TestReadHeaders, [] () {
+  auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country_simple.csv");
+  EXPECT(csv_file.get() != nullptr);
+  std::vector<std::string> headers;
+  csv_file->readNextRow(&headers);
+  EXPECT(headers.size() == 2);
+  EXPECT(headers[0] == "country");
+  EXPECT(headers[1] == "gbp");
+});
+
+
 /*
 int main() {
   try {
