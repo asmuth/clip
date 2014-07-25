@@ -44,6 +44,7 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
 include_directories(./src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
+add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
 
 add_test(QueryTest test/test-query)

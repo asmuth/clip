@@ -21,7 +21,7 @@ UNIT_TEST(CSVFileTest);
 
 TEST_CASE(CSVFileTest, TestOpenFile, [] () {
   auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csv");
-  assert(csv_file.get() != nullptr);
+  EXPECT(csv_file.get() != nullptr);
 });
 
 TEST_CASE(CSVFileTest, TestInvalidFileName, [] () {
