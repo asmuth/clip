@@ -14,7 +14,7 @@ namespace fnordmetric {
 namespace csv_backend {
 
 class CSVFile {
-  friend class CSVBackendTest;
+  friend class CSVFileTest;
 public:
 
   enum ErrorCodes {

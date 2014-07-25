@@ -13,34 +13,32 @@
 #include "csvfile.h"
 //#include "csv_backend.h"
 #include "../../util/runtimeexception.h"
+#include "../../util/unittest.h"
 
-namespace fnordmetric {
-namespace csv_backend {
+UNIT_TEST(CSVFileTest);
 
-class CSVBackendTest {
-public:
-  CSVBackendTest() {}
+TEST_CASE(CSVFileTest, TestOpenFile, [] () {
+  //printf("run test!\n");
+});
 
-  void run() {
-    testOpenFile();
-  }
+/*
+static fnordmetric::util::UnitTest::TestCase __case(
+    &csv_file_test,
+    "testOpenFile",
+    [] () {
+    });
+*/
 
-  void testOpenFile() {
-    auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csxv");
-    assert(csv_file.get() != nullptr);
-    assert(csv_file->fd_ > 0);
-  }
+  //void testOpenFile() {
+  //  auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csv");
+  //  assert(csv_file.get() != nullptr);
+  //  assert(csv_file->fd_ > 0);
+  //}
 
-};
-
-}
-}
-
+/*
 int main() {
-  fnordmetric::csv_backend::CSVBackendTest test;
-
   try {
-    test.run();
+    csv_file_test.run();
   } catch (fnordmetric::util::RuntimeException e) {
     printf("test fail :(\n\n");
     e.debugPrint();
@@ -49,3 +47,4 @@ int main() {
 
   printf("all tests passed! :)\n");
 }
+*/
