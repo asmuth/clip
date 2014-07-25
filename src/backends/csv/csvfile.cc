@@ -13,13 +13,14 @@ namespace fnordmetric {
 namespace csv_backend {
 
 std::unique_ptr<CSVFile> CSVFile::openFile(const std::string& file_path) {
-  int fd = open(file_path.c_str(), O_RDONLY);
+  auto fp = file_path.c_str();
+  int fd = open(fp, O_RDONLY);
 
   if (fd < 1) {
     throw RUNTIME_EXCEPTION_ERRNO(
         ERR_CANNOT_OPEN_FILE,
         "error opening file '%s'",
-        file_path.c_str());
+        fp);
   }
 
   auto csv_file = new CSVFile(fd);
