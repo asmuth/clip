@@ -9,12 +9,13 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "../../util/unittest.h"
 
 namespace fnordmetric {
 namespace csv_backend {
 
 class CSVFile {
-  friend class CSVFileTest;
+  friend class fnordmetric::util::UnitTest::TestCase;
 public:
 
   enum ErrorCodes {

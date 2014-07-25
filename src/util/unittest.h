@@ -6,6 +6,7 @@
  */
 #ifndef _FNORDMETRIC_UTIL_UNITTEST_H
 #define _FNORDMETRIC_UTIL_UNITTEST_H
+#include "runtimeexception.h"
 #include <functional>
 
 namespace fnordmetric {
@@ -19,7 +20,7 @@ namespace util {
   }
 
 #define TEST_CASE(T, N, L) \
-  static fnordmetric::util::UnitTest::TestCase __case(&T, #N, L);
+  static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, L);
 
 class UnitTest {
 public:
@@ -36,7 +37,7 @@ public:
     }
 
     const char* name_;
-    const std::function<void ()> lambda_;
+    std::function<void ()> lambda_;
   };
 
   UnitTest(const char* name) : name_(name) {}
@@ -50,15 +51,33 @@ public:
     printf("%s\n", name_);
 
     const TestCase* current_test_case = nullptr;
+    int num_tests_passed = 0;
     for (auto test_case : cases_) {
       printf("    %s::%s", name_, test_case->name_);
       current_test_case = test_case;
-      test_case->lambda_();
+
+      try {
+        test_case->lambda_();
+      } catch (fnordmetric::util::RuntimeException e) {
+        printf(" [FAIL]\n\n");
+        e.debugPrint();
+        continue;
+      }
+
+      num_tests_passed++;
       printf(" [PASS]\n");
     }
 
-    printf("All tests passed :)\n");
-    return 0;
+    if (num_tests_passed == cases_.size()) {
+      printf("\n[SUCCESS] All tests passed :)\n");
+      return 0;
+    } else {
+      printf(
+          "\n[FAIL] %i/%i tests failed :(\n",
+          cases_.size() - num_tests_passed,
+          cases_.size());
+      return 1;
+    }
   }
 
 protected:

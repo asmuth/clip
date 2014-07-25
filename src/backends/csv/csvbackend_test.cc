@@ -15,25 +15,19 @@
 #include "../../util/runtimeexception.h"
 #include "../../util/unittest.h"
 
+using namespace fnordmetric::csv_backend;
+
 UNIT_TEST(CSVFileTest);
 
 TEST_CASE(CSVFileTest, TestOpenFile, [] () {
-  //printf("run test!\n");
+  auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csv");
+  assert(csv_file.get() != nullptr);
 });
 
-/*
-static fnordmetric::util::UnitTest::TestCase __case(
-    &csv_file_test,
-    "testOpenFile",
-    [] () {
-    });
-*/
-
-  //void testOpenFile() {
-  //  auto csv_file = CSVFile::openFile("test/fixtures/gbp_per_country.csv");
-  //  assert(csv_file.get() != nullptr);
-  //  assert(csv_file->fd_ > 0);
-  //}
+TEST_CASE(CSVFileTest, TestInvalidFileName, [] () {
+  //auto csv_file = CSVFile::openFile("test/fixtures/invalid.csv");
+  //assert(csv_file.get() != nullptr);
+});
 
 /*
 int main() {
