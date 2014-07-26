@@ -87,9 +87,10 @@ TEST_CASE(CSVInputStreamTest, TestReadSimpleRowsEOF, [] () {
 });
 
 // CSVTableRefTest
-TEST_CASE(CSVInputStreamTest, TestGetColumnIndex, [] () {
+TEST_CASE(CSVInputStreamTest, TestGetColumnIndexWithHeaders, [] () {
   CSVTableRef table_ref(
-      CSVInputStream::openFile("test/fixtures/gbp_per_country_simple.csv"));
+      CSVInputStream::openFile("test/fixtures/gbp_per_country_simple.csv"),
+      true);
 
   EXPECT_EQ(table_ref.getColumnIndex("country"), 0);
 });

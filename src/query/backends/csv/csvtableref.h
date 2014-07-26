@@ -7,6 +7,8 @@
 #ifndef _FNORDMETRIC_CSVTABLEREF_H
 #define _FNORDMETRIC_CSVTABLEREF_H
 #include <memory>
+#include <unordered_map>
+#include <string>
 #include <fnordmetric/query/backends/csv/csvinputstream.h>
 #include <fnordmetric/query/tableref.h>
 
@@ -14,13 +16,26 @@ namespace fnordmetric {
 namespace query {
 namespace csv_backend {
 
+/**
+ * A CSVTableRef instance is threadfriendly but not threadsafe. You must
+ * synchronize access to all methods.
+ */
 class CSVTableRef : public TableRef {
 public:
-  CSVTableRef(std::unique_ptr<CSVInputStream>&& csv);
+  CSVTableRef(
+      std::unique_ptr<CSVInputStream>&& csv,
+      bool headers = false);
+
   int getColumnIndex(const std::string& name) override;
   void executeScan(TableScan* scan) override;
+
 protected:
+
+  void readHeaders();
+
+  std::unordered_map<std::string, size_t> headers_;
   std::unique_ptr<CSVInputStream> csv_;
+  int num_cols_;
 };
 
 }
