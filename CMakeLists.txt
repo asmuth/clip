@@ -39,7 +39,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     src/query/tokenize.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
-    src/backends/csv/csvinputstream.cc)
+    src/query/backends/csv/csvinputstream.cc)
 
 include_directories(./src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
@@ -63,4 +63,4 @@ add_executable(tests/test-input-stream
 add_executable(tests/test-csv-backend
     ${FNORDMETRIC_UI_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
-    src/backends/csv/csvbackend_test.cc)
+    src/query/backends/csv/csvbackend_test.cc)

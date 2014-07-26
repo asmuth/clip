@@ -7,15 +7,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
-#include <sys/fcntl.h>
-#include <unistd.h>
+#include "../../../util/runtimeexception.h"
+#include "../../../util/unittest.h"
 #include "csvinputstream.h"
 //#include "csv_backend.h"
-#include "../../util/runtimeexception.h"
-#include "../../util/unittest.h"
 
-using namespace fnordmetric::csv_backend;
+using namespace fnordmetric::query::csv_backend;
 
 UNIT_TEST(CSVInputStreamTest);
 
@@ -87,3 +84,4 @@ TEST_CASE(CSVInputStreamTest, TestReadSimpleRowsEOF, [] () {
 
   EXPECT_EQ(num_rows, 192);
 });
+

@@ -8,10 +8,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "csvinputstream.h"
-#include "../../util/inputstream.h"
-#include "../../util/runtimeexception.h"
+#include "../../../util/inputstream.h"
+#include "../../../util/runtimeexception.h"
 
 namespace fnordmetric {
+namespace query {
 namespace csv_backend {
 
 std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
@@ -75,5 +76,6 @@ bool CSVInputStream::readNextRow(std::vector<std::string>* target) {
   return !eof;
 }
 
+}
 }
 }

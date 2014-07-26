@@ -9,10 +9,10 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "../../util/inputstream.h"
-#include "../../util/unittest.h"
+#include "../../../util/inputstream.h"
 
 namespace fnordmetric {
+namespace query {
 namespace csv_backend {
 
 class CSVInputStream {
@@ -58,6 +58,7 @@ protected:
   const char quote_char_;
 };
 
+}
 }
 }
 #endif
