@@ -116,7 +116,10 @@ Executable* QueryPlan::buildDrawStatement(ASTNode* ast) {
       type = DrawStatement::T_AREA_CHART;
       break;
     default:
-      assert(888 == 0); // FIXPAUL add error
+      RAISE(
+          util::RuntimeException,
+          "invalid chart type: %s",
+          Token::getTypeName(ast->getToken()->getType()));
       return nullptr;
   }
 

@@ -914,3 +914,21 @@ TEST_CASE(QueryTest, TestTypeError, [] () {
   });
 });
 
+
+TEST_CASE(QueryTest, TestImportCSVTable, [] () {
+  TableRepository repo;
+
+  auto query = Query(
+      "  IMPORT TABLE gbp_per_country "
+      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
+      ""
+      "  SELECT"
+      "    sum(gbp) as global_gbp"
+      "  FROM"
+      "    gbp_per_country;",
+      &repo);
+
+  query.execute();
+});
+
+
