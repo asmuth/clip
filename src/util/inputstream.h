@@ -58,7 +58,7 @@ public:
 
 protected:
 
-  char buf_[4];
+  char buf_[8192]; // FIXPAUL make configurable
   size_t buf_len_;
   size_t buf_pos_;
   int fd_;

@@ -13,13 +13,13 @@
 #define RAISE_EXCEPTION(E) \
     throw (E).setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__); while(0) {}
 
-#define RAISE(E, M, ...) \
-    RAISE_EXCEPTION(E((M), __VA_ARGS__).setTypeName(#E)); while(0) {}
+#define RAISE(E, ...) \
+    RAISE_EXCEPTION(E( __VA_ARGS__).setTypeName(#E)); while(0) {}
 
-#define RAISE_ERRNO(E, M, ...) \
+#define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
-      RAISE_EXCEPTION(E((M), __VA_ARGS__).setTypeName(#E).setErrno(e)); \
+      RAISE_EXCEPTION(E(__VA_ARGS__).setTypeName(#E).setErrno(e)); \
     }
 
 namespace fnordmetric {

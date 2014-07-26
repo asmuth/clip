@@ -42,6 +42,11 @@ void CSVInputStream::readNextRow(std::vector<std::string>* target) {
 // FIXPAUL optimize?
 std::string CSVInputStream::readNextColumn() {
   std::string column;
+  char byte;
+
+  while (input_->readNextByte(&byte)) {
+    printf("byte: %c\n", byte);
+  }
 
   return column;
 }

@@ -5,6 +5,7 @@
  * Licensed under the MIT license (see LICENSE).
  */
 #include <string>
+#include <unistd.h>
 #include <fcntl.h>
 #include "inputstream.h"
 #include "runtimeexception.h"
@@ -28,23 +29,25 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
 FileInputStream::FileInputStream(int fd) : fd_(fd) {}
 
 bool FileInputStream::readNextByte(char* target) {
+  if (buf_pos_ >= buf_len_) {
+    int bytes_read = read(fd_, buf_, sizeof(buf_));
 
-}
+    if (bytes_read < 0) {
+      RAISE_ERRNO(RuntimeException, "read() failed");
+    }
 
-/*
-bool CSVInputStream::readNextChunk() {
-  int bytes_read = read(fd_, buf_, sizeof(buf_));
-
-  if (bytes_read < 0) {
-    throw RUNTIME_EXCEPTION_ERRNO(
-        &typeid(CSVInputStream),
-        ERR_CSV_READ_ERROR,
-        "read() failed");
+    buf_pos_ = 0;
+    buf_len_ = bytes_read;
   }
 
-  return bytes_read == 0;
+
+  if (buf_pos_ < buf_len_) {
+    *target = buf_[buf_pos_++];
+    return true;
+  } else {
+    return false;
+  }
 }
-*/
 
 }
 }
