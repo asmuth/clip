@@ -39,7 +39,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     src/query/tokenize.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
-    src/backends/csv/csvfile.cc)
+    src/backends/csv/csvinputstream.cc)
 
 include_directories(./src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
