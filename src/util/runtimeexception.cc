@@ -23,17 +23,6 @@ RuntimeException::RuntimeException(
   va_start(args, message);
   int pos = vsnprintf(message_, sizeof(message_), message, args);
   va_end(args);
-
-  if (pos < 0) {
-    pos = 0;
-  }
-
-  int posix_errno = -1;
-  if (posix_errno > 0) {
-    snprintf(message_ + pos, sizeof(message_) - pos, ": ");
-    pos += 2;
-    strerror_r(posix_errno, message_ + pos, sizeof(message_) - pos);
-  }
 }
 
 RuntimeException::RuntimeException(
@@ -57,6 +46,17 @@ RuntimeException RuntimeException::setSource(
 
 RuntimeException RuntimeException::setTypeName(const char* type_name) {
   type_name_ = type_name;
+  return *this;
+}
+
+RuntimeException RuntimeException::setErrno(int posix_errno) {
+  if (posix_errno > 0) {
+    size_t pos = strlen(message_);
+    snprintf(message_ + pos, sizeof(message_) - pos, ": ");
+    pos += 2;
+    strerror_r(posix_errno, message_ + pos, sizeof(message_) - pos);
+  }
+
   return *this;
 }
 

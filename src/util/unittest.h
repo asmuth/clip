@@ -26,9 +26,8 @@ namespace util {
 
 #define EXPECT(X) \
     if (!(X)) { \
-      throw RUNTIME_EXCEPTION( \
-          &typeid(fnordmetric::util::UnitTest), \
-          fnordmetric::util::UnitTest::kExpectationFailed, \
+      RAISE( \
+          fnordmetric::util::UnitTest::ExpectationFailed, \
           "expectation failed: %s", #X); \
     }
 
@@ -41,16 +40,14 @@ namespace util {
         raised = true; \
         auto msg = e.getMessage().c_str(); \
         if (strcmp(msg, E) != 0) { \
-          throw RUNTIME_EXCEPTION( \
-              &typeid(fnordmetric::util::UnitTest), \
-              fnordmetric::util::UnitTest::kExpectationFailed, \
+          RAISE( \
+              fnordmetric::util::UnitTest::ExpectationFailed, \
               "excepted exception '%s' but got '%s'", E, msg); \
         } \
       } \
       if (!raised) { \
-        throw RUNTIME_EXCEPTION( \
-            &typeid(fnordmetric::util::UnitTest), \
-            fnordmetric::util::UnitTest::kExpectationFailed, \
+        RAISE( \
+            fnordmetric::util::UnitTest::ExpectationFailed, \
             "excepted exception '%s' but got no exception", E); \
       } \
     }
@@ -58,6 +55,12 @@ namespace util {
 class UnitTest {
 public:
   static const int kExpectationFailed = 0;
+  struct ExpectationFailed : public RuntimeException {
+    template <typename... T>
+    ExpectationFailed(
+        const char* message, T... args) :
+        RuntimeException(message, args...) {}
+  };
 
   class TestCase {
   public:
@@ -119,8 +122,8 @@ public:
 
       printf(
           "\n[FAIL] %i/%i tests failed :(\n",
-          cases_.size() - num_tests_passed,
-          cases_.size());
+          (int) cases_.size() - num_tests_passed,
+          (int) cases_.size());
       return 1;
     }
   }

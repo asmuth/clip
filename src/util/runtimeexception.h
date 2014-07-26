@@ -11,20 +11,16 @@
 #include <string>
 
 #define RAISE_EXCEPTION(E) \
-    throw E.setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__);
+    throw (E).setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__); while(0) {}
 
 #define RAISE(E, M, ...) \
-    RAISE_EXCEPTION(E((M), __VA_ARGS__).setTypeName(#E)); \
+    RAISE_EXCEPTION(E((M), __VA_ARGS__).setTypeName(#E)); while(0) {}
 
-#define __RUNTIME_EXCEPTION(N, T, E, ...) \
-    fnordmetric::util::RuntimeException( \
-        __VA_ARGS__)
-
-#define RUNTIME_EXCEPTION(N, T, ...) \
-    __RUNTIME_EXCEPTION(N, T, -1, __VA_ARGS__)
-
-#define RUNTIME_EXCEPTION_ERRNO(N, T, ...) \
-    __RUNTIME_EXCEPTION(N, T, errno, __VA_ARGS__)
+#define RAISE_ERRNO(E, M, ...) \
+    { \
+      int e = errno; \
+      RAISE_EXCEPTION(E((M), __VA_ARGS__).setTypeName(#E).setErrno(e)); \
+    }
 
 namespace fnordmetric {
 namespace util {
@@ -40,6 +36,7 @@ public:
 
   RuntimeException setSource(const char* file, int line, const char* func);
   RuntimeException setTypeName(const char* type_name);
+  RuntimeException setErrno(int posix_errno);
 
 private:
   const char* type_name_;
