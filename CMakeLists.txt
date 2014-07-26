@@ -8,6 +8,7 @@ enable_testing()
 
 set(FNORDMETRIC_SOURCES
     src/util/format.cc
+    src/util/inputstream.cc
     src/util/runtimeexception.cc)
 
 set(FNORDMETRIC_UI_SOURCES

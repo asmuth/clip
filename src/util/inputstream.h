@@ -6,12 +6,14 @@
  */
 #ifndef _FNORDMETRIC_INPUTSTREAM_H
 #define _FNORDMETRIC_INPUTSTREAM_H
+#include <memory>
 
 namespace fnordmetric {
 namespace util {
 
 class InputStream {
 public:
+  InputStream() {}
   InputStream(const InputStream& other) = delete;
   InputStream& operator=(const InputStream& other) = delete;
   virtual ~InputStream() {}

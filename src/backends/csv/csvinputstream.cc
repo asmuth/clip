@@ -20,7 +20,10 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) {
   auto csv_file = new CSVInputStream(
-      fnordmetric::util::FileInputStream::openFile(file_path));
+      fnordmetric::util::FileInputStream::openFile(file_path),
+      column_seperator,
+      row_seperator,
+      quote_char);
 
   return std::unique_ptr<CSVInputStream>(csv_file);
 }

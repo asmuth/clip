@@ -4,28 +4,35 @@
  *
  * Licensed under the MIT license (see LICENSE).
  */
+#include <string>
+#include <fcntl.h>
 #include "inputstream.h"
+#include "runtimeexception.h"
+
 namespace fnordmetric {
 namespace util {
 
-std::unique_ptr<InputStream> InputStream::openFile(
-    const std::string& file_path,
-    char column_seperator /* = ',' */,
-    char row_seperator /* = '\n' */,
-    char quote_char /* = '"' */) {
+std::unique_ptr<FileInputStream> FileInputStream::openFile(
+    const std::string& file_path) {
   auto fp = file_path.c_str();
   int fd = open(fp, O_RDONLY);
 
   if (fd < 1) {
     throw RUNTIME_EXCEPTION_ERRNO(
-        &typeid(InputStream),
-        ERR_CSV_CANNOT_OPEN_FILE,
+        &typeid(FileInputStream),
+        0,
         "error opening file '%s'",
         fp);
   }
 
-  auto csv_file = new InputStream(fd);
-  return std::unique_ptr<InputStream>(csv_file);
+  auto csv_file = new FileInputStream(fd);
+  return std::unique_ptr<FileInputStream>(csv_file);
+}
+
+FileInputStream::FileInputStream(int fd) : fd_(fd) {}
+
+bool FileInputStream::readNextByte(char* target) {
+
 }
 
 /*
