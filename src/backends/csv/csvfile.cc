@@ -5,6 +5,7 @@
  * Licensed under the MIT license (see LICENSE).
  */
 #include <assert.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include "csvfile.h"
 #include "../../util/runtimeexception.h"
@@ -37,12 +38,33 @@ CSVFile::CSVFile(
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) :
-    fd_(fd) {
+    fd_(fd),
+    buf_len_(0),
+    buf_pos_(0) {
   assert(fd > 0);
 }
 
 void CSVFile::readNextRow(std::vector<std::string>* target) {
+  target->emplace_back(readNextColumn());
+}
 
+std::string CSVFile::readNextColumn() {
+  if (buf_pos_ < buf_len_) {
+    readNextChunk();
+  }
+}
+
+bool CSVFile::readNextChunk() {
+  int bytes_read = read(fd_, buf_, sizeof(buf_));
+
+  if (bytes_read < 0) {
+    throw RUNTIME_EXCEPTION_ERRNO(
+        &typeid(CSVFile),
+        ERR_CSV_READ_ERROR,
+        "read() failed");
+  }
+
+  return bytes_read == 0;
 }
 
 }

@@ -19,7 +19,8 @@ class CSVFile {
 public:
 
   enum ErrorCodes {
-    ERR_CSV_CANNOT_OPEN_FILE = 4000
+    ERR_CSV_CANNOT_OPEN_FILE = 4000,
+    ERR_CSV_READ_ERROR = 4001
   };
 
   /**
@@ -55,7 +56,24 @@ public:
   void readNextRow(std::vector<std::string>* target);
 
 protected:
+
+  /**
+   * Read the next column from the csv file
+   */
+  std::string readNextColumn();
+
+
+  /**
+   * Read the next chunk from disk. Returns true on success and false on EOF.
+   * Raises an exception on error.
+   */
+  bool readNextChunk();
+
+
   int fd_;
+  char buf_[4];
+  size_t buf_len_;
+  size_t buf_pos_;
 };
 
 }
