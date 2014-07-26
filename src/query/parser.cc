@@ -202,9 +202,11 @@ ASTNode* Parser::statement() {
       return beginStatement();
   }
 
-  addError(
-      ERR_UNEXPECTED_TOKEN,
-      "expected one of SELECT, CREATE or BEGIN\n");
+  RAISE(
+      ParseError,
+      "unexpected token '%s', expected one of SELECT, CREATE or BEGIN\n",
+      Token::getTypeName(cur_token_->getType()));
+
   return nullptr;
 }
 
@@ -296,9 +298,10 @@ ASTNode* Parser::createStatement() {
       }
 
     default:
-      addError(
-          ERR_UNEXPECTED_TOKEN,
-          "expected one of SERIES, AXIS\n");
+      RAISE(
+          ParseError,
+          "unexpected token '%s', expected one of SERIES or AXIS\n",
+          Token::getTypeName(cur_token_->getType()));
   }
 
   return nullptr;
@@ -315,9 +318,10 @@ ASTNode* Parser::beginStatement() {
       break;
 
     default:
-      addError(
-          ERR_UNEXPECTED_TOKEN,
-          "expected one of BAR, LINE, AREA\n");
+      RAISE(
+          ParseError,
+          "unexpected token '%s', expected one of BAR, LINE or AREA\n",
+          Token::getTypeName(cur_token_->getType()));
       return nullptr;
   }
 
@@ -350,7 +354,10 @@ ASTNode* Parser::selectSublist() {
   auto value_expr = expr();
 
   if (value_expr == nullptr) {
-    addError(ERR_UNEXPECTED_TOKEN, "expected value expression");
+    RAISE(
+        ParseError,
+        "unexpected token '%s', expected: value expression\n",
+        Token::getTypeName(cur_token_->getType()));
     delete derived;
     return nullptr;
   }
@@ -624,22 +631,15 @@ ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
 
 bool Parser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
-    addError(ERR_UNEXPECTED_TOKEN, "unexpected token, expected ...");
-    printf("got: %s, expected: %s\n",
+    RAISE(
+        ParseError,
+        "unexpected token '%s', expected: '%s'\n",
         Token::getTypeName(cur_token_->getType()),
         Token::getTypeName(expectation));
     return false;
   }
 
   return true;
-}
-
-void Parser::addError(kParserErrorType type, const char* msg) {
-  ParserError error;
-  error.type = type;
-  fprintf(stderr, "[ERROR] %s\n", msg);
-  throw std::string(msg, strlen(msg)); // FIXPAUL
-  errors_.push_back(error);
 }
 
 const std::vector<Parser::ParserError>& Parser::getErrors() const {

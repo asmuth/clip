@@ -9,8 +9,9 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "token.h"
-#include "astnode.h"
+#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/query/token.h>
+#include <fnordmetric/query/astnode.h>
 
 namespace fnordmetric {
 namespace query {
@@ -30,6 +31,13 @@ public:
   struct ParserError {
     kParserErrorType type;
     const char* msg;
+  };
+
+  struct ParseError : public fnordmetric::util::RuntimeException {
+    template <typename... T>
+    ParseError(
+        const char* message, T... args) :
+        RuntimeException(message, args...) {}
   };
 
   /* precedence table
