@@ -877,7 +877,7 @@ TEST_CASE(QueryTest, TestNoSuchColumnError, [] () {
     auto csv_table = new csv_backend::CSVTableRef(
         csv_backend::CSVInputStream::openFile(
             "test/fixtures/gbp_per_country_simple.csv"), 
-        true);
+        false);
 
     TableRepository repo;
     repo.addTableRef("gbp_per_country",
@@ -886,6 +886,27 @@ TEST_CASE(QueryTest, TestNoSuchColumnError, [] () {
     auto query = Query(
         "  SELECT"
         "    sum(fnord) as global_gbp"
+        "  FROM"
+        "    gbp_per_country;",
+        &repo);
+    query.execute();
+  });
+});
+
+TEST_CASE(QueryTest, TestTypeError, [] () {
+  EXPECT_EXCEPTION("can't convert String 'United States' to Float", [] () {
+    auto csv_table = new csv_backend::CSVTableRef(
+        csv_backend::CSVInputStream::openFile(
+            "test/fixtures/gbp_per_country.csv"), 
+        false);
+
+    TableRepository repo;
+    repo.addTableRef("gbp_per_country",
+        std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
+
+    auto query = Query(
+        "  SELECT"
+        "    sum(col4) as global_gbp"
         "  FROM"
         "    gbp_per_country;",
         &repo);

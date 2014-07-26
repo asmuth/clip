@@ -45,7 +45,9 @@ int CSVTableRef::getColumnIndex(const std::string& name) {
       return -1;
     }
 
-    return index;
+    if (index > 0) {
+      return index - 1;
+    }
   }
 
   return -1;
@@ -70,6 +72,8 @@ bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
 
   if (!csv_->readNextRow(&row) || row.size() == 0) {
     return false;
+  } else {
+    row_index_++;
   }
 
   if (row.size() < min_cols_) {

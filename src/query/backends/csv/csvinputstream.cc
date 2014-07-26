@@ -42,12 +42,14 @@ CSVInputStream::CSVInputStream(
     row_seperator_(row_seperator),
     quote_char_(quote_char) {}
 
+// FIXPAUL quotechar escaping...
 bool CSVInputStream::readNextRow(std::vector<std::string>* target) {
   bool eof = false;
 
   for (;;) {
     std::string column;
     char byte;
+    bool quoted = false;
 
     for (;;) {
       if (!input_->readNextByte(&byte)) {
@@ -55,12 +57,16 @@ bool CSVInputStream::readNextRow(std::vector<std::string>* target) {
         break;
       }
 
-      if (byte == column_seperator_) {
+      if (!quoted && byte == column_seperator_) {
         break;
       }
 
-      if (byte == row_seperator_) {
+      if (!quoted && byte == row_seperator_) {
         break;
+      }
+
+      if (byte == quote_char_) {
+        quoted = !quoted;
       }
 
       column += byte;

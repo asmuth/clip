@@ -119,10 +119,10 @@ TEST_CASE(CSVInputStreamTest, TestGetColumnIndexWithoutHeaders, [] () {
           "test/fixtures/gbp_per_country_simple_noheaders.csv"),
       false);
 
-  EXPECT_EQ(table_ref.getColumnIndex("col1"), 1);
-  EXPECT_EQ(table_ref.getColumnIndex("col2"), 2);
-  EXPECT_EQ(table_ref.getColumnIndex("col3"), 3);
-  EXPECT_EQ(table_ref.getColumnIndex("col99"), 99);
+  EXPECT_EQ(table_ref.getColumnIndex("col1"), 0);
+  EXPECT_EQ(table_ref.getColumnIndex("col2"), 1);
+  EXPECT_EQ(table_ref.getColumnIndex("col3"), 2);
+  EXPECT_EQ(table_ref.getColumnIndex("col99"), 98);
 });
 
 // CSVTableRefTest
