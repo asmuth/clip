@@ -58,15 +58,19 @@ public:
     T_RSHIFT,
     T_LT,
     T_GT,
-    T_SERIES,
     T_BEGIN,
+    T_DRAW,
     T_BAR,
     T_LINE,
     T_AREA,
     T_CHART,
     T_CREATE,
     T_WITH,
-    T_AXIS
+    T_AXIS,
+    T_TOP,
+    T_RIGHT,
+    T_BOTTOM,
+    T_LEFT
   };
 
   Token(kTokenType token_type);

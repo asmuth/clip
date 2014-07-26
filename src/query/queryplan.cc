@@ -149,21 +149,7 @@ Executable* QueryPlan::buildSeriesStatement(
 Executable* QueryPlan::buildAxisStatement(
     ASTNode* ast,
     TableRepository* repo) {
-  auto select_ast = ast->getChildren()[0];
-  assert(*select_ast == ASTNode::T_SELECT);
-
-  /* build nested select statement */
-  auto select = buildQueryPlan(select_ast, repo);
-
-  /* resolve output column names */
-  std::vector<std::string> column_names;
-  for (const auto& col : select->getColumns()) {
-    column_names.emplace_back(col);
-  }
-
-  return new AxisStatement(
-      std::move(column_names),
-      select);
+  return new AxisStatement();
 }
 
 Executable* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {

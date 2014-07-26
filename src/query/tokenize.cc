@@ -254,11 +254,6 @@ next:
     goto next;
   }
 
-  if (token == "SERIES") {
-    token_list->emplace_back(Token::T_SERIES);
-    goto next;
-  }
-
   if (token == "FROM") {
     token_list->emplace_back(Token::T_FROM);
     goto next;
@@ -356,6 +351,31 @@ next:
 
   if (token == "MOD") {
     token_list->emplace_back(Token::T_MOD);
+    goto next;
+  }
+
+  if (token == "DRAW") {
+    token_list->emplace_back(Token::T_DRAW);
+    goto next;
+  }
+
+  if (token == "TOP") {
+    token_list->emplace_back(Token::T_TOP);
+    goto next;
+  }
+
+  if (token == "RIGHT") {
+    token_list->emplace_back(Token::T_RIGHT);
+    goto next;
+  }
+
+  if (token == "BOTTOM") {
+    token_list->emplace_back(Token::T_BOTTOM);
+    goto next;
+  }
+
+  if (token == "LEFT") {
+    token_list->emplace_back(Token::T_LEFT);
     goto next;
   }
 

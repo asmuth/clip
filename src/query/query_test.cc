@@ -314,7 +314,7 @@ TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
 
 TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
   const char* err_msg = "unexpected token 'T_GROUP', expected one of SELECT, "
-      "CREATE or BEGIN";
+      "DRAW or IMPORT";
 
   EXPECT_EXCEPTION(err_msg, [] () {
     auto parser = parseTestQuery("GROUP BY SELECT");
@@ -831,27 +831,23 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
 
 
   auto query = Query(
-      "  BEGIN BAR CHART;"
+      "  DRAW BAR CHART;"
+      "  DRAW LEFT AXIS;"
       ""
-      "  CREATE AXIS WITH SELECT 'left' AS position;"
+      "  SELECT"
+      "    'series1' as series, one AS x, two AS y"
+      "  FROM"
+      "    testtable;"
       ""
-      "  CREATE SERIES WITH"
-      "    SELECT"
-      "      one AS x, two AS y"
-      "    FROM"
-      "      testtable;"
+      "  SELECT"
+      "    'series2' as series, one as x, two + 5 as y"
+      "  from"
+      "    testtable;"
       ""
-      "  CREATE SERIES WITH"
-      "    SELECT"
-      "      one as x, two + 5 as y"
-      "    from"
-      "      testtable;"
-      ""
-      "  CREATE SERIES WITH"
-      "    SELECT"
-      "      one as x, two / 2 + 4 as y"
-      "    from"
-      "      testtable;"
+      "  SELECT"
+      "    'series3' as series, one as x, two / 2 + 4 as y"
+      "  FROM"
+      "    testtable;"
       "",
       &repo);
 
@@ -860,6 +856,7 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
   //chart->renderSVG();
 });
 
+/*
 TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
@@ -881,4 +878,5 @@ TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
   query.execute();
   auto chart = query.getChart(0);
   //chart->renderSVG();
-});
+});\
+*/

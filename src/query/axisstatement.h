@@ -19,13 +19,7 @@ namespace query {
 class AxisStatement : public Executable {
 public:
 
-  AxisStatement(
-      std::vector<std::string>&& columns,
-      Executable* child) :
-      columns_(std::move(columns)),
-      child_(child) {
-    child->setTarget(this);
-  }
+  AxisStatement() {}
 
   void execute() override {}
 
@@ -34,7 +28,7 @@ public:
   }
 
   size_t getNumCols() const override {
-    return columns_.size();
+    return 0;
   }
 
   const std::vector<std::string>& getColumns() const override {
@@ -43,14 +37,12 @@ public:
 
   template <typename T>
   void executeDrawable(T* drawable) {
-    child_->execute();
     drawable->addAxis(ui::AxisDefinition::LEFT); // FIPXAUL
     drawable->addAxis(ui::AxisDefinition::BOTTOM); // FIPXAUL
   }
 
 protected:
   std::vector<std::string> columns_;
-  Executable* child_;
 };
 
 }

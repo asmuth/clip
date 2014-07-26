@@ -83,8 +83,9 @@ protected:
   ASTNode* selectStatement();
   ASTNode* selectSublist();
   ASTNode* tableName();
-  ASTNode* createStatement();
-  ASTNode* beginStatement();
+  ASTNode* drawStatement();
+  ASTNode* chartStatement();
+  ASTNode* axisStatement();
 
   ASTNode* fromClause();
   ASTNode* whereClause();

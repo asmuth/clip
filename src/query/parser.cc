@@ -196,15 +196,13 @@ ASTNode* Parser::statement() {
   switch (cur_token_->getType()) {
     case Token::T_SELECT:
       return selectStatement();
-    case Token::T_CREATE:
-      return createStatement();
-    case Token::T_BEGIN:
-      return beginStatement();
+    case Token::T_DRAW:
+      return drawStatement();
   }
 
   RAISE(
       ParseError,
-      "unexpected token '%s', expected one of SELECT, CREATE or BEGIN",
+      "unexpected token '%s', expected one of SELECT, DRAW or IMPORT",
       Token::getTypeName(cur_token_->getType()));
 
   return nullptr;
@@ -276,45 +274,29 @@ ASTNode* Parser::selectStatement() {
   return select;
 }
 
-ASTNode* Parser::createStatement() {
-  consumeToken();
 
-  switch (cur_token_->getType()) {
-    case Token::T_SERIES:
-      consumeToken();
-      if (cur_token_->getType() == Token::T_WITH) {
-        consumeToken();
-        auto series = new ASTNode(ASTNode::T_SERIES);
-        series->appendChild(selectStatement());
-        return series;
-      }
-    case Token::T_AXIS:
-      consumeToken();
-      if (cur_token_->getType() == Token::T_WITH) {
-        consumeToken();
-        auto series = new ASTNode(ASTNode::T_AXIS);
-        series->appendChild(selectStatement());
-        return series;
-      }
-
-    default:
-      RAISE(
-          ParseError,
-          "unexpected token '%s', expected one of SERIES or AXIS",
-          Token::getTypeName(cur_token_->getType()));
+ASTNode* Parser::drawStatement() {
+  if (lookahead(2, Token::T_CHART)) {
+    return chartStatement();
   }
 
+  if (lookahead(2, Token::T_AXIS)) {
+    return axisStatement();
+  }
+
+  RAISE(
+      ParseError,
+      "invalid DRAW statement. syntax is DRAW <type> {AXIS|CHART}");
   return nullptr;
 }
 
-
-ASTNode* Parser::beginStatement() {
-  auto draw = new ASTNode(ASTNode::T_DRAW);
+ASTNode* Parser::chartStatement() {
+  auto chart = new ASTNode(ASTNode::T_DRAW);
   consumeToken();
 
   switch (cur_token_->getType()) {
     case Token::T_BAR:
-      draw->setToken(consumeToken());
+      chart->setToken(consumeToken());
       break;
 
     default:
@@ -329,13 +311,47 @@ ASTNode* Parser::beginStatement() {
     return nullptr;
   }
 
+/*
   if (consumeIf(Token::T_WITH)) {
     draw->appendChild(selectStatement());
   } else {
-    consumeIf(Token::T_SEMICOLON);
+  }
+*/
+
+  consumeIf(Token::T_SEMICOLON);
+  return chart;
+}
+
+ASTNode* Parser::axisStatement() {
+  auto axis = new ASTNode(ASTNode::T_AXIS);
+  consumeToken();
+
+  switch (cur_token_->getType()) {
+    case Token::T_LEFT:
+      axis->setToken(consumeToken());
+      break;
+
+    default:
+      RAISE(
+          ParseError,
+          "unexpected token '%s', expected one of TOP, RIGHT, BOTTOM, LEFT",
+          Token::getTypeName(cur_token_->getType()));
+      return nullptr;
   }
 
-  return draw;
+  if (!expectAndConsume(Token::T_AXIS)) {
+    return nullptr;
+  }
+
+/*
+  if (consumeIf(Token::T_WITH)) {
+    draw->appendChild(selectStatement());
+  } else {
+  }
+*/
+
+  consumeIf(Token::T_SEMICOLON);
+  return axis;
 }
 
 ASTNode* Parser::selectSublist() {

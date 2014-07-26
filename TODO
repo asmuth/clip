@@ -53,25 +53,19 @@ point chart examples:
 --- TimeDomain!
 --- max interpolation gap -> draw as missing data
 
-BEGIN BAR CHART WITH
-  SELECT
-    axpr as title  expr
-  subtitle = expr;
-  [orientation = {HORIZONTAL|VERTICAL}]
-  [stacked = [TRUE|FALSE]]
-  [labels = [{INSIDE|OUTSIDE|OFF}]];
-  [FROM select_statement];
+DRAW BAR CHART
+  [TITLE title]
+  [SUBTITLE subtitle]
+  [ORIENTATION {HORIZONTAL|VERTICAL}]
+  [STACKED {TRUE|FALSE}]
+  [LABELS {INSIDE|OUTSIDE|OFF}];
 
-CREATE AXIS
-  position = {TOP|RIGHT|BOTTOM|BOTH|LEFT}
-  title = expr
-  min = expr
-  max = expr
-  logarithmic = expr
-  [FROM select_statement];
+DRAW AXIS {TOP|RIGHT|BOTTOM|LEFT}
+  [TITLE title]
+  [DOMAIN min, max [LOGARITHMIC]];
 
-CREATE SERIES
-  name = expr
+SELECT
+  series = expr
   x = expr
   y = expr
   z = expr
@@ -79,7 +73,6 @@ CREATE SERIES
   linestyle = expr
   pointstyle = expr
   color = expr
-  [FROM select_statement];
 
 
 SELECT
