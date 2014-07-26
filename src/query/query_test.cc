@@ -872,6 +872,24 @@ TEST_CASE(QueryTest, TestSimpleAggregateFromCSV, [] () {
   EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
+TEST_CASE(QueryTest, TestNoSuchColumnError, [] () {
+  EXPECT_EXCEPTION("no such column: 'fnord'", [] () {
+    auto csv_table = new csv_backend::CSVTableRef(
+        csv_backend::CSVInputStream::openFile(
+            "test/fixtures/gbp_per_country_simple.csv"), 
+        true);
 
+    TableRepository repo;
+    repo.addTableRef("gbp_per_country",
+        std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
 
+    auto query = Query(
+        "  SELECT"
+        "    sum(fnord) as global_gbp"
+        "  FROM"
+        "    gbp_per_country;",
+        &repo);
+    query.execute();
+  });
+});
 

@@ -52,7 +52,11 @@ Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
     return exec;
   }
 
-  assert(0); // FIXPAUL cant build queryplan
+  // if verbose -> dump ast
+
+  RAISE(
+      util::RuntimeException,
+      "can't figure out a query plan for this, sorry :(");
 }
 
 bool QueryPlan::hasGroupByClause(ASTNode* ast) {

@@ -16,6 +16,7 @@
 #include "tablerepository.h"
 #include "compile.h"
 #include "execute.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
@@ -167,7 +168,10 @@ protected:
 
       auto col_index = tbl_ref->getColumnIndex(token->getString());
       if (col_index < 0) {
-        printf("error: column not found: %s\n", token->getString().c_str());
+        RAISE(
+            util::RuntimeException,
+            "no such column: '%s'",
+            token->getString().c_str());
         return false;
       }
 
