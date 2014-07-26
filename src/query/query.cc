@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <memory>
+#include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/axisstatement.h>
 #include <fnordmetric/query/drawstatement.h>
@@ -14,7 +15,6 @@
 #include <fnordmetric/query/parser.h>
 #include <fnordmetric/query/queryplan.h>
 #include <fnordmetric/query/resultlist.h>
-#include <fnordmetric/query/seriesstatement.h>
 #include <fnordmetric/query/tablerepository.h>
 #include <fnordmetric/query/resultlist.h>
 
@@ -55,20 +55,10 @@ void Query::execute() {
       continue;
     }
 
-    auto series_stmt = dynamic_cast<query::SeriesStatement*>(stmt.get());
-    if (series_stmt != nullptr) {
-      if (current_draw_statement == nullptr) {
-        throw std::string("SERIES without BEGIN CHART");
-      }
-
-      current_draw_statement->addSeriesStatement(series_stmt);
-      continue;
-    }
-
     auto axis_stmt = dynamic_cast<query::AxisStatement*>(stmt.get());
     if (axis_stmt != nullptr) {
       if (current_draw_statement == nullptr) {
-        throw std::string("AXIS without BEGIN CHART");
+        RAISE(util::RuntimeException, "DRAW AXIS without DRAW CHART");
       }
 
       current_draw_statement->addAxisStatement(axis_stmt);
@@ -80,6 +70,10 @@ void Query::execute() {
     stmt->setTarget(target);
     stmt->execute();
     results_.emplace_back(target);
+
+    if (current_draw_statement != nullptr) {
+      current_draw_statement->addSeries(target);
+    }
   }
 
   for (const auto& draw_group : draw_statements) {

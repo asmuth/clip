@@ -42,6 +42,16 @@ public:
     return columns_;
   }
 
+  int getColumnIndex(const std::string& column_name) const {
+    for (int i = 0; i < columns_.size(); ++i) {
+      if (columns_[i] == column_name) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   void addHeader(const std::vector<std::string>& columns) {
     columns_ = columns;
   }

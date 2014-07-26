@@ -7,12 +7,13 @@
 #ifndef _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #define _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #include <stdlib.h>
-#include <assert.h>
-#include "compile.h"
-#include "execute.h"
-#include "executable.h"
-#include "seriesstatement.h"
-#include "axisstatement.h"
+#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/query/axisstatement.h>
+#include <fnordmetric/query/compile.h>
+#include <fnordmetric/query/execute.h>
+#include <fnordmetric/query/executable.h>
+#include <fnordmetric/query/resultlist.h>
+#include <fnordmetric/query/seriesadapter.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -36,7 +37,7 @@ public:
   void execute() override {}
 
   bool nextRow(SValue* row, int row_len) override {
-    assert(0);
+    RAISE(util::RuntimeException, "DrawStatement#nextRow called");
   }
 
   size_t getNumCols() const override {
@@ -52,8 +53,8 @@ public:
     return type_;
   }
 
-  void addSeriesStatement(SeriesStatement* series_stmt) {
-    series_stmts_.push_back(series_stmt);
+  void addSeries(ResultList* series) {
+    series_.push_back(series);
   }
 
   void addAxisStatement(AxisStatement* axis_stmt) {
@@ -64,8 +65,9 @@ public:
 
   template <typename T>
   void executeDrawable(T* drawable) {
-    for (const auto& series_stmt : series_stmts_) {
-      series_stmt->executeDrawable(drawable);
+    for (auto series : series_) {
+      SeriesAdapter<T> series_adapter(drawable);
+      series_adapter.addSeries(series);
     }
 
     for (const auto& axis_stmt : axis_stmts_) {
@@ -74,7 +76,7 @@ public:
   }
 
 protected:
-  std::vector<SeriesStatement*> series_stmts_;
+  std::vector<ResultList*> series_;
   std::vector<AxisStatement*> axis_stmts_;
   kDrawStatementType type_;
 };

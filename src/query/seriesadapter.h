@@ -4,45 +4,62 @@
  *
  * Licensed under the MIT license (see LICENSE).
  */
-#ifndef _FNORDMETRIC_QUERY_SERIESSTATEMENT_H
-#define _FNORDMETRIC_QUERY_SERIESSTATEMENT_H
+#ifndef _FNORDMETRIC_QUERY_SERIESADAPTER_H
+#define _FNORDMETRIC_QUERY_SERIESADAPTER_H
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
-#include "compile.h"
-#include "execute.h"
-#include "../base/series.h"
+#include <fnordmetric/base/series.h>
+#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/query/compile.h>
+#include <fnordmetric/query/execute.h>
 
 namespace fnordmetric {
 namespace query {
 
-class SeriesStatement : public Executable {
+template <typename T>
+class SeriesAdapter {
 public:
 
-  SeriesStatement(
-      std::vector<std::string>&& columns,
-      Executable* child) :
-      columns_(std::move(columns)),
-      child_(child) {
-    child->setTarget(this);
-  }
+  SeriesAdapter(T* drawable) : drawable_(drawable) {}
 
-  void execute() override {}
-
-  template <typename T>
-  void executeDrawable(T* drawable) {
-    child_->execute();
-
-    if (rows_.size() == 0) {
+  void addSeries(ResultList* series) {
+    if (series->getNumRows() == 0) {
       return;
     }
 
-    int x_ind = -1;
-    int y_ind = -1;
-    int z_ind = -1;
-    int name_ind = -1;
+    int x_ind = series->getColumnIndex("x");
+    int y_ind = series->getColumnIndex("y");
+    int z_ind = series->getColumnIndex("z");
+    int name_ind = series->getColumnIndex("series");
 
-    const auto& cols = getColumns();
+    if (name_ind < 0) {
+      RAISE(
+          util::RuntimeException,
+          "can't draw SELECT because it has no 'series' column");
+    }
+
+    if (x_ind < 0) {
+      RAISE(
+          util::RuntimeException,
+          "can't draw SELECT because it has no 'x' column");
+    }
+
+    if (y_ind < 0) {
+      RAISE(
+          util::RuntimeException,
+          "can't draw SELECT because it has no 'y' column");
+    }
+
+    auto first_row = series->getRow(0);
+  }
+
+/*
+
+  void executeDrawable( {
+    child_->execute();
+
+     const auto& cols = getColumns();
     for (int i = 0; i < getNumCols(); ++i) {
       const auto& col = cols[i];
 
@@ -184,7 +201,6 @@ public:
     for (int i = 0; i < row_len; ++i) {
       rows_.back().emplace_back(row[i]);
     }
-    /*
     executeExpression(
         name_expr_,
         nullptr,
@@ -214,22 +230,12 @@ public:
       datum.emplace_back(row[i]);
     }
     series->addDatum(std::move(datum));
-    */
     return true;
   }
 
-  size_t getNumCols() const override {
-    return columns_.size();
-  }
-
-  const std::vector<std::string>& getColumns() const override {
-    return columns_;
-  }
-
+*/
 protected:
-  std::vector<std::string> columns_;
-  std::vector<std::vector<SValue>> rows_;
-  Executable* child_;
+  T* drawable_;
 };
 
 }

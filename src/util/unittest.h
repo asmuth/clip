@@ -112,27 +112,27 @@ public:
       initializer->lambda_();
     }
 
-    printf("%s\n", name_);
+    fprintf(stderr, "%s\n", name_);
 
     const TestCase* current_test_case = nullptr;
     int num_tests_passed = 0;
     std::unordered_map<const TestCase*, RuntimeException> errors;
 
     for (auto test_case : cases_) {
-      printf("    %s::%s", name_, test_case->name_);
-      fflush(stdout);
+      fprintf(stderr, "    %s::%s", name_, test_case->name_);
+      fflush(stderr);
       current_test_case = test_case;
 
       try {
         test_case->lambda_();
       } catch (fnordmetric::util::RuntimeException e) {
-        printf(" \033[1;31m[FAIL]\e[0m\n");
+        fprintf(stderr, " \033[1;31m[FAIL]\e[0m\n");
         errors.emplace(test_case, e);
         continue;
       }
 
       num_tests_passed++;
-      printf(" \033[1;32m[PASS]\e[0m\n");
+      fprintf(stderr, " \033[1;32m[PASS]\e[0m\n");
     }
 
     if (num_tests_passed != cases_.size()) {
@@ -140,12 +140,16 @@ public:
         const auto& err = errors.find(test_case);
 
         if (err != errors.end()) {
-          printf("\n\033[1;31m[FAIL] %s::%s\e[0m", name_, test_case->name_);
+          fprintf(
+              stderr,
+              "\n\033[1;31m[FAIL] %s::%s\e[0m",
+              name_,
+              test_case->name_);
           err->second.debugPrint();
         }
       }
 
-      printf(
+      fprintf(stderr, 
           "\n\033[1;31m[FAIL] %i/%i tests failed :(\e[0m\n",
           (int) cases_.size() - num_tests_passed,
           (int) cases_.size());

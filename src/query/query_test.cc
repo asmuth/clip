@@ -533,49 +533,6 @@ TEST_INITIALIZER(QueryTest, InitializeComplexQueries, [] () {
   }
 });
 
-/*
-TEST_CASE(QueryTest, TestSeriesStatement, [] () {
-  auto parser = parseTestQuery(
-      "  SERIES \"myseries\" FROM"
-      "    SELECT * FROM tbl;");
-
-  EXPECT(parser.getErrors().size() == 0);
-  EXPECT(parser.getStatements().size() == 1);
-  const auto& stmt = parser.getStatements()[0];
-  EXPECT(stmt->getChildren().size() == 2);
-  EXPECT(*stmt == ASTNode::T_SERIES);
-
-  const auto& name = stmt->getChildren()[0];
-  EXPECT(*name == ASTNode::T_SERIES_NAME);
-  EXPECT(*name->getToken() == "myseries");
-
-  const auto& select = stmt->getChildren()[1];
-  EXPECT(*select == ASTNode::T_SELECT);
-  EXPECT(select->getChildren().size() == 2);
-});
-
-TEST_CASE(QueryTest, TestDerivedSeriesStatement, [] () {
-  auto parser = parseTestQuery(
-      "  SERIES fnord FROM"
-      "    SELECT fnord, blah FROM tbl;");
-
-  EXPECT(parser.getErrors().size() == 0);
-  EXPECT(parser.getStatements().size() == 1);
-  const auto& stmt = parser.getStatements()[0];
-  EXPECT(stmt->getChildren().size() == 2);
-  EXPECT(*stmt == ASTNode::T_SERIES);
-
-  const auto& expr = stmt->getChildren()[0];
-  EXPECT(*expr == ASTNode::T_COLUMN_NAME);
-  EXPECT(*expr->getToken() == "fnord");
-
-  const auto& select = stmt->getChildren()[1];
-  EXPECT(*select == ASTNode::T_SELECT);
-  EXPECT(select->getChildren().size() == 2);
-});
-
-*/
-
 TEST_CASE(QueryTest, TestSelectOnlyQuery, [] () {
   TableRepository repo;
   std::vector<std::unique_ptr<Query>> dst;
@@ -772,63 +729,76 @@ TEST_CASE(QueryTest, TestTableScanGroupWithoutGroupClause, [] () {
   EXPECT(results->getRow(0)[0] == "55");
 });
 
-/*
-
-TEST_CASE(QueryTest, TestNamedSeriesQuery, [] () {
+TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
 
   auto query = Query(
-      "  SERIES \"myseries\" FROM"
-      "    SELECT"
-      "      one, two"
-      "    FROM"
-      "      testtable;",
+      "  DRAW BAR CHART;"
+      "  DRAW LEFT AXIS;"
+      ""
+      "  SELECT"
+      "    'series1' as fnord, one AS x, two AS y"
+      "  FROM"
+      "    testtable;",
       &repo);
 
-  query.execute();
-  auto results = query.getResultList(0);
-  EXPECT(results->getNumRows() == 10);
-  EXPECT(results->getNumColumns() == 3);
-  for (int i = 0; i < results->getNumRows(); ++i) {
-    const auto& row = results->getRow(i);
-    EXPECT(row[0] == "myseries");
-    EXPECT(atoi(row[1].c_str()) == 10 - i);
-    EXPECT(atoi(row[2].c_str()) == 20 - i * 2);
-  }
+  const char err[] = "can't draw SELECT because it has no 'series' column";
+
+  EXPECT_EXCEPTION(err, [&query] () {
+    query.execute();
+  });
 });
 
-TEST_CASE(QueryTest, TestDerivedSeriesQuery, [] () {
+TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
 
   auto query = Query(
-      "  SERIES one * 5 FROM"
-      "    SELECT"
-      "      one, two"
-      "    FROM"
-      "      testtable;",
+      "  DRAW BAR CHART;"
+      "  DRAW LEFT AXIS;"
+      ""
+      "  SELECT"
+      "    'series1' as series, one AS f, two AS y"
+      "  FROM"
+      "    testtable;",
       &repo);
 
-  query.execute();
-  auto results = query.getResultList(0);
-  EXPECT(results->getNumRows() == 10);
-  EXPECT(results->getNumColumns() == 3);
-  for (int i = 0; i < results->getNumRows(); ++i) {
-    const auto& row = results->getRow(i);
-    EXPECT(atoi(row[0].c_str()) == atoi(row[1].c_str()) * 5);
-  }
+  const char err[] = "can't draw SELECT because it has no 'x' column";
+
+  EXPECT_EXCEPTION(err, [&query] () {
+    query.execute();
+  });
 });
 
-*/
+TEST_CASE(QueryTest, TestDrawQueryNeedsYColAssert, [] () {
+  TableRepository repo;
+  repo.addTableRef("testtable",
+      std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+  auto query = Query(
+      "  DRAW BAR CHART;"
+      "  DRAW LEFT AXIS;"
+      ""
+      "  SELECT"
+      "    'series1' as series, one AS x, two AS f"
+      "  FROM"
+      "    testtable;",
+      &repo);
+
+  const char err[] = "can't draw SELECT because it has no 'y' column";
+
+  EXPECT_EXCEPTION(err, [&query] () {
+    query.execute();
+  });
+});
 
 TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
-
 
   auto query = Query(
       "  DRAW BAR CHART;"
@@ -853,30 +823,25 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
 
   query.execute();
   auto chart = query.getChart(0);
-  //chart->renderSVG();
+  chart->renderSVG();
 });
 
-/*
 TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
 
   auto query = Query(
-      "  BEGIN BAR CHART;"
+      "  DRAW BAR CHART;"
+      "  DRAW LEFT AXIS;"
       ""
-      "  CREATE AXIS WITH SELECT 'left' AS position;"
-      ""
-      "  CREATE SERIES WITH"
-      "    SELECT"
-      "      one % 3 as name, one / 3 as x, two + one AS y"
-      "    FROM"
-      "      testtable;"
-      "",
+      "  SELECT"
+      "    one % 3 as series, one / 3 as x, two + one AS y"
+      "  FROM"
+      "    testtable;",
       &repo);
 
   query.execute();
   auto chart = query.getChart(0);
-  //chart->renderSVG();
-});\
-*/
+  chart->renderSVG();
+});

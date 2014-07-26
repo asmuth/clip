@@ -16,7 +16,6 @@
 #include "limitclause.h"
 #include "groupby.h"
 #include "symboltable.h"
-#include "seriesstatement.h"
 #include "drawstatement.h"
 
 namespace fnordmetric {
@@ -24,11 +23,6 @@ namespace query {
 
 Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   Executable* exec = nullptr;
-
-  /* series statement */
-  if (ast->getType() == ASTNode::T_SERIES) {
-    return buildSeriesStatement(ast, repo);
-  }
 
   /* axis statement */
   if (ast->getType() == ASTNode::T_AXIS) {
@@ -123,27 +117,6 @@ Executable* QueryPlan::buildDrawStatement(ASTNode* ast) {
   }
 
   return new DrawStatement(type);
-}
-
-
-Executable* QueryPlan::buildSeriesStatement(
-    ASTNode* ast,
-    TableRepository* repo) {
-  auto select_ast = ast->getChildren()[0];
-  assert(*select_ast == ASTNode::T_SELECT);
-
-  /* build nested select statement */
-  auto select = buildQueryPlan(select_ast, repo);
-
-  /* resolve output column names */
-  std::vector<std::string> column_names;
-  for (const auto& col : select->getColumns()) {
-    column_names.emplace_back(col);
-  }
-
-  return new SeriesStatement(
-      std::move(column_names),
-      select);
 }
 
 Executable* QueryPlan::buildAxisStatement(
