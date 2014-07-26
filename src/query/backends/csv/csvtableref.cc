@@ -35,6 +35,19 @@ int CSVTableRef::getColumnIndex(const std::string& name) {
     return header->second;
   }
 
+  if (name.size() > 3 &&
+      strncmp(name.c_str(), "col", 3) == 0) {
+    int index = -1;
+
+    try {
+      index = std::stoi(std::string(name.c_str() + 3, name.size() - 3));
+    } catch (std::exception e) {
+      return -1;
+    }
+
+    return index;
+  }
+
   return -1;
 }
 

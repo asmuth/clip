@@ -95,6 +95,7 @@ TEST_CASE(CSVInputStreamTest, TestGetColumnIndexWithHeaders, [] () {
   EXPECT_EQ(table_ref.getColumnIndex("country"), 0);
 });
 
+// CSVTableRefTest
 TEST_CASE(CSVInputStreamTest, TestReadRowsWithHeaders, [] () {
   CSVTableRef table_ref(
       CSVInputStream::openFile("test/fixtures/gbp_per_country_simple.csv"),
@@ -109,5 +110,18 @@ TEST_CASE(CSVInputStreamTest, TestReadRowsWithHeaders, [] () {
   }
 
   EXPECT_EQ(num_rows, 191)
+});
+
+// CSVTableRefTest
+TEST_CASE(CSVInputStreamTest, TestGetColumnIndexWithoutHeaders, [] () {
+  CSVTableRef table_ref(
+      CSVInputStream::openFile(
+          "test/fixtures/gbp_per_country_simple_noheaders.csv"),
+      false);
+
+  EXPECT_EQ(table_ref.getColumnIndex("col1"), 1);
+  EXPECT_EQ(table_ref.getColumnIndex("col2"), 2);
+  EXPECT_EQ(table_ref.getColumnIndex("col3"), 3);
+  EXPECT_EQ(table_ref.getColumnIndex("col99"), 99);
 });
 
