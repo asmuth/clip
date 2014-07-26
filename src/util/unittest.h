@@ -8,6 +8,7 @@
 #define _FNORDMETRIC_UTIL_UNITTEST_H
 #include "runtimeexception.h"
 #include <functional>
+#include <unordered_map>
 
 namespace fnordmetric {
 namespace util {
@@ -85,6 +86,8 @@ public:
 
     const TestCase* current_test_case = nullptr;
     int num_tests_passed = 0;
+    std::unordered_map<const TestCase*, RuntimeException> errors;
+
     for (auto test_case : cases_) {
       printf("    %s::%s", name_, test_case->name_);
       current_test_case = test_case;
@@ -92,8 +95,8 @@ public:
       try {
         test_case->lambda_();
       } catch (fnordmetric::util::RuntimeException e) {
-        printf(" [FAIL]\n\n");
-        e.debugPrint();
+        printf(" [FAIL]\n");
+        errors.emplace(test_case, e);
         continue;
       }
 
@@ -105,6 +108,15 @@ public:
       printf("\n[SUCCESS] All tests passed :)\n");
       return 0;
     } else {
+      for (auto test_case : cases_) {
+        const auto& err = errors.find(test_case);
+
+        if (err != errors.end()) {
+          printf("\n[FAIL] %s::%s", name_, test_case->name_);
+          err->second.debugPrint();
+        }
+      }
+
       printf(
           "\n[FAIL] %i/%i tests failed :(\n",
           cases_.size() - num_tests_passed,

@@ -18,7 +18,7 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
   int fd = open(fp, O_RDONLY);
 
   if (fd < 1) {
-    RAISE(RuntimeException, "error opening file '%s'", fp);
+    RAISE_EXCEPTION(RuntimeException("error opening file '%s'", fp));
   }
 
   auto csv_file = new FileInputStream(fd);

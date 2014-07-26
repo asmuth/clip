@@ -11,14 +11,10 @@
 #include <string>
 
 #define RAISE_EXCEPTION(E) \
-  { \
-    throw E; \
-  }
+    throw E.setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 
 #define RAISE(E, M, ...) \
-  { \
-    RAISE_EXCEPTION(E((M), __VA_ARGS__)); \
-  }
+    RAISE_EXCEPTION(E((M), __VA_ARGS__).setTypeName(#E)); \
 
 #define __RUNTIME_EXCEPTION(N, T, E, ...) \
     fnordmetric::util::RuntimeException( \
@@ -35,26 +31,20 @@ namespace util {
 
 class RuntimeException : public std::exception {
 public:
-
-/*
-      const void* namespace_id,
-      int type_id,
-      const char* type_human,
-      const char* file,
-      int line,
-      const char* func,
-      int posix_errno,
-*/
   RuntimeException(const char* message, ...);
+  RuntimeException(const RuntimeException& other);
+  RuntimeException& operator=(const RuntimeException& other) = delete;
+
   void debugPrint() const;
   std::string getMessage() const;
 
+  RuntimeException setSource(const char* file, int line, const char* func);
+  RuntimeException setTypeName(const char* type_name);
+
 private:
-  const void* namespace_id_;
-  const int type_id_;
-  const char* type_human_;
+  const char* type_name_;
   const char* file_;
-  const int line_;
+  int line_;
   const char* func_;
   char message_[1024];
 };

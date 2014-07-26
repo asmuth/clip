@@ -15,12 +15,10 @@ namespace util {
 RuntimeException::RuntimeException(
     const char* message,
     ...) :
-    namespace_id_(0),
-    type_id_(0),
-    type_human_(NULL),
-    file_(NULL),
+    type_name_(nullptr),
+    file_(nullptr),
     line_(0),
-    func_(NULL) {
+    func_(nullptr) {
   va_list args;
   va_start(args, message);
   int pos = vsnprintf(message_, sizeof(message_), message, args);
@@ -38,14 +36,40 @@ RuntimeException::RuntimeException(
   }
 }
 
+RuntimeException::RuntimeException(
+    const RuntimeException& other) :
+    type_name_(other.type_name_),
+    file_(other.file_),
+    line_(other.line_),
+    func_(other.func_) {
+  strncpy(message_, other.message_, sizeof(message_));
+}
+
+RuntimeException RuntimeException::setSource(
+    const char* file,
+    int line,
+    const char* func) {
+  file_ = file;
+  line_ = line;
+  func_ = func;
+  return *this;
+}
+
+RuntimeException RuntimeException::setTypeName(const char* type_name) {
+  type_name_ = type_name;
+  return *this;
+}
+
 void RuntimeException::debugPrint() const {
+  const char* type_name =
+      type_name_ == nullptr ? "RuntimeException" : type_name_;
+
   fprintf(
       stderr,
-      "RuntimeException[%s] (%i): %s\n"
+      "\n%s: %s\n"
       "    in %s\n"
       "    in %s:%i\n",
-      type_human_,
-      type_id_,
+      type_name,
       message_,
       func_,
       file_,
