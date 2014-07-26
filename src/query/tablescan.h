@@ -126,6 +126,7 @@ public:
 
   void execute() override {
     tbl_ref_->executeScan(this);
+    finish();
   }
 
   bool nextRow(SValue* row, int row_len) override {

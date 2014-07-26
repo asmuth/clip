@@ -38,5 +38,11 @@ int Executable::getColumnIndex(const std::string& column_name) const {
   return -1;
 }
 
+void Executable::finish() {
+  if (target_ != nullptr) {
+    target_->finish();
+  }
+}
+
 }
 }

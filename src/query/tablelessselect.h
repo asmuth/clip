@@ -65,6 +65,7 @@ public:
 
     executeExpression(expression_, nullptr, 0, nullptr, &row_len, row);
     emitRow(row, row_len);
+    finish();
   }
 
   size_t getNumCols() const override {

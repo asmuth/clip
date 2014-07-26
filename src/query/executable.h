@@ -20,6 +20,7 @@ namespace query {
 class RowSink {
 public:
   virtual bool nextRow(SValue* row, int row_len) = 0;
+  virtual void finish() {}
 };
 
 class Executable : public RowSink {
@@ -28,12 +29,12 @@ public:
   virtual ~Executable();
 
   virtual void execute() = 0;
-
   virtual size_t getNumCols() const = 0;
   virtual const std::vector<std::string>& getColumns() const = 0;
   int getColumnIndex(const std::string& column_name) const;
 
   void setTarget(RowSink* target);
+  void finish() override;
 
 protected:
   bool emitRow(SValue* row, int row_len);
