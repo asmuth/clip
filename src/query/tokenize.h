@@ -17,6 +17,10 @@ void tokenizeQuery(
     const char* end,
     std::vector<Token>* token_list);
 
+void tokenizeQuery(
+    const std::string& query,
+    std::vector<Token>* token_list);
+
 }
 }
 #endif

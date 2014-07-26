@@ -18,8 +18,6 @@
 #include <fnordmetric/query/tablerepository.h>
 #include <fnordmetric/query/resultlist.h>
 
-//namespace fnordmetric {
-
 using namespace fnordmetric::query;
 
 UNIT_TEST(QueryTest);
@@ -415,11 +413,13 @@ TEST_CASE(QueryTest, TestLimitOffsetClause, [] () {
   EXPECT(*limit->getChildren()[0]->getToken() == "23");
 });
 
-/*
 TEST_CASE(QueryTest, TestTokenizerEscaping, [] () {
-  auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
-      "= 'fnor\\'dbar' + 123.5;");
-  const auto& tl = parser.getTokenList();
+  std::vector<Token> tl;
+  tokenizeQuery(
+      " SELECT  fnord,sum(blah) from fubar blah.id"
+      "= 'fnor\\'dbar' + 123.5;",
+      &tl);
+
   EXPECT(tl.size() == 17);
   EXPECT(tl[0].getType() == Token::T_SELECT);
   EXPECT(tl[1].getType() == Token::T_IDENTIFIER);
@@ -449,35 +449,39 @@ TEST_CASE(QueryTest, TestTokenizerEscaping, [] () {
 });
 
 TEST_CASE(QueryTest, TestTokenizerSimple, [] () {
-  auto parser = parseTestQuery(" SELECT  fnord,sum(`blah-field`) from fubar"
-      " WHERE blah.id= \"fn'o=,rdbar\" + 123;");
-  auto tl = &parser.getTokenList();
-  EXPECT((*tl)[0].getType() == Token::T_SELECT);
-  EXPECT((*tl)[1].getType() == Token::T_IDENTIFIER);
-  EXPECT((*tl)[1] == "fnord");
-  EXPECT((*tl)[2].getType() == Token::T_COMMA);
-  EXPECT((*tl)[3].getType() == Token::T_IDENTIFIER);
-  EXPECT((*tl)[3] == "sum");
-  EXPECT((*tl)[4].getType() == Token::T_LPAREN);
-  EXPECT((*tl)[5].getType() == Token::T_IDENTIFIER);
-  EXPECT((*tl)[5] == "blah-field");
-  EXPECT((*tl)[6].getType() == Token::T_RPAREN);
-  EXPECT((*tl)[7].getType() == Token::T_FROM);
-  EXPECT((*tl)[8].getType() == Token::T_IDENTIFIER);
-  EXPECT((*tl)[8] == "fubar");
-  //EXPECT((*tl)[9].getType() == Token::T_IDENTIFIER);
-  //EXPECT((*tl)[9] == "blah");
-  //EXPECT((*tl)[10].getType() == Token::T_DOT);
-  //EXPECT((*tl)[11].getType() == Token::T_IDENTIFIER);
-  //EXPECT((*tl)[11] == "id");
-  //EXPECT((*tl)[12].getType() == Token::T_EQUAL);
-  //EXPECT((*tl)[13].getType() == Token::T_STRING);
-  //EXPECT((*tl)[13] == "fn'o=,rdbar");
-  //EXPECT((*tl)[14].getType() == Token::T_PLUS);
-  //EXPECT((*tl)[15].getType() == Token::T_NUMERIC);
-  //EXPECT((*tl)[15] == "123");
-  //EXPECT((*tl)[16].getType() == Token::T_SEMICOLON);
+  std::vector<Token> tl;
+  tokenizeQuery(
+      " SELECT  fnord,sum(`blah-field`) from fubar"
+      " WHERE blah.id= \"fn'o=,rdbar\" + 123;",
+      &tl);
+
+  EXPECT(tl[0].getType() == Token::T_SELECT);
+  EXPECT(tl[1].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[1] == "fnord");
+  EXPECT(tl[2].getType() == Token::T_COMMA);
+  EXPECT(tl[3].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[3] == "sum");
+  EXPECT(tl[4].getType() == Token::T_LPAREN);
+  EXPECT(tl[5].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[5] == "blah-field");
+  EXPECT(tl[6].getType() == Token::T_RPAREN);
+  EXPECT(tl[7].getType() == Token::T_FROM);
+  EXPECT(tl[8].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[8] == "fubar");
+  //EXPECT(tl[9].getType() == Token::T_IDENTIFIER);
+  //EXPECT(tl[9] == "blah");
+  //EXPECT(tl[10].getType() == Token::T_DOT);
+  //EXPECT(tl[11].getType() == Token::T_IDENTIFIER);
+  //EXPECT(tl[11] == "id");
+  //EXPECT(tl[12].getType() == Token::T_EQUAL);
+  //EXPECT(tl[13].getType() == Token::T_STRING);
+  //EXPECT(tl[13] == "fn'o=,rdbar");
+  //EXPECT(tl[14].getType() == Token::T_PLUS);
+  //EXPECT(tl[15].getType() == Token::T_NUMERIC);
+  //EXPECT(tl[15] == "123");
+  //EXPECT(tl[16].getType() == Token::T_SEMICOLON);
 });
+
 
 TEST_CASE(QueryTest, TestTokenizerAsClause, [] () {
   auto parser = parseTestQuery(" SELECT fnord As blah from");
@@ -528,6 +532,7 @@ TEST_CASE(QueryTest, TestComplexQueries, [] () {
   }
 });
 
+/*
 TEST_CASE(QueryTest, TestSeriesStatement, [] () {
   auto parser = parseTestQuery(
       "  SERIES \"myseries\" FROM"

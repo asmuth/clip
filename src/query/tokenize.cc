@@ -373,5 +373,12 @@ next:
   goto next; // poor mans tail recursion optimization
 }
 
+void tokenizeQuery(
+    const std::string& query,
+    std::vector<Token>* token_list) {
+  const char* str = query.c_str();
+  tokenizeQuery(&str, str + query.size(), token_list);
+}
+
 }
 }
