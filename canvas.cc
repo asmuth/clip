@@ -6,12 +6,12 @@
  */
 #include <stdlib.h>
 #include <assert.h>
-#include "canvas.h"
-#include "rendertarget.h"
-#include "seriesdefinition.h"
-#include "ui/domain.h"
-#include "ui/rendertarget.h"
-#include "ui/svgtarget.h"
+#include <fnordmetric/ui/canvas.h>
+#include <fnordmetric/ui/rendertarget.h>
+#include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/rendertarget.h>
+#include <fnordmetric/ui/svgtarget.h>
+#include <fnordmetric/seriesdefinition.h>
 
 namespace fnordmetric {
 namespace ui {
