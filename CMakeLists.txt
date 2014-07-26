@@ -58,6 +58,12 @@ add_executable(test/test-ui
     ${FNORDMETRIC_UI_SOURCES}
     src/ui/ui_test.cc)
 
+add_test(InputStreamTest test/test-input-stream)
+add_executable(test/test-input-stream
+    ${FNORDMETRIC_SOURCES}
+    ${FNORDMETRIC_CSV_BACKEND_SOURCES}
+    src/util/inputstream_test.cc)
+
 add_test(CSVBackendTest test/test-csv-backend)
 add_executable(test/test-csv-backend
     ${FNORDMETRIC_UI_SOURCES}

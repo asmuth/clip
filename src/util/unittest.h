@@ -9,6 +9,8 @@
 #include "runtimeexception.h"
 #include <functional>
 #include <unordered_map>
+#include <vector>
+#include <string>
 
 namespace fnordmetric {
 namespace util {

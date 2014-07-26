@@ -30,6 +30,10 @@ public:
 
 class FileInputStream : public InputStream {
 public:
+  enum kByteOrderMark {
+    BOM_UNKNOWN,
+    BOM_UTF8
+  };
 
   /**
    * Open a new file input stream from the provided file path. Throws an
@@ -56,7 +60,14 @@ public:
    */
   bool readNextByte(char* target) override;
 
+  /**
+   * Read the byte order mark of the file
+   */
+  kByteOrderMark readByteOrderMark();
+
 protected:
+
+  void readNextChunk();
 
   char buf_[8192]; // FIXPAUL make configurable
   size_t buf_len_;

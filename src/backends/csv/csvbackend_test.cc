@@ -32,7 +32,6 @@ TEST_CASE(CSVInputStreamTest, TestInvalidFileName, [] () {
 
   EXPECT_EXCEPTION(errmsg, [] () {
     auto csv_file = CSVInputStream::openFile("test/fixtures/invalid.csv");
-    EXPECT(csv_file.get() != nullptr);
   });
 });
 
