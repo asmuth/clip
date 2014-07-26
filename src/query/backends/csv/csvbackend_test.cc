@@ -125,3 +125,23 @@ TEST_CASE(CSVInputStreamTest, TestGetColumnIndexWithoutHeaders, [] () {
   EXPECT_EQ(table_ref.getColumnIndex("col99"), 99);
 });
 
+// CSVTableRefTest
+TEST_CASE(CSVInputStreamTest, TestReadRowsWithoutHeaders, [] () {
+  CSVTableRef table_ref(
+      CSVInputStream::openFile(
+          "test/fixtures/gbp_per_country_simple_noheaders.csv"),
+      false);
+
+  int num_rows = 0;
+  for (;; ++num_rows) {
+    std::vector<fnordmetric::query::SValue> target;
+    if (!table_ref.readNextRow(&target)) {
+      break;
+    }
+  }
+
+  EXPECT_EQ(num_rows, 191)
+});
+
+
+
