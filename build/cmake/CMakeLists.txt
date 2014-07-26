@@ -19,8 +19,13 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/linechart.cc
     stage/src/fnordmetric/ui/pointchart.cc)
 
+set(FNORDMETRIC_CSV_BACKEND_SOURCES
+    stage/src/fnordmetric/query/backends/csv/csvinputstream.cc
+    stage/src/fnordmetric/query/backends/csv/csvtableref.cc)
+
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
+    ${FNORDMETRIC_CSV_BACKEND_SOURCES}
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/astnode.cc
     stage/src/fnordmetric/query/compile.cc
@@ -37,10 +42,6 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/query/symboltable.cc
     stage/src/fnordmetric/query/token.cc
     stage/src/fnordmetric/query/tokenize.cc)
-
-set(FNORDMETRIC_CSV_BACKEND_SOURCES
-    stage/src/fnordmetric/query/backends/csv/csvinputstream.cc
-    stage/src/fnordmetric/query/backends/csv/csvtableref.cc)
 
 include_directories(stage/src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
@@ -62,5 +63,4 @@ add_executable(tests/test-input-stream
 
 add_executable(tests/test-csv-backend
     ${FNORDMETRIC_QUERY_SOURCES}
-    ${FNORDMETRIC_CSV_BACKEND_SOURCES}
     stage/src/fnordmetric/query/backends/csv/csvbackend_test.cc)

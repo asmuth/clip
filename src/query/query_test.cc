@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <fnordmetric/util/unittest.h>
+#include <fnordmetric/query/backends/csv/csvtableref.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/parser.h>
 #include <fnordmetric/query/token.h>
@@ -845,3 +846,27 @@ TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
   auto chart = query.getChart(0);
   chart->renderSVG();
 });
+
+TEST_CASE(QueryTest, TestSimpleSelectFromCSV, [] () {
+  auto csv_table = new csv_backend::CSVTableRef(
+      csv_backend::CSVInputStream::openFile(
+          "test/fixtures/gbp_per_country_simple.csv"), 
+      true);
+
+  TableRepository repo;
+  repo.addTableRef("gbp_per_country",
+      std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
+
+  auto query = Query(
+      "  SELECT"
+      "    country as country, gbp as gbp"
+      "  FROM"
+      "    gbp_per_country;",
+      &repo);
+
+  query.execute();
+  auto results = query.getResultList(0);
+  EXPECT(results->getNumRows() == 191);
+});
+
+

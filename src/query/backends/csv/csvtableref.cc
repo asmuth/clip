@@ -94,6 +94,10 @@ bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
         num_cols_); // FIXPAUL filename
   }
 
+  for (const auto& col : row) {
+    target->emplace_back(col);
+  }
+
   return true;
 }
 
