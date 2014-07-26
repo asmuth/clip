@@ -23,7 +23,7 @@ namespace util {
     }
 
 #define TEST_CASE(T, N, L) \
-    static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, L);
+    static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, (L));
 
 
 #define EXPECT(X) \
@@ -128,6 +128,8 @@ public:
           (int) cases_.size());
       return 1;
     }
+
+    return 0;
   }
 
 protected:

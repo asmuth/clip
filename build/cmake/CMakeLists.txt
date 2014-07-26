@@ -52,9 +52,9 @@ add_executable(tests/test-query
     ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/query/query_test.cc)
 
-# add_executable(tests/test-ui
-#     ${FNORDMETRIC_UI_SOURCES}
-#     src/ui/ui_test.cc)
+add_executable(tests/test-ui
+    ${FNORDMETRIC_UI_SOURCES}
+    stage/src/fnordmetric/ui/ui_test.cc)
 
 add_executable(tests/test-input-stream
     ${FNORDMETRIC_SOURCES}
