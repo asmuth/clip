@@ -41,12 +41,19 @@ CSVInputStream::CSVInputStream(
     row_seperator_(row_seperator),
     quote_char_(quote_char) {}
 
-void CSVInputStream::readNextRow(std::vector<std::string>* target) {
+bool CSVInputStream::readNextRow(std::vector<std::string>* target) {
+  bool eof = false;
+
   for (;;) {
     std::string column;
     char byte;
 
-    while (input_->readNextByte(&byte)) {
+    for (;;) {
+      if (!input_->readNextByte(&byte)) {
+        eof = true;
+        break;
+      }
+
       if (byte == column_seperator_) {
         break;
       }
@@ -60,10 +67,12 @@ void CSVInputStream::readNextRow(std::vector<std::string>* target) {
 
     target->emplace_back(column);
 
-    if (byte == row_seperator_) {
+    if (eof || byte == row_seperator_) {
       break;
     }
   }
+
+  return !eof;
 }
 
 }

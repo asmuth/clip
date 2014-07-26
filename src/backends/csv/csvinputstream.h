@@ -40,9 +40,10 @@ public:
       char quote_char = '"');
 
   /**
-   * Read the next row from the csv file
+   * Read the next row from the csv file. Returns true if a row was read and
+   * false on EOF. May raise an exception.
    */
-  void readNextRow(std::vector<std::string>* target);
+  bool readNextRow(std::vector<std::string>* target);
 
 protected:
 
