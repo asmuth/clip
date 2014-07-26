@@ -29,13 +29,15 @@ SValue::SValue(const std::string& string_value) {
   data_.type = T_STRING;
   data_.u.t_string.len = string_value.size();
   data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
-  assert(data_.u.t_string.ptr != nullptr);
+
+  if (data_.u.t_string.ptr == nullptr) {
+    RAISE(util::RuntimeException, "could not allocate SValue");
+  }
 
   memcpy(
       data_.u.t_string.ptr,
       string_value.c_str(),
       data_.u.t_string.len);
-
 }
 
 SValue::SValue(int64_t integer_value) : SValue() {
@@ -60,7 +62,11 @@ SValue::SValue(const SValue& copy) {
       data_.type = T_STRING;
       data_.u.t_string.len = copy.data_.u.t_string.len;
       data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
-      assert(data_.u.t_string.ptr != nullptr);
+
+      if (data_.u.t_string.ptr == nullptr) {
+        RAISE(util::RuntimeException, "could not allocate SValue");
+      }
+
       memcpy(
           data_.u.t_string.ptr,
           copy.data_.u.t_string.ptr,
@@ -83,7 +89,11 @@ SValue& SValue::operator=(const SValue& copy) {
       data_.type = T_STRING;
       data_.u.t_string.len = copy.data_.u.t_string.len;
       data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
-      assert(data_.u.t_string.ptr != nullptr);
+
+      if (data_.u.t_string.ptr == nullptr) {
+        RAISE(util::RuntimeException, "could not allocate SValue");
+      }
+
       memcpy(
           data_.u.t_string.ptr,
           copy.data_.u.t_string.ptr,
@@ -126,11 +136,26 @@ int64_t SValue::getInteger() const {
 }
 
 double SValue::getFloat() const {
+  switch (data_.type) {
+    case T_INTEGER:
+      return data_.u.t_integer;
+    case T_FLOAT:
+      return data_.u.t_float;
+
+    default:
+      RAISE(
+          TypeError,
+          "can't convert %s '%s' to Float",
+          SValue::getTypeName(data_.type),
+          toString().c_str());
+
+  }
   if (data_.type == T_INTEGER) {
-    return data_.u.t_integer;
   }
 
-  assert(data_.type == T_FLOAT);
+  if (data_.type == T_INTEGER) {
+  }
+
   return data_.u.t_float;
 }
 
@@ -140,8 +165,11 @@ bool SValue::getBool() const {
 }
 
 const std::string SValue::getString() const {
-  assert(data_.type == T_STRING);
-  return std::string(data_.u.t_string.ptr, data_.u.t_string.len);
+  if (data_.type == T_STRING) {
+    return std::string(data_.u.t_string.ptr, data_.u.t_string.len);
+  } else {
+    toString();
+  }
 }
 
 std::string SValue::makeUniqueKey(SValue* arr, size_t len) {
@@ -226,6 +254,22 @@ SValue* SValue::fromToken(const Token* token) {
       assert(0);
       return nullptr;
 
+  }
+}
+
+
+const char* SValue::getTypeName(kSValueType type) {
+  switch (type) {
+    case T_STRING:
+      return "String";
+    case T_FLOAT:
+      return "Float";
+    case T_INTEGER:
+      return "Integer";
+    case T_BOOL:
+      return "Boolean";
+    case T_UNDEFINED:
+      return "Undefined";
   }
 }
 

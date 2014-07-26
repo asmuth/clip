@@ -73,7 +73,6 @@ class TestTable2Ref : public TableRef {
 
 TEST_CASE(QueryTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -99,7 +98,6 @@ TEST_CASE(QueryTest, TestSimpleValueExpression, [] () {
 
 TEST_CASE(QueryTest, TestArithmeticValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 1 + 2 / 3;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
       ->getChildren()[0]->getChildren()[0]->getChildren()[0];
@@ -114,7 +112,6 @@ TEST_CASE(QueryTest, TestArithmeticValueExpression, [] () {
 
 TEST_CASE(QueryTest, TestArithmeticValueExpressionParens, [] () {
   auto parser = parseTestQuery("SELECT (1 * 2) + 3;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
       ->getChildren()[0]->getChildren()[0]->getChildren()[0];
@@ -130,7 +127,6 @@ TEST_CASE(QueryTest, TestArithmeticValueExpressionParens, [] () {
 TEST_CASE(QueryTest, TestArithmeticValueExpressionPrecedence, [] () {
   {
     auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
-    EXPECT(parser.getErrors().size() == 0);
     EXPECT(parser.getStatements().size() == 1);
     auto expr = parser.getStatements()[0]
         ->getChildren()[0]->getChildren()[0]->getChildren()[0];
@@ -144,7 +140,6 @@ TEST_CASE(QueryTest, TestArithmeticValueExpressionPrecedence, [] () {
   }
   {
     auto parser = parseTestQuery("SELECT 1 + 2 * 3;");
-    EXPECT(parser.getErrors().size() == 0);
     EXPECT(parser.getStatements().size() == 1);
     auto expr = parser.getStatements()[0]
         ->getChildren()[0]->getChildren()[0]->getChildren()[0];
@@ -160,7 +155,6 @@ TEST_CASE(QueryTest, TestArithmeticValueExpressionPrecedence, [] () {
 
 TEST_CASE(QueryTest, TestMethodCallValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 1 + sum(23, 4 + 1) FROM sometable;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -193,7 +187,6 @@ TEST_CASE(QueryTest, TestMethodCallValueExpression, [] () {
 
 TEST_CASE(QueryTest, TestNegatedValueExpression, [] () {
   auto parser = parseTestQuery("SELECT -(23 + 5.123) AS fucol FROM tbl;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -226,7 +219,6 @@ TEST_CASE(QueryTest, TestNegatedValueExpression, [] () {
 
 TEST_CASE(QueryTest, TestSelectWildcard, [] () {
   auto parser = parseTestQuery("SELECT * FROM sometable;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -242,7 +234,6 @@ TEST_CASE(QueryTest, TestSelectWildcard, [] () {
 
 TEST_CASE(QueryTest, TestSelectTableWildcard, [] () {
   auto parser = parseTestQuery("SELECT mytablex.* FROM sometable;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -261,7 +252,6 @@ TEST_CASE(QueryTest, TestSelectTableWildcard, [] () {
 
 TEST_CASE(QueryTest, TestSelectDerivedColumn, [] () {
   auto parser = parseTestQuery("SELECT somecol AS another FROM sometable;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -284,7 +274,6 @@ TEST_CASE(QueryTest, TestSelectDerivedColumn, [] () {
 
 TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
   auto parser = parseTestQuery("SELECT tbl.col AS another FROM sometable;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -324,7 +313,6 @@ TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
 
 TEST_CASE(QueryTest, TestFromList, [] () {
   auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   const auto& from = stmt->getChildren()[1];
@@ -338,7 +326,6 @@ TEST_CASE(QueryTest, TestFromList, [] () {
 
 TEST_CASE(QueryTest, TestWhereClause, [] () {
   auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
@@ -350,7 +337,6 @@ TEST_CASE(QueryTest, TestWhereClause, [] () {
 
 TEST_CASE(QueryTest, TestGroupByClause, [] () {
   auto parser = parseTestQuery("select count(x), y from t GROUP BY x;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
@@ -362,7 +348,6 @@ TEST_CASE(QueryTest, TestGroupByClause, [] () {
 
 TEST_CASE(QueryTest, TestOrderByClause, [] () {
   auto parser = parseTestQuery("select a FROM t ORDER BY a DESC;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
@@ -375,7 +360,6 @@ TEST_CASE(QueryTest, TestOrderByClause, [] () {
 
 TEST_CASE(QueryTest, TestHavingClause, [] () {
   auto parser = parseTestQuery("select a FROM t HAVING 1=1;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
@@ -387,7 +371,6 @@ TEST_CASE(QueryTest, TestHavingClause, [] () {
 
 TEST_CASE(QueryTest, TestLimitClause, [] () {
   auto parser = parseTestQuery("select a FROM t LIMIT 10;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
@@ -399,7 +382,6 @@ TEST_CASE(QueryTest, TestLimitClause, [] () {
 
 TEST_CASE(QueryTest, TestLimitOffsetClause, [] () {
   auto parser = parseTestQuery("select a FROM t LIMIT 10 OFFSET 23;");
-  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
@@ -528,7 +510,6 @@ TEST_INITIALIZER(QueryTest, InitializeComplexQueries, [] () {
         "TestComplexQueries",
         [query] () {
           auto parser = parseTestQuery(query);
-          EXPECT(parser.getErrors().size() == 0);
           EXPECT(parser.getStatements().size() == 1);
         });
   }
@@ -868,5 +849,29 @@ TEST_CASE(QueryTest, TestSimpleSelectFromCSV, [] () {
   auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 191);
 });
+
+TEST_CASE(QueryTest, TestSimpleAggregateFromCSV, [] () {
+  auto csv_table = new csv_backend::CSVTableRef(
+      csv_backend::CSVInputStream::openFile(
+          "test/fixtures/gbp_per_country_simple.csv"), 
+      true);
+
+  TableRepository repo;
+  repo.addTableRef("gbp_per_country",
+      std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
+
+  auto query = Query(
+      "  SELECT"
+      "    sum(gbp) as global_gbp"
+      "  FROM"
+      "    gbp_per_country;",
+      &repo);
+
+  query.execute();
+  auto results = query.getResultList(0);
+  EXPECT(results->getNumRows() == 123);
+});
+
+
 
 

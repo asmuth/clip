@@ -30,25 +30,28 @@ union sum_expr_scratchpad {
 };
 
 static void sumExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 1);
   SValue* val = argv;
-
   union sum_expr_scratchpad* data = (union sum_expr_scratchpad*) scratchpad;
+
+  if (argc != 1) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for sum(). expected: 1, got: %i\n",
+        argc);
+  }
 
   switch(val->getType()) {
     case SValue::T_INTEGER:
       data->t_integer += val->getInteger();
       *out = SValue((int64_t) data->t_integer);
       return;
+
     case SValue::T_FLOAT:
+    default:
       data->t_float += val->getFloat();
       *out = SValue(data->t_float);
       return;
-    default:
-      break;
   }
-
-  assert(0);
 }
 
 static SymbolTableEntry __sum_symbol(

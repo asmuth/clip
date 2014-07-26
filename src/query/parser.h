@@ -23,16 +23,6 @@ namespace query {
 class Parser {
   friend class QueryTest;
 public:
-  enum kParserErrorType {
-    ERR_UNEXPECTED_TOKEN,
-    ERR_INTERNAL_ERROR,
-  };
-
-  struct ParserError {
-    kParserErrorType type;
-    const char* msg;
-  };
-
   struct ParseError : public fnordmetric::util::RuntimeException {
     template <typename... T>
     ParseError(
@@ -66,7 +56,6 @@ public:
    */
   size_t parse(const char* query, size_t len);
 
-  const std::vector<ParserError>& getErrors() const;
   const std::vector<ASTNode*>& getStatements() const;
   const std::vector<Token>& getTokenList() const;
 
@@ -109,7 +98,6 @@ protected:
   ASTNode* powExpr(ASTNode* lhs, int precedence);
 
   bool assertExpectation(Token::kTokenType expectation);
-  void addError(kParserErrorType type, const char* msg);
 
   inline Token* consumeToken() {
     auto token = cur_token_;
@@ -143,7 +131,6 @@ protected:
   std::vector<Token> token_list_;
   Token* cur_token_;
   Token* token_list_end_;
-  std::vector<ParserError> errors_;
   ASTNode root_;
 };
 

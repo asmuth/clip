@@ -27,11 +27,11 @@ size_t Parser::parse(const char* query, size_t len) {
   cur_token_ = token_list_.data();
   token_list_end_ = cur_token_ + token_list_.size();
 
-  while (cur_token_ < token_list_end_ && errors_.size() == 0) {
+  while (cur_token_ < token_list_end_) {
     root_.appendChild(statement());
   }
 
-  return errors_.size() == 0;
+  return true;
 }
 
 ASTNode* Parser::expr(int precedence /* = 0 */) {
@@ -656,10 +656,6 @@ bool Parser::assertExpectation(Token::kTokenType expectation) {
   }
 
   return true;
-}
-
-const std::vector<Parser::ParserError>& Parser::getErrors() const {
-  return errors_;
 }
 
 const std::vector<ASTNode*>& Parser::getStatements() const {

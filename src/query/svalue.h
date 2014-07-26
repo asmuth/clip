@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include <assert.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
@@ -24,6 +24,15 @@ public:
     T_BOOL,
     T_UNDEFINED
   };
+
+  struct TypeError : public fnordmetric::util::RuntimeException {
+    template <typename... T>
+    TypeError(
+        const char* message, T... args) :
+        RuntimeException(message, args...) {}
+  };
+
+  static const char* getTypeName(kSValueType type);
 
   explicit SValue();
   explicit SValue(const std::string& string_value);

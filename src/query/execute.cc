@@ -8,6 +8,7 @@
 #include <vector>
 #include "compile.h"
 #include "svalue.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
@@ -24,7 +25,9 @@ bool executeExpression(
 
   /* execute children */
   for (auto cur = expr->child; cur != nullptr; cur = cur->next) {
-    assert(argc < sizeof(argv) / sizeof(SValue));
+    if (argc >= sizeof(argv) / sizeof(SValue)) {
+      RAISE(util::RuntimeException, "too many arguments");
+    }
 
     int out_len = 0;
     if (!executeExpression(
@@ -37,7 +40,10 @@ bool executeExpression(
       return false;
     }
 
-    assert(out_len == 1);
+    if (out_len != 1) {
+      RAISE(util::RuntimeException, "expression did not return");
+    }
+
     argc++;
   }
 
@@ -67,16 +73,18 @@ bool executeExpression(
     }
 
     case X_INPUT: {
-      uint64_t index = (uint64_t) expr->arg0;
-      assert(index < row_len);
+      auto index = reinterpret_cast<uint64_t>(expr->arg0);
+
+      if (index >= row_len) {
+        RAISE(util::RuntimeException, "invalid row index %i", index);
+      }
+
       *outv = row[index];
       *outc = 1;
       return true;
     }
 
   }
-
-  assert(0);
 }
 
 }
