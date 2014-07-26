@@ -7,9 +7,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
-#include <sys/fcntl.h>
-#include <unistd.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/parser.h>
@@ -81,413 +78,416 @@ class TestTable2Ref : public TableRef {
 
 TEST_CASE(QueryTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
   auto derived = sl->getChildren()[0];
-  assert(*derived == ASTNode::T_DERIVED_COLUMN);
-  assert(derived->getChildren().size() == 1);
+  EXPECT(*derived == ASTNode::T_DERIVED_COLUMN);
+  EXPECT(derived->getChildren().size() == 1);
   auto expr = derived->getChildren()[0];
-  assert(*expr == ASTNode::T_ADD_EXPR);
-  assert(expr->getChildren().size() == 2);
-  assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[0]->getToken() == "23");
-  assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[1]->getToken() == "5.123");
+  EXPECT(*expr == ASTNode::T_ADD_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "23");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "5.123");
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
 TEST_CASE(QueryTest, TestArithmeticValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 1 + 2 / 3;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
       ->getChildren()[0]->getChildren()[0]->getChildren()[0];
-  assert(*expr == ASTNode::T_ADD_EXPR);
-  assert(expr->getChildren().size() == 2);
-  assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[0]->getToken() == "1");
-  assert(*expr->getChildren()[1] == ASTNode::T_DIV_EXPR);
-  assert(expr->getChildren()[1]->getChildren().size() == 2);
+  EXPECT(*expr == ASTNode::T_ADD_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "1");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_DIV_EXPR);
+  EXPECT(expr->getChildren()[1]->getChildren().size() == 2);
 });
 
 TEST_CASE(QueryTest, TestArithmeticValueExpressionParens, [] () {
   auto parser = parseTestQuery("SELECT (1 * 2) + 3;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
       ->getChildren()[0]->getChildren()[0]->getChildren()[0];
-  assert(*expr == ASTNode::T_ADD_EXPR);
-  assert(expr->getChildren().size() == 2);
-  assert(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
-  assert(expr->getChildren()[0]->getChildren().size() == 2);
-  assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[1]->getToken() == "3");
+  EXPECT(*expr == ASTNode::T_ADD_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
+  EXPECT(expr->getChildren()[0]->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "3");
 });
 
 TEST_CASE(QueryTest, TestArithmeticValueExpressionPrecedence, [] () {
   {
     auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
-    assert(parser.getErrors().size() == 0);
-    assert(parser.getStatements().size() == 1);
+    EXPECT(parser.getErrors().size() == 0);
+    EXPECT(parser.getStatements().size() == 1);
     auto expr = parser.getStatements()[0]
         ->getChildren()[0]->getChildren()[0]->getChildren()[0];
-    assert(*expr == ASTNode::T_ADD_EXPR);
-    assert(expr->getChildren().size() == 2);
-    assert(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
-    assert(expr->getChildren()[0]->getChildren().size() == 2);
-    assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
-    assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
-    assert(*expr->getChildren()[1]->getToken() == "3");
+    EXPECT(*expr == ASTNode::T_ADD_EXPR);
+    EXPECT(expr->getChildren().size() == 2);
+    EXPECT(*expr->getChildren()[0] == ASTNode::T_MUL_EXPR);
+    EXPECT(expr->getChildren()[0]->getChildren().size() == 2);
+    EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+    EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+    EXPECT(*expr->getChildren()[1]->getToken() == "3");
   }
   {
     auto parser = parseTestQuery("SELECT 1 + 2 * 3;");
-    assert(parser.getErrors().size() == 0);
-    assert(parser.getStatements().size() == 1);
+    EXPECT(parser.getErrors().size() == 0);
+    EXPECT(parser.getStatements().size() == 1);
     auto expr = parser.getStatements()[0]
         ->getChildren()[0]->getChildren()[0]->getChildren()[0];
-    assert(*expr == ASTNode::T_ADD_EXPR);
-    assert(expr->getChildren().size() == 2);
-    assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
-    assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
-    assert(*expr->getChildren()[0]->getToken() == "1");
-    assert(*expr->getChildren()[1] == ASTNode::T_MUL_EXPR);
-    assert(expr->getChildren()[1]->getChildren().size() == 2);
+    EXPECT(*expr == ASTNode::T_ADD_EXPR);
+    EXPECT(expr->getChildren().size() == 2);
+    EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+    EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+    EXPECT(*expr->getChildren()[0]->getToken() == "1");
+    EXPECT(*expr->getChildren()[1] == ASTNode::T_MUL_EXPR);
+    EXPECT(expr->getChildren()[1]->getChildren().size() == 2);
   }
 });
 
 TEST_CASE(QueryTest, TestMethodCallValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 1 + sum(23, 4 + 1) FROM sometable;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
   auto derived = sl->getChildren()[0];
-  assert(*derived == ASTNode::T_DERIVED_COLUMN);
-  assert(derived->getChildren().size() == 1);
+  EXPECT(*derived == ASTNode::T_DERIVED_COLUMN);
+  EXPECT(derived->getChildren().size() == 1);
   auto expr = derived->getChildren()[0];
-  assert(*expr == ASTNode::T_ADD_EXPR);
-  assert(expr->getChildren().size() == 2);
-  assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[0]->getToken() == "1");
+  EXPECT(*expr == ASTNode::T_ADD_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "1");
   auto mcall = expr->getChildren()[1];
-  assert(*mcall == ASTNode::T_METHOD_CALL);
-  assert(*mcall->getToken() == Token::T_IDENTIFIER);
-  assert(*mcall->getToken() == "sum");
-  assert(mcall->getChildren().size() == 2);
-  assert(*mcall->getChildren()[0] == ASTNode::T_LITERAL);
-  assert(*mcall->getChildren()[0]->getToken() == Token::T_NUMERIC);
-  assert(*mcall->getChildren()[0]->getToken() == "23");
-  assert(*mcall->getChildren()[1] == ASTNode::T_ADD_EXPR);
-  assert(mcall->getChildren()[1]->getChildren().size() == 2);
+  EXPECT(*mcall == ASTNode::T_METHOD_CALL);
+  EXPECT(*mcall->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*mcall->getToken() == "sum");
+  EXPECT(mcall->getChildren().size() == 2);
+  EXPECT(*mcall->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*mcall->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*mcall->getChildren()[0]->getToken() == "23");
+  EXPECT(*mcall->getChildren()[1] == ASTNode::T_ADD_EXPR);
+  EXPECT(mcall->getChildren()[1]->getChildren().size() == 2);
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
 TEST_CASE(QueryTest, TestNegatedValueExpression, [] () {
   auto parser = parseTestQuery("SELECT -(23 + 5.123) AS fucol FROM tbl;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
   auto derived = sl->getChildren()[0];
-  assert(*derived == ASTNode::T_DERIVED_COLUMN);
-  assert(derived->getChildren().size() == 2);
+  EXPECT(*derived == ASTNode::T_DERIVED_COLUMN);
+  EXPECT(derived->getChildren().size() == 2);
   auto neg_expr = derived->getChildren()[0];
-  assert(*neg_expr == ASTNode::T_NEGATE_EXPR);
-  assert(neg_expr->getChildren().size() == 1);
+  EXPECT(*neg_expr == ASTNode::T_NEGATE_EXPR);
+  EXPECT(neg_expr->getChildren().size() == 1);
   auto expr = neg_expr->getChildren()[0];
-  assert(*expr == ASTNode::T_ADD_EXPR);
-  assert(expr->getChildren().size() == 2);
-  assert(*expr->getChildren()[0] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[0]->getToken() == "23");
-  assert(*expr->getChildren()[1] == ASTNode::T_LITERAL);
-  assert(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
-  assert(*expr->getChildren()[1]->getToken() == "5.123");
+  EXPECT(*expr == ASTNode::T_ADD_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "23");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "5.123");
   auto col_name = derived->getChildren()[1];
-  assert(*col_name == ASTNode::T_COLUMN_ALIAS);
-  assert(*col_name->getToken() == Token::T_IDENTIFIER);
-  assert(*col_name->getToken() == "fucol");
+  EXPECT(*col_name == ASTNode::T_COLUMN_ALIAS);
+  EXPECT(*col_name->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*col_name->getToken() == "fucol");
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
 TEST_CASE(QueryTest, TestSelectWildcard, [] () {
   auto parser = parseTestQuery("SELECT * FROM sometable;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
-  assert(*sl->getChildren()[0] == ASTNode::T_ALL);
-  assert(sl->getChildren()[0]->getToken() == nullptr);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
+  EXPECT(*sl->getChildren()[0] == ASTNode::T_ALL);
+  EXPECT(sl->getChildren()[0]->getToken() == nullptr);
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
 TEST_CASE(QueryTest, TestSelectTableWildcard, [] () {
   auto parser = parseTestQuery("SELECT mytablex.* FROM sometable;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
   const auto& all = sl->getChildren()[0];
-  assert(*all == ASTNode::T_ALL);
-  assert(all->getToken() != nullptr);
-  assert(*all->getToken() == Token::T_IDENTIFIER);
-  assert(*all->getToken() == "mytablex");
+  EXPECT(*all == ASTNode::T_ALL);
+  EXPECT(all->getToken() != nullptr);
+  EXPECT(*all->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*all->getToken() == "mytablex");
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
 TEST_CASE(QueryTest, TestSelectDerivedColumn, [] () {
   auto parser = parseTestQuery("SELECT somecol AS another FROM sometable;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
   const auto& derived = sl->getChildren()[0];
-  assert(*derived == ASTNode::T_DERIVED_COLUMN);
-  assert(derived->getChildren().size() == 2);
-  assert(*derived->getChildren()[0] == ASTNode::T_COLUMN_NAME);
-  assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
-  assert(*derived->getChildren()[0]->getToken() == "somecol");
-  assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_ALIAS);
-  assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
-  assert(*derived->getChildren()[1]->getToken() == "another");
+  EXPECT(*derived == ASTNode::T_DERIVED_COLUMN);
+  EXPECT(derived->getChildren().size() == 2);
+  EXPECT(*derived->getChildren()[0] == ASTNode::T_COLUMN_NAME);
+  EXPECT(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*derived->getChildren()[0]->getToken() == "somecol");
+  EXPECT(*derived->getChildren()[1] == ASTNode::T_COLUMN_ALIAS);
+  EXPECT(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*derived->getChildren()[1]->getToken() == "another");
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
 TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
   auto parser = parseTestQuery("SELECT tbl.col AS another FROM sometable;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(*stmt == ASTNode::T_SELECT);
-  assert(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
   const auto& sl = stmt->getChildren()[0];
-  assert(*sl == ASTNode::T_SELECT_LIST);
-  assert(sl->getChildren().size() == 1);
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
   const auto& derived = sl->getChildren()[0];
-  assert(*derived == ASTNode::T_DERIVED_COLUMN);
-  assert(derived->getChildren().size() == 2);
+  EXPECT(*derived == ASTNode::T_DERIVED_COLUMN);
+  EXPECT(derived->getChildren().size() == 2);
   auto tbl = derived->getChildren()[0];
-  assert(*tbl == ASTNode::T_TABLE_NAME);
-  assert(*tbl->getToken() == Token::T_IDENTIFIER);
-  assert(*tbl->getToken() == "tbl");
-  assert(tbl->getChildren().size() == 1);
+  EXPECT(*tbl == ASTNode::T_TABLE_NAME);
+  EXPECT(*tbl->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*tbl->getToken() == "tbl");
+  EXPECT(tbl->getChildren().size() == 1);
   auto col = tbl->getChildren()[0];
-  assert(*col->getToken() == Token::T_IDENTIFIER);
-  assert(*col->getToken() == "col");
-  assert(*derived->getChildren()[0] == ASTNode::T_TABLE_NAME);
-  assert(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
-  assert(*derived->getChildren()[0]->getToken() == "tbl");
-  assert(*derived->getChildren()[1] == ASTNode::T_COLUMN_ALIAS);
-  assert(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
-  assert(*derived->getChildren()[1]->getToken() == "another");
+  EXPECT(*col->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*col->getToken() == "col");
+  EXPECT(*derived->getChildren()[0] == ASTNode::T_TABLE_NAME);
+  EXPECT(*derived->getChildren()[0]->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*derived->getChildren()[0]->getToken() == "tbl");
+  EXPECT(*derived->getChildren()[1] == ASTNode::T_COLUMN_ALIAS);
+  EXPECT(*derived->getChildren()[1]->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*derived->getChildren()[1]->getToken() == "another");
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
+  EXPECT(*from == ASTNode::T_FROM);
 });
 
+/*
 TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
   auto parser = parseTestQuery("GROUP BY SELECT");
-  assert(parser.getErrors().size() == 1);
-  assert(parser.getErrors()[0].type == Parser::ERR_UNEXPECTED_TOKEN);
+  EXPECT(parser.getErrors().size() == 1);
+  EXPECT(parser.getErrors()[0].type == Parser::ERR_UNEXPECTED_TOKEN);
 });
+*/
 
 TEST_CASE(QueryTest, TestFromList, [] () {
   auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   const auto& from = stmt->getChildren()[1];
-  assert(*from == ASTNode::T_FROM);
-  assert(from->getChildren().size() == 2);
-  assert(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
-  assert(*from->getChildren()[0]->getToken() == "tbl1");
-  assert(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
-  assert(*from->getChildren()[1]->getToken() == "tbl2");
+  EXPECT(*from == ASTNode::T_FROM);
+  EXPECT(from->getChildren().size() == 2);
+  EXPECT(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
+  EXPECT(*from->getChildren()[0]->getToken() == "tbl1");
+  EXPECT(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
+  EXPECT(*from->getChildren()[1]->getToken() == "tbl2");
 });
 
 TEST_CASE(QueryTest, TestWhereClause, [] () {
   auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 3);
+  EXPECT(stmt->getChildren().size() == 3);
   const auto& where = stmt->getChildren()[2];
-  assert(*where == ASTNode::T_WHERE);
-  assert(where->getChildren().size() == 1);
-  assert(*where->getChildren()[0] == ASTNode::T_OR_EXPR);
+  EXPECT(*where == ASTNode::T_WHERE);
+  EXPECT(where->getChildren().size() == 1);
+  EXPECT(*where->getChildren()[0] == ASTNode::T_OR_EXPR);
 });
 
 TEST_CASE(QueryTest, TestGroupByClause, [] () {
   auto parser = parseTestQuery("select count(x), y from t GROUP BY x;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 3);
+  EXPECT(stmt->getChildren().size() == 3);
   const auto& where = stmt->getChildren()[2];
-  assert(*where == ASTNode::T_GROUP_BY);
-  assert(where->getChildren().size() == 1);
-  assert(*where->getChildren()[0] == ASTNode::T_COLUMN_NAME);
+  EXPECT(*where == ASTNode::T_GROUP_BY);
+  EXPECT(where->getChildren().size() == 1);
+  EXPECT(*where->getChildren()[0] == ASTNode::T_COLUMN_NAME);
 });
 
 TEST_CASE(QueryTest, TestOrderByClause, [] () {
   auto parser = parseTestQuery("select a FROM t ORDER BY a DESC;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 3);
+  EXPECT(stmt->getChildren().size() == 3);
   const auto& order_by = stmt->getChildren()[2];
-  assert(*order_by == ASTNode::T_ORDER_BY);
-  assert(order_by->getChildren().size() == 1);
-  assert(*order_by->getChildren()[0] == ASTNode::T_SORT_SPEC);
-  assert(*order_by->getChildren()[0]->getToken() == Token::T_DESC);
+  EXPECT(*order_by == ASTNode::T_ORDER_BY);
+  EXPECT(order_by->getChildren().size() == 1);
+  EXPECT(*order_by->getChildren()[0] == ASTNode::T_SORT_SPEC);
+  EXPECT(*order_by->getChildren()[0]->getToken() == Token::T_DESC);
 });
 
 TEST_CASE(QueryTest, TestHavingClause, [] () {
   auto parser = parseTestQuery("select a FROM t HAVING 1=1;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 3);
+  EXPECT(stmt->getChildren().size() == 3);
   const auto& having = stmt->getChildren()[2];
-  assert(*having == ASTNode::T_HAVING);
-  assert(having->getChildren().size() == 1);
-  assert(*having->getChildren()[0] == ASTNode::T_EQ_EXPR);
+  EXPECT(*having == ASTNode::T_HAVING);
+  EXPECT(having->getChildren().size() == 1);
+  EXPECT(*having->getChildren()[0] == ASTNode::T_EQ_EXPR);
 });
 
 TEST_CASE(QueryTest, TestLimitClause, [] () {
   auto parser = parseTestQuery("select a FROM t LIMIT 10;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 3);
+  EXPECT(stmt->getChildren().size() == 3);
   const auto& limit = stmt->getChildren()[2];
-  assert(*limit == ASTNode::T_LIMIT);
-  assert(limit->getChildren().size() == 0);
-  assert(*limit->getToken() == "10");
+  EXPECT(*limit == ASTNode::T_LIMIT);
+  EXPECT(limit->getChildren().size() == 0);
+  EXPECT(*limit->getToken() == "10");
 });
 
 TEST_CASE(QueryTest, TestLimitOffsetClause, [] () {
   auto parser = parseTestQuery("select a FROM t LIMIT 10 OFFSET 23;");
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 3);
+  EXPECT(stmt->getChildren().size() == 3);
   const auto& limit = stmt->getChildren()[2];
-  assert(*limit == ASTNode::T_LIMIT);
-  assert(limit->getChildren().size() == 1);
-  assert(*limit->getToken() == "10");
-  assert(*limit->getChildren()[0] == ASTNode::T_OFFSET);
-  assert(*limit->getChildren()[0]->getToken() == "23");
+  EXPECT(*limit == ASTNode::T_LIMIT);
+  EXPECT(limit->getChildren().size() == 1);
+  EXPECT(*limit->getToken() == "10");
+  EXPECT(*limit->getChildren()[0] == ASTNode::T_OFFSET);
+  EXPECT(*limit->getChildren()[0]->getToken() == "23");
 });
 
+/*
 TEST_CASE(QueryTest, TestTokenizerEscaping, [] () {
   auto parser = parseTestQuery(" SELECT  fnord,sum(blah) from fubar blah.id"
       "= 'fnor\\'dbar' + 123.5;");
   const auto& tl = parser.getTokenList();
-  assert(tl.size() == 17);
-  assert(tl[0].getType() == Token::T_SELECT);
-  assert(tl[1].getType() == Token::T_IDENTIFIER);
-  assert(tl[1] == "fnord");
-  assert(tl[2].getType() == Token::T_COMMA);
-  assert(tl[3].getType() == Token::T_IDENTIFIER);
-  assert(tl[3] == "sum");
-  assert(tl[4].getType() == Token::T_LPAREN);
-  assert(tl[5].getType() == Token::T_IDENTIFIER);
-  assert(tl[5] == "blah");
-  assert(tl[6].getType() == Token::T_RPAREN);
-  assert(tl[7].getType() == Token::T_FROM);
-  assert(tl[8].getType() == Token::T_IDENTIFIER);
-  assert(tl[8] == "fubar");
-  assert(tl[9].getType() == Token::T_IDENTIFIER);
-  assert(tl[9] == "blah");
-  assert(tl[10].getType() == Token::T_DOT);
-  assert(tl[11].getType() == Token::T_IDENTIFIER);
-  assert(tl[11] == "id");
-  assert(tl[12].getType() == Token::T_EQUAL);
-  assert(tl[13].getType() == Token::T_STRING);
-  //assert(tl[13] == "fnord'bar"); // FIXPAUL
-  assert(tl[14].getType() == Token::T_PLUS);
-  assert(tl[15].getType() == Token::T_NUMERIC);
-  assert(tl[15] == "123.5");
-  assert(tl[16].getType() == Token::T_SEMICOLON);
+  EXPECT(tl.size() == 17);
+  EXPECT(tl[0].getType() == Token::T_SELECT);
+  EXPECT(tl[1].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[1] == "fnord");
+  EXPECT(tl[2].getType() == Token::T_COMMA);
+  EXPECT(tl[3].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[3] == "sum");
+  EXPECT(tl[4].getType() == Token::T_LPAREN);
+  EXPECT(tl[5].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[5] == "blah");
+  EXPECT(tl[6].getType() == Token::T_RPAREN);
+  EXPECT(tl[7].getType() == Token::T_FROM);
+  EXPECT(tl[8].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[8] == "fubar");
+  EXPECT(tl[9].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[9] == "blah");
+  EXPECT(tl[10].getType() == Token::T_DOT);
+  EXPECT(tl[11].getType() == Token::T_IDENTIFIER);
+  EXPECT(tl[11] == "id");
+  EXPECT(tl[12].getType() == Token::T_EQUAL);
+  EXPECT(tl[13].getType() == Token::T_STRING);
+  //EXPECT(tl[13] == "fnord'bar"); // FIXPAUL
+  EXPECT(tl[14].getType() == Token::T_PLUS);
+  EXPECT(tl[15].getType() == Token::T_NUMERIC);
+  EXPECT(tl[15] == "123.5");
+  EXPECT(tl[16].getType() == Token::T_SEMICOLON);
 });
 
 TEST_CASE(QueryTest, TestTokenizerSimple, [] () {
   auto parser = parseTestQuery(" SELECT  fnord,sum(`blah-field`) from fubar"
       " WHERE blah.id= \"fn'o=,rdbar\" + 123;");
   auto tl = &parser.getTokenList();
-  assert((*tl)[0].getType() == Token::T_SELECT);
-  assert((*tl)[1].getType() == Token::T_IDENTIFIER);
-  assert((*tl)[1] == "fnord");
-  assert((*tl)[2].getType() == Token::T_COMMA);
-  assert((*tl)[3].getType() == Token::T_IDENTIFIER);
-  assert((*tl)[3] == "sum");
-  assert((*tl)[4].getType() == Token::T_LPAREN);
-  assert((*tl)[5].getType() == Token::T_IDENTIFIER);
-  assert((*tl)[5] == "blah-field");
-  assert((*tl)[6].getType() == Token::T_RPAREN);
-  assert((*tl)[7].getType() == Token::T_FROM);
-  assert((*tl)[8].getType() == Token::T_IDENTIFIER);
-  assert((*tl)[8] == "fubar");
-  //assert((*tl)[9].getType() == Token::T_IDENTIFIER);
-  //assert((*tl)[9] == "blah");
-  //assert((*tl)[10].getType() == Token::T_DOT);
-  //assert((*tl)[11].getType() == Token::T_IDENTIFIER);
-  //assert((*tl)[11] == "id");
-  //assert((*tl)[12].getType() == Token::T_EQUAL);
-  //assert((*tl)[13].getType() == Token::T_STRING);
-  //assert((*tl)[13] == "fn'o=,rdbar");
-  //assert((*tl)[14].getType() == Token::T_PLUS);
-  //assert((*tl)[15].getType() == Token::T_NUMERIC);
-  //assert((*tl)[15] == "123");
-  //assert((*tl)[16].getType() == Token::T_SEMICOLON);
+  EXPECT((*tl)[0].getType() == Token::T_SELECT);
+  EXPECT((*tl)[1].getType() == Token::T_IDENTIFIER);
+  EXPECT((*tl)[1] == "fnord");
+  EXPECT((*tl)[2].getType() == Token::T_COMMA);
+  EXPECT((*tl)[3].getType() == Token::T_IDENTIFIER);
+  EXPECT((*tl)[3] == "sum");
+  EXPECT((*tl)[4].getType() == Token::T_LPAREN);
+  EXPECT((*tl)[5].getType() == Token::T_IDENTIFIER);
+  EXPECT((*tl)[5] == "blah-field");
+  EXPECT((*tl)[6].getType() == Token::T_RPAREN);
+  EXPECT((*tl)[7].getType() == Token::T_FROM);
+  EXPECT((*tl)[8].getType() == Token::T_IDENTIFIER);
+  EXPECT((*tl)[8] == "fubar");
+  //EXPECT((*tl)[9].getType() == Token::T_IDENTIFIER);
+  //EXPECT((*tl)[9] == "blah");
+  //EXPECT((*tl)[10].getType() == Token::T_DOT);
+  //EXPECT((*tl)[11].getType() == Token::T_IDENTIFIER);
+  //EXPECT((*tl)[11] == "id");
+  //EXPECT((*tl)[12].getType() == Token::T_EQUAL);
+  //EXPECT((*tl)[13].getType() == Token::T_STRING);
+  //EXPECT((*tl)[13] == "fn'o=,rdbar");
+  //EXPECT((*tl)[14].getType() == Token::T_PLUS);
+  //EXPECT((*tl)[15].getType() == Token::T_NUMERIC);
+  //EXPECT((*tl)[15] == "123");
+  //EXPECT((*tl)[16].getType() == Token::T_SEMICOLON);
 });
 
 TEST_CASE(QueryTest, TestTokenizerAsClause, [] () {
   auto parser = parseTestQuery(" SELECT fnord As blah from");
   auto tl = &parser.getTokenList();
-  assert((*tl)[0].getType() == Token::T_SELECT);
-  assert((*tl)[1].getType() == Token::T_IDENTIFIER);
-  assert((*tl)[1] == "fnord");
-  assert((*tl)[2].getType() == Token::T_AS);
-  assert((*tl)[3].getType() == Token::T_IDENTIFIER);
-  assert((*tl)[3] == "blah");
+  EXPECT((*tl)[0].getType() == Token::T_SELECT);
+  EXPECT((*tl)[1].getType() == Token::T_IDENTIFIER);
+  EXPECT((*tl)[1] == "fnord");
+  EXPECT((*tl)[2].getType() == Token::T_AS);
+  EXPECT((*tl)[3].getType() == Token::T_IDENTIFIER);
+  EXPECT((*tl)[3] == "blah");
 });
 
 
@@ -523,8 +523,8 @@ TEST_CASE(QueryTest, TestComplexQueries, [] () {
 
   for (auto query : queries) {
     auto parser = parseTestQuery(query);
-    assert(parser.getErrors().size() == 0);
-    assert(parser.getStatements().size() == 1);
+    EXPECT(parser.getErrors().size() == 0);
+    EXPECT(parser.getStatements().size() == 1);
   }
 });
 
@@ -533,19 +533,19 @@ TEST_CASE(QueryTest, TestSeriesStatement, [] () {
       "  SERIES \"myseries\" FROM"
       "    SELECT * FROM tbl;");
 
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 2);
-  assert(*stmt == ASTNode::T_SERIES);
+  EXPECT(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SERIES);
 
   const auto& name = stmt->getChildren()[0];
-  assert(*name == ASTNode::T_SERIES_NAME);
-  assert(*name->getToken() == "myseries");
+  EXPECT(*name == ASTNode::T_SERIES_NAME);
+  EXPECT(*name->getToken() == "myseries");
 
   const auto& select = stmt->getChildren()[1];
-  assert(*select == ASTNode::T_SELECT);
-  assert(select->getChildren().size() == 2);
+  EXPECT(*select == ASTNode::T_SELECT);
+  EXPECT(select->getChildren().size() == 2);
 });
 
 TEST_CASE(QueryTest, TestDerivedSeriesStatement, [] () {
@@ -553,20 +553,22 @@ TEST_CASE(QueryTest, TestDerivedSeriesStatement, [] () {
       "  SERIES fnord FROM"
       "    SELECT fnord, blah FROM tbl;");
 
-  assert(parser.getErrors().size() == 0);
-  assert(parser.getStatements().size() == 1);
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
-  assert(stmt->getChildren().size() == 2);
-  assert(*stmt == ASTNode::T_SERIES);
+  EXPECT(stmt->getChildren().size() == 2);
+  EXPECT(*stmt == ASTNode::T_SERIES);
 
   const auto& expr = stmt->getChildren()[0];
-  assert(*expr == ASTNode::T_COLUMN_NAME);
-  assert(*expr->getToken() == "fnord");
+  EXPECT(*expr == ASTNode::T_COLUMN_NAME);
+  EXPECT(*expr->getToken() == "fnord");
 
   const auto& select = stmt->getChildren()[1];
-  assert(*select == ASTNode::T_SELECT);
-  assert(select->getChildren().size() == 2);
+  EXPECT(*select == ASTNode::T_SELECT);
+  EXPECT(select->getChildren().size() == 2);
 });
+
+*/
 
 TEST_CASE(QueryTest, TestSelectOnlyQuery, [] () {
   TableRepository repo;
@@ -584,22 +586,22 @@ TEST_CASE(QueryTest, TestSelectOnlyQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumColumns() == 6);
-  assert(results->getNumRows() == 1);
+  EXPECT(results->getNumColumns() == 6);
+  EXPECT(results->getNumRows() == 1);
   const auto& cols = results->getColumns();
-  assert(cols[0] == "fnord");
-  assert(cols[1] == "fubar");
-  assert(cols[2] == "baz");
-  assert(cols[3] == "one");
-  assert(cols[4] == "two");
-  assert(cols[5] == "three");
+  EXPECT(cols[0] == "fnord");
+  EXPECT(cols[1] == "fubar");
+  EXPECT(cols[2] == "baz");
+  EXPECT(cols[3] == "one");
+  EXPECT(cols[4] == "two");
+  EXPECT(cols[5] == "three");
   const auto& row = results->getRow(0);
-  assert(row[0] == "23");
-  assert(row[1] == "256");
-  assert(row[2] == "21");
-  //assert(row[3] == "true");
-  //assert(row[4] == "false");
-  //assert(row[5] == "true");
+  EXPECT(row[0] == "23");
+  EXPECT(row[1] == "256");
+  EXPECT(row[2] == "21");
+  //EXPECT(row[3] == "true");
+  //EXPECT(row[4] == "false");
+  //EXPECT(row[5] == "true");
 });
 
 TEST_CASE(QueryTest, TestSimpleTableScanQuery, [] () {
@@ -613,13 +615,13 @@ TEST_CASE(QueryTest, TestSimpleTableScanQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumColumns() == 2);
-  assert(results->getNumRows() == 100);
+  EXPECT(results->getNumColumns() == 2);
+  EXPECT(results->getNumRows() == 100);
 
   for (int i = 0; i<100; ++i) {
     const auto& row = results->getRow(i);
-    assert(atoi(row[0].c_str()) == 51 + i);
-    assert(atoi(row[1].c_str()) == 100 - i);
+    EXPECT(atoi(row[0].c_str()) == 51 + i);
+    EXPECT(atoi(row[1].c_str()) == 100 - i);
   }
 });
 
@@ -640,7 +642,7 @@ TEST_CASE(QueryTest, TestTableScanWhereQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 51);
+  EXPECT(results->getNumRows() == 51);
 });
 
 TEST_CASE(QueryTest, TestTableScanWhereLimitQuery, [] () {
@@ -661,10 +663,10 @@ TEST_CASE(QueryTest, TestTableScanWhereLimitQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 10);
+  EXPECT(results->getNumRows() == 10);
   const auto& row = results->getRow(0);
-  assert(row[0] == "56");
-  assert(row[1] == "46");
+  EXPECT(row[0] == "56");
+  EXPECT(row[1] == "46");
 });
 
 // select count(*), one, two, three from testtable2 group by case three when
@@ -689,7 +691,7 @@ TEST_CASE(QueryTest, TestTableScanGroupByQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 4);
+  EXPECT(results->getNumRows() == 4);
 });
 
 TEST_CASE(QueryTest, TestTableScanGroupByCountQuery, [] () {
@@ -717,7 +719,7 @@ TEST_CASE(QueryTest, TestTableScanGroupByCountQuery, [] () {
     const auto& row = results->getRow(i);
     sum += atoi(row[0].c_str());
   }
-  assert(sum == 10);
+  EXPECT(sum == 10);
 });
 
 TEST_CASE(QueryTest, TestTableScanGroupBySumQuery, [] () {
@@ -737,10 +739,10 @@ TEST_CASE(QueryTest, TestTableScanGroupBySumQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 2);
+  EXPECT(results->getNumRows() == 2);
   for (int i = 0; i<2; ++i) {
     const auto& row = results->getRow(i);
-    assert(
+    EXPECT(
       (atoi(row[0].c_str()) == 25 && atoi(row[1].c_str()) == 100) ||
       (atoi(row[0].c_str()) == 30 && atoi(row[1].c_str()) == 200));
   }
@@ -760,9 +762,11 @@ TEST_CASE(QueryTest, TestTableScanGroupWithoutGroupClause, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 1);
-  assert(results->getRow(0)[0] == "55");
+  EXPECT(results->getNumRows() == 1);
+  EXPECT(results->getRow(0)[0] == "55");
 });
+
+/*
 
 TEST_CASE(QueryTest, TestNamedSeriesQuery, [] () {
   TableRepository repo;
@@ -779,13 +783,13 @@ TEST_CASE(QueryTest, TestNamedSeriesQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 10);
-  assert(results->getNumColumns() == 3);
+  EXPECT(results->getNumRows() == 10);
+  EXPECT(results->getNumColumns() == 3);
   for (int i = 0; i < results->getNumRows(); ++i) {
     const auto& row = results->getRow(i);
-    assert(row[0] == "myseries");
-    assert(atoi(row[1].c_str()) == 10 - i);
-    assert(atoi(row[2].c_str()) == 20 - i * 2);
+    EXPECT(row[0] == "myseries");
+    EXPECT(atoi(row[1].c_str()) == 10 - i);
+    EXPECT(atoi(row[2].c_str()) == 20 - i * 2);
   }
 });
 
@@ -804,13 +808,15 @@ TEST_CASE(QueryTest, TestDerivedSeriesQuery, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  assert(results->getNumRows() == 10);
-  assert(results->getNumColumns() == 3);
+  EXPECT(results->getNumRows() == 10);
+  EXPECT(results->getNumColumns() == 3);
   for (int i = 0; i < results->getNumRows(); ++i) {
     const auto& row = results->getRow(i);
-    assert(atoi(row[0].c_str()) == atoi(row[1].c_str()) * 5);
+    EXPECT(atoi(row[0].c_str()) == atoi(row[1].c_str()) * 5);
   }
 });
+
+*/
 
 TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
   TableRepository repo;

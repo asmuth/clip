@@ -103,13 +103,13 @@ public:
       try {
         test_case->lambda_();
       } catch (fnordmetric::util::RuntimeException e) {
-        printf(" [FAIL]\n");
+        printf(" \033[1;31m[FAIL]\e[0m\n");
         errors.emplace(test_case, e);
         continue;
       }
 
       num_tests_passed++;
-      printf(" [PASS]\n");
+      printf(" \033[1;32m[PASS]\e[0m\n");
     }
 
     if (num_tests_passed != cases_.size()) {
@@ -117,13 +117,13 @@ public:
         const auto& err = errors.find(test_case);
 
         if (err != errors.end()) {
-          printf("\n[FAIL] %s::%s", name_, test_case->name_);
+          printf("\n\033[1;31m[FAIL] %s::%s\e[0m", name_, test_case->name_);
           err->second.debugPrint();
         }
       }
 
       printf(
-          "\n[FAIL] %i/%i tests failed :(\n",
+          "\n\033[1;31m[FAIL] %i/%i tests failed :(\e[0m\n",
           (int) cases_.size() - num_tests_passed,
           (int) cases_.size());
       return 1;
