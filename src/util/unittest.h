@@ -112,10 +112,7 @@ public:
       printf(" [PASS]\n");
     }
 
-    if (num_tests_passed == cases_.size()) {
-      printf("\n[SUCCESS] All tests passed :)\n");
-      return 0;
-    } else {
+    if (num_tests_passed != cases_.size()) {
       for (auto test_case : cases_) {
         const auto& err = errors.find(test_case);
 

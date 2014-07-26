@@ -19,8 +19,11 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) {
+  auto file = fnordmetric::util::FileInputStream::openFile(file_path);
+  file->readByteOrderMark();
+
   auto csv_file = new CSVInputStream(
-      fnordmetric::util::FileInputStream::openFile(file_path),
+      std::move(file),
       column_seperator,
       row_seperator,
       quote_char);
