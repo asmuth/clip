@@ -10,15 +10,18 @@
 #include <exception>
 #include <string>
 
+#define RAISE_EXCEPTION(E) \
+  { \
+    throw E; \
+  }
+
+#define RAISE(E, M, ...) \
+  { \
+    RAISE_EXCEPTION(E((M), __VA_ARGS__)); \
+  }
+
 #define __RUNTIME_EXCEPTION(N, T, E, ...) \
     fnordmetric::util::RuntimeException( \
-        N, \
-        T, \
-        #T, \
-        __FILE__, \
-        __LINE__, \
-        __PRETTY_FUNCTION__, \
-        E, \
         __VA_ARGS__)
 
 #define RUNTIME_EXCEPTION(N, T, ...) \
@@ -33,7 +36,7 @@ namespace util {
 class RuntimeException : public std::exception {
 public:
 
-  RuntimeException(
+/*
       const void* namespace_id,
       int type_id,
       const char* type_human,
@@ -41,11 +44,9 @@ public:
       int line,
       const char* func,
       int posix_errno,
-      const char* message,
-      ...);
-
+*/
+  RuntimeException(const char* message, ...);
   void debugPrint() const;
-
   std::string getMessage() const;
 
 private:

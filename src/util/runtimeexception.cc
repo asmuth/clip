@@ -13,21 +13,14 @@ namespace fnordmetric {
 namespace util {
 
 RuntimeException::RuntimeException(
-    const void* namespace_id,
-    int type_id,
-    const char* type_human,
-    const char* file,
-    int line,
-    const char* func,
-    int posix_errno,
     const char* message,
     ...) :
-    namespace_id_(namespace_id),
-    type_id_(type_id),
-    type_human_(type_human),
-    file_(file),
-    line_(line),
-    func_(func) {
+    namespace_id_(0),
+    type_id_(0),
+    type_human_(NULL),
+    file_(NULL),
+    line_(0),
+    func_(NULL) {
   va_list args;
   va_start(args, message);
   int pos = vsnprintf(message_, sizeof(message_), message, args);
@@ -37,6 +30,7 @@ RuntimeException::RuntimeException(
     pos = 0;
   }
 
+  int posix_errno = -1;
   if (posix_errno > 0) {
     snprintf(message_ + pos, sizeof(message_) - pos, ": ");
     pos += 2;
