@@ -26,5 +26,17 @@ bool Executable::emitRow(SValue* row, int row_len) {
   return target_->nextRow(row, row_len);
 }
 
+int Executable::getColumnIndex(const std::string& column_name) const {
+  const auto& columns = getColumns();
+
+  for (int i = 0; i < columns.size(); ++i) {
+    if (columns[i] == column_name) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 }
 }

@@ -31,6 +31,7 @@ public:
 
   virtual size_t getNumCols() const = 0;
   virtual const std::vector<std::string>& getColumns() const = 0;
+  int getColumnIndex(const std::string& column_name) const;
 
   void setTarget(RowSink* target);
 

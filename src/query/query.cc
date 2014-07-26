@@ -67,12 +67,14 @@ void Query::execute() {
 
     auto target = new ResultList();
     target->addHeader(stmt->getColumns());
-    stmt->setTarget(target);
-    stmt->execute();
     results_.emplace_back(target);
 
     if (current_draw_statement != nullptr) {
-      current_draw_statement->addSeries(target);
+      // FIXPAUL copy results into target...
+      current_draw_statement->addSelectStatement(stmt.get());
+    } else {
+      stmt->setTarget(target);
+      stmt->execute();
     }
   }
 

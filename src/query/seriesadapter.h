@@ -18,42 +18,121 @@ namespace fnordmetric {
 namespace query {
 
 template <typename T>
-class SeriesAdapter {
+class SeriesAdapter2D : public RowSink {
+
+
+};
+
+template <typename T>
+class SeriesAdapter : public RowSink {
 public:
 
-  SeriesAdapter(T* drawable) : drawable_(drawable) {}
+  SeriesAdapter(
+      T* drawable,
+      Executable* stmt) :
+      drawable_(drawable),
+      stmt_(stmt) {
+    x_ind_ = stmt->getColumnIndex("x");
+    y_ind_ = stmt->getColumnIndex("y");
+    z_ind_ = stmt->getColumnIndex("z");
+    name_ind_ = stmt->getColumnIndex("series");
 
-  void addSeries(ResultList* series) {
-    if (series->getNumRows() == 0) {
-      return;
-    }
-
-    int x_ind = series->getColumnIndex("x");
-    int y_ind = series->getColumnIndex("y");
-    int z_ind = series->getColumnIndex("z");
-    int name_ind = series->getColumnIndex("series");
-
-    if (name_ind < 0) {
+    if (name_ind_ < 0) {
       RAISE(
           util::RuntimeException,
           "can't draw SELECT because it has no 'series' column");
     }
 
-    if (x_ind < 0) {
+    if (x_ind_ < 0) {
       RAISE(
           util::RuntimeException,
           "can't draw SELECT because it has no 'x' column");
     }
 
-    if (y_ind < 0) {
+    if (y_ind_ < 0) {
       RAISE(
           util::RuntimeException,
           "can't draw SELECT because it has no 'y' column");
     }
-
-    auto first_row = series->getRow(0);
   }
 
+  bool nextRow(SValue* row, int row_len) {
+
+  }
+
+/*
+  void addSeries(ResultList* series) {
+    if (z_ind < 0) {
+      addSeries2D(series, name_ind, x_ind, y_ind);
+    }
+  }
+
+protected:
+
+  void addSeries2D(
+      ResultList* series,
+      int name_ind,
+      int x_ind,
+      int y_ind) {
+    auto first_row = series->getRow(0);
+
+    if (testSeriesSchema2D<double, double>(
+            first_row[x_ind],
+            first_row[y_ind])) {
+      return copySeries2D<double, double>(series, name_ind, x_ind, y_ind);
+    }
+  }
+
+  template <typename TX, typename TY>
+  bool testSeriesSchema2D(std::string x, std::string y) const {
+    return (testType<TX>(x) && testType<TY>(y));
+  }
+
+  template <typename TX, typename TY>
+  void copySeries2D(
+      ResultList* series,
+      int name_ind,
+      int x_ind,
+      int y_ind) {
+    std::unordered_map<std::string, Series2D<D1, D2>*> series_map;
+    std::vector<Series2D<D1, D2>*> series_list;
+
+    for (int i = 0; i < series->getNumRows(); ++i) {
+      const auto& row = series->getRow(i);
+      std::string name = "unnamed";
+
+      if (name_ind >= 0) {
+        name = row[name_ind].getValue<std::string>();
+      }
+
+      Series2D<D1, D2>* series = nullptr;
+      const auto& series_iter = series_map.find(name);
+      if (series_iter == series_map.end()) {
+        series = new Series2D<D1, D2>(name);
+        series_map[name] = series;
+        series_list.push_back(series);
+      } else {
+        series = series_iter->second;
+      }
+
+      series->addDatum(
+          row[x_ind].getValue<D1>(),
+          row[y_ind].getValue<D2>());
+    }
+
+    for (auto series : series_list) {
+      drawable->addSeries(series);
+    }
+  }
+
+  template <typename TV>
+  bool testType(std::string value) const {
+    return true;
+  }
+
+  template <typename TV>
+  TV castType(std::string value) const;
+*/
 /*
 
   void executeDrawable( {
@@ -236,6 +315,11 @@ public:
 */
 protected:
   T* drawable_;
+  Executable* stmt_;
+  int name_ind_;
+  int x_ind_;
+  int y_ind_;
+  int z_ind_;
 };
 
 }
