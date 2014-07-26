@@ -491,41 +491,45 @@ TEST_CASE(QueryTest, TestTokenizerAsClause, [] () {
   EXPECT((*tl)[3] == "blah");
 });
 
-
-TEST_CASE(QueryTest, TestComplexQueries, [] () {
+TEST_INITIALIZER(QueryTest, InitializeComplexQueries, [] () {
   std::vector<const char*> queries;
   queries.push_back("SELECT -sum(fnord) + (123 * 4);");
   queries.push_back("SELECT (-blah + sum(fnord) / (123 * 4)) as myfield;");
   queries.push_back(
       "SELECT concat(fnord + 5, -somefunc(myotherfield)) + (123 * 4);");
   queries.push_back(
-      "  SELECT"
-      "     l_orderkey,"
-      "     sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
-      "     o_orderdate,"
-      "     o_shippriority"
-      "  FROM"
-      "     customer,"
-      "     orders,"
-      "     lineitem "
-      "  WHERE"
-      "    c_mktsegment = 'FURNITURE' AND"
-      "    c_custkey = o_custkey AND"
-      "    l_orderkey = o_orderkey AND"
-      "    o_orderdate < \"2013-12-21\" AND"
-      "    l_shipdate > \"2014-01-06\""
-      "  GROUP BY"
-      "    l_orderkey,"
-      "    o_orderdate,"
-      "    o_shippriority"
-      "  ORDER BY"
-      "    revenue,"
-      "    o_orderdate;");
+        "  SELECT"
+        "     l_orderkey,"
+        "     sum( l_extendedprice * ( 1 - l_discount) ) AS revenue,"
+        "     o_orderdate,"
+        "     o_shippriority"
+        "  FROM"
+        "     customer,"
+        "     orders,"
+        "     lineitem "
+        "  WHERE"
+        "    c_mktsegment = 'FURNITURE' AND"
+        "    c_custkey = o_custkey AND"
+        "    l_orderkey = o_orderkey AND"
+        "    o_orderdate < \"2013-12-21\" AND"
+        "    l_shipdate > \"2014-01-06\""
+        "  GROUP BY"
+        "    l_orderkey,"
+        "    o_orderdate,"
+        "    o_shippriority"
+        "  ORDER BY"
+        "    revenue,"
+        "    o_orderdate;");
 
   for (auto query : queries) {
-    auto parser = parseTestQuery(query);
-    EXPECT(parser.getErrors().size() == 0);
-    EXPECT(parser.getStatements().size() == 1);
+    new fnordmetric::util::UnitTest::TestCase(
+        &QueryTest,
+        "TestComplexQueries",
+        [query] () {
+          auto parser = parseTestQuery(query);
+          EXPECT(parser.getErrors().size() == 0);
+          EXPECT(parser.getStatements().size() == 1);
+        });
   }
 });
 

@@ -25,6 +25,9 @@ namespace util {
 #define TEST_CASE(T, N, L) \
     static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, (L));
 
+#define TEST_INITIALIZER(T, N, L) \
+    static fnordmetric::util::UnitTest::TestInitializer __##T##__case__##N( \
+        &T, (L));
 
 #define EXPECT(X) \
     if (!(X)) { \
@@ -82,14 +85,33 @@ public:
     std::function<void ()> lambda_;
   };
 
+  class TestInitializer {
+  public:
+    TestInitializer(
+        UnitTest* test,
+        std::function<void ()> lambda) :
+        lambda_(lambda) {
+      test->addInitializer(this);
+    }
+
+    std::function<void ()> lambda_;
+  };
+
   UnitTest(const char* name) : name_(name) {}
 
   void addTestCase(const TestCase* test_case) {
     cases_.push_back(test_case);
   }
 
+  void addInitializer(const TestInitializer* init) {
+    initializers_.push_back(init);
+  }
+
   int run() {
-    setbuf(stdout, NULL);
+    for (auto initializer : initializers_) {
+      initializer->lambda_();
+    }
+
     printf("%s\n", name_);
 
     const TestCase* current_test_case = nullptr;
@@ -98,6 +120,7 @@ public:
 
     for (auto test_case : cases_) {
       printf("    %s::%s", name_, test_case->name_);
+      fflush(stdout);
       current_test_case = test_case;
 
       try {
@@ -135,6 +158,7 @@ public:
 protected:
   const char* name_;
   std::vector<const TestCase*> cases_;
+  std::vector<const TestInitializer*> initializers_;
 };
 
 }
