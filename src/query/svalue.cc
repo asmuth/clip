@@ -137,10 +137,19 @@ int64_t SValue::getInteger() const {
 
 double SValue::getFloat() const {
   switch (data_.type) {
+
     case T_INTEGER:
       return data_.u.t_integer;
+
     case T_FLOAT:
       return data_.u.t_float;
+
+    case T_STRING:
+      try {
+        return std::stod(getString());
+      } catch (std::exception e) {
+        /* FALLTHROUGH */
+      }
 
     default:
       RAISE(
@@ -150,13 +159,8 @@ double SValue::getFloat() const {
           toString().c_str());
 
   }
-  if (data_.type == T_INTEGER) {
-  }
 
-  if (data_.type == T_INTEGER) {
-  }
-
-  return data_.u.t_float;
+  return 0;
 }
 
 bool SValue::getBool() const {
@@ -279,14 +283,6 @@ template<> double SValue::getValue<double>() const {
 
 template<> std::string SValue::getValue<std::string>() const {
   return toString();
-}
-
-template<> bool SValue::testType<double>() const {
-  return true; // FIXPAUL
-}
-
-template<> bool SValue::testType<std::string>() const {
-  return true;
 }
 
 }

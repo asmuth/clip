@@ -805,7 +805,7 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
 
   query.execute();
   auto chart = query.getChart(0);
-  chart->renderSVG();
+  //chart->renderSVG();
 });
 
 TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
@@ -869,7 +869,7 @@ TEST_CASE(QueryTest, TestSimpleAggregateFromCSV, [] () {
 
   query.execute();
   auto results = query.getResultList(0);
-  EXPECT(results->getNumRows() == 123);
+  EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
 

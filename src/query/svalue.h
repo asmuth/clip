@@ -73,6 +73,17 @@ protected:
   } data_;
 };
 
+template <typename T>
+bool SValue::testType() const {
+  try {
+    getValue<T>();
+  } catch (TypeError e) {
+    return false;
+  }
+
+  return true;
+}
+
 }
 }
 #endif
