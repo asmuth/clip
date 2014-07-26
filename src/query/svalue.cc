@@ -237,5 +237,13 @@ template<> std::string SValue::getValue<std::string>() const {
   return toString();
 }
 
+template<> bool SValue::testType<double>() const {
+  return true; // FIXPAUL
+}
+
+template<> bool SValue::testType<std::string>() const {
+  return true;
+}
+
 }
 }
