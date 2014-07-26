@@ -8,10 +8,11 @@
 #define _FNORDMETRIC_BARCHART_H
 #include <stdlib.h>
 #include <assert.h>
-#include "../base/series.h"
-#include "axisdefinition.h"
-#include "domain.h"
-#include "drawable.h"
+#include <fnordmetric/base/series.h>
+#include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/drawable.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -93,8 +94,7 @@ public:
   void addSeries(Series3D<double, double, double>* series);
 
   void addSeries(Series* series) {
-    fprintf(stderr, "error: unsupported series type for barchart\n");
-    throw std::string("unsupported series type for barchart");
+    RAISE(util::RuntimeException, "unsupported series type for barchart");
   }
 
   /**

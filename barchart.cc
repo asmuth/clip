@@ -274,7 +274,7 @@ void BarChart::render(
     int height,
     std::tuple<int, int, int, int>* padding) const {
   if (data_.size() == 0) {
-    throw std::string("render without data");
+    RAISE(util::RuntimeException, "BarChart#render called without any data");
   }
 
   switch (orientation_) {
