@@ -21,6 +21,10 @@ SValue::SValue() {
   data_.type = T_UNDEFINED;
 }
 
+SValue::~SValue() {
+  // FIXPAUL free string!
+}
+
 SValue::SValue(const std::string& string_value) {
   data_.type = T_STRING;
   data_.u.t_string.len = string_value.size();
@@ -110,10 +114,6 @@ bool SValue::operator==(const SValue& other) const {
       return memcmp(&data_, &other.data_, sizeof(data_)) == 0;
 
   }
-}
-
-SValue::~SValue() {
-  // FIXPAUL free string!
 }
 
 SValue::kSValueType SValue::getType() const {

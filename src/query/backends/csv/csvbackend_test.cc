@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../util/runtimeexception.h"
-#include "../../../util/unittest.h"
-#include "csvinputstream.h"
-#include "csvtableref.h"
-//#include "csv_backend.h"
+#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/unittest.h>
+#include <fnordmetric/query/backends/csv/csvinputstream.h>
+#include <fnordmetric/query/backends/csv/csvtableref.h>
+#include <fnordmetric/query/svalue.h>
 
 using namespace fnordmetric::query::csv_backend;
 
@@ -93,5 +93,21 @@ TEST_CASE(CSVInputStreamTest, TestGetColumnIndexWithHeaders, [] () {
       true);
 
   EXPECT_EQ(table_ref.getColumnIndex("country"), 0);
+});
+
+TEST_CASE(CSVInputStreamTest, TestReadRowsWithHeaders, [] () {
+  CSVTableRef table_ref(
+      CSVInputStream::openFile("test/fixtures/gbp_per_country_simple.csv"),
+      true);
+
+  int num_rows = 0;
+  for (;; ++num_rows) {
+    std::vector<fnordmetric::query::SValue> target;
+    if (!table_ref.readNextRow(&target)) {
+      break;
+    }
+  }
+
+  EXPECT_EQ(num_rows, 191)
 });
 

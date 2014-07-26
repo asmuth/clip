@@ -14,6 +14,7 @@
 
 namespace fnordmetric {
 namespace query {
+class SValue;
 namespace csv_backend {
 
 /**
@@ -29,13 +30,15 @@ public:
   int getColumnIndex(const std::string& name) override;
   void executeScan(TableScan* scan) override;
 
-protected:
-
+  bool readNextRow(std::vector<SValue>* target);
   void readHeaders();
 
+protected:
   std::unordered_map<std::string, size_t> headers_;
   std::unique_ptr<CSVInputStream> csv_;
   int num_cols_;
+  int min_cols_;
+  int row_index_;
 };
 
 }

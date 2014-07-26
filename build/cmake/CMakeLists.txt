@@ -58,10 +58,9 @@ add_executable(tests/test-query
 
 add_executable(tests/test-input-stream
     ${FNORDMETRIC_SOURCES}
-    ${FNORDMETRIC_CSV_BACKEND_SOURCES}
     stage/src/fnordmetric/util/inputstream_test.cc)
 
 add_executable(tests/test-csv-backend
-    ${FNORDMETRIC_UI_SOURCES}
+    ${FNORDMETRIC_QUERY_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
     stage/src/fnordmetric/query/backends/csv/csvbackend_test.cc)
