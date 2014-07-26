@@ -70,10 +70,6 @@ class TestTable2Ref : public TableRef {
   }
 };
 
-
-
-// TEST_CASE(CSVInputStreamTest, TestOpenFile, [] () {
-
 TEST_CASE(QueryTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
   EXPECT(parser.getErrors().size() == 0);
@@ -316,31 +312,32 @@ TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-/*
 TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
-  auto parser = parseTestQuery("GROUP BY SELECT");
-  EXPECT(parser.getErrors().size() == 1);
-  EXPECT(parser.getErrors()[0].type == Parser::ERR_UNEXPECTED_TOKEN);
-});
-*/
+  const char* err_msg = "unexpected token 'T_GROUP', expected one of SELECT, "
+      "CREATE or BEGIN";
 
-TEST_CASE(QueryTest, TestFromList, [] () {
-  auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
-  EXPECT(parser.getErrors().size() == 0);
-  EXPECT(parser.getStatements().size() == 1);
-  const auto& stmt = parser.getStatements()[0];
-  const auto& from = stmt->getChildren()[1];
-  EXPECT(*from == ASTNode::T_FROM);
-  EXPECT(from->getChildren().size() == 2);
-  EXPECT(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
-  EXPECT(*from->getChildren()[0]->getToken() == "tbl1");
-  EXPECT(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
-  EXPECT(*from->getChildren()[1]->getToken() == "tbl2");
+  EXPECT_EXCEPTION(err_msg, [] () {
+    auto parser = parseTestQuery("GROUP BY SELECT");
+  });
 });
 
-TEST_CASE(QueryTest, TestWhereClause, [] () {
-  auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
-  EXPECT(parser.getErrors().size() == 0);
+  TEST_CASE(QueryTest, TestFromList, [] () {
+    auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
+    EXPECT(parser.getErrors().size() == 0);
+    EXPECT(parser.getStatements().size() == 1);
+    const auto& stmt = parser.getStatements()[0];
+    const auto& from = stmt->getChildren()[1];
+    EXPECT(*from == ASTNode::T_FROM);
+    EXPECT(from->getChildren().size() == 2);
+    EXPECT(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
+    EXPECT(*from->getChildren()[0]->getToken() == "tbl1");
+    EXPECT(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
+    EXPECT(*from->getChildren()[1]->getToken() == "tbl2");
+  });
+
+  TEST_CASE(QueryTest, TestWhereClause, [] () {
+    auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
+    EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);

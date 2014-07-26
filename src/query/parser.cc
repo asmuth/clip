@@ -204,7 +204,7 @@ ASTNode* Parser::statement() {
 
   RAISE(
       ParseError,
-      "unexpected token '%s', expected one of SELECT, CREATE or BEGIN\n",
+      "unexpected token '%s', expected one of SELECT, CREATE or BEGIN",
       Token::getTypeName(cur_token_->getType()));
 
   return nullptr;
@@ -300,7 +300,7 @@ ASTNode* Parser::createStatement() {
     default:
       RAISE(
           ParseError,
-          "unexpected token '%s', expected one of SERIES or AXIS\n",
+          "unexpected token '%s', expected one of SERIES or AXIS",
           Token::getTypeName(cur_token_->getType()));
   }
 
@@ -320,7 +320,7 @@ ASTNode* Parser::beginStatement() {
     default:
       RAISE(
           ParseError,
-          "unexpected token '%s', expected one of BAR, LINE or AREA\n",
+          "unexpected token '%s', expected one of BAR, LINE or AREA",
           Token::getTypeName(cur_token_->getType()));
       return nullptr;
   }
@@ -356,7 +356,7 @@ ASTNode* Parser::selectSublist() {
   if (value_expr == nullptr) {
     RAISE(
         ParseError,
-        "unexpected token '%s', expected: value expression\n",
+        "unexpected token '%s', expected: value expression",
         Token::getTypeName(cur_token_->getType()));
     delete derived;
     return nullptr;
@@ -633,7 +633,7 @@ bool Parser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
     RAISE(
         ParseError,
-        "unexpected token '%s', expected: '%s'\n",
+        "unexpected token '%s', expected: '%s'",
         Token::getTypeName(cur_token_->getType()),
         Token::getTypeName(expectation));
     return false;
