@@ -321,23 +321,23 @@ TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
   });
 });
 
-  TEST_CASE(QueryTest, TestFromList, [] () {
-    auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
-    EXPECT(parser.getErrors().size() == 0);
-    EXPECT(parser.getStatements().size() == 1);
-    const auto& stmt = parser.getStatements()[0];
-    const auto& from = stmt->getChildren()[1];
-    EXPECT(*from == ASTNode::T_FROM);
-    EXPECT(from->getChildren().size() == 2);
-    EXPECT(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
-    EXPECT(*from->getChildren()[0]->getToken() == "tbl1");
-    EXPECT(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
-    EXPECT(*from->getChildren()[1]->getToken() == "tbl2");
-  });
+TEST_CASE(QueryTest, TestFromList, [] () {
+  auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
+  EXPECT(parser.getErrors().size() == 0);
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  const auto& from = stmt->getChildren()[1];
+  EXPECT(*from == ASTNode::T_FROM);
+  EXPECT(from->getChildren().size() == 2);
+  EXPECT(*from->getChildren()[0] == ASTNode::T_TABLE_NAME);
+  EXPECT(*from->getChildren()[0]->getToken() == "tbl1");
+  EXPECT(*from->getChildren()[1] == ASTNode::T_TABLE_NAME);
+  EXPECT(*from->getChildren()[1]->getToken() == "tbl2");
+});
 
-  TEST_CASE(QueryTest, TestWhereClause, [] () {
-    auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
-    EXPECT(parser.getErrors().size() == 0);
+TEST_CASE(QueryTest, TestWhereClause, [] () {
+  auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
+  EXPECT(parser.getErrors().size() == 0);
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(stmt->getChildren().size() == 3);
