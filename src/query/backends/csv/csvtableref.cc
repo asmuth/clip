@@ -4,10 +4,9 @@
  *
  * Licensed under the MIT license (see LICENSE).
  */
-#ifndef _FNORDMETRIC_CSVTABLEREF_H
-#define _FNORDMETRIC_CSVTABLEREF_H
 #include <memory>
-#include <fnordmetric/query/tableref.h>
+#include <query/tableref.h>
+#include <query/backends/csv/csvtableref.h>
 
 namespace fnordmetric {
 namespace query {

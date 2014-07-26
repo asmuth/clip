@@ -7,7 +7,7 @@
 #ifndef _FNORDMETRIC_FORMAT_H
 #define _FNORDMETRIC_FORMAT_H
 #include <string.h>
-#include "query/svalue.h"
+#include <fnordmetric/query/svalue.h>
 
 namespace fnordmetric {
 namespace util {

@@ -10,6 +10,7 @@
 #include "../../../util/runtimeexception.h"
 #include "../../../util/unittest.h"
 #include "csvinputstream.h"
+#include "csvtableref.h"
 //#include "csv_backend.h"
 
 using namespace fnordmetric::query::csv_backend;
@@ -83,5 +84,13 @@ TEST_CASE(CSVInputStreamTest, TestReadSimpleRowsEOF, [] () {
   }
 
   EXPECT_EQ(num_rows, 192);
+});
+
+// CSVTableRefTest
+TEST_CASE(CSVInputStreamTest, TestGetColumnIndex, [] () {
+  CSVTableRef table_ref(
+      CSVInputStream::openFile("test/fixtures/gbp_per_country_simple.csv"));
+
+  EXPECT_EQ(table_ref.getColumnIndex("country"), 0);
 });
 
