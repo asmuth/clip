@@ -43,9 +43,9 @@ TEST_CASE(CSVInputStreamTest, TestReadHeaders, [] () {
   EXPECT(csv_file.get() != nullptr);
   std::vector<std::string> headers;
   csv_file->readNextRow(&headers);
-  EXPECT(headers.size() == 2);
-  EXPECT(headers[0] == "country");
-  EXPECT(headers[1] == "gbp");
+  EXPECT_EQ(headers.size(), 2);
+  EXPECT_EQ(headers[0], std::string("country"));
+  EXPECT_EQ(headers[1], "gbp");
 });
 
 

@@ -33,22 +33,34 @@ CSVInputStream::CSVInputStream(
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) :
-    input_(std::move(input_stream)) {}
+    input_(std::move(input_stream)),
+    column_seperator_(column_seperator),
+    row_seperator_(row_seperator),
+    quote_char_(quote_char) {}
 
 void CSVInputStream::readNextRow(std::vector<std::string>* target) {
-  target->emplace_back(readNextColumn());
-}
+  for (;;) {
+    std::string column;
+    char byte;
 
-// FIXPAUL optimize?
-std::string CSVInputStream::readNextColumn() {
-  std::string column;
-  char byte;
+    while (input_->readNextByte(&byte)) {
+      if (byte == column_seperator_) {
+        break;
+      }
 
-  while (input_->readNextByte(&byte)) {
-    printf("byte: %c\n", byte);
+      if (byte == row_seperator_) {
+        break;
+      }
+
+      column += byte;
+    }
+
+    target->emplace_back(column);
+
+    if (byte == row_seperator_) {
+      break;
+    }
   }
-
-  return column;
 }
 
 }

@@ -31,6 +31,9 @@ namespace util {
           "expectation failed: %s", #X); \
     }
 
+#define EXPECT_EQ(X, Y) \
+    EXPECT((X) == (Y));
+
 #define EXPECT_EXCEPTION(E, L) \
     { \
       bool raised = false; \

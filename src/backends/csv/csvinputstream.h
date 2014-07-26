@@ -52,6 +52,9 @@ protected:
   std::string readNextColumn();
 
   std::unique_ptr<fnordmetric::util::InputStream> input_;
+  const char column_seperator_;
+  const char row_seperator_;
+  const char quote_char_;
 };
 
 }
