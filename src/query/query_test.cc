@@ -10,15 +10,15 @@
 #include <assert.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
-#include "query.h"
-#include "query/parser.h"
-#include "query/token.h"
-#include "query/tokenize.h"
-#include "query/executable.h"
-#include "query/tableref.h"
-#include "query/tablescan.h"
-#include "query/tablerepository.h"
-#include "resultlist.h"
+#include <fnordmetric/query/query.h>
+#include <fnordmetric/query/parser.h>
+#include <fnordmetric/query/token.h>
+#include <fnordmetric/query/tokenize.h>
+#include <fnordmetric/query/executable.h>
+#include <fnordmetric/query/tableref.h>
+#include <fnordmetric/query/tablescan.h>
+#include <fnordmetric/query/tablerepository.h>
+#include <fnordmetric/query/resultlist.h>
 
 namespace fnordmetric {
 using namespace fnordmetric::query;

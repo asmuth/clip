@@ -10,7 +10,7 @@ all:
 	(cd target && cmake .. && make)
 
 test: all
-	@find target/tests -iname "test-*" | while read t; do $$t || exit 1; done
+	@find target/tests -iname "test-*" | while read t; do (cd ../../ && build/cmake/$$t) || exit 1; done
 
 clean:
 	rm -rf target stage

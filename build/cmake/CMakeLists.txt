@@ -39,7 +39,8 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/query/tokenize.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
-    stage/src/fnordmetric/query/backends/csv/csvinputstream.cc)
+    stage/src/fnordmetric/query/backends/csv/csvinputstream.cc
+    stage/src/fnordmetric/query/backends/csv/csvtableref.cc)
 
 include_directories(stage/src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")

@@ -5,23 +5,24 @@
  * Licensed under the MIT license (see LICENSE).
  */
 #include <memory>
-#include <query/tableref.h>
-#include <query/backends/csv/csvtableref.h>
+#include <fnordmetric/query/backends/csv/csvtableref.h>
+#include <fnordmetric/query/backends/csv/csvinputstream.h>
+#include <fnordmetric/query/tableref.h>
 
 namespace fnordmetric {
 namespace query {
 namespace csv_backend {
 
-class CSVTableRef : public TableRef {
-public:
-  CSVTableRef(std::unique_ptr<CSVInputStream>&& csv);
-  int getColumnIndex(const std::string& name) override;
-  void executeScan(TableScan* scan) override;
-protected:
-  std::unique_ptr<CSVInputStream> csv_;
-};
+CSVTableRef::CSVTableRef(
+    std::unique_ptr<CSVInputStream>&& csv) :
+    csv_(std::move(csv)) {}
+
+int CSVTableRef::getColumnIndex(const std::string& name) {
+}
+
+void CSVTableRef::executeScan(TableScan* scan) {
+}
 
 }
 }
 }
-#endif

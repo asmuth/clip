@@ -7,16 +7,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <memory>
-#include "query.h"
-#include "query/axisstatement.h"
-#include "query/drawstatement.h"
-#include "query/executable.h"
-#include "query/parser.h"
-#include "query/queryplan.h"
-#include "query/resultlist.h"
-#include "query/seriesstatement.h"
-#include "query/tablerepository.h"
-#include "query/resultlist.h"
+#include <fnordmetric/query/query.h>
+#include <fnordmetric/query/axisstatement.h>
+#include <fnordmetric/query/drawstatement.h>
+#include <fnordmetric/query/executable.h>
+#include <fnordmetric/query/parser.h>
+#include <fnordmetric/query/queryplan.h>
+#include <fnordmetric/query/resultlist.h>
+#include <fnordmetric/query/seriesstatement.h>
+#include <fnordmetric/query/tablerepository.h>
+#include <fnordmetric/query/resultlist.h>
 
 namespace fnordmetric {
 namespace query {

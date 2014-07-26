@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "query/svalue.h"
+#include <fnordmetric/query/svalue.h>
 
 namespace fnordmetric {
 namespace query {

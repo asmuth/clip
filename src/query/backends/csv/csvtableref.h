@@ -7,6 +7,7 @@
 #ifndef _FNORDMETRIC_CSVTABLEREF_H
 #define _FNORDMETRIC_CSVTABLEREF_H
 #include <memory>
+#include <fnordmetric/query/backends/csv/csvinputstream.h>
 #include <fnordmetric/query/tableref.h>
 
 namespace fnordmetric {
