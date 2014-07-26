@@ -484,7 +484,7 @@ TEST_CASE(QueryTest, TestTokenizerSimple, [] () {
 
 
 TEST_CASE(QueryTest, TestTokenizerAsClause, [] () {
-  auto parser = parseTestQuery(" SELECT fnord As blah from");
+  auto parser = parseTestQuery(" SELECT fnord As blah from asd;");
   auto tl = &parser.getTokenList();
   EXPECT((*tl)[0].getType() == Token::T_SELECT);
   EXPECT((*tl)[1].getType() == Token::T_IDENTIFIER);
