@@ -880,7 +880,7 @@ public:
 
     query.execute();
     auto chart = query.getChart(0);
-    chart->renderSVG();
+    //chart->renderSVG();
   }
 
   void testDerivedSeriesDrawQuery() {
@@ -903,7 +903,7 @@ public:
 
     query.execute();
     auto chart = query.getChart(0);
-    chart->renderSVG();
+    //chart->renderSVG();
   }
 
 };
