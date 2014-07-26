@@ -9,8 +9,8 @@
 #include <vector>
 #include <string>
 #include <tuple>
-#include "axisdefinition.h"
-#include "drawable.h"
+#include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/drawable.h>
 
 namespace fnordmetric {
 class SeriesDefinition;

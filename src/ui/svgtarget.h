@@ -10,7 +10,7 @@
 #include <vector>
 #include <string>
 #include "rendertarget.h"
-#include "styles/style_default.h"
+#include <fnordmetric/styles/style_default.h>
 
 namespace fnordmetric {
 namespace ui {
