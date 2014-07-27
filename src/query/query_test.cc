@@ -933,4 +933,28 @@ TEST_CASE(QueryTest, TestImportCSVTable, [] () {
   EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
+TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
+  TableRepository repo;
+
+  auto query = Query(
+      "  IMPORT TABLE gbp_per_country "
+      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
+      ""
+      "  DRAW BAR CHART;"
+      "  DRAW LEFT AXIS;"
+      ""
+      "  SELECT"
+      "    'gross domestic product per country' as series,"
+      "    country as x,"
+      "    gbp as y"
+      "  FROM"
+      "    gbp_per_country"
+      "  LIMIT 30;",
+      &repo);
+
+  query.execute();
+  auto chart = query.getChart(0);
+  chart->renderSVG();
+});
+
 
