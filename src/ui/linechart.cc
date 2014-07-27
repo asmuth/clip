@@ -9,6 +9,7 @@
 #include "canvas.h"
 #include "linechart.h"
 #include "rendertarget.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -197,6 +198,18 @@ void LineChart::render(
   }
 
   target->finishGroup();
+}
+
+void LineChart::addSeries(Series2D<std::string, double>* series) {
+  RAISE(
+      util::RuntimeException,
+      "unsupported series format for LineChart: <string, float>");
+}
+
+void LineChart::addSeries(Series2D<std::string, std::string>* series) {
+  RAISE(
+      util::RuntimeException,
+      "unsupported series format for LineChart: <string, float>");
 }
 
 }

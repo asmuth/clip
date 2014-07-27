@@ -354,6 +354,9 @@ ASTNode* Parser::chartStatement() {
     case Token::T_BAR:
       chart->setToken(consumeToken());
       break;
+    case Token::T_LINE:
+      chart->setToken(consumeToken());
+      break;
 
     default:
       RAISE(

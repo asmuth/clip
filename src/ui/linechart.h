@@ -64,6 +64,16 @@ public:
       bool smooth = false);
 
   /**
+   * Unsupported series format
+   */
+  void addSeries(Series2D<std::string, double>* series);
+
+  /**
+   * Unsupported series format
+   */
+  void addSeries(Series2D<std::string, std::string>* series);
+
+  /**
    * Add an axis to the chart. This method should only be called after all
    * series have been added to the chart.
    *
