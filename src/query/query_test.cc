@@ -37,20 +37,16 @@ static Parser parseTestQuery(const char* query) {
 
 static void compareChart(
     fnordmetric::ui::Canvas* chart,
-    const std::string& file_path) {
-  std::string output_str;
-  fnordmetric::util::StringOutputStream output_stream(&output_str);
-  fnordmetric::ui::SVGTarget target(&output_stream);
+    const std::string& file_name) {
+  auto output_stream = fnordmetric::util::FileOutputStream::openFile(
+      "build/tests/tmp/" + file_name);
+
+  fnordmetric::ui::SVGTarget target(output_stream.get());
   chart->render(&target);
 
-  std::string input_str;
-  auto input_stream = fnordmetric::util::FileInputStream::openFile(file_path);
-  input_stream->readUntilEOF(&input_str);
-
-  if (input_str != output_str) {
-    RAISE(fnordmetric::util::RuntimeException,
-        "chart does not match '%s'", file_path.c_str());
-  }
+  EXPECT_FILES_EQ(
+    "test/fixtures/" + file_name,
+    "build/tests/tmp/" + file_name);
 }
 
 class TestTableRef : public TableRef {
@@ -829,7 +825,10 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
 
   query.execute();
   auto chart = query.getChart(0);
-  //chart->renderSVG();
+
+  compareChart(
+      chart,
+      "QueryTest_TestSimpleDrawQuery_out.svg.html");
 });
 
 TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
@@ -849,7 +848,10 @@ TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
 
   query.execute();
   auto chart = query.getChart(0);
-  chart->renderSVG();
+
+  compareChart(
+      chart,
+      "QueryTest_TestDerivedSeriesDrawQuery_out.svg.html");
 });
 
 TEST_CASE(QueryTest, TestSimpleSelectFromCSV, [] () {
@@ -981,7 +983,7 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
 
   compareChart(
       chart,
-      "build/tests/tmp/QueryTest_SimpleEndToEndTest_out.svg.html");
+      "QueryTest_SimpleEndToEndTest_out.svg.html");
 });
 
 
