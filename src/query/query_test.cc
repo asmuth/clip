@@ -986,6 +986,10 @@ TEST_CASE(QueryTest, TestQueryService, [] () {
       input.get(),
       QueryService::FORMAT_SVG,
       output.get());
+
+  EXPECT_FILES_EQ(
+      "test/fixtures/QueryTest_TestQueryService_out.svg.html",
+      "build/tests/tmp/QueryTest_TestQueryService_out.svg.html");
 });
 
 

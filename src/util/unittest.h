@@ -6,7 +6,9 @@
  */
 #ifndef _FNORDMETRIC_UTIL_UNITTEST_H
 #define _FNORDMETRIC_UTIL_UNITTEST_H
-#include "runtimeexception.h"
+#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/inputstream.h>
+#include <fnordmetric/util/outputstream.h>
 #include <functional>
 #include <unordered_map>
 #include <vector>
@@ -59,6 +61,23 @@ namespace util {
             "excepted exception '%s' but got no exception", E); \
       } \
     }
+
+#define EXPECT_FILES_EQ(F1, F2) \
+  { \
+    auto one = fnordmetric::util::FileInputStream::openFile(F1); \
+    auto two = fnordmetric::util::FileInputStream::openFile(F1); \
+    std::string one_str; \
+    std::string two_str; \
+    one->readUntilEOF(&one_str); \
+    two->readUntilEOF(&two_str); \
+    if (one_str != two_str) { \
+      RAISE( \
+          fnordmetric::util::UnitTest::ExpectationFailed, \
+          "expected files '%s' and '%s' to be equal, but the differ", \
+          one_str.c_str(), two_str.c_str()); \
+    } \
+  }
+
 
 class UnitTest {
 public:
