@@ -75,13 +75,15 @@ protected:
 
 template <typename T>
 bool SValue::testType() const {
+  bool retval = false;
+
   try {
-    getValue<T>();
-  } catch (TypeError e) {
-    return false;
+    auto val = getValue<T>();
+    retval = true;
+  } catch (std::exception e) {
   }
 
-  return true;
+  return retval;
 }
 
 }

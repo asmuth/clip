@@ -148,7 +148,7 @@ double SValue::getFloat() const {
       try {
         return std::stod(getString());
       } catch (std::exception e) {
-        /* FALLTHROUGH */
+        /* fallthrough */
       }
 
     default:

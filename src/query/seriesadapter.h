@@ -130,6 +130,14 @@ protected:
           y_ind_);
     }
 
+    if (testSeriesSchema2D<std::string, double>(x, y)) {
+      return new SeriesAdapter2D<T, std::string, double>(
+          drawable_,
+          name_ind_,
+          x_ind_,
+          y_ind_);
+    }
+
     return new SeriesAdapter2D<T, std::string, std::string>(
         drawable_,
         name_ind_,
