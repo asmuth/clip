@@ -9,6 +9,7 @@
 #include <string.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/cli/cli.h>
+#include <fnordmetric/cli/flagparser.h>
 
 using namespace fnordmetric::cli;
 
@@ -22,7 +23,28 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
     "-o", "build/test/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html"
   };
 
-  CLI::execute(args);
+  FlagParser flag_parser;
+
+  flag_parser.defineFlag(
+      FlagParser::T_STRING,
+      false,
+      "f",
+      "format",
+      "human",
+      "The output format (svg,csv,human)",
+      "<output_format>");
+
+  flag_parser.defineFlag(
+      FlagParser::T_STRING,
+      false,
+      "o",
+      "output",
+      NULL,
+      "The output format (svg,csv,human)",
+      "<output_format>");
+
+  flag_parser.parseArgv(args);
+  CLI::execute(flag_parser);
 
   EXPECT_FILES_EQ(
     "test/fixtures/CLITest_TestSimpleSQLToSVG_out.svg.html",

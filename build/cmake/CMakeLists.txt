@@ -48,7 +48,8 @@ set(FNORDMETRIC_QUERY_SOURCES
 
 set(FNORDMETRIC_CLI_SOURCES
     ${FNORDMETRIC_QUERY_SOURCES}
-    stage/src/fnordmetric/cli/cli.cc)
+    stage/src/fnordmetric/cli/cli.cc
+    stage/src/fnordmetric/cli/flagparser.cc)
 
 include_directories(stage/src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")

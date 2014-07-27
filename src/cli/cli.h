@@ -10,6 +10,7 @@
 
 namespace fnordmetric {
 namespace cli {
+class FlagParser;
 
 class CLI {
 public:
@@ -22,7 +23,7 @@ public:
    *
    * May throw an exception!
    */
-  static void execute(std::vector<std::string> args);
+  static void execute(const cli::FlagParser& flag_parser);
 }
 ;
 
