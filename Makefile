@@ -11,5 +11,6 @@ test:
 
 clean:
 	(cd build/cmake && make clean)
+	rm -rf build/test/tmp*
 
 .PHONY: all test clean

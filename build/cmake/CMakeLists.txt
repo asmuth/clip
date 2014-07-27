@@ -46,6 +46,10 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/query/token.cc
     stage/src/fnordmetric/query/tokenize.cc)
 
+set(FNORDMETRIC_CLI_SOURCES
+    ${FNORDMETRIC_QUERY_SOURCES}
+    stage/src/fnordmetric/cli/cli.cc)
+
 include_directories(stage/src)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
@@ -59,6 +63,10 @@ add_executable(tests/test-query
 add_executable(tests/test-ui
     ${FNORDMETRIC_UI_SOURCES}
     stage/src/fnordmetric/ui/ui_test.cc)
+
+add_executable(tests/test-cli
+    ${FNORDMETRIC_CLI_SOURCES}
+    stage/src/fnordmetric/cli/cli_test.cc)
 
 add_executable(tests/test-input-stream
     ${FNORDMETRIC_SOURCES}

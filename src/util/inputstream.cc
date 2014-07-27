@@ -13,6 +13,11 @@
 namespace fnordmetric {
 namespace util {
 
+std::unique_ptr<InputStream> InputStream::getStdin() {
+  auto stdin_stream = new FileInputStream(0, false);
+  return std::unique_ptr<InputStream>(stdin_stream);
+}
+
 // FIXPAUL: optimize?
 size_t InputStream::readUntilEOF(std::string* target) {
   char byte;
@@ -42,7 +47,14 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
 FileInputStream::FileInputStream(
     int fd,
     bool close_on_destroy /* = false */) :
-    fd_(fd) {}
+    fd_(fd),
+    close_on_destroy_(close_on_destroy) {}
+
+FileInputStream::~FileInputStream() {
+  if (fd_ >= 0 && close_on_destroy_) {
+    close(fd_);
+  }
+}
 
 bool FileInputStream::readNextByte(char* target) {
   if (buf_pos_ >= buf_len_) {

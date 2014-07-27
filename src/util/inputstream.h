@@ -14,6 +14,12 @@ namespace util {
 
 class InputStream {
 public:
+
+  /**
+   * Get the stdin input stream
+   */
+  static std::unique_ptr<InputStream> getStdin();
+
   InputStream() {}
   InputStream(const InputStream& other) = delete;
   InputStream& operator=(const InputStream& other) = delete;
@@ -68,6 +74,11 @@ public:
   explicit FileInputStream(int fdd, bool close_on_destroy = false);
 
   /**
+   * Close the fd if close_on_destroy is true
+   */
+  ~FileInputStream();
+
+  /**
    * Read the next byte from the file. Returns true if the next byte was read
    * and false if the end of the stream was reached.
    *
@@ -88,6 +99,7 @@ protected:
   size_t buf_len_;
   size_t buf_pos_;
   int fd_;
+  bool close_on_destroy_;
 };
 
 class StringInputStream : public InputStream {
