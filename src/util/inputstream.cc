@@ -7,8 +7,8 @@
 #include <string>
 #include <unistd.h>
 #include <fcntl.h>
-#include "inputstream.h"
-#include "runtimeexception.h"
+#include <fnordmetric/util/inputstream.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace util {
@@ -27,7 +27,10 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
   return std::unique_ptr<FileInputStream>(csv_file);
 }
 
-FileInputStream::FileInputStream(int fd) : fd_(fd) {}
+FileInputStream::FileInputStream(
+    int fd,
+    bool close_on_destroy /* = false */) :
+    fd_(fd) {}
 
 bool FileInputStream::readNextByte(char* target) {
   if (buf_pos_ >= buf_len_) {

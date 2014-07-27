@@ -8,16 +8,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <fnordmetric/util/unittest.h>
+#include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/query/backends/csv/csvtableref.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/query/parser.h>
-#include <fnordmetric/query/token.h>
-#include <fnordmetric/query/tokenize.h>
 #include <fnordmetric/query/executable.h>
+#include <fnordmetric/query/parser.h>
+#include <fnordmetric/query/query.h>
+#include <fnordmetric/query/queryservice.h>
+#include <fnordmetric/query/resultlist.h>
 #include <fnordmetric/query/tableref.h>
 #include <fnordmetric/query/tablescan.h>
 #include <fnordmetric/query/tablerepository.h>
-#include <fnordmetric/query/resultlist.h>
+#include <fnordmetric/query/token.h>
+#include <fnordmetric/query/tokenize.h>
 
 using namespace fnordmetric::query;
 
@@ -955,6 +957,34 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
   query.execute();
   auto chart = query.getChart(0);
   chart->renderSVG();
+});
+
+
+TEST_CASE(QueryTest, TestQueryService, [] () {
+  auto query =
+      "  IMPORT TABLE gbp_per_country "
+      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
+      ""
+      "  DRAW BAR CHART;"
+      "  DRAW BOTTOM AXIS;"
+      "  DRAW LEFT AXIS;"
+      ""
+      "  SELECT"
+      "    'gross domestic product per country' as series,"
+      "    country as x,"
+      "    gbp as y"
+      "  FROM"
+      "    gbp_per_country"
+      "  LIMIT 30;";
+
+  QueryService query_service;
+  auto input = fnordmetric::util::StringInputStream::fromString(query);
+  auto output = fnordmetric::util::OutputStream::getStdout();
+
+  query_service.executeQuery(
+      input.get(),
+      QueryService::FORMAT_CSV,
+      output.get());
 });
 
 

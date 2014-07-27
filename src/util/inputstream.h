@@ -37,7 +37,8 @@ public:
 
   /**
    * Open a new file input stream from the provided file path. Throws an
-   * exception if the file cannot be opened.
+   * exception if the file cannot be opened. The file will be automatically
+   * closed on destroy.
    *
    * @param file_path the path to the file
    */
@@ -45,12 +46,14 @@ public:
       const std::string& file_path);
 
   /**
-   * Create a new FileInputStream instance from the provided filedescriptor. The
-   * input stream takes ownership of the fd and will close() it when destructed.
+   * Create a new FileInputStream instance from the provided filedescriptor. If
+   * close on_destroy is true, the fd will be close()ed when the input stream
+   * is destroyed.
    *
-   * @param fd a valid an opened fd, transfer ownership and close on destruct
+   * @param fd a valid fd
+   * @param close_on_destroy close the fd on destroy?
    */
-  explicit FileInputStream(int fd);
+  explicit FileInputStream(int fdd, bool close_on_destroy = false);
 
   /**
    * Read the next byte from the file. Returns true if the next byte was read
@@ -73,6 +76,37 @@ protected:
   size_t buf_len_;
   size_t buf_pos_;
   int fd_;
+};
+
+class StringInputStream : public InputStream {
+public:
+
+  /**
+   * Create a new InputStream from the provided string
+   *
+   * @param string the input string
+   */
+  static std::unique_ptr<StringInputStream> fromString(
+      const std::string& string);
+
+  /**
+   * Create a new InputStream from the provided string
+   *
+   * @param string the input string
+   */
+  StringInputStream(const std::string& string);
+
+  /**
+   * Read the next byte from the file. Returns true if the next byte was read
+   * and false if the end of the stream was reached.
+   *
+   * @param target the target char pointer
+   */
+  bool readNextByte(char* target) override;
+
+protected:
+  const std::string& str_;
+  size_t cur_;
 };
 
 }
