@@ -30,15 +30,17 @@ public:
 
   /**
    * Write the next n bytes to the output stream. This may raise an exception.
+   * Returns the number of bytes that have been written.
    *
    * @param data a pointer to the data to be written
    * @param size then number of bytes to be written
    */
-  virtual bool write(char* data, size_t size) = 0;
+  virtual size_t write(char* data, size_t size) = 0;
 
 };
 
 class FileOutputStream : public OutputStream {
+public:
 
   /**
    * Create a new FileOuputStream instance from the provided filedescriptor. If 
@@ -51,13 +53,22 @@ class FileOutputStream : public OutputStream {
   explicit FileOutputStream(int fd, bool close_on_destroy = false);
 
   /**
+   * Close the fd if close_on_destroy is true
+   */
+  ~FileOutputStream();
+
+  /**
    * Write the next n bytes to the file. This may raise an exception.
+   * Returns the number of bytes that have been written.
    *
    * @param data a pointer to the data to be written
    * @param size then number of bytes to be written
    */
-  virtual bool write(char* data, size_t size) = 0;
+  size_t write(char* data, size_t size) override;
 
+protected:
+  int fd_;
+  bool close_on_destroy_;
 };
 
 }

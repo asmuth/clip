@@ -1,4 +1,10 @@
 
+
+fnordmetric web:
+    $ fnordmetric --web 8080   # standalone webserver on port 8080
+    $ fnordmetric --cgi        # mount me as cgi script!
+
+
 rename:
   canvas -> chart
   resultlist -> table
