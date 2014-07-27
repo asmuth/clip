@@ -29,6 +29,7 @@ public:
     T_RESOLVED_COLUMN,
     T_TABLE_NAME,
     T_DERIVED_COLUMN,
+    T_PROPERTY,
 
     T_SELECT,
     T_SELECT_LIST,
@@ -56,10 +57,9 @@ public:
     T_MOD_EXPR,
     T_POW_EXPR,
 
-    T_SERIES,
-    T_SERIES_NAME,
     T_AXIS,
-    T_DRAW
+    T_DRAW,
+    T_IMPORT
   };
 
   ASTNode(kASTNodeType type);

@@ -198,6 +198,8 @@ ASTNode* Parser::statement() {
       return selectStatement();
     case Token::T_DRAW:
       return drawStatement();
+    case Token::T_IMPORT:
+      return importStatement();
   }
 
   RAISE(
@@ -274,6 +276,56 @@ ASTNode* Parser::selectStatement() {
   return select;
 }
 
+
+ASTNode* Parser::importStatement() {
+  auto import = new ASTNode(ASTNode::T_IMPORT);
+  consumeToken();
+
+  expectAndConsume(Token::T_TABLE);
+  import->appendChild(tableName());
+  expectAndConsume(Token::T_FROM);
+
+  switch (cur_token_->getType()) {
+    case Token::T_CSV:
+      importCSVClause(import);
+      break;
+
+    default:
+      RAISE(
+          ParseError,
+          "unexpected token '%s', expected one of CSV, MYSQL",
+          Token::getTypeName(cur_token_->getType()));
+  }
+
+  consumeIf(Token::T_SEMICOLON);
+  return import;
+}
+
+void Parser::importCSVClause(ASTNode* import) {
+  import->setToken(consumeToken());
+  assertExpectation(Token::T_STRING);
+
+  auto filename = new ASTNode(ASTNode::T_LITERAL);
+  filename->setToken(consumeToken());
+  import->appendChild(filename);
+
+  for (;;) {
+    switch (cur_token_->getType()) {
+
+      case Token::T_HEADER: {
+        auto flag = new ASTNode(ASTNode::T_PROPERTY);
+        flag->setToken(consumeToken());
+        import->appendChild(flag);
+        continue;
+      }
+
+      default:
+        break;
+    }
+
+    break;
+  }
+}
 
 ASTNode* Parser::drawStatement() {
   if (lookahead(2, Token::T_CHART)) {

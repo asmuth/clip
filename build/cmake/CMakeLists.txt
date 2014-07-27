@@ -20,6 +20,7 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/pointchart.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
+    stage/src/fnordmetric/query/backends/csv/csvbackend.cc
     stage/src/fnordmetric/query/backends/csv/csvinputstream.cc
     stage/src/fnordmetric/query/backends/csv/csvtableref.cc)
 

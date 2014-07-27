@@ -8,15 +8,15 @@
 #include <string.h>
 #include <memory>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/query/query.h>
 #include <fnordmetric/query/axisstatement.h>
+#include <fnordmetric/query/backends/csv/csvbackend.h>
 #include <fnordmetric/query/drawstatement.h>
 #include <fnordmetric/query/executable.h>
 #include <fnordmetric/query/parser.h>
+#include <fnordmetric/query/query.h>
 #include <fnordmetric/query/queryplan.h>
 #include <fnordmetric/query/resultlist.h>
 #include <fnordmetric/query/tablerepository.h>
-#include <fnordmetric/query/resultlist.h>
 
 namespace fnordmetric {
 namespace query {
@@ -31,13 +31,15 @@ Query::Query(const char* query_string, query::TableRepository* repo) {
   for (auto stmt : parser.getStatements()) {
     switch (stmt->getType()) {
       case query::ASTNode::T_SELECT:
-      case query::ASTNode::T_SERIES:
       case query::ASTNode::T_AXIS:
       case query::ASTNode::T_DRAW:
         addStatement(stmt, repo);
         break;
+      case query::ASTNode::T_IMPORT:
+        importTable(stmt, repo);
+        break;
       default:
-        assert(0 == 777);
+        RAISE(util::RuntimeException, "invalid statement");
     }
   }
 }
@@ -140,12 +142,28 @@ bool Query::addStatement(
     query::TableRepository* repo) {
   auto query_plan = query::QueryPlan::buildQueryPlan(statement, repo);
   if (query_plan == nullptr) {
-    fprintf(stderr, "error: cant build statement\n");
+    fprintf(stderr, "cant build statement");
     return false;
   }
 
   statements_.emplace_back(query_plan);
   return true;
+}
+
+void Query::importTable(ASTNode* statement, TableRepository* repo) const {
+  auto table_name = statement->getChildren()[0]->getToken()->getString();
+
+  switch (statement->getToken()->getType()) {
+
+    case Token::T_CSV:
+      return repo->addTableRef(
+          table_name,
+          csv_backend::CSVBackend::openTable(statement));
+
+    default:
+      RAISE(util::RuntimeException, "can't import table, unknown table type");
+
+  }
 }
 
 }

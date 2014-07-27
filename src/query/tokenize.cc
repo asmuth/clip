@@ -379,6 +379,26 @@ next:
     goto next;
   }
 
+  if (token == "IMPORT") {
+    token_list->emplace_back(Token::T_IMPORT);
+    goto next;
+  }
+
+  if (token == "TABLE") {
+    token_list->emplace_back(Token::T_TABLE);
+    goto next;
+  }
+
+  if (token == "CSV") {
+    token_list->emplace_back(Token::T_CSV);
+    goto next;
+  }
+
+  if (token == "HEADER") {
+    token_list->emplace_back(Token::T_HEADER);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

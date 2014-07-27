@@ -53,7 +53,7 @@ point chart examples:
 --- TimeDomain!
 --- max interpolation gap -> draw as missing data
 
-IMPORT tablename FROM CSV { 'filename' | STDIN }
+IMPORT TABLE tablename FROM CSV { 'filename' | STDIN }
     [ [ WITH ]
           [ DELIMITER [ AS ] 'delimiter' ]
           [ ROW_DELIMITER [ AS ] 'row_delimiter' ]
@@ -63,16 +63,16 @@ IMPORT tablename FROM CSV { 'filename' | STDIN }
 
 DRAW BAR CHART
     [ [ WITH ] ]
-      [ TITLE 'title' ]
-      [ SUBTITLE 'subtitle' ]
-      [ ORIENTATION {HORIZONTAL|VERTICAL} ]
-      [ STACKED {TRUE|FALSE} ]
-      [ LABELS {INSIDE|OUTSIDE|OFF} ] ]
+          [ TITLE 'title' ]
+          [ SUBTITLE 'subtitle' ]
+          [ ORIENTATION {HORIZONTAL|VERTICAL} ]
+          [ STACKED {TRUE|FALSE} ]
+          [ LABELS {INSIDE|OUTSIDE|OFF} ] ]
 
 DRAW AXIS {TOP|RIGHT|BOTTOM|LEFT}
     [ [ WITH ] ]
-      [ TITLE 'title' ]
-      [ DOMAIN min, max [ LOGARITHMIC ] ];
+          [ TITLE 'title' ]
+          [ DOMAIN min, max [ LOGARITHMIC ] ];
 
 SELECT
   series = expr

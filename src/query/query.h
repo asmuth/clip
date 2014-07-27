@@ -66,6 +66,7 @@ public:
 
 protected:
   bool addStatement(ASTNode* statement, TableRepository* repo);
+  void importTable(ASTNode* statement, TableRepository* repo) const;
 
   //Drawable* makeDrawable(query::DrawStatement* stmt);
   std::vector<std::unique_ptr<Executable>> statements_;

@@ -929,6 +929,8 @@ TEST_CASE(QueryTest, TestImportCSVTable, [] () {
       &repo);
 
   query.execute();
+  auto results = query.getResultList(0);
+  EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
 

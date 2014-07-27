@@ -70,7 +70,11 @@ public:
     T_TOP,
     T_RIGHT,
     T_BOTTOM,
-    T_LEFT
+    T_LEFT,
+    T_IMPORT,
+    T_TABLE,
+    T_CSV,
+    T_HEADER
   };
 
   Token(kTokenType token_type);

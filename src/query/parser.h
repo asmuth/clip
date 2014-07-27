@@ -76,6 +76,9 @@ protected:
   ASTNode* chartStatement();
   ASTNode* axisStatement();
 
+  ASTNode* importStatement();
+  void importCSVClause(ASTNode* import);
+
   ASTNode* fromClause();
   ASTNode* whereClause();
   ASTNode* groupByClause();
