@@ -16,10 +16,90 @@
 namespace fnordmetric {
 namespace cli {
 
-void CLI::execute(const cli::FlagParser& flag_parser) {
+FlagParser CLI::getDefaultFlagParser() {
+  FlagParser flag_parser;
+
+  flag_parser.defineFlag(
+      "format",
+      FlagParser::T_STRING,
+      false,
+      "f",
+      "human",
+      "The output format (svg,csv,human)",
+      "<format>");
+
+  flag_parser.defineFlag(
+      "output",
+      FlagParser::T_STRING,
+      false,
+      "o",
+      NULL,
+      "Write output to a file",
+      "<format>");
+
+  flag_parser.defineFlag(
+      "verbose",
+      FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "Be verbose");
+
+  flag_parser.defineFlag(
+      "help",
+      FlagParser::T_SWITCH,
+      false,
+      "h",
+      NULL,
+      "You are reading it...");
+
+  return flag_parser;
+}
+
+int CLI::executeSafely(
+      const std::vector<std::string>& argv,
+      util::OutputStream* error_stream) {
+  bool verbose = true;
+  auto flag_parser = getDefaultFlagParser();
+
+  try {
+    flag_parser.parseArgv(argv);
+    verbose = flag_parser.isSet("verbose");
+    execute(flag_parser, error_stream);
+  } catch (util::RuntimeException e) {
+    if (e.getTypeName() == "UsageError") {
+      flag_parser.printUsage(error_stream);
+      return 1;
+    }
+
+    error_stream->printf("fatal error: %s\n", e.getMessage().c_str());
+
+    if (verbose) {
+      e.debugPrint();
+    }
+
+    return 1;
+  }
+
+  return 0;
+}
+
+void CLI::execute(
+      const std::vector<std::string>& argv,
+      util::OutputStream* error_stream) {
+  /* parse flags */
+  auto flag_parser = getDefaultFlagParser();
+  flag_parser.parseArgv(argv);
   bool verbose = flag_parser.isSet("verbose");
-  auto err = util::OutputStream::getStderr();
   const auto& args = flag_parser.getArgv();
+  execute(flag_parser, error_stream);
+}
+
+void CLI::execute(
+      const FlagParser& flag_parser,
+      util::OutputStream* error_stream) {
+  const auto& args = flag_parser.getArgv();
+  bool verbose = flag_parser.isSet("verbose");
 
   /* web / cgi mode */
 
@@ -27,23 +107,22 @@ void CLI::execute(const cli::FlagParser& flag_parser) {
 
   /* open input stream */
   std::unique_ptr<util::InputStream> input;
-  switch (args.size()) {
-    case 0:
+  if (args.size() == 1) {
+    if (args[0] == "-") {
       if (verbose) {
-        err->printf("[INFO] input from stdin %s\n");
+        error_stream->printf("[INFO] input from stdin %s\n");
       }
 
       input = std::move(util::InputStream::getStdin());
-      break;
-    case 1:
+    } else {
       if (verbose) {
-        err->printf("[INFO] input file: %s\n", args[0].c_str());
+        error_stream->printf("[INFO] input file: %s\n", args[0].c_str());
       }
 
       input = std::move(util::FileInputStream::openFile(args[0]));
-      break;
-    default:
-      RAISE(UsageError);
+    }
+  } else {
+    RAISE(UsageError);
   }
 
   /* open output stream */
@@ -52,13 +131,13 @@ void CLI::execute(const cli::FlagParser& flag_parser) {
     auto output_file = flag_parser.getString("output");
 
     if (verbose) {
-      err->printf("[INFO] output file: %s\n", output_file.c_str());
+      error_stream->printf("[INFO] output file: %s\n", output_file.c_str());
     }
 
     output = std::move(util::FileOutputStream::openFile(output_file));
   } else {
     if (verbose) {
-      err->printf("[INFO] output to stdout\n");
+      error_stream->printf("[INFO] output to stdout\n");
     }
     output = std::move(util::OutputStream::getStdout());
   }

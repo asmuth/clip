@@ -11,6 +11,9 @@
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
+namespace util {
+class OutputStream;
+}
 namespace cli {
 
 class FlagParser {
@@ -67,6 +70,8 @@ public:
    * Get the argv array with all flag args removed
    */
   const std::vector<std::string>& getArgv() const;
+
+  void printUsage(util::OutputStream* target) const;
 
 protected:
   struct FlagState {

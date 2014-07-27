@@ -33,6 +33,7 @@ public:
 
   void debugPrint() const;
   std::string getMessage() const;
+  std::string getTypeName() const;
 
   void appendMessage(const char* message, ...);
 

@@ -10,6 +10,7 @@
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
+#include <fnordmetric/util/outputstream.h>
 
 using namespace fnordmetric::cli;
 
@@ -23,36 +24,10 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
     "-o", "build/tests/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html"
   };
 
-  FlagParser flag_parser;
-
-  flag_parser.defineFlag(
-      "verbose",
-      FlagParser::T_SWITCH,
-      false,
-      "v",
-      NULL,
-      "Be verbose");
-
-  flag_parser.defineFlag(
-      "format",
-      FlagParser::T_STRING,
-      false,
-      "f",
-      "human",
-      "The output format (svg,csv,human)",
-      "<output_format>");
-
-  flag_parser.defineFlag(
-      "output",
-      FlagParser::T_STRING,
-      false,
-      "o",
-      NULL,
-      "The output format (svg,csv,human)",
-      "<output_format>");
-
+  auto flag_parser = CLI::getDefaultFlagParser();
+  auto error_stream = fnordmetric::util::OutputStream::getStderr();
   flag_parser.parseArgv(args);
-  CLI::execute(flag_parser);
+  CLI::execute(flag_parser, error_stream.get());
 
   EXPECT_FILES_EQ(
     "test/fixtures/CLITest_TestSimpleSQLToSVG_out.svg.html",

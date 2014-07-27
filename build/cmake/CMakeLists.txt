@@ -57,6 +57,10 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
 
+add_executable(fnordmetric
+    ${FNORDMETRIC_CLI_SOURCES}
+    stage/src/fnordmetric/main.cc)
+
 add_executable(tests/test-query
     ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/query/query_test.cc)

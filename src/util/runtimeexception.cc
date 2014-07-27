@@ -88,5 +88,9 @@ std::string RuntimeException::getMessage() const {
   return std::string(message_);
 }
 
+std::string RuntimeException::getTypeName() const {
+  return std::string(type_name_);
+}
+
 }
 }

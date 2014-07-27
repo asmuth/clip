@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <fnordmetric/cli/flagparser.h>
+#include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
@@ -123,6 +124,50 @@ void FlagParser::parseArgv(const std::vector<std::string>& argv) {
 
 const std::vector<std::string>& FlagParser::getArgv() const {
   return argv_;
+}
+
+void FlagParser::printUsage(util::OutputStream* target) const {
+  target->printf("usage: fnordmetric [options] [file.sql]\n");
+
+  target->printf("\noptions:\n");
+  for (const auto& flag : flags_) {
+    if (flag.shortopt == nullptr) {
+      target->printf("    --%-16.16s", flag.longopt);
+    } else {
+      target->printf("    -%s, --%-12.12s", flag.shortopt, flag.longopt);
+    }
+
+    const char* placeholder = nullptr;
+    if (flag.placeholder == nullptr) {
+      switch (flag.type) {
+        case T_STRING:
+          placeholder = "<string>";
+          break;
+        case T_INTEGER:
+          placeholder = "<int>";
+          break;
+        case T_FLOAT:
+          placeholder = "<float>";
+          break;
+        case T_SWITCH:
+          placeholder = "";
+          break;
+      }
+    } else {
+      placeholder = flag.placeholder;
+    }
+    target->printf("%-12.12s", placeholder);
+
+    if (flag.description != nullptr) {
+      target->printf("%s\n", flag.description);
+    } else {
+      target->printf("\n");
+    }
+  }
+
+  target->printf("\nexamples:\n");
+  target->printf("    $ fnordmeric -f svg -o out.svg myquery.sql\n");
+  target->printf("    $ fnordmeric -f svg - < myquery.sql > out.svg\n");
 }
 
 }
