@@ -3,7 +3,9 @@
 #
 # Licensed under the MIT license (see LICENSE).
 
-all:
+all: build
+
+build:
 	(cd build/cmake && make)
 
 test:
@@ -13,4 +15,8 @@ clean:
 	(cd build/cmake && make clean)
 	rm -rf build/test/tmp*
 
-.PHONY: all test clean
+doc:
+	find examples -name "*.sql" | while read file; do fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
+	(cd doc && rake build)
+
+.PHONY: all test clean doc build

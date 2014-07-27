@@ -19,6 +19,7 @@ namespace cli {
 FlagParser CLI::getDefaultFlagParser() {
   FlagParser flag_parser;
 
+  // Execute queries from the commandline:
   flag_parser.defineFlag(
       "format",
       FlagParser::T_STRING,
@@ -36,6 +37,33 @@ FlagParser CLI::getDefaultFlagParser() {
       NULL,
       "Write output to a file",
       "<format>");
+
+  // Start a user interface:
+  flag_parser.defineFlag(
+      "repl",
+      FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "Start an interactive readline shell",
+      NULL);
+
+  flag_parser.defineFlag(
+      "web",
+      FlagParser::T_INTEGER,
+      false,
+      NULL,
+      NULL,
+      "Start a web interface on this port",
+      "<port>");
+
+  flag_parser.defineFlag(
+      "cgi",
+      FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "Run as CGI script");
 
   flag_parser.defineFlag(
       "verbose",

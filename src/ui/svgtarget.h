@@ -41,7 +41,7 @@ public:
       int height,
       const std::string& class_name) {
     appendLine(
-        "<svg width='%i' height='%i' class='%s'>\n",
+        "<svg viewBox='0 0 %i %i' class='%s'>\n",
         width,
         height,
         class_name.c_str());
