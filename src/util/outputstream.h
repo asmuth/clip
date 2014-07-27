@@ -6,6 +6,7 @@
  */
 #ifndef _FNORDMETRIC_OUTPUTSTREAM_H
 #define _FNORDMETRIC_OUTPUTSTREAM_H
+#include <fcntl.h>
 #include <memory>
 
 namespace fnordmetric {
@@ -41,6 +42,19 @@ public:
 
 class FileOutputStream : public OutputStream {
 public:
+
+  /**
+   * Create a new FileOutputStream instance by opening the provided file for
+   * writing. The fille will automatically be close()ed when the output stream
+   * is destroyed.
+   *
+   * @param file_path the path to the file to open
+   * @param flags flags to pass to the open() syscall
+   */
+  static std::unique_ptr<FileOutputStream> openFile(
+      const std::string& file_path,
+      int flags = O_CREAT | O_TRUNC,
+      int permissions = 0666);
 
   /**
    * Create a new FileOuputStream instance from the provided filedescriptor. If 
