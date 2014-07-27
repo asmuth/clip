@@ -21,7 +21,12 @@ void tokenizeQuery(
 next:
 
   /* skip whitespace */
-  while (**cur == ' ' && *cur < end) {
+  while ((
+      **cur == ' ' ||
+      **cur == '\t' ||
+      **cur == '\n' ||
+      **cur == '\r')
+      && *cur < end) {
     (*cur)++;
   }
 
@@ -195,6 +200,9 @@ next:
   /* keywords and identifiers (i.e table, field names) */
   while (
       **cur != ' ' &&
+      **cur != '\t' &&
+      **cur != '\n' &&
+      **cur != '\r' &&
       **cur != ',' &&
       **cur != '.' &&
       **cur != ';' &&

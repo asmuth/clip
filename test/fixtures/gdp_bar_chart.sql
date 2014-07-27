@@ -8,7 +8,7 @@ DRAW LEFT AXIS;
 SELECT
   'gross domestic product per country' AS series,
   country AS x,
-  gdp AS y
+  gbp AS y
 FROM
   gdp_per_country
 LIMIT 30;

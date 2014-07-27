@@ -34,6 +34,8 @@ public:
   void debugPrint() const;
   std::string getMessage() const;
 
+  void appendMessage(const char* message, ...);
+
   RuntimeException setSource(const char* file, int line, const char* func);
   RuntimeException setTypeName(const char* type_name);
   RuntimeException setErrno(int posix_errno);

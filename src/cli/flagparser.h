@@ -15,6 +15,13 @@ namespace cli {
 
 class FlagParser {
 public:
+  struct FlagError : public fnordmetric::util::RuntimeException {
+    template <typename... T>
+    FlagError(
+        const char* message, T... args) :
+        RuntimeException(message, args...) {}
+  };
+
   enum kFlagType {
     T_SWITCH,
     T_STRING,
@@ -28,13 +35,28 @@ public:
    * Define a flag
    */
   void defineFlag(
+      const char* longopt,
       kFlagType type,
       bool required,
-      const char* shortopt,
-      const char* longopt = NULL,
+      const char* shortopt = NULL,
       const char* default_value = NULL,
       const char* description = NULL,
       const char* placeholder = NULL);
+
+  /**
+   * Returns true if the flag is set and false otherwise
+   *
+   * @param longopt the longopt of the flag
+   */
+  bool isSet(const char* longopt) const;
+
+  /**
+   * Returns the string value of the flag or throws an exception if the value
+   * is invalid.
+   *
+   * @param longopt the longopt of the flag
+   */
+  std::string getString(const char* longopt) const;
 
   /**
    * Parse an argv array. This may throw an exception.
@@ -50,8 +72,8 @@ protected:
   struct FlagState {
     kFlagType type;
     bool required;
-    const char* shortopt;
     const char* longopt;
+    const char* shortopt;
     const char* default_value;
     const char* description;
     const char* placeholder;

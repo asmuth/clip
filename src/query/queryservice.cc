@@ -26,18 +26,23 @@ void QueryService::executeQuery(
   std::string query_string;
   input_stream->readUntilEOF(&query_string);
 
-  TableRepository repo;
-  Query query(query_string.c_str(), query_string.size(), &repo);
-  query.execute();
+  try {
+    TableRepository repo;
+    Query query(query_string.c_str(), query_string.size(), &repo);
+    query.execute();
 
-  switch (output_format) {
+    switch (output_format) {
 
-    case FORMAT_SVG: {
-      ui::SVGTarget target(output_stream);
-      renderCharts(&query, &target);
-      break;
+      case FORMAT_SVG: {
+        ui::SVGTarget target(output_stream);
+        renderCharts(&query, &target);
+        break;
+      }
+
     }
-
+  } catch (util::RuntimeException e) {
+    e.appendMessage(" while executing query: %s", query_string.c_str());
+    throw e;
   }
 }
 

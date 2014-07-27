@@ -60,6 +60,14 @@ RuntimeException RuntimeException::setErrno(int posix_errno) {
   return *this;
 }
 
+void RuntimeException::appendMessage(const char* message, ...) {
+  va_list args;
+  va_start(args, message);
+  size_t pos = strlen(message_);
+  vsnprintf(message_ + pos, sizeof(message_) - pos, message, args);
+  va_end(args);
+}
+
 void RuntimeException::debugPrint() const {
   const char* type_name =
       type_name_ == nullptr ? "RuntimeException" : type_name_;

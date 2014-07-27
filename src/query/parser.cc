@@ -204,8 +204,10 @@ ASTNode* Parser::statement() {
 
   RAISE(
       ParseError,
-      "unexpected token '%s', expected one of SELECT, DRAW or IMPORT",
-      Token::getTypeName(cur_token_->getType()));
+      "unexpected token %s%s%s, expected one of SELECT, DRAW or IMPORT",
+        Token::getTypeName(cur_token_->getType()),
+        cur_token_->getString().size() > 0 ? ": " : "",
+        cur_token_->getString().c_str());
 
   return nullptr;
 }
@@ -293,8 +295,10 @@ ASTNode* Parser::importStatement() {
     default:
       RAISE(
           ParseError,
-          "unexpected token '%s', expected one of CSV, MYSQL",
-          Token::getTypeName(cur_token_->getType()));
+          "unexpected token %s%s%s, expected one of CSV, MYSQL",
+          Token::getTypeName(cur_token_->getType()),
+          cur_token_->getString().size() > 0 ? ": " : "",
+          cur_token_->getString().c_str());
   }
 
   consumeIf(Token::T_SEMICOLON);
@@ -354,8 +358,10 @@ ASTNode* Parser::chartStatement() {
     default:
       RAISE(
           ParseError,
-          "unexpected token '%s', expected one of BAR, LINE or AREA",
-          Token::getTypeName(cur_token_->getType()));
+          "unexpected token %s%s%s, expected one of BAR, LINE or AREA",
+          Token::getTypeName(cur_token_->getType()),
+          cur_token_->getString().size() > 0 ? ": " : "",
+          cur_token_->getString().c_str());
       return nullptr;
   }
 
@@ -389,8 +395,10 @@ ASTNode* Parser::axisStatement() {
     default:
       RAISE(
           ParseError,
-          "unexpected token '%s', expected one of TOP, RIGHT, BOTTOM, LEFT",
-          Token::getTypeName(cur_token_->getType()));
+          "unexpected token %s%s%s, expected one of TOP, RIGHT, BOTTOM, LEFT",
+          Token::getTypeName(cur_token_->getType()),
+          cur_token_->getString().size() > 0 ? ": " : "",
+          cur_token_->getString().c_str());
       return nullptr;
   }
 
@@ -422,8 +430,10 @@ ASTNode* Parser::selectSublist() {
   if (value_expr == nullptr) {
     RAISE(
         ParseError,
-        "unexpected token '%s', expected: value expression",
-        Token::getTypeName(cur_token_->getType()));
+        "unexpected token %s%s%s, expected: value expression",
+        Token::getTypeName(cur_token_->getType()),
+        cur_token_->getString().size() > 0 ? ": " : "",
+        cur_token_->getString().c_str());
     delete derived;
     return nullptr;
   }
@@ -699,8 +709,10 @@ bool Parser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
     RAISE(
         ParseError,
-        "unexpected token '%s', expected: '%s'",
+        "unexpected token %s%s%s, expected: '%s'",
         Token::getTypeName(cur_token_->getType()),
+        cur_token_->getString().size() > 0 ? ": " : "",
+        cur_token_->getString().c_str(),
         Token::getTypeName(expectation));
     return false;
   }

@@ -20,25 +20,33 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
   std::vector<std::string> args = {
     "test/fixtures/gdp_bar_chart.sql",
     "-f", "svg",
-    "-o", "build/test/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html"
+    "-o", "build/tests/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html"
   };
 
   FlagParser flag_parser;
 
   flag_parser.defineFlag(
+      "verbose",
+      FlagParser::T_SWITCH,
+      false,
+      "v",
+      NULL,
+      "Be verbose");
+
+  flag_parser.defineFlag(
+      "format",
       FlagParser::T_STRING,
       false,
       "f",
-      "format",
       "human",
       "The output format (svg,csv,human)",
       "<output_format>");
 
   flag_parser.defineFlag(
+      "output",
       FlagParser::T_STRING,
       false,
       "o",
-      "output",
       NULL,
       "The output format (svg,csv,human)",
       "<output_format>");
@@ -48,6 +56,6 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
 
   EXPECT_FILES_EQ(
     "test/fixtures/CLITest_TestSimpleSQLToSVG_out.svg.html",
-    "build/test/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html");
+    "build/tests/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html");
 });
 

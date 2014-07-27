@@ -323,7 +323,7 @@ TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
 });
 
 TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
-  const char* err_msg = "unexpected token 'T_GROUP', expected one of SELECT, "
+  const char* err_msg = "unexpected token T_GROUP, expected one of SELECT, "
       "DRAW or IMPORT";
 
   EXPECT_EXCEPTION(err_msg, [] () {
