@@ -15,12 +15,27 @@
 #include <fnordmetric/ui/pointchart.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/unittest.h>
 
 using namespace fnordmetric;
 using namespace fnordmetric::ui;
 
 UNIT_TEST(UITest);
+
+static void compareChart(
+    fnordmetric::ui::Canvas* chart,
+    const std::string& file_name) {
+  auto output_stream = fnordmetric::util::FileOutputStream::openFile(
+      "build/tests/tmp/" + file_name);
+
+  fnordmetric::ui::SVGTarget target(output_stream.get());
+  chart->render(&target);
+
+  EXPECT_FILES_EQ(
+    "test/fixtures/" + file_name,
+    "build/tests/tmp/" + file_name);
+}
 
 TEST_CASE(UITest, TestCanvasWithLeftAxis, [] () {
   Canvas canvas;
@@ -39,8 +54,9 @@ TEST_CASE(UITest, TestCanvasWithLeftAxis, [] () {
   axis_left->addLabel(0.8, "4");
   axis_left->addLabel(1.0, "5");
 
-  
-  //printf("svg data: %s", svg.c_str());
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithLeftAxis_out.svg.html");
 });
 
 TEST_CASE(UITest, TestCanvasWithLeftAxisAndTitle, [] () {
@@ -61,8 +77,9 @@ TEST_CASE(UITest, TestCanvasWithLeftAxisAndTitle, [] () {
   axis_left->addLabel(0.8, "4");
   axis_left->addLabel(1.0, "5");
 
-  
-  //printf("svg data: %s", svg.c_str());
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithLeftAxisAndTitle_out.svg.html");
 });
 
 TEST_CASE(UITest, TestCanvasWithLeftAndBottomAxis, [] () {
@@ -96,8 +113,9 @@ TEST_CASE(UITest, TestCanvasWithLeftAndBottomAxis, [] () {
   axis_bottom->addLabel(0.6, "C");
   axis_bottom->addLabel(0.8, "D");
 
-  
-  //printf("svg data: %s", svg.c_str());
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithLeftAndBottomAxis_out.svg.html");
 });
 
 TEST_CASE(UITest, TestCanvasWithAllAxis, [] () {
@@ -159,8 +177,9 @@ TEST_CASE(UITest, TestCanvasWithAllAxis, [] () {
   axis_top->addLabel(0.6, "C");
   axis_top->addLabel(0.8, "D");
 
-  
-  //printf("svg data: %s", svg.c_str());
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithAllAxis_out.svg.html");
 });
 
 TEST_CASE(UITest, TestCanvasWithAllMultiAxis, [] () {
@@ -290,8 +309,9 @@ TEST_CASE(UITest, TestCanvasWithAllMultiAxis, [] () {
     axis_top->addLabel(0.8, "D");
   }
 
-  
-  //printf("svg data: %s", svg.c_str());
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithAllMultiAxis_out.svg.html");
 });
 
 TEST_CASE(UITest, TestCanvasWithMultiLeftAxis, [] () {
@@ -324,7 +344,9 @@ TEST_CASE(UITest, TestCanvasWithMultiLeftAxis, [] () {
   axis2->addLabel(0.9, "D");
   axis2->addLabel(1.0, "E");
 
-  //printf("svg data: %s", svg.c_str());
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithMultiLeftAxis_out.svg.html");
 });
 
 TEST_CASE(UITest, TestCanvasWithAxisFromNumericalDomain, [] () {
@@ -334,6 +356,9 @@ TEST_CASE(UITest, TestCanvasWithAxisFromNumericalDomain, [] () {
   auto axis1 = canvas.addAxis(AxisDefinition::LEFT, &domain);
   axis1->setTitle("numerical domain");
 
+  compareChart(
+      &canvas,
+      "UITest_TestCanvasWithAxisFromNumericalDomain_out.svg.html");
 });
 
 
@@ -355,10 +380,14 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_bar_chart_(
   bar_chart->addAxis(AxisDefinition::RIGHT);
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT);
+
+  compareChart(
+      &canvas,
+      "UITest_TestSimpleBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_mulitseries_bar_chart_(
-    &UITest, "TestMulitSeriesBarChart", [] () {
+    &UITest, "TestMultiSeriesBarChart", [] () {
   Series2D<std::string, double> series1("myseries1");
   series1.addDatum("A", 40);
   series1.addDatum("B", 35);
@@ -384,6 +413,9 @@ static fnordmetric::util::UnitTest::TestCase __test_mulitseries_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT);
 
+  compareChart(
+      &canvas,
+      "UITest_TestMultiSeriesBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_stacked_bar_chart_(
@@ -413,7 +445,9 @@ static fnordmetric::util::UnitTest::TestCase __test_stacked_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestStackedBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_horizontal_bar_chart_(
@@ -434,7 +468,9 @@ static fnordmetric::util::UnitTest::TestCase __test_horizontal_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestHorizontalBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
@@ -464,7 +500,9 @@ static fnordmetric::util::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestHorizontalMulitSeriesBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
@@ -494,7 +532,9 @@ static fnordmetric::util::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestHorizontalStackedBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_range_bar_chart_(
@@ -524,7 +564,9 @@ static fnordmetric::util::UnitTest::TestCase __test_range_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM);
   bar_chart->addAxis(AxisDefinition::LEFT)->setTitle("myaxis");
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestRangeBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_horiz_range_bar_chart_(
@@ -554,6 +596,9 @@ static fnordmetric::util::UnitTest::TestCase __test_horiz_range_bar_chart_(
   bar_chart->addAxis(AxisDefinition::BOTTOM)->setTitle("myaxis");
   bar_chart->addAxis(AxisDefinition::LEFT);
 
+  compareChart(
+      &canvas,
+      "UITest_TestHorizontalRangeBarChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
@@ -583,7 +628,9 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
   point_chart->addAxis(AxisDefinition::BOTTOM);
   point_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestSimplePointChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
@@ -613,7 +660,9 @@ static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
   point_chart->addAxis(AxisDefinition::BOTTOM);
   point_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestVariableSizePointChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
@@ -646,7 +695,9 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
   line_chart->addAxis(AxisDefinition::BOTTOM);
   line_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestSimpleLineChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_point_line_chart_(
@@ -678,7 +729,9 @@ static fnordmetric::util::UnitTest::TestCase __test_point_line_chart_(
   line_chart->addAxis(AxisDefinition::BOTTOM);
   line_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestPointLineChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
@@ -741,7 +794,9 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
   bar_chart->addAxis(AxisDefinition::RIGHT)->setTitle("x2");
   bar_chart->addAxis(AxisDefinition::BOTTOM)->setTitle("y2");
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestMultiChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
@@ -765,7 +820,9 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
   aread_chart->addAxis(AxisDefinition::BOTTOM);
   aread_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestSimpleAreaChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
@@ -789,7 +846,9 @@ static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
   area_chart->addAxis(AxisDefinition::BOTTOM);
   area_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestRangeAreaChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_chart_(
@@ -822,7 +881,9 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_chart_(
   area_chart->addAxis(AxisDefinition::BOTTOM);
   area_chart->addAxis(AxisDefinition::LEFT);
 
-  
+  compareChart(
+      &canvas,
+      "UITest_TestMultiRangeAreaChart_out.svg.html");
 });
 
 static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_line_(
@@ -867,4 +928,7 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_line_(
   auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
   line_chart->addSeries(&series3, "solid", 2, "circle", 4);
 
+  compareChart(
+      &canvas,
+      "UITest_TestMultiRangeAreaLineChart_out.svg.html");
 });
