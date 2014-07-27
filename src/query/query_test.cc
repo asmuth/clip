@@ -983,7 +983,7 @@ TEST_CASE(QueryTest, TestQueryService, [] () {
 
   query_service.executeQuery(
       input.get(),
-      QueryService::FORMAT_CSV,
+      QueryService::FORMAT_SVG,
       output.get());
 });
 

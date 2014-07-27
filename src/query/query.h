@@ -51,7 +51,7 @@ public:
   /**
    * Get the number of charts
    */
-  size_t getNumChart() const;
+  size_t getNumCharts() const;
 
   /**
    * Get the nth chart result of the query. Raises an exception if no such

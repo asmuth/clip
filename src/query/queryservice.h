@@ -9,6 +9,9 @@
 #include <fnordmetric/query/query.h>
 
 namespace fnordmetric {
+namespace ui {
+  class RenderTarget;
+}
 namespace util {
   class InputStream;
   class OutputStream;
@@ -23,6 +26,7 @@ namespace query {
 class QueryService {
 public:
   enum kFormat {
+    FORMAT_SVG,
     FORMAT_CSV
   };
 
@@ -33,11 +37,15 @@ public:
 
   /**
    * Execute a query. This may raise an exception.
+   *
+   * @param input_stream The input stream to read the SQL query
+   * @param output_format The output format
+   * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      util::InputStream* query,
+      util::InputStream* input_stream,
       kFormat output_format,
-      util::OutputStream* output_stream);
+      util::OutputStream* output_stream) const;
 
   /**
    * Register a query backend
@@ -45,6 +53,8 @@ public:
   void registerBackend();
 
 protected:
+
+  void renderCharts(Query* query, ui::RenderTarget* target) const;
 
 };
 

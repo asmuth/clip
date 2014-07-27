@@ -72,6 +72,8 @@ public:
   void render(RenderTarget* target) const;
 
   /**
+   * FIXPAUL REMOVEME
+   *
    * Render the contents of this canvas as a scalabale vector graphic and return
    * as string
    */

@@ -28,7 +28,6 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
-    stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/astnode.cc
     stage/src/fnordmetric/query/compile.cc
     stage/src/fnordmetric/query/drawstatement.cc
@@ -39,7 +38,9 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/query/expressions/math.cc
     stage/src/fnordmetric/query/grouper.cc
     stage/src/fnordmetric/query/parser.cc
+    stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryplan.cc
+    stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/query/svalue.cc
     stage/src/fnordmetric/query/symboltable.cc
     stage/src/fnordmetric/query/token.cc

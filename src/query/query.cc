@@ -23,9 +23,16 @@ namespace query {
 
 Query::Query(const char* query_string, query::TableRepository* repo) {
   query::Parser parser;
+  size_t query_string_len = strlen(query_string);
 
-  if (!parser.parse(query_string, strlen(query_string))) {
-    fprintf(stderr, "parser error\n");
+  if (query_string_len == 0) {
+    RAISE(Parser::ParseError, "empty query");
+  }
+
+  if (!parser.parse(query_string, query_string_len)) {
+    RAISE(
+        Parser::ParseError,
+        "can't figure out how to parse this, sorry :(");
   }
 
   for (auto stmt : parser.getStatements()) {
@@ -92,6 +99,10 @@ void Query::execute() {
 ResultList* Query::getResultList(size_t index) const {
   assert(index < results_.size()); // FIXPAUL
   return results_[index].get();
+}
+
+size_t Query::getNumCharts() const {
+  return charts_.size();
 }
 
 ui::Canvas* Query::getChart(size_t index) const {
