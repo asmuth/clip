@@ -11,6 +11,7 @@
 #include <string>
 #include <fnordmetric/ui/rendertarget.h>
 #include <fnordmetric/ui/styles/style_default.h>
+#include <fnordmetric/util/outputstream.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -18,12 +19,21 @@ namespace ui {
 class SVGTarget : public RenderTarget {
 public:
 
-  SVGTarget() : indent_(0) {}
+  /**
+   * Create a new SVG target.
+   *
+   * @param output_stream the output stream to write to. does not transfer
+   *                      ownership!
+   */
+  SVGTarget(
+      util::OutputStream* output_stream) :
+      output_(output_stream),
+      indent_(0) {}
 
-#define append(...) { printf(__VA_ARGS__); }
+#define append(...) { output_->printf(__VA_ARGS__); }
 
 #define appendLine(...) { \
-    for(int __i = 0; __i < indent_ * 2; ++__i) printf(" "); \
+    for(int __i = 0; __i < indent_ * 2; ++__i) append(" "); \
     append(__VA_ARGS__); }
 
   void beginChart(
@@ -176,7 +186,7 @@ public:
   }
 
 protected:
-
+  util::OutputStream* output_;
   int indent_;
 };
 
