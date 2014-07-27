@@ -7,6 +7,7 @@
 #ifndef _FNORDMETRIC_INPUTSTREAM_H
 #define _FNORDMETRIC_INPUTSTREAM_H
 #include <memory>
+#include <string>
 
 namespace fnordmetric {
 namespace util {
@@ -25,6 +26,17 @@ public:
    * @param target the target char pointer
    */
   virtual bool readNextByte(char* target) = 0;
+
+  /**
+   * Read from the stream until EOF and copy the data into the provided string.
+   * Returns the number of bytes read.
+   *
+   * WARNING: this method might never return if the input stream does not have
+   * an EOF!
+   *
+   * @param target the string to copy the data into
+   */
+  virtual size_t readUntilEOF(std::string* target);
 
 };
 
@@ -105,7 +117,7 @@ public:
   bool readNextByte(char* target) override;
 
 protected:
-  const std::string& str_;
+  std::string str_;
   size_t cur_;
 };
 

@@ -379,6 +379,9 @@ ASTNode* Parser::axisStatement() {
   consumeToken();
 
   switch (cur_token_->getType()) {
+    case Token::T_TOP:
+    case Token::T_RIGHT:
+    case Token::T_BOTTOM:
     case Token::T_LEFT:
       axis->setToken(consumeToken());
       break;
@@ -395,12 +398,7 @@ ASTNode* Parser::axisStatement() {
     return nullptr;
   }
 
-/*
-  if (consumeIf(Token::T_WITH)) {
-    draw->appendChild(selectStatement());
-  } else {
-  }
-*/
+  consumeIf(Token::T_WITH);
 
   consumeIf(Token::T_SEMICOLON);
   return axis;

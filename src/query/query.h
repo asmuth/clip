@@ -22,7 +22,14 @@ class ResultList;
 
 class Query {
 public:
+
   explicit Query(const char* query_string, TableRepository* repo);
+
+  explicit Query(
+      const char* query_string,
+      size_t query_string_len,
+      TableRepository* repo);
+
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
   Query(Query&& move);

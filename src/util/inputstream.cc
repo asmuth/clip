@@ -13,6 +13,18 @@
 namespace fnordmetric {
 namespace util {
 
+// FIXPAUL: optimize?
+size_t InputStream::readUntilEOF(std::string* target) {
+  char byte;
+  size_t length;
+
+  for (length = 0; readNextByte(&byte); ++length) {
+    *target += byte;
+  }
+
+  return length;
+}
+
 std::unique_ptr<FileInputStream> FileInputStream::openFile(
     const std::string& file_path) {
   auto fp = file_path.c_str();
@@ -76,11 +88,12 @@ std::unique_ptr<StringInputStream> StringInputStream::fromString(
 StringInputStream::StringInputStream(
     const std::string& string) :
     str_(string),
-    cur_(0) {}
+    cur_(0) {
+}
 
 bool StringInputStream::readNextByte(char* target) {
   if (cur_ < str_.size()) {
-    *target = str_.at(cur_++);
+    *target = str_[cur_++];
     return true;
   } else {
     return false;

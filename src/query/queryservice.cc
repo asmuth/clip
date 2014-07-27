@@ -9,6 +9,7 @@
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/query/resultlist.h>
 #include <fnordmetric/query/tablerepository.h>
+#include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/ui/svgtarget.h>
 
 namespace fnordmetric {
@@ -22,10 +23,11 @@ void QueryService::executeQuery(
     util::InputStream* input_stream,
     kFormat output_format,
     util::OutputStream* output_stream) const {
-  TableRepository repo;
   std::string query_string;
+  input_stream->readUntilEOF(&query_string);
 
-  Query query(query_string.c_str(), &repo);
+  TableRepository repo;
+  Query query(query_string.c_str(), query_string.size(), &repo);
   query.execute();
 
   switch (output_format) {

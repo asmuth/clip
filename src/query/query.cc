@@ -21,9 +21,16 @@
 namespace fnordmetric {
 namespace query {
 
-Query::Query(const char* query_string, query::TableRepository* repo) {
+Query::Query(
+    const char* query_string,
+    query::TableRepository* repo) :
+    Query(query_string, strlen(query_string), repo) {}
+
+Query::Query(
+    const char* query_string,
+    size_t query_string_len,
+    TableRepository* repo) {
   query::Parser parser;
-  size_t query_string_len = strlen(query_string);
 
   if (query_string_len == 0) {
     RAISE(Parser::ParseError, "empty query");
