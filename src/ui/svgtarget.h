@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include "rendertarget.h"
-#include <fnordmetric/styles/style_default.h>
+#include <fnordmetric/ui/rendertarget.h>
+#include <fnordmetric/ui/styles/style_default.h>
 
 namespace fnordmetric {
 namespace ui {
