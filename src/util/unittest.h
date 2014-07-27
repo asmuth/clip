@@ -65,7 +65,7 @@ namespace util {
 #define EXPECT_FILES_EQ(F1, F2) \
   { \
     auto one = fnordmetric::util::FileInputStream::openFile(F1); \
-    auto two = fnordmetric::util::FileInputStream::openFile(F1); \
+    auto two = fnordmetric::util::FileInputStream::openFile(F2); \
     std::string one_str; \
     std::string two_str; \
     one->readUntilEOF(&one_str); \
