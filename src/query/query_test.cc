@@ -980,7 +980,7 @@ TEST_CASE(QueryTest, TestQueryService, [] () {
   QueryService query_service;
   auto input = fnordmetric::util::StringInputStream::fromString(query);
   auto output = fnordmetric::util::FileOutputStream::openFile(
-      "build/tests/tmp/QueryTest_TestQueryService_out.svg");
+      "build/tests/tmp/QueryTest_TestQueryService_out.svg.html");
 
   query_service.executeQuery(
       input.get(),

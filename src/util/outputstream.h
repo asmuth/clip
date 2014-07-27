@@ -38,6 +38,8 @@ public:
    */
   virtual size_t write(char* data, size_t size) = 0;
 
+  virtual size_t printf(const char* format, ...) {} // FIXPAUL
+
 };
 
 class FileOutputStream : public OutputStream {
@@ -79,6 +81,8 @@ public:
    * @param size then number of bytes to be written
    */
   size_t write(char* data, size_t size) override;
+
+  size_t printf(const char* format, ...) override;
 
 protected:
   int fd_;

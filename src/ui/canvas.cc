@@ -370,7 +370,8 @@ void Canvas::renderLeftAxis(
 
 
 std::string Canvas::renderSVG() const {
-  SVGTarget target;
+  auto output = util::OutputStream::getStdout();
+  SVGTarget target(output.get());
   render(&target);
   return "fnord";
 }

@@ -46,8 +46,6 @@ std::unique_ptr<FileOutputStream> FileOutputStream::openFile(
   return std::unique_ptr<FileOutputStream>(new FileOutputStream(fd, true));
 }
 
-
-
 FileOutputStream::FileOutputStream(
     int fd,
     bool close_on_destroy /* = false */) :
@@ -63,6 +61,20 @@ FileOutputStream::~FileOutputStream() {
 size_t FileOutputStream::write(char* data, size_t size) {
   return 0;
 }
+
+size_t FileOutputStream::printf(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  int pos = vdprintf(fd_, format, args);
+  va_end(args);
+
+  if (pos < 0) {
+    RAISE_ERRNO(RuntimeException, "vdprintf() failed");
+  }
+
+  return pos;
+}
+
 
 }
 }

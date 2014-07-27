@@ -33,7 +33,7 @@ void QueryService::executeQuery(
   switch (output_format) {
 
     case FORMAT_SVG: {
-      ui::SVGTarget target;
+      ui::SVGTarget target(output_stream);
       renderCharts(&query, &target);
       break;
     }
