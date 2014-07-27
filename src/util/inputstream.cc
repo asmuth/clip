@@ -67,5 +67,25 @@ void FileInputStream::readNextChunk() {
   buf_len_ = bytes_read;
 }
 
+
+std::unique_ptr<StringInputStream> StringInputStream::fromString(
+    const std::string& string) {
+  return std::unique_ptr<StringInputStream>(new StringInputStream(string));
+}
+
+StringInputStream::StringInputStream(
+    const std::string& string) :
+    str_(string),
+    cur_(0) {}
+
+bool StringInputStream::readNextByte(char* target) {
+  if (cur_ < str_.size()) {
+    *target = str_.at(cur_++);
+    return true;
+  } else {
+    return false;
+  }
+}
+
 }
 }
