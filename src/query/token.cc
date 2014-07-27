@@ -43,7 +43,7 @@ Token::Token(const Token& copy) :
 
 Token::~Token() {
   if (data_ != nullptr) {
-    return free(data_);
+    free(data_);
   }
 }
 

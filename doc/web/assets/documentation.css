@@ -417,6 +417,7 @@ pre.dark code {
   border-bottom: 1px solid #ddd;
   margin: 15px 0;
   padding: 10px 0;
+  height: 500px;
 }
 
 #documentation p.breadcrumb {
