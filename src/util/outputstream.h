@@ -89,6 +89,36 @@ protected:
   bool close_on_destroy_;
 };
 
+class StringOutputStream : public OutputStream {
+public:
+
+  /**
+   * Create a new OutputStream from the provided string
+   *
+   * @param string the input string
+   */
+  static std::unique_ptr<StringOutputStream> fromString(std::string* string);
+
+  /**
+   * Create a new OutputStream from the provided string
+   *
+   * @param string the input string
+   */
+  StringOutputStream(std::string* string);
+
+  /**
+   * Write the next n bytes to the file. This may raise an exception.
+   * Returns the number of bytes that have been written.
+   *
+   * @param data a pointer to the data to be written
+   * @param size then number of bytes to be written
+   */
+  size_t write(char* data, size_t size) override;
+
+protected:
+  std::string* str_;
+};
+
 }
 }
 #endif

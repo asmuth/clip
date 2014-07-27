@@ -59,7 +59,15 @@ FileOutputStream::~FileOutputStream() {
 }
 
 size_t FileOutputStream::write(char* data, size_t size) {
-  return 0;
+  int bytes_written = -1;
+
+  bytes_written = ::write(fd_, data, size);
+
+  if (bytes_written < 0) {
+    RAISE_ERRNO(RuntimeException, "write() failed");
+  }
+
+  return bytes_written;
 }
 
 size_t FileOutputStream::printf(const char* format, ...) {
@@ -75,6 +83,17 @@ size_t FileOutputStream::printf(const char* format, ...) {
   return pos;
 }
 
+std::unique_ptr<StringOutputStream> StringOutputStream::fromString(
+    std::string* string) {
+  return std::unique_ptr<StringOutputStream>(new StringOutputStream(string));
+}
+
+StringOutputStream::StringOutputStream(std::string* string) : str_(string) {}
+
+size_t StringOutputStream::write(char* data, size_t size) {
+  *str_ += std::string(data, size);
+  return size;
+}
 
 }
 }

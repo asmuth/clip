@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/query/backends/csv/csvtableref.h>
 #include <fnordmetric/query/executable.h>
 #include <fnordmetric/query/parser.h>
@@ -20,6 +18,12 @@
 #include <fnordmetric/query/tablerepository.h>
 #include <fnordmetric/query/token.h>
 #include <fnordmetric/query/tokenize.h>
+#include <fnordmetric/ui/canvas.h>
+#include <fnordmetric/ui/svgtarget.h>
+#include <fnordmetric/util/inputstream.h>
+#include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/util/unittest.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 using namespace fnordmetric::query;
 
@@ -29,6 +33,24 @@ static Parser parseTestQuery(const char* query) {
   Parser parser;
   parser.parse(query, strlen(query));
   return parser;
+}
+
+static void compareChart(
+    fnordmetric::ui::Canvas* chart,
+    const std::string& file_path) {
+  std::string output_str;
+  fnordmetric::util::StringOutputStream output_stream(&output_str);
+  fnordmetric::ui::SVGTarget target(&output_stream);
+  chart->render(&target);
+
+  std::string input_str;
+  auto input_stream = fnordmetric::util::FileInputStream::openFile(file_path);
+  input_stream->readUntilEOF(&input_str);
+
+  if (input_str != output_str) {
+    RAISE(fnordmetric::util::RuntimeException,
+        "chart does not match '%s'", file_path.c_str());
+  }
 }
 
 class TestTableRef : public TableRef {
@@ -956,7 +978,10 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
 
   query.execute();
   auto chart = query.getChart(0);
-  chart->renderSVG();
+
+  compareChart(
+      chart,
+      "build/tests/tmp/QueryTest_SimpleEndToEndTest_out.svg.html");
 });
 
 
