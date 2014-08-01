@@ -1,3 +1,5 @@
+- missing data
+- hover 
 
 
 fnordmetric web:
@@ -13,10 +15,10 @@ Ways to contribute:
   + report bugs or suggest new features
   + suggest or implement new options for existing charts or new chart types
   + add a new default stylesheet (requires css knowledge)
-  + add some new features to the query engine (requires c++ knowledge)
-  + add a new query backend (requires c++ knowledge)
   + add a new language binding (requires minimal c++ knowledge)
+  + add a new query backend (requires c++ knowledge)
   + add a new render target (requires c++ knowledge)
+  + add some new features to the query engine (requires c++ knowledge)
   + many more! improve all the things :)
 
 If you need any help or guidance please contact the mailing list.
