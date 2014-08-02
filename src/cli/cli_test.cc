@@ -29,9 +29,11 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
   };
 
   auto flag_parser = CLI::getDefaultFlagParser();
-  auto error_stream = fnordmetric::util::OutputStream::getStderr();
   flag_parser.parseArgv(args);
-  CLI::execute(flag_parser, error_stream.get());
+
+  std::shared_ptr<fnordmetric::util::OutputStream> error_stream =
+      fnordmetric::util::OutputStream::getStderr();
+  CLI::execute(flag_parser, error_stream);
 
   EXPECT_FILES_EQ(
     "test/fixtures/CLITest_TestSimpleSQLToSVG_out.svg.html",

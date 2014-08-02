@@ -7,14 +7,28 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include "httpserver.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ev {
 
+ThreadedHTTPServer::ThreadedHTTPServer(
+    util::ThreadPool* thread_pool) :
+    thread_pool_(thread_pool) {}
+
 void ThreadedHTTPServer::onConnection(int fd) {
-  printf("got connection!\n");
+  try {
+    thread_pool_->run([this, fd] () {
+      handleConnection(fd);
+    });
+  } catch (util::RuntimeException e) {
+    e.debugPrint();
+  }
+}
+
+void ThreadedHTTPServer::handleConnection(int fd) {
+  RAISE(util::RuntimeException, "handle conn: %i", fd);
 }
 
 }

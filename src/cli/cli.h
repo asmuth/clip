@@ -10,12 +10,10 @@
 
 #ifndef _FNORDMETRIC_CLI_H
 #define _FNORDMETRIC_CLI_H
+#include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
-namespace util {
-class OutputStream;
-}
 namespace cli {
 class FlagParser;
 
@@ -32,21 +30,21 @@ public:
    */
   static int executeSafely(
       const std::vector<std::string>& argv,
-      util::OutputStream* error_stream);
+      std::shared_ptr<util::OutputStream> error_stream);
 
   /**
    * Execute a command line. May throw an exception!
    */
   static void execute(
       const std::vector<std::string>& argv,
-      util::OutputStream* error_stream);
+      std::shared_ptr<util::OutputStream> error_stream);
 
   /**
    * Execute a command line.  May throw an exception!
    */
   static void execute(
       const FlagParser& flag_parser,
-      util::OutputStream* error_stream);
+      std::shared_ptr<util::OutputStream> error_stream);
 };
 
 }

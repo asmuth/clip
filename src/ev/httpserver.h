@@ -10,17 +10,24 @@
 
 #ifndef _FNORDMETRIC_WEB_HTTPSERVER_H
 #define _FNORDMETRIC_WEB_HTTPSERVER_H
-#include <memory>
-#include <vector>
-#include "../ev/acceptor.h"
+#include <fnordmetric/ev/acceptor.h>
+#include <fnordmetric/util/threadpool.h>
 
 namespace fnordmetric {
 namespace ev {
 
-class ThreadedHTTPServer : public ev::Acceptor::CallbackInterface {
-public:
-  void onConnection(int fd) override;
+class HTTPServer : public ev::Acceptor::CallbackInterface {
 protected:
+};
+
+class ThreadedHTTPServer : public HTTPServer {
+public:
+  ThreadedHTTPServer(util::ThreadPool* thread_pool);
+  void onConnection(int fd) override;
+
+protected:
+  void handleConnection(int fd);
+  util::ThreadPool* thread_pool_;
 };
 
 }

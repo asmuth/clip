@@ -25,8 +25,10 @@ int main(int argc, char** argv) {
   }
 
   try {
-    auto stderr_stream = util::OutputStream::getStderr();
-    return cli::CLI::executeSafely(args, stderr_stream.get());
+    std::shared_ptr<util::OutputStream> stderr_stream =
+        util::OutputStream::getStderr();
+
+    return cli::CLI::executeSafely(args, stderr_stream);
   } catch (std::exception e) {
     fprintf(
         stderr,

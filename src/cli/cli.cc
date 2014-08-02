@@ -13,6 +13,7 @@
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/query/queryservice.h>
+#include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -93,7 +94,7 @@ FlagParser CLI::getDefaultFlagParser() {
 
 int CLI::executeSafely(
       const std::vector<std::string>& argv,
-      util::OutputStream* error_stream) {
+      std::shared_ptr<util::OutputStream> error_stream) {
   bool verbose = true;
   auto flag_parser = getDefaultFlagParser();
 
@@ -103,7 +104,7 @@ int CLI::executeSafely(
     execute(flag_parser, error_stream);
   } catch (util::RuntimeException e) {
     if (e.getTypeName() == "UsageError") {
-      flag_parser.printUsage(error_stream);
+      flag_parser.printUsage(error_stream.get());
       return 1;
     }
 
@@ -121,7 +122,7 @@ int CLI::executeSafely(
 
 void CLI::execute(
       const std::vector<std::string>& argv,
-      util::OutputStream* error_stream) {
+      std::shared_ptr<util::OutputStream> error_stream) {
   /* parse flags */
   auto flag_parser = getDefaultFlagParser();
   flag_parser.parseArgv(argv);
@@ -132,15 +133,20 @@ void CLI::execute(
 
 void CLI::execute(
       const FlagParser& flag_parser,
-      util::OutputStream* error_stream) {
+      std::shared_ptr<util::OutputStream> error_stream) {
   const auto& args = flag_parser.getArgv();
   bool verbose = flag_parser.isSet("verbose");
 
   /* web / cgi mode */
   if (flag_parser.isSet("web")) {
+    fnordmetric::util::ThreadPool thread_pool(
+        32,
+        std::unique_ptr<util::ExceptionHandler>(
+            new util::CatchAndPrintExceptionHandler(error_stream)));
+
     fnordmetric::ev::EventLoop ev_loop;
     fnordmetric::ev::Acceptor acceptor(&ev_loop);
-    fnordmetric::ev::ThreadedHTTPServer http;
+    fnordmetric::ev::ThreadedHTTPServer http(&thread_pool);
     acceptor.listen(flag_parser.getInt("web"), &http);
     ev_loop.loop();
   }

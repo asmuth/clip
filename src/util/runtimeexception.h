@@ -28,6 +28,7 @@
 
 namespace fnordmetric {
 namespace util {
+class OutputStream;
 
 class RuntimeException : public std::exception {
 public:
@@ -35,7 +36,7 @@ public:
   RuntimeException(const RuntimeException& other);
   RuntimeException& operator=(const RuntimeException& other) = delete;
 
-  void debugPrint() const;
+  void debugPrint(OutputStream* os = nullptr) const;
   std::string getMessage() const;
   std::string getTypeName() const;
 

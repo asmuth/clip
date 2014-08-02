@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include "runtimeexception.h"
+#include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace util {
@@ -72,13 +72,18 @@ void RuntimeException::appendMessage(const char* message, ...) {
   va_end(args);
 }
 
-void RuntimeException::debugPrint() const {
+void RuntimeException::debugPrint(OutputStream* os /* = nullptr */) const {
   const char* type_name =
       type_name_ == nullptr ? "RuntimeException" : type_name_;
 
-  fprintf(
-      stderr,
-      "\n%s: %s\n"
+  std::unique_ptr<OutputStream> os_local;
+  if (os == nullptr) {
+    os_local = OutputStream::getStderr();
+    os = os_local.get();
+  }
+
+  os->printf(
+      "%s: %s\n"
       "    in %s\n"
       "    in %s:%i\n",
       type_name,

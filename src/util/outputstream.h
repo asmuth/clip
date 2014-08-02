@@ -12,6 +12,7 @@
 #define _FNORDMETRIC_OUTPUTSTREAM_H
 #include <fcntl.h>
 #include <memory>
+#include <mutex>
 
 namespace fnordmetric {
 namespace util {
@@ -44,6 +45,7 @@ public:
 
   virtual size_t printf(const char* format, ...) {} // FIXPAUL
 
+  mutable std::mutex mutex_;
 };
 
 class FileOutputStream : public OutputStream {
