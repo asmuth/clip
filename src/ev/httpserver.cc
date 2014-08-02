@@ -11,7 +11,7 @@
 #include "httpserver.h"
 
 namespace fnordmetric {
-namespace web {
+namespace ev {
 
 void ThreadedHTTPServer::onConnection(int fd) {
   printf("got connection!\n");

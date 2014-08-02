@@ -6,6 +6,9 @@ cmake_minimum_required(VERSION 2.6)
 project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
+    stage/src/fnordmetric/ev/acceptor.cc
+    stage/src/fnordmetric/ev/eventloop.cc
+    stage/src/fnordmetric/ev/httpserver.cc
     stage/src/fnordmetric/util/format.cc
     stage/src/fnordmetric/util/inputstream.cc
     stage/src/fnordmetric/util/outputstream.cc

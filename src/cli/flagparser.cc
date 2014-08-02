@@ -53,6 +53,31 @@ std::string FlagParser::getString(const char* longopt) const {
   RAISE(FlagError, "flag '%s' is not set", longopt);
 }
 
+int64_t FlagParser::getInt(const char* longopt) const {
+  for (auto& flag : flags_) {
+    if (flag.longopt == longopt) {
+      if (flag.type != T_INTEGER) {
+        RAISE(FlagError, "flag '%s' is not an integer", longopt);
+      }
+
+      int64_t flag_value;
+      try {
+        flag_value = std::stoi(flag.values.back());
+      } catch (std::exception e) {
+        RAISE(
+            FlagError,
+            "flag '%s' value '%s' is not a valid integer",
+            longopt,
+            flag.values.back().c_str());
+      }
+
+      return flag_value;
+    }
+  }
+
+  RAISE(FlagError, "flag '%s' is not set", longopt);
+}
+
 // FIXPAUL optimize with hashmap?
 void FlagParser::parseArgv(const std::vector<std::string>& argv) {
   for (int i = 0; i < argv.size(); i++) {

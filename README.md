@@ -28,6 +28,8 @@ Ways to contribute to FnordMetric:
 
   + report bugs or suggest new features
   + suggest or implement new options for existing charts or new chart types
+  + improve the documentation
+  + publish howtos, tutorials and videos
   + add a new default stylesheet (requires css knowledge)
   + add a new language binding (requires minimal c++ knowledge)
   + add a new query backend (requires c++ knowledge)
@@ -37,7 +39,8 @@ Ways to contribute to FnordMetric:
 
 #### Other Open Source Software included in FnordMetric
 
-  + Christian Parpart's xzero HTTP library (http://github.com/xzero)
+  + Christian Parpart's xzero -- HTTP library (http://github.com/xzero)
+  + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
 
 #### Individial Contributors to FnordMetric
 

@@ -66,6 +66,14 @@ public:
   std::string getString(const char* longopt) const;
 
   /**
+   * Returns the integer value of the flag or throws an exception if the value
+   * is invalid.
+   *
+   * @param longopt the longopt of the flag
+   */
+  int64_t getInt(const char* longopt) const;
+
+  /**
    * Parse an argv array. This may throw an exception.
    */
   void parseArgv(const std::vector<std::string>& argv);

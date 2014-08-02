@@ -15,7 +15,7 @@
 #include "../ev/acceptor.h"
 
 namespace fnordmetric {
-namespace web {
+namespace ev {
 
 class ThreadedHTTPServer : public ev::Acceptor::CallbackInterface {
 public:

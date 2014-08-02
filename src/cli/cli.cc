@@ -16,6 +16,9 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/ev/eventloop.h>
+#include <fnordmetric/ev/acceptor.h>
+#include <fnordmetric/ev/httpserver.h>
 
 namespace fnordmetric {
 namespace cli {
@@ -134,6 +137,13 @@ void CLI::execute(
   bool verbose = flag_parser.isSet("verbose");
 
   /* web / cgi mode */
+  if (flag_parser.isSet("web")) {
+    fnordmetric::ev::EventLoop ev_loop;
+    fnordmetric::ev::Acceptor acceptor(&ev_loop);
+    fnordmetric::ev::ThreadedHTTPServer http;
+    acceptor.listen(flag_parser.getInt("web"), &http);
+    ev_loop.loop();
+  }
 
   /* execute query */
 
