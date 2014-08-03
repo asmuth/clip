@@ -34,7 +34,7 @@ size_t OutputStream::write(const std::string& data) {
 
 // FIXPAUL: variable size buffer
 size_t OutputStream::printf(const char* format, ...) {
-  char buf[4096];
+  char buf[8192];
 
   va_list args;
   va_start(args, format);

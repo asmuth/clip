@@ -110,8 +110,11 @@ void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
         }
       }
       target->endArray();
-
       target->endObject();
+
+      if (i < query->getNumResultLists() - 1) {
+        target->addComma();
+      }
     }
     target->endArray();
     target->addComma();
