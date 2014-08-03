@@ -22,7 +22,6 @@ Assets::AssetFile::AssetFile(
     const std::string& name,
     const unsigned char* data,
     size_t size) {
-  printf("register: %s,", name.c_str());
   asset_files.emplace(name, std::make_pair(data, size));
 }
 

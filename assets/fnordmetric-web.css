@@ -455,6 +455,8 @@ ul.ui_tabs li a{
   color:#666;
   font-weight:500;
   text-decoration:none;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 
@@ -1482,6 +1484,14 @@ ul.ui_tabs li.active a{
 }
 
 #query_editor {
+}
+
+.query_editor_result_tab_content {
+  display: none;
+}
+
+.query_editor_result_tab_content.active {
+  display: block;
 }
 
 #query_editor textarea {

@@ -117,10 +117,29 @@ void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
     target->addComma();
   }
 
-  target->addObjectEntry("charts");
-  target->beginArray();
-  target->endArray();
-  target->addComma();
+  if (query->getNumCharts() > 0) {
+    target->addObjectEntry("charts");
+    target->beginArray();
+
+    for (int i = 0; i < query->getNumCharts(); ++i) {
+      std::string svg_data;
+      auto string_stream = util::StringOutputStream::fromString(&svg_data);
+      ui::SVGTarget svg_target(string_stream.get());
+      query->getChart(i)->render(&svg_target);
+
+      target->beginObject();
+      target->addObjectEntry("svg");
+      target->addString(svg_data);
+      target->endObject();
+
+      if (i < query->getNumCharts() - 1) {
+        target->addComma();
+      }
+    }
+
+    target->endArray();
+    target->addComma();
+  }
 
   target->addObjectEntry("status");
   target->addString("success");

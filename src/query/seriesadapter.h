@@ -124,6 +124,10 @@ public:
       adapter->nextRow(row, row_len);
       stmt_->setTarget(adapter);
       adapter_.reset(adapter);
+    } else {
+      RAISE(
+          util::RuntimeException,
+          "3D series not implemented yet");
     }
 
     return true;

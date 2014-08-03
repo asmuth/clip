@@ -1,16 +1,48 @@
 FnordMetric = (function() {
   var editor = undefined;
 
+  var queryEditorActivateTab = function() {
+    var tab_lis = document.getElementsByClassName("query_editor_result_tab");
+    for (var i = 0; i < tab_lis.length; ++i) {
+      if (tab_lis[i].getAttribute("data-tab") ==
+          this.getAttribute("data-tab")) {
+        tab_lis[i].className = "query_editor_result_tab active";
+      } else {
+        tab_lis[i].className = "query_editor_result_tab";
+      }
+    }
+
+    var tabs = document.getElementsByClassName("query_editor_result_tab_content");
+    for (var i = 0; i < tabs.length; ++i) {
+      if (tabs[i].getAttribute("data-tab") == this.getAttribute("data-tab")) {
+        tabs[i].className = "query_editor_result_tab_content active";
+      } else {
+        tabs[i].className = "query_editor_result_tab_content";
+      }
+    }
+  };
+
   // FIXPAUL what is xss?
   var renderQueryResults = function(results) {
     var tabs = "<ul class='ui_tabs'>";
-    for (i = 0; i < results.tables.length; ++i) {
-      tabs += "<li class='active'><a>Table</a></li>";
+    for (var i = 0; i < results.charts.length; ++i) {
+      tabs += "<li class='query_editor_result_tab' data-tab='chart" + i + "'><a>Chart</a></li>";
+    }
+    for (var i = 0; i < results.tables.length; ++i) {
+      tabs += "<li class='query_editor_result_tab' data-tab='table" + i + "'><a>Table</a></li>";
     }
     tabs += "</ul>";
 
-    var results_html = tabs;
-    for (i = 0; i < results.tables.length; ++i) {
+    var results_html = "<div>" + tabs;
+
+    for (var i = 0; i < results.charts.length; ++i) {
+      results_html += "<div class='query_editor_result_tab_content' data-tab='chart" + i + "'>";
+      results_html += results.charts[i].svg;
+      results_html += "</div>";
+    }
+
+    for (var i = 0; i < results.tables.length; ++i) {
+      results_html += "<div class='query_editor_result_tab_content' data-tab='table" + i + "'>";
       var result = results.tables[i];
       results_html += "<table><tbody>";
 
@@ -40,12 +72,25 @@ FnordMetric = (function() {
 
 
       results_html += "</tbody></table>";
+      results_html += "</div>";
     }
 
-    document.getElementById("query_editor_results").innerHTML = results_html;
+    document.getElementById("query_editor_results").innerHTML =
+        results_html + "</div>";
+
+    var tab_elems = document.getElementsByClassName("query_editor_result_tab");
+    for (var i = 0; i < tab_elems.length; ++i) {
+      tab_elems[i].onclick = queryEditorActivateTab;
+
+      if (i == 0) {
+        tab_elems[i].onclick();
+      }
+    }
   }
 
   var executeQuery = function() {
+    document.getElementById("query_editor_results").innerHTML = "";
+
     if (typeof editor == undefined) {
       return;
     }
