@@ -19,7 +19,8 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/ev/eventloop.h>
 #include <fnordmetric/ev/acceptor.h>
-#include <fnordmetric/ev/httpserver.h>
+#include <fnordmetric/http/httpserver.h>
+#include <fnordmetric/web/webinterface.h>
 
 namespace fnordmetric {
 namespace cli {
@@ -146,7 +147,8 @@ void CLI::execute(
 
     fnordmetric::ev::EventLoop ev_loop;
     fnordmetric::ev::Acceptor acceptor(&ev_loop);
-    fnordmetric::ev::ThreadedHTTPServer http(&thread_pool);
+    fnordmetric::http::ThreadedHTTPServer http(&thread_pool);
+    http.addHandler(fnordmetric::web::WebInterface::getHandler());
     acceptor.listen(flag_parser.getInt("web"), &http);
     ev_loop.loop();
   }

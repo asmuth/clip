@@ -7,32 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#ifndef _FNORDMETRIC_WEB_HTTPSTUB_H
-#define _FNORDMETRIC_WEB_HTTPSTUB_H
+#ifndef _FNORDMETRIC_WEB_HTTPRESPONSE_H
+#define _FNORDMETRIC_WEB_HTTPRESPONSE_H
+#include <vector>
+#include <string>
+#include <utility>
 
 namespace fnordmetric {
-namespace web {
+namespace http {
 
-class HTTPStub {
+class HTTPResponse {
 public:
-
-  class Request {
-  public:
-
-    virtual ~Request();
-
-  };
-
-  class Response {
-  public:
-
-    virtual ~Response();
-
-  };
-
-  virtual ~HTTPStub();
-  virtual void onHTTPRequest(Request* request, Response* resp) = 0;
 };
 
 }

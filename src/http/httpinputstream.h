@@ -7,15 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef __FNORDMETRIC_3RDPARTY_HTTPPARSER_H
-#define __FNORDMETRIC_3RDPARTY_HTTPPARSER_H
+#ifndef __FNORDMETRIC_HTTPINPUTSTREAM_H
+#define __FNORDMETRIC_HTTPINPUTSTREAM_H
 #include <vector>
 #include <string>
 #include <utility>
 #include <fnordmetric/util/inputstream.h>
 
 namespace fnordmetric {
-namespace ev {
+namespace http {
 
 class HTTPInputStream {
 public:
@@ -26,12 +26,6 @@ public:
     HTTP_STATE_HKEY,
     HTTP_STATE_HVAL,
     HTTP_STATE_BODY
-  };
-
-  enum kHTTPMethod {
-    HTTP_METHOD_HEAD,
-    HTTP_METHOD_GET,
-    HTTP_METHOD_POST,
   };
 
   /**

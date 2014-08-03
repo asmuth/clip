@@ -7,17 +7,23 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_WEB_HTTPSERVER_H
 #define _FNORDMETRIC_WEB_HTTPSERVER_H
+#include <memory>
+#include <vector>
 #include <fnordmetric/ev/acceptor.h>
+#include <fnordmetric/http/httprequest.h>
+#include <fnordmetric/http/httphandler.h>
 #include <fnordmetric/util/threadpool.h>
 
 namespace fnordmetric {
-namespace ev {
+namespace http {
 
 class HTTPServer : public ev::Acceptor::CallbackInterface {
+public:
+  void addHandler(std::unique_ptr<HTTPHandler> handler);
 protected:
+  std::vector<std::unique_ptr<HTTPHandler>> handlers_;
 };
 
 class ThreadedHTTPServer : public HTTPServer {

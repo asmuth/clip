@@ -11,11 +11,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
-#include <fnordmetric/ev/httpinputstream.h>
+#include <fnordmetric/http/httpinputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
-namespace ev {
+namespace http {
 
 HTTPInputStream::HTTPInputStream(
     util::InputStream* input_stream) :

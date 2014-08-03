@@ -7,15 +7,18 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <vector>
-#include <string>
-#include <utility>
-#include <fnordmetric/ev/httpserver.h>
-#include <fnordmetric/ev/httpinputstream.h>
+#include <fnordmetric/http/httpserver.h>
+#include <fnordmetric/http/httpinputstream.h>
+#include <fnordmetric/http/httprequest.h>
+#include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
-namespace ev {
+namespace http {
+
+void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
+  handlers_.emplace_back(std::move(handler));
+}
 
 ThreadedHTTPServer::ThreadedHTTPServer(
     util::ThreadPool* thread_pool) :
@@ -28,22 +31,20 @@ void ThreadedHTTPServer::onConnection(int fd) {
 }
 
 void ThreadedHTTPServer::handleConnection(int fd) {
+  HTTPRequest request;
+  HTTPResponse response;
+
   util::FileInputStream input_stream(fd, false);
   util::FileOutputStream output_stream(fd, false);
 
-  /* read http headers */
-  ev::HTTPInputStream http_stream(&input_stream);
+  HTTPInputStream http_stream(&input_stream);
+  request.readFromInputStream(&http_stream);
 
-  std::string method;
-  std::string url;
-  std::string version;
-  http_stream.readStatusLine(&method, &url, &version);
-
-  std::vector<std::pair<std::string, std::string>> headers;
-  http_stream.readHeaders(&headers);
-
-  //HTTPRequest req(method, url, version, headers);
-  //HTTPResponse res;
+  for (const auto& handler : handlers_) {
+    if (handler->handleHTTPRequest(&request, &response)) {
+      break;
+    }
+  }
 
   output_stream.printf("200 OK\nContent-Length: 5\n\nfnord\n");
 }
