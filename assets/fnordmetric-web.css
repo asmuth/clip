@@ -1501,6 +1501,19 @@ ul.ui_tabs li.active a{
   border-bottom: 1px solid #ddd;
 }
 
+#query_editor_results table td {
+  height: 26px;
+}
+
+#query_editor_results table th {
+  height: 32px;
+  border-left: 1px solid #ddd;
+}
+
+#query_editor_results table th:first-child {
+  border-left: none;
+}
+
 #query_editor_error {
   display: none;
   padding: 10px 20px;
@@ -1712,4 +1725,9 @@ p.success {
 
 #topnav {
   display:none;
+}
+
+.CodeMirror {
+  font-size: 115%;
+  line-height: 140%;
 }

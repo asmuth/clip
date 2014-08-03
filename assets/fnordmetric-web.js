@@ -20,11 +20,20 @@ FnordMetric = (function() {
       }
       results_html += "</tr>";
 
-      for (j = 0; j < result.rows.length; ++j) {
+      var j = 0;
+      for (; j < result.rows.length; ++j) {
         var row = result.rows[j];
         results_html += "<tr>";
         for (k = 0; k < row.length; ++k) {
           results_html += "<td>" + row[k] + "</td>";
+        }
+        results_html += "</tr>";
+      }
+
+      for (; j < 20; ++j) {
+        results_html += "<tr>";
+        for (k = 0; k < result.columns.length; ++k) {
+          results_html += "<td></td>";
         }
         results_html += "</tr>";
       }
@@ -74,7 +83,7 @@ FnordMetric = (function() {
     document.getElementById("wrap").innerHTML =
         navbar +
         "<div id='query_editor'>" +
-          "<textarea id='query_editor_textarea'>select 1 as one, 2 as two, 3 as three, 4 as four;</textarea>" +
+          "<textarea id='query_editor_textarea'>DRAW BAR CHART;\nDRAW LEFT AXIS;\n\nSELECT\n\t1 as one,\n\t2 as two,\n\t3 as three,\n\t4 as four;</textarea>" +
         "</div>" +
         "<div class='headbar small'>Query executed in...</div>" +
         "<div id='query_editor_error'></div>" +
