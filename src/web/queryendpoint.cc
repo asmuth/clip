@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/web/assets.h>
 #include <fnordmetric/web/queryendpoint.h>
+#include <fnordmetric/query/queryservice.h>
 
 namespace fnordmetric {
 namespace web {
@@ -24,8 +25,21 @@ bool QueryEndpoint::handleHTTPRequest(
 
   if (url.substr(0, 6) == "/query") {
     response->setStatus(200);
-    response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody("query...." + request->getBody());
+    response->addHeader("Content-Type", "application/json; charset=utf-8");
+
+    auto input_stream = request->getBodyInputStream();
+    auto output_stream = response->getBodyOutputStream();
+
+    query::QueryService query_service;
+    query_service.executeQuery(
+        input_stream.get(),
+        query::QueryService::FORMAT_SVG,
+        output_stream.get());
+
+    response->addHeader(
+        "Content-Length",
+        std::to_string(response->getBody().size()));
+
     return true;
   }
 

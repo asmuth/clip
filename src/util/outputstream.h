@@ -42,10 +42,8 @@ public:
    * @param size then number of bytes to be written
    */
   virtual size_t write(const char* data, size_t size) = 0;
-
-  virtual size_t printf(const char* format, ...) {} // FIXPAUL
-
   virtual size_t write(const std::string& data);
+  virtual size_t printf(const char* format, ...);
 
   mutable std::mutex mutex_;
 };

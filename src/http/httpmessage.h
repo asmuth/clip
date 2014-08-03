@@ -12,6 +12,8 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <fnordmetric/util/inputstream.h>
+#include <fnordmetric/util/outputstream.h>
 
 namespace fnordmetric {
 namespace http {
@@ -27,6 +29,9 @@ public:
 
   const std::string& getBody() const;
   void addBody(const std::string& body);
+
+  std::unique_ptr<util::InputStream> getBodyInputStream() const;
+  std::unique_ptr<util::OutputStream> getBodyOutputStream();
 
 protected:
   std::string version_;

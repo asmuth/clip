@@ -32,6 +32,28 @@ size_t OutputStream::write(const std::string& data) {
   return write(data.c_str(), data.size());
 }
 
+// FIXPAUL: variable size buffer
+size_t OutputStream::printf(const char* format, ...) {
+  char buf[4096];
+
+  va_list args;
+  va_start(args, format);
+  int pos = vsnprintf(buf, sizeof(buf), format, args);
+  va_end(args);
+
+  if (pos < 0) {
+    RAISE_ERRNO(RuntimeException, "vsnprintf() failed");
+  }
+
+  if (pos < sizeof(buf)) {
+    write(buf, pos);
+  } else {
+    RAISE_ERRNO(RuntimeException, "vsnprintf() failed: value too large");
+  }
+
+  return pos;
+}
+
 std::unique_ptr<FileOutputStream> FileOutputStream::openFile(
     const std::string& file_path,
     int flags /* = O_CREAT | O_TRUNC */,
