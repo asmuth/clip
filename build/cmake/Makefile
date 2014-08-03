@@ -7,6 +7,7 @@ all:
 	mkdir -p target/tests
 	mkdir -p stage/src
 	test -e stage/src/fnordmetric || ln -s ../../../../src stage/src/fnordmetric || true
+	test -e stage/src/3rdparty || ln -s ../../../../3rdparty stage/src/3rdparty || true
 	(cd target && cmake .. && make)
 
 test: all

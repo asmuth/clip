@@ -102,6 +102,13 @@ void Acceptor::HandlerRef::onEvent(
     return;
   }
 
+  int flags = fcntl(conn_fd, F_GETFL, 0);
+  flags &= ~O_NONBLOCK;
+
+  if (fcntl(conn_fd, F_SETFL, flags) != 0) {
+    fprintf(stderr, "fnctl() failed\n");
+  }
+
   handler_->onConnection(conn_fd);
   loop->watch(fd, EventLoop::EV_READABLE, this);
 }

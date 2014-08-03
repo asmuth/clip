@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_INPUTSTREAM_H
 #define _FNORDMETRIC_INPUTSTREAM_H
 #include <memory>
@@ -96,9 +95,7 @@ public:
   kByteOrderMark readByteOrderMark();
 
 protected:
-
   void readNextChunk();
-
   char buf_[8192]; // FIXPAUL make configurable
   size_t buf_len_;
   size_t buf_pos_;

@@ -9,6 +9,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
     stage/src/fnordmetric/ev/httpserver.cc
+    stage/src/fnordmetric/ev/httpinputstream.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
     stage/src/fnordmetric/util/inputstream.cc
