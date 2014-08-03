@@ -7,12 +7,25 @@ FnordMetric = (function() {
     }
 
     var query = editor.getValue();
+    if (query.length == 0) {
+      return;
+    }
 
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "/query", false);
     xmlHttp.send(query);
+
     console.log(xmlHttp.responseText);
+    var response = JSON.parse(xmlHttp.responseText);
+
+    var error_div = document.getElementById("query_editor_error");
+    if (response.status == "success") {
+      error_div.className = "";
+    } else {
+      error_div.className = "visible";
+      error_div.innerHTML = response.error;
+    }
   };
 
   var renderQueryView = function() {
@@ -26,7 +39,8 @@ FnordMetric = (function() {
         navbar +
         "<div id='query_editor'>" +
           "<textarea id='query_editor_textarea'></textarea>" +
-        "</div>";
+        "</div>" +
+        "<div id='query_editor_error'></div>";
 
     editor = CodeMirror.fromTextArea(
         document.getElementById("query_editor_textarea"),

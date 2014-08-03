@@ -10,6 +10,8 @@
 #include <fnordmetric/web/assets.h>
 #include <fnordmetric/web/queryendpoint.h>
 #include <fnordmetric/query/queryservice.h>
+#include <fnordmetric/util/jsonoutputstream.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace web {
@@ -31,10 +33,25 @@ bool QueryEndpoint::handleHTTPRequest(
     auto output_stream = response->getBodyOutputStream();
 
     query::QueryService query_service;
-    query_service.executeQuery(
-        input_stream.get(),
-        query::QueryService::FORMAT_SVG,
-        output_stream.get());
+    try {
+      query_service.executeQuery(
+          input_stream.get(),
+          query::QueryService::FORMAT_JSON,
+          output_stream.get());
+
+    } catch (util::RuntimeException e) {
+      response->clearBody();
+
+      util::JSONOutputStream json(output_stream.get());
+      json.beginObject();
+      json.beginObjectEntry("status");
+      json.addString("error");
+      json.endObjectEntry(false);
+      json.beginObjectEntry("error");
+      json.addString(e.getMessage());
+      json.endObjectEntry(true);
+      json.endObject();
+    }
 
     response->addHeader(
         "Content-Length",

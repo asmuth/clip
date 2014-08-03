@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
 #include <fnordmetric/query/query.h>
@@ -31,7 +30,8 @@ class QueryService {
 public:
   enum kFormat {
     FORMAT_SVG,
-    FORMAT_CSV
+    FORMAT_CSV,
+    FORMAT_JSON
   };
 
   /**

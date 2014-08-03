@@ -51,6 +51,10 @@ void HTTPMessage::addBody(const std::string& body) {
   addHeader("Content-Length", std::to_string(body_.size()));
 }
 
+void HTTPMessage::clearBody() {
+  body_.clear();
+}
+
 std::unique_ptr<util::InputStream> HTTPMessage::getBodyInputStream() const {
   return util::StringInputStream::fromString(body_);
 }

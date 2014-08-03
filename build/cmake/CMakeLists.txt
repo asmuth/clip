@@ -18,6 +18,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/format.cc
     stage/src/fnordmetric/util/inputstream.cc
     stage/src/fnordmetric/util/outputstream.cc
+    stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/runtimeexception.cc)
 

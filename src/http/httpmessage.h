@@ -29,6 +29,7 @@ public:
 
   const std::string& getBody() const;
   void addBody(const std::string& body);
+  void clearBody();
 
   std::unique_ptr<util::InputStream> getBodyInputStream() const;
   std::unique_ptr<util::OutputStream> getBodyOutputStream();

@@ -1494,6 +1494,18 @@ ul.ui_tabs li.active a{
   outline: none;
 }
 
+#query_editor_error {
+  display: none;
+  padding: 7px;
+  font-family: monospace;
+  background: #ecc;
+  border: 1px solid #f88;
+}
+
+#query_editor_error.visible {
+  display:block;
+}
+
 .swatch {
   width: 10px;
   height: 10px;
