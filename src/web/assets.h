@@ -10,12 +10,20 @@
 #ifndef _FNORDMETRIC_WEB_ASSETS_H
 #define _FNORDMETRIC_WEB_ASSETS_H
 #include <string>
+#include <vector>
 
 namespace fnordmetric {
 namespace web {
 
 class Assets {
 public:
+  class AssetFile {
+  public:
+    AssetFile(
+        const std::string& name,
+        const unsigned char* data,
+        size_t size);
+  };
 
   static std::string getAsset(const std::string& filename);
 

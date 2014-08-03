@@ -10,9 +10,7 @@ all: assets
 	(cd target && cmake .. && make)
 
 assets:
-	mkdir -p stage/assets
-	(cd ../.. && xxd -i assets/index.html) > stage/assets/asset_index.html.h
-	(cd ../.. && xxd -i assets/fnordmetric-web.css) > stage/assets/fnordmetric_web.css.h
+	./assets.sh
 
 test: all
 	@find target/tests -iname "test-*" | while read t; do (cd ../../ && build/cmake/$$t) || exit 1; done

@@ -7,24 +7,39 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <unordered_map>
+#include <string>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/web/assets.h>
-#include <asset_index.html.h>
-#include <fnordmetric_web.css.h>
 
 namespace fnordmetric {
 namespace web {
 
-#define TRY_FILE(F,T) \
-  if (filename == F) { \
-    return std::string((const char *) T, sizeof(T)); \
-  }
+static std::unordered_map<std::string, std::pair<const unsigned char*, size_t>>
+    asset_files;
+
+Assets::AssetFile::AssetFile(
+    const std::string& name,
+    const unsigned char* data,
+    size_t size) {
+  printf("register: %s,", name.c_str());
+  asset_files.emplace(name, std::make_pair(data, size));
+}
 
 std::string Assets::getAsset(const std::string& filename) {
-  TRY_FILE("index.html", assets_index_html);
-  TRY_FILE("fnordmetric-web.css", assets_fnordmetric_web_css);
-  RAISE(util::RuntimeException, "asset not found: %s\n", filename.c_str());
+  const auto asset = asset_files.find(filename);
+
+  if (asset != asset_files.end()) {
+    const auto& data = asset->second;
+    return std::string((const char*) data.first, data.second);
+  }
+
+  RAISE(util::RuntimeException, "asset not found: %s", filename.c_str());
 }
 
 }
 }
+
+#include <asset_index.html.c>
+#include <asset_fnordmetric_web.css.c>
+#include <asset_fnordmetric_web.js.c>
