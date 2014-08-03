@@ -21,6 +21,7 @@
 #include <fnordmetric/ev/acceptor.h>
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/web/webinterface.h>
+#include <fnordmetric/web/queryendpoint.h>
 
 namespace fnordmetric {
 namespace cli {
@@ -149,6 +150,7 @@ void CLI::execute(
     fnordmetric::ev::Acceptor acceptor(&ev_loop);
     fnordmetric::http::ThreadedHTTPServer http(&thread_pool);
     http.addHandler(fnordmetric::web::WebInterface::getHandler());
+    http.addHandler(fnordmetric::web::QueryEndpoint::getHandler());
     acceptor.listen(flag_parser.getInt("web"), &http);
     ev_loop.loop();
   }

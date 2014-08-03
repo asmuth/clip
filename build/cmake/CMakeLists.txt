@@ -61,6 +61,7 @@ set(FNORDMETRIC_CLI_SOURCES
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/web/assets.cc
+    stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/web/webinterface.cc)
 
 include_directories(stage/src)

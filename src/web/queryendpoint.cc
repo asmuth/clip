@@ -8,38 +8,24 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/web/assets.h>
-#include <fnordmetric/web/webinterface.h>
+#include <fnordmetric/web/queryendpoint.h>
 
 namespace fnordmetric {
 namespace web {
 
-std::unique_ptr<http::HTTPHandler> WebInterface::getHandler() {
-  return std::unique_ptr<http::HTTPHandler>(new WebInterface());
+std::unique_ptr<http::HTTPHandler> QueryEndpoint::getHandler() {
+  return std::unique_ptr<http::HTTPHandler>(new QueryEndpoint());
 }
 
-bool WebInterface::handleHTTPRequest(
+bool QueryEndpoint::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
   auto url = request->getUrl();
 
-  if (url == "/") {
+  if (url.substr(0, 6) == "/query") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(Assets::getAsset("index.html"));
-    return true;
-  }
-
-  if (url == "/fnordmetric-web.css") {
-    response->setStatus(200);
-    response->addHeader("Content-Type", "text/css");
-    response->addBody(Assets::getAsset("fnordmetric-web.css"));
-    return true;
-  }
-
-  if (url == "/fnordmetric-web.js") {
-    response->setStatus(200);
-    response->addHeader("Content-Type", "text/javascript");
-    response->addBody(Assets::getAsset("fnordmetric-web.js"));
+    response->addBody("query :)");
     return true;
   }
 

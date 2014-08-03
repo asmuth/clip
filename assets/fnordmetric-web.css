@@ -1480,17 +1480,17 @@ ul.ui_tabs li.active a{
   background-color: #F4F4F4;
 }
 
-.query_editor {
+#query_editor {
 }
 
-.query_editor textarea {
+#query_editor textarea {
   border: 0;
   display: block;
   width: 100%;
   height: 300px;
 }
 
-.query_editor textarea:focus {
+#query_editor textarea:focus {
   outline: none;
 }
 

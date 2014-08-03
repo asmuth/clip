@@ -29,6 +29,6 @@ asset_name() {
 
 (
   asset_uniq "fnordmetric_web_js"
-  asset_file "assets/codemirror.min.js" "assets/fnordmetric-js"
+  asset_file "assets/codemirror.min.js" "assets/fnordmetric-web.js"
   asset_name "fnordmetric_web_js" "fnordmetric-web.js"
 ) > stage/assets/asset_fnordmetric_web.js.c

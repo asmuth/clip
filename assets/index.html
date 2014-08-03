@@ -3,159 +3,16 @@
   <head>
     <title>FnordMetric Web</title>
     <link rel="stylesheet" type="text/css" href="/fnordmetric-web.css" />
-    <link rel="stylesheet" type="text/css" href="/codemirror.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script src="/codemirror.min.js"></script>
   </head>
 
   <body>
-    <div id="sidebar">
+    <div id="sidebar"></div>
+    <div id="wrap"></div>
 
-    </div>
-    <div id="wrap">
-      <div class="navbar">
-        <a class="button navbutton">Execute</a>
-        <h2>Unnamed Query</h2>
-      </div>
-
-      <div class="query_editor">
-        <textarea id="query_editor_textarea">
-IMPORT TABLE gdp_per_country
-   FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;
-
-DRAW BAR CHART;
-DRAW BOTTOM AXIS;
-DRAW LEFT AXIS;
-
-SELECT
-  'gross domestic product per country' AS series,
-  country AS x,
-  gbp AS y
-FROM
-  gdp_per_country
-LIMIT 30;
-        </textarea>
-      </div>
-    <script>
-      var editor = CodeMirror.fromTextArea(
-          document.getElementById("query_editor_textarea"),
-          {
-            mode: "sql",
-            lineNumbers: true
-          });
-    </script>
-
-
-      <div class="headbar">
-        <div class="btn_group mr">
-          <a href="?range=1209600" class="button ">
-            <span>14d</span>
-          </a>
-          <a href="?range=432000" class="button ">
-            <span>5d</span>
-          </a>
-          <a href="?range=259200" class="button ">
-            <span>3d</span>
-          </a>
-          <a href="?range=172800" class="button ">
-            <span>48h</span>
-          </a>
-          <a href="?range=86400" class="button ">
-            <span>24h</span>
-          </a>
-          <a href="?range=43200" class="button ">
-            <span>12h</span>
-          </a>
-          <a href="?range=21600" class="button ">
-            <span>6h</span>
-          </a>
-          <a href="?range=10800" class="button ">
-            <span>3h</span>
-          </a>
-          <a href="?range=3600" class="button ">
-            <span>1h</span>
-          </a>
-          <a href="?range=2400" class="button ">
-            <span>20m</span>
-          </a>
-          <a href="?range=600" class="button ">
-            <span>5m</span>
-          </a>
-      </div>
-
-      </div>
-
-        <div class="titlebar">
-          <h3>HTTP Mean Render Time (ms)</h5>
-        </div>
-
-        <div>
-          <div
-            data-fnordmetric="timeseries"
-            data-gauges="nginx-loveos.loveos.page-product.request_time-mean-60,nginx-loveos.loveos.page-search.request_time-mean-60,nginx-loveos.loveos.page-shop.request_time-mean-60"
-            data-since="-7200"
-            data-until="now"
-            data-autoupdate="10"
-            data-chart-style="line"
-            data-legend="off"
-            data-height="350"
-            data-y-max="1000"
-            data-colors="#3d96ae,#89a54e,#aa4643"
-            style="height:339px; margin-top:5px;"
-            ></div>
-
-
-          <br class="clear" />
-          <div style="margin-right:30px; margin-left:23px; font-size:12px; color:#999; margin-bottom:13px; text-align:left;">
-            <span style="float:right;">Mean Render Time (ms)</span>
-            <span style="display:inline-block; width:10px; height:10px; opacity:0.8; border-radius:5px; background:#3d96ae;"></span>
-            <span style="color:#777; padding-left:4px; padding-right:15px;">/product</span>
-            <span style="display:inline-block; width:10px; height:10px; opacity:0.8; border-radius:5px; background:#89a54e;"></span>
-            <span style="color:#777; padding-left:4px; padding-right:15px;">/search</span>
-            <span style="display:inline-block; width:10px; height:10px; opacity:0.8; border-radius:5px; background:#aa4643;"></span>
-            <span style="color:#777; padding-left:4px; padding-right:15px;">/shop</span>
-          </div>
-        </div>
-      <br class="clear" />
-
-<div class="headbar">
-  <h2>Instances</h2>
-
-  <div class="btn_group ml">
-    <a href="/FIXPAUL" class="button">
-      <span>Open HAProxy webinterface</span>
-    </a>
-  </div>
-</div>
-
-<table style="width:100%;">
-  <tbody><tr>
-    <th style="padding-left:25px;">Hostname</th>
-    <th>Mem Usage</th>
-    <th>RPS</th>
-    <th>Avg. QTime</th>
-  </tr>
-    <tr>
-      <td style="padding-left:25px;">
-        <div class="swatch" style="background-color: rgb(137, 165, 78);"></div>
-        localhost
-      </td>
-      <td>...</td>
-      <td>
-        <span data-fnordmetric="counter" data-gauge="loveos.services.translation-service.instances.localhost.http-200-sum-10" data-unit=" rps" data-scale-by="0.1" data-autoupdate="2" data-at="-30" data-widget-key="1c01d90">0</span>
-      </td>
-      <td>
-        <span data-fnordmetric="counter" data-gauge="loveos.services.translation-service.instances.localhost.response-time-mean-10" data-unit=" ms" data-scale-by="0.001" data-autoupdate="2" data-at="-30" data-widget-key="1fc2a97">0</span>
-      </td>
-    </tr>
-</tbody></table>
-
-    </div>
-    <script type="text/javascript" src="/fnordmetric-ui.js"></script>
+    <script src="/fnordmetric-web.js"></script>
     <script type="text/javascript">
-      FnordMetric.setup({
-        address: "46.231.176.100:8085"
-      });
+      FnordMetric.render();
     </script>
   </body>
 </html>
