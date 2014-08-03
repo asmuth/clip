@@ -50,6 +50,8 @@ public:
   void readHeaders(
       std::vector<std::pair<std::string, std::string>>* target);
 
+  util::InputStream* getInputStream() const;
+
 protected:
   void readNextByte(std::string* target);
   util::InputStream* input_;

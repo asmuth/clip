@@ -25,10 +25,14 @@ public:
   const std::string& getHeader(const std::string& key) const;
   void addHeader(const std::string& key, const std::string& value);
 
+  const std::string& getBody() const;
+  void addBody(const std::string& body);
+
 protected:
   std::string version_;
   static std::string kEmptyHeader;
   std::vector<std::pair<std::string, std::string>> headers_;
+  std::string body_;
 };
 
 }

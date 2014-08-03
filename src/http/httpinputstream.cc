@@ -25,6 +25,10 @@ HTTPInputStream::HTTPInputStream(
 HTTPInputStream::~HTTPInputStream() {
 }
 
+util::InputStream* HTTPInputStream::getInputStream() const {
+  return input_;
+}
+
 void HTTPInputStream::readStatusLine(
     std::string* method,
     std::string* url,

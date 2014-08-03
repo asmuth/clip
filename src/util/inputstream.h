@@ -37,6 +37,14 @@ public:
   virtual bool readNextByte(char* target) = 0;
 
   /**
+   * Read N bytes from the stream and copy the data into the provided string.
+   * Returns the number of bytes read.
+   *
+   * @param target the string to copy the data into
+   */
+  virtual size_t readNextBytes(std::string* target, size_t n_bytes);
+
+  /**
    * Read from the stream until EOF and copy the data into the provided string.
    * Returns the number of bytes read.
    *

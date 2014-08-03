@@ -42,5 +42,14 @@ void HTTPMessage::addHeader(const std::string& key, const std::string& value) {
   headers_.emplace_back(key, value);
 }
 
+const std::string& HTTPMessage::getBody() const {
+  return body_;
+}
+
+void HTTPMessage::addBody(const std::string& body) {
+  body_ = body;
+  addHeader("Content-Length", std::to_string(body_.size()));
+}
+
 }
 }

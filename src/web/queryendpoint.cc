@@ -25,7 +25,7 @@ bool QueryEndpoint::handleHTTPRequest(
   if (url.substr(0, 6) == "/query") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody("query :)");
+    response->addBody("query...." + request->getBody());
     return true;
   }
 

@@ -23,6 +23,18 @@ std::unique_ptr<InputStream> InputStream::getStdin() {
 }
 
 // FIXPAUL: optimize?
+size_t InputStream::readNextBytes(std::string* target, size_t n_bytes) {
+  char byte;
+  size_t length;
+
+  for (length = 0; length < n_bytes && readNextByte(&byte); ++length) {
+    *target += byte;
+  }
+
+  return length;
+}
+
+// FIXPAUL: optimize?
 size_t InputStream::readUntilEOF(std::string* target) {
   char byte;
   size_t length;

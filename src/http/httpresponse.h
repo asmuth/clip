@@ -22,14 +22,12 @@ public:
   HTTPResponse();
 
   void setStatus(int status);
-  void addBody(const std::string& body);
 
   void writeToOutputStream(HTTPOutputStream* output);
   void populateFromRequest(const HTTPRequest& request);
 
 protected:
   int status_;
-  std::string body_;
 };
 
 }

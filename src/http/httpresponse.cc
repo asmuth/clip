@@ -20,11 +20,6 @@ void HTTPResponse::setStatus(int status) {
   status_ = status;
 }
 
-void HTTPResponse::addBody(const std::string& body) {
-  body_ = body;
-  addHeader("Content-Length", std::to_string(body_.size()));
-}
-
 void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
   output->writeStatusLine(version_, status_);
   output->writeHeaders(headers_);
