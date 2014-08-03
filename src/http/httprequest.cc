@@ -18,13 +18,24 @@ void HTTPRequest::readFromInputStream(HTTPInputStream* input) {
   input->readHeaders(&headers_);
 }
 
+const std::string& HTTPRequest::getMethod() const {
+  return method_;
+}
+
 const std::string& HTTPRequest::getUrl() const {
   return url_;
 }
 
-const std::vector<std::pair<std::string, std::string>>&
-    HTTPRequest::getHeaders() const {
-  return headers_;
+const bool HTTPRequest::keepalive() const {
+  if (getVersion() == "HTTP/1.1") {
+    return true;
+  }
+
+  if (getHeader("Connection") == "keep-alive") {
+    return true;
+  }
+
+  return false;
 }
 
 }

@@ -9,27 +9,25 @@
  */
 #ifndef _FNORDMETRIC_WEB_HTTPREQUEST_H
 #define _FNORDMETRIC_WEB_HTTPREQUEST_H
-#include <vector>
+#include <fnordmetric/http/httpmessage.h>
 #include <string>
-#include <utility>
 
 namespace fnordmetric {
 namespace http {
 class HTTPInputStream;
 
-class HTTPRequest {
+class HTTPRequest : public HTTPMessage {
 public:
   //HTTPRequest();
   void readFromInputStream(HTTPInputStream* input);
 
+  const std::string& getMethod() const;
   const std::string& getUrl() const;
-  const std::vector<std::pair<std::string, std::string>>& getHeaders() const;
+  const bool keepalive() const;
 
 protected:
   std::string method_;
   std::string url_;
-  std::string version_;
-  std::vector<std::pair<std::string, std::string>> headers_;
 };
 
 }

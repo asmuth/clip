@@ -14,15 +14,10 @@ namespace fnordmetric {
 namespace http {
 
 HTTPResponse::HTTPResponse() :
-    version_("HTTP/1.1"),
     status_(400) {}
 
 void HTTPResponse::setStatus(int status) {
   status_ = status;
-}
-
-void HTTPResponse::addHeader(const std::string& key, const std::string& value) {
-  headers_.emplace_back(key, value);
 }
 
 void HTTPResponse::addBody(const std::string& body) {
@@ -34,6 +29,16 @@ void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
   output->writeStatusLine(version_, status_);
   output->writeHeaders(headers_);
   output->getOutputStream()->write(body_);
+}
+
+void HTTPResponse::populateFromRequest(const HTTPRequest& request) {
+  setVersion(request.getVersion());
+
+  if (request.keepalive()) {
+    addHeader("Connection", "keep-alive");
+  } else {
+    addHeader("Connection", "close");
+  }
 }
 
 }

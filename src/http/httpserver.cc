@@ -32,22 +32,31 @@ void ThreadedHTTPServer::onConnection(int fd) {
 }
 
 void ThreadedHTTPServer::handleConnection(int fd) {
-  HTTPRequest request;
-  HTTPResponse response;
+  bool keepalive = false;
 
-  util::FileInputStream input_stream(fd, false);
-  HTTPInputStream http_input_stream(&input_stream);
-  request.readFromInputStream(&http_input_stream);
+  do {
+    HTTPRequest request;
+    HTTPResponse response;
 
-  for (const auto& handler : handlers_) {
-    if (handler->handleHTTPRequest(&request, &response)) {
-      break;
+    util::FileInputStream input_stream(fd, false);
+    HTTPInputStream http_input_stream(&input_stream);
+    request.readFromInputStream(&http_input_stream);
+    response.populateFromRequest(request);
+
+    for (const auto& handler : handlers_) {
+      if (handler->handleHTTPRequest(&request, &response)) {
+        break;
+      }
     }
-  }
 
-  util::FileOutputStream output_stream(fd, false);
-  HTTPOutputStream http_output_stream(&output_stream);
-  response.writeToOutputStream(&http_output_stream);
+    if (!request.keepalive()) {
+      keepalive = false;
+    }
+
+    util::FileOutputStream output_stream(fd, false);
+    HTTPOutputStream http_output_stream(&output_stream);
+    response.writeToOutputStream(&http_output_stream);
+  } while (keepalive);
 }
 
 }

@@ -165,7 +165,7 @@ public:
         if (err != errors.end()) {
           fprintf(
               stderr,
-              "\n\033[1;31m[FAIL] %s::%s\e[0m",
+              "\n\033[1;31m[FAIL] %s::%s\e[0m\n",
               name_,
               test_case->name_);
           err->second.debugPrint();

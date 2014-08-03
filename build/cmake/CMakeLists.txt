@@ -10,6 +10,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/ev/eventloop.cc
     stage/src/fnordmetric/http/httpinputstream.cc
     stage/src/fnordmetric/http/httpoutputstream.cc
+    stage/src/fnordmetric/http/httpmessage.cc
     stage/src/fnordmetric/http/httprequest.cc
     stage/src/fnordmetric/http/httpresponse.cc
     stage/src/fnordmetric/http/httpserver.cc
@@ -90,3 +91,7 @@ add_executable(tests/test-input-stream
 add_executable(tests/test-csv-backend
     ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/query/backends/csv/csvbackend_test.cc)
+
+add_executable(tests/test-http
+    ${FNORDMETRIC_SOURCES}
+    stage/src/fnordmetric/http/http_test.cc)

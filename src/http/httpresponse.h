@@ -9,28 +9,26 @@
  */
 #ifndef _FNORDMETRIC_WEB_HTTPRESPONSE_H
 #define _FNORDMETRIC_WEB_HTTPRESPONSE_H
-#include <vector>
+#include <fnordmetric/http/httpmessage.h>
+#include <fnordmetric/http/httprequest.h>
 #include <string>
-#include <utility>
 
 namespace fnordmetric {
 namespace http {
 class HTTPOutputStream;
 
-class HTTPResponse {
+class HTTPResponse : public HTTPMessage {
 public:
   HTTPResponse();
 
   void setStatus(int status);
-  void addHeader(const std::string& key, const std::string& value);
   void addBody(const std::string& body);
 
   void writeToOutputStream(HTTPOutputStream* output);
+  void populateFromRequest(const HTTPRequest& request);
 
 protected:
-  std::string version_;
   int status_;
-  std::vector<std::pair<std::string, std::string>> headers_;
   std::string body_;
 };
 
