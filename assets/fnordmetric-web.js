@@ -37,7 +37,9 @@ FnordMetric = (function() {
 
     for (var i = 0; i < results.charts.length; ++i) {
       results_html += "<div class='query_editor_result_tab_content' data-tab='chart" + i + "'>";
+      results_html += "<div class='chart'>";
       results_html += results.charts[i].svg;
+      results_html += "</div>";
       results_html += "</div>";
     }
 

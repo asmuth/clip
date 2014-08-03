@@ -1490,6 +1490,15 @@ ul.ui_tabs li.active a{
   display: none;
 }
 
+.query_editor_result_tab_content .chart {
+  text-align: center;
+  padding: 34px 0;
+}
+
+.query_editor_result_tab_content .chart svg {
+  height: 600px;
+}
+
 .query_editor_result_tab_content.active {
   display: block;
 }
