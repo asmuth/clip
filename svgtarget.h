@@ -49,7 +49,6 @@ public:
         width,
         height,
         class_name.c_str());
-
     indent_ ++;
     appendLine("<style type='text/css'>\n");
     appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());
