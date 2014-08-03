@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/web/assets.h>
 #include <fnordmetric/web/webinterface.h>
 
 namespace fnordmetric {
@@ -19,8 +20,23 @@ std::unique_ptr<http::HTTPHandler> WebInterface::getHandler() {
 bool WebInterface::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-  response->setStatus(200);
-  response->addBody("fnord");
+  auto url = request->getUrl();
+
+  if (url == "/") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    response->addBody(Assets::getAsset("index.html"));
+    return true;
+  }
+
+  if (url == "/fnordmetric-web.css") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/css");
+    response->addBody(Assets::getAsset("fnordmetric-web.css"));
+    return true;
+  }
+
+  return false;
 }
 
 }

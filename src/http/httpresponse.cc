@@ -35,8 +35,6 @@ void HTTPResponse::populateFromRequest(const HTTPRequest& request) {
   setVersion(request.getVersion());
 
   if (request.keepalive()) {
-    addHeader("Connection", "keep-alive");
-  } else {
     addHeader("Connection", "close");
   }
 }

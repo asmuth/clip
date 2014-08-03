@@ -60,9 +60,11 @@ set(FNORDMETRIC_CLI_SOURCES
     ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
+    stage/src/fnordmetric/web/assets.cc
     stage/src/fnordmetric/web/webinterface.cc)
 
 include_directories(stage/src)
+include_directories(stage/assets)
 set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
 add_definitions("-Wno-predefined-identifier-outside-function")
@@ -95,3 +97,4 @@ add_executable(tests/test-csv-backend
 add_executable(tests/test-http
     ${FNORDMETRIC_SOURCES}
     stage/src/fnordmetric/http/http_test.cc)
+

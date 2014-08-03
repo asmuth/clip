@@ -34,26 +34,43 @@ void ThreadedHTTPServer::onConnection(int fd) {
 void ThreadedHTTPServer::handleConnection(int fd) {
   bool keepalive = false;
 
+  util::FileInputStream input_stream(fd, false);
+  util::FileOutputStream output_stream(fd, true);
+
   do {
     HTTPRequest request;
     HTTPResponse response;
 
-    util::FileInputStream input_stream(fd, false);
-    HTTPInputStream http_input_stream(&input_stream);
-    request.readFromInputStream(&http_input_stream);
-    response.populateFromRequest(request);
+    try {
+      HTTPInputStream http_input_stream(&input_stream);
+      request.readFromInputStream(&http_input_stream);
 
+      if (!request.keepalive()) {
+        keepalive = false;
+      }
+
+      response.populateFromRequest(request);
+    } catch (util::RuntimeException e) {
+      e.debugPrint();
+      response.setStatus(400);
+      response.addHeader("Connection", "close");
+      response.addBody("Bad Request");
+      keepalive = false;
+    }
+
+    bool handled = false;
     for (const auto& handler : handlers_) {
       if (handler->handleHTTPRequest(&request, &response)) {
+        handled = true;
         break;
       }
     }
 
-    if (!request.keepalive()) {
-      keepalive = false;
+    if (!handled) {
+      response.setStatus(404);
+      response.addBody("Not Found");
     }
 
-    util::FileOutputStream output_stream(fd, false);
     HTTPOutputStream http_output_stream(&output_stream);
     response.writeToOutputStream(&http_output_stream);
   } while (keepalive);
