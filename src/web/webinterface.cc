@@ -19,13 +19,8 @@ std::unique_ptr<http::HTTPHandler> WebInterface::getHandler() {
 bool WebInterface::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-  printf("handle req!\n");
-
-  printf("request: %s\n", request->getUrl().c_str());
-
-  for (const auto& header : request->getHeaders()) {
-    printf("..header %s => %s\n", header.first.c_str(), header.second.c_str());
-  }
+  response->setStatus(200);
+  response->addBody("fnord");
 }
 
 }

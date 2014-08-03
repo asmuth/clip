@@ -15,9 +15,23 @@
 
 namespace fnordmetric {
 namespace http {
+class HTTPOutputStream;
 
 class HTTPResponse {
 public:
+  HTTPResponse();
+
+  void setStatus(int status);
+  void addHeader(const std::string& key, const std::string& value);
+  void addBody(const std::string& body);
+
+  void writeToOutputStream(HTTPOutputStream* output);
+
+protected:
+  std::string version_;
+  int status_;
+  std::vector<std::pair<std::string, std::string>> headers_;
+  std::string body_;
 };
 
 }

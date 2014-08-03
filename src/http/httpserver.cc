@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/http/httpinputstream.h>
+#include <fnordmetric/http/httpoutputstream.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -35,10 +36,8 @@ void ThreadedHTTPServer::handleConnection(int fd) {
   HTTPResponse response;
 
   util::FileInputStream input_stream(fd, false);
-  util::FileOutputStream output_stream(fd, false);
-
-  HTTPInputStream http_stream(&input_stream);
-  request.readFromInputStream(&http_stream);
+  HTTPInputStream http_input_stream(&input_stream);
+  request.readFromInputStream(&http_input_stream);
 
   for (const auto& handler : handlers_) {
     if (handler->handleHTTPRequest(&request, &response)) {
@@ -46,7 +45,9 @@ void ThreadedHTTPServer::handleConnection(int fd) {
     }
   }
 
-  output_stream.printf("200 OK\nContent-Length: 5\n\nfnord\n");
+  util::FileOutputStream output_stream(fd, false);
+  HTTPOutputStream http_output_stream(&output_stream);
+  response.writeToOutputStream(&http_output_stream);
 }
 
 }
