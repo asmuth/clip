@@ -57,8 +57,9 @@ public:
     return type_;
   }
 
-  void addSelectStatement(Executable* select_stmt) {
-    select_stmts_.push_back(select_stmt);
+  void addSelectStatement(Executable* select_stmt, ResultList* target) {
+    select_stmts_.emplace_back(select_stmt);
+    result_lists_.emplace_back(target);
   }
 
   void addAxisStatement(AxisStatement* axis_stmt) {
@@ -69,8 +70,9 @@ public:
 
   template <typename T>
   void executeDrawable(T* drawable) {
-    for (const auto& stmt : select_stmts_) {
-      SeriesAdapter<T> series_adapter(drawable, stmt);
+    for (int i = 0; i < select_stmts_.size(); ++i) {
+      const auto& stmt = select_stmts_[i];
+      SeriesAdapter<T> series_adapter(drawable, stmt, result_lists_[i]);
       stmt->setTarget(&series_adapter);
       stmt->execute();
     }
@@ -82,6 +84,7 @@ public:
 
 protected:
   std::vector<Executable*> select_stmts_;
+  std::vector<ResultList*> result_lists_;
   std::vector<AxisStatement*> axis_stmts_;
   kDrawStatementType type_;
 };

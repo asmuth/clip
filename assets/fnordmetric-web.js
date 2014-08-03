@@ -1,6 +1,41 @@
 FnordMetric = (function() {
   var editor = undefined;
 
+  // FIXPAUL what is xss?
+  var renderQueryResults = function(results) {
+    var tabs = "<ul class='ui_tabs'>";
+    for (i = 0; i < results.tables.length; ++i) {
+      tabs += "<li class='active'><a>Table</a></li>";
+    }
+    tabs += "</ul>";
+
+    var results_html = tabs;
+    for (i = 0; i < results.tables.length; ++i) {
+      var result = results.tables[i];
+      results_html += "<table><tbody>";
+
+      results_html += "<tr>";
+      for (j = 0; j < result.columns.length; ++j) {
+        results_html += "<th>" + result.columns[j] + "</th>";
+      }
+      results_html += "</tr>";
+
+      for (j = 0; j < result.rows.length; ++j) {
+        var row = result.rows[j];
+        results_html += "<tr>";
+        for (k = 0; k < row.length; ++k) {
+          results_html += "<td>" + row[k] + "</td>";
+        }
+        results_html += "</tr>";
+      }
+
+
+      results_html += "</tbody></table>";
+    }
+
+    document.getElementById("query_editor_results").innerHTML = results_html;
+  }
+
   var executeQuery = function() {
     if (typeof editor == undefined) {
       return;
@@ -22,9 +57,10 @@ FnordMetric = (function() {
     var error_div = document.getElementById("query_editor_error");
     if (response.status == "success") {
       error_div.className = "";
+      renderQueryResults(response);
     } else {
       error_div.className = "visible";
-      error_div.innerHTML = response.error;
+      error_div.innerHTML = "<b>Error:</b> " + response.error;
     }
   };
 
@@ -38,9 +74,11 @@ FnordMetric = (function() {
     document.getElementById("wrap").innerHTML =
         navbar +
         "<div id='query_editor'>" +
-          "<textarea id='query_editor_textarea'></textarea>" +
+          "<textarea id='query_editor_textarea'>select 1 as one, 2 as two, 3 as three, 4 as four;</textarea>" +
         "</div>" +
-        "<div id='query_editor_error'></div>";
+        "<div class='headbar small'>Query executed in...</div>" +
+        "<div id='query_editor_error'></div>" +
+        "<div id='query_editor_results'></div>";
 
     editor = CodeMirror.fromTextArea(
         document.getElementById("query_editor_textarea"),

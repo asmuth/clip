@@ -22,8 +22,10 @@ public:
 
   void beginObject();
   void endObject();
-  void beginObjectEntry(const std::string& key);
-  void endObjectEntry(bool last);
+  void addObjectEntry(const std::string& key);
+  void beginArray();
+  void endArray();
+  void addComma();
   void addString(const std::string& string);
 
 protected:

@@ -90,8 +90,7 @@ void Query::execute() {
     results_.emplace_back(target);
 
     if (current_draw_statement != nullptr) {
-      // FIXPAUL copy results into target...
-      current_draw_statement->addSelectStatement(stmt.get());
+      current_draw_statement->addSelectStatement(stmt.get(), target);
     } else {
       stmt->setTarget(target);
       stmt->execute();
@@ -110,6 +109,10 @@ void Query::execute() {
 ResultList* Query::getResultList(size_t index) const {
   assert(index < results_.size()); // FIXPAUL
   return results_[index].get();
+}
+
+size_t Query::getNumResultLists() const {
+  return results_.size();
 }
 
 size_t Query::getNumCharts() const {

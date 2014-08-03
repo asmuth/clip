@@ -14,6 +14,7 @@
 #include <fnordmetric/query/resultlist.h>
 #include <fnordmetric/query/tablerepository.h>
 #include <fnordmetric/util/inputstream.h>
+#include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/ui/svgtarget.h>
 
 namespace fnordmetric {
@@ -43,6 +44,15 @@ void QueryService::executeQuery(
         break;
       }
 
+      case FORMAT_JSON: {
+        util::JSONOutputStream target(output_stream);
+        renderJSON(&query, &target);
+        break;
+      }
+
+      default:
+        RAISE(util::RuntimeException, "can't handle this output format");
+
     }
   } catch (util::RuntimeException e) {
     e.appendMessage(" while executing query: %s", query_string.c_str());
@@ -58,6 +68,66 @@ void QueryService::renderCharts(Query* query, ui::RenderTarget* target) const {
     query->getChart(i)->render(target);
   }
 }
+
+void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
+    const {
+  target->beginObject();
+
+  if (query->getNumResultLists() > 0) {
+    target->addObjectEntry("tables");
+    target->beginArray();
+    for (int i = 0; i < query->getNumResultLists(); ++i) {
+      const auto result_list = query->getResultList(i);
+      target->beginObject();
+
+      target->addObjectEntry("columns");
+      target->beginArray();
+      for (const auto column : result_list->getColumns()) {
+        target->addString(column);
+        if (column != result_list->getColumns().back()) {
+          target->addComma();
+        }
+      }
+      target->endArray();
+      target->addComma();
+
+      target->addObjectEntry("rows");
+      target->beginArray();
+      for (int j = 0; j < result_list->getNumRows(); ++j) {
+        const auto& row = result_list->getRow(j);
+
+        target->beginArray();
+        for (const auto& col : row) {
+          target->addString(col);
+          if (col != row.back()) {
+            target->addComma();
+          }
+        }
+        target->endArray();
+
+        if (j < result_list->getNumRows() - 1) {
+          target->addComma();
+        }
+      }
+      target->endArray();
+
+      target->endObject();
+    }
+    target->endArray();
+    target->addComma();
+  }
+
+  target->addObjectEntry("charts");
+  target->beginArray();
+  target->endArray();
+  target->addComma();
+
+  target->addObjectEntry("status");
+  target->addString("success");
+
+  target->endObject();
+}
+
 
 }
 }

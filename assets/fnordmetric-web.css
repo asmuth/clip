@@ -1165,6 +1165,7 @@ body, html {
   border-left: 1px #D7DBE6 solid;
   border-right: 1px #D7DBE6 solid;
   margin-left:190px;
+  min-height: 900px;
 }
 
 .titlebar {
@@ -1441,7 +1442,7 @@ ul.ui_tabs{
   list-style-type:none;
   margin:0;
   padding:0;
-  height:46px;
+  height:36px;
   display:block;
   width:100%;
   font-size:13px;
@@ -1494,12 +1495,20 @@ ul.ui_tabs li.active a{
   outline: none;
 }
 
+#query_editor_results ul.ui_tabs {
+  padding-top: 16px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #ddd;
+}
+
 #query_editor_error {
   display: none;
-  padding: 7px;
+  padding: 10px 20px;
   font-family: monospace;
   background: #ecc;
   border: 1px solid #f88;
+  margin: 19px;
+  border-radius: 3px;
 }
 
 #query_editor_error.visible {
@@ -1535,7 +1544,7 @@ table th, table td {
   border: 1px solid #ddd;
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
-  padding: 9px 13px;
+  padding: 0 13px;
 }
 table th {
   font-weight: bold;

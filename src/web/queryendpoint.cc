@@ -44,12 +44,11 @@ bool QueryEndpoint::handleHTTPRequest(
 
       util::JSONOutputStream json(output_stream.get());
       json.beginObject();
-      json.beginObjectEntry("status");
+      json.addObjectEntry("status");
       json.addString("error");
-      json.endObjectEntry(false);
-      json.beginObjectEntry("error");
+      json.addComma();
+      json.addObjectEntry("error");
       json.addString(e.getMessage());
-      json.endObjectEntry(true);
       json.endObject();
     }
 

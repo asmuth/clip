@@ -18,6 +18,7 @@ namespace ui {
 namespace util {
   class InputStream;
   class OutputStream;
+  class JSONOutputStream;
 }
 
 namespace query {
@@ -59,6 +60,7 @@ public:
 protected:
 
   void renderCharts(Query* query, ui::RenderTarget* target) const;
+  void renderJSON(Query* query, util::JSONOutputStream* target) const;
 
 };
 

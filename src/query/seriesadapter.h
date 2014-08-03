@@ -85,11 +85,17 @@ public:
 
   SeriesAdapter(
       T* drawable,
-      Executable* stmt) :
+      Executable* stmt,
+      ResultList* result_list) :
       drawable_(drawable),
-      stmt_(stmt) {}
+      stmt_(stmt),
+      result_list_(result_list) {}
 
   bool nextRow(SValue* row, int row_len) {
+    if (result_list_ != nullptr) {
+      result_list_->nextRow(row, row_len);
+    }
+
     x_ind_ = stmt_->getColumnIndex("x");
     y_ind_ = stmt_->getColumnIndex("y");
     z_ind_ = stmt_->getColumnIndex("z");
@@ -158,6 +164,7 @@ protected:
   std::unique_ptr<AbstractSeriesAdapter> adapter_;
   T* drawable_;
   Executable* stmt_;
+  ResultList* result_list_;
   int name_ind_;
   int x_ind_;
   int y_ind_;
