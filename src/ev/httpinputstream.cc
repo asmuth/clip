@@ -47,7 +47,8 @@ void HTTPInputStream::readHeaders(
   std::pair<std::string, std::string>* cur_header;
 
   while (state_ == HTTP_STATE_HKEY || state_ == HTTP_STATE_HVAL) {
-    if (target->size() == 0 || target->back().second.size() > 0) {
+    if (target->size() == 0 || 
+        (state_ == HTTP_STATE_HKEY && target->back().second.size() > 0)) {
       target->emplace_back("", "");
     }
 
@@ -71,7 +72,7 @@ void HTTPInputStream::readNextByte(std::string* target) {
   switch (byte) {
 
     case '\r':
-      break;
+      return;
 
     case ' ':
       switch (state_) {
@@ -123,6 +124,10 @@ void HTTPInputStream::readNextByte(std::string* target) {
         return;
       }
       break;
+  }
+
+  if (byte == ' ' && target->size() == 0) {
+    return;
   }
 
   *target += byte;

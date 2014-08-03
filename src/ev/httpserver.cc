@@ -29,6 +29,9 @@ void ThreadedHTTPServer::onConnection(int fd) {
 
 void ThreadedHTTPServer::handleConnection(int fd) {
   util::FileInputStream input_stream(fd, false);
+  util::FileOutputStream output_stream(fd, false);
+
+  /* read http headers */
   ev::HTTPInputStream http_stream(&input_stream);
 
   std::string method;
@@ -36,17 +39,13 @@ void ThreadedHTTPServer::handleConnection(int fd) {
   std::string version;
   http_stream.readStatusLine(&method, &url, &version);
 
-  printf("method=%s, url=%s, version=%s\n",
-      method.c_str(),
-      url.c_str(),
-      version.c_str());
-
   std::vector<std::pair<std::string, std::string>> headers;
   http_stream.readHeaders(&headers);
 
-  for (const auto& header : headers) {
-    printf("header: %s => %s\n", header.first.c_str(), header.second.c_str());
-  }
+  //HTTPRequest req(method, url, version, headers);
+  //HTTPResponse res;
+
+  output_stream.printf("200 OK\nContent-Length: 5\n\nfnord\n");
 }
 
 }
