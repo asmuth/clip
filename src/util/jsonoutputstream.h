@@ -29,6 +29,7 @@ public:
   void addString(const std::string& string);
 
 protected:
+  std::string escapeString(const std::string& string) const;
   util::OutputStream* output_;
 };
 

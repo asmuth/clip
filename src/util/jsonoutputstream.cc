@@ -25,18 +25,16 @@ void JSONOutputStream::endObject() {
   output_->printf("}");
 }
 
-// FIXPAUL escaping
 void JSONOutputStream::addObjectEntry(const std::string& key) {
-  output_->printf("\"%s\": ", key.c_str());
+  output_->printf("\"%s\": ", escapeString(key).c_str());
 }
 
 void JSONOutputStream::addComma() {
   output_->printf(",");
 }
 
-// FIXPAUL escaping
-void JSONOutputStream::addString(const std::string& key) {
-  output_->printf("\"%s\"", key.c_str());
+void JSONOutputStream::addString(const std::string& string) {
+  output_->printf("\"%s\"", escapeString(string).c_str());
 }
 
 void JSONOutputStream::beginArray() {
@@ -46,6 +44,29 @@ void JSONOutputStream::beginArray() {
 void JSONOutputStream::endArray() {
   output_->printf("]");
 }
+
+std::string JSONOutputStream::escapeString(const std::string& string) const {
+  std::string new_str;
+
+  for (int i = 0; i < string.size(); ++i) {
+    switch (string.at(i)) {
+      case '"':
+        new_str += "\\\"";
+        break;
+      case '\n':
+        new_str += "\\n";
+        break;
+      case '\t':
+        new_str += "\\t";
+        break;
+      default:
+        new_str += string.at(i);
+    }
+  }
+
+  return new_str;
+}
+
 
 }
 }

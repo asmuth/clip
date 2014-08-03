@@ -83,7 +83,7 @@ FnordMetric = (function() {
     document.getElementById("wrap").innerHTML =
         navbar +
         "<div id='query_editor'>" +
-          "<textarea id='query_editor_textarea'>DRAW BAR CHART;\nDRAW LEFT AXIS;\n\nSELECT\n\t1 as one,\n\t2 as two,\n\t3 as three,\n\t4 as four;</textarea>" +
+          "<textarea id='query_editor_textarea'>DRAW BAR CHART;\nDRAW LEFT AXIS;\n\nSELECT\n\t'fnord' as series,\n\t5 as x,\n\t10 as y,\n\t4 as z;</textarea>" +
         "</div>" +
         "<div class='headbar small'>Query executed in...</div>" +
         "<div id='query_editor_error'></div>" +
