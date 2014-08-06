@@ -8,14 +8,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#include <fnordmetric/query/query.h>
+#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/sql/executable.h>
-#include <fnordmetric/sql/query.h>
-#include <fnordmetric/sql/queryservice.h>
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tablerepository.h>
+#include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/jsonoutputstream.h>
-#include <fnordmetric/ui/svgtarget.h>
 
 namespace fnordmetric {
 namespace query {

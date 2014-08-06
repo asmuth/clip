@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/web/assets.h>
 #include <fnordmetric/web/queryendpoint.h>
-#include <fnordmetric/sql/queryservice.h>
+#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 

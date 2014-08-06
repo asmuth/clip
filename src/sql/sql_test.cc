@@ -11,11 +11,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fnordmetric/query/query.h>
+#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/executable.h>
 #include <fnordmetric/sql/parser.h>
-#include <fnordmetric/sql/query.h>
-#include <fnordmetric/sql/queryservice.h>
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tableref.h>
 #include <fnordmetric/sql/tablescan.h>

@@ -12,10 +12,10 @@
 #define _FNORDMETRIC_QUERY_AXISSTATEMENT_H
 #include <stdlib.h>
 #include <assert.h>
-#include "compile.h"
-#include "execute.h"
-#include "executable.h"
-#include "../ui/axisdefinition.h"
+#include <fnordmetric/sql/compile.h>
+#include <fnordmetric/sql/execute.h>
+#include <fnordmetric/sql/executable.h>
+#include <fnordmetric/ui/axisdefinition.h>
 
 namespace fnordmetric {
 namespace query {

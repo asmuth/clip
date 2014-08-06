@@ -10,9 +10,9 @@
 
 #include <stdlib.h>
 #include <assert.h>
+// FIXPAUL!!!
 #include "queryplan.h"
 #include "astnode.h"
-#include "axisstatement.h"
 #include "executable.h"
 #include "tablelessselect.h"
 #include "tablescan.h"
@@ -20,7 +20,8 @@
 #include "limitclause.h"
 #include "groupby.h"
 #include "symboltable.h"
-#include "drawstatement.h"
+#include "../sql_extensions/drawstatement.h"
+#include "../sql_extensions/axisstatement.h"
 
 namespace fnordmetric {
 namespace query {

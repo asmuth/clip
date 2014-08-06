@@ -11,16 +11,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <memory>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/axisstatement.h>
+#include <fnordmetric/query/query.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/drawstatement.h>
 #include <fnordmetric/sql/executable.h>
 #include <fnordmetric/sql/parser.h>
-#include <fnordmetric/sql/query.h>
 #include <fnordmetric/sql/queryplan.h>
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tablerepository.h>
+#include <fnordmetric/sql_extensions/axisstatement.h>
+#include <fnordmetric/sql_extensions/drawstatement.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {

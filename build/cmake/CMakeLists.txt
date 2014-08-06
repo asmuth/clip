@@ -42,6 +42,8 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
+    stage/src/fnordmetric/query/query.cc
+    stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/astnode.cc
     stage/src/fnordmetric/sql/compile.cc
     stage/src/fnordmetric/sql/executable.cc
@@ -52,12 +54,10 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/grouper.cc
     stage/src/fnordmetric/sql/parser.cc
     stage/src/fnordmetric/sql/queryplan.cc
-    stage/src/fnordmetric/sql/queryservice.cc
     stage/src/fnordmetric/sql/svalue.cc
     stage/src/fnordmetric/sql/symboltable.cc
     stage/src/fnordmetric/sql/token.cc
     stage/src/fnordmetric/sql/tokenize.cc
-    stage/src/fnordmetric/sql_extensions/query.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc)
 
 set(FNORDMETRIC_CLI_SOURCES

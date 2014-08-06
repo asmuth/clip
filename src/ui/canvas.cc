@@ -15,7 +15,6 @@
 #include <fnordmetric/ui/domain.h>
 #include <fnordmetric/ui/rendertarget.h>
 #include <fnordmetric/ui/svgtarget.h>
-#include <fnordmetric/seriesdefinition.h>
 
 namespace fnordmetric {
 namespace ui {

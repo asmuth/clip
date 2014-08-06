@@ -12,14 +12,14 @@
 #include <string>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/sql/queryservice.h>
+#include <fnordmetric/ev/eventloop.h>
+#include <fnordmetric/ev/acceptor.h>
+#include <fnordmetric/http/httpserver.h>
+#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/ev/eventloop.h>
-#include <fnordmetric/ev/acceptor.h>
-#include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/web/webinterface.h>
 #include <fnordmetric/web/queryendpoint.h>
 
