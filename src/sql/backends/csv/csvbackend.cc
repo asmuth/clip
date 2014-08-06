@@ -9,10 +9,10 @@
  */
 
 #include <memory>
-#include <fnordmetric/query/astnode.h>
-#include <fnordmetric/query/backends/csv/csvbackend.h>
-#include <fnordmetric/query/backends/csv/csvtableref.h>
-#include <fnordmetric/query/token.h>
+#include <fnordmetric/sql/astnode.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <fnordmetric/sql/backends/csv/csvtableref.h>
+#include <fnordmetric/sql/token.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 

@@ -1,7 +1,10 @@
 # This file is part of the "FnordMetric" project
-#   Copyright (c) 2014 Paul Asmuth, Google Inc.
+#   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
 #
-# Licensed under the MIT license (see LICENSE).
+# FnordMetric is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License v3.0. You should have received a
+# copy of the GNU General Public License along with this program. If not, see
+# <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
 project(fnordmetric)
 
@@ -32,30 +35,30 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/pointchart.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
-    stage/src/fnordmetric/query/backends/csv/csvbackend.cc
-    stage/src/fnordmetric/query/backends/csv/csvinputstream.cc
-    stage/src/fnordmetric/query/backends/csv/csvtableref.cc)
+    stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
+    stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
+    stage/src/fnordmetric/sql/backends/csv/csvtableref.cc)
 
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
-    stage/src/fnordmetric/query/astnode.cc
-    stage/src/fnordmetric/query/compile.cc
-    stage/src/fnordmetric/query/drawstatement.cc
-    stage/src/fnordmetric/query/executable.cc
-    stage/src/fnordmetric/query/execute.cc
-    stage/src/fnordmetric/query/expressions/aggregate.cc
-    stage/src/fnordmetric/query/expressions/boolean.cc
-    stage/src/fnordmetric/query/expressions/math.cc
-    stage/src/fnordmetric/query/grouper.cc
-    stage/src/fnordmetric/query/parser.cc
-    stage/src/fnordmetric/query/query.cc
-    stage/src/fnordmetric/query/queryplan.cc
-    stage/src/fnordmetric/query/queryservice.cc
-    stage/src/fnordmetric/query/svalue.cc
-    stage/src/fnordmetric/query/symboltable.cc
-    stage/src/fnordmetric/query/token.cc
-    stage/src/fnordmetric/query/tokenize.cc)
+    stage/src/fnordmetric/sql/astnode.cc
+    stage/src/fnordmetric/sql/compile.cc
+    stage/src/fnordmetric/sql/executable.cc
+    stage/src/fnordmetric/sql/execute.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/math.cc
+    stage/src/fnordmetric/sql/grouper.cc
+    stage/src/fnordmetric/sql/parser.cc
+    stage/src/fnordmetric/sql/queryplan.cc
+    stage/src/fnordmetric/sql/queryservice.cc
+    stage/src/fnordmetric/sql/svalue.cc
+    stage/src/fnordmetric/sql/symboltable.cc
+    stage/src/fnordmetric/sql/token.cc
+    stage/src/fnordmetric/sql/tokenize.cc
+    stage/src/fnordmetric/sql_extensions/query.cc
+    stage/src/fnordmetric/sql_extensions/drawstatement.cc)
 
 set(FNORDMETRIC_CLI_SOURCES
     ${FNORDMETRIC_QUERY_SOURCES}
@@ -76,9 +79,13 @@ add_executable(fnordmetric
     ${FNORDMETRIC_CLI_SOURCES}
     stage/src/fnordmetric/main.cc)
 
-add_executable(tests/test-query
+add_executable(tests/test-sql
     ${FNORDMETRIC_QUERY_SOURCES}
-    stage/src/fnordmetric/query/query_test.cc)
+    stage/src/fnordmetric/sql/sql_test.cc)
+
+#add_executable(tests/test-query
+#    ${FNORDMETRIC_QUERY_SOURCES}
+#    stage/src/fnordmetric/query/query_test.cc)
 
 add_executable(tests/test-ui
     ${FNORDMETRIC_UI_SOURCES}
@@ -94,7 +101,7 @@ add_executable(tests/test-input-stream
 
 add_executable(tests/test-csv-backend
     ${FNORDMETRIC_QUERY_SOURCES}
-    stage/src/fnordmetric/query/backends/csv/csvbackend_test.cc)
+    stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
 
 add_executable(tests/test-http
     ${FNORDMETRIC_SOURCES}

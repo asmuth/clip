@@ -9,9 +9,9 @@
 #include <string.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnordmetric/query/backends/csv/csvinputstream.h>
-#include <fnordmetric/query/backends/csv/csvtableref.h>
-#include <fnordmetric/query/svalue.h>
+#include <fnordmetric/sql/backends/csv/csvinputstream.h>
+#include <fnordmetric/sql/backends/csv/csvtableref.h>
+#include <fnordmetric/sql/svalue.h>
 
 using namespace fnordmetric::query::csv_backend;
 

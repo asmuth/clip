@@ -15,8 +15,8 @@
 #include <unordered_map>
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/query/compile.h>
-#include <fnordmetric/query/execute.h>
+#include <fnordmetric/sql/compile.h>
+#include <fnordmetric/sql/execute.h>
 
 namespace fnordmetric {
 namespace query {

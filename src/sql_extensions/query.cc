@@ -12,15 +12,15 @@
 #include <string.h>
 #include <memory>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/query/axisstatement.h>
-#include <fnordmetric/query/backends/csv/csvbackend.h>
-#include <fnordmetric/query/drawstatement.h>
-#include <fnordmetric/query/executable.h>
-#include <fnordmetric/query/parser.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/query/queryplan.h>
-#include <fnordmetric/query/resultlist.h>
-#include <fnordmetric/query/tablerepository.h>
+#include <fnordmetric/sql/axisstatement.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <fnordmetric/sql/drawstatement.h>
+#include <fnordmetric/sql/executable.h>
+#include <fnordmetric/sql/parser.h>
+#include <fnordmetric/sql/query.h>
+#include <fnordmetric/sql/queryplan.h>
+#include <fnordmetric/sql/resultlist.h>
+#include <fnordmetric/sql/tablerepository.h>
 
 namespace fnordmetric {
 namespace query {

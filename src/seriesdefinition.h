@@ -11,7 +11,7 @@
 #ifndef _FNORDMETRIC_SERIESDEFINITION_H
 #define _FNORDMETRIC_SERIESDEFINITION_H
 #include <stdlib.h>
-#include "query/svalue.h"
+#include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
 

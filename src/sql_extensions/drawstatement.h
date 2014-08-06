@@ -12,12 +12,12 @@
 #define _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #include <stdlib.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/query/axisstatement.h>
-#include <fnordmetric/query/compile.h>
-#include <fnordmetric/query/execute.h>
-#include <fnordmetric/query/executable.h>
-#include <fnordmetric/query/resultlist.h>
-#include <fnordmetric/query/seriesadapter.h>
+#include <fnordmetric/sql/axisstatement.h>
+#include <fnordmetric/sql/compile.h>
+#include <fnordmetric/sql/execute.h>
+#include <fnordmetric/sql/executable.h>
+#include <fnordmetric/sql/resultlist.h>
+#include <fnordmetric/sql/seriesadapter.h>
 
 namespace fnordmetric {
 namespace ui {

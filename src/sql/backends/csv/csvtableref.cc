@@ -9,11 +9,11 @@
  */
 
 #include <memory>
-#include <fnordmetric/query/backends/csv/csvtableref.h>
-#include <fnordmetric/query/backends/csv/csvinputstream.h>
-#include <fnordmetric/query/svalue.h>
-#include <fnordmetric/query/tableref.h>
-#include <fnordmetric/query/tablescan.h>
+#include <fnordmetric/sql/backends/csv/csvtableref.h>
+#include <fnordmetric/sql/backends/csv/csvinputstream.h>
+#include <fnordmetric/sql/svalue.h>
+#include <fnordmetric/sql/tableref.h>
+#include <fnordmetric/sql/tablescan.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {

@@ -11,7 +11,7 @@
 #ifndef _FNORDMETRIC_CSVBACKEND_H
 #define _FNORDMETRIC_CSVBACKEND_H
 #include <memory>
-#include <fnordmetric/query/backends/csv/csvtableref.h>
+#include <fnordmetric/sql/backends/csv/csvtableref.h>
 
 namespace fnordmetric {
 namespace query {

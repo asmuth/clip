@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
-#include <fnordmetric/query/query.h>
+#include <fnordmetric/sql/query.h>
 
 namespace fnordmetric {
 namespace ui {

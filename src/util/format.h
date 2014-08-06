@@ -11,7 +11,7 @@
 #ifndef _FNORDMETRIC_FORMAT_H
 #define _FNORDMETRIC_FORMAT_H
 #include <string.h>
-#include <fnordmetric/query/svalue.h>
+#include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
 namespace util {

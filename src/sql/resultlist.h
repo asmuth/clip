@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/query/svalue.h>
+#include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {
