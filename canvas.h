@@ -17,7 +17,6 @@
 #include <fnordmetric/ui/drawable.h>
 
 namespace fnordmetric {
-class SeriesDefinition;
 namespace ui {
 class RenderTarget;
 
