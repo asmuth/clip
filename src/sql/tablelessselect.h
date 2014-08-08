@@ -16,14 +16,14 @@
 #include <assert.h>
 #include "token.h"
 #include "astnode.h"
-#include "executable.h"
+#include "queryplannode.h"
 #include "compile.h"
 #include "execute.h"
 
 namespace fnordmetric {
 namespace query {
 
-class TablelessSelect : public Executable {
+class TablelessSelect : public QueryPlanNode {
 public:
 
   static TablelessSelect* build(ASTNode* ast) {

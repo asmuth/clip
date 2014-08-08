@@ -16,12 +16,12 @@
 #include <assert.h>
 #include "token.h"
 #include "astnode.h"
-#include "executable.h"
+#include "queryplannode.h"
 
 namespace fnordmetric {
 namespace query {
 
-class LimitClause : public Executable {
+class LimitClause : public QueryPlanNode {
 public:
 
   static LimitClause* build(ASTNode* ast, TableRepository* repo) {
@@ -66,7 +66,7 @@ public:
     return nullptr;
   }
 
-  LimitClause(int limit, int offset, Executable* child) :
+  LimitClause(int limit, int offset, QueryPlanNode* child) :
       limit_(limit),
       offset_(offset),
       child_(child),
@@ -102,7 +102,7 @@ public:
 protected:
   size_t limit_;
   size_t offset_;
-  Executable* child_;
+  QueryPlanNode* child_;
   size_t counter_;
 };
 

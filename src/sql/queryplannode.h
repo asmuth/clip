@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FNORDMETRIC_QUERY_EXECUTABLE_H
-#define _FNORDMETRIC_QUERY_EXECUTABLE_H
+#ifndef _FNORDMETRIC_SQL_QUERYPLANNODE_H
+#define _FNORDMETRIC_SQL_QUERYPLANNODE_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -17,20 +17,15 @@
 #include "svalue.h"
 #include "token.h"
 #include "astnode.h"
+#include "rowsink.h"
 
 namespace fnordmetric {
 namespace query {
 
-class RowSink {
+class QueryPlanNode : public RowSink {
 public:
-  virtual bool nextRow(SValue* row, int row_len) = 0;
-  virtual void finish() {}
-};
-
-class Executable : public RowSink {
-public:
-  Executable();
-  virtual ~Executable();
+  QueryPlanNode();
+  virtual ~QueryPlanNode();
 
   virtual void execute() = 0;
   virtual size_t getNumCols() const = 0;

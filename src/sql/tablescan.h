@@ -14,18 +14,18 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "token.h"
-#include "astnode.h"
-#include "executable.h"
-#include "tablerepository.h"
-#include "compile.h"
-#include "execute.h"
+#include <fnordmetric/sql/token.h>
+#include <fnordmetric/sql/astnode.h>
+#include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/sql/tablerepository.h>
+#include <fnordmetric/sql/compile.h>
+#include <fnordmetric/sql/execute.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
 
-class TableScan : public Executable {
+class TableScan : public QueryPlanNode {
 public:
 
   static TableScan* build(ASTNode* ast, TableRepository* repo) {

@@ -85,7 +85,7 @@ public:
 
   SeriesAdapter(
       T* drawable,
-      Executable* stmt,
+      QueryPlanNode* stmt,
       ResultList* result_list) :
       drawable_(drawable),
       stmt_(stmt),
@@ -167,7 +167,7 @@ protected:
 protected:
   std::unique_ptr<AbstractSeriesAdapter> adapter_;
   T* drawable_;
-  Executable* stmt_;
+  QueryPlanNode* stmt_;
   ResultList* result_list_;
   int name_ind_;
   int x_ind_;

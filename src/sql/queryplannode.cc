@@ -12,25 +12,25 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include "executable.h"
+#include "queryplannode.h"
 
 namespace fnordmetric {
 namespace query {
 
-Executable::Executable() : target_(nullptr) {}
+QueryPlanNode::QueryPlanNode() : target_(nullptr) {}
 
-Executable::~Executable() {}
+QueryPlanNode::~QueryPlanNode() {}
 
-void Executable::setTarget(RowSink* target) {
+void QueryPlanNode::setTarget(RowSink* target) {
   target_ = target;
 }
 
-bool Executable::emitRow(SValue* row, int row_len) {
+bool QueryPlanNode::emitRow(SValue* row, int row_len) {
   assert(target_ != nullptr);
   return target_->nextRow(row, row_len);
 }
 
-int Executable::getColumnIndex(const std::string& column_name) const {
+int QueryPlanNode::getColumnIndex(const std::string& column_name) const {
   const auto& columns = getColumns();
 
   for (int i = 0; i < columns.size(); ++i) {
@@ -42,7 +42,7 @@ int Executable::getColumnIndex(const std::string& column_name) const {
   return -1;
 }
 
-void Executable::finish() {
+void QueryPlanNode::finish() {
   if (target_ != nullptr) {
     target_->finish();
   }

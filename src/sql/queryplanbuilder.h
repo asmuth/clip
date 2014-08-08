@@ -19,21 +19,21 @@
 
 namespace fnordmetric {
 namespace query {
-class Executable;
+class QueryPlanNode;
 class TableRepository;
 
 class QueryPlan {
 public:
 
   /* Build a query plan for the provided SELECT staement */
-  static Executable* buildQueryPlan(
+  static QueryPlanNode* buildQueryPlan(
       ASTNode* select_statement, TableRepository* repo);
 
 protected:
 
-  static Executable* buildDrawStatement(ASTNode* ast);
-  static Executable* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
-  static Executable* buildAxisStatement(ASTNode* ast, TableRepository* repo);
+  static QueryPlanNode* buildDrawStatement(ASTNode* ast);
+  static QueryPlanNode* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
+  static QueryPlanNode* buildAxisStatement(ASTNode* ast, TableRepository* repo);
 
   /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
@@ -57,7 +57,7 @@ protected:
    * Build a group by query plan node for a SELECT statement that has a GROUP
    * BY clause
    */
-  static Executable* buildGroupBy(ASTNode* ast, TableRepository* repo);
+  static QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo);
 
   /**
    * Recursively walk the provided ast and search for column references. For

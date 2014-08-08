@@ -14,14 +14,14 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "../ui/canvas.h"
+#include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/ui/canvas.h>
 
 namespace fnordmetric {
 namespace query {
 class TableRepository;
 class DrawStatement;
 class ASTNode;
-class Executable;
 class ResultList;
 
 class Query {
@@ -80,7 +80,7 @@ protected:
   void importTable(ASTNode* statement, TableRepository* repo) const;
 
   //Drawable* makeDrawable(query::DrawStatement* stmt);
-  std::vector<std::unique_ptr<Executable>> statements_;
+  std::vector<std::unique_ptr<QueryPlanNode>> statements_;
   std::vector<std::unique_ptr<ResultList>> results_;
   std::vector<std::unique_ptr<ui::Canvas>> charts_;
 };

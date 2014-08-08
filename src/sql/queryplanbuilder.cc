@@ -11,9 +11,9 @@
 #include <stdlib.h>
 #include <assert.h>
 // FIXPAUL!!!
-#include "queryplan.h"
+#include "queryplanbuilder.h"
 #include "astnode.h"
-#include "executable.h"
+#include "queryplannode.h"
 #include "tablelessselect.h"
 #include "tablescan.h"
 #include "tablerepository.h"
@@ -26,8 +26,8 @@
 namespace fnordmetric {
 namespace query {
 
-Executable* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
-  Executable* exec = nullptr;
+QueryPlanNode* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
+  QueryPlanNode* exec = nullptr;
 
   /* axis statement */
   if (ast->getType() == ASTNode::T_AXIS) {
@@ -108,7 +108,7 @@ bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
   return false;
 }
 
-Executable* QueryPlan::buildDrawStatement(ASTNode* ast) {
+QueryPlanNode* QueryPlan::buildDrawStatement(ASTNode* ast) {
   DrawStatement::kDrawStatementType type;
   switch (ast->getToken()->getType()) {
     case Token::T_BAR:
@@ -131,13 +131,13 @@ Executable* QueryPlan::buildDrawStatement(ASTNode* ast) {
   return new DrawStatement(type);
 }
 
-Executable* QueryPlan::buildAxisStatement(
+QueryPlanNode* QueryPlan::buildAxisStatement(
     ASTNode* ast,
     TableRepository* repo) {
   return new AxisStatement();
 }
 
-Executable* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {
+QueryPlanNode* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
   assert(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
 

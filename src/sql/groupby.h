@@ -16,7 +16,7 @@
 #include <assert.h>
 #include "token.h"
 #include "astnode.h"
-#include "executable.h"
+#include "queryplannode.h"
 #include "grouper.h"
 #include "symboltable.h"
 #include "compile.h"
@@ -24,7 +24,7 @@
 namespace fnordmetric {
 namespace query {
 
-class GroupBy : public Executable {
+class GroupBy : public QueryPlanNode {
 public:
 
   GroupBy(
@@ -32,7 +32,7 @@ public:
       CompiledExpression* select_expr,
       CompiledExpression* group_expr,
       size_t scratchpad_size,
-      Executable* child) :
+      QueryPlanNode* child) :
       columns_(std::move(columns)),
       select_expr_(select_expr),
       group_expr_(group_expr),
@@ -113,7 +113,7 @@ protected:
   CompiledExpression* select_expr_;
   CompiledExpression* group_expr_;
   size_t scratchpad_size_;
-  Executable* child_;
+  QueryPlanNode* child_;
   std::unordered_map<std::string, Group> groups_;
 };
 

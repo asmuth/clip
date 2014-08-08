@@ -14,7 +14,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/compile.h>
 #include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/executable.h>
+#include <fnordmetric/sql/queryplannode.h>
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
 #include <fnordmetric/sql_extensions/axisstatement.h>
@@ -25,7 +25,7 @@ class Canvas;
 }
 namespace query {
 
-class DrawStatement : public Executable {
+class DrawStatement : public QueryPlanNode {
 public:
 
   enum kDrawStatementType {
@@ -57,7 +57,7 @@ public:
     return type_;
   }
 
-  void addSelectStatement(Executable* select_stmt, ResultList* target) {
+  void addSelectStatement(QueryPlanNode* select_stmt, ResultList* target) {
     select_stmts_.emplace_back(select_stmt);
     result_lists_.emplace_back(target);
   }
@@ -83,7 +83,7 @@ public:
   }
 
 protected:
-  std::vector<Executable*> select_stmts_;
+  std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;
   std::vector<AxisStatement*> axis_stmts_;
   kDrawStatementType type_;

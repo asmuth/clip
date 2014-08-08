@@ -14,13 +14,13 @@
 #include <assert.h>
 #include <fnordmetric/sql/compile.h>
 #include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/executable.h>
+#include <fnordmetric/sql/queryplannode.h>
 #include <fnordmetric/ui/axisdefinition.h>
 
 namespace fnordmetric {
 namespace query {
 
-class AxisStatement : public Executable {
+class AxisStatement : public QueryPlanNode {
 public:
 
   AxisStatement() {}

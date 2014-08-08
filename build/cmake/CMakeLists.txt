@@ -46,14 +46,14 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/astnode.cc
     stage/src/fnordmetric/sql/compile.cc
-    stage/src/fnordmetric/sql/executable.cc
     stage/src/fnordmetric/sql/execute.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
     stage/src/fnordmetric/sql/expressions/math.cc
     stage/src/fnordmetric/sql/grouper.cc
     stage/src/fnordmetric/sql/parser.cc
-    stage/src/fnordmetric/sql/queryplan.cc
+    stage/src/fnordmetric/sql/queryplanbuilder.cc
+    stage/src/fnordmetric/sql/queryplannode.cc
     stage/src/fnordmetric/sql/svalue.cc
     stage/src/fnordmetric/sql/symboltable.cc
     stage/src/fnordmetric/sql/token.cc
