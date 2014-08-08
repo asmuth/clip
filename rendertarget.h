@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <fnordmetric/sql/executable.h>
 #include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
