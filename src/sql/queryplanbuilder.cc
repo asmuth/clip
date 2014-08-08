@@ -7,10 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <assert.h>
-// FIXPAUL!!!
 #include "queryplanbuilder.h"
 #include "astnode.h"
 #include "queryplannode.h"
@@ -20,23 +18,21 @@
 #include "limitclause.h"
 #include "groupby.h"
 #include "symboltable.h"
-#include "../sql_extensions/drawstatement.h"
-#include "../sql_extensions/axisstatement.h"
 
 namespace fnordmetric {
 namespace query {
 
-QueryPlanNode* DefaultQueryPlanBuilder::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
+QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
+    ASTNode* ast,
+    TableRepository* repo) const {
   QueryPlanNode* exec = nullptr;
 
-  /* axis statement */
-  if (ast->getType() == ASTNode::T_AXIS) {
-    return buildAxisStatement(ast, repo);
-  }
+  for (const auto& extension : extensions_) {
+    exec = extension->buildQueryPlan(ast, repo);
 
-  /* draw statement */
-  if (ast->getType() == ASTNode::T_DRAW) {
-    return buildDrawStatement(ast);
+    if (exec != nullptr) {
+      return exec;
+    }
   }
 
   /* internal nodes: multi table query (joins), order, aggregation, limit */
@@ -64,7 +60,7 @@ QueryPlanNode* DefaultQueryPlanBuilder::buildQueryPlan(ASTNode* ast, TableReposi
       "can't figure out a query plan for this, sorry :(");
 }
 
-bool DefaultQueryPlanBuilder::hasGroupByClause(ASTNode* ast) {
+bool QueryPlanBuilder::hasGroupByClause(ASTNode* ast) const {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
     return false;
   }
@@ -78,7 +74,7 @@ bool DefaultQueryPlanBuilder::hasGroupByClause(ASTNode* ast) {
   return false;
 }
 
-bool DefaultQueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) {
+bool QueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) const {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
     return false;
   }
@@ -89,7 +85,7 @@ bool DefaultQueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) {
   return hasAggregationExpression(select_list);
 }
 
-bool DefaultQueryPlanBuilder::hasAggregationExpression(ASTNode* ast) {
+bool QueryPlanBuilder::hasAggregationExpression(ASTNode* ast) const {
   if (ast->getType() == ASTNode::T_METHOD_CALL) {
     assert(ast->getToken() != nullptr);
     auto symbol = lookupSymbol(ast->getToken()->getString());
@@ -108,36 +104,9 @@ bool DefaultQueryPlanBuilder::hasAggregationExpression(ASTNode* ast) {
   return false;
 }
 
-QueryPlanNode* DefaultQueryPlanBuilder::buildDrawStatement(ASTNode* ast) {
-  DrawStatement::kDrawStatementType type;
-  switch (ast->getToken()->getType()) {
-    case Token::T_BAR:
-      type = DrawStatement::T_BAR_CHART;
-      break;
-    case Token::T_LINE:
-      type = DrawStatement::T_LINE_CHART;
-      break;
-    case Token::T_AREA:
-      type = DrawStatement::T_AREA_CHART;
-      break;
-    default:
-      RAISE(
-          util::RuntimeException,
-          "invalid chart type: %s",
-          Token::getTypeName(ast->getToken()->getType()));
-      return nullptr;
-  }
-
-  return new DrawStatement(type);
-}
-
-QueryPlanNode* DefaultQueryPlanBuilder::buildAxisStatement(
+QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     ASTNode* ast,
-    TableRepository* repo) {
-  return new AxisStatement();
-}
-
-QueryPlanNode* DefaultQueryPlanBuilder::buildGroupBy(ASTNode* ast, TableRepository* repo) {
+    TableRepository* repo) const {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
   assert(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
 
@@ -204,9 +173,9 @@ QueryPlanNode* DefaultQueryPlanBuilder::buildGroupBy(ASTNode* ast, TableReposito
 }
 
 
-bool DefaultQueryPlanBuilder::buildInternalSelectList(
+bool QueryPlanBuilder::buildInternalSelectList(
     ASTNode* node,
-    ASTNode* target_select_list) {
+    ASTNode* target_select_list) const {
   /* search for column references recursively */
   if (node->getType() == ASTNode::T_COLUMN_NAME) {
     auto col_index = -1;
@@ -239,9 +208,9 @@ bool DefaultQueryPlanBuilder::buildInternalSelectList(
   }
 }
 
-QueryPlanNode* DefaultQueryPlanBuilder::buildLimitClause(
+QueryPlanNode* QueryPlanBuilder::buildLimitClause(
     ASTNode* ast,
-    TableRepository* repo) {
+    TableRepository* repo) const {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
     return nullptr;
   }
@@ -281,6 +250,12 @@ QueryPlanNode* DefaultQueryPlanBuilder::buildLimitClause(
   }
 
   return nullptr;
+}
+
+
+void QueryPlanBuilder::extend(
+    std::unique_ptr<QueryPlanBuilderInterface> other) {
+  extensions_.emplace_back(std::move(other));
 }
 
 }

@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FNORDMETRIC_QUERY_PLANER_H
-#define _FNORDMETRIC_QUERY_PLANER_H
+#ifndef _FNORDMETRIC_SQL_QUERYPLANBUILDER_H
+#define _FNORDMETRIC_SQL_QUERYPLANBUILDER_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -22,54 +22,57 @@ namespace query {
 class QueryPlanNode;
 class TableRepository;
 
-class QueryPlanBuilder {
+/**
+ * All QueryPlanBuilder imeplementations must be thread safe. Specifically they
+ * must support calling the buildQueryPlan method concurrenctly from many
+ * threads
+ */
+class QueryPlanBuilderInterface {
 public:
-  QueryPlanBuilder() {}
-  virtual ~QueryPlanBuilder() {}
+  QueryPlanBuilderInterface() {}
+  virtual ~QueryPlanBuilderInterface() {}
 
   virtual QueryPlanNode* buildQueryPlan(
       ASTNode* statement,
-      TableRepository* repo) = 0;
+      TableRepository* repo) const = 0;
 
 };
 
-class DefaultQueryPlanBuilder : public QueryPlanBuilder {
+class QueryPlanBuilder : public QueryPlanBuilderInterface {
 public:
-  DefaultQueryPlanBuilder() {}
+  QueryPlanBuilder() {}
 
   QueryPlanNode* buildQueryPlan(
       ASTNode* statement,
-      TableRepository* repo) override;
+      TableRepository* repo) const override;
+
+  void extend(std::unique_ptr<QueryPlanBuilderInterface> other);
 
 protected:
-
-  QueryPlanNode* buildDrawStatement(ASTNode* ast);
-  QueryPlanNode* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
-  QueryPlanNode* buildAxisStatement(ASTNode* ast, TableRepository* repo);
 
   /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
    * otherwise false
    */
-  bool hasGroupByClause(ASTNode* ast);
+  bool hasGroupByClause(ASTNode* ast) const;
 
   /**
    * Returns true if the ast is a SELECT statement with a select list that
    * contains at least one aggregation expression, otherwise false.
    */
-  bool hasAggregationInSelectList(ASTNode* ast);
+  bool hasAggregationInSelectList(ASTNode* ast) const;
 
   /**
    * Walks the ast recursively and returns true if at least one aggregation
    * expression was found, otherwise false.
    */
-  bool hasAggregationExpression(ASTNode* ast);
+  bool hasAggregationExpression(ASTNode* ast) const;
 
   /**
    * Build a group by query plan node for a SELECT statement that has a GROUP
    * BY clause
    */
-  QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo);
+  QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo) const;
 
   /**
    * Recursively walk the provided ast and search for column references. For
@@ -79,10 +82,11 @@ protected:
    *
    * This is used to create child select lists for nested query plan nodes.
    */
-  bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list);
+  bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list) const;
 
-  QueryPlanNode* buildLimitClause(ASTNode* ast, TableRepository* repo);
+  QueryPlanNode* buildLimitClause(ASTNode* ast, TableRepository* repo) const;
 
+  std::vector<std::unique_ptr<QueryPlanBuilderInterface>> extensions_;
 };
 
 }

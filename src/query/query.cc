@@ -17,6 +17,7 @@
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tablerepository.h>
 #include <fnordmetric/sql_extensions/axisstatement.h>
+#include <fnordmetric/sql_extensions/chartqueryplanbuilder.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -124,7 +125,11 @@ ui::Canvas* Query::getChart(size_t index) const {
 bool Query::addStatement(
     query::ASTNode* statement,
     query::TableRepository* repo) {
-  DefaultQueryPlanBuilder query_plan_builder;
+  // FIXPAUL this should be initialized only once
+  QueryPlanBuilder query_plan_builder;
+  query_plan_builder.extend(
+      std::unique_ptr<ChartQueryPlanBuilder>(new ChartQueryPlanBuilder()));
+
   auto query_plan = query_plan_builder.buildQueryPlan(statement, repo);
   if (query_plan == nullptr) {
     fprintf(stderr, "cant build statement");
