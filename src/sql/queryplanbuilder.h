@@ -22,42 +22,54 @@ namespace query {
 class QueryPlanNode;
 class TableRepository;
 
-class QueryPlan {
+class QueryPlanBuilder {
 public:
+  QueryPlanBuilder() {}
+  virtual ~QueryPlanBuilder() {}
 
-  /* Build a query plan for the provided SELECT staement */
-  static QueryPlanNode* buildQueryPlan(
-      ASTNode* select_statement, TableRepository* repo);
+  virtual QueryPlanNode* buildQueryPlan(
+      ASTNode* statement,
+      TableRepository* repo) = 0;
+
+};
+
+class DefaultQueryPlanBuilder : public QueryPlanBuilder {
+public:
+  DefaultQueryPlanBuilder() {}
+
+  QueryPlanNode* buildQueryPlan(
+      ASTNode* statement,
+      TableRepository* repo) override;
 
 protected:
 
-  static QueryPlanNode* buildDrawStatement(ASTNode* ast);
-  static QueryPlanNode* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
-  static QueryPlanNode* buildAxisStatement(ASTNode* ast, TableRepository* repo);
+  QueryPlanNode* buildDrawStatement(ASTNode* ast);
+  QueryPlanNode* buildSeriesStatement(ASTNode* ast, TableRepository* repo);
+  QueryPlanNode* buildAxisStatement(ASTNode* ast, TableRepository* repo);
 
   /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
    * otherwise false
    */
-  static bool hasGroupByClause(ASTNode* ast);
+  bool hasGroupByClause(ASTNode* ast);
 
   /**
    * Returns true if the ast is a SELECT statement with a select list that
    * contains at least one aggregation expression, otherwise false.
    */
-  static bool hasAggregationInSelectList(ASTNode* ast);
+  bool hasAggregationInSelectList(ASTNode* ast);
 
   /**
    * Walks the ast recursively and returns true if at least one aggregation
    * expression was found, otherwise false.
    */
-  static bool hasAggregationExpression(ASTNode* ast);
+  bool hasAggregationExpression(ASTNode* ast);
 
   /**
    * Build a group by query plan node for a SELECT statement that has a GROUP
    * BY clause
    */
-  static QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo);
+  QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo);
 
   /**
    * Recursively walk the provided ast and search for column references. For
@@ -67,7 +79,9 @@ protected:
    *
    * This is used to create child select lists for nested query plan nodes.
    */
-  static bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list);
+  bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list);
+
+  QueryPlanNode* buildLimitClause(ASTNode* ast, TableRepository* repo);
 
 };
 

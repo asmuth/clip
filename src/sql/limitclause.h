@@ -24,48 +24,6 @@ namespace query {
 class LimitClause : public QueryPlanNode {
 public:
 
-  static LimitClause* build(ASTNode* ast, TableRepository* repo) {
-    if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
-      return nullptr;
-    }
-
-    for (const auto& child : ast->getChildren()) {
-      int limit = 0;
-      int offset = 0;
-
-      if (child->getType() != ASTNode::T_LIMIT) {
-        continue;
-      }
-
-      auto limit_token = child->getToken();
-      assert(limit_token);
-      assert(*limit_token == Token::T_NUMERIC);
-      limit = limit_token->getInteger();
-
-      if (child->getChildren().size() == 1) {
-        assert(child->getChildren()[0]->getType() == ASTNode::T_OFFSET);
-        auto offset_token = child->getChildren()[0]->getToken();
-        assert(offset_token);
-        assert(*offset_token == Token::T_NUMERIC);
-        offset = offset_token->getInteger();
-      }
-
-      auto new_ast = ast->deepCopy();
-      const auto& new_ast_children = new_ast->getChildren();
-
-      for (int i = 0; i < new_ast_children.size(); ++i) {
-        if (new_ast_children[i]->getType() == ASTNode::T_LIMIT) {
-          new_ast->removeChild(i);
-          break;
-        }
-      }
-
-      return new LimitClause(limit, offset, QueryPlan::buildQueryPlan(new_ast, repo));
-    }
-
-    return nullptr;
-  }
-
   LimitClause(int limit, int offset, QueryPlanNode* child) :
       limit_(limit),
       offset_(offset),

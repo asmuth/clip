@@ -26,7 +26,7 @@
 namespace fnordmetric {
 namespace query {
 
-QueryPlanNode* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
+QueryPlanNode* DefaultQueryPlanBuilder::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   QueryPlanNode* exec = nullptr;
 
   /* axis statement */
@@ -40,7 +40,7 @@ QueryPlanNode* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
   }
 
   /* internal nodes: multi table query (joins), order, aggregation, limit */
-  if ((exec = LimitClause::build(ast, repo)) != nullptr) {
+  if ((exec = buildLimitClause(ast, repo)) != nullptr) {
     return exec;
   }
 
@@ -64,7 +64,7 @@ QueryPlanNode* QueryPlan::buildQueryPlan(ASTNode* ast, TableRepository* repo) {
       "can't figure out a query plan for this, sorry :(");
 }
 
-bool QueryPlan::hasGroupByClause(ASTNode* ast) {
+bool DefaultQueryPlanBuilder::hasGroupByClause(ASTNode* ast) {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
     return false;
   }
@@ -78,7 +78,7 @@ bool QueryPlan::hasGroupByClause(ASTNode* ast) {
   return false;
 }
 
-bool QueryPlan::hasAggregationInSelectList(ASTNode* ast) {
+bool DefaultQueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
     return false;
   }
@@ -89,7 +89,7 @@ bool QueryPlan::hasAggregationInSelectList(ASTNode* ast) {
   return hasAggregationExpression(select_list);
 }
 
-bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
+bool DefaultQueryPlanBuilder::hasAggregationExpression(ASTNode* ast) {
   if (ast->getType() == ASTNode::T_METHOD_CALL) {
     assert(ast->getToken() != nullptr);
     auto symbol = lookupSymbol(ast->getToken()->getString());
@@ -108,7 +108,7 @@ bool QueryPlan::hasAggregationExpression(ASTNode* ast) {
   return false;
 }
 
-QueryPlanNode* QueryPlan::buildDrawStatement(ASTNode* ast) {
+QueryPlanNode* DefaultQueryPlanBuilder::buildDrawStatement(ASTNode* ast) {
   DrawStatement::kDrawStatementType type;
   switch (ast->getToken()->getType()) {
     case Token::T_BAR:
@@ -131,13 +131,13 @@ QueryPlanNode* QueryPlan::buildDrawStatement(ASTNode* ast) {
   return new DrawStatement(type);
 }
 
-QueryPlanNode* QueryPlan::buildAxisStatement(
+QueryPlanNode* DefaultQueryPlanBuilder::buildAxisStatement(
     ASTNode* ast,
     TableRepository* repo) {
   return new AxisStatement();
 }
 
-QueryPlanNode* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {
+QueryPlanNode* DefaultQueryPlanBuilder::buildGroupBy(ASTNode* ast, TableRepository* repo) {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
   assert(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
 
@@ -204,7 +204,7 @@ QueryPlanNode* QueryPlan::buildGroupBy(ASTNode* ast, TableRepository* repo) {
 }
 
 
-bool QueryPlan::buildInternalSelectList(
+bool DefaultQueryPlanBuilder::buildInternalSelectList(
     ASTNode* node,
     ASTNode* target_select_list) {
   /* search for column references recursively */
@@ -239,6 +239,49 @@ bool QueryPlan::buildInternalSelectList(
   }
 }
 
+QueryPlanNode* DefaultQueryPlanBuilder::buildLimitClause(
+    ASTNode* ast,
+    TableRepository* repo) {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
+    return nullptr;
+  }
+
+  for (const auto& child : ast->getChildren()) {
+    int limit = 0;
+    int offset = 0;
+
+    if (child->getType() != ASTNode::T_LIMIT) {
+      continue;
+    }
+
+    auto limit_token = child->getToken();
+    assert(limit_token);
+    assert(*limit_token == Token::T_NUMERIC);
+    limit = limit_token->getInteger();
+
+    if (child->getChildren().size() == 1) {
+      assert(child->getChildren()[0]->getType() == ASTNode::T_OFFSET);
+      auto offset_token = child->getChildren()[0]->getToken();
+      assert(offset_token);
+      assert(*offset_token == Token::T_NUMERIC);
+      offset = offset_token->getInteger();
+    }
+
+    auto new_ast = ast->deepCopy();
+    const auto& new_ast_children = new_ast->getChildren();
+
+    for (int i = 0; i < new_ast_children.size(); ++i) {
+      if (new_ast_children[i]->getType() == ASTNode::T_LIMIT) {
+        new_ast->removeChild(i);
+        break;
+      }
+    }
+
+    return new LimitClause(limit, offset, buildQueryPlan(new_ast, repo));
+  }
+
+  return nullptr;
+}
 
 }
 }

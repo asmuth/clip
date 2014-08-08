@@ -121,49 +121,11 @@ ui::Canvas* Query::getChart(size_t index) const {
   assert(index < charts_.size()); // FIXPAUL
   return charts_[index].get();
 }
-
-/*
-bool Query::execute(ChartRenderTarget* target) {
-  Drawable* drawable = nullptr;
-
-  for (const auto& stmt : statements_) {
-
-    if (drawable == nullptr) {
-      continue;
-    }
-
-    auto series_stmt = dynamic_cast<query::SeriesStatement*>(stmt.get());
-    if (series_stmt != nullptr) {
-      series_stmt->execute();
-      for (const auto& series : series_stmt->getSeries()) {
-        drawable->addSeries(series);
-      }
-    }
-  }
-
-  if (drawable == nullptr) {
-    // FIXPAUL add error no drawables defined
-  } else {
-    drawable->draw(target);
-  }
-
-  return true;
-}
-
-Drawable* Query::makeDrawable(query::DrawStatement* stmt) {
-  switch (stmt->getType()) {
-    case query::DrawStatement::T_BAR_CHART:
-      return new BarChart();
-    default:
-      assert(0); // FIXPAUL
-  }
-}
-*/
-
 bool Query::addStatement(
     query::ASTNode* statement,
     query::TableRepository* repo) {
-  auto query_plan = query::QueryPlan::buildQueryPlan(statement, repo);
+  DefaultQueryPlanBuilder query_plan_builder;
+  auto query_plan = query_plan_builder.buildQueryPlan(statement, repo);
   if (query_plan == nullptr) {
     fprintf(stderr, "cant build statement");
     return false;
