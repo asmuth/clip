@@ -1,52 +1,51 @@
-<div class="colorstripe"></div>
-<div class="colorbg">
-  <div id="wrap" class="<%= @doc_yield ? :large : nil %>" style="padding-top:25px;">
-    <div id="header">
-      <a class="menu" href="/documentation/support">Support</a>
-      <a class="menu" href="http://github.com/paulasmuth/fnordmetric" target="_blank">Github</a>
-      <a class="menu" href="/download">Download</a>
-      <a class="menu" href="/documentation">Documentation</a>
-      <a class="menu" href="/examples">Examples</a>
-      <h1><a href="/">FnordMetric</a></h1>
-    </div>
+<div class="header_wrap">
+  <div id="header">
+    <a class="menu" href="/documentation/support">Support</a>
+    <a class="menu" href="http://github.com/paulasmuth/fnordmetric" target="_blank">Github</a>
+    <a class="menu" href="/download">Download</a>
+    <a class="menu" href="/documentation">Documentation</a>
+    <a class="menu" href="/examples">Examples</a>
+    <h1><a href="/">FnordMetric</a></h1>
+  </div>
+</div>
 
-    <div id="documentation_wrap">
-      <div id="navigation">
+<div id="wrap" class="<%= @doc_yield ? :large : nil %>">
+  <div id="documentation_wrap">
+    <div id="navigation">
+      <ul>
+        <li class="<%= @route == "/index" ? :active : nil %>">
+          <a href="/documentation">Overview</a>
+        </li>
+        <li class="<%= @route == "/license" ? :active : nil %>">
+          <a href="/documentation/license">License</a>
+        </li>
+      </ul>
+
+      <% CONFIG["sitemap"].each do |_, topic| %>
+        <a class="nav_title"><%= topic["title"] %></a>
         <ul>
-          <li class="<%= @route == "/index" ? :active : nil %>">
-            <a href="/documentation">Overview</a>
-          </li>
-          <li class="<%= @route == "/license" ? :active : nil %>">
-            <a href="/documentation/license">License</a>
-          </li>
+          <% topic["pages"].each do |page| %>
+            <li class="<%= @route == page["url"] ? :active : nil %>">
+              <a href="/documentation<%= page["url"] %>">
+                <%= page["title"] %>
+              </a>
+            </li>
+          <% end %>
         </ul>
-
-        <% CONFIG["sitemap"].each do |_, topic| %>
-          <a class="nav_title"><%= topic["title"] %></a>
-          <ul>
-            <% topic["pages"].each do |page| %>
-              <li class="<%= @route == page["url"] ? :active : nil %>">
-                <a href="/documentation<%= page["url"] %>">
-                  <%= page["title"] %>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-      </div>
-
-      <!--<div class="headbar">Documentation</div>-->
-
-      <div id="documentation">
-        <%= @doc_yield %>
-      </div>
-
+      <% end %>
     </div>
+
+    <!--<div class="headbar">Documentation</div>-->
+
+    <div id="documentation">
+      <%= @doc_yield %>
+    </div>
+
   </div>
-  <div class="biglink" style="margin-top:70px;">
-    <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
-      Watch FnordMetric on Github &rarr;
-    </a>
-  </div>
+</div>
+<div class="biglink" style="margin-top:70px;">
+  <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
+    Watch FnordMetric on Github &rarr;
+  </a>
 </div>
 

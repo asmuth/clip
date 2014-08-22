@@ -1,86 +1,83 @@
-<div class="colorstripe"></div>
-<div class="colorbg">
-  <div id="wrap" class="<%= @doc_yield ? :large : nil %>" style="padding-top:25px;">
-    <div id="header">
-      <a class="menu" href="/documentation/support">Support</a>
-      <a class="menu" href="http://github.com/paulasmuth/fnordmetric" target="_blank">Github</a>
-      <a class="menu" href="/download">Download</a>
-      <a class="menu" href="/documentation">Documentation</a>
-      <a class="menu" href="/examples">Examples</a>
-      <h1><a href="/">FnordMetric</a></h1>
-    </div>
-
-    <div id="documentation_wrap">
-      <div class="headbar">Examples</div>
-
-      <div id="navigation">
-        <ul>
-          <li class="<%= @route == "/index" ? :active : nil %>">
-            <a href="/examples">Examples</a>
-          </li>
-        </ul>
-
-        <% CONFIG["examples"].each do |example_group| %>
-          <a class="nav_title">
-            <%= example_group["title"] %>
-          </a>
-          <ul>
-            <% example_group["examples"].each do |example| %>
-              <li class="<%= @route == example["url"] ? :active : nil %>">
-                <a href="/examples<%= example["url"] %>">
-                  <%= example["title"] %>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-      </div>
-
-      <% if @route == "/index" %>
-        <div id="documentation">
-        </div>
-      <% else %>
-        <div id="documentation">
-          <h2><%= @example["title"] %></h2>
-          <p class="breadcrumb">
-            <a href="/examples">
-              Examples
-            </a>
-            &raquo;
-            <a href="/examples/<%= @example["group"]["dir"] %>">
-              <%= @example["group"]["title"] %>
-            </a>
-            &raquo;
-            <a href="/examples<%= @example["url"] %>">
-              <%= @example["title"] %>
-            </a>
-          </p>
-
-          <h4>SVG Output</h4>
-          <div class="example_frame">
-            <%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.svg.html")) %>
-          </div>
-
-          <div class="optbar">
-            <h4>View Source: </h4>
-            <a class="active">SQL</a>
-            <a>C++</a>
-          </div>
-          <pre style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.sql")) %></code></pre>
-
-          <p>Run this example:</p>
-          <% example_cmd = "$ fnordmetric --format=svg examples#{@example["url"]}.sql" %>
-          <pre style="margin-top: 0;"><code><%=example_cmd%></code></pre>
-        </div>
-      <% end %>
-
-
-    </div>
-  </div>
-  <div class="biglink" style="margin-top:70px;">
-    <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
-      Watch FnordMetric on Github &rarr;
-    </a>
+<div class="header_wrap">
+  <div id="header">
+    <a class="menu" href="/documentation/support">Support</a>
+    <a class="menu" href="http://github.com/paulasmuth/fnordmetric" target="_blank">Github</a>
+    <a class="menu" href="/download">Download</a>
+    <a class="menu" href="/documentation">Documentation</a>
+    <a class="menu" href="/examples">Examples</a>
+    <h1><a href="/">FnordMetric</a></h1>
   </div>
 </div>
 
+<div id="wrap" class="<%= @doc_yield ? :large : nil %>" style="padding-top:25px;">
+
+  <div id="documentation_wrap">
+    <div id="xxx">
+      <ul>
+        <li class="<%= @route == "/index" ? :active : nil %>">
+          <a href="/examples">Examples</a>
+        </li>
+      </ul>
+
+      <% CONFIG["examples"].each do |example_group| %>
+        <a class="nav_title">
+          <%= example_group["title"] %>
+        </a>
+        <ul>
+          <% example_group["examples"].each do |example| %>
+            <li class="<%= @route == example["url"] ? :active : nil %>">
+              <a href="/examples<%= example["url"] %>">
+                <%= example["title"] %>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+
+    <% if @route == "/index" %>
+      <div id="documentation">
+      </div>
+    <% else %>
+      <div id="documentation">
+        <h2><%= @example["title"] %></h2>
+        <p class="breadcrumb">
+          <a href="/examples">
+            Examples
+          </a>
+          &raquo;
+          <a href="/examples/<%= @example["group"]["dir"] %>">
+            <%= @example["group"]["title"] %>
+          </a>
+          &raquo;
+          <a href="/examples<%= @example["url"] %>">
+            <%= @example["title"] %>
+          </a>
+        </p>
+
+        <h4>SVG Output</h4>
+        <div class="example_frame">
+          <%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.svg.html")) %>
+        </div>
+
+        <div class="optbar">
+          <h4>View Source: </h4>
+          <a class="active">SQL</a>
+          <a>C++</a>
+        </div>
+        <pre style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.sql")) %></code></pre>
+
+        <p>Run this example:</p>
+        <% example_cmd = "$ fnordmetric --format=svg examples#{@example["url"]}.sql" %>
+        <pre style="margin-top: 0;"><code><%=example_cmd%></code></pre>
+      </div>
+    <% end %>
+
+
+  </div>
+</div>
+<div class="biglink" style="margin-top:70px;">
+  <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
+    Watch FnordMetric on Github &rarr;
+  </a>
+</div>

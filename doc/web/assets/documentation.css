@@ -1,11 +1,12 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
   background-color: #fff;
   color: #333;
-  background: #0d0d0d;
   /*text-shadow:0 0 1px #000;*/
 }
 
@@ -31,20 +32,31 @@ hr {
   border-top: 1px solid #222;
 }
 
+ul {
+  padding: 0 0 0 40px;
+}
+
+ul li p {
+  padding: 0;
+  margin: 0;
+}
+
 #wrap {
-  max-width:1200px;
+  max-width:960px;
   height: auto;
   margin:auto;
 }
 
 .jumbotron {
+  text-align: center;
   margin: 60px 0;
   color: #fff;
 }
 
 .jumbotron h1 {
-  font-size: 58px;
+  font-size: 42px;
   line-height: 1.2;
+  font-weight: 300;
 }
 
 .lead {
@@ -63,6 +75,7 @@ hr {
   color: #aaa;
   font-size: 115%;
   line-height: 155%;
+  font-weight: 600;
 }
 
 .leadtext a.button {
@@ -149,7 +162,7 @@ hr {
   color:#777;
 }
 
-#header h1 { 
+#header h1 {
   font-size:23.5px;
   margin-bottom:25px;
 }
@@ -206,10 +219,14 @@ hr {
 }
 
 #navigation {
-  height:1200px;
+  padding: 20px 0;
   width:210px;
-  padding-top:15px;
-  position: absolute;
+  float: right;
+  margin-left: 30px;
+  border-radius:5px;
+  box-shadow:0 0 2px rgba(0,0,0,.1);
+  border:1px solid #ddd;
+  background:#f4f4f4;
 }
 
 #navigation ul {
@@ -250,26 +267,18 @@ hr {
 }
 
 #documentation {
-  padding: 25px 40px;
   color: #333;
-  font-size: 14px;
-  line-height:24px;
-  border-left:1px solid #c7c9cc;
-  background:#fff;
+  font-size: 16px;
+  line-height:26px;
+  font-weight: 300;
   padding-bottom:70px;
-  margin-left: 210px;
   min-height:1600px;
 }
 
 #documentation_wrap {
   min-height:600px;
-  border-radius:5px;
-  border:1px solid #ddd;
   border-top:none;
-  box-shadow:0 0 2px rgba(0,0,0,.1);
   overflow:hidden;
-  max-width:1200px;
-  background:#f4f4f4;
 }
 
 #documentation h3 {
@@ -454,4 +463,15 @@ pre.dark code {
 .optbar, .optbar h4 {
   line-height: 36px;
   display: inline-block;
+}
+
+.header_wrap {
+  padding-top: 15px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 34px;
+}
+
+#header {
+  width: 960px;
+  margin: auto;
 }
