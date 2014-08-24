@@ -1,8 +1,6 @@
-@import url(http://fonts.googleapis.com/css?family=OpenSans:300,400,500,600,700);
-
 body {
   margin: 0;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
   background-color: #fff;
@@ -156,10 +154,9 @@ ul li p {
 }
 
 #footer {
-  margin-top:70px;
+  margin-top:120px;
   padding:15px 0;
-  font-size:12px;
-  margin-bottom:30px;
+  margin-bottom:20px;
   color:#777;
   text-align: center;
 }
@@ -484,9 +481,19 @@ pre.dark code {
 
 section {
   margin-top: 80px;
-  border-top: 1px solid #eee;
   padding-top: 60px;
   text-align: center;
+}
+
+section:after {
+  content: ' ';
+  display: block;
+  height: 1px;
+  background: #ddd;
+  position: absolute;
+  margin-top: 80px;
+  left: 0;
+  right: 0;
 }
 
 section h1 {
