@@ -49,8 +49,10 @@ ul li p {
 
 .jumbotron {
   text-align: center;
-  margin: 60px 0;
   color: #fff;
+  width: 671px;
+  margin: auto;
+  margin-top: 162px;
 }
 
 .jumbotron h1 {
@@ -134,7 +136,7 @@ ul li p {
 
 
 .colorbg {
-  height: 750px;
+  height: 620px;
   overflow: visible;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#2e3336), to(#0d0d0d));
   background-image: -webkit-linear-gradient(top, #2e3336, #0d0d0d);
@@ -474,4 +476,75 @@ pre.dark code {
 #header {
   width: 960px;
   margin: auto;
+}
+
+section {
+  margin-top: 80px;
+  border-top: 1px solid #eee;
+  padding-top: 40px;
+  text-align: center;
+}
+
+section h1 {
+  text-align: left;
+  font-size: 220%;
+  font-weight: 300;
+  text-align: center;
+}
+
+section p {
+  font-size: 120%;
+  line-height: 160%;
+  width: 700px;
+  margin: auto;
+  color: #666;
+  font-weight: 300;
+}
+
+ul.fancylist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  text-align: left;
+}
+
+ul.fancylist li {
+  border-bottom: 1px solid #ddd;
+  margin: 0;
+  padding: 0 20px;
+}
+
+ul.fancylist li h3 {
+  font-size: 120%;
+  line-height: 140%;
+  padding: 0;
+  margin: 15px 0 0 0;
+}
+
+ul.fancylist li p {
+  font-size: 90%;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.using_fm {
+  margin-top: 60px;
+}
+
+.using_fm .preview {
+  height: 400px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  margin-left: 330px
+}
+
+.using_fm .fancylist {
+  background: #fff;
+  width: 300px;
+  position: absolute;
 }
