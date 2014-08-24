@@ -1,8 +1,9 @@
 FnordMetric
 ===========
 
-FnordMetric is a framework for collecting and visualizing timeseries data. It enables
-you to build beautiful real-time analytics dashboards within minutes.
+FnordMetric extends standard SQL; it allows to express queries that return SVG
+charts rather than tables. Turning a query result into a chart is literally one
+line of code.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
@@ -10,10 +11,24 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
 [ ![Screenshot](https://github.com/paulasmuth/fnordmetric/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
+If you're like me you are probably thinking something along the lines of "Does
+the world really need yet another data visualization tool?" right now. Surely,
+there already is gnuplot and about a bazillion javascript libraries that let you
+draw pretty charts.
 
-FnordMetric UI is a HTML5 API that lets you plug realtime data and charts into any webpage
-without writing a single line of code. It gives you maximum flexiblitiy as you have full
-control over layout and style with HTML and CSS.
+Most of the existing open source tools require you to provide the input data in
+some specific, custom format. I reckon this is not ideal. It means you have to
+write a heap of reptitive glue code (or sed incantations if that's your thing)
+to mangle your input data into that format. If you run a lot of ad-hoc queries
+you have to waste a significant amount of time on this boring legwork that could
+much better be spent on interesting tasks.
+
+FnordMetric aims to fix that by extending standard SQL; it allows you to express
+queries that return charts rather than tables.
+
+An example says more than a thousand words so here is how you generate a shiny
+timeseries chart from a csv file using nothing else than plain old SQL.
+   ...
 
 Documentation
 -------------
@@ -86,7 +101,6 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 FnordMetric. If not, see <http://www.gnu.org/licenses/>.
-
 
 
   [1]: http://groups.google.com/group/fnordmetric
