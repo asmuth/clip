@@ -1,10 +1,8 @@
+FnordMetric v2.0.0 Documentation
+--------------------------------
 
 FnordMetric allows you to visualize your data without ever leaving SQL. Turning
 a query result into a chart is literally one line of code.
-
-
-FnordMetric v2.0.0 Documentation
---------------------------------
 
 ### Table of Contents
 
