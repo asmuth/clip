@@ -50,15 +50,18 @@ ul li p {
 .jumbotron {
   text-align: center;
   color: #fff;
-  width: 671px;
-  margin: auto;
-  margin-top: 162px;
+  margin: 80px 0;
 }
 
 .jumbotron h1 {
-  font-size: 42px;
-  line-height: 1.2;
+  font-size: 48px;
+  line-height: 1.4;
   font-weight: 300;
+}
+
+.jumbotron p {
+  width: 680px;
+  margin: auto;
 }
 
 .lead {
@@ -144,6 +147,7 @@ ul li p {
   background-image: -ms-linear-gradient(top, #2e3336, #0d0d0d);
   background-image: -o-linear-gradient(top, #2e3336, #0d0d0d);
   background-image: linear-gradient(top, #2e3336, #0d0d0d);
+  background: #34495e;
 }
 
 .colorbg.intro {
@@ -153,11 +157,11 @@ ul li p {
 
 #footer {
   margin-top:70px;
-  border-top: 1px solid #222;
   padding:15px 0;
   font-size:12px;
-  margin-bottom:15px;
+  margin-bottom:30px;
   color:#777;
+  text-align: center;
 }
 
 #footer a {
@@ -481,7 +485,7 @@ pre.dark code {
 section {
   margin-top: 80px;
   border-top: 1px solid #eee;
-  padding-top: 40px;
+  padding-top: 60px;
   text-align: center;
 }
 
@@ -497,7 +501,7 @@ section p {
   line-height: 160%;
   width: 700px;
   margin: auto;
-  color: #666;
+  color: #444;
   font-weight: 300;
 }
 
