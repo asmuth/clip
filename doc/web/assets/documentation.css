@@ -1,8 +1,8 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+@import url(http://fonts.googleapis.com/css?family=OpenSans:300,400,500,600,700);
 
 body {
   margin: 0;
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
   background-color: #fff;
@@ -54,13 +54,13 @@ ul li p {
 }
 
 .jumbotron h1 {
-  font-size: 40px;
+  font-size: 42px;
   line-height: 1.4;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .jumbotron p {
-  width: 680px;
+  width: 685px;
   margin: auto;
 }
 
@@ -273,10 +273,10 @@ ul li p {
 }
 
 #documentation {
-  color: #333;
+  color: #444;
   font-size: 16px;
   line-height:26px;
-  font-weight: 300;
+  font-weight: 400;
   padding-bottom:70px;
   min-height:1600px;
 }
