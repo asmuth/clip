@@ -130,7 +130,7 @@ Domain* LineChart::getXDomain() const {
       x_min *= 1.1;
     }
 
-    x_domain_auto_.reset(new NumericalDomain(x_min, x_max, false));
+    x_domain_auto_.reset(new NumericalDomain(x_min, x_max));
   }
 
   return x_domain_auto_.get();
@@ -173,7 +173,7 @@ Domain* LineChart::getYDomain() const {
       y_min *= 1.1;
     }
 
-    y_domain_auto_.reset(new NumericalDomain(y_min, y_max, false));
+    y_domain_auto_.reset(new NumericalDomain(y_min, y_max));
   }
 
 
@@ -204,8 +204,37 @@ void LineChart::render(
       //    padding_left + x_domain->scale(point.first) * inner_width,
       //    padding_top + (1.0 - y_domain->scale(point.second)) * inner_height);
     }
+  }
 
-    target->drawPath(
+  for (const auto& line : categorical_lines_) {
+    std::vector<std::pair<double, double>> coords;
+
+    //for (const auto& point : line.points) {
+    //  double x_offset = x_domain->offsetFor(point.first);
+    //  double y_offset = y_domain->offsetFor(point.second);
+
+    //  coords.emplace_back(
+    //      padding_left + x_offset * inner_width,
+    //      padding_top + (1.0 - y_offset) * inner_height);
+    //}
+  }
+
+  target->finishGroup();
+}
+
+
+void LineChart::addSeries(Series2D<std::string, std::string>* series) {
+  RAISE(
+      util::RuntimeException,
+      "unsupported series format for LineChart: <string, float>");
+}
+
+template <typename T>
+void LineChart::drawLine(
+    RenderTarget* target,
+    T line,
+    std::vector<std::pair<double, double>>& coords) {
+  target->drawPath(
       coords,
       line.line_style,
       line.line_width,
@@ -213,26 +242,17 @@ void LineChart::render(
       line.color,
       "line");
 
-    if (line.point_style != "none") {
-      for (const auto& point : coords) {
-        target->drawPoint(
-          point.first,
-          point.second,
-          line.point_style,
-          line.point_size,
-          line.color,
-          "point");
-      }
+  if (line.point_style != "none") {
+    for (const auto& point : coords) {
+      target->drawPoint(
+        point.first,
+        point.second,
+        line.point_style,
+        line.point_size,
+        line.color,
+        "point");
     }
   }
-
-  target->finishGroup();
-}
-
-void LineChart::addSeries(Series2D<std::string, std::string>* series) {
-  RAISE(
-      util::RuntimeException,
-      "unsupported series format for LineChart: <string, float>");
 }
 
 }
