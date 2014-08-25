@@ -122,6 +122,12 @@ protected:
     bool smooth;
   };
 
+  template <typename T>
+  void drawLine(
+      RenderTarget* target,
+      T line,
+      std::vector<std::pair<double, double>>& coords);
+
   Canvas* canvas_;
   Domain* x_domain_;
   Domain* y_domain_;

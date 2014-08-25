@@ -19,9 +19,9 @@ namespace query {
 void DrawStatement::execute(ui::Canvas* canvas) {
   switch (type_) {
     case T_BAR_CHART:
-      return executeDrawable(canvas->addChart<ui::BarChart>());
+      return executeWithType<ui::BarChart>(canvas);
     case T_LINE_CHART:
-      return executeDrawable(canvas->addChart<ui::LineChart>());
+      return executeWithType<ui::LineChart>(canvas);
   }
 }
 

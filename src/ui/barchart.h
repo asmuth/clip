@@ -110,7 +110,7 @@ public:
    *
    * @param position the position/placement of the axis
    */
-   AxisDefinition* addAxis(AxisDefinition::kPosition position);
+   AxisDefinition* addAxis(AxisDefinition::kPosition position) override;
 
 protected:
 

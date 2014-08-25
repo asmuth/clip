@@ -69,13 +69,16 @@ public:
   void execute(ui::Canvas* canvas);
 
   template <typename T>
-  void executeDrawable(T* drawable) {
+  void executeWithType(ui::Canvas* canvas) {
+    SeriesAdapter<T> series_adapter(canvas);
+
     for (int i = 0; i < select_stmts_.size(); ++i) {
       const auto& stmt = select_stmts_[i];
-      SeriesAdapter<T> series_adapter(drawable, stmt, result_lists_[i]);
-      stmt->setTarget(&series_adapter);
-      stmt->execute();
+      series_adapter.executeStatement(stmt); //, result_lists_[i]);
     }
+
+    assert(series_adapter.adapter_.get() != nullptr);
+    auto drawable = series_adapter.adapter_->getDrawable();
 
     for (const auto& axis_stmt : axis_stmts_) {
       axis_stmt->executeDrawable(drawable);

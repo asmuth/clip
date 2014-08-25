@@ -39,8 +39,7 @@ public:
     return columns_;
   }
 
-  template <typename T>
-  void executeDrawable(T* drawable) {
+  void executeDrawable(ui::Drawable* drawable) {
     drawable->addAxis(ui::AxisDefinition::LEFT); // FIPXAUL
     drawable->addAxis(ui::AxisDefinition::BOTTOM); // FIPXAUL
   }

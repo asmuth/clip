@@ -24,6 +24,17 @@ public:
   Drawable() : color_index_(0) {}
   virtual ~Drawable() {}
 
+  /**
+   * Add an axis to the chart. This method should only be called after all
+   * series have been added to the chart.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * @param position the position/placement of the axis
+   */
+   virtual AxisDefinition* addAxis(AxisDefinition::kPosition position) = 0;
+
 protected:
 
   const std::string& seriesColor(Series* series) {

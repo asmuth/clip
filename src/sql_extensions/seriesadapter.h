@@ -14,6 +14,7 @@
 #include <assert.h>
 #include <unordered_map>
 #include <fnordmetric/base/series.h>
+#include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/compile.h>
 #include <fnordmetric/sql/execute.h>
@@ -24,6 +25,22 @@ namespace query {
 class AbstractSeriesAdapter : public RowSink {
 public:
 
+  AbstractSeriesAdapter(
+      int name_ind,
+      int x_ind,
+      int y_ind,
+      int z_ind) :
+      name_ind_(name_ind),
+      x_ind_(x_ind),
+      y_ind_(y_ind),
+      z_ind_(z_ind) {}
+
+  virtual ui::Drawable* getDrawable() = 0;
+
+  int name_ind_;
+  int x_ind_;
+  int y_ind_;
+  int z_ind_;
 };
 
 template <typename T, typename TX, typename TY>
@@ -31,14 +48,12 @@ class SeriesAdapter2D : public AbstractSeriesAdapter {
 public:
 
   SeriesAdapter2D(
-      T* drawable,
+      ui::Canvas* canvas,
       int name_ind,
       int x_ind,
       int y_ind) :
-      drawable_(drawable),
-      name_ind_(name_ind),
-      x_ind_(x_ind),
-      y_ind_(y_ind) {}
+      canvas_(canvas),
+      AbstractSeriesAdapter(name_ind, x_ind, y_ind, -1) {}
 
   bool nextRow(SValue* row, int row_len) override {
     std::string name = "unnamed";
@@ -64,17 +79,18 @@ public:
     return true;
   }
 
-  void finish() override {
+  ui::Drawable* getDrawable() override {
+    auto drawable = canvas_->addChart<T>();
+
     for (const auto& series : series_list_) {
-      drawable_->addSeries(static_cast<Series2D<TX, TY> *>(series.get()));
+      drawable->addSeries(static_cast<Series2D<TX, TY>*>(series.get()));
     }
+
+    return drawable;
   }
 
 protected:
-  T* drawable_;
-  int name_ind_;
-  int x_ind_;
-  int y_ind_;
+  ui::Canvas* canvas_;
   std::unordered_map<std::string, Series2D<TX, TY>*> series_map_;
   std::vector<std::unique_ptr<Series2D<TX, TY>>> series_list_;
 };
@@ -83,24 +99,9 @@ template <typename T>
 class SeriesAdapter : public RowSink {
 public:
 
-  SeriesAdapter(
-      T* drawable,
-      QueryPlanNode* stmt,
-      ResultList* result_list) :
-      drawable_(drawable),
-      stmt_(stmt),
-      result_list_(result_list) {}
+  SeriesAdapter(ui::Canvas* canvas) : canvas_(canvas) {}
 
   bool nextRow(SValue* row, int row_len) {
-    if (result_list_ != nullptr) {
-      result_list_->nextRow(row, row_len);
-    }
-
-    x_ind_ = stmt_->getColumnIndex("x");
-    y_ind_ = stmt_->getColumnIndex("y");
-    z_ind_ = stmt_->getColumnIndex("z");
-    name_ind_ = stmt_->getColumnIndex("series");
-
     if (name_ind_ < 0) {
       RAISE(
           util::RuntimeException,
@@ -119,26 +120,45 @@ public:
           "can't draw SELECT because it has no 'y' column");
     }
 
-    if (z_ind_ < 0) {
-      auto adapter = mkSeriesAdapter2D(row + x_ind_, row + y_ind_);
-      adapter->nextRow(row, row_len);
-      stmt_->setTarget(adapter);
-      adapter_.reset(adapter);
+    if (adapter_.get() == nullptr) {
+      if (z_ind_ < 0) {
+        adapter_.reset(mkSeriesAdapter2D(row + x_ind_, row + y_ind_));
+      } else {
+        RAISE(
+            util::RuntimeException,
+            "3D series not implemented yet");
+      }
     } else {
-      RAISE(
-          util::RuntimeException,
-          "3D series not implemented yet");
+      adapter_->name_ind_ = name_ind_;
+      adapter_->x_ind_ = x_ind_;
+      adapter_->y_ind_ = y_ind_;
+      adapter_->z_ind_ = y_ind_;
     }
 
+    adapter_->nextRow(row, row_len);
+    stmt_->setTarget(adapter_.get());
     return true;
   }
+
+  void executeStatement(QueryPlanNode* stmt) {
+    name_ind_ = stmt->getColumnIndex("series");
+    x_ind_ = stmt->getColumnIndex("x");
+    y_ind_ = stmt->getColumnIndex("y");
+    z_ind_ = stmt->getColumnIndex("z");
+
+    stmt_ = stmt;
+    stmt->setTarget(this);
+    stmt->execute();
+  }
+
+  std::unique_ptr<AbstractSeriesAdapter> adapter_;
 
 protected:
 
   AbstractSeriesAdapter* mkSeriesAdapter2D(SValue* x, SValue* y) {
     if (testSeriesSchema2D<double, double>(x, y)) {
       return new SeriesAdapter2D<T, double, double>(
-          drawable_,
+          canvas_,
           name_ind_,
           x_ind_,
           y_ind_);
@@ -146,14 +166,14 @@ protected:
 
     if (testSeriesSchema2D<std::string, double>(x, y)) {
       return new SeriesAdapter2D<T, std::string, double>(
-          drawable_,
+          canvas_,
           name_ind_,
           x_ind_,
           y_ind_);
     }
 
     return new SeriesAdapter2D<T, std::string, std::string>(
-        drawable_,
+        canvas_,
         name_ind_,
         x_ind_,
         y_ind_);
@@ -164,15 +184,12 @@ protected:
     return (x->testType<TX>() && y->testType<TY>());
   }
 
-protected:
-  std::unique_ptr<AbstractSeriesAdapter> adapter_;
-  T* drawable_;
-  QueryPlanNode* stmt_;
-  ResultList* result_list_;
   int name_ind_;
   int x_ind_;
   int y_ind_;
   int z_ind_;
+  QueryPlanNode* stmt_;
+  ui::Canvas* canvas_;
 };
 
 }
