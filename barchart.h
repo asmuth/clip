@@ -38,6 +38,7 @@ class Domain;
  *   orientation        = {horizontal,vertical}, default: horizontal
  *   stacked            = {on,off}, default: off
  */
+template <typename TX, typename TY>
 class BarChart : public Drawable {
 public:
   enum kBarChartOrientation {
@@ -68,38 +69,7 @@ public:
    *
    * @param series the series to add. does not transfer ownership
    */
-  void addSeries(Series2D<std::string, double>* series);
-
-  /**
-   * Add a (x: double, y: double) series. This will draw one bar for each point
-   * in the series where x is the label of the bar and y is the height of the
-   * bar
-   *
-   * @param series the series to add. does not transfer ownership
-   */
-  void addSeries(Series2D<double, double>* series);
-
-  /**
-   * Add a (x: string, y: double, z: double) series. This will draw one bar for
-   * each point in the series where x is the label of the bar, y is the lower
-   * bound of the bar and z is the upper bound of the bar.
-   *
-   * @param series the series to add. does not transfer ownership
-   */
-  void addSeries(Series3D<std::string, double, double>* series);
-
-  /**
-   * Add a (x: double, y: double, z: double) series. This will draw one bar for
-   * each point in the series where x is the label of the bar, y is the lower
-   * bound of the bar and z is the upper bound of the bar.
-   *
-   * @param series the series to add. does not transfer ownership
-   */
-  void addSeries(Series3D<double, double, double>* series);
-
-  void addSeries(Series* series) {
-    RAISE(util::RuntimeException, "unsupported series type for barchart");
-  }
+  void addSeries(Series2D<TX, TY>* series);
 
   /**
    * Add an axis to the chart. This method should only be called after all
