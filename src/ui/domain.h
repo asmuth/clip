@@ -37,7 +37,7 @@ public:
 
 };
 
-class NumericalDomain : public Domain{
+class NumericalDomain : public Domain {
 public:
 
   /**
@@ -92,6 +92,45 @@ protected:
   double min_value_;
   double max_value_;
   bool is_logarithmic_;
+};
+
+class CategoricalDomain : public Domain {
+public:
+
+  /**
+   * Create a new categorical domain
+   */
+  CategoricalDomain() {}
+
+  std::string labelAt(double index) const override {
+    return "fnord";
+    //return util::format::numberToHuman(valueAt(index));
+  }
+
+  std::vector<double> getTicks() const override {
+    std::vector<double> ticks;
+
+    //for (int i=0; i < kNumTicks; i++) {
+    //  auto tick = (double) i / (kNumTicks - 1);
+    //  ticks.push_back(tick);
+    //}
+
+    return ticks;
+  }
+
+  void addCategory(const std::string& category) {
+    bool exists = std::find(
+        categories_.begin(),
+        categories_.end(),
+        category) == categories_.end();
+
+    if (exists) {
+      categories_.emplace_back(category);
+    }
+  }
+
+protected:
+  std::vector<std::string> categories_;
 };
 
 }

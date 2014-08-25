@@ -25,8 +25,8 @@ double LineChart::kDefaultPointSize = 3.0f;
 
 LineChart::LineChart(
     Canvas* canvas,
-    NumericalDomain* x_domain /* = nullptr */,
-    NumericalDomain* y_domain /* = nullptr */) :
+    Domain* x_domain /* = nullptr */,
+    Domain* y_domain /* = nullptr */) :
     canvas_(canvas),
     x_domain_(x_domain),
     y_domain_(y_domain),
@@ -40,7 +40,7 @@ void LineChart::addSeries(
       double point_size /* = kDefaultPointsize */,
       bool smooth /* = false */) {
 
-  Line line;
+  Line<double> line;
   line.color = seriesColor(series);
   line.line_style = line_style;
   line.line_width = line_width;
@@ -53,6 +53,28 @@ void LineChart::addSeries(
   }
 
   lines_.emplace_back(line);
+}
+
+void LineChart::addSeries(
+      Series2D<std::string, double>* series,
+      const std::string& line_style /* = kDefaultLineStyle */,
+      double line_width /* = kDefaultLineWidth */,
+      const std::string& point_style /* = kDefaultLineStyle */,
+      double point_size /* = kDefaultPointsize */,
+      bool smooth /* = false */) {
+  Line<std::string> line;
+  line.color = seriesColor(series);
+  line.line_style = line_style;
+  line.line_width = line_width;
+  line.point_style = point_style;
+  line.point_size = point_size;
+  line.smooth = smooth;
+
+  for (const auto& spoint : series->getData()) {
+    line.points.emplace_back(std::get<0>(spoint), std::get<1>(spoint));
+  }
+
+  categorical_lines_.emplace_back(line);
 }
 
 AxisDefinition* LineChart::addAxis(AxisDefinition::kPosition position) {
@@ -71,7 +93,8 @@ AxisDefinition* LineChart::addAxis(AxisDefinition::kPosition position) {
   }
 }
 
-NumericalDomain* LineChart::getXDomain() const {
+// FIXPAUL: copy&paste form barchart...
+Domain* LineChart::getXDomain() const {
   if (x_domain_ != nullptr) {
     return x_domain_;
   }
@@ -113,7 +136,8 @@ NumericalDomain* LineChart::getXDomain() const {
   return x_domain_auto_.get();
 }
 
-NumericalDomain* LineChart::getYDomain() const {
+// FIXPAUL: copy&paste form barchart...
+Domain* LineChart::getYDomain() const {
   if (y_domain_ != nullptr) {
     return y_domain_;
   }
@@ -176,9 +200,9 @@ void LineChart::render(
     std::vector<std::pair<double, double>> coords;
 
     for (const auto& point : line.points) {
-      coords.emplace_back(
-          padding_left + x_domain->scale(point.first) * inner_width,
-          padding_top + (1.0 - y_domain->scale(point.second)) * inner_height);
+      //coords.emplace_back(
+      //    padding_left + x_domain->scale(point.first) * inner_width,
+      //    padding_top + (1.0 - y_domain->scale(point.second)) * inner_height);
     }
 
     target->drawPath(
@@ -203,12 +227,6 @@ void LineChart::render(
   }
 
   target->finishGroup();
-}
-
-void LineChart::addSeries(Series2D<std::string, double>* series) {
-  RAISE(
-      util::RuntimeException,
-      "unsupported series format for LineChart: <string, float>");
 }
 
 void LineChart::addSeries(Series2D<std::string, std::string>* series) {

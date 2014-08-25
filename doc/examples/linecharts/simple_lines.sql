@@ -5,17 +5,8 @@ DRAW LINE CHART;
 DRAW BOTTOM AXIS;
 
 SELECT
-  'Berlin' AS series,
-  temperature AS x,
+  city AS series,
+  month AS x,
   temperature AS y
 FROM
-  city_temperatures
-WHERE city = "Berlin";
-
-SELECT
-  'Tokyo' AS series,
-  temperature AS x,
-  temperature AS y
-FROM
-  city_temperatures
-WHERE city = "Tokyo";
+  city_temperatures;

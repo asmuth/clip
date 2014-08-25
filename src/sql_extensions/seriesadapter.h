@@ -66,7 +66,7 @@ public:
 
   void finish() override {
     for (const auto& series : series_list_) {
-      drawable_->addSeries(series.get());
+      drawable_->addSeries(static_cast<Series2D<TX, TY> *>(series.get()));
     }
   }
 

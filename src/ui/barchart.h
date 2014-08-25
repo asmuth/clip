@@ -114,9 +114,10 @@ public:
 
 protected:
 
-  NumericalDomain* getValueDomain() const;
-  NumericalDomain* newValueDomain() const;
-  AxisDefinition* newLabelAxis(AxisDefinition::kPosition position) const;
+  NumericalDomain* getYDomain() const;
+  NumericalDomain* newYDomain() const;
+  CategoricalDomain* getXDomain() const;
+  CategoricalDomain* newXDomain() const;
 
   void render(
       RenderTarget* target,
@@ -146,6 +147,7 @@ protected:
   bool stacked_;
   NumericalDomain* y_domain_;
   mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
+  mutable std::unique_ptr<CategoricalDomain> x_domain_auto_;
   std::vector<BarData> data_;
   int num_series_;
   std::vector<std::string> series_colors_;

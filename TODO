@@ -1,3 +1,4 @@
+cli output format
 linechart multiple series
 linechart string axis
 
@@ -13,6 +14,7 @@ v2.0.0
   - TimeDomain!
   - max interpolation gap -> draw as missing data
   - simple interactive charts (hover tooltips)
+  - histogram
 
 v2.1.0
   - statsd/graphite backend
