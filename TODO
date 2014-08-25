@@ -1,6 +1,7 @@
 cli output format
 linechart multiple series
 linechart string axis
+rename to discrete, continous domain
 
 v2.0.0
   - all examples working
