@@ -16,7 +16,7 @@ clean:
 	rm -rf build/test/tmp*
 
 doc:
-	find examples -name "*.sql" | while read file; do fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
+	find examples -name "*.sql" | while read file; do PATH=./build:$$PATH fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
 	(cd doc && rake build)
 
 .PHONY: all test clean doc build

@@ -57,7 +57,7 @@
 
         <h4>SVG Output</h4>
         <div class="example_frame">
-          <%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.svg.html")) %>
+          <%= IO.read(File.join(BASEDIR, "examples#{@example["url"]}.svg.html")) %>
         </div>
 
         <div class="optbar">
@@ -65,7 +65,7 @@
           <a class="active">SQL</a>
           <a>C++</a>
         </div>
-        <pre style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.sql")) %></code></pre>
+        <pre style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "examples#{@example["url"]}.sql")) %></code></pre>
 
         <p>Run this example:</p>
         <% example_cmd = "$ fnordmetric --format=svg examples#{@example["url"]}.sql" %>

@@ -8,6 +8,8 @@ all: assets
 	mkdir -p stage/src
 	test -e stage/src/fnordmetric || ln -s ../../../../src stage/src/fnordmetric || true
 	(cd target && cmake .. && make)
+	rm -f ../fnordmetric
+	ln -s cmake/target/fnordmetric ../fnordmetric
 
 assets:
 	./assets.sh
