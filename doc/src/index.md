@@ -43,8 +43,9 @@ the world really need yet another data visualization tool?" right now. Surely,
 there already is gnuplot and about a bazillion javascript libraries that let you
 draw pretty charts.
 
-Most of the existing open source tools require you to provide the input data in
-some specific, custom format. I reckon this is not ideal. It means you have to
+However, Most of the existing open source tools require you to provide the input
+data in
+some specific, custom format. I reckon this is not ideal; it means you have to
 write a heap of reptitive glue code (or sed incantations if that's your thing)
 to mangle your input data into that format. If you run a lot of ad-hoc queries
 you have to waste a significant amount of time on this boring legwork that could

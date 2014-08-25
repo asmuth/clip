@@ -55,11 +55,13 @@ ul li p {
   font-size: 42px;
   line-height: 1.4;
   font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .jumbotron p {
   width: 685px;
   margin: auto;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .lead {
@@ -145,7 +147,7 @@ ul li p {
   background-image: -ms-linear-gradient(top, #2e3336, #0d0d0d);
   background-image: -o-linear-gradient(top, #2e3336, #0d0d0d);
   background-image: linear-gradient(top, #2e3336, #0d0d0d);
-  background: #34495e;
+  background: #2980b9;
 }
 
 .colorbg.intro {
@@ -177,6 +179,7 @@ ul li p {
 
 .colorbg #header h1 a {
   color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 #header a.menu {
@@ -190,6 +193,7 @@ ul li p {
 
 .colorbg #header a.menu {
   color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 #header a.menu:hover {
