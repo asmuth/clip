@@ -12,8 +12,9 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include "../svalue.h"
-#include "../symboltable.h"
+#include <fnordmetric/sql/svalue.h>
+#include <fnordmetric/sql/symboltable.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
@@ -52,7 +53,9 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't compare %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __eq_symbol("eq", &eqExpr);

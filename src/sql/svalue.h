@@ -37,6 +37,7 @@ public:
   };
 
   static const char* getTypeName(kSValueType type);
+  const char* getTypeName() const;
 
   explicit SValue();
   explicit SValue(const std::string& string_value);

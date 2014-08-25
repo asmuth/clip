@@ -281,6 +281,10 @@ const char* SValue::getTypeName(kSValueType type) {
   }
 }
 
+const char* SValue::getTypeName() const {
+  return SValue::getTypeName(data_.type);
+}
+
 template<> double SValue::getValue<double>() const {
   return getFloat();
 }
