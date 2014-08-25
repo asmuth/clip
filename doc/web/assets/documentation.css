@@ -328,6 +328,10 @@ ul li p {
   margin-top: 1em;
 }
 
+#documentation pre + h3 {
+  margin-top: 2em;
+}
+
 #documentation p {
   margin-top: 4px;
 }
@@ -441,10 +445,6 @@ pre.dark code {
 
 .code_snippets a.link:hover {
   text-decoration: underline;
-}
-
-#documentation pre + h3 {
-  margin-top:55px;
 }
 
 .colorstripe {

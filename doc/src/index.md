@@ -259,6 +259,53 @@ group-wise values. Otherwise, the result is undefined. The same applies for
 the HAVING clause.
 
 
+Syntax Reference
+----------------
+
+### IMPORT statement
+
+    IMPORT TABLE tablename FROM CSV { 'filename' | STDIN }
+        [ [ WITH ]
+              [ DELIMITER [ AS ] 'delimiter' ]
+              [ ROW_DELIMITER [ AS ] 'row_delimiter' ]
+              [ HEADER ]
+              [ QUOTE [ AS ] 'escape' ]
+              [ ESCAPE [ AS ] 'escape' ] ]
+
+### DRAW ... CHART statement
+
+    DRAW BAR CHART
+        [ [ WITH ] ]
+              [ TITLE 'title' ]
+              [ SUBTITLE 'subtitle' ]
+              [ ORIENTATION {HORIZONTAL|VERTICAL} ]
+              [ STACKED {TRUE|FALSE} ]
+              [ LABELS {INSIDE|OUTSIDE|OFF} ] ]
+
+
+### DRAW AXIS statement
+
+    DRAW AXIS {TOP|RIGHT|BOTTOM|LEFT}
+        [ [ WITH ] ]
+              [ TITLE 'title' ]
+              [ DOMAIN min, max [ LOGARITHMIC ] ];
+
+### SELECT statement
+
+    SELECT
+        [ALL | DISTINCT | DISTINCTROW ]
+        select_expr [, select_expr ...]
+        [FROM table_references
+        [WHERE where_condition]
+        [GROUP BY {col_name | expr | position}
+          [ASC | DESC], ...]
+        [HAVING where_condition]
+        [ORDER BY {col_name | expr | position}
+          [ASC | DESC], ...]
+        [LIMIT {[offset,] row_count | row_count OFFSET offset}];
+
+
+
 Hacking
 =======
 
