@@ -33,8 +33,8 @@ public:
   /**
    * FIXPAUL documentation
    */
-  template <typename ChartType, typename... Args>
-  ChartType* addChart(Args... args) {
+  template <typename ChartType, typename TX, typename TY, typename... Args>
+  ChartType* addChart2D(Args... args) {
     auto drawable = new ChartType(this, args...);
     drawables_.emplace_back(drawable);
     return drawable;

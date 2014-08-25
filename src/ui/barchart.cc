@@ -22,7 +22,8 @@
 namespace fnordmetric {
 namespace ui {
 
-BarChart::BarChart(
+template <typename TX, typename TY>
+BarChart<TX, TY>::BarChart(
     Canvas* canvas,
     kBarChartOrientation orientation /* = O_HORIZONTAL */,
     bool stacked /* = false */,
@@ -33,8 +34,8 @@ BarChart::BarChart(
     y_domain_(y_domain),
     num_series_(0) {}
 
-
-void BarChart::addSeries(Series2D<std::string, double>* series) {
+template <typename TX, typename TY>
+void BarChart<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   series_colors_.emplace_back(seriesColor(series));
 
   for (const auto& point : series->getData()) {
@@ -67,6 +68,7 @@ void BarChart::addSeries(Series2D<std::string, double>* series) {
   num_series_++;
 }
 
+/*
 void BarChart::addSeries(Series2D<double, double>* series) {
   series_colors_.emplace_back(seriesColor(series));
 
@@ -133,8 +135,9 @@ void BarChart::addSeries(Series3D<std::string, double, double>* series) {
 
   num_series_++;
 }
-
-AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
+*/
+template <typename TX, typename TY>
+AxisDefinition*  BarChart<TX, TY>::addAxis(AxisDefinition::kPosition position) {
   switch (position) {
 
     case AxisDefinition::TOP:
@@ -172,7 +175,8 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
   }
 }
 
-NumericalDomain* BarChart::getYDomain() const {
+template <typename TX, typename TY>
+NumericalDomain* BarChart<TX, TY>::getYDomain() const {
   if (y_domain_ != nullptr) {
     return y_domain_;
   }
@@ -184,7 +188,8 @@ NumericalDomain* BarChart::getYDomain() const {
   return y_domain_auto_.get();
 }
 
-NumericalDomain* BarChart::newYDomain() const {
+template <typename TX, typename TY>
+NumericalDomain* BarChart<TX, TY>::newYDomain() const {
   double y_domain_min = 0.0f;
   double y_domain_max = 0.0f;
 
@@ -238,7 +243,8 @@ NumericalDomain* BarChart::newYDomain() const {
   return new NumericalDomain(y_domain_min, y_domain_max);
 }
 
-CategoricalDomain* BarChart::getXDomain() const {
+template <typename TX, typename TY>
+CategoricalDomain* BarChart<TX, TY>::getXDomain() const {
   if (x_domain_auto_.get() == nullptr) {
     x_domain_auto_.reset(newXDomain());
   }
@@ -246,7 +252,8 @@ CategoricalDomain* BarChart::getXDomain() const {
   return x_domain_auto_.get();
 }
 
-CategoricalDomain* BarChart::newXDomain() const {
+template <typename TX, typename TY>
+CategoricalDomain* BarChart<TX, TY>::newXDomain() const {
   auto domain = new CategoricalDomain();
 
   for (int i = 0; i < data_.size(); ++i) {
@@ -292,7 +299,8 @@ AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
 }
 */
 
-void BarChart::render(
+template <typename TX, typename TY>
+void BarChart<TX, TY>::render(
     RenderTarget* target,
     int width,
     int height,
@@ -315,7 +323,8 @@ void BarChart::render(
   }
 }
 
-void BarChart::renderVerticalBars(
+template <typename TX, typename TY>
+void BarChart<TX, TY>::renderVerticalBars(
     RenderTarget* target,
     int width,
     int height,
@@ -403,7 +412,9 @@ void BarChart::renderVerticalBars(
     draw_x += bar_width + bar_padding;
   }
 }
-void BarChart::renderHorizontalBars(
+
+template <typename TX, typename TY>
+void BarChart<TX, TY>::renderHorizontalBars(
     RenderTarget* target,
     int width,
     int height,

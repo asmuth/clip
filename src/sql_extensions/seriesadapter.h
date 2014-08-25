@@ -80,7 +80,7 @@ public:
   }
 
   ui::Drawable* getDrawable() override {
-    auto drawable = canvas_->addChart<T>();
+    auto drawable = canvas_->addChart2D<T>();
 
     for (const auto& series : series_list_) {
       drawable->addSeries(static_cast<Series2D<TX, TY>*>(series.get()));
