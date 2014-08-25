@@ -20,7 +20,7 @@ h1, h2, h3, h4, h5, h6 {
 h1, h2, h3 { line-height: 40px; }
 h1 { font-size: 38.5px; }
 h2 { font-size: 26.5px; }
-h3 { font-size: 17.5px; }
+h3 { font-size: 20px; }
 h4 { font-size: 14px; }
 h5 { font-size: 14px; }
 h6 { font-size: 11.9px; }
@@ -32,6 +32,10 @@ hr {
 
 ul {
   padding: 0 0 0 40px;
+}
+
+ul li > ul {
+  margin: 0.2em 0 1em 0;
 }
 
 ul li p {
@@ -228,12 +232,10 @@ ul li p {
 #navigation {
   padding: 20px 0;
   width:210px;
-  float: right;
-  margin-left: 30px;
   border-radius:5px;
   box-shadow:0 0 2px rgba(0,0,0,.1);
   border:1px solid #ddd;
-  background:#f4f4f4;
+  float: right;
 }
 
 #navigation ul {
@@ -280,6 +282,7 @@ ul li p {
   font-weight: 400;
   padding-bottom:70px;
   min-height:1600px;
+  margin-right: 240px;
 }
 
 #documentation_wrap {
@@ -299,7 +302,7 @@ ul li p {
 }
 
 #documentation a {
-  color: #06c;
+  color: #2980b9;
   text-decoration: none;
 }
 
@@ -456,7 +459,7 @@ pre.dark code {
 
 #documentation .optbar a:hover {
   text-decoration: none;
-  background:#06c;
+  background:#2980b9;
   border: 1px solid #fff;
   color: #fff;
 }
