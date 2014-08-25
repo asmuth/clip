@@ -23,7 +23,7 @@ public:
    */
   static std::unique_ptr<InputStream> getStdin();
 
-  InputStream() {}
+  InputStream(const std::string& filename = "<anonymous input stream>");
   InputStream(const InputStream& other) = delete;
   InputStream& operator=(const InputStream& other) = delete;
   virtual ~InputStream() {}
@@ -55,9 +55,31 @@ public:
    */
   virtual size_t readUntilEOF(std::string* target);
 
+  /**
+   * Return the input stream filename
+   */
+  const std::string& getFileName() const;
+
+  /**
+   * Set the input stream filename
+   */
+  void setFileName(const std::string& filename);
+
+private:
+  std::string filename_;
 };
 
-class FileInputStream : public InputStream {
+class RewindableInputStream : public InputStream {
+public:
+
+  /**
+   * Rewind the input stream
+   */
+  virtual void rewind() = 0;
+
+};
+
+class FileInputStream : public RewindableInputStream {
 public:
   enum kByteOrderMark {
     BOM_UNKNOWN,
@@ -82,7 +104,7 @@ public:
    * @param fd a valid fd
    * @param close_on_destroy close the fd on destroy?
    */
-  explicit FileInputStream(int fdd, bool close_on_destroy = false);
+  explicit FileInputStream(int fd, bool close_on_destroy = false);
 
   /**
    * Close the fd if close_on_destroy is true
@@ -98,6 +120,11 @@ public:
   bool readNextByte(char* target) override;
 
   /**
+   * Rewind the input stream
+   */
+  void rewind() override;
+
+  /**
    * Read the byte order mark of the file
    */
   kByteOrderMark readByteOrderMark();
@@ -111,7 +138,7 @@ protected:
   bool close_on_destroy_;
 };
 
-class StringInputStream : public InputStream {
+class StringInputStream : public RewindableInputStream {
 public:
 
   /**
@@ -136,6 +163,11 @@ public:
    * @param target the target char pointer
    */
   bool readNextByte(char* target) override;
+
+  /**
+   * Rewind the input stream
+   */
+  void rewind() override;
 
 protected:
   std::string str_;

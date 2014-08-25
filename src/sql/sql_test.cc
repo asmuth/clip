@@ -472,7 +472,6 @@ TEST_CASE(SQLTest, TestTokenizerSimple, [] () {
   //EXPECT(tl[16].getType() == Token::T_SEMICOLON);
 });
 
-
 TEST_CASE(SQLTest, TestTokenizerAsClause, [] () {
   auto parser = parseTestQuery(" SELECT fnord As blah from asd;");
   auto tl = &parser.getTokenList();
@@ -482,6 +481,27 @@ TEST_CASE(SQLTest, TestTokenizerAsClause, [] () {
   EXPECT((*tl)[2].getType() == Token::T_AS);
   EXPECT((*tl)[3].getType() == Token::T_IDENTIFIER);
   EXPECT((*tl)[3] == "blah");
+});
+
+TEST_CASE(SQLTest, TestParseMultipleSeelcts, [] () {
+  auto parser = parseTestQuery(
+      "SELECT "
+      "  'Berlin' AS series, "
+      "  temperature AS x, "
+      "  temperature AS y "
+      "FROM "
+      "  city_temperatures "
+      "WHERE city = \"Berlin\"; "
+      " "
+      "SELECT"
+      "  'Tokyo' AS series, "
+      "  temperature AS x, "
+      "  temperature AS y "
+      "FROM "
+      "  city_temperatures "
+      "WHERE city = \"Tokyo\";");
+
+  EXPECT(parser.getStatements().size() == 2);
 });
 
 TEST_INITIALIZER(SQLTest, InitializeComplexQueries, [] () {

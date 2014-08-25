@@ -38,7 +38,7 @@ public:
    * Create a new CSVInputStream from the provided InputStream.
    */
   explicit CSVInputStream(
-      std::unique_ptr<fnordmetric::util::InputStream>&& input_stream,
+      std::unique_ptr<fnordmetric::util::RewindableInputStream>&& input_stream,
       char column_seperator = ',',
       char row_seperator = '\n',
       char quote_char = '"');
@@ -49,6 +49,22 @@ public:
    */
   bool readNextRow(std::vector<std::string>* target);
 
+  /**
+   * Skip the next row from the csv file. Returns true if a row was skipped and
+   * false on EOF. May raise an exception.
+   */
+  bool skipNextRow();
+
+  /**
+   * Rewind the input stream
+   */
+  void rewind();
+
+  /**
+   * Return the input stream
+   */
+  const fnordmetric::util::RewindableInputStream& getInputStream() const;
+
 protected:
 
   /**
@@ -56,7 +72,7 @@ protected:
    */
   std::string readNextColumn();
 
-  std::unique_ptr<fnordmetric::util::InputStream> input_;
+  std::unique_ptr<fnordmetric::util::RewindableInputStream> input_;
   const char column_seperator_;
   const char row_seperator_;
   const char quote_char_;

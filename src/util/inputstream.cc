@@ -22,6 +22,18 @@ std::unique_ptr<InputStream> InputStream::getStdin() {
   return std::unique_ptr<InputStream>(stdin_stream);
 }
 
+InputStream::InputStream(
+    const std::string& filename /* = "<anonymous input stream>" */) :
+    filename_(filename) {}
+
+const std::string& InputStream::getFileName() const {
+  return filename_;
+}
+
+void InputStream::setFileName(const std::string& filename) {
+  filename_ = filename;
+}
+
 // FIXPAUL: optimize?
 size_t InputStream::readNextBytes(std::string* target, size_t n_bytes) {
   char byte;
@@ -57,6 +69,7 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
 
   auto csv_file = new FileInputStream(fd);
   csv_file->readNextChunk();
+  csv_file->setFileName(file_path);
   return std::unique_ptr<FileInputStream>(csv_file);
 }
 
@@ -64,7 +77,9 @@ FileInputStream::FileInputStream(
     int fd,
     bool close_on_destroy /* = false */) :
     fd_(fd),
-    close_on_destroy_(close_on_destroy) {}
+    close_on_destroy_(close_on_destroy),
+    buf_len_(0),
+    buf_pos_(0) {}
 
 FileInputStream::~FileInputStream() {
   if (fd_ >= 0 && close_on_destroy_) {
@@ -100,13 +115,21 @@ void FileInputStream::readNextChunk() {
   int bytes_read = read(fd_, buf_, sizeof(buf_));
 
   if (bytes_read < 0) {
-    RAISE_ERRNO(RuntimeException, "read() failed");
+    RAISE_ERRNO(RuntimeException, "read(%s) failed", getFileName().c_str());
   }
 
   buf_pos_ = 0;
   buf_len_ = bytes_read;
 }
 
+void FileInputStream::rewind() {
+  buf_pos_ = 0;
+  buf_len_ = 0;
+
+  if (lseek(fd_, 0, SEEK_SET) < 0) {
+    RAISE_ERRNO(RuntimeException, "lseek(%s) failed", getFileName().c_str());
+  }
+}
 
 std::unique_ptr<StringInputStream> StringInputStream::fromString(
     const std::string& string) {
@@ -126,6 +149,10 @@ bool StringInputStream::readNextByte(char* target) {
   } else {
     return false;
   }
+}
+
+void StringInputStream::rewind() {
+  cur_ = 0;
 }
 
 }

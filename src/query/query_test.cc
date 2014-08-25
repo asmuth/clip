@@ -278,4 +278,17 @@ TEST_CASE(QueryTest, TestQueryService, [] () {
       "build/tests/tmp/QueryTest_TestQueryService_out.svg.html");
 });
 
+TEST_CASE(QueryTest, TestParseCity, [] () {
+  std::string query_string;
+  auto query_stream = fnordmetric::util::FileInputStream::openFile(
+      "test/fixtures/city_temperatures.sql");
+  query_stream->readUntilEOF(&query_string);
 
+  auto parser = parseTestQuery(query_string.c_str());
+  EXPECT(parser.getStatements().size() == 5);
+  EXPECT(*parser.getStatements()[0] == ASTNode::T_IMPORT);
+  EXPECT(*parser.getStatements()[1] == ASTNode::T_DRAW);
+  EXPECT(*parser.getStatements()[2] == ASTNode::T_AXIS);
+  EXPECT(*parser.getStatements()[3] == ASTNode::T_SELECT);
+  EXPECT(*parser.getStatements()[4] == ASTNode::T_SELECT);
+});

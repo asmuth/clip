@@ -39,6 +39,7 @@ void LineChart::addSeries(
       const std::string& point_style /* = kDefaultLineStyle */,
       double point_size /* = kDefaultPointsize */,
       bool smooth /* = false */) {
+
   Line line;
   line.color = seriesColor(series);
   line.line_style = line_style;

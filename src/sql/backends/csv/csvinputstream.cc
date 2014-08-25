@@ -37,7 +37,7 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
 }
 
 CSVInputStream::CSVInputStream(
-    std::unique_ptr<fnordmetric::util::InputStream>&& input_stream,
+    std::unique_ptr<fnordmetric::util::RewindableInputStream>&& input_stream,
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) :
@@ -84,6 +84,20 @@ bool CSVInputStream::readNextRow(std::vector<std::string>* target) {
   }
 
   return !eof;
+}
+
+bool CSVInputStream::skipNextRow() {
+  std::vector<std::string> devnull;
+  return readNextRow(&devnull);
+}
+
+void CSVInputStream::rewind() {
+  input_->rewind();
+}
+
+const fnordmetric::util::RewindableInputStream& CSVInputStream::getInputStream()
+    const {
+  return *input_;
 }
 
 }

@@ -36,6 +36,7 @@ public:
 
   bool readNextRow(std::vector<SValue>* target);
   void readHeaders();
+  void rewind();
 
 protected:
   std::unordered_map<std::string, size_t> headers_;
@@ -43,6 +44,7 @@ protected:
   int num_cols_;
   int min_cols_;
   int row_index_;
+  bool dirty_;
 };
 
 }

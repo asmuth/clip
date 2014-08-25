@@ -26,7 +26,8 @@ CSVTableRef::CSVTableRef(
     csv_(std::move(csv)),
     num_cols_(-1),
     min_cols_(0),
-    row_index_(0) {
+    row_index_(0),
+    dirty_(false) {
   if (headers) {
     readHeaders();
   }
@@ -58,21 +59,26 @@ int CSVTableRef::getColumnIndex(const std::string& name) {
 }
 
 void CSVTableRef::executeScan(TableScan* scan) {
+  if (dirty_) {
+    rewind();
+  }
+
   for (;;) {
     std::vector<SValue> row;
 
     if (!readNextRow(&row)) {
-      return;
+      break;
     }
 
     if (!scan->nextRow(row.data(), row.size())) {
-      return;
+      break;
     }
   }
 }
 
 bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
   std::vector<std::string> row;
+  dirty_ = true;
 
   if (!csv_->readNextRow(&row) || row.size() == 0) {
     return false;
@@ -83,8 +89,9 @@ bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
   if (row.size() < min_cols_) {
     RAISE(
         util::RuntimeException,
-        "csv row #%i does not have enough columns -- "
-        "columns found=%i, required=%i\n",
+        "error while reading CSV file '%s': "
+        "row #%i does not have enough columns; columns found=%i, required=%i\n",
+        csv_->getInputStream().getFileName().c_str(),
         row_index_,
         row.size(),
         min_cols_); // FIXPAUL filename
@@ -95,8 +102,10 @@ bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
   } else if (row.size() != num_cols_) {
     RAISE(
         util::RuntimeException,
+        "error while reading CSV file '%s': "
         "csv row #%i does not have the same number of columns as the previous "
         "line -- number of columns found=%i, previous=%i\n",
+        csv_->getInputStream().getFileName().c_str(),
         row_index_,
         row.size(),
         num_cols_); // FIXPAUL filename
@@ -113,7 +122,10 @@ void CSVTableRef::readHeaders() {
   std::vector<std::string> headers;
 
   if (!csv_->readNextRow(&headers) || headers.size() == 0) {
-    RAISE(util::RuntimeException, "no headers found in CSV file"); // FIXPAUL filename
+    RAISE(
+        util::RuntimeException,
+        "no headers found in CSV file '%s'",
+        csv_->getInputStream().getFileName().c_str());
   }
 
   size_t col_index = 0;
@@ -124,6 +136,21 @@ void CSVTableRef::readHeaders() {
   num_cols_ = col_index;
   min_cols_ = col_index;
   row_index_++;
+}
+
+void CSVTableRef::rewind() {
+  csv_->rewind();
+
+  if (headers_.size() > 0) {
+    if (!csv_->skipNextRow()) {
+      RAISE(
+        util::RuntimeException,
+        "CSV file '%s' changed while we were reading it",
+        csv_->getInputStream().getFileName().c_str());
+    }
+
+    readHeaders();
+  }
 }
 
 }

@@ -43,12 +43,11 @@ Table of Contents
   + [HTML5 API reference](#)
 
 + Embedding FnordMetric
-  + [C++ / C](#)
+  + [C++](#)
+  + [C](#)
   + [Ruby](#)
   + [PHP](#)
   + [Python](#)
-
-+ C++ Library
 
 + Hacking
   + [Contributing](#)
