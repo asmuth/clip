@@ -53,9 +53,7 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
-      lhs->getTypeName(),
-      rhs->getTypeName());
+  *out = SValue(*lhs == *rhs);
 }
 
 static SymbolTableEntry __eq_symbol("eq", &eqExpr);
@@ -74,7 +72,9 @@ void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't AND %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __and_symbol("and", &andExpr);
@@ -93,7 +93,9 @@ void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't OR %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __or_symbol("or", &orExpr);
@@ -116,7 +118,8 @@ void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't negate %s",
+      val->getTypeName());
 }
 
 static SymbolTableEntry __neg_symbol("neg", &negExpr);
@@ -155,7 +158,9 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't compare %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __lt_symbol("lt", &ltExpr);
@@ -194,7 +199,9 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0); // FIXPAUL
+  RAISE(util::RuntimeException, "can't compare %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __gt_symbol("gt", &gtExpr);
