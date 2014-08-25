@@ -19,26 +19,32 @@ namespace ui {
 
 class Domain {
 public:
-  static const int kNumTicks = 6; // FIXPAUL!!
-
   virtual ~Domain() {}
 
   /**
-   * Returns the label at the specified tick/index
+   * Returns the label at the specified index
    *
-   * @param index the index/tick
+   * @param index the index
    */
-  virtual std::string labelAt(double index) const = 0;
+  virtual std::string labelAt(int index) const = 0;
 
   /**
-   * Returns the "ticks" of this domain
+   * Returns the 0-1 axis offset of the index
+   *
+   * @param index the index
    */
-  virtual std::vector<double> getTicks() const = 0;
+  virtual double offsetAt(int index) const = 0;
+
+  /**
+   * Returns the number of indexes of this domain
+   */
+  virtual int getCardinality() const = 0;
 
 };
 
 class NumericalDomain : public Domain {
 public:
+  static const int kDefaultCardinality = 6;
 
   /**
    * Create a new numerical domain with explicit parameters
@@ -50,9 +56,11 @@ public:
   NumericalDomain(
     double min_value,
     double max_value,
+    int cardinality = kDefaultCardinality,
     bool is_logarithmic = false) :
     min_value_(min_value),
     max_value_(max_value),
+    cardinality_(cardinality),
     is_logarithmic_(is_logarithmic) {}
 
   double scale(double value) const {
@@ -67,30 +75,26 @@ public:
     return (value - min_value_) / (max_value_ - min_value_);
   }
 
-  double valueAt(double index) const {
-    return min_value_ + (max_value_ - min_value_) * index;
+  double valueAt(int index) const {
+    return min_value_ + (max_value_ - min_value_) * offsetAt(index);
   }
 
-  std::string labelAt(double index) const override {
+  double offsetAt(int index) const {
+    return (double) index / (double) cardinality_;
+  }
+
+  std::string labelAt(int index) const override {
     return util::format::numberToHuman(valueAt(index));
   }
 
-  std::vector<double> getTicks() const override {
-    std::vector<double> ticks;
-
-    for (int i=0; i < kNumTicks; i++) {
-      auto tick = (double) i / (kNumTicks - 1);
-      ticks.push_back(tick);
-    }
-
-    return ticks;
+  int getCardinality() const override {
+    return cardinality_ + 1;
   }
-
-
 
 protected:
   double min_value_;
   double max_value_;
+  int cardinality_;
   bool is_logarithmic_;
 };
 
@@ -102,20 +106,20 @@ public:
    */
   CategoricalDomain() {}
 
-  std::string labelAt(double index) const override {
-    return "fnord";
-    //return util::format::numberToHuman(valueAt(index));
+  std::string labelAt(int index) const override {
+    if (index < 0 && index > categories_.size() - 1) {
+      return "n/a";
+    } else {
+      return categories_[index];
+    }
   }
 
-  std::vector<double> getTicks() const override {
-    std::vector<double> ticks;
+  double offsetAt(int index) const override {
+    return (double) index / categories_.size() + (1 / categories_.size()) * 0.5;
+  }
 
-    //for (int i=0; i < kNumTicks; i++) {
-    //  auto tick = (double) i / (kNumTicks - 1);
-    //  ticks.push_back(tick);
-    //}
-
-    return ticks;
+  int getCardinality() const override {
+    return categories_.size();
   }
 
   void addCategory(const std::string& category) {

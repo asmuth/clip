@@ -235,7 +235,7 @@ NumericalDomain* BarChart::newYDomain() const {
     y_domain_min *= 1.1;
   }
 
-  return new NumericalDomain(y_domain_min, y_domain_max, false);
+  return new NumericalDomain(y_domain_min, y_domain_max);
 }
 
 CategoricalDomain* BarChart::getXDomain() const {
