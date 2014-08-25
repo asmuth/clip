@@ -47,8 +47,8 @@ public:
    */
   LineChart(
       Canvas* canvas,
-      NumericalDomain* x_domain = nullptr,
-      NumericalDomain* y_domain = nullptr);
+      Domain* x_domain = nullptr,
+      Domain* y_domain = nullptr);
 
   /**
    * Add a (x: string, y: double) series. This will draw one connected line
@@ -68,9 +68,21 @@ public:
       bool smooth = false);
 
   /**
-   * Unsupported series format
+   * Add a (x: string, y: double) series. This will draw one connected line
+   * through all points in the series
+   *
+   * @param series the series to add. does not transfer ownership
+   * @param line_width the line widht
+   * @param smooth smooth this line?
+   * @param line_style the line style ({solid,dashed})
    */
-  void addSeries(Series2D<std::string, double>* series);
+  void addSeries(
+      Series2D<std::string, double>* series,
+      const std::string& line_style = kDefaultLineStyle,
+      double line_width = kDefaultLineWidth,
+      const std::string& point_style = kDefaultPointStyle,
+      double point_size = kDefaultPointSize,
+      bool smooth = false);
 
   /**
    * Unsupported series format
@@ -90,8 +102,8 @@ public:
 
 protected:
 
-  NumericalDomain* getXDomain() const;
-  NumericalDomain* getYDomain() const;
+  Domain* getXDomain() const;
+  Domain* getYDomain() const;
 
   void render(
       RenderTarget* target,
@@ -99,8 +111,9 @@ protected:
       int height,
       std::tuple<int, int, int, int>* padding) const override;
 
+  template <typename T>
   struct Line {
-    std::vector<std::pair<double, double>> points;
+    std::vector<std::pair<T, double>> points;
     std::string line_style;
     double line_width;
     std::string point_style;
@@ -110,12 +123,13 @@ protected:
   };
 
   Canvas* canvas_;
-  NumericalDomain* x_domain_;
-  NumericalDomain* y_domain_;
+  Domain* x_domain_;
+  Domain* y_domain_;
   int num_series_;
-  std::vector<Line> lines_;
-  mutable std::unique_ptr<NumericalDomain> x_domain_auto_;
-  mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
+  std::vector<Line<double>> lines_;
+  std::vector<Line<std::string>> categorical_lines_;
+  mutable std::unique_ptr<Domain> x_domain_auto_;
+  mutable std::unique_ptr<Domain> y_domain_auto_;
 };
 
 }

@@ -140,51 +140,51 @@ AxisDefinition* BarChart::addAxis(AxisDefinition::kPosition position) {
     case AxisDefinition::TOP:
       switch (orientation_) {
         case O_VERTICAL:
-          return newLabelAxis(position);
+          return canvas_->addAxis(position, getXDomain());
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, getValueDomain());
+          return canvas_->addAxis(position, getYDomain());
       }
 
     case AxisDefinition::RIGHT:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, getValueDomain());
+          return canvas_->addAxis(position, getYDomain());
         case O_HORIZONTAL:
-          return newLabelAxis(position);
+          return canvas_->addAxis(position, getXDomain());
       }
 
     case AxisDefinition::BOTTOM:
       switch (orientation_) {
         case O_VERTICAL:
-          return newLabelAxis(position);
+          return canvas_->addAxis(position, getXDomain());
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, getValueDomain());
+          return canvas_->addAxis(position, getYDomain());
       }
 
     case AxisDefinition::LEFT:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, getValueDomain());
+          return canvas_->addAxis(position, getYDomain());
         case O_HORIZONTAL:
-          return newLabelAxis(position);
+          return canvas_->addAxis(position, getXDomain());
       }
 
   }
 }
 
-NumericalDomain* BarChart::getValueDomain() const {
+NumericalDomain* BarChart::getYDomain() const {
   if (y_domain_ != nullptr) {
     return y_domain_;
   }
 
   if (y_domain_auto_.get() == nullptr) {
-    y_domain_auto_.reset(newValueDomain());
+    y_domain_auto_.reset(newYDomain());
   }
 
   return y_domain_auto_.get();
 }
 
-NumericalDomain* BarChart::newValueDomain() const {
+NumericalDomain* BarChart::newYDomain() const {
   double y_domain_min = 0.0f;
   double y_domain_max = 0.0f;
 
@@ -238,6 +238,25 @@ NumericalDomain* BarChart::newValueDomain() const {
   return new NumericalDomain(y_domain_min, y_domain_max, false);
 }
 
+CategoricalDomain* BarChart::getXDomain() const {
+  if (x_domain_auto_.get() == nullptr) {
+    x_domain_auto_.reset(newXDomain());
+  }
+
+  return x_domain_auto_.get();
+}
+
+CategoricalDomain* BarChart::newXDomain() const {
+  auto domain = new CategoricalDomain();
+
+  for (int i = 0; i < data_.size(); ++i) {
+    domain->addCategory(data_[i].x);
+  }
+
+  return domain;
+}
+
+/*
 AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
     const {
   auto axis = canvas_->addAxis(position);
@@ -271,6 +290,7 @@ AxisDefinition* BarChart::newLabelAxis(AxisDefinition::kPosition position)
   axis->addTick(1.0f);
   return axis;
 }
+*/
 
 void BarChart::render(
     RenderTarget* target,
@@ -315,7 +335,7 @@ void BarChart::renderVerticalBars(
   std::vector<double> x_ticks = {0.0f};
   auto draw_x = padding_left + bar_padding;
   auto draw_width = bar_width;
-  auto y_domain = getValueDomain();
+  auto y_domain = getYDomain();
   for (const auto& bar : data_) {
     draw_x += bar_padding;
 
@@ -404,7 +424,7 @@ void BarChart::renderHorizontalBars(
   std::vector<std::pair<double, std::string>> y_labels;
   auto draw_y = padding_top + bar_padding;
   auto draw_height = bar_height;
-  auto y_domain = getValueDomain();
+  auto y_domain = getYDomain();
   for (const auto& bar : data_) {
     draw_y += bar_padding;
 
