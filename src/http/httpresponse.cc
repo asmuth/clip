@@ -29,8 +29,12 @@ void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
 void HTTPResponse::populateFromRequest(const HTTPRequest& request) {
   setVersion(request.getVersion());
 
-  if (request.keepalive()) {
-    addHeader("Connection", "close");
+  if (request.getVersion() == "HTTP/1.0") {
+    if (request.keepalive()) {
+      addHeader("Connection", "keep-alive");
+    } else {
+      addHeader("Connection", "close");
+    }
   }
 }
 

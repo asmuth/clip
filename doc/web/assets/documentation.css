@@ -299,6 +299,10 @@ ul li p {
   font-size: 26.5px;
 }
 
+#documentation h1:first-child {
+  margin-top: 0;
+}
+
 #documentation h2 {
   margin-top: 1.5em;
   margin-bottom: 0;

@@ -76,12 +76,12 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot1Request, [] () {
   fnordmetric::http::HTTPInputStream http_is(&is);
   fnordmetric::http::HTTPRequest request;
   request.readFromInputStream(&http_is);
+  EXPECT(request.keepalive() == true);
 
   fnordmetric::http::HTTPResponse response;
   response.populateFromRequest(request);
 
   EXPECT_EQ(response.getVersion(), "HTTP/1.1");
-  EXPECT_EQ(response.getHeader("Connection"), "keep-alive");
 });
 
 TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {
