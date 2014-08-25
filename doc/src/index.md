@@ -1,13 +1,13 @@
 FnordMetric v2.0.0 Documentation
---------------------------------
+================================
 
 FnordMetric allows you to visualize your data without ever leaving SQL. Turning
 a query result into a chart is literally one line of code.
 
-### Table of Contents
+Table of Contents
+-----------------
 
 + Introduction
-  + [What is Fnordmetric?](#what-is-fnordmetric)
   + [Rationale](#rationale)
   + [Installing Fnordmetric](#installing-fnordmetric)
   + [Getting Started](#getting-started)
@@ -56,7 +56,8 @@ a query result into a chart is literally one line of code.
   + [License](#)
 
 
-### What is FnordMetric?
+Introduction
+============
 
 FnordMetric is a tool that lets you to:
 
@@ -86,7 +87,8 @@ And this plots a point chart with error bars directly from a MySQL database:
    ...
 
 
-### Rationale
+Rationale
+---------
 
 If you're like me you are probably thinking something along the lines of "Does
 the world really need yet another data visualization tool?" right now. Surely,
@@ -105,16 +107,18 @@ FnordMetric aims to fix that by extending standard SQL; it allows you to express
 queries that return charts rather than tables.
 
 
-### Installing Fnordmetric
+Installing Fnordmetric
+----------------------
 
-#### Debian: via apt-get
-#### Ubuntu: via dpkg
-#### Mac OSX: via homebrew
-#### Windows
-#### Compile From Source
+### Debian: via apt-get
+### Ubuntu: via dpkg
+### Mac OSX: via homebrew
+### Windows
+### Compile From Source
 
 
-### Getting Started
+Getting Started
+---------------
 
 As the first simple example we will create a bar chart that displays gross
 domestic product per country and looks like this:
@@ -124,26 +128,26 @@ domestic product per country and looks like this:
      #       #      #
      #       #      #
      USA     UK     IRAN ...
-  -----------------------------------------
+    -----------------------------------------
 
 Let's say we have a csv file containing the data that looks like this:
 
-  country,gdp
-  iran,8000
-  uk,9000
-  usa,1000
+    country,gdp
+    iran,8000
+    uk,9000
+    usa,1000
 
 We can create the chart pictured above with this sql query"
 
-  -- import the csv file as a table
-  IMPORT gdp_per_country FROM "gdp_per_country.csv";
+    -- import the csv file as a table
+    IMPORT gdp_per_country FROM "gdp_per_country.csv";
 
-  -- draw a simple bar chart
-  BEGIN BAR CHART;
+    -- draw a simple bar chart
+    BEGIN BAR CHART;
 
-  -- draw gdp of the top 10 countries
-  CREATE SERIES WITH
-    SELECT "gdp per country" as name gbp as x, country as y FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
+    -- draw gdp of the top 10 countries
+    CREATE SERIES WITH
+      SELECT "gdp per country" as name gbp as x, country as y FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
 
 
 Now lets add a custom style and axis deinitions:
@@ -169,58 +173,83 @@ runtime of the request.
 We will draw a single line graph that plots requests per minute vs the 90th
 percentile latency in that time window.
 
-  IMPORT experiment1 FROM "experiment_1.csv";
+    IMPORT experiment1 FROM "experiment_1.csv";
 
-  DRAW LINE CHART;
+    DRAW LINE CHART;
 
-  SERIES "experiment1" FROM
-    SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
-      FROM experiment1
-      GROUP BY time_window(time, 1s);
+    SERIES "experiment1" FROM
+      SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
+        FROM experiment1
+        GROUP BY time_window(time, 1s);
 
 Lets add another experiment as a second series in the chart:
 
-  IMPORT experiment1 FROM "experiment_1.csv";
-  IMPORT experiment2 FROM "experiment_2.csv";
+    IMPORT experiment1 FROM "experiment_1.csv";
+    IMPORT experiment2 FROM "experiment_2.csv";
 
-  BEGIN LINES;
+    BEGIN LINES;
 
-  CREATE SERIES WITH SELECT
-    "experiment1" as title, count(*) as x, nth_percentile(runtime, 90) as y
-    FROM experiment1
-    GROUP BY time_window(time, 1s);
-
-  SERIES "experiment2" FROM
-    SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
-      FROM experiment2
+    CREATE SERIES WITH SELECT
+      "experiment1" as title, count(*) as x, nth_percentile(runtime, 90) as y
+      FROM experiment1
       GROUP BY time_window(time, 1s);
+
+    SERIES "experiment2" FROM
+      SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
+        FROM experiment2
+        GROUP BY time_window(time, 1s);
 
 
 To make that last query more interesting lets say we put all our test results
 into a single file with an additional "experiment" columns and try to recreate
 the same chart:
 
--- load a csv file with per request logs from a load test
-IMPORT loadtests FROM "myfile.csv";
+    -- load a csv file with per request logs from a load test
+    IMPORT loadtests FROM "myfile.csv";
 
--- draw a graph of qps vs 90thpercentile, one series for each experiment
-BEGIN CHART;
+    -- draw a graph of qps vs 90thpercentile, one series for each experiment
+    BEGIN CHART;
 
-DRAW LINES experiment FROM
-  SELECT experiment, count(*) as qps, nth_percentile(runtime) as latency
-    FROM loadtests
-    GROUP BY experiment, time_window(time, 1s);
+    DRAW LINES experiment FROM
+      SELECT experiment, count(*) as qps, nth_percentile(runtime) as latency
+        FROM loadtests
+        GROUP BY experiment, time_window(time, 1s);
+
+
 
 
 Query Language
---------------
+==============
 
 The FnordMetric query language is a superset of SQL99 (SELECT statements only).
 It supports all the operations you would expect in your standard SQL database
 like GROUP BY or HAVING statements and joins. Additionally, FnordMetric implements
 a number of new statements to create charts directly from SQL.
 
-### Extensions to standard SQL:
+Extensions to standard SQL
+--------------------------
+
+### GROUP BY and HAVING extensions
+
+Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
+can refer to nonaggregated columns not named in the GROUP BY clause. If you use
+a group function in a statement containing no GROUP BY clause, it equivalent to
+grouping on all rows. This assumes that the nongrouped columns will have the same
+group-wise values. Otherwise, the result is undefined. The same applies for
+the HAVING clause.
+
+
+### GROUP BY and HAVING extensions
+
+Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
+can refer to nonaggregated columns not named in the GROUP BY clause. If you use
+a group function in a statement containing no GROUP BY clause, it equivalent to
+grouping on all rows. This assumes that the nongrouped columns will have the same
+group-wise values. Otherwise, the result is undefined. The same applies for
+the HAVING clause.
+
+
+### GROUP BY and HAVING extensions
 
 Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
 can refer to nonaggregated columns not named in the GROUP BY clause. If you use
@@ -231,11 +260,17 @@ the HAVING clause.
 
 
 Hacking
--------
+=======
 
-### Contributing
+Contributing
+------------
 
-Ways to contribute to FnordMetric:
+To contribute, please fork this repository, make your changes and run the 
+specs, commit them to your github repository and send me a pull request.
+Need help, head on over to our [Google Groups][1] page to discuss any ideas
+that you might have.
+
+### Ways to contribute to FnordMetric:
 
   + report bugs or suggest new features
   + suggest or implement new options for existing charts or new chart types
@@ -248,22 +283,17 @@ Ways to contribute to FnordMetric:
   + add some new features to the query engine (requires c++ knowledge)
   + many more! improve all the things :)
 
-If you need any help or guidance please contact the mailing list.
-
-This is how you run a development build and the tests:
-   ....
-
-#### Other Open Source Software included in FnordMetric
+### Other Open Source Software included in FnordMetric
 
   + Christian Parpart's xzero -- HTTP library (http://github.com/xzero)
   + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
 
-#### Individial Contributors to FnordMetric
+### Individial Contributors to FnordMetric Version 2.0.0
 
-**Version 2.0.0**
   + Christian Parpart (http://github.com/trapni)
 
-**Version 0.0.8 - v1.2.9**
+### Individial Contributors to FnordMetric Version 0.0.8 - v1.2.9
+
  + Simon Menke (http://github.com/fd),
  + Bruno Michel (http://github.com/nono),
  + Marco Borromeo (http://github.com/mborromeo),
@@ -281,12 +311,9 @@ This is how you run a development build and the tests:
  + Tadas Ščerbinskas (http://github.com/tadassce),
  + Sebastian Korfmann (http://github.com/skorfmann)
 
-To contribute, please fork this repository, make your changes and run the 
-specs, commit them to your github repository and send me a pull request.
-Need help, head on over to our [Google Groups][1]  page to discuss any ideas
-that you might have.
 
-### License
+License
+-------
 
 Copyright (c) 2011-2014 Paul Asmuth
 

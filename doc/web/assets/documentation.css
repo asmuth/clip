@@ -21,7 +21,7 @@ h1, h2, h3 { line-height: 40px; }
 h1 { font-size: 38.5px; }
 h2 { font-size: 26.5px; }
 h3 { font-size: 20px; }
-h4 { font-size: 14px; }
+h4 { font-size: 100%; font-weight: 500; }
 h5 { font-size: 14px; }
 h6 { font-size: 11.9px; }
 
@@ -32,6 +32,7 @@ hr {
 
 ul {
   padding: 0 0 0 40px;
+  margin: 0;
 }
 
 ul li > ul {
@@ -291,10 +292,36 @@ ul li p {
   overflow:hidden;
 }
 
-#documentation h3 {
-  margin-top: 25px;
+#documentation h1 {
+  margin-top: 2em;
   margin-bottom: 0;
   padding-bottom: 0;
+  font-size: 26.5px;
+}
+
+#documentation h2 {
+  margin-top: 1.5em;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  font-size: 20px;
+}
+
+#documentation h3 {
+  margin-top: 1em;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  font-size: 100%;
+  font-weight: 500;
+}
+
+#documentation h4 {
+  margin-top: 2em;
+  color: #666;
+}
+
+#documentation h1 + h2,
+#documentation h2 + h3 {
+  margin-top: 1em;
 }
 
 #documentation p {
