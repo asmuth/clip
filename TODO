@@ -1,6 +1,37 @@
-- missing data
-- hover 
+v2.0.0
+  - all examples working
+  - bar, area, line, pie, number chart
+  - documentation as per TOC complete
+  - full sql selects, joins working
+  - csv, mysql backend
+  - simple web interface (interactive query UI generates embed html snippets)
+  - cli interface
+  - simple dashboards working
+  - TimeDomain!
+  - max interpolation gap -> draw as missing data
+  - simple interactive charts (hover tooltips)
 
+v2.1.0
+  - statsd/graphite backend
+  - postgresql backend
+  - gannt charts
+  - sparklines? (multi svg output)
+  - stacked area charts
+  - smooth paths
+  - legend!
+  - gauges, heatmaps, boxplot, error bars 
+  - middle axis
+  - annotations / deploy lines
+  - query cache
+
+
+
+
+
+
+
+
+RANDOM IDEAS
 
 fnordmetric web:
     $ fnordmetric --web 8080   # standalone webserver on port 8080
@@ -35,15 +66,7 @@ point chart examples:
   * negative values
   * middle axis
 
---- stacked area charts
---- smooth paths
---> legend!
---- pie, scatter, bubble, gauges, heatmaps, boxplot, error bars 
---- sparklines? (multi svg output)
 --- axis expr can be a tuple!!. e.g for error bars or area
---- middle axis!
---- TimeDomain!
---- max interpolation gap -> draw as missing data
 
 IMPORT TABLE tablename FROM CSV { 'filename' | STDIN }
     [ [ WITH ]
@@ -236,19 +259,15 @@ SELECT real_value, holtwinters_forecast(real_value)
      * graph global req time distribution
      * graph 90th percentile req time per agent
 -> renice query threads in agents?
--> annotations / deploy lines?
 -> push query down into backend
--> drop-in statsd adapter :)
 -> agents that run queries on external data sources (e.g. logfiles)
 -> newrelic-like agents that auto-export streams on demand
 -> on demand streams :)
 -> nagios adapter for alerting
 -> http interface? (need to bundle lotsa resources)
--> query cache! :)
 -> stream replication
 -> optimized for seeks over time ranges
 -> row compression / page compression?
--> interactive query UI generates embed html snippets
 -> generate embed snippets from ruby api -> rails helper plugin
 -> execute multiple queries in parallel in the ui -> get multiple timeseries
    and tables (tabs)

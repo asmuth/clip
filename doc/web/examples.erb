@@ -11,9 +11,9 @@
 
 <div id="wrap" class="<%= @doc_yield ? :large : nil %>">
   <div id="documentation_wrap">
-    <% if @route == "/index" %>
-      <div id="documentation" style="margin-right:0;">
-        <h1 style="margin-top: 0; margin-bottom: 1.5em;">FnordMetric Examples</h1>
+    <div id="documentation" style="margin-right:0;">
+      <% if @route == "/index" %>
+        <h2 style="margin-top: 0; margin-bottom: 1.5em;">FnordMetric Examples</h2>
         <table width="100%" border=0 cellspacing=0>
           <tr style="border-bottom: 60px solid #fff; background: transparent;">
           <% CONFIG["examples"].each_with_index do |example_group, n| %>
@@ -37,10 +37,8 @@
           <% end %>
           </tr>
         </table>
-      </div>
-    <% else %>
-      <div id="documentation">
-        <h2><%= @example["title"] %></h2>
+      <% else %>
+        <h2 style="margin-top: 0;"><%= @example["title"] %></h2>
         <p class="breadcrumb">
           <a href="/examples">
             Examples
@@ -65,15 +63,13 @@
           <a class="active">SQL</a>
           <a>C++</a>
         </div>
-        <pre style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "examples#{@example["url"]}.sql")) %></code></pre>
+        <pre class="prettyprint" style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "examples#{@example["url"]}.sql")) %></code></pre>
 
         <p>Run this example:</p>
         <% example_cmd = "$ fnordmetric --format=svg examples#{@example["url"]}.sql" %>
-        <pre style="margin-top: 0;"><code><%=example_cmd%></code></pre>
-      </div>
-    <% end %>
-
-
+        <pre class="prettyprint" style="margin-top: 0;"><code><%=example_cmd%></code></pre>
+      <% end %>
+    </div>
   </div>
 </div>
 <div class="biglink" style="margin-top:70px;">

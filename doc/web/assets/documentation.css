@@ -463,11 +463,10 @@ pre.dark code {
 }
 
 .example_frame {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  margin: 15px 0;
-  padding: 10px 0;
-  height: 500px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 15px 0 0 0;
+  padding: 20px;
 }
 
 #documentation p.breadcrumb {
