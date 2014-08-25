@@ -84,9 +84,9 @@ add_executable(tests/test-sql
     ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/sql/sql_test.cc)
 
-#add_executable(tests/test-query
-#    ${FNORDMETRIC_QUERY_SOURCES}
-#    stage/src/fnordmetric/query/query_test.cc)
+add_executable(tests/test-query
+    ${FNORDMETRIC_QUERY_SOURCES}
+    stage/src/fnordmetric/query/query_test.cc)
 
 add_executable(tests/test-ui
     ${FNORDMETRIC_UI_SOURCES}

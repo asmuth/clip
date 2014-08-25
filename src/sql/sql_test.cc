@@ -31,26 +31,12 @@
 
 using namespace fnordmetric::query;
 
-UNIT_TEST(QueryTest);
+UNIT_TEST(SQLTest);
 
 static Parser parseTestQuery(const char* query) {
   Parser parser;
   parser.parse(query, strlen(query));
   return parser;
-}
-
-static void compareChart(
-    fnordmetric::ui::Canvas* chart,
-    const std::string& file_name) {
-  auto output_stream = fnordmetric::util::FileOutputStream::openFile(
-      "build/tests/tmp/" + file_name);
-
-  fnordmetric::ui::SVGTarget target(output_stream.get());
-  chart->render(&target);
-
-  EXPECT_FILES_EQ(
-    "test/fixtures/" + file_name,
-    "build/tests/tmp/" + file_name);
 }
 
 class TestTableRef : public TableRef {
@@ -95,7 +81,7 @@ class TestTable2Ref : public TableRef {
   }
 };
 
-TEST_CASE(QueryTest, TestSimpleValueExpression, [] () {
+TEST_CASE(SQLTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -120,7 +106,7 @@ TEST_CASE(QueryTest, TestSimpleValueExpression, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestArithmeticValueExpression, [] () {
+TEST_CASE(SQLTest, TestArithmeticValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 1 + 2 / 3;");
   EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
@@ -134,7 +120,7 @@ TEST_CASE(QueryTest, TestArithmeticValueExpression, [] () {
   EXPECT(expr->getChildren()[1]->getChildren().size() == 2);
 });
 
-TEST_CASE(QueryTest, TestArithmeticValueExpressionParens, [] () {
+TEST_CASE(SQLTest, TestArithmeticValueExpressionParens, [] () {
   auto parser = parseTestQuery("SELECT (1 * 2) + 3;");
   EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
@@ -148,7 +134,7 @@ TEST_CASE(QueryTest, TestArithmeticValueExpressionParens, [] () {
   EXPECT(*expr->getChildren()[1]->getToken() == "3");
 });
 
-TEST_CASE(QueryTest, TestArithmeticValueExpressionPrecedence, [] () {
+TEST_CASE(SQLTest, TestArithmeticValueExpressionPrecedence, [] () {
   {
     auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
     EXPECT(parser.getStatements().size() == 1);
@@ -177,7 +163,7 @@ TEST_CASE(QueryTest, TestArithmeticValueExpressionPrecedence, [] () {
   }
 });
 
-TEST_CASE(QueryTest, TestMethodCallValueExpression, [] () {
+TEST_CASE(SQLTest, TestMethodCallValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 1 + sum(23, 4 + 1) FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -209,7 +195,7 @@ TEST_CASE(QueryTest, TestMethodCallValueExpression, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestNegatedValueExpression, [] () {
+TEST_CASE(SQLTest, TestNegatedValueExpression, [] () {
   auto parser = parseTestQuery("SELECT -(23 + 5.123) AS fucol FROM tbl;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -241,7 +227,7 @@ TEST_CASE(QueryTest, TestNegatedValueExpression, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestSelectWildcard, [] () {
+TEST_CASE(SQLTest, TestSelectWildcard, [] () {
   auto parser = parseTestQuery("SELECT * FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -256,7 +242,7 @@ TEST_CASE(QueryTest, TestSelectWildcard, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestSelectTableWildcard, [] () {
+TEST_CASE(SQLTest, TestSelectTableWildcard, [] () {
   auto parser = parseTestQuery("SELECT mytablex.* FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -274,7 +260,7 @@ TEST_CASE(QueryTest, TestSelectTableWildcard, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestSelectDerivedColumn, [] () {
+TEST_CASE(SQLTest, TestSelectDerivedColumn, [] () {
   auto parser = parseTestQuery("SELECT somecol AS another FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -296,7 +282,7 @@ TEST_CASE(QueryTest, TestSelectDerivedColumn, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
+TEST_CASE(SQLTest, TestSelectDerivedColumnWithTableName, [] () {
   auto parser = parseTestQuery("SELECT tbl.col AS another FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -326,7 +312,7 @@ TEST_CASE(QueryTest, TestSelectDerivedColumnWithTableName, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
+TEST_CASE(SQLTest, TestSelectMustBeFirstAssert, [] () {
   const char* err_msg = "unexpected token T_GROUP, expected one of SELECT, "
       "DRAW or IMPORT";
 
@@ -335,7 +321,7 @@ TEST_CASE(QueryTest, TestSelectMustBeFirstAssert, [] () {
   });
 });
 
-TEST_CASE(QueryTest, TestFromList, [] () {
+TEST_CASE(SQLTest, TestFromList, [] () {
   auto parser = parseTestQuery("SELECT a FROM tbl1, tbl2;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -348,7 +334,7 @@ TEST_CASE(QueryTest, TestFromList, [] () {
   EXPECT(*from->getChildren()[1]->getToken() == "tbl2");
 });
 
-TEST_CASE(QueryTest, TestWhereClause, [] () {
+TEST_CASE(SQLTest, TestWhereClause, [] () {
   auto parser = parseTestQuery("SELECT x FROM t WHERE a=1 AND a+1=2 OR b=3;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -359,7 +345,7 @@ TEST_CASE(QueryTest, TestWhereClause, [] () {
   EXPECT(*where->getChildren()[0] == ASTNode::T_OR_EXPR);
 });
 
-TEST_CASE(QueryTest, TestGroupByClause, [] () {
+TEST_CASE(SQLTest, TestGroupByClause, [] () {
   auto parser = parseTestQuery("select count(x), y from t GROUP BY x;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -370,7 +356,7 @@ TEST_CASE(QueryTest, TestGroupByClause, [] () {
   EXPECT(*where->getChildren()[0] == ASTNode::T_COLUMN_NAME);
 });
 
-TEST_CASE(QueryTest, TestOrderByClause, [] () {
+TEST_CASE(SQLTest, TestOrderByClause, [] () {
   auto parser = parseTestQuery("select a FROM t ORDER BY a DESC;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -382,7 +368,7 @@ TEST_CASE(QueryTest, TestOrderByClause, [] () {
   EXPECT(*order_by->getChildren()[0]->getToken() == Token::T_DESC);
 });
 
-TEST_CASE(QueryTest, TestHavingClause, [] () {
+TEST_CASE(SQLTest, TestHavingClause, [] () {
   auto parser = parseTestQuery("select a FROM t HAVING 1=1;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -393,7 +379,7 @@ TEST_CASE(QueryTest, TestHavingClause, [] () {
   EXPECT(*having->getChildren()[0] == ASTNode::T_EQ_EXPR);
 });
 
-TEST_CASE(QueryTest, TestLimitClause, [] () {
+TEST_CASE(SQLTest, TestLimitClause, [] () {
   auto parser = parseTestQuery("select a FROM t LIMIT 10;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -404,7 +390,7 @@ TEST_CASE(QueryTest, TestLimitClause, [] () {
   EXPECT(*limit->getToken() == "10");
 });
 
-TEST_CASE(QueryTest, TestLimitOffsetClause, [] () {
+TEST_CASE(SQLTest, TestLimitOffsetClause, [] () {
   auto parser = parseTestQuery("select a FROM t LIMIT 10 OFFSET 23;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -417,7 +403,7 @@ TEST_CASE(QueryTest, TestLimitOffsetClause, [] () {
   EXPECT(*limit->getChildren()[0]->getToken() == "23");
 });
 
-TEST_CASE(QueryTest, TestTokenizerEscaping, [] () {
+TEST_CASE(SQLTest, TestTokenizerEscaping, [] () {
   std::vector<Token> tl;
   tokenizeQuery(
       " SELECT  fnord,sum(blah) from fubar blah.id"
@@ -452,7 +438,7 @@ TEST_CASE(QueryTest, TestTokenizerEscaping, [] () {
   EXPECT(tl[16].getType() == Token::T_SEMICOLON);
 });
 
-TEST_CASE(QueryTest, TestTokenizerSimple, [] () {
+TEST_CASE(SQLTest, TestTokenizerSimple, [] () {
   std::vector<Token> tl;
   tokenizeQuery(
       " SELECT  fnord,sum(`blah-field`) from fubar"
@@ -487,7 +473,7 @@ TEST_CASE(QueryTest, TestTokenizerSimple, [] () {
 });
 
 
-TEST_CASE(QueryTest, TestTokenizerAsClause, [] () {
+TEST_CASE(SQLTest, TestTokenizerAsClause, [] () {
   auto parser = parseTestQuery(" SELECT fnord As blah from asd;");
   auto tl = &parser.getTokenList();
   EXPECT((*tl)[0].getType() == Token::T_SELECT);
@@ -498,7 +484,7 @@ TEST_CASE(QueryTest, TestTokenizerAsClause, [] () {
   EXPECT((*tl)[3] == "blah");
 });
 
-TEST_INITIALIZER(QueryTest, InitializeComplexQueries, [] () {
+TEST_INITIALIZER(SQLTest, InitializeComplexQueries, [] () {
   std::vector<const char*> queries;
   queries.push_back("SELECT -sum(fnord) + (123 * 4);");
   queries.push_back("SELECT (-blah + sum(fnord) / (123 * 4)) as myfield;");
@@ -530,7 +516,7 @@ TEST_INITIALIZER(QueryTest, InitializeComplexQueries, [] () {
 
   for (auto query : queries) {
     new fnordmetric::util::UnitTest::TestCase(
-        &QueryTest,
+        &SQLTest,
         "TestComplexQueries",
         [query] () {
           auto parser = parseTestQuery(query);
@@ -539,7 +525,7 @@ TEST_INITIALIZER(QueryTest, InitializeComplexQueries, [] () {
   }
 });
 
-TEST_CASE(QueryTest, TestSelectOnlyQuery, [] () {
+TEST_CASE(SQLTest, TestSelectOnlyQuery, [] () {
   TableRepository repo;
   std::vector<std::unique_ptr<Query>> dst;
 
@@ -573,7 +559,7 @@ TEST_CASE(QueryTest, TestSelectOnlyQuery, [] () {
   //EXPECT(row[5] == "true");
 });
 
-TEST_CASE(QueryTest, TestSimpleTableScanQuery, [] () {
+TEST_CASE(SQLTest, TestSimpleTableScanQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTableRef()));
@@ -594,7 +580,7 @@ TEST_CASE(QueryTest, TestSimpleTableScanQuery, [] () {
   }
 });
 
-TEST_CASE(QueryTest, TestTableScanWhereQuery, [] () {
+TEST_CASE(SQLTest, TestTableScanWhereQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTableRef()));
@@ -614,7 +600,7 @@ TEST_CASE(QueryTest, TestTableScanWhereQuery, [] () {
   EXPECT(results->getNumRows() == 51);
 });
 
-TEST_CASE(QueryTest, TestTableScanWhereLimitQuery, [] () {
+TEST_CASE(SQLTest, TestTableScanWhereLimitQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTableRef()));
@@ -641,7 +627,7 @@ TEST_CASE(QueryTest, TestTableScanWhereLimitQuery, [] () {
 // select count(*), one, two, three from testtable2 group by case three when
 // 200 then 100 else 100 end;
 
-TEST_CASE(QueryTest, TestTableScanGroupByQuery, [] () {
+TEST_CASE(SQLTest, TestTableScanGroupByQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
@@ -663,7 +649,7 @@ TEST_CASE(QueryTest, TestTableScanGroupByQuery, [] () {
   EXPECT(results->getNumRows() == 4);
 });
 
-TEST_CASE(QueryTest, TestTableScanGroupByCountQuery, [] () {
+TEST_CASE(SQLTest, TestTableScanGroupByCountQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
@@ -691,7 +677,7 @@ TEST_CASE(QueryTest, TestTableScanGroupByCountQuery, [] () {
   EXPECT(sum == 10);
 });
 
-TEST_CASE(QueryTest, TestTableScanGroupBySumQuery, [] () {
+TEST_CASE(SQLTest, TestTableScanGroupBySumQuery, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
@@ -717,7 +703,7 @@ TEST_CASE(QueryTest, TestTableScanGroupBySumQuery, [] () {
   }
 });
 
-TEST_CASE(QueryTest, TestTableScanGroupWithoutGroupClause, [] () {
+TEST_CASE(SQLTest, TestTableScanGroupWithoutGroupClause, [] () {
   TableRepository repo;
   repo.addTableRef("testtable",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
@@ -735,130 +721,7 @@ TEST_CASE(QueryTest, TestTableScanGroupWithoutGroupClause, [] () {
   EXPECT(results->getRow(0)[0] == "55");
 });
 
-TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
-      "  DRAW BAR CHART;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    'series1' as fnord, one AS x, two AS y"
-      "  FROM"
-      "    testtable;",
-      &repo);
-
-  const char err[] = "can't draw SELECT because it has no 'series' column";
-
-  EXPECT_EXCEPTION(err, [&query] () {
-    query.execute();
-  });
-});
-
-TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
-      "  DRAW BAR CHART;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    'series1' as series, one AS f, two AS y"
-      "  FROM"
-      "    testtable;",
-      &repo);
-
-  const char err[] = "can't draw SELECT because it has no 'x' column";
-
-  EXPECT_EXCEPTION(err, [&query] () {
-    query.execute();
-  });
-});
-
-TEST_CASE(QueryTest, TestDrawQueryNeedsYColAssert, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
-      "  DRAW BAR CHART;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    'series1' as series, one AS x, two AS f"
-      "  FROM"
-      "    testtable;",
-      &repo);
-
-  const char err[] = "can't draw SELECT because it has no 'y' column";
-
-  EXPECT_EXCEPTION(err, [&query] () {
-    query.execute();
-  });
-});
-
-TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
-      "  DRAW BAR CHART;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    'series1' as series, one AS x, two AS y"
-      "  FROM"
-      "    testtable;"
-      ""
-      "  SELECT"
-      "    'series2' as series, one as x, two + 5 as y"
-      "  from"
-      "    testtable;"
-      ""
-      "  SELECT"
-      "    'series3' as series, one as x, two / 2 + 4 as y"
-      "  FROM"
-      "    testtable;"
-      "",
-      &repo);
-
-  query.execute();
-  auto chart = query.getChart(0);
-
-  compareChart(
-      chart,
-      "QueryTest_TestSimpleDrawQuery_out.svg.html");
-});
-
-TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
-      "  DRAW BAR CHART;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    one % 3 as series, one / 3 as x, two + one AS y"
-      "  FROM"
-      "    testtable;",
-      &repo);
-
-  query.execute();
-  auto chart = query.getChart(0);
-
-  compareChart(
-      chart,
-      "QueryTest_TestDerivedSeriesDrawQuery_out.svg.html");
-});
-
-TEST_CASE(QueryTest, TestSimpleSelectFromCSV, [] () {
+TEST_CASE(SQLTest, TestSimpleSelectFromCSV, [] () {
   auto csv_table = new csv_backend::CSVTableRef(
       csv_backend::CSVInputStream::openFile(
           "test/fixtures/gbp_per_country_simple.csv"), 
@@ -880,7 +743,7 @@ TEST_CASE(QueryTest, TestSimpleSelectFromCSV, [] () {
   EXPECT(results->getNumRows() == 191);
 });
 
-TEST_CASE(QueryTest, TestSimpleAggregateFromCSV, [] () {
+TEST_CASE(SQLTest, TestSimpleAggregateFromCSV, [] () {
   auto csv_table = new csv_backend::CSVTableRef(
       csv_backend::CSVInputStream::openFile(
           "test/fixtures/gbp_per_country_simple.csv"), 
@@ -902,7 +765,7 @@ TEST_CASE(QueryTest, TestSimpleAggregateFromCSV, [] () {
   EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
-TEST_CASE(QueryTest, TestNoSuchColumnError, [] () {
+TEST_CASE(SQLTest, TestNoSuchColumnError, [] () {
   EXPECT_EXCEPTION("no such column: 'fnord'", [] () {
     auto csv_table = new csv_backend::CSVTableRef(
         csv_backend::CSVInputStream::openFile(
@@ -923,7 +786,7 @@ TEST_CASE(QueryTest, TestNoSuchColumnError, [] () {
   });
 });
 
-TEST_CASE(QueryTest, TestTypeError, [] () {
+TEST_CASE(SQLTest, TestTypeError, [] () {
   EXPECT_EXCEPTION("can't convert String 'United States' to Float", [] () {
     auto csv_table = new csv_backend::CSVTableRef(
         csv_backend::CSVInputStream::openFile(
@@ -945,7 +808,7 @@ TEST_CASE(QueryTest, TestTypeError, [] () {
 });
 
 
-TEST_CASE(QueryTest, TestImportCSVTable, [] () {
+TEST_CASE(SQLTest, TestImportCSVTable, [] () {
   TableRepository repo;
 
   auto query = Query(
@@ -962,65 +825,3 @@ TEST_CASE(QueryTest, TestImportCSVTable, [] () {
   auto results = query.getResultList(0);
   EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
-
-TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
-  TableRepository repo;
-
-  auto query = Query(
-      "  IMPORT TABLE gbp_per_country "
-      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
-      ""
-      "  DRAW BAR CHART;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    'gross domestic product per country' as series,"
-      "    country as x,"
-      "    gbp as y"
-      "  FROM"
-      "    gbp_per_country"
-      "  LIMIT 30;",
-      &repo);
-
-  query.execute();
-  auto chart = query.getChart(0);
-
-  compareChart(
-      chart,
-      "QueryTest_SimpleEndToEndTest_out.svg.html");
-});
-
-
-TEST_CASE(QueryTest, TestQueryService, [] () {
-  auto query =
-      "  IMPORT TABLE gbp_per_country "
-      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
-      ""
-      "  DRAW BAR CHART;"
-      "  DRAW BOTTOM AXIS;"
-      "  DRAW LEFT AXIS;"
-      ""
-      "  SELECT"
-      "    'gross domestic product per country' as series,"
-      "    country as x,"
-      "    gbp as y"
-      "  FROM"
-      "    gbp_per_country"
-      "  LIMIT 30;";
-
-  QueryService query_service;
-  auto input = fnordmetric::util::StringInputStream::fromString(query);
-  auto output = fnordmetric::util::FileOutputStream::openFile(
-      "build/tests/tmp/QueryTest_TestQueryService_out.svg.html");
-
-  query_service.executeQuery(
-      input.get(),
-      QueryService::FORMAT_SVG,
-      output.get());
-
-  EXPECT_FILES_EQ(
-      "test/fixtures/QueryTest_TestQueryService_out.svg.html",
-      "build/tests/tmp/QueryTest_TestQueryService_out.svg.html");
-});
-
-
