@@ -10,6 +10,7 @@
 
 #ifndef _FNORDMETRIC_CANVAS_H
 #define _FNORDMETRIC_CANVAS_H
+#include <memory>
 #include <vector>
 #include <string>
 #include <tuple>
@@ -33,7 +34,7 @@ public:
   /**
    * FIXPAUL documentation
    */
-  template <typename ChartType, typename TX, typename TY, typename... Args>
+  template <typename ChartType, typename... Args>
   ChartType* addChart2D(Args... args) {
     auto drawable = new ChartType(this, args...);
     drawables_.emplace_back(drawable);
@@ -51,9 +52,10 @@ public:
    * @param axis_position the position of the new axis
    * @param domain the domain. does not transfer ownership
    */
+  template <typename T>
   AxisDefinition* addAxis(
       AxisDefinition::kPosition axis_position,
-      Domain* domain);
+      Domain<T>* domain);
 
   /**
    * Add an axis to this canvas. Usually axes are not specified manually using
