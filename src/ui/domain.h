@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_DOMAIN_H
 #define _FNORDMETRIC_DOMAIN_H
+#include <algorithm>
 #include <stdlib.h>
 #include <assert.h>
 #include "../util/format.h"
@@ -17,6 +17,7 @@
 namespace fnordmetric {
 namespace ui {
 
+template <typename T>
 class Domain {
 public:
   virtual ~Domain() {}
@@ -35,6 +36,8 @@ public:
    */
   virtual double offsetAt(int index) const = 0;
 
+  virtual double scale(T value) const = 0;
+
   /**
    * Returns the number of indexes of this domain
    */
@@ -42,7 +45,8 @@ public:
 
 };
 
-class NumericalDomain : public Domain {
+template <typename T>
+class NumericalDomain : public Domain<T> {
 public:
   static const int kDefaultCardinality = 6;
 
@@ -63,6 +67,9 @@ public:
     cardinality_(cardinality),
     is_logarithmic_(is_logarithmic) {}
 
+  double scale(T value) const override;
+
+/*
   double scale(double value) const {
     if (value <= min_value_) {
       return 0.0f;
@@ -74,6 +81,7 @@ public:
 
     return (value - min_value_) / (max_value_ - min_value_);
   }
+*/
 
   double valueAt(int index) const {
     return min_value_ + (max_value_ - min_value_) * offsetAt(index);
@@ -98,7 +106,8 @@ protected:
   bool is_logarithmic_;
 };
 
-class CategoricalDomain : public Domain {
+template <typename T>
+class CategoricalDomain : public Domain<T> {
 public:
 
   /**
@@ -113,6 +122,8 @@ public:
       return categories_[index];
     }
   }
+
+  double scale(T value) const override;
 
   double offsetAt(int index) const override {
     return (double) index / categories_.size() + (1 / categories_.size()) * 0.5;

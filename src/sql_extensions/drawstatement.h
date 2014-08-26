@@ -68,9 +68,9 @@ public:
 
   void execute(ui::Canvas* canvas);
 
-  template <typename T>
+  template <typename ChartBuilderType>
   void executeWithType(ui::Canvas* canvas) {
-    SeriesAdapter<T> series_adapter(canvas);
+    ChartBuilderType series_adapter(canvas);
 
     for (int i = 0; i < select_stmts_.size(); ++i) {
       const auto& stmt = select_stmts_[i];

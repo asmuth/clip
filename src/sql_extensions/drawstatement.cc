@@ -11,7 +11,6 @@
 #include "drawstatement.h"
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/barchart.h>
-#include <fnordmetric/ui/linechart.h>
 
 namespace fnordmetric {
 namespace query {
@@ -19,7 +18,7 @@ namespace query {
 void DrawStatement::execute(ui::Canvas* canvas) {
   switch (type_) {
     case T_BAR_CHART:
-      return executeWithType<ui::BarChart>(canvas);
+      return executeWithType<SeriesAdapter>(canvas);
     //case T_LINE_CHART:
     //  return executeWithType<ui::LineChart>(canvas);
   }

@@ -25,14 +25,15 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/runtimeexception.cc)
 
+#stage/src/fnordmetric/ui/areachart.cc
+#stage/src/fnordmetric/ui/linechart.cc
+#stage/src/fnordmetric/ui/pointchart.cc)
+
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
-    stage/src/fnordmetric/ui/areachart.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/barchart.cc
-    stage/src/fnordmetric/ui/canvas.cc
-    stage/src/fnordmetric/ui/linechart.cc
-    stage/src/fnordmetric/ui/pointchart.cc)
+    stage/src/fnordmetric/ui/canvas.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
@@ -71,7 +72,8 @@ set(FNORDMETRIC_CLI_SOURCES
 
 include_directories(stage/src)
 include_directories(stage/assets)
-set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "-std=c++0x")
+#set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
 add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})

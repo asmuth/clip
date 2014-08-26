@@ -12,6 +12,7 @@
 #define _FNORDMETRIC_QUERY_SVALUE_H
 #include <stdlib.h>
 #include <string>
+#include <string.h>
 #include <vector>
 #include <fnordmetric/util/runtimeexception.h>
 

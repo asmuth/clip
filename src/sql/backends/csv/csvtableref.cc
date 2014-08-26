@@ -9,6 +9,7 @@
  */
 
 #include <memory>
+#include <string.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/backends/csv/csvinputstream.h>
 #include <fnordmetric/sql/svalue.h>

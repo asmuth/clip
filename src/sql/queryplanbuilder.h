@@ -10,6 +10,7 @@
 
 #ifndef _FNORDMETRIC_SQL_QUERYPLANBUILDER_H
 #define _FNORDMETRIC_SQL_QUERYPLANBUILDER_H
+#include <memory>
 #include <stdlib.h>
 #include <string>
 #include <vector>

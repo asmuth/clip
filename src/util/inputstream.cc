@@ -9,6 +9,7 @@
  */
 
 #include <string>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <fnordmetric/util/inputstream.h>

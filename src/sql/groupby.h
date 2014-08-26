@@ -12,6 +12,7 @@
 #define _FNORDMETRIC_QUERY_GROUPBY_H
 #include <stdlib.h>
 #include <string>
+#include <string.h>
 #include <vector>
 #include <assert.h>
 #include "token.h"

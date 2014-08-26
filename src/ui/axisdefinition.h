@@ -7,16 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_AXISDEFINITION_H
 #define _FNORDMETRIC_AXISDEFINITION_H
 #include <utility>
 #include <string>
 #include <vector>
+#include "domain.h"
 
 namespace fnordmetric {
 namespace ui {
-class Domain;
 
 class AxisDefinition {
 public:
@@ -44,7 +43,8 @@ public:
    * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
    * @param domain the domain. does not transfer ownership
    */
-  AxisDefinition(kPosition axis_position, Domain* domain);
+  template <typename T>
+  AxisDefinition(kPosition axis_position, Domain<T>* domain);
 
   /**
    * Add a "tick" to this axis
@@ -108,6 +108,33 @@ protected:
   std::vector<double> ticks_;
   std::vector<std::pair<double, std::string>> labels_;
 };
+
+// FIXPAUL: use template specialization
+template <typename T>
+AxisDefinition::AxisDefinition(
+    kPosition axis_position,
+    Domain<T>* domain) :
+    position_(axis_position) {
+  auto numerical = dynamic_cast<NumericalDomain<T>*>(domain);
+
+  if (numerical == nullptr) {
+    int m = domain->getCardinality();
+
+    for (int n = 0; n < m; n++) {
+      double tick = domain->offsetAt(n);
+      addTick((double) n / m);
+      addLabel((double) n / m + (1.0f / (m + 1)) * 0.5, domain->labelAt(n));
+    }
+
+    addTick(1.0);
+  } else {
+    for (int n = 0; n < domain->getCardinality(); n++) {
+      double tick = domain->offsetAt(n);
+      addTick(tick);
+      addLabel(tick, domain->labelAt(n));
+    }
+  }
+}
 
 }
 }

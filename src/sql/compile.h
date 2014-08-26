@@ -12,6 +12,7 @@
 #define _FNORDMETRIC_QUERY_COMPILE_H
 #include <stdlib.h>
 #include <vector>
+#include <string>
 
 namespace fnordmetric {
 namespace query {

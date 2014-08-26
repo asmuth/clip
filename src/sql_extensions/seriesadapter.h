@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_QUERY_SERIESADAPTER_H
 #define _FNORDMETRIC_QUERY_SERIESADAPTER_H
 #include <stdlib.h>
@@ -15,6 +14,7 @@
 #include <unordered_map>
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/canvas.h>
+#include <fnordmetric/ui/barchart.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/compile.h>
 #include <fnordmetric/sql/execute.h>
@@ -43,7 +43,7 @@ public:
   int z_ind_;
 };
 
-template <typename T, typename TX, typename TY>
+template <typename TX, typename TY>
 class SeriesAdapter2D : public AbstractSeriesAdapter {
 public:
 
@@ -80,7 +80,9 @@ public:
   }
 
   ui::Drawable* getDrawable() override {
-    auto drawable = canvas_->addChart2D<T>();
+    auto x_domain = new ui::CategoricalDomain<TX>(); // FIXPAUL domain builder
+    auto y_domain = new ui::NumericalDomain<TY>(0, 100); // FIXPAUL domain builder
+    auto drawable = canvas_->addChart2D<ui::BarChart<TX, TY>>(x_domain, y_domain);
 
     for (const auto& series : series_list_) {
       drawable->addSeries(static_cast<Series2D<TX, TY>*>(series.get()));
@@ -95,7 +97,6 @@ protected:
   std::vector<std::unique_ptr<Series2D<TX, TY>>> series_list_;
 };
 
-template <typename T>
 class SeriesAdapter : public RowSink {
 public:
 
@@ -157,7 +158,7 @@ protected:
 
   AbstractSeriesAdapter* mkSeriesAdapter2D(SValue* x, SValue* y) {
     if (testSeriesSchema2D<double, double>(x, y)) {
-      return new SeriesAdapter2D<T, double, double>(
+      return new SeriesAdapter2D<double, double>(
           canvas_,
           name_ind_,
           x_ind_,
@@ -165,14 +166,14 @@ protected:
     }
 
     if (testSeriesSchema2D<std::string, double>(x, y)) {
-      return new SeriesAdapter2D<T, std::string, double>(
+      return new SeriesAdapter2D<std::string, double>(
           canvas_,
           name_ind_,
           x_ind_,
           y_ind_);
     }
 
-    return new SeriesAdapter2D<T, std::string, std::string>(
+    return new SeriesAdapter2D<std::string, std::string>(
         canvas_,
         name_ind_,
         x_ind_,

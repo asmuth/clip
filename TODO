@@ -1,3 +1,4 @@
+rename seriesadapter to chartbuilder
 cli output format
 linechart multiple series
 linechart string axis
@@ -38,6 +39,9 @@ v2.1.0
 
 
 RANDOM IDEAS
+
+- moving avg, etc
+- candlestick
 
 fnordmetric web:
     $ fnordmetric --web 8080   # standalone webserver on port 8080

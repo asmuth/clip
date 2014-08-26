@@ -381,9 +381,10 @@ std::string Canvas::renderSVG() const {
   return "fnord";
 }
 
+template <typename T>
 AxisDefinition* Canvas::addAxis(
     AxisDefinition::kPosition axis_position,
-    Domain* domain) {
+    Domain<T>* domain) {
   auto axis = new AxisDefinition(axis_position, domain);
   axes_.emplace_back(axis);
   return axis;
