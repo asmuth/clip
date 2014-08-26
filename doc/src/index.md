@@ -49,7 +49,7 @@ Table of Contents
   + [PHP](#)
   + [Python](#)
 
-+ Hacking
++ Appendix
   + [Contributing](#)
   + [Old Documentation](#)
   + [License](#)
@@ -118,6 +118,8 @@ Installing Fnordmetric
 
 Getting Started
 ---------------
+
+This chapter is for impatient people who don't like reading documentation. For more in-depth information you are kindly referred to the following chapters.
 
 As the first simple example we will create a bar chart that displays gross
 domestic product per country and looks like this:
