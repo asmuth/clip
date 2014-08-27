@@ -72,8 +72,8 @@ set(FNORDMETRIC_CLI_SOURCES
 
 include_directories(stage/src)
 include_directories(stage/assets)
-set(CMAKE_CXX_FLAGS "-std=c++0x")
-#set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+#set(CMAKE_CXX_FLAGS "-std=c++0x")
+set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
 add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
@@ -82,31 +82,31 @@ add_executable(fnordmetric
     ${FNORDMETRIC_CLI_SOURCES}
     stage/src/fnordmetric/main.cc)
 
-add_executable(tests/test-sql
-    ${FNORDMETRIC_QUERY_SOURCES}
-    stage/src/fnordmetric/sql/sql_test.cc)
-
-add_executable(tests/test-query
-    ${FNORDMETRIC_QUERY_SOURCES}
-    stage/src/fnordmetric/query/query_test.cc)
-
-add_executable(tests/test-ui
-    ${FNORDMETRIC_UI_SOURCES}
-    stage/src/fnordmetric/ui/ui_test.cc)
-
-add_executable(tests/test-cli
-    ${FNORDMETRIC_CLI_SOURCES}
-    stage/src/fnordmetric/cli/cli_test.cc)
-
-add_executable(tests/test-input-stream
-    ${FNORDMETRIC_SOURCES}
-    stage/src/fnordmetric/util/inputstream_test.cc)
-
-add_executable(tests/test-csv-backend
-    ${FNORDMETRIC_QUERY_SOURCES}
-    stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
-
-add_executable(tests/test-http
-    ${FNORDMETRIC_SOURCES}
-    stage/src/fnordmetric/http/http_test.cc)
-
+# add_executable(tests/test-sql
+#     ${FNORDMETRIC_QUERY_SOURCES}
+#     stage/src/fnordmetric/sql/sql_test.cc)
+# 
+# add_executable(tests/test-query
+#     ${FNORDMETRIC_QUERY_SOURCES}
+#     stage/src/fnordmetric/query/query_test.cc)
+# 
+# add_executable(tests/test-ui
+#     ${FNORDMETRIC_UI_SOURCES}
+#     stage/src/fnordmetric/ui/ui_test.cc)
+# 
+# add_executable(tests/test-cli
+#     ${FNORDMETRIC_CLI_SOURCES}
+#     stage/src/fnordmetric/cli/cli_test.cc)
+# 
+# add_executable(tests/test-input-stream
+#     ${FNORDMETRIC_SOURCES}
+#     stage/src/fnordmetric/util/inputstream_test.cc)
+# 
+# add_executable(tests/test-csv-backend
+#     ${FNORDMETRIC_QUERY_SOURCES}
+#     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
+# 
+# add_executable(tests/test-http
+#     ${FNORDMETRIC_SOURCES}
+#     stage/src/fnordmetric/http/http_test.cc)
+# 

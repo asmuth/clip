@@ -18,6 +18,16 @@ namespace fnordmetric {
 
 class Series {
 public:
+  template <typename T>
+  class Point {
+  public:
+    Point(T value) : value_(value) {}
+    T getValue() const { return value_; }
+    bool operator==(const Point<T>& other) { return value_ == other.value_; }
+  protected:
+    T value_;
+  };
+
   Series(const std::string& name) :
       name_(name) {}
 
@@ -53,7 +63,9 @@ public:
   }
 
 protected:
-  std::vector<std::tuple<X, Y>> data_;
+  std::vector<std::tuple<
+      Series::Point<X>,
+      Series::Point<Y>>> data_;
 };
 
 template <typename X, typename Y, typename Z>
@@ -66,12 +78,18 @@ public:
     data_.emplace_back(x, y, z);
   }
 
-  const std::vector<std::tuple<X, Y, Z>>& getData() const {
+  const std::vector<std::tuple<
+      Series::Point<X>,
+      Series::Point<Y>,
+      Series::Point<Z>>>& getData() const {
     return data_;
   }
 
 protected:
-  std::vector<std::tuple<X, Y, Z>> data_;
+  std::vector<std::tuple<
+      Series::Point<X>,
+      Series::Point<Y>,
+      Series::Point<Z>>> data_;
 };
 
 }

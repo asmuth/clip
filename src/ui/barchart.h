@@ -38,8 +38,8 @@ namespace ui {
  *   orientation        = {horizontal,vertical}, default: horizontal
  *   stacked            = {on,off}, default: off
  */
-template <typename TX, typename TY>
-class BarChart : public Drawable {
+template <typename TX, typename TY, typename TZ>
+class BarChart3D : public Drawable {
 public:
   enum kBarChartOrientation {
     O_VERTICAL,
@@ -56,12 +56,7 @@ public:
    * @param stack groups?
    * @param the y/value domain. does not transfer ownership
    */
-  BarChart(
-      Canvas* canvas,
-      Domain<TX>* x_domain,
-      Domain<TY>* y_domain,
-      kBarChartOrientation orientation = O_HORIZONTAL,
-      bool stacked = false);
+  BarChart3D(Canvas* canvas);
 
   /**
    * Add a (x: string, y: double) series. This will draw one bar for each point
@@ -70,7 +65,7 @@ public:
    *
    * @param series the series to add. does not transfer ownership
    */
-  void addSeries(Series2D<TX, TY>* series);
+  void addSeries(Series3D<TX, TY, TZ>* series);
 
   /**
    * Add an axis to the chart. This method should only be called after all
@@ -84,19 +79,20 @@ public:
    AxisDefinition* addAxis(AxisDefinition::kPosition position) override;
 
 protected:
-
   void render(
       RenderTarget* target,
       int width,
       int height,
       std::tuple<int, int, int, int>* padding) const override;
 
+/*
   void renderVerticalBars(
       RenderTarget* target,
       int width,
       int height,
       std::tuple<int, int, int, int>* padding) const;
 
+*/
   void renderHorizontalBars(
       RenderTarget* target,
       int width,
@@ -104,42 +100,32 @@ protected:
       std::tuple<int, int, int, int>* padding) const;
 
   struct BarData {
-    TX x;
-    std::vector<std::pair<double, TY>> ys;
-  };
+    BarData(const Series::Point<TX>& x_) : x(x_) {}
+    Series::Point<TX> x;
+    std::vector<std::pair<Series::Point<TY>, Series::Point<TZ>>> ys;
+   };
 
+  std::vector<BarData> data_;
   Canvas* canvas_;
   kBarChartOrientation orientation_;
   bool stacked_;
-  Domain<TX>* x_domain_;
-  Domain<TY>* y_domain_;
-  std::vector<BarData> data_;
   int num_series_;
-  std::vector<std::string> series_colors_;
 };
 
-template <typename TX, typename TY>
-BarChart<TX, TY>::BarChart(
-    Canvas* canvas,
-    Domain<TX>* x_domain,
-    Domain<TY>* y_domain,
-    kBarChartOrientation orientation /* = O_HORIZONTAL */,
-    bool stacked /* = false */) :
+template <typename TX, typename TY, typename TZ>
+BarChart3D<TX, TY, TZ>::BarChart3D(
+    Canvas* canvas) :
     canvas_(canvas),
-    x_domain_(x_domain),
-    y_domain_(y_domain),
-    orientation_(orientation),
-    stacked_(stacked),
     num_series_(0) {}
 
-
-template <typename TX, typename TY>
-void BarChart<TX, TY>::addSeries(Series2D<TX, TY>* series) {
-  series_colors_.emplace_back(seriesColor(series));
+template <typename TX, typename TY, typename TZ>
+void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
+  //series_colors_.emplace_back(seriesColor(series));
 
   for (const auto& point : series->getData()) {
     const auto& x_val = std::get<0>(point);
     const auto& y_val = std::get<1>(point);
+    const auto& z_val = std::get<2>(point);
 
     BarData* bar_data = nullptr;
 
@@ -150,25 +136,25 @@ void BarChart<TX, TY>::addSeries(Series2D<TX, TY>* series) {
     }
 
     if (bar_data == nullptr) {
-      data_.emplace_back();
+      data_.emplace_back(x_val);
       bar_data = &data_.back();
-      bar_data->x = x_val;
     }
 
     if (bar_data->ys.size() < num_series_ + 1) {
       for (int i = bar_data->ys.size(); i < num_series_; ++i) {
-        bar_data->ys.emplace_back(0, 0);
+      //  bar_data->ys.emplace_back(0, 0);
       }
 
-      // bar_data->ys.emplace_back(0, y_val);
+      bar_data->ys.emplace_back(y_val, z_val);
     }
   }
 
   num_series_++;
 }
 
-template <typename TX, typename TY>
-AxisDefinition*  BarChart<TX, TY>::addAxis(AxisDefinition::kPosition position) {
+template <typename TX, typename TY, typename TZ>
+AxisDefinition*  BarChart3D<TX, TY, TZ>::addAxis(AxisDefinition::kPosition position) {
+  /*
   switch (position) {
 
     case AxisDefinition::TOP:
@@ -204,34 +190,35 @@ AxisDefinition*  BarChart<TX, TY>::addAxis(AxisDefinition::kPosition position) {
       }
 
   }
+  */
 }
 
-template <typename TX, typename TY>
-void BarChart<TX, TY>::render(
+template <typename TX, typename TY, typename TZ>
+void BarChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     int width,
     int height,
     std::tuple<int, int, int, int>* padding) const {
   if (data_.size() == 0) {
-    RAISE(util::RuntimeException, "BarChart#render called without any data");
+    RAISE(util::RuntimeException, "BarChart3D#render called without any data");
   }
 
-  switch (orientation_) {
-    case O_VERTICAL:
-      target->beginGroup("bars vertical");
-      renderVerticalBars(target, width, height, padding);
-      target->finishGroup();
-      break;
-    case O_HORIZONTAL:
+  //switch (O_VERTICAL) {
+  //  case O_VERTICAL:
+  //    target->beginGroup("bars vertical");
+  //    renderVerticalBars(target, width, height, padding);
+  //    target->finishGroup();
+  //    break;
+    //case O_HORIZONTAL:
       target->beginGroup("bars horizontal");
       renderHorizontalBars(target, width, height, padding);
       target->finishGroup();
-      break;
-  }
+      //break;
+  //}
 }
 
-template <typename TX, typename TY>
-void BarChart<TX, TY>::renderVerticalBars(
+template <typename TX, typename TY, typename TZ>
+void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     RenderTarget* target,
     int width,
     int height,
@@ -243,130 +230,45 @@ void BarChart<TX, TY>::renderVerticalBars(
   auto padding_left = std::get<3>(*padding);
   auto inner_width = width - padding_right - padding_left;
   auto inner_height = height - padding_top - padding_bottom;
-  auto bar_width = (inner_width / data_.size()) * (1.0f - kBarPadding);
-  auto bar_padding = (inner_width / data_.size()) * (kBarPadding * 0.5f);
-  bar_width -= bar_padding / data_.size() * 2;
+
+  //auto bar_height = (inner_height / data_.size()) * (1.0f - kBarPadding);
+  //auto bar_padding = (inner_height / data_.size()) * (kBarPadding * 0.5f);
+  //bar_height -= bar_padding / data_.size() * 2;
 
   /* draw the bars */
-  std::vector<double> x_ticks = {0.0f};
-  auto draw_x = padding_left + bar_padding;
-  auto draw_width = bar_width;
-  auto y_domain = y_domain_;
-  for (const auto& bar : data_) {
-    draw_x += bar_padding;
+  //std::vector<double> y_ticks = {0.0f};
+  //std::vector<std::pair<double, std::string>> y_labels;
 
-    /* single series */
+  //auto draw_y = padding_top + bar_padding;
+  //auto draw_height = bar_height;
+  //auto y_domain = y_domain_;
+
+  for (const auto& bar : data_) {
+    //draw_y += bar_padding;
+
+    /* unstacked */
     if (num_series_ == 1) {
-      //auto y_min = y_domain->scale(bar.ys[0].first);
-      double y_min = 0; // FIXPAUL
-      auto y_max = y_domain->scale(bar.ys[0].second);
-      auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
-      auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
+      //auto& y_val = bar.ys[0];
+      //auto min = y_domain->scale(bar.ys[0].first);
+      //auto max = z_domain->scale(bar.ys[0].second);
+      auto draw_y = 0.5;
+      auto draw_height = 10;
+      auto min = 0.1;
+      auto max = 0.7;
+      auto draw_x = padding_left + min * inner_width;
+      auto draw_width = (max - min) * inner_width;
+
       target->drawRect(
           draw_x,
           draw_y,
           draw_width,
           draw_height,
-          series_colors_[0],
+          "#000000"
           "bar");
     }
 
-    /* multi series stacked */
-    else if (stacked_) {
-      double y_min = 0.0f;
-      double y_max = 0.0f;
-      for (int i = 0; i < bar.ys.size(); i++) {
-        auto& y_val = bar.ys[i];
-        y_max += y_val.second - y_val.first;
-        auto draw_y = padding_top + 
-            ((1.0f - y_domain->scale(y_max)) * inner_height);
-        auto draw_height = (1.0f - ((1.0f - y_domain->scale(y_max)) +
-            y_domain->scale(y_min))) * inner_height;
-
-        target->drawRect(
-            draw_x,
-            draw_y,
-            draw_width,
-            draw_height,
-            series_colors_[i],
-            "bar");
-
-        y_min += y_val.second - y_val.first;
-      }
-    }
-
-    /* multi series unstacked */
-    else {
-      auto draw_x_multi = draw_x;
-      auto draw_width_multi = draw_width / (double) num_series_;
-      for (int i = 0; i < bar.ys.size(); i++) {
-      auto y_min = y_domain->scale(bar.ys[i].first);
-      auto y_max = y_domain->scale(bar.ys[i].second);
-        auto draw_y = padding_top + ((1.0f - y_max) * inner_height);
-        auto draw_height = (1.0f - ((1.0f - y_max) + y_min)) * inner_height;
-
-        target->drawRect(
-            draw_x_multi,
-            draw_y,
-            draw_width_multi * (1.0f - kBarPadding * 0.5f),
-            draw_height,
-            series_colors_[i],
-            "bar");
-
-        draw_x_multi += (draw_width_multi * (1.0f + kBarPadding * 0.5f));
-      }
-    }
-
-    draw_x += bar_width + bar_padding;
-  }
-}
-
-template <typename TX, typename TY>
-void BarChart<TX, TY>::renderHorizontalBars(
-    RenderTarget* target,
-    int width,
-    int height,
-    std::tuple<int, int, int, int>* padding) const {
-  /* calculate bar width and padding */
-  auto padding_top = std::get<0>(*padding);
-  auto padding_right = std::get<1>(*padding);
-  auto padding_bottom = std::get<2>(*padding);
-  auto padding_left = std::get<3>(*padding);
-  auto inner_width = width - padding_right - padding_left;
-  auto inner_height = height - padding_top - padding_bottom;
-  auto bar_height = (inner_height / data_.size()) * (1.0f - kBarPadding);
-  auto bar_padding = (inner_height / data_.size()) * (kBarPadding * 0.5f);
-  bar_height -= bar_padding / data_.size() * 2;
-
-  /* draw the bars */
-  std::vector<double> y_ticks = {0.0f};
-  std::vector<std::pair<double, std::string>> y_labels;
-  auto draw_y = padding_top + bar_padding;
-  auto draw_height = bar_height;
-  auto y_domain = y_domain_;
-  for (const auto& bar : data_) {
-    draw_y += bar_padding;
-
-    /* single series */
-    if (num_series_ == 1) {
-      auto& y_val = bar.ys[0];
-      //auto y_min = y_domain->scale(bar.ys[0].first);
-      double y_min = 0.0f; // FIXPAUL
-      auto y_max = y_domain->scale(bar.ys[0].second);
-      auto draw_x = padding_left + y_min * inner_width;
-      auto draw_width = (y_max - y_min) * inner_width;
-
-      target->drawRect(
-          draw_x,
-          draw_y,
-          draw_width,
-          draw_height, 
-          series_colors_[0],
-          "bar");
-    }
-
-    /* multi series stacked */
-    else if (stacked_) {
+    /* stacked */
+    /*else if (stacked_) {
       double y_min = 0.0f;
       double y_max = 0.0f;
       for (int i = 0; i < bar.ys.size(); i++) {
@@ -385,10 +287,10 @@ void BarChart<TX, TY>::renderHorizontalBars(
 
         y_min += y_val.second - y_val.first;
       }
-    }
+    }*/
 
     /* multi series unstacked */
-    else {
+    /*else {
       auto draw_y_multi = draw_y;
       auto draw_height_multi = draw_height / num_series_;
       for (int i = 0; i < bar.ys.size(); i++) {
@@ -409,13 +311,11 @@ void BarChart<TX, TY>::renderHorizontalBars(
 
         draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
       }
-    }
+    }*/
 
-    draw_y += bar_height + bar_padding;
+    //draw_y += bar_height + bar_padding;
   }
 }
-
-
 
 }
 }

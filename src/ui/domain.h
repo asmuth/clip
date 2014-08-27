@@ -67,7 +67,7 @@ public:
     cardinality_(cardinality),
     is_logarithmic_(is_logarithmic) {}
 
-  double scale(T value) const override;
+  double scale(T value) const;
 
 /*
   double scale(double value) const {
@@ -91,11 +91,11 @@ public:
     return (double) index / (double) cardinality_;
   }
 
-  std::string labelAt(int index) const override {
+  std::string labelAt(int index) const {
     return util::format::numberToHuman(valueAt(index));
   }
 
-  int getCardinality() const override {
+  int getCardinality() const {
     return cardinality_ + 1;
   }
 
@@ -115,7 +115,7 @@ public:
    */
   CategoricalDomain() {}
 
-  std::string labelAt(int index) const override {
+  std::string labelAt(int index) const {
     if (index < 0 && index > categories_.size() - 1) {
       return "n/a";
     } else {
@@ -123,13 +123,13 @@ public:
     }
   }
 
-  double scale(T value) const override;
+  double scale(T value) const;
 
-  double offsetAt(int index) const override {
+  double offsetAt(int index) const {
     return (double) index / categories_.size() + (1 / categories_.size()) * 0.5;
   }
 
-  int getCardinality() const override {
+  int getCardinality() const {
     return categories_.size();
   }
 
