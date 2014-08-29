@@ -58,16 +58,14 @@ public:
    * @param logarithmic is this domain a logarithmic domain?
    */
   NumericalDomain(
-    T min_value,
-    T max_value,
+    T min_value = 0,
+    T max_value = 0,
     bool is_logarithmic = false) :
     min_value_(min_value),
     max_value_(max_value),
     is_logarithmic_(is_logarithmic) {}
 
   double scale(T value) const {
-    return 0.6;
-    /*
     if (value <= min_value_) {
       return 0.0f;
     }
@@ -77,7 +75,6 @@ public:
     }
 
     return (value - min_value_) / (max_value_ - min_value_);
-    */
   }
 
   std::string label(T value) const {
@@ -86,7 +83,17 @@ public:
   }
 
   std::pair<double, double> scaleRange(T value) const {
-    return std::make_pair(0,0);
+    return std::make_pair(0, 0);
+  }
+
+  void addValue(T value) {
+    if (value > max_value_) {
+      max_value_ = value;
+    }
+
+    if (value < min_value_) {
+      min_value_ = value;
+    }
   }
 
 protected:
@@ -156,6 +163,16 @@ public:
 protected:
   std::vector<T> categories_;
 };
+
+/*
+template <typename T>
+class DomainAdapter {
+public:
+  DomainAdapter() {};
+
+protected:
+};
+*/
 
 }
 }

@@ -96,9 +96,12 @@ protected:
     BarData(const Series::Point<TX>& x_) : x(x_) {}
     Series::Point<TX> x;
     std::vector<std::pair<Series::Point<TY>, Series::Point<TZ>>> ys;
-   };
-
+  };
   std::vector<BarData> data_;
+
+  //DomainAdapter x_domain_;
+  //DomainAdapter y_domain_;
+
   Canvas* canvas_;
   kBarChartOrientation orientation_;
   bool stacked_;
@@ -111,6 +114,7 @@ BarChart3D<TX, TY, TZ>::BarChart3D(
     canvas_(canvas),
     num_series_(0) {}
 
+// FIXPAUL enforce that TY == TZ
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   //series_colors_.emplace_back(seriesColor(series));
@@ -120,8 +124,11 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     const auto& y_val = std::get<1>(point);
     const auto& z_val = std::get<2>(point);
 
-    BarData* bar_data = nullptr;
+    printf("adddata: y=%s,z=%s\n",
+        std::to_string(y_val.value()).c_str(),
+        std::to_string(z_val.value()).c_str());
 
+    BarData* bar_data = nullptr;
     for (auto& candidate : data_) {
       if (candidate.x == x_val) {
         bar_data = &candidate;
@@ -232,19 +239,35 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     x_domain.addCategory(bar.x.value());
   }
 
+  NumericalDomain<TY> y_domain;
+  for (const auto& bar : data_) {
+    y_domain.addValue(bar.ys[0].first.value());
+    y_domain.addValue(static_cast<TY>(bar.ys[0].second.value()));
+  }
+
   //axes->emplace_back(AxisDefinition::LEFT, &x_domain);
 
   for (const auto& bar : data_) {
     //draw_y += bar_padding;
     auto x = x_domain.scaleRange(bar.x.value());
-    printf("x: %f - %f\n", x.first, x.second);
+    //printf("x: %f - %f\n", x.first, x.second);
 
     //if (num_series_ == 1) {
-      //auto& y_val = bar.ys[0];
-      //auto min = y_domain->scale(bar.ys[0].first);
-      //auto max = z_domain->scale(bar.ys[0].second);
-      auto y_min = 0.1;
-      auto y_max = 0.7;
+
+    printf("renderdata: y=%s,z=%s\n",
+        std::to_string(bar.ys[0].first.value()).c_str(),
+        std::to_string(bar.ys[0].second.value()).c_str());
+
+      auto y_min = y_domain.scale(bar.ys[0].first.value());
+      auto y_max = y_domain.scale(static_cast<TY>(bar.ys[0].second.value()));
+
+      printf("y: %f - %f\n", y_min, y_max);
+      if (!(y_min <= y_max)) { // doubles are funny...
+        RAISE(
+            util::RuntimeException,
+            "BarChart error: invalid point in series. Z value must be greater "
+            "or equal to Y value for all points");
+      }
 
       auto dx = viewport->paddingLeft() + y_min * viewport->innerWidth();
       auto dy = viewport->paddingTop() + x.first * viewport->innerHeight();

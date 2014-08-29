@@ -52,6 +52,7 @@ protected:
 
   virtual void render(RenderTarget* target, Viewport* viewport) const = 0;
 
+
   int color_index_;
 };
 
