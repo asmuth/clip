@@ -80,12 +80,68 @@ public:
   }
 
   ui::Drawable* getDrawable() override {
+    printf("getDrawable called\n");
+    abort();
     auto x_domain = new ui::CategoricalDomain<TX>(); // FIXPAUL domain builder
     auto y_domain = new ui::NumericalDomain<TY>(0, 100); // FIXPAUL domain builder
-    auto drawable = canvas_->addChart2D<ui::BarChart<TX, TY>>(x_domain, y_domain);
+    //auto drawable = canvas_->addChart2D<ui::BarChart2D<TX, TY>>(x_domain, y_domain);
+
+    //for (const auto& series : series_list_) {
+    //  drawable->addSeries(static_cast<Series2D<TX, TY>*>(series.get()));
+    //}
+
+    //return drawable;
+  }
+
+protected:
+  ui::Canvas* canvas_;
+  std::unordered_map<std::string, Series2D<TX, TY>*> series_map_;
+  std::vector<std::unique_ptr<Series2D<TX, TY>>> series_list_;
+};
+
+template <typename TX, typename TY, typename TZ>
+class SeriesAdapter3D : public AbstractSeriesAdapter {
+public:
+
+  SeriesAdapter3D(
+      ui::Canvas* canvas,
+      int name_ind,
+      int x_ind,
+      int y_ind,
+      int z_ind) :
+      canvas_(canvas),
+      AbstractSeriesAdapter(name_ind, x_ind, y_ind, z_ind) {}
+
+  bool nextRow(SValue* row, int row_len) override {
+    std::string name = "unnamed";
+
+    if (name_ind_ >= 0) {
+      name = row[name_ind_].template getValue<std::string>();
+    }
+
+    Series3D<TX, TY, TZ>* series = nullptr;
+    const auto& series_iter = series_map_.find(name);
+    if (series_iter == series_map_.end()) {
+      series = new Series3D<TX, TY, TZ>(name);
+      series_map_.emplace(name, series);
+      series_list_.emplace_back(series);
+    } else {
+      series = series_iter->second;
+    }
+
+    series->addDatum(
+        row[x_ind_].template getValue<TX>(),
+        row[y_ind_].template getValue<TY>(),
+        row[z_ind_].template getValue<TZ>());
+
+    return true;
+  }
+
+  ui::Drawable* getDrawable() override {
+    auto drawable = canvas_->addChart<ui::BarChart3D<TX, TY, TZ>>();
 
     for (const auto& series : series_list_) {
-      drawable->addSeries(static_cast<Series2D<TX, TY>*>(series.get()));
+      drawable->addSeries(static_cast<Series3D<TX, TY, TZ>*>(series.get()));
     }
 
     return drawable;
@@ -93,8 +149,8 @@ public:
 
 protected:
   ui::Canvas* canvas_;
-  std::unordered_map<std::string, Series2D<TX, TY>*> series_map_;
-  std::vector<std::unique_ptr<Series2D<TX, TY>>> series_list_;
+  std::unordered_map<std::string, Series3D<TX, TY, TZ>*> series_map_;
+  std::vector<std::unique_ptr<Series3D<TX, TY, TZ>>> series_list_;
 };
 
 class SeriesAdapter : public RowSink {
@@ -125,9 +181,10 @@ public:
       if (z_ind_ < 0) {
         adapter_.reset(mkSeriesAdapter2D(row + x_ind_, row + y_ind_));
       } else {
-        RAISE(
-            util::RuntimeException,
-            "3D series not implemented yet");
+        adapter_.reset(mkSeriesAdapter3D(
+            row + x_ind_,
+            row + y_ind_,
+            row + z_ind_));
       }
     } else {
       adapter_->name_ind_ = name_ind_;
@@ -156,6 +213,7 @@ public:
 
 protected:
 
+  // FIXPAUL: this should be generated!
   AbstractSeriesAdapter* mkSeriesAdapter2D(SValue* x, SValue* y) {
     if (testSeriesSchema2D<double, double>(x, y)) {
       return new SeriesAdapter2D<double, double>(
@@ -178,11 +236,32 @@ protected:
         name_ind_,
         x_ind_,
         y_ind_);
+
+    assert(0);
+  }
+
+  // FIXPAUL: this should be generated!
+  AbstractSeriesAdapter* mkSeriesAdapter3D(SValue* x, SValue* y, SValue* z) {
+    if (testSeriesSchema3D<std::string, double, double>(x, y, z)) {
+      return new SeriesAdapter3D<std::string, double, double>(
+          canvas_,
+          name_ind_,
+          x_ind_,
+          y_ind_,
+          z_ind_);
+    }
+
+    assert(0);
   }
 
   template <typename TX, typename TY>
   bool testSeriesSchema2D(SValue* x, SValue* y) const {
     return (x->testType<TX>() && y->testType<TY>());
+  }
+
+  template <typename TX, typename TY, typename TZ>
+  bool testSeriesSchema3D(SValue* x, SValue* y, SValue* z) const {
+    return (x->testType<TX>() && y->testType<TY>() && y->testType<TZ>());
   }
 
   int name_ind_;
