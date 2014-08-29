@@ -79,11 +79,8 @@ public:
    AxisDefinition* addAxis(AxisDefinition::kPosition position) override;
 
 protected:
-  void render(
-      RenderTarget* target,
-      int width,
-      int height,
-      std::tuple<int, int, int, int>* padding) const override;
+
+  void render(RenderTarget* target, Viewport* viewport) const override;
 
 /*
   void renderVerticalBars(
@@ -93,11 +90,7 @@ protected:
       std::tuple<int, int, int, int>* padding) const;
 
 */
-  void renderHorizontalBars(
-      RenderTarget* target,
-      int width,
-      int height,
-      std::tuple<int, int, int, int>* padding) const;
+  void renderHorizontalBars(RenderTarget* target, Viewport* viewport) const;
 
   struct BarData {
     BarData(const Series::Point<TX>& x_) : x(x_) {}
@@ -196,9 +189,7 @@ AxisDefinition*  BarChart3D<TX, TY, TZ>::addAxis(AxisDefinition::kPosition posit
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
-    int width,
-    int height,
-    std::tuple<int, int, int, int>* padding) const {
+    Viewport* viewport) const {
   if (data_.size() == 0) {
     RAISE(util::RuntimeException, "BarChart3D#render called without any data");
   }
@@ -210,9 +201,7 @@ void BarChart3D<TX, TY, TZ>::render(
   //    target->finishGroup();
   //    break;
     //case O_HORIZONTAL:
-      target->beginGroup("bars horizontal");
-      renderHorizontalBars(target, width, height, padding);
-      target->finishGroup();
+      renderHorizontalBars(target, viewport);
       //break;
   //}
 }
@@ -220,17 +209,8 @@ void BarChart3D<TX, TY, TZ>::render(
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     RenderTarget* target,
-    int width,
-    int height,
-    std::tuple<int, int, int, int>* padding) const {
+    Viewport* viewport) const {
   /* calculate bar width and padding */
-  auto padding_top = std::get<0>(*padding);
-  auto padding_right = std::get<1>(*padding);
-  auto padding_bottom = std::get<2>(*padding);
-  auto padding_left = std::get<3>(*padding);
-  auto inner_width = width - padding_right - padding_left;
-  auto inner_height = height - padding_top - padding_bottom;
-
   //auto bar_height = (inner_height / data_.size()) * (1.0f - kBarPadding);
   //auto bar_padding = (inner_height / data_.size()) * (kBarPadding * 0.5f);
   //bar_height -= bar_padding / data_.size() * 2;
@@ -243,29 +223,36 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
   //auto draw_height = bar_height;
   //auto y_domain = y_domain_;
 
+  //target->beginGroup("bars horizontal");
+  //target->finishGroup();
+
+  /* prepare x domain --- FIXPAUL move somewhere else */
+  CategoricalDomain<TX> x_domain;
+  for (const auto& bar : data_) {
+    x_domain.addCategory(bar.x.value());
+  }
+
+  //axes->emplace_back(AxisDefinition::LEFT, &x_domain);
+
   for (const auto& bar : data_) {
     //draw_y += bar_padding;
+    auto x = x_domain.scaleRange(bar.x.value());
+    printf("x: %f - %f\n", x.first, x.second);
 
-    /* unstacked */
-    if (num_series_ == 1) {
+    //if (num_series_ == 1) {
       //auto& y_val = bar.ys[0];
       //auto min = y_domain->scale(bar.ys[0].first);
       //auto max = z_domain->scale(bar.ys[0].second);
-      auto draw_y = 0.5;
-      auto draw_height = 10;
-      auto min = 0.1;
-      auto max = 0.7;
-      auto draw_x = padding_left + min * inner_width;
-      auto draw_width = (max - min) * inner_width;
+      auto y_min = 0.1;
+      auto y_max = 0.7;
 
-      target->drawRect(
-          draw_x,
-          draw_y,
-          draw_width,
-          draw_height,
-          "#000000"
-          "bar");
-    }
+      auto dx = viewport->paddingLeft() + y_min * viewport->innerWidth();
+      auto dy = viewport->paddingTop() + x.first * viewport->innerHeight();
+      auto dw = (y_max - y_min) * viewport->innerWidth();
+      auto dh = (x.second - x.first) * viewport->innerHeight();
+
+      target->drawRect(dx, dy, dw, dh, "#000000", "bar");
+    //}
 
     /* stacked */
     /*else if (stacked_) {

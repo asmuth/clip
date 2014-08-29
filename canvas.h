@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_CANVAS_H
 #define _FNORDMETRIC_CANVAS_H
 #include <memory>
@@ -32,7 +31,7 @@ public:
   Canvas();
 
   /**
-   * FIXPAUL documentation
+   * FIXPAUL overcomplicated, just accept a ptr
    */
   template <typename ChartType, typename... Args>
   ChartType* addChart(Args... args) {
@@ -46,28 +45,9 @@ public:
    * this method but through one of the Chart subclasses. However it is safe
    * to call this method to explicitly define a custom axis.
    *
-   * The returned pointer is owned by the canvas instance and must not be freed
-   * by the caller.
-   *
-   * @param axis_position the position of the new axis
-   * @param domain the domain. does not transfer ownership
+   * @param axis the axis definition -- does not transfer ownership!
    */
-  template <typename T>
-  AxisDefinition* addAxis(
-      AxisDefinition::kPosition axis_position,
-      Domain<T>* domain);
-
-  /**
-   * Add an axis to this canvas. Usually axes are not specified manually using
-   * this method but through one of the Chart subclasses. However it is safe
-   * to call this method to explicitly define a custom axis.
-   *
-   * The returned pointer is owned by the canvas instance and must not be freed
-   * by the caller.
-   *
-   * @param axis_position the position of the new axis
-   */
-  AxisDefinition* addAxis(AxisDefinition::kPosition axis_position);
+  void addAxis(AxisDefinition* axis);
 
   /**
    * Render the contents of this canvas to the provided render target
@@ -88,13 +68,8 @@ protected:
 
   /**
    * Render the axes
-   *
-   * @param target the render target
-   * @param padding the padding state
    */
-  void renderAxes(
-      RenderTarget* target,
-      std::tuple<int, int, int, int>* padding) const;
+  void renderAxes(RenderTarget* target, Viewport* viewport) const;
 
   /**
    * Render a top axis
@@ -152,9 +127,10 @@ protected:
       std::tuple<int, int, int, int>* padding,
       int left) const;
 
+  // FIXPAUL this belongs into the rendertarget
   int width_;
   int height_;
-  std::vector<std::unique_ptr<AxisDefinition>> axes_;
+  std::vector<AxisDefinition*> axes_;
   std::vector<std::unique_ptr<Drawable>> drawables_;
 };
 

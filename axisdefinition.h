@@ -43,8 +43,7 @@ public:
    * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
    * @param domain the domain. does not transfer ownership
    */
-  template <typename T>
-  AxisDefinition(kPosition axis_position, Domain<T>* domain);
+  AxisDefinition(kPosition axis_position, AnyDomain* domain);
 
   /**
    * Add a "tick" to this axis
@@ -110,7 +109,7 @@ protected:
 };
 
 // FIXPAUL: use template specialization
-template <typename T>
+/*template <typename T>
 AxisDefinition::AxisDefinition(
     kPosition axis_position,
     Domain<T>* domain) :
@@ -135,6 +134,7 @@ AxisDefinition::AxisDefinition(
     }
   }
 }
+*/
 
 }
 }

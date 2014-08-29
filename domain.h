@@ -17,8 +17,16 @@
 namespace fnordmetric {
 namespace ui {
 
+/**
+ * Untyped domain base class
+ */
+class AnyDomain {
+public:
+
+};
+
 template <typename T>
-class Domain {
+class Domain : public AnyDomain {
 public:
   virtual ~Domain() {}
 
@@ -27,21 +35,13 @@ public:
    *
    * @param index the index
    */
-  virtual std::string labelAt(int index) const = 0;
-
-  /**
-   * Returns the 0-1 axis offset of the index
-   *
-   * @param index the index
-   */
-  virtual double offsetAt(int index) const = 0;
+  virtual std::string label(T value) const = 0;
 
   virtual double scale(T value) const = 0;
 
-  /**
-   * Returns the number of indexes of this domain
-   */
-  virtual int getCardinality() const = 0;
+  virtual std::pair<double, double> scaleRange(T value) const = 0;
+
+  //virtual bool contains(T value) const = 0;
 
 };
 
@@ -58,19 +58,16 @@ public:
    * @param logarithmic is this domain a logarithmic domain?
    */
   NumericalDomain(
-    double min_value,
-    double max_value,
-    int cardinality = kDefaultCardinality,
+    T min_value,
+    T max_value,
     bool is_logarithmic = false) :
     min_value_(min_value),
     max_value_(max_value),
-    cardinality_(cardinality),
     is_logarithmic_(is_logarithmic) {}
 
-  double scale(T value) const;
-
-/*
-  double scale(double value) const {
+  double scale(T value) const {
+    return 0.6;
+    /*
     if (value <= min_value_) {
       return 0.0f;
     }
@@ -80,29 +77,21 @@ public:
     }
 
     return (value - min_value_) / (max_value_ - min_value_);
-  }
-*/
-
-  double valueAt(int index) const {
-    return min_value_ + (max_value_ - min_value_) * offsetAt(index);
+    */
   }
 
-  double offsetAt(int index) const {
-    return (double) index / (double) cardinality_;
+  std::string label(T value) const {
+    return "fu";
+    //return util::format::numberToHuman(valueAt(index));
   }
 
-  std::string labelAt(int index) const {
-    return util::format::numberToHuman(valueAt(index));
-  }
-
-  int getCardinality() const {
-    return cardinality_ + 1;
+  std::pair<double, double> scaleRange(T value) const {
+    return std::make_pair(0,0);
   }
 
 protected:
   double min_value_;
   double max_value_;
-  int cardinality_;
   bool is_logarithmic_;
 };
 
@@ -115,37 +104,57 @@ public:
    */
   CategoricalDomain() {}
 
-  std::string labelAt(int index) const {
-    if (index < 0 && index > categories_.size() - 1) {
-      return "n/a";
-    } else {
-      return categories_[index];
+  std::string label(T value) const {
+    //if (index < 0 && index > categories_.size() - 1) {
+    //  return "n/a";
+    //} else {
+      return "fnord";
+      //return categories_[index];
+    //}
+  }
+
+  double scale(T value) const {
+    size_t index = categories_.end() - std::find(
+        categories_.begin(),
+        categories_.end(),
+        value);
+
+    if (index < 1) {
+      RAISE(util::RuntimeException, "can't scale value");
     }
+
+    return index;
   }
 
-  double scale(T value) const;
+  std::pair<double, double> scaleRange(T value) const {
+    size_t index = categories_.end() - std::find(
+        categories_.begin(),
+        categories_.end(),
+        value);
 
-  double offsetAt(int index) const {
-    return (double) index / categories_.size() + (1 / categories_.size()) * 0.5;
+    if (index < 1) {
+      RAISE(util::RuntimeException, "can't scale value");
+    }
+
+    double cardinality = (double) categories_.size();
+    return std::make_pair(
+        (double) (index - 1) / cardinality,
+        (double) index / cardinality);
   }
 
-  int getCardinality() const {
-    return categories_.size();
-  }
-
-  void addCategory(const std::string& category) {
-    bool exists = std::find(
+  void addCategory(const T& category) {
+    bool insert = std::find(
         categories_.begin(),
         categories_.end(),
         category) == categories_.end();
 
-    if (exists) {
+    if (insert) {
       categories_.emplace_back(category);
     }
   }
 
 protected:
-  std::vector<std::string> categories_;
+  std::vector<T> categories_;
 };
 
 }
