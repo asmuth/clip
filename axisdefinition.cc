@@ -15,24 +15,33 @@ namespace ui {
 
 AxisDefinition::AxisDefinition(
     kPosition axis_position) :
-    position_(axis_position) {}
+    AxisDefinition(axis_position, nullptr) {}
 
 AxisDefinition::AxisDefinition(
     kPosition axis_position,
-    AnyDomain* domain) :
-    position_(axis_position) {}
+    DomainAdapter* domain) :
+    position_(axis_position),
+    domain_(domain),
+    has_ticks_(false),
+    has_labels_(false) {}
 
 void AxisDefinition::addTick(double tick_position) {
+  has_ticks_ = true;
   ticks_.push_back(tick_position);
 }
 
-const std::vector<double>& AxisDefinition::getTicks() const {
-  return ticks_;
+const std::vector<double> AxisDefinition::getTicks() const {
+  if (has_ticks_ || domain_ == nullptr) {
+    return ticks_;
+  }
+
+  return domain_->getTicks();
 }
 
 void AxisDefinition::addLabel(
     double label_position,
     const std::string& label_text) {
+  has_labels_ = true;
   labels_.emplace_back(label_position, label_text);
 }
 
@@ -40,13 +49,17 @@ void AxisDefinition::removeLabels() {
   labels_.clear();
 }
 
-const std::vector<std::pair<double, std::string>>& AxisDefinition::getLabels()
+const std::vector<std::pair<double, std::string>> AxisDefinition::getLabels()
     const {
-  return labels_;
+  if (has_labels_ || domain_ == nullptr) {
+    return labels_;
+  }
+
+  return domain_->getLabels();
 }
 
 bool AxisDefinition::hasLabels() const {
-  return labels_.size() > 0;
+  return has_labels_ || domain_ != nullptr;
 }
 
 AxisDefinition::kPosition AxisDefinition::getPosition() const {
@@ -63,6 +76,10 @@ const std::string& AxisDefinition::getTitle() {
 
 bool AxisDefinition::hasTitle() const {
   return title_.length() > 0;
+}
+
+void AxisDefinition::setDomain(DomainAdapter* domain) {
+  domain_ = domain;
 }
 
 }

@@ -164,15 +164,51 @@ protected:
   std::vector<T> categories_;
 };
 
-/*
-template <typename T>
 class DomainAdapter {
 public:
-  DomainAdapter() {};
+  DomainAdapter() : domain_(nullptr), free_on_destroy_(false) {};
+
+  ~DomainAdapter() {
+    if (free_on_destroy_) {
+      delete domain_;
+    }
+  }
+
+  AnyDomain* get() const {
+    return domain_;
+  }
+
+  bool empty() const {
+    return domain_ == nullptr;
+  }
+
+  void reset(AnyDomain* domain, bool free_on_destroy = false) {
+    if (free_on_destroy_) {
+      delete domain_;
+    }
+
+    domain_ = domain;
+    free_on_destroy_ = free_on_destroy;
+  }
+
+  const std::vector<double> getTicks() const {
+    return std::vector<double>{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+  }
+
+  const std::vector<std::pair<double, std::string>> getLabels() const {
+    return std::vector<std::pair<double, std::string>>{
+        { 0.0, "0" },
+        { 0.2, "5" },
+        { 0.4, "10" },
+        { 0.6, "15" },
+        { 0.8, "20" },
+        { 1.0, "25" }};
+  }
 
 protected:
+  AnyDomain* domain_;
+  bool free_on_destroy_;
 };
-*/
 
 }
 }

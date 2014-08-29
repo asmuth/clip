@@ -99,8 +99,8 @@ protected:
   };
   std::vector<BarData> data_;
 
-  //DomainAdapter x_domain_;
-  //DomainAdapter y_domain_;
+  DomainAdapter x_domain_;
+  DomainAdapter y_domain_;
 
   Canvas* canvas_;
   kBarChartOrientation orientation_;
@@ -155,12 +155,15 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 template <typename TX, typename TY, typename TZ>
 AxisDefinition* BarChart3D<TX, TY, TZ>::addAxis(
     AxisDefinition::kPosition position) {
+  auto axis = canvas_->addAxis(position);
+
   switch (position) {
 
     case AxisDefinition::TOP:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position); //, x_domain_);
+          axis->setDomain(&x_domain_);
+          return axis;
         case O_HORIZONTAL:
           return canvas_->addAxis(position); //, y_domain_);
       }
@@ -184,9 +187,11 @@ AxisDefinition* BarChart3D<TX, TY, TZ>::addAxis(
     case AxisDefinition::LEFT:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position); //, y_domain_);
+          axis->setDomain(&y_domain_);
+          return axis;
         case O_HORIZONTAL:
-          return canvas_->addAxis(position); //, x_domain_);
+          axis->setDomain(&x_domain_);
+          return axis;
       }
 
   }
