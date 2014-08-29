@@ -48,6 +48,10 @@ public:
     return std::get<3>(padding_);
   }
 
+  void setPadding(const std::tuple<int, int, int, int>& padding) {
+    padding_ = padding;
+  }
+
 protected:
   int width_;
   int height_;

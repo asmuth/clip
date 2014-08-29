@@ -24,18 +24,19 @@ Canvas::Canvas() :
     height_(500) {}
 
 void Canvas::render(RenderTarget* target) const {
-  printf("render!!\n");
   // FIXPAUL: initialize from rendertarget
   Viewport viewport(width_, height_);
 
   target->beginChart(width_, height_, "chart bar horizontal"); 
-  //renderAxes(target, &viewport);
-  for (const auto& drawable : drawables_) {
-    drawable->render(target, &viewport);
-  }
+  renderAxes(target, &viewport);
+  renderCharts(target, &viewport);
   target->finishChart();
+}
 
-  printf("done!!\n");
+void Canvas::renderCharts(RenderTarget* target, Viewport* viewport) const {
+  for (const auto& drawable : drawables_) {
+    drawable->render(target, viewport);
+  }
 }
 
 void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
@@ -45,11 +46,11 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
   std::vector<std::pair<int, AxisDefinition*>> bottom;
   std::vector<std::pair<int, AxisDefinition*>> left;
 
-  for (auto axis : axes_) {
+  for (const auto& axis : axes_) {
     switch (axis->getPosition()) {
 
       case AxisDefinition::TOP: {
-        top.emplace_back(std::get<0>(padding), axis);
+        top.emplace_back(std::get<0>(padding), axis.get());
         std::get<0>(padding) += kAxisPadding;
         std::get<0>(padding) += axis->hasLabels() ? kAxisLabelHeight : 0;
         std::get<0>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
@@ -57,7 +58,7 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
       }
 
       case AxisDefinition::RIGHT: {
-        right.emplace_back(std::get<1>(padding), axis);
+        right.emplace_back(std::get<1>(padding), axis.get());
         std::get<1>(padding) += kAxisPadding;
         std::get<1>(padding) += axis->hasLabels() ? kAxisLabelWidth : 0;
         std::get<1>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
@@ -65,7 +66,7 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
       }
 
       case AxisDefinition::BOTTOM: {
-        bottom.emplace_back(std::get<2>(padding), axis);
+        bottom.emplace_back(std::get<2>(padding), axis.get());
         std::get<2>(padding) += kAxisPadding;
         std::get<2>(padding) += axis->hasLabels() ? kAxisLabelHeight : 0;
         std::get<2>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
@@ -73,7 +74,7 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
       }
 
       case AxisDefinition::LEFT: {
-        left.emplace_back(std::get<3>(padding), axis);
+        left.emplace_back(std::get<3>(padding), axis.get());
         std::get<3>(padding) += kAxisPadding;
         std::get<3>(padding) += axis->hasLabels() ? kAxisLabelWidth : 0;
         std::get<3>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
@@ -99,6 +100,8 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
     std::get<3>(padding) += kAxisLabelWidth * 0.5f;
   }
 
+  viewport->setPadding(padding);
+
   for (const auto& placement : top) {
     //renderTopAxis(target, placement.second, padding, placement.first);
   }
@@ -112,7 +115,7 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
   }
 
   for (const auto& placement : left) {
-    //renderLeftAxis(target, placement.second, padding, placement.first);
+    renderLeftAxis(target, viewport, placement.second, placement.first);
   }
 }
 
@@ -311,11 +314,11 @@ void Canvas::renderBottomAxis(
 
 void Canvas::renderLeftAxis(
     RenderTarget* target,
+    Viewport* viewport,
     AxisDefinition* axis,
-    std::tuple<int, int, int, int>* padding,
     int left) const {
-  int padding_top = std::get<0>(*padding);
-  int inner_height = height_ - std::get<2>(*padding) - padding_top;
+  int padding_top = viewport->paddingTop();
+  int inner_height = viewport->innerHeight();
 
   left += kAxisPadding;
   target->beginGroup("axis left");
@@ -382,9 +385,9 @@ std::string Canvas::renderSVG() const {
   return "fnord";
 }
 
-void Canvas::addAxis(AxisDefinition* axis) {
-  printf("addaxis called");
-  axes_.emplace_back(axis);
+AxisDefinition* Canvas::addAxis(AxisDefinition::kPosition position) {
+  axes_.emplace_back(new AxisDefinition(position));
+  return axes_.back().get();
 }
 
 }
