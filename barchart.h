@@ -153,44 +153,43 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 }
 
 template <typename TX, typename TY, typename TZ>
-AxisDefinition*  BarChart3D<TX, TY, TZ>::addAxis(AxisDefinition::kPosition position) {
-  /*
+AxisDefinition* BarChart3D<TX, TY, TZ>::addAxis(
+    AxisDefinition::kPosition position) {
   switch (position) {
 
     case AxisDefinition::TOP:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, x_domain_);
+          return canvas_->addAxis(position); //, x_domain_);
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, y_domain_);
+          return canvas_->addAxis(position); //, y_domain_);
       }
 
     case AxisDefinition::RIGHT:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, y_domain_);
+          return canvas_->addAxis(position); //, y_domain_);
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, x_domain_);
+          return canvas_->addAxis(position); //, x_domain_);
       }
 
     case AxisDefinition::BOTTOM:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, x_domain_);
+          return canvas_->addAxis(position); //, x_domain_);
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, y_domain_);
+          return canvas_->addAxis(position); //, y_domain_);
       }
 
     case AxisDefinition::LEFT:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position, y_domain_);
+          return canvas_->addAxis(position); //, y_domain_);
         case O_HORIZONTAL:
-          return canvas_->addAxis(position, x_domain_);
+          return canvas_->addAxis(position); //, x_domain_);
       }
 
   }
-  */
 }
 
 template <typename TX, typename TY, typename TZ>
@@ -273,6 +272,10 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
       auto dy = viewport->paddingTop() + x.first * viewport->innerHeight();
       auto dw = (y_max - y_min) * viewport->innerWidth();
       auto dh = (x.second - x.first) * viewport->innerHeight();
+
+      double bar_padding = 0.2;
+      dy += dh * bar_padding * 0.5;
+      dh *= (1.0 - bar_padding);
 
       target->drawRect(dx, dy, dw, dh, "#000000", "bar");
     //}

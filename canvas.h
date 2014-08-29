@@ -32,6 +32,9 @@ public:
 
   /**
    * FIXPAUL overcomplicated, just accept a ptr
+   *
+   * The returned pointer is owned by the canvas instance and must not be freed
+   * by the caller.
    */
   template <typename ChartType, typename... Args>
   ChartType* addChart(Args... args) {
@@ -45,9 +48,10 @@ public:
    * this method but through one of the Chart subclasses. However it is safe
    * to call this method to explicitly define a custom axis.
    *
-   * @param axis the axis definition -- does not transfer ownership!
+   * The returned pointer is owned by the canvas instance and must not be freed
+   * by the caller.
    */
-  void addAxis(AxisDefinition* axis);
+   AxisDefinition* addAxis(AxisDefinition::kPosition position);
 
   /**
    * Render the contents of this canvas to the provided render target
@@ -65,6 +69,11 @@ public:
    std::string renderSVG() const;
 
 protected:
+
+  /**
+   * Render the charts
+   */
+  void renderCharts(RenderTarget* target, Viewport* viewport) const;
 
   /**
    * Render the axes
@@ -123,14 +132,14 @@ protected:
    */
   void renderLeftAxis(
       RenderTarget* target,
+      Viewport* viewport,
       AxisDefinition* axis,
-      std::tuple<int, int, int, int>* padding,
       int left) const;
 
   // FIXPAUL this belongs into the rendertarget
   int width_;
   int height_;
-  std::vector<AxisDefinition*> axes_;
+  std::vector<std::unique_ptr<AxisDefinition>> axes_;
   std::vector<std::unique_ptr<Drawable>> drawables_;
 };
 
