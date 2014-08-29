@@ -4,17 +4,20 @@ linechart multiple series
 linechart string axis
 rename to discrete, continous domain
 
-v2.0.0
+v2.0.0a
   - all examples working
   - bar, area, line, pie, number chart
   - documentation as per TOC complete
   - full sql selects, joins working
-  - csv, mysql backend
-  - simple web interface (interactive query UI generates embed html snippets)
+  - csv backend complete
   - cli interface
-  - simple dashboards working
   - TimeDomain!
   - max interpolation gap -> draw as missing data
+
+v2.0.0b
+  - mysql backend
+  - simple web interface (interactive query UI generates embed html snippets)
+  - simple dashboards working
   - simple interactive charts (hover tooltips)
   - histogram
 
@@ -30,7 +33,8 @@ v2.1.0
   - middle axis
   - annotations / deploy lines
   - query cache
-
+  - dashboard edit ui: html source
+  - dashboard edit ui: wysiwyg
 
 
 
