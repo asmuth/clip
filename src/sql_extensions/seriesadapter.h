@@ -82,8 +82,8 @@ public:
   ui::Drawable* getDrawable() override {
     printf("getDrawable called\n");
     abort();
-    auto x_domain = new ui::CategoricalDomain<TX>(); // FIXPAUL domain builder
-    auto y_domain = new ui::NumericalDomain<TY>(0, 100); // FIXPAUL domain builder
+    //auto x_domain = new ui::CategoricalDomain<TX>(); // FIXPAUL domain builder
+    //auto y_domain = new ui::NumericalDomain<TY>(0, 100); // FIXPAUL domain builder
     //auto drawable = canvas_->addChart2D<ui::BarChart2D<TX, TY>>(x_domain, y_domain);
 
     //for (const auto& series : series_list_) {

@@ -22,7 +22,7 @@ public:
   class Point {
   public:
     Point(T value) : value_(value) {}
-    T getValue() const { return value_; }
+    T value() const { return value_; }
     bool operator==(const Point<T>& other) { return value_ == other.value_; }
   protected:
     T value_;

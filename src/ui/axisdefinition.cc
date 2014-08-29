@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include "axisdefinition.h"
 #include "domain.h"
 
@@ -16,6 +15,11 @@ namespace ui {
 
 AxisDefinition::AxisDefinition(
     kPosition axis_position) :
+    position_(axis_position) {}
+
+AxisDefinition::AxisDefinition(
+    kPosition axis_position,
+    AnyDomain* domain) :
     position_(axis_position) {}
 
 void AxisDefinition::addTick(double tick_position) {

@@ -7,16 +7,19 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_DRAWABLE_H
 #define _FNORDMETRIC_DRAWABLE_H
 #include <tuple>
-#include "../base/series.h"
+#include <functional>
+#include <fnordmetric/base/series.h>
+#include <fnordmetric/ui/viewport.h>
 
 namespace fnordmetric {
 namespace ui {
 class RenderTarget;
 
+// FIXPAUL: rename to chart
+// FIXPAUL: move that color stuff somewhere else!
 class Drawable {
   friend class Canvas;
 public:
@@ -47,11 +50,7 @@ protected:
     return series->getColor();
   }
 
-  virtual void render(
-      RenderTarget* target,
-      int width,
-      int height,
-      std::tuple<int, int, int, int>* padding) const = 0;
+  virtual void render(RenderTarget* target, Viewport* viewport) const = 0;
 
   int color_index_;
 };

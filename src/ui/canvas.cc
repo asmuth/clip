@@ -24,94 +24,95 @@ Canvas::Canvas() :
     height_(500) {}
 
 void Canvas::render(RenderTarget* target) const {
-  std::tuple<int, int, int, int> padding;
-
   printf("render!!\n");
-  target->beginChart(width_, height_, "chart bar horizontal");
-  renderAxes(target, &padding);
+  // FIXPAUL: initialize from rendertarget
+  Viewport viewport(width_, height_);
+
+  target->beginChart(width_, height_, "chart bar horizontal"); 
+  //renderAxes(target, &viewport);
   for (const auto& drawable : drawables_) {
-    drawable->render(target, width_, height_, &padding);
+    drawable->render(target, &viewport);
   }
   target->finishChart();
+
   printf("done!!\n");
 }
 
-void Canvas::renderAxes(
-    RenderTarget* target,
-    std::tuple<int, int, int, int>* padding) const {
+void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
+  std::tuple<int, int, int, int> padding;
   std::vector<std::pair<int, AxisDefinition*>> top;
   std::vector<std::pair<int, AxisDefinition*>> right;
   std::vector<std::pair<int, AxisDefinition*>> bottom;
   std::vector<std::pair<int, AxisDefinition*>> left;
 
-  for (const auto& axis : axes_) {
+  for (auto axis : axes_) {
     switch (axis->getPosition()) {
 
       case AxisDefinition::TOP: {
-        top.emplace_back(std::get<0>(*padding), axis.get());
-        std::get<0>(*padding) += kAxisPadding;
-        std::get<0>(*padding) += axis->hasLabels() ? kAxisLabelHeight : 0;
-        std::get<0>(*padding) += axis->hasTitle() ? kAxisTitleLength : 0;
+        top.emplace_back(std::get<0>(padding), axis);
+        std::get<0>(padding) += kAxisPadding;
+        std::get<0>(padding) += axis->hasLabels() ? kAxisLabelHeight : 0;
+        std::get<0>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
         break;
       }
 
       case AxisDefinition::RIGHT: {
-        right.emplace_back(std::get<1>(*padding), axis.get());
-        std::get<1>(*padding) += kAxisPadding;
-        std::get<1>(*padding) += axis->hasLabels() ? kAxisLabelWidth : 0;
-        std::get<1>(*padding) += axis->hasTitle() ? kAxisTitleLength : 0;
+        right.emplace_back(std::get<1>(padding), axis);
+        std::get<1>(padding) += kAxisPadding;
+        std::get<1>(padding) += axis->hasLabels() ? kAxisLabelWidth : 0;
+        std::get<1>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
         break;
       }
 
       case AxisDefinition::BOTTOM: {
-        bottom.emplace_back(std::get<2>(*padding), axis.get());
-        std::get<2>(*padding) += kAxisPadding;
-        std::get<2>(*padding) += axis->hasLabels() ? kAxisLabelHeight : 0;
-        std::get<2>(*padding) += axis->hasTitle() ? kAxisTitleLength : 0;
+        bottom.emplace_back(std::get<2>(padding), axis);
+        std::get<2>(padding) += kAxisPadding;
+        std::get<2>(padding) += axis->hasLabels() ? kAxisLabelHeight : 0;
+        std::get<2>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
         break;
       }
 
       case AxisDefinition::LEFT: {
-        left.emplace_back(std::get<3>(*padding), axis.get());
-        std::get<3>(*padding) += kAxisPadding;
-        std::get<3>(*padding) += axis->hasLabels() ? kAxisLabelWidth : 0;
-        std::get<3>(*padding) += axis->hasTitle() ? kAxisTitleLength : 0;
+        left.emplace_back(std::get<3>(padding), axis);
+        std::get<3>(padding) += kAxisPadding;
+        std::get<3>(padding) += axis->hasLabels() ? kAxisLabelWidth : 0;
+        std::get<3>(padding) += axis->hasTitle() ? kAxisTitleLength : 0;
         break;
       }
 
     }
   }
 
-  if (std::get<0>(*padding) < kAxisLabelHeight * 0.5f) {
-    std::get<0>(*padding) += kAxisLabelHeight * 0.5f;
+  if (std::get<0>(padding) < kAxisLabelHeight * 0.5f) {
+    std::get<0>(padding) += kAxisLabelHeight * 0.5f;
   }
 
-  if (std::get<1>(*padding) < kAxisLabelWidth * 0.5f) {
-    std::get<1>(*padding) += kAxisLabelWidth * 0.5f;
+  if (std::get<1>(padding) < kAxisLabelWidth * 0.5f) {
+    std::get<1>(padding) += kAxisLabelWidth * 0.5f;
   }
 
-  if (std::get<2>(*padding) < kAxisLabelHeight * 0.5f) {
-    std::get<2>(*padding) += kAxisLabelHeight * 0.5f;
+  if (std::get<2>(padding) < kAxisLabelHeight * 0.5f) {
+    std::get<2>(padding) += kAxisLabelHeight * 0.5f;
   }
 
-  if (std::get<3>(*padding) < kAxisLabelWidth * 0.5f) {
-    std::get<3>(*padding) += kAxisLabelWidth * 0.5f;
+  if (std::get<3>(padding) < kAxisLabelWidth * 0.5f) {
+    std::get<3>(padding) += kAxisLabelWidth * 0.5f;
   }
 
   for (const auto& placement : top) {
-    renderTopAxis(target, placement.second, padding, placement.first);
+    //renderTopAxis(target, placement.second, padding, placement.first);
   }
 
   for (const auto& placement : right) {
-    renderRightAxis(target, placement.second, padding, placement.first);
+    //renderRightAxis(target, placement.second, padding, placement.first);
   }
 
   for (const auto& placement : bottom) {
-    renderBottomAxis(target, placement.second, padding, placement.first);
+    //renderBottomAxis(target, placement.second, padding, placement.first);
   }
 
   for (const auto& placement : left) {
-    renderLeftAxis(target, placement.second, padding, placement.first);
+    //renderLeftAxis(target, placement.second, padding, placement.first);
   }
 }
 
@@ -381,19 +382,9 @@ std::string Canvas::renderSVG() const {
   return "fnord";
 }
 
-template <typename T>
-AxisDefinition* Canvas::addAxis(
-    AxisDefinition::kPosition axis_position,
-    Domain<T>* domain) {
-  auto axis = new AxisDefinition(axis_position, domain);
+void Canvas::addAxis(AxisDefinition* axis) {
+  printf("addaxis called");
   axes_.emplace_back(axis);
-  return axis;
-}
-
-AxisDefinition* Canvas::addAxis(AxisDefinition::kPosition axis_position) {
-  auto axis = new AxisDefinition(axis_position);
-  axes_.emplace_back(axis);
-  return axis;
 }
 
 }
