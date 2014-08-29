@@ -43,7 +43,7 @@ public:
    * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
    * @param domain the domain. does not transfer ownership
    */
-  AxisDefinition(kPosition axis_position, AnyDomain* domain);
+  AxisDefinition(kPosition axis_position, DomainAdapter* domain);
 
   /**
    * Add a "tick" to this axis
@@ -55,7 +55,7 @@ public:
   /**
    * Returns the ticks of this axis
    */
-  const std::vector<double>& getTicks() const;
+  const std::vector<double> getTicks() const;
 
   /**
    * Add a label to this axis
@@ -73,7 +73,7 @@ public:
   /**
    * Returns the labels of this axis
    */
-  const std::vector<std::pair<double, std::string>>& getLabels() const;
+  const std::vector<std::pair<double, std::string>> getLabels() const;
 
   /**
    * Returns true if this axis has labels, false otherwise
@@ -101,11 +101,19 @@ public:
    */
   bool hasTitle() const;
 
+  /**
+   * Set the domain for this axis
+   */
+  void setDomain(DomainAdapter* domain);
+
 protected:
   kPosition position_;
+  DomainAdapter* domain_;
   std::string title_;
   std::vector<double> ticks_;
+  bool has_ticks_;
   std::vector<std::pair<double, std::string>> labels_;
+  bool has_labels_;
 };
 
 // FIXPAUL: use template specialization
