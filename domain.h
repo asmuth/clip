@@ -14,6 +14,7 @@
 #include <assert.h>
 #include "../util/format.h"
 
+// FIXPAUL too many copies T val...
 namespace fnordmetric {
 namespace ui {
 
@@ -22,9 +23,17 @@ namespace ui {
  */
 class AnyDomain {
 public:
+  virtual ~AnyDomain() {}
 
+  virtual const std::vector<double> getTicks() const = 0;
+
+  virtual const std::vector<std::pair<double, std::string>> getLabels()
+      const = 0;
 };
 
+/**
+ * Polymorphic domain
+ */
 template <typename T>
 class Domain : public AnyDomain {
 public:
@@ -96,6 +105,20 @@ public:
     }
   }
 
+  const std::vector<double> getTicks() const {
+    return std::vector<double>{0.0, 0.5, 1.0};
+  }
+
+  const std::vector<std::pair<double, std::string>> getLabels() const {
+    return std::vector<std::pair<double, std::string>>{
+        { 0.0, "0" },
+        { 0.2, "5" },
+        { 0.4, "10" },
+        { 0.6, "15" },
+        { 0.8, "20" },
+        { 1.0, "25" }};
+  }
+
 protected:
   double min_value_;
   double max_value_;
@@ -160,6 +183,27 @@ public:
     }
   }
 
+  const std::vector<double> getTicks() const {
+    std::vector<double> ticks{0.0};
+
+    for (const auto category : categories_) {
+      auto range = scaleRange(category);
+      ticks.push_back(range.second);
+    }
+
+    return ticks;
+  }
+
+  const std::vector<std::pair<double, std::string>> getLabels() const {
+    return std::vector<std::pair<double, std::string>>{
+        { 0.0, "0" },
+        { 0.2, "5" },
+        { 0.4, "10" },
+        { 0.6, "15" },
+        { 0.8, "20" },
+        { 1.0, "25" }};
+  }
+
 protected:
   std::vector<T> categories_;
 };
@@ -178,6 +222,17 @@ public:
     return domain_;
   }
 
+  template <typename T>
+  T* getAs() const {
+    T* domain = dynamic_cast<T*>(domain_);
+
+    if (domain == nullptr) {
+      RAISE(util::RuntimeException, "can't convert domain to requested type");
+    }
+
+    return domain;
+  }
+
   bool empty() const {
     return domain_ == nullptr;
   }
@@ -192,17 +247,20 @@ public:
   }
 
   const std::vector<double> getTicks() const {
-    return std::vector<double>{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+    if (empty()) {
+      abort();
+      return std::vector<double>{};
+    } else {
+      return domain_->getTicks();
+    }
   }
 
   const std::vector<std::pair<double, std::string>> getLabels() const {
-    return std::vector<std::pair<double, std::string>>{
-        { 0.0, "0" },
-        { 0.2, "5" },
-        { 0.4, "10" },
-        { 0.6, "15" },
-        { 0.8, "20" },
-        { 1.0, "25" }};
+    if (empty()) {
+      return std::vector<std::pair<double, std::string>>{};
+    } else {
+      return domain_->getLabels();
+    }
   }
 
 protected:
