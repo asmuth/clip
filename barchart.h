@@ -216,14 +216,11 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
   auto x_domain = x_domain_.getAs<Domain<TX>>();
   auto y_domain = y_domain_.getAs<Domain<TY>>();
 
-  printf("BARS: %i\n", data_.size());
+  printf("BARS: %i\n", data_.getData().size());
   for (const auto& bar : data_.getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
 
-    assert(bar.ys.size() == data_.seriesCount());
-
-  /*
-    for (int n = 0; n < num_series_; n++) {
+    for (int n = 0; n < data_.seriesCount(); n++) {
       auto y_min = y_domain->scale(bar.ys[n].first.value());
       auto y_max = y_domain->scale(static_cast<TY>(bar.ys[n].second.value()));
 
@@ -245,7 +242,7 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
         double bar_padding = 0.3;
         dy += dh * bar_padding * 0.5;
         dh *= (1.0 - bar_padding);
-        dh /= num_series_;
+        dh /= data_.seriesCount();
 
         for (int i = 0; i < n; ++i) {
           dy += dh;
@@ -254,8 +251,6 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
 
       target->drawRect(dx, dy, dw, dh, "#000000", "bar");
     }
-*/
-
 
 
     /* stacked */
