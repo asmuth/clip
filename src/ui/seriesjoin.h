@@ -27,6 +27,7 @@ public:
 
   SeriesJoin3D() : num_series_(0) {}
 
+  // FIXPAUL this should not be O(n^2)
   void addSeries(Series3D<TX, TY, TZ>* series) {
     for (const auto& point : series->getData()) {
       const auto& x_val = std::get<0>(point);
@@ -43,15 +44,23 @@ public:
       if (joined == nullptr) {
         data_.emplace_back(x_val);
         joined = &data_.back();
-        printf("newcat:\n");
       }
 
+      for (int i = joined->ys.size(); i < num_series_; ++i) {
+        joined->ys.emplace_back(nullptr, nullptr);
+      }
+
+      printf("pointisze: %i\n", joined->ys.size());
       if (joined->ys.size() < num_series_ + 1) {
-        for (int i = joined->ys.size(); i < num_series_; ++i) {
-          joined->ys.emplace_back(nullptr, nullptr);
-        }
 
         joined->ys.emplace_back(y_val, z_val);
+        printf("pointisze: %i\n", joined->ys.size());
+      }
+    }
+
+    for (auto& joined : data_) {
+      for (int i = joined.ys.size(); i <= num_series_; ++i) {
+        joined.ys.emplace_back(nullptr, nullptr);
       }
     }
 
@@ -67,13 +76,14 @@ public:
   }
 
   const size_t seriesCount() const {
-    return data_.size();
+    return num_series_;
   }
 
 protected:
   std::vector<JoinedPoint> data_;
   int num_series_;
 };
+
 
 }
 }

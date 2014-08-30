@@ -21,11 +21,11 @@ public:
   class Point {
   public:
     explicit Point(T value) : value_(value) {}
-    explicit Point(std::nullptr_t) {}
+    explicit Point(std::nullptr_t);
     T value() const { return value_; }
     bool operator==(const Point<T>& other) { return value_ == other.value_; }
   protected:
-    T value_;
+    const T value_;
   };
 
   Series(const std::string& name) :

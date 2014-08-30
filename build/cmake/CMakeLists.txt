@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 2.6)
 project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
+    stage/src/fnordmetric/base/series.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
     stage/src/fnordmetric/http/httpinputstream.cc
@@ -32,7 +33,6 @@ set(FNORDMETRIC_SOURCES
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
     stage/src/fnordmetric/ui/axisdefinition.cc
-    stage/src/fnordmetric/ui/barchart.cc
     stage/src/fnordmetric/ui/canvas.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
