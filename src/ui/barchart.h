@@ -18,6 +18,7 @@
 #include <fnordmetric/ui/domain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/rendertarget.h>
+#include <fnordmetric/ui/seriesjoin.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
@@ -92,20 +93,13 @@ protected:
 */
   void renderHorizontalBars(RenderTarget* target, Viewport* viewport) const;
 
-  struct BarData {
-    BarData(const Series::Point<TX>& x_) : x(x_) {}
-    Series::Point<TX> x;
-    std::vector<std::pair<Series::Point<TY>, Series::Point<TZ>>> ys;
-  };
-  std::vector<BarData> data_;
-
-  mutable DomainAdapter x_domain_;
-  mutable DomainAdapter y_domain_;
+  DomainAdapter x_domain_;
+  DomainAdapter y_domain_;
+  SeriesJoin3D<TX, TY, TY> data_;
 
   Canvas* canvas_;
   kBarChartOrientation orientation_;
   bool stacked_;
-  int num_series_;
 };
 
 template <typename TX, typename TY, typename TZ>
@@ -113,14 +107,11 @@ BarChart3D<TX, TY, TZ>::BarChart3D(
     Canvas* canvas) :
     canvas_(canvas),
     orientation_(O_HORIZONTAL),
-    stacked_(false),
-    num_series_(0) {}
+    stacked_(false) {}
 
 // FIXPAUL enforce that TY == TZ
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
-  //series_colors_.emplace_back(seriesColor(series));
-
   Domain<TX>* x_domain;
   if (x_domain_.empty()) {
     x_domain = new DiscreteDomain<TX>();
@@ -138,35 +129,12 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   }
 
   for (const auto& point : series->getData()) {
-    const auto& x_val = std::get<0>(point);
-    const auto& y_val = std::get<1>(point);
-    const auto& z_val = std::get<2>(point);
-
-    BarData* bar_data = nullptr;
-    for (auto& candidate : data_) {
-      if (candidate.x == x_val) {
-        bar_data = &candidate;
-      }
-    }
-
-    if (bar_data == nullptr) {
-      data_.emplace_back(x_val);
-      bar_data = &data_.back();
-      x_domain->addValue(x_val.value());
-    }
-
-    if (bar_data->ys.size() < num_series_ + 1) {
-      for (int i = bar_data->ys.size(); i < num_series_; ++i) {
-        // bar_data->ys.emplace_back(0, 0);
-      }
-
-      bar_data->ys.emplace_back(y_val, z_val);
-      y_domain->addValue(y_val.value());
-      y_domain->addValue(static_cast<TY>(z_val.value()));
-    }
+    x_domain->addValue(std::get<0>(point).value());
+    y_domain->addValue(std::get<1>(point).value());
+    y_domain->addValue(static_cast<TY>(std::get<2>(point).value()));
   }
 
-  num_series_++;
+  data_.addSeries(series);
 }
 
 template <typename TX, typename TY, typename TZ>
@@ -248,14 +216,17 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
   auto x_domain = x_domain_.getAs<Domain<TX>>();
   auto y_domain = y_domain_.getAs<Domain<TY>>();
 
-  for (const auto& bar : data_) {
+  printf("BARS: %i\n", data_.size());
+  for (const auto& bar : data_.getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
 
-    //if (num_series_ == 1) {
-      auto y_min = y_domain->scale(bar.ys[0].first.value());
-      auto y_max = y_domain->scale(static_cast<TY>(bar.ys[0].second.value()));
+    assert(bar.ys.size() == data_.seriesCount());
 
-      //printf("y: %f - %f\n", y_min, y_max);
+  /*
+    for (int n = 0; n < num_series_; n++) {
+      auto y_min = y_domain->scale(bar.ys[n].first.value());
+      auto y_max = y_domain->scale(static_cast<TY>(bar.ys[n].second.value()));
+
       if (!(y_min <= y_max)) { // doubles are funny...
         RAISE(
             util::RuntimeException,
@@ -269,12 +240,23 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
       auto dy = viewport->paddingTop() +
           (1.0 - x.first) * viewport->innerHeight() - dh;
 
-      double bar_padding = 0.2;
-      dy += dh * bar_padding * 0.5;
-      dh *= (1.0 - bar_padding);
+      if (stacked_) {
+      } else {
+        double bar_padding = 0.3;
+        dy += dh * bar_padding * 0.5;
+        dh *= (1.0 - bar_padding);
+        dh /= num_series_;
+
+        for (int i = 0; i < n; ++i) {
+          dy += dh;
+        }
+      }
 
       target->drawRect(dx, dy, dw, dh, "#000000", "bar");
-    //}
+    }
+*/
+
+
 
     /* stacked */
     /*else if (stacked_) {

@@ -1,8 +1,14 @@
+rename rowsink to virtualtable
 rename seriesadapter to chartbuilder
 cli output format
 linechart multiple series
 linechart string axis
-rename to discrete, continous domain
+distributions
+middle axis
+bar/point labels
+heatmaps
+histogram
+missing data / interpolation gap
 
 v2.0.0a
   - all examples working

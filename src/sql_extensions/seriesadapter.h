@@ -129,6 +129,12 @@ public:
       series = series_iter->second;
     }
 
+   printf(
+       "[row] x=%s(@%i), y=%s(@%i), z=%s(@%i)\n",
+       row[x_ind_].toString().c_str(), x_ind_,
+       row[y_ind_].toString().c_str(), y_ind_,
+       row[z_ind_].toString().c_str(), z_ind_);
+
     series->addDatum(
         row[x_ind_].template getValue<TX>(),
         row[y_ind_].template getValue<TY>(),
@@ -140,6 +146,7 @@ public:
   ui::Drawable* getDrawable() override {
     auto drawable = canvas_->addChart<ui::BarChart3D<TX, TY, TZ>>();
 
+    printf("serieslist len: %i\n", series_list_.size());
     for (const auto& series : series_list_) {
       drawable->addSeries(static_cast<Series3D<TX, TY, TZ>*>(series.get()));
     }
@@ -190,7 +197,7 @@ public:
       adapter_->name_ind_ = name_ind_;
       adapter_->x_ind_ = x_ind_;
       adapter_->y_ind_ = y_ind_;
-      adapter_->z_ind_ = y_ind_;
+      adapter_->z_ind_ = z_ind_;
     }
 
     adapter_->nextRow(row, row_len);
@@ -199,6 +206,7 @@ public:
   }
 
   void executeStatement(QueryPlanNode* stmt) {
+    printf("execute!!\n");
     name_ind_ = stmt->getColumnIndex("series");
     x_ind_ = stmt->getColumnIndex("x");
     y_ind_ = stmt->getColumnIndex("y");

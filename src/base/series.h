@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_SERIES_H
 #define _FNORDMETRIC_SERIES_H
 #include <stdlib.h>
@@ -21,7 +20,8 @@ public:
   template <typename T>
   class Point {
   public:
-    Point(T value) : value_(value) {}
+    explicit Point(T value) : value_(value) {}
+    explicit Point(std::nullptr_t) {}
     T value() const { return value_; }
     bool operator==(const Point<T>& other) { return value_ == other.value_; }
   protected:
@@ -52,7 +52,7 @@ template <typename X, typename Y>
 class Series2D : public Series {
 public:
   Series2D() : Series2D("unnamed") {}
-  Series2D(const std::string& name) : Series(name) {}
+  explicit Series2D(const std::string& name) : Series(name) {}
 
   void addDatum(X x, Y y) {
     data_.emplace_back(x, y);
@@ -72,7 +72,7 @@ template <typename X, typename Y, typename Z>
 class Series3D : public Series {
 public:
   Series3D() : Series3D("unnamed") {}
-  Series3D(const std::string& name) : Series(name) {}
+  explicit Series3D(const std::string& name) : Series(name) {}
 
   void addDatum(X x, Y y, Z z) {
     data_.emplace_back(x, y, z);

@@ -70,15 +70,15 @@ public:
 
   template <typename ChartBuilderType>
   void executeWithType(ui::Canvas* canvas) {
-    ChartBuilderType series_adapter(canvas);
+    ChartBuilderType chart_builder(canvas);
 
     for (int i = 0; i < select_stmts_.size(); ++i) {
       const auto& stmt = select_stmts_[i];
-      series_adapter.executeStatement(stmt); //, result_lists_[i]);
+      chart_builder.executeStatement(stmt); //, result_lists_[i]);
     }
 
-    assert(series_adapter.adapter_.get() != nullptr);
-    auto drawable = series_adapter.adapter_->getDrawable();
+    assert(chart_builder.adapter_.get() != nullptr);
+    auto drawable = chart_builder.adapter_->getDrawable();
 
     for (const auto& axis_stmt : axis_stmts_) {
       axis_stmt->executeDrawable(drawable);
