@@ -17,6 +17,7 @@
 namespace fnordmetric {
 namespace ui {
 class RenderTarget;
+class Canvas;
 
 // FIXPAUL: rename to chart
 // FIXPAUL: move that color stuff somewhere else!
@@ -24,7 +25,7 @@ class Drawable {
   friend class Canvas;
 public:
 
-  Drawable() : color_index_(0) {}
+  Drawable(Canvas* canvas) : canvas_(canvas), color_index_(0) {}
   virtual ~Drawable() {}
 
   /**
@@ -52,7 +53,7 @@ protected:
 
   virtual void render(RenderTarget* target, Viewport* viewport) const = 0;
 
-
+  Canvas* canvas_;
   int color_index_;
 };
 
