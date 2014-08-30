@@ -99,8 +99,8 @@ protected:
   };
   std::vector<BarData> data_;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  mutable DomainAdapter x_domain_;
+  mutable DomainAdapter y_domain_;
 
   Canvas* canvas_;
   kBarChartOrientation orientation_;
@@ -112,6 +112,8 @@ template <typename TX, typename TY, typename TZ>
 BarChart3D<TX, TY, TZ>::BarChart3D(
     Canvas* canvas) :
     canvas_(canvas),
+    orientation_(O_HORIZONTAL),
+    stacked_(false),
     num_series_(0) {}
 
 // FIXPAUL enforce that TY == TZ
@@ -119,14 +121,26 @@ template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   //series_colors_.emplace_back(seriesColor(series));
 
+  CategoricalDomain<TX>* x_domain;
+  if (x_domain_.empty()) {
+    x_domain = new CategoricalDomain<TX>();
+    x_domain_.reset(x_domain, true);
+  } else {
+    x_domain = x_domain_.getAs<CategoricalDomain<TX>>();
+  }
+
+  //NuericalDomain<TY>* y_domain;
+  //if (x_domain_.empty()) {
+  //  x_domain = new CategoricalDomain<TX>();
+  //  x_domain_.reset(x_domain, true);
+  //} else {
+  //  x_domain = x_domain_.getAs<CategoricalDomain<TX>>();
+  //}
+
   for (const auto& point : series->getData()) {
     const auto& x_val = std::get<0>(point);
     const auto& y_val = std::get<1>(point);
     const auto& z_val = std::get<2>(point);
-
-    printf("adddata: y=%s,z=%s\n",
-        std::to_string(y_val.value()).c_str(),
-        std::to_string(z_val.value()).c_str());
 
     BarData* bar_data = nullptr;
     for (auto& candidate : data_) {
@@ -138,6 +152,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     if (bar_data == nullptr) {
       data_.emplace_back(x_val);
       bar_data = &data_.back();
+      x_domain->addCategory(x_val.value());
     }
 
     if (bar_data->ys.size() < num_series_ + 1) {
@@ -205,22 +220,23 @@ void BarChart3D<TX, TY, TZ>::render(
     RAISE(util::RuntimeException, "BarChart3D#render called without any data");
   }
 
-  //switch (O_VERTICAL) {
+  switch (orientation_) {
   //  case O_VERTICAL:
   //    target->beginGroup("bars vertical");
   //    renderVerticalBars(target, width, height, padding);
   //    target->finishGroup();
   //    break;
-    //case O_HORIZONTAL:
+    case O_HORIZONTAL:
       renderHorizontalBars(target, viewport);
-      //break;
-  //}
+      break;
+  }
 }
 
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     RenderTarget* target,
     Viewport* viewport) const {
+  auto x_domain = x_domain_.getAs<Domain<TX>>();
   /* calculate bar width and padding */
   //auto bar_height = (inner_height / data_.size()) * (1.0f - kBarPadding);
   //auto bar_padding = (inner_height / data_.size()) * (kBarPadding * 0.5f);
@@ -237,12 +253,7 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
   //target->beginGroup("bars horizontal");
   //target->finishGroup();
 
-  /* prepare x domain --- FIXPAUL move somewhere else */
-  CategoricalDomain<TX> x_domain;
-  for (const auto& bar : data_) {
-    x_domain.addCategory(bar.x.value());
-  }
-
+  /* prepare y domain --- FIXPAUL move somewhere else */
   NumericalDomain<TY> y_domain;
   for (const auto& bar : data_) {
     y_domain.addValue(bar.ys[0].first.value());
@@ -253,15 +264,10 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
 
   for (const auto& bar : data_) {
     //draw_y += bar_padding;
-    auto x = x_domain.scaleRange(bar.x.value());
+    auto x = x_domain->scaleRange(bar.x.value());
     //printf("x: %f - %f\n", x.first, x.second);
 
     //if (num_series_ == 1) {
-
-    printf("renderdata: y=%s,z=%s\n",
-        std::to_string(bar.ys[0].first.value()).c_str(),
-        std::to_string(bar.ys[0].second.value()).c_str());
-
       auto y_min = y_domain.scale(bar.ys[0].first.value());
       auto y_max = y_domain.scale(static_cast<TY>(bar.ys[0].second.value()));
 
