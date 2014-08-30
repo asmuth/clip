@@ -84,14 +84,11 @@ protected:
 
   void render(RenderTarget* target, Viewport* viewport) const override;
 
-/*
   void renderVerticalBars(
       RenderTarget* target,
-      int width,
-      int height,
-      std::tuple<int, int, int, int>* padding) const;
+      Viewport* viewport,
+      SeriesJoin3D<TX, TY, TZ> const* data) const;
 
-*/
   void renderHorizontalBars(
       RenderTarget* target,
       Viewport* viewport,
@@ -233,15 +230,15 @@ void BarChart3D<TX, TY, TZ>::render(
   }
 
   switch (orientation_) {
-  //  case O_VERTICAL:
-  //    target->beginGroup("bars vertical");
-  //    renderVerticalBars(target, width, height, padding);
-  //    target->finishGroup();
-  //    break;
+    case O_VERTICAL:
+      target->beginGroup("bars vertical");
+      renderVerticalBars(target, viewport, data);
+      target->finishGroup();
+      break;
     case O_HORIZONTAL:
-  //target->beginGroup("bars horizontal");
-  //target->finishGroup();
+      target->beginGroup("bars horizontal");
       renderHorizontalBars(target, viewport, data);
+      target->finishGroup();
       break;
   }
 }
@@ -274,6 +271,42 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
         dh /= data->seriesCount();
         dy += dh * n + (dh * kBarPaddingInner * 0.5);
         dh *= (1.0 - kBarPaddingInner);
+      }
+
+      target->drawRect(dx, dy, dw, dh, "#000000", "bar");
+    }
+  }
+}
+
+template <typename TX, typename TY, typename TZ>
+void BarChart3D<TX, TY, TZ>::renderVerticalBars(
+    RenderTarget* target,
+    Viewport* viewport,
+    SeriesJoin3D<TX, TY, TZ> const* data) const {
+  auto x_domain = x_domain_.getAs<Domain<TX>>();
+  auto y_domain = y_domain_.getAs<Domain<TY>>();
+
+  for (const auto& bar : data->getData()) {
+    auto x = x_domain->scaleRange(bar.x.value());
+
+    printf("%s, %f-%f\n", bar.x.value().c_str(), x.first, x.second);
+    for (int n = 0; n < data->seriesCount(); n++) {
+      auto y_min = y_domain->scale(bar.ys[n].first.value());
+      auto y_max = y_domain->scale(static_cast<TY>(bar.ys[n].second.value()));
+
+      auto dw = (x.second - x.first) * viewport->innerWidth();
+      auto dh = (y_max - y_min) * viewport->innerHeight();
+      auto dx = viewport->paddingLeft() + x.first * viewport->innerWidth();
+      auto dy = viewport->paddingTop() +
+          (1.0 - y_max) * viewport->innerHeight();
+
+      dx += dw * kBarPadding * 0.5;
+      dw *= (1.0 - kBarPadding);
+
+      if (!stacked_) {
+        dw /= data->seriesCount();
+        dx += dw * n + (dw * kBarPaddingInner * 0.5);
+        dw *= (1.0 - kBarPaddingInner);
       }
 
       target->drawRect(dx, dy, dw, dh, "#000000", "bar");
