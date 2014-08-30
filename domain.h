@@ -50,12 +50,14 @@ public:
 
   virtual std::pair<double, double> scaleRange(T value) const = 0;
 
+  virtual void addValue(const T& value) = 0;
+
   //virtual bool contains(T value) const = 0;
 
 };
 
 template <typename T>
-class NumericalDomain : public Domain<T> {
+class ContinuousDomain : public Domain<T> {
 public:
   static const int kDefaultCardinality = 6;
 
@@ -66,7 +68,7 @@ public:
    * @param max_value the largest value
    * @param logarithmic is this domain a logarithmic domain?
    */
-  NumericalDomain(
+  ContinuousDomain(
     T min_value = 0,
     T max_value = 0,
     bool is_logarithmic = false) :
@@ -95,7 +97,7 @@ public:
     return std::make_pair(0, 0);
   }
 
-  void addValue(T value) {
+  void addValue(const T& value) {
     if (value > max_value_) {
       max_value_ = value;
     }
@@ -126,13 +128,13 @@ protected:
 };
 
 template <typename T>
-class CategoricalDomain : public Domain<T> {
+class DiscreteDomain : public Domain<T> {
 public:
 
   /**
    * Create a new categorical domain
    */
-  CategoricalDomain() {}
+  DiscreteDomain() {}
 
   std::string label(T value) const {
     //if (index < 0 && index > categories_.size() - 1) {
@@ -170,6 +172,10 @@ public:
     return std::make_pair(
         (double) (index - 1) / cardinality,
         (double) index / cardinality);
+  }
+
+  void addValue(const T& value) {
+    addCategory(value);
   }
 
   void addCategory(const T& category) {
