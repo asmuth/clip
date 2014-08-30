@@ -9,6 +9,7 @@ bar/point labels
 heatmaps
 histogram
 missing data / interpolation gap
+proper error message for missing table import
 
 v2.0.0a
   - all examples working

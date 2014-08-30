@@ -150,7 +150,9 @@ void CSVTableRef::rewind() {
         csv_->getInputStream().getFileName().c_str());
     }
 
-    readHeaders();
+    row_index_ = 1;
+  } else {
+    row_index_ = 0;
   }
 }
 

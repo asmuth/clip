@@ -101,8 +101,6 @@ TEST_CASE(CSVInputStreamTest, TestReadRowsWithHeaders, [] () {
       CSVInputStream::openFile("test/fixtures/gbp_per_country_simple.csv"),
       true);
 
-  table_ref.readHeaders();
-
   for (int n = 0; n < 2; n++) {
     int num_rows = 0;
     for (;; ++num_rows) {
@@ -112,9 +110,8 @@ TEST_CASE(CSVInputStreamTest, TestReadRowsWithHeaders, [] () {
       }
     }
 
-    printf("num rows: %i\n", num_rows);
-    EXPECT_EQ(num_rows, 190)
-
+    printf("NUM: %i\n", num_rows);
+    EXPECT_EQ(num_rows, 191);
     table_ref.rewind();
   }
 });
