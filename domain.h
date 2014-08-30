@@ -59,7 +59,7 @@ public:
 template <typename T>
 class ContinuousDomain : public Domain<T> {
 public:
-  static const int kDefaultCardinality = 6;
+  static const int kDefaultNumTicks = 8;
 
   /**
    * Create a new numerical domain with explicit parameters
@@ -89,8 +89,11 @@ public:
   }
 
   std::string label(T value) const {
-    return "fu";
-    //return util::format::numberToHuman(valueAt(index));
+    return util::format::numberToHuman(value);
+  }
+
+  T valueAt(double index) const {
+    return min_value_ + (max_value_ - min_value_) * index;
   }
 
   std::pair<double, double> scaleRange(T value) const {
@@ -112,17 +115,24 @@ public:
   }
 
   const std::vector<double> getTicks() const {
-    return std::vector<double>{0.0, 0.5, 1.0};
+    std::vector<double> ticks;
+
+    for (int n = 0; n < kDefaultNumTicks; ++n) {
+      ticks.push_back((double) n / (kDefaultNumTicks - 1));
+    }
+
+    return ticks;
   }
 
   const std::vector<std::pair<double, std::string>> getLabels() const {
-    return std::vector<std::pair<double, std::string>>{
-        { 0.0, "0" },
-        { 0.2, "5" },
-        { 0.4, "10" },
-        { 0.6, "15" },
-        { 0.8, "20" },
-        { 1.0, "25" }};
+    auto ticks = getTicks();
+    std::vector<std::pair<double, std::string>> labels;
+
+    for (auto tick : ticks) {
+      labels.emplace_back(tick, label(valueAt(tick)));
+    }
+
+    return labels;
   }
 
 protected:
