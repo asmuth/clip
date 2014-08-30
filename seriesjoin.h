@@ -30,29 +30,10 @@ public:
   // FIXPAUL this should not be O(n^2)
   void addSeries(Series3D<TX, TY, TZ>* series) {
     for (const auto& point : series->getData()) {
-      const auto& x_val = std::get<0>(point);
-      const auto& y_val = std::get<1>(point);
-      const auto& z_val = std::get<2>(point);
-
-      JoinedPoint* joined = nullptr;
-      for (auto& candidate : data_) {
-        if (candidate.x == x_val) {
-          joined = &candidate;
-        }
-      }
-
-      if (joined == nullptr) {
-        data_.emplace_back(x_val);
-        joined = &data_.back();
-      }
-
-      for (int i = joined->ys.size(); i < num_series_; ++i) {
-        joined->ys.emplace_back(nullptr, nullptr);
-      }
-
-      if (joined->ys.size() < num_series_ + 1) {
-        joined->ys.emplace_back(y_val, z_val);
-      }
+      addPoint(
+          std::get<0>(point),
+          std::get<1>(point),
+          std::get<2>(point));
     }
 
     for (auto& joined : data_) {
@@ -62,6 +43,32 @@ public:
     }
 
     num_series_++;
+  }
+
+  void addPoint(
+      const Series::Point<TX>& x_val,
+      const Series::Point<TY>& y_val,
+      const Series::Point<TZ>& z_val,
+      bool force = false) {
+    JoinedPoint* joined = nullptr;
+    for (auto& candidate : data_) {
+      if (candidate.x == x_val) {
+        joined = &candidate;
+      }
+    }
+
+    if (joined == nullptr) {
+      data_.emplace_back(x_val);
+      joined = &data_.back();
+    }
+
+    for (int i = joined->ys.size(); i < num_series_; ++i) {
+      joined->ys.emplace_back(nullptr, nullptr);
+    }
+
+    if (joined->ys.size() < num_series_ + 1 || force) {
+      joined->ys.emplace_back(y_val, z_val);
+    }
   }
 
   size_t size() const {
@@ -74,6 +81,10 @@ public:
 
   const size_t seriesCount() const {
     return num_series_;
+  }
+
+  void setSeriesCount(int num_series) {
+    num_series_ = num_series;
   }
 
 protected:

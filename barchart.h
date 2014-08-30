@@ -97,7 +97,7 @@ protected:
       Viewport* viewport,
       SeriesJoin3D<TX, TY, TZ> const* data) const;
 
-  void stackData(SeriesJoin3D<TX, TY, TZ> const* target) const;
+  void stackData(SeriesJoin3D<TX, TY, TZ>* target) const;
 
   DomainAdapter x_domain_;
   DomainAdapter y_domain_;
@@ -112,7 +112,7 @@ BarChart3D<TX, TY, TZ>::BarChart3D(
     Canvas* canvas) :
     Drawable(canvas),
     orientation_(O_HORIZONTAL),
-    stacked_(true) {}
+    stacked_(false) {}
 
 // FIXPAUL enforce that TY == TZ
 template <typename TX, typename TY, typename TZ>
@@ -134,12 +134,35 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   }
 
   for (const auto& point : series->getData()) {
-    x_domain->addValue(std::get<0>(point).value());
-    y_domain->addValue(std::get<1>(point).value());
-    y_domain->addValue(static_cast<TY>(std::get<2>(point).value()));
+    const auto& x_val = std::get<0>(point);
+    const auto& y_val = std::get<1>(point);
+    const auto& z_val = std::get<2>(point);
+
+    x_domain->addValue(x_val.value());
+    y_domain->addValue(y_val.value());
+    y_domain->addValue(static_cast<TY>(z_val.value()));
+
+    if (!(y_val.value() <= y_val.value())) {
+      RAISE(
+          util::RuntimeException,
+          "BarChart error: invalid point in series. Z value must be greater "
+          "or equal to Y value for all points");
+    }
   }
 
   data_.addSeries(series);
+
+  if (stacked_) {
+    for (const auto& bar : data_.getData()) {
+      TY max = 0;
+
+      for (const auto& y : bar.ys) {
+        max += y.second.value() - y.first.value();
+      }
+
+      y_domain->addValue(max);
+    }
+  }
 }
 
 template <typename TX, typename TY, typename TZ>
@@ -238,13 +261,6 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
       auto y_min = y_domain->scale(bar.ys[n].first.value());
       auto y_max = y_domain->scale(static_cast<TY>(bar.ys[n].second.value()));
 
-      if (!(y_min <= y_max)) { // doubles are funny...
-        RAISE(
-            util::RuntimeException,
-            "BarChart error: invalid point in series. Z value must be greater "
-            "or equal to Y value for all points");
-      }
-
       auto dw = (y_max - y_min) * viewport->innerWidth();
       auto dh = (x.second - x.first) * viewport->innerHeight();
       auto dx = viewport->paddingLeft() + y_min * viewport->innerWidth();
@@ -267,8 +283,24 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
 
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::stackData(
-    SeriesJoin3D<TX, TY, TZ> const* target) const {
+    SeriesJoin3D<TX, TY, TZ>* target) const {
+  for (const auto& bar : data_.getData()) {
+    TY cur = 0;
 
+    for (const auto& y : bar.ys) {
+      TY delta = y.second.value() - y.first.value();
+
+      target->addPoint(
+          bar.x,
+          Series::Point<TY>(cur),
+          Series::Point<TY>(cur + delta),
+          true);
+
+      cur += delta;
+    }
+  }
+
+  target->setSeriesCount(data_.seriesCount());
 }
 
 
