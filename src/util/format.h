@@ -20,6 +20,13 @@ namespace format {
 std::string numberToHuman(double value);
 std::string svalueToHuman(const query::SValue& value);
 
+// FIXPAUL clean up...
+template <typename T>
+std::string toHuman(T value) {
+  query::SValue sval(value);
+  return sval.toString();
+}
+
 }
 }
 }

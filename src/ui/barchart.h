@@ -250,7 +250,7 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
       auto y_min = y_domain->scale(bar.ys[0].first.value());
       auto y_max = y_domain->scale(static_cast<TY>(bar.ys[0].second.value()));
 
-      printf("y: %f - %f\n", y_min, y_max);
+      //printf("y: %f - %f\n", y_min, y_max);
       if (!(y_min <= y_max)) { // doubles are funny...
         RAISE(
             util::RuntimeException,
@@ -258,10 +258,11 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
             "or equal to Y value for all points");
       }
 
-      auto dx = viewport->paddingLeft() + y_min * viewport->innerWidth();
-      auto dy = viewport->paddingTop() + x.first * viewport->innerHeight();
       auto dw = (y_max - y_min) * viewport->innerWidth();
       auto dh = (x.second - x.first) * viewport->innerHeight();
+      auto dx = viewport->paddingLeft() + y_min * viewport->innerWidth();
+      auto dy = viewport->paddingTop() +
+          (1.0 - x.first) * viewport->innerHeight() - dh;
 
       double bar_padding = 0.2;
       dy += dh * bar_padding * 0.5;

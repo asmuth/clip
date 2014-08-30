@@ -129,12 +129,6 @@ public:
       series = series_iter->second;
     }
 
-    printf(
-        "[row] x=%s, y=%s, z=%s\n",
-        row[x_ind_].toString().c_str(),
-        row[y_ind_].toString().c_str(),
-        row[z_ind_].toString().c_str());
-
     series->addDatum(
         row[x_ind_].template getValue<TX>(),
         row[y_ind_].template getValue<TY>(),
