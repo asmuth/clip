@@ -182,23 +182,28 @@ AxisDefinition* BarChart3D<TX, TY, TZ>::addAxis(
           axis->setDomain(&x_domain_);
           return axis;
         case O_HORIZONTAL:
-          return canvas_->addAxis(position); //, y_domain_);
+          axis->setDomain(&y_domain_);
+          return axis;
       }
 
     case AxisDefinition::RIGHT:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position); //, y_domain_);
+          axis->setDomain(&y_domain_);
+          return axis;
         case O_HORIZONTAL:
-          return canvas_->addAxis(position); //, x_domain_);
+          axis->setDomain(&x_domain_);
+          return axis;
       }
 
     case AxisDefinition::BOTTOM:
       switch (orientation_) {
         case O_VERTICAL:
-          return canvas_->addAxis(position); //, x_domain_);
+          axis->setDomain(&x_domain_);
+          return axis;
         case O_HORIZONTAL:
-          return canvas_->addAxis(position); //, y_domain_);
+          axis->setDomain(&y_domain_);
+          return axis;
       }
 
     case AxisDefinition::LEFT:

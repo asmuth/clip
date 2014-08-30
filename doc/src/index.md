@@ -289,7 +289,8 @@ Syntax Reference
     DRAW AXIS {TOP|RIGHT|BOTTOM|LEFT}
         [ [ WITH ] ]
               [ TITLE 'title' ]
-              [ DOMAIN min, max [ LOGARITHMIC ] ];
+              [ DOMAIN min, max [ LOGARITHMIC ] ]
+              [ TICKS { INSIDE | OUTSIDE | OFF } ];
 
 ### SELECT statement
 

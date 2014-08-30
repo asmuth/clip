@@ -31,6 +31,15 @@ public:
   };
 
   /**
+   * The axis tick position
+   */
+  enum kTickPosition {
+    TICKS_INSIDE = 0,
+    TICKS_OUTSIDE = 1,
+    TICKS_OFF = 2
+  };
+
+  /**
    * Create a new axis definition
    *
    * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
@@ -84,6 +93,11 @@ public:
    * Return the position/placement of this axis
    */
   kPosition getPosition() const;
+
+  /**
+   * Return the tick position for this axis
+   */
+  kTickPosition getTickPosition() const;
 
   /**
    * Set the title for this axis

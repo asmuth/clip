@@ -42,6 +42,8 @@ public:
   void executeDrawable(ui::Drawable* drawable) {
     drawable->addAxis(ui::AxisDefinition::LEFT); // FIPXAUL
     drawable->addAxis(ui::AxisDefinition::BOTTOM); // FIPXAUL
+    drawable->addAxis(ui::AxisDefinition::TOP); // FIPXAUL
+    drawable->addAxis(ui::AxisDefinition::RIGHT); // FIPXAUL
   }
 
 protected:

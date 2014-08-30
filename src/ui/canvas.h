@@ -90,8 +90,8 @@ protected:
    */
   void renderTopAxis(
       RenderTarget* target,
+      Viewport* viewport,
       AxisDefinition* axis,
-      std::tuple<int, int, int, int>* padding,
       int top) const;
 
   /**
@@ -104,8 +104,8 @@ protected:
    */
   void renderRightAxis(
       RenderTarget* target,
+      Viewport* viewport,
       AxisDefinition* axis,
-      std::tuple<int, int, int, int>* padding,
       int right) const;
 
   /**
@@ -118,8 +118,8 @@ protected:
    */
   void renderBottomAxis(
       RenderTarget* target,
+      Viewport* viewport,
       AxisDefinition* axis,
-      std::tuple<int, int, int, int>* padding,
       int bottom) const;
 
   /**
