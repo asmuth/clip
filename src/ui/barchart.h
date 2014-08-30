@@ -121,21 +121,21 @@ template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   //series_colors_.emplace_back(seriesColor(series));
 
-  CategoricalDomain<TX>* x_domain;
+  Domain<TX>* x_domain;
   if (x_domain_.empty()) {
-    x_domain = new CategoricalDomain<TX>();
+    x_domain = new DiscreteDomain<TX>();
     x_domain_.reset(x_domain, true);
   } else {
-    x_domain = x_domain_.getAs<CategoricalDomain<TX>>();
+    x_domain = x_domain_.getAs<Domain<TX>>();
   }
 
-  //NuericalDomain<TY>* y_domain;
-  //if (x_domain_.empty()) {
-  //  x_domain = new CategoricalDomain<TX>();
-  //  x_domain_.reset(x_domain, true);
-  //} else {
-  //  x_domain = x_domain_.getAs<CategoricalDomain<TX>>();
-  //}
+  Domain<TY>* y_domain;
+  if (y_domain_.empty()) {
+    y_domain = new ContinuousDomain<TY>(); // FIXPAUL domain factory!
+    y_domain_.reset(y_domain, true);
+  } else {
+    y_domain = y_domain_.getAs<Domain<TY>>();
+  }
 
   for (const auto& point : series->getData()) {
     const auto& x_val = std::get<0>(point);
@@ -152,15 +152,17 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     if (bar_data == nullptr) {
       data_.emplace_back(x_val);
       bar_data = &data_.back();
-      x_domain->addCategory(x_val.value());
+      x_domain->addValue(x_val.value());
     }
 
     if (bar_data->ys.size() < num_series_ + 1) {
       for (int i = bar_data->ys.size(); i < num_series_; ++i) {
-      //  bar_data->ys.emplace_back(0, 0);
+        // bar_data->ys.emplace_back(0, 0);
       }
 
       bar_data->ys.emplace_back(y_val, z_val);
+      y_domain->addValue(y_val.value());
+      y_domain->addValue(static_cast<TY>(z_val.value()));
     }
   }
 
@@ -227,6 +229,8 @@ void BarChart3D<TX, TY, TZ>::render(
   //    target->finishGroup();
   //    break;
     case O_HORIZONTAL:
+  //target->beginGroup("bars horizontal");
+  //target->finishGroup();
       renderHorizontalBars(target, viewport);
       break;
   }
@@ -237,39 +241,14 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     RenderTarget* target,
     Viewport* viewport) const {
   auto x_domain = x_domain_.getAs<Domain<TX>>();
-  /* calculate bar width and padding */
-  //auto bar_height = (inner_height / data_.size()) * (1.0f - kBarPadding);
-  //auto bar_padding = (inner_height / data_.size()) * (kBarPadding * 0.5f);
-  //bar_height -= bar_padding / data_.size() * 2;
-
-  /* draw the bars */
-  //std::vector<double> y_ticks = {0.0f};
-  //std::vector<std::pair<double, std::string>> y_labels;
-
-  //auto draw_y = padding_top + bar_padding;
-  //auto draw_height = bar_height;
-  //auto y_domain = y_domain_;
-
-  //target->beginGroup("bars horizontal");
-  //target->finishGroup();
-
-  /* prepare y domain --- FIXPAUL move somewhere else */
-  NumericalDomain<TY> y_domain;
-  for (const auto& bar : data_) {
-    y_domain.addValue(bar.ys[0].first.value());
-    y_domain.addValue(static_cast<TY>(bar.ys[0].second.value()));
-  }
-
-  //axes->emplace_back(AxisDefinition::LEFT, &x_domain);
+  auto y_domain = y_domain_.getAs<Domain<TY>>();
 
   for (const auto& bar : data_) {
-    //draw_y += bar_padding;
     auto x = x_domain->scaleRange(bar.x.value());
-    //printf("x: %f - %f\n", x.first, x.second);
 
     //if (num_series_ == 1) {
-      auto y_min = y_domain.scale(bar.ys[0].first.value());
-      auto y_max = y_domain.scale(static_cast<TY>(bar.ys[0].second.value()));
+      auto y_min = y_domain->scale(bar.ys[0].first.value());
+      auto y_max = y_domain->scale(static_cast<TY>(bar.ys[0].second.value()));
 
       printf("y: %f - %f\n", y_min, y_max);
       if (!(y_min <= y_max)) { // doubles are funny...
