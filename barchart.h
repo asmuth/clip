@@ -39,9 +39,13 @@ namespace ui {
  *   orientation        = {horizontal,vertical}, default: horizontal
  *   stacked            = {on,off}, default: off
  */
-template <typename TX, typename TY, typename TZ>
+template <typename TX_, typename TY_, typename TZ_>
 class BarChart3D : public Drawable {
 public:
+  typedef TX_ TX;
+  typedef TY_ TY;
+  typedef TZ_ TZ;
+
   enum kBarChartOrientation {
     O_VERTICAL,
     O_HORIZONTAL
