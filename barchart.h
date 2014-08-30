@@ -47,7 +47,8 @@ public:
     O_HORIZONTAL
   };
 
-  constexpr static const double kBarPadding = 0.2f; // FIXPAUL make configurable
+  constexpr static const double kBarPadding = 0.3f; // FIXPAUL make configurable
+  constexpr static const double kBarPaddingInner = 0.2f; // FIXPAUL make configurable
 
   /**
    * Create a new bar chart with an explicit y domain
@@ -216,7 +217,6 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
   auto x_domain = x_domain_.getAs<Domain<TX>>();
   auto y_domain = y_domain_.getAs<Domain<TY>>();
 
-  printf("BARS: %i\n", data_.getData().size());
   for (const auto& bar : data_.getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
 
@@ -237,69 +237,17 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
       auto dy = viewport->paddingTop() +
           (1.0 - x.first) * viewport->innerHeight() - dh;
 
-      if (stacked_) {
-      } else {
-        double bar_padding = 0.3;
-        dy += dh * bar_padding * 0.5;
-        dh *= (1.0 - bar_padding);
-        dh /= data_.seriesCount();
+      dy += dh * kBarPadding * 0.5;
+      dh *= (1.0 - kBarPadding);
 
-        for (int i = 0; i < n; ++i) {
-          dy += dh;
-        }
+      if (!stacked_) {
+        dh /= data_.seriesCount();
+        dy += dh * n + (dh * kBarPaddingInner * 0.5);
+        dh *= (1.0 - kBarPaddingInner);
       }
 
       target->drawRect(dx, dy, dw, dh, "#000000", "bar");
     }
-
-
-    /* stacked */
-    /*else if (stacked_) {
-      double y_min = 0.0f;
-      double y_max = 0.0f;
-      for (int i = 0; i < bar.ys.size(); i++) {
-        auto& y_val = bar.ys[i];
-        y_max += y_val.second - y_val.first;
-        auto draw_x = padding_left + y_domain->scale(y_min) * inner_width;
-        auto draw_width = y_domain->scale(y_max - y_min) * inner_width;
-
-        target->drawRect(
-            draw_x,
-            draw_y,
-            draw_width,
-            draw_height,
-            series_colors_[i],
-            "bar");
-
-        y_min += y_val.second - y_val.first;
-      }
-    }*/
-
-    /* multi series unstacked */
-    /*else {
-      auto draw_y_multi = draw_y;
-      auto draw_height_multi = draw_height / num_series_;
-      for (int i = 0; i < bar.ys.size(); i++) {
-        //auto y_min = y_domain->scale(bar.ys[i].first);
-        //auto y_min = y_domain->scale(bar.ys[i].first);
-        double y_min = 0;
-        auto y_max = y_domain->scale(bar.ys[i].second);
-        auto draw_x = padding_left + y_min * inner_width;
-        auto draw_width = (y_max - y_min) * inner_width;
-
-        target->drawRect(
-            draw_x,
-            draw_y_multi,
-            draw_width,
-            draw_height_multi * (1.0f - kBarPadding * 0.5f),
-            series_colors_[i],
-            "bar");
-
-        draw_y_multi += (draw_height_multi * (1.0f + kBarPadding * 0.5f));
-      }
-    }*/
-
-    //draw_y += bar_height + bar_padding;
   }
 }
 

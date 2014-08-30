@@ -50,11 +50,8 @@ public:
         joined->ys.emplace_back(nullptr, nullptr);
       }
 
-      printf("pointisze: %i\n", joined->ys.size());
       if (joined->ys.size() < num_series_ + 1) {
-
         joined->ys.emplace_back(y_val, z_val);
-        printf("pointisze: %i\n", joined->ys.size());
       }
     }
 
