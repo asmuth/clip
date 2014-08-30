@@ -1,3 +1,5 @@
+invert domain for barchart
+domain padding
 rename rowsink to virtualtable
 rename seriesadapter to chartbuilder
 cli output format

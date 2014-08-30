@@ -108,7 +108,7 @@ template <typename TX, typename TY, typename TZ>
 BarChart3D<TX, TY, TZ>::BarChart3D(
     Canvas* canvas) :
     Drawable(canvas),
-    orientation_(O_HORIZONTAL),
+    orientation_(O_VERTICAL),
     stacked_(false) {}
 
 // FIXPAUL enforce that TY == TZ
@@ -289,7 +289,6 @@ void BarChart3D<TX, TY, TZ>::renderVerticalBars(
   for (const auto& bar : data->getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
 
-    printf("%s, %f-%f\n", bar.x.value().c_str(), x.first, x.second);
     for (int n = 0; n < data->seriesCount(); n++) {
       auto y_min = y_domain->scale(bar.ys[n].first.value());
       auto y_max = y_domain->scale(static_cast<TY>(bar.ys[n].second.value()));
