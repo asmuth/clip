@@ -43,21 +43,8 @@ public:
           "can't draw SELECT because it has no 'x' column");
     }
 
-    if (y_ind_ < 0) {
-      RAISE(
-          util::RuntimeException,
-          "can't draw SELECT because it has no 'y' column");
-    }
-
     if (adapter_.get() == nullptr) {
-      if (z_ind_ < 0) {
-        adapter_.reset(mkSeriesAdapter2D(row + x_ind_, row + y_ind_));
-      } else {
-        adapter_.reset(mkSeriesAdapter3D(
-            row + x_ind_,
-            row + y_ind_,
-            row + z_ind_));
-      }
+      adapter_.reset(mkSeriesAdapter(row));
     } else {
       adapter_->name_ind_ = name_ind_;
       adapter_->x_ind_ = x_ind_;
@@ -85,51 +72,67 @@ public:
 
 protected:
 
-  // FIXPAUL: this should be generated!
-  AnySeriesAdapter* mkSeriesAdapter2D(SValue* x, SValue* y) {
-    if (testSeriesSchema2D<double, double>(x, y)) {
-      return new SeriesAdapter2D<double, double>(
-          name_ind_,
-          x_ind_,
-          y_ind_);
+  AnySeriesAdapter* mkSeriesAdapter(SValue* row) {
+    AnySeriesAdapter* a = nullptr;
+    if (!a) a = mkSeriesAdapter1D<int>(row);
+    if (!a) a = mkSeriesAdapter1D<double>(row);
+    if (!a) a = mkSeriesAdapter1D<std::string>(row);
+
+    if (a == nullptr) {
+      RAISE(util::RuntimeException, "can't build seriesadapter");
     }
 
-    if (testSeriesSchema2D<std::string, double>(x, y)) {
-      return new SeriesAdapter2D<std::string, double>(
-          name_ind_,
-          x_ind_,
-          y_ind_);
-    }
-
-    return new SeriesAdapter2D<std::string, std::string>(
-        name_ind_,
-        x_ind_,
-        y_ind_);
-
-    assert(0);
+    return a;
   }
 
-  // FIXPAUL: this should be generated!
-  AnySeriesAdapter* mkSeriesAdapter3D(SValue* x, SValue* y, SValue* z) {
-    if (testSeriesSchema3D<std::string, double, double>(x, y, z)) {
-      return new SeriesAdapter3D<std::string, double, double>(
-          name_ind_,
-          x_ind_,
-          y_ind_,
-          z_ind_);
+  template <typename TX>
+  AnySeriesAdapter* mkSeriesAdapter1D(SValue* row) {
+    if (!row[x_ind_].testType<TX>()) {
+      return nullptr;
     }
 
-    assert(0);
+    if (y_ind_ < 0) {
+      return nullptr;
+    }
+
+    AnySeriesAdapter* a = nullptr;
+    if (!a) a = mkSeriesAdapter2D<TX, int>(row);
+    if (!a) a = mkSeriesAdapter2D<TX, double>(row);
+    if (!a) a = mkSeriesAdapter2D<TX, std::string>(row);
+    return a;
   }
 
   template <typename TX, typename TY>
-  bool testSeriesSchema2D(SValue* x, SValue* y) const {
-    return (x->testType<TX>() && y->testType<TY>());
+  AnySeriesAdapter* mkSeriesAdapter2D(SValue* row) {
+    if (!row[y_ind_].testType<TY>()) {
+      return nullptr;
+    }
+
+    if (z_ind_ < 0) {
+      return new SeriesAdapter2D<TX, TY>(
+          name_ind_,
+          x_ind_,
+          y_ind_);
+    }
+
+    AnySeriesAdapter* a = nullptr;
+    if (!a) a = mkSeriesAdapter3D<TX, TY, int>(row);
+    if (!a) a = mkSeriesAdapter3D<TX, TY, double>(row);
+    if (!a) a = mkSeriesAdapter3D<TX, TY, std::string>(row);
+    return a;
   }
 
   template <typename TX, typename TY, typename TZ>
-  bool testSeriesSchema3D(SValue* x, SValue* y, SValue* z) const {
-    return (x->testType<TX>() && y->testType<TY>() && y->testType<TZ>());
+  AnySeriesAdapter* mkSeriesAdapter3D(SValue* row) {
+    if (!row[z_ind_].testType<TZ>()) {
+      return nullptr;
+    }
+
+    return new SeriesAdapter3D<TX, TY, TZ>(
+        name_ind_,
+        x_ind_,
+        y_ind_,
+        z_ind_);
   }
 
   template <typename T>

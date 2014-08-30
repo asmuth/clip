@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 #include <stdlib.h>
@@ -135,8 +134,28 @@ SValue::kSValueType SValue::getType() const {
 }
 
 int64_t SValue::getInteger() const {
-  assert(data_.type == T_INTEGER);
-  return data_.u.t_integer;
+  switch (data_.type) {
+
+    case T_INTEGER:
+      return data_.u.t_integer;
+
+    case T_STRING:
+      try {
+        return std::stoi(getString());
+      } catch (std::exception e) {
+        /* fallthrough */
+      }
+
+    default:
+      RAISE(
+          TypeError,
+          "can't convert %s '%s' to Float",
+          SValue::getTypeName(data_.type),
+          toString().c_str());
+
+  }
+
+  return 0;
 }
 
 double SValue::getFloat() const {
@@ -265,7 +284,6 @@ SValue* SValue::fromToken(const Token* token) {
   }
 }
 
-
 const char* SValue::getTypeName(kSValueType type) {
   switch (type) {
     case T_STRING:
@@ -283,6 +301,14 @@ const char* SValue::getTypeName(kSValueType type) {
 
 const char* SValue::getTypeName() const {
   return SValue::getTypeName(data_.type);
+}
+
+template<> bool SValue::getValue<bool>() const {
+  return getBool();
+}
+
+template<> int SValue::getValue<int>() const {
+  return getInteger();
 }
 
 template<> double SValue::getValue<double>() const {
