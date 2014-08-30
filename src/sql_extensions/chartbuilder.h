@@ -136,12 +136,23 @@ protected:
   }
 
   template <typename T>
+  T* tryType2D() const {
+    return tryTypeND<T, SeriesAdapter2D<
+        typename T::TX,
+        typename T::TY>>();
+  }
+
+  template <typename T>
   T* tryType3D() const {
-    auto adapter = dynamic_cast<SeriesAdapter3D<
+    return tryTypeND<T, SeriesAdapter3D<
         typename T::TX,
         typename T::TY,
-        typename T::TZ>*>(
-        adapter_.get());
+        typename T::TZ>>();
+  }
+
+  template <typename T, typename S>
+  T* tryTypeND() const {
+    auto adapter = dynamic_cast<S*>(adapter_.get());
 
     if (adapter == nullptr) {
       return nullptr;
