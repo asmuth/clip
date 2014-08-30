@@ -16,7 +16,6 @@
 #include <fnordmetric/sql/execute.h>
 #include <fnordmetric/sql/queryplannode.h>
 #include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql_extensions/seriesadapter.h>
 #include <fnordmetric/sql_extensions/axisstatement.h>
 
 namespace fnordmetric {
@@ -77,11 +76,10 @@ public:
       chart_builder.executeStatement(stmt); //, result_lists_[i]);
     }
 
-    assert(chart_builder.adapter_.get() != nullptr);
-    auto drawable = chart_builder.adapter_->getDrawable();
+    auto drawable = chart_builder.getChart();
 
     for (const auto& axis_stmt : axis_stmts_) {
-      axis_stmt->executeDrawable(drawable);
+      axis_stmt->execute(drawable);
     }
   }
 

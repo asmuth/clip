@@ -7,19 +7,19 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
+#include <fnordmetric/ui/barchart.h>
 
 namespace fnordmetric {
 namespace query {
 
-void DrawStatement::execute(ui::Canvas* canvas) {
-  switch (type_) {
-    case T_BAR_CHART:
-      return executeWithType<BarChartBuilder>(canvas);
-    //case T_LINE_CHART:
-    //  return executeWithType<ui::LineChart>(canvas);
-  }
+BarChartBuilder::BarChartBuilder(ui::Canvas* canvas) : ChartBuilder(canvas) {}
+
+ui::Drawable* BarChartBuilder::getChart() const {
+  if (auto c = tryType3D<ui::BarChart3D<std::string, double, double>>())
+    return c;
+
+  RAISE(util::RuntimeException, "invalid series type for BarChart"); // FIXPAUL
 }
 
 }

@@ -59,6 +59,8 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/symboltable.cc
     stage/src/fnordmetric/sql/token.cc
     stage/src/fnordmetric/sql/tokenize.cc
+    stage/src/fnordmetric/sql_extensions/axisstatement.cc
+    stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
     stage/src/fnordmetric/sql_extensions/chartqueryplanbuilder.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc)
 

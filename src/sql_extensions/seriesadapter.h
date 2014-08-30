@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_QUERY_SERIESADAPTER_H
-#define _FNORDMETRIC_QUERY_SERIESADAPTER_H
+#ifndef _FNORDMETRIC_SQLEXTENSIONS_SERIESADAPTER_H
+#define _FNORDMETRIC_SQLEXTENSIONS_SERIESADAPTER_H
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
@@ -18,14 +18,16 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/compile.h>
 #include <fnordmetric/sql/execute.h>
+#include <fnordmetric/sql/rowsink.h>
+#include <fnordmetric/sql/queryplannode.h>
 
 namespace fnordmetric {
 namespace query {
 
-class AbstractSeriesAdapter : public RowSink {
+class AnySeriesAdapter : public RowSink {
 public:
 
-  AbstractSeriesAdapter(
+  AnySeriesAdapter(
       int name_ind,
       int x_ind,
       int y_ind,
@@ -35,8 +37,6 @@ public:
       y_ind_(y_ind),
       z_ind_(z_ind) {}
 
-  virtual ui::Drawable* getDrawable() = 0;
-
   int name_ind_;
   int x_ind_;
   int y_ind_;
@@ -44,16 +44,14 @@ public:
 };
 
 template <typename TX, typename TY>
-class SeriesAdapter2D : public AbstractSeriesAdapter {
+class SeriesAdapter2D : public AnySeriesAdapter {
 public:
 
   SeriesAdapter2D(
-      ui::Canvas* canvas,
       int name_ind,
       int x_ind,
       int y_ind) :
-      canvas_(canvas),
-      AbstractSeriesAdapter(name_ind, x_ind, y_ind, -1) {}
+      AnySeriesAdapter(name_ind, x_ind, y_ind, -1) {}
 
   bool nextRow(SValue* row, int row_len) override {
     std::string name = "unnamed";
@@ -79,38 +77,20 @@ public:
     return true;
   }
 
-  ui::Drawable* getDrawable() override {
-    printf("getDrawable called\n");
-    abort();
-    //auto x_domain = new ui::CategoricalDomain<TX>(); // FIXPAUL domain builder
-    //auto y_domain = new ui::NumericalDomain<TY>(0, 100); // FIXPAUL domain builder
-    //auto drawable = canvas_->addChart2D<ui::BarChart2D<TX, TY>>(x_domain, y_domain);
-
-    //for (const auto& series : series_list_) {
-    //  drawable->addSeries(static_cast<Series2D<TX, TY>*>(series.get()));
-    //}
-
-    //return drawable;
-  }
-
-protected:
-  ui::Canvas* canvas_;
   std::unordered_map<std::string, Series2D<TX, TY>*> series_map_;
   std::vector<std::unique_ptr<Series2D<TX, TY>>> series_list_;
 };
 
 template <typename TX, typename TY, typename TZ>
-class SeriesAdapter3D : public AbstractSeriesAdapter {
+class SeriesAdapter3D : public AnySeriesAdapter {
 public:
 
   SeriesAdapter3D(
-      ui::Canvas* canvas,
       int name_ind,
       int x_ind,
       int y_ind,
       int z_ind) :
-      canvas_(canvas),
-      AbstractSeriesAdapter(name_ind, x_ind, y_ind, z_ind) {}
+      AnySeriesAdapter(name_ind, x_ind, y_ind, z_ind) {}
 
   bool nextRow(SValue* row, int row_len) override {
     std::string name = "unnamed";
@@ -137,139 +117,8 @@ public:
     return true;
   }
 
-  ui::Drawable* getDrawable() override {
-    auto drawable = canvas_->addChart<ui::BarChart3D<TX, TY, TZ>>();
-
-    for (const auto& series : series_list_) {
-      drawable->addSeries(static_cast<Series3D<TX, TY, TZ>*>(series.get()));
-    }
-
-    return drawable;
-  }
-
-protected:
-  ui::Canvas* canvas_;
   std::unordered_map<std::string, Series3D<TX, TY, TZ>*> series_map_;
   std::vector<std::unique_ptr<Series3D<TX, TY, TZ>>> series_list_;
-};
-
-class SeriesAdapter : public RowSink {
-public:
-
-  SeriesAdapter(ui::Canvas* canvas) : canvas_(canvas) {}
-
-  bool nextRow(SValue* row, int row_len) {
-    if (name_ind_ < 0) {
-      RAISE(
-          util::RuntimeException,
-          "can't draw SELECT because it has no 'series' column");
-    }
-
-    if (x_ind_ < 0) {
-      RAISE(
-          util::RuntimeException,
-          "can't draw SELECT because it has no 'x' column");
-    }
-
-    if (y_ind_ < 0) {
-      RAISE(
-          util::RuntimeException,
-          "can't draw SELECT because it has no 'y' column");
-    }
-
-    if (adapter_.get() == nullptr) {
-      if (z_ind_ < 0) {
-        adapter_.reset(mkSeriesAdapter2D(row + x_ind_, row + y_ind_));
-      } else {
-        adapter_.reset(mkSeriesAdapter3D(
-            row + x_ind_,
-            row + y_ind_,
-            row + z_ind_));
-      }
-    } else {
-      adapter_->name_ind_ = name_ind_;
-      adapter_->x_ind_ = x_ind_;
-      adapter_->y_ind_ = y_ind_;
-      adapter_->z_ind_ = z_ind_;
-    }
-
-    adapter_->nextRow(row, row_len);
-    stmt_->setTarget(adapter_.get());
-    return true;
-  }
-
-  void executeStatement(QueryPlanNode* stmt) {
-    name_ind_ = stmt->getColumnIndex("series");
-    x_ind_ = stmt->getColumnIndex("x");
-    y_ind_ = stmt->getColumnIndex("y");
-    z_ind_ = stmt->getColumnIndex("z");
-
-    stmt_ = stmt;
-    stmt->setTarget(this);
-    stmt->execute();
-  }
-
-  std::unique_ptr<AbstractSeriesAdapter> adapter_;
-
-protected:
-
-  // FIXPAUL: this should be generated!
-  AbstractSeriesAdapter* mkSeriesAdapter2D(SValue* x, SValue* y) {
-    if (testSeriesSchema2D<double, double>(x, y)) {
-      return new SeriesAdapter2D<double, double>(
-          canvas_,
-          name_ind_,
-          x_ind_,
-          y_ind_);
-    }
-
-    if (testSeriesSchema2D<std::string, double>(x, y)) {
-      return new SeriesAdapter2D<std::string, double>(
-          canvas_,
-          name_ind_,
-          x_ind_,
-          y_ind_);
-    }
-
-    return new SeriesAdapter2D<std::string, std::string>(
-        canvas_,
-        name_ind_,
-        x_ind_,
-        y_ind_);
-
-    assert(0);
-  }
-
-  // FIXPAUL: this should be generated!
-  AbstractSeriesAdapter* mkSeriesAdapter3D(SValue* x, SValue* y, SValue* z) {
-    if (testSeriesSchema3D<std::string, double, double>(x, y, z)) {
-      return new SeriesAdapter3D<std::string, double, double>(
-          canvas_,
-          name_ind_,
-          x_ind_,
-          y_ind_,
-          z_ind_);
-    }
-
-    assert(0);
-  }
-
-  template <typename TX, typename TY>
-  bool testSeriesSchema2D(SValue* x, SValue* y) const {
-    return (x->testType<TX>() && y->testType<TY>());
-  }
-
-  template <typename TX, typename TY, typename TZ>
-  bool testSeriesSchema3D(SValue* x, SValue* y, SValue* z) const {
-    return (x->testType<TX>() && y->testType<TY>() && y->testType<TZ>());
-  }
-
-  int name_ind_;
-  int x_ind_;
-  int y_ind_;
-  int z_ind_;
-  QueryPlanNode* stmt_;
-  ui::Canvas* canvas_;
 };
 
 }

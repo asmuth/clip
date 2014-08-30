@@ -7,20 +7,19 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/sql_extensions/barchartbuilder.h>
+#ifndef _FNORDMETRIC_SQLEXTENSIONS_BARCHARTBUILDER_H
+#define _FNORDMETRIC_SQLEXTENSIONS_BARCHARTBUILDER_H
+#include <fnordmetric/sql_extensions/chartbuilder.h>
 
 namespace fnordmetric {
 namespace query {
 
-void DrawStatement::execute(ui::Canvas* canvas) {
-  switch (type_) {
-    case T_BAR_CHART:
-      return executeWithType<BarChartBuilder>(canvas);
-    //case T_LINE_CHART:
-    //  return executeWithType<ui::LineChart>(canvas);
-  }
-}
+class BarChartBuilder : public ChartBuilder {
+public:
+  BarChartBuilder(ui::Canvas* canvas);
+  ui::Drawable* getChart() const override;
+};
 
 }
 }
+#endif

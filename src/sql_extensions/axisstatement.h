@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_QUERY_AXISSTATEMENT_H
 #define _FNORDMETRIC_QUERY_AXISSTATEMENT_H
 #include <stdlib.h>
@@ -18,6 +17,10 @@
 #include <fnordmetric/ui/axisdefinition.h>
 
 namespace fnordmetric {
+namespace ui {
+class Drawable;
+}
+
 namespace query {
 
 class AxisStatement : public QueryPlanNode {
@@ -39,12 +42,7 @@ public:
     return columns_;
   }
 
-  void executeDrawable(ui::Drawable* drawable) {
-    drawable->addAxis(ui::AxisDefinition::LEFT); // FIPXAUL
-    drawable->addAxis(ui::AxisDefinition::BOTTOM); // FIPXAUL
-    drawable->addAxis(ui::AxisDefinition::TOP); // FIPXAUL
-    drawable->addAxis(ui::AxisDefinition::RIGHT); // FIPXAUL
-  }
+  void execute(ui::Drawable* drawable);
 
 protected:
   std::vector<std::string> columns_;
