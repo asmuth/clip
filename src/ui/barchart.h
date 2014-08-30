@@ -92,13 +92,17 @@ protected:
       std::tuple<int, int, int, int>* padding) const;
 
 */
-  void renderHorizontalBars(RenderTarget* target, Viewport* viewport) const;
+  void renderHorizontalBars(
+      RenderTarget* target,
+      Viewport* viewport,
+      SeriesJoin3D<TX, TY, TZ> const* data) const;
+
+  void stackData(SeriesJoin3D<TX, TY, TZ> const* target) const;
 
   DomainAdapter x_domain_;
   DomainAdapter y_domain_;
   SeriesJoin3D<TX, TY, TY> data_;
 
-  Canvas* canvas_;
   kBarChartOrientation orientation_;
   bool stacked_;
 };
@@ -106,9 +110,9 @@ protected:
 template <typename TX, typename TY, typename TZ>
 BarChart3D<TX, TY, TZ>::BarChart3D(
     Canvas* canvas) :
-    canvas_(canvas),
+    Drawable(canvas),
     orientation_(O_HORIZONTAL),
-    stacked_(false) {}
+    stacked_(true) {}
 
 // FIXPAUL enforce that TY == TZ
 template <typename TX, typename TY, typename TZ>
@@ -196,6 +200,15 @@ void BarChart3D<TX, TY, TZ>::render(
     RAISE(util::RuntimeException, "BarChart3D#render called without any data");
   }
 
+  SeriesJoin3D<TX, TY, TZ> const* data;
+  SeriesJoin3D<TX, TY, TZ> stacked_data;
+  if (stacked_) {
+    stackData(&stacked_data);
+    data = &stacked_data;
+  } else {
+    data = &data_;
+  }
+
   switch (orientation_) {
   //  case O_VERTICAL:
   //    target->beginGroup("bars vertical");
@@ -205,7 +218,7 @@ void BarChart3D<TX, TY, TZ>::render(
     case O_HORIZONTAL:
   //target->beginGroup("bars horizontal");
   //target->finishGroup();
-      renderHorizontalBars(target, viewport);
+      renderHorizontalBars(target, viewport, data);
       break;
   }
 }
@@ -213,14 +226,15 @@ void BarChart3D<TX, TY, TZ>::render(
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     RenderTarget* target,
-    Viewport* viewport) const {
+    Viewport* viewport,
+    SeriesJoin3D<TX, TY, TZ> const* data) const {
   auto x_domain = x_domain_.getAs<Domain<TX>>();
   auto y_domain = y_domain_.getAs<Domain<TY>>();
 
-  for (const auto& bar : data_.getData()) {
+  for (const auto& bar : data->getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
 
-    for (int n = 0; n < data_.seriesCount(); n++) {
+    for (int n = 0; n < data->seriesCount(); n++) {
       auto y_min = y_domain->scale(bar.ys[n].first.value());
       auto y_max = y_domain->scale(static_cast<TY>(bar.ys[n].second.value()));
 
@@ -241,7 +255,7 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
       dh *= (1.0 - kBarPadding);
 
       if (!stacked_) {
-        dh /= data_.seriesCount();
+        dh /= data->seriesCount();
         dy += dh * n + (dh * kBarPaddingInner * 0.5);
         dh *= (1.0 - kBarPaddingInner);
       }
@@ -250,6 +264,13 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
     }
   }
 }
+
+template <typename TX, typename TY, typename TZ>
+void BarChart3D<TX, TY, TZ>::stackData(
+    SeriesJoin3D<TX, TY, TZ> const* target) const {
+
+}
+
 
 }
 }
