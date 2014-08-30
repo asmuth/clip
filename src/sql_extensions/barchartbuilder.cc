@@ -16,10 +16,13 @@ namespace query {
 BarChartBuilder::BarChartBuilder(ui::Canvas* canvas) : ChartBuilder(canvas) {}
 
 ui::Drawable* BarChartBuilder::getChart() const {
+  if (auto c = tryType3D<ui::BarChart3D<std::string, int, int>>())
+    return c;
+
   if (auto c = tryType3D<ui::BarChart3D<std::string, double, double>>())
     return c;
 
-  RAISE(util::RuntimeException, "invalid series type for BarChart"); // FIXPAUL
+  invalidType();
 }
 
 }

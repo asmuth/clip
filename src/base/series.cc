@@ -14,4 +14,7 @@ namespace fnordmetric {
 template <>
 Series::Point<double>::Point(std::nullptr_t) : value_(0.0) {}
 
+template <>
+Series::Point<int>::Point(std::nullptr_t) : value_(0) {}
+
 }

@@ -153,6 +153,10 @@ protected:
     }
   }
 
+  void invalidType() const {
+    RAISE(util::RuntimeException, "invalid series type for BarChart"); // FIXPAUL
+  }
+
   std::unique_ptr<AnySeriesAdapter> adapter_;
   int name_ind_;
   int x_ind_;
