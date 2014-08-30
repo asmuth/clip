@@ -103,15 +103,15 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
   viewport->setPadding(padding);
 
   for (const auto& placement : top) {
-    //renderTopAxis(target, placement.second, padding, placement.first);
+    renderTopAxis(target, viewport, placement.second, placement.first);
   }
 
   for (const auto& placement : right) {
-    //renderRightAxis(target, placement.second, padding, placement.first);
+    renderRightAxis(target, viewport, placement.second, placement.first);
   }
 
   for (const auto& placement : bottom) {
-    //renderBottomAxis(target, placement.second, padding, placement.first);
+    renderBottomAxis(target, viewport, placement.second, placement.first);
   }
 
   for (const auto& placement : left) {
@@ -121,11 +121,11 @@ void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
 
 void Canvas::renderTopAxis(
     RenderTarget* target,
+    Viewport* viewport,
     AxisDefinition* axis,
-    std::tuple<int, int, int, int>* padding,
     int top) const {
-  int padding_left = std::get<3>(*padding);
-  int inner_width = width_ - std::get<1>(*padding) - padding_left;
+  int padding_left = viewport->paddingLeft();
+  int inner_width = viewport->innerWidth();
 
   top += kAxisPadding;
   target->beginGroup("axis bottom");
@@ -186,11 +186,11 @@ void Canvas::renderTopAxis(
 
 void Canvas::renderRightAxis(
     RenderTarget* target,
+    Viewport* viewport,
     AxisDefinition* axis,
-    std::tuple<int, int, int, int>* padding,
     int right) const {
-  int padding_top = std::get<0>(*padding);
-  int inner_height = height_ - std::get<2>(*padding) - padding_top;
+  int padding_top = viewport->paddingTop();
+  int inner_height = viewport->innerHeight();
 
   right += kAxisPadding;
   target->beginGroup("axis right");
@@ -250,11 +250,11 @@ void Canvas::renderRightAxis(
 
 void Canvas::renderBottomAxis(
     RenderTarget* target,
+    Viewport* viewport,
     AxisDefinition* axis,
-    std::tuple<int, int, int, int>* padding,
     int bottom) const {
-  int padding_left = std::get<3>(*padding);
-  int inner_width = width_ - std::get<1>(*padding) - padding_left;
+  int padding_left = viewport->paddingLeft();
+  int inner_width = viewport->innerWidth();
 
   bottom += kAxisPadding;
   target->beginGroup("axis bottom");
