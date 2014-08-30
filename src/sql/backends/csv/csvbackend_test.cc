@@ -110,7 +110,6 @@ TEST_CASE(CSVInputStreamTest, TestReadRowsWithHeaders, [] () {
       }
     }
 
-    printf("NUM: %i\n", num_rows);
     EXPECT_EQ(num_rows, 191);
     table_ref.rewind();
   }
