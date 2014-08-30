@@ -143,7 +143,7 @@ protected:
     if (adapter == nullptr) {
       return nullptr;
     } else {
-      auto chart = new T(canvas_);
+      auto chart = canvas_->addChart<T>();
 
       for (const auto& series : adapter->series_list_) {
         chart->addSeries(series.get());
