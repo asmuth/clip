@@ -52,7 +52,7 @@ public:
 
   virtual void addValue(const T& value) = 0;
 
-  //virtual bool contains(T value) const = 0;
+  virtual bool contains(T value) const = 0;
 
 };
 
@@ -107,6 +107,10 @@ public:
     }
   }
 
+  bool contains(T value) const {
+    return false;
+  }
+
   const std::vector<double> getTicks() const {
     return std::vector<double>{0.0, 0.5, 1.0};
   }
@@ -137,12 +141,7 @@ public:
   DiscreteDomain() {}
 
   std::string label(T value) const {
-    //if (index < 0 && index > categories_.size() - 1) {
-    //  return "n/a";
-    //} else {
-      return "fnord";
-      //return categories_[index];
-    //}
+    return fnordmetric::util::format::toHuman(value);
   }
 
   double scale(T value) const {
@@ -155,7 +154,8 @@ public:
       RAISE(util::RuntimeException, "can't scale value");
     }
 
-    return index;
+    double cardinality = (double) categories_.size();
+    return ((double) index - 0.5f) / cardinality;
   }
 
   std::pair<double, double> scaleRange(T value) const {
@@ -201,13 +201,21 @@ public:
   }
 
   const std::vector<std::pair<double, std::string>> getLabels() const {
-    return std::vector<std::pair<double, std::string>>{
-        { 0.0, "0" },
-        { 0.2, "5" },
-        { 0.4, "10" },
-        { 0.6, "15" },
-        { 0.8, "20" },
-        { 1.0, "25" }};
+    std::vector<std::pair<double, std::string>> labels;
+
+    for (const auto category : categories_) {
+      auto point = scale(category);
+      labels.emplace_back(point, label(category));
+    }
+
+    return labels;
+  }
+
+  bool contains(T value) const {
+    return std::find(
+        categories_.begin(),
+        categories_.end(),
+        value) != categories_.end();
   }
 
 protected:
