@@ -36,7 +36,7 @@ static const std::string kStyleSheetDefault = R"(
   }
 
   .axis .label {
-    font-size: 9pt;
+    font-size: 10px;
   }
 
   .axis .title {
