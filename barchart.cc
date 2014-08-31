@@ -22,9 +22,5 @@ void BarChart::setOrientation(kBarChartOrientation orientation) {
   orientation_ = orientation;
 }
 
-void BarChart::setStacked(bool stacked) {
-  stacked_ = stacked;
-}
-
 }
 }

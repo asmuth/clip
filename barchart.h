@@ -69,7 +69,7 @@ public:
    *
    * @param stack bars? true or false
    */
-  void setStacked(bool stacked);
+  virtual void setStacked(bool stacked) = 0;
 
 protected:
   kBarChartOrientation orientation_;
@@ -108,6 +108,13 @@ public:
    * @param position the position/placement of the axis
    */
    AxisDefinition* addAxis(AxisDefinition::kPosition position) override;
+
+  /**
+   * Set the stacked property of this bar chart
+   *
+   * @param stack bars? true or false
+   */
+  void setStacked(bool stacked) override;
 
 protected:
 
@@ -194,18 +201,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
   data_.addSeries(series);
   series_.push_back(series);
-
-  if (stacked_) {
-    for (const auto& bar : data_.getData()) {
-      TY max = 0;
-
-      for (const auto& y : bar.ys) {
-        max += y.second.value() - y.first.value();
-      }
-
-      y_domain->addValue(max);
-    }
-  }
+  setStacked(stacked_);
 
   if (!series->hasProperty(Series::P_COLOR)) {
     color_palette_.setNextColor(series);
@@ -393,6 +389,25 @@ const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
   }
 
   return series_[series_index]->getProperty(Series::P_COLOR);
+}
+
+template <typename TX, typename TY, typename TZ>
+void BarChart3D<TX, TY, TZ>::setStacked(bool stacked) {
+  stacked_ = stacked;
+
+  if (stacked && !y_domain_.empty()) {
+    auto y_domain = y_domain_.getAs<Domain<TY>>();
+
+    for (const auto& bar : data_.getData()) {
+      TY max = 0;
+
+      for (const auto& y : bar.ys) {
+        max += y.second.value() - y.first.value();
+      }
+
+      y_domain->addValue(max);
+    }
+  }
 }
 
 template <typename TX, typename TY>
