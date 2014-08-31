@@ -180,7 +180,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
   Domain<TY>* y_domain;
   if (y_domain_.empty()) {
-    y_domain = new ContinuousDomain<TY>(); // FIXPAUL domain factory!
+    y_domain = Domain<TY>::mkDomain();
     y_domain_.reset(y_domain, true);
   } else {
     y_domain = y_domain_.getAs<Domain<TY>>();
