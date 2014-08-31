@@ -20,12 +20,11 @@ class RenderTarget;
 class Canvas;
 
 // FIXPAUL: rename to chart
-// FIXPAUL: move that color stuff somewhere else!
 class Drawable {
   friend class Canvas;
 public:
 
-  Drawable(Canvas* canvas) : canvas_(canvas), color_index_(0) {}
+  Drawable(Canvas* canvas) : canvas_(canvas) {}
   virtual ~Drawable() {}
 
   /**
@@ -41,20 +40,9 @@ public:
 
 protected:
 
-  const std::string& seriesColor(Series* series) {
-    if (series->getColor().size() == 0) {
-      char buf[32];
-      size_t size = snprintf(buf, sizeof(buf), "color%i", ++color_index_);
-      series->setColor(std::string(buf, size));
-    }
-
-    return series->getColor();
-  }
-
   virtual void render(RenderTarget* target, Viewport* viewport) const = 0;
 
   Canvas* canvas_;
-  int color_index_;
 };
 
 }
