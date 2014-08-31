@@ -39,43 +39,67 @@ namespace ui {
  *   orientation        = {horizontal,vertical}, default: horizontal
  *   stacked            = {on,off}, default: off
  */
-template <typename TX_, typename TY_, typename TZ_>
-class BarChart3D : public Drawable {
+class BarChart : public Drawable {
 public:
-  typedef TX_ TX;
-  typedef TY_ TY;
-  typedef TZ_ TZ;
+  constexpr static const double kBarPadding = 0.3f; // FIXPAUL make configurable
+  constexpr static const double kBarPaddingInner = 0.2f; // FIXPAUL make configurable
 
   enum kBarChartOrientation {
     O_VERTICAL,
     O_HORIZONTAL
   };
 
-  constexpr static const double kBarPadding = 0.3f; // FIXPAUL make configurable
-  constexpr static const double kBarPaddingInner = 0.2f; // FIXPAUL make configurable
-
   /**
-   * Create a new bar chart with an explicit y domain
+   * Create a new bar chart
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
-   * @param orientation one of {O_HORIZNTAL,O_VERTICAL}. default is horizontal
-   * @param stack groups?
-   * @param the y/value domain. does not transfer ownership
+   */
+  BarChart(Canvas* canvas);
+
+  /**
+   * Set the orientation of this bar chart
+   *
+   * @param orientation one of {O_HORIZONTAL, O_VERTICAL}
+   */
+  void setOrientation(kBarChartOrientation orientation);
+
+  /**
+   * Set the stacked property of this bar chart
+   *
+   * @param stack bars? true or false
+   */
+  void setStacked(bool stacked);
+
+protected:
+  kBarChartOrientation orientation_;
+  bool stacked_;
+};
+
+template <typename TX_, typename TY_, typename TZ_>
+class BarChart3D : public BarChart {
+public:
+  typedef TX_ TX;
+  typedef TY_ TY;
+  typedef TZ_ TZ;
+
+  /**
+   * Create a new bar chart for 3 dimensional series
+   *
+   * @param canvas the canvas to draw this chart on. does not transfer ownership
    */
   BarChart3D(Canvas* canvas);
 
   /**
-   * Add a (x: string, y: double) series. This will draw one bar for each point
-   * in the series where x is the label of the bar and y is the height of the
-   * bar
+   * Add a (x: string, y: double, z: double) series. This will draw one bar for
+   * each point in the series where x is the label of the bar, y is the lower
+   * bound of the bar and z is the upper bound of the bar
    *
    * @param series the series to add. does not transfer ownership
    */
   void addSeries(Series3D<TX, TY, TZ>* series);
 
   /**
-   * Add an axis to the chart. This method should only be called after all
-   * series have been added to the chart.
+   * Add an axis to the chart.
    *
    * The returned pointer is owned by the canvas object and must not be freed
    * by the caller!
@@ -103,9 +127,6 @@ protected:
   DomainAdapter x_domain_;
   DomainAdapter y_domain_;
   SeriesJoin3D<TX, TY, TY> data_;
-
-  kBarChartOrientation orientation_;
-  bool stacked_;
 };
 
 template <typename TX_, typename TY_>
@@ -113,6 +134,13 @@ class BarChart2D : public BarChart3D<TX_, TY_, TY_> {
 public:
   typedef TX_ TX;
   typedef TY_ TY;
+
+  /**
+   * Create a new bar chart for 2 dimensional series
+   *
+   * @param canvas the canvas to draw this chart on. does not transfer ownership
+   */
+  BarChart2D(Canvas* canvas);
 
   /**
    * Add a (x: string, y: double) series. This will draw one bar for each point
@@ -123,18 +151,12 @@ public:
    */
   void addSeries(Series2D<TX, TY>* series);
 
-  BarChart2D(Canvas* canvas);
-
 protected:
   std::vector<Series3D<TX, TY, TY>> series_;
 };
 
 template <typename TX, typename TY, typename TZ>
-BarChart3D<TX, TY, TZ>::BarChart3D(
-    Canvas* canvas) :
-    Drawable(canvas),
-    orientation_(O_VERTICAL),
-    stacked_(false) {}
+BarChart3D<TX, TY, TZ>::BarChart3D(Canvas* canvas) : BarChart(canvas) {}
 
 // FIXPAUL enforce that TY == TZ
 template <typename TX, typename TY, typename TZ>

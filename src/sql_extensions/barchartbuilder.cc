@@ -19,6 +19,14 @@ BarChartBuilder::BarChartBuilder(
     ChartBuilder(canvas, draw_stmt) {}
 
 ui::Drawable* BarChartBuilder::getChart() const {
+  auto chart = dynamic_cast<ui::BarChart*>(findChartType());
+
+  chart->setOrientation(ui::BarChart::O_HORIZONTAL);
+
+  return chart;
+}
+
+ui::Drawable* BarChartBuilder::findChartType() const {
   if (auto c = tryType2D<ui::BarChart2D<std::string, int>>())
     return c;
 
@@ -32,6 +40,7 @@ ui::Drawable* BarChartBuilder::getChart() const {
     return c;
 
   invalidType();
+  return nullptr;
 }
 
 }

@@ -19,6 +19,8 @@ class BarChartBuilder : public ChartBuilder {
 public:
   BarChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
   ui::Drawable* getChart() const override;
+protected:
+  ui::Drawable* findChartType() const;
 };
 
 }
