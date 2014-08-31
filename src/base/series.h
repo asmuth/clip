@@ -18,7 +18,7 @@ namespace fnordmetric {
 class Series {
 public:
   template <typename T>
-  class Coord {
+  struct Coord {
   public:
     explicit Coord(T value) : value_(value) {}
     explicit Coord(std::nullptr_t);
@@ -48,58 +48,115 @@ protected:
   std::string color_;
 };
 
-template <typename X, typename Y>
+template <typename TX, typename TY>
 class Series2D : public Series {
 public:
+  class Point {
+  public:
+    explicit Point(TX x, TY y) : data_(Coord<TX>(x), Coord<TY>(y)) {}
+    explicit Point(Coord<TX> x, Coord<TY> y) : data_(x, y) {}
+
+    const TX x() const {
+      return std::get<0>(data_).value();
+    }
+
+    const Coord<TX>& x_coord() const {
+      return std::get<0>(data_);
+    }
+
+    const TY y() const {
+      return std::get<1>(data_).value();
+    }
+
+    const Coord<TY>& y_coord() const {
+      return std::get<1>(data_);
+    }
+
+  protected:
+    std::tuple<Coord<TX>, Coord<TY>> data_;
+  };
+
   Series2D() : Series2D("unnamed") {}
   explicit Series2D(const std::string& name) : Series(name) {}
 
-  void addDatum(X x, Y y) {
+  void addDatum(TX x, TY y) {
     data_.emplace_back(x, y);
   }
 
-  void addDatum(Series::Coord<X> x, Series::Coord<Y> y) {
+  void addDatum(Coord<TX> x, Coord<TY> y) {
     data_.emplace_back(x, y);
   }
 
-  const std::vector<std::tuple<
-      Series::Coord<X>,
-      Series::Coord<Y>>>& getData() const {
+  const std::vector<Point>& getData() const {
     return data_;
   }
 
 protected:
-  std::vector<std::tuple<
-      Series::Coord<X>,
-      Series::Coord<Y>>> data_;
+  std::vector<Point> data_;
 };
 
-template <typename X, typename Y, typename Z>
+template <typename TX, typename TY, typename TZ>
 class Series3D : public Series {
 public:
+  class Point {
+  public:
+    explicit Point(
+        TX x,
+        TY y,
+        TZ z) :
+        data_(Coord<TX>(x), Coord<TY>(y), Coord<TZ>(z)) {}
+
+    explicit Point(
+        Coord<TX> x,
+        Coord<TY> y,
+        Coord<TZ> z) :
+        data_(x, y, z) {}
+
+    const TX x() const {
+      return std::get<0>(data_).value();
+    }
+
+    const Coord<TX>& x_coord() const {
+      return std::get<0>(data_);
+    }
+
+    const TY y() const {
+      return std::get<1>(data_).value();
+    }
+
+    const Coord<TY>& y_coord() const {
+      return std::get<1>(data_);
+    }
+
+    const TZ z() const {
+      return std::get<2>(data_).value();
+    }
+
+    const Coord<TZ>& z_coord() const {
+      return std::get<2>(data_);
+    }
+
+  protected:
+    std::tuple<Coord<TX>, Coord<TY>, Coord<TZ>> data_;
+  };
+
   Series3D() : Series3D("unnamed") {}
   explicit Series3D(const std::string& name) : Series(name) {}
 
-  void addDatum(X x, Y y, Z z) {
+  void addDatum(TX x, TY y, TZ z) {
     data_.emplace_back(x, y, z);
   }
 
-  void addDatum(Series::Coord<X> x, Series::Coord<Y> y, Series::Coord<Z> z) {
+  void addDatum(Coord<TX> x, Coord<TY> y, Coord<TZ> z) {
     data_.emplace_back(x, y, z);
   }
 
-  const std::vector<std::tuple<
-      Series::Coord<X>,
-      Series::Coord<Y>,
-      Series::Coord<Z>>>& getData() const {
+  const std::vector<Point>& getData() const {
     return data_;
   }
 
 protected:
-  std::vector<std::tuple<
-      Series::Coord<X>,
-      Series::Coord<Y>,
-      Series::Coord<Z>>> data_;
+  std::vector<Point> data_;
 };
 
 }
