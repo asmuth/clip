@@ -249,7 +249,6 @@ grouping on all rows. This assumes that the nongrouped columns will have the sam
 group-wise values. Otherwise, the result is undefined. The same applies for
 the HAVING clause.
 
-
 ### GROUP BY and HAVING extensions
 
 Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
@@ -263,6 +262,89 @@ the HAVING clause.
 Syntax Reference
 ----------------
 
+### DRAW ... CHART statement
+
+    common_chart_options ::=
+        [ TITLE 'title' ]
+        [ SUBTITLE 'subtitle' ]
+        [ XDOMAIN min, max [ LOGARITHMIC ] ]
+        [ YDOMAIN min, max [ LOGARITHMIC ] ]
+        [ ZDOMAIN min, max [ LOGARITHMIC ] ]
+
+    axis_definition ::=
+        AXIS { TOP | RIGHT | BOTTOM | LEFT | LEFTRIGHT | TOPBOTTOM }
+            [ LABEL 'title' ]
+            [ TICKS { INSIDE | OUTSIDE | OFF } ];
+
+    DRAW AREA CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW BAR CHART
+        [ [ WITH ]
+              common_chart_options
+              [ ORIENTATION { HORIZONTAL | VERTICAL } ]
+              [ STACKED ]
+              [ LABELS { INSIDE | OUTSIDE } ] ]
+              [ axis_definition... ] ]
+
+    DRAW BOXPLOT CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW BUBBLE CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW ERRORBARS CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW HEATMAP CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW GANTT CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW HISTOGRAM CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW LINE CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW PIE CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW POINT CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW POLAR CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+    DRAW SPARKLINE CHART
+        [ [ WITH ]
+              common_chart_options
+              [ axis_definition... ] ]
+
+
 ### IMPORT statement
 
     IMPORT TABLE tablename FROM CSV { 'filename' | STDIN }
@@ -273,24 +355,6 @@ Syntax Reference
               [ QUOTE [ AS ] 'escape' ]
               [ ESCAPE [ AS ] 'escape' ] ]
 
-### DRAW ... CHART statement
-
-    DRAW BAR CHART
-        [ [ WITH ] ]
-              [ TITLE 'title' ]
-              [ SUBTITLE 'subtitle' ]
-              [ ORIENTATION {HORIZONTAL|VERTICAL} ]
-              [ STACKED ]
-              [ LABELS {INSIDE|OUTSIDE|OFF} ] ]
-
-
-### DRAW AXIS statement
-
-    DRAW AXIS {TOP|RIGHT|BOTTOM|LEFT}
-        [ [ WITH ] ]
-              [ TITLE 'title' ]
-              [ DOMAIN min, max [ LOGARITHMIC ] ]
-              [ TICKS { INSIDE | OUTSIDE | OFF } ];
 
 ### SELECT statement
 
@@ -300,12 +364,11 @@ Syntax Reference
         [FROM table_references
         [WHERE where_condition]
         [GROUP BY {col_name | expr | position}
-          [ASC | DESC], ...]
+            [ASC | DESC], ...]
         [HAVING where_condition]
         [ORDER BY {col_name | expr | position}
-          [ASC | DESC], ...]
-        [LIMIT {[offset,] row_count | row_count OFFSET offset}];
-
+            [ASC | DESC], ...]
+        [LIMIT {[offset,] row_count | row_count OFFSET offset}]
 
 
 Hacking

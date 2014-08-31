@@ -123,10 +123,12 @@ protected:
       SeriesJoin3D<TX, TY, TZ> const* data) const;
 
   void stackData(SeriesJoin3D<TX, TY, TZ>* target) const;
+  const std::string& seriesColor(size_t series_index) const;
 
   DomainAdapter x_domain_;
   DomainAdapter y_domain_;
   SeriesJoin3D<TX, TY, TY> data_;
+  std::vector<Series3D<TX, TY, TY>*> series_;
 };
 
 template <typename TX_, typename TY_>
@@ -151,8 +153,6 @@ public:
    */
   void addSeries(Series2D<TX, TY>* series);
 
-protected:
-  std::vector<Series3D<TX, TY, TY>> series_;
 };
 
 template <typename TX, typename TY, typename TZ>
@@ -191,6 +191,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   }
 
   data_.addSeries(series);
+  series_.push_back(series);
 
   if (stacked_) {
     for (const auto& bar : data_.getData()) {
@@ -316,7 +317,7 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
         dh *= (1.0 - kBarPaddingInner);
       }
 
-      target->drawRect(dx, dy, dw, dh, "#000000", "bar");
+      target->drawRect(dx, dy, dw, dh, seriesColor(n), "bar");
     }
   }
 }
@@ -351,7 +352,7 @@ void BarChart3D<TX, TY, TZ>::renderVerticalBars(
         dw *= (1.0 - kBarPaddingInner);
       }
 
-      target->drawRect(dx, dy, dw, dh, "#000000", "bar");
+      target->drawRect(dx, dy, dw, dh, seriesColor(n), "bar");
     }
   }
 }
@@ -378,6 +379,17 @@ void BarChart3D<TX, TY, TZ>::stackData(
   target->setSeriesCount(data_.seriesCount());
 }
 
+template <typename TX, typename TY, typename TZ>
+const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
+    size_t series_index) const {
+  if (series_index > series_.size()) {
+    RAISE(util::RuntimeException, "invalid series index");
+  }
+
+  printf("GETPROP\n");
+  return series_[series_index]->getProperty(Series::P_COLOR);
+}
+
 template <typename TX, typename TY>
 BarChart2D<TX, TY>::BarChart2D(
     Canvas* canvas) :
@@ -385,8 +397,7 @@ BarChart2D<TX, TY>::BarChart2D(
 
 template <typename TX, typename TY>
 void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
-  series_.emplace_back();
-  auto series3d = &series_.back();
+  auto series3d = new Series3D<TX, TY, TY>(); // FIXPAUL: never free'd!
 
   for (const auto& point : series->getData()) {
     // FIXPAUL copy properties

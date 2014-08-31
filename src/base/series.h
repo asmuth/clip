@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 
@@ -26,6 +28,10 @@ public:
     bool operator==(const Coord<T>& other) { return value_ == other.value_; }
   protected:
     const T value_;
+  };
+
+  enum kProperty {
+    P_COLOR = 1
   };
 
   Series(const std::string& name) :
@@ -43,7 +49,28 @@ public:
     return color_;
   }
 
+  const std::string& getProperty(kProperty prop) {
+    const auto p = properties_.find(prop);
+
+    if (p != properties_.end()) {
+      if (p->second.size() > 0) {
+        return p->second[0];
+      }
+    }
+
+    RAISE(util::RuntimeException, "property not set");
+  }
+
+  const void seDefaultProperty(kProperty prop, const std::string& val) {
+    const auto p = properties_.find(prop);
+
+    if (p == properties_.end()) {
+      properties_.emplace(std::make_pair(prop, std::vector<std::string>{val}));
+    }
+  }
+
 protected:
+  std::unordered_map<int, std::vector<std::string>> properties_;
   const std::string name_;
   std::string color_;
 };
