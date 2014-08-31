@@ -197,6 +197,10 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
           "BarChart error: invalid point in series. Z value must be greater "
           "or equal to Y value for all points");
     }
+
+    if (series->hasProperty(Series::P_LABEL)) {
+      printf("label=%s\n", series->getProperty(Series::P_LABEL, &point).c_str());
+    }
   }
 
   data_.addSeries(series);
@@ -418,6 +422,7 @@ BarChart2D<TX, TY>::BarChart2D(
 template <typename TX, typename TY>
 void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   auto series3d = new Series3D<TX, TY, TY>(); // FIXPAUL: never free'd!
+  auto copy_labels = series->hasProperty(Series::P_LABEL);
 
   for (const auto& point : series->getData()) {
     if (point.y() > 0) {
@@ -430,6 +435,13 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
           Series::Coord<TX>(point.x()),
           Series::Coord<TY>(point.y()),
           Series::Coord<TY>(nullptr));
+    }
+
+    if (copy_labels) {
+      series3d->setProperty(
+          Series::P_LABEL,
+          &series3d->getData().back(),
+          series->getProperty(Series::P_LABEL, &point));
     }
   }
 
