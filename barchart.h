@@ -108,6 +108,27 @@ protected:
   bool stacked_;
 };
 
+template <typename TX_, typename TY_>
+class BarChart2D : public BarChart3D<TX_, TY_, TY_> {
+public:
+  typedef TX_ TX;
+  typedef TY_ TY;
+
+  /**
+   * Add a (x: string, y: double) series. This will draw one bar for each point
+   * in the series where x is the label of the bar and y is the height of the
+   * bar
+   *
+   * @param series the series to add. does not transfer ownership
+   */
+  void addSeries(Series2D<TX, TY>* series);
+
+  BarChart2D(Canvas* canvas);
+
+protected:
+  std::vector<Series3D<TX, TY, TY>> series_;
+};
+
 template <typename TX, typename TY, typename TZ>
 BarChart3D<TX, TY, TZ>::BarChart3D(
     Canvas* canvas) :
@@ -339,6 +360,25 @@ void BarChart3D<TX, TY, TZ>::stackData(
   target->setSeriesCount(data_.seriesCount());
 }
 
+template <typename TX, typename TY>
+BarChart2D<TX, TY>::BarChart2D(
+    Canvas* canvas) :
+    BarChart3D<TX, TY, TY>(canvas) {}
+
+template <typename TX, typename TY>
+void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
+  series_.emplace_back();
+  auto series3d = &series_.back();
+
+  for (const auto& point : series->getData()) {
+    series3d->addDatum(
+        std::get<0>(point),
+        Series::Point<TY>(nullptr),
+        std::get<1>(point));
+  }
+
+  BarChart3D<TX, TY, TY>::addSeries(series3d);
+}
 
 }
 }
