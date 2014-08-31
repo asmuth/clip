@@ -347,10 +347,10 @@ void BarChart3D<TX, TY, TZ>::stackData(
     for (const auto& y : bar.ys) {
       TY delta = y.second.value() - y.first.value();
 
-      target->addPoint(
+      target->addCoord(
           bar.x,
-          Series::Point<TY>(cur),
-          Series::Point<TY>(cur + delta),
+          Series::Coord<TY>(cur),
+          Series::Coord<TY>(cur + delta),
           true);
 
       cur += delta;
@@ -373,7 +373,7 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   for (const auto& point : series->getData()) {
     series3d->addDatum(
         std::get<0>(point),
-        Series::Point<TY>(nullptr),
+        Series::Coord<TY>(nullptr),
         std::get<1>(point));
   }
 
