@@ -27,7 +27,7 @@ void AnySeriesAdapter::applyProperties(
     SValue* row,
     int row_len,
     Series* series,
-    Series::AnyPoint const* point) {
+    Series::AnyPoint* point) {
   for (const auto& prop : prop_indexes_) {
     if (prop.second >= row_len) {
       RAISE(util::RuntimeException, "invalid index for property");

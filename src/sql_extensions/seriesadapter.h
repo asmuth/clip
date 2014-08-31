@@ -45,7 +45,7 @@ protected:
       SValue* row,
       int row_len,
       Series* series,
-      Series::AnyPoint const* point);
+      Series::AnyPoint* point);
 };
 
 template <typename TX, typename TY>

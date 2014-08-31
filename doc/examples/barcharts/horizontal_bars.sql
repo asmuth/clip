@@ -6,5 +6,5 @@ DRAW BARCHART WITH
     AXIS LEFT
     AXIS BOTTOM;
 
-SELECT 'gross domestic product per country' AS series, country AS x, gbp AS y
+SELECT 'gdp per country' AS series, country AS x, gbp AS y, country as label
     FROM gdp_per_country LIMIT 10;

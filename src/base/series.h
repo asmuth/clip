@@ -19,6 +19,11 @@ namespace fnordmetric {
 
 class Series {
 public:
+  enum kProperty {
+    P_COLOR = 1,
+    P_LABEL = 2
+  };
+
   template <typename T>
   struct Coord {
   public:
@@ -33,10 +38,30 @@ public:
   class AnyPoint {
   public:
     AnyPoint() {}
-  };
 
-  enum kProperty {
-    P_COLOR = 1
+    int getPropertyOverride(kProperty prop) const {
+      for (const auto& override : prop_overrides_) {
+        if (override.first == prop) {
+          return override.second;
+        }
+      }
+
+      return -1;
+    }
+
+    void setPropertyOverride(kProperty prop, int index) {
+      for (auto& override : prop_overrides_) {
+        if (override.first == prop) {
+          override.second = index;
+          return;
+        }
+      }
+
+      prop_overrides_.emplace_back(prop, index);
+    }
+
+  protected:
+    std::vector<std::pair<kProperty, int>> prop_overrides_;
   };
 
   Series(const std::string& name) :
@@ -46,7 +71,7 @@ public:
     return name_;
   }
 
-  const std::string& getProperty(kProperty prop) {
+  const std::string& getProperty(kProperty prop) const {
     const auto p = properties_.find(prop);
 
     if (p != properties_.end()) {
@@ -58,15 +83,40 @@ public:
     RAISE(util::RuntimeException, "property not set");
   }
 
+  const std::string& getProperty(kProperty prop, AnyPoint const* point) const {
+    auto override = point->getPropertyOverride(prop);
+
+    if (override > 0) {
+      const auto p = properties_.find(prop);
+      if (p != properties_.end()) {
+        if (p->second.size() > override) {
+          return p->second[override];
+        }
+      }
+    }
+
+    return getProperty(prop);
+  }
+
   const bool hasProperty(kProperty prop) {
     return properties_.find(prop) != properties_.end();
   }
 
   const void setProperty(
       kProperty prop,
-      AnyPoint const* point,
+      AnyPoint* point,
       const std::string& val) {
-    setDefaultProperty(prop, val);
+    if (!hasProperty(prop)) {
+      setDefaultProperty(prop, val);
+    }
+
+    if (getProperty(prop) == val) {
+      return;
+    }
+
+    auto p = properties_.find(prop);
+    p->second.emplace_back(val);
+    point->setPropertyOverride(prop, p->second.size() - 1);
   }
 
   const void setDefaultProperty(kProperty prop, const std::string& val) {
@@ -121,7 +171,7 @@ public:
     data_.emplace_back(x, y);
   }
 
-  const std::vector<Point>& getData() const {
+  std::vector<Point>& getData() {
     return data_;
   }
 
@@ -132,7 +182,7 @@ protected:
 template <typename TX, typename TY, typename TZ>
 class Series3D : public Series {
 public:
-  class Point {
+  class Point : public AnyPoint {
   public:
     explicit Point(
         TX x,
@@ -185,7 +235,7 @@ public:
     data_.emplace_back(x, y, z);
   }
 
-  const std::vector<Point>& getData() const {
+  std::vector<Point>& getData() {
     return data_;
   }
 

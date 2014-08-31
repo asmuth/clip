@@ -76,6 +76,11 @@ public:
       prop_indexes_.emplace_back(Series::P_COLOR, color_ind);
     }
 
+    int label_ind = stmt->getColumnIndex("label");
+    if (label_ind >= 0) {
+      prop_indexes_.emplace_back(Series::P_LABEL, label_ind);
+    }
+
     stmt_ = stmt;
     stmt->setTarget(this);
     stmt->execute();
