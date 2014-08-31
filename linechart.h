@@ -34,9 +34,9 @@ namespace ui {
 class LineChart : public Drawable {
 public:
   static char kDefaultLineStyle[];
-  static double kDefaultLineWidth;
+  static char kDefaultLineWidth[];
   static char kDefaultPointStyle[];
-  static double kDefaultPointSize;
+  static char kDefaultPointSize[];
 
   LineChart(ui::Canvas* canvas);
 };
@@ -84,17 +84,6 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
-  void drawLine(
-      RenderTarget* target,
-      Viewport* viewport,
-      const std::vector<std::pair<double, double>>& coords,
-      const std::string& line_style,
-      double line_width,
-      const std::string& point_style,
-      double point_size,
-      bool smooth,
-      const std::string& color) const;
-
   DomainAdapter x_domain_;
   DomainAdapter y_domain_;
   std::vector<Series2D<TX, TY>*> series_;
@@ -132,6 +121,22 @@ void LineChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   if (!series->hasProperty(Series::P_COLOR)) {
     color_palette_.setNextColor(series);
   }
+
+  series->setDefaultProperty(
+      Series::P_LINE_STYLE,
+      LineChart::kDefaultLineStyle);
+
+  series->setDefaultProperty(
+      Series::P_LINE_WIDTH,
+      LineChart::kDefaultLineWidth);
+
+  series->setDefaultProperty(
+      Series::P_POINT_STYLE,
+      LineChart::kDefaultPointStyle);
+
+  series->setDefaultProperty(
+      Series::P_POINT_SIZE,
+      LineChart::kDefaultPointSize);
 }
 
 template <typename TX, typename TY>
@@ -143,22 +148,39 @@ void LineChart2D<TX, TY>::render(
   for (const auto& series : series_) {
     std::vector<std::pair<double, double>> coords;
 
+    // FIXPAUL catch conversion excpetion
+    auto point_style = series->getProperty(Series::P_POINT_STYLE);
+    auto point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+    auto line_style = series->getProperty(Series::P_LINE_STYLE);
+    auto line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+    auto color = series->getProperty(Series::P_COLOR);
+
     for (const auto& point : series->getData()) {
-      coords.emplace_back(
-          x_domain_.getAs<Domain<TX>>()->scale(point.x()),
-          y_domain_.getAs<Domain<TY>>()->scale(point.y()));
+      auto x = x_domain_.getAs<Domain<TX>>()->scale(point.x());
+      auto y = y_domain_.getAs<Domain<TY>>()->scale(point.y());
+      auto ss_x = viewport->paddingLeft() + x * viewport->innerWidth();
+      auto ss_y = viewport->paddingTop() + (1.0 - y) * viewport->innerHeight();
+
+      if (point_style != "none") {
+        target->drawPoint(
+            ss_x,
+            ss_y,
+            point_style,
+            point_size,
+            color,
+            "point");
+      }
+
+      coords.emplace_back(ss_x, ss_y);
     }
 
-    drawLine(
-        target,
-        viewport,
+    target->drawPath(
         coords,
-        "solid",
-        2,
-        "circle",
-        4,
+        line_style,
+        line_width,
         false,
-        series->getProperty(Series::P_COLOR));
+        color,
+        "line");
   }
 
   target->finishGroup();
@@ -187,49 +209,6 @@ AxisDefinition* LineChart2D<TX, TY>::addAxis(
       axis->setDomain(&y_domain_);
       return axis;
 
-  }
-}
-
-template <typename TX, typename TY>
-void LineChart2D<TX, TY>::drawLine(
-    RenderTarget* target,
-    Viewport* viewport,
-    const std::vector<std::pair<double, double>>& coords,
-    const std::string& line_style,
-    double line_width,
-    const std::string& point_style,
-    double point_size,
-    bool smooth,
-    const std::string& color) const {
-  std::vector<std::pair<double, double>> coords_ss;
-
-  for (const auto& coord : coords) {
-    auto ss_x =
-        viewport->paddingLeft() + coord.first * viewport->innerWidth();
-    auto ss_y =
-        viewport->paddingTop() + (1.0 - coord.second) * viewport->innerHeight();
-
-    coords_ss.emplace_back(ss_x, ss_y);
-  }
-
-  target->drawPath(
-      coords_ss,
-      line_style,
-      line_width,
-      smooth,
-      color,
-      "line");
-
-  if (point_style != "none") {
-    for (const auto& point : coords_ss) {
-      target->drawPoint(
-        point.first,
-        point.second,
-        point_style,
-        point_size,
-        color,
-        "point");
-    }
   }
 }
 
