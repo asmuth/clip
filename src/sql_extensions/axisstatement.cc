@@ -14,7 +14,9 @@
 namespace fnordmetric {
 namespace query {
 
-void AxisStatement::execute(ui::Drawable* drawable) {
+AxisStatement::AxisStatement(ASTNode* ast) {}
+
+void AxisStatement::execute(ui::Drawable* drawable) const {
   drawable->addAxis(ui::AxisDefinition::LEFT); // FIPXAUL
   drawable->addAxis(ui::AxisDefinition::BOTTOM); // FIPXAUL
   drawable->addAxis(ui::AxisDefinition::TOP); // FIPXAUL

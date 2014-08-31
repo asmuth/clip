@@ -23,29 +23,10 @@ class Drawable;
 
 namespace query {
 
-class AxisStatement : public QueryPlanNode {
+class AxisStatement {
 public:
-
-  AxisStatement() {}
-
-  void execute() override {}
-
-  bool nextRow(SValue* row, int row_len) override {
-    return true;
-  }
-
-  size_t getNumCols() const override {
-    return 0;
-  }
-
-  const std::vector<std::string>& getColumns() const override {
-    return columns_;
-  }
-
-  void execute(ui::Drawable* drawable);
-
-protected:
-  std::vector<std::string> columns_;
+  AxisStatement(ASTNode* ast);
+  void execute(ui::Drawable* drawable) const;
 };
 
 }

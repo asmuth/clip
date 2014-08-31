@@ -17,4 +17,7 @@ Series::Coord<double>::Coord(std::nullptr_t) : value_(0.0) {}
 template <>
 Series::Coord<int>::Coord(std::nullptr_t) : value_(0) {}
 
+template <>
+Series::Coord<std::string>::Coord(std::nullptr_t) : value_("") {}
+
 }

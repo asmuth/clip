@@ -13,7 +13,31 @@
 namespace fnordmetric {
 namespace query {
 
-void DrawStatement::execute(ui::Canvas* canvas) {
+DrawStatement::DrawStatement(
+    kDrawStatementType type) :
+    type_(type) {}
+
+
+DrawStatement::DrawStatement(ASTNode* ast) {
+  switch (ast->getToken()->getType()) {
+    case Token::T_BAR:
+      type_ = DrawStatement::T_BAR_CHART;
+      break;
+    case Token::T_LINE:
+      type_ = DrawStatement::T_LINE_CHART;
+      break;
+    case Token::T_AREA:
+      type_ = DrawStatement::T_AREA_CHART;
+      break;
+    default:
+      RAISE(
+          util::RuntimeException,
+          "invalid chart type: %s",
+          Token::getTypeName(ast->getToken()->getType()));
+  }
+}
+
+void DrawStatement::execute(ui::Canvas* canvas) const {
   switch (type_) {
     case T_BAR_CHART:
       return executeWithType<BarChartBuilder>(canvas);

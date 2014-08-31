@@ -17,7 +17,6 @@
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tablerepository.h>
 #include <fnordmetric/sql_extensions/axisstatement.h>
-#include <fnordmetric/sql_extensions/chartqueryplanbuilder.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -45,11 +44,18 @@ Query::Query(
         "can't figure out how to parse this, sorry :(");
   }
 
+  draw_statements_.emplace_back();
   for (auto stmt : parser.getStatements()) {
     switch (stmt->getType()) {
-      case query::ASTNode::T_SELECT:
       case query::ASTNode::T_AXIS:
+        if (!draw_statements_.back().empty()) {
+          draw_statements_.back().back().addAxisStatement(AxisStatement(stmt));
+        }
+        break;
       case query::ASTNode::T_DRAW:
+        draw_statements_.back().emplace_back(stmt);
+        break;
+      case query::ASTNode::T_SELECT:
         addStatement(stmt, repo);
         break;
       case query::ASTNode::T_IMPORT:
@@ -62,44 +68,23 @@ Query::Query(
 }
 
 void Query::execute() {
-  std::vector<std::vector<DrawStatement*>> draw_statements;
-  DrawStatement* current_draw_statement = nullptr;
-  draw_statements.emplace_back();
-
   for (const auto& stmt : statements_) {
-    auto draw_stmt = dynamic_cast<query::DrawStatement*>(stmt.get());
-    if (draw_stmt != nullptr) {
-      current_draw_statement = draw_stmt;
-      draw_statements.back().push_back(draw_stmt);
-      continue;
-    }
-
-    auto axis_stmt = dynamic_cast<query::AxisStatement*>(stmt.get());
-    if (axis_stmt != nullptr) {
-      if (current_draw_statement == nullptr) {
-        RAISE(util::RuntimeException, "DRAW AXIS without DRAW CHART");
-      }
-
-      current_draw_statement->addAxisStatement(axis_stmt);
-      continue;
-    }
-
     auto target = new ResultList();
-    target->addHeader(stmt->getColumns());
+    target->addHeader(stmt.first->getColumns());
     results_.emplace_back(target);
 
-    if (current_draw_statement != nullptr) {
-      current_draw_statement->addSelectStatement(stmt.get(), target);
+    if (stmt.second == nullptr) {
+      stmt.first->setTarget(target);
+      stmt.first->execute();
     } else {
-      stmt->setTarget(target);
-      stmt->execute();
+      stmt.second->addSelectStatement(stmt.first.get(), target);
     }
   }
 
-  for (const auto& draw_group : draw_statements) {
+  for (const auto& draw_group : draw_statements_) {
     auto chart = new ui::Canvas();
     for (const auto& draw_stmt : draw_group) {
-      draw_stmt->execute(chart);
+      draw_stmt.execute(chart);
     }
     charts_.emplace_back(chart);
   }
@@ -125,10 +110,7 @@ ui::Canvas* Query::getChart(size_t index) const {
 bool Query::addStatement(
     query::ASTNode* statement,
     query::TableRepository* repo) {
-  // FIXPAUL this should be initialized only once
   QueryPlanBuilder query_plan_builder;
-  query_plan_builder.extend(
-      std::unique_ptr<ChartQueryPlanBuilder>(new ChartQueryPlanBuilder()));
 
   auto query_plan = query_plan_builder.buildQueryPlan(statement, repo);
   if (query_plan == nullptr) {
@@ -136,7 +118,11 @@ bool Query::addStatement(
     return false;
   }
 
-  statements_.emplace_back(query_plan);
+  statements_.emplace_back(
+      query_plan,
+      draw_statements_.back().empty() ?
+          nullptr : &draw_statements_.back().back());
+
   return true;
 }
 

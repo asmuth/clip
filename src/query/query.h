@@ -15,6 +15,7 @@
 #include <vector>
 #include <memory>
 #include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/ui/canvas.h>
 
 namespace fnordmetric {
@@ -80,7 +81,8 @@ protected:
   void importTable(ASTNode* statement, TableRepository* repo) const;
 
   //Drawable* makeDrawable(query::DrawStatement* stmt);
-  std::vector<std::unique_ptr<QueryPlanNode>> statements_;
+  std::vector<std::pair<std::unique_ptr<QueryPlanNode>, DrawStatement*>> statements_;
+  std::vector<std::vector<DrawStatement>> draw_statements_;
   std::vector<std::unique_ptr<ResultList>> results_;
   std::vector<std::unique_ptr<ui::Canvas>> charts_;
 };
