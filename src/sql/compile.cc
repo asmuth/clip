@@ -75,9 +75,8 @@ CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
       return compileMethodCall(ast, scratchpad_len);
 
     default:
-      printf("error: cant compile expression\n");
       ast->debugPrint();
-      assert(0); // FIXPAUL
+      RAISE(util::RuntimeException, "internal error: cant compile expression");
   }
 }
 
@@ -93,8 +92,11 @@ CompiledExpression* compileSelectList(
 
   auto cur = &root->child;
   for (auto col : select_list->getChildren()) {
-    assert(*col == ASTNode::T_DERIVED_COLUMN);
-    assert(col->getChildren().size() > 0);
+    if (!(*col == ASTNode::T_DERIVED_COLUMN)
+        || col->getChildren().size() == 0) {
+      RAISE(util::RuntimeException, "internal error: corrupt ast");
+    }
+
     auto next = compileAST(col->getChildren()[0], scratchpad_len);
     *cur = next;
     cur = &next->next;
@@ -127,10 +129,8 @@ CompiledExpression* compileOperator(
   auto symbol = lookupSymbol(name);
 
   if (symbol == nullptr) {
-    fprintf(stderr, "symbol not found!: %s\n", name.c_str());
+    RAISE(util::RuntimeException, "undefined symbol: '%s'\n", name.c_str());
   }
-
-  assert(symbol != nullptr);
 
   auto op = new CompiledExpression();
   op->type = X_CALL;
@@ -150,7 +150,10 @@ CompiledExpression* compileOperator(
 }
 
 CompiledExpression* compileLiteral(ASTNode* ast) {
-  assert(ast->getToken() != nullptr);
+  if (ast->getToken() == nullptr) {
+    RAISE(util::RuntimeException, "internal error: corrupt ast");
+  }
+
   auto ins = new CompiledExpression();
   ins->type = X_LITERAL;
   ins->call = nullptr;

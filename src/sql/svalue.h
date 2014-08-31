@@ -56,6 +56,7 @@ public:
   template <typename T> T getValue() const;
   template <typename T> bool testType() const;
   kSValueType getType() const;
+  kSValueType testTypeWithNumericConversion() const;
   int64_t getInteger() const;
   double getFloat() const;
   bool getBool() const;

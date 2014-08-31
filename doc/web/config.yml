@@ -8,7 +8,7 @@ examples:
     examples:
       -
         title: "Simple line chart"
-        file: "horizontal_bars"
+        file: "simple_lines"
         url: "/linecharts/simple_lines"
 #      -
 #        title: "Lines with points"
@@ -18,10 +18,10 @@ examples:
 #        title: "Lines with time domain"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Multiple Y Axis"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Multiple Y Axes"
+        file: "multiple_y_axes"
+        url: "/linecharts/multiple_y_axes"
 #      -
 #        title: "Line and Point styles"
 #        file: "horizontal_bars"

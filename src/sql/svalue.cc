@@ -382,5 +382,11 @@ template <> bool SValue::testType<std::string>() const {
   return true;
 }
 
+SValue::kSValueType SValue::testTypeWithNumericConversion() const {
+  if (testType<int>()) return T_INTEGER;
+  if (testType<double>()) return T_FLOAT;
+  return T_STRING;
+}
+
 }
 }

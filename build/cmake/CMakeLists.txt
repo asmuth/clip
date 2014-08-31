@@ -51,9 +51,6 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/astnode.cc
     stage/src/fnordmetric/sql/compile.cc
     stage/src/fnordmetric/sql/execute.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/math.cc
     stage/src/fnordmetric/sql/grouper.cc
     stage/src/fnordmetric/sql/parser.cc
     stage/src/fnordmetric/sql/queryplanbuilder.cc
@@ -72,6 +69,9 @@ set(FNORDMETRIC_CLI_SOURCES
     stage/src/fnordmetric/web/assets.cc
     stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/web/webinterface.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/math.cc
     stage/src/fnordmetric/main.cc)
 
 include_directories(stage/src)
@@ -103,7 +103,7 @@ target_link_libraries(tests/test-sql libfnordmetric)
 #     stage/src/fnordmetric/cli/cli_test.cc)
 # 
 
-add_executable(tests/test-input-stream 
+add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
 target_link_libraries(tests/test-input-stream libfnordmetric)
 

@@ -20,7 +20,12 @@ namespace fnordmetric {
 namespace query {
 
 void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for eq. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -59,7 +64,12 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 static SymbolTableEntry __eq_symbol("eq", &eqExpr);
 
 void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for and. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -80,7 +90,12 @@ void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 static SymbolTableEntry __and_symbol("and", &andExpr);
 
 void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for or. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -101,7 +116,12 @@ void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 static SymbolTableEntry __or_symbol("or", &orExpr);
 
 void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 1);
+  if (argc != 1) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for neg. expected: 1, got: %i", argc);
+  }
+
   SValue* val = argv;
 
   switch(val->getType()) {
@@ -125,7 +145,12 @@ void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 static SymbolTableEntry __neg_symbol("neg", &negExpr);
 
 void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for lt. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -166,7 +191,12 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 static SymbolTableEntry __lt_symbol("lt", &ltExpr);
 
 void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for gt. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 

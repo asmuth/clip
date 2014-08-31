@@ -276,12 +276,12 @@ Syntax Reference
             [ LABEL 'title' ]
             [ TICKS { INSIDE | OUTSIDE | OFF } ];
 
-    DRAW AREA CHART
+    DRAW AREACHART
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW BAR CHART
+    DRAW BARCHART
         [ [ WITH ]
               common_chart_options
               [ ORIENTATION { HORIZONTAL | VERTICAL } ]
@@ -289,57 +289,52 @@ Syntax Reference
               [ LABELS { INSIDE | OUTSIDE } ] ]
               [ axis_definition... ] ]
 
-    DRAW BOXPLOT CHART
+    DRAW BOXPLOT
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW BUBBLE CHART
+    DRAW BUBBLECHART
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW ERRORBARS CHART
+    DRAW ERRORBARS
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW HEATMAP CHART
+    DRAW HEATMAP
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW GANTT CHART
+    DRAW GANTTCHART
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW HISTOGRAM CHART
+    DRAW HISTOGRAM
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW LINE CHART
+    DRAW LINECHART
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW PIE CHART
+    DRAW PIECHART
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW POINT CHART
+    DRAW SCATTERCHART
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]
 
-    DRAW POLAR CHART
-        [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
-
-    DRAW SPARKLINE CHART
+    DRAW SPARKLINES
         [ [ WITH ]
               common_chart_options
               [ axis_definition... ] ]

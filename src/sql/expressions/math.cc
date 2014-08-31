@@ -19,13 +19,18 @@ namespace fnordmetric {
 namespace query {
 
 void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for add. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((int64_t) (lhs->getInteger() + rhs->getInteger()));
           return;
@@ -37,7 +42,7 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((double) (lhs->getFloat() + rhs->getInteger()));
           return;
@@ -52,7 +57,9 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't add %s and %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 SymbolTableEntry __add_symbol("add", &addExpr);
@@ -62,9 +69,9 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((int64_t) (lhs->getInteger() - rhs->getInteger()));
           return;
@@ -76,7 +83,7 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((double) (lhs->getFloat() - rhs->getInteger()));
           return;
@@ -91,7 +98,9 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't subtract %s and %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __sub_symbol("sub", &subExpr);
@@ -101,9 +110,9 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((int64_t) (lhs->getInteger() * rhs->getInteger()));
           return;
@@ -115,7 +124,7 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((double) (lhs->getFloat() * rhs->getInteger()));
           return;
@@ -130,7 +139,9 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't multiply %s and %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __mul_symbol("mul", &mulExpr);
@@ -140,9 +151,9 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((int64_t) (lhs->getInteger() / rhs->getInteger()));
           return;
@@ -154,7 +165,7 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((double) (lhs->getFloat() / rhs->getInteger()));
           return;
@@ -169,7 +180,9 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't divide %s and %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __div_symbol("div", &divExpr);
@@ -179,9 +192,9 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((int64_t) (lhs->getInteger() % rhs->getInteger()));
           return;
@@ -193,7 +206,7 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue(fmod(lhs->getFloat(), rhs->getInteger()));
           return;
@@ -208,7 +221,9 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't modulo %s and %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __mod_symbol("mod", &modExpr);
@@ -218,9 +233,9 @@ void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((int64_t) pow(lhs->getInteger(), rhs->getInteger()));
           return;
@@ -232,7 +247,7 @@ void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue((double) pow(lhs->getFloat(), rhs->getInteger()));
           return;
@@ -247,7 +262,9 @@ void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  assert(0);
+  RAISE(util::RuntimeException, "can't pow %s and %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __pow_symbol("pow", &powExpr);

@@ -5,10 +5,7 @@ per point properties
 invert domain for barchart
 domain padding
 rename rowsink to virtualtable
-rename seriesadapter to chartbuilder
 cli output format
-linechart multiple series
-linechart string axis
 distributions
 middle axis
 bar/point labels
