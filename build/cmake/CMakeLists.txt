@@ -61,15 +61,16 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/token.cc
     stage/src/fnordmetric/sql/tokenize.cc
     stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
+    stage/src/fnordmetric/sql_extensions/linechartbuilder.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc)
 
 set(FNORDMETRIC_CLI_SOURCES
-    ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/web/assets.cc
     stage/src/fnordmetric/web/queryendpoint.cc
-    stage/src/fnordmetric/web/webinterface.cc)
+    stage/src/fnordmetric/web/webinterface.cc
+    stage/src/fnordmetric/main.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
@@ -79,13 +80,13 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
 
-add_executable(fnordmetric
-    ${FNORDMETRIC_CLI_SOURCES}
-    stage/src/fnordmetric/main.cc)
+add_library(libfnordmetric ${FNORDMETRIC_QUERY_SOURCES})
 
-add_executable(tests/test-sql
-   ${FNORDMETRIC_QUERY_SOURCES}
-   stage/src/fnordmetric/sql/sql_test.cc)
+add_executable(fnordmetric ${FNORDMETRIC_CLI_SOURCES})
+target_link_libraries(fnordmetric libfnordmetric)
+
+add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
+target_link_libraries(tests/test-sql libfnordmetric)
 
 # add_executable(tests/test-query
 #    ${FNORDMETRIC_QUERY_SOURCES}
@@ -100,15 +101,14 @@ add_executable(tests/test-sql
 #     stage/src/fnordmetric/cli/cli_test.cc)
 # 
 
-add_executable(tests/test-input-stream
-    ${FNORDMETRIC_SOURCES}
+add_executable(tests/test-input-stream 
     stage/src/fnordmetric/util/inputstream_test.cc)
+target_link_libraries(tests/test-input-stream libfnordmetric)
 
 add_executable(tests/test-csv-backend
-    ${FNORDMETRIC_QUERY_SOURCES}
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
+target_link_libraries(tests/test-csv-backend libfnordmetric)
 
-add_executable(tests/test-http
-    ${FNORDMETRIC_SOURCES}
-    stage/src/fnordmetric/http/http_test.cc)
+add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
+target_link_libraries(tests/test-http libfnordmetric)
 

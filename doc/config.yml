@@ -2,14 +2,14 @@
 
 examples:
 
-#  -
-#    title: "Line Charts"
-#    dir: "linecharts"
-#    examples:
-#      -
-#        title: "Simple line chart"
-#        file: "horizontal_bars"
-#        url: "/linecharts/simple_lines"
+  -
+    title: "Line Charts"
+    dir: "linecharts"
+    examples:
+      -
+        title: "Simple line chart"
+        file: "horizontal_bars"
+        url: "/linecharts/simple_lines"
 #      -
 #        title: "Lines with points"
 #        file: "horizontal_bars"

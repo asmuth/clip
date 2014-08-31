@@ -1,4 +1,7 @@
-point properties
+axis/chart titles
+axis tick settings
+legends
+per point properties
 invert domain for barchart
 domain padding
 rename rowsink to virtualtable

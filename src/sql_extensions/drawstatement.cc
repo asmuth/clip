@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
+#include <fnordmetric/sql_extensions/linechartbuilder.h>
 
 namespace fnordmetric {
 namespace query {
@@ -23,7 +24,7 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
       chart = mkChart<BarChartBuilder>(canvas);
       break;
     case Token::T_LINECHART:
-      chart = mkChart<BarChartBuilder>(canvas);
+      chart = mkChart<LineChartBuilder>(canvas);
       break;
     default:
       RAISE(

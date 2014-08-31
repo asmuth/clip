@@ -63,9 +63,14 @@ void BarChartBuilder::setOrientation(ui::BarChart* chart) const {
       break;
   }
 }
+
 void BarChartBuilder::setStacked(ui::BarChart* chart) const {
   auto prop = draw_stmt_->getProperty(Token::T_STACKED);
   chart->setStacked(prop != nullptr);
+}
+
+std::string BarChartBuilder::chartName() const {
+  return "BarChart";
 }
 
 }

@@ -74,6 +74,7 @@ public:
   }
 
   virtual ui::Drawable* getChart() const = 0;
+  virtual std::string chartName() const = 0;
 
 protected:
 
@@ -173,7 +174,10 @@ protected:
   }
 
   void invalidType() const {
-    RAISE(util::RuntimeException, "invalid series type for BarChart"); // FIXPAUL
+    RAISE(
+        util::RuntimeException,
+        "invalid series type for %s",
+        chartName().c_str()); // FIXPAUL
   }
 
   std::unique_ptr<AnySeriesAdapter> adapter_;
