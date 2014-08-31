@@ -20,8 +20,8 @@ namespace fnordmetric {
 namespace ui {
 
 Canvas::Canvas() :
-    width_(1024),
-    height_(500) {}
+    width_(750),
+    height_(300) {}
 
 void Canvas::render(RenderTarget* target) const {
   // FIXPAUL: initialize from rendertarget

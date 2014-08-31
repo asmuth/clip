@@ -61,7 +61,11 @@ public:
     RAISE(util::RuntimeException, "property not set");
   }
 
-  const void seDefaultProperty(kProperty prop, const std::string& val) {
+  const bool hasProperty(kProperty prop) {
+    return properties_.find(prop) != properties_.end();
+  }
+
+  const void setDefaultProperty(kProperty prop, const std::string& val) {
     const auto p = properties_.find(prop);
 
     if (p == properties_.end()) {

@@ -15,6 +15,7 @@
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/canvas.h>
+#include <fnordmetric/ui/colorpalette.h>
 #include <fnordmetric/ui/domain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/rendertarget.h>
@@ -129,6 +130,7 @@ protected:
   DomainAdapter y_domain_;
   SeriesJoin3D<TX, TY, TY> data_;
   std::vector<Series3D<TX, TY, TY>*> series_;
+  ColorPalette color_palette_;
 };
 
 template <typename TX_, typename TY_>
@@ -203,6 +205,10 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
       y_domain->addValue(max);
     }
+  }
+
+  if (!series->hasProperty(Series::P_COLOR)) {
+    color_palette_.setNextColor(series);
   }
 }
 
@@ -386,9 +392,7 @@ const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
     RAISE(util::RuntimeException, "invalid series index");
   }
 
-  static const std::string col = "#06c";
-  return col;
-  //return series_[series_index]->getProperty(Series::P_COLOR);
+  return series_[series_index]->getProperty(Series::P_COLOR);
 }
 
 template <typename TX, typename TY>
@@ -401,7 +405,6 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   auto series3d = new Series3D<TX, TY, TY>(); // FIXPAUL: never free'd!
 
   for (const auto& point : series->getData()) {
-    // FIXPAUL copy properties
     if (point.y() > 0) {
       series3d->addDatum(
           Series::Coord<TX>(point.x()),
@@ -413,6 +416,12 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
           Series::Coord<TY>(point.y()),
           Series::Coord<TY>(nullptr));
     }
+  }
+
+  if (series->hasProperty(Series::P_COLOR)) {
+    series3d->setDefaultProperty(
+        Series::P_COLOR,
+        series->getProperty(Series::P_COLOR));
   }
 
   BarChart3D<TX, TY, TY>::addSeries(series3d);
