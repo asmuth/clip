@@ -47,7 +47,7 @@ Query::Query(
   for (auto stmt : parser.getStatements()) {
     switch (stmt->getType()) {
       case query::ASTNode::T_DRAW:
-        draw_statements_.back().emplace_back(stmt);
+        draw_statements_.back().emplace_back(new DrawStatement(stmt));
         break;
       case query::ASTNode::T_SELECT:
         addStatement(stmt, repo);
@@ -78,7 +78,7 @@ void Query::execute() {
   for (const auto& draw_group : draw_statements_) {
     auto chart = new ui::Canvas();
     for (const auto& draw_stmt : draw_group) {
-      draw_stmt.execute(chart);
+      draw_stmt->execute(chart);
     }
     charts_.emplace_back(chart);
   }
@@ -115,7 +115,7 @@ bool Query::addStatement(
   statements_.emplace_back(
       query_plan,
       draw_statements_.back().empty() ?
-          nullptr : &draw_statements_.back().back());
+          nullptr : draw_statements_.back().back().get());
 
   return true;
 }

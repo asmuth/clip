@@ -10,16 +10,18 @@ SELECT
   month AS x,
   temperature AS y
 FROM
-  city_temperatures;
+  city_temperatures
+WHERE
+  city = "New York";
 
 DRAW LINECHART WITH
-  AXIS BOTTOM
   AXIS RIGHT;
 
 SELECT
   "fnord" AS series,
   month AS x,
-  temperature * 5 AS y
+  temperature AS y,
+  "color2" as color
 FROM
   city_temperatures
 WHERE

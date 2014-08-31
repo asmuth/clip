@@ -82,7 +82,7 @@ protected:
 
   //Drawable* makeDrawable(query::DrawStatement* stmt);
   std::vector<std::pair<std::unique_ptr<QueryPlanNode>, DrawStatement*>> statements_;
-  std::vector<std::vector<DrawStatement>> draw_statements_;
+  std::vector<std::vector<std::unique_ptr<DrawStatement>>> draw_statements_;
   std::vector<std::unique_ptr<ResultList>> results_;
   std::vector<std::unique_ptr<ui::Canvas>> charts_;
 };
