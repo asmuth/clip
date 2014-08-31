@@ -1,4 +1,0 @@
-Examples
---------
-
-here be dragons
