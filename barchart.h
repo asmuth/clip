@@ -182,10 +182,6 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     y_domain->addValue(point.y());
     y_domain->addValue(static_cast<TY>(point.z()));
 
-    printf("adddata: y=%s,z=%s\n",
-        std::to_string(point.y()).c_str(),
-        std::to_string(point.z()).c_str());
-
     if (!(point.y() <= point.z())) {
       RAISE(
           util::RuntimeException,
