@@ -34,7 +34,7 @@ ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
     if (child->getType() != ASTNode::T_PROPERTY) {
       continue;
     }
-  
+
     if (child->getToken()->getType() != key) {
       continue;
     }
