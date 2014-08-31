@@ -19,10 +19,10 @@ namespace ui {
 template <typename TX, typename TY, typename TZ>
 class SeriesJoin3D {
 public:
-  struct JoinedPoint {
-    JoinedPoint(const Series::Point<TX>& x_) : x(x_) {}
-    Series::Point<TX> x;
-    std::vector<std::pair<Series::Point<TY>, Series::Point<TZ>>> ys;
+  struct JoinedCoord {
+    JoinedCoord(const Series::Coord<TX>& x_) : x(x_) {}
+    Series::Coord<TX> x;
+    std::vector<std::pair<Series::Coord<TY>, Series::Coord<TZ>>> ys;
   };
 
   SeriesJoin3D() : num_series_(0) {}
@@ -30,7 +30,7 @@ public:
   // FIXPAUL this should not be O(n^2)
   void addSeries(Series3D<TX, TY, TZ>* series) {
     for (const auto& point : series->getData()) {
-      addPoint(
+      addCoord(
           std::get<0>(point),
           std::get<1>(point),
           std::get<2>(point));
@@ -45,12 +45,12 @@ public:
     num_series_++;
   }
 
-  void addPoint(
-      const Series::Point<TX>& x_val,
-      const Series::Point<TY>& y_val,
-      const Series::Point<TZ>& z_val,
+  void addCoord(
+      const Series::Coord<TX>& x_val,
+      const Series::Coord<TY>& y_val,
+      const Series::Coord<TZ>& z_val,
       bool force = false) {
-    JoinedPoint* joined = nullptr;
+    JoinedCoord* joined = nullptr;
     for (auto& candidate : data_) {
       if (candidate.x == x_val) {
         joined = &candidate;
@@ -75,7 +75,7 @@ public:
     return data_.size();
   }
 
-  const std::vector<JoinedPoint>& getData() const {
+  const std::vector<JoinedCoord>& getData() const {
     return data_;
   }
 
@@ -88,7 +88,7 @@ public:
   }
 
 protected:
-  std::vector<JoinedPoint> data_;
+  std::vector<JoinedCoord> data_;
   int num_series_;
 };
 

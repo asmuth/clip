@@ -18,12 +18,12 @@ namespace fnordmetric {
 class Series {
 public:
   template <typename T>
-  class Point {
+  class Coord {
   public:
-    explicit Point(T value) : value_(value) {}
-    explicit Point(std::nullptr_t);
+    explicit Coord(T value) : value_(value) {}
+    explicit Coord(std::nullptr_t);
     T value() const { return value_; }
-    bool operator==(const Point<T>& other) { return value_ == other.value_; }
+    bool operator==(const Coord<T>& other) { return value_ == other.value_; }
   protected:
     const T value_;
   };
@@ -58,20 +58,20 @@ public:
     data_.emplace_back(x, y);
   }
 
-  void addDatum(Series::Point<X> x, Series::Point<Y> y) {
+  void addDatum(Series::Coord<X> x, Series::Coord<Y> y) {
     data_.emplace_back(x, y);
   }
 
   const std::vector<std::tuple<
-      Series::Point<X>,
-      Series::Point<Y>>>& getData() const {
+      Series::Coord<X>,
+      Series::Coord<Y>>>& getData() const {
     return data_;
   }
 
 protected:
   std::vector<std::tuple<
-      Series::Point<X>,
-      Series::Point<Y>>> data_;
+      Series::Coord<X>,
+      Series::Coord<Y>>> data_;
 };
 
 template <typename X, typename Y, typename Z>
@@ -84,22 +84,22 @@ public:
     data_.emplace_back(x, y, z);
   }
 
-  void addDatum(Series::Point<X> x, Series::Point<Y> y, Series::Point<Z> z) {
+  void addDatum(Series::Coord<X> x, Series::Coord<Y> y, Series::Coord<Z> z) {
     data_.emplace_back(x, y, z);
   }
 
   const std::vector<std::tuple<
-      Series::Point<X>,
-      Series::Point<Y>,
-      Series::Point<Z>>>& getData() const {
+      Series::Coord<X>,
+      Series::Coord<Y>,
+      Series::Coord<Z>>>& getData() const {
     return data_;
   }
 
 protected:
   std::vector<std::tuple<
-      Series::Point<X>,
-      Series::Point<Y>,
-      Series::Point<Z>>> data_;
+      Series::Coord<X>,
+      Series::Coord<Y>,
+      Series::Coord<Z>>> data_;
 };
 
 }
