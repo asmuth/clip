@@ -22,6 +22,7 @@ BarChartBuilder::BarChartBuilder(
 ui::Drawable* BarChartBuilder::getChart() const {
   auto chart = dynamic_cast<ui::BarChart*>(findChartType());
   setOrientation(chart);
+  setStacked(chart);
   return chart;
 }
 
@@ -49,7 +50,22 @@ void BarChartBuilder::setOrientation(ui::BarChart* chart) const {
     return;
   }
 
-  chart->setOrientation(ui::BarChart::O_HORIZONTAL);
+  switch (prop->getToken()->getType()) {
+    case Token::T_VERTICAL:
+      chart->setOrientation(ui::BarChart::O_VERTICAL);
+      break;
+
+    case Token::T_HORIZONTAL:
+      chart->setOrientation(ui::BarChart::O_HORIZONTAL);
+      break;
+
+    default:
+      break;
+  }
+}
+void BarChartBuilder::setStacked(ui::BarChart* chart) const {
+  auto prop = draw_stmt_->getProperty(Token::T_STACKED);
+  chart->setStacked(prop != nullptr);
 }
 
 }

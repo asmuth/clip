@@ -379,29 +379,34 @@ ASTNode* Parser::chartStatement() {
 
   consumeIf(Token::T_WITH);
 
-  switch (cur_token_->getType()) {
-    case Token::T_ORIENTATION: {
-      auto prop = chart->appendChild(ASTNode::T_PROPERTY);
-      prop->setToken(cur_token_);
-      consumeToken();
-      prop->appendChild(ASTNode::T_PROPERTY_VALUE)->setToken(
-          expectAndConsume(std::vector<Token::kTokenType>{
-              Token::T_HORIZONTAL,
-              Token::T_VERTICAL}));
-      break;
+  while (cur_token_->getType() != Token::T_SEMICOLON) {
+    switch (cur_token_->getType()) {
+      case Token::T_ORIENTATION: {
+        auto prop = chart->appendChild(ASTNode::T_PROPERTY);
+        prop->setToken(consumeToken());
+        prop->appendChild(ASTNode::T_PROPERTY_VALUE)->setToken(
+            expectAndConsume(std::vector<Token::kTokenType>{
+                Token::T_HORIZONTAL,
+                Token::T_VERTICAL}));
+        break;
+      }
+
+      case Token::T_STACKED: {
+        auto prop = chart->appendChild(ASTNode::T_PROPERTY);
+        prop->setToken(consumeToken());
+        prop->appendChild(ASTNode::T_PROPERTY_VALUE);
+        break;
+      }
+
+      default:
+        RAISE(
+            ParseError,
+            "unexpected token %s%s%s",
+            Token::getTypeName(cur_token_->getType()),
+            cur_token_->getString().size() > 0 ? ": " : "",
+            cur_token_->getString().c_str());
+        return nullptr;
     }
-
-    case Token::T_SEMICOLON:
-      break;
-
-    default:
-      RAISE(
-          ParseError,
-          "unexpected token %s%s%s",
-          Token::getTypeName(cur_token_->getType()),
-          cur_token_->getString().size() > 0 ? ": " : "",
-          cur_token_->getString().c_str());
-      return nullptr;
   }
 
   consumeIf(Token::T_SEMICOLON);

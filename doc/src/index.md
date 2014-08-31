@@ -280,7 +280,7 @@ Syntax Reference
               [ TITLE 'title' ]
               [ SUBTITLE 'subtitle' ]
               [ ORIENTATION {HORIZONTAL|VERTICAL} ]
-              [ STACKED {TRUE|FALSE} ]
+              [ STACKED ]
               [ LABELS {INSIDE|OUTSIDE|OFF} ] ]
 
 

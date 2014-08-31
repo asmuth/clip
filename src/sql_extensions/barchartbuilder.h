@@ -22,6 +22,7 @@ public:
 protected:
   ui::Drawable* findChartType() const;
   void setOrientation(ui::BarChart* chart) const;
+  void setStacked(ui::BarChart* chart) const;
 };
 
 }
