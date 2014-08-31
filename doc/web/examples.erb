@@ -13,7 +13,7 @@
   <div id="documentation_wrap">
     <div id="documentation" style="margin-right:0;">
       <% if @route == "/index" %>
-        <h2 style="margin-top: 0; margin-bottom: 1.5em;">FnordMetric Examples</h2>
+        <h1 style="margin-top: 0; margin-bottom: 1.5em;">FnordMetric Examples</h1>
         <table width="100%" border=0 cellspacing=0>
           <tr style="border-bottom: 60px solid #fff; background: transparent;">
           <% CONFIG["examples"].each_with_index do |example_group, n| %>
@@ -38,8 +38,8 @@
           </tr>
         </table>
       <% else %>
-        <h2 style="margin-top: 0;"><%= @example["title"] %></h2>
-        <p class="breadcrumb">
+        <h1 style="margin:0 0 5px 0;"><%= @example["title"] %></h1>
+        <p class="breadcrumb" style="margin-bottom: 30px;">
           <a href="/examples">
             Examples
           </a>
@@ -53,7 +53,6 @@
           </a>
         </p>
 
-        <h4>SVG Output</h4>
         <div class="example_frame">
           <%= IO.read(File.join(BASEDIR, "examples#{@example["url"]}.svg.html")) %>
         </div>

@@ -350,6 +350,7 @@ code {
   font-family: "Monaco", monospace;
   background-color: #f8f8f8;
   border: 1px solid #cacaca;
+  border-bottom: 2px solid #cacaca;
   border-radius: 3px;
   text-shadow: 0 1px 0 #fff;
   overflow: auto;
@@ -464,6 +465,7 @@ pre.dark code {
 
 .example_frame {
   border: 1px solid #ddd;
+  border-bottom: 2px solid #ddd;
   border-radius: 5px;
   margin: 15px 0 0 0;
   padding: 20px;
