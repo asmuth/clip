@@ -21,6 +21,7 @@ public:
   ui::Drawable* getChart() const override;
 protected:
   ui::Drawable* findChartType() const;
+  void setOrientation(ui::BarChart* chart) const;
 };
 
 }

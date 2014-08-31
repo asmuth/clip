@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
+#include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/ui/barchart.h>
 
 namespace fnordmetric {
@@ -20,9 +21,7 @@ BarChartBuilder::BarChartBuilder(
 
 ui::Drawable* BarChartBuilder::getChart() const {
   auto chart = dynamic_cast<ui::BarChart*>(findChartType());
-
-  chart->setOrientation(ui::BarChart::O_HORIZONTAL);
-
+  setOrientation(chart);
   return chart;
 }
 
@@ -41,6 +40,16 @@ ui::Drawable* BarChartBuilder::findChartType() const {
 
   invalidType();
   return nullptr;
+}
+
+void BarChartBuilder::setOrientation(ui::BarChart* chart) const {
+  auto prop = draw_stmt_->getProperty(Token::T_ORIENTATION);
+
+  if (prop == nullptr) {
+    return;
+  }
+
+  chart->setOrientation(ui::BarChart::O_HORIZONTAL);
 }
 
 }

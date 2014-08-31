@@ -34,6 +34,7 @@ public:
     T_TABLE_NAME,
     T_DERIVED_COLUMN,
     T_PROPERTY,
+    T_PROPERTY_VALUE,
 
     T_SELECT,
     T_SELECT_LIST,

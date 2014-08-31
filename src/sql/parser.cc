@@ -380,15 +380,16 @@ ASTNode* Parser::chartStatement() {
   consumeIf(Token::T_WITH);
 
   switch (cur_token_->getType()) {
-    case Token::T_ORIENTATION:
+    case Token::T_ORIENTATION: {
+      auto prop = chart->appendChild(ASTNode::T_PROPERTY);
+      prop->setToken(cur_token_);
       consumeToken();
-      chart->appendChild(ASTNode::T_PROPERTY)->setToken(
+      prop->appendChild(ASTNode::T_PROPERTY_VALUE)->setToken(
           expectAndConsume(std::vector<Token::kTokenType>{
               Token::T_HORIZONTAL,
               Token::T_VERTICAL}));
-
-
       break;
+    }
 
     case Token::T_SEMICOLON:
       break;

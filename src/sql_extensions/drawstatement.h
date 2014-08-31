@@ -26,19 +26,7 @@ namespace query {
 
 class DrawStatement {
 public:
-
-  enum kDrawStatementType {
-    T_BAR_CHART,
-    T_LINE_CHART,
-    T_AREA_CHART
-  };
-
-  DrawStatement(kDrawStatementType type);
   DrawStatement(ASTNode* ast);
-
-  kDrawStatementType getType() const {
-    return type_;
-  }
 
   void addSelectStatement(QueryPlanNode* select_stmt, ResultList* target) {
     select_stmts_.emplace_back(select_stmt);
@@ -67,11 +55,13 @@ public:
     }
   }
 
+  ASTNode const* getProperty(Token::kTokenType key) const;
+
 protected:
   std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;
   std::vector<AxisStatement> axis_stmts_;
-  kDrawStatementType type_;
+  ASTNode* ast_;
 };
 
 }
