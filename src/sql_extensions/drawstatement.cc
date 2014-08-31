@@ -16,17 +16,23 @@ namespace query {
 DrawStatement::DrawStatement(ASTNode* ast) : ast_(ast->deepCopy()) {}
 
 void DrawStatement::execute(ui::Canvas* canvas) const {
+  ui::Drawable* chart = nullptr;
+
   switch (ast_->getToken()->getType()) {
     case Token::T_BARCHART:
-      return executeWithType<BarChartBuilder>(canvas);
+      chart = mkChart<BarChartBuilder>(canvas);
+      break;
     case Token::T_LINECHART:
-      return executeWithType<BarChartBuilder>(canvas);
+      chart = mkChart<BarChartBuilder>(canvas);
+      break;
     default:
       RAISE(
           util::RuntimeException,
           "invalid chart type: %s",
           Token::getTypeName(ast_->getToken()->getType()));
   }
+
+  applyAxisDefinitions(chart);
 }
 
 ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
@@ -48,6 +54,43 @@ ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
   }
 
   return nullptr;
+}
+
+void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
+  for (const auto& child : ast_->getChildren()) {
+    if (child->getType() != ASTNode::T_PROPERTY ||
+        child->getToken() == nullptr ||
+        child->getToken()->getType() != Token::T_AXIS) {
+      continue;
+    }
+
+    ui::AxisDefinition* axis = nullptr;
+
+    if (child->getChildren().size() < 1) {
+      RAISE(util::RuntimeException, "corrupt AST: AXIS has < 1 child");
+    }
+
+    switch (child->getChildren()[0]->getToken()->getType()) {
+      case Token::T_TOP:
+        axis = chart->addAxis(ui::AxisDefinition::TOP);
+        break;
+
+      case Token::T_RIGHT:
+        axis = chart->addAxis(ui::AxisDefinition::RIGHT);
+        break;
+
+      case Token::T_BOTTOM:
+        axis = chart->addAxis(ui::AxisDefinition::BOTTOM);
+        break;
+
+      case Token::T_LEFT:
+        axis = chart->addAxis(ui::AxisDefinition::LEFT);
+        break;
+
+      default:
+        RAISE(util::RuntimeException, "corrupt AST: invalid axis position");
+    }
+  }
 }
 
 }

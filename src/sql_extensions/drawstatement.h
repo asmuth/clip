@@ -20,6 +20,7 @@
 namespace fnordmetric {
 namespace ui {
 class Canvas;
+class Drawable;
 }
 namespace query {
 
@@ -34,9 +35,12 @@ public:
 
   void execute(ui::Canvas* canvas) const;
 
-  // FIXPAUL: who owns the chart?
+  ASTNode const* getProperty(Token::kTokenType key) const;
+
+protected:
+
   template <typename ChartBuilderType>
-  void executeWithType(ui::Canvas* canvas) const {
+  ui::Drawable* mkChart(ui::Canvas* canvas) const {
     ChartBuilderType chart_builder(canvas, this);
 
     for (int i = 0; i < select_stmts_.size(); ++i) {
@@ -44,16 +48,11 @@ public:
       chart_builder.executeStatement(stmt); //, result_lists_[i]);
     }
 
-    chart_builder.getChart();
-
-    //for (const auto& axis_stmt : axis_stmts_) {
-    //  axis_stmt.execute(drawable);
-    //}
+    return chart_builder.getChart();
   }
 
-  ASTNode const* getProperty(Token::kTokenType key) const;
+  void applyAxisDefinitions(ui::Drawable* chart) const;
 
-protected:
   std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;
   ASTNode* ast_;
