@@ -24,11 +24,16 @@
 
 namespace fnordmetric {
 namespace query {
+class DrawStatement;
 
 class ChartBuilder : public RowSink {
 public:
 
-  ChartBuilder(ui::Canvas* canvas) : canvas_(canvas) {}
+  ChartBuilder(
+      ui::Canvas* canvas,
+      DrawStatement const* draw_stmt) :
+      canvas_(canvas),
+      draw_stmt_(draw_stmt) {}
 
   bool nextRow(SValue* row, int row_len) {
     if (name_ind_ < 0) {
@@ -178,6 +183,7 @@ protected:
   int z_ind_;
   QueryPlanNode* stmt_;
   ui::Canvas* canvas_;
+  DrawStatement const* draw_stmt_;
 };
 
 

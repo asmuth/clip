@@ -1,9 +1,7 @@
 IMPORT TABLE gdp_per_country
    FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;
 
-DRAW BAR CHART
-  ORIENTATION HORIZONTAL;
-
+DRAW BAR CHART;
 DRAW LEFT AXIS;
 
 SELECT

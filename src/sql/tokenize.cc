@@ -411,6 +411,36 @@ next:
     goto next;
   }
 
+  if (token == "ORIENTATION") {
+    token_list->emplace_back(Token::T_ORIENTATION);
+    goto next;
+  }
+
+  if (token == "HORIZONTAL") {
+    token_list->emplace_back(Token::T_HORIZONTAL);
+    goto next;
+  }
+
+  if (token == "VERTICAL") {
+    token_list->emplace_back(Token::T_VERTICAL);
+    goto next;
+  }
+
+  if (token == "STACKED") {
+    token_list->emplace_back(Token::T_STACKED);
+    goto next;
+  }
+
+  if (token == "ON") {
+    token_list->emplace_back(Token::T_ON);
+    goto next;
+  }
+
+  if (token == "OFF") {
+    token_list->emplace_back(Token::T_OFF);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

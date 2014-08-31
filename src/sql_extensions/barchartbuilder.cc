@@ -13,7 +13,10 @@
 namespace fnordmetric {
 namespace query {
 
-BarChartBuilder::BarChartBuilder(ui::Canvas* canvas) : ChartBuilder(canvas) {}
+BarChartBuilder::BarChartBuilder(
+    ui::Canvas* canvas,
+    DrawStatement const* draw_stmt) :
+    ChartBuilder(canvas, draw_stmt) {}
 
 ui::Drawable* BarChartBuilder::getChart() const {
   if (auto c = tryType2D<ui::BarChart2D<std::string, int>>())

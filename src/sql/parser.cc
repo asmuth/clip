@@ -347,6 +347,7 @@ ASTNode* Parser::drawStatement() {
   RAISE(
       ParseError,
       "invalid DRAW statement. syntax is DRAW <type> {AXIS|CHART}");
+
   return nullptr;
 }
 
@@ -376,12 +377,31 @@ ASTNode* Parser::chartStatement() {
     return nullptr;
   }
 
-/*
-  if (consumeIf(Token::T_WITH)) {
-    draw->appendChild(selectStatement());
-  } else {
+  consumeIf(Token::T_WITH);
+
+  switch (cur_token_->getType()) {
+    case Token::T_ORIENTATION:
+      consumeToken();
+      chart->appendChild(ASTNode::T_PROPERTY)->setToken(
+          expectAndConsume(std::vector<Token::kTokenType>{
+              Token::T_HORIZONTAL,
+              Token::T_VERTICAL}));
+
+
+      break;
+
+    case Token::T_SEMICOLON:
+      break;
+
+    default:
+      RAISE(
+          ParseError,
+          "unexpected token %s%s%s",
+          Token::getTypeName(cur_token_->getType()),
+          cur_token_->getString().size() > 0 ? ": " : "",
+          cur_token_->getString().c_str());
+      return nullptr;
   }
-*/
 
   consumeIf(Token::T_SEMICOLON);
   return chart;

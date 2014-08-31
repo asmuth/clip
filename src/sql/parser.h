@@ -121,13 +121,40 @@ protected:
     }
   }
 
-  inline bool expectAndConsume(Token::kTokenType expectation) {
+  inline Token* expectAndConsume(Token::kTokenType expectation) {
     if (assertExpectation(expectation)) {
-      consumeToken();
-      return true;
-    } else {
-      return false;
+      return consumeToken();
     }
+
+    return nullptr;
+  }
+
+  inline Token* expectAndConsume(
+      const std::vector<Token::kTokenType>& expectation) {
+    for (const auto& candidate : expectation) {
+      if (*cur_token_ == candidate) {
+        return consumeToken();
+      }
+    }
+
+    std::string legal_tokens;
+    for (const auto& candidate : expectation) {
+      if (candidate != *expectation.begin()) {
+        legal_tokens += ", ";
+      }
+
+      legal_tokens += Token::getTypeName(candidate);
+    }
+
+    RAISE(
+        ParseError,
+        "unexpected token %s%s%s, expected one of: %s",
+        Token::getTypeName(cur_token_->getType()),
+        cur_token_->getString().size() > 0 ? ": " : "",
+        cur_token_->getString().c_str(),
+        legal_tokens.c_str());
+
+    return nullptr;
   }
 
   inline bool lookahead(size_t n, Token::kTokenType expectation) const {

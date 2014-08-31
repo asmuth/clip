@@ -78,7 +78,13 @@ public:
     T_IMPORT,
     T_TABLE,
     T_CSV,
-    T_HEADER
+    T_HEADER,
+    T_ORIENTATION,
+    T_HORIZONTAL,
+    T_VERTICAL,
+    T_STACKED,
+    T_ON,
+    T_OFF
   };
 
   Token(kTokenType token_type);

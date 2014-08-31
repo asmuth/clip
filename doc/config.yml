@@ -73,17 +73,13 @@ examples:
         file: "horizontal_bars"
         url: "/barcharts/horizontal_bars"
       -
-        title: "Vertical bar chart"
-        file: "horizontal_bars"
-        url: "/barcharts/horizontal_bars"
+        title: "Vertical bar chart, multiple series"
+        file: "vertical_bars"
+        url: "/barcharts/vertical_bars"
       -
-        title: "Multiple series, unstacked"
-        file: "horizontal_bars"
-        url: "/barcharts/horizontal_bars"
-      -
-        title: "Multiple series, stacked"
-        file: "horizontal_bars"
-        url: "/barcharts/horizontal_bars"
+        title: "Stacked Bar Chart"
+        file: "stacked_bars"
+        url: "/barcharts/stacked_bars"
       -
         title: "Bars with negative values"
         file: "horizontal_bars"

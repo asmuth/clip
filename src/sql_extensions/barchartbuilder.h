@@ -13,10 +13,11 @@
 
 namespace fnordmetric {
 namespace query {
+class DrawStatement;
 
 class BarChartBuilder : public ChartBuilder {
 public:
-  BarChartBuilder(ui::Canvas* canvas);
+  BarChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
   ui::Drawable* getChart() const override;
 };
 

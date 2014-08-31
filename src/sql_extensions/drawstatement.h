@@ -53,7 +53,7 @@ public:
 
   template <typename ChartBuilderType>
   void executeWithType(ui::Canvas* canvas) const {
-    ChartBuilderType chart_builder(canvas);
+    ChartBuilderType chart_builder(canvas, this);
 
     for (int i = 0; i < select_stmts_.size(); ++i) {
       const auto& stmt = select_stmts_[i];
