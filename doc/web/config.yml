@@ -10,10 +10,10 @@ examples:
         title: "Simple line chart"
         file: "simple_lines"
         url: "/linecharts/simple_lines"
-#      -
-#        title: "Lines with points"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Lines with points"
+        file: "lines_with_points"
+        url: "/linecharts/lines_with_points"
 #      -
 #        title: "Lines with time domain"
 #        file: "horizontal_bars"

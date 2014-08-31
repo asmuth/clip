@@ -9,6 +9,6 @@ SELECT
   city AS series,
   month AS x,
   temperature AS y,
-  1 as linewidth
+  "circle" as pointstyle
 FROM
   city_temperatures;

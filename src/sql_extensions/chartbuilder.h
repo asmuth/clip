@@ -81,6 +81,26 @@ public:
       prop_indexes_.emplace_back(Series::P_LABEL, label_ind);
     }
 
+    int line_style_ind = stmt->getColumnIndex("linestyle");
+    if (line_style_ind >= 0) {
+      prop_indexes_.emplace_back(Series::P_LINE_STYLE, line_style_ind);
+    }
+
+    int line_width_ind = stmt->getColumnIndex("linewidth");
+    if (line_width_ind >= 0) {
+      prop_indexes_.emplace_back(Series::P_LINE_WIDTH, line_width_ind);
+    }
+
+    int point_style_ind = stmt->getColumnIndex("pointstyle");
+    if (point_style_ind >= 0) {
+      prop_indexes_.emplace_back(Series::P_POINT_STYLE, point_style_ind);
+    }
+
+    int point_size_ind = stmt->getColumnIndex("pointsize");
+    if (point_size_ind >= 0) {
+      prop_indexes_.emplace_back(Series::P_POINT_SIZE, point_size_ind);
+    }
+
     stmt_ = stmt;
     stmt->setTarget(this);
     stmt->execute();
