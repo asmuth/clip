@@ -156,15 +156,11 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   }
 
   for (const auto& point : series->getData()) {
-    const auto& x_val = std::get<0>(point);
-    const auto& y_val = std::get<1>(point);
-    const auto& z_val = std::get<2>(point);
+    x_domain->addValue(point.x());
+    y_domain->addValue(point.y());
+    y_domain->addValue(static_cast<TY>(point.z()));
 
-    x_domain->addValue(x_val.value());
-    y_domain->addValue(y_val.value());
-    y_domain->addValue(static_cast<TY>(z_val.value()));
-
-    if (!(y_val.value() <= y_val.value())) {
+    if (!(point.y() <= point.z())) {
       RAISE(
           util::RuntimeException,
           "BarChart error: invalid point in series. Z value must be greater "
@@ -347,11 +343,11 @@ void BarChart3D<TX, TY, TZ>::stackData(
     for (const auto& y : bar.ys) {
       TY delta = y.second.value() - y.first.value();
 
-      target->addCoord(
-          bar.x,
-          Series::Coord<TY>(cur),
-          Series::Coord<TY>(cur + delta),
-          true);
+      target->addPoint(
+          typename Series3D<TX, TY, TZ>::Point(
+              bar.x,
+              Series::Coord<TY>(cur),
+              Series::Coord<TY>(cur + delta)), true);
 
       cur += delta;
     }
@@ -371,10 +367,11 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   auto series3d = &series_.back();
 
   for (const auto& point : series->getData()) {
+    // FIXPAUL copy properties
     series3d->addDatum(
-        std::get<0>(point),
+        Series::Coord<TX>(point.x()),
         Series::Coord<TY>(nullptr),
-        std::get<1>(point));
+        Series::Coord<TY>(point.y()));
   }
 
   BarChart3D<TX, TY, TY>::addSeries(series3d);

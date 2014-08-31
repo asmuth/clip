@@ -19,8 +19,8 @@ namespace ui {
 template <typename TX, typename TY, typename TZ>
 class SeriesJoin3D {
 public:
-  struct JoinedCoord {
-    JoinedCoord(const Series::Coord<TX>& x_) : x(x_) {}
+  struct JoinedPoint {
+    JoinedPoint(const Series::Coord<TX>& x_) : x(x_) {}
     Series::Coord<TX> x;
     std::vector<std::pair<Series::Coord<TY>, Series::Coord<TZ>>> ys;
   };
@@ -30,10 +30,7 @@ public:
   // FIXPAUL this should not be O(n^2)
   void addSeries(Series3D<TX, TY, TZ>* series) {
     for (const auto& point : series->getData()) {
-      addCoord(
-          std::get<0>(point),
-          std::get<1>(point),
-          std::get<2>(point));
+      addPoint(point);
     }
 
     for (auto& joined : data_) {
@@ -45,20 +42,18 @@ public:
     num_series_++;
   }
 
-  void addCoord(
-      const Series::Coord<TX>& x_val,
-      const Series::Coord<TY>& y_val,
-      const Series::Coord<TZ>& z_val,
-      bool force = false) {
-    JoinedCoord* joined = nullptr;
+  void addPoint(
+    const typename Series3D<TX, TY, TZ>::Point& point,
+    bool force = false) {
+    JoinedPoint* joined = nullptr;
     for (auto& candidate : data_) {
-      if (candidate.x == x_val) {
+      if (candidate.x == point.x_coord()) {
         joined = &candidate;
       }
     }
 
     if (joined == nullptr) {
-      data_.emplace_back(x_val);
+      data_.emplace_back(point.x_coord());
       joined = &data_.back();
     }
 
@@ -67,7 +62,7 @@ public:
     }
 
     if (joined->ys.size() < num_series_ + 1 || force) {
-      joined->ys.emplace_back(y_val, z_val);
+      joined->ys.emplace_back(point.y_coord(), point.z_coord());
     }
   }
 
@@ -75,7 +70,7 @@ public:
     return data_.size();
   }
 
-  const std::vector<JoinedCoord>& getData() const {
+  const std::vector<JoinedPoint>& getData() const {
     return data_;
   }
 
@@ -88,7 +83,7 @@ public:
   }
 
 protected:
-  std::vector<JoinedCoord> data_;
+  std::vector<JoinedPoint> data_;
   int num_series_;
 };
 
