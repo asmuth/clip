@@ -325,8 +325,24 @@ template <> bool SValue::testType<bool>() const {
 }
 
 template <> bool SValue::testType<int>() const {
-  printf("testInt '%s' = %i\n", toString().c_str(), data_.type == T_INTEGER);
-  return data_.type == T_INTEGER;
+  if (data_.type == T_INTEGER) {
+    return true;
+  }
+
+  auto str = toString();
+  const char* c = str.c_str();
+
+  if (*c == '-') {
+    ++c;
+  }
+
+  for (; *c != 0; ++c) {
+    if (*c < '0' || *c > '9') {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 template <> bool SValue::testType<double>() const {
