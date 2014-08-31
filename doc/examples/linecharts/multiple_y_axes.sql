@@ -11,6 +11,11 @@ SELECT
   temperature AS y
 FROM
   city_temperatures;
+
+DRAW LINECHART WITH
+  AXIS BOTTOM
+  AXIS RIGHT;
+
 SELECT
   "fnord" AS series,
   month AS x,
