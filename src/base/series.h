@@ -58,7 +58,13 @@ public:
     data_.emplace_back(x, y);
   }
 
-  const std::vector<std::tuple<X, Y>>& getData() const {
+  void addDatum(Series::Point<X> x, Series::Point<Y> y) {
+    data_.emplace_back(x, y);
+  }
+
+  const std::vector<std::tuple<
+      Series::Point<X>,
+      Series::Point<Y>>>& getData() const {
     return data_;
   }
 
@@ -75,6 +81,10 @@ public:
   explicit Series3D(const std::string& name) : Series(name) {}
 
   void addDatum(X x, Y y, Z z) {
+    data_.emplace_back(x, y, z);
+  }
+
+  void addDatum(Series::Point<X> x, Series::Point<Y> y, Series::Point<Z> z) {
     data_.emplace_back(x, y, z);
   }
 
