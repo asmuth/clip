@@ -386,8 +386,9 @@ const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
     RAISE(util::RuntimeException, "invalid series index");
   }
 
-  printf("GETPROP\n");
-  return series_[series_index]->getProperty(Series::P_COLOR);
+  static const std::string col = "#06c";
+  return col;
+  //return series_[series_index]->getProperty(Series::P_COLOR);
 }
 
 template <typename TX, typename TY>
