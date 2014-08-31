@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_LINECHART_H
 #define _FNORDMETRIC_LINECHART_H
 #include <stdlib.h>
@@ -20,7 +19,6 @@
 namespace fnordmetric {
 namespace ui {
 class Canvas;
-class Domain;
 
 /**
  * This draws the series data as points.
@@ -31,8 +29,12 @@ class Domain;
  *   line_width = default: 2
  *
  */
-class LineChart : public Drawable {
+template <typename TX_, typename TY_>
+class LineChart2D : public Drawable {
 public:
+  typedef TX_ TX;
+  typedef TY_ TY;
+
   static char kDefaultLineStyle[];
   static double kDefaultLineWidth;
   static char kDefaultPointStyle[];
@@ -45,10 +47,7 @@ public:
    * @param x_domain the x domain. does not transfer ownership
    * @param y_domain the y domain. does not transfer ownership
    */
-  LineChart(
-      Canvas* canvas,
-      Domain* x_domain = nullptr,
-      Domain* y_domain = nullptr);
+  LineChart2D(Canvas* canvas);
 
   /**
    * Add a (x: string, y: double) series. This will draw one connected line
@@ -59,35 +58,7 @@ public:
    * @param smooth smooth this line?
    * @param line_style the line style ({solid,dashed})
    */
-  void addSeries(
-      Series2D<double, double>* series,
-      const std::string& line_style = kDefaultLineStyle,
-      double line_width = kDefaultLineWidth,
-      const std::string& point_style = kDefaultPointStyle,
-      double point_size = kDefaultPointSize,
-      bool smooth = false);
-
-  /**
-   * Add a (x: string, y: double) series. This will draw one connected line
-   * through all points in the series
-   *
-   * @param series the series to add. does not transfer ownership
-   * @param line_width the line widht
-   * @param smooth smooth this line?
-   * @param line_style the line style ({solid,dashed})
-   */
-  void addSeries(
-      Series2D<std::string, double>* series,
-      const std::string& line_style = kDefaultLineStyle,
-      double line_width = kDefaultLineWidth,
-      const std::string& point_style = kDefaultPointStyle,
-      double point_size = kDefaultPointSize,
-      bool smooth = false);
-
-  /**
-   * Unsupported series format
-   */
-  void addSeries(Series2D<std::string, std::string>* series);
+  void addSeries(Series2D<TX, TY>* series);
 
   /**
    * Add an axis to the chart. This method should only be called after all
@@ -102,41 +73,80 @@ public:
 
 protected:
 
-  Domain* getXDomain() const;
-  Domain* getYDomain() const;
-
   void render(
       RenderTarget* target,
-      int width,
-      int height,
-      std::tuple<int, int, int, int>* padding) const override;
+      Viewport* viewport) const override;
 
-  template <typename T>
-  struct Line {
-    std::vector<std::pair<T, double>> points;
-    std::string line_style;
-    double line_width;
-    std::string point_style;
-    double point_size;
-    std::string color;
-    bool smooth;
-  };
-
-  template <typename T>
-  void drawLine(
-      RenderTarget* target,
-      T line,
-      std::vector<std::pair<double, double>>& coords);
-
-  Canvas* canvas_;
-  Domain* x_domain_;
-  Domain* y_domain_;
-  int num_series_;
-  std::vector<Line<double>> lines_;
-  std::vector<Line<std::string>> categorical_lines_;
-  mutable std::unique_ptr<Domain> x_domain_auto_;
-  mutable std::unique_ptr<Domain> y_domain_auto_;
+  DomainAdapter x_domain_;
+  DomainAdapter y_domain_;
+  std::vector<Series2D<TX, TY>*> series_;
+  ColorPalette color_palette_;
 };
+
+template <typename TX, typename TY>
+LineChart2D<TX, TY>::LineChart2D(Canvas* canvas) : Drawable(canvas) {}
+
+template <typename TX, typename TY>
+void LineChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
+  Domain<TX>* x_domain;
+  if (x_domain_.empty()) {
+    x_domain = Domain<TX>::mkDomain();
+    x_domain_.reset(x_domain, true);
+  } else {
+    x_domain = x_domain_.getAs<Domain<TX>>();
+  }
+
+  Domain<TY>* y_domain;
+  if (y_domain_.empty()) {
+    y_domain = Domain<TY>::mkDomain();
+    y_domain_.reset(y_domain, true);
+  } else {
+    y_domain = y_domain_.getAs<Domain<TY>>();
+  }
+
+  for (const auto& point : series->getData()) {
+    x_domain->addValue(point.x());
+    y_domain->addValue(point.y());
+  }
+
+  series_.push_back(series);
+
+  if (!series->hasProperty(Series::P_COLOR)) {
+    color_palette_.setNextColor(series);
+  }
+}
+
+template <typename TX, typename TY>
+void LineChart2D<TX, TY>::render(
+    RenderTarget* target,
+    Viewport* viewport) const {
+}
+
+template <typename TX, typename TY>
+AxisDefinition* LineChart2D<TX, TY>::addAxis(
+    AxisDefinition::kPosition position) {
+  auto axis = canvas_->addAxis(position);
+
+  switch (position) {
+
+    case AxisDefinition::TOP:
+      axis->setDomain(&x_domain_);
+      return axis;
+
+    case AxisDefinition::RIGHT:
+      axis->setDomain(&y_domain_);
+      return axis;
+
+    case AxisDefinition::BOTTOM:
+      axis->setDomain(&x_domain_);
+      return axis;
+
+    case AxisDefinition::LEFT:
+      axis->setDomain(&y_domain_);
+      return axis;
+
+  }
+}
 
 }
 }

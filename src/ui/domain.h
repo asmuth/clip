@@ -39,6 +39,8 @@ class Domain : public AnyDomain {
 public:
   virtual ~Domain() {}
 
+  static Domain<T>* mkDomain();
+
   /**
    * Returns the label at the specified index
    *

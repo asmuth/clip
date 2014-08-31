@@ -34,7 +34,8 @@ set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/barchart.cc
-    stage/src/fnordmetric/ui/canvas.cc)
+    stage/src/fnordmetric/ui/canvas.cc
+    stage/src/fnordmetric/ui/domain.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
