@@ -303,20 +303,67 @@ const char* SValue::getTypeName() const {
   return SValue::getTypeName(data_.type);
 }
 
-template<> bool SValue::getValue<bool>() const {
+template <> bool SValue::getValue<bool>() const {
   return getBool();
 }
 
-template<> int SValue::getValue<int>() const {
+template <> int SValue::getValue<int>() const {
   return getInteger();
 }
 
-template<> double SValue::getValue<double>() const {
+template <> double SValue::getValue<double>() const {
   return getFloat();
 }
 
-template<> std::string SValue::getValue<std::string>() const {
+template <> std::string SValue::getValue<std::string>() const {
   return toString();
+}
+
+// FIXPAUL: smarter type detection
+template <> bool SValue::testType<bool>() const {
+  return data_.type == T_BOOL;
+}
+
+template <> bool SValue::testType<int>() const {
+  printf("testInt '%s' = %i\n", toString().c_str(), data_.type == T_INTEGER);
+  return data_.type == T_INTEGER;
+}
+
+template <> bool SValue::testType<double>() const {
+  if (data_.type == T_FLOAT) {
+    return true;
+  }
+
+  auto str = toString();
+  bool dot = false;
+  const char* c = str.c_str();
+
+  if (*c == '-') {
+    ++c;
+  }
+
+  for (; *c != 0; ++c) {
+    if (*c >= '0' && *c <= '9') {
+      continue;
+    }
+
+    if (*c == '.' || *c == ',') {
+      if (dot) {
+        return false;
+      } else {
+        dot = true;
+      }
+      continue;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
+template <> bool SValue::testType<std::string>() const {
+  return true;
 }
 
 }

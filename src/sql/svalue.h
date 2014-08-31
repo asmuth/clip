@@ -79,19 +79,6 @@ protected:
   } data_;
 };
 
-template <typename T>
-bool SValue::testType() const {
-  bool retval = false;
-
-  try {
-    auto val = getValue<T>();
-    retval = true;
-  } catch (std::exception e) {
-  }
-
-  return retval;
-}
-
 }
 }
 #endif
