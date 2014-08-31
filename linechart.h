@@ -11,14 +11,16 @@
 #define _FNORDMETRIC_LINECHART_H
 #include <stdlib.h>
 #include <assert.h>
-#include "../base/series.h"
-#include "axisdefinition.h"
-#include "domain.h"
-#include "drawable.h"
+#include <fnordmetric/base/series.h>
+#include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/drawable.h>
+#include <fnordmetric/ui/canvas.h>
+#include <fnordmetric/ui/colorpalette.h>
+#include <fnordmetric/ui/rendertarget.h>
 
 namespace fnordmetric {
 namespace ui {
-class Canvas;
 
 /**
  * This draws the series data as points.
@@ -29,16 +31,21 @@ class Canvas;
  *   line_width = default: 2
  *
  */
-template <typename TX_, typename TY_>
-class LineChart2D : public Drawable {
+class LineChart : public Drawable {
 public:
-  typedef TX_ TX;
-  typedef TY_ TY;
-
   static char kDefaultLineStyle[];
   static double kDefaultLineWidth;
   static char kDefaultPointStyle[];
   static double kDefaultPointSize;
+
+  LineChart(ui::Canvas* canvas);
+};
+
+template <typename TX_, typename TY_>
+class LineChart2D : public LineChart {
+public:
+  typedef TX_ TX;
+  typedef TY_ TY;
 
   /**
    * Create a new line chart
@@ -77,6 +84,17 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
+  void drawLine(
+      RenderTarget* target,
+      Viewport* viewport,
+      const std::vector<std::pair<double, double>>& coords,
+      const std::string& line_style,
+      double line_width,
+      const std::string& point_style,
+      double point_size,
+      bool smooth,
+      const std::string& color) const;
+
   DomainAdapter x_domain_;
   DomainAdapter y_domain_;
   std::vector<Series2D<TX, TY>*> series_;
@@ -84,7 +102,7 @@ protected:
 };
 
 template <typename TX, typename TY>
-LineChart2D<TX, TY>::LineChart2D(Canvas* canvas) : Drawable(canvas) {}
+LineChart2D<TX, TY>::LineChart2D(Canvas* canvas) : LineChart(canvas) {}
 
 template <typename TX, typename TY>
 void LineChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
@@ -120,6 +138,30 @@ template <typename TX, typename TY>
 void LineChart2D<TX, TY>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  target->beginGroup("lines");
+
+  for (const auto& series : series_) {
+    std::vector<std::pair<double, double>> coords;
+
+    for (const auto& point : series->getData()) {
+      coords.emplace_back(
+          x_domain_.getAs<Domain<TX>>()->scale(point.x()),
+          y_domain_.getAs<Domain<TY>>()->scale(point.y()));
+    }
+
+    drawLine(
+        target,
+        viewport,
+        coords,
+        "solid",
+        2,
+        "circle",
+        4,
+        false,
+        series->getProperty(Series::P_COLOR));
+  }
+
+  target->finishGroup();
 }
 
 template <typename TX, typename TY>
@@ -145,6 +187,49 @@ AxisDefinition* LineChart2D<TX, TY>::addAxis(
       axis->setDomain(&y_domain_);
       return axis;
 
+  }
+}
+
+template <typename TX, typename TY>
+void LineChart2D<TX, TY>::drawLine(
+    RenderTarget* target,
+    Viewport* viewport,
+    const std::vector<std::pair<double, double>>& coords,
+    const std::string& line_style,
+    double line_width,
+    const std::string& point_style,
+    double point_size,
+    bool smooth,
+    const std::string& color) const {
+  std::vector<std::pair<double, double>> coords_ss;
+
+  for (const auto& coord : coords) {
+    auto ss_x =
+        viewport->paddingLeft() + coord.first * viewport->innerWidth();
+    auto ss_y =
+        viewport->paddingTop() + (1.0 - coord.second) * viewport->innerHeight();
+
+    coords_ss.emplace_back(ss_x, ss_y);
+  }
+
+  target->drawPath(
+      coords_ss,
+      line_style,
+      line_width,
+      smooth,
+      color,
+      "line");
+
+  if (point_style != "none") {
+    for (const auto& point : coords_ss) {
+      target->drawPoint(
+        point.first,
+        point.second,
+        point_style,
+        point_size,
+        color,
+        "point");
+    }
   }
 }
 
