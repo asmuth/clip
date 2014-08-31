@@ -17,6 +17,6 @@ clean:
 
 doc:
 	find doc/examples -name "*.sql" | while read file; do PATH=./build:$$PATH fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
-	(cd doc && rake build)
+	(cd doc/web && rake build)
 
 .PHONY: all test clean doc build
