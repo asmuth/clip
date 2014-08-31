@@ -99,7 +99,15 @@ examples:
 #        title: "Bars with labels"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#
+##
+  -
+    title: "Combined Charts"
+    dir: "combined"
+    examples:
+      -
+        title: "Bars and Lines"
+        file: "bars_and_lines"
+        url: "/combined/barsandlines"
 #  -
 #    title: "Point/Bubble Charts"
 #    dir: "barcharts"
