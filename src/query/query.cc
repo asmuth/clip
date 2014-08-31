@@ -16,7 +16,6 @@
 #include <fnordmetric/sql/queryplanbuilder.h>
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tablerepository.h>
-#include <fnordmetric/sql_extensions/axisstatement.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -47,11 +46,6 @@ Query::Query(
   draw_statements_.emplace_back();
   for (auto stmt : parser.getStatements()) {
     switch (stmt->getType()) {
-      case query::ASTNode::T_AXIS:
-        if (!draw_statements_.back().empty()) {
-          draw_statements_.back().back().addAxisStatement(AxisStatement(stmt));
-        }
-        break;
       case query::ASTNode::T_DRAW:
         draw_statements_.back().emplace_back(stmt);
         break;

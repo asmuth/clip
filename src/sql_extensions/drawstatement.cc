@@ -17,9 +17,9 @@ DrawStatement::DrawStatement(ASTNode* ast) : ast_(ast->deepCopy()) {}
 
 void DrawStatement::execute(ui::Canvas* canvas) const {
   switch (ast_->getToken()->getType()) {
-    case Token::T_BAR:
+    case Token::T_BARCHART:
       return executeWithType<BarChartBuilder>(canvas);
-    case Token::T_LINE:
+    case Token::T_LINECHART:
       return executeWithType<BarChartBuilder>(canvas);
     default:
       RAISE(

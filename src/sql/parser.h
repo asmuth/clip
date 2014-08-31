@@ -77,7 +77,6 @@ protected:
   ASTNode* selectSublist();
   ASTNode* tableName();
   ASTNode* drawStatement();
-  ASTNode* chartStatement();
   ASTNode* axisStatement();
 
   ASTNode* importStatement();

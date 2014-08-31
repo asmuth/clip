@@ -16,7 +16,6 @@
 #include <fnordmetric/sql/execute.h>
 #include <fnordmetric/sql/queryplannode.h>
 #include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql_extensions/axisstatement.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -33,12 +32,9 @@ public:
     result_lists_.emplace_back(target);
   }
 
-  void addAxisStatement(const AxisStatement& axis_stmt) {
-    axis_stmts_.emplace_back(axis_stmt);
-  }
-
   void execute(ui::Canvas* canvas) const;
 
+  // FIXPAUL: who owns the chart?
   template <typename ChartBuilderType>
   void executeWithType(ui::Canvas* canvas) const {
     ChartBuilderType chart_builder(canvas, this);
@@ -48,11 +44,11 @@ public:
       chart_builder.executeStatement(stmt); //, result_lists_[i]);
     }
 
-    auto drawable = chart_builder.getChart();
+    chart_builder.getChart();
 
-    for (const auto& axis_stmt : axis_stmts_) {
-      axis_stmt.execute(drawable);
-    }
+    //for (const auto& axis_stmt : axis_stmts_) {
+    //  axis_stmt.execute(drawable);
+    //}
   }
 
   ASTNode const* getProperty(Token::kTokenType key) const;
@@ -60,7 +56,6 @@ public:
 protected:
   std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;
-  std::vector<AxisStatement> axis_stmts_;
   ASTNode* ast_;
 };
 

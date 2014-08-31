@@ -326,38 +326,8 @@ next:
     goto next;
   }
 
-  if (token == "AXIS") {
-    token_list->emplace_back(Token::T_AXIS);
-    goto next;
-  }
-
   if (token == "BEGIN") {
     token_list->emplace_back(Token::T_BEGIN);
-    goto next;
-  }
-
-  if (token == "BAR") {
-    token_list->emplace_back(Token::T_BAR);
-    goto next;
-  }
-
-  if (token == "LINE") {
-    token_list->emplace_back(Token::T_LINE);
-    goto next;
-  }
-
-  if (token == "AREA") {
-    token_list->emplace_back(Token::T_AREA);
-    goto next;
-  }
-
-  if (token == "CHART") {
-    token_list->emplace_back(Token::T_CHART);
-    goto next;
-  }
-
-  if (token == "DIV") {
-    token_list->emplace_back(Token::T_DIV);
     goto next;
   }
 
@@ -408,6 +378,26 @@ next:
 
   if (token == "HEADER") {
     token_list->emplace_back(Token::T_HEADER);
+    goto next;
+  }
+
+  if (token == "AXIS") {
+    token_list->emplace_back(Token::T_AXIS);
+    goto next;
+  }
+
+  if (token == "BARCHART") {
+    token_list->emplace_back(Token::T_BARCHART);
+    goto next;
+  }
+
+  if (token == "LINECHART") {
+    token_list->emplace_back(Token::T_LINECHART);
+    goto next;
+  }
+
+  if (token == "AREACHART") {
+    token_list->emplace_back(Token::T_AREACHART);
     goto next;
   }
 

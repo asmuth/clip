@@ -336,51 +336,21 @@ void Parser::importCSVClause(ASTNode* import) {
 }
 
 ASTNode* Parser::drawStatement() {
-  if (lookahead(2, Token::T_CHART)) {
-    return chartStatement();
-  }
-
-  if (lookahead(2, Token::T_AXIS)) {
-    return axisStatement();
-  }
-
-  RAISE(
-      ParseError,
-      "invalid DRAW statement. syntax is DRAW <type> {AXIS|CHART}");
-
-  return nullptr;
-}
-
-ASTNode* Parser::chartStatement() {
   auto chart = new ASTNode(ASTNode::T_DRAW);
   consumeToken();
 
-  switch (cur_token_->getType()) {
-    case Token::T_BAR:
-      chart->setToken(consumeToken());
-      break;
-    case Token::T_LINE:
-      chart->setToken(consumeToken());
-      break;
-
-    default:
-      RAISE(
-          ParseError,
-          "unexpected token %s%s%s, expected one of BAR, LINE or AREA",
-          Token::getTypeName(cur_token_->getType()),
-          cur_token_->getString().size() > 0 ? ": " : "",
-          cur_token_->getString().c_str());
-      return nullptr;
-  }
-
-  if (!expectAndConsume(Token::T_CHART)) {
-    return nullptr;
-  }
+  chart->setToken(expectAndConsume(std::vector<Token::kTokenType>{
+      Token::T_BARCHART,
+      Token::T_LINECHART}));
 
   consumeIf(Token::T_WITH);
 
   while (cur_token_->getType() != Token::T_SEMICOLON) {
     switch (cur_token_->getType()) {
+      case Token::T_AXIS:
+        chart->appendChild(axisStatement());
+        break;
+
       case Token::T_ORIENTATION: {
         auto prop = chart->appendChild(ASTNode::T_PROPERTY);
         prop->setToken(consumeToken());
@@ -414,15 +384,15 @@ ASTNode* Parser::chartStatement() {
 }
 
 ASTNode* Parser::axisStatement() {
-  auto axis = new ASTNode(ASTNode::T_AXIS);
-  consumeToken();
+  auto axis = new ASTNode(ASTNode::T_PROPERTY);
+  axis->setToken(consumeToken());
 
   switch (cur_token_->getType()) {
     case Token::T_TOP:
     case Token::T_RIGHT:
     case Token::T_BOTTOM:
     case Token::T_LEFT:
-      axis->setToken(consumeToken());
+      axis->appendChild(ASTNode::T_PROPERTY_VALUE)->setToken(consumeToken());
       break;
 
     default:
@@ -435,13 +405,6 @@ ASTNode* Parser::axisStatement() {
       return nullptr;
   }
 
-  if (!expectAndConsume(Token::T_AXIS)) {
-    return nullptr;
-  }
-
-  consumeIf(Token::T_WITH);
-
-  consumeIf(Token::T_SEMICOLON);
   return axis;
 }
 

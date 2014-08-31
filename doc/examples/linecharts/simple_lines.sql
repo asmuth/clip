@@ -1,8 +1,8 @@
 IMPORT TABLE city_temperatures
    FROM CSV 'doc/examples/data/city_temperatures.csv' HEADER;
 
-DRAW LINE CHART;
-DRAW BOTTOM AXIS;
+DRAW LINECHART WITH
+  AXIS BOTTOM;
 
 SELECT
   city AS series,

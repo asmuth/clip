@@ -1,10 +1,9 @@
 IMPORT TABLE city_temperatures
    FROM CSV 'doc/examples/data/city_temperatures.csv' HEADER;
 
-DRAW BAR CHART WITH
-  ORIENTATION VERTICAL;
-
-DRAW LEFT AXIS;
+DRAW BARCHART WITH
+  ORIENTATION VERTICAL
+  AXIS BOTTOM;
 
 SELECT
   city AS series,

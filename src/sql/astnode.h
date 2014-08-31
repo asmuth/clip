@@ -62,7 +62,6 @@ public:
     T_MOD_EXPR,
     T_POW_EXPR,
 
-    T_AXIS,
     T_DRAW,
     T_IMPORT
   };
