@@ -30,6 +30,11 @@ public:
     const T value_;
   };
 
+  class AnyPoint {
+  public:
+    AnyPoint() {}
+  };
+
   enum kProperty {
     P_COLOR = 1
   };
@@ -39,14 +44,6 @@ public:
 
   const std::string& getName() const {
     return name_;
-  }
-
-  void setColor(const std::string& color) {
-    color_ = color;
-  }
-
-  const std::string& getColor() const {
-    return color_;
   }
 
   const std::string& getProperty(kProperty prop) {
@@ -65,6 +62,13 @@ public:
     return properties_.find(prop) != properties_.end();
   }
 
+  const void setProperty(
+      kProperty prop,
+      AnyPoint const* point,
+      const std::string& val) {
+    setDefaultProperty(prop, val);
+  }
+
   const void setDefaultProperty(kProperty prop, const std::string& val) {
     const auto p = properties_.find(prop);
 
@@ -76,13 +80,12 @@ public:
 protected:
   std::unordered_map<int, std::vector<std::string>> properties_;
   const std::string name_;
-  std::string color_;
 };
 
 template <typename TX, typename TY>
 class Series2D : public Series {
 public:
-  class Point {
+  class Point : public AnyPoint {
   public:
     explicit Point(TX x, TY y) : data_(Coord<TX>(x), Coord<TY>(y)) {}
     explicit Point(Coord<TX> x, Coord<TY> y) : data_(x, y) {}

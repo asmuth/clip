@@ -31,16 +31,21 @@ public:
       int name_ind,
       int x_ind,
       int y_ind,
-      int z_ind) :
-      name_ind_(name_ind),
-      x_ind_(x_ind),
-      y_ind_(y_ind),
-      z_ind_(z_ind) {}
+      int z_ind);
 
   int name_ind_;
   int x_ind_;
   int y_ind_;
   int z_ind_;
+  std::vector<std::pair<Series::kProperty, int>> prop_indexes_;
+
+protected:
+
+  void applyProperties(
+      SValue* row,
+      int row_len,
+      Series* series,
+      Series::AnyPoint const* point);
 };
 
 template <typename TX, typename TY>
@@ -73,6 +78,12 @@ public:
     series->addDatum(
         row[x_ind_].template getValue<TX>(),
         row[y_ind_].template getValue<TY>());
+
+    applyProperties(
+        row,
+        row_len,
+        series,
+        &series->getData().back());
 
     return true;
   }

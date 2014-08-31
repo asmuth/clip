@@ -57,6 +57,7 @@ public:
       adapter_->z_ind_ = z_ind_;
     }
 
+    adapter_->prop_indexes_ = prop_indexes_;
     adapter_->nextRow(row, row_len);
     stmt_->setTarget(adapter_.get());
     return true;
@@ -67,6 +68,13 @@ public:
     x_ind_ = stmt->getColumnIndex("x");
     y_ind_ = stmt->getColumnIndex("y");
     z_ind_ = stmt->getColumnIndex("z");
+
+    prop_indexes_.clear();
+
+    int color_ind = stmt->getColumnIndex("color");
+    if (color_ind >= 0) {
+      prop_indexes_.emplace_back(Series::P_COLOR, color_ind);
+    }
 
     stmt_ = stmt;
     stmt->setTarget(this);
@@ -185,6 +193,7 @@ protected:
   int x_ind_;
   int y_ind_;
   int z_ind_;
+  std::vector<std::pair<Series::kProperty, int>> prop_indexes_;
   QueryPlanNode* stmt_;
   ui::Canvas* canvas_;
   DrawStatement const* draw_stmt_;
