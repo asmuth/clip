@@ -182,6 +182,10 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     y_domain->addValue(point.y());
     y_domain->addValue(static_cast<TY>(point.z()));
 
+    printf("adddata: y=%s,z=%s\n",
+        std::to_string(point.y()).c_str(),
+        std::to_string(point.z()).c_str());
+
     if (!(point.y() <= point.z())) {
       RAISE(
           util::RuntimeException,
@@ -390,10 +394,17 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
 
   for (const auto& point : series->getData()) {
     // FIXPAUL copy properties
-    series3d->addDatum(
-        Series::Coord<TX>(point.x()),
-        Series::Coord<TY>(nullptr),
-        Series::Coord<TY>(point.y()));
+    if (point.y() > 0) {
+      series3d->addDatum(
+          Series::Coord<TX>(point.x()),
+          Series::Coord<TY>(nullptr),
+          Series::Coord<TY>(point.y()));
+    } else {
+      series3d->addDatum(
+          Series::Coord<TX>(point.x()),
+          Series::Coord<TY>(point.y()),
+          Series::Coord<TY>(nullptr));
+    }
   }
 
   BarChart3D<TX, TY, TY>::addSeries(series3d);
