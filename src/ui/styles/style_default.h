@@ -22,17 +22,17 @@ static const std::string kStyleSheetDefault = R"(
   }
 
   .axis .stroke {
-    stroke: rgb(0,0,0);
+    stroke: #aaa;
     stroke-width: 1px;
   }
 
   .axis .tick {
-    stroke: rgb(0,0,0);
+    stroke: #aaa;
     stroke-width: 1px;
   }
 
   .axis .label, .axis .title {
-    fill: #000;
+    fill: #666;
   }
 
   .axis .label {
