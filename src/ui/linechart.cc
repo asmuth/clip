@@ -16,9 +16,9 @@ namespace fnordmetric {
 namespace ui {
 
 char LineChart::kDefaultLineStyle[] = "solid";
-double LineChart::kDefaultLineWidth = 2.0f;
+char LineChart::kDefaultLineWidth[] = "2";
 char LineChart::kDefaultPointStyle[] = "none";
-double LineChart::kDefaultPointSize = 3.0f;
+char LineChart::kDefaultPointSize[] = "3";
 
 LineChart::LineChart(ui::Canvas* canvas) : Drawable(canvas) {}
 

@@ -1,14 +1,15 @@
+line/point styles
+bar/point labels
 axis/chart titles
 axis tick settings
-legends
-per point properties
-invert domain for barchart
+domain sql settings
+invert domain
 domain padding
+legends
 rename rowsink to virtualtable
 cli output format
 distributions
 middle axis
-bar/point labels
 heatmaps
 histogram
 missing data / interpolation gap

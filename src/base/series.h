@@ -21,7 +21,11 @@ class Series {
 public:
   enum kProperty {
     P_COLOR = 1,
-    P_LABEL = 2
+    P_LABEL = 2,
+    P_LINE_STYLE = 3,
+    P_LINE_WIDTH = 4,
+    P_POINT_STYLE = 5,
+    P_POINT_SIZE = 6
   };
 
   template <typename T>
