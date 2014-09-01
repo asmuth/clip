@@ -18,8 +18,13 @@ public:
 
   Viewport(
       int width,
+      int height) :
+      Viewport(width, height, std::tuple<int, int, int, int>(0,0,0,0)) {}
+
+  Viewport(
+      int width,
       int height,
-      const std::tuple<int, int, int, int>& padding = {0,0,0,0}) :
+      const std::tuple<int, int, int, int>& padding) :
       width_(width),
       height_(height),
       padding_(padding) {}
