@@ -113,7 +113,7 @@ bool Query::addStatement(
   }
 
   statements_.emplace_back(
-      query_plan,
+      std::unique_ptr<QueryPlanNode>(query_plan),
       draw_statements_.back().empty() ?
           nullptr : draw_statements_.back().back().get());
 
