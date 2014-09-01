@@ -12,7 +12,7 @@
       <div class="jumbotron">
         <h1>Create charts and dashboards from SQL</h1>
         <p class="lead">
-          FnordMetric allows yout to write SQL queries that return SVG charts rather than tables. Turning a query result into a chart is literally one line of code.
+          FnordMetric allows you to write SQL queries that return SVG charts rather than tables. Turning a query result into a chart is literally one line of code.
         </p>
       </div>
 
@@ -38,15 +38,33 @@
   </div>
 </div>
 <div id="wrap" style="min-height: 900px;">
-  <section style="border-top: none; margin-top: 0;">
-    <h1>What is FnordMetric?</h1>
+  <section style="border-top: none; margin-top: 0;" class="whatisfnordmetric">
+    <h1 style="margin-bottom: 20px;">What is FnordMetric?</h1>
+
     <p>
-      FnordMetric consists of two components: a query engine that executes a
-      superset of standard SQL against a number of backends and a C++ library
-      that renders SVG charts from plain old data. While you can use each of
-      these components on its own, awesomness ensues when you mash them together.
-      Think peanut butter and jelly.
+      FnordMetric is a fully-featured featured SQL query engine; it reads input
+      data from a number of external sources like MySQL databases or flat CSV files.
     </p>
+
+    <p>
+      Like others, it can return query results as plain old tables. Unlike others
+      it allows you to write SQL queries that return charts. These are rendered
+      as PNG or SVG images and can easily be embedded into any website in order
+      to build beautiful dashboards.
+    </p>
+
+<!--
+    <p>
+      FnordMetric is a fully powered SQL query engine but not a database on its
+      own; it reads the input data from a number of external sources like MySQL
+      databases or flat CSV files.
+    </p>
+    <p>
+      You can use FnordMetric from the commandline, via the built-in web interface
+      or embed it into your own application. FnordMetric is written in C++ and
+      ships with language bindings for C, C++, PHP, Python and Ruby.
+    </p>
+-->
 
     <!--
         -> 100% open source, licensed as mit
@@ -61,40 +79,84 @@ webpage without writing a single line of code. It gives you maximum flexiblitiy 
 control over layout and style with HTML and CSS.
     -->
 
-<div style="/* height:300px; */ width: 744px; margin: 60px auto;">
-      <div style="position: absolute; height: 80px; width:100%; left:0;margin-top: 65px;">
-          <div style="height: 66px;width: 66px;background: #2980b9;border-radius: 5%;margin: -20px auto 0 auto;line-height: 80px;color:  #fff;font-size: 22px;text-shadow: 0 0 2px rgba(0,0,0,.3);-webkit-transform: rotate(45deg);position: relative;left: 45px;border-bottom: 2px solid #34495e;border-right: 2px solid #34495e;"></div>
-          <div style="height: 70px;width: 129px;background: #2980b9;border-radius: 5%;margin: -15px auto 0 auto;line-height: 70px;color:  #fff;font-size: 22px;text-shadow: 1px 1px 2px rgba(0,0,0,.3);position: relative;top: -54px;left: -30px;border-bottom: 2px solid #34495e;border-bottom-right-radius: 0;">
-  <span style="
-    position: relative;
-    left: 14px;
-">Fnord SQL</span>
-          </div>
-        </div>
-<div style="
-        height: 165px;
-        background: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        width: 350px;
-        border-bottom: 2px solid #ddd;
-        float:  right;
-"></div>
+    <div style="width: 960px; margin: 60px auto;">
       <div style="
-        height: 165px;
-        background: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        width: 350px;
-        border-bottom: 2px solid #ddd;
-"></div>
+          position: absolute; height: 60px; width:100%; left:0;
+          background: url('/img/arrow.png') center center no-repeat;
+          background-size: contain;
+          opacity: 0.1;
+          margin-top: 83px;">
+          </div>
+
+      <div style="
+          height: 240px;
+          background: url('/img/leadexample-chart.png') center center no-repeat #f9f9f9;
+          border-radius: 5px;
+          width: 350px;
+          border: 3px solid #e7e7e7;
+          float: right;">
+          </div>
+
+      <div style="
+          height: 240px;
+          background: url('/img/leadexample-code.png') center center no-repeat #f9f9f9;
+          border-radius: 5px;
+          width: 350px;
+          border: 3px solid #e7e7e7;">
+          </div>
     </div>
 
     <p>
-      FnordMetric is licensed under the GNU General Public License v3.0
+      You can use FnordMetric from the commandline, via the built-in web interface
+      or include it into your own application. FnordMetric is written in C++ and
+      ships with language bindings for C, C++, PHP, Python and Ruby.
+    </p>
+
+    <p>
+      FnordMetric is free software and licensed under the GNU General Public License v3.0
     </p>
   </section>
 
+  <section class="whatisfnordmetric">
+    <h1 style="margin-bottom: 20px;">Getting started</h1>
+
+    <p>
+      Lebowski ipsum we're scattering the fucking ashes! It's all a goddamn fake.
+      Like Lenin said, look for the person who will benefit. And you will, uh,
+      you know, you'll, uh, you know what I'm trying to say.
+    </p>
+
+    <p>
+      And so, Theodore Donald Karabotsos, in accordance with what we think your
+      dying wishes might well have been, we commit your mortal remains to the
+      bosom of the Pacific Ocean, which you loved so well.
+    </p>
+
+    <a class="fancybutton" href="#">See Examples &rarr;</a>
+    <a class="fancybutton" href="#">Read the Documentation &rarr;</a>
+  </section>
+  
+  <section class="whatisfnordmetric">
+    <h1 style="margin-bottom: 20px;">Join the community</h1>
+
+    <p>
+      Lebowski ipsum we're scattering the fucking ashes! It's all a goddamn fake.
+      Like Lenin said, look for the person who will benefit. And you will, uh,
+      you know, you'll, uh, you know what I'm trying to say.
+    </p>
+
+    <p>
+      And so, Theodore Donald Karabotsos, in accordance with what we think your
+      dying wishes might well have been, we commit your mortal remains to the
+      bosom of the Pacific Ocean, which you loved so well.
+    </p>
+
+    <p>
+      Newsletter signup
+    </p>
+  </section>
+
+<!--
   <section>
     <h1>Examples</h1>
     <p>
@@ -159,10 +221,7 @@ control over layout and style with HTML and CSS.
     </div>
   </section>
 
-
-  <section style="margin-bottom: 80px;">
-    <h1>Getting Started with FnordMetric</h1>
-  </section>
+-->
 </div>
 
 <div id="footer">

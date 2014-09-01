@@ -1,0 +1,54 @@
+VERSION A
+
+FM is a full-featured SQL query engine. It reads input from ....
+
+      FnordMetric is a fully-featured featured SQL query engine
+
+      reads the input data from a number of external sources like MySQL
+      databases or flat CSV files.
+      Like others, it
+      can return query results as plain old tables. Unlike others it allows you
+      to write SQL queries that return charts.
+
+      and other visualizationsit 
+
+      These are rendered as PNG or SVG images and can easily be embedded into
+      any website in order to build beautiful dashboards.
+
+
+      You can use FnordMetric from the commandline, via the built-in web interface
+      or embed it into your own application. FnordMetric is written in C++ and
+      ships with language bindings for C, C++, PHP, Python and Ruby.
+
+      FnordMetric is free software and licensed under the GNU General Public
+      License v3.0
+
+
+
+What sets FM apart from other query engines is the ability to not only return plain old tables,
+but also display a wide array of visualisations and charts.
+
+These are rendered either as PNG or SVG images and can easily be implemented
+into your website in order to build quick and beautiful dashboards.
+
+
+VERSION B
+
+      FnordMetric lets you write SQL queries that return charts rather than tables.
+      It is a fully powered SQL query engine but not a database on its own. Instead
+      it can query over data from a number of external sources like MySQL databases
+      or flat CSV files. 
+
+      FnordMetric renders charts as PNG or SVG images that you can plug into any
+      website to build beautiful dashboards.
+
+      You can use FnordMetric from the commandline, via the built-in web interface
+      or embed it into your own application or website. FnordMetric is written in
+      C++ and ships with language bindings for C, C++, PHP, Python and Ruby.
+
+      FnordMetric is free software and licensed under the GNU General Public
+      License v3.0
+
+
+
+
