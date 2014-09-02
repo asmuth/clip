@@ -1,6 +1,9 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
   background-color: #fff;
@@ -53,7 +56,7 @@ ul li p {
 .jumbotron {
   text-align: center;
   color: #fff;
-  margin: 80px 0;
+  margin: 200px 0;
 }
 
 .jumbotron h1 {
@@ -144,9 +147,9 @@ ul li p {
 
 
 .colorbg {
-  height: 620px;
+  height: 800px;
   overflow: visible;
-  background: url('/img/bgtile.png') repeat center center #2980b9;
+  background: url('/img/bg.png') center center repeat-x #2980b9;
 }
 
 .colorbg.intro {
@@ -620,4 +623,21 @@ p + .fancybutton {
 
 .fancybutton:hover {
   background: #2980b9;
+}
+
+.fancybutton-light {
+  height: 42px;
+  line-height: 42px;
+  margin: 0 15px;
+  display: inline-block;
+  padding: 0 20px;
+  border-radius: 6px;
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 110%;
+  text-decoration: none;
+}
+
+.fancybutton-light:hover {
+  background: rgba(255,255,255,0.1);
 }
