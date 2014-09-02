@@ -29,7 +29,6 @@ v2.0.0a
 v2.0.0b
   - mysql backend
   - simple web interface (interactive query UI generates embed html snippets)
-  - simple dashboards working
   - simple interactive charts (hover tooltips)
   - histogram
 

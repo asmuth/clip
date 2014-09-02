@@ -14,6 +14,6 @@ DRAW LINECHART WITH
     AXIS BOTTOM
     AXIS LEFT;
 
-SELECT city AS series, month AS x, temperature AS y, "circle" as pointstyle, "color2" as color
+SELECT city AS series, month AS x, temperature * 2 AS y, "circle" as pointstyle, "color2" as color
     FROM city_temperatures
     WHERE city = "Tokyo";

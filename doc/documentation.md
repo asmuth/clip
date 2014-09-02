@@ -24,12 +24,24 @@ Table of Contents
   + [Command line interface](#)
   + [Web interface](#)
 
-+ Chart Styles
++ Charts
   + [Line Charts](#)
-  + [Area Charts](#)
   + [Bar Charts](#)
-  + [Point/Bubble/Scatter Charts](#)
-  + [Axis, Legend, Point and Line styles](#)
+  + [Area Charts](#)
+  + [Bubble Charts](#)
+  + [Scatter Charts](#)
+  + [Histograms](#)
+  + [Heatmaps](#)
+  + [Pie Charts](#)
+  + [Boxplots](#)
+  + [Error Bars](#)
+  + [Gantt charts](#)
+  + [Sparklines](#)
+
++ Customizing Charts
+  + [Point and Line styles](#)
+  + [Axis Styles](#)
+  + [Legend Styles](#)
   + [Custom themes with CSS](#)
   + [Interactive Charts](#)
 
@@ -37,17 +49,17 @@ Table of Contents
   + [MySQL Database](#)
   + [CSV Files](#)
 
-+ Building Dashboards
-  + [Getting started with dashboards](#)
-  + [Dynamic dashboards](#)
++ Embedding Charts into the web
+  + [Getting started with the HTML5 API](#)
+  + [Building web dashboards](#)
   + [HTML5 API reference](#)
 
 + Embedding FnordMetric
-  + [C++](#)
-  + [C](#)
-  + [Ruby](#)
-  + [PHP](#)
-  + [Python](#)
+  + [C++ API Reference](#)
+  + [C API Reference](#)
+  + [Ruby API Reference](#)
+  + [PHP API Reference](#)
+  + [Python API Reference](#)
 
 + Appendix
   + [Contributing](#)
