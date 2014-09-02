@@ -1,13 +1,13 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 
 body {
   margin: 0;
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
   background-color: #fff;
   color: #333;
+  text-rendering: optimizelegibility;
   /*text-shadow:0 0 1px #000;*/
 }
 
@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   line-height: 20px;
   color: inherit;
-  text-rendering: optimizelegibility;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 h1, h2, h3 { line-height: 40px; }
@@ -54,6 +54,7 @@ ul li p {
 }
 
 .jumbotron {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-align: center;
   color: #fff;
   margin: 200px 0;
@@ -154,7 +155,6 @@ ul li p {
 
 .colorbg.intro {
   overflow: hidden;
-  border-bottom: 1px solid #ddd;
 }
 
 #footer {
@@ -167,6 +167,10 @@ ul li p {
 
 #footer a {
   color:#777;
+}
+
+#header {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #header h1 {
@@ -189,7 +193,7 @@ ul li p {
   color:#333;
   text-decoration:none;
   line-height:26px;
-  margin-top:9px;
+  margin-top:10px;
   margin-left:25px;
 }
 
