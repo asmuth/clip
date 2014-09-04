@@ -415,7 +415,7 @@ ASTNode* Parser::axisClause() {
 }
 
 ASTNode* Parser::domainClause() {
-  auto domain = new ASTNode(ASTNode::T_PROPERTY);
+  auto domain = new ASTNode(ASTNode::T_DOMAIN);
   domain->setToken(consumeToken());
 
   auto min_expr = expr();
@@ -433,7 +433,9 @@ ASTNode* Parser::domainClause() {
           cur_token_->getString().c_str());
     }
 
-    //abort();
+    auto scale = domain->appendChild(ASTNode::T_DOMAIN_SCALE);
+    scale->appendChild(min_expr);
+    scale->appendChild(max_expr);
   }
 
   switch (cur_token_->getType()) {

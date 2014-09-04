@@ -1,5 +1,6 @@
 sql: AXIS LABELs
 sql: AXIS TICKs
+sql: chart TITLE / SUBTITLE
 
 invert domain
 logarithmic domain

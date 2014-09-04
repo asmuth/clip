@@ -71,7 +71,10 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithExplicitYDomain, [] () {
   EXPECT(stmt->getToken() != nullptr);
   EXPECT(*stmt->getToken() == Token::T_BARCHART);
   EXPECT(stmt->getChildren().size() == 1);
-  //EXPECT(*stmt->getChildren()[0] == ASTNode::T_PROPERTY);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_DOMAIN);
+  EXPECT(stmt->getChildren()[0]->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0]->getChildren()[0] == ASTNode::T_DOMAIN_SCALE);
+  EXPECT(stmt->getChildren()[0]->getChildren()[0]->getChildren().size() == 2);
 });
 
 // AXIS LABEL, TICKS

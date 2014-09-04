@@ -65,7 +65,9 @@ public:
     T_DRAW,
     T_IMPORT,
     T_AXIS,
-    T_AXIS_POSITION
+    T_AXIS_POSITION,
+    T_DOMAIN,
+    T_DOMAIN_SCALE
   };
 
   ASTNode(kASTNodeType type);
