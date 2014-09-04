@@ -59,9 +59,9 @@ ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
 
 void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
   for (const auto& child : ast_->getChildren()) {
-    if (child->getType() != ASTNode::T_PROPERTY ||
-        child->getToken() == nullptr ||
-        child->getToken()->getType() != Token::T_AXIS) {
+    if (child->getType() != ASTNode::T_AXIS ||
+        child->getChildren().size() < 1 ||
+        child->getChildren()[0]->getType() != ASTNode::T_AXIS_POSITION) {
       continue;
     }
 

@@ -63,7 +63,9 @@ public:
     T_POW_EXPR,
 
     T_DRAW,
-    T_IMPORT
+    T_IMPORT,
+    T_AXIS,
+    T_AXIS_POSITION
   };
 
   ASTNode(kASTNodeType type);

@@ -43,8 +43,8 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxes, [] () {
   EXPECT(stmt->getToken() != nullptr);
   EXPECT(*stmt->getToken() == Token::T_BARCHART);
   EXPECT(stmt->getChildren().size() == 2);
-  EXPECT(*stmt->getChildren()[0] == ASTNode::T_PROPERTY);
-  EXPECT(*stmt->getChildren()[1] == ASTNode::T_PROPERTY);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_AXIS);
+  EXPECT(*stmt->getChildren()[1] == ASTNode::T_AXIS);
   EXPECT(*stmt->getChildren()[0]->getToken() == Token::T_AXIS);
   EXPECT(*stmt->getChildren()[1]->getToken() == Token::T_AXIS);
   EXPECT(stmt->getChildren()[0]->getChildren().size() == 1);
@@ -52,9 +52,9 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxes, [] () {
   EXPECT(stmt->getChildren()[0]->getToken() != nullptr);
   EXPECT(stmt->getChildren()[1]->getToken() != nullptr);
   EXPECT(
-      *stmt->getChildren()[0]->getChildren()[0] == ASTNode::T_PROPERTY_VALUE);
+      *stmt->getChildren()[0]->getChildren()[0] == ASTNode::T_AXIS_POSITION);
   EXPECT(
-      *stmt->getChildren()[1]->getChildren()[0] == ASTNode::T_PROPERTY_VALUE);
+      *stmt->getChildren()[1]->getChildren()[0] == ASTNode::T_AXIS_POSITION);
   EXPECT(stmt->getChildren()[0]->getChildren()[0]->getToken() != nullptr);
   EXPECT(stmt->getChildren()[1]->getChildren()[0]->getToken() != nullptr);
   EXPECT(

@@ -390,7 +390,7 @@ ASTNode* Parser::drawStatement() {
 }
 
 ASTNode* Parser::axisClause() {
-  auto axis = new ASTNode(ASTNode::T_PROPERTY);
+  auto axis = new ASTNode(ASTNode::T_AXIS);
   axis->setToken(consumeToken());
 
   switch (cur_token_->getType()) {
@@ -398,7 +398,7 @@ ASTNode* Parser::axisClause() {
     case Token::T_RIGHT:
     case Token::T_BOTTOM:
     case Token::T_LEFT:
-      axis->appendChild(ASTNode::T_PROPERTY_VALUE)->setToken(consumeToken());
+      axis->appendChild(ASTNode::T_AXIS_POSITION)->setToken(consumeToken());
       break;
 
     default:
