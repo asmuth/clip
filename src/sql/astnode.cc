@@ -197,7 +197,10 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
   }
 
   if (token_ != nullptr) {
-    printf(" [%s]", Token::getTypeName(token_->getType()));
+    printf(
+        " [%s] (%s)",
+        Token::getTypeName(token_->getType()),
+        token_->getString().c_str());
   }
   printf("\n");
 

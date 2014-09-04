@@ -34,6 +34,7 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
   }
 
   applyAxisDefinitions(chart);
+  applyDomainDefinitions(chart);
 }
 
 ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
@@ -90,6 +91,66 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
 
       default:
         RAISE(util::RuntimeException, "corrupt AST: invalid axis position");
+    }
+  }
+}
+
+void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
+  for (const auto& child : ast_->getChildren()) {
+    bool invert = false;
+    bool logarithmic = false;
+    ASTNode* min_expr = nullptr;
+    ASTNode* max_expr = nullptr;
+
+    if (child->getType() != ASTNode::T_DOMAIN) {
+      continue;
+    }
+
+    for (const auto& domain_prop : child->getChildren()) {
+      switch (domain_prop->getType()) {
+        case ASTNode::T_DOMAIN_SCALE: {
+          auto min_max_expr = domain_prop->getChildren();
+          if (min_max_expr.size() != 2 ) {
+            RAISE(util::RuntimeException, "corrupt AST: invalid DOMAIN SCALE");
+          }
+          min_expr = min_max_expr[0];
+          max_expr = min_max_expr[1];
+          break;
+        }
+
+        case ASTNode::T_PROPERTY: {
+          if (domain_prop->getToken() != nullptr) {
+            switch (domain_prop->getToken()->getType()) {
+              case Token::T_INVERT:
+                invert = true;
+                continue;
+              case Token::T_LOGARITHMIC:
+                logarithmic = true;
+                continue;
+              default:
+                break;
+            }
+          }
+
+          RAISE(util::RuntimeException, "corrupt AST: invalid DOMAIN property");
+          break;
+        }
+
+        default:
+          RAISE(util::RuntimeException, "corrupt AST: unexpected DOMAIN child");
+
+      }
+    }
+
+    if (min_expr != nullptr && max_expr != nullptr) {
+      auto min = executeSimpleConstExpression(min_expr).getFloat();
+      auto max = executeSimpleConstExpression(max_expr).getFloat();
+
+      printf("domain: min=%f, max=%f, inv=%s, log=%s\n",
+        min,
+        max,
+        invert ? "true" : "false",
+        logarithmic ? "true" : "false");
     }
   }
 }

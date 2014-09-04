@@ -1,3 +1,5 @@
+lotsa overflows in expression exectution // outc val not respected
+
 sql: AXIS LABELs
 sql: AXIS TICKs
 sql: chart TITLE / SUBTITLE

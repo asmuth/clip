@@ -25,6 +25,8 @@ bool executeExpression(
     int* outc,
     SValue* outv);
 
+SValue executeSimpleConstExpression(ASTNode* expr);
+
 }
 }
 #endif

@@ -160,6 +160,7 @@ CompiledExpression* compileLiteral(ASTNode* ast) {
   ins->arg0 = SValue::fromToken(ast->getToken());
   ins->child = nullptr;
   ins->next  = nullptr;
+
   return ins;
 }
 

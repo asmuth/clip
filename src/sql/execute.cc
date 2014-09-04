@@ -12,6 +12,7 @@
 #include <vector>
 #include "compile.h"
 #include "svalue.h"
+#include "astnode.h"
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
@@ -89,6 +90,35 @@ bool executeExpression(
     }
 
   }
+}
+
+SValue executeSimpleConstExpression(ASTNode* expr) {
+  size_t scratchpad_len = 0;
+  auto compiled = compileAST(expr, &scratchpad_len);
+
+  if (scratchpad_len > 0) {
+    RAISE(
+        util::RuntimeException,
+        "invalid const expression: const expressions must be pure functions");
+  }
+
+  SValue eval_result;
+  int eval_result_len = 0;
+  auto eval_retcode = executeExpression(
+      compiled,
+      nullptr,
+      0,
+      nullptr,
+      &eval_result_len,
+      &eval_result);
+
+  if (!eval_retcode || eval_result_len != 1) {
+    RAISE(
+        util::RuntimeException,
+        "invalid const expression: evaluation did not return a result");
+  }
+
+  return eval_result;
 }
 
 }

@@ -260,19 +260,17 @@ std::string SValue::toString() const {
 SValue* SValue::fromToken(const Token* token) {
   switch (token->getType()) {
 
-    case Token::T_NUMERIC: {
-      if (token->isDouble()) {
-        return new SValue(token->getDouble());
-      } else {
-        return new SValue(token->getInteger());
-      }
-    }
-
     case Token::T_TRUE:
       return new SValue(true);
 
     case Token::T_FALSE:
       return new SValue(false);
+
+    case Token::T_NUMERIC: {
+      auto sval = new SValue(token->getString());
+      sval->tryNumericConversion();
+      return sval;
+    }
 
     case Token::T_STRING:
       return new SValue(token->getString());
@@ -387,6 +385,25 @@ SValue::kSValueType SValue::testTypeWithNumericConversion() const {
   if (testType<double>()) return T_FLOAT;
   return T_STRING;
 }
+
+bool SValue::tryNumericConversion() {
+  if (testType<int>()) {
+    int val = getValue<int>();
+    data_.type = T_INTEGER;
+    data_.u.t_integer = val;
+    return true;
+  }
+
+  if (testType<double>()) {
+    double val = getValue<double>();
+    data_.type = T_FLOAT;
+    data_.u.t_float = val;
+    return true;
+  }
+
+  return false;
+}
+
 
 }
 }

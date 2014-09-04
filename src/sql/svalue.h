@@ -62,6 +62,7 @@ public:
   bool getBool() const;
   const std::string getString() const;
   std::string toString() const;
+  bool tryNumericConversion();
 
   static SValue* fromToken(const Token* token);
 

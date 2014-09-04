@@ -178,14 +178,6 @@ int64_t Token::getInteger() const {
   return value;
 }
 
-bool Token::isDouble() const {
-  return false;
-}
-
-double Token::getDouble() const {
-  return 23.5f;
-}
-
 const std::string Token::getString() const {
   if (len_ == 0) {
     return std::string();

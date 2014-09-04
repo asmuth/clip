@@ -102,11 +102,8 @@ public:
   bool operator==(kTokenType type) const;
   kTokenType getType() const;
   static const char* getTypeName(kTokenType type);
-
   const std::string getString() const;
-  int64_t getInteger() const;
-  bool isDouble() const;
-  double getDouble() const;
+  int64_t getInteger() const; // FIXPAUL removeme
 
   void debugPrint() const;
 
