@@ -24,6 +24,9 @@ missing data / interpolation gap
 proper error message for missing table import
 rotate axis labels
 
+??? rename domain -> scale
+??? rename logarithmic -> log
+
 v2.0.0a
   - all examples working
   - bar, area, line, pie, number chart

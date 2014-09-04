@@ -438,13 +438,21 @@ ASTNode* Parser::domainClause() {
     scale->appendChild(max_expr);
   }
 
-  switch (cur_token_->getType()) {
-    case Token::T_INVERT:
-    case Token::T_LOGARITHMIC:
-      break;
+  for (int i = 0; i < 2; i++) {
+    switch (cur_token_->getType()) {
+      case Token::T_INVERT:
+      case Token::T_LOGARITHMIC: {
+        auto prop = domain->appendChild(ASTNode::T_PROPERTY);
+        prop->setToken(consumeToken());
+        prop->appendChild(ASTNode::T_PROPERTY_VALUE);
+        continue;
+      }
 
-    default:
-      break;
+      default:
+        break;
+    }
+
+    break;
   }
 
   return domain;

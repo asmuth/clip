@@ -77,4 +77,27 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithExplicitYDomain, [] () {
   EXPECT(stmt->getChildren()[0]->getChildren()[0]->getChildren().size() == 2);
 });
 
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithExplicitLogInvYDomain, [] () {
+  auto parser = parseTestQuery(
+      "DRAW BARCHART YDOMAIN 0, 100 LOGARITHMIC INVERT;");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_DRAW);
+  EXPECT(stmt->getToken() != nullptr);
+  EXPECT(*stmt->getToken() == Token::T_BARCHART);
+  EXPECT(stmt->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_DOMAIN);
+  EXPECT(stmt->getChildren().size() == 1);
+  auto domain = stmt->getChildren()[0];
+  EXPECT(domain->getChildren().size() == 3);
+  EXPECT(*domain->getChildren()[0] == ASTNode::T_DOMAIN_SCALE);
+  EXPECT(domain->getChildren()[0]->getChildren().size() == 2);
+  EXPECT(*domain->getChildren()[1] == ASTNode::T_PROPERTY);
+  EXPECT(domain->getChildren()[1]->getToken() != nullptr);
+  EXPECT(*domain->getChildren()[1]->getToken() == Token::T_LOGARITHMIC);
+  EXPECT(*domain->getChildren()[2] == ASTNode::T_PROPERTY);
+  EXPECT(domain->getChildren()[2]->getToken() != nullptr);
+  EXPECT(*domain->getChildren()[2]->getToken() == Token::T_INVERT);
+});
+
 // AXIS LABEL, TICKS
