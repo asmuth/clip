@@ -1,4 +1,5 @@
 refactor expression symbol lookup/registration
+refactor tokenizer // dynamically register tokens
 line/point styles
 bar/point labels
 axis/chart titles

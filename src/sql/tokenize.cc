@@ -431,6 +431,31 @@ next:
     goto next;
   }
 
+  if (token == "XDOMAIN") {
+    token_list->emplace_back(Token::T_XDOMAIN);
+    goto next;
+  }
+
+  if (token == "YDOMAIN") {
+    token_list->emplace_back(Token::T_YDOMAIN);
+    goto next;
+  }
+
+  if (token == "ZDOMAIN") {
+    token_list->emplace_back(Token::T_ZDOMAIN);
+    goto next;
+  }
+
+  if (token == "LOGARITHMIC") {
+    token_list->emplace_back(Token::T_LOGARITHMIC);
+    goto next;
+  }
+
+  if (token == "INVERT") {
+    token_list->emplace_back(Token::T_INVERT);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

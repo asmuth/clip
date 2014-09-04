@@ -13,10 +13,9 @@ Table of Contents
   + [Getting Started](#getting-started)
 
 + Query Language
-  + [Overview](#)
   + [Extensions to standard SQL](#)
   + [Virtual Tables](#)
-  + [Visualizing Results](#)
+  + [The DRAW statement](#)
   + [Built-in Functions](#)
   + [Syntax Reference](#)
 
@@ -234,10 +233,33 @@ the same chart:
 Query Language
 ==============
 
-The FnordMetric query language is a superset of SQL99 (SELECT statements only).
+I would love to say that the FnordMetric query language is a superset of SQL99,
+but we aren't there just yet.
+
 It supports all the operations you would expect in your standard SQL database
 like GROUP BY or HAVING statements and joins. Additionally, FnordMetric implements
 a number of new statements to create charts directly from SQL.
+
+The DRAW Statement
+------------------
+
+- basic idea: one draw and all successive selects select series
+- select format
+
+- specifying domains
+   * logarithmic
+
+- specifying axes
+   * titles
+   * multiyple y axis
+
+- setting a title / subtitle
+
+- adding a legend
+
+- combining charts / overdraw
+
+
 
 Extensions to standard SQL
 --------------------------
@@ -279,14 +301,14 @@ Syntax Reference
     common_chart_options ::=
         [ TITLE 'title' ]
         [ SUBTITLE 'subtitle' ]
-        [ XDOMAIN min, max [ LOGARITHMIC ] ]
-        [ YDOMAIN min, max [ LOGARITHMIC ] ]
-        [ ZDOMAIN min, max [ LOGARITHMIC ] ]
+        [ XDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ YDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ ZDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
 
     axis_definition ::=
         AXIS { TOP | RIGHT | BOTTOM | LEFT | LEFTRIGHT | TOPBOTTOM }
             [ LABEL 'title' ]
-            [ TICKS { INSIDE | OUTSIDE | OFF } ];
+            [ TICKS { INSIDE | OUTSIDE | OFF } ]
 
     DRAW AREACHART
         [ [ WITH ]

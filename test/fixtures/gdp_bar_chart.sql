@@ -1,9 +1,9 @@
 IMPORT TABLE gdp_per_country
    FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;
 
-DRAW BAR CHART;
-DRAW BOTTOM AXIS;
-DRAW LEFT AXIS;
+DRAW BARCHART
+  AXIS BOTTOM
+  AXIS LEFT;
 
 SELECT
   'gross domestic product per country' AS series,

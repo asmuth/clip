@@ -72,8 +72,7 @@ set(FNORDMETRIC_CLI_SOURCES
     stage/src/fnordmetric/web/webinterface.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/math.cc
-    stage/src/fnordmetric/main.cc)
+    stage/src/fnordmetric/sql/expressions/math.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
@@ -85,7 +84,9 @@ add_definitions("-Wno-predefined-identifier-outside-function")
 
 add_library(libfnordmetric ${FNORDMETRIC_QUERY_SOURCES})
 
-add_executable(fnordmetric ${FNORDMETRIC_CLI_SOURCES})
+add_executable(fnordmetric
+    ${FNORDMETRIC_CLI_SOURCES}
+    stage/src/fnordmetric/main.cc)
 target_link_libraries(fnordmetric libfnordmetric)
 
 add_executable(tests/test-sql
@@ -95,18 +96,30 @@ add_executable(tests/test-sql
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-sql libfnordmetric)
 
-# add_executable(tests/test-query
-#    ${FNORDMETRIC_QUERY_SOURCES}
-#    stage/src/fnordmetric/query/query_test.cc)
+add_executable(tests/test-sql-extensions
+    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/math.cc)
+target_link_libraries(tests/test-sql-extensions libfnordmetric)
+
+add_executable(tests/test-query
+    ${FNORDMETRIC_QUERY_SOURCES}
+    stage/src/fnordmetric/query/query_test.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/math.cc)
+target_link_libraries(tests/test-query libfnordmetric)
 
 # add_executable(tests/test-ui
 #     ${FNORDMETRIC_UI_SOURCES}
 #     stage/src/fnordmetric/ui/ui_test.cc)
 # 
-# add_executable(tests/test-cli
-#     ${FNORDMETRIC_CLI_SOURCES}
-#     stage/src/fnordmetric/cli/cli_test.cc)
-# 
+
+add_executable(tests/test-cli
+    ${FNORDMETRIC_CLI_SOURCES}
+    stage/src/fnordmetric/cli/cli_test.cc)
+target_link_libraries(tests/test-cli libfnordmetric)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)

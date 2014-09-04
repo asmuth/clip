@@ -85,6 +85,11 @@ public:
     T_HORIZONTAL,
     T_VERTICAL,
     T_STACKED,
+    T_XDOMAIN,
+    T_YDOMAIN,
+    T_ZDOMAIN,
+    T_LOGARITHMIC,
+    T_INVERT
   };
 
   Token(kTokenType token_type);

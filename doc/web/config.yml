@@ -22,6 +22,14 @@ examples:
         title: "Multiple Y Axes"
         file: "multiple_y_axes"
         url: "/linecharts/multiple_y_axes"
+      -
+        title: "Lines with explicit domain"
+        file: "explicit_domain"
+        url: "/linecharts/explicit_domain"
+#      -
+#        title: "Lines with logarithmic domain"
+#        file: "logarithmic_domain"
+#        url: "/linecharts/logarithmic_domain"
 #      -
 #        title: "Line and Point styles"
 #        file: "horizontal_bars"
