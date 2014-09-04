@@ -77,7 +77,8 @@ protected:
   ASTNode* selectSublist();
   ASTNode* tableName();
   ASTNode* drawStatement();
-  ASTNode* axisStatement();
+  ASTNode* axisClause();
+  ASTNode* domainClause();
 
   ASTNode* importStatement();
   void importCSVClause(ASTNode* import);

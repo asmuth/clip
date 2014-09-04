@@ -1,3 +1,9 @@
+sql: AXIS LABELs
+sql: AXIS TICKs
+
+invert domain
+logarithmic domain
+
 refactor expression symbol lookup/registration
 refactor tokenizer // dynamically register tokens
 line/point styles
@@ -5,7 +11,6 @@ bar/point labels
 axis/chart titles
 axis tick settings
 domain sql settings
-invert domain
 domain padding
 legends
 rename rowsink to virtualtable

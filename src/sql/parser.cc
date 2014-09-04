@@ -334,6 +334,7 @@ void Parser::importCSVClause(ASTNode* import) {
   }
 }
 
+// FIXPAUL move this into sql extensions
 ASTNode* Parser::drawStatement() {
   auto chart = new ASTNode(ASTNode::T_DRAW);
   consumeToken();
@@ -347,7 +348,13 @@ ASTNode* Parser::drawStatement() {
   while (cur_token_->getType() != Token::T_SEMICOLON) {
     switch (cur_token_->getType()) {
       case Token::T_AXIS:
-        chart->appendChild(axisStatement());
+        chart->appendChild(axisClause());
+        break;
+
+      case Token::T_XDOMAIN:
+      case Token::T_YDOMAIN:
+      case Token::T_ZDOMAIN:
+        chart->appendChild(domainClause());
         break;
 
       case Token::T_ORIENTATION: {
@@ -382,7 +389,7 @@ ASTNode* Parser::drawStatement() {
   return chart;
 }
 
-ASTNode* Parser::axisStatement() {
+ASTNode* Parser::axisClause() {
   auto axis = new ASTNode(ASTNode::T_PROPERTY);
   axis->setToken(consumeToken());
 
@@ -405,6 +412,40 @@ ASTNode* Parser::axisStatement() {
   }
 
   return axis;
+}
+
+ASTNode* Parser::domainClause() {
+  auto domain = new ASTNode(ASTNode::T_PROPERTY);
+  domain->setToken(consumeToken());
+
+  auto min_expr = expr();
+
+  if (min_expr != nullptr) {
+    expectAndConsume(Token::T_COMMA);
+
+    auto max_expr = expr();
+    if (max_expr == nullptr) {
+      RAISE(
+          ParseError,
+          "unexpected token %s%s%s, expected: value expression",
+          Token::getTypeName(cur_token_->getType()),
+          cur_token_->getString().size() > 0 ? ": " : "",
+          cur_token_->getString().c_str());
+    }
+
+    //abort();
+  }
+
+  switch (cur_token_->getType()) {
+    case Token::T_INVERT:
+    case Token::T_LOGARITHMIC:
+      break;
+
+    default:
+      break;
+  }
+
+  return domain;
 }
 
 ASTNode* Parser::selectSublist() {

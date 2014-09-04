@@ -306,7 +306,7 @@ Syntax Reference
         [ ZDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
 
     axis_definition ::=
-        AXIS { TOP | RIGHT | BOTTOM | LEFT | LEFTRIGHT | TOPBOTTOM }
+        AXIS { TOP | RIGHT | BOTTOM | LEFT }
             [ LABEL 'title' ]
             [ TICKS { INSIDE | OUTSIDE | OFF } ]
 
