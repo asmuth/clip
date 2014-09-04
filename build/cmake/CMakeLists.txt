@@ -77,8 +77,8 @@ set(FNORDMETRIC_CLI_SOURCES
 
 include_directories(stage/src)
 include_directories(stage/assets)
-set(CMAKE_CXX_FLAGS "-std=c++0x")
-#set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+#set(CMAKE_CXX_FLAGS "-std=c++0x")
+set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 
 add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
@@ -88,7 +88,11 @@ add_library(libfnordmetric ${FNORDMETRIC_QUERY_SOURCES})
 add_executable(fnordmetric ${FNORDMETRIC_CLI_SOURCES})
 target_link_libraries(fnordmetric libfnordmetric)
 
-add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
+add_executable(tests/test-sql
+    stage/src/fnordmetric/sql/sql_test.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-sql libfnordmetric)
 
 # add_executable(tests/test-query
