@@ -12,6 +12,7 @@
 #include <tuple>
 #include <functional>
 #include <fnordmetric/base/series.h>
+#include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/viewport.h>
 
 namespace fnordmetric {
