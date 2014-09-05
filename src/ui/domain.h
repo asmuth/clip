@@ -23,6 +23,12 @@ namespace ui {
  */
 class AnyDomain {
 public:
+  enum kDimension {
+    DIM_X = 0,
+    DIM_Y = 1,
+    DIM_Z = 2
+  };
+
   virtual ~AnyDomain() {}
 
   virtual const std::vector<double> getTicks() const = 0;

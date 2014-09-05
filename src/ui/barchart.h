@@ -116,6 +116,16 @@ public:
    */
   void setStacked(bool stacked) override;
 
+  /**
+   * Get the {x,y,z} domain of this chart.
+   *
+   * The returned pointer is owned by the chart object and must not be freed
+   * by the caller!
+   *
+   * @param dimension the dimension (x,y,z)
+   */
+  AnyDomain* getDomain(AnyDomain::kDimension dimension) override;
+
 protected:
 
   void render(RenderTarget* target, Viewport* viewport) const override;
@@ -411,6 +421,18 @@ void BarChart3D<TX, TY, TZ>::setStacked(bool stacked) {
 
       y_domain->addValue(max);
     }
+  }
+}
+
+template <typename TX, typename TY, typename TZ>
+AnyDomain* BarChart3D<TX, TY, TZ>::getDomain(AnyDomain::kDimension dimension) {
+  switch (dimension) {
+    case AnyDomain::DIM_X:
+      return x_domain_.get();
+
+    case AnyDomain::DIM_Y:
+    case AnyDomain::DIM_Z:
+      return y_domain_.get();
   }
 }
 

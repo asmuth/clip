@@ -29,15 +29,25 @@ public:
   virtual ~Drawable() {}
 
   /**
-   * Add an axis to the chart. This method should only be called after all
-   * series have been added to the chart.
+   * Add an axis to the chart.
    *
    * The returned pointer is owned by the canvas object and must not be freed
    * by the caller!
    *
    * @param position the position/placement of the axis
    */
-   virtual AxisDefinition* addAxis(AxisDefinition::kPosition position) = 0;
+  virtual AxisDefinition* addAxis(AxisDefinition::kPosition position) = 0;
+
+  /**
+   * Get the {x,y,z} domain of this chart. May raise an exception if the chart
+   * does not implement the requested domain.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * @param dimension the dimension
+   */
+  virtual AnyDomain* getDomain(AnyDomain::kDimension dimension) = 0;
 
 protected:
 

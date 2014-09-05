@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <assert.h>
+#include <fnordmetric/ui/domain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/util/format.h>
 
@@ -33,6 +34,8 @@ public:
   void setInvert(bool invert);
   void setLogarithmic(bool logarithmic);
 
+protected:
+  ui::AnyDomain* domain_;
 };
 
 }

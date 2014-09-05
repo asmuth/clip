@@ -61,6 +61,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/tokenize.cc
     stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
     stage/src/fnordmetric/sql_extensions/linechartbuilder.cc
+    stage/src/fnordmetric/sql_extensions/domainconfig.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
