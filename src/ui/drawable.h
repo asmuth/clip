@@ -29,6 +29,16 @@ public:
   virtual ~Drawable() {}
 
   /**
+   * Set the title for this chart
+   */
+  void setTitle(const std::string& title);
+
+  /**
+   * Set the subtitle for this chart
+   */
+  void setSubtitle(const std::string& subtitle);
+
+  /**
    * Add an axis to the chart.
    *
    * The returned pointer is owned by the canvas object and must not be freed

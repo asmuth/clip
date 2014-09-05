@@ -36,6 +36,7 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
 
   applyAxisDefinitions(chart);
   applyDomainDefinitions(chart);
+  applyTitle(chart);
 }
 
 ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
@@ -168,6 +169,37 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
     if (min_expr != nullptr && max_expr != nullptr) {
       domain_config.setMin(executeSimpleConstExpression(min_expr));
       domain_config.setMax(executeSimpleConstExpression(max_expr));
+    }
+  }
+}
+
+void DrawStatement::applyTitle(ui::Drawable* chart) const {
+  for (const auto& child : ast_->getChildren()) {
+    if (child->getType() != ASTNode::T_PROPERTY ||
+        child->getToken() == nullptr || !(
+        child->getToken()->getType() == Token::T_TITLE ||
+        child->getToken()->getType() == Token::T_SUBTITLE)) {
+      continue;
+    }
+
+    if (child->getChildren().size() != 1) {
+      RAISE(util::RuntimeException, "corrupt AST: [SUB]TITLE has != 1 child");
+    }
+
+    auto title_eval = executeSimpleConstExpression(child->getChildren()[0]);
+    auto title_str = title_eval.toString();
+
+    switch (child->getToken()->getType()) {
+      case Token::T_TITLE:
+        chart->setTitle(title_str);
+        break;
+
+      case Token::T_SUBTITLE:
+        chart->setSubtitle(title_str);
+        break;
+
+      default:
+        break;
     }
   }
 }

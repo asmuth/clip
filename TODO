@@ -2,8 +2,10 @@ lotsa overflows in expression exectution // outc val not respected
 
 sql: AXIS TITLE, LABELS
 sql: LEGEND
-sql: XGRID, YGRID
+sql: GRID
+sql: csv opts
 
+impl axis title
 impl inverted domains
 impl logarithmic domain
 
