@@ -12,6 +12,8 @@
 namespace fnordmetric {
 namespace ui {
 
+const char AnyDomain::kDimensionLetters[] = "xyz";
+
 template <> Domain<int>* Domain<int>::mkDomain() {
   return new ContinuousDomain<int>();
 }
