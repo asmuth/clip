@@ -466,6 +466,11 @@ next:
     goto next;
   }
 
+  if (token == "GRID") {
+    token_list->emplace_back(Token::T_GRID);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

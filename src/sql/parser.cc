@@ -357,6 +357,26 @@ ASTNode* Parser::drawStatement() {
         chart->appendChild(domainClause());
         break;
 
+      case Token::T_GRID: {
+        auto grid = chart->appendChild(ASTNode::T_GRID);
+        consumeToken();
+
+        for (int i = 0; i < 2; i++) {
+          switch (cur_token_->getType()) {
+            case Token::T_HORIZONTAL:
+            case Token::T_VERTICAL: {
+              auto prop = grid->appendChild(ASTNode::T_PROPERTY);
+              prop->setToken(consumeToken());
+              break;
+            }
+            default:
+              break;
+          }
+        }
+
+        break;
+      }
+
       case Token::T_ORIENTATION: {
         auto prop = chart->appendChild(ASTNode::T_PROPERTY);
         prop->setToken(consumeToken());

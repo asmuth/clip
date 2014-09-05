@@ -93,7 +93,8 @@ public:
     T_LOGARITHMIC,
     T_INVERT,
     T_TITLE,
-    T_SUBTITLE
+    T_SUBTITLE,
+    T_GRID
   };
 
   Token(kTokenType token_type);
