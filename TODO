@@ -5,30 +5,28 @@ sql: LEGEND
 sql: GRID
 sql: csv opts
 
+impl chart title, subtitle
 impl axis title
 impl inverted domains
 impl logarithmic domain
+impl legend
+impl rotate axis labels
 
 refactor expression symbol lookup/registration
 refactor tokenizer // dynamically register tokens
 line/point styles
 bar/point labels
-axis/chart titles
-axis tick settings
-domain sql settings
 domain padding
-legends
 rename rowsink to virtualtable
 cli output format
-distributions
+short token for: logarithmic -> log
+proper error message for missing table import
+
 middle axis
 heatmaps
 histogram
 missing data / interpolation gap
-proper error message for missing table import
-rotate axis labels
 
-short token for: logarithmic -> log
 
 v2.0.0a
   - all examples working
