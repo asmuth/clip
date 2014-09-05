@@ -121,6 +121,26 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithLogInvYDomain, [] () {
   EXPECT(*domain->getChildren()[1]->getToken() == Token::T_INVERT);
 });
 
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithGrid, [] () {
+  auto parser = parseTestQuery(
+      "DRAW BARCHART GRID HORIZONTAL VERTICAL;");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_DRAW);
+  EXPECT(stmt->getToken() != nullptr);
+  EXPECT(*stmt->getToken() == Token::T_BARCHART);
+  EXPECT(stmt->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_GRID);
+  auto grid = stmt->getChildren()[0];
+  EXPECT(grid->getChildren().size() == 2);
+  EXPECT(*grid->getChildren()[0] == ASTNode::T_PROPERTY);
+  EXPECT(grid->getChildren()[0]->getToken() != nullptr);
+  EXPECT(*grid->getChildren()[0]->getToken() == Token::T_HORIZONTAL);
+  EXPECT(*grid->getChildren()[1] == ASTNode::T_PROPERTY);
+  EXPECT(grid->getChildren()[1]->getToken() != nullptr);
+  EXPECT(*grid->getChildren()[1]->getToken() == Token::T_VERTICAL);
+});
+
 
 
 // AXIS LABEL, TICKS

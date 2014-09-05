@@ -1,8 +1,8 @@
 lotsa overflows in expression exectution // outc val not respected
 
+sql: GRID
 sql: AXIS TITLE, LABELS
 sql: LEGEND
-sql: GRID
 sql: csv opts
 
 impl chart title, subtitle

@@ -67,7 +67,8 @@ public:
     T_AXIS,
     T_AXIS_POSITION,
     T_DOMAIN,
-    T_DOMAIN_SCALE
+    T_DOMAIN_SCALE,
+    T_GRID
   };
 
   ASTNode(kASTNodeType type);
