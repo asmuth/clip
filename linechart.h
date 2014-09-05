@@ -78,6 +78,17 @@ public:
    */
    AxisDefinition* addAxis(AxisDefinition::kPosition position);
 
+  /**
+   * Get the {x,y} domain of this chart. Will raise an exception if z domain
+   * is requested.
+   *
+   * The returned pointer is owned by the chart object and must not be freed
+   * by the caller!
+   *
+   * @param dimension the dimension (x,y)
+   */
+  AnyDomain* getDomain(AnyDomain::kDimension dimension) override;
+
 protected:
 
   void render(
@@ -209,6 +220,21 @@ AxisDefinition* LineChart2D<TX, TY>::addAxis(
       axis->setDomain(&y_domain_);
       return axis;
 
+  }
+}
+
+template <typename TX, typename TY>
+AnyDomain* LineChart2D<TX, TY>::getDomain(AnyDomain::kDimension dimension) {
+  switch (dimension) {
+    case AnyDomain::DIM_X:
+      return x_domain_.get();
+
+    case AnyDomain::DIM_Y:
+      return y_domain_.get();
+
+    case AnyDomain::DIM_Z:
+      RAISE(util::RuntimeException, "LineChart2D does not have a Y domain");
+      return nullptr;
   }
 }
 
