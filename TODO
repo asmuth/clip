@@ -27,6 +27,7 @@ heatmaps
 histogram
 missing data / interpolation gap
 
+make # of axis ticks configurable via sql
 
 v2.0.0a
   - all examples working
