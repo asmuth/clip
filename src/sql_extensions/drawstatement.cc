@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/sql_extensions/domainconfig.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
 #include <fnordmetric/sql_extensions/linechartbuilder.h>
@@ -142,15 +143,31 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
       }
     }
 
-    if (min_expr != nullptr && max_expr != nullptr) {
-      auto min = executeSimpleConstExpression(min_expr).getFloat();
-      auto max = executeSimpleConstExpression(max_expr).getFloat();
+    if (child->getToken() == nullptr) {
+      RAISE(util::RuntimeException, "corrupt AST: DOMAIN has no token");
+    }
 
-      printf("domain: min=%f, max=%f, inv=%s, log=%s\n",
-        min,
-        max,
-        invert ? "true" : "false",
-        logarithmic ? "true" : "false");
+    int dim = -1;
+    switch (child->getToken()->getType()) {
+      case Token::T_XDOMAIN:
+        dim = 0;
+        break;
+      case Token::T_YDOMAIN:
+        dim = 1;
+        break;
+      case Token::T_ZDOMAIN:
+        dim = 2;
+        break;
+      default:
+        RAISE(util::RuntimeException, "corrupt AST: DOMAIN has invalid token");
+    }
+
+    DomainConfig domain_config(chart, dim);
+    domain_config.setInvert(invert);
+    domain_config.setLogarithmic(logarithmic);
+    if (min_expr != nullptr && max_expr != nullptr) {
+      domain_config.setMin(executeSimpleConstExpression(min_expr));
+      domain_config.setMax(executeSimpleConstExpression(max_expr));
     }
   }
 }
