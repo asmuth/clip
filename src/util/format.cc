@@ -29,24 +29,44 @@ std::string numberToHuman(double value) {
     len = snprintf(buf, sizeof(buf), "0");
   }
 
-  else if (abs_value < 1){
+  else if (abs_value < 0.000000001){
+    len = snprintf(buf, sizeof(buf), "%.1fp", value * 1000000000000);
+  }
+
+  else if (abs_value < 0.000001){
+    len = snprintf(buf, sizeof(buf), "%.1fn", value * 1000000000);
+  }
+
+  else if (abs_value < 0.001){
+    len = snprintf(buf, sizeof(buf), "%.1fμ", value * 1000000);
+  }
+
+  else if (abs_value < 0.1){
+    len = snprintf(buf, sizeof(buf), "%.1fm", value * 1000);
+  }
+
+  else if (abs_value < 100){
     len = snprintf(buf, sizeof(buf), "%.2f", value);
   }
 
-  else if (abs_value < 10){
+  else if (abs_value < 1000) {
     len = snprintf(buf, sizeof(buf), "%.1f", value);
   }
 
-  else if (abs_value < 100) {
-    len = snprintf(buf, sizeof(buf), "%.0f", value);
+  else if (abs_value < 1000000) {
+    len = snprintf(buf, sizeof(buf), "%.1fK", value / 1000);
   }
 
-  else if (abs_value > 1000) {
-    len = snprintf(buf, sizeof(buf), "%.1fk", value / 1000);
+  else if (abs_value < 1000000000) {
+    len = snprintf(buf, sizeof(buf), "%.1fM", value / 1000000);
+  }
+
+  else if (abs_value < 1000000000000) {
+    len = snprintf(buf, sizeof(buf), "%.1fG", value / 1000000000);
   }
 
   else {
-    len = snprintf(buf, sizeof(buf), "%.0f", value);
+    len = snprintf(buf, sizeof(buf), "%.1fT", value / 1000000000000);
   }
 
   return std::string(buf, len);
