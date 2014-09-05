@@ -172,8 +172,8 @@ public:
   }
 
 protected:
-  T min_value_;
-  T max_value_;
+  double min_value_;
+  double max_value_;
   bool is_logarithmic_;
 };
 
