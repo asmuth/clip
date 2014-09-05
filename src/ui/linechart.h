@@ -233,7 +233,7 @@ AnyDomain* LineChart2D<TX, TY>::getDomain(AnyDomain::kDimension dimension) {
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "LineChart2D does not have a Y domain");
+      RAISE(util::RuntimeException, "LineChart2D does not have a Z domain");
       return nullptr;
   }
 }

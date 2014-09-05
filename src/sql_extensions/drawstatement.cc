@@ -107,6 +107,25 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
       continue;
     }
 
+    if (child->getToken() == nullptr) {
+      RAISE(util::RuntimeException, "corrupt AST: DOMAIN has no token");
+    }
+
+    ui::AnyDomain::kDimension dim;
+    switch (child->getToken()->getType()) {
+      case Token::T_XDOMAIN:
+        dim = ui::AnyDomain::DIM_X;
+        break;
+      case Token::T_YDOMAIN:
+        dim = ui::AnyDomain::DIM_Y;
+        break;
+      case Token::T_ZDOMAIN:
+        dim = ui::AnyDomain::DIM_Z;
+        break;
+      default:
+        RAISE(util::RuntimeException, "corrupt AST: DOMAIN has invalid token");
+    }
+
     for (const auto& domain_prop : child->getChildren()) {
       switch (domain_prop->getType()) {
         case ASTNode::T_DOMAIN_SCALE: {
@@ -141,25 +160,6 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
           RAISE(util::RuntimeException, "corrupt AST: unexpected DOMAIN child");
 
       }
-    }
-
-    if (child->getToken() == nullptr) {
-      RAISE(util::RuntimeException, "corrupt AST: DOMAIN has no token");
-    }
-
-    int dim = -1;
-    switch (child->getToken()->getType()) {
-      case Token::T_XDOMAIN:
-        dim = 0;
-        break;
-      case Token::T_YDOMAIN:
-        dim = 1;
-        break;
-      case Token::T_ZDOMAIN:
-        dim = 2;
-        break;
-      default:
-        RAISE(util::RuntimeException, "corrupt AST: DOMAIN has invalid token");
     }
 
     DomainConfig domain_config(chart, dim);

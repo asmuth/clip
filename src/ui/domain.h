@@ -23,6 +23,8 @@ namespace ui {
  */
 class AnyDomain {
 public:
+  static const char kDimensionLetters[];
+
   enum kDimension {
     DIM_X = 0,
     DIM_Y = 1,
@@ -35,6 +37,14 @@ public:
 
   virtual const std::vector<std::pair<double, std::string>> getLabels()
       const = 0;
+
+  virtual void setInverted(bool inverted) = 0;
+
+};
+
+class AnyContinuousDomain {
+public:
+  virtual void setLogarithmic(bool logarithmic) = 0;
 };
 
 /**
@@ -65,7 +75,7 @@ public:
 };
 
 template <typename T>
-class ContinuousDomain : public Domain<T> {
+class ContinuousDomain : public Domain<T>, public AnyContinuousDomain {
 public:
   static const int kDefaultNumTicks = 8;
 
@@ -143,9 +153,27 @@ public:
     return labels;
   }
 
+  void setMin(T min) {
+    min_value_ = min;
+  }
+
+  void setMax(T max) {
+    max_value_ = max;
+  }
+
+  void setInverted(bool inverted) {
+    RAISE(
+        util::RuntimeException,
+        "not yet implemented: ContinuousDomain::setInverted");
+  }
+
+  void setLogarithmic(bool logarithmic) {
+    is_logarithmic_ = logarithmic;
+  }
+
 protected:
-  double min_value_;
-  double max_value_;
+  T min_value_;
+  T max_value_;
   bool is_logarithmic_;
 };
 
@@ -234,6 +262,12 @@ public:
         categories_.begin(),
         categories_.end(),
         value) != categories_.end();
+  }
+
+  void setInverted(bool inverted) {
+    RAISE(
+        util::RuntimeException,
+        "not yet implemented: DiscreteDomain::setInverted");
   }
 
 protected:

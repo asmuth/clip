@@ -27,7 +27,7 @@ public:
    */
   DomainConfig(
       ui::Drawable* drawable,
-      int dimension);
+      ui::AnyDomain::kDimension dimension);
 
   void setMin(const SValue& value);
   void setMax(const SValue& value);
@@ -36,6 +36,7 @@ public:
 
 protected:
   ui::AnyDomain* domain_;
+  char dimension_letter_;
 };
 
 }

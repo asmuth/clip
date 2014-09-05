@@ -14,29 +14,70 @@ namespace query {
 
 DomainConfig::DomainConfig(
     ui::Drawable* drawable,
-    int dimension) {
-  switch (dimension) {
-    case 0:
-      domain_ = drawable->getDomain(ui::AnyDomain::DIM_X);
-    case 1:
-      domain_ = drawable->getDomain(ui::AnyDomain::DIM_Y);
-    case 2:
-      domain_ = drawable->getDomain(ui::AnyDomain::DIM_Z);
-    default:
-      RAISE(util::RuntimeException, "invalid dimension: %i", dimension);
-  }
-}
+    ui::AnyDomain::kDimension dimension) :
+    domain_(drawable->getDomain(dimension)),
+    dimension_letter_(ui::AnyDomain::kDimensionLetters[dimension]) {}
 
 void DomainConfig::setMin(const SValue& value) {
+  auto int_domain = dynamic_cast<ui::ContinuousDomain<int>*>(domain_);
+  if (int_domain != nullptr) {
+    int_domain->setMin(value.getValue<int>());
+    return;
+  }
+
+  auto float_domain = dynamic_cast<ui::ContinuousDomain<double>*>(domain_);
+  if (float_domain != nullptr) {
+    float_domain->setMin(value.getValue<double>());
+    return;
+  }
+
+  RAISE(
+      util::RuntimeException,
+      "TypeError: can't set min value for %c domain",
+      dimension_letter_);
 }
 
 void DomainConfig::setMax(const SValue& value) {
+  auto int_domain = dynamic_cast<ui::ContinuousDomain<int>*>(domain_);
+  if (int_domain != nullptr) {
+    int_domain->setMax(value.getValue<int>());
+    return;
+  }
+
+  auto float_domain = dynamic_cast<ui::ContinuousDomain<double>*>(domain_);
+  if (float_domain != nullptr) {
+    float_domain->setMax(value.getValue<double>());
+    return;
+  }
+
+  RAISE(
+      util::RuntimeException,
+      "TypeError: can't set max value for %c domain",
+      dimension_letter_);
 }
 
 void DomainConfig::setInvert(bool invert) {
+  if (!invert) {
+    return;
+  }
+
+  domain_->setInverted(invert);
 }
 
 void DomainConfig::setLogarithmic(bool logarithmic) {
+  if (!logarithmic) {
+    return;
+  }
+
+  auto continuous_domain = dynamic_cast<ui::AnyContinuousDomain*>(domain_);
+  if (continuous_domain == nullptr) {
+    RAISE(
+        util::RuntimeException,
+        "TypeError: can't set LOGARITHMIC for discrete domain %c",
+        dimension_letter_);
+  } else {
+    continuous_domain->setLogarithmic(logarithmic);
+  }
 }
 
 }
