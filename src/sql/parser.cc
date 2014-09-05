@@ -374,6 +374,25 @@ ASTNode* Parser::drawStatement() {
         break;
       }
 
+      case Token::T_TITLE:
+      case Token::T_SUBTITLE: {
+        auto prop = chart->appendChild(ASTNode::T_PROPERTY);
+        prop->setToken(consumeToken());
+
+        auto title_expr = expr();
+        if (title_expr == nullptr) {
+          RAISE(
+              ParseError,
+              "unexpected token %s%s%s, expected: value expression",
+              Token::getTypeName(cur_token_->getType()),
+              cur_token_->getString().size() > 0 ? ": " : "",
+              cur_token_->getString().c_str());
+        }
+
+        prop->appendChild(title_expr);
+        break;
+      }
+
       default:
         RAISE(
             ParseError,

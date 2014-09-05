@@ -1,11 +1,11 @@
 lotsa overflows in expression exectution // outc val not respected
 
-sql: AXIS LABELs
-sql: AXIS TICKs
-sql: chart TITLE / SUBTITLE
+sql: AXIS TITLE, LABELS
+sql: LEGEND
+sql: XGRID, YGRID
 
-invert domain
-logarithmic domain
+impl inverted domains
+impl logarithmic domain
 
 refactor expression symbol lookup/registration
 refactor tokenizer // dynamically register tokens
@@ -26,8 +26,7 @@ missing data / interpolation gap
 proper error message for missing table import
 rotate axis labels
 
-??? rename domain -> scale
-??? rename logarithmic -> log
+short token for: logarithmic -> log
 
 v2.0.0a
   - all examples working

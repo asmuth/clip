@@ -456,6 +456,16 @@ next:
     goto next;
   }
 
+  if (token == "TITLE") {
+    token_list->emplace_back(Token::T_TITLE);
+    goto next;
+  }
+
+  if (token == "SUBTITLE") {
+    token_list->emplace_back(Token::T_SUBTITLE);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

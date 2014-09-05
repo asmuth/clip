@@ -88,8 +88,12 @@ public:
     T_XDOMAIN,
     T_YDOMAIN,
     T_ZDOMAIN,
+    T_XGRID,
+    T_YGRID,
     T_LOGARITHMIC,
-    T_INVERT
+    T_INVERT,
+    T_TITLE,
+    T_SUBTITLE
   };
 
   Token(kTokenType token_type);

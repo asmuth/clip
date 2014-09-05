@@ -301,19 +301,26 @@ Syntax Reference
     common_chart_options ::=
         [ TITLE 'title' ]
         [ SUBTITLE 'subtitle' ]
-        [ XDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
-        [ YDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
-        [ ZDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ XDOMAIN [ min, max ] [ LOG[ARITHMIC] ] [ INVERT ] ]
+        [ YDOMAIN [ min, max ] [ LOG[ARITHMIC] ] [ INVERT ] ]
+        [ ZDOMAIN [ min, max ] [ LOG[ARITHMIC] ] [ INVERT ] ]
+        [ GRID [ HORIZONTAL ] [ VERTICAL ] ]
+        [ axis_definition... ]
+        [ legend_definition ]
 
     axis_definition ::=
         AXIS { TOP | RIGHT | BOTTOM | LEFT }
-            [ LABEL 'title' ]
-            [ TICKS { INSIDE | OUTSIDE | OFF } ]
+            [ TITLE 'title' ]
+            [ LABELS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ] ]
+
+    legend_definition ::=
+        LEGEND { LEFT | RIGHT} { TOP | BOTTOM } { INSIDE | OUTSIDE }
+            [ TITLE 'title' ]
+
 
     DRAW AREACHART
         [ [ WITH ]
               common_chart_options
-              [ axis_definition... ] ]
 
     DRAW BARCHART
         [ [ WITH ]
@@ -321,57 +328,46 @@ Syntax Reference
               [ ORIENTATION { HORIZONTAL | VERTICAL } ]
               [ STACKED ]
               [ LABELS { INSIDE | OUTSIDE } ] ]
-              [ axis_definition... ] ]
 
     DRAW BOXPLOT
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW BUBBLECHART
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW ERRORBARS
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW HEATMAP
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW GANTTCHART
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW HISTOGRAM
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW LINECHART
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW PIECHART
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW SCATTERCHART
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
     DRAW SPARKLINES
         [ [ WITH ]
-              common_chart_options
-              [ axis_definition... ] ]
+              common_chart_options ]
 
 
 ### IMPORT statement

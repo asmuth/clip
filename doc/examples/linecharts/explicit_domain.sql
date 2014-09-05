@@ -2,6 +2,8 @@ IMPORT TABLE city_temperatures
    FROM CSV 'doc/examples/data/city_temperatures.csv' HEADER;
 
 DRAW LINECHART WITH
+   TITLE "mytitle"
+   SUBTITLE "fnordtitle"
    AXIS BOTTOM
    AXIS LEFT
    YDOMAIN -10.0, 30.0;
