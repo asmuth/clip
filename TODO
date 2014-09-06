@@ -30,26 +30,22 @@
 [ sql ]
      - full sql selects, joins working
      - pointchartbuilder
+     - make # of axis ticks configurable via sql
 
 [ cli ]
     - cli output format
 
 [ feature q ]
+    - simple web interface (interactive query UI generates embed html snippets)
+    - simple interactive charts (hover tooltips)
+    - max interpolation gap -> draw as missing data
     - chart type: ganttchart
     - chart type: boxplot
     - chart type: error bars
     - chart type: pie chart
     - sparklines
-    - simple web interface (interactive query UI generates embed html snippets)
-    - simple interactive charts (hover tooltips)
-    - max interpolation gap -> draw as missing data
-    - make # of axis ticks configurable via sql
     - postgresql backend
-    - gannt charts
-    - sparklines? (multi svg output)
-    - stacked area charts
     - smooth paths
-    - legend!
     - gauges, heatmaps, boxplot, error bars 
     - middle axis
     - annotations / deploy lines
