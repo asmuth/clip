@@ -45,7 +45,7 @@ std::string numberToHuman(double value) {
     len = snprintf(buf, sizeof(buf), "%.1fm", value * 1000);
   }
 
-  else if (abs_value < 100){
+  else if (abs_value < 10){
     len = snprintf(buf, sizeof(buf), "%.2f", value);
   }
 

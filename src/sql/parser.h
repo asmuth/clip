@@ -157,6 +157,21 @@ protected:
     return nullptr;
   }
 
+  inline ASTNode* expectAndConsumeValueExpr() {
+    auto val_expr = expr();
+
+    if (val_expr == nullptr) {
+      RAISE(
+          ParseError,
+          "unexpected token %s%s%s, expected: value expression",
+          Token::getTypeName(cur_token_->getType()),
+          cur_token_->getString().size() > 0 ? ": " : "",
+          cur_token_->getString().c_str());
+    }
+
+    return val_expr;
+  }
+
   inline bool lookahead(size_t n, Token::kTokenType expectation) const {
     return cur_token_ + n < token_list_end_ &&
         cur_token_[n].getType() == expectation;

@@ -17,6 +17,8 @@ namespace query {
 
 Parser::Parser() : root_(ASTNode::T_ROOT) {}
 
+// FIXPAUL free all explicit news on ex!
+
 size_t Parser::parse(const char* query, size_t len) {
   const char* cur = query;
   const char* end = cur + len;
@@ -398,18 +400,7 @@ ASTNode* Parser::drawStatement() {
       case Token::T_SUBTITLE: {
         auto prop = chart->appendChild(ASTNode::T_PROPERTY);
         prop->setToken(consumeToken());
-
-        auto title_expr = expr();
-        if (title_expr == nullptr) {
-          RAISE(
-              ParseError,
-              "unexpected token %s%s%s, expected: value expression",
-              Token::getTypeName(cur_token_->getType()),
-              cur_token_->getString().size() > 0 ? ": " : "",
-              cur_token_->getString().c_str());
-        }
-
-        prop->appendChild(title_expr);
+        prop->appendChild(expectAndConsumeValueExpr());
         break;
       }
 
@@ -450,6 +441,15 @@ ASTNode* Parser::axisClause() {
       return nullptr;
   }
 
+  while (cur_token_->getType() != Token::T_SEMICOLON) {
+    switch (cur_token_->getType()) {
+      default:
+        break;
+    }
+
+    break;
+  }
+
   return axis;
 }
 
@@ -461,20 +461,9 @@ ASTNode* Parser::domainClause() {
 
   if (min_expr != nullptr) {
     expectAndConsume(Token::T_COMMA);
-
-    auto max_expr = expr();
-    if (max_expr == nullptr) {
-      RAISE(
-          ParseError,
-          "unexpected token %s%s%s, expected: value expression",
-          Token::getTypeName(cur_token_->getType()),
-          cur_token_->getString().size() > 0 ? ": " : "",
-          cur_token_->getString().c_str());
-    }
-
     auto scale = domain->appendChild(ASTNode::T_DOMAIN_SCALE);
     scale->appendChild(min_expr);
-    scale->appendChild(max_expr);
+    scale->appendChild(expectAndConsumeValueExpr());
   }
 
   for (int i = 0; i < 2; i++) {
@@ -509,21 +498,8 @@ ASTNode* Parser::selectSublist() {
   }
 
   /* derived_col AS col_name */
-  auto derived = new ASTNode(ASTNode::T_DERIVED_COLUMN);
-  auto value_expr = expr();
-
-  if (value_expr == nullptr) {
-    RAISE(
-        ParseError,
-        "unexpected token %s%s%s, expected: value expression",
-        Token::getTypeName(cur_token_->getType()),
-        cur_token_->getString().size() > 0 ? ": " : "",
-        cur_token_->getString().c_str());
-    delete derived;
-    return nullptr;
-  }
-
-  derived->appendChild(value_expr);
+  auto derived = new ASTNode(ASTNode::T_DERIVED_COLUMN); // FIXPAUL free on ex
+  derived->appendChild(expectAndConsumeValueExpr());
 
   if (consumeIf(Token::T_AS)) {
     assertExpectation(Token::T_IDENTIFIER);

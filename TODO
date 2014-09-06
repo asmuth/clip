@@ -1,31 +1,36 @@
-lotsa overflows in expression exectution // outc val not respected
-
 sql: AXIS TITLE, LABELS
 sql: LEGEND
-sql: csv opts
 
 impl chart title, subtitle
 impl axis title
 impl inverted domains
 impl logarithmic domain
 impl legend
-impl rotate axis labels
+impl inside/outside, rotate axis labels
 impl grid
 
-refactor expression symbol lookup/registration
-refactor tokenizer // dynamically register tokens
+integer overflow :(
+lotsa overflows in expression exectution // outc val not respected
+explicit domain with range smaller than value range
+line chart with only negative values
+
 line/point styles
 bar/point labels
-domain padding
-rename rowsink to virtualtable
+
 cli output format
+
 short token for: logarithmic -> log
 proper error message for missing table import
+rename rowsink to virtualtable
+refactor expression symbol lookup/registration
+refactor tokenizer // dynamically register tokens
 
 middle axis
 heatmaps
 histogram
 missing data / interpolation gap
+
+sql: csv opts
 
 make # of axis ticks configurable via sql
 
