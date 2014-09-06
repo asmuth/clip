@@ -28,6 +28,8 @@ namespace ui {
 class PointChart : public Drawable {
 public:
   static char kDefaultPointStyle[];
+  static char kDefaultPointSize[];
+
   PointChart(ui::Canvas* canvas);
 };
 
@@ -39,16 +41,14 @@ public:
   typedef TZ_ TZ;
 
   /**
-   * Create a new line chart
+   * Create a new point chart
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
-   * @param x_domain the x domain. does not transfer ownership
-   * @param y_domain the y domain. does not transfer ownership
    */
   PointChart3D(Canvas* canvas);
 
   /**
-   * Create a new line chart
+   * Create a new point chart
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    * @param x_domain the x domain. does not transfer ownership
@@ -92,6 +92,39 @@ protected:
   DomainAdapter y_domain_;
   std::vector<Series3D<TX, TY, TZ>*> series_;
   ColorPalette color_palette_;
+};
+
+template <typename TX_, typename TY_>
+class PointChart2D : public PointChart3D<TX_, TY_, double> {
+public:
+  typedef TX_ TX;
+  typedef TY_ TY;
+
+  /**
+   * Create a new point chart
+   *
+   * @param canvas the canvas to draw this chart on. does not transfer ownership
+   */
+  PointChart2D(Canvas* canvas);
+
+  /**
+   * Create a new point chart
+   *
+   * @param canvas the canvas to draw this chart on. does not transfer ownership
+   * @param x_domain the x domain. does not transfer ownership
+   * @param y_domain the y domain. does not transfer ownership
+   */
+  PointChart2D(Canvas* canvas, AnyDomain* x_domain, AnyDomain* y_domain);
+
+  /**
+   * Add a (x: string, y: double) series. This will draw one bar for each point
+   * in the series where x is the label of the bar and y is the height of the
+   * bar
+   *
+   * @param series the series to add. does not transfer ownership
+   */
+  void addSeries(Series2D<TX, TY>* series);
+
 };
 
 template <typename TX, typename TY, typename TZ>
@@ -215,6 +248,55 @@ AnyDomain* PointChart3D<TX, TY, TZ>::getDomain(
       RAISE(util::RuntimeException, "PointChart3D does not have a Z domain");
       return nullptr;
   }
+}
+
+template <typename TX, typename TY>
+PointChart2D<TX, TY>::PointChart2D(
+    Canvas* canvas) :
+    PointChart3D<TX, TY, double>(canvas) {}
+
+template <typename TX, typename TY>
+PointChart2D<TX, TY>::PointChart2D(
+    Canvas* canvas,
+    AnyDomain* x_domain,
+    AnyDomain* y_domain) :
+    PointChart3D<TX, TY, double>(canvas, x_domain, y_domain) {}
+
+template <typename TX, typename TY>
+void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
+  auto series3d = new Series3D<TX, TY, double>(); // FIXPAUL: never free'd!
+  auto copy_labels = series->hasProperty(Series::P_LABEL);
+
+  series->setDefaultProperty(
+      Series::P_POINT_SIZE,
+      PointChart::kDefaultPointSize);
+
+  // FIXPAUL copy point style
+  for (const auto& point : series->getData()) {
+    // FIXPAUL catch converison errror
+    double point_size = std::stod(
+        series->getProperty(Series::P_POINT_SIZE, &point));
+
+    series3d->addDatum(
+        Series::Coord<TX>(point.x()),
+        Series::Coord<TY>(point.y()),
+        Series::Coord<double>(point_size));
+
+    if (copy_labels) {
+      series3d->setProperty(
+          Series::P_LABEL,
+          &series3d->getData().back(),
+          series->getProperty(Series::P_LABEL, &point));
+    }
+  }
+
+  if (series->hasProperty(Series::P_COLOR)) {
+    series3d->setDefaultProperty(
+        Series::P_COLOR,
+        series->getProperty(Series::P_COLOR));
+  }
+
+  PointChart3D<TX, TY, TY>::addSeries(series3d);
 }
 
 }
