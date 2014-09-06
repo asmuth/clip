@@ -1,6 +1,5 @@
 lotsa overflows in expression exectution // outc val not respected
 
-sql: GRID
 sql: AXIS TITLE, LABELS
 sql: LEGEND
 sql: csv opts
@@ -11,6 +10,7 @@ impl inverted domains
 impl logarithmic domain
 impl legend
 impl rotate axis labels
+impl grid
 
 refactor expression symbol lookup/registration
 refactor tokenizer // dynamically register tokens

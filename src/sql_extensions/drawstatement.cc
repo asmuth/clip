@@ -34,9 +34,10 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
           Token::getTypeName(ast_->getToken()->getType()));
   }
 
-  applyAxisDefinitions(chart);
   applyDomainDefinitions(chart);
   applyTitle(chart);
+  applyAxisDefinitions(chart);
+  applyGrid(chart);
 }
 
 ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
@@ -201,6 +202,47 @@ void DrawStatement::applyTitle(ui::Drawable* chart) const {
       default:
         break;
     }
+  }
+}
+
+void DrawStatement::applyGrid(ui::Drawable* chart) const {
+  ASTNode* grid = nullptr;
+
+  for (const auto& child : ast_->getChildren()) {
+    if (child->getType() == ASTNode::T_GRID) {
+      grid = child;
+      break;
+    }
+  }
+
+  if (!grid) {
+    return;
+  }
+
+  bool horizontal = false;
+  bool vertical = false;
+
+  for (const auto& prop : grid->getChildren()) {
+    if (prop->getType() == ASTNode::T_PROPERTY && prop->getToken() != nullptr) {
+      switch (prop->getToken()->getType()) {
+        case Token::T_HORIZONTAL:
+          horizontal = true;
+          break;
+
+        case Token::T_VERTICAL:
+          vertical = true;
+          break;
+
+        default:
+          RAISE(
+              util::RuntimeException,
+              "corrupt AST: GRID has invalid property");
+      }
+    }
+  }
+
+  if (horizontal || vertical) {
+    chart->addGrid(horizontal, vertical);
   }
 }
 

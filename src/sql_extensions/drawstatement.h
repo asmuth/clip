@@ -53,6 +53,7 @@ protected:
 
   void applyAxisDefinitions(ui::Drawable* chart) const;
   void applyDomainDefinitions(ui::Drawable* chart) const;
+  void applyGrid(ui::Drawable* chart) const;
   void applyTitle(ui::Drawable* chart) const;
 
   std::vector<QueryPlanNode*> select_stmts_;
