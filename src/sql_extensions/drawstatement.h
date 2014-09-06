@@ -21,6 +21,7 @@ namespace fnordmetric {
 namespace ui {
 class Canvas;
 class Drawable;
+class AxisDefinition;
 }
 namespace query {
 
@@ -52,6 +53,7 @@ protected:
   }
 
   void applyAxisDefinitions(ui::Drawable* chart) const;
+  void applyAxisLabels(ASTNode* ast, ui::AxisDefinition* axis) const;
   void applyDomainDefinitions(ui::Drawable* chart) const;
   void applyGrid(ui::Drawable* chart) const;
   void applyTitle(ui::Drawable* chart) const;

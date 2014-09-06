@@ -109,8 +109,42 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
       }
 
       if (prop->getType() == ASTNode::T_AXIS_LABELS) {
-        //applyAxisLabels(
+        applyAxisLabels(prop, axis);
       }
+    }
+  }
+}
+
+void DrawStatement::applyAxisLabels(
+    ASTNode* ast,
+    ui::AxisDefinition* axis) const {
+  for (const auto& prop : ast->getChildren()) {
+    if (prop->getType() != ASTNode::T_PROPERTY ||
+        prop->getToken() == nullptr) {
+      continue;
+    }
+
+    switch (prop->getToken()->getType()) {
+      case Token::T_INSIDE:
+        axis->setLabelPosition(ui::AxisDefinition::LABELS_INSIDE);
+        break;
+      case Token::T_OUTSIDE:
+        axis->setLabelPosition(ui::AxisDefinition::LABELS_OUTSIDE);
+        break;
+      case Token::T_OFF:
+        axis->setLabelPosition(ui::AxisDefinition::LABELS_OFF);
+        break;
+      case Token::T_ROTATE: {
+        if (prop->getChildren().size() != 1) {
+          RAISE(util::RuntimeException, "corrupt AST: ROTATE has no children");
+        }
+
+        auto rot = executeSimpleConstExpression(prop->getChildren()[0]);
+        axis->setLabelRotation(rot.getValue<double>());
+        break;
+      }
+      default:
+        RAISE(util::RuntimeException, "corrupt AST: LABELS has invalid token");
     }
   }
 }

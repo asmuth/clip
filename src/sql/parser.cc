@@ -458,7 +458,8 @@ ASTNode* Parser::axisClause() {
           switch (cur_token_->getType()) {
 
             case Token::T_INSIDE:
-            case Token::T_OUTSIDE: {
+            case Token::T_OUTSIDE:
+            case Token::T_OFF: {
               auto prop = title->appendChild(ASTNode::T_PROPERTY);
               prop->setToken(consumeToken());
               break;
