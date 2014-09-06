@@ -58,7 +58,7 @@ ul li p {
   border-bottom: 1px solid #ddd;
   box-shadow:0 0 2px rgba(0,0,0,.1);
   margin: 0;
-  padding: 1px 50px;
+  padding: 1px 40px;
   height: 62px;
   line-height: 62px;
 }
@@ -249,10 +249,9 @@ ul li p {
 
 #navigation {
   padding: 30px 0;
-  width: 320px;
+  width: 300px;
   position: absolute;
   top: 65px;
-  background: #f9f9f9;
 }
 
 #navigation ul {
@@ -299,18 +298,17 @@ ul li p {
 #documentation {
   border-left: 1px solid #ddd;
   color: #444;
+  background: #fff;
   font-size: 16px;
   line-height:26px;
   font-weight: 400;
-  padding-bottom:70px;
-  min-height:1600px;
-  padding-top: 30px;
-  margin-left: 320px;
-  padding-left: 50px;
-  margin-right: 50px;
+  margin: 0 0 0 300px;
+  padding: 30px 50px 50px 50px;
+  min-height:1000px;
 }
 
 #documentation_wrap {
+  background: #f9f9f9;
   min-height:600px;
   border-top:none;
   overflow:hidden;
@@ -490,6 +488,11 @@ pre.dark code {
 .example_frame {
   border-bottom: 1px solid #eee;
   padding: 20px 0 10px 0;
+  text-align: center;
+}
+
+.example_frame svg {
+  max-width: 1100px;
 }
 
 #documentation p.breadcrumb {

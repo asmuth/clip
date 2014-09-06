@@ -29,7 +29,9 @@
     </div>
     <div id="documentation">
       <% if @route == "/index" %>
-        <h1 style="margin-top: 0; margin-bottom: 1.5em;">FnordMetric Examples</h1>
+        <script type="text/javascript">
+          window.location.href = "/examples/linecharts/simple_lines";
+        </script>
       <% else %>
         <h1 style="margin:0 0 5px 0;"><%= @example["title"] %></h1>
         <p class="breadcrumb">
@@ -50,7 +52,7 @@
           <%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.svg.html")) %>
         </div>
 
-        <h4>SQL Source: </h4>
+        <h3 style="margin: 1.5em 0 1em 0;">SQL source code for this example:</h2>
         <pre class="prettyprint" style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.sql")) %></code></pre>
 
         <p>Run this example:</p>
@@ -59,9 +61,4 @@
       <% end %>
     </div>
   </div>
-</div>
-<div class="biglink" style="margin-top:70px;">
-  <a href="http://github.com/paulasmuth/fnordmetric" target="_blank">
-    Watch FnordMetric on Github &rarr;
-  </a>
 </div>
