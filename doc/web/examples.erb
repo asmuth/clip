@@ -11,35 +11,28 @@
 
 <div id="wrap" class="<%= @doc_yield ? :large : nil %>">
   <div id="documentation_wrap">
-    <div id="documentation" style="margin-right:0;">
+    <div id="navigation">
+      <% CONFIG["examples"].each_with_index do |example_group, n| %>
+          <a class="nav_title">
+            <%= example_group["title"] %>
+          </a>
+          <ul>
+            <% example_group["examples"].each do |example| %>
+              <li class="<%= @route == example["url"] ? :active : nil %>">
+                <a href="/examples<%= example["url"] %>">
+                  <%= example["title"] %>
+                </a>
+              </li>
+            <% end %>
+          </ul>
+      <% end %>
+    </div>
+    <div id="documentation">
       <% if @route == "/index" %>
         <h1 style="margin-top: 0; margin-bottom: 1.5em;">FnordMetric Examples</h1>
-        <table width="100%" border=0 cellspacing=0>
-          <tr style="border-bottom: 60px solid #fff; background: transparent;">
-          <% CONFIG["examples"].each_with_index do |example_group, n| %>
-            <td style="border: none; padding: 0; <%= n % 3 == 0 ? "" : "padding-left: 30px;" %> <%= (n + 1) % 3 == 0 ? "" : "border-right: 1px solid #eee;" %> vertical-align: top;">
-              <h3 style="margin-top: 0;">
-                <%= example_group["title"] %>
-              </h3>
-              <ul>
-                <% example_group["examples"].each do |example| %>
-                  <li class="<%= @route == example["url"] ? :active : nil %>">
-                    <a href="/examples<%= example["url"] %>">
-                      <%= example["title"] %>
-                    </a>
-                  </li>
-                <% end %>
-              </ul>
-            </td>
-            <% if (n + 1) % 3 == 0 %>
-              </tr><tr style="border-bottom: 60px solid #fff; background: transparent;">
-            <% end %>
-          <% end %>
-          </tr>
-        </table>
       <% else %>
         <h1 style="margin:0 0 5px 0;"><%= @example["title"] %></h1>
-        <p class="breadcrumb" style="margin-bottom: 30px;">
+        <p class="breadcrumb">
           <a href="/examples">
             Examples
           </a>
@@ -57,11 +50,7 @@
           <%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.svg.html")) %>
         </div>
 
-        <div class="optbar">
-          <h4>View Source: </h4>
-          <a class="active">SQL</a>
-          <a>C++</a>
-        </div>
+        <h4>SQL Source: </h4>
         <pre class="prettyprint" style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.sql")) %></code></pre>
 
         <p>Run this example:</p>

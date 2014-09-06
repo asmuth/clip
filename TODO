@@ -1,15 +1,13 @@
-
 [ ui ]
     - TimeDomain!
-    - wire up scatter/bubble charts
     - impl chart title, subtitle
+    - chart type: areachart
     - impl legend
     - middle axis
     - impl inside/outside, rotate axis labels
     - impl grid
     - line/point styles
     - bar/point labels
-    - chart type: areachart
     - chart type: histogram
     - chart type: heatmap
 

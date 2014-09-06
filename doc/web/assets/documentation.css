@@ -1,7 +1,13 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 
+html {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
+  padding: 0;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
@@ -47,10 +53,20 @@ ul li p {
   margin: 0;
 }
 
-#wrap {
-  max-width:960px;
-  height: auto;
-  margin:auto;
+#header {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  box-shadow:0 0 2px rgba(0,0,0,.1);
+  margin: 0;
+  padding: 1px 50px;
+  height: 62px;
+  line-height: 62px;
+}
+
+.colorbg #header {
+  background: transparent;
+  border-bottom: none;
+  box-shadow: none;
 }
 
 .jumbotron {
@@ -175,7 +191,9 @@ ul li p {
 
 #header h1 {
   font-size:23.5px;
-  margin-bottom:25px;
+  line-height: 62px;
+  margin: 0;
+  padding: 0;
 }
 
 #header h1 a {
@@ -192,8 +210,6 @@ ul li p {
   float:right;
   color:#333;
   text-decoration:none;
-  line-height:26px;
-  margin-top:10px;
   margin-left:25px;
 }
 
@@ -232,23 +248,29 @@ ul li p {
 }
 
 #navigation {
-  padding: 20px 0;
-  width:210px;
-  border-radius:5px;
-  box-shadow:0 0 2px rgba(0,0,0,.1);
-  border:1px solid #ddd;
-  float: right;
+  padding: 30px 0;
+  width: 320px;
+  position: absolute;
+  top: 65px;
+  background: #f9f9f9;
 }
 
 #navigation ul {
   list-style-type:none;
   margin: 0;
-  padding: 0 0 0 20px;
+  padding: 0 40px;
 }
 
 #navigation ul li {
   font-size: 14px;
   line-height:30px;
+}
+
+#navigation a.nav_title:first-child  {
+  border-top: none;
+  box-shadow: none;
+  padding-top: 0;
+  margin-top: 0;
 }
 
 #navigation ul li a {
@@ -257,7 +279,7 @@ ul li p {
 }
 
 #navigation ul li.active a {
-  font-weight: bold;
+  color: #2980b9;
 }
 
 #navigation ul li a:hover {
@@ -266,25 +288,26 @@ ul li p {
 
 #navigation a.nav_title {
   display:block;
-  text-transform: uppercase;
-  font-family: Arial,sans-serif;
-  font-weight: bold;
-  font-size: 11px;
+  font-weight: 600;
   margin: 20px 0 8px 0;
-  padding: 15px 0 0 22px;
+  padding: 25px 40px 0 40px;
   border-top: 1px white solid;
   box-shadow: 0 -1px 0 #d7dbe6;
-  color:#666;
+  color:#333;
 }
 
 #documentation {
+  border-left: 1px solid #ddd;
   color: #444;
   font-size: 16px;
   line-height:26px;
   font-weight: 400;
   padding-bottom:70px;
   min-height:1600px;
-  margin-right: 240px;
+  padding-top: 30px;
+  margin-left: 320px;
+  padding-left: 50px;
+  margin-right: 50px;
 }
 
 #documentation_wrap {
@@ -465,17 +488,16 @@ pre.dark code {
 }
 
 .example_frame {
-  border: 1px solid #ddd;
-  border-bottom: 2px solid #ddd;
-  border-radius: 5px;
-  margin: 15px 0 0 0;
-  padding: 20px;
+  border-bottom: 1px solid #eee;
+  padding: 20px 0 10px 0;
 }
 
 #documentation p.breadcrumb {
-  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
   font-size: 90%;
   margin-top: -5px;
+  margin-bottom: 0;
 }
 
 .optbar {
@@ -506,17 +528,6 @@ pre.dark code {
 .optbar, .optbar h4 {
   line-height: 36px;
   display: inline-block;
-}
-
-.header_wrap {
-  padding-top: 15px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 34px;
-}
-
-#header {
-  width: 960px;
-  margin: auto;
 }
 
 section {
