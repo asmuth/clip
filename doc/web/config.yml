@@ -113,10 +113,10 @@ examples:
         title: "Simple bubble chart"
         file: "simple_bubble_chart"
         url: "/pointcharts/simple_bubbles"
-#      -
-#        title: "Simple scatter chart"
-#        file: "simple_scatter_chart"
-#        url: "/pointcharts/simple_scatter"
+      -
+        title: "Simple scatter chart"
+        file: "simple_scatter_chart"
+        url: "/pointcharts/simple_scatter"
 #      -
 #        title: "Points with labels"
 #        file: "horizontal_bars"
