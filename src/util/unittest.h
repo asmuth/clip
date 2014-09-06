@@ -75,10 +75,12 @@ namespace util {
     one->readUntilEOF(&one_str); \
     two->readUntilEOF(&two_str); \
     if (one_str != two_str) { \
+      std::string filename1(F1); \
+      std::string filename2(F2); \
       RAISE( \
           fnordmetric::util::UnitTest::ExpectationFailed, \
           "expected files '%s' and '%s' to be equal, but the differ", \
-          one_str.c_str(), two_str.c_str()); \
+          filename1.c_str(), filename2.c_str()); \
     } \
   }
 

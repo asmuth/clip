@@ -443,8 +443,16 @@ ASTNode* Parser::axisClause() {
 
   while (cur_token_->getType() != Token::T_SEMICOLON) {
     switch (cur_token_->getType()) {
+      case Token::T_TITLE: {
+        auto title = axis->appendChild(ASTNode::T_PROPERTY);
+        title->setToken(consumeToken());
+        title->appendChild(expectAndConsumeValueExpr());
+        continue;
+      }
+
       default:
         break;
+
     }
 
     break;
