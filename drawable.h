@@ -49,6 +49,18 @@ public:
   virtual AxisDefinition* addAxis(AxisDefinition::kPosition position) = 0;
 
   /**
+   * Add a grid to the chart.
+   *
+   */
+  void addGrid(bool horizontal, bool vertical) {
+    RAISE(
+        util::RuntimeException,
+        "grid not implemented: horizontal=%s, vertical=%s",
+        horizontal ? "true" : "false",
+        vertical ? "true" : "false");
+  }
+
+  /**
    * Get the {x,y,z} domain of this chart. May raise an exception if the chart
    * does not implement the requested domain.
    *
