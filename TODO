@@ -1,6 +1,6 @@
 [ ui ]
+    - wire up scatter/bubble charts
     - impl chart title, subtitle
-    - impl logarithmic domain
     - impl legend
     - impl inside/outside, rotate axis labels
     - impl grid

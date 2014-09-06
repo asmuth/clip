@@ -143,6 +143,14 @@ examples:
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #      -
+#        title: "Horizontal grid"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
+#        title: "Horizontal &amp; Vertical grid"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
 #        title: "Legend outside"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
@@ -172,14 +180,6 @@ examples:
 #    title: "Custom styles"
 #    dir: "styles"
 #    examples:
-#      -
-#        title: "Legend styles"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Axis styles"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
 #      -
 #        title: "Default Style"
 #        file: "horizontal_bars"
