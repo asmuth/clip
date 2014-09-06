@@ -1,7 +1,3 @@
-[ sql ]
-     - sql: LEGEND
-     - full sql selects, joins working
-
 [ ui ]
     - impl chart title, subtitle
     - better axis title
@@ -30,6 +26,9 @@
     - mysql backend
     - sql: csv opts
     - proper csv w/ all opts
+
+[ sql ]
+     - full sql selects, joins working
 
 [ cli ]
     - cli output format
