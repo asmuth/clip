@@ -66,6 +66,22 @@ AxisDefinition::kPosition AxisDefinition::getPosition() const {
   return position_;
 }
 
+void AxisDefinition::setLabelPosition(kLabelPosition pos) {
+  printf("set label pos: %i", pos);
+}
+
+AxisDefinition::kLabelPosition AxisDefinition::getLabelPosition() const {
+  return LABELS_INSIDE;
+}
+
+void AxisDefinition::setLabelRotation(double deg) {
+  printf("axis label rot: %f\n", deg);
+}
+
+double AxisDefinition::getLabelRotation() const {
+  return 0.0f;
+}
+
 void AxisDefinition::setTitle(const std::string& title) {
   title_ = title;
 }

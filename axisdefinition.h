@@ -33,10 +33,10 @@ public:
   /**
    * The axis tick position
    */
-  enum kTickPosition {
-    TICKS_INSIDE = 0,
-    TICKS_OUTSIDE = 1,
-    TICKS_OFF = 2
+  enum kLabelPosition {
+    LABELS_INSIDE = 0,
+    LABELS_OUTSIDE = 1,
+    LABELS_OFF = 2
   };
 
   /**
@@ -95,9 +95,24 @@ public:
   kPosition getPosition() const;
 
   /**
-   * Return the tick position for this axis
+   * Set the label position for this axis
    */
-  kTickPosition getTickPosition() const;
+  void setLabelPosition(kLabelPosition pos);
+
+  /**
+   * Return the label position for this axis
+   */
+  kLabelPosition getLabelPosition() const;
+
+  /**
+   * Set the label rotation for this axis
+   */
+  void setLabelRotation(double deg);
+
+  /**
+   * Return the label rotaitoj for this axis
+   */
+  double getLabelRotation() const;
 
   /**
    * Set the title for this axis
