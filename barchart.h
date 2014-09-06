@@ -55,7 +55,10 @@ public:
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    */
-  BarChart(Canvas* canvas);
+  BarChart(
+      Canvas* canvas,
+      kBarChartOrientation orient = O_VERTICAL,
+      bool stacked = false);
 
   /**
    * Set the orientation of this bar chart
@@ -88,7 +91,10 @@ public:
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    */
-  BarChart3D(Canvas* canvas);
+  BarChart3D(
+      Canvas* canvas,
+      kBarChartOrientation orient = O_VERTICAL,
+      bool stacked = false);
 
   /**
    * Add a (x: string, y: double, z: double) series. This will draw one bar for
@@ -161,7 +167,10 @@ public:
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    */
-  BarChart2D(Canvas* canvas);
+  BarChart2D(
+      Canvas* canvas,
+      BarChart::kBarChartOrientation orient = BarChart::O_VERTICAL,
+      bool stacked = false);
 
   /**
    * Add a (x: string, y: double) series. This will draw one bar for each point
@@ -175,7 +184,11 @@ public:
 };
 
 template <typename TX, typename TY, typename TZ>
-BarChart3D<TX, TY, TZ>::BarChart3D(Canvas* canvas) : BarChart(canvas) {}
+BarChart3D<TX, TY, TZ>::BarChart3D(
+    Canvas* canvas,
+    BarChart::kBarChartOrientation orient /* = O_VERTICAL */,
+    bool stacked /* = false */) :
+    BarChart(canvas, orient, stacked) {}
 
 // FIXPAUL enforce that TY == TZ
 template <typename TX, typename TY, typename TZ>
@@ -438,8 +451,10 @@ AnyDomain* BarChart3D<TX, TY, TZ>::getDomain(AnyDomain::kDimension dimension) {
 
 template <typename TX, typename TY>
 BarChart2D<TX, TY>::BarChart2D(
-    Canvas* canvas) :
-    BarChart3D<TX, TY, TY>(canvas) {}
+    Canvas* canvas,
+    BarChart::kBarChartOrientation orient /* = O_VERTICAL */,
+    bool stacked /* = false */) :
+    BarChart3D<TX, TY, TY>(canvas, orient, stacked) {}
 
 template <typename TX, typename TY>
 void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {

@@ -302,7 +302,10 @@ protected:
 
 class DomainAdapter {
 public:
-  DomainAdapter() : domain_(nullptr), free_on_destroy_(false) {};
+  DomainAdapter(
+      AnyDomain* domain = nullptr) :
+      domain_(domain),
+      free_on_destroy_(false) {};
 
   ~DomainAdapter() {
     if (free_on_destroy_) {
