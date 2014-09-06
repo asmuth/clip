@@ -94,8 +94,8 @@ public:
     T max_value = 0,
     bool is_logarithmic = false,
     bool is_inverted = false) :
-    min_value_(min_value),
-    max_value_(max_value),
+    min_value_(std::numeric_limits<double>::max()),
+    max_value_(std::numeric_limits<double>::min()),
     is_logarithmic_(is_logarithmic),
     is_inverted_(is_inverted),
     padding_(0, 0) {}
@@ -126,14 +126,6 @@ public:
       auto min_value = min_max.first;
       auto max_value = min_max.second;
 
-      if (value <= min_value) {
-        return 0.0f;
-      }
-
-      if (value >= max_value) {
-        return 1.0f;
-      }
-
       scaled = (value - min_value) / (max_value - min_value);
     }
 
@@ -148,7 +140,7 @@ public:
     return util::format::numberToHuman(value);
   }
 
-  T valueAt(double index) const {
+  double valueAt(double index) const {
     if (is_logarithmic_) {
       if (max_value_ < 0) {
         RAISE(
@@ -168,9 +160,9 @@ public:
       }
     } else {
       auto min_max = getRangeWithPadding();
-      auto min_value = min_max.first;
-      auto max_value = min_max.second;
-      auto val_range = min_value + (max_value - min_value);
+      double min_value = min_max.first;
+      double max_value = min_max.second;
+      double val_range = min_value + (max_value - min_value);
 
       if (is_inverted_) {
         return min_value + (max_value - min_value) * (1.0 - index);
@@ -201,8 +193,9 @@ public:
   const std::vector<double> getTicks() const {
     std::vector<double> ticks;
 
-    for (int n = 0; n < AnyDomain::kDefaultNumTicks; ++n) {
-      ticks.push_back((double) n / (AnyDomain::kDefaultNumTicks - 1));
+    double num_ticks = AnyDomain::kDefaultNumTicks;
+    for (int n = 0; n < num_ticks; ++n) {
+      ticks.push_back((double) n / (double) (num_ticks - 1));
     }
 
     return ticks;
@@ -213,7 +206,8 @@ public:
     std::vector<std::pair<double, std::string>> labels;
 
     for (auto tick : ticks) {
-      labels.emplace_back(tick, label(valueAt(tick)));
+      labels.emplace_back(tick,
+          util::format::numberToHuman(valueAt(tick)));
     }
 
     return labels;
@@ -243,7 +237,7 @@ protected:
     double range = max_value_ - min_value_;
 
     return std::make_pair(
-        min_value_ == 0 ? 0 : min_value_ - range * padding_.first,
+        min_value_ - range * padding_.first,
         max_value_ + range * padding_.second);
   }
 
