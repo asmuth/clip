@@ -615,7 +615,6 @@ static fnordmetric::util::UnitTest::TestCase __test_horiz_range_bar_chart_(
       "UITest_TestHorizontalRangeBarChart_out.svg.html");
 });
 
-/*
 static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
     &UITest, "TestSimplePointChart", [] () {
   Series2D<double, double> series1("myseries1");
@@ -647,7 +646,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
       &canvas,
       "UITest_TestSimplePointChart_out.svg.html");
 });
-*/
+
 static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
     &UITest, "TestVariableSizePointChart", [] () {
   Series3D<double, double, double> series1("myseries1");

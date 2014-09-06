@@ -15,6 +15,7 @@ namespace fnordmetric {
 namespace ui {
 
 char PointChart::kDefaultPointStyle[] = "circle";
+char PointChart::kDefaultPointSize[] = "3";
 
 PointChart::PointChart(ui::Canvas* canvas) : Drawable(canvas) {}
 
