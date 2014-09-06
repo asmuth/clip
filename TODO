@@ -9,6 +9,7 @@
     - areachart
 
 [ cleanup ]
+    - uncontainted points are clamped -> fix
     - integer overflow :(
     - lotsa overflows in expression exectution // outc val not respected
     - explicit domain with range smaller than value range

@@ -1,10 +1,10 @@
-IMPORT TABLE city_temperatures
-   FROM CSV 'doc/examples/data/city_temperatures.csv' HEADER;
+IMPORT TABLE example_data
+   FROM CSV 'doc/examples/data/log_example.csv' HEADER;
 
 DRAW LINECHART WITH
-   YDOMAIN LOGARITHMIC
+   YDOMAIN 0, 10000 LOGARITHMIC
    AXIS BOTTOM
    AXIS LEFT;
 
-SELECT city AS series, month AS x, temperature AS y, "circle" as pointstyle
-   FROM city_temperatures;
+SELECT "log example" as series, x AS x, y AS y, "circle" as pointstyle
+   FROM example_data;
