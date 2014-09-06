@@ -2,6 +2,7 @@ IMPORT TABLE example_data
    FROM CSV 'doc/examples/data/log_example.csv' HEADER;
 
 DRAW LINECHART WITH
+   XDOMAIN 0, 5 LOGARITHMIC
    YDOMAIN 0, 10000 LOGARITHMIC
    AXIS BOTTOM
    AXIS LEFT;
