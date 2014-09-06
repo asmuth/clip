@@ -98,7 +98,8 @@ public:
     T_LABEL,
     T_LABELS,
     T_INSIDE,
-    T_OUTSIDE
+    T_OUTSIDE,
+    T_ROTATE
   };
 
   Token(kTokenType token_type);

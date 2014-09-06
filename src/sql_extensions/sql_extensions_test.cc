@@ -219,7 +219,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisTitle, [] () {
   EXPECT_EQ(title, "axistitle");
 });
 
-TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelDef, [] () {
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPos, [] () {
   auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT LABELS INSIDE;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -238,4 +238,58 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelDef, [] () {
   EXPECT(*labels->getChildren()[0] == ASTNode::T_PROPERTY);
   EXPECT(labels->getChildren()[0]->getToken() != nullptr);
   EXPECT(*labels->getChildren()[0]->getToken() == Token::T_INSIDE);
+});
+
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelRotate, [] () {
+  auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT LABELS ROTATE 45;");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_DRAW);
+  EXPECT(stmt->getToken() != nullptr);
+  EXPECT(*stmt->getToken() == Token::T_BARCHART);
+  EXPECT(stmt->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_AXIS);
+  EXPECT(*stmt->getChildren()[0]->getToken() == Token::T_AXIS);
+  EXPECT(stmt->getChildren()[0]->getChildren().size() == 2);
+  EXPECT(
+      *stmt->getChildren()[0]->getChildren()[0] == ASTNode::T_AXIS_POSITION)
+  auto labels = stmt->getChildren()[0]->getChildren()[1];
+  EXPECT(*labels == ASTNode::T_AXIS_LABELS)
+  EXPECT(labels->getChildren().size() == 1);
+  EXPECT(*labels->getChildren()[0] == ASTNode::T_PROPERTY);
+  EXPECT(labels->getChildren()[0]->getToken() != nullptr);
+  EXPECT(*labels->getChildren()[0]->getToken() == Token::T_ROTATE);
+  EXPECT(labels->getChildren()[0]->getChildren().size() == 1);
+  auto deg_expr = labels->getChildren()[0]->getChildren()[0];
+  auto deg = executeSimpleConstExpression(deg_expr).toString();
+  EXPECT_EQ(deg, "45");
+});
+
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPosAndRotate, [] () {
+  auto parser = parseTestQuery(
+      "DRAW BARCHART AXIS LEFT LABELS OUTSIDE ROTATE 45;");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_DRAW);
+  EXPECT(stmt->getToken() != nullptr);
+  EXPECT(*stmt->getToken() == Token::T_BARCHART);
+  EXPECT(stmt->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_AXIS);
+  EXPECT(*stmt->getChildren()[0]->getToken() == Token::T_AXIS);
+  EXPECT(stmt->getChildren()[0]->getChildren().size() == 2);
+  EXPECT(
+      *stmt->getChildren()[0]->getChildren()[0] == ASTNode::T_AXIS_POSITION)
+  auto labels = stmt->getChildren()[0]->getChildren()[1];
+  EXPECT(*labels == ASTNode::T_AXIS_LABELS)
+  EXPECT(labels->getChildren().size() == 2);
+  EXPECT(*labels->getChildren()[0] == ASTNode::T_PROPERTY);
+  EXPECT(labels->getChildren()[0]->getToken() != nullptr);
+  EXPECT(*labels->getChildren()[0]->getToken() == Token::T_OUTSIDE);
+  EXPECT(*labels->getChildren()[1] == ASTNode::T_PROPERTY);
+  EXPECT(labels->getChildren()[1]->getToken() != nullptr);
+  EXPECT(*labels->getChildren()[1]->getToken() == Token::T_ROTATE);
+  EXPECT(labels->getChildren()[1]->getChildren().size() == 1);
+  auto deg_expr = labels->getChildren()[1]->getChildren()[0];
+  auto deg = executeSimpleConstExpression(deg_expr).toString();
+  EXPECT_EQ(deg, "45");
 });

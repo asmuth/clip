@@ -491,6 +491,11 @@ next:
     goto next;
   }
 
+  if (token == "ROTATE") {
+    token_list->emplace_back(Token::T_ROTATE);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

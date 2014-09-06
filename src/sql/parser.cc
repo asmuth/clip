@@ -461,6 +461,14 @@ ASTNode* Parser::axisClause() {
             case Token::T_OUTSIDE: {
               auto prop = title->appendChild(ASTNode::T_PROPERTY);
               prop->setToken(consumeToken());
+              break;
+            }
+
+            case Token::T_ROTATE: {
+              auto prop = title->appendChild(ASTNode::T_PROPERTY);
+              prop->setToken(consumeToken());
+              prop->appendChild(expectAndConsumeValueExpr());
+              break;
             }
 
           }
