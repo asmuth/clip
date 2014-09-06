@@ -66,6 +66,7 @@ public:
     T_IMPORT,
     T_AXIS,
     T_AXIS_POSITION,
+    T_AXIS_LABELS,
     T_DOMAIN,
     T_DOMAIN_SCALE,
     T_GRID

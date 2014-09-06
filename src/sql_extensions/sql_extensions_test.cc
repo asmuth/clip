@@ -218,3 +218,24 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisTitle, [] () {
   auto title = executeSimpleConstExpression(title_expr).toString();
   EXPECT_EQ(title, "axistitle");
 });
+
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelDef, [] () {
+  auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT LABELS INSIDE;");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_DRAW);
+  EXPECT(stmt->getToken() != nullptr);
+  EXPECT(*stmt->getToken() == Token::T_BARCHART);
+  EXPECT(stmt->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_AXIS);
+  EXPECT(*stmt->getChildren()[0]->getToken() == Token::T_AXIS);
+  EXPECT(stmt->getChildren()[0]->getChildren().size() == 2);
+  EXPECT(
+      *stmt->getChildren()[0]->getChildren()[0] == ASTNode::T_AXIS_POSITION)
+  auto labels = stmt->getChildren()[0]->getChildren()[1];
+  EXPECT(*labels == ASTNode::T_AXIS_LABELS)
+  EXPECT(labels->getChildren().size() == 1);
+  EXPECT(*labels->getChildren()[0] == ASTNode::T_PROPERTY);
+  EXPECT(labels->getChildren()[0]->getToken() != nullptr);
+  EXPECT(*labels->getChildren()[0]->getToken() == Token::T_INSIDE);
+});

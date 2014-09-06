@@ -450,6 +450,25 @@ ASTNode* Parser::axisClause() {
         continue;
       }
 
+      case Token::T_LABELS: {
+        auto title = axis->appendChild(ASTNode::T_AXIS_LABELS);
+        consumeToken();
+
+        for (int i = 0; i < 2; i++) {
+          switch (cur_token_->getType()) {
+
+            case Token::T_INSIDE:
+            case Token::T_OUTSIDE: {
+              auto prop = title->appendChild(ASTNode::T_PROPERTY);
+              prop->setToken(consumeToken());
+            }
+
+          }
+        }
+
+        continue;
+      }
+
       default:
         break;
 

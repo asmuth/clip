@@ -1,105 +1,89 @@
-sql: AXIS TITLE, LABELS
-sql: LEGEND
+[ sql ]
+     - sql: AXIS TITLE, LABELS
+     - sql: LEGEND
+     - full sql selects, joins working
 
-impl chart title, subtitle
-impl axis title
-impl inverted domains
-impl logarithmic domain
-impl legend
-impl inside/outside, rotate axis labels
-impl grid
+[ ui ]
+    - impl chart title, subtitle
+    - impl axis title
+    - impl inverted domains
+    - impl logarithmic domain
+    - impl legend
+    - impl inside/outside, rotate axis labels
+    - impl grid
+    - line/point styles
+    - bar/point labels
 
-integer overflow :(
-lotsa overflows in expression exectution // outc val not respected
-explicit domain with range smaller than value range
-line chart with only negative values
+[ cleanup ]
+    - integer overflow :(
+    - lotsa overflows in expression exectution // outc val not respected
+    - explicit domain with range smaller than value range
+    - line chart with only negative values
+    - short token for: logarithmic -> log
+    - proper error message for missing table import
+    - rename rowsink to virtualtable
+    - refactor expression symbol lookup/registration
+    - refactor tokenizer // dynamically register tokens
+    - refactor: remove ASTNode::T_PROPERTY for title, subtitle, etc -> new astnodetype
+    - resultlist -> materializetable
 
-line/point styles
-bar/point labels
+[ backends ]
+    - mysql backend
+    - sql: csv opts
+    - proper csv w/ all opts
 
-cli output format
+[ cli ]
+    - cli output format
 
-short token for: logarithmic -> log
-proper error message for missing table import
-rename rowsink to virtualtable
-refactor expression symbol lookup/registration
-refactor tokenizer // dynamically register tokens
+[ feature q ]
+    - all examples working
+    - bar, area, line, pie, number chart
+    - documentation as per TOC complete
+    - simple web interface (interactive query UI generates embed html snippets)
+    - simple interactive charts (hover tooltips)
+    - histogram
+    - TimeDomain!
+    - middle axis
+    - heatmaps
+    - histogram
+    - max interpolation gap -> draw as missing data
+    - make # of axis ticks configurable via sql
+    - postgresql backend
+    - gannt charts
+    - sparklines? (multi svg output)
+    - stacked area charts
+    - smooth paths
+    - legend!
+    - gauges, heatmaps, boxplot, error bars 
+    - middle axis
+    - annotations / deploy lines
+    - query cache
+    - dashboard edit ui: html source
+    - dashboard edit ui: wysiwyg
 
-middle axis
-heatmaps
-histogram
-missing data / interpolation gap
-
-sql: csv opts
-
-make # of axis ticks configurable via sql
-
-v2.0.0a
-  - all examples working
-  - bar, area, line, pie, number chart
-  - documentation as per TOC complete
-  - full sql selects, joins working
-  - csv backend complete
-  - cli interface
-  - TimeDomain!
-  - max interpolation gap -> draw as missing data
-
-v2.0.0b
-  - mysql backend
-  - simple web interface (interactive query UI generates embed html snippets)
-  - simple interactive charts (hover tooltips)
-  - histogram
-
-v2.1.0
-  - statsd/graphite backend
-  - postgresql backend
-  - gannt charts
-  - sparklines? (multi svg output)
-  - stacked area charts
-  - smooth paths
-  - legend!
-  - gauges, heatmaps, boxplot, error bars 
-  - middle axis
-  - annotations / deploy lines
-  - query cache
-  - dashboard edit ui: html source
-  - dashboard edit ui: wysiwyg
-
-
+[ random ideas ]
+    - moving avg, etc
+    - candlestick
 
 
 
 
-
-RANDOM IDEAS
-
-- moving avg, etc
-- candlestick
 
 fnordmetric web:
     $ fnordmetric --web 8080   # standalone webserver on port 8080
     $ fnordmetric --cgi        # mount me as cgi script!
 
 
-rename:
-  canvas -> chart
-  resultlist -> table
-
 
 examples from csv file with temp measurements per time/city -> timelines, range
 bar charts etc...
 
 bar chart examples:
-  * horizontal
-  * vertical
   * horizontal with labels outside
   * horizontal with labels inside
   * vertical with negative values
   * zero-centered horizontal ranges
-  * multiseries unstacked
-  * multiseries stacked
   * histogram
-  * multiple y axis
 
 point chart examples:
   * single 2d series

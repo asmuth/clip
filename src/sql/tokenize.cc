@@ -471,6 +471,26 @@ next:
     goto next;
   }
 
+  if (token == "LABEL") {
+    token_list->emplace_back(Token::T_LABEL);
+    goto next;
+  }
+
+  if (token == "LABELS") {
+    token_list->emplace_back(Token::T_LABELS);
+    goto next;
+  }
+
+  if (token == "INSIDE") {
+    token_list->emplace_back(Token::T_INSIDE);
+    goto next;
+  }
+
+  if (token == "OUTSIDE") {
+    token_list->emplace_back(Token::T_OUTSIDE);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;
