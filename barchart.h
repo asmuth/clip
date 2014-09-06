@@ -205,6 +205,13 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   if (y_domain_.empty()) {
     y_domain = Domain<TY>::mkDomain();
     y_domain_.reset(y_domain, true);
+
+    auto cont = dynamic_cast<AnyContinuousDomain*>(y_domain);
+    if (cont != nullptr) {
+      cont->setPadding(
+          AnyDomain::kDefaultDomainPadding,
+          AnyDomain::kDefaultDomainPadding);
+    }
   } else {
     y_domain = y_domain_.getAs<Domain<TY>>();
   }

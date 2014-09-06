@@ -146,6 +146,13 @@ void PointChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   if (x_domain_.empty()) {
     x_domain = Domain<TX>::mkDomain();
     x_domain_.reset(x_domain, true);
+
+    auto cont = dynamic_cast<AnyContinuousDomain*>(x_domain);
+    if (cont != nullptr) {
+      cont->setPadding(
+          AnyDomain::kDefaultDomainPadding,
+          AnyDomain::kDefaultDomainPadding);
+    }
   } else {
     x_domain = x_domain_.getAs<Domain<TX>>();
   }
@@ -154,6 +161,13 @@ void PointChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   if (y_domain_.empty()) {
     y_domain = Domain<TY>::mkDomain();
     y_domain_.reset(y_domain, true);
+
+    auto cont = dynamic_cast<AnyContinuousDomain*>(y_domain);
+    if (cont != nullptr) {
+      cont->setPadding(
+          AnyDomain::kDefaultDomainPadding,
+          AnyDomain::kDefaultDomainPadding);
+    }
   } else {
     y_domain = y_domain_.getAs<Domain<TY>>();
   }

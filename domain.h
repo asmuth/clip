@@ -49,6 +49,7 @@ public:
 class AnyContinuousDomain {
 public:
   virtual void setLogarithmic(bool logarithmic) = 0;
+  virtual void setPadding(double min_padding, double top_padding) = 0;
 };
 
 /**
@@ -231,13 +232,18 @@ public:
     is_logarithmic_ = logarithmic;
   }
 
+  void setPadding(double min_padding, double max_padding) {
+    padding_.first = min_padding;
+    padding_.second = max_padding;
+  }
+
 protected:
 
   std::pair<double, double> getRangeWithPadding() const {
     double range = max_value_ - min_value_;
 
     return std::make_pair(
-        min_value_ - range * padding_.first,
+        min_value_ == 0 ? 0 : min_value_ - range * padding_.first,
         max_value_ + range * padding_.second);
   }
 
