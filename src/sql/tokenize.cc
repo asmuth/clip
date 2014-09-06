@@ -401,6 +401,12 @@ next:
     goto next;
   }
 
+  if (token == "POINTCHART") {
+    token_list->emplace_back(Token::T_POINTCHART);
+    goto next;
+  }
+
+
   if (token == "ORIENTATION") {
     token_list->emplace_back(Token::T_ORIENTATION);
     goto next;

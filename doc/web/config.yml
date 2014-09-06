@@ -105,22 +105,18 @@ examples:
 #        title: "Bars with labels"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#  -
-#    title: "Point/Bubble Charts"
-#    dir: "barcharts"
-#    examples:
+  -
+    title: "Bubble &amp; Scatter Charts"
+    dir: "barcharts"
+    examples:
+      -
+        title: "Simple bubble chart"
+        file: "simple_bubble_chart"
+        url: "/pointcharts/simple_bubbles"
 #      -
-#        title: "Simple point chart"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "3D bubble chart"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Multiple point series"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+#        title: "Simple scatter chart"
+#        file: "simple_scatter_chart"
+#        url: "/pointcharts/simple_scatter"
 #      -
 #        title: "Points with labels"
 #        file: "horizontal_bars"

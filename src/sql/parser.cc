@@ -342,7 +342,9 @@ ASTNode* Parser::drawStatement() {
   consumeToken();
 
   chart->setToken(expectAndConsume(std::vector<Token::kTokenType>{
+      Token::T_AREACHART,
       Token::T_BARCHART,
+      Token::T_POINTCHART,
       Token::T_LINECHART}));
 
   consumeIf(Token::T_WITH);

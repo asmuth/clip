@@ -76,6 +76,7 @@ public:
     T_LINECHART,
     T_AREACHART,
     T_BARCHART,
+    T_POINTCHART,
     T_AXIS,
     T_TOP,
     T_RIGHT,

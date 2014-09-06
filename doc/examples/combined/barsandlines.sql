@@ -3,6 +3,7 @@ IMPORT TABLE city_temperatures
 
 DRAW BARCHART WITH
     ORIENTATION VERTICAL
+    YDOMAIN 0, 50
     AXIS RIGHT
     AXIS TOP;
 
@@ -11,6 +12,7 @@ SELECT city AS series, month AS x, temperature AS y
     WHERE city = "London";
 
 DRAW LINECHART WITH
+    YDOMAIN 0, 70
     AXIS BOTTOM
     AXIS LEFT;
 
