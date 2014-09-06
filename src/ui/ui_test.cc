@@ -679,7 +679,6 @@ static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
       "UITest_TestVariableSizePointChart_out.svg.html");
 });
 
-/*
 static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
     &UITest, "TestSimpleLineChart", [] () {
   Series2D<double, double> series1("myseries1");
@@ -753,7 +752,6 @@ static fnordmetric::util::UnitTest::TestCase __test_point_line_chart_(
       "UITest_TestPointLineChart_out.svg.html");
 });
 
-/*
 static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
     &UITest, "TestMultiChart", [] () {
   Series2D<double, double> series1("myseries1");
@@ -790,7 +788,6 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
 
   ui::ContinuousDomain<double> x_domain(10, 50, false);
   ui::ContinuousDomain<double> y_domain(0, 50, false);
-  ui::ContinuousDomain<double> bar_domain(0, 300, false);
 
   Canvas canvas;
 
@@ -802,25 +799,32 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
   line_chart->addAxis(AxisDefinition::TOP)->setTitle("x1");
   line_chart->addAxis(AxisDefinition::LEFT)->setTitle("y1");
 
-  auto point_chart = canvas.addChart<PointChart>(&x_domain, &y_domain);
-  point_chart->addSeries(&series1, "circle", 4);
-  point_chart->addSeries(&series2, "circle", 4);
+  auto point_chart = canvas.addChart<PointChart2D<double, double>>(
+      &x_domain, &y_domain);
+  point_chart->addSeries(&series1);
+  point_chart->addSeries(&series2);
 
-  auto bar_chart = canvas.addChart<BarChart>(
+  auto bar_chart = canvas.addChart<BarChart2D<std::string, double>>(
       BarChart::O_VERTICAL,
-      false,
-      &bar_domain);
+      false);
 
   bar_chart->addSeries(&series3);
   bar_chart->addSeries(&series4);
   bar_chart->addAxis(AxisDefinition::RIGHT)->setTitle("x2");
   bar_chart->addAxis(AxisDefinition::BOTTOM)->setTitle("y2");
 
+  auto bar_domain = dynamic_cast<ContinuousDomain<double>*>(
+      bar_chart->getDomain(AnyDomain::DIM_Y));
+  EXPECT(bar_domain != nullptr);
+  bar_domain->setMin(0);
+  bar_domain->setMax(200);
+
   compareChart(
       &canvas,
       "UITest_TestMultiChart_out.svg.html");
 });
 
+/*
 static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
     &UITest, "TestSimpleAreaChart", [] () {
   Series2D<double, double> series1("myseries1");

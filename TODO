@@ -8,6 +8,7 @@
     - impl grid
     - line/point styles
     - bar/point labels
+    - areachart
 
 [ cleanup ]
     - integer overflow :(
