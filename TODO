@@ -1,12 +1,17 @@
+
 [ ui ]
+    - TimeDomain!
     - wire up scatter/bubble charts
     - impl chart title, subtitle
     - impl legend
+    - middle axis
     - impl inside/outside, rotate axis labels
     - impl grid
     - line/point styles
     - bar/point labels
-    - areachart
+    - chart type: areachart
+    - chart type: histogram
+    - chart type: heatmap
 
 [ cleanup ]
     - integer overflow :(
@@ -32,13 +37,13 @@
     - cli output format
 
 [ feature q ]
+    - chart type: ganttchart
+    - chart type: boxplot
+    - chart type: error bars
+    - chart type: pie chart
+    - sparklines
     - simple web interface (interactive query UI generates embed html snippets)
     - simple interactive charts (hover tooltips)
-    - histogram
-    - TimeDomain!
-    - middle axis
-    - heatmaps
-    - histogram
     - max interpolation gap -> draw as missing data
     - make # of axis ticks configurable via sql
     - postgresql backend

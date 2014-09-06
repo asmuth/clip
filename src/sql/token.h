@@ -77,6 +77,8 @@ public:
     T_AREACHART,
     T_BARCHART,
     T_POINTCHART,
+    T_HEATMAP,
+    T_HISTOGRAM,
     T_AXIS,
     T_TOP,
     T_RIGHT,

@@ -344,6 +344,8 @@ ASTNode* Parser::drawStatement() {
   chart->setToken(expectAndConsume(std::vector<Token::kTokenType>{
       Token::T_AREACHART,
       Token::T_BARCHART,
+      Token::T_HEATMAP,
+      Token::T_HISTOGRAM,
       Token::T_POINTCHART,
       Token::T_LINECHART}));
 

@@ -328,23 +328,7 @@ Syntax Reference
               [ STACKED ]
               [ LABELS { INSIDE | OUTSIDE | HOVER | OFF } ] ]
 
-    DRAW BOXPLOT
-        [ [ WITH ]
-              common_chart_options ]
-
-    DRAW BUBBLECHART
-        [ [ WITH ]
-              common_chart_options ]
-
-    DRAW ERRORBARS
-        [ [ WITH ]
-              common_chart_options ]
-
     DRAW HEATMAP
-        [ [ WITH ]
-              common_chart_options ]
-
-    DRAW GANTTCHART
         [ [ WITH ]
               common_chart_options ]
 
@@ -356,18 +340,9 @@ Syntax Reference
         [ [ WITH ]
               common_chart_options ]
 
-    DRAW PIECHART
+    DRAW POINTCHART
         [ [ WITH ]
               common_chart_options ]
-
-    DRAW SCATTERCHART
-        [ [ WITH ]
-              common_chart_options ]
-
-    DRAW SPARKLINES
-        [ [ WITH ]
-              common_chart_options ]
-
 
 ### IMPORT statement
 

@@ -406,6 +406,15 @@ next:
     goto next;
   }
 
+  if (token == "HEATMAP") {
+    token_list->emplace_back(Token::T_HEATMAP);
+    goto next;
+  }
+
+  if (token == "HISTOGRAM") {
+    token_list->emplace_back(Token::T_HISTOGRAM);
+    goto next;
+  }
 
   if (token == "ORIENTATION") {
     token_list->emplace_back(Token::T_ORIENTATION);
