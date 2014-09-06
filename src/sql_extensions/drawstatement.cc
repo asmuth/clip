@@ -38,6 +38,7 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
   applyTitle(chart);
   applyAxisDefinitions(chart);
   applyGrid(chart);
+  applyLegend(chart);
 }
 
 ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
@@ -245,11 +246,9 @@ void DrawStatement::applyTitle(ui::Drawable* chart) const {
       case Token::T_TITLE:
         chart->setTitle(title_str);
         break;
-
       case Token::T_SUBTITLE:
         chart->setSubtitle(title_str);
         break;
-
       default:
         break;
     }
@@ -279,15 +278,11 @@ void DrawStatement::applyGrid(ui::Drawable* chart) const {
         case Token::T_HORIZONTAL:
           horizontal = true;
           break;
-
         case Token::T_VERTICAL:
           vertical = true;
           break;
-
         default:
-          RAISE(
-              util::RuntimeException,
-              "corrupt AST: GRID has invalid property");
+          RAISE(util::RuntimeException, "corrupt AST: invalid GRID property");
       }
     }
   }
@@ -295,6 +290,67 @@ void DrawStatement::applyGrid(ui::Drawable* chart) const {
   if (horizontal || vertical) {
     chart->addGrid(horizontal, vertical);
   }
+}
+
+void DrawStatement::applyLegend(ui::Drawable* chart) const {
+  ASTNode* legend = nullptr;
+
+  for (const auto& child : ast_->getChildren()) {
+    if (child->getType() == ASTNode::T_LEGEND) {
+      legend = child;
+      break;
+    }
+  }
+
+  if (!legend) {
+    return;
+  }
+
+
+  ui::Drawable::kLegendVerticalPosition vert_pos = ui::Drawable::LEGEND_BOTTOM;
+  ui::Drawable::kLegendHorizontalPosition horiz_pos = ui::Drawable::LEGEND_LEFT;
+  ui::Drawable::kLegendPlacement placement = ui::Drawable::LEGEND_OUTSIDE;
+  std::string title;
+
+  for (const auto& prop : legend->getChildren()) {
+    if (prop->getType() == ASTNode::T_PROPERTY && prop->getToken() != nullptr) {
+      switch (prop->getToken()->getType()) {
+        case Token::T_TOP:
+          vert_pos = ui::Drawable::LEGEND_TOP;
+          break;
+        case Token::T_RIGHT:
+          horiz_pos = ui::Drawable::LEGEND_RIGHT;
+          break;
+        case Token::T_BOTTOM:
+          vert_pos = ui::Drawable::LEGEND_BOTTOM;
+          break;
+        case Token::T_LEFT:
+          horiz_pos = ui::Drawable::LEGEND_LEFT;
+          break;
+        case Token::T_INSIDE:
+          placement = ui::Drawable::LEGEND_INSIDE;
+          break;
+        case Token::T_OUTSIDE:
+          placement = ui::Drawable::LEGEND_OUTSIDE;
+          break;
+        case Token::T_TITLE: {
+          if (prop->getChildren().size() != 1) {
+            RAISE(util::RuntimeException, "corrupt AST: TITLE has no children");
+          }
+
+          auto sval = executeSimpleConstExpression(prop->getChildren()[0]);
+          title = sval.toString();
+          break;
+        }
+        default:
+          RAISE(
+              util::RuntimeException,
+              "corrupt AST: LEGEND has invalid property");
+      }
+    }
+  }
+
+  chart->addLegend(vert_pos, horiz_pos, placement, title);
 }
 
 }
