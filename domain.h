@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_DOMAIN_H
 #include <algorithm>
 #include <stdlib.h>
-#include <assert.h>
+#include <math.h>
 #include "../util/format.h"
 
 // FIXPAUL too many copies T val...
@@ -98,24 +98,44 @@ public:
     max_value_(max_value),
     is_logarithmic_(is_logarithmic),
     is_inverted_(is_inverted),
-    padding_(
-        AnyDomain::kDefaultDomainPadding,
-        AnyDomain::kDefaultDomainPadding) {}
+    padding_(0, 0) {}
 
   double scale(T value) const {
-    auto min_max = getRangeWithPadding();
-    auto min_value = min_max.first;
-    auto max_value = min_max.second;
+    double scaled;
 
-    if (value <= min_value) {
-      return 0.0f;
+    if (is_logarithmic_) {
+      if (min_value_ < 0) {
+        RAISE(
+            util::RuntimeException,
+            "negative value is outside of logarithmic domain");
+      }
+
+      double max_log = 0.0f;
+      if (max_value_ >= 1.0) {
+        max_log = log10(max_value_ + max_value_* padding_.second);
+      }
+
+      double value_log = 0.0f;
+      if (value >= 1.0) {
+        value_log = log10(value);
+      }
+
+      scaled = value_log / max_log;
+    } else {
+      auto min_max = getRangeWithPadding();
+      auto min_value = min_max.first;
+      auto max_value = min_max.second;
+
+      if (value <= min_value) {
+        return 0.0f;
+      }
+
+      if (value >= max_value) {
+        return 1.0f;
+      }
+
+      scaled = (value - min_value) / (max_value - min_value);
     }
-
-    if (value >= max_value) {
-      return 1.0f;
-    }
-
-    auto scaled = (value - min_value) / (max_value - min_value);
 
     if (is_inverted_) {
       return 1.0 - scaled;
@@ -129,15 +149,34 @@ public:
   }
 
   T valueAt(double index) const {
-    auto min_max = getRangeWithPadding();
-    auto min_value = min_max.first;
-    auto max_value = min_max.second;
-    auto val_range = min_value + (max_value - min_value);
+    if (is_logarithmic_) {
+      if (max_value_ < 0) {
+        RAISE(
+            util::RuntimeException,
+            "negative value is outside of logarithmic domain");
+      }
 
-    if (is_inverted_) {
-      return min_value + (max_value - min_value) * (1.0 - index);
+      double max_log = 0.0f;
+      if (max_value_ >= 1.0) {
+        max_log = log10(max_value_ + max_value_* padding_.second);
+      }
+
+      if (is_inverted_) {
+        return pow(10, (1.0 - index) * max_log);
+      } else {
+        return pow(10, index * max_log);
+      }
     } else {
-      return min_value + (max_value - min_value) * index;
+      auto min_max = getRangeWithPadding();
+      auto min_value = min_max.first;
+      auto max_value = min_max.second;
+      auto val_range = min_value + (max_value - min_value);
+
+      if (is_inverted_) {
+        return min_value + (max_value - min_value) * (1.0 - index);
+      } else {
+        return min_value + (max_value - min_value) * index;
+      }
     }
   }
 
