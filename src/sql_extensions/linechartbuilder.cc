@@ -26,25 +26,10 @@ ui::Drawable* LineChartBuilder::getChart() const {
 }
 
 ui::Drawable* LineChartBuilder::findChartType() const {
-  if (auto c = tryType2D<ui::LineChart2D<int, int>>())
-    return c;
-
-  if (auto c = tryType2D<ui::LineChart2D<int, double>>())
-    return c;
-
-  if (auto c = tryType2D<ui::LineChart2D<int, std::string>>())
-    return c;
-
-  if (auto c = tryType2D<ui::LineChart2D<double, int>>())
-    return c;
-
   if (auto c = tryType2D<ui::LineChart2D<double, double>>())
     return c;
 
   if (auto c = tryType2D<ui::LineChart2D<double, std::string>>())
-    return c;
-
-  if (auto c = tryType2D<ui::LineChart2D<std::string, int>>())
     return c;
 
   if (auto c = tryType2D<ui::LineChart2D<std::string, double>>())

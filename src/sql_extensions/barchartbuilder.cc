@@ -27,13 +27,7 @@ ui::Drawable* BarChartBuilder::getChart() const {
 }
 
 ui::Drawable* BarChartBuilder::findChartType() const {
-  if (auto c = tryType2D<ui::BarChart2D<std::string, int>>())
-    return c;
-
   if (auto c = tryType2D<ui::BarChart2D<std::string, double>>())
-    return c;
-
-  if (auto c = tryType3D<ui::BarChart3D<std::string, int, int>>())
     return c;
 
   if (auto c = tryType3D<ui::BarChart3D<std::string, double, double>>())

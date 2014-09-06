@@ -11,6 +11,7 @@
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
 #include <fnordmetric/sql_extensions/linechartbuilder.h>
+#include <fnordmetric/sql_extensions/pointchartbuilder.h>
 
 namespace fnordmetric {
 namespace query {
@@ -26,6 +27,9 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
       break;
     case Token::T_LINECHART:
       chart = mkChart<LineChartBuilder>(canvas);
+      break;
+    case Token::T_POINTCHART:
+      chart = mkChart<PointChartBuilder>(canvas);
       break;
     default:
       RAISE(

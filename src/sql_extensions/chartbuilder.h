@@ -113,7 +113,6 @@ protected:
 
   AnySeriesAdapter* mkSeriesAdapter(SValue* row) {
     AnySeriesAdapter* a = nullptr;
-    if (!a) a = mkSeriesAdapter1D<int>(row);
     if (!a) a = mkSeriesAdapter1D<double>(row);
     if (!a) a = mkSeriesAdapter1D<std::string>(row);
 
@@ -135,7 +134,6 @@ protected:
     }
 
     AnySeriesAdapter* a = nullptr;
-    if (!a) a = mkSeriesAdapter2D<TX, int>(row);
     if (!a) a = mkSeriesAdapter2D<TX, double>(row);
     if (!a) a = mkSeriesAdapter2D<TX, std::string>(row);
     return a;
@@ -155,7 +153,6 @@ protected:
     }
 
     AnySeriesAdapter* a = nullptr;
-    if (!a) a = mkSeriesAdapter3D<TX, TY, int>(row);
     if (!a) a = mkSeriesAdapter3D<TX, TY, double>(row);
     if (!a) a = mkSeriesAdapter3D<TX, TY, std::string>(row);
     return a;
