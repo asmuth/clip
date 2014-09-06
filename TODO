@@ -1,6 +1,5 @@
 [ ui ]
     - impl chart title, subtitle
-    - better axis title
     - impl inverted domains
     - impl logarithmic domain
     - impl legend

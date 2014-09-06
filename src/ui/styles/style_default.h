@@ -18,7 +18,7 @@ namespace fnordmetric {
 static const std::string kStyleSheetDefault = R"(
   .chart text {
     font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    font: 10pt sans-serif;
+    font: 10px sans-serif;
   }
 
   .axis .stroke {
@@ -40,7 +40,7 @@ static const std::string kStyleSheetDefault = R"(
   }
 
   .axis .title {
-    font-size: 11pt;
+    font-size: 12px;
   }
 
   .chart .line {

@@ -3,14 +3,14 @@ IMPORT TABLE city_temperatures
 
 DRAW LINECHART WITH
     AXIS BOTTOM
-    AXIS LEFT;
+    AXIS LEFT TITLE "New York";
 
 SELECT city AS series, month AS x, temperature AS y, "circle" AS pointstyle
     FROM city_temperatures
     WHERE city = "New York";
 
 DRAW LINECHART WITH
-    AXIS RIGHT;
+    AXIS RIGHT TITLE "Berlin";
 
 SELECT city AS series, month AS x, temperature AS y, "circle" as pointstyle, "color2" as color
     FROM city_temperatures
