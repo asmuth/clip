@@ -13,10 +13,12 @@ namespace fnordmetric {
 namespace ui {
 
 BarChart::BarChart(
-    ui::Canvas* canvas) :
+    ui::Canvas* canvas,
+    kBarChartOrientation orient /* = O_VERTICAL */,
+    bool stacked /* = false */) :
     Drawable(canvas),
-    orientation_(O_VERTICAL),
-    stacked_(false) {}
+    orientation_(orient),
+    stacked_(stacked) {}
 
 void BarChart::setOrientation(kBarChartOrientation orientation) {
   orientation_ = orientation;

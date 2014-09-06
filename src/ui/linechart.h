@@ -57,6 +57,15 @@ public:
   LineChart2D(Canvas* canvas);
 
   /**
+   * Create a new line chart
+   *
+   * @param canvas the canvas to draw this chart on. does not transfer ownership
+   * @param x_domain the x domain. does not transfer ownership
+   * @param y_domain the y domain. does not transfer ownership
+   */
+  LineChart2D(Canvas* canvas, AnyDomain* x_domain, AnyDomain* y_domain);
+
+  /**
    * Add a (x: string, y: double) series. This will draw one connected line
    * through all points in the series
    *
@@ -103,6 +112,16 @@ protected:
 
 template <typename TX, typename TY>
 LineChart2D<TX, TY>::LineChart2D(Canvas* canvas) : LineChart(canvas) {}
+
+template <typename TX, typename TY>
+LineChart2D<TX, TY>::LineChart2D(
+    Canvas* canvas,
+    AnyDomain* x_domain,
+    AnyDomain* y_domain) :
+    LineChart(canvas) {
+  x_domain_.reset(x_domain);
+  y_domain_.reset(y_domain);
+}
 
 template <typename TX, typename TY>
 void LineChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
