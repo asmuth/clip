@@ -26,15 +26,12 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/runtimeexception.cc)
 
-#stage/src/fnordmetric/ui/areachart.cc
-#stage/src/fnordmetric/ui/linechart.cc
-#stage/src/fnordmetric/ui/pointchart.cc)
-
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/barchart.cc
     stage/src/fnordmetric/ui/linechart.cc
+    stage/src/fnordmetric/ui/pointchart.cc
     stage/src/fnordmetric/ui/canvas.cc
     stage/src/fnordmetric/ui/domain.cc
     stage/src/fnordmetric/ui/drawable.cc)

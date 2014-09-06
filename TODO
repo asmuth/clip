@@ -29,14 +29,12 @@
 
 [ sql ]
      - full sql selects, joins working
+     - pointchartbuilder
 
 [ cli ]
     - cli output format
 
 [ feature q ]
-    - all examples working
-    - bar, area, line, pie, number chart
-    - documentation as per TOC complete
     - simple web interface (interactive query UI generates embed html snippets)
     - simple interactive charts (hover tooltips)
     - histogram

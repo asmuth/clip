@@ -10,9 +10,10 @@
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/barchart.h>
-#include <fnordmetric/ui/linechart.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/linechart.h>
+#include <fnordmetric/ui/pointchart.h>
 #include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/unittest.h>
 
@@ -634,7 +635,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
   series2.addDatum(-50, -33);
 
   Canvas canvas;
-  auto point_chart = canvas.addChart<PointChart>();
+  auto point_chart = canvas.addChart<PointChart2D<double, double>>();
   point_chart->addSeries(&series1);
   point_chart->addSeries(&series2);
   point_chart->addAxis(AxisDefinition::TOP);
@@ -646,7 +647,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
       &canvas,
       "UITest_TestSimplePointChart_out.svg.html");
 });
-
+*/
 static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
     &UITest, "TestVariableSizePointChart", [] () {
   Series3D<double, double, double> series1("myseries1");
@@ -666,7 +667,7 @@ static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
   series2.addDatum(-50, -23, 17);
 
   Canvas canvas;
-  auto point_chart = canvas.addChart<PointChart>();
+  auto point_chart = canvas.addChart<PointChart3D<double, double, double>>();
   point_chart->addSeries(&series1);
   point_chart->addSeries(&series2);
   point_chart->addAxis(AxisDefinition::TOP);
@@ -678,7 +679,8 @@ static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
       &canvas,
       "UITest_TestVariableSizePointChart_out.svg.html");
 });
-*/
+
+/*
 static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
     &UITest, "TestSimpleLineChart", [] () {
   Series2D<double, double> series1("myseries1");
