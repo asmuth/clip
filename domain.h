@@ -92,10 +92,12 @@ public:
   ContinuousDomain(
     T min_value = 0,
     T max_value = 0,
-    bool is_logarithmic = false) :
+    bool is_logarithmic = false,
+    bool is_inverted = false) :
     min_value_(min_value),
     max_value_(max_value),
     is_logarithmic_(is_logarithmic),
+    is_inverted_(is_inverted),
     padding_(
         AnyDomain::kDefaultDomainPadding,
         AnyDomain::kDefaultDomainPadding) {}
@@ -113,7 +115,13 @@ public:
       return 1.0f;
     }
 
-    return (value - min_value) / (max_value - min_value);
+    auto scaled = (value - min_value) / (max_value - min_value);
+
+    if (is_inverted_) {
+      return 1.0 - scaled;
+    } else {
+      return scaled;
+    }
   }
 
   std::string label(T value) const {
@@ -124,8 +132,13 @@ public:
     auto min_max = getRangeWithPadding();
     auto min_value = min_max.first;
     auto max_value = min_max.second;
+    auto val_range = min_value + (max_value - min_value);
 
-    return min_value + (max_value - min_value) * index;
+    if (is_inverted_) {
+      return min_value + (max_value - min_value) * (1.0 - index);
+    } else {
+      return min_value + (max_value - min_value) * index;
+    }
   }
 
   std::pair<double, double> scaleRange(T value) const {
@@ -178,9 +191,7 @@ public:
   }
 
   void setInverted(bool inverted) {
-    RAISE(
-        util::RuntimeException,
-        "not yet implemented: ContinuousDomain::setInverted");
+    is_inverted_ = inverted;
   }
 
   void setLogarithmic(bool logarithmic) {
@@ -200,6 +211,7 @@ protected:
   double min_value_;
   double max_value_;
   bool is_logarithmic_;
+  bool is_inverted_;
   std::pair<double, double> padding_;
 };
 
@@ -210,7 +222,7 @@ public:
   /**
    * Create a new categorical domain
    */
-  DiscreteDomain() {}
+  DiscreteDomain(bool is_inverted = false) : is_inverted_(is_inverted) {}
 
   std::string label(T value) const {
     return fnordmetric::util::format::toHuman(value);
@@ -227,7 +239,13 @@ public:
     }
 
     double cardinality = (double) categories_.size();
-    return ((double) index - 0.5f) / cardinality;
+    auto scaled = ((double) index - 0.5f) / cardinality;
+
+    if (is_inverted_) {
+      return 1.0 - scaled;
+    } else {
+      return scaled;
+    }
   }
 
   std::pair<double, double> scaleRange(T value) const {
@@ -240,10 +258,15 @@ public:
       RAISE(util::RuntimeException, "can't scale value");
     }
 
-    double cardinality = (double) categories_.size();
-    return std::make_pair(
-        (double) (index - 1) / cardinality,
-        (double) index / cardinality);
+    auto cardinality = (double) categories_.size();
+    auto begin = (double) (index - 1) / cardinality;;
+    auto end = (double) index / cardinality;
+
+    if (is_inverted_) {
+      return std::make_pair(1.0 - begin, 1.0 - end);
+    } else {
+      return std::make_pair(begin, end);
+    }
   }
 
   void addValue(const T& value) {
@@ -291,12 +314,11 @@ public:
   }
 
   void setInverted(bool inverted) {
-    RAISE(
-        util::RuntimeException,
-        "not yet implemented: DiscreteDomain::setInverted");
+    is_inverted_ = inverted;
   }
 
 protected:
+  bool is_inverted_;
   std::vector<T> categories_;
 };
 
