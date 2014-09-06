@@ -25,6 +25,10 @@ class AnyDomain {
 public:
   static const char kDimensionLetters[];
 
+  // FIXPAUL make this configurable
+  static const int kDefaultNumTicks;
+  static const double kDefaultDomainPadding;
+
   enum kDimension {
     DIM_X = 0,
     DIM_Y = 1,
@@ -77,7 +81,6 @@ public:
 template <typename T>
 class ContinuousDomain : public Domain<T>, public AnyContinuousDomain {
 public:
-  static const int kDefaultNumTicks = 8;
 
   /**
    * Create a new numerical domain with explicit parameters
@@ -92,18 +95,25 @@ public:
     bool is_logarithmic = false) :
     min_value_(min_value),
     max_value_(max_value),
-    is_logarithmic_(is_logarithmic) {}
+    is_logarithmic_(is_logarithmic),
+    padding_(
+        AnyDomain::kDefaultDomainPadding,
+        AnyDomain::kDefaultDomainPadding) {}
 
   double scale(T value) const {
-    if (value <= min_value_) {
+    auto min_max = getRangeWithPadding();
+    auto min_value = min_max.first;
+    auto max_value = min_max.second;
+
+    if (value <= min_value) {
       return 0.0f;
     }
 
-    if (value >= max_value_) {
+    if (value >= max_value) {
       return 1.0f;
     }
 
-    return (value - min_value_) / (max_value_ - min_value_);
+    return (value - min_value) / (max_value - min_value);
   }
 
   std::string label(T value) const {
@@ -111,11 +121,15 @@ public:
   }
 
   T valueAt(double index) const {
-    return min_value_ + (max_value_ - min_value_) * index;
+    auto min_max = getRangeWithPadding();
+    auto min_value = min_max.first;
+    auto max_value = min_max.second;
+
+    return min_value + (max_value - min_value) * index;
   }
 
   std::pair<double, double> scaleRange(T value) const {
-    return std::make_pair(0, 0);
+    return std::make_pair(scale(value), scale(value));
   }
 
   void addValue(const T& value) {
@@ -135,8 +149,8 @@ public:
   const std::vector<double> getTicks() const {
     std::vector<double> ticks;
 
-    for (int n = 0; n < kDefaultNumTicks; ++n) {
-      ticks.push_back((double) n / (kDefaultNumTicks - 1));
+    for (int n = 0; n < AnyDomain::kDefaultNumTicks; ++n) {
+      ticks.push_back((double) n / (AnyDomain::kDefaultNumTicks - 1));
     }
 
     return ticks;
@@ -155,10 +169,12 @@ public:
 
   void setMin(T min) {
     min_value_ = min;
+    padding_.first = 0.0f;
   }
 
   void setMax(T max) {
     max_value_ = max;
+    padding_.second = 0.0f;
   }
 
   void setInverted(bool inverted) {
@@ -172,9 +188,19 @@ public:
   }
 
 protected:
+
+  std::pair<double, double> getRangeWithPadding() const {
+    double range = max_value_ - min_value_;
+
+    return std::make_pair(
+        min_value_ == 0 ? 0 : min_value_ - range * padding_.first,
+        max_value_ + range * padding_.second);
+  }
+
   double min_value_;
   double max_value_;
   bool is_logarithmic_;
+  std::pair<double, double> padding_;
 };
 
 template <typename T>

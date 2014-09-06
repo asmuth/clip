@@ -13,6 +13,8 @@ namespace fnordmetric {
 namespace ui {
 
 const char AnyDomain::kDimensionLetters[] = "xyz";
+const int AnyDomain::kDefaultNumTicks = 8;
+const double AnyDomain::kDefaultDomainPadding = 0.1;
 
 template <> Domain<int>* Domain<int>::mkDomain() {
   return new ContinuousDomain<int>();
