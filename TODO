@@ -1,6 +1,5 @@
 [ ui ]
     - impl chart title, subtitle
-    - impl inverted domains
     - impl logarithmic domain
     - impl legend
     - impl inside/outside, rotate axis labels

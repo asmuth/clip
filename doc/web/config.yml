@@ -3,6 +3,19 @@
 examples:
 
   -
+    title: "Axis &amp; Legend Styles"
+    dir: "linecharts"
+    examples:
+      -
+        title: "Multiple Y Axes"
+        file: "multiple_y_axes"
+        url: "/linecharts/multiple_y_axes"
+      -
+        title: "Inverted Axis"
+        file: "inverted_axis"
+        url: "/linecharts/inverted_axis"
+
+  -
     title: "Line Charts"
     dir: "linecharts"
     examples:
@@ -18,10 +31,6 @@ examples:
 #        title: "Lines with time domain"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-      -
-        title: "Multiple Y Axes"
-        file: "multiple_y_axes"
-        url: "/linecharts/multiple_y_axes"
       -
         title: "Lines with explicit domain"
         file: "explicit_domain"
