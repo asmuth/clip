@@ -1,5 +1,4 @@
 [ sql ]
-     - sql: AXIS TITLE, LABELS
      - sql: LEGEND
      - full sql selects, joins working
 

@@ -95,6 +95,23 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
       default:
         RAISE(util::RuntimeException, "corrupt AST: invalid axis position");
     }
+
+    for (int i = 1; i < child->getChildren().size(); ++i) {
+      auto prop = child->getChildren()[i];
+
+      if (prop->getType() == ASTNode::T_PROPERTY &&
+          prop->getToken() != nullptr &&
+          *prop->getToken() == Token::T_TITLE &&
+          prop->getChildren().size() == 1) {
+        auto axis_title = executeSimpleConstExpression(prop->getChildren()[0]);
+        axis->setTitle(axis_title.toString());
+        continue;
+      }
+
+      if (prop->getType() == ASTNode::T_AXIS_LABELS) {
+        //applyAxisLabels(
+      }
+    }
   }
 }
 
