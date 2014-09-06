@@ -38,10 +38,10 @@ examples:
 #        title: "Line and Point styles"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Lines irregular intervals"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Data with irregular intervals"
+        file: "irregular_intervals"
+        url: "/linecharts/irregular_data"
 #      -
 #        title: "Lines with missing data"
 #        file: "horizontal_bars"
