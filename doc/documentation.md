@@ -301,9 +301,9 @@ Syntax Reference
     common_chart_options ::=
         [ TITLE 'title' ]
         [ SUBTITLE 'subtitle' ]
-        [ XDOMAIN [ min, max ] [ LOG[ARITHMIC] ] [ INVERT ] ]
-        [ YDOMAIN [ min, max ] [ LOG[ARITHMIC] ] [ INVERT ] ]
-        [ ZDOMAIN [ min, max ] [ LOG[ARITHMIC] ] [ INVERT ] ]
+        [ XDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ YDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ ZDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
         [ GRID [ HORIZONTAL ] [ VERTICAL ] ]
         [ axis_definition... ]
         [ legend_definition ]

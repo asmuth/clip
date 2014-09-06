@@ -3,19 +3,6 @@
 examples:
 
   -
-    title: "Axis &amp; Legend Styles"
-    dir: "linecharts"
-    examples:
-      -
-        title: "Multiple Y Axes"
-        file: "multiple_y_axes"
-        url: "/linecharts/multiple_y_axes"
-      -
-        title: "Inverted Axis"
-        file: "inverted_axis"
-        url: "/linecharts/inverted_axis"
-
-  -
     title: "Line Charts"
     dir: "linecharts"
     examples:
@@ -28,34 +15,41 @@ examples:
         file: "lines_with_points"
         url: "/linecharts/lines_with_points"
 #      -
+#        title: "Lines with points &amp; labels"
+#        file: "lines_with_points"
+#        url: "/linecharts/lines_with_points"
+      -
+        title: "Explicit range/domain"
+        file: "explicit_domain"
+        url: "/linecharts/explicit_domain"
+#      -
 #        title: "Lines with time domain"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
       -
-        title: "Lines with explicit domain"
-        file: "explicit_domain"
-        url: "/linecharts/explicit_domain"
-#      -
-#        title: "Lines with logarithmic domain"
-#        file: "logarithmic_domain"
-#        url: "/linecharts/logarithmic_domain"
+        title: "Multiple Y Axes"
+        file: "multiple_y_axes"
+        url: "/linecharts/multiple_y_axes"
+      -
+        title: "Logarithmic domain"
+        file: "logarithmic_domain"
+        url: "/linecharts/logarithmic_domain"
 #      -
 #        title: "Line and Point styles"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #      -
-#        title: "Lines with error bars"
+#        title: "Lines irregular intervals"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #      -
-#        title: "Lines with legend"
+#        title: "Lines with missing data"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Axis styles"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-
+      -
+        title: "Inverted Axis"
+        file: "inverted_axis"
+        url: "/linecharts/inverted_axis"
 #  -
 #    title: "Area Charts"
 #    dir: "areacharts"
@@ -76,11 +70,6 @@ examples:
 #        title: "Area ranges"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Areas with lines"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#
   -
     title: "Bar Charts"
     dir: "barcharts"
@@ -117,14 +106,9 @@ examples:
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 ##
-  -
-    title: "Combined Charts"
-    dir: "combined"
-    examples:
-      -
-        title: "Bars and Lines"
-        file: "bars_and_lines"
-        url: "/combined/barsandlines"
+#  -
+#    title: "Axis &amp; Legend styles"
+#    examples:
 #  -
 #    title: "Point/Bubble Charts"
 #    dir: "barcharts"
@@ -150,10 +134,36 @@ examples:
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #
+  -
+    title: "Combined Charts"
+    dir: "combined"
+    examples:
+      -
+        title: "Bars and Lines"
+        file: "bars_and_lines"
+        url: "/combined/barsandlines"
+#      -
+#        title: "Lines with error bars"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
+#        title: "Areas with lines"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#
+
 #  -
 #    title: "Custom styles"
 #    dir: "styles"
 #    examples:
+#      -
+#        title: "Legend styles"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
+#        title: "Axis styles"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
 #      -
 #        title: "Default Style"
 #        file: "horizontal_bars"

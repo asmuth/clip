@@ -95,7 +95,6 @@ public:
     T_TITLE,
     T_SUBTITLE,
     T_GRID,
-    T_LABEL,
     T_LABELS,
     T_INSIDE,
     T_OUTSIDE,

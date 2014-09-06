@@ -13,7 +13,6 @@
     - lotsa overflows in expression exectution // outc val not respected
     - explicit domain with range smaller than value range
     - line chart with only negative values
-    - short token for: logarithmic -> log
     - proper error message for missing table import
     - rename rowsink to virtualtable
     - refactor expression symbol lookup/registration
