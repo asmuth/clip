@@ -315,3 +315,30 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithSimpleLegend, [] () {
   EXPECT(props[2]->getToken() != nullptr);
   EXPECT(*props[2]->getToken() == Token::T_INSIDE);
 });
+
+TEST_CASE(SQLExtensionsTest, TestDrawStatementWithLegendWithTitle, [] () {
+  auto parser = parseTestQuery(
+      "DRAW BARCHART LEGEND TOP LEFT INSIDE TITLE 'fnordylegend';");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_DRAW);
+  EXPECT(stmt->getToken() != nullptr);
+  EXPECT(*stmt->getToken() == Token::T_BARCHART);
+  EXPECT(stmt->getChildren().size() == 1);
+  EXPECT(*stmt->getChildren()[0] == ASTNode::T_LEGEND);
+  EXPECT(stmt->getChildren()[0]->getChildren().size() == 4);
+  auto props = stmt->getChildren()[0]->getChildren();
+  EXPECT(*props[0] == ASTNode::T_PROPERTY);
+  EXPECT(props[0]->getToken() != nullptr);
+  EXPECT(*props[0]->getToken() == Token::T_TOP);
+  EXPECT(*props[1] == ASTNode::T_PROPERTY);
+  EXPECT(props[1]->getToken() != nullptr);
+  EXPECT(*props[1]->getToken() == Token::T_LEFT);
+  EXPECT(*props[2] == ASTNode::T_PROPERTY);
+  EXPECT(props[2]->getToken() != nullptr);
+  EXPECT(*props[2]->getToken() == Token::T_INSIDE);
+  EXPECT(props[3]->getChildren().size() == 1);
+  auto title_expr = props[3]->getChildren()[0];
+  auto title = executeSimpleConstExpression(title_expr).toString();
+  EXPECT_EQ(title, "fnordylegend");
+});

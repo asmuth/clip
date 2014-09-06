@@ -541,6 +541,12 @@ ASTNode* Parser::legendClause() {
       Token::T_OUTSIDE}));
   }
 
+  if (*cur_token_ == Token::T_TITLE) {
+    auto prop = legend->appendChild(ASTNode::T_PROPERTY);
+    prop->setToken(consumeToken());
+    prop->appendChild(expectAndConsumeValueExpr());
+  }
+
   return legend;
 }
 
