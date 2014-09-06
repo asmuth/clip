@@ -99,7 +99,8 @@ public:
     T_LABELS,
     T_INSIDE,
     T_OUTSIDE,
-    T_ROTATE
+    T_ROTATE,
+    T_LEGEND
   };
 
   Token(kTokenType token_type);

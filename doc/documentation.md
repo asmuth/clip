@@ -314,9 +314,8 @@ Syntax Reference
             [ LABELS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ] ]
 
     legend_definition ::=
-        LEGEND { LEFT | RIGHT} { TOP | BOTTOM } { INSIDE | OUTSIDE }
+        LEGEND { TOP | BOTTOM } { LEFT | RIGHT} { INSIDE | OUTSIDE }
             [ TITLE 'title' ]
-
 
     DRAW AREACHART
         [ [ WITH ]
@@ -327,7 +326,7 @@ Syntax Reference
               common_chart_options
               [ ORIENTATION { HORIZONTAL | VERTICAL } ]
               [ STACKED ]
-              [ LABELS { INSIDE | OUTSIDE } ] ]
+              [ LABELS { INSIDE | OUTSIDE | HOVER | OFF } ] ]
 
     DRAW BOXPLOT
         [ [ WITH ]

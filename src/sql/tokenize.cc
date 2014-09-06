@@ -496,6 +496,11 @@ next:
     goto next;
   }
 
+  if (token == "LEGEND") {
+    token_list->emplace_back(Token::T_LEGEND);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

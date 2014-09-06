@@ -4,7 +4,7 @@
 
 [ ui ]
     - impl chart title, subtitle
-    - impl axis title
+    - better axis title
     - impl inverted domains
     - impl logarithmic domain
     - impl legend
@@ -65,14 +65,11 @@
     - candlestick
 
 
+    $ fnordmetric web -p 8080   # standalone webserver on port 8080
+    $ fnordmetric cgi        # mount me as cgi script!
 
 
-
-fnordmetric web:
-    $ fnordmetric --web 8080   # standalone webserver on port 8080
-    $ fnordmetric --cgi        # mount me as cgi script!
-
-
+fnordetric collect --from-statsd 1234 --to 'mysql::'
 
 examples from csv file with temp measurements per time/city -> timelines, range
 bar charts etc...

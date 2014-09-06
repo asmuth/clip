@@ -79,6 +79,7 @@ protected:
   ASTNode* drawStatement();
   ASTNode* axisClause();
   ASTNode* domainClause();
+  ASTNode* legendClause();
 
   ASTNode* importStatement();
   void importCSVClause(ASTNode* import);

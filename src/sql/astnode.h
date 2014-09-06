@@ -69,7 +69,8 @@ public:
     T_AXIS_LABELS,
     T_DOMAIN,
     T_DOMAIN_SCALE,
-    T_GRID
+    T_GRID,
+    T_LEGEND
   };
 
   ASTNode(kASTNodeType type);

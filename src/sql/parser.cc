@@ -359,6 +359,10 @@ ASTNode* Parser::drawStatement() {
         chart->appendChild(domainClause());
         break;
 
+      case Token::T_LEGEND:
+        chart->appendChild(legendClause());
+        break;
+
       case Token::T_GRID: {
         auto grid = chart->appendChild(ASTNode::T_GRID);
         consumeToken();
@@ -520,6 +524,24 @@ ASTNode* Parser::domainClause() {
   }
 
   return domain;
+}
+
+ASTNode* Parser::legendClause() {
+  auto legend = new ASTNode(ASTNode::T_LEGEND);
+  consumeToken();
+
+  for (int i = 0; i < 3; i++) {
+    auto prop = legend->appendChild(ASTNode::T_PROPERTY);
+    prop->setToken(expectAndConsume(std::vector<Token::kTokenType>{
+      Token::T_TOP,
+      Token::T_RIGHT,
+      Token::T_BOTTOM,
+      Token::T_LEFT,
+      Token::T_INSIDE,
+      Token::T_OUTSIDE}));
+  }
+
+  return legend;
 }
 
 ASTNode* Parser::selectSublist() {
