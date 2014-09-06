@@ -7,67 +7,58 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_POINTCHART_H
 #define _FNORDMETRIC_POINTCHART_H
 #include <stdlib.h>
 #include <assert.h>
-#include "../base/series.h"
-#include "axisdefinition.h"
-#include "domain.h"
-#include "drawable.h"
+#include <fnordmetric/base/series.h>
+#include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/drawable.h>
+#include <fnordmetric/ui/canvas.h>
+#include <fnordmetric/ui/colorpalette.h>
+#include <fnordmetric/ui/rendertarget.h>
 
 namespace fnordmetric {
 namespace ui {
-class Canvas;
-class Domain;
 
 /**
  * This draws the series data as points.
- *
- * OPTIONS
- *
- *   point_style = {dot,square}, default: horizontal
- *   point_size = default: 5
- *
  */
 class PointChart : public Drawable {
 public:
-  static double kDefaultPointSize;
   static char kDefaultPointStyle[];
+  PointChart(ui::Canvas* canvas);
+};
+
+template <typename TX_, typename TY_, typename TZ_>
+class PointChart3D : public PointChart {
+public:
+  typedef TX_ TX;
+  typedef TY_ TY;
+  typedef TZ_ TZ;
 
   /**
-   * Create a new point chart
+   * Create a new line chart
    *
    * @param canvas the canvas to draw this chart on. does not transfer ownership
    * @param x_domain the x domain. does not transfer ownership
    * @param y_domain the y domain. does not transfer ownership
    */
-  PointChart(
-      Canvas* canvas,
-      NumericalDomain* x_domain = nullptr,
-      NumericalDomain* y_domain = nullptr);
+  PointChart3D(Canvas* canvas);
 
   /**
-   * Add a (x: string, y: double) series. This will draw one point for each
-   * point in the series.
+   * Create a new line chart
    *
-   * @param series the series to add. does not transfer ownership
+   * @param canvas the canvas to draw this chart on. does not transfer ownership
+   * @param x_domain the x domain. does not transfer ownership
+   * @param y_domain the y domain. does not transfer ownership
    */
-  void addSeries(
-      Series2D<double, double>* series,
-      const std::string& point_style = kDefaultPointStyle,
-      double point_size = kDefaultPointSize);
+  PointChart3D(Canvas* canvas, AnyDomain* x_domain, AnyDomain* y_domain);
 
   /**
-   * Add a (x: string, y: double, z: double) series. This will draw one point
-   * for each point in the series with size Z.
-   *
-   * @param series the series to add. does not transfer ownership
    */
-  void addSeries(
-      Series3D<double, double, double>* series,
-      const std::string& point_style = kDefaultPointStyle);
+  void addSeries(Series3D<TX, TY, TZ>* series);
 
   /**
    * Add an axis to the chart. This method should only be called after all
@@ -80,33 +71,151 @@ public:
    */
    AxisDefinition* addAxis(AxisDefinition::kPosition position);
 
-protected:
+  /**
+   * Get the {x,y} domain of this chart. Will raise an exception if z domain
+   * is requested.
+   *
+   * The returned pointer is owned by the chart object and must not be freed
+   * by the caller!
+   *
+   * @param dimension the dimension (x,y)
+   */
+  AnyDomain* getDomain(AnyDomain::kDimension dimension) override;
 
-  NumericalDomain* getXDomain() const;
-  NumericalDomain* getYDomain() const;
+protected:
 
   void render(
       RenderTarget* target,
-      int width,
-      int height,
-      std::tuple<int, int, int, int>* padding) const override;
+      Viewport* viewport) const override;
 
-  struct Point {
-    double x;
-    double y;
-    double size;
-    std::string type;
-    std::string color;
-  };
-
-  Canvas* canvas_;
-  NumericalDomain* x_domain_;
-  NumericalDomain* y_domain_;
-  int num_series_;
-  std::vector<Point> points_;
-  mutable std::unique_ptr<NumericalDomain> x_domain_auto_;
-  mutable std::unique_ptr<NumericalDomain> y_domain_auto_;
+  DomainAdapter x_domain_;
+  DomainAdapter y_domain_;
+  std::vector<Series3D<TX, TY, TZ>*> series_;
+  ColorPalette color_palette_;
 };
+
+template <typename TX, typename TY, typename TZ>
+PointChart3D<TX, TY, TZ>::PointChart3D(Canvas* canvas) : PointChart(canvas) {}
+
+template <typename TX, typename TY, typename TZ>
+PointChart3D<TX, TY, TZ>::PointChart3D(
+    Canvas* canvas,
+    AnyDomain* x_domain,
+    AnyDomain* y_domain) :
+    PointChart(canvas) {
+  x_domain_.reset(x_domain);
+  y_domain_.reset(y_domain);
+}
+
+template <typename TX, typename TY, typename TZ>
+void PointChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
+  Domain<TX>* x_domain;
+  if (x_domain_.empty()) {
+    x_domain = Domain<TX>::mkDomain();
+    x_domain_.reset(x_domain, true);
+  } else {
+    x_domain = x_domain_.getAs<Domain<TX>>();
+  }
+
+  Domain<TY>* y_domain;
+  if (y_domain_.empty()) {
+    y_domain = Domain<TY>::mkDomain();
+    y_domain_.reset(y_domain, true);
+  } else {
+    y_domain = y_domain_.getAs<Domain<TY>>();
+  }
+
+  for (const auto& point : series->getData()) {
+    x_domain->addValue(point.x());
+    y_domain->addValue(point.y());
+  }
+
+  series_.push_back(series);
+
+  if (!series->hasProperty(Series::P_COLOR)) {
+    color_palette_.setNextColor(series);
+  }
+
+  series->setDefaultProperty(
+      Series::P_POINT_STYLE,
+      PointChart::kDefaultPointStyle);
+}
+
+template <typename TX, typename TY, typename TZ>
+void PointChart3D<TX, TY, TZ>::render(
+    RenderTarget* target,
+    Viewport* viewport) const {
+  target->beginGroup("points");
+
+  for (const auto& series : series_) {
+    std::vector<std::pair<double, double>> coords;
+
+    // FIXPAUL catch conversion excpetion
+    auto point_style = series->getProperty(Series::P_POINT_STYLE);
+    auto color = series->getProperty(Series::P_COLOR);
+
+    for (const auto& point : series->getData()) {
+      auto x = x_domain_.getAs<Domain<TX>>()->scale(point.x());
+      auto y = y_domain_.getAs<Domain<TY>>()->scale(point.y());
+      auto ss_x = viewport->paddingLeft() + x * viewport->innerWidth();
+      auto ss_y = viewport->paddingTop() + (1.0 - y) * viewport->innerHeight();
+
+      if (point_style != "none") {
+        target->drawPoint(
+            ss_x,
+            ss_y,
+            point_style,
+            point.z(),
+            color,
+            "point");
+      }
+    }
+  }
+
+  target->finishGroup();
+}
+
+template <typename TX, typename TY, typename TZ>
+AxisDefinition* PointChart3D<TX, TY, TZ>::addAxis(
+    AxisDefinition::kPosition position) {
+  auto axis = canvas_->addAxis(position);
+
+  switch (position) {
+
+    case AxisDefinition::TOP:
+      axis->setDomain(&x_domain_);
+      return axis;
+
+    case AxisDefinition::RIGHT:
+      axis->setDomain(&y_domain_);
+      return axis;
+
+    case AxisDefinition::BOTTOM:
+      axis->setDomain(&x_domain_);
+      return axis;
+
+    case AxisDefinition::LEFT:
+      axis->setDomain(&y_domain_);
+      return axis;
+
+  }
+}
+
+template <typename TX, typename TY, typename TZ>
+AnyDomain* PointChart3D<TX, TY, TZ>::getDomain(
+    AnyDomain::kDimension dimension) {
+  switch (dimension) {
+    case AnyDomain::DIM_X:
+      return x_domain_.get();
+
+    case AnyDomain::DIM_Y:
+      return y_domain_.get();
+
+    case AnyDomain::DIM_Z:
+      RAISE(util::RuntimeException, "PointChart3D does not have a Z domain");
+      return nullptr;
+  }
+}
 
 }
 }
