@@ -310,7 +310,7 @@ void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
         series->getProperty(Series::P_COLOR));
   }
 
-  PointChart3D<TX, TY, TY>::addSeries(series3d);
+  PointChart3D<TX, TY, double>::addSeries(series3d);
 }
 
 }
