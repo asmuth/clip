@@ -105,10 +105,6 @@ examples:
 #        title: "Bars with labels"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-##
-#  -
-#    title: "Axis &amp; Legend styles"
-#    examples:
 #  -
 #    title: "Point/Bubble Charts"
 #    dir: "barcharts"
@@ -134,6 +130,26 @@ examples:
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #
+#  -
+#    title: "Axis &amp Legend"
+#    dir: "styles"
+#    examples:
+#      -
+#        title: "Rotated axis labels"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
+#        title: "Axis styles"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
+#        title: "Legend outside"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+#      -
+#        title: "Legend inside"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
   -
     title: "Combined Charts"
     dir: "combined"
