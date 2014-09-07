@@ -4,6 +4,8 @@ IMPORT TABLE city_temperatures
 DRAW LINECHART WITH
    AXIS BOTTOM
    AXIS LEFT
+   AXIS TOP
+   AXIS RIGHT
    LEGEND TOP RIGHT INSIDE;
 
 SELECT city AS series, month AS x, temperature AS y, "circle" as pointstyle
