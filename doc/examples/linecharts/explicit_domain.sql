@@ -6,7 +6,7 @@ DRAW LINECHART WITH
    SUBTITLE "fnordtitle"
    AXIS BOTTOM
    AXIS LEFT
-   YDOMAIN -10.0, 30.0;
+   YDOMAIN -30.0, 30.0;
 
 SELECT city AS series, month AS x, temperature AS y, "circle" as pointstyle
    FROM city_temperatures;
