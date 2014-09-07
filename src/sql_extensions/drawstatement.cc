@@ -315,31 +315,34 @@ void DrawStatement::applyLegend(ui::Drawable* chart) const {
   }
 
 
-  ui::Drawable::kLegendVerticalPosition vert_pos = ui::Drawable::LEGEND_BOTTOM;
-  ui::Drawable::kLegendHorizontalPosition horiz_pos = ui::Drawable::LEGEND_LEFT;
-  ui::Drawable::kLegendPlacement placement = ui::Drawable::LEGEND_OUTSIDE;
+  ui::LegendDefinition::kVerticalPosition vert_pos =
+      ui::LegendDefinition::LEGEND_BOTTOM;
+  ui::LegendDefinition::kHorizontalPosition horiz_pos =
+      ui::LegendDefinition::LEGEND_LEFT;
+  ui::LegendDefinition::kPlacement placement =
+      ui::LegendDefinition::LEGEND_OUTSIDE;
   std::string title;
 
   for (const auto& prop : legend->getChildren()) {
     if (prop->getType() == ASTNode::T_PROPERTY && prop->getToken() != nullptr) {
       switch (prop->getToken()->getType()) {
         case Token::T_TOP:
-          vert_pos = ui::Drawable::LEGEND_TOP;
+          vert_pos = ui::LegendDefinition::LEGEND_TOP;
           break;
         case Token::T_RIGHT:
-          horiz_pos = ui::Drawable::LEGEND_RIGHT;
+          horiz_pos = ui::LegendDefinition::LEGEND_RIGHT;
           break;
         case Token::T_BOTTOM:
-          vert_pos = ui::Drawable::LEGEND_BOTTOM;
+          vert_pos = ui::LegendDefinition::LEGEND_BOTTOM;
           break;
         case Token::T_LEFT:
-          horiz_pos = ui::Drawable::LEGEND_LEFT;
+          horiz_pos = ui::LegendDefinition::LEGEND_LEFT;
           break;
         case Token::T_INSIDE:
-          placement = ui::Drawable::LEGEND_INSIDE;
+          placement = ui::LegendDefinition::LEGEND_INSIDE;
           break;
         case Token::T_OUTSIDE:
-          placement = ui::Drawable::LEGEND_OUTSIDE;
+          placement = ui::LegendDefinition::LEGEND_OUTSIDE;
           break;
         case Token::T_TITLE: {
           if (prop->getChildren().size() != 1) {

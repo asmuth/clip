@@ -13,6 +13,7 @@
 #include <functional>
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/legenddefinition.h>
 #include <fnordmetric/ui/viewport.h>
 
 namespace fnordmetric {
@@ -24,22 +25,6 @@ class Canvas;
 class Drawable {
   friend class Canvas;
 public:
-  enum kLegendVerticalPosition {
-    LEGEND_TOP = 0,
-    LEGEND_BOTTOM = 1
-  };
-
-  enum kLegendHorizontalPosition {
-    LEGEND_LEFT = 0,
-    LEGEND_RIGHT = 1
-  };
-
-  enum kLegendPlacement {
-    LEGEND_INSIDE = 0,
-    LEGEND_OUTSIDE = 1
-  };
-
-
   Drawable(Canvas* canvas) : canvas_(canvas) {}
   virtual ~Drawable() {}
 
@@ -77,19 +62,11 @@ public:
   /**
    * Add a legend to the chart.
    */
-  void addLegend(
-      kLegendVerticalPosition vert_pos,
-      kLegendHorizontalPosition horiz_pos,
-      kLegendPlacement placement,
-      const std::string& title) {
-    RAISE(
-        util::RuntimeException,
-        "legend not implemented: horiz=%i, vert=%i placement=%i title=%s",
-        vert_pos,
-        horiz_pos,
-        placement,
-        title.c_str());
-  }
+  LegendDefinition* addLegend(
+      LegendDefinition::kVerticalPosition vert_pos,
+      LegendDefinition::kHorizontalPosition horiz_pos,
+      LegendDefinition::kPlacement placement,
+      const std::string& title);
 
   /**
    * Get the {x,y,z} domain of this chart. May raise an exception if the chart

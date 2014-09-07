@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <string>
+#include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/drawable.h>
 
 namespace fnordmetric {
@@ -19,6 +20,14 @@ void Drawable::setTitle(const std::string& title) {
 
 void Drawable::setSubtitle(const std::string& subtitle) {
   printf("SUBTITLE: %s\n", subtitle.c_str());
+}
+
+LegendDefinition* Drawable::addLegend(
+    LegendDefinition::kVerticalPosition vert_pos,
+    LegendDefinition::kHorizontalPosition horiz_pos,
+    LegendDefinition::kPlacement placement,
+    const std::string& title) {
+  canvas_->addLegend(vert_pos, horiz_pos, placement, title);
 }
 
 }
