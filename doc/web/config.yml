@@ -150,11 +150,7 @@ examples:
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #      -
-#        title: "Legend outside"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Legend inside"
+#        title: "Legend outside, Axes inside"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
   -

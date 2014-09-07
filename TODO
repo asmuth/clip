@@ -3,12 +3,14 @@
     - impl chart title, subtitle
     - stacked area charts
     - middle axis
+    - pointchart labels
+    - barchart labels
+    - linechart labels
     - impl inside/outside axis labels
     - impl variable axis label size
     - impl rotated axis labels
     - impl grid
     - line/point styles
-    - bar/point labels
     - chart type: histogram
     - chart type: heatmap
     - make # of axis ticks configurable via sql
