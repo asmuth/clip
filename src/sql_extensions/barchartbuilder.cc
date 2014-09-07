@@ -27,6 +27,8 @@ ui::Drawable* BarChartBuilder::getChart() const {
 }
 
 ui::Drawable* BarChartBuilder::findChartType() const {
+  preconditionCheck();
+
   if (auto c = tryType2D<ui::BarChart2D<std::string, double>>())
     return c;
 

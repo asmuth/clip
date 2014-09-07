@@ -203,6 +203,15 @@ protected:
     }
   }
 
+  void preconditionCheck() const {
+    if (adapter_.get() == nullptr) {
+      RAISE(
+          util::RuntimeException,
+          "can't DRAW %s because the query returned no result rows",
+          chartName().c_str());
+    }
+  }
+
   void invalidType() const {
     RAISE(
         util::RuntimeException,
