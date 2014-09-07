@@ -29,24 +29,22 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue(lhs->getInteger() == rhs->getInteger());
           return;
         case SValue::T_FLOAT:
-          *out = SValue(lhs->getInteger() == rhs->getFloat());
+          *out = SValue(lhs->getFloat() == rhs->getFloat());
           return;
         default:
           break;
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
-          *out = SValue(lhs->getFloat() == rhs->getInteger());
-          return;
         case SValue::T_FLOAT:
           *out = SValue(lhs->getFloat() == rhs->getFloat());
           return;
@@ -58,7 +56,15 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  *out = SValue(*lhs == *rhs);
+  if (lhs->getType() == SValue::T_STRING ||
+      rhs->getType() == SValue::T_STRING) {
+    *out = SValue(lhs->toString() == rhs->toString());
+    return;
+  }
+
+  RAISE(util::RuntimeException, "can't compare %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
 }
 
 static SymbolTableEntry __eq_symbol("eq", &eqExpr);
@@ -156,7 +162,7 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   switch(lhs->getType()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue(lhs->getInteger() < rhs->getInteger());
           return;
@@ -168,7 +174,7 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue(lhs->getFloat() < rhs->getInteger());
           return;
@@ -229,7 +235,7 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
+  RAISE(util::RuntimeException, "can't ompare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }

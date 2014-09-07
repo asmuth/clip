@@ -143,7 +143,13 @@ public:
 
     if (where_expr_ != nullptr) {
       executeExpression(where_expr_, nullptr, row_len, row, &out_len, out);
-      assert(out_len == 1);
+
+      if (out_len != 1) {
+        RAISE(
+            util::RuntimeException,
+            "WHERE predicate expression evaluation did not return a result");
+      }
+
       pred_bool = out[0].getBool();
     }
 
