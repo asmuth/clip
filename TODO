@@ -21,6 +21,7 @@
     - refactor tokenizer // dynamically register tokens
     - refactor: remove ASTNode::T_PROPERTY for title, subtitle, etc -> new astnodetype
     - resultlist -> materializetable
+    - replace all stoi, stod with wrappers that throw runtimeexceptions
 
 [ backends ]
     - mysql backend
