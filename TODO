@@ -28,9 +28,9 @@
     - proper csv w/ all opts
 
 [ sql ]
-     - full sql selects, joins working
-     - order by
-     - pointchartbuilder
+     - SQL: order by
+     - SQL: having
+     - SQL: join
      - make # of axis ticks configurable via sql
      - comments! :)
      - string lt gt exprs
