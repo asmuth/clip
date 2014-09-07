@@ -36,7 +36,6 @@ public:
 
   /**
    * Create a new legend definition
-   *
    */
   LegendDefinition(
       kVerticalPosition vert_pos,
@@ -44,35 +43,25 @@ public:
       kPlacement placement,
       const std::string& title);
 
-  const std::string title() const {
-    return "my long legend title";
-  }
+  const std::string title() const;
+  kVerticalPosition verticalPosition() const;
+  kHorizontalPosition horizontalPosition() const;
+  kPlacement placement() const;
 
-  const std::vector<std::pair<std::string, std::string>> entries() const {
-    std::vector<std::pair<std::string, std::string>> entries;
-    entries.emplace_back("Berlin", "color1");
-    entries.emplace_back("New York", "color2");
-    entries.emplace_back("London", "color2");
-    return entries;
-  }
+  void addEntry(
+      const std::string& name,
+      const std::string& color,
+      const std::string& shape = "circle");
 
-  kVerticalPosition verticalPosition() const {
-    return vert_pos_;
-  }
-
-  kHorizontalPosition horizontalPosition() const {
-    return horiz_pos_;
-  }
-
-  kPlacement placement() const {
-    return placement_;
-  }
+  const std::vector<std::tuple<std::string, std::string, std::string>>
+      entries() const;
 
 protected:
   kVerticalPosition vert_pos_;
   kHorizontalPosition horiz_pos_;
   kPlacement placement_;
   const std::string title_;
+  std::vector<std::tuple<std::string, std::string, std::string>> entries_;
 };
 
 }

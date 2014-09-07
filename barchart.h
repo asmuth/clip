@@ -240,6 +240,8 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   if (!series->hasProperty(Series::P_COLOR)) {
     color_palette_.setNextColor(series);
   }
+
+  Drawable::addSeries(series);
 }
 
 template <typename TX, typename TY, typename TZ>

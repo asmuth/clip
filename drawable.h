@@ -25,7 +25,7 @@ class Canvas;
 class Drawable {
   friend class Canvas;
 public:
-  Drawable(Canvas* canvas) : canvas_(canvas) {}
+  Drawable(Canvas* canvas);
   virtual ~Drawable() {}
 
   /**
@@ -81,9 +81,13 @@ public:
 
 protected:
 
+  void addSeries(Series* series);
   virtual void render(RenderTarget* target, Viewport* viewport) const = 0;
 
   Canvas* canvas_;
+private:
+  void updateLegend();
+  std::vector<Series*> all_series_;
 };
 
 }

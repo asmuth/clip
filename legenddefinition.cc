@@ -22,5 +22,35 @@ LegendDefinition::LegendDefinition(
     placement_(placement),
     title_ (title) {}
 
+const std::string LegendDefinition::title() const {
+  return title_;
+}
+
+LegendDefinition::kVerticalPosition LegendDefinition::verticalPosition() 
+    const {
+  return vert_pos_;
+}
+
+LegendDefinition::kHorizontalPosition LegendDefinition::horizontalPosition() 
+    const {
+  return horiz_pos_;
+}
+
+LegendDefinition::kPlacement LegendDefinition::placement() const {
+  return placement_;
+}
+
+void LegendDefinition::addEntry(
+    const std::string& name,
+    const std::string& color,
+    const std::string& shape /* = "circle" */) {
+  entries_.emplace_back(name, color, shape);
+}
+
+const std::vector<std::tuple<std::string, std::string, std::string>>
+    LegendDefinition::entries() const {
+  return entries_;
+}
+
 }
 }

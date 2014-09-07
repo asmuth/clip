@@ -242,6 +242,7 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
   // FIXPAUL: stacked areas, missing data
   areas_.emplace_back(area);
+  Drawable::addSeries(series);
 }
 
 template <typename TX, typename TY, typename TZ>

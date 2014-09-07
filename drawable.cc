@@ -14,6 +14,8 @@
 namespace fnordmetric {
 namespace ui {
 
+Drawable::Drawable(Canvas* canvas) : canvas_(canvas) {}
+
 void Drawable::setTitle(const std::string& title) {
   printf("TITLE: %s\n", title.c_str());
 }
@@ -28,6 +30,27 @@ LegendDefinition* Drawable::addLegend(
     LegendDefinition::kPlacement placement,
     const std::string& title) {
   canvas_->addLegend(vert_pos, horiz_pos, placement, title);
+  updateLegend();
+}
+
+void Drawable::addSeries(Series* series) {
+  all_series_.push_back(series);
+  updateLegend();
+}
+
+void Drawable::updateLegend() {
+  auto legend = canvas_->legend();
+
+  if (legend == nullptr) {
+    return;
+  }
+
+  for (const auto& series : all_series_) {
+    legend->addEntry(
+        series->name(),
+        series->getProperty(Series::P_COLOR),
+        "circle");
+  }
 }
 
 }
