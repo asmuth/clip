@@ -91,12 +91,12 @@ public:
    * @param logarithmic is this domain a logarithmic domain?
    */
   ContinuousDomain(
-    T min_value = 0,
-    T max_value = 0,
+    T min_value = std::numeric_limits<T>::max(),
+    T max_value = std::numeric_limits<T>::min(),
     bool is_logarithmic = false,
     bool is_inverted = false) :
-    min_value_(std::numeric_limits<double>::max()),
-    max_value_(std::numeric_limits<double>::min()),
+    min_value_(min_value),
+    max_value_(max_value),
     is_logarithmic_(is_logarithmic),
     is_inverted_(is_inverted),
     padding_(0, 0) {}
@@ -237,6 +237,9 @@ public:
     padding_.second = max_padding;
   }
 
+
+  double min_value_;
+  double max_value_;
 protected:
 
   std::pair<double, double> getRangeWithPadding() const {
@@ -246,9 +249,6 @@ protected:
         min_value_ == 0 ? 0 : min_value_ - range * padding_.first,
         max_value_ + range * padding_.second);
   }
-
-  double min_value_;
-  double max_value_;
   bool is_logarithmic_;
   bool is_inverted_;
   std::pair<double, double> padding_;

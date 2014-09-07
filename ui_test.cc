@@ -834,6 +834,8 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
   series1.addDatum(30, 33);
   series1.addDatum(40, 21);
   series1.addDatum(50, 33);
+  series1.setDefaultProperty(Series::P_LINE_STYLE, "solid");
+  series1.setDefaultProperty(Series::P_POINT_STYLE, "circle");
 
   ui::ContinuousDomain<double> x_domain(10, 50, false);
   ui::ContinuousDomain<double> y_domain(0, 50, false);
@@ -851,7 +853,6 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
       &canvas,
       "UITest_TestSimpleAreaChart_out.svg.html");
 });
-/*
 
 static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
     &UITest, "TestRangeAreaChart", [] () {
@@ -862,13 +863,16 @@ static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
   series1.addDatum(30, -24, 33);
   series1.addDatum(40, -18, 21);
   series1.addDatum(50, -32, 33);
+  series1.setDefaultProperty(Series::P_LINE_STYLE, "solid");
+  series1.setDefaultProperty(Series::P_POINT_STYLE, "circle");
 
   ui::ContinuousDomain<double> x_domain(10, 50, false);
   ui::ContinuousDomain<double> y_domain(-50, 50, false);
 
   Canvas canvas;
-  auto area_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
-  area_chart->addSeries(&series1, "solid", 2, "circle", 4);
+  auto area_chart = canvas.addChart<AreaChart3D<double, double, double>>(
+      &x_domain, &y_domain);
+  area_chart->addSeries(&series1);
   area_chart->addAxis(AxisDefinition::TOP);
   area_chart->addAxis(AxisDefinition::RIGHT);
   area_chart->addAxis(AxisDefinition::BOTTOM);
@@ -901,7 +905,8 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_chart_(
   ui::ContinuousDomain<double> y_domain(-50, 50, false);
 
   Canvas canvas;
-  auto area_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
+  auto area_chart = canvas.addChart<AreaChart3D<double, double, double>>(
+      &x_domain, &y_domain);
   area_chart->addSeries(&series1);
   area_chart->addSeries(&series2);
   area_chart->addAxis(AxisDefinition::TOP);
@@ -939,13 +944,14 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_line_(
   series3.addDatum(30, 2);
   series3.addDatum(40, 1);
   series3.addDatum(50, 9);
-  series3.setColor("black");
+  series3.setDefaultProperty(Series::P_COLOR, "black");
 
   ui::ContinuousDomain<double> x_domain(10, 50, false);
   ui::ContinuousDomain<double> y_domain(-50, 50, false);
 
   Canvas canvas;
-  auto area_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
+  auto area_chart = canvas.addChart<AreaChart3D<double, double, double>>(
+      &x_domain, &y_domain);
   area_chart->addSeries(&series1);
   area_chart->addSeries(&series2);
   area_chart->addAxis(AxisDefinition::TOP);
@@ -953,12 +959,11 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_line_(
   area_chart->addAxis(AxisDefinition::BOTTOM);
   area_chart->addAxis(AxisDefinition::LEFT);
 
-  auto line_chart = canvas.addChart<LineChart>(&x_domain, &y_domain);
-  line_chart->addSeries(&series3, "solid", 2, "circle", 4);
+  auto line_chart = canvas.addChart<LineChart2D<double, double>>(
+      &x_domain, &y_domain);
+  line_chart->addSeries(&series3);
 
   compareChart(
       &canvas,
       "UITest_TestMultiRangeAreaLineChart_out.svg.html");
 });
-
-*/
