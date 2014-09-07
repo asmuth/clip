@@ -386,7 +386,7 @@ void Canvas::renderOutsideLegends(
   for (const auto& legend : legends_) {
     target->beginGroup("legend");
 
-    renderTopRightLegend(
+    renderTopLeftLegend(
         target,
         viewport,
         legend.get(),
@@ -405,7 +405,7 @@ void Canvas::renderInsideLegends(
     target->beginGroup("legend");
     viewport->setPaddingTop(viewport->paddingTop() + kLegendInsideVertPadding);
 
-    renderTopRightLegend(
+    renderTopLeftLegend(
         target,
         viewport,
         legend.get(),
@@ -424,8 +424,7 @@ void Canvas::renderTopRightLegend(
     LegendDefinition* legend,
     double horiz_padding) const {
   double height = 0.0f;
-
-  std::string title = "legend title";
+  std::string title = legend->title();
 
   target->drawText(
     title,
@@ -466,6 +465,60 @@ void Canvas::renderTopRightLegend(
       "label");
 
     lx -= this_len;
+  }
+
+  height += kLegendLineHeight;
+  viewport->setPaddingTop(viewport->paddingTop() + height);
+}
+
+void Canvas::renderTopLeftLegend(
+    RenderTarget* target,
+    Viewport* viewport,
+    LegendDefinition* legend,
+    double horiz_padding) const {
+  double height = 0.0f;
+  std::string title = legend->title();
+
+  target->drawText(
+    title,
+    viewport->paddingLeft() + viewport->innerWidth() - horiz_padding,
+    viewport->paddingTop(),
+    "end",
+    "text-before-edge",
+    "title");
+
+  auto lx = viewport->paddingLeft() + horiz_padding;
+  auto lx_boundary = viewport->paddingLeft() + viewport->innerWidth() -
+      horiz_padding - estimateTextLength(title) - kLegendLabelPadding;
+
+  for (const auto& entry : legend->entries()) {
+    auto this_len = estimateTextLength(entry.first) + kLegendLabelPadding;
+
+    /* line wrap */
+    if (lx + this_len > lx_boundary) {
+      lx = viewport->paddingLeft() + horiz_padding;
+      lx_boundary = viewport->paddingLeft() + viewport->innerWidth() -
+          horiz_padding;
+      height += kLegendLineHeight;
+    }
+
+    target->drawPoint(
+        lx,
+        viewport->paddingTop() + kLegendPointY + height,
+        "circle",
+        kLegendPointSize,
+        entry.second,
+        "point");
+
+    target->drawText(
+      entry.first,
+      lx + kLegendPointWidth,
+      viewport->paddingTop() + height,
+      "start",
+      "text-before-edge",
+      "label");
+
+    lx += this_len;
   }
 
   height += kLegendLineHeight;
