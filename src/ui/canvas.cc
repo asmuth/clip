@@ -386,21 +386,23 @@ void Canvas::renderOutsideLegends(
   for (const auto& legend : legends_) {
     target->beginGroup("legend");
 
-    renderLeftLegend(
-        target,
-        viewport,
-        legend.get(),
-        kLegendOutsideHorizPadding,
-        false);
-    viewport->setPaddingTop(viewport->paddingTop() + kLegendOutsideVertPadding);
-
-    viewport->setPaddingBottom(viewport->paddingBottom() + kLegendOutsideVertPadding);
     renderRightLegend(
         target,
         viewport,
         legend.get(),
         kLegendOutsideHorizPadding,
+        false,
         true);
+    viewport->setPaddingTop(viewport->paddingTop() + kLegendOutsideVertPadding);
+
+    renderLeftLegend(
+        target,
+        viewport,
+        legend.get(),
+        kLegendOutsideHorizPadding,
+        true,
+        true);
+    viewport->setPaddingBottom(viewport->paddingBottom() + kLegendOutsideVertPadding);
 
     target->finishGroup();
   }
@@ -422,13 +424,7 @@ void Canvas::renderInsideLegends(
         viewport,
         legend.get(),
         kLegendInsideHorizPadding,
-        true);
-
-    renderRightLegend(
-        target,
-        viewport,
-        legend.get(),
-        kLegendInsideHorizPadding,
+        true,
         false);
 
     target->finishGroup();
@@ -442,13 +438,14 @@ void Canvas::renderRightLegend(
     Viewport* viewport,
     LegendDefinition* legend,
     double horiz_padding,
-    bool bottom) const {
+    bool bottom,
+    bool outside) const {
   std::string title = legend->title();
 
   double height;
   if (bottom) {
-    height = viewport->paddingTop() + viewport->innerHeight() -
-      kLegendLineHeight;
+    height = viewport->paddingTop() + viewport->innerHeight()  -
+      kLegendLineHeight * 0.2f;
   } else {
     height = viewport->paddingTop();
   }
@@ -497,6 +494,10 @@ void Canvas::renderRightLegend(
   }
 
   if (bottom) {
+    if (outside) {
+      height -= kLegendLineHeight;
+    }
+
     viewport->setPaddingBottom(
         viewport->innerHeight() + viewport->paddingTop() +
         viewport->paddingBottom() - height);
@@ -511,12 +512,14 @@ void Canvas::renderLeftLegend(
     Viewport* viewport,
     LegendDefinition* legend,
     double horiz_padding,
-    bool bottom) const {
+    bool bottom,
+    bool outside) const {
   std::string title = legend->title();
 
   double height;
   if (bottom) {
-    height = viewport->paddingTop() + viewport->innerHeight() - 5.0f;
+    height = viewport->paddingTop() + viewport->innerHeight()  -
+      kLegendLineHeight * 0.2f;
   } else {
     height = viewport->paddingTop();
   }
@@ -566,6 +569,10 @@ void Canvas::renderLeftLegend(
   }
 
   if (bottom) {
+    if (outside) {
+      height -= kLegendLineHeight;
+    }
+
     viewport->setPaddingBottom(
         viewport->innerHeight() + viewport->paddingTop() +
         viewport->paddingBottom() - height);

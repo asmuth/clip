@@ -40,7 +40,7 @@ static const std::string kStyleSheetDefault = R"(
   }
 
   .axis .title {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .legend text {
