@@ -390,5 +390,16 @@ AxisDefinition* Canvas::addAxis(AxisDefinition::kPosition position) {
   return axes_.back().get();
 }
 
+LegendDefinition* Canvas::addLegend(
+    LegendDefinition::kVerticalPosition vert_pos,
+    LegendDefinition::kHorizontalPosition horiz_pos,
+    LegendDefinition::kPlacement placement,
+    const std::string& title) {
+  legends_.emplace_back(
+      new LegendDefinition(vert_pos, horiz_pos, placement, title));
+  return legends_.back().get();
+}
+
+
 }
 }

@@ -15,6 +15,7 @@
 #include <tuple>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/drawable.h>
+#include <fnordmetric/ui/legenddefinition.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -51,7 +52,21 @@ public:
    * The returned pointer is owned by the canvas instance and must not be freed
    * by the caller.
    */
-   AxisDefinition* addAxis(AxisDefinition::kPosition position);
+  AxisDefinition* addAxis(AxisDefinition::kPosition position);
+
+  /**
+   * Add a a leged to this canvas. Usually axes are not specified manually using
+   * this method but through one of the Chart subclasses. However it is safe
+   * to call this method to explicitly define a custom axis.
+   *
+   * The returned pointer is owned by the canvas instance and must not be freed
+   * by the caller.
+   */
+  LegendDefinition* addLegend(
+      LegendDefinition::kVerticalPosition vert_pos,
+      LegendDefinition::kHorizontalPosition horiz_pos,
+      LegendDefinition::kPlacement placement,
+      const std::string& title);
 
   /**
    * Render the contents of this canvas to the provided render target
@@ -140,6 +155,7 @@ protected:
   int width_;
   int height_;
   std::vector<std::unique_ptr<AxisDefinition>> axes_;
+  std::vector<std::unique_ptr<LegendDefinition>> legends_;
   std::vector<std::unique_ptr<Drawable>> drawables_;
 };
 
