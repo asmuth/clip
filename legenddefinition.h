@@ -44,6 +44,23 @@ public:
       kPlacement placement,
       const std::string& title);
 
+  const std::vector<std::pair<std::string, std::string>> entries() const {
+    std::vector<std::pair<std::string, std::string>> entries;
+    entries.emplace_back("fnord1", "color1");
+    entries.emplace_back("fnord2", "color2");
+    entries.emplace_back("iiiii", "color2");
+    entries.emplace_back("iiiasdasdii", "color2");
+    entries.emplace_back("iiiaasdasdasdsdasdii", "color2");
+    entries.emplace_back("iiiaasdasdasdsdas  asd  asddii", "color2");
+    entries.emplace_back("wwwwwwww", "color2");
+    entries.emplace_back("iiiii", "color2");
+    entries.emplace_back("iiiasdasdii", "color2");
+    entries.emplace_back("iiiaasdasdasdsdasdii", "color2");
+    entries.emplace_back("iiiaasdasdasdsdas  asd  asddii", "color2");
+    entries.emplace_back("fnord3", "color3");
+    return entries;
+  }
+
 protected:
   kVerticalPosition vert_pos_;
   kHorizontalPosition horiz_pos_;

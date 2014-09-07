@@ -53,8 +53,28 @@ public:
     return std::get<3>(padding_);
   }
 
+  const std::tuple<int, int, int, int>& padding() {
+    return padding_;
+  }
+
   void setPadding(const std::tuple<int, int, int, int>& padding) {
     padding_ = padding;
+  }
+
+  void setPaddingTop(int val) {
+    std::get<0>(padding_) = val;
+  }
+
+  void setPaddingRight(int val) {
+    std::get<1>(padding_) = val;
+  }
+
+  void setPaddingBottom(int val) {
+    std::get<2>(padding_) = val;
+  }
+
+  void setPaddingLeft(int val) {
+    std::get<3>(padding_) = val;
   }
 
 protected:

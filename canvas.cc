@@ -28,7 +28,9 @@ void Canvas::render(RenderTarget* target) const {
   Viewport viewport(width_, height_);
 
   target->beginChart(width_, height_, "chart bar horizontal"); 
+  renderOutsideLegends(target, &viewport);
   renderAxes(target, &viewport);
+  renderInsideLegends(target, &viewport);
   renderCharts(target, &viewport);
   target->finishChart();
 }
@@ -40,7 +42,7 @@ void Canvas::renderCharts(RenderTarget* target, Viewport* viewport) const {
 }
 
 void Canvas::renderAxes(RenderTarget* target, Viewport* viewport) const {
-  std::tuple<int, int, int, int> padding;
+  std::tuple<int, int, int, int> padding = viewport->padding();
   std::vector<std::pair<int, AxisDefinition*>> top;
   std::vector<std::pair<int, AxisDefinition*>> right;
   std::vector<std::pair<int, AxisDefinition*>> bottom;
@@ -377,6 +379,86 @@ void Canvas::renderLeftAxis(
   target->finishGroup();
 }
 
+
+void Canvas::renderOutsideLegends(
+    RenderTarget* target,
+    Viewport* viewport) const {
+  for (const auto& legend : legends_) {
+    target->beginGroup("legend");
+    renderOutsideTopLegend(target, viewport, legend.get(), 25.0f);
+    target->finishGroup();
+  }
+}
+
+void Canvas::renderInsideLegends(
+    RenderTarget* target,
+    Viewport* viewport) const {
+  auto orig_padding = viewport->padding();
+
+  for (const auto& legend : legends_) {
+    target->beginGroup("legend");
+    viewport->setPaddingTop(viewport->paddingTop() + 10.0f);
+    renderOutsideTopLegend(target, viewport, legend.get(), 15.0f);
+    viewport->setPaddingTop(viewport->paddingTop() + 10.0f);
+    target->finishGroup();
+  }
+
+  viewport->setPadding(orig_padding);
+}
+
+void Canvas::renderOutsideTopLegend(
+    RenderTarget* target,
+    Viewport* viewport,
+    LegendDefinition* legend,
+    double horiz_padding) const {
+  double height = 0.0f;
+
+  std::string title = "legend title";
+
+  target->drawText(
+    title,
+    viewport->paddingLeft() + horiz_padding,
+    viewport->paddingTop(),
+    "start",
+    "text-before-edge",
+    "title");
+
+  auto lx = viewport->paddingLeft() + viewport->innerWidth() - horiz_padding;
+  auto lx_boundary = viewport->paddingLeft() + horiz_padding +
+    estimateTextLength(title) + kLegendLabelPadding;
+
+  for (const auto& entry : legend->entries()) {
+    auto this_len = estimateTextLength(entry.first) + kLegendLabelPadding;
+
+    /* line wrap */
+    if (lx - this_len < lx_boundary) {
+      lx = viewport->paddingLeft() + viewport->innerWidth() - horiz_padding;
+      height += kLegendLineHeight;
+      lx_boundary = viewport->paddingLeft() + horiz_padding;
+    }
+
+    target->drawPoint(
+        lx,
+        viewport->paddingTop() + 6 + height,
+        "circle",
+        4,
+        entry.second,
+        "circle");
+
+    target->drawText(
+      entry.first,
+      lx - 8.0f,
+      viewport->paddingTop() + height,
+      "end",
+      "text-before-edge",
+      "title");
+
+    lx -= this_len;
+  }
+
+  height += kLegendLineHeight;
+  viewport->setPaddingTop(viewport->paddingTop() + height);
+}
 
 std::string Canvas::renderSVG() const {
   auto output = util::OutputStream::getStdout();

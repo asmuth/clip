@@ -28,6 +28,10 @@ public:
   static const int kAxisLabelHeight = 35.0f; // FIXPAUL make configurable
   static const int kAxisLabelWidth = 50.0f; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20.0f; // FIXPAUL make configurable
+  static const int kCharWidth = 6.0f; // FIXPAUL make configurable
+  static const int kLegendOutsideHorizPadding = 20.0f; // FIXPAUL make configurable
+  static const int kLegendLabelPadding = 20.0f; // FIXPAUL make configurable
+  static const int kLegendLineHeight = 20.0f; // FIXPAUL make configurable
 
   Canvas();
 
@@ -84,6 +88,9 @@ public:
    std::string renderSVG() const;
 
 protected:
+  int estimateTextLength(const std::string& str) const {
+    return str.size() * kCharWidth;
+  }
 
   /**
    * Render the charts
@@ -150,6 +157,22 @@ protected:
       Viewport* viewport,
       AxisDefinition* axis,
       int left) const;
+
+  /**
+   * Render the legends
+   */
+  void renderOutsideLegends(RenderTarget* target, Viewport* viewport) const;
+
+  /**
+   * Render the legends
+   */
+  void renderInsideLegends(RenderTarget* target, Viewport* viewport) const;
+
+  void renderOutsideTopLegend(
+      RenderTarget* target,
+      Viewport* viewport,
+      LegendDefinition* legend,
+      double horiz_padding) const;
 
   // FIXPAUL this belongs into the rendertarget
   int width_;
