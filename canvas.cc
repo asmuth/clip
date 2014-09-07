@@ -506,7 +506,7 @@ void Canvas::renderRightLegend(
   double height;
   if (bottom) {
     height = viewport->paddingTop() + viewport->innerHeight()  -
-      kLegendLineHeight * 0.3f;
+      kLegendLineHeight * 0.5f;
   } else {
     height = viewport->paddingTop();
   }
@@ -581,7 +581,7 @@ void Canvas::renderLeftLegend(
   double height;
   if (bottom) {
     height = viewport->paddingTop() + viewport->innerHeight()  -
-      kLegendLineHeight * 0.3f;
+      kLegendLineHeight * 0.5f;
   } else {
     height = viewport->paddingTop();
   }
