@@ -3,7 +3,8 @@ IMPORT TABLE city_temperatures
 
 DRAW LINECHART WITH
     AXIS BOTTOM
-    AXIS LEFT TITLE "New York";
+    AXIS LEFT TITLE "New York"
+    LEGEND TOP LEFT INSIDE;
 
 SELECT city AS series, month AS x, temperature AS y, "circle" AS pointstyle
     FROM city_temperatures
