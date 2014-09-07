@@ -56,6 +56,18 @@ public:
     return entries;
   }
 
+  kVerticalPosition verticalPosition() const {
+    return vert_pos_;
+  }
+
+  kHorizontalPosition horizontalPosition() const {
+    return horiz_pos_;
+  }
+
+  kPlacement placement() const {
+    return placement_;
+  }
+
 protected:
   kVerticalPosition vert_pos_;
   kHorizontalPosition horiz_pos_;

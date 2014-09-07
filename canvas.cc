@@ -384,25 +384,68 @@ void Canvas::renderOutsideLegends(
     RenderTarget* target,
     Viewport* viewport) const {
   for (const auto& legend : legends_) {
+    if (legend->placement() != LegendDefinition::LEGEND_OUTSIDE) {
+      continue;
+    }
+
     target->beginGroup("legend");
 
-    renderRightLegend(
-        target,
-        viewport,
-        legend.get(),
-        kLegendOutsideHorizPadding,
-        false,
-        true);
-    viewport->setPaddingTop(viewport->paddingTop() + kLegendOutsideVertPadding);
+    switch (legend->verticalPosition()) {
+      case LegendDefinition::LEGEND_TOP: {
+        switch (legend->horizontalPosition()) {
+          case LegendDefinition::LEGEND_LEFT:
+            renderLeftLegend(
+                target,
+                viewport,
+                legend.get(),
+                kLegendOutsideHorizPadding,
+                false,
+                true);
+            break;
+          case LegendDefinition::LEGEND_RIGHT:
+            renderRightLegend(
+                target,
+                viewport,
+                legend.get(),
+                kLegendOutsideHorizPadding,
+                false,
+                true);
+            break;
+          }
 
-    renderLeftLegend(
-        target,
-        viewport,
-        legend.get(),
-        kLegendOutsideHorizPadding,
-        true,
-        true);
-    viewport->setPaddingBottom(viewport->paddingBottom() + kLegendOutsideVertPadding);
+        viewport->setPaddingTop(
+            viewport->paddingTop() + kLegendOutsideVertPadding);
+        break;
+      }
+
+      case LegendDefinition::LEGEND_BOTTOM: {
+        switch (legend->horizontalPosition()) {
+          case LegendDefinition::LEGEND_LEFT:
+            renderLeftLegend(
+                target,
+                viewport,
+                legend.get(),
+                kLegendOutsideHorizPadding,
+                true,
+                true);
+            break;
+          case LegendDefinition::LEGEND_RIGHT:
+            renderRightLegend(
+                target,
+                viewport,
+                legend.get(),
+                kLegendOutsideHorizPadding,
+                true,
+                true);
+            break;
+
+          }
+
+        viewport->setPaddingBottom(
+            viewport->paddingBottom() + kLegendOutsideVertPadding);
+        break;
+      }
+    }
 
     target->finishGroup();
   }
@@ -414,18 +457,36 @@ void Canvas::renderInsideLegends(
   auto orig_padding = viewport->padding();
 
   for (const auto& legend : legends_) {
+    if (legend->placement() != LegendDefinition::LEGEND_INSIDE) {
+      continue;
+    }
+
     target->beginGroup("legend");
+
     viewport->setPaddingTop(viewport->paddingTop() + kLegendInsideVertPadding);
     viewport->setPaddingBottom(
         viewport->paddingBottom() + kLegendInsideVertPadding);
 
-    renderLeftLegend(
-        target,
-        viewport,
-        legend.get(),
-        kLegendInsideHorizPadding,
-        true,
-        false);
+    switch (legend->horizontalPosition()) {
+      case LegendDefinition::LEGEND_LEFT:
+        renderLeftLegend(
+            target,
+            viewport,
+            legend.get(),
+            kLegendOutsideHorizPadding,
+            legend->verticalPosition() == LegendDefinition::LEGEND_BOTTOM,
+            false);
+        break;
+      case LegendDefinition::LEGEND_RIGHT:
+        renderRightLegend(
+            target,
+            viewport,
+            legend.get(),
+            kLegendOutsideHorizPadding,
+            legend->verticalPosition() == LegendDefinition::LEGEND_BOTTOM,
+            false);
+        break;
+      }
 
     target->finishGroup();
   }
@@ -445,7 +506,7 @@ void Canvas::renderRightLegend(
   double height;
   if (bottom) {
     height = viewport->paddingTop() + viewport->innerHeight()  -
-      kLegendLineHeight * 0.2f;
+      kLegendLineHeight * 0.3f;
   } else {
     height = viewport->paddingTop();
   }
@@ -519,7 +580,7 @@ void Canvas::renderLeftLegend(
   double height;
   if (bottom) {
     height = viewport->paddingTop() + viewport->innerHeight()  -
-      kLegendLineHeight * 0.2f;
+      kLegendLineHeight * 0.3f;
   } else {
     height = viewport->paddingTop();
   }
