@@ -54,19 +54,10 @@ ul li p {
 }
 
 #header {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  box-shadow:0 0 2px rgba(0,0,0,.1);
   margin: 0;
-  padding: 1px 40px;
-  height: 62px;
-  line-height: 62px;
-}
-
-.colorbg #header {
-  background: transparent;
-  border-bottom: none;
-  box-shadow: none;
+  padding: 1px 40px 0 40px;
+  height: 56px;
+  line-height: 56px;
 }
 
 .jumbotron {
@@ -189,43 +180,43 @@ ul li p {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.header_wrap {
+  background: #3093d1;
+  background: -moz-linear-gradient(top,  #3093d1 0%, #2980b9 99%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3093d1), color-stop(99%,#2980b9));
+  background: -webkit-linear-gradient(top,  #3093d1 0%,#2980b9 99%);
+  background: -o-linear-gradient(top,  #3093d1 0%,#2980b9 99%);
+  background: -ms-linear-gradient(top,  #3093d1 0%,#2980b9 99%);
+  background: linear-gradient(to bottom,  #3093d1 0%,#2980b9 99%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3093d1', endColorstr='#2980b9',GradientType=0 );
+  border-bottom: 1px solid #174766;
+}
+
 #header h1 {
   font-size:23.5px;
-  line-height: 62px;
+  line-height: 56px;
   margin: 0;
   padding: 0;
 }
 
 #header h1 a {
-  color:#333;
   text-decoration:none;
-}
-
-.colorbg #header h1 a {
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 #header a.menu {
   float:right;
-  color:#333;
   text-decoration:none;
   padding: 0 10px;
   margin-left: 10px;
-}
-
-.colorbg #header a.menu {
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
   line-height: 32px;
-  margin-top: 15px;
+  margin-top: 12px;
 }
 
 #header a.menu:hover {
-  border-bottom: 1px solid #666;
-}
-
-.colorbg #header a.menu:hover {
   background: rgba(255,255,255,.1);
   border-radius: 4px;
   border-bottom: none ;
@@ -312,7 +303,7 @@ ul li p {
   line-height:26px;
   font-weight: 400;
   margin: 0 0 0 300px;
-  padding: 30px 50px 50px 50px;
+  padding: 35px 50px 50px 50px;
   min-height:1000px;
 }
 
@@ -328,6 +319,7 @@ ul li p {
   margin-bottom: 0;
   padding-bottom: 0;
   font-size: 26.5px;
+  font-weight: 400;
 }
 
 #documentation h1:first-child {
@@ -339,6 +331,7 @@ ul li p {
   margin-bottom: 0;
   padding-bottom: 0;
   font-size: 20px;
+  font-weight: 400;
 }
 
 #documentation h3 {
