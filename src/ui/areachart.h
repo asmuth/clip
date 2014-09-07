@@ -249,6 +249,85 @@ void AreaChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
   target->beginGroup("areas");
+
+  for (const auto& area : areas_) {
+    std::vector<std::pair<double, double>> area_coords;
+    std::vector<std::pair<double, double>> border_top_coords;
+    std::vector<std::pair<double, double>> border_bottom_coords;
+    std::vector<std::pair<double, double>> point_coords;
+
+    for (int i = 0; i < area.points.size(); ++i) {
+      const auto& point = area.points[i];
+      auto s_x = x_domain_.getAs<Domain<TX>>()->scale(std::get<0>(point));
+      auto s_y2 = 1.0 - y_domain_.getAs<Domain<TY>>()->scale(
+          std::get<2>(point));
+
+      auto draw_x = viewport->paddingLeft() + s_x * viewport->innerWidth();
+      auto draw_y2 = viewport->paddingTop() + s_y2 * viewport->innerHeight();
+
+      area_coords.emplace_back(draw_x, draw_y2);
+      border_top_coords.emplace_back(draw_x, draw_y2);
+      point_coords.emplace_back(draw_x, draw_y2);
+    }
+
+    for (int i = area.points.size() - 1; i >= 0; --i) {
+      const auto& point = area.points[i];
+      auto s_x = x_domain_.getAs<Domain<TX>>()->scale(std::get<0>(point));
+      auto s_y1 = 1.0 - y_domain_.getAs<Domain<TY>>()->scale(
+          std::get<1>(point));
+      auto draw_x = viewport->paddingLeft() + s_x * viewport->innerWidth();
+      auto draw_y1 = viewport->paddingTop() + s_y1 * viewport->innerHeight();
+
+      area_coords.emplace_back(draw_x, draw_y1);
+
+      if (std::get<1>(point) != 0) {
+        border_bottom_coords.emplace_back(draw_x, draw_y1);
+        point_coords.emplace_back(draw_x, draw_y1);
+      }
+    }
+
+    target->drawPath(
+        area_coords,
+        "fill",
+        area.line_style == "none" ? 0 : area.line_width,
+        false,
+        area.color,
+        "area");
+
+    if (area.line_style != "none") {
+      target->drawPath(
+          border_top_coords,
+          area.line_style,
+          area.line_width,
+          false,
+          area.color,
+          "line");
+
+      if (border_bottom_coords.size() > 0) {
+        target->drawPath(
+            border_bottom_coords,
+            area.line_style,
+            area.line_width,
+            false,
+            area.color,
+            "line");
+      }
+    }
+
+    if (area.point_style != "none") {
+      for (const auto &point : point_coords) {
+        target->drawPoint(
+            point.first,
+            point.second,
+            area.point_style,
+            area.point_size,
+            area.color,
+            "point");
+      }
+    }
+  }
+
+
   target->finishGroup();
 }
 
@@ -331,6 +410,30 @@ void AreaChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
     series3d->setDefaultProperty(
         Series::P_COLOR,
         series->getProperty(Series::P_COLOR));
+  }
+
+  if (series->hasProperty(Series::P_LINE_STYLE)) {
+    series3d->setDefaultProperty(
+        Series::P_LINE_STYLE,
+        series->getProperty(Series::P_LINE_STYLE));
+  }
+
+  if (series->hasProperty(Series::P_LINE_WIDTH)) {
+    series3d->setDefaultProperty(
+        Series::P_LINE_WIDTH,
+        series->getProperty(Series::P_LINE_WIDTH));
+  }
+
+  if (series->hasProperty(Series::P_POINT_STYLE)) {
+    series3d->setDefaultProperty(
+        Series::P_POINT_STYLE,
+        series->getProperty(Series::P_POINT_STYLE));
+  }
+
+  if (series->hasProperty(Series::P_POINT_SIZE)) {
+    series3d->setDefaultProperty(
+        Series::P_POINT_SIZE,
+        series->getProperty(Series::P_POINT_SIZE));
   }
 
   AreaChart3D<TX, TY, TY>::addSeries(series3d);

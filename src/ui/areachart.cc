@@ -17,9 +17,9 @@ namespace fnordmetric {
 namespace ui {
 
 char AreaChart::kDefaultLineStyle[] = "none";
-char AreaChart::kDefaultLineWidth[] = "2";
+char AreaChart::kDefaultLineWidth[] = "1";
 char AreaChart::kDefaultPointStyle[] = "none";
-char AreaChart::kDefaultPointSize[] = "3";
+char AreaChart::kDefaultPointSize[] = "2";
 
 AreaChart::AreaChart(
     ui::Canvas* canvas,
