@@ -44,6 +44,10 @@ public:
       kPlacement placement,
       const std::string& title);
 
+  const std::string title() const {
+    return "my long legend title";
+  }
+
   const std::vector<std::pair<std::string, std::string>> entries() const {
     std::vector<std::pair<std::string, std::string>> entries;
     entries.emplace_back("fnord1", "color1");

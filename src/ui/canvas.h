@@ -179,6 +179,12 @@ protected:
       LegendDefinition* legend,
       double horiz_padding) const;
 
+  void renderTopLeftLegend(
+      RenderTarget* target,
+      Viewport* viewport,
+      LegendDefinition* legend,
+      double horiz_padding) const;
+
   // FIXPAUL this belongs into the rendertarget
   int width_;
   int height_;
