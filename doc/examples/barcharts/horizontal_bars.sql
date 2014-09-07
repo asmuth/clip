@@ -3,5 +3,5 @@ IMPORT TABLE gdp_per_capita
 
 SELECT 'gdp per country' AS series, isocode, gdp AS y, year as year
     FROM gdp_per_capita
-    WHERE year = "2010"
+    WHERE year > "2009"
     LIMIT 100;

@@ -33,6 +33,7 @@
      - pointchartbuilder
      - make # of axis ticks configurable via sql
      - comments! :)
+     - string lt gt exprs
 
 [ cli ]
     - cli output format

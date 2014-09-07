@@ -130,7 +130,7 @@ void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   SValue* val = argv;
 
-  switch(val->getType()) {
+  switch(val->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
       *out = SValue(val->getInteger() * -1);
       return;
@@ -160,14 +160,14 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue(lhs->getInteger() < rhs->getInteger());
           return;
         case SValue::T_FLOAT:
-          *out = SValue(lhs->getInteger() < rhs->getFloat());
+          *out = SValue(lhs->getFloat() < rhs->getFloat());
           return;
         default:
           break;
@@ -176,8 +176,6 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
     case SValue::T_FLOAT:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
-          *out = SValue(lhs->getFloat() < rhs->getInteger());
-          return;
         case SValue::T_FLOAT:
           *out = SValue(lhs->getFloat() < rhs->getFloat());
           return;
@@ -206,24 +204,22 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
-  switch(lhs->getType()) {
+  switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
           *out = SValue(lhs->getInteger() > rhs->getInteger());
           return;
         case SValue::T_FLOAT:
-          *out = SValue(lhs->getInteger() > rhs->getFloat());
+          *out = SValue(lhs->getFloat() > rhs->getFloat());
           return;
         default:
           break;
       }
       break;
     case SValue::T_FLOAT:
-      switch(rhs->getType()) {
+      switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
-          *out = SValue(lhs->getFloat() > rhs->getInteger());
-          return;
         case SValue::T_FLOAT:
           *out = SValue(lhs->getFloat() > rhs->getFloat());
           return;
@@ -235,7 +231,7 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't ompare %s with %s",
+  RAISE(util::RuntimeException, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
