@@ -9,6 +9,7 @@
 #include <string.h>
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/areachart.h>
 #include <fnordmetric/ui/barchart.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/domain.h>
@@ -824,7 +825,6 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
       "UITest_TestMultiChart_out.svg.html");
 });
 
-/*
 static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
     &UITest, "TestSimpleAreaChart", [] () {
   Series2D<double, double> series1("myseries1");
@@ -839,17 +839,19 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
   ui::ContinuousDomain<double> y_domain(0, 50, false);
 
   Canvas canvas;
-  auto aread_chart = canvas.addChart<AreaChart>(&x_domain, &y_domain);
-  aread_chart->addSeries(&series1, "solid", 2, "circle", 4);
-  aread_chart->addAxis(AxisDefinition::TOP);
-  aread_chart->addAxis(AxisDefinition::RIGHT);
-  aread_chart->addAxis(AxisDefinition::BOTTOM);
-  aread_chart->addAxis(AxisDefinition::LEFT);
+  auto area_chart = canvas.addChart<AreaChart2D<double, double>>(
+      &x_domain, &y_domain);
+  area_chart->addSeries(&series1);
+  area_chart->addAxis(AxisDefinition::TOP);
+  area_chart->addAxis(AxisDefinition::RIGHT);
+  area_chart->addAxis(AxisDefinition::BOTTOM);
+  area_chart->addAxis(AxisDefinition::LEFT);
 
   compareChart(
       &canvas,
       "UITest_TestSimpleAreaChart_out.svg.html");
 });
+/*
 
 static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
     &UITest, "TestRangeAreaChart", [] () {
