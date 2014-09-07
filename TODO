@@ -1,4 +1,5 @@
 [ ui ]
+    - series adapter: max interpolation gap
     - TimeDomain!
     - impl chart title, subtitle
     - stacked area charts
@@ -15,7 +16,6 @@
     - chart type: heatmap
     - make # of axis ticks configurable via sql
     - simple interactive charts (hover tooltips)
-    - max interpolation gap -> draw as missing data
     - simple web interface (interactive query UI generates embed html snippets)
 
 [ cleanup ]
