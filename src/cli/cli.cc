@@ -202,7 +202,33 @@ void CLI::execute(
 
 const query::QueryService::kFormat CLI::getOutputFormat(
     const FlagParser& flags) {
-  return query::QueryService::FORMAT_TABLE;
+  if (!flags.isSet("format")) {
+    return query::QueryService::FORMAT_TABLE;
+  }
+
+  auto format_str = flags.getString("format");
+
+  if (format_str == "csv") {
+    return query::QueryService::FORMAT_CSV;
+  }
+
+  if (format_str == "json") {
+    return query::QueryService::FORMAT_JSON;
+  }
+
+  if (format_str == "svg") {
+    return query::QueryService::FORMAT_SVG;
+  }
+
+  if (format_str == "table") {
+    return query::QueryService::FORMAT_TABLE;
+  }
+
+  RAISE(
+      util::RuntimeException,
+      "invalid format: '%s', allowed formats are "
+      "'svg', 'csv', 'json' and 'table'",
+      format_str.c_str());
 }
 
 }
