@@ -1,11 +1,12 @@
 [ ui ]
     - TimeDomain!
     - impl chart title, subtitle
-    - impl legend
     - stacked area charts
     - middle axis
-    - impl inside/outside, rotate axis labels
+    - impl inside/outside
     - impl grid
+    - variable axis label size
+    - rotated axis labels
     - line/point styles
     - bar/point labels
     - chart type: histogram

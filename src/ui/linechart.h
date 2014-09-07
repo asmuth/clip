@@ -174,6 +174,8 @@ void LineChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
   series->setDefaultProperty(
       Series::P_POINT_SIZE,
       LineChart::kDefaultPointSize);
+
+  Drawable::addSeries(series);
 }
 
 template <typename TX, typename TY>

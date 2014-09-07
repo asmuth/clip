@@ -524,7 +524,8 @@ void Canvas::renderRightLegend(
     estimateTextLength(title) + kLegendLabelPadding;
 
   for (const auto& entry : legend->entries()) {
-    auto this_len = estimateTextLength(entry.first) + kLegendLabelPadding;
+    auto this_len = estimateTextLength(std::get<0>(entry)) +
+        kLegendLabelPadding;
 
     /* line wrap */
     if (lx - this_len < lx_boundary) {
@@ -538,13 +539,13 @@ void Canvas::renderRightLegend(
         bottom ?
             height - kLegendPointSize * 0.4f :
             height + kLegendPointSize * 2.0f,
-        "circle",
+        std::get<2>(entry),
         kLegendPointSize,
-        entry.second,
+        std::get<1>(entry),
         "point");
 
     target->drawText(
-      entry.first,
+      std::get<0>(entry),
       lx - kLegendPointWidth,
       height,
       "end",
@@ -598,7 +599,8 @@ void Canvas::renderLeftLegend(
       horiz_padding - estimateTextLength(title) - kLegendLabelPadding;
 
   for (const auto& entry : legend->entries()) {
-    auto this_len = estimateTextLength(entry.first) + kLegendLabelPadding;
+    auto this_len = estimateTextLength(std::get<0>(entry)) + 
+        kLegendLabelPadding;
 
     /* line wrap */
     if (lx + this_len > lx_boundary) {
@@ -613,13 +615,13 @@ void Canvas::renderLeftLegend(
         bottom ?
             height - kLegendPointSize * 0.4f :
             height + kLegendPointSize * 2.0f,
-        "circle",
+        std::get<2>(entry),
         kLegendPointSize,
-        entry.second,
+        std::get<1>(entry),
         "point");
 
     target->drawText(
-      entry.first,
+      std::get<0>(entry),
       lx + kLegendPointWidth,
       height,
       "start",
@@ -665,6 +667,13 @@ LegendDefinition* Canvas::addLegend(
   return legends_.back().get();
 }
 
+LegendDefinition* Canvas::legend() const {
+  if (legends_.size() == 0) {
+    return nullptr;
+  } else {
+    return legends_.back().get();
+  }
+}
 
 }
 }

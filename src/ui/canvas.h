@@ -79,6 +79,11 @@ public:
       const std::string& title);
 
   /**
+   * Return the legend or nullptr
+   */
+  LegendDefinition* legend() const;
+
+  /**
    * Render the contents of this canvas to the provided render target
    *
    * @param target a RenderTarget subclass instance. Does not transfer ownership

@@ -186,6 +186,8 @@ void PointChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   series->setDefaultProperty(
       Series::P_POINT_STYLE,
       PointChart::kDefaultPointStyle);
+
+  Drawable::addSeries(series);
 }
 
 template <typename TX, typename TY, typename TZ>
