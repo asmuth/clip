@@ -1,12 +1,11 @@
-IMPORT TABLE gdp_per_capita
-   FROM CSV 'doc/examples/data/gdp_per_capita.csv' HEADER;
+IMPORT TABLE gdp_per_country
+   FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;
 
 DRAW BARCHART WITH
     ORIENTATION HORIZONTAL
     AXIS LEFT
     AXIS BOTTOM;
 
-SELECT 'gdp per country' AS series, isocode AS x, gdp AS y
-    FROM gdp_per_capita
-    WHERE year = "2010"
-    LIMIT 20;
+SELECT 'gdp per country' AS series, country AS x, gbp AS y
+    FROM gdp_per_country
+    LIMIT 10;

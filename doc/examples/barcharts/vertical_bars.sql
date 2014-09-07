@@ -1,12 +1,14 @@
-IMPORT TABLE city_temperatures
-   FROM CSV 'doc/examples/data/city_temperatures.csv' HEADER;
+IMPORT TABLE gdp_per_capita
+   FROM CSV 'doc/examples/data/gdp_per_capita.csv' HEADER;
 
 DRAW BARCHART WITH
-   ORIENTATION VERTICAL
-   LEGEND TOP LEFT INSIDE
-   AXIS BOTTOM;
+    ORIENTATION VERTICAL
+    AXIS LEFT
+    AXIS BOTTOM
+    LEGEND TOP RIGHT INSIDE;
 
-SELECT city AS series, month AS x, temperature AS y
-   FROM city_temperatures;
-
+SELECT year AS series, isocode AS x, gdp AS y
+    FROM gdp_per_capita
+    WHERE year = "2010" OR year = '2009' or year = '2008'
+    LIMIT 20 OFFSET 40;
 

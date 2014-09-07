@@ -1,5 +1,5 @@
-IMPORT TABLE gdp_per_country
-   FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;
+IMPORT TABLE gdp_per_capita
+   FROM CSV 'doc/examples/data/gdp_per_capita.csv' HEADER;
 
 DRAW BARCHART WITH
   ORIENTATION HORIZONTAL
@@ -8,18 +8,7 @@ DRAW BARCHART WITH
   AXIS BOTTOM
   LEGEND BOTTOM RIGHT INSIDE;
 
-SELECT
-  'gross domestic product per country' AS series,
-  country AS x,
-  gbp AS y
-FROM
-  gdp_per_country
-LIMIT 10;
-
-SELECT
-  'gross domestic product per country 2' AS series,
-  country AS x,
-  gbp AS y
-FROM
-  gdp_per_country
-LIMIT 10;
+SELECT year AS series, isocode AS x, gdp AS y
+    FROM gdp_per_capita
+    WHERE year = "2010" OR year = '2009' or year = '2008'
+    LIMIT 20 OFFSET 40;

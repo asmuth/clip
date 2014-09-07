@@ -50,6 +50,7 @@ examples:
         title: "Inverted Axis"
         file: "inverted_axis"
         url: "/linecharts/inverted_axis"
+
   -
     title: "Area Charts"
     dir: "areacharts"
@@ -58,18 +59,19 @@ examples:
         title: "Simple area chart"
         file: "simple_area"
         url: "/areacharts/simple_area"
-#      -
-#        title: "Areas with borders/points"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Area with borders/points"
+        file: "area_with_points"
+        url: "/areacharts/area_with_points"
 #      -
 #        title: "Stacked areas"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Area ranges"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Area ranges"
+        file: "area_ranges"
+        url: "/areacharts/area_ranges"
+
   -
     title: "Bar Charts"
     dir: "barcharts"
@@ -86,25 +88,26 @@ examples:
         title: "Stacked Bar Chart"
         file: "stacked_bars"
         url: "/barcharts/stacked_bars"
-#      -
-#        title: "Bars with negative values"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Horizontal range bars"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Vertical range bars"
+        file: "vertical_ranges"
+        url: "/barcharts/vertical_ranges"
+      -
+        title: "Horizontal range bars"
+        file: "horizontal_ranges"
+        url: "/barcharts/horizontal_ranges"
 #      -
 #        title: "Histogram"
 #        file: "horizontal_bars"
 #      -
-#        title: "Bars with lines"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#      -
 #        title: "Bars with labels"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
+      -
+        title: "Bars with negative values"
+        file: "negative_values"
+        url: "/barcharts/negative_values"
+
   -
     title: "Bubble &amp; Scatter Charts"
     dir: "barcharts"
@@ -166,11 +169,11 @@ examples:
 #        title: "Lines with error bars"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-#      -
-#        title: "Areas with lines"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-#
+      -
+        title: "Areas with lines"
+        file: "arearange_and_line"
+        url: "/combined/arearange_and_line"
+
 
 #  -
 #    title: "Custom styles"

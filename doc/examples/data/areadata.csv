@@ -1,0 +1,13 @@
+series,x,y,z,w
+series1,10,34,43,A
+series1,15,38,65,B
+series1,20,43,46,C
+series1,30,33,38,D
+series1,40,21,38,E
+series1,50,33,55,F
+series2,10,-34,34,A
+series2,15,-30,38,B
+series2,20,-20,43,C
+series2,30,-24,33,D
+series2,40,-18,21,E
+series2,50,-32,33,F

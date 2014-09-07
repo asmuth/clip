@@ -3,14 +3,18 @@
     - impl chart title, subtitle
     - stacked area charts
     - middle axis
-    - impl inside/outside
+    - impl inside/outside axis labels
+    - impl variable axis label size
+    - impl rotated axis labels
     - impl grid
-    - variable axis label size
-    - rotated axis labels
     - line/point styles
     - bar/point labels
     - chart type: histogram
     - chart type: heatmap
+    - make # of axis ticks configurable via sql
+    - simple interactive charts (hover tooltips)
+    - max interpolation gap -> draw as missing data
+    - simple web interface (interactive query UI generates embed html snippets)
 
 [ cleanup ]
     - integer overflow :(
@@ -20,9 +24,8 @@
     - rename rowsink to virtualtable
     - refactor expression symbol lookup/registration
     - refactor tokenizer // dynamically register tokens
-    - refactor: remove ASTNode::T_PROPERTY for title, subtitle, etc -> new astnodetype
-    - resultlist -> materializetable
     - replace all stoi, stod with wrappers that throw runtimeexceptions
+    - known bug: 2d area chart with explicit y domain, min > 0
 
 [ backends ]
     - mysql backend
@@ -33,17 +36,14 @@
      - SQL: order by
      - SQL: having
      - SQL: join
-     - make # of axis ticks configurable via sql
      - comments! :)
      - string lt gt exprs
 
-[ cli ]
-    - cli output format
+
+---------  release 1 --------
+
 
 [ feature q ]
-    - simple web interface (interactive query UI generates embed html snippets)
-    - simple interactive charts (hover tooltips)
-    - max interpolation gap -> draw as missing data
     - chart type: ganttchart
     - chart type: boxplot
     - chart type: error bars
@@ -51,8 +51,6 @@
     - sparklines
     - postgresql backend
     - smooth paths
-    - gauges, heatmaps, boxplot, error bars 
-    - middle axis
     - annotations / deploy lines
     - query cache
     - dashboard edit ui: html source
