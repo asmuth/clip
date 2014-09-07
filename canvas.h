@@ -33,6 +33,7 @@ public:
   static const int kLegendLineHeight = 20.0f; // FIXPAUL make configurable
   static const int kLegendInsideVertPadding = 10.0f;
   static const int kLegendInsideHorizPadding = 15.0f;
+  static const int kLegendOutsideVertPadding = 5.0f;
   static const int kLegendOutsideHorizPadding = 25.0f;
   static const int kLegendPointY = 6;
   static const int kLegendPointWidth = 8;
