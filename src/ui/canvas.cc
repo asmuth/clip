@@ -392,7 +392,9 @@ void Canvas::renderOutsideLegends(
         legend.get(),
         kLegendOutsideHorizPadding,
         false);
+    viewport->setPaddingTop(viewport->paddingTop() + kLegendOutsideVertPadding);
 
+    viewport->setPaddingBottom(viewport->paddingBottom() + kLegendOutsideVertPadding);
     renderRightLegend(
         target,
         viewport,
@@ -412,6 +414,8 @@ void Canvas::renderInsideLegends(
   for (const auto& legend : legends_) {
     target->beginGroup("legend");
     viewport->setPaddingTop(viewport->paddingTop() + kLegendInsideVertPadding);
+    viewport->setPaddingBottom(
+        viewport->paddingBottom() + kLegendInsideVertPadding);
 
     renderLeftLegend(
         target,
@@ -427,7 +431,6 @@ void Canvas::renderInsideLegends(
         kLegendInsideHorizPadding,
         false);
 
-    viewport->setPaddingTop(viewport->paddingTop() + kLegendInsideVertPadding);
     target->finishGroup();
   }
 
@@ -513,8 +516,7 @@ void Canvas::renderLeftLegend(
 
   double height;
   if (bottom) {
-    height = viewport->paddingTop() + viewport->innerHeight() -
-      kLegendLineHeight;
+    height = viewport->paddingTop() + viewport->innerHeight() - 5.0f;
   } else {
     height = viewport->paddingTop();
   }
