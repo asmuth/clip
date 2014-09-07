@@ -173,17 +173,19 @@ protected:
    */
   void renderInsideLegends(RenderTarget* target, Viewport* viewport) const;
 
-  void renderTopRightLegend(
+  void renderRightLegend(
       RenderTarget* target,
       Viewport* viewport,
       LegendDefinition* legend,
-      double horiz_padding) const;
+      double horiz_padding,
+      bool bottom) const;
 
-  void renderTopLeftLegend(
+  void renderLeftLegend(
       RenderTarget* target,
       Viewport* viewport,
       LegendDefinition* legend,
-      double horiz_padding) const;
+      double horiz_padding,
+      bool bottom) const;
 
   // FIXPAUL this belongs into the rendertarget
   int width_;
