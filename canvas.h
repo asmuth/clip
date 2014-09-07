@@ -23,9 +23,9 @@ class RenderTarget;
 
 class Canvas {
 public:
-  static const int kAxisPadding = 5; // FIXPAUL make configurable
+  static const int kAxisPadding = 0; // FIXPAUL make configurable
   static const int kTickLength = 5; // FIXPAUL make configurable
-  static const int kAxisLabelHeight = 35.0f; // FIXPAUL make configurable
+  static const int kAxisLabelHeight = 20; // FIXPAUL make configurable
   static const int kAxisLabelWidth = 50.0f; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20.0f; // FIXPAUL make configurable
   static const int kCharWidth = 6.0f; // FIXPAUL make configurable
@@ -33,7 +33,7 @@ public:
   static const int kLegendLineHeight = 20.0f; // FIXPAUL make configurable
   static const int kLegendInsideVertPadding = 10.0f;
   static const int kLegendInsideHorizPadding = 15.0f;
-  static const int kLegendOutsideVertPadding = 5.0f;
+  static const int kLegendOutsideVertPadding = 10.0f;
   static const int kLegendOutsideHorizPadding = 25.0f;
   static const int kLegendPointY = 6;
   static const int kLegendPointWidth = 8;
@@ -179,14 +179,16 @@ protected:
       Viewport* viewport,
       LegendDefinition* legend,
       double horiz_padding,
-      bool bottom) const;
+      bool bottom,
+      bool outside) const;
 
   void renderLeftLegend(
       RenderTarget* target,
       Viewport* viewport,
       LegendDefinition* legend,
       double horiz_padding,
-      bool bottom) const;
+      bool bottom,
+      bool outside) const;
 
   // FIXPAUL this belongs into the rendertarget
   int width_;
