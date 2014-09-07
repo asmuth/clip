@@ -29,9 +29,14 @@ public:
   static const int kAxisLabelWidth = 50.0f; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20.0f; // FIXPAUL make configurable
   static const int kCharWidth = 6.0f; // FIXPAUL make configurable
-  static const int kLegendOutsideHorizPadding = 20.0f; // FIXPAUL make configurable
   static const int kLegendLabelPadding = 20.0f; // FIXPAUL make configurable
   static const int kLegendLineHeight = 20.0f; // FIXPAUL make configurable
+  static const int kLegendInsideVertPadding = 10.0f;
+  static const int kLegendInsideHorizPadding = 15.0f;
+  static const int kLegendOutsideHorizPadding = 25.0f;
+  static const int kLegendPointY = 6;
+  static const int kLegendPointWidth = 8;
+  static const int kLegendPointSize = 3;
 
   Canvas();
 
@@ -168,7 +173,7 @@ protected:
    */
   void renderInsideLegends(RenderTarget* target, Viewport* viewport) const;
 
-  void renderOutsideTopLegend(
+  void renderTopRightLegend(
       RenderTarget* target,
       Viewport* viewport,
       LegendDefinition* legend,
