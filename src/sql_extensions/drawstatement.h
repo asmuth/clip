@@ -46,7 +46,7 @@ protected:
 
     for (int i = 0; i < select_stmts_.size(); ++i) {
       const auto& stmt = select_stmts_[i];
-      chart_builder.executeStatement(stmt); //, result_lists_[i]);
+      chart_builder.executeStatement(stmt, result_lists_[i]);
     }
 
     return chart_builder.getChart();

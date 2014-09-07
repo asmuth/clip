@@ -19,6 +19,7 @@
 #include <fnordmetric/sql/compile.h>
 #include <fnordmetric/sql/execute.h>
 #include <fnordmetric/sql/rowsink.h>
+#include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/queryplannode.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
 
@@ -63,7 +64,7 @@ public:
     return true;
   }
 
-  void executeStatement(QueryPlanNode* stmt) {
+  void executeStatement(QueryPlanNode* stmt, ResultList* result_list) {
     name_ind_ = stmt->getColumnIndex("series");
     x_ind_ = stmt->getColumnIndex("x");
     y_ind_ = stmt->getColumnIndex("y");
@@ -102,6 +103,7 @@ public:
     }
 
     stmt_ = stmt;
+    result_list_ = result_list;
     stmt->setTarget(this);
     stmt->execute();
   }
@@ -149,7 +151,8 @@ protected:
       return new SeriesAdapter2D<TX, TY>(
           name_ind_,
           x_ind_,
-          y_ind_);
+          y_ind_,
+          result_list_);
     }
 
     AnySeriesAdapter* a = nullptr;
@@ -168,7 +171,8 @@ protected:
         name_ind_,
         x_ind_,
         y_ind_,
-        z_ind_);
+        z_ind_,
+        result_list_);
   }
 
   template <typename T>
@@ -226,6 +230,7 @@ protected:
   int z_ind_;
   std::vector<std::pair<Series::kProperty, int>> prop_indexes_;
   QueryPlanNode* stmt_;
+  ResultList* result_list_;
   ui::Canvas* canvas_;
   DrawStatement const* draw_stmt_;
 };

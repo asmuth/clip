@@ -31,7 +31,8 @@ public:
       int name_ind,
       int x_ind,
       int y_ind,
-      int z_ind);
+      int z_ind,
+      ResultList* result_list);
 
   int name_ind_;
   int x_ind_;
@@ -46,6 +47,10 @@ protected:
       int row_len,
       Series* series,
       Series::AnyPoint* point);
+
+  void copyToResultList(SValue* row, int row_len);
+
+  ResultList* result_list_;
 };
 
 template <typename TX, typename TY>
@@ -55,10 +60,12 @@ public:
   SeriesAdapter2D(
       int name_ind,
       int x_ind,
-      int y_ind) :
-      AnySeriesAdapter(name_ind, x_ind, y_ind, -1) {}
+      int y_ind,
+      ResultList* result_list) :
+      AnySeriesAdapter(name_ind, x_ind, y_ind, -1, result_list) {}
 
   bool nextRow(SValue* row, int row_len) override {
+    copyToResultList(row, row_len);
     std::string name = "unnamed";
 
     if (name_ind_ >= 0) {
@@ -100,10 +107,12 @@ public:
       int name_ind,
       int x_ind,
       int y_ind,
-      int z_ind) :
-      AnySeriesAdapter(name_ind, x_ind, y_ind, z_ind) {}
+      int z_ind,
+      ResultList* result_list) :
+      AnySeriesAdapter(name_ind, x_ind, y_ind, z_ind, result_list) {}
 
   bool nextRow(SValue* row, int row_len) override {
+    copyToResultList(row, row_len);
     std::string name = "unnamed";
 
     if (name_ind_ >= 0) {
