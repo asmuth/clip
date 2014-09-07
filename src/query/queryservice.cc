@@ -50,6 +50,11 @@ void QueryService::executeQuery(
         break;
       }
 
+      case FORMAT_TABLE: {
+        renderTables(&query, output_stream);
+        break;
+      }
+
       default:
         RAISE(util::RuntimeException, "can't handle this output format");
 
@@ -150,6 +155,12 @@ void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
   target->endObject();
 }
 
+void QueryService::renderTables(Query* query, util::OutputStream* out) const {
+  for (int i = 0; i < query->getNumResultLists(); ++i) {
+    const auto result_list = query->getResultList(i);
+    result_list->debugPrint();
+  }
+}
 
 }
 }

@@ -29,8 +29,10 @@
 
 [ sql ]
      - full sql selects, joins working
+     - order by
      - pointchartbuilder
      - make # of axis ticks configurable via sql
+     - comments! :)
 
 [ cli ]
     - cli output format

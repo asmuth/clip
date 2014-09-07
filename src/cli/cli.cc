@@ -15,7 +15,6 @@
 #include <fnordmetric/ev/eventloop.h>
 #include <fnordmetric/ev/acceptor.h>
 #include <fnordmetric/http/httpserver.h>
-#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
@@ -35,8 +34,8 @@ FlagParser CLI::getDefaultFlagParser() {
       FlagParser::T_STRING,
       false,
       "f",
-      "human",
-      "The output format (svg,csv,human)",
+      "table",
+      "The output format { svg, csv, table }",
       "<format>");
 
   flag_parser.defineFlag(
@@ -155,8 +154,6 @@ void CLI::execute(
     ev_loop.loop();
   }
 
-  /* execute query */
-
   /* open input stream */
   std::unique_ptr<util::InputStream> input;
   if (args.size() == 1) {
@@ -194,11 +191,18 @@ void CLI::execute(
     output = std::move(util::OutputStream::getStdout());
   }
 
+
+  /* execute query */
   query::QueryService query_service;
   query_service.executeQuery(
       input.get(),
-      query::QueryService::FORMAT_SVG,
+      getOutputFormat(flag_parser),
       output.get());
+}
+
+const query::QueryService::kFormat CLI::getOutputFormat(
+    const FlagParser& flags) {
+  return query::QueryService::FORMAT_TABLE;
 }
 
 }

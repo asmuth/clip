@@ -30,9 +30,10 @@ namespace query {
 class QueryService {
 public:
   enum kFormat {
-    FORMAT_SVG,
     FORMAT_CSV,
-    FORMAT_JSON
+    FORMAT_JSON,
+    FORMAT_SVG,
+    FORMAT_TABLE
   };
 
   /**
@@ -61,6 +62,7 @@ protected:
 
   void renderCharts(Query* query, ui::RenderTarget* target) const;
   void renderJSON(Query* query, util::JSONOutputStream* target) const;
+  void renderTables(Query* query, util::OutputStream* out) const;
 
 };
 
