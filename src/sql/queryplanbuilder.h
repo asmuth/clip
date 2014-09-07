@@ -86,6 +86,7 @@ protected:
   bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list) const;
 
   QueryPlanNode* buildLimitClause(ASTNode* ast, TableRepository* repo) const;
+  QueryPlanNode* buildOrderByClause(ASTNode* ast, TableRepository* repo) const;
 
   std::vector<std::unique_ptr<QueryPlanBuilderInterface>> extensions_;
 };

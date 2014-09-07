@@ -40,6 +40,10 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     return exec;
   }
 
+  if ((exec = buildOrderByClause(ast, repo)) != nullptr) {
+    return exec;
+  }
+
   if (hasGroupByClause(ast) || hasAggregationInSelectList(ast)) {
     return buildGroupBy(ast, repo);
   }
@@ -247,6 +251,24 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
     }
 
     return new LimitClause(limit, offset, buildQueryPlan(new_ast, repo));
+  }
+
+  return nullptr;
+}
+
+QueryPlanNode* QueryPlanBuilder::buildOrderByClause(
+    ASTNode* ast,
+    TableRepository* repo) const {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
+    return nullptr;
+  }
+
+  for (const auto& child : ast->getChildren()) {
+    if (child->getType() != ASTNode::T_ORDER_BY) {
+      continue;
+    }
+
+    RAISE(util::RuntimeException, "ORDER BY not yet implemented");
   }
 
   return nullptr;
