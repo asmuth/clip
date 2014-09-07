@@ -20,6 +20,8 @@ PointChartBuilder::PointChartBuilder(
     ChartBuilder(canvas, draw_stmt) {}
 
 ui::Drawable* PointChartBuilder::getChart() const {
+  preconditionCheck();
+
   if (auto c = tryType2D<ui::PointChart2D<double, double>>())
     return c;
 

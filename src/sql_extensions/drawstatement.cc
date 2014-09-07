@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql_extensions/domainconfig.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
+#include <fnordmetric/sql_extensions/areachartbuilder.h>
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
 #include <fnordmetric/sql_extensions/linechartbuilder.h>
 #include <fnordmetric/sql_extensions/pointchartbuilder.h>
@@ -22,6 +23,9 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
   ui::Drawable* chart = nullptr;
 
   switch (ast_->getToken()->getType()) {
+    case Token::T_AREACHART:
+      chart = mkChart<AreaChartBuilder>(canvas);
+      break;
     case Token::T_BARCHART:
       chart = mkChart<BarChartBuilder>(canvas);
       break;

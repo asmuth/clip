@@ -50,14 +50,14 @@ examples:
         title: "Inverted Axis"
         file: "inverted_axis"
         url: "/linecharts/inverted_axis"
-#  -
-#    title: "Area Charts"
-#    dir: "areacharts"
-#    examples:
-#      -
-#        title: "Simple area chart"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+  -
+    title: "Area Charts"
+    dir: "areacharts"
+    examples:
+      -
+        title: "Simple area chart"
+        file: "simple_area"
+        url: "/areacharts/simple_area"
 #      -
 #        title: "Areas with borders/points"
 #        file: "horizontal_bars"

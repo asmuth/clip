@@ -9,5 +9,4 @@ DRAW BARCHART WITH
 SELECT 'gdp per country' AS series, isocode AS x, gdp AS y
     FROM gdp_per_capita
     WHERE year = "2010"
-    ORDER BY gdp DESC
     LIMIT 20;

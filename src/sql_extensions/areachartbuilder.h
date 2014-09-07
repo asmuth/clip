@@ -7,17 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
-#define _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
+#ifndef _FNORDMETRIC_SQLEXTENSIONS_AREACHARTBUILDER_H
+#define _FNORDMETRIC_SQLEXTENSIONS_AREACHARTBUILDER_H
 #include <fnordmetric/sql_extensions/chartbuilder.h>
 
 namespace fnordmetric {
 namespace query {
 class DrawStatement;
 
-class LineChartBuilder : public ChartBuilder {
+class AreaChartBuilder : public ChartBuilder {
 public:
-  LineChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
+  AreaChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
   ui::Drawable* getChart() const override;
   std::string chartName() const override;
 };

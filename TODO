@@ -1,8 +1,8 @@
 [ ui ]
     - TimeDomain!
     - impl chart title, subtitle
-    - chart type: areachart
     - impl legend
+    - stacked area charts
     - middle axis
     - impl inside/outside, rotate axis labels
     - impl grid
