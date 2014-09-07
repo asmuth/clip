@@ -45,6 +45,11 @@ static const std::string kStyleSheetDefault = R"(
 
   .legend text {
     font-size: 10px;
+    fill: #333;
+  }
+
+  .legend text.title {
+    fill: #666;
   }
 
   .chart .line {

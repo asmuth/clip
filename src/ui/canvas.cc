@@ -385,7 +385,13 @@ void Canvas::renderOutsideLegends(
     Viewport* viewport) const {
   for (const auto& legend : legends_) {
     target->beginGroup("legend");
-    renderOutsideTopLegend(target, viewport, legend.get(), 25.0f);
+
+    renderTopRightLegend(
+        target,
+        viewport,
+        legend.get(),
+        kLegendOutsideHorizPadding);
+
     target->finishGroup();
   }
 }
@@ -397,16 +403,22 @@ void Canvas::renderInsideLegends(
 
   for (const auto& legend : legends_) {
     target->beginGroup("legend");
-    viewport->setPaddingTop(viewport->paddingTop() + 10.0f);
-    renderOutsideTopLegend(target, viewport, legend.get(), 15.0f);
-    viewport->setPaddingTop(viewport->paddingTop() + 10.0f);
+    viewport->setPaddingTop(viewport->paddingTop() + kLegendInsideVertPadding);
+
+    renderTopRightLegend(
+        target,
+        viewport,
+        legend.get(),
+        kLegendInsideHorizPadding);
+
+    viewport->setPaddingTop(viewport->paddingTop() + kLegendInsideVertPadding);
     target->finishGroup();
   }
 
   viewport->setPadding(orig_padding);
 }
 
-void Canvas::renderOutsideTopLegend(
+void Canvas::renderTopRightLegend(
     RenderTarget* target,
     Viewport* viewport,
     LegendDefinition* legend,
@@ -439,19 +451,19 @@ void Canvas::renderOutsideTopLegend(
 
     target->drawPoint(
         lx,
-        viewport->paddingTop() + 6 + height,
+        viewport->paddingTop() + kLegendPointY + height,
         "circle",
-        4,
+        kLegendPointSize,
         entry.second,
-        "circle");
+        "point");
 
     target->drawText(
       entry.first,
-      lx - 8.0f,
+      lx - kLegendPointWidth,
       viewport->paddingTop() + height,
       "end",
       "text-before-edge",
-      "title");
+      "label");
 
     lx -= this_len;
   }
