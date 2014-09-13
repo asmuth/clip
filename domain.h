@@ -137,8 +137,8 @@ public:
     }
   }
 
-  std::string label(T value) const {
-    return util::format::numberToHuman(value);
+  virtual std::string label(T value) const {
+    return fnordmetric::util::format::numberToHuman(value);
   }
 
   double valueAt(double index) const {
@@ -207,8 +207,7 @@ public:
     std::vector<std::pair<double, std::string>> labels;
 
     for (auto tick : ticks) {
-      labels.emplace_back(tick,
-          util::format::numberToHuman(valueAt(tick)));
+      labels.emplace_back(tick, label(valueAt(tick)));
     }
 
     return labels;
@@ -237,9 +236,6 @@ public:
     padding_.second = max_padding;
   }
 
-
-  double min_value_;
-  double max_value_;
 protected:
 
   std::pair<double, double> getRangeWithPadding() const {
@@ -249,9 +245,41 @@ protected:
         min_value_ == 0 ? 0 : min_value_ - range * padding_.first,
         max_value_ + range * padding_.second);
   }
+
+  T getRange() const {
+    return max_value_ - min_value_;
+  }
+
+  double min_value_;
+  double max_value_;
   bool is_logarithmic_;
   bool is_inverted_;
   std::pair<double, double> padding_;
+};
+
+template <typename T>
+class TimeDomain : public ContinuousDomain<T> {
+public:
+
+  TimeDomain(
+    T min_value = std::numeric_limits<T>::max(),
+    T max_value = std::numeric_limits<T>::min(),
+    bool is_logarithmic = false,
+    bool is_inverted = false) :
+    ContinuousDomain<T>(
+        min_value,
+        max_value,
+        is_logarithmic,
+        is_inverted) {}
+
+  std::string label(T value) const {
+    struct tm tm;
+    gmtime_r(&value, &tm);
+
+    return fnordmetric::util::format::smartTimeFormatWithRange(
+        &tm, ContinuousDomain<T>::getRange());
+  }
+
 };
 
 template <typename T>

@@ -145,34 +145,6 @@ protected:
   bool has_labels_;
 };
 
-// FIXPAUL: use template specialization
-/*template <typename T>
-AxisDefinition::AxisDefinition(
-    kPosition axis_position,
-    Domain<T>* domain) :
-    position_(axis_position) {
-  auto numerical = dynamic_cast<NumericalDomain<T>*>(domain);
-
-  if (numerical == nullptr) {
-    int m = domain->getCardinality();
-
-    for (int n = 0; n < m; n++) {
-      double tick = domain->offsetAt(n);
-      addTick((double) n / m);
-      addLabel((double) n / m + (1.0f / (m + 1)) * 0.5, domain->labelAt(n));
-    }
-
-    addTick(1.0);
-  } else {
-    for (int n = 0; n < domain->getCardinality(); n++) {
-      double tick = domain->offsetAt(n);
-      addTick(tick);
-      addLabel(tick, domain->labelAt(n));
-    }
-  }
-}
-*/
-
 }
 }
 #endif
