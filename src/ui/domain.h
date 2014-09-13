@@ -273,11 +273,8 @@ public:
         is_inverted) {}
 
   std::string label(T value) const {
-    struct tm tm;
-    gmtime_r(&value, &tm);
-
-    return fnordmetric::util::format::smartTimeFormatWithRange(
-        &tm, ContinuousDomain<T>::getRange());
+    return fnordmetric::util::format::formatTimeWithRange(
+        value, ContinuousDomain<T>::getRange());
   }
 
 };

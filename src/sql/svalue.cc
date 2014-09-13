@@ -13,6 +13,7 @@
 #include <string>
 #include <stdint.h>
 #include <assert.h>
+#include <fnordmetric/util/format.h>
 #include "svalue.h"
 #include "token.h"
 
@@ -247,12 +248,7 @@ std::string SValue::toString() const {
     }
 
     case T_TIMESTAMP: {
-      auto ts = getTimestamp();
-      struct tm tm;
-      gmtime_r(&ts, &tm);
-      len = strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
-      str = buf;
-      break;
+      return util::format::formatTime(getTimestamp());
     }
 
     case T_FLOAT: {

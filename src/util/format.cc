@@ -72,8 +72,27 @@ std::string numberToHuman(double value) {
   return std::string(buf, len);
 }
 
-std::string smartTimeFormatWithRange(struct tm* time, int range) {
-  return "here be dragons";
+std::string formatTime(fnordmetric::TimeType time, char* fmt /* = nullptr */) {
+  static char default_fmt[] = "%Y-%m-%d %H:%M:%S";
+
+  struct tm tm;
+  localtime_r(&time, &tm);
+
+  char buf[256];
+  buf[0] = 0;
+  strftime(buf, sizeof(buf), fmt == nullptr ? default_fmt : fmt, &tm);
+
+  return std::string(buf);
+}
+
+std::string formatTimeWithRange(fnordmetric::TimeType time, int range) {
+  if (range < 60 * 60) {
+    return formatTime(time, "%H:%M:%S");
+  } else if (range < 60 * 60 * 24) {
+    return formatTime(time, "%H:%M");
+  } else {
+    return formatTime(time, "%Y-%m-%d %H:%M");
+  }
 }
 
 }
