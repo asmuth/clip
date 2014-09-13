@@ -16,126 +16,126 @@
 namespace fnordmetric {
 
 static const std::string kStyleSheetDefault = R"(
-  .chart text {
+  .fm-chart text {
     font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font: 10px sans-serif;
   }
 
-  .axis .stroke {
+  .fm-chart .axis .stroke {
     stroke: #aaa;
     stroke-width: 1px;
   }
 
-  .axis .tick {
+  .fm-chart .axis .tick {
     stroke: #aaa;
     stroke-width: 1px;
   }
 
-  .axis .label, .axis .title {
+  .fm-chart .axis .label, .axis .title {
     fill: #666;
   }
 
-  .axis .label {
+  .fm-chart .axis .label {
     font-size: 10px;
   }
 
-  .axis .title {
+  .fm-chart .axis .title {
     font-size: 10px;
   }
 
-  .legend text {
+  .fm-chart .legend text {
     font-size: 10px;
     fill: #333;
   }
 
-  .legend text.title {
+  .fm-chart .legend text.title {
     fill: #666;
   }
 
-  .chart .line {
+  .fm-chart .line {
     fill: none;
     stroke: #000;
   }
 
-  .chart .area {
+  .fm-chart .area {
     opacity: 0.8;
   }
 
-  .chart .grid .gridline {
+  .fm-chart .grid .gridline {
     stroke: #ddd;
     stroke-width: 0.02em;
   }
 
-  .chart .bar,
-  .chart .point,
-  .chart .area {
+  .fm-chart .bar,
+  .fm-chart .point,
+  .fm-chart .area {
     fill: #000;
   }
 
-  .chart .bar.color6,
-  .chart .point.color6,
-  .chart .area.color6 {
+  .fm-chart .bar.color6,
+  .fm-chart .point.color6,
+  .fm-chart .area.color6 {
     fill: #db843d;
   }
 
-  .chart .lines .line.color6 {
+  .fm-chart .lines .line.color6 {
     strok: #db843d;
   }
 
-  .chart .bar.color5,
-  .chart .point.color5,
-  .chart .area.color5 {
+  .fm-chart .bar.color5,
+  .fm-chart .point.color5,
+  .fm-chart .area.color5 {
     fill: #3d96ae;
   }
 
-  .chart .lines .line.color5 {
+  .fm-chart .lines .line.color5 {
     stroke: #3d96ae;
   }
 
-  .chart .bar.color4,
-  .chart .point.color4,
-  .chart .area.color4 {
+  .fm-chart .bar.color4,
+  .fm-chart .point.color4,
+  .fm-chart .area.color4 {
     fill: #80699b;
   }
 
-  .chart .line.color4 {
+  .fm-chart .line.color4 {
     stroke: #80699b;
   }
 
-  .chart .bar.color3,
-  .chart .point.color3,
-  .chart .area.color3 {
+  .fm-chart .bar.color3,
+  .fm-chart .point.color3,
+  .fm-chart .area.color3 {
     fill: #89a54e;
   }
 
-  .chart .line.color3 {
+  .fm-chart .line.color3 {
     stroke: #89a54e;
   }
 
-  .chart .bar.color2,
-  .chart .point.color2,
-  .chart .area.color2 {
+  .fm-chart .bar.color2,
+  .fm-chart .point.color2,
+  .fm-chart .area.color2 {
     fill: #aa4643;
   }
 
-  .chart .line.color2 {
+  .fm-chart .line.color2 {
     stroke: #aa4643;
   }
 
-  .chart .bar.color1,
-  .chart .point.color1,
-  .chart .area.color1 {
+  .fm-chart .bar.color1,
+  .fm-chart .point.color1,
+  .fm-chart .area.color1 {
     fill: #4572a7;
   }
 
-  .chart .line.color1 {
+  .fm-chart .line.color1 {
     stroke: #4572a7;
   }
 
-  .chart.bar.vertical .axis.left .stroke,
-  .chart.bar.vertical .axis.left .tick,
-  .chart.bar.vertical .axis.right .stroke,
-  .chart.bar.vertical .axis.right .tick {
+  .fm-chart.bar.vertical .axis.left .stroke,
+  .fm-chart.bar.vertical .axis.left .tick,
+  .fm-chart.bar.vertical .axis.right .stroke,
+  .fm-chart.bar.vertical .axis.right .tick {
     display: none;
   }
 )";
