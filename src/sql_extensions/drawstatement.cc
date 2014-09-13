@@ -300,7 +300,7 @@ void DrawStatement::applyGrid(ui::Drawable* chart) const {
   }
 
   if (vertical) {
-    chart->addGrid(ui::GridDefinition::GRID_HORIZONTAL);
+    chart->addGrid(ui::GridDefinition::GRID_VERTICAL);
   }
 }
 

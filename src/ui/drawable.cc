@@ -29,8 +29,9 @@ LegendDefinition* Drawable::addLegend(
     LegendDefinition::kHorizontalPosition horiz_pos,
     LegendDefinition::kPlacement placement,
     const std::string& title) {
-  canvas_->addLegend(vert_pos, horiz_pos, placement, title);
+  auto legend = canvas_->addLegend(vert_pos, horiz_pos, placement, title);
   updateLegend();
+  return legend;
 }
 
 void Drawable::addSeries(Series* series) {

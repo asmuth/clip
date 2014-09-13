@@ -3,7 +3,8 @@ IMPORT TABLE example_data
 
 DRAW AREACHART WITH
   AXIS BOTTOM
-  AXIS LEFT;
+  AXIS LEFT
+  GRID HORIZONTAL;
 
 SELECT 'data' AS series, (time - 1404278100) / 60 AS x, value2 * 1000 AS y, 'solid' as linestyle
    FROM example_data

@@ -5,7 +5,8 @@ DRAW POINTCHART WITH
    AXIS BOTTOM
    AXIS LEFT
    AXIS TOP
-   AXIS RIGHT;
+   AXIS RIGHT
+   GRID HORIZONTAL VERTICAL;
 
 SELECT series AS series, x AS x, y AS y
    FROM example_data;
