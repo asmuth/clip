@@ -29,6 +29,8 @@ public:
   static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20; // FIXPAUL make configurable
   static const int kCharWidth = 6.0f; // FIXPAUL make configurable
+  static const int kTitleLineHeight = 20; // FIXPAUL make configurable
+  static const int kSubtitleLineHeight = 20; // FIXPAUL make configurable
   static const int kLegendLabelPadding = 20; // FIXPAUL make configurable
   static const int kLegendLineHeight = 20; // FIXPAUL make configurable
   static const int kLegendInsideVertPadding = 10;
@@ -40,6 +42,16 @@ public:
   static const int kLegendPointSize = 3;
 
   Canvas();
+
+  /**
+   * Set the title for this canvas
+   */
+  void setTitle(const std::string& title);
+
+  /**
+   * Set the subtitle for this canvas
+   */
+  void setSubtitle(const std::string& subtitle);
 
   /**
    * FIXPAUL overcomplicated, just accept a ptr
@@ -109,9 +121,16 @@ public:
    std::string renderSVG() const;
 
 protected:
+
+  // FIXPAUL
   int estimateTextLength(const std::string& str) const {
     return str.size() * kCharWidth;
   }
+
+  /**
+   * Render the chart title
+   */
+  void renderTitle(RenderTarget* target, Viewport* viewport) const;
 
   /**
    * Render the charts
@@ -217,6 +236,8 @@ protected:
   std::vector<std::unique_ptr<LegendDefinition>> legends_;
   std::vector<std::unique_ptr<GridDefinition>> grids_;
   std::vector<std::unique_ptr<Drawable>> drawables_;
+  std::string title_;
+  std::string subtitle_;
 };
 
 }

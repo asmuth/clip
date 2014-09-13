@@ -17,11 +17,11 @@ namespace ui {
 Drawable::Drawable(Canvas* canvas) : canvas_(canvas) {}
 
 void Drawable::setTitle(const std::string& title) {
-  printf("TITLE: %s\n", title.c_str());
+  canvas_->setTitle(title);
 }
 
 void Drawable::setSubtitle(const std::string& subtitle) {
-  printf("SUBTITLE: %s\n", subtitle.c_str());
+  canvas_->setSubtitle(subtitle);
 }
 
 LegendDefinition* Drawable::addLegend(
