@@ -35,7 +35,9 @@ public:
 
     for (auto& joined : data_) {
       for (int i = joined.ys.size(); i <= num_series_; ++i) {
-        joined.ys.emplace_back(nullptr, nullptr);
+        joined.ys.emplace_back(
+            Series::Coord<TY>(nullptr),
+            Series::Coord<TZ>(nullptr));
       }
     }
 
@@ -58,7 +60,9 @@ public:
     }
 
     for (int i = joined->ys.size(); i < num_series_; ++i) {
-      joined->ys.emplace_back(nullptr, nullptr);
+      joined->ys.emplace_back(
+          Series::Coord<TY>(nullptr),
+          Series::Coord<TZ>(nullptr));
     }
 
     if (joined->ys.size() < num_series_ + 1 || force) {
