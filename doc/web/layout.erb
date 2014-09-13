@@ -11,6 +11,11 @@
   <body onload="prettyPrint();">
     <%= @yield %>
 
+    <script type="text/javascript" src="/fnordmetric.js"></script>
+    <script type="text/javascript">
+      FnordMetric.extendCharts();
+    </script>
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-11365464-7']);

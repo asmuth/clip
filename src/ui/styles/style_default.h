@@ -16,7 +16,7 @@
 namespace fnordmetric {
 
 static const std::string kStyleSheetDefault = R"(
-  .fm-chart text {
+  .fm-chart text, .fm-tooltip {
     font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font: 10px sans-serif;
   }
@@ -137,6 +137,15 @@ static const std::string kStyleSheetDefault = R"(
   .fm-chart.bar.vertical .axis.right .stroke,
   .fm-chart.bar.vertical .axis.right .tick {
     display: none;
+  }
+
+  .fm-tooltip {
+    text-align: center;
+    padding: 5px 7px;
+    color: #fff;
+    background: #333;
+    border-radius: 3px;
+    font-size: 13px;
   }
 )";
 
