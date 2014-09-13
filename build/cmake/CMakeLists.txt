@@ -76,6 +76,7 @@ set(FNORDMETRIC_CLI_SOURCES
     stage/src/fnordmetric/web/webinterface.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 
 include_directories(stage/src)
@@ -97,6 +98,7 @@ add_executable(tests/test-sql
     stage/src/fnordmetric/sql/sql_test.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-sql libfnordmetric)
 
@@ -104,6 +106,7 @@ add_executable(tests/test-sql-extensions
     stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-sql-extensions libfnordmetric)
 
@@ -111,6 +114,7 @@ add_executable(tests/test-query
     stage/src/fnordmetric/query/query_test.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-query libfnordmetric)
 

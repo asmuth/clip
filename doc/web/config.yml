@@ -7,7 +7,7 @@ examples:
     dir: "linecharts"
     examples:
       -
-        title: "Simple line chart"
+        title: "Simple timeseries line chart"
         file: "simple_lines"
         url: "/linecharts/simple_lines"
       -

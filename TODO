@@ -1,22 +1,22 @@
 [ ui ]
-    - series adapter: max interpolation gap
     - TimeDomain!
     - impl chart title, subtitle
     - stacked area charts
-    - middle axis
     - pointchart labels
     - barchart labels
     - linechart labels
     - impl inside/outside axis labels
-    - impl variable axis label size
-    - impl rotated axis labels
-    - impl grid
     - line/point styles
-    - chart type: histogram
-    - chart type: heatmap
     - make # of axis ticks configurable via sql
     - simple interactive charts (hover tooltips)
     - simple web interface (interactive query UI generates embed html snippets)
+    ----------
+    - series adapter: max interpolation gap
+    - middle axis
+    - impl rotated axis labels
+    - impl variable axis label size
+    - chart type: histogram
+    - chart type: heatmap
 
 [ cleanup ]
     - integer overflow :(

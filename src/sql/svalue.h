@@ -27,8 +27,15 @@ public:
     T_FLOAT,
     T_INTEGER,
     T_BOOL,
+    T_TIMESTAMP,
     T_UNDEFINED
   };
+
+  typedef std::string StringType;
+  typedef double FloatType;
+  typedef int64_t IntegerType;
+  typedef bool BoolType;
+  typedef time_t TimeType;
 
   struct TypeError : public fnordmetric::util::RuntimeException {
     template <typename... T>
@@ -41,11 +48,13 @@ public:
   const char* getTypeName() const;
 
   explicit SValue();
-  explicit SValue(const std::string& string_value);
-  explicit SValue(int64_t integer_value);
-  explicit SValue(double float_value);
-  explicit SValue(bool bool_value);
+  explicit SValue(const StringType& string_value);
+  explicit SValue(IntegerType integer_value);
+  explicit SValue(FloatType float_value);
+  explicit SValue(BoolType bool_value);
+  explicit SValue(TimeType time_value);
   explicit SValue(const char* str_value, size_t len, bool copy);
+
   SValue(const SValue& copy);
   SValue& operator=(const SValue& copy);
   bool operator==(const SValue& other) const;
@@ -57,12 +66,14 @@ public:
   template <typename T> bool testType() const;
   kSValueType getType() const;
   kSValueType testTypeWithNumericConversion() const;
-  int64_t getInteger() const;
-  double getFloat() const;
-  bool getBool() const;
-  const std::string getString() const;
+  IntegerType getInteger() const;
+  FloatType getFloat() const;
+  BoolType getBool() const;
+  TimeType getTimestamp() const;
+  StringType getString() const;
   std::string toString() const;
   bool tryNumericConversion();
+  bool tryTimeConversion();
 
   static SValue* fromToken(const Token* token);
 
@@ -70,9 +81,10 @@ protected:
   struct {
     kSValueType type;
     union {
-      int64_t t_integer;
-      double t_float;
-      bool t_bool;
+      IntegerType t_integer;
+      FloatType t_float;
+      BoolType t_bool;
+      TimeType t_timestamp;
       struct {
         char* ptr;
         uint32_t len;

@@ -33,14 +33,16 @@ int main(int argc, char** argv) {
     fprintf(
         stderr,
         "FnordMetric crashed :( -- Please report a bug at "
-        "github.com/paulasmuth/fnordmetric");
+        "github.com/paulasmuth/fnordmetric\n\n");
 
     auto runtime_exception = dynamic_cast<util::RuntimeException*>(&e);
-    if (runtime_exception != nullptr) {
+    if (runtime_exception == nullptr) {
+      fprintf(stderr, "Aborting...\n");
+      abort(); // core dump if enabled
+    } else {
       runtime_exception->debugPrint();
+      return 1;
     }
-
-    return 1;
   }
 }
 

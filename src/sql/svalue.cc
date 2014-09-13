@@ -28,7 +28,7 @@ SValue::~SValue() {
   // FIXPAUL free string!
 }
 
-SValue::SValue(const std::string& string_value) {
+SValue::SValue(const SValue::StringType& string_value) {
   data_.type = T_STRING;
   data_.u.t_string.len = string_value.size();
   data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
@@ -43,19 +43,24 @@ SValue::SValue(const std::string& string_value) {
       data_.u.t_string.len);
 }
 
-SValue::SValue(int64_t integer_value) : SValue() {
+SValue::SValue(SValue::IntegerType integer_value) : SValue() {
   data_.type = T_INTEGER;
   data_.u.t_integer = integer_value;
 }
 
-SValue::SValue(double float_value) : SValue() {
+SValue::SValue(SValue::FloatType float_value) : SValue() {
   data_.type = T_FLOAT;
   data_.u.t_float = float_value;
 }
 
-SValue::SValue(bool bool_value) : SValue() {
+SValue::SValue(SValue::BoolType bool_value) : SValue() {
   data_.type = T_BOOL;
   data_.u.t_bool = bool_value;
+}
+
+SValue::SValue(SValue::TimeType time_value) : SValue() {
+  data_.type = T_TIMESTAMP;
+  data_.u.t_timestamp = time_value;
 }
 
 SValue::SValue(const SValue& copy) {
@@ -133,7 +138,7 @@ SValue::kSValueType SValue::getType() const {
   return data_.type;
 }
 
-int64_t SValue::getInteger() const {
+SValue::IntegerType SValue::getInteger() const {
   switch (data_.type) {
 
     case T_INTEGER:
@@ -158,7 +163,7 @@ int64_t SValue::getInteger() const {
   return 0;
 }
 
-double SValue::getFloat() const {
+SValue::FloatType SValue::getFloat() const {
   switch (data_.type) {
 
     case T_INTEGER:
@@ -186,16 +191,34 @@ double SValue::getFloat() const {
   return 0;
 }
 
-bool SValue::getBool() const {
+SValue::BoolType SValue::getBool() const {
   assert(data_.type == T_BOOL);
   return data_.u.t_bool;
 }
 
-const std::string SValue::getString() const {
+SValue::TimeType SValue::getTimestamp() const {
+  switch (getType()) {
+
+    case T_TIMESTAMP:
+      return data_.u.t_timestamp;
+
+    default:
+      RAISE(
+         TypeError,
+          "can't convert %s '%s' to Timestamp",
+          SValue::getTypeName(data_.type),
+          toString().c_str());
+      time_t ts;
+      time(&ts);
+
+  }
+}
+
+SValue::StringType SValue::getString() const {
   if (data_.type == T_STRING) {
     return std::string(data_.u.t_string.ptr, data_.u.t_string.len);
   } else {
-    toString();
+    return toString();
   }
 }
 
@@ -219,6 +242,15 @@ std::string SValue::toString() const {
 
     case T_INTEGER: {
       len = snprintf(buf, sizeof(buf), "%" PRId64, getInteger());
+      str = buf;
+      break;
+    }
+
+    case T_TIMESTAMP: {
+      auto ts = getTimestamp();
+      struct tm tm;
+      gmtime_r(&ts, &tm);
+      len = strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
       str = buf;
       break;
     }
@@ -292,6 +324,8 @@ const char* SValue::getTypeName(kSValueType type) {
       return "Integer";
     case T_BOOL:
       return "Boolean";
+    case T_TIMESTAMP:
+      return "Timestamp";
     case T_UNDEFINED:
       return "Undefined";
   }
@@ -301,28 +335,32 @@ const char* SValue::getTypeName() const {
   return SValue::getTypeName(data_.type);
 }
 
-template <> bool SValue::getValue<bool>() const {
+template <> SValue::BoolType SValue::getValue<SValue::BoolType>() const {
   return getBool();
 }
 
-template <> int SValue::getValue<int>() const {
+template <> SValue::IntegerType SValue::getValue<SValue::IntegerType>() const {
   return getInteger();
 }
 
-template <> double SValue::getValue<double>() const {
+template <> SValue::FloatType SValue::getValue<SValue::FloatType>() const {
   return getFloat();
 }
 
-template <> std::string SValue::getValue<std::string>() const {
+template <> SValue::StringType SValue::getValue<SValue::StringType>() const {
   return toString();
 }
 
+template <> SValue::TimeType SValue::getValue<SValue::TimeType>() const {
+  return getTimestamp();
+}
+
 // FIXPAUL: smarter type detection
-template <> bool SValue::testType<bool>() const {
+template <> bool SValue::testType<SValue::BoolType>() const {
   return data_.type == T_BOOL;
 }
 
-template <> bool SValue::testType<int>() const {
+template <> bool SValue::testType<SValue::IntegerType>() const {
   if (data_.type == T_INTEGER) {
     return true;
   }
@@ -343,7 +381,7 @@ template <> bool SValue::testType<int>() const {
   return true;
 }
 
-template <> bool SValue::testType<double>() const {
+template <> bool SValue::testType<SValue::FloatType>() const {
   if (data_.type == T_FLOAT) {
     return true;
   }
@@ -381,27 +419,38 @@ template <> bool SValue::testType<std::string>() const {
 }
 
 SValue::kSValueType SValue::testTypeWithNumericConversion() const {
-  if (testType<int>()) return T_INTEGER;
-  if (testType<double>()) return T_FLOAT;
+  if (testType<SValue::IntegerType>()) return T_INTEGER;
+  if (testType<SValue::FloatType>()) return T_FLOAT;
   return getType();
 }
 
 bool SValue::tryNumericConversion() {
-  if (testType<int>()) {
-    int val = getValue<int>();
+  if (testType<SValue::IntegerType>()) {
+    SValue::IntegerType val = getValue<SValue::IntegerType>();
     data_.type = T_INTEGER;
     data_.u.t_integer = val;
     return true;
   }
 
-  if (testType<double>()) {
-    double val = getValue<double>();
+  if (testType<SValue::FloatType>()) {
+    SValue::FloatType val = getValue<SValue::FloatType>();
     data_.type = T_FLOAT;
     data_.u.t_float = val;
     return true;
   }
 
   return false;
+}
+
+bool SValue::tryTimeConversion() {
+  if (!tryNumericConversion()) {
+    return false;
+  }
+
+  time_t ts = getInteger();
+  data_.type = T_TIMESTAMP;
+  data_.u.t_timestamp = ts;
+  return true;
 }
 
 

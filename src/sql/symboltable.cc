@@ -13,6 +13,7 @@
 #include <string>
 #include <unordered_map>
 #include "symboltable.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
@@ -23,11 +24,11 @@ static std::unordered_map<std::string, const SymbolTableEntry*>*
   return &symbols;
 }
 
-
 const SymbolTableEntry* lookupSymbol(const std::string& symbol) {
   auto iter = __globalSymbolTable()->find(symbol);
 
   if (iter == __globalSymbolTable()->end()) {
+    RAISE(util::RuntimeException, "symbol not found: %s", symbol.c_str());
     return nullptr;
   } else {
     return iter->second;

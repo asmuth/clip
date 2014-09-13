@@ -19,15 +19,17 @@ DomainConfig::DomainConfig(
     dimension_letter_(ui::AnyDomain::kDimensionLetters[dimension]) {}
 
 void DomainConfig::setMin(const SValue& value) {
-  auto int_domain = dynamic_cast<ui::ContinuousDomain<int>*>(domain_);
+  auto int_domain = dynamic_cast<ui::ContinuousDomain<SValue::IntegerType>*>(
+      domain_);
   if (int_domain != nullptr) {
-    int_domain->setMin(value.getValue<int>());
+    int_domain->setMin(value.getValue<SValue::IntegerType>());
     return;
   }
 
-  auto float_domain = dynamic_cast<ui::ContinuousDomain<double>*>(domain_);
+  auto float_domain = dynamic_cast<ui::ContinuousDomain<SValue::FloatType>*>(
+      domain_);
   if (float_domain != nullptr) {
-    float_domain->setMin(value.getValue<double>());
+    float_domain->setMin(value.getValue<SValue::FloatType>());
     return;
   }
 
@@ -38,15 +40,17 @@ void DomainConfig::setMin(const SValue& value) {
 }
 
 void DomainConfig::setMax(const SValue& value) {
-  auto int_domain = dynamic_cast<ui::ContinuousDomain<int>*>(domain_);
+  auto int_domain = dynamic_cast<ui::ContinuousDomain<SValue::IntegerType>*>(
+      domain_);
   if (int_domain != nullptr) {
-    int_domain->setMax(value.getValue<int>());
+    int_domain->setMax(value.getValue<SValue::IntegerType>());
     return;
   }
 
-  auto float_domain = dynamic_cast<ui::ContinuousDomain<double>*>(domain_);
+  auto float_domain = dynamic_cast<ui::ContinuousDomain<SValue::FloatType>*>(
+      domain_);
   if (float_domain != nullptr) {
-    float_domain->setMax(value.getValue<double>());
+    float_domain->setMax(value.getValue<SValue::FloatType>());
     return;
   }
 
