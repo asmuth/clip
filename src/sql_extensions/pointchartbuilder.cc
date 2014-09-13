@@ -22,28 +22,103 @@ PointChartBuilder::PointChartBuilder(
 ui::Drawable* PointChartBuilder::getChart() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::PointChart2D<double, double>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<double, std::string>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<std::string, double>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<std::string, std::string>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<double, double, double>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<double, std::string, double>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<std::string, double, double>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::StringType,
+        fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<std::string, std::string, double>>())
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType2D<ui::PointChart2D<
+        fnordmetric::StringType,
+        fnordmetric::StringType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::TimeType,
+        fnordmetric::TimeType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::TimeType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::TimeType,
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::FloatType,
+        fnordmetric::TimeType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::FloatType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::FloatType,
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::StringType,
+        fnordmetric::TimeType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::PointChart3D<
+        fnordmetric::StringType,
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
     return c;
 
   invalidType();

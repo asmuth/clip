@@ -115,8 +115,9 @@ protected:
 
   AnySeriesAdapter* mkSeriesAdapter(SValue* row) {
     AnySeriesAdapter* a = nullptr;
-    if (!a) a = mkSeriesAdapter1D<double>(row);
-    if (!a) a = mkSeriesAdapter1D<std::string>(row);
+    if (!a) a = mkSeriesAdapter1D<fnordmetric::TimeType>(row);
+    if (!a) a = mkSeriesAdapter1D<fnordmetric::FloatType>(row);
+    if (!a) a = mkSeriesAdapter1D<fnordmetric::StringType>(row);
 
     if (a == nullptr) {
       RAISE(util::RuntimeException, "can't build seriesadapter");
@@ -136,8 +137,9 @@ protected:
     }
 
     AnySeriesAdapter* a = nullptr;
-    if (!a) a = mkSeriesAdapter2D<TX, double>(row);
-    if (!a) a = mkSeriesAdapter2D<TX, std::string>(row);
+    if (!a) a = mkSeriesAdapter2D<TX, fnordmetric::TimeType>(row);
+    if (!a) a = mkSeriesAdapter2D<TX, fnordmetric::FloatType>(row);
+    if (!a) a = mkSeriesAdapter2D<TX, fnordmetric::StringType>(row);
     return a;
   }
 
@@ -156,8 +158,9 @@ protected:
     }
 
     AnySeriesAdapter* a = nullptr;
-    if (!a) a = mkSeriesAdapter3D<TX, TY, double>(row);
-    if (!a) a = mkSeriesAdapter3D<TX, TY, std::string>(row);
+    if (!a) a = mkSeriesAdapter3D<TX, TY, fnordmetric::TimeType>(row);
+    if (!a) a = mkSeriesAdapter3D<TX, TY, fnordmetric::FloatType>(row);
+    if (!a) a = mkSeriesAdapter3D<TX, TY, fnordmetric::StringType>(row);
     return a;
   }
 

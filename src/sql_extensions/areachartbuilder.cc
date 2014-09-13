@@ -22,16 +22,37 @@ AreaChartBuilder::AreaChartBuilder(
 ui::Drawable* AreaChartBuilder::getChart() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::AreaChart2D<double, double>>())
+  if (auto c = tryType2D<ui::AreaChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::AreaChart2D<std::string, double>>())
+  if (auto c = tryType2D<ui::AreaChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::AreaChart3D<double, double, double>>())
+  if (auto c = tryType2D<ui::AreaChart2D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::AreaChart3D<std::string, double, double>>())
+  if (auto c = tryType3D<ui::AreaChart3D<
+        fnordmetric::TimeType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::AreaChart3D<
+        fnordmetric::FloatType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType3D<ui::AreaChart3D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
     return c;
 
   invalidType();

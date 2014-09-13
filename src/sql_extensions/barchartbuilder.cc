@@ -29,10 +29,15 @@ ui::Drawable* BarChartBuilder::getChart() const {
 ui::Drawable* BarChartBuilder::findChartType() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::BarChart2D<std::string, double>>())
+  if (auto c = tryType2D<ui::BarChart2D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::BarChart3D<std::string, double, double>>())
+  if (auto c = tryType3D<ui::BarChart3D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
     return c;
 
   invalidType();

@@ -16,12 +16,19 @@ const char AnyDomain::kDimensionLetters[] = "xyz";
 const int AnyDomain::kDefaultNumTicks = 8;
 const double AnyDomain::kDefaultDomainPadding = 0.1;
 
-template <> Domain<int>* Domain<int>::mkDomain() {
-  return new ContinuousDomain<int>();
+template <> Domain<fnordmetric::IntegerType>*
+    Domain<fnordmetric::IntegerType>::mkDomain() {
+  return new ContinuousDomain<fnordmetric::IntegerType>();
 }
 
-template <> Domain<double>* Domain<double>::mkDomain() {
-  return new ContinuousDomain<double>();
+template <> Domain<fnordmetric::FloatType>*
+    Domain<fnordmetric::FloatType>::mkDomain() {
+  return new ContinuousDomain<fnordmetric::FloatType>();
+}
+
+template <> Domain<fnordmetric::TimeType>*
+    Domain<fnordmetric::TimeType>::mkDomain() {
+  return new ContinuousDomain<fnordmetric::TimeType>();
 }
 
 template <> Domain<std::string>* Domain<std::string>::mkDomain() {

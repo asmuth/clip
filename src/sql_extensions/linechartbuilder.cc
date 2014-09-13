@@ -22,18 +22,57 @@ LineChartBuilder::LineChartBuilder(
 ui::Drawable* LineChartBuilder::getChart() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::LineChart2D<double, double>>())
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<double, std::string>>())
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<std::string, double>>())
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::TimeType,
+        fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<std::string, std::string>>())
+/*
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::StringType>>())
     return c;
 
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::TimeType>>())
+    return c;
+
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::FloatType,
+        fnordmetric::StringType>>())
+    return c;
+
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::StringType,
+        fnordmetric::TimeType>>())
+    return c;
+
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::StringType,
+        fnordmetric::FloatType>>())
+    return c;
+
+  if (auto c = tryType2D<ui::LineChart2D<
+        fnordmetric::StringType,
+        fnordmetric::StringType>>())
+    return c;
+*/
   invalidType();
   return nullptr;
 }

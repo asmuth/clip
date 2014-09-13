@@ -11,6 +11,9 @@
     - simple interactive charts (hover tooltips)
     - simple web interface (interactive query UI generates embed html snippets)
     ----------
+    - set option: date format string
+    - set option: timezone
+    - set option: number format (si, exp, etc)
     - series adapter: max interpolation gap
     - middle axis
     - impl rotated axis labels
