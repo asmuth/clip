@@ -57,9 +57,7 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't add %s and %s",
-      lhs->getTypeName(),
-      rhs->getTypeName());
+  *out = SValue(lhs->toString() + rhs->toString());
 }
 
 SymbolTableEntry __add_symbol("add", &addExpr);
