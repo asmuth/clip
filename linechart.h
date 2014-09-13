@@ -211,15 +211,15 @@ void LineChart2D<TX, TY>::render(
       auto ss_x = viewport->paddingLeft() + x * viewport->innerWidth();
       auto ss_y = viewport->paddingTop() + (1.0 - y) * viewport->innerHeight();
 
-      if (point_style != "none") {
-        target->drawPoint(
-            ss_x,
-            ss_y,
-            point_style,
-            point_size,
-            color,
-            "point");
-      }
+      target->drawPoint(
+          ss_x,
+          ss_y,
+          point_style,
+          point_size,
+          color,
+          "point",
+          series->labelFor(&point),
+          series->name());
 
       coords.emplace_back(ss_x, ss_y);
     }

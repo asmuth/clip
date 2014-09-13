@@ -117,10 +117,12 @@ protected:
   struct Area {
     std::string color;
     std::string line_style;
+    std::string series;
     double line_width;
     std::string point_style;
     double point_size;
     std::vector<std::tuple<TX, TY, TZ>> points;
+    std::vector<std::string> labels;
   };
 
   void render(
@@ -235,6 +237,7 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
   // FIXPAUL catch conversion errors
   Area area;
+  area.series = series->name();
   area.color = series->getProperty(Series::P_COLOR);
   area.line_style = series->getProperty(Series::P_LINE_STYLE);
   area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
@@ -249,6 +252,9 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
         point.x(),
         point.y(),
         point.z());
+
+    area.labels.emplace_back(
+        series->labelFor(&point));
   }
 
   // FIXPAUL: stacked areas, missing data
@@ -266,7 +272,6 @@ void AreaChart3D<TX, TY, TZ>::render(
     std::vector<std::pair<double, double>> area_coords;
     std::vector<std::pair<double, double>> border_top_coords;
     std::vector<std::pair<double, double>> border_bottom_coords;
-    std::vector<std::pair<double, double>> point_coords;
 
     for (int i = 0; i < area.points.size(); ++i) {
       const auto& point = area.points[i];
@@ -279,7 +284,16 @@ void AreaChart3D<TX, TY, TZ>::render(
 
       area_coords.emplace_back(draw_x, draw_y2);
       border_top_coords.emplace_back(draw_x, draw_y2);
-      point_coords.emplace_back(draw_x, draw_y2);
+
+      target->drawPoint(
+          draw_x,
+          draw_y2,
+          area.point_style,
+          area.point_size,
+          area.color,
+          "point",
+          area.labels[i],
+          area.series);
     }
 
     for (int i = area.points.size() - 1; i >= 0; --i) {
@@ -294,7 +308,16 @@ void AreaChart3D<TX, TY, TZ>::render(
 
       if (std::get<1>(point) != 0) {
         border_bottom_coords.emplace_back(draw_x, draw_y1);
-        point_coords.emplace_back(draw_x, draw_y1);
+
+        target->drawPoint(
+            draw_x,
+            draw_y1,
+            area.point_style,
+            area.point_size,
+            area.color,
+            "point",
+            area.labels[i],
+            area.series);
       }
     }
 
@@ -323,18 +346,6 @@ void AreaChart3D<TX, TY, TZ>::render(
             false,
             area.color,
             "line");
-      }
-    }
-
-    if (area.point_style != "none") {
-      for (const auto &point : point_coords) {
-        target->drawPoint(
-            point.first,
-            point.second,
-            area.point_style,
-            area.point_size,
-            area.color,
-            "point");
       }
     }
   }
@@ -433,6 +444,11 @@ void AreaChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
           Series::P_LABEL,
           &series3d->getData().back(),
           series->getProperty(Series::P_LABEL, &point));
+    } else {
+        series3d->setProperty(
+          Series::P_LABEL,
+          &series3d->getData().back(),
+          series->labelFor(&point));
     }
   }
 
