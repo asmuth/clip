@@ -113,7 +113,18 @@ public:
    *
    * @param position the position/placement of the axis
    */
-   AxisDefinition* addAxis(AxisDefinition::kPosition position) override;
+  AxisDefinition* addAxis(AxisDefinition::kPosition position) override;
+
+  /**
+   * Add a grid to the chart.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * @param vertical render vertical grid lines?
+   * @param horizontal render horizonyal grid lines?
+   */
+  GridDefinition* addGrid(GridDefinition::kPlacement placement) override;
 
   /**
    * Set the stacked property of this bar chart
@@ -289,6 +300,36 @@ AxisDefinition* BarChart3D<TX, TY, TZ>::addAxis(
         case O_HORIZONTAL:
           axis->setDomain(&x_domain_);
           return axis;
+      }
+
+  }
+}
+
+template <typename TX, typename TY, typename TZ>
+GridDefinition* BarChart3D<TX, TY, TZ>::addGrid(
+    GridDefinition::kPlacement placement) {
+  auto grid = canvas_->addGrid(placement);
+
+  switch (placement) {
+
+    case GridDefinition::GRID_VERTICAL:
+      switch (orientation_) {
+        case O_VERTICAL:
+          grid->setDomain(&y_domain_);
+          return grid;
+        case O_HORIZONTAL:
+          grid->setDomain(&x_domain_);
+          return grid;
+      }
+
+    case GridDefinition::GRID_HORIZONTAL:
+      switch (orientation_) {
+        case O_VERTICAL:
+          grid->setDomain(&x_domain_);
+          return grid;
+        case O_HORIZONTAL:
+          grid->setDomain(&y_domain_);
+          return grid;
       }
 
   }

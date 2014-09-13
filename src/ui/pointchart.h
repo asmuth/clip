@@ -72,6 +72,17 @@ public:
    AxisDefinition* addAxis(AxisDefinition::kPosition position);
 
   /**
+   * Add a grid to the chart.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * @param vertical render vertical grid lines?
+   * @param horizontal render horizonyal grid lines?
+   */
+  GridDefinition* addGrid(GridDefinition::kPlacement placement) override;
+
+  /**
    * Get the {x,y} domain of this chart. Will raise an exception if z domain
    * is requested.
    *
@@ -246,6 +257,24 @@ AxisDefinition* PointChart3D<TX, TY, TZ>::addAxis(
     case AxisDefinition::LEFT:
       axis->setDomain(&y_domain_);
       return axis;
+
+  }
+}
+
+template <typename TX, typename TY, typename TZ>
+GridDefinition* PointChart3D<TX, TY, TZ>::addGrid(
+    GridDefinition::kPlacement placement) {
+  auto grid = canvas_->addGrid(placement);
+
+  switch (placement) {
+
+    case GridDefinition::GRID_VERTICAL:
+      grid->setDomain(&y_domain_);
+      return grid;
+
+    case GridDefinition::GRID_HORIZONTAL:
+      grid->setDomain(&x_domain_);
+      return grid;
 
   }
 }

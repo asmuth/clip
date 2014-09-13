@@ -28,6 +28,8 @@
     - refactor tokenizer // dynamically register tokens
     - replace all stoi, stod with wrappers that throw runtimeexceptions
     - known bug: 2d area chart with explicit y domain, min > 0
+    - rename domainadapter -> domainprovider
+    - rename (axis|legend|grid)definition -> \1config
 
 [ backends ]
     - mysql backend

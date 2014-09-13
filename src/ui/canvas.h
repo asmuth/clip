@@ -55,7 +55,7 @@ public:
   }
 
   /**
-   * Add an axis to this canvas. Usually axes are not specified manually using
+   * Add an axis to this canvas. Usually axes are not specified manually via
    * this method but through one of the Chart subclasses. However it is safe
    * to call this method to explicitly define a custom axis.
    *
@@ -65,9 +65,9 @@ public:
   AxisDefinition* addAxis(AxisDefinition::kPosition position);
 
   /**
-   * Add a a leged to this canvas. Usually axes are not specified manually using
+   * Add a leged to this canvas. Usually legends are not specified manually via
    * this method but through one of the Chart subclasses. However it is safe
-   * to call this method to explicitly define a custom axis.
+   * to call this method to explicitly define a custom legend.
    *
    * The returned pointer is owned by the canvas instance and must not be freed
    * by the caller.
@@ -77,6 +77,16 @@ public:
       LegendDefinition::kHorizontalPosition horiz_pos,
       LegendDefinition::kPlacement placement,
       const std::string& title);
+
+  /**
+   * Add a grid to this canvas. Usually grids are not specified manually via
+   * this method but through one of the Chart subclasses. However it is safe
+   * to call this method to explicitly define a custom grid.
+   *
+   * The returned pointer is owned by the canvas instance and must not be freed
+   * by the caller.
+   */
+  GridDefinition* addGrid(GridDefinition::kPlacement placement);
 
   /**
    * Return the legend or nullptr

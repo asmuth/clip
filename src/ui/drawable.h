@@ -13,6 +13,7 @@
 #include <functional>
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/griddefinition.h>
 #include <fnordmetric/ui/legenddefinition.h>
 #include <fnordmetric/ui/viewport.h>
 
@@ -50,17 +51,22 @@ public:
 
   /**
    * Add a grid to the chart.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * @param vertical render vertical grid lines?
+   * @param horizontal render horizonyal grid lines?
    */
-  void addGrid(bool horizontal, bool vertical) {
-    RAISE(
-        util::RuntimeException,
-        "grid not implemented: horizontal=%s, vertical=%s",
-        horizontal ? "true" : "false",
-        vertical ? "true" : "false");
-  }
+  virtual GridDefinition* addGrid(GridDefinition::kPlacement placement) = 0;
 
   /**
    * Add a legend to the chart.
+   *
+   * The returned pointer is owned by the canvas object and must not be freed
+   * by the caller!
+   *
+   * FIXPAUL params
    */
   LegendDefinition* addLegend(
       LegendDefinition::kVerticalPosition vert_pos,
