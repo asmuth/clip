@@ -128,17 +128,17 @@ task :render do
   end
 
   puts "+ Copying Assets"
-  %x{ln -s #{BASEDIR}/../../contrib/fnordmetric-js/fnordmetric.js* #{BASEDIR}/target}
+  %x{test -e #{BASEDIR}/target/fnordmetric.js || ln -s #{BASEDIR}/../../contrib/fnordmetric-js/fnordmetric.js* #{BASEDIR}/target}
   %x{cp -R #{BASEDIR}/assets/* #{BASEDIR}/target}
   %x{cp -R #{BASEDIR}/assets/.htaccess #{BASEDIR}/target}
 end
 
 task :publish do
-  exec "rsync -vr target/ fnordmetric.io:fnordmetric.io"
+  exec "rsync -Lvr target/ fnordmetric.io:fnordmetric.io"
 end
 
 task :publish_staging do
-  exec "rsync -vr target/ fnordmetric.io:staging.fnordmetric.io"
+  exec "rsync -Lvr target/ fnordmetric.io:staging.fnordmetric.io"
 end
 
 task :default do
