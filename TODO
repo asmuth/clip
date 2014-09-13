@@ -1,5 +1,4 @@
 [ ui ]
-    - TimeDomain!
     - impl chart title, subtitle
     - stacked area charts
     - pointchart labels

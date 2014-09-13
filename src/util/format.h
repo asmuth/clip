@@ -19,6 +19,7 @@ namespace format {
 
 std::string numberToHuman(double value);
 std::string svalueToHuman(const query::SValue& value);
+std::string smartTimeFormatWithRange(struct tm* time, int range);
 
 // FIXPAUL clean up...
 template <typename T>

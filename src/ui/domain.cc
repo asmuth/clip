@@ -28,7 +28,7 @@ template <> Domain<fnordmetric::FloatType>*
 
 template <> Domain<fnordmetric::TimeType>*
     Domain<fnordmetric::TimeType>::mkDomain() {
-  return new ContinuousDomain<fnordmetric::TimeType>();
+  return new TimeDomain<fnordmetric::TimeType>();
 }
 
 template <> Domain<std::string>* Domain<std::string>::mkDomain() {

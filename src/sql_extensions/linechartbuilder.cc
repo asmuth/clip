@@ -37,7 +37,6 @@ ui::Drawable* LineChartBuilder::getChart() const {
         fnordmetric::StringType>>())
     return c;
 
-/*
   if (auto c = tryType2D<ui::LineChart2D<
         fnordmetric::FloatType,
         fnordmetric::StringType>>())
@@ -72,7 +71,7 @@ ui::Drawable* LineChartBuilder::getChart() const {
         fnordmetric::StringType,
         fnordmetric::StringType>>())
     return c;
-*/
+
   invalidType();
   return nullptr;
 }

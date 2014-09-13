@@ -72,6 +72,10 @@ std::string numberToHuman(double value) {
   return std::string(buf, len);
 }
 
+std::string smartTimeFormatWithRange(struct tm* time, int range) {
+  return "here be dragons";
+}
+
 }
 }
 }
