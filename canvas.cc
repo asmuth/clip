@@ -27,7 +27,7 @@ void Canvas::render(RenderTarget* target) const {
   // FIXPAUL: initialize from rendertarget
   Viewport viewport(width_, height_);
 
-  target->beginChart(width_, height_, "chart fnordmetric"); 
+  target->beginChart(width_, height_, "fm-chart"); 
   renderOutsideLegends(target, &viewport);
   renderAxes(target, &viewport);
   renderGrids(target, &viewport);
