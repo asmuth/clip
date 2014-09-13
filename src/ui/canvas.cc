@@ -23,17 +23,52 @@ Canvas::Canvas() :
     width_(800),
     height_(320) {}
 
+void Canvas::setTitle(const std::string& title) {
+  title_ = title;
+}
+
+void Canvas::setSubtitle(const std::string& subtitle) {
+  subtitle_ = subtitle;
+}
+
 void Canvas::render(RenderTarget* target) const {
   // FIXPAUL: initialize from rendertarget
   Viewport viewport(width_, height_);
 
-  target->beginChart(width_, height_, "fm-chart"); 
+  target->beginChart(width_, height_, "fm-chart");
+  renderTitle(target, &viewport);
   renderOutsideLegends(target, &viewport);
   renderAxes(target, &viewport);
   renderGrids(target, &viewport);
   renderInsideLegends(target, &viewport);
   renderCharts(target, &viewport);
   target->finishChart();
+}
+
+void Canvas::renderTitle(RenderTarget* target, Viewport* viewport) const {
+  if (title_.size() > 0) {
+    target->drawText(
+        title_,
+        viewport->paddingLeft() + viewport->innerWidth() * 0.5f,
+        viewport->paddingTop(),
+        "middle",
+        "text-before-edge",
+        "chart-title");
+
+    viewport->setPaddingTop(viewport->paddingTop() + kTitleLineHeight);
+  }
+
+  if (subtitle_.size() > 0) {
+    target->drawText(
+        subtitle_,
+        viewport->paddingLeft() + viewport->innerWidth() * 0.5f,
+        viewport->paddingTop(),
+        "middle",
+        "text-before-edge",
+        "chart-subtitle");
+
+    viewport->setPaddingTop(viewport->paddingTop() + kSubtitleLineHeight);
+  }
 }
 
 void Canvas::renderCharts(RenderTarget* target, Viewport* viewport) const {

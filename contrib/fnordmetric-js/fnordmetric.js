@@ -60,7 +60,7 @@ FnordMetric.ChartExtensions = function(elem) {
     var pos_x = Math.round(point.x - tooltip_elem.offsetWidth * 0.5);
     tooltip_elem.style.left = pos_x + "px";
 
-    var pos_y = Math.round(point.y - tooltip_elem.offsetHeight )-5;
+    var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
     tooltip_elem.style.top = pos_y + "px";
   };
 
