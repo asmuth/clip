@@ -135,18 +135,24 @@ public:
       const std::string& point_type,
       double point_size,
       const std::string& color,
-      const std::string& class_name) override {
+      const std::string& class_name /* = "" */,
+      const std::string& label /* = "" */,
+      const std::string& series /* = "" */) override {
     std::string class_str(class_name);
     class_str += " ";
     class_str += color;
 
     /* point_type: circle */
+    // FIXPAUL escape label
     appendLine(
-        "<circle cx='%f' cy='%f' r='%f' class='%s' />\n", 
+        "<circle cx='%f' cy='%f' r='%f' class='%s' fm:label='%s' "
+            "fm:series='%s'></circle>\n",
         x,
         y,
-        point_size,
-        class_str.c_str());
+        point_type == "none" ? 0 : point_size,
+        class_str.c_str(),
+        label.c_str(),
+        series.c_str());
   }
 
    void drawPath(

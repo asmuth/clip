@@ -53,7 +53,9 @@ public:
       const std::string& point_type,
       double point_size,
       const std::string& color,
-      const std::string& class_name = "") = 0;
+      const std::string& class_name = "",
+      const std::string& label = "",
+      const std::string& series = "") = 0;
 
   virtual void drawRect(
       double x,

@@ -14,6 +14,8 @@
 #include <vector>
 #include <unordered_map>
 #include <fnordmetric/util/runtimeexception.h>
+ #include <fnordmetric/util/format.h>
+
 
 namespace fnordmetric {
 
@@ -102,7 +104,7 @@ public:
     return getProperty(prop);
   }
 
-  const bool hasProperty(kProperty prop) {
+  const bool hasProperty(kProperty prop) const {
     return properties_.find(prop) != properties_.end();
   }
 
@@ -179,6 +181,26 @@ public:
     return data_;
   }
 
+  std::string labelFor(const Point* const point) const {
+    if (hasProperty(P_LABEL)) {
+      return getProperty(P_LABEL, point);
+    }
+
+    char buf[256]; // FIXPAUL
+    int len = snprintf(
+        buf,
+        sizeof(buf),
+        "%s: %s",
+        util::format::toHuman(point->x()).c_str(),
+        util::format::toHuman(point->y()).c_str());
+
+    if (len < 0) {
+      RAISE(util::RuntimeException, "snprintf() failed");
+    }
+
+    return std::string(buf, len);
+  }
+
 protected:
   std::vector<Point> data_;
 };
@@ -241,6 +263,27 @@ public:
 
   std::vector<Point>& getData() {
     return data_;
+  }
+
+  std::string labelFor(const Point* const point) const {
+    if (hasProperty(P_LABEL)) {
+      return getProperty(P_LABEL, point);
+    }
+  
+    char buf[256]; // FIXPAUL
+    int len = snprintf(
+        buf,
+        sizeof(buf),
+        "%s: %s, %s",
+        util::format::toHuman(point->x()).c_str(),
+        util::format::toHuman(point->y()).c_str(),
+        util::format::toHuman(point->z()).c_str());
+
+    if (len < 0) {
+      RAISE(util::RuntimeException, "snprintf() failed");
+    }
+
+    return std::string(buf, len);
   }
 
 protected:

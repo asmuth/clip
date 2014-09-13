@@ -220,15 +220,15 @@ void PointChart3D<TX, TY, TZ>::render(
       auto ss_x = viewport->paddingLeft() + x * viewport->innerWidth();
       auto ss_y = viewport->paddingTop() + (1.0 - y) * viewport->innerHeight();
 
-      if (point_style != "none") {
-        target->drawPoint(
-            ss_x,
-            ss_y,
-            point_style,
-            point.z(),
-            color,
-            "point");
-      }
+      target->drawPoint(
+          ss_x,
+          ss_y,
+          point_style,
+          point.z(),
+          color,
+          "point",
+          series->labelFor(&point),
+          series->name());
     }
   }
 
@@ -332,6 +332,11 @@ void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
           Series::P_LABEL,
           &series3d->getData().back(),
           series->getProperty(Series::P_LABEL, &point));
+    } else {
+        series3d->setProperty(
+          Series::P_LABEL,
+          &series3d->getData().back(),
+          series->labelFor(&point));
     }
   }
 
