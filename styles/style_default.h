@@ -61,6 +61,11 @@ static const std::string kStyleSheetDefault = R"(
     opacity: 0.8;
   }
 
+  .chart .grid .gridline {
+    stroke: #ddd;
+    stroke-width: 0.02em;
+  }
+
   .chart .bar,
   .chart .point,
   .chart .area {

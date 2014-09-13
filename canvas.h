@@ -205,11 +205,17 @@ protected:
       bool bottom,
       bool outside) const;
 
+  /**
+   * Render the grids
+   */
+  void renderGrids(RenderTarget* target, Viewport* viewport) const;
+
   // FIXPAUL this belongs into the rendertarget
   int width_;
   int height_;
   std::vector<std::unique_ptr<AxisDefinition>> axes_;
   std::vector<std::unique_ptr<LegendDefinition>> legends_;
+  std::vector<std::unique_ptr<GridDefinition>> grids_;
   std::vector<std::unique_ptr<Drawable>> drawables_;
 };
 

@@ -32,8 +32,12 @@ public:
    */
   void setDomain(DomainAdapter* domain);
 
+  kPlacement placement() const;
+  const std::vector<double> ticks() const;
+
 protected:
   kPlacement placement_;
+  DomainAdapter* domain_;
 };
 
 }

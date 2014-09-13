@@ -20,8 +20,8 @@ namespace fnordmetric {
 namespace ui {
 
 Canvas::Canvas() :
-    width_(750),
-    height_(300) {}
+    width_(800),
+    height_(320) {}
 
 void Canvas::render(RenderTarget* target) const {
   // FIXPAUL: initialize from rendertarget
@@ -30,6 +30,7 @@ void Canvas::render(RenderTarget* target) const {
   target->beginChart(width_, height_, "chart bar horizontal"); 
   renderOutsideLegends(target, &viewport);
   renderAxes(target, &viewport);
+  renderGrids(target, &viewport);
   renderInsideLegends(target, &viewport);
   renderCharts(target, &viewport);
   target->finishChart();
@@ -379,7 +380,6 @@ void Canvas::renderLeftAxis(
   target->finishGroup();
 }
 
-
 void Canvas::renderOutsideLegends(
     RenderTarget* target,
     Viewport* viewport) const {
@@ -645,6 +645,45 @@ void Canvas::renderLeftLegend(
   }
 }
 
+void Canvas::renderGrids(RenderTarget* target, Viewport* viewport) const {
+  for (const auto& grid : grids_) {
+    switch (grid->placement()) {
+
+      case GridDefinition::GRID_HORIZONTAL:
+        target->beginGroup("grid horizontal");
+        for (const auto& tick : grid->ticks()) {
+          auto line_y = viewport->paddingTop() +
+              viewport->innerHeight() * (1.0 - tick);
+
+          target->drawLine(
+              viewport->paddingLeft(),
+              line_y,
+              viewport->paddingLeft() + viewport->innerWidth(),
+              line_y,
+              "gridline");
+        }
+        target->finishGroup();
+        break;
+
+      case GridDefinition::GRID_VERTICAL:
+        target->beginGroup("grid vertical");
+        for (const auto& tick : grid->ticks()) {
+          auto line_x = viewport->paddingLeft() + viewport->innerWidth() * tick;
+
+          target->drawLine(
+              line_x,
+              viewport->paddingTop(),
+              line_x,
+              viewport->paddingTop() + viewport->innerHeight(),
+              "gridline");
+        }
+        target->finishGroup();
+        break;
+
+    }
+  }
+}
+
 std::string Canvas::renderSVG() const {
   auto output = util::OutputStream::getStdout();
   SVGTarget target(output.get());
@@ -655,6 +694,11 @@ std::string Canvas::renderSVG() const {
 AxisDefinition* Canvas::addAxis(AxisDefinition::kPosition position) {
   axes_.emplace_back(new AxisDefinition(position));
   return axes_.back().get();
+}
+
+GridDefinition* Canvas::addGrid(GridDefinition::kPlacement placement) {
+  grids_.emplace_back(new GridDefinition(placement));
+  return grids_.back().get();
 }
 
 LegendDefinition* Canvas::addLegend(
