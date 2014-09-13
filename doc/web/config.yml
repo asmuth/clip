@@ -22,10 +22,6 @@ examples:
         title: "Explicit range/domain"
         file: "explicit_domain"
         url: "/linecharts/explicit_domain"
-#      -
-#        title: "Lines with time domain"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
       -
         title: "Multiple Y Axes"
         file: "multiple_y_axes"
@@ -99,10 +95,6 @@ examples:
 #      -
 #        title: "Histogram"
 #        file: "horizontal_bars"
-#      -
-#        title: "Bars with labels"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
       -
         title: "Bars with negative values"
         file: "negative_values"
@@ -129,6 +121,23 @@ examples:
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
 #
+  -
+    title: "Combined Charts"
+    dir: "combined"
+    examples:
+      -
+        title: "Bars and Lines"
+        file: "bars_and_lines"
+        url: "/combined/barsandlines"
+#      -
+#        title: "Lines with error bars"
+#        file: "horizontal_bars"
+#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Areas with lines"
+        file: "arearange_and_line"
+        url: "/combined/arearange_and_line"
+
 #  -
 #    title: "Axis &amp Legend"
 #    dir: "styles"
@@ -153,23 +162,6 @@ examples:
 #        title: "Legend outside, Axes inside"
 #        file: "horizontal_bars"
 #        url: "/barcharts/horizontal_bars"
-  -
-    title: "Combined Charts"
-    dir: "combined"
-    examples:
-      -
-        title: "Bars and Lines"
-        file: "bars_and_lines"
-        url: "/combined/barsandlines"
-#      -
-#        title: "Lines with error bars"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
-      -
-        title: "Areas with lines"
-        file: "arearange_and_line"
-        url: "/combined/arearange_and_line"
-
 
 #  -
 #    title: "Custom styles"
