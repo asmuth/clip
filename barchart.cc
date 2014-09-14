@@ -18,10 +18,15 @@ BarChart::BarChart(
     bool stacked /* = false */) :
     Drawable(canvas),
     orientation_(orient),
-    stacked_(stacked) {}
+    stacked_(stacked),
+    show_labels_(false) {}
 
 void BarChart::setOrientation(kBarChartOrientation orientation) {
   orientation_ = orientation;
+}
+
+void BarChart::setLabels(bool show_labels) {
+  show_labels_ = show_labels;
 }
 
 }
