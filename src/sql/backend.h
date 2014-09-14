@@ -10,6 +10,9 @@
 #ifndef _FNORDMETRIC_SQL_BACKEND_H
 #define _FNORDMETRIC_SQL_BACKEND_H
 #include <memory>
+#include <vector>
+#include <fnordmetric/util/uri.h>
+#include <fnordmetric/sql/tableref.h>
 
 namespace fnordmetric {
 namespace query {
@@ -17,9 +20,10 @@ namespace query {
 class Backend {
 public:
 
-  //static std::unique_ptr<TableRef> openTable(ASTNode* import);
-
-  virtual std::string protocol() const = 0;
+  virtual bool openTables(
+      const std::vector<std::string>& table_names,
+      const util::URI& source_uri,
+      std::vector<std::unique_ptr<TableRef>>* target) = 0;
 
 };
 

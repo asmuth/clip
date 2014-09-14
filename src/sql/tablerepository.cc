@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql/tablerepository.h>
 #include <fnordmetric/sql/importstatement.h>
+#include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {
@@ -35,18 +36,29 @@ void TableRepository::import(
     const std::string& source_uri_raw) {
   util::URI source_uri(source_uri_raw);
 
-  printf("URI: %s\n", source_uri.toString().c_str());
-  //for (const auto& backend : backends_) {
-  //}
+  for (const auto& backend : backends_) {
+    std::vector<std::unique_ptr<TableRef>> tbl_refs;
 
-/*
-  printf("IMPORT: ");
-  for (const auto tbl : tables) {
-    printf("'%s', ", tbl.c_str());
+    if (backend->openTables(tables, source_uri, &tbl_refs)) {
+      if (tbl_refs.size() != tables.size()) {
+        RAISE(
+            util::RuntimeException,
+            "openTabes failed for '%s'\n",
+            source_uri.toString().c_str());
+      }
+
+      for (int i = 0; i < tables.size(); ++i) {
+        addTableRef(tables[i], std::move(tbl_refs[i]));
+      }
+
+      return;
+    }
   }
 
-  printf("FROM '%s'\n", source_uri.c_str());
-*/
+  RAISE(
+      util::RuntimeException,
+      "no backend found for '%s'\n",
+      source_uri.toString().c_str());
 }
 
 void TableRepository::import(const ImportStatement& import_stmt) {
