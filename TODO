@@ -1,9 +1,7 @@
 [ ui ]
-    - barchart labels
-
     - stacked area charts
-    - line/point styles
     - make # of axis ticks configurable via sql
+    - line/point styles
     - simple web interface (interactive query UI generates embed html snippets)
     ----------
     - impl inside/outside axis labels
@@ -41,7 +39,7 @@
      - SQL: join
      - comments! :)
      - string lt gt exprs
-
+     - round fn
 
 ---------  release 1 --------
 
