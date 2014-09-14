@@ -66,18 +66,24 @@ public:
       double width,
       double height,
       const std::string& color,
-      const std::string& class_name) override {
+      const std::string& class_name,
+      const std::string& label,
+      const std::string& series) override {
     std::string class_str(class_name);
     class_str += " ";
     class_str += color;
 
+    // FIXPAUL escape me
     appendLine(
-        "<rect x='%f' y='%f' width='%f' height='%f' class='%s'></rect>\n",
+        "<rect x='%f' y='%f' width='%f' height='%f' class='%s' "
+            "fm:series='%s' fm:label='%s'></rect>\n",
         x,
         y,
         width,
         height,
-        class_str.c_str());
+        class_str.c_str(),
+        series.c_str(),
+        label.c_str());
   }
 
   void drawLine(

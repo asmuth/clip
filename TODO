@@ -16,6 +16,7 @@
     - chart type: heatmap
 
 [ cleanup ]
+    - escape series names, labels!
     - integer overflow :(
     - lotsa overflows in expression exectution // outc val not respected
     - line chart with only negative values
