@@ -20,6 +20,8 @@ TEST_CASE(URITest, TestSchemeAndAuthority, [] () {
   EXPECT_EQ(uri.scheme(), "fnord");
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 0);
+
+  EXPECT_EQ(uri.toString(), "fnord://myhost");
 });
 
 TEST_CASE(URITest, TestSchemeAndAuthorityWithPort, [] () {
@@ -28,6 +30,8 @@ TEST_CASE(URITest, TestSchemeAndAuthorityWithPort, [] () {
   EXPECT_EQ(uri.scheme(), "fnord");
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 2345);
+
+  EXPECT_EQ(uri.toString(), "fnord://myhost:2345");
 });
 
 TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfo, [] () {
@@ -37,6 +41,8 @@ TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfo, [] () {
   EXPECT_EQ(uri.userinfo(), "blah");
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 0);
+
+  EXPECT_EQ(uri.toString(), "fnord://blah@myhost");
 });
 
 TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoWithPort, [] () {
@@ -46,6 +52,8 @@ TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoWithPort, [] () {
   EXPECT_EQ(uri.userinfo(), "blah");
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 2345);
+
+  EXPECT_EQ(uri.toString(), "fnord://blah@myhost:2345");
 });
 
 TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoSub, [] () {
@@ -55,6 +63,8 @@ TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoSub, [] () {
   EXPECT_EQ(uri.userinfo(), "blah:asd");
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 0);
+
+  EXPECT_EQ(uri.toString(), "fnord://blah:asd@myhost");
 });
 
 TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoSubWithPort, [] () {
@@ -64,6 +74,8 @@ TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoSubWithPort, [] () {
   EXPECT_EQ(uri.userinfo(), "blah:asd");
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 2345);
+
+  EXPECT_EQ(uri.toString(), "fnord://blah:asd@myhost:2345");
 });
 
 TEST_CASE(URITest, TestSchemeAndPath, [] () {
@@ -71,6 +83,18 @@ TEST_CASE(URITest, TestSchemeAndPath, [] () {
 
   EXPECT_EQ(uri.scheme(), "fnord");
   EXPECT_EQ(uri.path(), "my/path");
+
+  EXPECT_EQ(uri.toString(), "fnord:my/path");
+});
+
+TEST_CASE(URITest, TestSchemeAndPathAndQuery, [] () {
+  URI uri("fnord:my/path?asdasd");
+
+  EXPECT_EQ(uri.scheme(), "fnord");
+  EXPECT_EQ(uri.path(), "my/path");
+  EXPECT_EQ(uri.query(), "asdasd");
+
+  EXPECT_EQ(uri.toString(), "fnord:my/path?asdasd");
 });
 
 TEST_CASE(URITest, TestSchemeAndPathWithLeadingSlash, [] () {
@@ -78,6 +102,8 @@ TEST_CASE(URITest, TestSchemeAndPathWithLeadingSlash, [] () {
 
   EXPECT_EQ(uri.scheme(), "fnord");
   EXPECT_EQ(uri.path(), "/my/path");
+
+  EXPECT_EQ(uri.toString(), "fnord:/my/path");
 });
 
 TEST_CASE(URITest, TestSchemeAndPathWithQueryString, [] () {
@@ -86,6 +112,8 @@ TEST_CASE(URITest, TestSchemeAndPathWithQueryString, [] () {
   EXPECT_EQ(uri.scheme(), "fnord");
   EXPECT_EQ(uri.path(), "/my/path");
   EXPECT_EQ(uri.query(), "myquerystring");
+
+  EXPECT_EQ(uri.toString(), "fnord:/my/path?myquerystring");
 });
 
 TEST_CASE(URITest, TestSchemeAndPathWithQueryStringAndFragment, [] () {
@@ -95,6 +123,8 @@ TEST_CASE(URITest, TestSchemeAndPathWithQueryStringAndFragment, [] () {
   EXPECT_EQ(uri.path(), "/my/path");
   EXPECT_EQ(uri.query(), "myquerystring");
   EXPECT_EQ(uri.fragment(), "myfragment");
+
+  EXPECT_EQ(uri.toString(), "fnord:/my/path?myquerystring#myfragment");
 });
 
 TEST_CASE(URITest, TestSchemeAndPathWithFragment, [] () {
@@ -103,4 +133,6 @@ TEST_CASE(URITest, TestSchemeAndPathWithFragment, [] () {
   EXPECT_EQ(uri.scheme(), "fnord");
   EXPECT_EQ(uri.path(), "/my/path");
   EXPECT_EQ(uri.fragment(), "myfragment");
+
+  EXPECT_EQ(uri.toString(), "fnord:/my/path#myfragment");
 });

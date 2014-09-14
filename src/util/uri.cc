@@ -71,7 +71,6 @@ void URI::parse(const std::string& uri_str) {
   }
 }
 
-// FIXPAUL parse userinfo
 void URI::parseAuthority(const std::string& authority) {
   const char* begin = authority.c_str();
   const char* end = begin + authority.size();
@@ -141,6 +140,34 @@ std::string URI::toString() const {
 
   uri_str.append(scheme());
   uri_str.append(":");
+
+  if (host_.size() > 0) {
+    uri_str.append("//");
+
+    if (userinfo_.size() > 0) {
+      uri_str.append(userinfo_);
+      uri_str.append("@");
+    }
+
+    uri_str.append(host_);
+
+    if (port_ > 0) { // FIXPAUL hasPort
+      uri_str.append(":");
+      uri_str.append(std::to_string(port_));
+    }
+  }
+
+  uri_str.append(path_);
+
+  if (query_.size() > 0) {
+    uri_str.append("?");
+    uri_str.append(query_);
+  }
+
+  if (fragment_.size() > 0) {
+    uri_str.append("#");
+    uri_str.append(fragment_);
+  }
 
   return uri_str;
 }
