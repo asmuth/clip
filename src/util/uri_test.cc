@@ -1,5 +1,5 @@
 /**
- * This file is part of the "FnordStream" project
+ * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Licensed under the MIT license (see LICENSE).
@@ -135,4 +135,28 @@ TEST_CASE(URITest, TestSchemeAndPathWithFragment, [] () {
   EXPECT_EQ(uri.fragment(), "myfragment");
 
   EXPECT_EQ(uri.toString(), "fnord:/my/path#myfragment");
+});
+
+TEST_CASE(URITest, TestParseQueryParamsSingle, [] () {
+  URI uri("fnord:path?fuu=bar");
+
+  auto params = uri.queryParams();
+  EXPECT_EQ(params.size(), 1);
+  EXPECT_EQ(params[0].first, "fuu");
+  EXPECT_EQ(params[0].second, "bar");
+
+  EXPECT_EQ(uri.toString(), "fnord:path?fuu=bar");
+});
+
+TEST_CASE(URITest, TestParseQueryParams, [] () {
+  URI uri("fnord:path?fuu=bar&blah=123123");
+
+  auto params = uri.queryParams();
+  EXPECT_EQ(params.size(), 1);
+  EXPECT_EQ(params[0].first, "fuu");
+  EXPECT_EQ(params[0].second, "bar");
+  EXPECT_EQ(params[1].first, "blah");
+  EXPECT_EQ(params[1].second, "123123");
+
+  EXPECT_EQ(uri.toString(), "fnord:path?fuu=bar&blah=123123");
 });

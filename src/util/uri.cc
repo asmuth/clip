@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -18,89 +18,15 @@ URI::URI(const std::string& uri_str) : port_(0) {
 }
 
 void URI::parse(const std::string& uri_str) {
-  const char* begin = uri_str.c_str();
-  const char* end = begin + uri_str.size();
-
-  /* scheme */
-  for (const char* cur = begin; cur < end; ++cur) {
-    if (cur[0] == ':') {
-      scheme_ = std::string(begin, cur - begin);
-      begin = cur + 1;
-      break;
-    }
-  }
-
-  if (scheme_.size() == 0) {
-    RAISE(util::RuntimeException, "invalid URI: must begin with scheme:");
-  }
-
-  /* authority */
-  if (begin < end - 2 && begin[0] == '/' && begin[1] == '/') {
-    begin += 2;
-    const char* cur = begin;
-    for (; cur < end && *cur != '/' && *cur != '?' && *cur != '#'; ++cur);
-    if (cur > begin) {
-      const char* abegin = begin;
-      const char* aend = cur;
-
-      /* userinfo */
-      for (const char* acur = abegin; acur < aend; ++acur) {
-        if (*acur == '/' || *acur == '?' || *acur == '#') {
-          break;
-        }
-
-        if (*acur == '@') {
-          userinfo_ = std::string(abegin, acur - abegin);
-          abegin = acur + 1;
-          break;
-        }
-      }
-
-      /* host */
-      const char* acur = abegin;
-      for (; acur < aend &&
-            *acur != '/' &&
-            *acur != '?' &&
-            *acur != '#' &&
-            *acur != ':'; ++acur);
-      host_ = std::string(abegin, acur - abegin);
-
-      /* port */
-      if (acur < aend - 1 && *acur == ':') {
-        abegin = ++acur;
-        for (; *acur >= '0' && *acur <= '9'; ++acur);
-        if (acur > abegin) {
-          port_ = std::stoi(std::string(abegin, acur - abegin));
-        }
-      }
-    }
-    begin = cur;
-  }
-
-  /* path */
-  if (begin < end) {
-    const char* cur = begin;
-    for (; cur < end && *cur != '?' && *cur != '#'; ++cur);
-    if (cur > begin) {
-      path_ = std::string(begin, cur - begin);
-    }
-    begin = cur;
-  }
-
-  /* query */
-  if (begin < end && *begin == '?') {
-    const char* cur = ++begin;
-    for (; cur < end && *cur != '#'; ++cur);
-    if (cur > begin) {
-      query_ = std::string(begin, cur - begin);
-    }
-    begin = cur;
-  }
-
-  /* fragment */
-  if (begin < end - 1 && *begin == '#') {
-    fragment_ = std::string(begin + 1, end - begin - 1);
-  }
+  URI::parseURI(
+      uri_str,
+      &scheme_,
+      &userinfo_,
+      &host_,
+      &port_,
+      &path_,
+      &query_,
+      &fragment_);
 }
 
 const std::string& URI::scheme() const {
@@ -125,6 +51,15 @@ const std::string& URI::path() const {
 
 const std::string& URI::query() const {
   return query_;
+}
+
+const std::vector<std::pair<std::string, std::string>> URI::queryParams()
+    const {
+  if (query_.size() == 0) {
+    return std::vector<std::pair<std::string, std::string>>();
+  } else {
+    return URI::parseQueryString(query_);
+  }
 }
 
 const std::string& URI::fragment() const {
@@ -166,6 +101,107 @@ std::string URI::toString() const {
   }
 
   return uri_str;
+}
+
+void URI::parseURI(
+    const std::string& uri_str,
+    std::string* scheme,
+    std::string* userinfo,
+    std::string* host,
+    unsigned* port,
+    std::string* path,
+    std::string* query,
+    std::string* fragment) {
+  const char* begin = uri_str.c_str();
+  const char* end = begin + uri_str.size();
+
+  /* scheme */
+  bool has_scheme = false;
+  for (const char* cur = begin; cur < end; ++cur) {
+    if (cur[0] == ':') {
+      *scheme = std::string(begin, cur - begin);
+      begin = cur + 1;
+      has_scheme = true;
+      break;
+    }
+  }
+
+  if (!has_scheme) {
+    RAISE(util::RuntimeException, "invalid URI: must begin with scheme:");
+  }
+
+  /* authority */
+  if (begin < end - 2 && begin[0] == '/' && begin[1] == '/') {
+    begin += 2;
+    const char* cur = begin;
+    for (; cur < end && *cur != '/' && *cur != '?' && *cur != '#'; ++cur);
+    if (cur > begin) {
+      const char* abegin = begin;
+      const char* aend = cur;
+
+      /* userinfo */
+      for (const char* acur = abegin; acur < aend; ++acur) {
+        if (*acur == '/' || *acur == '?' || *acur == '#') {
+          break;
+        }
+
+        if (*acur == '@') {
+          *userinfo = std::string(abegin, acur - abegin);
+          abegin = acur + 1;
+          break;
+        }
+      }
+
+      /* host */
+      const char* acur = abegin;
+      for (; acur < aend &&
+            *acur != '/' &&
+            *acur != '?' &&
+            *acur != '#' &&
+            *acur != ':'; ++acur);
+      *host = std::string(abegin, acur - abegin);
+
+      /* port */
+      if (acur < aend - 1 && *acur == ':') {
+        abegin = ++acur;
+        for (; *acur >= '0' && *acur <= '9'; ++acur);
+        if (acur > abegin) {
+          *port = std::stoi(std::string(abegin, acur - abegin));
+        }
+      }
+    }
+    begin = cur;
+  }
+
+  /* path */
+  if (begin < end) {
+    const char* cur = begin;
+    for (; cur < end && *cur != '?' && *cur != '#'; ++cur);
+    if (cur > begin) {
+      *path = std::string(begin, cur - begin);
+    }
+    begin = cur;
+  }
+
+  /* query */
+  if (begin < end && *begin == '?') {
+    const char* cur = ++begin;
+    for (; cur < end && *cur != '#'; ++cur);
+    if (cur > begin) {
+      *query = std::string(begin, cur - begin);
+    }
+    begin = cur;
+  }
+
+  /* fragment */
+  if (begin < end - 1 && *begin == '#') {
+    *fragment = std::string(begin + 1, end - begin - 1);
+  }
+}
+
+std::vector<std::pair<std::string, std::string>> URI::parseQueryString(
+    const std::string& query) {
+  return std::vector<std::pair<std::string, std::string>>();
 }
 
 }
