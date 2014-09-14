@@ -4,7 +4,7 @@ if (typeof FnordMetric == "undefined") {
 
 FnordMetric.ChartExtensions = function(elem) {
   var base_elem = elem;
-  var points_pos = [];
+  var hover_points = [];
   var tooltip_elem = null;
   var bbox = null;
   var legend_elems = base_elem.querySelectorAll(".legend .point");
@@ -23,10 +23,10 @@ FnordMetric.ChartExtensions = function(elem) {
 
   var indexPoints  = function(elems) {
     for (var j = 0; j < elems.length; j++) {
-      var points = elems[j].querySelectorAll(".point")
+      var points = elems[j].querySelectorAll(".point");
       for (var i = 0; i < points.length; i++) {
         var bbox = points[i].getBoundingClientRect();
-        points_pos.push({
+        hover_points.push({
           x: bbox.left + bbox.width * 0.5,
           y: window.scrollY + bbox.top + bbox.height * 0.5,
           top: window.scrollY + bbox.top,
@@ -36,14 +36,31 @@ FnordMetric.ChartExtensions = function(elem) {
     }
   }
 
+  var indexBarPoints = function(elems) {
+    for (var i = 0; i < elems.length; i++) {
+      var bbox = elems[i].getBoundingClientRect();
+
+      hover_points.push({
+        x: bbox.left + bbox.width *0.5,
+        y: window.scrollY + bbox.top + bbox.height * 0.5,
+        top: window.scrollY + bbox.top,
+        bbox: bbox,
+        label: "foobar"
+      });
+    }
+
+  }
+
   var indexAllPoints = function() {
-    points_pos = [];
+    hover_points = [];
     indexPoints(elem.querySelectorAll(".areas"));
     indexPoints(elem.querySelectorAll(".lines"));
     indexPoints(elem.querySelectorAll(".points"));
+    indexBarPoints(elem.querySelectorAll(".bar"))
   }
 
   var showToolTip = function (point) {
+
     if (tooltip_elem == null) {
       /* setup tooltip elem */
       tooltip_elem = document.createElement("div");
@@ -62,6 +79,7 @@ FnordMetric.ChartExtensions = function(elem) {
 
     var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
     tooltip_elem.style.top = pos_y + "px";
+
   };
 
   var hideToolTip = function () {
@@ -79,14 +97,25 @@ FnordMetric.ChartExtensions = function(elem) {
     var best_distance = max_snap;
 
     /* calculate the euclidian distance */
-    for (var i = 0; i < points_pos.length; i++) {
-      var diff_x = Math.pow((x - points_pos[i].x), 2);
-      var diff_y = Math.pow((y - points_pos[i].y), 2);
-      var dist = Math.sqrt(diff_x + diff_y);
+    for (var i = 0; i < hover_points.length; i++) {
+      if (hover_points[i].bbox) {
+        if (
+          (x >= hover_points[i].bbox.left && 
+          x <= hover_points[i].bbox.right) && (
+          y >= hover_points[i].bbox.top &&
+          y <= hover_points[i].bbox.bottom)
+          ) {
+          best_point = hover_points[i];
+        }
+      } else {
+        var diff_x = Math.pow((x - hover_points[i].x), 2);
+        var diff_y = Math.pow((y - hover_points[i].y), 2);
+        var dist = Math.sqrt(diff_x + diff_y);
 
-      if (dist < best_distance) { 
-        best_distance = dist;
-        best_point = points_pos[i];
+        if (dist < best_distance) { 
+          best_distance = dist;
+          best_point = hover_points[i];
+        }
       }
     }
 
@@ -102,14 +131,12 @@ FnordMetric.ChartExtensions = function(elem) {
       bbox = base_elem.getBoundingClientRect();
     }
 
-
     var point = findClosestPoint(mx, my, 50);
     if (point == null) {
       hideToolTip();
     } else {
       showToolTip(point);
     }
-
   };
 
   base_elem.onmouseover = chartHover;
