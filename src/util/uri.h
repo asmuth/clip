@@ -24,6 +24,9 @@ public:
   const std::string& userinfo() const;
   const std::string& host() const;
   const unsigned port() const;
+  const std::string& path() const;
+  const std::string& query() const;
+  const std::string& fragment() const;
 
   std::string toString() const;
 
@@ -33,6 +36,9 @@ protected:
   std::string scheme_;
   std::string userinfo_;
   std::string host_;
+  std::string path_;
+  std::string query_;
+  std::string fragment_;
   unsigned port_;
 };
 

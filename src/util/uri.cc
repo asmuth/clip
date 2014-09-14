@@ -40,10 +40,35 @@ void URI::parse(const std::string& uri_str) {
     const char* cur = begin;
     for (; cur < end && *cur != '/' && *cur != '?' && *cur != '#'; ++cur);
     if (cur > begin) {
-      parseAuthority(std::string(begin, cur - begin).c_str());
+      parseAuthority(std::string(begin, cur - begin));
     }
+    begin = cur;
   }
 
+  /* path */
+  if (begin < end) {
+    const char* cur = begin;
+    for (; cur < end && *cur != '?' && *cur != '#'; ++cur);
+    if (cur > begin) {
+      path_ = std::string(begin, cur - begin);
+    }
+    begin = cur;
+  }
+
+  /* query */
+  if (begin < end && *begin == '?') {
+    const char* cur = ++begin;
+    for (; cur < end && *cur != '#'; ++cur);
+    if (cur > begin) {
+      query_ = std::string(begin, cur - begin);
+    }
+    begin = cur;
+  }
+
+  /* fragment */
+  if (begin < end - 1 && *begin == '#') {
+    fragment_ = std::string(begin + 1, end - begin - 1);
+  }
 }
 
 // FIXPAUL parse userinfo
@@ -97,6 +122,18 @@ const std::string& URI::host() const {
 
 const unsigned URI::port() const {
   return port_;
+}
+
+const std::string& URI::path() const {
+  return path_;
+}
+
+const std::string& URI::query() const {
+  return query_;
+}
+
+const std::string& URI::fragment() const {
+  return fragment_;
 }
 
 std::string URI::toString() const {

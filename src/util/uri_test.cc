@@ -65,3 +65,42 @@ TEST_CASE(URITest, TestSchemeAndAuthorityWithUserInfoSubWithPort, [] () {
   EXPECT_EQ(uri.host(), "myhost");
   EXPECT_EQ(uri.port(), 2345);
 });
+
+TEST_CASE(URITest, TestSchemeAndPath, [] () {
+  URI uri("fnord:my/path");
+
+  EXPECT_EQ(uri.scheme(), "fnord");
+  EXPECT_EQ(uri.path(), "my/path");
+});
+
+TEST_CASE(URITest, TestSchemeAndPathWithLeadingSlash, [] () {
+  URI uri("fnord:/my/path");
+
+  EXPECT_EQ(uri.scheme(), "fnord");
+  EXPECT_EQ(uri.path(), "/my/path");
+});
+
+TEST_CASE(URITest, TestSchemeAndPathWithQueryString, [] () {
+  URI uri("fnord:/my/path?myquerystring");
+
+  EXPECT_EQ(uri.scheme(), "fnord");
+  EXPECT_EQ(uri.path(), "/my/path");
+  EXPECT_EQ(uri.query(), "myquerystring");
+});
+
+TEST_CASE(URITest, TestSchemeAndPathWithQueryStringAndFragment, [] () {
+  URI uri("fnord:/my/path?myquerystring#myfragment");
+
+  EXPECT_EQ(uri.scheme(), "fnord");
+  EXPECT_EQ(uri.path(), "/my/path");
+  EXPECT_EQ(uri.query(), "myquerystring");
+  EXPECT_EQ(uri.fragment(), "myfragment");
+});
+
+TEST_CASE(URITest, TestSchemeAndPathWithFragment, [] () {
+  URI uri("fnord:/my/path#myfragment");
+
+  EXPECT_EQ(uri.scheme(), "fnord");
+  EXPECT_EQ(uri.path(), "/my/path");
+  EXPECT_EQ(uri.fragment(), "myfragment");
+});
