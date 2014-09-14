@@ -23,7 +23,7 @@ FnordMetric.ChartExtensions = function(elem) {
 
   var indexPoints  = function(elems) {
     for (var j = 0; j < elems.length; j++) {
-      var points = elems[j].querySelectorAll(".point")
+      var points = elems[j].querySelectorAll(".point");
       for (var i = 0; i < points.length; i++) {
         var bbox = points[i].getBoundingClientRect();
         points_pos.push({
@@ -36,14 +36,31 @@ FnordMetric.ChartExtensions = function(elem) {
     }
   }
 
+  var indexBarPoints = function(elems) {
+    for (var i = 0; i < elems.length; i++) {
+      var bbox = elems[i].getBoundingClientRect();
+
+      points_pos.push({
+        x: bbox.left + bbox.width *0.5,
+        y: window.scrollY + bbox.top + bbox.height * 0.5,
+        top: window.scrollY + bbox.top,
+        bbox: bbox,
+        label: "foobar"
+      });
+    }
+
+  }
+
   var indexAllPoints = function() {
     points_pos = [];
     indexPoints(elem.querySelectorAll(".areas"));
     indexPoints(elem.querySelectorAll(".lines"));
     indexPoints(elem.querySelectorAll(".points"));
+    indexBarPoints(elem.querySelectorAll(".bar"))
   }
 
   var showToolTip = function (point) {
+
     if (tooltip_elem == null) {
       /* setup tooltip elem */
       tooltip_elem = document.createElement("div");
@@ -62,6 +79,7 @@ FnordMetric.ChartExtensions = function(elem) {
 
     var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
     tooltip_elem.style.top = pos_y + "px";
+
   };
 
   var hideToolTip = function () {
@@ -75,25 +93,43 @@ FnordMetric.ChartExtensions = function(elem) {
       max_snap = Infinity;
     }
 
+
+
     var best_point = null;
     var best_distance = max_snap;
 
+
+
     /* calculate the euclidian distance */
     for (var i = 0; i < points_pos.length; i++) {
-      var diff_x = Math.pow((x - points_pos[i].x), 2);
-      var diff_y = Math.pow((y - points_pos[i].y), 2);
-      var dist = Math.sqrt(diff_x + diff_y);
+      if (points_pos[i].bbox) {
+        if (
+          (x >= points_pos[i].bbox.left && 
+          x <= points_pos[i].bbox.right) && (
+          y >= points_pos[i].bbox.top &&
+          y <= points_pos[i].bbox.bottom)
+          ) {
+          best_point = points_pos[i];
+        } 
+      } else {
+        var diff_x = Math.pow((x - points_pos[i].x), 2);
+        var diff_y = Math.pow((y - points_pos[i].y), 2);
+        var dist = Math.sqrt(diff_x + diff_y);
 
-      if (dist < best_distance) { 
-        best_distance = dist;
-        best_point = points_pos[i];
+        if (dist < best_distance) { 
+          best_distance = dist;
+          best_point = points_pos[i];
+        }
       }
+      
     }
 
     return best_point;
   };
 
+
   var chartHover = function(e) {
+
     var mx = e.x + window.scrollX;
     var my = e.y + window.scrollY;
 
@@ -101,14 +137,21 @@ FnordMetric.ChartExtensions = function(elem) {
       indexAllPoints();
       bbox = base_elem.getBoundingClientRect();
     }
+    /*if (points_pos.length == 0) {
+      indexAllPoints();
+    }*/
 
 
     var point = findClosestPoint(mx, my, 50);
+
+
     if (point == null) {
       hideToolTip();
     } else {
       showToolTip(point);
     }
+
+    
 
   };
 
