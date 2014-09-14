@@ -152,7 +152,7 @@ TEST_CASE(URITest, TestParseQueryParams, [] () {
   URI uri("fnord:path?fuu=bar&blah=123123");
 
   auto params = uri.queryParams();
-  EXPECT_EQ(params.size(), 1);
+  EXPECT_EQ(params.size(), 2);
   EXPECT_EQ(params[0].first, "fuu");
   EXPECT_EQ(params[0].second, "bar");
   EXPECT_EQ(params[1].first, "blah");

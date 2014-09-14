@@ -42,8 +42,9 @@ public:
       std::string* query,
       std::string* fragment);
 
-  static std::vector<std::pair<std::string, std::string>> parseQueryString(
-      const std::string& query);
+  static void parseQueryString(
+      const std::string& query,
+      std::vector<std::pair<std::string, std::string>>* params);
 
 protected:
   std::string scheme_;

@@ -55,11 +55,13 @@ const std::string& URI::query() const {
 
 const std::vector<std::pair<std::string, std::string>> URI::queryParams()
     const {
-  if (query_.size() == 0) {
-    return std::vector<std::pair<std::string, std::string>>();
-  } else {
-    return URI::parseQueryString(query_);
+  std::vector<std::pair<std::string, std::string>> params;
+
+  if (query_.size() > 0) {
+    URI::parseQueryString(query_, &params);
   }
+
+  return params;
 }
 
 const std::string& URI::fragment() const {
@@ -199,9 +201,29 @@ void URI::parseURI(
   }
 }
 
-std::vector<std::pair<std::string, std::string>> URI::parseQueryString(
-    const std::string& query) {
-  return std::vector<std::pair<std::string, std::string>>();
+void URI::parseQueryString(
+    const std::string& query,
+    std::vector<std::pair<std::string, std::string>>* params) {
+  const char* begin = query.c_str();
+  const char* end = begin + query.size();
+
+  for (const char* cur = begin; cur < end; ++cur) {
+    for (; cur < end && *cur != '=' && *cur != '&'; cur++);
+    if (cur > begin && cur < end && *cur == '=' ) {
+      std::string key_str(begin, cur - begin);
+      const char* val = ++cur;
+      for (; cur < end && *cur != '=' && *cur != '&'; cur++);
+      if (cur > val) {
+        std::string val_str(val, cur - val);
+        params->emplace_back(key_str, val_str);
+        begin = cur + 1;
+      } else {
+        break;
+      }
+    } else {
+      break;
+    }
+  }
 }
 
 }
