@@ -15,13 +15,13 @@ examples:
         file: "lines_with_points"
         url: "/linecharts/lines_with_points"
       -
-        title: "Lines with data labels"
-        file: "lines_with_labels"
-        url: "/linecharts/lines_with_labels"
-      -
         title: "Explicit range/domain"
         file: "explicit_domain"
         url: "/linecharts/explicit_domain"
+      -
+        title: "Lines with data labels"
+        file: "lines_with_labels"
+        url: "/linecharts/lines_with_labels"
       -
         title: "Multiple Y Axes"
         file: "multiple_y_axes"
@@ -73,13 +73,13 @@ examples:
     dir: "barcharts"
     examples:
       -
-        title: "Horizontal bar chart"
-        file: "horizontal_bars"
-        url: "/barcharts/horizontal_bars"
-      -
         title: "Vertical bar chart, multiple series"
         file: "vertical_bars"
         url: "/barcharts/vertical_bars"
+      -
+        title: "Horizontal bar chart with labels"
+        file: "horizontal_bars"
+        url: "/barcharts/horizontal_bars"
       -
         title: "Stacked Bar Chart"
         file: "stacked_bars"
@@ -112,10 +112,10 @@ examples:
         title: "Simple scatter chart"
         file: "simple_scatter_chart"
         url: "/pointcharts/simple_scatter"
-#      -
-#        title: "Points with labels"
-#        file: "horizontal_bars"
-#        url: "/barcharts/horizontal_bars"
+      -
+        title: "Point chart with labels"
+        file: "pointchart_with_labels"
+        url: "/pointcharts/pointchart_with_labels"
 #      -
 #        title: "Points with middle axis"
 #        file: "horizontal_bars"

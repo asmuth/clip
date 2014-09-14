@@ -1,5 +1,4 @@
 [ ui ]
-    - pointchart labels
     - barchart labels
 
     - stacked area charts
