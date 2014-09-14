@@ -14,10 +14,10 @@ examples:
         title: "Lines with points"
         file: "lines_with_points"
         url: "/linecharts/lines_with_points"
-#      -
-#        title: "Lines with points &amp; labels"
-#        file: "lines_with_points"
-#        url: "/linecharts/lines_with_points"
+      -
+        title: "Lines with points &amp; labels"
+        file: "lines_with_labels"
+        url: "/linecharts/lines_with_labels"
       -
         title: "Explicit range/domain"
         file: "explicit_domain"

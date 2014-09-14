@@ -17,7 +17,14 @@ namespace ui {
 char PointChart::kDefaultPointStyle[] = "circle";
 char PointChart::kDefaultPointSize[] = "3";
 
-PointChart::PointChart(ui::Canvas* canvas) : Drawable(canvas) {}
+PointChart::PointChart(
+    ui::Canvas* canvas) :
+    Drawable(canvas),
+    show_labels_(false) {}
+
+void PointChart::setLabels(bool show_labels) {
+  show_labels_ = show_labels;
+}
 
 }
 }

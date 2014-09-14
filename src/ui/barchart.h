@@ -74,9 +74,12 @@ public:
    */
   virtual void setStacked(bool stacked) = 0;
 
+  void setLabels(bool show_labels);
+
 protected:
   kBarChartOrientation orientation_;
   bool stacked_;
+  bool show_labels_;
 };
 
 template <typename TX_, typename TY_, typename TZ_>

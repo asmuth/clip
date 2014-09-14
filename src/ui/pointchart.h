@@ -31,6 +31,11 @@ public:
   static char kDefaultPointSize[];
 
   PointChart(ui::Canvas* canvas);
+
+  void setLabels(bool show_labels);
+
+protected:
+  bool show_labels_;
 };
 
 template <typename TX_, typename TY_, typename TZ_>

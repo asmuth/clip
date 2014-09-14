@@ -320,13 +320,14 @@ Syntax Reference
     DRAW AREACHART
         [ [ WITH ]
               common_chart_options
+              [ STACKED ] ]
 
     DRAW BARCHART
         [ [ WITH ]
               common_chart_options
               [ ORIENTATION { HORIZONTAL | VERTICAL } ]
               [ STACKED ]
-              [ LABELS { INSIDE | OUTSIDE | HOVER | OFF } ] ]
+              [ LABELS ] ]
 
     DRAW HEATMAP
         [ [ WITH ]
@@ -338,11 +339,13 @@ Syntax Reference
 
     DRAW LINECHART
         [ [ WITH ]
-              common_chart_options ]
+              common_chart_options
+              [ LABELS ] ]
 
     DRAW POINTCHART
         [ [ WITH ]
-              common_chart_options ]
+              common_chart_options
+              [ LABELS ] ]
 
 ### IMPORT statement
 

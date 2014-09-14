@@ -397,7 +397,8 @@ ASTNode* Parser::drawStatement() {
         break;
       }
 
-      case Token::T_STACKED: {
+      case Token::T_STACKED:
+      case Token::T_LABELS: {
         auto prop = chart->appendChild(ASTNode::T_PROPERTY);
         prop->setToken(consumeToken());
         prop->appendChild(ASTNode::T_PROPERTY_VALUE);
