@@ -1,8 +1,8 @@
 [ ui ]
-    - stacked area charts
     - pointchart labels
     - barchart labels
-    - linechart labels
+
+    - stacked area charts
     - line/point styles
     - make # of axis ticks configurable via sql
     - simple web interface (interactive query UI generates embed html snippets)

@@ -15,7 +15,7 @@ examples:
         file: "lines_with_points"
         url: "/linecharts/lines_with_points"
       -
-        title: "Lines with points &amp; labels"
+        title: "Lines with data labels"
         file: "lines_with_labels"
         url: "/linecharts/lines_with_labels"
       -

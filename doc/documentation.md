@@ -311,7 +311,7 @@ Syntax Reference
     axis_definition ::=
         AXIS { TOP | RIGHT | BOTTOM | LEFT }
             [ TITLE 'title' ]
-            [ LABELS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ] ]
+            [ TICKS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ] ]
 
     legend_definition ::=
         LEGEND { TOP | BOTTOM } { LEFT | RIGHT} { INSIDE | OUTSIDE }

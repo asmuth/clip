@@ -459,7 +459,7 @@ ASTNode* Parser::axisClause() {
         continue;
       }
 
-      case Token::T_LABELS: {
+      case Token::T_TICKS: {
         auto title = axis->appendChild(ASTNode::T_AXIS_LABELS);
         consumeToken();
 

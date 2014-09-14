@@ -491,6 +491,11 @@ next:
     goto next;
   }
 
+  if (token == "TICKS") {
+    token_list->emplace_back(Token::T_TICKS);
+    goto next;
+  }
+
   if (token == "INSIDE") {
     token_list->emplace_back(Token::T_INSIDE);
     goto next;

@@ -99,6 +99,7 @@ public:
     T_SUBTITLE,
     T_GRID,
     T_LABELS,
+    T_TICKS,
     T_INSIDE,
     T_OUTSIDE,
     T_ROTATE,
