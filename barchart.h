@@ -400,7 +400,15 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
         dh *= (1.0 - kBarPaddingInner);
       }
 
-      target->drawRect(dx, dy, dw, dh, seriesColor(n), "bar");
+      target->drawRect(
+          dx,
+          dy,
+          dw,
+          dh,
+          seriesColor(n),
+          "bar",
+          bar.label, // FIXPAUL per series label
+          series_[n]->name());
 
       if (dx + dw > label_x) {
         label_x = dx + dw;
@@ -452,7 +460,15 @@ void BarChart3D<TX, TY, TZ>::renderVerticalBars(
         dw *= (1.0 - kBarPaddingInner);
       }
 
-      target->drawRect(dx, dy, dw, dh, seriesColor(n), "bar");
+      target->drawRect(
+          dx,
+          dy,
+          dw,
+          dh,
+          seriesColor(n),
+          "bar",
+          bar.label, // FIXPAUL per series label
+          series_[n]->name());
 
       if (dy < label_y) {
         label_y = dy;
