@@ -98,7 +98,6 @@ FnordMetric.ChartExtensions = function(elem) {
     var best_point = null;
     var best_distance = max_snap;
 
-    /* calculate the euclidian distance */
     for (var i = 0; i < hover_points.length; i++) {
       if (hover_points[i].bbox) {
         if (
@@ -110,6 +109,7 @@ FnordMetric.ChartExtensions = function(elem) {
           best_point = hover_points[i];
         }
       } else {
+        /* calculate the euclidian distance */
         var diff_x = Math.pow((x - hover_points[i].x), 2);
         var diff_y = Math.pow((y - hover_points[i].y), 2);
         var dist = Math.sqrt(diff_x + diff_y);
@@ -141,8 +141,7 @@ FnordMetric.ChartExtensions = function(elem) {
     }
   };
 
-
-  var indexChartElems = function() {
+  var initChartElems = function() {
     chart_elems = base_elem.querySelectorAll(".lines circle");
     Array.prototype.push.apply(
       chart_elems, base_elem.querySelectorAll(".lines path"));
@@ -150,6 +149,8 @@ FnordMetric.ChartExtensions = function(elem) {
       chart_elems, base_elem.querySelectorAll(".points circle"));
     Array.prototype.push.apply(
       chart_elems, base_elem.querySelectorAll(".bars rect"));
+    Array.prototype.push.apply(
+      chart_elems, base_elem.querySelectorAll(".areas circle"));
   };
 
   var hideSeries = function(series) {
@@ -170,7 +171,7 @@ FnordMetric.ChartExtensions = function(elem) {
 
   var legendClick = function(legend_elem) {
     if (chart_elems.length == 0) {
-      indexChartElems();
+      initChartElems();
     }
     var series = legend_elem.getAttribute('fm:series');
     //FIXME: add fm:series attribute to legend_elems and path_elems
@@ -192,9 +193,8 @@ FnordMetric.ChartExtensions = function(elem) {
   for (var i = 0; i < legend_elems.length; i++) {
     legend_elems[i].onclick = function() {
       legendClick(this);
-    }
-  };
-
+    };
+  }
 }
 
 FnordMetric.extendCharts = function() {
