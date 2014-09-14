@@ -14,7 +14,8 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
-#include "tableref.h"
+#include <fnordmetric/sql/backend.h>
+#include <fnordmetric/sql/tableref.h>
 
 namespace fnordmetric {
 namespace query {
@@ -29,6 +30,8 @@ public:
       const std::string& table_name,
       std::unique_ptr<TableRef>&& table_ref);
 
+  void addBackend(Backend* backend);
+
   void import(
       const std::vector<std::string>& tables,
       const std::string& source_uri);
@@ -36,6 +39,7 @@ public:
   void import(const ImportStatement& import_stmt);
 
 protected:
+  std::vector<Backend*> backends_;
   std::unordered_map<std::string, std::unique_ptr<TableRef>> table_refs_;
 };
 

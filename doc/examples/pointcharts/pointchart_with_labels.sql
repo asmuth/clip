@@ -1,5 +1,5 @@
 IMPORT TABLE example_data
-   FROM CSV 'doc/examples/data/point_example.csv' HEADER;
+   FROM 'csv://localhost:123/doc/examples/data/point_example.csv?headers=true';
 
 DRAW POINTCHART WITH
    AXIS BOTTOM

@@ -24,7 +24,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/outputstream.cc
     stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/threadpool.cc
-    stage/src/fnordmetric/util/runtimeexception.cc)
+    stage/src/fnordmetric/util/runtimeexception.cc
+    stage/src/fnordmetric/util/uri.cc)
 
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
@@ -132,6 +133,10 @@ target_link_libraries(tests/test-cli libfnordmetric)
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
 target_link_libraries(tests/test-input-stream libfnordmetric)
+
+add_executable(tests/test-uri
+    stage/src/fnordmetric/util/uri_test.cc)
+target_link_libraries(tests/test-uri libfnordmetric)
 
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)

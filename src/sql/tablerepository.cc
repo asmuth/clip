@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql/tablerepository.h>
 #include <fnordmetric/sql/importstatement.h>
+#include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {
 namespace query {
@@ -31,14 +32,21 @@ void TableRepository::addTableRef(
 
 void TableRepository::import(
     const std::vector<std::string>& tables,
-    const std::string& source_uri) {
+    const std::string& source_uri_raw) {
+  util::URI source_uri(source_uri_raw);
+
+  printf("URI: %s\n", source_uri.toString().c_str());
+  //for (const auto& backend : backends_) {
+  //}
+
+/*
   printf("IMPORT: ");
   for (const auto tbl : tables) {
     printf("'%s', ", tbl.c_str());
   }
 
   printf("FROM '%s'\n", source_uri.c_str());
-  abort();
+*/
 }
 
 void TableRepository::import(const ImportStatement& import_stmt) {
