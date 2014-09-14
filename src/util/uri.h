@@ -27,12 +27,9 @@ public:
   const std::string& path() const;
   const std::string& query() const;
   const std::string& fragment() const;
-
   std::string toString() const;
 
 protected:
-  void parseAuthority(const std::string& authority);
-
   std::string scheme_;
   std::string userinfo_;
   std::string host_;

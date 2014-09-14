@@ -40,7 +40,39 @@ void URI::parse(const std::string& uri_str) {
     const char* cur = begin;
     for (; cur < end && *cur != '/' && *cur != '?' && *cur != '#'; ++cur);
     if (cur > begin) {
-      parseAuthority(std::string(begin, cur - begin));
+      const char* abegin = begin;
+      const char* aend = cur;
+
+      /* userinfo */
+      for (const char* acur = abegin; acur < aend; ++acur) {
+        if (*acur == '/' || *acur == '?' || *acur == '#') {
+          break;
+        }
+
+        if (*acur == '@') {
+          userinfo_ = std::string(abegin, acur - abegin);
+          abegin = acur + 1;
+          break;
+        }
+      }
+
+      /* host */
+      const char* acur = abegin;
+      for (; acur < aend &&
+            *acur != '/' &&
+            *acur != '?' &&
+            *acur != '#' &&
+            *acur != ':'; ++acur);
+      host_ = std::string(abegin, acur - abegin);
+
+      /* port */
+      if (acur < aend - 1 && *acur == ':') {
+        abegin = ++acur;
+        for (; *acur >= '0' && *acur <= '9'; ++acur);
+        if (acur > abegin) {
+          port_ = std::stoi(std::string(abegin, acur - abegin));
+        }
+      }
     }
     begin = cur;
   }
@@ -68,42 +100,6 @@ void URI::parse(const std::string& uri_str) {
   /* fragment */
   if (begin < end - 1 && *begin == '#') {
     fragment_ = std::string(begin + 1, end - begin - 1);
-  }
-}
-
-void URI::parseAuthority(const std::string& authority) {
-  const char* begin = authority.c_str();
-  const char* end = begin + authority.size();
-
-  /* userinfo */
-  for (const char* cur = begin; cur < end; ++cur) {
-    if (*cur == '/' || *cur == '?' || *cur == '#') {
-      break;
-    }
-
-    if (*cur == '@') {
-      userinfo_ = std::string(begin, cur - begin);
-      begin = cur + 1;
-      break;
-    }
-  }
-
-  /* host */
-  const char* cur = begin;
-  for (; cur < end &&
-        *cur != '/' &&
-        *cur != '?' &&
-        *cur != '#' &&
-        *cur != ':'; ++cur);
-  host_ = std::string(begin, cur - begin);
-
-  /* port */
-  if (cur < end - 1 && *cur == ':') {
-    begin = ++cur;
-    for (; *cur >= '0' && *cur <= '9'; ++cur);
-    if (cur > begin) {
-      port_ = std::stoi(std::string(begin, cur - begin));
-    }
   }
 }
 
