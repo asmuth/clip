@@ -1,21 +1,19 @@
 [ ui ]
-    - impl chart title, subtitle
     - stacked area charts
     - pointchart labels
     - barchart labels
     - linechart labels
-    - impl inside/outside axis labels
     - line/point styles
     - make # of axis ticks configurable via sql
-    - simple interactive charts (hover tooltips)
     - simple web interface (interactive query UI generates embed html snippets)
     ----------
+    - impl inside/outside axis labels
+    - impl rotated axis labels
     - set option: date format string
     - set option: timezone
     - set option: number format (si, exp, etc)
     - series adapter: max interpolation gap
     - middle axis
-    - impl rotated axis labels
     - impl variable axis label size
     - chart type: histogram
     - chart type: heatmap

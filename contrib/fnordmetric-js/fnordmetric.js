@@ -14,11 +14,11 @@ FnordMetric.ChartExtensions = function(elem) {
       return false;
     }
 
-    return 
+    return (
         a.left == b.left &&
         a.top == b.top &&
         a.width == b.width &&
-        a.height == b.height;
+        a.height == b.height);
   }
 
   var indexPoints  = function(elems) {
@@ -26,12 +26,11 @@ FnordMetric.ChartExtensions = function(elem) {
       var points = elems[j].querySelectorAll(".point")
       for (var i = 0; i < points.length; i++) {
         var bbox = points[i].getBoundingClientRect();
-
         points_pos.push({
           x: bbox.left + bbox.width * 0.5,
           y: window.scrollY + bbox.top + bbox.height * 0.5,
           top: window.scrollY + bbox.top,
-          label: "fixme"
+          label: points[i].getAttribute('fm:label')
         });
       }
     }
@@ -39,6 +38,7 @@ FnordMetric.ChartExtensions = function(elem) {
 
   var indexAllPoints = function() {
     points_pos = [];
+    indexPoints(elem.querySelectorAll(".areas"));
     indexPoints(elem.querySelectorAll(".lines"));
     indexPoints(elem.querySelectorAll(".points"));
   }
@@ -60,7 +60,7 @@ FnordMetric.ChartExtensions = function(elem) {
     var pos_x = Math.round(point.x - tooltip_elem.offsetWidth * 0.5);
     tooltip_elem.style.left = pos_x + "px";
 
-    var pos_y = Math.round(point.y - tooltip_elem.offsetHeight )-5;
+    var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
     tooltip_elem.style.top = pos_y + "px";
   };
 
