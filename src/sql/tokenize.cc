@@ -371,16 +371,6 @@ next:
     goto next;
   }
 
-  if (token == "CSV") {
-    token_list->emplace_back(Token::T_CSV);
-    goto next;
-  }
-
-  if (token == "HEADER") {
-    token_list->emplace_back(Token::T_HEADER);
-    goto next;
-  }
-
   if (token == "AXIS") {
     token_list->emplace_back(Token::T_AXIS);
     goto next;

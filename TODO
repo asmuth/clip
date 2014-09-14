@@ -1,26 +1,26 @@
 [ ui ]
     - stacked area charts
-    - make # of axis ticks configurable via sql
     - line/point styles
     - simple web interface (interactive query UI generates embed html snippets)
     ----------
     - impl inside/outside axis labels
     - impl rotated axis labels
-    - set option: date format string
-    - set option: timezone
-    - set option: number format (si, exp, etc)
     - series adapter: max interpolation gap
     - middle axis
     - impl variable axis label size
+    - make # of axis ticks configurable via sql
+    - set option: date format string
+    - set option: timezone
+    - set option: number format (si, exp, etc)
     - chart type: histogram
     - chart type: heatmap
 
 [ cleanup ]
+    - draw legend labels with baseline central // fix in FF
     - escape series names, labels!
     - integer overflow :(
     - lotsa overflows in expression exectution // outc val not respected
     - line chart with only negative values
-    - proper error message for missing table import
     - rename rowsink to virtualtable
     - refactor expression symbol lookup/registration
     - refactor tokenizer // dynamically register tokens
@@ -41,6 +41,15 @@
      - comments! :)
      - string lt gt exprs
      - round fn
+
+[ doc ]
+
+     - faqs
+     - why svg rocks
+       - open it in inkscape
+       - scale up or down
+       - embed into web or native
+       - does not require javascript
 
 ---------  release 1 --------
 

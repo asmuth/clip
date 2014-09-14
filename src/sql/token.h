@@ -67,8 +67,6 @@ public:
     T_WITH,
     T_IMPORT,
     T_TABLE,
-    T_CSV,
-    T_HEADER,
     T_ON,
     T_OFF,
 

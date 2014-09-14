@@ -28,6 +28,7 @@ std::unique_ptr<TableRef> CSVBackend::openTable(ASTNode* import) {
   bool headers = false;
   auto filename = import->getChildren()[1]->getToken()->getString();
 
+/*
   for (int i = 2; i < import->getChildren().size(); ++i) {
     const auto& child = import->getChildren()[i];
 
@@ -43,6 +44,7 @@ std::unique_ptr<TableRef> CSVBackend::openTable(ASTNode* import) {
             Token::getTypeName(child->getToken()->getType()));
     }
   }
+*/
 
   auto csv = CSVInputStream::openFile(
       filename,

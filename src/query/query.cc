@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -16,6 +16,7 @@
 #include <fnordmetric/sql/queryplanbuilder.h>
 #include <fnordmetric/sql/resultlist.h>
 #include <fnordmetric/sql/tablerepository.h>
+#include <fnordmetric/sql/importstatement.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -53,7 +54,7 @@ Query::Query(
         addStatement(stmt, repo);
         break;
       case query::ASTNode::T_IMPORT:
-        importTable(stmt, repo);
+        repo->import(ImportStatement(stmt));
         break;
       default:
         RAISE(util::RuntimeException, "invalid statement");
@@ -101,6 +102,7 @@ ui::Canvas* Query::getChart(size_t index) const {
   assert(index < charts_.size()); // FIXPAUL
   return charts_[index].get();
 }
+
 bool Query::addStatement(
     query::ASTNode* statement,
     query::TableRepository* repo) {
@@ -118,22 +120,6 @@ bool Query::addStatement(
           nullptr : draw_statements_.back().back().get());
 
   return true;
-}
-
-void Query::importTable(ASTNode* statement, TableRepository* repo) const {
-  auto table_name = statement->getChildren()[0]->getToken()->getString();
-
-  switch (statement->getToken()->getType()) {
-
-    case Token::T_CSV:
-      return repo->addTableRef(
-          table_name,
-          csv_backend::CSVBackend::openTable(statement));
-
-    default:
-      RAISE(util::RuntimeException, "can't import table, unknown table type");
-
-  }
 }
 
 }

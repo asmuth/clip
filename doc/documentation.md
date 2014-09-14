@@ -349,13 +349,16 @@ Syntax Reference
 
 ### IMPORT statement
 
-    IMPORT TABLE tablename FROM CSV { 'filename' | STDIN }
-        [ [ WITH ]
-              [ DELIMITER [ AS ] 'delimiter' ]
-              [ ROW_DELIMITER [ AS ] 'row_delimiter' ]
-              [ HEADER ]
-              [ QUOTE [ AS ] 'escape' ]
-              [ ESCAPE [ AS ] 'escape' ] ]
+    IMPORT TABLE tablename [, tablename]...
+        FROM source_url;
+
+Examples:
+
+    IMPORT TABLE measurements
+        FROM "csv://my_measurements.csv?headers=true";
+
+    IMPORT TABLE products, users
+        FROM "mysql://localhost:3306/mydatabase?user=hans&pass=geheim"
 
 
 ### SELECT statement

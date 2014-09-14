@@ -1,5 +1,5 @@
 # This file is part of the "FnordMetric" project
-#   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+#   Copyright (c) 2014 Paul Asmuth, Google Inc.
 #
 # FnordMetric is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License v3.0. You should have received a
@@ -53,11 +53,13 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/compile.cc
     stage/src/fnordmetric/sql/execute.cc
     stage/src/fnordmetric/sql/grouper.cc
+    stage/src/fnordmetric/sql/importstatement.cc
     stage/src/fnordmetric/sql/parser.cc
     stage/src/fnordmetric/sql/queryplanbuilder.cc
     stage/src/fnordmetric/sql/queryplannode.cc
     stage/src/fnordmetric/sql/svalue.cc
     stage/src/fnordmetric/sql/symboltable.cc
+    stage/src/fnordmetric/sql/tablerepository.cc
     stage/src/fnordmetric/sql/token.cc
     stage/src/fnordmetric/sql/tokenize.cc
     stage/src/fnordmetric/sql_extensions/areachartbuilder.cc

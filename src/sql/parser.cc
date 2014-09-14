@@ -290,50 +290,17 @@ ASTNode* Parser::importStatement() {
 
   expectAndConsume(Token::T_TABLE);
   import->appendChild(tableName());
-  expectAndConsume(Token::T_FROM);
 
-  switch (cur_token_->getType()) {
-    case Token::T_CSV:
-      importCSVClause(import);
-      break;
-
-    default:
-      RAISE(
-          ParseError,
-          "unexpected token %s%s%s, expected one of CSV, MYSQL",
-          Token::getTypeName(cur_token_->getType()),
-          cur_token_->getString().size() > 0 ? ": " : "",
-          cur_token_->getString().c_str());
+  if (*cur_token_ == Token::T_COMMA) {
+    consumeToken();
+    import->appendChild(tableName());
   }
+
+  expectAndConsume(Token::T_FROM);
+  import->appendChild(expectAndConsumeValueExpr());
 
   consumeIf(Token::T_SEMICOLON);
   return import;
-}
-
-void Parser::importCSVClause(ASTNode* import) {
-  import->setToken(consumeToken());
-  assertExpectation(Token::T_STRING);
-
-  auto filename = new ASTNode(ASTNode::T_LITERAL);
-  filename->setToken(consumeToken());
-  import->appendChild(filename);
-
-  for (;;) {
-    switch (cur_token_->getType()) {
-
-      case Token::T_HEADER: {
-        auto flag = new ASTNode(ASTNode::T_PROPERTY);
-        flag->setToken(consumeToken());
-        import->appendChild(flag);
-        continue;
-      }
-
-      default:
-        break;
-    }
-
-    break;
-  }
 }
 
 // FIXPAUL move this into sql extensions

@@ -82,7 +82,6 @@ protected:
   ASTNode* legendClause();
 
   ASTNode* importStatement();
-  void importCSVClause(ASTNode* import);
 
   ASTNode* fromClause();
   ASTNode* whereClause();

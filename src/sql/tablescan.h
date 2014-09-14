@@ -56,8 +56,11 @@ public:
     auto tbl_ref = repo->getTableRef(tbl_name_token->getString());
 
     if (tbl_ref == nullptr) {
-      printf("error: undefined table '%s'\n",
+      RAISE(
+          util::RuntimeException,
+          "undefined table '%s'",
           tbl_name_token->getString().c_str());
+
       return nullptr;
     }
 
