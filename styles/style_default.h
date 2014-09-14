@@ -52,6 +52,10 @@ static const std::string kStyleSheetDefault = R"(
     font-size: 10px;
   }
 
+  .fm-chart text.label {
+    fill: #666;
+  }
+
   .fm-chart .legend text {
     font-size: 10px;
     fill: #333;

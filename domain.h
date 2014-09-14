@@ -429,7 +429,6 @@ public:
 
   const std::vector<double> getTicks() const {
     if (empty()) {
-      abort();
       return std::vector<double>{};
     } else {
       return domain_->getTicks();
