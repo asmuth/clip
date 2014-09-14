@@ -113,7 +113,7 @@ examples:
         file: "simple_scatter_chart"
         url: "/pointcharts/simple_scatter"
       -
-        title: "Point chart with labels"
+        title: "Point chart with data labels"
         file: "pointchart_with_labels"
         url: "/pointcharts/pointchart_with_labels"
 #      -
