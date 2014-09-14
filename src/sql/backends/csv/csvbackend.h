@@ -11,6 +11,7 @@
 #ifndef _FNORDMETRIC_CSVBACKEND_H
 #define _FNORDMETRIC_CSVBACKEND_H
 #include <memory>
+#include <fnordmetric/sql/backend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 
 namespace fnordmetric {
@@ -18,10 +19,15 @@ namespace query {
 class ASTNode;
 namespace csv_backend {
 
-class CSVBackend {
+class CSVBackend : public fnordmetric::query::Backend {
 public:
 
-  static std::unique_ptr<TableRef> openTable(ASTNode* import);
+  static CSVBackend* singleton();
+
+  bool openTables(
+      const std::vector<std::string>& table_names,
+      const util::URI& source_uri,
+      std::vector<std::unique_ptr<TableRef>>* target) override;
 
 };
 

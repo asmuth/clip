@@ -1,5 +1,5 @@
 IMPORT TABLE city_temperatures
-   FROM CSV 'doc/examples/data/city_temperatures.csv' HEADER;
+   FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';
 
 DRAW LINECHART WITH
    XDOMAIN INVERT

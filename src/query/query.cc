@@ -32,6 +32,9 @@ Query::Query(
     const char* query_string,
     size_t query_string_len,
     TableRepository* repo) {
+  // FIXPAUL!!
+  repo->addBackend(query::csv_backend::CSVBackend::singleton());
+
   query::Parser parser;
 
   if (query_string_len == 0) {

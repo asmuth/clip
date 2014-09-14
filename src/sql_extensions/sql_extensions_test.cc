@@ -220,7 +220,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisTitle, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPos, [] () {
-  auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT LABELS INSIDE;");
+  auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT TICKS INSIDE;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_DRAW);
@@ -241,7 +241,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPos, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelRotate, [] () {
-  auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT LABELS ROTATE 45;");
+  auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT TICKS ROTATE 45;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_DRAW);
@@ -267,7 +267,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelRotate, [] () {
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPosAndRotate, [] () {
   auto parser = parseTestQuery(
-      "DRAW BARCHART AXIS LEFT LABELS OUTSIDE ROTATE 45;");
+      "DRAW BARCHART AXIS LEFT TICKS OUTSIDE ROTATE 45;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_DRAW);

@@ -31,6 +31,10 @@ void TableRepository::addTableRef(
   table_refs_[table_name] = std::move(table_ref);
 }
 
+void TableRepository::addBackend(Backend* backend) {
+  backends_.emplace_back(backend);
+}
+
 void TableRepository::import(
     const std::vector<std::string>& tables,
     const std::string& source_uri_raw) {

@@ -1,5 +1,5 @@
 IMPORT TABLE example_data
-   FROM CSV 'doc/examples/data/areadata.csv' HEADER;
+   FROM 'csv:doc/examples/data/areadata.csv?headers=true';
 
 DRAW BARCHART
     ORIENTATION HORIZONTAL
