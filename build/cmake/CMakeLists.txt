@@ -45,9 +45,13 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
     stage/src/fnordmetric/sql/backends/csv/csvtableref.cc)
 
+set(FNORDMETRIC_MYSQL_BACKEND_SOURCES
+    stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc)
+
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
+    ${FNORDMETRIC_MYSQL_BACKEND_SOURCES}
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/astnode.cc

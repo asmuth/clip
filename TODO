@@ -32,7 +32,6 @@
 [ backends ]
     - mysql backend
     - sql: csv opts
-    - proper csv w/ all opts
 
 [ sql ]
      - SQL: order by

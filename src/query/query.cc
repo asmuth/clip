@@ -12,6 +12,7 @@
 #include <string.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/sql/parser.h>
 #include <fnordmetric/sql/queryplanbuilder.h>
 #include <fnordmetric/sql/resultlist.h>
@@ -34,6 +35,7 @@ Query::Query(
     TableRepository* repo) {
   // FIXPAUL!!
   repo->addBackend(query::csv_backend::CSVBackend::singleton());
+  repo->addBackend(query::mysql_backend::MySQLBackend::singleton());
 
   query::Parser parser;
 
