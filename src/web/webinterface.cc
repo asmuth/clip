@@ -23,9 +23,46 @@ bool WebInterface::handleHTTPRequest(
   auto url = request->getUrl();
 
   if (url == "/") {
+    response->setStatus(302);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    response->addHeader("Location", "/admin");
+    return true;
+  }
+
+  if (url == "/admin") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(Assets::getAsset("fnordmetric.js"));
+    response->addBody(Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric.js") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/javascript");
+    response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric.js"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric-editor.js") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/javascript");
+    response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric-editor.js"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric-webui.css") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/css");
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric-webui.js") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/javascript");
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"));
     return true;
   }
 
