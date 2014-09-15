@@ -24,14 +24,14 @@ FnordMetric.WebUI = function() {
 
     var left_pane = document.createElement("div");
     left_pane.className = "editor_pane";
-    left_pane.style.width = "30%";
+    left_pane.style.width = "50%";
     left_pane.innerHTML = "<div class='card editor'><textarea></textarea></div>"
     editor.appendChild(left_pane);
 
     var right_pane = document.createElement("div");
     right_pane.className = "result_pane";
-    right_pane.style.left = "30%";
-    right_pane.style.width = "70%";
+    right_pane.style.left = "50%";
+    right_pane.style.width = "50%";
     right_pane.innerHTML = "<div class='card'></div>"
     editor.appendChild(right_pane);
 
