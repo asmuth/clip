@@ -20,4 +20,4 @@ test: all
 clean:
 	rm -rf target stage
 
-.PHONY: all test clean
+.PHONY: all test clean assets

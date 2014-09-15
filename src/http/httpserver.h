@@ -32,7 +32,7 @@ public:
   void onConnection(int fd) override;
 
 protected:
-  void handleConnection(int fd);
+  void handleConnection(int fd) const;
   util::ThreadPool* thread_pool_;
 };
 

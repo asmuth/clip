@@ -38,7 +38,3 @@ std::string Assets::getAsset(const std::string& filename) {
 
 }
 }
-
-#include <asset_index.html.c>
-#include <asset_fnordmetric_web.css.c>
-#include <asset_fnordmetric_web.js.c>

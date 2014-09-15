@@ -29,20 +29,6 @@ bool WebInterface::handleHTTPRequest(
     return true;
   }
 
-  if (url == "/fnordmetric-web.css") {
-    response->setStatus(200);
-    response->addHeader("Content-Type", "text/css");
-    response->addBody(Assets::getAsset("fnordmetric-web.css"));
-    return true;
-  }
-
-  if (url == "/fnordmetric-web.js") {
-    response->setStatus(200);
-    response->addHeader("Content-Type", "text/javascript");
-    response->addBody(Assets::getAsset("fnordmetric-web.js"));
-    return true;
-  }
-
   return false;
 }
 
