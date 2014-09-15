@@ -44,3 +44,9 @@ asset_name() {
   asset_file "contrib/fnordmetric-webui/fnordmetric-webui.js"
   asset_name "fnordmetric_webui_fnordmetric_webui_js" "fnordmetric-webui/fnordmetric-webui.js"
 ) >> stage/src/asset_bundle.cc
+
+(
+  asset_uniq "fnordmetric_webui_fnordmetric_favicon_ico"
+  asset_file "contrib/fnordmetric-webui/fnordmetric-favicon.ico"
+  asset_name "fnordmetric_webui_fnordmetric_favicon_ico" "fnordmetric-webui/fnordmetric-favicon.ico"
+) >> stage/src/asset_bundle.cc

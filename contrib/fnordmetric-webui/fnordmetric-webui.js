@@ -3,5 +3,12 @@ if (typeof FnordMetric == "undefined") {
 }
 
 FnordMetric.WebUI = function() {
-  console.log("here be dragons: webui");
+  var setupLayoutHTML = function() {
+    var navbar = document.createElement("div");
+    navbar.id = "navbar";
+    document.body.appendChild(navbar);
+  }
+
+
+  setupLayoutHTML();
 }

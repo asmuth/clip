@@ -36,6 +36,14 @@ bool WebInterface::handleHTTPRequest(
     return true;
   }
 
+  if (url == "/favicon.ico") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "image/x-icon");
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"));
+    return true;
+  }
+
   if (url == "/s/fnordmetric.js") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/javascript");
