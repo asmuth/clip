@@ -12,21 +12,28 @@ if (typeof FnordMetric == "undefined") {
   FnordMetric = {};
 }
 
-FnordMetric.Editor = {};
+FnordMetric.Editor = {
+  tab_width: 4,
+  font: "14px monospace",
+  patterns: {
+    "#d33682": /(SELECT|FROM|WHERE|GROUP|ORDER|BY|HAVING|LIMIT|OFFSET|ASC|DESC|COMMA|DOT|IDENTIFIER|STRING|NUMERIC|SEMICOLON|LPAREN|RPAREN|AND|OR|EQUAL|PLUS|MINUS|ASTERISK|SLASH|NOT|TRUE|FALSE|BANG|CIRCUMFLEX|TILDE|PERCENT|DIV|MOD|AMPERSAND|PIPE|LSHIFT|RSHIFT|LT|GT|BEGIN|CREATE|WITH|IMPORT|TABLE|ON|OFF|DRAW|LINECHART|AREACHART|BARCHART|POINTCHART|HEATMAP|HISTOGRAM|AXIS|TOP|RIGHT|BOTTOM|LEFT|ORIENTATION|HORIZONTAL|VERTICAL|STACKED|XDOMAIN|YDOMAIN|ZDOMAIN|XGRID|YGRID|LOGARITHMIC|INVERT|TITLE|SUBTITLE|GRID|LABELS|TICKS|INSIDE|OUTSIDE|ROTATE|LEGEND)\s/,
+    "#6c71c4": /AS\s/,
+    whitespace: /\s+/,
+    other: /\S+/
+  }
+};
 
 FnordMetric.Editor.extendTextarea = function(elem) {
-  var parser = new FnordMetric.Editor.Parser({
-        whitespace: /\s+/,
-        red: /red/,
-        orange: /orange/,
-        yellow: /yellow/,
-        green: /green/,
-        blue: /blue/,
-        indigo: /indigo/,
-        violet: /violet/,
-        other: /\S+/ },
-        true);
+  elem.value = "IMPORT TABLE example_data\n" +
+      "    FROM 'csv:measurement.csv?headers=true'\n\n" +
+      "    DRAW LINECHART WITH\n" +
+      "        AXIS BOTTOM\n" +
+      "        AXIS LEFT;\n\n" +
+      "    SELECT 'data' AS series, FROM_TIMESTAMP(time) AS x, value2 * 1000 AS y\n" +
+      "        FROM example_data\n" +
+      "        WHERE series = 'measurement2';\n";
 
+  var parser = new FnordMetric.Editor.Parser(FnordMetric.Editor.patterns, true);
   var decorator = new FnordMetric.Editor.TextareaDecorator(elem, parser);
 }
 
@@ -37,10 +44,7 @@ FnordMetric.Editor.extendTextarea = function(elem) {
  * Parser - Generates a tokenizer from regular expressions for TextareaDecorator
  */
 FnordMetric.Editor.Parser = function(rules, i) {
-  /* INIT */
   var api = this;
-
-  // variables used internally
   var i = i ? 'i' : '';
   var parseRE = null;
   var ruleSrc = [];
@@ -54,9 +58,11 @@ FnordMetric.Editor.Parser = function(rules, i) {
     }
     parseRE = new RegExp( ruleSrc.join('|'), 'g'+i );
   };
+
   api.tokenize = function(input){
     return input.match(parseRE);
   };
+
   api.identify = function(token){
     for( var rule in ruleMap ){
       if( ruleMap[rule].test(token) ){
@@ -79,7 +85,7 @@ FnordMetric.Editor.Parser = function(rules, i) {
  */
 FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
   var api = this;
-  var font_str = "14px monospace";
+  var font_str = FnordMetric.Editor.font;
   var padding_str = "20px";
 
   var parent = document.createElement("div");
@@ -92,6 +98,7 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
   output.style.margin = "0";
   output.style.MozPaddingStart = "1px";
   output.style.font = font_str;
+  output.style.minHeight = "300px";
   parent.appendChild(output);
 
   var label = document.createElement("label");
@@ -120,12 +127,36 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
   textarea.style.overflow = "hidden";
   textarea.style.maxWidth = "100%";
   textarea.style.minHeight = "100%";
-  textarea.filter = "alpha(opacity = 20)";
-  textarea.color = "color: rgba(0,0,0,.01)";
+  textarea.style.filter = "alpha(opacity = 20)";
+  textarea.style.color = "rgba(0,0,0,.1)";
   label.appendChild(textarea);
 
+  textarea.addEventListener(
+      'keydown',
+      function (e) {
+        if(e.keyCode === 9) {
+          var start = this.selectionStart;
+          var end = this.selectionEnd;
+          var target = e.target;
+          var value = target.value;
+          var tab_str = "";
+          for (var i = 0; i < FnordMetric.Editor.tab_width; i++) {
+            tab_str += " ";
+          }
 
-  var color = function( input, output, parser ){
+          target.value =
+              value.substring(0, start) + tab_str + value.substring(end);
+
+          this.selectionStart = this.selectionEnd = start +
+            FnordMetric.Editor.tab_width;
+
+          e.preventDefault();
+          api.update();
+        }
+      },
+      false);
+
+  var color = function(input, output, parser){
     var oldTokens = output.childNodes;
     var newTokens = parser.tokenize(input);
     var firstDiff, lastDiffNew, lastDiffOld;
@@ -140,13 +171,13 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
       if( newTokens[lastDiffNew] !== oldTokens[lastDiffOld].textContent ) break;
     // update modified spans
     for( ; firstDiff <= lastDiffOld; firstDiff++ ){
-      oldTokens[firstDiff].className = parser.identify(newTokens[firstDiff]);
+      oldTokens[firstDiff].style.color = parser.identify(newTokens[firstDiff]);
       oldTokens[firstDiff].textContent = oldTokens[firstDiff].innerText = newTokens[firstDiff];
     }
     // add in modified spans
     for( var insertionPt = oldTokens[firstDiff] || null; firstDiff <= lastDiffNew; firstDiff++ ){
       var span = document.createElement("span");
-      span.className = parser.identify(newTokens[firstDiff]);
+      span.style.color = parser.identify(newTokens[firstDiff]);
       span.textContent = span.innerText = newTokens[firstDiff];
       output.insertBefore( span, insertionPt );
     }
@@ -156,19 +187,15 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
   api.output = output;
   api.update = function(){
     var input = textarea.value;
-    if( input ){
-      color( input, output, parser );
+    if (input){
+      color(input, output, parser);
       // determine the best size for the textarea
       var lines = input.split('\n');
       // find the number of columns
-      var maxlen = 0, curlen;
-      for( var i = 0; i < lines.length; i++ ){
-        // calculate the width of each tab
-        var tabLength = 0, offset = -1;
-        while( (offset = lines[i].indexOf( '\t', offset+1 )) > -1 ){
-          tabLength += 7 - (tabLength + offset) % 8;
-        }
-        var curlen = lines[i].length + tabLength;
+      var maxlen = 0;
+      var curlen;
+      for (var i = 0; i < lines.length; i++ ){
+        var curlen = lines[i].length;
         // store the greatest line length thus far
         maxlen = maxlen > curlen ? maxlen : curlen;
       }
@@ -197,8 +224,8 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
       }
     );
   }
-  // initial highlighting
-  api.update();
 
+  api.update();
+  textarea.focus();
   return api;
 };
