@@ -1,7 +1,6 @@
 #/bin/bash
-
-mkdir -p assets
->stage/asset_bundle.c
+mkdir -p stage/src
+echo "#include <fnordmetric/web/assets.h>" > stage/src/asset_bundle.cc
 
 asset_file() {
   (cd ../.. && cat $@ | xxd -i)
@@ -19,5 +18,5 @@ asset_name() {
 (
   asset_uniq "fnordmetric_js"
   asset_file "contrib/fnordmetric-js/fnordmetric.js"
-  asset_name "fordmetric_js" "fnordmetric.js"
-) >> stage/asset_bundle.c
+  asset_name "fnordmetric_js" "fnordmetric.js"
+) >> stage/src/asset_bundle.cc

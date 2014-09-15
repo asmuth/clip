@@ -25,7 +25,7 @@ bool WebInterface::handleHTTPRequest(
   if (url == "/") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(Assets::getAsset("index.html"));
+    response->addBody(Assets::getAsset("fnordmetric.js"));
     return true;
   }
 
