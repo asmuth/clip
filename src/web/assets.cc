@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/web/assets.h>
 #include <asset_bundle.cc>
@@ -29,6 +30,20 @@ Assets::AssetFile::AssetFile(
 }
 
 std::string Assets::getAsset(const std::string& filename) {
+#ifndef _NDEBUG
+  auto dev_asset_path = std::getenv("DEV_ASSET_PATH");
+
+  if (dev_asset_path != nullptr) {
+    // FIXPAUL check that file exists
+    auto file = util::FileInputStream::openFile(
+        std::string(dev_asset_path) + "/" + filename);
+
+    std::string asset_str;
+    file->readUntilEOF(&asset_str);
+    return asset_str;
+  }
+#endif
+
   auto asset_files = Assets::global_map();
   const auto asset = asset_files->find(filename);
 
