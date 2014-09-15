@@ -20,6 +20,12 @@ PointChartBuilder::PointChartBuilder(
     ChartBuilder(canvas, draw_stmt) {}
 
 ui::Drawable* PointChartBuilder::getChart() const {
+  auto chart = dynamic_cast<ui::PointChart*>(findChartType());
+  setLabels(chart);
+  return chart;
+}
+
+ui::Drawable* PointChartBuilder::findChartType() const {
   preconditionCheck();
 
   if (auto c = tryType2D<ui::PointChart2D<
@@ -127,6 +133,11 @@ ui::Drawable* PointChartBuilder::getChart() const {
 
 std::string PointChartBuilder::chartName() const {
   return "PointChart";
+}
+
+void PointChartBuilder::setLabels(ui::PointChart* chart) const {
+  auto prop = draw_stmt_->getProperty(Token::T_LABELS);
+  chart->setLabels(prop != nullptr);
 }
 
 }

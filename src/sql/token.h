@@ -67,8 +67,6 @@ public:
     T_WITH,
     T_IMPORT,
     T_TABLE,
-    T_CSV,
-    T_HEADER,
     T_ON,
     T_OFF,
 
@@ -99,6 +97,7 @@ public:
     T_SUBTITLE,
     T_GRID,
     T_LABELS,
+    T_TICKS,
     T_INSIDE,
     T_OUTSIDE,
     T_ROTATE,

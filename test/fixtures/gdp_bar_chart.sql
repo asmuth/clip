@@ -1,5 +1,5 @@
 IMPORT TABLE gdp_per_country
-   FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;
+   FROM 'csv:test/fixtures/gbp_per_country_simple.csv?headers=true';
 
 DRAW BARCHART
   AXIS BOTTOM

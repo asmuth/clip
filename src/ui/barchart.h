@@ -44,6 +44,7 @@ class BarChart : public Drawable {
 public:
   constexpr static const double kBarPadding = 0.3f; // FIXPAUL make configurable
   constexpr static const double kBarPaddingInner = 0.2f; // FIXPAUL make configurable
+  constexpr static const int kLabelPadding = 8;
 
   enum kBarChartOrientation {
     O_VERTICAL,
@@ -74,9 +75,12 @@ public:
    */
   virtual void setStacked(bool stacked) = 0;
 
+  void setLabels(bool show_labels);
+
 protected:
   kBarChartOrientation orientation_;
   bool stacked_;
+  bool show_labels_;
 };
 
 template <typename TX_, typename TY_, typename TZ_>
@@ -238,10 +242,6 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
           "BarChart error: invalid point in series. Z value must be greater "
           "or equal to Y value for all points");
     }
-
-    if (series->hasProperty(Series::P_LABEL)) {
-      printf("label=%s\n", series->getProperty(Series::P_LABEL, &point).c_str());
-    }
   }
 
   data_.addSeries(series);
@@ -376,6 +376,10 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
 
   for (const auto& bar : data->getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
+    auto label_x = viewport->paddingLeft();
+    auto label_y = viewport->paddingTop() +
+        ((1.0f - x.second) + (x.second - x.first) * 0.5f) *
+            viewport->innerHeight();
 
     for (int n = 0; n < data->seriesCount(); n++) {
       auto y_min = y_domain->scale(bar.ys[n].first.value());
@@ -396,7 +400,29 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
         dh *= (1.0 - kBarPaddingInner);
       }
 
-      target->drawRect(dx, dy, dw, dh, seriesColor(n), "bar");
+      target->drawRect(
+          dx,
+          dy,
+          dw,
+          dh,
+          seriesColor(n),
+          "bar",
+          bar.label, // FIXPAUL per series label
+          series_[n]->name());
+
+      if (dx + dw > label_x) {
+        label_x = dx + dw;
+      }
+    }
+
+    if (show_labels_) {
+      target->drawText(
+          bar.label,
+          label_x + kLabelPadding,
+          label_y,
+          "start",
+          "central",
+          "label");
     }
   }
 }
@@ -411,6 +437,9 @@ void BarChart3D<TX, TY, TZ>::renderVerticalBars(
 
   for (const auto& bar : data->getData()) {
     auto x = x_domain->scaleRange(bar.x.value());
+    auto label_y = viewport->paddingTop() + viewport->innerHeight();
+    auto label_x = viewport->paddingLeft() + (x.first +
+        ((x.second - x.first) * 0.5)) * viewport->innerWidth();
 
     for (int n = 0; n < data->seriesCount(); n++) {
       auto y_min = y_domain->scale(bar.ys[n].first.value());
@@ -431,7 +460,29 @@ void BarChart3D<TX, TY, TZ>::renderVerticalBars(
         dw *= (1.0 - kBarPaddingInner);
       }
 
-      target->drawRect(dx, dy, dw, dh, seriesColor(n), "bar");
+      target->drawRect(
+          dx,
+          dy,
+          dw,
+          dh,
+          seriesColor(n),
+          "bar",
+          bar.label, // FIXPAUL per series label
+          series_[n]->name());
+
+      if (dy < label_y) {
+        label_y = dy;
+      }
+    }
+
+    if (show_labels_) {
+      target->drawText(
+          bar.label,
+          label_x,
+          label_y - kLabelPadding,
+          "middle",
+          "text-after-edge",
+          "label");
     }
   }
 }
@@ -449,7 +500,9 @@ void BarChart3D<TX, TY, TZ>::stackData(
           typename Series3D<TX, TY, TZ>::Point(
               bar.x,
               Series::Coord<TY>(cur),
-              Series::Coord<TY>(cur + delta)), true);
+              Series::Coord<TY>(cur + delta)),
+          bar.label,
+          true);
 
       cur += delta;
     }
@@ -529,6 +582,11 @@ void BarChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
           Series::P_LABEL,
           &series3d->getData().back(),
           series->getProperty(Series::P_LABEL, &point));
+    } else {
+        series3d->setProperty(
+          Series::P_LABEL,
+          &series3d->getData().back(),
+          series->labelFor(&point));
     }
   }
 

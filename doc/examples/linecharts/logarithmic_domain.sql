@@ -1,5 +1,5 @@
 IMPORT TABLE example_data
-   FROM CSV 'doc/examples/data/log_example.csv' HEADER;
+   FROM 'csv:doc/examples/data/log_example.csv?headers=true';
 
 DRAW LINECHART WITH
    XDOMAIN 0, 5 LOGARITHMIC

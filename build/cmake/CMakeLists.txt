@@ -1,5 +1,5 @@
 # This file is part of the "FnordMetric" project
-#   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+#   Copyright (c) 2014 Paul Asmuth, Google Inc.
 #
 # FnordMetric is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License v3.0. You should have received a
@@ -24,7 +24,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/outputstream.cc
     stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/threadpool.cc
-    stage/src/fnordmetric/util/runtimeexception.cc)
+    stage/src/fnordmetric/util/runtimeexception.cc
+    stage/src/fnordmetric/util/uri.cc)
 
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
@@ -44,20 +45,26 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
     stage/src/fnordmetric/sql/backends/csv/csvtableref.cc)
 
+set(FNORDMETRIC_MYSQL_BACKEND_SOURCES
+    stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc)
+
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
     ${FNORDMETRIC_CSV_BACKEND_SOURCES}
+    ${FNORDMETRIC_MYSQL_BACKEND_SOURCES}
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/astnode.cc
     stage/src/fnordmetric/sql/compile.cc
     stage/src/fnordmetric/sql/execute.cc
     stage/src/fnordmetric/sql/grouper.cc
+    stage/src/fnordmetric/sql/importstatement.cc
     stage/src/fnordmetric/sql/parser.cc
     stage/src/fnordmetric/sql/queryplanbuilder.cc
     stage/src/fnordmetric/sql/queryplannode.cc
     stage/src/fnordmetric/sql/svalue.cc
     stage/src/fnordmetric/sql/symboltable.cc
+    stage/src/fnordmetric/sql/tablerepository.cc
     stage/src/fnordmetric/sql/token.cc
     stage/src/fnordmetric/sql/tokenize.cc
     stage/src/fnordmetric/sql_extensions/areachartbuilder.cc
@@ -130,6 +137,10 @@ target_link_libraries(tests/test-cli libfnordmetric)
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
 target_link_libraries(tests/test-input-stream libfnordmetric)
+
+add_executable(tests/test-uri
+    stage/src/fnordmetric/util/uri_test.cc)
+target_link_libraries(tests/test-uri libfnordmetric)
 
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)

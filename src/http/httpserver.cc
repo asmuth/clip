@@ -31,7 +31,7 @@ void ThreadedHTTPServer::onConnection(int fd) {
   });
 }
 
-void ThreadedHTTPServer::handleConnection(int fd) {
+void ThreadedHTTPServer::handleConnection(int fd) const {
   bool keepalive = false;
 
   util::FileInputStream input_stream(fd, false);
@@ -41,29 +41,38 @@ void ThreadedHTTPServer::handleConnection(int fd) {
     HTTPRequest request;
     HTTPResponse response;
 
+    keepalive = false;
     try {
       HTTPInputStream http_input_stream(&input_stream);
       request.readFromInputStream(&http_input_stream);
 
-      if (!request.keepalive()) {
-        keepalive = false;
+      if (request.keepalive()) {
+        keepalive = true;
       }
 
       response.populateFromRequest(request);
     } catch (util::RuntimeException e) {
-      e.debugPrint();
+      keepalive = false;
       response.setStatus(400);
       response.addHeader("Connection", "close");
       response.addBody("Bad Request");
-      keepalive = false;
+      e.debugPrint(); // FIXPAUL
     }
 
     bool handled = false;
-    for (const auto& handler : handlers_) {
-      if (handler->handleHTTPRequest(&request, &response)) {
-        handled = true;
-        break;
+    try {
+      for (const auto& handler : handlers_) {
+        if (handler->handleHTTPRequest(&request, &response)) {
+          handled = true;
+          break;
+        }
       }
+    } catch (util::RuntimeException e) {
+      keepalive = false;
+      response.setStatus(500);
+      response.addHeader("Connection", "close");
+      response.addBody("Internal Server Error");
+      e.debugPrint(); // FIXPAUL
     }
 
     if (!handled) {

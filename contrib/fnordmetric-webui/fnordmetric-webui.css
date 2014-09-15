@@ -1,0 +1,15 @@
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #ececec;
+}
+
+#navbar {
+  height: 48px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 0 1px rgba(0,0,0,.1);
+}

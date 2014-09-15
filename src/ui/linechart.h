@@ -33,12 +33,18 @@ namespace ui {
  */
 class LineChart : public Drawable {
 public:
+  static const constexpr int kLabelPadding = 8;
   static char kDefaultLineStyle[];
   static char kDefaultLineWidth[];
   static char kDefaultPointStyle[];
   static char kDefaultPointSize[];
 
   LineChart(ui::Canvas* canvas);
+
+  void setLabels(bool show_labels);
+
+protected:
+  bool show_labels_;
 };
 
 template <typename TX_, typename TY_>
@@ -210,6 +216,17 @@ void LineChart2D<TX, TY>::render(
       auto y = y_domain_.getAs<Domain<TY>>()->scale(point.y());
       auto ss_x = viewport->paddingLeft() + x * viewport->innerWidth();
       auto ss_y = viewport->paddingTop() + (1.0 - y) * viewport->innerHeight();
+      auto label = series->labelFor(&point);
+
+      if (show_labels_) {
+        target->drawText(
+            label,
+            ss_x,
+            ss_y - point_size - kLabelPadding,
+            "middle",
+            "text-after-edge",
+            "label");
+      }
 
       target->drawPoint(
           ss_x,
@@ -218,7 +235,7 @@ void LineChart2D<TX, TY>::render(
           point_size,
           color,
           "point",
-          series->labelFor(&point),
+          label,
           series->name());
 
       coords.emplace_back(ss_x, ss_y);

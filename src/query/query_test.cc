@@ -220,7 +220,7 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
 
   auto query = Query(
       "  IMPORT TABLE gbp_per_country "
-      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
+      "     FROM 'csv:test/fixtures/gbp_per_country_simple.csv?headers=true';"
       ""
       "  DRAW BARCHART AXIS LEFT;"
       ""
@@ -246,7 +246,7 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
 TEST_CASE(QueryTest, TestQueryService, [] () {
   auto query =
       "  IMPORT TABLE gbp_per_country "
-      "     FROM CSV 'test/fixtures/gbp_per_country_simple.csv' HEADER;"
+      "     FROM 'csv:test/fixtures/gbp_per_country_simple.csv?headers=true';"
       ""
       "  DRAW BARCHART"
       "    AXIS BOTTOM"

@@ -311,7 +311,7 @@ Syntax Reference
     axis_definition ::=
         AXIS { TOP | RIGHT | BOTTOM | LEFT }
             [ TITLE 'title' ]
-            [ LABELS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ] ]
+            [ TICKS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ] ]
 
     legend_definition ::=
         LEGEND { TOP | BOTTOM } { LEFT | RIGHT} { INSIDE | OUTSIDE }
@@ -320,13 +320,14 @@ Syntax Reference
     DRAW AREACHART
         [ [ WITH ]
               common_chart_options
+              [ STACKED ] ]
 
     DRAW BARCHART
         [ [ WITH ]
               common_chart_options
               [ ORIENTATION { HORIZONTAL | VERTICAL } ]
               [ STACKED ]
-              [ LABELS { INSIDE | OUTSIDE | HOVER | OFF } ] ]
+              [ LABELS ] ]
 
     DRAW HEATMAP
         [ [ WITH ]
@@ -338,21 +339,26 @@ Syntax Reference
 
     DRAW LINECHART
         [ [ WITH ]
-              common_chart_options ]
+              common_chart_options
+              [ LABELS ] ]
 
     DRAW POINTCHART
         [ [ WITH ]
-              common_chart_options ]
+              common_chart_options
+              [ LABELS ] ]
 
 ### IMPORT statement
 
-    IMPORT TABLE tablename FROM CSV { 'filename' | STDIN }
-        [ [ WITH ]
-              [ DELIMITER [ AS ] 'delimiter' ]
-              [ ROW_DELIMITER [ AS ] 'row_delimiter' ]
-              [ HEADER ]
-              [ QUOTE [ AS ] 'escape' ]
-              [ ESCAPE [ AS ] 'escape' ] ]
+    IMPORT TABLE tablename [, tablename]...
+        FROM source_url;
+
+Examples:
+
+    IMPORT TABLE measurements
+        FROM "csv://my_measurements.csv?headers=true";
+
+    IMPORT TABLE products, users
+        FROM "mysql://localhost:3306/mydatabase?user=hans&pass=geheim"
 
 
 ### SELECT statement

@@ -23,6 +23,7 @@ ui::Drawable* BarChartBuilder::getChart() const {
   auto chart = dynamic_cast<ui::BarChart*>(findChartType());
   setOrientation(chart);
   setStacked(chart);
+  setLabels(chart);
   return chart;
 }
 
@@ -72,6 +73,11 @@ void BarChartBuilder::setStacked(ui::BarChart* chart) const {
 
 std::string BarChartBuilder::chartName() const {
   return "BarChart";
+}
+
+void BarChartBuilder::setLabels(ui::BarChart* chart) const {
+  auto prop = draw_stmt_->getProperty(Token::T_LABELS);
+  chart->setLabels(prop != nullptr);
 }
 
 }

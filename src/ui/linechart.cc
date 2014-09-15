@@ -20,7 +20,14 @@ char LineChart::kDefaultLineWidth[] = "2";
 char LineChart::kDefaultPointStyle[] = "none";
 char LineChart::kDefaultPointSize[] = "3";
 
-LineChart::LineChart(ui::Canvas* canvas) : Drawable(canvas) {}
+LineChart::LineChart(
+    ui::Canvas* canvas) :
+    Drawable(canvas),
+    show_labels_(false) {}
+
+void LineChart::setLabels(bool show_labels) {
+  show_labels_ = show_labels;
+}
 
 }
 }

@@ -25,7 +25,7 @@ class Canvas {
 public:
   static const int kAxisPadding = 0; // FIXPAUL make configurable
   static const int kTickLength = 5; // FIXPAUL make configurable
-  static const int kAxisLabelHeight = 20; // FIXPAUL make configurable
+  static const int kAxisLabelHeight = 25; // FIXPAUL make configurable
   static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20; // FIXPAUL make configurable
   static const int kCharWidth = 6.0f; // FIXPAUL make configurable

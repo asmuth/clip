@@ -23,23 +23,54 @@ bool WebInterface::handleHTTPRequest(
   auto url = request->getUrl();
 
   if (url == "/") {
+    response->setStatus(302);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    response->addHeader("Location", "/admin");
+    return true;
+  }
+
+  if (url == "/admin") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(Assets::getAsset("index.html"));
+    response->addBody(Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
     return true;
   }
 
-  if (url == "/fnordmetric-web.css") {
+  if (url == "/favicon.ico") {
     response->setStatus(200);
-    response->addHeader("Content-Type", "text/css");
-    response->addBody(Assets::getAsset("fnordmetric-web.css"));
+    response->addHeader("Content-Type", "image/x-icon");
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"));
     return true;
   }
 
-  if (url == "/fnordmetric-web.js") {
+  if (url == "/s/fnordmetric.js") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/javascript");
-    response->addBody(Assets::getAsset("fnordmetric-web.js"));
+    response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric.js"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric-editor.js") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/javascript");
+    response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric-editor.js"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric-webui.css") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/css");
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"));
+    return true;
+  }
+
+  if (url == "/s/fnordmetric-webui.js") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "text/javascript");
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"));
     return true;
   }
 

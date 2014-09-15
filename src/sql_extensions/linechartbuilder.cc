@@ -20,6 +20,12 @@ LineChartBuilder::LineChartBuilder(
     ChartBuilder(canvas, draw_stmt) {}
 
 ui::Drawable* LineChartBuilder::getChart() const {
+  auto chart = dynamic_cast<ui::LineChart*>(findChartType());
+  setLabels(chart);
+  return chart;
+}
+
+ui::Drawable* LineChartBuilder::findChartType() const {
   preconditionCheck();
 
   if (auto c = tryType2D<ui::LineChart2D<
@@ -78,6 +84,11 @@ ui::Drawable* LineChartBuilder::getChart() const {
 
 std::string LineChartBuilder::chartName() const {
   return "LineChart";
+}
+
+void LineChartBuilder::setLabels(ui::LineChart* chart) const {
+  auto prop = draw_stmt_->getProperty(Token::T_LABELS);
+  chart->setLabels(prop != nullptr);
 }
 
 }

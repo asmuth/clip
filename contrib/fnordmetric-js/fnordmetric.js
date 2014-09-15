@@ -43,11 +43,11 @@ FnordMetric.ChartExtensions = function(elem) {
       var bbox = elems[i].getBoundingClientRect();
 
       hover_points.push({
-        x: bbox.left + bbox.width *0.5,
+        x: bbox.left + bbox.width * 0.5,
         y: window.scrollY + bbox.top + bbox.height * 0.5,
         top: window.scrollY + bbox.top,
         bbox: bbox,
-        label: "foobar"
+        label: elems[i].getAttribute('fm:label')
       });
     }
 

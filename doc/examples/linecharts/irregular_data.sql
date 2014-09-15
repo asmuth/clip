@@ -1,5 +1,5 @@
 IMPORT TABLE example_data
-   FROM CSV 'doc/examples/data/irregular_data.csv' HEADER;
+   FROM 'csv:doc/examples/data/irregular_data.csv?headers=true';
 
 DRAW LINECHART WITH
    AXIS BOTTOM

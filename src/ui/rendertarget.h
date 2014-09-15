@@ -63,7 +63,9 @@ public:
       double width,
       double height,
       const std::string& color,
-      const std::string& class_name = "") = 0;
+      const std::string& class_name = "",
+      const std::string& label = "",
+      const std::string& series = "") = 0;
 
   virtual void drawPath(
       const std::vector<std::pair<double, double>>& points,

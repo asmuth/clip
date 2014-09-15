@@ -134,6 +134,12 @@ public:
         row[y_ind_].template getValue<TY>(),
         row[z_ind_].template getValue<TZ>());
 
+    applyProperties(
+        row,
+        row_len,
+        series,
+        &series->getData().back());
+
     return true;
   }
 

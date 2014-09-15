@@ -29,8 +29,14 @@ class PointChart : public Drawable {
 public:
   static char kDefaultPointStyle[];
   static char kDefaultPointSize[];
+  static const constexpr int kLabelPadding = 8;
 
   PointChart(ui::Canvas* canvas);
+
+  void setLabels(bool show_labels);
+
+protected:
+  bool show_labels_;
 };
 
 template <typename TX_, typename TY_, typename TZ_>
@@ -219,6 +225,17 @@ void PointChart3D<TX, TY, TZ>::render(
       auto y = y_domain_.getAs<Domain<TY>>()->scale(point.y());
       auto ss_x = viewport->paddingLeft() + x * viewport->innerWidth();
       auto ss_y = viewport->paddingTop() + (1.0 - y) * viewport->innerHeight();
+      auto label = series->labelFor(&point);
+
+      if (show_labels_) {
+        target->drawText(
+            label,
+            ss_x,
+            ss_y - point.z() - kLabelPadding,
+            "middle",
+            "text-after-edge",
+            "label");
+      }
 
       target->drawPoint(
           ss_x,
@@ -227,7 +244,7 @@ void PointChart3D<TX, TY, TZ>::render(
           point.z(),
           color,
           "point",
-          series->labelFor(&point),
+          label,
           series->name());
     }
   }

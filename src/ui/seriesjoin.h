@@ -22,6 +22,7 @@ public:
   struct JoinedPoint {
     JoinedPoint(const Series::Coord<TX>& x_) : x(x_) {}
     Series::Coord<TX> x;
+    std::string label;
     std::vector<std::pair<Series::Coord<TY>, Series::Coord<TZ>>> ys;
   };
 
@@ -30,7 +31,7 @@ public:
   // FIXPAUL this should not be O(n^2)
   void addSeries(Series3D<TX, TY, TZ>* series) {
     for (const auto& point : series->getData()) {
-      addPoint(point);
+      addPoint(point, series->labelFor(&point));
     }
 
     for (auto& joined : data_) {
@@ -45,8 +46,9 @@ public:
   }
 
   void addPoint(
-    const typename Series3D<TX, TY, TZ>::Point& point,
-    bool force = false) {
+      const typename Series3D<TX, TY, TZ>::Point& point,
+      const std::string& label,
+      bool force = false) {
     JoinedPoint* joined = nullptr;
     for (auto& candidate : data_) {
       if (candidate.x == point.x_coord()) {
@@ -67,6 +69,13 @@ public:
 
     if (joined->ys.size() < num_series_ + 1 || force) {
       joined->ys.emplace_back(point.y_coord(), point.z_coord());
+    }
+
+    if (joined->label.size() == 0) {
+      joined->label = label;
+    } else if (joined->label != label) {
+      joined->label.append(", ");
+      joined->label.append(label);
     }
   }
 
