@@ -9,6 +9,37 @@ body {
 
 #navbar {
   height: 48px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.query_editor.horizontal_split .editor_pane, .query_editor.horizontal_split .result_pane {
+  position: fixed;
+  top: 48px;
+  bottom: 0;
+  box-sizing: border-box;
+}
+
+.query_editor.horizontal_split .editor_pane {
+  padding: 30px 15px 30px 30px;
+}
+
+.query_editor.horizontal_split .result_pane {
+  padding: 30px 30px 30px 15px;
+}
+
+.card {
+  padding: 20px;
+}
+
+.card.editor {
+  padding: 0;
+}
+
+#navbar, .card {
   background: #fff;
   border-bottom: 1px solid #ddd;
   box-shadow: 0 0 1px rgba(0,0,0,.1);
