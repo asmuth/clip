@@ -40,7 +40,8 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/domainprovider.cc
     stage/src/fnordmetric/ui/drawable.cc
     stage/src/fnordmetric/ui/griddefinition.cc
-    stage/src/fnordmetric/ui/legenddefinition.cc)
+    stage/src/fnordmetric/ui/legenddefinition.cc
+    stage/src/fnordmetric/ui/timedomain.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvbackend.cc

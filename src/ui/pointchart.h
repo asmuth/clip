@@ -14,6 +14,7 @@
 #include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/continuousdomain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/colorpalette.h>

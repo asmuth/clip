@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql_extensions/domainconfig.h>
+#include <fnordmetric/ui/continuousdomain.h>
 
 namespace fnordmetric {
 namespace query {

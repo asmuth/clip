@@ -8,6 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/continuousdomain.h>
+#include <fnordmetric/ui/discretedomain.h>
+#include <fnordmetric/ui/timedomain.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -28,7 +31,7 @@ template <> Domain<fnordmetric::FloatType>*
 
 template <> Domain<fnordmetric::TimeType>*
     Domain<fnordmetric::TimeType>::mkDomain() {
-  return new TimeDomain<fnordmetric::TimeType>();
+  return new TimeDomain();
 }
 
 template <> Domain<std::string>* Domain<std::string>::mkDomain() {
