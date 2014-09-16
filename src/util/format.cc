@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <ctime>
 #include "math.h"
 #include "format.h"
 

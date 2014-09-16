@@ -11,6 +11,7 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string>
+#include <ctime>
 #include <stdint.h>
 #include <assert.h>
 #include <fnordmetric/util/format.h>

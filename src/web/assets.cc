@@ -11,6 +11,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/web/assets.h>
 #include <asset_bundle.cc>
+#include <cstdlib>
 
 namespace fnordmetric {
 namespace web {
