@@ -18,6 +18,7 @@ FnordMetric.Editor = {
   patterns: {
     "#d33682": /(SELECT|FROM|WHERE|GROUP|ORDER|BY|HAVING|LIMIT|OFFSET|ASC|DESC|COMMA|DOT|IDENTIFIER|STRING|NUMERIC|SEMICOLON|LPAREN|RPAREN|AND|OR|EQUAL|PLUS|MINUS|ASTERISK|SLASH|NOT|TRUE|FALSE|BANG|CIRCUMFLEX|TILDE|PERCENT|DIV|MOD|AMPERSAND|PIPE|LSHIFT|RSHIFT|LT|GT|BEGIN|CREATE|WITH|IMPORT|TABLE|ON|OFF|DRAW|LINECHART|AREACHART|BARCHART|POINTCHART|HEATMAP|HISTOGRAM|AXIS|TOP|RIGHT|BOTTOM|LEFT|ORIENTATION|HORIZONTAL|VERTICAL|STACKED|XDOMAIN|YDOMAIN|ZDOMAIN|XGRID|YGRID|LOGARITHMIC|INVERT|TITLE|SUBTITLE|GRID|LABELS|TICKS|INSIDE|OUTSIDE|ROTATE|LEGEND)\s/,
     "#6c71c4": /AS\s/,
+    "#2aa198" : /\b(\d+(.\d+)?)\s/,
     whitespace: /\s+/,
     other: /\S+/
   }
@@ -50,13 +51,13 @@ FnordMetric.Editor.Parser = function(rules, i) {
   var ruleSrc = [];
   var ruleMap = {};
 
-  api.add = function( rules ){
-    for( var rule in rules ){
+  api.add = function(rules) {
+    for (var rule in rules) {
       var s = rules[rule].source;
-      ruleSrc.push( s );
-      ruleMap[rule] = new RegExp('^('+s+')$', i );
+      ruleSrc.push(s);
+      ruleMap[rule] = new RegExp('^('+s+')$', i);
     }
-    parseRE = new RegExp( ruleSrc.join('|'), 'g'+i );
+    parseRE = new RegExp(ruleSrc.join('|'), 'g'+i);
   };
 
   api.tokenize = function(input){
@@ -83,7 +84,7 @@ FnordMetric.Editor.Parser = function(rules, i) {
  * TextareaDecorator - Builds and maintains a styled output layer under a
  * textarea input layer
  */
-FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
+FnordMetric.Editor.TextareaDecorator = function(textarea, parser) {
   var api = this;
   var font_str = FnordMetric.Editor.font;
   var padding_str = "20px";
@@ -152,17 +153,32 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
 
           e.preventDefault();
           api.update();
-        }
+        } 
       },
       false);
 
-  var color = function(input, output, parser){
+
+  var color = function(input, output, parser) {
     var oldTokens = output.childNodes;
     var newTokens = parser.tokenize(input);
-    var firstDiff, lastDiffNew, lastDiffOld;
+
+    while (output.firstChild) {
+      output.removeChild(output.firstChild);
+    }
+
+    for (var i = 0; i < newTokens.length; i++) {
+      var span = document.createElement("span");
+      span.style.color = parser.identify(newTokens[i]);
+      span.textContent = span.innerText = newTokens[i];
+      output.insertBefore(span, null);
+    }
+
+ 
+    /*var firstDiff, lastDiffNew, lastDiffOld;
     // find the first difference
-    for( firstDiff = 0; firstDiff < newTokens.length && firstDiff < oldTokens.length; firstDiff++ )
-      if( newTokens[firstDiff] !== oldTokens[firstDiff].textContent ) break;
+    for (firstDiff = 0; firstDiff < newTokens.length && firstDiff < oldTokens.length; firstDiff++) {
+      if (newTokens[firstDiff] !== oldTokens[firstDiff].textContent) {break;}
+    }
     // trim the length of output nodes to the size of the input
     while( newTokens.length < oldTokens.length )
       output.removeChild(oldTokens[firstDiff]);
@@ -171,6 +187,8 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
       if( newTokens[lastDiffNew] !== oldTokens[lastDiffOld].textContent ) break;
     // update modified spans
     for( ; firstDiff <= lastDiffOld; firstDiff++ ){
+      console.log(parser.identify(newTokens[firstDiff]));
+
       oldTokens[firstDiff].style.color = parser.identify(newTokens[firstDiff]);
       oldTokens[firstDiff].textContent = oldTokens[firstDiff].innerText = newTokens[firstDiff];
     }
@@ -180,7 +198,7 @@ FnordMetric.Editor.TextareaDecorator = function( textarea, parser ) {
       span.style.color = parser.identify(newTokens[firstDiff]);
       span.textContent = span.innerText = newTokens[firstDiff];
       output.insertBefore( span, insertionPt );
-    }
+    } */
   };
 
   api.input = textarea;
