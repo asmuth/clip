@@ -12,7 +12,8 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include "domain.h"
+#include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/domainprovider.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -52,7 +53,7 @@ public:
    * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
    * @param domain the domain. does not transfer ownership
    */
-  AxisDefinition(kPosition axis_position, DomainAdapter* domain);
+  AxisDefinition(kPosition axis_position, DomainProvider* domain);
 
   /**
    * Add a "tick" to this axis
@@ -133,11 +134,11 @@ public:
   /**
    * Set the domain for this axis
    */
-  void setDomain(DomainAdapter* domain);
+  void setDomain(DomainProvider* domain);
 
 protected:
   kPosition position_;
-  DomainAdapter* domain_;
+  DomainProvider* domain_;
   std::string title_;
   std::vector<double> ticks_;
   bool has_ticks_;

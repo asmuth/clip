@@ -388,68 +388,6 @@ protected:
   std::vector<T> categories_;
 };
 
-class DomainAdapter {
-public:
-  DomainAdapter(
-      AnyDomain* domain = nullptr) :
-      domain_(domain),
-      free_on_destroy_(false) {};
-
-  ~DomainAdapter() {
-    if (free_on_destroy_) {
-      delete domain_;
-    }
-  }
-
-  AnyDomain* get() const {
-    return domain_;
-  }
-
-  template <typename T>
-  T* getAs() const {
-    T* domain = dynamic_cast<T*>(domain_);
-
-    if (domain == nullptr) {
-      RAISE(util::RuntimeException, "can't convert domain to requested type");
-    }
-
-    return domain;
-  }
-
-  bool empty() const {
-    return domain_ == nullptr;
-  }
-
-  void reset(AnyDomain* domain, bool free_on_destroy = false) {
-    if (free_on_destroy_) {
-      delete domain_;
-    }
-
-    domain_ = domain;
-    free_on_destroy_ = free_on_destroy;
-  }
-
-  const std::vector<double> getTicks() const {
-    if (empty()) {
-      return std::vector<double>{};
-    } else {
-      return domain_->getTicks();
-    }
-  }
-
-  const std::vector<std::pair<double, std::string>> getLabels() const {
-    if (empty()) {
-      return std::vector<std::pair<double, std::string>>{};
-    } else {
-      return domain_->getLabels();
-    }
-  }
-
-protected:
-  AnyDomain* domain_;
-  bool free_on_destroy_;
-};
-
 }
 }
 #endif

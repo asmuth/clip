@@ -354,7 +354,7 @@ TEST_CASE(UITest, TestCanvasWithAxisFromNumericalDomain, [] () {
 
   ContinuousDomain<double> domain(0, 100);
   auto axis1 = canvas.addAxis(AxisDefinition::LEFT);
-  DomainAdapter domain_adapter(&domain);
+  DomainProvider domain_adapter(&domain);
   axis1->setDomain(&domain_adapter);
   axis1->setTitle("numerical domain");
 
