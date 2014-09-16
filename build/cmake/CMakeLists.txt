@@ -89,8 +89,12 @@ set(FNORDMETRIC_CLI_SOURCES
 
 include_directories(stage/src)
 include_directories(stage/assets)
-#set(CMAKE_CXX_FLAGS "-std=c++0x")
-set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+
+IF(APPLE)
+  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+ELSE()
+  set(CMAKE_CXX_FLAGS "-std=c++0x")
+ENDIF()
 
 add_definitions("-Wno-predefined-identifier-outside-function")
 # add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})

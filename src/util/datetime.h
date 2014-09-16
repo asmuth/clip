@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_UTIL_DATETIME_H
 #define _FNORDMETRIC_UTIL_DATETIME_H
 #include <ctime>
+#include <limits>
 
 namespace fnordmetric {
 namespace util {

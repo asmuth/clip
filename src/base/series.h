@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <tuple>
 #include <fnordmetric/util/runtimeexception.h>
- #include <fnordmetric/util/format.h>
-
+#include <fnordmetric/util/format.h>
 
 namespace fnordmetric {
 
