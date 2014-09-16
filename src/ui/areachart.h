@@ -129,8 +129,8 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   std::vector<Area> areas_;
   ColorPalette color_palette_;
 };

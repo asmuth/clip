@@ -17,7 +17,7 @@ GridDefinition::GridDefinition(
     placement_(placement),
     domain_(nullptr) {}
 
-void GridDefinition::setDomain(DomainAdapter* domain) {
+void GridDefinition::setDomain(DomainProvider* domain) {
   domain_ = domain;
 }
 

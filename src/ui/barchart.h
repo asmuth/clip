@@ -164,8 +164,8 @@ protected:
   void stackData(SeriesJoin3D<TX, TY, TZ>* target) const;
   const std::string& seriesColor(size_t series_index) const;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   SeriesJoin3D<TX, TY, TY> data_;
   std::vector<Series3D<TX, TY, TY>*> series_;
   ColorPalette color_palette_;

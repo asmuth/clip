@@ -105,8 +105,8 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   std::vector<Series3D<TX, TY, TZ>*> series_;
   ColorPalette color_palette_;
 };

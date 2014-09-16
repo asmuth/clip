@@ -72,7 +72,9 @@ std::string numberToHuman(double value) {
   return std::string(buf, len);
 }
 
-std::string formatTime(fnordmetric::TimeType time, char* fmt /* = nullptr */) {
+std::string formatTime(
+    fnordmetric::TimeType time,
+    const char* fmt /* = nullptr */) {
   static char default_fmt[] = "%Y-%m-%d %H:%M:%S";
   return time.toString(fmt == nullptr ? default_fmt : fmt);
 }

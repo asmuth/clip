@@ -37,6 +37,7 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/pointchart.cc
     stage/src/fnordmetric/ui/canvas.cc
     stage/src/fnordmetric/ui/domain.cc
+    stage/src/fnordmetric/ui/domainprovider.cc
     stage/src/fnordmetric/ui/drawable.cc
     stage/src/fnordmetric/ui/griddefinition.cc
     stage/src/fnordmetric/ui/legenddefinition.cc)

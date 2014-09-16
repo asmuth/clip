@@ -19,7 +19,7 @@ AxisDefinition::AxisDefinition(
 
 AxisDefinition::AxisDefinition(
     kPosition axis_position,
-    DomainAdapter* domain) :
+    DomainProvider* domain) :
     position_(axis_position),
     domain_(domain),
     has_ticks_(false),
@@ -94,7 +94,7 @@ bool AxisDefinition::hasTitle() const {
   return title_.length() > 0;
 }
 
-void AxisDefinition::setDomain(DomainAdapter* domain) {
+void AxisDefinition::setDomain(DomainProvider* domain) {
   domain_ = domain;
 }
 
