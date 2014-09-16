@@ -18,6 +18,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/http/httprequest.cc
     stage/src/fnordmetric/http/httpresponse.cc
     stage/src/fnordmetric/http/httpserver.cc
+    stage/src/fnordmetric/util/datetime.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
     stage/src/fnordmetric/util/inputstream.cc

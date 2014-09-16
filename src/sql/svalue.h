@@ -78,7 +78,7 @@ protected:
       fnordmetric::IntegerType t_integer;
       fnordmetric::FloatType t_float;
       fnordmetric::BoolType t_bool;
-      fnordmetric::TimeType t_timestamp;
+      uint64_t t_timestamp;
       struct {
         char* ptr;
         uint32_t len;

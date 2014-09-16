@@ -61,7 +61,7 @@ SValue::SValue(fnordmetric::BoolType bool_value) : SValue() {
 
 SValue::SValue(fnordmetric::TimeType time_value) : SValue() {
   data_.type = T_TIMESTAMP;
-  data_.u.t_timestamp = time_value;
+  data_.u.t_timestamp = static_cast<uint64_t>(time_value);
 }
 
 SValue::SValue(const SValue& copy) {
