@@ -117,8 +117,8 @@ public:
       }
 
       double value_log = 0.0f;
-      if (value >= 1.0) {
-        value_log = log10(value);
+      if (static_cast<double>(value) >= 1.0) {
+        value_log = log10(static_cast<double>(value));
       }
 
       scaled = value_log / max_log;
@@ -127,7 +127,8 @@ public:
       auto min_value = min_max.first;
       auto max_value = min_max.second;
 
-      scaled = (value - min_value) / (max_value - min_value);
+      scaled =
+          (static_cast<double>(value) - min_value) / (max_value - min_value);
     }
 
     if (is_inverted_) {
@@ -138,7 +139,7 @@ public:
   }
 
   virtual std::string label(T value) const {
-    return fnordmetric::util::format::numberToHuman(value);
+    return fnordmetric::util::format::numberToHuman(static_cast<double>(value));
   }
 
   double valueAt(double index) const {
@@ -178,12 +179,12 @@ public:
   }
 
   void addValue(const T& value) {
-    if (value > max_value_) {
-      max_value_ = value;
+    if (static_cast<double>(value) > max_value_) {
+      max_value_ = static_cast<double>(value);
     }
 
-    if (value < min_value_) {
-      min_value_ = value;
+    if (static_cast<double>(value) < min_value_) {
+      min_value_ = static_cast<double>(value);
     }
   }
 
@@ -274,7 +275,8 @@ public:
 
   std::string label(T value) const {
     return fnordmetric::util::format::formatTimeWithRange(
-        value, ContinuousDomain<T>::getRange());
+        value,
+        static_cast<uint64_t>(ContinuousDomain<T>::getRange()));
   }
 
 };
