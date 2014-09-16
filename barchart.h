@@ -17,6 +17,8 @@
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/colorpalette.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/continuousdomain.h>
+#include <fnordmetric/ui/discretedomain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/rendertarget.h>
 #include <fnordmetric/ui/seriesjoin.h>
