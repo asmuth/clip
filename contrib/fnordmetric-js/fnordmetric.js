@@ -8,6 +8,8 @@ FnordMetric.ChartExtensions = function(elem) {
   var tooltip_elem = null;
   var bbox = null;
   var legend_elems = base_elem.querySelectorAll(".legend .point");
+  var hidden_series = [];
+  var chart_elems = [];
 
   var compareBBox = function(a, b) {
     if (a == null || b == null) {
@@ -96,7 +98,6 @@ FnordMetric.ChartExtensions = function(elem) {
     var best_point = null;
     var best_distance = max_snap;
 
-    /* calculate the euclidian distance */
     for (var i = 0; i < hover_points.length; i++) {
       if (hover_points[i].bbox) {
         if (
@@ -108,6 +109,7 @@ FnordMetric.ChartExtensions = function(elem) {
           best_point = hover_points[i];
         }
       } else {
+        /* calculate the euclidian distance */
         var diff_x = Math.pow((x - hover_points[i].x), 2);
         var diff_y = Math.pow((y - hover_points[i].y), 2);
         var dist = Math.sqrt(diff_x + diff_y);
@@ -139,8 +141,60 @@ FnordMetric.ChartExtensions = function(elem) {
     }
   };
 
+  var initChartElems = function() {
+    chart_elems = base_elem.querySelectorAll(".lines circle");
+    Array.prototype.push.apply(
+      chart_elems, base_elem.querySelectorAll(".lines path"));
+    Array.prototype.push.apply(
+      chart_elems, base_elem.querySelectorAll(".points circle"));
+    Array.prototype.push.apply(
+      chart_elems, base_elem.querySelectorAll(".bars rect"));
+    Array.prototype.push.apply(
+      chart_elems, base_elem.querySelectorAll(".areas circle"));
+  };
+
+  var hideSeries = function(series) {
+    for (var i = 0; i < chart_elems.length; i++) {
+      if (chart_elems[i].getAttribute('fm:series') == series) {
+        chart_elems[i].style.display = "none";
+      }
+    }
+  };
+
+  var displaySeries = function(series) {
+    for (var i = 0; i < chart_elems.length; i++) {
+      if (chart_elems[i].getAttribute('fm:series') == series) {
+        chart_elems[i].style.display = "block";
+      }
+    }
+  };
+
+  var legendClick = function(legend_elem) {
+    if (chart_elems.length == 0) {
+      initChartElems();
+    }
+    var series = legend_elem.getAttribute('fm:series');
+    //FIXME: add fm:series attribute to legend_elems and path_elems
+    var series = 'Tokyo'; 
+    var index = hidden_series.indexOf(series);
+    if (index > -1) {
+      displaySeries(series);
+      hidden_series.splice(index, 1);
+    } else {
+      hidden_series.push(series);
+      hideSeries(series);
+    } 
+  };
+
   base_elem.onmouseover = chartHover;
   base_elem.onmousemove = chartHover;
+
+
+  for (var i = 0; i < legend_elems.length; i++) {
+    legend_elems[i].onclick = function() {
+      legendClick(this);
+    };
+  }
 }
 
 FnordMetric.extendCharts = function() {
