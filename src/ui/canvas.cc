@@ -569,11 +569,13 @@ void Canvas::renderRightLegend(
       lx_boundary = viewport->paddingLeft() + horiz_padding;
     }
 
+    auto ly = bottom ?
+        height - kLegendPointSize * 0.4f :
+        height + kLegendPointSize * 2.0f;
+
     target->drawPoint(
         lx,
-        bottom ?
-            height - kLegendPointSize * 0.4f :
-            height + kLegendPointSize * 2.0f,
+        ly,
         std::get<2>(entry),
         kLegendPointSize,
         std::get<1>(entry),
@@ -582,9 +584,9 @@ void Canvas::renderRightLegend(
     target->drawText(
       std::get<0>(entry),
       lx - kLegendPointWidth,
-      height,
+      ly,
       "end",
-      bottom ? "text-after-edge" : "text-before-edge",
+      "central",
       "label");
 
     lx -= this_len;
@@ -645,11 +647,13 @@ void Canvas::renderLeftLegend(
       height += bottom ? -1 * kLegendLineHeight : kLegendLineHeight;
     }
 
+    auto ly = bottom ?
+        height - kLegendPointSize * 0.4f :
+        height + kLegendPointSize * 2.0f;
+
     target->drawPoint(
         lx,
-        bottom ?
-            height - kLegendPointSize * 0.4f :
-            height + kLegendPointSize * 2.0f,
+        ly,
         std::get<2>(entry),
         kLegendPointSize,
         std::get<1>(entry),
@@ -658,9 +662,9 @@ void Canvas::renderLeftLegend(
     target->drawText(
       std::get<0>(entry),
       lx + kLegendPointWidth,
-      height,
+      ly,
       "start",
-      bottom ? "text-after-edge" : "text-before-edge",
+      "central",
       "label");
 
     lx += this_len;
