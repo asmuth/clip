@@ -31,6 +31,15 @@ body {
   padding: 30px 30px 30px 15px;
 }
 
+.query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
+  position: fixed;
+  top: 48px;
+}
+
+.query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
+  padding: 30px;
+}
+
 .card {
   padding: 20px;
 }
@@ -49,7 +58,7 @@ body {
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: monospace;
+  font: 14px monospace;
   height: 300px;
 }
 .CodeMirror-scroll {
@@ -60,15 +69,17 @@ body {
 /* PADDING */
 
 .CodeMirror-lines {
-  padding: 4px 0; /* Vertical padding around content */
+  padding: 4px 4px; /* Vertical padding around content */
 }
 .CodeMirror pre {
-  padding: 0 4px; /* Horizontal padding of content */
+  padding: 2px 4px; /* Horizontal padding of content */
 }
 
 .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
   background-color: white; /* The little square between H and V scrollbars */
 }
+
+
 
 /* GUTTER */
 

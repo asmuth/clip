@@ -29,14 +29,70 @@ FnordMetric.Editor = {
 };
 
 FnordMetric.Editor.init = function(elem) {
-  var cm = CodeMirror(elem);
-  console.log(cm);
+  //var cm = CodeMirror(elem);
+  //console.log(cm);
+  var mime = "text/fm-sql";
+  //get mime type 
+  if (window.location.href.indexOf('mime=') > -1) {
+    mime = window.location.href.substr(window.location.href.indexOf('mime=') + 5);
+  }
+  console.log(mime);
+
+  var cm = CodeMirror(elem, {
+    parserfile: mime,
+
+    matchBrackets: true,
+    autofocus: true
+  });
 };
 
 FnordMetric.WebUI = function() {
   var navbar = document.createElement("div");
   navbar.id = "navbar";
   document.body.appendChild(navbar);
+  var vertical;
+
+  var adjustEditor = function(editor_pane, result_pane) {
+    var width = document.body.clientWidth;
+    var mobile_patt = /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i;
+    var uagent = navigator.userAgent.toLowerCase();
+
+
+    var makeVerticalSplit = function() {
+      var query_editor = document.querySelector(".query_editor");
+      query_editor.className = "query_editor vertical_split";
+      editor_pane.style.width = "95%";
+      result_pane.style.top = editor_pane.offsetHeight + "px";
+      result_pane.style.left = "";
+      result_pane.style.width = "95%";
+    }
+
+    var makeHorizontalSplit = function() {
+      var query_editor = document.querySelector(".query_editor");
+      query_editor.className = "query_editor horizontal_split";
+      editor_pane.style.width = "50%";
+      result_pane.style.left = "50%";
+      result_pane.style.width = "50%";
+      result_pane.style.top = "48px";
+    }
+
+    // oder einfach mit screen.width ? 
+    var isMobile = mobile_patt.test(uagent);
+
+    if (isMobile || (width < 1300)) {
+      makeVerticalSplit();
+      vertical = true;
+    }
+    console.log(vertical);
+    console.log(width);
+
+    if (vertical && (width > 1300)) {
+      console.log("make horizontal");
+      makeHorizontalSplit();
+      
+    }
+
+  }
 
   var renderQueryEditor = function() {
     var editor = document.createElement("div");
@@ -57,6 +113,11 @@ FnordMetric.WebUI = function() {
     editor.appendChild(right_pane);
 
     FnordMetric.Editor.init(left_pane.querySelector(".editor"));
+    adjustEditor(left_pane, right_pane);
+    window.addEventListener('resize', function() {
+        adjustEditor(left_pane, right_pane);
+    }, true);
+    //addeventListener to document.body.clientWidth;
   };
 
   renderQueryEditor();
