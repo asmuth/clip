@@ -16,7 +16,6 @@
     - chart type: heatmap
 
 [ cleanup ]
-    - draw legend labels with baseline central // fix in FF
     - escape series names, labels!
     - lotsa overflows in expression exectution // outc val not respected
     - line chart with only negative values
