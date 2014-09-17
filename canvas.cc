@@ -191,9 +191,9 @@ void Canvas::renderTopAxis(
       target->drawText(
           label.second,
           tick_x,
-          top - (kTickLength * 2),
+          top - kAxisLabelHeight * 0.5f,
           "middle",
-          "text-after-edge",
+          "central",
           "label");
     }
   }
@@ -320,9 +320,9 @@ void Canvas::renderBottomAxis(
       target->drawText(
           label.second,
           tick_x,
-          height_ - bottom + (kTickLength * 2),
+          height_ - bottom + kAxisLabelHeight * 0.5f,
           "middle",
-          "text-before-edge",
+          "central",
           "label");
     }
   }
