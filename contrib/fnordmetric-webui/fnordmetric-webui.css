@@ -34,14 +34,13 @@ body {
 .query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
   position: fixed;
   top: 48px;
-}
-
-.query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
   padding: 30px;
 }
 
+
 .card {
   padding: 20px;
+  min-height: 260px;
 }
 
 .card.editor {

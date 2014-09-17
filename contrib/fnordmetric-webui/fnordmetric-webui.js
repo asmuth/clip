@@ -54,9 +54,10 @@ FnordMetric.WebUI = function() {
 
   var adjustEditor = function(editor_pane, result_pane) {
     var width = document.body.clientWidth;
-    var mobile_patt = /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i;
     var uagent = navigator.userAgent.toLowerCase();
 
+    /*var editor_height = document.querySelector(".card.editor").offsetHeight;
+    document.querySelector(".result_pane .card").style.height = editor_height + "px";*/
 
     var makeVerticalSplit = function() {
       var query_editor = document.querySelector(".query_editor");
@@ -70,28 +71,33 @@ FnordMetric.WebUI = function() {
     var makeHorizontalSplit = function() {
       var query_editor = document.querySelector(".query_editor");
       query_editor.className = "query_editor horizontal_split";
-      editor_pane.style.width = "50%";
-      result_pane.style.left = "50%";
-      result_pane.style.width = "50%";
       result_pane.style.top = "48px";
     }
 
-    // oder einfach mit screen.width ? 
-    var isMobile = mobile_patt.test(uagent);
+    var adjustHorizontalView = function() {
+      if (width < 1500) {
+        var editor_width = "50%";
+        var result_width = "50%";
+      } else {
+        var editor_width = "40%";
+        var result_width = "60%";
+      }
+      editor_pane.style.width = editor_width;
+      result_pane.style.left = editor_width;
+      result_pane.style.width = result_width;
+    }
 
-    if (isMobile || (width < 1300)) {
+    if (width < 1300) {
       makeVerticalSplit();
       vertical = true;
     }
-    console.log(vertical);
-    console.log(width);
 
-    if (vertical && (width > 1300)) {
-      console.log("make horizontal");
-      makeHorizontalSplit();
-      
+    if (width > 1300) {
+      if (vertical) {
+        makeHorizontalSplit();
+      }
+      adjustHorizontalView();
     }
-
   }
 
   var renderQueryEditor = function() {
@@ -113,11 +119,11 @@ FnordMetric.WebUI = function() {
     editor.appendChild(right_pane);
 
     FnordMetric.Editor.init(left_pane.querySelector(".editor"));
+
     adjustEditor(left_pane, right_pane);
     window.addEventListener('resize', function() {
         adjustEditor(left_pane, right_pane);
     }, true);
-    //addeventListener to document.body.clientWidth;
   };
 
   renderQueryEditor();
