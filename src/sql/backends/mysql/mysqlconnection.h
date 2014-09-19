@@ -73,6 +73,16 @@ public:
       const std::string& username,
       const std::string& password);
 
+
+  /**
+   * Returns a list of all column names for the provided table name. May 
+   * throw an exception (This does the equivalent to a DESCRIBEL TABLE)
+   *
+   * @param table_name the name of the table do describe
+   * @returns a list of all columns names of the table
+   */
+  std::vector<std::string> describeTable(const std::string& table_name);
+
 protected:
    MYSQL* mysql_;
 };

@@ -17,7 +17,7 @@ MySQLTableRef::MySQLTableRef(
       std::shared_ptr<MySQLConnection> conn,
       const std::string& table_name) :
       conn_(conn) {
-
+  conn->describeTable(table_name);
 }
 
 }

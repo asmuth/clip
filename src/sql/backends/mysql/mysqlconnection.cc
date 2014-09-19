@@ -105,6 +105,27 @@ void MySQLConnection::connect(
   }
 }
 
+
+std::vector<std::string> MySQLConnection::describeTable(const std::string& table_name) {
+  MYSQL_RES* res = mysql_list_fields(mysql_, table_name.c_str(), NULL);
+  if (res == nullptr) {
+    RAISE(
+      util::RuntimeException,
+      "mysql_list_fields() failed: %s\n",
+      mysql_error(mysql_));
+  }
+
+  std::vector<std::string> columns;
+  auto num_cols = mysql_num_fields(res);
+  for (int i = 0; i < num_cols; ++i) {
+    MYSQL_FIELD* col = mysql_fetch_field_direct(res, i);
+    columns.emplace_back(col->name);
+  }
+
+  mysql_free_result(res);
+  return columns;
+}
+
 }
 }
 }
