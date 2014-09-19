@@ -11,20 +11,25 @@
 #define _FNORDMETRIC_MYSQLBACKEND_MYSQLTABLEREF_H
 #include <memory>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
+#include <fnordmetric/sql/tableref.h>
 
 namespace fnordmetric {
 namespace query {
 namespace mysql_backend {
 
-class MySQLTableRef {
+class MySQLTableRef : public TableRef {
 public:
 
   MySQLTableRef(
       std::shared_ptr<MySQLConnection> conn,
       const std::string& table_name);
 
+  int getColumnIndex(const std::string& name) override;
+  void executeScan(TableScan* scan) override;
+
 protected:
   std::shared_ptr<MySQLConnection> conn_;
+  std::vector<std::string> columns_;
 };
 
 }

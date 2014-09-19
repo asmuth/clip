@@ -49,8 +49,7 @@ bool MySQLBackend::openTables(
       MySQLConnection::openConnection(source_uri);
 
   for (const auto& tbl : table_names) {
-    //target->emplace_back(
-    new MySQLTableRef(conn, tbl);
+    target->emplace_back(new MySQLTableRef(conn, tbl));
   }
 
   connections_mutex_.lock();

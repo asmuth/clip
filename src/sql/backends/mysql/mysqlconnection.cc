@@ -106,7 +106,8 @@ void MySQLConnection::connect(
 }
 
 
-std::vector<std::string> MySQLConnection::describeTable(const std::string& table_name) {
+std::vector<std::string> MySQLConnection::describeTable(
+    const std::string& table_name) {
   MYSQL_RES* res = mysql_list_fields(mysql_, table_name.c_str(), NULL);
   if (res == nullptr) {
     RAISE(

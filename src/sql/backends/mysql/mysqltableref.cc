@@ -17,7 +17,22 @@ MySQLTableRef::MySQLTableRef(
       std::shared_ptr<MySQLConnection> conn,
       const std::string& table_name) :
       conn_(conn) {
-  conn->describeTable(table_name);
+  columns_ = conn->describeTable(table_name);
+}
+
+int MySQLTableRef::getColumnIndex(const std::string& name) {
+  for (int i = 0; i < columns_.size(); ++i) {
+    // FIXPAUL case insensitive match
+    if (columns_[i] == name) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+void MySQLTableRef::executeScan(TableScan* scan) {
+  RAISE(util::RuntimeException, "not implemented yet");
 }
 
 }
