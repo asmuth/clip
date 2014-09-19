@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
+#include <fnordmetric/sql/backends/mysql/mysqltableref.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <memory>
 #include <mutex>
@@ -43,7 +44,18 @@ bool MySQLBackend::openTables(
     return false;
   }
 
-  auto conn = MySQLConnection::openConnection(source_uri);
+  // FIXPAUL move all of this into a mysql thread/connection pool
+  std::shared_ptr<MySQLConnection> conn =
+      MySQLConnection::openConnection(source_uri);
+
+  for (const auto& tbl : table_names) {
+    //target->emplace_back(
+    new MySQLTableRef(conn, tbl);
+  }
+
+  connections_mutex_.lock();
+  connections_.push_back(std::move(conn));
+  connections_mutex_.unlock();
 
   return true;
 }

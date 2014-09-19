@@ -9,8 +9,11 @@
  */
 #ifndef _FNORDMETRIC_MYSQLBACKEND_H
 #define _FNORDMETRIC_MYSQLBACKEND_H
-#include <memory>
 #include <fnordmetric/sql/backend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
+#include <memory>
+#include <mutex>
+#include <vector>
 
 namespace fnordmetric {
 namespace query {
@@ -28,6 +31,9 @@ public:
       const util::URI& source_uri,
       std::vector<std::unique_ptr<TableRef>>* target) override;
 
+protected:
+  std::vector<std::shared_ptr<MySQLConnection>> connections_;
+  std::mutex connections_mutex_;
 };
 
 }

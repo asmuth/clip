@@ -50,7 +50,8 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
 
 set(FNORDMETRIC_MYSQL_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
-    stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc)
+    stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc
+    stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc)
 
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
