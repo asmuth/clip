@@ -26,10 +26,6 @@
     - refactor tokenizer // dynamically register tokens
     - rename (axis|legend|grid)definition -> \1config
 
-[ backends ]
-    - mysql backend
-    - sql: csv opts
-
 [ sql ]
      - SQL: order by
      - SQL: having

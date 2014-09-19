@@ -7,9 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <memory>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <memory>
+#include <mutex>
+#include <mysql.h>
 
 namespace fnordmetric {
 namespace query {
@@ -20,6 +23,18 @@ MySQLBackend* MySQLBackend::singleton() {
   return &singleton_backend;
 }
 
+static std::mutex global_mysql_init_lock;
+static bool global_mysql_initialized = false;
+
+MySQLBackend::MySQLBackend() {
+  global_mysql_init_lock.lock();
+  if (!global_mysql_initialized) {
+    mysql_library_init(0, NULL, NULL); // FIXPAUl mysql_library_end();
+    global_mysql_initialized = true;
+  }
+  global_mysql_init_lock.unlock();
+}
+
 bool MySQLBackend::openTables(
     const std::vector<std::string>& table_names,
     const util::URI& source_uri,
@@ -28,7 +43,8 @@ bool MySQLBackend::openTables(
     return false;
   }
 
-  RAISE(util::RuntimeException, "mysql backend not yet implemented");
+  auto conn = MySQLConnection::openConnection(source_uri);
+
   return true;
 }
 

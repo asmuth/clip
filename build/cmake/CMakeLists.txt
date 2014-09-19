@@ -49,7 +49,8 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvtableref.cc)
 
 set(FNORDMETRIC_MYSQL_BACKEND_SOURCES
-    stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc)
+    stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
+    stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc)
 
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
@@ -92,6 +93,8 @@ set(FNORDMETRIC_CLI_SOURCES
 include_directories(stage/src)
 include_directories(stage/assets)
 
+include_directories(/usr/local/mysql/include) # FIXPAUL proper FindMySQL
+
 IF(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 ELSE()
@@ -99,7 +102,6 @@ ELSE()
 ENDIF()
 
 add_definitions("-Wno-predefined-identifier-outside-function")
-# add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
 
 add_library(libfnordmetric ${FNORDMETRIC_QUERY_SOURCES})
 
@@ -107,6 +109,7 @@ add_executable(fnordmetric
     ${FNORDMETRIC_CLI_SOURCES}
     stage/src/fnordmetric/main.cc)
 target_link_libraries(fnordmetric libfnordmetric)
+target_link_libraries(fnordmetric mysql)
 
 add_executable(tests/test-sql
     stage/src/fnordmetric/sql/sql_test.cc
@@ -115,6 +118,7 @@ add_executable(tests/test-sql
     stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-sql libfnordmetric)
+target_link_libraries(tests/test-sql mysql)
 
 add_executable(tests/test-sql-extensions
     stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
@@ -131,6 +135,7 @@ add_executable(tests/test-query
     stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-query libfnordmetric)
+target_link_libraries(tests/test-query mysql)
 
 add_executable(tests/test-ui
      stage/src/fnordmetric/ui/ui_test.cc)
@@ -140,6 +145,7 @@ add_executable(tests/test-cli
     ${FNORDMETRIC_CLI_SOURCES}
     stage/src/fnordmetric/cli/cli_test.cc)
 target_link_libraries(tests/test-cli libfnordmetric)
+target_link_libraries(tests/test-cli mysql)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)

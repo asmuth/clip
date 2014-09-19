@@ -47,7 +47,7 @@ void TableRepository::import(
       if (tbl_refs.size() != tables.size()) {
         RAISE(
             util::RuntimeException,
-            "openTabes failed for '%s'\n",
+            "openTables failed for '%s'\n",
             source_uri.toString().c_str());
       }
 

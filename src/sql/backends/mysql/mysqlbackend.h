@@ -21,6 +21,8 @@ public:
 
   static MySQLBackend* singleton();
 
+  MySQLBackend();
+
   bool openTables(
       const std::vector<std::string>& table_names,
       const util::URI& source_uri,
