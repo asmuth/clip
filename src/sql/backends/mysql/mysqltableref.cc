@@ -17,8 +17,9 @@ namespace mysql_backend {
 MySQLTableRef::MySQLTableRef(
       std::shared_ptr<MySQLConnection> conn,
       const std::string& table_name) :
-      conn_(conn) {
-  columns_ = conn->describeTable(table_name);
+      conn_(conn),
+      table_name_(table_name) {
+  columns_ = conn->describeTable(table_name_);
 }
 
 int MySQLTableRef::getColumnIndex(const std::string& name) {
@@ -43,7 +44,9 @@ void MySQLTableRef::executeScan(TableScan* scan) {
     mysql_query.append("`");
   }
 
-  RAISE(util::RuntimeException, "not implemented yet: %s", mysql_query.c_str());
+  mysql_query.append(" FROM ");
+  mysql_query.append(table_name_);
+  printf("query: %s\n", mysql_query.c_str());
 }
 
 }
