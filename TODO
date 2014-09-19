@@ -27,6 +27,7 @@
     - rename (axis|legend|grid)definition -> \1config
 
 [ sql ]
+     - SELECT * ...
      - SQL: order by
      - SQL: having
      - SQL: join

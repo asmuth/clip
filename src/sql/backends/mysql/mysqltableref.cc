@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/backends/mysql/mysqltableref.h>
+#include <fnordmetric/sql/tablescan.h>
 
 namespace fnordmetric {
 namespace query {
@@ -32,7 +33,17 @@ int MySQLTableRef::getColumnIndex(const std::string& name) {
 }
 
 void MySQLTableRef::executeScan(TableScan* scan) {
-  RAISE(util::RuntimeException, "not implemented yet");
+  std::string mysql_query = "SELECT";
+
+  auto columns = scan->getColumns();
+  for (int i = 0; i < columns.size(); ++i) {
+    mysql_query.append(i == 0 ? " " : ",");
+    mysql_query.append("`'");
+    mysql_query.append(columns[i]); // FIXPAUL escape?
+    mysql_query.append("`");
+  }
+
+  RAISE(util::RuntimeException, "not implemented yet: %s", mysql_query.c_str());
 }
 
 }

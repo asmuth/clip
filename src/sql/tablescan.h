@@ -81,17 +81,42 @@ public:
     /* column names */
     std::vector<std::string> column_names;
     for (auto col : select_list->getChildren()) {
-      assert(*col == ASTNode::T_DERIVED_COLUMN); // FIXPAUL
+      if (col->getType() != ASTNode::T_DERIVED_COLUMN) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
+
       auto derived = col->getChildren();
 
+      // column with AS clause
       if (derived.size() == 2) {
-        assert(*derived[1] == ASTNode::T_COLUMN_ALIAS);
+        if (derived[1]->getType() != ASTNode::T_COLUMN_ALIAS) {
+          RAISE(util::RuntimeException, "corrupt AST");
+        }
+
         auto colname_token = derived[1]->getToken();
-        assert(colname_token && *colname_token == Token::T_IDENTIFIER);
+
+        if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
+          RAISE(util::RuntimeException, "corrupt AST");
+        }
+
         column_names.emplace_back(colname_token->getString());
-      } else {
-        column_names.emplace_back("unnamed");
+        continue;
       }
+
+      // resolved column name
+      if (derived.size() == 1 && *derived[0] == ASTNode::T_RESOLVED_COLUMN) {
+        auto colname_token = derived[0]->getToken();
+
+        if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
+          RAISE(util::RuntimeException, "corrupt AST");
+        }
+
+        column_names.emplace_back(colname_token->getString());
+        continue;
+      }
+
+      // expression
+      column_names.emplace_back("<expr>"); // FIXPAUL!!
     }
 
     /* get where expression */
