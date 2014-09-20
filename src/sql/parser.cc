@@ -26,13 +26,15 @@ size_t Parser::parse(const char* query, size_t len) {
   tokenizeQuery(&cur, end, &token_list_);
 
   if (token_list_.size() == 0) {
-    return 0; // FIXPAUL return error...
+    RAISE(util::RuntimeException, "SQL query doesn't contain any tokens");
   }
 
+  token_list_.emplace_back(Token::T_EOF);
   cur_token_ = token_list_.data();
   token_list_end_ = cur_token_ + token_list_.size();
 
-  while (cur_token_ < token_list_end_) {
+  while (cur_token_ < token_list_end_ &&
+      cur_token_->getType() != Token::T_EOF) {
     root_.appendChild(statement());
   }
 
