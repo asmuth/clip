@@ -63,10 +63,6 @@ void Runtime::addBackend(std::unique_ptr<Backend> backend) {
   backends_.emplace_back(std::move(backend));
 }
 
-void Runtime::installBuiltinBackends() {
-  addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
-}
-
 Compiler* Runtime::compiler() {
   return &compiler_;
 }

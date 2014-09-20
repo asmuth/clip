@@ -58,8 +58,6 @@ public:
 
   void addBackend(std::unique_ptr<Backend> backend);
 
-  void installBuiltinBackends();
-
   Compiler* compiler();
 
 protected:

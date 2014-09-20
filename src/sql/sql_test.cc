@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -16,9 +16,9 @@
 #include <fnordmetric/sql/parser/parser.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/tokenize.h>
+#include <fnordmetric/sql/runtime/defaultruntime.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/tablescan.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/ui/canvas.h>
@@ -82,8 +82,7 @@ static Parser parseTestQuery(const char* query) {
 
 static std::unique_ptr<ResultList> executeTestQuery(
     const char* query) {
-  Runtime runtime;
-  runtime.installBuiltinBackends();
+  DefaultRuntime runtime;
 
   QueryPlan query_plan;
   query_plan.tableRepository()->addTableRef(
@@ -926,8 +925,7 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
 });
 
 TEST_CASE(SQLTest, TestRuntime, [] () {
-  Runtime runtime;
-  runtime.installBuiltinBackends();
+  DefaultRuntime runtime;
 
   auto statements = runtime.parseQuery(
       "  IMPORT TABLE city_temperatures "
