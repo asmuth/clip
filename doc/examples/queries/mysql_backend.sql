@@ -7,5 +7,5 @@ DRAW BARCHART WITH
     GRID HORIZONTAL
     LEGEND TOP RIGHT INSIDE;
 
-SELECT "fnord" as series, y, x FROM test_table WHERE x != "e";
+SELECT series, x, y FROM test_table;
 

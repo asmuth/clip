@@ -873,7 +873,8 @@ TEST_CASE(SQLTest, TestNotEquals, [] () {
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
-      "  SELECT city FROM city_temperatures GROUP BY city LIMIT 10;",
+      "  SELECT city FROM city_temperatures WHERE city != 'Berlin'"
+      "     GROUP BY city LIMIT 10;",
       &repo);
 
   query.execute();
@@ -885,3 +886,21 @@ TEST_CASE(SQLTest, TestNotEquals, [] () {
   EXPECT(result->getRow(1)[0] == "Berlin");
   EXPECT(result->getRow(2)[0] == "New York");
 });
+
+TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city == 'Berlin'",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 1);
+
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 4);
+});
+
+
