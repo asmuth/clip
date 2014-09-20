@@ -889,18 +889,18 @@ TEST_CASE(SQLTest, TestNotEquals, [] () {
 
 TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
   TableRepository repo;
-  auto query = Query(
+  auto query_str =
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
-      "  SELECT city FROM city_temperatures WHERE city == 'Berlin'",
-      &repo);
+      "  SELECT city FROM city_temperatures WHERE city == 'Berlin'";
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-
-  auto result = query.getResultList(0);
-  EXPECT(result->getNumRows() == 4);
+  EXPECT_EXCEPTION(
+      "eqExpr needs second paramater. Did you type '==' instead of '='?",
+      [&] () {
+        auto query = Query(query_str, &repo);
+        query.execute();
+      });
 });
 
 

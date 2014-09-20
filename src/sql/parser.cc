@@ -668,9 +668,16 @@ ASTNode* Parser::eqExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(6);
+  if (rhs == nullptr) {
+    RAISE(
+        util::RuntimeException,
+        "eqExpr needs second paramater. Did you type '==' instead of '='?");
+  }
+
   auto e = new ASTNode(ASTNode::T_EQ_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(6));
+  e->appendChild(rhs);
   return e;
 }
 
