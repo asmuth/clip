@@ -82,7 +82,6 @@ class TestTable2Ref : public TableRef {
   }
 };
 
-/* 
 TEST_CASE(SQLTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
@@ -607,6 +606,7 @@ TEST_INITIALIZER(SQLTest, InitializeComplexQueries, [] () {
   }
 });
 
+/* 
 TEST_CASE(SQLTest, TestSelectOnlyQuery, [] () {
   TableRepository repo;
   std::vector<std::unique_ptr<Query>> dst;
@@ -1067,15 +1067,13 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
       "     GROUP BY city LIMIT 10;");
 
   auto query_plan = runtime.buildQueryPlan(statements);
+  EXPECT(query_plan->queries().size() == 1);
 
-/*
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
-  EXPECT(result->getNumRows() == 2);
-  EXPECT(result->getRow(0)[0] == "New York");
-  EXPECT(result->getRow(1)[0] == "Tokyo");
-*/
+  ResultList result;
+  runtime.executeQuery(query_plan->queries()[0].get(), &result);
+  EXPECT(result.getNumRows() == 2);
+  EXPECT(result.getRow(0)[0] == "New York");
+  EXPECT(result.getRow(1)[0] == "Tokyo");
 });
 
 

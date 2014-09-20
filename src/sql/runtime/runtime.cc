@@ -42,6 +42,11 @@ std::unique_ptr<QueryPlan> Runtime::buildQueryPlan(
   return query_plan;
 }
 
+void Runtime::executeQuery(QueryPlanNode* query, RowSink* target) {
+  query->setTarget(target);
+  query->execute();
+}
+
 const std::vector<std::unique_ptr<Backend>>& Runtime::backends() {
   return backends_;
 }

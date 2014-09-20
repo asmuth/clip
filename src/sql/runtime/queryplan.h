@@ -23,8 +23,11 @@ class QueryPlan {
 public:
 
   QueryPlan();
-  TableRepository* tableRepository();
+
   void addQuery(std::unique_ptr<QueryPlanNode> query);
+  const std::vector<std::unique_ptr<QueryPlanNode>>& queries();
+
+  TableRepository* tableRepository();
 
 protected:
   TableRepository table_repo_;

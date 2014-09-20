@@ -14,12 +14,16 @@ namespace query {
 
 QueryPlan::QueryPlan() {}
 
-TableRepository* QueryPlan::tableRepository() {
-  return &table_repo_;
-}
-
 void QueryPlan::addQuery(std::unique_ptr<QueryPlanNode> query) {
   queries_.emplace_back(std::move(query));
+}
+
+const std::vector<std::unique_ptr<QueryPlanNode>>& QueryPlan::queries() {
+  return queries_;
+}
+
+TableRepository* QueryPlan::tableRepository() {
+  return &table_repo_;
 }
 
 }

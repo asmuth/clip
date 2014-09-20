@@ -40,6 +40,11 @@ public:
       const std::vector<std::unique_ptr<ASTNode>>& statements);
 
   /**
+   * Execute a query plan node
+   */
+  void executeQuery(QueryPlanNode* query, RowSink* target);
+
+  /**
    * Return the backends for this runtime
    */
   const std::vector<std::unique_ptr<Backend>>& backends();
