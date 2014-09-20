@@ -7,16 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
-#include <fnordmetric/sql/svalue.h>
+#include <fnordmetric/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {
+namespace expressions {
 
 void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
@@ -60,8 +59,6 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   *out = SValue(lhs->toString() + rhs->toString());
 }
 
-SymbolTableEntry __add_symbol("add", &addExpr);
-
 void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
@@ -100,8 +97,6 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       lhs->getTypeName(),
       rhs->getTypeName());
 }
-
-static SymbolTableEntry __sub_symbol("sub", &subExpr);
 
 void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
@@ -142,8 +137,6 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __mul_symbol("mul", &mulExpr);
-
 void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
@@ -182,8 +175,6 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       lhs->getTypeName(),
       rhs->getTypeName());
 }
-
-static SymbolTableEntry __div_symbol("div", &divExpr);
 
 void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
@@ -224,8 +215,6 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __mod_symbol("mod", &modExpr);
-
 void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   assert(argc == 2);
   SValue* lhs = argv;
@@ -265,7 +254,6 @@ void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __pow_symbol("pow", &powExpr);
-
+}
 }
 }

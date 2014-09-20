@@ -17,6 +17,7 @@
 #include <fnordmetric/sql/parser/parser.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/tokenize.h>
+#include <fnordmetric/sql/runtime/defaultruntime.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql/runtime/tablescan.h>
@@ -88,7 +89,7 @@ static void compareChart(
 }
 
 TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
@@ -109,7 +110,7 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
 });
 
 TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
@@ -130,7 +131,7 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
 });
 
 TEST_CASE(QueryTest, TestDrawQueryNeedsYColAssert, [] () {
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
@@ -152,7 +153,7 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsYColAssert, [] () {
 });
 
 TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
@@ -186,7 +187,7 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
 });
 
 TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
@@ -209,7 +210,7 @@ TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
 });
 
 TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 
   auto query = Query(
@@ -288,7 +289,7 @@ TEST_CASE(QueryTest, TestFourSelectFromCSVQuery, [] () {
       "test/fixtures/queries/gdpfourselects.sql");
   query_stream->readUntilEOF(&query_str);
 
-  Runtime runtime;
+  DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
   auto query = Query(query_str, &runtime);
 

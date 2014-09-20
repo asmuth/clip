@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/backends/tableref.h>
 #include <fnordmetric/sql/parser/parser.h>
@@ -83,6 +84,8 @@ static Parser parseTestQuery(const char* query) {
 static std::unique_ptr<ResultList> executeTestQuery(
     const char* query) {
   DefaultRuntime runtime;
+  runtime.addBackend(
+      std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 
   QueryPlan query_plan;
   query_plan.tableRepository()->addTableRef(

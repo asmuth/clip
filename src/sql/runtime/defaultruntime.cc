@@ -8,12 +8,19 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/runtime/defaultruntime.h>
+#include <fnordmetric/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {
 
 DefaultRuntime::DefaultRuntime() {
-  //addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
+  /* expressions/math.h */
+  symbol_table_.registerSymbol("add", &expressions::addExpr);
+  symbol_table_.registerSymbol("sub", &expressions::subExpr);
+  symbol_table_.registerSymbol("mul", &expressions::mulExpr);
+  symbol_table_.registerSymbol("div", &expressions::divExpr);
+  symbol_table_.registerSymbol("mod", &expressions::modExpr);
+  symbol_table_.registerSymbol("pow", &expressions::powExpr);
 }
 
 }

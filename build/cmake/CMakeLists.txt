@@ -60,6 +60,10 @@ set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_MYSQL_BACKEND_SOURCES}
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/datetime.cc
+    stage/src/fnordmetric/sql/expressions/math.cc
     stage/src/fnordmetric/sql/parser/astnode.cc
     stage/src/fnordmetric/sql/parser/parser.cc
     stage/src/fnordmetric/sql/parser/token.cc
@@ -89,11 +93,7 @@ set(FNORDMETRIC_CLI_SOURCES
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/web/assets.cc
     stage/src/fnordmetric/web/queryendpoint.cc
-    stage/src/fnordmetric/web/webinterface.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
+    stage/src/fnordmetric/web/webinterface.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
@@ -121,28 +121,17 @@ target_link_libraries(fnordmetric libfnordmetric)
 target_link_libraries(fnordmetric mysqlclient)
 
 add_executable(tests/test-sql
-    stage/src/fnordmetric/sql/sql_test.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
+    stage/src/fnordmetric/sql/sql_test.cc)
 target_link_libraries(tests/test-sql libfnordmetric)
 target_link_libraries(tests/test-sql mysqlclient)
 
 add_executable(tests/test-sql-extensions
     stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
+)
 target_link_libraries(tests/test-sql-extensions libfnordmetric)
 
 add_executable(tests/test-query
-    stage/src/fnordmetric/query/query_test.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
+    stage/src/fnordmetric/query/query_test.cc)
 target_link_libraries(tests/test-query libfnordmetric)
 target_link_libraries(tests/test-query mysqlclient)
 

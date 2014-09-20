@@ -19,14 +19,6 @@ namespace query {
 class SymbolTableEntry;
 class SValue;
 
-class SymbolTable {
-public:
-  const SymbolTableEntry* lookupSymbol(const std::string& symbol) const;
-  void registerSymbol(const std::string& symbol, const SymbolTableEntry* entry);
-protected:
-  std::unordered_map<std::string, const SymbolTableEntry*> symbols_;
-};
-
 class SymbolTableEntry {
 public:
 
@@ -50,6 +42,16 @@ public:
 protected:
   void (*call_)(void*, int, SValue*, SValue*);
   const size_t scratchpad_size_;
+};
+
+class SymbolTable {
+public:
+  SymbolTableEntry const* lookupSymbol(const std::string& symbol) const;
+  void registerSymbol(
+      const std::string& symbol,
+      void (*method)(void*, int, SValue*, SValue*));
+protected:
+  std::unordered_map<std::string, SymbolTableEntry> symbols_;
 };
 
 }
