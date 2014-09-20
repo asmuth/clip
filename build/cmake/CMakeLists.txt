@@ -6,6 +6,7 @@
 # copy of the GNU General Public License along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
@@ -94,7 +95,11 @@ set(FNORDMETRIC_CLI_SOURCES
 include_directories(stage/src)
 include_directories(stage/assets)
 
-include_directories(/usr/local/mysql/include) # FIXPAUL proper FindMySQL
+find_package(MySQL)
+if (MySQL_FOUND)
+  include_directories(${MYSQL_INCLUDE_DIRS})
+  target_link_librarie (helloworld ${MYSQL_LIBRARIES})
+endif(MySQL_FOUND)
 
 IF(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
