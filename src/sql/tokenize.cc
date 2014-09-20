@@ -70,84 +70,6 @@ next:
       goto next;
     }
 
-    case '=': {
-      token_list->emplace_back(Token::T_EQUAL);
-      (*cur)++;
-      goto next;
-    }
-
-    case '+': {
-      token_list->emplace_back(Token::T_PLUS);
-      (*cur)++;
-      goto next;
-    }
-
-    case '-': {
-      token_list->emplace_back(Token::T_MINUS);
-      (*cur)++;
-      goto next;
-    }
-
-    case '*': {
-      token_list->emplace_back(Token::T_ASTERISK);
-      (*cur)++;
-      goto next;
-    }
-
-    case '!': {
-      token_list->emplace_back(Token::T_BANG);
-      (*cur)++;
-      goto next;
-    }
-
-    case '/': {
-      token_list->emplace_back(Token::T_SLASH);
-      (*cur)++;
-      goto next;
-    }
-
-    case '^': {
-      token_list->emplace_back(Token::T_CIRCUMFLEX);
-      (*cur)++;
-      goto next;
-    }
-
-    case '~': {
-      token_list->emplace_back(Token::T_TILDE);
-      (*cur)++;
-      goto next;
-    }
-
-    case '%': {
-      token_list->emplace_back(Token::T_PERCENT);
-      (*cur)++;
-      goto next;
-    }
-
-    case '&': {
-      token_list->emplace_back(Token::T_AMPERSAND);
-      (*cur)++;
-      goto next;
-    }
-
-    case '|': {
-      token_list->emplace_back(Token::T_PIPE);
-      (*cur)++;
-      goto next;
-    }
-
-    case '<': {
-      token_list->emplace_back(Token::T_LT);
-      (*cur)++;
-      goto next;
-    }
-
-    case '>': {
-      token_list->emplace_back(Token::T_GT);
-      (*cur)++;
-      goto next;
-    }
-
     /* numeric literals */
     case '0':
     case '1':
@@ -173,7 +95,10 @@ next:
     case '\'':
       quote_char = **cur;
       (*cur)++;
-      /* fallthrough */
+      break;
+
+    default:
+      break;
   }
 
   /* multi char tokens */
@@ -201,7 +126,86 @@ next:
     goto next;
   }
 
-  /* keywords and identifiers (i.e table, field names) */
+  /* operators */
+  if (**cur == '=') {
+    token_list->emplace_back(Token::T_EQUAL);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '+') {
+    token_list->emplace_back(Token::T_PLUS);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '-') {
+    token_list->emplace_back(Token::T_MINUS);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '*') {
+    token_list->emplace_back(Token::T_ASTERISK);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '!') {
+    token_list->emplace_back(Token::T_BANG);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '/') {
+    token_list->emplace_back(Token::T_SLASH);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '^') {
+    token_list->emplace_back(Token::T_CIRCUMFLEX);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '~') {
+    token_list->emplace_back(Token::T_TILDE);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '%') {
+    token_list->emplace_back(Token::T_PERCENT);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '&') {
+    token_list->emplace_back(Token::T_AMPERSAND);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '|') {
+    token_list->emplace_back(Token::T_PIPE);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '<') {
+    token_list->emplace_back(Token::T_LT);
+    (*cur)++;
+    goto next;
+  }
+
+  if (**cur == '>') {
+    token_list->emplace_back(Token::T_GT);
+    (*cur)++;
+    goto next;
+  }
+
+  /* identifiers */
   while (
       **cur != ' ' &&
       **cur != '\t' &&
@@ -212,6 +216,9 @@ next:
       **cur != ';' &&
       **cur != '(' &&
       **cur != ')' &&
+      **cur != '"' &&
+      **cur != '\'' &&
+      **cur != '`' &&
       **cur != '=' &&
       **cur != '+' &&
       **cur != '-' &&
@@ -223,9 +230,18 @@ next:
       **cur != '%' &&
       **cur != '&' &&
       **cur != '|' &&
+      **cur != '<' &&
+      **cur != '>' &&
       *cur < end) {
     len++;
     (*cur)++;
+
+    if (len > 2) {
+      continue;
+    }
+
+    Token token(Token::T_IDENTIFIER, begin, len);
+
   }
 
   // FIXPAUL this should be a hashmap/trie lookup!
