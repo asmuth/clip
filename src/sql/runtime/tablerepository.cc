@@ -31,16 +31,13 @@ void TableRepository::addTableRef(
   table_refs_[table_name] = std::move(table_ref);
 }
 
-void TableRepository::addBackend(Backend* backend) {
-  backends_.emplace_back(backend);
-}
-
 void TableRepository::import(
     const std::vector<std::string>& tables,
-    const std::string& source_uri_raw) {
+    const std::string& source_uri_raw,
+    const std::vector<std::unique_ptr<Backend>>& backends) {
   util::URI source_uri(source_uri_raw);
 
-  for (const auto& backend : backends_) {
+  for (const auto& backend : backends) {
     std::vector<std::unique_ptr<TableRef>> tbl_refs;
 
     if (backend->openTables(tables, source_uri, &tbl_refs)) {
@@ -65,8 +62,10 @@ void TableRepository::import(
       source_uri.toString().c_str());
 }
 
-void TableRepository::import(const ImportStatement& import_stmt) {
-  import(import_stmt.tables(), import_stmt.source_uri());
+void TableRepository::import(
+    const ImportStatement& import_stmt,
+    const std::vector<std::unique_ptr<Backend>>& backends) {
+  import(import_stmt.tables(), import_stmt.source_uri(), backends);
 }
 
 }

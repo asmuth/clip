@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/runtime/runtime.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
 
 namespace fnordmetric {
 namespace query {
@@ -32,6 +33,25 @@ std::vector<std::unique_ptr<ASTNode>> Runtime::parseQuery(
   }
 
   return stmts;
+}
+
+std::unique_ptr<QueryPlan> Runtime::buildQueryPlan(
+    const std::vector<std::unique_ptr<ASTNode>>& statements) {
+  std::unique_ptr<QueryPlan> query_plan(new QueryPlan());
+  query_plan_builder_.buildQueryPlan(this, statements, query_plan.get());
+  return query_plan;
+}
+
+const std::vector<std::unique_ptr<Backend>>& Runtime::backends() {
+  return backends_;
+}
+
+void Runtime::addBackend(std::unique_ptr<Backend> backend) {
+  backends_.emplace_back(std::move(backend));
+}
+
+void Runtime::installBuiltinBackends() {
+  addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 }
 
 }

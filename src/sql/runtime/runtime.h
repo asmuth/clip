@@ -28,14 +28,30 @@ class Runtime {
 public:
   Runtime();
 
+  /**
+   * Parse a SQL query string and return one AST tree for every statement
+   */
   std::vector<std::unique_ptr<ASTNode>> parseQuery(const std::string query);
 
+  /**
+   * Build a query plan from a provided list of statements
+   */
   std::unique_ptr<QueryPlan> buildQueryPlan(
       const std::vector<std::unique_ptr<ASTNode>>& statements);
+
+  /**
+   * Return the backends for this runtime
+   */
+  const std::vector<std::unique_ptr<Backend>>& backends();
+
+  void addBackend(std::unique_ptr<Backend> backend);
+
+  void installBuiltinBackends();
 
 protected:
   Parser parser_;
   QueryPlanBuilder query_plan_builder_;
+  std::vector<std::unique_ptr<Backend>> backends_;
 };
 
 }

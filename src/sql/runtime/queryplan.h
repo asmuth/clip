@@ -14,6 +14,7 @@
 #include <vector>
 #include <memory>
 #include <fnordmetric/sql/runtime/queryplannode.h>
+#include <fnordmetric/sql/runtime/tablerepository.h>
 
 namespace fnordmetric {
 namespace query {
@@ -21,6 +22,13 @@ namespace query {
 class QueryPlan {
 public:
 
+  QueryPlan();
+  TableRepository* tableRepository();
+  void addQuery(std::unique_ptr<QueryPlanNode> query);
+
+protected:
+  TableRepository table_repo_;
+  std::vector<std::unique_ptr<QueryPlanNode>> queries_;
 };
 
 }

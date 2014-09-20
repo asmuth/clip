@@ -35,8 +35,8 @@ Query::Query(
     size_t query_string_len,
     TableRepository* repo) {
   // FIXPAUL!!
-  repo->addBackend(query::csv_backend::CSVBackend::singleton());
-  repo->addBackend(query::mysql_backend::MySQLBackend::singleton());
+  //repo->addBackend(query::csv_backend::CSVBackend::singleton());
+  //repo->addBackend(query::mysql_backend::MySQLBackend::singleton());
 
   query::Parser parser;
 
@@ -60,7 +60,7 @@ Query::Query(
         addStatement(stmt, repo);
         break;
       case query::ASTNode::T_IMPORT:
-        repo->import(ImportStatement(stmt));
+        //repo->import(ImportStatement(stmt));
         break;
       default:
         RAISE(util::RuntimeException, "invalid statement");
@@ -113,7 +113,7 @@ bool Query::addStatement(
     query::ASTNode* statement,
     query::TableRepository* repo) {
   QueryPlanBuilder query_plan_builder;
-
+/*
   auto query_plan = query_plan_builder.buildQueryPlan(statement, repo);
   if (query_plan == nullptr) {
     fprintf(stderr, "cant build statement");
@@ -124,7 +124,7 @@ bool Query::addStatement(
       std::unique_ptr<QueryPlanNode>(query_plan),
       draw_statements_.back().empty() ?
           nullptr : draw_statements_.back().back().get());
-
+*/
   return true;
 }
 

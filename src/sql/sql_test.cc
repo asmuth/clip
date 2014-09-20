@@ -1057,6 +1057,7 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
 
 TEST_CASE(SQLTest, TestRuntime, [] () {
   Runtime runtime;
+  runtime.installBuiltinBackends();
 
   auto statements = runtime.parseQuery(
       "  IMPORT TABLE city_temperatures "

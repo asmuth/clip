@@ -23,6 +23,7 @@ namespace fnordmetric {
 namespace query {
 class QueryPlanNode;
 class TableRepository;
+class Runtime;
 
 /**
  * All QueryPlanBuilder imeplementations must be thread safe. Specifically they
@@ -45,7 +46,8 @@ public:
   QueryPlanBuilder() {}
 
   void buildQueryPlan(
-      const std::vector<std::unique_ptr<ASTNode>> statements,
+      Runtime* runtime,
+      const std::vector<std::unique_ptr<ASTNode>>& statements,
       QueryPlan* repo) const;
 
   QueryPlanNode* buildQueryPlan(

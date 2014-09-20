@@ -30,16 +30,16 @@ public:
       const std::string& table_name,
       std::unique_ptr<TableRef>&& table_ref);
 
-  void addBackend(Backend* backend);
-
   void import(
       const std::vector<std::string>& tables,
-      const std::string& source_uri);
+      const std::string& source_uri,
+      const std::vector<std::unique_ptr<Backend>>& backends);
 
-  void import(const ImportStatement& import_stmt);
+  void import(
+      const ImportStatement& import_stmt,
+      const std::vector<std::unique_ptr<Backend>>& backends);
 
 protected:
-  std::vector<Backend*> backends_;
   std::unordered_map<std::string, std::unique_ptr<TableRef>> table_refs_;
 };
 

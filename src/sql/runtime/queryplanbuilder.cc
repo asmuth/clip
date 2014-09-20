@@ -17,10 +17,46 @@
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/limitclause.h>
 #include <fnordmetric/sql/runtime/groupby.h>
+#include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/symboltable.h>
+#include <fnordmetric/sql/runtime/importstatement.h>
 
 namespace fnordmetric {
 namespace query {
+
+void QueryPlanBuilder::buildQueryPlan(
+    Runtime* runtime,
+    const std::vector<std::unique_ptr<ASTNode>>& statements,
+    QueryPlan* query_plan) const {
+
+  for (const auto& stmt : statements) {
+    switch (stmt->getType()) {
+      case query::ASTNode::T_SELECT: {
+        auto query_plan_node = buildQueryPlan(
+            stmt.get(),
+            query_plan->tableRepository());
+
+        if (query_plan_node == nullptr) {
+          RAISE(
+              util::RuntimeException,
+              "can't figure out a query plan for this, sorry :(");
+        }
+
+        query_plan->addQuery(std::unique_ptr<QueryPlanNode>(query_plan_node));
+        break;
+      }
+
+      case query::ASTNode::T_IMPORT:
+        query_plan->tableRepository()->import(
+            ImportStatement(stmt.get()),
+            runtime->backends());
+        break;
+
+      default:
+        RAISE(util::RuntimeException, "invalid statement");
+    }
+  }
+}
 
 QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     ASTNode* ast,
@@ -57,11 +93,12 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     return exec;
   }
 
-  // if verbose -> dump ast
-
   RAISE(
       util::RuntimeException,
       "can't figure out a query plan for this, sorry :(");
+
+  // if verbose -> dump ast
+  return nullptr;
 }
 
 bool QueryPlanBuilder::hasGroupByClause(ASTNode* ast) const {
