@@ -55,6 +55,11 @@ public:
   Parser();
 
   /**
+   * Parse a SQL query string and return one AST tree for every statement
+   */
+  std::vector<std::unique_ptr<ASTNode>> parseQuery(const std::string query);
+
+  /**
    * Parse a SQL Query from the input string. Returns true on success and false
    * if an error occurred.
    */

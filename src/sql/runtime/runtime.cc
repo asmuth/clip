@@ -18,53 +18,24 @@ Runtime::Runtime() :
     compiler_(&symbol_table_),
     query_plan_builder_(&compiler_, backends_) {}
 
-std::vector<std::unique_ptr<ASTNode>> Runtime::parseQuery(
-    const std::string query) {
-  if (query.size() == 0) {
-    RAISE(Parser::ParseError, "empty query");
-  }
-
-  if (!parser_.parse(query.c_str(), query.size())) {
-    RAISE(
-        Parser::ParseError,
-        "can't figure out how to parse this, sorry :(");
-  }
-
-  std::vector<std::unique_ptr<ASTNode>> stmts;
-  for (const auto stmt : parser_.getStatements()) {
-    stmts.emplace_back(stmt->deepCopy());
-  }
-
-  return stmts;
-}
-
-std::unique_ptr<QueryPlan> Runtime::buildQueryPlan(
-    const std::vector<std::unique_ptr<ASTNode>>& statements) {
-  std::unique_ptr<QueryPlan> query_plan(new QueryPlan());
-  query_plan_builder_.buildQueryPlan(statements, query_plan.get());
-  return query_plan;
-}
-
 QueryPlanBuilder* Runtime::queryPlanBuilder() {
   return &query_plan_builder_;
-}
-
-void Runtime::executeQuery(QueryPlanNode* query, ResultList* target) {
-  target->addHeader(query->getColumns());
-  query->setTarget(target);
-  query->execute();
-}
-
-const std::vector<std::unique_ptr<Backend>>& Runtime::backends() {
-  return backends_;
 }
 
 void Runtime::addBackend(std::unique_ptr<Backend> backend) {
   backends_.emplace_back(std::move(backend));
 }
 
+const std::vector<std::unique_ptr<Backend>>& Runtime::backends() {
+  return backends_;
+}
+
 Compiler* Runtime::compiler() {
   return &compiler_;
+}
+
+Parser* Runtime::parser() {
+  return &parser_;
 }
 
 }

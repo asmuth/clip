@@ -32,7 +32,7 @@ Query::Query(
     const std::string& query_string,
     Runtime* runtime) :
     runtime_(runtime) {
-  auto statements = runtime->parseQuery(query_string);
+  auto statements = runtime->parser()->parseQuery(query_string);
   draw_statements_.emplace_back();
 
   for (const auto& stmt : statements) {

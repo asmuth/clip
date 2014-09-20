@@ -101,12 +101,15 @@ static std::unique_ptr<ResultList> executeTestQuery(
                   "test/fixtures/gbp_per_country_simple.csv"), true)));
 
 
-  auto statements = runtime.parseQuery(query);
+  auto statements = runtime.parser()->parseQuery(query);
   runtime.queryPlanBuilder()->buildQueryPlan(statements, &query_plan);
   EXPECT(query_plan.queries().size() == 1);
 
   auto result = new ResultList();
-  runtime.executeQuery(query_plan.queries()[0].get(), result);
+  auto query_plan_node = query_plan.queries()[0].get();
+  result->addHeader(query_plan_node->getColumns());
+  query_plan_node->setTarget(result);
+  query_plan_node->execute();
 
   EXPECT(result->getNumRows() > 0);
   EXPECT(result->getNumColumns() > 0);
@@ -927,18 +930,21 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
 TEST_CASE(SQLTest, TestRuntime, [] () {
   DefaultRuntime runtime;
 
-  auto statements = runtime.parseQuery(
+  auto statements = runtime.parser()->parseQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
       "     GROUP BY city LIMIT 10;");
 
-  auto query_plan = runtime.buildQueryPlan(statements);
-  EXPECT(query_plan->queries().size() == 1);
+  QueryPlan query_plan;
+  runtime.queryPlanBuilder()->buildQueryPlan(statements, &query_plan);
 
   ResultList result;
-  runtime.executeQuery(query_plan->queries()[0].get(), &result);
+  auto query_plan_node = query_plan.queries()[0].get();
+  query_plan_node->setTarget(&result);
+  query_plan_node->execute();
+
   EXPECT(result.getNumRows() == 2);
   EXPECT(result.getRow(0)[0] == "New York");
   EXPECT(result.getRow(1)[0] == "Tokyo");

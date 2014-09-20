@@ -17,8 +17,27 @@ namespace query {
 
 Parser::Parser() : root_(ASTNode::T_ROOT) {}
 
-// FIXPAUL free all explicit news on ex!
+std::vector<std::unique_ptr<ASTNode>> Parser::parseQuery(
+    const std::string query) {
+  if (query.size() == 0) {
+    RAISE(Parser::ParseError, "empty query");
+  }
 
+  if (!parse(query.c_str(), query.size())) {
+    RAISE(
+        Parser::ParseError,
+        "can't figure out how to parse this, sorry :(");
+  }
+
+  std::vector<std::unique_ptr<ASTNode>> stmts;
+  for (const auto stmt : getStatements()) {
+    stmts.emplace_back(stmt->deepCopy());
+  }
+
+  return stmts;
+}
+
+// FIXPAUL free all explicit news on ex!
 size_t Parser::parse(const char* query, size_t len) {
   const char* cur = query;
   const char* end = cur + len;
