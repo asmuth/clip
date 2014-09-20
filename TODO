@@ -32,7 +32,6 @@
      - SQL: having
      - SQL: join
      - comments! :)
-     - string lt gt exprs
      - round fn
 
 [ doc ]
