@@ -140,6 +140,11 @@ next:
   }
 
   if (**cur == '-') {
+    if (*cur + 1 < end && (*cur)[1] == '-') {
+      for (; *cur < end && **cur != '\n'; (*cur)++);
+      goto next;
+    }
+
     token_list->emplace_back(Token::T_MINUS);
     (*cur)++;
     goto next;

@@ -1,11 +1,12 @@
 IMPORT TABLE test_table
    FROM 'mysql://localhost/test_database?user=root';
 
+-- my comment
 DRAW BARCHART WITH
     ORIENTATION VERTICAL
-    AXIS BOTTOM
+    AXIS BOTTOM  -- another comment
     GRID HORIZONTAL
     LEGEND TOP RIGHT INSIDE;
 
-SELECT series, x, y FROM test_table;
+SELECT series, x, y FROM test_table WHERE series = "fnord";
 

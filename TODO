@@ -30,7 +30,8 @@
      - SQL: order by
      - SQL: having
      - SQL: join
-     - comments! :)
+     - SQL: subqueries
+     - mysql: re-serialize where condition
      - round fn
 
 [ doc ]

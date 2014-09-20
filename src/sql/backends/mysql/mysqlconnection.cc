@@ -130,7 +130,7 @@ std::vector<std::string> MySQLConnection::describeTable(
 void MySQLConnection::executeQuery(
     const std::string& query,
     std::function<bool (const std::vector<std::string>&)> row_callback) {
-  //printf("Execute Query: %s\n", query.c_str()); // FIXPAUL debug log
+  printf("Execute Query: %s\n", query.c_str()); // FIXPAUL debug log
 
   MYSQL_RES* result = nullptr;
   if (mysql_real_query(mysql_, query.c_str(), query.size()) == 0) {
