@@ -1,13 +1,12 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
@@ -16,24 +15,26 @@
 #include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/jsonoutputstream.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
 namespace query {
 
 QueryService::QueryService() {
-
+  runtime_.installBuiltinBackends();
+  runtime_.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 }
 
 void QueryService::executeQuery(
     util::InputStream* input_stream,
     kFormat output_format,
-    util::OutputStream* output_stream) const {
+    util::OutputStream* output_stream) {
   std::string query_string;
   input_stream->readUntilEOF(&query_string);
 
   try {
-    TableRepository repo;
-    Query query(query_string.c_str(), query_string.size(), &repo);
+    Query query(query_string, &runtime_);
     query.execute();
 
     switch (output_format) {

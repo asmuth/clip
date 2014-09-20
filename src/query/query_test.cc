@@ -12,7 +12,7 @@
 #include <string.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/queryservice.h>
-#include <fnordmetric/sql/backends/csv/csvtableref.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/tableref.h>
 #include <fnordmetric/sql/parser/parser.h>
 #include <fnordmetric/sql/parser/token.h>
@@ -26,6 +26,7 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/unittest.h>
+#include <fnordmetric/util/uri.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 using namespace fnordmetric::query;
@@ -38,43 +39,7 @@ static Parser parseTestQuery(const char* query) {
   return parser;
 }
 
-static void compareChart(
-    fnordmetric::ui::Canvas* chart,
-    const std::string& file_name) {
-  auto output_stream = fnordmetric::util::FileOutputStream::openFile(
-      "build/tests/tmp/" + file_name);
-
-  fnordmetric::ui::SVGTarget target(output_stream.get());
-  chart->render(&target);
-
-  EXPECT_FILES_EQ(
-    "test/fixtures/" + file_name,
-    "build/tests/tmp/" + file_name);
-}
-
 class TestTableRef : public TableRef {
-  int getColumnIndex(const std::string& name) override {
-    if (name == "one") return 0;
-    if (name == "two") return 1;
-    if (name == "three") return 2;
-    return -1;
-  }
-  void executeScan(TableScan* scan) override {
-    int64_t one = 0;
-    int64_t two = 100;
-    for (int i = two; i > 0; --i) {
-      std::vector<SValue> row;
-      row.emplace_back(SValue(++one));
-      row.emplace_back(SValue(two--));
-      row.emplace_back(SValue((int64_t) (i % 2 ? 10 : 20)));
-      if (!scan->nextRow(row.data(), row.size())) {
-        return;
-      }
-    }
-  }
-};
-
-class TestTable2Ref : public TableRef {
   int getColumnIndex(const std::string& name) override {
     if (name == "one") return 0;
     if (name == "two") return 1;
@@ -94,19 +59,47 @@ class TestTable2Ref : public TableRef {
   }
 };
 
+class TestBackend : public Backend {
+public:
+
+  bool openTables(
+    const std::vector<std::string>& table_names,
+    const fnordmetric::util::URI& source_uri,
+    std::vector<std::unique_ptr<TableRef>>* target) {
+    EXPECT_EQ(source_uri.scheme(), "testtable");
+    target->emplace_back(new TestTableRef());
+    return true;
+  }
+
+};
+
+static void compareChart(
+    fnordmetric::ui::Canvas* chart,
+    const std::string& file_name) {
+  auto output_stream = fnordmetric::util::FileOutputStream::openFile(
+      "build/tests/tmp/" + file_name);
+
+  fnordmetric::ui::SVGTarget target(output_stream.get());
+  chart->render(&target);
+
+  EXPECT_FILES_EQ(
+    "test/fixtures/" + file_name,
+    "build/tests/tmp/" + file_name);
+}
+
 TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
+      "  IMPORT TABLE testtable FROM 'testtable:';"
       "  DRAW BARCHART;"
       ""
       "  SELECT"
       "    'series1' as fnord, one AS x, two AS y"
       "  FROM"
       "    testtable;",
-      &repo);
+      &runtime);
 
   const char err[] = "can't draw SELECT because it has no 'series' column";
 
@@ -116,18 +109,18 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
 });
 
 TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
+      "  IMPORT TABLE testtable FROM 'testtable:';"
       "  DRAW BARCHART;"
       ""
       "  SELECT"
       "    'series1' as series, one AS f, two AS y"
       "  FROM"
       "    testtable;",
-      &repo);
+      &runtime);
 
   const char err[] = "can't draw SELECT because it has no 'x' column";
 
@@ -137,18 +130,18 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
 });
 
 TEST_CASE(QueryTest, TestDrawQueryNeedsYColAssert, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
+      "  IMPORT TABLE testtable FROM 'testtable:';"
       "  DRAW BARCHART;"
       ""
       "  SELECT"
       "    'series1' as series, one AS x, two AS f"
       "  FROM"
       "    testtable;",
-      &repo);
+      &runtime);
 
   // FIXPAUL check that we get an informative error message
   //const char err[] = "can't draw SELECT because it has no 'y' column";
@@ -159,11 +152,11 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsYColAssert, [] () {
 });
 
 TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
+      "  IMPORT TABLE testtable FROM 'testtable:';"
       "  DRAW LINECHART AXIS LEFT;"
       ""
       "  SELECT"
@@ -181,7 +174,7 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
       "  FROM"
       "    testtable;"
       "",
-      &repo);
+      &runtime);
 
   query.execute();
   auto chart = query.getChart(0);
@@ -193,18 +186,18 @@ TEST_CASE(QueryTest, TestSimpleDrawQuery, [] () {
 });
 
 TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
 
   auto query = Query(
+      "  IMPORT TABLE testtable FROM 'testtable:';"
       "  DRAW LINECHART AXIS LEFT;"
       ""
       "  SELECT"
       "    one % 3 as series, one / 3 as x, two + one AS y"
       "  FROM"
       "    testtable;",
-      &repo);
+      &runtime);
 
   query.execute();
   auto chart = query.getChart(0);
@@ -216,7 +209,8 @@ TEST_CASE(QueryTest, TestDerivedSeriesDrawQuery, [] () {
 });
 
 TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
-  TableRepository repo;
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 
   auto query = Query(
       "  IMPORT TABLE gbp_per_country "
@@ -231,7 +225,7 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
       "  FROM"
       "    gbp_per_country"
       "  LIMIT 30;",
-      &repo);
+      &runtime);
 
   query.execute();
   auto chart = query.getChart(0);
@@ -295,8 +289,9 @@ TEST_CASE(QueryTest, TestFourSelectFromCSVQuery, [] () {
       "test/fixtures/queries/gdpfourselects.sql");
   query_stream->readUntilEOF(&query_str);
 
-  TableRepository repo;
-  auto query = Query(query_str.c_str(), &repo);
+  Runtime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
+  auto query = Query(query_str, &runtime);
 
   query.execute();
   EXPECT(query.getNumResultLists() == 4);

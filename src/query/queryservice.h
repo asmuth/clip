@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
 #include <fnordmetric/query/query.h>
+#include <fnordmetric/sql/runtime/runtime.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -25,7 +26,7 @@ namespace query {
 
 /**
  * The query service is the default entry point for executing all queries. A
- * QueryService instance is thread safe.
+ * QueryService instance should only be used from one thread at the same time.
  */
 class QueryService {
 public:
@@ -51,7 +52,7 @@ public:
   void executeQuery(
       util::InputStream* input_stream,
       kFormat output_format,
-      util::OutputStream* output_stream) const;
+      util::OutputStream* output_stream);
 
   /**
    * Register a query backend
@@ -64,6 +65,7 @@ protected:
   void renderJSON(Query* query, util::JSONOutputStream* target) const;
   void renderTables(Query* query, util::OutputStream* out) const;
 
+  Runtime runtime_;
 };
 
 }
