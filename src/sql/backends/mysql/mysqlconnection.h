@@ -12,6 +12,7 @@
 #include <memory>
 #include <fnordmetric/sql/backend.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <functional>
 #include <mysql.h>
 
 namespace fnordmetric {
@@ -73,7 +74,6 @@ public:
       const std::string& username,
       const std::string& password);
 
-
   /**
    * Returns a list of all column names for the provided table name. May 
    * throw an exception (This does the equivalent to a DESCRIBEL TABLE)
@@ -82,6 +82,25 @@ public:
    * @returns a list of all columns names of the table
    */
   std::vector<std::string> describeTable(const std::string& table_name);
+
+  /**
+   * Execute a mysql query. The mysql query string must not include a terminal
+   * semicolon.
+   *
+   * The provided row callback will be called for every row in the result set.
+   * The row callback must return a boolean value; if it returns true it will
+   * be called again for the next row in the result set (if a next row exists),
+   * if it returns false it will not be called again and the remainder of the
+   * result set will be discarded.
+   *
+   * This method may throw an exception.
+   *
+   * @param query the mysql query string without a terminal semicolon
+   * @param row_callback the callback that should be called for every result row
+   */
+  void executeQuery(
+      const std::string& query,
+      std::function<bool (const std::vector<std::string>&)> row_callback);
 
 protected:
    MYSQL* mysql_;

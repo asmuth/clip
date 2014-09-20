@@ -39,14 +39,20 @@ void MySQLTableRef::executeScan(TableScan* scan) {
   auto columns = scan->getColumns();
   for (int i = 0; i < columns.size(); ++i) {
     mysql_query.append(i == 0 ? " " : ",");
-    mysql_query.append("`'");
+    mysql_query.append("`");
     mysql_query.append(columns[i]); // FIXPAUL escape?
     mysql_query.append("`");
   }
 
   mysql_query.append(" FROM ");
   mysql_query.append(table_name_);
-  printf("query: %s\n", mysql_query.c_str());
+
+  conn_->executeQuery(
+      mysql_query,
+      [] (const std::vector<std::string>& row) -> bool {
+        printf("row!\n");
+        return true;
+      });
 }
 
 }

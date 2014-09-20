@@ -127,6 +127,22 @@ std::vector<std::string> MySQLConnection::describeTable(
   return columns;
 }
 
+void MySQLConnection::executeQuery(
+    const std::string& query,
+    std::function<bool (const std::vector<std::string>&)> row_callback) {
+  printf("Execute Query: %s\n", query.c_str()); // FIXPAUL debug log
+
+  int ret = mysql_real_query(mysql_, query.c_str(), query.size());
+
+  if (ret != 0) {
+    RAISE(
+        util::RuntimeException,
+        "mysql query failed: %s -- error: %s\n",
+        query.c_str(),
+        mysql_error(mysql_));
+  }
+}
+
 }
 }
 }
