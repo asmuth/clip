@@ -236,7 +236,9 @@ protected:
 
     if (node->getType() == ASTNode::T_COLUMN_NAME) {
       auto token = node->getToken();
-      if (!(token && *token == Token::T_IDENTIFIER)) { RAISE(util::RuntimeException, "corrupt AST"); }
+      if (!(token && *token == Token::T_IDENTIFIER)) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
 
       auto col_index = tbl_ref->getColumnIndex(token->getString());
       if (col_index < 0) {
@@ -253,6 +255,7 @@ protected:
     } else {
       for (const auto& child : node->getChildren()) {
         if (child == nullptr) {
+          node->debugPrint(4);
           RAISE(util::RuntimeException, "corrupt AST");
         }
 

@@ -192,7 +192,10 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
       printf("- POW_EXPR");
       break;
     case T_METHOD_CALL:
-      printf("- METHOD_CALL");
+      printf("- <method_call>");
+      break;
+    default:
+      printf("- <unknown ASTNode>");
       break;
   }
 
@@ -205,7 +208,16 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
   printf("\n");
 
   for (const auto child : children_) {
-    child->debugPrint(indent + 1);
+    if (child == nullptr) {
+
+      for (int i = 0; i < indent - 1; i++) {
+        printf("  ");
+      }
+
+      printf("- <nullptr>\n");
+    } else {
+      child->debugPrint(indent + 1);
+    }
   }
 }
 
