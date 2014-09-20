@@ -49,9 +49,15 @@ void MySQLTableRef::executeScan(TableScan* scan) {
 
   conn_->executeQuery(
       mysql_query,
-      [] (const std::vector<std::string>& row) -> bool {
-        printf("row!\n");
-        return true;
+      [scan] (const std::vector<std::string>& row) -> bool {
+        std::vector<SValue> row_svals;
+
+        for (const auto& col : row) {
+          row_svals.emplace_back(col);
+        }
+
+        RAISE(util::RuntimeException, "fnord");
+        return scan->nextRow(row_svals.data(), row_svals.size());
       });
 }
 

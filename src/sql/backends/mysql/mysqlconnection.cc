@@ -132,15 +132,49 @@ void MySQLConnection::executeQuery(
     std::function<bool (const std::vector<std::string>&)> row_callback) {
   printf("Execute Query: %s\n", query.c_str()); // FIXPAUL debug log
 
-  int ret = mysql_real_query(mysql_, query.c_str(), query.size());
+  MYSQL_RES* result = nullptr;
+  if (mysql_real_query(mysql_, query.c_str(), query.size()) == 0) {
+    result = mysql_use_result(mysql_);
+  }
 
-  if (ret != 0) {
+  if (result == nullptr) {
     RAISE(
         util::RuntimeException,
         "mysql query failed: %s -- error: %s\n",
         query.c_str(),
         mysql_error(mysql_));
   }
+
+
+  MYSQL_ROW row;
+  while ((row = mysql_fetch_row(result))) {
+    auto col_lens = mysql_fetch_lengths(result);
+    if (col_lens == nullptr) {
+      break;
+    }
+
+    std::vector<std::string> row_vec;
+    auto row_len = mysql_num_fields(result);
+    for (int i = 0; i < row_len; ++i) {
+      row_vec.emplace_back(row[i], col_lens[i]);
+    }
+
+    try {
+      if (!row_callback(row_vec)) {
+        break;
+      }
+    } catch (const std::exception& e) {
+      mysql_free_result(result);
+      try {
+        auto rte = dynamic_cast<const util::RuntimeException&>(e);
+        throw rte;
+      } catch (std::bad_cast bce) {
+        throw e;
+      }
+    }
+  }
+
+  mysql_free_result(result);
 }
 
 }
