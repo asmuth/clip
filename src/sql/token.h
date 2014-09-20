@@ -69,6 +69,7 @@ public:
     T_TABLE,
     T_ON,
     T_OFF,
+    T_EOF,
 
     T_DRAW,
     T_LINECHART,
