@@ -110,7 +110,7 @@ add_executable(fnordmetric
     ${FNORDMETRIC_CLI_SOURCES}
     stage/src/fnordmetric/main.cc)
 target_link_libraries(fnordmetric libfnordmetric)
-target_link_libraries(fnordmetric mysql)
+target_link_libraries(fnordmetric mysqlclient)
 
 add_executable(tests/test-sql
     stage/src/fnordmetric/sql/sql_test.cc
@@ -119,7 +119,7 @@ add_executable(tests/test-sql
     stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-sql libfnordmetric)
-target_link_libraries(tests/test-sql mysql)
+target_link_libraries(tests/test-sql mysqlclient)
 
 add_executable(tests/test-sql-extensions
     stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
@@ -136,7 +136,7 @@ add_executable(tests/test-query
     stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc)
 target_link_libraries(tests/test-query libfnordmetric)
-target_link_libraries(tests/test-query mysql)
+target_link_libraries(tests/test-query mysqlclient)
 
 add_executable(tests/test-ui
      stage/src/fnordmetric/ui/ui_test.cc)
@@ -146,7 +146,7 @@ add_executable(tests/test-cli
     ${FNORDMETRIC_CLI_SOURCES}
     stage/src/fnordmetric/cli/cli_test.cc)
 target_link_libraries(tests/test-cli libfnordmetric)
-target_link_libraries(tests/test-cli mysql)
+target_link_libraries(tests/test-cli mysqlclient)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)

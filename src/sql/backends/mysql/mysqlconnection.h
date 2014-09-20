@@ -13,7 +13,7 @@
 #include <fnordmetric/sql/backend.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <functional>
-#include <mysql.h>
+#include <mysql/mysql.h>
 
 namespace fnordmetric {
 namespace query {

@@ -13,7 +13,6 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <memory>
 #include <mutex>
-#include <mysql.h>
 
 namespace fnordmetric {
 namespace query {
