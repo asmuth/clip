@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/ui/canvas.h>
 

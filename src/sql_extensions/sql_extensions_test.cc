@@ -11,9 +11,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/sql/compile.h>
-#include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/parser.h>
+#include <fnordmetric/sql/parser/parser.h>
+#include <fnordmetric/sql/runtime/compile.h>
+#include <fnordmetric/sql/runtime/execute.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/util/runtimeexception.h>

@@ -60,19 +60,19 @@ set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_MYSQL_BACKEND_SOURCES}
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
-    stage/src/fnordmetric/sql/astnode.cc
-    stage/src/fnordmetric/sql/compile.cc
-    stage/src/fnordmetric/sql/execute.cc
-    stage/src/fnordmetric/sql/grouper.cc
-    stage/src/fnordmetric/sql/importstatement.cc
-    stage/src/fnordmetric/sql/parser.cc
-    stage/src/fnordmetric/sql/queryplanbuilder.cc
-    stage/src/fnordmetric/sql/queryplannode.cc
+    stage/src/fnordmetric/sql/parser/astnode.cc
+    stage/src/fnordmetric/sql/parser/parser.cc
+    stage/src/fnordmetric/sql/parser/token.cc
+    stage/src/fnordmetric/sql/parser/tokenize.cc
+    stage/src/fnordmetric/sql/runtime/compile.cc
+    stage/src/fnordmetric/sql/runtime/execute.cc
+    stage/src/fnordmetric/sql/runtime/importstatement.cc
+    stage/src/fnordmetric/sql/runtime/queryplanbuilder.cc
+    stage/src/fnordmetric/sql/runtime/queryplannode.cc
+    stage/src/fnordmetric/sql/runtime/symboltable.cc
+    stage/src/fnordmetric/sql/runtime/tablerepository.cc
+    stage/src/fnordmetric/sql/runtime/tablescan.cc
     stage/src/fnordmetric/sql/svalue.cc
-    stage/src/fnordmetric/sql/symboltable.cc
-    stage/src/fnordmetric/sql/tablerepository.cc
-    stage/src/fnordmetric/sql/token.cc
-    stage/src/fnordmetric/sql/tokenize.cc
     stage/src/fnordmetric/sql_extensions/areachartbuilder.cc
     stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
     stage/src/fnordmetric/sql_extensions/linechartbuilder.cc

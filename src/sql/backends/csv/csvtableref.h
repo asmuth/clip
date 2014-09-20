@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <string>
 #include <fnordmetric/sql/backends/csv/csvinputstream.h>
-#include <fnordmetric/sql/tableref.h>
+#include <fnordmetric/sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

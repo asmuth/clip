@@ -10,9 +10,9 @@
 
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/queryservice.h>
-#include <fnordmetric/sql/queryplannode.h>
-#include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql/tablerepository.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
+#include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/jsonoutputstream.h>

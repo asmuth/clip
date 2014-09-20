@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_MYSQLBACKEND_MYSQLCONNECTION_H
 #define _FNORDMETRIC_MYSQLBACKEND_MYSQLCONNECTION_H
 #include <memory>
-#include <fnordmetric/sql/backend.h>
+#include <fnordmetric/util/uri.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <functional>
 #include <mysql.h>

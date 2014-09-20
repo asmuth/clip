@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/backends/mysql/mysqltableref.h>
-#include <fnordmetric/sql/tablescan.h>
+#include <fnordmetric/sql/runtime/tablescan.h>
 
 namespace fnordmetric {
 namespace query {

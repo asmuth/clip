@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_MYSQLBACKEND_H
 #define _FNORDMETRIC_MYSQLBACKEND_H
-#include <fnordmetric/sql/backend.h>
+#include <fnordmetric/sql/backends/backend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
 #include <memory>
 #include <mutex>

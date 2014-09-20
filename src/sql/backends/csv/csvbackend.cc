@@ -8,10 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <memory>
-#include <fnordmetric/sql/astnode.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
-#include <fnordmetric/sql/token.h>
+#include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 

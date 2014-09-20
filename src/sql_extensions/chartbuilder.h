@@ -16,11 +16,11 @@
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/barchart.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/compile.h>
-#include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/rowsink.h>
-#include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/sql/runtime/compile.h>
+#include <fnordmetric/sql/runtime/execute.h>
+#include <fnordmetric/sql/runtime/rowsink.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
 
 namespace fnordmetric {

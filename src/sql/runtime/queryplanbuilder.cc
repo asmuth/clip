@@ -9,15 +9,15 @@
  */
 #include <stdlib.h>
 #include <assert.h>
-#include "queryplanbuilder.h"
-#include "astnode.h"
-#include "queryplannode.h"
-#include "tablelessselect.h"
-#include "tablescan.h"
-#include "tablerepository.h"
-#include "limitclause.h"
-#include "groupby.h"
-#include "symboltable.h"
+#include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/runtime/queryplanbuilder.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
+#include <fnordmetric/sql/runtime/tablelessselect.h>
+#include <fnordmetric/sql/runtime/tablescan.h>
+#include <fnordmetric/sql/runtime/tablerepository.h>
+#include <fnordmetric/sql/runtime/limitclause.h>
+#include <fnordmetric/sql/runtime/groupby.h>
+#include <fnordmetric/sql/runtime/symboltable.h>
 
 namespace fnordmetric {
 namespace query {

@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_MYSQLBACKEND_MYSQLTABLEREF_H
 #include <memory>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
-#include <fnordmetric/sql/tableref.h>
+#include <fnordmetric/sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

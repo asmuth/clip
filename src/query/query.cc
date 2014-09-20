@@ -13,11 +13,12 @@
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
-#include <fnordmetric/sql/parser.h>
-#include <fnordmetric/sql/queryplanbuilder.h>
-#include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql/tablerepository.h>
-#include <fnordmetric/sql/importstatement.h>
+#include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/parser/parser.h>
+#include <fnordmetric/sql/runtime/queryplanbuilder.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
+#include <fnordmetric/sql/runtime/tablerepository.h>
+#include <fnordmetric/sql/runtime/importstatement.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/util/runtimeexception.h>
 

@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/resultlist.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
 #include <fnordmetric/util/runtimeexception.h>
 

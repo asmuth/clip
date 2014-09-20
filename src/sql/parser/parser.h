@@ -8,14 +8,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FNORDMETRIC_QUERY_QUERYPARSER_H
-#define _FNORDMETRIC_QUERY_QUERYPARSER_H
+#ifndef _FNORDMETRIC_SQL_PARSER_H
+#define _FNORDMETRIC_SQL_PARSER_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/token.h>
-#include <fnordmetric/sql/astnode.h>
+#include <fnordmetric/sql/parser/token.h>
+#include <fnordmetric/sql/parser/astnode.h>
 
 namespace fnordmetric {
 namespace query {

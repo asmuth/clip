@@ -10,11 +10,11 @@
 
 #include <memory>
 #include <string.h>
+#include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/backends/csv/csvinputstream.h>
+#include <fnordmetric/sql/runtime/tablescan.h>
 #include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/sql/tableref.h>
-#include <fnordmetric/sql/tablescan.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {

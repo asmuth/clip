@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "symboltable.h"
 
 namespace fnordmetric {
 namespace query {

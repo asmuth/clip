@@ -22,12 +22,6 @@ asset_name() {
 ) >> stage/src/asset_bundle.cc
 
 (
-  asset_uniq "fnordmetric_js_fnordmetric_editor_js"
-  asset_file "contrib/fnordmetric-js/fnordmetric-editor.js"
-  asset_name "fnordmetric_js_fnordmetric_editor_js" "fnordmetric-js/fnordmetric-editor.js"
-) >> stage/src/asset_bundle.cc
-
-(
   asset_uniq "fnordmetric_webui_fnordmetric_webui_css"
   asset_file "contrib/fnordmetric-webui/fnordmetric-webui.css"
   asset_name "fnordmetric_webui_fnordmetric_webui_css" "fnordmetric-webui/fnordmetric-webui.css"

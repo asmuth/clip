@@ -7,21 +7,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#ifndef _FNORDMETRIC_QUERY_EXPRESSION_H
-#define _FNORDMETRIC_QUERY_EXPRESSION_H
+#ifndef _FNORDMETRIC_QUERY_TABLEREF_H
+#define _FNORDMETRIC_QUERY_TABLEREF_H
 #include <stdlib.h>
-#include <vector>
+#include <string>
+#include <memory>
 
 namespace fnordmetric {
 namespace query {
+class TableScan;
 
-class Expression {
+class TableRef {
 public:
-
+  virtual ~TableRef() {}
+  virtual int getColumnIndex(const std::string& name) = 0;
+  virtual void executeScan(TableScan* scan) = 0;
 protected:
-
-  //SValue* (*call_)(void**, int, SValue**);
 };
 
 }
