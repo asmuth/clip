@@ -866,3 +866,22 @@ TEST_CASE(SQLTest, TestFourSelectFromCSVQuery, [] () {
     EXPECT(results->getRow(9)[1] == "IND")
   }
 });
+
+TEST_CASE(SQLTest, TestNotEquals, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures GROUP BY city LIMIT 10;",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 1);
+
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 4);
+  EXPECT(result->getRow(0)[0] == "London");
+  EXPECT(result->getRow(1)[0] == "Berlin");
+  EXPECT(result->getRow(2)[0] == "New York");
+});

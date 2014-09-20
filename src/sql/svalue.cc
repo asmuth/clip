@@ -225,14 +225,14 @@ fnordmetric::StringType SValue::getString() const {
 }
 
 std::string SValue::makeUniqueKey(SValue* arr, size_t len) {
-  size_t buf_len = sizeof(data_) * len;
-  char* buf = static_cast<char*>(alloca(buf_len));
+  std::string key;
 
   for (int i = 0; i < len; ++i) {
-    memcpy(buf + i * sizeof(data_), &arr[i].data_, sizeof(data_));
+    key.append(arr[i].toString());
+    key.append("\x00");
   }
 
-  return std::string(buf, buf_len);
+  return key;
 }
 
 std::string SValue::toString() const {
