@@ -8,12 +8,24 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/runtime/defaultruntime.h>
+#include <fnordmetric/sql/expressions/boolean.h>
 #include <fnordmetric/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {
 
 DefaultRuntime::DefaultRuntime() {
+  /* expressions/boolean.h */
+  symbol_table_.registerSymbol("eq", &expressions::eqExpr);
+  symbol_table_.registerSymbol("neq", &expressions::neqExpr);
+  symbol_table_.registerSymbol("and", &expressions::andExpr);
+  symbol_table_.registerSymbol("or", &expressions::orExpr);
+  symbol_table_.registerSymbol("neg", &expressions::negExpr);
+  symbol_table_.registerSymbol("lt", &expressions::ltExpr);
+  symbol_table_.registerSymbol("lte", &expressions::lteExpr);
+  symbol_table_.registerSymbol("gt", &expressions::gtExpr);
+  symbol_table_.registerSymbol("gte", &expressions::gteExpr);
+
   /* expressions/math.h */
   symbol_table_.registerSymbol("add", &expressions::addExpr);
   symbol_table_.registerSymbol("sub", &expressions::subExpr);

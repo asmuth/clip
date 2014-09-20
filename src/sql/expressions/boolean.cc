@@ -11,12 +11,12 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
+#include <fnordmetric/sql/expressions/boolean.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
+namespace expressions {
 
 void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
@@ -66,15 +66,11 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __eq_symbol("eq", &eqExpr);
-
 void neqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue ret;
   eqExpr(scratchpad, argc, argv, &ret);
   *out = SValue(!ret.getValue<bool>());
 }
-
-static SymbolTableEntry __neq_symbol("neq", &neqExpr);
 
 void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
@@ -104,8 +100,6 @@ void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __and_symbol("and", &andExpr);
-
 void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
@@ -134,8 +128,6 @@ void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __or_symbol("or", &orExpr);
-
 void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 1) {
     RAISE(
@@ -162,8 +154,6 @@ void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   RAISE(util::RuntimeException, "can't negate %s",
       val->getTypeName());
 }
-
-static SymbolTableEntry __neg_symbol("neg", &negExpr);
 
 void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
@@ -213,8 +203,6 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __lt_symbol("lt", &ltExpr);
-
 void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
@@ -262,8 +250,6 @@ void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       lhs->getTypeName(),
       rhs->getTypeName());
 }
-
-static SymbolTableEntry __lte_symbol("lte", &lteExpr);
 
 void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
@@ -313,8 +299,6 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __gt_symbol("gt", &gtExpr);
-
 void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
@@ -363,8 +347,6 @@ void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __gte_symbol("gte", &gteExpr);
-
-
+}
 }
 }
