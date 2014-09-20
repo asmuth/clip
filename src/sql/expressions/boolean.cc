@@ -69,6 +69,14 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
 static SymbolTableEntry __eq_symbol("eq", &eqExpr);
 
+void neqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
+  SValue ret;
+  eqExpr(scratchpad, argc, argv, &ret);
+  *out = SValue(!ret.getValue<bool>());
+}
+
+static SymbolTableEntry __neq_symbol("neq", &neqExpr);
+
 void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
@@ -85,7 +93,11 @@ void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
         case SValue::T_BOOL:
           *out = SValue(lhs->getBool() && rhs->getBool());
           return;
+        default:
+          break;
       }
+    default:
+      break;
   }
 
   RAISE(util::RuntimeException, "can't AND %s with %s",
@@ -111,7 +123,11 @@ void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
         case SValue::T_BOOL:
           *out = SValue(lhs->getBool() || rhs->getBool());
           return;
+        default:
+          break;
       }
+    default:
+      break;
   }
 
   RAISE(util::RuntimeException, "can't OR %s with %s",
@@ -154,7 +170,7 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
         util::RuntimeException,
-        "wrong number of arguments for lt. expected: 2, got: %i", argc);
+        "wrong number of arguments for ltExpr. expected: 2, got: %i", argc);
   }
 
   SValue* lhs = argv;
@@ -187,6 +203,12 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
+  if (lhs->getType() == SValue::T_STRING ||
+      rhs->getType() == SValue::T_STRING) {
+    *out = SValue(lhs->toString() < rhs->toString());
+    return;
+  }
+
   RAISE(util::RuntimeException, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
@@ -194,11 +216,61 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
 static SymbolTableEntry __lt_symbol("lt", &ltExpr);
 
+void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for lteExpr. expected: 2, got: %i", argc);
+  }
+
+  SValue* lhs = argv;
+  SValue* rhs = argv + 1;
+
+  switch(lhs->testTypeWithNumericConversion()) {
+    case SValue::T_INTEGER:
+      switch(rhs->testTypeWithNumericConversion()) {
+        case SValue::T_INTEGER:
+          *out = SValue(lhs->getInteger() <= rhs->getInteger());
+          return;
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getFloat() <= rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->testTypeWithNumericConversion()) {
+        case SValue::T_INTEGER:
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getFloat() <= rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  if (lhs->getType() == SValue::T_STRING ||
+      rhs->getType() == SValue::T_STRING) {
+    *out = SValue(lhs->toString() <= rhs->toString());
+    return;
+  }
+
+  RAISE(util::RuntimeException, "can't compare %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
+}
+
+static SymbolTableEntry __lte_symbol("lte", &lteExpr);
+
 void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
         util::RuntimeException,
-        "wrong number of arguments for gt. expected: 2, got: %i", argc);
+        "wrong number of arguments for gtExpr. expected: 2, got: %i", argc);
   }
 
   SValue* lhs = argv;
@@ -231,12 +303,69 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
+  if (lhs->getType() == SValue::T_STRING ||
+      rhs->getType() == SValue::T_STRING) {
+    *out = SValue(lhs->toString() > rhs->toString());
+    return;
+  }
+
   RAISE(util::RuntimeException, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
 
 static SymbolTableEntry __gt_symbol("gt", &gtExpr);
+
+void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for gteExpr. expected: 2, got: %i", argc);
+  }
+
+  SValue* lhs = argv;
+  SValue* rhs = argv + 1;
+
+  switch(lhs->testTypeWithNumericConversion()) {
+    case SValue::T_INTEGER:
+      switch(rhs->testTypeWithNumericConversion()) {
+        case SValue::T_INTEGER:
+          *out = SValue(lhs->getInteger() >= rhs->getInteger());
+          return;
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getFloat() >= rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    case SValue::T_FLOAT:
+      switch(rhs->testTypeWithNumericConversion()) {
+        case SValue::T_INTEGER:
+        case SValue::T_FLOAT:
+          *out = SValue(lhs->getFloat() >= rhs->getFloat());
+          return;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+
+  if (lhs->getType() == SValue::T_STRING ||
+      rhs->getType() == SValue::T_STRING) {
+    *out = SValue(lhs->toString() >= rhs->toString());
+    return;
+  }
+
+  RAISE(util::RuntimeException, "can't compare %s with %s",
+      lhs->getTypeName(),
+      rhs->getTypeName());
+}
+
+static SymbolTableEntry __gte_symbol("gte", &gteExpr);
+
 
 }
 }

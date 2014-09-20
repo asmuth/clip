@@ -994,7 +994,7 @@ TEST_CASE(SQLTest, TestLessThanEquals, [] () {
   query.execute();
   EXPECT(query.getNumResultLists() == 1);
   auto result = query.getResultList(0);
-  EXPECT(result->getNumRows() == 2);
+  EXPECT(result->getNumRows() == 3);
   EXPECT(result->getRow(0)[0] == "London");
   EXPECT(result->getRow(1)[0] == "Berlin");
   EXPECT(result->getRow(2)[0] == "New York");
@@ -1011,7 +1011,7 @@ TEST_CASE(SQLTest, TestGreaterThan, [] () {
       &repo);
 
   query.execute();
-  EXPECT(query.getNumResultLists() == 2);
+  EXPECT(query.getNumResultLists() == 1);
   auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 1);
   EXPECT(result->getRow(0)[0] == "Tokyo");
@@ -1028,9 +1028,9 @@ TEST_CASE(SQLTest, TestGreaterThanEquals, [] () {
       &repo);
 
   query.execute();
-  EXPECT(query.getNumResultLists() == 2);
+  EXPECT(query.getNumResultLists() == 1);
   auto result = query.getResultList(0);
-  EXPECT(result->getNumRows() == 1);
+  EXPECT(result->getNumRows() == 2);
   EXPECT(result->getRow(0)[0] == "New York");
   EXPECT(result->getRow(1)[0] == "Tokyo");
 });

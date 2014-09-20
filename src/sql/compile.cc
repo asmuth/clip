@@ -47,8 +47,14 @@ CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
     case ASTNode::T_LT_EXPR:
       return compileOperator("lt", ast, scratchpad_len);
 
+    case ASTNode::T_LTE_EXPR:
+      return compileOperator("lte", ast, scratchpad_len);
+
     case ASTNode::T_GT_EXPR:
       return compileOperator("gt", ast, scratchpad_len);
+
+    case ASTNode::T_GTE_EXPR:
+      return compileOperator("gte", ast, scratchpad_len);
 
     case ASTNode::T_ADD_EXPR:
       return compileOperator("add", ast, scratchpad_len);
