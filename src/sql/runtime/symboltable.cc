@@ -11,23 +11,16 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string>
-#include <unordered_map>
 #include "symboltable.h"
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
 
-static std::unordered_map<std::string, const SymbolTableEntry*>*
-  __globalSymbolTable() {
-  static std::unordered_map<std::string, const SymbolTableEntry*> symbols;
-  return &symbols;
-}
+const SymbolTableEntry* SymbolTable::lookupSymbol(const std::string& symbol) {
+  auto iter = symbols_->find(symbol);
 
-const SymbolTableEntry* lookupSymbol(const std::string& symbol) {
-  auto iter = __globalSymbolTable()->find(symbol);
-
-  if (iter == __globalSymbolTable()->end()) {
+  if (iter == symbols_->end()) {
     RAISE(util::RuntimeException, "symbol not found: %s", symbol.c_str());
     return nullptr;
   } else {
@@ -41,7 +34,7 @@ SymbolTableEntry::SymbolTableEntry(
     size_t scratchpad_size) :
     call_(method),
     scratchpad_size_(scratchpad_size) {
-  assert(__globalSymbolTable()->find(symbol) == __globalSymbolTable()->end());
+  assert(symbols_->find(symbol) == symbols_->end());
   (*__globalSymbolTable())[symbol] = this;
 }
 

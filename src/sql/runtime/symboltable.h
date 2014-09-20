@@ -7,20 +7,25 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_QUERY_SYMBOLTABLE_H
 #define _FNORDMETRIC_QUERY_SYMBOLTABLE_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace fnordmetric {
 namespace query {
 class SymbolTableEntry;
 class SValue;
 
-void registerSymbol(const std::string& symbol, const SymbolTableEntry* entry);
-const SymbolTableEntry* lookupSymbol(const std::string& symbol);
+class SymbolTable {
+public:
+  const SymbolTableEntry* lookupSymbol(const std::string& symbol) const;
+  void registerSymbol(const std::string& symbol, const SymbolTableEntry* entry);
+protected:
+  std::unordered_map<std::string, const SymbolTableEntry*> symbols_;
+};
 
 class SymbolTableEntry {
 public:
