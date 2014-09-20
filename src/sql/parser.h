@@ -93,7 +93,9 @@ protected:
   ASTNode* eqExpr(ASTNode* lhs, int precedence);
   ASTNode* neqExpr(ASTNode* lhs, int precedence);
   ASTNode* ltExpr(ASTNode* lhs, int precedence);
+  ASTNode* lteExpr(ASTNode* lhs, int precedence);
   ASTNode* gtExpr(ASTNode* lhs, int precedence);
+  ASTNode* gteExpr(ASTNode* lhs, int precedence);
   ASTNode* andExpr(ASTNode* lhs, int precedence);
   ASTNode* orExpr(ASTNode* lhs, int precedence);
 

@@ -157,9 +157,17 @@ ASTNode* Parser::binaryExpr(ASTNode* lhs, int precedence) {
     case Token::T_LT:
       return ltExpr(lhs, precedence);
 
-    /* less than expression */
+    /* less than or equal expression */
+    case Token::T_LTE:
+      return lteExpr(lhs, precedence);
+
+    /* greater than expression */
     case Token::T_GT:
       return gtExpr(lhs, precedence);
+
+    /* greater than or equal expression */
+    case Token::T_GTE:
+      return gteExpr(lhs, precedence);
 
     /* and expression */
     case Token::T_AND:
@@ -211,6 +219,8 @@ ASTNode* Parser::statement() {
       return drawStatement();
     case Token::T_IMPORT:
       return importStatement();
+    default:
+      break;
   }
 
   RAISE(
@@ -721,6 +731,24 @@ ASTNode* Parser::ltExpr(ASTNode* lhs, int precedence) {
   return e;
 }
 
+ASTNode* Parser::lteExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 6) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto rhs = expr(6);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "lteExpr needs second argument");
+  }
+
+  auto e = new ASTNode(ASTNode::T_LTE_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(rhs);
+  return e;
+}
+
 ASTNode* Parser::gtExpr(ASTNode* lhs, int precedence) {
   if (precedence < 6) {
     consumeToken();
@@ -734,6 +762,24 @@ ASTNode* Parser::gtExpr(ASTNode* lhs, int precedence) {
   }
 
   auto e = new ASTNode(ASTNode::T_GT_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(rhs);
+  return e;
+}
+
+ASTNode* Parser::gteExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 6) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto rhs = expr(6);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "gteExpr needs second argument");
+  }
+
+  auto e = new ASTNode(ASTNode::T_GTE_EXPR);
   e->appendChild(lhs);
   e->appendChild(rhs);
   return e;

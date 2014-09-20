@@ -200,12 +200,24 @@ next:
   }
 
   if (**cur == '<') {
+    if (*cur + 1 < end && (*cur)[1] == '=') {
+      token_list->emplace_back(Token::T_LTE);
+      (*cur) += 2;
+      goto next;
+    }
+
     token_list->emplace_back(Token::T_LT);
     (*cur)++;
     goto next;
   }
 
   if (**cur == '>') {
+    if (*cur + 1 < end && (*cur)[1] == '=') {
+      token_list->emplace_back(Token::T_GTE);
+      (*cur) += 2;
+      goto next;
+    }
+
     token_list->emplace_back(Token::T_GT);
     (*cur)++;
     goto next;

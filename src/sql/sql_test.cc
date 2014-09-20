@@ -134,12 +134,57 @@ TEST_CASE(SQLTest, TestArithmeticValueExpressionParens, [] () {
   EXPECT(*expr->getChildren()[1]->getToken() == "3");
 });
 
+TEST_CASE(SQLTest, TestParseEqual, [] () {
+  auto parser = parseTestQuery("SELECT 2=5;");
+  EXPECT(parser.getStatements().size() == 1);
+  auto expr = parser.getStatements()[0]
+      ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+  EXPECT(*expr == ASTNode::T_EQ_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "2");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "5");
+});
+
 TEST_CASE(SQLTest, TestParseNotEqual, [] () {
   auto parser = parseTestQuery("SELECT 2!=5;");
   EXPECT(parser.getStatements().size() == 1);
   auto expr = parser.getStatements()[0]
       ->getChildren()[0]->getChildren()[0]->getChildren()[0];
   EXPECT(*expr == ASTNode::T_NEQ_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "2");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "5");
+});
+
+TEST_CASE(SQLTest, ParseGreaterThan, [] () {
+  auto parser = parseTestQuery("SELECT 2>5;");
+  EXPECT(parser.getStatements().size() == 1);
+  auto expr = parser.getStatements()[0]
+      ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+  EXPECT(*expr == ASTNode::T_GT_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "2");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "5");
+});
+
+TEST_CASE(SQLTest, ParseGreaterThanEqual, [] () {
+  auto parser = parseTestQuery("SELECT 2>=5;");
+  EXPECT(parser.getStatements().size() == 1);
+  auto expr = parser.getStatements()[0]
+      ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+  EXPECT(*expr == ASTNode::T_GTE_EXPR);
   EXPECT(expr->getChildren().size() == 2);
   EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
   EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
@@ -882,6 +927,23 @@ TEST_CASE(SQLTest, TestFourSelectFromCSVQuery, [] () {
   }
 });
 
+TEST_CASE(SQLTest, TestEquals, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city = 'Berlin'"
+      "     GROUP BY city LIMIT 10;",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 1);
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 1);
+  EXPECT(result->getRow(0)[0] == "Berlin");
+});
+
 TEST_CASE(SQLTest, TestNotEquals, [] () {
   TableRepository repo;
   auto query = Query(
@@ -894,12 +956,83 @@ TEST_CASE(SQLTest, TestNotEquals, [] () {
 
   query.execute();
   EXPECT(query.getNumResultLists() == 1);
-
   auto result = query.getResultList(0);
-  EXPECT(result->getNumRows() == 4);
+  EXPECT(result->getNumRows() == 3);
+  EXPECT(result->getRow(0)[0] == "London");
+  EXPECT(result->getRow(1)[0] == "New York");
+  EXPECT(result->getRow(2)[0] == "Tokyo");
+});
+
+TEST_CASE(SQLTest, TestLessThan, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city < 'New York'"
+      "     GROUP BY city LIMIT 10;",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 1);
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 2);
+  EXPECT(result->getRow(0)[0] == "London");
+  EXPECT(result->getRow(1)[0] == "Berlin");
+});
+
+TEST_CASE(SQLTest, TestLessThanEquals, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city <= 'New York'"
+      "     GROUP BY city LIMIT 10;",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 1);
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 2);
   EXPECT(result->getRow(0)[0] == "London");
   EXPECT(result->getRow(1)[0] == "Berlin");
   EXPECT(result->getRow(2)[0] == "New York");
+});
+
+TEST_CASE(SQLTest, TestGreaterThan, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city > 'New York'"
+      "     GROUP BY city LIMIT 10;",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 2);
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 1);
+  EXPECT(result->getRow(0)[0] == "Tokyo");
+});
+
+TEST_CASE(SQLTest, TestGreaterThanEquals, [] () {
+  TableRepository repo;
+  auto query = Query(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
+      "     GROUP BY city LIMIT 10;",
+      &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 2);
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 1);
+  EXPECT(result->getRow(0)[0] == "New York");
+  EXPECT(result->getRow(1)[0] == "Tokyo");
 });
 
 TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
@@ -917,5 +1050,4 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
         query.execute();
       });
 });
-
 
