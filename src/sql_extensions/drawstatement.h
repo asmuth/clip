@@ -27,7 +27,7 @@ namespace query {
 
 class DrawStatement {
 public:
-  DrawStatement(ASTNode* ast);
+  DrawStatement(ASTNode* ast, Compiler* compiler);
 
   void addSelectStatement(QueryPlanNode* select_stmt, ResultList* target) {
     select_stmts_.emplace_back(select_stmt);
@@ -62,6 +62,7 @@ protected:
   std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;
   ASTNode* ast_;
+  Compiler* compiler_;
 };
 
 }

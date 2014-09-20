@@ -38,7 +38,8 @@ Query::Query(
   for (const auto& stmt : statements) {
     switch (stmt->getType()) {
       case query::ASTNode::T_DRAW:
-        draw_statements_.back().emplace_back(new DrawStatement(stmt.get()));
+        draw_statements_.back().emplace_back(
+            new DrawStatement(stmt.get(), runtime->compiler()));
         break;
       case query::ASTNode::T_SELECT:
         statements_.emplace_back(
@@ -50,7 +51,7 @@ Query::Query(
         break;
       case query::ASTNode::T_IMPORT:
         query_plan_.tableRepository()->import(
-            ImportStatement(stmt.get()),
+            ImportStatement(stmt.get(), runtime_->compiler()),
             runtime_->backends());
         break;
       default:

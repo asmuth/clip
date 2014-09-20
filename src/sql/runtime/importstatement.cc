@@ -17,26 +17,29 @@
 namespace fnordmetric {
 namespace query {
 
-ImportStatement::ImportStatement(ASTNode* ast) : ast_(ast) {
+ImportStatement::ImportStatement(ASTNode* ast, Compiler* compiler) {
   if (ast->getChildren().size() < 2) {
     RAISE(util::RuntimeException, "corrupt ast: ASTNode::Import\n");
   }
-}
 
-std::string ImportStatement::source_uri() const {
-  auto sval = executeSimpleConstExpression(ast_->getChildren().back());
-  return sval.toString();
-}
+  auto source_uri_sval = executeSimpleConstExpression(
+      compiler,
+      ast->getChildren().back());
 
-std::vector<std::string> ImportStatement::tables() const {
-  std::vector<std::string> tables;
+  source_uri_ = source_uri_sval.toString();
 
-  const auto& children = ast_->getChildren();
+  const auto& children = ast->getChildren();
   for (int i = 0; i < children.size() - 1; ++i) {
-    tables.emplace_back(children[i]->getToken()->getString());
+    tables_.emplace_back(children[i]->getToken()->getString());
   }
+}
 
-  return tables;
+const std::string& ImportStatement::source_uri() const {
+  return source_uri_;
+}
+
+const std::vector<std::string>& ImportStatement::tables() const {
+  return tables_;
 }
 
 }

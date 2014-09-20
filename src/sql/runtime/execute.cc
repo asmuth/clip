@@ -92,9 +92,9 @@ bool executeExpression(
   }
 }
 
-SValue executeSimpleConstExpression(ASTNode* expr) {
+SValue executeSimpleConstExpression(Compiler* compiler, ASTNode* expr) {
   size_t scratchpad_len = 0;
-  auto compiled = compileAST(expr, &scratchpad_len);
+  auto compiled = compiler->compile(expr, &scratchpad_len);
 
   if (scratchpad_len > 0) {
     RAISE(

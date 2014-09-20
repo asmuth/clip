@@ -12,17 +12,19 @@
 #include <stdlib.h>
 #include <vector>
 #include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/runtime/compile.h>
 
 namespace fnordmetric {
 namespace query {
 
 class ImportStatement {
 public:
-  ImportStatement(ASTNode* ast);
-  std::string source_uri() const;
-  std::vector<std::string> tables() const;
+  ImportStatement(ASTNode* ast, Compiler* compiler);
+  const std::string& source_uri() const;
+  const std::vector<std::string>& tables() const;
 protected:
-  ASTNode* ast_;
+  std::string source_uri_;
+  std::vector<std::string> tables_;
 };
 
 }

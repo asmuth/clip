@@ -18,7 +18,9 @@
 namespace fnordmetric {
 namespace query {
 
-CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
+Compiler::Compiler(SymbolTable* symbol_table) : symbol_table_(symbol_table) {}
+
+CompiledExpression* Compiler::compile(ASTNode* ast, size_t* scratchpad_len) {
   assert(ast != nullptr);
   switch (ast->getType()) {
 
@@ -89,7 +91,7 @@ CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
 }
 
 
-CompiledExpression* compileSelectList(
+CompiledExpression* Compiler::compileSelectList(
     ASTNode* select_list,
     size_t* scratchpad_len) {
   auto root = new CompiledExpression();
@@ -105,7 +107,7 @@ CompiledExpression* compileSelectList(
       RAISE(util::RuntimeException, "internal error: corrupt ast");
     }
 
-    auto next = compileAST(col->getChildren()[0], scratchpad_len);
+    auto next = compile(col->getChildren()[0], scratchpad_len);
     *cur = next;
     cur = &next->next;
   }
@@ -113,7 +115,9 @@ CompiledExpression* compileSelectList(
   return root;
 }
 
-CompiledExpression* compileChildren(ASTNode* parent, size_t* scratchpad_len) {
+CompiledExpression* Compiler::compileChildren(
+    ASTNode* parent,
+    size_t* scratchpad_len) {
   auto root = new CompiledExpression();
   root->type = X_MULTI;
   root->call = nullptr;
@@ -122,7 +126,7 @@ CompiledExpression* compileChildren(ASTNode* parent, size_t* scratchpad_len) {
 
   auto cur = &root->child;
   for (auto child : parent->getChildren()) {
-    auto next = compileAST(child, scratchpad_len);
+    auto next = compile(child, scratchpad_len);
     *cur = next;
     cur = &next->next;
   }
@@ -130,11 +134,11 @@ CompiledExpression* compileChildren(ASTNode* parent, size_t* scratchpad_len) {
   return root;
 }
 
-CompiledExpression* compileOperator(
+CompiledExpression* Compiler::compileOperator(
     const std::string& name,
     ASTNode* ast,
     size_t* scratchpad_len) {
-  auto symbol = lookupSymbol(name);
+  auto symbol = symbol_table_->lookupSymbol(name);
 
   if (symbol == nullptr) {
     RAISE(util::RuntimeException, "undefined symbol: '%s'\n", name.c_str());
@@ -149,7 +153,7 @@ CompiledExpression* compileOperator(
 
   auto cur = &op->child;
   for (auto e : ast->getChildren()) {
-    auto next = compileAST(e, scratchpad_len);
+    auto next = compile(e, scratchpad_len);
     *cur = next;
     cur = &next->next;
   }
@@ -157,7 +161,7 @@ CompiledExpression* compileOperator(
   return op;
 }
 
-CompiledExpression* compileLiteral(ASTNode* ast) {
+CompiledExpression* Compiler::compileLiteral(ASTNode* ast) {
   if (ast->getToken() == nullptr) {
     RAISE(util::RuntimeException, "internal error: corrupt ast");
   }
@@ -172,7 +176,7 @@ CompiledExpression* compileLiteral(ASTNode* ast) {
   return ins;
 }
 
-CompiledExpression* compileColumnReference(ASTNode* ast) {
+CompiledExpression* Compiler::compileColumnReference(ASTNode* ast) {
   auto ins = new CompiledExpression();
   ins->type = X_INPUT;
   ins->call = nullptr;
@@ -182,11 +186,13 @@ CompiledExpression* compileColumnReference(ASTNode* ast) {
   return ins;
 }
 
-CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len) {
+CompiledExpression* Compiler::compileMethodCall(
+    ASTNode* ast,
+    size_t* scratchpad_len) {
   assert(ast->getToken() != nullptr);
   assert(*ast->getToken() == Token::T_IDENTIFIER);
 
-  auto symbol = lookupSymbol(ast->getToken()->getString());
+  auto symbol = symbol_table_->lookupSymbol(ast->getToken()->getString());
   if (symbol == nullptr) {
     fprintf(stderr,
         "error: cannot resolve symbol: %s\n",
@@ -208,7 +214,7 @@ CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len) {
 
   auto cur = &op->child;
   for (auto e : ast->getChildren()) {
-    auto next = compileAST(e, scratchpad_len);
+    auto next = compile(e, scratchpad_len);
     *cur = next;
     cur = &next->next;
   }

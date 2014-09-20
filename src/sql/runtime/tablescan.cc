@@ -12,7 +12,10 @@
 namespace fnordmetric {
 namespace query {
 
-TableScan* TableScan::build(ASTNode* ast, TableRepository* repo) {
+TableScan* TableScan::build(
+    ASTNode* ast,
+    TableRepository* repo,
+    Compiler* compiler) {
   if (!(*ast == ASTNode::T_SELECT)) {
     return nullptr;
   }
@@ -74,7 +77,7 @@ TableScan* TableScan::build(ASTNode* ast, TableRepository* repo) {
 
   /* compile select expression */
   size_t select_scratchpad_len = 0;
-  auto select_expr = compileAST(select_list, &select_scratchpad_len);
+  auto select_expr = compiler->compile(select_list, &select_scratchpad_len);
   if (!(select_scratchpad_len == 0)) {
     RAISE(util::RuntimeException, "corrupt AST");
   }
@@ -147,7 +150,7 @@ TableScan* TableScan::build(ASTNode* ast, TableRepository* repo) {
     }
 
     size_t where_scratchpad_len = 0;
-    where_expr = compileAST(e, &where_scratchpad_len);
+    where_expr = compiler->compile(e, &where_scratchpad_len);
     if (where_scratchpad_len != 0) {
       RAISE(
           util::RuntimeException,

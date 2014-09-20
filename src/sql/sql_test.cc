@@ -103,7 +103,7 @@ static std::unique_ptr<ResultList> executeTestQuery(
 
 
   auto statements = runtime.parseQuery(query);
-  runtime.queryPlanBuilder()->buildQueryPlan(&runtime, statements, &query_plan);
+  runtime.queryPlanBuilder()->buildQueryPlan(statements, &query_plan);
   EXPECT(query_plan.queries().size() == 1);
 
   auto result = new ResultList();

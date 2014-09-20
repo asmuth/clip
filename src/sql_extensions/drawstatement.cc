@@ -17,7 +17,11 @@
 namespace fnordmetric {
 namespace query {
 
-DrawStatement::DrawStatement(ASTNode* ast) : ast_(ast->deepCopy()) {}
+DrawStatement::DrawStatement(
+    ASTNode* ast,
+    Compiler* compiler) :
+    ast_(ast->deepCopy()),
+    compiler_(compiler) {}
 
 void DrawStatement::execute(ui::Canvas* canvas) const {
   ui::Drawable* chart = nullptr;
@@ -112,7 +116,9 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
           prop->getToken() != nullptr &&
           *prop->getToken() == Token::T_TITLE &&
           prop->getChildren().size() == 1) {
-        auto axis_title = executeSimpleConstExpression(prop->getChildren()[0]);
+        auto axis_title = executeSimpleConstExpression(
+            compiler_,
+            prop->getChildren()[0]);
         axis->setTitle(axis_title.toString());
         continue;
       }
@@ -148,7 +154,9 @@ void DrawStatement::applyAxisLabels(
           RAISE(util::RuntimeException, "corrupt AST: ROTATE has no children");
         }
 
-        auto rot = executeSimpleConstExpression(prop->getChildren()[0]);
+        auto rot = executeSimpleConstExpression(
+            compiler_,
+            prop->getChildren()[0]);
         axis->setLabelRotation(rot.getValue<double>());
         break;
       }
@@ -228,8 +236,8 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
     domain_config.setInvert(invert);
     domain_config.setLogarithmic(logarithmic);
     if (min_expr != nullptr && max_expr != nullptr) {
-      domain_config.setMin(executeSimpleConstExpression(min_expr));
-      domain_config.setMax(executeSimpleConstExpression(max_expr));
+      domain_config.setMin(executeSimpleConstExpression(compiler_, min_expr));
+      domain_config.setMax(executeSimpleConstExpression(compiler_, max_expr));
     }
   }
 }
@@ -247,7 +255,9 @@ void DrawStatement::applyTitle(ui::Drawable* chart) const {
       RAISE(util::RuntimeException, "corrupt AST: [SUB]TITLE has != 1 child");
     }
 
-    auto title_eval = executeSimpleConstExpression(child->getChildren()[0]);
+    auto title_eval = executeSimpleConstExpression(
+        compiler_,
+        child->getChildren()[0]);
     auto title_str = title_eval.toString();
 
     switch (child->getToken()->getType()) {
@@ -353,7 +363,10 @@ void DrawStatement::applyLegend(ui::Drawable* chart) const {
             RAISE(util::RuntimeException, "corrupt AST: TITLE has no children");
           }
 
-          auto sval = executeSimpleConstExpression(prop->getChildren()[0]);
+          auto sval = executeSimpleConstExpression(
+              compiler_,
+              prop->getChildren()[0]);
+
           title = sval.toString();
           break;
         }

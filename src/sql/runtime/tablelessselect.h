@@ -26,7 +26,7 @@ namespace query {
 class TablelessSelect : public QueryPlanNode {
 public:
 
-  static TablelessSelect* build(ASTNode* ast) {
+  static TablelessSelect* build(ASTNode* ast, Compiler* compiler) {
     if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() != 1) {
       return nullptr;
     }
@@ -35,7 +35,7 @@ public:
 
     /* compile ast */
     size_t scratchpad_len = 0;
-    auto expr = compileAST(select_list, &scratchpad_len);
+    auto expr = compiler->compile(select_list, &scratchpad_len);
     assert(scratchpad_len == 0);
 
     /* column names */

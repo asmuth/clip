@@ -18,6 +18,7 @@
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/runtime/queryplan.h>
+#include <fnordmetric/sql/runtime/compile.h>
 
 namespace fnordmetric {
 namespace query {
@@ -32,27 +33,36 @@ class Runtime;
  */
 class QueryPlanBuilderInterface {
 public:
-  QueryPlanBuilderInterface() {}
+  QueryPlanBuilderInterface(
+      Compiler* compiler,
+      const std::vector<std::unique_ptr<Backend>>& backends) :
+      compiler_(compiler),
+      backends_(backends) {}
+
   virtual ~QueryPlanBuilderInterface() {}
 
   virtual QueryPlanNode* buildQueryPlan(
       ASTNode* statement,
-      TableRepository* repo) const = 0;
+      TableRepository* repo) = 0;
 
+protected:
+  Compiler* compiler_;
+  const std::vector<std::unique_ptr<Backend>>& backends_;
 };
 
 class QueryPlanBuilder : public QueryPlanBuilderInterface {
 public:
-  QueryPlanBuilder() {}
+  QueryPlanBuilder(
+      Compiler* compiler,
+      const std::vector<std::unique_ptr<Backend>>& backends);
 
   void buildQueryPlan(
-      Runtime* runtime,
       const std::vector<std::unique_ptr<ASTNode>>& statements,
-      QueryPlan* repo) const;
+      QueryPlan* query_plan);
 
   QueryPlanNode* buildQueryPlan(
       ASTNode* statement,
-      TableRepository* repo) const override;
+      TableRepository* repo) override;
 
   void extend(std::unique_ptr<QueryPlanBuilderInterface> other);
 
@@ -80,7 +90,7 @@ protected:
    * Build a group by query plan node for a SELECT statement that has a GROUP
    * BY clause
    */
-  QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo) const;
+  QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo);
 
   /**
    * Recursively walk the provided ast and search for column references. For
@@ -90,10 +100,10 @@ protected:
    *
    * This is used to create child select lists for nested query plan nodes.
    */
-  bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list) const;
+  bool buildInternalSelectList(ASTNode* ast, ASTNode* select_list);
 
-  QueryPlanNode* buildLimitClause(ASTNode* ast, TableRepository* repo) const;
-  QueryPlanNode* buildOrderByClause(ASTNode* ast, TableRepository* repo) const;
+  QueryPlanNode* buildLimitClause(ASTNode* ast, TableRepository* repo);
+  QueryPlanNode* buildOrderByClause(ASTNode* ast, TableRepository* repo);
 
   std::vector<std::unique_ptr<QueryPlanBuilderInterface>> extensions_;
 };

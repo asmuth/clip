@@ -14,7 +14,9 @@
 namespace fnordmetric {
 namespace query {
 
-Runtime::Runtime() {}
+Runtime::Runtime() :
+    compiler_(&symbol_table_),
+    query_plan_builder_(&compiler_, backends_) {}
 
 std::vector<std::unique_ptr<ASTNode>> Runtime::parseQuery(
     const std::string query) {
@@ -39,7 +41,7 @@ std::vector<std::unique_ptr<ASTNode>> Runtime::parseQuery(
 std::unique_ptr<QueryPlan> Runtime::buildQueryPlan(
     const std::vector<std::unique_ptr<ASTNode>>& statements) {
   std::unique_ptr<QueryPlan> query_plan(new QueryPlan());
-  query_plan_builder_.buildQueryPlan(this, statements, query_plan.get());
+  query_plan_builder_.buildQueryPlan(statements, query_plan.get());
   return query_plan;
 }
 
@@ -63,6 +65,10 @@ void Runtime::addBackend(std::unique_ptr<Backend> backend) {
 
 void Runtime::installBuiltinBackends() {
   addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
+}
+
+Compiler* Runtime::compiler() {
+  return &compiler_;
 }
 
 }

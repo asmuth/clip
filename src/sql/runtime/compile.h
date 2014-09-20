@@ -1,18 +1,18 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#ifndef _FNORDMETRIC_QUERY_COMPILE_H
-#define _FNORDMETRIC_QUERY_COMPILE_H
+#ifndef _FNORDMETRIC_QUERY_COMPILER_H
+#define _FNORDMETRIC_QUERY_COMPILER_H
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <fnordmetric/sql/runtime/symboltable.h>
 
 namespace fnordmetric {
 namespace query {
@@ -34,24 +34,35 @@ struct CompiledExpression {
   CompiledExpression* child;
 };
 
-CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len);
+class Compiler {
+public:
+  Compiler(SymbolTable* symbol_table);
 
-CompiledExpression* compileSelectList(
-    ASTNode* select_list, 
-    size_t* scratchpad_len);
+  CompiledExpression* compile(ASTNode* ast, size_t* scratchpad_len);
 
-CompiledExpression* compileOperator(
-    const std::string& name,
-    ASTNode* ast,
-    size_t* scratchpad_len);
+  SymbolTable* symbolTable() { return symbol_table_; }
 
-CompiledExpression* compileLiteral(ASTNode* ast);
+protected:
 
-CompiledExpression* compileColumnReference(ASTNode* ast);
+  CompiledExpression* compileSelectList(
+      ASTNode* select_list, 
+      size_t* scratchpad_len);
 
-CompiledExpression* compileChildren(ASTNode* ast, size_t* scratchpad_len);
+  CompiledExpression* compileOperator(
+      const std::string& name,
+      ASTNode* ast,
+      size_t* scratchpad_len);
 
-CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len);
+  CompiledExpression* compileLiteral(ASTNode* ast);
+
+  CompiledExpression* compileColumnReference(ASTNode* ast);
+
+  CompiledExpression* compileChildren(ASTNode* ast, size_t* scratchpad_len);
+
+  CompiledExpression* compileMethodCall(ASTNode* ast, size_t* scratchpad_len);
+
+  SymbolTable* symbol_table_;
+};
 
 }
 }

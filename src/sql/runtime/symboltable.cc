@@ -17,10 +17,11 @@
 namespace fnordmetric {
 namespace query {
 
-const SymbolTableEntry* SymbolTable::lookupSymbol(const std::string& symbol) {
-  auto iter = symbols_->find(symbol);
+const SymbolTableEntry* SymbolTable::lookupSymbol(const std::string& symbol)
+    const {
+  auto iter = symbols_.find(symbol);
 
-  if (iter == symbols_->end()) {
+  if (iter == symbols_.end()) {
     RAISE(util::RuntimeException, "symbol not found: %s", symbol.c_str());
     return nullptr;
   } else {
@@ -33,10 +34,7 @@ SymbolTableEntry::SymbolTableEntry(
     void (*method)(void*, int, SValue*, SValue*),
     size_t scratchpad_size) :
     call_(method),
-    scratchpad_size_(scratchpad_size) {
-  assert(symbols_->find(symbol) == symbols_->end());
-  (*__globalSymbolTable())[symbol] = this;
-}
+    scratchpad_size_(scratchpad_size) {}
 
 SymbolTableEntry::SymbolTableEntry(
     const std::string& symbol,

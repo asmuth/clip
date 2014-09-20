@@ -15,6 +15,7 @@
 #include <memory>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/parser/parser.h>
+#include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/queryplan.h>
 #include <fnordmetric/sql/runtime/queryplanbuilder.h>
 
@@ -59,10 +60,14 @@ public:
 
   void installBuiltinBackends();
 
+  Compiler* compiler();
+
 protected:
   Parser parser_;
-  QueryPlanBuilder query_plan_builder_;
+  SymbolTable symbol_table_;
+  Compiler compiler_;
   std::vector<std::unique_ptr<Backend>> backends_;
+  QueryPlanBuilder query_plan_builder_;
 };
 
 }

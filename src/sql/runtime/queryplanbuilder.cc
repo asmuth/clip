@@ -24,10 +24,14 @@
 namespace fnordmetric {
 namespace query {
 
+QueryPlanBuilder::QueryPlanBuilder(
+    Compiler* compiler,
+    const std::vector<std::unique_ptr<Backend>>& backends) :
+    QueryPlanBuilderInterface(compiler, backends) {}
+
 void QueryPlanBuilder::buildQueryPlan(
-    Runtime* runtime,
     const std::vector<std::unique_ptr<ASTNode>>& statements,
-    QueryPlan* query_plan) const {
+    QueryPlan* query_plan) {
 
   for (const auto& stmt : statements) {
     switch (stmt->getType()) {
@@ -48,8 +52,8 @@ void QueryPlanBuilder::buildQueryPlan(
 
       case query::ASTNode::T_IMPORT:
         query_plan->tableRepository()->import(
-            ImportStatement(stmt.get()),
-            runtime->backends());
+            ImportStatement(stmt.get(), compiler_),
+            backends_);
         break;
 
       default:
@@ -60,7 +64,7 @@ void QueryPlanBuilder::buildQueryPlan(
 
 QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     ASTNode* ast,
-    TableRepository* repo) const {
+    TableRepository* repo) {
   QueryPlanNode* exec = nullptr;
 
   for (const auto& extension : extensions_) {
@@ -85,11 +89,11 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
   }
 
   /* leaf nodes: table scan, tableless select */
-  if ((exec = TableScan::build(ast, repo)) != nullptr) {
+  if ((exec = TableScan::build(ast, repo, compiler_)) != nullptr) {
     return exec;
   }
 
-  if ((exec = TablelessSelect::build(ast)) != nullptr) {
+  if ((exec = TablelessSelect::build(ast, compiler_)) != nullptr) {
     return exec;
   }
 
@@ -129,8 +133,10 @@ bool QueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) const {
 bool QueryPlanBuilder::hasAggregationExpression(ASTNode* ast) const {
   if (ast->getType() == ASTNode::T_METHOD_CALL) {
     assert(ast->getToken() != nullptr);
-    auto symbol = lookupSymbol(ast->getToken()->getString());
-    assert(symbol != nullptr); // FIXPAUL!!!!
+    auto symbol = compiler_->symbolTable()->lookupSymbol
+        (ast->getToken()->getString());
+
+    if(symbol != nullptr); // FIXPAUL!!!!
     if (symbol->isAggregate()) {
       return true;
     }
@@ -147,7 +153,7 @@ bool QueryPlanBuilder::hasAggregationExpression(ASTNode* ast) const {
 
 QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     ASTNode* ast,
-    TableRepository* repo) const {
+    TableRepository* repo) {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
   assert(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
 
@@ -191,10 +197,10 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
 
   /* compile select list and group expressions */
   size_t select_scratchpad_len = 0;
-  auto select_expr = compileAST(select_list, &select_scratchpad_len);
+  auto select_expr = compiler_->compile(select_list, &select_scratchpad_len);
 
   size_t group_scratchpad_len = 0;
-  auto group_expr = compileAST(&group_exprs, &group_scratchpad_len);
+  auto group_expr = compiler_->compile(&group_exprs, &group_scratchpad_len);
   assert(group_scratchpad_len == 0);
   //child_ast->debugPrint(2);
   //select_list->debugPrint(2);
@@ -216,7 +222,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
 
 bool QueryPlanBuilder::buildInternalSelectList(
     ASTNode* node,
-    ASTNode* target_select_list) const {
+    ASTNode* target_select_list) {
   /* search for column references recursively */
   if (node->getType() == ASTNode::T_COLUMN_NAME) {
     auto col_index = -1;
@@ -251,7 +257,7 @@ bool QueryPlanBuilder::buildInternalSelectList(
 
 QueryPlanNode* QueryPlanBuilder::buildLimitClause(
     ASTNode* ast,
-    TableRepository* repo) const {
+    TableRepository* repo) {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
     return nullptr;
   }
@@ -295,7 +301,7 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
 
 QueryPlanNode* QueryPlanBuilder::buildOrderByClause(
     ASTNode* ast,
-    TableRepository* repo) const {
+    TableRepository* repo) {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
     return nullptr;
   }

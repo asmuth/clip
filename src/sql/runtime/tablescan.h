@@ -27,7 +27,10 @@ namespace query {
 class TableScan : public QueryPlanNode {
 public:
 
-  static TableScan* build(ASTNode* ast, TableRepository* repo);
+  static TableScan* build(
+      ASTNode* ast,
+      TableRepository* repo,
+      Compiler* compiler);
 
   TableScan(
       TableRef* tbl_ref,
