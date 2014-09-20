@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_QUERY_TABLELESCAN_H
 #define _FNORDMETRIC_QUERY_TABLELESCAN_H
 #include <stdlib.h>
@@ -200,6 +199,10 @@ public:
 protected:
 
   static bool resolveColumns(ASTNode* node, TableRef* tbl_ref) {
+    if (node == nullptr) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     if (node->getType() == ASTNode::T_COLUMN_NAME) {
       auto token = node->getToken();
       assert(token && *token == Token::T_IDENTIFIER);
