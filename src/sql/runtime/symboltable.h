@@ -29,7 +29,8 @@ public:
   SymbolTableEntry(
       const std::string& symbol,
       void (*method)(void*, int, SValue*, SValue*),
-      size_t scratchpad_size);
+      size_t scratchpad_size,
+      void (*free_method)(void*));
 
   inline void call(void* scratchpad, int argc, SValue* argv, SValue* out) const {
     call_(scratchpad, argc, argv, out);
@@ -47,9 +48,17 @@ protected:
 class SymbolTable {
 public:
   SymbolTableEntry const* lookupSymbol(const std::string& symbol) const;
+
   void registerSymbol(
       const std::string& symbol,
       void (*method)(void*, int, SValue*, SValue*));
+
+  void registerSymbol(
+      const std::string& symbol,
+      void (*method)(void*, int, SValue*, SValue*),
+      size_t scratchpad_size,
+      void (*free_method)(void*));
+
 protected:
   std::unordered_map<std::string, SymbolTableEntry> symbols_;
 };

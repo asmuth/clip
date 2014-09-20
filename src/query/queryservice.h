@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
 #include <fnordmetric/query/query.h>
-#include <fnordmetric/sql/runtime/runtime.h>
+#include <fnordmetric/sql/runtime/defaultruntime.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -65,7 +65,7 @@ protected:
   void renderJSON(Query* query, util::JSONOutputStream* target) const;
   void renderTables(Query* query, util::OutputStream* out) const;
 
-  Runtime runtime_;
+  DefaultRuntime runtime_;
 };
 
 }

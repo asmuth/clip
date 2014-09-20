@@ -932,6 +932,7 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
 
 TEST_CASE(SQLTest, TestRuntime, [] () {
   DefaultRuntime runtime;
+  runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 
   auto statements = runtime.parser()->parseQuery(
       "  IMPORT TABLE city_temperatures "

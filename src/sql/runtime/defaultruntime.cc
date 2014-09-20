@@ -8,13 +8,28 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/runtime/defaultruntime.h>
+#include <fnordmetric/sql/expressions/aggregate.h>
 #include <fnordmetric/sql/expressions/boolean.h>
+#include <fnordmetric/sql/expressions/datetime.h>
 #include <fnordmetric/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {
 
 DefaultRuntime::DefaultRuntime() {
+  /* expressions/aggregate.h */
+  symbol_table_.registerSymbol(
+      "count",
+      &expressions::countExpr,
+      expressions::countExprScratchpadSize(),
+      &expressions::countExprFree);
+
+  symbol_table_.registerSymbol(
+      "sum",
+      &expressions::sumExpr,
+      expressions::sumExprScratchpadSize(),
+      &expressions::sumExprFree);
+
   /* expressions/boolean.h */
   symbol_table_.registerSymbol("eq", &expressions::eqExpr);
   symbol_table_.registerSymbol("neq", &expressions::neqExpr);
@@ -25,6 +40,9 @@ DefaultRuntime::DefaultRuntime() {
   symbol_table_.registerSymbol("lte", &expressions::lteExpr);
   symbol_table_.registerSymbol("gt", &expressions::gtExpr);
   symbol_table_.registerSymbol("gte", &expressions::gteExpr);
+
+  /* expressions/datetime.h */
+  symbol_table_.registerSymbol("FROM_TIMESTAMP", &expressions::fromTimestamp);
 
   /* expressions/math.h */
   symbol_table_.registerSymbol("add", &expressions::addExpr);

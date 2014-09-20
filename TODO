@@ -22,7 +22,6 @@
     - replace all stoi, stod with wrappers that throw runtimeexceptions
     - known bug: 2d area chart with explicit y domain, min > 0
     ---
-    - refactor expression symbol lookup/registration
     - refactor tokenizer // dynamically register tokens
     - rename (axis|legend|grid)definition -> \1config
 

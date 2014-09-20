@@ -23,6 +23,17 @@ void SymbolTable::registerSymbol(
   symbols_.emplace(std::make_pair(symbol, SymbolTableEntry(symbol, method)));
 }
 
+void SymbolTable::registerSymbol(
+    const std::string& symbol,
+    void (*method)(void*, int, SValue*, SValue*),
+    size_t scratchpad_size,
+    void (*free_method)(void*)) {
+  symbols_.emplace(
+      std::make_pair(
+          symbol,
+          SymbolTableEntry(symbol, method, scratchpad_size, free_method)));
+}
+
 SymbolTableEntry const* SymbolTable::lookupSymbol(const std::string& symbol)
     const {
   auto iter = symbols_.find(symbol);
@@ -38,14 +49,15 @@ SymbolTableEntry const* SymbolTable::lookupSymbol(const std::string& symbol)
 SymbolTableEntry::SymbolTableEntry(
     const std::string& symbol,
     void (*method)(void*, int, SValue*, SValue*),
-    size_t scratchpad_size) :
+    size_t scratchpad_size,
+    void (*free_method)(void*)) :
     call_(method),
     scratchpad_size_(scratchpad_size) {}
 
 SymbolTableEntry::SymbolTableEntry(
     const std::string& symbol,
     void (*method)(void*, int, SValue*, SValue*)) :
-    SymbolTableEntry(symbol, method, 0) {}
+    SymbolTableEntry(symbol, method, 0, nullptr) {}
 
 bool SymbolTableEntry::isAggregate() const {
   return scratchpad_size_ > 0;

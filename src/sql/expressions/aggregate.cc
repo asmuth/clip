@@ -8,21 +8,25 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
+#include <fnordmetric/sql/expressions/aggregate.h>
 #include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {
+namespace expressions {
 
-static void countExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
+void countExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   uint64_t* count = (uint64_t*) scratchpad;
   *out = SValue((int64_t) ++(*count));
 }
 
-static SymbolTableEntry __count_symbol(
-    "count",
-    &countExpr,
-    sizeof(uint64_t));
+void countExprFree(void* scratchpad) {
+  /* noop */
+}
+
+size_t countExprScratchpadSize() {
+  return sizeof(uint64_t);
+}
 
 /**
  * SUM() expression
@@ -32,7 +36,7 @@ union sum_expr_scratchpad {
   double t_float;
 };
 
-static void sumExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
+void sumExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   SValue* val = argv;
   union sum_expr_scratchpad* data = (union sum_expr_scratchpad*) scratchpad;
 
@@ -57,11 +61,14 @@ static void sumExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   }
 }
 
-static SymbolTableEntry __sum_symbol(
-    "sum",
-    &sumExpr,
-    sizeof(union sum_expr_scratchpad));
+void sumExprFree(void* scratchpad) {
+  /* noop */
+}
 
+size_t sumExprScratchpadSize() {
+  return sizeof(union sum_expr_scratchpad);
+}
 
+}
 }
 }
