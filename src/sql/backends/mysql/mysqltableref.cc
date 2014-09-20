@@ -56,7 +56,6 @@ void MySQLTableRef::executeScan(TableScan* scan) {
           row_svals.emplace_back(col);
         }
 
-        RAISE(util::RuntimeException, "fnord");
         return scan->nextRow(row_svals.data(), row_svals.size());
       });
 }
