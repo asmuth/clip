@@ -236,7 +236,6 @@ TEST_CASE(QueryTest, SimpleEndToEndTest, [] () {
   //    "QueryTest_SimpleEndToEndTest_out.svg.html");
 });
 
-
 TEST_CASE(QueryTest, TestQueryService, [] () {
   auto query =
       "  IMPORT TABLE gbp_per_country "
