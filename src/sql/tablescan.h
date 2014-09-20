@@ -38,7 +38,10 @@ public:
 
     /* get FROM clause */
     ASTNode* from_list = ast->getChildren()[1];
-    assert(from_list);
+    if (!(from_list)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     if (!(*from_list == ASTNode::T_FROM)) {
       return nullptr;
     }
@@ -49,9 +52,15 @@ public:
 
     /* get table reference */
     auto tbl_name = from_list->getChildren()[0];
-    assert(*tbl_name == ASTNode::T_TABLE_NAME);
+    if (!(*tbl_name == ASTNode::T_TABLE_NAME)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     auto tbl_name_token = tbl_name->getToken();
-    assert(tbl_name_token != nullptr);
+    if (!(tbl_name_token != nullptr)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     auto tbl_ref = repo->getTableRef(tbl_name_token->getString());
 
     if (tbl_ref == nullptr) {
@@ -64,10 +73,16 @@ public:
     }
 
     /* get select list */
-    assert(*ast->getChildren()[0] == ASTNode::T_SELECT_LIST);
+    if (!(*ast->getChildren()[0] == ASTNode::T_SELECT_LIST)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
     auto select_list = ast->getChildren()[0];
 
     /* resolve column references and compile ast */
+    if (select_list == nullptr) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     if (!resolveColumns(select_list, tbl_ref)) {
       return nullptr;
     }
@@ -75,7 +90,9 @@ public:
     /* compile select expression */
     size_t select_scratchpad_len = 0;
     auto select_expr = compileAST(select_list, &select_scratchpad_len);
-    assert(select_scratchpad_len == 0);
+    if (!(select_scratchpad_len == 0)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
 
     /* column names */
     std::vector<std::string> column_names;
@@ -122,13 +139,23 @@ public:
     CompiledExpression* where_expr = nullptr;
     if (ast->getChildren().size() > 2) {
       ASTNode* where_clause = ast->getChildren()[2];
-      assert(where_clause);
+      if (!(where_clause)) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
+
       if (!(*where_clause == ASTNode::T_WHERE)) {
         return nullptr;
       }
 
-      assert(where_clause->getChildren().size() == 1);
+      if (where_clause->getChildren().size() != 1) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
+
       auto e = where_clause->getChildren()[0];
+
+      if (e == nullptr) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
 
       if (!resolveColumns(e, tbl_ref)) {
         return nullptr;
@@ -136,7 +163,11 @@ public:
 
       size_t where_scratchpad_len = 0;
       where_expr = compileAST(e, &where_scratchpad_len);
-      assert(where_scratchpad_len == 0);
+      if (where_scratchpad_len != 0) {
+        RAISE(
+            util::RuntimeException,
+            "where expressions can only contain pure functions\n");
+      }
     }
 
     return new TableScan(
@@ -205,7 +236,7 @@ protected:
 
     if (node->getType() == ASTNode::T_COLUMN_NAME) {
       auto token = node->getToken();
-      assert(token && *token == Token::T_IDENTIFIER);
+      if (!(token && *token == Token::T_IDENTIFIER)) { RAISE(util::RuntimeException, "corrupt AST"); }
 
       auto col_index = tbl_ref->getColumnIndex(token->getString());
       if (col_index < 0) {
@@ -221,6 +252,10 @@ protected:
       return true;
     } else {
       for (const auto& child : node->getChildren()) {
+        if (child == nullptr) {
+          RAISE(util::RuntimeException, "corrupt AST");
+        }
+
         if (!resolveColumns(child, tbl_ref)) {
           return false;
         }
