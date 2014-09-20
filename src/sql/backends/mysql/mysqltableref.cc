@@ -19,14 +19,22 @@ MySQLTableRef::MySQLTableRef(
       const std::string& table_name) :
       conn_(conn),
       table_name_(table_name) {
-  columns_ = conn->describeTable(table_name_);
+  table_columns_ = conn->describeTable(table_name_); // FIXPAUL cache me
 }
 
 int MySQLTableRef::getColumnIndex(const std::string& name) {
   for (int i = 0; i < columns_.size(); ++i) {
     // FIXPAUL case insensitive match
-    if (columns_[i] == name) {
+    if (*columns_[i] == name) {
       return i;
+    }
+  }
+
+  for (int i = 0; i < table_columns_.size(); ++i) {
+    // FIXPAUL case insensitive match
+    if (table_columns_[i] == name) {
+      columns_.emplace_back(&table_columns_[i]);
+      return columns_.size() - 1;
     }
   }
 
@@ -36,11 +44,10 @@ int MySQLTableRef::getColumnIndex(const std::string& name) {
 void MySQLTableRef::executeScan(TableScan* scan) {
   std::string mysql_query = "SELECT";
 
-  auto columns = scan->getColumns();
-  for (int i = 0; i < columns.size(); ++i) {
+  for (int i = 0; i < columns_.size(); ++i) {
     mysql_query.append(i == 0 ? " " : ",");
     mysql_query.append("`");
-    mysql_query.append(columns[i]); // FIXPAUL escape?
+    mysql_query.append(*columns_[i]); // FIXPAUL escape?
     mysql_query.append("`");
   }
 
@@ -49,7 +56,7 @@ void MySQLTableRef::executeScan(TableScan* scan) {
 
   conn_->executeQuery(
       mysql_query,
-      [scan] (const std::vector<std::string>& row) -> bool {
+      [this, scan] (const std::vector<std::string>& row) -> bool {
         std::vector<SValue> row_svals;
 
         for (const auto& col : row) {

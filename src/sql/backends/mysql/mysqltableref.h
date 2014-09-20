@@ -30,7 +30,8 @@ public:
 protected:
   std::shared_ptr<MySQLConnection> conn_;
   std::string table_name_;
-  std::vector<std::string> columns_;
+  std::vector<std::string> table_columns_;
+  std::vector<std::string*> columns_;
 };
 
 }
