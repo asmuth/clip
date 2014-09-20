@@ -42,6 +42,7 @@ public:
     T_AND,
     T_OR,
     T_EQUAL,
+    T_NEQUAL,
     T_PLUS,
     T_MINUS,
     T_ASTERISK,

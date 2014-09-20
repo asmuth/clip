@@ -149,6 +149,10 @@ ASTNode* Parser::binaryExpr(ASTNode* lhs, int precedence) {
     case Token::T_EQUAL:
       return eqExpr(lhs, precedence);
 
+    /* not equals expression */
+    case Token::T_NEQUAL:
+      return neqExpr(lhs, precedence);
+
     /* less than expression */
     case Token::T_LT:
       return ltExpr(lhs, precedence);
@@ -672,10 +676,28 @@ ASTNode* Parser::eqExpr(ASTNode* lhs, int precedence) {
   if (rhs == nullptr) {
     RAISE(
         util::RuntimeException,
-        "eqExpr needs second paramater. Did you type '==' instead of '='?");
+        "eqExpr needs second argument. Did you type '==' instead of '='?");
   }
 
   auto e = new ASTNode(ASTNode::T_EQ_EXPR);
+  e->appendChild(lhs);
+  e->appendChild(rhs);
+  return e;
+}
+
+ASTNode* Parser::neqExpr(ASTNode* lhs, int precedence) {
+  if (precedence < 6) {
+    consumeToken();
+  } else {
+    return nullptr;
+  }
+
+  auto rhs = expr(6);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "neqExpr needs second argument");
+  }
+
+  auto e = new ASTNode(ASTNode::T_NEQ_EXPR);
   e->appendChild(lhs);
   e->appendChild(rhs);
   return e;
@@ -688,9 +710,14 @@ ASTNode* Parser::ltExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(6);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "ltExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_LT_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(6));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -701,9 +728,14 @@ ASTNode* Parser::gtExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(6);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "gtExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_GT_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(6));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -714,9 +746,14 @@ ASTNode* Parser::andExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(3);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "andExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_AND_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(3));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -727,9 +764,14 @@ ASTNode* Parser::orExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(1);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "orExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_OR_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(1));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -740,9 +782,14 @@ ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(10);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "addExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_ADD_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(10));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -753,9 +800,14 @@ ASTNode* Parser::subExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(10);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "subExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_SUB_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(10));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -766,9 +818,14 @@ ASTNode* Parser::mulExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(11);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "mulExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_MUL_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(11));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -779,9 +836,14 @@ ASTNode* Parser::divExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(11);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "divExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_DIV_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(11));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -792,9 +854,14 @@ ASTNode* Parser::modExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(11);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "modExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_MOD_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(11));
+  e->appendChild(rhs);
   return e;
 }
 
@@ -805,9 +872,14 @@ ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
     return nullptr;
   }
 
+  auto rhs = expr(11);
+  if (rhs == nullptr) {
+    RAISE(util::RuntimeException, "powExpr needs second argument");
+  }
+
   auto e = new ASTNode(ASTNode::T_POW_EXPR);
   e->appendChild(lhs);
-  e->appendChild(expr(11));
+  e->appendChild(rhs);
   return e;
 }
 

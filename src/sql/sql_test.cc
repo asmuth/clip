@@ -134,6 +134,21 @@ TEST_CASE(SQLTest, TestArithmeticValueExpressionParens, [] () {
   EXPECT(*expr->getChildren()[1]->getToken() == "3");
 });
 
+TEST_CASE(SQLTest, TestParseNotEqual, [] () {
+  auto parser = parseTestQuery("SELECT 2!=5;");
+  EXPECT(parser.getStatements().size() == 1);
+  auto expr = parser.getStatements()[0]
+      ->getChildren()[0]->getChildren()[0]->getChildren()[0];
+  EXPECT(*expr == ASTNode::T_NEQ_EXPR);
+  EXPECT(expr->getChildren().size() == 2);
+  EXPECT(*expr->getChildren()[0] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[0]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[0]->getToken() == "2");
+  EXPECT(*expr->getChildren()[1] == ASTNode::T_LITERAL);
+  EXPECT(*expr->getChildren()[1]->getToken() == Token::T_NUMERIC);
+  EXPECT(*expr->getChildren()[1]->getToken() == "5");
+});
+
 TEST_CASE(SQLTest, TestArithmeticValueExpressionPrecedence, [] () {
   {
     auto parser = parseTestQuery("SELECT 1 * 2 + 3;");
@@ -896,7 +911,7 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
       "  SELECT city FROM city_temperatures WHERE city == 'Berlin'";
 
   EXPECT_EXCEPTION(
-      "eqExpr needs second paramater. Did you type '==' instead of '='?",
+      "eqExpr needs second argument. Did you type '==' instead of '='?",
       [&] () {
         auto query = Query(query_str, &repo);
         query.execute();

@@ -152,6 +152,12 @@ next:
   }
 
   if (**cur == '!') {
+    if (*cur + 1 < end && (*cur)[1] == '=') {
+      token_list->emplace_back(Token::T_NEQUAL);
+      (*cur) += 2;
+      goto next;
+    }
+
     token_list->emplace_back(Token::T_BANG);
     (*cur)++;
     goto next;

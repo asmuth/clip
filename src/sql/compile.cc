@@ -32,6 +32,9 @@ CompiledExpression* compileAST(ASTNode* ast, size_t* scratchpad_len) {
     case ASTNode::T_EQ_EXPR:
       return compileOperator("eq", ast, scratchpad_len);
 
+    case ASTNode::T_NEQ_EXPR:
+      return compileOperator("neq", ast, scratchpad_len);
+
     case ASTNode::T_AND_EXPR:
       return compileOperator("and", ast, scratchpad_len);
 
