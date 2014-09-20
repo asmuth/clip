@@ -11,8 +11,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/backends/tableref.h>
 #include <fnordmetric/sql/parser/parser.h>
@@ -33,12 +31,6 @@
 using namespace fnordmetric::query;
 
 UNIT_TEST(SQLTest);
-
-static Parser parseTestQuery(const char* query) {
-  Parser parser;
-  parser.parse(query, strlen(query));
-  return parser;
-}
 
 class TestTableRef : public TableRef {
   int getColumnIndex(const std::string& name) override {
@@ -81,6 +73,46 @@ class TestTable2Ref : public TableRef {
     }
   }
 };
+
+static Parser parseTestQuery(const char* query) {
+  Parser parser;
+  parser.parse(query, strlen(query));
+  return parser;
+}
+
+static std::unique_ptr<ResultList> executeTestQuery(
+    const char* query) {
+  Runtime runtime;
+  runtime.installBuiltinBackends();
+
+  QueryPlan query_plan;
+  query_plan.tableRepository()->addTableRef(
+      "testtable",
+      std::unique_ptr<TableRef>(new TestTableRef()));
+
+  query_plan.tableRepository()->addTableRef(
+      "testtable2",
+      std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+  query_plan.tableRepository()->addTableRef(
+      "gbp_per_country",
+      std::unique_ptr<TableRef>(
+          new csv_backend::CSVTableRef(
+              csv_backend::CSVInputStream::openFile(
+                  "test/fixtures/gbp_per_country_simple.csv"), true)));
+
+
+  auto statements = runtime.parseQuery(query);
+  runtime.queryPlanBuilder()->buildQueryPlan(&runtime, statements, &query_plan);
+  EXPECT(query_plan.queries().size() == 1);
+
+  auto result = new ResultList();
+  runtime.executeQuery(query_plan.queries()[0].get(), result);
+
+  EXPECT(result->getNumRows() > 0);
+  EXPECT(result->getNumColumns() > 0);
+  return std::unique_ptr<ResultList>(result);
+}
 
 TEST_CASE(SQLTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
@@ -606,23 +638,16 @@ TEST_INITIALIZER(SQLTest, InitializeComplexQueries, [] () {
   }
 });
 
-/* 
 TEST_CASE(SQLTest, TestSelectOnlyQuery, [] () {
-  TableRepository repo;
-  std::vector<std::unique_ptr<Query>> dst;
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    13 + 2 * 5 as fnord,"
       "    2 ^ 2 ^ 3 as fubar,"
       "    13 * (8 % 3) + -5 as baz,"
       "    true one,"
       "    !(true) as two,"
-      "    NOT NOT true as three;",
-      &repo);
+      "    NOT NOT true as three;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumColumns() == 6);
   EXPECT(results->getNumRows() == 1);
   const auto& cols = results->getColumns();
@@ -642,16 +667,9 @@ TEST_CASE(SQLTest, TestSelectOnlyQuery, [] () {
 });
 
 TEST_CASE(SQLTest, TestSimpleTableScanQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTableRef()));
+  auto results = executeTestQuery(
+      "  SELECT one + 50, two FROM testtable");
 
-  auto query = Query(
-      "  SELECT one + 50, two FROM testtable",
-      &repo);
-
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumColumns() == 2);
   EXPECT(results->getNumRows() == 100);
 
@@ -663,31 +681,20 @@ TEST_CASE(SQLTest, TestSimpleTableScanQuery, [] () {
 });
 
 TEST_CASE(SQLTest, TestTableScanWhereQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTableRef()));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    one + 1 as fnord,"
       "    two"
       "  FROM"
       "    testtable"
       "  WHERE"
-      "    one > two or one = 3;",
-      &repo);
+      "    one > two or one = 3;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 51);
 });
 
 TEST_CASE(SQLTest, TestTableScanWhereLimitQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTableRef()));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    one + 1 as fnord,"
       "    two"
@@ -695,11 +702,8 @@ TEST_CASE(SQLTest, TestTableScanWhereLimitQuery, [] () {
       "    testtable"
       "  WHERE"
       "    one > two or one = 3"
-      "  LIMIT 10 OFFSET 5;",
-      &repo);
+      "  LIMIT 10 OFFSET 5;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 10);
   const auto& row = results->getRow(0);
   EXPECT(row[0] == "56");
@@ -710,47 +714,33 @@ TEST_CASE(SQLTest, TestTableScanWhereLimitQuery, [] () {
 // 200 then 100 else 100 end;
 
 TEST_CASE(SQLTest, TestTableScanGroupByQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    one,"
       "    two,"
       "    three"
       "  FROM"
-      "    testtable"
+      "    testtable2"
       "  GROUP BY"
       "    three, "
-      "    two % 8;",
-      &repo);
+      "    two % 8;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 4);
 });
 
 TEST_CASE(SQLTest, TestTableScanGroupByCountQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    count(one),"
       "    one,"
       "    two,"
       "    three"
       "  FROM"
-      "    testtable"
+      "    testtable2"
       "  GROUP BY"
       "    three, "
-      "    two % 8;",
-      &repo);
+      "    two % 8;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   int sum = 0;
   for (int i = 0; i < results->getNumRows(); ++i) {
     const auto& row = results->getRow(i);
@@ -760,22 +750,15 @@ TEST_CASE(SQLTest, TestTableScanGroupByCountQuery, [] () {
 });
 
 TEST_CASE(SQLTest, TestTableScanGroupBySumQuery, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    sum(one),"
       "    three"
       "  FROM"
-      "    testtable"
+      "    testtable2"
       "  GROUP BY"
-      "    three;",
-      &repo);
+      "    three;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 2);
   for (int i = 0; i<2; ++i) {
     const auto& row = results->getRow(i);
@@ -786,179 +769,89 @@ TEST_CASE(SQLTest, TestTableScanGroupBySumQuery, [] () {
 });
 
 TEST_CASE(SQLTest, TestTableScanGroupWithoutGroupClause, [] () {
-  TableRepository repo;
-  repo.addTableRef("testtable",
-      std::unique_ptr<TableRef>(new TestTable2Ref()));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    sum(one)"
       "  FROM"
-      "    testtable;",
-      &repo);
+      "    testtable2;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 1);
   EXPECT(results->getRow(0)[0] == "55");
 });
 
 TEST_CASE(SQLTest, TestSimpleSelectFromCSV, [] () {
-  auto csv_table = new csv_backend::CSVTableRef(
-      csv_backend::CSVInputStream::openFile(
-          "test/fixtures/gbp_per_country_simple.csv"), 
-      true);
-
-  TableRepository repo;
-  repo.addTableRef("gbp_per_country",
-      std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    country as country, gbp as gbp"
       "  FROM"
-      "    gbp_per_country;",
-      &repo);
+      "    gbp_per_country;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(results->getNumRows() == 191);
 });
 
 TEST_CASE(SQLTest, TestSimpleAggregateFromCSV, [] () {
-  auto csv_table = new csv_backend::CSVTableRef(
-      csv_backend::CSVInputStream::openFile(
-          "test/fixtures/gbp_per_country_simple.csv"), 
-      true);
-
-  TableRepository repo;
-  repo.addTableRef("gbp_per_country",
-      std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  SELECT"
       "    sum(gbp) as global_gbp"
       "  FROM"
-      "    gbp_per_country;",
-      &repo);
+      "    gbp_per_country;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
 TEST_CASE(SQLTest, TestNoSuchColumnError, [] () {
   EXPECT_EXCEPTION("no such column: 'fnord'", [] () {
-    auto csv_table = new csv_backend::CSVTableRef(
-        csv_backend::CSVInputStream::openFile(
-            "test/fixtures/gbp_per_country_simple.csv"), 
-        false);
-
-    TableRepository repo;
-    repo.addTableRef("gbp_per_country",
-        std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
-
-    auto query = Query(
+    auto results = executeTestQuery(
         "  SELECT"
         "    sum(fnord) as global_gbp"
         "  FROM"
-        "    gbp_per_country;",
-        &repo);
-    query.execute();
+        "    gbp_per_country;");
   });
 });
 
 TEST_CASE(SQLTest, TestTypeError, [] () {
-  EXPECT_EXCEPTION("can't convert String 'United States' to Float", [] () {
-    auto csv_table = new csv_backend::CSVTableRef(
-        csv_backend::CSVInputStream::openFile(
-            "test/fixtures/gbp_per_country.csv"), 
-        false);
-
-    TableRepository repo;
-    repo.addTableRef("gbp_per_country",
-        std::unique_ptr<csv_backend::CSVTableRef>(csv_table));
-
-    auto query = Query(
+  EXPECT_EXCEPTION("can't convert String 'USA' to Float", [] () {
+    auto results = executeTestQuery(
         "  SELECT"
-        "    sum(col4) as global_gbp"
+        "    sum(country) as global_gbp"
         "  FROM"
-        "    gbp_per_country;",
-        &repo);
-    query.execute();
+        "    gbp_per_country;");
   });
 });
 
-
 TEST_CASE(SQLTest, TestImportCSVTable, [] () {
-  TableRepository repo;
-
-  auto query = Query(
+  auto results = executeTestQuery(
       "  IMPORT TABLE gbp_per_country "
       "     FROM 'csv:test/fixtures/gbp_per_country_simple.csv?headers=true';"
       ""
       "  SELECT"
       "    sum(gbp) as global_gbp"
       "  FROM"
-      "    gbp_per_country;",
-      &repo);
+      "    gbp_per_country;");
 
-  query.execute();
-  auto results = query.getResultList(0);
   EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
 });
 
-TEST_CASE(SQLTest, TestFourSelectFromCSVQuery, [] () {
-  std::string query_str;
-  auto query_stream = fnordmetric::util::FileInputStream::openFile(
-      "test/fixtures/queries/gdpfourselects.sql");
-  query_stream->readUntilEOF(&query_str);
-
-  TableRepository repo;
-  auto query = Query(query_str.c_str(), &repo);
-
-  query.execute();
-  EXPECT(query.getNumResultLists() == 4);
-
-  for (int i = 0; i < query.getNumResultLists(); i++) {
-    auto results = query.getResultList(i);
-    EXPECT(results->getNumRows() == 10);
-    EXPECT(results->getColumns().size() == 4);
-    EXPECT(results->getRow(0)[1] == "USA")
-    EXPECT(results->getRow(9)[1] == "IND")
-  }
-});
-
 TEST_CASE(SQLTest, TestEquals, [] () {
-  TableRepository repo;
-  auto query = Query(
+  auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city = 'Berlin'"
-      "     GROUP BY city LIMIT 10;",
-      &repo);
+      "     GROUP BY city LIMIT 10;");
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 1);
   EXPECT(result->getRow(0)[0] == "Berlin");
 });
 
 TEST_CASE(SQLTest, TestNotEquals, [] () {
-  TableRepository repo;
-  auto query = Query(
+  auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city != 'Berlin'"
-      "     GROUP BY city LIMIT 10;",
-      &repo);
+      "     GROUP BY city LIMIT 10;");
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 3);
   EXPECT(result->getRow(0)[0] == "London");
   EXPECT(result->getRow(1)[0] == "New York");
@@ -966,36 +859,26 @@ TEST_CASE(SQLTest, TestNotEquals, [] () {
 });
 
 TEST_CASE(SQLTest, TestLessThan, [] () {
-  TableRepository repo;
-  auto query = Query(
+  auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city < 'New York'"
-      "     GROUP BY city LIMIT 10;",
-      &repo);
+      "     GROUP BY city LIMIT 10;");
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 2);
   EXPECT(result->getRow(0)[0] == "London");
   EXPECT(result->getRow(1)[0] == "Berlin");
 });
 
 TEST_CASE(SQLTest, TestLessThanEquals, [] () {
-  TableRepository repo;
-  auto query = Query(
+  auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city <= 'New York'"
-      "     GROUP BY city LIMIT 10;",
-      &repo);
+      "     GROUP BY city LIMIT 10;");
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 3);
   EXPECT(result->getRow(0)[0] == "London");
   EXPECT(result->getRow(1)[0] == "Berlin");
@@ -1003,35 +886,25 @@ TEST_CASE(SQLTest, TestLessThanEquals, [] () {
 });
 
 TEST_CASE(SQLTest, TestGreaterThan, [] () {
-  TableRepository repo;
-  auto query = Query(
+  auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city > 'New York'"
-      "     GROUP BY city LIMIT 10;",
-      &repo);
+      "     GROUP BY city LIMIT 10;");
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 1);
   EXPECT(result->getRow(0)[0] == "Tokyo");
 });
 
 TEST_CASE(SQLTest, TestGreaterThanEquals, [] () {
-  TableRepository repo;
-  auto query = Query(
+  auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
-      "     GROUP BY city LIMIT 10;",
-      &repo);
+      "     GROUP BY city LIMIT 10;");
 
-  query.execute();
-  EXPECT(query.getNumResultLists() == 1);
-  auto result = query.getResultList(0);
   EXPECT(result->getNumRows() == 2);
   EXPECT(result->getRow(0)[0] == "New York");
   EXPECT(result->getRow(1)[0] == "Tokyo");
@@ -1048,12 +921,9 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
   EXPECT_EXCEPTION(
       "eqExpr needs second argument. Did you type '==' instead of '='?",
       [&] () {
-        auto query = Query(query_str, &repo);
-        query.execute();
+        auto result = executeTestQuery(query_str);
       });
 });
-
-*/
 
 TEST_CASE(SQLTest, TestRuntime, [] () {
   Runtime runtime;

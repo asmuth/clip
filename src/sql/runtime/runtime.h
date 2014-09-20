@@ -20,6 +20,7 @@
 
 namespace fnordmetric {
 namespace query {
+class ResultList;
 
 /**
  * A runtime can only be used within a a single thread!
@@ -40,9 +41,14 @@ public:
       const std::vector<std::unique_ptr<ASTNode>>& statements);
 
   /**
+   * Return the query plan builder for this runtime
+   */
+  QueryPlanBuilder* queryPlanBuilder();
+
+  /**
    * Execute a query plan node
    */
-  void executeQuery(QueryPlanNode* query, RowSink* target);
+  void executeQuery(QueryPlanNode* query, ResultList* target);
 
   /**
    * Return the backends for this runtime

@@ -288,3 +288,26 @@ TEST_CASE(QueryTest, TestParseCity, [] () {
   EXPECT(*parser.getStatements()[2] == ASTNode::T_SELECT);
   EXPECT(*parser.getStatements()[3] == ASTNode::T_SELECT);
 });
+
+TEST_CASE(QueryTest, TestFourSelectFromCSVQuery, [] () {
+  std::string query_str;
+  auto query_stream = fnordmetric::util::FileInputStream::openFile(
+      "test/fixtures/queries/gdpfourselects.sql");
+  query_stream->readUntilEOF(&query_str);
+
+  TableRepository repo;
+  auto query = Query(query_str.c_str(), &repo);
+
+  query.execute();
+  EXPECT(query.getNumResultLists() == 4);
+
+  for (int i = 0; i < query.getNumResultLists(); i++) {
+    auto results = query.getResultList(i);
+    EXPECT(results->getNumRows() == 10);
+    EXPECT(results->getColumns().size() == 4);
+    EXPECT(results->getRow(0)[1] == "USA")
+    EXPECT(results->getRow(9)[1] == "IND")
+  }
+});
+
+

@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/runtime/runtime.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 
 namespace fnordmetric {
@@ -42,7 +43,12 @@ std::unique_ptr<QueryPlan> Runtime::buildQueryPlan(
   return query_plan;
 }
 
-void Runtime::executeQuery(QueryPlanNode* query, RowSink* target) {
+QueryPlanBuilder* Runtime::queryPlanBuilder() {
+  return &query_plan_builder_;
+}
+
+void Runtime::executeQuery(QueryPlanNode* query, ResultList* target) {
+  target->addHeader(query->getColumns());
   query->setTarget(target);
   query->execute();
 }
