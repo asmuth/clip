@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/runtime/queryplan.h>
 
 namespace fnordmetric {
 namespace query {
@@ -42,6 +43,10 @@ public:
 class QueryPlanBuilder : public QueryPlanBuilderInterface {
 public:
   QueryPlanBuilder() {}
+
+  void buildQueryPlan(
+      const std::vector<std::unique_ptr<ASTNode>> statements,
+      QueryPlan* repo) const;
 
   QueryPlanNode* buildQueryPlan(
       ASTNode* statement,

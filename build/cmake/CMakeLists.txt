@@ -69,6 +69,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/runtime/importstatement.cc
     stage/src/fnordmetric/sql/runtime/queryplanbuilder.cc
     stage/src/fnordmetric/sql/runtime/queryplannode.cc
+    stage/src/fnordmetric/sql/runtime/runtime.cc
     stage/src/fnordmetric/sql/runtime/symboltable.cc
     stage/src/fnordmetric/sql/runtime/tablerepository.cc
     stage/src/fnordmetric/sql/runtime/tablescan.cc

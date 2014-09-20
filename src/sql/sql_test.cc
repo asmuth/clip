@@ -20,6 +20,7 @@
 #include <fnordmetric/sql/parser/tokenize.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
+#include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/tablescan.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/ui/canvas.h>
@@ -81,6 +82,7 @@ class TestTable2Ref : public TableRef {
   }
 };
 
+/* 
 TEST_CASE(SQLTest, TestSimpleValueExpression, [] () {
   auto parser = parseTestQuery("SELECT 23 + 5.123 FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
@@ -1050,4 +1052,29 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
         query.execute();
       });
 });
+
+*/
+
+TEST_CASE(SQLTest, TestRuntime, [] () {
+  Runtime runtime;
+
+  auto statements = runtime.parseQuery(
+      "  IMPORT TABLE city_temperatures "
+      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      ""
+      "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
+      "     GROUP BY city LIMIT 10;");
+
+  auto query_plan = runtime.buildQueryPlan(statements);
+
+/*
+  query.execute();
+  EXPECT(query.getNumResultLists() == 1);
+  auto result = query.getResultList(0);
+  EXPECT(result->getNumRows() == 2);
+  EXPECT(result->getRow(0)[0] == "New York");
+  EXPECT(result->getRow(1)[0] == "Tokyo");
+*/
+});
+
 

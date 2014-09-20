@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -13,6 +13,10 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/parser/parser.h>
+#include <fnordmetric/sql/runtime/queryplan.h>
+#include <fnordmetric/sql/runtime/queryplanbuilder.h>
 
 namespace fnordmetric {
 namespace query {
@@ -24,13 +28,14 @@ class Runtime {
 public:
   Runtime();
 
-  std::unique_ptr<QueryPlan> buildQueryPlan
+  std::vector<std::unique_ptr<ASTNode>> parseQuery(const std::string query);
 
-  void addQueryPlanBuilder(
-      std::unique_ptr<QueryPlanBuilder> query_plan_builder);
+  std::unique_ptr<QueryPlan> buildQueryPlan(
+      const std::vector<std::unique_ptr<ASTNode>>& statements);
 
 protected:
-  std::vector<std::unique_ptr<QueryPlanBuilder>> query_plan_builders_;
+  Parser parser_;
+  QueryPlanBuilder query_plan_builder_;
 };
 
 }
