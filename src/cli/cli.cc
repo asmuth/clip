@@ -99,19 +99,17 @@ void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
 int CLI::executeSafely(Environment* env) {
   try {
     execute(env);
-  } catch (util::RuntimeException e) {
+  } catch (const util::RuntimeException& e) {
     if (e.getTypeName() == "UsageError") {
       //env->flags()->printUsage(env->error_stream());
       return 1;
     }
 
-    // FIXPAUL: use logger
-    env->logger()->log("FATAL", "fatal error: " + e.getMessage());
-
-    if (env->verbose()) {
+    //if (env->verbose()) {
+      env->logger()->exception("FATAL", "Fatal error", e);
+    //} else {
       // env->logger()->exception();
       //e.debugPrint();
-    }
 
     return 1;
   }
@@ -124,12 +122,11 @@ void CLI::execute(Environment* env) {
   auto flags = env->flags();
   const auto& args = flags->getArgv();
 
-  /* web / cgi mode */
-  /*if (flags->isSet("web")) {
+  if (flags->isSet("web")) {
     fnordmetric::util::ThreadPool thread_pool(
         32,
         std::unique_ptr<util::ExceptionHandler>(
-            new util::CatchAndPrintExceptionHandler(env->error_stream())));
+            new util::CatchAndPrintExceptionHandler(env->logger())));
 
     fnordmetric::ev::EventLoop ev_loop;
     fnordmetric::ev::Acceptor acceptor(&ev_loop);
@@ -138,7 +135,7 @@ void CLI::execute(Environment* env) {
     http.addHandler(fnordmetric::web::QueryEndpoint::getHandler());
     acceptor.listen(flags->getInt("web"), &http);
     ev_loop.loop();
-  }*/
+  }
 
   /* open input stream */
   std::unique_ptr<util::InputStream> input;

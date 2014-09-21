@@ -39,6 +39,9 @@ public:
   void debugPrint(OutputStream* os = nullptr) const;
   std::string getMessage() const;
   std::string getTypeName() const;
+  std::string method() const;
+  std::string file() const;
+  int line() const;
 
   void appendMessage(const char* message, ...);
 

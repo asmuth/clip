@@ -21,7 +21,6 @@ namespace util {
  */
 class ThreadPool {
 public:
-  ThreadPool(int max_threads);
   ThreadPool(int max_threads, std::unique_ptr<ExceptionHandler> error_handler);
 
   /**

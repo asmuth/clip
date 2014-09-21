@@ -30,7 +30,7 @@ void LogOutputStream::log(const LogEntry& log_entry) {
       continue;
     }
 
-    lines.emplace_back(line.first + ": " + line.second);
+    lines.emplace_back("-- " + line.first + ": " + line.second);
   }
 
   std::string prefix;
@@ -44,7 +44,15 @@ void LogOutputStream::log(const LogEntry& log_entry) {
     msg.append("\n");
   }
 
-  target_->write(msg.c_str(), msg.size());
+  target_->mutex_.lock();
+  try {
+    target_->write(msg.c_str(), msg.size());
+  } catch (const std::exception& e) {
+    target_->mutex_.unlock();
+    throw e;
+  }
+
+  target_->mutex_.unlock();
 }
 
 }

@@ -14,25 +14,12 @@ namespace fnordmetric {
 namespace util {
 
 CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler(
-    std::shared_ptr<OutputStream> os) :
-    os_(std::move(os)) {}
+    Logger* logger) :
+    logger_(logger) {}
 
-CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler() :
-    CatchAndPrintExceptionHandler(OutputStream::getStderr()) {}
-
-void CatchAndPrintExceptionHandler::onException(std::exception* error) const {
-  os_->mutex_.lock();
-  try {
-    os_->printf("[ERROR] Uncaught exception!\n");
-    RuntimeException* rte = dynamic_cast<RuntimeException *>(error);
-    if (rte != nullptr) {
-      rte->debugPrint(os_.get());
-    }
-  } catch (std::exception e) {
-    /* oopsiedaisy */
-  }
-
-  os_->mutex_.unlock();
+void CatchAndPrintExceptionHandler::onException(
+    const std::exception& error) const {
+  logger_->exception("ERROR", "Uncaught exception", error);
 }
 
 }

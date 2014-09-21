@@ -101,5 +101,17 @@ std::string RuntimeException::getTypeName() const {
   return std::string(type_name_);
 }
 
+std::string RuntimeException::method() const {
+  return std::string(func_);
+}
+
+std::string RuntimeException::file() const {
+  return std::string(file_);
+}
+
+int RuntimeException::line() const {
+  return line_;
+}
+
 }
 }

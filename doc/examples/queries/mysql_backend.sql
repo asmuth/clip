@@ -1,7 +1,8 @@
 IMPORT TABLE test_table
    FROM 'mysql://localhost/test_database?user=root';
 
--- my comment
+-- my comment 
+asd
 DRAW BARCHART WITH
     ORIENTATION VERTICAL
     AXIS BOTTOM  -- another comment
