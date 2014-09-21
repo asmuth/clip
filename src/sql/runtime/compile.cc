@@ -21,7 +21,7 @@ Compiler::Compiler(SymbolTable* symbol_table) : symbol_table_(symbol_table) {}
 
 CompiledExpression* Compiler::compile(ASTNode* ast, size_t* scratchpad_len) {
   if (ast == nullptr) {
-    RAISE(kRuntimeError, "can't compile nullptr");
+    RAISE(kNullPointerError, "can't compile nullptr");
   }
 
   switch (ast->getType()) {

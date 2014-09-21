@@ -14,10 +14,18 @@
 #include <string>
 
 const char kBufferOverflowError[] = "BufferOverflowError";
+const char kConcurrentModificationError[] = "ConcurrentModificationError";
+const char kDivideByZeroError[] = "DivideByZeroError";
 const char kIOError[] = "IOError";
+const char kIllegalArgumentError[] = "IOIllegalArgument";
+const char kIllegalStateError[] = "IOIllegalState";
 const char kIndexError[] = "IndexError";
+const char kKeyError[] = "KeyError";
 const char kMallocError[] = "MallocError";
+const char kNotImplementedError[] = "NotImplementedError";
+const char kNullPointerError[] = "kNullPointerError";
 const char kParseError[] = "ParseError";
+const char kRangeError[] = "RangeError";
 const char kRuntimeError[] = "RuntimeErrpr";
 const char kTypeError[] = "TypeError";
 
