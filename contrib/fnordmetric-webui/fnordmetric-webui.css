@@ -1,6 +1,8 @@
 body, html {
   margin: 0;
   padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
 }
 
 body {
@@ -16,9 +18,30 @@ body {
   right: 0;
 }
 
+.fancy_button {
+  height: 40px;
+  border-radius: 5px;
+  border-bottom: 2px solid #34495e;;
+  background: #2980b9;
+  float:right;
+  margin-right: 30px;
+  margin-top: 58px;
+  text-align:center;
+}
+
+.fancy_button a {
+  line-height: 40px;
+  padding: 0 15px;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,.3);
+}
+
 .query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
   position: fixed;
-  top: 48px;
+  top: 80px;
   bottom: 0;
   box-sizing: border-box;
 }
@@ -33,20 +56,19 @@ body {
 
 .query_editor.horizontal_split .editor_pane, .query_editor.horizontal_split .result_pane {
   position: fixed;
-  top: 48px;
+  top: 80px;
   padding: 30px;
 }
 
-.query_editor .layout_resizer {
+.query_editor .editor_resizer_tooltip {
   display:block;
   width: 6px;
   position: absolute;
   z-index: 100;
-  
 }
 
-.query_editor #vertical.layout_resizer {
-  top: 78px;
+.query_editor #vertical.editor_resizer_tooltip {
+  top: 110px;
   min-height: 300px;
 }
 
