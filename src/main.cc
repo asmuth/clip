@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +14,7 @@
 #include <vector>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/environment.h>
 
 using namespace fnordmetric;
 
@@ -25,10 +25,8 @@ int main(int argc, char** argv) {
   }
 
   try {
-    std::shared_ptr<util::OutputStream> stderr_stream =
-        util::OutputStream::getStderr();
-
-    return cli::CLI::executeSafely(args, stderr_stream);
+    cli::CLI::parseArgs(env(), args);
+    return cli::CLI::executeSafely(env());
   } catch (std::exception e) {
     fprintf(
         stderr,

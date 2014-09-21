@@ -8,5 +8,5 @@ DRAW BARCHART WITH
     GRID HORIZONTAL
     LEGEND TOP RIGHT INSIDE;
 
-SELECT series, x, y FROM test_table WHERE series = "fnord";
+SELECT series, x, y FROM test_table WHERE series = "fnord"; -- final comment
 
