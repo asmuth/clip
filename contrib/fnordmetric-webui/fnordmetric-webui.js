@@ -28,19 +28,12 @@ FnordMetric.Editor = {
     //"#2aa198": /\b([-+]?)(\d+(.\d+)?)((?=;)?)\b/
 };
 
-FnordMetric.Editor.init = function(elem) {
-  var mime = "fm-sql";
-
-  var cm = CodeMirror(elem, {
-    mode: mime,
-    lineNumbers: true,
-  });
-};
-
 FnordMetric.WebUI = function() {
   //var navbar = document.createElement("div");
   //navbar.id = "navbar";
   //document.body.appendChild(navbar);
+
+ //myCodeMirror.setSize(500, 300);
 
   var renderQueryEditor = function() {
     var horizontal = true;
@@ -61,6 +54,11 @@ FnordMetric.WebUI = function() {
     editor_pane.innerHTML = "<div class='card editor'></div><div class='editor_menu'></div>"
     editor.appendChild(editor_pane);
 
+    var cm = CodeMirror(editor_pane.querySelector(".editor"), {
+      mode: "fm-sql",
+      lineNumbers: true,
+    });
+
     var editor_resizer_tooltip = document.createElement("div");
     editor_resizer_tooltip.className = "editor_resizer_tooltip";
     editor_resizer_tooltip.setAttribute('draggable', 'true');
@@ -68,7 +66,7 @@ FnordMetric.WebUI = function() {
 
     var result_pane = document.createElement("div");
     result_pane.className = "result_pane";
-    result_pane.innerHTML = "<div class='card'></div>"
+    result_pane.innerHTML = ""
     editor.appendChild(result_pane);
 
     var split_button = document.createElement("div");
@@ -103,6 +101,8 @@ FnordMetric.WebUI = function() {
         editor_resizer_tooltip.style.left = "20px";
         editor_resizer_tooltip.style.right = "20px";
       }
+
+      cm.setSize("auto", editor_height);
     }
 
     editor_resizer_tooltip.addEventListener('drag',function (e) {
@@ -131,7 +131,6 @@ FnordMetric.WebUI = function() {
     }, true);
 
     updateLayout();
-    FnordMetric.Editor.init(editor_pane.querySelector(".editor"));
   };
 
   renderQueryEditor();
