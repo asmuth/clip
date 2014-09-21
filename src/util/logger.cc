@@ -24,7 +24,7 @@ void Logger::log(
   log(entry);
 }
 
-void Logger::printf(const std::string& key, const std::string& value, ...) {
+void Logger::printf(const std::string& key, std::string value, ...) {
   char buf[4096]; // FIXPAUL!
   buf[0] = 0;
 
@@ -68,7 +68,7 @@ void LogEntry::append(const std::string& key, const std::string& value) {
   lines_.emplace_back(key, value);
 }
 
-void LogEntry::printf(const std::string& key, const std::string& value, ...) {
+void LogEntry::printf(const std::string& key, std::string value, ...) {
   char buf[4096]; // FIXPAUL!
   buf[0] = 0;
 

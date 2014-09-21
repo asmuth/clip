@@ -20,7 +20,7 @@ class LogEntry {
 public:
   LogEntry();
   void append(const std::string& key, const std::string& value);
-  void printf(const std::string& key, const std::string& value, ...);
+  void printf(const std::string& key, std::string value, ...);
   const std::vector<std::pair<std::string, std::string>>& lines() const;
   const DateTime& time() const;
 protected:
@@ -34,7 +34,7 @@ public:
   virtual ~Logger() {}
 
   void log(const std::string& severity, const std::string& message);
-  void printf(const std::string& severity, const std::string& message, ...);
+  void printf(const std::string& severity, std::string message, ...);
 
   void exception(
       const std::string& severity,
