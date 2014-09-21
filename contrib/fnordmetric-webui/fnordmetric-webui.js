@@ -82,6 +82,7 @@ FnordMetric.WebUI = function() {
         editor_pane.style.left = "0";
         result_pane.style.width = (100 - editor_width) + "%";
         result_pane.style.left = editor_width + "%";
+        result_pane.style.top = "";
         editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
         editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
       } else {
@@ -98,15 +99,11 @@ FnordMetric.WebUI = function() {
     }
 
     function resizePane(e) {
-      var start_position = left_pane.offsetWidth-3;
-      var right_pane_width = right_pane.offsetWidth;
-      var left_pane_width = left_pane.offsetWidth;
-      var cur_pos = e.clientX;
-      var offset = start_position - cur_pos;
-      editor_resizer_tooltip.style.left = cur_pos + "px";
-      left_pane.style.width = (left_pane_width - offset) + "px";
-      right_pane.style.left = (left_pane_width - offset) + "px";
-      right_pane.style.width = (right_pane_width + offset) + "px";
+      if (horizontal) {
+        editor_width = (e.clientX / window.innerWidth) * 100;
+        console.log(editor_width);
+        updateLayout();
+      }
     }
 
     window.addEventListener('resize', function() { updateLayout(); }, true);
