@@ -27,19 +27,19 @@ int main(int argc, char** argv) {
   try {
     cli::CLI::parseArgs(env(), args);
     return cli::CLI::executeSafely(env());
-  } catch (std::exception e) {
+  } catch (const std::exception& e) {
     fprintf(
         stderr,
         "FnordMetric crashed :( -- Please report a bug at "
         "github.com/paulasmuth/fnordmetric\n\n");
 
-    auto runtime_exception = dynamic_cast<util::RuntimeException*>(&e);
-    if (runtime_exception == nullptr) {
+    try {
+      auto rte = dynamic_cast<const util::RuntimeException&>(e);
+      rte.debugPrint();
+      exit(1);
+    } catch (const std::exception& e) {
       fprintf(stderr, "Aborting...\n");
       abort(); // core dump if enabled
-    } else {
-      runtime_exception->debugPrint();
-      return 1;
     }
   }
 }

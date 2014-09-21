@@ -10,7 +10,9 @@
 #ifndef _FNORDMETRIC_UTIL_DATETIME_H
 #define _FNORDMETRIC_UTIL_DATETIME_H
 #include <ctime>
+#include <inttypes.h>
 #include <limits>
+#include <string>
 
 namespace fnordmetric {
 namespace util {
@@ -37,13 +39,13 @@ public:
   bool operator>(const DateTime& other) const;
 
   /**
-   * Cast the DateTime object to a UTC millsecond unix timestamp represented as
+   * Cast the DateTime object to a UTC unix timestamp represented as
    * an uint64_t
    */
   explicit operator uint64_t() const;
 
   /**
-   * Cast the DateTime object to a UTC millsecond unix timestamp represented as
+   * Cast the DateTime object to a UTC unix timestamp represented as
    * a double
    */
   explicit operator double() const;

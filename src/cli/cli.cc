@@ -91,7 +91,7 @@ void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
       NULL,
       "You are reading it...");
 
-  const auto& args = flags->getArgv();
+  flags->parseArgv(argv);
   env->setVerbose(flags->isSet("verbose"));
 }
 
@@ -122,7 +122,7 @@ int CLI::executeSafely(Environment* env) {
 
 void CLI::execute(Environment* env) {
   auto flags = env->flags();
-  auto args = flags->getArgv();
+  const auto& args = flags->getArgv();
 
   /* web / cgi mode */
   /*if (flags->isSet("web")) {

@@ -17,11 +17,11 @@ namespace util {
 DateTime::DateTime(uint64_t utc_time) : utc_time_(utc_time) {}
 
 DateTime::operator uint64_t() const {
-  return utc_time_;
+  return utc_time_ / 1000000;
 }
 
 DateTime::operator double() const {
-  return utc_time_;
+  return utc_time_ / 1000000.0f;
 }
 
 DateTime DateTime::epoch() {
@@ -30,7 +30,7 @@ DateTime DateTime::epoch() {
 
 std::string DateTime::toString(const char* fmt) const {
   struct tm tm;
-  time_t tt = utc_time_;
+  time_t tt = utc_time_ / 1000000;
   localtime_r(&tt, &tm); // FIXPAUL
 
   char buf[256]; // FIXPAUL

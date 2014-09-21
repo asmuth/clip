@@ -7,38 +7,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_ENVIRONMENT_H
-#define _FNORDMETRIC_ENVIRONMENT_H
-#include <fnordmetric/cli/flagparser.h>
+#ifndef _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
+#define _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
 #include <fnordmetric/util/logger.h>
+#include <fnordmetric/util/outputstream.h>
 
 namespace fnordmetric {
+namespace util {
 
-class Environment {
+class LogOutputStream : public Logger {
 public:
-  Environment();
-
-  inline cli::FlagParser* flags() {
-    return &flag_parser_;
-  }
-
-  inline util::Logger* logger() {
-    return logger_.get();
-  }
-
-  inline bool verbose() {
-    return verbose_;
-  }
-
-  void setVerbose(bool verbose);
-
+  LogOutputStream(std::unique_ptr<OutputStream> target);
+  void log(const LogEntry& log_entry) override;
 protected:
-  bool verbose_;
-  cli::FlagParser flag_parser_;
-  std::unique_ptr<util::Logger> logger_;
+  std::unique_ptr<OutputStream> target_;
 };
 
-Environment* env();
-
+}
 }
 #endif

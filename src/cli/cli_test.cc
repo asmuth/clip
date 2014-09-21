@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fnordmetric/environment.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
@@ -27,12 +28,9 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
     "-o", "build/tests/tmp/CLITest_TestSimpleSQLToSVG_out.svg.html"
   };
 
-  auto flag_parser = CLI::getDefaultFlagParser();
-  flag_parser.parseArgv(args);
-
-  std::shared_ptr<fnordmetric::util::OutputStream> error_stream =
-      fnordmetric::util::OutputStream::getStderr();
-  CLI::execute(flag_parser, error_stream);
+  fnordmetric::Environment myenv;
+  CLI::parseArgs(&myenv, args);
+  CLI::execute(&myenv);
 
   EXPECT_FILES_EQ(
     "test/fixtures/CLITest_TestSimpleSQLToSVG_out.svg.html",

@@ -9,23 +9,31 @@
  */
 #ifndef _FNORDMETRIC_UTIL_LOGGER_H
 #define _FNORDMETRIC_UTIL_LOGGER_H
+#include <fnordmetric/util/datetime.h>
+#include <string>
+#include <vector>
 
 namespace fnordmetric {
 namespace util {
 
-class Logger {
+class LogEntry {
 public:
-  typedef std::vector<std::pair<std::string, std::string>> LogEntry;
-
-  Logger() {}
-  virtual ~Logger() {}
-
-  void log(const std::string& severity, const std::string& message);
-
-  virtual void log(const LogEntry& log_entry);
-
+  LogEntry();
+  void append(const std::string& key, const std::string& value);
+  const std::vector<std::pair<std::string, std::string>>& lines() const;
+  const DateTime& time() const;
+protected:
+  DateTime time_;
+  std::vector<std::pair<std::string, std::string>> lines_;
 };
 
+class Logger {
+public:
+  Logger() {}
+  virtual ~Logger() {}
+  virtual void log(const LogEntry& log_entry) = 0;
+  void log(const std::string& severity, const std::string& message);
+};
 
 }
 }

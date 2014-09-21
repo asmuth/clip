@@ -11,6 +11,7 @@ project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/base/series.cc
+    stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
     stage/src/fnordmetric/http/httpinputstream.cc
@@ -23,11 +24,14 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
     stage/src/fnordmetric/util/inputstream.cc
+    stage/src/fnordmetric/util/logger.cc
+    stage/src/fnordmetric/util/logoutputstream.cc
     stage/src/fnordmetric/util/outputstream.cc
     stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/runtimeexception.cc
-    stage/src/fnordmetric/util/uri.cc)
+    stage/src/fnordmetric/util/uri.cc
+    stage/src/fnordmetric/util/wallclock.cc)
 
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
