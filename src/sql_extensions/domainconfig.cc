@@ -35,7 +35,7 @@ void DomainConfig::setMin(const SValue& value) {
   }
 
   RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "TypeError: can't set min value for %c domain",
       dimension_letter_);
 }
@@ -56,7 +56,7 @@ void DomainConfig::setMax(const SValue& value) {
   }
 
   RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "TypeError: can't set max value for %c domain",
       dimension_letter_);
 }
@@ -77,7 +77,7 @@ void DomainConfig::setLogarithmic(bool logarithmic) {
   auto continuous_domain = dynamic_cast<ui::AnyContinuousDomain*>(domain_);
   if (continuous_domain == nullptr) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "TypeError: can't set LOGARITHMIC for discrete domain %c",
         dimension_letter_);
   } else {

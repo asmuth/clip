@@ -19,7 +19,7 @@ namespace query {
 
 ImportStatement::ImportStatement(ASTNode* ast, Compiler* compiler) {
   if (ast->getChildren().size() < 2) {
-    RAISE(util::RuntimeException, "corrupt ast: ASTNode::Import\n");
+    RAISE(kRuntimeError, "corrupt ast: ASTNode::Import\n");
   }
 
   auto source_uri_sval = executeSimpleConstExpression(

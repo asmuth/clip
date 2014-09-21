@@ -1,13 +1,12 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_UTIL_UNITTEST_H
 #define _FNORDMETRIC_UTIL_UNITTEST_H
 #include <fnordmetric/util/runtimeexception.h>
@@ -19,8 +18,7 @@
 #include <string>
 #include <string.h>
 
-namespace fnordmetric {
-namespace util {
+const char kExpectationFailed[] = "ExpectationFailed";
 
 #define UNIT_TEST(T) \
     static fnordmetric::util::UnitTest T(#T); \
@@ -39,7 +37,7 @@ namespace util {
 #define EXPECT(X) \
     if (!(X)) { \
       RAISE( \
-          fnordmetric::util::UnitTest::ExpectationFailed, \
+          kExpectationFailed, \
           "expectation failed: %s", #X); \
     }
 
@@ -56,13 +54,13 @@ namespace util {
         auto msg = e.getMessage().c_str(); \
         if (strcmp(msg, E) != 0) { \
           RAISE( \
-              fnordmetric::util::UnitTest::ExpectationFailed, \
+              kExpectationFailed, \
               "excepted exception '%s' but got '%s'", E, msg); \
         } \
       } \
       if (!raised) { \
         RAISE( \
-            fnordmetric::util::UnitTest::ExpectationFailed, \
+            kExpectationFailed, \
             "excepted exception '%s' but got no exception", E); \
       } \
     }
@@ -79,22 +77,17 @@ namespace util {
       std::string filename1(F1); \
       std::string filename2(F2); \
       RAISE( \
-          fnordmetric::util::UnitTest::ExpectationFailed, \
+          kExpectationFailed, \
           "expected files '%s' and '%s' to be equal, but the differ", \
           filename1.c_str(), filename2.c_str()); \
     } \
   }
 
+namespace fnordmetric {
+namespace util {
 
 class UnitTest {
 public:
-  static const int kExpectationFailed = 0;
-  struct ExpectationFailed : public RuntimeException {
-    template <typename... T>
-    ExpectationFailed(
-        const char* message, T... args) :
-        RuntimeException(message, args...) {}
-  };
 
   class TestCase {
   public:

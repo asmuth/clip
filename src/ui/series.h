@@ -86,7 +86,7 @@ public:
       }
     }
 
-    RAISE(util::RuntimeException, "property not set");
+    RAISE(kRuntimeError, "property not set");
   }
 
   const std::string& getProperty(kProperty prop, AnyPoint const* point) const {
@@ -195,7 +195,7 @@ public:
         util::format::toHuman(point->y()).c_str());
 
     if (len < 0) {
-      RAISE(util::RuntimeException, "snprintf() failed");
+      RAISE(kRuntimeError, "snprintf() failed");
     }
 
     return std::string(buf, len);
@@ -280,7 +280,7 @@ public:
         util::format::toHuman(point->z()).c_str());
 
     if (len < 0) {
-      RAISE(util::RuntimeException, "snprintf() failed");
+      RAISE(kRuntimeError, "snprintf() failed");
     }
 
     return std::string(buf, len);

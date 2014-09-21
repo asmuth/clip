@@ -39,7 +39,7 @@ public:
 
   const std::vector<std::string>& getRow(size_t index) const {
     if (index >= rows_.size()) {
-      RAISE(util::RuntimeException, "invalid index");
+      RAISE(kRuntimeError, "invalid index");
     }
 
     return rows_[index];

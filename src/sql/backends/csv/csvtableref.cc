@@ -89,7 +89,7 @@ bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
 
   if (row.size() < min_cols_) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "error while reading CSV file '%s': "
         "row #%i does not have enough columns; columns found=%i, required=%i\n",
         csv_->getInputStream().getFileName().c_str(),
@@ -102,7 +102,7 @@ bool CSVTableRef::readNextRow(std::vector<SValue>* target) {
     num_cols_ = row.size();
   } else if (row.size() != num_cols_) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "error while reading CSV file '%s': "
         "csv row #%i does not have the same number of columns as the previous "
         "line -- number of columns found=%i, previous=%i\n",
@@ -124,7 +124,7 @@ void CSVTableRef::readHeaders() {
 
   if (!csv_->readNextRow(&headers) || headers.size() == 0) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "no headers found in CSV file '%s'",
         csv_->getInputStream().getFileName().c_str());
   }
@@ -145,7 +145,7 @@ void CSVTableRef::rewind() {
   if (headers_.size() > 0) {
     if (!csv_->skipNextRow()) {
       RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "CSV file '%s' changed while we were reading it",
         csv_->getInputStream().getFileName().c_str());
     }

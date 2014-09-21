@@ -42,13 +42,13 @@ size_t OutputStream::printf(const char* format, ...) {
   va_end(args);
 
   if (pos < 0) {
-    RAISE_ERRNO(RuntimeException, "vsnprintf() failed");
+    RAISE_ERRNO(kIOError, "vsnprintf() failed");
   }
 
   if (pos < sizeof(buf)) {
     write(buf, pos);
   } else {
-    RAISE_ERRNO(RuntimeException, "vsnprintf() failed: value too large");
+    RAISE_ERRNO(kBufferOverflowError, "vsnprintf() failed: value too large");
   }
 
   return pos;
@@ -70,7 +70,7 @@ std::unique_ptr<FileOutputStream> FileOutputStream::openFile(
   }
 
   if (fd < 1) {
-    RAISE_ERRNO(RuntimeException, "error opening file '%s'", fp);
+    RAISE_ERRNO(kIOError, "error opening file '%s'", fp);
   }
 
   return std::unique_ptr<FileOutputStream>(new FileOutputStream(fd, true));
@@ -94,7 +94,7 @@ size_t FileOutputStream::write(const char* data, size_t size) {
   bytes_written = ::write(fd_, data, size);
 
   if (bytes_written < 0) {
-    RAISE_ERRNO(RuntimeException, "write() failed");
+    RAISE_ERRNO(kIOError, "write() failed");
   }
 
   return bytes_written;
@@ -107,7 +107,7 @@ size_t FileOutputStream::printf(const char* format, ...) {
   va_end(args);
 
   if (pos < 0) {
-    RAISE_ERRNO(RuntimeException, "vdprintf() failed");
+    RAISE_ERRNO(kIOError, "vdprintf() failed");
   }
 
   return pos;

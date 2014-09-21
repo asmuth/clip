@@ -47,7 +47,7 @@ public:
     if (is_logarithmic_) {
       if (min_value_ < 0) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "negative value is outside of logarithmic domain");
       }
 
@@ -86,7 +86,7 @@ public:
     if (is_logarithmic_) {
       if (max_value_ < 0) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "negative value is outside of logarithmic domain");
       }
 

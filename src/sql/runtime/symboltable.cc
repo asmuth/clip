@@ -39,7 +39,7 @@ SymbolTableEntry const* SymbolTable::lookupSymbol(const std::string& symbol)
   auto iter = symbols_.find(symbol);
 
   if (iter == symbols_.end()) {
-    RAISE(util::RuntimeException, "symbol not found: %s", symbol.c_str());
+    RAISE(kRuntimeError, "symbol not found: %s", symbol.c_str());
     return nullptr;
   } else {
     return &iter->second;

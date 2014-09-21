@@ -21,7 +21,7 @@ static char* copyTokenData(const char* data, size_t len) {
 
   void* data_copy = malloc(len);
   if (data_copy == nullptr) {
-    RAISE(util::RuntimeException, "malloc() failed");
+    RAISE(kRuntimeError, "malloc() failed");
   }
 
   memcpy(data_copy, data, len);
@@ -60,7 +60,7 @@ void Token::debugPrint() const {
     char buf[1024];
 
     if (len_ >= sizeof(buf)) {
-      RAISE(util::RuntimeException, "token too large");
+      RAISE(kRuntimeError, "token too large");
     }
 
     memcpy(buf, data_, len_);

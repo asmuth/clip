@@ -20,7 +20,7 @@ namespace expressions {
 void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for add. expected: 2, got: %i", argc);
   }
 
@@ -62,7 +62,7 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for sub. expected: 2, got: %i", argc);
   }
 
@@ -98,7 +98,7 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't subtract %s and %s",
+  RAISE(kRuntimeError, "can't subtract %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -106,7 +106,7 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for mul. expected: 2, got: %i", argc);
   }
 
@@ -142,7 +142,7 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't multiply %s and %s",
+  RAISE(kRuntimeError, "can't multiply %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -150,7 +150,7 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for div. expected: 2, got: %i", argc);
   }
 
@@ -186,7 +186,7 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't divide %s and %s",
+  RAISE(kRuntimeError, "can't divide %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -194,7 +194,7 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for mod. expected: 2, got: %i", argc);
   }
 
@@ -230,7 +230,7 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't modulo %s and %s",
+  RAISE(kRuntimeError, "can't modulo %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -238,7 +238,7 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for pow. expected: 2, got: %i", argc);
   }
 
@@ -274,7 +274,7 @@ void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't pow %s and %s",
+  RAISE(kRuntimeError, "can't pow %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }

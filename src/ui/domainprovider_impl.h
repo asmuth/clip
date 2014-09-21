@@ -18,7 +18,7 @@ T* DomainProvider::getAs() const {
   T* domain = dynamic_cast<T*>(domain_);
 
   if (domain == nullptr) {
-    RAISE(util::RuntimeException, "can't convert domain to requested type");
+    RAISE(kRuntimeError, "can't convert domain to requested type");
   }
 
   return domain;

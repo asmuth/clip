@@ -154,7 +154,7 @@ protected:
     }
 
     RAISE(
-        ParseError,
+        kParseError,
         "unexpected token %s%s%s, expected one of: %s",
         Token::getTypeName(cur_token_->getType()),
         cur_token_->getString().size() > 0 ? ": " : "",
@@ -169,7 +169,7 @@ protected:
 
     if (val_expr == nullptr) {
       RAISE(
-          ParseError,
+          kParseError,
           "unexpected token %s%s%s, expected: value expression",
           Token::getTypeName(cur_token_->getType()),
           cur_token_->getString().size() > 0 ? ": " : "",

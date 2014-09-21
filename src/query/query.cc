@@ -55,7 +55,7 @@ Query::Query(
             runtime_->backends());
         break;
       default:
-        RAISE(util::RuntimeException, "invalid statement");
+        RAISE(kRuntimeError, "invalid statement");
     }
   }
 }
@@ -85,7 +85,7 @@ void Query::execute() {
 
 ResultList* Query::getResultList(size_t index) const {
   if (index >= results_.size()) {
-    RAISE(util::RuntimeException, "invalid index: %i", index);
+    RAISE(kRuntimeError, "invalid index: %i", index);
   }
 
   return results_[index].get();
@@ -101,7 +101,7 @@ size_t Query::getNumCharts() const {
 
 ui::Canvas* Query::getChart(size_t index) const {
   if (index >= charts_.size()) {
-    RAISE(util::RuntimeException, "invalid index: %i", index);
+    RAISE(kRuntimeError, "invalid index: %i", index);
   }
 
   return charts_[index].get();

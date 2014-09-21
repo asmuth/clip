@@ -25,7 +25,7 @@ void QueryPlanNode::setTarget(RowSink* target) {
 
 bool QueryPlanNode::emitRow(SValue* row, int row_len) {
   if (target_ == nullptr) {
-    RAISE(util::RuntimeException, "QueryPlanNode has no target");
+    RAISE(kRuntimeError, "QueryPlanNode has no target");
   }
 
   return target_->nextRow(row, row_len);

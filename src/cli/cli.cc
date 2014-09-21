@@ -158,7 +158,7 @@ void CLI::execute(Environment* env) {
       input = std::move(util::FileInputStream::openFile(args[0]));
     }
   } else {
-    RAISE(UsageError);
+    RAISE("UsageError", "usage error");
   }
 
   /* open output stream */
@@ -212,7 +212,7 @@ const query::QueryService::kFormat CLI::getOutputFormat(Environment* env) {
   }
 
   RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "invalid format: '%s', allowed formats are "
       "'svg', 'csv', 'json' and 'table'",
       format_str.c_str());

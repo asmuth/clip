@@ -1,29 +1,40 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_UTIL_RUNTIMEXCEPTION_H
 #define _FNORDMETRIC_UTIL_RUNTIMEXCEPTION_H
 #include <errno.h>
 #include <exception>
 #include <string>
 
+const char kBufferOverflowError[] = "BufferOverflowError";
+const char kIOError[] = "IOError";
+const char kIndexError[] = "IndexError";
+const char kMallocError[] = "MallocError";
+const char kParseError[] = "ParseError";
+const char kRuntimeError[] = "RuntimeErrpr";
+const char kTypeError[] = "TypeError";
+
 #define RAISE_EXCEPTION(E) \
     throw (E).setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__); while(0) {}
 
 #define RAISE(E, ...) \
-    RAISE_EXCEPTION(E( __VA_ARGS__).setTypeName(#E)); while(0) {}
+    RAISE_EXCEPTION( \
+        fnordmetric::util::RuntimeException( __VA_ARGS__).setTypeName(E)); \
+        while(0) {}
 
 #define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
-      RAISE_EXCEPTION(E(__VA_ARGS__).setTypeName(#E).setErrno(e)); \
+      RAISE_EXCEPTION( \
+          fnordmetric::util::RuntimeException( \
+              __VA_ARGS__).setTypeName(E).setErrno(e)); \
     }
 
 namespace fnordmetric {

@@ -65,7 +65,7 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
   int fd = open(fp, O_RDONLY);
 
   if (fd < 1) {
-    RAISE_ERRNO(RuntimeException, "error opening file '%s'", fp);
+    RAISE_ERRNO(kIOError, "error opening file '%s'", fp);
   }
 
   auto csv_file = new FileInputStream(fd);
@@ -116,7 +116,7 @@ void FileInputStream::readNextChunk() {
   int bytes_read = read(fd_, buf_, sizeof(buf_));
 
   if (bytes_read < 0) {
-    RAISE_ERRNO(RuntimeException, "read(%s) failed", getFileName().c_str());
+    RAISE_ERRNO(kIOError, "read(%s) failed", getFileName().c_str());
   }
 
   buf_pos_ = 0;
@@ -128,7 +128,7 @@ void FileInputStream::rewind() {
   buf_len_ = 0;
 
   if (lseek(fd_, 0, SEEK_SET) < 0) {
-    RAISE_ERRNO(RuntimeException, "lseek(%s) failed", getFileName().c_str());
+    RAISE_ERRNO(kIOError, "lseek(%s) failed", getFileName().c_str());
   }
 }
 

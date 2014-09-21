@@ -27,7 +27,7 @@ TableScan* TableScan::build(
   /* get FROM clause */
   ASTNode* from_list = ast->getChildren()[1];
   if (!(from_list)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   if (!(*from_list == ASTNode::T_FROM)) {
@@ -41,19 +41,19 @@ TableScan* TableScan::build(
   /* get table reference */
   auto tbl_name = from_list->getChildren()[0];
   if (!(*tbl_name == ASTNode::T_TABLE_NAME)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   auto tbl_name_token = tbl_name->getToken();
   if (!(tbl_name_token != nullptr)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   auto tbl_ref = repo->getTableRef(tbl_name_token->getString());
 
   if (tbl_ref == nullptr) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "undefined table '%s'",
         tbl_name_token->getString().c_str());
 
@@ -62,13 +62,13 @@ TableScan* TableScan::build(
 
   /* get select list */
   if (!(*ast->getChildren()[0] == ASTNode::T_SELECT_LIST)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
   auto select_list = ast->getChildren()[0];
 
   /* resolve column references and compile ast */
   if (select_list == nullptr) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   if (!resolveColumns(select_list, tbl_ref)) {
@@ -79,14 +79,14 @@ TableScan* TableScan::build(
   size_t select_scratchpad_len = 0;
   auto select_expr = compiler->compile(select_list, &select_scratchpad_len);
   if (!(select_scratchpad_len == 0)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   /* column names */
   std::vector<std::string> column_names;
   for (auto col : select_list->getChildren()) {
     if (col->getType() != ASTNode::T_DERIVED_COLUMN) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     auto derived = col->getChildren();
@@ -94,13 +94,13 @@ TableScan* TableScan::build(
     // column with AS clause
     if (derived.size() == 2) {
       if (derived[1]->getType() != ASTNode::T_COLUMN_ALIAS) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       auto colname_token = derived[1]->getToken();
 
       if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       column_names.emplace_back(colname_token->getString());
@@ -112,7 +112,7 @@ TableScan* TableScan::build(
       auto colname_token = derived[0]->getToken();
 
       if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       column_names.emplace_back(colname_token->getString());
@@ -128,7 +128,7 @@ TableScan* TableScan::build(
   if (ast->getChildren().size() > 2) {
     ASTNode* where_clause = ast->getChildren()[2];
     if (!(where_clause)) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     if (!(*where_clause == ASTNode::T_WHERE)) {
@@ -136,13 +136,13 @@ TableScan* TableScan::build(
     }
 
     if (where_clause->getChildren().size() != 1) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     auto e = where_clause->getChildren()[0];
 
     if (e == nullptr) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     if (!resolveColumns(e, tbl_ref)) {
@@ -153,7 +153,7 @@ TableScan* TableScan::build(
     where_expr = compiler->compile(e, &where_scratchpad_len);
     if (where_scratchpad_len != 0) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "where expressions can only contain pure functions\n");
     }
   }
@@ -192,7 +192,7 @@ bool TableScan::nextRow(SValue* row, int row_len) {
 
     if (out_len != 1) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "WHERE predicate expression evaluation did not return a result");
     }
 
@@ -217,19 +217,19 @@ const std::vector<std::string>& TableScan::getColumns() const {
 
 bool TableScan::resolveColumns(ASTNode* node, TableRef* tbl_ref) {
   if (node == nullptr) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   if (node->getType() == ASTNode::T_COLUMN_NAME) {
     auto token = node->getToken();
     if (!(token && *token == Token::T_IDENTIFIER)) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     auto col_index = tbl_ref->getColumnIndex(token->getString());
     if (col_index < 0) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "no such column: '%s'",
           token->getString().c_str());
       return false;
@@ -242,7 +242,7 @@ bool TableScan::resolveColumns(ASTNode* node, TableRef* tbl_ref) {
     for (const auto& child : node->getChildren()) {
       if (child == nullptr) {
         node->debugPrint(4);
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       if (!resolveColumns(child, tbl_ref)) {

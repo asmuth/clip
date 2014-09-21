@@ -31,7 +31,7 @@ bool executeExpression(
   /* execute children */
   for (auto cur = expr->child; cur != nullptr; cur = cur->next) {
     if (argc >= sizeof(argv) / sizeof(SValue)) {
-      RAISE(util::RuntimeException, "too many arguments");
+      RAISE(kRuntimeError, "too many arguments");
     }
 
     int out_len = 0;
@@ -46,7 +46,7 @@ bool executeExpression(
     }
 
     if (out_len != 1) {
-      RAISE(util::RuntimeException, "expression did not return");
+      RAISE(kRuntimeError, "expression did not return");
     }
 
     argc++;
@@ -81,7 +81,7 @@ bool executeExpression(
       auto index = reinterpret_cast<uint64_t>(expr->arg0);
 
       if (index >= row_len) {
-        RAISE(util::RuntimeException, "invalid row index %i", index);
+        RAISE(kRuntimeError, "invalid row index %i", index);
       }
 
       *outv = row[index];
@@ -98,7 +98,7 @@ SValue executeSimpleConstExpression(Compiler* compiler, ASTNode* expr) {
 
   if (scratchpad_len > 0) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid const expression: const expressions must be pure functions");
   }
 
@@ -114,7 +114,7 @@ SValue executeSimpleConstExpression(Compiler* compiler, ASTNode* expr) {
 
   if (!eval_retcode || eval_result_len != 1) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid const expression: evaluation did not return a result");
   }
 

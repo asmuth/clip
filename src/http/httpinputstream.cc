@@ -70,7 +70,7 @@ void HTTPInputStream::readNextByte(std::string* target) {
   char byte;
 
   if (!input_->readNextByte(&byte)) {
-    RAISE(util::RuntimeException, "unexpected EOF while reading HTTP header");
+    RAISE(kRuntimeError, "unexpected EOF while reading HTTP header");
   }
 
   switch (byte) {
@@ -99,10 +99,10 @@ void HTTPInputStream::readNextByte(std::string* target) {
       switch (state_) {
 
         case HTTP_STATE_METHOD:
-          RAISE(util::RuntimeException, "invalid HTTP header");
+          RAISE(kRuntimeError, "invalid HTTP header");
 
         case HTTP_STATE_URI:
-          RAISE(util::RuntimeException, "invalid HTTP header");
+          RAISE(kRuntimeError, "invalid HTTP header");
 
         case HTTP_STATE_VERSION:
           state_ = HTTP_STATE_HKEY;

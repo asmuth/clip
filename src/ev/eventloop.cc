@@ -20,7 +20,7 @@ namespace ev {
 EventLoop::EventLoop() : max_fd_(1), running_(true) {
   auto callbacks_size = sizeof(CallbackInterface*) * FD_SETSIZE;
   callbacks_ = static_cast<CallbackInterface**>(malloc(callbacks_size));
-  if (callbacks_ == nullptr) { RAISE(util::RuntimeException, "malloc failed"); }
+  if (callbacks_ == nullptr) { RAISE(kMallocError, "malloc failed"); }
   memset(callbacks_, 0, callbacks_size);
 
   FD_ZERO(&op_read_);
@@ -33,7 +33,7 @@ void EventLoop::watch(
     CallbackInterface* callback) {
   if (fd >= FD_SETSIZE) {
     RAISE(
-        util::RuntimeException,
+        kIOError,
         "fd is too big: %i, max is %i\n",
         fd,
         FD_SETSIZE - 1);
@@ -75,7 +75,7 @@ int EventLoop::poll() {
   }
 
   if (res == -1) {
-    RAISE_ERRNO(util::RuntimeException, "select() failed");
+    RAISE_ERRNO(kIOError, "select() failed");
     return -1;
   }
 

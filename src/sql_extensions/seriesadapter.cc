@@ -33,7 +33,7 @@ void AnySeriesAdapter::applyProperties(
     Series::AnyPoint* point) {
   for (const auto& prop : prop_indexes_) {
     if (prop.second >= row_len) {
-      RAISE(util::RuntimeException, "invalid index for property");
+      RAISE(kRuntimeError, "invalid index for property");
     }
 
     series->setProperty(prop.first, point, row[prop.second].toString());

@@ -35,7 +35,7 @@ SValue::SValue(const fnordmetric::StringType& string_value) {
   data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
 
   if (data_.u.t_string.ptr == nullptr) {
-    RAISE(util::RuntimeException, "could not allocate SValue");
+    RAISE(kRuntimeError, "could not allocate SValue");
   }
 
   memcpy(
@@ -73,7 +73,7 @@ SValue::SValue(const SValue& copy) {
       data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
 
       if (data_.u.t_string.ptr == nullptr) {
-        RAISE(util::RuntimeException, "could not allocate SValue");
+        RAISE(kRuntimeError, "could not allocate SValue");
       }
 
       memcpy(
@@ -100,7 +100,7 @@ SValue& SValue::operator=(const SValue& copy) {
       data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
 
       if (data_.u.t_string.ptr == nullptr) {
-        RAISE(util::RuntimeException, "could not allocate SValue");
+        RAISE(kRuntimeError, "could not allocate SValue");
       }
 
       memcpy(
@@ -154,7 +154,7 @@ fnordmetric::IntegerType SValue::getInteger() const {
 
     default:
       RAISE(
-          TypeError,
+          kTypeError,
           "can't convert %s '%s' to Float",
           SValue::getTypeName(data_.type),
           toString().c_str());
@@ -182,7 +182,7 @@ fnordmetric::FloatType SValue::getFloat() const {
 
     default:
       RAISE(
-          TypeError,
+          kTypeError,
           "can't convert %s '%s' to Float",
           SValue::getTypeName(data_.type),
           toString().c_str());
@@ -195,7 +195,7 @@ fnordmetric::FloatType SValue::getFloat() const {
 fnordmetric::BoolType SValue::getBool() const {
   if (data_.type != T_BOOL) {
     RAISE(
-       TypeError,
+       kTypeError,
         "can't convert %s '%s' to Bool",
         SValue::getTypeName(data_.type),
         toString().c_str());
@@ -212,7 +212,7 @@ fnordmetric::TimeType SValue::getTimestamp() const {
 
     default:
       RAISE(
-         TypeError,
+         kTypeError,
           "can't convert %s '%s' to Timestamp",
           SValue::getTypeName(data_.type),
           toString().c_str());
@@ -311,7 +311,7 @@ SValue* SValue::fromToken(const Token* token) {
       return new SValue(token->getString());
 
     default:
-      RAISE(util::RuntimeException, "can't cast Token to SValue");
+      RAISE(kRuntimeError, "can't cast Token to SValue");
       return nullptr;
 
   }

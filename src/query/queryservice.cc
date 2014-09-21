@@ -60,7 +60,7 @@ void QueryService::executeQuery(
       }
 
       default:
-        RAISE(util::RuntimeException, "can't handle this output format");
+        RAISE(kRuntimeError, "can't handle this output format");
 
     }
   } catch (util::RuntimeException e) {

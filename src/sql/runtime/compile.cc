@@ -21,7 +21,7 @@ Compiler::Compiler(SymbolTable* symbol_table) : symbol_table_(symbol_table) {}
 
 CompiledExpression* Compiler::compile(ASTNode* ast, size_t* scratchpad_len) {
   if (ast == nullptr) {
-    RAISE(util::RuntimeException, "can't compile nullptr");
+    RAISE(kRuntimeError, "can't compile nullptr");
   }
 
   switch (ast->getType()) {
@@ -88,7 +88,7 @@ CompiledExpression* Compiler::compile(ASTNode* ast, size_t* scratchpad_len) {
 
     default:
       ast->debugPrint();
-      RAISE(util::RuntimeException, "internal error: cant compile expression");
+      RAISE(kRuntimeError, "internal error: cant compile expression");
   }
 }
 
@@ -106,7 +106,7 @@ CompiledExpression* Compiler::compileSelectList(
   for (auto col : select_list->getChildren()) {
     if (!(*col == ASTNode::T_DERIVED_COLUMN)
         || col->getChildren().size() == 0) {
-      RAISE(util::RuntimeException, "internal error: corrupt ast");
+      RAISE(kRuntimeError, "internal error: corrupt ast");
     }
 
     auto next = compile(col->getChildren()[0], scratchpad_len);
@@ -143,7 +143,7 @@ CompiledExpression* Compiler::compileOperator(
   auto symbol = symbol_table_->lookupSymbol(name);
 
   if (symbol == nullptr) {
-    RAISE(util::RuntimeException, "undefined symbol: '%s'\n", name.c_str());
+    RAISE(kRuntimeError, "undefined symbol: '%s'\n", name.c_str());
   }
 
   auto op = new CompiledExpression();
@@ -165,7 +165,7 @@ CompiledExpression* Compiler::compileOperator(
 
 CompiledExpression* Compiler::compileLiteral(ASTNode* ast) {
   if (ast->getToken() == nullptr) {
-    RAISE(util::RuntimeException, "internal error: corrupt ast");
+    RAISE(kRuntimeError, "internal error: corrupt ast");
   }
 
   auto ins = new CompiledExpression();
@@ -193,13 +193,13 @@ CompiledExpression* Compiler::compileMethodCall(
     size_t* scratchpad_len) {
   if (ast->getToken() == nullptr ||
       ast->getToken()->getType() != Token::T_IDENTIFIER) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   auto symbol = symbol_table_->lookupSymbol(ast->getToken()->getString());
   if (symbol == nullptr) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "error: cannot resolve symbol: %s\n",
         ast->getToken()->getString().c_str());
   }

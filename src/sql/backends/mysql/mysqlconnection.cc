@@ -25,7 +25,7 @@ MySQLConnection::MySQLConnection() : mysql_(nullptr) {
   mysql_ = mysql_init(NULL);
 
   if (mysql_ == nullptr) {
-    RAISE(util::RuntimeException, "mysql_init() failed\n");
+    RAISE(kRuntimeError, "mysql_init() failed\n");
   }
 }
 
@@ -42,7 +42,7 @@ void MySQLConnection::connect(const util::URI& uri) {
 
   if (host.size() == 0) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid mysql:// URI: has no hostname (URI: '%s')",
         uri.toString().c_str());
   }
@@ -53,7 +53,7 @@ void MySQLConnection::connect(const util::URI& uri) {
 
   if (uri.path().size() < 2 || uri.path()[0] != '/') {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid mysql:// URI: missing database, format is: mysql://host/db "
         " (URI: %s)",
         uri.toString().c_str());
@@ -73,7 +73,7 @@ void MySQLConnection::connect(const util::URI& uri) {
     }
 
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid parameter for mysql:// URI: '%s=%s'",
         param.first.c_str(),
         param.second.c_str());
@@ -100,7 +100,7 @@ void MySQLConnection::connect(
 
   if (ret != mysql_) {
     RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "mysql_real_connect() failed: %s\n",
       mysql_error(mysql_));
   }
@@ -112,7 +112,7 @@ std::vector<std::string> MySQLConnection::describeTable(
   MYSQL_RES* res = mysql_list_fields(mysql_, table_name.c_str(), NULL);
   if (res == nullptr) {
     RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "mysql_list_fields() failed: %s\n",
       mysql_error(mysql_));
   }
@@ -146,7 +146,7 @@ void MySQLConnection::executeQuery(
 
   if (result == nullptr) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "mysql query failed: %s -- error: %s\n",
         query.c_str(),
         mysql_error(mysql_));

@@ -42,7 +42,7 @@ void sumExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   if (argc != 1) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for sum(). expected: 1, got: %i\n",
         argc);
   }

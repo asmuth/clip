@@ -245,7 +245,7 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
   } catch (const std::exception& e) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid line width: %s",
         series->getProperty(Series::P_LINE_WIDTH).c_str());
   }
@@ -254,7 +254,7 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     area.point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
   } catch (const std::exception& e) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid point size: %s",
         series->getProperty(Series::P_POINT_SIZE).c_str());
   }
@@ -424,7 +424,7 @@ AnyDomain* AreaChart3D<TX, TY, TZ>::getDomain(
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "AreaChart3D does not have a Z domain");
+      RAISE(kRuntimeError, "AreaChart3D does not have a Z domain");
       return nullptr;
   }
 }

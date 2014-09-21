@@ -41,7 +41,7 @@ void QueryPlanBuilder::buildQueryPlan(
 
         if (query_plan_node == nullptr) {
           RAISE(
-              util::RuntimeException,
+              kRuntimeError,
               "can't figure out a query plan for this, sorry :(");
         }
 
@@ -56,7 +56,7 @@ void QueryPlanBuilder::buildQueryPlan(
         break;
 
       default:
-        RAISE(util::RuntimeException, "invalid statement");
+        RAISE(kRuntimeError, "invalid statement");
     }
   }
 }
@@ -97,7 +97,7 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
   }
 
   RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "can't figure out a query plan for this, sorry :(");
 
   // if verbose -> dump ast
@@ -125,7 +125,7 @@ bool QueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) const {
 
   auto select_list = ast->getChildren()[0];
   if (!(select_list->getType() == ASTNode::T_SELECT_LIST)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   return hasAggregationExpression(select_list);
@@ -134,14 +134,14 @@ bool QueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) const {
 bool QueryPlanBuilder::hasAggregationExpression(ASTNode* ast) const {
   if (ast->getType() == ASTNode::T_METHOD_CALL) {
     if (!(ast->getToken() != nullptr)) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     auto symbol = compiler_->symbolTable()->lookupSymbol
         (ast->getToken()->getString());
 
     if (symbol == nullptr) {
-      RAISE(util::RuntimeException, "symbol lookup failed");
+      RAISE(kRuntimeError, "symbol lookup failed");
     }
 
     if (symbol->isAggregate()) {
@@ -163,7 +163,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     TableRepository* repo) {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
   if (!(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST)) {
-    RAISE(util::RuntimeException, "corrupt AST");
+    RAISE(kRuntimeError, "corrupt AST");
   }
 
   /* copy own select list */
@@ -213,7 +213,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
 
   if (group_scratchpad_len > 0) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "GROUP clause can only contain pure functions");
   }
 
@@ -284,27 +284,27 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
 
     auto limit_token = child->getToken();
     if (!(limit_token)) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     if (!(*limit_token == Token::T_NUMERIC)) {
-      RAISE(util::RuntimeException, "corrupt AST");
+      RAISE(kRuntimeError, "corrupt AST");
     }
 
     limit = limit_token->getInteger();
 
     if (child->getChildren().size() == 1) {
       if (!(child->getChildren()[0]->getType() == ASTNode::T_OFFSET)) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       auto offset_token = child->getChildren()[0]->getToken();
       if (!(offset_token)) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       if (!(*offset_token == Token::T_NUMERIC)) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
       offset = offset_token->getInteger();
     }
@@ -337,7 +337,7 @@ QueryPlanNode* QueryPlanBuilder::buildOrderByClause(
       continue;
     }
 
-    RAISE(util::RuntimeException, "ORDER BY not yet implemented");
+    RAISE(kRuntimeError, "ORDER BY not yet implemented");
   }
 
   return nullptr;

@@ -31,13 +31,6 @@ public:
     T_UNDEFINED
   };
 
-  struct TypeError : public fnordmetric::util::RuntimeException {
-    template <typename... T>
-    TypeError(
-        const char* message, T... args) :
-        RuntimeException(message, args...) {}
-  };
-
   static const char* getTypeName(kSValueType type);
   const char* getTypeName() const;
 

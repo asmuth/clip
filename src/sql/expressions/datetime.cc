@@ -21,7 +21,7 @@ namespace expressions {
 static void checkArgs(const char* symbol, int argc, int argc_expected) {
   if (argc != argc_expected) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for %s. expected: %i, got: %i",
         symbol,
         argc_expected,

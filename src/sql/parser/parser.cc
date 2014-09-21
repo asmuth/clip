@@ -20,12 +20,12 @@ Parser::Parser() : root_(ASTNode::T_ROOT) {}
 std::vector<std::unique_ptr<ASTNode>> Parser::parseQuery(
     const std::string query) {
   if (query.size() == 0) {
-    RAISE(Parser::ParseError, "empty query");
+    RAISE(kParseError, "empty query");
   }
 
   if (!parse(query.c_str(), query.size())) {
     RAISE(
-        Parser::ParseError,
+        kParseError,
         "can't figure out how to parse this, sorry :(");
   }
 
@@ -45,7 +45,7 @@ size_t Parser::parse(const char* query, size_t len) {
   tokenizeQuery(&cur, end, &token_list_);
 
   if (token_list_.size() == 0) {
-    RAISE(util::RuntimeException, "SQL query doesn't contain any tokens");
+    RAISE(kRuntimeError, "SQL query doesn't contain any tokens");
   }
 
   token_list_.emplace_back(Token::T_EOF);
@@ -243,7 +243,7 @@ ASTNode* Parser::statement() {
   }
 
   RAISE(
-      ParseError,
+      kParseError,
       "unexpected token %s%s%s, expected one of SELECT, DRAW or IMPORT",
         Token::getTypeName(cur_token_->getType()),
         cur_token_->getString().size() > 0 ? ": " : "",
@@ -417,7 +417,7 @@ ASTNode* Parser::drawStatement() {
 
       default:
         RAISE(
-            ParseError,
+            kParseError,
             "unexpected token %s%s%s",
             Token::getTypeName(cur_token_->getType()),
             cur_token_->getString().size() > 0 ? ": " : "",
@@ -444,7 +444,7 @@ ASTNode* Parser::axisClause() {
 
     default:
       RAISE(
-          ParseError,
+          kParseError,
           "unexpected token %s%s%s, expected one of TOP, RIGHT, BOTTOM, LEFT",
           Token::getTypeName(cur_token_->getType()),
           cur_token_->getString().size() > 0 ? ": " : "",
@@ -707,7 +707,7 @@ ASTNode* Parser::eqExpr(ASTNode* lhs, int precedence) {
   auto rhs = expr(6);
   if (rhs == nullptr) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "eqExpr needs second argument. Did you type '==' instead of '='?");
   }
 
@@ -726,7 +726,7 @@ ASTNode* Parser::neqExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(6);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "neqExpr needs second argument");
+    RAISE(kRuntimeError, "neqExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_NEQ_EXPR);
@@ -744,7 +744,7 @@ ASTNode* Parser::ltExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(6);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "ltExpr needs second argument");
+    RAISE(kRuntimeError, "ltExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_LT_EXPR);
@@ -762,7 +762,7 @@ ASTNode* Parser::lteExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(6);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "lteExpr needs second argument");
+    RAISE(kRuntimeError, "lteExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_LTE_EXPR);
@@ -780,7 +780,7 @@ ASTNode* Parser::gtExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(6);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "gtExpr needs second argument");
+    RAISE(kRuntimeError, "gtExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_GT_EXPR);
@@ -798,7 +798,7 @@ ASTNode* Parser::gteExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(6);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "gteExpr needs second argument");
+    RAISE(kRuntimeError, "gteExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_GTE_EXPR);
@@ -816,7 +816,7 @@ ASTNode* Parser::andExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(3);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "andExpr needs second argument");
+    RAISE(kRuntimeError, "andExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_AND_EXPR);
@@ -834,7 +834,7 @@ ASTNode* Parser::orExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(1);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "orExpr needs second argument");
+    RAISE(kRuntimeError, "orExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_OR_EXPR);
@@ -852,7 +852,7 @@ ASTNode* Parser::addExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(10);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "addExpr needs second argument");
+    RAISE(kRuntimeError, "addExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_ADD_EXPR);
@@ -870,7 +870,7 @@ ASTNode* Parser::subExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(10);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "subExpr needs second argument");
+    RAISE(kRuntimeError, "subExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_SUB_EXPR);
@@ -888,7 +888,7 @@ ASTNode* Parser::mulExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(11);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "mulExpr needs second argument");
+    RAISE(kRuntimeError, "mulExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_MUL_EXPR);
@@ -906,7 +906,7 @@ ASTNode* Parser::divExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(11);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "divExpr needs second argument");
+    RAISE(kRuntimeError, "divExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_DIV_EXPR);
@@ -924,7 +924,7 @@ ASTNode* Parser::modExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(11);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "modExpr needs second argument");
+    RAISE(kRuntimeError, "modExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_MOD_EXPR);
@@ -942,7 +942,7 @@ ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
 
   auto rhs = expr(11);
   if (rhs == nullptr) {
-    RAISE(util::RuntimeException, "powExpr needs second argument");
+    RAISE(kRuntimeError, "powExpr needs second argument");
   }
 
   auto e = new ASTNode(ASTNode::T_POW_EXPR);
@@ -954,7 +954,7 @@ ASTNode* Parser::powExpr(ASTNode* lhs, int precedence) {
 bool Parser::assertExpectation(Token::kTokenType expectation) {
   if (!(*cur_token_ == expectation)) {
     RAISE(
-        ParseError,
+        kParseError,
         "unexpected token %s%s%s, expected: '%s'",
         Token::getTypeName(cur_token_->getType()),
         cur_token_->getString().size() > 0 ? ": " : "",

@@ -21,7 +21,7 @@ namespace expressions {
 void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for eq. expected: 2, got: %i", argc);
   }
 
@@ -61,7 +61,7 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
     return;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
+  RAISE(kRuntimeError, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -75,7 +75,7 @@ void neqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for and. expected: 2, got: %i", argc);
   }
 
@@ -95,7 +95,7 @@ void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't AND %s with %s",
+  RAISE(kRuntimeError, "can't AND %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -103,7 +103,7 @@ void andExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for or. expected: 2, got: %i", argc);
   }
 
@@ -123,7 +123,7 @@ void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't OR %s with %s",
+  RAISE(kRuntimeError, "can't OR %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -131,7 +131,7 @@ void orExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 1) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for neg. expected: 1, got: %i", argc);
   }
 
@@ -151,14 +151,14 @@ void negExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't negate %s",
+  RAISE(kRuntimeError, "can't negate %s",
       val->getTypeName());
 }
 
 void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for ltExpr. expected: 2, got: %i", argc);
   }
 
@@ -198,7 +198,7 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
     return;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
+  RAISE(kRuntimeError, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -206,7 +206,7 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for lteExpr. expected: 2, got: %i", argc);
   }
 
@@ -246,7 +246,7 @@ void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
     return;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
+  RAISE(kRuntimeError, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -254,7 +254,7 @@ void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for gtExpr. expected: 2, got: %i", argc);
   }
 
@@ -294,7 +294,7 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
     return;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
+  RAISE(kRuntimeError, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
@@ -302,7 +302,7 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for gteExpr. expected: 2, got: %i", argc);
   }
 
@@ -342,7 +342,7 @@ void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
     return;
   }
 
-  RAISE(util::RuntimeException, "can't compare %s with %s",
+  RAISE(kRuntimeError, "can't compare %s with %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }

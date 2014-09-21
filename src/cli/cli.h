@@ -21,10 +21,6 @@ class FlagParser;
 
 class CLI {
 public:
-  struct UsageError : public fnordmetric::util::RuntimeException {
-    UsageError() : RuntimeException("usage error") {}
-  };
-
   /**
    * Parse a command line
    */

@@ -37,7 +37,7 @@ public:
 
     if (scratchpad_len > 0) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "tableless SELECT can only contain pure functions");
     }
 
@@ -45,19 +45,19 @@ public:
     std::vector<std::string> column_names;
     for (auto col : select_list->getChildren()) {
       if (!(*col == ASTNode::T_DERIVED_COLUMN)) {
-        RAISE(util::RuntimeException, "corrupt AST");
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
       auto derived = col->getChildren();
 
       if (derived.size() == 2) {
         if (!(*derived[1] == ASTNode::T_COLUMN_ALIAS)) {
-          RAISE(util::RuntimeException, "corrupt AST");
+          RAISE(kRuntimeError, "corrupt AST");
         }
 
         auto colname_token = derived[1]->getToken();
         if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
-          RAISE(util::RuntimeException, "corrupt AST");
+          RAISE(kRuntimeError, "corrupt AST");
         }
 
         column_names.emplace_back(colname_token->getString());
@@ -89,7 +89,7 @@ public:
   }
 
   bool nextRow(SValue* row, int row_len) override {
-    RAISE(util::RuntimeException, "TablelessSelect#nextRow called");
+    RAISE(kRuntimeError, "TablelessSelect#nextRow called");
   }
 
   const std::vector<std::string>& getColumns() const override {

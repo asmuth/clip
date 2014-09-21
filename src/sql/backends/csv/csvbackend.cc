@@ -34,7 +34,7 @@ bool CSVBackend::openTables(
 
   if (table_names.size() != 1) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "CSVBackend can only import exactly one table per source");
   }
 
@@ -53,7 +53,7 @@ bool CSVBackend::openTables(
     if (param.first == "row_sep") {
       if (param.second.size() != 1) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "invalid parameter %s for CSVBackend: '%s', must be a single "
                 "character",
             param.first.c_str(),
@@ -67,7 +67,7 @@ bool CSVBackend::openTables(
     if (param.first == "col_sep") {
       if (param.second.size() != 1) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "invalid parameter %s for CSVBackend: '%s', must be a single "
                 "character",
             param.first.c_str(),
@@ -81,7 +81,7 @@ bool CSVBackend::openTables(
     if (param.first == "quote_char") {
       if (param.second.size() != 1) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "invalid parameter %s for CSVBackend: '%s', must be a single "
                 "character",
             param.first.c_str(),
@@ -95,7 +95,7 @@ bool CSVBackend::openTables(
     if (param.first == "escape_char") {
       if (param.second.size() != 1) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "invalid parameter %s for CSVBackend: '%s', must be a single "
                 "character",
             param.first.c_str(),
@@ -107,7 +107,7 @@ bool CSVBackend::openTables(
     }
 
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid parameter for CSVBackend: '%s'", param.first.c_str());
   }
 

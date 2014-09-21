@@ -43,7 +43,7 @@ void TableRepository::import(
     if (backend->openTables(tables, source_uri, &tbl_refs)) {
       if (tbl_refs.size() != tables.size()) {
         RAISE(
-            util::RuntimeException,
+            kRuntimeError,
             "openTables failed for '%s'\n",
             source_uri.toString().c_str());
       }
@@ -57,7 +57,7 @@ void TableRepository::import(
   }
 
   RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "no backend found for '%s'\n",
       source_uri.toString().c_str());
 }
