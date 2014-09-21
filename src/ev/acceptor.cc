@@ -19,6 +19,7 @@
 #include <errno.h>
 #include "acceptor.h"
 #include "eventloop.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ev {
@@ -33,24 +34,24 @@ void Acceptor::listen(int port, CallbackInterface* handler) {
 
   int ssock = socket(AF_INET, SOCK_STREAM, 0);
   if (ssock == -1) {
-    fprintf(stderr, "create socket failed!\n");
+    RAISE_ERRNO(util::RuntimeException, "socket() creation failed");
     return;
   }
 
   int opt = 1;
   if (setsockopt(ssock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-    perror("setsockopt(SO_REUSEADDR)");
+    RAISE_ERRNO(util::RuntimeException, "setsockopt(SO_REUSEADDR) failed");
     return;
   }
 
 #ifdef SOL_TCP
   if (setsockopt(ssock, SOL_TCP, TCP_QUICKACK, &opt, sizeof(opt)) < 0) {
-    perror("setsockopt(TCP_QUICKACK)");
+    RAISE_ERRNO(util::RuntimeException, "setsockopt(TCP_QUICKACK) failed");
     return;
   }
 
   if (setsockopt(ssock, SOL_TCP, TCP_DEFER_ACCEPT, &opt, sizeof(opt)) < 0) {
-    perror("setsockopt(TCP_DEFER_ACCEPT)");
+    RAISE_ERRNO(util::RuntimeException, "setsockopt(TCP_DEFER_ACCEPT) failed");
     return;
   }
 #endif
@@ -60,12 +61,12 @@ void Acceptor::listen(int port, CallbackInterface* handler) {
       (struct sockaddr *)
       &server_addr, 
       sizeof(server_addr)) == -1) {
-    perror("bind failed");
+    RAISE_ERRNO(util::RuntimeException, "bind() failed");
     return;
   }
 
   if (::listen(ssock, 1024) == -1) {
-    perror("listen failed");
+    RAISE_ERRNO(util::RuntimeException, "listen() failed");
     return;
   }
 
@@ -73,7 +74,7 @@ void Acceptor::listen(int port, CallbackInterface* handler) {
   flags = flags | O_NONBLOCK;
 
   if (fcntl(ssock, F_SETFL, flags) != 0) {
-    fprintf(stderr, "fnctl() failed\n");
+    RAISE(util::RuntimeException, "fnctl() failed");
   }
 
   auto handler_ptr = new HandlerRef(ssock, handler);
@@ -98,7 +99,7 @@ void Acceptor::HandlerRef::onEvent(
   int conn_fd = accept(ssock_, NULL, NULL);
 
   if (conn_fd == -1) {
-    perror("accept failed");
+    RAISE_ERRNO(util::RuntimeException, "accept() failed");
     return;
   }
 
@@ -106,7 +107,7 @@ void Acceptor::HandlerRef::onEvent(
   flags &= ~O_NONBLOCK;
 
   if (fcntl(conn_fd, F_SETFL, flags) != 0) {
-    fprintf(stderr, "fnctl() failed\n");
+    RAISE(util::RuntimeException, "fnctl() failed");
   }
 
   handler_->onConnection(conn_fd);

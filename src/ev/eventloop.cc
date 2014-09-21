@@ -32,8 +32,11 @@ void EventLoop::watch(
     kInterestType interest,
     CallbackInterface* callback) {
   if (fd >= FD_SETSIZE) {
-    fprintf(stderr,
-        "fd is too big: %i, max is %i\n", fd, FD_SETSIZE - 1);
+    RAISE(
+        util::RuntimeException,
+        "fd is too big: %i, max is %i\n",
+        fd,
+        FD_SETSIZE - 1);
     return;
   }
 
@@ -72,7 +75,7 @@ int EventLoop::poll() {
   }
 
   if (res == -1) {
-    perror("error while selecting");
+    RAISE_ERRNO(util::RuntimeException, "select() failed");
     return -1;
   }
 
