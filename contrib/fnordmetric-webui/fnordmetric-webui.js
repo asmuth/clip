@@ -29,9 +29,6 @@ FnordMetric.Editor = {
 };
 
 FnordMetric.Editor.init = function(elem) {
-  
-
-  //var cm = CodeMirror(elem);
   var mime = "fm-sql";
 
   var cm = CodeMirror(elem, {
@@ -44,121 +41,64 @@ FnordMetric.WebUI = function() {
   navbar.id = "navbar";
   document.body.appendChild(navbar);
 
-  var horizontal =false;
-
-  var split_button = document.createElement("div");
-  split_button.className = "fancy_button";
-  split_button.innerHTML = "<a href='#'>Change View</a>";
-  document.body.appendChild(split_button);
-
-  split_button.addEventListener('click', function() {
-    var left_pane = document.querySelector(".editor_pane");
-    var right_pane = document.querySelector(".result_pane");
-    var resizer_tool = document.querySelector(".editor_resizer_tooltip");
-    adjustView(left_pane, right_pane, resizer_tool, false);
-  },false);
-
-  
-
-  var adjustView= function(editor_pane, result_pane, resizer_tool, resp) {
-    var width = document.body.clientWidth;
-    console.log(horizontal);
-    var makeHorizontalSplit = function() {
-      var query_editor = document.querySelector(".query_editor");
-      query_editor.className = "query_editor horizontal_split";
-      editor_pane.style.width = "95%";
-      result_pane.style.top = (editor_pane.offsetHeight+30) + "px";
-      result_pane.style.left = "";
-      result_pane.style.width = "95%";
-      resizer_tool.id = "horizontal";
-      horizontal = true;
-    }
-
-    var makeVerticalSplit = function() {
-      var query_editor = document.querySelector(".query_editor");
-      query_editor.className = "query_editor vertical_split";
-      result_pane.style.top = "80px";
-      resizer_tool.id = "vertical";
-      horizontal = false;
-      adjustVerticalView();
-    }
-
-    var adjustVerticalView = function() {
-      if (width > 1500) {
-        var editor_width = "50%";
-        var result_width = "50%";
-      } else {
-        var editor_width = "40%";
-        var result_width = "60%";
-      }
-      editor_pane.style.width = editor_width;
-      result_pane.style.left = editor_width;
-      result_pane.style.width = result_width;
-    }
-
-    var adjustToWindwoWith = function() {
-      if (width < 1300) {
-        makeHorizontalSplit(editor_pane, result_pane,resizer_tool);
-      }
-
-      if (width > 1300) {
-        if (horizontal) {
-          makeVerticalSplit(editor_pane, result_pane,resizer_tool);
-        }
-      }
-    }
-
-    if (resp) {
-      adjustToWindwoWith();
-    } else {
-      if (horizontal) {
-        makeVerticalSplit();
-      } else {
-        makeHorizontalSplit();
-      }
-    }
-
-  }
-
-
   var renderQueryEditor = function() {
+    var horizontal = true;
+
     var editor = document.createElement("div");
     editor.className = "query_editor vertical_split";
     document.body.appendChild(editor);
 
-    var left_pane = document.createElement("div");
-    left_pane.className = "editor_pane";
-    left_pane.style.width = "50%";
-    left_pane.innerHTML = "<div class='card editor'></div>"
-    editor.appendChild(left_pane);
+    var editor_pane = document.createElement("div");
+    var editor_width = 50;
+    var editor_height = 300;
+    editor_pane.className = "editor_pane";
+    editor_pane.innerHTML = "<div class='card editor'></div>"
+    editor.appendChild(editor_pane);
 
     var editor_resizer_tooltip = document.createElement("div");
     editor_resizer_tooltip.className = "editor_resizer_tooltip";
-    editor_resizer_tooltip.id = "vertical";
     editor_resizer_tooltip.setAttribute('draggable', 'true');
-    editor_resizer_tooltip.style.left = left_pane.offsetWidth-3 +"px";
     editor.appendChild(editor_resizer_tooltip);
 
-    var right_pane = document.createElement("div");
-    right_pane.className = "result_pane";
-    right_pane.style.left = "50%";
-    right_pane.style.width = "50%";
-    right_pane.innerHTML = "<div class='card'></div>"
-    editor.appendChild(right_pane);
+    var result_pane = document.createElement("div");
+    result_pane.className = "result_pane";
+    result_pane.innerHTML = "<div class='card'></div>"
+    editor.appendChild(result_pane);
 
-    FnordMetric.Editor.init(left_pane.querySelector(".editor"));
+    var split_button = document.createElement("div");
+    split_button.className = "fancy_button";
+    split_button.innerHTML = "<a href='#'>Change View</a>";
+    document.body.appendChild(split_button);
+    split_button.addEventListener('click', function() {
+        horizontal = !horizontal;
+        updateLayout();
+    },false);
 
-    adjustView(left_pane, right_pane, editor_resizer_tooltip, true);
-
-    window.addEventListener('resize', function() {
-        adjustView(left_pane, right_pane, editor_resizer_tooltip, true);
-    }, true);
-
-    
+    var updateLayout = function() {
+      var query_editor = document.querySelector(".query_editor");
+      if (horizontal) {
+        query_editor.className = "query_editor horizontal_split";
+        editor_pane.style.width = editor_width + "%";
+        editor_pane.style.left = "0";
+        result_pane.style.width = (100 - editor_width) + "%";
+        result_pane.style.left = editor_width + "%";
+        editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
+        editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
+      } else {
+        query_editor.className = "query_editor vertical_split";
+        editor_pane.style.width = "100%";
+        editor_pane.style.left = "0";
+        editor_pane.style.height = editor_height + "px";
+        result_pane.style.width = "100%";
+        result_pane.style.left = "0";
+        result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";;
+        editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
+        editor_resizer_tooltip.style.left = "0";
+      }
+    }
 
     function resizePane(e) {
       var start_position = left_pane.offsetWidth-3;
-      editor_resizer_tooltip.style.cursor = "ew-resize";
       var right_pane_width = right_pane.offsetWidth;
       var left_pane_width = left_pane.offsetWidth;
       var cur_pos = e.clientX;
@@ -169,24 +109,14 @@ FnordMetric.WebUI = function() {
       right_pane.style.width = (right_pane_width + offset) + "px";
     }
 
-    function handleDragEnd(e){
-      console.log('handleDragEnd');
-      editor_resizer_tooltip.style.backgroundColor = "#ececec";
-      editor_resizer_tooltip.style.cursor = "pointer";
-    }
-
-    editor_resizer_tooltip.onmouseover = function() {
-      console.log("mouser over");
-      editor_resizer_tooltip.style.backgroundColor = "#d7e4f2";
-      editor_resizer_tooltip.style.cursor = "ew-resize";
-    }
-
+    window.addEventListener('resize', function() { updateLayout(); }, true);
     editor_resizer_tooltip.addEventListener('dragstart', resizePane, false);
     editor_resizer_tooltip.addEventListener('dragover', resizePane, true);
-    editor_resizer_tooltip.addEventListener('dragend', handleDragEnd, false);
+    editor_resizer_tooltip.addEventListener('dragend', resizePane, true);
 
+    updateLayout();
+    FnordMetric.Editor.init(editor_pane.querySelector(".editor"));
   };
-
 
   renderQueryEditor();
 }
