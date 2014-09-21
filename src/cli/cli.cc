@@ -146,13 +146,13 @@ void CLI::execute(Environment* env) {
   if (args.size() == 1) {
     if (args[0] == "-") {
       if (env->verbose()) {
-        env->logger()->log("DEBUG", "input from stdin");
+        env->logger()->log("DEBUG", "Input from stdin");
       }
 
       input = std::move(util::InputStream::getStdin());
     } else {
       if (env->verbose()) {
-        env->logger()->log("DEBUG", "input file: " + args[0]);
+        env->logger()->log("DEBUG", "Input file: " + args[0]);
       }
 
       input = std::move(util::FileInputStream::openFile(args[0]));
@@ -167,13 +167,13 @@ void CLI::execute(Environment* env) {
     auto output_file = flags->getString("output");
 
     if (env->verbose()) {
-      env->logger()->log("DEBUG", "output file: " + output_file);
+      env->logger()->log("DEBUG", "Output file: " + output_file);
     }
 
     output = std::move(util::FileOutputStream::openFile(output_file));
   } else {
     if (env->verbose()) {
-      env->logger()->log("DEBUG", "output to stout");
+      env->logger()->log("DEBUG", "Output to stdout");
     }
     output = std::move(util::OutputStream::getStdout());
   }
