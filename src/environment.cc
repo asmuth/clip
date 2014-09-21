@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <memory>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/util/logoutputstream.h>
 

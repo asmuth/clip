@@ -9,6 +9,7 @@
  */
 #include <vector>
 #include <string>
+#include <memory>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>

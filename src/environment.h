@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_ENVIRONMENT_H
 #define _FNORDMETRIC_ENVIRONMENT_H
+#include <memory>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/util/logger.h>
 

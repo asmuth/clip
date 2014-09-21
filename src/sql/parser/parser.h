@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_SQL_PARSER_H
 #define _FNORDMETRIC_SQL_PARSER_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <memory>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/astnode.h>

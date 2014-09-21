@@ -9,6 +9,7 @@
  */
 #include <stdlib.h>
 #include <assert.h>
+#include <memory>
 #include "parser.h"
 #include "tokenize.h"
 
