@@ -1,15 +1,13 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
-#include <assert.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/rendertarget.h>
 #include <fnordmetric/ui/domain.h>
@@ -191,9 +189,9 @@ void Canvas::renderTopAxis(
       target->drawText(
           label.second,
           tick_x,
-          top - (kTickLength * 2),
+          top - kAxisLabelHeight * 0.5f,
           "middle",
-          "text-after-edge",
+          "central",
           "label");
     }
   }
@@ -320,9 +318,9 @@ void Canvas::renderBottomAxis(
       target->drawText(
           label.second,
           tick_x,
-          height_ - bottom + (kTickLength * 2),
+          height_ - bottom + kAxisLabelHeight * 0.5f,
           "middle",
-          "text-before-edge",
+          "central",
           "label");
     }
   }
@@ -569,11 +567,13 @@ void Canvas::renderRightLegend(
       lx_boundary = viewport->paddingLeft() + horiz_padding;
     }
 
+    auto ly = bottom ?
+        height - kLegendPointSize * 0.4f :
+        height + kLegendPointSize * 2.0f;
+
     target->drawPoint(
         lx,
-        bottom ?
-            height - kLegendPointSize * 0.4f :
-            height + kLegendPointSize * 2.0f,
+        ly,
         std::get<2>(entry),
         kLegendPointSize,
         std::get<1>(entry),
@@ -582,9 +582,9 @@ void Canvas::renderRightLegend(
     target->drawText(
       std::get<0>(entry),
       lx - kLegendPointWidth,
-      height,
+      ly,
       "end",
-      bottom ? "text-after-edge" : "text-before-edge",
+      "central",
       "label");
 
     lx -= this_len;
@@ -645,11 +645,13 @@ void Canvas::renderLeftLegend(
       height += bottom ? -1 * kLegendLineHeight : kLegendLineHeight;
     }
 
+    auto ly = bottom ?
+        height - kLegendPointSize * 0.4f :
+        height + kLegendPointSize * 2.0f;
+
     target->drawPoint(
         lx,
-        bottom ?
-            height - kLegendPointSize * 0.4f :
-            height + kLegendPointSize * 2.0f,
+        ly,
         std::get<2>(entry),
         kLegendPointSize,
         std::get<1>(entry),
@@ -658,9 +660,9 @@ void Canvas::renderLeftLegend(
     target->drawText(
       std::get<0>(entry),
       lx + kLegendPointWidth,
-      height,
+      ly,
       "start",
-      bottom ? "text-after-edge" : "text-before-edge",
+      "central",
       "label");
 
     lx += this_len;

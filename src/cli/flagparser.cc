@@ -43,21 +43,21 @@ std::string FlagParser::getString(const char* longopt) const {
   for (auto& flag : flags_) {
     if (flag.longopt == longopt) {
       if (flag.type != T_STRING) {
-        RAISE(FlagError, "flag '%s' is not a string", longopt);
+        RAISE(kFlagError, "flag '%s' is not a string", longopt);
       }
 
       return flag.values.back();
     }
   }
 
-  RAISE(FlagError, "flag '%s' is not set", longopt);
+  RAISE(kFlagError, "flag '%s' is not set", longopt);
 }
 
 int64_t FlagParser::getInt(const char* longopt) const {
   for (auto& flag : flags_) {
     if (flag.longopt == longopt) {
       if (flag.type != T_INTEGER) {
-        RAISE(FlagError, "flag '%s' is not an integer", longopt);
+        RAISE(kFlagError, "flag '%s' is not an integer", longopt);
       }
 
       int64_t flag_value;
@@ -65,7 +65,7 @@ int64_t FlagParser::getInt(const char* longopt) const {
         flag_value = std::stoi(flag.values.back());
       } catch (std::exception e) {
         RAISE(
-            FlagError,
+            kFlagError,
             "flag '%s' value '%s' is not a valid integer",
             longopt,
             flag.values.back().c_str());
@@ -75,7 +75,7 @@ int64_t FlagParser::getInt(const char* longopt) const {
     }
   }
 
-  RAISE(FlagError, "flag '%s' is not set", longopt);
+  RAISE(kFlagError, "flag '%s' is not set", longopt);
 }
 
 // FIXPAUL optimize with hashmap?
@@ -127,13 +127,13 @@ void FlagParser::parseArgv(const std::vector<std::string>& argv) {
       flag_ptr->values.emplace_back("true");
     } else if (eq_len > 0) {
       if (arg.size() == eq_len) {
-        RAISE(FlagError, "flag --%s=... has no value", flag_ptr->longopt);
+        RAISE(kFlagError, "flag --%s=... has no value", flag_ptr->longopt);
       }
 
       flag_ptr->values.emplace_back(arg.substr(eq_len));
     } else {
       if (i + 1 >= argv.size()) {
-        RAISE(FlagError, "flag --%s has no value", flag_ptr->longopt);
+        RAISE(kFlagError, "flag --%s has no value", flag_ptr->longopt);
       }
 
       flag_ptr->values.emplace_back(argv[++i]);
@@ -142,7 +142,7 @@ void FlagParser::parseArgv(const std::vector<std::string>& argv) {
 
   for (const auto& flag : flags_) {
     if (flag.required == true && flag.values.size() == 0) {
-      RAISE(FlagError, "flag --%s is required", flag.longopt);
+      RAISE(kFlagError, "flag --%s is required", flag.longopt);
     }
   }
 }

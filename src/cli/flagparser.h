@@ -20,14 +20,10 @@ class OutputStream;
 }
 namespace cli {
 
+const char kFlagError[] = "FlagError";
+
 class FlagParser {
 public:
-  struct FlagError : public fnordmetric::util::RuntimeException {
-    template <typename... T>
-    FlagError(
-        const char* message, T... args) :
-        RuntimeException(message, args...) {}
-  };
 
   enum kFlagType {
     T_SWITCH,

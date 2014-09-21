@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/resultlist.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -33,7 +33,7 @@ void AnySeriesAdapter::applyProperties(
     Series::AnyPoint* point) {
   for (const auto& prop : prop_indexes_) {
     if (prop.second >= row_len) {
-      RAISE(util::RuntimeException, "invalid index for property");
+      RAISE(kRuntimeError, "invalid index for property");
     }
 
     series->setProperty(prop.first, point, row[prop.second].toString());

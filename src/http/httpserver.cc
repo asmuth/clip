@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/http/httpinputstream.h>
 #include <fnordmetric/http/httpoutputstream.h>
@@ -27,6 +28,10 @@ ThreadedHTTPServer::ThreadedHTTPServer(
 
 void ThreadedHTTPServer::onConnection(int fd) {
   thread_pool_->run([this, fd] () {
+    if (env()->verbose()) {
+      env()->logger()->printf("DEBUG", "New HTTP connection on fd %i", fd);
+    }
+
     handleConnection(fd);
   });
 }

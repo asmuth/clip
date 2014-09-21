@@ -6,10 +6,16 @@
 # copy of the GNU General Public License along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
-    stage/src/fnordmetric/base/series.cc
+    stage/src/fnordmetric/cli/cli.cc
+    stage/src/fnordmetric/cli/flagparser.cc
+    stage/src/fnordmetric/web/assets.cc
+    stage/src/fnordmetric/web/queryendpoint.cc
+    stage/src/fnordmetric/web/webinterface.cc
+    stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
     stage/src/fnordmetric/http/httpinputstream.cc
@@ -18,14 +24,18 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/http/httprequest.cc
     stage/src/fnordmetric/http/httpresponse.cc
     stage/src/fnordmetric/http/httpserver.cc
+    stage/src/fnordmetric/util/datetime.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
     stage/src/fnordmetric/util/inputstream.cc
+    stage/src/fnordmetric/util/logger.cc
+    stage/src/fnordmetric/util/logoutputstream.cc
     stage/src/fnordmetric/util/outputstream.cc
     stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/runtimeexception.cc
-    stage/src/fnordmetric/util/uri.cc)
+    stage/src/fnordmetric/util/uri.cc
+    stage/src/fnordmetric/util/wallclock.cc)
 
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
@@ -36,9 +46,12 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/pointchart.cc
     stage/src/fnordmetric/ui/canvas.cc
     stage/src/fnordmetric/ui/domain.cc
+    stage/src/fnordmetric/ui/domainprovider.cc
     stage/src/fnordmetric/ui/drawable.cc
     stage/src/fnordmetric/ui/griddefinition.cc
-    stage/src/fnordmetric/ui/legenddefinition.cc)
+    stage/src/fnordmetric/ui/legenddefinition.cc
+    stage/src/fnordmetric/ui/series.cc
+    stage/src/fnordmetric/ui/timedomain.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
@@ -46,7 +59,9 @@ set(FNORDMETRIC_CSV_BACKEND_SOURCES
     stage/src/fnordmetric/sql/backends/csv/csvtableref.cc)
 
 set(FNORDMETRIC_MYSQL_BACKEND_SOURCES
-    stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc)
+    stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
+    stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc
+    stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc)
 
 set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_UI_SOURCES}
@@ -54,19 +69,26 @@ set(FNORDMETRIC_QUERY_SOURCES
     ${FNORDMETRIC_MYSQL_BACKEND_SOURCES}
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
-    stage/src/fnordmetric/sql/astnode.cc
-    stage/src/fnordmetric/sql/compile.cc
-    stage/src/fnordmetric/sql/execute.cc
-    stage/src/fnordmetric/sql/grouper.cc
-    stage/src/fnordmetric/sql/importstatement.cc
-    stage/src/fnordmetric/sql/parser.cc
-    stage/src/fnordmetric/sql/queryplanbuilder.cc
-    stage/src/fnordmetric/sql/queryplannode.cc
+    stage/src/fnordmetric/sql/expressions/aggregate.cc
+    stage/src/fnordmetric/sql/expressions/boolean.cc
+    stage/src/fnordmetric/sql/expressions/datetime.cc
+    stage/src/fnordmetric/sql/expressions/math.cc
+    stage/src/fnordmetric/sql/parser/astnode.cc
+    stage/src/fnordmetric/sql/parser/parser.cc
+    stage/src/fnordmetric/sql/parser/token.cc
+    stage/src/fnordmetric/sql/parser/tokenize.cc
+    stage/src/fnordmetric/sql/runtime/compile.cc
+    stage/src/fnordmetric/sql/runtime/defaultruntime.cc
+    stage/src/fnordmetric/sql/runtime/execute.cc
+    stage/src/fnordmetric/sql/runtime/importstatement.cc
+    stage/src/fnordmetric/sql/runtime/queryplan.cc
+    stage/src/fnordmetric/sql/runtime/queryplanbuilder.cc
+    stage/src/fnordmetric/sql/runtime/queryplannode.cc
+    stage/src/fnordmetric/sql/runtime/runtime.cc
+    stage/src/fnordmetric/sql/runtime/symboltable.cc
+    stage/src/fnordmetric/sql/runtime/tablerepository.cc
+    stage/src/fnordmetric/sql/runtime/tablescan.cc
     stage/src/fnordmetric/sql/svalue.cc
-    stage/src/fnordmetric/sql/symboltable.cc
-    stage/src/fnordmetric/sql/tablerepository.cc
-    stage/src/fnordmetric/sql/token.cc
-    stage/src/fnordmetric/sql/tokenize.cc
     stage/src/fnordmetric/sql_extensions/areachartbuilder.cc
     stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
     stage/src/fnordmetric/sql_extensions/linechartbuilder.cc
@@ -75,77 +97,57 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/drawstatement.cc
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
-set(FNORDMETRIC_CLI_SOURCES
-    stage/src/fnordmetric/cli/cli.cc
-    stage/src/fnordmetric/cli/flagparser.cc
-    stage/src/fnordmetric/web/assets.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
-    stage/src/fnordmetric/web/webinterface.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
-
 include_directories(stage/src)
 include_directories(stage/assets)
-#set(CMAKE_CXX_FLAGS "-std=c++0x")
-set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+
+IF(APPLE)
+  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+ELSE()
+  set(CMAKE_CXX_FLAGS "-std=c++0x")
+ENDIF()
 
 add_definitions("-Wno-predefined-identifier-outside-function")
-# add_library(fnordmetric SHARED ${FNORDMETRIC_SOURCES})
+add_library(fnordmetric-static ${FNORDMETRIC_QUERY_SOURCES})
 
-add_library(libfnordmetric ${FNORDMETRIC_QUERY_SOURCES})
+find_package(MySQL)
+if (MYSQL_FOUND)
+  include_directories(${MYSQL_INCLUDE_DIRS})
+  target_link_libraries(fnordmetric-static mysqlclient)
+endif(MYSQL_FOUND)
 
-add_executable(fnordmetric
-    ${FNORDMETRIC_CLI_SOURCES}
-    stage/src/fnordmetric/main.cc)
-target_link_libraries(fnordmetric libfnordmetric)
+add_executable(fnordmetric stage/src/fnordmetric/main.cc)
+target_link_libraries(fnordmetric fnordmetric-static)
 
-add_executable(tests/test-sql
-    stage/src/fnordmetric/sql/sql_test.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
-target_link_libraries(tests/test-sql libfnordmetric)
+add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
+target_link_libraries(tests/test-sql fnordmetric-static)
 
 add_executable(tests/test-sql-extensions
-    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
-target_link_libraries(tests/test-sql-extensions libfnordmetric)
+    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc)
+target_link_libraries(tests/test-sql-extensions fnordmetric-static)
 
 add_executable(tests/test-query
-    stage/src/fnordmetric/query/query_test.cc
-    stage/src/fnordmetric/sql/expressions/aggregate.cc
-    stage/src/fnordmetric/sql/expressions/boolean.cc
-    stage/src/fnordmetric/sql/expressions/datetime.cc
-    stage/src/fnordmetric/sql/expressions/math.cc)
-target_link_libraries(tests/test-query libfnordmetric)
+    stage/src/fnordmetric/query/query_test.cc)
+target_link_libraries(tests/test-query fnordmetric-static)
 
 add_executable(tests/test-ui
      stage/src/fnordmetric/ui/ui_test.cc)
-target_link_libraries(tests/test-ui libfnordmetric)
+target_link_libraries(tests/test-ui fnordmetric-static)
 
-add_executable(tests/test-cli
-    ${FNORDMETRIC_CLI_SOURCES}
-    stage/src/fnordmetric/cli/cli_test.cc)
-target_link_libraries(tests/test-cli libfnordmetric)
+add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
+target_link_libraries(tests/test-cli fnordmetric-static)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
-target_link_libraries(tests/test-input-stream libfnordmetric)
+target_link_libraries(tests/test-input-stream fnordmetric-static)
 
 add_executable(tests/test-uri
     stage/src/fnordmetric/util/uri_test.cc)
-target_link_libraries(tests/test-uri libfnordmetric)
+target_link_libraries(tests/test-uri fnordmetric-static)
 
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
-target_link_libraries(tests/test-csv-backend libfnordmetric)
+target_link_libraries(tests/test-csv-backend fnordmetric-static)
 
 add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http libfnordmetric)
+target_link_libraries(tests/test-http fnordmetric-static)
 

@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -10,13 +10,13 @@
 #ifndef _FNORDMETRIC_BARCHART_H
 #define _FNORDMETRIC_BARCHART_H
 #include <stdlib.h>
-#include <assert.h>
 #include <memory>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/colorpalette.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/continuousdomain.h>
+#include <fnordmetric/ui/discretedomain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/rendertarget.h>
 #include <fnordmetric/ui/seriesjoin.h>
@@ -164,8 +164,8 @@ protected:
   void stackData(SeriesJoin3D<TX, TY, TZ>* target) const;
   const std::string& seriesColor(size_t series_index) const;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   SeriesJoin3D<TX, TY, TY> data_;
   std::vector<Series3D<TX, TY, TY>*> series_;
   ColorPalette color_palette_;
@@ -238,7 +238,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
     if (!(point.y() <= point.z())) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "BarChart error: invalid point in series. Z value must be greater "
           "or equal to Y value for all points");
     }
@@ -340,7 +340,7 @@ void BarChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
   if (data_.size() == 0) {
-    RAISE(util::RuntimeException, "BarChart3D#render called without any data");
+    RAISE(kRuntimeError, "BarChart3D#render called without any data");
   }
 
   SeriesJoin3D<TX, TY, TZ> const* data;
@@ -515,7 +515,7 @@ template <typename TX, typename TY, typename TZ>
 const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
     size_t series_index) const {
   if (series_index > series_.size()) {
-    RAISE(util::RuntimeException, "invalid series index");
+    RAISE(kRuntimeError, "invalid series index");
   }
 
   return series_[series_index]->getProperty(Series::P_COLOR);

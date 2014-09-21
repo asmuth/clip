@@ -1,27 +1,26 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include "../svalue.h"
-#include "../symboltable.h"
+#include <fnordmetric/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {
+namespace expressions {
 
 void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   if (argc != 2) {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "wrong number of arguments for add. expected: 2, got: %i", argc);
   }
 
@@ -60,10 +59,13 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   *out = SValue(lhs->toString() + rhs->toString());
 }
 
-SymbolTableEntry __add_symbol("add", &addExpr);
-
 void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        kRuntimeError,
+        "wrong number of arguments for sub. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -96,15 +98,18 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't subtract %s and %s",
+  RAISE(kRuntimeError, "can't subtract %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __sub_symbol("sub", &subExpr);
-
 void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        kRuntimeError,
+        "wrong number of arguments for mul. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -137,15 +142,18 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't multiply %s and %s",
+  RAISE(kRuntimeError, "can't multiply %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __mul_symbol("mul", &mulExpr);
-
 void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        kRuntimeError,
+        "wrong number of arguments for div. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -178,15 +186,18 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't divide %s and %s",
+  RAISE(kRuntimeError, "can't divide %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __div_symbol("div", &divExpr);
-
 void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        kRuntimeError,
+        "wrong number of arguments for mod. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -219,15 +230,18 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't modulo %s and %s",
+  RAISE(kRuntimeError, "can't modulo %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __mod_symbol("mod", &modExpr);
-
 void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        kRuntimeError,
+        "wrong number of arguments for pow. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -260,12 +274,11 @@ void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       break;
   }
 
-  RAISE(util::RuntimeException, "can't pow %s and %s",
+  RAISE(kRuntimeError, "can't pow %s and %s",
       lhs->getTypeName(),
       rhs->getTypeName());
 }
 
-static SymbolTableEntry __pow_symbol("pow", &powExpr);
-
+}
 }
 }

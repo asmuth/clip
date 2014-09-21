@@ -129,7 +129,7 @@ void URI::parseURI(
   }
 
   if (!has_scheme) {
-    RAISE(util::RuntimeException, "invalid URI: must begin with scheme:");
+    RAISE(kRuntimeError, "invalid URI: must begin with scheme:");
   }
 
   /* authority */
@@ -168,7 +168,15 @@ void URI::parseURI(
         abegin = ++acur;
         for (; *acur >= '0' && *acur <= '9'; ++acur);
         if (acur > abegin) {
-          *port = std::stoi(std::string(abegin, acur - abegin));
+          std::string port_str(abegin, acur - abegin);
+          try {
+            *port = std::stoi(port_str);
+          } catch (const std::exception& e) {
+            RAISE(
+                kRuntimeError,
+                "invalid URI: invalid port: %s",
+                port_str.c_str());
+          }
         }
       }
     }

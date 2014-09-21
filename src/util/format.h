@@ -19,7 +19,7 @@ namespace format {
 
 std::string numberToHuman(double value);
 std::string svalueToHuman(const query::SValue& value);
-std::string formatTime(fnordmetric::TimeType time, char* fmt = nullptr);
+std::string formatTime(fnordmetric::TimeType time, const char* fmt = nullptr);
 std::string formatTimeWithRange(fnordmetric::TimeType time, int range);
 
 // FIXPAUL clean up...

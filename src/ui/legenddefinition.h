@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_UI_LEGENDDEFINITION_H
 #define _FNORDMETRIC_UI_LEGENDDEFINITION_H
-#include <utility>
+#include <tuple>
 #include <string>
 #include <vector>
 

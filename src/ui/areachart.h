@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -10,10 +10,9 @@
 #ifndef _FNORDMETRIC_AREACHART_H
 #define _FNORDMETRIC_AREACHART_H
 #include <stdlib.h>
-#include <assert.h>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/continuousdomain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/colorpalette.h>
@@ -129,8 +128,8 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   std::vector<Area> areas_;
   ColorPalette color_palette_;
 };
@@ -240,9 +239,25 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   area.series = series->name();
   area.color = series->getProperty(Series::P_COLOR);
   area.line_style = series->getProperty(Series::P_LINE_STYLE);
-  area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
   area.point_style = series->getProperty(Series::P_POINT_STYLE);
-  area.point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+
+  try {
+    area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+  } catch (const std::exception& e) {
+    RAISE(
+        kRuntimeError,
+        "invalid line width: %s",
+        series->getProperty(Series::P_LINE_WIDTH).c_str());
+  }
+
+  try {
+    area.point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+  } catch (const std::exception& e) {
+    RAISE(
+        kRuntimeError,
+        "invalid point size: %s",
+        series->getProperty(Series::P_POINT_SIZE).c_str());
+  }
 
   for (const auto& point : series->getData()) {
     x_domain->addValue(point.x());
@@ -409,7 +424,7 @@ AnyDomain* AreaChart3D<TX, TY, TZ>::getDomain(
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "AreaChart3D does not have a Z domain");
+      RAISE(kRuntimeError, "AreaChart3D does not have a Z domain");
       return nullptr;
   }
 }

@@ -12,6 +12,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/web/assets.h>
 #include <asset_bundle.cc>
+#include <cstdlib>
 
 namespace fnordmetric {
 namespace web {
@@ -53,7 +54,7 @@ std::string Assets::getAsset(const std::string& filename) {
     return std::string((const char*) data.first, data.second);
   }
 
-  RAISE(util::RuntimeException, "asset not found: %s", filename.c_str());
+  RAISE(kRuntimeError, "asset not found: %s", filename.c_str());
 }
 
 }

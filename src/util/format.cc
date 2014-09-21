@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <ctime>
 #include "math.h"
 #include "format.h"
 
@@ -72,17 +72,11 @@ std::string numberToHuman(double value) {
   return std::string(buf, len);
 }
 
-std::string formatTime(fnordmetric::TimeType time, char* fmt /* = nullptr */) {
+std::string formatTime(
+    fnordmetric::TimeType time,
+    const char* fmt /* = nullptr */) {
   static char default_fmt[] = "%Y-%m-%d %H:%M:%S";
-
-  struct tm tm;
-  localtime_r(&time, &tm);
-
-  char buf[256];
-  buf[0] = 0;
-  strftime(buf, sizeof(buf), fmt == nullptr ? default_fmt : fmt, &tm);
-
-  return std::string(buf);
+  return time.toString(fmt == nullptr ? default_fmt : fmt);
 }
 
 std::string formatTimeWithRange(fnordmetric::TimeType time, int range) {

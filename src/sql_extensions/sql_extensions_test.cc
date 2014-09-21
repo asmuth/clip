@@ -1,19 +1,19 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/sql/compile.h>
-#include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/parser.h>
+#include <fnordmetric/sql/parser/parser.h>
+#include <fnordmetric/sql/runtime/compile.h>
+#include <fnordmetric/sql/runtime/execute.h>
+#include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -39,6 +39,7 @@ TEST_CASE(SQLExtensionsTest, TestSimpleDrawStatement, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxes, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT AXIS RIGHT;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -67,6 +68,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxes, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithExplicitYDomain, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery("DRAW BARCHART YDOMAIN 0, 100;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -81,6 +83,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithExplicitYDomain, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithScaleLogInvYDomain, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART YDOMAIN 0, 100 LOGARITHMIC INVERT;");
   EXPECT(parser.getStatements().size() == 1);
@@ -104,6 +107,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithScaleLogInvYDomain, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithLogInvYDomain, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART YDOMAIN LOGARITHMIC INVERT;");
   EXPECT(parser.getStatements().size() == 1);
@@ -125,6 +129,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithLogInvYDomain, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithGrid, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART GRID HORIZONTAL VERTICAL;");
   EXPECT(parser.getStatements().size() == 1);
@@ -145,6 +150,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithGrid, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithTitle, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART TITLE 'fnordtitle';");
   EXPECT(parser.getStatements().size() == 1);
@@ -156,11 +162,14 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithTitle, [] () {
   EXPECT(*stmt->getChildren()[0] == ASTNode::T_PROPERTY);
   EXPECT(stmt->getChildren()[0]->getChildren().size() == 1);
   auto title_expr = stmt->getChildren()[0]->getChildren()[0];
-  auto title = executeSimpleConstExpression(title_expr).toString();
+  auto title = executeSimpleConstExpression(
+      runtime.compiler(),
+      title_expr).toString();
   EXPECT_EQ(title, "fnordtitle");
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithSubtitle, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART SUBTITLE 'fnordsubtitle';");
   EXPECT(parser.getStatements().size() == 1);
@@ -172,11 +181,14 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithSubtitle, [] () {
   EXPECT(*stmt->getChildren()[0] == ASTNode::T_PROPERTY);
   EXPECT(stmt->getChildren()[0]->getChildren().size() == 1);
   auto title_expr = stmt->getChildren()[0]->getChildren()[0];
-  auto title = executeSimpleConstExpression(title_expr).toString();
+  auto title = executeSimpleConstExpression(
+      runtime.compiler(),
+      title_expr).toString();
   EXPECT_EQ(title, "fnordsubtitle");
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithTitleAndSubtitle, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART TITLE 'fnordtitle' SUBTITLE 'fnordsubtitle';");
   EXPECT(parser.getStatements().size() == 1);
@@ -189,17 +201,22 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithTitleAndSubtitle, [] () {
   EXPECT(*stmt->getChildren()[0] == ASTNode::T_PROPERTY);
   EXPECT(stmt->getChildren()[0]->getChildren().size() == 1);
   auto title_expr = stmt->getChildren()[0]->getChildren()[0];
-  auto title = executeSimpleConstExpression(title_expr).toString();
+  auto title = executeSimpleConstExpression(
+      runtime.compiler(),
+      title_expr).toString();
   EXPECT_EQ(title, "fnordtitle");
 
   EXPECT(*stmt->getChildren()[1] == ASTNode::T_PROPERTY);
   EXPECT(stmt->getChildren()[1]->getChildren().size() == 1);
   auto subtitle_expr = stmt->getChildren()[1]->getChildren()[0];
-  auto subtitle = executeSimpleConstExpression(subtitle_expr).toString();
+  auto subtitle = executeSimpleConstExpression(
+      runtime.compiler(),
+      subtitle_expr).toString();
   EXPECT_EQ(subtitle, "fnordsubtitle");
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisTitle, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT TITLE 'axistitle';");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -215,11 +232,14 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisTitle, [] () {
   EXPECT(*stmt->getChildren()[0]->getChildren()[1] == ASTNode::T_PROPERTY);
   EXPECT(stmt->getChildren()[0]->getChildren()[1]->getChildren().size() == 1);
   auto title_expr = stmt->getChildren()[0]->getChildren()[1]->getChildren()[0];
-  auto title = executeSimpleConstExpression(title_expr).toString();
+  auto title = executeSimpleConstExpression(
+      runtime.compiler(),
+      title_expr).toString();
   EXPECT_EQ(title, "axistitle");
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPos, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT TICKS INSIDE;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -241,6 +261,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPos, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelRotate, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery("DRAW BARCHART AXIS LEFT TICKS ROTATE 45;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -261,11 +282,14 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelRotate, [] () {
   EXPECT(*labels->getChildren()[0]->getToken() == Token::T_ROTATE);
   EXPECT(labels->getChildren()[0]->getChildren().size() == 1);
   auto deg_expr = labels->getChildren()[0]->getChildren()[0];
-  auto deg = executeSimpleConstExpression(deg_expr).toString();
+  auto deg = executeSimpleConstExpression(
+      runtime.compiler(),
+      deg_expr).toString();
   EXPECT_EQ(deg, "45");
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPosAndRotate, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART AXIS LEFT TICKS OUTSIDE ROTATE 45;");
   EXPECT(parser.getStatements().size() == 1);
@@ -290,11 +314,14 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithAxisLabelPosAndRotate, [] () {
   EXPECT(*labels->getChildren()[1]->getToken() == Token::T_ROTATE);
   EXPECT(labels->getChildren()[1]->getChildren().size() == 1);
   auto deg_expr = labels->getChildren()[1]->getChildren()[0];
-  auto deg = executeSimpleConstExpression(deg_expr).toString();
+  auto deg = executeSimpleConstExpression(
+      runtime.compiler(),
+      deg_expr).toString();
   EXPECT_EQ(deg, "45");
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithSimpleLegend, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery("DRAW BARCHART LEGEND TOP LEFT INSIDE;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -317,6 +344,7 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithSimpleLegend, [] () {
 });
 
 TEST_CASE(SQLExtensionsTest, TestDrawStatementWithLegendWithTitle, [] () {
+  Runtime runtime;
   auto parser = parseTestQuery(
       "DRAW BARCHART LEGEND TOP LEFT INSIDE TITLE 'fnordylegend';");
   EXPECT(parser.getStatements().size() == 1);
@@ -339,6 +367,8 @@ TEST_CASE(SQLExtensionsTest, TestDrawStatementWithLegendWithTitle, [] () {
   EXPECT(*props[2]->getToken() == Token::T_INSIDE);
   EXPECT(props[3]->getChildren().size() == 1);
   auto title_expr = props[3]->getChildren()[0];
-  auto title = executeSimpleConstExpression(title_expr).toString();
+  auto title = executeSimpleConstExpression(
+      runtime.compiler(),
+      title_expr).toString();
   EXPECT_EQ(title, "fnordylegend");
 });

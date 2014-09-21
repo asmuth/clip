@@ -15,42 +15,31 @@
 #include <fnordmetric/query/queryservice.h>
 
 namespace fnordmetric {
+class Environment;
 namespace cli {
 class FlagParser;
 
 class CLI {
 public:
-  struct UsageError : public fnordmetric::util::RuntimeException {
-    UsageError() : RuntimeException("usage error") {}
-  };
-
-  static FlagParser getDefaultFlagParser();
+  /**
+   * Parse a command line
+   */
+  static void parseArgs(Environment* env, const std::vector<std::string>& argv);
 
   /**
-   * Execute a command line. Should not throw an exception!
+   * Execute a command line but do not throw exceptions
    */
-  static int executeSafely(
-      const std::vector<std::string>& argv,
-      std::shared_ptr<util::OutputStream> error_stream);
+  static int executeSafely(Environment* env);
 
   /**
-   * Execute a command line. May throw an exception!
+   * Execute a command line
    */
-  static void execute(
-      const std::vector<std::string>& argv,
-      std::shared_ptr<util::OutputStream> error_stream);
+  static void execute(Environment* env);
 
-  /**
-   * Execute a command line. May throw an exception!
-   */
-  static void execute(
-      const FlagParser& flag_parser,
-      std::shared_ptr<util::OutputStream> error_stream);
 
 protected:
 
-  static const query::QueryService::kFormat getOutputFormat(
-      const FlagParser& flags);
+  static const query::QueryService::kFormat getOutputFormat(Environment* env);
 
 };
 

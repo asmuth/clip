@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_UI_GRIDDEFINITION_H
 #define _FNORDMETRIC_UI_GRIDDEFINITION_H
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/domainprovider.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -30,14 +31,14 @@ public:
   /**
    * Set the domain for this grid
    */
-  void setDomain(DomainAdapter* domain);
+  void setDomain(DomainProvider* domain);
 
   kPlacement placement() const;
   const std::vector<double> ticks() const;
 
 protected:
   kPlacement placement_;
-  DomainAdapter* domain_;
+  DomainProvider* domain_;
 };
 
 }

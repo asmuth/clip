@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -11,11 +11,11 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string>
+#include <ctime>
 #include <stdint.h>
-#include <assert.h>
+#include <fnordmetric/sql/parser/token.h>
+#include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/format.h>
-#include "svalue.h"
-#include "token.h"
 
 namespace fnordmetric {
 namespace query {
@@ -35,7 +35,7 @@ SValue::SValue(const fnordmetric::StringType& string_value) {
   data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
 
   if (data_.u.t_string.ptr == nullptr) {
-    RAISE(util::RuntimeException, "could not allocate SValue");
+    RAISE(kRuntimeError, "could not allocate SValue");
   }
 
   memcpy(
@@ -61,7 +61,7 @@ SValue::SValue(fnordmetric::BoolType bool_value) : SValue() {
 
 SValue::SValue(fnordmetric::TimeType time_value) : SValue() {
   data_.type = T_TIMESTAMP;
-  data_.u.t_timestamp = time_value;
+  data_.u.t_timestamp = static_cast<uint64_t>(time_value);
 }
 
 SValue::SValue(const SValue& copy) {
@@ -73,7 +73,7 @@ SValue::SValue(const SValue& copy) {
       data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
 
       if (data_.u.t_string.ptr == nullptr) {
-        RAISE(util::RuntimeException, "could not allocate SValue");
+        RAISE(kRuntimeError, "could not allocate SValue");
       }
 
       memcpy(
@@ -100,7 +100,7 @@ SValue& SValue::operator=(const SValue& copy) {
       data_.u.t_string.ptr = static_cast<char *>(malloc(data_.u.t_string.len));
 
       if (data_.u.t_string.ptr == nullptr) {
-        RAISE(util::RuntimeException, "could not allocate SValue");
+        RAISE(kRuntimeError, "could not allocate SValue");
       }
 
       memcpy(
@@ -154,7 +154,7 @@ fnordmetric::IntegerType SValue::getInteger() const {
 
     default:
       RAISE(
-          TypeError,
+          kTypeError,
           "can't convert %s '%s' to Float",
           SValue::getTypeName(data_.type),
           toString().c_str());
@@ -182,7 +182,7 @@ fnordmetric::FloatType SValue::getFloat() const {
 
     default:
       RAISE(
-          TypeError,
+          kTypeError,
           "can't convert %s '%s' to Float",
           SValue::getTypeName(data_.type),
           toString().c_str());
@@ -193,7 +193,14 @@ fnordmetric::FloatType SValue::getFloat() const {
 }
 
 fnordmetric::BoolType SValue::getBool() const {
-  assert(data_.type == T_BOOL);
+  if (data_.type != T_BOOL) {
+    RAISE(
+       kTypeError,
+        "can't convert %s '%s' to Bool",
+        SValue::getTypeName(data_.type),
+        toString().c_str());
+  }
+
   return data_.u.t_bool;
 }
 
@@ -205,7 +212,7 @@ fnordmetric::TimeType SValue::getTimestamp() const {
 
     default:
       RAISE(
-         TypeError,
+         kTypeError,
           "can't convert %s '%s' to Timestamp",
           SValue::getTypeName(data_.type),
           toString().c_str());
@@ -224,14 +231,14 @@ fnordmetric::StringType SValue::getString() const {
 }
 
 std::string SValue::makeUniqueKey(SValue* arr, size_t len) {
-  size_t buf_len = sizeof(data_) * len;
-  char* buf = static_cast<char*>(alloca(buf_len));
+  std::string key;
 
   for (int i = 0; i < len; ++i) {
-    memcpy(buf + i * sizeof(data_), &arr[i].data_, sizeof(data_));
+    key.append(arr[i].toString());
+    key.append("\x00");
   }
 
-  return std::string(buf, buf_len);
+  return key;
 }
 
 std::string SValue::toString() const {
@@ -304,7 +311,7 @@ SValue* SValue::fromToken(const Token* token) {
       return new SValue(token->getString());
 
     default:
-      assert(0);
+      RAISE(kRuntimeError, "can't cast Token to SValue");
       return nullptr;
 
   }
@@ -449,7 +456,8 @@ bool SValue::tryTimeConversion() {
 
   time_t ts = getInteger();
   data_.type = T_TIMESTAMP;
-  data_.u.t_timestamp = ts;
+  // FIXPAUL take a smart guess if this is milli, micro, etc
+  data_.u.t_timestamp = ts * 1000000;
   return true;
 }
 

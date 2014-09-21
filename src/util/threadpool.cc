@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -16,13 +16,6 @@ namespace fnordmetric {
 namespace util {
 
 ThreadPool::ThreadPool(
-    int max_threads) :
-    ThreadPool(
-        max_threads,
-        std::unique_ptr<ExceptionHandler>(
-            new CatchAndPrintExceptionHandler())) {}
-
-ThreadPool::ThreadPool(
     int max_threads,
     std::unique_ptr<ExceptionHandler> error_handler) :
     max_threads_(max_threads),
@@ -32,25 +25,18 @@ ThreadPool::ThreadPool(
 void ThreadPool::run(std::function<void()> runnable) {
   if (num_threads_++ >= max_threads_) {
     num_threads_--;
-    RAISE(RuntimeException, "too many threads");
+    RAISE(kRuntimeError, "too many threads");
   }
 
   ThreadPool* self = this;
   new std::thread([self, runnable] () {
     try {
-      try {
-        runnable();
-      } catch (RuntimeException e) {
-        self->error_handler_->onException(&e);
-      }
-    } catch (std::exception e) {
-      self->error_handler_->onException(&e);
+      runnable();
+    } catch (const std::exception& e) {
+      self->error_handler_->onException(e);
     }
     self->num_threads_--;
   });
-}
-
-static std::unique_ptr<ExceptionHandler> newDefaultExceptionHandler() {
 }
 
 }

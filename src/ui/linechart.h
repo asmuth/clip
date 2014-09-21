@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -10,9 +10,8 @@
 #ifndef _FNORDMETRIC_LINECHART_H
 #define _FNORDMETRIC_LINECHART_H
 #include <stdlib.h>
-#include <assert.h>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
+#include <fnordmetric/ui/continuousdomain.h>
 #include <fnordmetric/ui/domain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/canvas.h>
@@ -121,8 +120,8 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   std::vector<Series2D<TX, TY>*> series_;
   ColorPalette color_palette_;
 };
@@ -204,11 +203,29 @@ void LineChart2D<TX, TY>::render(
   for (const auto& series : series_) {
     std::vector<std::pair<double, double>> coords;
 
-    // FIXPAUL catch conversion excpetion
     auto point_style = series->getProperty(Series::P_POINT_STYLE);
-    auto point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+    double point_size;
     auto line_style = series->getProperty(Series::P_LINE_STYLE);
-    auto line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+    double line_width;
+
+    try {
+      line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+    } catch (const std::exception& e) {
+      RAISE(
+          kRuntimeError,
+          "invalid line width: %s",
+          series->getProperty(Series::P_LINE_WIDTH).c_str());
+    }
+
+    try {
+      point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+    } catch (const std::exception& e) {
+      RAISE(
+          kRuntimeError,
+          "invalid point size: %s",
+          series->getProperty(Series::P_POINT_SIZE).c_str());
+    }
+
     auto color = series->getProperty(Series::P_COLOR);
 
     for (const auto& point : series->getData()) {
@@ -307,7 +324,7 @@ AnyDomain* LineChart2D<TX, TY>::getDomain(AnyDomain::kDimension dimension) {
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "LineChart2D does not have a Z domain");
+      RAISE(kRuntimeError, "LineChart2D does not have a Z domain");
       return nullptr;
   }
 }

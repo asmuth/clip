@@ -7,9 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <memory>
+#include <fnordmetric/environment.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
+#include <fnordmetric/sql/backends/mysql/mysqltableref.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <memory>
+#include <mutex>
 
 namespace fnordmetric {
 namespace query {
@@ -20,6 +24,18 @@ MySQLBackend* MySQLBackend::singleton() {
   return &singleton_backend;
 }
 
+static std::mutex global_mysql_init_lock;
+static bool global_mysql_initialized = false;
+
+MySQLBackend::MySQLBackend() {
+  global_mysql_init_lock.lock();
+  if (!global_mysql_initialized) {
+    mysql_library_init(0, NULL, NULL); // FIXPAUl mysql_library_end();
+    global_mysql_initialized = true;
+  }
+  global_mysql_init_lock.unlock();
+}
+
 bool MySQLBackend::openTables(
     const std::vector<std::string>& table_names,
     const util::URI& source_uri,
@@ -28,7 +44,18 @@ bool MySQLBackend::openTables(
     return false;
   }
 
-  RAISE(util::RuntimeException, "mysql backend not yet implemented");
+  // FIXPAUL move all of this into a mysql thread/connection pool
+  std::shared_ptr<MySQLConnection> conn =
+      MySQLConnection::openConnection(source_uri);
+
+  for (const auto& tbl : table_names) {
+    target->emplace_back(new MySQLTableRef(conn, tbl));
+  }
+
+  connections_mutex_.lock();
+  connections_.push_back(std::move(conn));
+  connections_mutex_.unlock();
+
   return true;
 }
 

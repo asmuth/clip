@@ -1,15 +1,16 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <vector>
 #include <string>
+#include <memory>
+#include <fnordmetric/environment.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/ev/eventloop.h>
@@ -25,11 +26,11 @@
 namespace fnordmetric {
 namespace cli {
 
-FlagParser CLI::getDefaultFlagParser() {
-  FlagParser flag_parser;
+void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
+  auto flags = env->flags();
 
   // Execute queries from the commandline:
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "format",
       FlagParser::T_STRING,
       false,
@@ -38,7 +39,7 @@ FlagParser CLI::getDefaultFlagParser() {
       "The output format { svg, csv, table }",
       "<format>");
 
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "output",
       FlagParser::T_STRING,
       false,
@@ -48,7 +49,7 @@ FlagParser CLI::getDefaultFlagParser() {
       "<format>");
 
   // Start a user interface:
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "repl",
       FlagParser::T_SWITCH,
       false,
@@ -57,7 +58,7 @@ FlagParser CLI::getDefaultFlagParser() {
       "Start an interactive readline shell",
       NULL);
 
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "web",
       FlagParser::T_INTEGER,
       false,
@@ -66,7 +67,7 @@ FlagParser CLI::getDefaultFlagParser() {
       "Start a web interface on this port",
       "<port>");
 
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "cgi",
       FlagParser::T_SWITCH,
       false,
@@ -74,7 +75,7 @@ FlagParser CLI::getDefaultFlagParser() {
       NULL,
       "Run as CGI script");
 
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "verbose",
       FlagParser::T_SWITCH,
       false,
@@ -82,7 +83,7 @@ FlagParser CLI::getDefaultFlagParser() {
       NULL,
       "Be verbose");
 
-  flag_parser.defineFlag(
+  flags->defineFlag(
       "help",
       FlagParser::T_SWITCH,
       false,
@@ -90,29 +91,29 @@ FlagParser CLI::getDefaultFlagParser() {
       NULL,
       "You are reading it...");
 
-  return flag_parser;
+  flags->parseArgv(argv);
+  env->setVerbose(flags->isSet("verbose"));
 }
 
-int CLI::executeSafely(
-      const std::vector<std::string>& argv,
-      std::shared_ptr<util::OutputStream> error_stream) {
-  bool verbose = true;
-  auto flag_parser = getDefaultFlagParser();
+
+int CLI::executeSafely(Environment* env) {
+  auto err_stream = util::OutputStream::getStderr();
 
   try {
-    flag_parser.parseArgv(argv);
-    verbose = flag_parser.isSet("verbose");
-    execute(flag_parser, error_stream);
-  } catch (util::RuntimeException e) {
+    execute(env);
+  } catch (const util::RuntimeException& e) {
     if (e.getTypeName() == "UsageError") {
-      flag_parser.printUsage(error_stream.get());
+      env->flags()->printUsage(err_stream.get());
       return 1;
     }
 
-    error_stream->printf("fatal error: %s\n", e.getMessage().c_str());
-
-    if (verbose) {
-      e.debugPrint();
+    if (env->verbose()) {
+      env->logger()->exception("FATAL", "Fatal error", e);
+    } else {
+      auto msg = e.getMessage();
+      err_stream->printf("[ERROR] ");
+      err_stream->write(msg.c_str(), msg.size());
+      err_stream->printf("\n");
     }
 
     return 1;
@@ -121,36 +122,25 @@ int CLI::executeSafely(
   return 0;
 }
 
-void CLI::execute(
-      const std::vector<std::string>& argv,
-      std::shared_ptr<util::OutputStream> error_stream) {
-  /* parse flags */
-  auto flag_parser = getDefaultFlagParser();
-  flag_parser.parseArgv(argv);
-  bool verbose = flag_parser.isSet("verbose");
-  const auto& args = flag_parser.getArgv();
-  execute(flag_parser, error_stream);
-}
 
-void CLI::execute(
-      const FlagParser& flag_parser,
-      std::shared_ptr<util::OutputStream> error_stream) {
-  const auto& args = flag_parser.getArgv();
-  bool verbose = flag_parser.isSet("verbose");
+void CLI::execute(Environment* env) {
+  auto flags = env->flags();
+  const auto& args = flags->getArgv();
 
-  /* web / cgi mode */
-  if (flag_parser.isSet("web")) {
+  if (flags->isSet("web")) {
     fnordmetric::util::ThreadPool thread_pool(
         32,
         std::unique_ptr<util::ExceptionHandler>(
-            new util::CatchAndPrintExceptionHandler(error_stream)));
+            new util::CatchAndPrintExceptionHandler(env->logger())));
 
     fnordmetric::ev::EventLoop ev_loop;
     fnordmetric::ev::Acceptor acceptor(&ev_loop);
     fnordmetric::http::ThreadedHTTPServer http(&thread_pool);
     http.addHandler(fnordmetric::web::WebInterface::getHandler());
     http.addHandler(fnordmetric::web::QueryEndpoint::getHandler());
-    acceptor.listen(flag_parser.getInt("web"), &http);
+    auto port = flags->getInt("web");
+    env->logger()->printf("INFO", "Starting HTTP server on port %i", port);
+    acceptor.listen(port, &http);
     ev_loop.loop();
   }
 
@@ -158,55 +148,55 @@ void CLI::execute(
   std::unique_ptr<util::InputStream> input;
   if (args.size() == 1) {
     if (args[0] == "-") {
-      if (verbose) {
-        error_stream->printf("[INFO] input from stdin %s\n");
+      if (env->verbose()) {
+        env->logger()->log("DEBUG", "Input from stdin");
       }
 
       input = std::move(util::InputStream::getStdin());
     } else {
-      if (verbose) {
-        error_stream->printf("[INFO] input file: %s\n", args[0].c_str());
+      if (env->verbose()) {
+        env->logger()->log("DEBUG", "Input file: " + args[0]);
       }
 
       input = std::move(util::FileInputStream::openFile(args[0]));
     }
   } else {
-    RAISE(UsageError);
+    RAISE("UsageError", "usage error");
   }
 
   /* open output stream */
   std::unique_ptr<util::OutputStream> output;
-  if (flag_parser.isSet("output")) {
-    auto output_file = flag_parser.getString("output");
+  if (flags->isSet("output")) {
+    auto output_file = flags->getString("output");
 
-    if (verbose) {
-      error_stream->printf("[INFO] output file: %s\n", output_file.c_str());
+    if (env->verbose()) {
+      env->logger()->log("DEBUG", "Output file: " + output_file);
     }
 
     output = std::move(util::FileOutputStream::openFile(output_file));
   } else {
-    if (verbose) {
-      error_stream->printf("[INFO] output to stdout\n");
+    if (env->verbose()) {
+      env->logger()->log("DEBUG", "Output to stdout");
     }
     output = std::move(util::OutputStream::getStdout());
   }
-
 
   /* execute query */
   query::QueryService query_service;
   query_service.executeQuery(
       input.get(),
-      getOutputFormat(flag_parser),
+      getOutputFormat(env),
       output.get());
 }
 
-const query::QueryService::kFormat CLI::getOutputFormat(
-    const FlagParser& flags) {
-  if (!flags.isSet("format")) {
+const query::QueryService::kFormat CLI::getOutputFormat(Environment* env) {
+  auto flags = env->flags();
+
+  if (!flags->isSet("format")) {
     return query::QueryService::FORMAT_TABLE;
   }
 
-  auto format_str = flags.getString("format");
+  auto format_str = flags->getString("format");
 
   if (format_str == "csv") {
     return query::QueryService::FORMAT_CSV;
@@ -225,7 +215,7 @@ const query::QueryService::kFormat CLI::getOutputFormat(
   }
 
   RAISE(
-      util::RuntimeException,
+      kRuntimeError,
       "invalid format: '%s', allowed formats are "
       "'svg', 'csv', 'json' and 'table'",
       format_str.c_str());

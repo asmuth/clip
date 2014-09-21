@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -48,7 +48,7 @@ public:
         "<svg viewBox='0 0 %i %i' class='%s'>\n",
         width,
         height,
-        class_name.c_str());
+        escapeString(class_name).c_str());
     indent_ ++;
     appendLine("<style type='text/css'>\n");
     appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());
@@ -81,9 +81,9 @@ public:
         y,
         width,
         height,
-        class_str.c_str(),
-        series.c_str(),
-        label.c_str());
+        escapeString(class_str).c_str(),
+        escapeString(series).c_str(),
+        escapeString(label).c_str());
   }
 
   void drawLine(
@@ -98,7 +98,7 @@ public:
         y1,
         x2,
         y2,
-        class_name.c_str());
+        escapeString(class_name).c_str());
   }
 
   void drawText(
@@ -130,9 +130,9 @@ public:
         y,
         halign.c_str(),
         valign.c_str(),
-        class_name.c_str(),
+        escapeString(class_name).c_str(),
         transform,
-        text.c_str());
+        escapeString(text).c_str());
   }
 
   void drawPoint(
@@ -156,9 +156,9 @@ public:
         x,
         y,
         point_type == "none" ? 0 : point_size,
-        class_str.c_str(),
-        label.c_str(),
-        series.c_str());
+        escapeString(class_str).c_str(),
+        escapeString(label).c_str(),
+        escapeString(series).c_str());
   }
 
    void drawPath(
@@ -175,7 +175,7 @@ public:
     appendLine(
         "<path stroke-width='%f' class='%s' d='",
         line_width,
-        class_str.c_str());
+        escapeString(class_str).c_str());
 
     for (int i = 0; i < points.size(); ++i) {
       if (i == 0) {
@@ -191,13 +191,18 @@ public:
   }
 
   void beginGroup(const std::string& class_name) override {
-    appendLine("<g class='%s'>\n", class_name.c_str());
+    appendLine("<g class='%s'>\n", escapeString(class_name).c_str());
     indent_++;
   }
 
   void finishGroup() override {
     indent_--;
     appendLine("</g>\n");
+  }
+
+  // FIXPAUL
+  std::string escapeString(const std::string& src) {
+    return src;
   }
 
 protected:

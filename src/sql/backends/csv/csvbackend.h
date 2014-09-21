@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_CSVBACKEND_H
 #define _FNORDMETRIC_CSVBACKEND_H
 #include <memory>
-#include <fnordmetric/sql/backend.h>
+#include <fnordmetric/sql/backends/backend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 
 namespace fnordmetric {

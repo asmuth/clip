@@ -11,11 +11,11 @@
 #ifndef _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #define _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #include <stdlib.h>
+#include <fnordmetric/sql/runtime/compile.h>
+#include <fnordmetric/sql/runtime/execute.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/compile.h>
-#include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/queryplannode.h>
-#include <fnordmetric/sql/resultlist.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -27,7 +27,7 @@ namespace query {
 
 class DrawStatement {
 public:
-  DrawStatement(ASTNode* ast);
+  DrawStatement(ASTNode* ast, Compiler* compiler);
 
   void addSelectStatement(QueryPlanNode* select_stmt, ResultList* target) {
     select_stmts_.emplace_back(select_stmt);
@@ -62,6 +62,7 @@ protected:
   std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;
   ASTNode* ast_;
+  Compiler* compiler_;
 };
 
 }

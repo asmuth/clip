@@ -17,7 +17,11 @@
 namespace fnordmetric {
 namespace query {
 
-DrawStatement::DrawStatement(ASTNode* ast) : ast_(ast->deepCopy()) {}
+DrawStatement::DrawStatement(
+    ASTNode* ast,
+    Compiler* compiler) :
+    ast_(ast->deepCopy()),
+    compiler_(compiler) {}
 
 void DrawStatement::execute(ui::Canvas* canvas) const {
   ui::Drawable* chart = nullptr;
@@ -37,7 +41,7 @@ void DrawStatement::execute(ui::Canvas* canvas) const {
       break;
     default:
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "invalid chart type: %s",
           Token::getTypeName(ast_->getToken()->getType()));
   }
@@ -61,7 +65,7 @@ ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
 
     const auto& values = child->getChildren();
     if (values.size() != 1) {
-      RAISE(util::RuntimeException, "corrupt AST: T_PROPERTY has != 1 child");
+      RAISE(kRuntimeError, "corrupt AST: T_PROPERTY has != 1 child");
     }
 
     return values[0];
@@ -81,7 +85,7 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
     ui::AxisDefinition* axis = nullptr;
 
     if (child->getChildren().size() < 1) {
-      RAISE(util::RuntimeException, "corrupt AST: AXIS has < 1 child");
+      RAISE(kRuntimeError, "corrupt AST: AXIS has < 1 child");
     }
 
     switch (child->getChildren()[0]->getToken()->getType()) {
@@ -102,7 +106,7 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
         break;
 
       default:
-        RAISE(util::RuntimeException, "corrupt AST: invalid axis position");
+        RAISE(kRuntimeError, "corrupt AST: invalid axis position");
     }
 
     for (int i = 1; i < child->getChildren().size(); ++i) {
@@ -112,7 +116,9 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
           prop->getToken() != nullptr &&
           *prop->getToken() == Token::T_TITLE &&
           prop->getChildren().size() == 1) {
-        auto axis_title = executeSimpleConstExpression(prop->getChildren()[0]);
+        auto axis_title = executeSimpleConstExpression(
+            compiler_,
+            prop->getChildren()[0]);
         axis->setTitle(axis_title.toString());
         continue;
       }
@@ -145,15 +151,17 @@ void DrawStatement::applyAxisLabels(
         break;
       case Token::T_ROTATE: {
         if (prop->getChildren().size() != 1) {
-          RAISE(util::RuntimeException, "corrupt AST: ROTATE has no children");
+          RAISE(kRuntimeError, "corrupt AST: ROTATE has no children");
         }
 
-        auto rot = executeSimpleConstExpression(prop->getChildren()[0]);
+        auto rot = executeSimpleConstExpression(
+            compiler_,
+            prop->getChildren()[0]);
         axis->setLabelRotation(rot.getValue<double>());
         break;
       }
       default:
-        RAISE(util::RuntimeException, "corrupt AST: LABELS has invalid token");
+        RAISE(kRuntimeError, "corrupt AST: LABELS has invalid token");
     }
   }
 }
@@ -170,7 +178,7 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
     }
 
     if (child->getToken() == nullptr) {
-      RAISE(util::RuntimeException, "corrupt AST: DOMAIN has no token");
+      RAISE(kRuntimeError, "corrupt AST: DOMAIN has no token");
     }
 
     ui::AnyDomain::kDimension dim;
@@ -185,7 +193,7 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
         dim = ui::AnyDomain::DIM_Z;
         break;
       default:
-        RAISE(util::RuntimeException, "corrupt AST: DOMAIN has invalid token");
+        RAISE(kRuntimeError, "corrupt AST: DOMAIN has invalid token");
     }
 
     for (const auto& domain_prop : child->getChildren()) {
@@ -193,7 +201,7 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
         case ASTNode::T_DOMAIN_SCALE: {
           auto min_max_expr = domain_prop->getChildren();
           if (min_max_expr.size() != 2 ) {
-            RAISE(util::RuntimeException, "corrupt AST: invalid DOMAIN SCALE");
+            RAISE(kRuntimeError, "corrupt AST: invalid DOMAIN SCALE");
           }
           min_expr = min_max_expr[0];
           max_expr = min_max_expr[1];
@@ -214,12 +222,12 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
             }
           }
 
-          RAISE(util::RuntimeException, "corrupt AST: invalid DOMAIN property");
+          RAISE(kRuntimeError, "corrupt AST: invalid DOMAIN property");
           break;
         }
 
         default:
-          RAISE(util::RuntimeException, "corrupt AST: unexpected DOMAIN child");
+          RAISE(kRuntimeError, "corrupt AST: unexpected DOMAIN child");
 
       }
     }
@@ -228,8 +236,8 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
     domain_config.setInvert(invert);
     domain_config.setLogarithmic(logarithmic);
     if (min_expr != nullptr && max_expr != nullptr) {
-      domain_config.setMin(executeSimpleConstExpression(min_expr));
-      domain_config.setMax(executeSimpleConstExpression(max_expr));
+      domain_config.setMin(executeSimpleConstExpression(compiler_, min_expr));
+      domain_config.setMax(executeSimpleConstExpression(compiler_, max_expr));
     }
   }
 }
@@ -244,10 +252,12 @@ void DrawStatement::applyTitle(ui::Drawable* chart) const {
     }
 
     if (child->getChildren().size() != 1) {
-      RAISE(util::RuntimeException, "corrupt AST: [SUB]TITLE has != 1 child");
+      RAISE(kRuntimeError, "corrupt AST: [SUB]TITLE has != 1 child");
     }
 
-    auto title_eval = executeSimpleConstExpression(child->getChildren()[0]);
+    auto title_eval = executeSimpleConstExpression(
+        compiler_,
+        child->getChildren()[0]);
     auto title_str = title_eval.toString();
 
     switch (child->getToken()->getType()) {
@@ -290,7 +300,7 @@ void DrawStatement::applyGrid(ui::Drawable* chart) const {
           vertical = true;
           break;
         default:
-          RAISE(util::RuntimeException, "corrupt AST: invalid GRID property");
+          RAISE(kRuntimeError, "corrupt AST: invalid GRID property");
       }
     }
   }
@@ -350,16 +360,19 @@ void DrawStatement::applyLegend(ui::Drawable* chart) const {
           break;
         case Token::T_TITLE: {
           if (prop->getChildren().size() != 1) {
-            RAISE(util::RuntimeException, "corrupt AST: TITLE has no children");
+            RAISE(kRuntimeError, "corrupt AST: TITLE has no children");
           }
 
-          auto sval = executeSimpleConstExpression(prop->getChildren()[0]);
+          auto sval = executeSimpleConstExpression(
+              compiler_,
+              prop->getChildren()[0]);
+
           title = sval.toString();
           break;
         }
         default:
           RAISE(
-              util::RuntimeException,
+              kRuntimeError,
               "corrupt AST: LEGEND has invalid property");
       }
     }

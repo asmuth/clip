@@ -9,6 +9,9 @@ all: assets
 	test -e stage/src/fnordmetric || ln -s ../../../../src stage/src/fnordmetric || true
 	(cd target && cmake .. && make)
 	rm -f ../fnordmetric
+	rm -f ../libfnordmetric-static.a
+	rm -f ../libfnordmetric.dylib
+	rm -f ../libfnordmetric.so
 	ln -s cmake/target/fnordmetric ../fnordmetric
 
 assets:

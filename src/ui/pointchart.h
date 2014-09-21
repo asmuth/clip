@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -10,10 +10,9 @@
 #ifndef _FNORDMETRIC_POINTCHART_H
 #define _FNORDMETRIC_POINTCHART_H
 #include <stdlib.h>
-#include <assert.h>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/domain.h>
+#include <fnordmetric/ui/continuousdomain.h>
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/colorpalette.h>
@@ -105,8 +104,8 @@ protected:
       RenderTarget* target,
       Viewport* viewport) const override;
 
-  DomainAdapter x_domain_;
-  DomainAdapter y_domain_;
+  DomainProvider x_domain_;
+  DomainProvider y_domain_;
   std::vector<Series3D<TX, TY, TZ>*> series_;
   ColorPalette color_palette_;
 };
@@ -307,7 +306,7 @@ AnyDomain* PointChart3D<TX, TY, TZ>::getDomain(
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "PointChart3D does not have a Z domain");
+      RAISE(kRuntimeError, "PointChart3D does not have a Z domain");
       return nullptr;
   }
 }
@@ -335,9 +334,16 @@ void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
 
   // FIXPAUL copy point style
   for (const auto& point : series->getData()) {
-    // FIXPAUL catch converison errror
-    double point_size = std::stod(
-        series->getProperty(Series::P_POINT_SIZE, &point));
+    double point_size;
+    try {
+      point_size = std::stod(
+          series->getProperty(Series::P_POINT_SIZE, &point));
+    } catch (const std::exception& e) {
+      RAISE(
+          kRuntimeError,
+          "invalid point size: %s",
+          series->getProperty(Series::P_POINT_SIZE, &point).c_str());
+    }
 
     series3d->addDatum(
         Series::Coord<TX>(point.x()),

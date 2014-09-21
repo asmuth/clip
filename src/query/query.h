@@ -14,7 +14,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/sql/runtime/runtime.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/ui/canvas.h>
 
@@ -28,12 +29,12 @@ class ResultList;
 class Query {
 public:
 
-  explicit Query(const char* query_string, TableRepository* repo);
+  explicit Query(const std::string& query_string, Runtime* runtime);
 
   explicit Query(
       const char* query_string,
       size_t query_string_len,
-      TableRepository* repo);
+      Runtime* repo);
 
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
@@ -77,10 +78,11 @@ public:
   ui::Canvas* getChart(size_t index) const;
 
 protected:
-  bool addStatement(ASTNode* statement, TableRepository* repo);
+  Runtime* runtime_;
+  QueryPlan query_plan_;
 
-  //Drawable* makeDrawable(query::DrawStatement* stmt);
-  std::vector<std::pair<std::unique_ptr<QueryPlanNode>, DrawStatement*>> statements_;
+  std::vector<std::pair<std::unique_ptr<QueryPlanNode>, DrawStatement*>>
+      statements_;
   std::vector<std::vector<std::unique_ptr<DrawStatement>>> draw_statements_;
   std::vector<std::unique_ptr<ResultList>> results_;
   std::vector<std::unique_ptr<ui::Canvas>> charts_;

@@ -7,17 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <string.h>
 #include <fnordmetric/query/query.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
-#include <fnordmetric/sql/parser.h>
-#include <fnordmetric/sql/queryplanbuilder.h>
-#include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql/tablerepository.h>
-#include <fnordmetric/sql/importstatement.h>
+#include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/parser/parser.h>
+#include <fnordmetric/sql/runtime/queryplanbuilder.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
+#include <fnordmetric/sql/runtime/tablerepository.h>
+#include <fnordmetric/sql/runtime/importstatement.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -26,43 +24,38 @@ namespace query {
 
 Query::Query(
     const char* query_string,
-    query::TableRepository* repo) :
-    Query(query_string, strlen(query_string), repo) {}
+    size_t query_string_len,
+    Runtime* runtime) :
+    Query(std::string(query_string, query_string_len), runtime) {}
 
 Query::Query(
-    const char* query_string,
-    size_t query_string_len,
-    TableRepository* repo) {
-  // FIXPAUL!!
-  repo->addBackend(query::csv_backend::CSVBackend::singleton());
-  repo->addBackend(query::mysql_backend::MySQLBackend::singleton());
-
-  query::Parser parser;
-
-  if (query_string_len == 0) {
-    RAISE(Parser::ParseError, "empty query");
-  }
-
-  if (!parser.parse(query_string, query_string_len)) {
-    RAISE(
-        Parser::ParseError,
-        "can't figure out how to parse this, sorry :(");
-  }
-
+    const std::string& query_string,
+    Runtime* runtime) :
+    runtime_(runtime) {
+  auto statements = runtime->parser()->parseQuery(query_string);
   draw_statements_.emplace_back();
-  for (auto stmt : parser.getStatements()) {
+
+  for (const auto& stmt : statements) {
     switch (stmt->getType()) {
       case query::ASTNode::T_DRAW:
-        draw_statements_.back().emplace_back(new DrawStatement(stmt));
+        draw_statements_.back().emplace_back(
+            new DrawStatement(stmt.get(), runtime->compiler()));
         break;
       case query::ASTNode::T_SELECT:
-        addStatement(stmt, repo);
+        statements_.emplace_back(
+            std::unique_ptr<QueryPlanNode>(
+                runtime_->queryPlanBuilder()->buildQueryPlan(
+                    stmt.get(), query_plan_.tableRepository())),
+            draw_statements_.back().empty() ?
+                nullptr : draw_statements_.back().back().get());
         break;
       case query::ASTNode::T_IMPORT:
-        repo->import(ImportStatement(stmt));
+        query_plan_.tableRepository()->import(
+            ImportStatement(stmt.get(), runtime_->compiler()),
+            runtime_->backends());
         break;
       default:
-        RAISE(util::RuntimeException, "invalid statement");
+        RAISE(kRuntimeError, "invalid statement");
     }
   }
 }
@@ -91,7 +84,10 @@ void Query::execute() {
 }
 
 ResultList* Query::getResultList(size_t index) const {
-  assert(index < results_.size()); // FIXPAUL
+  if (index >= results_.size()) {
+    RAISE(kIndexError, "invalid index: %i", index);
+  }
+
   return results_[index].get();
 }
 
@@ -104,27 +100,11 @@ size_t Query::getNumCharts() const {
 }
 
 ui::Canvas* Query::getChart(size_t index) const {
-  assert(index < charts_.size()); // FIXPAUL
-  return charts_[index].get();
-}
-
-bool Query::addStatement(
-    query::ASTNode* statement,
-    query::TableRepository* repo) {
-  QueryPlanBuilder query_plan_builder;
-
-  auto query_plan = query_plan_builder.buildQueryPlan(statement, repo);
-  if (query_plan == nullptr) {
-    fprintf(stderr, "cant build statement");
-    return false;
+  if (index >= charts_.size()) {
+    RAISE(kIndexError, "invalid index: %i", index);
   }
 
-  statements_.emplace_back(
-      std::unique_ptr<QueryPlanNode>(query_plan),
-      draw_statements_.back().empty() ?
-          nullptr : draw_statements_.back().back().get());
-
-  return true;
+  return charts_[index].get();
 }
 
 }

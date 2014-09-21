@@ -12,15 +12,15 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/barchart.h>
+#include <fnordmetric/ui/series.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/compile.h>
-#include <fnordmetric/sql/execute.h>
-#include <fnordmetric/sql/rowsink.h>
-#include <fnordmetric/sql/resultlist.h>
-#include <fnordmetric/sql/queryplannode.h>
+#include <fnordmetric/sql/runtime/compile.h>
+#include <fnordmetric/sql/runtime/execute.h>
+#include <fnordmetric/sql/runtime/rowsink.h>
+#include <fnordmetric/sql/runtime/resultlist.h>
+#include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
 
 namespace fnordmetric {
@@ -39,13 +39,13 @@ public:
   bool nextRow(SValue* row, int row_len) {
     if (name_ind_ < 0) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "can't draw SELECT because it has no 'series' column");
     }
 
     if (x_ind_ < 0) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "can't draw SELECT because it has no 'x' column");
     }
 
@@ -120,7 +120,7 @@ protected:
     if (!a) a = mkSeriesAdapter1D<fnordmetric::StringType>(row);
 
     if (a == nullptr) {
-      RAISE(util::RuntimeException, "can't build seriesadapter");
+      RAISE(kRuntimeError, "can't build seriesadapter");
     }
 
     return a;
@@ -213,7 +213,7 @@ protected:
   void preconditionCheck() const {
     if (adapter_.get() == nullptr) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "can't DRAW %s because the query returned no result rows",
           chartName().c_str());
     }
@@ -221,7 +221,7 @@ protected:
 
   void invalidType() const {
     RAISE(
-        util::RuntimeException,
+        kRuntimeError,
         "invalid series type for %s",
         chartName().c_str()); // FIXPAUL
   }

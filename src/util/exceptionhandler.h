@@ -11,23 +11,33 @@
 #define _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #include <mutex>
 #include <memory>
-#include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/util/logger.h>
 
 namespace fnordmetric {
 namespace util {
 
 class ExceptionHandler {
 public:
-  virtual void onException(std::exception* error) const = 0;
+  virtual void onException(const std::exception& error) const = 0;
 };
 
 class CatchAndPrintExceptionHandler : public ExceptionHandler {
 public:
-  CatchAndPrintExceptionHandler();
-  CatchAndPrintExceptionHandler(std::shared_ptr<OutputStream> os);
-  void onException(std::exception* error) const override;
+  CatchAndPrintExceptionHandler(Logger* logger);
+  void onException(const std::exception& error) const override;
 protected:
-  std::shared_ptr<OutputStream> os_;
+  Logger* logger_;
+};
+
+class CatchAndAbortExceptionHandler : public ExceptionHandler {
+public:
+  CatchAndAbortExceptionHandler(const std::string& message);
+  void onException(const std::exception& error) const override;
+
+  void installGlobalHandlers();
+
+protected:
+  std::string message_;
 };
 
 }
