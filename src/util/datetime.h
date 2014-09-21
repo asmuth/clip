@@ -39,13 +39,13 @@ public:
   bool operator>(const DateTime& other) const;
 
   /**
-   * Cast the DateTime object to a UTC unix timestamp represented as
+   * Cast the DateTime object to a UTC unix microsecond timestamp represented as
    * an uint64_t
    */
   explicit operator uint64_t() const;
 
   /**
-   * Cast the DateTime object to a UTC unix timestamp represented as
+   * Cast the DateTime object to a UTC unix microsecond timestamp represented as
    * a double
    */
   explicit operator double() const;

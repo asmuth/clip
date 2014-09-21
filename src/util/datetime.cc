@@ -17,11 +17,11 @@ namespace util {
 DateTime::DateTime(uint64_t utc_time) : utc_time_(utc_time) {}
 
 DateTime::operator uint64_t() const {
-  return utc_time_ / 1000000;
+  return utc_time_;
 }
 
 DateTime::operator double() const {
-  return utc_time_ / 1000000.0f;
+  return utc_time_;
 }
 
 DateTime DateTime::epoch() {
