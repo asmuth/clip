@@ -11,10 +11,10 @@
 #define _FNORDMETRIC_DRAWABLE_H
 #include <tuple>
 #include <functional>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/griddefinition.h>
 #include <fnordmetric/ui/legenddefinition.h>
+#include <fnordmetric/ui/series.h>
 #include <fnordmetric/ui/viewport.h>
 
 namespace fnordmetric {

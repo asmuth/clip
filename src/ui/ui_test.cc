@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/base/series.h>
 #include <fnordmetric/ui/axisdefinition.h>
 #include <fnordmetric/ui/areachart.h>
 #include <fnordmetric/ui/barchart.h>
@@ -15,6 +14,7 @@
 #include <fnordmetric/ui/domain.h>
 #include <fnordmetric/ui/linechart.h>
 #include <fnordmetric/ui/pointchart.h>
+#include <fnordmetric/ui/series.h>
 #include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/unittest.h>
 

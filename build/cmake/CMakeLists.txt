@@ -10,7 +10,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/")
 project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
-    stage/src/fnordmetric/base/series.cc
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/web/assets.cc
@@ -51,6 +50,7 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/drawable.cc
     stage/src/fnordmetric/ui/griddefinition.cc
     stage/src/fnordmetric/ui/legenddefinition.cc
+    stage/src/fnordmetric/ui/series.cc
     stage/src/fnordmetric/ui/timedomain.cc)
 
 set(FNORDMETRIC_CSV_BACKEND_SOURCES
