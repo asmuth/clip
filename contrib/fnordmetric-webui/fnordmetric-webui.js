@@ -42,11 +42,16 @@ FnordMetric.WebUI = function() {
   document.body.appendChild(navbar);
 
   var renderQueryEditor = function() {
-    var horizontal = true;
+    var horizontal = false;
 
     var editor = document.createElement("div");
     editor.className = "query_editor vertical_split";
     document.body.appendChild(editor);
+
+    var headbar = document.createElement("div");
+    headbar.className = "headbar";
+    headbar.innerHTML = ""
+    editor.appendChild(headbar);
 
     var editor_pane = document.createElement("div");
     var editor_width = 50;
@@ -68,13 +73,13 @@ FnordMetric.WebUI = function() {
     var split_button = document.createElement("div");
     split_button.className = "fancy_button";
     split_button.innerHTML = "<a href='#'>Change View</a>";
-    document.body.appendChild(split_button);
+    headbar.appendChild(split_button);
     split_button.addEventListener('click', function() {
         horizontal = !horizontal;
         updateLayout();
     },false);
 
-    var updateLayout = function() {
+    var updateLayout = function(minor) {
       var query_editor = document.querySelector(".query_editor");
       if (horizontal) {
         query_editor.className = "query_editor horizontal_split";
@@ -92,24 +97,37 @@ FnordMetric.WebUI = function() {
         editor_pane.style.height = editor_height + "px";
         result_pane.style.width = "100%";
         result_pane.style.left = "0";
-        result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";;
+        result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
         editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
-        editor_resizer_tooltip.style.left = "0";
+        editor_resizer_tooltip.style.left = "20px";
+        editor_resizer_tooltip.style.right = "20px";
       }
     }
 
-    function resizePane(e) {
-      if (horizontal) {
+    editor_resizer_tooltip.addEventListener('drag',function (e) {
+      editor_resizer_tooltip.style.background = "";
+      if (horizontal && e.clientX > 0) {
         editor_width = (e.clientX / window.innerWidth) * 100;
-        console.log(editor_width);
-        updateLayout();
+        updateLayout(true);
       }
-    }
 
-    window.addEventListener('resize', function() { updateLayout(); }, true);
-    editor_resizer_tooltip.addEventListener('dragstart', resizePane, false);
-    editor_resizer_tooltip.addEventListener('dragover', resizePane, true);
-    editor_resizer_tooltip.addEventListener('dragend', resizePane, true);
+      if (!horizontal && e.clientY > 0) {
+        editor_height = (e.clientY + window.pageYOffset) - editor_pane.offsetTop;
+        updateLayout(true);
+      }
+    }, false);
+
+    editor_resizer_tooltip.addEventListener('dragstart', function(e) {
+      this.style.background = "transparent";
+    }, false);
+
+    window.addEventListener('dragover', function(e) {
+      e.preventDefault();
+    }, false);
+
+    window.addEventListener('resize', function() {
+      updateLayout();
+    }, true);
 
     updateLayout();
     FnordMetric.Editor.init(editor_pane.querySelector(".editor"));

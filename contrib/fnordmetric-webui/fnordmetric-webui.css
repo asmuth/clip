@@ -7,53 +7,61 @@ body, html {
 
 body {
   background: #ececec;
+  padding-bottom: 20px;
 }
 
 #navbar {
   height: 48px;
-  position: fixed;
+  position: absolute;
   width: 100%;
   top: 0;
   left: 0;
   right: 0;
 }
 
-.fancy_button {
-  height: 40px;
-  border-radius: 5px;
-  border-bottom: 2px solid #34495e;;
-  background: #2980b9;
-  float:right;
-  margin-right: 30px;
-  margin-top: 58px;
-  text-align:center;
-}
-
-.fancy_button a {
-  line-height: 40px;
-  padding: 0 15px;
-  display: inline-block;
-  white-space: nowrap;
-  text-decoration: none;
-  color: #fff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,.3);
+.query_editor .headbar {
+  height: 70px;
+  top: 68px;
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  background: #ddd;
 }
 
 .query_editor .editor_pane,
 .query_editor .result_pane {
-  position: fixed;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.query_editor .result_pane .card {
+  height: 1000px;
 }
 
 .query_editor.horizontal_split .editor_pane,
 .query_editor.horizontal_split .result_pane,
 .query_editor.vertical_split .editor_pane {
-  top: 100px;
+  top: 127px;
+}
+
+.query_editor.horizontal_split .editor_pane {
+  padding-left: 20px;
+}
+
+.query_editor.horizontal_split .result_pane {
+  padding-right: 20px;
+}
+
+.query_editor.vertical_split .editor_pane,
+.query_editor.vertical_split .result_pane {
+  padding: 0 20px;
 }
 
 .query_editor .editor_resizer_tooltip {
   display:block;
   position: absolute;
   z-index: 100;
+  background: #d7e4f2;
 }
 
 .query_editor .editor_resizer_tooltip:hover {
@@ -61,7 +69,6 @@ body {
 }
 
 .query_editor.vertical_split .editor_resizer_tooltip {
-  width: 100%;
   height: 6px;
   cursor: ns-resize;
 }
@@ -98,7 +105,8 @@ body {
 }
 
 .card.editor {
-  padding: 0;
+  padding: 10px;
+  height: 100%;
 }
 
 #navbar, .card {
