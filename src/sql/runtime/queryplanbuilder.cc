@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <assert.h>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/runtime/queryplanbuilder.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
@@ -125,18 +124,26 @@ bool QueryPlanBuilder::hasAggregationInSelectList(ASTNode* ast) const {
   }
 
   auto select_list = ast->getChildren()[0];
-  assert(select_list->getType() == ASTNode::T_SELECT_LIST);
+  if (!(select_list->getType() == ASTNode::T_SELECT_LIST)) {
+    RAISE(util::RuntimeException, "corrupt AST");
+  }
 
   return hasAggregationExpression(select_list);
 }
 
 bool QueryPlanBuilder::hasAggregationExpression(ASTNode* ast) const {
   if (ast->getType() == ASTNode::T_METHOD_CALL) {
-    assert(ast->getToken() != nullptr);
+    if (!(ast->getToken() != nullptr)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     auto symbol = compiler_->symbolTable()->lookupSymbol
         (ast->getToken()->getString());
 
-    if(symbol != nullptr); // FIXPAUL!!!!
+    if (symbol == nullptr) {
+      RAISE(util::RuntimeException, "symbol lookup failed");
+    }
+
     if (symbol->isAggregate()) {
       return true;
     }
@@ -155,7 +162,9 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     ASTNode* ast,
     TableRepository* repo) {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
-  assert(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST);
+  if (!(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST)) {
+    RAISE(util::RuntimeException, "corrupt AST");
+  }
 
   /* copy own select list */
   auto select_list = ast->getChildren()[0]->deepCopy();
@@ -201,9 +210,12 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
 
   size_t group_scratchpad_len = 0;
   auto group_expr = compiler_->compile(&group_exprs, &group_scratchpad_len);
-  assert(group_scratchpad_len == 0);
-  //child_ast->debugPrint(2);
-  //select_list->debugPrint(2);
+
+  if (group_scratchpad_len > 0) {
+    RAISE(
+        util::RuntimeException,
+        "GROUP clause can only contain pure functions");
+  }
 
   /* resolve output column names */
   std::vector<std::string> column_names;
@@ -271,15 +283,29 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
     }
 
     auto limit_token = child->getToken();
-    assert(limit_token);
-    assert(*limit_token == Token::T_NUMERIC);
+    if (!(limit_token)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
+    if (!(*limit_token == Token::T_NUMERIC)) {
+      RAISE(util::RuntimeException, "corrupt AST");
+    }
+
     limit = limit_token->getInteger();
 
     if (child->getChildren().size() == 1) {
-      assert(child->getChildren()[0]->getType() == ASTNode::T_OFFSET);
+      if (!(child->getChildren()[0]->getType() == ASTNode::T_OFFSET)) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
+
       auto offset_token = child->getChildren()[0]->getToken();
-      assert(offset_token);
-      assert(*offset_token == Token::T_NUMERIC);
+      if (!(offset_token)) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
+
+      if (!(*offset_token == Token::T_NUMERIC)) {
+        RAISE(util::RuntimeException, "corrupt AST");
+      }
       offset = offset_token->getInteger();
     }
 

@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <assert.h>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/runtime/compile.h>
@@ -21,7 +20,10 @@ namespace query {
 Compiler::Compiler(SymbolTable* symbol_table) : symbol_table_(symbol_table) {}
 
 CompiledExpression* Compiler::compile(ASTNode* ast, size_t* scratchpad_len) {
-  assert(ast != nullptr);
+  if (ast == nullptr) {
+    RAISE(util::RuntimeException, "can't compile nullptr");
+  }
+
   switch (ast->getType()) {
 
     case ASTNode::T_SELECT_LIST:
@@ -189,15 +191,17 @@ CompiledExpression* Compiler::compileColumnReference(ASTNode* ast) {
 CompiledExpression* Compiler::compileMethodCall(
     ASTNode* ast,
     size_t* scratchpad_len) {
-  assert(ast->getToken() != nullptr);
-  assert(*ast->getToken() == Token::T_IDENTIFIER);
+  if (ast->getToken() == nullptr ||
+      ast->getToken()->getType() != Token::T_IDENTIFIER) {
+    RAISE(util::RuntimeException, "corrupt AST");
+  }
 
   auto symbol = symbol_table_->lookupSymbol(ast->getToken()->getString());
   if (symbol == nullptr) {
-    fprintf(stderr,
+    RAISE(
+        util::RuntimeException,
         "error: cannot resolve symbol: %s\n",
         ast->getToken()->getString().c_str());
-    assert(0); // FIXPAUL
   }
 
   auto op = new CompiledExpression();

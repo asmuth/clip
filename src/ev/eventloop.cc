@@ -1,18 +1,18 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include "eventloop.h"
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ev {
@@ -20,7 +20,7 @@ namespace ev {
 EventLoop::EventLoop() : max_fd_(1), running_(true) {
   auto callbacks_size = sizeof(CallbackInterface*) * FD_SETSIZE;
   callbacks_ = static_cast<CallbackInterface**>(malloc(callbacks_size));
-  assert(callbacks_ != nullptr);
+  if (callbacks_ == nullptr) { RAISE(util::RuntimeException, "malloc failed"); }
   memset(callbacks_, 0, callbacks_size);
 
   FD_ZERO(&op_read_);
