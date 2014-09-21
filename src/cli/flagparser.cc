@@ -78,6 +78,14 @@ int64_t FlagParser::getInt(const char* longopt) const {
   RAISE(kFlagError, "flag '%s' is not set", longopt);
 }
 
+void FlagParser::parseArgv(int argc, const char** argv) {
+  std::vector<std::string> args;
+  for (int i = 1; i < argc; ++i) {
+    args.emplace_back(argv[i]);
+  }
+  parseArgv(args);
+}
+
 // FIXPAUL optimize with hashmap?
 void FlagParser::parseArgv(const std::vector<std::string>& argv) {
   for (int i = 0; i < argv.size(); i++) {

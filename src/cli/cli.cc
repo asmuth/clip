@@ -95,6 +95,13 @@ void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
   env->setVerbose(flags->isSet("verbose"));
 }
 
+void CLI::parseArgs(Environment* env, int argc, const char** argv) {
+  std::vector<std::string> args;
+  for (int i = 1; i < argc; ++i) {
+    args.emplace_back(argv[i]);
+  }
+  parseArgs(env, args);
+}
 
 int CLI::executeSafely(Environment* env) {
   auto err_stream = util::OutputStream::getStderr();

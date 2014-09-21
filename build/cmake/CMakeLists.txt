@@ -34,6 +34,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/runtimeexception.cc
+    stage/src/fnordmetric/util/signalhandler.cc
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc)
 

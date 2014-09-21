@@ -72,6 +72,11 @@ public:
   /**
    * Parse an argv array. This may throw an exception.
    */
+  void parseArgv(int argc, const char** argv);
+
+  /**
+   * Parse an argv array. This may throw an exception.
+   */
   void parseArgv(const std::vector<std::string>& argv);
 
   /**

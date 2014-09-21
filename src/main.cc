@@ -15,21 +15,24 @@
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/environment.h>
+#include <fnordmetric/util/signalhandler.h>
 
 using namespace fnordmetric;
 
-int main(int argc, char** argv) {
-  std::vector<std::string> args;
-  for (int i = 1; i < argc; ++i) {
-    args.emplace_back(argv[i]);
-  }
+static const char kCrashErrorMsg[] =
+    "FnordMetric crashed :( -- Please report a bug at "
+    "github.com/paulasmuth/fnordmetric";
 
-  util::CatchAndAbortExceptionHandler ehandler(
-      "FnordMetric crashed :( -- Please report a bug at "
-      "github.com/paulasmuth/fnordmetric");
+int main(int argc, const char** argv) {
+  /* setup environment */
+  util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
 
-  cli::CLI::parseArgs(env(), args);
+  util::SignalHandler::ignoreSIGHUP();
+  util::SignalHandler::ignoreSIGPIPE();
+
+  /* execute commandline */
+  cli::CLI::parseArgs(env(), argc, argv);
   cli::CLI::executeSafely(env());
   return 0;
 }

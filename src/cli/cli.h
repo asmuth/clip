@@ -25,6 +25,7 @@ public:
    * Parse a command line
    */
   static void parseArgs(Environment* env, const std::vector<std::string>& argv);
+  static void parseArgs(Environment* env, int argc, const char** argv);
 
   /**
    * Execute a command line but do not throw exceptions
