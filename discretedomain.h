@@ -34,7 +34,7 @@ public:
         value);
 
     if (index < 1) {
-      RAISE(util::RuntimeException, "can't scale value");
+      RAISE(kRuntimeError, "can't scale value");
     }
 
     double cardinality = (double) categories_.size();
@@ -54,7 +54,7 @@ public:
         value);
 
     if (index < 1) {
-      RAISE(util::RuntimeException, "can't scale value");
+      RAISE(kRuntimeError, "can't scale value");
     }
 
     auto cardinality = (double) categories_.size();

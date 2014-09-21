@@ -238,7 +238,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
     if (!(point.y() <= point.z())) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "BarChart error: invalid point in series. Z value must be greater "
           "or equal to Y value for all points");
     }
@@ -340,7 +340,7 @@ void BarChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
   if (data_.size() == 0) {
-    RAISE(util::RuntimeException, "BarChart3D#render called without any data");
+    RAISE(kRuntimeError, "BarChart3D#render called without any data");
   }
 
   SeriesJoin3D<TX, TY, TZ> const* data;
@@ -515,7 +515,7 @@ template <typename TX, typename TY, typename TZ>
 const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
     size_t series_index) const {
   if (series_index > series_.size()) {
-    RAISE(util::RuntimeException, "invalid series index");
+    RAISE(kRuntimeError, "invalid series index");
   }
 
   return series_[series_index]->getProperty(Series::P_COLOR);

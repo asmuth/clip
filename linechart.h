@@ -212,7 +212,7 @@ void LineChart2D<TX, TY>::render(
       line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
     } catch (const std::exception& e) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "invalid line width: %s",
           series->getProperty(Series::P_LINE_WIDTH).c_str());
     }
@@ -221,7 +221,7 @@ void LineChart2D<TX, TY>::render(
       point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
     } catch (const std::exception& e) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "invalid point size: %s",
           series->getProperty(Series::P_POINT_SIZE).c_str());
     }
@@ -324,7 +324,7 @@ AnyDomain* LineChart2D<TX, TY>::getDomain(AnyDomain::kDimension dimension) {
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "LineChart2D does not have a Z domain");
+      RAISE(kRuntimeError, "LineChart2D does not have a Z domain");
       return nullptr;
   }
 }

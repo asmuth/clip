@@ -306,7 +306,7 @@ AnyDomain* PointChart3D<TX, TY, TZ>::getDomain(
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(util::RuntimeException, "PointChart3D does not have a Z domain");
+      RAISE(kRuntimeError, "PointChart3D does not have a Z domain");
       return nullptr;
   }
 }
@@ -340,7 +340,7 @@ void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
           series->getProperty(Series::P_POINT_SIZE, &point));
     } catch (const std::exception& e) {
       RAISE(
-          util::RuntimeException,
+          kRuntimeError,
           "invalid point size: %s",
           series->getProperty(Series::P_POINT_SIZE, &point).c_str());
     }
