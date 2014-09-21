@@ -55,10 +55,17 @@ RuntimeException RuntimeException::setTypeName(const char* type_name) {
 
 RuntimeException RuntimeException::setErrno(int posix_errno) {
   if (posix_errno > 0) {
+    char buf[4096];
+    char* errstr = buf;
+
+#ifdef _GNU_SOURCE
+    errstr = strerror_r(posix_errno, buf, sizeof(buf));
+#else
+    strerror_r(posix_errno, buf, sizeof(buf));
+#endif
+
     size_t pos = strlen(message_);
-    snprintf(message_ + pos, sizeof(message_) - pos, ": ");
-    pos += 2;
-    strerror_r(posix_errno, message_ + pos, sizeof(message_) - pos);
+    snprintf(message_ + pos, sizeof(message_) - pos, ": %s", errstr);
   }
 
   return *this;

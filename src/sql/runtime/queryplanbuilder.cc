@@ -96,9 +96,7 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     return exec;
   }
 
-  RAISE(
-      kRuntimeError,
-      "can't figure out a query plan for this, sorry :(");
+  RAISE(kRuntimeError, "can't figure out a query plan for this, sorry :(");
 
   // if verbose -> dump ast
   return nullptr;
@@ -212,9 +210,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
   auto group_expr = compiler_->compile(&group_exprs, &group_scratchpad_len);
 
   if (group_scratchpad_len > 0) {
-    RAISE(
-        kRuntimeError,
-        "GROUP clause can only contain pure functions");
+    RAISE(kRuntimeError, "GROUP clause can only contain pure functions");
   }
 
   /* resolve output column names */
