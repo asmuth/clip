@@ -26,14 +26,11 @@ int main(int argc, char** argv) {
 
   util::CatchAndAbortExceptionHandler ehandler(
       "FnordMetric crashed :( -- Please report a bug at "
-      "github.com/paulasmuth/fnordmetric\n\n");
+      "github.com/paulasmuth/fnordmetric");
+  ehandler.installGlobalHandlers();
 
-  try {
-    cli::CLI::parseArgs(env(), args);
-    cli::CLI::execute(env());
-    return 0;
-  } catch (const std::exception& e) {
-    ehandler.onException(e);
-  }
+  cli::CLI::parseArgs(env(), args);
+  cli::CLI::executeSafely(env());
+  return 0;
 }
 

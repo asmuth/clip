@@ -28,7 +28,7 @@ CatchAndAbortExceptionHandler::CatchAndAbortExceptionHandler(
 
 void CatchAndAbortExceptionHandler::onException(
     const std::exception& error) const {
-  fprintf(stderr, "%s", message_.c_str()); // FIXPAUL
+  fprintf(stderr, "%s\n\n", message_.c_str()); // FIXPAUL
 
   try {
     auto rte = dynamic_cast<const util::RuntimeException&>(error);
@@ -38,6 +38,33 @@ void CatchAndAbortExceptionHandler::onException(
     fprintf(stderr, "Aborting...\n");
     abort(); // core dump if enabled
   }
+}
+
+static std::string globalEHandlerMessage;
+static void globalEHandler() {
+  fprintf(stderr, "%s\n", globalEHandlerMessage.c_str());
+
+  try {
+    throw;
+  } catch (const std::exception& e) {
+    try {
+      auto rte = dynamic_cast<const util::RuntimeException&>(e);
+      rte.debugPrint();
+      exit(1);
+    } catch (...) {
+      /* fallthrough */
+    }
+  } catch (...) {
+    /* fallthrough */
+  }
+
+  abort();
+}
+
+void CatchAndAbortExceptionHandler::installGlobalHandlers() {
+  globalEHandlerMessage = message_;
+  std::set_terminate(&globalEHandler);
+  std::set_unexpected(&globalEHandler);
 }
 
 }
