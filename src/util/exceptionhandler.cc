@@ -22,5 +22,23 @@ void CatchAndPrintExceptionHandler::onException(
   logger_->exception("ERROR", "Uncaught exception", error);
 }
 
+CatchAndAbortExceptionHandler::CatchAndAbortExceptionHandler(
+    const std::string& message) :
+    message_(message) {}
+
+void CatchAndAbortExceptionHandler::onException(
+    const std::exception& error) const {
+  fprintf(stderr, "%s", message_.c_str()); // FIXPAUL
+
+  try {
+    auto rte = dynamic_cast<const util::RuntimeException&>(error);
+    rte.debugPrint();
+    exit(1);
+  } catch (const std::exception& e) {
+    fprintf(stderr, "Aborting...\n");
+    abort(); // core dump if enabled
+  }
+}
+
 }
 }

@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <fnordmetric/cli/cli.h>
-#include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/environment.h>
 
 using namespace fnordmetric;
@@ -24,23 +24,16 @@ int main(int argc, char** argv) {
     args.emplace_back(argv[i]);
   }
 
+  util::CatchAndAbortExceptionHandler ehandler(
+      "FnordMetric crashed :( -- Please report a bug at "
+      "github.com/paulasmuth/fnordmetric\n\n");
+
   try {
     cli::CLI::parseArgs(env(), args);
-    return cli::CLI::executeSafely(env());
+    cli::CLI::execute(env());
+    return 0;
   } catch (const std::exception& e) {
-    fprintf(
-        stderr,
-        "FnordMetric crashed :( -- Please report a bug at "
-        "github.com/paulasmuth/fnordmetric\n\n");
-
-    try {
-      auto rte = dynamic_cast<const util::RuntimeException&>(e);
-      rte.debugPrint();
-      exit(1);
-    } catch (const std::exception& e) {
-      fprintf(stderr, "Aborting...\n");
-      abort(); // core dump if enabled
-    }
+    ehandler.onException(e);
   }
 }
 

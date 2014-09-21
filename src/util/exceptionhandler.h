@@ -29,6 +29,17 @@ protected:
   Logger* logger_;
 };
 
+class CatchAndAbortExceptionHandler : public ExceptionHandler {
+public:
+  CatchAndAbortExceptionHandler(const std::string& message);
+  void onException(const std::exception& error) const override;
+
+  void installGlobalHandlers();
+
+protected:
+  std::string message_;
+};
+
 }
 }
 #endif
