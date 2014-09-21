@@ -87,7 +87,7 @@ FnordMetric.WebUI = function() {
         result_pane.style.left = editor_width + "%";
         result_pane.style.top = "";
         result_pane.style.height = editor_height + "px";
-        result_pane.style.overflow = "scroll";
+        result_pane.style.overflowY = "auto";
         editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
         editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
       } else {
@@ -99,7 +99,7 @@ FnordMetric.WebUI = function() {
         result_pane.style.left = "0";
         result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
         result_pane.style.height = "auto";
-        result_pane.style.overflow = "visible";
+        result_pane.style.overflowY = "visible";
         editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
         editor_resizer_tooltip.style.left = "20px";
         editor_resizer_tooltip.style.right = "20px";
