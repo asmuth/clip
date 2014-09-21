@@ -168,7 +168,15 @@ void URI::parseURI(
         abegin = ++acur;
         for (; *acur >= '0' && *acur <= '9'; ++acur);
         if (acur > abegin) {
-          *port = std::stoi(std::string(abegin, acur - abegin));
+          std::string port_str(abegin, acur - abegin);
+          try {
+            *port = std::stoi(port_str);
+          } catch (const std::exception& e) {
+            RAISE(
+                util::RuntimeException,
+                "invalid URI: invalid port: %s",
+                port_str.c_str());
+          }
         }
       }
     }

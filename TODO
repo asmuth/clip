@@ -12,7 +12,6 @@
     - svg: escape series names, labels!
     - sql: lotsa overflows in expression exectution // outc val not respected
     - ui: line chart with only negative values
-    - replace all stoi, stod with wrappers that throw runtimeexceptions
     - ui: known bug: 2d area chart with explicit y domain, min > 0
     ----------
     - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,

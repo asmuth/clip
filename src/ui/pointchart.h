@@ -336,9 +336,16 @@ void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
 
   // FIXPAUL copy point style
   for (const auto& point : series->getData()) {
-    // FIXPAUL catch converison errror
-    double point_size = std::stod(
-        series->getProperty(Series::P_POINT_SIZE, &point));
+    double point_size;
+    try {
+      point_size = std::stod(
+          series->getProperty(Series::P_POINT_SIZE, &point));
+    } catch (const std::exception& e) {
+      RAISE(
+          util::RuntimeException,
+          "invalid point size: %s",
+          series->getProperty(Series::P_POINT_SIZE, &point).c_str());
+    }
 
     series3d->addDatum(
         Series::Coord<TX>(point.x()),
