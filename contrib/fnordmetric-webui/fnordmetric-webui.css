@@ -19,29 +19,16 @@ body {
   right: 0;
 }
 
-.query_editor .headbar {
-  height: 70px;
-  top: 68px;
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  background: #ddd;
-}
-
 .query_editor .editor_pane,
 .query_editor .result_pane {
   position: absolute;
   box-sizing: border-box;
 }
 
-.query_editor .result_pane .card {
-  height: 1000px;
-}
-
 .query_editor.horizontal_split .editor_pane,
 .query_editor.horizontal_split .result_pane,
 .query_editor.vertical_split .editor_pane {
-  top: 127px;
+  top: 115px;
 }
 
 .query_editor.horizontal_split .editor_pane {
@@ -79,41 +66,44 @@ body {
   cursor: ew-resize;
 }
 
-/*
-
-.query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
-  position: fixed;
-  top: 80px;
-  bottom: 0;
-  box-sizing: border-box;
+.query_editor .headbar {
+  height: 64px;
+  top: 50px;
+  position: absolute;
+  left: 20px;
+  right: 20px;
 }
 
-.query_editor.vertical_split .editor_pane {
-  padding: 30px 3px 30px 30px;
+.query_editor .headbar h1 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 64px;
+  padding: 0 20px;
+  margin: 0;
+  float: left;
 }
 
-.query_editor.vertical_split .result_pane {
-  padding: 30px 30px 30px 3px;
+.editor_pane .editor_menu {
+  background: #ddd;
+  height: 46px;
 }
 
+.card.editor {
+  padding: 0;
+  height: 100%;
+}
 
-*/
+#navbar, .card, .headbar {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 0 1px rgba(0,0,0,.1);
+}
 
 .card {
   padding: 20px;
   min-height: 260px;
 }
 
-.card.editor {
-  padding: 10px;
-  height: 100%;
-}
-
-#navbar, .card {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  box-shadow: 0 0 1px rgba(0,0,0,.1);
-}
 
 /* BASICS */
 

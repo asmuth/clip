@@ -32,17 +32,18 @@ FnordMetric.Editor.init = function(elem) {
   var mime = "fm-sql";
 
   var cm = CodeMirror(elem, {
-    mode: mime
+    mode: mime,
+    lineNumbers: true,
   });
 };
 
 FnordMetric.WebUI = function() {
-  var navbar = document.createElement("div");
-  navbar.id = "navbar";
-  document.body.appendChild(navbar);
+  //var navbar = document.createElement("div");
+  //navbar.id = "navbar";
+  //document.body.appendChild(navbar);
 
   var renderQueryEditor = function() {
-    var horizontal = false;
+    var horizontal = true;
 
     var editor = document.createElement("div");
     editor.className = "query_editor vertical_split";
@@ -50,14 +51,14 @@ FnordMetric.WebUI = function() {
 
     var headbar = document.createElement("div");
     headbar.className = "headbar";
-    headbar.innerHTML = ""
+    headbar.innerHTML = "<h1>New Query<h1>"
     editor.appendChild(headbar);
 
     var editor_pane = document.createElement("div");
     var editor_width = 50;
     var editor_height = 300;
     editor_pane.className = "editor_pane";
-    editor_pane.innerHTML = "<div class='card editor'></div>"
+    editor_pane.innerHTML = "<div class='card editor'></div><div class='editor_menu'></div>"
     editor.appendChild(editor_pane);
 
     var editor_resizer_tooltip = document.createElement("div");
