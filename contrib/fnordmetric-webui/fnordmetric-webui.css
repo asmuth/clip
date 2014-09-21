@@ -16,27 +16,44 @@ body {
   right: 0;
 }
 
-.query_editor.horizontal_split .editor_pane, .query_editor.horizontal_split .result_pane {
+.query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
   position: fixed;
   top: 48px;
   bottom: 0;
   box-sizing: border-box;
 }
 
-.query_editor.horizontal_split .editor_pane {
-  padding: 30px 15px 30px 30px;
+.query_editor.vertical_split .editor_pane {
+  padding: 30px 3px 30px 30px;
 }
 
-.query_editor.horizontal_split .result_pane {
-  padding: 30px 30px 30px 15px;
+.query_editor.vertical_split .result_pane {
+  padding: 30px 30px 30px 3px;
 }
 
-.query_editor.vertical_split .editor_pane, .query_editor.vertical_split .result_pane {
+.query_editor.horizontal_split .editor_pane, .query_editor.horizontal_split .result_pane {
   position: fixed;
   top: 48px;
   padding: 30px;
 }
 
+.query_editor .layout_resizer {
+  display:none;
+  width: 6px;
+  position: absolute;
+  z-index: 100;
+  background-color: #d7e4f2;
+}
+
+.query_editor:hover .layout_resizer{
+  display:block;
+  cursor: ew-resize;
+}
+
+.query_editor #vertical.layout_resizer {
+  top: 78px;
+  min-height: 300px;
+}
 
 .card {
   padding: 20px;
