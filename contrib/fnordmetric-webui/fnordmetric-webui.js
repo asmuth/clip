@@ -29,14 +29,10 @@ FnordMetric.Editor = {
 };
 
 FnordMetric.WebUI = function() {
-  //var navbar = document.createElement("div");
-  //navbar.id = "navbar";
-  //document.body.appendChild(navbar);
-
- //myCodeMirror.setSize(500, 300);
-
   var renderQueryEditor = function() {
     var horizontal = true;
+    var editor_width = 42;
+    var editor_height = 300;
 
     var editor = document.createElement("div");
     editor.className = "query_editor vertical_split";
@@ -48,8 +44,6 @@ FnordMetric.WebUI = function() {
     editor.appendChild(headbar);
 
     var editor_pane = document.createElement("div");
-    var editor_width = 50;
-    var editor_height = 300;
     editor_pane.className = "editor_pane";
     editor_pane.innerHTML = "<div class='card editor'></div><div class='editor_menu'></div>"
     editor.appendChild(editor_pane);
@@ -66,7 +60,6 @@ FnordMetric.WebUI = function() {
 
     var result_pane = document.createElement("div");
     result_pane.className = "result_pane";
-    result_pane.innerHTML = ""
     editor.appendChild(result_pane);
 
     var split_button = document.createElement("div");
@@ -74,19 +67,27 @@ FnordMetric.WebUI = function() {
     split_button.innerHTML = "<a href='#'>Change View</a>";
     headbar.appendChild(split_button);
     split_button.addEventListener('click', function() {
-        horizontal = !horizontal;
-        updateLayout();
+      horizontal = !horizontal;
+
+      if (!horizontal) {
+        editor_height = window.innerHeight * 0.3;
+      }
+
+      updateLayout();
     },false);
 
     var updateLayout = function(minor) {
       var query_editor = document.querySelector(".query_editor");
       if (horizontal) {
+        editor_height =  window.innerHeight - 68;
         query_editor.className = "query_editor horizontal_split";
         editor_pane.style.width = editor_width + "%";
         editor_pane.style.left = "0";
         result_pane.style.width = (100 - editor_width) + "%";
         result_pane.style.left = editor_width + "%";
         result_pane.style.top = "";
+        result_pane.style.height = editor_height + "px";
+        result_pane.style.overflow = "scroll";
         editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
         editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
       } else {
@@ -97,23 +98,27 @@ FnordMetric.WebUI = function() {
         result_pane.style.width = "100%";
         result_pane.style.left = "0";
         result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
+        result_pane.style.height = "auto";
+        result_pane.style.overflow = "visible";
         editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
         editor_resizer_tooltip.style.left = "20px";
         editor_resizer_tooltip.style.right = "20px";
       }
 
-      cm.setSize("auto", editor_height);
+      cm.setSize("auto", editor_height - 46);
     }
 
     editor_resizer_tooltip.addEventListener('drag',function (e) {
       editor_resizer_tooltip.style.background = "";
       if (horizontal && e.clientX > 0) {
         editor_width = (e.clientX / window.innerWidth) * 100;
+        editor_width = Math.min(Math.max(25, editor_width), 60);
         updateLayout(true);
       }
 
       if (!horizontal && e.clientY > 0) {
         editor_height = (e.clientY + window.pageYOffset) - editor_pane.offsetTop;
+        editor_height = Math.max(100, editor_height);
         updateLayout(true);
       }
     }, false);
