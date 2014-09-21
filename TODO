@@ -1,8 +1,22 @@
-[ ui ]
-    - stacked area charts
-    - line/point styles
-    - simple web interface (interactive query UI generates embed html snippets)
+[ todo ]
+    - SELECT * ...
+    - SQL: order by
+    - SQL: having
+    - SQL: join
+    - SQL: subqueries
+    - mysql: re-serialize where condition
+    - round fn
+    - ui: stacked area charts
+    - ui: line/point styles
+    - ui: simple web interface (interactive query UI generates embed html snippets)
+    - svg: escape series names, labels!
+    - sql: lotsa overflows in expression exectution // outc val not respected
+    - ui: line chart with only negative values
+    - replace all stoi, stod with wrappers that throw runtimeexceptions
+    - ui: known bug: 2d area chart with explicit y domain, min > 0
     ----------
+    - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
+              holtwinters
     - impl inside/outside axis labels
     - impl rotated axis labels
     - series adapter: max interpolation gap
@@ -14,28 +28,11 @@
     - set option: number format (si, exp, etc)
     - chart type: histogram
     - chart type: heatmap
-
-[ cleanup ]
-    - escape series names, labels!
-    - lotsa overflows in expression exectution // outc val not respected
-    - line chart with only negative values
-    - replace all stoi, stod with wrappers that throw runtimeexceptions
-    - known bug: 2d area chart with explicit y domain, min > 0
-    ---
     - refactor tokenizer // dynamically register tokens
     - rename (axis|legend|grid)definition -> \1config
 
-[ sql ]
-     - SELECT * ...
-     - SQL: order by
-     - SQL: having
-     - SQL: join
-     - SQL: subqueries
-     - mysql: re-serialize where condition
-     - round fn
 
 [ doc ]
-
      - faqs
      - why svg rocks
        - open it in inkscape
@@ -59,103 +56,11 @@
     - query cache
     - dashboard edit ui: html source
     - dashboard edit ui: wysiwyg
-
-[ random ideas ]
     - moving avg, etc
     - candlestick
+    - fnordetric collect --from-statsd 1234 --to 'mysql::'
 
 
-    $ fnordmetric web -p 8080   # standalone webserver on port 8080
-    $ fnordmetric cgi        # mount me as cgi script!
-
-
-fnordetric collect --from-statsd 1234 --to 'mysql::'
-
-examples from csv file with temp measurements per time/city -> timelines, range
-bar charts etc...
-
-bar chart examples:
-  * horizontal with labels outside
-  * horizontal with labels inside
-  * vertical with negative values
-  * zero-centered horizontal ranges
-  * histogram
-
-point chart examples:
-  * single 2d series
-  * point types, size
-  * multi 2d series
-  * multi 3d series
-  * negative values
-  * middle axis
-
---- axis expr can be a tuple!!. e.g for error bars or area
-
--- draw a graph with explicit axis definition
-DRAW LINE CHART;
-
-SERIES experiment XAXIS fu YAXIS bar FROM
-  SELECT fu, bar FROM table1;
-
-
--- draw a graph with different y scales per series
-DRAW LINE CHART;
-
-SERIES experiment YSCALE 0, 100 FROM
-  SELECT x, y FROM table1;
-
-SERIES experiment YSCALE 0, 500 FROM
-  SELECT x, y FROM table2;
-
-
--- draw a graph with dynamic YSCALE
-DRAW LINE CHART;
-
-SERIES experiment YSCALE 0, max(y) * 1.5 FROM
-  SELECT x, y FROM table1;
-
-SERIES experiment YSCALE 0, max(y) * 1.5 FROM
-  SELECT x, y FROM table2;
-
-Examples page with examples left: query, right: output and link to examples/
-folder with source data!
-
-eMail contributers and long time followers "FnordMetric <3 username"
-
-
--> msync
--> import freelist properly
--> MmapPageManager, MallocPageManager, InMemoryDatabase, FileBackedDatabase
--> crc32 instead of fnc32 for checksums?
--> file lock on open
--> proper error handling
-
-You can run it as a standalone timerseries database or as a network of distributed
-data collection agents. SQL Syntax, statsd support, c++, bindings for x,z,y jadda
-jadda
-
-FnordMetric is heavily optimized for sequential queries and aggregations over
-time ranges. This means running something like "give me the slowest pages by
-90th percentile latency for every 10 minute window in the last 3 days" is pretty
-fast, whereas something like "give me a whole stream with thousands of rows but
-reorder it by some custom" field is better suited for a regular database.
-
-- streaming queries that output a continiously changing dataset
-- standing queries (< streaming queries) that output the data into a new stream
-  as it is generated
-- streaming queries can't have: order by -- can they?
-- no sub-query support! (if you need sub queries what you are trying to do is
-probably better suited for a regular database anyway)
-
-Execution Flow:
-
-  {
-     Scan+Filter,
-     Aggregate
-  }
-  Having
-  Re-Order
-  Limit, Offset
 
 
 -- Select number of http error codes in the last hour
@@ -208,44 +113,3 @@ SELECT real_value, holtwinters_forecast(real_value)
   FROM metric
   WHERE time > -24hours AND time < +24hours;
 
--- JOIN two streams on a non time parameter
--- SELECT http error rate from one metric for yesterday in 5 min windows
--- SELECT http error rate from one metric for yesterday gross
-
-
--> Concepts: Stream, Agents vs Server, Retention Policy
-
--> functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
-              holtwinters
-
--> msync safety mode: relaxed (consistent but might loose data), conservative
-                      (msync async) and paranoid (msync sync)
-
--> implicit fields: time, agent, offset
-
--> UI menu: query / streams
--> streams: local/remote. disk usage, replication status, retention, etc
--> query ui: tabs for: html req equivalent, html embed, etc
--> query safety mode: on/off (check row checksums)
--> malloc page manager
--> example:
-  * getting started standalone:
-     * create http_reqs stream with statuscode, count
-     * select select http error rate
-  * getting started distributed
-     * agents have metrics with http req time distribution and url
-     * graph global req time distribution
-     * graph 90th percentile req time per agent
--> renice query threads in agents?
--> push query down into backend
--> agents that run queries on external data sources (e.g. logfiles)
--> newrelic-like agents that auto-export streams on demand
--> on demand streams :)
--> nagios adapter for alerting
--> http interface? (need to bundle lotsa resources)
--> stream replication
--> optimized for seeks over time ranges
--> row compression / page compression?
--> generate embed snippets from ruby api -> rails helper plugin
--> execute multiple queries in parallel in the ui -> get multiple timeseries
-   and tables (tabs)
