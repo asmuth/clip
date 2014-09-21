@@ -38,16 +38,11 @@ body {
 }
 
 .query_editor .layout_resizer {
-  display:none;
+  display:block;
   width: 6px;
   position: absolute;
   z-index: 100;
-  background-color: #d7e4f2;
-}
-
-.query_editor:hover .layout_resizer{
-  display:block;
-  cursor: ew-resize;
+  
 }
 
 .query_editor #vertical.layout_resizer {
