@@ -241,9 +241,25 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   area.series = series->name();
   area.color = series->getProperty(Series::P_COLOR);
   area.line_style = series->getProperty(Series::P_LINE_STYLE);
-  area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
   area.point_style = series->getProperty(Series::P_POINT_STYLE);
-  area.point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+
+  try {
+    area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+  } catch (const std::exception& e) {
+    RAISE(
+        util::RuntimeException,
+        "invalid line width: %s",
+        series->getProperty(Series::P_LINE_WIDTH).c_str());
+  }
+
+  try {
+    area.point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+  } catch (const std::exception& e) {
+    RAISE(
+        util::RuntimeException,
+        "invalid point size: %s",
+        series->getProperty(Series::P_POINT_SIZE).c_str());
+  }
 
   for (const auto& point : series->getData()) {
     x_domain->addValue(point.x());

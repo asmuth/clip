@@ -205,11 +205,29 @@ void LineChart2D<TX, TY>::render(
   for (const auto& series : series_) {
     std::vector<std::pair<double, double>> coords;
 
-    // FIXPAUL catch conversion excpetion
     auto point_style = series->getProperty(Series::P_POINT_STYLE);
-    auto point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+    double point_size;
     auto line_style = series->getProperty(Series::P_LINE_STYLE);
-    auto line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+    double line_width;
+
+    try {
+      line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
+    } catch (const std::exception& e) {
+      RAISE(
+          util::RuntimeException,
+          "invalid line width: %s",
+          series->getProperty(Series::P_LINE_WIDTH).c_str());
+    }
+
+    try {
+      point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
+    } catch (const std::exception& e) {
+      RAISE(
+          util::RuntimeException,
+          "invalid point size: %s",
+          series->getProperty(Series::P_POINT_SIZE).c_str());
+    }
+
     auto color = series->getProperty(Series::P_COLOR);
 
     for (const auto& point : series->getData()) {
