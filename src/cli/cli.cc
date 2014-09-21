@@ -1,13 +1,12 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <vector>
 #include <string>
 #include <fnordmetric/environment.h>
@@ -97,19 +96,24 @@ void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
 
 
 int CLI::executeSafely(Environment* env) {
+  auto err_stream = util::OutputStream::getStderr();
+
   try {
     execute(env);
   } catch (const util::RuntimeException& e) {
     if (e.getTypeName() == "UsageError") {
-      //env->flags()->printUsage(env->error_stream());
+      env->flags()->printUsage(err_stream.get());
       return 1;
     }
 
-    //if (env->verbose()) {
+    if (env->verbose()) {
       env->logger()->exception("FATAL", "Fatal error", e);
-    //} else {
-      // env->logger()->exception();
-      //e.debugPrint();
+    } else {
+      auto msg = e.getMessage();
+      err_stream->printf("[ERROR] ");
+      err_stream->write(msg.c_str(), msg.size());
+      err_stream->printf("\n");
+    }
 
     return 1;
   }
