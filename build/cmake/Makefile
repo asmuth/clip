@@ -12,10 +12,7 @@ all: assets
 	rm -f ../libfnordmetric-static.a
 	rm -f ../libfnordmetric.dylib
 	rm -f ../libfnordmetric.so
-	ln -s cmake/target/fnordmetric-cli ../fnordmetric
-	ln -s cmake/target/libfnordmetric.a ../libfnordmetric-static.a
-	ln -s cmake/target/libfnordmetric.dylib ../libfnordmetric.dylib
-	ln -s cmake/target/libfnordmetric.so ../libfnordmetric.so
+	ln -s cmake/target/fnordmetric ../fnordmetric
 
 assets:
 	./assets.sh

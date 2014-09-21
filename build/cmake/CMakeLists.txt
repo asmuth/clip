@@ -100,12 +100,6 @@ set(FNORDMETRIC_QUERY_SOURCES
 include_directories(stage/src)
 include_directories(stage/assets)
 
-find_package(MySQL)
-if (MySQL_FOUND)
-  include_directories(${MYSQL_INCLUDE_DIRS})
-  target_link_librarie (helloworld ${MYSQL_LIBRARIES})
-endif(MySQL_FOUND)
-
 IF(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
 ELSE()
@@ -114,43 +108,46 @@ ENDIF()
 
 add_definitions("-Wno-predefined-identifier-outside-function")
 add_library(fnordmetric-static ${FNORDMETRIC_QUERY_SOURCES})
-target_link_libraries(fnordmetric-static mysqlclient)
-add_library(fnordmetric SHARED)
+
+find_package(MySQL)
+if (MYSQL_FOUND)
+  include_directories(${MYSQL_INCLUDE_DIRS})
+  target_link_libraries(fnordmetric-static mysqlclient)
+endif(MYSQL_FOUND)
+
+add_executable(fnordmetric stage/src/fnordmetric/main.cc)
 target_link_libraries(fnordmetric fnordmetric-static)
 
-add_executable(fnordmetric-cli stage/src/fnordmetric/main.cc)
-target_link_libraries(fnordmetric-cli fnordmetric-static)
-
 add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
-target_link_libraries(tests/test-sql fnordmetric)
+target_link_libraries(tests/test-sql fnordmetric-static)
 
 add_executable(tests/test-sql-extensions
     stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc)
-target_link_libraries(tests/test-sql-extensions fnordmetric)
+target_link_libraries(tests/test-sql-extensions fnordmetric-static)
 
 add_executable(tests/test-query
     stage/src/fnordmetric/query/query_test.cc)
-target_link_libraries(tests/test-query fnordmetric)
+target_link_libraries(tests/test-query fnordmetric-static)
 
 add_executable(tests/test-ui
      stage/src/fnordmetric/ui/ui_test.cc)
-target_link_libraries(tests/test-ui fnordmetric)
+target_link_libraries(tests/test-ui fnordmetric-static)
 
 add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
-target_link_libraries(tests/test-cli fnordmetric)
+target_link_libraries(tests/test-cli fnordmetric-static)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
-target_link_libraries(tests/test-input-stream fnordmetric)
+target_link_libraries(tests/test-input-stream fnordmetric-static)
 
 add_executable(tests/test-uri
     stage/src/fnordmetric/util/uri_test.cc)
-target_link_libraries(tests/test-uri fnordmetric)
+target_link_libraries(tests/test-uri fnordmetric-static)
 
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
-target_link_libraries(tests/test-csv-backend fnordmetric)
+target_link_libraries(tests/test-csv-backend fnordmetric-static)
 
 add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http fnordmetric)
+target_link_libraries(tests/test-http fnordmetric-static)
 
