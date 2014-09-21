@@ -13,7 +13,6 @@
 #include <string>
 #include <ctime>
 #include <stdint.h>
-#include <assert.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/format.h>
@@ -194,7 +193,14 @@ fnordmetric::FloatType SValue::getFloat() const {
 }
 
 fnordmetric::BoolType SValue::getBool() const {
-  assert(data_.type == T_BOOL);
+  if (data_.type != T_BOOL) {
+    RAISE(
+       TypeError,
+        "can't convert %s '%s' to Bool",
+        SValue::getTypeName(data_.type),
+        toString().c_str());
+  }
+
   return data_.u.t_bool;
 }
 
@@ -305,7 +311,7 @@ SValue* SValue::fromToken(const Token* token) {
       return new SValue(token->getString());
 
     default:
-      assert(0);
+      RAISE(util::RuntimeException, "can't cast Token to SValue");
       return nullptr;
 
   }

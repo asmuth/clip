@@ -60,7 +60,12 @@ void addExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 }
 
 void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for sub. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -99,7 +104,12 @@ void subExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 }
 
 void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for mul. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -138,7 +148,12 @@ void mulExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 }
 
 void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for div. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -177,7 +192,12 @@ void divExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 }
 
 void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for mod. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 
@@ -216,7 +236,12 @@ void modExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 }
 
 void powExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
-  assert(argc == 2);
+  if (argc != 2) {
+    RAISE(
+        util::RuntimeException,
+        "wrong number of arguments for pow. expected: 2, got: %i", argc);
+  }
+
   SValue* lhs = argv;
   SValue* rhs = argv + 1;
 

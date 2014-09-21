@@ -1,17 +1,15 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#include <stdlib.h>
-#include <assert.h>
+#include <fnordmetric/sql/parser/token.h>
+#include <fnordmetric/util/runtimeexception.h>
 #include <string.h>
-#include "token.h"
 
 namespace fnordmetric {
 namespace query {
@@ -22,7 +20,10 @@ static char* copyTokenData(const char* data, size_t len) {
   }
 
   void* data_copy = malloc(len);
-  assert(data_copy); // FIXPAUL
+  if (data_copy == nullptr) {
+    RAISE(util::RuntimeException, "malloc() failed");
+  }
+
   memcpy(data_copy, data, len);
   return static_cast<char *>(data_copy);
 }
@@ -57,7 +58,11 @@ void Token::debugPrint() const {
     printf("%s\n", getTypeName(type_));
   } else {
     char buf[1024];
-    assert(len_ < sizeof(buf));
+
+    if (len_ >= sizeof(buf)) {
+      RAISE(util::RuntimeException, "token too large");
+    }
+
     memcpy(buf, data_, len_);
     buf[len_] = 0;
     printf("%s(%s)\n", getTypeName(type_), buf);

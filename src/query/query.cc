@@ -84,7 +84,10 @@ void Query::execute() {
 }
 
 ResultList* Query::getResultList(size_t index) const {
-  assert(index < results_.size()); // FIXPAUL
+  if (index >= results_.size()) {
+    RAISE(util::RuntimeException, "invalid index: %i", index);
+  }
+
   return results_[index].get();
 }
 
@@ -97,7 +100,10 @@ size_t Query::getNumCharts() const {
 }
 
 ui::Canvas* Query::getChart(size_t index) const {
-  assert(index < charts_.size()); // FIXPAUL
+  if (index >= charts_.size()) {
+    RAISE(util::RuntimeException, "invalid index: %i", index);
+  }
+
   return charts_[index].get();
 }
 
