@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/web/assets.h>
 #include <fnordmetric/web/webinterface.h>
 
@@ -20,6 +21,19 @@ std::unique_ptr<http::HTTPHandler> WebInterface::getHandler() {
 bool WebInterface::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
+
+  if (env()->verbose()) {
+    util::LogEntry log_entry;
+    log_entry.append("__severity__", "DEBUG");
+    log_entry.printf(
+        "__message__",
+        "HTTP request: %s %s",
+        request->getMethod().c_str(),
+        request->getUrl().c_str());
+
+    env()->logger()->log(log_entry);
+  }
+
   auto url = request->getUrl();
 
   if (url == "/") {
@@ -32,7 +46,8 @@ bool WebInterface::handleHTTPRequest(
   if (url == "/admin") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
+    response->addBody(
+        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
     return true;
   }
 
@@ -48,13 +63,6 @@ bool WebInterface::handleHTTPRequest(
     response->setStatus(200);
     response->addHeader("Content-Type", "text/javascript");
     response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric.js"));
-    return true;
-  }
-
-  if (url == "/s/fnordmetric-editor.js") {
-    response->setStatus(200);
-    response->addHeader("Content-Type", "text/javascript");
-    response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric-editor.js"));
     return true;
   }
 

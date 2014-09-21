@@ -24,6 +24,18 @@ void Logger::log(
   log(entry);
 }
 
+void Logger::printf(const std::string& key, const std::string& value, ...) {
+  char buf[4096]; // FIXPAUL!
+  buf[0] = 0;
+
+  va_list args;
+  va_start(args, value);
+  vsnprintf(buf, sizeof(buf), value.c_str(), args);
+  va_end(args);
+
+  log(key, buf);
+}
+
 void Logger::exception(
     const std::string& severity,
     const std::string& message,

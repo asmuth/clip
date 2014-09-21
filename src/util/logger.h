@@ -34,6 +34,7 @@ public:
   virtual ~Logger() {}
 
   void log(const std::string& severity, const std::string& message);
+  void printf(const std::string& severity, const std::string& message, ...);
 
   void exception(
       const std::string& severity,

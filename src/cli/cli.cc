@@ -138,7 +138,9 @@ void CLI::execute(Environment* env) {
     fnordmetric::http::ThreadedHTTPServer http(&thread_pool);
     http.addHandler(fnordmetric::web::WebInterface::getHandler());
     http.addHandler(fnordmetric::web::QueryEndpoint::getHandler());
-    acceptor.listen(flags->getInt("web"), &http);
+    auto port = flags->getInt("web");
+    env->logger()->printf("INFO", "Starting HTTP server on port %i", port);
+    acceptor.listen(port, &http);
     ev_loop.loop();
   }
 
