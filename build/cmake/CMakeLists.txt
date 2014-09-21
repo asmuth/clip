@@ -11,6 +11,11 @@ project(fnordmetric)
 
 set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/base/series.cc
+    stage/src/fnordmetric/cli/cli.cc
+    stage/src/fnordmetric/cli/flagparser.cc
+    stage/src/fnordmetric/web/assets.cc
+    stage/src/fnordmetric/web/queryendpoint.cc
+    stage/src/fnordmetric/web/webinterface.cc
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
@@ -92,13 +97,6 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/drawstatement.cc
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
-set(FNORDMETRIC_CLI_SOURCES
-    stage/src/fnordmetric/cli/cli.cc
-    stage/src/fnordmetric/cli/flagparser.cc
-    stage/src/fnordmetric/web/assets.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
-    stage/src/fnordmetric/web/webinterface.cc)
-
 include_directories(stage/src)
 include_directories(stage/assets)
 
@@ -115,52 +113,44 @@ ELSE()
 ENDIF()
 
 add_definitions("-Wno-predefined-identifier-outside-function")
+add_library(fnordmetric-static ${FNORDMETRIC_QUERY_SOURCES})
+target_link_libraries(fnordmetric-static mysqlclient)
+add_library(fnordmetric SHARED)
+target_link_libraries(fnordmetric fnordmetric-static)
 
-add_library(libfnordmetric ${FNORDMETRIC_QUERY_SOURCES})
+add_executable(fnordmetric-cli stage/src/fnordmetric/main.cc)
+target_link_libraries(fnordmetric-cli fnordmetric-static)
 
-add_executable(fnordmetric
-    ${FNORDMETRIC_CLI_SOURCES}
-    stage/src/fnordmetric/main.cc)
-target_link_libraries(fnordmetric libfnordmetric)
-target_link_libraries(fnordmetric mysqlclient)
-
-add_executable(tests/test-sql
-    stage/src/fnordmetric/sql/sql_test.cc)
-target_link_libraries(tests/test-sql libfnordmetric)
-target_link_libraries(tests/test-sql mysqlclient)
+add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
+target_link_libraries(tests/test-sql fnordmetric)
 
 add_executable(tests/test-sql-extensions
-    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc
-)
-target_link_libraries(tests/test-sql-extensions libfnordmetric)
+    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc)
+target_link_libraries(tests/test-sql-extensions fnordmetric)
 
 add_executable(tests/test-query
     stage/src/fnordmetric/query/query_test.cc)
-target_link_libraries(tests/test-query libfnordmetric)
-target_link_libraries(tests/test-query mysqlclient)
+target_link_libraries(tests/test-query fnordmetric)
 
 add_executable(tests/test-ui
      stage/src/fnordmetric/ui/ui_test.cc)
-target_link_libraries(tests/test-ui libfnordmetric)
+target_link_libraries(tests/test-ui fnordmetric)
 
-add_executable(tests/test-cli
-    ${FNORDMETRIC_CLI_SOURCES}
-    stage/src/fnordmetric/cli/cli_test.cc)
-target_link_libraries(tests/test-cli libfnordmetric)
-target_link_libraries(tests/test-cli mysqlclient)
+add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
+target_link_libraries(tests/test-cli fnordmetric)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
-target_link_libraries(tests/test-input-stream libfnordmetric)
+target_link_libraries(tests/test-input-stream fnordmetric)
 
 add_executable(tests/test-uri
     stage/src/fnordmetric/util/uri_test.cc)
-target_link_libraries(tests/test-uri libfnordmetric)
+target_link_libraries(tests/test-uri fnordmetric)
 
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
-target_link_libraries(tests/test-csv-backend libfnordmetric)
+target_link_libraries(tests/test-csv-backend fnordmetric)
 
 add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http libfnordmetric)
+target_link_libraries(tests/test-http fnordmetric)
 

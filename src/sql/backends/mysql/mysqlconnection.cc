@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
 
 namespace fnordmetric {
@@ -130,7 +131,13 @@ std::vector<std::string> MySQLConnection::describeTable(
 void MySQLConnection::executeQuery(
     const std::string& query,
     std::function<bool (const std::vector<std::string>&)> row_callback) {
-  printf("Execute Query: %s\n", query.c_str()); // FIXPAUL debug log
+  if (env()->verbose()) {
+    util::LogEntry entry;
+    entry.append("__severity__", "DEBUG");
+    entry.append("__message__", "Executing MySQL query");
+    entry.append("query", query);
+    env()->logger()->log(entry);
+  }
 
   MYSQL_RES* result = nullptr;
   if (mysql_real_query(mysql_, query.c_str(), query.size()) == 0) {

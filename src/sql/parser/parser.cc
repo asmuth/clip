@@ -483,6 +483,9 @@ ASTNode* Parser::axisClause() {
               break;
             }
 
+            default:
+              break;
+
           }
         }
 

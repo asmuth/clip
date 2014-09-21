@@ -50,8 +50,5 @@ void ThreadPool::run(std::function<void()> runnable) {
   });
 }
 
-static std::unique_ptr<ExceptionHandler> newDefaultExceptionHandler() {
-}
-
 }
 }
