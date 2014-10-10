@@ -20,6 +20,7 @@ public:
   const std::vector<std::pair<std::string, std::string>>& labels() const;
 
   void setKey(const std::string& key);
+  void addLabel(const std::string& label, const std::string& value);
 
   static void parseStatsdFormat(
       const std::string& src,

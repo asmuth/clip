@@ -26,8 +26,13 @@ const std::vector<std::pair<std::string, std::string>>& MetricKey::labels()
   return labels_;
 }
 
-static enum StatsdParseState {
+void MetricKey::addLabel(const std::string& label, const std::string& value) {
+  labels_.emplace_back(label, value);
+}
+
+enum StatsdParseState {
   S_KEY,
+  S_LABEL_OR_VALUE,
   S_LABEL,
   S_VALUE
 };
@@ -42,25 +47,75 @@ void MetricKey::parseStatsdFormat(
   char const* end = cur + src.size();
   char const* mark = cur;
 
-  for (; cur < end; ++cur) {
+  for (; cur <= end; ++cur) {
     switch (state) {
-
-      /* key */
-      case S_KEY:
+      case S_KEY: {
         switch (*cur) {
           case '[':
           case ':':
-            key->setKey(std::string(mark, cur));
-            state = *cur == '[' ? S_LABEL : S_VALUE;
-            continue;
+          case 0:
+            break;
           case '=':
-            //RAISE(util::RuntimeException, "invalid equal sign in metric key");
-            continue;
+            RAISE(kParseError, "invalid equal sign in metric key");
           default:
             continue;
         }
+
+        key->setKey(std::string(mark, cur));
+        state = *cur == '[' ? S_LABEL : S_VALUE;
+        mark = cur + 1;
+        break;
+      }
+
+      case S_LABEL_OR_VALUE: {
+        switch (*cur) {
+          case '[':
+            state = S_LABEL;
+            mark = cur + 1;
+            continue;
+          case ':':
+            state = S_VALUE;
+            mark = cur + 1;
+            continue;
+          default:
+            RAISE(kParseError, "unexpected...");
+            return;
+        }
+      }
+
+      case S_LABEL: {
+        switch (*cur) {
+          case ']':
+          case ':':
+          case 0:
+            break;
+          default:
+            continue;
+        }
+
+        char const* split;
+        for (split = mark; split < cur && *split != '='; ++split);
+        if (split + 1 >= cur) {
+          RAISE(
+              kParseError,
+              "invalid label (format is k=v): '%s'",
+              std::string(mark, cur).c_str());
+        }
+
+        key->addLabel(std::string(mark, split), std::string(split + 1, cur));
+        state = S_LABEL_OR_VALUE;
+        mark = cur + 1;
+        break;
+      }
+
+      case S_VALUE: {
+        *value = std::string(mark, end);
+        return;
+      }
+
     }
   }
+
 }
 
 }

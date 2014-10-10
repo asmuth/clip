@@ -19,6 +19,20 @@ TEST_CASE(MetricKeyTest, TestSimpleParseFromStatsdFormat, [] () {
   std::string value;
 
   MetricKey::parseStatsdFormat(
+      "/fnord/mymetric",
+      &mkey,
+      &value);
+
+  EXPECT_EQ(mkey.key(), "/fnord/mymetric");
+  EXPECT_EQ(mkey.labels().size(), 0);
+  EXPECT_EQ(value, "")
+});
+
+TEST_CASE(MetricKeyTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
+  MetricKey mkey;
+  std::string value;
+
+  MetricKey::parseStatsdFormat(
       "/fnord/mymetric:34.23",
       &mkey,
       &value);
@@ -28,7 +42,7 @@ TEST_CASE(MetricKeyTest, TestSimpleParseFromStatsdFormat, [] () {
   EXPECT_EQ(value, "34.23")
 });
 
-TEST_CASE(MetricKeyTest, TestParseFromStatsdFormat, [] () {
+TEST_CASE(MetricKeyTest, TestParseFromStatsdFormatWithLabels, [] () {
   MetricKey mkey;
   std::string value;
 
@@ -41,8 +55,8 @@ TEST_CASE(MetricKeyTest, TestParseFromStatsdFormat, [] () {
   EXPECT_EQ(mkey.labels().size(), 2);
   EXPECT_EQ(mkey.labels()[0].first, "label1");
   EXPECT_EQ(mkey.labels()[0].second, "435");
-  EXPECT_EQ(mkey.labels()[0].first, "l2");
-  EXPECT_EQ(mkey.labels()[0].second, "str");
+  EXPECT_EQ(mkey.labels()[1].first, "l2");
+  EXPECT_EQ(mkey.labels()[1].second, "str");
   EXPECT_EQ(value, "34.23")
 });
 
