@@ -1,3 +1,49 @@
+
+[ metricdb doc ]
+
+  getting started
+    - installing
+    - running
+    - getting started 5 min howto
+
+  sending data
+    - semantics
+    - via json over http
+    - via statsd over tcp/udp
+
+  querying data
+    - query language
+    - web interface
+    - HTTP API
+
+  language bindings
+    - ruby/rails
+    - node js
+    - python
+
+  advanced topics
+    - retention policies
+    - streaming queries
+
+
+    POST /metrics
+
+      {
+        key: "/web/frontend/http_status_codes",
+        value: 12,
+        labels: {
+          status_code: 500,
+          hostname: "webfe1"
+        }
+      }
+
+
+  Statsd API:
+
+    /web/frontend/http_requests_total:2357
+    /web/frontend/http_status_codes{status_code=200}:2345
+    /web/frontend/http_status_codes{status_code=500}:12
+
 [ todo ]
     - SELECT * ...
     - SQL: order by

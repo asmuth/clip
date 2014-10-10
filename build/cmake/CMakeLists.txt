@@ -107,48 +107,58 @@ ELSE()
   set(CMAKE_CXX_FLAGS "-std=c++0x")
 ENDIF()
 
+# libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
-add_library(fnordmetric-static ${FNORDMETRIC_QUERY_SOURCES})
+add_library(fnord-static ${FNORDMETRIC_QUERY_SOURCES})
 
 find_package(MySQL)
 if (MYSQL_FOUND)
   include_directories(${MYSQL_INCLUDE_DIRS})
-  target_link_libraries(fnordmetric-static mysqlclient)
+  target_link_libraries(fnord-static mysqlclient)
 endif(MYSQL_FOUND)
 
-add_executable(fnordmetric stage/src/fnordmetric/main.cc)
-target_link_libraries(fnordmetric fnordmetric-static)
-
+# libfnord tests
 add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
-target_link_libraries(tests/test-sql fnordmetric-static)
-
-add_executable(tests/test-sql-extensions
-    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc)
-target_link_libraries(tests/test-sql-extensions fnordmetric-static)
-
-add_executable(tests/test-query
-    stage/src/fnordmetric/query/query_test.cc)
-target_link_libraries(tests/test-query fnordmetric-static)
+target_link_libraries(tests/test-sql fnord-static)
 
 add_executable(tests/test-ui
      stage/src/fnordmetric/ui/ui_test.cc)
-target_link_libraries(tests/test-ui fnordmetric-static)
-
-add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
-target_link_libraries(tests/test-cli fnordmetric-static)
+target_link_libraries(tests/test-ui fnord-static)
 
 add_executable(tests/test-input-stream
     stage/src/fnordmetric/util/inputstream_test.cc)
-target_link_libraries(tests/test-input-stream fnordmetric-static)
+target_link_libraries(tests/test-input-stream fnord-static)
 
 add_executable(tests/test-uri
     stage/src/fnordmetric/util/uri_test.cc)
-target_link_libraries(tests/test-uri fnordmetric-static)
+target_link_libraries(tests/test-uri fnord-static)
 
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
-target_link_libraries(tests/test-csv-backend fnordmetric-static)
+target_link_libraries(tests/test-csv-backend fnord-static)
 
 add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http fnordmetric-static)
+target_link_libraries(tests/test-http fnord-static)
 
+# chartsql
+add_executable(chartsql stage/src/fnordmetric/main.cc)
+target_link_libraries(chartsql fnord-static)
+
+add_executable(tests/test-sql-extensions
+    stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc)
+target_link_libraries(tests/test-sql-extensions fnord-static)
+
+add_executable(tests/test-query
+    stage/src/fnordmetric/query/query_test.cc)
+target_link_libraries(tests/test-query fnord-static)
+
+add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
+target_link_libraries(tests/test-cli fnord-static)
+
+# metricdb
+add_executable(metricdb stage/src/fnordmetric/metricdb/metricdb.cc)
+target_link_libraries(metricdb fnord-static)
+
+add_executable(tests/test-metrickey
+    stage/src/fnordmetric/metricdb/metrickey_test.cc)
+target_link_libraries(tests/test-metrickey fnord-static)
