@@ -99,7 +99,8 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
 set(METRICDB_SOURCES
-    stage/src/fnordmetric/metricdb/metrickey.cc)
+    stage/src/fnordmetric/metricdb/metrickey.cc
+    stage/src/fnordmetric/metricdb/statsd.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
@@ -166,3 +167,8 @@ add_executable(tests/test-metrickey
     ${METRICDB_SOURCES}
     stage/src/fnordmetric/metricdb/metrickey_test.cc)
 target_link_libraries(tests/test-metrickey fnord-static)
+
+add_executable(tests/test-statsd
+    ${METRICDB_SOURCES}
+    stage/src/fnordmetric/metricdb/statsd_test.cc)
+target_link_libraries(tests/test-statsd fnord-static)

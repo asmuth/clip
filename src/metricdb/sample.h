@@ -8,27 +8,15 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metrickey.h>
-#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-const std::string& MetricKey::key() const {
-  return key_;
-}
-
-void MetricKey::setKey(const std::string& key) {
-  key_ = key;
-}
-
-const std::vector<std::pair<std::string, std::string>>& MetricKey::labels()
-    const {
-  return labels_;
-}
-
-void MetricKey::addLabel(const std::string& label, const std::string& value) {
-  labels_.emplace_back(label, value);
-}
+template <typename ValueType>
+struct Sample {
+  MetricKey key;
+  ValueType value;
+};
 
 }
 }

@@ -8,10 +8,13 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/util/unittest.h>
 
-using namespace fnordmetric::metricdb;
+namespace fnordmetric {
+namespace metricdb {
 
-UNIT_TEST(MetricKeyTest);
+void parseStatsdSample(
+    const std::string& src,
+    Sample<std::string>* dst);
 
-
+}
+}

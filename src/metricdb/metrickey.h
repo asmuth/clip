@@ -22,11 +22,6 @@ public:
   void setKey(const std::string& key);
   void addLabel(const std::string& label, const std::string& value);
 
-  static void parseStatsdFormat(
-      const std::string& src,
-      MetricKey* key,
-      std::string* value);
-
 protected:
   std::string key_;
   std::vector<std::pair<std::string, std::string>> labels_;
