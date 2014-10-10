@@ -16,13 +16,15 @@ namespace metricdb {
 class MetricKey {
 public:
 
+  const std::string& key() const;
+  const std::vector<std::pair<std::string, std::string>>& labels() const;
+
+  void setKey(const std::string& key);
+
   static void parseStatsdFormat(
       const std::string& src,
       MetricKey* key,
       std::string* value);
-
-  const std::string& key() const;
-  const std::vector<std::pair<std::string, std::string>>& labels() const;
 
 protected:
   std::string key_;
