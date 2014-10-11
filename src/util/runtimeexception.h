@@ -18,7 +18,8 @@ const char kConcurrentModificationError[] = "ConcurrentModificationError";
 const char kDivideByZeroError[] = "DivideByZeroError";
 const char kIOError[] = "IOError";
 const char kIllegalArgumentError[] = "IOIllegalArgument";
-const char kIllegalStateError[] = "IOIllegalState";
+const char kIllegalFormatError[] = "IllegalFormat";
+const char kIllegalStateError[] = "IllegalState";
 const char kIndexError[] = "IndexError";
 const char kKeyError[] = "KeyError";
 const char kMallocError[] = "MallocError";
@@ -28,6 +29,7 @@ const char kParseError[] = "ParseError";
 const char kRangeError[] = "RangeError";
 const char kRuntimeError[] = "RuntimeErrpr";
 const char kTypeError[] = "TypeError";
+const char kVersionMismatchError[] = "VersionMismatchError";
 
 #define RAISE_EXCEPTION(E) \
     throw (E).setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__); while(0) {}

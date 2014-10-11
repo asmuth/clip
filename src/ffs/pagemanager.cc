@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -17,8 +17,10 @@
 namespace fnordmetric {
 namespace ffs {
 
-PageManager::PageManager(size_t block_size) :
-  end_pos_(0),
+PageManager::PageManager(
+  size_t block_size,
+  size_t end_pos /* = 0 */) :
+  end_pos_(end_pos),
   block_size_(block_size) {}
 
 //PageManager::PageManager(size_t block_size, const LogSnapshot& log_snapshot) :
@@ -86,7 +88,7 @@ void* PageManager::PageRef::operator*() const {
 PageManager::PageRef::~PageRef() {};
 
 MmapPageManager::MmapPageManager(int fd, size_t len, size_t block_size) :
-    PageManager(block_size),
+    PageManager(block_size, len),
     fd_(fd),
     file_size_(len),
     current_mapping_(nullptr) {}

@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -48,7 +48,7 @@ public:
     const PageManager::Page page_;
   };
 
-  PageManager(size_t block_size);
+  PageManager(size_t block_size, size_t end_pos = 0);
   //PageManager(size_t block_size, const LogSnapshot& log_snapshot);
   PageManager(const PageManager& copy) = delete;
   PageManager& operator=(const PageManager& copy) = delete;
