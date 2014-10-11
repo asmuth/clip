@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_FILEBACKEND_PAGEMANAGER_H
 #define _FNORDMETRIC_FILEBACKEND_PAGEMANAGER_H
 
