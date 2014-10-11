@@ -15,7 +15,7 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 
-using namespace fnordmetric::storage;
+using namespace fnordmetric::ffs;
 
 UNIT_TEST(PageManagerTest);
 

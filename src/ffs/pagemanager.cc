@@ -15,7 +15,7 @@
 #include "pagemanager.h"
 
 namespace fnordmetric {
-namespace storage {
+namespace ffs {
 
 PageManager::PageManager(size_t block_size) :
   end_pos_(0),

@@ -20,7 +20,7 @@
 #include <atomic>
 
 namespace fnordmetric {
-namespace storage {
+namespace ffs {
 
 /**
  * This is an internal class. For usage instructions and extended documentation

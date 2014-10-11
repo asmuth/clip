@@ -153,6 +153,10 @@ add_executable(tests/test-pagemanager
     stage/src/fnordmetric/ffs/pagemanager_test.cc)
 target_link_libraries(tests/test-pagemanager fnord-static)
 
+add_executable(tests/test-volume
+    stage/src/fnordmetric/ffs/volume_test.cc)
+target_link_libraries(tests/test-volume fnord-static)
+
 # chartsql
 add_executable(chartsql stage/src/fnordmetric/main.cc)
 target_link_libraries(chartsql fnord-static)
