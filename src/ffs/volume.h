@@ -16,6 +16,7 @@
 #include <memory>
 #include <mutex>
 #include <unordered_map>
+#include "objectref.h"
 #include "pagemanager.h"
 
 /**
@@ -125,9 +126,37 @@ public:
       const std::string& filename,
       uint64_t flags = MODE_CONSERVATIVE);
 
+  /**
+   * Insert a new object. Will raise an exception if an object with the same
+   * key already exists or is currently opened.
+   */
+  template <typename ObjectType>
+  ObjectRef<ObjectType> insert(const std::string& object_key);
+
+  /**
+   * Find an object. Will raise an exception if no object with the provided
+   * key exists or the object is currently opened.
+   */
+  template <typename ObjectType>
+  std::unique_ptr<ObjectType> find(const std::string& object_key);
+
+  /**
+   * Find an object with the provided key or insert a new object. This will
+   * raise an exception if an object with the key exists and is currently opened
+   */
+  template <typename ObjectType>
+  std::unique_ptr<ObjectType> findOrInsert(const std::string& object_key);
+
+  /**
+   * Returns true if an object with the provided key exists and false otherwise
+   */
+  bool contains(const std::string& object_key);
 
 protected:
   Volume(const std::shared_ptr<PageManager>& page_manager, int flags);
+
+  std::unordered_map<std::string, Object*> live_objects_;
+  std::mutex live_objects_mutex_;
 
   const std::shared_ptr<PageManager> page_manager_;
   uint64_t flags_;
@@ -136,4 +165,5 @@ protected:
 }
 }
 
+#include "volume_impl.h"
 #endif

@@ -39,6 +39,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/wallclock.cc)
 
 set(FNORDMETRIC_FFS_SOURCES
+    stage/src/fnordmetric/ffs/cowblob.cc
+    stage/src/fnordmetric/ffs/object.cc
     stage/src/fnordmetric/ffs/pagemanager.cc
     stage/src/fnordmetric/ffs/volume.cc)
 

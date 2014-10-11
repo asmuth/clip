@@ -7,19 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ffs/cowblob.h>
-#include <fnordmetric/ffs/volume.h>
-#include <fnordmetric/util/unittest.h>
+#include "object.h"
 
-using namespace fnordmetric::ffs;
+namespace fnordmetric {
+namespace ffs {
 
-UNIT_TEST(VolumeTest);
+void Object::incrRefcount() {
+}
 
-TEST_CASE(VolumeTest, TestCowBlob, [] () {
-  auto volume = Volume::openFile(
-      "/tmp/__ffs_test_volume",
-      Volume::FILE_TRUNCATE || Volume::FILE_AUTODELETE);
+void Object::decrRefcount() {
+}
 
-  auto blob = volume->insert<COWBlob>("myblob");
-});
+}
+}
 
