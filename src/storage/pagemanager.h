@@ -20,13 +20,13 @@
 #include <atomic>
 
 namespace fnordmetric {
+namespace storage {
 
 /**
  * This is an internal class. For usage instructions and extended documentation
  * please refer to "storagebackend.h" and "database.h"
  */
 class PageManager {
-  friend class DatabaseTest;
 public:
 
   struct Page {
@@ -106,7 +106,6 @@ protected:
 };
 
 class MmapPageManager : public PageManager {
-  friend class DatabaseTest;
 protected:
   class MmappedFile {
   public:
@@ -178,7 +177,7 @@ protected:
    * Returns a mmap()ed memory region backend by the managed file spans until
    * at least last_byte
    */
-  MmappedFile* getMmapedFile(uint64_t last_byte);
+  MmappedFile* getMmappedFile(uint64_t last_byte);
 
   int fd_;
   size_t file_size_;
@@ -196,6 +195,6 @@ T* PageManager::PageRef::structAt(size_t position) const {
   return (T*) (((char *) getPtr()) + page_.offset + position);
 }
 
-
+}
 }
 #endif

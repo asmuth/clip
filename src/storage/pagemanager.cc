@@ -15,6 +15,7 @@
 #include "pagemanager.h"
 
 namespace fnordmetric {
+namespace storage {
 
 PageManager::PageManager(size_t block_size) :
   end_pos_(0),
@@ -135,13 +136,14 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
     file_size_ = last_byte;
   }
 
-  auto page_ref = new MmappedPageRef(page, getMmapedFile(last_byte));
+  auto page_ref = new MmappedPageRef(page, getMmappedFile(last_byte));
   mmap_mutex_.unlock();
 
   return std::unique_ptr<PageManager::PageRef>(page_ref);
 }
 
-MmapPageManager::MmappedFile* MmapPageManager::getMmapedFile(uint64_t last_byte) {
+MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
+    uint64_t last_byte) {
   if (current_mapping_ == nullptr || last_byte > current_mapping_->size) {
     /* align mmap size to the next larger block boundary */
     uint64_t mmap_size =
@@ -223,4 +225,5 @@ MmapPageManager::MmappedPageRef::~MmappedPageRef() {
   file_->decrRefs();
 }
 
+}
 }

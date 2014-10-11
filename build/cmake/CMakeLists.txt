@@ -38,6 +38,9 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc)
 
+set(FNORDMETRIC_STORAGE_SOURCES
+    stage/src/fnordmetric/storage/pagemanager.cc)
+
 set(FNORDMETRIC_UI_SOURCES
     ${FNORDMETRIC_SOURCES}
     stage/src/fnordmetric/ui/axisdefinition.cc
@@ -113,7 +116,9 @@ ENDIF()
 
 # libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
-add_library(fnord-static ${FNORDMETRIC_QUERY_SOURCES})
+add_library(fnord-static
+    ${FNORDMETRIC_QUERY_SOURCES}
+    ${FNORDMETRIC_STORAGE_SOURCES})
 
 find_package(MySQL)
 if (MYSQL_FOUND)
@@ -144,6 +149,10 @@ target_link_libraries(tests/test-csv-backend fnord-static)
 add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
 target_link_libraries(tests/test-http fnord-static)
 
+add_executable(tests/test-pagemanager
+    stage/src/fnordmetric/storage/pagemanager_test.cc)
+target_link_libraries(tests/test-pagemanager fnord-static)
+
 # chartsql
 add_executable(chartsql stage/src/fnordmetric/main.cc)
 target_link_libraries(chartsql fnord-static)
@@ -172,3 +181,4 @@ add_executable(tests/test-statsd
     ${METRICDB_SOURCES}
     stage/src/fnordmetric/metricdb/statsd_test.cc)
 target_link_libraries(tests/test-statsd fnord-static)
+
