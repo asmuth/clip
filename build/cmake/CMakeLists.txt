@@ -200,3 +200,7 @@ add_executable(tests/test-statsd
     stage/src/fnordmetric/metricdb/statsd_test.cc)
 target_link_libraries(tests/test-statsd fnord-static)
 
+add_executable(tests/test-metricrepository
+    ${METRICDB_SOURCES}
+    stage/src/fnordmetric/metricdb/metricrepository_test.cc)
+target_link_libraries(tests/test-metricrepository fnord-static)

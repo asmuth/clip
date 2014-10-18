@@ -43,7 +43,7 @@ void parseStatsdSample(
             continue;
         }
 
-        dst->key.setKey(std::string(mark, cur));
+        dst->key = std::string(mark, cur);
         state = *cur == '[' ? S_LABEL : S_VALUE;
         mark = cur + 1;
         break;
@@ -84,7 +84,7 @@ void parseStatsdSample(
               std::string(mark, cur).c_str());
         }
 
-        dst->key.addLabel(
+        dst->labels.emplace_back(
             std::string(mark, split),
             std::string(split + 1, cur));
 

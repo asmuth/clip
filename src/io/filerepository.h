@@ -7,24 +7,31 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sstable/rowoffsetindex.h>
+#ifndef _FNORD_IO_FILEREPOSITORY_H_
+#define _FNORD_IO_FILEREPOSITORY_H_
+#include <string>
+#include <vector>
 
 namespace fnord {
-namespace sstable {
+namespace io {
 
-RowOffsetIndex* RowOffsetIndex::makeIndex() {
-  return new RowOffsetIndex();
-}
+class FileRepository {
+public:
+  struct FileRef {
+    std::string logical_filename;
+    std::string absolute_path;
+  };
 
-RowOffsetIndex::RowOffsetIndex() : Index(RowOffsetIndex::kIndexType) {}
+  FileRepository(const std::string& basedir);
 
-void RowOffsetIndex::addRow(
-    size_t body_offset,
-    void const* key,
-    size_t key_size,
-    void const* data,
-    size_t data_size) const {
-}
+  /**
+   * Create and return a new file
+   */
+  FileRef createFile();
+
+
+};
 
 }
 }
+#endif

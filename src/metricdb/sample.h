@@ -14,7 +14,8 @@ namespace metricdb {
 
 template <typename ValueType>
 struct Sample {
-  MetricKey key;
+  std::string key;
+  std::vector<std::pair<std::string, std::string>> labels;
   ValueType value;
 };
 
