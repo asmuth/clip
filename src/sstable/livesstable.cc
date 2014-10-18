@@ -41,6 +41,7 @@ LiveSSTable::LiveSSTable(
     file_(std::move(file)),
     indexes_(std::move(indexes)),
     mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)),
+    header_size_(0),
     body_size_(0) {}
 
 LiveSSTable::~LiveSSTable() {
@@ -79,6 +80,7 @@ void LiveSSTable::appendRow(
   appendRow(key.data(), key.size(), value.data(), value.size());
 }
 
+// FIXPAUL lock
 void LiveSSTable::writeHeader(void const* data, size_t size) {
   auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FileHeader) + size);
   auto page = mmap_->getPage(alloc);
@@ -98,6 +100,7 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
   }
 
   page->sync();
+  header_size_ = alloc.size;
 }
 
 // FIXPAUL lock
@@ -107,6 +110,43 @@ void LiveSSTable::finalize() {
 
   auto header = page->structAt<BinaryFormat::FileHeader>(0);
   header->body_size = body_size_;
+}
+
+// FIXPAUL lock
+std::unique_ptr<Cursor> LiveSSTable::getCursor() {
+  return std::unique_ptr<Cursor>(
+      new LiveSSTable::Cursor(this, mmap_.get()));
+}
+
+// FIXPAUL lock
+size_t LiveSSTable::bodySize() const {
+  return body_size_;
+}
+
+LiveSSTable::Cursor::Cursor(
+    LiveSSTable* table,
+    io::MmapPageManager* mmap) :
+    table_(table),
+    mmap_(mmap),
+    pos_(0) {}
+
+void LiveSSTable::Cursor::seekTo(size_t body_offset) {
+  if (body_offset >= table_->bodySize()) {
+    RAISE(kIndexError, "seekTo() out of bounds position");
+  }
+
+  pos_ = body_offset;
+}
+
+bool LiveSSTable::Cursor::next() {
+
+}
+
+void LiveSSTable::Cursor::getKey(void** data, size_t* size) {
+
+}
+
+void LiveSSTable::Cursor::getData(void** data, size_t* size) {
 }
 
 }

@@ -37,6 +37,9 @@ TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
   tbl->appendRow("key1", "value1");
   tbl->appendRow("key2", "value2");
   tbl->appendRow("key3", "value3");
+
+  auto cursor = tbl->getCursor();
+
   tbl->finalize();
 });
 

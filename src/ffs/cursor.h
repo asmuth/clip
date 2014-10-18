@@ -24,7 +24,6 @@ namespace fnordmetric {
  */
 class Cursor {
 public:
-
   Cursor(const Cursor& copy) = delete;
   Cursor& operator=(const Cursor& copy) = delete;
   virtual ~Cursor();

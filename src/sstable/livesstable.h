@@ -15,6 +15,7 @@
 #include <memory>
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/io/pagemanager.h>
+#include <fnordmetric/sstable/cursor.h>
 #include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -79,8 +80,24 @@ public:
   /**
    * Get an sstable cursor for the sstable currently being written
    */
+  std::unique_ptr<Cursor> getCursor();
 
 protected:
+  class Cursor : public sstable::Cursor {
+  public:
+    Cursor(
+        LiveSSTable* table,
+        io::MmapPageManager* mmap);
+
+    void seekTo(size_t body_offset) override;
+    bool next() override;
+    void getKey(void** data, size_t* size) override;
+    void getData(void** data, size_t* size) override;
+  protected:
+    LiveSSTable* table_;
+    io::MmapPageManager* mmap_;
+    size_t pos_;
+  };
 
   LiveSSTable(
       io::File&& file,
@@ -88,9 +105,12 @@ protected:
 
   void writeHeader(void const* data, size_t size);
 
+  size_t bodySize() const;
+
   io::File file_;
   std::vector<Index::IndexRef> indexes_;
   std::unique_ptr<io::MmapPageManager> mmap_;
+  size_t header_size_;
   size_t body_size_;
 };
 
