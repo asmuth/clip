@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <fnordmetric/io/file.h>
 #include <fnordmetric/sstable/indexprovider.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -35,7 +36,7 @@ public:
    * Create and open a new sstable for writing
    */
   static std::unique_ptr<LiveSSTable> create(
-      int fd,
+      io::File file,
       const IndexProvider& index_provider,
       void const* header,
       size_t header_size);
@@ -44,8 +45,13 @@ public:
    * Re-open a partially written sstable for writing
    */
   static std::unique_ptr<LiveSSTable> reopen(
-      int fd,
+      io::File file,
       const IndexProvider& index_provider);
+
+
+  LiveSSTable(const LiveSSTable& other) = delete;
+  LiveSSTable& operator=(const LiveSSTable& other) = delete;
+  ~LiveSSTable();
 
   /**
    * Append a row to the sstable
@@ -73,7 +79,10 @@ public:
    */
 
 protected:
+  LiveSSTable(io::File&& file, const IndexProvider& index_provider);
 
+  io::File file_;
+  const IndexProvider& index_provider_;
 };
 
 

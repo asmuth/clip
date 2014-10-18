@@ -16,7 +16,7 @@
 namespace fnord {
 namespace io {
 
-std::unique_ptr<File> File::openFile(
+File File::openFile(
     const std::string& filename,
     int flags) {
   int open_flags = 0;
@@ -61,10 +61,20 @@ std::unique_ptr<File> File::openFile(
     unlink(filename.c_str());
   }
 
-  return std::unique_ptr<File>(new File(fd));
+  return File(fd);
 }
 
 File::File(int fd) : fd_(fd) {}
+
+File::~File() {
+  if (fd_ >= 0) {
+    close(fd_);
+  }
+}
+
+File::File(File&& other) : fd_(other.fd_) {
+  other.fd_ = -1;
+}
 
 /*
   struct stat fd_stat;

@@ -64,9 +64,16 @@ public:
    * @param filename the filename/path
    * @param flags flags from kOpenFlags
    */
-  static std::unique_ptr<File> openFile(
+  static File openFile(
       const std::string& filename,
       int flags);
+
+
+  File(File&& move);
+  File(const File& copy) = delete;
+  ~File();
+
+  File& operator=(const File& copy) = delete;
 
   int fd() const;
 
