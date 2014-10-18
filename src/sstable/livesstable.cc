@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -23,6 +24,7 @@ std::unique_ptr<LiveSSTable> LiveSSTable::create(
   }
 
   auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
+  sstable->writeHeader(header, header_size);
   return std::unique_ptr<LiveSSTable>(sstable);
 }
 
@@ -38,7 +40,7 @@ LiveSSTable::LiveSSTable(
     std::vector<Index::IndexRef>&& indexes) :
     file_(std::move(file)),
     indexes_(std::move(indexes)),
-    mmap_(new io::MmapPageManager(file.fd(), file_.size(), 1)) {}
+    mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)) {}
 
 LiveSSTable::~LiveSSTable() {
 }
@@ -53,6 +55,27 @@ void LiveSSTable::appendRow(
     const std::string& key,
     const std::string& value) {
   appendRow(key.data(), key.size(), value.data(), value.size());
+}
+
+void LiveSSTable::writeHeader(void const* data, size_t size) {
+  auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FileHeader) + size);
+  auto page = mmap_->getPage(alloc);
+
+  if (alloc.offset != 0) {
+    RAISE(kIllegalStateError, "header page offset must be 0");
+  }
+
+  auto header = page->structAt<BinaryFormat::FileHeader>(0);
+  header->magic = BinaryFormat::kMagicBytes;
+  header->body_size = 0;
+  header->header_size = size;
+
+  if (size > 0) {
+    auto userdata = page->structAt<void>(sizeof(BinaryFormat::FileHeader));
+    memcpy(userdata, data, size);
+  }
+
+  page->sync();
 }
 
 void LiveSSTable::finalize() {}

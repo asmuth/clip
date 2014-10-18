@@ -25,7 +25,6 @@ public:
   std::unique_ptr<PageRef> getPage(const PageManager::Page& page) override {
     return std::unique_ptr<PageRef>(nullptr);
   }
-  void fsync() const override {}
   size_t endPos() const { return end_pos_; }
 };
 

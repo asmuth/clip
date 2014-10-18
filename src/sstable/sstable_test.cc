@@ -19,14 +19,10 @@ using namespace fnord::sstable;
 using namespace fnord::io;
 UNIT_TEST(SSTableTest);
 
-const int kTestFileOpenFlags =
-    File::O_READ | File::O_WRITE | File::O_CREATEOROPEN | File::O_TRUNCATE |
-        File::O_AUTODELETE;
-
 TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
   auto file = File::openFile(
       "/tmp/__fnord__sstabletest1.sstable",
-      kTestFileOpenFlags);
+      File::O_READ | File::O_WRITE | File::O_CREATEOROPEN | File::O_TRUNCATE);
 
   std::string header = "myfnordyheader!";
 

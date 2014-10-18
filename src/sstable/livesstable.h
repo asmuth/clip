@@ -81,9 +81,12 @@ public:
    */
 
 protected:
+
   LiveSSTable(
       io::File&& file,
       std::vector<Index::IndexRef>&& indexes);
+
+  void writeHeader(void const* data, size_t size);
 
   io::File file_;
   std::vector<Index::IndexRef> indexes_;

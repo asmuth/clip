@@ -45,6 +45,7 @@ public:
     void* operator*() const;
     template<typename T> T* structAt(size_t position) const;
     virtual void* getPtr() const = 0;
+    virtual void sync(bool async = false) const {};
     const PageManager::Page page_;
   };
 
@@ -68,11 +69,6 @@ public:
    * Request a page to be mapped into memory. Returns a smart pointer.
    */
   virtual std::unique_ptr<PageRef> getPage(const PageManager::Page& page) = 0;
-
-  /**
-   * Fsync() the page contents if this is a file backed page manager
-   */
-  virtual void fsync() const = 0;
 
 protected:
 
@@ -135,6 +131,7 @@ public:
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
     ~MmappedPageRef();
+    void sync(bool async = false) const override;
   protected:
     void* getPtr() const override;
     MmappedFile* file_;
@@ -156,11 +153,6 @@ public:
    */
   std::unique_ptr<PageManager::PageRef> getPage(
       const PageManager::Page& page) override;
-
-  /**
-   * Msync() the whole managed file
-   */
-  void fsync() const override;
 
 protected:
 
