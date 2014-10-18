@@ -21,9 +21,21 @@ class Index {
 public:
   typedef std::unique_ptr<Index> IndexRef;
 
+  Index(uint32_t type);
   Index(const Index& copy) = delete;
   Index& operator=(const Index& copy) = delete;
 
+  uint32_t type() const;
+
+  virtual void addRow(
+      size_t body_offset,
+      void const* key,
+      size_t key_size,
+      void const* data,
+      size_t data_size) const = 0;
+
+protected:
+  uint32_t type_;
 };
 
 

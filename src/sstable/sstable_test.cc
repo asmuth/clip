@@ -19,7 +19,7 @@ using namespace fnord::sstable;
 using namespace fnord::io;
 UNIT_TEST(SSTableTest);
 
-TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
+TEST_CASE(SSTableTest, TestLiveSSTableWriteRead, [] () {
   auto file = File::openFile(
       "/tmp/__fnord__sstabletest1.sstable",
       File::O_READ | File::O_WRITE | File::O_CREATEOROPEN | File::O_TRUNCATE);
@@ -51,7 +51,58 @@ TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
   EXPECT_EQ(cursor->getData(), "value3");
   EXPECT_EQ(cursor->next(), false);
 
+  tbl->appendRow("key4", "value4");
+
+  EXPECT_EQ(cursor->next(), true);
+  EXPECT_EQ(cursor->getKey(), "key4");
+  EXPECT_EQ(cursor->getData(), "value4");
+  EXPECT_EQ(cursor->next(), false);
+
   tbl->finalize();
 });
+
+TEST_CASE(SSTableTest, TestLiveSSTableWithIndexes, [] () {
+  auto file = File::openFile(
+      "/tmp/__fnord__sstabletest2.sstable",
+      File::O_READ | File::O_WRITE | File::O_CREATEOROPEN | File::O_TRUNCATE);
+
+  std::string header = "myfnordyheader!";
+
+  IndexProvider indexes;
+  indexes.addIndex<RowOffsetIndex>();
+
+  auto tbl = LiveSSTable::create(
+      std::move(file),
+      std::move(indexes),
+      header.data(),
+      header.size());
+
+  tbl->appendRow("key1", "value1");
+  tbl->appendRow("key2", "value2");
+  tbl->appendRow("key3", "value3");
+
+  auto cursor = tbl->getCursor();
+  EXPECT_EQ(cursor->getKey(), "key1");
+  EXPECT_EQ(cursor->getData(), "value1");
+  EXPECT_EQ(cursor->next(), true);
+
+  EXPECT_EQ(cursor->getKey(), "key2");
+  EXPECT_EQ(cursor->getData(), "value2");
+  EXPECT_EQ(cursor->next(), true);
+
+  EXPECT_EQ(cursor->getKey(), "key3");
+  EXPECT_EQ(cursor->getData(), "value3");
+  EXPECT_EQ(cursor->next(), false);
+
+  tbl->appendRow("key4", "value4");
+
+  EXPECT_EQ(cursor->next(), true);
+  EXPECT_EQ(cursor->getKey(), "key4");
+  EXPECT_EQ(cursor->getData(), "value4");
+  EXPECT_EQ(cursor->next(), false);
+
+  tbl->finalize();
+});
+
 
 

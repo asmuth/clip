@@ -38,7 +38,7 @@ protected:
 
 template <typename IndexType>
 void IndexProvider::addIndex() {
-  indexes_.emplace_back(std::unique_ptr<IndexType>(new IndexType()));
+  indexes_.emplace_back(IndexType::makeIndex());
 }
 
 }

@@ -71,7 +71,13 @@ void LiveSSTable::appendRow(
   memcpy(data_dst, data, data_size);
 
   page->sync();
+
+  auto row_body_offset = body_size_;
   body_size_ += page_size;
+
+  for (const auto& idx : indexes_) {
+    idx->addRow(row_body_offset, key, key_size, data, data_size);
+  }
 }
 
 void LiveSSTable::appendRow(
