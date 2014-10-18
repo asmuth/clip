@@ -19,7 +19,7 @@ namespace sstable {
 
 class Cursor {
 public:
-  Cursor() {}
+  Cursor();
   Cursor(const Cursor& copy) = delete;
   Cursor& operator=(const Cursor& copy) = delete;
 
@@ -27,7 +27,9 @@ public:
   virtual bool next() = 0;
 
   virtual void getKey(void** data, size_t* size) = 0;
+  std::string getKey();
   virtual void getData(void** data, size_t* size) = 0;
+  std::string getData();
 };
 
 

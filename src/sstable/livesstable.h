@@ -94,6 +94,7 @@ protected:
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
   protected:
+    std::unique_ptr<io::PageManager::PageRef> getPage();
     LiveSSTable* table_;
     io::MmapPageManager* mmap_;
     size_t pos_;
@@ -106,7 +107,9 @@ protected:
   void writeHeader(void const* data, size_t size);
 
   size_t bodySize() const;
+  size_t headerSize() const;
 
+private:
   io::File file_;
   std::vector<Index::IndexRef> indexes_;
   std::unique_ptr<io::MmapPageManager> mmap_;

@@ -123,6 +123,10 @@ size_t LiveSSTable::bodySize() const {
   return body_size_;
 }
 
+size_t LiveSSTable::headerSize() const {
+  return header_size_;
+}
+
 LiveSSTable::Cursor::Cursor(
     LiveSSTable* table,
     io::MmapPageManager* mmap) :
@@ -139,14 +143,21 @@ void LiveSSTable::Cursor::seekTo(size_t body_offset) {
 }
 
 bool LiveSSTable::Cursor::next() {
-
+  auto page = getPage();
 }
 
 void LiveSSTable::Cursor::getKey(void** data, size_t* size) {
-
+  auto page = getPage();
 }
 
 void LiveSSTable::Cursor::getData(void** data, size_t* size) {
+  auto page = getPage();
+}
+
+std::unique_ptr<io::PageManager::PageRef> LiveSSTable::Cursor::getPage() {
+  return mmap_->getPage(io::PageManager::Page(
+      table_->headerSize() + pos_,
+      table_->bodySize() - pos_));
 }
 
 }

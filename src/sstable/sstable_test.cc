@@ -39,6 +39,17 @@ TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
   tbl->appendRow("key3", "value3");
 
   auto cursor = tbl->getCursor();
+  EXPECT_EQ(cursor->getKey(), "key1");
+  EXPECT_EQ(cursor->getData(), "value1");
+  EXPECT_EQ(cursor->next(), true);
+
+  EXPECT_EQ(cursor->getKey(), "key2");
+  EXPECT_EQ(cursor->getData(), "value2");
+  EXPECT_EQ(cursor->next(), true);
+
+  EXPECT_EQ(cursor->getKey(), "key3");
+  EXPECT_EQ(cursor->getData(), "value3");
+  EXPECT_EQ(cursor->next(), false);
 
   tbl->finalize();
 });
