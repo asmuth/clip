@@ -9,6 +9,7 @@
  */
 #ifndef _FNORD_SSTABLE_INDEXPROVIDER_H
 #define _FNORD_SSTABLE_INDEXPROVIDER_H
+#include <fnordmetric/sstable/index.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -19,12 +20,26 @@ namespace sstable {
 
 class IndexProvider {
 public:
+
+  IndexProvider();
+  IndexProvider(IndexProvider&& other);
+  IndexProvider(const IndexProvider& copy) = delete;
+  IndexProvider& operator=(const IndexProvider& copy) = delete;
+
+  template <typename IndexType>
+  void addIndex();
+
+  std::vector<Index::IndexRef>&& popIndexes();
+
+protected:
+  std::vector<Index::IndexRef> indexes_;
 };
 
-class DefaultIndexProvider : public IndexProvider {
-public:
-};
 
+template <typename IndexType>
+void IndexProvider::addIndex() {
+  indexes_.emplace_back(std::unique_ptr<IndexType>(new IndexType()));
+}
 
 }
 }

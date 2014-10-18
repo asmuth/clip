@@ -15,19 +15,19 @@ namespace sstable {
 
 std::unique_ptr<LiveSSTable> LiveSSTable::create(
     io::File file,
-    const IndexProvider& index_provider,
+    IndexProvider index_provider,
     void const* header,
     size_t header_size) {
 
   return std::unique_ptr<LiveSSTable>(
-      new LiveSSTable(std::move(file), index_provider));
+      new LiveSSTable(std::move(file), index_provider.popIndexes()));
 }
 
 LiveSSTable::LiveSSTable(
     io::File&& file,
-    const IndexProvider& index_provider) :
+    std::vector<Index::IndexRef>&& indexes) :
     file_(std::move(file)),
-    index_provider_(index_provider) {}
+    indexes_(std::move(indexes)) {}
 
 LiveSSTable::~LiveSSTable() {
 }

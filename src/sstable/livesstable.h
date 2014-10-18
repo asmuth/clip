@@ -14,6 +14,7 @@
 #include <vector>
 #include <memory>
 #include <fnordmetric/io/file.h>
+#include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -37,7 +38,7 @@ public:
    */
   static std::unique_ptr<LiveSSTable> create(
       io::File file,
-      const IndexProvider& index_provider,
+      IndexProvider index_provider,
       void const* header,
       size_t header_size);
 
@@ -79,10 +80,10 @@ public:
    */
 
 protected:
-  LiveSSTable(io::File&& file, const IndexProvider& index_provider);
+  LiveSSTable(io::File&& file, std::vector<Index::IndexRef>&& indexes);
 
   io::File file_;
-  const IndexProvider& index_provider_;
+  std::vector<Index::IndexRef> indexes_;
 };
 
 

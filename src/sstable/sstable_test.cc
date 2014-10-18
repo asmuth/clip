@@ -13,6 +13,7 @@
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/sstable/livesstable.h>
+#include <fnordmetric/sstable/rowoffsetindex.h>
 
 using namespace fnord::sstable;
 using namespace fnord::io;
@@ -27,12 +28,15 @@ TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
       "/tmp/__fnord__sstabletest1.sstable",
       kTestFileOpenFlags);
 
-  DefaultIndexProvider index_provider;
+  std::string header = "myfnordyheader!";
+
+  IndexProvider indexes;
+
   auto tbl = LiveSSTable::create(
       std::move(file),
-      index_provider,
-      NULL,
-      0);
+      std::move(indexes),
+      header.data(),
+      header.size());
 
 /*
   tbl.append("key1", "value1");
