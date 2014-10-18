@@ -20,7 +20,7 @@ namespace fnordmetric {
 namespace ffs {
 
 Volume::Volume(
-    const std::shared_ptr<PageManager>& page_manager,
+    const std::shared_ptr<io::PageManager>& page_manager,
     int flags) :
     page_manager_(page_manager),
     flags_(flags) {}
@@ -57,10 +57,10 @@ std::unique_ptr<Volume> Volume::openFile(
     unlink(filename.c_str());
   }
 
-  std::shared_ptr<MmapPageManager> page_manager(
-      new MmapPageManager(fd, fd_len, fd_stat.st_blksize));
+  std::shared_ptr<io::MmapPageManager> page_manager(
+      new io::MmapPageManager(fd, fd_len, fd_stat.st_blksize));
 
-  PageManager::Page header_page;
+  io::PageManager::Page header_page;
   if (fd_len == 0) {
     header_page = page_manager->allocPage(kMinReservedHeaderSize);
   } else {
@@ -68,7 +68,7 @@ std::unique_ptr<Volume> Volume::openFile(
       RAISE(kIllegalFormatError, "invalid file\n");
     }
 
-    header_page = PageManager::Page(0, kMinReservedHeaderSize);
+    header_page = io::PageManager::Page(0, kMinReservedHeaderSize);
   }
 
   auto header_mmap = page_manager->getPage(header_page);

@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <stdint.h>
 #include <sys/mman.h>
@@ -15,7 +14,7 @@
 #include "pagemanager.h"
 
 namespace fnordmetric {
-namespace ffs {
+namespace io {
 
 PageManager::PageManager(
   size_t block_size,

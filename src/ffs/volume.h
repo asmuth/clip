@@ -17,7 +17,7 @@
 #include <mutex>
 #include <unordered_map>
 #include "objectref.h"
-#include "pagemanager.h"
+#include <fnordmetric/io/pagemanager.h>
 
 /**
  * A ffs volume stores an arbitrary number of 'objects'. Each object is
@@ -153,12 +153,12 @@ public:
   bool contains(const std::string& object_key);
 
 protected:
-  Volume(const std::shared_ptr<PageManager>& page_manager, int flags);
+  Volume(const std::shared_ptr<io::PageManager>& page_manager, int flags);
 
   std::unordered_map<std::string, Object*> live_objects_;
   std::mutex live_objects_mutex_;
 
-  const std::shared_ptr<PageManager> page_manager_;
+  const std::shared_ptr<io::PageManager> page_manager_;
   uint64_t flags_;
 };
 

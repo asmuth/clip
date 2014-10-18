@@ -18,9 +18,17 @@ std::unique_ptr<LiveSSTable> LiveSSTable::create(
     IndexProvider index_provider,
     void const* header,
     size_t header_size) {
+  auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
 
-  return std::unique_ptr<LiveSSTable>(
-      new LiveSSTable(std::move(file), index_provider.popIndexes()));
+  return std::unique_ptr<LiveSSTable>(sstable);
+}
+
+std::unique_ptr<LiveSSTable> LiveSSTable::reopen(
+    io::File file,
+    IndexProvider index_provider) {
+  auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
+
+  return std::unique_ptr<LiveSSTable>(sstable);
 }
 
 LiveSSTable::LiveSSTable(
@@ -32,11 +40,6 @@ LiveSSTable::LiveSSTable(
 LiveSSTable::~LiveSSTable() {
 }
 
-/*
-std::unique_ptr<LiveSSTable> LiveSSTable::reopen(
-    io::File file,
-    const IndexProvider& index_provider) {}
-
 void LiveSSTable::appendRow(
     void const* key,
     size_t key_size,
@@ -45,10 +48,11 @@ void LiveSSTable::appendRow(
 
 void LiveSSTable::appendRow(
     const std::string& key,
-    const std::string& value) {}
+    const std::string& value) {
+  appendRow(key.data(), key.size(), value.data(), value.size());
+}
 
 void LiveSSTable::finalize() {}
-*/
 
 }
 }

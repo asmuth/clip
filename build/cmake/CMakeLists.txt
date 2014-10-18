@@ -14,6 +14,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/io/file.cc
+    stage/src/fnordmetric/io/pagemanager.cc
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
@@ -45,7 +46,6 @@ set(FNORDMETRIC_SOURCES
 set(FNORDMETRIC_FFS_SOURCES
     stage/src/fnordmetric/ffs/cowblob.cc
     stage/src/fnordmetric/ffs/object.cc
-    stage/src/fnordmetric/ffs/pagemanager.cc
     stage/src/fnordmetric/ffs/volume.cc)
 
 set(FNORDMETRIC_UI_SOURCES
@@ -157,7 +157,7 @@ add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
 target_link_libraries(tests/test-http fnord-static)
 
 add_executable(tests/test-pagemanager
-    stage/src/fnordmetric/ffs/pagemanager_test.cc)
+    stage/src/fnordmetric/io/pagemanager_test.cc)
 target_link_libraries(tests/test-pagemanager fnord-static)
 
 add_executable(tests/test-sstable

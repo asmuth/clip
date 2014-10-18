@@ -38,12 +38,10 @@ TEST_CASE(SSTableTest, TestLiveSSTableAppend, [] () {
       header.data(),
       header.size());
 
-/*
-  tbl.append("key1", "value1");
-  tbl.append("key2", "value2");
-  tbl.append("key3", "value3");
-  tbl.finalize();
-*/
+  tbl->appendRow("key1", "value1");
+  tbl->appendRow("key2", "value2");
+  tbl->appendRow("key3", "value3");
+  tbl->finalize();
 });
 
 

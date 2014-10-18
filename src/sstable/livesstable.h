@@ -47,7 +47,7 @@ public:
    */
   static std::unique_ptr<LiveSSTable> reopen(
       io::File file,
-      const IndexProvider& index_provider);
+      IndexProvider index_provider);
 
 
   LiveSSTable(const LiveSSTable& other) = delete;

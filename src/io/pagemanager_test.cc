@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ffs/pagemanager.h>
+#include <fnordmetric/io/pagemanager.h>
 #include <fnordmetric/util/unittest.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,7 +15,7 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 
-using namespace fnordmetric::ffs;
+using namespace fnordmetric::io;
 
 UNIT_TEST(PageManagerTest);
 
