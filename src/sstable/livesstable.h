@@ -91,6 +91,7 @@ protected:
   io::File file_;
   std::vector<Index::IndexRef> indexes_;
   std::unique_ptr<io::MmapPageManager> mmap_;
+  size_t body_size_;
 };
 
 

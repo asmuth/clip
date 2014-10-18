@@ -24,23 +24,24 @@ namespace sstable {
  *       *<footer>
  *
  *   <header> :=
- *       %x17 %x17 %x17 %x17"      // magic bytes
- *       <uint64_t>                // total body size in bytes
- *       <uint32_t>                // userdata size in bytes
- *       <bytes>                   // userdata
+ *       %x17 %x17 %x17 %x17"    // magic bytes
+ *       <uint64_t>              // total body size in bytes
+ *       <uint32_t>              // userdata size in bytes
+ *       <bytes>                 // userdata
  *
  *   <body> :=
  *       *<row>
  *
  *   <row> :=
- *     <lenenc_str>                // key
- *     <lenenc_str>                // value
- *     [ <uint64_t> ]              // checksum
+ *     <uint32_t>                // key size in bytes
+ *     <uint32_t>                // data size in bytes
+ *     <bytes>                   // key
+ *     <bytes>                   // data
  *
  *   <footer> :=
- *       %x17 %x17 %x17 %x17"      // magic bytes
- *       <uint32_t>                // footer type id
- *       <lenenc_str>              // userdata
+ *       %x17 %x17 %x17 %x17"    // magic bytes
+ *       <uint32_t>              // footer type id
+ *       <lenenc_str>            // userdata
  *
  */
 class BinaryFormat {
@@ -52,6 +53,11 @@ public:
     uint64_t magic;
     uint64_t body_size;
     uint32_t header_size;
+  };
+
+  struct __attribute__((packed)) RowHeader {
+    uint32_t key_size;
+    uint32_t data_size;
   };
 
 };

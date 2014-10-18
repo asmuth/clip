@@ -40,16 +40,38 @@ LiveSSTable::LiveSSTable(
     std::vector<Index::IndexRef>&& indexes) :
     file_(std::move(file)),
     indexes_(std::move(indexes)),
-    mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)) {}
+    mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)),
+    body_size_(0) {}
 
 LiveSSTable::~LiveSSTable() {
 }
 
+// FIXPAUL lock
 void LiveSSTable::appendRow(
     void const* key,
     size_t key_size,
     void const* data,
-    size_t data_size) {}
+    size_t data_size) {
+  // assert that key is monotonically increasing...
+
+  size_t page_size = sizeof(BinaryFormat::RowHeader) + key_size + data_size;
+  auto alloc = mmap_->allocPage(page_size);
+  auto page = mmap_->getPage(alloc);
+
+  auto header = page->structAt<BinaryFormat::RowHeader>(0);
+  header->key_size = key_size;
+  header->data_size = data_size;
+
+  auto key_dst = page->structAt<void>(sizeof(BinaryFormat::RowHeader));
+  memcpy(key_dst, key, key_size);
+
+  auto data_dst = page->structAt<void>(
+      sizeof(BinaryFormat::RowHeader) + key_size);
+  memcpy(data_dst, data, data_size);
+
+  page->sync();
+  body_size_ += page_size;
+}
 
 void LiveSSTable::appendRow(
     const std::string& key,
@@ -78,7 +100,14 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
   page->sync();
 }
 
-void LiveSSTable::finalize() {}
+// FIXPAUL lock
+void LiveSSTable::finalize() {
+  auto page = mmap_->getPage(
+      io::PageManager::Page(0, sizeof(BinaryFormat::FileHeader)));
+
+  auto header = page->structAt<BinaryFormat::FileHeader>(0);
+  header->body_size = body_size_;
+}
 
 }
 }
