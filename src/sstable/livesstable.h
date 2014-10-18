@@ -14,6 +14,7 @@
 #include <vector>
 #include <memory>
 #include <fnordmetric/io/file.h>
+#include <fnordmetric/io/pagemanager.h>
 #include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -80,10 +81,13 @@ public:
    */
 
 protected:
-  LiveSSTable(io::File&& file, std::vector<Index::IndexRef>&& indexes);
+  LiveSSTable(
+      io::File&& file,
+      std::vector<Index::IndexRef>&& indexes);
 
   io::File file_;
   std::vector<Index::IndexRef> indexes_;
+  std::unique_ptr<io::MmapPageManager> mmap_;
 };
 
 

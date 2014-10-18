@@ -44,6 +44,7 @@
  *                         PAGE_PTR           ; pointer to first FREELIST_PAGE
  *
  */
+using namespace fnord;
 namespace fnordmetric {
 namespace ffs {
 

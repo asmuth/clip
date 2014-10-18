@@ -76,6 +76,7 @@ public:
   File& operator=(const File& copy) = delete;
 
   int fd() const;
+  size_t size() const;
 
 protected:
 

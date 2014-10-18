@@ -16,6 +16,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+using namespace fnord;
+
 namespace fnordmetric {
 namespace ffs {
 

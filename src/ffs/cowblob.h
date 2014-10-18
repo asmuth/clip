@@ -17,7 +17,7 @@ namespace ffs {
 
 class COWBlob : public Object {
 public:
-  COWBlob(std::shared_ptr<io::PageManager> page_manager);
+  COWBlob(std::shared_ptr<fnord::io::PageManager> page_manager);
 };
 
 }

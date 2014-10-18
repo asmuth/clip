@@ -76,14 +76,18 @@ File::File(File&& other) : fd_(other.fd_) {
   other.fd_ = -1;
 }
 
-/*
-  struct stat fd_stat;
-  if (fstat(fd, &fd_stat) < 0) {
-    RAISE_ERRNO(kIOError, "openFile('%s'): fstat() failed", filename.c_str());
-  }
-*/
 int File::fd() const {
   return fd_;
+}
+
+size_t File::size() const {
+  struct stat fd_stat;
+
+  if (fstat(fd_, &fd_stat) < 0) {
+    RAISE_ERRNO(kIOError, "fstat(%i) failed", fd_);
+  }
+
+  return fd_stat.st_size;
 }
 
 }

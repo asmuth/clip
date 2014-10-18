@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include "pagemanager.h"
 
-namespace fnordmetric {
+namespace fnord {
 namespace io {
 
 PageManager::PageManager(

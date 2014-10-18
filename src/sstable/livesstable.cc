@@ -18,8 +18,11 @@ std::unique_ptr<LiveSSTable> LiveSSTable::create(
     IndexProvider index_provider,
     void const* header,
     size_t header_size) {
-  auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
+  if (file.size() > 0) {
+    RAISE(kIllegalStateError, "file size must be 0");
+  }
 
+  auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
   return std::unique_ptr<LiveSSTable>(sstable);
 }
 
@@ -27,7 +30,6 @@ std::unique_ptr<LiveSSTable> LiveSSTable::reopen(
     io::File file,
     IndexProvider index_provider) {
   auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
-
   return std::unique_ptr<LiveSSTable>(sstable);
 }
 
@@ -35,7 +37,8 @@ LiveSSTable::LiveSSTable(
     io::File&& file,
     std::vector<Index::IndexRef>&& indexes) :
     file_(std::move(file)),
-    indexes_(std::move(indexes)) {}
+    indexes_(std::move(indexes)),
+    mmap_(new io::MmapPageManager(file.fd(), file_.size(), 1)) {}
 
 LiveSSTable::~LiveSSTable() {
 }

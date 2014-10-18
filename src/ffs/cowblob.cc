@@ -12,7 +12,7 @@
 namespace fnordmetric {
 namespace ffs {
 
-COWBlob::COWBlob(std::shared_ptr<io::PageManager> page_manager) {
+COWBlob::COWBlob(std::shared_ptr<fnord::io::PageManager> page_manager) {
 }
 
 }

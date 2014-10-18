@@ -15,7 +15,7 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 
-using namespace fnordmetric::io;
+using namespace fnord::io;
 
 UNIT_TEST(PageManagerTest);
 

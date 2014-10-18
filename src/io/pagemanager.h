@@ -19,7 +19,7 @@
 #include <vector>
 #include <atomic>
 
-namespace fnordmetric {
+namespace fnord {
 namespace io {
 
 /**
@@ -145,15 +145,6 @@ public:
    */
   explicit MmapPageManager(int fd, size_t len, size_t block_size);
 
-  /**
-   * Create a new mmap page manager for a file where some pages are already
-   * allocaed
-   */
-  //explicit MmapPageManager(
-  //    int fd,
-  //    size_t len,
-  //    size_t block_size);
-      //const LogSnapshot& log_snapshot);
 
   MmapPageManager(MmapPageManager&& move);
   MmapPageManager(const MmapPageManager& copy) = delete;
