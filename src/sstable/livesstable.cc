@@ -144,14 +144,55 @@ void LiveSSTable::Cursor::seekTo(size_t body_offset) {
 
 bool LiveSSTable::Cursor::next() {
   auto page = getPage();
+  auto header = page->structAt<BinaryFormat::RowHeader>(0);
+
+  size_t page_size = page->page_.size;
+  size_t row_size = sizeof(BinaryFormat::RowHeader) + header->key_size +
+      header->data_size;
+
+  if (row_size > page_size) {
+    RAISE(kIllegalStateError, "row exceeds page boundary");
+  }
+
+  if (row_size == page_size) {
+    return false;
+  } else {
+    pos_ += row_size;
+    return true;
+  }
 }
 
 void LiveSSTable::Cursor::getKey(void** data, size_t* size) {
   auto page = getPage();
+  size_t page_size = page->page_.size;
+
+  auto header = page->structAt<BinaryFormat::RowHeader>(0);
+  if (header->key_size == 0) {
+    RAISE(kIllegalStateError, "empty key");
+  }
+
+  if (sizeof(BinaryFormat::RowHeader) + header->key_size > page_size) {
+    RAISE(kIllegalStateError, "key exceeds page boundary");
+  }
+
+  *data = page->structAt<void>(sizeof(BinaryFormat::RowHeader));
+  *size = header->key_size;
 }
 
 void LiveSSTable::Cursor::getData(void** data, size_t* size) {
   auto page = getPage();
+  auto header = page->structAt<BinaryFormat::RowHeader>(0);
+
+  size_t page_size = page->page_.size;
+  size_t row_size = sizeof(BinaryFormat::RowHeader) + header->key_size +
+      header->data_size;
+  if (row_size > page_size) {
+    RAISE(kIllegalStateError, "row exceeds page boundary");
+  }
+
+  *data = page->structAt<void>(
+      sizeof(BinaryFormat::RowHeader) + header->key_size);
+  *size = header->data_size;
 }
 
 std::unique_ptr<io::PageManager::PageRef> LiveSSTable::Cursor::getPage() {
