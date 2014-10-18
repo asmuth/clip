@@ -12,9 +12,8 @@ project(fnordmetric)
 set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
-    stage/src/fnordmetric/web/assets.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
-    stage/src/fnordmetric/web/webinterface.cc
+    stage/src/fnordmetric/cli/cli.cc
+    stage/src/fnordmetric/io/file.cc
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
@@ -36,7 +35,10 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/runtimeexception.cc
     stage/src/fnordmetric/util/signalhandler.cc
     stage/src/fnordmetric/util/uri.cc
-    stage/src/fnordmetric/util/wallclock.cc)
+    stage/src/fnordmetric/util/wallclock.cc
+    stage/src/fnordmetric/web/assets.cc
+    stage/src/fnordmetric/web/queryendpoint.cc
+    stage/src/fnordmetric/web/webinterface.cc)
 
 set(FNORDMETRIC_FFS_SOURCES
     stage/src/fnordmetric/ffs/cowblob.cc
@@ -155,6 +157,10 @@ target_link_libraries(tests/test-http fnord-static)
 add_executable(tests/test-pagemanager
     stage/src/fnordmetric/ffs/pagemanager_test.cc)
 target_link_libraries(tests/test-pagemanager fnord-static)
+
+add_executable(tests/test-sstable
+    stage/src/fnordmetric/sstable/sstable_test.cc)
+target_link_libraries(tests/test-sstable fnord-static)
 
 add_executable(tests/test-volume
     stage/src/fnordmetric/ffs/volume_test.cc)

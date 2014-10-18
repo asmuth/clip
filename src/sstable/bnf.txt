@@ -1,0 +1,24 @@
+// http://tools.ietf.org/html/rfc5234
+
+<sstable> :=
+    <header>
+    <body>
+    *<footer>
+
+<header> :=
+    %x17 %x17 %x17 %x17"      // magic bytes
+    <uint64_t>                // total body size in bytes
+    <lenenc_str>              // userdata
+
+<body> :=
+    *<row>
+
+<row> :=
+  <lenenc_str>                // key
+  <lenenc_str>                // value
+  [ <uint64_t> ]              // checksum
+
+<footer> :=
+    %x17 %x17 %x17 %x17"      // magic bytes
+    <uint32_t>                // footer type id
+    <lenenc_str>              // userdata
