@@ -14,20 +14,21 @@ namespace fnordmetric {
 namespace ui {
 
 TimeDomain::TimeDomain(
-    util::DateTime min_value,
-    util::DateTime max_value,
+    fnord::util::DateTime min_value,
+    fnord::util::DateTime max_value,
     bool is_logarithmic,
     bool is_inverted) :
-    ContinuousDomain<util::DateTime>(
+    ContinuousDomain<fnord::util::DateTime>(
         min_value,
         max_value,
         is_logarithmic,
         is_inverted) {}
 
-std::string TimeDomain::label(util::DateTime value) const {
+std::string TimeDomain::label(fnord::util::DateTime value) const {
   return fnordmetric::util::format::formatTimeWithRange(
       value,
-      static_cast<uint64_t>(ContinuousDomain<util::DateTime>::getRange()));
+      static_cast<uint64_t>(
+          ContinuousDomain<fnord::util::DateTime>::getRange()));
 }
 
 }

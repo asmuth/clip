@@ -10,20 +10,23 @@
 #ifndef _FNORDMETRIC_TIMEDOMAIN_H
 #define _FNORDMETRIC_TIMEDOMAIN_H
 #include <fnordmetric/ui/continuousdomain.h>
+#include <fnordmetric/util/datetime.h>
 
 namespace fnordmetric {
 namespace ui {
 
-class TimeDomain : public ContinuousDomain<util::DateTime> {
+class TimeDomain : public ContinuousDomain<fnord::util::DateTime> {
 public:
 
   TimeDomain(
-    util::DateTime min_value = std::numeric_limits<util::DateTime>::max(),
-    util::DateTime max_value = std::numeric_limits<util::DateTime>::min(),
+    fnord::util::DateTime min_value =
+        std::numeric_limits<fnord::util::DateTime>::max(),
+    fnord::util::DateTime max_value =
+        std::numeric_limits<fnord::util::DateTime>::min(),
     bool is_logarithmic = false,
     bool is_inverted = false);
 
-  std::string label(util::DateTime value) const;
+  std::string label(fnord::util::DateTime value) const;
 
 };
 
