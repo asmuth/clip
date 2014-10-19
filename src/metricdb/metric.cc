@@ -64,9 +64,13 @@ void Metric::scanSamples(
   if (live_sstable_.get() != nullptr) {
     auto cursor = live_sstable_->getCursor();
 
-    do {
+    while (cursor->valid()) {
       callback(nullptr);
-    } while (cursor->next());
+
+      if (!cursor->next()) {
+        break;
+      }
+    }
   }
 }
 

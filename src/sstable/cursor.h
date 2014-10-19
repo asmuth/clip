@@ -25,6 +25,7 @@ public:
 
   virtual void seekTo(size_t body_offset) = 0;
   virtual bool next() = 0;
+  virtual bool valid() = 0;
 
   virtual void getKey(void** data, size_t* size) = 0;
   std::string getKey();

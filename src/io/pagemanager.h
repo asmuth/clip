@@ -18,6 +18,7 @@
 #include <mutex>
 #include <vector>
 #include <atomic>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnord {
 namespace io {
@@ -178,7 +179,15 @@ protected:
  */
 template<typename T>
 T* PageManager::PageRef::structAt(size_t position) const {
-  assert(position < page_.size);
+  if (position >= page_.size) {
+    RAISE(
+        kIndexError,
+        "invalid access at address %x, page size=%x offset=%x",
+        position,
+        page_.size,
+        page_.offset);
+  }
+
   return (T*) (((char *) getPtr()) + page_.offset + position);
 }
 

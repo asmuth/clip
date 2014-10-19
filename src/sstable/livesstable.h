@@ -91,6 +91,7 @@ protected:
 
     void seekTo(size_t body_offset) override;
     bool next() override;
+    bool valid() override;
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
   protected:

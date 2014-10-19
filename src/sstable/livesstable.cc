@@ -168,6 +168,10 @@ bool LiveSSTable::Cursor::next() {
   }
 }
 
+bool LiveSSTable::Cursor::valid() {
+  return pos_ < table_->bodySize();
+}
+
 void LiveSSTable::Cursor::getKey(void** data, size_t* size) {
   auto page = getPage();
   size_t page_size = page->page_.size;

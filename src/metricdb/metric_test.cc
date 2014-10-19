@@ -28,13 +28,24 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
 
   Metric metric("mymetric", &file_repo);
 
+  int num_samples = 0;
+  metric.scanSamples(
+      util::DateTime::epoch(),
+      util::DateTime::now(),
+      [&num_samples] (Sample<double> const* smpl) -> bool {
+        num_samples++;
+        return true;
+      });
+
+  EXPECT_EQ(num_samples, 0);
+
   Sample<double> sample;
   sample.key = "mymetric";
   sample.value = 23.5f;
   sample.labels.emplace_back("mylabel", "myvalue");
   metric.addSample(sample);
 
-  int num_samples = 0;
+  num_samples = 0;
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
