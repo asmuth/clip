@@ -10,10 +10,12 @@
 #ifndef _FNORDMETRIC_METRICDB_SAMPLEFIELDINDEX_H
 #define _FNORDMETRIC_METRICDB_SAMPLEFIELDINDEX_H
 #include <fnordmetric/sstable/index.h>
+#include <memory>
+#include <mutex>
 #include <stdlib.h>
 #include <string>
+#include <unordered_map>
 #include <vector>
-#include <memory>
 
 namespace fnordmetric {
 namespace metricdb  {
@@ -34,6 +36,13 @@ public:
       void const* data,
       size_t data_size) const override;
 
+  uint32_t findLabel(const std::string& key) const;
+  uint32_t addLabel(const std::string& key);
+
+protected:
+  std::unordered_map<std::string, uint32_t> indexes_;
+  uint32_t max_index_;
+  mutable std::mutex mutex_;
 };
 
 
