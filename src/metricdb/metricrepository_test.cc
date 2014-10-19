@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/util/unittest.h>
 
@@ -18,11 +19,13 @@ using namespace fnord::io;
 
 UNIT_TEST(MetricRepositoryTest);
 
+const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo";
+
 TEST_CASE(MetricRepositoryTest, TestCreateNewMetric, [] () {
-  //io::File::mkdir_p("/tmp/__fnordmetric_test_metricrepo"));
+  io::FileUtil::mkdir_p(kTestRepoPath);
 
   MetricRepository repo(std::shared_ptr<FileRepository>(
-      new FileRepository("/tmp/__fnordmetric_test_metricrepo")));
+      new FileRepository(kTestRepoPath)));
 
   auto metric = repo.findOrCreateMetric("http_status_codes");
 });

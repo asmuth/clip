@@ -7,31 +7,23 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_FILE_H_
-#define _FNORDMETRIC_UTIL_FILE_H_
+#include <fnordmetric/io/fileutil.h>
+#include <fnordmetric/util/runtimeexception.h>
+#include <sys/stat.h>
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <string>
 
 namespace fnord {
 namespace io {
 
-class FileUtil {
-public:
+void FileUtil::mkdir(const std::string dirname) {
+  if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
+    RAISE_ERRNO(kIOError, "mkdir('%s') failed", dirname.c_str());
+  }
+}
 
-  /**
-   * Create a new directory
-   */
-  static void mkdir(const std::string dirname);
-
-  /**
-   * Create one or more directories recursively
-   */
-  static void mkdir_p(const std::string dirname);
-
-};
+void FileUtil::mkdir_p(const std::string dirname) {
+  RAISE(kNotYetImplementedError, "FileUtil::mkdir_p is not yet implemented");
+}
 
 }
 }
-#endif

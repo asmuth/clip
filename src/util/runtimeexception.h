@@ -24,6 +24,7 @@ const char kIndexError[] = "IndexError";
 const char kKeyError[] = "KeyError";
 const char kMallocError[] = "MallocError";
 const char kNotImplementedError[] = "NotImplementedError";
+const char kNotYetImplementedError[] = "NotYetImplementedError";
 const char kNullPointerError[] = "kNullPointerError";
 const char kParseError[] = "ParseError";
 const char kRangeError[] = "RangeError";
