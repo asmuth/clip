@@ -53,7 +53,7 @@ void LiveSSTable::appendRow(
     size_t key_size,
     void const* data,
     size_t data_size) {
-  // assert that key is monotonically increasing...
+  // FIXPAUL assert that key is monotonically increasing...
 
   size_t page_size = sizeof(BinaryFormat::RowHeader) + key_size + data_size;
   auto alloc = mmap_->allocPage(page_size);

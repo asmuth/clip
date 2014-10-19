@@ -27,7 +27,7 @@ public:
   /**
    * Create and return a new file
    */
-  FileRef createFile();
+  FileRef createFile() const;
 
 protected:
   std::string basedir_;

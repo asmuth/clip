@@ -82,6 +82,9 @@ public:
    */
   std::unique_ptr<Cursor> getCursor();
 
+  template <typename IndexType>
+  IndexType* getIndex() const;
+
 protected:
   class Cursor : public sstable::Cursor {
   public:
@@ -122,4 +125,5 @@ private:
 }
 }
 
+#include "livesstable_impl.h"
 #endif

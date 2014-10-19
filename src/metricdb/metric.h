@@ -39,8 +39,8 @@ protected:
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
   std::shared_ptr<MetricSnapshot> createSnapshot();
 
-  std::string key_;
-  io::FileRepository* file_repo_;
+  const std::string key_;
+  io::FileRepository const* file_repo_;
   std::shared_ptr<MetricSnapshot> head_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;

@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/metricdb/binaryformat.h>
 #include <fnordmetric/metricdb/metric.h>
+#include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -54,12 +55,13 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
 }
 
 void Metric::addSample(const Sample<double>& sample) {
-  SampleWriter writer;
-  writer.writeValue(sample.value);
-
   std::lock_guard<std::mutex> lock_holder(append_mutex_);
   auto snapshot = getOrCreateSnapshot();
   auto table = snapshot->liveTable();
+  auto field_index = table->getIndex<SampleFieldIndex>();
+
+  SampleWriter writer;
+  writer.writeValue(sample.value);
 
   uint64_t now = fnord::util::WallClock::unixMillis();
   table->appendRow(&now, sizeof(now), writer.data(), writer.size());
@@ -67,6 +69,7 @@ void Metric::addSample(const Sample<double>& sample) {
 
 std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
   sstable::IndexProvider indexes;
+  indexes.addIndex<SampleFieldIndex>();
 
   size_t field_definitions_size = 0;
   size_t header_size = sizeof(BinaryFormat::TableHeader) + key_.size();

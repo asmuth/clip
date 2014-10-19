@@ -74,11 +74,16 @@ TEST_CASE(MetricTest, TestCreateOneMillionSamples, [] () {
 
   EXPECT_EQ(num_samples, 0);
 
-  Sample<double> sample;
-  sample.key = "mymetric";
-  sample.value = 23.5f;
-  sample.labels.emplace_back("mylabel", "myvalue");
+  std::vector<std::string> labels;
+  for (int i = 0; i < 1000; ++i) {
+    labels.emplace_back(fnord::util::Random::alphanumericString(16));
+  }
+
   for (int i = 0; i < 1000000; ++i) {
+    Sample<double> sample;
+    sample.key = "mymetric";
+    sample.value = 23.5f;
+    sample.labels.emplace_back(labels[i % labels.size()], "myvalue");
     metric.addSample(sample);
   }
 
