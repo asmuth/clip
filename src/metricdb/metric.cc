@@ -62,6 +62,9 @@ void Metric::addSample(const Sample<double>& sample) {
 
   SampleWriter writer(field_index);
   writer.writeValue(sample.value);
+  for (const auto& label : sample.labels) {
+    writer.writeLabel(label.first, label.second);
+  }
 
   uint64_t now = fnord::util::WallClock::unixMillis();
   table->appendRow(&now, sizeof(now), writer.data(), writer.size());

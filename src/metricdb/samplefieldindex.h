@@ -18,6 +18,7 @@
 namespace fnordmetric {
 namespace metricdb  {
 
+// FIXPAUL rename to SampleLabelIndex
 class SampleFieldIndex : public fnord::sstable::Index {
 public:
   static const uint32_t kIndexType = 0xf8f8;

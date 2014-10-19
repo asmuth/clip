@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_SAMPLEWRITER_H
 #include <stdlib.h>
 #include <stdint.h>
+#include <string>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -24,6 +25,7 @@ public:
   ~SampleWriter();
 
   void writeValue(uint64_t value);
+  void writeLabel(const std::string& key, const std::string& value);
 
   void* data() const;
   size_t size() const;

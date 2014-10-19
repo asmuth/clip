@@ -29,6 +29,11 @@ void SampleWriter::writeValue(uint64_t value) {
   static_cast<BinaryFormat::SampleHeader*>(ptr_)->value = value;
 }
 
+void SampleWriter::writeLabel(
+    const std::string& key,
+    const std::string& value) {
+}
+
 void* SampleWriter::data() const {
   return ptr_;
 }
