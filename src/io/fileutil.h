@@ -23,12 +23,22 @@ public:
   /**
    * Create a new directory
    */
-  static void mkdir(const std::string dirname);
+  static void mkdir(const std::string& dirname);
 
   /**
    * Create one or more directories recursively
    */
-  static void mkdir_p(const std::string dirname);
+  static void mkdir_p(const std::string& dirname);
+
+  /**
+   * Check if a file exists
+   */
+  static bool exists(const std::string& dirname);
+
+  /**
+   * Check if a file exists and is a directory
+   */
+  static bool isDirectory(const std::string& dirname);
 
 };
 

@@ -19,7 +19,7 @@ using namespace fnord::io;
 
 UNIT_TEST(MetricRepositoryTest);
 
-const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo";
+const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo/a/s/d";
 
 TEST_CASE(MetricRepositoryTest, TestCreateNewMetric, [] () {
   io::FileUtil::mkdir_p(kTestRepoPath);
