@@ -7,11 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/util/unittest.h>
+#include <fnordmetric/metricdb/metricsnapshot.h>
 
-using namespace fnordmetric::metricdb;
+using namespace fnord;
+namespace fnordmetric {
+namespace metricdb {
 
-UNIT_TEST(MetricKeyTest);
+MetricSnapshot::MetricSnapshot(
+    std::unique_ptr<sstable::LiveSSTable> live_sstable) :
+    live_sstable_(std::move(live_sstable)) {}
 
+
+sstable::LiveSSTable* MetricSnapshot::liveTable() const {
+  return live_sstable_.get();
+}
+
+}
+}
 

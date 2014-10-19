@@ -117,6 +117,7 @@ set(FNORDMETRIC_QUERY_SOURCES
 set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
+    stage/src/fnordmetric/metricdb/metricsnapshot.cc
     stage/src/fnordmetric/metricdb/samplewriter.cc
     stage/src/fnordmetric/metricdb/statsd.cc)
 

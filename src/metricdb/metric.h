@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
+#include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/datetime.h>
@@ -34,19 +35,15 @@ public:
   const std::string& key() const;
 
 protected:
-  sstable::LiveSSTable* getLiveTable();
-  void mkLiveTable();
-
-  struct SSTableRef {
-    std::string filename;
-    uint64_t first_key;
-    uint64_t last_key;
-  };
+  std::shared_ptr<MetricSnapshot> getSnapshot() const;
+  std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
+  std::shared_ptr<MetricSnapshot> createSnapshot();
 
   std::string key_;
   io::FileRepository* file_repo_;
-  std::vector<SSTableRef> sstables_;
-  std::unique_ptr<sstable::LiveSSTable> live_sstable_;
+  std::shared_ptr<MetricSnapshot> head_;
+  mutable std::mutex head_mutex_;
+  std::mutex append_mutex_;
 };
 
 }

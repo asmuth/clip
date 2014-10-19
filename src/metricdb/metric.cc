@@ -24,31 +24,48 @@ Metric::Metric(
     io::FileRepository* file_repo) :
     key_(key),
     file_repo_(file_repo),
-    live_sstable_(nullptr) {}
+    head_(nullptr) {}
 
-void Metric::addSample(const Sample<double>& sample) {
-  SampleWriter writer;
-  writer.writeValue(sample.value);
-
-  auto live_table = getLiveTable();
-
-  uint64_t now = fnord::util::WallClock::unixMillis();
-  live_table->appendRow(&now, sizeof(now), writer.data(), writer.size());
-}
 
 const std::string& Metric::key() const {
   return key_;
 }
 
-sstable::LiveSSTable* Metric::getLiveTable() {
-  if (live_sstable_.get() == nullptr) {
-    mkLiveTable();
-  }
-
-  return live_sstable_.get();
+std::shared_ptr<MetricSnapshot> Metric::getSnapshot() const {
+  std::lock_guard<std::mutex> lock_holder(head_mutex_);
+  return head_;
 }
 
-void Metric::mkLiveTable() {
+// Must hold append_mutex_ to call this!
+std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
+  {
+    std::lock_guard<std::mutex> lock_holder(head_mutex_);
+
+    // FIXPAUL test if full...
+    if (head_.get() != nullptr) {
+      return head_;
+    }
+  }
+
+  auto new_snapshot = createSnapshot();
+  std::lock_guard<std::mutex> lock_holder(head_mutex_);
+  head_ = new_snapshot;
+  return head_;
+}
+
+void Metric::addSample(const Sample<double>& sample) {
+  SampleWriter writer;
+  writer.writeValue(sample.value);
+
+  std::lock_guard<std::mutex> lock_holder(append_mutex_);
+  auto snapshot = getOrCreateSnapshot();
+  auto table = snapshot->liveTable();
+
+  uint64_t now = fnord::util::WallClock::unixMillis();
+  table->appendRow(&now, sizeof(now), writer.data(), writer.size());
+}
+
+std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
   sstable::IndexProvider indexes;
 
   size_t field_definitions_size = 0;
@@ -66,29 +83,34 @@ void Metric::mkLiveTable() {
       fileref.absolute_path,
       io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
 
-  live_sstable_ = sstable::LiveSSTable::create(
+  auto live_sstable = sstable::LiveSSTable::create(
       std::move(file),
       std::move(indexes),
       header,
       header_size);
+
+  return std::shared_ptr<MetricSnapshot>(
+      new MetricSnapshot(std::move(live_sstable)));
 }
 
 void Metric::scanSamples(
     const fnord::util::DateTime& time_begin,
     const fnord::util::DateTime& time_end,
     std::function<bool (Sample<double> const*)> callback) {
+  auto snapshot = getSnapshot();
   // FIXPAUL scan samples from non-live sstables
 
-  // FIXPAUL locking
-  if (live_sstable_.get() != nullptr) {
-    auto cursor = live_sstable_->getCursor();
+  if (snapshot.get() == nullptr) {
+    return;
+  }
 
-    while (cursor->valid()) {
-      callback(nullptr);
+  auto cursor = snapshot->liveTable()->getCursor();
 
-      if (!cursor->next()) {
-        break;
-      }
+  while (cursor->valid()) {
+    callback(nullptr);
+
+    if (!cursor->next()) {
+      break;
     }
   }
 }
