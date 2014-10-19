@@ -17,10 +17,35 @@ MetricRepository::MetricRepository(
     std::shared_ptr<io::FileRepository> file_repo) :
     file_repo_(file_repo) {}
 
+// FIXPAUL lock
 Metric* MetricRepository::findMetric(const std::string& key) {
+  Metric* metric = nullptr;
+
+  std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
+
+  auto iter = metrics_.find(key);
+  if (iter != metrics_.end()) {
+    metric = iter->second.get();
+  }
+
+  return metric;
 }
 
 Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
+  Metric* metric;
+
+  std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
+
+  auto iter = metrics_.find(key);
+  if (iter == metrics_.end()) {
+    // FIXPAUL expensive operation; should be done outside of lock..
+    metric = new Metric(key, file_repo_.get());
+    metrics_.emplace(key, metric);
+  } else {
+    metric = iter->second.get();
+  }
+
+  return metric;
 }
 
 

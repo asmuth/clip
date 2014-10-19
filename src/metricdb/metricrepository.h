@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
 #include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/metric.h>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -30,6 +31,7 @@ public:
 protected:
   std::shared_ptr<io::FileRepository> file_repo_;
   std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
+  std::mutex metrics_mutex_;
 };
 
 }

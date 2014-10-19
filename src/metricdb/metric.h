@@ -31,6 +31,8 @@ protected:
     uint64_t last_key;
   };
 
+  std::string key_;
+  io::FileRepository* file_repo_;
   std::vector<SSTableRef> sstables_;
 };
 

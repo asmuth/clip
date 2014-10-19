@@ -114,7 +114,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
 set(METRICDB_SOURCES
-    stage/src/fnordmetric/metricdb/metrickey.cc
+    stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
     stage/src/fnordmetric/metricdb/statsd.cc)
 

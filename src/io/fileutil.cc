@@ -11,7 +11,6 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <sys/stat.h>
 
-
 namespace fnord {
 namespace io {
 
