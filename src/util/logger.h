@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+using namespace fnord::util;
 namespace fnordmetric {
 namespace util {
 

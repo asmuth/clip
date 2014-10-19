@@ -10,7 +10,7 @@
 #include <fnordmetric/util/wallclock.h>
 #include <sys/time.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
 
 DateTime WallClock::now() {

@@ -10,6 +10,7 @@
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/util/unittest.h>
+#include <fnordmetric/util/wallclock.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,6 +33,17 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   sample.value = 23.5f;
   sample.labels.emplace_back("mylabel", "myvalue");
   metric.addSample(sample);
+
+  int num_samples = 0;
+  metric.scanSamples(
+      util::DateTime::epoch(),
+      util::DateTime::now(),
+      [&num_samples] (Sample<double> const* smpl) -> bool {
+        num_samples++;
+        return true;
+      });
+
+  EXPECT_EQ(num_samples, 1);
 });
 
 

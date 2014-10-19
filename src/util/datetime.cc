@@ -11,7 +11,7 @@
 #include <ctime>
 #include <fnordmetric/util/datetime.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
 
 DateTime::DateTime(uint64_t utc_time) : utc_time_(utc_time) {}
@@ -43,12 +43,12 @@ std::string DateTime::toString(const char* fmt) const {
 }
 }
 
-fnordmetric::util::DateTime
-    std::numeric_limits<fnordmetric::util::DateTime>::min() {
-  return fnordmetric::util::DateTime::epoch();
+fnord::util::DateTime
+    std::numeric_limits<fnord::util::DateTime>::min() {
+  return fnord::util::DateTime::epoch();
 }
 
-fnordmetric::util::DateTime
-    std::numeric_limits<fnordmetric::util::DateTime>::max() {
-  return fnordmetric::util::DateTime(std::numeric_limits<uint64_t>::max());
+fnord::util::DateTime
+    std::numeric_limits<fnord::util::DateTime>::max() {
+  return fnord::util::DateTime(std::numeric_limits<uint64_t>::max());
 }

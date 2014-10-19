@@ -10,11 +10,12 @@
 #ifndef _FNORDMETRIC_UTIL_DATETIME_H
 #define _FNORDMETRIC_UTIL_DATETIME_H
 #include <ctime>
+#include <fnordmetric/util/datetime.h>
 #include <inttypes.h>
 #include <limits>
 #include <string>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
 
 class DateTime {
@@ -55,6 +56,11 @@ public:
    */
   static DateTime epoch();
 
+  /**
+   * Return a new DateTime instance with time = now
+   */
+  static DateTime now();
+
 protected:
 
   /**
@@ -72,10 +78,10 @@ protected:
 }
 }
 
-template <> class std::numeric_limits<fnordmetric::util::DateTime> {
+template <> class std::numeric_limits<fnord::util::DateTime> {
 public:
-  static fnordmetric::util::DateTime max();
-  static fnordmetric::util::DateTime min();
+  static fnord::util::DateTime max();
+  static fnord::util::DateTime min();
 };
 
 #endif

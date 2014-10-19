@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
 
 class WallClock {

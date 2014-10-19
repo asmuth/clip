@@ -12,6 +12,7 @@
 #include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/sstable/livesstable.h>
+#include <fnordmetric/util/datetime.h>
 #include <string>
 #include <vector>
 
@@ -24,6 +25,11 @@ public:
   Metric(const std::string& key, io::FileRepository* file_repo);
 
   void addSample(const Sample<double>& sample);
+
+  void scanSamples(
+      const fnord::util::DateTime& time_begin,
+      const fnord::util::DateTime& time_end,
+      std::function<bool (Sample<double> const*)>);
 
   const std::string& key() const;
 

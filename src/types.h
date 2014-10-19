@@ -17,7 +17,7 @@ typedef std::string StringType;
 typedef double FloatType;
 typedef int64_t IntegerType;
 typedef bool BoolType;
-typedef fnordmetric::util::DateTime TimeType;
+typedef fnord::util::DateTime TimeType;
 
 }
 

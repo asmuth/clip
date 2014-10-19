@@ -12,6 +12,7 @@
 #include <fnordmetric/ui/discretedomain.h>
 #include <fnordmetric/ui/timedomain.h>
 
+using namespace fnord;
 namespace fnordmetric {
 namespace ui {
 
