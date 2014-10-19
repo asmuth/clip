@@ -57,5 +57,43 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   EXPECT_EQ(num_samples, 1);
 });
 
+TEST_CASE(MetricTest, TestCreateOneMillionSamples, [] () {
+  io::FileUtil::mkdir_p(kTestRepoPath);
+  FileRepository file_repo(kTestRepoPath);
+
+  Metric metric("myothermetric", &file_repo);
+
+  int num_samples = 0;
+  metric.scanSamples(
+      util::DateTime::epoch(),
+      util::DateTime::now(),
+      [&num_samples] (Sample<double> const* smpl) -> bool {
+        num_samples++;
+        return true;
+      });
+
+  EXPECT_EQ(num_samples, 0);
+
+  Sample<double> sample;
+  sample.key = "mymetric";
+  sample.value = 23.5f;
+  sample.labels.emplace_back("mylabel", "myvalue");
+  for (int i = 0; i < 1000000; ++i) {
+    metric.addSample(sample);
+  }
+
+  num_samples = 0;
+  metric.scanSamples(
+      util::DateTime::epoch(),
+      util::DateTime::now(),
+      [&num_samples] (Sample<double> const* smpl) -> bool {
+        num_samples++;
+        return true;
+      });
+
+  EXPECT_EQ(num_samples, 1000000);
+});
+
+
 
 
