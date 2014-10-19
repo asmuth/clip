@@ -29,7 +29,7 @@ public:
   void scanSamples(
       const fnord::util::DateTime& time_begin,
       const fnord::util::DateTime& time_end,
-      std::function<bool (Sample<double> const*)>);
+      std::function<bool (Sample<double> const*)> callback);
 
   const std::string& key() const;
 

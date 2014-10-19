@@ -10,6 +10,7 @@
 #include <string>
 #include <ctime>
 #include <fnordmetric/util/datetime.h>
+#include <fnordmetric/util/wallclock.h>
 
 namespace fnord {
 namespace util {
@@ -26,6 +27,10 @@ DateTime::operator double() const {
 
 DateTime DateTime::epoch() {
   return DateTime(0);
+}
+
+DateTime DateTime::now() {
+  return DateTime(WallClock::unixMicros());
 }
 
 std::string DateTime::toString(const char* fmt) const {

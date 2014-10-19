@@ -20,7 +20,9 @@ class WallClock {
 public:
   static DateTime now();
   static uint64_t getUnixMillis();
+  static uint64_t unixMillis();
   static uint64_t getUnixMicros();
+  static uint64_t unixMicros();
 };
 
 }

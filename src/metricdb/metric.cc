@@ -54,5 +54,21 @@ void Metric::mkLiveTable() {
       header.size());
 }
 
+void Metric::scanSamples(
+    const fnord::util::DateTime& time_begin,
+    const fnord::util::DateTime& time_end,
+    std::function<bool (Sample<double> const*)> callback) {
+  // FIXPAUL scan samples from non-live sstables
+
+  // FIXPAUL locking
+  if (live_sstable_.get() != nullptr) {
+    auto cursor = live_sstable_->getCursor();
+
+    do {
+      callback(nullptr);
+    } while (cursor->next());
+  }
+}
+
 }
 }
