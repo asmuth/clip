@@ -14,7 +14,9 @@
 namespace fnordmetric {
 namespace metricdb {
 
-SampleWriter::SampleWriter() :
+SampleWriter::SampleWriter(
+    SampleFieldIndex* field_index) :
+    field_index_(field_index),
     ptr_(calloc(1, kInitialDataSize)),
     size_(kInitialDataSize),
     used_(sizeof(BinaryFormat::SampleHeader)) {}

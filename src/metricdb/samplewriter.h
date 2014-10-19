@@ -14,12 +14,13 @@
 
 namespace fnordmetric {
 namespace metricdb {
+class SampleFieldIndex;
 
 class SampleWriter {
 public:
   static const size_t kInitialDataSize = 4096;
 
-  SampleWriter();
+  SampleWriter(SampleFieldIndex* field_index);
   ~SampleWriter();
 
   void writeValue(uint64_t value);
@@ -28,6 +29,7 @@ public:
   size_t size() const;
 
 protected:
+  SampleFieldIndex* field_index_;
   void* ptr_;
   size_t size_;
   size_t used_;

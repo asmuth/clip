@@ -60,7 +60,7 @@ void Metric::addSample(const Sample<double>& sample) {
   auto table = snapshot->liveTable();
   auto field_index = table->getIndex<SampleFieldIndex>();
 
-  SampleWriter writer;
+  SampleWriter writer(field_index);
   writer.writeValue(sample.value);
 
   uint64_t now = fnord::util::WallClock::unixMillis();
