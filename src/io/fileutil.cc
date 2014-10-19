@@ -83,5 +83,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
   mkdir(dirname);
 }
 
+std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
+  return p1 + "/" + p2; // FIXPAUL
+}
+
 }
 }

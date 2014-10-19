@@ -40,6 +40,11 @@ public:
    */
   static bool isDirectory(const std::string& dirname);
 
+  /**
+   * Join two paths
+   */
+  static std::string joinPaths(const std::string& p1, const std::string p2);
+
 };
 
 }

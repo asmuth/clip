@@ -7,25 +7,26 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/util/random.h>
 
 namespace fnord {
-namespace io {
+namespace util {
 
-FileRepository::FileRepository(
-    const std::string& basedir) :
-    basedir_(basedir) {}
+void Random::init() {
+  srand(time(NULL));
+}
 
-FileRepository::FileRef FileRepository::createFile() {
-  FileRef fileref;
-  fileref.logical_filename = util::Random::alphanumericString(32);
-  fileref.absolute_path = FileUtil::joinPaths(
-      basedir_,
-      fileref.logical_filename);
+std::string Random::alphanumericString(int nchars) {
+  static const char kAlphanumericChars[] =
+      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-  return fileref;
+  std::string str;
+  for (int i = 0; i < nchars; ++i) {
+    // FIXPAUL too many rand() calls!
+    str += kAlphanumericChars[rand() % (sizeof(kAlphanumericChars) - 1)];
+  }
+
+  return str;
 }
 
 }

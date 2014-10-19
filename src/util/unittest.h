@@ -12,6 +12,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/util/random.h>
 #include <functional>
 #include <unordered_map>
 #include <vector>
@@ -127,6 +128,8 @@ public:
   }
 
   int run() {
+    fnord::util::Random::init();
+
     for (auto initializer : initializers_) {
       initializer->lambda_();
     }
