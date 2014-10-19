@@ -24,5 +24,9 @@ void Metric::addSample(const Sample<double>& sample) {
   RAISE(kNotYetImplementedError, "not yet implemented");
 }
 
+const std::string& Metric::key() const {
+  return key_;
+}
+
 }
 }

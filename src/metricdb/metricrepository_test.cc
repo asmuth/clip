@@ -22,7 +22,6 @@ UNIT_TEST(MetricRepositoryTest);
 const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo";
 
 TEST_CASE(MetricRepositoryTest, TestCreateNewMetric, [] () {
-  //io::FileUtil::rm_rf(kTestRepoPath);
   io::FileUtil::mkdir_p(kTestRepoPath);
 
   MetricRepository repo(std::shared_ptr<FileRepository>(
@@ -30,6 +29,8 @@ TEST_CASE(MetricRepositoryTest, TestCreateNewMetric, [] () {
 
   EXPECT(repo.findMetric("http_status_codes") == nullptr);
   auto metric = repo.findOrCreateMetric("http_status_codes");
+  EXPECT(metric != nullptr);
+  EXPECT_EQ(metric->key(), "http_status_codes");
 });
 
 

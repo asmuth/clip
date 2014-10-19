@@ -24,6 +24,8 @@ public:
 
   void addSample(const Sample<double>& sample);
 
+  const std::string& key() const;
+
 protected:
   struct SSTableRef {
     std::string filename;
