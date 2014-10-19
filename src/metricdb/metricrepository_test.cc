@@ -19,6 +19,8 @@ using namespace fnord::io;
 UNIT_TEST(MetricRepositoryTest);
 
 TEST_CASE(MetricRepositoryTest, TestCreateNewMetric, [] () {
+  //io::File::mkdir_p("/tmp/__fnordmetric_test_metricrepo"));
+
   MetricRepository repo(std::shared_ptr<FileRepository>(
       new FileRepository("/tmp/__fnordmetric_test_metricrepo")));
 

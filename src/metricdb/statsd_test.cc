@@ -21,11 +21,9 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
       "/fnord/mymetric",
       &sample);
 
-  const auto& mkey = sample.key;
-  const auto& value = sample.value;
-  EXPECT_EQ(mkey.key(), "/fnord/mymetric");
-  EXPECT_EQ(mkey.labels().size(), 0);
-  EXPECT_EQ(value, "")
+  EXPECT_EQ(sample.key, "/fnord/mymetric");
+  EXPECT_EQ(sample.labels.size(), 0);
+  EXPECT_EQ(sample.value, "")
 });
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
@@ -35,11 +33,9 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
       "/fnord/mymetric:34.23",
       &sample);
 
-  const auto& mkey = sample.key;
-  const auto& value = sample.value;
-  EXPECT_EQ(mkey.key(), "/fnord/mymetric");
-  EXPECT_EQ(mkey.labels().size(), 0);
-  EXPECT_EQ(value, "34.23")
+  EXPECT_EQ(sample.key, "/fnord/mymetric");
+  EXPECT_EQ(sample.labels.size(), 0);
+  EXPECT_EQ(sample.value, "34.23")
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
@@ -49,14 +45,12 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
       "/fnord/mymetric[label1=435][l2=str]:34.23",
       &sample);
 
-  const auto& mkey = sample.key;
-  const auto& value = sample.value;
-  EXPECT_EQ(mkey.key(), "/fnord/mymetric");
-  EXPECT_EQ(mkey.labels().size(), 2);
-  EXPECT_EQ(mkey.labels()[0].first, "label1");
-  EXPECT_EQ(mkey.labels()[0].second, "435");
-  EXPECT_EQ(mkey.labels()[1].first, "l2");
-  EXPECT_EQ(mkey.labels()[1].second, "str");
-  EXPECT_EQ(value, "34.23")
+  EXPECT_EQ(sample.key, "/fnord/mymetric");
+  EXPECT_EQ(sample.labels.size(), 2);
+  EXPECT_EQ(sample.labels[0].first, "label1");
+  EXPECT_EQ(sample.labels[0].second, "435");
+  EXPECT_EQ(sample.labels[1].first, "l2");
+  EXPECT_EQ(sample.labels[1].second, "str");
+  EXPECT_EQ(sample.value, "34.23")
 });
 

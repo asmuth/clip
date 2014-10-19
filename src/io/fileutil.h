@@ -7,30 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_IO_FILEREPOSITORY_H_
-#define _FNORD_IO_FILEREPOSITORY_H_
+#ifndef _FNORDMETRIC_UTIL_FILE_H_
+#define _FNORDMETRIC_UTIL_FILE_H_
+
+#include <stdlib.h>
+#include <stdint.h>
 #include <string>
-#include <vector>
 
 namespace fnord {
 namespace io {
 
-class FileRepository {
+class FileUtil {
 public:
-  struct FileRef {
-    std::string logical_filename;
-    std::string absolute_path;
-  };
-
-  FileRepository(const std::string& basedir);
 
   /**
-   * Create and return a new file
+   * Create one or more directories recursively
    */
-  FileRef createFile();
+  static void mkdir_p(const std::string dirname);
 
-protected:
-  std::string basedir_;
 };
 
 }

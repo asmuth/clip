@@ -14,6 +14,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/io/file.cc
+    stage/src/fnordmetric/io/filerepository.cc
     stage/src/fnordmetric/io/pagemanager.cc
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
@@ -113,6 +114,7 @@ set(FNORDMETRIC_QUERY_SOURCES
 
 set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/metrickey.cc
+    stage/src/fnordmetric/metricdb/metricrepository.cc
     stage/src/fnordmetric/metricdb/statsd.cc)
 
 include_directories(stage/src)

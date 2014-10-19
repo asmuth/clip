@@ -7,32 +7,20 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_IO_FILEREPOSITORY_H_
-#define _FNORD_IO_FILEREPOSITORY_H_
-#include <string>
-#include <vector>
+#include <fnordmetric/io/filerepository.h>
 
 namespace fnord {
 namespace io {
 
-class FileRepository {
-public:
-  struct FileRef {
-    std::string logical_filename;
-    std::string absolute_path;
-  };
+FileRepository::FileRepository(
+    const std::string& basedir) :
+    basedir_(basedir) {}
 
-  FileRepository(const std::string& basedir);
+FileRepository::FileRef FileRepository::createFile() {
 
-  /**
-   * Create and return a new file
-   */
-  FileRef createFile();
+}
 
-protected:
-  std::string basedir_;
-};
 
 }
 }
-#endif
+

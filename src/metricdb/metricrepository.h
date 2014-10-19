@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
 #define _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
-#include <fnordmetric/io/FileRepository.h>
+#include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <string>
 #include <unordered_map>
