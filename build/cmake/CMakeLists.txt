@@ -193,15 +193,15 @@ target_link_libraries(tests/test-cli fnord-static)
 add_executable(metricdb stage/src/fnordmetric/metricdb/metricdb.cc)
 target_link_libraries(metricdb fnord-static)
 
-add_executable(tests/test-metrickey
-    ${METRICDB_SOURCES}
-    stage/src/fnordmetric/metricdb/metrickey_test.cc)
-target_link_libraries(tests/test-metrickey fnord-static)
-
 add_executable(tests/test-statsd
     ${METRICDB_SOURCES}
     stage/src/fnordmetric/metricdb/statsd_test.cc)
 target_link_libraries(tests/test-statsd fnord-static)
+
+add_executable(tests/test-metric
+    ${METRICDB_SOURCES}
+    stage/src/fnordmetric/metricdb/metric_test.cc)
+target_link_libraries(tests/test-metric fnord-static)
 
 add_executable(tests/test-metricrepository
     ${METRICDB_SOURCES}

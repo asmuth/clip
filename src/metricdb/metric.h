@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/sample.h>
+#include <fnordmetric/sstable/livesstable.h>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,9 @@ public:
   const std::string& key() const;
 
 protected:
+  sstable::LiveSSTable* getLiveTable();
+  void mkLiveTable();
+
   struct SSTableRef {
     std::string filename;
     uint64_t first_key;
@@ -36,6 +40,7 @@ protected:
   std::string key_;
   io::FileRepository* file_repo_;
   std::vector<SSTableRef> sstables_;
+  std::unique_ptr<sstable::LiveSSTable> live_sstable_;
 };
 
 }

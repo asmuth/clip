@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metric.h>
+#include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 using namespace fnord;
@@ -18,14 +19,39 @@ Metric::Metric(
     const std::string& key,
     io::FileRepository* file_repo) :
     key_(key),
-    file_repo_(file_repo) {}
+    file_repo_(file_repo),
+    live_sstable_(nullptr) {}
 
 void Metric::addSample(const Sample<double>& sample) {
-  RAISE(kNotYetImplementedError, "not yet implemented");
+  auto live_table = getLiveTable();
 }
 
 const std::string& Metric::key() const {
   return key_;
+}
+
+sstable::LiveSSTable* Metric::getLiveTable() {
+  if (live_sstable_.get() == nullptr) {
+    mkLiveTable();
+  }
+
+  return live_sstable_.get();
+}
+
+void Metric::mkLiveTable() {
+  sstable::IndexProvider indexes;
+  std::string header = key_;
+
+  auto fileref = file_repo_->createFile();
+  auto file = io::File::openFile(
+      fileref.absolute_path,
+      io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+
+  live_sstable_ = sstable::LiveSSTable::create(
+      std::move(file),
+      std::move(indexes),
+      header.c_str(),
+      header.size());
 }
 
 }

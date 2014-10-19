@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_FILE_H_
-#define _FNORDMETRIC_UTIL_FILE_H_
+#ifndef _FNORD_IO_FILE_H_
+#define _FNORD_IO_FILE_H_
 
 #include <stdlib.h>
 #include <stdint.h>
