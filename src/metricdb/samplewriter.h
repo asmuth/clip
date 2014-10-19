@@ -31,6 +31,8 @@ public:
   size_t size() const;
 
 protected:
+  void append(void const* data, size_t size);
+
   SampleFieldIndex* label_index_;
   void* ptr_;
   size_t size_;

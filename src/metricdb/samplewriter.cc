@@ -10,6 +10,7 @@
 #include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/metricdb/binaryformat.h>
+#include <fnordmetric/util/runtimeexception.h>
 #include <stdlib.h>
 
 namespace fnordmetric {
@@ -18,9 +19,13 @@ namespace metricdb {
 SampleWriter::SampleWriter(
     SampleFieldIndex* label_index) :
     label_index_(label_index),
-    ptr_(calloc(1, kInitialDataSize)),
+    ptr_(malloc(kInitialDataSize)),
     size_(kInitialDataSize),
-    used_(sizeof(BinaryFormat::SampleHeader)) {}
+    used_(sizeof(BinaryFormat::SampleHeader)) {
+  if (ptr_ == nullptr) {
+    RAISE(kMallocError, "malloc() failed");
+  }
+}
 
 SampleWriter::~SampleWriter() {
   free(ptr_);
@@ -37,13 +42,19 @@ void SampleWriter::writeLabel(
 
   if (indexed_key == 0) {
     indexed_key = label_index_->addLabel(key);
-
-    // write label definition
+    uint32_t def_marker = 0xffffffff;
+    append(&def_marker, sizeof(def_marker));
+    append(&indexed_key, sizeof(indexed_key));
+    uint32_t key_len = key.size();
+    append(&key_len, sizeof(key_len));
+    append(key.c_str(), key.size());
   } else {
-    // write label reference
+    append(&indexed_key, sizeof(indexed_key));
   }
 
-  // write label value
+  uint32_t value_len = value.size();
+  append(&value_len, sizeof(value_len));
+  append(value.c_str(), value.size());
 }
 
 void* SampleWriter::data() const {
@@ -52,6 +63,27 @@ void* SampleWriter::data() const {
 
 size_t SampleWriter::size() const {
   return used_;
+}
+
+void SampleWriter::append(void const* data, size_t size) {
+  size_t resize = size_;
+
+  while (used_ + size >= size_) {
+    resize *= 2;
+  }
+
+  if (resize > size_) {
+    auto new_ptr = realloc(ptr_, resize);
+
+    if (ptr_ == nullptr) {
+      RAISE(kMallocError, "realloc() failed");
+    }
+
+    ptr_ = new_ptr;
+  }
+
+  memcpy(((char*) ptr_) + used_, data, size);
+  used_ += size;
 }
 
 }
