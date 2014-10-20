@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_SAMPLEWRITER_H
 #define _FNORDMETRIC_METRICDB_SAMPLEWRITER_H
+#include <fnordmetric/util/binarymessagewriter.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
@@ -17,26 +18,15 @@ namespace fnordmetric {
 namespace metricdb {
 class SampleFieldIndex;
 
-class SampleWriter {
+class SampleWriter : public fnord::util::BinaryMessageWriter {
 public:
-  static const size_t kInitialDataSize = 4096;
-
   SampleWriter(SampleFieldIndex* label_index);
-  ~SampleWriter();
 
   void writeValue(uint64_t value);
   void writeLabel(const std::string& key, const std::string& value);
 
-  void* data() const;
-  size_t size() const;
-
 protected:
-  void append(void const* data, size_t size);
-
   SampleFieldIndex* label_index_;
-  void* ptr_;
-  size_t size_;
-  size_t used_;
 };
 
 }

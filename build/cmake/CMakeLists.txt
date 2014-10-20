@@ -31,6 +31,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sstable/indexprovider.cc
     stage/src/fnordmetric/sstable/livesstable.cc
     stage/src/fnordmetric/sstable/rowoffsetindex.cc
+    stage/src/fnordmetric/util/binarymessagewriter.cc
     stage/src/fnordmetric/util/datetime.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
