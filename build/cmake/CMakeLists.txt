@@ -31,6 +31,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sstable/indexprovider.cc
     stage/src/fnordmetric/sstable/livesstable.cc
     stage/src/fnordmetric/sstable/rowoffsetindex.cc
+    stage/src/fnordmetric/util/binarymessagereader.cc
     stage/src/fnordmetric/util/binarymessagewriter.cc
     stage/src/fnordmetric/util/datetime.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
@@ -119,6 +120,7 @@ set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
     stage/src/fnordmetric/metricdb/metricsnapshot.cc
+    stage/src/fnordmetric/metricdb/samplereader.cc
     stage/src/fnordmetric/metricdb/samplewriter.cc
     stage/src/fnordmetric/metricdb/samplefieldindex.cc
     stage/src/fnordmetric/metricdb/statsd.cc)

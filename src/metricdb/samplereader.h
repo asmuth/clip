@@ -20,7 +20,10 @@ class SampleFieldIndex;
 
 class SampleReader : public fnord::util::BinaryMessageReader {
 public:
-  SampleReader(SampleFieldIndex* label_index);
+  SampleReader(
+      void* data,
+      size_t size,
+      SampleFieldIndex* label_index);
 
   template <typename T>
   T value();

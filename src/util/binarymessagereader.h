@@ -18,17 +18,18 @@ namespace util {
 
 class BinaryMessageReader {
 public:
-  BinaryMessageReader(void* buf, size_t buf_len);
+  BinaryMessageReader(void const* buf, size_t buf_len);
 
-  void appendUInt32(uint32_t value);
-  void appendUInt64(uint64_t value);
-  void appendString(const std::string& string);
-  void append(void const* data, size_t size);
+  uint32_t const* readUInt32();
+  uint64_t const* readUInt64();
+  void const* readData(size_t size);
+  char const* readString(size_t size);
 
   void rewind();
+  void seekTo(size_t pos);
 
 protected:
-  void* ptr_;
+  void const* ptr_;
   size_t size_;
   size_t pos_;
 };

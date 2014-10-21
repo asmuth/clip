@@ -62,7 +62,7 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
         return true;
       });
 
-  EXPECT_EQ(num_samples, 1000000);
+  EXPECT_EQ(num_samples, 100000);
 });
 
 
