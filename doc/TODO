@@ -82,6 +82,9 @@
     - rename (axis|legend|grid)definition -> \1config
 
 
+- backend: graphite/statsd
+- backend: legacy-fnordmetric
+
 [ doc ]
      - faqs
      - why svg rocks
