@@ -32,7 +32,7 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
-      [&num_samples] (SampleReader const* smpl_reader) -> bool {
+      [&num_samples] (MetricCursor const* cur) -> bool {
         num_samples++;
         return true;
       });
@@ -56,8 +56,9 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
-      [&num_samples] (SampleReader* smpl_reader) -> bool {
-        EXPECT_EQ(smpl_reader->value<double>(), 23);
+      [&num_samples] (MetricCursor* cur) -> bool {
+        auto smpl = cur->sample();
+        EXPECT_EQ(smpl->value<double>(), 23);
         num_samples++;
         return true;
       });

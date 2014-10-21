@@ -28,13 +28,14 @@ public:
   bool next();
   bool valid();
 
-  uint64_t time() const;
-  SampleReader* sample() const;
+  uint64_t time();
+  SampleReader* sample();
 
 protected:
   std::shared_ptr<MetricSnapshot> snapshot_;
   fnord::sstable::Cursor* tableCursor();
-  fnord::sstable::Cursor* table_cur_;
+  std::unique_ptr<fnord::sstable::Cursor> table_cur_;
+  std::unique_ptr<SampleReader> sample_;
 };
 
 

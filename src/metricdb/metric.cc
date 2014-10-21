@@ -102,31 +102,28 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
 void Metric::scanSamples(
     const fnord::util::DateTime& time_begin,
     const fnord::util::DateTime& time_end,
-    std::function<bool (SampleReader*)> callback) {
+    std::function<bool (MetricCursor*)> callback) {
   auto snapshot = getSnapshot();
   if (snapshot.get() == nullptr) {
     return;
   }
 
   MetricCursor cursor(snapshot);
-  /*
-  auto cursor = snapshot->liveTable()->getCursor();
-
-  while (cursor->valid()) {
+  while (cursor.valid()) {
     //void* key;
     //size_t key_size;
+    /*
     void* data;
     size_t data_size;
 
     cursor->getData(&data, &data_size);
-    SampleReader reader(data, data_size, nullptr);
-    callback(&reader);
+    SampleReader reader(data, data_size, nullptr);*/
+    callback(&cursor);
 
-    if (!cursor->next()) {
+    if (!cursor.next()) {
       break;
     }
   }
-  */
 }
 
 }

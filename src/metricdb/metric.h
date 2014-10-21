@@ -32,7 +32,7 @@ public:
   void scanSamples(
       const fnord::util::DateTime& time_begin,
       const fnord::util::DateTime& time_end,
-      std::function<bool (SampleReader*)> callback);
+      std::function<bool (MetricCursor*)> callback);
 
   std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
