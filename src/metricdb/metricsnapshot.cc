@@ -28,8 +28,7 @@ const std::vector<std::shared_ptr<TableRef>>& MetricSnapshot::tables() const {
 }
 
 std::shared_ptr<MetricSnapshot> MetricSnapshot::clone() const {
-  auto snap = new MetricSnapshot(tables_);
-  return std::shared_ptr<MetricSnapshot>(snap);
+  return std::shared_ptr<MetricSnapshot>(new MetricSnapshot(tables_));
 }
 
 

@@ -98,8 +98,14 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
       header,
       header_size);
 
-  // clone the current snapshot
-  auto snapshot = head_->clone();
+  std::shared_ptr<MetricSnapshot> snapshot;
+
+  if (head_.get() == nullptr) {
+    snapshot.reset(new MetricSnapshot());
+  } else {
+    snapshot = head_->clone();
+  }
+
   snapshot->appendTable(
       std::shared_ptr<TableRef>(new LiveTableRef(std::move(live_sstable))));
 
