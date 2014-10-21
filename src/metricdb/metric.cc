@@ -102,7 +102,7 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
 void Metric::scanSamples(
     const fnord::util::DateTime& time_begin,
     const fnord::util::DateTime& time_end,
-    std::function<bool (Sample<double> const*)> callback) {
+    std::function<bool (SampleReader*)> callback) {
   auto snapshot = getSnapshot();
   // FIXPAUL scan samples from non-live sstables
 

@@ -26,48 +26,13 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   io::FileUtil::mkdir_p(kTestRepoPath);
   FileRepository file_repo(kTestRepoPath);
 
-  Metric metric("mymetric", &file_repo);
+  Metric metric("myfirstmetric", &file_repo);
 
   int num_samples = 0;
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
-      [&num_samples] (Sample<double> const* smpl) -> bool {
-        num_samples++;
-        return true;
-      });
-
-  EXPECT_EQ(num_samples, 0);
-
-  Sample<double> sample;
-  sample.key = "mymetric";
-  sample.value = 23.5f;
-  sample.labels.emplace_back("mylabel", "myvalue");
-  metric.addSample(sample);
-
-  num_samples = 0;
-  metric.scanSamples(
-      util::DateTime::epoch(),
-      util::DateTime::now(),
-      [&num_samples] (Sample<double> const* smpl) -> bool {
-        num_samples++;
-        return true;
-      });
-
-  EXPECT_EQ(num_samples, 1);
-});
-
-TEST_CASE(MetricTest, TestCreateOneMillionSamples, [] () {
-  io::FileUtil::mkdir_p(kTestRepoPath);
-  FileRepository file_repo(kTestRepoPath);
-
-  Metric metric("myothermetric", &file_repo);
-
-  int num_samples = 0;
-  metric.scanSamples(
-      util::DateTime::epoch(),
-      util::DateTime::now(),
-      [&num_samples] (Sample<double> const* smpl) -> bool {
+      [&num_samples] (SampleReader const* smpl_reader) -> bool {
         num_samples++;
         return true;
       });
@@ -79,7 +44,7 @@ TEST_CASE(MetricTest, TestCreateOneMillionSamples, [] () {
     labels.emplace_back(fnord::util::Random::alphanumericString(16));
   }
 
-  for (int i = 0; i < 1000000; ++i) {
+  for (int i = 0; i < 100000; ++i) {
     Sample<double> sample;
     sample.key = "mymetric";
     sample.value = 23.5f;
@@ -91,7 +56,8 @@ TEST_CASE(MetricTest, TestCreateOneMillionSamples, [] () {
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
-      [&num_samples] (Sample<double> const* smpl) -> bool {
+      [&num_samples] (SampleReader* smpl_reader) -> bool {
+        EXPECT_EQ(smpl_reader->value<double>(), 23.5);
         num_samples++;
         return true;
       });

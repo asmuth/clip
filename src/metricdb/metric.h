@@ -12,6 +12,7 @@
 #include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
+#include <fnordmetric/metricdb/samplereader.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/datetime.h>
 #include <string>
@@ -30,7 +31,7 @@ public:
   void scanSamples(
       const fnord::util::DateTime& time_begin,
       const fnord::util::DateTime& time_end,
-      std::function<bool (Sample<double> const*)> callback);
+      std::function<bool (SampleReader*)> callback);
 
   const std::string& key() const;
 
