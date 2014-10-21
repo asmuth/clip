@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
+#include <fnordmetric/metricdb/metriccursor.h>
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/metricdb/samplereader.h>
@@ -33,6 +34,7 @@ public:
       const fnord::util::DateTime& time_end,
       std::function<bool (SampleReader*)> callback);
 
+  std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
 
 protected:

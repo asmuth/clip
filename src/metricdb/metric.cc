@@ -104,12 +104,12 @@ void Metric::scanSamples(
     const fnord::util::DateTime& time_end,
     std::function<bool (SampleReader*)> callback) {
   auto snapshot = getSnapshot();
-  // FIXPAUL scan samples from non-live sstables
-
   if (snapshot.get() == nullptr) {
     return;
   }
 
+  MetricCursor cursor(snapshot);
+  /*
   auto cursor = snapshot->liveTable()->getCursor();
 
   while (cursor->valid()) {
@@ -126,6 +126,7 @@ void Metric::scanSamples(
       break;
     }
   }
+  */
 }
 
 }
