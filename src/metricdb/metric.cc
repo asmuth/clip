@@ -110,14 +110,6 @@ void Metric::scanSamples(
 
   MetricCursor cursor(snapshot);
   while (cursor.valid()) {
-    //void* key;
-    //size_t key_size;
-    /*
-    void* data;
-    size_t data_size;
-
-    cursor->getData(&data, &data_size);
-    SampleReader reader(data, data_size, nullptr);*/
     callback(&cursor);
 
     if (!cursor.next()) {
