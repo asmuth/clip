@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <string.h>
 #include <sys/stat.h>
 
 namespace fnord {
@@ -46,7 +47,7 @@ bool FileUtil::isDirectory(const std::string& filename) {
 
 /* The mkdir_p method was adapted from bash 4.1 */
 void FileUtil::mkdir_p(const std::string& dirname) {
-  const char const* begin = dirname.c_str();
+  char const* begin = dirname.c_str();
   char const* cur = begin;
 
   if (exists(dirname)) {

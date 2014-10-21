@@ -10,6 +10,7 @@
 #include <fnordmetric/util/binarymessagewriter.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <stdlib.h>
+#include <string.h>
 
 namespace fnord {
 namespace util {

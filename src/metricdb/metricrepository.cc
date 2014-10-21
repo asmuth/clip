@@ -40,7 +40,7 @@ Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
   if (iter == metrics_.end()) {
     // FIXPAUL expensive operation; should be done outside of lock..
     metric = new Metric(key, file_repo_.get());
-    metrics_.emplace(key, metric);
+    metrics_.emplace(key, std::unique_ptr<Metric>(metric));
   } else {
     metric = iter->second.get();
   }

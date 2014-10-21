@@ -10,6 +10,7 @@
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <string.h>
 
 namespace fnord {
 namespace sstable {

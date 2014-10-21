@@ -16,6 +16,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/freeondestroy.h>
 #include <fnordmetric/util/wallclock.h>
+#include <string.h>
 
 using namespace fnord;
 namespace fnordmetric {
