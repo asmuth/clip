@@ -113,7 +113,14 @@ void Metric::scanSamples(
   auto cursor = snapshot->liveTable()->getCursor();
 
   while (cursor->valid()) {
-    callback(nullptr);
+    //void* key;
+    //size_t key_size;
+    void* data;
+    size_t data_size;
+
+    cursor->getData(&data, &data_size);
+    SampleReader reader(data, data_size, nullptr);
+    callback(&reader);
 
     if (!cursor->next()) {
       break;

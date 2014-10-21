@@ -21,7 +21,7 @@ SampleReader::SampleReader(
     label_index_(label_index) {}
 
 template <> double SampleReader::value<double>() {
-  return 23.5f;
+  return *readUInt64();
 }
 
 }

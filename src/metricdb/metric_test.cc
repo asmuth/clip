@@ -47,7 +47,7 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   for (int i = 0; i < 100000; ++i) {
     Sample<double> sample;
     sample.key = "mymetric";
-    sample.value = 23.5f;
+    sample.value = 23;
     sample.labels.emplace_back(labels[i % labels.size()], "myvalue");
     metric.addSample(sample);
   }
@@ -57,7 +57,7 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
       util::DateTime::epoch(),
       util::DateTime::now(),
       [&num_samples] (SampleReader* smpl_reader) -> bool {
-        EXPECT_EQ(smpl_reader->value<double>(), 23.5);
+        EXPECT_EQ(smpl_reader->value<double>(), 23);
         num_samples++;
         return true;
       });
