@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_TABLEREF_H_
 #define _FNORDMETRIC_METRICDB_TABLEREF_H_
 #include <fnordmetric/metricdb/sample.h>
+#include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <string>
 
@@ -23,7 +24,7 @@ public:
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
 
-  virtual void addSample(const Sample<double>& sample, uint64_t time) = 0;
+  virtual void addSample(SampleWriter const* sample, uint64_t time) = 0;
   virtual std::unique_ptr<sstable::Cursor> cursor() = 0;
 
 };
@@ -32,8 +33,8 @@ class LiveTableRef : public TableRef {
 public:
   LiveTableRef(std::unique_ptr<sstable::LiveSSTable> table);
 
-  void addSample(const Sample<double>& sample, uint64_t time) final;
-  std::unique_ptr<sstable::Cursor> cursor() final;
+  void addSample(SampleWriter const* sample, uint64_t time) override;
+  std::unique_ptr<sstable::Cursor> cursor() override;
 
 protected:
   std::unique_ptr<sstable::LiveSSTable> table_;

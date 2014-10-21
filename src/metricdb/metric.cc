@@ -69,7 +69,7 @@ void Metric::addSample(const Sample<double>& sample) {
   auto& table = snapshot->tables().back();
 
   uint64_t now = fnord::util::WallClock::unixMillis();
-  table->addSample(sample, now);
+  table->addSample(&writer, now);
 }
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table

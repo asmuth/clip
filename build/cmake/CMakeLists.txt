@@ -124,7 +124,8 @@ set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/samplereader.cc
     stage/src/fnordmetric/metricdb/samplewriter.cc
     stage/src/fnordmetric/metricdb/samplefieldindex.cc
-    stage/src/fnordmetric/metricdb/statsd.cc)
+    stage/src/fnordmetric/metricdb/statsd.cc
+    stage/src/fnordmetric/metricdb/tableref.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)

@@ -30,9 +30,8 @@ void SampleWriter::writeLabel(
   uint32_t indexed_key = 0; //label_index_->findLabel(key);
 
   if (indexed_key == 0) {
-    indexed_key = label_index_->addLabel(key);
+    //indexed_key = label_index_->addLabel(key);
     appendUInt32(0xffffffff);
-    appendUInt32(indexed_key);
     appendUInt32(key.size());
     appendString(key);
   } else {
