@@ -13,14 +13,24 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
+MetricSnapshot::MetricSnapshot() {}
+
 MetricSnapshot::MetricSnapshot(
-    std::unique_ptr<sstable::LiveSSTable> live_sstable) :
-    live_sstable_(std::move(live_sstable)) {}
+    const std::vector<std::shared_ptr<TableRef>>& tables) :
+    tables_(tables) {}
 
-
-sstable::LiveSSTable* MetricSnapshot::liveTable() const {
-  return live_sstable_.get();
+void MetricSnapshot::appendTable(std::shared_ptr<TableRef> table) {
+  tables_.emplace_back(table);
 }
+
+const std::vector<std::shared_ptr<TableRef>>& MetricSnapshot::tables() const {
+  return tables_;
+}
+
+std::shared_ptr<MetricSnapshot> MetricSnapshot::clone() const {
+  return std::shared_ptr<MetricSnapshot>(new MetricSnapshot(tables_));
+}
+
 
 }
 }

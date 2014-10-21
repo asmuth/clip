@@ -44,7 +44,7 @@ SampleReader* MetricCursor::sample() {
 fnord::sstable::Cursor* MetricCursor::tableCursor() {
   if (table_cur_.get() == nullptr) {
     // FIXPAUL start with first table, not always the live table
-    table_cur_ = snapshot_->liveTable()->getCursor();
+    table_cur_ = snapshot_->tables()[0]->cursor();
   }
 
   return table_cur_.get();

@@ -27,7 +27,7 @@ void SampleWriter::writeValue(uint64_t value) {
 void SampleWriter::writeLabel(
     const std::string& key,
     const std::string& value) {
-  uint32_t indexed_key = label_index_->findLabel(key);
+  uint32_t indexed_key = 0; //label_index_->findLabel(key);
 
   if (indexed_key == 0) {
     indexed_key = label_index_->addLabel(key);

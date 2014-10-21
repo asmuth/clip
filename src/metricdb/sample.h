@@ -7,6 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#ifndef _FNORDMETRIC_METRICDB_SAMPLE_H_
+#define _FNORDMETRIC_METRICDB_SAMPLE_H_
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -23,3 +25,4 @@ struct Sample {
 
 }
 }
+#endif

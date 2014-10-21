@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICSNAPSHOT_H_
 #define _FNORDMETRIC_METRICDB_METRICSNAPSHOT_H_
-#include <fnordmetric/sstable/livesstable.h>
+#include <fnordmetric/metricdb/tableref.h>
 #include <string>
 #include <vector>
 
@@ -19,20 +19,21 @@ namespace metricdb {
 
 class MetricSnapshot {
 public:
-  struct SSTableRef {
-    std::string filename;
-    uint64_t first_key;
-    uint64_t last_key;
-  };
+  explicit MetricSnapshot();
 
-  explicit MetricSnapshot(
-      std::unique_ptr<sstable::LiveSSTable> live_sstable);
+  MetricSnapshot(const MetricSnapshot& other);
+  MetricSnapshot& operator=(const MetricSnapshot& other) = delete;
 
-  sstable::LiveSSTable* liveTable() const;
+  void appendTable(std::shared_ptr<TableRef> table);
+  const std::vector<std::shared_ptr<TableRef>>& tables() const;
+
+  std::shared_ptr<MetricSnapshot> clone() const;
 
 protected:
-  const std::vector<SSTableRef> sstables_;
-  const std::unique_ptr<sstable::LiveSSTable> live_sstable_;
+  explicit MetricSnapshot(
+      const std::vector<std::shared_ptr<TableRef>>& tables);
+
+  std::vector<std::shared_ptr<TableRef>> tables_;
 };
 
 }
