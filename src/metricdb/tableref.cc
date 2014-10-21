@@ -20,7 +20,7 @@ LiveTableRef::LiveTableRef(
     table_(std::move(table)) {}
 
 void LiveTableRef::addSample(SampleWriter const* sample, uint64_t time) {
-  //table_->appendRow(&time, sizeof(time), sample->data(), sample->size()); // FIXPAUL
+  table_->appendRow(&time, sizeof(time), sample->data(), sample->size()); // FIXPAUL
 }
 
 std::unique_ptr<sstable::Cursor> LiveTableRef::cursor() {
