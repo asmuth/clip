@@ -117,6 +117,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
 set(METRICDB_SOURCES
+    stage/src/fnordmetric/metricdb/httpinterface.cc
     stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metriccursor.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
@@ -199,7 +200,9 @@ add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
 target_link_libraries(tests/test-cli fnord-static)
 
 # metricdb
-add_executable(metricdb stage/src/fnordmetric/metricdb/metricdb.cc)
+add_executable(metricdb
+    ${METRICDB_SOURCES}
+    stage/src/fnordmetric/metricdb/metricdb.cc)
 target_link_libraries(metricdb fnord-static)
 
 add_executable(tests/test-statsd
