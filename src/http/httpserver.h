@@ -14,7 +14,7 @@
 #include <fnordmetric/ev/acceptor.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/util/threadpool.h>
+#include <fnordmetric/thread/threadpool.h>
 
 namespace fnordmetric {
 namespace http {

@@ -41,12 +41,12 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/logoutputstream.cc
     stage/src/fnordmetric/util/outputstream.cc
     stage/src/fnordmetric/util/jsonoutputstream.cc
-    stage/src/fnordmetric/util/threadpool.cc
     stage/src/fnordmetric/util/random.cc
     stage/src/fnordmetric/util/runtimeexception.cc
     stage/src/fnordmetric/util/signalhandler.cc
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
+    stage/src/fnordmetric/thread/threadpool.cc
     stage/src/fnordmetric/web/assets.cc
     stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/web/webinterface.cc)

@@ -9,7 +9,7 @@
  */
 #include <thread>
 #include <memory>
-#include <fnordmetric/util/threadpool.h>
+#include <fnordmetric/thread/threadpool.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
