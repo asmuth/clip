@@ -46,6 +46,10 @@ std::string FlagParser::getString(const char* longopt) const {
         RAISE(kFlagError, "flag '%s' is not a string", longopt);
       }
 
+      if (flag.values.size() == 0) {
+        RAISE(kFlagError, "flag '%s' is not set", longopt);
+      }
+
       return flag.values.back();
     }
   }
@@ -58,6 +62,10 @@ int64_t FlagParser::getInt(const char* longopt) const {
     if (flag.longopt == longopt) {
       if (flag.type != T_INTEGER) {
         RAISE(kFlagError, "flag '%s' is not an integer", longopt);
+      }
+
+      if (flag.values.size() == 0) {
+        RAISE(kFlagError, "flag '%s' is not set", longopt);
       }
 
       int64_t flag_value;
