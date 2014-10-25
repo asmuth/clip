@@ -8,16 +8,46 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/util/ieee754.h>
+#include <fnordmetric/util/runtimeexception.h>
+#include <stdio.h>
 
 namespace fnord {
 namespace util {
 
 uint64_t IEEE754::toBytes(double value) {
-  return value;
+  uint64_t bytes;
+
+  constexpr bool ieee754 =
+      std::numeric_limits<double>::is_iec559 &&
+      sizeof(double) == sizeof(uint64_t);
+
+  if (ieee754) {
+    memcpy((void *) &bytes, (void *) &value, sizeof(bytes));
+  } else {
+    RAISE(
+        kNotYetImplementedError,
+        "IEEE 754 floating point conversion not yet implemented");
+  }
+
+  return bytes;
 }
 
 double IEEE754::fromBytes(uint64_t bytes) {
-  return bytes;
+  double value;
+
+  constexpr bool ieee754 =
+      std::numeric_limits<double>::is_iec559 &&
+      sizeof(double) == sizeof(uint64_t);
+
+  if (ieee754) {
+    memcpy((void *) &value, (void *) &bytes, sizeof(bytes));
+  } else {
+    RAISE(
+        kNotYetImplementedError,
+        "IEEE 754 floating point conversion not yet implemented");
+  }
+
+  return value;
 }
 
 }
