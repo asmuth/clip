@@ -48,14 +48,14 @@ Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
   return metric;
 }
 
-std::vector<std::pair<std::string, Metric*>> MetricRepository::listMetrics()
+std::vector<Metric*> MetricRepository::listMetrics()
     const {
-  std::vector<std::pair<std::string, Metric*>> metrics;
+  std::vector<Metric*> metrics;
 
   {
     std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
     for (const auto& iter : metrics_) {
-      metrics.emplace_back(iter.first, iter.second.get());
+      metrics.emplace_back(iter.second.get());
     }
   }
 

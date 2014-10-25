@@ -82,7 +82,10 @@ void HTTPAPI::renderMetricList(
   json.beginArray();
 
   for (const auto& metric : metric_repo_->listMetrics()) {
-
+    json.beginObject();
+    json.addObjectEntry("key");
+    json.addString(metric->key());
+    json.endObject();
   }
 
   json.endArray();
@@ -120,7 +123,6 @@ void HTTPAPI::insertSample(
 
   auto metric = metric_repo_->findOrCreateMetric(metric_key);
   metric->addSample(sample);
-
   response->setStatus(http::kStatusCreated);
 }
 

@@ -28,7 +28,7 @@ public:
   Metric* findMetric(const std::string& key) const;
   Metric* findOrCreateMetric(const std::string& key);
 
-  std::vector<std::pair<std::string, Metric*>> listMetrics() const;
+  std::vector<Metric*> listMetrics() const;
 
 protected:
   std::shared_ptr<io::FileRepository> file_repo_;
