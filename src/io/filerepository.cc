@@ -28,6 +28,12 @@ FileRepository::FileRef FileRepository::createFile() const {
   return fileref;
 }
 
+void FileRepository::listFiles(
+    std::function<bool(const char*)> callback) const {
+  FileUtil::ls(basedir_, callback);
+}
+
+
 }
 }
 

@@ -9,6 +9,7 @@
  */
 #ifndef _FNORD_IO_FILEREPOSITORY_H_
 #define _FNORD_IO_FILEREPOSITORY_H_
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -28,6 +29,9 @@ public:
    * Create and return a new file
    */
   FileRef createFile() const;
+
+  void listFiles(
+      std::function<bool(const char*)> callback) const;
 
 protected:
   std::string basedir_;

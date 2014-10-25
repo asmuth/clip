@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_UTIL_FILE_H_
 #define _FNORDMETRIC_UTIL_FILE_H_
-
+#include <functional>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
@@ -44,6 +44,13 @@ public:
    * Join two paths
    */
   static std::string joinPaths(const std::string& p1, const std::string p2);
+
+  /**
+   * List files in a directory
+   */
+  static void ls(
+      const std::string& dirname,
+      std::function<bool(const char*)> callback);
 
 };
 

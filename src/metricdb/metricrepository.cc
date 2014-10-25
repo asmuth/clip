@@ -15,7 +15,11 @@ namespace metricdb {
 
 MetricRepository::MetricRepository(
     std::shared_ptr<io::FileRepository> file_repo) :
-    file_repo_(file_repo) {}
+    file_repo_(file_repo) {
+  file_repo->listFiles([this] (const char* filename) -> bool {
+    printf("file: %s\n", filename);
+  });
+}
 
 // FIXPAUL lock
 Metric* MetricRepository::findMetric(const std::string& key) const {
