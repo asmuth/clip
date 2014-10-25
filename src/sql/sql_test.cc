@@ -87,7 +87,8 @@ static std::unique_ptr<ResultList> executeTestQuery(
   runtime.addBackend(
       std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 
-  QueryPlan query_plan;
+  TableRepository table_repo;
+  QueryPlan query_plan(&table_repo);
   query_plan.tableRepository()->addTableRef(
       "testtable",
       std::unique_ptr<TableRef>(new TestTableRef()));
@@ -941,7 +942,8 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
       "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
       "     GROUP BY city LIMIT 10;");
 
-  QueryPlan query_plan;
+  TableRepository table_repo;
+  QueryPlan query_plan(&table_repo);
   runtime.queryPlanBuilder()->buildQueryPlan(statements, &query_plan);
 
   ResultList result;

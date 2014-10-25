@@ -22,7 +22,7 @@ namespace query {
 class QueryPlan {
 public:
 
-  QueryPlan();
+  QueryPlan(TableRepository* table_repo);
 
   void addQuery(std::unique_ptr<QueryPlanNode> query);
   const std::vector<std::unique_ptr<QueryPlanNode>>& queries();
@@ -30,7 +30,7 @@ public:
   TableRepository* tableRepository();
 
 protected:
-  TableRepository table_repo_;
+  TableRepository* table_repo_;
   std::vector<std::unique_ptr<QueryPlanNode>> queries_;
 };
 

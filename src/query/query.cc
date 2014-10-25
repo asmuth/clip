@@ -31,7 +31,18 @@ Query::Query(
 Query::Query(
     const std::string& query_string,
     Runtime* runtime) :
-    runtime_(runtime) {
+    Query(
+        query_string,
+        runtime,
+        std::unique_ptr<TableRepository>(new TableRepository())) {}
+
+Query::Query(
+    const std::string& query_string,
+    Runtime* runtime,
+    std::unique_ptr<TableRepository> table_repo) :
+    runtime_(runtime),
+    table_repo_(std::move(table_repo)),
+    query_plan_(table_repo_.get()) {
   auto statements = runtime->parser()->parseQuery(query_string);
   draw_statements_.emplace_back();
 
@@ -45,12 +56,12 @@ Query::Query(
         statements_.emplace_back(
             std::unique_ptr<QueryPlanNode>(
                 runtime_->queryPlanBuilder()->buildQueryPlan(
-                    stmt.get(), query_plan_.tableRepository())),
+                    stmt.get(), table_repo_.get())),
             draw_statements_.back().empty() ?
                 nullptr : draw_statements_.back().back().get());
         break;
       case query::ASTNode::T_IMPORT:
-        query_plan_.tableRepository()->import(
+        table_repo_->import(
             ImportStatement(stmt.get(), runtime_->compiler()),
             runtime_->backends());
         break;

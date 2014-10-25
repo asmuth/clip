@@ -29,12 +29,17 @@ class ResultList;
 class Query {
 public:
 
-  explicit Query(const std::string& query_string, Runtime* runtime);
-
   explicit Query(
       const char* query_string,
       size_t query_string_len,
       Runtime* repo);
+
+  explicit Query(const std::string& query_string, Runtime* runtime);
+
+  explicit Query(
+      const std::string& query_string,
+      Runtime* runtime,
+      std::unique_ptr<TableRepository> table_repo);
 
   Query(const Query& copy) = delete;
   Query& operator=(const Query& copy) = delete;
@@ -79,6 +84,7 @@ public:
 
 protected:
   Runtime* runtime_;
+  std::unique_ptr<TableRepository> table_repo_;
   QueryPlan query_plan_;
 
   std::vector<std::pair<std::unique_ptr<QueryPlanNode>, DrawStatement*>>
