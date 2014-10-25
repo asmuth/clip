@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/metricdb/tableheaderreader.h>
 #include <fnordmetric/metricdb/tableheaderwriter.h>
@@ -20,6 +21,14 @@ std::unique_ptr<TableRef> TableRef::createTable(
     const std::string& key,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Creating new sstable for metric: '%s', generation: %" PRIu64,
+        key.c_str(),
+        generation);
+  }
+
   // build header
   TableHeaderWriter header(key, generation, parents);
 

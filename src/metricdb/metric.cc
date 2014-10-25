@@ -60,7 +60,7 @@ Metric::Metric(
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
-        "Reopening metric: '%s' with %i tables, generation: %" PRIu64,
+        "Reopening metric: '%s' with %i table(s), generation: %" PRIu64,
         key.c_str(),
         (int) generations.size(),
         head_table->generation());
