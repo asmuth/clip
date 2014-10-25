@@ -21,12 +21,14 @@ uint64_t IEEE754::toBytes(double value) {
       std::numeric_limits<double>::is_iec559 &&
       sizeof(double) == sizeof(uint64_t);
 
+  static_assert(
+      ieee754,
+      "IEEE 754 floating point conversion not yet implemented");
+
   if (ieee754) {
     memcpy((void *) &bytes, (void *) &value, sizeof(bytes));
   } else {
-    RAISE(
-        kNotYetImplementedError,
-        "IEEE 754 floating point conversion not yet implemented");
+    /* not yet implemented */
   }
 
   return bytes;
@@ -39,12 +41,14 @@ double IEEE754::fromBytes(uint64_t bytes) {
       std::numeric_limits<double>::is_iec559 &&
       sizeof(double) == sizeof(uint64_t);
 
+  static_assert(
+      ieee754,
+      "IEEE 754 floating point conversion not yet implemented");
+
   if (ieee754) {
     memcpy((void *) &value, (void *) &bytes, sizeof(bytes));
   } else {
-    RAISE(
-        kNotYetImplementedError,
-        "IEEE 754 floating point conversion not yet implemented");
+    /* not yet implemented */
   }
 
   return value;
