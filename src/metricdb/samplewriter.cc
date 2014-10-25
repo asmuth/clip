@@ -10,6 +10,7 @@
 #include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/metricdb/binaryformat.h>
+#include <fnordmetric/util/ieee754.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <stdlib.h>
 
@@ -20,8 +21,12 @@ SampleWriter::SampleWriter(
     SampleFieldIndex* label_index) :
     label_index_(label_index) {}
 
-void SampleWriter::writeValue(uint64_t value) {
+template <> void SampleWriter::writeValue<uint64_t>(uint64_t value) {
   appendUInt64(value);
+}
+
+template <> void SampleWriter::writeValue<double>(double value) {
+  appendUInt64(fnord::util::IEEE754::toBytes(value));
 }
 
 void SampleWriter::writeLabel(

@@ -7,22 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/samplefieldindex.h>
-#include <fnordmetric/metricdb/samplereader.h>
 #include <fnordmetric/util/ieee754.h>
 
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace util {
 
-SampleReader::SampleReader(
-    void* data,
-    size_t size,
-    SampleFieldIndex* label_index) :
-    fnord::util::BinaryMessageReader(data, size),
-    label_index_(label_index) {}
+uint64_t IEEE754::toBytes(double value) {
+  return value;
+}
 
-template <> double SampleReader::value<double>() {
-  return fnord::util::IEEE754::fromBytes(*readUInt64());
+double IEEE754::fromBytes(uint64_t bytes) {
+  return bytes;
 }
 
 }

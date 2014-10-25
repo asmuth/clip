@@ -160,10 +160,16 @@ void HTTPAPI::renderMetricSampleScan(
       fnord::util::DateTime::epoch(),
       fnord::util::DateTime::now(),
       [&json, &i] (MetricCursor* cursor) -> bool {
+        auto sample = cursor->sample();
         if (i++ > 0) { json.addComma(); }
         json.beginObject();
+
         json.addObjectEntry("time");
         json.addLiteral<uint64_t>(cursor->time());
+        json.addComma();
+
+        json.addObjectEntry("value");
+        json.addLiteral<double>(sample->value<double>());
         json.endObject();
         return true;
       });

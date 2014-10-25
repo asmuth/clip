@@ -39,6 +39,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/datetime.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
+    stage/src/fnordmetric/util/ieee754.cc
     stage/src/fnordmetric/util/inputstream.cc
     stage/src/fnordmetric/util/logger.cc
     stage/src/fnordmetric/util/logoutputstream.cc

@@ -22,7 +22,9 @@ class SampleWriter : public fnord::util::BinaryMessageWriter {
 public:
   SampleWriter(SampleFieldIndex* label_index);
 
-  void writeValue(uint64_t value);
+  template <typename T>
+  void writeValue(T value);
+
   void writeLabel(const std::string& key, const std::string& value);
 
 protected:
