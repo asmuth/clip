@@ -31,7 +31,7 @@ public:
   FileRef createFile() const;
 
   void listFiles(
-      std::function<bool(const char*)> callback) const;
+      std::function<bool(const std::string& filename)> callback) const;
 
 protected:
   std::string basedir_;

@@ -7,8 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <dirent.h>
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/stringutil.h>
 #include <string.h>
 #include <sys/stat.h>
 
@@ -85,8 +87,50 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 }
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
-  return p1 + "/" + p2; // FIXPAUL
+  auto p1_stripped = p1;
+  util::StringUtil::stripTrailingSlashes(&p1_stripped);
+  auto p2_stripped = p2;
+  util::StringUtil::stripTrailingSlashes(&p2_stripped);
+  return p1_stripped + "/" + p2_stripped;
 }
+
+void FileUtil::ls(
+    const std::string& dirname,
+    std::function<bool(const std::string&)> callback) {
+  if (exists(dirname)) {
+    if (!isDirectory(dirname)) {
+      RAISE(
+          kIOError,
+          "file '%s' exists but is not a directory",
+          dirname.c_str());
+    }
+  } else {
+    RAISE(
+        kIOError,
+        "file '%s' does not exist",
+        dirname.c_str());
+  }
+
+  auto dir = opendir(dirname.c_str());
+
+  if (dir == nullptr) {
+    RAISE_ERRNO("opendir(%s) failed", dirname.c_str());
+  }
+
+  struct dirent* entry;
+  while ((entry = readdir(dir)) != NULL) {
+    if (entry->d_namlen < 1 || *entry->d_name == '.') {
+      continue;
+    }
+
+    if (!callback(std::string(entry->d_name, entry->d_namlen))) {
+      break;
+    }
+  }
+
+  closedir(dir);
+}
+
 
 }
 }

@@ -29,8 +29,11 @@ FileRepository::FileRef FileRepository::createFile() const {
 }
 
 void FileRepository::listFiles(
-    std::function<bool(const char*)> callback) const {
-  FileUtil::ls(basedir_, callback);
+    std::function<bool(const std::string&)> callback) const {
+  FileUtil::ls(basedir_, [&] (const std::string& filename) -> bool {
+    auto absolute_path = FileUtil::joinPaths(basedir_, filename);
+    return callback(absolute_path);
+  });
 }
 
 

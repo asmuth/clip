@@ -50,7 +50,7 @@ public:
    */
   static void ls(
       const std::string& dirname,
-      std::function<bool(const char*)> callback);
+      std::function<bool(const std::string&)> callback);
 
 };
 
