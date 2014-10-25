@@ -128,10 +128,6 @@ void URI::parseURI(
     }
   }
 
-  if (!has_scheme) {
-    RAISE(kRuntimeError, "invalid URI: must begin with scheme:");
-  }
-
   /* authority */
   if (begin < end - 2 && begin[0] == '/' && begin[1] == '/') {
     begin += 2;

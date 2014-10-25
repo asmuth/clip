@@ -18,10 +18,23 @@ class HTTPInputStream;
 
 class HTTPRequest : public HTTPMessage {
 public:
+  enum kMethod {
+    M_CONNECT,
+    M_DELETE,
+    M_GET,
+    M_HEAD,
+    M_OPTIONS,
+    M_POST,
+    M_PUT,
+    M_TRACE,
+    M_INVALID
+  };
+
   //HTTPRequest();
   void readFromInputStream(HTTPInputStream* input);
 
   const std::string& getMethod() const;
+  kMethod method() const;
   const std::string& getUrl() const;
   const bool keepalive() const;
 

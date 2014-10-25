@@ -28,6 +28,11 @@ public:
       http::HTTPResponse* response) override;
 
 protected:
+
+  void renderMetricList(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
   MetricRepository* metric_repo_;
 };
 

@@ -45,6 +45,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/random.cc
     stage/src/fnordmetric/util/runtimeexception.cc
     stage/src/fnordmetric/util/signalhandler.cc
+    stage/src/fnordmetric/util/stringutil.cc
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
     stage/src/fnordmetric/thread/threadpool.cc

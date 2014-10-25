@@ -36,6 +36,19 @@ const std::string& HTTPRequest::getMethod() const {
   return method_;
 }
 
+// FIXPAUL sloooow
+HTTPRequest::kMethod HTTPRequest::method() const {
+  if (method_ == "CONNECT") { return M_CONNECT; }
+  if (method_ == "DELETE") { return M_DELETE; }
+  if (method_ == "GET") { return M_GET; }
+  if (method_ == "HEAD") { return M_HEAD; }
+  if (method_ == "OPTIONS") { return M_OPTIONS; }
+  if (method_ == "POST") { return M_POST; }
+  if (method_ == "PUT") { return M_PUT; }
+  if (method_ == "TRACE") { return M_TRACE; }
+  return M_INVALID;
+}
+
 const std::string& HTTPRequest::getUrl() const {
   return url_;
 }
