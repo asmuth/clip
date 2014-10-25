@@ -35,6 +35,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/assets.cc
     stage/src/fnordmetric/util/binarymessagereader.cc
     stage/src/fnordmetric/util/binarymessagewriter.cc
+    stage/src/fnordmetric/util/buffer.cc
     stage/src/fnordmetric/util/datetime.cc
     stage/src/fnordmetric/util/exceptionhandler.cc
     stage/src/fnordmetric/util/format.cc
@@ -128,6 +129,7 @@ set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/samplewriter.cc
     stage/src/fnordmetric/metricdb/samplefieldindex.cc
     stage/src/fnordmetric/metricdb/statsd.cc
+    stage/src/fnordmetric/metricdb/tableheaderreader.cc
     stage/src/fnordmetric/metricdb/tableheaderwriter.cc
     stage/src/fnordmetric/metricdb/tableref.cc)
 

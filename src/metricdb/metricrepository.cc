@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/tableheaderreader.h>
 #include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
@@ -23,7 +24,15 @@ MetricRepository::MetricRepository(
     sstable::SSTableReader reader(
         io::File::openFile(filename, io::File::O_READ | io::File::O_WRITE));
 
-    printf("header size: %i\n", reader.headerSize());
+    auto header_buf = reader.readHeader();
+    TableHeaderReader header(header_buf.data(), header_buf.size());
+
+    if (reader.bodySize() == 0) {
+      //tables[header.metricKey()].emplace_back();
+    } else {
+
+    }
+
     return true;
   });
 }

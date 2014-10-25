@@ -15,6 +15,9 @@
 #include <string>
 
 namespace fnord {
+namespace util {
+class Buffer;
+}
 namespace io {
 
 #undef O_APPEND
@@ -76,8 +79,9 @@ public:
 
   File& operator=(const File& copy) = delete;
 
-  void seekTo(int pos);
+  void seekTo(size_t pos);
   size_t read(void* buf, size_t buf_len);
+  size_t read(util::Buffer* buf);
 
   int fd() const;
   size_t size() const;

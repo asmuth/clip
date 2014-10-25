@@ -39,6 +39,13 @@ SSTableReader::SSTableReader(io::File&& file) : file_(std::move(file)) {
   }
 }
 
+util::Buffer SSTableReader::readHeader() {
+  file_.seekTo(sizeof(BinaryFormat::FileHeader));
+  util::Buffer buf(header_size_);
+  file_.read(&buf);
+  return buf;
+}
+
 size_t SSTableReader::bodySize() const {
   return body_size_;
 }

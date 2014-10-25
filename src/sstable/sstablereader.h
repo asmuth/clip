@@ -18,6 +18,7 @@
 #include <fnordmetric/sstable/cursor.h>
 #include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
+#include <fnordmetric/util/buffer.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnord {
@@ -37,6 +38,8 @@ public:
 
   //template <typename IndexType>
   //IndexType* getIndex() const;
+
+  util::Buffer readHeader();
 
   size_t bodySize() const;
   size_t headerSize() const;

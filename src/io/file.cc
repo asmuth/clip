@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/io/file.h>
+#include <fnordmetric/util/buffer.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
@@ -90,8 +91,8 @@ size_t File::size() const {
   return fd_stat.st_size;
 }
 
-void File::seekTo(int pos) {
-  if (lseek(fd_, SEEK_SET, pos) < 0) {
+void File::seekTo(size_t pos) {
+  if (lseek(fd_, pos, SEEK_SET) < 0) {
     RAISE_ERRNO(kIOError, "lseek(%i) failed", fd_);
   }
 }
@@ -104,6 +105,10 @@ size_t File::read(void* buf, size_t buf_len) {
   }
 
   return res;
+}
+
+size_t File::read(util::Buffer* buf) {
+  return read(buf->data(), buf->size());
 }
 
 }
