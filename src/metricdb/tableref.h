@@ -24,7 +24,12 @@ public:
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
 
-  static std::unique_ptr<TableRef> createTable();
+  static std::unique_ptr<TableRef> createTable(
+      fnord::io::File&& file,
+      const std::string& key,
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
+
   static std::unique_ptr<TableRef> reopenTable(fnord::io::File&& file);
   static std::unique_ptr<TableRef> openTable(fnord::io::File&& file);
 

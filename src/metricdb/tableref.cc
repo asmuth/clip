@@ -8,10 +8,30 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/tableref.h>
+#include <fnordmetric/metricdb/tableheaderwriter.h>
 
 using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+
+std::unique_ptr<TableRef> TableRef::createTable(
+    fnord::io::File&& file,
+    const std::string& key,
+    uint64_t generation,
+    const std::vector<uint64_t>& parents) {
+  // build header
+  TableHeaderWriter header(key, generation, parents);
+
+  // create new sstable
+  sstable::IndexProvider indexes;
+  auto live_sstable = sstable::LiveSSTable::create(
+      std::move(file),
+      std::move(indexes),
+      header.data(),
+      header.size());
+
+  return std::unique_ptr<TableRef>(new LiveTableRef(std::move(live_sstable)));
+}
 
 std::unique_ptr<TableRef> TableRef::reopenTable(fnord::io::File&& file) {
   sstable::IndexProvider indexes;

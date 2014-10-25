@@ -11,7 +11,6 @@
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
-#include <fnordmetric/metricdb/tableheaderwriter.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -28,7 +27,8 @@ Metric::Metric(
     io::FileRepository* file_repo) :
     key_(key),
     file_repo_(file_repo),
-    head_(nullptr) {}
+    head_(nullptr),
+    max_generation_(0) {}
 
 Metric::Metric(
     const std::string& key,
@@ -91,24 +91,8 @@ void Metric::addSample(const Sample<double>& sample) {
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
 std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
-  // build header
-  TableHeaderWriter header(key_);
-
-  // open new file
-  auto fileref = file_repo_->createFile();
-  auto file = io::File::openFile(
-      fileref.absolute_path,
-      io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
-
-  // create new sstable
-  sstable::IndexProvider indexes;
-  auto live_sstable = sstable::LiveSSTable::create(
-      std::move(file),
-      std::move(indexes),
-      header.data(),
-      header.size());
-
   std::shared_ptr<MetricSnapshot> snapshot;
+  std::vector<uint64_t> parents;
 
   if (head_.get() == nullptr) {
     snapshot.reset(new MetricSnapshot());
@@ -116,8 +100,17 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
     snapshot = head_->clone();
   }
 
-  snapshot->appendTable(
-      std::shared_ptr<TableRef>(new LiveTableRef(std::move(live_sstable))));
+  // open new file
+  auto fileref = file_repo_->createFile();
+  auto file = io::File::openFile(
+      fileref.absolute_path,
+      io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+
+  snapshot->appendTable(TableRef::createTable(
+      std::move(file),
+      key_,
+      max_generation_++,
+      parents));
 
   return snapshot;
 }
