@@ -98,7 +98,8 @@ int main(int argc, const char** argv) {
   ev::Acceptor acceptor(&ev_loop);
   http::ThreadedHTTPServer http(&thread_pool);
   http.addHandler(AdminUI::getHandler());
-  http.addHandler(HTTPAPI::getHandler());
+  http.addHandler(std::unique_ptr<http::HTTPHandler>(
+      new HTTPAPI(&metric_repo)));
 
   auto port = env()->flags()->getInt("port");
   env()->logger()->printf("INFO", "Starting HTTP server on port %i", port);

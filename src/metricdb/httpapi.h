@@ -16,16 +16,19 @@
 
 namespace fnordmetric {
 namespace metricdb {
+class MetricRepository;
 
 class HTTPAPI : public http::HTTPHandler {
 public:
 
-  static std::unique_ptr<http::HTTPHandler> getHandler();
+  HTTPAPI(MetricRepository* metric_repo);
 
   bool handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
+protected:
+  MetricRepository* metric_repo_;
 };
 
 }

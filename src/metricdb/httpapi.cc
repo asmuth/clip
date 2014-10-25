@@ -8,13 +8,13 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/httpapi.h>
+#include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/util/jsonoutputstream.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-std::unique_ptr<http::HTTPHandler> HTTPAPI::getHandler() {
-  return std::unique_ptr<http::HTTPHandler>(new HTTPAPI());
-}
+HTTPAPI::HTTPAPI(MetricRepository* metric_repo) : metric_repo_(metric_repo) {}
 
 bool HTTPAPI::handleHTTPRequest(
     http::HTTPRequest* request,
@@ -24,7 +24,18 @@ bool HTTPAPI::handleHTTPRequest(
   if (url == "/metrics") {
     response->setStatus(200);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
-    response->addBody("fnord");
+    util::JSONOutputStream json(response->getBodyOutputStream());
+
+    json.beginObject();
+    json.addObjectEntry("metrics");
+    json.beginArray();
+
+    for (const auto& metri : metric_repo_->listMetrics()) {
+
+    }
+
+    json.endArray();
+    json.endObject();
     return true;
   }
 

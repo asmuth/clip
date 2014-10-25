@@ -18,7 +18,7 @@ namespace util {
 class JSONOutputStream {
 public:
 
-  JSONOutputStream(OutputStream* output_stream);
+  JSONOutputStream(std::shared_ptr<OutputStream> output_stream);
 
   void beginObject();
   void endObject();
@@ -30,7 +30,7 @@ public:
 
 protected:
   std::string escapeString(const std::string& string) const;
-  util::OutputStream* output_;
+  std::shared_ptr<util::OutputStream> output_;
 };
 
 }

@@ -49,8 +49,8 @@ void QueryService::executeQuery(
       }
 
       case FORMAT_JSON: {
-        util::JSONOutputStream target(output_stream);
-        renderJSON(&query, &target);
+        //util::JSONOutputStream target(output_stream);
+        //renderJSON(&query, &target);
         break;
       }
 

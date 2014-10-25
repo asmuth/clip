@@ -25,13 +25,15 @@ public:
 
   MetricRepository(std::shared_ptr<io::FileRepository> file_repo);
 
-  Metric* findMetric(const std::string& key);
+  Metric* findMetric(const std::string& key) const;
   Metric* findOrCreateMetric(const std::string& key);
+
+  std::vector<std::pair<std::string, Metric*>> listMetrics() const;
 
 protected:
   std::shared_ptr<io::FileRepository> file_repo_;
   std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
-  std::mutex metrics_mutex_;
+  mutable std::mutex metrics_mutex_;
 };
 
 }

@@ -42,6 +42,17 @@ void HTTPMessage::addHeader(const std::string& key, const std::string& value) {
   headers_.emplace_back(key, value);
 }
 
+void HTTPMessage::setHeader(const std::string& key, const std::string& value) {
+  for (auto& header : headers_) {
+    if (header.first == key) {
+      header.second = value;
+      return;
+    }
+  }
+
+  headers_.emplace_back(key, value);
+}
+
 const std::string& HTTPMessage::getBody() const {
   return body_;
 }

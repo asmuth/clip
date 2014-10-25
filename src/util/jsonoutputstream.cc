@@ -13,7 +13,7 @@ namespace fnordmetric {
 namespace util {
 
 JSONOutputStream::JSONOutputStream(
-    OutputStream* output_stream) :
+    std::shared_ptr<OutputStream> output_stream) :
     output_(output_stream) {}
 
 

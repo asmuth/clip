@@ -26,6 +26,7 @@ public:
   const std::vector<std::pair<std::string, std::string>>& getHeaders() const;
   const std::string& getHeader(const std::string& key) const;
   void addHeader(const std::string& key, const std::string& value);
+  void setHeader(const std::string& key, const std::string& value);
 
   const std::string& getBody() const;
   void addBody(const std::string& body);

@@ -41,7 +41,7 @@ bool QueryEndpoint::handleHTTPRequest(
     } catch (util::RuntimeException e) {
       response->clearBody();
 
-      util::JSONOutputStream json(output_stream.get());
+      util::JSONOutputStream json(std::move(output_stream));
       json.beginObject();
       json.addObjectEntry("status");
       json.addString("error");

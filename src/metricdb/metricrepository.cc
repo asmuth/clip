@@ -18,7 +18,7 @@ MetricRepository::MetricRepository(
     file_repo_(file_repo) {}
 
 // FIXPAUL lock
-Metric* MetricRepository::findMetric(const std::string& key) {
+Metric* MetricRepository::findMetric(const std::string& key) const {
   Metric* metric = nullptr;
 
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
@@ -48,6 +48,19 @@ Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
   return metric;
 }
 
+std::vector<std::pair<std::string, Metric*>> MetricRepository::listMetrics()
+    const {
+  std::vector<std::pair<std::string, Metric*>> metrics;
+
+  {
+    std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
+    for (const auto& iter : metrics_) {
+      metrics.emplace_back(iter.first, iter.second.get());
+    }
+  }
+
+  return metrics;
+}
 
 }
 }
