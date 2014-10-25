@@ -17,8 +17,10 @@
 #include <fnordmetric/ev/acceptor.h>
 #include <fnordmetric/ev/eventloop.h>
 #include <fnordmetric/http/httpserver.h>
+#include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/httpapi.h>
+#include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
@@ -34,13 +36,22 @@ static const char kCrashErrorMsg[] =
     "github.com/paulasmuth/fnordmetric";
 
 int main(int argc, const char** argv) {
-  util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  fnordmetric::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
 
-  util::SignalHandler::ignoreSIGHUP();
-  util::SignalHandler::ignoreSIGPIPE();
+  fnordmetric::util::SignalHandler::ignoreSIGHUP();
+  fnordmetric::util::SignalHandler::ignoreSIGPIPE();
 
   // flags
+  env()->flags()->defineFlag(
+      "datadir",
+      cli::FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL,
+      "Store the database in this directory",
+      "<path>");
+
   env()->flags()->defineFlag(
       "port",
       cli::FlagParser::T_INTEGER,
@@ -53,10 +64,35 @@ int main(int argc, const char** argv) {
   env()->flags()->parseArgv(argc, argv);
 
   // boot
-  util::ThreadPool thread_pool(
+  fnordmetric::util::ThreadPool thread_pool(
       32,
-      std::unique_ptr<util::ExceptionHandler>(
-          new util::CatchAndPrintExceptionHandler(env()->logger())));
+      std::unique_ptr<fnordmetric::util::ExceptionHandler>(
+          new fnordmetric::util::CatchAndPrintExceptionHandler(
+              env()->logger())));
+
+  auto datadir = env()->flags()->getString("datadir");
+  if (!fnord::io::FileUtil::exists(datadir)) {
+    env()->logger()->printf(
+        "FATAL",
+        "File %s does not exist",
+        datadir.c_str());
+
+    return 1;
+  }
+
+  if (!fnord::io::FileUtil::isDirectory(datadir)) {
+    env()->logger()->printf(
+        "FATAL",
+        "FIle %s is not a directory",
+        datadir.c_str());
+
+    return 1;
+  }
+
+  env()->logger()->printf("INFO", "Opening database at %s", datadir.c_str());
+  std::shared_ptr<fnord::io::FileRepository> file_repo(
+      new fnord::io::FileRepository(datadir));
+  MetricRepository metric_repo(file_repo);
 
   ev::EventLoop ev_loop;
   ev::Acceptor acceptor(&ev_loop);

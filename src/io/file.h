@@ -17,6 +17,7 @@
 namespace fnord {
 namespace io {
 
+#undef O_APPEND
 class File {
 public:
 
