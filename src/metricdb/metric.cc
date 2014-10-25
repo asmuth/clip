@@ -30,6 +30,21 @@ Metric::Metric(
     file_repo_(file_repo),
     head_(nullptr) {}
 
+Metric::Metric(
+    const std::string& key,
+    io::FileRepository* file_repo,
+    std::vector<std::unique_ptr<TableRef>>&& tables) :
+    key_(key),
+    file_repo_(file_repo) {
+  std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
+
+  // FIXPAUL sort tables
+  for (auto& table : tables) {
+    snapshot->appendTable(std::move(table));
+  }
+
+  head_ = snapshot;
+}
 
 const std::string& Metric::key() const {
   return key_;

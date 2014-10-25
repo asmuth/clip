@@ -27,6 +27,11 @@ class Metric {
 public:
   Metric(const std::string& key, io::FileRepository* file_repo);
 
+  Metric(
+      const std::string& key,
+      io::FileRepository* file_repo,
+      std::vector<std::unique_ptr<TableRef>>&& tables);
+
   void addSample(const Sample<double>& sample);
 
   void scanSamples(

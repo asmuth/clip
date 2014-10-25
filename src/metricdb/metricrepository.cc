@@ -40,6 +40,15 @@ MetricRepository::MetricRepository(
 
     return true;
   });
+
+  for (auto& iter : tables) {
+    auto metric = new Metric(
+        iter.first,
+        file_repo_.get(),
+        std::move(iter.second));
+
+    metrics_.emplace(iter.first, std::unique_ptr<Metric>(metric));
+  }
 }
 
 // FIXPAUL lock
