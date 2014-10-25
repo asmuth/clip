@@ -29,7 +29,14 @@ Metric::Metric(
     key_(key),
     file_repo_(file_repo),
     head_(nullptr),
-    max_generation_(0) {}
+    max_generation_(1) {
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Create new metric: '%s'",
+        key.c_str());
+  }
+}
 
 Metric::Metric(
     const std::string& key,
@@ -49,6 +56,15 @@ Metric::Metric(
 
   generations = head_table->parents();
   generations.emplace_back(head_table->generation());
+
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Reopening metric: '%s' with %i tables, generation: %" PRIu64,
+        key.c_str(),
+        (int) generations.size(),
+        head_table->generation());
+  }
 
   std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
   for (const auto gen : generations) {

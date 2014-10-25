@@ -65,6 +65,7 @@ int main(int argc, const char** argv) {
       "<port>");
 
   env()->flags()->parseArgv(argc, argv);
+  env()->setVerbose(true);
 
   // boot
   fnordmetric::util::ThreadPool thread_pool(
