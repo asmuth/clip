@@ -11,6 +11,7 @@
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
+#include <fnordmetric/metricdb/tableheaderwriter.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -76,13 +77,7 @@ void Metric::addSample(const Sample<double>& sample) {
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
 std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
   // build header
-  size_t header_size = sizeof(BinaryFormat::TableHeader) + key_.size();
-  void* alloc = malloc(header_size);
-  fnord::util::FreeOnDestroy autofree(alloc);
-  auto header = static_cast<BinaryFormat::TableHeader*>(alloc);
-  header->first_timestamp = 123;
-  header->metric_key_size = key_.size();
-  memcpy(header->metric_key, key_.c_str(), key_.size());
+  TableHeaderWriter header(key_);
 
   // open new file
   auto fileref = file_repo_->createFile();
@@ -95,8 +90,8 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
   auto live_sstable = sstable::LiveSSTable::create(
       std::move(file),
       std::move(indexes),
-      header,
-      header_size);
+      header.data(),
+      header.size());
 
   std::shared_ptr<MetricSnapshot> snapshot;
 

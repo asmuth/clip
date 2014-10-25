@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_BINARYFORMAT_H
 #include <stdlib.h>
 #include <stdint.h>
+#include <string>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -19,7 +20,6 @@ namespace metricdb {
  * // http://tools.ietf.org/html/rfc5234
  *
  *   <table_header> :=
- *       <uint64_t>          // first_timestamp
  *       <uint32_t>          // metric key size
  *       <bytes>             // metric key
  *       *<feld_definition>  // field definitions
@@ -49,10 +49,8 @@ namespace metricdb {
 class BinaryFormat {
 public:
 
-  struct __attribute__((packed)) TableHeader {
-    uint64_t first_timestamp;
-    uint32_t metric_key_size;
-    char metric_key[0];
+  struct TableHeader {
+    std::string metric_key;
   };
 
   struct __attribute__((packed)) SampleHeader {
