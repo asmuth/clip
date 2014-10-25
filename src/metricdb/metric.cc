@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/binaryformat.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/samplefieldindex.h>
@@ -36,14 +37,40 @@ Metric::Metric(
     std::vector<std::unique_ptr<TableRef>>&& tables) :
     key_(key),
     file_repo_(file_repo) {
-  std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
+  TableRef* head_table = nullptr;
+  std::vector<uint64_t> generations;
 
-  // FIXPAUL sort tables
   for (auto& table : tables) {
-    snapshot->appendTable(std::move(table));
+    if (head_table == nullptr ||
+        table->generation() > head_table->generation()) {
+      head_table = table.get();
+    }
+  }
+
+  generations = head_table->parents();
+  generations.emplace_back(head_table->generation());
+
+  std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
+  for (const auto gen : generations) {
+    for (auto& table : tables) {
+      if (table.get() == nullptr) {
+        continue;
+      }
+
+      if (table->generation() == gen) {
+        snapshot->appendTable(std::move(table));
+        table.reset(nullptr);
+      }
+    }
   }
 
   head_ = snapshot;
+
+  for (auto& table : tables) {
+    if (table.get() != nullptr) {
+      env()->logger()->printf("INFO", "Orphaned table...");
+    }
+  }
 }
 
 const std::string& Metric::key() const {

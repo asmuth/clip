@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/tableheaderreader.h>
 #include <fnordmetric/sstable/sstablereader.h>
@@ -31,9 +32,16 @@ MetricRepository::MetricRepository(
     auto header_buf = reader.readHeader();
     TableHeaderReader header(header_buf.data(), header_buf.size());
 
+    if (env()->verbose()) {
+      env()->logger()->printf(
+          "DEBUG",
+          "Opening sstable: '%s'",
+          filename.c_str());
+    }
+
     if (reader.bodySize() == 0) {
       tables[header.metricKey()].emplace_back(
-          TableRef::reopenTable(std::move(file)));
+          TableRef::reopenTable(std::move(file), &header));
     } else {
       RAISE(kNotYetImplementedError, "fnord");
     }

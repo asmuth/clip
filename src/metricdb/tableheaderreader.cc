@@ -18,10 +18,23 @@ TableHeaderReader::TableHeaderReader(
     fnord::util::BinaryMessageReader(data, size) {
   size_t metric_key_size = *readUInt32();
   metric_key_ = std::string(readString(metric_key_size), metric_key_size);
+  generation_ = *readUInt64();
+  auto num_parents = *readUInt32();
+  for (int i = 0; i < num_parents; ++i) {
+    parents_.emplace_back(*readUInt64());
+  }
 }
 
 const std::string& TableHeaderReader::metricKey() const {
   return metric_key_;
+}
+
+const uint64_t TableHeaderReader::generation() const {
+  return generation_;
+}
+
+const std::vector<uint64_t>& TableHeaderReader::parents() const {
+  return parents_;
 }
 
 }

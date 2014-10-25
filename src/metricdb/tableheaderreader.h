@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -25,8 +26,13 @@ public:
 
   const std::string& metricKey() const;
 
+  const uint64_t generation() const;
+  const std::vector<uint64_t>& parents() const;
+
 protected:
   std::string metric_key_;
+  uint64_t generation_;
+  std::vector<uint64_t> parents_;
 };
 
 }
