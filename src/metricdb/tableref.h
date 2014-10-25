@@ -24,6 +24,10 @@ public:
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
 
+  static std::unique_ptr<TableRef> createTable();
+  static std::unique_ptr<TableRef> reopenTable(fnord::io::File&& file);
+  static std::unique_ptr<TableRef> openTable(fnord::io::File&& file);
+
   virtual void addSample(SampleWriter const* sample, uint64_t time) = 0;
   virtual std::unique_ptr<sstable::Cursor> cursor() = 0;
 

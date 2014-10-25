@@ -86,10 +86,11 @@ public:
   int fd() const;
   size_t size() const;
 
+  File clone() const;
+
 protected:
 
   File(int fd);
-
   int fd_;
 };
 

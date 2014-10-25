@@ -13,6 +13,16 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
+std::unique_ptr<TableRef> TableRef::reopenTable(fnord::io::File&& file) {
+  sstable::IndexProvider indexes;
+
+  auto table = sstable::LiveSSTable::reopen(
+      std::move(file),
+      std::move(indexes));
+
+  return std::unique_ptr<TableRef>(new LiveTableRef(std::move(table)));
+}
+
 TableRef::TableRef() {}
 
 LiveTableRef::LiveTableRef(

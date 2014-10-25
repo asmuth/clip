@@ -18,19 +18,24 @@ namespace metricdb {
 MetricRepository::MetricRepository(
     std::shared_ptr<io::FileRepository> file_repo) :
     file_repo_(file_repo) {
-  std::unordered_map<std::string, std::vector<TableRef>> tables;
+  std::unordered_map<
+      std::string,
+      std::vector<std::unique_ptr<TableRef>>> tables;
 
-  file_repo->listFiles([this] (const std::string& filename) -> bool {
-    sstable::SSTableReader reader(
-        io::File::openFile(filename, io::File::O_READ | io::File::O_WRITE));
+  file_repo->listFiles([this, &tables] (const std::string& filename) -> bool {
+    auto file = io::File::openFile(
+        filename,
+        io::File::O_READ | io::File::O_WRITE);
 
+    sstable::SSTableReader reader(file.clone());
     auto header_buf = reader.readHeader();
     TableHeaderReader header(header_buf.data(), header_buf.size());
 
     if (reader.bodySize() == 0) {
-      //tables[header.metricKey()].emplace_back();
+      tables[header.metricKey()].emplace_back(
+          TableRef::reopenTable(std::move(file)));
     } else {
-
+      RAISE(kNotYetImplementedError, "fnord");
     }
 
     return true;

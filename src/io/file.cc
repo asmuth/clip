@@ -111,5 +111,15 @@ size_t File::read(util::Buffer* buf) {
   return read(buf->data(), buf->size());
 }
 
+File File::clone() const {
+  int new_fd = dup(fd_);
+
+  if (new_fd < 0) {
+    RAISE_ERRNO(kIOError, "dup(%i) failed", fd_);
+  }
+
+  return File(new_fd);
+}
+
 }
 }
