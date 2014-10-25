@@ -46,11 +46,11 @@ FnordMetric.views.MetricList = function() {
 
     function createListItem(data) {
       var list_item_row = document.createElement("tr");
-      for (var i = 0; i < data.length; i++) {
+      Object.keys(data).map(function(k) {
         var list_item = document.createElement("td");
-        list_item.innerHTML = data[i];
+        list_item.innerHTML = data[k];
         list_item_row.appendChild(list_item);
-      }
+      });
       list_container.appendChild(list_item_row);
     }
 
@@ -66,16 +66,17 @@ FnordMetric.views.MetricList = function() {
       if (r.status == 200) {
         var metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
+        //FIXME
+        metrics_data[0].key2 = ["statuscode", "hostname"];
+        metrics_data[0].key3 = 1414241420602240;
+        metrics_data[0].key4 = 24641536;
         for (var i = 0; i < metrics_data.length; i++) {
-          console.log("call createListItem");
+          createListItem(metrics_data[i]);
         }
       } else {
         alert("httpGet error");
       }
     });
-
-    createListItem(["http_status_code", ["statuscode", "hostname"], 123432342, 1223442]);
-    createListItem(["http_latency", ["url", "hostname"], 123432342, 1223442]);
 
     elem.appendChild(list_container);
 
