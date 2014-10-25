@@ -41,7 +41,7 @@ bool HTTPAPI::handleHTTPRequest(
   }
 
   // PATH: ^/metrics/.*
-  if (path.compare(0, sizeof(kMetricsUrlPrefix), kMetricsUrlPrefix) == 0) {
+  if (path.compare(0, sizeof(kMetricsUrlPrefix) - 1, kMetricsUrlPrefix) == 0) {
     // PATH: ^/metrics/(.*)$
     switch (request->method()) {
       case http::HTTPRequest::M_GET:

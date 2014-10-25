@@ -18,7 +18,7 @@ HTTPResponse::HTTPResponse() {
 }
 
 void HTTPResponse::setStatus(int status_code, const std::string& status) {
-  status_code = status_code_;
+  status_code_ = status_code;
   status_ = status;
 }
 
