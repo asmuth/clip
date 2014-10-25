@@ -15,7 +15,7 @@
 namespace fnordmetric {
 namespace query {
 
-TableRef* TableRepository::getTableRef(const std::string& table_name) {
+TableRef* TableRepository::getTableRef(const std::string& table_name) const {
   auto iter = table_refs_.find(table_name);
 
   if (iter == table_refs_.end()) {

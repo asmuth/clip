@@ -21,18 +21,30 @@
 namespace fnordmetric {
 namespace query {
 
-QueryService::QueryService() {
-}
+QueryService::QueryService() {}
 
 void QueryService::executeQuery(
     util::InputStream* input_stream,
     kFormat output_format,
     util::OutputStream* output_stream) {
+  std::unique_ptr<TableRepository> table_repo(new TableRepository());
+  executeQuery(
+      input_stream,
+      output_format,
+      output_stream,
+      std::move(table_repo));
+}
+
+void QueryService::executeQuery(
+    util::InputStream* input_stream,
+    kFormat output_format,
+    util::OutputStream* output_stream,
+    std::unique_ptr<TableRepository> table_repo) {
   std::string query_string;
   input_stream->readUntilEOF(&query_string);
 
   try {
-    Query query(query_string, &runtime_);
+    Query query(query_string, &runtime_, std::move(table_repo));
     query.execute();
 
     switch (output_format) {

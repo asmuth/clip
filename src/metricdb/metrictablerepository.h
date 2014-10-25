@@ -7,19 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/localmetricbackend.h>
+#ifndef _FNORDMETRIC_METRICDB_LOCALMETRICBACKEND_H
+#define _FNORDMETRIC_METRICDB_LOCALMETRICBACKEND_H
+#include <fnordmetric/sql/runtime/tablerepository.h>
+#include <memory>
+#include <mutex>
+#include <vector>
 
 namespace fnordmetric {
 namespace metricdb {
 
-LocalMetricBackend::LocalMetricBackend() {}
+class MetricTableRepository : public fnordmetric::query::TableRepository {
+public:
 
-bool LocalMetricBackend::openTables(
-    const std::vector<std::string>& table_names,
-    const util::URI& source_uri,
-    std::vector<std::unique_ptr<query::TableRef>>* target) {
-  return false;
-}
+  MetricTableRepository();
+  query::TableRef* getTableRef(const std::string& table_name) const override;
+
+};
 
 }
 }
+#endif

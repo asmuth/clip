@@ -122,11 +122,11 @@ set(FNORDMETRIC_QUERY_SOURCES
 set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/adminui.cc
     stage/src/fnordmetric/metricdb/httpapi.cc
-    stage/src/fnordmetric/metricdb/localmetricbackend.cc
     stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metriccursor.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
     stage/src/fnordmetric/metricdb/metricsnapshot.cc
+    stage/src/fnordmetric/metricdb/metrictablerepository.cc
     stage/src/fnordmetric/metricdb/samplereader.cc
     stage/src/fnordmetric/metricdb/samplewriter.cc
     stage/src/fnordmetric/metricdb/samplefieldindex.cc

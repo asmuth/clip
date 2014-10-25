@@ -55,6 +55,19 @@ public:
       util::OutputStream* output_stream);
 
   /**
+   * Execute a query. This may raise an exception.
+   *
+   * @param input_stream The input stream to read the SQL query
+   * @param output_format The output format
+   * @param output_stream The output stream to write the results
+   */
+  void executeQuery(
+      util::InputStream* input_stream,
+      kFormat output_format,
+      util::OutputStream* output_stream,
+      std::unique_ptr<TableRepository> table_repo);
+
+  /**
    * Register a query backend
    */
   void registerBackend(std::unique_ptr<Backend>&& backend);

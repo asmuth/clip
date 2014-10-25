@@ -9,8 +9,8 @@
  */
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/query/queryservice.h>
-#include <fnordmetric/metricdb/localmetricbackend.h>
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/metrictablerepository.h>
 #include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/stringutil.h>
 
@@ -192,14 +192,15 @@ void HTTPAPI::executeQuery(
 
   // FIXPAUL move to thread/worker pool
   query::QueryService query_service;
-  query_service.registerBackend(std::unique_ptr<query::Backend>(
-      new LocalMetricBackend()));
+  std::unique_ptr<query::TableRepository> table_repo(
+      new MetricTableRepository());
 
   try {
     query_service.executeQuery(
         input_stream.get(),
         query::QueryService::FORMAT_JSON,
-        output_stream.get());
+        output_stream.get(),
+        std::move(table_repo));
 
   } catch (util::RuntimeException e) {
     response->clearBody();
