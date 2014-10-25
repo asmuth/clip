@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -20,7 +21,9 @@ namespace metricdb {
 class TableHeaderWriter : public fnord::util::BinaryMessageWriter {
 public:
   TableHeaderWriter(
-      const std::string& metric_key);
+      const std::string& metric_key,
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
 };
 
 }

@@ -50,6 +50,7 @@ protected:
   const std::string key_;
   io::FileRepository const* file_repo_;
   std::shared_ptr<MetricSnapshot> head_;
+  uint64_t max_generation_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;
 };

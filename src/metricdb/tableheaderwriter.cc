@@ -13,9 +13,16 @@ namespace fnordmetric {
 namespace metricdb {
 
 TableHeaderWriter::TableHeaderWriter(
-    const std::string& metric_key) {
+    const std::string& metric_key,
+    uint64_t generation,
+    const std::vector<uint64_t>& parents) {
   appendUInt32(metric_key.size());
   appendString(metric_key);
+  appendUInt64(generation);
+  appendUInt32(parents.size());
+  for (const auto parent : parents) {
+    appendUInt64(parent);
+  }
 }
 
 }

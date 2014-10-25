@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/binaryformat.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
-#include <fnordmetric/metricdb/tableheaderwriter.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
@@ -28,7 +28,15 @@ Metric::Metric(
     io::FileRepository* file_repo) :
     key_(key),
     file_repo_(file_repo),
-    head_(nullptr) {}
+    head_(nullptr),
+    max_generation_(1) {
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Create new metric: '%s'",
+        key.c_str());
+  }
+}
 
 Metric::Metric(
     const std::string& key,
@@ -36,14 +44,50 @@ Metric::Metric(
     std::vector<std::unique_ptr<TableRef>>&& tables) :
     key_(key),
     file_repo_(file_repo) {
-  std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
+  TableRef* head_table = nullptr;
+  std::vector<uint64_t> generations;
 
-  // FIXPAUL sort tables
   for (auto& table : tables) {
-    snapshot->appendTable(std::move(table));
+    if (head_table == nullptr ||
+        table->generation() > head_table->generation()) {
+      head_table = table.get();
+    }
+  }
+
+  generations = head_table->parents();
+  generations.emplace_back(head_table->generation());
+
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Reopening metric: '%s' with %i tables, generation: %" PRIu64,
+        key.c_str(),
+        (int) generations.size(),
+        head_table->generation());
+  }
+
+  std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
+  for (const auto gen : generations) {
+    for (auto& table : tables) {
+      if (table.get() == nullptr) {
+        continue;
+      }
+
+      if (table->generation() == gen) {
+        snapshot->appendTable(std::move(table));
+        table.reset(nullptr);
+      }
+    }
   }
 
   head_ = snapshot;
+  max_generation_ = head_table->generation() + 1;
+
+  for (auto& table : tables) {
+    if (table.get() != nullptr) {
+      env()->logger()->printf("INFO", "Orphaned table...");
+    }
+  }
 }
 
 const std::string& Metric::key() const {
@@ -60,8 +104,9 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
   {
     std::lock_guard<std::mutex> lock_holder(head_mutex_);
 
-    // FIXPAUL test if full...
-    if (head_.get() != nullptr) {
+    if (head_.get() != nullptr &&
+        head_->tables().back()->isWritable() &&
+        head_->tables().back()->bodySize() < (2 << 16)) {
       return head_;
     }
   }
@@ -91,8 +136,17 @@ void Metric::addSample(const Sample<double>& sample) {
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
 std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
-  // build header
-  TableHeaderWriter header(key_);
+  std::shared_ptr<MetricSnapshot> snapshot;
+  std::vector<uint64_t> parents;
+
+  if (head_.get() == nullptr) {
+    snapshot.reset(new MetricSnapshot());
+  } else {
+    snapshot = head_->clone();
+    for (const auto& tbl : snapshot->tables()) {
+      parents.emplace_back(tbl->generation());
+    }
+  }
 
   // open new file
   auto fileref = file_repo_->createFile();
@@ -100,24 +154,11 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
       fileref.absolute_path,
       io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
 
-  // create new sstable
-  sstable::IndexProvider indexes;
-  auto live_sstable = sstable::LiveSSTable::create(
+  snapshot->appendTable(TableRef::createTable(
       std::move(file),
-      std::move(indexes),
-      header.data(),
-      header.size());
-
-  std::shared_ptr<MetricSnapshot> snapshot;
-
-  if (head_.get() == nullptr) {
-    snapshot.reset(new MetricSnapshot());
-  } else {
-    snapshot = head_->clone();
-  }
-
-  snapshot->appendTable(
-      std::shared_ptr<TableRef>(new LiveTableRef(std::move(live_sstable))));
+      key_,
+      max_generation_++,
+      parents));
 
   return snapshot;
 }
