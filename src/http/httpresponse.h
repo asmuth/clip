@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_WEB_HTTPRESPONSE_H
 #include <fnordmetric/http/httpmessage.h>
 #include <fnordmetric/http/httprequest.h>
+#include <fnordmetric/http/status.h>
 #include <string>
 
 namespace fnordmetric {
@@ -21,13 +22,15 @@ class HTTPResponse : public HTTPMessage {
 public:
   HTTPResponse();
 
-  void setStatus(int status);
+  void setStatus(int status_code, const std::string& status);
+  void setStatus(const HTTPStatus& status);
 
   void writeToOutputStream(HTTPOutputStream* output);
   void populateFromRequest(const HTTPRequest& request);
 
 protected:
-  int status_;
+  int status_code_;
+  std::string status_;
 };
 
 }

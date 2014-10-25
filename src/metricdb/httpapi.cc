@@ -47,6 +47,7 @@ bool HTTPAPI::handleHTTPRequest(
       case http::HTTPRequest::M_GET:
         return true;
       case http::HTTPRequest::M_POST:
+        insertSample(request, response);
         return true;
       default:
         return false;
@@ -72,7 +73,7 @@ bool HTTPAPI::handleHTTPRequest(
 void HTTPAPI::renderMetricList(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-  response->setStatus(200);
+  response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
   util::JSONOutputStream json(response->getBodyOutputStream());
 
@@ -87,6 +88,14 @@ void HTTPAPI::renderMetricList(
   json.endArray();
   json.endObject();
 }
+
+void HTTPAPI::insertSample(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  response->setStatus(http::kStatusCreated);
+  response->addBody("CREATED");
+}
+
 
 
 }

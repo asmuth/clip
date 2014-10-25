@@ -27,7 +27,8 @@ public:
 
   void writeStatusLine(
       const std::string& version,
-      int status);
+      int status_code,
+      const std::string& status);
 
   void writeHeaders(
       const std::vector<std::pair<std::string, std::string>>& headers);

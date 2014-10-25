@@ -58,7 +58,7 @@ void ThreadedHTTPServer::handleConnection(int fd) const {
       response.populateFromRequest(request);
     } catch (util::RuntimeException e) {
       keepalive = false;
-      response.setStatus(400);
+      response.setStatus(kStatusNotFound);
       response.addHeader("Connection", "close");
       response.addBody("Bad Request");
       e.debugPrint(); // FIXPAUL
@@ -74,14 +74,14 @@ void ThreadedHTTPServer::handleConnection(int fd) const {
       }
     } catch (util::RuntimeException e) {
       keepalive = false;
-      response.setStatus(500);
+      response.setStatus(kStatusInternalServerError);
       response.addHeader("Connection", "close");
       response.addBody("Internal Server Error");
       e.debugPrint(); // FIXPAUL
     }
 
     if (!handled) {
-      response.setStatus(404);
+      response.setStatus(kStatusNotFound);
       response.addBody("Not Found");
     }
 

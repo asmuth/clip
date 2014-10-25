@@ -33,6 +33,10 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
+  void insertSample(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
   MetricRepository* metric_repo_;
 };
 

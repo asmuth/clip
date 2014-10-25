@@ -13,16 +13,22 @@
 namespace fnordmetric {
 namespace http {
 
-HTTPResponse::HTTPResponse() :
-    status_(400) {}
+HTTPResponse::HTTPResponse() {
+  setStatus(kStatusNotFound);
+}
 
-void HTTPResponse::setStatus(int status) {
+void HTTPResponse::setStatus(int status_code, const std::string& status) {
+  status_code = status_code_;
   status_ = status;
+}
+
+void HTTPResponse::setStatus(const HTTPStatus& status) {
+  setStatus(status.code, status.name);
 }
 
 void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
   setHeader("Content-Length", std::to_string(body_.size()));
-  output->writeStatusLine(version_, status_);
+  output->writeStatusLine(version_, status_code_, status_);
   output->writeHeaders(headers_);
   output->getOutputStream()->write(body_);
 }

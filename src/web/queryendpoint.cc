@@ -25,7 +25,7 @@ bool QueryEndpoint::handleHTTPRequest(
   auto url = request->getUrl();
 
   if (url.substr(0, 6) == "/query") {
-    response->setStatus(200);
+    response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
 
     auto input_stream = request->getBodyInputStream();

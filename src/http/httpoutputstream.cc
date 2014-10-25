@@ -18,8 +18,9 @@ HTTPOutputStream::HTTPOutputStream(
 
 void HTTPOutputStream::writeStatusLine(
     const std::string& version,
-    int status) {
-  output_->printf("%s %i %s\r\n", version.c_str(), status, "OK"); // FIXPAUL
+    int status_code,
+    const std::string& status) {
+  output_->printf("%s %i %s\r\n", version.c_str(), status_code, status.c_str());
 }
 
 void HTTPOutputStream::writeHeaders(

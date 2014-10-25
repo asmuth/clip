@@ -37,14 +37,14 @@ bool AdminUI::handleHTTPRequest(
   auto url = request->getUrl();
 
   if (url == "/") {
-    response->setStatus(302);
+    response->setStatus(http::kStatusFound);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addHeader("Location", "/admin");
     return true;
   }
 
   if (url == "/admin") {
-    response->setStatus(200);
+    response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addBody(
         util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
@@ -52,7 +52,7 @@ bool AdminUI::handleHTTPRequest(
   }
 
   if (url == "/favicon.ico") {
-    response->setStatus(200);
+    response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "image/x-icon");
     response->addBody(
         util::Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"));
@@ -60,14 +60,14 @@ bool AdminUI::handleHTTPRequest(
   }
 
   if (url == "/s/fnordmetric.js") {
-    response->setStatus(200);
+    response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/javascript");
     response->addBody(util::Assets::getAsset("fnordmetric-js/fnordmetric.js"));
     return true;
   }
 
   if (url == "/s/fnordmetric-webui.css") {
-    response->setStatus(200);
+    response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/css");
     response->addBody(
         util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"));
@@ -75,7 +75,7 @@ bool AdminUI::handleHTTPRequest(
   }
 
   if (url == "/s/fnordmetric-webui.js") {
-    response->setStatus(200);
+    response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/javascript");
     response->addBody(
         util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"));
