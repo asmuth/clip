@@ -46,7 +46,6 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
 
   for (int i = 0; i < 100000; ++i) {
     Sample<double> sample;
-    sample.key = "mymetric";
     sample.value = 23;
     sample.labels.emplace_back(labels[i % labels.size()], "myvalue");
     metric.addSample(sample);

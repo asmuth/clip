@@ -22,6 +22,7 @@ enum StatsdParseState {
 
 void parseStatsdSample(
     const std::string& src,
+    std::string* key,
     Sample<std::string>* dst) {
   StatsdParseState state = S_KEY;
 
@@ -43,7 +44,7 @@ void parseStatsdSample(
             continue;
         }
 
-        dst->key = std::string(mark, cur);
+        *key = std::string(mark, cur);
         state = *cur == '[' ? S_LABEL : S_VALUE;
         mark = cur + 1;
         break;

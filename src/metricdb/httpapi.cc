@@ -109,6 +109,18 @@ void HTTPAPI::insertSample(
     return;
   }
 
+  Sample<double> sample;
+  try {
+    sample.value = std::stod(value_str);
+  } catch (std::exception& e) {
+    response->addBody("error: invalid value: " + value_str);
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  auto metric = metric_repo_->findOrCreateMetric(metric_key);
+  metric->addSample(sample);
+
   response->setStatus(http::kStatusCreated);
 }
 

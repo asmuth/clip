@@ -14,7 +14,8 @@ namespace metricdb {
 
 void parseStatsdSample(
     const std::string& src,
-    Sample<std::string>* dst);
+    std::string* key,
+    Sample<std::string>* sample);
 
 }
 }

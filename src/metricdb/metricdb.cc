@@ -24,6 +24,7 @@
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
+#include <fnordmetric/util/random.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
 #include <fnordmetric/thread/threadpool.h>
@@ -41,6 +42,8 @@ int main(int argc, const char** argv) {
 
   fnordmetric::util::SignalHandler::ignoreSIGHUP();
   fnordmetric::util::SignalHandler::ignoreSIGPIPE();
+
+  fnord::util::Random::init();
 
   // flags
   env()->flags()->defineFlag(

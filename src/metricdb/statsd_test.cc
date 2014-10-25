@@ -16,36 +16,42 @@ UNIT_TEST(StatsdTest);
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
   Sample<std::string> sample;
+  std::string key;
 
   parseStatsdSample(
       "/fnord/mymetric",
+      &key,
       &sample);
 
-  EXPECT_EQ(sample.key, "/fnord/mymetric");
+  EXPECT_EQ(key, "/fnord/mymetric");
   EXPECT_EQ(sample.labels.size(), 0);
   EXPECT_EQ(sample.value, "")
 });
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
   Sample<std::string> sample;
+  std::string key;
 
   parseStatsdSample(
       "/fnord/mymetric:34.23",
+      &key,
       &sample);
 
-  EXPECT_EQ(sample.key, "/fnord/mymetric");
+  EXPECT_EQ(key, "/fnord/mymetric");
   EXPECT_EQ(sample.labels.size(), 0);
   EXPECT_EQ(sample.value, "34.23")
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
   Sample<std::string> sample;
+  std::string key;
 
   parseStatsdSample(
       "/fnord/mymetric[label1=435][l2=str]:34.23",
+      &key,
       &sample);
 
-  EXPECT_EQ(sample.key, "/fnord/mymetric");
+  EXPECT_EQ(key, "/fnord/mymetric");
   EXPECT_EQ(sample.labels.size(), 2);
   EXPECT_EQ(sample.labels[0].first, "label1");
   EXPECT_EQ(sample.labels[0].second, "435");
