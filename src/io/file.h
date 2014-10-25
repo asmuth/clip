@@ -76,6 +76,9 @@ public:
 
   File& operator=(const File& copy) = delete;
 
+  void seekTo(int pos);
+  size_t read(void* buf, size_t buf_len);
+
   int fd() const;
   size_t size() const;
 

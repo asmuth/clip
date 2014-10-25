@@ -90,5 +90,21 @@ size_t File::size() const {
   return fd_stat.st_size;
 }
 
+void File::seekTo(int pos) {
+  if (lseek(fd_, SEEK_SET, pos) < 0) {
+    RAISE_ERRNO(kIOError, "lseek(%i) failed", fd_);
+  }
+}
+
+size_t File::read(void* buf, size_t buf_len) {
+  int res = ::read(fd_, buf, buf_len);
+
+  if (res < 0) {
+    RAISE_ERRNO(kIOError, "read(%i) failed", fd_);
+  }
+
+  return res;
+}
+
 }
 }

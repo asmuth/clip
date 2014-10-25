@@ -27,10 +27,12 @@ public:
 
   Metric* findMetric(const std::string& key) const;
   Metric* findOrCreateMetric(const std::string& key);
-
   std::vector<Metric*> listMetrics() const;
 
 protected:
+
+  void openTable(const std::string& filename);
+
   std::shared_ptr<io::FileRepository> file_repo_;
   std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
   mutable std::mutex metrics_mutex_;

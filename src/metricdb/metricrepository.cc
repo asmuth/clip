@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -16,8 +17,13 @@ namespace metricdb {
 MetricRepository::MetricRepository(
     std::shared_ptr<io::FileRepository> file_repo) :
     file_repo_(file_repo) {
+  std::unordered_map<std::string, std::vector<TableRef>> tables;
+
   file_repo->listFiles([this] (const std::string& filename) -> bool {
-    printf("file: %s\n", filename.c_str());
+    sstable::SSTableReader reader(
+        io::File::openFile(filename, io::File::O_READ | io::File::O_WRITE));
+
+    printf("header size: %i\n", reader.headerSize());
     return true;
   });
 }
