@@ -20,7 +20,6 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/web/webinterface.h>
 #include <fnordmetric/web/queryendpoint.h>
 
 namespace fnordmetric {
@@ -133,23 +132,6 @@ int CLI::executeSafely(Environment* env) {
 void CLI::execute(Environment* env) {
   auto flags = env->flags();
   const auto& args = flags->getArgv();
-
-  if (flags->isSet("web")) {
-    fnordmetric::util::ThreadPool thread_pool(
-        32,
-        std::unique_ptr<util::ExceptionHandler>(
-            new util::CatchAndPrintExceptionHandler(env->logger())));
-
-    fnordmetric::ev::EventLoop ev_loop;
-    fnordmetric::ev::Acceptor acceptor(&ev_loop);
-    fnordmetric::http::ThreadedHTTPServer http(&thread_pool);
-    http.addHandler(fnordmetric::web::WebInterface::getHandler());
-    http.addHandler(fnordmetric::web::QueryEndpoint::getHandler());
-    auto port = flags->getInt("web");
-    env->logger()->printf("INFO", "Starting HTTP server on port %i", port);
-    acceptor.listen(port, &http);
-    ev_loop.loop();
-  }
 
   /* open input stream */
   std::unique_ptr<util::InputStream> input;

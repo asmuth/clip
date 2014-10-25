@@ -8,17 +8,17 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
-#include <fnordmetric/web/assets.h>
-#include <fnordmetric/web/webinterface.h>
+#include <fnordmetric/metricdb/adminui.h>
+#include <fnordmetric/util/assets.h>
 
 namespace fnordmetric {
-namespace web {
+namespace metricdb {
 
-std::unique_ptr<http::HTTPHandler> WebInterface::getHandler() {
-  return std::unique_ptr<http::HTTPHandler>(new WebInterface());
+std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
+  return std::unique_ptr<http::HTTPHandler>(new AdminUI());
 }
 
-bool WebInterface::handleHTTPRequest(
+bool AdminUI::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
 
@@ -47,7 +47,7 @@ bool WebInterface::handleHTTPRequest(
     response->setStatus(200);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addBody(
-        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
     return true;
   }
 
@@ -55,14 +55,14 @@ bool WebInterface::handleHTTPRequest(
     response->setStatus(200);
     response->addHeader("Content-Type", "image/x-icon");
     response->addBody(
-        Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"));
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"));
     return true;
   }
 
   if (url == "/s/fnordmetric.js") {
     response->setStatus(200);
     response->addHeader("Content-Type", "text/javascript");
-    response->addBody(Assets::getAsset("fnordmetric-js/fnordmetric.js"));
+    response->addBody(util::Assets::getAsset("fnordmetric-js/fnordmetric.js"));
     return true;
   }
 
@@ -70,7 +70,7 @@ bool WebInterface::handleHTTPRequest(
     response->setStatus(200);
     response->addHeader("Content-Type", "text/css");
     response->addBody(
-        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"));
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"));
     return true;
   }
 
@@ -78,7 +78,7 @@ bool WebInterface::handleHTTPRequest(
     response->setStatus(200);
     response->addHeader("Content-Type", "text/javascript");
     response->addBody(
-        Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"));
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"));
     return true;
   }
 

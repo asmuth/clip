@@ -15,9 +15,9 @@
 #include <fnordmetric/http/httpresponse.h>
 
 namespace fnordmetric {
-namespace web {
+namespace metricdb {
 
-class WebInterface : public http::HTTPHandler {
+class AdminUI : public http::HTTPHandler {
 public:
 
   static std::unique_ptr<http::HTTPHandler> getHandler();

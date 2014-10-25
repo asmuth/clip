@@ -17,7 +17,7 @@
 #include <fnordmetric/ev/acceptor.h>
 #include <fnordmetric/ev/eventloop.h>
 #include <fnordmetric/http/httpserver.h>
-#include <fnordmetric/metricdb/httpinterface.h>
+#include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
@@ -26,7 +26,7 @@
 #include <fnordmetric/thread/threadpool.h>
 
 using namespace fnordmetric;
-using namespace fnordmetric::cli;
+using namespace fnordmetric::metricdb;
 
 static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
@@ -42,7 +42,7 @@ int main(int argc, const char** argv) {
   // flags
   env()->flags()->defineFlag(
       "port",
-      FlagParser::T_INTEGER,
+      cli::FlagParser::T_INTEGER,
       false,
       NULL,
       NULL,
@@ -57,12 +57,10 @@ int main(int argc, const char** argv) {
       std::unique_ptr<util::ExceptionHandler>(
           new util::CatchAndPrintExceptionHandler(env()->logger())));
 
-  fnordmetric::ev::EventLoop ev_loop;
-  fnordmetric::ev::Acceptor acceptor(&ev_loop);
-  fnordmetric::http::ThreadedHTTPServer http(&thread_pool);
-  http.addHandler(
-      std::unique_ptr<fnordmetric::http::HTTPHandler>(
-          new fnordmetric::metricdb::HTTPInterface()));
+  ev::EventLoop ev_loop;
+  ev::Acceptor acceptor(&ev_loop);
+  http::ThreadedHTTPServer http(&thread_pool);
+  http.addHandler(AdminUI::getHandler());
 
   auto port = env()->flags()->getInt("port");
   env()->logger()->printf("INFO", "Starting HTTP server on port %i", port);

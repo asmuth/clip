@@ -31,6 +31,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sstable/indexprovider.cc
     stage/src/fnordmetric/sstable/livesstable.cc
     stage/src/fnordmetric/sstable/rowoffsetindex.cc
+    stage/src/fnordmetric/util/assets.cc
     stage/src/fnordmetric/util/binarymessagereader.cc
     stage/src/fnordmetric/util/binarymessagewriter.cc
     stage/src/fnordmetric/util/datetime.cc
@@ -47,9 +48,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
     stage/src/fnordmetric/thread/threadpool.cc
-    stage/src/fnordmetric/web/assets.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
-    stage/src/fnordmetric/web/webinterface.cc)
+    stage/src/fnordmetric/web/queryendpoint.cc)
 
 set(FNORDMETRIC_FFS_SOURCES
     stage/src/fnordmetric/ffs/cowblob.cc
@@ -117,7 +116,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
 
 set(METRICDB_SOURCES
-    stage/src/fnordmetric/metricdb/httpinterface.cc
+    stage/src/fnordmetric/metricdb/adminui.cc
     stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metriccursor.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc

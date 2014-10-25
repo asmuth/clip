@@ -1,6 +1,6 @@
 #/bin/bash
 mkdir -p stage/src
-echo "#include <fnordmetric/web/assets.h>" > stage/src/asset_bundle.cc
+echo "#include <fnordmetric/util/assets.h>" > stage/src/asset_bundle.cc
 
 asset_file() {
   (cd ../.. && cat $@ | xxd -i)
@@ -12,7 +12,7 @@ asset_uniq() {
 }
 
 asset_name() {
-  echo "static fnordmetric::web::Assets::AssetFile __$1(\"$2\", __$1_data, sizeof(__$1_data));"
+  echo "static fnordmetric::util::Assets::AssetFile __$1(\"$2\", __$1_data, sizeof(__$1_data));"
 };
 
 (

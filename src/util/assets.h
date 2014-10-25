@@ -14,7 +14,7 @@
 #include <vector>
 
 namespace fnordmetric {
-namespace web {
+namespace util {
 
 class Assets {
 public:
