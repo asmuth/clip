@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/httpapi.h>
+#include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/stringutil.h>
@@ -58,8 +59,8 @@ bool HTTPAPI::handleHTTPRequest(
   if (path == kQueryUrl) {
     switch (request->method()) {
       case http::HTTPRequest::M_GET:
-        return true;
       case http::HTTPRequest::M_POST:
+        executeQuery(request, response, &uri);
         return true;
       default:
         return false;
@@ -176,6 +177,42 @@ void HTTPAPI::renderMetricSampleScan(
 
   json.endArray();
   json.endObject();
+}
+
+void HTTPAPI::executeQuery(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    util::URI* uri) {
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+
+  auto input_stream = request->getBodyInputStream();
+  auto output_stream = response->getBodyOutputStream();
+
+  // FIXPAUL move to thread/worker pool
+  query::QueryService query_service;
+  try {
+    query_service.executeQuery(
+        input_stream.get(),
+        query::QueryService::FORMAT_JSON,
+        output_stream.get());
+
+  } catch (util::RuntimeException e) {
+    response->clearBody();
+
+    util::JSONOutputStream json(std::move(output_stream));
+    json.beginObject();
+    json.addObjectEntry("status");
+    json.addString("error");
+    json.addComma();
+    json.addObjectEntry("error");
+    json.addString(e.getMessage());
+    json.endObject();
+  }
+
+  response->addHeader(
+      "Content-Length",
+      std::to_string(response->getBody().size()));
 }
 
 }

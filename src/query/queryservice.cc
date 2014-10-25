@@ -22,11 +22,8 @@ namespace fnordmetric {
 namespace query {
 
 QueryService::QueryService() {
-  runtime_.addBackend(std::unique_ptr<Backend>(
-      new csv_backend::CSVBackend()));
-
-  runtime_.addBackend(std::unique_ptr<Backend>(
-      new mysql_backend::MySQLBackend()));
+  //runtime_.addBackend(std::unique_ptr<Backend>(
+  //    new csv_backend::CSVBackend()));
 }
 
 void QueryService::executeQuery(

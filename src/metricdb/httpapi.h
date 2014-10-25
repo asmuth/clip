@@ -45,6 +45,11 @@ protected:
       http::HTTPResponse* response,
       util::URI* uri);
 
+  void executeQuery(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      util::URI* uri);
+
   MetricRepository* metric_repo_;
 };
 
