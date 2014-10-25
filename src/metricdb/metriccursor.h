@@ -33,6 +33,7 @@ public:
 
 protected:
   std::shared_ptr<MetricSnapshot> snapshot_;
+  int table_index_;
   fnord::sstable::Cursor* tableCursor();
   std::unique_ptr<fnord::sstable::Cursor> table_cur_;
   std::unique_ptr<SampleReader> sample_;

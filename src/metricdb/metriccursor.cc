@@ -18,10 +18,20 @@ namespace metricdb {
 
 MetricCursor::MetricCursor(
     std::shared_ptr<MetricSnapshot> snapshot) :
-    snapshot_(snapshot) {}
+    snapshot_(snapshot),
+    table_index_(0) {}
 
 bool MetricCursor::next() {
-  return tableCursor()->next();
+  if (tableCursor()->next()) {
+    return true;
+  }
+
+  if (table_index_ < (snapshot_->tables().size() - 1)) {
+    table_cur_ = snapshot_->tables()[++table_index_]->cursor();
+    return table_cur_->valid();
+  }
+
+  return false;
 }
 
 bool MetricCursor::valid() {
@@ -56,7 +66,7 @@ SampleReader* MetricCursor::sample() {
 fnord::sstable::Cursor* MetricCursor::tableCursor() {
   if (table_cur_.get() == nullptr) {
     // FIXPAUL start with first table, not always the live table
-    table_cur_ = snapshot_->tables()[0]->cursor();
+    table_cur_ = snapshot_->tables()[table_index_]->cursor();
   }
 
   return table_cur_.get();
