@@ -18,6 +18,7 @@
 #include <fnordmetric/ev/eventloop.h>
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/metricdb/adminui.h>
+#include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
@@ -61,6 +62,7 @@ int main(int argc, const char** argv) {
   ev::Acceptor acceptor(&ev_loop);
   http::ThreadedHTTPServer http(&thread_pool);
   http.addHandler(AdminUI::getHandler());
+  http.addHandler(HTTPAPI::getHandler());
 
   auto port = env()->flags()->getInt("port");
   env()->logger()->printf("INFO", "Starting HTTP server on port %i", port);

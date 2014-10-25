@@ -7,14 +7,27 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/httpinterface.h>
+#include <fnordmetric/metricdb/httpapi.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-bool HTTPInterface::handleHTTPRequest(
+std::unique_ptr<http::HTTPHandler> HTTPAPI::getHandler() {
+  return std::unique_ptr<http::HTTPHandler>(new HTTPAPI());
+}
+
+bool HTTPAPI::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
+  auto url = request->getUrl();
+
+  if (url == "/metrics") {
+    response->setStatus(200);
+    response->addHeader("Content-Type", "application/json; charset=utf-8");
+    response->addBody("fnord");
+    return true;
+  }
+
   return false;
 }
 

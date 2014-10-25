@@ -17,8 +17,10 @@
 namespace fnordmetric {
 namespace metricdb {
 
-class HTTPInterface : public http::HTTPHandler {
+class HTTPAPI : public http::HTTPHandler {
 public:
+
+  static std::unique_ptr<http::HTTPHandler> getHandler();
 
   bool handleHTTPRequest(
       http::HTTPRequest* request,
