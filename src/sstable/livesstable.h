@@ -85,6 +85,9 @@ public:
   template <typename IndexType>
   IndexType* getIndex() const;
 
+  size_t bodySize() const;
+  size_t headerSize() const;
+
 protected:
   class Cursor : public sstable::Cursor {
   public:
@@ -110,15 +113,12 @@ protected:
 
   void writeHeader(void const* data, size_t size);
 
-  size_t bodySize() const;
-  size_t headerSize() const;
-
 private:
   io::File file_;
   std::vector<Index::IndexRef> indexes_;
   std::unique_ptr<io::MmapPageManager> mmap_;
-  size_t header_size_;
-  size_t body_size_;
+  size_t header_size_; // FIXPAUL make atomic
+  size_t body_size_; // FIXPAUL make atomic
 };
 
 

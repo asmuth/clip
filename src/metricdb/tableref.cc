@@ -85,6 +85,14 @@ std::unique_ptr<sstable::Cursor> LiveTableRef::cursor() {
   return table_->getCursor();
 }
 
+bool LiveTableRef::isWritable() const {
+  return true;
+}
+
+size_t LiveTableRef::bodySize() const {
+  return table_->bodySize();
+}
+
 }
 }
 

@@ -65,6 +65,7 @@ Metric::Metric(
   }
 
   head_ = snapshot;
+  max_generation_ = head_table->generation() + 1;
 
   for (auto& table : tables) {
     if (table.get() != nullptr) {
@@ -87,8 +88,9 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
   {
     std::lock_guard<std::mutex> lock_holder(head_mutex_);
 
-    // FIXPAUL test if full...
-    if (head_.get() != nullptr) {
+    if (head_.get() != nullptr &&
+        head_->tables().back()->isWritable() &&
+        head_->tables().back()->bodySize() < (2 << 16)) {
       return head_;
     }
   }
@@ -125,6 +127,9 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
     snapshot.reset(new MetricSnapshot());
   } else {
     snapshot = head_->clone();
+    for (const auto& tbl : snapshot->tables()) {
+      parents.emplace_back(tbl->generation());
+    }
   }
 
   // open new file

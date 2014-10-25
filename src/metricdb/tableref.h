@@ -39,6 +39,8 @@ public:
 
   virtual void addSample(SampleWriter const* sample, uint64_t time) = 0;
   virtual std::unique_ptr<sstable::Cursor> cursor() = 0;
+  virtual bool isWritable() const = 0;
+  virtual size_t bodySize() const = 0;
 
   uint64_t generation() const;
   const std::vector<uint64_t> parents() const;
@@ -57,6 +59,9 @@ public:
 
   void addSample(SampleWriter const* sample, uint64_t time) override;
   std::unique_ptr<sstable::Cursor> cursor() override;
+
+  bool isWritable() const override;
+  size_t bodySize() const override;
 
 protected:
   std::unique_ptr<sstable::LiveSSTable> table_;
