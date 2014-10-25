@@ -32,7 +32,9 @@ std::unique_ptr<LiveSSTable> LiveSSTable::create(
 std::unique_ptr<LiveSSTable> LiveSSTable::reopen(
     io::File file,
     IndexProvider index_provider) {
+  auto file_size = file.size();
   auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
+  sstable->reopen(file_size);
   return std::unique_ptr<LiveSSTable>(sstable);
 }
 
@@ -108,6 +110,23 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
 
   page->sync();
   header_size_ = alloc.size;
+}
+
+void LiveSSTable::reopen(size_t file_size) {
+  io::PageManager::Page header_page(0, sizeof(BinaryFormat::FileHeader));
+  auto page = mmap_->getPage(header_page);
+  auto header = page->structAt<BinaryFormat::FileHeader>(0);
+
+  if (header->magic != BinaryFormat::kMagicBytes) {
+    RAISE(kIllegalStateError, "not a valid sstable");
+  }
+
+  if (header->body_size != 0) {
+    RAISE(kIllegalStateError, "finalized sstable can't be re-opened");
+  }
+
+  header_size_ = sizeof(BinaryFormat::FileHeader) + header->header_size;
+  body_size_ = file_size - header_size_;
 }
 
 // FIXPAUL lock

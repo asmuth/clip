@@ -82,7 +82,9 @@ void HTTPAPI::renderMetricList(
   json.addObjectEntry("metrics");
   json.beginArray();
 
+  int i = 0;
   for (const auto& metric : metric_repo_->listMetrics()) {
+    if (i++ > 0) { json.addComma(); }
     json.beginObject();
     json.addObjectEntry("key");
     json.addString(metric->key());
@@ -153,10 +155,12 @@ void HTTPAPI::renderMetricSampleScan(
   json.addObjectEntry("samples");
   json.beginArray();
 
+  int i = 0;
   metric->scanSamples(
       fnord::util::DateTime::epoch(),
       fnord::util::DateTime::now(),
-      [&json] (MetricCursor* cursor) -> bool {
+      [&json, &i] (MetricCursor* cursor) -> bool {
+        if (i++ > 0) { json.addComma(); }
         json.beginObject();
         json.addObjectEntry("time");
         json.addInteger(cursor->time());

@@ -114,6 +114,8 @@ protected:
   void writeHeader(void const* data, size_t size);
 
 private:
+  void reopen(size_t file_size);
+
   io::File file_;
   std::vector<Index::IndexRef> indexes_;
   std::unique_ptr<io::MmapPageManager> mmap_;

@@ -29,7 +29,19 @@ bool MetricCursor::valid() {
 }
 
 uint64_t MetricCursor::time() {
-  return 0;
+  uint64_t time = 0;
+
+  void* key;
+  size_t key_len;
+  tableCursor()->getKey(&key, &key_len);
+
+  if (key_len == sizeof(time)) {
+    memcpy(&time, key, sizeof(time));
+  } else {
+    RAISE(kIllegalStateError, "invalid key");
+  }
+
+  return time;
 }
 
 SampleReader* MetricCursor::sample() {
