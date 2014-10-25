@@ -22,8 +22,6 @@ namespace fnordmetric {
 namespace query {
 
 QueryService::QueryService() {
-  //runtime_.addBackend(std::unique_ptr<Backend>(
-  //    new csv_backend::CSVBackend()));
 }
 
 void QueryService::executeQuery(
@@ -66,7 +64,8 @@ void QueryService::executeQuery(
   }
 }
 
-void QueryService::registerBackend() {
+void QueryService::registerBackend(std::unique_ptr<Backend>&& backend) {
+  runtime_.addBackend(std::move(backend));
 }
 
 void QueryService::renderCharts(Query* query, ui::RenderTarget* target) const {

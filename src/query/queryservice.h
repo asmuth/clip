@@ -57,7 +57,7 @@ public:
   /**
    * Register a query backend
    */
-  void registerBackend();
+  void registerBackend(std::unique_ptr<Backend>&& backend);
 
 protected:
 
