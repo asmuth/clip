@@ -28,7 +28,11 @@ public:
   void addComma();
   void addString(const std::string& string);
   void addFloat(double value);
-  void addInteger(int integer);
+
+  template <typename T>
+  void addLiteral(T integer) {
+    output_->write(std::to_string(integer));
+  }
 
 protected:
   std::string escapeString(const std::string& string) const;

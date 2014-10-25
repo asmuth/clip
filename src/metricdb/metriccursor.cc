@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metriccursor.h>
+#include <fnordmetric/util/stringutil.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -50,7 +51,6 @@ uint64_t MetricCursor::time() {
   } else {
     RAISE(kIllegalStateError, "invalid key");
   }
-
   return time;
 }
 
@@ -65,7 +65,6 @@ SampleReader* MetricCursor::sample() {
 
 fnord::sstable::Cursor* MetricCursor::tableCursor() {
   if (table_cur_.get() == nullptr) {
-    // FIXPAUL start with first table, not always the live table
     table_cur_ = snapshot_->tables()[table_index_]->cursor();
   }
 

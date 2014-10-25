@@ -163,7 +163,7 @@ void HTTPAPI::renderMetricSampleScan(
         if (i++ > 0) { json.addComma(); }
         json.beginObject();
         json.addObjectEntry("time");
-        json.addInteger(cursor->time());
+        json.addLiteral<uint64_t>(cursor->time());
         json.endObject();
         return true;
       });

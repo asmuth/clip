@@ -22,6 +22,12 @@ public:
 
   static void stripTrailingSlashes(std::string* str);
 
+  static std::string hexPrint(
+      void* data,
+      size_t size,
+      bool separate_bytes = true,
+      bool reverse_byte_order = false);
+
 };
 
 }

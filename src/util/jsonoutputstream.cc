@@ -8,6 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/util/jsonoutputstream.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
 
 namespace fnordmetric {
 namespace util {
@@ -35,14 +38,6 @@ void JSONOutputStream::addComma() {
 
 void JSONOutputStream::addString(const std::string& string) {
   output_->printf("\"%s\"", escapeString(string).c_str());
-}
-
-void JSONOutputStream::addFloat(double value) {
-  output_->printf("%f", value);
-}
-
-void JSONOutputStream::addInteger(int value) {
-  output_->printf("%i", value);
 }
 
 void JSONOutputStream::beginArray() {
