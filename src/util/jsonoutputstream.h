@@ -27,6 +27,8 @@ public:
   void endArray();
   void addComma();
   void addString(const std::string& string);
+  void addFloat(double value);
+  void addInteger(int integer);
 
 protected:
   std::string escapeString(const std::string& string) const;

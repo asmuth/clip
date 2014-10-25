@@ -44,6 +44,7 @@ bool HTTPAPI::handleHTTPRequest(
     // PATH: ^/metrics/(.*)$
     switch (request->method()) {
       case http::HTTPRequest::M_GET:
+        renderMetricSampleScan(request, response, &uri);
         return true;
       case http::HTTPRequest::M_POST:
         insertSample(request, response, &uri);
@@ -126,7 +127,46 @@ void HTTPAPI::insertSample(
   response->setStatus(http::kStatusCreated);
 }
 
+void HTTPAPI::renderMetricSampleScan(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    util::URI* uri) {
+  auto metric_key = uri->path().substr(sizeof(kMetricsUrlPrefix) - 1);
+  if (metric_key.size() < 3) {
+    response->addBody("error: invalid metric key: " + metric_key);
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
 
+  auto metric = metric_repo_->findMetric(metric_key);
+  if (metric == nullptr) {
+    response->addBody("metric not found: " + metric_key);
+    response->setStatus(http::kStatusNotFound);
+    return;
+  }
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  util::JSONOutputStream json(response->getBodyOutputStream());
+
+  json.beginObject();
+  json.addObjectEntry("samples");
+  json.beginArray();
+
+  metric->scanSamples(
+      fnord::util::DateTime::epoch(),
+      fnord::util::DateTime::now(),
+      [&json] (MetricCursor* cursor) -> bool {
+        json.beginObject();
+        json.addObjectEntry("time");
+        json.addInteger(cursor->time());
+        json.endObject();
+        return true;
+      });
+
+  json.endArray();
+  json.endObject();
+}
 
 }
 }

@@ -35,6 +35,11 @@ protected:
       http::HTTPResponse* response,
       util::URI* uri);
 
+  void renderMetricSampleScan(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      util::URI* uri);
+
   void insertSample(
       http::HTTPRequest* request,
       http::HTTPResponse* response,

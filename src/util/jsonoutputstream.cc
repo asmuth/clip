@@ -37,6 +37,14 @@ void JSONOutputStream::addString(const std::string& string) {
   output_->printf("\"%s\"", escapeString(string).c_str());
 }
 
+void JSONOutputStream::addFloat(double value) {
+  output_->printf("\"%f\"", value);
+}
+
+void JSONOutputStream::addInteger(int value) {
+  output_->printf("\"%i\"", value);
+}
+
 void JSONOutputStream::beginArray() {
   output_->printf("[");
 }
