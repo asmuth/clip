@@ -18,6 +18,7 @@ namespace util {
 
 class URI {
 public:
+  typedef std::vector<std::pair<std::string, std::string>> ParamList;
 
   URI(const std::string& uri_str);
   void parse(const std::string& uri_str);
@@ -28,7 +29,7 @@ public:
   const unsigned port() const;
   const std::string& path() const;
   const std::string& query() const;
-  const std::vector<std::pair<std::string, std::string>> queryParams() const;
+  ParamList queryParams() const;
   const std::string& fragment() const;
   std::string toString() const;
 
@@ -45,6 +46,11 @@ public:
   static void parseQueryString(
       const std::string& query,
       std::vector<std::pair<std::string, std::string>>* params);
+
+  static bool getParam(
+      const ParamList&,
+      const std::string& key,
+      std::string* value);
 
 protected:
   std::string scheme_;

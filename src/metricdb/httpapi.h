@@ -13,6 +13,7 @@
 #include <fnordmetric/http/httphandler.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
+#include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -31,11 +32,13 @@ protected:
 
   void renderMetricList(
       http::HTTPRequest* request,
-      http::HTTPResponse* response);
+      http::HTTPResponse* response,
+      util::URI* uri);
 
   void insertSample(
       http::HTTPRequest* request,
-      http::HTTPResponse* response);
+      http::HTTPResponse* response,
+      util::URI* uri);
 
   MetricRepository* metric_repo_;
 };

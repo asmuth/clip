@@ -53,15 +53,29 @@ const std::string& URI::query() const {
   return query_;
 }
 
-const std::vector<std::pair<std::string, std::string>> URI::queryParams()
+URI::ParamList URI::queryParams()
     const {
-  std::vector<std::pair<std::string, std::string>> params;
+  URI::ParamList params;
 
   if (query_.size() > 0) {
     URI::parseQueryString(query_, &params);
   }
 
   return params;
+}
+
+bool URI::getParam(
+    const URI::ParamList& params,
+    const std::string& key,
+    std::string* value) {
+  for (const auto& param : params) {
+    if (param.first == key) {
+      *value = param.second;
+      return true;
+    }
+  }
+
+  return false;
 }
 
 const std::string& URI::fragment() const {

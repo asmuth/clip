@@ -11,7 +11,6 @@
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/stringutil.h>
-#include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -33,7 +32,7 @@ bool HTTPAPI::handleHTTPRequest(
   if (path == kMetricsUrl) {
     switch (request->method()) {
       case http::HTTPRequest::M_GET:
-        renderMetricList(request, response);
+        renderMetricList(request, response, &uri);
         return true;
       default:
         return false;
@@ -47,7 +46,7 @@ bool HTTPAPI::handleHTTPRequest(
       case http::HTTPRequest::M_GET:
         return true;
       case http::HTTPRequest::M_POST:
-        insertSample(request, response);
+        insertSample(request, response, &uri);
         return true;
       default:
         return false;
@@ -72,7 +71,8 @@ bool HTTPAPI::handleHTTPRequest(
 
 void HTTPAPI::renderMetricList(
     http::HTTPRequest* request,
-    http::HTTPResponse* response) {
+    http::HTTPResponse* response,
+    util::URI* uri) {
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
   util::JSONOutputStream json(response->getBodyOutputStream());
@@ -91,9 +91,25 @@ void HTTPAPI::renderMetricList(
 
 void HTTPAPI::insertSample(
     http::HTTPRequest* request,
-    http::HTTPResponse* response) {
+    http::HTTPResponse* response,
+    util::URI* uri) {
+  auto params = uri->queryParams();
+
+  auto metric_key = uri->path().substr(sizeof(kMetricsUrlPrefix) - 1);
+  if (metric_key.size() < 3) {
+    response->addBody("error: invalid metric key: " + metric_key);
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  std::string value_str;
+  if (!util::URI::getParam(params, "value", &value_str)) {
+    response->addBody("error: missing ?value=... parameter");
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
   response->setStatus(http::kStatusCreated);
-  response->addBody("CREATED");
 }
 
 
