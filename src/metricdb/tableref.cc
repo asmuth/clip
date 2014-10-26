@@ -20,6 +20,7 @@ namespace fnordmetric {
 namespace metricdb {
 
 std::unique_ptr<TableRef> TableRef::createTable(
+    const std::string filename,
     fnord::io::File&& file,
     const std::string& key,
     uint64_t generation,
@@ -44,6 +45,7 @@ std::unique_ptr<TableRef> TableRef::createTable(
       header.size());
 
   auto table_ref = new LiveTableRef(
+      filename,
       std::move(live_sstable),
       generation,
       parents);
@@ -52,8 +54,10 @@ std::unique_ptr<TableRef> TableRef::createTable(
 }
 
 std::unique_ptr<TableRef> TableRef::reopenTable(
+    const std::string filename,
     fnord::io::File&& file,
-    TableHeaderReader* header) {
+    uint64_t generation,
+    const std::vector<uint64_t>& parents) {
   sstable::IndexProvider indexes;
 
   auto table = sstable::LiveSSTable::reopen(
@@ -61,30 +65,37 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
       std::move(indexes));
 
   auto table_ref = new LiveTableRef(
+      filename,
       std::move(table),
-      header->generation(),
-      header->parents());
+      generation,
+      parents);
 
   return std::unique_ptr<TableRef>(table_ref);
 }
 
 std::unique_ptr<TableRef> TableRef::openTable(
     const std::string filename,
-    TableHeaderReader* header,
-    sstable::SSTableReader* reader) {
+    uint64_t generation,
+    const std::vector<uint64_t>& parents) {
   auto table_ref = new ReadonlyTableRef(
       filename,
-      header->generation(),
-      header->parents());
+      generation,
+      parents);
 
   return std::unique_ptr<TableRef>(table_ref);
 }
 
 TableRef::TableRef(
+    const std::string& filename,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
+    filename_(filename),
     generation_(generation),
     parents_(parents) {}
+
+const std::string& TableRef::filename() const {
+  return filename_;
+}
 
 uint64_t TableRef::generation() const {
   return generation_;
@@ -95,10 +106,11 @@ const std::vector<uint64_t> TableRef::parents() const {
 }
 
 LiveTableRef::LiveTableRef(
+    const std::string& filename,
     std::unique_ptr<sstable::LiveSSTable> table,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
-    TableRef(generation, parents),
+    TableRef(filename, generation, parents),
     table_(std::move(table)),
     is_writable_(true) {}
 
@@ -151,7 +163,14 @@ ReadonlyTableRef::ReadonlyTableRef(
     const std::string& filename,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
-    TableRef(generation, parents) {}
+    TableRef(filename, generation, parents) {}
+
+ReadonlyTableRef::ReadonlyTableRef(
+    const TableRef& live_table) :
+    TableRef(
+        live_table.filename(),
+        live_table.generation(),
+        live_table.parents()) {}
 
 void ReadonlyTableRef::addSample(SampleWriter const* sample, uint64_t time) {
   RAISE(kIllegalStateError, "table is immutable");
@@ -162,6 +181,7 @@ std::unique_ptr<sstable::Cursor> ReadonlyTableRef::cursor() {
 }
 
 void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
+  RAISE(kNotYetImplementedError, "fnord");
 }
 
 void ReadonlyTableRef::finalize(TokenIndex* token_index) {

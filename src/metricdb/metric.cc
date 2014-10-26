@@ -28,7 +28,7 @@ Metric::Metric(
     key_(key),
     file_repo_(file_repo),
     head_(nullptr),
-    max_generation_(1) {
+    max_generation_(0) {
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
@@ -81,7 +81,7 @@ Metric::Metric(
   }
 
   head_ = snapshot;
-  max_generation_ = head_table->generation() + 1;
+  max_generation_ = head_table->generation();
 
   for (auto& table : tables) {
     if (table.get() != nullptr) {
@@ -157,9 +157,10 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
         io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
 
     snapshot->appendTable(TableRef::createTable(
+        fileref.absolute_path,
         std::move(file),
         key_,
-        max_generation_++,
+        ++max_generation_,
         parents));
   }
 
@@ -228,7 +229,7 @@ void Metric::compact() {
             "Finalizing sstable: '...'");
 
         table->finalize(&token_index_);
-        new_tables.emplace_back(table); // FIXPAUL reopen
+        new_tables.emplace_back(new ReadonlyTableRef(*table));
       }
     } else {
       new_tables.emplace_back(table);

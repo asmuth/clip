@@ -22,24 +22,30 @@ class TableHeaderReader;
 
 class TableRef {
 public:
-  TableRef(uint64_t generation, const std::vector<uint64_t>& parents);
+  TableRef(
+      const std::string& filename,
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
 
   static std::unique_ptr<TableRef> createTable(
+      const std::string filename,
       fnord::io::File&& file,
       const std::string& key,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
   static std::unique_ptr<TableRef> reopenTable(
+      const std::string filename,
       fnord::io::File&& file,
-      TableHeaderReader* header);
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
 
   static std::unique_ptr<TableRef> openTable(
       const std::string filename,
-      TableHeaderReader* header,
-      sstable::SSTableReader* reader);
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
 
   virtual void addSample(SampleWriter const* sample, uint64_t time) = 0;
   virtual std::unique_ptr<sstable::Cursor> cursor() = 0;
@@ -49,10 +55,12 @@ public:
   virtual bool isWritable() const = 0;
   virtual size_t bodySize() const = 0;
 
+  const std::string& filename() const;
   uint64_t generation() const;
   const std::vector<uint64_t> parents() const;
 
 protected:
+  std::string filename_;
   uint64_t generation_;
   std::vector<uint64_t> parents_;
 };
@@ -60,6 +68,7 @@ protected:
 class LiveTableRef : public TableRef {
 public:
   LiveTableRef(
+      const std::string& filename,
       std::unique_ptr<sstable::LiveSSTable> table,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
@@ -80,10 +89,13 @@ protected:
 
 class ReadonlyTableRef : public TableRef {
 public:
-  ReadonlyTableRef(
+  explicit ReadonlyTableRef(
       const std::string& filename,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
+
+  explicit ReadonlyTableRef(
+      const TableRef& live_table);
 
   void addSample(SampleWriter const* sample, uint64_t time) override;
   std::unique_ptr<sstable::Cursor> cursor() override;

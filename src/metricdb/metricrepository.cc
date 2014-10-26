@@ -41,10 +41,17 @@ MetricRepository::MetricRepository(
 
     if (reader.bodySize() == 0) {
       tables[header.metricKey()].emplace_back(
-          TableRef::reopenTable(std::move(file), &header));
+          TableRef::reopenTable(
+              filename,
+              std::move(file),
+              header.generation(),
+              header.parents()));
     } else {
       tables[header.metricKey()].emplace_back(
-          TableRef::openTable(filename, &header, &reader));
+          TableRef::openTable(
+              filename,
+              header.generation(),
+              header.parents()));
     }
 
     return true;
