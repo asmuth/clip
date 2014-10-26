@@ -123,6 +123,7 @@ private:
   std::unique_ptr<io::MmapPageManager> mmap_;
   size_t header_size_; // FIXPAUL make atomic
   size_t body_size_; // FIXPAUL make atomic
+  bool finalized_;
 };
 
 

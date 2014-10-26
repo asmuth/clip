@@ -45,7 +45,8 @@ LiveSSTable::LiveSSTable(
     indexes_(std::move(indexes)),
     mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)),
     header_size_(0),
-    body_size_(0) {}
+    body_size_(0),
+    finalized_(false) {}
 
 LiveSSTable::~LiveSSTable() {
 }
@@ -56,6 +57,9 @@ void LiveSSTable::appendRow(
     size_t key_size,
     void const* data,
     size_t data_size) {
+  if (finalized_) {
+    RAISE(kIllegalStateError, "table is immutable (alread finalized)");
+  }
   // FIXPAUL assert that key is monotonically increasing...
 
   size_t page_size = sizeof(BinaryFormat::RowHeader) + key_size + data_size;
@@ -91,6 +95,10 @@ void LiveSSTable::appendRow(
 
 // FIXPAUL lock
 void LiveSSTable::writeHeader(void const* data, size_t size) {
+  if (header_size_ > 0) {
+    RAISE(kIllegalStateError, "header already written");
+  }
+
   auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FileHeader) + size);
   auto page = mmap_->getPage(alloc);
 
@@ -113,6 +121,10 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
 }
 
 void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
+  if (finalized_) {
+    RAISE(kIllegalStateError, "table is immutable (alread finalized)");
+  }
+
   auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FooterHeader) + size);
   auto page = mmap_->getPage(alloc);
 
@@ -148,6 +160,8 @@ void LiveSSTable::reopen(size_t file_size) {
 
 // FIXPAUL lock
 void LiveSSTable::finalize() {
+  finalized_ = true;
+
   auto page = mmap_->getPage(
       io::PageManager::Page(0, sizeof(BinaryFormat::FileHeader)));
 
