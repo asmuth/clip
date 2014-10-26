@@ -15,6 +15,7 @@
 #include <memory>
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/io/pagemanager.h>
+#include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/cursor.h>
 #include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
@@ -57,9 +58,17 @@ protected:
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
   protected:
+    void fileSeek(size_t pos);
+    void readRowHeader();
     io::File file_;
+    size_t pos_;
+    size_t seekto_cached_;
     size_t begin_;
     size_t limit_;
+    BinaryFormat::RowHeader cur_header_;
+    std::unique_ptr<util::Buffer> cur_key_;
+    std::unique_ptr<util::Buffer> cur_value_;
+    bool valid_;
   };
 
 private:
