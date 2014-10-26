@@ -201,14 +201,32 @@ void Metric::compact() {
     snapshot = createSnapshot();
   }
 
-  auto tables = snapshot->tables();
-  tables.pop_back();
+  auto old_tables = snapshot->tables();
+  old_tables.pop_back();
+  std::vector<std::shared_ptr<TableRef>> new_tables;
 
   // finalize unfinished sstables
-  for (const auto& table : tables) {
+  for (auto& table : old_tables) {
     if (table->isWritable()) {
-      table->finalize();
+      if (table->bodySize() == 0) {
+        if (env()->verbose()) {
+          env()->logger()->printf(
+              "DEBUG",
+              "SSTable '...' is empty, deleting...",
+              key_.c_str());
+        }
+
+        continue;
+      } else {
+        env()->logger()->printf(
+            "DEBUG",
+            "Finalizing sstable: '...'");
+
+        table->finalize();
+      }
     }
+
+    new_tables.emplace_back(table);
   }
 }
 

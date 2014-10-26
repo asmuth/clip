@@ -40,6 +40,7 @@ public:
   virtual void addSample(SampleWriter const* sample, uint64_t time) = 0;
   virtual std::unique_ptr<sstable::Cursor> cursor() = 0;
   virtual void importTokenIndex(TokenIndex* token_index) = 0;
+  virtual void finalize() = 0;
 
   virtual bool isWritable() const = 0;
   virtual size_t bodySize() const = 0;
@@ -63,11 +64,13 @@ public:
   std::unique_ptr<sstable::Cursor> cursor() override;
 
   void importTokenIndex(TokenIndex* token_index) override;
+  void finalize() override;
 
   bool isWritable() const override;
   size_t bodySize() const override;
 
 protected:
+  bool is_writable_;
   std::unique_ptr<sstable::LiveSSTable> table_;
 };
 

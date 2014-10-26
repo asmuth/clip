@@ -86,7 +86,8 @@ LiveTableRef::LiveTableRef(
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
     TableRef(generation, parents),
-    table_(std::move(table)) {}
+    table_(std::move(table)),
+    is_writable_(true) {}
 
 void LiveTableRef::addSample(SampleWriter const* sample, uint64_t time) {
   table_->appendRow(&time, sizeof(time), sample->data(), sample->size()); // FIXPAUL
@@ -97,7 +98,7 @@ std::unique_ptr<sstable::Cursor> LiveTableRef::cursor() {
 }
 
 bool LiveTableRef::isWritable() const {
-  return true;
+  return is_writable_;
 }
 
 size_t LiveTableRef::bodySize() const {
@@ -121,6 +122,10 @@ void LiveTableRef::importTokenIndex(TokenIndex* token_index) {
       break;
     }
   }
+}
+
+void LiveTableRef::finalize() {
+  printf("finalize!\n");
 }
 
 }
