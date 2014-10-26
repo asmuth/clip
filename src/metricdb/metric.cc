@@ -111,8 +111,8 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
     }
   }
 
-  auto new_snapshot = createSnapshot();
   std::lock_guard<std::mutex> lock_holder(head_mutex_);
+  auto new_snapshot = createSnapshot();
   head_ = new_snapshot;
   return head_;
 }
@@ -179,6 +179,39 @@ void Metric::scanSamples(
     }
   }
 }
+
+void Metric::compact() {
+  if (!compaction_mutex_.try_lock()) {
+    return;
+  }
+
+  std::lock_guard<std::mutex>(compaction_mutex_, std::adopt_lock);
+
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Running compaction for metric: '%s'",
+        key_.c_str());
+  }
+
+  // create a new snapshot
+  std::shared_ptr<MetricSnapshot> snapshot;
+  {
+    std::lock_guard<std::mutex> lock_holder(head_mutex_);
+    snapshot = createSnapshot();
+  }
+
+  auto tables = snapshot->tables();
+  tables.pop_back();
+
+  // finalize unfinished sstables
+  for (const auto& table : tables) {
+    if (table->isWritable()) {
+      table->finalize();
+    }
+  }
+}
+
 
 }
 }

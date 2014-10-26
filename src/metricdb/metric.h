@@ -43,6 +43,8 @@ public:
   std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
 
+  void compact();
+
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
@@ -51,9 +53,10 @@ protected:
   const std::string key_;
   io::FileRepository const* file_repo_;
   std::shared_ptr<MetricSnapshot> head_;
-  uint64_t max_generation_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;
+  std::mutex compaction_mutex_;
+  uint64_t max_generation_;
   TokenIndex token_index_;
 };
 
