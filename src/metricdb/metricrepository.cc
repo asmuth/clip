@@ -55,7 +55,6 @@ MetricRepository::MetricRepository(
         file_repo_.get(),
         std::move(iter.second));
 
-    metric->compact();
     metrics_.emplace(iter.first, std::unique_ptr<Metric>(metric));
   }
 }

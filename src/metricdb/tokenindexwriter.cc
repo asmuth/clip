@@ -15,6 +15,11 @@ namespace metricdb {
 TokenIndexWriter::TokenIndexWriter(TokenIndex* index) {
   auto token_ids = index->tokenIDs();
 
+  for (const auto& pair : token_ids) {
+    appendUInt32(pair.second);
+    appendUInt32(pair.first.size());
+    appendString(pair.first);
+  }
 }
 
 }

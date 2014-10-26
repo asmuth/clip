@@ -98,6 +98,10 @@ int main(int argc, const char** argv) {
       new fnord::io::FileRepository(datadir));
   MetricRepository metric_repo(file_repo);
 
+  for (const auto& metric : metric_repo.listMetrics()) {
+    metric->compact();
+  }
+
   ev::EventLoop ev_loop;
   ev::Acceptor acceptor(&ev_loop);
   http::ThreadedHTTPServer http(&thread_pool);

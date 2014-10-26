@@ -113,7 +113,20 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
 }
 
 void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
+  auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FooterHeader) + size);
+  auto page = mmap_->getPage(alloc);
 
+  auto header = page->structAt<BinaryFormat::FooterHeader>(0);
+  header->magic = BinaryFormat::kMagicBytes;
+  header->type = index_type;
+  header->footer_size = size;
+
+  if (size > 0) {
+    auto dst = page->structAt<void>(sizeof(BinaryFormat::FooterHeader));
+    memcpy(dst, data, size);
+  }
+
+  page->sync();
 }
 
 void LiveSSTable::reopen(size_t file_size) {

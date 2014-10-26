@@ -41,7 +41,8 @@ namespace sstable {
  *   <footer> :=
  *       %x17 %x17 %x17 %x17"    // magic bytes
  *       <uint32_t>              // footer type id
- *       <lenenc_str>            // userdata
+ *       <uint32_t>              // userdata size in bytes
+ *       <bytes>                 // userdata
  *
  */
 class BinaryFormat {
@@ -58,6 +59,12 @@ public:
   struct __attribute__((packed)) RowHeader {
     uint32_t key_size;
     uint32_t data_size;
+  };
+
+  struct __attribute__((packed)) FooterHeader {
+    uint64_t magic;
+    uint32_t type;
+    uint32_t footer_size;
   };
 
 };
