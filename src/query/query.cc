@@ -86,6 +86,10 @@ void Query::execute() {
   }
 
   for (const auto& draw_group : draw_statements_) {
+    if (draw_group.size() == 0) {
+      continue;
+    }
+
     auto chart = new ui::Canvas();
     for (const auto& draw_stmt : draw_group) {
       draw_stmt->execute(chart);
