@@ -168,16 +168,17 @@ FnordMetric.views.QueryPlayground = function() {
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.left = "0";
       editor_pane.style.float = "left";
-      result_pane.style.width = (100 - editor_width) + "%";
+      result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
-      result_pane.style.float = "left";
-      result_pane.style.height = editor_height + "px";
+      //result_pane.style.float = "left";
+      result_pane.style.height = editor_height - 54 + "px";
       result_pane.style.overflowY = "auto";
       editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
       editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
     } else {
       query_editor.className = "query_editor vertical_split";
+      editor_pane.style.float = "";
       editor_pane.style.width = "100%";
       editor_pane.style.left = "0";
       editor_pane.style.height = editor_height + "px";
@@ -192,7 +193,8 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     cm.setSize("auto", editor_height - 46);
-    cm.setValue("SELECT time AS x FROM http_status_codes");
+
+    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series, time AS x, value as y FROM http_status_codes;");
   }
 
   var render = function(elem) {
@@ -257,13 +259,95 @@ FnordMetric.views.QueryPlayground = function() {
     }
   };
 
+  var renderResult = function(chart, table) {
+    var chart_container = document.createElement("div");
+    chart_container.className = "chart_container";
+    chart_container.setAttribute("id", "chart_container");
+    chart_container.innerHTML = chart.svg;
+    result_pane.appendChild(chart_container);
+
+    var result_table = document.createElement("table");
+    result_table.className = "result_table";
+    result_table.setAttribute("id", "result_table");
+    var table_header = document.createElement("tr");
+
+    var columns = table.columns;
+
+    for (var i = 0; i < columns.length; i++) {
+      var table_header_cell = document.createElement("th");
+      table_header_cell.innerHTML = columns[i];
+      table_header.appendChild(table_header_cell);
+    }
+    result_table.appendChild(table_header);
+
+    var rows = table.rows;
+    for (var i = 0; i < rows.length; i++) {
+      var row = document.createElement("tr");
+      for (var j = 0; j < rows[i].length; j++) {
+        var cell = document.createElement("td");
+        cell.innerHTML = rows[i][j];
+        row.appendChild(cell);
+      }
+      result_table.appendChild(row);
+    }
+    result_pane.appendChild(result_table);
+
+  }
+
+  var destroyResult = function() {
+    var result_table = document.getElementById("result_table");
+    while (result_table.firstChild) {
+      result_table.removeChild(result_table.firstChild);
+    }
+
+    var chart_container = document.getElementById("chart_container");
+    chart_container.removeChild(chart_container.firstChild);
+
+    result_pane.removeChild(chart_container);
+    result_pane.removeChild(result_table);
+  }
+
+
+  var renderResultPane= function(resp) {
+    result_pane.style.background = "#fff";
+    result_pane.style.borderLeft = "1px solid #ddd";
+
+    var charts = resp.charts;
+    var tables = resp.tables;
+    var curr_result = 0;
+
+    var result_navbar = document.createElement("div");
+    result_navbar.className = "result_navbar";
+
+    for (var i = 0; i < charts.length; i++) {
+      var menuitem_result = document.createElement("a");
+      menuitem_result.className = "menuitem_result";
+      menuitem_result.setAttribute("id", i);
+      menuitem_result.href = "#";
+      menuitem_result.innerHTML = "<h3>"+(i+1)+"</h3>";
+      result_navbar.appendChild(menuitem_result);
+
+      menuitem_result.addEventListener('click', function() {
+        if (this.id != curr_result) {
+          destroyResult();
+          curr_result = this.id;
+          renderResult(charts[curr_result], tables[curr_result]);
+        }
+      }, false);
+
+    }
+    result_pane.appendChild(result_navbar);
+
+    renderResult(charts[curr_result], tables[curr_result]);
+
+  }
+
   var runQuery = function() {
     var query = cm.getValue();
-    //query = SELECT time as x, value as y from http_status_codes LIMIT 100;
     FnordMetric.httpPost("/query", query, function(r) {
       if (r.status == 200) {
-        console.log(r.response);
-        result_pane.innerHTML = r.response;
+        var res = JSON.parse(r.response);
+        renderResultPane(res);
       } else {
         alert("http post error");
       }
