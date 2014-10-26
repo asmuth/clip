@@ -7,8 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_METRICDB_LOCALMETRICBACKEND_H
-#define _FNORDMETRIC_METRICDB_LOCALMETRICBACKEND_H
+#ifndef _FNORDMETRIC_METRICDB_METRICTABLEREPOSITORY_H
+#define _FNORDMETRIC_METRICDB_METRICTABLEREPOSITORY_H
+#include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <memory>
 #include <mutex>
@@ -20,9 +21,11 @@ namespace metricdb {
 class MetricTableRepository : public fnordmetric::query::TableRepository {
 public:
 
-  MetricTableRepository();
+  MetricTableRepository(MetricRepository* metric_repo);
   query::TableRef* getTableRef(const std::string& table_name) const override;
 
+protected:
+  MetricRepository* metric_repo_;
 };
 
 }

@@ -193,7 +193,7 @@ void HTTPAPI::executeQuery(
   // FIXPAUL move to thread/worker pool
   query::QueryService query_service;
   std::unique_ptr<query::TableRepository> table_repo(
-      new MetricTableRepository());
+      new MetricTableRepository(metric_repo_));
 
   try {
     query_service.executeQuery(

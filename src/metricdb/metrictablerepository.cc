@@ -8,15 +8,24 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metrictablerepository.h>
+#include <fnordmetric/metricdb/metrictableref.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-MetricTableRepository::MetricTableRepository() {}
+MetricTableRepository::MetricTableRepository(
+    MetricRepository* metric_repo) :
+    metric_repo_(metric_repo) {}
 
 query::TableRef* MetricTableRepository::getTableRef(
     const std::string& table_name) const {
-  return query::TableRepository::getTableRef(table_name);
+  auto metric = metric_repo_->findMetric(table_name);
+
+  if (metric == nullptr) {
+    return query::TableRepository::getTableRef(table_name);
+  }
+
+  return new MetricTableRef(metric);
 }
 
 }
