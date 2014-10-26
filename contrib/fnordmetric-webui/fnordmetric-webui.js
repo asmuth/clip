@@ -28,9 +28,21 @@ FnordMetric.httpGet = function(url, callback) {
   }
 }
 
+FnordMetric.httpPost = function(url, request, callback) {
+  var http = new XMLHttpRequest();
+  http.open("POST", url, true);
+  http.send(request);
+
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      callback(http);
+    }
+  }
+}
+
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
-    
+
     var menuitem_editor = document.getElementById("menuitem_editor");
     menuitem_editor.style.background = "#fff";
     var menuitem_metrics = document.getElementById("menuitem_metrics");
@@ -117,6 +129,9 @@ FnordMetric.views.QueryPlayground = function() {
   var editor_width = 42;
   var editor_height = 300;
 
+  var navbar = document.createElement("div");
+  navbar.className = "navbar";
+
   var query_editor = document.createElement("div");
   query_editor.className = "card editor";
 
@@ -134,9 +149,15 @@ FnordMetric.views.QueryPlayground = function() {
   var split_button = document.createElement("div");
   split_button.className = "fancy_button";
   split_button.innerHTML = "<a href='#'>Change View</a>";
+  navbar.appendChild(split_button);
+
+  var query_button = document.createElement("div");
+  query_button.className = "fancy_button";
+  query_button.innerHTML = "<a href='#'>Run Query</a>";
+  query_button.style.float ="left";
+  navbar.appendChild(query_button);
 
   var cm = CodeMirror(editor_pane.querySelector(".editor"), {
-    mode: "fm-sql",
     lineNumbers: true,
   });
 
@@ -146,9 +167,11 @@ FnordMetric.views.QueryPlayground = function() {
       query_editor.className = "query_editor horizontal_split";
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.left = "0";
+      editor_pane.style.float = "left";
       result_pane.style.width = (100 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
+      result_pane.style.float = "left";
       result_pane.style.height = editor_height + "px";
       result_pane.style.overflowY = "auto";
       editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
@@ -169,21 +192,25 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     cm.setSize("auto", editor_height - 46);
+    cm.setValue("SELECT time AS x FROM http_status_codes");
   }
 
   var render = function(elem) {
-    
+
     var menuitem_editor = document.getElementById("menuitem_editor");
     menuitem_editor.style.background = "rgba(0,0,0,0.04)";
     var menuitem_metrics = document.getElementById("menuitem_metrics");
     menuitem_metrics.style.background = "#fff";
-
+    elem.appendChild(navbar);
     elem.appendChild(editor_pane);
 
     elem.appendChild(editor_resizer_tooltip);
     elem.appendChild(result_pane);
 
-    //headbar.appendChild(split_button);
+    query_button.addEventListener('click', function() {
+      runQuery();
+    }, false);
+
     split_button.addEventListener('click', function() {
       horizontal = !horizontal;
 
@@ -191,7 +218,7 @@ FnordMetric.views.QueryPlayground = function() {
         editor_height = window.innerheight * 0.3;
       }
 
-      updatelayout();
+      updateLayout();
     }, false);
 
     editor_resizer_tooltip.addEventListener('drag',function (e) {
@@ -228,6 +255,19 @@ FnordMetric.views.QueryPlayground = function() {
     while (elem.firstChild) {
       elem.removeChild(elem.firstChild);
     }
+  };
+
+  var runQuery = function() {
+    var query = cm.getValue();
+    //query = SELECT time as x, value as y from http_status_codes LIMIT 100;
+    FnordMetric.httpPost("/query", query, function(r) {
+      if (r.status == 200) {
+        console.log(r.response);
+        result_pane.innerHTML = r.response;
+      } else {
+        alert("http post error");
+      }
+    });
   }
 
   return {
@@ -274,7 +314,7 @@ FnordMetric.WebUI = function() {
   };
 
   init();
-  renderView(FnordMetric.views.MetricList());
+  renderView(FnordMetric.views.QueryPlayground());
 }
 
 
