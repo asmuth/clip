@@ -187,8 +187,11 @@ void HTTPAPI::executeQuery(
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
 
-  auto input_stream = request->getBodyInputStream();
-  auto output_stream = response->getBodyOutputStream();
+  std::shared_ptr<util::InputStream> input_stream =
+      request->getBodyInputStream();
+
+  std::shared_ptr<util::OutputStream> output_stream =
+      response->getBodyOutputStream();
 
   // FIXPAUL move to thread/worker pool
   query::QueryService query_service;
@@ -197,9 +200,9 @@ void HTTPAPI::executeQuery(
 
   try {
     query_service.executeQuery(
-        input_stream.get(),
+        input_stream,
         query::QueryService::FORMAT_JSON,
-        output_stream.get(),
+        output_stream,
         std::move(table_repo));
 
   } catch (util::RuntimeException e) {

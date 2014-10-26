@@ -28,20 +28,23 @@ bool QueryEndpoint::handleHTTPRequest(
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
 
-    auto input_stream = request->getBodyInputStream();
-    auto output_stream = response->getBodyOutputStream();
+    std::shared_ptr<util::InputStream> input_stream =
+        request->getBodyInputStream();
+
+    std::shared_ptr<util::OutputStream> output_stream =
+        response->getBodyOutputStream();
 
     query::QueryService query_service;
     try {
       query_service.executeQuery(
-          input_stream.get(),
+          input_stream,
           query::QueryService::FORMAT_JSON,
-          output_stream.get());
+          output_stream);
 
     } catch (util::RuntimeException e) {
       response->clearBody();
 
-      util::JSONOutputStream json(std::move(output_stream));
+      util::JSONOutputStream json(output_stream);
       json.beginObject();
       json.addObjectEntry("status");
       json.addString("error");

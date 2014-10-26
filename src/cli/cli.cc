@@ -21,6 +21,8 @@
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/web/queryendpoint.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
 namespace cli {
@@ -134,7 +136,7 @@ void CLI::execute(Environment* env) {
   const auto& args = flags->getArgv();
 
   /* open input stream */
-  std::unique_ptr<util::InputStream> input;
+  std::shared_ptr<util::InputStream> input;
   if (args.size() == 1) {
     if (args[0] == "-") {
       if (env->verbose()) {
@@ -154,7 +156,7 @@ void CLI::execute(Environment* env) {
   }
 
   /* open output stream */
-  std::unique_ptr<util::OutputStream> output;
+  std::shared_ptr<util::OutputStream> output;
   if (flags->isSet("output")) {
     auto output_file = flags->getString("output");
 
@@ -172,10 +174,19 @@ void CLI::execute(Environment* env) {
 
   /* execute query */
   query::QueryService query_service;
+
+  query_service.registerBackend(
+      std::unique_ptr<fnordmetric::query::Backend>(
+          new fnordmetric::query::mysql_backend::MySQLBackend));
+
+  query_service.registerBackend(
+      std::unique_ptr<fnordmetric::query::Backend>(
+          new fnordmetric::query::csv_backend::CSVBackend));
+
   query_service.executeQuery(
-      input.get(),
+      input,
       getOutputFormat(env),
-      output.get());
+      output);
 }
 
 const query::QueryService::kFormat CLI::getOutputFormat(Environment* env) {

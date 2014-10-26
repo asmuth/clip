@@ -255,14 +255,18 @@ TEST_CASE(QueryTest, TestQueryService, [] () {
       "  LIMIT 30;";
 
   QueryService query_service;
+  query_service.registerBackend(
+      std::unique_ptr<fnordmetric::query::Backend>(
+          new fnordmetric::query::csv_backend::CSVBackend));
+
   auto input = fnordmetric::util::StringInputStream::fromString(query);
   auto output = fnordmetric::util::FileOutputStream::openFile(
       "build/tests/tmp/QueryTest_TestQueryService_out.svg.html");
 
   query_service.executeQuery(
-      input.get(),
+      std::move(input),
       QueryService::FORMAT_SVG,
-      output.get());
+      std::move(output));
 
   EXPECT_FILES_EQ(
       "test/fixtures/QueryTest_TestQueryService_out.svg.html",

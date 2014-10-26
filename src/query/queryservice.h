@@ -50,9 +50,9 @@ public:
    * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      util::InputStream* input_stream,
+      std::shared_ptr<util::InputStream> input_stream,
       kFormat output_format,
-      util::OutputStream* output_stream);
+      std::shared_ptr<util::OutputStream> output_stream);
 
   /**
    * Execute a query. This may raise an exception.
@@ -62,9 +62,9 @@ public:
    * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      util::InputStream* input_stream,
+      std::shared_ptr<util::InputStream> input_stream,
       kFormat output_format,
-      util::OutputStream* output_stream,
+      std::shared_ptr<util::OutputStream> output_stream,
       std::unique_ptr<TableRepository> table_repo);
 
   /**

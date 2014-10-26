@@ -15,8 +15,6 @@
 #include <fnordmetric/ui/svgtarget.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/jsonoutputstream.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
 namespace query {
@@ -24,9 +22,9 @@ namespace query {
 QueryService::QueryService() {}
 
 void QueryService::executeQuery(
-    util::InputStream* input_stream,
+    std::shared_ptr<util::InputStream> input_stream,
     kFormat output_format,
-    util::OutputStream* output_stream) {
+    std::shared_ptr<util::OutputStream> output_stream) {
   std::unique_ptr<TableRepository> table_repo(new TableRepository());
   executeQuery(
       input_stream,
@@ -36,9 +34,9 @@ void QueryService::executeQuery(
 }
 
 void QueryService::executeQuery(
-    util::InputStream* input_stream,
+    std::shared_ptr<util::InputStream> input_stream,
     kFormat output_format,
-    util::OutputStream* output_stream,
+    std::shared_ptr<util::OutputStream> output_stream,
     std::unique_ptr<TableRepository> table_repo) {
   std::string query_string;
   input_stream->readUntilEOF(&query_string);
@@ -50,19 +48,19 @@ void QueryService::executeQuery(
     switch (output_format) {
 
       case FORMAT_SVG: {
-        ui::SVGTarget target(output_stream);
+        ui::SVGTarget target(output_stream.get());
         renderCharts(&query, &target);
         break;
       }
 
       case FORMAT_JSON: {
-        //util::JSONOutputStream target(output_stream);
-        //renderJSON(&query, &target);
+        util::JSONOutputStream target(output_stream);
+        renderJSON(&query, &target);
         break;
       }
 
       case FORMAT_TABLE: {
-        renderTables(&query, output_stream);
+        renderTables(&query, output_stream.get());
         break;
       }
 
