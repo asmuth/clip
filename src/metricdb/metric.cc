@@ -240,6 +240,25 @@ void Metric::compact() {
       new_tables.emplace_back(table);
     }
   }
+
+
+  // create a new snapshot and commit modifications
+  {
+    std::lock_guard<std::mutex> append_lock_holder(append_mutex_);
+    std::lock_guard<std::mutex> head_lock_holder(head_mutex_);
+    auto new_snapshot = new MetricSnapshot();
+    new_snapshot->setWritable(head_->isWritable());
+
+    for (const auto& table : new_tables) {
+      new_snapshot->appendTable(table);
+    }
+
+    for (int i = old_tables.size(); i < head_->tables().size(); ++i) {
+      new_snapshot->appendTable(head_->tables()[i]);
+    }
+
+    head_.reset(new_snapshot);
+  }
 }
 
 
