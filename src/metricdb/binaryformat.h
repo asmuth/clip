@@ -22,28 +22,32 @@ namespace metricdb {
  *   <table_header> :=
  *       <uint32_t>          // metric key size
  *       <bytes>             // metric key
- *       *<feld_definition>  // field definitions
+ *       <uint64_t>          // generation
+ *       <uint32_t>          // number of parent generations
+ *       *<uint64_t>         // parent generations
  *
  *   <sample> :=
- *        <uint64_t>      // value
- *        *<field>        // fields
+ *        <uint64_t>      // sample value
+ *        *<label>        // sample labels
  *
- *   <field> :=
- *        <field_reference>
- *        <uint32_t>      // value len
- *        <bytes>         // value
+ *   <label> :=
+ *        <token>         // label key
+ *        <token>         // label value
  *
- *   <field_reference> :=
- *        <field_definition> | <field_id>
+ *   <token> :=
+ *        <anonymous_token> | <token_definition> | <token_reference>
  *
- *   <field_id> :=
- *        <uint32_t>      // key (must be < 0xffffffff)
+ *   <anonymous_token> :=
+ *        <uint32_t>      // string length (must be < 0xf0000000)
+ *        <bytes>         // string bytes
  *
- *   <field_definition> :=
- *        %xffffffff      // uint32_t
- *        <field_id>      // key
- *        <uint32_t>      // value len
- *        <bytes>         // value
+ *   <token_definition> :=
+ *        <uint32_t>      // token id (must be > 0xf0000000)
+ *        <uint32_t>      // string length (must be < 0xf0000000)
+ *        <bytes>         // string bytes
+ *
+ *   <token_reference> :=
+ *        <uint32_t>      // token id (must be > 0xf0000000)
  *
  */
 class BinaryFormat {
