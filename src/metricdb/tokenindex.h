@@ -27,10 +27,12 @@ public:
 
   uint32_t findToken(const std::string& key) const;
   uint32_t addToken(const std::string& key);
+  void addToken(const std::string& key, uint32_t id);
   std::string resolveToken(uint32_t token_id) const;
 
 protected:
   std::unordered_map<std::string, uint32_t> token_ids_;
+
   uint32_t max_token_id_;
   mutable std::mutex mutex_;
 };

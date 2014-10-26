@@ -8,9 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
+#include <fnordmetric/metricdb/samplereader.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/metricdb/tableheaderreader.h>
 #include <fnordmetric/metricdb/tableheaderwriter.h>
+#include <fnordmetric/metricdb/tokenindex.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -100,6 +102,25 @@ bool LiveTableRef::isWritable() const {
 
 size_t LiveTableRef::bodySize() const {
   return table_->bodySize();
+}
+
+void LiveTableRef::importTokenIndex(TokenIndex* token_index) {
+  auto cur = cursor();
+
+  while (cur->valid()) {
+    void* data;
+    size_t data_size;
+    cur->getData(&data, &data_size);
+
+    SampleReader<double> sample(data, data_size, token_index);
+    for (const auto& def : sample.tokenDefinitions()) {
+      token_index->addToken(def.second, def.first);
+    }
+
+    if (!cur->next()) {
+      break;
+    }
+  }
 }
 
 }

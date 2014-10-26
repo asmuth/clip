@@ -22,7 +22,7 @@ AbstractSampleReader::AbstractSampleReader(
     token_index_(token_index),
     labels_read_(false) {}
 
-std::vector<std::pair<std::string, std::string>>
+const std::vector<std::pair<std::string, std::string>>&
     AbstractSampleReader::labels() {
   if (!labels_read_) {
     labels_read_ = true;
@@ -37,12 +37,19 @@ std::vector<std::pair<std::string, std::string>>
   return labels_;
 }
 
+const std::vector<std::pair<uint32_t, std::string>>&
+    AbstractSampleReader::tokenDefinitions() {
+  labels();
+  return token_definitions_;
+}
+
 std::string AbstractSampleReader::readToken() {
   auto token_ref = *readUInt32();
   uint32_t string_len;
+  uint32_t token_def = 0;
 
   if (token_ref == 0xffffffff) {
-    readUInt32(); // token id
+    token_def = *readUInt32();
     string_len = *readUInt32();
   } else if (token_ref >= TokenIndex::kMinTokenID) {
     return token_index_->resolveToken(token_ref);
@@ -50,7 +57,13 @@ std::string AbstractSampleReader::readToken() {
     string_len = token_ref;
   }
 
-  return std::string(readString(string_len), string_len);
+  auto token = std::string(readString(string_len), string_len);
+
+  if (token_def > 0) {
+    token_definitions_.emplace_back(token_def, token);
+  }
+
+  return token;
 }
 
 template <> double SampleReader<double>::readValue() {

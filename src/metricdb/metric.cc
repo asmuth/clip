@@ -73,6 +73,7 @@ Metric::Metric(
       }
 
       if (table->generation() == gen) {
+        table->importTokenIndex(&token_index_);
         snapshot->appendTable(std::move(table));
         table.reset(nullptr);
       }
