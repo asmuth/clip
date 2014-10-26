@@ -20,6 +20,7 @@ namespace metricdb {
 static const char kMetricsUrl[] = "/metrics";
 static const char kMetricsUrlPrefix[] = "/metrics/";
 static const char kQueryUrl[] = "/query";
+static const char kLabelParamPrefix[] = "label[";
 
 HTTPAPI::HTTPAPI(MetricRepository* metric_repo) : metric_repo_(metric_repo) {}
 
@@ -117,7 +118,23 @@ void HTTPAPI::insertSample(
     return;
   }
 
+  std::vector<std::pair<std::string, std::string>> labels;
+  for (const auto& param : params) {
+    const auto& key = param.first;
+    const auto& value = param.second;
+
+    if (key.compare(0, sizeof(kLabelParamPrefix) - 1, kLabelParamPrefix) == 0 &&
+        key.back() == ']') {
+      auto label_key = key.substr(
+          sizeof(kLabelParamPrefix) - 1,
+          key.size() - sizeof(kLabelParamPrefix));
+
+      labels.emplace_back(label_key, value);
+    }
+  }
+
   Sample<double> sample;
+  sample.labels = std::move(labels);
   try {
     sample.value = std::stod(value_str);
   } catch (std::exception& e) {
