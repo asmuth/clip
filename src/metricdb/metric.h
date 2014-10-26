@@ -27,6 +27,10 @@ namespace metricdb {
 
 class Metric {
 public:
+  static constexpr const size_t kLiveTableMaxSize = 2 << 19; /* 1MB */
+  static constexpr const uint64_t kLiveTableIdleTimeMicros = 
+      5 * 60 * 1000000; /* 5 minutes */
+
   Metric(const std::string& key, io::FileRepository* file_repo);
 
   Metric(
@@ -59,6 +63,10 @@ protected:
   std::mutex compaction_mutex_;
   uint64_t max_generation_;
   TokenIndex token_index_;
+
+  size_t live_table_max_size_; // FIXPAUL make atomic
+  uint64_t live_table_idle_time_micros_; // FIXPAUL make atomic
+  uint64_t last_insert_; // FIXPAUL make atomic
 };
 
 }

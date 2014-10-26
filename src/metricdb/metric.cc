@@ -28,7 +28,10 @@ Metric::Metric(
     key_(key),
     file_repo_(file_repo),
     head_(nullptr),
-    max_generation_(0) {
+    max_generation_(0),
+    live_table_max_size_(kLiveTableMaxSize),
+    live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
+    last_insert_(0) {
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
@@ -42,7 +45,10 @@ Metric::Metric(
     io::FileRepository* file_repo,
     std::vector<std::unique_ptr<TableRef>>&& tables) :
     key_(key),
-    file_repo_(file_repo) {
+    file_repo_(file_repo),
+    live_table_max_size_(kLiveTableMaxSize),
+    live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
+    last_insert_(0) {
   TableRef* head_table = nullptr;
   std::vector<uint64_t> generations;
 
@@ -107,7 +113,7 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
     if (head_.get() != nullptr &&
         head_->isWritable() &&
         head_->tables().back()->isWritable() &&
-        head_->tables().back()->bodySize() < (2 << 16)) {
+        head_->tables().back()->bodySize() < live_table_max_size_) {
       return head_;
     }
   }
@@ -131,6 +137,7 @@ void Metric::addSample(const Sample<double>& sample) {
 
   uint64_t now = fnord::util::WallClock::unixMicros();
   table->addSample(&writer, now);
+  last_insert_ = now;
 }
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
@@ -209,6 +216,12 @@ void Metric::compact(CompactionPolicy* compaction /* = nullptr */) {
   }
 
   auto old_tables = snapshot->tables();
+  auto idle_time_micros = WallClock::unixMicros() - last_insert_;
+
+  if (idle_time_micros < live_table_idle_time_micros_) {
+    old_tables.pop_back();
+  }
+
   std::vector<std::shared_ptr<TableRef>> new_tables;
 
   // finalize unfinished sstables
