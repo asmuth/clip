@@ -19,22 +19,54 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
+std::unique_ptr<TableRef> TableRef::openTable(const std::string filename) {
+  auto file = io::File::openFile(
+      filename,
+      io::File::O_READ | io::File::O_WRITE);
+
+  sstable::SSTableReader reader(file.clone());
+  auto header_buf = reader.readHeader();
+  TableHeaderReader header(header_buf.data(), header_buf.size());
+
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Opening sstable: '%s'",
+        filename.c_str());
+  }
+
+  if (reader.bodySize() == 0) {
+    return TableRef::reopenTable(
+        filename,
+        header.metricKey(),
+        std::move(file),
+        header.generation(),
+        header.parents());
+  } else {
+    return TableRef::openTable(
+        filename,
+        header.metricKey(),
+        header.generation(),
+        header.parents());
+  }
+}
+
 std::unique_ptr<TableRef> TableRef::createTable(
-    const std::string filename,
+    const std::string& filename,
+    const std::string& metric_key,
     fnord::io::File&& file,
-    const std::string& key,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
         "Creating new sstable for metric: '%s', generation: %" PRIu64,
-        key.c_str(),
+        metric_key.c_str(),
         generation);
   }
 
   // build header
-  TableHeaderWriter header(key, generation, parents);
+  TableHeaderWriter header(metric_key, generation, parents);
 
   // create new sstable
   sstable::IndexProvider indexes;
@@ -46,6 +78,7 @@ std::unique_ptr<TableRef> TableRef::createTable(
 
   auto table_ref = new LiveTableRef(
       filename,
+      metric_key,
       std::move(live_sstable),
       generation,
       parents);
@@ -54,7 +87,8 @@ std::unique_ptr<TableRef> TableRef::createTable(
 }
 
 std::unique_ptr<TableRef> TableRef::reopenTable(
-    const std::string filename,
+    const std::string& filename,
+    const std::string& metric_key,
     fnord::io::File&& file,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
@@ -66,6 +100,7 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
 
   auto table_ref = new LiveTableRef(
       filename,
+      metric_key,
       std::move(table),
       generation,
       parents);
@@ -74,11 +109,13 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
 }
 
 std::unique_ptr<TableRef> TableRef::openTable(
-    const std::string filename,
+    const std::string& filename,
+    const std::string& metric_key,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
   auto table_ref = new ReadonlyTableRef(
       filename,
+      metric_key,
       generation,
       parents);
 
@@ -87,14 +124,20 @@ std::unique_ptr<TableRef> TableRef::openTable(
 
 TableRef::TableRef(
     const std::string& filename,
+    const std::string& metric_key,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
     filename_(filename),
+    metric_key_(metric_key),
     generation_(generation),
     parents_(parents) {}
 
 const std::string& TableRef::filename() const {
   return filename_;
+}
+
+const std::string& TableRef::metricKey() const {
+  return metric_key_;
 }
 
 uint64_t TableRef::generation() const {
@@ -107,10 +150,11 @@ const std::vector<uint64_t> TableRef::parents() const {
 
 LiveTableRef::LiveTableRef(
     const std::string& filename,
+    const std::string& metric_key,
     std::unique_ptr<sstable::LiveSSTable> table,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
-    TableRef(filename, generation, parents),
+    TableRef(filename, metric_key, generation, parents),
     table_(std::move(table)),
     is_writable_(true) {}
 
@@ -161,14 +205,16 @@ void LiveTableRef::finalize(TokenIndex* token_index) {
 
 ReadonlyTableRef::ReadonlyTableRef(
     const std::string& filename,
+    const std::string& metric_key,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
-    TableRef(filename, generation, parents) {}
+    TableRef(filename, metric_key, generation, parents) {}
 
 ReadonlyTableRef::ReadonlyTableRef(
     const TableRef& live_table) :
     TableRef(
         live_table.filename(),
+        live_table.metricKey(),
         live_table.generation(),
         live_table.parents()) {}
 

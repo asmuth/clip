@@ -158,8 +158,8 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
 
     snapshot->appendTable(TableRef::createTable(
         fileref.absolute_path,
-        std::move(file),
         key_,
+        std::move(file),
         ++max_generation_,
         parents));
   }

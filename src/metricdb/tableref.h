@@ -22,28 +22,28 @@ class TableHeaderReader;
 
 class TableRef {
 public:
-  TableRef(
-      const std::string& filename,
-      uint64_t generation,
-      const std::vector<uint64_t>& parents);
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
 
+  static std::unique_ptr<TableRef> openTable(const std::string filename);
+
   static std::unique_ptr<TableRef> createTable(
-      const std::string filename,
+      const std::string& filename,
+      const std::string& metric_key,
       fnord::io::File&& file,
-      const std::string& key,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
   static std::unique_ptr<TableRef> reopenTable(
-      const std::string filename,
+      const std::string& filename,
+      const std::string& metric_key,
       fnord::io::File&& file,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
   static std::unique_ptr<TableRef> openTable(
-      const std::string filename,
+      const std::string& filename,
+      const std::string& metric_key,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
@@ -56,11 +56,19 @@ public:
   virtual size_t bodySize() const = 0;
 
   const std::string& filename() const;
+  const std::string& metricKey() const;
   uint64_t generation() const;
   const std::vector<uint64_t> parents() const;
 
 protected:
+  TableRef(
+      const std::string& filename,
+      const std::string& metric_key,
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
+
   std::string filename_;
+  std::string metric_key_;
   uint64_t generation_;
   std::vector<uint64_t> parents_;
 };
@@ -69,6 +77,7 @@ class LiveTableRef : public TableRef {
 public:
   LiveTableRef(
       const std::string& filename,
+      const std::string& metric_key,
       std::unique_ptr<sstable::LiveSSTable> table,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
@@ -91,6 +100,7 @@ class ReadonlyTableRef : public TableRef {
 public:
   explicit ReadonlyTableRef(
       const std::string& filename,
+      const std::string& metric_key,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 

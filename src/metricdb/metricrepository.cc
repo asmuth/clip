@@ -24,36 +24,8 @@ MetricRepository::MetricRepository(
       std::vector<std::unique_ptr<TableRef>>> tables;
 
   file_repo->listFiles([this, &tables] (const std::string& filename) -> bool {
-    auto file = io::File::openFile(
-        filename,
-        io::File::O_READ | io::File::O_WRITE);
-
-    sstable::SSTableReader reader(file.clone());
-    auto header_buf = reader.readHeader();
-    TableHeaderReader header(header_buf.data(), header_buf.size());
-
-    if (env()->verbose()) {
-      env()->logger()->printf(
-          "DEBUG",
-          "Opening sstable: '%s'",
-          filename.c_str());
-    }
-
-    if (reader.bodySize() == 0) {
-      tables[header.metricKey()].emplace_back(
-          TableRef::reopenTable(
-              filename,
-              std::move(file),
-              header.generation(),
-              header.parents()));
-    } else {
-      tables[header.metricKey()].emplace_back(
-          TableRef::openTable(
-              filename,
-              header.generation(),
-              header.parents()));
-    }
-
+    auto table_ref = TableRef::openTable(filename);
+    tables[table_ref->metricKey()].emplace_back(std::move(table_ref));
     return true;
   });
 
