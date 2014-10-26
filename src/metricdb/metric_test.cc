@@ -56,8 +56,8 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
       util::DateTime::epoch(),
       util::DateTime::now(),
       [&num_samples] (MetricCursor* cur) -> bool {
-        auto smpl = cur->sample();
-        EXPECT_EQ(smpl->value<double>(), 23);
+        auto smpl = cur->sample<double>();
+        EXPECT_EQ(smpl->value(), 23);
         num_samples++;
         return true;
       });

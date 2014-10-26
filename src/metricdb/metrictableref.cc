@@ -41,12 +41,12 @@ void MetricTableRef::executeScan(query::TableScan* scan) {
       begin,
       limit,
       [scan] (MetricCursor* cursor) -> bool {
-        auto sample = cursor->sample();
+        auto sample = cursor->sample<double>();
         auto time = fnord::util::DateTime(cursor->time());
 
         std::vector<query::SValue> row;
         row.emplace_back(time);
-        row.emplace_back(sample->value<double>());
+        row.emplace_back(sample->value());
 
         return scan->nextRow(row.data(), row.size());
       });

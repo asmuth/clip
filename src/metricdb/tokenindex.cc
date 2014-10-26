@@ -40,6 +40,10 @@ uint32_t TokenIndex::addToken(const std::string& key) {
   return new_id;
 }
 
+std::string TokenIndex::resolveToken(uint32_t token_id) const {
+  return "__FNORD__";
+}
+
 
 }
 }

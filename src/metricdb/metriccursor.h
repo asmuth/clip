@@ -11,6 +11,7 @@
 #define _FNORD_METRICDB_METRICCURSOR_H
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/samplereader.h>
+#include <fnordmetric/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -32,17 +33,30 @@ public:
   bool valid();
 
   uint64_t time();
-  SampleReader* sample();
+
+  template <typename T>
+  SampleReader<T>* sample();
 
 protected:
   std::shared_ptr<MetricSnapshot> snapshot_;
   int table_index_;
   fnord::sstable::Cursor* tableCursor();
   std::unique_ptr<fnord::sstable::Cursor> table_cur_;
-  std::unique_ptr<SampleReader> sample_;
+  std::unique_ptr<fnord::util::BinaryMessageReader> sample_;
   TokenIndex* token_index_;
 };
 
+// impl
+template <typename T>
+SampleReader<T>* MetricCursor::sample() {
+  void* data;
+  size_t data_size;
+  tableCursor()->getData(&data, &data_size);
+
+  auto reader = new SampleReader<T>(data, data_size, token_index_);
+  sample_.reset(reader);
+  return reader;
+}
 
 }
 }

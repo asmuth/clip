@@ -180,7 +180,7 @@ void HTTPAPI::renderMetricSampleScan(
       fnord::util::DateTime::epoch(),
       fnord::util::DateTime::now(),
       [&json, &i] (MetricCursor* cursor) -> bool {
-        auto sample = cursor->sample();
+        auto sample = cursor->sample<double>();
         if (i++ > 0) { json.addComma(); }
         json.beginObject();
 
@@ -189,7 +189,7 @@ void HTTPAPI::renderMetricSampleScan(
         json.addComma();
 
         json.addObjectEntry("value");
-        json.addLiteral<double>(sample->value<double>());
+        json.addLiteral<double>(sample->value());
         json.addComma();
 
         json.addObjectEntry("labels");
