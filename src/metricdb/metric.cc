@@ -186,7 +186,7 @@ void Metric::scanSamples(
   }
 }
 
-void Metric::compact() {
+void Metric::compact(Compaction* compaction /* = nullptr */) {
   if (!compaction_mutex_.try_lock()) {
     return;
   }
@@ -241,6 +241,10 @@ void Metric::compact() {
     }
   }
 
+  // run the compaction
+  if (compaction != nullptr) {
+    compaction->compact(&new_tables);
+  }
 
   // create a new snapshot and commit modifications
   {
