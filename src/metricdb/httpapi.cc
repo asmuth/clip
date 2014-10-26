@@ -11,7 +11,6 @@
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/metrictablerepository.h>
-#include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/stringutil.h>
 
 namespace fnordmetric {
@@ -20,6 +19,7 @@ namespace metricdb {
 static const char kMetricsUrl[] = "/metrics";
 static const char kMetricsUrlPrefix[] = "/metrics/";
 static const char kQueryUrl[] = "/query";
+static const char kLabelParamPrefix[] = "label[";
 
 HTTPAPI::HTTPAPI(MetricRepository* metric_repo) : metric_repo_(metric_repo) {}
 
@@ -87,10 +87,7 @@ void HTTPAPI::renderMetricList(
   int i = 0;
   for (const auto& metric : metric_repo_->listMetrics()) {
     if (i++ > 0) { json.addComma(); }
-    json.beginObject();
-    json.addObjectEntry("key");
-    json.addString(metric->key());
-    json.endObject();
+    renderMetricJSON(metric, &json);
   }
 
   json.endArray();
@@ -117,7 +114,23 @@ void HTTPAPI::insertSample(
     return;
   }
 
+  std::vector<std::pair<std::string, std::string>> labels;
+  for (const auto& param : params) {
+    const auto& key = param.first;
+    const auto& value = param.second;
+
+    if (key.compare(0, sizeof(kLabelParamPrefix) - 1, kLabelParamPrefix) == 0 &&
+        key.back() == ']') {
+      auto label_key = key.substr(
+          sizeof(kLabelParamPrefix) - 1,
+          key.size() - sizeof(kLabelParamPrefix));
+
+      labels.emplace_back(label_key, value);
+    }
+  }
+
   Sample<double> sample;
+  sample.labels = std::move(labels);
   try {
     sample.value = std::stod(value_str);
   } catch (std::exception& e) {
@@ -154,6 +167,11 @@ void HTTPAPI::renderMetricSampleScan(
   util::JSONOutputStream json(response->getBodyOutputStream());
 
   json.beginObject();
+
+  json.addObjectEntry("metric");
+  renderMetricJSON(metric, &json);
+  json.addComma();
+
   json.addObjectEntry("samples");
   json.beginArray();
 
@@ -172,6 +190,21 @@ void HTTPAPI::renderMetricSampleScan(
 
         json.addObjectEntry("value");
         json.addLiteral<double>(sample->value<double>());
+        json.addComma();
+
+        json.addObjectEntry("labels");
+        json.beginObject();
+        auto labels = sample->labels();
+        for (int n = 0; n < labels.size(); n++) {
+          if (n > 0) {
+            json.addComma();
+          }
+
+          json.addObjectEntry(labels[n].first);
+          json.addString(labels[n].second);
+        }
+        json.endObject();
+
         json.endObject();
         return true;
       });
@@ -221,6 +254,16 @@ void HTTPAPI::executeQuery(
   response->addHeader(
       "Content-Length",
       std::to_string(response->getBody().size()));
+}
+
+
+void HTTPAPI::renderMetricJSON(
+    Metric* metric,
+    util::JSONOutputStream* json) const {
+  json->beginObject();
+  json->addObjectEntry("key");
+  json->addString(metric->key());
+  json->endObject();
 }
 
 }

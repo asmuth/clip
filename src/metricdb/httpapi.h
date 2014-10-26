@@ -13,10 +13,12 @@
 #include <fnordmetric/http/httphandler.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
+#include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {
 namespace metricdb {
+class Metric;
 class MetricRepository;
 
 class HTTPAPI : public http::HTTPHandler {
@@ -49,6 +51,10 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response,
       util::URI* uri);
+
+  void renderMetricJSON(
+      Metric* metric,
+      util::JSONOutputStream* json) const;
 
   MetricRepository* metric_repo_;
 };

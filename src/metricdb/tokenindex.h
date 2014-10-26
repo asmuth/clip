@@ -7,32 +7,33 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_METRICDB_SAMPLEREADER_H
-#define _FNORDMETRIC_METRICDB_SAMPLEREADER_H
-#include <fnordmetric/util/binarymessagereader.h>
+#ifndef _FNORDMETRIC_METRICDB_TOKENINDEX_H
+#define _FNORDMETRIC_METRICDB_TOKENINDEX_H
+#include <memory>
+#include <mutex>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace fnordmetric {
-namespace metricdb {
-class TokenIndex;
+namespace metricdb  {
 
-class SampleReader : public fnord::util::BinaryMessageReader {
+class TokenIndex {
 public:
-  SampleReader(
-      void* data,
-      size_t size,
-      TokenIndex* token_index);
+  static const int kMinTokenID = 0xf0000000;
 
-  template <typename T>
-  T value();
+  TokenIndex();
 
-  std::vector<std::pair<std::string, std::string>> labels();
+  uint32_t findToken(const std::string& key) const;
+  uint32_t addToken(const std::string& key);
 
 protected:
-  TokenIndex* token_index_;
+  std::unordered_map<std::string, uint32_t> token_ids_;
+  uint32_t max_token_id_;
+  mutable std::mutex mutex_;
 };
+
 
 }
 }

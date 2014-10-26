@@ -14,6 +14,7 @@
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/metricdb/samplereader.h>
+#include <fnordmetric/metricdb/tokenindex.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/datetime.h>
 #include <string>
@@ -53,6 +54,7 @@ protected:
   uint64_t max_generation_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;
+  TokenIndex token_index_;
 };
 
 }
