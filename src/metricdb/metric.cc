@@ -130,7 +130,7 @@ void Metric::addSample(const Sample<double>& sample) {
   auto snapshot = getOrCreateSnapshot();
   auto& table = snapshot->tables().back();
 
-  uint64_t now = fnord::util::WallClock::unixMillis();
+  uint64_t now = fnord::util::WallClock::unixMicros();
   table->addSample(&writer, now);
 }
 

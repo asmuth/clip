@@ -8,6 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metrictableref.h>
+#include <fnordmetric/sql/runtime/tablescan.h>
+#include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {
@@ -32,8 +34,24 @@ int MetricTableRef::getColumnIndex(const std::string& name) {
 }
 
 void MetricTableRef::executeScan(query::TableScan* scan) {
+  auto begin = fnord::util::DateTime::epoch();
+  auto limit = fnord::util::DateTime::now();
 
+  metric_->scanSamples(
+      begin,
+      limit,
+      [scan] (MetricCursor* cursor) -> bool {
+        auto sample = cursor->sample();
+        auto time = fnord::util::DateTime(cursor->time());
+
+        std::vector<query::SValue> row;
+        row.emplace_back(time);
+        row.emplace_back(sample->value<double>());
+
+        return scan->nextRow(row.data(), row.size());
+      });
 }
+
 
 }
 }
