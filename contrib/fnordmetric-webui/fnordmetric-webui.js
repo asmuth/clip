@@ -46,11 +46,19 @@ FnordMetric.views.MetricList = function() {
 
     function createListItem(data) {
       var list_item_row = document.createElement("tr");
+      var i = 0;
       Object.keys(data).map(function(k) {
+        i++;
         var list_item = document.createElement("td");
         list_item.innerHTML = data[k];
         list_item_row.appendChild(list_item);
       });
+
+      for (; i < 4; i++) {
+        var list_item = document.createElement("td");
+        list_item_row.appendChild(list_item);
+      }
+
       list_container.appendChild(list_item_row);
     }
 
@@ -66,10 +74,6 @@ FnordMetric.views.MetricList = function() {
       if (r.status == 200) {
         var metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
-        //FIXME
-        metrics_data[0].key2 = ["statuscode", "hostname"];
-        metrics_data[0].key3 = 1414241420602240;
-        metrics_data[0].key4 = 24641536;
         for (var i = 0; i < metrics_data.length; i++) {
           createListItem(metrics_data[i]);
         }
