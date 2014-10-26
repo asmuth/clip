@@ -186,7 +186,7 @@ void Metric::scanSamples(
   }
 }
 
-void Metric::compact(Compaction* compaction /* = nullptr */) {
+void Metric::compact(CompactionPolicy* compaction /* = nullptr */) {
   if (!compaction_mutex_.try_lock()) {
     return;
   }

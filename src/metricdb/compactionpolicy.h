@@ -7,17 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_METRICDB_COMPACTION_H_
-#define _FNORDMETRIC_METRICDB_COMPACTION_H_
+#ifndef _FNORDMETRIC_METRICDB_COMPACTIONPOLICY_H_
+#define _FNORDMETRIC_METRICDB_COMPACTIONPOLICY_H_
 #include <fnordmetric/metricdb/tableref.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-class Compaction {
+class CompactionPolicy {
 public:
-  Compaction() {}
-  virtual ~Compaction() {}
+  CompactionPolicy() {}
+  virtual ~CompactionPolicy() {}
 
   virtual void compact(std::vector<std::shared_ptr<TableRef>>* tables) = 0;
 

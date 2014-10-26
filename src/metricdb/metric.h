@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/metricdb/compaction.h>
+#include <fnordmetric/metricdb/compactionpolicy.h>
 #include <fnordmetric/metricdb/metriccursor.h>
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
@@ -44,7 +44,7 @@ public:
   std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
 
-  void compact(Compaction* compaction = nullptr);
+  void compact(CompactionPolicy* compaction = nullptr);
 
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
