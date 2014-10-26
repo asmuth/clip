@@ -12,6 +12,7 @@
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/sstable/livesstable.h>
+#include <fnordmetric/sstable/sstablereader.h>
 #include <string>
 
 using namespace fnord;
@@ -35,7 +36,10 @@ public:
       fnord::io::File&& file,
       TableHeaderReader* header);
 
-  static std::unique_ptr<TableRef> openTable(fnord::io::File&& file);
+  static std::unique_ptr<TableRef> openTable(
+      const std::string filename,
+      TableHeaderReader* header,
+      sstable::SSTableReader* reader);
 
   virtual void addSample(SampleWriter const* sample, uint64_t time) = 0;
   virtual std::unique_ptr<sstable::Cursor> cursor() = 0;
@@ -74,6 +78,26 @@ protected:
   std::unique_ptr<sstable::LiveSSTable> table_;
 };
 
+class ReadonlyTableRef : public TableRef {
+public:
+  ReadonlyTableRef(
+      const std::string& filename,
+      uint64_t generation,
+      const std::vector<uint64_t>& parents);
+
+  void addSample(SampleWriter const* sample, uint64_t time) override;
+  std::unique_ptr<sstable::Cursor> cursor() override;
+
+  void importTokenIndex(TokenIndex* token_index) override;
+  void finalize(TokenIndex* token_index) override;
+
+  bool isWritable() const override;
+  size_t bodySize() const override;
+
+protected:
+  bool is_writable_;
+  std::unique_ptr<sstable::LiveSSTable> table_;
+};
 
 }
 }

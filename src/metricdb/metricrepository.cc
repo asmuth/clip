@@ -43,7 +43,8 @@ MetricRepository::MetricRepository(
       tables[header.metricKey()].emplace_back(
           TableRef::reopenTable(std::move(file), &header));
     } else {
-      RAISE(kNotYetImplementedError, "fnord");
+      tables[header.metricKey()].emplace_back(
+          TableRef::openTable(filename, &header, &reader));
     }
 
     return true;

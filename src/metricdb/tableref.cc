@@ -68,6 +68,18 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
   return std::unique_ptr<TableRef>(table_ref);
 }
 
+std::unique_ptr<TableRef> TableRef::openTable(
+    const std::string filename,
+    TableHeaderReader* header,
+    sstable::SSTableReader* reader) {
+  auto table_ref = new ReadonlyTableRef(
+      filename,
+      header->generation(),
+      header->parents());
+
+  return std::unique_ptr<TableRef>(table_ref);
+}
+
 TableRef::TableRef(
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
@@ -133,6 +145,35 @@ void LiveTableRef::finalize(TokenIndex* token_index) {
       token_index_writer.size());
 
   table_->finalize();
+}
+
+ReadonlyTableRef::ReadonlyTableRef(
+    const std::string& filename,
+    uint64_t generation,
+    const std::vector<uint64_t>& parents) :
+    TableRef(generation, parents) {}
+
+void ReadonlyTableRef::addSample(SampleWriter const* sample, uint64_t time) {
+  RAISE(kIllegalStateError, "table is immutable");
+}
+
+std::unique_ptr<sstable::Cursor> ReadonlyTableRef::cursor() {
+
+}
+
+void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
+}
+
+void ReadonlyTableRef::finalize(TokenIndex* token_index) {
+  RAISE(kIllegalStateError, "table is immutable");
+}
+
+bool ReadonlyTableRef::isWritable() const {
+  return false;
+}
+
+size_t ReadonlyTableRef::bodySize() const {
+  return 0;
 }
 
 }

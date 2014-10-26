@@ -48,7 +48,7 @@ public:
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
-  std::shared_ptr<MetricSnapshot> createSnapshot();
+  std::shared_ptr<MetricSnapshot> createSnapshot(bool writable);
 
   const std::string key_;
   io::FileRepository const* file_repo_;

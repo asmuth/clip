@@ -26,14 +26,17 @@ public:
 
   void appendTable(std::shared_ptr<TableRef> table);
   const std::vector<std::shared_ptr<TableRef>>& tables() const;
-
   std::shared_ptr<MetricSnapshot> clone() const;
+
+  void setWritable(bool writable);
+  bool isWritable() const;
 
 protected:
   explicit MetricSnapshot(
       const std::vector<std::shared_ptr<TableRef>>& tables);
 
   std::vector<std::shared_ptr<TableRef>> tables_;
+  bool writable_;
 };
 
 }

@@ -105,6 +105,7 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
     std::lock_guard<std::mutex> lock_holder(head_mutex_);
 
     if (head_.get() != nullptr &&
+        head_->isWritable() &&
         head_->tables().back()->isWritable() &&
         head_->tables().back()->bodySize() < (2 << 16)) {
       return head_;
@@ -112,7 +113,7 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
   }
 
   std::lock_guard<std::mutex> lock_holder(head_mutex_);
-  auto new_snapshot = createSnapshot();
+  auto new_snapshot = createSnapshot(true);
   head_ = new_snapshot;
   return head_;
 }
@@ -133,7 +134,7 @@ void Metric::addSample(const Sample<double>& sample) {
 }
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
-std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
+std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
   std::shared_ptr<MetricSnapshot> snapshot;
   std::vector<uint64_t> parents;
 
@@ -146,17 +147,21 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
     }
   }
 
-  // open new file
-  auto fileref = file_repo_->createFile();
-  auto file = io::File::openFile(
-      fileref.absolute_path,
-      io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+  snapshot->setWritable(writable);
 
-  snapshot->appendTable(TableRef::createTable(
-      std::move(file),
-      key_,
-      max_generation_++,
-      parents));
+  if (writable) {
+    // open new file
+    auto fileref = file_repo_->createFile();
+    auto file = io::File::openFile(
+        fileref.absolute_path,
+        io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+
+    snapshot->appendTable(TableRef::createTable(
+        std::move(file),
+        key_,
+        max_generation_++,
+        parents));
+  }
 
   return snapshot;
 }
@@ -194,15 +199,15 @@ void Metric::compact() {
         key_.c_str());
   }
 
-  // create a new snapshot
+  // create a new snapshot and make all tables immutable
   std::shared_ptr<MetricSnapshot> snapshot;
   {
-    std::lock_guard<std::mutex> lock_holder(head_mutex_);
-    snapshot = createSnapshot();
+    std::lock_guard<std::mutex> append_lock_holder(append_mutex_);
+    std::lock_guard<std::mutex> head_lock_holder(head_mutex_);
+    snapshot = createSnapshot(false);
   }
 
   auto old_tables = snapshot->tables();
-  old_tables.pop_back();
   std::vector<std::shared_ptr<TableRef>> new_tables;
 
   // finalize unfinished sstables
