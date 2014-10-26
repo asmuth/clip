@@ -10,13 +10,16 @@ body {
   padding-bottom: 20px;
 }
 
-#navbar {
-  height: 48px;
-  position: absolute;
+.navbar {
+  height: 35px;
   width: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
+  margin: 0px;
+  line-height: 35px;
+}
+
+.navbar div {
+  float: right;
+  margin-right: 20px;
 }
 
 .query_editor .editor_pane,
@@ -64,6 +67,10 @@ body {
   width: 6px;
   min-height: 300px;
   cursor: ew-resize;
+}
+
+.viewport {
+  margin-top: 65px;
 }
 
 .headbar {
