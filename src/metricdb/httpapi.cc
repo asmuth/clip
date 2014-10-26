@@ -11,7 +11,6 @@
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/metrictablerepository.h>
-#include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/stringutil.h>
 
 namespace fnordmetric {
@@ -88,10 +87,7 @@ void HTTPAPI::renderMetricList(
   int i = 0;
   for (const auto& metric : metric_repo_->listMetrics()) {
     if (i++ > 0) { json.addComma(); }
-    json.beginObject();
-    json.addObjectEntry("key");
-    json.addString(metric->key());
-    json.endObject();
+    renderMetricJSON(metric, &json);
   }
 
   json.endArray();
@@ -171,6 +167,11 @@ void HTTPAPI::renderMetricSampleScan(
   util::JSONOutputStream json(response->getBodyOutputStream());
 
   json.beginObject();
+
+  json.addObjectEntry("metric");
+  renderMetricJSON(metric, &json);
+  json.addComma();
+
   json.addObjectEntry("samples");
   json.beginArray();
 
@@ -253,6 +254,16 @@ void HTTPAPI::executeQuery(
   response->addHeader(
       "Content-Length",
       std::to_string(response->getBody().size()));
+}
+
+
+void HTTPAPI::renderMetricJSON(
+    Metric* metric,
+    util::JSONOutputStream* json) const {
+  json->beginObject();
+  json->addObjectEntry("key");
+  json->addString(metric->key());
+  json->endObject();
 }
 
 }
