@@ -226,7 +226,8 @@ void ReadonlyTableRef::addSample(SampleWriter const* sample, uint64_t time) {
 }
 
 std::unique_ptr<sstable::Cursor> ReadonlyTableRef::cursor() {
-
+  auto table = openTable();
+  return table->getCursor();
 }
 
 void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {

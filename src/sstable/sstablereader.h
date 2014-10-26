@@ -34,10 +34,7 @@ public:
   /**
    * Get an sstable cursor for the body of this sstable
    */
-  //std::unique_ptr<Cursor> getBodyCursor();
-
-  //template <typename IndexType>
-  //IndexType* getIndex() const;
+  std::unique_ptr<Cursor> getCursor();
 
   util::Buffer readHeader();
   util::Buffer readFooter(uint32_t type);
@@ -46,9 +43,13 @@ public:
   size_t headerSize() const;
 
 protected:
-/*
+
   class Cursor : public sstable::Cursor {
   public:
+    Cursor(
+        io::File&& file,
+        size_t begin,
+        size_t limit);
 
     void seekTo(size_t body_offset) override;
     bool next() override;
@@ -56,12 +57,11 @@ protected:
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
   protected:
-    std::unique_ptr<io::PageManager::PageRef> getPage();
-    LiveSSTable* table_;
-    io::MmapPageManager* mmap_;
-    size_t pos_;
+    io::File file_;
+    size_t begin_;
+    size_t limit_;
   };
-*/
+
 private:
   io::File file_;
 

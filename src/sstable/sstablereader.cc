@@ -71,6 +71,15 @@ util::Buffer SSTableReader::readFooter(uint32_t type) {
   return util::Buffer(0);
 }
 
+std::unique_ptr<Cursor> SSTableReader::getCursor() {
+  auto cursor = new Cursor(
+      file_.clone(),
+      sizeof(BinaryFormat::FileHeader) + header_size_,
+      sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_);
+
+  return std::unique_ptr<Cursor>(cursor);
+}
+
 size_t SSTableReader::bodySize() const {
   return body_size_;
 }
@@ -79,6 +88,37 @@ size_t SSTableReader::headerSize() const {
   return header_size_;
 }
 
+SSTableReader::Cursor::Cursor(
+    io::File&& file,
+    size_t begin,
+    size_t limit) :
+    file_(std::move(file)),
+    begin_(begin),
+    limit_(limit) {
+  file_.seekTo(begin);
+}
+
+void SSTableReader::Cursor::seekTo(size_t body_offset) {
+  if (body_offset >= limit_) {
+    RAISE(kIndexError, "body offset exceeds limit");
+  }
+
+  seekTo(body_offset);
+}
+
+bool SSTableReader::Cursor::next() {
+  return false;
+}
+
+bool SSTableReader::Cursor::valid() {
+  return false;
+}
+
+void SSTableReader::Cursor::getKey(void** data, size_t* size) {
+}
+
+void SSTableReader::Cursor::getData(void** data, size_t* size) {
+}
 
 }
 }
