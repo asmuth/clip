@@ -69,6 +69,50 @@ body {
   cursor: ew-resize;
 }
 
+.result_pane .result_navbar {
+  width: 100%;
+  height: 40px;
+  margin-top: 0px;
+  border-bottom: 1px solid #ddd;
+  text-decoration: none;
+}
+
+.result_pane .result_navbar a h3 {
+  text-decoration: none;
+  color: #444;
+  line-height: 40px;
+  margin: 0px;
+  padding: 0 30px;
+  border-right: 1px solid #ddd;
+  float: left;
+}
+
+.result_pane .chart_container {
+  margin-top: 30px;
+}
+
+.result_pane table.result_table {
+  width: 95%;
+  margin: auto;
+  margin-top: 40px;
+  border-collapse: collapse;
+}
+
+.result_pane table.result_table th {
+  padding: 10px 0 10px 10px;
+  background-color: rgba(0,0,0,0.04);
+  font-weight: normal;
+}
+
+.result_pane table.result_table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.result_pane table.result_table td {
+  padding: 10px 0 10px 10px;
+  text-align: center;
+}
+
 .viewport {
   margin-top: 65px;
 }
