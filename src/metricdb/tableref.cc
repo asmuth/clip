@@ -14,6 +14,7 @@
 #include <fnordmetric/metricdb/tableheaderwriter.h>
 #include <fnordmetric/metricdb/tokenindex.h>
 #include <fnordmetric/metricdb/tokenindexwriter.h>
+#include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -195,6 +196,7 @@ void LiveTableRef::importTokenIndex(TokenIndex* token_index) {
 
 void LiveTableRef::finalize(TokenIndex* token_index) {
   TokenIndexWriter token_index_writer(token_index);
+
   table_->writeIndex(
       TokenIndex::kIndexType,
       token_index_writer.data(),
@@ -227,7 +229,20 @@ std::unique_ptr<sstable::Cursor> ReadonlyTableRef::cursor() {
 }
 
 void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
-  RAISE(kNotYetImplementedError, "fnord");
+  auto reader = openTable();
+  auto data = reader->readFooter(TokenIndex::kIndexType);
+
+  if (data.size() == 0) {
+    if (env()->verbose()) {
+      env()->logger()->printf(
+          "DEBUG",
+          "SStable has empty token index: '%s' (%s)",
+          filename_.c_str(),
+          metric_key_.c_str());
+    }
+
+    return;
+  }
 }
 
 void ReadonlyTableRef::finalize(TokenIndex* token_index) {
@@ -240,6 +255,19 @@ bool ReadonlyTableRef::isWritable() const {
 
 size_t ReadonlyTableRef::bodySize() const {
   return 0;
+}
+
+std::unique_ptr<fnord::sstable::SSTableReader> ReadonlyTableRef::openTable() {
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Opening read-only sstable: '%s'",
+        filename_.c_str());
+  }
+
+  auto file = io::File::openFile(filename_, io::File::O_READ);
+  return std::unique_ptr<fnord::sstable::SSTableReader>(
+      new sstable::SSTableReader(std::move(file)));
 }
 
 }

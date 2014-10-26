@@ -117,6 +117,8 @@ public:
   size_t bodySize() const override;
 
 protected:
+  std::unique_ptr<fnord::sstable::SSTableReader> openTable();
+
   bool is_writable_;
   std::unique_ptr<sstable::LiveSSTable> table_;
 };

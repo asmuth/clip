@@ -17,8 +17,8 @@ namespace sstable {
 SSTableReader::SSTableReader(io::File&& file) : file_(std::move(file)) {
   BinaryFormat::FileHeader header;
 
-  auto file_size = file_.size();
-  if (file_size < sizeof(header)) {
+  file_size_ = file_.size();
+  if (file_size_ < sizeof(header)) {
     RAISE(kIllegalStateError, "not a valid sstable");
   }
 
@@ -32,7 +32,7 @@ SSTableReader::SSTableReader(io::File&& file) : file_(std::move(file)) {
   body_size_ = header.body_size;
   header_size_ = header.header_size;
 
-  if (sizeof(header) + header_size_ + body_size_ > file_size) {
+  if (sizeof(header) + header_size_ + body_size_ > file_size_) {
     if (header.magic != BinaryFormat::kMagicBytes) {
       RAISE(kIllegalStateError, "file metadata offsets exceed file bounds");
     }
@@ -44,6 +44,31 @@ util::Buffer SSTableReader::readHeader() {
   util::Buffer buf(header_size_);
   file_.read(&buf);
   return buf;
+}
+
+util::Buffer SSTableReader::readFooter(uint32_t type) {
+  size_t pos = sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_;
+
+  while (pos < file_size_) {
+    BinaryFormat::FooterHeader header;
+    file_.seekTo(pos);
+    file_.read(&header, sizeof(header));
+
+    if (header.magic != BinaryFormat::kMagicBytes) {
+      RAISE(kIllegalStateError, "corrupt sstable footer");
+    }
+
+    if (header.type == type) {
+      util::Buffer buf(header.footer_size);
+      file_.read(&buf);
+      return buf;
+    }
+
+    pos += sizeof(header) + header.footer_size;
+  }
+
+  RAISE(kIndexError, "no such footer found");
+  return util::Buffer(0);
 }
 
 size_t SSTableReader::bodySize() const {

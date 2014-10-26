@@ -40,6 +40,7 @@ public:
   //IndexType* getIndex() const;
 
   util::Buffer readHeader();
+  util::Buffer readFooter(uint32_t type);
 
   size_t bodySize() const;
   size_t headerSize() const;
@@ -64,6 +65,7 @@ protected:
 private:
   io::File file_;
 
+  uint64_t file_size_;
   uint64_t body_size_;
   uint32_t header_size_;
 };

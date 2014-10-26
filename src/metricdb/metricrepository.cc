@@ -9,8 +9,6 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/tableheaderreader.h>
-#include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
 namespace fnordmetric {

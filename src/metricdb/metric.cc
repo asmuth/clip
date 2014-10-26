@@ -218,15 +218,20 @@ void Metric::compact() {
         if (env()->verbose()) {
           env()->logger()->printf(
               "DEBUG",
-              "SSTable '...' is empty, deleting...",
-              key_.c_str());
+              "SSTable '%s' (%s) is empty, deleting...",
+              table->filename().c_str(),
+              table->metricKey().c_str());
         }
 
         continue;
       } else {
-        env()->logger()->printf(
-            "DEBUG",
-            "Finalizing sstable: '...'");
+        if (env()->verbose()) {
+          env()->logger()->printf(
+              "DEBUG",
+              "Finalizing sstable '%s' (%s)",
+              table->filename().c_str(),
+              table->metricKey().c_str());
+        }
 
         table->finalize(&token_index_);
         new_tables.emplace_back(new ReadonlyTableRef(*table));
