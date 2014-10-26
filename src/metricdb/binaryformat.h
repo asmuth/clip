@@ -42,12 +42,13 @@ namespace metricdb {
  *        <bytes>         // string bytes
  *
  *   <token_definition> :=
- *        <uint32_t>      // token id (must be > 0xf0000000)
+ *        <uint32_t>      // 0xffffffff
+ *        <uint32_t>      // token id (must be 0xf0000000 < id < 0xffffffff)
  *        <uint32_t>      // string length (must be < 0xf0000000)
  *        <bytes>         // string bytes
  *
  *   <token_reference> :=
- *        <uint32_t>      // token id (must be > 0xf0000000)
+ *        <uint32_t>      // token id (must be 0xf0000000 < id < 0xffffffff)
  *
  */
 class BinaryFormat {

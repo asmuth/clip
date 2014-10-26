@@ -54,6 +54,7 @@ protected:
   uint64_t max_generation_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;
+  TokenIndex token_index_;
 };
 
 }

@@ -18,8 +18,8 @@ namespace fnordmetric {
 namespace metricdb {
 
 SampleWriter::SampleWriter(
-    TokenIndex* label_index) :
-    label_index_(label_index) {}
+    TokenIndex* token_index) :
+    token_index_(token_index) {}
 
 template <> void SampleWriter::writeValue<uint64_t>(uint64_t value) {
   appendUInt64(value);
@@ -32,20 +32,34 @@ template <> void SampleWriter::writeValue<double>(double value) {
 void SampleWriter::writeLabel(
     const std::string& key,
     const std::string& value) {
-  uint32_t indexed_key = 0; //label_index_->findLabel(key);
+  writeToken(key, true);
+  writeToken(value, false);
+}
 
-  if (indexed_key == 0) {
-    //indexed_key = label_index_->addLabel(key);
-    appendUInt32(0xffffffff);
-    appendUInt32(key.size());
-    appendString(key);
-  } else {
-    appendUInt32(indexed_key);
+void SampleWriter::writeToken(const std::string& token, bool force_indexing) {
+  uint32_t token_id = token_index_->findToken(token);
+
+  if (token.size() >= TokenIndex::kMinTokenID) {
+    RAISE(kIllegalArgumentError, "token too large");
   }
 
-  appendUInt32(value.size());
-  appendString(value);
+  if (token_id > 0) {
+    // write token reference
+    appendUInt32(token_id);
+  } else if (force_indexing) {
+    // write new definition
+    token_id = token_index_->addToken(token);
+    appendUInt32(0xffffffff);
+    appendUInt32(token_id);
+    appendUInt32(token.size());
+    appendString(token);
+  } else {
+    // write anonymous token
+    appendUInt32(token.size());
+    appendString(token);
+  }
 }
+
 
 }
 }

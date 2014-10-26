@@ -23,13 +23,15 @@ public:
   SampleReader(
       void* data,
       size_t size,
-      TokenIndex* label_index);
+      TokenIndex* token_index);
 
   template <typename T>
   T value();
 
+  std::vector<std::pair<std::string, std::string>> labels();
+
 protected:
-  TokenIndex* label_index_;
+  TokenIndex* token_index_;
 };
 
 }

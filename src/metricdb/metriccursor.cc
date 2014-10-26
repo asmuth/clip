@@ -18,8 +18,10 @@ namespace fnordmetric {
 namespace metricdb {
 
 MetricCursor::MetricCursor(
-    std::shared_ptr<MetricSnapshot> snapshot) :
+    std::shared_ptr<MetricSnapshot> snapshot,
+    TokenIndex* token_index) :
     snapshot_(snapshot),
+    token_index_(token_index),
     table_index_(0) {}
 
 bool MetricCursor::next() {
@@ -59,7 +61,7 @@ SampleReader* MetricCursor::sample() {
   size_t data_size;
   tableCursor()->getData(&data, &data_size);
 
-  sample_.reset(new SampleReader(data, data_size, nullptr));
+  sample_.reset(new SampleReader(data, data_size, token_index_));
   return sample_.get();
 }
 

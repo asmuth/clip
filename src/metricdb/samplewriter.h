@@ -28,7 +28,8 @@ public:
   void writeLabel(const std::string& key, const std::string& value);
 
 protected:
-  TokenIndex* label_index_;
+  void writeToken(const std::string& token, bool force_indexing);
+  TokenIndex* token_index_;
 };
 
 }

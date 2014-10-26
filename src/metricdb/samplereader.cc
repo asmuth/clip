@@ -17,9 +17,14 @@ namespace metricdb {
 SampleReader::SampleReader(
     void* data,
     size_t size,
-    TokenIndex* label_index) :
+    TokenIndex* token_index) :
     fnord::util::BinaryMessageReader(data, size),
-    label_index_(label_index) {}
+    token_index_(token_index) {}
+
+std::vector<std::pair<std::string, std::string>> SampleReader::labels() {
+  std::vector<std::pair<std::string, std::string>> labels;
+  return labels;
+}
 
 template <> double SampleReader::value<double>() {
   return fnord::util::IEEE754::fromBytes(*readUInt64());

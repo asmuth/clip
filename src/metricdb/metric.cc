@@ -117,9 +117,7 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
 }
 
 void Metric::addSample(const Sample<double>& sample) {
-  //auto field_index = table->getIndex<SampleFieldIndex>();
-
-  SampleWriter writer(nullptr);
+  SampleWriter writer(&token_index_);
   writer.writeValue(sample.value);
   for (const auto& label : sample.labels) {
     writer.writeLabel(label.first, label.second);
@@ -171,7 +169,7 @@ void Metric::scanSamples(
     return;
   }
 
-  MetricCursor cursor(snapshot);
+  MetricCursor cursor(snapshot, &token_index_);
   while (cursor.valid()) {
     callback(&cursor);
 

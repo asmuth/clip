@@ -21,7 +21,10 @@ namespace metricdb {
 
 class MetricCursor {
 public:
-  MetricCursor(std::shared_ptr<MetricSnapshot> snapshot);
+  MetricCursor(
+      std::shared_ptr<MetricSnapshot> snapshot,
+      TokenIndex* token_index);
+
   MetricCursor(const MetricCursor& copy) = delete;
   MetricCursor& operator=(const MetricCursor& copy) = delete;
 
@@ -37,6 +40,7 @@ protected:
   fnord::sstable::Cursor* tableCursor();
   std::unique_ptr<fnord::sstable::Cursor> table_cur_;
   std::unique_ptr<SampleReader> sample_;
+  TokenIndex* token_index_;
 };
 
 

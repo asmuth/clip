@@ -189,6 +189,21 @@ void HTTPAPI::renderMetricSampleScan(
 
         json.addObjectEntry("value");
         json.addLiteral<double>(sample->value<double>());
+        json.addComma();
+
+        json.addObjectEntry("labels");
+        json.beginObject();
+        auto labels = sample->labels();
+        for (int n = 0; n < labels.size(); n++) {
+          if (n > 0) {
+            json.addComma();
+          }
+
+          json.addObjectEntry(labels[n].first);
+          json.addString(labels[n].second);
+        }
+        json.endObject();
+
         json.endObject();
         return true;
       });
