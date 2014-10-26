@@ -17,8 +17,8 @@ namespace sstable {
 SSTableReader::SSTableReader(io::File&& file) : file_(std::move(file)) {
   BinaryFormat::FileHeader header;
 
-  auto file_size = file_.size();
-  if (file_size < sizeof(header)) {
+  file_size_ = file_.size();
+  if (file_size_ < sizeof(header)) {
     RAISE(kIllegalStateError, "not a valid sstable");
   }
 
@@ -32,7 +32,7 @@ SSTableReader::SSTableReader(io::File&& file) : file_(std::move(file)) {
   body_size_ = header.body_size;
   header_size_ = header.header_size;
 
-  if (sizeof(header) + header_size_ + body_size_ > file_size) {
+  if (sizeof(header) + header_size_ + body_size_ > file_size_) {
     if (header.magic != BinaryFormat::kMagicBytes) {
       RAISE(kIllegalStateError, "file metadata offsets exceed file bounds");
     }
@@ -46,6 +46,40 @@ util::Buffer SSTableReader::readHeader() {
   return buf;
 }
 
+util::Buffer SSTableReader::readFooter(uint32_t type) {
+  size_t pos = sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_;
+
+  while (pos < file_size_) {
+    BinaryFormat::FooterHeader header;
+    file_.seekTo(pos);
+    file_.read(&header, sizeof(header));
+
+    if (header.magic != BinaryFormat::kMagicBytes) {
+      RAISE(kIllegalStateError, "corrupt sstable footer");
+    }
+
+    if (header.type == type) {
+      util::Buffer buf(header.footer_size);
+      file_.read(&buf);
+      return buf;
+    }
+
+    pos += sizeof(header) + header.footer_size;
+  }
+
+  RAISE(kIndexError, "no such footer found");
+  return util::Buffer(0);
+}
+
+std::unique_ptr<Cursor> SSTableReader::getCursor() {
+  auto cursor = new Cursor(
+      file_.clone(),
+      sizeof(BinaryFormat::FileHeader) + header_size_,
+      sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_);
+
+  return std::unique_ptr<Cursor>(cursor);
+}
+
 size_t SSTableReader::bodySize() const {
   return body_size_;
 }
@@ -54,6 +88,37 @@ size_t SSTableReader::headerSize() const {
   return header_size_;
 }
 
+SSTableReader::Cursor::Cursor(
+    io::File&& file,
+    size_t begin,
+    size_t limit) :
+    file_(std::move(file)),
+    begin_(begin),
+    limit_(limit) {
+  file_.seekTo(begin);
+}
+
+void SSTableReader::Cursor::seekTo(size_t body_offset) {
+  if (body_offset >= limit_) {
+    RAISE(kIndexError, "body offset exceeds limit");
+  }
+
+  seekTo(body_offset);
+}
+
+bool SSTableReader::Cursor::next() {
+  return false;
+}
+
+bool SSTableReader::Cursor::valid() {
+  return false;
+}
+
+void SSTableReader::Cursor::getKey(void** data, size_t* size) {
+}
+
+void SSTableReader::Cursor::getData(void** data, size_t* size) {
+}
 
 }
 }

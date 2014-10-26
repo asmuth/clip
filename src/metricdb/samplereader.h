@@ -18,23 +18,43 @@ namespace fnordmetric {
 namespace metricdb {
 class TokenIndex;
 
-class SampleReader : public fnord::util::BinaryMessageReader {
+class AbstractSampleReader : public fnord::util::BinaryMessageReader {
 public:
+  AbstractSampleReader(
+      void* data,
+      size_t size,
+      TokenIndex* token_index);
+
+  const std::vector<std::pair<std::string, std::string>>& labels();
+  const std::vector<std::pair<uint32_t, std::string>>& tokenDefinitions();
+
+protected:
+  std::string readToken();
+
+  TokenIndex* token_index_;
+  std::vector<std::pair<std::string, std::string>> labels_;
+  std::vector<std::pair<uint32_t, std::string>> token_definitions_;
+  bool labels_read_;
+};
+
+template <typename T>
+class SampleReader : public AbstractSampleReader {
+public:
+
   SampleReader(
       void* data,
       size_t size,
       TokenIndex* token_index);
 
-  template <typename T>
-  T value();
-
-  std::vector<std::pair<std::string, std::string>> labels();
+  const T& value();
 
 protected:
-  TokenIndex* token_index_;
+  T readValue();
+  T value_;
 };
 
 }
 }
 
+#include "samplereader_impl.h"
 #endif

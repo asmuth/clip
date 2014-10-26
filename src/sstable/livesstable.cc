@@ -45,7 +45,8 @@ LiveSSTable::LiveSSTable(
     indexes_(std::move(indexes)),
     mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)),
     header_size_(0),
-    body_size_(0) {}
+    body_size_(0),
+    finalized_(false) {}
 
 LiveSSTable::~LiveSSTable() {
 }
@@ -56,6 +57,9 @@ void LiveSSTable::appendRow(
     size_t key_size,
     void const* data,
     size_t data_size) {
+  if (finalized_) {
+    RAISE(kIllegalStateError, "table is immutable (alread finalized)");
+  }
   // FIXPAUL assert that key is monotonically increasing...
 
   size_t page_size = sizeof(BinaryFormat::RowHeader) + key_size + data_size;
@@ -91,6 +95,10 @@ void LiveSSTable::appendRow(
 
 // FIXPAUL lock
 void LiveSSTable::writeHeader(void const* data, size_t size) {
+  if (header_size_ > 0) {
+    RAISE(kIllegalStateError, "header already written");
+  }
+
   auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FileHeader) + size);
   auto page = mmap_->getPage(alloc);
 
@@ -112,6 +120,27 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
   header_size_ = alloc.size;
 }
 
+void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
+  if (finalized_) {
+    RAISE(kIllegalStateError, "table is immutable (alread finalized)");
+  }
+
+  auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FooterHeader) + size);
+  auto page = mmap_->getPage(alloc);
+
+  auto header = page->structAt<BinaryFormat::FooterHeader>(0);
+  header->magic = BinaryFormat::kMagicBytes;
+  header->type = index_type;
+  header->footer_size = size;
+
+  if (size > 0) {
+    auto dst = page->structAt<void>(sizeof(BinaryFormat::FooterHeader));
+    memcpy(dst, data, size);
+  }
+
+  page->sync();
+}
+
 void LiveSSTable::reopen(size_t file_size) {
   io::PageManager::Page header_page(0, sizeof(BinaryFormat::FileHeader));
   auto page = mmap_->getPage(header_page);
@@ -131,11 +160,14 @@ void LiveSSTable::reopen(size_t file_size) {
 
 // FIXPAUL lock
 void LiveSSTable::finalize() {
+  finalized_ = true;
+
   auto page = mmap_->getPage(
       io::PageManager::Page(0, sizeof(BinaryFormat::FileHeader)));
 
   auto header = page->structAt<BinaryFormat::FileHeader>(0);
   header->body_size = body_size_;
+  page->sync();
 }
 
 // FIXPAUL lock

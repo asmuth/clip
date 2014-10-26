@@ -9,8 +9,6 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/tableheaderreader.h>
-#include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -24,28 +22,8 @@ MetricRepository::MetricRepository(
       std::vector<std::unique_ptr<TableRef>>> tables;
 
   file_repo->listFiles([this, &tables] (const std::string& filename) -> bool {
-    auto file = io::File::openFile(
-        filename,
-        io::File::O_READ | io::File::O_WRITE);
-
-    sstable::SSTableReader reader(file.clone());
-    auto header_buf = reader.readHeader();
-    TableHeaderReader header(header_buf.data(), header_buf.size());
-
-    if (env()->verbose()) {
-      env()->logger()->printf(
-          "DEBUG",
-          "Opening sstable: '%s'",
-          filename.c_str());
-    }
-
-    if (reader.bodySize() == 0) {
-      tables[header.metricKey()].emplace_back(
-          TableRef::reopenTable(std::move(file), &header));
-    } else {
-      RAISE(kNotYetImplementedError, "fnord");
-    }
-
+    auto table_ref = TableRef::openTable(filename);
+    tables[table_ref->metricKey()].emplace_back(std::move(table_ref));
     return true;
   });
 

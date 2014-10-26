@@ -56,15 +56,6 @@ uint64_t MetricCursor::time() {
   return time;
 }
 
-SampleReader* MetricCursor::sample() {
-  void* data;
-  size_t data_size;
-  tableCursor()->getData(&data, &data_size);
-
-  sample_.reset(new SampleReader(data, data_size, token_index_));
-  return sample_.get();
-}
-
 fnord::sstable::Cursor* MetricCursor::tableCursor() {
   if (table_cur_.get() == nullptr) {
     table_cur_ = snapshot_->tables()[table_index_]->cursor();

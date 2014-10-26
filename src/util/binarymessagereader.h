@@ -19,6 +19,7 @@ namespace util {
 class BinaryMessageReader {
 public:
   BinaryMessageReader(void const* buf, size_t buf_len);
+  virtual ~BinaryMessageReader() {};
 
   uint32_t const* readUInt32();
   uint64_t const* readUInt64();

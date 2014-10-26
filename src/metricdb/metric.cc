@@ -28,7 +28,7 @@ Metric::Metric(
     key_(key),
     file_repo_(file_repo),
     head_(nullptr),
-    max_generation_(1) {
+    max_generation_(0) {
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
@@ -73,6 +73,7 @@ Metric::Metric(
       }
 
       if (table->generation() == gen) {
+        table->importTokenIndex(&token_index_);
         snapshot->appendTable(std::move(table));
         table.reset(nullptr);
       }
@@ -80,7 +81,7 @@ Metric::Metric(
   }
 
   head_ = snapshot;
-  max_generation_ = head_table->generation() + 1;
+  max_generation_ = head_table->generation();
 
   for (auto& table : tables) {
     if (table.get() != nullptr) {
@@ -104,14 +105,15 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
     std::lock_guard<std::mutex> lock_holder(head_mutex_);
 
     if (head_.get() != nullptr &&
+        head_->isWritable() &&
         head_->tables().back()->isWritable() &&
         head_->tables().back()->bodySize() < (2 << 16)) {
       return head_;
     }
   }
 
-  auto new_snapshot = createSnapshot();
   std::lock_guard<std::mutex> lock_holder(head_mutex_);
+  auto new_snapshot = createSnapshot(true);
   head_ = new_snapshot;
   return head_;
 }
@@ -132,7 +134,7 @@ void Metric::addSample(const Sample<double>& sample) {
 }
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
-std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
+std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
   std::shared_ptr<MetricSnapshot> snapshot;
   std::vector<uint64_t> parents;
 
@@ -145,17 +147,22 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot() {
     }
   }
 
-  // open new file
-  auto fileref = file_repo_->createFile();
-  auto file = io::File::openFile(
-      fileref.absolute_path,
-      io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+  snapshot->setWritable(writable);
 
-  snapshot->appendTable(TableRef::createTable(
-      std::move(file),
-      key_,
-      max_generation_++,
-      parents));
+  if (writable) {
+    // open new file
+    auto fileref = file_repo_->createFile();
+    auto file = io::File::openFile(
+        fileref.absolute_path,
+        io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+
+    snapshot->appendTable(TableRef::createTable(
+        fileref.absolute_path,
+        key_,
+        std::move(file),
+        ++max_generation_,
+        parents));
+  }
 
   return snapshot;
 }
@@ -178,6 +185,86 @@ void Metric::scanSamples(
     }
   }
 }
+
+void Metric::compact(Compaction* compaction /* = nullptr */) {
+  if (!compaction_mutex_.try_lock()) {
+    return;
+  }
+
+  std::lock_guard<std::mutex>(compaction_mutex_, std::adopt_lock);
+
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "Running compaction for metric: '%s'",
+        key_.c_str());
+  }
+
+  // create a new snapshot and make all tables immutable
+  std::shared_ptr<MetricSnapshot> snapshot;
+  {
+    std::lock_guard<std::mutex> append_lock_holder(append_mutex_);
+    std::lock_guard<std::mutex> head_lock_holder(head_mutex_);
+    snapshot = createSnapshot(false);
+  }
+
+  auto old_tables = snapshot->tables();
+  std::vector<std::shared_ptr<TableRef>> new_tables;
+
+  // finalize unfinished sstables
+  for (auto& table : old_tables) {
+    if (table->isWritable()) {
+      if (table->bodySize() == 0) {
+        if (env()->verbose()) {
+          env()->logger()->printf(
+              "DEBUG",
+              "SSTable '%s' (%s) is empty, deleting...",
+              table->filename().c_str(),
+              table->metricKey().c_str());
+        }
+
+        continue;
+      } else {
+        if (env()->verbose()) {
+          env()->logger()->printf(
+              "DEBUG",
+              "Finalizing sstable '%s' (%s)",
+              table->filename().c_str(),
+              table->metricKey().c_str());
+        }
+
+        table->finalize(&token_index_);
+        new_tables.emplace_back(new ReadonlyTableRef(*table));
+      }
+    } else {
+      new_tables.emplace_back(table);
+    }
+  }
+
+  // run the compaction
+  if (compaction != nullptr) {
+    compaction->compact(&new_tables);
+  }
+
+  // create a new snapshot and commit modifications
+  {
+    std::lock_guard<std::mutex> append_lock_holder(append_mutex_);
+    std::lock_guard<std::mutex> head_lock_holder(head_mutex_);
+    auto new_snapshot = new MetricSnapshot();
+    new_snapshot->setWritable(head_->isWritable());
+
+    for (const auto& table : new_tables) {
+      new_snapshot->appendTable(table);
+    }
+
+    for (int i = old_tables.size(); i < head_->tables().size(); ++i) {
+      new_snapshot->appendTable(head_->tables()[i]);
+    }
+
+    head_.reset(new_snapshot);
+  }
+}
+
 
 }
 }

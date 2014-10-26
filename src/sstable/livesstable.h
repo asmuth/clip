@@ -88,6 +88,8 @@ public:
   size_t bodySize() const;
   size_t headerSize() const;
 
+  void writeIndex(uint32_t index_type, void* data, size_t size);
+
 protected:
   class Cursor : public sstable::Cursor {
   public:
@@ -121,6 +123,7 @@ private:
   std::unique_ptr<io::MmapPageManager> mmap_;
   size_t header_size_; // FIXPAUL make atomic
   size_t body_size_; // FIXPAUL make atomic
+  bool finalized_;
 };
 
 

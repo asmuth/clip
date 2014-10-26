@@ -13,11 +13,12 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
-MetricSnapshot::MetricSnapshot() {}
+MetricSnapshot::MetricSnapshot() : writable_(false) {}
 
 MetricSnapshot::MetricSnapshot(
     const std::vector<std::shared_ptr<TableRef>>& tables) :
-    tables_(tables) {}
+    tables_(tables),
+    writable_(false) {}
 
 void MetricSnapshot::appendTable(std::shared_ptr<TableRef> table) {
   tables_.emplace_back(table);
@@ -31,6 +32,13 @@ std::shared_ptr<MetricSnapshot> MetricSnapshot::clone() const {
   return std::shared_ptr<MetricSnapshot>(new MetricSnapshot(tables_));
 }
 
+void MetricSnapshot::setWritable(bool writable) {
+  writable_ = writable;
+}
+
+bool MetricSnapshot::isWritable() const {
+  return writable_;
+}
 
 }
 }

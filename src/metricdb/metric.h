@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
+#include <fnordmetric/metricdb/compaction.h>
 #include <fnordmetric/metricdb/metriccursor.h>
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
@@ -43,17 +44,20 @@ public:
   std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
 
+  void compact(Compaction* compaction = nullptr);
+
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
-  std::shared_ptr<MetricSnapshot> createSnapshot();
+  std::shared_ptr<MetricSnapshot> createSnapshot(bool writable);
 
   const std::string key_;
   io::FileRepository const* file_repo_;
   std::shared_ptr<MetricSnapshot> head_;
-  uint64_t max_generation_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;
+  std::mutex compaction_mutex_;
+  uint64_t max_generation_;
   TokenIndex token_index_;
 };
 
