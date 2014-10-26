@@ -135,6 +135,7 @@ set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/tableheaderwriter.cc
     stage/src/fnordmetric/metricdb/tableref.cc
     stage/src/fnordmetric/metricdb/tokenindex.cc
+    stage/src/fnordmetric/metricdb/tokenindexreader.cc
     stage/src/fnordmetric/metricdb/tokenindexwriter.cc)
 
 include_directories(stage/src)

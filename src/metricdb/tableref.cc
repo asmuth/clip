@@ -14,6 +14,7 @@
 #include <fnordmetric/metricdb/tableheaderwriter.h>
 #include <fnordmetric/metricdb/tokenindex.h>
 #include <fnordmetric/metricdb/tokenindexwriter.h>
+#include <fnordmetric/metricdb/tokenindexreader.h>
 #include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
@@ -230,9 +231,9 @@ std::unique_ptr<sstable::Cursor> ReadonlyTableRef::cursor() {
 
 void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
   auto reader = openTable();
-  auto data = reader->readFooter(TokenIndex::kIndexType);
+  auto buffer = reader->readFooter(TokenIndex::kIndexType);
 
-  if (data.size() == 0) {
+  if (buffer.size() == 0) {
     if (env()->verbose()) {
       env()->logger()->printf(
           "DEBUG",
@@ -243,6 +244,9 @@ void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
 
     return;
   }
+
+  TokenIndexReader token_index_reader(buffer.data(), buffer.size());
+  token_index_reader.readIndex(token_index);
 }
 
 void ReadonlyTableRef::finalize(TokenIndex* token_index) {
