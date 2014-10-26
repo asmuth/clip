@@ -71,6 +71,16 @@ std::string TokenIndex::resolveToken(uint32_t token_id) const {
   RAISE(kIndexError, "token not found");
 }
 
+std::unordered_map<std::string, uint32_t> TokenIndex::tokenIDs() const {
+  std::unordered_map<std::string, uint32_t> copy;
+
+  {
+    std::lock_guard<std::mutex> lock_holder(mutex_);
+    copy = token_ids_;
+  }
+
+  return copy;
+}
 
 }
 }

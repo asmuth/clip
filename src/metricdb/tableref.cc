@@ -13,6 +13,7 @@
 #include <fnordmetric/metricdb/tableheaderreader.h>
 #include <fnordmetric/metricdb/tableheaderwriter.h>
 #include <fnordmetric/metricdb/tokenindex.h>
+#include <fnordmetric/metricdb/tokenindexwriter.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -124,8 +125,14 @@ void LiveTableRef::importTokenIndex(TokenIndex* token_index) {
   }
 }
 
-void LiveTableRef::finalize() {
-  printf("finalize!\n");
+void LiveTableRef::finalize(TokenIndex* token_index) {
+  TokenIndexWriter token_index_writer(token_index);
+  table_->writeIndex(
+      TokenIndex::kIndexType,
+      token_index_writer.data(),
+      token_index_writer.size());
+
+  table_->finalize();
 }
 
 }

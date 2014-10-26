@@ -112,6 +112,10 @@ void LiveSSTable::writeHeader(void const* data, size_t size) {
   header_size_ = alloc.size;
 }
 
+void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
+
+}
+
 void LiveSSTable::reopen(size_t file_size) {
   io::PageManager::Page header_page(0, sizeof(BinaryFormat::FileHeader));
   auto page = mmap_->getPage(header_page);
@@ -136,6 +140,7 @@ void LiveSSTable::finalize() {
 
   auto header = page->structAt<BinaryFormat::FileHeader>(0);
   header->body_size = body_size_;
+  page->sync();
 }
 
 // FIXPAUL lock

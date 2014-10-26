@@ -21,6 +21,7 @@ namespace metricdb  {
 
 class TokenIndex {
 public:
+  static const uint32_t kIndexType = 0xa0f0;
   static const int kMinTokenID = 0xf0000000;
 
   TokenIndex();
@@ -29,6 +30,7 @@ public:
   uint32_t addToken(const std::string& key);
   void addToken(const std::string& key, uint32_t id);
   std::string resolveToken(uint32_t token_id) const;
+  std::unordered_map<std::string, uint32_t> tokenIDs() const;
 
 protected:
   std::unordered_map<std::string, uint32_t> token_ids_;

@@ -222,11 +222,12 @@ void Metric::compact() {
             "DEBUG",
             "Finalizing sstable: '...'");
 
-        table->finalize();
+        table->finalize(&token_index_);
+        new_tables.emplace_back(table); // FIXPAUL reopen
       }
+    } else {
+      new_tables.emplace_back(table);
     }
-
-    new_tables.emplace_back(table);
   }
 }
 
