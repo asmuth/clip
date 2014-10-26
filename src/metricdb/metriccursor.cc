@@ -29,16 +29,32 @@ bool MetricCursor::next() {
     return true;
   }
 
-  if (table_index_ < (snapshot_->tables().size() - 1)) {
+
+  while (table_index_ < (snapshot_->tables().size() - 1)) {
     table_cur_ = snapshot_->tables()[++table_index_]->cursor();
-    return table_cur_->valid();
+
+    if (table_cur_->valid()) {
+      return true;
+    }
   }
 
   return false;
 }
 
 bool MetricCursor::valid() {
-  return tableCursor()->valid();
+  if (tableCursor()->valid()) {
+    return true;
+  }
+
+  while (table_index_ < (snapshot_->tables().size() - 1)) {
+    table_cur_ = snapshot_->tables()[++table_index_]->cursor();
+
+    if (table_cur_->valid()) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 uint64_t MetricCursor::time() {
