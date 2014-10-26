@@ -14,6 +14,7 @@
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/metricdb/samplereader.h>
+#include <fnordmetric/metricdb/tokenindex.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/datetime.h>
 #include <string>

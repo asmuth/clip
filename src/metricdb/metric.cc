@@ -10,7 +10,6 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/binaryformat.h>
 #include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/metricdb/samplefieldindex.h>
 #include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/sstable/livesstable.h>

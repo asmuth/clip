@@ -16,11 +16,11 @@
 
 namespace fnordmetric {
 namespace metricdb {
-class SampleFieldIndex;
+class TokenIndex;
 
 class SampleWriter : public fnord::util::BinaryMessageWriter {
 public:
-  SampleWriter(SampleFieldIndex* label_index);
+  SampleWriter(TokenIndex* label_index);
 
   template <typename T>
   void writeValue(T value);
@@ -28,7 +28,7 @@ public:
   void writeLabel(const std::string& key, const std::string& value);
 
 protected:
-  SampleFieldIndex* label_index_;
+  TokenIndex* label_index_;
 };
 
 }

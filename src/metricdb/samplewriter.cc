@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/samplefieldindex.h>
-#include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/metricdb/binaryformat.h>
+#include <fnordmetric/metricdb/samplewriter.h>
+#include <fnordmetric/metricdb/tokenindex.h>
 #include <fnordmetric/util/ieee754.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <stdlib.h>
@@ -18,7 +18,7 @@ namespace fnordmetric {
 namespace metricdb {
 
 SampleWriter::SampleWriter(
-    SampleFieldIndex* label_index) :
+    TokenIndex* label_index) :
     label_index_(label_index) {}
 
 template <> void SampleWriter::writeValue<uint64_t>(uint64_t value) {
