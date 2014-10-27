@@ -50,7 +50,6 @@
     /web/frontend/http_status_codes[hostname=webfe1][status_code=500]:12
 
 [ todo ]
-    - metric: make maximum live sstable size + live sstable idle time configurable
     - label index
     - merge compaction
     - scan samples with range / sstable binary search

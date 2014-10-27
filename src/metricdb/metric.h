@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/compactionpolicy.h>
+#include <fnordmetric/metricdb/labelindex.h>
 #include <fnordmetric/metricdb/metriccursor.h>
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
@@ -55,6 +56,7 @@ public:
 
   size_t numTables() const;
   size_t totalBytes() const;
+  uint64_t lastInsertTime() const;
 
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
@@ -69,6 +71,7 @@ protected:
   std::mutex compaction_mutex_;
   uint64_t max_generation_;
   TokenIndex token_index_;
+  LabelIndex label_index_;
 
   size_t live_table_max_size_; // FIXPAUL make atomic
   uint64_t live_table_idle_time_micros_; // FIXPAUL make atomic

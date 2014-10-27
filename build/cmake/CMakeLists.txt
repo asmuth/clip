@@ -123,6 +123,7 @@ set(FNORDMETRIC_QUERY_SOURCES
 set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/adminui.cc
     stage/src/fnordmetric/metricdb/httpapi.cc
+    stage/src/fnordmetric/metricdb/labelindex.cc
     stage/src/fnordmetric/metricdb/metric.cc
     stage/src/fnordmetric/metricdb/metriccursor.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
