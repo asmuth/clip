@@ -40,6 +40,14 @@ FnordMetric.httpPost = function(url, request, callback) {
   }
 }
 
+FnordMetric.max = function(n1, n2) {
+  if (n1 >= n2) {
+    return n1;
+  } else {
+    return n2;
+  }
+}
+
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
 
@@ -162,14 +170,19 @@ FnordMetric.views.QueryPlayground = function() {
   var cm = CodeMirror(editor_pane.querySelector(".editor"), {
     lineNumbers: true,
   });
+
   cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
   "time AS x, value as y FROM http_status_codes;");
 
   var updateLayout = function(viewport) {
-    console.log(viewport);
     if (horizontal) {
-      editor_height =  window.innerHeight - 68;
-      viewport.className = "viewport horizontal_split";
+      if (viewport != undefined) {
+        viewport.className = "viewport horizontal_split";
+      }
+      var initial_height =  (window.innerHeight - 68) / 1.2;
+      var result_height = (document.querySelector(
+        ".result_pane")).offsetHeight;
+      var height = FnordMetric.max(initial_height, result_height);
       query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.left = "0";
@@ -177,12 +190,12 @@ FnordMetric.views.QueryPlayground = function() {
       result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
-      //result_pane.style.float = "left";
-      result_pane.style.height = editor_height - 54 + "px";
+      //result_pane.style.height = editor_height - 54 + "px";
       result_pane.style.overflowY = "auto";
-      editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
+      editor_resizer_tooltip.style.left = (editor_pane.offsetWidth) + "px";
       editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
-      cm.setSize("auto", editor_height - 46);
+      editor_resizer_tooltip.style.height = height + "px";
+      cm.setSize("auto", height);
     } else {
       editor_height = (cm.lineCount() * 20 + 60);
       console.log(cm.lineCount());
@@ -204,6 +217,7 @@ FnordMetric.views.QueryPlayground = function() {
       editor_resizer_tooltip.style.right = "20px";
       cm.setSize("auto", editor_height + "px");
     }
+
 
   }
 
@@ -334,7 +348,6 @@ FnordMetric.views.QueryPlayground = function() {
       alert(resp.error);
       return;
     }
-
     result_pane.style.background = "#fff";
     result_pane.style.borderLeft = "1px solid #ddd";
 
@@ -377,6 +390,7 @@ FnordMetric.views.QueryPlayground = function() {
         var res = JSON.parse(r.response);
         destroy(result_pane);
         renderResultPane(res);
+        updateLayout();
       } else {
         alert("http post error");
       }
