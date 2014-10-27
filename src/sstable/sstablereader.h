@@ -14,6 +14,7 @@
 #include <vector>
 #include <memory>
 #include <fnordmetric/io/file.h>
+#include <fnordmetric/io/mmappedfile.h>
 #include <fnordmetric/io/pagemanager.h>
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/cursor.h>
@@ -48,7 +49,7 @@ protected:
   class Cursor : public sstable::Cursor {
   public:
     Cursor(
-        io::File&& file,
+        std::shared_ptr<io::MmappedFile> file,
         size_t begin,
         size_t limit);
 
@@ -58,21 +59,15 @@ protected:
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
   protected:
-    void fileSeek(size_t pos);
-    void readRowHeader();
-    io::File file_;
+    std::shared_ptr<io::MmappedFile> mmap_;
     size_t pos_;
-    size_t seekto_cached_;
     size_t begin_;
     size_t limit_;
-    BinaryFormat::RowHeader cur_header_;
-    std::unique_ptr<util::Buffer> cur_key_;
-    std::unique_ptr<util::Buffer> cur_value_;
-    bool valid_;
   };
 
 private:
   io::File file_;
+  std::shared_ptr<io::MmappedFile> mmap_;
 
   uint64_t file_size_;
   uint64_t body_size_;

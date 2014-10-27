@@ -278,6 +278,29 @@ void Metric::compact(CompactionPolicy* compaction /* = nullptr */) {
   }
 }
 
+void Metric::setLiveTableMaxSize(size_t max_size) {
+  live_table_max_size_ = max_size;
+}
+
+void Metric::setLiveTableIdleTimeMicros(uint64_t idle_time_micros) {
+  live_table_idle_time_micros_ = idle_time_micros;
+}
+
+size_t Metric::numTables() const {
+  auto snapshot = getSnapshot();
+  return snapshot->tables().size();
+}
+
+size_t Metric::totalBytes() const {
+  auto snapshot = getSnapshot();
+
+  size_t bytes = 0;
+  for (const auto& tbl : snapshot->tables()) {
+    bytes += tbl->bodySize();
+  }
+
+  return bytes;
+}
 
 }
 }

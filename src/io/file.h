@@ -88,10 +88,13 @@ public:
 
   File clone() const;
 
+  bool isWritable() const;
+
 protected:
 
-  File(int fd);
+  File(int fd, int flags);
   int fd_;
+  int flags_;
 };
 
 }

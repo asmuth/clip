@@ -44,6 +44,7 @@ public:
   static std::unique_ptr<TableRef> openTable(
       const std::string& filename,
       const std::string& metric_key,
+      size_t body_size,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
@@ -101,6 +102,7 @@ public:
   explicit ReadonlyTableRef(
       const std::string& filename,
       const std::string& metric_key,
+      size_t size,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
@@ -118,9 +120,7 @@ public:
 
 protected:
   std::unique_ptr<fnord::sstable::SSTableReader> openTable();
-
-  bool is_writable_;
-  std::unique_ptr<sstable::LiveSSTable> table_;
+  size_t body_size_;
 };
 
 }

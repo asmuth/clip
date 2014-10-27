@@ -36,6 +36,12 @@ void FileRepository::listFiles(
   });
 }
 
+void FileRepository::deleteAllFiles() {
+  listFiles([] (const std::string& filename) -> bool {
+    FileUtil::rm(filename);
+    return true;
+  });
+}
 
 }
 }

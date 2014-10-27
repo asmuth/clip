@@ -14,7 +14,10 @@
 namespace fnord {
 namespace sstable {
 
-SSTableReader::SSTableReader(io::File&& file) : file_(std::move(file)) {
+SSTableReader::SSTableReader(
+    io::File&& file) : file_(std::move(file)) {
+  mmap_.reset(new io::MmappedFile(file_.clone()));
+
   BinaryFormat::FileHeader header;
 
   file_size_ = file_.size();
@@ -73,7 +76,7 @@ util::Buffer SSTableReader::readFooter(uint32_t type) {
 
 std::unique_ptr<Cursor> SSTableReader::getCursor() {
   auto cursor = new Cursor(
-      file_.clone(),
+      mmap_,
       sizeof(BinaryFormat::FileHeader) + header_size_,
       sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_);
 
@@ -89,99 +92,63 @@ size_t SSTableReader::headerSize() const {
 }
 
 SSTableReader::Cursor::Cursor(
-    io::File&& file,
+    std::shared_ptr<io::MmappedFile> mmap,
     size_t begin,
     size_t limit) :
-    file_(std::move(file)),
+    mmap_(std::move(mmap)),
     begin_(begin),
     limit_(limit),
-    valid_(false),
-    pos_(0),
-    seekto_cached_(begin) {
-  file_.seekTo(seekto_cached_);
-  readRowHeader();
-}
+    pos_(begin) {}
 
 void SSTableReader::Cursor::seekTo(size_t body_offset) {
-  pos_ = body_offset;
-  readRowHeader();
-}
-
-void SSTableReader::Cursor::fileSeek(size_t pos) {
-  //if (pos == seekto_cached_) {
-  //  return;
-  //}
-
-  if (pos >= limit_) {
-    RAISE(kIndexError, "body offset exceeds limit");
-  }
-
-  file_.seekTo(pos);
-  seekto_cached_ = pos;
+  pos_ = begin_ + body_offset;
 }
 
 bool SSTableReader::Cursor::next() {
-  seekTo(pos_ + sizeof(cur_header_) + cur_header_.key_size);
-  return valid_;
+  auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
+
+  auto next_pos = pos_ += sizeof(BinaryFormat::RowHeader) +
+      header->key_size +
+      header->data_size;
+
+  if (next_pos < limit_) {
+    pos_ = next_pos;
+  } else {
+    return false;
+  }
+
+  return valid();
 }
 
 bool SSTableReader::Cursor::valid() {
-  return valid_;
+  auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
+
+  auto row_limit = pos_ + sizeof(BinaryFormat::RowHeader) +
+      header->key_size +
+      header->data_size;
+
+  return header->key_size > 0 && row_limit < limit_;
 }
 
 void SSTableReader::Cursor::getKey(void** data, size_t* size) {
-  if (!valid_) {
+  if (!valid()) {
     RAISE(kIllegalStateError, "invalid cursor");
   }
 
-  if (cur_key_.get() == nullptr) {
-    auto buf = new util::Buffer(cur_header_.key_size);
-    cur_key_.reset(buf);
-    fileSeek(begin_ + pos_ + sizeof(cur_header_));
-
-    size_t bytes_read = file_.read(buf);
-    seekto_cached_ += bytes_read;
-
-    if (bytes_read != buf->size()) {
-      RAISE(kIOError, "can't read row key");
-    }
-  }
-
-  *data = cur_key_->data();
-  *size = cur_key_->size();
+  auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
+  *data = mmap_->structAt<void>(pos_ + sizeof(BinaryFormat::RowHeader));
+  *size = header->key_size;
 }
 
 void SSTableReader::Cursor::getData(void** data, size_t* size) {
-  if (!valid_) {
+  if (!valid()) {
     RAISE(kIllegalStateError, "invalid cursor");
   }
 
-  if (cur_value_.get() == nullptr) {
-    auto buf = new util::Buffer(cur_header_.data_size);
-    cur_value_.reset(buf);
-    fileSeek(begin_ + pos_ + sizeof(cur_header_) + cur_header_.key_size);
-
-    size_t bytes_read = file_.read(buf);
-    seekto_cached_ += bytes_read;
-
-    if (bytes_read != buf->size()) {
-      RAISE(kIOError, "can't read row value");
-    }
-  }
-
-  *data = cur_value_->data();
-  *size = cur_value_->size();
-}
-
-void SSTableReader::Cursor::readRowHeader() {
-  size_t bytes_read = file_.read(&cur_header_, sizeof(cur_header_));
-  seekto_cached_ += bytes_read;
-
-  if (bytes_read == sizeof(cur_header_)) {
-    valid_ = true;
-  } else {
-    valid_ = false;
-  }
+  auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
+  auto offset = pos_ + sizeof(BinaryFormat::RowHeader) + header->key_size;
+  *data = mmap_->structAt<void>(offset);
+  *size = header->data_size;
 }
 
 }

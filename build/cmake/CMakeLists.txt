@@ -16,6 +16,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/io/file.cc
     stage/src/fnordmetric/io/fileutil.cc
     stage/src/fnordmetric/io/filerepository.cc
+    stage/src/fnordmetric/io/mmappedfile.cc
     stage/src/fnordmetric/io/pagemanager.cc
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc

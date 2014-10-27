@@ -62,10 +62,10 @@ File File::openFile(
     unlink(filename.c_str());
   }
 
-  return File(fd);
+  return File(fd, flags);
 }
 
-File::File(int fd) : fd_(fd) {}
+File::File(int fd, int flags) : fd_(fd), flags_(flags) {}
 
 File::~File() {
   if (fd_ >= 0) {
@@ -73,12 +73,16 @@ File::~File() {
   }
 }
 
-File::File(File&& other) : fd_(other.fd_) {
+File::File(File&& other) : fd_(other.fd_), flags_(other.flags_) {
   other.fd_ = -1;
 }
 
 int File::fd() const {
   return fd_;
+}
+
+bool File::isWritable() const {
+  return (flags_ & O_WRITE) == O_WRITE;
 }
 
 size_t File::size() const {
@@ -118,7 +122,7 @@ File File::clone() const {
     RAISE_ERRNO(kIOError, "dup(%i) failed", fd_);
   }
 
-  return File(new_fd);
+  return File(new_fd, flags_);
 }
 
 }

@@ -52,6 +52,11 @@ public:
       const std::string& dirname,
       std::function<bool(const std::string&)> callback);
 
+  /**
+   * Delete a file
+   */
+  static void rm(const std::string& filename);
+
 };
 
 }

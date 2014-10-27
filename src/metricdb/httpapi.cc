@@ -263,6 +263,8 @@ void HTTPAPI::renderMetricJSON(
   json->beginObject();
   json->addObjectEntry("key");
   json->addString(metric->key());
+  json->addObjectEntry("total_bytes");
+  json->addLiteral<size_t>(metric->totalBytes());
   json->endObject();
 }
 

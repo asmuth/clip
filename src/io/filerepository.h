@@ -33,6 +33,8 @@ public:
   void listFiles(
       std::function<bool(const std::string& filename)> callback) const;
 
+  void deleteAllFiles();
+
 protected:
   std::string basedir_;
 };

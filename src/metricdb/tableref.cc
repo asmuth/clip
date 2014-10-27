@@ -48,6 +48,7 @@ std::unique_ptr<TableRef> TableRef::openTable(const std::string filename) {
     return TableRef::openTable(
         filename,
         header.metricKey(),
+        reader.bodySize(),
         header.generation(),
         header.parents());
   }
@@ -113,11 +114,13 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
 std::unique_ptr<TableRef> TableRef::openTable(
     const std::string& filename,
     const std::string& metric_key,
+    size_t body_size,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
   auto table_ref = new ReadonlyTableRef(
       filename,
       metric_key,
+      body_size,
       generation,
       parents);
 
@@ -209,12 +212,15 @@ void LiveTableRef::finalize(TokenIndex* token_index) {
 ReadonlyTableRef::ReadonlyTableRef(
     const std::string& filename,
     const std::string& metric_key,
+    size_t body_size,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
-    TableRef(filename, metric_key, generation, parents) {}
+    TableRef(filename, metric_key, generation, parents),
+    body_size_(body_size) {}
 
 ReadonlyTableRef::ReadonlyTableRef(
     const TableRef& live_table) :
+    body_size_(live_table.bodySize()),
     TableRef(
         live_table.filename(),
         live_table.metricKey(),
@@ -259,7 +265,7 @@ bool ReadonlyTableRef::isWritable() const {
 }
 
 size_t ReadonlyTableRef::bodySize() const {
-  return 0;
+  return body_size_;
 }
 
 std::unique_ptr<fnord::sstable::SSTableReader> ReadonlyTableRef::openTable() {

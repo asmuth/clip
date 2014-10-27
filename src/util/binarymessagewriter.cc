@@ -63,7 +63,7 @@ size_t BinaryMessageWriter::size() const {
 void BinaryMessageWriter::append(void const* data, size_t size) {
   size_t resize = size_;
 
-  while (used_ + size >= size_) {
+  while (used_ + size >= resize) {
     resize *= 2;
   }
 

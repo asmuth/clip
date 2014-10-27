@@ -50,6 +50,12 @@ public:
 
   void compact(CompactionPolicy* compaction = nullptr);
 
+  void setLiveTableMaxSize(size_t max_size);
+  void setLiveTableIdleTimeMicros(uint64_t idle_time_micros);
+
+  size_t numTables() const;
+  size_t totalBytes() const;
+
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();

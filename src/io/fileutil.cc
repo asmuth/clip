@@ -13,6 +13,7 @@
 #include <fnordmetric/util/stringutil.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 namespace fnord {
 namespace io {
@@ -129,6 +130,10 @@ void FileUtil::ls(
   }
 
   closedir(dir);
+}
+
+void FileUtil::rm(const std::string& filename) {
+  unlink(filename.c_str());
 }
 
 
