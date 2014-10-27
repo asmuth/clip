@@ -127,7 +127,7 @@ bool SSTableReader::Cursor::valid() {
       header->key_size +
       header->data_size;
 
-  return header->key_size > 0 && row_limit < limit_;
+  return header->key_size > 0 && row_limit <= limit_;
 }
 
 void SSTableReader::Cursor::getKey(void** data, size_t* size) {

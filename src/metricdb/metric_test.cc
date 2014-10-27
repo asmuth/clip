@@ -24,7 +24,6 @@ UNIT_TEST(MetricTest);
 const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo2";
 
 TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
-  fnordmetric::env()->setVerbose(true);
   io::FileUtil::mkdir_p(kTestRepoPath);
   FileRepository file_repo(kTestRepoPath);
   file_repo.deleteAllFiles();
@@ -49,7 +48,7 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   }
 
   auto seq1 = [] (double x) {
-    return fmod((x + 1) * 23.5f, 42.0f);
+    return fmod((x + 1) * 23.5f, 4200.0f);
   };
 
   int num_saples = 1000000;
@@ -63,10 +62,8 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   EXPECT_EQ(metric.numTables(), 10);
   size_t total_bytes = metric.totalBytes();
   metric.compact();
-  printf("bytes: %s, %s\n", std::to_string(total_bytes).c_str(), std::to_string(metric.totalBytes()).c_str());
   EXPECT_EQ(metric.totalBytes(), total_bytes);
   EXPECT_EQ(metric.numTables(), 10);
-
 
   n = 0;
   metric.scanSamples(
@@ -74,13 +71,11 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
       util::DateTime::now(),
       [&n, &seq1] (MetricCursor* cur) -> bool {
         auto smpl = cur->sample<double>();
-        printf("test: %f vs %f'\n", smpl->value(), seq1(n));
         EXPECT_EQ(smpl->value(), seq1(n));
         n++;
         return true;
       });
 
-  printf("%i\n", n);
   EXPECT_EQ(n, num_saples);
 });
 
