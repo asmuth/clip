@@ -53,7 +53,6 @@
     - merge compaction
     - scan samples with range / sstable binary search
     - sstable checksums + fsck + repair
-    - sstablereader should mmap
     - mmap cache for readonly files
     - SELECT * ...
     - SQL: order by

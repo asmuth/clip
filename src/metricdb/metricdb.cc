@@ -19,6 +19,7 @@
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
+#include <fnordmetric/metricdb/compactiontask.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/util/exceptionhandler.h>
@@ -98,9 +99,8 @@ int main(int argc, const char** argv) {
       new fnord::io::FileRepository(datadir));
   MetricRepository metric_repo(file_repo);
 
-  for (const auto& metric : metric_repo.listMetrics()) {
-    metric->compact();
-  }
+  CompactionTask compaction_task(&metric_repo);
+  thread_pool.run(compaction_task.runnable());
 
   ev::EventLoop ev_loop;
   ev::Acceptor acceptor(&ev_loop);

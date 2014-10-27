@@ -122,6 +122,7 @@ set(FNORDMETRIC_QUERY_SOURCES
 
 set(METRICDB_SOURCES
     stage/src/fnordmetric/metricdb/adminui.cc
+    stage/src/fnordmetric/metricdb/compactiontask.cc
     stage/src/fnordmetric/metricdb/httpapi.cc
     stage/src/fnordmetric/metricdb/labelindex.cc
     stage/src/fnordmetric/metricdb/labelindexreader.cc
