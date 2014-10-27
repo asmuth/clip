@@ -261,11 +261,30 @@ void HTTPAPI::renderMetricJSON(
     Metric* metric,
     util::JSONOutputStream* json) const {
   json->beginObject();
+
   json->addObjectEntry("key");
   json->addString(metric->key());
   json->addComma();
+
   json->addObjectEntry("total_bytes");
   json->addLiteral<size_t>(metric->totalBytes());
+  json->addComma();
+
+  json->addObjectEntry("last_insert");
+  json->addLiteral<uint64_t>(metric->lastInsertTime());
+  json->addComma();
+
+  json->addObjectEntry("labels");
+  json->beginArray();
+  auto labels = metric->labels();
+  for (auto cur = labels.begin(); cur != labels.end(); ++cur) {
+    if (cur != labels.begin()) {
+      json->addComma();
+    }
+    json->addString(*cur);
+  }
+  json->endArray();
+
   json->endObject();
 }
 

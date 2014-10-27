@@ -129,6 +129,7 @@ void Metric::addSample(const Sample<double>& sample) {
   writer.writeValue(sample.value);
   for (const auto& label : sample.labels) {
     writer.writeLabel(label.first, label.second);
+    label_index_.addLabel(label.first);
   }
 
   std::lock_guard<std::mutex> lock_holder(append_mutex_);
@@ -300,6 +301,14 @@ size_t Metric::totalBytes() const {
   }
 
   return bytes;
+}
+
+uint64_t Metric::lastInsertTime() const {
+  return last_insert_;
+}
+
+std::set<std::string> Metric::labels() const {
+  return label_index_.labels();
 }
 
 }

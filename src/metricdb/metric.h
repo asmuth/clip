@@ -57,6 +57,7 @@ public:
   size_t numTables() const;
   size_t totalBytes() const;
   uint64_t lastInsertTime() const;
+  std::set<std::string> labels() const;
 
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
