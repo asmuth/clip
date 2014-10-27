@@ -94,30 +94,94 @@ SSTableReader::Cursor::Cursor(
     size_t limit) :
     file_(std::move(file)),
     begin_(begin),
-    limit_(limit) {
-  file_.seekTo(begin);
+    limit_(limit),
+    valid_(false),
+    pos_(0),
+    seekto_cached_(begin) {
+  file_.seekTo(seekto_cached_);
+  readRowHeader();
 }
 
 void SSTableReader::Cursor::seekTo(size_t body_offset) {
-  if (body_offset >= limit_) {
+  pos_ = body_offset;
+  readRowHeader();
+}
+
+void SSTableReader::Cursor::fileSeek(size_t pos) {
+  //if (pos == seekto_cached_) {
+  //  return;
+  //}
+
+  if (pos >= limit_) {
     RAISE(kIndexError, "body offset exceeds limit");
   }
 
-  seekTo(body_offset);
+  file_.seekTo(pos);
+  seekto_cached_ = pos;
 }
 
 bool SSTableReader::Cursor::next() {
-  return false;
+  seekTo(pos_ + sizeof(cur_header_) + cur_header_.key_size);
+  return valid_;
 }
 
 bool SSTableReader::Cursor::valid() {
-  return false;
+  return valid_;
 }
 
 void SSTableReader::Cursor::getKey(void** data, size_t* size) {
+  if (!valid_) {
+    RAISE(kIllegalStateError, "invalid cursor");
+  }
+
+  if (cur_key_.get() == nullptr) {
+    auto buf = new util::Buffer(cur_header_.key_size);
+    cur_key_.reset(buf);
+    fileSeek(begin_ + pos_ + sizeof(cur_header_));
+
+    size_t bytes_read = file_.read(buf);
+    seekto_cached_ += bytes_read;
+
+    if (bytes_read != buf->size()) {
+      RAISE(kIOError, "can't read row key");
+    }
+  }
+
+  *data = cur_key_->data();
+  *size = cur_key_->size();
 }
 
 void SSTableReader::Cursor::getData(void** data, size_t* size) {
+  if (!valid_) {
+    RAISE(kIllegalStateError, "invalid cursor");
+  }
+
+  if (cur_value_.get() == nullptr) {
+    auto buf = new util::Buffer(cur_header_.data_size);
+    cur_value_.reset(buf);
+    fileSeek(begin_ + pos_ + sizeof(cur_header_) + cur_header_.key_size);
+
+    size_t bytes_read = file_.read(buf);
+    seekto_cached_ += bytes_read;
+
+    if (bytes_read != buf->size()) {
+      RAISE(kIOError, "can't read row value");
+    }
+  }
+
+  *data = cur_value_->data();
+  *size = cur_value_->size();
+}
+
+void SSTableReader::Cursor::readRowHeader() {
+  size_t bytes_read = file_.read(&cur_header_, sizeof(cur_header_));
+  seekto_cached_ += bytes_read;
+
+  if (bytes_read == sizeof(cur_header_)) {
+    valid_ = true;
+  } else {
+    valid_ = false;
+  }
 }
 
 }

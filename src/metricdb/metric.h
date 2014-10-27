@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/metricdb/compaction.h>
+#include <fnordmetric/metricdb/compactionpolicy.h>
 #include <fnordmetric/metricdb/metriccursor.h>
 #include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
@@ -27,6 +27,10 @@ namespace metricdb {
 
 class Metric {
 public:
+  static constexpr const size_t kLiveTableMaxSize = 2 << 19; /* 1MB */
+  static constexpr const uint64_t kLiveTableIdleTimeMicros = 
+      5 * 60 * 1000000; /* 5 minutes */
+
   Metric(const std::string& key, io::FileRepository* file_repo);
 
   Metric(
@@ -44,7 +48,7 @@ public:
   std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
 
-  void compact(Compaction* compaction = nullptr);
+  void compact(CompactionPolicy* compaction = nullptr);
 
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
@@ -59,6 +63,10 @@ protected:
   std::mutex compaction_mutex_;
   uint64_t max_generation_;
   TokenIndex token_index_;
+
+  size_t live_table_max_size_; // FIXPAUL make atomic
+  uint64_t live_table_idle_time_micros_; // FIXPAUL make atomic
+  uint64_t last_insert_; // FIXPAUL make atomic
 };
 
 }

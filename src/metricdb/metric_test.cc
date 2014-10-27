@@ -51,6 +51,8 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
     metric.addSample(sample);
   }
 
+  metric.compact();
+
   num_samples = 0;
   metric.scanSamples(
       util::DateTime::epoch(),
