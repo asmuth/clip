@@ -148,11 +148,13 @@ FnordMetric.views.QueryPlayground = function() {
 
   var split_button = document.createElement("div");
   split_button.className = "fancy_button";
+  split_button.style.margin = "10px";
   split_button.innerHTML = "<a href='#'>Change View</a>";
   navbar.appendChild(split_button);
 
   var query_button = document.createElement("div");
   query_button.className = "fancy_button";
+  query_button.style.margin = "10px";
   query_button.innerHTML = "<a href='#'>Run Query</a>";
   query_button.style.float ="left";
   navbar.appendChild(query_button);
@@ -194,7 +196,8 @@ FnordMetric.views.QueryPlayground = function() {
 
     cm.setSize("auto", editor_height - 46);
 
-    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series, time AS x, value as y FROM http_status_codes;");
+    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
+    "time AS x, value as y FROM http_status_codes;");
   }
 
   var render = function(elem) {
@@ -305,10 +308,26 @@ FnordMetric.views.QueryPlayground = function() {
 
     result_pane.removeChild(chart_container);
     result_pane.removeChild(result_table);
-  }
+  };
+
+  var updateNavbar = function(selected_item, prev_itemid) {
+    if (typeof selected_item === 'number') {
+      selected_item = document.getElementById(selected_item);
+    }
+    selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
+    if (prev_item >= 0 ) {
+      var prev_item = document.getElementById(prev_itemid);
+      prev_item.firstChild.style.backgroundColor = "#fff";
+    }
+  };
 
 
   var renderResultPane= function(resp) {
+    if (resp.status == "error") {
+      alert(resp.error);
+      return;
+    }
+
     result_pane.style.background = "#fff";
     result_pane.style.borderLeft = "1px solid #ddd";
 
@@ -330,6 +349,7 @@ FnordMetric.views.QueryPlayground = function() {
       menuitem_result.addEventListener('click', function() {
         if (this.id != curr_result) {
           destroyResult();
+          updateNavbar(this, curr_result);
           curr_result = this.id;
           renderResult(charts[curr_result], tables[curr_result]);
         }
@@ -339,6 +359,7 @@ FnordMetric.views.QueryPlayground = function() {
     result_pane.appendChild(result_navbar);
 
     renderResult(charts[curr_result], tables[curr_result]);
+    updateNavbar(curr_result, -1);
 
   }
 
@@ -347,6 +368,7 @@ FnordMetric.views.QueryPlayground = function() {
     FnordMetric.httpPost("/query", query, function(r) {
       if (r.status == 200) {
         var res = JSON.parse(r.response);
+        console.log(res);
         renderResultPane(res);
       } else {
         alert("http post error");

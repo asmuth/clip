@@ -1,4 +1,4 @@
-body, html {
+Body, html {
   margin: 0;
   padding: 0;
   font-family: Helvetica, Arial, sans-serif;
@@ -11,7 +11,7 @@ body {
 }
 
 .navbar {
-  height: 35px;
+  height: 57px;
   width: 100%;
   margin: 0px;
   line-height: 35px;
@@ -19,7 +19,6 @@ body {
 
 .navbar div {
   float: right;
-  margin-right: 20px;
 }
 
 .query_editor .editor_pane,
@@ -89,6 +88,8 @@ body {
 
 .result_pane .chart_container {
   margin-top: 30px;
+  text-align:center;
+  padding: 0px 15px;
 }
 
 .result_pane table.result_table {
@@ -111,6 +112,23 @@ body {
 .result_pane table.result_table td {
   padding: 10px 0 10px 10px;
   text-align: center;
+}
+
+.fancy_button {
+  height: 35px;
+  line-height: 35px;
+  display: inline-block;
+  padding: 0 18px;
+  border-radius: 5px;
+  border-bottom: 1px solid #34495e;
+  color: #fff;
+  background-color: #2980b9;
+}
+
+.fancy_button a {
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 1px 1px 2px rgba(0,0,0,.3);
 }
 
 .viewport {
