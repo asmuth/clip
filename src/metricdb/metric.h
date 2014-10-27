@@ -58,6 +58,7 @@ public:
   size_t totalBytes() const;
   uint64_t lastInsertTime() const;
   std::set<std::string> labels() const;
+  bool hasLabel(const std::string& label) const;
 
 protected:
   std::shared_ptr<MetricSnapshot> getSnapshot() const;

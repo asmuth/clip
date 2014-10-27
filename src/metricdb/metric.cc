@@ -311,5 +311,9 @@ std::set<std::string> Metric::labels() const {
   return label_index_.labels();
 }
 
+bool Metric::hasLabel(const std::string& label) const {
+  return label_index_.hasLabel(label);
+}
+
 }
 }

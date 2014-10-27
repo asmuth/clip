@@ -28,7 +28,7 @@ public:
     T_INTEGER,
     T_BOOL,
     T_TIMESTAMP,
-    T_UNDEFINED
+    T_NULL
   };
 
   static const char* getTypeName(kSValueType type);

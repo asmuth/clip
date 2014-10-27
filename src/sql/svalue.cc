@@ -22,7 +22,7 @@ namespace query {
 
 SValue::SValue() {
   memset(&data_, 0, sizeof(data_));
-  data_.type = T_UNDEFINED;
+  data_.type = T_NULL;
 }
 
 SValue::~SValue() {
@@ -281,8 +281,8 @@ std::string SValue::toString() const {
       return getString();
     }
 
-    case T_UNDEFINED: {
-      static const auto undef_str = "undefined";
+    case T_NULL: {
+      static const char undef_str[] = "NULL";
       str = undef_str;
       len = sizeof(undef_str);
     }
@@ -329,8 +329,8 @@ const char* SValue::getTypeName(kSValueType type) {
       return "Boolean";
     case T_TIMESTAMP:
       return "Timestamp";
-    case T_UNDEFINED:
-      return "Undefined";
+    case T_NULL:
+      return "NULL";
   }
 }
 
