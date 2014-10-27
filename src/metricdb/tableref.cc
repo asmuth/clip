@@ -8,6 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
+#include <fnordmetric/metricdb/labelindex.h>
+#include <fnordmetric/metricdb/labelindexreader.h>
+#include <fnordmetric/metricdb/labelindexwriter.h>
 #include <fnordmetric/metricdb/samplereader.h>
 #include <fnordmetric/metricdb/tableref.h>
 #include <fnordmetric/metricdb/tableheaderreader.h>
@@ -179,7 +182,7 @@ size_t LiveTableRef::bodySize() const {
   return table_->bodySize();
 }
 
-void LiveTableRef::importTokenIndex(TokenIndex* token_index) {
+void LiveTableRef::import(TokenIndex* token_index, LabelIndex* label_index) {
   auto cur = cursor();
 
   while (cur->valid()) {
@@ -192,19 +195,32 @@ void LiveTableRef::importTokenIndex(TokenIndex* token_index) {
       token_index->addToken(def.second, def.first);
     }
 
+    for (const auto& label : sample.labels()) {
+      label_index->addLabel(label.first);
+    }
+
     if (!cur->next()) {
       break;
     }
   }
 }
 
-void LiveTableRef::finalize(TokenIndex* token_index) {
+void LiveTableRef::finalize(
+    TokenIndex* token_index,
+    LabelIndex* label_index) {
   TokenIndexWriter token_index_writer(token_index);
 
   table_->writeIndex(
       TokenIndex::kIndexType,
       token_index_writer.data(),
       token_index_writer.size());
+
+  LabelIndexWriter label_index_writer(label_index);
+
+  table_->writeIndex(
+      LabelIndex::kIndexType,
+      label_index_writer.data(),
+      label_index_writer.size());
 
   table_->finalize();
 }
@@ -236,11 +252,12 @@ std::unique_ptr<sstable::Cursor> ReadonlyTableRef::cursor() {
   return table->getCursor();
 }
 
-void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
+void ReadonlyTableRef::import(
+    TokenIndex* token_index,
+    LabelIndex* label_index) {
   auto reader = openTable();
-  auto buffer = reader->readFooter(TokenIndex::kIndexType);
-
-  if (buffer.size() == 0) {
+  auto token_index_buffer = reader->readFooter(TokenIndex::kIndexType);
+  if (token_index_buffer.size() == 0) {
     if (env()->verbose()) {
       env()->logger()->printf(
           "DEBUG",
@@ -248,15 +265,35 @@ void ReadonlyTableRef::importTokenIndex(TokenIndex* token_index) {
           filename_.c_str(),
           metric_key_.c_str());
     }
+  } else {
+    TokenIndexReader token_index_reader(
+        token_index_buffer.data(),
+        token_index_buffer.size());
 
-    return;
+    token_index_reader.readIndex(token_index);
   }
 
-  TokenIndexReader token_index_reader(buffer.data(), buffer.size());
-  token_index_reader.readIndex(token_index);
+  auto label_index_buffer = reader->readFooter(LabelIndex::kIndexType);
+  if (label_index_buffer.size() == 0) {
+    if (env()->verbose()) {
+      env()->logger()->printf(
+          "DEBUG",
+          "SStable has empty labelindex: '%s' (%s)",
+          filename_.c_str(),
+          metric_key_.c_str());
+    }
+  } else {
+    LabelIndexReader label_index_reader(
+        label_index_buffer.data(),
+        label_index_buffer.size());
+
+    label_index_reader.readIndex(label_index);
+  }
 }
 
-void ReadonlyTableRef::finalize(TokenIndex* token_index) {
+void ReadonlyTableRef::finalize(
+    TokenIndex* token_index,
+    LabelIndex* label_index) {
   RAISE(kIllegalStateError, "table is immutable");
 }
 

@@ -79,7 +79,7 @@ Metric::Metric(
       }
 
       if (table->generation() == gen) {
-        table->importTokenIndex(&token_index_);
+        table->import(&token_index_, &label_index_);
         snapshot->appendTable(std::move(table));
         table.reset(nullptr);
       }
@@ -247,7 +247,7 @@ void Metric::compact(CompactionPolicy* compaction /* = nullptr */) {
               table->metricKey().c_str());
         }
 
-        table->finalize(&token_index_);
+        table->finalize(&token_index_, &label_index_);
         new_tables.emplace_back(new ReadonlyTableRef(*table));
       }
     } else {
