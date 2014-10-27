@@ -162,11 +162,15 @@ FnordMetric.views.QueryPlayground = function() {
   var cm = CodeMirror(editor_pane.querySelector(".editor"), {
     lineNumbers: true,
   });
+  cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
+  "time AS x, value as y FROM http_status_codes;");
 
-  var updateLayout = function(minor) {
+  var updateLayout = function(viewport) {
+    console.log(viewport);
     if (horizontal) {
       editor_height =  window.innerHeight - 68;
-      query_editor.className = "query_editor horizontal_split";
+      viewport.className = "viewport horizontal_split";
+      query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.left = "0";
       editor_pane.style.float = "left";
@@ -178,12 +182,18 @@ FnordMetric.views.QueryPlayground = function() {
       result_pane.style.overflowY = "auto";
       editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
       editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
+      cm.setSize("auto", editor_height - 46);
     } else {
-      query_editor.className = "query_editor vertical_split";
+      editor_height = (cm.lineCount() * 20 + 60);
+      console.log(cm.lineCount());
+      console.log(editor_height);
+      viewport.className = "viewport vertical_split";
+      query_editor.className = "query_editor";
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
       editor_pane.style.left = "0";
       editor_pane.style.height = editor_height + "px";
+      query_editor.style.height = editor_height + "px";
       result_pane.style.width = "100%";
       result_pane.style.left = "0";
       result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
@@ -192,12 +202,9 @@ FnordMetric.views.QueryPlayground = function() {
       editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
       editor_resizer_tooltip.style.left = "20px";
       editor_resizer_tooltip.style.right = "20px";
+      cm.setSize("auto", editor_height + "px");
     }
 
-    cm.setSize("auto", editor_height - 46);
-
-    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
-    "time AS x, value as y FROM http_status_codes;");
   }
 
   var render = function(elem) {
@@ -223,7 +230,7 @@ FnordMetric.views.QueryPlayground = function() {
         editor_height = window.innerheight * 0.3;
       }
 
-      updateLayout();
+      updateLayout(elem);
     }, false);
 
     editor_resizer_tooltip.addEventListener('drag',function (e) {
@@ -250,10 +257,10 @@ FnordMetric.views.QueryPlayground = function() {
     }, false);
 
     window.addEventListener('resize', function() {
-      updateLayout();
+      updateLayout(elem);
     }, true);
 
-    updateLayout();
+    updateLayout(elem);
   };
 
   var destroy = function(elem) {
@@ -322,7 +329,7 @@ FnordMetric.views.QueryPlayground = function() {
   };
 
 
-  var renderResultPane= function(resp) {
+  var renderResultPane = function(resp) {
     if (resp.status == "error") {
       alert(resp.error);
       return;
@@ -368,7 +375,7 @@ FnordMetric.views.QueryPlayground = function() {
     FnordMetric.httpPost("/query", query, function(r) {
       if (r.status == 200) {
         var res = JSON.parse(r.response);
-        console.log(res);
+        destroy(result_pane);
         renderResultPane(res);
       } else {
         alert("http post error");
