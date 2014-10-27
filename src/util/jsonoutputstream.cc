@@ -37,7 +37,9 @@ void JSONOutputStream::addComma() {
 }
 
 void JSONOutputStream::addString(const std::string& string) {
-  output_->printf("\"%s\"", escapeString(string).c_str());
+  output_->write("\"");
+  output_->write(escapeString(string));
+  output_->write("\"");
 }
 
 void JSONOutputStream::beginArray() {
