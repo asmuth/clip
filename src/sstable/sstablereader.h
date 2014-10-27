@@ -38,7 +38,9 @@ public:
    */
   std::unique_ptr<Cursor> getCursor();
 
+  void readHeader(void** data, size_t* size);
   util::Buffer readHeader();
+  void readFooter(uint32_t type, void** data, size_t* size);
   util::Buffer readFooter(uint32_t type);
 
   size_t bodySize() const;
@@ -66,9 +68,7 @@ protected:
   };
 
 private:
-  io::File file_;
   std::shared_ptr<io::MmappedFile> mmap_;
-
   uint64_t file_size_;
   uint64_t body_size_;
   uint32_t header_size_;

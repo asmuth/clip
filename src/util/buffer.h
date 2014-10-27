@@ -19,6 +19,7 @@ namespace util {
 class Buffer {
 public:
 
+  Buffer(void* initial_data, size_t initial_size);
   Buffer(size_t initial_size);
   Buffer(Buffer&& move);
   Buffer(const Buffer& copy) = delete;

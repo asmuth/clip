@@ -15,63 +15,76 @@ namespace fnord {
 namespace sstable {
 
 SSTableReader::SSTableReader(
-    io::File&& file) : file_(std::move(file)) {
-  mmap_.reset(new io::MmappedFile(file_.clone()));
+    io::File&& file) :
+    mmap_(new io::MmappedFile(std::move(file))) {
+  file_size_ = mmap_->size();
 
-  BinaryFormat::FileHeader header;
-
-  file_size_ = file_.size();
-  if (file_size_ < sizeof(header)) {
+  if (file_size_ < sizeof(BinaryFormat::FileHeader)) {
     RAISE(kIllegalStateError, "not a valid sstable");
   }
 
-  file_.seekTo(0);
-  file_.read(&header, sizeof(header));
+  auto header = mmap_->structAt<BinaryFormat::FileHeader>(0);
 
-  if (header.magic != BinaryFormat::kMagicBytes) {
+  if (header->magic != BinaryFormat::kMagicBytes) {
     RAISE(kIllegalStateError, "not a valid sstable");
   }
 
-  body_size_ = header.body_size;
-  header_size_ = header.header_size;
+  body_size_ = header->body_size;
+  header_size_ = header->header_size;
 
-  if (sizeof(header) + header_size_ + body_size_ > file_size_) {
-    if (header.magic != BinaryFormat::kMagicBytes) {
-      RAISE(kIllegalStateError, "file metadata offsets exceed file bounds");
-    }
+  auto meta_file_size =
+      sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_;
+
+  if (meta_file_size > file_size_) {
+    RAISE(kIllegalStateError, "file metadata offsets exceed file bounds");
   }
+}
+
+void SSTableReader::readHeader(void** data, size_t* size) {
+  *data = mmap_->structAt<void>(sizeof(BinaryFormat::FileHeader));
+  *size = header_size_;
 }
 
 util::Buffer SSTableReader::readHeader() {
-  file_.seekTo(sizeof(BinaryFormat::FileHeader));
-  util::Buffer buf(header_size_);
-  file_.read(&buf);
-  return buf;
+  void* data;
+  size_t size;
+  readHeader(&data, &size);
+
+  return util::Buffer(data, size);
 }
 
-util::Buffer SSTableReader::readFooter(uint32_t type) {
+void SSTableReader::readFooter(
+    uint32_t type,
+    void** data,
+    size_t* size) {
   size_t pos = sizeof(BinaryFormat::FileHeader) + header_size_ + body_size_;
 
   while (pos < file_size_) {
-    BinaryFormat::FooterHeader header;
-    file_.seekTo(pos);
-    file_.read(&header, sizeof(header));
+    auto header = mmap_->structAt<BinaryFormat::FooterHeader>(pos);
+    pos += sizeof(BinaryFormat::FooterHeader);
 
-    if (header.magic != BinaryFormat::kMagicBytes) {
+    if (header->magic != BinaryFormat::kMagicBytes) {
       RAISE(kIllegalStateError, "corrupt sstable footer");
     }
 
-    if (header.type == type) {
-      util::Buffer buf(header.footer_size);
-      file_.read(&buf);
-      return buf;
+    if (header->type == type) {
+      *data = mmap_->structAt<void>(pos);
+      *size = header->footer_size;
+      return;
     }
 
-    pos += sizeof(header) + header.footer_size;
+    pos += header->footer_size;
   }
 
   RAISE(kIndexError, "no such footer found");
-  return util::Buffer(0);
+}
+
+util::Buffer SSTableReader::readFooter(uint32_t type) {
+  void* data;
+  size_t size;
+  readFooter(type, &data, &size);
+
+  return util::Buffer(data, size);
 }
 
 std::unique_ptr<Cursor> SSTableReader::getCursor() {

@@ -14,6 +14,18 @@ namespace fnord {
 namespace util {
 
 Buffer::Buffer(
+    void* initial_data,
+    size_t initial_size) :
+    data_(malloc(initial_size)),
+    size_(initial_size) {
+  if (data_ == nullptr) {
+    RAISE(kMallocError, "malloc() failed");
+  }
+
+  memcpy(data_, initial_data, size_);
+}
+
+Buffer::Buffer(
     size_t initial_size) :
     data_(malloc(initial_size)),
     size_(initial_size) {
