@@ -174,7 +174,7 @@ FnordMetric.views.QueryPlayground = function() {
   cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
   "time AS x, value as y FROM http_status_codes;");
 
-  var updateLayout = function(viewport) {
+  var updateLayout = function(tooltip, viewport) {
     if (horizontal) {
       if (viewport != undefined) {
         viewport.className = "viewport horizontal_split";
@@ -183,10 +183,8 @@ FnordMetric.views.QueryPlayground = function() {
       var result_height = (document.querySelector(
         ".result_pane")).offsetHeight;
       var height = FnordMetric.max(initial_height, result_height);
-
       query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
-      editor_pane.style.left = "0";
       editor_pane.style.float = "left";
       result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
@@ -197,22 +195,22 @@ FnordMetric.views.QueryPlayground = function() {
       editor_resizer_tooltip.style.height = height + "px";
       cm.setSize("auto", height);
     } else {
-      editor_height = (cm.lineCount() * 20 + 60);
-      console.log(cm.lineCount());
-      console.log(editor_height);
-      viewport.className = "viewport vertical_split";
+      console.log("update Layout");
+      if (viewport != undefined) {
+        viewport.className = "viewport vertical_split";
+      }
+      if (!tooltip) {
+        editor_height = (cm.lineCount() * 30 + 60);
+      }
       query_editor.className = "query_editor";
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
-      editor_pane.style.left = "0";
       editor_pane.style.height = editor_height + "px";
       query_editor.style.height = editor_height + "px";
-      console.log(window.innerWidth);
       result_pane.style.width = (window.innerWidth - 55) + "px";
       result_pane.style.left = "20px";
       result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
       result_pane.style.height = "auto";
-      result_pane.style.overflowY = "visible";
       editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
       editor_resizer_tooltip.style.left = "20px";
       editor_resizer_tooltip.style.right = "20px";
@@ -246,7 +244,7 @@ FnordMetric.views.QueryPlayground = function() {
         editor_height = window.innerheight * 0.3;
       }
 
-      updateLayout(elem);
+      updateLayout(false, elem);
     }, false);
 
     editor_resizer_tooltip.addEventListener('drag',function (e) {
@@ -273,10 +271,10 @@ FnordMetric.views.QueryPlayground = function() {
     }, false);
 
     window.addEventListener('resize', function() {
-      updateLayout(elem);
+      updateLayout(false, elem);
     }, true);
 
-    updateLayout(elem);
+    updateLayout(false, elem);
   };
 
   var destroy = function(elem) {
@@ -392,7 +390,7 @@ FnordMetric.views.QueryPlayground = function() {
         var res = JSON.parse(r.response);
         destroy(result_pane);
         renderResultPane(res);
-        updateLayout();
+        updateLayout(false);
       } else {
         alert("http post error");
       }
