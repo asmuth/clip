@@ -40,6 +40,14 @@ FnordMetric.httpPost = function(url, request, callback) {
   }
 }
 
+FnordMetric.max = function(n1, n2) {
+  if (n1 >= n2) {
+    return n1;
+  } else {
+    return n2;
+  }
+}
+
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
 
@@ -148,11 +156,13 @@ FnordMetric.views.QueryPlayground = function() {
 
   var split_button = document.createElement("div");
   split_button.className = "fancy_button";
+  split_button.style.margin = "10px";
   split_button.innerHTML = "<a href='#'>Change View</a>";
   navbar.appendChild(split_button);
 
   var query_button = document.createElement("div");
   query_button.className = "fancy_button";
+  query_button.style.margin = "10px";
   query_button.innerHTML = "<a href='#'>Run Query</a>";
   query_button.style.float ="left";
   navbar.appendChild(query_button);
@@ -161,40 +171,54 @@ FnordMetric.views.QueryPlayground = function() {
     lineNumbers: true,
   });
 
-  var updateLayout = function(minor) {
+  cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
+  "time AS x, value as y FROM http_status_codes;");
+
+  var updateLayout = function(tooltip, viewport) {
     if (horizontal) {
-      editor_height =  window.innerHeight - 68;
-      query_editor.className = "query_editor horizontal_split";
+      if (viewport != undefined) {
+        viewport.className = "viewport horizontal_split";
+      }
+      var initial_height =  (window.innerHeight - 68) / 1.2;
+      var result_height = (document.querySelector(
+        ".result_pane")).offsetHeight;
+      var height = FnordMetric.max(initial_height, result_height);
+      query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
-      editor_pane.style.left = "0";
       editor_pane.style.float = "left";
       result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
-      //result_pane.style.float = "left";
-      result_pane.style.height = editor_height - 54 + "px";
       result_pane.style.overflowY = "auto";
-      editor_resizer_tooltip.style.left = (editor_pane.offsetWidth - 3) + "px";
+      editor_resizer_tooltip.style.left = (editor_pane.offsetWidth) + "px";
       editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
+      editor_resizer_tooltip.style.height = height + "px";
+      cm.setSize("auto", height);
     } else {
-      query_editor.className = "query_editor vertical_split";
+      console.log("update Layout");
+      if (viewport != undefined) {
+        viewport.className = "viewport vertical_split";
+      }
+      if (!tooltip) {
+        editor_height = (cm.lineCount() * 30 + 60);
+      }
+      query_editor.className = "query_editor";
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
-      editor_pane.style.left = "0";
       editor_pane.style.height = editor_height + "px";
-      result_pane.style.width = "100%";
-      result_pane.style.left = "0";
+      query_editor.style.height = editor_height + "px";
+      result_pane.style.width = (window.innerWidth - 55) + "px";
+      result_pane.style.left = "20px";
       result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
       result_pane.style.height = "auto";
-      result_pane.style.overflowY = "visible";
       editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
       editor_resizer_tooltip.style.left = "20px";
       editor_resizer_tooltip.style.right = "20px";
+      editor_resizer_tooltip.style.height = "6px";
+      cm.setSize("auto", editor_height + "px");
     }
 
-    cm.setSize("auto", editor_height - 46);
 
-    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series, time AS x, value as y FROM http_status_codes;");
   }
 
   var render = function(elem) {
@@ -220,7 +244,7 @@ FnordMetric.views.QueryPlayground = function() {
         editor_height = window.innerheight * 0.3;
       }
 
-      updateLayout();
+      updateLayout(false, elem);
     }, false);
 
     editor_resizer_tooltip.addEventListener('drag',function (e) {
@@ -247,10 +271,10 @@ FnordMetric.views.QueryPlayground = function() {
     }, false);
 
     window.addEventListener('resize', function() {
-      updateLayout();
+      updateLayout(false, elem);
     }, true);
 
-    updateLayout();
+    updateLayout(false, elem);
   };
 
   var destroy = function(elem) {
@@ -305,10 +329,25 @@ FnordMetric.views.QueryPlayground = function() {
 
     result_pane.removeChild(chart_container);
     result_pane.removeChild(result_table);
-  }
+  };
+
+  var updateNavbar = function(selected_item, prev_itemid) {
+    if (typeof selected_item === 'number') {
+      selected_item = document.getElementById(selected_item);
+    }
+    selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
+    if (prev_item >= 0 ) {
+      var prev_item = document.getElementById(prev_itemid);
+      prev_item.firstChild.style.backgroundColor = "#fff";
+    }
+  };
 
 
-  var renderResultPane= function(resp) {
+  var renderResultPane = function(resp) {
+    if (resp.status == "error") {
+      alert(resp.error);
+      return;
+    }
     result_pane.style.background = "#fff";
     result_pane.style.borderLeft = "1px solid #ddd";
 
@@ -330,6 +369,7 @@ FnordMetric.views.QueryPlayground = function() {
       menuitem_result.addEventListener('click', function() {
         if (this.id != curr_result) {
           destroyResult();
+          updateNavbar(this, curr_result);
           curr_result = this.id;
           renderResult(charts[curr_result], tables[curr_result]);
         }
@@ -339,6 +379,7 @@ FnordMetric.views.QueryPlayground = function() {
     result_pane.appendChild(result_navbar);
 
     renderResult(charts[curr_result], tables[curr_result]);
+    updateNavbar(curr_result, -1);
 
   }
 
@@ -347,7 +388,9 @@ FnordMetric.views.QueryPlayground = function() {
     FnordMetric.httpPost("/query", query, function(r) {
       if (r.status == 200) {
         var res = JSON.parse(r.response);
+        destroy(result_pane);
         renderResultPane(res);
+        updateLayout(false);
       } else {
         alert("http post error");
       }
