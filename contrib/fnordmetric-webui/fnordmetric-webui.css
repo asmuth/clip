@@ -68,20 +68,24 @@ body {
 .editor_pane, .result_pane {
   position: absolute;
   box-sizing: border-box;
-  margin-bottom: 50px;
 }
 
 .viewport.horizontal_split .editor_pane {
   padding-left: 20px;
+  margin-bottom: 50px;
 }
 
 .viewport.horizontal_split .result_pane {
   padding-right: 20px;
+  margin-bottom: 50px;
 }
 
-.viewport.vertical_split .editor_pane,
-.viewport.vertical_split .result_pane {
+.viewport.vertical_split .editor_pane {
   padding: 0 20px;
+}
+
+.viewport.vertical_split .result_pane {
+  margin-bottom: 50px;
 }
 
 .editor_resizer_tooltip {
@@ -96,13 +100,11 @@ body {
 }
 
 .viewport.vertical_split .editor_resizer_tooltip {
-  height: 6px;
   cursor: ns-resize;
 }
 
 .viewport.horizontal_split .editor_resizer_tooltip {
   width: 6px;
-  min-height: 300px;
   cursor: ew-resize;
 }
 
@@ -130,8 +132,13 @@ body {
   padding: 0px 15px;
 }
 
+.result_pane .chart_container svg {
+  max-width: 1100px;
+}
+
 .result_pane table.result_table {
   width: 100%;
+  max-width: 1100px;
   margin: auto;
   margin-top: 70px;
   border-collapse: collapse;

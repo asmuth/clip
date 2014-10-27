@@ -183,6 +183,7 @@ FnordMetric.views.QueryPlayground = function() {
       var result_height = (document.querySelector(
         ".result_pane")).offsetHeight;
       var height = FnordMetric.max(initial_height, result_height);
+
       query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.left = "0";
@@ -190,7 +191,6 @@ FnordMetric.views.QueryPlayground = function() {
       result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
-      //result_pane.style.height = editor_height - 54 + "px";
       result_pane.style.overflowY = "auto";
       editor_resizer_tooltip.style.left = (editor_pane.offsetWidth) + "px";
       editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
@@ -207,14 +207,16 @@ FnordMetric.views.QueryPlayground = function() {
       editor_pane.style.left = "0";
       editor_pane.style.height = editor_height + "px";
       query_editor.style.height = editor_height + "px";
-      result_pane.style.width = "100%";
-      result_pane.style.left = "0";
+      console.log(window.innerWidth);
+      result_pane.style.width = (window.innerWidth - 55) + "px";
+      result_pane.style.left = "20px";
       result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
       result_pane.style.height = "auto";
       result_pane.style.overflowY = "visible";
       editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
       editor_resizer_tooltip.style.left = "20px";
       editor_resizer_tooltip.style.right = "20px";
+      editor_resizer_tooltip.style.height = "6px";
       cm.setSize("auto", editor_height + "px");
     }
 
