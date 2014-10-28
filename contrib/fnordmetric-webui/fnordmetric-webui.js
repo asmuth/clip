@@ -290,7 +290,14 @@ FnordMetric.views.QueryPlayground = function() {
     }
   };
 
+
+  var renderResultTableRows = function(rows, start, end) {
+    console.log(rows);
+
+  }
+
   var renderResult = function(chart, table) {
+    console.log(table);
     var chart_container = document.createElement("div");
     chart_container.className = "chart_container";
     chart_container.setAttribute("id", "chart_container");
@@ -299,6 +306,43 @@ FnordMetric.views.QueryPlayground = function() {
       chart_container.innerHTML = chart.svg;
     }
     result_pane.appendChild(chart_container);
+
+    //FIXME check for off by one errors 
+    var num_rows = 5;
+    if (table.rows.length > num_rows) {
+      var curr_start_index = 0;
+      console.log("render table navbar");
+      var table_navbar = document.createElement("div");
+      table_navbar.className = "table_navbar";
+      var tooltip_for = document.createElement("a");
+      tooltip_for.href = "#";
+      tooltip_for.setAttribute("id", num_rows);
+      tooltip_for.innerHTML = "for";
+      var tooltip_back = document.createElement("a");
+      tooltip_back.href = "#";
+      tooltip_back.setAttribute("id" , 0);
+      tooltip_back.innerHTML = "back";
+      var navbar_label = document.createElement("div");
+      navbar_label.innerHTML = (curr_start_index + 1) +
+        " - " + num_rows + " of " + table.rows.length;
+
+      table_navbar.appendChild(tooltip_for);
+      table_navbar.appendChild(tooltip_back);
+      table_navbar.appendChild(navbar_label);
+      result_pane.appendChild(table_navbar);
+
+      tooltip_for.addEventListener('click', function() {
+        console.log("scroll table forward");
+        console.log(this.id);
+        renderResultTableRows(table.rows, this.id, this.id + num_rows);
+      }, false);
+
+      tooltip_back.addEventListener('click', function() {
+        console.log("scroll table backwards");
+        console.log(this);
+      }, false);
+
+    }
 
     var result_table = document.createElement("table");
     result_table.className = "result_table";
