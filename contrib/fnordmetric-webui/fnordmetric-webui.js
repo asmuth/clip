@@ -179,14 +179,20 @@ FnordMetric.views.QueryPlayground = function() {
       if (viewport != undefined) {
         viewport.className = "viewport horizontal_split";
       }
+      result_pane.style.height = "auto";
+
       var initial_height =  (window.innerHeight - 68) / 1.2;
+      var editor_height = (document.querySelector(
+        ".editor_pane")).offsetHeight;
+      editor_height = FnordMetric.max(initial_height, editor_height);
       var result_height = (document.querySelector(
         ".result_pane")).offsetHeight;
-      var height = FnordMetric.max(initial_height, result_height);
+      var height = FnordMetric.max(editor_height, result_height);
+
       query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.float = "left";
-      result_pane.style.height = height;
+      result_pane.style.height = height + "px";
       result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
@@ -195,6 +201,7 @@ FnordMetric.views.QueryPlayground = function() {
       editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
       editor_resizer_tooltip.style.height = height + "px";
       cm.setSize("auto", height);
+
     } else {
       if (viewport != undefined) {
         viewport.className = "viewport vertical_split";
@@ -379,6 +386,7 @@ FnordMetric.views.QueryPlayground = function() {
           updateNavbar(this, curr_result);
           curr_result = this.id;
           renderResult(charts[curr_result], tables[curr_result]);
+          updateLayout(false);
         }
       }, false);
 
