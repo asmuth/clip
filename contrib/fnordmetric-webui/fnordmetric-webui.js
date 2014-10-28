@@ -186,6 +186,7 @@ FnordMetric.views.QueryPlayground = function() {
       query_editor.className = "query_editor";
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.float = "left";
+      result_pane.style.height = height;
       result_pane.style.width = (99 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
@@ -195,7 +196,6 @@ FnordMetric.views.QueryPlayground = function() {
       editor_resizer_tooltip.style.height = height + "px";
       cm.setSize("auto", height);
     } else {
-      console.log("update Layout");
       if (viewport != undefined) {
         viewport.className = "viewport vertical_split";
       }
@@ -287,7 +287,10 @@ FnordMetric.views.QueryPlayground = function() {
     var chart_container = document.createElement("div");
     chart_container.className = "chart_container";
     chart_container.setAttribute("id", "chart_container");
-    chart_container.innerHTML = chart.svg;
+    //FIX if no chart is returned
+    if (chart != undefined) {
+      chart_container.innerHTML = chart.svg;
+    }
     result_pane.appendChild(chart_container);
 
     var result_table = document.createElement("table");
@@ -325,7 +328,9 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     var chart_container = document.getElementById("chart_container");
-    chart_container.removeChild(chart_container.firstChild);
+    while (chart_container.firstChild) {
+      chart_container.removeChild(chart_container.firstChild);
+    }
 
     result_pane.removeChild(chart_container);
     result_pane.removeChild(result_table);
@@ -336,7 +341,7 @@ FnordMetric.views.QueryPlayground = function() {
       selected_item = document.getElementById(selected_item);
     }
     selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
-    if (prev_item >= 0 ) {
+    if (prev_itemid >= 0 ) {
       var prev_item = document.getElementById(prev_itemid);
       prev_item.firstChild.style.backgroundColor = "#fff";
     }
@@ -358,7 +363,9 @@ FnordMetric.views.QueryPlayground = function() {
     var result_navbar = document.createElement("div");
     result_navbar.className = "result_navbar";
 
-    for (var i = 0; i < charts.length; i++) {
+    console.log(charts.length);
+    console.log(resp);
+    for (var i = 0; i < tables.length; i++) {
       var menuitem_result = document.createElement("a");
       menuitem_result.className = "menuitem_result";
       menuitem_result.setAttribute("id", i);
