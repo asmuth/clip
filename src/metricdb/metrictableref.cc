@@ -37,6 +37,29 @@ int MetricTableRef::getColumnIndex(const std::string& name) {
   return -1;
 }
 
+std::string MetricTableRef::getColumnName(int index) {
+  if (index == 0) {
+    return "time";
+  }
+
+  if (index == 1) {
+    return "value";
+  }
+
+  if (index - 2 >= fields_.size()) {
+    RAISE(kIndexError, "no such column");
+  }
+
+  return fields_[index - 2];
+}
+
+std::vector<std::string> MetricTableRef::columns() {
+  auto columns = fields_;
+  columns.emplace_back("value");
+  columns.emplace_back("time");
+  return columns;
+}
+
 void MetricTableRef::executeScan(query::TableScan* scan) {
   auto begin = fnord::util::DateTime::epoch();
   auto limit = fnord::util::DateTime::now();

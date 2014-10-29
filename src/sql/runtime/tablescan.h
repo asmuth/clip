@@ -45,7 +45,7 @@ public:
 
 protected:
 
-  static bool resolveColumns(ASTNode* node, TableRef* tbl_ref);
+  static bool resolveColumns(ASTNode* node, ASTNode* parent, TableRef* tbl_ref);
 
   TableRef* const tbl_ref_;
   const std::vector<std::string> columns_;

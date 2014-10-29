@@ -40,6 +40,7 @@ TableScan* TableScan::build(
 
   /* get table reference */
   auto tbl_name = from_list->getChildren()[0];
+
   if (!(*tbl_name == ASTNode::T_TABLE_NAME)) {
     RAISE(kRuntimeError, "corrupt AST");
   }
@@ -71,7 +72,7 @@ TableScan* TableScan::build(
     RAISE(kRuntimeError, "corrupt AST");
   }
 
-  if (!resolveColumns(select_list, tbl_ref)) {
+  if (!resolveColumns(select_list, nullptr, tbl_ref)) {
     return nullptr;
   }
 
@@ -109,13 +110,8 @@ TableScan* TableScan::build(
 
     // resolved column name
     if (derived.size() == 1 && *derived[0] == ASTNode::T_RESOLVED_COLUMN) {
-      auto colname_token = derived[0]->getToken();
-
-      if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
-        RAISE(kRuntimeError, "corrupt AST");
-      }
-
-      column_names.emplace_back(colname_token->getString());
+      auto col_name = tbl_ref->getColumnName(derived[0]->getID());
+      column_names.emplace_back(col_name);
       continue;
     }
 
@@ -145,7 +141,7 @@ TableScan* TableScan::build(
       RAISE(kRuntimeError, "corrupt AST");
     }
 
-    if (!resolveColumns(e, tbl_ref)) {
+    if (!resolveColumns(e, nullptr, tbl_ref)) {
       return nullptr;
     }
 
@@ -215,42 +211,71 @@ const std::vector<std::string>& TableScan::getColumns() const {
   return columns_;
 }
 
-bool TableScan::resolveColumns(ASTNode* node, TableRef* tbl_ref) {
+/* recursively walk the ast and resolve column references */
+bool TableScan::resolveColumns(
+    ASTNode* node,
+    ASTNode* parent,
+    TableRef* tbl_ref) {
   if (node == nullptr) {
     RAISE(kRuntimeError, "corrupt AST");
   }
 
-  if (node->getType() == ASTNode::T_COLUMN_NAME) {
-    auto token = node->getToken();
-    if (!(token && *token == Token::T_IDENTIFIER)) {
-      RAISE(kRuntimeError, "corrupt AST");
+  switch (node->getType()) {
+
+    case ASTNode::T_ALL: {
+      /* handle SELECT * FROM ... by expanding the wildcard */
+      if (parent == nullptr || parent->getType() != ASTNode::T_SELECT_LIST) {
+        RAISE(kRuntimeError, "invalid use of the * wildcard");
+      }
+
+      parent->removeChild(node);
+
+      for (const auto& column : tbl_ref->columns()) {
+        auto derived_col = new ASTNode(ASTNode::T_DERIVED_COLUMN);
+        auto resolved_col = new ASTNode(ASTNode::T_RESOLVED_COLUMN);
+        resolved_col->setID(tbl_ref->getColumnIndex(column));
+        derived_col->appendChild(resolved_col);
+        parent->appendChild(derived_col);
+      }
+
+      parent->debugPrint(2);
+      return true;
     }
 
-    auto col_index = tbl_ref->getColumnIndex(token->getString());
-    if (col_index < 0) {
-      RAISE(
-          kRuntimeError,
-          "no such column: '%s'",
-          token->getString().c_str());
-      return false;
-    }
-
-    node->setType(ASTNode::T_RESOLVED_COLUMN);
-    node->setID(col_index);
-    return true;
-  } else {
-    for (const auto& child : node->getChildren()) {
-      if (child == nullptr) {
-        node->debugPrint(4);
+    case ASTNode::T_COLUMN_NAME: {
+      auto token = node->getToken();
+      if (!(token && *token == Token::T_IDENTIFIER)) {
         RAISE(kRuntimeError, "corrupt AST");
       }
 
-      if (!resolveColumns(child, tbl_ref)) {
+      auto col_index = tbl_ref->getColumnIndex(token->getString());
+      if (col_index < 0) {
+        RAISE(
+            kRuntimeError,
+            "no such column: '%s'",
+            token->getString().c_str());
         return false;
       }
+
+      node->setType(ASTNode::T_RESOLVED_COLUMN);
+      node->setID(col_index);
+      return true;
     }
 
-    return true;
+    default: {
+      for (const auto& child : node->getChildren()) {
+        if (child == nullptr) {
+          RAISE(kRuntimeError, "corrupt AST");
+        }
+
+        if (!resolveColumns(child, node, tbl_ref)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
   }
 }
 

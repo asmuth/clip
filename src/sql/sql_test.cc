@@ -34,11 +34,17 @@ using namespace fnordmetric::query;
 UNIT_TEST(SQLTest);
 
 class TestTableRef : public TableRef {
+  std::vector<std::string> columns() override {
+    return {"one", "two", "three"};
+  }
   int getColumnIndex(const std::string& name) override {
     if (name == "one") return 0;
     if (name == "two") return 1;
     if (name == "three") return 2;
     return -1;
+  }
+  std::string getColumnName(int index) override {
+    return columns()[index];
   }
   void executeScan(TableScan* scan) override {
     int64_t one = 0;
@@ -56,11 +62,17 @@ class TestTableRef : public TableRef {
 };
 
 class TestTable2Ref : public TableRef {
+  std::vector<std::string> columns() override {
+    return {"one", "two", "three"};
+  }
   int getColumnIndex(const std::string& name) override {
     if (name == "one") return 0;
     if (name == "two") return 1;
     if (name == "three") return 2;
     return -1;
+  }
+  std::string getColumnName(int index) override {
+    return columns()[index];
   }
   void executeScan(TableScan* scan) override {
     for (int i = 10; i > 0; --i) {
@@ -105,8 +117,8 @@ static std::unique_ptr<ResultList> executeTestQuery(
                   "test/fixtures/gbp_per_country_simple.csv"), true)));
 
 
-  auto statements = runtime.parser()->parseQuery(query);
-  runtime.queryPlanBuilder()->buildQueryPlan(statements, &query_plan);
+  auto ast = runtime.parser()->parseQuery(query);
+  runtime.queryPlanBuilder()->buildQueryPlan(ast, &query_plan);
   EXPECT(query_plan.queries().size() == 1);
 
   auto result = new ResultList();
@@ -326,7 +338,7 @@ TEST_CASE(SQLTest, TestNegatedValueExpression, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
-TEST_CASE(SQLTest, TestSelectWildcard, [] () {
+TEST_CASE(SQLTest, TestSelectAll, [] () {
   auto parser = parseTestQuery("SELECT * FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
@@ -699,6 +711,12 @@ TEST_CASE(SQLTest, TestTableScanWhereQuery, [] () {
   EXPECT(results->getNumRows() == 51);
 });
 
+TEST_CASE(SQLTest, TestSelectAllQuery, [] () {
+  auto results = executeTestQuery("SELECT * from testtable;");
+  EXPECT(results->getNumColumns() == 3);
+  EXPECT(results->getNumRows() == 100);
+});
+
 TEST_CASE(SQLTest, TestTableScanWhereLimitQuery, [] () {
   auto results = executeTestQuery(
       "  SELECT"
@@ -935,7 +953,7 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
   DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
 
-  auto statements = runtime.parser()->parseQuery(
+  auto ast = runtime.parser()->parseQuery(
       "  IMPORT TABLE city_temperatures "
       "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
       ""
@@ -944,7 +962,7 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
 
   TableRepository table_repo;
   QueryPlan query_plan(&table_repo);
-  runtime.queryPlanBuilder()->buildQueryPlan(statements, &query_plan);
+  runtime.queryPlanBuilder()->buildQueryPlan(ast, &query_plan);
 
   ResultList result;
   auto query_plan_node = query_plan.queries()[0].get();
@@ -955,5 +973,4 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
   EXPECT(result.getRow(0)[0] == "New York");
   EXPECT(result.getRow(1)[0] == "Tokyo");
 });
-
 

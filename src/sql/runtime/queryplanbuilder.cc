@@ -173,7 +173,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
 
   /* copy ast for child and swap out select lists*/
   auto child_ast = ast->deepCopy();
-  child_ast->removeChild(0);
+  child_ast->removeChildByIndex(0);
   child_ast->appendChild(child_sl, 0);
 
   /* search for a group by clause */
@@ -196,7 +196,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     const auto& child_ast_children = child_ast->getChildren();
     for (int i = 0; i < child_ast_children.size(); ++i) {
       if (child_ast_children[i]->getType() == ASTNode::T_GROUP_BY) {
-        child_ast->removeChild(i);
+        child_ast->removeChildByIndex(i);
         break;
       }
     }
@@ -310,7 +310,7 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
 
     for (int i = 0; i < new_ast_children.size(); ++i) {
       if (new_ast_children[i]->getType() == ASTNode::T_LIMIT) {
-        new_ast->removeChild(i);
+        new_ast->removeChildByIndex(i);
         break;
       }
     }

@@ -34,6 +34,24 @@ CSVTableRef::CSVTableRef(
   }
 }
 
+std::vector<std::string> CSVTableRef::columns() {
+  std::vector<std::string> cols;
+
+  if (min_cols_ > 0) {
+    if (headers_.size() > 0) {
+      for (const auto& header : headers_) {
+        cols.emplace_back(header.first);
+      }
+    } else  {
+      for (int i = 0; i < min_cols_; ++i) {
+        cols.emplace_back("col" + std::to_string(i + 1));
+      }
+    }
+  }
+
+  return cols;
+}
+
 int CSVTableRef::getColumnIndex(const std::string& name) {
   const auto& header = headers_.find(name);
 
@@ -57,6 +75,16 @@ int CSVTableRef::getColumnIndex(const std::string& name) {
   }
 
   return -1;
+}
+
+std::string CSVTableRef::getColumnName(int index) {
+  for (const auto& header : headers_) {
+    if (header.second == index) {
+      return header.first;
+    }
+  }
+
+  RAISE(kIndexError, "no such column");
 }
 
 void CSVTableRef::executeScan(TableScan* scan) {

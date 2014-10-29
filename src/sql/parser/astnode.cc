@@ -43,9 +43,17 @@ ASTNode* ASTNode::appendChild(ASTNode::kASTNodeType type) {
   return child;
 }
 
-void ASTNode::removeChild(size_t index) {
-  //delete children_[index];
+void ASTNode::removeChildByIndex(size_t index) {
   children_.erase(children_.begin() + index);
+}
+
+void ASTNode::removeChild(ASTNode* node) {
+  for (auto child = children_.begin(); child != children_.end(); ++child) {
+    if (*child == node) {
+      children_.erase(child);
+      return;
+    }
+  }
 }
 
 void ASTNode::appendChild(ASTNode* node) {
@@ -142,6 +150,9 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
       break;
     case T_DERIVED_COLUMN:
       printf("- DERIVED_COLUMN");
+      break;
+    case T_RESOLVED_COLUMN:
+      printf("- RESOLVED_COLUMN");
       break;
     case T_COLUMN_NAME:
       printf("- COLUMN_NAME");

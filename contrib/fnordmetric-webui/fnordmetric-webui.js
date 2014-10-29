@@ -8,6 +8,34 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+
+/**
+ *
+ * TODOS:
+ *
+ * Query Playground:
+ *  - proper error handling (alert() is too intrusive)
+ *  - proper empty states
+ *  - proper "loading" state
+ *  - stretch: display a [fake] loading bar
+ *  - "embed this query" opens up a popup with html/js/ruby snippets
+ *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
+ *  - "Query execution took .... ms and returned ... rows" hint
+ *  - prevent reload/navigation to other page (body onunload)
+ *  - tabs should read "(Chart|Table) [0-9]+"
+ *
+ * Metric list view:
+ *  - proper "loading" state
+ *  - proper empty state ("looks like you haven't inserted any data yet" w/ curl example)
+ *  - wire up remaining fields
+ *  - hover state/cursor for table rows/metrics
+ *  - click on a metric opens up an example query in the query playground
+ *  - pagination
+ *  - search/filter/autocomplete input box
+ *  - stretch: make table sortable by column
+ *
+ */
+
 if (typeof FnordMetric == "undefined") {
   FnordMetric = {};
 }

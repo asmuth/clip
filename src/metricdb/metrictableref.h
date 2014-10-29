@@ -27,7 +27,9 @@ public:
   MetricTableRef(Metric* metric);
 
   int getColumnIndex(const std::string& name) override;
+  std::string getColumnName(int index) override;
   void executeScan(query::TableScan* scan) override;
+  std::vector<std::string> columns() override;
 
 protected:
   Metric* metric_;
