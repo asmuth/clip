@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/util/buffer.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <string.h>
 
 namespace fnord {
 namespace util {
