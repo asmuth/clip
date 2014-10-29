@@ -120,11 +120,16 @@ void FileUtil::ls(
 
   struct dirent* entry;
   while ((entry = readdir(dir)) != NULL) {
-    if (entry->d_namlen < 1 || *entry->d_name == '.') {
+#if defined(__APPLE__)
+    size_t namlen = entry->d_namlen;
+#else
+    size_t namlen = strlen(entry->d_name);
+#endif
+    if (namlen < 1 || *entry->d_name == '.') {
       continue;
     }
 
-    if (!callback(std::string(entry->d_name, entry->d_namlen))) {
+    if (!callback(std::string(entry->d_name, namlen))) {
       break;
     }
   }
