@@ -10,6 +10,7 @@
 #include <fnordmetric/metricdb/metriccursor.h>
 #include <fnordmetric/util/stringutil.h>
 #include <stdlib.h>
+#include <cstring>
 #include <string>
 #include <vector>
 #include <memory>

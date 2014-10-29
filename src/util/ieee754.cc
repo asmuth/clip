@@ -9,6 +9,8 @@
  */
 #include <fnordmetric/util/ieee754.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <limits>
+#include <string.h>
 #include <stdio.h>
 
 namespace fnord {
