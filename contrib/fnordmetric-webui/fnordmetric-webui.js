@@ -286,50 +286,65 @@ FnordMetric.views.QueryPlayground = function() {
 
   var renderResultTableTooltip = function(rows, rows_per_side) {
     var start_index = 0;
+    var end_index = rows_per_side;
     var table_navbar = document.createElement("div");
     table_navbar.className = "table_navbar";
 
     var tooltip_for = document.createElement("a");
+    tooltip_for.className = "table_navbar_tooltip";
     tooltip_for.href = "#";
-    tooltip_for.setAttribute("id", rows_per_side);
-    tooltip_for.innerHTML = "for";
+    tooltip_for.innerHTML = "&#8594;";
 
     var tooltip_back = document.createElement("a");
+    tooltip_back.className = "table_navbar_tooltip";
     tooltip_back.href = "#";
-    tooltip_back.setAttribute("id" , 0);
-    tooltip_back.innerHTML = "back";
+    tooltip_back.style.marginRight = "2px";
+    tooltip_back.innerHTML = "&#8592;";
 
     var navbar_label = document.createElement("div");
-    navbar_label.innerHTML = (start_index + 1) +
-      " - " + rows_per_side + " of " + rows.length;
+    navbar_label.className = "navbar_label";
+
+    var updateNavbarLabel = function() {
+      navbar_label.innerHTML = "<b>" + (start_index +1) + 
+      "</b><span> - </span><b>" + end_index + 
+      "</b><span> of </span><b>" + rows.length + "</b>";
+    }
+
+    var updateNavbarTooltips = function() {
+      tooltip_for.setAttribute("id", end_index);
+      tooltip_back.setAttribute("id" , start_index);
+
+      tooltip_for.style.color = 
+        (end_index == rows.length) ? "#ddd" : "#444";
+
+      tooltip_back.style.color = 
+        (start_index == 0) ? "#ddd" : "#444";
+    }
+
+    updateNavbarLabel();
+    updateNavbarTooltips();
 
     table_navbar.appendChild(tooltip_for);
     table_navbar.appendChild(tooltip_back);
     table_navbar.appendChild(navbar_label);
     result_pane.appendChild(table_navbar);
 
+
+
     tooltip_for.addEventListener('click', function() {
       start_index = parseInt(this.id);
-      var end_index = Math.min(rows.length, start_index + rows_per_side);
-
-      this.setAttribute("id", start_index + rows_per_side);
-      tooltip_back.setAttribute("id", start_index);
-      navbar_label.innerHTML = (start_index + 1) +
-        " - " + end_index + " of " + rows.length;
-
+      end_index = Math.min(rows.length, start_index + rows_per_side);
+      updateNavbarLabel();
+      updateNavbarTooltips();
       destroyResultTableRows();
       renderResultTableRows(rows, start_index, end_index);
     }, false);
 
     tooltip_back.addEventListener('click', function() {
       start_index = Math.max(0, parseInt(this.id) - rows_per_side);
-      var end_index = start_index + rows_per_side;
-
-      this.setAttribute("id", start_index);
-      tooltip_for.setAttribute("id", end_index);
-      navbar_label.innerHTML = (start_index + 1) +
-        " - " + end_index + " of " + rows.length;
-
+      end_index = start_index + rows_per_side;
+      updateNavbarLabel();
+      updateNavbarTooltips();
       destroyResultTableRows();
       renderResultTableRows(rows, start_index, end_index);
     }, false);
