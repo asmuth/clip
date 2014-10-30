@@ -29,6 +29,10 @@ public:
     return data_;
   }
 
+  inline void* ptr() const {
+    return data_;
+  }
+
   inline size_t size() const {
     return size_;
   }
