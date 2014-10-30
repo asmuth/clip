@@ -88,15 +88,12 @@ FnordMetric.views.MetricList = function() {
     function createListItem(data) {
       var list_item_row = document.createElement("tr");
       var i = 0;
-      Object.keys(data).map(function(k) {
-        i++;
-        var list_item = document.createElement("td");
-        list_item.innerHTML = data[k];
-        list_item_row.appendChild(list_item);
-      });
+      console.log(data);
+      var list_elems = ["key", "labels", "last_insert", "total_bytes"];
 
-      for (; i < 4; i++) {
+      for (; i < list_elems.length; i++) {
         var list_item = document.createElement("td");
+        list_item.innerHTML = data[list_elems[i]];
         list_item_row.appendChild(list_item);
       }
 
@@ -196,7 +193,6 @@ FnordMetric.views.QueryPlayground = function() {
   "time AS x, value as y FROM http_status_codes;");
 
   var updateLayout = function(tooltip, viewport) {
-    console.log("zpdate layout");
     if (horizontal) {
       if (viewport != undefined) {
         viewport.className = "viewport horizontal_split";
@@ -324,12 +320,10 @@ FnordMetric.views.QueryPlayground = function() {
     var chart_container = document.createElement("div");
     chart_container.className = "chart_container";
     chart_container.setAttribute("id", "chart_container");
-    //FIX if no chart is returned
     if (chart != undefined) {
       chart_container.innerHTML = chart.svg;
     }
     result_pane.appendChild(chart_container);
-    //make result_table global or as argument of renderResultTableRows ? 
     result_table = document.createElement("table");
     result_table.className = "result_table";
     result_table.setAttribute("id", "result_table");
@@ -540,7 +534,6 @@ FnordMetric.WebUI = function() {
   viewport.className = "viewport";
 
   var init = function() {
-    console.log("init");
     var headbar = document.createElement("div");
     headbar.className = "headbar";
     document.body.appendChild(headbar);
@@ -550,7 +543,7 @@ FnordMetric.WebUI = function() {
     menuitem_editor.href = "#";
     menuitem_editor.innerHTML = "<h1 id ='menuitem_editor'>New Query</h1>";
     menuitem_editor.addEventListener('click', function() {
-      window.location.href = "/admin";
+      window.location.href = "/admin#query_playground";
       renderView(FnordMetric.views.QueryPlayground());
     });
     headbar.appendChild(menuitem_editor);
@@ -559,16 +552,15 @@ FnordMetric.WebUI = function() {
     menuitem_metrics.href = "#";
     menuitem_metrics.innerHTML = "<h1 id ='menuitem_metrics'>Metrics</h1>";
     menuitem_metrics.addEventListener('click', function() {
-      console.log("click metrics");
-      window.location.href = "/admin#";
+      var url = document.URL;
       renderView(FnordMetric.views.MetricList());
+      window.location.href = "/admin#metrics_list";
+      window.history.pushState({path: url}, "MetricsList", url);
     });
     headbar.appendChild(menuitem_metrics);
   };
 
   var renderView = function(view, query_fragment) {
-    console.log("render View");
-    console.log(view);
     if (current_view != null) {
       current_view.destroy(viewport);
     }
@@ -589,12 +581,18 @@ FnordMetric.WebUI = function() {
         alert("error handling: wrong url");
       }
     } else {
-      console.log("render default view");
       renderView(FnordMetric.views.QueryPlayground());
     }
   }
 
-  console.log("fnordmetric webui");
+  //reload page when going back and forward
+  window.onpopstate = function(event) {
+    console.log("pop state event");
+    if (event.state != null) {
+      location.reload();
+    }
+  }
+
   init();
   renderFromURL();
 
