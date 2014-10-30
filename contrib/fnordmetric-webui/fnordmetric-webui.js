@@ -231,7 +231,6 @@ FnordMetric.views.QueryPlayground = function() {
       if (!tooltip) {
         editor_height = (cm.lineCount() * 30 + 60);
       }
-      console.log("editor height in update: " + editor_height);
       query_editor.className = "query_editor";
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
@@ -513,6 +512,7 @@ FnordMetric.views.QueryPlayground = function() {
     if (query == undefined) {
       var query = cm.getValue();
     }
+    cm.setValue(query);
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     FnordMetric.httpPost("/query", query, function(r) {
@@ -540,6 +540,7 @@ FnordMetric.WebUI = function() {
   viewport.className = "viewport";
 
   var init = function() {
+    console.log("init");
     var headbar = document.createElement("div");
     headbar.className = "headbar";
     document.body.appendChild(headbar);
@@ -549,6 +550,7 @@ FnordMetric.WebUI = function() {
     menuitem_editor.href = "#";
     menuitem_editor.innerHTML = "<h1 id ='menuitem_editor'>New Query</h1>";
     menuitem_editor.addEventListener('click', function() {
+      window.location.href = "/admin";
       renderView(FnordMetric.views.QueryPlayground());
     });
     headbar.appendChild(menuitem_editor);
@@ -557,35 +559,46 @@ FnordMetric.WebUI = function() {
     menuitem_metrics.href = "#";
     menuitem_metrics.innerHTML = "<h1 id ='menuitem_metrics'>Metrics</h1>";
     menuitem_metrics.addEventListener('click', function() {
+      console.log("click metrics");
+      window.location.href = "/admin#";
       renderView(FnordMetric.views.MetricList());
     });
     headbar.appendChild(menuitem_metrics);
   };
 
-  var renderView = function(view) {
-    if (window.location.hash) {
-      var fragment = window.location.hash.substring(1);
-      var fragment = fragment.split("!");
-      var query = decodeURIComponent(fragment[1]);
-      if (fragment[0] == "query_playground") {
-        view = FnordMetric.views.QueryPlayground();
-      } else if (fragment[0] == "metric_list") {
-        view = FnordMetric.views.MetricList();
-      } else {
-        alert("handle error: wrong url");
-      }
-    }
+  var renderView = function(view, query_fragment) {
+    console.log("render View");
+    console.log(view);
     if (current_view != null) {
       current_view.destroy(viewport);
     }
 
     current_view = view;
-    view.render(viewport, query);
+    view.render(viewport, query_fragment);
   };
 
+  var renderFromURL = function() {
+    if (window.location.hash) {
+      var fragment = (window.location.hash.substring(1)).split("!");
+      var query = decodeURIComponent(fragment[1]);
+      if (fragment[0] == "query_playground") {
+        renderView(FnordMetric.views.QueryPlayground(), query);
+      } else if (fragment[0] == "metric_list") {
+        renderView(FnordMetric.view.MetricList(), query);
+      } else {
+        alert("error handling: wrong url");
+      }
+    } else {
+      console.log("render default view");
+      renderView(FnordMetric.views.QueryPlayground());
+    }
+  }
+
+  console.log("fnordmetric webui");
   init();
-  renderView(FnordMetric.views.QueryPlayground());
-}
+  renderFromURL();
+
+  }
 
 
 /* CodeMirror - Minified & Bundled
