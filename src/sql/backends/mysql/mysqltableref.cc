@@ -22,6 +22,16 @@ MySQLTableRef::MySQLTableRef(
   table_columns_ = conn->describeTable(table_name_); // FIXPAUL cache me
 }
 
+std::vector<std::string> MySQLTableRef::columns() {
+  std::vector<std::string> cols;
+
+  for (const auto& col : columns_) {
+    cols.emplace_back(*col);
+  }
+
+  return cols;
+}
+
 int MySQLTableRef::getColumnIndex(const std::string& name) {
   for (int i = 0; i < columns_.size(); ++i) {
     // FIXPAUL case insensitive match
@@ -39,6 +49,14 @@ int MySQLTableRef::getColumnIndex(const std::string& name) {
   }
 
   return -1;
+}
+
+std::string MySQLTableRef::getColumnName(int index) {
+  if (index >= columns_.size()) {
+    RAISE(kIndexError, "no such column");
+  }
+
+  return *columns_[index];
 }
 
 void MySQLTableRef::executeScan(TableScan* scan) {

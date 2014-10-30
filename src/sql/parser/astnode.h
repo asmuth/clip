@@ -80,7 +80,8 @@ public:
   ASTNode* appendChild(ASTNode::kASTNodeType type);
   void appendChild(ASTNode* node);
   void appendChild(ASTNode* node, size_t index);
-  void removeChild(size_t index);
+  void removeChildByIndex(size_t index);
+  void removeChild(ASTNode* node);
   const std::vector<ASTNode*>& getChildren() const;
   void setToken(const Token* token);
   const Token* getToken() const;

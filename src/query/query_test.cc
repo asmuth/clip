@@ -41,11 +41,17 @@ static Parser parseTestQuery(const char* query) {
 }
 
 class TestTableRef : public TableRef {
+  std::vector<std::string> columns() override {
+    return {"one", "two", "three"};
+  }
   int getColumnIndex(const std::string& name) override {
     if (name == "one") return 0;
     if (name == "two") return 1;
     if (name == "three") return 2;
     return -1;
+  }
+  std::string getColumnName(int index) override {
+    return columns()[index];
   }
   void executeScan(TableScan* scan) override {
     for (int i = 10; i > 0; --i) {

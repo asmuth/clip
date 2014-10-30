@@ -31,7 +31,9 @@ public:
       std::unique_ptr<CSVInputStream>&& csv,
       bool headers = false);
 
+  std::vector<std::string> columns() override;
   int getColumnIndex(const std::string& name) override;
+  std::string getColumnName(int index) override;
   void executeScan(TableScan* scan) override;
 
   bool readNextRow(std::vector<SValue>* target);
