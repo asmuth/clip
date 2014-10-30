@@ -231,7 +231,6 @@ FnordMetric.views.QueryPlayground = function() {
       if (!tooltip) {
         editor_height = (cm.lineCount() * 30 + 60);
       }
-      console.log("editor height in update: " + editor_height);
       query_editor.className = "query_editor";
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
@@ -251,8 +250,7 @@ FnordMetric.views.QueryPlayground = function() {
 
   }
 
-  var render = function(elem) {
-
+  var render = function(elem, query) {
     var menuitem_editor = document.getElementById("menuitem_editor");
     menuitem_editor.style.background = "rgba(0,0,0,0.04)";
     var menuitem_metrics = document.getElementById("menuitem_metrics");
@@ -288,7 +286,6 @@ FnordMetric.views.QueryPlayground = function() {
       if (!horizontal && e.clientY > 0) {
         editor_height = (e.clientY + window.pageYOffset) - editor_pane.offsetTop;
         editor_height = Math.max(100, editor_height);
-        console.log("editor height in render: " + editor_height);
         updateLayout(true);
       }
     }, false);
@@ -306,6 +303,11 @@ FnordMetric.views.QueryPlayground = function() {
     }, true);
 
     updateLayout(false, elem);
+
+    if (query != undefined) {
+      runQuery(query);
+    }
+
   };
 
   var destroy = function(elem) {
@@ -506,9 +508,15 @@ FnordMetric.views.QueryPlayground = function() {
 
   }
 
-  var runQuery = function() {
-    var query = cm.getValue();
+  var runQuery = function(query) {
+    if (query == undefined) {
+      var query = cm.getValue();
+    }
+    cm.setValue(query);
+    var encoded_query = encodeURIComponent(query);
+    var url = "/admin#query_playground!" + encoded_query;
     FnordMetric.httpPost("/query", query, function(r) {
+      window.location.href = url;
       if (r.status == 200) {
         var res = JSON.parse(r.response);
         destroy(result_pane);
@@ -532,6 +540,7 @@ FnordMetric.WebUI = function() {
   viewport.className = "viewport";
 
   var init = function() {
+    console.log("init");
     var headbar = document.createElement("div");
     headbar.className = "headbar";
     document.body.appendChild(headbar);
@@ -541,6 +550,7 @@ FnordMetric.WebUI = function() {
     menuitem_editor.href = "#";
     menuitem_editor.innerHTML = "<h1 id ='menuitem_editor'>New Query</h1>";
     menuitem_editor.addEventListener('click', function() {
+      window.location.href = "/admin";
       renderView(FnordMetric.views.QueryPlayground());
     });
     headbar.appendChild(menuitem_editor);
@@ -549,23 +559,46 @@ FnordMetric.WebUI = function() {
     menuitem_metrics.href = "#";
     menuitem_metrics.innerHTML = "<h1 id ='menuitem_metrics'>Metrics</h1>";
     menuitem_metrics.addEventListener('click', function() {
+      console.log("click metrics");
+      window.location.href = "/admin#";
       renderView(FnordMetric.views.MetricList());
     });
     headbar.appendChild(menuitem_metrics);
   };
 
-  var renderView = function(view) {
+  var renderView = function(view, query_fragment) {
+    console.log("render View");
+    console.log(view);
     if (current_view != null) {
       current_view.destroy(viewport);
     }
 
     current_view = view;
-    view.render(viewport);
+    view.render(viewport, query_fragment);
   };
 
+  var renderFromURL = function() {
+    if (window.location.hash) {
+      var fragment = (window.location.hash.substring(1)).split("!");
+      var query = decodeURIComponent(fragment[1]);
+      if (fragment[0] == "query_playground") {
+        renderView(FnordMetric.views.QueryPlayground(), query);
+      } else if (fragment[0] == "metric_list") {
+        renderView(FnordMetric.view.MetricList(), query);
+      } else {
+        alert("error handling: wrong url");
+      }
+    } else {
+      console.log("render default view");
+      renderView(FnordMetric.views.QueryPlayground());
+    }
+  }
+
+  console.log("fnordmetric webui");
   init();
-  renderView(FnordMetric.views.QueryPlayground());
-}
+  renderFromURL();
+
+  }
 
 
 /* CodeMirror - Minified & Bundled
