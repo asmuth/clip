@@ -50,6 +50,8 @@ public:
     void* operator*() const;
     template<typename T> T* structAt(size_t position) const;
     virtual void* getPtr() const = 0;
+    inline void* ptr() const { return getPtr(); }
+    inline size_t size() const { return page_.size; }
     virtual void sync(bool async = false) const {};
     const PageManager::Page page_;
   };
@@ -108,6 +110,7 @@ protected:
 
 class MmapPageManager : public PageManager {
 protected:
+  // FIXPAUL replace with io::MmapedFile
   class MmappedFile {
   public:
     MmappedFile(void* __data, const size_t __size, const int __fd);

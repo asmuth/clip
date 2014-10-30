@@ -25,7 +25,9 @@ namespace sstable {
  *
  *   <header> :=
  *       %x17 %x17 %x17 %x17"    // magic bytes
+ *       %x00 %x01               // sstable file format version
  *       <uint64_t>              // total body size in bytes
+ *       <uint32_t>              // userdata checksum
  *       <uint32_t>              // userdata size in bytes
  *       <bytes>                 // userdata
  *
@@ -47,14 +49,8 @@ namespace sstable {
  */
 class BinaryFormat {
 public:
-
+  static const uint16_t kVersion = 1;
   static const uint64_t kMagicBytes = 0x17171717;
-
-  struct __attribute__((packed)) FileHeader {
-    uint64_t magic;
-    uint64_t body_size;
-    uint32_t header_size;
-  };
 
   struct __attribute__((packed)) RowHeader {
     uint32_t key_size;

@@ -8,6 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sstable/binaryformat.h>
+#include <fnordmetric/sstable/fileheaderwriter.h>
+#include <fnordmetric/sstable/fileheaderreader.h>
 #include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <string.h>
@@ -94,30 +96,27 @@ void LiveSSTable::appendRow(
 }
 
 // FIXPAUL lock
-void LiveSSTable::writeHeader(void const* data, size_t size) {
+void LiveSSTable::writeHeader(void const* userdata, size_t userdata_size) {
   if (header_size_ > 0) {
     RAISE(kIllegalStateError, "header already written");
   }
 
-  auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FileHeader) + size);
+  header_size_ = FileHeaderWriter::calculateSize(userdata_size);
+  auto alloc = mmap_->allocPage(header_size_);
   auto page = mmap_->getPage(alloc);
 
   if (alloc.offset != 0) {
     RAISE(kIllegalStateError, "header page offset must be 0");
   }
 
-  auto header = page->structAt<BinaryFormat::FileHeader>(0);
-  header->magic = BinaryFormat::kMagicBytes;
-  header->body_size = 0;
-  header->header_size = size;
-
-  if (size > 0) {
-    auto userdata = page->structAt<void>(sizeof(BinaryFormat::FileHeader));
-    memcpy(userdata, data, size);
-  }
+  FileHeaderWriter header(
+      page->ptr(),
+      page->size(),
+      0,
+      userdata,
+      userdata_size);
 
   page->sync();
-  header_size_ = alloc.size;
 }
 
 void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
@@ -142,19 +141,19 @@ void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
 }
 
 void LiveSSTable::reopen(size_t file_size) {
-  io::PageManager::Page header_page(0, sizeof(BinaryFormat::FileHeader));
-  auto page = mmap_->getPage(header_page);
-  auto header = page->structAt<BinaryFormat::FileHeader>(0);
+  auto page = mmap_->getPage(io::PageManager::Page(0, file_size));
 
-  if (header->magic != BinaryFormat::kMagicBytes) {
-    RAISE(kIllegalStateError, "not a valid sstable");
+  FileHeaderReader header(page->ptr(), page->size());
+
+  if (!header.verify()) {
+    RAISE(kIllegalStateError, "corrupt sstable header");
   }
 
-  if (header->body_size != 0) {
+  if (header.bodySize() != 0) {
     RAISE(kIllegalStateError, "finalized sstable can't be re-opened");
   }
 
-  header_size_ = sizeof(BinaryFormat::FileHeader) + header->header_size;
+  header_size_ = header.headerSize();
   body_size_ = file_size - header_size_;
 }
 
@@ -163,10 +162,11 @@ void LiveSSTable::finalize() {
   finalized_ = true;
 
   auto page = mmap_->getPage(
-      io::PageManager::Page(0, sizeof(BinaryFormat::FileHeader)));
+      io::PageManager::Page(0, FileHeaderWriter::calculateSize(0)));
 
-  auto header = page->structAt<BinaryFormat::FileHeader>(0);
-  header->body_size = body_size_;
+  FileHeaderWriter header(page->ptr(), page->size());
+  header.updateBodySize(body_size_);
+
   page->sync();
 }
 

@@ -54,7 +54,6 @@
     - scan samples with range / sstable binary search
     - sstable checksums + fsck + repair
     - mmap cache for readonly files
-    - SELECT * ...
     - SQL: order by
     - SQL: having
     - SQL: join

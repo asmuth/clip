@@ -15,8 +15,8 @@
 #include <memory>
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/io/mmappedfile.h>
-#include <fnordmetric/io/pagemanager.h>
 #include <fnordmetric/sstable/binaryformat.h>
+#include <fnordmetric/sstable/fileheaderreader.h>
 #include <fnordmetric/sstable/cursor.h>
 #include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
@@ -70,8 +70,7 @@ protected:
 private:
   std::shared_ptr<io::MmappedFile> mmap_;
   uint64_t file_size_;
-  uint64_t body_size_;
-  uint32_t header_size_;
+  FileHeaderReader header_;
 };
 
 
