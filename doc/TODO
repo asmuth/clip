@@ -60,6 +60,10 @@
     - SQL: subqueries
     - mysql: re-serialize where condition
     - round fn
+    - time based aggregations / windows
+    - pluggable metric backends
+    - mysql backend
+    - hbase backend
     - ui: stacked area charts
     - ui: line/point styles
     - ui: simple web interface (interactive query UI generates embed html snippets)
