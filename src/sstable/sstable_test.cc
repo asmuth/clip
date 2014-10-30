@@ -12,14 +12,14 @@
 #include <string.h>
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnordmetric/sstable/livesstable.h>
+#include <fnordmetric/sstable/sstablewriter.h>
 #include <fnordmetric/sstable/rowoffsetindex.h>
 
 using namespace fnord::sstable;
 using namespace fnord::io;
 UNIT_TEST(SSTableTest);
 
-TEST_CASE(SSTableTest, TestLiveSSTableWriteRead, [] () {
+TEST_CASE(SSTableTest, TestSSTableWriter, [] () {
   auto file = File::openFile(
       "/tmp/__fnord__sstabletest1.sstable",
       File::O_READ | File::O_WRITE | File::O_CREATEOROPEN | File::O_TRUNCATE);
@@ -28,7 +28,7 @@ TEST_CASE(SSTableTest, TestLiveSSTableWriteRead, [] () {
 
   IndexProvider indexes;
 
-  auto tbl = LiveSSTable::create(
+  auto tbl = SSTableWriter::create(
       std::move(file),
       std::move(indexes),
       header.data(),
@@ -61,7 +61,7 @@ TEST_CASE(SSTableTest, TestLiveSSTableWriteRead, [] () {
   tbl->finalize();
 });
 
-TEST_CASE(SSTableTest, TestLiveSSTableWithIndexes, [] () {
+TEST_CASE(SSTableTest, TestSSTableWriterWithIndexes, [] () {
   auto file = File::openFile(
       "/tmp/__fnord__sstabletest2.sstable",
       File::O_READ | File::O_WRITE | File::O_CREATEOROPEN | File::O_TRUNCATE);
@@ -71,7 +71,7 @@ TEST_CASE(SSTableTest, TestLiveSSTableWithIndexes, [] () {
   IndexProvider indexes;
   indexes.addIndex<RowOffsetIndex>();
 
-  auto tbl = LiveSSTable::create(
+  auto tbl = SSTableWriter::create(
       std::move(file),
       std::move(indexes),
       header.data(),

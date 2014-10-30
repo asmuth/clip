@@ -76,7 +76,7 @@ std::unique_ptr<TableRef> TableRef::createTable(
 
   // create new sstable
   sstable::IndexProvider indexes;
-  auto live_sstable = sstable::LiveSSTable::create(
+  auto live_sstable = sstable::SSTableWriter::create(
       std::move(file),
       std::move(indexes),
       header.data(),
@@ -100,7 +100,7 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
     const std::vector<uint64_t>& parents) {
   sstable::IndexProvider indexes;
 
-  auto table = sstable::LiveSSTable::reopen(
+  auto table = sstable::SSTableWriter::reopen(
       std::move(file),
       std::move(indexes));
 
@@ -159,7 +159,7 @@ const std::vector<uint64_t> TableRef::parents() const {
 LiveTableRef::LiveTableRef(
     const std::string& filename,
     const std::string& metric_key,
-    std::unique_ptr<sstable::LiveSSTable> table,
+    std::unique_ptr<sstable::SSTableWriter> table,
     uint64_t generation,
     const std::vector<uint64_t>& parents) :
     TableRef(filename, metric_key, generation, parents),

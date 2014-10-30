@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_SSTABLE_LIVESSTABLE_H
-#define _FNORD_SSTABLE_LIVESSTABLE_H
+#ifndef _FNORD_SSTABLE_SSTABLEWRITER_H
+#define _FNORD_SSTABLE_SSTABLEWRITER_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -32,13 +32,13 @@ namespace sstable {
  * 
  *
  */
-class LiveSSTable {
+class SSTableWriter {
 public:
 
   /**
    * Create and open a new sstable for writing
    */
-  static std::unique_ptr<LiveSSTable> create(
+  static std::unique_ptr<SSTableWriter> create(
       io::File file,
       IndexProvider index_provider,
       void const* header,
@@ -47,14 +47,14 @@ public:
   /**
    * Re-open a partially written sstable for writing
    */
-  static std::unique_ptr<LiveSSTable> reopen(
+  static std::unique_ptr<SSTableWriter> reopen(
       io::File file,
       IndexProvider index_provider);
 
 
-  LiveSSTable(const LiveSSTable& other) = delete;
-  LiveSSTable& operator=(const LiveSSTable& other) = delete;
-  ~LiveSSTable();
+  SSTableWriter(const SSTableWriter& other) = delete;
+  SSTableWriter& operator=(const SSTableWriter& other) = delete;
+  ~SSTableWriter();
 
   /**
    * Append a row to the sstable
@@ -94,7 +94,7 @@ protected:
   class Cursor : public sstable::Cursor {
   public:
     Cursor(
-        LiveSSTable* table,
+        SSTableWriter* table,
         io::MmapPageManager* mmap);
 
     void seekTo(size_t body_offset) override;
@@ -104,12 +104,12 @@ protected:
     void getData(void** data, size_t* size) override;
   protected:
     std::unique_ptr<io::PageManager::PageRef> getPage();
-    LiveSSTable* table_;
+    SSTableWriter* table_;
     io::MmapPageManager* mmap_;
     size_t pos_;
   };
 
-  LiveSSTable(
+  SSTableWriter(
       io::File&& file,
       std::vector<Index::IndexRef>&& indexes);
 
@@ -130,5 +130,5 @@ private:
 }
 }
 
-#include "livesstable_impl.h"
+#include "sstablewriter_impl.h"
 #endif

@@ -12,7 +12,6 @@
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/metricdb/tableref.h>
-#include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/freeondestroy.h>
 #include <fnordmetric/util/wallclock.h>

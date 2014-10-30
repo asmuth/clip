@@ -10,14 +10,14 @@
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/fileheaderwriter.h>
 #include <fnordmetric/sstable/fileheaderreader.h>
-#include <fnordmetric/sstable/livesstable.h>
+#include <fnordmetric/sstable/sstablewriter.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <string.h>
 
 namespace fnord {
 namespace sstable {
 
-std::unique_ptr<LiveSSTable> LiveSSTable::create(
+std::unique_ptr<SSTableWriter> SSTableWriter::create(
     io::File file,
     IndexProvider index_provider,
     void const* header,
@@ -26,21 +26,21 @@ std::unique_ptr<LiveSSTable> LiveSSTable::create(
     RAISE(kIllegalStateError, "file size must be 0");
   }
 
-  auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
+  auto sstable = new SSTableWriter(std::move(file), index_provider.popIndexes());
   sstable->writeHeader(header, header_size);
-  return std::unique_ptr<LiveSSTable>(sstable);
+  return std::unique_ptr<SSTableWriter>(sstable);
 }
 
-std::unique_ptr<LiveSSTable> LiveSSTable::reopen(
+std::unique_ptr<SSTableWriter> SSTableWriter::reopen(
     io::File file,
     IndexProvider index_provider) {
   auto file_size = file.size();
-  auto sstable = new LiveSSTable(std::move(file), index_provider.popIndexes());
+  auto sstable = new SSTableWriter(std::move(file), index_provider.popIndexes());
   sstable->reopen(file_size);
-  return std::unique_ptr<LiveSSTable>(sstable);
+  return std::unique_ptr<SSTableWriter>(sstable);
 }
 
-LiveSSTable::LiveSSTable(
+SSTableWriter::SSTableWriter(
     io::File&& file,
     std::vector<Index::IndexRef>&& indexes) :
     file_(std::move(file)),
@@ -50,11 +50,11 @@ LiveSSTable::LiveSSTable(
     body_size_(0),
     finalized_(false) {}
 
-LiveSSTable::~LiveSSTable() {
+SSTableWriter::~SSTableWriter() {
 }
 
 // FIXPAUL lock
-void LiveSSTable::appendRow(
+void SSTableWriter::appendRow(
     void const* key,
     size_t key_size,
     void const* data,
@@ -89,14 +89,14 @@ void LiveSSTable::appendRow(
   }
 }
 
-void LiveSSTable::appendRow(
+void SSTableWriter::appendRow(
     const std::string& key,
     const std::string& value) {
   appendRow(key.data(), key.size(), value.data(), value.size());
 }
 
 // FIXPAUL lock
-void LiveSSTable::writeHeader(void const* userdata, size_t userdata_size) {
+void SSTableWriter::writeHeader(void const* userdata, size_t userdata_size) {
   if (header_size_ > 0) {
     RAISE(kIllegalStateError, "header already written");
   }
@@ -119,7 +119,7 @@ void LiveSSTable::writeHeader(void const* userdata, size_t userdata_size) {
   page->sync();
 }
 
-void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
+void SSTableWriter::writeIndex(uint32_t index_type, void* data, size_t size) {
   if (finalized_) {
     RAISE(kIllegalStateError, "table is immutable (alread finalized)");
   }
@@ -140,7 +140,7 @@ void LiveSSTable::writeIndex(uint32_t index_type, void* data, size_t size) {
   page->sync();
 }
 
-void LiveSSTable::reopen(size_t file_size) {
+void SSTableWriter::reopen(size_t file_size) {
   auto page = mmap_->getPage(io::PageManager::Page(0, file_size));
 
   FileHeaderReader header(page->ptr(), page->size());
@@ -158,7 +158,7 @@ void LiveSSTable::reopen(size_t file_size) {
 }
 
 // FIXPAUL lock
-void LiveSSTable::finalize() {
+void SSTableWriter::finalize() {
   finalized_ = true;
 
   auto page = mmap_->getPage(
@@ -171,28 +171,28 @@ void LiveSSTable::finalize() {
 }
 
 // FIXPAUL lock
-std::unique_ptr<Cursor> LiveSSTable::getCursor() {
+std::unique_ptr<Cursor> SSTableWriter::getCursor() {
   return std::unique_ptr<Cursor>(
-      new LiveSSTable::Cursor(this, mmap_.get()));
+      new SSTableWriter::Cursor(this, mmap_.get()));
 }
 
 // FIXPAUL lock
-size_t LiveSSTable::bodySize() const {
+size_t SSTableWriter::bodySize() const {
   return body_size_;
 }
 
-size_t LiveSSTable::headerSize() const {
+size_t SSTableWriter::headerSize() const {
   return header_size_;
 }
 
-LiveSSTable::Cursor::Cursor(
-    LiveSSTable* table,
+SSTableWriter::Cursor::Cursor(
+    SSTableWriter* table,
     io::MmapPageManager* mmap) :
     table_(table),
     mmap_(mmap),
     pos_(0) {}
 
-void LiveSSTable::Cursor::seekTo(size_t body_offset) {
+void SSTableWriter::Cursor::seekTo(size_t body_offset) {
   if (body_offset >= table_->bodySize()) {
     RAISE(kIndexError, "seekTo() out of bounds position");
   }
@@ -200,7 +200,7 @@ void LiveSSTable::Cursor::seekTo(size_t body_offset) {
   pos_ = body_offset;
 }
 
-bool LiveSSTable::Cursor::next() {
+bool SSTableWriter::Cursor::next() {
   auto page = getPage();
   auto header = page->structAt<BinaryFormat::RowHeader>(0);
 
@@ -220,11 +220,11 @@ bool LiveSSTable::Cursor::next() {
   }
 }
 
-bool LiveSSTable::Cursor::valid() {
+bool SSTableWriter::Cursor::valid() {
   return pos_ < table_->bodySize();
 }
 
-void LiveSSTable::Cursor::getKey(void** data, size_t* size) {
+void SSTableWriter::Cursor::getKey(void** data, size_t* size) {
   auto page = getPage();
   size_t page_size = page->page_.size;
 
@@ -241,7 +241,7 @@ void LiveSSTable::Cursor::getKey(void** data, size_t* size) {
   *size = header->key_size;
 }
 
-void LiveSSTable::Cursor::getData(void** data, size_t* size) {
+void SSTableWriter::Cursor::getData(void** data, size_t* size) {
   auto page = getPage();
   auto header = page->structAt<BinaryFormat::RowHeader>(0);
 
@@ -257,7 +257,7 @@ void LiveSSTable::Cursor::getData(void** data, size_t* size) {
   *size = header->data_size;
 }
 
-std::unique_ptr<io::PageManager::PageRef> LiveSSTable::Cursor::getPage() {
+std::unique_ptr<io::PageManager::PageRef> SSTableWriter::Cursor::getPage() {
   return mmap_->getPage(io::PageManager::Page(
       table_->headerSize() + pos_,
       table_->bodySize() - pos_));

@@ -11,8 +11,8 @@
 #define _FNORDMETRIC_METRICDB_TABLEREF_H_
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/metricdb/samplewriter.h>
-#include <fnordmetric/sstable/livesstable.h>
 #include <fnordmetric/sstable/sstablereader.h>
+#include <fnordmetric/sstable/sstablewriter.h>
 #include <string>
 
 using namespace fnord;
@@ -81,7 +81,7 @@ public:
   LiveTableRef(
       const std::string& filename,
       const std::string& metric_key,
-      std::unique_ptr<sstable::LiveSSTable> table,
+      std::unique_ptr<sstable::SSTableWriter> table,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 
@@ -101,7 +101,7 @@ public:
 
 protected:
   bool is_writable_;
-  std::unique_ptr<sstable::LiveSSTable> table_;
+  std::unique_ptr<sstable::SSTableWriter> table_;
 };
 
 class ReadonlyTableRef : public TableRef {

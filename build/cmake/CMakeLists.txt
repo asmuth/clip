@@ -32,9 +32,9 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sstable/fileheaderwriter.cc
     stage/src/fnordmetric/sstable/index.cc
     stage/src/fnordmetric/sstable/indexprovider.cc
-    stage/src/fnordmetric/sstable/livesstable.cc
     stage/src/fnordmetric/sstable/rowoffsetindex.cc
     stage/src/fnordmetric/sstable/sstablereader.cc
+    stage/src/fnordmetric/sstable/sstablewriter.cc
     stage/src/fnordmetric/util/assets.cc
     stage/src/fnordmetric/util/binarymessagereader.cc
     stage/src/fnordmetric/util/binarymessagewriter.cc

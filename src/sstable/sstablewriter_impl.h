@@ -11,7 +11,7 @@ namespace fnord {
 namespace sstable {
 
 template <typename IndexType>
-IndexType* LiveSSTable::getIndex() const {
+IndexType* SSTableWriter::getIndex() const {
   for (const auto& idx : indexes_) {
     if (idx->type() == IndexType::kIndexType) {
       auto idx_cast = dynamic_cast<IndexType*>(idx.get());
