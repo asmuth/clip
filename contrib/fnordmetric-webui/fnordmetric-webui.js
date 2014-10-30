@@ -71,7 +71,7 @@ FnordMetric.httpPost = function(url, request, callback) {
 
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
-
+    console.log("url in Metriclist.render : " + document.URL);
     var menuitem_editor = document.getElementById("menuitem_editor");
     menuitem_editor.style.background = "#fff";
     var menuitem_metrics = document.getElementById("menuitem_metrics");
@@ -109,6 +109,7 @@ FnordMetric.views.MetricList = function() {
     list_container.appendChild(list_header);
 
     FnordMetric.httpGet("/metrics", function(r) {
+      window.location.href = "/admin#metrics_list";
       if (r.status == 200) {
         var metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
@@ -175,7 +176,8 @@ FnordMetric.views.QueryPlayground = function() {
   var split_button = document.createElement("div");
   split_button.className = "fancy_button";
   split_button.style.margin = "10px";
-  split_button.innerHTML = "<a href='#'>Change View</a>";
+  //FIXME
+  split_button.innerHTML = "<a href="+document.URL+">Change View</a>";
   navbar.appendChild(split_button);
 
   var query_button = document.createElement("div");
@@ -383,7 +385,6 @@ FnordMetric.views.QueryPlayground = function() {
       result_pane.appendChild(table_navbar);
 
 
-
       tooltip_for.addEventListener('click', function() {
         start_index = parseInt(this.id);
         end_index = Math.min(rows.length, start_index + rows_per_side);
@@ -543,8 +544,10 @@ FnordMetric.WebUI = function() {
     menuitem_editor.href = "#";
     menuitem_editor.innerHTML = "<h1 id ='menuitem_editor'>New Query</h1>";
     menuitem_editor.addEventListener('click', function() {
-      window.location.href = "/admin#query_playground";
+      var url = document.URL;
       renderView(FnordMetric.views.QueryPlayground());
+      window.location.href = "/admin#query_playground";
+      window.history.pushState({path: url}, "QueryPlayground", url);
     });
     headbar.appendChild(menuitem_editor);
 
@@ -554,13 +557,13 @@ FnordMetric.WebUI = function() {
     menuitem_metrics.addEventListener('click', function() {
       var url = document.URL;
       renderView(FnordMetric.views.MetricList());
-      window.location.href = "/admin#metrics_list";
       window.history.pushState({path: url}, "MetricsList", url);
     });
     headbar.appendChild(menuitem_metrics);
   };
 
   var renderView = function(view, query_fragment) {
+    console.log("url in render view: " + document.URL);
     if (current_view != null) {
       current_view.destroy(viewport);
     }
