@@ -260,7 +260,6 @@ FnordMetric.views.QueryPlayground = function() {
       if (!horizontal && e.clientY > 0) {
         editor_height = (e.clientY + window.pageYOffset) - editor_pane.offsetTop;
         editor_height = Math.max(100, editor_height);
-        console.log("editor height in render: " + editor_height);
         updateLayout(true);
       }
     }, false);
@@ -480,7 +479,10 @@ FnordMetric.views.QueryPlayground = function() {
 
   var runQuery = function() {
     var query = cm.getValue();
+    var encoded_query =encodeURIComponent(query);
+    var url = "/admin#query_playground!" + encoded_query;
     FnordMetric.httpPost("/query", query, function(r) {
+      window.location.href = url;
       if (r.status == 200) {
         var res = JSON.parse(r.response);
         destroy(result_pane);
