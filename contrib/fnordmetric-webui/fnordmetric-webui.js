@@ -303,7 +303,7 @@ FnordMetric.views.QueryPlayground = function() {
       updateLayout(false, elem);
     }, true);
 
-    updateLayout(false, elem);\
+    updateLayout(false, elem);
 
     if (query != undefined) {
       runQuery(query);
