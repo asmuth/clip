@@ -251,8 +251,7 @@ FnordMetric.views.QueryPlayground = function() {
 
   }
 
-  var render = function(elem) {
-
+  var render = function(elem, query) {
     var menuitem_editor = document.getElementById("menuitem_editor");
     menuitem_editor.style.background = "rgba(0,0,0,0.04)";
     var menuitem_metrics = document.getElementById("menuitem_metrics");
@@ -304,7 +303,12 @@ FnordMetric.views.QueryPlayground = function() {
       updateLayout(false, elem);
     }, true);
 
-    updateLayout(false, elem);
+    updateLayout(false, elem);\
+
+    if (query != undefined) {
+      runQuery(query);
+    }
+
   };
 
   var destroy = function(elem) {
@@ -505,9 +509,11 @@ FnordMetric.views.QueryPlayground = function() {
 
   }
 
-  var runQuery = function() {
-    var query = cm.getValue();
-    var encoded_query =encodeURIComponent(query);
+  var runQuery = function(query) {
+    if (query == undefined) {
+      var query = cm.getValue();
+    }
+    var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     FnordMetric.httpPost("/query", query, function(r) {
       window.location.href = url;
@@ -557,12 +563,24 @@ FnordMetric.WebUI = function() {
   };
 
   var renderView = function(view) {
+    if (window.location.hash) {
+      var fragment = window.location.hash.substring(1);
+      var fragment = fragment.split("!");
+      var query = decodeURIComponent(fragment[1]);
+      if (fragment[0] == "query_playground") {
+        view = FnordMetric.views.QueryPlayground();
+      } else if (fragment[0] == "metric_list") {
+        view = FnordMetric.views.MetricList();
+      } else {
+        alert("handle error: wrong url");
+      }
+    }
     if (current_view != null) {
       current_view.destroy(viewport);
     }
 
     current_view = view;
-    view.render(viewport);
+    view.render(viewport, query);
   };
 
   init();
