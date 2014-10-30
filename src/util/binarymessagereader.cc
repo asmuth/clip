@@ -20,15 +20,19 @@ BinaryMessageReader::BinaryMessageReader(
     size_(buf_len),
     pos_(0) {}
 
+uint16_t const* BinaryMessageReader::readUInt16() {
+  return static_cast<uint16_t const*>(read(sizeof(uint16_t)));
+}
+
 uint32_t const* BinaryMessageReader::readUInt32() {
-  return static_cast<uint32_t const*>(readData(sizeof(uint32_t)));
+  return static_cast<uint32_t const*>(read(sizeof(uint32_t)));
 }
 
 uint64_t const* BinaryMessageReader::readUInt64() {
-  return static_cast<uint64_t const*>(readData(sizeof(uint64_t)));
+  return static_cast<uint64_t const*>(read(sizeof(uint64_t)));
 }
 
-void const* BinaryMessageReader::readData(size_t size) {
+void const* BinaryMessageReader::read(size_t size) {
   return static_cast<void const*>(readString(size));
 }
 

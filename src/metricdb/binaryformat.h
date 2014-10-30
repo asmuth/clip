@@ -54,17 +54,9 @@ namespace metricdb {
 class BinaryFormat {
 public:
 
+  // FIXPAUL move somewhere else
   struct TableHeader {
     std::string metric_key;
-  };
-
-  struct __attribute__((packed)) SampleHeader {
-    uint64_t value;
-  };
-
-  struct __attribute__((packed)) FieldHeader {
-    uint32_t key;
-    uint32_t value_len;
   };
 
 };

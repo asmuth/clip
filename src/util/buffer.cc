@@ -15,7 +15,7 @@ namespace fnord {
 namespace util {
 
 Buffer::Buffer(
-    void* initial_data,
+    const void* initial_data,
     size_t initial_size) :
     data_(malloc(initial_size)),
     size_(initial_size) {

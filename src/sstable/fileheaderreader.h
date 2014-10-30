@@ -17,7 +17,7 @@
 namespace fnord {
 namespace sstable {
 
-class FileHeaderReader {
+class FileHeaderReader : public fnord::util::BinaryMessageReader {
 public:
 
   FileHeaderReader(
@@ -47,8 +47,13 @@ public:
   /**
    * Return the userdata
    */
-  void readUserdata(void** userdata, size_t* userdata_size);
+  void readUserdata(const void** userdata, size_t* userdata_size);
 
+protected:
+  uint64_t body_size_;
+  uint32_t userdata_checksum_;
+  uint32_t userdata_size_;
+  size_t userdata_offset_;
 };
 
 }

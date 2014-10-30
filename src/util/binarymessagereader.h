@@ -21,10 +21,11 @@ public:
   BinaryMessageReader(void const* buf, size_t buf_len);
   virtual ~BinaryMessageReader() {};
 
+  uint16_t const* readUInt16();
   uint32_t const* readUInt32();
   uint64_t const* readUInt64();
-  void const* readData(size_t size);
   char const* readString(size_t size);
+  void const* read(size_t size);
 
   void rewind();
   void seekTo(size_t pos);

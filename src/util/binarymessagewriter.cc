@@ -40,16 +40,38 @@ BinaryMessageWriter::~BinaryMessageWriter() {
   }
 }
 
+void BinaryMessageWriter::appendUInt16(uint16_t value) {
+  append(&value, sizeof(value));
+}
+
+void BinaryMessageWriter::updateUInt16(size_t offset, uint16_t value) {
+  update(offset, &value, sizeof(value));
+}
+
 void BinaryMessageWriter::appendUInt32(uint32_t value) {
   append(&value, sizeof(value));
+}
+
+void BinaryMessageWriter::updateUInt32(size_t offset, uint32_t value) {
+  update(offset, &value, sizeof(value));
 }
 
 void BinaryMessageWriter::appendUInt64(uint64_t value) {
   append(&value, sizeof(value));
 }
 
+void BinaryMessageWriter::updateUInt64(size_t offset, uint64_t value) {
+  update(offset, &value, sizeof(value));
+}
+
 void BinaryMessageWriter::appendString(const std::string& string) {
   append(string.data(), string.size());
+}
+
+void BinaryMessageWriter::updateString(
+    size_t offset,
+    const std::string& string) {
+  update(offset, string.data(), string.size());
 }
 
 void* BinaryMessageWriter::data() const {
@@ -63,7 +85,7 @@ size_t BinaryMessageWriter::size() const {
 void BinaryMessageWriter::append(void const* data, size_t size) {
   size_t resize = size_;
 
-  while (used_ + size >= resize) {
+  while (used_ + size > resize) {
     resize *= 2;
   }
 
@@ -83,6 +105,14 @@ void BinaryMessageWriter::append(void const* data, size_t size) {
 
   memcpy(((char*) ptr_) + used_, data, size);
   used_ += size;
+}
+
+void BinaryMessageWriter::update(size_t offset, void const* data, size_t size) {
+  if (offset + size > size_) {
+    RAISE(kBufferOverflowError, "update exceeds buffer boundary");
+  }
+
+  memcpy(((char*) ptr_) + offset, data, size);
 }
 
 }

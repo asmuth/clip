@@ -17,7 +17,7 @@
 namespace fnord {
 namespace sstable {
 
-class FileHeaderWriter {
+class FileHeaderWriter : public fnord::util::BinaryMessageWriter {
 public:
   static size_t calculateSize(size_t userdata_size);
 

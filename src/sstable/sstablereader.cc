@@ -28,12 +28,12 @@ SSTableReader::SSTableReader(
   }
 }
 
-void SSTableReader::readHeader(void** userdata, size_t* userdata_size) {
+void SSTableReader::readHeader(const void** userdata, size_t* userdata_size) {
   header_.readUserdata(userdata, userdata_size);
 }
 
 util::Buffer SSTableReader::readHeader() {
-  void* data;
+  const void* data;
   size_t size;
   readHeader(&data, &size);
 

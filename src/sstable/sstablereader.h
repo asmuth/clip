@@ -38,7 +38,7 @@ public:
    */
   std::unique_ptr<Cursor> getCursor();
 
-  void readHeader(void** data, size_t* size);
+  void readHeader(const void** data, size_t* size);
   util::Buffer readHeader();
   void readFooter(uint32_t type, void** data, size_t* size);
   util::Buffer readFooter(uint32_t type);

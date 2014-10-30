@@ -28,6 +28,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/http/httpresponse.cc
     stage/src/fnordmetric/http/httpserver.cc
     stage/src/fnordmetric/sstable/cursor.cc
+    stage/src/fnordmetric/sstable/fileheaderreader.cc
+    stage/src/fnordmetric/sstable/fileheaderwriter.cc
     stage/src/fnordmetric/sstable/index.cc
     stage/src/fnordmetric/sstable/indexprovider.cc
     stage/src/fnordmetric/sstable/livesstable.cc
