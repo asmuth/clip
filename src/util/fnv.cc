@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include "fnv.h"
 
+namespace fnord {
+namespace util {
+
 /**
  * Parameters for the 32bit version of the FNV hash function
  *
@@ -19,9 +22,9 @@
  * prime: 16777619
  *
  */
-template<> fnordmetric::FNV<uint32_t>::FNV() :
-    basis_(2166136261u),
-    prime_(16777619u) {}
+template<> FNV<uint32_t>::FNV() :
+    basis_(2166136261llu),
+    prime_(16777619llu) {}
 
 
 /**
@@ -31,6 +34,9 @@ template<> fnordmetric::FNV<uint32_t>::FNV() :
  * prime: 1099511628211
  *
  */
-template<> fnordmetric::FNV<uint64_t>::FNV() :
-    basis_(14695981039346656037u),
-    prime_(1099511628211u) {}
+template<> FNV<uint64_t>::FNV() :
+    basis_(14695981039346656037llu),
+    prime_(1099511628211llu) {}
+
+}
+}

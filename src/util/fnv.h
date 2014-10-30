@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -15,7 +15,8 @@
 #include <stdint.h>
 #include <string>
 
-namespace fnordmetric {
+namespace fnord {
+namespace util {
 
 /**
  * This implements the FNV1a (Fowler–Noll–Vo) hash function
@@ -39,17 +40,20 @@ public:
     return memory;
   }
 
-  T hash(const std::string& data) const {
+  inline T hash(const void* data, size_t len) const {
+    return hash(static_cast<const uint8_t*>(data), len);
+  }
+
+  inline T hash(const std::string& data) const {
     return hash(reinterpret_cast<const uint8_t*>(data.c_str()), data.length());
   }
 
 protected:
-
   T basis_;
   T prime_;
-
 };
 
+}
 }
 
 #endif

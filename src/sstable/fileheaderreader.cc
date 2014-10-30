@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/fileheaderreader.h>
+#include <fnordmetric/util/fnv.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnord {
@@ -39,8 +40,14 @@ bool FileHeaderReader::verify() {
     return false;
   }
 
- // checksum check...
- return true;
+  const void* userdata;
+  size_t userdata_size;
+  readUserdata(&userdata, &userdata_size);
+
+  util::FNV<uint32_t> fnv;
+  uint32_t userdata_checksum = fnv.hash(userdata, userdata_size);
+
+  return userdata_checksum == userdata_checksum_;
 }
 
 size_t FileHeaderReader::headerSize() const {

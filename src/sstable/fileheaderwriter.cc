@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/fileheaderwriter.h>
+#include <fnordmetric/util/fnv.h>
 
 namespace fnord {
 namespace sstable {
@@ -27,9 +28,17 @@ FileHeaderWriter::FileHeaderWriter(
   appendUInt32(BinaryFormat::kMagicBytes);
   appendUInt16(BinaryFormat::kVersion);
   appendUInt64(body_size);
-  appendUInt32(0); // FIXPAUL
-  appendUInt32(userdata_size);
-  append(userdata, userdata_size);
+
+  if (userdata_size > 0) {
+    util::FNV<uint32_t> fnv;
+    auto userdata_checksum = fnv.hash(userdata, userdata_size);
+    appendUInt32(userdata_checksum); // FIXPAUL
+    appendUInt32(userdata_size);
+    append(userdata, userdata_size);
+  } else {
+    appendUInt32(0);
+    appendUInt32(0);
+  }
 }
 
 FileHeaderWriter::FileHeaderWriter(
