@@ -71,7 +71,6 @@ FnordMetric.httpPost = function(url, request, callback) {
 
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
-    console.log("url in Metriclist.render : " + document.URL);
     var menuitem_editor = document.getElementById("menuitem_editor");
     menuitem_editor.style.background = "#fff";
     var menuitem_metrics = document.getElementById("menuitem_metrics");
@@ -88,7 +87,6 @@ FnordMetric.views.MetricList = function() {
     function createListItem(data) {
       var list_item_row = document.createElement("tr");
       var i = 0;
-      console.log(data);
       var list_elems = ["key", "labels", "last_insert", "total_bytes"];
 
       for (; i < list_elems.length; i++) {
@@ -107,9 +105,7 @@ FnordMetric.views.MetricList = function() {
     list_header.className = "metrics_list_header";
     createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
     list_container.appendChild(list_header);
-
     FnordMetric.httpGet("/metrics", function(r) {
-      window.location.href = "/admin#metrics_list";
       if (r.status == 200) {
         var metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
@@ -541,18 +537,17 @@ FnordMetric.WebUI = function() {
     document.body.appendChild(viewport);
 
     var menuitem_editor = document.createElement("a");
-    menuitem_editor.href = "#";
+    menuitem_editor.href = "#query_playground";
     menuitem_editor.innerHTML = "<h1 id ='menuitem_editor'>New Query</h1>";
     menuitem_editor.addEventListener('click', function() {
       var url = document.URL;
       renderView(FnordMetric.views.QueryPlayground());
-      window.location.href = "/admin#query_playground";
       window.history.pushState({path: url}, "QueryPlayground", url);
     });
     headbar.appendChild(menuitem_editor);
 
     var menuitem_metrics = document.createElement("a");
-    menuitem_metrics.href = "#";
+    menuitem_metrics.href = "#metrics_list";
     menuitem_metrics.innerHTML = "<h1 id ='menuitem_metrics'>Metrics</h1>";
     menuitem_metrics.addEventListener('click', function() {
       var url = document.URL;
@@ -563,7 +558,6 @@ FnordMetric.WebUI = function() {
   };
 
   var renderView = function(view, query_fragment) {
-    console.log("url in render view: " + document.URL);
     if (current_view != null) {
       current_view.destroy(viewport);
     }
@@ -575,11 +569,11 @@ FnordMetric.WebUI = function() {
   var renderFromURL = function() {
     if (window.location.hash) {
       var fragment = (window.location.hash.substring(1)).split("!");
-      var query = decodeURIComponent(fragment[1]);
-      if (fragment[0] == "query_playground") {
+      var query = fragment[1] ? decodeURIComponent(fragment[1]) : undefined;
+      if (fragment[0] == "query_playground" || fragment == "query_playground") {
         renderView(FnordMetric.views.QueryPlayground(), query);
-      } else if (fragment[0] == "metric_list") {
-        renderView(FnordMetric.view.MetricList(), query);
+      } else if (fragment[0] == "metrics_list" || fragment == "metrics_list") {
+        renderView(FnordMetric.views.MetricList(), query);
       } else {
         alert("error handling: wrong url");
       }
@@ -590,7 +584,6 @@ FnordMetric.WebUI = function() {
 
   //reload page when going back and forward
   window.onpopstate = function(event) {
-    console.log("pop state event");
     if (event.state != null) {
       location.reload();
     }
