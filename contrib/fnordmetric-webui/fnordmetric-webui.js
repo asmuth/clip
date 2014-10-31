@@ -22,7 +22,7 @@
  *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
  *  - "Query execution took .... ms and returned ... rows" hint
  *  - prevent reload/navigation to other page (body onunload)
- *  - tabs should read "(Chart|Table) [0-9]+"
+ *  - represent current chart and table in url --> renderResultPane
  *
  * Metric list view:
  *  - proper "loading" state
@@ -328,6 +328,7 @@ FnordMetric.views.QueryPlayground = function() {
       var end_index = rows_per_side;
       var table_navbar = document.createElement("div");
       table_navbar.className = "table_navbar";
+      table_navbar.id = "table_navbar";
 
       var tooltip_for = document.createElement("a");
       tooltip_for.className = "table_navbar_tooltip";
@@ -417,9 +418,6 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     result_pane.appendChild(result_table);
-
-
-
   }
 
 
@@ -436,6 +434,12 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   var destroyTable = function() {
+    var table_navbar = document.getElementById("table_navbar");
+    while (table_navbar.firstChild) {
+      table_navbar.removeChild(table_navbar.firstChild);
+    }
+    result_pane.removeChild(table_navbar);
+
     var result_table = document.getElementById("result_table");
     while (result_table.firstChild) {
       result_table.removeChild(result_table.firstChild);
@@ -453,29 +457,24 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  //DELETE??
-  var destroyResult = function() {
-    var result_table = document.getElementById("result_table");
-    while (result_table.firstChild) {
-      result_table.removeChild(result_table.firstChild);
-    }
-
-    var chart_container = document.getElementById("chart_container");
-    while (chart_container.firstChild) {
-      chart_container.removeChild(chart_container.firstChild);
-    }
-
-    result_pane.removeChild(chart_container);
-    result_pane.removeChild(result_table);
-  };
-
-  var updateNavbar = function(selected_item, prev_itemid) {
+  var updateNavbarChart = function(selected_item, prev_itemid) {
     if (typeof selected_item === 'number') {
-      selected_item = document.getElementById(selected_item);
+      selected_item = document.getElementById("chart" + selected_item);
     }
     selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
     if (prev_itemid >= 0 ) {
-      var prev_item = document.getElementById(prev_itemid);
+      var prev_item = document.getElementById("chart" + prev_itemid);
+      prev_item.firstChild.style.backgroundColor = "#fff";
+    }
+  };
+
+  var updateNavbarTable = function(selected_item, prev_itemid) {
+    if (typeof selected_item === 'number') {
+      selected_item = document.getElementById("table" + selected_item);
+    }
+    selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
+    if (prev_itemid >= 0 ) {
+      var prev_item = document.getElementById("table" + prev_itemid);
       prev_item.firstChild.style.backgroundColor = "#fff";
     }
   };
@@ -493,23 +492,24 @@ FnordMetric.views.QueryPlayground = function() {
     var tables = resp.tables;
     var curr_chart = 0;
     var curr_table = 0;
+    var curr_url = document.URL;
 
     var result_navbar_chart = document.createElement("div");
     result_navbar_chart.className = "result_navbar chart";
     for (var i = 0; i < charts.length; i++) {
       var menuitem_result_chart = document.createElement("a");
       menuitem_result_chart.className = "menuitem_result";
-      menuitem_result_chart.setAttribute("id", i);
-      //FIXME
-      menuitem_result_chart.href = "#";
+      menuitem_result_chart.setAttribute("id", "chart" + i);
+      menuitem_result_chart.setAttribute("data-id", i);
+      menuitem_result_chart.href = curr_url;
       menuitem_result_chart.innerHTML = "<h3>Chart "+(i+1)+"</h3>";
       result_navbar_chart.appendChild(menuitem_result_chart);
 
       menuitem_result_chart.addEventListener('click', function() {
         if (this.id != curr_chart) {
           destroyChart();
-          updateNavbar(this, curr_chart);
-          curr_chart = this.id;
+          updateNavbarChart(this, curr_chart);
+          curr_chart = this.getAttribute('data-id');
           renderChart(charts[curr_chart]);
           updateLayout(false);
         }
@@ -518,23 +518,23 @@ FnordMetric.views.QueryPlayground = function() {
     result_pane.appendChild(result_navbar_chart);
 
     renderChart(charts[curr_chart]);
-    
+
     var result_navbar_table = document.createElement("div");
     result_navbar_table.className = "result_navbar table";
     for (var i = 0; i < tables.length; i++) {
       var menuitem_result_table = document.createElement("a");
       menuitem_result_table.className = "menuitem_result";
-      menuitem_result_table.setAttribute("id", i);
-      //FIXME
-      menuitem_result_table.href = "#";
+      menuitem_result_table.setAttribute("id", "table" + i);
+      menuitem_result_table.setAttribute("data-id", i);
+      menuitem_result_table.href = curr_url;
       menuitem_result_table.innerHTML = "<h3>Table "+(i+1)+"</h3>";
       result_navbar_table.appendChild(menuitem_result_table);
 
       menuitem_result_table.addEventListener('click', function() {
         if (this.id != curr_table) {
           destroyTable();
-          updateNavbar(this, curr_table);
-          curr_table = this.id;
+          updateNavbarTable(this, curr_table);
+          curr_table = this.getAttribute('data-id');
           renderTable(tables[curr_table]);
           updateLayout(false);
         }
@@ -542,11 +542,10 @@ FnordMetric.views.QueryPlayground = function() {
     }
     result_pane.appendChild(result_navbar_table);
 
-
-    
     renderTable(tables[curr_table]);
-    //Fixme
-    updateNavbar(curr_table, -1);
+
+    updateNavbarChart(curr_chart, -1);
+    updateNavbarTable(curr_table, -1);
 
   }
 
