@@ -310,31 +310,19 @@ FnordMetric.views.QueryPlayground = function() {
     }
   };
 
-
-  var renderResult = function(chart, table) {
+  var renderTable = function(table) {
     var rows = table.rows;
     var columns = table.columns;
-
-    var chart_container = document.createElement("div");
-    chart_container.className = "chart_container";
-    chart_container.setAttribute("id", "chart_container");
-    if (chart != undefined) {
-      chart_container.innerHTML = chart.svg;
-    }
-    result_pane.appendChild(chart_container);
     result_table = document.createElement("table");
     result_table.className = "result_table";
     result_table.setAttribute("id", "result_table");
     var table_header = document.createElement("tr");
-
-
     for (var i = 0; i < columns.length; i++) {
       var table_header_cell = document.createElement("th");
       table_header_cell.innerHTML = columns[i];
       table_header.appendChild(table_header_cell);
     }
     result_table.appendChild(table_header);
-
     var renderResultTableTooltip = function(rows, rows_per_side) {
       var start_index = 0;
       var end_index = rows_per_side;
@@ -429,9 +417,43 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     result_pane.appendChild(result_table);
+
+
+
+  }
+
+
+  var renderChart = function(chart) {
+    var chart_container = document.createElement("div");
+    chart_container.className = "chart_container";
+    chart_container.setAttribute("id", "chart_container");
+    if (chart != undefined) {
+      chart_container.innerHTML = chart.svg;
+    }
+    result_pane.appendChild(chart_container);
+
     return false;
   }
 
+  var destroyTable = function() {
+    var result_table = document.getElementById("result_table");
+    while (result_table.firstChild) {
+      result_table.removeChild(result_table.firstChild);
+    }
+    result_pane.removeChild(result_table);
+  }
+
+  var destroyChart = function() {
+    var chart_container = document.getElementById("chart_container");
+    while (chart_container.firstChild) {
+      chart_container.removeChild(chart_container.firstChild);
+    }
+
+    result_pane.removeChild(chart_container);
+  }
+
+
+  //DELETE??
   var destroyResult = function() {
     var result_table = document.getElementById("result_table");
     while (result_table.firstChild) {
@@ -469,33 +491,62 @@ FnordMetric.views.QueryPlayground = function() {
 
     var charts = resp.charts;
     var tables = resp.tables;
-    var curr_result = 0;
+    var curr_chart = 0;
+    var curr_table = 0;
 
-    var result_navbar = document.createElement("div");
-    result_navbar.className = "result_navbar";
-    for (var i = 0; i < tables.length; i++) {
-      var menuitem_result = document.createElement("a");
-      menuitem_result.className = "menuitem_result";
-      menuitem_result.setAttribute("id", i);
-      menuitem_result.href = "#";
-      menuitem_result.innerHTML = "<h3>"+(i+1)+"</h3>";
-      result_navbar.appendChild(menuitem_result);
+    var result_navbar_chart = document.createElement("div");
+    result_navbar_chart.className = "result_navbar chart";
+    for (var i = 0; i < charts.length; i++) {
+      var menuitem_result_chart = document.createElement("a");
+      menuitem_result_chart.className = "menuitem_result";
+      menuitem_result_chart.setAttribute("id", i);
+      //FIXME
+      menuitem_result_chart.href = "#";
+      menuitem_result_chart.innerHTML = "<h3>Chart "+(i+1)+"</h3>";
+      result_navbar_chart.appendChild(menuitem_result_chart);
 
-      menuitem_result.addEventListener('click', function() {
-        if (this.id != curr_result) {
-          destroyResult();
-          updateNavbar(this, curr_result);
-          curr_result = this.id;
-          renderResult(charts[curr_result], tables[curr_result]);
+      menuitem_result_chart.addEventListener('click', function() {
+        if (this.id != curr_chart) {
+          destroyChart();
+          updateNavbar(this, curr_chart);
+          curr_chart = this.id;
+          renderChart(charts[curr_chart]);
           updateLayout(false);
         }
       }, false);
-
     }
-    result_pane.appendChild(result_navbar);
+    result_pane.appendChild(result_navbar_chart);
 
-    renderResult(charts[curr_result], tables[curr_result]);
-    updateNavbar(curr_result, -1);
+    renderChart(charts[curr_chart]);
+    
+    var result_navbar_table = document.createElement("div");
+    result_navbar_table.className = "result_navbar table";
+    for (var i = 0; i < tables.length; i++) {
+      var menuitem_result_table = document.createElement("a");
+      menuitem_result_table.className = "menuitem_result";
+      menuitem_result_table.setAttribute("id", i);
+      //FIXME
+      menuitem_result_table.href = "#";
+      menuitem_result_table.innerHTML = "<h3>Table "+(i+1)+"</h3>";
+      result_navbar_table.appendChild(menuitem_result_table);
+
+      menuitem_result_table.addEventListener('click', function() {
+        if (this.id != curr_table) {
+          destroyTable();
+          updateNavbar(this, curr_table);
+          curr_table = this.id;
+          renderTable(tables[curr_table]);
+          updateLayout(false);
+        }
+      }, false);
+    }
+    result_pane.appendChild(result_navbar_table);
+
+
+    
+    renderTable(tables[curr_table]);
+    //Fixme
+    updateNavbar(curr_table, -1);
 
   }
 
