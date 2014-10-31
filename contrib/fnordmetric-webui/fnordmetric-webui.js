@@ -22,7 +22,7 @@
  *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
  *  - "Query execution took .... ms and returned ... rows" hint
  *  - prevent reload/navigation to other page (body onunload)
- *  - represent current chart and table in url --> renderResultPane
+ *  - represent current chart and table, view in url --> renderResultPane
  *
  * Metric list view:
  *  - proper "loading" state
@@ -76,6 +76,12 @@ FnordMetric.views.MetricList = function() {
     var menuitem_metrics = document.getElementById("menuitem_metrics");
     menuitem_metrics.style.background = "rgba(0,0,0,0.04)";
 
+    var renderError = function(msg) {
+      var error_field = document.createElement("div");
+      error_field.innerHTML = msg? msg : "Upps something went wrong";
+      elem.appendChild(error_field);
+    }
+
     function createListHeaderCells(labels) {
       for (var i = 0; i < labels.length; i++) {
         var list_header_cell = document.createElement("th");
@@ -113,7 +119,8 @@ FnordMetric.views.MetricList = function() {
           createListItem(metrics_data[i]);
         }
       } else {
-        alert("httpGet error");
+        console.log(r);
+        renderError(r);
       }
     });
 
@@ -172,7 +179,6 @@ FnordMetric.views.QueryPlayground = function() {
   var split_button = document.createElement("div");
   split_button.className = "fancy_button";
   split_button.style.margin = "10px";
-  //FIXME
   split_button.innerHTML = "<a href="+document.URL+">Change View</a>";
   navbar.appendChild(split_button);
 
@@ -479,10 +485,18 @@ FnordMetric.views.QueryPlayground = function() {
     }
   };
 
+  var renderError = function(msg) {
+    result_pane.style.background = "#fff";
+    result_pane.style.borderLeft = "1px solid #ddd";
+    var error_msg = document.createElement("div");
+    error_msg.style.padding = "20px";
+    error_msg.innerHTML = msg;
+    result_pane.appendChild(error_msg);
+  }
 
   var renderResultPane = function(resp) {
     if (resp.status == "error") {
-      alert(resp.error);
+      renderError(resp.error);
       return;
     }
     result_pane.style.background = "#fff";
@@ -564,7 +578,7 @@ FnordMetric.views.QueryPlayground = function() {
         renderResultPane(res);
         updateLayout(false);
       } else {
-        alert("http post error");
+        renderError(r);
       }
     });
   }
@@ -607,13 +621,19 @@ FnordMetric.WebUI = function() {
     headbar.appendChild(menuitem_metrics);
   };
 
-  var renderView = function(view, query_fragment) {
+  var renderError = function(msg) {
+    var error_field = document.createElement("div");
+    error_field.style.padding = "20px";
+    error_field.innerHTML = msg;
+    viewport.appendChild(error_field);
+  }
+
+  var renderView = function(view, args) {
     if (current_view != null) {
       current_view.destroy(viewport);
     }
-
-    current_view = view;
-    view.render(viewport, query_fragment);
+    console.log(view);
+    view.render(viewport, args);
   };
 
   var renderFromURL = function() {
@@ -624,8 +644,12 @@ FnordMetric.WebUI = function() {
         renderView(FnordMetric.views.QueryPlayground(), query);
       } else if (fragment[0] == "metrics_list" || fragment == "metrics_list") {
         renderView(FnordMetric.views.MetricList(), query);
+      } else if (fragment == "error") {
+        renderError("nice error message wrong URL, display with timeout?");
+        renderView(FnordMetric.views.QueryPlayground());
       } else {
-        alert("error handling: wrong url");
+        document.location.href = "/admin#error";
+        location.reload();
       }
     } else {
       renderView(FnordMetric.views.QueryPlayground());
@@ -641,6 +665,10 @@ FnordMetric.WebUI = function() {
 
   init();
   renderFromURL();
+
+  return {
+    "renderView": renderView
+  };
 
   }
 
