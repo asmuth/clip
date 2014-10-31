@@ -82,6 +82,12 @@ FnordMetric.views.MetricList = function() {
       elem.appendChild(error_field);
     }
 
+    var renderEmptyState = function() {
+      var msg_field = document.createElement("div");
+      msg_field.innerHTML = "Looks like zou you haven't inserted any data yet.";
+      elem.appendChild(msg_field);
+    }
+
     function createListHeaderCells(labels) {
       for (var i = 0; i < labels.length; i++) {
         var list_header_cell = document.createElement("th");
@@ -115,8 +121,12 @@ FnordMetric.views.MetricList = function() {
       if (r.status == 200) {
         var metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
-        for (var i = 0; i < metrics_data.length; i++) {
-          createListItem(metrics_data[i]);
+        if (metrics_data.length == 0) {
+          renderEmptyState();
+        } else {
+          for (var i = 0; i < metrics_data.length; i++) {
+            createListItem(metrics_data[i]);
+          }
         }
       } else {
         console.log(r);
@@ -632,7 +642,8 @@ FnordMetric.WebUI = function() {
     if (current_view != null) {
       current_view.destroy(viewport);
     }
-    console.log(view);
+
+    current_view = view;
     view.render(viewport, args);
   };
 
