@@ -7,28 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_STRINGUTIL_H_
-#define _FNORDMETRIC_UTIL_STRINGUTIL_H_
-
-#include <stdlib.h>
-#include <stdint.h>
+#ifndef _FNORDMETRIC_UTIL_INSPECT_H_
+#define _FNORDMETRIC_UTIL_INSPECT_H_
 #include <string>
 
 namespace fnord {
 namespace util {
 
-class StringUtil {
-public:
-
-  static void stripTrailingSlashes(std::string* str);
-
-  static std::string hexPrint(
-      void* data,
-      size_t size,
-      bool separate_bytes = true,
-      bool reverse_byte_order = false);
-
-};
+template <typename T>
+std::string inspect(const T& value);
 
 }
 }

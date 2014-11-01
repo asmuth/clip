@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/stringutil.h>
+#include <fnordmetric/util/inspect.h>
 #include <string.h>
 
 namespace fnordmetric {
@@ -196,14 +196,14 @@ const std::string Token::getString() const {
 } // namespace fnordmetric
 
 template <>
-std::string fnord::util::StringUtil::debugPrint<
+std::string fnord::util::inspect<
     fnordmetric::query::Token::kTokenType>(
     const fnordmetric::query::Token::kTokenType& value) {
   return fnordmetric::query::Token::getTypeName(value);
 }
 
 template <>
-std::string fnord::util::StringUtil::debugPrint<
+std::string fnord::util::inspect<
     fnordmetric::query::Token>(
     const fnordmetric::query::Token& value) {
   return fnordmetric::query::Token::getTypeName(value.getType());

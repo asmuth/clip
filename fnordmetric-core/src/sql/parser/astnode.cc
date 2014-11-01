@@ -11,7 +11,7 @@
 #include <assert.h>
 #include "astnode.h"
 #include "token.h"
-#include <fnordmetric/util/stringutil.h>
+#include <fnordmetric/util/inspect.h>
 
 namespace fnordmetric {
 namespace query {
@@ -236,14 +236,14 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
 } // namespace fnordmetric
 
 template <>
-std::string fnord::util::StringUtil::debugPrint<
+std::string fnord::util::inspect<
     fnordmetric::query::ASTNode::kASTNodeType>(
     const fnordmetric::query::ASTNode::kASTNodeType& value) {
   return "<ASTNode>";
 }
 
 template <>
-std::string fnord::util::StringUtil::debugPrint<
+std::string fnord::util::inspect<
     fnordmetric::query::ASTNode>(
     const fnordmetric::query::ASTNode& value) {
   return "<ASTNode>";

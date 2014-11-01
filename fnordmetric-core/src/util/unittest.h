@@ -13,7 +13,7 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/random.h>
-#include <fnordmetric/util/stringutil.h>
+#include <fnordmetric/util/inspect.h>
 #include <functional>
 #include <unordered_map>
 #include <vector>
@@ -49,8 +49,8 @@ void EXPECT_EQ(T1 left, T2 right) {
     RAISE(
         kExpectationFailed,
         "expectation failed: %s == %s",
-        fnord::util::StringUtil::debugPrint<T1>(left).c_str(),
-        fnord::util::StringUtil::debugPrint<T2>(right).c_str());
+        fnord::util::inspect<T1>(left).c_str(),
+        fnord::util::inspect<T2>(right).c_str());
   }
 }
 
