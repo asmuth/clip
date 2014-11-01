@@ -1141,6 +1141,33 @@ TEST_CASE(SQLTest, TestOrderByMulti, [] () {
   EXPECT_EQ(result->getRow(569)[1], "AFG");
 });
 
+TEST_CASE(SQLTest, TestOrderByGroupByTableCol, [] () {
+  auto result = executeTestQuery(
+      "  SELECT country"
+      "      FROM gdp_per_capita"
+      "      GROUP BY gdp_per_capita.country"
+      "      ORDER BY gdp_per_capita.country DESC;");
+
+  EXPECT_EQ(result->getNumRows(), 570);
+  EXPECT_EQ(result->getNumColumns(), 1);
+  EXPECT_EQ(result->getColumns()[0], "country");
+  EXPECT_EQ(result->getRow(0)[0], "ZWE");
+  EXPECT_EQ(result->getRow(569)[0], "AFG");
+});
+
+TEST_CASE(SQLTest, TestOrderByTableCol, [] () {
+  auto result = executeTestQuery(
+      "  SELECT country"
+      "      FROM gdp_per_capita"
+      "      ORDER BY gdp_per_capita.country DESC;");
+
+  EXPECT_EQ(result->getNumRows(), 2090);
+  EXPECT_EQ(result->getNumColumns(), 1);
+  EXPECT_EQ(result->getColumns()[0], "country");
+  EXPECT_EQ(result->getRow(0)[0], "ZWE");
+  EXPECT_EQ(result->getRow(2089)[0], "AFG");
+});
+
 TEST_CASE(SQLTest, TestRuntime, [] () {
   DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new csv_backend::CSVBackend()));
