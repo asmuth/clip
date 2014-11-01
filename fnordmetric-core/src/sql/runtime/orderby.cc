@@ -81,7 +81,6 @@ bool OrderBy::nextRow(SValue* row, int row_len) {
     row_vec.emplace_back(row[i]);
   }
 
-  printf("got row: %i\n", row_len);
   rows_.emplace_back(row_vec);
   return true;
 }

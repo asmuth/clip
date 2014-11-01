@@ -221,21 +221,32 @@ bool TableScan::resolveColumns(
   }
 
   switch (node->getType()) {
-    case ASTNode::T_ALL: {
-      if (parent == nullptr || parent->getType() != ASTNode::T_SELECT_LIST) {
-        RAISE(kRuntimeError, "invalid use of the * wildcard");
+    case ASTNode::T_TABLE_NAME: {
+      if (node->getChildren().size() != 1) {
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
-      parent->removeChild(node);
-
-      for (const auto& column : tbl_ref->columns()) {
-        auto derived_col = new ASTNode(ASTNode::T_DERIVED_COLUMN);
-        auto resolved_col = new ASTNode(ASTNode::T_RESOLVED_COLUMN);
-        resolved_col->setID(tbl_ref->getColumnIndex(column));
-        derived_col->appendChild(resolved_col);
-        parent->appendChild(derived_col);
+      auto column_name = node->getChildren()[0];
+      if (column_name->getType() != ASTNode::T_COLUMN_NAME) {
+        RAISE(kRuntimeError, "corrupt AST");
       }
 
+      auto token = column_name->getToken();
+      if (!(token && *token == Token::T_IDENTIFIER)) {
+        RAISE(kRuntimeError, "corrupt AST");
+      }
+
+      auto col_index = tbl_ref->getColumnIndex(token->getString());
+      if (col_index < 0) {
+        RAISE(
+            kRuntimeError,
+            "no such column: '%s'",
+            token->getString().c_str());
+        return false;
+      }
+
+      node->setType(ASTNode::T_RESOLVED_COLUMN);
+      node->setID(col_index);
       return true;
     }
 

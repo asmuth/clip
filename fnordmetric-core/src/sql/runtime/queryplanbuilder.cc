@@ -67,6 +67,11 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     TableRepository* repo) {
   QueryPlanNode* exec = nullptr;
 
+  /* exapand all column names + wildcard to tablename->columnanme */
+  if (hasUnexpandedColumns(ast)) {
+    expandColumns(ast, repo);
+  }
+
   for (const auto& extension : extensions_) {
     exec = extension->buildQueryPlan(ast, repo);
 
@@ -74,8 +79,6 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
       return exec;
     }
   }
-
-  /* exapand all column names + wildcard to tablename->columnanme */
 
   /* internal nodes: multi table query (joins), order, aggregation, limit */
   if ((exec = buildLimitClause(ast, repo)) != nullptr) {
@@ -103,6 +106,34 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
 
   // if verbose -> dump ast
   return nullptr;
+}
+
+bool QueryPlanBuilder::hasUnexpandedColumns(ASTNode* ast) const {
+  if (ast->getType() != ASTNode::T_SELECT) {
+    return false;
+  }
+
+  if (ast->getChildren().size() < 1 ||
+      ast->getChildren()[0]->getType() != ASTNode::T_SELECT_LIST) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+
+  if (ast->getChildren().size() == 1) {
+    return false;
+  }
+
+  for (const auto& col : ast->getChildren()[0]->getChildren()) {
+    if (col->getType() != ASTNode::T_DERIVED_COLUMN ||
+        col->getChildren().size() != 1 ||
+        col->getChildren()[0]->getType() != ASTNode::T_TABLE_NAME ||
+        col->getChildren()[0]->getChildren().size() != 1 ||
+        col->getChildren()[0]->getChildren()[0]->getType() !=
+        ASTNode::T_COLUMN_NAME) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool QueryPlanBuilder::hasGroupByClause(ASTNode* ast) const {
@@ -171,6 +202,59 @@ bool QueryPlanBuilder::hasAggregationExpression(ASTNode* ast) const {
   }
 
   return false;
+}
+
+void QueryPlanBuilder::expandColumns(ASTNode* ast, TableRepository* repo) {
+  if (ast->getChildren().size() < 2) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+
+  auto select_list = ast->getChildren()[0];
+  if (select_list->getType() != ASTNode::T_SELECT_LIST) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+
+  auto from_list = ast->getChildren()[1];
+  if (from_list->getType() != ASTNode::T_FROM ||
+      from_list->getChildren().size() < 1) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+
+  for (const auto& node : select_list->getChildren()) {
+    /* expand wildcard select (SELECT * FROM ...) */
+    if (node->getType() == ASTNode::T_ALL) {
+      if (from_list->getChildren().size() != 1) {
+        RAISE(
+            kRuntimeError,
+            "can't use wilcard select (SELECT * FROM ...) when selecting from "
+            "multiple tables");
+      }
+
+      auto table_name = from_list->getChildren()[0];
+      if (table_name->getType() != ASTNode::T_TABLE_NAME ||
+          table_name->getToken() == nullptr) {
+        RAISE(kRuntimeError, "corrupt AST");
+      }
+
+      select_list->removeChild(node);
+
+      auto tbl_ref = repo->getTableRef(table_name->getToken()->getString());
+      for (const auto& column : tbl_ref->columns()) {
+        auto derived_col = new ASTNode(ASTNode::T_DERIVED_COLUMN);
+        auto derived_table_name = new ASTNode(ASTNode::T_TABLE_NAME);
+        derived_table_name->setToken(table_name->getToken());
+        auto column_name = new ASTNode(ASTNode::T_COLUMN_NAME);
+        column_name->setToken(new Token(Token::T_IDENTIFIER, column));
+        derived_col->appendChild(derived_table_name);
+        derived_table_name->appendChild(column_name);
+        select_list->appendChild(derived_col);
+      }
+
+      ast->debugPrint(2);
+      continue;
+    }
+  }
+
 }
 
 QueryPlanNode* QueryPlanBuilder::buildGroupBy(
