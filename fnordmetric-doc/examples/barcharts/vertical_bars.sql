@@ -1,11 +1,11 @@
 IMPORT TABLE gdp_per_capita
    FROM 'csv:examples/data/gdp_per_capita.csv?headers=true';
 
---DRAW BARCHART WITH
---    ORIENTATION VERTICAL
---    AXIS BOTTOM
---    GRID HORIZONTAL
---    LEGEND TOP RIGHT INSIDE;
+DRAW BARCHART WITH
+    ORIENTATION VERTICAL
+    AXIS BOTTOM
+    GRID HORIZONTAL
+    LEGEND TOP RIGHT INSIDE;
 
 SELECT year AS series, isocode AS x, gdp AS y
     FROM gdp_per_capita
