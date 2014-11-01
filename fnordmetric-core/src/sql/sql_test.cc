@@ -423,6 +423,26 @@ TEST_CASE(SQLTest, TestSelectDerivedColumnWithTableName, [] () {
   EXPECT(*from == ASTNode::T_FROM);
 });
 
+TEST_CASE(SQLTest, TestSelectWithQuotedTableName, [] () {
+  auto parser = parseTestQuery("SELECT xxx FROM sometable;");
+  EXPECT(parser.getStatements().size() == 1);
+  const auto& stmt = parser.getStatements()[0];
+  EXPECT(*stmt == ASTNode::T_SELECT);
+  EXPECT(stmt->getChildren().size() == 2);
+  const auto& sl = stmt->getChildren()[0];
+  EXPECT(*sl == ASTNode::T_SELECT_LIST);
+  EXPECT(sl->getChildren().size() == 1);
+  const auto& derived = sl->getChildren()[0];
+  EXPECT(*derived == ASTNode::T_DERIVED_COLUMN);
+  EXPECT(derived->getChildren().size() == 1);
+  auto col = derived->getChildren()[0];
+  EXPECT(*col == ASTNode::T_COLUMN_NAME);
+  EXPECT(*col->getToken() == Token::T_IDENTIFIER);
+  EXPECT(*col->getToken() == "xxx");
+  const auto& from = stmt->getChildren()[1];
+  EXPECT(*from == ASTNode::T_FROM);
+});
+
 TEST_CASE(SQLTest, TestSelectMustBeFirstAssert, [] () {
   const char* err_msg = "unexpected token T_GROUP, expected one of SELECT, "
       "DRAW or IMPORT";
@@ -859,7 +879,7 @@ TEST_CASE(SQLTest, TestImportCSVTable, [] () {
 TEST_CASE(SQLTest, TestEquals, [] () {
   auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city = 'Berlin'"
       "     GROUP BY city LIMIT 10;");
@@ -871,7 +891,7 @@ TEST_CASE(SQLTest, TestEquals, [] () {
 TEST_CASE(SQLTest, TestNotEquals, [] () {
   auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city != 'Berlin'"
       "     GROUP BY city LIMIT 10;");
@@ -885,7 +905,7 @@ TEST_CASE(SQLTest, TestNotEquals, [] () {
 TEST_CASE(SQLTest, TestLessThan, [] () {
   auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city < 'New York'"
       "     GROUP BY city LIMIT 10;");
@@ -898,7 +918,7 @@ TEST_CASE(SQLTest, TestLessThan, [] () {
 TEST_CASE(SQLTest, TestLessThanEquals, [] () {
   auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city <= 'New York'"
       "     GROUP BY city LIMIT 10;");
@@ -912,7 +932,7 @@ TEST_CASE(SQLTest, TestLessThanEquals, [] () {
 TEST_CASE(SQLTest, TestGreaterThan, [] () {
   auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city > 'New York'"
       "     GROUP BY city LIMIT 10;");
@@ -924,7 +944,7 @@ TEST_CASE(SQLTest, TestGreaterThan, [] () {
 TEST_CASE(SQLTest, TestGreaterThanEquals, [] () {
   auto result = executeTestQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
       "     GROUP BY city LIMIT 10;");
@@ -938,7 +958,7 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
   TableRepository repo;
   auto query_str =
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city == 'Berlin'";
 
@@ -955,7 +975,7 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
 
   auto ast = runtime.parser()->parseQuery(
       "  IMPORT TABLE city_temperatures "
-      "     FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';"
+      "     FROM 'csv:test/fixtures/city_temperatures.csv?headers=true';"
       ""
       "  SELECT city FROM city_temperatures WHERE city >= 'New York'"
       "     GROUP BY city LIMIT 10;");

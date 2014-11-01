@@ -1,0 +1,49 @@
+city,month,temperature
+Tokyo,Dec,9.6
+Tokyo,Nov,13.9
+Tokyo,Oct,18.3
+Tokyo,Sep,23.3
+Tokyo,Aug,26.5
+Tokyo,Jul,25.2
+Tokyo,Jun,21.5
+Tokyo,May,18.2
+Tokyo,Apr,14.5
+Tokyo,Mar,9.5
+Tokyo,Feb,6.9
+Tokyo,Jan,7.0
+New York,Dec,2.5
+New York,Nov,8.6
+New York,Oct,14.1
+New York,Sep,20.1
+New York,Aug,24.1
+New York,Jul,24.8
+New York,Jun,22.0
+New York,May,17.0
+New York,Apr,11.3
+New York,Mar,5.7
+New York,Feb,0.8
+New York,Jan,-0.2
+Berlin,Jan,-0.9
+Berlin,Feb,0.6
+Berlin,Mar,3.5
+Berlin,Apr,8.4
+Berlin,May,13.5
+Berlin,Jun,17.0
+Berlin,Jul,18.6
+Berlin,Aug,17.9
+Berlin,Sep,14.3
+Berlin,Oct,9.0
+Berlin,Nov,3.9
+Berlin,Dec,1.0
+London,Jan,3.9
+London,Feb,4.2
+London,Mar,5.7
+London,Apr,8.5
+London,May,11.9
+London,Jun,15.2
+London,Jul,17.0
+London,Aug,16.6
+London,Sep,14.2
+London,Oct,10.3
+London,Nov,6.6
+London,Dec,4.8

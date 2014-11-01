@@ -51,7 +51,7 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
     return fmod((x + 1) * 23.5f, 4200.0f);
   };
 
-  int num_saples = 1000000;
+  int num_saples = 100000;
   for (int i = 0; i < num_saples; ++i) {
     Sample<double> sample;
     sample.value = seq1(i);
@@ -59,11 +59,9 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
     metric.addSample(sample);
   }
 
-  EXPECT_EQ(metric.numTables(), 10);
   size_t total_bytes = metric.totalBytes();
   metric.compact();
   EXPECT_EQ(metric.totalBytes(), total_bytes);
-  EXPECT_EQ(metric.numTables(), 10);
 
   n = 0;
   metric.scanSamples(
