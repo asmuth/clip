@@ -125,18 +125,52 @@ FnordMetric.views.MetricList = function() {
         var list_item_row = document.createElement("tr");
         var i = 0;
         var list_elems = ["key", "labels", "last_insert", "total_bytes"];
+
         var convertTimestamp = function() {
-          var date = new Date(data["last_insert"] / 1000);
-          data["last_insert"] = 
-            date.getMonth() +
-            "/" + date.getMonth() +
-            "/" + date.getFullYear() +
-            " " + date.getHours() +
-            ":" + date.getMinutes() +
-            ":" + date.getSeconds();
+          if (data["last_insert"] == 0 || 
+              data["last_insert"].length == 0) {
+            return;
+          }
+
+          var timestamp = data["last_insert"] / 1000;
+          var now = Date.now();
+          var date = new Date(timestamp);
+
+          var getTimeOffset = function() {
+            var offset =  Math.floor(
+              (now - timestamp) / 1000);
+            if (offset < 60) {
+              offset = offset + " seconds ago";
+            } else if (offset < 3600) {
+              offset = Math.floor(offset / 60) +
+                " minutes ago";
+            } else if (offset < 86400) {
+              offset = Math.floor(offset / 3600) +
+                " hours ago";
+            } else {
+              offset = Math.floor(offset / 86400) +
+                " days ago";
+            }
+            data["last_insert"] = offset;
+
+          }
+
+          var getHumanDate = function() {
+            data["last_insert"] += 
+              " " + date.getDate() +
+              "/" + (date.getMonth() + 1) +
+              "/" + date.getFullYear() +
+              " " + date.getHours() +
+              ":" + date.getMinutes() +
+              ":" + date.getSeconds();
+          }
+
+          getTimeOffset();
+          getHumanDate();
         }
 
         var parseLabels = function() {
+          if (data["labels"].length == 0) {return;}
           var labelstring = data["labels"][0];
           for (var i = 1; i < data["labels"].length; i++) {
             labelstring += ", " + data["labels"][i];
@@ -146,6 +180,7 @@ FnordMetric.views.MetricList = function() {
 
         parseLabels();
         convertTimestamp();
+
         for (; i < list_elems.length; i++) {
           var list_item = document.createElement("td");
           list_item.innerHTML = data[list_elems[i]];
