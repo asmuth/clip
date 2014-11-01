@@ -40,7 +40,7 @@ Returns a list of all metrics.
     << }
 
 
-### POST /metrics/:key
+### POST /insert
 
 Insert a sample into a metric. If no metric with this key exists, a new one
 will be created.
@@ -49,9 +49,9 @@ will be created.
 
 <table>
   <tr>
-    <th>key <i>(mandatory)</i></th>
+    <th>metric <i>(mandatory)</i></th>
     <td>
-      key of this metric (e.g. my-counter-sum-15)
+      the key of this metric (e.g. my-counter-sum-15 or /frontend/http_status_code)
     </td>
   </tr>
   <tr>
