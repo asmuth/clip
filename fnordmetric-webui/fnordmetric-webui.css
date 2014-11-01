@@ -195,6 +195,10 @@ body {
   border-bottom: 1px solid #ddd;
 }
 
+.result_pane table.result_table tr:hover td  {
+  background-color: #d7e4f2;
+}
+
 .result_pane table.result_table td {
   padding: 10px 0 10px 10px;
   text-align: center;
@@ -229,6 +233,10 @@ tr.metrics_list_header th {
   padding: 18px 0 18px 13px;
   text-align: left;
   font-weight: 500;
+}
+
+table.metrics_list_container tr:hover td {
+  background-color: #d7e4f2;
 }
 
 table.metrics_list_container td {

@@ -23,8 +23,6 @@
  *
  * Metric list view:
  *  - write meaningful error messages
- *  - hover state/cursor for table rows/metrics
- *  - click on a metric opens up an example query in the query playground
  *  - pagination
  *  - search/filter/autocomplete input box
  *  - stretch: make table sortable by column
@@ -143,6 +141,7 @@ FnordMetric.views.MetricList = function() {
 
       var createListItem = function(data) {
         var list_item_row = document.createElement("tr");
+
         var i = 0;
         var list_elems = ["key", "labels", "last_insert", "total_bytes"];
 
@@ -233,6 +232,19 @@ FnordMetric.views.MetricList = function() {
         }
 
         list_container.appendChild(list_item_row);
+
+        list_item_row.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log("click metrics row");
+          var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM;" +
+          "SELECT 'exp' as series, time AS x, value as y FROM " +
+          data["key"];
+          var enc_query = encodeURIComponent(query);
+          window.location = "/admin#query_playground!" + enc_query;
+          //FIXME pushstate?
+          destroy(elem);
+          FnordMetric.views.QueryPlayground().render(elem, query);
+        }, false);
       }
 
       var list_container = document.createElement("table");
@@ -663,7 +675,7 @@ FnordMetric.views.QueryPlayground = function() {
       info_field.innerHTML =
         "Query execution took " + parseMilliTS(duration) 
         + " and returned " + getRowsInfo();
-      result_pane.appendChild(info_field);
+      editor_pane.appendChild(info_field);
     }
 
 
@@ -730,15 +742,15 @@ FnordMetric.views.QueryPlayground = function() {
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     window.history.pushState({url: url}, "", "#" + url);
-    var d = new Date();
-    var start = d.getTime();
-    
+    var start = (new Date()).getTime();
+
     FnordMetric.httpPost("/query", query, function(r) {
       console.log(r);
       FnordMetric.Loading().destroy();
       window.location.href = url;
       if (r.status == 200) {
-        var duration = d.getTime() - start;
+        var end = (new Date()).getTime();
+        var duration = end - start;
         var res = JSON.parse(r.response);
         destroy(result_pane);
         renderResultPane(res, duration);
