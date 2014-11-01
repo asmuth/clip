@@ -20,6 +20,8 @@ class URI {
 public:
   typedef std::vector<std::pair<std::string, std::string>> ParamList;
 
+  static std::string urlDecode(const std::string& str);
+
   URI(const std::string& uri_str);
   void parse(const std::string& uri_str);
 

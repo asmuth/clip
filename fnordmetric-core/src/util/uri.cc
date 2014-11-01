@@ -13,6 +13,29 @@
 namespace fnordmetric {
 namespace util {
 
+std::string URI::urlDecode(const std::string& str) {
+  std::string decoded;
+  const char* begin = str.c_str();
+  const char* end = begin + str.size();
+
+  while (begin != end) {
+    if (*begin == '%') {
+      char hex[3];
+      if (++begin + 2 > end) {
+        RAISE(kIllegalArgumentError, "invalid URL encoding");
+      }
+      hex[0] = *begin++;
+      hex[1] = *begin++;
+      hex[2] = 0;
+      decoded += static_cast<char>(std::stoul(hex, nullptr, 16));
+    } else {
+      decoded += *begin++;
+    }
+  }
+
+  return decoded;
+}
+
 URI::URI(const std::string& uri_str) : port_(0) {
   parse(uri_str);
 }
@@ -233,7 +256,7 @@ void URI::parseQueryString(
       for (; cur < end && *cur != '=' && *cur != '&'; cur++);
       if (cur > val) {
         std::string val_str(val, cur - val);
-        params->emplace_back(key_str, val_str);
+        params->emplace_back(URI::urlDecode(key_str), URI::urlDecode(val_str));
         begin = cur + 1;
       } else {
         break;
