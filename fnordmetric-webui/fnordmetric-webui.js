@@ -26,7 +26,6 @@
  * Metric list view:
  *  - write meaningful error messages
  *  - proper "loading" state
- *  - wire up remaining fields
  *  - hover state/cursor for table rows/metrics
  *  - click on a metric opens up an example query in the query playground
  *  - pagination
@@ -70,11 +69,6 @@ FnordMetric.httpPost = function(url, request, callback) {
 
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
-    var menuitem_editor = document.getElementById("menuitem_editor");
-    menuitem_editor.style.background = "#fff";
-    var menuitem_metrics = document.getElementById("menuitem_metrics");
-    menuitem_metrics.style.background = "rgba(0,0,0,0.04)";
-
     var metrics_data;
 
     FnordMetric.httpGet("/metrics", function(r) {
@@ -118,7 +112,8 @@ FnordMetric.views.MetricList = function() {
     }
 
     var renderResult = function() {
-      function createListHeaderCells(labels) {
+
+      var createListHeaderCells = function(labels) {
         for (var i = 0; i < labels.length; i++) {
           var list_header_cell = document.createElement("th");
           list_header_cell.innerHTML = labels[i];
@@ -126,11 +121,31 @@ FnordMetric.views.MetricList = function() {
         }
       }
 
-      function createListItem(data) {
+      var createListItem = function(data) {
         var list_item_row = document.createElement("tr");
         var i = 0;
         var list_elems = ["key", "labels", "last_insert", "total_bytes"];
+        var convertTimestamp = function() {
+          var date = new Date(data["last_insert"] / 1000);
+          data["last_insert"] = 
+            date.getMonth() +
+            "/" + date.getMonth() +
+            "/" + date.getFullYear() +
+            " " + date.getHours() +
+            ":" + date.getMinutes() +
+            ":" + date.getSeconds();
+        }
 
+        var parseLabels = function() {
+          var labelstring = data["labels"][0];
+          for (var i = 1; i < data["labels"].length; i++) {
+            labelstring += ", " + data["labels"][i];
+          }
+          data["labels"] = labelstring;
+        }
+
+        parseLabels();
+        convertTimestamp();
         for (; i < list_elems.length; i++) {
           var list_item = document.createElement("td");
           list_item.innerHTML = data[list_elems[i]];
@@ -280,13 +295,8 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   var render = function(elem, query) {
-    var menuitem_editor = document.getElementById("menuitem_editor");
-    menuitem_editor.style.background = "rgba(0,0,0,0.04)";
-    var menuitem_metrics = document.getElementById("menuitem_metrics");
-    menuitem_metrics.style.background = "#fff";
     elem.appendChild(navbar);
     elem.appendChild(editor_pane);
-
     elem.appendChild(editor_resizer_tooltip);
     elem.appendChild(result_pane);
 
@@ -332,8 +342,7 @@ FnordMetric.views.QueryPlayground = function() {
     }, true);
 
     updateLayout(false, elem);
-
-    if (query != undefined) {
+    if (query != 'undefined') {
       runQuery(query);
     }
 
@@ -599,6 +608,7 @@ FnordMetric.views.QueryPlayground = function() {
     cm.setValue(query);
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
+    window.history.pushState({url: url}, "", "#" + url);
     FnordMetric.httpPost("/query", query, function(r) {
       window.location.href = url;
       if (r.status == 200) {
@@ -620,34 +630,33 @@ FnordMetric.views.QueryPlayground = function() {
 
 FnordMetric.WebUI = function() {
   var current_view = null;
+  var current_url = null;
+
   var viewport = document.createElement("div");
   viewport.className = "viewport";
 
+  var headbar = document.createElement("div");
+  headbar.className = "headbar";
+
+  var routes = {
+    "metric_list": FnordMetric.views.MetricList,
+    "query_playground": FnordMetric.views.QueryPlayground
+  };
+
   var init = function() {
-    var headbar = document.createElement("div");
-    headbar.className = "headbar";
     document.body.appendChild(headbar);
     document.body.appendChild(viewport);
 
-    var menuitem_editor = document.createElement("a");
-    menuitem_editor.href = "#query_playground";
-    menuitem_editor.innerHTML = "<h1 id ='menuitem_editor'>New Query</h1>";
-    menuitem_editor.addEventListener('click', function() {
-      var url = document.URL;
-      renderView(FnordMetric.views.QueryPlayground());
-      window.history.pushState({path: url}, "QueryPlayground", url);
-    });
-    headbar.appendChild(menuitem_editor);
+    addMenuItem("Query Playground", "query_playground");
+    addMenuItem("Metrics", "metric_list");
 
-    var menuitem_metrics = document.createElement("a");
-    menuitem_metrics.href = "#metrics_list";
-    menuitem_metrics.innerHTML = "<h1 id ='menuitem_metrics'>Metrics</h1>";
-    menuitem_metrics.addEventListener('click', function() {
-      var url = document.URL;
-      renderView(FnordMetric.views.MetricList());
-      window.history.pushState({path: url}, "MetricsList", url);
-    });
-    headbar.appendChild(menuitem_metrics);
+    window.onpopstate = function(e) {
+      e.preventDefault();
+
+      if (e.state != null && typeof e.state.url != "undefined") {
+        openUrl(e.state.url);
+      }
+    }
   };
 
   var renderError = function(msg) {
@@ -655,6 +664,52 @@ FnordMetric.WebUI = function() {
     error_field.style.padding = "20px";
     error_field.innerHTML = msg;
     viewport.appendChild(error_field);
+  }
+
+  var addMenuItem = function(name, url) {
+    var menuitem = document.createElement("a");
+    menuitem.href = "#" + url;
+    menuitem.innerHTML = "<h1>" + name + "</h1>";
+    headbar.appendChild(menuitem);
+    menuitem.addEventListener('click', function(e) {
+      e.preventDefault();
+      openUrl(this.getAttribute("href").substr(1), true);
+      return false; 
+    });
+  }
+
+  var openUrl = function(url, push_state) {
+    if (url == current_url) {
+      return;
+    }
+
+    var query;
+
+    var parseURLComponent = function() {
+      var fragment = url.split("!");
+      if (fragment.length > 0) {
+        query = decodeURIComponent(fragment[1]);
+        url = fragment[0];
+      }
+    }
+
+
+    parseURLComponent();
+
+    var view = routes[url];
+    if (typeof view == "undefined") {
+      console.log("invalid route", url, routes); // FIXME
+      return;
+    }
+
+    current_url = url;
+
+    if (push_state) {
+      window.history.pushState({url: url}, "", "#" + url);
+    }
+
+
+    renderView(view(), query);
   }
 
   var renderView = function(view, args) {
@@ -666,41 +721,16 @@ FnordMetric.WebUI = function() {
     view.render(viewport, args);
   };
 
-  var renderFragmentURL = function() {
-    if (window.location.hash) {
-      var fragment = (window.location.hash.substring(1)).split("!");
-      var query = fragment[1] ? decodeURIComponent(fragment[1]) : undefined;
-      if (fragment[0] == "query_playground" || fragment == "query_playground") {
-        renderView(FnordMetric.views.QueryPlayground(), query);
-      } else if (fragment[0] == "metrics_list" || fragment == "metrics_list") {
-        renderView(FnordMetric.views.MetricList(), query);
-      } else if (fragment == "error") {
-        renderError("nice error message wrong URL, display with timeout?");
-        renderView(FnordMetric.views.QueryPlayground());
-      } else {
-        document.location.href = "/admin#error";
-        location.reload();
-      }
-    } else {
-      renderView(FnordMetric.views.QueryPlayground());
-    }
-  }
-
-  //reload page when going back and forward
-  window.onpopstate = function(event) {
-    if (event.state != null) {
-      location.reload();
-    }
-  }
 
   init();
-  renderFragmentURL();
-
-  return {
-    "renderView": renderView
-  };
-
+  var fragment = window.location.hash;
+  if (fragment) {
+    openUrl(fragment.substring(1));
+  } else {
+    openUrl("metric_list", true);
   }
+}
+
 
 
 /* CodeMirror - Minified & Bundled
