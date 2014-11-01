@@ -14,19 +14,18 @@
  * TODOS:
  *
  * Query Playground:
- *  - proper error handling (alert() is too intrusive)
- *  - proper empty states
+ *  - proper empty states --> how to detect empty state?
  *  - proper "loading" state
  *  - stretch: display a [fake] loading bar
  *  - "embed this query" opens up a popup with html/js/ruby snippets
  *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
  *  - "Query execution took .... ms and returned ... rows" hint
  *  - prevent reload/navigation to other page (body onunload)
- *  - represent current chart and table, view in url --> renderResultPane
+ *  - nice to have: represent current chart and table, view in url --> renderResultPane
  *
  * Metric list view:
+ *  - write meaningful error messages
  *  - proper "loading" state
- *  - proper empty state ("looks like you haven't inserted any data yet" w/ curl example)
  *  - wire up remaining fields
  *  - hover state/cursor for table rows/metrics
  *  - click on a metric opens up an example query in the query playground
@@ -76,65 +75,85 @@ FnordMetric.views.MetricList = function() {
     var menuitem_metrics = document.getElementById("menuitem_metrics");
     menuitem_metrics.style.background = "rgba(0,0,0,0.04)";
 
-    var renderError = function(msg) {
+    var metrics_data;
+
+    FnordMetric.httpGet("/metrics", function(r) {
+      if (r.status == 200) {
+        metrics_data = JSON.parse(r.response);
+        metrics_data = metrics_data.metrics;
+        if (metrics_data.length == 0) {
+          renderEmptyState();
+          return;
+        } else {
+          renderResult();
+        }
+      } else {
+        renderError(r.status);
+        return;
+      }
+    });
+
+    var renderError = function(state) {
       var error_field = document.createElement("div");
-      error_field.innerHTML = msg? msg : "Upps something went wrong";
+      error_field.className = "metrics_error_pane";
+      switch(state) {
+        case 404:
+           error_field.innerHTML = "404 NOT FOUND.";
+           break;
+        case 500:
+           error_field.innerHTML = "Internal server error";
+           break;
+        default:
+           error_field.innerHTML = "Upps. Something went wrong.";
+          break;
+      }
       elem.appendChild(error_field);
     }
 
     var renderEmptyState = function() {
       var msg_field = document.createElement("div");
-      msg_field.innerHTML = "Looks like zou you haven't inserted any data yet.";
+      msg_field.className = "metrics_error_pane";
+      msg_field.innerHTML = "Looks like you haven't inserted any data yet.";
       elem.appendChild(msg_field);
     }
 
-    function createListHeaderCells(labels) {
-      for (var i = 0; i < labels.length; i++) {
-        var list_header_cell = document.createElement("th");
-        list_header_cell.innerHTML = labels[i];
-        list_header.appendChild(list_header_cell);
-      }
-    }
-
-    function createListItem(data) {
-      var list_item_row = document.createElement("tr");
-      var i = 0;
-      var list_elems = ["key", "labels", "last_insert", "total_bytes"];
-
-      for (; i < list_elems.length; i++) {
-        var list_item = document.createElement("td");
-        list_item.innerHTML = data[list_elems[i]];
-        list_item_row.appendChild(list_item);
-      }
-
-      list_container.appendChild(list_item_row);
-    }
-
-    var list_container = document.createElement("table");
-    list_container.className = "metrics_list_container";
-
-    var list_header = document.createElement("tr");
-    list_header.className = "metrics_list_header";
-    createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
-    list_container.appendChild(list_header);
-    FnordMetric.httpGet("/metrics", function(r) {
-      if (r.status == 200) {
-        var metrics_data = JSON.parse(r.response);
-        metrics_data = metrics_data.metrics;
-        if (metrics_data.length == 0) {
-          renderEmptyState();
-        } else {
-          for (var i = 0; i < metrics_data.length; i++) {
-            createListItem(metrics_data[i]);
-          }
+    var renderResult = function() {
+      function createListHeaderCells(labels) {
+        for (var i = 0; i < labels.length; i++) {
+          var list_header_cell = document.createElement("th");
+          list_header_cell.innerHTML = labels[i];
+          list_header.appendChild(list_header_cell);
         }
-      } else {
-        console.log(r);
-        renderError(r);
       }
-    });
 
-    elem.appendChild(list_container);
+      function createListItem(data) {
+        var list_item_row = document.createElement("tr");
+        var i = 0;
+        var list_elems = ["key", "labels", "last_insert", "total_bytes"];
+
+        for (; i < list_elems.length; i++) {
+          var list_item = document.createElement("td");
+          list_item.innerHTML = data[list_elems[i]];
+          list_item_row.appendChild(list_item);
+        }
+
+        list_container.appendChild(list_item_row);
+      }
+
+      var list_container = document.createElement("table");
+      list_container.className = "metrics_list_container";
+
+      var list_header = document.createElement("tr");
+      list_header.className = "metrics_list_header";
+      createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
+      list_container.appendChild(list_header);
+
+      for (var i = 0; i < metrics_data.length; i++) {
+        createListItem(metrics_data[i]);
+      }
+
+      elem.appendChild(list_container);
+    }
 
   };
 
@@ -647,7 +666,7 @@ FnordMetric.WebUI = function() {
     view.render(viewport, args);
   };
 
-  var renderFromURL = function() {
+  var renderFragmentURL = function() {
     if (window.location.hash) {
       var fragment = (window.location.hash.substring(1)).split("!");
       var query = fragment[1] ? decodeURIComponent(fragment[1]) : undefined;
@@ -675,7 +694,7 @@ FnordMetric.WebUI = function() {
   }
 
   init();
-  renderFromURL();
+  renderFragmentURL();
 
   return {
     "renderView": renderView
