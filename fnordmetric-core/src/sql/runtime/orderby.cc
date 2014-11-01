@@ -57,9 +57,7 @@ void OrderBy::execute() {
         expressions::ltExpr(nullptr, 2, args, &res);
       }
 
-      if (res.getBool()) {
-        return true;
-      }
+      return res.getBool();
     }
 
     /* all dimensions equal */

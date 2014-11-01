@@ -117,6 +117,12 @@ static std::unique_ptr<ResultList> executeTestQuery(
               csv_backend::CSVInputStream::openFile(
                   "test/fixtures/gbp_per_country_simple.csv"), true)));
 
+  query_plan.tableRepository()->addTableRef(
+      "gdp_per_capita",
+      std::unique_ptr<TableRef>(
+          new csv_backend::CSVTableRef(
+              csv_backend::CSVInputStream::openFile(
+                  "test/fixtures/gdp_per_capita.csv"), true)));
 
   auto ast = runtime.parser()->parseQuery(query);
   runtime.queryPlanBuilder()->buildQueryPlan(ast, &query_plan);
@@ -943,7 +949,6 @@ TEST_CASE(SQLTest, TestSimpleOrderByAscOnUnselectedColumn, [] () {
       "  ORDER BY"
       "    gbp ASC;");
 
-  //results->debugPrint();
   EXPECT_EQ(results->getNumColumns(), 1);
   EXPECT_EQ(results->getNumRows(), 191);
   EXPECT_EQ(results->getRow(0)[0], "TUV");
@@ -1075,6 +1080,65 @@ TEST_CASE(SQLTest, TestDoubleEqualsSignError, [] () {
       [&] () {
         auto result = executeTestQuery(query_str);
       });
+});
+
+TEST_CASE(SQLTest, TestOrderByWithColumnAlias, [] () {
+  auto result = executeTestQuery(
+      "  SELECT year AS series, isocode AS x, gdp AS y"
+      "      FROM gdp_per_capita"
+      "      WHERE year = '2010' OR year = '2009' or year = '2008'"
+      "      ORDER BY gdp DESC, year DESC"
+      "      LIMIT 9;");
+
+  EXPECT_EQ(result->getNumRows(), 9);
+  EXPECT_EQ(result->getNumColumns(), 3);
+  EXPECT_EQ(result->getColumns()[0], "series");
+  EXPECT_EQ(result->getColumns()[1], "x");
+  EXPECT_EQ(result->getColumns()[2], "y");
+  EXPECT_EQ(result->getRow(0)[0], "2010");
+  EXPECT_EQ(result->getRow(0)[1], "QAT");
+  EXPECT_EQ(result->getRow(1)[0], "2009");
+  EXPECT_EQ(result->getRow(1)[1], "QAT");
+  EXPECT_EQ(result->getRow(2)[0], "2008");
+  EXPECT_EQ(result->getRow(2)[1], "QAT");
+  EXPECT_EQ(result->getRow(3)[0], "2008");
+  EXPECT_EQ(result->getRow(3)[1], "LUX");
+  EXPECT_EQ(result->getRow(4)[0], "2010");
+  EXPECT_EQ(result->getRow(4)[1], "LUX");
+  EXPECT_EQ(result->getRow(5)[0], "2009");
+  EXPECT_EQ(result->getRow(5)[1], "LUX");
+  EXPECT_EQ(result->getRow(6)[0], "2008");
+  EXPECT_EQ(result->getRow(6)[1], "ARE");
+  EXPECT_EQ(result->getRow(7)[0], "2009");
+  EXPECT_EQ(result->getRow(7)[1], "ARE");
+  EXPECT_EQ(result->getRow(8)[0], "2010");
+  EXPECT_EQ(result->getRow(8)[1], "ARE");
+});
+
+TEST_CASE(SQLTest, TestOrderByMulti, [] () {
+  auto result = executeTestQuery(
+      "  SELECT year, isocode, gdp"
+      "      FROM gdp_per_capita"
+      "      WHERE year = '2010' OR year = '2009' or year = '2008'"
+      "      ORDER BY country DESC, year ASC;");
+
+  EXPECT_EQ(result->getNumRows(), 570);
+  EXPECT_EQ(result->getNumColumns(), 3);
+  EXPECT_EQ(result->getColumns()[0], "year");
+  EXPECT_EQ(result->getColumns()[1], "isocode");
+  EXPECT_EQ(result->getColumns()[2], "gdp");
+  EXPECT_EQ(result->getRow(0)[0], "2008");
+  EXPECT_EQ(result->getRow(0)[1], "ZWE");
+  EXPECT_EQ(result->getRow(1)[0], "2009");
+  EXPECT_EQ(result->getRow(1)[1], "ZWE");
+  EXPECT_EQ(result->getRow(2)[0], "2010");
+  EXPECT_EQ(result->getRow(2)[1], "ZWE");
+  EXPECT_EQ(result->getRow(567)[0], "2008");
+  EXPECT_EQ(result->getRow(567)[1], "AFG");
+  EXPECT_EQ(result->getRow(568)[0], "2009");
+  EXPECT_EQ(result->getRow(568)[1], "AFG");
+  EXPECT_EQ(result->getRow(569)[0], "2010");
+  EXPECT_EQ(result->getRow(569)[1], "AFG");
 });
 
 TEST_CASE(SQLTest, TestRuntime, [] () {

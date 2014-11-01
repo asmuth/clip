@@ -150,6 +150,32 @@ bool QueryPlanBuilder::hasGroupByClause(ASTNode* ast) const {
   return false;
 }
 
+bool QueryPlanBuilder::hasJoin(ASTNode* ast) const {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
+    return false;
+  }
+
+  auto from_list = ast->getChildren()[1];
+  if (from_list->getType() != ASTNode::T_FROM ||
+      from_list->getChildren().size() < 1) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+
+  if (from_list->getChildren().size() > 1) {
+    return true;
+  }
+
+  for (const auto& child : ast->getChildren()) {
+    //if (child->getType() == ASTNode::T_JOIN) {
+    //  return true;
+    //}
+  }
+
+  return false;
+}
+
+
+
 bool QueryPlanBuilder::hasOrderByClause(ASTNode* ast) const {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
     return false;
@@ -223,7 +249,7 @@ void QueryPlanBuilder::expandColumns(ASTNode* ast, TableRepository* repo) {
   for (const auto& node : select_list->getChildren()) {
     /* expand wildcard select (SELECT * FROM ...) */
     if (node->getType() == ASTNode::T_ALL) {
-      if (from_list->getChildren().size() != 1) {
+      if (hasJoin(ast) || from_list->getChildren().size() != 1) {
         RAISE(
             kRuntimeError,
             "can't use wilcard select (SELECT * FROM ...) when selecting from "
@@ -250,7 +276,6 @@ void QueryPlanBuilder::expandColumns(ASTNode* ast, TableRepository* repo) {
         select_list->appendChild(derived_col);
       }
 
-      ast->debugPrint(2);
       continue;
     }
   }

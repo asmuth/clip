@@ -1,5 +1,5 @@
 IMPORT TABLE city_temperatures
-    FROM 'csv:doc/examples/data/city_temperatures.csv?headers=true';
+    FROM 'csv:examples/data/city_temperatures.csv?headers=true';
 
 DRAW LINECHART WITH
     AXIS BOTTOM

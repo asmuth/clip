@@ -74,6 +74,11 @@ protected:
   bool hasUnexpandedColumns(ASTNode* ast) const;
 
   /**
+   * Returns true if the ast is a SELECT statement that has a join
+   */
+  bool hasJoin(ASTNode* ast) const;
+
+  /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
    * otherwise false
    */
