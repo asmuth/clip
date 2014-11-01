@@ -246,59 +246,76 @@ FnordMetric.views.MetricList = function() {
 }
 
 FnordMetric.views.QueryPlayground = function() {
-  var tab_width = 4;
-  var font = "14px monospace";
-  var patterns = [
-    {
-      regex: /^(SELECT|FROM|WHERE|GROUP|ORDER|BY|HAVING|LIMIT|OFFSET|ASC|DESC|COMMA|DOT|IDENTIFIER|STRING|NUMERIC|SEMICOLON|LPAREN|RPAREN|AND|OR|EQUAL|PLUS|MINUS|ASTERISK|SLASH|NOT|TRUE|FALSE|BANG|CIRCUMFLEX|TILDE|PERCENT|DIV|MOD|AMPERSAND|PIPE|LSHIFT|RSHIFT|LT|GT|BEGIN|CREATE|WITH|IMPORT|TABLE|ON|OFF|DRAW|LINECHART|AREACHART|BARCHART|POINTCHART|HEATMAP|HISTOGRAM|AXIS|TOP|RIGHT|BOTTOM|LEFT|ORIENTATION|HORIZONTAL|VERTICAL|STACKED|XDOMAIN|YDOMAIN|ZDOMAIN|XGRID|YGRID|LOGARITHMIC|INVERT|TITLE|SUBTITLE|GRID|LABELS|TICKS|INSIDE|OUTSIDE|ROTATE|LEGEND)$/i,
-      color: "#d33682",
-    },
-    {
-      regex: /AS/i,
-      color: "#6c71c4"
-    }
-  ];
-
   var horizontal = true;
   var editor_width = 42;
   var editor_height = 300;
+  var navbar;
+  var editor_pane;
+  var result_pane;
+  var editor_resizer_tooltip;
+  var split_button;
+  var query_button;
+  var query_editor;
+  var cm;
 
-  var navbar = document.createElement("div");
-  navbar.className = "navbar";
+  var initEditor = function() {
+    navbar = document.createElement("div");
+    navbar.className = "navbar";
 
-  var query_editor = document.createElement("div");
-  query_editor.className = "card editor";
+    query_editor = document.createElement("div");
+    query_editor.className = "card editor";
 
-  var editor_pane = document.createElement("div");
-  editor_pane.className = "editor_pane";
-  editor_pane.appendChild(query_editor);
+    editor_pane = document.createElement("div");
+    editor_pane.className = "editor_pane";
+    editor_pane.appendChild(query_editor);
 
-  var result_pane = document.createElement("div");
-  result_pane.className = "result_pane";
+    result_pane = document.createElement("div");
+    result_pane.className = "result_pane";
 
-  var editor_resizer_tooltip = document.createElement("div");
-  editor_resizer_tooltip.className = "editor_resizer_tooltip";
-  editor_resizer_tooltip.setAttribute('draggable', 'true');
+    editor_resizer_tooltip = document.createElement("div");
+    editor_resizer_tooltip.className = "editor_resizer_tooltip";
+    editor_resizer_tooltip.setAttribute('draggable', 'true');
 
-  var split_button = document.createElement("div");
-  split_button.className = "fancy_button";
-  split_button.style.margin = "10px";
-  split_button.innerHTML = "<a href="+document.URL+">Change View</a>";
-  navbar.appendChild(split_button);
+    split_button = document.createElement("div");
+    split_button.className = "fancy_button";
+    split_button.style.margin = "10px";
+    split_button.innerHTML = "<a href="+document.URL+">Change View</a>";
+    navbar.appendChild(split_button);
 
-  var query_button = document.createElement("div");
-  query_button.className = "fancy_button";
-  query_button.style.margin = "10px";
-  query_button.innerHTML = "<a href='#'>Run Query</a>";
-  query_button.style.float ="left";
-  navbar.appendChild(query_button);
+    query_button = document.createElement("div");
+    query_button.className = "fancy_button";
+    query_button.style.margin = "10px";
+    query_button.innerHTML = "<a href='#'>Run Query</a>";
+    query_button.style.float ="left";
 
-  var cm = CodeMirror(editor_pane.querySelector(".editor"), {
-    lineNumbers: true,
-  });
+    navbar.appendChild(query_button);
+  }
 
-  cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
-  "time AS x, value as y FROM http_status_codes;");
+  var initCM = function() {
+    var tab_width = 4;
+    var font = "14px monospace";
+    var patterns = [
+      {
+        regex: /^(SELECT|FROM|WHERE|GROUP|ORDER|BY|HAVING|LIMIT|OFFSET|ASC|DESC|COMMA|DOT|IDENTIFIER|STRING|NUMERIC|SEMICOLON|LPAREN|RPAREN|AND|OR|EQUAL|PLUS|MINUS|ASTERISK|SLASH|NOT|TRUE|FALSE|BANG|CIRCUMFLEX|TILDE|PERCENT|DIV|MOD|AMPERSAND|PIPE|LSHIFT|RSHIFT|LT|GT|BEGIN|CREATE|WITH|IMPORT|TABLE|ON|OFF|DRAW|LINECHART|AREACHART|BARCHART|POINTCHART|HEATMAP|HISTOGRAM|AXIS|TOP|RIGHT|BOTTOM|LEFT|ORIENTATION|HO  RIZONTAL|VERTICAL|STACKED|XDOMAIN|YDOMAIN|ZDOMAIN|XGRID|YGRID|LOGARITHMIC|INVERT|TITLE|SUBTITLE|GRID|LABELS|TICKS|INSIDE|OUTSIDE|ROTATE|LEGEND)$/i,
+        color: "#d33682",
+      },
+      {
+        regex: /AS/i,
+        color: "#6c71c4"
+      }
+    ];
+    cm = CodeMirror(editor_pane.querySelector(".editor"), {
+      lineNumbers: true,
+    });
+
+    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
+    "time AS x, value as y FROM http_status_codes;");
+
+  }
+
+  initEditor();
+  initCM();
+
 
   var updateLayout = function(tooltip, viewport) {
     if (horizontal) {
@@ -426,7 +443,9 @@ FnordMetric.views.QueryPlayground = function() {
       table_header_cell.innerHTML = columns[i];
       table_header.appendChild(table_header_cell);
     }
+
     result_table.appendChild(table_header);
+
     var renderResultTableTooltip = function(rows, rows_per_side) {
       var start_index = 0;
       var end_index = rows_per_side;
@@ -537,51 +556,24 @@ FnordMetric.views.QueryPlayground = function() {
     return false;
   }
 
-  var destroyTable = function() {
-    var table_navbar = document.getElementById("table_navbar");
-    while (table_navbar.firstChild) {
-      table_navbar.removeChild(table_navbar.firstChild);
-    }
-    result_pane.removeChild(table_navbar);
 
-    var result_table = document.getElementById("result_table");
-    while (result_table.firstChild) {
-      result_table.removeChild(result_table.firstChild);
+  var destroyResult = function(type) {
+    var typeNodes = {
+      "chart" : ["chart_container"],
+      "table" : ["result_table", "table_navbar"]
     }
-    result_pane.removeChild(result_table);
+
+    var parentElems = typeNodes[type];
+
+    for (var i = 0; i < parentElems.length; i++) {
+      var parentNode = document.getElementById(parentElems[i]);
+      while (parentNode.firstChild) {
+        parentNode.removeChild(parentNode.firstChild);
+      }
+      result_pane.removeChild(parentNode);
+    }
   }
 
-  var destroyChart = function() {
-    var chart_container = document.getElementById("chart_container");
-    while (chart_container.firstChild) {
-      chart_container.removeChild(chart_container.firstChild);
-    }
-
-    result_pane.removeChild(chart_container);
-  }
-
-
-  var updateNavbarChart = function(selected_item, prev_itemid) {
-    if (typeof selected_item === 'number') {
-      selected_item = document.getElementById("chart" + selected_item);
-    }
-    selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
-    if (prev_itemid >= 0 ) {
-      var prev_item = document.getElementById("chart" + prev_itemid);
-      prev_item.firstChild.style.backgroundColor = "#fff";
-    }
-  };
-
-  var updateNavbarTable = function(selected_item, prev_itemid) {
-    if (typeof selected_item === 'number') {
-      selected_item = document.getElementById("table" + selected_item);
-    }
-    selected_item.firstChild.style.backgroundColor = "rgba(0,0,0,0.04)";
-    if (prev_itemid >= 0 ) {
-      var prev_item = document.getElementById("table" + prev_itemid);
-      prev_item.firstChild.style.backgroundColor = "#fff";
-    }
-  };
 
   var renderError = function(msg) {
     result_pane.style.background = "#fff";
@@ -602,62 +594,74 @@ FnordMetric.views.QueryPlayground = function() {
 
     var charts = resp.charts;
     var tables = resp.tables;
-    var curr_chart = 0;
-    var curr_table = 0;
+    var curr_chart;
+    var curr_table;
+    var curr_chartID = 0;
+    var curr_tableID = 0;
     var curr_url = document.URL;
 
-    var result_navbar_chart = document.createElement("div");
-    result_navbar_chart.className = "result_navbar chart";
-    for (var i = 0; i < charts.length; i++) {
-      var menuitem_result_chart = document.createElement("a");
-      menuitem_result_chart.className = "menuitem_result";
-      menuitem_result_chart.setAttribute("id", "chart" + i);
-      menuitem_result_chart.setAttribute("data-id", i);
-      menuitem_result_chart.href = curr_url;
-      menuitem_result_chart.innerHTML = "<h3>Chart "+(i+1)+"</h3>";
-      result_navbar_chart.appendChild(menuitem_result_chart);
-
-      menuitem_result_chart.addEventListener('click', function() {
-        if (this.id != curr_chart) {
-          destroyChart();
-          updateNavbarChart(this, curr_chart);
-          curr_chart = this.getAttribute('data-id');
-          renderChart(charts[curr_chart]);
-          updateLayout(false);
-        }
-      }, false);
+    var resultData = {
+      "chart" : charts,
+      "table" : tables
     }
-    result_pane.appendChild(result_navbar_chart);
 
-    renderChart(charts[curr_chart]);
-
-    var result_navbar_table = document.createElement("div");
-    result_navbar_table.className = "result_navbar table";
-    for (var i = 0; i < tables.length; i++) {
-      var menuitem_result_table = document.createElement("a");
-      menuitem_result_table.className = "menuitem_result";
-      menuitem_result_table.setAttribute("id", "table" + i);
-      menuitem_result_table.setAttribute("data-id", i);
-      menuitem_result_table.href = curr_url;
-      menuitem_result_table.innerHTML = "<h3>Table "+(i+1)+"</h3>";
-      result_navbar_table.appendChild(menuitem_result_table);
-
-      menuitem_result_table.addEventListener('click', function() {
-        if (this.id != curr_table) {
-          destroyTable();
-          updateNavbarTable(this, curr_table);
-          curr_table = this.getAttribute('data-id');
-          renderTable(tables[curr_table]);
-          updateLayout(false);
-        }
-      }, false);
+    var currentResult = {
+      "chart" : curr_chart,
+      "table" : curr_table
     }
-    result_pane.appendChild(result_navbar_table);
 
-    renderTable(tables[curr_table]);
 
-    updateNavbarChart(curr_chart, -1);
-    updateNavbarTable(curr_table, -1);
+    var renderResultNavbar = function(type, quantity) {
+      var result_navbar = document.createElement("div");
+      result_navbar.className = "result_navbar";
+      for (var i = 0; i < quantity; i++) {
+        var navitem = document.createElement("a");
+        navitem.className = "result_link";
+        navitem.href = curr_url;
+        navitem.setAttribute("id", i);
+        navitem.innerHTML = "<h3>" + type + " " + (i+1) + "</h3>";
+        result_navbar.appendChild(navitem);
+
+        navitem.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (this.id != currentResult[type]) {
+            updateResult(type, this);
+          }
+        }, false);
+      }
+      result_pane.appendChild(result_navbar);
+    }
+
+
+    var updateResultNavbar = function(type, new_id, old_id) {
+      //get new_item
+      //set background color for new item
+      if (old_id >= 0) {
+        //get old_item and set background color to white
+      }
+    }
+
+    var updateResult = function(type, elem) {
+      destroyResult(type);
+      updateNavbar(elem, currentResult[type]);
+      if (type == "chart") {
+        curr_chartID = elem.id;
+      } else {
+        curr_tableID = elem.id;
+      }
+      renderChart(resultData[type][elem.id]);
+      updateLayout(false);
+
+    }
+
+    renderResultNavbar("chart", charts.length, curr_chart);
+    renderChart(charts[curr_chartID]);
+    renderResultNavbar("table", tables.length, curr_table);
+    console.log(curr_tableID);
+    renderTable(tables[curr_tableID]);
+
+    updateResultNavbar("chart", curr_chartID, -1);
+    updateResultNavbar("table", curr_tableID, -1);
 
   }
 
@@ -783,6 +787,7 @@ FnordMetric.WebUI = function() {
 
 
   init();
+  console.log("init");
   var fragment = window.location.hash;
   if (fragment) {
     openUrl(fragment.substring(1));
