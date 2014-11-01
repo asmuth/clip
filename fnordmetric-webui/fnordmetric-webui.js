@@ -15,11 +15,10 @@
  *
  * Query Playground:
  *  - proper empty states --> how to detect empty state?
- *  - stretch: display a [fake] loading bar
  *  - "embed this query" opens up a popup with html/js/ruby snippets
  *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
- *  - "Query execution took .... ms and returned ... rows" hint
  *  - prevent reload/navigation to other page (body onunload)
+ *  - stretch: display a [fake] loading bar
  *  - nice to have: represent current chart and table, view in url --> renderResultPane
  *
  * Metric list view:
@@ -605,7 +604,7 @@ FnordMetric.views.QueryPlayground = function() {
     result_pane.appendChild(error_msg);
   }
 
-  var renderResultPane = function(resp) {
+  var renderResultPane = function(resp, duration) {
     if (resp.status == "error") {
       renderError(resp.error);
       return;
@@ -629,6 +628,42 @@ FnordMetric.views.QueryPlayground = function() {
     var currentResult = {
       "chart" : curr_chart,
       "table" : curr_table
+    }
+
+    var renderExecutionInfo = function() {
+      console.log(editor_pane);
+      var parseMilliTS = function(ts) {
+        if (ts < 1000) {
+          if (ts == 0) {
+            return " less than 1 millisecond";
+          } else if (ts == 1) {
+            return " 1 millisecond";
+          } else {
+            return ts + " milliseconds";
+          }
+        } else if (ts < 60000) {
+          ts = ts / 1000;
+          return (ts + (ts == 1? " second" : " seconds"));
+        } else {
+          ts = ts / 60000;
+          return (ts + (ts == 1? " minute" : " minutes"));
+        }
+      }
+
+      var getRowsInfo = function() {
+        var num = 0;
+        for (var i = 0; i < tables.length; i++) {
+          num += tables[i]['rows'].length;
+        }
+        return (num == 1? num + " row" : num + " rows")
+      }
+
+      var info_field = document.createElement("div");
+      info_field.className = "info_field";
+      info_field.innerHTML =
+        "Query execution took " + parseMilliTS(duration) 
+        + " and returned " + getRowsInfo();
+      result_pane.appendChild(info_field);
     }
 
 
@@ -675,10 +710,10 @@ FnordMetric.views.QueryPlayground = function() {
 
     }
 
+    renderExecutionInfo();
     renderResultNavbar("chart", charts.length, curr_chart);
     renderChart(charts[curr_chartID]);
     renderResultNavbar("table", tables.length, curr_table);
-    console.log(curr_tableID);
     renderTable(tables[curr_tableID]);
 
     updateResultNavbar("chart", curr_chartID, -1);
@@ -695,13 +730,18 @@ FnordMetric.views.QueryPlayground = function() {
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     window.history.pushState({url: url}, "", "#" + url);
+    var d = new Date();
+    var start = d.getTime();
+    
     FnordMetric.httpPost("/query", query, function(r) {
+      console.log(r);
       FnordMetric.Loading().destroy();
       window.location.href = url;
       if (r.status == 200) {
+        var duration = d.getTime() - start;
         var res = JSON.parse(r.response);
         destroy(result_pane);
-        renderResultPane(res);
+        renderResultPane(res, duration);
         updateLayout(false);
       } else {
         renderError(r);
@@ -810,7 +850,6 @@ FnordMetric.WebUI = function() {
 
 
   init();
-  console.log("init");
   var fragment = window.location.hash;
   if (fragment) {
     openUrl(fragment.substring(1));

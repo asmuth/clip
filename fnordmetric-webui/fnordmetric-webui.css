@@ -243,6 +243,12 @@ table.metrics_list_container td {
   box-shadow: 0 0 1px rgba(0,0,0,.1);
 }
 
+.info_field {
+  font-style: italic;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
 /* BASICS */
 
 .CodeMirror {
