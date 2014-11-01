@@ -48,10 +48,18 @@ void ASTNode::removeChildByIndex(size_t index) {
 }
 
 void ASTNode::removeChild(ASTNode* node) {
-  for (auto child = children_.begin(); child != children_.end(); ++child) {
+  for (auto child = children_.begin(); child < children_.end(); ++child) {
     if (*child == node) {
       children_.erase(child);
       return;
+    }
+  }
+}
+
+void ASTNode::removeChildrenByType(kASTNodeType type) {
+  for (auto child = children_.begin(); child < children_.end(); ++child) {
+    if ((*child)->getType() == type) {
+      children_.erase(child);
     }
   }
 }

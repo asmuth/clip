@@ -15,6 +15,7 @@
 #include <fnordmetric/sql/runtime/tablescan.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/limitclause.h>
+#include <fnordmetric/sql/runtime/orderby.h>
 #include <fnordmetric/sql/runtime/groupby.h>
 #include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/symboltable.h>
@@ -216,7 +217,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
   /* resolve output column names */
   std::vector<std::string> column_names;
   for (const auto& col : select_list->getChildren()) {
-    column_names.push_back("unnamed");
+    column_names.push_back("unnamed"); // FIXPAUL
   }
 
   return new GroupBy(
@@ -305,15 +306,9 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
       offset = offset_token->getInteger();
     }
 
+    // clone ast + remove limit clause
     auto new_ast = ast->deepCopy();
-    const auto& new_ast_children = new_ast->getChildren();
-
-    for (int i = 0; i < new_ast_children.size(); ++i) {
-      if (new_ast_children[i]->getType() == ASTNode::T_LIMIT) {
-        new_ast->removeChildByIndex(i);
-        break;
-      }
-    }
+    new_ast->removeChildrenByType(ASTNode::T_LIMIT);
 
     return new LimitClause(limit, offset, buildQueryPlan(new_ast, repo));
   }
@@ -333,7 +328,14 @@ QueryPlanNode* QueryPlanBuilder::buildOrderByClause(
       continue;
     }
 
-    RAISE(kRuntimeError, "ORDER BY not yet implemented");
+    // build sort spec
+    std::vector<OrderBy::SortSpec> sort_specs;
+
+    // clone ast + remove order by clause
+    auto new_ast = ast->deepCopy();
+    new_ast->removeChildrenByType(ASTNode::T_ORDER_BY);
+
+    return new OrderBy(sort_specs, buildQueryPlan(new_ast, repo));
   }
 
   return nullptr;

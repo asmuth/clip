@@ -424,7 +424,7 @@ TEST_CASE(SQLTest, TestSelectDerivedColumnWithTableName, [] () {
 });
 
 TEST_CASE(SQLTest, TestSelectWithQuotedTableName, [] () {
-  auto parser = parseTestQuery("SELECT xxx FROM sometable;");
+  auto parser = parseTestQuery("SELECT `xxx` FROM sometable;");
   EXPECT(parser.getStatements().size() == 1);
   const auto& stmt = parser.getStatements()[0];
   EXPECT(*stmt == ASTNode::T_SELECT);
@@ -444,7 +444,7 @@ TEST_CASE(SQLTest, TestSelectWithQuotedTableName, [] () {
   EXPECT_EQ(from->getChildren().size(), 1);
   EXPECT_EQ(*from->getChildren()[0], ASTNode::T_TABLE_NAME);
   EXPECT_EQ(*from->getChildren()[0]->getToken(), Token::T_IDENTIFIER);
-  EXPECT_EQ(from->getChildren()[0]->getToken()->getString(), "somextable");
+  EXPECT_EQ(from->getChildren()[0]->getToken()->getString(), "sometable");
 });
 
 TEST_CASE(SQLTest, TestSelectMustBeFirstAssert, [] () {
@@ -834,7 +834,7 @@ TEST_CASE(SQLTest, TestSimpleSelectFromCSV, [] () {
       "  FROM"
       "    gbp_per_country;");
 
-  EXPECT(results->getNumRows() == 191);
+  EXPECT_EQ(results->getNumRows(), 191);
 });
 
 TEST_CASE(SQLTest, TestSimpleAggregateFromCSV, [] () {
@@ -844,7 +844,20 @@ TEST_CASE(SQLTest, TestSimpleAggregateFromCSV, [] () {
       "  FROM"
       "    gbp_per_country;");
 
-  EXPECT(std::stof(results->getRow(0)[0]) == 74209240);
+  EXPECT_EQ(std::stof(results->getRow(0)[0]), 74209240);
+});
+
+TEST_CASE(SQLTest, TestSimpleOrderByAsc, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    country"
+      "  FROM"
+      "    gbp_per_country"
+      "  ORDER BY"
+      "    country ASC;");
+
+  results->debugPrint();
+  EXPECT_EQ(results->getRow(0)[0], "ABW");
 });
 
 TEST_CASE(SQLTest, TestNoSuchColumnError, [] () {
