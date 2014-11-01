@@ -7,20 +7,20 @@ SELECT "mymetric" as series, time as x, value as y FROM mymetric,
 SELECT time as x, delta(value) as FROM mymetric GROUP BY TIMEWINDOW(60, 10);
 
 -- display the first derivative of our measurement over a moving 60s window in the last hour
-SELECT time as x, delta(value) as
+SELECT time as x, delta(value) as y
   FROM mymetric
   GROUP BY TIMEWINDOW(time, 60, 10)
   WHERE time > -60mins;
 
 -- ....equivalent to
-SELECT time as x, delta(value) as
+SELECT time as x, delta(value) as y
   FROM mymetric
   GROUP BY TIMEWINDOW(time, 60, 10)
   SINCE -60mins UNTIL now;
 
 -- number of requests per http status code over a moving 60 second window in
 -- the last hour
-SELECT status_code as series, time as x, delta(value)  as y
+SELECT status_code as series, time as x, delta(value) as y
   FROM http_status_codes
   GROUP BY TIMEWINDOW(time, 60, 10), status_code;
 
