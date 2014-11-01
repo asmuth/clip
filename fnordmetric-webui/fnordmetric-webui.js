@@ -140,29 +140,54 @@ FnordMetric.views.MetricList = function() {
             var offset =  Math.floor(
               (now - timestamp) / 1000);
             if (offset < 60) {
-              offset = offset + " seconds ago";
+              var label = (offset == 1)? " second ago" : " seconds ago";
+              data["last_insert"]  = offset + label;
             } else if (offset < 3600) {
-              offset = Math.floor(offset / 60) +
-                " minutes ago";
+              var time = Math.floor(offset / 60);
+              var label = (time == 1)? " minute ago" : " minutes ago";
+              data["last_insert"]  = time + label;
             } else if (offset < 86400) {
-              offset = Math.floor(offset / 3600) +
-                " hours ago";
+              var time =  Math.floor(offset / 3600);
+              var label = (time == 1)? " hour ago" : " hours ago";
+              data["last_insert"]  = time + label;
             } else {
-              offset = Math.floor(offset / 86400) +
-                " days ago";
+              var time = Math.floor(offset / 86400);
+              var label = (time == 1)? " day ago" : " days ago";
+              data["last_insert"]  = time + label;
             }
-            data["last_insert"] = offset;
 
           }
 
           var getHumanDate = function() {
+            var getHumanMonth = function() {
+              var months = ["Jan", "Feb", "Mar", "Apr", "May",
+                "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+              return months[date.getMonth()];
+            }
+
+            var getMinutes = function() {
+              var minutes = date.getMinutes();
+              if (minutes < 10) {
+                minutes = "0" + minutes;
+              }
+              return minutes;
+            }
+
+            var getSeconds = function() {
+              var seconds = date.getSeconds();
+              if (seconds < 10) {
+                seconds = "0" + seconds;
+              }
+              return seconds;
+            }
+
             data["last_insert"] += 
+              " - " + getHumanMonth() +
               " " + date.getDate() +
-              "/" + (date.getMonth() + 1) +
-              "/" + date.getFullYear() +
+              " " + date.getFullYear() +
               " " + date.getHours() +
-              ":" + date.getMinutes() +
-              ":" + date.getSeconds();
+              ":" + getMinutes() +
+              ":" + getSeconds();
           }
 
           getTimeOffset();
