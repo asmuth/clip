@@ -57,15 +57,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
     stage/src/fnordmetric/thread/threadpool.cc
-    stage/src/fnordmetric/web/queryendpoint.cc)
-
-set(FNORDMETRIC_FFS_SOURCES
-    stage/src/fnordmetric/ffs/cowblob.cc
-    stage/src/fnordmetric/ffs/object.cc
-    stage/src/fnordmetric/ffs/volume.cc)
-
-set(FNORDMETRIC_UI_SOURCES
-    ${FNORDMETRIC_SOURCES}
+    stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/areachart.cc
     stage/src/fnordmetric/ui/barchart.cc
@@ -78,22 +70,13 @@ set(FNORDMETRIC_UI_SOURCES
     stage/src/fnordmetric/ui/griddefinition.cc
     stage/src/fnordmetric/ui/legenddefinition.cc
     stage/src/fnordmetric/ui/series.cc
-    stage/src/fnordmetric/ui/timedomain.cc)
-
-set(FNORDMETRIC_CSV_BACKEND_SOURCES
+    stage/src/fnordmetric/ui/timedomain.cc
     stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
     stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
-    stage/src/fnordmetric/sql/backends/csv/csvtableref.cc)
-
-set(FNORDMETRIC_MYSQL_BACKEND_SOURCES
+    stage/src/fnordmetric/sql/backends/csv/csvtableref.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc
-    stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc)
-
-set(FNORDMETRIC_QUERY_SOURCES
-    ${FNORDMETRIC_UI_SOURCES}
-    ${FNORDMETRIC_CSV_BACKEND_SOURCES}
-    ${FNORDMETRIC_MYSQL_BACKEND_SOURCES}
+    stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
@@ -107,6 +90,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql/runtime/compile.cc
     stage/src/fnordmetric/sql/runtime/defaultruntime.cc
     stage/src/fnordmetric/sql/runtime/execute.cc
+    stage/src/fnordmetric/sql/runtime/orderby.cc
     stage/src/fnordmetric/sql/runtime/importstatement.cc
     stage/src/fnordmetric/sql/runtime/queryplan.cc
     stage/src/fnordmetric/sql/runtime/queryplanbuilder.cc
@@ -122,9 +106,7 @@ set(FNORDMETRIC_QUERY_SOURCES
     stage/src/fnordmetric/sql_extensions/pointchartbuilder.cc
     stage/src/fnordmetric/sql_extensions/domainconfig.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc
-    stage/src/fnordmetric/sql_extensions/seriesadapter.cc)
-
-set(METRICDB_SOURCES
+    stage/src/fnordmetric/sql_extensions/seriesadapter.cc
     stage/src/fnordmetric/metricdb/adminui.cc
     stage/src/fnordmetric/metricdb/compactiontask.cc
     stage/src/fnordmetric/metricdb/httpapi.cc
@@ -158,15 +140,20 @@ ENDIF()
 
 # libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
-add_library(fnord-static
-    ${FNORDMETRIC_QUERY_SOURCES}
-    ${FNORDMETRIC_FFS_SOURCES})
+add_library(fnord-static ${FNORDMETRIC_SOURCES})
 
 find_package(MySQL)
 if (MYSQL_FOUND)
   include_directories(${MYSQL_INCLUDE_DIRS})
   target_link_libraries(fnord-static mysqlclient)
 endif(MYSQL_FOUND)
+
+# fnordmetric
+add_executable(fnordmetric-cli stage/src/fnordmetric/cli.cc)
+target_link_libraries(fnordmetric-cli fnord-static)
+
+add_executable(fnordmetric-server stage/src/fnordmetric/server.cc)
+target_link_libraries(fnordmetric-server fnord-static)
 
 # libfnord tests
 add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
@@ -199,14 +186,7 @@ add_executable(tests/test-sstable
     stage/src/fnordmetric/sstable/sstable_test.cc)
 target_link_libraries(tests/test-sstable fnord-static)
 
-add_executable(tests/test-volume
-    stage/src/fnordmetric/ffs/volume_test.cc)
-target_link_libraries(tests/test-volume fnord-static)
-
-# chartsql
-add_executable(chartsql stage/src/fnordmetric/main.cc)
-target_link_libraries(chartsql fnord-static)
-
+# fnordmetric tests
 add_executable(tests/test-sql-extensions
     stage/src/fnordmetric/sql_extensions/sql_extensions_test.cc)
 target_link_libraries(tests/test-sql-extensions fnord-static)
@@ -218,23 +198,14 @@ target_link_libraries(tests/test-query fnord-static)
 add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
 target_link_libraries(tests/test-cli fnord-static)
 
-# metricdb
-add_executable(metricdb
-    ${METRICDB_SOURCES}
-    stage/src/fnordmetric/metricdb/metricdb.cc)
-target_link_libraries(metricdb fnord-static)
-
 add_executable(tests/test-statsd
-    ${METRICDB_SOURCES}
     stage/src/fnordmetric/metricdb/statsd_test.cc)
 target_link_libraries(tests/test-statsd fnord-static)
 
 add_executable(tests/test-metric
-    ${METRICDB_SOURCES}
     stage/src/fnordmetric/metricdb/metric_test.cc)
 target_link_libraries(tests/test-metric fnord-static)
 
 add_executable(tests/test-metricrepository
-    ${METRICDB_SOURCES}
     stage/src/fnordmetric/metricdb/metricrepository_test.cc)
 target_link_libraries(tests/test-metricrepository fnord-static)

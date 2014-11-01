@@ -1,9 +1,3 @@
-
-
-
-
-
-
 [ metricdb doc ]
 
   getting started
@@ -57,7 +51,6 @@
     - bug: chart with only same values -> strange rendering
     - bug: multiple draw statements dont produce multiple charts
     - bug: NAN is not a valid value in SVG
-    - SQL: order by
     - SQL: having
     - SQL: join
     - SQL: subqueries
