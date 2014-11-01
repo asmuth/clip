@@ -508,14 +508,8 @@ QueryPlanNode* QueryPlanBuilder::buildOrderByClause(
   child_ast->appendChild(child_sl, 0);
   child_ast->removeChildrenByType(ASTNode::T_ORDER_BY);
 
-  /* resolve output column names */
-  std::vector<std::string> column_names;
-  for (const auto& col : ast->getChildren()[0]->getChildren()) {
-    column_names.emplace_back("unnamed"); // FIPXAUL
-  }
-
   return new OrderBy(
-      std::move(column_names),
+      ast->getChildren()[0]->getChildren().size(),
       sort_specs,
       buildQueryPlan(child_ast, repo));
 }

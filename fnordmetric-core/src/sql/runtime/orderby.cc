@@ -14,14 +14,22 @@ namespace fnordmetric {
 namespace query {
 
 OrderBy::OrderBy(
-    std::vector<std::string>&& columns,
+    size_t num_columns,
     std::vector<SortSpec> sort_specs,
     QueryPlanNode* child) :
-    columns_(columns),
     sort_specs_(sort_specs),
     child_(child) {
   if (sort_specs_.size() == 0) {
     RAISE(kIllegalArgumentError, "empty sort spec");
+  }
+
+  const auto& child_columns = child_->getColumns();
+  if (child_columns.size() < num_columns) {
+    RAISE(kRuntimeError, "not enough columns in virtual table");
+  }
+
+  for (int i = 0; i < num_columns; ++i) {
+    columns_.emplace_back(child_columns[i]);
   }
 
   child->setTarget(this);
