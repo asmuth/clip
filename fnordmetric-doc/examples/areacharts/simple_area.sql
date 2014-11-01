@@ -1,5 +1,5 @@
 IMPORT TABLE example_data
-   FROM 'csv:doc/examples/data/measurement.csv?headers=true';
+   FROM 'csv:examples/data/measurement.csv?headers=true';
 
 DRAW AREACHART WITH
   AXIS BOTTOM

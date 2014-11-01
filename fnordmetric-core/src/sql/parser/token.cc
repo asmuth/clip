@@ -15,58 +15,34 @@
 namespace fnordmetric {
 namespace query {
 
-static char* copyTokenData(const char* data, size_t len) {
-  if (data == nullptr) {
-    return nullptr;
-  }
-
-  void* data_copy = malloc(len);
-  if (data_copy == nullptr) {
-    RAISE(kRuntimeError, "malloc() failed");
-  }
-
-  memcpy(data_copy, data, len);
-  return static_cast<char *>(data_copy);
-}
-
 Token::Token(kTokenType token_type) :
-    type_(token_type),
-    data_(nullptr),
-    len_(0) {}
+    type_(token_type) {}
 
 Token::Token(
     kTokenType token_type,
     const char* data,
     size_t len) :
-    type_(token_type),
-    len_(len),
-    data_(copyTokenData(data, len)) {}
-
-Token::Token(const Token& copy) :
-    type_(copy.type_),
-    len_(copy.len_),
-    data_(copyTokenData(copy.data_, copy.len_)) {}
-
-Token::~Token() {
-  if (data_ != nullptr) {
-    free(data_);
+    type_(token_type) {
+  if (data != nullptr) {
+    str_ = std::string(data, len);
   }
 }
 
-// FIXPAUL!!
+Token::Token(
+    kTokenType token_type,
+    const std::string& str) :
+    type_(token_type),
+    str_(str) {}
+
+Token::Token(const Token& copy) :
+    type_(copy.type_),
+    str_(copy.str_) {}
+
 void Token::debugPrint() const {
-  if (len_ == 0) {
+  if (str_.size() == 0) {
     printf("%s\n", getTypeName(type_));
   } else {
-    char buf[1024];
-
-    if (len_ >= sizeof(buf)) {
-      RAISE(kRuntimeError, "token too large");
-    }
-
-    memcpy(buf, data_, len_);
-    buf[len_] = 0;
-    printf("%s(%s)\n", getTypeName(type_), buf);
+    printf("%s(%s)\n", getTypeName(type_), str_.c_str());
   }
 }
 
@@ -145,12 +121,11 @@ Token::kTokenType Token::getType() const {
 }
 
 bool Token::operator==(const std::string& string) const {
-  if (this->len_ != string.size()) {
+  if (str_.size() != string.size()) {
     return false;
   }
 
-  // FIXPAUL this might copy string just for a strncmp
-  return strncasecmp(this->data_, string.c_str(), string.size()) == 0;
+  return strncasecmp(str_.c_str(), string.c_str(), string.size()) == 0;
 }
 
 bool Token::operator==(kTokenType type) const {
@@ -162,34 +137,15 @@ bool Token::operator==(const Token& other) const {
     return false;
   }
 
-  if (len_ != other.len_) {
-    return false;
-  }
-
-  if (len_ > 0) {
-    return memcmp(data_, other.data_, len_) == 0;
-  } else {
-    return true;
-  }
+  return str_ == other.str_;
 }
 
 int64_t Token::getInteger() const {
-  int64_t value = 0;
-
-  for(int i = 0; i < len_; ++i) {
-    value *= 10;
-    value += data_[i] - '0';
-  }
-
-  return value;
+  return std::stoi(str_); // FIXPAUL catch errors
 }
 
 const std::string Token::getString() const {
-  if (len_ == 0) {
-    return std::string();
-  } else {
-    return std::string(data_, len_);
-  }
+  return str_;
 }
 
 } // namespace query

@@ -68,6 +68,17 @@ public:
 protected:
 
   /**
+   * Returns true if the ast is a SELECT statement that has columns in its
+   * select list that are not of the form T_TABLE_NAME -> T_COLUMN_NAME
+   */
+  bool hasUnexpandedColumns(ASTNode* ast) const;
+
+  /**
+   * Returns true if the ast is a SELECT statement that has a join
+   */
+  bool hasJoin(ASTNode* ast) const;
+
+  /**
    * Returns true if the ast is a SELECT statement that has a GROUP BY clause,
    * otherwise false
    */
@@ -90,6 +101,12 @@ protected:
    * expression was found, otherwise false.
    */
   bool hasAggregationExpression(ASTNode* ast) const;
+
+  /**
+   * Build a group by query plan node for a SELECT statement that has a GROUP
+   * BY clause
+   */
+  void expandColumns(ASTNode* ast, TableRepository* repo);
 
   /**
    * Build a group by query plan node for a SELECT statement that has a GROUP

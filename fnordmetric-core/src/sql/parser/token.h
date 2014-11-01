@@ -110,8 +110,8 @@ public:
 
   Token(kTokenType token_type);
   Token(kTokenType token_type, const char* data, size_t size);
+  Token(kTokenType token_type, const std::string& str);
   Token(const Token& copy);
-  ~Token();
   Token& operator=(const Token& copy) = delete;
   bool operator==(const Token& other) const;
   bool operator==(const std::string& string) const;
@@ -124,8 +124,7 @@ public:
   void debugPrint() const;
 
 protected:
-  char* const data_;
-  const size_t len_;
+  std::string str_;
   const kTokenType type_;
 };
 

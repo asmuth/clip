@@ -88,7 +88,7 @@ CompiledExpression* Compiler::compile(ASTNode* ast, size_t* scratchpad_len) {
 
     default:
       ast->debugPrint();
-      RAISE(kRuntimeError, "internal error: cant compile expression");
+      RAISE(kRuntimeError, "internal error: can't compile expression");
   }
 }
 

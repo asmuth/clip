@@ -29,7 +29,7 @@ public:
   };
 
   OrderBy(
-      std::vector<std::string>&& columns,
+      size_t num_columns,
       std::vector<SortSpec> sort_specs,
       QueryPlanNode* child);
 
