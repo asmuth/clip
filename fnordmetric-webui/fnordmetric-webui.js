@@ -15,7 +15,6 @@
  *
  * Query Playground:
  *  - proper empty states --> how to detect empty state?
- *  - proper "loading" state
  *  - stretch: display a [fake] loading bar
  *  - "embed this query" opens up a popup with html/js/ruby snippets
  *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
@@ -25,7 +24,6 @@
  *
  * Metric list view:
  *  - write meaningful error messages
- *  - proper "loading" state
  *  - hover state/cursor for table rows/metrics
  *  - click on a metric opens up an example query in the query playground
  *  - pagination
@@ -66,12 +64,35 @@ FnordMetric.httpPost = function(url, request, callback) {
   }
 }
 
+FnordMetric.Loading = function() {
+  var foreground = document.createElement("div");
+  foreground.className = "load_foreground";
+
+  var render = function() {
+    document.body.appendChild(foreground);
+  }
+
+  //FIXME why doesn't document.body.removeChild(foreground) work?
+  var destroy = function() {
+    var elem = document.querySelector(".load_foreground");
+    //document.body.removeChild(foreground);
+    document.body.removeChild(elem);
+  }
+
+  return {
+    "render": render,
+    "destroy": destroy
+  }
+}
+
+
 
 FnordMetric.views.MetricList = function() {
   var render = function(elem) {
     var metrics_data;
-
+    FnordMetric.Loading().render();
     FnordMetric.httpGet("/metrics", function(r) {
+      FnordMetric.Loading().destroy();
       if (r.status == 200) {
         metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
@@ -669,11 +690,13 @@ FnordMetric.views.QueryPlayground = function() {
     if (query == undefined) {
       var query = cm.getValue();
     }
+    FnordMetric.Loading().render();
     cm.setValue(query);
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     window.history.pushState({url: url}, "", "#" + url);
     FnordMetric.httpPost("/query", query, function(r) {
+      FnordMetric.Loading().destroy();
       window.location.href = url;
       if (r.status == 200) {
         var res = JSON.parse(r.response);

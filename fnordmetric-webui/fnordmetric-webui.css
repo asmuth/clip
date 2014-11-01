@@ -10,6 +10,16 @@ body {
   padding-bottom: 20px;
 }
 
+.load_foreground {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  background-color: #444;
+  opacity: 0.5;
+}
+
 .navbar {
   height: 57px;
   width: 100%;
