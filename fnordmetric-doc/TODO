@@ -54,6 +54,9 @@
     - scan samples with range / sstable binary search
     - sstable checksums + fsck + repair
     - mmap cache for readonly files
+    - bug: chart with only same values -> strange rendering
+    - bug: multiple draw statements dont produce multiple charts
+    - bug: NAN is not a valid value in SVG
     - SQL: order by
     - SQL: having
     - SQL: join

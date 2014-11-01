@@ -36,6 +36,9 @@ bool HTTPAPI::handleHTTPRequest(
       case http::HTTPRequest::M_GET:
         renderMetricList(request, response, &uri);
         return true;
+      case http::HTTPRequest::M_POST:
+        insertSample(request, response, &uri);
+        return true;
       default:
         return false;
     }
@@ -47,9 +50,6 @@ bool HTTPAPI::handleHTTPRequest(
     switch (request->method()) {
       case http::HTTPRequest::M_GET:
         renderMetricSampleScan(request, response, &uri);
-        return true;
-      case http::HTTPRequest::M_POST:
-        insertSample(request, response, &uri);
         return true;
       default:
         return false;
@@ -100,8 +100,8 @@ void HTTPAPI::insertSample(
     util::URI* uri) {
   auto params = uri->queryParams();
 
-  auto metric_key = uri->path().substr(sizeof(kMetricsUrlPrefix) - 1);
-  if (metric_key.size() < 3) {
+  std::string metric_key;
+  if (!util::URI::getParam(params, "metric", &metric_key)) {
     response->addBody("error: invalid metric key: " + metric_key);
     response->setStatus(http::kStatusBadRequest);
     return;
