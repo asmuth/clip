@@ -1,47 +1,46 @@
 
 
-SELECT value, time FROM num_http_requests;
+-- display the last hour of measurements
+SELECT "mymetric" as series, time as x, value as y FROM mymetric,
+
+-- display the first derivate of measurement over a moving 60s window
+SELECT time as x, delta(value) as FROM mymetric GROUP BY TIMEWINDOW(60, 10);
 
 -- number of requests per http status code over a moving 60 second window in
 -- the last hour
 SELECT
   status_code as series,
-  delta(value) as y,
   time as x,
-  "Number of HTTP " + status_code + " codes: " + y as label
+  delta(value)  as y
 FROM
   http_status_codes
-WHERE
-  time > -60minutes
-GROUP BY
-  TIMEWINDOW(time, 60, 10),
+GROUP BY TIMEWINDOW(60, 10),
   status_code;
 
 -- error rate computed from joining two metrics over a moving 60 second window
 -- in the last hour
 SELECT
-  status_code as series,
-  delta(error_metric.value) / delta(successful_requests_metric.value) as y,
+  "error rate" as series,
   time as x,
-  "error rate " + y as label
+  delta(error_metric.value) / delta(success_metric.value) as y
 FROM
-  successful_requests_metric,
+  success_metric,
   error_metric
 WHERE
   time > -60minutes
-GROUP BY
-  TIMEWINDOW(time, 60, 10),
+GROUP BY TIMEWINDOW(60, 10)
   status_code;
 
 
+-- error rate computed from joining two metrics over a moving 60 second window
+-- in the last hour
 SELECT
   "http error rate" as series,
   num_200.time as x,
   num_500.delta / num_200.delta as y
 FROM (
     SELECT
-      time,
-      delta(value) OVER as delta,
+      time, delta(value)
     WHERE
       time > -60minutes
       status_code = 200
