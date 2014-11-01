@@ -75,13 +75,15 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     }
   }
 
+  /* exapand all column names + wildcard to tablename->columnanme */
+
   /* internal nodes: multi table query (joins), order, aggregation, limit */
   if ((exec = buildLimitClause(ast, repo)) != nullptr) {
     return exec;
   }
 
-  if ((exec = buildOrderByClause(ast, repo)) != nullptr) {
-    return exec;
+  if (hasOrderByClause(ast)) {
+    return buildOrderByClause(ast, repo);
   }
 
   if (hasGroupByClause(ast) || hasAggregationInSelectList(ast)) {
@@ -110,6 +112,20 @@ bool QueryPlanBuilder::hasGroupByClause(ASTNode* ast) const {
 
   for (const auto& child : ast->getChildren()) {
     if (child->getType() == ASTNode::T_GROUP_BY) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool QueryPlanBuilder::hasOrderByClause(ASTNode* ast) const {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
+    return false;
+  }
+
+  for (const auto& child : ast->getChildren()) {
+    if (child->getType() == ASTNode::T_ORDER_BY) {
       return true;
     }
   }
@@ -161,11 +177,12 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     ASTNode* ast,
     TableRepository* repo) {
   ASTNode group_exprs(ASTNode::T_GROUP_BY);
+
+  /* copy own select list */
   if (!(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST)) {
     RAISE(kRuntimeError, "corrupt AST");
   }
 
-  /* copy own select list */
   auto select_list = ast->getChildren()[0]->deepCopy();
 
   /* generate select list for child */
@@ -194,13 +211,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
     }
 
     /* remove group by clause from child ast */
-    const auto& child_ast_children = child_ast->getChildren();
-    for (int i = 0; i < child_ast_children.size(); ++i) {
-      if (child_ast_children[i]->getType() == ASTNode::T_GROUP_BY) {
-        child_ast->removeChildByIndex(i);
-        break;
-      }
-    }
+    child_ast->removeChildrenByType(ASTNode::T_GROUP_BY);
   }
 
   /* compile select list and group expressions */
@@ -319,26 +330,85 @@ QueryPlanNode* QueryPlanBuilder::buildLimitClause(
 QueryPlanNode* QueryPlanBuilder::buildOrderByClause(
     ASTNode* ast,
     TableRepository* repo) {
-  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 3) {
-    return nullptr;
-  }
+  std::vector<OrderBy::SortSpec> sort_specs;
 
+  /* copy select list for child */
+  if (!(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST)) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+  auto child_sl = ast->getChildren()[0]->deepCopy();
+
+  /* search for the order by clause */
   for (const auto& child : ast->getChildren()) {
     if (child->getType() != ASTNode::T_ORDER_BY) {
       continue;
     }
 
-    // build sort spec
-    std::vector<OrderBy::SortSpec> sort_specs;
+    /* build each sort spec and expand select list for missing columns */
+    auto sort_specs_asts = child->getChildren();
+    for (int i = 0; i < sort_specs_asts.size(); ++i) {
+      auto sort = sort_specs_asts[i];
+      //if (sort->getChildren().size() != 1 ||
+      //    sort->getChildren()[0]->getType() != ASTNode::T_COLUMN_NAME) {
+      //  RAISE(kRuntimeError, "corrupt AST");
+      //}
 
-    // clone ast + remove order by clause
-    auto new_ast = ast->deepCopy();
-    new_ast->removeChildrenByType(ASTNode::T_ORDER_BY);
+      auto col = sort->getChildren()[0];
+      size_t col_index;
+      bool col_found = false;
 
-    return new OrderBy(sort_specs, buildQueryPlan(new_ast, repo));
+      /* check if column is already included in the child select list */
+      for (const auto& derived : child_sl->getChildren()) {
+        /*
+        if (derived->getChildren().size != 1 ||
+            derived->getChildren()[0]->getType() != ASTNode::T_DERVIED_COLUMN) {
+          RAISE(kRuntimeError, "corrupt AST");
+        }
+
+        auto sel_col = derived.getChildren()[0];
+        if (col->getToken()->toString() == sel_col->getToken()->toString()) {
+          col_index = i;
+          col_found = true;
+          break;
+        }
+        */
+      }
+
+      /* otherwise add the column to the child select list */
+      if (!col_found) {
+        auto new_derived = new ASTNode(ASTNode::T_DERIVED_COLUMN);
+        new_derived->appendChild(col);
+        child_sl->appendChild(new_derived);
+        col_index = child_sl->getChildren().size() - 1;
+      }
+
+      auto sort_descending = sort->getToken() != nullptr &&
+          sort->getToken()->getType() == Token::T_DESC;
+
+      /* create the sort spec */
+      OrderBy::SortSpec sort_spec;
+      sort_spec.column = col_index;
+      sort_spec.descending = sort_descending;
+      sort_specs.emplace_back(sort_spec);
+    }
   }
 
-  return nullptr;
+  /* copy ast for child and swap out select lists, remove order by clause */
+  auto child_ast = ast->deepCopy();
+  child_ast->removeChildByIndex(0);
+  child_ast->appendChild(child_sl, 0);
+  child_ast->removeChildrenByType(ASTNode::T_ORDER_BY);
+
+  /* resolve output column names */
+  std::vector<std::string> column_names;
+  for (const auto& col : ast->getChildren()[0]->getChildren()) {
+    column_names.emplace_back("unnamed"); // FIPXAUL
+  }
+
+  return new OrderBy(
+      std::move(column_names),
+      sort_specs,
+      buildQueryPlan(child_ast, repo));
 }
 
 

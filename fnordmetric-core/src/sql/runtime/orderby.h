@@ -24,11 +24,12 @@ class OrderBy : public QueryPlanNode {
 public:
 
   struct SortSpec {
-    size_t column_index;
+    size_t column;
     bool descending; // false == ASCENDING, true == DESCENDING
   };
 
   OrderBy(
+      std::vector<std::string>&& columns,
       std::vector<SortSpec> sort_specs,
       QueryPlanNode* child);
 
@@ -38,8 +39,10 @@ public:
   const std::vector<std::string>& getColumns() const override;
 
 protected:
+  std::vector<std::string> columns_;
   std::vector<SortSpec> sort_specs_;
   QueryPlanNode* child_;
+  std::vector<std::vector<SValue>> rows_;
 };
 
 }

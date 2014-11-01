@@ -74,6 +74,12 @@ protected:
   bool hasGroupByClause(ASTNode* ast) const;
 
   /**
+   * Returns true if the ast is a SELECT statement that has a ORDER BY clause,
+   * otherwise false
+   */
+  bool hasOrderByClause(ASTNode* ast) const;
+
+  /**
    * Returns true if the ast is a SELECT statement with a select list that
    * contains at least one aggregation expression, otherwise false.
    */

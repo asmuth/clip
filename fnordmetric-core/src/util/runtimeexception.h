@@ -28,7 +28,7 @@ const char kNotYetImplementedError[] = "NotYetImplementedError";
 const char kNullPointerError[] = "kNullPointerError";
 const char kParseError[] = "ParseError";
 const char kRangeError[] = "RangeError";
-const char kRuntimeError[] = "RuntimeErrpr";
+const char kRuntimeError[] = "RuntimeError";
 const char kTypeError[] = "TypeError";
 const char kVersionMismatchError[] = "VersionMismatchError";
 

@@ -54,6 +54,7 @@
     - SQL: having
     - SQL: join
     - SQL: subqueries
+    - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
     - mysql: re-serialize where condition
     - round fn
     - time based aggregations / windows
@@ -83,7 +84,8 @@
     - chart type: heatmap
     - refactor tokenizer // dynamically register tokens
     - rename (axis|legend|grid)definition -> \1config
-
+    - sql: query plan optimizer. push limit/offset/order down into tablescan if
+           no complex nodes inbetween
 
 - backend: graphite/statsd
 - backend: legacy-fnordmetric

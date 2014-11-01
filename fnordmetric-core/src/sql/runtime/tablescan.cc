@@ -221,9 +221,7 @@ bool TableScan::resolveColumns(
   }
 
   switch (node->getType()) {
-
     case ASTNode::T_ALL: {
-      /* handle SELECT * FROM ... by expanding the wildcard */
       if (parent == nullptr || parent->getType() != ASTNode::T_SELECT_LIST) {
         RAISE(kRuntimeError, "invalid use of the * wildcard");
       }
@@ -238,7 +236,6 @@ bool TableScan::resolveColumns(
         parent->appendChild(derived_col);
       }
 
-      parent->debugPrint(2);
       return true;
     }
 

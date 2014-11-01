@@ -33,6 +33,7 @@ using namespace fnordmetric::query;
 
 UNIT_TEST(SQLTest);
 
+
 class TestTableRef : public TableRef {
   std::vector<std::string> columns() override {
     return {"one", "two", "three"};
@@ -850,15 +851,85 @@ TEST_CASE(SQLTest, TestSimpleAggregateFromCSV, [] () {
 TEST_CASE(SQLTest, TestSimpleOrderByAsc, [] () {
   auto results = executeTestQuery(
       "  SELECT"
-      "    country"
+      "    country, gbp"
+      "  FROM"
+      "    gbp_per_country"
+      "  ORDER BY"
+      "    country ASC;");
+
+  EXPECT_EQ(results->getNumColumns(), 2);
+  EXPECT_EQ(results->getNumRows(), 191);
+  EXPECT_EQ(results->getRow(0)[0], "ABW");
+  EXPECT_EQ(results->getRow(0)[1], "2584");
+  EXPECT_EQ(results->getRow(190)[0], "ZWE");
+  EXPECT_EQ(results->getRow(190)[1], "12802");
+});
+
+TEST_CASE(SQLTest, TestSimpleOrderByDesc, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    country, gbp"
+      "  FROM"
+      "    gbp_per_country"
+      "  ORDER BY"
+      "    country DESC;");
+
+  EXPECT_EQ(results->getNumColumns(), 2);
+  EXPECT_EQ(results->getNumRows(), 191);
+  EXPECT_EQ(results->getRow(0)[0], "ZWE");
+  EXPECT_EQ(results->getRow(0)[1], "12802");
+  EXPECT_EQ(results->getRow(190)[0], "ABW");
+  EXPECT_EQ(results->getRow(190)[1], "2584");
+});
+
+TEST_CASE(SQLTest, TestSimpleOrderByWithoutOrderingSpec, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    country, gbp"
+      "  FROM"
+      "    gbp_per_country"
+      "  ORDER BY"
+      "    country;");
+
+  EXPECT_EQ(results->getNumColumns(), 2);
+  EXPECT_EQ(results->getNumRows(), 191);
+  EXPECT_EQ(results->getRow(0)[0], "ABW");
+  EXPECT_EQ(results->getRow(0)[1], "2584");
+  EXPECT_EQ(results->getRow(190)[0], "ZWE");
+  EXPECT_EQ(results->getRow(190)[1], "12802");
+});
+
+/*
+TEST_CASE(SQLTest, TestSimpleOrderByAscWithWildcardSelect, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    *"
       "  FROM"
       "    gbp_per_country"
       "  ORDER BY"
       "    country ASC;");
 
   results->debugPrint();
-  EXPECT_EQ(results->getRow(0)[0], "ABW");
+  EXPECT_EQ(results->getRow(0)[1], "ABW");
 });
+*/
+
+TEST_CASE(SQLTest, TestSimpleOrderByAscOnUnselectedColumn, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    country"
+      "  FROM"
+      "    gbp_per_country"
+      "  ORDER BY"
+      "    gbp ASC;");
+
+  //results->debugPrint();
+  EXPECT_EQ(results->getNumColumns(), 1);
+  EXPECT_EQ(results->getNumRows(), 191);
+  EXPECT_EQ(results->getRow(0)[0], "TUV");
+  EXPECT_EQ(results->getRow(190)[0], "USA");
+});
+
 
 TEST_CASE(SQLTest, TestNoSuchColumnError, [] () {
   EXPECT_EXCEPTION("no such column: 'fnord'", [] () {
