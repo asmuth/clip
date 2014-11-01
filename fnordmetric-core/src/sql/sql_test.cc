@@ -742,6 +742,26 @@ TEST_CASE(SQLTest, TestSelectAllQuery, [] () {
   EXPECT(results->getNumRows() == 100);
 });
 
+TEST_CASE(SQLTest, TestSelectTableAllQuery, [] () {
+  auto results = executeTestQuery("SELECT testtable.* from testtable;");
+  EXPECT(results->getNumColumns() == 3);
+  EXPECT(results->getNumRows() == 100);
+});
+
+TEST_CASE(SQLTest, TestSelectAllMultitable, [] () {
+  auto expected = "can't use wilcard select (SELECT * FROM ...) when selecting "
+      "from multiple tables";
+
+  EXPECT_EXCEPTION(expected, [] () {
+    auto results = executeTestQuery("SELECT * from testtable, tesstable2;");
+  });
+
+  EXPECT_EXCEPTION(expected, [] () {
+    auto results = executeTestQuery("SELECT testtable.*, tesstable2.* "
+        "from testtable, tesstable2;");
+  });
+});
+
 TEST_CASE(SQLTest, TestTableScanWhereLimitQuery, [] () {
   auto results = executeTestQuery(
       "  SELECT"
