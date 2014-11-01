@@ -46,5 +46,56 @@ std::string StringUtil::hexPrint(
   return str;
 }
 
+template <>
+std::string StringUtil::debugPrint<bool>(const bool& value) {
+  return value == true ? "true" : "false";
+}
+
+template <>
+std::string StringUtil::debugPrint<int>(const int& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::debugPrint<unsigned int>(const unsigned int& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::debugPrint<unsigned long>(const unsigned long& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::debugPrint<unsigned long long>(
+    const unsigned long long& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::debugPrint<double>(const double& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::debugPrint<std::string>(const std::string& value) {
+  return value;
+}
+
+template <>
+std::string StringUtil::debugPrint<char const*>(char const* const& value) {
+  return std::string(value);
+}
+
+template <>
+std::string StringUtil::debugPrint<void*>(void* const& value) {
+  return "<ptr>";
+}
+
+template <>
+std::string StringUtil::debugPrint<const void*>(void const* const& value) {
+  return "<ptr>";
+}
+
 }
 }

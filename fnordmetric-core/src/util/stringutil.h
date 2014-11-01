@@ -28,6 +28,9 @@ public:
       bool separate_bytes = true,
       bool reverse_byte_order = false);
 
+  template <typename T>
+  static std::string debugPrint(const T& value);
+
 };
 
 }

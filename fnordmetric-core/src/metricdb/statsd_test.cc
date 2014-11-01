@@ -25,7 +25,7 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
 
   EXPECT_EQ(key, "/fnord/mymetric");
   EXPECT_EQ(sample.labels.size(), 0);
-  EXPECT_EQ(sample.value, "")
+  EXPECT_EQ(sample.value, "");
 });
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
@@ -39,7 +39,7 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
 
   EXPECT_EQ(key, "/fnord/mymetric");
   EXPECT_EQ(sample.labels.size(), 0);
-  EXPECT_EQ(sample.value, "34.23")
+  EXPECT_EQ(sample.value, "34.23");
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
@@ -57,6 +57,6 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
   EXPECT_EQ(sample.labels[0].second, "435");
   EXPECT_EQ(sample.labels[1].first, "l2");
   EXPECT_EQ(sample.labels[1].second, "str");
-  EXPECT_EQ(sample.value, "34.23")
+  EXPECT_EQ(sample.value, "34.23");
 });
 

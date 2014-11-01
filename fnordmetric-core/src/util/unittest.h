@@ -13,6 +13,7 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/random.h>
+#include <fnordmetric/util/stringutil.h>
 #include <functional>
 #include <unordered_map>
 #include <vector>
@@ -42,8 +43,16 @@ const char kExpectationFailed[] = "ExpectationFailed";
           "expectation failed: %s", #X); \
     }
 
-#define EXPECT_EQ(X, Y) \
-    EXPECT((X) == (Y));
+template <typename T1, typename T2>
+void EXPECT_EQ(T1 left, T2 right) {
+  if (!(left == right)) {
+    RAISE(
+        kExpectationFailed,
+        "expectation failed: %s == %s",
+        fnord::util::StringUtil::debugPrint<T1>(left).c_str(),
+        fnord::util::StringUtil::debugPrint<T2>(right).c_str());
+  }
+}
 
 #define EXPECT_EXCEPTION(E, L) \
     { \
@@ -83,6 +92,7 @@ const char kExpectationFailed[] = "ExpectationFailed";
           filename1.c_str(), filename2.c_str()); \
     } \
   }
+
 
 namespace fnordmetric {
 namespace util {

@@ -143,7 +143,7 @@ TEST_CASE(CSVInputStreamTest, TestReadRowsWithoutHeaders, [] () {
     }
   }
 
-  EXPECT_EQ(num_rows, 191)
+  EXPECT_EQ(num_rows, 191);
 });
 
 

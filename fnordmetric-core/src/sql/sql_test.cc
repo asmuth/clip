@@ -440,7 +440,11 @@ TEST_CASE(SQLTest, TestSelectWithQuotedTableName, [] () {
   EXPECT(*col->getToken() == Token::T_IDENTIFIER);
   EXPECT(*col->getToken() == "xxx");
   const auto& from = stmt->getChildren()[1];
-  EXPECT(*from == ASTNode::T_FROM);
+  EXPECT_EQ(*from, ASTNode::T_FROM);
+  EXPECT_EQ(from->getChildren().size(), 1);
+  EXPECT_EQ(*from->getChildren()[0], ASTNode::T_TABLE_NAME);
+  EXPECT_EQ(*from->getChildren()[0]->getToken(), Token::T_IDENTIFIER);
+  EXPECT_EQ(from->getChildren()[0]->getToken()->getString(), "somextable");
 });
 
 TEST_CASE(SQLTest, TestSelectMustBeFirstAssert, [] () {

@@ -1,17 +1,17 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <assert.h>
 #include "astnode.h"
 #include "token.h"
+#include <fnordmetric/util/stringutil.h>
 
 namespace fnordmetric {
 namespace query {
@@ -232,5 +232,19 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
   }
 }
 
+} // namespace query
+} // namespace fnordmetric
+
+template <>
+std::string fnord::util::StringUtil::debugPrint<
+    fnordmetric::query::ASTNode::kASTNodeType>(
+    const fnordmetric::query::ASTNode::kASTNodeType& value) {
+  return "<ASTNode>";
 }
+
+template <>
+std::string fnord::util::StringUtil::debugPrint<
+    fnordmetric::query::ASTNode>(
+    const fnordmetric::query::ASTNode& value) {
+  return "<ASTNode>";
 }

@@ -105,7 +105,7 @@ TEST_CASE(PageManagerTest, TestMmapPageManager, [] () {
   auto mfile1 = page_manager->getMmappedFileTest(3000);
   auto mfile2 = page_manager->getMmappedFileTest(304200);
   EXPECT_EQ(mfile1->size, 1048576);
-  EXPECT_EQ(mfile1, mfile2);
+  EXPECT_EQ((void *) mfile1, (void *) mfile2);
   mfile2->incrRefs();
 
   auto mfile3 = page_manager->getMmappedFileTest(1048577);
