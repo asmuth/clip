@@ -13,14 +13,10 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/ev/eventloop.h>
-#include <fnordmetric/ev/acceptor.h>
-#include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/web/queryendpoint.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 

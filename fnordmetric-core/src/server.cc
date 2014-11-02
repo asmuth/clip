@@ -14,9 +14,6 @@
 #include <vector>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/ev/acceptor.h>
-#include <fnordmetric/ev/eventloop.h>
-#include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/compactiontask.h>
