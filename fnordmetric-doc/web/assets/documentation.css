@@ -310,7 +310,7 @@ ul li p {
   font-weight: 400;
   margin: 0 0 0 300px;
   padding: 35px 50px 50px 50px;
-  min-height:1000px;
+  min-height:1400px;
 }
 
 #documentation_wrap {
@@ -343,7 +343,7 @@ ul li p {
   margin-top: 1em;
   margin-bottom: 0;
   padding-bottom: 0;
-  font-size: 100%;
+  font-size: 120%;
   font-weight: 500;
 }
 
@@ -368,7 +368,7 @@ ul li p {
 }
 
 #documentation hr {
-  margin: 24px 0 20px 0;
+  margin: 24px 0 35px 0;
   border: none;
   border-bottom: 1px solid #eee;
 }
