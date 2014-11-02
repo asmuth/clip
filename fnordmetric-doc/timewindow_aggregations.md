@@ -11,8 +11,8 @@ timeseries data, FnordMetric introduces a new GROUP OVER TIMEWINDOW clause.
 Here is a simple example that should demonstrate the general conpect before we
 look at the detailed semantics of the GROUP OVER TIMEWINDOW clause:
 
-    -- display the moving average mymetric's value over a mving 60s window
-    SELECT time as x, average(value) as FROM mymetric GROUP OVER TIMEWINDOW(60, 10);
+    -- display the moving average of mymetric's value over a mving 60s window
+    SELECT time, mean(value) FROM mymetric GROUP OVER TIMEWINDOW(60, 10);
 
 ### Detailed explanation
 
