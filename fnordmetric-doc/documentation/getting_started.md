@@ -76,3 +76,11 @@ data and send them to fnordmetric-server.
 
 
 
+
+---
+
+_FnordMetric also includes a number pre-built agents to collect data from common sources:_
+
+### FnordMetric Community Contributed Agents
+
+  + Docker Agent (fm-docker-agent)
