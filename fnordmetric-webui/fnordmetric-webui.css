@@ -268,6 +268,22 @@ table.metrics_list_container td {
   margin-left: 10px;
 }
 
+.popup {
+  position: absolute;
+  height: 40%;
+  width: 40%;
+  z-index: 2000;
+  border: 1px solid #ddd;
+  left: 30%;
+  background: #fff;
+}
+
+.popup a {
+  float: left;
+  color: #444;
+  text-decoration: none;
+}
+
 /* BASICS */
 
 .CodeMirror {

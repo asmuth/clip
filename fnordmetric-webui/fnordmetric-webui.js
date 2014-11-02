@@ -332,8 +332,9 @@ FnordMetric.views.MetricList = function() {
 
         list_item_row.addEventListener('click', function(e) {
           e.preventDefault();
-          var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM;" +
-          "SELECT * FROM " + data["key"] + " LIMIT 10;";
+          var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
+          "SELECT 'mymetric' AS series, time AS x, value AS y "+
+          "FROM " + data["key"];
           var enc_query = encodeURIComponent(query);
           window.location = "/admin#query_playground!" + enc_query;
           //FIXME pushstate?
@@ -395,6 +396,7 @@ FnordMetric.views.QueryPlayground = function() {
   var editor_resizer_tooltip;
   var split_button;
   var query_button;
+  var embed_button;
   var query_editor;
   var cm;
 
@@ -424,19 +426,23 @@ FnordMetric.views.QueryPlayground = function() {
     editor_resizer_tooltip.className = "editor_resizer_tooltip";
     editor_resizer_tooltip.setAttribute('draggable', 'true');
 
-    split_button = document.createElement("div");
-    split_button.className = "fancy_button";
-    split_button.style.margin = "10px";
-    split_button.innerHTML = "<a href="+document.URL+">Change View</a>";
-    navbar.appendChild(split_button);
+    var createFancyButton = function(text, href, floatdir) {
+      var button = document.createElement("div");
+      button.className = "fancy_button";
+      button.style.margin = "10px";
+      button.style.float = floatdir;
+      button_link = document.createElement("a");
+      button_link.href = href;
+      button_link.innerHTML = text;
+      button.appendChild(button_link);
+      navbar.appendChild(button);
+      console.log(button);
+      return button;
+    }
 
-    query_button = document.createElement("div");
-    query_button.className = "fancy_button";
-    query_button.style.margin = "10px";
-    query_button.innerHTML = "<a href='#'>Run Query</a>";
-    query_button.style.float ="left";
-
-    navbar.appendChild(query_button);
+    split_button = createFancyButton("Change View", document.URL, "");
+    query_button = createFancyButton("Run Query", '#', "left");
+    embed_button = createFancyButton("Embed This Query", '#', "left");
   }
 
   var initCM = function() {
@@ -525,11 +531,18 @@ FnordMetric.views.QueryPlayground = function() {
     elem.appendChild(editor_resizer_tooltip);
     elem.appendChild(result_pane);
 
-    query_button.addEventListener('click', function() {
+    query_button.addEventListener('click', function(e) {
+      e.preventDefault();
       runQuery();
     }, false);
 
-    split_button.addEventListener('click', function() {
+    embed_button.addEventListener('click', function(e) {
+      e.preventDefault();
+      openEmbedPopup();
+    }, false);
+
+    split_button.addEventListener('click', function(e) {
+      e.preventDefault();
       horizontal = !horizontal;
 
       if (!horizontal) {
@@ -897,6 +910,38 @@ FnordMetric.views.QueryPlayground = function() {
         renderError(r);
       }
     });
+  }
+
+  var openEmbedPopup = function() {
+    var query = cm.getValue();
+    if (query.length == 0) {
+      //FIXME
+      alert("Please enter a query");
+      return;
+    }
+    var renderPopup = function() {
+      var foreground = document.createElement("div");
+      foreground.className = "load_foreground";
+      var popup = document.createElement("div");
+      popup.className = "popup";
+      var close_button = document.createElement("a");
+      close_button.href = "#";
+      close_button.innerHTML = "X";
+      //FIXME & make me fancy
+      popup.innerHTML = "Ruby/html/js snippet ";
+      popup.appendChild(close_button);
+
+      document.body.appendChild(foreground);
+      document.body.appendChild(popup);
+
+      close_button.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.body.removeChild(popup);
+        document.body.removeChild(foreground);
+      }, false);
+    }
+
+    renderPopup();
   }
 
   return {
