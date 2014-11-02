@@ -76,16 +76,19 @@ Just like a normal GROUP BY clause, the GROUP OVER TIMEWINDOW clause accepts
 a list of expressions by which to roll up the result.
 
 As an example let's calculate the moving average of the number of requests
-per hostname:
+per hostname in the last hour:
 
     SELECT time, mean(value)
         FROM number_of_requests
+        WHERE time > -1hour
         GROUP OVER TIMEWINDOW(40, 10) BY hostname;
 
-Or let's break down the 99th percentile latency by hostname and url:
+Or let's break down the 99th percentile latency by hostname and url over
+a fixed time range:
 
     SELECT time, percentile(99, value)
         FROM request_latencies
+        WHERE time > 2014-08-01 AND time < 2014-09-01
         GROUP OVER TIMEWINDOW(40, 10) BY hostname, url;
 
 
