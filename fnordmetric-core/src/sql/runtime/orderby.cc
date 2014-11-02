@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql/runtime/orderby.h>
 #include <fnordmetric/sql/expressions/boolean.h>
+#include <algorithm>
 
 namespace fnordmetric {
 namespace query {
