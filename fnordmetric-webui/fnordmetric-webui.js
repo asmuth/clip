@@ -235,7 +235,6 @@ FnordMetric.views.MetricList = function() {
 
         list_item_row.addEventListener('click', function(e) {
           e.preventDefault();
-          console.log("click metrics row");
           var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM;" +
           "SELECT 'exp' as series, time AS x, value as y FROM " +
           data["key"];
@@ -284,6 +283,7 @@ FnordMetric.views.QueryPlayground = function() {
   var navbar;
   var editor_pane;
   var result_pane;
+  var empty_text;
   var editor_resizer_tooltip;
   var split_button;
   var query_button;
@@ -301,8 +301,14 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane.className = "editor_pane";
     editor_pane.appendChild(query_editor);
 
+    empty_text = document.createElement("p");
+    empty_text.innerHTML = "Text Text Insert your query on the left ...";
+
     result_pane = document.createElement("div");
     result_pane.className = "result_pane";
+    result_pane.style.background = "#fff";
+    result_pane.style.borderLeft = "1px solid #ddd";
+    result_pane.appendChild(empty_text);
 
     editor_resizer_tooltip = document.createElement("div");
     editor_resizer_tooltip.className = "editor_resizer_tooltip";
@@ -340,8 +346,8 @@ FnordMetric.views.QueryPlayground = function() {
       lineNumbers: true,
     });
 
-    cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
-    "time AS x, value as y FROM http_status_codes;");
+    //cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
+    //"time AS x, value as y FROM http_status_codes;");
 
   }
 
@@ -621,8 +627,7 @@ FnordMetric.views.QueryPlayground = function() {
       renderError(resp.error);
       return;
     }
-    result_pane.style.background = "#fff";
-    result_pane.style.borderLeft = "1px solid #ddd";
+
 
     var charts = resp.charts;
     var tables = resp.tables;
@@ -632,18 +637,22 @@ FnordMetric.views.QueryPlayground = function() {
     var curr_tableID = 0;
     var curr_url = document.URL;
 
-    var resultData = {
-      "chart" : charts,
-      "table" : tables
-    }
 
-    var currentResult = {
-      "chart" : curr_chart,
-      "table" : curr_table
+
+    var outputObj = {
+      chart : {
+        label : "Chart",
+        currResult : curr_chart,
+        resultData : charts
+      },
+      table : {
+        label : "Label",
+        currResult : curr_table,
+        resultData : tables
+      }
     }
 
     var renderExecutionInfo = function() {
-      console.log(editor_pane);
       var parseMilliTS = function(ts) {
         if (ts < 1000) {
           if (ts == 0) {
@@ -687,12 +696,13 @@ FnordMetric.views.QueryPlayground = function() {
         navitem.className = "result_link";
         navitem.href = curr_url;
         navitem.setAttribute("id", i);
-        navitem.innerHTML = "<h3>" + type + " " + (i+1) + "</h3>";
+        console.log(type);
+        navitem.innerHTML = "<h3>" + outputObj[type]["label"] + " " + (i+1) + "</h3>";
         result_navbar.appendChild(navitem);
 
         navitem.addEventListener('click', function(e) {
           e.preventDefault();
-          if (this.id != currentResult[type]) {
+          if (this.id != outputObj[type][currResult]) {
             updateResult(type, this);
           }
         }, false);
@@ -711,13 +721,13 @@ FnordMetric.views.QueryPlayground = function() {
 
     var updateResult = function(type, elem) {
       destroyResult(type);
-      updateNavbar(elem, currentResult[type]);
+      updateNavbar(elem, outputObj[type][currResult]);
       if (type == "chart") {
         curr_chartID = elem.id;
       } else {
         curr_tableID = elem.id;
       }
-      renderChart(resultData[type][elem.id]);
+      renderChart(outputObj[type][resultData][elem.id]);
       updateLayout(false);
 
     }

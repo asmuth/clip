@@ -100,6 +100,10 @@ body {
   overflow-y: visible;
 }
 
+.result_pane p {
+  padding: 20px;
+}
+
 .editor_resizer_tooltip {
   display:block;
   position: absolute;
