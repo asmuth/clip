@@ -153,7 +153,7 @@ task :render do
   end
 
   puts "+ Copying Assets"
-  %x{test -e #{BASEDIR}/target/fnordmetric.js || ln -s #{BASEDIR}/../../contrib/fnordmetric-js/fnordmetric.js* #{BASEDIR}/target}
+  %x{test -e #{BASEDIR}/target/fnordmetric.js || (rm #{BASEDIR}/target/fnordmetric.js; ln -s #{BASEDIR}/../../fnordmetric-js/fnordmetric.js #{BASEDIR}/target)}
   %x{cp -R #{BASEDIR}/assets/* #{BASEDIR}/target}
   %x{cp -R #{BASEDIR}/assets/.htaccess #{BASEDIR}/target}
 end
