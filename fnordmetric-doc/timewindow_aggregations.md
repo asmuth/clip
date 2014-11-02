@@ -1,10 +1,38 @@
 
+-- insert distribution as map of $bucket -> $count pairs. expand each $bucket to
+-- $count rows with value = $bucket on query
+-- e.g. insert value {10:2, 100: 4, 250: 1}
+-- select...
+-- time, value
+-- t0, 10
+-- t0, 10
+-- t0, 100
+-- t0, 100
+-- t0, 100
+-- t0, 100
+-- t0, 250
+
 
 -- display the last hour of measurements
 SELECT "mymetric" as series, time as x, value as y FROM mymetric,
 
 -- display the first derivative of our measurement over a moving 60s window
 SELECT time as x, delta(value) as FROM mymetric GROUP BY TIMEWINDOW(60, 10);
+
+
+-- insert rationals/fractions (e.g. error rate)
+-- allows proper aggregation over error rate:
+-- display the aggregate error rate with a moving 60s window in the last hour
+SELECT time as x, sum(numerator(value)) / sum(denominator(value)) as y
+  FROM mymetric
+  GROUP BY TIMEWINDOW(time, 60, 10)
+  WHERE time > -60mins;
+
+-- display the error rate per host with a moving 60s window in the last hour
+SELECT time as x, sum(numerator(value)) / sum(denominator(value)) as y
+  FROM mymetric
+  GROUP BY TIMEWINDOW(time, 60, 10), hostname
+  WHERE time > -60mins;
 
 -- display the first derivative of our measurement over a moving 60s window in the last hour
 SELECT time as x, delta(value) as y
