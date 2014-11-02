@@ -31,4 +31,8 @@ You can find the complete [source code on Github](http://github.com/paulasmuth/f
 
 To compile fnordmetric
 
-    $ ./autogen.sh
+    $ make
+
+To run the tests
+
+    $ make test

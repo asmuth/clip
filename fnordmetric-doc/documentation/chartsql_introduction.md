@@ -8,27 +8,6 @@ It supports all the operations you would expect in your standard SQL database
 like GROUP BY or HAVING statements and joins. Additionally, FnordMetric implements
 a number of new statements to create charts directly from SQL.
 
-The DRAW Statement
-------------------
-
-- basic idea: one draw and all successive selects select series
-- select format
-
-- specifying domains
-   * logarithmic
-
-- specifying axes
-   * titles
-   * multiyple y axis
-
-- setting a title / subtitle
-
-- adding a legend
-
-- combining charts / overdraw
-
-
-
 Extensions to standard SQL
 --------------------------
 
@@ -40,24 +19,3 @@ a group function in a statement containing no GROUP BY clause, it equivalent to
 grouping on all rows. This assumes that the nongrouped columns will have the same
 group-wise values. Otherwise, the result is undefined. The same applies for
 the HAVING clause.
-
-
-### GROUP BY and HAVING extensions
-
-Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
-can refer to nonaggregated columns not named in the GROUP BY clause. If you use
-a group function in a statement containing no GROUP BY clause, it equivalent to
-grouping on all rows. This assumes that the nongrouped columns will have the same
-group-wise values. Otherwise, the result is undefined. The same applies for
-the HAVING clause.
-
-### GROUP BY and HAVING extensions
-
-Like MySQL, fnordmetric SQL extends the use of GROUP BY so that the select list
-can refer to nonaggregated columns not named in the GROUP BY clause. If you use
-a group function in a statement containing no GROUP BY clause, it equivalent to
-grouping on all rows. This assumes that the nongrouped columns will have the same
-group-wise values. Otherwise, the result is undefined. The same applies for
-the HAVING clause.
-
-
