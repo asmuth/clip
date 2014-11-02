@@ -33,12 +33,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
-    stage/src/fnordmetric/http/httpinputstream.cc
-    stage/src/fnordmetric/http/httpoutputstream.cc
-    stage/src/fnordmetric/http/httpmessage.cc
-    stage/src/fnordmetric/http/httprequest.cc
-    stage/src/fnordmetric/http/httpresponse.cc
-    stage/src/fnordmetric/http/httpserver.cc
     stage/src/fnordmetric/sstable/cursor.cc
     stage/src/fnordmetric/sstable/fileheaderreader.cc
     stage/src/fnordmetric/sstable/fileheaderwriter.cc
@@ -69,7 +63,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
     stage/src/fnordmetric/thread/threadpool.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/areachart.cc
     stage/src/fnordmetric/ui/barchart.cc
@@ -187,9 +180,6 @@ target_link_libraries(tests/test-uri fnord-static)
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
 target_link_libraries(tests/test-csv-backend fnord-static)
-
-add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http fnord-static)
 
 add_executable(tests/test-pagemanager
     stage/src/fnordmetric/io/pagemanager_test.cc)
