@@ -132,7 +132,7 @@ FnordMetric.views.MetricList = function() {
     }
 
     var renderResult = function() {
-      var rows_per_side = 10;
+      var rows_per_side = 5;
 
       var createListHeaderCells = function(labels) {
         for (var i = 0; i < labels.length; i++) {
@@ -600,16 +600,48 @@ FnordMetric.views.QueryPlayground = function() {
       table_navbar.className = "pagination_navbar";
       table_navbar.id = "table_navbar";
 
-      var tooltip_for = document.createElement("a");
-      tooltip_for.className = "pagination_tooltip";
-      tooltip_for.href = "#";
-      tooltip_for.innerHTML = "&#8594;";
+      var tooltipProp = {
+        "for" : {
+          "arrow" : "&#8594;",
+          "marginRight" : "0px"
+        },
+        "back" : {
+          "arrow" : "&#8592;",
+          "marginRight" : "2px;"
+        }
+      }
 
-      var tooltip_back = document.createElement("a");
-      tooltip_back.className = "pagination_tooltip";
-      tooltip_back.href = "#";
-      tooltip_back.style.marginRight = "2px";
-      tooltip_back.innerHTML = "&#8592;";
+      var tooltipEvent = function() {
+        updateNavbarTooltips();
+        destroyResultTableRows();
+        renderResultTableRows(start_index, end_index);
+      }
+
+      var createTooltip = function(type) {
+        var tooltip = document.createElement("a");
+        tooltip.className = "pagination_tooltip";
+        tooltip.href = "#";
+        tooltip.style.marginRight = tooltipProp[type]["marginRight"];
+        tooltip.innerHTML = tooltipProp[type]["arrow"];
+
+        tooltip.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (type == "for") {
+            start_index = parseInt(this.id);
+            end_index = Math.min(rows.length, 
+              start_index + rows_per_side);
+
+          } else {
+            start_index = Math.max(0, 
+              parseInt(this.id) - rows_per_side);
+            end_index = start_index + rows_per_side;
+          }
+          tooltipEvent();
+        }, false)
+
+        return tooltip;
+      }
+
 
       var navbar_label = document.createElement("div");
       navbar_label.className = "navbar_label";
@@ -631,6 +663,9 @@ FnordMetric.views.QueryPlayground = function() {
           (start_index == 0) ? "#ddd" : "#444";
       }
 
+      var tooltip_for = createTooltip("for");
+      var tooltip_back = createTooltip("back");
+
       updateNavbarLabel();
       updateNavbarTooltips();
 
@@ -638,26 +673,7 @@ FnordMetric.views.QueryPlayground = function() {
       table_navbar.appendChild(tooltip_back);
       table_navbar.appendChild(navbar_label);
       result_pane.appendChild(table_navbar);
-
-
-      tooltip_for.addEventListener('click', function() {
-        start_index = parseInt(this.id);
-        end_index = Math.min(rows.length, start_index + rows_per_side);
-        updateNavbarLabel();
-        updateNavbarTooltips();
-        destroyResultTableRows();
-        renderResultTableRows(start_index, end_index);
-      }, false);
-
-      tooltip_back.addEventListener('click', function() {
-        start_index = Math.max(0, parseInt(this.id) - rows_per_side);
-        end_index = start_index + rows_per_side;
-        updateNavbarLabel();
-        updateNavbarTooltips();
-        destroyResultTableRows();
-        renderResultTableRows(start_index, end_index);
-      }, false);
-    }
+   }
 
 
     var renderResultTableRows = function(start, end) {
