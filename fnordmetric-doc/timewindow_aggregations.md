@@ -41,7 +41,7 @@ this:
 Now let's GROUP OVER TIMEWINDOW on this table with a 40 second window and a 10
 second step to produce a moving average
 
-    SELECT time, mean(value) FROM ... GROUP OVER TIMWINDOW(40, 10)
+    SELECT time, mean(value) FROM ... GROUP OVER TIMEWINDOW(40, 10)
 
 The GROUP OVER TIMEWINDOW clause will produce one output row each 10 seconds,
 grouping over the last 40 seconds of data. This illustration shows the first
@@ -80,13 +80,13 @@ per hostname:
 
     SELECT time, mean(value)
         FROM number_of_requests
-        GROUP OVER TIMWINDOW(40, 10) BY hostname;
+        GROUP OVER TIMEWINDOW(40, 10) BY hostname;
 
 Or let's break down the 99th percentile latency by hostname and url:
 
     SELECT time, percentile(99, value)
         FROM request_latencies
-        GROUP OVER TIMWINDOW(40, 10) BY hostname, url;
+        GROUP OVER TIMEWINDOW(40, 10) BY hostname, url;
 
 
 ### GROUP OVER TIMEWINDOW on multiple tables
@@ -115,140 +115,14 @@ An example:
   group in the input row set, the GROUP OVER TIMEWINDOW will produce one output
   row for each step in time.
 
-  - A GROUP OVER TIMEWINDOW clause may produce more than one output row for each
-  row in the input set (if there is less than one input row per time window).
+  - The number of output rows of a GROUP OVER TIMEWINDOW clause may be greater
+  than then number of rows in the input set (if there is less than one input row
+  per output time window).
+
+  - The output groups may overlap, i.e. each input row may appear in more than
+  one output group.
 
   - When selecting from multiple tables, a GROUP OVER TIMEWINDOW is an implicit
-  natural join on the specified timewindow. GROUP OVER TIMEWINDOW clauses may 
+  natural join on the specified timewindow. GROUP OVER TIMEWINDOW clauses may
   therefore not be mixed with JOIN clauses.
-
-
-
-
-
-
-
----------------------- work in progress below here -----------------------
-
-
-
-### More examples:
-
-  -- error rate computed from joining the first derivates of two metrics over a
-  -- moving 60 second window in the last hour
-  SELECT
-    "http error rate" as series,
-    num_200.time as x,
-    num_500.val / num_200.val as y
-  FROM (
-      SELECT time, delta(value) AS val
-        FROM http_status_codes
-        SINCE -60minutes UNTIL now
-        WHERE status_code = 200
-        GROUP BY TIMEWINDOW(time, 60, 10);
-    ) AS num_200
-  JOIN (
-      SELECT time, delta(value) AS val
-        FROM http_status_codes
-        SINCE -60minutes UNTIL now
-        WHERE status_code = 5200
-        GROUP BY TIMEWINDOW(time, 60, 10);
-    ) AS num_500
-  ) ON num_200.time = num_500.time;
-
-
-
-  -- error rate computed from joining the first derivates of two metrics over a
-  -- moving 60 second window in the last hour
-  SELECT
-    "http error rate" as series,
-    num_200.time as x,
-    num_500.val / num_200.val as y
-  FROM (
-      SELECT time, delta(value) AS val
-        FROM http_status_codes
-        SINCE -60minutes UNTIL now
-        WHERE status_code = 200
-        GROUP BY TIMEWINDOW(time, 60, 10);
-    ) AS num_200, (
-      SELECT time, delta(value) AS val
-        FROM http_status_codes
-        SINCE -60minutes UNTIL now
-        WHERE status_code = 5200
-        GROUP BY TIMEWINDOW(time, 60, 10);
-    ) AS num_500
-  WHERE num_200.time = num_500.time;
-
-
-
-
-
--- insert distribution as map of $bucket -> $count pairs. expand each $bucket to
--- $count rows with value = $bucket on query
--- e.g. insert value {10:2, 100: 4, 250: 1}
--- select...
--- time, value
--- t0, 10
--- t0, 10
--- t0, 100
--- t0, 100
--- t0, 100
--- t0, 100
--- t0, 250
-
-
--- display the last hour of measurements
-SELECT "mymetric" as series, time as x, value as y FROM mymetric,
-
--- display the moving average of our measurement over a moving 60s window
-SELECT time as x, average(value) as FROM mymetric GROUP BY TIMEWINDOW(time 60, 10);
-
-
--- insert rationals/fractions (e.g. error rate)
--- allows proper aggregation over error rate:
--- display the aggregate error rate with a moving 60s window in the last hour
-SELECT time as x, sum(numerator(value)) / sum(denominator(value)) as y
-  FROM mymetric
-  GROUP BY TIMEWINDOW(time, 60, 10)
-  WHERE time > -60mins;
-
--- display the error rate per host with a moving 60s window in the last hour
-SELECT time as x, sum(numerator(value)) / sum(denominator(value)) as y
-  FROM mymetric
-  GROUP BY TIMEWINDOW(time, 60, 10), hostname
-  WHERE time > -60mins;
-
--- display the first derivative of our measurement over a moving 60s window in the last hour
-SELECT time as x, delta(value) as y
-  FROM mymetric
-  GROUP BY TIMEWINDOW(time, 60, 10)
-  WHERE time > -60mins;
-
--- ....equivalent to
-SELECT time as x, delta(value) as y
-  FROM mymetric
-  GROUP BY TIMEWINDOW(time, 60, 10)
-  SINCE -60mins UNTIL now;
-
--- number of requests per http status code over a moving 60 second window in
--- the last hour
-SELECT status_code as series, time as x, delta(value) as y
-  FROM http_status_codes
-  GROUP BY TIMEWINDOW(time, 60, 10), status_code;
-
--- error rate computed from joining two metrics over a moving 60 second window
--- in the last hour
-SELECT
-  hostname as series,
-  time as x,
-  delta(error_metric.value) / delta(success_metric.value) as y
-FROM
-  success_metric,
-  error_metric
-WHERE
-  time > -60minutes
-GROUP BY
-  TIMEWINDOW(time, 60, 10),
-  hostname;
-
 
