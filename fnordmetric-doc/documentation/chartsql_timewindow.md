@@ -25,8 +25,7 @@ one output row for each step in time. Each of these output rows will be computed
 by grouping over all rows in the preceeding time window.
 
 To illustrate this concept, lets imagine we insert the number of registered users
-on our website every 10 seconds. This could produce a raw table that looks like
-this:
+on our website every 10 seconds and our source table looks like this:
 
      time   | value
      ----------------
@@ -42,7 +41,7 @@ this:
      90     | 999
 
 Now let's GROUP OVER TIMEWINDOW on this table with a 40 second window and a 10
-second step to produce a moving average
+second step to compute a moving average
 
     SELECT time, mean(value) FROM ... GROUP OVER TIMEWINDOW(40, 10)
 

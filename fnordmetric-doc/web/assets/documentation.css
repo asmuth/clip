@@ -684,3 +684,7 @@ p + .fancybutton {
   margin: 0;
   margin-bottom: -20px;
 }
+
+#documentation ul {
+  margin-bottom: 1.5em;
+}
