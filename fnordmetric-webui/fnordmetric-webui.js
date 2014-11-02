@@ -22,7 +22,6 @@
  *
  * Metric list view:
  *  - write meaningful error messages
- *  - pagination
  *  - search/filter/autocomplete input box
  *  - stretch: make table sortable by column
  *
@@ -411,7 +410,9 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane.appendChild(query_editor);
 
     empty_text = document.createElement("p");
-    empty_text.innerHTML = "Text Text Insert your query on the left ...";
+    empty_text.innerHTML = "Text Text Insert your query on the left ... \n " +
+      "Example: DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
+      "time AS x, value as y FROM http_status_codes;";
 
     result_pane = document.createElement("div");
     result_pane.className = "result_pane";
@@ -572,9 +573,18 @@ FnordMetric.views.QueryPlayground = function() {
 
   };
 
-  var destroy = function(elem) {
-    while (elem.firstChild) {
-      elem.removeChild(elem.firstChild);
+  var destroy = function(viewport) {
+    if (viewport) {
+      while (viewport.firstChild) {
+        viewport.removeChild(viewport.firstChild);
+      }
+    } else {
+      while (result_pane.firstChild) {
+        result_pane.removeChild(result_pane.firstChild);
+      }
+      if (editor_pane.lastChild.className == "info_field") {
+        editor_pane.removeChild(editor_pane.lastChild);
+      }
     }
   };
 
@@ -771,7 +781,7 @@ FnordMetric.views.QueryPlayground = function() {
         resultData : charts
       },
       table : {
-        label : "Label",
+        label : "Table",
         currResult : curr_table,
         resultData : tables
       }
@@ -811,7 +821,6 @@ FnordMetric.views.QueryPlayground = function() {
         + " and returned " + getRowsInfo();
       editor_pane.appendChild(info_field);
     }
-
 
     var renderResultNavbar = function(type, quantity) {
       var result_navbar = document.createElement("div");
@@ -881,7 +890,7 @@ FnordMetric.views.QueryPlayground = function() {
       window.location.href = url;
       if (r.status == 200 && r.statusText == "OK") {
         var res = JSON.parse(r.response);
-        destroy(result_pane);
+        destroy();
         renderResultPane(res, duration);
         updateLayout(false);
       } else {
@@ -988,6 +997,7 @@ FnordMetric.WebUI = function() {
 
   var renderView = function(view, args) {
     if (current_view != null) {
+      console.log("destroy current view");
       current_view.destroy(viewport);
     }
 
