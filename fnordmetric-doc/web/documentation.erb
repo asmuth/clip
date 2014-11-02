@@ -12,14 +12,18 @@
 <div id="wrap" class="<%= @doc_yield ? :large : nil %>">
   <div id="documentation_wrap">
     <div id="navigation">
-      <% CONFIG["sitemap"].each do |_, topic| %>
+      <% CONFIG["documentation"].each do |topic| %>
         <a class="nav_title"><%= topic["title"] %></a>
         <ul>
           <% topic["pages"].each do |page| %>
             <li class="<%= @route == page["url"] ? :active : nil %>">
-              <a href="/documentation<%= page["url"] %>">
-                <%= page["title"] %>
-              </a>
+              <% if File.exists?(File.join(BASEDIR, "../documentation/#{page["file"]}.md")) %>
+                <a href="/documentation<%= page["url"] %>">
+                  <%= page["title"] %>
+                </a>
+              <% else %>
+                [MISSING] <%= page["title"] %>
+              <% end %>
             </li>
           <% end %>
         </ul>
@@ -27,6 +31,9 @@
     </div>
 
     <div id="documentation" style="max-width: 800px; padding-bottom: 120px;">
+      <p class="disclaimer">
+        This is an alpha release of FnordMetric. Expect bugs and vulnerabilities.
+      </p>
       <%= @doc_yield %>
     </div>
 

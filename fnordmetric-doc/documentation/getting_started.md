@@ -4,7 +4,7 @@ Getting Started with FnordMetric
 FnordMetric is a framework for visualizing and collecting (timeseries) data
 using SQL. It extends standard SQL with ChartSQL, allowing you to write queries
 that return charts rather than tables. The query results are rendered as SVG
-vector graphics or images.
+vector graphics or images. [Check out some examples](/examples)
 
 The charts can easily be embedded into any website and customized using CSS.
 This enables you to build beautiful dashboards within minutes using nothing
@@ -61,7 +61,7 @@ minutes using only SQL and HTML/CSS. Includes generic dashboard control elements
 ### FnordMetric for JavaScript and node.js
 
 The JavaScript client allows you to plug fnordmetric charts into any web
-application. It also includes helper code to collect counters/timerseries
+application. It also includes helper code to collect counters/timeseries
 data in your node.js backend and send them to fnordmetric-server.
 
 [Getting started with the JavaScript API](/documentation/getting_started/fnordmetric-server)
@@ -69,7 +69,7 @@ data in your node.js backend and send them to fnordmetric-server.
 ### FnordMetric for Ruby (on Rails)
 
 The ruby client allows you to plug fnordmetric charts into an Ruby (on Rails)
-web application. It also includes helper classes to collect counters/timerseries
+web application. It also includes helper classes to collect counters/timeseries
 data and send them to fnordmetric-server.
 
 [Getting started with the ruby API](/documentation/getting_started/fnordmetric-server)
@@ -79,7 +79,7 @@ data and send them to fnordmetric-server.
 
 ---
 
-_FnordMetric also includes a number pre-built agents to collect data from common sources:_
+_FnordMetric also includes a number of pre-built agents to collect data from common sources:_
 
 ### FnordMetric Community Contributed Agents
 
