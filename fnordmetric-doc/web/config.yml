@@ -1,5 +1,159 @@
 ---
 
+documentation:
+  -
+    title: "Using FnordMetric"
+    pages:
+      -
+        title: "Getting Started"
+        url: "/"
+        file: "getting_started"
+      -
+        title: "Installation"
+        url: "/installation"
+        file: "installation"
+      -
+        title: "Using fnordmetric-server"
+        url: "/getting_started/fnordmetric-server"
+        file: "/getting_started_with_fnordmetric_server"
+      -
+        title: "Using fnordmetric-cli"
+        url: "/getting_started/fnordmetric-cli"
+        file: "/getting_started_with_fnordmetric_cli"
+
+  -
+    title: "Query Language (ChartSQL)"
+    pages:
+      -
+        title: "Introduction"
+        url: "/chartsql/introduction"
+        file: "chartsql_introduction"
+      -
+        title: "Drawing Charts"
+        url: "/chartsql/draw_statement"
+        file: "chartsql_draw"
+      -
+        title: "Time-window Aggregations"
+        url: "/chartsql/timewindow_aggregations"
+        file: "chartsql_timewindow"
+      -
+        title: "External Data Sources"
+        url: "/chartsql/external_data_sources"
+        file: "chartsql_import"
+      -
+        title: "Built-in Functions"
+        url: "/chartsql/built_in_functions"
+        file: "chartsql_builtins"
+      -
+        title: "Syntax Reference"
+        url: "/chartsql/syntax_reference"
+        file: "chartsql_syntax_reference"
+
+  -
+    title: "Collecting Data"
+    pages:
+      -
+        title: "Metrics &amp; Labels"
+        url: "/query_language/reference"
+      -
+        title: "Sending data via HTTP"
+        url: "/query_language/reference"
+      -
+        title: "Sending data via statsd"
+        url: "/query_language/reference"
+      -
+        title: "Retention Policies"
+        url: "/query_language/reference"
+      -
+        title: "Included agents"
+        url: "/query_language/reference"
+
+  -
+    title: "Building Dashboards"
+    pages:
+      -
+        title: "Getting started with Dashboards"
+        url: "/html5_dashboards"
+        file: "html5_dashboards"
+      -
+        title: "HTML5 API Reference"
+        url: "/html5_api_reference"
+        file: "html5_api_reference"
+
+  -
+    title: "Customizing Charts"
+    pages:
+      -
+        title: "Axis styles"
+        url: "/query_language/reference"
+      -
+        title: "Legend styles"
+        url: "/query_language/reference"
+      -
+        title: "Point and Line styles"
+        url: "/query_language/reference"
+      -
+        title: "Line Charts"
+        url: "/query_language/reference"
+      -
+        title: "Point Charts"
+        url: "/query_language/reference"
+      -
+        title: "Area Charts"
+        url: "/query_language/reference"
+      -
+        title: "Bar Charts"
+        url: "/query_language/reference"
+      -
+        title: "Combining Charts"
+        url: "/query_language/reference"
+      -
+        title: "Timeseries Data"
+        url: "/query_language/reference"
+      -
+        title: "Multiple Domains"
+        url: "/query_language/reference"
+      -
+        title: "Interactive Charts"
+        url: "/query_language/reference"
+      -
+        title: "Styles / Themes"
+        url: "/query_language/reference"
+
+  -
+    title: "FnordMetric APIs &amp Clients"
+    pages:
+      -
+        title: "FnordMetric HTTP API"
+        url: "/http_api"
+        file: "http_api"
+      -
+        title: "FnordMetric statsd API"
+        url: "/query_language/reference"
+      -
+        title: "FnordMetric for JavaScript"
+        url: "/query_language/reference"
+      -
+        title: "FnordMetric for Ruby (on Rails)"
+        url: "/query_language/reference"
+
+
+  -
+    title: "Hacking"
+    pages:
+      -
+        title: "Support"
+        url: "/support"
+        file: "support"
+      -
+        title: "Contributing"
+        url: "/contributing"
+        file: "contributing"
+      -
+        title: "License"
+        url: "/license"
+        file: "license"
+
 examples:
 
   -
@@ -188,139 +342,4 @@ examples:
 #  * horizontal with labels outside
 #  * horizontal with labels inside
 #  * multiple y axis
-
-sitemap:
-  getting_started:
-    title: "Using FnordMetric"
-    pages:
-      -
-        title: "Installation"
-        url: "/query_language/reference"
-      -
-        title: "Getting Started"
-        url: "/query_language/reference"
-      -
-        title: "Commandline Interface"
-        url: "/query_language/reference"
-      -
-        title: "Web Interface"
-        url: "/query_language/reference"
-
-
-  query_language:
-    title: "Query Language"
-    pages:
-      -
-        title: "Introduction"
-        url: "/query_language/overview"
-      -
-        title: "Drawing Charts"
-        url: "/query_language/reference"
-      -
-        title: "Defining Series"
-        url: "/query_language/reference"
-      -
-        title: "Data Sources"
-        url: "/query_language/reference"
-      -
-        title: "Time-based Aggregations"
-        url: "/query_language/reference"
-      -
-        title: "Built-in Functions"
-        url: "/query_language/reference"
-      -
-        title: "Syntax Reference"
-        url: "/query_language/reference"
-      -
-        title: "Example Queries"
-        url: "/query_language/reference"
-
-  charts:
-    title: "Custom Charts"
-    pages:
-      -
-        title: "Axis styles"
-        url: "/query_language/reference"
-      -
-        title: "Legend styles"
-        url: "/query_language/reference"
-      -
-        title: "Point and Line styles"
-        url: "/query_language/reference"
-      -
-        title: "Line Charts"
-        url: "/query_language/reference"
-      -
-        title: "Point Charts"
-        url: "/query_language/reference"
-      -
-        title: "Area Charts"
-        url: "/query_language/reference"
-      -
-        title: "Bar Charts"
-        url: "/query_language/reference"
-      -
-        title: "Combining Charts"
-        url: "/query_language/reference"
-      -
-        title: "Timeseries Data"
-        url: "/query_language/reference"
-      -
-        title: "Multiple Domains"
-        url: "/query_language/reference"
-      -
-        title: "Interactive Charts"
-        url: "/query_language/reference"
-      -
-        title: "Styles / Themes"
-        url: "/query_language/reference"
-
-  data_sources:
-    title: "Data Sources"
-    pages:
-      -
-        title: "Query from CSV"
-        url: "/query_language/reference"
-      -
-        title: "Query from MySQL"
-        url: "/query_language/reference"
-      -
-        title: "Query from statsd"
-        url: "/query_language/reference"
-
-  cpp_api:
-    title: "C++ API"
-    pages:
-      -
-        title: "Introduction"
-        url: "/query_language/reference"
-      -
-        title: "API Reference"
-        url: "/query_language/reference"
-      -
-        title: "Examples"
-        url: "/query_language/reference"
-
-  dashboards:
-    title: "Building Dashboards"
-    pages:
-      -
-        title: "Dashboards"
-        url: "/query_language/reference"
-      -
-        title: "HTML5 API Reference"
-        url: "/query_language/reference"
-      -
-        title: "Examples"
-        url: "/query_language/reference"
-
-  hacking:
-    title: "Hacking"
-    pages:
-      -
-        title: "Contributing"
-        url: "/enterprise_api_reference"
-      -
-        title: "Old Documentation"
-        url: "/enterprise_usage"
 
