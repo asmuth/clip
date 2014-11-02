@@ -9,6 +9,18 @@ cmake_minimum_required(VERSION 2.6)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
 
+include(FindPkgConfig)
+
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/stage/src/libxzero/include)
+  add_subdirectory(stage/src/libxzero)
+  set(XZERO_LIBRARIES xzero)
+  set(XZERO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/stage/src/libxzero/include)
+else()
+  pkg_check_modules(XZERO REQUIRED "libxzero")
+  link_directories(${XZERO_LIBRARY_DIRS})
+endif()
+link_libraries(${XZERO_LIBRARIES})
+
 set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
@@ -131,6 +143,7 @@ set(FNORDMETRIC_SOURCES
 
 include_directories(stage/src)
 include_directories(stage/assets)
+include_directories(${XZERO_INCLUDE_DIRS})
 
 IF(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
