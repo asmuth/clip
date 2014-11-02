@@ -100,6 +100,10 @@ body {
   overflow-y: visible;
 }
 
+.result_pane p {
+  padding: 20px;
+}
+
 .editor_resizer_tooltip {
   display:block;
   position: absolute;
@@ -149,22 +153,22 @@ body {
   max-width: 1100px;
 }
 
-.result_pane .table_navbar {
+.pagination_navbar {
   width: 100%;
   height: 25px;
   line-height: 25px;
   margin-bottom: 10px;
 }
 
-.result_pane .table_navbar a, 
-.result_pane .table_navbar div {
+.pagination_navbar a, 
+.pagination_navbar div {
   float:right;
   margin-right: 10px;
   text-decoration: none;
   color: #444;
 }
 
-.result_pane .table_navbar .table_navbar_tooltip {
+.pagination_navbar .pagination_tooltip {
   text-align: center;
   font-weight: bold;
   border-radius: 2px;
@@ -173,8 +177,14 @@ body {
   padding: 0 5px;
 }
 
-.result_pane .table_navbar #tooltip_back.table_navbar_tooltip {
+.pagination_navbar #tooltip_back.pagination_tooltip {
   margin-right: 2px;
+}
+
+.pagination_navbar.metrics {
+  width: 80%;
+  margin: auto;
+  margin-top: 90px;
 }
 
 .result_pane table.result_table {
@@ -213,7 +223,7 @@ body {
 table.metrics_list_container {
   width: 80%;
   margin: auto;
-  margin-top: 70px;
+  margin-top: 5px;
   border-collapse: collapse;
 }
 
@@ -237,6 +247,7 @@ tr.metrics_list_header th {
 
 table.metrics_list_container tr:hover td {
   background-color: #d7e4f2;
+  cursor: pointer;
 }
 
 table.metrics_list_container td {
