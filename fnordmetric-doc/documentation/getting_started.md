@@ -84,3 +84,23 @@ _FnordMetric also includes a number of pre-built agents to collect data from com
 ### FnordMetric Community Contributed Agents
 
   + Docker Agent (fm-docker-agent)
+
+
+---
+
+### Rationale
+
+If you're like me you are probably thinking something along the lines of "Does
+the world really need yet another data visualization tool?" right now. Surely,
+there already is gnuplot and about a bazillion javascript libraries that let
+you draw pretty charts.
+
+However, most of the existing open source tools require you to provide the input
+data in some specific, custom format. I reckon this is not ideal. It means you
+have to write a heap of reptitive glue code (or sed incantations if that's your
+thing) to mangle your input data into that format. If you run a lot of ad-hoc
+queries you have to waste a significant amount of time on this boring legwork
+that could much better be spent on interesting tasks.
+
+FnordMetric aims to fix that by extending standard SQL; it allows you to express
+the data query and the chart specification in a coherent fashion (SQL).
