@@ -165,11 +165,11 @@ ul li p {
 }
 
 #footer {
-  margin-top:120px;
-  padding:15px 0;
-  margin-bottom:20px;
+  padding:36px 0;
+  font-size: 90%;
   color:#777;
   text-align: center;
+  border-top: 1px solid #ddd;
 }
 
 #footer a {
@@ -181,15 +181,8 @@ ul li p {
 }
 
 .header_wrap {
-  background: #3093d1;
-  background: -moz-linear-gradient(top,  #3093d1 0%, #2980b9 99%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3093d1), color-stop(99%,#2980b9));
-  background: -webkit-linear-gradient(top,  #3093d1 0%,#2980b9 99%);
-  background: -o-linear-gradient(top,  #3093d1 0%,#2980b9 99%);
-  background: -ms-linear-gradient(top,  #3093d1 0%,#2980b9 99%);
-  background: linear-gradient(to bottom,  #3093d1 0%,#2980b9 99%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3093d1', endColorstr='#2980b9',GradientType=0 );
-  border-bottom: 1px solid #174766;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ddd;
 }
 
 #header h1 {
@@ -201,6 +194,10 @@ ul li p {
 
 #header h1 a {
   text-decoration:none;
+  color: #333;
+}
+
+.colorbg #header h1 a {
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
@@ -210,13 +207,22 @@ ul li p {
   text-decoration:none;
   padding: 0 10px;
   margin-left: 10px;
-  color: #fff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
   line-height: 32px;
   margin-top: 12px;
+  color: #2980b9;
 }
 
-#header a.menu:hover {
+#header a.menu.active {
+  color: #333;
+}
+
+.colorbg #header a.menu {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.colorbg #header a.menu:hover {
   background: rgba(255,255,255,.1);
   border-radius: 4px;
   border-bottom: none ;
@@ -248,7 +254,7 @@ ul li p {
 }
 
 #navigation {
-  padding: 30px 0;
+  padding: 20px 0;
   width: 300px;
   position: absolute;
   top: 65px;
@@ -261,8 +267,8 @@ ul li p {
 }
 
 #navigation ul li {
-  font-size: 14px;
-  line-height:30px;
+  font-size: 13px;
+  line-height: 28px;
 }
 
 #navigation a.nav_title:first-child  {
@@ -308,7 +314,6 @@ ul li p {
 }
 
 #documentation_wrap {
-  background: #f9f9f9;
   min-height:600px;
   border-top:none;
   overflow:hidden;
@@ -316,10 +321,10 @@ ul li p {
 
 #documentation h1 {
   margin-top: 2em;
-  margin-bottom: 0;
+  margin-bottom: 0.6em;
   padding-bottom: 0;
   font-size: 26.5px;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 #documentation h1:first-child {
@@ -327,11 +332,11 @@ ul li p {
 }
 
 #documentation h2 {
-  margin-top: 1.5em;
+  margin-top: 2.5em;
   margin-bottom: 0;
   padding-bottom: 0;
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 #documentation h3 {
@@ -358,6 +363,14 @@ ul li p {
 
 #documentation p {
   margin-top: 4px;
+  font-size: 90%;
+  line-height: 160%;
+}
+
+#documentation hr {
+  margin: 24px 0 20px 0;
+  border: none;
+  border-bottom: 1px solid #eee;
 }
 
 #documentation a {

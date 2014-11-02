@@ -194,21 +194,21 @@ sitemap:
     title: "Using FnordMetric"
     pages:
       -
-        title: "Installation"
-        url: "/query_language/reference"
-      -
         title: "Getting Started"
         url: "/query_language/reference"
       -
-        title: "Commandline Interface"
+        title: "Installation"
         url: "/query_language/reference"
       -
-        title: "Web Interface"
+        title: "Using fnordmetric-server"
+        url: "/query_language/reference"
+      -
+        title: "Using fnordmetric-cli"
         url: "/query_language/reference"
 
 
   query_language:
-    title: "Query Language"
+    title: "Query Language (ChartSQL)"
     pages:
       -
         title: "Introduction"
@@ -217,13 +217,10 @@ sitemap:
         title: "Drawing Charts"
         url: "/query_language/reference"
       -
-        title: "Defining Series"
-        url: "/query_language/reference"
-      -
-        title: "Data Sources"
-        url: "/query_language/reference"
-      -
         title: "Time-based Aggregations"
+        url: "/query_language/reference"
+      -
+        title: "External Data Sources"
         url: "/query_language/reference"
       -
         title: "Built-in Functions"
@@ -231,12 +228,38 @@ sitemap:
       -
         title: "Syntax Reference"
         url: "/query_language/reference"
+
+  collecting_data:
+    title: "Collecting Data"
+    pages:
       -
-        title: "Example Queries"
+        title: "Metrics &amp; Labels"
+        url: "/query_language/reference"
+      -
+        title: "Sending data via HTTP"
+        url: "/query_language/reference"
+      -
+        title: "Sending data via statsd"
+        url: "/query_language/reference"
+      -
+        title: "Retention Policies"
+        url: "/query_language/reference"
+      -
+        title: "Included agents"
+        url: "/query_language/reference"
+
+  dashboards:
+    title: "Building Dashboards"
+    pages:
+      -
+        title: "Dashboards"
+        url: "/query_language/reference"
+      -
+        title: "HTML5 API Reference"
         url: "/query_language/reference"
 
   charts:
-    title: "Custom Charts"
+    title: "Customizing Charts"
     pages:
       -
         title: "Axis styles"
@@ -275,44 +298,22 @@ sitemap:
         title: "Styles / Themes"
         url: "/query_language/reference"
 
-  data_sources:
-    title: "Data Sources"
+  api:
+    title: "FnordMetric APIs &amp Clients"
     pages:
       -
-        title: "Query from CSV"
+        title: "FnordMetric HTTP API"
         url: "/query_language/reference"
       -
-        title: "Query from MySQL"
+        title: "FnordMetric statsd API"
         url: "/query_language/reference"
       -
-        title: "Query from statsd"
+        title: "FnordMetric for JavaScript"
+        url: "/query_language/reference"
+      -
+        title: "FnordMetric for Ruby (on Rails)"
         url: "/query_language/reference"
 
-  cpp_api:
-    title: "C++ API"
-    pages:
-      -
-        title: "Introduction"
-        url: "/query_language/reference"
-      -
-        title: "API Reference"
-        url: "/query_language/reference"
-      -
-        title: "Examples"
-        url: "/query_language/reference"
-
-  dashboards:
-    title: "Building Dashboards"
-    pages:
-      -
-        title: "Dashboards"
-        url: "/query_language/reference"
-      -
-        title: "HTML5 API Reference"
-        url: "/query_language/reference"
-      -
-        title: "Examples"
-        url: "/query_language/reference"
 
   hacking:
     title: "Hacking"

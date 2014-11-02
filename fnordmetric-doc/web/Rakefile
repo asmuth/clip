@@ -77,7 +77,7 @@ class DocApp < Sinatra::Base
     renderer = Redcarpet::Markdown.new(
       Redcarpet::Render::HTML.new(:no_link => true))
     @doc_yield = md_post(renderer.render(md_pre(IO.read(
-      File.join(BASEDIR, "../documentation.md")))))
+      File.join(BASEDIR, "../documentation/timewindow_aggregations.md")))))
     @yield = render(:erb, IO.read(File.join(BASEDIR, 'documentation.erb')))
     render_with_layout
   end
