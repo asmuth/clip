@@ -71,15 +71,34 @@ class DocApp < Sinatra::Base
     render_with_layout
   end
 
-  get "/documentation" do
-    page = { "title" => "Documentation" }
-    @title = "#{page["title"]} | Documentation" if page
+  def render_documentation(route)
+    @route = route
+    @page = CONFIG["documentation"]
+        .map { |g| g["pages"].map{ |p| p.merge("group" => g) } }
+        .flatten
+        .find { |p| p["url"] == @route }
+
     renderer = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(:no_link => true))
-    @doc_yield = md_post(renderer.render(md_pre(IO.read(
-      File.join(BASEDIR, "../documentation.md")))))
+        Redcarpet::Render::HTML.new(:no_link => true))
+
+    @title = "#{@page["title"]} | Documentation"
+    doc_file = File.join(BASEDIR, "../documentation/#{@page["file"]}.md")
+    @doc_yield = if File.exists?(doc_file)
+      md_post(renderer.render(md_pre(IO.read(doc_file))))
+    else
+      "file not found #{@page["file"]}"
+    end
     @yield = render(:erb, IO.read(File.join(BASEDIR, 'documentation.erb')))
+
     render_with_layout
+  end
+
+  get "/documentation" do
+    render_documentation "/"
+  end
+
+  get "/documentation/*" do
+    render_documentation "/#{params[:splat] * "/"}"
   end
 
   def render_with_layout
@@ -122,13 +141,19 @@ task :render do
     end
   end
 
+  CONFIG["documentation"].each do |page_group|
+    page_group["pages"].each do |page|
+      routes << "/documentation#{page["url"]}"
+    end
+  end
+
   routes.each do |path|
     puts "  + #{path}"
     builder.send(:build_path, path, target)
   end
 
   puts "+ Copying Assets"
-  %x{test -e #{BASEDIR}/target/fnordmetric.js || ln -s #{BASEDIR}/../../contrib/fnordmetric-js/fnordmetric.js* #{BASEDIR}/target}
+  %x{test -e #{BASEDIR}/target/fnordmetric.js || (rm #{BASEDIR}/target/fnordmetric.js; ln -s #{BASEDIR}/../../fnordmetric-js/fnordmetric.js #{BASEDIR}/target)}
   %x{cp -R #{BASEDIR}/assets/* #{BASEDIR}/target}
   %x{cp -R #{BASEDIR}/assets/.htaccess #{BASEDIR}/target}
 end

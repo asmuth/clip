@@ -1,18 +1,21 @@
-
-
-### The GROUP OVER TIMEWINDOW clause
+The GROUP OVER TIMEWINDOW clause
+================================
 
 Standard SQL makes (moving) window queries over timeseries fairly akward. Just
-computing a moving average requires complex self-joins.
+computing a moving average requires complex self-joins. Since these kind of
+time based rollups are very common when working with timeseries data,
+FnordMetric introduces a new GROUP OVER TIMEWINDOW clause.
 
-Since these kind of time based rollups are very common when working with
-timeseries data, FnordMetric introduces a new GROUP OVER TIMEWINDOW clause.
+Here is a simple example that should demonstrate the general concept before we
+dig into the detailed semantics of the GROUP OVER TIMEWINDOW clause:
 
-Here is a simple example that should demonstrate the general conpect before we
-look at the detailed semantics of the GROUP OVER TIMEWINDOW clause:
+---
 
-    -- display the moving average of mymetric's value over a mving 60s window
+_Display the moving average of mymetric's value over a moving 60s window_
+
     SELECT time, mean(value) FROM mymetric GROUP OVER TIMEWINDOW(60, 10);
+
+---
 
 ### Detailed explanation
 
@@ -22,8 +25,7 @@ one output row for each step in time. Each of these output rows will be computed
 by grouping over all rows in the preceeding time window.
 
 To illustrate this concept, lets imagine we insert the number of registered users
-on our website every 10 seconds. This could produce a raw table that looks like
-this:
+on our website every 10 seconds and our source table looks like this:
 
      time   | value
      ----------------
@@ -39,7 +41,7 @@ this:
      90     | 999
 
 Now let's GROUP OVER TIMEWINDOW on this table with a 40 second window and a 10
-second step to produce a moving average
+second step to compute a moving average
 
     SELECT time, mean(value) FROM ... GROUP OVER TIMEWINDOW(40, 10)
 
@@ -70,7 +72,8 @@ Our example query will produce the following output:
      90     | ...
 
 
-### GROUP OVER TIMEWINDOW rollup in multiple dimensions
+GROUP OVER TIMEWINDOW rollup in multiple dimensions
+---------------------------------------------------
 
 Just like a normal GROUP BY clause, the GROUP OVER TIMEWINDOW clause accepts
 a list of expressions by which to roll up the result.
@@ -78,7 +81,7 @@ a list of expressions by which to roll up the result.
 As an example let's calculate the moving average of the number of requests
 per hostname in the last hour:
 
-    SELECT time, mean(value)
+    SELECT time, hostname, mean(value)
         FROM number_of_requests
         WHERE time > -1hour
         GROUP OVER TIMEWINDOW(40, 10) BY hostname;
@@ -86,13 +89,14 @@ per hostname in the last hour:
 Or let's break down the 99th percentile latency by hostname and url over
 a fixed time range:
 
-    SELECT time, percentile(99, value)
+    SELECT time, hostname, url, percentile(99, value)
         FROM request_latencies
         WHERE time > 2014-08-01 AND time < 2014-09-01
         GROUP OVER TIMEWINDOW(40, 10) BY hostname, url;
 
 
-### GROUP OVER TIMEWINDOW on multiple tables
+GROUP OVER TIMEWINDOW on multiple tables
+----------------------------------------
 
 If a GROUP OVER TIMEWINDOW clause appears in a SELECT over multiple tables, the
 tables are implicitly joined on the specified timewindow. This allows you to
@@ -109,17 +113,18 @@ An example:
       my_success_count_metric,
       my_error_count_metric
     WHERE time > -60minutes
-    GROUP BY TIMEWINDOW(60, 10);
+    GROUP OVER TIMEWINDOW(60, 10);
 
 
-### GROUP OVER TIMEWINDOW semantics
+GROUP OVER TIMEWINDOW semantics
+-------------------------------
 
   - While a regular GROUP BY clause will produce one output row for each distinct
   group in the input row set, the GROUP OVER TIMEWINDOW will produce one output
   row for each step in time.
 
   - The number of output rows of a GROUP OVER TIMEWINDOW clause may be greater
-  than then number of rows in the input set (if there is less than one input row
+  than the number of rows in the input set (if there is less than one input row
   per output time window).
 
   - The output groups may overlap, i.e. each input row may appear in more than
