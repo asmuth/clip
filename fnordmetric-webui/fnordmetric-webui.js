@@ -14,7 +14,6 @@
  * TODOS:
  *
  * Query Playground:
- *  - proper empty states --> how to detect empty state?
  *  - "embed this query" opens up a popup with html/js/ruby snippets
  *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
  *  - prevent reload/navigation to other page (body onunload)
@@ -52,11 +51,14 @@ FnordMetric.httpGet = function(url, callback) {
 FnordMetric.httpPost = function(url, request, callback) {
   var http = new XMLHttpRequest();
   http.open("POST", url, true);
+  var start = (new Date()).getTime();
   http.send(request);
 
   http.onreadystatechange = function() {
     if (http.readyState == 4) {
-      callback(http);
+      var end = (new Date()).getTime();
+      var duration = end - start;
+      callback(http, duration);
     }
   }
 }
@@ -130,6 +132,7 @@ FnordMetric.views.MetricList = function() {
     }
 
     var renderResult = function() {
+      var rows_per_side = 10;
 
       var createListHeaderCells = function(labels) {
         for (var i = 0; i < labels.length; i++) {
@@ -138,6 +141,93 @@ FnordMetric.views.MetricList = function() {
           list_header.appendChild(list_header_cell);
         }
       }
+
+      var renderListPagination = function() {
+        var start_index = 0;
+        var end_index = rows_per_side;
+
+
+        var pag_navbar = document.createElement("div");
+        pag_navbar.className = "pagination_navbar metrics";
+
+        var tooltipObj = {
+          "for" :  {
+            "arrow" : "&#8594;",
+            "marginRight" : "0px"
+          },
+          "back" : {
+            "arrow" : "&#8592;",
+            "marginRight" : "2px"
+          }
+        }
+
+        var createTooltip = function(type) {
+          var tooltip = document.createElement("a");
+          tooltip.className = "pagination_tooltip";
+          tooltip.href = "#";
+          tooltip.style.marginRight = tooltipObj[type]["marginRight"];
+          tooltip.innerHTML = tooltipObj[type]["arrow"];
+
+          tooltip.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (type == "for") {
+              start_index = parseInt(this.id);
+              end_index = Math.min(metrics_data.length, 
+                start_index + rows_per_side);
+            } else {
+              start_index = Math.max(0, parseInt(this.id) - rows_per_side);
+              end_index = start_index + rows_per_side;
+            }
+            tooltipEvent()
+          }, false);
+
+          return tooltip;
+        }
+
+
+        var pag_label = document.createElement("div");
+        pag_label.className = "pagination_label";
+
+        var updateLabel = function() {
+          pag_label.innerHTML = "<b>" + (start_index +1) + 
+            "</b><span> - </span><b>" + end_index + 
+            "</b><span> of </span><b>" + metrics_data.length + "</b>";
+        }
+
+        var updateTooltips = function() {
+          tooltip_for.setAttribute("id", end_index);
+          tooltip_back.setAttribute("id" , start_index);
+
+          tooltip_for.style.color = 
+            (end_index == metrics_data.length) ? "#ddd" : "#444";
+
+          tooltip_back.style.color = 
+            (start_index == 0) ? "#ddd" : "#444";
+        }
+
+        var tooltipEvent = function() {
+          updateLabel();
+          updateTooltips();
+          destroyRows();
+          for (var i = start_index; i < end_index; i++) {
+            console.log(metrics_data[i]);
+            createListItem(metrics_data[i]);
+          }
+        }
+
+
+        var tooltip_for = createTooltip("for");
+        var tooltip_back = createTooltip("back");
+
+        updateLabel();
+        updateTooltips();
+
+        pag_navbar.appendChild(tooltip_for);
+        pag_navbar.appendChild(tooltip_back);
+        pag_navbar.appendChild(pag_label);
+        elem.appendChild(pag_navbar);
+      }
+
 
       var createListItem = function(data) {
         var list_item_row = document.createElement("tr");
@@ -209,6 +299,8 @@ FnordMetric.views.MetricList = function() {
               ":" + getSeconds();
           }
 
+          data.converted = true;
+
           getTimeOffset();
           getHumanDate();
         }
@@ -220,10 +312,16 @@ FnordMetric.views.MetricList = function() {
             labelstring += ", " + data["labels"][i];
           }
           data["labels"] = labelstring;
+
+          data.converted = true;
+
         }
 
-        parseLabels();
-        convertTimestamp();
+        if (!data.converted) {
+          parseLabels();
+          convertTimestamp();
+        }
+
 
         for (; i < list_elems.length; i++) {
           var list_item = document.createElement("td");
@@ -236,8 +334,7 @@ FnordMetric.views.MetricList = function() {
         list_item_row.addEventListener('click', function(e) {
           e.preventDefault();
           var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM;" +
-          "SELECT 'exp' as series, time AS x, value as y FROM " +
-          data["key"];
+          "SELECT * FROM " + data["key"] + " LIMIT 10;";
           var enc_query = encodeURIComponent(query);
           window.location = "/admin#query_playground!" + enc_query;
           //FIXME pushstate?
@@ -246,7 +343,17 @@ FnordMetric.views.MetricList = function() {
         }, false);
       }
 
-      var list_container = document.createElement("table");
+      var destroyRows = function() {
+        while (list_container.childNodes.length > 1) {
+          list_container.removeChild(list_container.lastChild);
+        }
+      }
+
+      if (metrics_data.length >= rows_per_side) {
+        renderListPagination();
+      }
+
+      list_container = document.createElement("table");
       list_container.className = "metrics_list_container";
 
       var list_header = document.createElement("tr");
@@ -254,8 +361,10 @@ FnordMetric.views.MetricList = function() {
       createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
       list_container.appendChild(list_header);
 
-      for (var i = 0; i < metrics_data.length; i++) {
-        createListItem(metrics_data[i]);
+      var end = Math.min(metrics_data.length, rows_per_side);
+      console.log(end);
+      for (var i = 0; i < end;  i++) {
+        createListItem(metrics_data[i], true);
       }
 
       elem.appendChild(list_container);
@@ -488,16 +597,16 @@ FnordMetric.views.QueryPlayground = function() {
       var start_index = 0;
       var end_index = rows_per_side;
       var table_navbar = document.createElement("div");
-      table_navbar.className = "table_navbar";
+      table_navbar.className = "pagination_navbar";
       table_navbar.id = "table_navbar";
 
       var tooltip_for = document.createElement("a");
-      tooltip_for.className = "table_navbar_tooltip";
+      tooltip_for.className = "pagination_tooltip";
       tooltip_for.href = "#";
       tooltip_for.innerHTML = "&#8594;";
 
       var tooltip_back = document.createElement("a");
-      tooltip_back.className = "table_navbar_tooltip";
+      tooltip_back.className = "pagination_tooltip";
       tooltip_back.href = "#";
       tooltip_back.style.marginRight = "2px";
       tooltip_back.innerHTML = "&#8592;";
@@ -696,7 +805,6 @@ FnordMetric.views.QueryPlayground = function() {
         navitem.className = "result_link";
         navitem.href = curr_url;
         navitem.setAttribute("id", i);
-        console.log(type);
         navitem.innerHTML = "<h3>" + outputObj[type]["label"] + " " + (i+1) + "</h3>";
         result_navbar.appendChild(navitem);
 
@@ -752,14 +860,10 @@ FnordMetric.views.QueryPlayground = function() {
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     window.history.pushState({url: url}, "", "#" + url);
-    var start = (new Date()).getTime();
-
-    FnordMetric.httpPost("/query", query, function(r) {
+    FnordMetric.httpPost("/query", query, function(r, duration) {
       FnordMetric.Loading().destroy();
       window.location.href = url;
-      if (r.status == 200) {
-        var end = (new Date()).getTime();
-        var duration = end - start;
+      if (r.status == 200 && r.statusText == "OK") {
         var res = JSON.parse(r.response);
         destroy(result_pane);
         renderResultPane(res, duration);
