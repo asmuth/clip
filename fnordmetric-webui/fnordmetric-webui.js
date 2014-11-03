@@ -15,7 +15,6 @@
  *
  * Query Playground:
  *  - "embed this query" opens up a popup with html/js/ruby snippets
- *  - ctrl + enter executes the query. (+ hint text next to the submit btn)
  *  - prevent reload/navigation to other page (body onunload)
  *  - stretch: display a [fake] loading bar
  *  - nice to have: represent current chart and table, view in url --> renderResultPane
@@ -24,6 +23,11 @@
  *  - write meaningful error messages
  *  - search/filter/autocomplete input box
  *  - stretch: make table sortable by column
+ *
+ *  - fix menuitems
+ *  - fix resize tooltip, vertical split
+ *  - wrong URL: redirect and display message 
+ *  - fix back and for (push and pop states)
  *
  */
 
@@ -436,13 +440,20 @@ FnordMetric.views.QueryPlayground = function() {
       button_link.innerHTML = text;
       button.appendChild(button_link);
       navbar.appendChild(button);
-      console.log(button);
       return button;
     }
 
     split_button = createFancyButton("Change View", document.URL, "");
     query_button = createFancyButton("Run Query", '#', "left");
-    embed_button = createFancyButton("Embed This Query", '#', "left");
+    embed_button = createFancyButton("Embed This Query", '#', "right");
+
+    var textfield = document.createElement("div");
+    textfield.innerHTML = "You can submit the query pressing CTRL Enter";
+    textfield.style.margin = "10px";
+    textfield.style.float = "left";
+    navbar.appendChild(textfield);
+
+
   }
 
   var initCM = function() {
@@ -578,6 +589,14 @@ FnordMetric.views.QueryPlayground = function() {
     window.addEventListener('resize', function() {
       updateLayout(false, elem);
     }, true);
+
+    window.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.keyCode == 13) {
+        e.preventDefault();
+        var query = cm.getValue();
+        if (query) {runQuery(query)};
+      }
+    }, false);
 
     updateLayout(false, elem);
     if (query != 'undefined') {
