@@ -184,7 +184,7 @@ body {
 .pagination_navbar.metrics {
   width: 80%;
   margin: auto;
-  margin-top: 90px;
+  margin-top: 5px;
 }
 
 .result_pane table.result_table {
@@ -219,6 +219,53 @@ body {
   margin-top: 95px;
   text-align: center;
 }
+
+.metrics.search_bar {
+  width: 80%;
+  margin: auto;
+  margin-top: 90px;
+}
+
+.metrics.search_bar input {
+  width: 200px;
+  height: 23px;
+  float:left;
+  padding: 2px;
+  font-size: 14px;
+}
+
+.metrics.search_bar .fancy_button {
+  border-radius: 0px;
+  padding: 0 10px;
+  float:left;
+  height: 30px;
+  line-height: 30px;
+}
+
+ul.dropdown {
+  position: absolute;
+  margin-top: 32px;
+  width: 208px;
+  z-index: 999;
+  padding-left: 0px;
+}
+
+ul.dropdown li {
+  background: #fff;
+  border: 1px solid #ddd;
+  list-style: none;
+  list-style-type:none;
+  margin:0;
+  border-bottom: 1px solid #ddd;
+}
+
+ul.dropdown li a {
+  line-height:30px;
+  display: block;
+  padding: 0 4px;
+  text-decoration: none;
+}
+
 
 table.metrics_list_container {
   width: 80%;

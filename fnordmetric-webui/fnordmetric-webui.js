@@ -74,11 +74,11 @@ FnordMetric.Loading = function() {
     document.body.appendChild(foreground);
   }
 
-  //FIXME why doesn't document.body.removeChild(foreground) work?
+  //FIXME
   var destroy = function() {
     var elem = document.querySelector(".load_foreground");
-    //document.body.removeChild(foreground);
     document.body.removeChild(elem);
+    //document.body.removeChild(foreground);
   }
 
   return {
@@ -135,7 +135,61 @@ FnordMetric.views.MetricList = function() {
     }
 
     var renderResult = function() {
-      var rows_per_side = 5;
+      var rows_per_side = 1;
+
+      var createSearchBar = function() {
+        var search_bar = document.createElement("div");
+        search_bar.className = "metrics search_bar";
+        var input_field = document.createElement("input");
+        var search_button = document.createElement("div");
+        search_button.className = "fancy_button";
+        var button_link = document.createElement("a");
+        button_link.href = "#";
+        button_link.innerHTML = "Search";
+
+        search_button.appendChild(button_link);
+        search_bar.appendChild(input_field);
+        search_bar.appendChild(search_button);
+        elem.appendChild(search_bar);
+
+        var dropdown = document.createElement("ul");
+        dropdown.className = "dropdown";
+
+        search_button.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log("search");
+        }, false);
+
+        input_field.addEventListener('input', function(e) {
+          console.log("iput onfocus");
+          autocomplete(this.value)
+        }, false);
+
+        var getKeys = function() {
+          var keys = [];
+          for (var i = 0; i < metrics_data.length; i++) {
+            keys.push(metrics_data[i]["key"]);
+          }
+          return keys;
+        }
+
+        var keys = getKeys();
+        keys.push("foobar");
+
+        var autocomplete = function(input) {
+          console.log(input);
+          console.log(metrics_data);
+          search_bar.appendChild(dropdown);
+          for (var i = 0; i < keys.length; i++) {
+            var dropdown_item = document.createElement("li");
+            var dropdown_link = document.createElement("a");
+            dropdown_link.href = "#";
+            dropdown_link.innerHTML = keys[i];
+            dropdown_item.appendChild(dropdown_link);
+            dropdown.appendChild(dropdown_item);
+          }
+        }
+      }
 
       var createListHeaderCells = function(labels) {
         for (var i = 0; i < labels.length; i++) {
@@ -353,7 +407,9 @@ FnordMetric.views.MetricList = function() {
         }
       }
 
-      if (metrics_data.length >= rows_per_side) {
+      createSearchBar();
+
+      if (metrics_data.length > rows_per_side) {
         renderListPagination();
       }
 
