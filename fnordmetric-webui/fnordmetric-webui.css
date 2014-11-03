@@ -242,6 +242,25 @@ body {
   line-height: 30px;
 }
 
+.metrics.search_bar .clear_button {
+  float: left;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  text-align:center;
+  text-decoration: none;
+  color: #444;
+}
+
+.metrics.big_text {
+  width: 80%;
+  margin: auto;
+  padding-top: 100px;
+  font-size: 20px;
+  text-align:center
+}
+
 ul.dropdown {
   position: absolute;
   margin-top: 32px;

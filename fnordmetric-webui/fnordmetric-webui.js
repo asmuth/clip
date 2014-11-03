@@ -135,34 +135,53 @@ FnordMetric.views.MetricList = function() {
     }
 
     var renderResult = function() {
-      var rows_per_side = 1;
+      var rows_per_side = 10;
       var pag_navbar;
       var list_container;
+      var no_result_text;
+
 
       var searchRows = function(key) {
         destroyRows();
         destroyListPagination();
+        console.log("text_field: " + no_result_text);
+        if (typeof no_result_text != "undefined") {
+          elem.removeChild(no_result_text);
+        }
         //FIXME works but seems not to be the best solution
-        var count = 0;
         var data = [];
         for (var i = 0; i < metrics_data.length; i++) {
           if (metrics_data[i]["key"].indexOf(key) > -1) {
-            //createListItem(metrics_data[i]);
             data.push(metrics_data[i]);
-            count++;
           }
         }
-        if (count > rows_per_side) {
+        if (data.length == 0) {
+          destroyTable();
+          no_result_text = renderNoResult();
+        } else if (data.length > rows_per_side) {
           renderListPagination(data);
+          if (typeof list_container == "undefined") {
+            initTable();
+          }
           for (var i = 0; i < rows_per_side; i++) {
             createListItem(data[i]);
           }
         } else {
-          for (var i = 0; i < count; i++) {
+          if (typeof list_container == "undefined") {
+            initTable();
+          }
+          for (var i = 0; i < data.length; i++) {
             createListItem(data[i]);
           }
         }
-        console.log("count: " +count);
+      }
+
+      var renderNoResult = function() {
+        var text_field = document.createElement("div");
+        text_field.className = "metrics big_text";
+        text_field.innerHTML = "No matching Results";
+        elem.appendChild(text_field);
+        return text_field;
       }
 
       var createSearchBar = function() {
@@ -175,6 +194,19 @@ FnordMetric.views.MetricList = function() {
         button_link.href = "#";
         button_link.innerHTML = "Search";
 
+        var createClearButton = function() {
+          var clear_button = document.createElement("a");
+          clear_button.className = "clear_button";
+          clear_button.href = "#";
+          clear_button.innerHTML = "X";
+          search_bar.appendChild(clear_button);
+
+          clear_button.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log("clear search");
+          }, false);
+        }
+
         search_button.appendChild(button_link);
         search_bar.appendChild(input_field);
         search_bar.appendChild(search_button);
@@ -183,11 +215,12 @@ FnordMetric.views.MetricList = function() {
         var dropdown = document.createElement("ul");
         dropdown.className = "dropdown";
 
-        var initInputAutocomplete = function() {
+        var initSearch = function() {
           search_button.addEventListener('click', function(e) {
             e.preventDefault();
             destroyDropdown();
             searchRows(input_field.value);
+            createClearButton();
             console.log("search");
           }, false);
 
@@ -239,7 +272,7 @@ FnordMetric.views.MetricList = function() {
             }
           }
         }
-        initInputAutocomplete();
+        initSearch();
       }
 
       var createListHeaderCells = function(labels) {
@@ -335,6 +368,7 @@ FnordMetric.views.MetricList = function() {
         pag_navbar.appendChild(tooltip_back);
         pag_navbar.appendChild(pag_label);
         if (typeof list_container != "undefined") {
+          console.log(typeof list_container);
           elem.insertBefore(pag_navbar, list_container);
         } else {
           elem.appendChild(pag_navbar);
@@ -470,12 +504,33 @@ FnordMetric.views.MetricList = function() {
         }, false);
       }
 
-      
-
       var destroyRows = function() {
+        if (typeof list_container == "undefined") {
+          return;
+        }
         while (list_container.childNodes.length > 1) {
           list_container.removeChild(list_container.lastChild);
         }
+      }
+
+      var list_header;
+      var initTable = function() {
+        list_container = document.createElement("table");
+        list_container.className = "metrics_list_container";
+
+        list_header = document.createElement("tr");
+        list_header.className = "metrics_list_header";
+        createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
+        list_container.appendChild(list_header);
+        elem.appendChild(list_container);
+      }
+
+      var destroyTable = function() {
+        while (list_container.firstChild) {
+          list_container.removeChild(list_container.firstChild);
+        }
+        elem.removeChild(list_container);
+        list_container = undefined;
       }
 
       createSearchBar();
@@ -484,21 +539,13 @@ FnordMetric.views.MetricList = function() {
         pag_navbar = renderListPagination(metrics_data);
       }
 
-      list_container = document.createElement("table");
-      list_container.className = "metrics_list_container";
-
-      var list_header = document.createElement("tr");
-      list_header.className = "metrics_list_header";
-      createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
-      list_container.appendChild(list_header);
+      initTable();
 
       var end = Math.min(metrics_data.length, rows_per_side);
-      console.log(end);
       for (var i = 0; i < end;  i++) {
         createListItem(metrics_data[i], true);
       }
 
-      elem.appendChild(list_container);
     }
 
   };
