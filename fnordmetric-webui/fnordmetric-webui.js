@@ -136,6 +136,34 @@ FnordMetric.views.MetricList = function() {
 
     var renderResult = function() {
       var rows_per_side = 1;
+      var pag_navbar;
+      var list_container;
+
+      var searchRows = function(key) {
+        destroyRows();
+        destroyListPagination();
+        //FIXME works but seems not to be the best solution
+        var count = 0;
+        var data = [];
+        for (var i = 0; i < metrics_data.length; i++) {
+          if (metrics_data[i]["key"].indexOf(key) > -1) {
+            //createListItem(metrics_data[i]);
+            data.push(metrics_data[i]);
+            count++;
+          }
+        }
+        if (count > rows_per_side) {
+          renderListPagination(data);
+          for (var i = 0; i < rows_per_side; i++) {
+            createListItem(data[i]);
+          }
+        } else {
+          for (var i = 0; i < count; i++) {
+            createListItem(data[i]);
+          }
+        }
+        console.log("count: " +count);
+      }
 
       var createSearchBar = function() {
         var search_bar = document.createElement("div");
@@ -155,15 +183,23 @@ FnordMetric.views.MetricList = function() {
         var dropdown = document.createElement("ul");
         dropdown.className = "dropdown";
 
-        search_button.addEventListener('click', function(e) {
-          e.preventDefault();
-          console.log("search");
-        }, false);
+        var initInputAutocomplete = function() {
+          search_button.addEventListener('click', function(e) {
+            e.preventDefault();
+            destroyDropdown();
+            searchRows(input_field.value);
+            console.log("search");
+          }, false);
 
-        input_field.addEventListener('input', function(e) {
-          console.log("iput onfocus");
-          autocomplete(this.value)
-        }, false);
+          input_field.addEventListener('focus', function(e) {
+            this.value = "";
+          }, false);
+
+          input_field.addEventListener('input', function(e) {
+            autocomplete(this.value)
+          }, false);
+
+        }
 
         var getKeys = function() {
           var keys = [];
@@ -176,19 +212,34 @@ FnordMetric.views.MetricList = function() {
         var keys = getKeys();
         keys.push("foobar");
 
-        var autocomplete = function(input) {
-          console.log(input);
-          console.log(metrics_data);
-          search_bar.appendChild(dropdown);
-          for (var i = 0; i < keys.length; i++) {
-            var dropdown_item = document.createElement("li");
-            var dropdown_link = document.createElement("a");
-            dropdown_link.href = "#";
-            dropdown_link.innerHTML = keys[i];
-            dropdown_item.appendChild(dropdown_link);
-            dropdown.appendChild(dropdown_item);
+        var destroyDropdown = function() {
+          while (dropdown.firstChild) {
+            dropdown.removeChild(dropdown.firstChild);
           }
         }
+
+        var autocomplete = function(input) {
+          destroyDropdown();
+          search_bar.appendChild(dropdown);
+          for (var i = 0; i < keys.length; i++) {
+            if (keys[i].indexOf(input) > - 1) {
+              var dropdown_item = document.createElement("li");
+              var dropdown_link = document.createElement("a");
+              dropdown_link.href = "#";
+              dropdown_link.innerHTML = keys[i];
+              dropdown_item.appendChild(dropdown_link);
+              dropdown.appendChild(dropdown_item);
+
+              dropdown_link.addEventListener('click', function(e) {
+                e.preventDefault();
+                input_field.value = this.innerHTML;
+                destroyDropdown();
+                console.log("click list item");
+              }, false);
+            }
+          }
+        }
+        initInputAutocomplete();
       }
 
       var createListHeaderCells = function(labels) {
@@ -199,7 +250,8 @@ FnordMetric.views.MetricList = function() {
         }
       }
 
-      var renderListPagination = function() {
+      var renderListPagination = function(metrics_data) {
+        console.log(metrics_data);
         var start_index = 0;
         var end_index = rows_per_side;
 
@@ -282,9 +334,26 @@ FnordMetric.views.MetricList = function() {
         pag_navbar.appendChild(tooltip_for);
         pag_navbar.appendChild(tooltip_back);
         pag_navbar.appendChild(pag_label);
-        elem.appendChild(pag_navbar);
+        if (typeof list_container != "undefined") {
+          elem.insertBefore(pag_navbar, list_container);
+        } else {
+          elem.appendChild(pag_navbar);
+        }
+
+        return pag_navbar;
       }
 
+      var destroyListPagination = function() {
+        console.log(pag_navbar);
+        if (typeof pag_navbar == "undefined") {
+          return;
+        }
+        while (pag_navbar.firstChild) {
+          pag_navbar.removeChild(pag_navbar.firstChild);
+        }
+        //FIXME
+        elem.removeChild(document.querySelector(".pagination_navbar"));
+      }
 
       var createListItem = function(data) {
         var list_item_row = document.createElement("tr");
@@ -383,7 +452,7 @@ FnordMetric.views.MetricList = function() {
         for (; i < list_elems.length; i++) {
           var list_item = document.createElement("td");
           list_item.innerHTML = data[list_elems[i]];
-          list_item_row.appendChild(list_item);
+          list_item_row.appendChild(list_item);i
         }
 
         list_container.appendChild(list_item_row);
@@ -401,6 +470,8 @@ FnordMetric.views.MetricList = function() {
         }, false);
       }
 
+      
+
       var destroyRows = function() {
         while (list_container.childNodes.length > 1) {
           list_container.removeChild(list_container.lastChild);
@@ -410,7 +481,7 @@ FnordMetric.views.MetricList = function() {
       createSearchBar();
 
       if (metrics_data.length > rows_per_side) {
-        renderListPagination();
+        pag_navbar = renderListPagination(metrics_data);
       }
 
       list_container = document.createElement("table");

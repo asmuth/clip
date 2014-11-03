@@ -251,7 +251,7 @@ ul.dropdown {
 }
 
 ul.dropdown li {
-  background: #fff;
+  background-color: #fff;
   border: 1px solid #ddd;
   list-style: none;
   list-style-type:none;
@@ -264,6 +264,11 @@ ul.dropdown li a {
   display: block;
   padding: 0 4px;
   text-decoration: none;
+  color: #444;
+}
+
+ul.dropdown li:hover {
+  background-color: #d7e4f2;
 }
 
 
