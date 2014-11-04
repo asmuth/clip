@@ -29,11 +29,11 @@
  *
  */
 
-if (typeof FnordMetric == "undefined") {
+if (FnordMetric === undefined) {
   FnordMetric = {};
 }
 
-if (typeof FnordMetric.views == "undefined") {
+if (FnordMetric.views === undefined) {
   FnordMetric.views = {};
 }
 
@@ -85,9 +85,591 @@ FnordMetric.Loading = function() {
   }
 }
 
+FnordMetric.createButton = function(href, class_name, inner_HTML) {
+  var button = document.createElement("a");
+  button.href = "#";
+  if (class_name !== undefined) {
+    button.className = class_name;
+  }
+  if (inner_HTML !== undefined) {
+    button.innerHTML = inner_HTML;
+  }
+  return button;
+}
 
 
 FnordMetric.views.MetricList = function() {
+  function getKeys(data) {
+    var keys = [];
+    for (var i = 0; i < data.length; i++) {
+      keys.push(data[i]["key"]);
+    }
+    return keys;
+  }
+
+  function compare(a, b) {
+    if (a < b) {
+      return -1;
+    }
+    if (a > b) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function sortColumns (data, id, order) {
+    var sorted_data = data;
+    switch (id) {
+      case "Key":
+        sorted_data.sort(function(a, b) {
+          if (order == "asc") {
+            return (compare(
+              a.key.toLowerCase(), 
+              b.key.toLowerCase()));
+          } else {
+            return (compare(
+              b.key.toLowerCase(), 
+              a.key.toLowerCase()));
+          }
+        });
+        break;
+      case "Labels":
+        console.log("sort by labels");
+        break;
+      case "Last Insert":
+        sorted_data.sort(function(a, b) {
+          if (order == "asc") {
+            return (compare(a.last_insert, b.last_insert));
+          } else {
+            return (compare(b.last_insert, a.last_insert));
+          }
+        });
+        break;
+      case "Total stored bytes":
+        sorted_data.sort(function(a, b) {
+          if (order == "asc") {
+            return (compare(a.total_bytes, b.total_bytes));
+          } else {
+            return (compare(b.total_bytes, a.total_bytes));
+          }
+        });
+        break;
+      default:
+        break;
+    }
+    return sorted_data;
+  }
+
+
+
+  
+  var renderError = function(state, elem) {
+    var error_field = document.createElement("div");
+    error_field.className = "metrics_error_pane";
+    switch(state) {
+      case 404:
+        error_field.innerHTML = "404 NOT FOUND.";
+        break;
+      case 500:
+        error_field.innerHTML = "Internal server error";
+        break;
+      default:
+        error_field.innerHTML = "Upps. Something went wrong.";
+        break;
+    }
+    elem.appendChild(error_field);
+  }
+
+
+  var convertTimestamp = function(data) {
+    if (data["last_insert"] == 0 || 
+      data["last_insert"].length == 0) {
+      return;
+    }
+
+    var timestamp = data["last_insert"] / 1000;
+    var now = Date.now();
+    var date = new Date(timestamp);
+
+    var getTimeOffset = function() {
+      var offset =  Math.floor(
+        (now - timestamp) / 1000);
+      if (offset < 60) {
+        var label = (offset == 1)? " second ago" : " seconds ago";
+        data.insert  = offset + label;
+      } else if (offset < 3600) {
+        var time = Math.floor(offset / 60);
+        var label = (time == 1)? " minute ago" : " minutes ago";
+        data.insert  = time + label;
+      } else if (offset < 86400) {
+        var time =  Math.floor(offset / 3600);
+        var label = (time == 1)? " hour ago" : " hours ago";
+        data.insert  = time + label;
+      } else {
+        var time = Math.floor(offset / 86400);
+        var label = (time == 1)? " day ago" : " days ago";
+        data.insert  = time + label;
+      }
+      return data;
+    }
+
+    var getHumanDate = function() {
+      var getHumanMonth = function() {
+        var months = ["Jan", "Feb", "Mar", "Apr", "May",
+          "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        return months[date.getMonth()];
+      }
+
+      var getMinutes = function() {
+        var minutes = date.getMinutes();
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        return minutes;
+      }
+
+      var getSeconds = function() {
+        var seconds = date.getSeconds();
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        return seconds;
+      }
+
+      data["insert"] += 
+        " - " + getHumanMonth() +
+        " " + date.getDate() +
+        " " + date.getFullYear() +
+        " " + date.getHours() +
+        ":" + getMinutes() +
+        ":" + getSeconds();
+    }
+
+    data.converted = true;
+
+    getTimeOffset();
+    getHumanDate();
+  }
+
+
+
+
+  var renderEmptyState = function(elem) {
+    var msg_field = document.createElement("div");
+    msg_field.className = "metrics_error_pane";
+    msg_field.innerHTML = "Looks like you haven't inserted any data yet.";
+    elem.appendChild(msg_field);
+  }
+
+  var renderResult = function(metrics_data, elem) {
+    var rows_per_side = 10;
+    var pag_navbar;
+    var list_container;
+    var no_result_text = undefined;
+
+
+    function searchRows(key) {
+      destroyRows();
+      destroyListPagination();
+      //FIXME works but seems not to be the best solution
+      var data = [];
+      for (var i = 0; i < metrics_data.length; i++) {
+        if (metrics_data[i]["key"].indexOf(key) > -1) {
+          data.push(metrics_data[i]);
+        }
+      }
+      renderTable(data);
+    }
+
+    var renderNoResult = function() {
+      var text_field = document.createElement("div");
+      text_field.className = "metrics big_text";
+      text_field.innerHTML = "No matching Results";
+      elem.appendChild(text_field);
+      return text_field;
+    }
+
+    var destroyNoResult = function() {
+      if (no_result_text === undefined) {
+        return;
+      }
+      elem.removeChild(no_result_text);
+      no_result_text = undefined;
+    }
+
+    var createSearchBar = function() {
+      var search_bar = document.createElement("div");
+      search_bar.className = "metrics search_bar";
+      var input_field = document.createElement("input");
+
+      var search_button = document.createElement("div");
+      search_button.className = "fancy_button";
+      var button_link = document.createElement("a");
+      button_link.href = "#";
+      button_link.innerHTML = "Search";
+      search_button.appendChild(button_link);
+      search_bar.appendChild(input_field);
+      search_bar.appendChild(search_button);
+
+      var clear_button = FnordMetric.createButton("#", "clear_button", "X");
+      search_bar.appendChild(clear_button);
+      clear_button.addEventListener('click', function(e) {
+        e.preventDefault();
+        clearSearch();
+      }, false);
+
+      elem.appendChild(search_bar);
+
+      var dropdown = document.createElement("ul");
+      dropdown.className = "dropdown";
+
+      var down = 0;
+      var dropdownKeyNav = function() {
+        var dropdown_items = dropdown.childNodes;
+        var i = down -1;
+        if (i < dropdown_items.length) {
+          if (i > 0) {
+            dropdown_items[i - 1].className = "";
+          }
+          if (i+1 < dropdown_items.length) {
+            dropdown_items[i+1].className = "";
+          }
+          var current_value = dropdown_items[i].firstChild.innerHTML;
+          dropdown_items[i].className = "hover";
+          input_field.addEventListener('keydown', function(e) {
+            switch (e.keyCode) {
+              case 13:
+                e.preventDefault();
+                input_field.value = current_value;
+                break;
+              default:
+                break;
+            }
+          }, false);
+        }
+      }
+
+      var initSearch = function() {
+        search_button.addEventListener('click', function(e) {
+          e.preventDefault();
+          destroyDropdown();
+          searchRows(input_field.value);
+        }, false);
+
+        input_field.addEventListener('focus', function(e) {
+          this.value = "";
+        }, false);
+
+        input_field.addEventListener('input', function(e) {
+          autocomplete(this.value)
+        }, false);
+
+        input_field.addEventListener('keydown', function(e) {
+          switch (e.keyCode) {
+            case 13:
+              e.preventDefault();
+              destroyDropdown();
+              searchRows(input_field.value);
+              break;
+            case 40:
+              down++;
+              dropdownKeyNav();
+              break;
+            case 38:
+              down--;
+              dropdownKeyNav();
+              break;
+            default:
+              break;
+          }
+        }, false);
+      }
+
+      var clearSearch = function() {
+        input_field.value = "";
+        destroyRows();
+        destroyListPagination();
+        renderTable(metrics_data);
+      }
+
+      var keys = getKeys(metrics_data);
+
+      var destroyDropdown = function() {
+        down = 0;
+        while (dropdown.firstChild) {
+          dropdown.removeChild(dropdown.firstChild);
+        }
+      }
+
+      var autocomplete = function(input) {
+        destroyDropdown();
+        search_bar.appendChild(dropdown);
+        for (var i = 0; i < keys.length; i++) {
+          if (keys[i].indexOf(input) > - 1) {
+            var dropdown_item = document.createElement("li");
+            var dropdown_link = document.createElement("a");
+            dropdown_link.href = "#";
+            dropdown_link.innerHTML = keys[i];
+            dropdown_item.appendChild(dropdown_link);
+            dropdown.appendChild(dropdown_item);
+
+            dropdown_link.addEventListener('click', function(e) {
+              e.preventDefault();
+              input_field.value = this.innerHTML;
+              destroyDropdown();
+            }, false);
+          }
+        }
+          //FIXME viewport ends after last table row
+        elem.addEventListener('click', function(e) {
+          destroyDropdown();
+        }, false);
+      }
+      initSearch();
+    }
+
+
+    var createListHeaderCells = function(labels) {
+      for (var i = 0; i < labels.length; i++) {
+        var list_header_cell = document.createElement("th");
+        list_header_cell.innerHTML = labels[i];
+        var createSortLink = function(symbol, order) {
+          var sort_link = document.createElement("a");
+          sort_link.setAttribute("id", labels[i]);
+          sort_link.className = "caret";
+          sort_link.href = "#";
+          sort_link.innerHTML = symbol;
+          list_header_cell.appendChild(sort_link);
+
+          sort_link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var sorted_data = sortColumns(metrics_data, this.id, order);
+            renderTable(sorted_data);
+          }, false);
+        }
+        createSortLink("&#x25B2;", "asc");
+        createSortLink("&#x25BC;", "desc");
+        list_header.appendChild(list_header_cell);
+      }
+    }
+
+    var renderListPagination = function(metrics_data) {
+      var start_index = 0;
+      var end_index = rows_per_side;
+
+
+      var pag_navbar = document.createElement("div");
+      pag_navbar.className = "pagination_navbar metrics";
+
+      var tooltipObj = {
+        "for" :  {
+          "arrow" : "&#8594;",
+          "marginRight" : "0px"
+        },
+        "back" : {
+          "arrow" : "&#8592;",
+          "marginRight" : "2px"
+        }
+      }
+
+      var createTooltip = function(type) {
+        var tooltip = document.createElement("a");
+        tooltip.className = "pagination_tooltip";
+        tooltip.href = "#";
+        tooltip.style.marginRight = tooltipObj[type]["marginRight"];
+        tooltip.innerHTML = tooltipObj[type]["arrow"];
+
+        tooltip.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (type == "for") {
+            start_index = parseInt(this.id);
+            end_index = Math.min(metrics_data.length, 
+              start_index + rows_per_side);
+          } else {
+            start_index = Math.max(0, parseInt(this.id) - rows_per_side);
+            end_index = start_index + rows_per_side;
+          }
+          tooltipEvent()
+        }, false);
+
+        return tooltip;
+      }
+
+
+      var pag_label = document.createElement("div");
+      pag_label.className = "pagination_label";
+
+      var updateLabel = function() {
+        pag_label.innerHTML = "<b>" + (start_index +1) + 
+          "</b><span> - </span><b>" + end_index + 
+          "</b><span> of </span><b>" + metrics_data.length + "</b>";
+      }
+
+      var updateTooltips = function() {
+        tooltip_for.setAttribute("id", end_index);
+        tooltip_back.setAttribute("id" , start_index);
+
+        tooltip_for.style.color = 
+          (end_index == metrics_data.length) ? "#ddd" : "#444";
+
+        tooltip_back.style.color = 
+          (start_index == 0) ? "#ddd" : "#444";
+      }
+
+      var tooltipEvent = function() {
+        updateLabel();
+        updateTooltips();
+        destroyRows();
+        for (var i = start_index; i < end_index; i++) {
+          createListItem(metrics_data[i]);
+        }
+      }
+
+
+      var tooltip_for = createTooltip("for");
+      var tooltip_back = createTooltip("back");
+
+      updateLabel();
+      updateTooltips();
+
+      pag_navbar.appendChild(tooltip_for);
+      pag_navbar.appendChild(tooltip_back);
+      pag_navbar.appendChild(pag_label);
+      if (list_container !== undefined) {
+        elem.insertBefore(pag_navbar, list_container);
+      } else {
+        elem.appendChild(pag_navbar);
+      }
+
+      return pag_navbar;
+    }
+
+    var destroyListPagination = function() {
+      if (pag_navbar === undefined) {
+        return;
+      }
+      while (pag_navbar.firstChild) {
+        pag_navbar.removeChild(pag_navbar.firstChild);
+      }
+        //FIXME
+      elem.removeChild(document.querySelector(".pagination_navbar"));
+    }
+
+    var createListItem = function(data) {
+      var list_item_row = document.createElement("tr");
+
+      var i = 0;
+      var list_elems = ["key", "labels", "insert", "total_bytes"];
+
+      
+      var parseLabels = function(data) {
+        if (data.labels.length == 0) {return;}
+        var labelstring = data.labels[0];
+        for (var i = 1; i < data.labels.length; i++) {
+          labelstring += ", " + data.labels[i];
+        }
+        data.labels = labelstring;
+
+
+      }
+
+      if (!data.converted) {
+        parseLabels(data);
+        convertTimestamp(data);
+        data.converted = true;
+      }
+
+
+      for (; i < list_elems.length; i++) {
+        var list_item = document.createElement("td");
+        list_item.innerHTML = data[list_elems[i]];
+        list_item_row.appendChild(list_item);i
+      }
+
+      list_container.appendChild(list_item_row);
+
+      list_item_row.addEventListener('click', function(e) {
+        e.preventDefault();
+        var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
+        "SELECT 'mymetric' AS series, time AS x, value AS y "+
+        "FROM " + data["key"];
+        var enc_query = encodeURIComponent(query);
+        window.location = "/admin#query_playground!" + enc_query;
+          //FIXME pushstate?
+        destroy(elem);
+        FnordMetric.views.QueryPlayground().render(elem, query);
+      }, false);
+    }
+
+    var renderTable = function(data) {
+      destroyTable();
+      if (data.length == 0) {
+        no_result_text = renderNoResult();
+        return;
+      }
+      if (list_container === undefined) {
+        initTable();
+      }
+      if (no_result_text !== undefined) {
+        destroyNoResult();
+      }
+      if (data.length > rows_per_side) {
+        renderListPagination(data);
+        var end = rows_per_side;
+      } else {
+        var end = data.length;
+      }
+      for (var i = 0; i < end; i++) {
+        createListItem(data[i]);
+      }
+
+    }
+
+    var destroyRows = function() {
+      if (list_container === undefined) {
+        return;
+      }
+      while (list_container.childNodes.length > 1) {
+        list_container.removeChild(list_container.lastChild);
+      }
+    }
+
+    var list_header;
+    var initTable = function() {
+      list_container = document.createElement("table");
+      list_container.className = "metrics_list_container";
+
+      list_header = document.createElement("tr");
+      list_header.className = "metrics_list_header";
+      createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
+      list_container.appendChild(list_header);
+      elem.appendChild(list_container);
+    }
+
+    var destroyTable = function() {
+      if (list_container === undefined) {return;}
+      while (list_container.firstChild) {
+        list_container.removeChild(list_container.firstChild);
+      }
+      elem.removeChild(list_container);
+      list_container = undefined;
+    }
+
+    createSearchBar();
+
+    if (metrics_data.length > rows_per_side) {
+      pag_navbar = renderListPagination(metrics_data);
+    }
+
+    initTable();
+
+    var end = Math.min(metrics_data.length, rows_per_side);
+    for (var i = 0; i < end;  i++) {
+      createListItem(metrics_data[i], true);
+    }
+
+  }
+
   var render = function(elem) {
     var metrics_data;
     FnordMetric.Loading().render();
@@ -97,587 +679,17 @@ FnordMetric.views.MetricList = function() {
         metrics_data = JSON.parse(r.response);
         metrics_data = metrics_data.metrics;
         if (metrics_data.length == 0) {
-          renderEmptyState();
+          renderEmptyState(elem);
           return;
         } else {
-          renderResult();
+          renderResult(metrics_data, elem);
         }
       } else {
-        renderError(r.status);
+        renderError(r.status, elem);
         return;
       }
     });
-
-    var renderError = function(state) {
-      var error_field = document.createElement("div");
-      error_field.className = "metrics_error_pane";
-      switch(state) {
-        case 404:
-           error_field.innerHTML = "404 NOT FOUND.";
-           break;
-        case 500:
-           error_field.innerHTML = "Internal server error";
-           break;
-        default:
-           error_field.innerHTML = "Upps. Something went wrong.";
-          break;
-      }
-      elem.appendChild(error_field);
-    }
-
-    var renderEmptyState = function() {
-      var msg_field = document.createElement("div");
-      msg_field.className = "metrics_error_pane";
-      msg_field.innerHTML = "Looks like you haven't inserted any data yet.";
-      elem.appendChild(msg_field);
-    }
-
-    var renderResult = function() {
-      var rows_per_side = 10;
-      var pag_navbar;
-      var list_container;
-      var no_result_text = undefined;
-
-
-      var searchRows = function(key) {
-        destroyRows();
-        destroyListPagination();
-        //FIXME works but seems not to be the best solution
-        var data = [];
-        for (var i = 0; i < metrics_data.length; i++) {
-          if (metrics_data[i]["key"].indexOf(key) > -1) {
-            data.push(metrics_data[i]);
-          }
-        }
-        renderTable(data);
-      }
-
-      var renderNoResult = function() {
-        var text_field = document.createElement("div");
-        text_field.className = "metrics big_text";
-        text_field.innerHTML = "No matching Results";
-        elem.appendChild(text_field);
-        return text_field;
-      }
-
-      var destroyNoResult = function() {
-        if (typeof no_result_text == "undefined") {
-          return;
-        }
-        elem.removeChild(no_result_text);
-        no_result_text = undefined;
-      }
-
-      var createSearchBar = function() {
-        var search_bar = document.createElement("div");
-        search_bar.className = "metrics search_bar";
-        var input_field = document.createElement("input");
-        var search_button = document.createElement("div");
-        search_button.className = "fancy_button";
-        var button_link = document.createElement("a");
-        button_link.href = "#";
-        button_link.innerHTML = "Search";
-
-        var createClearButton = function() {
-          var clear_button = document.createElement("a");
-          clear_button.className = "clear_button";
-          clear_button.href = "#";
-          clear_button.innerHTML = "X";
-          search_bar.appendChild(clear_button);
-
-          clear_button.addEventListener('click', function(e) {
-            e.preventDefault();
-            clearSearch();
-          }, false);
-        }
-
-        search_button.appendChild(button_link);
-        search_bar.appendChild(input_field);
-        search_bar.appendChild(search_button);
-        createClearButton();
-        elem.appendChild(search_bar);
-
-        var dropdown = document.createElement("ul");
-        dropdown.className = "dropdown";
-
-        var down = 0;
-        var dropdownKeyNav = function() {
-          var dropdown_items = dropdown.childNodes;
-          var i = down -1;
-          if (i < dropdown_items.length) {
-            if (i > 0) {
-              dropdown_items[i - 1].className = "";
-            }
-            if (i+1 < dropdown_items.length) {
-              dropdown_items[i+1].className = "";
-            }
-            var current_value = dropdown_items[i].firstChild.innerHTML;
-            dropdown_items[i].className = "hover";
-            input_field.addEventListener('keydown', function(e) {
-              switch (e.keyCode) {
-                case 13:
-                  e.preventDefault();
-                  input_field.value = current_value;
-                  break;
-                default:
-                  break;
-              }
-            }, false);
-
-          }
-        }
-
-        var initSearch = function() {
-          search_button.addEventListener('click', function(e) {
-            e.preventDefault();
-            destroyDropdown();
-            searchRows(input_field.value);
-          }, false);
-
-          input_field.addEventListener('focus', function(e) {
-            this.value = "";
-          }, false);
-
-          input_field.addEventListener('input', function(e) {
-            autocomplete(this.value)
-          }, false);
-
-          input_field.addEventListener('keydown', function(e) {
-            switch (e.keyCode) {
-              case 13:
-                e.preventDefault();
-                destroyDropdown();
-                searchRows(input_field.value);
-                break;
-              case 40:
-                down++;
-                dropdownKeyNav();
-                break;
-              case 38:
-                down--;
-                dropdownKeyNav();
-                break;
-              default:
-                break;
-            }
-          }, false);
-
-        }
-
-        var clearSearch = function() {
-          input_field.value = "";
-          destroyRows();
-          destroyListPagination();
-          renderTable(metrics_data);
-        }
-
-        var getKeys = function() {
-          var keys = [];
-          for (var i = 0; i < metrics_data.length; i++) {
-            keys.push(metrics_data[i]["key"]);
-          }
-          return keys;
-        }
-
-        var keys = getKeys();
-
-        var destroyDropdown = function() {
-          down = 0;
-          while (dropdown.firstChild) {
-            dropdown.removeChild(dropdown.firstChild);
-          }
-        }
-
-        var autocomplete = function(input) {
-          destroyDropdown();
-          search_bar.appendChild(dropdown);
-          for (var i = 0; i < keys.length; i++) {
-            if (keys[i].indexOf(input) > - 1) {
-              var dropdown_item = document.createElement("li");
-              var dropdown_link = document.createElement("a");
-              dropdown_link.href = "#";
-              dropdown_link.innerHTML = keys[i];
-              dropdown_item.appendChild(dropdown_link);
-              dropdown.appendChild(dropdown_item);
-
-              dropdown_link.addEventListener('click', function(e) {
-                e.preventDefault();
-                input_field.value = this.innerHTML;
-                destroyDropdown();
-              }, false);
-            }
-          }
-          //FIXME viewport ends after last table row
-          elem.addEventListener('click', function(e) {
-            destroyDropdown();
-          }, false);
-        }
-        initSearch();
-      }
-
-      var compare = function(a, b) {
-        if (a < b) {
-          return -1;
-        }
-        if (a > b) {
-          return 1;
-        }
-        return 0;
-      }
-
-
-      var sortColumns = function(id, order) {
-        var sorted_data = metrics_data;
-        switch (id) {
-          case "Key":
-            sorted_data.sort(function(a, b) {
-              if (order == "asc") {
-                return (compare(
-                  a.key.toLowerCase(), 
-                  b.key.toLowerCase()));
-              } else {
-                 return (compare(
-                  b.key.toLowerCase(), 
-                  a.key.toLowerCase()));
-              }
-            });
-            break;
-          case "Labels":
-            console.log("sort by labels");
-            break;
-          case "Last Insert":
-            sorted_data.sort(function(a, b) {
-              if (order == "asc") {
-                return (compare(a.last_insert, b.last_insert));
-              } else {
-                return (compare(b.last_insert, a.last_insert));
-              }
-            });
-            break;
-          case "Total stored bytes":
-            sorted_data.sort(function(a, b) {
-              if (order == "asc") {
-                return (compare(a.total_bytes, b.total_bytes));
-              } else {
-                return (compare(b.total_bytes, a.total_bytes));
-              }
-            });
-            break;
-          default:
-            break;
-        }
-        renderTable(sorted_data);
-      }
-
-      var createListHeaderCells = function(labels) {
-        for (var i = 0; i < labels.length; i++) {
-          var list_header_cell = document.createElement("th");
-          list_header_cell.innerHTML = labels[i];
-          var createSortLink = function(symbol, order) {
-            var sort_link = document.createElement("a");
-            sort_link.setAttribute("id", labels[i]);
-            sort_link.className = "caret";
-            sort_link.href = "#";
-            sort_link.innerHTML = symbol;
-            list_header_cell.appendChild(sort_link);
-
-            sort_link.addEventListener('click', function(e) {
-              e.preventDefault();
-              sortColumns(this.id, order);
-            }, false);
-          }
-          createSortLink("&#x25B2;", "asc");
-          createSortLink("&#x25BC;", "desc");
-          list_header.appendChild(list_header_cell);
-        }
-      }
-
-      var renderListPagination = function(metrics_data) {
-        var start_index = 0;
-        var end_index = rows_per_side;
-
-
-        var pag_navbar = document.createElement("div");
-        pag_navbar.className = "pagination_navbar metrics";
-
-        var tooltipObj = {
-          "for" :  {
-            "arrow" : "&#8594;",
-            "marginRight" : "0px"
-          },
-          "back" : {
-            "arrow" : "&#8592;",
-            "marginRight" : "2px"
-          }
-        }
-
-        var createTooltip = function(type) {
-          var tooltip = document.createElement("a");
-          tooltip.className = "pagination_tooltip";
-          tooltip.href = "#";
-          tooltip.style.marginRight = tooltipObj[type]["marginRight"];
-          tooltip.innerHTML = tooltipObj[type]["arrow"];
-
-          tooltip.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (type == "for") {
-              start_index = parseInt(this.id);
-              end_index = Math.min(metrics_data.length, 
-                start_index + rows_per_side);
-            } else {
-              start_index = Math.max(0, parseInt(this.id) - rows_per_side);
-              end_index = start_index + rows_per_side;
-            }
-            tooltipEvent()
-          }, false);
-
-          return tooltip;
-        }
-
-
-        var pag_label = document.createElement("div");
-        pag_label.className = "pagination_label";
-
-        var updateLabel = function() {
-          pag_label.innerHTML = "<b>" + (start_index +1) + 
-            "</b><span> - </span><b>" + end_index + 
-            "</b><span> of </span><b>" + metrics_data.length + "</b>";
-        }
-
-        var updateTooltips = function() {
-          tooltip_for.setAttribute("id", end_index);
-          tooltip_back.setAttribute("id" , start_index);
-
-          tooltip_for.style.color = 
-            (end_index == metrics_data.length) ? "#ddd" : "#444";
-
-          tooltip_back.style.color = 
-            (start_index == 0) ? "#ddd" : "#444";
-        }
-
-        var tooltipEvent = function() {
-          updateLabel();
-          updateTooltips();
-          destroyRows();
-          for (var i = start_index; i < end_index; i++) {
-            createListItem(metrics_data[i]);
-          }
-        }
-
-
-        var tooltip_for = createTooltip("for");
-        var tooltip_back = createTooltip("back");
-
-        updateLabel();
-        updateTooltips();
-
-        pag_navbar.appendChild(tooltip_for);
-        pag_navbar.appendChild(tooltip_back);
-        pag_navbar.appendChild(pag_label);
-        if (typeof list_container != "undefined") {
-          elem.insertBefore(pag_navbar, list_container);
-        } else {
-          elem.appendChild(pag_navbar);
-        }
-
-        return pag_navbar;
-      }
-
-      var destroyListPagination = function() {
-        if (typeof pag_navbar == "undefined") {
-          return;
-        }
-        while (pag_navbar.firstChild) {
-          pag_navbar.removeChild(pag_navbar.firstChild);
-        }
-        //FIXME
-        elem.removeChild(document.querySelector(".pagination_navbar"));
-      }
-
-      var createListItem = function(data) {
-        var list_item_row = document.createElement("tr");
-
-        var i = 0;
-        var list_elems = ["key", "labels", "insert", "total_bytes"];
-
-        var convertTimestamp = function() {
-          if (data["last_insert"] == 0 || 
-              data["last_insert"].length == 0) {
-            return;
-          }
-
-          var timestamp = data["last_insert"] / 1000;
-          var now = Date.now();
-          var date = new Date(timestamp);
-
-          var getTimeOffset = function() {
-            var offset =  Math.floor(
-              (now - timestamp) / 1000);
-            if (offset < 60) {
-              var label = (offset == 1)? " second ago" : " seconds ago";
-              data["insert"]  = offset + label;
-            } else if (offset < 3600) {
-              var time = Math.floor(offset / 60);
-              var label = (time == 1)? " minute ago" : " minutes ago";
-              data["insert"]  = time + label;
-            } else if (offset < 86400) {
-              var time =  Math.floor(offset / 3600);
-              var label = (time == 1)? " hour ago" : " hours ago";
-              data["insert"]  = time + label;
-            } else {
-              var time = Math.floor(offset / 86400);
-              var label = (time == 1)? " day ago" : " days ago";
-              data["insert"]  = time + label;
-            }
-
-          }
-
-          var getHumanDate = function() {
-            var getHumanMonth = function() {
-              var months = ["Jan", "Feb", "Mar", "Apr", "May",
-                "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-              return months[date.getMonth()];
-            }
-
-            var getMinutes = function() {
-              var minutes = date.getMinutes();
-              if (minutes < 10) {
-                minutes = "0" + minutes;
-              }
-              return minutes;
-            }
-
-            var getSeconds = function() {
-              var seconds = date.getSeconds();
-              if (seconds < 10) {
-                seconds = "0" + seconds;
-              }
-              return seconds;
-            }
-
-            data["insert"] += 
-              " - " + getHumanMonth() +
-              " " + date.getDate() +
-              " " + date.getFullYear() +
-              " " + date.getHours() +
-              ":" + getMinutes() +
-              ":" + getSeconds();
-          }
-
-          data.converted = true;
-
-          getTimeOffset();
-          getHumanDate();
-        }
-
-        var parseLabels = function() {
-          if (data["labels"].length == 0) {return;}
-          var labelstring = data["labels"][0];
-          for (var i = 1; i < data["labels"].length; i++) {
-            labelstring += ", " + data["labels"][i];
-          }
-          data["labels"] = labelstring;
-
-          data.converted = true;
-
-        }
-
-        if (!data.converted) {
-          parseLabels();
-          convertTimestamp();
-        }
-
-
-        for (; i < list_elems.length; i++) {
-          var list_item = document.createElement("td");
-          list_item.innerHTML = data[list_elems[i]];
-          list_item_row.appendChild(list_item);i
-        }
-
-        list_container.appendChild(list_item_row);
-
-        list_item_row.addEventListener('click', function(e) {
-          e.preventDefault();
-          var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
-          "SELECT 'mymetric' AS series, time AS x, value AS y "+
-          "FROM " + data["key"];
-          var enc_query = encodeURIComponent(query);
-          window.location = "/admin#query_playground!" + enc_query;
-          //FIXME pushstate?
-          destroy(elem);
-          FnordMetric.views.QueryPlayground().render(elem, query);
-        }, false);
-      }
-
-      var renderTable = function(data) {
-        destroyTable();
-        if (data.length == 0) {
-          no_result_text = renderNoResult();
-          return;
-        }
-        if (typeof list_container == "undefined") {
-          initTable();
-        }
-        if (typeof no_result_text != "undefined") {
-          destroyNoResult();
-        }
-        if (data.length > rows_per_side) {
-          renderListPagination(data);
-          var end = rows_per_side;
-        } else {
-          var end = data.length;
-        }
-        for (var i = 0; i < end; i++) {
-          createListItem(data[i]);
-        }
-
-      }
-
-      var destroyRows = function() {
-        if (typeof list_container == "undefined") {
-          return;
-        }
-        while (list_container.childNodes.length > 1) {
-          list_container.removeChild(list_container.lastChild);
-        }
-      }
-
-      var list_header;
-      var initTable = function() {
-        list_container = document.createElement("table");
-        list_container.className = "metrics_list_container";
-
-        list_header = document.createElement("tr");
-        list_header.className = "metrics_list_header";
-        createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
-        list_container.appendChild(list_header);
-        elem.appendChild(list_container);
-      }
-
-      var destroyTable = function() {
-        while (list_container.firstChild) {
-          list_container.removeChild(list_container.firstChild);
-        }
-        elem.removeChild(list_container);
-        list_container = undefined;
-      }
-
-      createSearchBar();
-
-      if (metrics_data.length > rows_per_side) {
-        pag_navbar = renderListPagination(metrics_data);
-      }
-
-      initTable();
-
-      var end = Math.min(metrics_data.length, rows_per_side);
-      for (var i = 0; i < end;  i++) {
-        createListItem(metrics_data[i], true);
-      }
-
-    }
-
-  };
+  }
 
   var destroy = function(elem) {
     while (elem.firstChild) {
@@ -685,12 +697,11 @@ FnordMetric.views.MetricList = function() {
     }
   }
 
-
   return {
     "render": render,
     "destroy": destroy
   };
-}
+};
 
 FnordMetric.views.QueryPlayground = function() {
   var horizontal = true;
@@ -755,8 +766,6 @@ FnordMetric.views.QueryPlayground = function() {
     textfield.style.margin = "10px";
     textfield.style.float = "left";
     navbar.appendChild(textfield);
-
-
   }
 
   var initCM = function() {
@@ -787,7 +796,7 @@ FnordMetric.views.QueryPlayground = function() {
 
   var updateLayout = function(tooltip, viewport) {
     if (horizontal) {
-      if (viewport != undefined) {
+      if (viewport !== undefined) {
         viewport.className = "viewport horizontal_split";
       }
       result_pane.style.height = "auto";
@@ -814,7 +823,7 @@ FnordMetric.views.QueryPlayground = function() {
       cm.setSize("auto", height);
 
     } else {
-      if (viewport != undefined) {
+      if (viewport !== undefined) {
         viewport.className = "viewport vertical_split";
       }
       if (!tooltip) {
@@ -835,8 +844,6 @@ FnordMetric.views.QueryPlayground = function() {
       editor_resizer_tooltip.style.height = "6px";
       cm.setSize("auto", editor_height + "px");
     }
-
-
   }
 
   var render = function(elem, query) {
@@ -1097,7 +1104,7 @@ FnordMetric.views.QueryPlayground = function() {
       renderError(resp.error);
       return;
     }
-
+    
 
     var charts = resp.charts;
     var tables = resp.tables;
@@ -1140,24 +1147,9 @@ FnordMetric.views.QueryPlayground = function() {
           return (ts + (ts == 1? " minute" : " minutes"));
         }
       }
-
-      var getRowsInfo = function() {
-        var num = 0;
-        for (var i = 0; i < tables.length; i++) {
-          num += tables[i]['rows'].length;
-        }
-        return (num == 1? num + " row" : num + " rows")
-      }
-
-      var info_field = document.createElement("div");
-      info_field.className = "info_field";
-      info_field.innerHTML =
-        "Query execution took " + parseMilliTS(duration) 
-        + " and returned " + getRowsInfo();
-      editor_pane.appendChild(info_field);
     }
 
-    var renderResultNavbar = function(type, quantity) {
+      var renderResultNavbar = function(type, quantity) {
       var result_navbar = document.createElement("div");
       result_navbar.className = "result_navbar";
       for (var i = 0; i < quantity; i++) {
@@ -1207,12 +1199,12 @@ FnordMetric.views.QueryPlayground = function() {
     renderTable(tables[curr_tableID]);
 
     updateResultNavbar("chart", curr_chartID, -1);
-    updateResultNavbar("table", curr_tableID, -1);
+    updateResultNavbar("table", curr_tableID, -1); 
 
   }
 
   var runQuery = function(query) {
-    if (query == undefined) {
+    if (query === undefined) {
       var query = cm.getValue();
     }
     FnordMetric.Loading().render();
@@ -1264,7 +1256,7 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     renderPopup();
-  }
+  } 
 
   return {
     "render": render,
@@ -1348,7 +1340,7 @@ FnordMetric.WebUI = function() {
 
 
     var view = routes[url];
-    if (typeof view == "undefined") {
+    if (view === undefined) {
       console.log("invalid route", url, routes); // FIXME
       return;
     }
