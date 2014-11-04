@@ -286,6 +286,10 @@ ul.dropdown li a {
   color: #444;
 }
 
+ul.dropdown li.hover {
+  background-color: #d7e4f2;
+}
+
 ul.dropdown li:hover {
   background-color: #d7e4f2;
 }

@@ -202,6 +202,33 @@ FnordMetric.views.MetricList = function() {
         var dropdown = document.createElement("ul");
         dropdown.className = "dropdown";
 
+        var down = 0;
+        var dropdownKeyNav = function() {
+          var dropdown_items = dropdown.childNodes;
+          var i = down -1;
+          if (i < dropdown_items.length) {
+            if (i > 0) {
+              dropdown_items[i - 1].className = "";
+            }
+            if (i+1 < dropdown_items.length) {
+              dropdown_items[i+1].className = "";
+            }
+            var current_value = dropdown_items[i].firstChild.innerHTML;
+            dropdown_items[i].className = "hover";
+            input_field.addEventListener('keydown', function(e) {
+              switch (e.keyCode) {
+                case 13:
+                  e.preventDefault();
+                  input_field.value = current_value;
+                  break;
+                default:
+                  break;
+              }
+            }, false);
+
+          }
+        }
+
         var initSearch = function() {
           search_button.addEventListener('click', function(e) {
             e.preventDefault();
@@ -215,6 +242,26 @@ FnordMetric.views.MetricList = function() {
 
           input_field.addEventListener('input', function(e) {
             autocomplete(this.value)
+          }, false);
+
+          input_field.addEventListener('keydown', function(e) {
+            switch (e.keyCode) {
+              case 13:
+                e.preventDefault();
+                destroyDropdown();
+                searchRows(input_field.value);
+                break;
+              case 40:
+                down++;
+                dropdownKeyNav();
+                break;
+              case 38:
+                down--;
+                dropdownKeyNav();
+                break;
+              default:
+                break;
+            }
           }, false);
 
         }
@@ -237,6 +284,7 @@ FnordMetric.views.MetricList = function() {
         var keys = getKeys();
 
         var destroyDropdown = function() {
+          down = 0;
           while (dropdown.firstChild) {
             dropdown.removeChild(dropdown.firstChild);
           }
