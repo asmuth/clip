@@ -1,30 +1,3 @@
-[ metricdb doc ]
-
-  getting started
-    - installing
-    - running
-    - getting started 5 min howto
-
-  sending data
-    - semantics
-    - via json over http
-    - via statsd over tcp/udp
-
-  querying data
-    - query language
-    - web interface
-    - HTTP API
-
-  language bindings
-    - ruby/rails
-    - node js
-    - python
-
-  advanced topics
-    - retention policies
-    - streaming queries
-
-
     POST /metrics
 
       {
@@ -44,17 +17,15 @@
     /web/frontend/http_status_codes[hostname=webfe1][status_code=500]:12
 
 [ todo ]
-    - merge compaction
     - scan samples with range / sstable binary search
     - sstable checksums + fsck + repair
-    - mmap cache for readonly files
     - bug: chart with only same values -> strange rendering
     - bug: multiple draw statements dont produce multiple charts
     - bug: NAN is not a valid value in SVG
     - SQL: having
-    - SQL: join
+    - SQL: cross joins
     - SQL: subqueries
-    - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
+    - SQL: GROUP OVER TIMEWINDOW
     - mysql: re-serialize where condition
     - round fn
     - time based aggregations / windows
@@ -69,6 +40,10 @@
     - ui: line chart with only negative values
     - ui: known bug: 2d area chart with explicit y domain, min > 0
     ----------
+    - merge compaction
+    - mmap cache for readonly files
+    - SQL: JOIN
+    - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
     - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
               holtwinters
     - impl inside/outside axis labels
@@ -89,6 +64,9 @@
 
 - backend: graphite/statsd
 - backend: legacy-fnordmetric
+
+- alerts
+- events (annotations)
 
 [ doc ]
      - faqs

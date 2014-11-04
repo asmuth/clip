@@ -1,4 +1,4 @@
-Body, html {
+body, html {
   margin: 0;
   padding: 0;
   font-family: Helvetica, Arial, sans-serif;
@@ -6,7 +6,7 @@ Body, html {
 }
 
 body {
-  background: #ececec;
+  background: #f1f1f1;
   padding-bottom: 20px;
 }
 
@@ -53,7 +53,7 @@ body {
 }
 
 .headbar {
-  height: 64px;
+  height: 49px;
   top: 0;
   position: absolute;
   left: 0;
@@ -61,18 +61,17 @@ body {
   z-index:999;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  box-shadow: 0 0 1px rgba(0,0,0,.1);
 }
 
 .headbar a h1 {
   font-weight: 500;
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 40px;
+  font-size: 100%;
+  line-height: 49px;
+  padding: 0 20px;
   margin: 0;
   float: left;
-  color: black;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #e8e8e8;
+  color: #333;
 }
 
 .editor_pane, .result_pane {
