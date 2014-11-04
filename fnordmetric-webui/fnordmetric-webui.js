@@ -138,16 +138,12 @@ FnordMetric.views.MetricList = function() {
       var rows_per_side = 10;
       var pag_navbar;
       var list_container;
-      var no_result_text;
+      var no_result_text = undefined;
 
 
       var searchRows = function(key) {
         destroyRows();
         destroyListPagination();
-        console.log("text_field: " + no_result_text);
-        if (typeof no_result_text != "undefined") {
-          elem.removeChild(no_result_text);
-        }
         //FIXME works but seems not to be the best solution
         var data = [];
         for (var i = 0; i < metrics_data.length; i++) {
@@ -155,25 +151,7 @@ FnordMetric.views.MetricList = function() {
             data.push(metrics_data[i]);
           }
         }
-        if (data.length == 0) {
-          destroyTable();
-          no_result_text = renderNoResult();
-        } else if (data.length > rows_per_side) {
-          renderListPagination(data);
-          if (typeof list_container == "undefined") {
-            initTable();
-          }
-          for (var i = 0; i < rows_per_side; i++) {
-            createListItem(data[i]);
-          }
-        } else {
-          if (typeof list_container == "undefined") {
-            initTable();
-          }
-          for (var i = 0; i < data.length; i++) {
-            createListItem(data[i]);
-          }
-        }
+        renderTable(data);
       }
 
       var renderNoResult = function() {
@@ -182,6 +160,14 @@ FnordMetric.views.MetricList = function() {
         text_field.innerHTML = "No matching Results";
         elem.appendChild(text_field);
         return text_field;
+      }
+
+      var destroyNoResult = function() {
+        if (typeof no_result_text == "undefined") {
+          return;
+        }
+        elem.removeChild(no_result_text);
+        no_result_text = undefined;
       }
 
       var createSearchBar = function() {
@@ -203,13 +189,14 @@ FnordMetric.views.MetricList = function() {
 
           clear_button.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log("clear search");
+            clearSearch();
           }, false);
         }
 
         search_button.appendChild(button_link);
         search_bar.appendChild(input_field);
         search_bar.appendChild(search_button);
+        createClearButton();
         elem.appendChild(search_bar);
 
         var dropdown = document.createElement("ul");
@@ -220,8 +207,6 @@ FnordMetric.views.MetricList = function() {
             e.preventDefault();
             destroyDropdown();
             searchRows(input_field.value);
-            createClearButton();
-            console.log("search");
           }, false);
 
           input_field.addEventListener('focus', function(e) {
@@ -234,6 +219,13 @@ FnordMetric.views.MetricList = function() {
 
         }
 
+        var clearSearch = function() {
+          input_field.value = "";
+          destroyRows();
+          destroyListPagination();
+          renderTable(metrics_data);
+        }
+
         var getKeys = function() {
           var keys = [];
           for (var i = 0; i < metrics_data.length; i++) {
@@ -243,7 +235,6 @@ FnordMetric.views.MetricList = function() {
         }
 
         var keys = getKeys();
-        keys.push("foobar");
 
         var destroyDropdown = function() {
           while (dropdown.firstChild) {
@@ -267,7 +258,6 @@ FnordMetric.views.MetricList = function() {
                 e.preventDefault();
                 input_field.value = this.innerHTML;
                 destroyDropdown();
-                console.log("click list item");
               }, false);
             }
           }
@@ -284,7 +274,6 @@ FnordMetric.views.MetricList = function() {
       }
 
       var renderListPagination = function(metrics_data) {
-        console.log(metrics_data);
         var start_index = 0;
         var end_index = rows_per_side;
 
@@ -352,7 +341,6 @@ FnordMetric.views.MetricList = function() {
           updateTooltips();
           destroyRows();
           for (var i = start_index; i < end_index; i++) {
-            console.log(metrics_data[i]);
             createListItem(metrics_data[i]);
           }
         }
@@ -368,7 +356,6 @@ FnordMetric.views.MetricList = function() {
         pag_navbar.appendChild(tooltip_back);
         pag_navbar.appendChild(pag_label);
         if (typeof list_container != "undefined") {
-          console.log(typeof list_container);
           elem.insertBefore(pag_navbar, list_container);
         } else {
           elem.appendChild(pag_navbar);
@@ -378,7 +365,6 @@ FnordMetric.views.MetricList = function() {
       }
 
       var destroyListPagination = function() {
-        console.log(pag_navbar);
         if (typeof pag_navbar == "undefined") {
           return;
         }
@@ -502,6 +488,30 @@ FnordMetric.views.MetricList = function() {
           destroy(elem);
           FnordMetric.views.QueryPlayground().render(elem, query);
         }, false);
+      }
+
+      var renderTable = function(data) {
+        if (data.length == 0) {
+          destroyTable();
+          no_result_text = renderNoResult();
+          return;
+        }
+        if (typeof list_container == "undefined") {
+          initTable();
+        }
+        if (typeof no_result_text != "undefined") {
+          destroyNoResult();
+        }
+        if (data.length > rows_per_side) {
+          renderListPagination(data);
+          var end = rows_per_side;
+        } else {
+          var end = data.length;
+        }
+        for (var i = 0; i < end; i++) {
+          createListItem(data[i]);
+        }
+
       }
 
       var destroyRows = function() {
@@ -1235,7 +1245,6 @@ FnordMetric.WebUI = function() {
 
   var renderView = function(view, args) {
     if (current_view != null) {
-      console.log("destroy current view");
       current_view.destroy(viewport);
     }
 
