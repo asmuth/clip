@@ -251,9 +251,6 @@ FnordMetric.views.MetricList = function() {
     getHumanDate();
   }
 
-
-
-
   var renderEmptyState = function(elem) {
     var msg_field = document.createElement("div");
     msg_field.className = "metrics_error_pane";
@@ -268,16 +265,16 @@ FnordMetric.views.MetricList = function() {
     var no_result_text = undefined;
 
 
-    function searchRows(key) {
+    function searchRows(search_key) {
       destroyRows();
       destroyListPagination();
       //FIXME works but seems not to be the best solution
       var data = [];
-      for (var i = 0; i < metrics_data.length; i++) {
-        if (metrics_data[i]["key"].indexOf(key) > -1) {
-          data.push(metrics_data[i]);
+      metrics_data.map(function(item) {
+       if (item.key.indexOf(search_key) > -1) {
+          data.push(item);
         }
-      }
+      });
       renderTable(data);
     }
 
@@ -304,14 +301,15 @@ FnordMetric.views.MetricList = function() {
 
       var search_button = document.createElement("div");
       search_button.className = "fancy_button";
-      var button_link = document.createElement("a");
-      button_link.href = "#";
-      button_link.innerHTML = "Search";
+
+      var button_link = FnordMetric.createButton(
+        "#", undefined, "Search");
       search_button.appendChild(button_link);
       search_bar.appendChild(input_field);
       search_bar.appendChild(search_button);
 
-      var clear_button = FnordMetric.createButton("#", "clear_button", "X");
+      var clear_button = FnordMetric.createButton(
+        "#", "clear_button", "X");
       search_bar.appendChild(clear_button);
       clear_button.addEventListener('click', function(e) {
         e.preventDefault();
@@ -353,7 +351,7 @@ FnordMetric.views.MetricList = function() {
         search_button.addEventListener('click', function(e) {
           e.preventDefault();
           destroyDropdown();
-          searchRows(input_field.value);
+          var matching_data = searchRows(input_field.value);
         }, false);
 
         input_field.addEventListener('focus', function(e) {
@@ -404,12 +402,12 @@ FnordMetric.views.MetricList = function() {
       var autocomplete = function(input) {
         destroyDropdown();
         search_bar.appendChild(dropdown);
-        for (var i = 0; i < keys.length; i++) {
-          if (keys[i].indexOf(input) > - 1) {
+
+        keys.map(function(key) {
+          if (key.indexOf(input) > - 1) {
             var dropdown_item = document.createElement("li");
-            var dropdown_link = document.createElement("a");
-            dropdown_link.href = "#";
-            dropdown_link.innerHTML = keys[i];
+            var dropdown_link = FnordMetric.createButton(
+              "#", undefined, key);
             dropdown_item.appendChild(dropdown_link);
             dropdown.appendChild(dropdown_item);
 
@@ -419,7 +417,7 @@ FnordMetric.views.MetricList = function() {
               destroyDropdown();
             }, false);
           }
-        }
+        });
           //FIXME viewport ends after last table row
         elem.addEventListener('click', function(e) {
           destroyDropdown();
@@ -428,17 +426,14 @@ FnordMetric.views.MetricList = function() {
       initSearch();
     }
 
-
     var createListHeaderCells = function(labels) {
-      for (var i = 0; i < labels.length; i++) {
+      labels.map(function(label) {
         var list_header_cell = document.createElement("th");
-        list_header_cell.innerHTML = labels[i];
+        list_header_cell.innerHTML = label;
         var createSortLink = function(symbol, order) {
-          var sort_link = document.createElement("a");
-          sort_link.setAttribute("id", labels[i]);
-          sort_link.className = "caret";
-          sort_link.href = "#";
-          sort_link.innerHTML = symbol;
+          var sort_link = FnordMetric.createButton(
+            "#", "caret", symbol);
+          sort_link.setAttribute("id", label);
           list_header_cell.appendChild(sort_link);
 
           sort_link.addEventListener('click', function(e) {
@@ -450,7 +445,7 @@ FnordMetric.views.MetricList = function() {
         createSortLink("&#x25B2;", "asc");
         createSortLink("&#x25BC;", "desc");
         list_header.appendChild(list_header_cell);
-      }
+      });
     }
 
     var renderListPagination = function(metrics_data) {
@@ -473,11 +468,9 @@ FnordMetric.views.MetricList = function() {
       }
 
       var createTooltip = function(type) {
-        var tooltip = document.createElement("a");
-        tooltip.className = "pagination_tooltip";
-        tooltip.href = "#";
+        var tooltip = FnordMetric.createButton(
+          "#", "pagination_tooltip", tooltipObj[type]["arrow"]);
         tooltip.style.marginRight = tooltipObj[type]["marginRight"];
-        tooltip.innerHTML = tooltipObj[type]["arrow"];
 
         tooltip.addEventListener('click', function(e) {
           e.preventDefault();
@@ -561,16 +554,9 @@ FnordMetric.views.MetricList = function() {
       var i = 0;
       var list_elems = ["key", "labels", "insert", "total_bytes"];
 
-      
       var parseLabels = function(data) {
         if (data.labels.length == 0) {return;}
-        var labelstring = data.labels[0];
-        for (var i = 1; i < data.labels.length; i++) {
-          labelstring += ", " + data.labels[i];
-        }
-        data.labels = labelstring;
-
-
+        data.labels = data.labels.join(", ");
       }
 
       if (!data.converted) {
@@ -579,12 +565,11 @@ FnordMetric.views.MetricList = function() {
         data.converted = true;
       }
 
-
-      for (; i < list_elems.length; i++) {
+      list_elems.map(function(item) {
         var list_item = document.createElement("td");
-        list_item.innerHTML = data[list_elems[i]];
-        list_item_row.appendChild(list_item);i
-      }
+        list_item.innerHTML = data[item];
+        list_item_row.appendChild(list_item);
+      });
 
       list_container.appendChild(list_item_row);
 
