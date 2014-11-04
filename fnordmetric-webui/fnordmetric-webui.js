@@ -21,7 +21,6 @@
  *
  * Metric list view:
  *  - write meaningful error messages
- *  - search/filter/autocomplete input box
  *  - stretch: make table sortable by column
  *
  *  - fix menuitems
@@ -309,14 +308,130 @@ FnordMetric.views.MetricList = function() {
               }, false);
             }
           }
+          //FIXME viewport ends after last table row
+          elem.addEventListener('click', function(e) {
+            destroyDropdown();
+          }, false);
         }
         initSearch();
+      }
+
+      var sortAsc = function(id) {
+        var sorted_data = metrics_data;
+        switch (id) {
+          case "Key":
+            sorted_data.sort(function(a, b) {
+              var keyA = a.key.toLowerCase();
+              var keyB = b.key.toLowerCase();
+              if (keyA < keyB) {
+                return -1;
+              }
+              if (keyA > keyB) {
+                return 1;
+              }
+              return 0;
+            });
+            break;
+          case "Labels":
+            console.log("sort by labels");
+            break;
+          case "Last Insert":
+            sorted_data.sort(function(a, b) {
+              if (a.last_insert < b.last_insert) {
+                return -1;
+              }
+              if (a.last_insert > b.last_insert) {
+                return 1;
+              }
+              return 0;
+            });
+            break;
+          case "Total stored bytes":
+            sorted_data.sort(function(a, b) {
+              if (a.total_bytes < b.total_bytes) {
+                return -1;
+              }
+              if (a.total_bytes > b.total_bytes) {
+                return 1;
+              }
+              return 0;
+            });
+
+            console.log("sort by stored bytes");
+            break;
+          default:
+            break;
+        }
+        renderTable(sorted_data);
+      }
+
+      var sortDesc = function(id) {
+        var sorted_data = metrics_data;
+        switch (id) {
+          case "Key":
+            sorted_data.sort(function(a, b) {
+              var keyA = a.key.toLowerCase();
+              var keyB = b.key.toLowerCase();
+              if (keyA > keyB) {
+                return -1;
+              }
+              if (keyA < keyB) {
+                return 1;
+              }
+              return 0;
+            });
+            break;
+          case "Labels":
+            console.log("sort by labels");
+            break;
+          case "Last Insert":
+            sorted_data.sort(function(a, b) {
+              if (a.last_insert > b.last_insert) {
+                return -1;
+              }
+              if (a.last_insert < b.last_insert) {
+                return 1;
+              }
+              return 0;
+            });
+            break;
+            break;
+          case "Total stored bytes":
+            sorted_data.sort(function(a, b) {
+              if (a.total_bytes > b.total_bytes) {
+                return -1;
+              }
+              if (a.total_bytes < b.total_bytes) {
+                return 1;
+              }
+              return 0;
+            });
+            break;
+          default:
+            break;
+        }
+        renderTable(sorted_data);
       }
 
       var createListHeaderCells = function(labels) {
         for (var i = 0; i < labels.length; i++) {
           var list_header_cell = document.createElement("th");
           list_header_cell.innerHTML = labels[i];
+          var createSortLink = function(symbol, callback) {
+            var sort_link = document.createElement("a");
+            sort_link.setAttribute("id", labels[i]);
+            sort_link.className = "caret";
+            sort_link.href = "#";
+            sort_link.innerHTML = symbol;
+            list_header_cell.appendChild(sort_link);
+
+            sort_link.addEventListener('click', function(e) {
+              e.preventDefault();
+              callback(this.id);
+            }, false);
+          }
+          createSortLink("&#x25B2;", sortAsc);
+          createSortLink("&#x25BC;", sortDesc);
           list_header.appendChild(list_header_cell);
         }
       }
@@ -427,7 +542,7 @@ FnordMetric.views.MetricList = function() {
         var list_item_row = document.createElement("tr");
 
         var i = 0;
-        var list_elems = ["key", "labels", "last_insert", "total_bytes"];
+        var list_elems = ["key", "labels", "insert", "total_bytes"];
 
         var convertTimestamp = function() {
           if (data["last_insert"] == 0 || 
@@ -444,19 +559,19 @@ FnordMetric.views.MetricList = function() {
               (now - timestamp) / 1000);
             if (offset < 60) {
               var label = (offset == 1)? " second ago" : " seconds ago";
-              data["last_insert"]  = offset + label;
+              data["insert"]  = offset + label;
             } else if (offset < 3600) {
               var time = Math.floor(offset / 60);
               var label = (time == 1)? " minute ago" : " minutes ago";
-              data["last_insert"]  = time + label;
+              data["insert"]  = time + label;
             } else if (offset < 86400) {
               var time =  Math.floor(offset / 3600);
               var label = (time == 1)? " hour ago" : " hours ago";
-              data["last_insert"]  = time + label;
+              data["insert"]  = time + label;
             } else {
               var time = Math.floor(offset / 86400);
               var label = (time == 1)? " day ago" : " days ago";
-              data["last_insert"]  = time + label;
+              data["insert"]  = time + label;
             }
 
           }
@@ -484,7 +599,7 @@ FnordMetric.views.MetricList = function() {
               return seconds;
             }
 
-            data["last_insert"] += 
+            data["insert"] += 
               " - " + getHumanMonth() +
               " " + date.getDate() +
               " " + date.getFullYear() +
@@ -539,8 +654,8 @@ FnordMetric.views.MetricList = function() {
       }
 
       var renderTable = function(data) {
+        destroyTable();
         if (data.length == 0) {
-          destroyTable();
           no_result_text = renderNoResult();
           return;
         }
