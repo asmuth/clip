@@ -183,7 +183,7 @@ body {
 .pagination_navbar.metrics {
   width: 80%;
   margin: auto;
-  margin-top: 90px;
+  margin-top: 5px;
 }
 
 .result_pane table.result_table {
@@ -219,6 +219,81 @@ body {
   text-align: center;
 }
 
+.metrics.search_bar {
+  width: 80%;
+  margin: auto;
+  margin-top: 90px;
+}
+
+.metrics.search_bar input {
+  width: 200px;
+  height: 23px;
+  float:left;
+  padding: 2px;
+  font-size: 14px;
+}
+
+.metrics.search_bar .fancy_button {
+  border-radius: 0px;
+  padding: 0 10px;
+  float:left;
+  height: 30px;
+  line-height: 30px;
+}
+
+.metrics.search_bar .clear_button {
+  float: left;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  text-align:center;
+  text-decoration: none;
+  color: #444;
+}
+
+.metrics.big_text {
+  width: 80%;
+  margin: auto;
+  padding-top: 100px;
+  font-size: 20px;
+  text-align:center
+}
+
+ul.dropdown {
+  position: absolute;
+  margin-top: 32px;
+  width: 208px;
+  z-index: 999;
+  padding-left: 0px;
+}
+
+ul.dropdown li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  list-style: none;
+  list-style-type:none;
+  margin:0;
+  border-bottom: 1px solid #ddd;
+}
+
+ul.dropdown li a {
+  line-height:30px;
+  display: block;
+  padding: 0 4px;
+  text-decoration: none;
+  color: #444;
+}
+
+ul.dropdown li.hover {
+  background-color: #d7e4f2;
+}
+
+ul.dropdown li:hover {
+  background-color: #d7e4f2;
+}
+
+
 table.metrics_list_container {
   width: 80%;
   margin: auto;
@@ -244,6 +319,12 @@ tr.metrics_list_header th {
   font-weight: 500;
 }
 
+tr.metrics_list_header th .caret {
+  text-decoration: none;
+  color: #888;
+  font-size: 10px;
+}
+
 table.metrics_list_container tr:hover td {
   background-color: #d7e4f2;
   cursor: pointer;
@@ -265,6 +346,22 @@ table.metrics_list_container td {
   font-style: italic;
   margin-top: 5px;
   margin-left: 10px;
+}
+
+.popup {
+  position: absolute;
+  height: 40%;
+  width: 40%;
+  z-index: 2000;
+  border: 1px solid #ddd;
+  left: 30%;
+  background: #fff;
+}
+
+.popup a {
+  float: left;
+  color: #444;
+  text-decoration: none;
 }
 
 /* BASICS */
