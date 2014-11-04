@@ -21,7 +21,6 @@
  *
  * Metric list view:
  *  - write meaningful error messages
- *  - stretch: make table sortable by column
  *
  *  - fix menuitems
  *  - fix resize tooltip, vertical split
@@ -316,69 +315,31 @@ FnordMetric.views.MetricList = function() {
         initSearch();
       }
 
-      var sortAsc = function(id) {
-        var sorted_data = metrics_data;
-        switch (id) {
-          case "Key":
-            sorted_data.sort(function(a, b) {
-              var keyA = a.key.toLowerCase();
-              var keyB = b.key.toLowerCase();
-              if (keyA < keyB) {
-                return -1;
-              }
-              if (keyA > keyB) {
-                return 1;
-              }
-              return 0;
-            });
-            break;
-          case "Labels":
-            console.log("sort by labels");
-            break;
-          case "Last Insert":
-            sorted_data.sort(function(a, b) {
-              if (a.last_insert < b.last_insert) {
-                return -1;
-              }
-              if (a.last_insert > b.last_insert) {
-                return 1;
-              }
-              return 0;
-            });
-            break;
-          case "Total stored bytes":
-            sorted_data.sort(function(a, b) {
-              if (a.total_bytes < b.total_bytes) {
-                return -1;
-              }
-              if (a.total_bytes > b.total_bytes) {
-                return 1;
-              }
-              return 0;
-            });
-
-            console.log("sort by stored bytes");
-            break;
-          default:
-            break;
+      var compare = function(a, b) {
+        if (a < b) {
+          return -1;
         }
-        renderTable(sorted_data);
+        if (a > b) {
+          return 1;
+        }
+        return 0;
       }
 
-      var sortDesc = function(id) {
+
+      var sortColumns = function(id, order) {
         var sorted_data = metrics_data;
         switch (id) {
           case "Key":
             sorted_data.sort(function(a, b) {
-              var keyA = a.key.toLowerCase();
-              var keyB = b.key.toLowerCase();
-              if (keyA > keyB) {
-                return -1;
+              if (order == "asc") {
+                return (compare(
+                  a.key.toLowerCase(), 
+                  b.key.toLowerCase()));
+              } else {
+                 return (compare(
+                  b.key.toLowerCase(), 
+                  a.key.toLowerCase()));
               }
-              if (keyA < keyB) {
-                return 1;
-              }
-              return 0;
             });
             break;
           case "Labels":
@@ -386,25 +347,20 @@ FnordMetric.views.MetricList = function() {
             break;
           case "Last Insert":
             sorted_data.sort(function(a, b) {
-              if (a.last_insert > b.last_insert) {
-                return -1;
+              if (order == "asc") {
+                return (compare(a.last_insert, b.last_insert));
+              } else {
+                return (compare(b.last_insert, a.last_insert));
               }
-              if (a.last_insert < b.last_insert) {
-                return 1;
-              }
-              return 0;
             });
-            break;
             break;
           case "Total stored bytes":
             sorted_data.sort(function(a, b) {
-              if (a.total_bytes > b.total_bytes) {
-                return -1;
+              if (order == "asc") {
+                return (compare(a.total_bytes, b.total_bytes));
+              } else {
+                return (compare(b.total_bytes, a.total_bytes));
               }
-              if (a.total_bytes < b.total_bytes) {
-                return 1;
-              }
-              return 0;
             });
             break;
           default:
@@ -417,7 +373,7 @@ FnordMetric.views.MetricList = function() {
         for (var i = 0; i < labels.length; i++) {
           var list_header_cell = document.createElement("th");
           list_header_cell.innerHTML = labels[i];
-          var createSortLink = function(symbol, callback) {
+          var createSortLink = function(symbol, order) {
             var sort_link = document.createElement("a");
             sort_link.setAttribute("id", labels[i]);
             sort_link.className = "caret";
@@ -427,11 +383,11 @@ FnordMetric.views.MetricList = function() {
 
             sort_link.addEventListener('click', function(e) {
               e.preventDefault();
-              callback(this.id);
+              sortColumns(this.id, order);
             }, false);
           }
-          createSortLink("&#x25B2;", sortAsc);
-          createSortLink("&#x25BC;", sortDesc);
+          createSortLink("&#x25B2;", "asc");
+          createSortLink("&#x25BC;", "desc");
           list_header.appendChild(list_header_cell);
         }
       }
