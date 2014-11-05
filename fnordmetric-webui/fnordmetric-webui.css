@@ -219,13 +219,13 @@ body {
   text-align: center;
 }
 
-.metrics.search_bar {
-  width: 80%;
-  margin: auto;
-  margin-top: 90px;
+.search_bar {
+  float:left;
+  margin-left: 20px;
+  margin-top: 9px;
 }
 
-.metrics.search_bar input {
+.search_bar input {
   width: 200px;
   height: 23px;
   float:left;
@@ -233,7 +233,7 @@ body {
   font-size: 14px;
 }
 
-.metrics.search_bar .fancy_button {
+.search_bar .fancy_button {
   border-radius: 0px;
   padding: 0 10px;
   float:left;
@@ -241,7 +241,7 @@ body {
   line-height: 30px;
 }
 
-.metrics.search_bar .clear_button {
+.search_bar .clear_button {
   float: left;
   height: 30px;
   width: 30px;

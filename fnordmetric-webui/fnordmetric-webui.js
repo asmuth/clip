@@ -99,14 +99,7 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
 
 
 FnordMetric.views.MetricList = function() {
-  function getKeys(data) {
-    var keys = [];
-    for (var i = 0; i < data.length; i++) {
-      keys.push(data[i]["key"]);
-    }
-    return keys;
-  }
-
+  
   function compare(a, b) {
     if (a < b) {
       return -1;
@@ -291,139 +284,7 @@ FnordMetric.views.MetricList = function() {
       no_result_text = undefined;
     }
 
-    var createSearchBar = function() {
-      var search_bar = document.createElement("div");
-      search_bar.className = "metrics search_bar";
-      var input_field = document.createElement("input");
-
-      var search_button = document.createElement("div");
-      search_button.className = "fancy_button";
-
-      var button_link = FnordMetric.createButton(
-        "#", undefined, "Search");
-      search_button.appendChild(button_link);
-      search_bar.appendChild(input_field);
-      search_bar.appendChild(search_button);
-
-      var clear_button = FnordMetric.createButton(
-        "#", "clear_button", "X");
-      search_bar.appendChild(clear_button);
-      clear_button.addEventListener('click', function(e) {
-        e.preventDefault();
-        clearSearch();
-      }, false);
-
-      elem.appendChild(search_bar);
-
-      var dropdown = document.createElement("ul");
-      dropdown.className = "dropdown";
-
-      var down = 0;
-      var dropdownKeyNav = function() {
-        var dropdown_items = dropdown.childNodes;
-        var i = down -1;
-        if (i < dropdown_items.length) {
-          if (i > 0) {
-            dropdown_items[i - 1].className = "";
-          }
-          if (i+1 < dropdown_items.length) {
-            dropdown_items[i+1].className = "";
-          }
-          var current_value = dropdown_items[i].firstChild.innerHTML;
-          dropdown_items[i].className = "hover";
-          input_field.addEventListener('keydown', function(e) {
-            switch (e.keyCode) {
-              case 13:
-                e.preventDefault();
-                input_field.value = current_value;
-                break;
-              default:
-                break;
-            }
-          }, false);
-        }
-      }
-
-      var initSearch = function() {
-        search_button.addEventListener('click', function(e) {
-          e.preventDefault();
-          destroyDropdown();
-          var matching_data = searchRows(input_field.value);
-        }, false);
-
-        input_field.addEventListener('focus', function(e) {
-          this.value = "";
-        }, false);
-
-        input_field.addEventListener('input', function(e) {
-          autocomplete(this.value)
-        }, false);
-
-        input_field.addEventListener('keydown', function(e) {
-          switch (e.keyCode) {
-            case 13:
-              e.preventDefault();
-              destroyDropdown();
-              searchRows(input_field.value);
-              break;
-            case 40:
-              down++;
-              dropdownKeyNav();
-              break;
-            case 38:
-              down--;
-              dropdownKeyNav();
-              break;
-            default:
-              break;
-          }
-        }, false);
-      }
-
-      var clearSearch = function() {
-        input_field.value = "";
-        destroyRows();
-        destroyListPagination();
-        renderTable(metrics_data);
-      }
-
-      var keys = getKeys(metrics_data);
-
-      var destroyDropdown = function() {
-        down = 0;
-        while (dropdown.firstChild) {
-          dropdown.removeChild(dropdown.firstChild);
-        }
-      }
-
-      var autocomplete = function(input) {
-        destroyDropdown();
-        search_bar.appendChild(dropdown);
-
-        keys.map(function(key) {
-          if (key.indexOf(input) > - 1) {
-            var dropdown_item = document.createElement("li");
-            var dropdown_link = FnordMetric.createButton(
-              "#", undefined, key);
-            dropdown_item.appendChild(dropdown_link);
-            dropdown.appendChild(dropdown_item);
-
-            dropdown_link.addEventListener('click', function(e) {
-              e.preventDefault();
-              input_field.value = this.innerHTML;
-              destroyDropdown();
-            }, false);
-          }
-        });
-          //FIXME viewport ends after last table row
-        elem.addEventListener('click', function(e) {
-          destroyDropdown();
-        }, false);
-      }
-      initSearch();
-    }
-
-    var createListHeaderCells = function(labels) {
+   var createListHeaderCells = function(labels) {
       labels.map(function(label) {
         var list_header_cell = document.createElement("th");
         list_header_cell.innerHTML = label;
@@ -1272,12 +1133,157 @@ FnordMetric.WebUI = function() {
     "query_playground": FnordMetric.views.QueryPlayground
   };
 
+  function getKeys(data) {
+    var keys = [];
+    for (var i = 0; i < data.length; i++) {
+      keys.push(data[i]["key"]);
+    }
+    return keys;
+  }
+
+  var createSearchBar = function() {
+    var search_bar = document.createElement("div");
+    search_bar.className = "search_bar";
+    var input_field = document.createElement("input");
+
+    var search_button = document.createElement("div");
+    search_button.className = "fancy_button";
+
+    var button_link = FnordMetric.createButton(
+      "#", undefined, "Search");
+    search_button.appendChild(button_link);
+    search_bar.appendChild(input_field);
+    search_bar.appendChild(search_button);
+
+    var clear_button = FnordMetric.createButton(
+      "#", "clear_button", "X");
+    search_bar.appendChild(clear_button);
+    clear_button.addEventListener('click', function(e) {
+      e.preventDefault();
+      clearSearch();
+    }, false);
+
+    headbar.appendChild(search_bar);
+
+  }
+
+ /*   var dropdown = document.createElement("ul");
+    dropdown.className = "dropdown";
+
+    var down = 0;
+    var dropdownKeyNav = function() {
+      var dropdown_items = dropdown.childNodes;
+      var i = down -1;
+      if (i < dropdown_items.length) {
+        if (i > 0) {
+          dropdown_items[i - 1].className = "";
+        }
+        if (i+1 < dropdown_items.length) {
+          dropdown_items[i+1].className = "";
+        }
+        var current_value = dropdown_items[i].firstChild.innerHTML;
+        dropdown_items[i].className = "hover";
+        input_field.addEventListener('keydown', function(e) {
+          switch (e.keyCode) {
+            case 13:
+              e.preventDefault();
+              input_field.value = current_value;
+              break;
+            default:
+              break;
+          }
+        }, false);
+      }
+    }
+
+    var initSearch = function() {
+      search_button.addEventListener('click', function(e) {
+        e.preventDefault();
+        destroyDropdown();
+        var matching_data = searchRows(input_field.value);
+      }, false);
+
+      input_field.addEventListener('focus', function(e) {
+        this.value = "";
+      }, false);
+
+      input_field.addEventListener('input', function(e) {
+        autocomplete(this.value)
+      }, false);
+
+      input_field.addEventListener('keydown', function(e) {
+        switch (e.keyCode) {
+          case 13:
+            e.preventDefault();
+            destroyDropdown();
+            searchRows(input_field.value);
+            break;
+          case 40:
+            down++;
+            dropdownKeyNav();
+            break;
+          case 38:
+            down--;
+            dropdownKeyNav();
+            break;
+          default:
+            break;
+        }
+      }, false);
+    }
+
+    var clearSearch = function() {
+      input_field.value = "";
+      destroyRows();
+      destroyListPagination();
+      renderTable(metrics_data);
+    }
+
+    var keys = getKeys(metrics_data);
+
+    var destroyDropdown = function() {
+      down = 0;
+      while (dropdown.firstChild) {
+        dropdown.removeChild(dropdown.firstChild);
+      }
+    }
+
+    var autocomplete = function(input) {
+      destroyDropdown();
+      search_bar.appendChild(dropdown);
+
+      keys.map(function(key) {
+        if (key.indexOf(input) > - 1) {
+          var dropdown_item = document.createElement("li");
+          var dropdown_link = FnordMetric.createButton(
+            "#", undefined, key);
+          dropdown_item.appendChild(dropdown_link);
+          dropdown.appendChild(dropdown_item);
+
+          dropdown_link.addEventListener('click', function(e) {
+            e.preventDefault();
+            input_field.value = this.innerHTML;
+            destroyDropdown();
+          }, false);
+        }
+      });
+          //FIXME viewport ends after last table row
+      elem.addEventListener('click', function(e) {
+        destroyDropdown();
+      }, false);
+    }
+    initSearch();
+  } */
+
+
+
   var init = function() {
     document.body.appendChild(headbar);
     document.body.appendChild(viewport);
 
     addMenuItem("Query Playground", "query_playground");
     addMenuItem("Metrics", "metric_list");
+    createSearchBar();
 
     window.onpopstate = function(e) {
       e.preventDefault();
