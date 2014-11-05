@@ -99,7 +99,6 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
 
 
 FnordMetric.views.MetricList = function() {
-  
   function compare(a, b) {
     if (a < b) {
       return -1;
@@ -248,11 +247,13 @@ FnordMetric.views.MetricList = function() {
     elem.appendChild(msg_field);
   }
 
-  var renderResult = function(metrics_data, elem) {
+  var renderResult = function(metrics_data, elem, isSearchResult, search_item) {
     var rows_per_side = 10;
     var pag_navbar;
     var list_container;
     var no_result_text = undefined;
+    var end;
+    console.log(search_item);
 
 
     function searchRows(search_key) {
@@ -498,23 +499,29 @@ FnordMetric.views.MetricList = function() {
       list_container = undefined;
     }
 
-    createSearchBar();
-
-    if (metrics_data.length > rows_per_side) {
-      pag_navbar = renderListPagination(metrics_data);
+    var renderView = function() {
+      if (isSearchResult) {
+        searchRows(search_item);
+      } else {
+        if (metrics_data.length > rows_per_side) {
+            pag_navbar = renderListPagination(metrics_data);
+        }
+        end = Math.min(metrics_data.length, rows_per_side);
+        initTable();
+        for (var i = 0; i < end;  i++) {
+          createListItem(metrics_data[i], true);
+        }
+      }
     }
 
-    initTable();
+    renderView();
 
-    var end = Math.min(metrics_data.length, rows_per_side);
-    for (var i = 0; i < end;  i++) {
-      createListItem(metrics_data[i], true);
-    }
+
 
   }
-
-  var render = function(elem) {
-    var metrics_data;
+  var metrics_data;
+  var render = function(elem, isSearchResult, search_item) {
+    if (isSearchResult !== true) {isSearchResult = false;}
     FnordMetric.Loading().render();
     FnordMetric.httpGet("/metrics", function(r) {
       FnordMetric.Loading().destroy();
@@ -525,7 +532,7 @@ FnordMetric.views.MetricList = function() {
           renderEmptyState(elem);
           return;
         } else {
-          renderResult(metrics_data, elem);
+          renderResult(metrics_data, elem, isSearchResult, search_item);
         }
       } else {
         renderError(r.status, elem);
@@ -540,9 +547,25 @@ FnordMetric.views.MetricList = function() {
     }
   }
 
+  function getMetricData() {
+    if (metrics_data !== undefined) {
+      return metrics_data;
+    }
+    FnordMetric.httpGet("/metrics", function(r) {
+      if (r.status == 200) {
+        metrics_data = JSON.parse(r.response);
+        metrics_data = metrics_data.metrics;
+        console.log(metrics_data);
+        return metrics_data;
+      }
+    });
+  }
+
   return {
     "render": render,
-    "destroy": destroy
+    "destroy": destroy,
+    "getMetricData" : getMetricData,
+    "name" : "metric_list"
   };
 };
 
@@ -1113,7 +1136,8 @@ FnordMetric.views.QueryPlayground = function() {
 
   return {
     "render": render,
-    "destroy": destroy
+    "destroy": destroy,
+    "name": "query_playground"
   };
 }
 
@@ -1133,15 +1157,7 @@ FnordMetric.WebUI = function() {
     "query_playground": FnordMetric.views.QueryPlayground
   };
 
-  function getKeys(data) {
-    var keys = [];
-    for (var i = 0; i < data.length; i++) {
-      keys.push(data[i]["key"]);
-    }
-    return keys;
-  }
-
-  var createSearchBar = function() {
+   var createSearchBar = function() {
     var search_bar = document.createElement("div");
     search_bar.className = "search_bar";
     var input_field = document.createElement("input");
@@ -1158,123 +1174,12 @@ FnordMetric.WebUI = function() {
     var clear_button = FnordMetric.createButton(
       "#", "clear_button", "X");
     search_bar.appendChild(clear_button);
-    clear_button.addEventListener('click', function(e) {
-      e.preventDefault();
-      clearSearch();
-    }, false);
-
     headbar.appendChild(search_bar);
 
+    input_field.addEventListener('focus', search(
+      search_bar, input_field, search_button, clear_button),  false);
+
   }
-
- /*   var dropdown = document.createElement("ul");
-    dropdown.className = "dropdown";
-
-    var down = 0;
-    var dropdownKeyNav = function() {
-      var dropdown_items = dropdown.childNodes;
-      var i = down -1;
-      if (i < dropdown_items.length) {
-        if (i > 0) {
-          dropdown_items[i - 1].className = "";
-        }
-        if (i+1 < dropdown_items.length) {
-          dropdown_items[i+1].className = "";
-        }
-        var current_value = dropdown_items[i].firstChild.innerHTML;
-        dropdown_items[i].className = "hover";
-        input_field.addEventListener('keydown', function(e) {
-          switch (e.keyCode) {
-            case 13:
-              e.preventDefault();
-              input_field.value = current_value;
-              break;
-            default:
-              break;
-          }
-        }, false);
-      }
-    }
-
-    var initSearch = function() {
-      search_button.addEventListener('click', function(e) {
-        e.preventDefault();
-        destroyDropdown();
-        var matching_data = searchRows(input_field.value);
-      }, false);
-
-      input_field.addEventListener('focus', function(e) {
-        this.value = "";
-      }, false);
-
-      input_field.addEventListener('input', function(e) {
-        autocomplete(this.value)
-      }, false);
-
-      input_field.addEventListener('keydown', function(e) {
-        switch (e.keyCode) {
-          case 13:
-            e.preventDefault();
-            destroyDropdown();
-            searchRows(input_field.value);
-            break;
-          case 40:
-            down++;
-            dropdownKeyNav();
-            break;
-          case 38:
-            down--;
-            dropdownKeyNav();
-            break;
-          default:
-            break;
-        }
-      }, false);
-    }
-
-    var clearSearch = function() {
-      input_field.value = "";
-      destroyRows();
-      destroyListPagination();
-      renderTable(metrics_data);
-    }
-
-    var keys = getKeys(metrics_data);
-
-    var destroyDropdown = function() {
-      down = 0;
-      while (dropdown.firstChild) {
-        dropdown.removeChild(dropdown.firstChild);
-      }
-    }
-
-    var autocomplete = function(input) {
-      destroyDropdown();
-      search_bar.appendChild(dropdown);
-
-      keys.map(function(key) {
-        if (key.indexOf(input) > - 1) {
-          var dropdown_item = document.createElement("li");
-          var dropdown_link = FnordMetric.createButton(
-            "#", undefined, key);
-          dropdown_item.appendChild(dropdown_link);
-          dropdown.appendChild(dropdown_item);
-
-          dropdown_link.addEventListener('click', function(e) {
-            e.preventDefault();
-            input_field.value = this.innerHTML;
-            destroyDropdown();
-          }, false);
-        }
-      });
-          //FIXME viewport ends after last table row
-      elem.addEventListener('click', function(e) {
-        destroyDropdown();
-      }, false);
-    }
-    initSearch();
-  } */
-
 
 
   var init = function() {
@@ -1313,7 +1218,6 @@ FnordMetric.WebUI = function() {
     });
   }
 
- 
 
   var openUrl = function(url, push_state) {
     var query = null;
@@ -1360,6 +1264,158 @@ FnordMetric.WebUI = function() {
     current_view = view;
     view.render(viewport, args);
   };
+
+  var renderSearchedView = function(search_item) {
+    console.log(search_item);
+    if (current_view.name == "query_playground") {
+      current_view.destroy(viewport);
+    }
+    current_view = FnordMetric.views.MetricList();
+    current_view.render(viewport, true, search_item);
+  }
+
+  var search = function(search_bar, input_field, search_button, clear_button) {
+  //var metrics_data = FnordMetric.views.MetricList().getMetricData();
+    var metrics_data;
+    function getMetricData() {
+      if (metrics_data !== undefined) {
+        return;
+      }
+      FnordMetric.httpGet("/metrics", function(r) {
+        if (r.status == 200) {
+          metrics_data = JSON.parse(r.response);
+          metrics_data = metrics_data.metrics;
+          console.log(metrics_data);
+          initSearch();
+        }
+      });
+    }
+    getMetricData();
+
+    function getKeys(data) {
+      var keys = [];
+      for (var i = 0; i < data.length; i++) {
+        keys.push(data[i]["key"]);
+      }
+      return keys;
+    }
+
+    clear_button.addEventListener('click', function(e) {
+      e.preventDefault();
+      clearSearch();
+    }, false);
+
+    var dropdown = document.createElement("ul");
+    dropdown.className = "dropdown";
+
+    var down = 0;
+    var dropdownKeyNav = function() {
+      var dropdown_items = dropdown.childNodes;
+      var i = down -1;
+      if (i < dropdown_items.length) {
+        if (i > 0) {
+          dropdown_items[i - 1].className = "";
+        }
+        if (i+1 < dropdown_items.length) {
+          dropdown_items[i+1].className = "";
+        }
+        var current_value = dropdown_items[i].firstChild.innerHTML;
+        dropdown_items[i].className = "hover";
+        input_field.addEventListener('keydown', function(e) {
+          switch (e.keyCode) {
+            case 13:
+              e.preventDefault();
+              input_field.value = current_value;
+              break;
+            default:
+              break;
+          }
+        }, false);
+      }
+    }
+
+    var initSearch = function() {
+      search_button.addEventListener('click', function(e) {
+        e.preventDefault();
+        destroyDropdown();
+      //var matching_data = searchRows(input_field.value);
+        //FnordMetric.views.MetricList().render(elem, true, input_field.value);
+        renderSearchedView(input_field.value);
+      }, false);
+
+      input_field.addEventListener('focus', function(e) {
+        this.value = "";
+      }, false);
+
+      input_field.addEventListener('input', function(e) {
+        autocomplete(this.value)
+      }, false);
+
+      input_field.addEventListener('keydown', function(e) {
+        switch (e.keyCode) {
+          case 13:
+            e.preventDefault();
+            destroyDropdown();
+            //searchRows(input_field.value);
+            break;
+          case 40:
+            down++;
+            dropdownKeyNav();
+            break;
+          case 38:
+            down--;
+            dropdownKeyNav();
+            break;
+          default:
+            break;
+        }
+      }, false);
+    
+
+
+    }
+
+    var clearSearch = function() {
+      input_field.value = "";
+    //destroyRows();
+      //destroyListPagination();
+      //renderTable(metrics_data);
+    }
+
+      var destroyDropdown = function() {
+      down = 0;
+      while (dropdown.firstChild) {
+        dropdown.removeChild(dropdown.firstChild);
+      }
+    }
+
+    var autocomplete = function(input) {
+      destroyDropdown();
+      search_bar.appendChild(dropdown);
+      var keys = getKeys(metrics_data);
+
+      keys.map(function(key) {
+        if (key.indexOf(input) > - 1) {
+          var dropdown_item = document.createElement("li");
+          var dropdown_link = FnordMetric.createButton(
+            "#", undefined, key);
+          dropdown_item.appendChild(dropdown_link);
+          dropdown.appendChild(dropdown_item);
+
+          dropdown_link.addEventListener('click', function(e) {
+            e.preventDefault();
+            input_field.value = this.innerHTML;
+            destroyDropdown();
+          }, false);
+        }
+      });
+
+    }
+
+
+  }
+
+
 
 
   init();
