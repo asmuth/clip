@@ -99,6 +99,108 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
   return button;
 }
 
+FnordMetric.DropdownAutocomplete = function(parentNode, dropdown, input_field, keys, search_button) {
+  console.log("fnordmetrid dropdown autocomplete");
+  var down = 0;
+  var dropdownKeyNav = function() {
+    var dropdown_items = dropdown.childNodes;
+    var i = down -1;
+    if (i < dropdown_items.length) {
+      if (i > 0) {
+        dropdown_items[i - 1].className = "";
+      }
+      if (i+1 < dropdown_items.length) {
+        dropdown_items[i+1].className = "";
+      }
+      var current_value = dropdown_items[i].firstChild.innerHTML;
+      dropdown_items[i].className = "hover";
+      input_field.addEventListener('keydown', function(e) {
+        switch (e.keyCode) {
+          case 13:
+            e.preventDefault();
+            input_field.value = current_value;
+            break;
+          default:
+            break;
+        }
+      }, false);
+    }
+  }
+
+  var destroyDropdown = function() {
+    down = 0;
+    while (dropdown.firstChild) {
+      dropdown.removeChild(dropdown.firstChild);
+    }
+  }
+
+
+
+  var autocomplete = function(input) {
+    destroyDropdown();
+    parentNode.appendChild(dropdown);
+
+    keys.map(function(key) {
+      if (key.indexOf(input) > - 1) {
+        var dropdown_item = document.createElement("li");
+        var dropdown_link = FnordMetric.createButton(
+          "#", undefined, key);
+        dropdown_item.appendChild(dropdown_link);
+        dropdown.appendChild(dropdown_item);
+
+        dropdown_link.addEventListener('click', function(e) {
+          e.preventDefault();
+          input_field.value = this.innerHTML;
+          destroyDropdown();
+        }, false);
+      }
+    });
+
+  }
+
+  var init = function() {
+    console.log("init");
+    if (search_button !== undefined ) {
+      search_button.addEventListener('click', function(e) {
+        e.preventDefault();
+        destroyDropdown();
+      //var matching_data = searchRows(input_field.value);
+        //FnordMetric.views.MetricList().render(elem, true, input_field.value);
+        renderSearchedView(input_field.value);
+      }, false);
+    }
+
+    input_field.addEventListener('focus', function(e) {
+      this.value = "";
+    }, false);
+
+    input_field.addEventListener('input', function(e) {
+        autocomplete(this.value)
+    }, false);
+
+    input_field.addEventListener('keydown', function(e) {
+      switch (e.keyCode) {
+        case 13:
+          e.preventDefault();
+          destroyDropdown();
+            //searchRows(input_field.value);
+          break;
+        case 40:
+          down++;
+          dropdownKeyNav();
+          break;
+        case 38:
+          down--;
+          dropdownKeyNav();
+          break;
+        default:
+          break;
+      }
+    }, false);
+  }
+  init();
+}
+
 
 FnordMetric.views.MetricList = function() {
   function compare(a, b) {
@@ -773,7 +875,6 @@ FnordMetric.views.QueryPlayground = function() {
       function destroyCM() {
         cm = undefined;
         var cm_pane = query_editor.querySelector(".CodeMirror");
-        console.log(cm_pane);
         if (cm_pane === null) {return;}
         while (cm_pane.firstChild) {
           cm_pane.removeChild(cm_pane.firstChild);
@@ -782,8 +883,6 @@ FnordMetric.views.QueryPlayground = function() {
       }
 
       function initPane() {
-        console.log(horizontal);
-        console.log(editor_height);
         if (horizontal) {
           query_editor.style.height = (height - 29) + "px";
         } else{
@@ -793,32 +892,61 @@ FnordMetric.views.QueryPlayground = function() {
       }
 
       function createVisualElements() {
-        var metric_field = document.createElement("div");
-        metric_field.className = "visual_editor field";
+        function renderFieldTitle(title_text, parentNode) {
+          var title = document.createElement("div");
+          title.className = "field_title";
+          title.innerHTML = title_text;
+          parentNode.appendChild(title);
+        }
 
-        var title = document.createElement("div");
-        title.className = "field_title";
-        title.innerHTML = "Metric";
+        function createField(title_text) {
+          var field = document.createElement("div");
+          field.className = "visual_editor field";
+          renderFieldTitle(title_text, field);
+          return field;
+        }
 
-        var metric_dropdown = document.createElement("select");
+        function createDropdown(values, key) {
+          var dropdown = document.createElement("select");
+          values.map(function(value) {
+            var option = document.createElement("option");
+            option.value = key === true? value.key : value;
+            option.innerHTML = key === true? value.key : value;
+            dropdown.appendChild(option);
+          });
+          return dropdown;
+        }
+
+        var metric_field = createField("Metric");
+        var metric = document.createElement("input");
+        var metric_list = document.createElement("ul");
+        metric_list.className = "dropdown";
+        var keys = [];
         FnordMetric.MetricData.map(function(metric) {
-          console.log(metric.key);
-          var option = document.createElement("option");
-          option.value = metric.key;
-          option.innerHTML = metric.key;
-          metric_dropdown.appendChild(option);
+          keys.push(metric.key);
         });
+        console.log(keys);
+        metric_field.appendChild(metric);
+        metric_field.appendChild(metric_list);
 
-        metric_field.appendChild(title);
-        metric_field.appendChild(metric_dropdown);
+        FnordMetric.DropdownAutocomplete(
+          metric_field, metric_list, metric, keys, undefined);
+
+        var draw_field = createField("DRAW");
+        var draw_dropdown = createDropdown(["LINECHART", 
+          "POINTCHART","BARCHART", "AREACHART"], false);
+        draw_field.appendChild(draw_dropdown);
+
+
         query_editor.appendChild(metric_field);
+        query_editor.appendChild(draw_field);
+
 
       }
 
       destroyCM();
       initPane();
       createVisualElements();
-      console.log(FnordMetric.MetricData);
       //updateLayout(false, undefined);
     }
 
