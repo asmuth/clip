@@ -140,6 +140,11 @@ body {
   padding: 0 10px;
   border-right: 1px solid #ddd;
   color: #444;
+  background-color: #fff;
+}
+
+.editor_pane .editor_navbar a.active h3 {
+  background-color: #ddd;
 }
 
 .result_pane .result_navbar {
