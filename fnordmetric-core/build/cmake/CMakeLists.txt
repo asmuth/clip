@@ -6,20 +6,9 @@
 # copy of the GNU General Public License along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
+include(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
-
-include(FindPkgConfig)
-
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/stage/src/libxzero/include)
-  add_subdirectory(stage/src/libxzero)
-  set(XZERO_LIBRARIES xzero)
-  set(XZERO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/stage/src/libxzero/include)
-else()
-  pkg_check_modules(XZERO REQUIRED "libxzero")
-  link_directories(${XZERO_LIBRARY_DIRS})
-endif()
-link_libraries(${XZERO_LIBRARIES})
 
 set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/cli.cc
@@ -136,23 +125,37 @@ set(FNORDMETRIC_SOURCES
 
 include_directories(stage/src)
 include_directories(stage/assets)
-include_directories(${XZERO_INCLUDE_DIRS})
 
-IF(APPLE)
+if(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
-ELSE()
+else()
   set(CMAKE_CXX_FLAGS "-std=c++0x")
-ENDIF()
+endif()
 
 # libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
-add_library(fnord-static ${FNORDMETRIC_SOURCES})
+add_library(fnord-static STATIC ${FNORDMETRIC_SOURCES})
 
 find_package(MySQL)
-if (MYSQL_FOUND)
+if(MYSQL_FOUND)
   include_directories(${MYSQL_INCLUDE_DIRS})
   target_link_libraries(fnord-static mysqlclient)
-endif(MYSQL_FOUND)
+endif()
+
+pkg_check_modules(XZERO "libxzero")
+SET(XZERO_BUNDLED libxzero-0.11.0_pre20141105.tgz)
+if(XZERO_FOUND)
+  link_directories(${XZERO_LIBRARY_DIRS})
+  include_directories(${XZERO_INCLUDE_DIRS})
+else()
+  set(XZERO_STAGE_DIR ${CMAKE_SOURCE_DIR}/stage/libxzero)
+  execute_process(COMMAND mkdir -p ${XZERO_STAGE_DIR})
+  execute_process(COMMAND tar -xz -C ${XZERO_STAGE_DIR} -f ${CMAKE_SOURCE_DIR}/../../3rdparty/${XZERO_BUNDLED})
+  add_subdirectory(${XZERO_STAGE_DIR})
+  link_directories(${XZERO_STAGE_DIR})
+  include_directories(${XZERO_STAGE_DIR}/include)
+endif()
+target_link_libraries(fnord-static xzero)
 
 # fnordmetric
 add_executable(fnordmetric-cli stage/src/fnordmetric/cli.cc)
