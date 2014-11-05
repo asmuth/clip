@@ -1,4 +1,75 @@
 
+   POST /metrics
+
+      {
+        key: "/web/frontend/http_status_codes",
+        value: 12,
+        labels: {
+          status_code: 500,
+          hostname: "webfe1"
+        }
+      }
+
+
+  Statsd API:
+
+    /web/frontend/http_requests_total[hostname=webfe1]:2357
+    /web/frontend/http_status_codes[hostname=webfe1][status_code=200]:2345
+    /web/frontend/http_status_codes[hostname=webfe1][status_code=500]:12
+
+
+
+-- Select number of http error codes in the last hour
+SELECT http_status, count(http_status) from http_requests
+  WHERE time > -24hours
+  GROUP BY http_status;
+-- AGGREGATE_LOCKSTEP;
+
+-- Select 90th percentile latency in the last day
+SELECT percentile(latency, 90) from latency_metric WHERE time > -24hours;
+-- SCAN_LOCKSTEP
+
+-- SELECT error rate with two metrics and a 5 min window
+SELECT
+  time,
+  ((delta(succesful_requests.count) / delta(errors.count)) * 100) as error_rate,
+  FROM successful_requests, errors
+  WHERE time > -24hours
+  GROUP BY TIME_WINDOW(5 minutes);
+-- AGGREGATE_TIME_WINDOW
+
+-- SELECT top 10 slowest pages yesterday by 90th percentile latency
+SELECT
+  url, percentile(90, latency) as 90thpercentile_latency
+  FROM request_log
+  WHERE time > 24hours
+  GROUP BY url
+  ORDER BY 90thpercentile_latency DESC
+-- SELECT all pages yesterday with a 90th percentile latency > 1000ms
+SELECT
+  url, percentile(90, latency) as 90thpercentile_latency
+  FROM request_log
+  WHERE time > 24hours
+  GROUP BY url
+  HAVING 90thpercentile_latency > 1000;
+
+-- SELECT 90thpercentile page latency for three pages in 5 min windows
+SELECT
+  time, url, percentile(90, latency) as 90thpercentile_latency
+  FROM request_log
+  WHERE time > 24hours
+  WHERE url IN ("/mypage1", "/mypage2", "/mypage3")
+  GROUP BY TIME_WINDOW(5minutes), url;
+
+-- COUNT number of events per time period
+SELECT count(*) FROM metric GROUP BY TIME_WINDOW(5minutes);
+
+-- SELECT holtwinters forecast for a metric value
+SELECT real_value, holtwinters_forecast(real_value)
+  FROM metric
+  WHERE time > -24hours AND time < +24hours;
+
+
 
 
 ### More examples:

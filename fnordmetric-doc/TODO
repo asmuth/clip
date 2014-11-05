@@ -1,76 +1,28 @@
-[ metricdb doc ]
-
-  getting started
-    - installing
-    - running
-    - getting started 5 min howto
-
-  sending data
-    - semantics
-    - via json over http
-    - via statsd over tcp/udp
-
-  querying data
-    - query language
-    - web interface
-    - HTTP API
-
-  language bindings
-    - ruby/rails
-    - node js
-    - python
-
-  advanced topics
-    - retention policies
-    - streaming queries
-
-
-    POST /metrics
-
-      {
-        key: "/web/frontend/http_status_codes",
-        value: 12,
-        labels: {
-          status_code: 500,
-          hostname: "webfe1"
-        }
-      }
-
-
-  Statsd API:
-
-    /web/frontend/http_requests_total[hostname=webfe1]:2357
-    /web/frontend/http_status_codes[hostname=webfe1][status_code=200]:2345
-    /web/frontend/http_status_codes[hostname=webfe1][status_code=500]:12
-
 [ todo ]
-    - merge compaction
-    - scan samples with range / sstable binary search
+    - SQL: GROUP OVER TIMEWINDOW
+    - pluggable metric backends
     - sstable checksums + fsck + repair
-    - mmap cache for readonly files
+    - svg: escape series names, labels!
+    - merge compaction
+    - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
+    - round fn
+    - scan samples with range / sstable binary search
     - bug: chart with only same values -> strange rendering
     - bug: multiple draw statements dont produce multiple charts
     - bug: NAN is not a valid value in SVG
+    - bug: line chart with only negative values
+    - bug: 2d area chart with explicit y domain, min > 0
+
+[ feature q ]
+    - statsd interface
     - SQL: having
-    - SQL: join
+    - SQL: cross joins
     - SQL: subqueries
-    - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
     - mysql: re-serialize where condition
-    - round fn
-    - time based aggregations / windows
-    - pluggable metric backends
     - mysql backend
     - hbase backend
-    - ui: stacked area charts
+    - SQL: JOIN
     - ui: line/point styles
-    - ui: simple web interface (interactive query UI generates embed html snippets)
-    - svg: escape series names, labels!
-    - sql: lotsa overflows in expression exectution // outc val not respected
-    - ui: line chart with only negative values
-    - ui: known bug: 2d area chart with explicit y domain, min > 0
-    ----------
-    - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
-              holtwinters
     - impl inside/outside axis labels
     - impl rotated axis labels
     - series adapter: max interpolation gap
@@ -82,27 +34,10 @@
     - set option: number format (si, exp, etc)
     - chart type: histogram
     - chart type: heatmap
-    - refactor tokenizer // dynamically register tokens
-    - rename (axis|legend|grid)definition -> \1config
-    - sql: query plan optimizer. push limit/offset/order down into tablescan if
-           no complex nodes inbetween
-
-- backend: graphite/statsd
-- backend: legacy-fnordmetric
-
-[ doc ]
-     - faqs
-     - why svg rocks
-       - open it in inkscape
-       - scale up or down
-       - embed into web or native
-       - does not require javascript
-
-
----------  release 1 --------
-
-
-[ feature q ]
+    - ui: stacked area charts
+    - mmap cache for readonly files
+    - alerts
+    - events (annotations)
     - chart type: ganttchart
     - chart type: boxplot
     - chart type: error bars
@@ -110,64 +45,16 @@
     - sparklines
     - postgresql backend
     - smooth paths
-    - annotations / deploy lines
     - query cache
+    - holtwinters
     - dashboard edit ui: html source
     - dashboard edit ui: wysiwyg
-    - moving avg, etc
     - candlestick
-    - fnordetric collect --from-statsd 1234 --to 'mysql::'
+    - sql: query plan optimizer. push limit/offset/order down into tablescan if
+           no complex nodes inbetween
 
-
-
-
--- Select number of http error codes in the last hour
-SELECT http_status, count(http_status) from http_requests
-  WHERE time > -24hours
-  GROUP BY http_status;
--- AGGREGATE_LOCKSTEP;
-
--- Select 90th percentile latency in the last day
-SELECT percentile(latency, 90) from latency_metric WHERE time > -24hours;
--- SCAN_LOCKSTEP
-
--- SELECT error rate with two metrics and a 5 min window
-SELECT
-  time,
-  ((delta(succesful_requests.count) / delta(errors.count)) * 100) as error_rate,
-  FROM successful_requests, errors
-  WHERE time > -24hours
-  GROUP BY TIME_WINDOW(5 minutes);
--- AGGREGATE_TIME_WINDOW
-
--- SELECT top 10 slowest pages yesterday by 90th percentile latency
-SELECT
-  url, percentile(90, latency) as 90thpercentile_latency
-  FROM request_log
-  WHERE time > 24hours
-  GROUP BY url
-  ORDER BY 90thpercentile_latency DESC
--- SELECT all pages yesterday with a 90th percentile latency > 1000ms
-SELECT
-  url, percentile(90, latency) as 90thpercentile_latency
-  FROM request_log
-  WHERE time > 24hours
-  GROUP BY url
-  HAVING 90thpercentile_latency > 1000;
-
--- SELECT 90thpercentile page latency for three pages in 5 min windows
-SELECT
-  time, url, percentile(90, latency) as 90thpercentile_latency
-  FROM request_log
-  WHERE time > 24hours
-  WHERE url IN ("/mypage1", "/mypage2", "/mypage3")
-  GROUP BY TIME_WINDOW(5minutes), url;
-
--- COUNT number of events per time period
-SELECT count(*) FROM metric GROUP BY TIME_WINDOW(5minutes);
-
--- SELECT holtwinters forecast for a metric value
-SELECT real_value, holtwinters_forecast(real_value)
-  FROM metric
-  WHERE time > -24hours AND time < +24hours;
+[ refactor q ]
+    - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
+    - refactor tokenizer // dynamically register tokens
+    - rename (axis|legend|grid)definition -> \1config
 
