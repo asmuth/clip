@@ -10,22 +10,19 @@
 #ifndef _FNORDMETRIC_WEBINTERFACE_H
 #define _FNORDMETRIC_WEBINTERFACE_H
 #include <memory>
-#include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
+#include <xzero/http/HttpService.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-class AdminUI : public http::HTTPHandler {
+class AdminUI : public xzero::HttpService::Handler {
 public:
 
-  static std::unique_ptr<http::HTTPHandler> getHandler();
+  static xzero::HttpService::Handler* get();
 
-  bool handleHTTPRequest(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response) override;
-
+  bool handleRequest(
+      xzero::HttpRequest* request,
+      xzero::HttpResponse* response) override;
 };
 
 }

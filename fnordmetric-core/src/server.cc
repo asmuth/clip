@@ -14,9 +14,6 @@
 #include <vector>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/ev/acceptor.h>
-#include <fnordmetric/ev/eventloop.h>
-#include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/compactiontask.h>
@@ -29,6 +26,15 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
 #include <fnordmetric/thread/threadpool.h>
+#include <xzero/TimeSpan.h>
+#include <xzero/http/HttpService.h>
+#include <xzero/executor/ThreadedExecutor.h>
+#include <xzero/net/IPAddress.h>
+#include <xzero/net/InetConnector.h>
+#include <xzero/support/libev/LibevScheduler.h>
+#include <xzero/support/libev/LibevSelector.h>
+#include <xzero/support/libev/LibevClock.h>
+#include <ev++.h>
 
 using namespace fnordmetric;
 using namespace fnordmetric::metricdb;
@@ -55,6 +61,15 @@ int main(int argc, const char** argv) {
       NULL,
       "Store the database in this directory",
       "<path>");
+
+  env()->flags()->defineFlag(
+      "stnb",
+      cli::FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "Run HTTP server in Single-Threaded-Non-Blocking I/O mode.",
+      "");
 
   env()->flags()->defineFlag(
       "port",
@@ -102,17 +117,42 @@ int main(int argc, const char** argv) {
   CompactionTask compaction_task(&metric_repo);
   thread_pool.run(compaction_task.runnable());
 
-  ev::EventLoop ev_loop;
-  ev::Acceptor acceptor(&ev_loop);
-  http::ThreadedHTTPServer http(&thread_pool);
-  http.addHandler(AdminUI::getHandler());
-  http.addHandler(std::unique_ptr<http::HTTPHandler>(
-      new HTTPAPI(&metric_repo)));
-
   auto port = env()->flags()->getInt("port");
-  env()->logger()->printf("INFO", "Starting HTTP server on port %i", port);
-  acceptor.listen(port, &http);
-  ev_loop.loop();
+  xzero::IPAddress bind("0.0.0.0");
+  const bool threaded = !env()->flags()->isSet("stnb");
+  xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
+  xzero::HttpService http;
+  HTTPAPI fmHttpApi(&metric_repo);
+  http.addHandler(&fmHttpApi);
+  http.addHandler(fnordmetric::metricdb::AdminUI::get());
+
+  if (threaded) {
+    // multi-threaded blocking execution
+    xzero::ThreadedExecutor executor;
+    xzero::WallClock* clock = xzero::WallClock::system();
+    http.configureInet(&executor, nullptr, nullptr, clock, idle, bind, port);
+    http.start();
+    env()->logger()->printf("INFO", "Starting HTTP server on port %i", port);
+    executor.joinAll();
+  } else {
+    // single-threaded non-blocking execution
+    ::ev::loop_ref loop = ::ev::default_loop(0);
+    xzero::support::LibevScheduler scheduler(loop);
+    xzero::support::LibevSelector selector(loop);
+    xzero::support::LibevClock clock(loop);
+
+    auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
+                                   idle, bind, port);
+    inet->setBlocking(false);
+
+    env()->logger()->printf(
+        "INFO",
+        "Starting HTTP server on port %i (single threaded non-blocking)",
+        port);
+
+    http.start();
+    selector.select();
+  }
 
   return 0;
 }
