@@ -6,6 +6,7 @@
 # copy of the GNU General Public License along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
+include(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
 
@@ -21,12 +22,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/environment.cc
     stage/src/fnordmetric/ev/acceptor.cc
     stage/src/fnordmetric/ev/eventloop.cc
-    stage/src/fnordmetric/http/httpinputstream.cc
-    stage/src/fnordmetric/http/httpoutputstream.cc
-    stage/src/fnordmetric/http/httpmessage.cc
-    stage/src/fnordmetric/http/httprequest.cc
-    stage/src/fnordmetric/http/httpresponse.cc
-    stage/src/fnordmetric/http/httpserver.cc
     stage/src/fnordmetric/sstable/cursor.cc
     stage/src/fnordmetric/sstable/fileheaderreader.cc
     stage/src/fnordmetric/sstable/fileheaderwriter.cc
@@ -57,7 +52,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
     stage/src/fnordmetric/thread/threadpool.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/areachart.cc
     stage/src/fnordmetric/ui/barchart.cc
@@ -132,21 +126,36 @@ set(FNORDMETRIC_SOURCES
 include_directories(stage/src)
 include_directories(stage/assets)
 
-IF(APPLE)
+if(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
-ELSE()
+else()
   set(CMAKE_CXX_FLAGS "-std=c++0x")
-ENDIF()
+endif()
 
 # libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
-add_library(fnord-static ${FNORDMETRIC_SOURCES})
+add_library(fnord-static STATIC ${FNORDMETRIC_SOURCES})
 
 find_package(MySQL)
-if (MYSQL_FOUND)
+if(MYSQL_FOUND)
   include_directories(${MYSQL_INCLUDE_DIRS})
   target_link_libraries(fnord-static mysqlclient)
-endif(MYSQL_FOUND)
+endif()
+
+pkg_check_modules(XZERO "libxzero")
+SET(XZERO_BUNDLED libxzero-0.11.0_pre20141105.tgz)
+if(XZERO_FOUND)
+  link_directories(${XZERO_LIBRARY_DIRS})
+  include_directories(${XZERO_INCLUDE_DIRS})
+else()
+  set(XZERO_STAGE_DIR ${CMAKE_SOURCE_DIR}/stage/libxzero)
+  execute_process(COMMAND mkdir -p ${XZERO_STAGE_DIR})
+  execute_process(COMMAND tar -xz -C ${XZERO_STAGE_DIR} -f ${CMAKE_SOURCE_DIR}/../../3rdparty/${XZERO_BUNDLED})
+  add_subdirectory(${XZERO_STAGE_DIR})
+  link_directories(${XZERO_STAGE_DIR})
+  include_directories(${XZERO_STAGE_DIR}/include)
+endif()
+target_link_libraries(fnord-static xzero)
 
 # fnordmetric
 add_executable(fnordmetric-cli stage/src/fnordmetric/cli.cc)
@@ -174,9 +183,6 @@ target_link_libraries(tests/test-uri fnord-static)
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
 target_link_libraries(tests/test-csv-backend fnord-static)
-
-add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http fnord-static)
 
 add_executable(tests/test-pagemanager
     stage/src/fnordmetric/io/pagemanager_test.cc)
