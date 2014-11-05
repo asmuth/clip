@@ -123,6 +123,25 @@ body {
   cursor: ew-resize;
 }
 
+.editor_pane .editor_navbar {
+  background-color: #fff;
+  height: 28px;
+  border-bottom: 1px solid #ddd;
+}
+
+.editor_pane .editor_navbar a h3{
+  float:left;
+  margin:0;
+  font-weight: normal;
+  font-size: 14px;
+  text-decoration: none;
+  line-height: 28px;
+  height: 28px;
+  padding: 0 10px;
+  border-right: 1px solid #ddd;
+  color: #444;
+}
+
 .result_pane .result_navbar {
   width: 100%;
   height: 40px;

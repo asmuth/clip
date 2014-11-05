@@ -615,18 +615,16 @@ FnordMetric.views.QueryPlayground = function() {
   var query_button;
   var embed_button;
   var query_editor;
+  var visual_editor;
+  var sql_editor;
   var cm;
 
   var initEditor = function() {
-    navbar = document.createElement("div");
-    navbar.className = "navbar";
-
     query_editor = document.createElement("div");
     query_editor.className = "card editor";
 
     editor_pane = document.createElement("div");
     editor_pane.className = "editor_pane";
-    editor_pane.appendChild(query_editor);
 
     empty_text = document.createElement("p");
     empty_text.innerHTML = "Text Text Insert your query on the left ... \n " +
@@ -643,26 +641,49 @@ FnordMetric.views.QueryPlayground = function() {
     editor_resizer_tooltip.className = "editor_resizer_tooltip";
     editor_resizer_tooltip.setAttribute('draggable', 'true');
 
-    var createFancyButton = function(text, href, floatdir) {
-      var button = document.createElement("div");
-      button.className = "fancy_button";
-      button.style.margin = "10px";
-      button.style.float = floatdir;
-      var button_link = FnordMetric.createButton(href, undefined, text);
-      button.appendChild(button_link);
-      navbar.appendChild(button);
-      return button;
+    function createTabBar() {
+      var tabbar = document.createElement("div");
+      tabbar.className = "editor_navbar";
+
+      function createTab(inner_text, callback) {
+        var tab = FnordMetric.createButton(
+          "#", undefined, "<h3>"+inner_text+"</h3>");
+        tabbar.appendChild(tab);
+
+        return tab;
+      }
+      visual_editor = createTab("Visual");
+      sql_editor = createTab("SQL");
+      editor_pane.appendChild(tabbar);
     }
 
-    split_button = createFancyButton("Change View", document.URL, "");
-    query_button = createFancyButton("Run Query", '#', "left");
-    embed_button = createFancyButton("Embed This Query", '#', "right");
+    function createNavbar() {
+      navbar = document.createElement("div");
+      navbar.className = "navbar";
 
-    var textfield = document.createElement("div");
-    textfield.innerHTML = "You can submit the query pressing CTRL Enter";
-    textfield.style.margin = "10px";
-    textfield.style.float = "left";
-    navbar.appendChild(textfield);
+      var createFancyButton = function(text, href, floatdir) {
+        var button = document.createElement("div");
+        button.className = "fancy_button";
+        button.style.margin = "10px";
+        button.style.float = floatdir;
+        var button_link = FnordMetric.createButton(href, undefined, text);
+        button.appendChild(button_link);
+        navbar.appendChild(button);
+        return button;
+      }
+
+      split_button = createFancyButton("Change View", document.URL, "");
+      query_button = createFancyButton("Run Query", '#', "left");
+      embed_button = createFancyButton("Embed This Query", '#', "right");
+      var textfield = document.createElement("div");
+      textfield.innerHTML = "You can submit the query pressing CTRL Enter";
+      textfield.style.margin = "10px";
+      textfield.style.float = "left";
+      navbar.appendChild(textfield);
+    }
+    createTabBar();
+    editor_pane.appendChild(query_editor);
+    createNavbar();
   }
 
   var initCM = function() {
@@ -743,11 +764,29 @@ FnordMetric.views.QueryPlayground = function() {
     }
   }
 
+  var renderPlainEditor = function() {
+    console.log("render plain editor");
+  }
+
+  var renderVisualEditor = function() {
+    console.log("rejder visiual editor");
+  }
+
   var render = function(elem, query) {
     elem.appendChild(navbar);
     elem.appendChild(editor_pane);
     elem.appendChild(editor_resizer_tooltip);
     elem.appendChild(result_pane);
+
+    visual_editor.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log("render visual editor");
+    }, false);
+
+    sql_editor.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log("render sql editor");
+    }, false);
 
     query_button.addEventListener('click', function(e) {
       e.preventDefault();
