@@ -160,9 +160,6 @@ FnordMetric.views.MetricList = function() {
     return sorted_data;
   }
 
-
-
-  
   var renderError = function(state, elem) {
     var error_field = document.createElement("div");
     error_field.className = "metrics_error_pane";
@@ -689,6 +686,34 @@ FnordMetric.views.MetricList = function() {
 };
 
 FnordMetric.views.QueryPlayground = function() {
+  function parseMilliTS(ts) {
+    if (ts < 1000) {
+      if (ts == 0) {
+        return " less than 1 millisecond";
+      } else if (ts == 1) {
+        return " 1 millisecond";
+      } else {
+        return ts + " milliseconds";
+      }
+    } else if (ts < 60000) {
+      ts = ts / 1000;
+    return (ts + (ts == 1? " second" : " seconds"));
+    } else {
+      ts = ts / 60000;
+      return (ts + (ts == 1? " minute" : " minutes"));
+    }
+  }
+
+  function getRowsInfo(tables) {
+    var num = 0;
+    tables.map(function(table) {
+      num += table.rows.length;
+    });
+    return (num == 1? num + " row" : num + " rows")
+  }
+
+
+
   var horizontal = true;
   var editor_width = 42;
   var editor_height = 300;
@@ -734,9 +759,7 @@ FnordMetric.views.QueryPlayground = function() {
       button.className = "fancy_button";
       button.style.margin = "10px";
       button.style.float = floatdir;
-      button_link = document.createElement("a");
-      button_link.href = href;
-      button_link.innerHTML = text;
+      var button_link = FnordMetric.createButton(href, undefined, text);
       button.appendChild(button_link);
       navbar.appendChild(button);
       return button;
@@ -922,11 +945,11 @@ FnordMetric.views.QueryPlayground = function() {
     result_table.className = "result_table";
     result_table.setAttribute("id", "result_table");
     var table_header = document.createElement("tr");
-    for (var i = 0; i < columns.length; i++) {
+    columns.map(function(column) {
       var table_header_cell = document.createElement("th");
-      table_header_cell.innerHTML = columns[i];
+      table_header_cell.innerHTML = column;
       table_header.appendChild(table_header_cell);
-    }
+    });
 
     result_table.appendChild(table_header);
 
@@ -955,11 +978,9 @@ FnordMetric.views.QueryPlayground = function() {
       }
 
       var createTooltip = function(type) {
-        var tooltip = document.createElement("a");
-        tooltip.className = "pagination_tooltip";
-        tooltip.href = "#";
+        var tooltip = FnordMetric.createButton(
+          "#", "pagination_tooltip", tooltipPrp[type]["arrow"]);
         tooltip.style.marginRight = tooltipProp[type]["marginRight"];
-        tooltip.innerHTML = tooltipProp[type]["arrow"];
 
         tooltip.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1016,11 +1037,11 @@ FnordMetric.views.QueryPlayground = function() {
     var renderResultTableRows = function(start, end) {
       for (var i = start; i < end; i++) {
         var row = document.createElement("tr");
-        for (var j = 0; j < rows[i].length; j++) {
+        rows[i].map(function(celldata) {
           var cell = document.createElement("td");
-          cell.innerHTML = rows[i][j];
+          cell.innerHTML = celldata;
           row.appendChild(cell);
-        }
+        });
         result_table.appendChild(row);
       }
       return false;
@@ -1064,7 +1085,6 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     var parentElems = typeNodes[type];
-
     for (var i = 0; i < parentElems.length; i++) {
       var parentNode = document.getElementById(parentElems[i]);
       while (parentNode.firstChild) {
@@ -1089,7 +1109,6 @@ FnordMetric.views.QueryPlayground = function() {
       renderError(resp.error);
       return;
     }
-    
 
     var charts = resp.charts;
     var tables = resp.tables;
@@ -1115,34 +1134,23 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     var renderExecutionInfo = function() {
-      var parseMilliTS = function(ts) {
-        if (ts < 1000) {
-          if (ts == 0) {
-            return " less than 1 millisecond";
-          } else if (ts == 1) {
-            return " 1 millisecond";
-          } else {
-            return ts + " milliseconds";
-          }
-        } else if (ts < 60000) {
-          ts = ts / 1000;
-          return (ts + (ts == 1? " second" : " seconds"));
-        } else {
-          ts = ts / 60000;
-          return (ts + (ts == 1? " minute" : " minutes"));
-        }
-      }
+      var info_field = document.createElement("div");
+      info_field.className = "info_field";
+      info_field.innerHTML =
+        "Query execution took " + parseMilliTS(duration) 
+        + " and returned " + getRowsInfo(tables);
+      editor_pane.appendChild(info_field);
     }
 
-      var renderResultNavbar = function(type, quantity) {
+    var renderResultNavbar = function(type, quantity) {
       var result_navbar = document.createElement("div");
       result_navbar.className = "result_navbar";
       for (var i = 0; i < quantity; i++) {
-        var navitem = document.createElement("a");
-        navitem.className = "result_link";
-        navitem.href = curr_url;
+        var navitem = FnordMetric.createButton(
+          curr_url, 
+          "result_link",
+          "<h3>" + outputObj[type]["label"] + " " + (i+1) + "</h3>");
         navitem.setAttribute("id", i);
-        navitem.innerHTML = "<h3>" + outputObj[type]["label"] + " " + (i+1) + "</h3>";
         result_navbar.appendChild(navitem);
 
         navitem.addEventListener('click', function(e) {
@@ -1223,9 +1231,8 @@ FnordMetric.views.QueryPlayground = function() {
       foreground.className = "load_foreground";
       var popup = document.createElement("div");
       popup.className = "popup";
-      var close_button = document.createElement("a");
-      close_button.href = "#";
-      close_button.innerHTML = "X";
+      var close_button = FnordMetric.createButton(
+        "#", undefined, "X");
       //FIXME & make me fancy
       popup.innerHTML = "Ruby/html/js snippet ";
       popup.appendChild(close_button);
