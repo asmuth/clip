@@ -894,9 +894,9 @@ FnordMetric.views.QueryPlayground = function() {
       query_editor.style.backgroundColor = "#fff";
     }
 
-    var curr_color;
     var draw_dropdown;
     var aggr_dropdown;
+    var color_dropdown;
     var step_input;
     var time_input;
     var metric;
@@ -904,6 +904,10 @@ FnordMetric.views.QueryPlayground = function() {
     var render = function(url_query) {
       destroyCM();
       initPane();
+      function setQueryValues() {
+
+      }
+
       console.log("query in visual editor " + url_query);
       function renderFieldTitle(title_text, parentNode) {
          var title = document.createElement("div");
@@ -946,56 +950,6 @@ FnordMetric.views.QueryPlayground = function() {
         }, false);
       }
 
-      function changeColor(elem, color1, color2, changeAttr) {
-        if (elem.hasAttribute("active")) {
-          elem.style.backgroundColor = color2;
-          if (changeAttr) {
-            elem.removeAttribute("active");
-          }
-        } else {
-          elem.style.backgroundColor = color1;
-            if (changeAttr) {
-            elem.setAttribute("active", true);
-          }
-        }
-      }
-
-
-      function createColorButton(hex, name, parentNode) {
-        var button = FnordMetric.createButton(
-          "#", "simple_button color", name);
-        button.style.border = "1px solid " + hex;
-        button.setAttribute("id", hex);
-        parentNode.appendChild(button);
-        button.addEventListener('mouseover', function(e) {
-          changeColor(this, hex, "#fff", false);
-        }, false);
-
-        button.addEventListener('mouseout', function(e) {
-          changeColor(this, "#fff", hex, false)
-        }, false);
-
-        button.addEventListener('click', function(e) {
-          e.preventDefault();
-          changeColor(this, hex, "#fff", true);
-          if (curr_color !== undefined) {
-            changeColor(curr_color, "#fff", "#fff", true);
-          }
-          curr_color = this;
-          query.chart.color = hex;
-        }, false);
-        return button;
-      }
-
-      function setDefaultColor(buttons) {
-        if (curr_color !== undefined) {
-          return;
-        }
-        curr_color = buttons[0];
-        buttons[0].style.backgroundColor = 
-          buttons[0].id;
-        buttons[0].setAttribute("active", "true");
-      }
 
       var metric_field = createField();
       metric = document.createElement("input");
@@ -1054,19 +1008,8 @@ FnordMetric.views.QueryPlayground = function() {
       var color_ttl = renderFieldTitle("COLOR", undefined);
       color_ttl.style.marginLeft = "20px";
       draw_field.appendChild(color_ttl);
-      var colors = [
-        {"name" : "Blue", "hex" : "rgb(69, 114, 167)"},
-        {"name" : "Red", "hex" : "rgb(170, 70, 67)"},
-        {"name" : "Green", "hex" : "rgb(137, 165, 78)"},
-        {"name" : "Purple", "hex" :"rgb(128, 105, 155)"}];
-      var color_buttons = [];
-      colors.map(function(color) {
-        color_buttons.push(
-          createColorButton(color.hex, color.name, draw_field));
-      });
-      setDefaultColor(color_buttons);
 
-      var color_dropdown = createDropdown(
+      color_dropdown = createDropdown(
         ["Blue", "Red", "Green", "Purple"]);
       draw_field.appendChild(color_dropdown);
 
@@ -1086,6 +1029,7 @@ FnordMetric.views.QueryPlayground = function() {
         query.aggregation.type = aggr_dropdown.value;
         query.aggregation.step = step_input.value;
         query.aggregation.time = time_input.value;
+        query.chart.color = color_dropdown.value;
       }
 
       function buildQueryString() {
@@ -1230,7 +1174,8 @@ FnordMetric.views.QueryPlayground = function() {
         current_editor = plainEditor();
         sql_editor.className = "active";
       }
-      if (query === undefined) {
+
+      if (query == "undefined" || query === undefined) {
         current_editor.render();
       } else {
         current_editor.render(query);
