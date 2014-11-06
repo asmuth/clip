@@ -918,6 +918,10 @@ FnordMetric.views.QueryPlayground = function() {
 
         var metric_field = createField();
         var metric = document.createElement("input");
+        console.log(typeof FnordMetric.MetricData[0]);
+        console.log(FnordMetric.MetricData[0] == Object);
+        metric.value = FnordMetric.MetricData[0] !== undefined ?
+          FnordMetric.MetricData[0].key : "";
         var metric_list = document.createElement("ul");
         metric_list.className = "dropdown";
         var keys = [];
