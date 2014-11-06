@@ -1522,6 +1522,7 @@ FnordMetric.views.QueryPlayground = function() {
 
 FnordMetric.WebUI = function() {
   var current_view = null;
+  var current_menuitem = null;
   var current_url = null;
   var current_query = null;
 
@@ -1592,7 +1593,13 @@ FnordMetric.WebUI = function() {
     headbar.appendChild(menuitem);
     menuitem.addEventListener('click', function(e) {
       e.preventDefault();
+      if (current_menuitem !== null) {
+        current_menuitem.style.backgroundColor = "#fff";
+      }
+      current_menuitem = this.firstChild;
+      current_menuitem.style.backgroundColor = "#ddd";
       openUrl(this.getAttribute("href").substr(1), true);
+
       return false; 
     });
   }
