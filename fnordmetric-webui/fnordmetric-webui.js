@@ -900,6 +900,7 @@ FnordMetric.views.QueryPlayground = function() {
     var aggr_dropdown;
     var step_input;
     var time_input;
+    var metric;
 
     var render = function() {
       destroyCM();
@@ -998,7 +999,7 @@ FnordMetric.views.QueryPlayground = function() {
       }
 
       var metric_field = createField();
-      var metric = document.createElement("input");
+      metric = document.createElement("input");
       metric.value = FnordMetric.MetricData[0] !== undefined ?
       FnordMetric.MetricData[0].key : "";
       var metric_list = document.createElement("ul");
@@ -1075,16 +1076,37 @@ FnordMetric.views.QueryPlayground = function() {
 
    
     var buildQuery = function() {
+      var querystring;
       function getQueryInput() {
+        query.metric = metric.value;
         query.chart.type = draw_dropdown.value;
         query.chart.color = curr_color.id;
         query.aggregation.type = aggr_dropdown.value;
         query.aggregation.step = step_input.value;
         query.aggregation.time = time_input.value;
       }
+      
+      function buildQueryString() {
+        querystring = "DRAW " + query.chart.type +";";
+        querystring += " SELECT ";
+        if (query.aggregation.type.length > 0) {
+          querystring += query.aggregation.type;
+        }
+        if (query.aggregation.step.length > 0 && 
+            query.aggregation.time.length >0) {
+              querystring += " GROUP OVER TIMEWINDOW("+
+              query.aggregation.time + ", " +
+              query.aggregation.step + ")";
+        }
+
+        querystring += " FROM " + query.metric;
+        querystring += ";"
+        console.log(query.aggregation);
+        console.log(querystring);
+      }
       getQueryInput();
-      console.log(query);
-      console.log("build query");
+      buildQueryString();
+      return querystring;
     }
       //updateLayout(false, undefined);
 
@@ -1142,9 +1164,8 @@ FnordMetric.views.QueryPlayground = function() {
 
     query_button.addEventListener('click', function(e) {
       e.preventDefault();
-      console.log(current_editor);
       var query = current_editor.buildQuery();
-      //runQuery(query);
+      runQuery(query);
     }, false);
 
     embed_button.addEventListener('click', function(e) {
@@ -1494,7 +1515,7 @@ FnordMetric.views.QueryPlayground = function() {
       var query = cm.getValue();
     }
     FnordMetric.Loading().render();
-    cm.setValue(query);
+    //cm.setValue(query);
     var encoded_query = encodeURIComponent(query);
     var url = "/admin#query_playground!" + encoded_query;
     window.history.pushState({url: url}, "", "#" + url);
