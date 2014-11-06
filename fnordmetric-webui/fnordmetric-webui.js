@@ -816,8 +816,6 @@ FnordMetric.views.QueryPlayground = function() {
   initEditor();
 
   var updateLayout = function(tooltip, viewport) {
-    console.log("update Layout");
-    console.log(tooltip);
     if (horizontal) {
       if (viewport !== undefined) {
         viewport.className = "viewport horizontal_split";
@@ -869,6 +867,7 @@ FnordMetric.views.QueryPlayground = function() {
     }
   }
 
+
   var visualEditor = function() {
     var query = {
       metric: "", 
@@ -902,10 +901,10 @@ FnordMetric.views.QueryPlayground = function() {
     var time_input;
     var metric;
 
-    var render = function() {
+    var render = function(url_query) {
       destroyCM();
       initPane();
-
+      console.log("query in visual editor " + url_query);
       function renderFieldTitle(title_text, parentNode) {
          var title = document.createElement("div");
         title.className = "field_title";
@@ -1067,6 +1066,10 @@ FnordMetric.views.QueryPlayground = function() {
       });
       setDefaultColor(color_buttons);
 
+      var color_dropdown = createDropdown(
+        ["Blue", "Red", "Green", "Purple"]);
+      draw_field.appendChild(color_dropdown);
+
 
       query_editor.appendChild(metric_field);
       query_editor.appendChild(aggr_field);
@@ -1074,7 +1077,6 @@ FnordMetric.views.QueryPlayground = function() {
       query_editor.appendChild(draw_field);
     }
 
-   
     var buildQuery = function() {
       var querystring;
       function getQueryInput() {
@@ -1085,7 +1087,7 @@ FnordMetric.views.QueryPlayground = function() {
         query.aggregation.step = step_input.value;
         query.aggregation.time = time_input.value;
       }
-      
+
       function buildQueryString() {
         querystring = "DRAW " + query.chart.type +";";
         querystring += " SELECT ";
@@ -1117,7 +1119,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   var plainEditor = function() {
-    var render = function() {
+    var render = function(query) {
       function initQueryEditor() {
         while (query_editor.firstChild) {
           queryEditor.removeChild(query_editor.firstChild)
@@ -1126,6 +1128,10 @@ FnordMetric.views.QueryPlayground = function() {
 
       initQueryEditor();
       initCM();
+
+      if (query !== undefined) {
+        cm.setValue(query);
+      }
       updateLayout();
     }
 
@@ -1224,17 +1230,15 @@ FnordMetric.views.QueryPlayground = function() {
         current_editor = plainEditor();
         sql_editor.className = "active";
       }
-      current_editor.render();
-    }
-
+      if (query === undefined) {
+        current_editor.render();
+      } else {
+        current_editor.render(query);
+        runQuery(query);
+      }
+    };
     renderEditor();
-
-
     updateLayout(false, elem);
-    if (query != 'undefined') {
-      runQuery(query);
-    }
-
   };
 
   var destroy = function(viewport) {
