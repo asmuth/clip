@@ -171,6 +171,10 @@ input {
   height: 20px;
 }
 
+.visual_editor input.small {
+  width: 40px;
+  font-size: 12px;
+}
 
 .visual_editor ul.dropdown * {
   clear: both;
@@ -197,6 +201,7 @@ input {
   float:left;
   height: 26px;
 }
+
 
 
 

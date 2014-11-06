@@ -870,180 +870,232 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   var visualEditor = function() {
-    var render = function() {
+    var query = {
+      metric: "", 
+      aggregation: {type: "", step: "", time: ""},
+      group_by: [],
+      chart: {type: "", color: ""}};
 
-      function destroyCM() {
-        cm = undefined;
-        var cm_pane = query_editor.querySelector(".CodeMirror");
-        if (cm_pane === null) {return;}
-        while (cm_pane.firstChild) {
-          cm_pane.removeChild(cm_pane.firstChild);
-        }
-        query_editor.removeChild(cm_pane);
+    function destroyCM() {
+      cm = undefined;
+      var cm_pane = query_editor.querySelector(".CodeMirror");
+      if (cm_pane === null) {return;}
+      while (cm_pane.firstChild) {
+        cm_pane.removeChild(cm_pane.firstChild);
       }
-
-      function initPane() {
-        if (horizontal) {
-          query_editor.style.height = (height - 29) + "px";
-        } else{
-          //set query_editor height
-        }
-        query_editor.style.backgroundColor = "#fff";
-      }
-
-      function createVisualElements() {
-        function renderFieldTitle(title_text, parentNode) {
-          var title = document.createElement("div");
-          title.className = "field_title";
-          title.innerHTML = title_text;
-          console.log("parent Node: "+ parentNode);
-          if (parentNode === undefined) {return title;}
-          parentNode.appendChild(title);
-        }
-
-        function createField() {
-          var field = document.createElement("div");
-          field.className = "visual_editor field";
-          return field;
-        }
-
-        function createDropdown(values, isObject) {
-          var dropdown = document.createElement("select");
-          values.map(function(value) {
-            var option = document.createElement("option");
-            option.value = isObject === true? value.key : value;
-            option.innerHTML = isObject === true? value.key : value;
-            dropdown.appendChild(option);
-          });
-          return dropdown;
-        }
-
-        function renderSelectButton(inner_text, parentNode) {
-          var button = FnordMetric.createButton(
-            "#", "simple_button", inner_text);
-          parentNode.appendChild(button);
-
-          button.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (this.className == "simple_button") {
-              this.className = "simple_button active";
-            } else {
-              this.className = "simple_button";
-            }
-          }, false);
-        }
-
-        function changeColor(elem, color1, color2, changeAttr) {
-          if (elem.hasAttribute("active")) {
-            elem.style.backgroundColor = color2;
-            if (changeAttr) {
-              elem.removeAttribute("active");
-            }
-          } else {
-            elem.style.backgroundColor = color1;
-            if (changeAttr) {
-              elem.setAttribute("active", true);
-            }
-          }
-        }
-
-
-        function renderColorButton(hex, name, parentNode) {
-          var button = FnordMetric.createButton(
-            "#", "simple_button color", name);
-          button.style.border = "1px solid " + hex;
-          button.setAttribute("id", hex);
-          parentNode.appendChild(button);
-
-          button.addEventListener('mouseover', function(e) {
-            changeColor(this, hex, "#fff", false);
-          }, false);
-
-          button.addEventListener('mouseout', function(e) {
-            changeColor(this, "#fff", hex, false)
-          }, false);
-
-          button.addEventListener('click', function(e) {
-            e.preventDefault();
-            changeColor(this, hex, "#fff", true);
-          }, false);
-        }
-
-        var metric_field = createField();
-        var metric = document.createElement("input");
-        metric.value = FnordMetric.MetricData[0] !== undefined ?
-          FnordMetric.MetricData[0].key : "";
-        var metric_list = document.createElement("ul");
-        metric_list.className = "dropdown";
-        var keys = [];
-        FnordMetric.MetricData.map(function(metric) {
-          keys.push(metric.key);
-        });
-        metric_field.appendChild(metric);
-        //metric_field.appendChild(metric_list);
-
-        FnordMetric.DropdownAutocomplete(
-          metric_field, metric_list, metric, keys, undefined);
-
-        var aggr_field = createField();
-        var aggr_title = renderFieldTitle("AGGREGATION", aggr_field);
-        var aggr_dropdown = createDropdown(
-          ["", "SUM", "AVG", "COUNT", "MAX", "MIN"], false);
-        aggr_field.appendChild(aggr_dropdown);
-
-        var group_field = createField();
-        var group_title = renderFieldTitle("GROUP BY", group_field);
-        var columns = ["Key", "Labels", "Last Insert", "Total Stored Bytes"];
-        columns.map(function(column) {
-          renderSelectButton(column, group_field);
-        });
-
-
-        var draw_field = createField();
-        renderFieldTitle("DRAW AS", draw_field);
-        var draw_dropdown = createDropdown(["LINECHART", 
-          "POINTCHART","BARCHART", "AREACHART"], false);
-        draw_field.appendChild(draw_dropdown);
-
-        var color_ttl = renderFieldTitle("COLOR", undefined);
-        console.log(color_ttl);
-        color_ttl.style.marginLeft = "20px";
-        draw_field.appendChild(color_ttl);
-        var colors = [
-          {"name" : "Blue", "hex" : "rgb(69, 114, 167)"},
-          {"name" : "Red", "hex" : "rgb(170, 70, 67)"},
-          {"name" : "Green", "hex" : "rgb(137, 165, 78)"},
-          {"name" : "Purple", "hex" :"rgb(128, 105, 155)"}];
-        colors.map(function(color) {
-          renderColorButton(color.hex, color.name, draw_field);
-        });
-        console.log(colors);
-        //var color_dd = createDropdown(
-
-
-
-        query_editor.appendChild(metric_field);
-        query_editor.appendChild(aggr_field);
-        query_editor.appendChild(group_field);
-        query_editor.appendChild(draw_field);
-
-
-      }
-
-      destroyCM();
-      initPane();
-      createVisualElements();
-      //updateLayout(false, undefined);
+      query_editor.removeChild(cm_pane);
     }
 
+    function initPane() {
+      if (horizontal) {
+        query_editor.style.height = (height - 29) + "px";
+      } else{
+          //set query_editor height
+      }
+      query_editor.style.backgroundColor = "#fff";
+    }
+
+    var curr_color;
+    var draw_dropdown;
+    var aggr_dropdown;
+    var step_input;
+    var time_input;
+
+    var render = function() {
+      destroyCM();
+      initPane();
+
+      function renderFieldTitle(title_text, parentNode) {
+         var title = document.createElement("div");
+        title.className = "field_title";
+        title.innerHTML = title_text;
+        if (parentNode === undefined) {return title;}
+        parentNode.appendChild(title);
+      }
+
+      function createField() {
+        var field = document.createElement("div");
+        field.className = "visual_editor field";
+        return field;
+      }
+
+      function createDropdown(values) {
+        var dropdown = document.createElement("select");
+        values.map(function(value) {
+          var option = document.createElement("option");
+          option.value = value;
+          option.innerHTML = value;
+           dropdown.appendChild(option);
+        });
+        return dropdown;
+      }
+
+      function renderSelectButton(inner_text, parentNode) {
+        var button = FnordMetric.createButton(
+          "#", "simple_button", inner_text);
+        parentNode.appendChild(button);
+
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (this.className == "simple_button") {
+            this.className = "simple_button active";
+          } else {
+            this.className = "simple_button";
+          }
+          query.group_by.push(inner_text);
+        }, false);
+      }
+
+      function changeColor(elem, color1, color2, changeAttr) {
+        if (elem.hasAttribute("active")) {
+          elem.style.backgroundColor = color2;
+          if (changeAttr) {
+            elem.removeAttribute("active");
+          }
+        } else {
+          elem.style.backgroundColor = color1;
+            if (changeAttr) {
+            elem.setAttribute("active", true);
+          }
+        }
+      }
+
+
+      function createColorButton(hex, name, parentNode) {
+        var button = FnordMetric.createButton(
+          "#", "simple_button color", name);
+        button.style.border = "1px solid " + hex;
+        button.setAttribute("id", hex);
+        parentNode.appendChild(button);
+        button.addEventListener('mouseover', function(e) {
+          changeColor(this, hex, "#fff", false);
+        }, false);
+
+        button.addEventListener('mouseout', function(e) {
+          changeColor(this, "#fff", hex, false)
+        }, false);
+
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          changeColor(this, hex, "#fff", true);
+          if (curr_color !== undefined) {
+            changeColor(curr_color, "#fff", "#fff", true);
+          }
+          curr_color = this;
+          query.chart.color = hex;
+        }, false);
+        return button;
+      }
+
+      function setDefaultColor(buttons) {
+        if (curr_color !== undefined) {
+          return;
+        }
+        curr_color = buttons[0];
+        buttons[0].style.backgroundColor = 
+          buttons[0].id;
+        buttons[0].setAttribute("active", "true");
+      }
+
+      var metric_field = createField();
+      var metric = document.createElement("input");
+      metric.value = FnordMetric.MetricData[0] !== undefined ?
+      FnordMetric.MetricData[0].key : "";
+      var metric_list = document.createElement("ul");
+      metric_list.className = "dropdown";
+      var keys = [];
+      FnordMetric.MetricData.map(function(metric) {
+        keys.push(metric.key);
+      });
+      metric_field.appendChild(metric);
+
+      FnordMetric.DropdownAutocomplete(
+        metric_field, metric_list, metric, keys, undefined);
+
+      var aggr_field = createField();
+      var aggr_title = renderFieldTitle("AGGREGATION", aggr_field);
+
+      aggr_dropdown = createDropdown(
+        ["", "SUM", "AVG", "COUNT", "MAX", "MIN"]);
+      aggr_field.appendChild(aggr_dropdown);
+
+      var step_title = renderFieldTitle("STEP");
+      step_title.style.marginLeft = "20px";
+      aggr_field.appendChild(step_title);
+
+      step_input = document.createElement("input");
+      step_input.className = "small";
+      aggr_field.appendChild(step_input);
+      var time_title = renderFieldTitle("TIME");
+      time_title.style.marginLeft = "20px";
+      aggr_field.appendChild(time_title);
+
+      time_input = document.createElement("input");
+      time_input.className = "small";
+      aggr_field.appendChild(time_input);
+
+
+      var group_field = createField();
+      var group_title = renderFieldTitle("GROUP BY", group_field);
+
+      var columns = ["Key", "Labels", "Last Insert", "Total Stored Bytes"];
+      columns.map(function(column) {
+          renderSelectButton(column, group_field);
+      });
+
+
+      var draw_field = createField();
+      renderFieldTitle("DRAW AS", draw_field);
+
+      draw_dropdown = createDropdown(["LINECHART", 
+        "POINTCHART","BARCHART", "AREACHART"]);
+      draw_field.appendChild(draw_dropdown);
+
+      var color_ttl = renderFieldTitle("COLOR", undefined);
+      color_ttl.style.marginLeft = "20px";
+      draw_field.appendChild(color_ttl);
+      var colors = [
+        {"name" : "Blue", "hex" : "rgb(69, 114, 167)"},
+        {"name" : "Red", "hex" : "rgb(170, 70, 67)"},
+        {"name" : "Green", "hex" : "rgb(137, 165, 78)"},
+        {"name" : "Purple", "hex" :"rgb(128, 105, 155)"}];
+      var color_buttons = [];
+      colors.map(function(color) {
+        color_buttons.push(
+          createColorButton(color.hex, color.name, draw_field));
+      });
+      setDefaultColor(color_buttons);
+
+
+      query_editor.appendChild(metric_field);
+      query_editor.appendChild(aggr_field);
+      query_editor.appendChild(group_field);
+      query_editor.appendChild(draw_field);
+    }
+
+   
+    var buildQuery = function() {
+      function getQueryInput() {
+        query.chart.type = draw_dropdown.value;
+        query.chart.color = curr_color.id;
+        query.aggregation.type = aggr_dropdown.value;
+        query.aggregation.step = step_input.value;
+        query.aggregation.time = time_input.value;
+      }
+      getQueryInput();
+      console.log(query);
+      console.log("build query");
+    }
+      //updateLayout(false, undefined);
+
     return {
-      "render" : render
+      "render" : render,
+      "buildQuery" : buildQuery
     }
   }
 
   var plainEditor = function() {
     var render = function() {
-      console.log("plain editor");
       function initQueryEditor() {
         while (query_editor.firstChild) {
           queryEditor.removeChild(query_editor.firstChild)
@@ -1054,8 +1106,13 @@ FnordMetric.views.QueryPlayground = function() {
       initCM();
       updateLayout();
     }
+
+    var buildQuery = function() {
+      return (cm.getValue());
+    }
     return {
-      "render" : render
+      "render" : render,
+      "buildQuery" : buildQuery
     }
   }
 
@@ -1085,7 +1142,9 @@ FnordMetric.views.QueryPlayground = function() {
 
     query_button.addEventListener('click', function(e) {
       e.preventDefault();
-      runQuery();
+      console.log(current_editor);
+      var query = current_editor.buildQuery();
+      //runQuery(query);
     }, false);
 
     embed_button.addEventListener('click', function(e) {
