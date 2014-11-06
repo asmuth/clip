@@ -158,12 +158,14 @@ input {
 .visual_editor.field {
   width: 100%;
   padding: 20px 10px 20px 20px;
+  line-height: 26px;
 }
 
-.visual_editor.field .title {
+.visual_editor.field .field_title {
   float:left;
   margin-right: 10px;
 }
+
 
 .visual_editor input {
   height: 20px;
@@ -173,6 +175,27 @@ input {
 .visual_editor ul.dropdown * {
   clear: both;
   margin-right: 0px;
+}
+
+.visual_editor .simple_button {
+  line-height: 26px;
+  float:left; 
+  margin-right: 10px;
+  padding: 0 5px;
+  text-decoration: none;
+  color: #444;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.visual_editor .simple_button:hover,
+.visual_editor .simple_button.active{
+  background-color: #ddd;
+}
+
+.visual_editor select {
+  float:left;
+  height: 26px;
 }
 
 

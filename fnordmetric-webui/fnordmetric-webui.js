@@ -896,6 +896,8 @@ FnordMetric.views.QueryPlayground = function() {
           var title = document.createElement("div");
           title.className = "field_title";
           title.innerHTML = title_text;
+          console.log("parent Node: "+ parentNode);
+          if (parentNode === undefined) {return title;}
           parentNode.appendChild(title);
         }
 
@@ -905,21 +907,70 @@ FnordMetric.views.QueryPlayground = function() {
           return field;
         }
 
-        function createDropdown(values, key) {
+        function createDropdown(values, isObject) {
           var dropdown = document.createElement("select");
           values.map(function(value) {
             var option = document.createElement("option");
-            option.value = key === true? value.key : value;
-            option.innerHTML = key === true? value.key : value;
+            option.value = isObject === true? value.key : value;
+            option.innerHTML = isObject === true? value.key : value;
             dropdown.appendChild(option);
           });
           return dropdown;
         }
 
+        function renderSelectButton(inner_text, parentNode) {
+          var button = FnordMetric.createButton(
+            "#", "simple_button", inner_text);
+          parentNode.appendChild(button);
+
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (this.className == "simple_button") {
+              this.className = "simple_button active";
+            } else {
+              this.className = "simple_button";
+            }
+          }, false);
+        }
+
+        function changeColor(elem, color1, color2, changeAttr) {
+          if (elem.hasAttribute("active")) {
+            elem.style.backgroundColor = color2;
+            if (changeAttr) {
+              elem.removeAttribute("active");
+            }
+          } else {
+            elem.style.backgroundColor = color1;
+            if (changeAttr) {
+              elem.setAttribute("active", true);
+            }
+          }
+        }
+
+
+        function renderColorButton(hex, name, parentNode) {
+          var button = FnordMetric.createButton(
+            "#", "simple_button color", name);
+          button.style.border = "1px solid " + hex;
+          button.setAttribute("id", hex);
+          parentNode.appendChild(button);
+
+          button.addEventListener('mouseover', function(e) {
+            changeColor(this, hex, "#fff", false);
+          }, false);
+
+          button.addEventListener('mouseout', function(e) {
+            changeColor(this, "#fff", hex, false)
+          }, false);
+
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            changeColor(this, hex, "#fff", true);
+          }, false);
+        }
+
         var metric_field = createField();
         var metric = document.createElement("input");
-        console.log(typeof FnordMetric.MetricData[0]);
-        console.log(FnordMetric.MetricData[0] == Object);
         metric.value = FnordMetric.MetricData[0] !== undefined ?
           FnordMetric.MetricData[0].key : "";
         var metric_list = document.createElement("ul");
@@ -928,21 +979,52 @@ FnordMetric.views.QueryPlayground = function() {
         FnordMetric.MetricData.map(function(metric) {
           keys.push(metric.key);
         });
-        console.log(keys);
         metric_field.appendChild(metric);
         //metric_field.appendChild(metric_list);
 
         FnordMetric.DropdownAutocomplete(
           metric_field, metric_list, metric, keys, undefined);
 
+        var aggr_field = createField();
+        var aggr_title = renderFieldTitle("AGGREGATION", aggr_field);
+        var aggr_dropdown = createDropdown(
+          ["", "SUM", "AVG", "COUNT", "MAX", "MIN"], false);
+        aggr_field.appendChild(aggr_dropdown);
+
+        var group_field = createField();
+        var group_title = renderFieldTitle("GROUP BY", group_field);
+        var columns = ["Key", "Labels", "Last Insert", "Total Stored Bytes"];
+        columns.map(function(column) {
+          renderSelectButton(column, group_field);
+        });
+
+
         var draw_field = createField();
-        renderFieldTitle("DRAW", draw_field);
+        renderFieldTitle("DRAW AS", draw_field);
         var draw_dropdown = createDropdown(["LINECHART", 
           "POINTCHART","BARCHART", "AREACHART"], false);
         draw_field.appendChild(draw_dropdown);
 
+        var color_ttl = renderFieldTitle("COLOR", undefined);
+        console.log(color_ttl);
+        color_ttl.style.marginLeft = "20px";
+        draw_field.appendChild(color_ttl);
+        var colors = [
+          {"name" : "Blue", "hex" : "rgb(69, 114, 167)"},
+          {"name" : "Red", "hex" : "rgb(170, 70, 67)"},
+          {"name" : "Green", "hex" : "rgb(137, 165, 78)"},
+          {"name" : "Purple", "hex" :"rgb(128, 105, 155)"}];
+        colors.map(function(color) {
+          renderColorButton(color.hex, color.name, draw_field);
+        });
+        console.log(colors);
+        //var color_dd = createDropdown(
+
+
 
         query_editor.appendChild(metric_field);
+        query_editor.appendChild(aggr_field);
+        query_editor.appendChild(group_field);
         query_editor.appendChild(draw_field);
 
 
