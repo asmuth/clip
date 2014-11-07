@@ -28,6 +28,7 @@ public:
 
   void* data() const;
   size_t size() const;
+  std::string toString() const;
 
 protected:
   void* data_;

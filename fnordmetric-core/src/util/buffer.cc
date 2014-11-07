@@ -54,6 +54,9 @@ size_t Buffer::size() const {
   return size_;
 }
 
+std::string Buffer::toString() const {
+  return std::string(static_cast<char *>(data_), size_);
+}
 
 }
 }

@@ -19,13 +19,14 @@
 #include <fnordmetric/metricdb/compactiontask.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/net/udpserver.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/random.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
-#include <fnordmetric/thread/threadpool.h>
+#include <thread>
 #include <xzero/TimeSpan.h>
 #include <xzero/http/HttpService.h>
 #include <xzero/executor/ThreadedExecutor.h>
@@ -63,15 +64,6 @@ int main(int argc, const char** argv) {
       "<path>");
 
   env()->flags()->defineFlag(
-      "stnb",
-      cli::FlagParser::T_SWITCH,
-      false,
-      NULL,
-      NULL,
-      "Run HTTP server in Single-Threaded-Non-Blocking I/O mode.",
-      "");
-
-  env()->flags()->defineFlag(
       "port",
       cli::FlagParser::T_INTEGER,
       false,
@@ -80,15 +72,24 @@ int main(int argc, const char** argv) {
       "Start the web interface on this port",
       "<port>");
 
+  env()->flags()->defineFlag(
+      "stnb",
+      cli::FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "Run HTTP server in Single-Threaded-Non-Blocking I/O mode.",
+      "");
+
   env()->flags()->parseArgv(argc, argv);
   env()->setVerbose(true);
 
   // boot
-  fnordmetric::util::ThreadPool thread_pool(
-      32,
-      std::unique_ptr<fnordmetric::util::ExceptionHandler>(
-          new fnordmetric::util::CatchAndPrintExceptionHandler(
-              env()->logger())));
+  //fnordmetric::util::ThreadPool thread_pool(
+  //    32,
+  //    std::unique_ptr<fnordmetric::util::ExceptionHandler>(
+  //        new fnordmetric::util::CatchAndPrintExceptionHandler(
+  //            env()->logger())));
 
   auto datadir = env()->flags()->getString("datadir");
   if (!fnord::io::FileUtil::exists(datadir)) {
@@ -114,8 +115,17 @@ int main(int argc, const char** argv) {
       new fnord::io::FileRepository(datadir));
   MetricRepository metric_repo(file_repo);
 
-  CompactionTask compaction_task(&metric_repo);
-  thread_pool.run(compaction_task.runnable());
+  //CompactionTask compaction_task(&metric_repo);
+  //thread_pool.run(compaction_task.runnable());
+
+  //thread::Executor executor;
+  std::thread server_thread([] () {
+    fnord::net::UDPServer statsd_server;
+    statsd_server.onMessage([] (const fnord::util::Buffer& msg) {
+      printf("msg: %s\n", msg.toString().c_str());
+    });
+    statsd_server.listen(1337);
+  });
 
   auto port = env()->flags()->getInt("port");
   xzero::IPAddress bind("0.0.0.0");

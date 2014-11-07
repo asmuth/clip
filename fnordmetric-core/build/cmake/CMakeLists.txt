@@ -14,14 +14,15 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/cli/cli.cc
+    stage/src/fnordmetric/io/acceptor.cc
+    stage/src/fnordmetric/io/eventloop.cc
     stage/src/fnordmetric/io/file.cc
     stage/src/fnordmetric/io/fileutil.cc
     stage/src/fnordmetric/io/filerepository.cc
     stage/src/fnordmetric/io/mmappedfile.cc
     stage/src/fnordmetric/io/pagemanager.cc
+    stage/src/fnordmetric/net/udpserver.cc
     stage/src/fnordmetric/environment.cc
-    stage/src/fnordmetric/ev/acceptor.cc
-    stage/src/fnordmetric/ev/eventloop.cc
     stage/src/fnordmetric/sstable/cursor.cc
     stage/src/fnordmetric/sstable/fileheaderreader.cc
     stage/src/fnordmetric/sstable/fileheaderwriter.cc
@@ -51,7 +52,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/stringutil.cc
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
-    stage/src/fnordmetric/thread/threadpool.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/areachart.cc
     stage/src/fnordmetric/ui/barchart.cc
