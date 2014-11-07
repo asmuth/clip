@@ -1,3 +1,11 @@
+    - make "series" column optional
+    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so 
+    - sql: in
+    - sql: if
+    - sql: case
+    - --help
+    - inline libev
+
 [ todo ]
     - SQL: GROUP OVER TIMEWINDOW
     - pluggable metric backends
