@@ -1124,7 +1124,6 @@ FnordMetric.views.QueryPlayground = function() {
     elem.appendChild(editor_resizer_tooltip);
     elem.appendChild(result_pane);
 
-    
     visual_editor.addEventListener('click', function(e) {
       e.preventDefault();
       if (visualIsOn) {
@@ -1138,7 +1137,9 @@ FnordMetric.views.QueryPlayground = function() {
     }, false);
 
     visual_editor.addEventListener('mouseover', function() {
-      visualHoverTtp.style.display = "block";
+      if (!visualIsOn) {
+        visualHoverTtp.style.display = "block";
+      }
     }, false);
 
     visual_editor.addEventListener('mouseout', function() {
@@ -1589,7 +1590,20 @@ FnordMetric.WebUI = function() {
     "current" : null
   };
 
-   var createSearchBar = function() {
+  function getMetricData() {
+       }
+
+  function getKeys(data) {
+    var keys = [];
+    for (var i = 0; i < data.length; i++) {
+      keys.push(data[i]["key"]);
+    }
+    return keys;
+  }
+
+
+
+  var createSearchBar = function() {
     var search_bar = document.createElement("div");
     search_bar.className = "search_bar";
     var input_field = document.createElement("input");
@@ -1608,8 +1622,34 @@ FnordMetric.WebUI = function() {
     search_bar.appendChild(clear_button);
     headbar.appendChild(search_bar);
 
-    input_field.addEventListener('focus', search(
-      search_bar, input_field, search_button, clear_button),  false);
+    var dropdown = document.createElement("ul");
+    dropdown.className = "dropdown";
+    console.log("FnordKetroc metric data");
+    console.log(FnordMetric.MetricData);
+
+    if (FnordMetric.MetricData === undefined) {
+      FnordMetric.httpGet("/metrics", function(r) {
+        if (r.status == 200) {
+          var data = JSON.parse(r.response);
+          data = data.metrics;
+          FnordMetric.MetricData = data;
+          var keys = getKeys(FnordMetric.MetricData);
+          console.log(keys);
+          FnordMetric.DropdownAutocomplete(
+            search_bar, dropdown, input_field, keys, search_button);
+        }
+      });
+    } else {
+      var keys =getKeys(FnordMetric.MetricData);
+      FnordMetric.DropdownAutocomplete(
+        search_bar, dropdown, input_field, keys, search_button);
+    }
+
+    
+    
+
+    //input_field.addEventListener('focus', search(
+      //search_bar, input_field, search_button, clear_button),  false);
 
   }
 
@@ -1723,147 +1763,6 @@ FnordMetric.WebUI = function() {
     }
     window.location.href = "/admin#metric_list";
   }
-
-  var search = function(search_bar, input_field, search_button, clear_button) {
-  //var metrics_data = FnordMetric.views.MetricList().getMetricData();
-    var metrics_data;
-    function getMetricData() {
-      if (metrics_data !== undefined) {
-        return;
-      }
-      FnordMetric.httpGet("/metrics", function(r) {
-        if (r.status == 200) {
-          metrics_data = JSON.parse(r.response);
-          metrics_data = metrics_data.metrics;
-          FnordMetric.MetricData = metrics_data;
-          console.log(metrics_data);
-          initSearch();
-        }
-      });
-    }
-    getMetricData();
-
-    function getKeys(data) {
-      var keys = [];
-      for (var i = 0; i < data.length; i++) {
-        keys.push(data[i]["key"]);
-      }
-      return keys;
-    }
-
-    clear_button.addEventListener('click', function(e) {
-      e.preventDefault();
-      input_field.value = "";
-      renderSearchedView(undefined);
-    }, false);
-
-    var dropdown = document.createElement("ul");
-    dropdown.className = "dropdown";
-
-    var down = 0;
-    var dropdownKeyNav = function() {
-      var dropdown_items = dropdown.childNodes;
-      var i = down -1;
-      if (i < dropdown_items.length) {
-        if (i > 0) {
-          dropdown_items[i - 1].className = "";
-        }
-        if (i+1 < dropdown_items.length) {
-          dropdown_items[i+1].className = "";
-        }
-        var current_value = dropdown_items[i].firstChild.innerHTML;
-        dropdown_items[i].className = "hover";
-        input_field.addEventListener('keydown', function(e) {
-          switch (e.keyCode) {
-            case 13:
-              e.preventDefault();
-              input_field.value = current_value;
-              break;
-            default:
-              break;
-          }
-        }, false);
-      }
-    }
-
-    var initSearch = function() {
-      search_button.addEventListener('click', function(e) {
-        e.preventDefault();
-        destroyDropdown();
-      //var matching_data = searchRows(input_field.value);
-        //FnordMetric.views.MetricList().render(elem, true, input_field.value);
-        renderSearchedView(input_field.value);
-      }, false);
-
-      input_field.addEventListener('focus', function(e) {
-        this.value = "";
-      }, false);
-
-      input_field.addEventListener('input', function(e) {
-        autocomplete(this.value)
-      }, false);
-
-      input_field.addEventListener('keydown', function(e) {
-        switch (e.keyCode) {
-          case 13:
-            e.preventDefault();
-            destroyDropdown();
-            //searchRows(input_field.value);
-            break;
-          case 40:
-            down++;
-            dropdownKeyNav();
-            break;
-          case 38:
-            down--;
-            dropdownKeyNav();
-            break;
-          default:
-            break;
-        }
-      }, false);
-    
-
-
-    }
-
-
-
-    var destroyDropdown = function() {
-      down = 0;
-      while (dropdown.firstChild) {
-        dropdown.removeChild(dropdown.firstChild);
-      }
-    }
-
-    var autocomplete = function(input) {
-      destroyDropdown();
-      search_bar.appendChild(dropdown);
-      var keys = getKeys(metrics_data);
-
-      keys.map(function(key) {
-        if (key.indexOf(input) > - 1) {
-          var dropdown_item = document.createElement("li");
-          var dropdown_link = FnordMetric.createButton(
-            "#", undefined, key);
-          dropdown_item.appendChild(dropdown_link);
-          dropdown.appendChild(dropdown_item);
-
-          dropdown_link.addEventListener('click', function(e) {
-            e.preventDefault();
-            input_field.value = this.innerHTML;
-            destroyDropdown();
-          }, false);
-        }
-      });
-
-    }
-
-
-  }
-
-
-
 
   init();
   var fragment = window.location.hash;
