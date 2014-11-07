@@ -3,10 +3,11 @@ body, html {
   padding: 0;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
+  color: #778693;
 }
 
 body {
-  background: #f1f1f1;
+  background: #fff;
   padding-bottom: 20px;
 }
 
@@ -21,35 +22,18 @@ body {
 }
 
 .navbar {
-  height: 57px;
+  height: 40px;
   width: 100%;
   margin: 0px;
-  line-height: 35px;
-}
-
-.navbar div {
-  float: right;
+  line-height: 40px;
+  border-bottom: 1px solid #dbdedf;
 }
 
 .fancy_button {
-  height: 35px;
-  line-height: 35px;
-  display: inline-block;
-  padding: 0 18px;
-  border-radius: 5px;
-  border-bottom: 1px solid #34495e;
-  color: #fff;
-  background-color: #2980b9;
-}
-
-.fancy_button a {
-  color: #fff;
-  text-decoration: none;
-  text-shadow: 1px 1px 2px rgba(0,0,0,.3);
 }
 
 .viewport {
-  margin-top: 65px;
+  margin-top: 50px;
 }
 
 .headbar {
@@ -59,8 +43,8 @@ body {
   left: 0;
   right: 0;
   z-index:999;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background: rgba(25, 32, 37, 1);
+  border-bottom: rgba(24, 31, 36, 1);
 }
 
 .headbar a h1 {
@@ -70,8 +54,7 @@ body {
   padding: 0 20px;
   margin: 0;
   float: left;
-  border-right: 1px solid #e8e8e8;
-  color: #333;
+  color: #fff;
 }
 
 .editor_pane, .result_pane {
@@ -80,8 +63,6 @@ body {
 }
 
 .viewport.horizontal_split .editor_pane {
-  padding-left: 20px;
-  margin-bottom: 50px;
   left: 0;
 }
 
@@ -187,10 +168,11 @@ body {
 }
 
 .pagination_navbar {
-  width: 100%;
+  float: right;
   height: 25px;
   line-height: 25px;
   margin-bottom: 10px;
+  margin-right: 20px;
 }
 
 .pagination_navbar a, 
@@ -329,45 +311,45 @@ ul.dropdown li:hover {
 
 
 table.metrics_list_container {
-  width: 80%;
-  margin: auto;
+  width: 100%;
   margin-top: 5px;
   border-collapse: collapse;
 }
 
 table.metrics_list_container tr {
-  border-left: 1px solid #d3d3d3;
-  border-right: 1px solid #d3d3d3;
-  border-bottom: 1px solid #d3d3d3;
+  border-bottom: 1px solid rgb(226, 232, 237);
 }
 
 table.metrics_list_container tr.metrics_list_header {
-  border-left: none ;
-  border-right: none;
+  border-top: 1px solid rgb(226, 232, 237);
+  background-color: #f6f8fa;
+  color: #60707f;
 }
 
-tr.metrics_list_header th {
-  color: #888;
-  padding: 18px 0 18px 13px;
+tr.metrics_list_header th,
+table.metrics_list_container td {
   text-align: left;
   font-weight: 500;
+  border: none;
+  height: 40px;
+  line-height: 40px;
+  font-size: 109%;
+}
+
+tr.metrics_list_header th:first-child,
+table.metrics_list_container td:first-child {
+  padding-left: 20px;
 }
 
 tr.metrics_list_header th .caret {
+  color: #60707f;
   text-decoration: none;
-  color: #888;
   font-size: 10px;
 }
 
 table.metrics_list_container tr:hover td {
-  background-color: #d7e4f2;
+  background-color: #f6f8fa;
   cursor: pointer;
-}
-
-table.metrics_list_container td {
-  padding: 18px 0 18px 13px;
-  background-color: #fff;
-  border: none;
 }
 
 .editor_pane .editor_menu {
