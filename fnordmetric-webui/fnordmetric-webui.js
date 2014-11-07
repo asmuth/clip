@@ -99,8 +99,8 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
   return button;
 }
 
-FnordMetric.DropdownAutocomplete = function(parentNode, dropdown, input_field, keys, search_button) {
-  console.log("fnordmetrid dropdown autocomplete");
+FnordMetric.DropdownAutocomplete = function(
+  parentNode, dropdown, input_field, keys, search_button) {
   var down = 0;
   var dropdownKeyNav = function() {
     var dropdown_items = dropdown.childNodes;
@@ -159,16 +159,7 @@ FnordMetric.DropdownAutocomplete = function(parentNode, dropdown, input_field, k
   }
 
   var init = function() {
-    console.log("init");
-    if (search_button !== undefined ) {
-      search_button.addEventListener('click', function(e) {
-        e.preventDefault();
-        destroyDropdown();
-      //var matching_data = searchRows(input_field.value);
-        //FnordMetric.views.MetricList().render(elem, true, input_field.value);
-        renderSearchedView(input_field.value);
-      }, false);
-    }
+
 
     input_field.addEventListener('focus', function(e) {
       this.value = "";
@@ -381,8 +372,10 @@ FnordMetric.views.MetricList = function() {
 
     var destroyNoResult = function() {
       if (no_result_text === undefined) {
-        return;
+        no_result_text = document.querySelector(
+          ".metrics.big_text");
       }
+      if (no_result_text == null) {return;}
       elem.removeChild(no_result_text);
       no_result_text = undefined;
     }
@@ -611,6 +604,7 @@ FnordMetric.views.MetricList = function() {
 
     var renderView = function() {
       destroyTable();
+      destroyNoResult();
 
       if (isSearchResult) {
         searchRows(search_item);
@@ -1491,8 +1485,6 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     renderExecutionInfo();
-    console.log(charts);
-    console.log(tables);
     if (charts !== undefined) {
       renderResultNavbar("chart", charts.length, curr_chart);
       renderChart(charts[curr_chartID]);
@@ -1590,8 +1582,6 @@ FnordMetric.WebUI = function() {
     "current" : null
   };
 
-  function getMetricData() {
-       }
 
   function getKeys(data) {
     var keys = [];
@@ -1601,8 +1591,6 @@ FnordMetric.WebUI = function() {
     return keys;
   }
 
-
-
   var createSearchBar = function() {
     var search_bar = document.createElement("div");
     search_bar.className = "search_bar";
@@ -1610,6 +1598,15 @@ FnordMetric.WebUI = function() {
 
     var search_button = document.createElement("div");
     search_button.className = "fancy_button";
+
+    search_button.addEventListener('click', function(e) {
+      e.preventDefault();
+      //var matching_data = searchRows(input_field.value);
+        //FnordMetric.views.MetricList().render(elem, true, input_field.value);
+      console.log("click search button");
+      renderSearchResult(input_field.value);
+    }, false);
+
 
     var button_link = FnordMetric.createButton(
       "#", undefined, "Search");
@@ -1624,8 +1621,6 @@ FnordMetric.WebUI = function() {
 
     var dropdown = document.createElement("ul");
     dropdown.className = "dropdown";
-    console.log("FnordKetroc metric data");
-    console.log(FnordMetric.MetricData);
 
     if (FnordMetric.MetricData === undefined) {
       FnordMetric.httpGet("/metrics", function(r) {
@@ -1634,9 +1629,9 @@ FnordMetric.WebUI = function() {
           data = data.metrics;
           FnordMetric.MetricData = data;
           var keys = getKeys(FnordMetric.MetricData);
-          console.log(keys);
           FnordMetric.DropdownAutocomplete(
-            search_bar, dropdown, input_field, keys, search_button);
+            search_bar, dropdown, input_field, keys, 
+            search_button);
         }
       });
     } else {
@@ -1644,13 +1639,6 @@ FnordMetric.WebUI = function() {
       FnordMetric.DropdownAutocomplete(
         search_bar, dropdown, input_field, keys, search_button);
     }
-
-    
-    
-
-    //input_field.addEventListener('focus', search(
-      //search_bar, input_field, search_button, clear_button),  false);
-
   }
 
 
@@ -1697,6 +1685,31 @@ FnordMetric.WebUI = function() {
     return menuitem;
   }
 
+  var renderView = function(view, args) {
+    if (current_view != null) {
+      current_view.destroy(viewport);
+    }
+
+    current_view = view;
+    view.render(viewport, args);
+  };
+
+  var renderSearchResult = function(search_item) {
+    console.log("render search result");
+    if (current_view.name == "query_playground") {
+      current_view.destroy(viewport);
+    }
+    current_view = FnordMetric.views.MetricList();
+    if (search_item === undefined) {
+      current_view.render(viewport);
+    } else {
+      console.log("render metric list with search item");
+      current_view.render(viewport, true, search_item);
+    }
+    window.location.href = "/admin#metric_list";
+  }
+
+
 
   var openUrl = function(url, push_state) {
     var query = null;
@@ -1741,36 +1754,16 @@ FnordMetric.WebUI = function() {
     renderView(view(), query);
   }
 
-  var renderView = function(view, args) {
-    if (current_view != null) {
-      current_view.destroy(viewport);
-    }
-
-    current_view = view;
-    view.render(viewport, args);
-  };
-
-  var renderSearchedView = function(search_item) {
-    console.log(search_item);
-    if (current_view.name == "query_playground") {
-      current_view.destroy(viewport);
-    }
-    current_view = FnordMetric.views.MetricList();
-    if (search_item === undefined) {
-      current_view.render(viewport);
-    } else {
-      current_view.render(viewport, true, search_item);
-    }
-    window.location.href = "/admin#metric_list";
-  }
-
+  var fragment;
   init();
-  var fragment = window.location.hash;
+  fragment = window.location.hash;
   if (fragment) {
     openUrl(fragment.substring(1));
   } else {
     openUrl("metric_list", true);
   }
+
+
 }
 
 
