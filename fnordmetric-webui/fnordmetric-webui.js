@@ -913,7 +913,6 @@ FnordMetric.views.QueryPlayground = function() {
       } else{
           //set query_editor height
       }
-      query_editor.style.backgroundColor = "#fff";
     }
 
     var draw_dropdown;
@@ -1673,13 +1672,8 @@ FnordMetric.WebUI = function() {
     headbar.appendChild(menuitem);
     menuitem.addEventListener('click', function(e) {
       e.preventDefault();
-      if (menuitems.current !== null) {
-        menuitems.current.style.backgroundColor = "#fff";
-      }
       menuitems.current = this.firstChild;
-      menuitems.current.style.backgroundColor = "#ddd";
       openUrl(this.getAttribute("href").substr(1), true);
-
       return false; 
     });
     return menuitem;
@@ -1738,19 +1732,9 @@ FnordMetric.WebUI = function() {
       return;
     }
 
-    var menuitem = menuitems[url];
-    if (menuitems.current !== null) {
-      menuitems.current.style.backgroundColor = "#fff";
-    }
-    menuitems.current = menuitem.firstChild;
-    menuitems.current.style.backgroundColor = "#ddd";
-
-
     if (push_state) {
       window.history.pushState({url: url}, "", "#" + url);
     }
-
-
     renderView(view(), query);
   }
 
