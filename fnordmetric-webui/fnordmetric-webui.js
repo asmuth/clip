@@ -616,7 +616,7 @@ FnordMetric.views.MetricList = function() {
         searchRows(search_item);
       } else {
         if (metrics_data.length > rows_per_side) {
-            pag_navbar = renderListPagination(metrics_data);
+         pag_navbar = renderListPagination(metrics_data);
         }
         end = Math.min(metrics_data.length, rows_per_side);
         initTable();
@@ -723,6 +723,7 @@ FnordMetric.views.QueryPlayground = function() {
   var visual_editor;
   var visualIsOn = true;
   var sql_editor;
+  var visualHoverTtp;
   var cm;
 
   var initEditor = function() {
@@ -751,6 +752,14 @@ FnordMetric.views.QueryPlayground = function() {
       var tabbar = document.createElement("div");
       tabbar.className = "editor_navbar";
 
+      function createTabHoverText(inner_text) {
+        var textbox = document.createElement("div");
+        textbox.className = "hover_tooltip";
+        textbox.innerHTML = inner_text;
+        tabbar.appendChild(textbox);
+        return textbox;
+      }
+
       function createTab(inner_text, callback) {
         var tab = FnordMetric.createButton(
           "#", undefined, "<h3>"+inner_text+"</h3>");
@@ -760,6 +769,9 @@ FnordMetric.views.QueryPlayground = function() {
       }
       visual_editor = createTab("Visual");
       sql_editor = createTab("SQL");
+      visualHoverTtp = createTabHoverText(
+        "The visual editor has been "+
+        "disabled because you modified the ChartSQL query");
       editor_pane.appendChild(tabbar);
     }
 
@@ -1112,6 +1124,7 @@ FnordMetric.views.QueryPlayground = function() {
     elem.appendChild(editor_resizer_tooltip);
     elem.appendChild(result_pane);
 
+    
     visual_editor.addEventListener('click', function(e) {
       e.preventDefault();
       if (visualIsOn) {
@@ -1122,6 +1135,14 @@ FnordMetric.views.QueryPlayground = function() {
       } else {
         alert("display nice box: You will loose your query. Do you want to proceed anyway? ... ");
       }
+    }, false);
+
+    visual_editor.addEventListener('mouseover', function() {
+      visualHoverTtp.style.display = "block";
+    }, false);
+
+    visual_editor.addEventListener('mouseout', function() {
+      visualHoverTtp.style.display = "none";
     }, false);
 
     sql_editor.addEventListener('click', function(e) {

@@ -202,8 +202,23 @@ input {
   height: 26px;
 }
 
+.hover_tooltip {
+  text-align: center;
+  padding: 5px 7px;
+  color: #fff;
+  background: #2a2a2a;
+  border-radius: 3px;
+  font-size: 13px;
+  z-index: 900;
+  max-width: 300px;
+  display: none;
+  position: absolute;
+}
 
-
+.editor_navbar .hover_tooltip {
+  top: 30px;
+  left: 4px;
+}
 
 .result_pane .result_navbar {
   width: 100%;
