@@ -721,6 +721,7 @@ FnordMetric.views.QueryPlayground = function() {
   var embed_button;
   var query_editor;
   var visual_editor;
+  var visualIsOn = true;
   var sql_editor;
   var cm;
 
@@ -792,6 +793,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   var initCM = function() {
+
     var tab_width = 4;
     var font = "14px monospace";
     var patterns = [
@@ -804,13 +806,27 @@ FnordMetric.views.QueryPlayground = function() {
         color: "#6c71c4"
       }
     ];
-    cm = CodeMirror(editor_pane.querySelector(".editor"), {
+
+    cm = CodeMirror(query_editor, {
       lineNumbers: true,
     });
 
-    //cm.setValue("DRAW POINTCHART AXIS LEFT AXIS BOTTOM; SELECT 'fu' as series,\n "+
-    //"time AS x, value as y FROM http_status_codes;");
+    //FIXME ?
+    cm.on('change', function(cmirror) {
+      var cm_val = cm.getValue();
+      if (cm_val.length == 0 || (/^\s*$/).test(cm_val) ) {
+        if (!visualIsOn) {
+          visual_editor.firstChild.style.color = "#444";
+          visualIsOn = true;
+        }
 
+      } else {
+        if (visualIsOn) {
+          visualIsOn = false;
+          visual_editor.firstChild.style.color = "#ddd";
+        }
+      }
+    });
   }
 
   initEditor();
@@ -1066,7 +1082,7 @@ FnordMetric.views.QueryPlayground = function() {
     var render = function(query) {
       function initQueryEditor() {
         while (query_editor.firstChild) {
-          queryEditor.removeChild(query_editor.firstChild)
+          query_editor.removeChild(query_editor.firstChild)
         }
       }
 
@@ -1098,10 +1114,14 @@ FnordMetric.views.QueryPlayground = function() {
 
     visual_editor.addEventListener('click', function(e) {
       e.preventDefault();
-      this.className = "active";
-      sql_editor.className = "";
-      current_editor = visualEditor();
-      renderEditor();
+      if (visualIsOn) {
+        this.className = "active";
+        sql_editor.className = "";
+        current_editor = visualEditor();
+        renderEditor();
+      } else {
+        alert("display nice box: You will loose your query. Do you want to proceed anyway? ... ");
+      }
     }, false);
 
     sql_editor.addEventListener('click', function(e) {
