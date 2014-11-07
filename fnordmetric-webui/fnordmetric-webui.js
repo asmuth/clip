@@ -1449,10 +1449,16 @@ FnordMetric.views.QueryPlayground = function() {
     }
 
     renderExecutionInfo();
-    renderResultNavbar("chart", charts.length, curr_chart);
-    renderChart(charts[curr_chartID]);
-    renderResultNavbar("table", tables.length, curr_table);
-    renderTable(tables[curr_tableID]);
+    console.log(charts);
+    console.log(tables);
+    if (charts !== undefined) {
+      renderResultNavbar("chart", charts.length, curr_chart);
+      renderChart(charts[curr_chartID]);
+    }
+    if (tables !== undefined) {
+      renderResultNavbar("table", tables.length, curr_table);
+      renderTable(tables[curr_tableID]);
+    }
 
     updateResultNavbar("chart", curr_chartID, -1);
     updateResultNavbar("table", curr_tableID, -1); 
@@ -1522,7 +1528,6 @@ FnordMetric.views.QueryPlayground = function() {
 
 FnordMetric.WebUI = function() {
   var current_view = null;
-  var current_menuitem = null;
   var current_url = null;
   var current_query = null;
 
@@ -1535,6 +1540,12 @@ FnordMetric.WebUI = function() {
   var routes = {
     "metric_list": FnordMetric.views.MetricList,
     "query_playground": FnordMetric.views.QueryPlayground
+  };
+
+  var menuitems = {
+    "metric_list" : null,
+    "query_playground" : null,
+    "current" : null
   };
 
    var createSearchBar = function() {
@@ -1566,8 +1577,8 @@ FnordMetric.WebUI = function() {
     document.body.appendChild(headbar);
     document.body.appendChild(viewport);
 
-    addMenuItem("Query Playground", "query_playground");
-    addMenuItem("Metrics", "metric_list");
+    menuitems.query_playground = addMenuItem("Query Playground", "query_playground");
+    menuitems.metric_list = addMenuItem("Metrics", "metric_list");
     createSearchBar();
 
     window.onpopstate = function(e) {
@@ -1593,15 +1604,16 @@ FnordMetric.WebUI = function() {
     headbar.appendChild(menuitem);
     menuitem.addEventListener('click', function(e) {
       e.preventDefault();
-      if (current_menuitem !== null) {
-        current_menuitem.style.backgroundColor = "#fff";
+      if (menuitems.current !== null) {
+        menuitems.current.style.backgroundColor = "#fff";
       }
-      current_menuitem = this.firstChild;
-      current_menuitem.style.backgroundColor = "#ddd";
+      menuitems.current = this.firstChild;
+      menuitems.current.style.backgroundColor = "#ddd";
       openUrl(this.getAttribute("href").substr(1), true);
 
       return false; 
     });
+    return menuitem;
   }
 
 
@@ -1626,12 +1638,18 @@ FnordMetric.WebUI = function() {
     current_query = query;
     current_url = url;
 
-
     var view = routes[url];
     if (view === undefined) {
       console.log("invalid route", url, routes); // FIXME
       return;
     }
+
+    var menuitem = menuitems[url];
+    if (menuitems.current !== null) {
+      menuitems.current.style.backgroundColor = "#fff";
+    }
+    menuitems.current = menuitem.firstChild;
+    menuitems.current.style.backgroundColor = "#ddd";
 
 
     if (push_state) {
