@@ -7,23 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_WEBINTERFACE_H
-#define _FNORDMETRIC_WEBINTERFACE_H
-#include <memory>
-#include <xzero/http/HttpService.h>
+#ifndef _FNORDMETRIC_NET_UDPSERVER_H
+#define _FNORDMETRIC_NET_UDPSERVER_H
+#include <fnordmetric/util/buffer.h>
+#include <functional>
 
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace net {
 
-class AdminUI : public xzero::HttpService::Handler {
+class UDPServer {
 public:
-
-  static xzero::HttpService::Handler* get();
-
-  bool handleRequest(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response) override;
+  UDPServer();
+  void onMessage(std::function<void (const util::Buffer&)> callback);
+  void listen(int port);
+protected:
+  int ssock_;
+  std::function<void (const fnord::util::Buffer&)> callback_;
 };
+
 
 }
 }

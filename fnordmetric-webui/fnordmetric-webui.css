@@ -147,7 +147,6 @@ input {
   margin-right: 10px;
 }
 
-
 .visual_editor input {
   height: 20px;
 }
@@ -200,6 +199,7 @@ input {
   top: 30px;
   left: 4px;
 }
+>>>>>>> adminui
 
 .result_pane .result_navbar {
   width: 100%;

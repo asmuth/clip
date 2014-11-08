@@ -6,6 +6,7 @@
 # copy of the GNU General Public License along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
+include(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
 
@@ -13,20 +14,15 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/cli/cli.cc
+    stage/src/fnordmetric/io/acceptor.cc
+    stage/src/fnordmetric/io/eventloop.cc
     stage/src/fnordmetric/io/file.cc
     stage/src/fnordmetric/io/fileutil.cc
     stage/src/fnordmetric/io/filerepository.cc
     stage/src/fnordmetric/io/mmappedfile.cc
     stage/src/fnordmetric/io/pagemanager.cc
+    stage/src/fnordmetric/net/udpserver.cc
     stage/src/fnordmetric/environment.cc
-    stage/src/fnordmetric/ev/acceptor.cc
-    stage/src/fnordmetric/ev/eventloop.cc
-    stage/src/fnordmetric/http/httpinputstream.cc
-    stage/src/fnordmetric/http/httpoutputstream.cc
-    stage/src/fnordmetric/http/httpmessage.cc
-    stage/src/fnordmetric/http/httprequest.cc
-    stage/src/fnordmetric/http/httpresponse.cc
-    stage/src/fnordmetric/http/httpserver.cc
     stage/src/fnordmetric/sstable/cursor.cc
     stage/src/fnordmetric/sstable/fileheaderreader.cc
     stage/src/fnordmetric/sstable/fileheaderwriter.cc
@@ -56,8 +52,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/stringutil.cc
     stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
-    stage/src/fnordmetric/thread/threadpool.cc
-    stage/src/fnordmetric/web/queryendpoint.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/areachart.cc
     stage/src/fnordmetric/ui/barchart.cc
@@ -107,46 +101,50 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql_extensions/domainconfig.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc
+    stage/src/fnordmetric/thread/threadpool.cc
     stage/src/fnordmetric/metricdb/adminui.cc
-    stage/src/fnordmetric/metricdb/compactiontask.cc
+    stage/src/fnordmetric/metricdb/backends/inmemory/metric.cc
+    stage/src/fnordmetric/metricdb/backends/inmemory/metricrepository.cc
     stage/src/fnordmetric/metricdb/httpapi.cc
-    stage/src/fnordmetric/metricdb/labelindex.cc
-    stage/src/fnordmetric/metricdb/labelindexreader.cc
-    stage/src/fnordmetric/metricdb/labelindexwriter.cc
     stage/src/fnordmetric/metricdb/metric.cc
-    stage/src/fnordmetric/metricdb/metriccursor.cc
     stage/src/fnordmetric/metricdb/metricrepository.cc
-    stage/src/fnordmetric/metricdb/metricsnapshot.cc
     stage/src/fnordmetric/metricdb/metrictableref.cc
     stage/src/fnordmetric/metricdb/metrictablerepository.cc
-    stage/src/fnordmetric/metricdb/samplereader.cc
-    stage/src/fnordmetric/metricdb/samplewriter.cc
-    stage/src/fnordmetric/metricdb/statsd.cc
-    stage/src/fnordmetric/metricdb/tableheaderreader.cc
-    stage/src/fnordmetric/metricdb/tableheaderwriter.cc
-    stage/src/fnordmetric/metricdb/tableref.cc
-    stage/src/fnordmetric/metricdb/tokenindex.cc
-    stage/src/fnordmetric/metricdb/tokenindexreader.cc
-    stage/src/fnordmetric/metricdb/tokenindexwriter.cc)
+    stage/src/fnordmetric/metricdb/sample.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
 
-IF(APPLE)
+if(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
-ELSE()
+else()
   set(CMAKE_CXX_FLAGS "-std=c++0x")
-ENDIF()
+endif()
 
 # libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
-add_library(fnord-static ${FNORDMETRIC_SOURCES})
+add_library(fnord-static STATIC ${FNORDMETRIC_SOURCES})
 
 find_package(MySQL)
-if (MYSQL_FOUND)
+if(MYSQL_FOUND)
   include_directories(${MYSQL_INCLUDE_DIRS})
   target_link_libraries(fnord-static mysqlclient)
-endif(MYSQL_FOUND)
+endif()
+
+pkg_check_modules(XZERO "libxzero")
+SET(XZERO_BUNDLED libxzero-0.11.0_pre20141105.tgz)
+if(XZERO_FOUND)
+  link_directories(${XZERO_LIBRARY_DIRS})
+  include_directories(${XZERO_INCLUDE_DIRS})
+else()
+  set(XZERO_STAGE_DIR ${CMAKE_SOURCE_DIR}/stage/libxzero)
+  execute_process(COMMAND mkdir -p ${XZERO_STAGE_DIR})
+  execute_process(COMMAND tar -xz -C ${XZERO_STAGE_DIR} -f ${CMAKE_SOURCE_DIR}/../../3rdparty/${XZERO_BUNDLED})
+  add_subdirectory(${XZERO_STAGE_DIR})
+  link_directories(${XZERO_STAGE_DIR})
+  include_directories(${XZERO_STAGE_DIR}/include)
+endif()
+target_link_libraries(fnord-static xzero)
 
 # fnordmetric
 add_executable(fnordmetric-cli stage/src/fnordmetric/cli.cc)
@@ -175,9 +173,6 @@ add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
 target_link_libraries(tests/test-csv-backend fnord-static)
 
-add_executable(tests/test-http stage/src/fnordmetric/http/http_test.cc)
-target_link_libraries(tests/test-http fnord-static)
-
 add_executable(tests/test-pagemanager
     stage/src/fnordmetric/io/pagemanager_test.cc)
 target_link_libraries(tests/test-pagemanager fnord-static)
@@ -198,14 +193,14 @@ target_link_libraries(tests/test-query fnord-static)
 add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
 target_link_libraries(tests/test-cli fnord-static)
 
-add_executable(tests/test-statsd
-    stage/src/fnordmetric/metricdb/statsd_test.cc)
-target_link_libraries(tests/test-statsd fnord-static)
+#add_executable(tests/test-statsd
+#    stage/src/fnordmetric/metricdb/statsd_test.cc)
+#target_link_libraries(tests/test-statsd fnord-static)
 
-add_executable(tests/test-metric
-    stage/src/fnordmetric/metricdb/metric_test.cc)
-target_link_libraries(tests/test-metric fnord-static)
+#add_executable(tests/test-metric
+#    stage/src/fnordmetric/metricdb/metric_test.cc)
+#target_link_libraries(tests/test-metric fnord-static)
 
-add_executable(tests/test-metricrepository
-    stage/src/fnordmetric/metricdb/metricrepository_test.cc)
-target_link_libraries(tests/test-metricrepository fnord-static)
+#add_executable(tests/test-metricrepository
+#    stage/src/fnordmetric/metricdb/metricrepository_test.cc)
+#target_link_libraries(tests/test-metricrepository fnord-static)

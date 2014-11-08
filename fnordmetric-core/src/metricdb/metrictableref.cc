@@ -18,7 +18,7 @@ class TableScan;
 
 namespace metricdb {
 
-MetricTableRef::MetricTableRef(Metric* metric) : metric_(metric) {}
+MetricTableRef::MetricTableRef(IMetric* metric) : metric_(metric) {}
 
 int MetricTableRef::getColumnIndex(const std::string& name) {
   if (name == "time") {
@@ -67,12 +67,9 @@ void MetricTableRef::executeScan(query::TableScan* scan) {
   metric_->scanSamples(
       begin,
       limit,
-      [this, scan] (MetricCursor* cursor) -> bool {
-        auto sample = cursor->sample<double>();
-        auto time = fnord::util::DateTime(cursor->time());
-
+      [this, scan] (Sample* sample) -> bool {
         std::vector<query::SValue> row;
-        row.emplace_back(time);
+        row.emplace_back(sample->time());
         row.emplace_back(sample->value());
 
         // FIXPAUL slow!

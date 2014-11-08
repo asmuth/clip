@@ -9,7 +9,9 @@
  */
 #include <fnordmetric/util/logoutputstream.h>
 
-namespace fnordmetric {
+using fnordmetric::util::OutputStream;
+
+namespace fnord {
 namespace util {
 
 LogOutputStream::LogOutputStream(

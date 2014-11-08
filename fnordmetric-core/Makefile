@@ -6,7 +6,12 @@
 all: build
 
 build:
+	(cd ../fnordmetric-webui && make)
 	(cd build/cmake && make)
+
+devserver: build
+	mkdir -p /tmp/fnordmetric-data
+	DEV_ASSET_PATH=../ ./build/cmake/target/fnordmetric-server --port 8080 --datadir /tmp/fnordmetric-data
 
 test:
 	(cd build/cmake && make test)
@@ -15,8 +20,4 @@ clean:
 	(cd build/cmake && make clean)
 	rm -rf build/test/tmp*
 
-doc:
-	find doc/examples -name "*.sql" | while read file; do PATH=./build:$$PATH fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
-	(cd doc/web && rake build)
-
-.PHONY: all test clean doc build
+.PHONY: all test clean build devserver

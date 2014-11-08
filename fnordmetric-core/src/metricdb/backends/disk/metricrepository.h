@@ -9,9 +9,9 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
 #define _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
+#include <fnordmetric/io/filerepository.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <mutex>
-#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -20,14 +20,21 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
-class IMetricRepository {
+class MetricRepository {
 public:
-  IMetric* findMetric(const std::string& key) const;
-  IMetric* findOrCreateMetric(const std::string& key);
-  std::vector<IMetric*> listMetrics() const;
+
+  MetricRepository(std::shared_ptr<io::FileRepository> file_repo);
+
+  Metric* findMetric(const std::string& key) const;
+  Metric* findOrCreateMetric(const std::string& key);
+  std::vector<Metric*> listMetrics() const;
+
 protected:
-  virtual IMetric* createMetric(const std::string& key) = 0;
-  std::unordered_map<std::string, std::unique_ptr<IMetric>> metrics_;
+
+  void openTable(const std::string& filename);
+
+  std::shared_ptr<io::FileRepository> file_repo_;
+  std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
   mutable std::mutex metrics_mutex_;
 };
 

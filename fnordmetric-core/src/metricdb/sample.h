@@ -9,17 +9,31 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_SAMPLE_H_
 #define _FNORDMETRIC_METRICDB_SAMPLE_H_
+#include <fnordmetric/util/datetime.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
 
+using fnord::util::DateTime;
+
 namespace fnordmetric {
 namespace metricdb {
 
-template <typename ValueType>
-struct Sample {
-  std::vector<std::pair<std::string, std::string>> labels;
-  ValueType value;
+class Sample {
+public:
+  Sample(
+      const DateTime& time,
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels);
+
+  const DateTime& time();
+  double value();
+  const std::vector<std::pair<std::string, std::string>>& labels();
+
+protected:
+  const DateTime& time_;
+  double value_;
+  const std::vector<std::pair<std::string, std::string>>& labels_;
 };
 
 }

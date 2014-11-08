@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <fnordmetric/environment.h>
+#include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
@@ -22,6 +23,8 @@ UNIT_TEST(CLITest);
 
 static fnordmetric::util::UnitTest::TestCase __test_simple_sql_to_svg_(
     &CLITest, "TestSimpleSQLToSVG", [] () {
+  fnord::io::FileUtil::mkdir_p("build/tests/tmp");
+
   std::vector<std::string> args = {
     "test/fixtures/gdp_bar_chart.sql",
     "-f", "svg",

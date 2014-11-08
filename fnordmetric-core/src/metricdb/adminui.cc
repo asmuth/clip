@@ -10,75 +10,85 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/util/assets.h>
+#include <xzero/http/HttpRequest.h>
+#include <xzero/http/HttpResponse.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
-  return std::unique_ptr<http::HTTPHandler>(new AdminUI());
+xzero::HttpService::Handler* AdminUI::get() {
+  static AdminUI self;
+  return &self;
 }
 
-bool AdminUI::handleHTTPRequest(
-    http::HTTPRequest* request,
-    http::HTTPResponse* response) {
+bool AdminUI::handleRequest(xzero::HttpRequest* request,
+                            xzero::HttpResponse* response) {
 
   if (env()->verbose()) {
-    util::LogEntry log_entry;
+    fnord::util::LogEntry log_entry;
     log_entry.append("__severity__", "DEBUG");
     log_entry.printf(
         "__message__",
         "HTTP request: %s %s",
-        request->getMethod().c_str(),
-        request->getUrl().c_str());
+        request->unparsedMethod().c_str(),
+        request->path().c_str());
 
     env()->logger()->log(log_entry);
   }
 
-  auto url = request->getUrl();
+  auto url = request->path();
+  auto done = std::bind(&xzero::HttpResponse::completed, response);
 
   if (url == "/") {
-    response->setStatus(http::kStatusFound);
+    response->setStatus(xzero::HttpStatus::Found);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addHeader("Location", "/admin");
+    response->completed();
     return true;
   }
 
   if (url == "/admin") {
-    response->setStatus(http::kStatusOK);
+    response->setStatus(xzero::HttpStatus::Ok);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"));
+    response->output()->write(
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"),
+        done);
     return true;
   }
 
   if (url == "/favicon.ico") {
-    response->setStatus(http::kStatusOK);
+    response->setStatus(xzero::HttpStatus::Ok);
     response->addHeader("Content-Type", "image/x-icon");
-    response->addBody(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"));
+    response->output()->write(
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"),
+        done);
     return true;
   }
 
   if (url == "/s/fnordmetric.js") {
-    response->setStatus(http::kStatusOK);
+    response->setStatus(xzero::HttpStatus::Ok);
     response->addHeader("Content-Type", "text/javascript");
-    response->addBody(util::Assets::getAsset("fnordmetric-js/fnordmetric.js"));
+    response->output()->write(
+        util::Assets::getAsset("fnordmetric-js/fnordmetric.js"),
+        done);
     return true;
   }
 
   if (url == "/s/fnordmetric-webui.css") {
-    response->setStatus(http::kStatusOK);
+    response->setStatus(xzero::HttpStatus::Ok);
     response->addHeader("Content-Type", "text/css");
-    response->addBody(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"));
+    response->output()->write(
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"),
+        done);
     return true;
   }
 
   if (url == "/s/fnordmetric-webui.js") {
-    response->setStatus(http::kStatusOK);
+    response->setStatus(xzero::HttpStatus::Ok);
     response->addHeader("Content-Type", "text/javascript");
-    response->addBody(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"));
+    response->output()->write(
+        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"),
+        done);
     return true;
   }
 

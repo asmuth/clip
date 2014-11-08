@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 using namespace fnordmetric::metricdb;
 using namespace fnord::io;

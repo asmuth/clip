@@ -17,6 +17,32 @@ namespace util {
 
 DateTime::DateTime(uint64_t utc_time) : utc_time_(utc_time) {}
 
+DateTime& DateTime::operator=(const DateTime& other) {
+  utc_time_ = other.utc_time_;
+  tz_offset_ = other.tz_offset_;
+  return *this;
+}
+
+bool DateTime::operator==(const DateTime& other) const {
+  return utc_time_ < other.utc_time_;
+}
+
+bool DateTime::operator<(const DateTime& other) const {
+  return utc_time_ < other.utc_time_;
+}
+
+bool DateTime::operator>(const DateTime& other) const {
+  return utc_time_ > other.utc_time_;
+}
+
+bool DateTime::operator<=(const DateTime& other) const {
+  return utc_time_ <= other.utc_time_;
+}
+
+bool DateTime::operator>=(const DateTime& other) const {
+  return utc_time_ >= other.utc_time_;
+}
+
 DateTime::operator uint64_t() const {
   return utc_time_;
 }

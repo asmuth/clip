@@ -12,7 +12,9 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <sstream>
 
-namespace fnordmetric {
+using fnordmetric::util::RuntimeException;
+
+namespace fnord {
 namespace util {
 
 void Logger::log(

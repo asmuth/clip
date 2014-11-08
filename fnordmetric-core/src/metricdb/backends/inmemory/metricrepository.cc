@@ -7,23 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_HTTPHANDLER_H
-#define _FNORDMETRIC_HTTPHANDLER_H
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
+#include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
 
 namespace fnordmetric {
-namespace http {
+namespace metricdb {
+namespace inmemory_backend {
 
-class HTTPHandler {
-public:
-
-  virtual bool handleHTTPRequest(
-      HTTPRequest* request,
-      HTTPResponse* response) = 0;
-
-};
+Metric* MetricRepository::createMetric(const std::string& key) {
+  return new inmemory_backend::Metric(key);
+}
 
 }
 }
-#endif
+}
+

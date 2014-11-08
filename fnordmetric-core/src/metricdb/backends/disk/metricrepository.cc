@@ -14,9 +14,32 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
+MetricRepository::MetricRepository(
+    std::shared_ptr<io::FileRepository> file_repo) :
+    file_repo_(file_repo) {
+  std::unordered_map<
+      std::string,
+      std::vector<std::unique_ptr<TableRef>>> tables;
+
+  file_repo->listFiles([this, &tables] (const std::string& filename) -> bool {
+    auto table_ref = TableRef::openTable(filename);
+    tables[table_ref->metricKey()].emplace_back(std::move(table_ref));
+    return true;
+  });
+
+  for (auto& iter : tables) {
+    auto metric = new Metric(
+        iter.first,
+        file_repo_.get(),
+        std::move(iter.second));
+
+    metrics_.emplace(iter.first, std::unique_ptr<Metric>(metric));
+  }
+}
+
 // FIXPAUL lock
-IMetric* IMetricRepository::findMetric(const std::string& key) const {
-  IMetric* metric = nullptr;
+Metric* MetricRepository::findMetric(const std::string& key) const {
+  Metric* metric = nullptr;
 
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
 
@@ -28,15 +51,16 @@ IMetric* IMetricRepository::findMetric(const std::string& key) const {
   return metric;
 }
 
-IMetric* IMetricRepository::findOrCreateMetric(const std::string& key) {
-  IMetric* metric;
+Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
+  Metric* metric;
+
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
 
   auto iter = metrics_.find(key);
   if (iter == metrics_.end()) {
     // FIXPAUL expensive operation; should be done outside of lock..
-    metric = createMetric(key);
-    metrics_.emplace(key, std::unique_ptr<IMetric>(metric));
+    metric = new Metric(key, file_repo_.get());
+    metrics_.emplace(key, std::unique_ptr<Metric>(metric));
   } else {
     metric = iter->second.get();
   }
@@ -44,9 +68,9 @@ IMetric* IMetricRepository::findOrCreateMetric(const std::string& key) {
   return metric;
 }
 
-std::vector<IMetric*> IMetricRepository::listMetrics()
+std::vector<Metric*> MetricRepository::listMetrics()
     const {
-  std::vector<IMetric*> metrics;
+  std::vector<Metric*> metrics;
 
   {
     std::lock_guard<std::mutex> lock_holder(metrics_mutex_);

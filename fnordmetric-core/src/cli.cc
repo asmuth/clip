@@ -25,7 +25,7 @@ static const char kCrashErrorMsg[] =
 
 int main(int argc, const char** argv) {
   /* setup environment */
-  util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
 
   util::SignalHandler::ignoreSIGHUP();

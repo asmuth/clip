@@ -9,74 +9,40 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
-#include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/metricdb/compactionpolicy.h>
-#include <fnordmetric/metricdb/labelindex.h>
-#include <fnordmetric/metricdb/metriccursor.h>
-#include <fnordmetric/metricdb/metricsnapshot.h>
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/metricdb/samplereader.h>
-#include <fnordmetric/metricdb/tokenindex.h>
 #include <fnordmetric/util/datetime.h>
 #include <string>
 #include <vector>
+#include <set>
 
-using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
-class Metric {
+/**
+ * IMPLEMENTATIONS MUST BE THREADSAFE
+ */
+class IMetric {
 public:
-  static constexpr const size_t kLiveTableMaxSize = 2 << 19; /* 1MB */
-  static constexpr const uint64_t kLiveTableIdleTimeMicros = 
-      5 * 60 * 1000000; /* 5 minutes */
+  IMetric(const std::string& key);
+  virtual ~IMetric();
 
-  Metric(const std::string& key, io::FileRepository* file_repo);
+  virtual void insertSample(
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels) = 0;
 
-  Metric(
-      const std::string& key,
-      io::FileRepository* file_repo,
-      std::vector<std::unique_ptr<TableRef>>&& tables);
-
-  void addSample(const Sample<double>& sample);
-
-  void scanSamples(
+  virtual void scanSamples(
       const fnord::util::DateTime& time_begin,
       const fnord::util::DateTime& time_end,
-      std::function<bool (MetricCursor*)> callback);
+      std::function<bool (Sample* sample)> callback) = 0;
 
-  std::unique_ptr<MetricCursor> cursor() const;
   const std::string& key() const;
-
-  void compact(CompactionPolicy* compaction = nullptr);
-
-  void setLiveTableMaxSize(size_t max_size);
-  void setLiveTableIdleTimeMicros(uint64_t idle_time_micros);
-
-  size_t numTables() const;
-  size_t totalBytes() const;
-  uint64_t lastInsertTime() const;
-  std::set<std::string> labels() const;
-  bool hasLabel(const std::string& label) const;
+  virtual size_t totalBytes() const = 0;
+  virtual DateTime lastInsertTime() const = 0;
+  virtual std::set<std::string> labels() const = 0;
+  virtual bool hasLabel(const std::string& label) const = 0;
 
 protected:
-  std::shared_ptr<MetricSnapshot> getSnapshot() const;
-  std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
-  std::shared_ptr<MetricSnapshot> createSnapshot(bool writable);
-
   const std::string key_;
-  io::FileRepository const* file_repo_;
-  std::shared_ptr<MetricSnapshot> head_;
-  mutable std::mutex head_mutex_;
-  std::mutex append_mutex_;
-  std::mutex compaction_mutex_;
-  uint64_t max_generation_;
-  TokenIndex token_index_;
-  LabelIndex label_index_;
-
-  size_t live_table_max_size_; // FIXPAUL make atomic
-  uint64_t live_table_idle_time_micros_; // FIXPAUL make atomic
-  uint64_t last_insert_; // FIXPAUL make atomic
 };
 
 }

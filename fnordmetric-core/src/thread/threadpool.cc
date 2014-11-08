@@ -12,8 +12,10 @@
 #include <fnordmetric/thread/threadpool.h>
 #include <fnordmetric/util/runtimeexception.h>
 
-namespace fnordmetric {
-namespace util {
+using fnord::util::ExceptionHandler;
+
+namespace fnord {
+namespace thread {
 
 ThreadPool::ThreadPool(
     int max_threads,
