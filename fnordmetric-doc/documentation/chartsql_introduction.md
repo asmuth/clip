@@ -7,17 +7,46 @@ standard SQL database like GROUP BY or HAVING statements and joins.
 
 These are the main differences between ChartSQL and standard SQL:
 
-#### The DRAW Statement
+The DRAW Statement
+------------------
 
-#### The IMPORT Statement
+The DRAW statement allows you to specify that the query result should be returned
+as a chart (or other visualization) rather than a table. Here is a simple example
+of the DRAW statement:
 
-#### The GROUP OVER TIMEWINDOW Clause
+    DRAW LINECHART
+        WITH AXIS BOTTOM
+
+    SELECT time AS x, value AS y
+        FROM example_data;
+
+Read the [documentation for the DRAW statement](/documentation/chartsql/draw_statement)
+
+
+The IMPORT Statement
+--------------------
+
+The IMPORT statement allows you to import tables from External Data Sources,
+like CSV files or a MySQL database. Here is a asmple axmple of the IMPORT
+statement:
+
+    IMPORT TABLE example_data
+        FROM 'csv:examples/data/measurement.csv?headers=true';
+
+    SELECT * FROM example_data;
+
+Read the [documentation for the IMPORT statement](/documentation/chartsql/import_statement)
+
+
+The GROUP OVER TIMEWINDOW Clause
+--------------------------------
 
 FnordMetric introduces a new GROUP OVER TIMEWINDOW clause to simplify time based
 rollups when working with timeseries data. Here is a simple example of the GROUP
 OVER TIMEWINDOW clause:
 
-    SELECT time, mean(value) FROM mymetric GROUP OVER TIMEWINDOW(60, 10);
+    -- compute a moving average with a 60 second window
+    SELECT time, mean(value) FROM mymetric GROUP OVER TIMEWINDOW(60);
 
 Read the [documentation for the GROUP OVER TIMEWINDOW clause](/documentation/chartsql/timewindow_aggregations)
 
