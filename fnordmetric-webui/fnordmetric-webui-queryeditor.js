@@ -26,8 +26,9 @@ FnordMetric.views.QueryPlayground = function() {
     editorViews[view].render(editor_pane);
   }
 
-  function renderResult(result_pane) {
-
+  function renderResult(result_pane, query_str) {
+    /*FnordMetric.util.queryResultView().render(
+      result_pane, query_str);*/
   }
 
   function updateLayout(editor_pane, result_pane, direction) {
@@ -59,6 +60,7 @@ FnordMetric.views.QueryPlayground = function() {
 
   function render(viewport, url) {
     var direction = "horizontal";
+    var current_view = "visual";
     /* init viewport */
     viewport.innerHTML = "";
 
@@ -67,8 +69,14 @@ FnordMetric.views.QueryPlayground = function() {
     button_bar.className = "navbar";
     var split_btn = FnordMetric.createButton(
       "#", "fancy_button", "Change View");
+
     var query_btn = FnordMetric.createButton(
       "#", "fancy_button", "Run Query");
+    query_btn.onclick = function(e) {
+      e.preventDefault();
+      renderResult(editor_pane, "foobobar");
+    }
+
     var embed_btn = FnordMetric.createButton(
       "#", "fancy_button", "Embed Query");
 
@@ -89,7 +97,7 @@ FnordMetric.views.QueryPlayground = function() {
     updateLayout(editor_pane, result_pane, direction);
 
     /* first Version --> later the editor may be defined in the url */
-    renderEditorView("sql", editor_pane);
+    renderEditorView(current_view, editor_pane);
 
   }
 
