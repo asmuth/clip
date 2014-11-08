@@ -22,6 +22,8 @@ public:
       thread::TaskScheduler* server_scheduler,
       thread::TaskScheduler* callback_scheduler);
 
+  ~UDPServer();
+
   void onMessage(std::function<void (const util::Buffer&)> callback);
   void listen(int port);
 

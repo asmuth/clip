@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <string.h>
+#include <unistd.h>
 
 using fnord::util::Buffer;
 
@@ -25,6 +26,11 @@ UDPServer::UDPServer(
     thread::TaskScheduler* callback_scheduler) :
     server_scheduler_(server_scheduler),
     callback_scheduler_(callback_scheduler) {}
+
+UDPServer::~UDPServer() {
+  // FIXPAUL cancel pending task
+  close(ssock_);
+}
 
 void UDPServer::onMessage(
     std::function<void (const Buffer&)> callback) {

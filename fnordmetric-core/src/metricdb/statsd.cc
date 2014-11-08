@@ -7,6 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
+#include <fnordmetric/util/inspect.h>
 #include <fnordmetric/metricdb/statsd.h>
 #include <fnordmetric/util/runtimeexception.h>
 
@@ -17,8 +19,9 @@ StatsdServer::StatsdServer(
     fnord::thread::TaskScheduler* server_scheduler,
     fnord::thread::TaskScheduler* work_scheduler) :
     udp_server_(server_scheduler, work_scheduler) {
-  udp_server_.onMessage([] (const fnord::util::Buffer& msg) {
-    printf("msg: %s\n", msg.toString().c_str());
+
+  udp_server_.onMessage([this] (const fnord::util::Buffer& msg) {
+    this->messageReceived(msg);
   });
 }
 
@@ -26,7 +29,6 @@ void StatsdServer::listen(int port) {
   udp_server_.listen(port);
 }
 
-/*
 enum StatsdParseState {
   S_KEY,
   S_LABEL_OR_VALUE,
@@ -34,14 +36,41 @@ enum StatsdParseState {
   S_VALUE
 };
 
-void parseStatsdSample(
-    const std::string& src,
-    std::string* key,
-    Sample<std::string>* dst) {
-  StatsdParseState state = S_KEY;
+void StatsdServer::messageReceived(const fnord::util::Buffer& msg) {
+  std::string key;
+  std::string value;
+  std::vector<std::pair<std::string, std::string>> labels;
 
-  char const* cur = src.c_str();
-  char const* end = cur + src.size();
+  auto msg_str = msg.toString();
+  char const* begin = msg_str.c_str();
+  char const* end = begin + msg_str.size();
+  parseStatsdSample(begin, end, &key, &value, &labels);
+
+  double float_value;
+  try {
+    float_value = std::stod(value);
+  } catch (std::exception& e) {
+    return;
+  }
+
+  if (env()->verbose()) {
+    env()->logger()->printf(
+        "DEBUG",
+        "statsd sample: %s=%f %s",
+        key.c_str(),
+        float_value,
+        fnord::util::inspect(labels).c_str());
+  }
+}
+
+char const* StatsdServer::parseStatsdSample(
+    char const* begin,
+    char const* end,
+    std::string* key,
+    std::string* value,
+    std::vector<std::pair<std::string, std::string>>* labels) const {
+  StatsdParseState state = S_KEY;
+  char const* cur = begin;
   char const* mark = cur;
 
   for (; cur <= end; ++cur) {
@@ -76,7 +105,7 @@ void parseStatsdSample(
             continue;
           default:
             RAISE(kParseError, "unexpected...");
-            return;
+            return end;
         }
       }
 
@@ -99,7 +128,7 @@ void parseStatsdSample(
               std::string(mark, cur).c_str());
         }
 
-        dst->labels.emplace_back(
+        labels->emplace_back(
             std::string(mark, split),
             std::string(split + 1, cur));
 
@@ -109,15 +138,15 @@ void parseStatsdSample(
       }
 
       case S_VALUE: {
-        dst->value = std::string(mark, end);
-        return;
+        *value = std::string(mark, end);
+        return end;
       }
 
     }
   }
 
+  return end;
 }
-*/
 
 }
 }

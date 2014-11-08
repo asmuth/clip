@@ -24,12 +24,15 @@ public:
   void listen(int port);
 
 protected:
-  /*
-  void parseStatsdSample(
-      const std::string& src,
+
+  void messageReceived(const fnord::util::Buffer& msg);
+
+  char const* parseStatsdSample(
+      char const* begin,
+      char const* end,
       std::string* key,
-      Sample<std::string>* sample);
-  */
+      std::string* value,
+      std::vector<std::pair<std::string, std::string>>* labels) const;
 
   fnord::net::UDPServer udp_server_;
 };
