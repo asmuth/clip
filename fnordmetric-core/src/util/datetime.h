@@ -35,9 +35,13 @@ public:
    */
   std::string toString(const char* fmt = "%Y-%m-%d %H:%M:%S") const;
 
-  bool operator=(const DateTime& other) const;
+  DateTime& operator=(const DateTime& other);
+
+  bool operator==(const DateTime& other) const;
   bool operator<(const DateTime& other) const;
   bool operator>(const DateTime& other) const;
+  bool operator<=(const DateTime& other) const;
+  bool operator>=(const DateTime& other) const;
 
   /**
    * Cast the DateTime object to a UTC unix microsecond timestamp represented as
