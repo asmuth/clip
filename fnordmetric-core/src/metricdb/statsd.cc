@@ -16,8 +16,10 @@ namespace fnordmetric {
 namespace metricdb {
 
 StatsdServer::StatsdServer(
+    IMetricRepository* metric_repo,
     fnord::thread::TaskScheduler* server_scheduler,
     fnord::thread::TaskScheduler* work_scheduler) :
+    metric_repo_(metric_repo),
     udp_server_(server_scheduler, work_scheduler) {
 
   udp_server_.onMessage([this] (const fnord::util::Buffer& msg) {
@@ -61,6 +63,9 @@ void StatsdServer::messageReceived(const fnord::util::Buffer& msg) {
         float_value,
         fnord::util::inspect(labels).c_str());
   }
+
+  auto metric = metric_repo_->findOrCreateMetric(key);
+  metric->insertSample(float_value, labels);
 }
 
 char const* StatsdServer::parseStatsdSample(

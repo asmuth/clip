@@ -120,7 +120,7 @@ int main(int argc, const char** argv) {
   inmemory_backend::MetricRepository metric_repo;
 
   /* statsd server */
-  StatsdServer statsd_server(&thread_pool, &thread_pool);
+  StatsdServer statsd_server(&metric_repo, &thread_pool, &thread_pool);
   statsd_server.listen(1337);
 
   auto port = env()->flags()->getInt("port");
