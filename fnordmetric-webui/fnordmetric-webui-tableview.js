@@ -18,64 +18,101 @@ if (FnordMetric.util === undefined) {
 }
 
 FnordMetric.util.TableView = function(columns, elem) {
-  var onRowClick = null;
+  var all_rows = [];
+  var on_row_click = null;
 
-  var table = document.createElement("table");
-  table.className = "metric_list";
-  var header = document.createElement("tr");
-  header.className = "list_header";
-  columns.map(function(column) {
-    var header_cell = document.createElement("th");
-    header_cell.innerHTML = column;
-    header.appendChild(header_cell);
-  });
-  table.appendChild(header);
-  elem.appendChild(table);
+  var per_page = 10;
+  var current_page = 0;
+
+  function render() {
+    elem.innerHTML = "";
+    var offset = current_page * per_page;
+    renderPagination(offset, per_page, all_rows.length);
+    renderTable(all_rows.slice(offset, offset + per_page));
+  }
+
+  function updatePage(page_index) {
+    current_page = page_index;
+    render();
+  }
+
+  function resortRows(column_index) {
+    // resort all_rows in place
+    updatePage(0);
+  }
+
+  function renderTable(rows) {
+    var table = document.createElement("table");
+    table.className = "metric_list";
+    elem.appendChild(table);
+
+    /* render header */
+    var header = document.createElement("tr");
+    table.appendChild(header);
+    header.className = "list_header";
+    columns.map(function(column) {
+      var header_cell = document.createElement("th");
+      header_cell.innerHTML = column;
+      header.appendChild(header_cell);
+    });
+
+    /* render rows */
+    rows.map(function(row) {
+      var list_row = document.createElement("tr");
+      table.appendChild(list_row);
+
+      console.log(this);
+
+      if (on_row_click != null) {
+        list_row.addEventListener('click', on_row_click, false);
+      }
+
+      row.map(function(cell) {
+        var list_cell = document.createElement("td");
+        list_cell.innerHTML = cell;
+        list_row.appendChild(list_cell);
+      });
+    });
+  };
 
   function renderPagination(from, until, total) {
     var navbar = document.createElement("div");
     navbar.className = "pagination_navbar metric";
-    var ttp_for = FnordMetric.createButton(
+
+    var ttp_forward = FnordMetric.createButton(
       "#", "pagination_tooltip", "&#8594;");
+    navbar.appendChild(ttp_forward);
+    ttp_forward.onclick = function () {
+      updatePage(current_page + 1);
+    }
+
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
+    ttp_back.onclick = function () {
+      updatePage(current_page - 1);
+    }
+    navbar.appendChild(ttp_back);
+
     var label = document.createElement("div");
     label.className = "pagination_label";
-    label.innerHTML = 
-      from + " - " + until + " of " + total;
-    navbar.appendChild(ttp_for);
-    navbar.appendChild(ttp_back);
+    label.innerHTML = from + " - " + until + " of " + total;
     navbar.appendChild(label);
-    elem.insertBefore(navbar, table);
+
+    elem.appendChild(navbar);
   }
-
-  function updatePaginationLabel(from, until, total) {
-    //FIXME
-    var label = elem.querySelector(".pagination_label");
-    label.innerHTML = 
-      from + " - " + until + " of " + total;
-  }
-
-
 
   function addRow(row) {
-    var list_row = document.createElement("tr");
-    //onRowClick = list_row.onclick;
-    list_row.addEventListener('click', onRowClick, false);
+    all_rows.push(row);
+  }
 
-    row.map(function(cell) {
-      var list_cell = document.createElement("td");
-      list_cell.innerHTML = cell;
-      list_row.appendChild(list_cell);
-    });
-    table.appendChild(list_row);
+  function onRowClick(on_row_click_new) {
+    on_row_click = on_row_click_new;
   }
 
   return {
-    "renderPagination" : renderPagination,
-    "updatePaginationLabel" : updatePaginationLabel,
     "addRow": addRow,
-    "onRowClick": onRowClick
+    "onRowClick": onRowClick,
+    "render": render
   };
 };
 

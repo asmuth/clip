@@ -19,6 +19,7 @@ if (FnordMetric.views === undefined) {
 FnordMetric.views.MetricList = function() {
 
   function openQueryEditor() {
+    alert("click");
     /*
     var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
         "SELECT 'mymetric' AS series, time AS x, value AS y "+
@@ -46,25 +47,18 @@ FnordMetric.views.MetricList = function() {
         "Last Insert",
         "Total stored bytes"], viewport);
 
-    table_view.onRowClick = openQueryEditor;
-    /*table_view.onLabelClick = renderMetricList(viewport, 
-      FnordMetric.util.sortMetricList);
-    */
-    var rows_per_page = 1;
-    var end = metrics.length;
-    if (metrics.length > rows_per_page) {
-      table_view.renderPagination(1, rows_per_page, metrics.length);
-      end = rows_per_page;
-    }
-    for (var i = 0; i < end; i++) {
+    for (i in metrics) {
       table_view.addRow([
           metrics[i]["key"],
           FnordMetric.util.convertArrayToString(
-            metrics[i]["labels"]),
+              metrics[i]["labels"]),
           FnordMetric.util.parseTimestamp(
-            metrics[i]["last_insert"]),
+              metrics[i]["last_insert"]),
           metrics[i]["total_bytes"]]);
     }
+
+    table_view.onRowClick(openQueryEditor);
+    table_view.render();
   };
 
   function renderEmptyMetricsList(elem) {
