@@ -9,7 +9,7 @@ Statsd is a very simple, text based protocol.
 To use the statsd protocol, start the fnordmetric server with the --statsd-port
 option:
 
-    $ fnordmetric-server --backend inmemory --statsd_port 8125 --http_port 8080
+    $ fnordmetric-server --storage_backend inmemory --statsd_port 8125 --http_port 8080
 
 The fnordmetric server will listen for UDP packets on the specified port. Each
 UDP packet must contain one or more ASCII lines. Each line is expected to be in
@@ -37,8 +37,8 @@ For example, to insert the values 23, 42 and 5 into the metrics "mymetric-one",
     mymetric-three:5\r\n
 
 
-Using labels with statsd
-------------------------
+Using metric labels with statsd
+-------------------------------
 
 The statsd protocol itself does not support labels. However, the statsd
 implementation in FnordMetric Server respects a metric naming convention

@@ -53,8 +53,9 @@ documentation:
     title: "Collecting Data"
     pages:
       -
-        title: "Metrics &amp; Labels"
-        url: "/query_language/reference"
+        title: "Collecting Metrics"
+        url: "/metricdb/collecting_metrics"
+        file: "metricdb_collecting_metrics"
       -
         title: "Sending data via HTTP"
         url: "/query_language/reference"
