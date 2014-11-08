@@ -61,6 +61,14 @@ FnordMetric.util.parseQueryString = function(qstr) {
   };
 }
 
+FnordMetric.util.convertArrayToString = function(array) {
+  var string = "";
+  if (array.length > 0) {
+    string = array.join(", ");
+  }
+  return string;
+}
+
 FnordMetric.util.displayLoader = function(elem) {
   elem.innerHTML = "<div class='load_foreground'></div>";
 }
@@ -97,12 +105,102 @@ FnordMetric.httpPost = function(url, request, callback) {
   }
 }
 
+FnordMetric.util.parseTimestamp = function(timestamp) {
+  if (timestamp == 0) {
+    return timestamp;
+  }
 
+  var time_str;
+  var timestamp = timestamp / 1000;
+  var now = Date.now();
+  var date = new Date(timestamp);
 
+  var offset =  Math.floor(
+    (now - timestamp) / 1000);
+  if (offset < 60) {
+    var label = (offset == 1)? " second ago" : " seconds ago";
+    time_str  = offset + label;
+  } else if (offset < 3600) {
+    var time = Math.floor(offset / 60);
+    var label = (time == 1)? " minute ago" : " minutes ago";
+    time_str = time + label;
+  } else if (offset < 86400) {
+    var time =  Math.floor(offset / 3600);
+    var label = (time == 1)? " hour ago" : " hours ago";
+    time_str = time + label;
+  } else {
+    var time = Math.floor(offset / 86400);
+    var label = (time == 1)? " day ago" : " days ago";
+    time_str = time + label;
+  }
 
+  var months = ["Jan", "Feb", "Mar", "Apr", "May",
+    "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+  var minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
 
+  var seconds = date.getSeconds();
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
 
+  time_str +=
+    " - " + months[date.getMonth()] + 
+    " " + date.getDate() +
+    " " + date.getFullYear() +
+    " " + date.getHours() +
+    ":" + minutes +
+    ":" + seconds
+
+  return time_str;
+}
+
+FnordMetric.util.sortMetricList = function(order, id) {
+  function compare(a, b) {
+    if (a < b) {
+      if (order == "asc") {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+    if (a > b) {
+      if (order == "asc") {
+        return 1;
+      } else {
+        return -1;
+      }
+    }
+    return 0;
+  }
+
+  var sorted_data = data;
+  switch (id) {
+    case "Key":
+      sorted_data.sort(function(a, b) {
+        return (compare(
+          a.key.toLowerCase(), 
+          b.key.toLowerCase()));
+      });
+      break;
+    case "Last Insert":
+      sorted_data.sort(function(a, b) {
+        return (compare(a.last_insert, b.last_insert));
+      });
+      break;
+    case "Total stored bytes":
+      sorted_data.sort(function(a, b) {
+        return (compare(a.total_bytes, b.total_bytes));
+      });
+      break;
+    default:
+      break;
+  }
+  return sorted_data;
+}
 
 
 FnordMetric.createButton = function(href, class_name, inner_HTML) {

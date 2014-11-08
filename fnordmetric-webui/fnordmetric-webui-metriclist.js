@@ -34,6 +34,7 @@ FnordMetric.views.MetricList = function() {
   };
 
   function renderMetricList(viewport, metrics) {
+    viewport.innerHTML = "";
     if (metrics.length == 0) {
       renderEmptyMetricsList(viewport);
       return;
@@ -43,15 +44,25 @@ FnordMetric.views.MetricList = function() {
         "Metric",
         "Labels",
         "Last Insert",
-        "Total stored bytes"]);
+        "Total stored bytes"], viewport);
 
     table_view.onRowClick = openQueryEditor;
-
-    for (i in metrics) {
+    /*table_view.onLabelClick = renderMetricList(viewport, 
+      FnordMetric.util.sortMetricList);
+    */
+    var rows_per_page = 1;
+    var end = metrics.length;
+    if (metrics.length > rows_per_page) {
+      table_view.renderPagination(1, rows_per_page, metrics.length);
+      end = rows_per_page;
+    }
+    for (var i = 0; i < end; i++) {
       table_view.addRow([
           metrics[i]["key"],
-          "labels...",
-          metrics[i]["last_insert"],
+          FnordMetric.util.convertArrayToString(
+            metrics[i]["labels"]),
+          FnordMetric.util.parseTimestamp(
+            metrics[i]["last_insert"]),
           metrics[i]["total_bytes"]]);
     }
   };

@@ -259,7 +259,7 @@ input {
   margin-right: 2px;
 }
 
-.pagination_navbar.metrics {
+.pagination_navbar.metric {
   width: 80%;
   margin: auto;
   margin-top: 5px;
@@ -365,24 +365,24 @@ ul.dropdown li:hover {
 }
 
 
-table.metrics_list_container {
+table.metric_list {
   width: 100%;
   margin-top: 5px;
   border-collapse: collapse;
 }
 
-table.metrics_list_container tr {
+table.metric_list tr {
   border-bottom: 1px solid rgb(226, 232, 237);
 }
 
-table.metrics_list_container tr.metrics_list_header {
+table.metric_list tr.list_header {
   border-top: 1px solid rgb(226, 232, 237);
   background-color: #f6f8fa;
   color: #60707f;
 }
 
-tr.metrics_list_header th,
-table.metrics_list_container td {
+table.metric_list th,
+table.metric_list td {
   text-align: left;
   font-weight: 500;
   border: none;
@@ -391,18 +391,18 @@ table.metrics_list_container td {
   font-size: 109%;
 }
 
-tr.metrics_list_header th:first-child,
-table.metrics_list_container td:first-child {
+tr.list_header th:first-child,
+table.metric_list td:first-child {
   padding-left: 20px;
 }
 
-tr.metrics_list_header th .caret {
+tr.list_header th .caret {
   color: #60707f;
   text-decoration: none;
   font-size: 10px;
 }
 
-table.metrics_list_container tr:hover td {
+table.metric_list tr:hover td {
   background-color: #f6f8fa;
   cursor: pointer;
 }

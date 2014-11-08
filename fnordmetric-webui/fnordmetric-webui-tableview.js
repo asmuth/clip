@@ -17,19 +17,67 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.TableView = function(columns) {
+FnordMetric.util.TableView = function(columns, elem) {
   var onRowClick = null;
 
+  var table = document.createElement("table");
+  table.className = "metric_list";
+  var header = document.createElement("tr");
+  header.className = "list_header";
+  columns.map(function(column) {
+    var header_cell = document.createElement("th");
+    header_cell.innerHTML = column;
+    header.appendChild(header_cell);
+  });
+  table.appendChild(header);
+  elem.appendChild(table);
+
+  function renderPagination(from, until, total) {
+    var navbar = document.createElement("div");
+    navbar.className = "pagination_navbar metric";
+    var ttp_for = FnordMetric.createButton(
+      "#", "pagination_tooltip", "&#8594;");
+    var ttp_back = FnordMetric.createButton(
+      "#", "pagination_tooltip",  "&#8592;");
+    var label = document.createElement("div");
+    label.className = "pagination_label";
+    label.innerHTML = 
+      from + " - " + until + " of " + total;
+    navbar.appendChild(ttp_for);
+    navbar.appendChild(ttp_back);
+    navbar.appendChild(label);
+    elem.insertBefore(navbar, table);
+  }
+
+  function updatePaginationLabel(from, until, total) {
+    //FIXME
+    var label = elem.querySelector(".pagination_label");
+    label.innerHTML = 
+      from + " - " + until + " of " + total;
+  }
+
+
+
   function addRow(row) {
-    console.log(row);
+    var list_row = document.createElement("tr");
+    //onRowClick = list_row.onclick;
+    list_row.addEventListener('click', onRowClick, false);
+
+    row.map(function(cell) {
+      var list_cell = document.createElement("td");
+      list_cell.innerHTML = cell;
+      list_row.appendChild(list_cell);
+    });
+    table.appendChild(list_row);
   }
 
   return {
+    "renderPagination" : renderPagination,
+    "updatePaginationLabel" : updatePaginationLabel,
     "addRow": addRow,
     "onRowClick": onRowClick
   };
 };
-
 
 
 /*
@@ -185,10 +233,6 @@ FnordMetric.util.TableView = function(columns) {
       var i = 0;
       var list_elems = ["key", "labels", "insert", "total_bytes"];
 
-      var parseLabels = function(data) {
-        if (data.labels.length == 0) {return;}
-        data.labels = data.labels.join(", ");
-      }
 
       if (!data.converted) {
         parseLabels(data);
