@@ -10,7 +10,7 @@ clean:
 
 build:
 	( \
-	  echo "/* THIS IS AN AUTOMATICALLY GENEREATED FILE --- DO NOT EDIT */" \
+	  echo "/* THIS IS AN AUTOMATICALLY GENEREATED FILE --- DO NOT EDIT */"; \
 	  cat fnordmetric-webui-layout.js \
 	      fnordmetric-webui-util.js \
 	      fnordmetric-webui-tableview.js \
