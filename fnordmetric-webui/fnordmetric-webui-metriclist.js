@@ -17,6 +17,18 @@ if (FnordMetric.views === undefined) {
 }
 
 FnordMetric.views.MetricList = function() {
+
+  function openQueryEditor() {
+    /*
+    var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
+        "SELECT 'mymetric' AS series, time AS x, value AS y "+
+        "FROM " + data["key"];
+        var enc_query = encodeURIComponent(query);
+        window.location = "/admin#query_playground!" + enc_query;
+          //FIXME pushstate?
+    */
+  };
+
   function render(viewport, url) {
     loadMetricList(viewport);
   };
@@ -24,9 +36,23 @@ FnordMetric.views.MetricList = function() {
   function renderMetricList(viewport, metrics) {
     if (metrics.length == 0) {
       renderEmptyMetricsList(viewport);
-    } else {
-      viewport.innerHTML = "FIXME: render metrics table";
-      console.log(metrics);
+      return;
+    }
+
+    var table_view = FnordMetric.util.TableView([
+        "Metric",
+        "Labels",
+        "Last Insert",
+        "Total stored bytes"]);
+
+    table_view.onRowClick = openQueryEditor;
+
+    for (i in metrics) {
+      table_view.addRow([
+          metrics[i]["key"],
+          "labels...",
+          metrics[i]["last_insert"],
+          metrics[i]["total_bytes"]]);
     }
   };
 
