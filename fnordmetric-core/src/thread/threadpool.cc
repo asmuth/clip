@@ -18,26 +18,16 @@ namespace fnord {
 namespace thread {
 
 ThreadPool::ThreadPool(
-    int max_threads,
     std::unique_ptr<ExceptionHandler> error_handler) :
-    max_threads_(max_threads),
-    error_handler_(std::move(error_handler)),
-    num_threads_(0) {}
+    error_handler_(std::move(error_handler)) {}
 
-void ThreadPool::run(std::function<void()> runnable) {
-  if (num_threads_++ >= max_threads_) {
-    num_threads_--;
-    RAISE(kRuntimeError, "too many threads");
-  }
-
-  ThreadPool* self = this;
-  new std::thread([self, runnable] () {
+void ThreadPool::run(std::shared_ptr<Task> task) {
+  new std::thread([this, task] () {
     try {
-      runnable();
+      task->run();
     } catch (const std::exception& e) {
-      self->error_handler_->onException(e);
+      this->error_handler_->onException(e);
     }
-    self->num_threads_--;
   });
 }
 

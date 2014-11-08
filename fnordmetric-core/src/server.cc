@@ -19,6 +19,7 @@
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
+#include <fnordmetric/metricdb/statsd.h>
 #include <fnordmetric/net/udpserver.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
@@ -89,7 +90,6 @@ int main(int argc, const char** argv) {
 
   // boot
   fnord::thread::ThreadPool thread_pool(
-      32,
       std::unique_ptr<fnord::util::ExceptionHandler>(
           new fnord::util::CatchAndPrintExceptionHandler(
               env()->logger())));
@@ -119,15 +119,9 @@ int main(int argc, const char** argv) {
 
   inmemory_backend::MetricRepository metric_repo;
 
-  auto statsd_server = Task::create([] () {
-    fnord::net::UDPServer statsd_server;
-
-    statsd_server.onMessage([] (const fnord::util::Buffer& msg) {
-      printf("msg: %s\n", msg.toString().c_str());
-    });
-
-    statsd_server.listen(1337);
-  });
+  /* statsd server */
+  StatsdServer statsd_server(&thread_pool, &thread_pool);
+  statsd_server.listen(1337);
 
   auto port = env()->flags()->getInt("port");
   xzero::IPAddress bind("0.0.0.0");

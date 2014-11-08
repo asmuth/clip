@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_NET_UDPSERVER_H
 #define _FNORDMETRIC_NET_UDPSERVER_H
+#include <fnordmetric/thread/taskscheduler.h>
 #include <fnordmetric/util/buffer.h>
 #include <functional>
 
@@ -17,10 +18,16 @@ namespace net {
 
 class UDPServer {
 public:
-  UDPServer();
+  UDPServer(
+      thread::TaskScheduler* server_scheduler,
+      thread::TaskScheduler* callback_scheduler);
+
   void onMessage(std::function<void (const util::Buffer&)> callback);
   void listen(int port);
+
 protected:
+  thread::TaskScheduler* server_scheduler_;
+  thread::TaskScheduler* callback_scheduler_;
   int ssock_;
   std::function<void (const fnord::util::Buffer&)> callback_;
 };

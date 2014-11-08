@@ -19,7 +19,11 @@ using fnord::util::Buffer;
 namespace fnord {
 namespace net {
 
-UDPServer::UDPServer() {}
+UDPServer::UDPServer(
+    thread::TaskScheduler* server_scheduler,
+    thread::TaskScheduler* callback_scheduler) :
+    server_scheduler_(server_scheduler),
+    callback_scheduler_(callback_scheduler_) {}
 
 void UDPServer::onMessage(
     std::function<void (const Buffer&)> callback) {

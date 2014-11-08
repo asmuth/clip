@@ -9,12 +9,12 @@
  */
 #ifndef _FNORDMETRIC_THREAD_TASKSCHEDULER_H
 #define _FNORDMETRIC_THREAD_TASKSCHEDULER_H
-#include <fnordmetric/task.h>
+#include <fnordmetric/thread/task.h>
 
 namespace fnord {
 namespace thread {
 
-class ITaskScheduler {
+class TaskScheduler {
 public:
 
   /**

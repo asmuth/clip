@@ -13,6 +13,20 @@
 namespace fnordmetric {
 namespace metricdb {
 
+StatsdServer::StatsdServer(
+    fnord::thread::TaskScheduler* server_scheduler,
+    fnord::thread::TaskScheduler* work_scheduler) :
+    udp_server_(server_scheduler, work_scheduler) {
+  udp_server_.onMessage([] (const fnord::util::Buffer& msg) {
+    printf("msg: %s\n", msg.toString().c_str());
+  });
+}
+
+void StatsdServer::listen(int port) {
+  udp_server_.listen(port);
+}
+
+/*
 enum StatsdParseState {
   S_KEY,
   S_LABEL_OR_VALUE,
@@ -103,6 +117,7 @@ void parseStatsdSample(
   }
 
 }
+*/
 
 }
 }

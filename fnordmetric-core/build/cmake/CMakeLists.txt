@@ -110,7 +110,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/metricdb/metricrepository.cc
     stage/src/fnordmetric/metricdb/metrictableref.cc
     stage/src/fnordmetric/metricdb/metrictablerepository.cc
-    stage/src/fnordmetric/metricdb/sample.cc)
+    stage/src/fnordmetric/metricdb/sample.cc
+    stage/src/fnordmetric/metricdb/statsd.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)

@@ -8,14 +8,32 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/sample.h>
+#include <fnordmetric/net/udpserver.h>
+#include <fnordmetric/thread/taskscheduler.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
-void parseStatsdSample(
-    const std::string& src,
-    std::string* key,
-    Sample<std::string>* sample);
+class StatsdServer {
+public:
+
+  StatsdServer(
+      fnord::thread::TaskScheduler* server_scheduler,
+      fnord::thread::TaskScheduler* work_scheduler);
+
+  void listen(int port);
+
+protected:
+  /*
+  void parseStatsdSample(
+      const std::string& src,
+      std::string* key,
+      Sample<std::string>* sample);
+  */
+
+  fnord::net::UDPServer udp_server_;
+};
+
 
 }
 }
