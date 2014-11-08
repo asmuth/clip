@@ -17,8 +17,10 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.VisualEditorView = function(elem) {
-
+FnordMetric.util.VisualEditorView = function() {
+  function render(elem) {
+    console.log("render visual editor");
+  }
   return {
     "render" : render
   }

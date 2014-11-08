@@ -17,8 +17,30 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.SQLEditorView = function(elem) {
+FnordMetric.util.SQLEditorView = function() {
+  function initCodeMirror(cm) {
+    /* set CodeMirror Configs here */
+  }
 
+
+  function render(elem) {
+    console.log("render sql editor");
+    console.log(elem);
+    elem.style.border = "1px solid #ddd";
+    //init editor_pane
+    elem.innerHTML = "";
+
+    var cm = CodeMirror(elem, {
+      lineNumbers: true,
+      lineWrapping: true,
+      autofocus: true
+    });
+
+    initCodeMirror(cm);
+    console.log(cm);
+
+    
+  }
   return {
     "render" : render
   }

@@ -18,8 +18,8 @@ if (FnordMetric.views === undefined) {
 
 FnordMetric.views.QueryPlayground = function() {
   var editorViews = {
-    "sql" : FnordMetric.util.SQLEditorView,
-    "visual" : FnordMetric.util.VisualEditorView
+    "sql" : FnordMetric.util.SQLEditorView(),
+    "visual" : FnordMetric.util.VisualEditorView()
   }
 
   function renderEditorView(view, editor_pane) {
@@ -31,15 +31,38 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function updateLayout(editor_pane, result_pane, direction) {
-
+    if (direction == "horizontal") {
+      var height = FnordMetric.util.getHorizontalEditorHeight(
+        editor_pane.offsetHeight, result_pane.offsetHeight);
+      var editor_width =
+        FnordMetric.util.getHorizontalEditorWidth(
+          editor_pane.offsetWidth);
+      editor_pane.style.width = editor_width + "%";
+      editor_pane.style.float = "left";
+      editor_pane.style.height = height + "px";
+      result_pane.style.height = height + "px";
+      result_pane.style.width = (99 - editor_width) + "%";
+      result_pane.style.left = editor_width + "%";
+      result_pane.style.top = "";
+      result_pane.style.overflowY = "auto";
+    } else {
+      editor_pane.style.float = "";
+      editor_pane.style.width = "100%";
+      /*editor_pane.style.height = editor_height + "px";
+      query_editor.style.height = editor_height + "px";*/
+      result_pane.style.width = (window.innerWidth - 55) + "px";
+      result_pane.style.left = "20px";
+      //result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
+      result_pane.style.height = "auto";
+    }
   }
 
   function render(viewport, url) {
     var direction = "horizontal";
-    //init viewport
+    /* init viewport */
     viewport.innerHTML = "";
 
-    //render buttons
+    /* render buttons */
     var button_bar = document.createElement("div");
     button_bar.className = "navbar";
     var split_btn = FnordMetric.createButton(
@@ -54,7 +77,7 @@ FnordMetric.views.QueryPlayground = function() {
     button_bar.appendChild(embed_btn);
     viewport.appendChild(button_bar);
 
-    //init editorpane & resultpane
+    /* init editorpane & resultpane */
     var editor_pane = document.createElement("div");
     editor_pane.className = "editor_pane";
     viewport.appendChild(editor_pane);
@@ -65,7 +88,7 @@ FnordMetric.views.QueryPlayground = function() {
 
     updateLayout(editor_pane, result_pane, direction);
 
-    //first Version --> later the editor may be defined in the url
+    /* first Version --> later the editor may be defined in the url */
     renderEditorView("sql", editor_pane);
 
   }

@@ -391,6 +391,10 @@ table.metric_list td {
   font-size: 109%;
 }
 
+table.metric_list th.clickable:hover {
+  cursor:pointer;
+}
+
 tr.list_header th:first-child,
 table.metric_list td:first-child {
   padding-left: 20px;
@@ -399,7 +403,7 @@ table.metric_list td:first-child {
 tr.list_header th .caret {
   color: #60707f;
   text-decoration: none;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 table.metric_list tr:hover td {
