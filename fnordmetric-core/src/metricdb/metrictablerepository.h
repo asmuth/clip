@@ -21,11 +21,11 @@ namespace metricdb {
 class MetricTableRepository : public fnordmetric::query::TableRepository {
 public:
 
-  MetricTableRepository(MetricRepository* metric_repo);
+  MetricTableRepository(IMetricRepository* metric_repo);
   query::TableRef* getTableRef(const std::string& table_name) const override;
 
 protected:
-  MetricRepository* metric_repo_;
+  IMetricRepository* metric_repo_;
 };
 
 }

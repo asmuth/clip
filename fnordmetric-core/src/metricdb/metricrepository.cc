@@ -15,8 +15,8 @@ namespace fnordmetric {
 namespace metricdb {
 
 // FIXPAUL lock
-Metric* MetricRepository::findMetric(const std::string& key) const {
-  Metric* metric = nullptr;
+IMetric* IMetricRepository::findMetric(const std::string& key) const {
+  IMetric* metric = nullptr;
 
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
 
@@ -28,15 +28,15 @@ Metric* MetricRepository::findMetric(const std::string& key) const {
   return metric;
 }
 
-Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
-  Metric* metric;
+IMetric* IMetricRepository::findOrCreateMetric(const std::string& key) {
+  IMetric* metric;
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
 
   auto iter = metrics_.find(key);
   if (iter == metrics_.end()) {
     // FIXPAUL expensive operation; should be done outside of lock..
     metric = createMetric(key);
-    metrics_.emplace(key, std::unique_ptr<Metric>(metric));
+    metrics_.emplace(key, std::unique_ptr<IMetric>(metric));
   } else {
     metric = iter->second.get();
   }
@@ -44,9 +44,9 @@ Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
   return metric;
 }
 
-std::vector<Metric*> MetricRepository::listMetrics()
+std::vector<IMetric*> IMetricRepository::listMetrics()
     const {
-  std::vector<Metric*> metrics;
+  std::vector<IMetric*> metrics;
 
   {
     std::lock_guard<std::mutex> lock_holder(metrics_mutex_);

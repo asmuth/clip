@@ -16,13 +16,13 @@
 
 namespace fnordmetric {
 namespace metricdb {
-class Metric;
-class MetricRepository;
+class IMetric;
+class IMetricRepository;
 
 class HTTPAPI : public xzero::HttpService::Handler {
 public:
 
-  HTTPAPI(MetricRepository* metric_repo);
+  HTTPAPI(IMetricRepository* metric_repo);
 
   bool handleRequest(
       xzero::HttpRequest* request,
@@ -51,10 +51,10 @@ protected:
       util::URI* uri);
 
   void renderMetricJSON(
-      Metric* metric,
+      IMetric* metric,
       util::JSONOutputStream* json) const;
 
-  MetricRepository* metric_repo_;
+  IMetricRepository* metric_repo_;
 };
 
 }

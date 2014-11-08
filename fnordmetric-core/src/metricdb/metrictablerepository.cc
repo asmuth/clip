@@ -14,7 +14,7 @@ namespace fnordmetric {
 namespace metricdb {
 
 MetricTableRepository::MetricTableRepository(
-    MetricRepository* metric_repo) :
+    IMetricRepository* metric_repo) :
     metric_repo_(metric_repo) {}
 
 query::TableRef* MetricTableRepository::getTableRef(

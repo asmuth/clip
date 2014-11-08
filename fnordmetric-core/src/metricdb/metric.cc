@@ -12,10 +12,10 @@
 namespace fnordmetric {
 namespace metricdb {
 
-Metric::Metric(const std::string& key) : key_(key) {}
-Metric::~Metric() {}
+IMetric::IMetric(const std::string& key) : key_(key) {}
+IMetric::~IMetric() {}
 
-const std::string& Metric::key() const {
+const std::string& IMetric::key() const {
   return key_;
 }
 

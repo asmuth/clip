@@ -24,7 +24,7 @@ namespace metricdb {
 
 class MetricTableRef : public query::TableRef {
 public:
-  MetricTableRef(Metric* metric);
+  MetricTableRef(IMetric* metric);
 
   int getColumnIndex(const std::string& name) override;
   std::string getColumnName(int index) override;
@@ -32,7 +32,7 @@ public:
   std::vector<std::string> columns() override;
 
 protected:
-  Metric* metric_;
+  IMetric* metric_;
   std::vector<std::string> fields_;
 };
 

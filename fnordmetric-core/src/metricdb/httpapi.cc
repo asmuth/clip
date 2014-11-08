@@ -91,7 +91,7 @@ static const char kMetricsUrlPrefix[] = "/metrics/";
 static const char kQueryUrl[] = "/query";
 static const char kLabelParamPrefix[] = "label[";
 
-HTTPAPI::HTTPAPI(MetricRepository* metric_repo) : metric_repo_(metric_repo) {}
+HTTPAPI::HTTPAPI(IMetricRepository* metric_repo) : metric_repo_(metric_repo) {}
 
 bool HTTPAPI::handleRequest(
     xzero::HttpRequest* request,
@@ -342,7 +342,7 @@ void HTTPAPI::executeQuery(
 }
 
 void HTTPAPI::renderMetricJSON(
-    Metric* metric,
+    IMetric* metric,
     util::JSONOutputStream* json) const {
   json->beginObject();
 
@@ -355,7 +355,7 @@ void HTTPAPI::renderMetricJSON(
   json->addComma();
 
   json->addObjectEntry("last_insert");
-  json->addLiteral<uint64_t>(metric->lastInsertTime());
+  json->addLiteral<uint64_t>(static_cast<uint64_t>(metric->lastInsertTime()));
   json->addComma();
 
   json->addObjectEntry("labels");

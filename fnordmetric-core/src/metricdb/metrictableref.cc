@@ -18,7 +18,7 @@ class TableScan;
 
 namespace metricdb {
 
-MetricTableRef::MetricTableRef(Metric* metric) : metric_(metric) {}
+MetricTableRef::MetricTableRef(IMetric* metric) : metric_(metric) {}
 
 int MetricTableRef::getColumnIndex(const std::string& name) {
   if (name == "time") {

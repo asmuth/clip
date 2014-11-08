@@ -18,10 +18,13 @@
 namespace fnordmetric {
 namespace metricdb {
 
-class Metric {
+/**
+ * IMPLEMENTATIONS MUST BE THREADSAFE
+ */
+class IMetric {
 public:
-  Metric(const std::string& key);
-  virtual ~Metric();
+  IMetric(const std::string& key);
+  virtual ~IMetric();
 
   virtual void insertSample(
       double value,
@@ -34,7 +37,7 @@ public:
 
   const std::string& key() const;
   virtual size_t totalBytes() const = 0;
-  virtual uint64_t lastInsertTime() const = 0;
+  virtual DateTime lastInsertTime() const = 0;
   virtual std::set<std::string> labels() const = 0;
   virtual bool hasLabel(const std::string& label) const = 0;
 
