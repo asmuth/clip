@@ -72,24 +72,15 @@ int main(int argc, const char** argv) {
       "Start the web interface on this port",
       "<port>");
 
-  env()->flags()->defineFlag(
-      "stnb",
-      cli::FlagParser::T_SWITCH,
-      false,
-      NULL,
-      NULL,
-      "Run HTTP server in Single-Threaded-Non-Blocking I/O mode.",
-      "");
-
   env()->flags()->parseArgv(argc, argv);
   env()->setVerbose(true);
 
   // boot
-  //fnordmetric::util::ThreadPool thread_pool(
-  //    32,
-  //    std::unique_ptr<fnordmetric::util::ExceptionHandler>(
-  //        new fnordmetric::util::CatchAndPrintExceptionHandler(
-  //            env()->logger())));
+  fnordmetric::util::ThreadPool thread_pool(
+      32,
+      std::unique_ptr<fnordmetric::util::ExceptionHandler>(
+          new fnordmetric::util::CatchAndPrintExceptionHandler(
+              env()->logger())));
 
   auto datadir = env()->flags()->getString("datadir");
   if (!fnord::io::FileUtil::exists(datadir)) {
@@ -115,11 +106,10 @@ int main(int argc, const char** argv) {
       new fnord::io::FileRepository(datadir));
   MetricRepository metric_repo(file_repo);
 
-  //CompactionTask compaction_task(&metric_repo);
-  //thread_pool.run(compaction_task.runnable());
+  CompactionTask compaction_task(&metric_repo);
+  thread_pool.run(compaction_task.runnable());
 
-  //thread::Executor executor;
-  std::thread server_thread([] () {
+  thread_pool.run([] () {
     fnord::net::UDPServer statsd_server;
     statsd_server.onMessage([] (const fnord::util::Buffer& msg) {
       printf("msg: %s\n", msg.toString().c_str());
@@ -129,40 +119,29 @@ int main(int argc, const char** argv) {
 
   auto port = env()->flags()->getInt("port");
   xzero::IPAddress bind("0.0.0.0");
-  const bool threaded = !env()->flags()->isSet("stnb");
   xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
   xzero::HttpService http;
   HTTPAPI fmHttpApi(&metric_repo);
   http.addHandler(&fmHttpApi);
   http.addHandler(fnordmetric::metricdb::AdminUI::get());
 
-  if (threaded) {
-    // multi-threaded blocking execution
-    xzero::ThreadedExecutor executor;
-    xzero::WallClock* clock = xzero::WallClock::system();
-    http.configureInet(&executor, nullptr, nullptr, clock, idle, bind, port);
-    http.start();
-    env()->logger()->printf("INFO", "Starting HTTP server on port %i", port);
-    executor.joinAll();
-  } else {
-    // single-threaded non-blocking execution
-    ::ev::loop_ref loop = ::ev::default_loop(0);
-    xzero::support::LibevScheduler scheduler(loop);
-    xzero::support::LibevSelector selector(loop);
-    xzero::support::LibevClock clock(loop);
+  // single-threaded non-blocking execution
+  ::ev::loop_ref loop = ::ev::default_loop(0);
+  xzero::support::LibevScheduler scheduler(loop);
+  xzero::support::LibevSelector selector(loop);
+  xzero::support::LibevClock clock(loop);
 
-    auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
-                                   idle, bind, port);
-    inet->setBlocking(false);
+  auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
+                                 idle, bind, port);
+  inet->setBlocking(false);
 
-    env()->logger()->printf(
-        "INFO",
-        "Starting HTTP server on port %i (single threaded non-blocking)",
-        port);
+  env()->logger()->printf(
+      "INFO",
+      "Starting HTTP server on port %i (single threaded non-blocking)",
+      port);
 
-    http.start();
-    selector.select();
-  }
+  http.start();
+  selector.select();
 
   return 0;
 }
