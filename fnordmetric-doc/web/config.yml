@@ -134,9 +134,6 @@ documentation:
         url: "/http_api"
         file: "http_api"
       -
-        title: "FnordMetric statsd API"
-        url: "/query_language/reference"
-      -
         title: "FnordMetric for JavaScript"
         url: "/query_language/reference"
       -
