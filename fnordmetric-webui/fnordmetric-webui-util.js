@@ -158,7 +158,7 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   return time_str;
 }
 
-FnordMetric.util.sortMetricList = function(order, id) {
+FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   function compare(a, b) {
     if (a < b) {
       if (order == "asc") {
@@ -177,29 +177,32 @@ FnordMetric.util.sortMetricList = function(order, id) {
     return 0;
   }
 
-  var sorted_data = data;
-  switch (id) {
-    case "Key":
-      sorted_data.sort(function(a, b) {
+  var sorted_metrics = metrics;
+  column_index = parseInt(column_index);
+  switch (column_index) {
+    case 0:
+      sorted_metrics.sort(function(a, b) {
         return (compare(
-          a.key.toLowerCase(), 
-          b.key.toLowerCase()));
+          a[column_index].toLowerCase(),
+          b[column_index].toLowerCase()));
       });
       break;
-    case "Last Insert":
-      sorted_data.sort(function(a, b) {
-        return (compare(a.last_insert, b.last_insert));
+    case 2:
+      sorted_metrics.sort(function(a, b) {
+        return (compare(
+          a[column_index].toLowerCase(), 
+          b[column_index].toLowerCase()));
       });
       break;
-    case "Total stored bytes":
-      sorted_data.sort(function(a, b) {
-        return (compare(a.total_bytes, b.total_bytes));
+    case 3:
+      sorted_metrics.sort(function(a, b) {
+        return (compare(
+          a[column_index], b[column_index]));
       });
       break;
     default:
       break;
   }
-  return sorted_data;
 }
 
 
