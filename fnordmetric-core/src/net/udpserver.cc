@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <string.h>
 
 using fnord::util::Buffer;
 
