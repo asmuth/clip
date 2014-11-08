@@ -139,9 +139,10 @@ input {
 .visual_editor.field {
   width: 100%;
   padding: 20px 10px 20px 20px;
+  line-height: 26px;
 }
 
-.visual_editor.field .title {
+.visual_editor.field .field_title {
   float:left;
   margin-right: 10px;
 }
@@ -150,13 +151,55 @@ input {
   height: 20px;
 }
 
+.visual_editor input.small {
+  width: 40px;
+  font-size: 12px;
+}
 
 .visual_editor ul.dropdown * {
   clear: both;
   margin-right: 0px;
 }
 
+.visual_editor .simple_button {
+  line-height: 26px;
+  float:left; 
+  margin-right: 10px;
+  padding: 0 5px;
+  text-decoration: none;
+  color: #444;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
 
+.visual_editor .simple_button:hover,
+.visual_editor .simple_button.active{
+  background-color: #ddd;
+}
+
+.visual_editor select {
+  float:left;
+  height: 26px;
+}
+
+.hover_tooltip {
+  text-align: center;
+  padding: 5px 7px;
+  color: #fff;
+  background: #2a2a2a;
+  border-radius: 3px;
+  font-size: 13px;
+  z-index: 900;
+  max-width: 300px;
+  display: none;
+  position: absolute;
+}
+
+.editor_navbar .hover_tooltip {
+  top: 30px;
+  left: 4px;
+}
+>>>>>>> adminui
 
 .result_pane .result_navbar {
   width: 100%;
