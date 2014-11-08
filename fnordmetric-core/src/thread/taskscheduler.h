@@ -22,6 +22,16 @@ public:
    */
   virtual void run(std::shared_ptr<Task> task) = 0;
 
+  /**
+   * Run the provided task when the provided filedescriptor becomes readable
+   */
+  virtual void runOnReadable(std::shared_ptr<Task> task, int fd) = 0;
+
+  /**
+   * Run the provided task when the provided filedescriptor becomes writable
+   */
+  virtual void runOnWritable(std::shared_ptr<Task> task, int fd) = 0;
+
 };
 
 }

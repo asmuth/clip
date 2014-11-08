@@ -21,8 +21,8 @@ public:
 
   Buffer(const void* initial_data, size_t initial_size);
   Buffer(size_t initial_size);
+  Buffer(const Buffer& copy);
   Buffer(Buffer&& move);
-  Buffer(const Buffer& copy) = delete;
   Buffer& operator=(const Buffer& copy) = delete;
   ~Buffer();
 

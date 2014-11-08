@@ -27,6 +27,8 @@ public:
       std::unique_ptr<fnord::util::ExceptionHandler> error_handler);
 
   void run(std::shared_ptr<Task> task) override;
+  void runOnReadable(std::shared_ptr<Task> task, int fd) override;
+  void runOnWritable(std::shared_ptr<Task> task, int fd) override;
 
 protected:
   std::unique_ptr<fnord::util::ExceptionHandler> error_handler_;

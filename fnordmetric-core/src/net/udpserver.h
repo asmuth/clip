@@ -26,6 +26,8 @@ public:
   void listen(int port);
 
 protected:
+  void messageReceived();
+
   thread::TaskScheduler* server_scheduler_;
   thread::TaskScheduler* callback_scheduler_;
   int ssock_;
