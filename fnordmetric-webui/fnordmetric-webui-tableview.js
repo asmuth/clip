@@ -21,14 +21,19 @@ FnordMetric.util.TableView = function(columns, elem) {
   var all_rows = [];
   var on_row_click = null;
 
-  var per_page = 10;
+  var per_page = 25;
   var current_page = 0;
+  var pages;
 
   function render() {
     elem.innerHTML = "";
+    pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
-    renderPagination(offset, per_page, all_rows.length);
-    renderTable(all_rows.slice(offset, offset + per_page));
+    var until = Math.min(offset + per_page, all_rows.length);
+    if (all_rows.length > per_page) {
+      renderPagination(offset+1,until, all_rows.length);
+    }
+    renderTable(all_rows.slice(offset, until));
   }
 
   function updatePage(page_index) {
@@ -36,8 +41,9 @@ FnordMetric.util.TableView = function(columns, elem) {
     render();
   }
 
-  function resortRows(column_index) {
-    // resort all_rows in place
+  function resortRows(column_index, order) {
+    FnordMetric.util.sortMetricList(
+      all_rows, column_index, order);
     updatePage(0);
   }
 
@@ -50,18 +56,39 @@ FnordMetric.util.TableView = function(columns, elem) {
     var header = document.createElement("tr");
     table.appendChild(header);
     header.className = "list_header";
-    columns.map(function(column) {
+
+    for (var i = 0; i < columns.length; i++) {
       var header_cell = document.createElement("th");
-      header_cell.innerHTML = column;
+      header_cell.innerHTML = columns[i];
       header.appendChild(header_cell);
-    });
+      if (i != 1) {
+        header_cell.className = "clickable";
+
+        var sort_asc = FnordMetric.createButton(
+          "#", "caret left", "&#x25B2;");
+        sort_asc.setAttribute("id", i);
+        sort_asc.onclick = function(e) {
+          e.preventDefault();
+          resortRows(this.id, "asc");
+        }
+        header_cell.appendChild(sort_asc);
+
+        var sort_desc = FnordMetric.createButton(
+          "#", "caret", "&#x25BC;");
+        sort_desc.setAttribute("id", i);
+        sort_desc.onclick = function(e) {
+          e.preventDefault();
+          resortRows(this.id, "desc");
+        }
+        header_cell.appendChild(sort_desc);
+      }
+    }
 
     /* render rows */
     rows.map(function(row) {
       var list_row = document.createElement("tr");
       table.appendChild(list_row);
 
-      console.log(this);
 
       if (on_row_click != null) {
         list_row.addEventListener('click', on_row_click, false);
@@ -83,13 +110,13 @@ FnordMetric.util.TableView = function(columns, elem) {
       "#", "pagination_tooltip", "&#8594;");
     navbar.appendChild(ttp_forward);
     ttp_forward.onclick = function () {
-      updatePage(current_page + 1);
+      updatePage((current_page + 1) % pages);
     }
 
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
     ttp_back.onclick = function () {
-      updatePage(current_page - 1);
+      updatePage((current_page + per_page) % pages);
     }
     navbar.appendChild(ttp_back);
 
@@ -118,17 +145,6 @@ FnordMetric.util.TableView = function(columns, elem) {
 
 
 /*
-
-
-
-
-  var renderResult = function(metrics_data, elem, isSearchResult, search_item) {
-    var rows_per_side = 10;
-    var pag_navbar;
-    var list_container;
-    var no_result_text = undefined;
-    var end;
-
     function searchRows(search_key) {
       //destroyRows();
       destroyListPagination();
@@ -141,241 +157,4 @@ FnordMetric.util.TableView = function(columns, elem) {
       });
       renderTable(data);
     }
-
-    var createListHeaderCells = function(labels) {
-      labels.map(function(label) {
-        var list_header_cell = document.createElement("th");
-        list_header_cell.innerHTML = label;
-        var createSortLink = function(symbol, order) {
-          var sort_link = FnordMetric.createButton(
-            "#", "caret", symbol);
-          sort_link.setAttribute("id", label);
-          list_header_cell.appendChild(sort_link);
-
-          sort_link.addEventListener('click', function(e) {
-            e.preventDefault();
-            var sorted_data = sortColumns(metrics_data, this.id, order);
-            renderTable(sorted_data);
-          }, false);
-        }
-        createSortLink("&#x25B2;", "asc");
-        createSortLink("&#x25BC;", "desc");
-        list_header.appendChild(list_header_cell);
-      });
-    }
-
-    var renderListPagination = function(metrics_data) {
-      var start_index = 0;
-      var end_index = rows_per_side;
-
-
-      var pag_navbar = document.createElement("div");
-      pag_navbar.className = "pagination_navbar metrics";
-
-      var tooltipObj = {
-        "for" :  {
-          "arrow" : "&#8594;",
-          "marginRight" : "0px"
-        },
-        "back" : {
-          "arrow" : "&#8592;",
-          "marginRight" : "2px"
-        }
-      }
-
-      var createTooltip = function(type) {
-        var tooltip = FnordMetric.createButton(
-          "#", "pagination_tooltip", tooltipObj[type]["arrow"]);
-        tooltip.style.marginRight = tooltipObj[type]["marginRight"];
-
-        tooltip.addEventListener('click', function(e) {
-          e.preventDefault();
-          if (type == "for") {
-            start_index = parseInt(this.id);
-            end_index = Math.min(metrics_data.length, 
-              start_index + rows_per_side);
-          } else {
-            start_index = Math.max(0, parseInt(this.id) - rows_per_side);
-            end_index = start_index + rows_per_side;
-          }
-          tooltipEvent()
-        }, false);
-
-        return tooltip;
-      }
-
-
-      var pag_label = document.createElement("div");
-      pag_label.className = "pagination_label";
-
-      var updateLabel = function() {
-        pag_label.innerHTML = "<b>" + (start_index +1) + 
-          "</b><span> - </span><b>" + end_index + 
-          "</b><span> of </span><b>" + metrics_data.length + "</b>";
-      }
-
-      var updateTooltips = function() {
-        tooltip_for.setAttribute("id", end_index);
-        tooltip_back.setAttribute("id" , start_index);
-
-        tooltip_for.style.color = 
-          (end_index == metrics_data.length) ? "#ddd" : "#444";
-
-        tooltip_back.style.color = 
-          (start_index == 0) ? "#ddd" : "#444";
-      }
-
-      var tooltipEvent = function() {
-        updateLabel();
-        updateTooltips();
-        destroyRows();
-        for (var i = start_index; i < end_index; i++) {
-          createListItem(metrics_data[i]);
-        }
-      }
-
-
-      var tooltip_for = createTooltip("for");
-      var tooltip_back = createTooltip("back");
-
-      updateLabel();
-      updateTooltips();
-
-      pag_navbar.appendChild(tooltip_for);
-      pag_navbar.appendChild(tooltip_back);
-      pag_navbar.appendChild(pag_label);
-      if (list_container !== undefined) {
-        elem.insertBefore(pag_navbar, list_container);
-      } else {
-        elem.appendChild(pag_navbar);
-      }
-
-      return pag_navbar;
-    }
-
-    var destroyListPagination = function() {
-      if (pag_navbar === undefined) {
-        return;
-      }
-      while (pag_navbar.firstChild) {
-        pag_navbar.removeChild(pag_navbar.firstChild);
-      }
-        //FIXME
-      elem.removeChild(document.querySelector(".pagination_navbar"));
-    }
-
-    var createListItem = function(data) {
-      var list_item_row = document.createElement("tr");
-
-      var i = 0;
-      var list_elems = ["key", "labels", "insert", "total_bytes"];
-
-
-      if (!data.converted) {
-        parseLabels(data);
-        convertTimestamp(data);
-        data.converted = true;
-      }
-
-      list_elems.map(function(item) {
-        var list_item = document.createElement("td");
-        list_item.innerHTML = data[item];
-        list_item_row.appendChild(list_item);
-      });
-
-      list_container.appendChild(list_item_row);
-
-      list_item_row.addEventListener('click', function(e) {
-        e.preventDefault();
-              destroy(elem);
-        FnordMetric.views.QueryPlayground().render(elem, query);
-      }, false);
-    }
-
-    var renderTable = function(data) {
-      if (data.length == 0) {
-        no_result_text = renderNoResult();
-        return;
-      }
-      if (list_container === undefined) {
-        initTable();
-      } else {
-        destroyRows();
-      }
-      if (no_result_text !== undefined) {
-        destroyNoResult();
-      }
-      if (data.length > rows_per_side) {
-        renderListPagination(data);
-        var end = rows_per_side;
-      } else {
-        var end = data.length;
-      }
-      for (var i = 0; i < end; i++) {
-        createListItem(data[i]);
-      }
-    }
-
-    var destroyRows = function() {
-      if (list_container === undefined ||
-          list_container === null) {
-        return;
-      }
-      while (list_container.childNodes.length > 1) {
-        list_container.removeChild(list_container.lastChild);
-      }
-    }
-
-    var list_header;
-    var initTable = function() {
-      list_container = document.createElement("table");
-      list_container.className = "metrics_list_container";
-
-      list_header = document.createElement("tr");
-      list_header.className = "metrics_list_header";
-      createListHeaderCells(["Key", "Labels", "Last Insert", "Total stored bytes"]);
-      list_container.appendChild(list_header);
-      elem.appendChild(list_container);
-    }
-
-    var destroyTable = function() {
-      if (list_container === undefined) {
-        list_container = document.querySelector(
-          ".metrics_list_container");
-        if (list_container === null) {
-          list_container = undefined;
-          return;
-        }
-      }
-      while (list_container.firstChild) {
-        list_container.removeChild(list_container.firstChild);
-      }
-      console.log(elem);
-      console.log(list_container.parentNode);
-      (list_container.parentNode).removeChild(list_container);
-      list_container = undefined;
-    }
-
-    var renderView = function() {
-      destroyTable();
-      destroyNoResult();
-
-      if (isSearchResult) {
-        searchRows(search_item);
-      } else {
-        if (metrics_data.length > rows_per_side) {
-         pag_navbar = renderListPagination(metrics_data);
-        }
-        end = Math.min(metrics_data.length, rows_per_side);
-        initTable();
-        for (var i = 0; i < end;  i++) {
-          createListItem(metrics_data[i], true);
-        }
-      }
-    }
-
-    renderView();
-  }
-
-
 */

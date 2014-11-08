@@ -260,9 +260,10 @@ input {
 }
 
 .pagination_navbar.metric {
-  width: 80%;
+  width: 100%;
   margin: auto;
   margin-top: 5px;
+  margin-bottom: 6px
 }
 
 .result_pane table.result_table {
