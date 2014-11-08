@@ -37,7 +37,6 @@ bool AdminUI::handleRequest(xzero::HttpRequest* request,
   }
 
   auto url = request->path();
-  auto done = std::bind(&xzero::HttpResponse::completed, response);
 
   if (url == "/") {
     response->setStatus(xzero::HttpStatus::Found);
@@ -48,52 +47,62 @@ bool AdminUI::handleRequest(xzero::HttpRequest* request,
   }
 
   if (url == "/admin") {
-    response->setStatus(xzero::HttpStatus::Ok);
-    response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->output()->write(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.html"),
-        done);
+    sendAsset(
+        response,
+        "fnordmetric-webui/fnordmetric-webui.html",
+        "text/html; charset=utf-8");
     return true;
   }
 
   if (url == "/favicon.ico") {
-    response->setStatus(xzero::HttpStatus::Ok);
-    response->addHeader("Content-Type", "image/x-icon");
-    response->output()->write(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-favicon.ico"),
-        done);
+    sendAsset(
+        response,
+        "fnordmetric-webui/fnordmetric-favicon.ico",
+        "image/x-icon");
     return true;
   }
 
   if (url == "/s/fnordmetric.js") {
-    response->setStatus(xzero::HttpStatus::Ok);
-    response->addHeader("Content-Type", "text/javascript");
-    response->output()->write(
-        util::Assets::getAsset("fnordmetric-js/fnordmetric.js"),
-        done);
+    sendAsset(
+        response,
+        "fnordmetric-js/fnordmetric.js",
+        "text/javascript");
     return true;
   }
 
   if (url == "/s/fnordmetric-webui.css") {
-    response->setStatus(xzero::HttpStatus::Ok);
-    response->addHeader("Content-Type", "text/css");
-    response->output()->write(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.css"),
-        done);
+    sendAsset(
+        response,
+        "fnordmetric-webui/fnordmetric-webui.css",
+        "text/css");
     return true;
   }
 
   if (url == "/s/fnordmetric-webui.js") {
-    response->setStatus(xzero::HttpStatus::Ok);
-    response->addHeader("Content-Type", "text/javascript");
-    response->output()->write(
-        util::Assets::getAsset("fnordmetric-webui/fnordmetric-webui.js"),
-        done);
+    sendAsset(
+        response,
+        "fnordmetric-webui/fnordmetric-webui.js",
+        "text/javascript");
     return true;
   }
 
   return false;
 }
+
+void AdminUI::sendAsset(
+    xzero::HttpResponse* response,
+    const std::string& asset_path,
+    const std::string& content_type) const {
+  auto asset_data = util::Assets::getAsset(asset_path);
+  response->setStatus(xzero::HttpStatus::Ok);
+  response->addHeader("Content-Type", content_type);
+  response->setContentLength(asset_data.size());
+
+  response->output()->write(
+      asset_data,
+      std::bind(&xzero::HttpResponse::completed, response));
+}
+
 
 }
 }

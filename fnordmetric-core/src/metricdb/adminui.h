@@ -23,6 +23,14 @@ public:
   bool handleRequest(
       xzero::HttpRequest* request,
       xzero::HttpResponse* response) override;
+
+private:
+
+  void sendAsset(
+      xzero::HttpResponse* response,
+      const std::string& asset_path,
+      const std::string& content_type) const;
+
 };
 
 }
