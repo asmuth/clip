@@ -27,6 +27,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
 #include <fnordmetric/thread/threadpool.h>
+#include <fnordmetric/thread/task.h>
 #include <xzero/TimeSpan.h>
 #include <xzero/http/HttpService.h>
 #include <xzero/executor/ThreadedExecutor.h>
@@ -43,6 +44,8 @@ using namespace fnordmetric::metricdb;
 static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
     "github.com/paulasmuth/fnordmetric";
+
+using fnord::thread::Task;
 
 int main(int argc, const char** argv) {
   fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
@@ -116,11 +119,13 @@ int main(int argc, const char** argv) {
 
   inmemory_backend::MetricRepository metric_repo;
 
-  thread_pool.run([] () {
+  auto statsd_server = Task::create([] () {
     fnord::net::UDPServer statsd_server;
+
     statsd_server.onMessage([] (const fnord::util::Buffer& msg) {
       printf("msg: %s\n", msg.toString().c_str());
     });
+
     statsd_server.listen(1337);
   });
 
