@@ -32,6 +32,14 @@ body {
 .fancy_button {
 }
 
+input {
+  width: 200px;
+  height: 23px;
+  float:left;
+  padding: 2px;
+  font-size: 14px;
+}
+
 .viewport {
   margin-top: 50px;
 }
@@ -133,10 +141,22 @@ body {
   padding: 20px 10px 20px 20px;
 }
 
-.visual_editor.field * {
+.visual_editor.field .title {
   float:left;
   margin-right: 10px;
 }
+
+.visual_editor input {
+  height: 20px;
+}
+
+
+.visual_editor ul.dropdown * {
+  clear: both;
+  margin-right: 0px;
+}
+
+
 
 .result_pane .result_navbar {
   width: 100%;
@@ -239,14 +259,6 @@ body {
   float:left;
   margin-left: 20px;
   margin-top: 9px;
-}
-
-.search_bar input {
-  width: 200px;
-  height: 23px;
-  float:left;
-  padding: 2px;
-  font-size: 14px;
 }
 
 .search_bar .fancy_button {

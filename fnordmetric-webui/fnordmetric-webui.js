@@ -899,10 +899,9 @@ FnordMetric.views.QueryPlayground = function() {
           parentNode.appendChild(title);
         }
 
-        function createField(title_text) {
+        function createField() {
           var field = document.createElement("div");
           field.className = "visual_editor field";
-          renderFieldTitle(title_text, field);
           return field;
         }
 
@@ -917,8 +916,12 @@ FnordMetric.views.QueryPlayground = function() {
           return dropdown;
         }
 
-        var metric_field = createField("Metric");
+        var metric_field = createField();
         var metric = document.createElement("input");
+        console.log(typeof FnordMetric.MetricData[0]);
+        console.log(FnordMetric.MetricData[0] == Object);
+        metric.value = FnordMetric.MetricData[0] !== undefined ?
+          FnordMetric.MetricData[0].key : "";
         var metric_list = document.createElement("ul");
         metric_list.className = "dropdown";
         var keys = [];
@@ -927,12 +930,13 @@ FnordMetric.views.QueryPlayground = function() {
         });
         console.log(keys);
         metric_field.appendChild(metric);
-        metric_field.appendChild(metric_list);
+        //metric_field.appendChild(metric_list);
 
         FnordMetric.DropdownAutocomplete(
           metric_field, metric_list, metric, keys, undefined);
 
-        var draw_field = createField("DRAW");
+        var draw_field = createField();
+        renderFieldTitle("DRAW", draw_field);
         var draw_dropdown = createDropdown(["LINECHART", 
           "POINTCHART","BARCHART", "AREACHART"], false);
         draw_field.appendChild(draw_dropdown);
