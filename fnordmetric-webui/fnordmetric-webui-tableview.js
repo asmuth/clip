@@ -21,14 +21,19 @@ FnordMetric.util.TableView = function(columns, elem) {
   var all_rows = [];
   var on_row_click = null;
 
-  var per_page = 10;
+  var per_page = 25;
   var current_page = 0;
+  var pages;
 
   function render() {
     elem.innerHTML = "";
+    pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
-    renderPagination(offset, per_page, all_rows.length);
-    renderTable(all_rows.slice(offset, offset + per_page));
+    var until = Math.min(offset + per_page, all_rows.length);
+    if (all_rows.length > per_page) {
+      renderPagination(offset+1,until, all_rows.length);
+    }
+    renderTable(all_rows.slice(offset, until));
   }
 
   function updatePage(page_index) {
@@ -61,7 +66,6 @@ FnordMetric.util.TableView = function(columns, elem) {
       var list_row = document.createElement("tr");
       table.appendChild(list_row);
 
-      console.log(this);
 
       if (on_row_click != null) {
         list_row.addEventListener('click', on_row_click, false);
@@ -83,13 +87,13 @@ FnordMetric.util.TableView = function(columns, elem) {
       "#", "pagination_tooltip", "&#8594;");
     navbar.appendChild(ttp_forward);
     ttp_forward.onclick = function () {
-      updatePage(current_page + 1);
+      updatePage((current_page + 1) % pages);
     }
 
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
     ttp_back.onclick = function () {
-      updatePage(current_page - 1);
+      updatePage((current_page + 5) % pages);
     }
     navbar.appendChild(ttp_back);
 
