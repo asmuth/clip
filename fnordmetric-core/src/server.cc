@@ -72,7 +72,7 @@ int main(int argc, const char** argv) {
       cli::FlagParser::T_STRING,
       false,
       NULL,
-      NULL,
+      "/tmp/fnordmetric-data",
       "Store the database in this directory (disk backend only)",
       "<path>");
 
@@ -81,7 +81,7 @@ int main(int argc, const char** argv) {
       cli::FlagParser::T_INTEGER,
       false,
       NULL,
-      NULL,
+      "8080",
       "Start the web interface on this port",
       "<port>");
 

@@ -32,7 +32,7 @@ void FlagParser::defineFlag(
 bool FlagParser::isSet(const char* longopt) const {
   for (auto& flag : flags_) {
     if (flag.longopt == longopt) {
-      return flag.values.size() > 0;
+      return flag.default_value != nullptr || flag.values.size() > 0;
     }
   }
 
@@ -47,6 +47,10 @@ std::string FlagParser::getString(const char* longopt) const {
       }
 
       if (flag.values.size() == 0) {
+        if (flag.default_value != nullptr) {
+          return flag.default_value;
+        }
+
         RAISE(kFlagError, "flag '%s' is not set", longopt);
       }
 
@@ -64,13 +68,21 @@ int64_t FlagParser::getInt(const char* longopt) const {
         RAISE(kFlagError, "flag '%s' is not an integer", longopt);
       }
 
+      std::string flag_value_str;
+
       if (flag.values.size() == 0) {
-        RAISE(kFlagError, "flag '%s' is not set", longopt);
+        if (flag.default_value != nullptr) {
+          flag_value_str = flag.default_value;
+        } else {
+          RAISE(kFlagError, "flag '%s' is not set", longopt);
+        }
+      } else {
+        flag_value_str = flag.values.back();
       }
 
       int64_t flag_value;
       try {
-        flag_value = std::stoi(flag.values.back());
+        flag_value = std::stoi(flag_value_str);
       } catch (std::exception e) {
         RAISE(
             kFlagError,

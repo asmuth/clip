@@ -304,15 +304,16 @@ void HTTPAPI::executeQuery(
     xzero::HttpRequest* request,
     xzero::HttpResponse* response,
     util::URI* uri) {
+  printf("run query\n");
   std::shared_ptr<util::InputStream> input_stream = createInputStream(request);
-
   std::shared_ptr<BufferOutputStream> output_stream(new BufferOutputStream());
 
   // FIXPAUL move to thread/worker pool
   query::QueryService query_service;
   std::unique_ptr<query::TableRepository> table_repo(
       new MetricTableRepository(metric_repo_));
-
+  
+  printf("run query...\n");
   try {
     query_service.executeQuery(
         input_stream,
