@@ -73,7 +73,7 @@ char const* StatsdServer::parseStatsdSample(
     char const* end,
     std::string* key,
     std::string* value,
-    std::vector<std::pair<std::string, std::string>>* labels) const {
+    std::vector<std::pair<std::string, std::string>>* labels) {
   StatsdParseState state = S_KEY;
   char const* cur = begin;
   char const* mark = cur;
