@@ -9,6 +9,10 @@ build:
 	(cd ../fnordmetric-webui && make)
 	(cd build/cmake && make)
 
+devserver: build
+	mkdir -p /tmp/fnordmetric-data
+	DEV_ASSET_PATH=../ ./build/cmake/target/fnordmetric-server --port 8080 --datadir /tmp/fnordmetric-data
+
 test:
 	(cd build/cmake && make test)
 
@@ -16,4 +20,4 @@ clean:
 	(cd build/cmake && make clean)
 	rm -rf build/test/tmp*
 
-.PHONY: all test clean build
+.PHONY: all test clean build devserver
