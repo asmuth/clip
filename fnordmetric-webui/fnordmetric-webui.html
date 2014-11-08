@@ -9,6 +9,21 @@
   <body>
     <script type="text/javascript" src="/s/fnordmetric.js"></script>
     <script type="text/javascript" src="/s/fnordmetric-webui.js"></script>
-    <script type="text/javascript">FnordMetric.WebUI();</script>
+    <script type="text/javascript">
+      /* intialize web ui */
+      FnordMetric.WebUI.singleton = FnordMetric.WebUI();
+      FnordMetric.WebUI.singleton.addView("metric_list", FnordMetric.views.MetricList);
+
+      /* initialize the main menu */
+      FnordMetric.WebUI.singleton.addMenuItem("Metrics", "metric_list");
+
+      /* open initial url */
+      var fragment = window.location.hash;
+      if (fragment) {
+        FnordMetric.WebUI.singleton.openUrl(fragment.substring(1));
+      } else {
+        FnordMetric.WebUI.singleton.openUrl("metric_list");
+      }
+    </script>
   </body>
 </html>
