@@ -60,7 +60,8 @@ documentation:
         url: "/query_language/reference"
       -
         title: "Sending data via statsd"
-        url: "/query_language/reference"
+        url: "/metridb/statsd_interface"
+        file: "metricdb_statsd_interface"
       -
         title: "Retention Policies"
         url: "/query_language/reference"
