@@ -11,6 +11,8 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/util/logoutputstream.h>
 
+using fnord::util::LogOutputStream;
+
 namespace fnordmetric {
 
 Environment* env() {
@@ -19,7 +21,7 @@ Environment* env() {
 }
 
 Environment::Environment() :
-    logger_(new util::LogOutputStream(util::OutputStream::getStderr())) {}
+    logger_(new LogOutputStream(util::OutputStream::getStderr())) {}
 
 void Environment::setVerbose(bool verbose) {
   verbose_ = verbose;

@@ -132,7 +132,7 @@ void MySQLConnection::executeQuery(
     const std::string& query,
     std::function<bool (const std::vector<std::string>&)> row_callback) {
   if (env()->verbose()) {
-    util::LogEntry entry;
+    fnord::util::LogEntry entry;
     entry.append("__severity__", "DEBUG");
     entry.append("__message__", "Executing MySQL query");
     entry.append("query", query);

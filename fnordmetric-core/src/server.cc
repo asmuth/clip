@@ -26,7 +26,7 @@
 #include <fnordmetric/util/random.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
-#include <thread>
+#include <fnordmetric/thread/threadpool.h>
 #include <xzero/TimeSpan.h>
 #include <xzero/http/HttpService.h>
 #include <xzero/executor/ThreadedExecutor.h>
@@ -45,7 +45,7 @@ static const char kCrashErrorMsg[] =
     "github.com/paulasmuth/fnordmetric";
 
 int main(int argc, const char** argv) {
-  fnordmetric::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
 
   fnordmetric::util::SignalHandler::ignoreSIGHUP();
@@ -76,10 +76,10 @@ int main(int argc, const char** argv) {
   env()->setVerbose(true);
 
   // boot
-  fnordmetric::util::ThreadPool thread_pool(
+  fnord::thread::ThreadPool thread_pool(
       32,
-      std::unique_ptr<fnordmetric::util::ExceptionHandler>(
-          new fnordmetric::util::CatchAndPrintExceptionHandler(
+      std::unique_ptr<fnord::util::ExceptionHandler>(
+          new fnord::util::CatchAndPrintExceptionHandler(
               env()->logger())));
 
   auto datadir = env()->flags()->getString("datadir");

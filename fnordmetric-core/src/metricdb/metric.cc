@@ -18,6 +18,8 @@
 #include <string.h>
 
 using namespace fnord;
+using fnord::util::WallClock;
+
 namespace fnordmetric {
 namespace metricdb {
 

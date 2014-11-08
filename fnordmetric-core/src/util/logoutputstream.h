@@ -12,15 +12,15 @@
 #include <fnordmetric/util/logger.h>
 #include <fnordmetric/util/outputstream.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
 
 class LogOutputStream : public Logger {
 public:
-  LogOutputStream(std::unique_ptr<OutputStream> target);
+  LogOutputStream(std::unique_ptr<fnordmetric::util::OutputStream> target);
   void log(const LogEntry& log_entry) override;
 protected:
-  std::unique_ptr<OutputStream> target_;
+  std::unique_ptr<fnordmetric::util::OutputStream> target_;
 };
 
 }

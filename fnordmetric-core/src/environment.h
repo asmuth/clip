@@ -13,6 +13,8 @@
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/util/logger.h>
 
+using fnord::util::Logger;
+
 namespace fnordmetric {
 
 class Environment {
@@ -23,7 +25,7 @@ public:
     return &flag_parser_;
   }
 
-  inline util::Logger* logger() {
+  inline Logger* logger() {
     return logger_.get();
   }
 
@@ -36,7 +38,7 @@ public:
 protected:
   bool verbose_;
   cli::FlagParser flag_parser_;
-  std::unique_ptr<util::Logger> logger_;
+  std::unique_ptr<Logger> logger_;
 };
 
 Environment* env();

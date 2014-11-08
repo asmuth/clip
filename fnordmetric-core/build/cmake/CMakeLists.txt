@@ -101,6 +101,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql_extensions/domainconfig.cc
     stage/src/fnordmetric/sql_extensions/drawstatement.cc
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc
+    stage/src/fnordmetric/thread/threadpool.cc
     stage/src/fnordmetric/metricdb/adminui.cc
     stage/src/fnordmetric/metricdb/compactiontask.cc
     stage/src/fnordmetric/metricdb/httpapi.cc

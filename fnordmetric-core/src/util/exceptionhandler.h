@@ -13,7 +13,7 @@
 #include <memory>
 #include <fnordmetric/util/logger.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
 
 class ExceptionHandler {

@@ -25,7 +25,7 @@ bool AdminUI::handleRequest(xzero::HttpRequest* request,
                             xzero::HttpResponse* response) {
 
   if (env()->verbose()) {
-    util::LogEntry log_entry;
+    fnord::util::LogEntry log_entry;
     log_entry.append("__severity__", "DEBUG");
     log_entry.printf(
         "__message__",

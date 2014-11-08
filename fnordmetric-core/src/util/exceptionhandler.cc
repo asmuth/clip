@@ -11,8 +11,10 @@
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/runtimeexception.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace util {
+
+using fnordmetric::util::RuntimeException;
 
 CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler(
     Logger* logger) :
@@ -32,7 +34,7 @@ void CatchAndAbortExceptionHandler::onException(
   fprintf(stderr, "%s\n\n", message_.c_str()); // FIXPAUL
 
   try {
-    auto rte = dynamic_cast<const util::RuntimeException&>(error);
+    auto rte = dynamic_cast<const RuntimeException&>(error);
     rte.debugPrint();
     exit(1);
   } catch (const std::exception& e) {
@@ -49,7 +51,7 @@ static void globalEHandler() {
     throw;
   } catch (const std::exception& e) {
     try {
-      auto rte = dynamic_cast<const util::RuntimeException&>(e);
+      auto rte = dynamic_cast<const RuntimeException&>(e);
       rte.debugPrint();
       exit(1);
     } catch (...) {

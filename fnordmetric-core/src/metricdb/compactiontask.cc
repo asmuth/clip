@@ -13,6 +13,8 @@
 #include <fnordmetric/util/wallclock.h>
 #include <unistd.h>
 
+using fnord::util::WallClock;
+
 namespace fnordmetric {
 namespace metricdb {
 
