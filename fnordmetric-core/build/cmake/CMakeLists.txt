@@ -103,26 +103,9 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc
     stage/src/fnordmetric/thread/threadpool.cc
     stage/src/fnordmetric/metricdb/adminui.cc
-    stage/src/fnordmetric/metricdb/compactiontask.cc
     stage/src/fnordmetric/metricdb/httpapi.cc
-    stage/src/fnordmetric/metricdb/labelindex.cc
-    stage/src/fnordmetric/metricdb/labelindexreader.cc
-    stage/src/fnordmetric/metricdb/labelindexwriter.cc
     stage/src/fnordmetric/metricdb/metric.cc
-    stage/src/fnordmetric/metricdb/metriccursor.cc
-    stage/src/fnordmetric/metricdb/metricrepository.cc
-    stage/src/fnordmetric/metricdb/metricsnapshot.cc
-    stage/src/fnordmetric/metricdb/metrictableref.cc
-    stage/src/fnordmetric/metricdb/metrictablerepository.cc
-    stage/src/fnordmetric/metricdb/samplereader.cc
-    stage/src/fnordmetric/metricdb/samplewriter.cc
-    stage/src/fnordmetric/metricdb/statsd.cc
-    stage/src/fnordmetric/metricdb/tableheaderreader.cc
-    stage/src/fnordmetric/metricdb/tableheaderwriter.cc
-    stage/src/fnordmetric/metricdb/tableref.cc
-    stage/src/fnordmetric/metricdb/tokenindex.cc
-    stage/src/fnordmetric/metricdb/tokenindexreader.cc
-    stage/src/fnordmetric/metricdb/tokenindexwriter.cc)
+    stage/src/fnordmetric/metricdb/metricrepository.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
@@ -209,10 +192,10 @@ add_executable(tests/test-statsd
     stage/src/fnordmetric/metricdb/statsd_test.cc)
 target_link_libraries(tests/test-statsd fnord-static)
 
-add_executable(tests/test-metric
-    stage/src/fnordmetric/metricdb/metric_test.cc)
-target_link_libraries(tests/test-metric fnord-static)
+#add_executable(tests/test-metric
+#    stage/src/fnordmetric/metricdb/metric_test.cc)
+#target_link_libraries(tests/test-metric fnord-static)
 
-add_executable(tests/test-metricrepository
-    stage/src/fnordmetric/metricdb/metricrepository_test.cc)
-target_link_libraries(tests/test-metricrepository fnord-static)
+#add_executable(tests/test-metricrepository
+#    stage/src/fnordmetric/metricdb/metricrepository_test.cc)
+#target_link_libraries(tests/test-metricrepository fnord-static)

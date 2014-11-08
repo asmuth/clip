@@ -207,10 +207,9 @@ void HTTPAPI::insertSample(
     }
   }
 
-  Sample<double> sample;
-  sample.labels = std::move(labels);
+  double sample_value;
   try {
-    sample.value = std::stod(value_str);
+    sample_value = std::stod(value_str);
   } catch (std::exception& e) {
     response->sendError(
         xzero::HttpStatus::BadRequest,
@@ -219,7 +218,7 @@ void HTTPAPI::insertSample(
   }
 
   auto metric = metric_repo_->findOrCreateMetric(metric_key);
-  metric->addSample(sample);
+  metric->insertSample(sample_value, labels);
 
   response->setStatus(xzero::HttpStatus::Created);
   response->completed();
@@ -261,13 +260,12 @@ void HTTPAPI::renderMetricSampleScan(
   metric->scanSamples(
       fnord::util::DateTime::epoch(),
       fnord::util::DateTime::now(),
-      [&json, &i] (MetricCursor* cursor) -> bool {
-        auto sample = cursor->sample<double>();
+      [&json, &i] (Sample* sample) -> bool {
         if (i++ > 0) { json.addComma(); }
         json.beginObject();
 
         json.addObjectEntry("time");
-        json.addLiteral<uint64_t>(cursor->time());
+        json.addLiteral<uint64_t>(static_cast<uint64_t>(sample->time()));
         json.addComma();
 
         json.addObjectEntry("value");

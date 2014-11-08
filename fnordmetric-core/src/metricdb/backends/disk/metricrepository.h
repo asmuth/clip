@@ -22,11 +22,18 @@ namespace metricdb {
 
 class MetricRepository {
 public:
+
+  MetricRepository(std::shared_ptr<io::FileRepository> file_repo);
+
   Metric* findMetric(const std::string& key) const;
   Metric* findOrCreateMetric(const std::string& key);
   std::vector<Metric*> listMetrics() const;
+
 protected:
-  virtual Metric* createMetric(const std::string& key) = 0;
+
+  void openTable(const std::string& filename);
+
+  std::shared_ptr<io::FileRepository> file_repo_;
   std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
   mutable std::mutex metrics_mutex_;
 };

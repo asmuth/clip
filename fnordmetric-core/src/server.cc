@@ -16,7 +16,6 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
-#include <fnordmetric/metricdb/compactiontask.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/net/udpserver.h>
@@ -105,9 +104,6 @@ int main(int argc, const char** argv) {
   std::shared_ptr<fnord::io::FileRepository> file_repo(
       new fnord::io::FileRepository(datadir));
   MetricRepository metric_repo(file_repo);
-
-  CompactionTask compaction_task(&metric_repo);
-  thread_pool.run(compaction_task.runnable());
 
   thread_pool.run([] () {
     fnord::net::UDPServer statsd_server;
