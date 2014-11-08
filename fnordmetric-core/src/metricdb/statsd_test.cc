@@ -76,3 +76,50 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
   EXPECT_EQ(labels[1].second, "str");
   EXPECT_EQ(value, "34.23");
 });
+
+TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSamples, [] () {
+  std::string key;
+  std::string value;
+  LabelList labels;
+
+  std::string test_smpl = "/fnord/mymetric:2.3\n/fnord/other:42.5\r\nfu:4.6";
+
+  auto begin = test_smpl.c_str();
+  auto end = test_smpl.c_str() + test_smpl.size();
+
+  auto ret = StatsdServer::parseStatsdSample(
+      begin,
+      end,
+      &key,
+      &value,
+      &labels);
+
+  EXPECT(ret == begin + 20);
+  EXPECT_EQ(key, "/fnord/mymetric");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "2.3");
+
+  ret = StatsdServer::parseStatsdSample(
+      ret,
+      end,
+      &key,
+      &value,
+      &labels);
+
+  EXPECT(ret == begin + 39);
+  EXPECT_EQ(key, "/fnord/other");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "42.5");
+
+  ret = StatsdServer::parseStatsdSample(
+      ret,
+      end,
+      &key,
+      &value,
+      &labels);
+
+  EXPECT(ret == end);
+  EXPECT_EQ(key, "fu");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "4.6");
+});

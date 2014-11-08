@@ -46,26 +46,29 @@ void StatsdServer::messageReceived(const fnord::util::Buffer& msg) {
   auto msg_str = msg.toString();
   char const* begin = msg_str.c_str();
   char const* end = begin + msg_str.size();
-  parseStatsdSample(begin, end, &key, &value, &labels);
 
-  double float_value;
-  try {
-    float_value = std::stod(value);
-  } catch (std::exception& e) {
-    return;
+  while (begin < end) {
+    begin = parseStatsdSample(begin, end, &key, &value, &labels);
+
+    double float_value;
+    try {
+      float_value = std::stod(value);
+    } catch (std::exception& e) {
+      return;
+    }
+
+    if (env()->verbose()) {
+      env()->logger()->printf(
+          "DEBUG",
+          "statsd sample: %s=%f %s",
+          key.c_str(),
+          float_value,
+          fnord::util::inspect(labels).c_str());
+    }
+
+    auto metric = metric_repo_->findOrCreateMetric(key);
+    metric->insertSample(float_value, labels);
   }
-
-  if (env()->verbose()) {
-    env()->logger()->printf(
-        "DEBUG",
-        "statsd sample: %s=%f %s",
-        key.c_str(),
-        float_value,
-        fnord::util::inspect(labels).c_str());
-  }
-
-  auto metric = metric_repo_->findOrCreateMetric(key);
-  metric->insertSample(float_value, labels);
 }
 
 char const* StatsdServer::parseStatsdSample(
@@ -143,8 +146,11 @@ char const* StatsdServer::parseStatsdSample(
       }
 
       case S_VALUE: {
-        *value = std::string(mark, end);
-        return end;
+        char const* lend = mark;
+        for (; lend < end && *lend != '\n' && *lend != '\r'; ++lend);
+        *value = std::string(mark, lend);
+        for (; lend < end && (*lend == '\n' || *lend == '\r'); ++lend);
+        return lend;
       }
 
     }
