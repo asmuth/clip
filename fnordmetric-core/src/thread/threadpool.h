@@ -11,29 +11,27 @@
 #define _FNORDMETRIC_THREAD_THREADPOOL_H
 #include <functional>
 #include <atomic>
+#include <fnordmetric/thread/task.h>
+#include <fnordmetric/thread/taskscheduler.h>
 #include <fnordmetric/util/exceptionhandler.h>
 
 namespace fnord {
 namespace thread {
+
 /**
  * A threadpool is threadsafe
  */
-class ThreadPool {
+class ThreadPool : public TaskScheduler {
 public:
   ThreadPool(
-      int max_threads,
       std::unique_ptr<fnord::util::ExceptionHandler> error_handler);
 
-  /**
-   * Run the provided lambda on the thread pool. Raises an exception if thread
-   * pool is full
-   */
-  void run(std::function<void()> runnable);
+  void run(std::shared_ptr<Task> task) override;
+  void runOnReadable(std::shared_ptr<Task> task, int fd) override;
+  void runOnWritable(std::shared_ptr<Task> task, int fd) override;
 
 protected:
-  int max_threads_;
   std::unique_ptr<fnord::util::ExceptionHandler> error_handler_;
-  std::atomic_int num_threads_;
 };
 
 }

@@ -1,67 +1,164 @@
-FnordMetric Enterprise
-----------------------
+Getting Started with FnordMetric Server
+=======================================
 
-FnordMetric Enterprise is a key-value store (much like redis or memcached) where each
-key holds a "metric". There are different metric types like sum, mean, min/max, 90th
-percentile, etcetera. You continuously add data to these keys/metrics which is aggregated
-and periodically persisted.
+_This guide will walk you through starting a FnordMetric Server instance, inserting
+metric data and querying the metric data with ChartSQL. If you do not have installed
+FnordMetric yet, read the [Installation page](/documentation/installation) first._
 
-### Installation
+Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
+and a HTTP API to run ChartSQL queries and collect timeseries data.
 
-Installing FnordMetric Enterprise is straightforward. [Download the latest release
-here](/documentation/downloads) and run the jarfile with this command:
+You can start FnordMetric Server with or without a "storage backend".
+If FnordMetric Server is started without a storage backend you can only use the
+web interface to execute ChartSQL queries against external data sources (like a
+MySQL database). If it is started with a storage backend, you can also use the
+HTTP (and optionally the statsd) API to collect timeseries data into the storage
+backend and subsequently query that timerseries data using ChartSQL.
 
-    java -jar FnordMetric-Enterprise-v1.2.7.jar --tcp 8922 --websocket 8080 --admin 8081
-
-This will start FnordMetric, listen on TCP port 8922, start a WebSocket server on port
-8080 and start the admin interface on port 8081.
-
-
-### Semantics
-
-Each metric is addressed by a unique key. The metrics type and interval are implicitly specified
-by its key; all keys have to end with a "$type-$interval" pattern.
-
-For example: if you want a metric `response\_time` to record the average/mean of all sampled
-values in an aggregation interval of 60 seconds, you'd use the key `response\_time-mean-60` (type: mean,
-interval: 60s). For a metric `total\_clicks` that sums up all measuements in one-hour intervals, you would use
-`total_clicks.sum-3600` (type: sum, interval: 3600s)
-
-You can find a list of all metric types and the [full API Reference here](/documentation/enterprise_api_reference/)
+FnordMetric Server currently supports four storage backends: `inmemory`, `disk`,
+`mysql` and `hbase`.
 
 
-### Getting Started
+#### Starting Fnordmetric Server
 
-As an example, we will report the average http response time of a fictional application "myapp" to
-FnordMetric. They key we will use for this is `myapp.response\_time-mean-10` which will create a
-metric "myapp.response_time" that records the mean of all sampled values in a 10 second interval.
+For the getting started guide we will use the `disk` backend which stores the
+metric data in a folder on the local hard disk. To start a FnordMetric server
+instance with a local disk storage backend on HTTP port 8080 run:
 
-To add the first value to this metric we use netcat from the command line. This opens up a TCP
-connection to localhost on port 8922 and sends one line to add the value 42 to the metric. In our
-example this means we record the response time of one HTTP request that took 42ms.
+    $ mkdir -p /tmp/fnordmetric-data
+    $ fnordmetric-server --http_port 8080 --statsd_port 8125 --storage_backend=disk --datadir=/tmp/fnordmetric-data
 
-FnordMetric Enterprise will automatically create the metric if it doesnt exist yet.
 
-    $ echo "SAMPLE myapp.response_time-mean-10" | nc localhost 9222
-    OK
+#### Collecting Timeseries Data
 
-There are also [other ways to connect to FnordMetric Enterprise](/documentation/enterprise_api_reference/)
-(e.g. WebSockets, UDP, HTTP).
+FnordMetric Server records timeseries data in "Metrics". A Metrics is somewhat
+equivalent to a tables in a regular SQL database. Each metric has a unique name
+and consists of a collection of data points called "samples" that are recorded
+over time (i.e. a timeseries).
 
-You should now be able to navigate to the admin interface on http://localhost:8081/ in your
-browser and see something like this:
+A "sample" is a single datapoint. Each sample contains at least a timestamp
+and a numeric value. To keep the table analogy, each metric is a table that has
+two default columns `value` and `time` and each sample is a row in that table.
 
-<img src="/img/simple_example_screen.png" width="630" class="shadow" />
+You can query metrics using ChartSQL like normal tables:
+
+    > select time, value from mymetric;
+
+    ===================================
+    | time                  |  value  |
+    ===================================
+    | 2014-11-08 20:30:12   |  0.913  |
+    | 2014-11-08 20:30:42   |  0.837  |
+    | 2014-11-08 20:31:13   |  0.638  |
+    | 2014-11-08 20:31:41   |  0.326  |
+    | ...                   |  ...    |
+
+
+
+As an example, we will monitor the http reponse times of a fictional web
+application. We will create one "metric" that will be called `http\_reponse\_times`
+and will record the http response times (latencies) of our application. We are
+going to insert a sample into this metric for each HTTP request that our web
+application serves.
+
+There are a number of client libraries that allow you to send samples to
+FnordMetric Server using the HTTP or statsd API. For now, lets cheat a bit and
+manually send samples from the command line. The simplest way to send samples
+from your command line is using the statsd API. If you started FnordMetric Server
+on port 8125 (see above), you can use the netcat utility to send a sample via
+UDP+statsd.
+
+Let's insert the value `42` into the `http\_reponse\_times` metric. In our example this
+means we record the response time of a single HTTP request that took 42ms.
+
+    $ echo "http_reponse_times:42" | nc -u -w0 127.0.0.1 8125
+
+
+Execute this command a few times with different values to insert multiple samples
+into the metric. FnordMetric Server will automatically create the metric if it
+doesnt exist yet.
+
+#### Execute Queries from the Web Interface
+
+You should now be able to navigate to the admin interface on
+`http://localhost:8080/` in your browser and see our newly created metric. Click
+on the metric to bring up the interactive query editor. This should look something
+like this:
+
+<img style="margin: 30px;" src="/img/simple_example_screen.png" width="630" class="shadow" />
 <br />
 
-We can retrieve the measured data in a similar way. This will e.g. retrieve the measured mean
-response times for the last hour ([see a full list of commands here](/documentation/enterprise_api_reference/))
+Click around a bit to make yourself familiar with the Web UI. The chart you see
+above was generated by the following ChartSQL query which was automatically
+generated by the interactive query editor.
 
-    $ echo "VALUESIN myapp.response_time-mean-10 -1h now" | nc localhost 9222
-    1360804571:4233.52 1360804581:4312.36 1360804591:6323.12
+<i>Display the 100 latest samples from `http\_response\_times` as a line chart with the
+sample time plotted on the X axis and the sample value plotted on the Y axis.:</i>
+
+    DRAW LINECHART
+        AXIS LEFT
+        AXIS BOTTOM;
+
+    SELECT time as x, value as y
+        FROM http_response_times
+        ORDER BY time DESC
+        LIMIT 100;
 
 
-You now have a running FnordMetric application. There is a lot more you can do: Checkout out
-the [full API Reference here](/documentation/enterprise_api_reference/) or [read more
-about FnordMetric UI](/documentation/ui_index), a JavaScript / HTML5 library that you can use
-to plug in the data into any webpage within seconds.
+#### Adding labels
+
+To allow you to drill down into your metric data in arbitrary dimensions, each
+sample can optionally be labelled with one or more "labels". Each label is a
+key: value pair.
+
+In our example, assume we run our web application on multiple hosts in different
+datacenters. It would be nice to label each sample with  `hostname=...` and
+`datacenter=...` so that we can roll up the http response times by host, datacenter
+or a combinaton of both.
+
+Let's insert a few more example samples into our <code>http\_response\_times</code> metric
+and attach these labels:
+
+    $ echo "http_reponse_times[hostname=machine82][datacenter=ams1]:18" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_reponse_times[hostname=machine83][datacenter=ams1]:42" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_reponse_times[hostname=machine84][datacenter=ams1]:23" | nc -u -w0 127.0.0.1 8125
+
+When querying metrics with ChartSQL, the label keys act as table columns so you
+can filter and aggregate/group by label values. Our <code>http\_response\_times</code> table
+now has 4 columns:
+
+    > select time, value, hostname, datacenter from http_response_times;
+
+    ==============================================================
+    | time                  | value  | hostanme   | datacenter  |
+    ==============================================================
+    | 2014-11-08 20:30:12   | 18     | machine82  | ams1        |
+    | 2014-11-08 20:30:12   | 42     | machine83  | ams1        |
+    | 2014-11-08 20:30:12   | 23     | machine84  | ams1        |
+    | ...                   | ...    | ...        | ...         |
+
+You can execute this query from the interactive query editor to dispalay the last
+hour of samples in the `http\_response\_times` metric rolled up by hostname. It
+will draw a line chart with the sample time plotted on the X axis and the sample value
+plotted on the Y axis and one series per hostname:
+
+    DRAW LINECHART
+        AXIS LEFT
+        AXIS BOTTOM;
+
+    SELECT hostname as series, time as x, value as y
+        FROM http_response_times
+        WHERE time > -1hour;
+
+The result should look something like this:
+
+<img style="margin: 30px;" src="/img/simple_example_screen.png" width="630" class="shadow" />
+<br />
+
+You now have a running FnordMetric Server, but there is a lot more you can do.
+These are good docs to read next:
+
+  + [Examples](/examples/)
+  + [ChartSQL Query Language](/chartsql/introduction/)
+  + [Time-window aggregations](/documentation/chartsql/timewindow_aggregations/)
+  + [Building Dashboards](/documentation/html_dashboards/)

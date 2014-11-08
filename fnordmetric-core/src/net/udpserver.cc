@@ -7,19 +7,30 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fcntl.h>
 #include <fnordmetric/net/udpserver.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <string.h>
+#include <unistd.h>
 
 using fnord::util::Buffer;
 
 namespace fnord {
 namespace net {
 
-UDPServer::UDPServer() {}
+UDPServer::UDPServer(
+    thread::TaskScheduler* server_scheduler,
+    thread::TaskScheduler* callback_scheduler) :
+    server_scheduler_(server_scheduler),
+    callback_scheduler_(callback_scheduler) {}
+
+UDPServer::~UDPServer() {
+  // FIXPAUL cancel pending task
+  close(ssock_);
+}
 
 void UDPServer::onMessage(
     std::function<void (const Buffer&)> callback) {
@@ -42,31 +53,46 @@ void UDPServer::listen(int port) {
     RAISE_ERRNO(kIOError, "bind() failed");
   }
 
-  for (;;) {
-    char buf[65535];
-    struct sockaddr_in other_addr;
-    socklen_t other_addr_len = sizeof(other_addr);
-    auto buf_len = recvfrom(
-        ssock_,
-        buf,
-        sizeof(buf),
-        0,
-        (struct sockaddr *) &other_addr,
-        &other_addr_len);
+  int flags = fcntl(ssock_, F_GETFL, 0);
+  flags = flags | O_NONBLOCK;
 
-    if (buf_len < 0) {
-      // FIXPAUL log error
-      //RAISE_ERRNO(kIOError, "bind() failed");
-      continue;
-    }
-
-    if (callback_) {
-      Buffer msg(buf, buf_len);
-      callback_(msg);
-    }
+  if (fcntl(ssock_, F_SETFL, flags) != 0) {
+    RAISE_ERRNO(kIOError, "fnctl(%i) failed", ssock_);
   }
+
+  server_scheduler_->runOnReadable(
+      thread::Task::create(std::bind(&UDPServer::messageReceived, this)),
+      ssock_);
 }
 
+void UDPServer::messageReceived() {
+  struct sockaddr_in other_addr;
+  socklen_t other_addr_len = sizeof(other_addr);
+
+  char buf[65535];
+  auto buf_len = recvfrom(
+      ssock_,
+      buf,
+      sizeof(buf),
+      0,
+      (struct sockaddr *) &other_addr,
+      &other_addr_len);
+
+  server_scheduler_->runOnReadable(
+      thread::Task::create(std::bind(&UDPServer::messageReceived, this)),
+      ssock_);
+
+  if (buf_len < 0) {
+    RAISE_ERRNO(kIOError, "read(%i) failed", ssock_);
+  }
+
+  if (callback_) {
+    Buffer msg(buf, buf_len);
+    callback_scheduler_->run(thread::Task::create([msg, this] () {
+      this->callback_(msg);
+    }));
+  }
+}
 
 }
 }

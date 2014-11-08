@@ -19,6 +19,7 @@
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
+#include <fnordmetric/metricdb/statsd.h>
 #include <fnordmetric/net/udpserver.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
@@ -27,6 +28,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
 #include <fnordmetric/thread/threadpool.h>
+#include <fnordmetric/thread/task.h>
 #include <xzero/TimeSpan.h>
 #include <xzero/http/HttpService.h>
 #include <xzero/executor/ThreadedExecutor.h>
@@ -43,6 +45,8 @@ using namespace fnordmetric::metricdb;
 static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
     "github.com/paulasmuth/fnordmetric";
+
+using fnord::thread::Task;
 
 int main(int argc, const char** argv) {
   fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
@@ -86,7 +90,6 @@ int main(int argc, const char** argv) {
 
   // boot
   fnord::thread::ThreadPool thread_pool(
-      32,
       std::unique_ptr<fnord::util::ExceptionHandler>(
           new fnord::util::CatchAndPrintExceptionHandler(
               env()->logger())));
@@ -116,13 +119,9 @@ int main(int argc, const char** argv) {
 
   inmemory_backend::MetricRepository metric_repo;
 
-  thread_pool.run([] () {
-    fnord::net::UDPServer statsd_server;
-    statsd_server.onMessage([] (const fnord::util::Buffer& msg) {
-      printf("msg: %s\n", msg.toString().c_str());
-    });
-    statsd_server.listen(1337);
-  });
+  /* statsd server */
+  StatsdServer statsd_server(&metric_repo, &thread_pool, &thread_pool);
+  statsd_server.listen(1337);
 
   auto port = env()->flags()->getInt("port");
   xzero::IPAddress bind("0.0.0.0");

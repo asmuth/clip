@@ -7,25 +7,34 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_INSPECT_H_
-#define _FNORDMETRIC_UTIL_INSPECT_H_
-#include <string>
-#include <vector>
-
 namespace fnord {
 namespace util {
 
-template <typename T>
-std::string inspect(const T& value);
-
 template <typename T1, typename T2>
-std::string inspect(const std::pair<T1, T2>& value);
+std::string inspect(const std::pair<T1, T2>& value) {
+  std::string str = "<";
+  str += inspect(value.first);
+  str += ", ";
+  str += inspect(value.second);
+  str += '>';
+  return str;
+}
 
 template <typename T>
-std::string inspect(const std::vector<T>& value);
+std::string inspect(const std::vector<T>& value) {
+  std::string str = "[";
+  for (auto iter = value.begin(); iter != value.end(); ++iter) {
+    if (iter != value.begin()) {
+      str += ", ";
+    }
+
+    str += inspect(*iter);
+  }
+  str += ']';
+  return str;
+}
+
 
 }
 }
 
-#include "inspect_impl.h"
-#endif

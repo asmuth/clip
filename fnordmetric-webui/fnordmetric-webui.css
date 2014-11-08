@@ -260,9 +260,10 @@ input {
 }
 
 .pagination_navbar.metric {
-  width: 80%;
+  width: 100%;
   margin: auto;
   margin-top: 5px;
+  margin-bottom: 6px
 }
 
 .result_pane table.result_table {
@@ -404,6 +405,10 @@ tr.list_header th .caret {
   color: #60707f;
   text-decoration: none;
   font-size: 14px;
+}
+
+tr.list_header th .caret.left {
+  margin-left: 5px;
 }
 
 table.metric_list tr:hover td {

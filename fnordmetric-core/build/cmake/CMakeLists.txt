@@ -110,7 +110,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/metricdb/metricrepository.cc
     stage/src/fnordmetric/metricdb/metrictableref.cc
     stage/src/fnordmetric/metricdb/metrictablerepository.cc
-    stage/src/fnordmetric/metricdb/sample.cc)
+    stage/src/fnordmetric/metricdb/sample.cc
+    stage/src/fnordmetric/metricdb/statsd.cc)
 
 include_directories(stage/src)
 include_directories(stage/assets)
@@ -193,9 +194,9 @@ target_link_libraries(tests/test-query fnord-static)
 add_executable(tests/test-cli stage/src/fnordmetric/cli/cli_test.cc)
 target_link_libraries(tests/test-cli fnord-static)
 
-#add_executable(tests/test-statsd
-#    stage/src/fnordmetric/metricdb/statsd_test.cc)
-#target_link_libraries(tests/test-statsd fnord-static)
+add_executable(tests/test-statsd
+    stage/src/fnordmetric/metricdb/statsd_test.cc)
+target_link_libraries(tests/test-statsd fnord-static)
 
 #add_executable(tests/test-metric
 #    stage/src/fnordmetric/metricdb/metric_test.cc)

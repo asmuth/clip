@@ -392,6 +392,7 @@ code {
   text-shadow: 0 1px 0 #fff;
   overflow: auto;
   font-size:12px;
+  line-height: 22px;
 }
 
 pre code {

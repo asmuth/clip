@@ -7,10 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <thread>
 #include <memory>
 #include <fnordmetric/thread/threadpool.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <sys/select.h>
+#include <thread>
 
 using fnord::util::ExceptionHandler;
 
@@ -18,26 +19,66 @@ namespace fnord {
 namespace thread {
 
 ThreadPool::ThreadPool(
-    int max_threads,
     std::unique_ptr<ExceptionHandler> error_handler) :
-    max_threads_(max_threads),
-    error_handler_(std::move(error_handler)),
-    num_threads_(0) {}
+    error_handler_(std::move(error_handler)) {}
 
-void ThreadPool::run(std::function<void()> runnable) {
-  if (num_threads_++ >= max_threads_) {
-    num_threads_--;
-    RAISE(kRuntimeError, "too many threads");
-  }
-
-  ThreadPool* self = this;
-  new std::thread([self, runnable] () {
+void ThreadPool::run(std::shared_ptr<Task> task) {
+  new std::thread([this, task] () {
     try {
-      runnable();
+      task->run();
     } catch (const std::exception& e) {
-      self->error_handler_->onException(e);
+      this->error_handler_->onException(e);
     }
-    self->num_threads_--;
+  });
+}
+
+void ThreadPool::runOnReadable(std::shared_ptr<Task> task, int fd) {
+  new std::thread([this, task, fd] () {
+    try {
+      fd_set op_read, op_write;
+      FD_ZERO(&op_read);
+      FD_ZERO(&op_write);
+      FD_SET(fd, &op_read);
+
+      auto res = select(fd + 1, &op_read, &op_write, NULL, NULL);
+
+      if (res == 0) {
+        RAISE(kIOError, "unexpected timeout while select()ing");
+      }
+
+      if (res == -1) {
+        RAISE_ERRNO(kIOError, "select() failed");
+      }
+
+      task->run();
+    } catch (const std::exception& e) {
+      this->error_handler_->onException(e);
+    }
+  });
+}
+
+void ThreadPool::runOnWritable(std::shared_ptr<Task> task, int fd) {
+  new std::thread([this, task, fd] () {
+    try {
+      fd_set op_read, op_write;
+      FD_ZERO(&op_read);
+      FD_ZERO(&op_write);
+      FD_SET(fd, &op_write);
+
+      auto res = select(fd + 1, &op_read, &op_write, NULL, NULL);
+
+      if (res == 0) {
+        RAISE(kIOError, "unexpected timeout while select()ing");
+      }
+
+      if (res == -1) {
+        RAISE_ERRNO(kIOError, "select() failed");
+      }
+
+      task->run();
+    } catch (const std::exception& e) {
+      this->error_handler_->onException(e);
+    }
   });
 }
 

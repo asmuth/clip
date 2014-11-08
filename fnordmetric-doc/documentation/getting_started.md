@@ -1,6 +1,28 @@
 Getting Started with FnordMetric
 ================================
 
+### Getting Started in 5 minutes
+
+We have two 5 minute getting started guides for impatient people who don't like
+reading documentation (like the author). For more in-depth information you are
+kindly referred to the remaining pages.
+
+If you want to learn how to draw charts from SQL query results using ChartSQL and
+the FnordMetric command line interface, read:
+
+  + [Gettting Started with ChartSQL in 5 minutes](/documentation/getting_started/fnordmetric-cli)
+
+If you want to see how you can collect timeseries data with FnordMetric Server
+and query it using a web interface and ChartSQL, read:
+
+  + [Gettting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
+
+
+---
+
+What is FnordMetric?
+====================
+
 FnordMetric is a framework for visualizing and collecting (timeseries) data
 using SQL. It extends standard SQL with ChartSQL, allowing you to write queries
 that return charts rather than tables. The query results are rendered as SVG
@@ -10,11 +32,12 @@ The charts can easily be embedded into any website and customized using CSS.
 This enables you to build beautiful dashboards within minutes using nothing
 else than SQL.
 
----
+FnordMetric Binaries
+--------------------
 
-_FnordMetric ships two binaries, each with it's own usecase:_
+FnordMetric ships two binaries, each with it's own usecase:
 
-### fnordmetric-cli
+#### FnordMetric CLI
 
 fnordmetric-cli is probably best described as gnuplot meets SQL. It allows you
 to run ChartSQL queries from the command line against external data sources,
@@ -26,7 +49,7 @@ want to visualize it using ChartSQL.
 [Getting started with fnordmetric-cli](/documentation/getting_started/fnordmetric-cli)
 <br style="line-height:30px;"/>
 
-### fnordmetric-server
+#### FnordMetric Server
 
 fnordmetric-server is a standalone HTTP server application. It exposes a web UI
 and a HTTP API to run ChartSQL queries. The query results are returned as JSON,
@@ -45,20 +68,20 @@ implements a wire compatible StatsD API.
 
 
 
+FnordMetric Clients
+-------------------
 
----
-
-_Additionally, there are a number of client libraries for FnordMetric:_
+Additionally, there are a number of client libraries for FnordMetric:
 
 
-### FnordMetric for HTML5
+#### FnordMetric for HTML5
 
 Plug fnordmetric charts into any website and build beautiful dashboards within
 minutes using only SQL and HTML/CSS. Includes generic dashboard control elements.
 
 [Getting started with the HTML5 API](/documentation/getting_started/fnordmetric-server)
 
-### FnordMetric for JavaScript and node.js
+#### FnordMetric for JavaScript and node.js
 
 The JavaScript client allows you to plug fnordmetric charts into any web
 application. It also includes helper code to collect counters/timeseries
@@ -66,7 +89,7 @@ data in your node.js backend and send them to fnordmetric-server.
 
 [Getting started with the JavaScript API](/documentation/getting_started/fnordmetric-server)
 
-### FnordMetric for Ruby (on Rails)
+#### FnordMetric for Ruby (on Rails)
 
 The ruby client allows you to plug fnordmetric charts into an Ruby (on Rails)
 web application. It also includes helper classes to collect counters/timeseries
@@ -75,22 +98,19 @@ data and send them to fnordmetric-server.
 [Getting started with the ruby API](/documentation/getting_started/fnordmetric-server)
 
 
+FnordMetric Agents
+------------------
 
-
----
-
-_FnordMetric also includes a number of pre-built agents to collect data from common sources:_
-
-### FnordMetric Community Contributed Agents
+FnordMetric also includes a number of pre-built agents to collect data from common sources:
 
   + Docker Agent (fm-docker-agent)
 
 
----
 
-### Rationale
+Rationale
+---------
 
-If you're like me you are probably thinking something along the lines of "Does
+If you're like the author you are probably thinking something along the lines of "Does
 the world really need yet another data visualization tool?" right now. Surely,
 there already is gnuplot and about a bazillion javascript libraries that let
 you draw pretty charts.

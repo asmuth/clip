@@ -14,49 +14,112 @@ using namespace fnordmetric::metricdb;
 
 UNIT_TEST(StatsdTest);
 
+using LabelList = std::vector<std::pair<std::string, std::string>>;
+
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
-  Sample<std::string> sample;
   std::string key;
+  std::string value;
+  LabelList labels;
 
-  parseStatsdSample(
-      "/fnord/mymetric",
+  std::string test_smpl = "/fnord/mymetric";
+  auto ret = StatsdServer::parseStatsdSample(
+      test_smpl.c_str(),
+      test_smpl.c_str() + test_smpl.size(),
       &key,
-      &sample);
+      &value,
+      &labels);
 
+  EXPECT_EQ(ret, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(sample.labels.size(), 0);
-  EXPECT_EQ(sample.value, "");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "");
 });
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
-  Sample<std::string> sample;
   std::string key;
+  std::string value;
+  LabelList labels;
 
-  parseStatsdSample(
-      "/fnord/mymetric:34.23",
+  std::string test_smpl = "/fnord/mymetric:34.23";
+  auto ret = StatsdServer::parseStatsdSample(
+      test_smpl.c_str(),
+      test_smpl.c_str() + test_smpl.size(),
       &key,
-      &sample);
+      &value,
+      &labels);
 
+  EXPECT_EQ(ret, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(sample.labels.size(), 0);
-  EXPECT_EQ(sample.value, "34.23");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "34.23");
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
-  Sample<std::string> sample;
   std::string key;
+  std::string value;
+  LabelList labels;
 
-  parseStatsdSample(
-      "/fnord/mymetric[label1=435][l2=str]:34.23",
+  std::string test_smpl = "/fnord/mymetric[label1=435][l2=str]:34.23";
+  auto ret = StatsdServer::parseStatsdSample(
+      test_smpl.c_str(),
+      test_smpl.c_str() + test_smpl.size(),
       &key,
-      &sample);
+      &value,
+      &labels);
 
+  EXPECT_EQ(ret, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(sample.labels.size(), 2);
-  EXPECT_EQ(sample.labels[0].first, "label1");
-  EXPECT_EQ(sample.labels[0].second, "435");
-  EXPECT_EQ(sample.labels[1].first, "l2");
-  EXPECT_EQ(sample.labels[1].second, "str");
-  EXPECT_EQ(sample.value, "34.23");
+  EXPECT_EQ(labels.size(), 2);
+  EXPECT_EQ(labels[0].first, "label1");
+  EXPECT_EQ(labels[0].second, "435");
+  EXPECT_EQ(labels[1].first, "l2");
+  EXPECT_EQ(labels[1].second, "str");
+  EXPECT_EQ(value, "34.23");
 });
 
+TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSamples, [] () {
+  std::string key;
+  std::string value;
+  LabelList labels;
+
+  std::string test_smpl = "/fnord/mymetric:2.3\n/fnord/other:42.5\r\nfu:4.6";
+
+  auto begin = test_smpl.c_str();
+  auto end = test_smpl.c_str() + test_smpl.size();
+
+  auto ret = StatsdServer::parseStatsdSample(
+      begin,
+      end,
+      &key,
+      &value,
+      &labels);
+
+  EXPECT(ret == begin + 20);
+  EXPECT_EQ(key, "/fnord/mymetric");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "2.3");
+
+  ret = StatsdServer::parseStatsdSample(
+      ret,
+      end,
+      &key,
+      &value,
+      &labels);
+
+  EXPECT(ret == begin + 39);
+  EXPECT_EQ(key, "/fnord/other");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "42.5");
+
+  ret = StatsdServer::parseStatsdSample(
+      ret,
+      end,
+      &key,
+      &value,
+      &labels);
+
+  EXPECT(ret == end);
+  EXPECT_EQ(key, "fu");
+  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(value, "4.6");
+});

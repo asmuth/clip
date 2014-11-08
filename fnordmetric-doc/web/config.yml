@@ -13,11 +13,11 @@ documentation:
         url: "/installation"
         file: "installation"
       -
-        title: "Using fnordmetric-server"
+        title: "Getting Started: FnordMetric Server"
         url: "/getting_started/fnordmetric-server"
         file: "/getting_started_with_fnordmetric_server"
       -
-        title: "Using fnordmetric-cli"
+        title: "Getting Started: ChartSQL"
         url: "/getting_started/fnordmetric-cli"
         file: "/getting_started_with_fnordmetric_cli"
 
@@ -53,14 +53,20 @@ documentation:
     title: "Collecting Data"
     pages:
       -
-        title: "Metrics &amp; Labels"
-        url: "/query_language/reference"
+        title: "Collecting Metrics"
+        url: "/metricdb/collecting_metrics"
+        file: "metricdb_collecting_metrics"
+      -
+        title: "Storage Backends"
+        url: "/metricdb/storage_backends"
+        file: "metricdb_storage_backends"
       -
         title: "Sending data via HTTP"
         url: "/query_language/reference"
       -
         title: "Sending data via statsd"
-        url: "/query_language/reference"
+        url: "/metridb/statsd_interface"
+        file: "metricdb_statsd_interface"
       -
         title: "Retention Policies"
         url: "/query_language/reference"

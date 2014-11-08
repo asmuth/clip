@@ -35,6 +35,16 @@ Buffer::Buffer(
   }
 }
 
+Buffer::Buffer(const Buffer& copy) : size_(copy.size_) {
+  data_ = malloc(size_);
+
+  if (data_ == nullptr) {
+    RAISE(kMallocError, "malloc() failed");
+  }
+
+  memcpy(data_, copy.data_, size_);
+}
+
 Buffer::Buffer(Buffer&& move) : data_(move.data_), size_(move.size_) {
   move.data_ = nullptr;
   move.size_ = 0;
