@@ -57,6 +57,10 @@ documentation:
         url: "/metricdb/collecting_metrics"
         file: "metricdb_collecting_metrics"
       -
+        title: "Storage Backends"
+        url: "/metricdb/storage_backends"
+        file: "metricdb_storage_backends"
+      -
         title: "Sending data via HTTP"
         url: "/query_language/reference"
       -
