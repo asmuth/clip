@@ -18,6 +18,7 @@
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
 #include <fnordmetric/net/udpserver.h>
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
@@ -52,6 +53,15 @@ int main(int argc, const char** argv) {
 
   fnord::util::Random::init();
 
+  env()->flags()->defineFlag(
+      "backend",
+      cli::FlagParser::T_STRING,
+      false,
+      NULL,
+      "disk",
+      "One of 'disk', 'inmemory', 'mysql' or 'hbase'. Default: 'disk'",
+      "<name>");
+
   // flags
   env()->flags()->defineFlag(
       "datadir",
@@ -59,7 +69,7 @@ int main(int argc, const char** argv) {
       false,
       NULL,
       NULL,
-      "Store the database in this directory",
+      "Store the database in this directory (disk backend only)",
       "<path>");
 
   env()->flags()->defineFlag(
@@ -100,10 +110,11 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
-  env()->logger()->printf("INFO", "Opening database at %s", datadir.c_str());
-  std::shared_ptr<fnord::io::FileRepository> file_repo(
-      new fnord::io::FileRepository(datadir));
-  MetricRepository metric_repo(file_repo);
+  //env()->logger()->printf("INFO", "Opening database at %s", datadir.c_str());
+  //std::shared_ptr<fnord::io::FileRepository> file_repo(
+  //    new fnord::io::FileRepository(datadir));
+
+  inmemory_backend::MetricRepository metric_repo;
 
   thread_pool.run([] () {
     fnord::net::UDPServer statsd_server;

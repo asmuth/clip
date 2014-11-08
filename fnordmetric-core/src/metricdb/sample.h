@@ -21,9 +21,19 @@ namespace metricdb {
 
 class Sample {
 public:
+  Sample(
+      const DateTime& time,
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels);
+
   const DateTime& time();
   double value();
   const std::vector<std::pair<std::string, std::string>>& labels();
+
+protected:
+  const DateTime& time_;
+  double value_;
+  const std::vector<std::pair<std::string, std::string>>& labels_;
 };
 
 }
