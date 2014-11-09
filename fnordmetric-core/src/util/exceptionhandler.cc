@@ -36,11 +36,11 @@ void CatchAndAbortExceptionHandler::onException(
   try {
     auto rte = dynamic_cast<const RuntimeException&>(error);
     rte.debugPrint();
-    exit(1);
   } catch (const std::exception& e) {
     fprintf(stderr, "Aborting...\n");
-    abort(); // core dump if enabled
   }
+
+  abort(); // core dump if enabled
 }
 
 static std::string globalEHandlerMessage;
