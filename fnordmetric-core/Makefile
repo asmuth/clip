@@ -11,7 +11,7 @@ build:
 
 devserver: build
 	mkdir -p /tmp/fnordmetric-data
-	DEV_ASSET_PATH=../ ./build/cmake/target/fnordmetric-server --port 8080 --datadir /tmp/fnordmetric-data
+	DEV_ASSET_PATH=../ ./build/cmake/target/fnordmetric-server --storage_backend inmemory --datadir /tmp/fnordmetric-data --statsd_port 1337
 
 test:
 	(cd build/cmake && make test)

@@ -48,6 +48,17 @@ static const char kCrashErrorMsg[] =
 
 using fnord::thread::Task;
 
+IMetricRepository* openBackend(const std::string& backend_type) {
+  if (backend_type == "inmemory") {
+    return new inmemory_backend::MetricRepository();
+  }
+
+  RAISE(
+      kIllegalArgumentError,
+      "unknown backend type: %s",
+      backend_type.c_str());
+}
+
 int main(int argc, const char** argv) {
   fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
@@ -58,7 +69,7 @@ int main(int argc, const char** argv) {
   fnord::util::Random::init();
 
   env()->flags()->defineFlag(
-      "backend",
+      "storage_backend",
       cli::FlagParser::T_STRING,
       false,
       NULL,
@@ -77,12 +88,21 @@ int main(int argc, const char** argv) {
       "<path>");
 
   env()->flags()->defineFlag(
-      "port",
+      "http_port",
       cli::FlagParser::T_INTEGER,
       false,
       NULL,
       "8080",
       "Start the web interface on this port",
+      "<port>");
+
+  env()->flags()->defineFlag(
+      "statsd_port",
+      cli::FlagParser::T_INTEGER,
+      false,
+      NULL,
+      "8125",
+      "Start the statsd interface on this port",
       "<port>");
 
   env()->flags()->parseArgv(argc, argv);
@@ -117,37 +137,49 @@ int main(int argc, const char** argv) {
   //std::shared_ptr<fnord::io::FileRepository> file_repo(
   //    new fnord::io::FileRepository(datadir));
 
-  inmemory_backend::MetricRepository metric_repo;
+  auto metric_repo = openBackend(env()->flags()->getString("storage_backend"));
 
   /* statsd server */
-  StatsdServer statsd_server(&metric_repo, &thread_pool, &thread_pool);
-  statsd_server.listen(1337);
+  if (env()->flags()->isSet("statsd_port")) {
+    auto port = env()->flags()->getInt("statsd_port");
+    auto statsd_server =
+        new StatsdServer(metric_repo, &thread_pool, &thread_pool);
+    statsd_server->listen(port);
 
-  auto port = env()->flags()->getInt("port");
-  xzero::IPAddress bind("0.0.0.0");
-  xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
-  xzero::HttpService http;
-  HTTPAPI fmHttpApi(&metric_repo);
-  http.addHandler(&fmHttpApi);
-  http.addHandler(fnordmetric::metricdb::AdminUI::get());
+    env()->logger()->printf(
+        "INFO",
+        "Starting statsd server on port %i",
+        port);
+  }
 
-  // single-threaded non-blocking execution
-  ::ev::loop_ref loop = ::ev::default_loop(0);
-  xzero::support::LibevScheduler scheduler(loop);
-  xzero::support::LibevSelector selector(loop);
-  xzero::support::LibevClock clock(loop);
+  /* http server */
+  if (env()->flags()->isSet("http_port")) {
+    auto port = env()->flags()->getInt("http_port");
+    xzero::IPAddress bind("0.0.0.0");
+    xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
+    xzero::HttpService http;
+    HTTPAPI fmHttpApi(metric_repo);
+    http.addHandler(&fmHttpApi);
+    http.addHandler(fnordmetric::metricdb::AdminUI::get());
 
-  auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
-                                 idle, bind, port);
-  inet->setBlocking(false);
+    // single-threaded non-blocking execution
+    ::ev::loop_ref loop = ::ev::default_loop(0);
+    xzero::support::LibevScheduler scheduler(loop);
+    xzero::support::LibevSelector selector(loop);
+    xzero::support::LibevClock clock(loop);
 
-  env()->logger()->printf(
-      "INFO",
-      "Starting HTTP server on port %i (single threaded non-blocking)",
-      port);
+    auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
+                                   idle, bind, port);
+    inet->setBlocking(false);
 
-  http.start();
-  selector.select();
+    env()->logger()->printf(
+        "INFO",
+        "Starting HTTP server on port %i",
+        port);
+
+    http.start();
+    selector.select();
+  }
 
   return 0;
 }

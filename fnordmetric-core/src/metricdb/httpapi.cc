@@ -22,7 +22,6 @@
 namespace fnordmetric {
 namespace metricdb {
 
-
 static const char kMetricsUrl[] = "/metrics";
 static const char kMetricsUrlPrefix[] = "/metrics/";
 static const char kQueryUrl[] = "/query";
