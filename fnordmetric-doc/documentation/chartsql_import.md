@@ -7,7 +7,7 @@ CSV files or a MySQL database. The general syntax of the IMPORT statement is:
     IMPORT TABLE <table> [, <table>]... FROM <source_url>;
 
 The source url specifies the external source from which the tables should be
-imported. For example, to import a the table `mytable` from a remote MySQL
+imported. For example, to import the table `mytable` from a remote MySQL
 database:
 
     IMPORT TABLE mytable FROM 'mysql://localhost:3306/mydatabase';
@@ -27,7 +27,7 @@ for csv files is:
 
     csv://path/to/csv_file.csv?param=value...
 
-You can import at most one table per IMPORT statement when importing from CSV.
+You can import exactly one table per IMPORT statement when retrieving data from CSV.
 The valid parameters for csv files urls are:
 
 <table style="width:100%;">
