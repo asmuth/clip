@@ -9,13 +9,14 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICSNAPSHOT_H_
 #define _FNORDMETRIC_METRICDB_METRICSNAPSHOT_H_
-#include <fnordmetric/metricdb/tableref.h>
+#include <fnordmetric/metricdb/backends/disk/tableref.h>
 #include <string>
 #include <vector>
 
 using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class MetricSnapshot {
 public:
@@ -39,6 +40,7 @@ protected:
   bool writable_;
 };
 
+}
 }
 }
 #endif

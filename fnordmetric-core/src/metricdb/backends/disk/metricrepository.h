@@ -7,37 +7,26 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
-#define _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
+#ifndef _FNORDMETRIC_METRICDB_DISK_BACKEND_METRICREPOSITORY_H_
+#define _FNORDMETRIC_METRICDB_DISK_BACKEND_METRICREPOSITORY_H_
+#include <fnordmetric/metricdb/backends/disk/metric.h>
+#include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/metricdb/metric.h>
-#include <mutex>
-#include <string>
-#include <unordered_map>
-#include <vector>
 
-using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
-class MetricRepository {
+class MetricRepository : public fnordmetric::metricdb::IMetricRepository {
 public:
-
-  MetricRepository(std::shared_ptr<io::FileRepository> file_repo);
-
-  Metric* findMetric(const std::string& key) const;
-  Metric* findOrCreateMetric(const std::string& key);
-  std::vector<Metric*> listMetrics() const;
+  MetricRepository(const std::string data_dir);
 
 protected:
-
-  void openTable(const std::string& filename);
-
-  std::shared_ptr<io::FileRepository> file_repo_;
-  std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
-  mutable std::mutex metrics_mutex_;
+  Metric* createMetric(const std::string& key) override;
+  std::shared_ptr<fnord::io::FileRepository> file_repo_;
 };
 
+}
 }
 }
 #endif

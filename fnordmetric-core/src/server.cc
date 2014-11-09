@@ -18,6 +18,7 @@
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
 #include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
 #include <fnordmetric/metricdb/statsd.h>
 #include <fnordmetric/net/udpserver.h>
@@ -49,8 +50,29 @@ static const char kCrashErrorMsg[] =
 using fnord::thread::Task;
 
 IMetricRepository* openBackend(const std::string& backend_type) {
+  /* open inmemory backend */
   if (backend_type == "inmemory") {
+    env()->logger()->printf(
+        "INFO",
+        "Opening new inmemory backend -- SHOULD ONlY BE USED FOR TESTING");
     return new inmemory_backend::MetricRepository();
+  }
+
+  /* open disk backend */
+  if (backend_type == "disk") {
+    if (!env()->flags()->isSet("datadir")) {
+      RAISE(
+          kIllegalArgumentError,
+          "the --datadir flag must be set when using the disk backend");
+    }
+
+    auto datadir = env()->flags()->getString("datadir");
+    env()->logger()->printf(
+        "INFO",
+        "Opening disk backend at %s",
+        datadir.c_str());
+
+    return new disk_backend::MetricRepository(datadir);
   }
 
   RAISE(
@@ -133,9 +155,6 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
-  //env()->logger()->printf("INFO", "Opening database at %s", datadir.c_str());
-  //std::shared_ptr<fnord::io::FileRepository> file_repo(
-  //    new fnord::io::FileRepository(datadir));
 
   auto metric_repo = openBackend(env()->flags()->getString("storage_backend"));
 
