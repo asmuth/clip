@@ -100,14 +100,30 @@ void CLI::parseArgs(Environment* env, int argc, const char** argv) {
   parseArgs(env, args);
 }
 
+void CLI::printUsage() {
+  auto err_stream = fnordmetric::util::OutputStream::getStderr();
+  err_stream->printf("usage: fnordmetric-cli [options] [file.sql]\n");
+  err_stream->printf("\noptions:\n");
+  env()->flags()->printUsage(err_stream.get());
+  err_stream->printf("\nexamples:\n");
+  err_stream->printf("    $ fnordmeric-cli -f svg -o out.svg myquery.sql\n");
+  err_stream->printf("    $ fnordmeric-cli -f svg - < myquery.sql > out.svg\n");
+}
+
 int CLI::executeSafely(Environment* env) {
   auto err_stream = util::OutputStream::getStderr();
 
   try {
+    if (env->flags()->isSet("help")) {
+      printUsage();
+      return 0;
+    }
+
     execute(env);
   } catch (const util::RuntimeException& e) {
     if (e.getTypeName() == "UsageError") {
-      env->flags()->printUsage(err_stream.get());
+      err_stream->printf("\n");
+      printUsage();
       return 1;
     }
 

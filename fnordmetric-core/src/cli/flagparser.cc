@@ -180,9 +180,6 @@ const std::vector<std::string>& FlagParser::getArgv() const {
 }
 
 void FlagParser::printUsage(util::OutputStream* target) const {
-  target->printf("usage: fnordmetric [options] [file.sql]\n");
-
-  target->printf("\noptions:\n");
   for (const auto& flag : flags_) {
     if (flag.shortopt == nullptr) {
       target->printf("    --%-16.16s", flag.longopt);
@@ -217,10 +214,6 @@ void FlagParser::printUsage(util::OutputStream* target) const {
       target->printf("\n");
     }
   }
-
-  target->printf("\nexamples:\n");
-  target->printf("    $ fnordmeric -f svg -o out.svg myquery.sql\n");
-  target->printf("    $ fnordmeric -f svg - < myquery.sql > out.svg\n");
 }
 
 }

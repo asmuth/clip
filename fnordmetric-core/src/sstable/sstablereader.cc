@@ -68,7 +68,7 @@ void SSTableReader::readFooter(
       return;
     }
 
-    if (footer_header->type == type) {
+    if (footer_header->type == type || type == 0) {
       if (pos >= mmap_->size()) {
         RAISE(kIllegalStateError, "footer exceeds file boundary");
       }
@@ -87,13 +87,13 @@ void SSTableReader::readFooter(
         RAISE(kIllegalStateError, "footer checksum mismatch. corrupt sstable?");
       }
 
-      return;
+      if (type != 0) {
+        return;
+      }
     }
 
     pos += footer_header->footer_size;
   }
-
-  RAISE(kIndexError, "no such footer found");
 }
 
 util::Buffer SSTableReader::readFooter(uint32_t type) {

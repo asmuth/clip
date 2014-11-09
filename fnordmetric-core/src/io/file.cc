@@ -12,6 +12,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 namespace fnord {
@@ -123,6 +124,12 @@ File File::clone() const {
   }
 
   return File(new_fd, flags_);
+}
+
+void File::truncate(size_t new_size) {
+  if (ftruncate(fd_, new_size) < 0) {
+    RAISE_ERRNO(kIOError, "ftruncate(%i) failed", fd_);
+  }
 }
 
 }

@@ -14,6 +14,7 @@
 #include <vector>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/util/exceptionhandler.h>
+#include <fnordmetric/util/random.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/util/signalhandler.h>
 
@@ -27,9 +28,9 @@ int main(int argc, const char** argv) {
   /* setup environment */
   fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
-
   util::SignalHandler::ignoreSIGHUP();
   util::SignalHandler::ignoreSIGPIPE();
+  fnord::util::Random::init();
 
   /* execute commandline */
   cli::CLI::parseArgs(env(), argc, argv);
