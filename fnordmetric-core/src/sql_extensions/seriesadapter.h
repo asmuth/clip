@@ -96,7 +96,7 @@ public:
   }
 
   std::unordered_map<std::string, Series2D<TX, TY>*> series_map_;
-  std::vector<std::unique_ptr<Series2D<TX, TY>>> series_list_;
+  std::vector<Series2D<TX, TY>*> series_list_;
 };
 
 template <typename TX, typename TY, typename TZ>
@@ -144,7 +144,7 @@ public:
   }
 
   std::unordered_map<std::string, Series3D<TX, TY, TZ>*> series_map_;
-  std::vector<std::unique_ptr<Series3D<TX, TY, TZ>>> series_list_;
+  std::vector<Series3D<TX, TY, TZ>*> series_list_;
 };
 
 }

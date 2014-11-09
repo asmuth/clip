@@ -16,6 +16,12 @@ namespace ui {
 
 Drawable::Drawable(Canvas* canvas) : canvas_(canvas) {}
 
+Drawable::~Drawable() {
+  for (auto series : all_series_) {
+    delete series;
+  }
+}
+
 void Drawable::setTitle(const std::string& title) {
   canvas_->setTitle(title);
 }

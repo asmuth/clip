@@ -203,7 +203,7 @@ protected:
       auto chart = canvas_->addChart<T>();
 
       for (const auto& series : adapter->series_list_) {
-        chart->addSeries(series.get());
+        chart->addSeries(series);
       }
 
       return chart;
