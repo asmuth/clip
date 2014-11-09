@@ -166,11 +166,9 @@ LiveTableRef::LiveTableRef(
     TableRef(filename, metric_key, generation, parents),
     table_(std::move(table)),
     is_writable_(true) {
-  printf("create live table ref\n");
 }
 
 LiveTableRef::~LiveTableRef() {
-  printf("delete live table ref\n");
 }
 
 void LiveTableRef::addSample(SampleWriter const* sample, uint64_t time) {
