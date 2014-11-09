@@ -3,7 +3,7 @@ body, html {
   padding: 0;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
-  color: #778693;
+  color: #545758;
 }
 
 body {
@@ -22,11 +22,17 @@ body {
 }
 
 .navbar {
-  height: 40px;
+  height: 39px;
   width: 100%;
   margin: 0px;
-  line-height: 40px;
+  line-height: 39px;
   border-bottom: 1px solid #dbdedf;
+  font-size: 95%;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #545758;
 }
 
 .fancy_button {
@@ -71,13 +77,13 @@ input {
 }
 
 .editor_pane {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dbdedf;
 }
 
 .result_pane {
-  border-bottom: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #dbdedf;
+  border-left: 1px solid #dbdedf;
+  border-right: 1px solid #dbdedf;
 }
 
 .viewport.horizontal_split .editor_pane {
@@ -125,7 +131,7 @@ input {
 .editor_pane .editor_navbar {
   background-color: #fff;
   height: 28px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dbdedf;
 }
 
 .editor_pane .editor_navbar a h3{
@@ -137,13 +143,13 @@ input {
   line-height: 28px;
   height: 28px;
   padding: 0 10px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #dbdedf;
   color: #444;
   background-color: #fff;
 }
 
 .editor_pane .editor_navbar a.active h3 {
-  background-color: #ddd;
+  background-color: #dbdedf;
 }
 
 .visual_editor.field {
@@ -179,12 +185,12 @@ input {
   text-decoration: none;
   color: #444;
   border-radius: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid #dbdedf;
 }
 
 .visual_editor .simple_button:hover,
 .visual_editor .simple_button.active{
-  background-color: #ddd;
+  background-color: #dbdedf;
 }
 
 .visual_editor select {
@@ -214,7 +220,7 @@ input {
   width: 100%;
   height: 40px;
   margin-top: 0px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dbdedf;
   text-decoration: none;
 }
 
@@ -224,7 +230,7 @@ input {
   line-height: 40px;
   margin: 0px;
   padding: 0 30px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #dbdedf;
   float: left;
 }
 
@@ -308,7 +314,7 @@ input {
 }
 
 .result_pane table.result_table tr {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dbdedf;
 }
 
 .result_pane table.result_table tr:hover td  {
@@ -369,11 +375,11 @@ ul.dropdown {
 
 ul.dropdown li {
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #dbdedf;
   list-style: none;
   list-style-type:none;
   margin:0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dbdedf;
 }
 
 ul.dropdown li a {
@@ -397,6 +403,7 @@ table.metric_list {
   width: 100%;
   margin-top: 5px;
   border-collapse: collapse;
+  font-size: 90%;
 }
 
 table.metric_list tr {
@@ -417,21 +424,22 @@ table.metric_list td {
   height: 40px;
   line-height: 40px;
   font-size: 109%;
+  padding: 0 20px;
+}
+
+table.metric_list th {
+  border-right: 1px solid rgb(226, 232, 237);
 }
 
 table.metric_list th.clickable:hover {
   cursor:pointer;
 }
 
-tr.list_header th:first-child,
-table.metric_list td:first-child {
-  padding-left: 20px;
-}
-
 tr.list_header th .caret {
-  color: #60707f;
+  color: #bed0e2;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 10px;
+  float: right;
 }
 
 tr.list_header th .caret.left {
@@ -444,7 +452,7 @@ table.metric_list tr:hover td {
 }
 
 .editor_pane .editor_menu {
-  background: #ddd;
+  background: #dbdedf;
   height: 46px;
   box-shadow: 0 0 1px rgba(0,0,0,.1);
 }
@@ -461,7 +469,7 @@ table.metric_list tr:hover td {
   width: 40%;
   min-width: 700px;
   z-index: 2000;
-  border: 1px solid #ddd;
+  border: 1px solid #dbdedf;
   left: 30%;
   top:90px;
   background: #fff;
@@ -484,7 +492,7 @@ table.metric_list tr:hover td {
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font: 14px monospace;
-  height: auto;
+  height: 100%;
 }
 .CodeMirror-scroll {
   /* Set scrolling behaviour here */
@@ -509,16 +517,16 @@ table.metric_list tr:hover td {
 /* GUTTER */
 
 .CodeMirror-gutters {
-  border-right: 1px solid #ddd;
-  background-color: #f7f7f7;
+  border-right: 1px solid #dbdedf;
+  background-color: #edf0f2;
   white-space: nowrap;
 }
 .CodeMirror-linenumbers {}
 .CodeMirror-linenumber {
-  padding: 0 3px 0 5px;
+  padding: 0 15px 0 10px;
   min-width: 20px;
   text-align: right;
-  color: #999;
+  color: #a6a5ab;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
@@ -639,6 +647,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
+
 .CodeMirror-sizer {
   position: relative;
   border-right: 30px solid transparent;
