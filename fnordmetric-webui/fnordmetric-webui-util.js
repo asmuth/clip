@@ -52,7 +52,6 @@ FnordMetric.util.parseQueryString = function(qstr) {
       query_params = {};
       query_params.name = decodeURIComponent(param[0]);
       query_params.value = decodeURIComponent(param[1]);
-      //query_params[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
     }
   } else {
     path = qstr;
@@ -72,9 +71,44 @@ FnordMetric.util.convertArrayToString = function(array) {
   return string;
 }
 
+/* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
   elem.innerHTML = "<div class='load_foreground'></div>";
 }
+
+/*
+ * loader foreground if loader can't be 
+ * destroyed with resetting the innerHTML 
+*/
+FnordMetric.util.Loader = function() {
+  var loader  = document.createElement("div");
+  loader.className = "load_foreground";
+  on_click = null;
+
+  function onClick(on_click_new) {
+    on_click = on_click_new;
+  }
+
+  function display(elem) {
+    elem.appendChild(loader);
+    if (on_click != null) {
+      loader.onclick = on_click;
+    }
+  }
+
+  function destroy(elem) {
+    //FIXME
+    loader = elem.querySelector(".load_foreground");
+    elem.removeChild(loader);
+  }
+
+  return {
+    "display" : display,
+    "destroy" : destroy,
+    "onClick" : onClick
+  }
+}
+
 
 FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
@@ -89,6 +123,33 @@ FnordMetric.util.setFragmentURL = function(name, value, encode) {
   }
   var hash = fragment + "?" + name + "=" + value;
   window.location.hash = hash;
+}
+
+FnordMetric.util.openPopup = function(elem, text) {
+  function closePopup() {
+    elem.removeChild(popup);
+    loader.destroy(elem);
+  }
+
+  var loader = FnordMetric.util.Loader();
+  loader.onClick(closePopup);
+  loader.display(elem);
+  var popup = document.createElement("div");
+  popup.className = "popup";
+  var close_btn = FnordMetric.createButton(
+    "#", undefined, "X");
+  var innerWindow = document.createElement("div");
+  innerWindow.className = "inner_window";
+  innerWindow.innerHTML = text;
+
+  popup.appendChild(close_btn);
+  popup.appendChild(innerWindow);
+  elem.appendChild(popup);
+
+  close_btn.onclick = function(e) {
+    e.preventDefault();
+    closePopup();
+  }
 }
 
 

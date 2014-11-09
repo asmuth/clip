@@ -147,6 +147,12 @@ FnordMetric.views.QueryPlayground = function() {
     var embed_btn = FnordMetric.createButton(
       "#", "fancy_button", "Embed Query");
 
+    embed_btn.onclick = function(e) {
+      e.preventDefault();
+      FnordMetric.util.openPopup(
+        viewport, "Todo: Ruby/JS/html snippet");
+    }
+
     button_bar.appendChild(split_btn);
     button_bar.appendChild(query_btn);
     button_bar.appendChild(embed_btn);

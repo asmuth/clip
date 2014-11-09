@@ -457,11 +457,13 @@ table.metric_list tr:hover td {
 
 .popup {
   position: absolute;
-  height: 40%;
+  min-height: 400px;
   width: 40%;
+  min-width: 700px;
   z-index: 2000;
   border: 1px solid #ddd;
   left: 30%;
+  top:90px;
   background: #fff;
 }
 
@@ -469,6 +471,12 @@ table.metric_list tr:hover td {
   float: left;
   color: #444;
   text-decoration: none;
+  padding: 2px;
+}
+
+.popup .inner_window {
+  margin-top: 30px;
+  margin-left: 20px;
 }
 
 /* BASICS */
