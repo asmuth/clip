@@ -22,69 +22,6 @@
 namespace fnordmetric {
 namespace metricdb {
 
-class BufferInputStream : public util::InputStream { // {{{
- public:
-  BufferInputStream();
-  BufferInputStream(xzero::Buffer&& data);
-
-  bool readNextByte(char* target) override;
-
- private:
-  xzero::Buffer buffer_;
-  size_t readOffset_;
-};
-
-BufferInputStream::BufferInputStream()
-    : util::InputStream(),
-      buffer_(),
-      readOffset_(0) {
-}
-
-BufferInputStream::BufferInputStream(xzero::Buffer&& data)
-    : util::InputStream(),
-      buffer_(std::move(data)),
-      readOffset_(0) {
-}
-
-bool BufferInputStream::readNextByte(char* target) {
-  if (readOffset_ < buffer_.size()) {
-    *target = buffer_[readOffset_++];
-    return true;
-  }
-
-  return false;
-}
-
-std::shared_ptr<util::InputStream> createInputStream(xzero::HttpRequest* request) {
-  xzero::Buffer body;
-  request->input()->read(&body);
-  return std::shared_ptr<util::InputStream>(new BufferInputStream(std::move(body)));
-}
-// }}}
-class BufferOutputStream : public util::OutputStream { // {{{
- public:
-  BufferOutputStream();
-
-  size_t write(const char* data, size_t size) override;
-
-  void clear() { buffer_.clear(); }
-  size_t size() const noexcept { return buffer_.size(); }
-  const xzero::Buffer& buffer() const noexcept { return buffer_; }
-  xzero::Buffer&& take() { return std::move(buffer_); }
-
- private:
-  xzero::Buffer buffer_;
-};
-
-BufferOutputStream::BufferOutputStream()
-    : buffer_() {
-}
-
-size_t BufferOutputStream::write(const char* data, size_t size) {
-  buffer_.push_back(data, size);
-  return size;
-}
-// }}}
 
 static const char kMetricsUrl[] = "/metrics";
 static const char kMetricsUrlPrefix[] = "/metrics/";
@@ -146,7 +83,9 @@ void HTTPAPI::renderMetricList(
     xzero::HttpRequest* request,
     xzero::HttpResponse* response,
     util::URI* uri) {
-  std::shared_ptr<BufferOutputStream> output_stream(new BufferOutputStream());
+  std::string resp;
+  std::shared_ptr<util::OutputStream> output_stream(
+      new util::StringOutputStream(&resp));
   util::JSONOutputStream json(output_stream);
 
   json.beginObject();
@@ -164,9 +103,9 @@ void HTTPAPI::renderMetricList(
 
   response->setStatus(xzero::HttpStatus::Ok);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->setContentLength(output_stream->size());
+  response->setContentLength(resp.size());
   response->output()->write(
-      std::move(output_stream->take()),
+      resp,
       std::bind(&xzero::HttpResponse::completed, response));
 }
 
@@ -244,7 +183,9 @@ void HTTPAPI::renderMetricSampleScan(
     return;
   }
 
-  std::shared_ptr<BufferOutputStream> output_stream(new BufferOutputStream());
+  std::string resp;
+  std::shared_ptr<util::OutputStream> output_stream(
+      new util::StringOutputStream(&resp));
   util::JSONOutputStream json(output_stream);
 
   json.beginObject();
@@ -294,9 +235,9 @@ void HTTPAPI::renderMetricSampleScan(
 
   response->setStatus(xzero::HttpStatus::Ok);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->setContentLength(output_stream->size());
+  response->setContentLength(resp.size());
   response->output()->write(
-      std::move(output_stream->take()),
+      resp,
       std::bind(&xzero::HttpResponse::completed, response));
 }
 
@@ -304,16 +245,22 @@ void HTTPAPI::executeQuery(
     xzero::HttpRequest* request,
     xzero::HttpResponse* response,
     util::URI* uri) {
-  printf("run query\n");
-  std::shared_ptr<util::InputStream> input_stream = createInputStream(request);
-  std::shared_ptr<BufferOutputStream> output_stream(new BufferOutputStream());
+
+  xzero::Buffer body;
+  request->input()->read(&body);
+
+  std::shared_ptr<util::InputStream> input_stream(
+      new util::StringInputStream(body.str()));
+
+  std::string resp;
+  std::shared_ptr<util::OutputStream> output_stream(
+      new util::StringOutputStream(&resp));
 
   // FIXPAUL move to thread/worker pool
   query::QueryService query_service;
   std::unique_ptr<query::TableRepository> table_repo(
       new MetricTableRepository(metric_repo_));
-  
-  printf("run query...\n");
+
   try {
     query_service.executeQuery(
         input_stream,
@@ -322,7 +269,7 @@ void HTTPAPI::executeQuery(
         std::move(table_repo));
 
   } catch (util::RuntimeException e) {
-    output_stream->clear();
+    resp.clear();
 
     util::JSONOutputStream json(std::move(output_stream));
     json.beginObject();
@@ -336,9 +283,9 @@ void HTTPAPI::executeQuery(
 
   response->setStatus(xzero::HttpStatus::Ok);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->setContentLength(output_stream->size());
+  response->setContentLength(resp.size());
   response->output()->write(
-      std::move(output_stream->take()),
+      resp,
       std::bind(&xzero::HttpResponse::completed, response));
 }
 
