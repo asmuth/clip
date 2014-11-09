@@ -9,8 +9,9 @@
  */
 #ifndef _FNORDMETRIC_THREAD_THREADPOOL_H
 #define _FNORDMETRIC_THREAD_THREADPOOL_H
-#include <functional>
 #include <atomic>
+#include <condition_variable>
+#include <functional>
 #include <list>
 #include <fnordmetric/thread/task.h>
 #include <fnordmetric/thread/taskscheduler.h>
