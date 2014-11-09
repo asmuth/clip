@@ -34,15 +34,46 @@ FnordMetric.util.queryResultView = function() {
     navbar.className = "result_navbar";
   }
 
+  function renderTable(table, elem) {
+    var table_view = FnordMetric.util.TableView(
+      table.columns, elem);
+
+    table.rows.map(function(row) {
+      table_view.addRow(row);
+    });
+
+    table_view.render();
+  }
 
 
+  function renderTableNavbar(tables, elem) {
+    var navbar = document.createElement("div");
+    navbar.className = "result_navbar";
+    for (var i = 0; i < tables.length; i++) {
+      var item = FnordMetric.createButton(
+        "#",
+        "result_link", 
+        "<h3>Table "+(i+1)+"</h3>");
+      item.setAttribute("id", i);
+      navbar.appendChild(item);
+
+      item.onclick = function(e) {
+        e.preventDefault();
+        renderTable(tables[this.id], table_container);
+      };
+    }
+    elem.appendChild(navbar);
+    var table_container = document.createElement("div");
+    elem.appendChild(table_container);
+    renderTable(tables[0], table_container);
+  }
 
 
 
   function render(elem, resp, duration) {
-    console.log("render Result");
-    console.log(resp);
     elem.innerHTML = "";
+    var tables = resp.tables;
+    renderTableNavbar(tables, elem);
 
 
 

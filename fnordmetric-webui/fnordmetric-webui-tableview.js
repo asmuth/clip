@@ -30,9 +30,7 @@ FnordMetric.util.TableView = function(columns, elem) {
     pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
     var until = Math.min(offset + per_page, all_rows.length);
-    if (all_rows.length > per_page) {
-      renderPagination(offset+1,until, all_rows.length);
-    }
+    renderPagination(offset+1,until, all_rows.length);
     renderTable(all_rows.slice(offset, until));
   }
 
