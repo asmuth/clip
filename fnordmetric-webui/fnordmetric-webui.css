@@ -70,6 +70,16 @@ input {
   box-sizing: border-box;
 }
 
+.editor_pane {
+  border-bottom: 1px solid #ddd;
+}
+
+.result_pane {
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
 .viewport.horizontal_split .editor_pane {
   left: 0;
 }
@@ -199,7 +209,6 @@ input {
   top: 30px;
   left: 4px;
 }
->>>>>>> adminui
 
 .result_pane .result_navbar {
   width: 100%;
@@ -226,8 +235,26 @@ input {
   margin-bottom: 70px;
 }
 
+.result_pane .error_box {
+  width: 90%;
+  margin:auto;
+  margin-top: 20px;
+  padding: 9px 14px;
+  background: rgba(230, 126, 34,0.1);
+  border: 1px solid rgba(230, 126, 34,1.0);
+  border-radius: 3px;
+  color: rgba(122, 07, 03,1.0);
+  line-height: 23px;
+}
+
 .result_pane .chart_container svg {
   max-width: 1100px;
+}
+
+.result_pane .error_field {
+  width: 80%;
+  padding: 10px;
+  color: #444;
 }
 
 .pagination_navbar {
@@ -424,17 +451,19 @@ table.metric_list tr:hover td {
 
 .info_field {
   font-style: italic;
-  margin-top: 5px;
-  margin-left: 10px;
+  position: absolute;
+  left: 5px;
 }
 
 .popup {
   position: absolute;
-  height: 40%;
+  min-height: 400px;
   width: 40%;
+  min-width: 700px;
   z-index: 2000;
   border: 1px solid #ddd;
   left: 30%;
+  top:90px;
   background: #fff;
 }
 
@@ -442,6 +471,12 @@ table.metric_list tr:hover td {
   float: left;
   color: #444;
   text-decoration: none;
+  padding: 2px;
+}
+
+.popup .inner_window {
+  margin-top: 30px;
+  margin-left: 20px;
 }
 
 /* BASICS */

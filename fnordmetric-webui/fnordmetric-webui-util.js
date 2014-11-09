@@ -40,7 +40,7 @@ if (FnordMetric.util === undefined) {
 
 FnordMetric.util.parseQueryString = function(qstr) {
   var path;
-  var query_params = {};
+  var query_params;
 
   if (qstr.indexOf("?") >= 0) {
     path = qstr.substr(0, qstr.indexOf("?"))
@@ -49,7 +49,9 @@ FnordMetric.util.parseQueryString = function(qstr) {
     var raw_params = params_str.split('&');
     for (var i in raw_params) {
       var param = raw_params[i].split('=');
-      query_params[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
+      query_params = {};
+      query_params.name = decodeURIComponent(param[0]);
+      query_params.value = decodeURIComponent(param[1]);
     }
   } else {
     path = qstr;
@@ -69,12 +71,85 @@ FnordMetric.util.convertArrayToString = function(array) {
   return string;
 }
 
+/* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
   elem.innerHTML = "<div class='load_foreground'></div>";
 }
 
+/*
+ * loader foreground if loader can't be 
+ * destroyed with resetting the innerHTML 
+*/
+FnordMetric.util.Loader = function() {
+  var loader  = document.createElement("div");
+  loader.className = "load_foreground";
+  on_click = null;
+
+  function onClick(on_click_new) {
+    on_click = on_click_new;
+  }
+
+  function display(elem) {
+    elem.appendChild(loader);
+    if (on_click != null) {
+      loader.onclick = on_click;
+    }
+  }
+
+  function destroy(elem) {
+    //FIXME
+    loader = elem.querySelector(".load_foreground");
+    elem.removeChild(loader);
+  }
+
+  return {
+    "display" : display,
+    "destroy" : destroy,
+    "onClick" : onClick
+  }
+}
+
+
 FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
+}
+
+FnordMetric.util.setFragmentURL = function(name, value, encode) {
+  var fragment = window.location.hash.substr(1).split("?");
+  fragment = fragment.length > 0 ? fragment[0] : "";
+  var value = value;
+  if (encode) {
+    value = encodeURIComponent(value);
+  }
+  var hash = fragment + "?" + name + "=" + value;
+  window.location.hash = hash;
+}
+
+FnordMetric.util.openPopup = function(elem, text) {
+  function closePopup() {
+    elem.removeChild(popup);
+    loader.destroy(elem);
+  }
+
+  var loader = FnordMetric.util.Loader();
+  loader.onClick(closePopup);
+  loader.display(elem);
+  var popup = document.createElement("div");
+  popup.className = "popup";
+  var close_btn = FnordMetric.createButton(
+    "#", undefined, "X");
+  var innerWindow = document.createElement("div");
+  innerWindow.className = "inner_window";
+  innerWindow.innerHTML = text;
+
+  popup.appendChild(close_btn);
+  popup.appendChild(innerWindow);
+  elem.appendChild(popup);
+
+  close_btn.onclick = function(e) {
+    e.preventDefault();
+    closePopup();
+  }
 }
 
 
@@ -157,6 +232,33 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
 
   return time_str;
 }
+
+FnordMetric.util.parseMilliTS = function(ts) {
+  if (ts < 1000) {
+    if (ts == 0) {
+      return " less than 1 millisecond";
+    } else if (ts == 1) {
+      return " 1 millisecond";
+    } else {
+      return ts + " milliseconds";
+    }
+  } else if (ts < 60000) {
+    ts = ts / 1000;
+  return (ts + (ts == 1? " second" : " seconds"));
+  } else {
+    ts = ts / 60000;
+    return (ts + (ts == 1? " minute" : " minutes"));
+  }
+}
+
+FnordMetric.util.humanCountRows = function(tables) {
+  var num = 0;
+  tables.map(function(table) {
+    num += table.rows.length;
+  });
+  return (num == 1? num + " row" : num + " rows")
+}
+
 
 FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   function compare(a, b) {

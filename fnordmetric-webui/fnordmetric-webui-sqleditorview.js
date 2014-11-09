@@ -18,30 +18,35 @@ if (FnordMetric.util === undefined) {
 }
 
 FnordMetric.util.SQLEditorView = function() {
+  var cm;
   function initCodeMirror(cm) {
     /* set CodeMirror Configs here */
   }
 
+  function getQuery() {
+    var query = cm.getValue();
+    return query;
+  }
 
-  function render(elem) {
-    console.log("render sql editor");
-    console.log(elem);
-    elem.style.border = "1px solid #ddd";
+
+  function render(elem, query) {
+    //elem.style.border = "1px solid #ddd";
     //init editor_pane
     elem.innerHTML = "";
 
-    var cm = CodeMirror(elem, {
+    cm = CodeMirror(elem, {
       lineNumbers: true,
       lineWrapping: true,
       autofocus: true
     });
 
     initCodeMirror(cm);
-    console.log(cm);
-
-    
+    if (query != undefined) {
+      cm.setValue(query);
+    }
   }
   return {
-    "render" : render
+    "render" : render,
+    "getQuery" : getQuery
   }
 }

@@ -20,16 +20,78 @@ FnordMetric.views.QueryPlayground = function() {
   var editorViews = {
     "sql" : FnordMetric.util.SQLEditorView(),
     "visual" : FnordMetric.util.VisualEditorView()
+
   }
 
-  function renderEditorView(view, editor_pane) {
-    editorViews[view].render(editor_pane);
+  var urlName = {
+    "sql" : "sql_query",
+    "sql_query" : "sql",
+    "visual" : "visual_query",
+    "visual_query" : "visual"
   }
 
-  function renderResult(result_pane, query_str) {
-    /*FnordMetric.util.queryResultView().render(
-      result_pane, query_str);*/
+  var viewport;
+  var direction;
+  
+  function renderExecutionInfo(duration, tables, elem) {
+    if (tables == undefined) {return;}
+    if (elem.lastChild.className == "info_field") {
+      elem.removeChild(elem.lastChild);
+    }
+    var info_field = document.createElement("div");
+    info_field.className = "info_field";
+    var duration = FnordMetric.util.parseMilliTS(duration);
+    var rows = FnordMetric.util.humanCountRows(tables);
+    info_field.innerHTML =
+      "The execution took " + duration + 
+      " and returned " + rows;
+    info_field.style.top = elem.offsetHeight + "px";
+    elem.appendChild(info_field);
   }
+
+  function renderServerError(elem) {
+    elem.innerHTML = "";
+    var error_box = document.createElement("div");
+    error_box.className = "error_box";
+    error_box.innerHTML = 
+      "Oopps. FnordMetric Server encountered an error. " + "<br>" + 
+      "If you believe this is a bug in FnordMetric Server "+
+      "please report an issue at github.com/.../issues.";
+    elem.appendChild(error_box);
+  }
+
+
+  function runQuery(result_pane, editor_pane, view, query_str) {
+    if (query_str == undefined) {
+      query_str = editorViews[view].getQuery();
+      FnordMetric.util.setFragmentURL(urlName[view], query_str, true);
+    }
+
+    FnordMetric.util.displayLoader(result_pane);
+
+    FnordMetric.httpPost("/query", query_str, function(r, duration) {
+      if (r.status == 200 && r.statusText == "Ok") {
+        var res = JSON.parse(r.response);
+
+        FnordMetric.util.queryResultView().render(
+          result_pane, res, duration);
+        updateLayout(editor_pane, result_pane, direction);
+        renderExecutionInfo(duration, res.tables, editor_pane);
+      } else {
+        /* server error */
+        renderServerError(result_pane);
+      }
+    });
+  }
+
+  function renderEditorView(view, editor_pane, result_pane, query) {
+    "render editor view";
+    editorViews[view].render(editor_pane, query);
+    if (query != undefined) {
+      runQuery(result_pane, editor_pane, view, query);
+    }
+  }
+
 
   function updateLayout(editor_pane, result_pane, direction) {
     if (direction == "horizontal") {
@@ -58,9 +120,11 @@ FnordMetric.views.QueryPlayground = function() {
     }
   }
 
-  function render(viewport, url) {
-    var direction = "horizontal";
-    var current_view = "visual";
+  function render(viewport, url, query_params) {
+    direction = "horizontal";
+    viewport = viewport;
+    var current_view = "sql";
+    var query = null;
     /* init viewport */
     viewport.innerHTML = "";
 
@@ -74,11 +138,20 @@ FnordMetric.views.QueryPlayground = function() {
       "#", "fancy_button", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
-      renderResult(editor_pane, "foobobar");
+      runQuery(
+        result_pane,
+        editor_pane,
+        current_view);
     }
 
     var embed_btn = FnordMetric.createButton(
       "#", "fancy_button", "Embed Query");
+
+    embed_btn.onclick = function(e) {
+      e.preventDefault();
+      FnordMetric.util.openPopup(
+        viewport, "Todo: Ruby/JS/html snippet");
+    }
 
     button_bar.appendChild(split_btn);
     button_bar.appendChild(query_btn);
@@ -86,18 +159,38 @@ FnordMetric.views.QueryPlayground = function() {
     viewport.appendChild(button_bar);
 
     /* init editorpane & resultpane */
-    var editor_pane = document.createElement("div");
+    editor_pane = document.createElement("div");
     editor_pane.className = "editor_pane";
     viewport.appendChild(editor_pane);
 
-    var result_pane = document.createElement("div");
+    /* set eventListeners */
+    editor_pane.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
+        e.preventDefault();
+        runQuery(
+          result_pane,
+          editor_pane,
+          current_view);
+      }
+    }, false);
+
+    /* in dev mode disabled */
+    /*window.onbeforeunload = function(e) {
+      return "You may loose your query when leaving the page.";
+    }*/
+
+
+    result_pane = document.createElement("div");
     result_pane.className = "result_pane";
     viewport.appendChild(result_pane);
 
     updateLayout(editor_pane, result_pane, direction);
 
-    /* first Version --> later the editor may be defined in the url */
-    renderEditorView(current_view, editor_pane);
+    if (query_params != undefined) {
+      current_view = urlName[query_params.name];
+      query = query_params.value;
+    }
+    renderEditorView(current_view, editor_pane, result_pane, query);
 
   }
 
