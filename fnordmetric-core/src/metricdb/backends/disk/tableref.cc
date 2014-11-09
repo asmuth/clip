@@ -26,6 +26,19 @@ namespace metricdb {
 namespace disk_backend {
 
 std::unique_ptr<TableRef> TableRef::openTable(const std::string filename) {
+  try {
+    return openTableUnsafe(filename);
+  } catch (util::RuntimeException& rte) {
+    RAISE(
+        kIOError,
+        "error while opening sstable %s: %s",
+        filename.c_str(),
+        rte.getMessage().c_str());
+  }
+}
+
+std::unique_ptr<TableRef> TableRef::openTableUnsafe(
+    const std::string filename) {
   auto file = io::File::openFile(
       filename,
       io::File::O_READ | io::File::O_WRITE);

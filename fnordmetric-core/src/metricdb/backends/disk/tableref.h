@@ -29,6 +29,7 @@ public:
   virtual ~TableRef() {}
 
   static std::unique_ptr<TableRef> openTable(const std::string filename);
+  static std::unique_ptr<TableRef> openTableUnsafe(const std::string filename);
 
   static std::unique_ptr<TableRef> createTable(
       const std::string& filename,
