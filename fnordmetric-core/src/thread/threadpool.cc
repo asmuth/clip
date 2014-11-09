@@ -33,7 +33,7 @@ void ThreadPool::run(std::shared_ptr<Task> task) {
 }
 
 void ThreadPool::runOnReadable(std::shared_ptr<Task> task, int fd) {
-  new std::thread([this, task, fd] () {
+  auto thread = new std::thread([this, task, fd] () {
     try {
       fd_set op_read, op_write;
       FD_ZERO(&op_read);
@@ -55,6 +55,8 @@ void ThreadPool::runOnReadable(std::shared_ptr<Task> task, int fd) {
       this->error_handler_->onException(e);
     }
   });
+
+  thread->detach();
 }
 
 void ThreadPool::runOnWritable(std::shared_ptr<Task> task, int fd) {
