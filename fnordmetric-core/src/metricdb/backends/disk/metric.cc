@@ -179,7 +179,21 @@ void Metric::scanSamples(
 
   MetricCursor cursor(snapshot, &token_index_);
   while (cursor.valid()) {
-    //callback(&cursor);
+    auto sample = cursor.sample<double>();
+    auto time = cursor.time();
+
+    if (time >= static_cast<uint64_t>(time_end)) {
+      break;
+    }
+
+    if (time >= static_cast<uint64_t>(time_begin)) {
+      Sample cb_sample(
+          time,
+          sample->value(),
+          sample->labels());
+
+      callback(&cb_sample);
+    }
 
     if (!cursor.next()) {
       break;
