@@ -27,7 +27,7 @@ class Drawable {
   friend class Canvas;
 public:
   Drawable(Canvas* canvas);
-  virtual ~Drawable() {}
+  virtual ~Drawable();
 
   /**
    * Set the title for this chart

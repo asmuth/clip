@@ -1,4 +1,5 @@
 
+    - allow uppercase X, Y, Z / series col names
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
     - getting started client
