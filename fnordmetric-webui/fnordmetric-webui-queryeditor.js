@@ -27,9 +27,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function renderExecutionInfo(duration, tables, elem) {
-    console.log(elem.lastChild);
     if (elem.lastChild.className == "info_field") {
-      console.log("remove last child");
       elem.removeChild(elem.lastChild);
     }
     var info_field = document.createElement("div");
@@ -119,6 +117,14 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane = document.createElement("div");
     editor_pane.className = "editor_pane";
     viewport.appendChild(editor_pane);
+
+    editor_pane.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.keyCode == 13) {
+        e.preventDefault();
+        renderResult(result_pane, editor_pane, direction, current_view);
+      }
+    }, false);
+
 
     result_pane = document.createElement("div");
     result_pane.className = "result_pane";
