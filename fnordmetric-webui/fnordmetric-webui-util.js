@@ -77,6 +77,17 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
 }
 
+FnordMetric.util.setFragmentURL = function(name, value, encode) {
+  var fragment = window.location.hash.substr(1).split("?");
+  fragment = fragment.length > 0 ? fragment[0] : "";
+  var value = value;
+  if (encode) {
+    value = encodeURIComponent(value);
+  }
+  var hash = fragment + "?" + name + "=" + value;
+  window.location.hash = hash;
+}
+
 
 FnordMetric.httpGet = function(url, callback) {
   var http = new XMLHttpRequest();

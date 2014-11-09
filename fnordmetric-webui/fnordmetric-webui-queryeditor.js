@@ -22,6 +22,11 @@ FnordMetric.views.QueryPlayground = function() {
     "visual" : FnordMetric.util.VisualEditorView()
   }
 
+  var urlName = {
+    "sql" : "sql_query",
+    "visual" : "visual_query"
+  }
+
   function renderEditorView(view, editor_pane) {
     editorViews[view].render(editor_pane);
   }
@@ -54,13 +59,16 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  function renderResult(viewport, result_pane, editor_pane, direction, view) {
+  function runQuery(viewport, result_pane, editor_pane, direction, view) {
     var query_str = editorViews[view].getQuery();
-    //render Loading
+    FnordMetric.util.setFragmentURL(urlName[view], query_str, true);
+
     FnordMetric.util.displayLoader(result_pane);
+
     FnordMetric.httpPost("/query", query_str, function(r, duration) {
       if (r.status == 200 && r.statusText == "Ok") {
         var res = JSON.parse(r.response);
+
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
         updateLayout(editor_pane, result_pane, direction);
@@ -116,11 +124,11 @@ FnordMetric.views.QueryPlayground = function() {
       "#", "fancy_button", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
-      renderResult
-        (viewport, 
+      runQuery(
+        viewport,
         result_pane,
-        editor_pane, 
-        direction, 
+        editor_pane,
+        direction,
         current_view);
     }
 
@@ -140,11 +148,11 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.keyCode == 13) {
         e.preventDefault();
-        renderResult(
+        runQuery(
           viewport,
-          result_pane, 
+          result_pane,
           editor_pane,
-          direction, 
+          direction,
           current_view);
       }
     }, false);
