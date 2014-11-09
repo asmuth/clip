@@ -63,6 +63,7 @@ FnordMetric.WebUI = function() {
     FnordMetric.util.displayLoader(viewport);
 
     current_view = view;
+    console.log(query_params);
     view.render(viewport, url, query_params);
   };
 

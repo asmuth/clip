@@ -17,8 +17,12 @@ if (FnordMetric.views === undefined) {
 }
 
 FnordMetric.views.MetricList = function() {
+  var actions = {
+    "search" : FnordMetric.util.searchMetricList
+  }
 
-  function openQueryEditor() {
+  function onRowClick(e) {
+    e.preventDefault()
     alert("click");
     /*
     var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
@@ -30,14 +34,22 @@ FnordMetric.views.MetricList = function() {
     */
   };
 
-  function render(viewport, url) {
-    loadMetricList(viewport);
+  function render(viewport, url, query_params) {
+    loadMetricList(viewport, query_params);
   };
 
-  function renderMetricList(viewport, metrics) {
+  function renderMetricList(viewport, metrics, isSearchResult) {
     viewport.innerHTML = "";
+    if (isSearchResult == undefined) {
+      isSearchResult = false;
+    }
+    console.log(isSearchResult);
     if (metrics.length == 0) {
-      renderEmptyMetricsList(viewport);
+      if (isSearchResult) {
+        console.log("render no search result");
+      } else {
+        renderEmptyMetricsList(viewport);
+      }
       return;
     }
 
@@ -57,7 +69,7 @@ FnordMetric.views.MetricList = function() {
           metrics[i]["total_bytes"]]);
     }
 
-    table_view.onRowClick(openQueryEditor);
+    table_view.onRowClick(onRowClick);
     table_view.render();
   };
 
@@ -69,11 +81,17 @@ FnordMetric.views.MetricList = function() {
     elem.appendChild(msg_field);
   }
 
-  function loadMetricList(viewport) {
+  function loadMetricList(viewport, query_params) {
     FnordMetric.httpGet("/metrics", function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
-        renderMetricList(viewport, json.metrics);
+        var search = false;
+        if (query_params != undefined) {
+          json.metrics = 
+            actions[query_params.name](json.metrics, query_params.value);
+          search = true;
+        }
+        renderMetricList(viewport, json.metrics, search);
       } else {
         FnordMetric.util.displayErrorMessage(viewport, "Error connecting to server");
       }

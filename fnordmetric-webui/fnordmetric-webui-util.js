@@ -339,6 +339,17 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
   return button;
 }
 
+FnordMetric.util.searchMetricList = function(metrics, search_item) {
+  //FIXME works but seems not to be the best solution
+  var data = [];
+  metrics.map(function(item) {
+   if (item.key.indexOf(search_item) > -1) {
+      data.push(item);
+    }
+  });
+  return data;
+}
+
 
 FnordMetric.DropdownAutocomplete = function(
   parentNode, dropdown, input_field, keys, search_button) {
