@@ -42,6 +42,7 @@ public:
   inline T* structAt(size_t pos) const {
 #ifndef NDEBUG
     if (pos >= size_) {
+      abort();
       RAISE(kIndexError, "position out of bounds");
     }
 #endif

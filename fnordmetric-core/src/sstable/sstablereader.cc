@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/sstablereader.h>
+#include <fnordmetric/util/fnv.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnord {
@@ -47,6 +48,10 @@ void SSTableReader::readFooter(
   size_t pos = header_.headerSize() + header_.bodySize();
 
   while (pos < file_size_) {
+    if (pos + sizeof(BinaryFormat::FooterHeader) > mmap_->size()) {
+      RAISE(kIllegalStateError, "footer exceeds file boundary");
+    }
+
     auto footer_header = mmap_->structAt<BinaryFormat::FooterHeader>(pos);
     pos += sizeof(BinaryFormat::FooterHeader);
 
@@ -54,9 +59,31 @@ void SSTableReader::readFooter(
       RAISE(kIllegalStateError, "corrupt sstable footer");
     }
 
+    if (footer_header->footer_size == 0) {
+      *size = 0;
+      *data = nullptr;
+      return;
+    }
+
     if (footer_header->type == type) {
+      if (pos >= mmap_->size()) {
+        RAISE(kIllegalStateError, "footer exceeds file boundary");
+      }
+
       *data = mmap_->structAt<void>(pos);
       *size = footer_header->footer_size;
+
+      if (pos + *size > mmap_->size()) {
+        RAISE(kIllegalStateError, "footer exceeds file boundary");
+      }
+
+      util::FNV<uint32_t> fnv;
+      auto checksum = fnv.hash(*data, *size);
+
+      if (checksum != footer_header->footer_checksum) {
+        RAISE(kIllegalStateError, "footer checksum mismatch. corrupt sstable?");
+      }
+
       return;
     }
 

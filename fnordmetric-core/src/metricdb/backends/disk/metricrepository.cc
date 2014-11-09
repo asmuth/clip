@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/backends/disk/metricrepository.h>
+#include <fnordmetric/sstable/sstablerepair.h>
 #include <fnordmetric/thread/task.h>
 
 namespace fnordmetric {
@@ -25,8 +26,18 @@ MetricRepository::MetricRepository(
       std::vector<std::unique_ptr<TableRef>>> tables;
 
   file_repo_->listFiles([this, &tables] (const std::string& filename) -> bool {
-    auto table_ref = TableRef::openTable(filename);
-    tables[table_ref->metricKey()].emplace_back(std::move(table_ref));
+    fnord::sstable::SSTableRepair repair(filename);
+
+    if (repair.checkAndRepair(true)) {
+      auto table_ref = TableRef::openTable(filename);
+      tables[table_ref->metricKey()].emplace_back(std::move(table_ref));
+    } else {
+      env()->logger()->printf(
+          "ERROR",
+          "can't repair sstable %s. skipping...",
+          filename.c_str());
+    }
+
     return true;
   });
 

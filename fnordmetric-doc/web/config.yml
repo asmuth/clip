@@ -62,7 +62,8 @@ documentation:
         file: "metricdb_storage_backends"
       -
         title: "Sending data via HTTP"
-        url: "/query_language/reference"
+        url: "/metricdb/sending_data_via_http"
+        file: "sending_data_via_http"
       -
         title: "Sending data via statsd"
         url: "/metridb/statsd_interface"
@@ -109,15 +110,6 @@ documentation:
         url: "/query_language/reference"
       -
         title: "Bar Charts"
-        url: "/query_language/reference"
-      -
-        title: "Combining Charts"
-        url: "/query_language/reference"
-      -
-        title: "Timeseries Data"
-        url: "/query_language/reference"
-      -
-        title: "Multiple Domains"
         url: "/query_language/reference"
       -
         title: "Interactive Charts"

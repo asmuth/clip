@@ -11,6 +11,7 @@
 #include <fnordmetric/sstable/fileheaderwriter.h>
 #include <fnordmetric/sstable/fileheaderreader.h>
 #include <fnordmetric/sstable/sstablewriter.h>
+#include <fnordmetric/util/fnv.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <string.h>
 
@@ -79,6 +80,11 @@ void SSTableWriter::appendRow(
       sizeof(BinaryFormat::RowHeader) + key_size);
   memcpy(data_dst, data, data_size);
 
+  util::FNV<uint32_t> fnv;
+  header->checksum = fnv.hash(
+      page->structAt<void>(sizeof(uint32_t)),
+      page_size - sizeof(uint32_t));
+
   page->sync();
 
   auto row_body_offset = body_size_;
@@ -131,6 +137,9 @@ void SSTableWriter::writeIndex(uint32_t index_type, void* data, size_t size) {
   header->magic = BinaryFormat::kMagicBytes;
   header->type = index_type;
   header->footer_size = size;
+
+  util::FNV<uint32_t> fnv;
+  header->footer_checksum = fnv.hash(data, size);
 
   if (size > 0) {
     auto dst = page->structAt<void>(sizeof(BinaryFormat::FooterHeader));
