@@ -9,6 +9,7 @@
  */
 #ifndef _FNORD_SSTABLE_SSTABLEREPAIR_H
 #define _FNORD_SSTABLE_SSTABLEREPAIR_H
+#include <string>
 
 namespace fnord {
 namespace sstable {
@@ -20,6 +21,9 @@ public:
 
   bool checkAndRepair(bool repair = false);
 
+protected:
+  bool checkAndRepairUnfinishedTable(bool repair, SSTableReader* reader);
+  const std::string filename_;
 };
 
 }

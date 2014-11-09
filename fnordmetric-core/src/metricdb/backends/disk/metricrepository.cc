@@ -34,7 +34,7 @@ MetricRepository::MetricRepository(
     } else {
       env()->logger()->printf(
           "ERROR",
-          "can't repair sstable %s. skipping...\n",
+          "can't repair sstable %s. skipping...",
           filename.c_str());
     }
 
