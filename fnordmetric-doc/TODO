@@ -5,6 +5,7 @@
     - make all the command in installation work
     - all the doc links
 
+    - SELECT count(*) ...
     - make "series" column optional
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so 
     - sql: in

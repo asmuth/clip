@@ -22,6 +22,7 @@ namespace metricdb {
 
 class IMetricRepository {
 public:
+  virtual ~IMetricRepository() {}
   IMetric* findMetric(const std::string& key) const;
   IMetric* findOrCreateMetric(const std::string& key);
   std::vector<IMetric*> listMetrics() const;

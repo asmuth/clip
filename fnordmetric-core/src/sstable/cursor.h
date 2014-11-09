@@ -22,6 +22,7 @@ public:
   Cursor();
   Cursor(const Cursor& copy) = delete;
   Cursor& operator=(const Cursor& copy) = delete;
+  virtual ~Cursor();
 
   virtual void seekTo(size_t body_offset) = 0;
   virtual bool next() = 0;

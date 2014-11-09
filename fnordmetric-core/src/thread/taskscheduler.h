@@ -16,6 +16,7 @@ namespace thread {
 
 class TaskScheduler {
 public:
+  virtual ~TaskScheduler() {}
 
   /**
    * Run the provided task as soon as possible

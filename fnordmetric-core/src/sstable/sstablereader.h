@@ -32,6 +32,7 @@ public:
   SSTableReader(io::File&& file);
   SSTableReader(const SSTableReader& other) = delete;
   SSTableReader& operator=(const SSTableReader& other) = delete;
+  ~SSTableReader();
 
   /**
    * Get an sstable cursor for the body of this sstable

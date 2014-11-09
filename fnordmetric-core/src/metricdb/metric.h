@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_METRIC_H_
 #include <fnordmetric/metricdb/sample.h>
 #include <fnordmetric/util/datetime.h>
+#include <functional>
 #include <string>
 #include <vector>
 #include <set>

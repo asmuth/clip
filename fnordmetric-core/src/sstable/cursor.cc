@@ -14,6 +14,8 @@ namespace sstable {
 
 Cursor::Cursor() {}
 
+Cursor::~Cursor() {}
+
 std::string Cursor::getKey() {
   void* data;
   size_t size;

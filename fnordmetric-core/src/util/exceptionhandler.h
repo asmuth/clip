@@ -18,6 +18,7 @@ namespace util {
 
 class ExceptionHandler {
 public:
+  virtual ~ExceptionHandler() {}
   virtual void onException(const std::exception& error) const = 0;
 };
 
