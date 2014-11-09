@@ -12,6 +12,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 template <typename T>
 SampleReader<T>::SampleReader(
@@ -28,7 +29,7 @@ const T& SampleReader<T>::value() {
 }
 
 
-
+}
 }
 }
 

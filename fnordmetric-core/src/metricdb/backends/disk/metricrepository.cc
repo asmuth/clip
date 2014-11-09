@@ -8,20 +8,23 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
+#include <fnordmetric/thread/task.h>
 
-using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 MetricRepository::MetricRepository(
-    std::shared_ptr<io::FileRepository> file_repo) :
-    file_repo_(file_repo) {
+    const std::string data_dir,
+    fnord::thread::TaskScheduler* scheduler) :
+    file_repo_(new fnord::io::FileRepository(data_dir)),
+    compaction_task_(this) {
   std::unordered_map<
       std::string,
       std::vector<std::unique_ptr<TableRef>>> tables;
 
-  file_repo->listFiles([this, &tables] (const std::string& filename) -> bool {
+  file_repo_->listFiles([this, &tables] (const std::string& filename) -> bool {
     auto table_ref = TableRef::openTable(filename);
     tables[table_ref->metricKey()].emplace_back(std::move(table_ref));
     return true;
@@ -35,52 +38,15 @@ MetricRepository::MetricRepository(
 
     metrics_.emplace(iter.first, std::unique_ptr<Metric>(metric));
   }
+
+  scheduler->run(fnord::thread::Task::create(compaction_task_.runnable()));
 }
 
-// FIXPAUL lock
-Metric* MetricRepository::findMetric(const std::string& key) const {
-  Metric* metric = nullptr;
-
-  std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-
-  auto iter = metrics_.find(key);
-  if (iter != metrics_.end()) {
-    metric = iter->second.get();
-  }
-
-  return metric;
-}
-
-Metric* MetricRepository::findOrCreateMetric(const std::string& key) {
-  Metric* metric;
-
-  std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-
-  auto iter = metrics_.find(key);
-  if (iter == metrics_.end()) {
-    // FIXPAUL expensive operation; should be done outside of lock..
-    metric = new Metric(key, file_repo_.get());
-    metrics_.emplace(key, std::unique_ptr<Metric>(metric));
-  } else {
-    metric = iter->second.get();
-  }
-
-  return metric;
-}
-
-std::vector<Metric*> MetricRepository::listMetrics()
-    const {
-  std::vector<Metric*> metrics;
-
-  {
-    std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-    for (const auto& iter : metrics_) {
-      metrics.emplace_back(iter.second.get());
-    }
-  }
-
-  return metrics;
+Metric* MetricRepository::createMetric(const std::string& key) {
+  return new Metric(key, file_repo_.get());
 }
 
 }
 }
+}
+

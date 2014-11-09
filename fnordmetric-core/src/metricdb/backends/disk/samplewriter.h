@@ -16,6 +16,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 class TokenIndex;
 
 class SampleWriter : public fnord::util::BinaryMessageWriter {
@@ -32,6 +33,7 @@ protected:
   TokenIndex* token_index_;
 };
 
+}
 }
 }
 

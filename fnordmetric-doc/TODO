@@ -1,3 +1,10 @@
+
+    - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
+    - pictures in getting started server
+    - getting started client
+    - make all the command in installation work
+    - all the doc links
+
     - make "series" column optional
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so 
     - sql: in
@@ -22,7 +29,6 @@
     - bug: 2d area chart with explicit y domain, min > 0
 
 [ feature q ]
-    - statsd interface
     - SQL: having
     - SQL: cross joins
     - SQL: subqueries

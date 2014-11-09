@@ -8,21 +8,22 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/labelindex.h>
-#include <fnordmetric/metricdb/labelindexreader.h>
-#include <fnordmetric/metricdb/labelindexwriter.h>
-#include <fnordmetric/metricdb/samplereader.h>
-#include <fnordmetric/metricdb/tableref.h>
-#include <fnordmetric/metricdb/tableheaderreader.h>
-#include <fnordmetric/metricdb/tableheaderwriter.h>
-#include <fnordmetric/metricdb/tokenindex.h>
-#include <fnordmetric/metricdb/tokenindexwriter.h>
-#include <fnordmetric/metricdb/tokenindexreader.h>
+#include <fnordmetric/metricdb/backends/disk/labelindex.h>
+#include <fnordmetric/metricdb/backends/disk/labelindexreader.h>
+#include <fnordmetric/metricdb/backends/disk/labelindexwriter.h>
+#include <fnordmetric/metricdb/backends/disk/samplereader.h>
+#include <fnordmetric/metricdb/backends/disk/tableref.h>
+#include <fnordmetric/metricdb/backends/disk/tableheaderreader.h>
+#include <fnordmetric/metricdb/backends/disk/tableheaderwriter.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindexwriter.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindexreader.h>
 #include <fnordmetric/sstable/sstablereader.h>
 
 using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 std::unique_ptr<TableRef> TableRef::openTable(const std::string filename) {
   auto file = io::File::openFile(
@@ -164,7 +165,11 @@ LiveTableRef::LiveTableRef(
     const std::vector<uint64_t>& parents) :
     TableRef(filename, metric_key, generation, parents),
     table_(std::move(table)),
-    is_writable_(true) {}
+    is_writable_(true) {
+}
+
+LiveTableRef::~LiveTableRef() {
+}
 
 void LiveTableRef::addSample(SampleWriter const* sample, uint64_t time) {
   table_->appendRow(&time, sizeof(time), sample->data(), sample->size()); // FIXPAUL
@@ -320,4 +325,4 @@ std::unique_ptr<fnord::sstable::SSTableReader> ReadonlyTableRef::openTable() {
 
 }
 }
-
+}

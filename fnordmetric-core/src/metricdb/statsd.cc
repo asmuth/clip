@@ -58,12 +58,12 @@ void StatsdServer::messageReceived(const fnord::util::Buffer& msg) {
     }
 
     if (env()->verbose()) {
-      env()->logger()->printf(
+      /*env()->logger()->printf(
           "DEBUG",
           "statsd sample: %s=%f %s",
           key.c_str(),
           float_value,
-          fnord::util::inspect(labels).c_str());
+          fnord::util::inspect(labels).c_str());*/
     }
 
     auto metric = metric_repo_->findOrCreateMetric(key);

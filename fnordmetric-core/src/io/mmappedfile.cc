@@ -16,7 +16,6 @@ namespace io {
 
 MmappedFile::MmappedFile(File&& file) : file_(std::move(file)) {
   size_ = file_.size();
-
   if (size_ == 0) {
     RAISE(kIllegalArgumentError, "can't mmap() empty file");
   }
@@ -32,6 +31,10 @@ MmappedFile::MmappedFile(File&& file) : file_(std::move(file)) {
   if (data_ == MAP_FAILED) {
     RAISE_ERRNO(kIOError, "mmap() failed");
   }
+}
+
+MmappedFile::~MmappedFile() {
+  munmap(data_, size_);
 }
 
 bool MmappedFile::isWritable() const {

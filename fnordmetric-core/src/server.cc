@@ -18,6 +18,7 @@
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
 #include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
 #include <fnordmetric/metricdb/statsd.h>
 #include <fnordmetric/net/udpserver.h>
@@ -47,6 +48,41 @@ static const char kCrashErrorMsg[] =
     "github.com/paulasmuth/fnordmetric";
 
 using fnord::thread::Task;
+using fnord::thread::TaskScheduler;
+
+IMetricRepository* openBackend(
+    const std::string& backend_type,
+    TaskScheduler* backend_scheduler) {
+  /* open inmemory backend */
+  if (backend_type == "inmemory") {
+    env()->logger()->printf(
+        "INFO",
+        "Opening new inmemory backend -- SHOULD ONlY BE USED FOR TESTING");
+    return new inmemory_backend::MetricRepository();
+  }
+
+  /* open disk backend */
+  if (backend_type == "disk") {
+    if (!env()->flags()->isSet("datadir")) {
+      RAISE(
+          kIllegalArgumentError,
+          "the --datadir flag must be set when using the disk backend");
+    }
+
+    auto datadir = env()->flags()->getString("datadir");
+    env()->logger()->printf(
+        "INFO",
+        "Opening disk backend at %s",
+        datadir.c_str());
+
+    return new disk_backend::MetricRepository(datadir, backend_scheduler);
+  }
+
+  RAISE(
+      kIllegalArgumentError,
+      "unknown backend type: %s",
+      backend_type.c_str());
+}
 
 int main(int argc, const char** argv) {
   fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
@@ -58,7 +94,7 @@ int main(int argc, const char** argv) {
   fnord::util::Random::init();
 
   env()->flags()->defineFlag(
-      "backend",
+      "storage_backend",
       cli::FlagParser::T_STRING,
       false,
       NULL,
@@ -72,17 +108,26 @@ int main(int argc, const char** argv) {
       cli::FlagParser::T_STRING,
       false,
       NULL,
-      NULL,
+      "/tmp/fnordmetric-data",
       "Store the database in this directory (disk backend only)",
       "<path>");
 
   env()->flags()->defineFlag(
-      "port",
+      "http_port",
       cli::FlagParser::T_INTEGER,
       false,
       NULL,
-      NULL,
+      "8080",
       "Start the web interface on this port",
+      "<port>");
+
+  env()->flags()->defineFlag(
+      "statsd_port",
+      cli::FlagParser::T_INTEGER,
+      false,
+      NULL,
+      "8125",
+      "Start the statsd interface on this port",
       "<port>");
 
   env()->flags()->parseArgv(argc, argv);
@@ -113,41 +158,52 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
-  //env()->logger()->printf("INFO", "Opening database at %s", datadir.c_str());
-  //std::shared_ptr<fnord::io::FileRepository> file_repo(
-  //    new fnord::io::FileRepository(datadir));
 
-  inmemory_backend::MetricRepository metric_repo;
+  auto metric_repo = openBackend(
+      env()->flags()->getString("storage_backend"),
+      &thread_pool);
 
   /* statsd server */
-  StatsdServer statsd_server(&metric_repo, &thread_pool, &thread_pool);
-  statsd_server.listen(1337);
+  if (env()->flags()->isSet("statsd_port")) {
+    auto port = env()->flags()->getInt("statsd_port");
+    auto statsd_server =
+        new StatsdServer(metric_repo, &thread_pool, &thread_pool);
+    statsd_server->listen(port);
 
-  auto port = env()->flags()->getInt("port");
-  xzero::IPAddress bind("0.0.0.0");
-  xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
-  xzero::HttpService http;
-  HTTPAPI fmHttpApi(&metric_repo);
-  http.addHandler(&fmHttpApi);
-  http.addHandler(fnordmetric::metricdb::AdminUI::get());
+    env()->logger()->printf(
+        "INFO",
+        "Starting statsd server on port %i",
+        port);
+  }
 
-  // single-threaded non-blocking execution
-  ::ev::loop_ref loop = ::ev::default_loop(0);
-  xzero::support::LibevScheduler scheduler(loop);
-  xzero::support::LibevSelector selector(loop);
-  xzero::support::LibevClock clock(loop);
+  /* http server */
+  if (env()->flags()->isSet("http_port")) {
+    auto port = env()->flags()->getInt("http_port");
+    xzero::IPAddress bind("0.0.0.0");
+    xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
+    xzero::HttpService http;
+    HTTPAPI fmHttpApi(metric_repo);
+    http.addHandler(&fmHttpApi);
+    http.addHandler(fnordmetric::metricdb::AdminUI::get());
 
-  auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
-                                 idle, bind, port);
-  inet->setBlocking(false);
+    // single-threaded non-blocking execution
+    ::ev::loop_ref loop = ::ev::default_loop(0);
+    xzero::support::LibevScheduler scheduler(loop);
+    xzero::support::LibevSelector selector(loop);
+    xzero::support::LibevClock clock(loop);
 
-  env()->logger()->printf(
-      "INFO",
-      "Starting HTTP server on port %i (single threaded non-blocking)",
-      port);
+    auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
+                                   idle, bind, port);
+    inet->setBlocking(false);
 
-  http.start();
-  selector.select();
+    env()->logger()->printf(
+        "INFO",
+        "Starting HTTP server on port %i",
+        port);
+
+    http.start();
+    selector.select();
+  }
 
   return 0;
 }

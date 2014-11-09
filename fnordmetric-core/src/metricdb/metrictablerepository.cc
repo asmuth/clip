@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/metricdb/metrictablerepository.h>
 #include <fnordmetric/metricdb/metrictableref.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -22,7 +23,13 @@ query::TableRef* MetricTableRepository::getTableRef(
   auto metric = metric_repo_->findMetric(table_name);
 
   if (metric == nullptr) {
-    return query::TableRepository::getTableRef(table_name);
+    auto tbl_ref = query::TableRepository::getTableRef(table_name);
+
+    if (tbl_ref == nullptr) {
+      RAISE(kRuntimeError, "unknown table");
+    }
+
+    return tbl_ref;
   }
 
   return new MetricTableRef(metric);

@@ -183,6 +183,10 @@ MmapPageManager::MmappedFile::MmappedFile(
   fd(__fd),
   refs(1) {}
 
+MmapPageManager::MmappedFile::~MmappedFile() {
+  munmap(data, size);
+}
+
 void MmapPageManager::MmappedFile::incrRefs() {
   refs++;
 }

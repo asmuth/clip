@@ -265,6 +265,13 @@ void QueryPlanBuilder::expandColumns(ASTNode* ast, TableRepository* repo) {
       select_list->removeChild(node);
 
       auto tbl_ref = repo->getTableRef(table_name->getToken()->getString());
+      if (tbl_ref == nullptr) {
+        RAISE(
+            kRuntimeError,
+            "unknown table: %s",
+            table_name->getToken()->getString().c_str());
+      }
+
       for (const auto& column : tbl_ref->columns()) {
         auto derived_col = new ASTNode(ASTNode::T_DERIVED_COLUMN);
         auto derived_table_name = new ASTNode(ASTNode::T_TABLE_NAME);

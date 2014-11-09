@@ -55,8 +55,8 @@ You can query metrics using ChartSQL like normal tables:
 
 
 
-As an example, we will monitor the http reponse times of a fictional web
-application. We will create one "metric" that will be called `http\_reponse\_times`
+As an example, we will monitor the http response times of a fictional web
+application. We will create one "metric" that will be called `http\_response\_times`
 and will record the http response times (latencies) of our application. We are
 going to insert a sample into this metric for each HTTP request that our web
 application serves.
@@ -68,10 +68,10 @@ from your command line is using the statsd API. If you started FnordMetric Serve
 on port 8125 (see above), you can use the netcat utility to send a sample via
 UDP+statsd.
 
-Let's insert the value `42` into the `http\_reponse\_times` metric. In our example this
+Let's insert the value `42` into the `http\_response\_times` metric. In our example this
 means we record the response time of a single HTTP request that took 42ms.
 
-    $ echo "http_reponse_times:42" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_response_times:42" | nc -u -w0 127.0.0.1 8125
 
 
 Execute this command a few times with different values to insert multiple samples
@@ -119,9 +119,9 @@ or a combinaton of both.
 Let's insert a few more example samples into our <code>http\_response\_times</code> metric
 and attach these labels:
 
-    $ echo "http_reponse_times[hostname=machine82][datacenter=ams1]:18" | nc -u -w0 127.0.0.1 8125
-    $ echo "http_reponse_times[hostname=machine83][datacenter=ams1]:42" | nc -u -w0 127.0.0.1 8125
-    $ echo "http_reponse_times[hostname=machine84][datacenter=ams1]:23" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_response_times[hostname=machine82][datacenter=ams1]:18" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_response_times[hostname=machine83][datacenter=ams1]:42" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_response_times[hostname=machine84][datacenter=ams1]:23" | nc -u -w0 127.0.0.1 8125
 
 When querying metrics with ChartSQL, the label keys act as table columns so you
 can filter and aggregate/group by label values. Our <code>http\_response\_times</code> table

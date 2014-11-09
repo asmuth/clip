@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_LABELINDEXWRITER_H
 #define _FNORDMETRIC_METRICDB_LABELINDEXWRITER_H
 #include <fnordmetric/util/binarymessagewriter.h>
-#include <fnordmetric/metricdb/labelindex.h>
+#include <fnordmetric/metricdb/backends/disk/labelindex.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
@@ -18,12 +18,14 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class LabelIndexWriter : public fnord::util::BinaryMessageWriter {
 public:
   LabelIndexWriter(LabelIndex* index);
 };
 
+}
 }
 }
 

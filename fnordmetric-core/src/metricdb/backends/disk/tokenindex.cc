@@ -7,11 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/tokenindex.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
-namespace metricdb  {
+namespace metricdb {
+namespace disk_backend {
 
 TokenIndex::TokenIndex() : max_token_id_(kMinTokenID) {}
 
@@ -82,6 +83,7 @@ std::unordered_map<std::string, uint32_t> TokenIndex::tokenIDs() const {
   return copy;
 }
 
+}
 }
 }
 

@@ -34,6 +34,13 @@ IMetric* IMetricRepository::findOrCreateMetric(const std::string& key) {
 
   auto iter = metrics_.find(key);
   if (iter == metrics_.end()) {
+    if (env()->verbose()) {
+      env()->logger()->printf(
+          "DEBUG",
+          "Create new metric: '%s'",
+          key.c_str());
+    }
+
     // FIXPAUL expensive operation; should be done outside of lock..
     metric = createMetric(key);
     metrics_.emplace(key, std::unique_ptr<IMetric>(metric));

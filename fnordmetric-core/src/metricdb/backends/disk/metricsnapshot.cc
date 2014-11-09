@@ -7,11 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/metricsnapshot.h>
+#include <fnordmetric/metricdb/backends/disk/metricsnapshot.h>
 
 using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 MetricSnapshot::MetricSnapshot() : writable_(false) {}
 
@@ -40,6 +41,7 @@ bool MetricSnapshot::isWritable() const {
   return writable_;
 }
 
+}
 }
 }
 

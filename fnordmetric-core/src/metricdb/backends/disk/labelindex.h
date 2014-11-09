@@ -17,6 +17,7 @@
 
 namespace fnordmetric {
 namespace metricdb  {
+namespace disk_backend {
 
 class LabelIndex {
 public:
@@ -34,6 +35,7 @@ protected:
 };
 
 
+}
 }
 }
 

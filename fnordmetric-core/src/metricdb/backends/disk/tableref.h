@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_TABLEREF_H_
 #define _FNORDMETRIC_METRICDB_TABLEREF_H_
+#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/sstable/sstablereader.h>
 #include <fnordmetric/sstable/sstablewriter.h>
 #include <string>
@@ -18,6 +18,7 @@
 using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 class LabelIndex;
 class TableHeaderReader;
 
@@ -25,6 +26,7 @@ class TableRef {
 public:
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
+  virtual ~TableRef() {}
 
   static std::unique_ptr<TableRef> openTable(const std::string filename);
 
@@ -84,7 +86,7 @@ public:
       std::unique_ptr<sstable::SSTableWriter> table,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
-
+  ~LiveTableRef();
   void addSample(SampleWriter const* sample, uint64_t time) override;
   std::unique_ptr<sstable::Cursor> cursor() override;
 
@@ -135,6 +137,7 @@ protected:
   size_t body_size_;
 };
 
+}
 }
 }
 #endif

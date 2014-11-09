@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_LABELINDEXREADER_H
 #define _FNORDMETRIC_METRICDB_LABELINDEXREADER_H
-#include <fnordmetric/metricdb/labelindex.h>
+#include <fnordmetric/metricdb/backends/disk/labelindex.h>
 #include <fnordmetric/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -18,6 +18,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class LabelIndexReader : public fnord::util::BinaryMessageReader {
 public:
@@ -29,6 +30,7 @@ public:
 
 };
 
+}
 }
 }
 

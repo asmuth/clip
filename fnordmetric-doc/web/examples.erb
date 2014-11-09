@@ -11,6 +11,7 @@
 
 <div id="wrap" class="<%= @doc_yield ? :large : nil %>">
   <div id="documentation_wrap">
+
     <div id="navigation">
       <% CONFIG["examples"].each_with_index do |example_group, n| %>
           <a class="nav_title">
@@ -27,11 +28,25 @@
           </ul>
       <% end %>
     </div>
+
     <div id="documentation">
       <% if @route == "/index" %>
-        <script type="text/javascript">
-          window.location.href = "/examples/linecharts/simple_lines";
-        </script>
+        <h1>FnordMetric Examples<h1>
+
+        <% CONFIG["examples"].each_with_index do |example_group, n| %>
+            <h2>
+              <%= example_group["title"] %>
+            </h2>
+            <ul>
+              <% example_group["examples"].each do |example| %>
+                <li class="<%= @route == example["url"] ? :active : nil %>">
+                  <a href="/examples<%= example["url"] %>">
+                    <%= example["title"] %>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+        <% end %>
       <% else %>
         <h1 style="margin:0 0 5px 0; font-weight: 400;"><%= @example["title"] %></h1>
         <p class="breadcrumb">
@@ -56,7 +71,7 @@
         <pre class="prettyprint" style="margin-top: 0;"><code><%= IO.read(File.join(BASEDIR, "../examples#{@example["url"]}.sql")) %></code></pre>
 
         <p>Run this example:</p>
-        <% example_cmd = "$ fnordmetric --format=svg examples#{@example["url"]}.sql" %>
+        <% example_cmd = "$ fnordmetric-cli --format=svg examples#{@example["url"]}.sql" %>
         <pre class="prettyprint" style="margin-top: 0;"><code><%=example_cmd%></code></pre>
       <% end %>
     </div>

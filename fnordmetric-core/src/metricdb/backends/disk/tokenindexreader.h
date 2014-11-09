@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_TOKENINDEXREADER_H
 #define _FNORDMETRIC_METRICDB_TOKENINDEXREADER_H
-#include <fnordmetric/metricdb/tokenindex.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -18,6 +18,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class TokenIndexReader : public fnord::util::BinaryMessageReader {
 public:
@@ -29,6 +30,7 @@ public:
 
 };
 
+}
 }
 }
 

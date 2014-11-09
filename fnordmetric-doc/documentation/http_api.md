@@ -1,11 +1,15 @@
-HTTP API
---------
+FnordMetric Server HTTP API
+===========================
 
-### GET /metrics
++ [GET /metrics](#get_metrics)
++ [POST /metrics](#get_metrics)
+
+GET /metrics
+------------
 
 Returns a list of all metrics.
 
-#### Parameters:
+Parameters:
 
 <table>
   <tr>
@@ -17,7 +21,7 @@ Returns a list of all metrics.
 </table>
 <br />
 
-#### Examples:
+Examples:
 
     >> GET /metrics HTTP/1.1
     << HTTP/1.1 200 OK

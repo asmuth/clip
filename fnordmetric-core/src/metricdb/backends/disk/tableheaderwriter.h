@@ -17,6 +17,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class TableHeaderWriter : public fnord::util::BinaryMessageWriter {
 public:
@@ -26,6 +27,7 @@ public:
       const std::vector<uint64_t>& parents);
 };
 
+}
 }
 }
 

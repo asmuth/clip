@@ -7,10 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/tableheaderreader.h>
+#include <fnordmetric/metricdb/backends/disk/tableheaderreader.h>
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 TableHeaderReader::TableHeaderReader(
     void* data,
@@ -37,6 +38,7 @@ const std::vector<uint64_t>& TableHeaderReader::parents() const {
   return parents_;
 }
 
+}
 }
 }
 

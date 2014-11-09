@@ -9,10 +9,11 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_COMPACTIONPOLICY_H_
 #define _FNORDMETRIC_METRICDB_COMPACTIONPOLICY_H_
-#include <fnordmetric/metricdb/tableref.h>
+#include <fnordmetric/metricdb/backends/disk/tableref.h>
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class CompactionPolicy {
 public:
@@ -23,6 +24,7 @@ public:
 
 };
 
+}
 }
 }
 #endif

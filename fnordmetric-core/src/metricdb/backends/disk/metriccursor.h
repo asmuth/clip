@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_METRICDB_METRICCURSOR_H
-#define _FNORD_METRICDB_METRICCURSOR_H
-#include <fnordmetric/metricdb/metricsnapshot.h>
-#include <fnordmetric/metricdb/samplereader.h>
+#ifndef _FNORD_METRICDB_DISK_BACKEND_METRICCURSOR_H
+#define _FNORD_METRICDB_DISK_BACKEND_METRICCURSOR_H
+#include <fnordmetric/metricdb/backends/disk/metricsnapshot.h>
+#include <fnordmetric/metricdb/backends/disk/samplereader.h>
 #include <fnordmetric/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <string>
@@ -19,6 +19,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class MetricCursor {
 public:
@@ -60,5 +61,7 @@ SampleReader<T>* MetricCursor::sample() {
 
 }
 }
+}
 
 #endif
+

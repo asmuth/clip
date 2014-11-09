@@ -8,10 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/binaryformat.h>
-#include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/metricdb/samplewriter.h>
-#include <fnordmetric/metricdb/tableref.h>
+#include <fnordmetric/metricdb/backends/disk/binaryformat.h>
+#include <fnordmetric/metricdb/backends/disk/metric.h>
+#include <fnordmetric/metricdb/backends/disk/tableref.h>
+#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/freeondestroy.h>
 #include <fnordmetric/util/wallclock.h>
@@ -22,30 +22,24 @@ using fnord::util::WallClock;
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 Metric::Metric(
     const std::string& key,
     io::FileRepository* file_repo) :
-    key_(key),
+    IMetric(key),
     file_repo_(file_repo),
     head_(nullptr),
     max_generation_(0),
     live_table_max_size_(kLiveTableMaxSize),
     live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
-    last_insert_(0) {
-  if (env()->verbose()) {
-    env()->logger()->printf(
-        "DEBUG",
-        "Create new metric: '%s'",
-        key.c_str());
-  }
-}
+    last_insert_(0) {}
 
 Metric::Metric(
     const std::string& key,
     io::FileRepository* file_repo,
     std::vector<std::unique_ptr<TableRef>>&& tables) :
-    key_(key),
+    IMetric(key),
     file_repo_(file_repo),
     live_table_max_size_(kLiveTableMaxSize),
     live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
@@ -97,10 +91,6 @@ Metric::Metric(
   }
 }
 
-const std::string& Metric::key() const {
-  return key_;
-}
-
 std::shared_ptr<MetricSnapshot> Metric::getSnapshot() const {
   std::lock_guard<std::mutex> lock_holder(head_mutex_);
   return head_;
@@ -125,10 +115,12 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
   return head_;
 }
 
-void Metric::addSample(const Sample<double>& sample) {
+void Metric::insertSample(
+    double value,
+    const std::vector<std::pair<std::string, std::string>>& labels) {
   SampleWriter writer(&token_index_);
-  writer.writeValue(sample.value);
-  for (const auto& label : sample.labels) {
+  writer.writeValue(value);
+  for (const auto& label : labels) {
     writer.writeLabel(label.first, label.second);
     label_index_.addLabel(label.first);
   }
@@ -179,7 +171,7 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
 void Metric::scanSamples(
     const fnord::util::DateTime& time_begin,
     const fnord::util::DateTime& time_end,
-    std::function<bool (MetricCursor*)> callback) {
+    std::function<bool (Sample* sample)> callback) {
   auto snapshot = getSnapshot();
   if (snapshot.get() == nullptr) {
     return;
@@ -187,7 +179,21 @@ void Metric::scanSamples(
 
   MetricCursor cursor(snapshot, &token_index_);
   while (cursor.valid()) {
-    callback(&cursor);
+    auto sample = cursor.sample<double>();
+    auto time = cursor.time();
+
+    if (time >= static_cast<uint64_t>(time_end)) {
+      break;
+    }
+
+    if (time >= static_cast<uint64_t>(time_begin)) {
+      Sample cb_sample(
+          time,
+          sample->value(),
+          sample->labels());
+
+      callback(&cb_sample);
+    }
 
     if (!cursor.next()) {
       break;
@@ -304,8 +310,8 @@ size_t Metric::totalBytes() const {
   return bytes;
 }
 
-uint64_t Metric::lastInsertTime() const {
-  return last_insert_;
+DateTime Metric::lastInsertTime() const {
+  return DateTime(last_insert_);
 }
 
 std::set<std::string> Metric::labels() const {
@@ -318,3 +324,5 @@ bool Metric::hasLabel(const std::string& label) const {
 
 }
 }
+}
+
