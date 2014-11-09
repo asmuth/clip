@@ -165,7 +165,13 @@ LiveTableRef::LiveTableRef(
     const std::vector<uint64_t>& parents) :
     TableRef(filename, metric_key, generation, parents),
     table_(std::move(table)),
-    is_writable_(true) {}
+    is_writable_(true) {
+  printf("create live table ref\n");
+}
+
+LiveTableRef::~LiveTableRef() {
+  printf("delete live table ref\n");
+}
 
 void LiveTableRef::addSample(SampleWriter const* sample, uint64_t time) {
   table_->appendRow(&time, sizeof(time), sample->data(), sample->size()); // FIXPAUL

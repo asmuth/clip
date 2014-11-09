@@ -26,6 +26,7 @@ class TableRef {
 public:
   TableRef(const TableRef& other) = delete;
   TableRef& operator=(const TableRef& other) = delete;
+  virtual ~TableRef() {}
 
   static std::unique_ptr<TableRef> openTable(const std::string filename);
 
@@ -85,7 +86,7 @@ public:
       std::unique_ptr<sstable::SSTableWriter> table,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
-
+  ~LiveTableRef();
   void addSample(SampleWriter const* sample, uint64_t time) override;
   std::unique_ptr<sstable::Cursor> cursor() override;
 
