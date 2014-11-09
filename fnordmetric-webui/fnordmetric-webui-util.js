@@ -49,7 +49,9 @@ FnordMetric.util.parseQueryString = function(qstr) {
     var raw_params = params_str.split('&');
     for (var i in raw_params) {
       var param = raw_params[i].split('=');
-      query_params[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
+      query_params.name = decodeURIComponent(param[0]);
+      query_params.value = decodeURIComponent(param[1]);
+      //query_params[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
     }
   } else {
     path = qstr;

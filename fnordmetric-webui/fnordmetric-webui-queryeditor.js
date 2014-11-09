@@ -20,17 +20,19 @@ FnordMetric.views.QueryPlayground = function() {
   var editorViews = {
     "sql" : FnordMetric.util.SQLEditorView(),
     "visual" : FnordMetric.util.VisualEditorView()
+
   }
 
   var urlName = {
     "sql" : "sql_query",
-    "visual" : "visual_query"
+    "sql_query" : "sql",
+    "visual" : "visual_query",
+    "visual_query" : "visual"
   }
 
-  function renderEditorView(view, editor_pane) {
-    editorViews[view].render(editor_pane);
-  }
-
+  var viewport;
+  var direction;
+  
   function renderExecutionInfo(duration, tables, elem) {
     if (tables == undefined) {return;}
     if (elem.lastChild.className == "info_field") {
@@ -59,9 +61,11 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  function runQuery(viewport, result_pane, editor_pane, direction, view) {
-    var query_str = editorViews[view].getQuery();
-    FnordMetric.util.setFragmentURL(urlName[view], query_str, true);
+  function runQuery(result_pane, editor_pane, view, query_str) {
+    if (query_str == undefined) {
+      query_str = editorViews[view].getQuery();
+      FnordMetric.util.setFragmentURL(urlName[view], query_str, true);
+    }
 
     FnordMetric.util.displayLoader(result_pane);
 
@@ -80,8 +84,15 @@ FnordMetric.views.QueryPlayground = function() {
     });
   }
 
+  function renderEditorView(view, editor_pane, result_pane, query) {
+    editorViews[view].render(editor_pane, query);
+    if (query != undefined) {
+      runQuery(result_pane, editor_pane, view, query);
+    }
+  }
+
+
   function updateLayout(editor_pane, result_pane, direction) {
-    console.log("update layout");
     if (direction == "horizontal") {
       var height = FnordMetric.util.getHorizontalEditorHeight(
         editor_pane.offsetHeight, result_pane.offsetHeight);
@@ -108,9 +119,11 @@ FnordMetric.views.QueryPlayground = function() {
     }
   }
 
-  function render(viewport, url) {
-    var direction = "horizontal";
+  function render(viewport, url, query_params) {
+    direction = "horizontal";
+    viewport = viewport;
     var current_view = "sql";
+    var query = null;
     /* init viewport */
     viewport.innerHTML = "";
 
@@ -170,9 +183,11 @@ FnordMetric.views.QueryPlayground = function() {
 
     updateLayout(editor_pane, result_pane, direction);
 
-    /* first Version --> later the editor may be defined in the url */
-    renderEditorView(current_view, editor_pane);
-
+    if (query_params != undefined) {
+      var current_view = urlName[query_params.name];
+      query = query_params.value;
+    }
+    renderEditorView(current_view, editor_pane, result_pane, query);
 
   }
 

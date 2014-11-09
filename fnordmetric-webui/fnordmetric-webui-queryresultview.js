@@ -102,8 +102,6 @@ FnordMetric.util.queryResultView = function() {
 
   function render(elem, resp, duration) {
     elem.innerHTML = "";
-    console.log("render");
-    console.log(resp);
     if (resp.status == "success") {
       var charts = resp.charts;
       renderChartPane(charts, elem);
