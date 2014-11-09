@@ -20,7 +20,7 @@ if (FnordMetric.util === undefined) {
 FnordMetric.util.TableView = function(columns, elem, per_page) {
   var all_rows = [];
   var on_row_click = null;
-  
+
   var per_page = parseInt(per_page);
   var current_page = 0;
   var pages;
@@ -34,7 +34,7 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     var offset = current_page * per_page;
     var until = Math.min(offset + per_page, all_rows.length);
     renderPagination(offset+1,until, all_rows.length);
-    renderTable(all_rows.slice(offset, until));
+    renderTable(all_rows.slice(offset, until), isSortable);
   }
 
   function updatePage(page_index) {
