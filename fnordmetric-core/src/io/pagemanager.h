@@ -116,6 +116,7 @@ protected:
     MmappedFile(void* __data, const size_t __size, const int __fd);
     MmappedFile(const MmappedFile& copy) = delete;
     MmappedFile& operator=(const MmappedFile& copy) = delete;
+    ~MmappedFile();
     void* const data;
     const size_t size;
     void incrRefs();

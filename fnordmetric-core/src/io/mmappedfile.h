@@ -24,6 +24,7 @@ public:
   MmappedFile(File&& file);
   MmappedFile(const MmappedFile& copy) = delete;
   MmappedFile& operator=(const MmappedFile& copy) = delete;
+  ~MmappedFile();
 
   inline void* data() const {
     return data_;
