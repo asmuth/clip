@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/sstablereader.h>
+#include <fnordmetric/util/fnv.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnord {
@@ -57,6 +58,18 @@ void SSTableReader::readFooter(
     if (footer_header->type == type) {
       *data = mmap_->structAt<void>(pos);
       *size = footer_header->footer_size;
+
+      if (pos + *size > file_size_) {
+        RAISE(kIllegalStateError, "footer exceeds file boundary");
+      }
+
+      util::FNV<uint32_t> fnv;
+      auto checksum = fnv.hash(*data, *size);
+
+      if (checksum != footer_header->footer_checksum) {
+        RAISE(kIllegalStateError, "footer checksum mismatch. corrupt sstable?");
+      }
+
       return;
     }
 

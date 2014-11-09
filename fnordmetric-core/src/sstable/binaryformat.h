@@ -35,6 +35,7 @@ namespace sstable {
  *       *<row>
  *
  *   <row> :=
+ *     <uint32_t>                // row checksum
  *     <uint32_t>                // key size in bytes
  *     <uint32_t>                // data size in bytes
  *     <bytes>                   // key
@@ -53,6 +54,7 @@ public:
   static const uint64_t kMagicBytes = 0x17171717;
 
   struct __attribute__((packed)) RowHeader {
+    uint32_t checksum;
     uint32_t key_size;
     uint32_t data_size;
   };
@@ -60,6 +62,7 @@ public:
   struct __attribute__((packed)) FooterHeader {
     uint64_t magic;
     uint32_t type;
+    uint32_t footer_checksum;
     uint32_t footer_size;
   };
 

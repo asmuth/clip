@@ -32,7 +32,7 @@ FileHeaderWriter::FileHeaderWriter(
   if (userdata_size > 0) {
     util::FNV<uint32_t> fnv;
     auto userdata_checksum = fnv.hash(userdata, userdata_size);
-    appendUInt32(userdata_checksum); // FIXPAUL
+    appendUInt32(userdata_checksum);
     appendUInt32(userdata_size);
     append(userdata, userdata_size);
   } else {
