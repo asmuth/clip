@@ -235,8 +235,26 @@ input {
   margin-bottom: 70px;
 }
 
+.result_pane .error_box {
+  width: 90%;
+  margin:auto;
+  margin-top: 20px;
+  padding: 9px 14px;
+  background: rgba(230, 126, 34,0.1);
+  border: 1px solid rgba(230, 126, 34,1.0);
+  border-radius: 3px;
+  color: rgba(122, 07, 03,1.0);
+  line-height: 23px;
+}
+
 .result_pane .chart_container svg {
   max-width: 1100px;
+}
+
+.result_pane .error_field {
+  width: 80%;
+  padding: 10px;
+  color: #444;
 }
 
 .pagination_navbar {

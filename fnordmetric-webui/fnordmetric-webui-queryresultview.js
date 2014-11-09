@@ -92,17 +92,26 @@ FnordMetric.util.queryResultView = function() {
     result_pane.style.height = "auto";
   }
 
-  
+  function renderError(msg, elem) {
+    var msg_field = document.createElement("div");
+    msg_field.className = "error_field";
+    msg_field.innerHTML = msg;
+    elem.appendChild(msg_field);
+  }
 
 
   function render(elem, resp, duration) {
     elem.innerHTML = "";
-
-    var charts = resp.charts;
-    renderChartPane(charts, elem);
-    var tables = resp.tables;
-    renderTablePane(tables, elem);
-
+    console.log("render");
+    console.log(resp);
+    if (resp.status == "success") {
+      var charts = resp.charts;
+      renderChartPane(charts, elem);
+      var tables = resp.tables;
+      renderTablePane(tables, elem);
+    } else {
+      renderError(resp.error, elem);
+    }
   }
 
   return {

@@ -177,18 +177,12 @@ FnordMetric.util.parseMilliTS = function(ts) {
 }
 
 FnordMetric.util.humanCountRows = function(tables) {
-  console.log(tables);
   var num = 0;
   tables.map(function(table) {
     num += table.rows.length;
   });
   return (num == 1? num + " row" : num + " rows")
 }
-
-FnordMetric.util.insertAfter = function(newNode, refNode) {
-  refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
-}
-
 
 
 FnordMetric.util.sortMetricList = function(metrics, column_index, order) {

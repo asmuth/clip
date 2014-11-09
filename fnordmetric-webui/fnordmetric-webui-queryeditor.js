@@ -27,6 +27,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function renderExecutionInfo(duration, tables, elem) {
+    if (tables == undefined) {return;}
     if (elem.lastChild.className == "info_field") {
       elem.removeChild(elem.lastChild);
     }
@@ -38,8 +39,18 @@ FnordMetric.views.QueryPlayground = function() {
       "The execution took " + duration + 
       " and returned " + rows;
     info_field.style.top = elem.offsetHeight + "px";
-    //FnordMetric.util.insertAfter(info_field, elem);
     elem.appendChild(info_field);
+  }
+
+  function renderServerError(elem) {
+    elem.innerHTML = "";
+    var error_box = document.createElement("div");
+    error_box.className = "error_box";
+    error_box.innerHTML = 
+      "Oopps. FnordMetric Server encountered an error. " + "<br>" + 
+      "If you believe this is a bug in FnordMetric Server "+
+      "please report an issue at github.com/.../issues.";
+    elem.appendChild(error_box);
   }
 
 
@@ -51,10 +62,11 @@ FnordMetric.views.QueryPlayground = function() {
         var res = JSON.parse(r.response);
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
-        updateLayout(editor_pane, result_pane, direction);
         renderExecutionInfo(duration, res.tables, editor_pane);
+        updateLayout(editor_pane, result_pane, direction);
       } else {
-        //renderError(r);
+        /* server error */
+        renderServerError(result_pane);
       }
     });
   }
