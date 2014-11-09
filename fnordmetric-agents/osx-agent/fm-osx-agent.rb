@@ -74,7 +74,6 @@ loop do
     packet << "\n"
   end
 
-  puts packet
   begin
     udp.send packet, 0, target_host, target_port
   rescue Exception => e

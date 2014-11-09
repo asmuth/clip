@@ -68,10 +68,10 @@ std::unique_ptr<FileInputStream> FileInputStream::openFile(
     RAISE_ERRNO(kIOError, "error opening file '%s'", fp);
   }
 
-  auto csv_file = new FileInputStream(fd);
-  csv_file->readNextChunk();
-  csv_file->setFileName(file_path);
-  return std::unique_ptr<FileInputStream>(csv_file);
+  auto file = new FileInputStream(fd, true);
+  file->readNextChunk();
+  file->setFileName(file_path);
+  return std::unique_ptr<FileInputStream>(file);
 }
 
 FileInputStream::FileInputStream(
