@@ -1,4 +1,5 @@
-    
+
+    - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
     - getting started client
     - make all the command in installation work

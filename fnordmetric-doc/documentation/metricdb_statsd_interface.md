@@ -24,18 +24,6 @@ fnordmetric server running on port 8125 would be:
 
 This would insert the value "1" into the metric "foo".
 
-### Batch insert
-
-You may include multiple lines in the same UDP packet. The lines may be
-separated with `\n` or `\r\n`.
-
-For example, to insert the values 23, 42 and 5 into the metrics "mymetric-one",
-"mymetric-two" and "mymetric-three", you would send this UDP packet:
-
-    mymetric-one:23\r\n
-    mymetric-two:42\r\n
-    mymetric-three:5\r\n
-
 
 Using metric labels with statsd
 -------------------------------
@@ -59,4 +47,18 @@ our UDP packets could look like this:
 _Insert value `0.642` with labels `hostname=machine83` and `datacenter=ams1` into metric `cpu-utilization`:_
 
     cpu-utilization[hostname=machine83][datacenter=ams1]:0.642
+
+Batch insert
+------------
+
+You may include multiple lines in the same UDP packet. The lines may be
+separated with `\n` or `\r\n`.
+
+For example, to insert the values 23, 42 and 5 into the metrics "mymetric-one",
+"mymetric-two" and "mymetric-three", you would send this UDP packet:
+
+    mymetric-one:23\r\n
+    mymetric-two:42\r\n
+    mymetric-three:5\r\n
+
 
