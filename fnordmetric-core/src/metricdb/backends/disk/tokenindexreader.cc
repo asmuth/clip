@@ -7,10 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/tokenindexreader.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindexreader.h>
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 TokenIndexReader::TokenIndexReader(
     void* data,
@@ -26,6 +27,7 @@ void TokenIndexReader::readIndex(TokenIndex* token_index) {
   }
 }
 
+}
 }
 }
 

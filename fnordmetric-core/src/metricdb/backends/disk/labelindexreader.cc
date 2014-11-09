@@ -7,10 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/labelindexreader.h>
+#include <fnordmetric/metricdb/backends/disk/labelindexreader.h>
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 LabelIndexReader::LabelIndexReader(
     void* data,
@@ -25,6 +26,7 @@ void LabelIndexReader::readIndex(LabelIndex* index) {
   }
 }
 
+}
 }
 }
 

@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_TOKENINDEXWRITER_H
 #define _FNORDMETRIC_METRICDB_TOKENINDEXWRITER_H
 #include <fnordmetric/util/binarymessagewriter.h>
-#include <fnordmetric/metricdb/tokenindex.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
@@ -18,12 +18,14 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class TokenIndexWriter : public fnord::util::BinaryMessageWriter {
 public:
   TokenIndexWriter(TokenIndex* index);
 };
 
+}
 }
 }
 

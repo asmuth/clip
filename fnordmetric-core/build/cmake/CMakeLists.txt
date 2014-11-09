@@ -105,11 +105,19 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/metricdb/adminui.cc
     stage/src/fnordmetric/metricdb/backends/disk/metric.cc
     stage/src/fnordmetric/metricdb/backends/disk/metriccursor.cc
+    stage/src/fnordmetric/metricdb/backends/disk/metricsnapshot.cc
     stage/src/fnordmetric/metricdb/backends/disk/metricrepository.cc
     stage/src/fnordmetric/metricdb/backends/disk/labelindex.cc
+    stage/src/fnordmetric/metricdb/backends/disk/labelindexreader.cc
+    stage/src/fnordmetric/metricdb/backends/disk/labelindexwriter.cc
     stage/src/fnordmetric/metricdb/backends/disk/samplereader.cc
     stage/src/fnordmetric/metricdb/backends/disk/samplewriter.cc
+    stage/src/fnordmetric/metricdb/backends/disk/tableheaderreader.cc
+    stage/src/fnordmetric/metricdb/backends/disk/tableheaderwriter.cc
+    stage/src/fnordmetric/metricdb/backends/disk/tableref.cc
     stage/src/fnordmetric/metricdb/backends/disk/tokenindex.cc
+    stage/src/fnordmetric/metricdb/backends/disk/tokenindexreader.cc
+    stage/src/fnordmetric/metricdb/backends/disk/tokenindexwriter.cc
     stage/src/fnordmetric/metricdb/backends/inmemory/metric.cc
     stage/src/fnordmetric/metricdb/backends/inmemory/metricrepository.cc
     stage/src/fnordmetric/metricdb/httpapi.cc

@@ -17,6 +17,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 class TableHeaderReader : public fnord::util::BinaryMessageReader {
 public:
@@ -35,6 +36,7 @@ protected:
   std::vector<uint64_t> parents_;
 };
 
+}
 }
 }
 
