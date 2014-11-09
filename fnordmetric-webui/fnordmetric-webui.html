@@ -13,9 +13,11 @@
       /* intialize web ui */
       FnordMetric.WebUI.singleton = FnordMetric.WebUI();
       FnordMetric.WebUI.singleton.addView("metric_list", FnordMetric.views.MetricList);
+      FnordMetric.WebUI.singleton.addView("query_playground", FnordMetric.views.QueryPlayground);
 
       /* initialize the main menu */
       FnordMetric.WebUI.singleton.addMenuItem("Metrics", "metric_list");
+      FnordMetric.WebUI.singleton.addMenuItem("Query Playground", "query_playground");
 
       /* open initial url */
       var fragment = window.location.hash;

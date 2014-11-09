@@ -205,6 +205,25 @@ FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   }
 }
 
+FnordMetric.util.getHorizontalEditorHeight = function(
+  editor_height, result_height) {
+    var default_height = (window.innerHeight - 68) / 1.2;
+    editor_height = Math.max(editor_height, default_height);
+    var height = Math.max(editor_height, result_height);
+    return height;
+}
+
+FnordMetric.util.getHorizontalEditorWidth = 
+  function(editor_width) {
+    //returns the percental editor width
+    var wdn_width = window.innerWidth;
+    if (editor_width > 0) {
+      editor_width = wdn_width / editor_width;
+    }
+    var width = Math.max(50, editor_width);
+    return width;
+}
+
 
 FnordMetric.createButton = function(href, class_name, inner_HTML) {
   var button = document.createElement("a");
@@ -217,6 +236,7 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
   }
   return button;
 }
+
 
 FnordMetric.DropdownAutocomplete = function(
   parentNode, dropdown, input_field, keys, search_button) {

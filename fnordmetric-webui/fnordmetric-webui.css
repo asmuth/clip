@@ -404,7 +404,7 @@ table.metric_list td:first-child {
 tr.list_header th .caret {
   color: #60707f;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 tr.list_header th .caret.left {
