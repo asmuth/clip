@@ -136,8 +136,7 @@ int main(int argc, const char** argv) {
   // boot
   fnord::thread::ThreadPool thread_pool(
       std::unique_ptr<fnord::util::ExceptionHandler>(
-          new fnord::util::CatchAndPrintExceptionHandler(
-              env()->logger())));
+          new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
 
   auto datadir = env()->flags()->getString("datadir");
   if (!fnord::io::FileUtil::exists(datadir)) {
