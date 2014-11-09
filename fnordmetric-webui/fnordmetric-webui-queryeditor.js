@@ -147,7 +147,7 @@ FnordMetric.views.QueryPlayground = function() {
 
     /* set eventListeners */
     editor_pane.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.keyCode == 13) {
+      if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
         e.preventDefault();
         runQuery(
           viewport,
@@ -158,11 +158,9 @@ FnordMetric.views.QueryPlayground = function() {
       }
     }, false);
 
-
     window.onbeforeunload = function(e) {
       return "You may loose your query when leaving the page.";
     }
-
 
 
     result_pane = document.createElement("div");
