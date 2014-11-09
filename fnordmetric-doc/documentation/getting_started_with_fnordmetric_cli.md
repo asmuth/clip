@@ -1,103 +1,105 @@
 Getting Started with fnordmetric-cli
 ====================================
 
-This chapter is for impatient people who don't like reading documentation. For
-more in-depth information you are kindly referred to the following chapters.
-
-As the first simple example we will create a bar chart that displays gross
-domestic product per country and looks like this:
-
-     #
-     #       #
-     #       #      #
-     #       #      #
-     USA     UK     IRAN ...
-    -----------------------------------------
-
-Let's say we have a csv file containing the data that looks like this:
-
-    country,gdp
-    iran,8000
-    uk,9000
-    usa,1000
-
-We can create the chart pictured above with this sql query"
-
-    -- import the csv file as a table
-    IMPORT gdp_per_country FROM "gdp_per_country.csv";
-
-    -- draw a simple bar chart
-    BEGIN BAR CHART;
-
-    -- draw gdp of the top 10 countries
-    CREATE SERIES WITH
-      SELECT "gdp per country" as name gbp as x, country as y FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
+_This guide will walk you through executing a simple ChartSQL query from the
+command line. If you do not have installed FnordMetric yet, read the
+[Installation page](/documentation/installation) first._
 
 
-Now lets add a custom style and axis deinitions:
+As the first simple example we will create a line chart that displays the
+average temperatures by city and month and looks like this:
 
-  -- draw a simple bar chart
-  DRAW BAR CHART
-    WITH STYLE ...;
-
-  -- draw gdp of the top 10 countries
-  SERIES "gdp per country" FROM
-    SELECT gbp, country FROM gdp_per_country ORDER BY gdp DESC LIMIT 10;
-    WITH gdp AS X and country as Y;
+<img src="/img/simple_linechart.png" width="800" />
 
 
-Another example:
+Importing data from CSV
+-----------------------
 
-Draw a few latency distributions for multiple loadtest experiments sourced from
-multiple csv files. The csv files contain two columns "time" and "runtime" and
-one line for each request in the load test. The "time" column contains the wall
-clock time at which the request was issued and the "runtime" column contains the
-runtime of the request.
+ChartSQL allows you to import tables from external data sources using the
+IMPORT statement. For our example, assume we have a CSV file called city_temperatures.csv.
+The contents of the city_temperatures.csv file look like this:
 
-We will draw a single line graph that plots requests per minute vs the 90th
-percentile latency in that time window.
+    city,month,temperature
+    Tokyo,Dec,9.6
+    New York,Nov,8.6
+    ...
 
-    IMPORT experiment1 FROM "experiment_1.csv";
+Download the city_temperatures.csv file and put it on a folder in your system.
+In the same folder create another file called example_query.sql with this
+content:
 
-    DRAW LINE CHART;
+    IMPORT city_temperatures FROM "csv://city_temperatures.csv?headers=true"
 
-    SERIES "experiment1" FROM
-      SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
-        FROM experiment1
-        GROUP BY time_window(time, 1s);
+    SELECT * FROM city_temperatures;
 
-Lets add another experiment as a second series in the chart:
+This will import the city_temperatures table with three columns `city`, `month`
+and `temperature` from our csv file and return all rows from the table.
 
-    IMPORT experiment1 FROM "experiment_1.csv";
-    IMPORT experiment2 FROM "experiment_2.csv";
+To execute the query we just wrote from the command line, we using the
+fnordmetric-cli binary:
 
-    BEGIN LINES;
+    $ fnordmetric-cli example_query.sql
 
-    CREATE SERIES WITH SELECT
-      "experiment1" as title, count(*) as x, nth_percentile(runtime, 90) as y
-      FROM experiment1
-      GROUP BY time_window(time, 1s);
+This should print something like this:
 
-    SERIES "experiment2" FROM
-      SELECT count(*) as qps, nth_percentile(runtime, 90) as latency
-        FROM experiment2
-        GROUP BY time_window(time, 1s);
-
-
-To make that last query more interesting lets say we put all our test results
-into a single file with an additional "experiment" columns and try to recreate
-the same chart:
-
-    -- load a csv file with per request logs from a load test
-    IMPORT loadtests FROM "myfile.csv";
-
-    -- draw a graph of qps vs 90thpercentile, one series for each experiment
-    BEGIN CHART;
-
-    DRAW LINES experiment FROM
-      SELECT experiment, count(*) as qps, nth_percentile(runtime) as latency
-        FROM loadtests
-        GROUP BY experiment, time_window(time, 1s);
+    ==================================
+    | city   | month  | temperature  |
+    ==================================
+    | Tokyo  | Dec    | 9.6          |
+    | Tokyo  | Nov    | 13.9         |
+    | Tokyo  | Oct    | 18.3         |
+    | Tokyo  | Sep    | 23.3         |
+    | ...    | ...    | ...          |
 
 
+Visualizing SQL Query Results
+------------------------------
 
+Now lets create a simple line chart from the data. The ChartSQL DRAW statement
+allows you to specify that the query result should be returned as a chart (or
+other visualization) rather than a table.
+
+All SELECT statements that follow a DRAW statement are interpreted as chart data.
+and must return at least a `x` and a `y` result list column. In our example
+we want to plot the month on the X axis and the temperature on the Y axis,
+so we add this DRAW statement to our example_query.sql file:
+
+
+    IMPORT city_temperatures FROM "csv://city_temperatures.csv?headers=true"
+
+    DRAW LINECHART;
+
+    SELECT city as series, month as X, temperature AS Y FROM city_temperatures;
+
+Let's execute the query and render the chart to SVG:
+
+    $ fnordmetric-cli --format example_query.sql > example_chart.svg
+
+Open the example_chart.svg file in a browser. You'll see a chart that looks
+somewhat like the chart in the beginning of this guide. We are still missing
+axes, the legend and points. After we add these, we arrive at out final
+example_query.sql file:
+
+    IMPORT city_temperatures FROM "csv://city_temperatures.csv?headers=true"
+
+    DRAW LINECHART WITH
+        AXIS LEFT
+        AXIS BOTTOM
+        LEGEND TOP LEFT INSIDE;
+
+    SELECT
+        city as series,
+        month as X,
+        temperature AS Y,
+        "circle" as pointstyle
+    FROM city_temperatures;
+
+
+You now have now seen how to execute a simple ChartSQL query from the command line,
+but there is a lot more you can do. These are good docs to read next:
+
+  + [Examples](/examples/)
+  + [ChartSQL Query Language](/chartsql/introduction/)
+  + [The DRAW Statement](/documentation/chartsql/draw_statement/)
+  + [External Data Source](/documentation/chartsql/external_data_sources/)
+  + [FnordMetric Server](/documentation/getting_started/fnordmetric-server/)
