@@ -70,6 +70,16 @@ input {
   box-sizing: border-box;
 }
 
+.editor_pane {
+  border-bottom: 1px solid #ddd;
+}
+
+.result_pane {
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
 .viewport.horizontal_split .editor_pane {
   left: 0;
 }
@@ -199,7 +209,6 @@ input {
   top: 30px;
   left: 4px;
 }
->>>>>>> adminui
 
 .result_pane .result_navbar {
   width: 100%;
@@ -424,8 +433,8 @@ table.metric_list tr:hover td {
 
 .info_field {
   font-style: italic;
-  margin-top: 5px;
-  margin-left: 10px;
+  position: absolute;
+  left: 5px;
 }
 
 .popup {

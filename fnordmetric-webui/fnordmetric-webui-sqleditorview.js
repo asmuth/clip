@@ -30,9 +30,7 @@ FnordMetric.util.SQLEditorView = function() {
 
 
   function render(elem) {
-    console.log("render sql editor");
-    console.log(elem);
-    elem.style.border = "1px solid #ddd";
+    //elem.style.border = "1px solid #ddd";
     //init editor_pane
     elem.innerHTML = "";
 
@@ -43,7 +41,6 @@ FnordMetric.util.SQLEditorView = function() {
     });
 
     initCodeMirror(cm);
-    console.log(cm);
 
     
   }

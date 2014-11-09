@@ -26,6 +26,25 @@ FnordMetric.views.QueryPlayground = function() {
     editorViews[view].render(editor_pane);
   }
 
+  function renderExecutionInfo(duration, tables, elem) {
+    console.log(elem.lastChild);
+    if (elem.lastChild.className == "info_field") {
+      console.log("remove last child");
+      elem.removeChild(elem.lastChild);
+    }
+    var info_field = document.createElement("div");
+    info_field.className = "info_field";
+    var duration = FnordMetric.util.parseMilliTS(duration);
+    var rows = FnordMetric.util.humanCountRows(tables);
+    info_field.innerHTML =
+      "The execution took " + duration + 
+      " and returned " + rows;
+    info_field.style.top = elem.offsetHeight + "px";
+    //FnordMetric.util.insertAfter(info_field, elem);
+    elem.appendChild(info_field);
+  }
+
+
   function renderResult(result_pane, editor_pane, direction, view) {
     var query_str = editorViews[view].getQuery();
     //render Loading
@@ -35,6 +54,7 @@ FnordMetric.views.QueryPlayground = function() {
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
         updateLayout(editor_pane, result_pane, direction);
+        renderExecutionInfo(duration, res.tables, editor_pane);
       } else {
         //renderError(r);
       }

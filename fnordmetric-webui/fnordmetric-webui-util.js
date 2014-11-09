@@ -158,6 +158,39 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   return time_str;
 }
 
+FnordMetric.util.parseMilliTS = function(ts) {
+  if (ts < 1000) {
+    if (ts == 0) {
+      return " less than 1 millisecond";
+    } else if (ts == 1) {
+      return " 1 millisecond";
+    } else {
+      return ts + " milliseconds";
+    }
+  } else if (ts < 60000) {
+    ts = ts / 1000;
+  return (ts + (ts == 1? " second" : " seconds"));
+  } else {
+    ts = ts / 60000;
+    return (ts + (ts == 1? " minute" : " minutes"));
+  }
+}
+
+FnordMetric.util.humanCountRows = function(tables) {
+  console.log(tables);
+  var num = 0;
+  tables.map(function(table) {
+    num += table.rows.length;
+  });
+  return (num == 1? num + " row" : num + " rows")
+}
+
+FnordMetric.util.insertAfter = function(newNode, refNode) {
+  refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
+}
+
+
+
 FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   function compare(a, b) {
     if (a < b) {
