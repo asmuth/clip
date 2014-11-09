@@ -1,9 +1,8 @@
 The GROUP OVER TIMEWINDOW clause
 ================================
 
-Standard SQL makes (moving) window queries over timeseries fairly akward. Just
-computing a moving average requires complex self-joins. Since these kind of
-time based rollups are very common when working with timeseries data,
+Standard SQL makes (moving) window queries over timeseries fairly akward. Since
+these kind of time based rollups are very common when working with timeseries data,
 FnordMetric introduces a new GROUP OVER TIMEWINDOW clause.
 
 Here is a simple example that should demonstrate the general concept before we
