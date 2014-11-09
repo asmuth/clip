@@ -1,23 +1,4 @@
 
-   POST /metrics
-
-      {
-        key: "/web/frontend/http_status_codes",
-        value: 12,
-        labels: {
-          status_code: 500,
-          hostname: "webfe1"
-        }
-      }
-
-
-  Statsd API:
-
-    /web/frontend/http_requests_total[hostname=webfe1]:2357
-    /web/frontend/http_status_codes[hostname=webfe1][status_code=200]:2345
-    /web/frontend/http_status_codes[hostname=webfe1][status_code=500]:12
-
-
 
 -- Select number of http error codes in the last hour
 SELECT http_status, count(http_status) from http_requests
