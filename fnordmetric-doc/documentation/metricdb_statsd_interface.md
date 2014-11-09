@@ -6,7 +6,7 @@ Statsd is a very simple, text based protocol.
 
 ---
 
-To use the statsd protocol, start the fnordmetric server with the --statsd-port
+To use the statsd protocol, start the fnordmetric server with the --statsd_port
 option:
 
     $ fnordmetric-server --storage_backend inmemory --statsd_port 8125 --http_port 8080
@@ -22,7 +22,8 @@ fnordmetric server running on port 8125 would be:
 
     $ echo "foo:1" | nc -u -w0 127.0.0.1 8125
 
-This would insert the value "1" into the metric "foo".
+This would insert the value "1" into the metric "foo". If no metric with this key
+exists yet, a new one will be created.
 
 
 Using metric labels with statsd
