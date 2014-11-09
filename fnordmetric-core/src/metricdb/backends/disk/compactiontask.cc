@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/compactiontask.h>
-#include <fnordmetric/metricdb/metricrepository.h>
+#include <fnordmetric/metricdb/backends/disk/compactiontask.h>
+#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
 #include <fnordmetric/util/wallclock.h>
 #include <unistd.h>
 
@@ -17,6 +17,7 @@ using fnord::util::WallClock;
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 CompactionTask::CompactionTask(
     MetricRepository* metric_repo) :
@@ -41,7 +42,11 @@ void CompactionTask::run() const {
 
     for (const auto& metric : metric_repo_->listMetrics()) {
       try {
-        metric->compact();
+        auto disk_metric = dynamic_cast<Metric*>(metric);
+
+        if (disk_metric != nullptr) {
+          disk_metric->compact();
+        }
       } catch (util::RuntimeException e) {
         env()->logger()->printf(
             "ERROR",
@@ -55,3 +60,5 @@ void CompactionTask::run() const {
 
 }
 }
+}
+

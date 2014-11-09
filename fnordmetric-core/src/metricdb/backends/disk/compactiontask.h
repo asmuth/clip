@@ -13,6 +13,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 class MetricRepository;
 
 class CompactionTask {
@@ -28,6 +29,7 @@ protected:
 };
 
 
+}
 }
 }
 #endif

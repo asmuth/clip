@@ -103,6 +103,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql_extensions/seriesadapter.cc
     stage/src/fnordmetric/thread/threadpool.cc
     stage/src/fnordmetric/metricdb/adminui.cc
+    stage/src/fnordmetric/metricdb/backends/disk/compactiontask.cc
     stage/src/fnordmetric/metricdb/backends/disk/metric.cc
     stage/src/fnordmetric/metricdb/backends/disk/metriccursor.cc
     stage/src/fnordmetric/metricdb/backends/disk/metricsnapshot.cc

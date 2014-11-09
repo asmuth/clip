@@ -9,14 +9,17 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/backends/disk/metricrepository.h>
+#include <fnordmetric/thread/task.h>
 
 namespace fnordmetric {
 namespace metricdb {
 namespace disk_backend {
 
 MetricRepository::MetricRepository(
-    const std::string data_dir) :
-    file_repo_(new fnord::io::FileRepository(data_dir)) {
+    const std::string data_dir,
+    fnord::thread::TaskScheduler* scheduler) :
+    file_repo_(new fnord::io::FileRepository(data_dir)),
+    compaction_task_(this) {
   std::unordered_map<
       std::string,
       std::vector<std::unique_ptr<TableRef>>> tables;
@@ -35,6 +38,8 @@ MetricRepository::MetricRepository(
 
     metrics_.emplace(iter.first, std::unique_ptr<Metric>(metric));
   }
+
+  scheduler->run(fnord::thread::Task::create(compaction_task_.runnable()));
 }
 
 Metric* MetricRepository::createMetric(const std::string& key) {

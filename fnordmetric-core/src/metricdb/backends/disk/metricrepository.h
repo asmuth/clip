@@ -9,9 +9,11 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_DISK_BACKEND_METRICREPOSITORY_H_
 #define _FNORDMETRIC_METRICDB_DISK_BACKEND_METRICREPOSITORY_H_
+#include <fnordmetric/metricdb/backends/disk/compactiontask.h>
 #include <fnordmetric/metricdb/backends/disk/metric.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/io/filerepository.h>
+#include <fnordmetric/thread/taskscheduler.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -19,11 +21,14 @@ namespace disk_backend {
 
 class MetricRepository : public fnordmetric::metricdb::IMetricRepository {
 public:
-  MetricRepository(const std::string data_dir);
+  MetricRepository(
+      const std::string data_dir,
+      fnord::thread::TaskScheduler* scheduler);
 
 protected:
   Metric* createMetric(const std::string& key) override;
   std::shared_ptr<fnord::io::FileRepository> file_repo_;
+  CompactionTask compaction_task_;
 };
 
 }

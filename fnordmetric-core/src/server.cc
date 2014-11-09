@@ -48,8 +48,11 @@ static const char kCrashErrorMsg[] =
     "github.com/paulasmuth/fnordmetric";
 
 using fnord::thread::Task;
+using fnord::thread::TaskScheduler;
 
-IMetricRepository* openBackend(const std::string& backend_type) {
+IMetricRepository* openBackend(
+    const std::string& backend_type,
+    TaskScheduler* backend_scheduler) {
   /* open inmemory backend */
   if (backend_type == "inmemory") {
     env()->logger()->printf(
@@ -72,7 +75,7 @@ IMetricRepository* openBackend(const std::string& backend_type) {
         "Opening disk backend at %s",
         datadir.c_str());
 
-    return new disk_backend::MetricRepository(datadir);
+    return new disk_backend::MetricRepository(datadir, backend_scheduler);
   }
 
   RAISE(
@@ -156,7 +159,9 @@ int main(int argc, const char** argv) {
   }
 
 
-  auto metric_repo = openBackend(env()->flags()->getString("storage_backend"));
+  auto metric_repo = openBackend(
+      env()->flags()->getString("storage_backend"),
+      &thread_pool);
 
   /* statsd server */
   if (env()->flags()->isSet("statsd_port")) {
