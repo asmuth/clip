@@ -1,5 +1,5 @@
-Getting Started with fnordmetric-cli
-====================================
+Getting Started with ChartSQL
+=============================
 
 _This guide will walk you through executing a simple ChartSQL query from the
 command line. If you do not have installed FnordMetric yet, read the
@@ -73,7 +73,7 @@ so we add this DRAW statement to our example_query.sql file:
 
 Let's execute the query and render the chart to SVG:
 
-    $ fnordmetric-cli --format example_query.sql > example_chart.svg
+    $ fnordmetric-cli --format svg example_query.sql > example_chart.svg
 
 Open the example_chart.svg file in a browser. You'll see a chart that looks
 somewhat like the chart in the beginning of this guide. We are still missing
