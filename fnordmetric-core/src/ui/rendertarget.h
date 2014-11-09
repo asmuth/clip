@@ -20,6 +20,7 @@ namespace ui {
 
 class RenderTarget {
 public:
+  virtual ~RenderTarget() {}
 
   virtual void beginChart(
       int width,

@@ -19,6 +19,7 @@ namespace query {
 
 class Backend {
 public:
+  virtual ~Backend() {}
 
   virtual bool openTables(
       const std::vector<std::string>& table_names,

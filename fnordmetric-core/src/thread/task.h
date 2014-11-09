@@ -17,6 +17,7 @@ namespace thread {
 
 class Task {
 public:
+  virtual ~Task() {}
 
   template <class RunnableType>
   static std::shared_ptr<Task> create(RunnableType runnable);

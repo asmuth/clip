@@ -23,6 +23,7 @@ namespace query {
 
 class RowSink {
 public:
+  virtual ~RowSink() {}
   virtual bool nextRow(SValue* row, int row_len) = 0;
   virtual void finish() {}
 };

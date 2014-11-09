@@ -24,6 +24,7 @@ public:
   Index(uint32_t type);
   Index(const Index& copy) = delete;
   Index& operator=(const Index& copy) = delete;
+  virtual ~Index() {}
 
   uint32_t type() const;
 

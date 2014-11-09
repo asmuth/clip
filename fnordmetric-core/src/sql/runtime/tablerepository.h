@@ -23,6 +23,7 @@ class ImportStatement;
 
 class TableRepository {
 public:
+  virtual ~TableRepository() {}
 
   virtual TableRef* getTableRef(const std::string& table_name) const;
 
