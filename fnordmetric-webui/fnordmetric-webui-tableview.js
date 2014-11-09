@@ -33,13 +33,13 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
     var until = Math.min(offset + per_page, all_rows.length);
-    renderPagination(offset+1,until, all_rows.length);
+    renderPagination(offset+1,until, all_rows.length, isSortable);
     renderTable(all_rows.slice(offset, until), isSortable);
   }
 
-  function updatePage(page_index) {
+  function updatePage(page_index, isSortable) {
     current_page = page_index;
-    render();
+    render(isSortable);
   }
 
   function resortRows(column_index, order) {
@@ -103,7 +103,7 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     });
   };
 
-  function renderPagination(from, until, total) {
+  function renderPagination(from, until, total, isSortable) {
     var navbar = document.createElement("div");
     navbar.className = "pagination_navbar metric";
 
@@ -112,14 +112,14 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     navbar.appendChild(ttp_forward);
     ttp_forward.onclick = function(e) {
       e.preventDefault();
-      updatePage((current_page + 1) % pages);
+      updatePage((current_page + 1) % pages, isSortable);
     }
 
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
     ttp_back.onclick = function(e) {
       e.preventDefault();
-      updatePage((current_page + per_page) % pages);
+      updatePage((current_page + per_page) % pages, isSortable);
     }
     navbar.appendChild(ttp_back);
 

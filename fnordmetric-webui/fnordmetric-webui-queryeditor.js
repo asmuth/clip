@@ -158,9 +158,10 @@ FnordMetric.views.QueryPlayground = function() {
       }
     }, false);
 
-    window.onbeforeunload = function(e) {
+    /* in dev mode disabled */
+    /*window.onbeforeunload = function(e) {
       return "You may loose your query when leaving the page.";
-    }
+    }*/
 
 
     result_pane = document.createElement("div");
