@@ -30,6 +30,7 @@ const char kParseError[] = "ParseError";
 const char kRangeError[] = "RangeError";
 const char kRuntimeError[] = "RuntimeError";
 const char kTypeError[] = "TypeError";
+const char kUsageError[] = "UsageError";
 const char kVersionMismatchError[] = "VersionMismatchError";
 
 #define RAISE_EXCEPTION(E) \

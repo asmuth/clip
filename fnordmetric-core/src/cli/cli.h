@@ -37,8 +37,9 @@ public:
    */
   static void execute(Environment* env);
 
-
 protected:
+
+  static void printUsage();
 
   static const query::QueryService::kFormat getOutputFormat(Environment* env);
 

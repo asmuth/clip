@@ -50,7 +50,7 @@ static const char kCrashErrorMsg[] =
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
 
-IMetricRepository* openBackend(
+static IMetricRepository* openBackend(
     const std::string& backend_type,
     TaskScheduler* backend_scheduler) {
   /* open inmemory backend */
@@ -65,7 +65,7 @@ IMetricRepository* openBackend(
   if (backend_type == "disk") {
     if (!env()->flags()->isSet("datadir")) {
       RAISE(
-          kIllegalArgumentError,
+          kUsageError,
           "the --datadir flag must be set when using the disk backend");
     }
 
@@ -79,84 +79,37 @@ IMetricRepository* openBackend(
   }
 
   RAISE(
-      kIllegalArgumentError,
+      kUsageError,
       "unknown backend type: %s",
       backend_type.c_str());
 }
 
-int main(int argc, const char** argv) {
-  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
-  ehandler.installGlobalHandlers();
-
-  fnordmetric::util::SignalHandler::ignoreSIGHUP();
-  fnordmetric::util::SignalHandler::ignoreSIGPIPE();
-
-  fnord::util::Random::init();
-
-  env()->flags()->defineFlag(
-      "storage_backend",
-      cli::FlagParser::T_STRING,
-      false,
-      NULL,
-      "disk",
-      "One of 'disk', 'inmemory', 'mysql' or 'hbase'. Default: 'disk'",
-      "<name>");
-
-  // flags
-  env()->flags()->defineFlag(
-      "datadir",
-      cli::FlagParser::T_STRING,
-      false,
-      NULL,
-      "/tmp/fnordmetric-data",
-      "Store the database in this directory (disk backend only)",
-      "<path>");
-
-  env()->flags()->defineFlag(
-      "http_port",
-      cli::FlagParser::T_INTEGER,
-      false,
-      NULL,
-      "8080",
-      "Start the web interface on this port",
-      "<port>");
-
-  env()->flags()->defineFlag(
-      "statsd_port",
-      cli::FlagParser::T_INTEGER,
-      false,
-      NULL,
-      "8125",
-      "Start the statsd interface on this port",
-      "<port>");
-
-  env()->flags()->parseArgv(argc, argv);
-  env()->setVerbose(true);
-
-  // boot
+static int startServer() {
   fnord::thread::ThreadPool thread_pool(
       std::unique_ptr<fnord::util::ExceptionHandler>(
           new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
 
-  auto datadir = env()->flags()->getString("datadir");
-  if (!fnord::io::FileUtil::exists(datadir)) {
-    env()->logger()->printf(
-        "FATAL",
-        "File %s does not exist",
-        datadir.c_str());
+  if (env()->flags()->isSet("datadir")) {
+    auto datadir = env()->flags()->getString("datadir");
 
-    return 1;
+    if (!fnord::io::FileUtil::exists(datadir)) {
+      env()->logger()->printf(
+          "FATAL",
+          "File %s does not exist",
+          datadir.c_str());
+
+      return 1;
+    }
+
+    if (!fnord::io::FileUtil::isDirectory(datadir)) {
+      env()->logger()->printf(
+          "FATAL",
+          "File %s is not a directory",
+          datadir.c_str());
+
+      return 1;
+    }
   }
-
-  if (!fnord::io::FileUtil::isDirectory(datadir)) {
-    env()->logger()->printf(
-        "FATAL",
-        "FIle %s is not a directory",
-        datadir.c_str());
-
-    return 1;
-  }
-
 
   auto metric_repo = openBackend(
       env()->flags()->getString("storage_backend"),
@@ -202,6 +155,105 @@ int main(int argc, const char** argv) {
 
     http.start();
     selector.select();
+  }
+
+  return 0;
+}
+
+static void printUsage() {
+  auto err_stream = fnordmetric::util::OutputStream::getStderr();
+  err_stream->printf("usage: fnordmetric-server [options]\n");
+  err_stream->printf("\noptions:\n");
+  env()->flags()->printUsage(err_stream.get());
+  err_stream->printf("\nexamples:\n");
+  err_stream->printf("    $ fnordmeric-server --http_port 8080 --statsd_port 8125 --datadir /tmp/fnordmetric-data\n");
+}
+
+int main(int argc, const char** argv) {
+  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  ehandler.installGlobalHandlers();
+  fnordmetric::util::SignalHandler::ignoreSIGHUP();
+  fnordmetric::util::SignalHandler::ignoreSIGPIPE();
+  fnord::util::Random::init();
+
+  env()->flags()->defineFlag(
+      "http_port",
+      cli::FlagParser::T_INTEGER,
+      false,
+      NULL,
+      "8080",
+      "Start the web interface on this port",
+      "<port>");
+
+  env()->flags()->defineFlag(
+      "statsd_port",
+      cli::FlagParser::T_INTEGER,
+      false,
+      NULL,
+      "8125",
+      "Start the statsd interface on this port",
+      "<port>");
+
+  env()->flags()->defineFlag(
+      "storage_backend",
+      cli::FlagParser::T_STRING,
+      false,
+      NULL,
+      "disk",
+      "One of 'disk', 'inmemory', 'mysql' or 'hbase'. Default: 'disk'",
+      "<name>");
+
+  // flags
+  env()->flags()->defineFlag(
+      "datadir",
+      cli::FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL,
+      "Store the database in this directory (disk backend only)",
+      "<path>");
+
+  env()->flags()->defineFlag(
+      "verbose",
+      cli::FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "Be verbose");
+
+  env()->flags()->defineFlag(
+      "help",
+      cli::FlagParser::T_SWITCH,
+      false,
+      "h",
+      NULL,
+      "You are reading it...");
+
+  env()->flags()->parseArgv(argc, argv);
+  env()->setVerbose(env()->flags()->isSet("verbose"));
+
+  if (env()->flags()->isSet("help")) {
+    printUsage();
+    return 0;
+  }
+
+  try {
+    return startServer();
+  } catch (const fnordmetric::util::RuntimeException& e) {
+    auto err_stream = fnordmetric::util::OutputStream::getStderr();
+    auto msg = e.getMessage();
+    err_stream->printf("[ERROR] ");
+    err_stream->write(msg.c_str(), msg.size());
+    err_stream->printf("\n");
+
+    if (e.getTypeName() == kUsageError) {
+      err_stream->printf("\n");
+      printUsage();
+    } else {
+      env()->logger()->exception("FATAL", "Fatal error", e);
+    }
+
+    return 1;
   }
 
   return 0;
