@@ -31,7 +31,8 @@ FnordMetric.util.VisualEditorView = function() {
 
     var aggr_field = document.createElement("div");
     aggr_field.className = "visual_editor field";
-    aggr_field.innerHTML = "AGGREGATION";
+    var aggr_title = document.createElement("div");
+    aggr_title.innerHTML = "AGGREGATION";
     var aggr_select = document.createElement("select");
     var aggregations = ["", "SUM", "MAX", "MIN", "COUNT", "AVG"];
     aggregations.map(function(aggr) {
@@ -40,13 +41,35 @@ FnordMetric.util.VisualEditorView = function() {
       option.innerHTML = aggr;
       aggr_select.appendChild(option);
     });
+    aggr_field.appendChild(aggr_title);
     aggr_field.appendChild(aggr_select);
+
+    var step_title = document.createElement("div");
+    step_title.innerHTML = "STEP";
+    var step_input = document.createElement("input");
+    step_input.className = "small";
+    aggr_field.appendChild(step_title);
+    aggr_field.appendChild(step_input);
+
+    var time_title = document.createElement("div");
+    time_title.innerHTML = "TIME";
+    var time_input = document.createElement("input");
+    time_input.className = "small right";
+    aggr_field.appendChild(time_title);
+    aggr_field.appendChild(time_input);
     elem.appendChild(aggr_field);
 
+    var group_field = document.createElement("div");
+    group_field.className = "visual_editor field";
+  }
 
+  function getQuery() {
+    //return querystring
 
   }
+
   return {
-    "render" : render
+    "render" : render,
+    "getQuery" : getQuery
   }
 }

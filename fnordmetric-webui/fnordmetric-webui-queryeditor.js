@@ -26,9 +26,19 @@ FnordMetric.views.QueryPlayground = function() {
     editorViews[view].render(editor_pane);
   }
 
-  function renderResult(result_pane, query_str) {
-    /*FnordMetric.util.queryResultView().render(
-      result_pane, query_str);*/
+  function renderResult(result_pane, view) {
+    var query_str = editorViews[view].getQuery();
+    //render Loading
+    FnordMetric.httpPost("/query", query_str, function(r, duration) {
+      if (r.status == 200 && r.statusText == "Ok") {
+        var res = JSON.parse(r.response);
+        FnordMetric.util.queryResultView().render(
+          result_pane, res, duration);
+        //updateLayout();
+      } else {
+        //renderError(r);
+      }
+    });
   }
 
   function updateLayout(editor_pane, result_pane, direction) {
@@ -60,7 +70,7 @@ FnordMetric.views.QueryPlayground = function() {
 
   function render(viewport, url) {
     var direction = "horizontal";
-    var current_view = "visual";
+    var current_view = "sql";
     /* init viewport */
     viewport.innerHTML = "";
 
@@ -74,7 +84,7 @@ FnordMetric.views.QueryPlayground = function() {
       "#", "fancy_button", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
-      renderResult(editor_pane, "foobobar");
+      renderResult(editor_pane, current_view);
     }
 
     var embed_btn = FnordMetric.createButton(
