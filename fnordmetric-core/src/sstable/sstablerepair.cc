@@ -31,7 +31,7 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
   } catch (RuntimeException& rte) {
     fnordmetric::env()->logger()->printf(
         "INFO",
-        "SSTableRepair: sstable %s is corrupt: %s",
+        "SSTableRepair: sstable %s header is corrupt: %s",
         filename_.c_str(),
         rte.getMessage().c_str());
 
@@ -43,6 +43,20 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
 
   if (reader_->bodySize() == 0) {
     return checkAndRepairUnfinishedTable(repair);
+  } else {
+    try {
+      void* dummy_data;
+      size_t dummy_size;
+      reader_->readFooter(0, &dummy_data, &dummy_size);
+    } catch (RuntimeException& rte) {
+      fnordmetric::env()->logger()->printf(
+          "INFO",
+          "SSTableRepair: sstable %s footer is corrupt: %s",
+          filename_.c_str(),
+          rte.getMessage().c_str());
+
+      return false;
+    }
   }
 
   return true;
