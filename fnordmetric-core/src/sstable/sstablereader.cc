@@ -20,6 +20,7 @@ SSTableReader::SSTableReader(
     mmap_(new io::MmappedFile(std::move(file))),
     file_size_(mmap_->size()),
     header_(mmap_->ptr(), file_size_) {
+  printf("NEW SSTABLE READER\n");
   if (!header_.verify()) {
     RAISE(kIllegalStateError, "corrupt sstable header");
   }
@@ -27,6 +28,10 @@ SSTableReader::SSTableReader(
   if (header_.headerSize() + header_.bodySize() > file_size_) {
     RAISE(kIllegalStateError, "file metadata offsets exceed file bounds");
   }
+}
+
+SSTableReader::~SSTableReader() {
+  printf("DESTROY SSTABLE READER\n");
 }
 
 void SSTableReader::readHeader(const void** userdata, size_t* userdata_size) {
