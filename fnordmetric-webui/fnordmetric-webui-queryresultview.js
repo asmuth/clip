@@ -57,7 +57,7 @@ FnordMetric.util.queryResultView = function() {
 
   function renderTable(table, elem) {
     var table_view = FnordMetric.util.TableView(
-      table.columns, elem);
+      table.columns, elem, 5);
 
     table.rows.map(function(row) {
       table_view.addRow(row);

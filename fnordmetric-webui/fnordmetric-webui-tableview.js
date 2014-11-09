@@ -17,11 +17,11 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.TableView = function(columns, elem) {
+FnordMetric.util.TableView = function(columns, elem, per_page) {
   var all_rows = [];
   var on_row_click = null;
-
-  var per_page = 25;
+  
+  var per_page = parseInt(per_page);
   var current_page = 0;
   var pages;
 

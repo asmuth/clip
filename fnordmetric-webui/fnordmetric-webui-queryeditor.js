@@ -54,16 +54,17 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  function renderResult(result_pane, editor_pane, direction, view) {
+  function renderResult(viewport, result_pane, editor_pane, direction, view) {
     var query_str = editorViews[view].getQuery();
     //render Loading
+    FnordMetric.util.displayLoader(result_pane);
     FnordMetric.httpPost("/query", query_str, function(r, duration) {
       if (r.status == 200 && r.statusText == "Ok") {
         var res = JSON.parse(r.response);
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
-        renderExecutionInfo(duration, res.tables, editor_pane);
         updateLayout(editor_pane, result_pane, direction);
+        renderExecutionInfo(duration, res.tables, editor_pane);
       } else {
         /* server error */
         renderServerError(result_pane);
@@ -72,6 +73,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function updateLayout(editor_pane, result_pane, direction) {
+    console.log("update layout");
     if (direction == "horizontal") {
       var height = FnordMetric.util.getHorizontalEditorHeight(
         editor_pane.offsetHeight, result_pane.offsetHeight);
@@ -114,7 +116,12 @@ FnordMetric.views.QueryPlayground = function() {
       "#", "fancy_button", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
-      renderResult(result_pane, editor_pane, direction, current_view);
+      renderResult
+        (viewport, 
+        result_pane,
+        editor_pane, 
+        direction, 
+        current_view);
     }
 
     var embed_btn = FnordMetric.createButton(
@@ -133,7 +140,12 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.keyCode == 13) {
         e.preventDefault();
-        renderResult(result_pane, editor_pane, direction, current_view);
+        renderResult(
+          viewport,
+          result_pane, 
+          editor_pane,
+          direction, 
+          current_view);
       }
     }, false);
 
