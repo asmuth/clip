@@ -14,10 +14,10 @@
 #include <fnordmetric/metricdb/backends/disk/labelindex.h>
 #include <fnordmetric/metricdb/backends/disk/metriccursor.h>
 #include <fnordmetric/metricdb/backends/disk/metricsnapshot.h>
+#include <fnordmetric/metricdb/backends/disk/samplereader.h>
 #include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/metricdb/samplereader.h>
 #include <fnordmetric/util/datetime.h>
 #include <string>
 #include <vector>

@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/metriccursor.h>
+#include <fnordmetric/metricdb/backends/disk/metriccursor.h>
 #include <fnordmetric/util/stringutil.h>
 #include <stdlib.h>
 #include <cstring>
@@ -17,6 +17,7 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 MetricCursor::MetricCursor(
     std::shared_ptr<MetricSnapshot> snapshot,
@@ -83,3 +84,5 @@ fnord::sstable::Cursor* MetricCursor::tableCursor() {
 
 }
 }
+}
+

@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_TABLEREF_H_
 #define _FNORDMETRIC_METRICDB_TABLEREF_H_
+#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/metricdb/samplewriter.h>
 #include <fnordmetric/sstable/sstablereader.h>
 #include <fnordmetric/sstable/sstablewriter.h>
 #include <string>
@@ -18,6 +18,7 @@
 using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 class LabelIndex;
 class TableHeaderReader;
 
@@ -135,6 +136,7 @@ protected:
   size_t body_size_;
 };
 
+}
 }
 }
 #endif

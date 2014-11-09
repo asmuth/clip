@@ -17,7 +17,8 @@
 #include <vector>
 
 namespace fnordmetric {
-namespace metricdb  {
+namespace metricdb {
+namespace disk_backend {
 
 class TokenIndex {
 public:
@@ -40,6 +41,7 @@ protected:
 };
 
 
+}
 }
 }
 

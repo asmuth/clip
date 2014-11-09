@@ -7,12 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/tokenindex.h>
-#include <fnordmetric/metricdb/samplereader.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
+#include <fnordmetric/metricdb/backends/disk/samplereader.h>
 #include <fnordmetric/util/ieee754.h>
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 AbstractSampleReader::AbstractSampleReader(
     void* data,
@@ -70,6 +71,7 @@ template <> double SampleReader<double>::readValue() {
   return fnord::util::IEEE754::fromBytes(*readUInt64());
 }
 
+}
 }
 }
 

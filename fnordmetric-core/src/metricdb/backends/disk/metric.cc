@@ -11,7 +11,7 @@
 #include <fnordmetric/metricdb/backends/disk/binaryformat.h>
 #include <fnordmetric/metricdb/backends/disk/metric.h>
 #include <fnordmetric/metricdb/backends/disk/tableref.h>
-#include <fnordmetric/metricdb/samplewriter.h>
+#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/freeondestroy.h>
 #include <fnordmetric/util/wallclock.h>

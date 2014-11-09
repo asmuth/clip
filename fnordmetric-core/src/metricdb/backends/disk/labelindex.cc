@@ -7,10 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/labelindex.h>
+#include <fnordmetric/metricdb/backends/disk/labelindex.h>
 
 namespace fnordmetric {
 namespace metricdb  {
+namespace disk_backend {
 
 LabelIndex::LabelIndex() {}
 
@@ -29,6 +30,7 @@ std::set<std::string> LabelIndex::labels() const {
   return labels_;
 }
 
+}
 }
 }
 

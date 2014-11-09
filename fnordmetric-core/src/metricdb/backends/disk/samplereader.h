@@ -16,6 +16,8 @@
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend{
+
 class TokenIndex;
 
 class AbstractSampleReader : public fnord::util::BinaryMessageReader {
@@ -53,6 +55,7 @@ protected:
   T value_;
 };
 
+}
 }
 }
 

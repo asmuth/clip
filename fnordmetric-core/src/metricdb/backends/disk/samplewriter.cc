@@ -7,15 +7,16 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/binaryformat.h>
-#include <fnordmetric/metricdb/samplewriter.h>
-#include <fnordmetric/metricdb/tokenindex.h>
+#include <fnordmetric/metricdb/backends/disk/binaryformat.h>
+#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
+#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/util/ieee754.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <stdlib.h>
 
 namespace fnordmetric {
 namespace metricdb {
+namespace disk_backend {
 
 SampleWriter::SampleWriter(
     TokenIndex* token_index) :
@@ -61,6 +62,7 @@ void SampleWriter::writeToken(const std::string& token, bool force_indexing) {
 }
 
 
+}
 }
 }
 
