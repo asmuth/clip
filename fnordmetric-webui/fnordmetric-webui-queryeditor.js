@@ -84,7 +84,7 @@ FnordMetric.views.QueryPlayground = function() {
       "#", "fancy_button", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
-      renderResult(editor_pane, current_view);
+      renderResult(result_pane, current_view);
     }
 
     var embed_btn = FnordMetric.createButton(
