@@ -119,6 +119,16 @@ respected by the linechart and areachart.
 
 [See the point and line styles reference](/documentation/chartsql/point_and_line_styles)
 
+Drawing Timeseries Data
+-----------------------
+
+If the values returned in the `x` or `y` result list columns are of the
+DateTime type, the chart will be drawn as a timseries chart. For example:
+
+
+    SELECT FROM_TIMESTAMP(my_timestamp) AS x, my_value AS y FROM ...
+
+
 Axes
 ----
 
@@ -195,6 +205,7 @@ To invert/mirror a domain, use the INVERT keyword. For example:
         YDOMAIN INVERT
         AXIS BOTTOM
         AXIS LEFT;
+
 
 
 Adding Legends

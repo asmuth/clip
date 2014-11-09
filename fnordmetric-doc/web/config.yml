@@ -111,15 +111,6 @@ documentation:
         title: "Bar Charts"
         url: "/query_language/reference"
       -
-        title: "Combining Charts"
-        url: "/query_language/reference"
-      -
-        title: "Timeseries Data"
-        url: "/query_language/reference"
-      -
-        title: "Multiple Domains"
-        url: "/query_language/reference"
-      -
         title: "Interactive Charts"
         url: "/query_language/reference"
       -
