@@ -158,22 +158,117 @@ You can also control the position of the axis labels and rotate them:
 Value Domains
 -------------
 
-- specifying domains
-   * logarithmic
+By default, the chart will fit the X, Y and if applicable Z domains to include
+all values. However, you can specify explicit domains. The syntax to specify
+domains is:
+
+    DRAW <charttype> [ WITH ]
+        [ XDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ YDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ]
+        [ ZDOMAIN [ min, max ] [ LOGARITHMIC ] [ INVERT ] ];
+
+For example, to draw a line chart with an X axis from 0 to 100 and a Y axis
+from 0 to 10:
+
+    DRAW LINECHART WITH
+        XDOMAIN 0, 100
+        YDOMAIN 0, 100
+        AXIS BOTTOM
+        AXIS LEFT;
+
+#### Logarithmic Domains
+
+You can also specify that a domain should be plotted logarithmically. For example:
+
+    -- draw a log/log chart
+    DRAW LINECHART WITH
+        XDOMAIN LOGARITHMIC
+        YDOMAIN 0, 100 LOGARITHMIC
+        AXIS BOTTOM
+        AXIS LEFT;
+
+#### Inverted Domains
+
+To invert/mirror a domain, use the INVERT keyword. For example:
+
+    DRAW LINECHART WITH
+        YDOMAIN INVERT
+        AXIS BOTTOM
+        AXIS LEFT;
+
 
 Adding Legends
 --------------
 
+You can add one legend per DRAW statement. The syntax to add a legend is:
+
+    DRAW <charttype> [ WITH ]
+        LEGEND { TOP | BOTTOM } { LEFT | RIGHT} { INSIDE | OUTSIDE }
+            [ TITLE 'title' ]
+
+Some examples:
+
+    -- draw a line chart with a legend outside of the chart on the
+    -- bottom left corner:
+    DRAW LINECHART WITH
+        LEGEND BOTTOM LEFT OUTSIDE;
+
+    -- draw a line chart with a legend inside/overlayed onto the chart
+    -- on the top right corner with the title "mylegend":
+    DRAW LINECHART WITH
+        LEGEND TOP RIGHT INSIDE TITLE "mylegend";
+
+
 Adding a Chart Title/Subtitle
 -----------------------------
 
-- setting a title / subtitle
+You can optionally specify a title and/or a subtitle for each DRAW statement.
+The (sub)title will be plotted onto the chart.
+
+    DRAW <charttype> [ WITH ]
+        [ TITLE 'title' ]
+        [ SUBTITLE 'subtitle' ]
+
+An example:
+
+    DRAW LINECHART WITH
+        TITLE "mychart"
+        SUBTITLE "mysubtitle";
 
 Combining Charts
 ----------------
 
-- multiple y axis
-- combining charts / overdraw
+Successive DRAW statements will be drawn onto the same canvas. You can use this
+draw statements to combine multiple chart types or draw data with multiple Y
+axes:
+
+#### Multiple Y Axes
+
+Draw a line chart with two independent Y axes using two DRAW statements:
+
+    DRAW LINECHART WITH
+        AXIS LEFT TITLE "y axis 1";
+
+    SELECT ....;
+
+    DRAW LINECHART WITH
+        AXIS RIGHT TITLE "y axis 2";
+
+    SELECT ....;
 
 
+[See an example for multiple Y axes](/examples/linecharts/multiple_y_axes/)
+
+#### Combining Chart Types
+
+Draw a line chart and bar chart over each other:
+
+    DRAW LINECHART;
+    SELECT ....;
+
+    DRAW BARCHART;
+    SELECT ....;
+
+
+[See an example for a combined type chart](/examples/combined/barsandlines/)
 
