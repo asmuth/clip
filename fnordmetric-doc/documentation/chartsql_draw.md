@@ -122,12 +122,41 @@ respected by the linechart and areachart.
 Axes
 ----
 
-- specifying axes
-   * titles
-   * multiyple y axis
+A chart has no axes by default. You must explicitly add all axes. The syntax
+to add axes is:
 
-Configuring Value Domains
--------------------------
+    DRAW <charttype> [ WITH ]
+        [ AXIS { TOP | RIGHT | BOTTOM | LEFT }
+            [ TITLE 'title' ]
+            [ TICKS [ { INSIDE | OUTSIDE | OFF } ] [ ROTATE deg ]]...;
+
+For example, to add a bottom (X) and a left (Y) axis to a line chart:
+
+    DRAW LINECHART WITH
+        AXIS LEFFT
+        AXIS BOTTOM;
+
+
+#### Axis Title
+
+You can optionally specify an axis title that will be plotted next to the
+axis:
+
+    DRAW LINECHART WITH
+        AXIS LEFFT TITLE "my y axis"
+        AXIS BOTTOM TITLE "my x axis";
+
+#### Labels Positions & Rotated Labels
+
+You can also control the position of the axis labels and rotate them:
+
+    DRAW LINECHART WITH
+        AXIS LEFFT TICKS INSIDE
+        AXIS BOTTOM TICKS OUTSIDE ROTATE 45;
+
+
+Value Domains
+-------------
 
 - specifying domains
    * logarithmic
@@ -143,6 +172,7 @@ Adding a Chart Title/Subtitle
 Combining Charts
 ----------------
 
+- multiple y axis
 - combining charts / overdraw
 
 

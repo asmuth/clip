@@ -35,7 +35,7 @@ statement:
 
     SELECT * FROM example_data;
 
-Read the [documentation for the IMPORT statement](/documentation/chartsql/import_statement)
+Read the [documentation for the IMPORT statement](/documentation/chartsql/external_data_sources)
 
 
 The GROUP OVER TIMEWINDOW Clause

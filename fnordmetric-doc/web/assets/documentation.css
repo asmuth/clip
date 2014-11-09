@@ -367,6 +367,10 @@ ul li p {
   line-height: 160%;
 }
 
+#documentation table {
+  font-size: 90%;
+}
+
 #documentation hr {
   margin: 24px 0 35px 0;
   border: none;
