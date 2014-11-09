@@ -29,7 +29,7 @@ FnordMetric.util.SQLEditorView = function() {
   }
 
 
-  function render(elem) {
+  function render(elem, query) {
     //elem.style.border = "1px solid #ddd";
     //init editor_pane
     elem.innerHTML = "";
@@ -41,8 +41,9 @@ FnordMetric.util.SQLEditorView = function() {
     });
 
     initCodeMirror(cm);
-
-    
+    if (query != undefined) {
+      cm.setValue(query);
+    }
   }
   return {
     "render" : render,

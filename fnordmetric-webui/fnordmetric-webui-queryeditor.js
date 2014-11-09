@@ -85,6 +85,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function renderEditorView(view, editor_pane, result_pane, query) {
+    "render editor view";
     editorViews[view].render(editor_pane, query);
     if (query != undefined) {
       runQuery(result_pane, editor_pane, view, query);
@@ -138,10 +139,8 @@ FnordMetric.views.QueryPlayground = function() {
     query_btn.onclick = function(e) {
       e.preventDefault();
       runQuery(
-        viewport,
         result_pane,
         editor_pane,
-        direction,
         current_view);
     }
 
@@ -163,10 +162,8 @@ FnordMetric.views.QueryPlayground = function() {
       if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
         e.preventDefault();
         runQuery(
-          viewport,
           result_pane,
           editor_pane,
-          direction,
           current_view);
       }
     }, false);
@@ -184,7 +181,7 @@ FnordMetric.views.QueryPlayground = function() {
     updateLayout(editor_pane, result_pane, direction);
 
     if (query_params != undefined) {
-      var current_view = urlName[query_params.name];
+      current_view = urlName[query_params.name];
       query = query_params.value;
     }
     renderEditorView(current_view, editor_pane, result_pane, query);

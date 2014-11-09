@@ -40,7 +40,7 @@ if (FnordMetric.util === undefined) {
 
 FnordMetric.util.parseQueryString = function(qstr) {
   var path;
-  var query_params = {};
+  var query_params;
 
   if (qstr.indexOf("?") >= 0) {
     path = qstr.substr(0, qstr.indexOf("?"))
@@ -49,6 +49,7 @@ FnordMetric.util.parseQueryString = function(qstr) {
     var raw_params = params_str.split('&');
     for (var i in raw_params) {
       var param = raw_params[i].split('=');
+      query_params = {};
       query_params.name = decodeURIComponent(param[0]);
       query_params.value = decodeURIComponent(param[1]);
       //query_params[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
