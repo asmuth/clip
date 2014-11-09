@@ -145,6 +145,7 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane.className = "editor_pane";
     viewport.appendChild(editor_pane);
 
+    /* set eventListeners */
     editor_pane.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.keyCode == 13) {
         e.preventDefault();
@@ -158,6 +159,12 @@ FnordMetric.views.QueryPlayground = function() {
     }, false);
 
 
+    window.onbeforeunload = function(e) {
+      return "You may loose your query when leaving the page.";
+    }
+
+
+
     result_pane = document.createElement("div");
     result_pane.className = "result_pane";
     viewport.appendChild(result_pane);
@@ -166,6 +173,7 @@ FnordMetric.views.QueryPlayground = function() {
 
     /* first Version --> later the editor may be defined in the url */
     renderEditorView(current_view, editor_pane);
+
 
   }
 
