@@ -26,7 +26,7 @@ FnordMetric.views.QueryPlayground = function() {
     editorViews[view].render(editor_pane);
   }
 
-  function renderResult(result_pane, view) {
+  function renderResult(result_pane, editor_pane, direction, view) {
     var query_str = editorViews[view].getQuery();
     //render Loading
     FnordMetric.httpPost("/query", query_str, function(r, duration) {
@@ -34,7 +34,7 @@ FnordMetric.views.QueryPlayground = function() {
         var res = JSON.parse(r.response);
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
-        //updateLayout();
+        updateLayout(editor_pane, result_pane, direction);
       } else {
         //renderError(r);
       }
@@ -84,7 +84,7 @@ FnordMetric.views.QueryPlayground = function() {
       "#", "fancy_button", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
-      renderResult(result_pane, current_view);
+      renderResult(result_pane, editor_pane, direction, current_view);
     }
 
     var embed_btn = FnordMetric.createButton(
@@ -96,11 +96,11 @@ FnordMetric.views.QueryPlayground = function() {
     viewport.appendChild(button_bar);
 
     /* init editorpane & resultpane */
-    var editor_pane = document.createElement("div");
+    editor_pane = document.createElement("div");
     editor_pane.className = "editor_pane";
     viewport.appendChild(editor_pane);
 
-    var result_pane = document.createElement("div");
+    result_pane = document.createElement("div");
     result_pane.className = "result_pane";
     viewport.appendChild(result_pane);
 

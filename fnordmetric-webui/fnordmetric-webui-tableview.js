@@ -25,7 +25,10 @@ FnordMetric.util.TableView = function(columns, elem) {
   var current_page = 0;
   var pages;
 
-  function render() {
+  function render(isSortable) {
+    if (isSortable == undefined) {
+      isSortable = true;
+    }
     elem.innerHTML = "";
     pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
@@ -45,7 +48,7 @@ FnordMetric.util.TableView = function(columns, elem) {
     updatePage(0);
   }
 
-  function renderTable(rows) {
+  function renderTable(rows, isSortable) {
     var table = document.createElement("table");
     table.className = "metric_list";
     elem.appendChild(table);
@@ -59,7 +62,7 @@ FnordMetric.util.TableView = function(columns, elem) {
       var header_cell = document.createElement("th");
       header_cell.innerHTML = columns[i];
       header.appendChild(header_cell);
-      if (i != 1) {
+      if (i != 1 && isSortable) {
         header_cell.className = "clickable";
 
         var sort_asc = FnordMetric.createButton(
@@ -107,13 +110,15 @@ FnordMetric.util.TableView = function(columns, elem) {
     var ttp_forward = FnordMetric.createButton(
       "#", "pagination_tooltip", "&#8594;");
     navbar.appendChild(ttp_forward);
-    ttp_forward.onclick = function () {
+    ttp_forward.onclick = function(e) {
+      e.preventDefault();
       updatePage((current_page + 1) % pages);
     }
 
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
-    ttp_back.onclick = function () {
+    ttp_back.onclick = function(e) {
+      e.preventDefault();
       updatePage((current_page + per_page) % pages);
     }
     navbar.appendChild(ttp_back);

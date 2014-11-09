@@ -20,18 +20,41 @@ if (FnordMetric.util === undefined) {
 FnordMetric.util.queryResultView = function() {
 
   function renderChart(chart, elem) {
-    var chart_container = document.createElement("div");
-    chart_container.className = "chart_container";
-    chart_container.setAttribute("id", "chart_container");
+    elem.innerHTML = "";
+    var chart_pane = document.createElement("div");
+    chart_pane.className = "chart_container";
+    chart_pane.setAttribute("id", "chart_container");
     if (chart != undefined) {
-      chart_container.innerHTML = chart.svg;
+      chart_pane.innerHTML = chart.svg;
     }
-    elem.appendChild(chart_container);
+    elem.appendChild(chart_pane);
   }
 
-  function renderChartNavbar() {
+  function renderChartPane(charts, elem) {
+    console.log("render chart pane");
+    console.log(charts);
+    if (charts == undefined) {
+      return;
+    }
     var navbar = document.createElement("div");
     navbar.className = "result_navbar";
+    for (var i = 0; i < charts.length; i++) {
+      var item = FnordMetric.createButton(
+        "#",
+        "result_link",
+        "<h3>Chart "+(i+1)+"</h3>");
+      item.setAttribute("id", i);
+      navbar.appendChild(item);
+
+      item.onclick = function(e) {
+        e.preventDfault();
+        renderChart(charts[this.id], chart_container);
+      }
+    }
+    elem.appendChild(navbar);
+    var chart_container = document.createElement("div");
+    elem.appendChild(chart_container);
+    renderChart(charts[0], chart_container);
   }
 
   function renderTable(table, elem) {
@@ -42,11 +65,14 @@ FnordMetric.util.queryResultView = function() {
       table_view.addRow(row);
     });
 
-    table_view.render();
+    table_view.render(false);
   }
 
 
-  function renderTableNavbar(tables, elem) {
+  function renderTablePane(tables, elem) {
+    if (tables == undefined) {
+      return;
+    }
     var navbar = document.createElement("div");
     navbar.className = "result_navbar";
     for (var i = 0; i < tables.length; i++) {
@@ -66,14 +92,18 @@ FnordMetric.util.queryResultView = function() {
     var table_container = document.createElement("div");
     elem.appendChild(table_container);
     renderTable(tables[0], table_container);
+    result_pane.style.height = "auto";
   }
 
 
 
   function render(elem, resp, duration) {
     elem.innerHTML = "";
+    console.log(resp);
+    var charts = resp.charts;
+    renderChartPane(charts, elem);
     var tables = resp.tables;
-    renderTableNavbar(tables, elem);
+    renderTablePane(tables, elem);
 
 
 
