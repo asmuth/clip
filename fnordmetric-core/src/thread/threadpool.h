@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_THREAD_THREADPOOL_H
 #include <functional>
 #include <atomic>
+#include <list>
 #include <fnordmetric/thread/task.h>
 #include <fnordmetric/thread/taskscheduler.h>
 #include <fnordmetric/util/exceptionhandler.h>
@@ -31,7 +32,14 @@ public:
   void runOnWritable(std::shared_ptr<Task> task, int fd) override;
 
 protected:
+  void runInternal(std::function<void()> fn);
+  void startThread();
+
   std::unique_ptr<fnord::util::ExceptionHandler> error_handler_;
+  std::mutex runq_mutex_;
+  std::list<std::function<void()>> runq_;
+  std::condition_variable wakeup_;
+  int free_threads_;
 };
 
 }
