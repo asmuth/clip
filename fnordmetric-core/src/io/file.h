@@ -87,6 +87,7 @@ public:
   size_t size() const;
 
   File clone() const;
+  void truncate(size_t new_size);
 
   bool isWritable() const;
 

@@ -7,8 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/sstable/sstablereader.h>
 #include <fnordmetric/sstable/sstablerepair.h>
+#include <fnordmetric/util/fnv.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 using fnordmetric::util::RuntimeException;
@@ -27,6 +29,12 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
   try {
     reader_.reset(new sstable::SSTableReader(std::move(file)));
   } catch (RuntimeException& rte) {
+    fnordmetric::env()->logger()->printf(
+        "INFO",
+        "SSTableRepair: sstable %s is corrupt: %s",
+        filename_.c_str(),
+        rte.getMessage().c_str());
+
     /* the constructor raises if the checksum is invalid or if the file
      * metadata exceeds the file bounds. there is nothing we can do to recover
      * if that happens */
@@ -34,15 +42,69 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
   }
 
   if (reader_->bodySize() == 0) {
-    checkAndRepairUnfinishedTable(repair, reader_.get());
+    return checkAndRepairUnfinishedTable(repair);
   }
 
   return true;
 }
 
-bool SSTableRepair::checkAndRepairUnfinishedTable(
-    bool repair,
-    SSTableReader* reader) {
+bool SSTableRepair::checkAndRepairUnfinishedTable(bool repair) {
+  io::MmappedFile file(io::File::openFile(filename_, io::File::O_READ));
+  FileHeaderReader header_reader(file.data(), file.size());
+
+  if (!header_reader.verify()) {
+    return false;
+  }
+
+  auto pos = header_reader.headerSize();
+  auto end = file.size();
+
+  while (pos < end) {
+    if (pos + sizeof(BinaryFormat::RowHeader) > end) {
+      break;
+    }
+
+    auto row_header = file.structAt<BinaryFormat::RowHeader>(pos);
+    auto row_len = sizeof(BinaryFormat::RowHeader) +
+        row_header->key_size + row_header->data_size;
+
+    if (pos + row_len > end) {
+      break;
+    }
+
+    util::FNV<uint32_t> fnv;
+    auto checksum = fnv.hash(
+        file.structAt<void>(pos + sizeof(uint32_t)),
+        row_len - sizeof(uint32_t));
+
+    if (row_header->checksum != checksum) {
+      break;
+    }
+
+    pos += row_len;
+  }
+
+  if (pos < end) {
+    fnordmetric::env()->logger()->printf(
+        "INFO",
+        "SSTableRepair: found %i extraneous trailing bytes in sstable %s",
+        (int) (end - pos),
+        filename_.c_str());
+
+    if (repair) {
+      fnordmetric::env()->logger()->printf(
+          "INFO",
+          "SSTableRepair: truncating sstable %s to %i bytes",
+          filename_.c_str(),
+          (int) pos);
+
+        auto writable_file = io::File::openFile(filename_, io::File::O_WRITE);
+        writable_file.truncate(pos);
+    } else {
+      return false;
+    }
+  }
+
   return true;
 }
 

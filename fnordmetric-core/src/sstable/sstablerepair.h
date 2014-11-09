@@ -22,7 +22,7 @@ public:
   bool checkAndRepair(bool repair = false);
 
 protected:
-  bool checkAndRepairUnfinishedTable(bool repair, SSTableReader* reader);
+  bool checkAndRepairUnfinishedTable(bool repair);
   const std::string filename_;
 };
 
