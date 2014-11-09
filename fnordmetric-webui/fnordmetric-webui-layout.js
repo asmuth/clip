@@ -47,7 +47,7 @@ FnordMetric.WebUI = function() {
 
       if (e.state != null && typeof e.state.url != "undefined") {
         openUrl(e.state.url);
-      }
+     }
     }
   };
 
@@ -55,7 +55,7 @@ FnordMetric.WebUI = function() {
     routes[route] = view;
   }
 
-  function renderView(view, url) {
+  function renderView(view, url, query_params) {
     if (current_view != null) {
       current_view.destroy(viewport);
     }
@@ -63,11 +63,12 @@ FnordMetric.WebUI = function() {
     FnordMetric.util.displayLoader(viewport);
 
     current_view = view;
-    view.render(viewport, url);
+    view.render(viewport, url, query_params);
   };
 
   function openUrl(raw_url, push_state) {
     var url = FnordMetric.util.parseQueryString(raw_url);
+    var query_params = url["query_params"];
 
     view = routes[url["path"]];
     if (view === undefined) {
@@ -79,7 +80,7 @@ FnordMetric.WebUI = function() {
       window.history.pushState({url: raw_url}, "", "#" + raw_url);
     }
 
-    renderView(view(), url);
+    renderView(view(), url, query_params);
   }
 
   init();

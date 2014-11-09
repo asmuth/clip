@@ -17,28 +17,29 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.TableView = function(columns, elem) {
+FnordMetric.util.TableView = function(columns, elem, per_page) {
   var all_rows = [];
   var on_row_click = null;
 
-  var per_page = 25;
+  var per_page = parseInt(per_page);
   var current_page = 0;
   var pages;
 
-  function render() {
+  function render(isSortable) {
+    if (isSortable == undefined) {
+      isSortable = true;
+    }
     elem.innerHTML = "";
     pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
     var until = Math.min(offset + per_page, all_rows.length);
-    if (all_rows.length > per_page) {
-      renderPagination(offset+1,until, all_rows.length);
-    }
-    renderTable(all_rows.slice(offset, until));
+    renderPagination(offset+1,until, all_rows.length, isSortable);
+    renderTable(all_rows.slice(offset, until), isSortable);
   }
 
-  function updatePage(page_index) {
+  function updatePage(page_index, isSortable) {
     current_page = page_index;
-    render();
+    render(isSortable);
   }
 
   function resortRows(column_index, order) {
@@ -47,7 +48,7 @@ FnordMetric.util.TableView = function(columns, elem) {
     updatePage(0);
   }
 
-  function renderTable(rows) {
+  function renderTable(rows, isSortable) {
     var table = document.createElement("table");
     table.className = "metric_list";
     elem.appendChild(table);
@@ -61,7 +62,7 @@ FnordMetric.util.TableView = function(columns, elem) {
       var header_cell = document.createElement("th");
       header_cell.innerHTML = columns[i];
       header.appendChild(header_cell);
-      if (i != 1) {
+      if (i != 1 && isSortable) {
         header_cell.className = "clickable";
 
         var sort_asc = FnordMetric.createButton(
@@ -102,21 +103,23 @@ FnordMetric.util.TableView = function(columns, elem) {
     });
   };
 
-  function renderPagination(from, until, total) {
+  function renderPagination(from, until, total, isSortable) {
     var navbar = document.createElement("div");
     navbar.className = "pagination_navbar metric";
 
     var ttp_forward = FnordMetric.createButton(
       "#", "pagination_tooltip", "&#8594;");
     navbar.appendChild(ttp_forward);
-    ttp_forward.onclick = function () {
-      updatePage((current_page + 1) % pages);
+    ttp_forward.onclick = function(e) {
+      e.preventDefault();
+      updatePage((current_page + 1) % pages, isSortable);
     }
 
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
-    ttp_back.onclick = function () {
-      updatePage((current_page + per_page) % pages);
+    ttp_back.onclick = function(e) {
+      e.preventDefault();
+      updatePage((current_page + per_page) % pages, isSortable);
     }
     navbar.appendChild(ttp_back);
 

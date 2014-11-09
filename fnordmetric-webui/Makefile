@@ -18,6 +18,7 @@ build:
 	      fnordmetric-webui-queryeditor.js \
 	      fnordmetric-webui-sqleditorview.js \
 	      fnordmetric-webui-visualeditorview.js \
+	      fnordmetric-webui-queryresultview.js \
 	      codemirror.js \
 	) > fnordmetric-webui.js
 
