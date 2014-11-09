@@ -2,7 +2,7 @@ Getting Started with ChartSQL
 =============================
 
 _This guide will walk you through the required steps of executing a simple ChartSQL query 
-from the command line. If you do haven't installed FnordMetric yet, start by reading the
+from the command line. If you haven't installed FnordMetric yet, start by reading the
 [Installation page](/documentation/installation) ._
 
 
