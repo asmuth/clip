@@ -1,36 +1,35 @@
 
-    - allow uppercase X, Y, Z / series col names
+[ doc ]
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
-    - getting started client
     - make all the command in installation work
     - all the doc links
 
+[ SQL ]
+    - scan samples with range / sstable binary search
     - SELECT count(*) ...
     - make "series" column optional
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so 
     - sql: in
     - sql: if
     - sql: case
-    - --help
-    - inline libev
+    - allow uppercase X, Y, Z / series col names
 
-[ todo ]
-    - SQL: GROUP OVER TIMEWINDOW
-    - pluggable metric backends
-    - sstable checksums + fsck + repair
+[ release ]
+    - inline libev
     - svg: escape series names, labels!
-    - merge compaction
     - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
     - round fn
-    - scan samples with range / sstable binary search
     - bug: chart with only same values -> strange rendering
     - bug: multiple draw statements dont produce multiple charts
     - bug: NAN is not a valid value in SVG
     - bug: line chart with only negative values
     - bug: 2d area chart with explicit y domain, min > 0
 
+-----
+
 [ feature q ]
+    - merge compaction
     - SQL: having
     - SQL: cross joins
     - SQL: subqueries
