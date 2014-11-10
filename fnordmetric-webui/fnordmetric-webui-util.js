@@ -309,7 +309,7 @@ FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
 
 FnordMetric.util.getHorizontalEditorHeight = function(
   editor_height, result_height) {
-    var default_height = (window.innerHeight - 92);
+    var default_height = (window.innerHeight - 49);
     editor_height = Math.max(editor_height, default_height);
     var height = Math.max(editor_height, result_height);
     return height;

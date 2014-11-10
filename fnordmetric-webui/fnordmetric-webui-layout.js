@@ -23,6 +23,7 @@ FnordMetric.WebUI = function() {
   var viewport = document.createElement("div");
   viewport.className = "viewport";
   var headbar = document.createElement("div");
+  headbar.innerHTML = "<h1 class='le_fnord'>F</h1>"
   headbar.className = "headbar";
 
   function addMenuItem(name, url) {

@@ -11,6 +11,19 @@ body {
   padding-bottom: 20px;
 }
 
+.le_fnord {
+  float: left;
+  line-height: 49px;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  font-family: "Arial";
+  width: 51px;
+  text-align: center;
+  font-size: 24px;
+  border-right: 1px solid #2e3135;
+}
+
 .load_foreground {
   position: absolute;
   top: 0;
@@ -19,6 +32,18 @@ body {
   z-index: 1000;
   background-color: #444;
   opacity: 0.5;
+}
+
+.editor_type_picker {
+  background: #f6f8fa;
+  height: 39px;
+  display: block;
+  width: 90px;
+  text-align: center;
+  border-right: 1px solid #dbdedf;
+  padding: 0 7px 0 20px;
+  line-height: 41px;
+  font-size: 95%;
 }
 
 .navbar {
@@ -35,7 +60,19 @@ body {
   color: #545758;
 }
 
+.editor_type_chooser {
+
+}
+
 .fancy_button {
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: linear-gradient(to bottom right, #f5f5f5, #f1f1f1);
+  padding: 0 12px;
+  height: 27px;
+  line-height: 28px;
+  display: inline-block;
 }
 
 input {
@@ -47,7 +84,7 @@ input {
 }
 
 .viewport {
-  margin-top: 50px;
+  margin-top: 49px;
 }
 
 .headbar {
@@ -82,8 +119,9 @@ input {
 
 .result_pane {
   border-bottom: 1px solid #dbdedf;
-  border-left: 1px solid #dbdedf;
+  border-left: 2px solid #dbdedf;
   border-right: 1px solid #dbdedf;
+  background: #e9ebed;
 }
 
 .viewport.horizontal_split .editor_pane {
@@ -523,7 +561,7 @@ table.metric_list tr:hover td {
 }
 .CodeMirror-linenumbers {}
 .CodeMirror-linenumber {
-  padding: 0 15px 0 10px;
+  padding: 0 25px 0 6px;
   min-width: 20px;
   text-align: right;
   color: #a6a5ab;
@@ -704,6 +742,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 }
 
 .CodeMirror-lines {
+  padding: 10px 10px;
   cursor: text;
   min-height: 1px; /* prevents collapsing before first draw */
 }
