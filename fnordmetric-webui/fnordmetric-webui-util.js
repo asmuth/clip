@@ -349,15 +349,27 @@ FnordMetric.util.htmlEscape = function(str) {
   return str;
 }
 
+FnordMetric.util.insertAfter = function(elem, ref_elem) {
+  ref_elem.parentNode.insertBefore(elem, ref_elem.nextSibling);
+}
+
 
 
 FnordMetric.util.Autocomplete = function(input, source) {
   console.log("autocomplte");
   var list = document.createElement("ul");
   list.className = "autocomplete";
+  source.map(function(item) {
+    var li = document.createElement("li");
+    li.innerHTML = item;
+    list.appendChild(li);
+  });
+
+  FnordMetric.util.insertAfter(list, input);
 
   input.addEventListener('keydown', function(e) {
     console.log("keydown in input");
+    console.log(input.value);
   }, false);
 
 }
