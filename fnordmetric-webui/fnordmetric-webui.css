@@ -47,6 +47,13 @@
 .fa-circle-o-notch:before {
   content: "\f1ce";
 }
+.fa-sort-amount-asc:before {
+  content: "\f160";
+}
+.fa-sort-amount-desc:before {
+  content: "\f161";
+}
+
 .fa-spin {
   -webkit-animation: fa-spin 1s infinite linear;
   animation: fa-spin 1s infinite linear;
@@ -595,6 +602,11 @@ table.metric_list tr.list_header {
   color: #60707f;
 }
 
+table.metric_list tr.list_header i.sort {
+  float: right;
+  line-height: 40px;
+}
+
 table.metric_list th,
 table.metric_list td {
   text-align: left;
@@ -610,7 +622,7 @@ table.metric_list th {
   border-right: 1px solid rgb(226, 232, 237);
 }
 
-table.metric_list th.clickable:hover {
+table.metric_list .clickable:hover {
   cursor:pointer;
 }
 

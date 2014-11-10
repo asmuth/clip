@@ -177,7 +177,7 @@ FnordMetric.util.renderPageHeader = function(text, elem) {
 
 FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
-    return timestamp;
+    return "0";
   }
 
   var time_str;
