@@ -1,108 +1,81 @@
-FnordMetric UI
---------------
+Getting Started with HTML5 Dashboards
+=====================================
 
-<i>This tutorial assumes that you have either FnordMetric Classic or FnordMetric
-Enterprise running as a backend</i>
+<i>This guide will walk you through building a simple dashboard using ChartSQL
+and HTML5. You need a running FnordMetric Server instance. If you do not have
+FnordMetric running yet, read the [Getting started with Fnordmetric Server page](documentation/getting_started/fnordmetric-server)
+first.</i>
 
-The FnordMetric UI HTML5 API allows you to plugin real-time data and
-charts into any website without having to write any code. This is achieved
-by including a JavaScript library and using data-* attributes on html
-elements to declare the widgets.
 
-FnordMetric UI requires jQuery 1.6.2+. To set up the basic HTML structure save
-this to a file `my_dashboard.html`. Download the two files `fnordmetric-ui.js`
-and `fnordmetric-ui.css` [from here](/documentation/downloads) and put them into
-the same folder.
+The FnordMetric HTML5 API allows you to plug query results and charts into any
+website without having to write any code. This is achieved by including a small
+JavaScript library and using the component html tags: `\<fm-chart\>`, `\<fm-table\>`.
+
+#### Getting Started
+
+For our example, we will build a dashboard that displays the total sales amount of
+a fictional web shop. Let's start by creating a metric called "myshop_sales" that
+records the sales amount in cents for each sale. To create the metric and insert
+the first sample using the HTTP API, run this from your command line:
+
+    $ curl -X POST -d "metric=myshop_sales&value=2350" localhost:8080/metrics
+
+In our example, this would record a single sale of 23.50 in or shop. Execute the
+command a few times with different values to simulate a few "sales". Then open
+the FnordMetric Server web UI on http://localhost:8080/ in your browser and
+excute this query to show the data you just inserted:
+
+    SELECT time, value FROM myshop_sales;
+
+To make a chart from the values, execute this query (note that you need to insert
+at least two values to get a reasonable output):
+
+    DRAW LINECHART
+        AXIS BOTTOM;
+
+    SELECT time AS x, value AS y
+        FROM myshop_sales;
+
+
+#### Embedding Charts in HTML5
+
+The next step is to embed the query we just wrote into a HTML page to create a
+simple dashboard. To set up the basic HTML structure save this to a new file
+and call it `my\_dashboard.html`:
 
     <!DOCTYPE html>
     <html>
       <head>
-        <title>FnordMetric</title>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-        <link href='fnordmetric-ui.css' type='text/css' rel='stylesheet' />
-        <script src='fnordmetric-ui.js' type='text/javascript'></script>
+        <title>My Dashboard</title>
+        <script src='http://localhost:8080/s/fnordmetric.js' type='text/javascript'></script>
       </head>
       <body>
         ...
       </body>
     </html>
 
+**Note that the example above assumes you have FnordMetric Server running on
+`localhost:8080`. Change if appropriate**
 
-We will display one counter "total sales in the last hour" on our page. To do that we
-first have to connect to the FnordMetric Backend using WebSockets. This examples assumes
-that you have either FnordMetric Classic running on port 4242 or FnordMetric Enterprise
-with a WebSocket listener on port 4242.
+---
 
-    <script>
-      FnordMetric.setup({
-        "address":   "localhost:4242",
-        "namespace": "myapp"
-      });
-    </script>
+The HTML5 API offers a number of components that you can use without writing any
+JavaScript. To display our chart, we will use the `\<fm-chart\>` component. Put
+this in the body of the `my_dashboard.html` file we created earlier.
 
+    <fm-chart style="width: 800px;">
+        DRAW LINECHART
+            AXIS BOTTOM;
 
-_Note: If you are using FnordMetric Classic, make sure you set the correct namespace (it is
-"myapp" below). If you are using FnordMetric Enterprise you don't have to specify a
-namespace at all)_:
-
-Now the FnordMetric UI library is loaded and we can plug widgets into the page
-using HTML5 elements. Let's start with a simple counter that displays the sum of
-sales in the last hour and updates itself every second:
-
-    Total Sales in the last hour:
-    <span
-      data-fnordmetric="counter"
-      data-at="sum(-1hour)"
-      data-gauge="total_sales-sum-10"
-      data-autoupdate="1"
-      data-unit="$"
-      >0</span>
+        SELECT time AS x, value AS y
+            FROM myshop_sales;
+    </fm-chart>
 
 
-If you open `my_dashboard.html` in your browser, You should see a
-page displaying "0". It's a good idea to open the JavaScript / Inspector
-console of your browser as FnordMetric UI will print error messages using `console.log`
+If you now open `my_dashboard.html` in your browser, you should see a
+page displaying a simple line chart. 
 
-The last step is to start sending data. We will report one sale of 29$.
-
-If you are using FnordMetric Enterprise you can do this with e.g. netcat:
-
-    echo "SAMPLE total_sales-sum-10 29" | nc localhost 8922
-
-If you are using FnordMetric Classic you can do this e.g. with curl + http:
-
-    curl -X POST -d '{ "_type": "_incr", "value": 29, "gauge": "total_sales-sum-10" }' http://localhost:4242/events
-
-
-For fun and profit, we can display a timeseries graph of sales in the last 10 minutes with this snippet:
-
-    <div
-      data-fnordmetric="timeseries"
-      data-since="-10minutes"
-      data-until="now"
-      data-gauges="total_sales-sum-10"
-      data-autoupdate="1"
-      ></div>
-
-
-Now your dashboard should look like this:
-
-<img src="/img/fnordmetric_ui_example_screen.png" width="630" class="shadow" />
+<img src="/img/fnordmetric_ui_example_screen.png" width="800" style="margin: 20px 0 40px 0;" class="shadow" />
 <br />
-
-#### But wait, my dashboard is white?
-
-Yes, I skipped this part to make the into a bit shorter. The example above
-uses a "custom" styesheet. Since all widgets are rendered with HTML5 + SVG (d3.js) you
-can control the style with CSS.
-
-This five-line CSS snippet is all it takes to apply the "dark" style from above:
-
-    body{ background:#111; }
-    body .fnordmetric_legend li.line .label{ color:#fff; }
-    body .fnordmetric_graph .y_grid .tick { stroke:rgba(255,255,255,.15); stroke-dasharray:0; }
-    body .fnordmetric_graph .y_ticks text { fill:#ffffff; }
-    body .fnordmetric_graph .x_tick .title { color:#ffffff; }
-
 
 Have a look at the full [API Reference](/documentation/ui_html5_api) to see what else is possible.

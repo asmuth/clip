@@ -175,34 +175,6 @@ FnordMetric.util.renderPageHeader = function(text, elem) {
   elem.appendChild(header);
 }
 
-
-FnordMetric.httpGet = function(url, callback) {
-  var http = new XMLHttpRequest();
-  http.open("GET", url, true);
-  http.send();
-
-  http.onreadystatechange = function() {
-    if (http.readyState == 4) {
-      callback(http);
-    }
-  }
-}
-
-FnordMetric.httpPost = function(url, request, callback) {
-  var http = new XMLHttpRequest();
-  http.open("POST", url, true);
-  var start = (new Date()).getTime();
-  http.send(request);
-
-  http.onreadystatechange = function() {
-    if (http.readyState == 4) {
-      var end = (new Date()).getTime();
-      var duration = end - start;
-      callback(http, duration);
-    }
-  }
-}
-
 FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
     return timestamp;

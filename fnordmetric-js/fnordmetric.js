@@ -10,6 +10,7 @@ FnordMetric.ChartExtensions = function(elem) {
   var legend_elems = base_elem.querySelectorAll(".legend .point");
   var hidden_series = [];
   var chart_elems = [];
+  base_elem.className += "extended";
 
   var compareBBox = function(a, b) {
     if (a == null || b == null) {
@@ -197,11 +198,86 @@ FnordMetric.ChartExtensions = function(elem) {
   }
 }
 
+FnordMetric.ChartComponent = function(elem) {
+  var query = elem.innerHTML;
+  elem.innerHTML = "";
+  elem.style.display = "block";
+  elem.className += "loading extended";
+
+  FnordMetric.httpPost("http://localhost:8080/query", query, function(resp) {
+    elem.className = elem.className.replace("loading", "");
+
+    if (resp.status != 200) {
+      elem.innerHTML = "Server Error";
+      elem.className += "error";
+      return;
+    }
+
+    var resp_json = JSON.parse(resp.response);
+    if (resp_json.status != "success") {
+      elem.innerHTML = "error: " + resp_json.error;
+      elem.className += "error";
+      return;
+    }
+
+    if (typeof resp_json.charts == "undefined" || resp_json.charts.length < 1) {
+      elem.innerHTML = "error: query did not return any charts";
+      elem.className += "error";
+      return;
+    }
+
+    elem.innerHTML = resp_json.charts[0].svg;
+  });
+}
+
+FnordMetric.httpGet = function(url, callback) {
+  var http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      callback(http);
+    }
+  }
+}
+
+FnordMetric.httpPost = function(url, request, callback) {
+  var http = new XMLHttpRequest();
+  http.open("POST", url, true);
+  var start = (new Date()).getTime();
+  http.send(request);
+
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      var end = (new Date()).getTime();
+      var duration = end - start;
+      callback(http, duration);
+    }
+  }
+}
+
 FnordMetric.extendCharts = function() {
   var elems = document.getElementsByClassName("fm-chart");
 
   for (var i = 0; i < elems.length; ++i) {
-    FnordMetric.ChartExtensions(elems[i]);
+    if (elems[i].className.indexOf("extended") == -1) {
+      FnordMetric.ChartExtensions(elems[i]);
+    }
   }
 }
 
+FnordMetric.extendComponents = function () {
+  var chart_elems = document.getElementsByTagName("fm-chart");
+
+  for (var i = 0; i < chart_elems.length; ++i) {
+    if (chart_elems[i].className.indexOf("extended") == -1) {
+      FnordMetric.ChartComponent(chart_elems[i]);
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  FnordMetric.extendComponents();
+  FnordMetric.extendCharts();
+}, false);

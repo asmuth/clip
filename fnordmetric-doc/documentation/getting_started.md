@@ -3,7 +3,7 @@ Getting Started with FnordMetric
 
 ### Getting Started in 5 minutes
 
-We have two 5 minute getting started guides for impatient people who don't like
+We have three 5 minute getting started guides for impatient people who don't like
 reading documentation (like the author). For more in-depth information you are
 kindly referred to the remaining pages.
 
@@ -16,7 +16,6 @@ If you want to see how you can collect timeseries data with FnordMetric Server
 and query it using a web interface and ChartSQL, read:
 
   + [Gettting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
-
 
 ---
 

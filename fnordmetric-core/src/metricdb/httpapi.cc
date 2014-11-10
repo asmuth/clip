@@ -282,6 +282,7 @@ void HTTPAPI::executeQuery(
 
   response->setStatus(xzero::HttpStatus::Ok);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
+  response->addHeader("Access-Control-Allow-Origin", "*");
   response->setContentLength(resp.size());
   response->output()->write(
       resp,

@@ -162,3 +162,8 @@ These are good docs to read next:
   + [ChartSQL Query Language](/chartsql/introduction/)
   + [Time-window aggregations](/documentation/chartsql/timewindow_aggregations/)
   + [Building Dashboards](/documentation/html_dashboards/)
+
+This guide will walk you through building a simple HTML5 dashboard using ChartSQL
+and FnordMetric Server:
+
+  + [Gettting Started with HTML5 Dashboards in 5 Minutes](/documentation/html5_dashboards)
