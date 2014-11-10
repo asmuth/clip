@@ -159,10 +159,12 @@ examples:
         title: "Simple timeseries line chart"
         file: "simple_lines"
         url: "/linecharts/simple_lines"
+        thumb: "/img/examples_simple_lines.png"
       -
         title: "Lines with points"
         file: "lines_with_points"
         url: "/linecharts/lines_with_points"
+        thumb: "/img/examples_lines_with_points.png"
       -
         title: "Explicit range/domain"
         file: "explicit_domain"
@@ -229,10 +231,12 @@ examples:
         title: "Horizontal bar chart with labels"
         file: "horizontal_bars"
         url: "/barcharts/horizontal_bars"
+        thumb: "/img/examples_horizontal_bars.png"
       -
         title: "Stacked Bar Chart"
         file: "stacked_bars"
         url: "/barcharts/stacked_bars"
+        thumb: "/img/examples_stacked_bars.png"
       -
         title: "Vertical range bars"
         file: "vertical_ranges"

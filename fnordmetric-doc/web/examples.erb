@@ -37,15 +37,17 @@
             <h2>
               <%= example_group["title"] %>
             </h2>
-            <ul>
-              <% example_group["examples"].each do |example| %>
-                <li class="<%= @route == example["url"] ? :active : nil %>">
-                  <a href="/examples<%= example["url"] %>">
-                    <%= example["title"] %>
-                  </a>
-                </li>
-              <% end %>
-            </ul>
+            <div class="example_gallery">
+            <% example_group["examples"].each do |example| %>
+              <div class="example <%= @route == example["url"] ? :active : nil %>">
+                <a href="/examples<%= example["url"] %>">
+                  <h2><%= example["title"] %></h2>
+                  <span class="thumb" style="background-image:url('<%= example["thumb"] %>');"><span>
+                </a>
+              </div>
+            <% end %>
+            </div>
+            <hr style="clear:both;" />
         <% end %>
       <% else %>
         <h1 style="margin:0 0 5px 0; font-weight: 400;"><%= @example["title"] %></h1>
