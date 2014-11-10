@@ -34,6 +34,7 @@ FnordMetric.views.QueryPlayground = function() {
   var direction;
   var editor_pane;
   var result_pane;
+  var current_view;
   var button_bar;
 
   function renderExecutionInfo(duration, tables, elem) {
@@ -75,7 +76,6 @@ FnordMetric.views.QueryPlayground = function() {
     FnordMetric.httpPost("/query", query_str, function(r, duration) {
       if (r.status == 200 && r.statusText == "Ok") {
         var res = JSON.parse(r.response);
-
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
         updateLayout(editor_pane, result_pane, direction);
@@ -89,7 +89,6 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function renderEditorView(view, editor_pane, result_pane, query) {
-    "render editor view";
     editorViews[view].render(editor_pane, query);
     editor_pane.insertBefore(button_bar, editor_pane.firstChild);
     if (query != undefined) {
@@ -98,7 +97,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  function updateLayout(editor_pane, result_pane, direction) {
+  function updateLayout() {
     if (direction == "horizontal") {
       var height = FnordMetric.util.getHorizontalEditorHeight(
         editor_pane.offsetHeight, result_pane.offsetHeight);
@@ -116,19 +115,19 @@ FnordMetric.views.QueryPlayground = function() {
     } else {
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
-      /*editor_pane.style.height = editor_height + "px";
-      query_editor.style.height = editor_height + "px";*/
-      result_pane.style.width = (window.innerWidth - 55) + "px";
-      result_pane.style.left = "20px";
-      //result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
-      result_pane.style.height = "auto";
+      var editor_height = editorViews[current_view].getHeight();
+      editor_pane.style.height = editor_height + "px";
+      result_pane.style.width = "100%";
+      result_pane.style.left = 0;
+      result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
+      result_pane.style.height = "100%";
     }
   }
 
   function render(viewport, url, query_params) {
     direction = "horizontal";
     viewport = viewport;
-    var current_view = "sql";
+    current_view = "sql";
     var query = null;
     /* init viewport */
     viewport.innerHTML = "";
@@ -137,9 +136,22 @@ FnordMetric.views.QueryPlayground = function() {
     button_bar = document.createElement("div");
     button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor</div>";
     button_bar.className = "navbar";
+
     var split_btn = FnordMetric.createButton(
       "#", "fancy_button", "Change View");
+    split_btn.style.float = "right";
+    button_bar.appendChild(split_btn);
 
+    split_btn.onclick = function(e) {
+      e.preventDefault();
+      if (direction == "horizontal") {
+        direction = "vertical"
+      } else {
+        direction = "horizontal"
+      }
+      updateLayout();
+      console.log("change view");
+    }
 
     var query_btn = FnordMetric.createButton(
       "#", "run_query", "Run Query");
@@ -160,7 +172,6 @@ FnordMetric.views.QueryPlayground = function() {
         viewport, "Todo: Ruby/JS/html snippet");
     }
 
-    button_bar.appendChild(split_btn);
     //button_bar.appendChild(query_btn);
     //button_bar.appendChild(embed_btn);
 

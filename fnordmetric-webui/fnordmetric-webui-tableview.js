@@ -120,7 +120,7 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
       "#", "pagination_tooltip",  "&#8592;");
     ttp_back.onclick = function(e) {
       e.preventDefault();
-      updatePage((current_page + per_page) % pages, isSortable);
+      updatePage((current_page + pages - 1) % pages, isSortable);
     }
     navbar.appendChild(ttp_back);
 
