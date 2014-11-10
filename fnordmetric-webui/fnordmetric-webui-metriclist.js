@@ -18,39 +18,39 @@ if (FnordMetric.views === undefined) {
 
 FnordMetric.views.MetricList = function() {
   var actions = {
-    "search" : FnordMetric.util.searchMetricList,
-    "metric" : FnordMetric.util.getSingleMetric
+    "search" : {
+      "render" : loadMetricList,
+      "data" :FnordMetric.util.searchMetricList
+    },
+    "metric" : {
+      "render" : FnordMetric.util.singleMetricView().render
+    }
   }
 
+
+
   function render(viewport, url, query_params) {
+    if (query_params != undefined) {
+      actions[query_params.name].render(viewport, query_params);
+      return;
+    }
     loadMetricList(viewport, query_params);
   };
 
 
-  function onRowClick(e) {
-    e.preventDefault();
-    var metric = this.firstChild.id;
+  function onRowClick() {
     //FIXME
-    FnordMetric.util.setURLQueryString(
-      "metric", metric, false);
-    location.reload();
+    console.log("on row click");
+    var viewport = document.body.querySelector(".viewport");
+    var params = {
+      "name" : "metric",
+      "value" : this.firstChild.id
+    };
+    FnordMetric.util.singleMetricView().render(
+      viewport, params);
   };
 
-  function renderMetricButton(elem, metric) {
-    var button = FnordMetric.createButton(
-      "#", undefined, "Open in Query Editor");
-    elem.appendChild(button);
-
-    button.onclick = function(e) {
-      e.preventDefault();
-      var query = 
-        "SELECT * FROM " + metric[0].key;
-      FnordMetric.util.setFragmentURL(
-        "query_playground", "sql_query", query, true);
-      location.reload();
-    }
-  }
-
+  
   function renderMetricList(viewport, metrics, action) {
     viewport.innerHTML = "";
     var table_container = document.createElement("div");
@@ -65,9 +65,6 @@ FnordMetric.views.MetricList = function() {
       return;
     }
 
-    if (action == "metric") {
-      renderMetricButton(viewport, metrics);
-    }
 
     var table_view = FnordMetric.util.TableView([
         "Metric",

@@ -571,6 +571,9 @@ ul.dropdown li:hover {
   background-color: #d7e4f2;
 }
 
+h1.metric {
+  margin-top: 80px;
+}
 
 table.metric_list {
   width: 100%;

@@ -19,6 +19,7 @@ build:
 	      fnordmetric-webui-sqleditorview.js \
 	      fnordmetric-webui-visualeditorview.js \
 	      fnordmetric-webui-queryresultview.js \
+	      fnordmetric-webui-singlemetricview.js \
 	      codemirror.js \
 	) > fnordmetric-webui.js
 

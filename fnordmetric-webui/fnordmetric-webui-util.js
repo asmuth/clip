@@ -16,7 +16,7 @@
  * Query Playground:
  *  - "embed this query" opens up a popup with html/js/ruby snippets
  *  - prevent reload/navigation to other page (body onunload)
- *  - stretch: display a [fake] loading bar
+*  - stretch: display a [fake] loading bar
  *  - nice to have: represent current chart and table, view in url --> renderResultPane
  *
  * Metric list view:
@@ -125,16 +125,19 @@ FnordMetric.util.setURLQueryString = function(name, value, encode) {
   window.location.hash = hash;
 }
 
-FnordMetric.util.setFragmentURL = function(hash, name, value, encode) {
-  console.log(window.location.pathname);
+FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
   var path = window.location.pathname;
   var value = value;
-  if (encode) {
+  if (encode == true) {
     value = encodeURIComponent(value);
   }
   var hash = 
     path + "#" + hash + "?" + name + "=" + value;
   window.location = hash;
+  console.log("push state: " + push_state);
+  if (push_state == true) {
+    window.history.pushState({url: hash}, "#", hash);
+  }
 }
 
 FnordMetric.util.openPopup = function(elem, text) {
