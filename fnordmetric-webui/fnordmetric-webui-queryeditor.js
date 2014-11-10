@@ -34,6 +34,7 @@ FnordMetric.views.QueryPlayground = function() {
   var direction;
   var editor_pane;
   var result_pane;
+  var current_view;
   var button_bar;
 
   function renderExecutionInfo(duration, tables, elem) {
@@ -75,7 +76,6 @@ FnordMetric.views.QueryPlayground = function() {
     FnordMetric.httpPost("/query", query_str, function(r, duration) {
       if (r.status == 200 && r.statusText == "Ok") {
         var res = JSON.parse(r.response);
-
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
         updateLayout(editor_pane, result_pane, direction);
@@ -88,7 +88,6 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function renderEditorView(view, editor_pane, result_pane, query) {
-    "render editor view";
     editorViews[view].render(editor_pane, query);
     editor_pane.insertBefore(button_bar, editor_pane.firstChild);
     if (query != undefined) {
@@ -116,19 +115,20 @@ FnordMetric.views.QueryPlayground = function() {
       console.log("vertical split");
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
-      /*editor_pane.style.height = editor_height + "px";
-      query_editor.style.height = editor_height + "px";*/
-      result_pane.style.width = (window.innerWidth - 55) + "px";
-      result_pane.style.left = "20px";
-      //result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
-      result_pane.style.height = "auto";
+      var editor_height = editorViews[current_view].getHeight();
+      console.log(editor_height);
+      editor_pane.style.height = editor_height + "px";
+      result_pane.style.width = "100%";
+      result_pane.style.left = 0;
+      result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
+      result_pane.style.height = "100%";
     }
   }
 
   function render(viewport, url, query_params) {
     direction = "horizontal";
     viewport = viewport;
-    var current_view = "sql";
+    current_view = "sql";
     var query = null;
     /* init viewport */
     viewport.innerHTML = "";

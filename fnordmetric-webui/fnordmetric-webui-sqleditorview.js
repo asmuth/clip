@@ -19,8 +19,9 @@ if (FnordMetric.util === undefined) {
 
 FnordMetric.util.SQLEditorView = function() {
   var cm;
-  function initCodeMirror(cm) {
-    /* set CodeMirror Configs here */
+  function getHeight() {
+    var line_num = cm.lineCount();
+    return (line_num * 18 + 200);
   }
 
   function getQuery() {
@@ -40,13 +41,13 @@ FnordMetric.util.SQLEditorView = function() {
       autofocus: true
     });
 
-    initCodeMirror(cm);
     if (query != undefined) {
       cm.setValue(query);
     }
   }
   return {
     "render" : render,
-    "getQuery" : getQuery
+    "getQuery" : getQuery,
+    "getHeight" : getHeight
   }
 }
