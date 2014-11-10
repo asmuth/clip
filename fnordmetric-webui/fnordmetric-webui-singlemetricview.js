@@ -35,7 +35,7 @@ FnordMetric.util.singleMetricView = function() {
     button.onclick = function(e) {
       e.preventDefault();
       var query = 
-        "SELECT * FROM " + query_params.value;
+        "SELECT * FROM `" + query_params.value + "` LIMIT 100;";
       FnordMetric.util.setFragmentURL(
         "query_playground", "sql_query", query, true);
       location.reload();
