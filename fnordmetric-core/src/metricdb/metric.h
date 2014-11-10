@@ -27,9 +27,9 @@ public:
   IMetric(const std::string& key);
   virtual ~IMetric();
 
-  virtual void insertSample(
+  void insertSample(
       double value,
-      const std::vector<std::pair<std::string, std::string>>& labels) = 0;
+      const std::vector<std::pair<std::string, std::string>>& labels);
 
   virtual void scanSamples(
       const fnord::util::DateTime& time_begin,
@@ -43,6 +43,11 @@ public:
   virtual bool hasLabel(const std::string& label) const = 0;
 
 protected:
+
+  virtual void insertSampleImpl(
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels) = 0;
+
   const std::string key_;
 };
 

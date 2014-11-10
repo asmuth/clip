@@ -7,14 +7,14 @@
     - all the doc links
 
 [ SQL ]
+    - find time constraint from sql query
     - scan samples with range / sstable binary search
     - SELECT count(*) ...
-    - make "series" column optional
-    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so 
+    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
+    - sql time helpers (1hour, etc)
     - sql: in
     - sql: if
     - sql: case
-    - allow uppercase X, Y, Z / series col names
 
 [ release ]
     - inline libev

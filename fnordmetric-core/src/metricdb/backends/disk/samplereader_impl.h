@@ -21,6 +21,7 @@ SampleReader<T>::SampleReader(
     TokenIndex* token_index) :
     AbstractSampleReader(data, size, token_index) {
   value_ = readValue();
+  label_offset_ = pos_;
 }
 
 template <typename T>

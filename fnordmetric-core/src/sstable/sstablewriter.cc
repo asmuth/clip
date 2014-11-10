@@ -162,6 +162,10 @@ void SSTableWriter::reopen(size_t file_size) {
     RAISE(kIllegalStateError, "finalized sstable can't be re-opened");
   }
 
+  if (header.headerSize() + header.bodySize() > file_size) {
+    RAISE(kIllegalStateError, "file metadata offsets exceed file bounds");
+  }
+
   header_size_ = header.headerSize();
   body_size_ = file_size - header_size_;
 }
@@ -248,6 +252,10 @@ void SSTableWriter::Cursor::getKey(void** data, size_t* size) {
 
   *data = page->structAt<void>(sizeof(BinaryFormat::RowHeader));
   *size = header->key_size;
+}
+
+size_t SSTableWriter::Cursor::position() const {
+  return pos_;
 }
 
 void SSTableWriter::Cursor::getData(void** data, size_t* size) {

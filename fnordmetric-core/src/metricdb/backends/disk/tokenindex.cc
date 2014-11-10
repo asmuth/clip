@@ -69,7 +69,7 @@ std::string TokenIndex::resolveToken(uint32_t token_id) const {
     }
   }
 
-  RAISE(kIndexError, "token not found");
+  RAISE(kIndexError, "token not found, %i", (int) token_id);
 }
 
 std::unordered_map<std::string, uint32_t> TokenIndex::tokenIDs() const {

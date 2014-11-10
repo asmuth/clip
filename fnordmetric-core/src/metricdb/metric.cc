@@ -8,12 +8,28 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metric.h>
+#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
 IMetric::IMetric(const std::string& key) : key_(key) {}
 IMetric::~IMetric() {}
+
+void IMetric::insertSample(
+    double value,
+    const std::vector<std::pair<std::string, std::string>>& labels) {
+  // FIXPAUL slow slow slow!
+  for (const auto& l1 : labels) {
+    for (const auto& l2 : labels) {
+      if (l1.first == l2.first) {
+        RAISE(kIllegalArgumentError, "duplicate label: %s", l1.first.c_str());
+      }
+    }
+  }
+
+  insertSampleImpl(value, labels);
+}
 
 const std::string& IMetric::key() const {
   return key_;

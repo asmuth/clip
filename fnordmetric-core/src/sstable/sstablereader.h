@@ -61,6 +61,7 @@ protected:
     bool valid() override;
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
+    size_t position() const override;
   protected:
     std::shared_ptr<io::MmappedFile> mmap_;
     size_t pos_;

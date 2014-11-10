@@ -68,6 +68,7 @@ void StatsdServer::messageReceived(const fnord::util::Buffer& msg) {
 
     auto metric = metric_repo_->findOrCreateMetric(key);
     metric->insertSample(float_value, labels);
+    labels.clear();
   }
 }
 

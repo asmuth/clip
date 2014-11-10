@@ -94,6 +94,7 @@ static void compareChart(
     "build/tests/tmp/" + file_name);
 }
 
+/*
 TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
   DefaultRuntime runtime;
   runtime.addBackend(std::unique_ptr<Backend>(new TestBackend()));
@@ -114,6 +115,7 @@ TEST_CASE(QueryTest, TestDrawQueryNeedsSeriesColAssert, [] () {
     query.execute();
   });
 });
+*/
 
 TEST_CASE(QueryTest, TestDrawQueryNeedsXColAssert, [] () {
   DefaultRuntime runtime;
