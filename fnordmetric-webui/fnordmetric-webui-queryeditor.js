@@ -134,12 +134,11 @@ FnordMetric.views.QueryPlayground = function() {
 
     /* render buttons */
     button_bar = document.createElement("div");
-    button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor</div>";
+    button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor <i class='fa fa-chevron-down'></i></div>";
     button_bar.className = "navbar";
 
-    var split_btn = FnordMetric.createButton(
-      "#", "fancy_button", "Change View");
-    split_btn.style.float = "right";
+    var split_btn = document.createElement("i");
+    split_btn.className = "fa fa-columns icobtn";
     button_bar.appendChild(split_btn);
 
     split_btn.onclick = function(e) {
@@ -153,9 +152,16 @@ FnordMetric.views.QueryPlayground = function() {
       console.log("change view");
     }
 
-    var query_btn = FnordMetric.createButton(
-      "#", "run_query", "Run Query");
-    query_btn.onclick = function(e) {
+    var refresh_btn = document.createElement("i");
+    refresh_btn.className = "fa fa-refresh icobtn";
+    button_bar.appendChild(refresh_btn);
+
+    var exec_btn = document.createElement("span");
+    exec_btn.className = "run_query_btn";
+    exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
+    button_bar.appendChild(exec_btn);
+
+    exec_btn.onclick = function(e) {
       e.preventDefault();
       runQuery(
         result_pane,
@@ -163,6 +169,8 @@ FnordMetric.views.QueryPlayground = function() {
         current_view);
     }
 
+
+/*
     var embed_btn = FnordMetric.createButton(
       "#", "fancy_button", "Embed Query");
 
@@ -171,7 +179,7 @@ FnordMetric.views.QueryPlayground = function() {
       FnordMetric.util.openPopup(
         viewport, "Todo: Ruby/JS/html snippet");
     }
-
+*/
     //button_bar.appendChild(query_btn);
     //button_bar.appendChild(embed_btn);
 
