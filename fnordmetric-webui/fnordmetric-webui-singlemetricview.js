@@ -25,7 +25,7 @@ FnordMetric.util.singleMetricView = function() {
 
     elem.innerHTML = "";
 
-    FnordMetric.util.renderMetricHader(
+    FnordMetric.util.renderMetricHeader(
       query_params.value, elem);
 
     var button = FnordMetric.createButton(
