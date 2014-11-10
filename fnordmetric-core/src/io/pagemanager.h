@@ -134,13 +134,14 @@ public:
 
   class MmappedPageRef : public PageManager::PageRef {
   public:
-    MmappedPageRef(const PageManager::Page& page, MmappedFile* file);
+    MmappedPageRef(const PageManager::Page& page, MmappedFile* file, size_t sys_page_size);
     MmappedPageRef(MmappedPageRef&& move);
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
     ~MmappedPageRef();
     void sync(bool async = false) const override;
   protected:
+    size_t sys_page_size_;
     void* getPtr() const override;
     MmappedFile* file_;
   };
@@ -170,10 +171,11 @@ protected:
    */
   MmappedFile* getMmappedFile(uint64_t last_byte);
 
-  const std::string& filename_;
+  const std::string filename_;
   size_t file_size_;
   MmappedFile* current_mapping_;
   std::mutex mmap_mutex_;
+  size_t sys_page_size_;
 };
 
 
