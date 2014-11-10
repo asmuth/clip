@@ -31,15 +31,15 @@ public:
    * @param logarithmic is this domain a logarithmic domain?
    */
   ContinuousDomain(
-    T min_value = std::numeric_limits<T>::max(),
-    T max_value = std::numeric_limits<T>::min(),
-    bool is_logarithmic = false,
-    bool is_inverted = false) :
-    min_value_(min_value),
-    max_value_(max_value),
-    is_logarithmic_(is_logarithmic),
-    is_inverted_(is_inverted),
-    padding_(0, 0) {}
+      T min_value = std::numeric_limits<T>::max(),
+      T max_value = std::numeric_limits<T>::min(),
+      bool is_logarithmic = false,
+      bool is_inverted = false) :
+      min_value_(min_value),
+      max_value_(max_value),
+      is_logarithmic_(is_logarithmic),
+      is_inverted_(is_inverted),
+      padding_(0, 0) {}
 
   double scale(T value) const {
     double scaled;
@@ -175,6 +175,13 @@ public:
   void setPadding(double min_padding, double max_padding) {
     padding_.first = min_padding;
     padding_.second = max_padding;
+  }
+
+  void build() {
+    if (min_value_ == max_value_) {
+      max_value_ += 1.0f;
+      min_value_ -= 1.0f;
+    }
   }
 
 protected:

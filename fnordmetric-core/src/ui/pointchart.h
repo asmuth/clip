@@ -210,6 +210,9 @@ template <typename TX, typename TY, typename TZ>
 void PointChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  x_domain_.get()->build();
+  y_domain_.get()->build();
+
   target->beginGroup("points");
 
   for (const auto& series : series_) {

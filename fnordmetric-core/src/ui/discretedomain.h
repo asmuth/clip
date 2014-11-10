@@ -116,6 +116,8 @@ public:
     is_inverted_ = inverted;
   }
 
+  void build() {}
+
 protected:
   bool is_inverted_;
   std::vector<T> categories_;

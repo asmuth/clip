@@ -281,6 +281,9 @@ template <typename TX, typename TY, typename TZ>
 void AreaChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  x_domain_.get()->build();
+  y_domain_.get()->build();
+
   target->beginGroup("areas");
 
   for (const auto& area : areas_) {

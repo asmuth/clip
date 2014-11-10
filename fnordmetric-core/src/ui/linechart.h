@@ -198,6 +198,9 @@ template <typename TX, typename TY>
 void LineChart2D<TX, TY>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  x_domain_.get()->build();
+  y_domain_.get()->build();
+
   target->beginGroup("lines");
 
   for (const auto& series : series_) {

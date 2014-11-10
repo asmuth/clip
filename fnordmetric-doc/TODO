@@ -19,11 +19,7 @@
 
 [ release ]
     - svg: escape series names, labels!
-    - bug: chart with only same values -> strange rendering
-    - bug: multiple draw statements dont produce multiple charts
     - bug: NAN is not a valid value in SVG
-    - bug: line chart with only negative values
-    - bug: 2d area chart with explicit y domain, min > 0
     - inline libev
 
 -----
@@ -72,6 +68,8 @@
 
 [ bug q ]
     - SELECT count(*) AS row_count FROM `/osx/load_avg_5m`; --- does not return col name
+    - bug: line chart with only negative values
+    - bug: 2d area chart with explicit y domain, min > 0
 
 [ refactor q ]
     - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)

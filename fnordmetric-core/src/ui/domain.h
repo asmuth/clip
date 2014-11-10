@@ -44,6 +44,8 @@ public:
 
   virtual void setInverted(bool inverted) = 0;
 
+  virtual void build() = 0;
+
 };
 
 /**
