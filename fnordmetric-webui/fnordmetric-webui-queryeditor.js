@@ -97,7 +97,7 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  function updateLayout(editor_pane, result_pane, direction) {
+  function updateLayout() {
     if (direction == "horizontal") {
       var height = FnordMetric.util.getHorizontalEditorHeight(
         editor_pane.offsetHeight, result_pane.offsetHeight);
@@ -113,6 +113,7 @@ FnordMetric.views.QueryPlayground = function() {
       result_pane.style.top = "";
       result_pane.style.overflowY = "auto";
     } else {
+      console.log("vertical split");
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
       /*editor_pane.style.height = editor_height + "px";
@@ -136,9 +137,22 @@ FnordMetric.views.QueryPlayground = function() {
     button_bar = document.createElement("div");
     button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor</div>";
     button_bar.className = "navbar";
+
     var split_btn = FnordMetric.createButton(
       "#", "fancy_button", "Change View");
+    split_btn.style.float = "right";
+    button_bar.appendChild(split_btn);
 
+    split_btn.onclick = function(e) {
+      e.preventDefault();
+      if (direction == "horizontal") {
+        direction = "vertical"
+      } else {
+        direction = "horizontal"
+      }
+      updateLayout();
+      console.log("change view");
+    }
 
     var query_btn = FnordMetric.createButton(
       "#", "run_query", "Run Query");
@@ -159,7 +173,6 @@ FnordMetric.views.QueryPlayground = function() {
         viewport, "Todo: Ruby/JS/html snippet");
     }
 
-    button_bar.appendChild(split_btn);
     //button_bar.appendChild(query_btn);
     //button_bar.appendChild(embed_btn);
 
