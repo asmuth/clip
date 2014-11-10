@@ -72,7 +72,6 @@ FnordMetric.WebUI = function() {
     FnordMetric.util.displayLoader(viewport);
 
     current_view = view;
-    console.log(query_params);
     view.render(viewport, url, query_params);
   };
 
@@ -81,7 +80,7 @@ FnordMetric.WebUI = function() {
     var query_params = url["query_params"];
 
     view = routes[url["path"]];
-    if (view === undefined) {
+    if (view == undefined) {
       alert("no route found for: " + url["path"]);
       return;
     }
