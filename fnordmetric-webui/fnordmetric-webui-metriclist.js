@@ -29,21 +29,25 @@ FnordMetric.views.MetricList = function() {
 
   function onRowClick(e) {
     e.preventDefault();
-    var metric = this.firstChild.innerText;
+    var metric = this.firstChild.id;
     //FIXME
-    FnordMetric.util.setFragmentURL(
+    FnordMetric.util.setURLQueryString(
       "metric", metric, false);
     location.reload();
   };
 
-  function renderMetricButton(elem) {
+  function renderMetricButton(elem, metric) {
     var button = FnordMetric.createButton(
       "#", undefined, "Open in Query Editor");
     elem.appendChild(button);
 
     button.onclick = function(e) {
       e.preventDefault();
-      var metric = this.firstChild.innerText;
+      var query = 
+        "SELECT * FROM " + metric[0].key;
+      FnordMetric.util.setFragmentURL(
+        "query_playground", "sql_query", query, true);
+      location.reload();
     }
   }
 
@@ -62,7 +66,7 @@ FnordMetric.views.MetricList = function() {
     }
 
     if (action == "metric") {
-      renderMetricButton(viewport);
+      renderMetricButton(viewport, metrics);
     }
 
     var table_view = FnordMetric.util.TableView([

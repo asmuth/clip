@@ -98,6 +98,7 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
       row.map(function(cell) {
         var list_cell = document.createElement("td");
         list_cell.innerHTML = cell;
+        list_cell.setAttribute("id", cell);
         list_row.appendChild(list_cell);
       });
     });
@@ -147,17 +148,4 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
 };
 
 
-/*
-    function searchRows(search_key) {
-      //destroyRows();
-      destroyListPagination();
-      //FIXME works but seems not to be the best solution
-      var data = [];
-      metrics_data.map(function(item) {
-       if (item.key.indexOf(search_key) > -1) {
-          data.push(item);
-        }
-      });
-      renderTable(data);
-    }
-*/
+

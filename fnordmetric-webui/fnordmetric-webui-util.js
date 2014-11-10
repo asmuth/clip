@@ -114,7 +114,7 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
 }
 
-FnordMetric.util.setFragmentURL = function(name, value, encode) {
+FnordMetric.util.setURLQueryString = function(name, value, encode) {
   var fragment = window.location.hash.substr(1).split("?");
   fragment = fragment.length > 0 ? fragment[0] : "";
   var value = value;
@@ -123,6 +123,18 @@ FnordMetric.util.setFragmentURL = function(name, value, encode) {
   }
   var hash = fragment + "?" + name + "=" + value;
   window.location.hash = hash;
+}
+
+FnordMetric.util.setFragmentURL = function(hash, name, value, encode) {
+  console.log(window.location.pathname);
+  var path = window.location.pathname;
+  var value = value;
+  if (encode) {
+    value = encodeURIComponent(value);
+  }
+  var hash = 
+    path + "#" + hash + "?" + name + "=" + value;
+  window.location = hash;
 }
 
 FnordMetric.util.openPopup = function(elem, text) {

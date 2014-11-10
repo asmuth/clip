@@ -67,7 +67,7 @@ FnordMetric.views.QueryPlayground = function() {
   function runQuery(result_pane, editor_pane, view, query_str) {
     if (query_str == undefined) {
       query_str = editorViews[view].getQuery();
-      FnordMetric.util.setFragmentURL(urlName[view], query_str, true);
+      FnordMetric.util.setURLQueryString(urlName[view], query_str, true);
     }
 
     FnordMetric.util.displayLoader(result_pane);
