@@ -112,11 +112,9 @@ FnordMetric.views.QueryPlayground = function() {
       result_pane.style.top = "";
       result_pane.style.overflowY = "auto";
     } else {
-      console.log("vertical split");
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
       var editor_height = editorViews[current_view].getHeight();
-      console.log(editor_height);
       editor_pane.style.height = editor_height + "px";
       result_pane.style.width = "100%";
       result_pane.style.left = 0;
