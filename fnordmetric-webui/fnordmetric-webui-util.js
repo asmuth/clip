@@ -16,7 +16,7 @@
  * Query Playground:
  *  - "embed this query" opens up a popup with html/js/ruby snippets
  *  - prevent reload/navigation to other page (body onunload)
- *  - stretch: display a [fake] loading bar
+*  - stretch: display a [fake] loading bar
  *  - nice to have: represent current chart and table, view in url --> renderResultPane
  *
  * Metric list view:
@@ -114,7 +114,7 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
 }
 
-FnordMetric.util.setFragmentURL = function(name, value, encode) {
+FnordMetric.util.setURLQueryString = function(name, value, encode) {
   var fragment = window.location.hash.substr(1).split("?");
   fragment = fragment.length > 0 ? fragment[0] : "";
   var value = value;
@@ -123,6 +123,21 @@ FnordMetric.util.setFragmentURL = function(name, value, encode) {
   }
   var hash = fragment + "?" + name + "=" + value;
   window.location.hash = hash;
+}
+
+FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
+  var path = window.location.pathname;
+  var value = value;
+  if (encode == true) {
+    value = encodeURIComponent(value);
+  }
+  var hash = 
+    path + "#" + hash + "?" + name + "=" + value;
+  window.location = hash;
+  console.log("push state: " + push_state);
+  if (push_state == true) {
+    window.history.pushState({url: hash}, "#", hash);
+  }
 }
 
 FnordMetric.util.openPopup = function(elem, text) {
@@ -150,6 +165,14 @@ FnordMetric.util.openPopup = function(elem, text) {
     e.preventDefault();
     closePopup();
   }
+}
+
+FnordMetric.util.renderMetricHeader = function(text, elem) {
+  var header = document.createElement("h1");
+  header.className = "metric";
+  header.innerHTML = text;
+
+  elem.appendChild(header);
 }
 
 
@@ -337,6 +360,28 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
     button.innerHTML = inner_HTML;
   }
   return button;
+}
+
+FnordMetric.util.searchMetricList = function(metrics, search_item) {
+  //FIXME works but seems not to be the best solution
+  var data = [];
+  metrics.map(function(item) {
+   if (item.key.indexOf(search_item) > -1) {
+      data.push(item);
+    }
+  });
+  return data;
+}
+
+FnordMetric.util.getSingleMetric = function(metrics, key) {
+  var data = [];
+  metrics.map(function(item) {
+    if (item.key == key) {
+      data.push(item);
+      return data;
+    }
+  });
+  return data;
 }
 
 
