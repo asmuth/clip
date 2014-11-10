@@ -3,7 +3,7 @@ Collecting Metrics
 
 You can use FnordMetric Server to collect timeseries data (and subsequently
 query the data using ChartSQL). FnordMetric Server stores the collected data
-on local disk or in an external storage system like MySQL or HBase.
+on local disk or in an external storage system (HBase).
 
 To enable metric collection, you have to start fnordmetric-server with the 
 `--storage_backend` flag. See backends for instructions how to configure each
