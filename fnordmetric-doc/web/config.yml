@@ -169,18 +169,22 @@ examples:
         title: "Explicit range/domain"
         file: "explicit_domain"
         url: "/linecharts/explicit_domain"
+        thumb: "/img/examples_explicit_domain.png"
       -
         title: "Lines with data labels"
         file: "lines_with_labels"
         url: "/linecharts/lines_with_labels"
+        thumb: "/img/examples_lines_with_labels.png"
       -
         title: "Multiple Y Axes"
         file: "multiple_y_axes"
         url: "/linecharts/multiple_y_axes"
+        thumb: "/img/examples_multiple_y_axes.png"
       -
         title: "Logarithmic domain"
         file: "logarithmic_domain"
         url: "/linecharts/logarithmic_domain"
+        thumb: "/img/examples_logarithmic_domain.png"
 #      -
 #        title: "Line and Point styles"
 #        file: "horizontal_bars"
@@ -189,6 +193,7 @@ examples:
         title: "Data with irregular intervals"
         file: "irregular_intervals"
         url: "/linecharts/irregular_data"
+        thumb: "/img/examples_irregular_data.png"
 #      -
 #        title: "Lines with missing data"
 #        file: "horizontal_bars"
@@ -197,6 +202,7 @@ examples:
         title: "Inverted Axis"
         file: "inverted_axis"
         url: "/linecharts/inverted_axis"
+        thumb: "/img/examples_inverted_axis.png"
 
   -
     title: "Area Charts"
@@ -206,10 +212,12 @@ examples:
         title: "Simple area chart"
         file: "simple_area"
         url: "/areacharts/simple_area"
+        thumb: "/img/examples_simple_area.png"
       -
         title: "Area with borders/points"
         file: "area_with_points"
         url: "/areacharts/area_with_points"
+        thumb: "/img/examples_area_with_points.png"
 #      -
 #        title: "Stacked areas"
 #        file: "horizontal_bars"
@@ -218,6 +226,7 @@ examples:
         title: "Area ranges"
         file: "area_ranges"
         url: "/areacharts/area_ranges"
+        thumb: "/img/examples_area_ranges.png"
 
   -
     title: "Bar Charts"
@@ -227,6 +236,7 @@ examples:
         title: "Vertical bar chart, multiple series"
         file: "vertical_bars"
         url: "/barcharts/vertical_bars"
+        thumb: "/img/examples_vertical_bars.png"
       -
         title: "Horizontal bar chart with labels"
         file: "horizontal_bars"
@@ -241,10 +251,12 @@ examples:
         title: "Vertical range bars"
         file: "vertical_ranges"
         url: "/barcharts/vertical_ranges"
+        thumb: "/img/examples_vertical_ranges.png"
       -
         title: "Horizontal range bars"
         file: "horizontal_ranges"
         url: "/barcharts/horizontal_ranges"
+        thumb: "/img/examples_horizontal_ranges.png"
 #      -
 #        title: "Histogram"
 #        file: "horizontal_bars"
@@ -252,6 +264,7 @@ examples:
         title: "Bars with negative values"
         file: "negative_values"
         url: "/barcharts/negative_values"
+        thumb: "/img/examples_negative_values.png"
 
   -
     title: "Bubble &amp; Scatter Charts"
@@ -261,14 +274,17 @@ examples:
         title: "Simple bubble chart"
         file: "simple_bubble_chart"
         url: "/pointcharts/simple_bubbles"
+        thumb: "/img/examples_simple_bubbles.png"
       -
         title: "Simple scatter chart"
         file: "simple_scatter_chart"
         url: "/pointcharts/simple_scatter"
+        thumb: "/img/examples_simple_scatter.png"
       -
         title: "Point chart with data labels"
         file: "pointchart_with_labels"
         url: "/pointcharts/pointchart_with_labels"
+        thumb: "/img/examples_pointchart_with_labels.png"
 #      -
 #        title: "Points with middle axis"
 #        file: "horizontal_bars"
@@ -282,6 +298,7 @@ examples:
         title: "Bars and Lines"
         file: "bars_and_lines"
         url: "/combined/barsandlines"
+        thumb: "/img/examples_barsandlines.png"
 #      -
 #        title: "Lines with error bars"
 #        file: "horizontal_bars"
@@ -290,6 +307,7 @@ examples:
         title: "Areas with lines"
         file: "arearange_and_line"
         url: "/combined/arearange_and_line"
+        thumb: "/img/examples_arearange_and_line.png"
 
 #  -
 #    title: "Axis &amp Legend"
@@ -340,5 +358,4 @@ examples:
 
 #  * horizontal with labels outside
 #  * horizontal with labels inside
-#  * multiple y axis
 
