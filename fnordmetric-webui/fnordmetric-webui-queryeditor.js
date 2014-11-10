@@ -139,6 +139,7 @@ FnordMetric.views.QueryPlayground = function() {
     var split_btn = FnordMetric.createButton(
       "#", "fancy_button", "Change View");
 
+
     var query_btn = FnordMetric.createButton(
       "#", "run_query", "Run Query");
     query_btn.onclick = function(e) {
@@ -158,8 +159,8 @@ FnordMetric.views.QueryPlayground = function() {
         viewport, "Todo: Ruby/JS/html snippet");
     }
 
-    //button_bar.appendChild(split_btn);
-    button_bar.appendChild(query_btn);
+    button_bar.appendChild(split_btn);
+    //button_bar.appendChild(query_btn);
     //button_bar.appendChild(embed_btn);
 
     /* init editorpane & resultpane */

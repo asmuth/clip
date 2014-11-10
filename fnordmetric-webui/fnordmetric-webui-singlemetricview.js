@@ -25,8 +25,8 @@ FnordMetric.util.singleMetricView = function() {
 
     elem.innerHTML = "";
 
-    FnordMetric.util.renderMetricHeader(
-      query_params.value, elem);
+    FnordMetric.util.renderPageHeader(
+      "Metric &rsaquo; <em>" + FordMetric.util.htmlEscape(query_params.value) + "</em>", elem);
 
     var button = FnordMetric.createButton(
       "#", undefined, "Open in Query Editor");

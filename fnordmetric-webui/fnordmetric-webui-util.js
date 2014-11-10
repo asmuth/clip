@@ -461,4 +461,7 @@ FnordMetric.DropdownAutocomplete = function(
   init();
 }
 
+FnordMetric.util.htmlEscape = function(str) {
+  return str;
+}
 
