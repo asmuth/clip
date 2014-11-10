@@ -34,23 +34,9 @@ FnordMetric.util.queryResultView = function() {
     if (charts == undefined) {
       return;
     }
-    var navbar = document.createElement("div");
-    navbar.className = "result_navbar";
-    for (var i = 0; i < charts.length; i++) {
-      var item = FnordMetric.createButton(
-        "#",
-        "result_link",
-        "<h3>Chart "+(i+1)+"</h3>");
-      item.setAttribute("id", i);
-      navbar.appendChild(item);
 
-      item.onclick = function(e) {
-        e.preventDfault();
-        renderChart(charts[this.id], chart_container);
-      }
-    }
-    elem.appendChild(navbar);
     var chart_container = document.createElement("div");
+    chart_container.className = "result_card";
     elem.appendChild(chart_container);
     renderChart(charts[0], chart_container);
   }
@@ -62,6 +48,7 @@ FnordMetric.util.queryResultView = function() {
     table.rows.map(function(row) {
       table_view.addRow(row);
     });
+
     table_view.render(false);
   }
 
@@ -70,26 +57,14 @@ FnordMetric.util.queryResultView = function() {
     if (tables == undefined) {
       return;
     }
-    var navbar = document.createElement("div");
-    navbar.className = "result_navbar";
-    for (var i = 0; i < tables.length; i++) {
-      var item = FnordMetric.createButton(
-        "#",
-        "result_link", 
-        "<h3>Table "+(i+1)+"</h3>");
-      item.setAttribute("id", i);
-      navbar.appendChild(item);
 
-      item.onclick = function(e) {
-        e.preventDefault();
-        renderTable(tables[this.id], table_container);
-      };
+    for (var i = 0; i < tables.length; i++) {
+      var table_container = document.createElement("div");
+      table_container.className = "result_card";
+      elem.appendChild(table_container);
+      renderTable(tables[i], table_container);
+      result_pane.style.height = "auto";
     }
-    elem.appendChild(navbar);
-    var table_container = document.createElement("div");
-    elem.appendChild(table_container);
-    renderTable(tables[0], table_container);
-    result_pane.style.height = "auto";
   }
 
   function renderError(msg, elem) {

@@ -459,8 +459,8 @@ table.metric_list td {
   text-align: left;
   font-weight: 500;
   border: none;
-  height: 40px;
-  line-height: 40px;
+  height: 38px;
+  line-height: 38px;
   font-size: 109%;
   padding: 0 20px;
 }
@@ -523,6 +523,15 @@ table.metric_list tr:hover td {
 .popup .inner_window {
   margin-top: 30px;
   margin-left: 20px;
+}
+
+.result_card {
+  background: #fff;
+  margin: 10px;
+  padding: 0;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 3px rgba(0,0,0,.1);
+  border-radius: 1px
 }
 
 /* BASICS */
