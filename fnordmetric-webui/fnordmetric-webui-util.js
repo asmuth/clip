@@ -350,6 +350,17 @@ FnordMetric.util.searchMetricList = function(metrics, search_item) {
   return data;
 }
 
+FnordMetric.util.getSingleMetric = function(metrics, key) {
+  var data = [];
+  metrics.map(function(item) {
+    if (item.key == key) {
+      data.push(item);
+      return data;
+    }
+  });
+  return data;
+}
+
 
 FnordMetric.DropdownAutocomplete = function(
   parentNode, dropdown, input_field, keys, search_button) {

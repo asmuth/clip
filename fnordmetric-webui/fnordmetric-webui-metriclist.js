@@ -18,34 +18,42 @@ if (FnordMetric.views === undefined) {
 
 FnordMetric.views.MetricList = function() {
   var actions = {
-    "search" : FnordMetric.util.searchMetricList
+    "search" : FnordMetric.util.searchMetricList,
+    "metric" : FnordMetric.util.getSingleMetric
   }
-
-  function onRowClick(e) {
-    e.preventDefault()
-    alert("click");
-    /*
-    var query = " DRAW LINECHART AXIS LEFT AXIS BOTTOM; \n" +
-        "SELECT 'mymetric' AS series, time AS x, value AS y "+
-        "FROM " + data["key"];
-        var enc_query = encodeURIComponent(query);
-        window.location = "/admin#query_playground!" + enc_query;
-          //FIXME pushstate?
-    */
-  };
 
   function render(viewport, url, query_params) {
     loadMetricList(viewport, query_params);
   };
 
-  function renderMetricList(viewport, metrics, isSearchResult) {
-    viewport.innerHTML = "";
-    if (isSearchResult == undefined) {
-      isSearchResult = false;
+
+  function onRowClick(e) {
+    e.preventDefault();
+    var metric = this.firstChild.innerText;
+    //FIXME
+    FnordMetric.util.setFragmentURL(
+      "metric", metric, false);
+    location.reload();
+  };
+
+  function renderMetricButton(elem) {
+    var button = FnordMetric.createButton(
+      "#", undefined, "Open in Query Editor");
+    elem.appendChild(button);
+
+    button.onclick = function(e) {
+      e.preventDefault();
+      var metric = this.firstChild.innerText;
     }
-    console.log(isSearchResult);
+  }
+
+  function renderMetricList(viewport, metrics, action) {
+    viewport.innerHTML = "";
+    var table_container = document.createElement("div");
+    viewport.appendChild(table_container);
+
     if (metrics.length == 0) {
-      if (isSearchResult) {
+      if (action != undefined) {
         console.log("render no search result");
       } else {
         renderEmptyMetricsList(viewport);
@@ -53,11 +61,15 @@ FnordMetric.views.MetricList = function() {
       return;
     }
 
+    if (action == "metric") {
+      renderMetricButton(viewport);
+    }
+
     var table_view = FnordMetric.util.TableView([
         "Metric",
         "Labels",
         "Last Insert",
-        "Total stored bytes"], viewport, 25);
+        "Total stored bytes"], table_container, 25);
 
     for (i in metrics) {
       table_view.addRow([
@@ -85,13 +97,13 @@ FnordMetric.views.MetricList = function() {
     FnordMetric.httpGet("/metrics", function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
-        var search = false;
+        var action;
         if (query_params != undefined) {
-          json.metrics = 
-            actions[query_params.name](json.metrics, query_params.value);
-          search = true;
+          json.metrics =
+              actions[query_params.name](json.metrics, query_params.value);
+          action = query_params.name;
         }
-        renderMetricList(viewport, json.metrics, search);
+        renderMetricList(viewport, json.metrics, action);
       } else {
         FnordMetric.util.displayErrorMessage(viewport, "Error connecting to server");
       }
