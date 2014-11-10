@@ -46,10 +46,11 @@ FnordMetric.views.MetricList = function() {
 
   function renderMetricList(viewport, metrics, search_item) {
     viewport.innerHTML = "";
+    console.log(metrics);
 
     if (metrics.length == 0) {
       if (search_item != undefined) {
-        console.log("render no search result");
+        renderEmptySearch(viewport, search_item);
       } else {
         renderEmptyMetricsList(viewport);
       }
@@ -89,6 +90,13 @@ FnordMetric.views.MetricList = function() {
     msg_field.innerHTML = "Looks like you haven't inserted any data yet.";
     elem.innerHTML = "";
     elem.appendChild(msg_field);
+  }
+
+  function renderEmptySearch(elem, search_item) {
+    elem.innerHTML = "";
+    FnordMetric.util.renderMetricHeader(
+      "No Results were found for " + search_item, elem);
+    FnordMetric.util.TableView().renderEmptyTable(elem);
   }
 
   function loadMetricList(viewport, query_params) {
