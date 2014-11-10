@@ -3,6 +3,7 @@
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
     - make all the command in installation work
+    - chart 2d/3d signature doc
     - all the doc links
 
 [ SQL ]
@@ -51,6 +52,7 @@
     - chart type: heatmap
     - ui: stacked area charts
     - mmap cache for readonly files
+    - dashboard hosting (--dashboards <dir>)
     - alerts
     - events (annotations)
     - chart type: ganttchart
@@ -67,6 +69,7 @@
     - candlestick
     - sql: query plan optimizer. push limit/offset/order down into tablescan if
            no complex nodes inbetween
+    - report with markdown + chartsql
 
 [ refactor q ]
     - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
