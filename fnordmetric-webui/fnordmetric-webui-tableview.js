@@ -25,6 +25,8 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
   var current_page = 0;
   var pages;
 
+  var order = {};
+
   function render(isSortable) {
     if (isSortable == undefined) {
       isSortable = true;
@@ -42,9 +44,14 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     render(isSortable);
   }
 
-  function resortRows(column_index, order) {
+  function resortRows(column_index) {
+    var column_order;
+    column_order  = (order[column_index] == undefined ||
+      order[column_index] == "desc") ?
+      "asc" : "desc";
+    order[column_index] = column_order;
     FnordMetric.util.sortMetricList(
-      all_rows, column_index, order);
+      all_rows, column_index, column_order);
     updatePage(0);
   }
 
@@ -60,28 +67,22 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
 
     for (var i = 0; i < columns.length; i++) {
       var header_cell = document.createElement("th");
-      header_cell.innerHTML = columns[i];
+      var title = document.createElement("span");
+      title.innerHTML = columns[i];
+      header_cell.appendChild(title);
       header.appendChild(header_cell);
-      if (i != 1 && isSortable) {
-        header_cell.className = "clickable";
 
-        var sort_asc = FnordMetric.createButton(
-          "#", "caret left", "&#x25B2;");
-        sort_asc.setAttribute("id", i);
-        sort_asc.onclick = function(e) {
-          e.preventDefault();
-          resortRows(this.id, "asc");
-        }
-        header_cell.appendChild(sort_asc);
+      if (isSortable) {
+        header_cell.onclick = (function(idx) {
+          return function() {
+            resortRows(idx);
+          }
+        })(i);
 
-        var sort_desc = FnordMetric.createButton(
-          "#", "caret", "&#x25BC;");
-        sort_desc.setAttribute("id", i);
-        sort_desc.onclick = function(e) {
-          e.preventDefault();
-          resortRows(this.id, "desc");
-        }
-        header_cell.appendChild(sort_desc);
+        var sort = document.createElement("i");
+        sort.className = "fa sort " +
+            (order[i] == "asc" ? "fa-sort-amount-asc" : "fa-sort-amount-desc");
+        header_cell.appendChild(sort);
       }
     }
 
@@ -140,25 +141,17 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     on_row_click = on_row_click_new;
   }
 
-  function renderEmptyTable(elem) {
+  function renderEmptyTable(elem, column_names) {
     var table = document.createElement("table");
     table.className = "metric_list";
     var header = document.createElement("tr");
     header.className = "list_header";
-    for (var i = 0; i < 4; i++) {
+    column_names.map(function(column) {
       var cell = document.createElement("th");
+      cell.innerHTML = column;
       header.appendChild(cell);
-    }
+    });
     table.appendChild(header);
-
-    for (var i = 0; i < 7; i++) {
-      var row = document.createElement("tr");
-      for (var j = 0; j < 4; j++) {
-        var cell = document.createElement("td");
-        row.appendChild(cell);
-      }
-      table.appendChild(row);
-    }
 
     elem.appendChild(table);
   }
