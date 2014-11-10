@@ -32,7 +32,10 @@ FnordMetric.views.QueryPlayground = function() {
 
   var viewport;
   var direction;
-  
+  var editor_pane;
+  var result_pane;
+  var button_bar;
+
   function renderExecutionInfo(duration, tables, elem) {
     if (tables == undefined) {return;}
     if (elem.lastChild.className == "info_field") {
@@ -87,6 +90,7 @@ FnordMetric.views.QueryPlayground = function() {
   function renderEditorView(view, editor_pane, result_pane, query) {
     "render editor view";
     editorViews[view].render(editor_pane, query);
+    editor_pane.insertBefore(button_bar, editor_pane.firstChild);
     if (query != undefined) {
       runQuery(result_pane, editor_pane, view, query);
     }
@@ -102,9 +106,9 @@ FnordMetric.views.QueryPlayground = function() {
           editor_pane.offsetWidth);
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.float = "left";
-      editor_pane.style.height = height + "px";
+      editor_pane.style.height = (height - 40) + "px";
       result_pane.style.height = height + "px";
-      result_pane.style.width = (99 - editor_width) + "%";
+      result_pane.style.width = (100 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
       result_pane.style.overflowY = "auto";
@@ -129,13 +133,14 @@ FnordMetric.views.QueryPlayground = function() {
     viewport.innerHTML = "";
 
     /* render buttons */
-    var button_bar = document.createElement("div");
+    button_bar = document.createElement("div");
+    button_bar.innerHTML = "<div class='editor_type_picker'>SQL Editor</div>";
     button_bar.className = "navbar";
     var split_btn = FnordMetric.createButton(
       "#", "fancy_button", "Change View");
 
     var query_btn = FnordMetric.createButton(
-      "#", "fancy_button", "Run Query");
+      "#", "run_query", "Run Query");
     query_btn.onclick = function(e) {
       e.preventDefault();
       runQuery(
@@ -153,10 +158,9 @@ FnordMetric.views.QueryPlayground = function() {
         viewport, "Todo: Ruby/JS/html snippet");
     }
 
-    button_bar.appendChild(split_btn);
+    //button_bar.appendChild(split_btn);
     button_bar.appendChild(query_btn);
-    button_bar.appendChild(embed_btn);
-    viewport.appendChild(button_bar);
+    //button_bar.appendChild(embed_btn);
 
     /* init editorpane & resultpane */
     editor_pane = document.createElement("div");
@@ -191,7 +195,6 @@ FnordMetric.views.QueryPlayground = function() {
       query = query_params.value;
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
-
   }
 
 
