@@ -22,7 +22,7 @@ void IMetric::insertSample(
   // FIXPAUL slow slow slow!
   for (int i1 = 0; i1 < labels.size(); ++i1) {
     for (int i2 = 0; i2 < labels.size(); ++i2) {
-      if (i1 != i1 && labels[i1].first == labels[i2].first) {
+      if (i1 != i2 && labels[i1].first == labels[i2].first) {
         RAISE(
             kIllegalArgumentError,
             "duplicate label: %s",
