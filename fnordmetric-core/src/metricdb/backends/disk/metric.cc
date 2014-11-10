@@ -115,7 +115,7 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
   return head_;
 }
 
-void Metric::insertSample(
+void Metric::insertSampleImpl(
     double value,
     const std::vector<std::pair<std::string, std::string>>& labels) {
   SampleWriter writer(&token_index_);

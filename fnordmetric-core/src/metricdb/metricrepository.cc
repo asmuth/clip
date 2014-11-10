@@ -14,7 +14,6 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
-// FIXPAUL lock
 IMetric* IMetricRepository::findMetric(const std::string& key) const {
   IMetric* metric = nullptr;
 

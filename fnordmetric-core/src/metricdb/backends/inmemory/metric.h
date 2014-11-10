@@ -26,10 +26,6 @@ class Metric : public fnordmetric::metricdb::IMetric {
 public:
   Metric(const std::string& key);
 
-  void insertSample(
-      double value,
-      const std::vector<std::pair<std::string, std::string>>& labels) override;
-
   void scanSamples(
       const DateTime& time_begin,
       const DateTime& time_end,
@@ -41,6 +37,11 @@ public:
   bool hasLabel(const std::string& label) const override;
 
 protected:
+
+  void insertSampleImpl(
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels) override;
+
   struct MemSample {
     DateTime time;
     double value;

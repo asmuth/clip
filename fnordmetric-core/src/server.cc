@@ -89,6 +89,10 @@ static int startServer() {
       std::unique_ptr<fnord::util::ExceptionHandler>(
           new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
 
+  fnord::thread::ThreadPool insert_worker_pool(
+      std::unique_ptr<fnord::util::ExceptionHandler>(
+          new fnord::util::CatchAndPrintExceptionHandler(env()->logger())));
+
   if (env()->flags()->isSet("datadir")) {
     auto datadir = env()->flags()->getString("datadir");
 
@@ -119,7 +123,7 @@ static int startServer() {
   if (env()->flags()->isSet("statsd_port")) {
     auto port = env()->flags()->getInt("statsd_port");
     auto statsd_server =
-        new StatsdServer(metric_repo, &thread_pool, &thread_pool);
+        new StatsdServer(metric_repo, &thread_pool, &insert_worker_pool);
     statsd_server->listen(port);
 
     env()->logger()->printf(

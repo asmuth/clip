@@ -32,6 +32,9 @@ public:
   std::string getKey();
   virtual void getData(void** data, size_t* size) = 0;
   std::string getData();
+
+  virtual size_t position() const = 0;
+
 };
 
 

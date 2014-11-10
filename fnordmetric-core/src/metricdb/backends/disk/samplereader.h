@@ -28,14 +28,13 @@ public:
       TokenIndex* token_index);
 
   const std::vector<std::pair<std::string, std::string>>& labels();
-  const std::vector<std::pair<uint32_t, std::string>>& tokenDefinitions();
+  std::vector<std::pair<uint32_t, std::string>> tokenDefinitions();
 
 protected:
   std::string readToken();
-
+  size_t label_offset_;
   TokenIndex* token_index_;
   std::vector<std::pair<std::string, std::string>> labels_;
-  std::vector<std::pair<uint32_t, std::string>> token_definitions_;
   bool labels_read_;
 };
 

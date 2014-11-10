@@ -37,12 +37,6 @@ public:
       draw_stmt_(draw_stmt) {}
 
   bool nextRow(SValue* row, int row_len) {
-    if (name_ind_ < 0) {
-      RAISE(
-          kRuntimeError,
-          "can't draw SELECT because it has no 'series' column");
-    }
-
     if (x_ind_ < 0) {
       RAISE(
           kRuntimeError,
@@ -66,9 +60,21 @@ public:
 
   void executeStatement(QueryPlanNode* stmt, ResultList* result_list) {
     name_ind_ = stmt->getColumnIndex("series");
+
     x_ind_ = stmt->getColumnIndex("x");
+    if (x_ind_ < 0) {
+      x_ind_ = stmt->getColumnIndex("X");
+    }
+
     y_ind_ = stmt->getColumnIndex("y");
+    if (y_ind_ < 0) {
+      y_ind_ = stmt->getColumnIndex("Y");
+    }
+
     z_ind_ = stmt->getColumnIndex("z");
+    if (z_ind_ < 0) {
+      z_ind_ = stmt->getColumnIndex("Z");
+    }
 
     prop_indexes_.clear();
 

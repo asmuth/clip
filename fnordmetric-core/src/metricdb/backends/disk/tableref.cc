@@ -209,6 +209,7 @@ void LiveTableRef::import(TokenIndex* token_index, LabelIndex* label_index) {
     cur->getData(&data, &data_size);
 
     SampleReader<double> sample(data, data_size, token_index);
+
     for (const auto& def : sample.tokenDefinitions()) {
       token_index->addToken(def.second, def.first);
     }

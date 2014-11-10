@@ -35,11 +35,11 @@ namespace sstable {
  *       *<row>
  *
  *   <row> :=
- *     <uint32_t>                // row checksum
- *     <uint32_t>                // key size in bytes
- *     <uint32_t>                // data size in bytes
- *     <bytes>                   // key
- *     <bytes>                   // data
+ *       <uint32_t>              // row checksum
+ *       <uint32_t>              // key size in bytes
+ *       <uint32_t>              // data size in bytes
+ *       <bytes>                 // key
+ *       <bytes>                 // data
  *
  *   <footer> :=
  *       %x17 %x17 %x17 %x17"    // magic bytes

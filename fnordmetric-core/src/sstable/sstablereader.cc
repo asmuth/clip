@@ -134,6 +134,10 @@ void SSTableReader::Cursor::seekTo(size_t body_offset) {
   pos_ = begin_ + body_offset;
 }
 
+size_t SSTableReader::Cursor::position() const {
+  return pos_ - begin_;
+}
+
 bool SSTableReader::Cursor::next() {
   auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
 

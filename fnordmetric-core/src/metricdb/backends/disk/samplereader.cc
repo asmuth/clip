@@ -26,6 +26,7 @@ AbstractSampleReader::AbstractSampleReader(
 const std::vector<std::pair<std::string, std::string>>&
     AbstractSampleReader::labels() {
   if (!labels_read_) {
+    seekTo(label_offset_);
     labels_read_ = true;
 
     while (pos_ < size_) {
@@ -38,10 +39,32 @@ const std::vector<std::pair<std::string, std::string>>&
   return labels_;
 }
 
-const std::vector<std::pair<uint32_t, std::string>>&
+std::vector<std::pair<uint32_t, std::string>>
     AbstractSampleReader::tokenDefinitions() {
-  labels();
-  return token_definitions_;
+  seekTo(label_offset_);
+
+  std::vector<std::pair<uint32_t, std::string>> token_definitions;
+  while (pos_ < size_) {
+    auto token_ref = *readUInt32();
+    uint32_t string_len;
+    uint32_t token_def = 0;
+
+    if (token_ref == 0xffffffff) {
+      token_def = *readUInt32();
+      string_len = *readUInt32();
+    } else if (token_ref >= TokenIndex::kMinTokenID) {
+      continue;
+    } else {
+      string_len = token_ref;
+    }
+
+    auto str = std::string(readString(string_len), string_len);
+    if (token_def > 0) {
+      token_definitions.emplace_back( token_def, str);
+    }
+  }
+
+  return token_definitions;
 }
 
 std::string AbstractSampleReader::readToken() {
@@ -59,11 +82,6 @@ std::string AbstractSampleReader::readToken() {
   }
 
   auto token = std::string(readString(string_len), string_len);
-
-  if (token_def > 0) {
-    token_definitions_.emplace_back(token_def, token);
-  }
-
   return token;
 }
 

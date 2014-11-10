@@ -102,6 +102,7 @@ protected:
     bool valid() override;
     void getKey(void** data, size_t* size) override;
     void getData(void** data, size_t* size) override;
+    size_t position() const override;
   protected:
     std::unique_ptr<io::PageManager::PageRef> getPage();
     SSTableWriter* table_;

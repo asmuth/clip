@@ -23,7 +23,7 @@ Metric::Metric(
     total_bytes_(0),
     last_insert_time_(0) {}
 
-void Metric::insertSample(
+void Metric::insertSampleImpl(
     double value,
     const std::vector<std::pair<std::string, std::string>>& labels) {
 

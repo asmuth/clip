@@ -40,10 +40,6 @@ public:
       io::FileRepository* file_repo,
       std::vector<std::unique_ptr<TableRef>>&& tables);
 
-  void insertSample(
-      double value,
-      const std::vector<std::pair<std::string, std::string>>& labels) override;
-
   void scanSamples(
       const fnord::util::DateTime& time_begin,
       const fnord::util::DateTime& time_end,
@@ -61,6 +57,10 @@ public:
   bool hasLabel(const std::string& label) const override;
 
 protected:
+  void insertSampleImpl(
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels) override;
+
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
   std::shared_ptr<MetricSnapshot> createSnapshot(bool writable);
