@@ -12,6 +12,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include "pagemanager.h"
+#include <fnordmetric/environment.h>
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/io/fileutil.h>
 
@@ -118,9 +119,19 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
   mmap_mutex_.lock();
 
   if (last_byte > file_size_) {
-    // FIXPAUL truncate in larger blocks
-    FileUtil::truncate(filename_, last_byte);
-    file_size_ = last_byte;
+    auto new_size =
+        ((last_byte / kMmapSizeMultiplier) + 1) * kMmapSizeMultiplier;
+
+    if (fnordmetric::env()->verbose()) {
+      fnordmetric::env()->logger()->printf(
+          "DEBUG",
+          "Truncating file %s to %lu bytes",
+          filename_.c_str(),
+          (long unsigned) new_size);
+    }
+
+    FileUtil::truncate(filename_, new_size);
+    file_size_ = new_size;
   }
 
   auto page_ref = new MmappedPageRef(page, getMmappedFile(last_byte));

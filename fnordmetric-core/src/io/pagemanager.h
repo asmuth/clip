@@ -170,7 +170,7 @@ protected:
    */
   MmappedFile* getMmappedFile(uint64_t last_byte);
 
-  const std::string& filename_;
+  const std::string filename_;
   size_t file_size_;
   MmappedFile* current_mapping_;
   std::mutex mmap_mutex_;
