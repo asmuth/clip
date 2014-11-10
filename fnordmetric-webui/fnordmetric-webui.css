@@ -41,6 +41,37 @@
 .fa-search:before {
   content: "\f002";
 }
+.fa-refresh:before {
+  content: "\f021";
+}
+.fa-circle-o-notch:before {
+  content: "\f1ce";
+}
+.fa-spin {
+  -webkit-animation: fa-spin 1s infinite linear;
+  animation: fa-spin 1s infinite linear;
+}
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
 
 body, html {
   margin: 0;
@@ -74,8 +105,17 @@ body {
   height: 100%;
   width: 100%;
   z-index: 1000;
-  background-color: #444;
-  opacity: 0.5;
+  background: #e9ebed;
+  display: table;
+  text-align: center;
+}
+
+
+.load_foreground i.fa {
+  font-size: 48px;
+  display: table-cell;
+  vertical-align: middle;
+  color: #aaadae;
 }
 
 .editor_type_picker {

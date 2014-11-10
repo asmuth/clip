@@ -73,7 +73,7 @@ FnordMetric.util.convertArrayToString = function(array) {
 
 /* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
-  elem.innerHTML = "<div class='load_foreground'></div>";
+  elem.innerHTML = "<div class='load_foreground'><i class='fa fa-refresh fa-spin'></div>";
 }
 
 /*
