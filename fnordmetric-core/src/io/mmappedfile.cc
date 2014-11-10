@@ -14,8 +14,12 @@
 namespace fnord {
 namespace io {
 
-MmappedFile::MmappedFile(File&& file) : file_(std::move(file)) {
-  size_ = file_.size();
+MmappedFile::MmappedFile(File&& file) {
+  File local_file = std::move(file);
+
+  size_ = local_file.size();
+  is_writable_ = local_file.isWritable();
+
   if (size_ == 0) {
     RAISE(kIllegalArgumentError, "can't mmap() empty file");
   }
@@ -23,9 +27,9 @@ MmappedFile::MmappedFile(File&& file) : file_(std::move(file)) {
   data_ = mmap(
       nullptr,
       size_,
-      file_.isWritable() ? PROT_WRITE | PROT_READ : PROT_READ,
+      is_writable_ ? PROT_WRITE | PROT_READ : PROT_READ,
       MAP_SHARED,
-      file_.fd(),
+      local_file.fd(),
       0);
 
   if (data_ == MAP_FAILED) {
@@ -38,7 +42,7 @@ MmappedFile::~MmappedFile() {
 }
 
 bool MmappedFile::isWritable() const {
-  return file_.isWritable();
+  return is_writable_;
 }
 
 }

@@ -39,7 +39,7 @@ public:
    * Create and open a new sstable for writing
    */
   static std::unique_ptr<SSTableWriter> create(
-      io::File file,
+      const std::string& filename,
       IndexProvider index_provider,
       void const* header,
       size_t header_size);
@@ -48,7 +48,7 @@ public:
    * Re-open a partially written sstable for writing
    */
   static std::unique_ptr<SSTableWriter> reopen(
-      io::File file,
+      const std::string& filename,
       IndexProvider index_provider);
 
 
@@ -111,7 +111,8 @@ protected:
   };
 
   SSTableWriter(
-      io::File&& file,
+      const std::string& filename,
+      size_t file_size,
       std::vector<Index::IndexRef>&& indexes);
 
   void writeHeader(void const* data, size_t size);
@@ -119,7 +120,6 @@ protected:
 private:
   void reopen(size_t file_size);
 
-  io::File file_;
   std::vector<Index::IndexRef> indexes_;
   std::unique_ptr<io::MmapPageManager> mmap_;
   size_t header_size_; // FIXPAUL make atomic

@@ -91,7 +91,7 @@ std::unique_ptr<TableRef> TableRef::createTable(
   // create new sstable
   sstable::IndexProvider indexes;
   auto live_sstable = sstable::SSTableWriter::create(
-      std::move(file),
+      filename,
       std::move(indexes),
       header.data(),
       header.size());
@@ -115,7 +115,7 @@ std::unique_ptr<TableRef> TableRef::reopenTable(
   sstable::IndexProvider indexes;
 
   auto table = sstable::SSTableWriter::reopen(
-      std::move(file),
+      filename,
       std::move(indexes));
 
   auto table_ref = new LiveTableRef(
