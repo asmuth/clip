@@ -559,6 +559,10 @@ section {
   text-align: center;
 }
 
+section.noborder:after {
+  display: none;
+}
+
 section:after {
   content: ' ';
   display: block;
