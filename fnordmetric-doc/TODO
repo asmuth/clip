@@ -5,8 +5,10 @@
     - make all the command in installation work
     - chart 2d/3d signature doc
     - all the doc links
+    - better screenshot on homepage
 
 [ SQL ]
+    - match function names case-insensitively
     - find time constraint from sql query
     - scan samples with range / sstable binary search
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
@@ -23,6 +25,10 @@
     - inline libev
 
 -----
+
+[ frontend feature q ]
+    - vertical hover line in chartextensions
+    - syntax highlighting
 
 [ feature q ]
     - merge compaction

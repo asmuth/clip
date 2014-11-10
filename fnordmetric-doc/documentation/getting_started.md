@@ -57,7 +57,7 @@ SVG or PNG.
 Like fnordmetric-cli, the server allows you to execute queries against a number
 of external backends like MySQL databases or CSV files. Additionally, the server
 includes a facility to collect timeseries data and store them either on local
-disk or in external storage (MySQL, HBase).
+disk or in external storage (HBase).
 
 You can use fnordmetric-server as a one-stop solution for metric collection and
 charting. Since fnordmetric-server aims to be a StatsD+graphite competitor, it

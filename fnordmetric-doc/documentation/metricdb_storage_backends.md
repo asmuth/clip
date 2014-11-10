@@ -37,11 +37,6 @@ use an unbounded amount of memory. (Seriously, do not use this in production)
     $ fnordmetric-cli --storage_backend=inmemory
 
 
-MySQL Backend
--------------
-
-_The MySQL Backend is not implemented yet._
-
 HBase Backend
 -------------
 

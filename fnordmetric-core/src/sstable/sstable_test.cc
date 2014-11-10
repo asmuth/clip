@@ -29,7 +29,7 @@ TEST_CASE(SSTableTest, TestSSTableWriter, [] () {
   IndexProvider indexes;
 
   auto tbl = SSTableWriter::create(
-      std::move(file),
+      "/tmp/__fnord__sstabletest1.sstable",
       std::move(indexes),
       header.data(),
       header.size());
@@ -72,7 +72,7 @@ TEST_CASE(SSTableTest, TestSSTableWriterWithIndexes, [] () {
   indexes.addIndex<RowOffsetIndex>();
 
   auto tbl = SSTableWriter::create(
-      std::move(file),
+      "/tmp/__fnord__sstabletest2.sstable",
       std::move(indexes),
       header.data(),
       header.size());

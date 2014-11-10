@@ -12,7 +12,9 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/stringutil.h>
 #include <string.h>
+#include <sys/fcntl.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 namespace fnord {
@@ -141,6 +143,12 @@ void FileUtil::rm(const std::string& filename) {
   unlink(filename.c_str());
 }
 
+
+void FileUtil::truncate(const std::string& filename, size_t new_size) {
+  if (::truncate(filename.c_str(), new_size) < 0) {
+    RAISE_ERRNO(kIOError, "truncate(%s) failed", filename.c_str());
+  }
+}
 
 }
 }

@@ -12,6 +12,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include "pagemanager.h"
+#include <fnordmetric/environment.h>
+#include <fnordmetric/io/file.h>
+#include <fnordmetric/io/fileutil.h>
 
 namespace fnord {
 namespace io {
@@ -86,28 +89,22 @@ void* PageManager::PageRef::operator*() const {
 
 PageManager::PageRef::~PageRef() {};
 
-MmapPageManager::MmapPageManager(int fd, size_t len, size_t block_size) :
-    PageManager(block_size, len),
-    fd_(fd),
-    file_size_(len),
-    current_mapping_(nullptr) {}
-
-//MmapPageManager::MmapPageManager(
-//    int fd,
-//    size_t len,
-//    size_t block_size,
-//    const LogSnapshot& log_snapshot) :
-//    PageManager(block_size, log_snapshot),
-//    fd_(fd),
-//    file_size_(len),
-//    current_mapping_(nullptr) {}
+MmapPageManager::MmapPageManager(
+    const std::string& filename,
+    size_t file_size) :
+    PageManager(1, file_size),
+    filename_(filename),
+    file_size_(file_size),
+    current_mapping_(nullptr) {
+  sys_page_size_ = sysconf(_SC_PAGESIZE);
+}
 
 MmapPageManager::MmapPageManager(MmapPageManager&& move) :
     PageManager(std::move(move)),
-    fd_(move.fd_),
+    filename_(move.filename_),
     file_size_(move.file_size_),
-    current_mapping_(move.current_mapping_) {
-  move.fd_ = -1;
+    current_mapping_(move.current_mapping_),
+    sys_page_size_(move.sys_page_size_) {
   move.file_size_ = 0;
   move.current_mapping_ = nullptr;
 }
@@ -116,8 +113,6 @@ MmapPageManager::~MmapPageManager() {
   if (current_mapping_ != nullptr) {
     current_mapping_->decrRefs();
   }
-
-  close(fd_);
 }
 
 std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
@@ -127,11 +122,26 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
   mmap_mutex_.lock();
 
   if (last_byte > file_size_) {
-    ftruncate(fd_, last_byte); // FIXPAUL check errors
-    file_size_ = last_byte;
+    auto new_size =
+        ((last_byte / kMmapSizeMultiplier) + 1) * kMmapSizeMultiplier;
+
+    if (fnordmetric::env()->verbose()) {
+      fnordmetric::env()->logger()->printf(
+          "DEBUG",
+          "Truncating file %s to %lu bytes",
+          filename_.c_str(),
+          (long unsigned) new_size);
+    }
+
+    FileUtil::truncate(filename_, new_size);
+    file_size_ = new_size;
   }
 
-  auto page_ref = new MmappedPageRef(page, getMmappedFile(last_byte));
+  auto page_ref = new MmappedPageRef(
+      page,
+      getMmappedFile(last_byte),
+      sys_page_size_);
+
   mmap_mutex_.unlock();
 
   return std::unique_ptr<PageManager::PageRef>(page_ref);
@@ -141,34 +151,29 @@ MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
     uint64_t last_byte) {
   if (current_mapping_ == nullptr || last_byte > current_mapping_->size) {
     /* align mmap size to the next larger block boundary */
-    uint64_t mmap_size =
-        ((last_byte + kMmapSizeMultiplier - 1) / kMmapSizeMultiplier) *
-        kMmapSizeMultiplier;
+    auto file = fnord::io::File::openFile(
+        filename_,
+        File::O_READ | File::O_WRITE);
 
-    int fd = dup(fd_);
-    if (fd < 0) {
-      perror("dup() failed");
-      abort(); // FIXPAUL
-    }
+    auto mmap_size = file.size();
 
     void* addr = mmap(
         nullptr,
         mmap_size,
         PROT_WRITE | PROT_READ,
         MAP_SHARED,
-        fd,
+        file.fd(),
         0);
 
     if (addr == MAP_FAILED) {
-      perror("mmap() failed");
-      abort(); // FIXPAUL
+      RAISE(kMallocError, "mmap() failed");
     }
 
     if (current_mapping_ != nullptr) {
       current_mapping_->decrRefs();
     }
 
-    current_mapping_ = new MmappedFile(addr, mmap_size, fd);
+    current_mapping_ = new MmappedFile(addr, mmap_size);
   }
 
   return current_mapping_;
@@ -176,11 +181,9 @@ MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
 
 MmapPageManager::MmappedFile::MmappedFile(
   void* __data,
-  const size_t __size,
-  const int __fd) :
+  const size_t __size) :
   data(__data),
   size(__size),
-  fd(__fd),
   refs(1) {}
 
 MmapPageManager::MmappedFile::~MmappedFile() {
@@ -194,25 +197,25 @@ void MmapPageManager::MmappedFile::incrRefs() {
 void MmapPageManager::MmappedFile::decrRefs() {
   if (refs.fetch_sub(1) == 1) {
     assert(refs.load() == 0);
-    munmap(data, size);
-    close(fd);
     delete this;
   }
 }
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     const PageManager::Page& page,
-    MmappedFile* file) :
+    MmappedFile* file,
+    size_t sys_page_size) :
     PageRef(page),
-    file_(file) {
-
+    file_(file),
+    sys_page_size_(sys_page_size) {
   file_->incrRefs();
 }
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     MmapPageManager::MmappedPageRef&& move) :
     PageRef(move.page_),
-    file_(move.file_) {
+    file_(move.file_),
+    sys_page_size_(move.sys_page_size_) {
   move.file_ = nullptr;
 }
 
@@ -221,10 +224,10 @@ void* MmapPageManager::MmappedPageRef::getPtr() const {
 }
 
 void MmapPageManager::MmappedPageRef::sync(bool async /* = false */) const {
-  msync(
-      ((char *) getPtr()) + page_.offset,
-      page_.size,
-      async ? MS_SYNC : MS_ASYNC);
+  uintptr_t ptr = (uintptr_t) ((char *) getPtr()) + page_.offset;
+  auto sptr = (ptr / (sys_page_size_)) * sys_page_size_;
+  auto ssize = page_.size + (ptr - sptr);
+  msync((void *) sptr, ssize, async ? MS_SYNC : MS_ASYNC);
 }
 
 MmapPageManager::MmappedPageRef::~MmappedPageRef() {

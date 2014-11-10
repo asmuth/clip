@@ -31,10 +31,10 @@ public:
 class TestMmapPageManager : public MmapPageManager {
 public:
   explicit TestMmapPageManager(
-      int fd,
+      const std::string& filename,
       size_t len,
       size_t block_size) :
-      MmapPageManager(fd, len, block_size) {}
+      MmapPageManager(filename, len) {}
 
   MmappedFile* getMmappedFileTest(uint64_t last_byte) {
     return getMmappedFile(last_byte);
@@ -99,8 +99,9 @@ TEST_CASE(PageManagerTest, TestMmapPageManager, [] () {
   int fd = open("/tmp/__fnordmetric_testMmapPageManager",
       O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
   EXPECT(fd > 0);
+  auto page_manager = new TestMmapPageManager(
+      "/tmp/__fnordmetric_testMmapPageManager", 0, 4096);
   unlink("/tmp/__fnordmetric_testMmapPageManager");
-  auto page_manager = new TestMmapPageManager(fd, 0, 4096);
 
   auto mfile1 = page_manager->getMmappedFileTest(3000);
   auto mfile2 = page_manager->getMmappedFileTest(304200);

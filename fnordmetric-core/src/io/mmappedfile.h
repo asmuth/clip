@@ -53,7 +53,7 @@ public:
   bool isWritable() const;
 
 protected:
-  File file_;
+  bool is_writable_;
   void* data_;
   size_t size_;
 };

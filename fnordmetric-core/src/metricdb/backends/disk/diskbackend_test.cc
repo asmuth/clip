@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/metricdb/metric.h>
+#include <fnordmetric/metricdb/backends/disk/metric.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/util/wallclock.h>
 #include <stdlib.h>
@@ -18,13 +18,16 @@
 #include <math.h>
 
 using namespace fnordmetric::metricdb::disk_backend;
+using namespace fnordmetric::metricdb;
 using namespace fnord::io;
 
-UNIT_TEST(MetricTest);
+UNIT_TEST(DiskBackendTest);
 
 const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo2";
 
-TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
+using LabelListType = std::vector<std::pair<std::string, std::string>>;
+
+TEST_CASE(DiskBackendTest, TestCreateNewMetric, [] () {
   io::FileUtil::mkdir_p(kTestRepoPath);
   FileRepository file_repo(kTestRepoPath);
   file_repo.deleteAllFiles();
@@ -36,13 +39,12 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
-      [&n] (MetricCursor const* cur) -> bool {
+      [&n] (Sample* sample) -> bool {
         n++;
         return true;
       });
 
   EXPECT_EQ(n, 0);
-  metric.compact();
 
   std::vector<std::string> labels;
   for (int i = 0; i < 1000; ++i) {
@@ -53,12 +55,11 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
     return fmod((x + 1) * 23.5f, 4200.0f);
   };
 
-  int num_saples = 1000000;
+  int num_saples = 100000;
   for (int i = 0; i < num_saples; ++i) {
-    Sample<double> sample;
-    sample.value = seq1(i);
-    sample.labels.emplace_back(labels[i % labels.size()], "myvalue");
-    metric.addSample(sample);
+    LabelListType smpl_labels;
+    smpl_labels.emplace_back(labels[i % labels.size()], "myvalue");
+    metric.insertSample(seq1(i), smpl_labels);
   }
 
   size_t total_bytes = metric.totalBytes();
@@ -69,9 +70,8 @@ TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
   metric.scanSamples(
       util::DateTime::epoch(),
       util::DateTime::now(),
-      [&n, &seq1] (MetricCursor* cur) -> bool {
-        auto smpl = cur->sample<double>();
-        EXPECT_EQ(smpl->value(), seq1(n));
+      [&n, &seq1] (Sample* sample) -> bool {
+        EXPECT_EQ(sample->value(), seq1(n));
         n++;
         return true;
       });

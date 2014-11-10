@@ -19,34 +19,46 @@ namespace fnord {
 namespace sstable {
 
 std::unique_ptr<SSTableWriter> SSTableWriter::create(
-    io::File file,
+    const std::string& filename,
     IndexProvider index_provider,
     void const* header,
     size_t header_size) {
-  if (file.size() > 0) {
+  auto file = io::File::openFile(filename, io::File::O_READ);
+  auto file_size = file.size();
+  if (file_size > 0) {
     RAISE(kIllegalStateError, "file size must be 0");
   }
 
-  auto sstable = new SSTableWriter(std::move(file), index_provider.popIndexes());
+  auto sstable = new SSTableWriter(
+      filename,
+      file_size,
+      index_provider.popIndexes());
+
   sstable->writeHeader(header, header_size);
   return std::unique_ptr<SSTableWriter>(sstable);
 }
 
 std::unique_ptr<SSTableWriter> SSTableWriter::reopen(
-    io::File file,
+    const std::string& filename,
     IndexProvider index_provider) {
+  auto file = io::File::openFile(filename, io::File::O_READ);
   auto file_size = file.size();
-  auto sstable = new SSTableWriter(std::move(file), index_provider.popIndexes());
+
+  auto sstable = new SSTableWriter(
+      filename,
+      file_size,
+      index_provider.popIndexes());
+
   sstable->reopen(file_size);
   return std::unique_ptr<SSTableWriter>(sstable);
 }
 
 SSTableWriter::SSTableWriter(
-    io::File&& file,
+    const std::string& filename,
+    size_t file_size,
     std::vector<Index::IndexRef>&& indexes) :
-    file_(std::move(file)),
     indexes_(std::move(indexes)),
-    mmap_(new io::MmapPageManager(file_.fd(), file_.size(), 1)),
+    mmap_(new io::MmapPageManager(filename, file_size)),
     header_size_(0),
     body_size_(0),
     finalized_(false) {}

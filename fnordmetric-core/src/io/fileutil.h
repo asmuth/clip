@@ -57,6 +57,11 @@ public:
    */
   static void rm(const std::string& filename);
 
+  /**
+   * Truncate a file
+   */
+  static void truncate(const std::string& filename, size_t size);
+
 };
 
 }

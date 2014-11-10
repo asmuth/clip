@@ -10,7 +10,7 @@ FnordMetric.ChartExtensions = function(elem) {
   var legend_elems = base_elem.querySelectorAll(".legend .point");
   var hidden_series = [];
   var chart_elems = [];
-  base_elem.className += "extended";
+  base_elem.className.baseVal += " extended";
 
   var compareBBox = function(a, b) {
     if (a == null || b == null) {
@@ -202,7 +202,7 @@ FnordMetric.ChartComponent = function(elem) {
   var query = elem.innerHTML;
   elem.innerHTML = "";
   elem.style.display = "block";
-  elem.className += "loading extended";
+  elem.className += " loading extended";
 
   FnordMetric.httpPost("http://localhost:8080/query", query, function(resp) {
     elem.className = elem.className.replace("loading", "");
@@ -227,6 +227,7 @@ FnordMetric.ChartComponent = function(elem) {
     }
 
     elem.innerHTML = resp_json.charts[0].svg;
+    FnordMetric.extendCharts();
   });
 }
 
@@ -261,7 +262,7 @@ FnordMetric.extendCharts = function() {
   var elems = document.getElementsByClassName("fm-chart");
 
   for (var i = 0; i < elems.length; ++i) {
-    if (elems[i].className.indexOf("extended") == -1) {
+    if (elems[i].className.baseVal.indexOf("extended") == -1) {
       FnordMetric.ChartExtensions(elems[i]);
     }
   }

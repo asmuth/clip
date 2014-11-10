@@ -113,7 +113,7 @@ protected:
   // FIXPAUL replace with io::MmapedFile
   class MmappedFile {
   public:
-    MmappedFile(void* __data, const size_t __size, const int __fd);
+    MmappedFile(void* __data, const size_t __size);
     MmappedFile(const MmappedFile& copy) = delete;
     MmappedFile& operator=(const MmappedFile& copy) = delete;
     ~MmappedFile();
@@ -122,7 +122,6 @@ protected:
     void incrRefs();
     void decrRefs();
   protected:
-    const int fd;
     std::atomic_int refs;
   };
 
@@ -135,13 +134,14 @@ public:
 
   class MmappedPageRef : public PageManager::PageRef {
   public:
-    MmappedPageRef(const PageManager::Page& page, MmappedFile* file);
+    MmappedPageRef(const PageManager::Page& page, MmappedFile* file, size_t sys_page_size);
     MmappedPageRef(MmappedPageRef&& move);
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
     ~MmappedPageRef();
     void sync(bool async = false) const override;
   protected:
+    size_t sys_page_size_;
     void* getPtr() const override;
     MmappedFile* file_;
   };
@@ -149,7 +149,7 @@ public:
   /**
    * Create a new mmap page manager for a new file
    */
-  explicit MmapPageManager(int fd, size_t len, size_t block_size);
+  explicit MmapPageManager(const std::string& filename, size_t file_size);
 
 
   MmapPageManager(MmapPageManager&& move);
@@ -171,10 +171,11 @@ protected:
    */
   MmappedFile* getMmappedFile(uint64_t last_byte);
 
-  int fd_;
+  const std::string filename_;
   size_t file_size_;
   MmappedFile* current_mapping_;
   std::mutex mmap_mutex_;
+  size_t sys_page_size_;
 };
 
 
