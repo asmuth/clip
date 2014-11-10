@@ -140,25 +140,17 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     on_row_click = on_row_click_new;
   }
 
-  function renderEmptyTable(elem) {
+  function renderEmptyTable(elem, column_names) {
     var table = document.createElement("table");
     table.className = "metric_list";
     var header = document.createElement("tr");
     header.className = "list_header";
-    for (var i = 0; i < 4; i++) {
+    column_names.map(function(column) {
       var cell = document.createElement("th");
+      cell.innerHTML = column;
       header.appendChild(cell);
-    }
+    });
     table.appendChild(header);
-
-    for (var i = 0; i < 7; i++) {
-      var row = document.createElement("tr");
-      for (var j = 0; j < 4; j++) {
-        var cell = document.createElement("td");
-        row.appendChild(cell);
-      }
-      table.appendChild(row);
-    }
 
     elem.appendChild(table);
   }

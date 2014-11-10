@@ -95,9 +95,13 @@ FnordMetric.views.MetricList = function() {
 
   function renderEmptySearch(elem, search_item) {
     elem.innerHTML = "";
-    FnordMetric.util.renderMetricHeader(
-      "No Results were found for " + search_item, elem);
-    FnordMetric.util.TableView().renderEmptyTable(elem);
+    var header = 
+      "Metrics &rsaquo; <em>No Search Results for &quot;" +
+      FnordMetric.util.htmlEscape(search_item) + "&quot;</em>";
+    FnordMetric.util.renderPageHeader(header,elem);
+
+    FnordMetric.util.TableView().renderEmptyTable(
+      elem, ["Metric", "Labels", "Last Insert", "Total stored bytes"]);
   }
 
   function loadMetricList(viewport, query_params) {
