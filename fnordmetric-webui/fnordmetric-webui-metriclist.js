@@ -28,7 +28,6 @@ FnordMetric.views.MetricList = function() {
   }
 
 
-
   function render(viewport, url, query_params) {
     if (query_params != undefined) {
       actions[query_params.name].render(viewport, query_params);
@@ -40,7 +39,6 @@ FnordMetric.views.MetricList = function() {
 
   function onRowClick() {
     //FIXME
-    console.log("on row click");
     var viewport = document.body.querySelector(".viewport");
     var params = {
       "name" : "metric",
@@ -50,14 +48,13 @@ FnordMetric.views.MetricList = function() {
       viewport, params);
   };
 
-  
-  function renderMetricList(viewport, metrics, action) {
+
+
+  function renderMetricList(viewport, metrics, search_item) {
     viewport.innerHTML = "";
-    var table_container = document.createElement("div");
-    viewport.appendChild(table_container);
 
     if (metrics.length == 0) {
-      if (action != undefined) {
+      if (search_item != undefined) {
         console.log("render no search result");
       } else {
         renderEmptyMetricsList(viewport);
@@ -65,6 +62,12 @@ FnordMetric.views.MetricList = function() {
       return;
     }
 
+    var header_text = (search_item != undefined) ? 
+      "Search " + search_item : "Metrics";
+    FnordMetric.util.renderMetricHeader(header_text, viewport);
+
+    var table_container = document.createElement("div");
+    viewport.appendChild(table_container);
 
     var table_view = FnordMetric.util.TableView([
         "Metric",
@@ -98,13 +101,13 @@ FnordMetric.views.MetricList = function() {
     FnordMetric.httpGet("/metrics", function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
-        var action;
+        var search_item;
         if (query_params != undefined) {
           json.metrics =
-              actions[query_params.name](json.metrics, query_params.value);
-          action = query_params.name;
+              actions[query_params.name].data(json.metrics, query_params.value);
+          search_item = query_params.value;
         }
-        renderMetricList(viewport, json.metrics, action);
+        renderMetricList(viewport, json.metrics, search_item);
       } else {
         FnordMetric.util.displayErrorMessage(viewport, "Error connecting to server");
       }

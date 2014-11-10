@@ -167,6 +167,14 @@ FnordMetric.util.openPopup = function(elem, text) {
   }
 }
 
+FnordMetric.util.renderMetricHeader = function(text, elem) {
+  var header = document.createElement("h1");
+  header.className = "metric";
+  header.innerHTML = text;
+
+  elem.appendChild(header);
+}
+
 
 FnordMetric.httpGet = function(url, callback) {
   var http = new XMLHttpRequest();

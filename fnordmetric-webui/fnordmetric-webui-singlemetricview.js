@@ -19,18 +19,17 @@ if (FnordMetric.views === undefined) {
 
 FnordMetric.util.singleMetricView = function() {
   function render(elem, query_params) {
+    /* set url and push history state */
     FnordMetric.util.setURLQueryString(
       query_params.name, query_params.value, false, true);
-   
+
     elem.innerHTML = "";
-    var header = document.createElement("h1");
-    header.className = "metric";
-    header.innerHTML = query_params.value;
+
+    FnordMetric.util.renderMetricHader(
+      query_params.value, elem);
 
     var button = FnordMetric.createButton(
       "#", undefined, "Open in Query Editor");
-
-    elem.appendChild(header);
     elem.appendChild(button);
 
     button.onclick = function(e) {
