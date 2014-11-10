@@ -134,7 +134,7 @@ FnordMetric.views.QueryPlayground = function() {
 
     /* render buttons */
     button_bar = document.createElement("div");
-    button_bar.innerHTML = "<div class='editor_type_picker'>SQL Editor</div>";
+    button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor</div>";
     button_bar.className = "navbar";
     var split_btn = FnordMetric.createButton(
       "#", "fancy_button", "Change View");

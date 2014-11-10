@@ -559,6 +559,10 @@ section {
   text-align: center;
 }
 
+section.noborder:after {
+  display: none;
+}
+
 section:after {
   content: ' ';
   display: block;
@@ -692,4 +696,25 @@ p + .fancybutton {
 
 #documentation ul {
   margin-bottom: 1.5em;
+}
+
+#documentation .example_gallery h2 {
+  font-size: 100%;
+  margin-top: 0;
+}
+
+.example_gallery .example {
+  list-style-type: none;
+  width: 430px;
+  margin: 20px 40px 0 0;
+  padding: 0;
+  float: left;
+}
+
+.example_gallery .thumb {
+  height: 213px;
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
 }

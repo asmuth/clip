@@ -73,7 +73,7 @@ FnordMetric.util.convertArrayToString = function(array) {
 
 /* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
-  elem.innerHTML = "<div class='load_foreground'></div>";
+  elem.innerHTML = "<div class='load_foreground'><i class='fa fa-refresh fa-spin'></div>";
 }
 
 /*
@@ -334,7 +334,7 @@ FnordMetric.util.getHorizontalEditorWidth =
     if (editor_width > 0) {
       editor_width = wdn_width / editor_width;
     }
-    var width = Math.max(50, editor_width);
+    var width = Math.max(35, Math.min(50, editor_width));
     return width;
 }
 

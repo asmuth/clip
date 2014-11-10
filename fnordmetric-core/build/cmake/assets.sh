@@ -46,3 +46,9 @@ asset_name() {
   asset_file "fnordmetric-webui/fnordmetric-favicon.ico"
   asset_name "fnordmetric_webui_fnordmetric_favicon_ico" "fnordmetric-webui/fnordmetric-favicon.ico"
 ) >> stage/src/asset_bundle.cc
+
+(
+  asset_uniq "fnordmetric_webui_fontawesome_woff"
+  asset_file "fnordmetric-webui/fontawesome.woff"
+  asset_name "fnordmetric_webui_fontawesome_woff" "fnordmetric-webui/fontawesome.woff"
+) >> stage/src/asset_bundle.cc

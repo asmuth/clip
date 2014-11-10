@@ -26,8 +26,9 @@ FnordMetric.WebUI = function() {
   headbar.innerHTML = "<h1 class='le_fnord'>F</h1>"
   headbar.className = "headbar";
 
-  function addMenuItem(name, url) {
+  function addMenuItem(name, url, classes) {
     var menuitem = document.createElement("a");
+    menuitem.className = classes;
     menuitem.href = "#" + url;
     menuitem.innerHTML = "<h1>" + name + "</h1>";
     headbar.appendChild(menuitem);
@@ -36,6 +37,13 @@ FnordMetric.WebUI = function() {
       openUrl(this.getAttribute("href").substr(1), true);
       return false;
     });
+  }
+
+  function addSearchBar() {
+    var searchbar = document.createElement("div");
+    searchbar.className = "searchbar";
+    searchbar.innerHTML = "<i class='fa fa-search'></i><input />";
+    headbar.appendChild(searchbar);
   }
 
   function init() {
@@ -90,6 +98,7 @@ FnordMetric.WebUI = function() {
   return {
     "openUrl" : openUrl,
     "addView": addView,
-    "addMenuItem": addMenuItem
+    "addMenuItem": addMenuItem,
+    "addSearchBar": addSearchBar
   }
 };

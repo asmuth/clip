@@ -23,18 +23,13 @@
 </div>
 <div id="wrap" style="min-height: 900px;">
   <section style="border-top: none; margin-top: 0;" class="whatisfnordmetric">
-    <h1 style="margin-bottom: 20px;">What is FnordMetric?</h1>
+    <h1 style="margin-bottom: 20px;">FnordMetric ChartSQL</h1>
 
     <p>
-      FnordMetric is a fully-featured featured SQL query engine; it reads input
-      data from a number of external sources like MySQL databases or flat CSV files.
-    </p>
-
-    <p>
-      Like others, it can return query results as plain old tables. Unlike others
-      it allows you to write SQL queries that return charts. These are rendered
-      as PNG or SVG images and can easily be embedded into any website in order
-      to build beautiful dashboards.
+      FnordMetric ChartSQL allows you to write SQL queries that return charts
+      instead of tables. The charts are rendered as SVG vector graphics and can 
+      easily be embedded into any website and customized with css in order to
+      build beautiful dashboards:
     </p>
 
 <!--
@@ -63,47 +58,56 @@ webpage without writing a single line of code. It gives you maximum flexiblitiy 
 control over layout and style with HTML and CSS.
     -->
 
-    <div style="width: 960px; margin: 60px auto;">
-      <div style="
-          position: absolute; height: 60px; width:100%; left:0;
-          background: url('/img/arrow.png') center center no-repeat;
-          background-size: contain;
-          opacity: 0.1;
-          margin-top: 83px;">
-          </div>
+    <div style="margin: 40px auto; width: 600px;">
+<pre class="prettyprint" style="margin-top: 0; text-align:left;"><code>IMPORT TABLE city_temperatures
+   FROM 'csv:examples/data/city_temperatures.csv?headers=true';
 
-      <div style="
-          height: 240px;
-          background: url('/img/leadexample-chart.png') center center no-repeat #f9f9f9;
-          border-radius: 5px;
-          width: 350px;
-          border: 3px solid #e7e7e7;
-          float: right;">
-          </div>
+DRAW LINECHART WITH
+   AXIS BOTTOM;
 
-      <div style="
-          height: 240px;
-          background: url('/img/leadexample-code.png') center center no-repeat #f9f9f9;
-          border-radius: 5px;
-          width: 350px;
-          border: 3px solid #e7e7e7;">
-          </div>
+SELECT city AS series, month AS x, temperature AS y
+   FROM city_temperatures;
+</code></pre>
     </div>
 
     <p>
-      You can use FnordMetric as a standalone program from the commandline, via
-      the built-in web interface or include it into your own application.
-      FnordMetric is written in C++ and ships with language bindings for C, C++,
-      PHP, Python and Ruby.
+      You can execute ChartSQL queries from the command line against a number of
+      external sources like CSV files or a MySQL database.
+    </p>
+
+    <code style="width: 580px;
+display: block;
+margin: 40px auto 20px auto;
+text-align: left;
+padding: 8px 10px;">$  fnordmetric-cli --format=svg my_chart_sql_query.sql</code>
+  </section>
+
+  <section class="whatisfnordmetric">
+    <h1 style="margin-bottom: 20px;">FnordMetric Server</h1>
+
+    <p>
+      Fnordmetric Server is a standalone HTTP server application. It exposes a
+      web UI and a HTTP API to run ChartSQL queries and collect timeseries data.
+      You can use fnordmetric-server as a one-stop solution for metric collection
+      and charting. Since fnordmetric-server aims to be a StatsD+graphite
+      competitor, it implements a wire compatible StatsD API.
+    </p>
+
+    <img style="margin: 30px;" src="/img/fnordmetric_server_screen.png" width="800" class="shadow" />
+
+    <p>
+      FnordMetric Server can store the collected timeseries data on local disk or
+      in external storage (MySQL or HBase).
     </p>
 
     <p>
       FnordMetric is free software and licensed under the GNU General Public License v3.0
     </p>
+
   </section>
 
-  <section class="whatisfnordmetric">
-    <h1 style="margin-bottom: 20px;">Getting started</h1>
+  <section class="whatisfnordmetric noborder" style="margin-bottom:140px;">
+    <h1 style="margin-bottom: 20px;">Getting Started</h1>
 
     <p>
       Lebowski ipsum we're scattering the fucking ashes! It's all a goddamn fake.
@@ -117,28 +121,8 @@ control over layout and style with HTML and CSS.
       bosom of the Pacific Ocean, which you loved so well.
     </p>
 
-    <a class="fancybutton" href="#">See Examples &rarr;</a>
-    <a class="fancybutton" href="#">Read the Documentation &rarr;</a>
-  </section>
-
-  <section class="whatisfnordmetric">
-    <h1 style="margin-bottom: 20px;">Join the community</h1>
-
-    <p>
-      Lebowski ipsum we're scattering the fucking ashes! It's all a goddamn fake.
-      Like Lenin said, look for the person who will benefit. And you will, uh,
-      you know, you'll, uh, you know what I'm trying to say.
-    </p>
-
-    <p>
-      And so, Theodore Donald Karabotsos, in accordance with what we think your
-      dying wishes might well have been, we commit your mortal remains to the
-      bosom of the Pacific Ocean, which you loved so well.
-    </p>
-
-    <p>
-      Newsletter signup
-    </p>
+    <a class="fancybutton" href="/examples">See Examples &rarr;</a>
+    <a class="fancybutton" href="/documentation">Read the Documentation &rarr;</a>
   </section>
 
 <!--

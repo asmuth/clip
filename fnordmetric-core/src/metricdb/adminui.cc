@@ -86,6 +86,14 @@ bool AdminUI::handleRequest(xzero::HttpRequest* request,
     return true;
   }
 
+  if (url == "/s/fontawesome.woff") {
+    sendAsset(
+        response,
+        "fnordmetric-webui/fontawesome.woff",
+        "application/x-font-woff");
+    return true;
+  }
+
   return false;
 }
 
