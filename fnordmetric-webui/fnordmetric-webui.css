@@ -437,6 +437,7 @@ input {
 }
 
 .pagination_navbar {
+  position: absolute;
   float: right;
   height: 25px;
   line-height: 25px;
@@ -468,8 +469,8 @@ input {
 .pagination_navbar.metric {
   width: 100%;
   margin: auto;
-  margin-top: 5px;
-  margin-bottom: 6px
+  margin-top: -40px;
+  right: 10px;
 }
 
 .result_pane table.result_table {
@@ -587,7 +588,8 @@ table.metric_list tr {
 }
 
 table.metric_list tr.list_header {
-  border-top: 1px solid rgb(226, 232, 237);
+  border-top: 2px solid rgb(226, 232, 237);
+  border-bottom: 2px solid rgb(226, 232, 237);
   background-color: #f6f8fa;
   color: #60707f;
 }
@@ -670,6 +672,19 @@ table.metric_list tr:hover td {
   border: 1px solid #ccc;
   box-shadow: 0 0 3px rgba(0,0,0,.1);
   border-radius: 1px
+}
+
+h1.page_header {
+  font-size: 140%;
+  font-weight: 500;
+  margin: 0 0 0 20px;
+  padding: 17px 0 10px 0;
+  color: #738694;
+}
+
+h1.page_header em {
+  font-style: normal;
+  color: #394b59;
 }
 
 /* BASICS */

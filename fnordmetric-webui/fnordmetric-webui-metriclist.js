@@ -63,8 +63,8 @@ FnordMetric.views.MetricList = function() {
     }
 
     var header_text = (search_item != undefined) ? 
-      "Search " + search_item : "Metrics";
-    FnordMetric.util.renderMetricHeader(header_text, viewport);
+      "Search " + search_item : "Metrics &rsaquo; <em>All Metrics</em>";
+    FnordMetric.util.renderPageHeader(header_text, viewport);
 
     var table_container = document.createElement("div");
     viewport.appendChild(table_container);

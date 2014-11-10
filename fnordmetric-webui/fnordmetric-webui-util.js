@@ -167,9 +167,9 @@ FnordMetric.util.openPopup = function(elem, text) {
   }
 }
 
-FnordMetric.util.renderMetricHeader = function(text, elem) {
+FnordMetric.util.renderPageHeader = function(text, elem) {
   var header = document.createElement("h1");
-  header.className = "metric";
+  header.className = "page_header";
   header.innerHTML = text;
 
   elem.appendChild(header);
