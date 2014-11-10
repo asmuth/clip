@@ -322,7 +322,7 @@ FnordMetric.util.getHorizontalEditorWidth =
     if (editor_width > 0) {
       editor_width = wdn_width / editor_width;
     }
-    var width = Math.max(50, editor_width);
+    var width = Math.max(35, Math.min(50, editor_width));
     return width;
 }
 
