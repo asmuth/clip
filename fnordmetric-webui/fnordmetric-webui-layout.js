@@ -46,11 +46,8 @@ FnordMetric.WebUI = function() {
     searchbar.innerHTML = "<i class='fa fa-search'></i>";
     searchbar.appendChild(searchinput);
     headbar.appendChild(searchbar);
+    FnordMetric.util.Autocomplete(searchbar,searchinput, ["foo", "bar"]);
 
-    searchinput.addEventListener('focus', function() {
-      console.log("searhc");
-      FnordMetric.util.Autocomplete(searchinput, ["foo", "bar"]);
-    }, false);
   }
 
   function init() {
