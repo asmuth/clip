@@ -95,13 +95,16 @@ MmapPageManager::MmapPageManager(
     PageManager(1, file_size),
     filename_(filename),
     file_size_(file_size),
-    current_mapping_(nullptr) {}
+    current_mapping_(nullptr) {
+  sys_page_size_ = sysconf(_SC_PAGESIZE);
+}
 
 MmapPageManager::MmapPageManager(MmapPageManager&& move) :
     PageManager(std::move(move)),
     filename_(move.filename_),
     file_size_(move.file_size_),
-    current_mapping_(move.current_mapping_) {
+    current_mapping_(move.current_mapping_),
+    sys_page_size_(move.sys_page_size_) {
   move.file_size_ = 0;
   move.current_mapping_ = nullptr;
 }
@@ -134,7 +137,11 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
     file_size_ = new_size;
   }
 
-  auto page_ref = new MmappedPageRef(page, getMmappedFile(last_byte));
+  auto page_ref = new MmappedPageRef(
+      page,
+      getMmappedFile(last_byte),
+      sys_page_size_);
+
   mmap_mutex_.unlock();
 
   return std::unique_ptr<PageManager::PageRef>(page_ref);
@@ -196,17 +203,19 @@ void MmapPageManager::MmappedFile::decrRefs() {
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     const PageManager::Page& page,
-    MmappedFile* file) :
+    MmappedFile* file,
+    size_t sys_page_size) :
     PageRef(page),
-    file_(file) {
-
+    file_(file),
+    sys_page_size_(sys_page_size) {
   file_->incrRefs();
 }
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     MmapPageManager::MmappedPageRef&& move) :
     PageRef(move.page_),
-    file_(move.file_) {
+    file_(move.file_),
+    sys_page_size_(move.sys_page_size_) {
   move.file_ = nullptr;
 }
 
@@ -215,10 +224,10 @@ void* MmapPageManager::MmappedPageRef::getPtr() const {
 }
 
 void MmapPageManager::MmappedPageRef::sync(bool async /* = false */) const {
-  msync(
-      ((char *) getPtr()) + page_.offset,
-      page_.size,
-      async ? MS_SYNC : MS_ASYNC);
+  uintptr_t ptr = (uintptr_t) ((char *) getPtr()) + page_.offset;
+  auto sptr = (ptr / (sys_page_size_)) * sys_page_size_;
+  auto ssize = page_.size + (ptr - sptr);
+  msync((void *) sptr, ssize, async ? MS_SYNC : MS_ASYNC);
 }
 
 MmapPageManager::MmappedPageRef::~MmappedPageRef() {
