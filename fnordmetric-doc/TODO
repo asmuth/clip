@@ -8,6 +8,7 @@
     - better screenshot on homepage
 
 [ SQL ]
+    - match function names case-insensitively
     - find time constraint from sql query
     - scan samples with range / sstable binary search
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
