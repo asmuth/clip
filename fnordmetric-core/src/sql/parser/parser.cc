@@ -155,7 +155,13 @@ ASTNode* Parser::methodCall() {
   /* read arguments */
   do {
     consumeToken();
-    e->appendChild(expr());
+
+    /* ignore T_ALL in SELECT count(*) FROM ... */
+    if (*cur_token_ == Token::T_ASTERISK) {
+      consumeToken();
+    } else {
+      e->appendChild(expr());
+    }
   } while (*cur_token_ == Token::T_COMMA);
 
   expectAndConsume(Token::T_RPAREN);

@@ -824,6 +824,15 @@ TEST_CASE(SQLTest, TestTableScanGroupByCountQuery, [] () {
   EXPECT(sum == 10);
 });
 
+TEST_CASE(SQLTest, TestCountAllQuery, [] () {
+  auto results = executeTestQuery(
+      "  SELECT count(*) FROM testtable2;");
+
+  EXPECT(results->getNumRows() == 1);
+  EXPECT_EQ(results->getRow(0)[0], "10");
+});
+
+
 TEST_CASE(SQLTest, TestTableScanGroupBySumQuery, [] () {
   auto results = executeTestQuery(
       "  SELECT"
