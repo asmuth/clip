@@ -63,7 +63,6 @@ FnordMetric.util.queryResultView = function() {
       table_container.className = "result_card";
       elem.appendChild(table_container);
       renderTable(tables[i], table_container);
-      result_pane.style.height = "auto";
     }
   }
 

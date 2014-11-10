@@ -79,7 +79,8 @@ FnordMetric.views.QueryPlayground = function() {
         FnordMetric.util.queryResultView().render(
           result_pane, res, duration);
         updateLayout(editor_pane, result_pane, direction);
-        renderExecutionInfo(duration, res.tables, editor_pane);
+        renderExecutionInfo(duration, res.tables, result_pane);
+        FnordMetric.extendCharts();
       } else {
         /* server error */
         renderServerError(result_pane);
