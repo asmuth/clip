@@ -85,7 +85,7 @@ You should now be able to navigate to the admin interface on
 on the metric to bring up the interactive query editor. This should look something
 like this:
 
-<img style="margin: 30px;" src="/img/simple_example_screen.png" width="630" class="shadow" />
+<img src="/img/fnordmetric_server_screen.png" width="800" class="shadow" />
 <br />
 
 Click around a bit to make yourself familiar with the Web UI. The chart you see
@@ -152,7 +152,7 @@ plotted on the Y axis and one series per hostname:
 
 The result should look something like this:
 
-<img style="margin: 30px;" src="/img/simple_example_screen.png" width="630" class="shadow" />
+<img src="/img/fnordmetric_server_screen.png" width="800" class="shadow" />
 <br />
 
 You now have a running FnordMetric Server, but there is a lot more you can do.
