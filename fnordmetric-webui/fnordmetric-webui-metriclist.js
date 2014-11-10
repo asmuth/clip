@@ -38,14 +38,8 @@ FnordMetric.views.MetricList = function() {
 
 
   function onRowClick() {
-    //FIXME
-    var viewport = document.body.querySelector(".viewport");
-    var params = {
-      "name" : "metric",
-      "value" : this.firstChild.id
-    };
-    FnordMetric.util.singleMetricView().render(
-      viewport, params);
+    var raw_url = "metric_list?metric="+ this.firstChild.id;
+    FnordMetric.WebUI.singleton.openUrl(raw_url, true);
   };
 
 
