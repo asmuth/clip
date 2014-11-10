@@ -345,8 +345,26 @@ FnordMetric.util.searchMetricList = function(metrics, search_item) {
   return data;
 }
 
+FnordMetric.util.htmlEscape = function(str) {
+  return str;
+}
 
-FnordMetric.DropdownAutocomplete = function(
+
+
+FnordMetric.util.Autocomplete = function(input, source) {
+  console.log("autocomplte");
+  var list = document.createElement("ul");
+  list.className = "autocomplete";
+
+  input.addEventListener('keydown', function(e) {
+    console.log("keydown in input");
+  }, false);
+
+}
+
+
+/*
+
   parentNode, dropdown, input_field, keys, search_button) {
   var down = 0;
   var current_value = "";
@@ -433,7 +451,4 @@ FnordMetric.DropdownAutocomplete = function(
   init();
 }
 
-FnordMetric.util.htmlEscape = function(str) {
-  return str;
-}
-
+*/
