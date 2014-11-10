@@ -609,7 +609,7 @@ table.metric_list th {
   border-right: 1px solid rgb(226, 232, 237);
 }
 
-table.metric_list th.clickable:hover {
+table.metric_list .clickable:hover {
   cursor:pointer;
 }
 

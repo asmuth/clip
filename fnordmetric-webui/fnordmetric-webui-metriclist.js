@@ -46,7 +46,6 @@ FnordMetric.views.MetricList = function() {
 
   function renderMetricList(viewport, metrics, search_item) {
     viewport.innerHTML = "";
-    console.log(metrics);
 
     if (metrics.length == 0) {
       if (search_item != undefined) {

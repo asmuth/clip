@@ -205,7 +205,7 @@ FnordMetric.httpPost = function(url, request, callback) {
 
 FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
-    return timestamp;
+    return "0";
   }
 
   var time_str;

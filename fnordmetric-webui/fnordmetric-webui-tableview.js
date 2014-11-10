@@ -25,6 +25,8 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
   var current_page = 0;
   var pages;
 
+  var order = {};
+
   function render(isSortable) {
     if (isSortable == undefined) {
       isSortable = true;
@@ -42,9 +44,14 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     render(isSortable);
   }
 
-  function resortRows(column_index, order) {
+  function resortRows(column_index) {
+    var column_order;
+    column_order  = (order[column_index] == undefined ||
+      order[column_index] == "desc") ?
+      "asc" : "desc";
+    order[column_index] = column_order;
     FnordMetric.util.sortMetricList(
-      all_rows, column_index, order);
+      all_rows, column_index, column_order);
     updatePage(0);
   }
 
@@ -60,28 +67,24 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
 
     for (var i = 0; i < columns.length; i++) {
       var header_cell = document.createElement("th");
-      header_cell.innerHTML = columns[i];
+      var title = document.createElement("span");
+      title.innerHTML = columns[i];
+      header_cell.appendChild(title);
       header.appendChild(header_cell);
       if (i != 1 && isSortable) {
-        header_cell.className = "clickable";
-
-        var sort_asc = FnordMetric.createButton(
+        title.setAttribute("id", i);
+        title.className = "clickable";
+        title.onclick = function() {
+          resortRows(this.id);
+        }
+        var sort = FnordMetric.createButton(
           "#", "caret left", "&#x25B2;");
-        sort_asc.setAttribute("id", i);
-        sort_asc.onclick = function(e) {
+        sort.setAttribute("id", i);
+        sort.onclick = function(e) {
           e.preventDefault();
-          resortRows(this.id, "asc");
+          resortRows(this.id);
         }
-        header_cell.appendChild(sort_asc);
-
-        var sort_desc = FnordMetric.createButton(
-          "#", "caret", "&#x25BC;");
-        sort_desc.setAttribute("id", i);
-        sort_desc.onclick = function(e) {
-          e.preventDefault();
-          resortRows(this.id, "desc");
-        }
-        header_cell.appendChild(sort_desc);
+        header_cell.appendChild(sort);
       }
     }
 
