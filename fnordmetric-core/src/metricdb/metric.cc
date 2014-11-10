@@ -20,10 +20,13 @@ void IMetric::insertSample(
     double value,
     const std::vector<std::pair<std::string, std::string>>& labels) {
   // FIXPAUL slow slow slow!
-  for (const auto& l1 : labels) {
-    for (const auto& l2 : labels) {
-      if (l1.first == l2.first) {
-        RAISE(kIllegalArgumentError, "duplicate label: %s", l1.first.c_str());
+  for (int i1 = 0; i1 < labels.size(); ++i1) {
+    for (int i2 = 0; i2 < labels.size(); ++i2) {
+      if (i1 != i1 && labels[i1].first == labels[i2].first) {
+        RAISE(
+            kIllegalArgumentError,
+            "duplicate label: %s",
+            labels[i1].first.c_str());
       }
     }
   }

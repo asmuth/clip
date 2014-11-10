@@ -215,9 +215,9 @@ add_executable(tests/test-statsd
     stage/src/fnordmetric/metricdb/statsd_test.cc)
 target_link_libraries(tests/test-statsd fnord-static)
 
-#add_executable(tests/test-metric
-#    stage/src/fnordmetric/metricdb/metric_test.cc)
-#target_link_libraries(tests/test-metric fnord-static)
+add_executable(tests/test-disk-backend
+    stage/src/fnordmetric/metricdb/backends/disk/diskbackend_test.cc)
+target_link_libraries(tests/test-disk-backend fnord-static)
 
 #add_executable(tests/test-metricrepository
 #    stage/src/fnordmetric/metricdb/metricrepository_test.cc)

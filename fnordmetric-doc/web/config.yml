@@ -69,7 +69,7 @@ documentation:
         url: "/metridb/statsd_interface"
         file: "metricdb_statsd_interface"
       -
-        title: "Retention Policies"
+        title: "Retention & Downsampling"
         url: "/query_language/reference"
       -
         title: "Included agents"

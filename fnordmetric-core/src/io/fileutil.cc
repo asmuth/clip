@@ -146,7 +146,7 @@ void FileUtil::rm(const std::string& filename) {
 
 void FileUtil::truncate(const std::string& filename, size_t new_size) {
   if (::truncate(filename.c_str(), new_size) < 0) {
-    RAISE_ERRNO(kIOError, "ftruncate(%s) failed", filename.c_str());
+    RAISE_ERRNO(kIOError, "truncate(%s) failed", filename.c_str());
   }
 }
 
