@@ -304,6 +304,11 @@ input {
   margin-left: 10px;
   line-height: 40px;
   text-align: center;
+  cursor: pointer;
+}
+
+.icobtn:hover {
+  color: #009fe9;
 }
 
 .viewport.horizontal_split .editor_pane {

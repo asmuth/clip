@@ -1,3 +1,8 @@
+[ faq ] 
+  - how do i set the line color
+  - can i use fnordmetric with external data
+  - do I need an external database
+
 
 [ doc ]
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
@@ -17,6 +22,7 @@
     - sql: if
     - sql: case
     - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
+    - support red/green/blue/hex colors
     - round fn
 
 [ release ]
