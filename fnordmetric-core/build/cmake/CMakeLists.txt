@@ -85,6 +85,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql/runtime/compile.cc
     stage/src/fnordmetric/sql/runtime/defaultruntime.cc
     stage/src/fnordmetric/sql/runtime/execute.cc
+    stage/src/fnordmetric/sql/runtime/groupovertimewindow.cc
     stage/src/fnordmetric/sql/runtime/orderby.cc
     stage/src/fnordmetric/sql/runtime/importstatement.cc
     stage/src/fnordmetric/sql/runtime/queryplan.cc

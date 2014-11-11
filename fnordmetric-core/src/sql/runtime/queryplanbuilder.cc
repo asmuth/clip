@@ -17,6 +17,7 @@
 #include <fnordmetric/sql/runtime/limitclause.h>
 #include <fnordmetric/sql/runtime/orderby.h>
 #include <fnordmetric/sql/runtime/groupby.h>
+#include <fnordmetric/sql/runtime/groupovertimewindow.h>
 #include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/symboltable.h>
 #include <fnordmetric/sql/runtime/importstatement.h>
