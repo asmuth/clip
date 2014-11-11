@@ -1241,7 +1241,7 @@ TEST_CASE(SQLTest, TestSimpleGroupOverTimeWindow, [] () {
   auto result = executeTestQuery(
       "  SELECT time, sum(value) "
       "      FROM timeseries"
-      "      GROUP OVER TIMEWINDOW(time, 60);");
+      "      GROUP OVER TIMEWINDOW(time, 60, 20);");
 
   result->debugPrint();
   EXPECT_EQ(result->getNumRows(), 1);

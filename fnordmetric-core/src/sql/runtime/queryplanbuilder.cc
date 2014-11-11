@@ -460,6 +460,16 @@ QueryPlanNode* QueryPlanBuilder::buildGroupOverTimewindow(
         "illegal use of aggregate functions in the GROUP OVER clause");
   }
 
+  /* find time expression input column */
+  if (time_expr_ast->getType() != ASTNode::T_RESOLVED_COLUMN) {
+    RAISE(
+        kRuntimeError,
+        "first argument to TIMEWINDOW() must be a column reference");
+  }
+
+  auto input_row_size = child_sl->getChildren().size();
+  auto input_row_time_index = time_expr_ast->getID();
+
   /* compile window and step */
   auto window_svalue = executeSimpleConstExpression(compiler_, window_expr_ast);
   auto window = window_svalue.getInteger();
@@ -483,6 +493,8 @@ QueryPlanNode* QueryPlanBuilder::buildGroupOverTimewindow(
       time_expr,
       window,
       step,
+      input_row_size,
+      input_row_time_index,
       select_expr,
       group_expr,
       select_scratchpad_len,

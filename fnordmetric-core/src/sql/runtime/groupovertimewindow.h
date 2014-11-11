@@ -31,6 +31,8 @@ public:
       CompiledExpression* time_expr,
       fnordmetric::IntegerType window,
       fnordmetric::IntegerType step,
+      size_t input_row_size,
+      size_t input_row_time_index,
       CompiledExpression* select_expr,
       CompiledExpression* group_expr,
       size_t scratchpad_size,
@@ -61,6 +63,8 @@ protected:
   CompiledExpression* time_expr_;
   fnordmetric::IntegerType window_;
   fnordmetric::IntegerType step_;
+  size_t input_row_size_;
+  size_t input_row_time_index_;
   CompiledExpression* select_expr_;
   CompiledExpression* group_expr_;
   size_t scratchpad_size_;

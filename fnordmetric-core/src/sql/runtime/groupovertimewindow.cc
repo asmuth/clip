@@ -19,6 +19,8 @@ GroupOverTimewindow::GroupOverTimewindow(
     CompiledExpression* time_expr,
     fnordmetric::IntegerType window,
     fnordmetric::IntegerType step,
+    size_t input_row_size,
+    size_t input_row_time_index,
     CompiledExpression* select_expr,
     CompiledExpression* group_expr,
     size_t scratchpad_size,
@@ -26,6 +28,8 @@ GroupOverTimewindow::GroupOverTimewindow(
     time_expr_(time_expr),
     window_(window),
     step_(step),
+    input_row_size_(input_row_size),
+    input_row_time_index_(input_row_time_index),
     columns_(std::move(columns)),
     select_expr_(select_expr),
     group_expr_(group_expr),
@@ -157,14 +161,30 @@ void GroupOverTimewindow::emitWindow(
 
   memset(scratchpad_.get(), 0, scratchpad_size_);
 
-  for (; window_begin != window_end; window_begin++) {
+  if (window_begin == window_end) {
+    std::vector<SValue> row(input_row_size_, SValue());
+    row[input_row_time_index_] = SValue(fnord::util::DateTime(window_time));
+
     executeExpression(
         select_expr_,
         scratchpad_.get(),
-        window_begin->second.size(),
-        window_begin->second.data(),
+        row.size(),
+        row.data(),
         &out_len,
         out);
+  } else {
+    for (; window_begin != window_end; window_begin++) {
+      auto& row = window_begin->second;
+      row[input_row_time_index_] = SValue(fnord::util::DateTime(window_time));
+
+      executeExpression(
+          select_expr_,
+          scratchpad_.get(),
+          row.size(),
+          row.data(),
+          &out_len,
+          out);
+    }
   }
 
   emitRow(out, out_len);

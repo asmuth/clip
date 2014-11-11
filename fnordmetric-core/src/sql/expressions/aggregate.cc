@@ -48,6 +48,9 @@ void sumExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
   }
 
   switch(val->getType()) {
+    case SValue::T_NULL:
+      return;
+
     case SValue::T_INTEGER:
       data->t_integer += val->getInteger();
       *out = SValue((int64_t) data->t_integer);
