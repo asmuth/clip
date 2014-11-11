@@ -246,6 +246,16 @@ FnordMetric.util.parseMilliTS = function(ts) {
   }
 }
 
+FnordMetric.util.humanDateToMikroTS = function(date) {
+  /* first version until datepicker is implemented */ 
+  var ts;
+  if (date == "NOW") {
+    ts = Date.now();
+  }
+  return ts;
+}
+
+
 FnordMetric.util.humanCountRows = function(tables) {
   var num = 0;
   tables.map(function(table) {
@@ -371,7 +381,10 @@ FnordMetric.util.filterStringArray = function(strings, filter) {
       "time" : null,
       "step" : null
       },
-    "time" : null,
+    "time" : {
+      "start" : null,
+      "end" : null
+    }
     "group_by" : []
   }
 */
@@ -397,6 +410,23 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   query += draw + select + show + from;
 
   /* check for time --> where clause and add to query */
+  if (inputs.time.start != null) {
+    where = 
+      " where time > FROM_TIMESTAMP(" + inputs.time.start + ")";
+  }
+
+  if (inputs.time.end != null) {
+    if (where == null) {
+      where += 
+        "where time < FROM_TIMESTAMP(" + inputs.time.end + ")";
+    } else {
+      where += 
+        " and time < FROM_TIMESTAMP(" + inputs.time.end +")";
+    }
+  }
+
+  //query += where;
+
 
   if (hasAggr) {
     /* group over timewindow needs a time and step info */
@@ -423,8 +453,8 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   }
 
   query += ";";
-  console.log(query);
   return query;
 }
+
 
 
