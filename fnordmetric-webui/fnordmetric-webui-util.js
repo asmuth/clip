@@ -394,8 +394,8 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   var where = null;
 
   var draw = "DRAW Linechart AXIS BOTTOM AXIS LEFT; ";
-  var select = "SELECT 'mymetric' AS series, time AS x, ";
-  var from = " FROM " + metric;
+  var select = "SELECT time AS x, ";
+  var from = " FROM `" + metric + "`";
   var show;
   var hasAggr;
 

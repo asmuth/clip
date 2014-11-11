@@ -976,6 +976,8 @@ h1.page_header em {
 
 .single_metric_ui.chart_container {
   height: 400px;
+  padding: 20px;
+  text-align: center;
 }
 
 .single_metric_ui.chart_container svg {

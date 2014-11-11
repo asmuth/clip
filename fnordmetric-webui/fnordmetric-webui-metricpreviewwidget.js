@@ -28,6 +28,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       chart_container.className = "single_metric_ui chart_container";
       chart_container.innerHTML = chart.svg;
       elem.appendChild(chart_container);
+      FnordMetric.extendCharts();
     }
   }
 
@@ -80,7 +81,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    elems.aggregation.time.addEventListener('change', function() {
+    elems.aggregation.window.addEventListener('change', function() {
       inputs.aggregation.time = this.value;
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
@@ -182,15 +183,14 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     };
 
     var date_group = document.createElement("div");
+    date_group.innerHTML = "<b>End Time<b>"
     date_group.className = "group date";
     controls.appendChild(date_group);
 
-    var date_ttl = document.createElement("b");
-    date_ttl.innerHTML = "End Date";
     var datepicker = document.createElement("input");
-    date_group.appendChild(date_ttl);
     date_group.appendChild(datepicker);
     FnordMetric.util.DatePicker(elem, datepicker);
+    elems.date = datepicker;
 
     var timespan_group = document.createElement("div");
     timespan_group.className = "group timespan";
