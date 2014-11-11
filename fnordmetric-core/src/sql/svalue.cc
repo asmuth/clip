@@ -284,7 +284,7 @@ std::string SValue::toString() const {
     case T_NULL: {
       static const char undef_str[] = "NULL";
       str = undef_str;
-      len = sizeof(undef_str);
+      len = sizeof(undef_str) - 1;
     }
 
   }

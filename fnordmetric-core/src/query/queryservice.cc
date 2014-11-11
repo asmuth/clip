@@ -97,11 +97,13 @@ void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
 
       target->addObjectEntry("columns");
       target->beginArray();
-      for (const auto column : result_list->getColumns()) {
-        target->addString(column);
-        if (column != result_list->getColumns().back()) {
+
+      auto columns = result_list->getColumns();
+      for (int i = 0; i < columns.size(); ++i) {
+        if (i > 0) {
           target->addComma();
         }
+        target->addString(columns[i]);
       }
       target->endArray();
       target->addComma();
