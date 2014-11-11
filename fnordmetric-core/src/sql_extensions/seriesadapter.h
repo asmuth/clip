@@ -82,9 +82,13 @@ public:
       series = series_iter->second;
     }
 
-    series->addDatum(
-        row[x_ind_].template getValue<TX>(),
-        row[y_ind_].template getValue<TY>());
+    if (row[y_ind_].getType() == SValue::T_NULL) {
+      // FIXPAUL better handling of missing/NULL values!
+    } else {
+      series->addDatum(
+          row[x_ind_].template getValue<TX>(),
+          row[y_ind_].template getValue<TY>());
+    }
 
     applyProperties(
         row,
