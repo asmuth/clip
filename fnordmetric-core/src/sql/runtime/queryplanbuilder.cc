@@ -89,6 +89,11 @@ QueryPlanNode* QueryPlanBuilder::buildQueryPlan(
     return buildOrderByClause(ast, repo);
   }
 
+  // FIXPAUL move to sql extensions
+  if (hasGroupOverTimewindowClause(ast)) {
+    return buildGroupOverTimewindow(ast, repo);
+  }
+
   if (hasGroupByClause(ast) || hasAggregationInSelectList(ast)) {
     return buildGroupBy(ast, repo);
   }
@@ -149,6 +154,21 @@ bool QueryPlanBuilder::hasGroupByClause(ASTNode* ast) const {
 
   return false;
 }
+
+bool QueryPlanBuilder::hasGroupOverTimewindowClause(ASTNode* ast) const {
+  if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
+    return false;
+  }
+
+  for (const auto& child : ast->getChildren()) {
+    if (child->getType() == ASTNode::T_GROUP_OVER_TIMEWINDOW) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 
 bool QueryPlanBuilder::hasJoin(ASTNode* ast) const {
   if (!(*ast == ASTNode::T_SELECT) || ast->getChildren().size() < 2) {
@@ -355,6 +375,118 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
       buildQueryPlan(child_ast, repo));
 }
 
+QueryPlanNode* QueryPlanBuilder::buildGroupOverTimewindow(
+    ASTNode* ast,
+    TableRepository* repo) {
+  ASTNode group_exprs(ASTNode::T_GROUP_BY);
+  ASTNode* time_expr_ast;
+  ASTNode* window_expr_ast;
+  ASTNode* step_expr_ast = nullptr;
+
+  /* copy own select list */
+  if (!(ast->getChildren()[0]->getType() == ASTNode::T_SELECT_LIST)) {
+    RAISE(kRuntimeError, "corrupt AST");
+  }
+
+  auto select_list = ast->getChildren()[0]->deepCopy();
+
+  /* generate select list for child */
+  auto child_sl = new ASTNode(ASTNode::T_SELECT_LIST);
+  buildInternalSelectList(select_list, child_sl);
+
+  /* copy ast for child and swap out select lists*/
+  auto child_ast = ast->deepCopy();
+  child_ast->removeChildByIndex(0);
+  child_ast->appendChild(child_sl, 0);
+
+  /* search for a group over timewindow clause */
+  for (const auto& child : ast->getChildren()) {
+    if (child->getType() != ASTNode::T_GROUP_OVER_TIMEWINDOW) {
+      continue;
+    }
+
+    if (child->getChildren().size() < 3) {
+      RAISE(kRuntimeError, "corrupt AST");
+    }
+
+    /* FIXPAUL resolve aliases in group list from select list, return error
+       if alias contains aggregate func */
+
+    /* copy time expression and add required fields to the child select list */
+    time_expr_ast = child->getChildren()[0]->deepCopy();
+    buildInternalSelectList(time_expr_ast, child_sl);
+
+    /* copy all group exprs and add required fields to the child select list */
+    auto group_by_list = child->getChildren()[1];
+    for (const auto& group_expr : group_by_list->getChildren()) {
+      auto e = group_expr->deepCopy();
+      buildInternalSelectList(e, child_sl);
+      group_exprs.appendChild(e);
+    }
+
+    /* copy window and step expressions */
+    window_expr_ast = child->getChildren()[2]->deepCopy();
+    if (child->getChildren().size() > 3) {
+      step_expr_ast = child->getChildren()[3]->deepCopy();
+    }
+
+    /* remove group by clause from child ast */
+    child_ast->removeChildrenByType(ASTNode::T_GROUP_OVER_TIMEWINDOW);
+  }
+
+  /* compile select list and group expressions */
+  size_t select_scratchpad_len = 0;
+  auto select_expr = compiler_->compile(select_list, &select_scratchpad_len);
+
+  size_t group_scratchpad_len = 0;
+  auto group_expr = compiler_->compile(&group_exprs, &group_scratchpad_len);
+
+  if (group_scratchpad_len > 0) {
+    RAISE(
+        kRuntimeError,
+        "illegal use of aggregate functions in the GROUP BY clause");
+  }
+
+  /* compile time expression */
+  size_t time_expr_scratchpad_len = 0;
+  auto time_expr = compiler_->compile(
+      time_expr_ast,
+      &time_expr_scratchpad_len);
+
+  if (time_expr_scratchpad_len > 0) {
+    RAISE(
+        kRuntimeError,
+        "illegal use of aggregate functions in the GROUP OVER clause");
+  }
+
+  /* compile window and step */
+  auto window_svalue = executeSimpleConstExpression(compiler_, window_expr_ast);
+  auto window = window_svalue.getInteger();
+
+  fnordmetric::IntegerType step;
+  if (step_expr_ast == nullptr) {
+    step = window;
+  } else {
+    auto step_svalue = executeSimpleConstExpression(compiler_, step_expr_ast);
+    step = step_svalue.getInteger();
+  }
+
+  /* resolve output column names */
+  std::vector<std::string> column_names;
+  for (const auto& col : select_list->getChildren()) {
+    column_names.push_back("unnamed"); // FIXPAUL
+  }
+
+  return new GroupOverTimewindow(
+      std::move(column_names),
+      time_expr,
+      window,
+      step,
+      select_expr,
+      group_expr,
+      select_scratchpad_len,
+      buildQueryPlan(child_ast, repo));
+}
 
 bool QueryPlanBuilder::buildInternalSelectList(
     ASTNode* node,

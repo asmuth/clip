@@ -85,6 +85,12 @@ protected:
   bool hasGroupByClause(ASTNode* ast) const;
 
   /**
+   * Returns true if the ast is a SELECT statement that has a GROUP OVER
+   * TIMEWINDOW clause, otherwise false
+   */
+  bool hasGroupOverTimewindowClause(ASTNode* ast) const;
+
+  /**
    * Returns true if the ast is a SELECT statement that has a ORDER BY clause,
    * otherwise false
    */
@@ -113,6 +119,12 @@ protected:
    * BY clause
    */
   QueryPlanNode* buildGroupBy(ASTNode* ast, TableRepository* repo);
+
+  /**
+   * Build a group over timewindow query plan node for a SELECT statement that
+   * has a GROUP OVer TIMEWINDOW clause
+   */
+  QueryPlanNode* buildGroupOverTimewindow(ASTNode* ast, TableRepository* repo);
 
   /**
    * Recursively walk the provided ast and search for column references. For
