@@ -508,10 +508,21 @@ bool QueryPlanBuilder::buildInternalSelectList(
   if (node->getType() == ASTNode::T_COLUMN_NAME) {
     auto col_index = -1;
 
-    /* check if this columns is already in the select list */
+    /* check if this column already exists in the select list */
     const auto& candidates = target_select_list->getChildren();
     for (int i = 0; i < candidates.size(); ++i) {
-      // FIXPAUL
+      candidates[i]->debugPrint(4);
+      if (candidates[i]->getType() == ASTNode::T_DERIVED_COLUMN) {
+        if (candidates[i]->getChildren().size() == 1) {
+          auto colname = candidates[i]->getChildren()[0];
+          if (colname->getType() == ASTNode::T_COLUMN_NAME &&
+              node->getToken()->getString() ==
+                  colname->getToken()->getString()) {
+            col_index = i;
+            break;
+          }
+        }
+      }
     }
 
     /* otherwise add this column to the select list */
