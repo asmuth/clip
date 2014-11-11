@@ -345,95 +345,21 @@ FnordMetric.util.searchMetricList = function(metrics, search_item) {
   return data;
 }
 
-
-FnordMetric.DropdownAutocomplete = function(
-  parentNode, dropdown, input_field, keys, search_button) {
-  var down = 0;
-  var current_value = "";
-  var dropdownKeyNav = function() {
-    var dropdown_items = dropdown.childNodes;
-    var i = down -1;
-    if (i < dropdown_items.length) {
-      if (i > 0) {
-        dropdown_items[i - 1].className = "";
-      }
-      if (i+1 < dropdown_items.length) {
-        dropdown_items[i+1].className = "";
-      }
-      current_value = dropdown_items[i].firstChild.innerHTML;
-      dropdown_items[i].className = "hover";
-    }
-  }
-
-  var destroyDropdown = function() {
-    down = 0;
-    current_value = "";
-    while (dropdown.firstChild) {
-      dropdown.removeChild(dropdown.firstChild);
-    }
-  }
-
-
-
-  var autocomplete = function(input) {
-    destroyDropdown();
-    parentNode.appendChild(dropdown);
-
-    keys.map(function(key) {
-      if (key.indexOf(input) > - 1) {
-        var dropdown_item = document.createElement("li");
-        var dropdown_link = FnordMetric.createButton(
-          "#", undefined, key);
-        dropdown_item.appendChild(dropdown_link);
-        dropdown.appendChild(dropdown_item);
-
-        dropdown_link.addEventListener('click', function(e) {
-          e.preventDefault();
-          input_field.value = this.innerHTML;
-          destroyDropdown();
-        }, false);
-      }
-    });
-
-  }
-
-  var init = function() {
-    input_field.addEventListener('focus', function(e) {
-      this.value = "";
-    }, false);
-
-    input_field.addEventListener('input', function(e) {
-        autocomplete(this.value)
-    }, false);
-
-    input_field.addEventListener('keydown', function(e) {
-      switch (e.keyCode) {
-        case 13:
-          e.preventDefault();
-          if (current_value.length > 0) {
-            input_field.value = current_value;
-          } else {
-            FnordMetric.WebUI().renderSearchResult(input_field.value);
-          }
-          destroyDropdown();
-          break;
-        case 40:
-          down++;
-          dropdownKeyNav();
-          break;
-        case 38:
-          down--;
-          dropdownKeyNav();
-          break;
-        default:
-          break;
-      }
-    }, false);
-  }
-  init();
-}
-
 FnordMetric.util.htmlEscape = function(str) {
   return str;
 }
+
+
+/* returns all words that includes filter */
+FnordMetric.util.filterStringArray = function(strings, filter) {
+  //FIXME ?
+  var data = [];
+  strings.map(function(string) {
+    if (string.indexOf(filter) > -1) {
+      data.push(string);
+    }
+  });
+  return data;
+}
+
 

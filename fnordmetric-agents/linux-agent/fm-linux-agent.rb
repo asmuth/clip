@@ -60,6 +60,9 @@ loop do
         :metric => "load_avg_15m",
         :value => loadavg[2],
         :labels => {
+          :host => hostname
+        }
+      }
 
   # gather basic memory statistics
 
@@ -137,7 +140,7 @@ loop do
   #count open TCP and UDP sockets
 
   if File.exists?("/proc/net/tcp")
-    loadavg_data = IO::read("/proc/net/tcp")
+   loadavg_data = IO::read("/proc/net/tcp")
 
    tcp_sockets =  %x{wc -l "/proc/net/tcp"}.to_i - 1
 
@@ -191,4 +194,6 @@ loop do
   # sleep if we completed executing faster than the requested interval
   sleep_for = (last_run + INTERVAL) - Time.now.to_f
   sleep(sleep_for) if sleep_for > 0
+end
+end
 end
