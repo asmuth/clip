@@ -26,156 +26,166 @@ target_port = ARGV[1].to_i
 
 loop do
   last_run = Time.now.to_f
-  samples = []
+  @samples = []
 
   # hostname
-  hostname = `hostname`.strip
+  @hostname = `hostname`.strip
 
 
   # collect CPU load averages
 
-  if File.exists?("/proc/loadavg")
-    loadavg_data = IO::read("/proc/loadavg")
+  def report_cpu_load
 
-    loadavg = loadavg_data.scan(/([0-9]+[,\.][0-9]+)+/).flatten
+    if File.exists?("/proc/loadavg")
+      loadavg_data = IO::read("/proc/loadavg")
 
-    if loadavg.size == 3
-      samples << {
-        :metric => "load_avg_1m",
-        :value => loadavg[0],
-        :labels => {
-          :host => hostname
+      loadavg = loadavg_data.scan(/([0-9]+[,\.][0-9]+)+/).flatten
+
+      if loadavg.size == 3
+        @samples << {
+          :metric => "load_avg_1m",
+          :value => loadavg[0],
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
 
-      samples << {
-        :metric => "load_avg_5m",
-        :value => loadavg[1],
-        :labels => {
-          :host => hostname
+        @samples << {
+          :metric => "load_avg_5m",
+          :value => loadavg[1],
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
 
-      samples << {
-        :metric => "load_avg_15m",
-        :value => loadavg[2],
-        :labels => {
-          :host => hostname
+        @samples << {
+          :metric => "load_avg_15m",
+          :value => loadavg[2],
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
+      end
+    end
+  end
 
   # gather basic memory statistics
 
-  if File.exists?("/proc/meminfo")
-    loadavg_data = IO::read("/proc/meminfo")
-    memtotal  = loadavg_data.scan(/MemTotal:\s+ (\d+)\skB/).flatten
-    memfree   = loadavg_data.scan(/MemFree:\s+ (\d+)\skB/).flatten
-    swaptotal = loadavg_data.scan(/SwapTotal:\s+ (\d+)\skB/).flatten
-    swapfree  = loadavg_data.scan(/SwapFree:\s+ (\d+)\skB/).flatten
+  def report_memory_stats
+    if File.exists?("/proc/meminfo")
+      loadavg_data = IO::read("/proc/meminfo")
+      memtotal  = loadavg_data.scan(/MemTotal:\s+ (\d+)\skB/).flatten.first.to_i
+      memfree   = loadavg_data.scan(/MemFree:\s+ (\d+)\skB/).flatten.first.to_i
+      swaptotal = loadavg_data.scan(/SwapTotal:\s+ (\d+)\skB/).flatten.first.to_i
+      swapfree  = loadavg_data.scan(/SwapFree:\s+ (\d+)\skB/).flatten.first.to_i
 
-      samples << {
-        :metric => "memory_total",
-        :value => memtotal,
-        :labels => {
-          :host => hostname
+        @samples << {
+          :metric => "memory_total",
+          :value => memtotal,
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
 
-      samples << {
-        :metric => "memory_free",
-        :value => memfree,
-        :labels => {
-          :host => hostname
+        @samples << {
+          :metric => "memory_free",
+          :value => memfree,
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
 
-      samples << {
-        :metric => "swap_total",
-        :value => swaptotal,
-        :labels => {
-          :host => hostname
+        @samples << {
+          :metric => "swap_total",
+          :value => swaptotal,
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
 
-      samples << {
-        :metric => "swap_total",
-        :value => swapfree,
-        :labels => {
-          :host => hostname
+        @samples << {
+          :metric => "swap_free",
+          :value => swapfree,
+          :labels => {
+            :host => @hostname
+          }
         }
-      }
-
-
+    end
   end
 
   # determine disk usage and available space
 
-  df_input = `df -P`.lines[1..-1]
+  def report_disk_stats
 
-  if !df_input.empty?
-   df_input.each { |single_line|
-    elements = single_line.split " "
+    df_input = `df -P`.lines[1..-1]
 
-        samples << {
-        :metric => "disk_used",
-        :value => elements[2],
-        :labels => {
-          :host => hostname,
-          :mount_name => elements[0]
+    if !df_input.empty?
+     df_input.each do |single_line|
+      elements = single_line.split " "
+
+          @samples << {
+          :metric => "disk_used",
+          :value => elements[2],
+          :labels => {
+            :host => @hostname,
+            :mount_name => elements[0]
+          }
         }
-      }
 
-        samples << {
-        :metric => "disk_available",
-        :value => elements[3],
-        :labels => {
-          :host => hostname,
-          :mount_name => elements[0]
+          @samples << {
+          :metric => "disk_available",
+          :value => elements[3],
+          :labels => {
+            :host => @hostname,
+            :mount_name => elements[0]
+          }
         }
-      }
-    }
+     end
+    end
   end
-
 
   #count open TCP and UDP sockets
 
-  if File.exists?("/proc/net/tcp")
-   loadavg_data = IO::read("/proc/net/tcp")
+  def report_open_sockets
 
-   tcp_sockets =  %x{wc -l "/proc/net/tcp"}.to_i - 1
+    if File.exists?("/proc/net/tcp")
+     tcp_sockets =  %x{wc -l "/proc/net/tcp"}.to_i - 1
 
-    samples << {
-      :metric => "open_tcp_sockets",
-      :value => tcp_sockets,
-      :labels => {
-        :host => hostname
+      @samples << {
+        :metric => "open_tcp_sockets",
+        :value => tcp_sockets,
+        :labels => {
+          :host => @hostname
+        }
       }
-    }
+    end
+
+    if File.exists?("/proc/net/udp")
+     tcp_sockets =  %x{wc -l "/proc/net/udp"}.to_i - 1
+
+      @samples << {
+        :metric => "open_udp_sockets",
+        :value => tcp_sockets,
+        :labels => {
+          :host => @hostname
+        }
+      }
 
 
+    end
   end
 
-  if File.exists?("/proc/net/udp")
-    loadavg_data = IO::read("/proc/net/udp")
+  # fill samples array with data
 
-   tcp_sockets =  %x{wc -l "/proc/net/udp"}.to_i - 1
-
-    samples << {
-      :metric => "open_udp_sockets",
-      :value => tcp_sockets,
-      :labels => {
-        :host => hostname
-      }
-    }
-
-
-  end
-
+  report_memory_stats
+  report_disk_stats
+  report_cpu_load
+  report_open_sockets
 
   # send the samples in a single udp packet to FnordMetric server (the combined
   # packet size must be strictly less than or equal to 65535 bytes
   packet = ""
-  samples.each do |sample|
+  @samples.each do |sample|
     packet << METRIC_NAME_PREFIX + sample[:metric]
     sample[:labels].each do |k,v|
       packet << "[#{k}=#{v}]"
@@ -194,6 +204,4 @@ loop do
   # sleep if we completed executing faster than the requested interval
   sleep_for = (last_run + INTERVAL) - Time.now.to_f
   sleep(sleep_for) if sleep_for > 0
-end
-end
 end
