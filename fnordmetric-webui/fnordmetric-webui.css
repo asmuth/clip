@@ -586,15 +586,16 @@ input {
   text-align:center
 }
 
-ul.dropdown {
+ul.autocomplete {
   position: absolute;
-  margin-top: 32px;
-  width: 208px;
+  top: 28px;
+  margin-left: 27px;
+  width: 360px;
   z-index: 999;
   padding-left: 0px;
 }
 
-ul.dropdown li {
+ul.autocomplete li {
   background-color: #fff;
   border: 1px solid #dbdedf;
   list-style: none;
@@ -603,7 +604,7 @@ ul.dropdown li {
   border-bottom: 1px solid #dbdedf;
 }
 
-ul.dropdown li a {
+ul.autocomplete li a {
   line-height:30px;
   display: block;
   padding: 0 4px;
@@ -611,11 +612,11 @@ ul.dropdown li a {
   color: #444;
 }
 
-ul.dropdown li.hover {
+ul.autocomplete li.hover {
   background-color: #d7e4f2;
 }
 
-ul.dropdown li:hover {
+ul.autocomplete li:hover {
   background-color: #d7e4f2;
 }
 

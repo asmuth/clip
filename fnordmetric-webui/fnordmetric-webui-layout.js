@@ -39,11 +39,21 @@ FnordMetric.WebUI = function() {
     });
   }
 
+  function setSearchUrl(input) {
+    var input = FnordMetric.util.htmlEscape(input);
+    FnordMetric.WebUI.singleton.openUrl(
+      "metric_list?search="+input);
+  }
+
   function addSearchBar() {
     var searchbar = document.createElement("div");
     searchbar.className = "searchbar";
-    searchbar.innerHTML = "<i class='fa fa-search'></i><input />";
+    var searchinput = document.createElement("input");
+    searchbar.innerHTML = "<i class='fa fa-search'></i>";
+    searchbar.appendChild(searchinput);
     headbar.appendChild(searchbar);
+    FnordMetric.util.Autocomplete(
+      searchbar,searchinput, setSearchUrl);
   }
 
   function init() {
