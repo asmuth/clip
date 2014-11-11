@@ -96,19 +96,21 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    elems.group_by.map(function(column) {
-      column.addEventListener('click', function(e) {
-        e.preventDefault();
-        var c = this.innerText;
-        var index = inputs.group_by.indexOf(c);
-        if (index == -1) {
-          inputs.group_by.push(this.innerText);
-        } else {
-          inputs.group_by.splice(index, 1);
-        }
-        runQuery(FnordMetric.util.createQuery(inputs, metric));
-      });
-    }, false);
+    if (elems.group_by.map) {
+      elems.group_by.map(function(column) {
+        column.addEventListener('click', function(e) {
+          e.preventDefault();
+          var c = this.innerText;
+          var index = inputs.group_by.indexOf(c);
+          if (index == -1) {
+            inputs.group_by.push(this.innerText);
+          } else {
+            inputs.group_by.splice(index, 1);
+          }
+          runQuery(FnordMetric.util.createQuery(inputs, metric));
+        });
+      }, false);
+    }
 
     elems.date.addEventListener('change', function() {
       //inputs.time.start = 
