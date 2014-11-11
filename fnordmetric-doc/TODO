@@ -1,7 +1,3 @@
-[ faq ]
-    - how do i set the line color
-    - can i use fnordmetric with external data
-    - do I need an external database
 
 [ doc ]
     - dashboard api reference
@@ -13,16 +9,11 @@
     - better screenshot on homepage
     - page: included agents
     - finish http api 
+    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ SQL ]
     - match function names case-insensitively
-    - find time constraint from sql query
-    - scan samples with range / sstable binary search
-    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
     - sql time helpers (1hour, etc)
-    - sql: in
-    - sql: if
-    - sql: case
     - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
     - support red/green/blue/hex colors
     - round fn
@@ -33,18 +24,30 @@
     - syntax highlighting
     - embed as iframe
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
+    - make editr split draggable/resizable
     - vertical hover line in chartextensions
+    - better error message style
 
 [ release ]
+    - svg: escape series names, labels!
+    - proper thread/worker pool
+    - inline libev
     - ruby client
     - javascript client + doc
-    - svg: escape series names, labels!
-    - bug: NAN is not a valid value in SVG
-    - inline libev
 
 -----
 
+[ faq ]
+    - how do i set the line color
+    - can i use fnordmetric with external data
+    - do I need an external database
+
 [ feature q ]
+    - find time constraint from sql query
+    - scan samples with range / sstable binary search
+    - sql: in
+    - sql: if
+    - sql: case
     - dashboard params
     - retention / downsampling + DOC
     - merge compaction
@@ -89,6 +92,7 @@
     - report with markdown + chartsql
 
 [ bug q ]
+    - bug: NAN is not a valid value in SVG
     - SELECT count(*) AS row_count FROM `/osx/load_avg_5m`; --- does not return col name
     - bug: line chart with only negative values
     - bug: 2d area chart with explicit y domain, min > 0

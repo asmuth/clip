@@ -73,7 +73,7 @@ Examples:
         select_expr [, select_expr ...]
         [FROM table_references
         [WHERE where_condition]
-        [GROUP [OVER TIMEWINDOW(window_expr, step_expr) ]
+        [GROUP [OVER TIMEWINDOW(window_expr [, step_expr]) ]
             [ BY {col_name | expr | position} ]
             [ASC | DESC], ...]
         [HAVING where_condition]

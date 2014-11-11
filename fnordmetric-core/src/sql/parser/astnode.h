@@ -71,7 +71,8 @@ public:
     T_DOMAIN,
     T_DOMAIN_SCALE,
     T_GRID,
-    T_LEGEND
+    T_LEGEND,
+    T_GROUP_OVER_TIMEWINDOW
   };
 
   ASTNode(kASTNodeType type);

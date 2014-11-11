@@ -625,6 +625,11 @@ ASTNode* Parser::groupByClause() {
     return nullptr;
   }
 
+  // FIXPAUL move to sql extensions
+  if (consumeIf(Token::T_OVER)) {
+    return groupOverClause();
+  }
+
   expectAndConsume(Token::T_BY);
 
   auto clause = new ASTNode(ASTNode::T_GROUP_BY);
@@ -632,6 +637,34 @@ ASTNode* Parser::groupByClause() {
   do {
     clause->appendChild(expr());
   } while (consumeIf(Token::T_COMMA));
+
+  return clause;
+}
+
+// FIXPAUL move to sql extensions
+ASTNode* Parser::groupOverClause() {
+  expectAndConsume(Token::T_TIMEWINDOW);
+  expectAndConsume(Token::T_LPAREN);
+
+  auto clause = new ASTNode(ASTNode::T_GROUP_OVER_TIMEWINDOW);
+  clause->appendChild(expectAndConsumeValueExpr());
+  expectAndConsume(Token::T_COMMA);
+
+  auto group_list = new ASTNode(ASTNode::T_GROUP_BY);
+  clause->appendChild(group_list);
+
+  clause->appendChild(expectAndConsumeValueExpr());
+  if (consumeIf(Token::T_COMMA)) {
+    clause->appendChild(expectAndConsumeValueExpr());
+  }
+
+  expectAndConsume(Token::T_RPAREN);
+
+  if (consumeIf(Token::T_BY)) {
+    do {
+      group_list->appendChild(expr());
+    } while (consumeIf(Token::T_COMMA));
+  }
 
   return clause;
 }

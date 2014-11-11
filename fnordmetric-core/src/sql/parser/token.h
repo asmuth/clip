@@ -105,7 +105,9 @@ public:
     T_INSIDE,
     T_OUTSIDE,
     T_ROTATE,
-    T_LEGEND
+    T_LEGEND,
+    T_OVER,
+    T_TIMEWINDOW
   };
 
   Token(kTokenType token_type);

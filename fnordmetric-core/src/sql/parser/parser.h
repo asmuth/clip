@@ -91,6 +91,7 @@ protected:
   ASTNode* fromClause();
   ASTNode* whereClause();
   ASTNode* groupByClause();
+  ASTNode* groupOverClause();
   ASTNode* havingClause();
   ASTNode* orderByClause();
   ASTNode* limitClause();

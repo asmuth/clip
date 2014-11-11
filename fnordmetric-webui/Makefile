@@ -9,7 +9,7 @@ clean:
 	rm fnordmetric-webui.js
 
 build:
-	( \
+	@( \
 	  echo "/* THIS IS AN AUTOMATICALLY GENEREATED FILE --- DO NOT EDIT */"; \
 	  cat fnordmetric-webui-layout.js \
 	      fnordmetric-webui-util.js \

@@ -545,6 +545,16 @@ next:
     goto next;
   }
 
+  if (token == "OVER") {
+    token_list->emplace_back(Token::T_OVER);
+    goto next;
+  }
+
+  if (token == "TIMEWINDOW") {
+    token_list->emplace_back(Token::T_TIMEWINDOW);
+    goto next;
+  }
+
   if (token == "<<") {
     token_list->emplace_back(Token::T_LSHIFT);
     goto next;

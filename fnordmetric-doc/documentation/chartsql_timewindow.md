@@ -12,7 +12,7 @@ dig into the detailed semantics of the GROUP OVER TIMEWINDOW clause:
 
 _Display the moving average of mymetric's value over a moving 60s window_
 
-    SELECT time, mean(value) FROM mymetric GROUP OVER TIMEWINDOW(60, 10);
+    SELECT time, mean(value) FROM mymetric GROUP OVER TIMEWINDOW(time, 60);
 
 ---
 
@@ -42,7 +42,7 @@ on our website every 10 seconds and our source table looks like this:
 Now let's GROUP OVER TIMEWINDOW on this table with a 40 second window and a 10
 second step to compute a moving average
 
-    SELECT time, mean(value) FROM ... GROUP OVER TIMEWINDOW(40, 10)
+    SELECT time, mean(value) FROM ... GROUP OVER TIMEWINDOW(time, 40, 10)
 
 The GROUP OVER TIMEWINDOW clause will produce one output row each 10 seconds,
 grouping over the last 40 seconds of data. This illustration shows the first
@@ -83,7 +83,7 @@ per hostname in the last hour:
     SELECT time, hostname, mean(value)
         FROM number_of_requests
         WHERE time > -1hour
-        GROUP OVER TIMEWINDOW(40, 10) BY hostname;
+        GROUP OVER TIMEWINDOW(time, 40, 10) BY hostname;
 
 Or let's break down the 99th percentile latency by hostname and url over
 a fixed time range:
@@ -91,7 +91,7 @@ a fixed time range:
     SELECT time, hostname, url, percentile(99, value)
         FROM request_latencies
         WHERE time > 2014-08-01 AND time < 2014-09-01
-        GROUP OVER TIMEWINDOW(40, 10) BY hostname, url;
+        GROUP OVER TIMEWINDOW(time, 40, 10) BY hostname, url;
 
 
 GROUP OVER TIMEWINDOW on multiple tables
@@ -104,7 +104,7 @@ easily align and join data from multiple tables/metrics.
 An example:
 
     -- error rate computed from joining the first derivates of two metrics over a
-    -- moving 60 second window in the last hour, move the window in 10s steps
+    -- moving 60 second window in the last hour
     SELECT
       "error rate" as series,
       delta(my_success_count_metric) / delta(my_error_count_metric)
@@ -112,7 +112,7 @@ An example:
       my_success_count_metric,
       my_error_count_metric
     WHERE time > -60minutes
-    GROUP OVER TIMEWINDOW(60, 10);
+    GROUP OVER TIMEWINDOW(time, 60);
 
 
 GROUP OVER TIMEWINDOW semantics

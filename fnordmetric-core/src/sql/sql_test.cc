@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -24,6 +23,7 @@
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/svgtarget.h>
+#include <fnordmetric/util/datetime.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/unittest.h>
@@ -88,6 +88,33 @@ class TestTable2Ref : public TableRef {
   }
 };
 
+class TestTimeTableRef : public TableRef {
+  std::vector<std::string> columns() override {
+    return {"time", "value"};
+  }
+  int getColumnIndex(const std::string& name) override {
+    if (name == "time") return 0;
+    if (name == "value") return 1;
+    return -1;
+  }
+  std::string getColumnName(int index) override {
+    return columns()[index];
+  }
+  void executeScan(TableScan* scan) override {
+    auto start_time = 1415712875216794;
+
+    for (int i = 0; i < 500; ++i) {
+      std::vector<SValue> row;
+      row.emplace_back(fnord::util::DateTime(start_time + 1000000 * i));
+      row.emplace_back(SValue((fnordmetric::IntegerType) i));
+      if (!scan->nextRow(row.data(), row.size())) {
+        return;
+      }
+    }
+  }
+};
+
+
 static Parser parseTestQuery(const char* query) {
   Parser parser;
   parser.parse(query, strlen(query));
@@ -109,6 +136,10 @@ static std::unique_ptr<ResultList> executeTestQuery(
   query_plan.tableRepository()->addTableRef(
       "testtable2",
       std::unique_ptr<TableRef>(new TestTable2Ref()));
+
+  query_plan.tableRepository()->addTableRef(
+      "timeseries",
+      std::unique_ptr<TableRef>(new TestTimeTableRef()));
 
   query_plan.tableRepository()->addTableRef(
       "gbp_per_country",
@@ -1202,3 +1233,11 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
   EXPECT(result.getRow(1)[0] == "Tokyo");
 });
 
+TEST_CASE(SQLTest, TestSimpleGroupOverTimeWindow, [] () {
+  auto result = executeTestQuery(
+      "  SELECT sum(value) FROM timeseries GROUP OVER TIMEWINDOW(time, 60);");
+
+  EXPECT_EQ(result->getNumRows(), 1);
+  EXPECT_EQ(result->getNumColumns(), 1);
+  EXPECT_EQ(result->getRow(0)[0], "123");
+});
