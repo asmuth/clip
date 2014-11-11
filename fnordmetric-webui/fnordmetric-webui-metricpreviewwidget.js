@@ -96,7 +96,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    if (elems.group_by.map) {
+    if (elems.group_by) {
       elems.group_by.map(function(column) {
         column.addEventListener('click', function(e) {
           e.preventDefault();
