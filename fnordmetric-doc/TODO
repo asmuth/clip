@@ -17,6 +17,7 @@
     - functions: avg, mean, max/min, percentile, variance, stddev, delta, nth_derivate,
     - support red/green/blue/hex colors
     - round fn
+    - better handling of missing/NULL values! in seriesadapter
 
 [ frontend ]
     - clean up sql result view
