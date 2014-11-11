@@ -45,9 +45,17 @@ public:
 protected:
 
   struct Group {
-    std::vector<SValue> row;
-    void* scratchpad;
+    std::vector<std::pair<uint64_t, std::vector<SValue>>> rows;
   };
+
+  void emitGroup(Group* group);
+
+  void emitWindow(
+      uint64_t window_time,
+      std::vector<std::pair<uint64_t, std::vector<SValue>>>::iterator
+          window_begin,
+      std::vector<std::pair<uint64_t, std::vector<SValue>>>::iterator
+          window_end);
 
   std::vector<std::string> columns_;
   CompiledExpression* time_expr_;
@@ -57,6 +65,7 @@ protected:
   CompiledExpression* group_expr_;
   size_t scratchpad_size_;
   QueryPlanNode* child_;
+  std::unique_ptr<void> scratchpad_;
   std::unordered_map<std::string, Group> groups_;
 };
 

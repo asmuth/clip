@@ -105,6 +105,10 @@ class TestTimeTableRef : public TableRef {
 
     for (int i = 0; i < 500; ++i) {
       std::vector<SValue> row;
+      if (i == 300) {
+        start_time += 120000000;
+      }
+
       row.emplace_back(fnord::util::DateTime(start_time + 1000000 * i));
       row.emplace_back(SValue((fnordmetric::IntegerType) i));
       if (!scan->nextRow(row.data(), row.size())) {
@@ -1235,8 +1239,11 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
 
 TEST_CASE(SQLTest, TestSimpleGroupOverTimeWindow, [] () {
   auto result = executeTestQuery(
-      "  SELECT sum(value) FROM timeseries GROUP OVER TIMEWINDOW(time, 60);");
+      "  SELECT time, sum(value) "
+      "      FROM timeseries"
+      "      GROUP OVER TIMEWINDOW(time, 60);");
 
+  result->debugPrint();
   EXPECT_EQ(result->getNumRows(), 1);
   EXPECT_EQ(result->getNumColumns(), 1);
   EXPECT_EQ(result->getRow(0)[0], "123");

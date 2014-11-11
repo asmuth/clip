@@ -14,7 +14,7 @@
 [ SQL ]
     - match function names case-insensitively
     - sql time helpers (1hour, etc)
-    - functions: sum, avg, percentile, mean, variance, stddev, delta, nth_derivate,
+    - functions: avg, mean, max/min, percentile, variance, stddev, delta, nth_derivate,
     - support red/green/blue/hex colors
     - round fn
 
@@ -43,6 +43,9 @@
     - do I need an external database
 
 [ feature q ]
+    - union
+    - cross join
+    - GROUP OVER TIMEWINDOW on multiple tables
     - find time constraint from sql query
     - scan samples with range / sstable binary search
     - sql: in
