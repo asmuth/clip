@@ -12,8 +12,9 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include <fnordmetric/sql/parser/token.h>
+#include <fnordmetric/sql/parser/astutil.h>
 #include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>
@@ -42,30 +43,7 @@ public:
     }
 
     /* column names */
-    std::vector<std::string> column_names;
-    for (auto col : select_list->getChildren()) {
-      if (!(*col == ASTNode::T_DERIVED_COLUMN)) {
-        RAISE(kRuntimeError, "corrupt AST");
-      }
-
-      auto derived = col->getChildren();
-
-      if (derived.size() == 2) {
-        if (!(*derived[1] == ASTNode::T_COLUMN_ALIAS)) {
-          RAISE(kRuntimeError, "corrupt AST");
-        }
-
-        auto colname_token = derived[1]->getToken();
-        if (!(colname_token && *colname_token == Token::T_IDENTIFIER)) {
-          RAISE(kRuntimeError, "corrupt AST");
-        }
-
-        column_names.emplace_back(colname_token->getString());
-      } else {
-        column_names.emplace_back("unnamed");
-      }
-    }
-
+    auto column_names = ASTUtil::columnNamesFromSelectList(select_list);
     return new TablelessSelect(std::move(column_names), expr);
   }
 

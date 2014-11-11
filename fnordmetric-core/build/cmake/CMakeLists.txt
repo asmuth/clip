@@ -79,6 +79,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql/expressions/datetime.cc
     stage/src/fnordmetric/sql/expressions/math.cc
     stage/src/fnordmetric/sql/parser/astnode.cc
+    stage/src/fnordmetric/sql/parser/astutil.cc
     stage/src/fnordmetric/sql/parser/parser.cc
     stage/src/fnordmetric/sql/parser/token.cc
     stage/src/fnordmetric/sql/parser/tokenize.cc

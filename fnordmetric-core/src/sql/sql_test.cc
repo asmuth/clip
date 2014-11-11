@@ -1239,12 +1239,16 @@ TEST_CASE(SQLTest, TestRuntime, [] () {
 
 TEST_CASE(SQLTest, TestSimpleGroupOverTimeWindow, [] () {
   auto result = executeTestQuery(
-      "  SELECT time, sum(value) "
+      "  SELECT time as X, sum(value) as Y"
       "      FROM timeseries"
       "      GROUP OVER TIMEWINDOW(time, 60, 20);");
 
-  result->debugPrint();
-  EXPECT_EQ(result->getNumRows(), 1);
-  EXPECT_EQ(result->getNumColumns(), 1);
-  EXPECT_EQ(result->getRow(0)[0], "123");
+  EXPECT_EQ(result->getNumRows(), 29);
+  EXPECT_EQ(result->getNumColumns(), 2);
+  EXPECT_EQ(result->getColumns()[0], "X");
+  EXPECT_EQ(result->getColumns()[1], "Y");
+  EXPECT_EQ(result->getRow(0)[1], "1770");
+  EXPECT_EQ(result->getRow(10)[1], "13770");
+  EXPECT_EQ(result->getRow(15)[1], "NULL");
+  EXPECT_EQ(result->getRow(28)[1], "28170");
 });

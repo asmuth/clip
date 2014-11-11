@@ -9,6 +9,7 @@
  */
 #include <stdlib.h>
 #include <fnordmetric/sql/parser/astnode.h>
+#include <fnordmetric/sql/parser/astutil.h>
 #include <fnordmetric/sql/runtime/queryplanbuilder.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/tablelessselect.h>
@@ -363,10 +364,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupBy(
   }
 
   /* resolve output column names */
-  std::vector<std::string> column_names;
-  for (const auto& col : select_list->getChildren()) {
-    column_names.push_back("unnamed"); // FIXPAUL
-  }
+  auto column_names = ASTUtil::columnNamesFromSelectList(select_list);
 
   return new GroupBy(
       std::move(column_names),
@@ -483,10 +481,7 @@ QueryPlanNode* QueryPlanBuilder::buildGroupOverTimewindow(
   }
 
   /* resolve output column names */
-  std::vector<std::string> column_names;
-  for (const auto& col : select_list->getChildren()) {
-    column_names.push_back("unnamed"); // FIXPAUL
-  }
+  auto column_names = ASTUtil::columnNamesFromSelectList(select_list);
 
   return new GroupOverTimewindow(
       std::move(column_names),
@@ -511,7 +506,6 @@ bool QueryPlanBuilder::buildInternalSelectList(
     /* check if this column already exists in the select list */
     const auto& candidates = target_select_list->getChildren();
     for (int i = 0; i < candidates.size(); ++i) {
-      candidates[i]->debugPrint(4);
       if (candidates[i]->getType() == ASTNode::T_DERIVED_COLUMN) {
         if (candidates[i]->getChildren().size() == 1) {
           auto colname = candidates[i]->getChildren()[0];

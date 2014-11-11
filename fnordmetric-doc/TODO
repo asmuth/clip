@@ -29,6 +29,8 @@
     - better error message style
 
 [ release ]
+    - free scratchpads in group by
+    - no more "UNKNOWN TOKEN"
     - svg: escape series names, labels!
     - proper thread/worker pool
     - inline libev
