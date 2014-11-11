@@ -76,6 +76,7 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
 
     input.addEventListener('keydown', function(e) {
       switch (e.keyCode) {
+        /* Enter */
         case 13:
           e.preventDefault();
           if (current_value.length > 0){
@@ -85,12 +86,14 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
             callback(input.value);
           }
           break;
+        /* Up arrow */
         case 38:
           position--;
           keyNavigation(
             list_items, position);
           current_value = items[position];
           break;
+        /* Down arrow */
         case 40:
           position++;
           keyNavigation(

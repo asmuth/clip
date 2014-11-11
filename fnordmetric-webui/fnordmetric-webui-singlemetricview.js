@@ -22,24 +22,29 @@ FnordMetric.util.singleMetricView = function() {
     /* set url and push history state */
     FnordMetric.util.setURLQueryString(
       query_params.name, query_params.value, false, true);
-
     elem.innerHTML = "";
 
     FnordMetric.util.renderPageHeader(
-      "Metric &rsaquo; <em>" + FnordMetric.util.htmlEscape(query_params.value) + "</em>", elem);
+      "Metric &rsaquo; <em>" + 
+      FnordMetric.util.htmlEscape(query_params.value) + 
+      "</em>", elem);
 
-    var button = FnordMetric.createButton(
+    var editor_btn = FnordMetric.createButton(
       "#", undefined, "Open in Query Editor");
-    elem.appendChild(button);
+    elem.appendChild(editor_btn);
 
-    button.onclick = function(e) {
+    editor_btn.onclick = function(e) {
       e.preventDefault();
       var query = 
         "SELECT * FROM `" + query_params.value + "` LIMIT 100;";
       FnordMetric.util.setFragmentURL(
         "query_playground", "sql_query", query, true);
+      //FIXME --> openUrl
       location.reload();
     }
+
+    FnordMetric.util.MetricPreviewWidget().render(
+      elem, query_params.value);
 
   }
 
