@@ -974,6 +974,14 @@ h1.page_header em {
   color: #545758;
 }
 
+.single_metric_ui.chart_container {
+  height: 400px;
+}
+
+.single_metric_ui.chart_container svg {
+  height: 100%;
+}
+
 /* BASICS */
 
 .CodeMirror {

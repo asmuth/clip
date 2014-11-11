@@ -29,8 +29,9 @@ FnordMetric.util.singleMetricView = function() {
       FnordMetric.util.htmlEscape(query_params.value) + 
       "</em>", elem);
 
-    FnordMetric.util.MetricPreviewWidget().render(
+    var preview_widget = FnordMetric.util.MetricPreviewWidget(
       elem, query_params.value);
+    preview_widget.render();
 
   }
 
