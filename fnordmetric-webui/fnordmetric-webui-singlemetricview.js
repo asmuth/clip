@@ -43,8 +43,9 @@ FnordMetric.util.singleMetricView = function() {
       location.reload();
     }
 
-    FnordMetric.util.MetricPreviewWidget().render(
+    var preview_widget = FnordMetric.util.MetricPreviewWidget(
       elem, query_params.value);
+    preview_widget.render();
 
   }
 

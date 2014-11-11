@@ -394,7 +394,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
     show = (inputs.show + "(value) as y");
   }
 
-  query += select + show + from;
+  query += draw + select + show + from;
 
   /* check for time --> where clause and add to query */
 
@@ -423,6 +423,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   }
 
   query += ";";
+  console.log(query);
   return query;
 }
 

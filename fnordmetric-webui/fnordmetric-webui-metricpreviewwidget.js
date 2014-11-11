@@ -16,9 +16,47 @@ if (FnordMetric.views === undefined) {
   FnordMetric.views = {};
 }
 
-FnordMetric.util.MetricPreviewWidget = function() {
-  var metric;
+FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
+  var elem = viewport;
+  var metric = metric;
 
+  function renderChart(chart) {
+    if (chart != undefined) {
+      var chart_container = document.createElement("div");
+      chart_container.className = "single_metric_ui chart_container";
+      chart_container.innerHTML = chart.svg;
+      elem.appendChild(chart_container);
+    }
+  }
+
+  function renderTable(table) {
+    var table_container = document.createElement("div");
+    var table_view = FnordMetric.util.TableView(
+      ["series", "x", "y"], table_container, 25);
+    elem.appendChild(table_container);
+    for (i in table.rows) {
+      table_view.addRow(table.rows[i]);
+    }
+    table_view.render();
+
+  }
+
+  function runQuery(querystr) {
+    FnordMetric.httpPost("/query", querystr, function(r) {
+      if (r.status == 200) {
+        var json = JSON.parse(r.response);
+        console.log(json);
+        if (json.charts != undefined) {
+          renderChart(json.charts[0]);
+        }
+        if (json.tables != undefined) {
+          renderTable(json.tables[0]);
+        }
+      }
+    });
+  }
+
+  //FIXME works but seems to be ugly
   function updateEventHandler(elems) {
     var inputs = {
       "show" : null,
@@ -33,22 +71,22 @@ FnordMetric.util.MetricPreviewWidget = function() {
     elems.show.addEventListener('change', function() {
       var value = (this.value == "Value") ? null : this.value;
       inputs.show = value;
-      FnordMetric.util.createQuery(inputs, metric);
+      runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
     elems.aggregation.time.addEventListener('change', function() {
       inputs.aggregation.time = this.value;
-      FnordMetric.util.createQuery(inputs, metric);
+      runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
     elems.aggregation.step.addEventListener('change', function() {
       inputs.aggregation.step = this.value;
-      FnordMetric.util.createQuery(inputs, metric);
+      runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
     elems.seconds.addEventListener('change', function() {
       //inputs.last_seconds = this.value;
-      FnordMetric.util.createQuery(inputs, metric);
+      runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
     elems.group_by.map(function(column) {
@@ -61,14 +99,14 @@ FnordMetric.util.MetricPreviewWidget = function() {
         } else {
           inputs.group_by.splice(index, 1);
         }
-        FnordMetric.util.createQuery(inputs, metric);
+        runQuery(FnordMetric.util.createQuery(inputs, metric));
       });
     }, false);
 
     //last_ seconds & timespan & datepicker --> date
   }
 
-  function renderElems(elem, columns) {
+  function initElems(columns) {
     var elems = {};
     var show_ttl = document.createElement("div");
     show_ttl.innerHTML = "Show";
@@ -154,12 +192,20 @@ FnordMetric.util.MetricPreviewWidget = function() {
     elem.appendChild(next_timespan);
 
     updateEventHandler(elems);
-    //createQuery(
+    runQuery(FnordMetric.util.createQuery({
+      "show" : null,
+      "aggregation" : {
+        "time" : null,
+        "step" : null
+        },
+      "time" : null,
+      "group_by" : []
+    }, metric));
+
 
   }
 
-  function render(elem, metricname) {
-    metric = metricname;
+  function render() {
     var columns = [];
     FnordMetric.httpGet("/metrics", function(r) {
       if (r.status == 200) {
@@ -170,7 +216,7 @@ FnordMetric.util.MetricPreviewWidget = function() {
             columns.push(label);
           });
         });
-        renderElems(elem, columns);
+        initElems(columns);
       }
     });
 
