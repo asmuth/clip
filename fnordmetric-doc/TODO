@@ -27,6 +27,7 @@
     - make editr split draggable/resizable
     - vertical hover line in chartextensions
     - better error message style
+    - compare with yesterday in metric preview widget
 
 [ release ]
     - free scratchpads in group by
