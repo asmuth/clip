@@ -22,6 +22,7 @@ build:
 	      fnordmetric-webui-singlemetricview.js \
 	      fnordmetric-webui-metricpreviewwidget.js \
 	      fnordmetric-webui-autocomplete.js \
+	      fnordmetric-webui-datepicker.js \
 	      codemirror.js \
 	) > fnordmetric-webui.js
 
