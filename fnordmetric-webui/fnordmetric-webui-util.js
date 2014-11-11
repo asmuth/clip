@@ -363,3 +363,67 @@ FnordMetric.util.filterStringArray = function(strings, filter) {
 }
 
 
+/*
+  Inputs Object with default values
+  inputs = {
+    "show" : null,
+    "aggregation" : {
+      "time" : null,
+      "step" : null
+      },
+    "time" : null,
+    "group_by" : []
+  }
+*/
+FnordMetric.util.createQuery = function(inputs, metric) {
+  var query = "";
+  var timewindow = null;
+  var where = null;
+
+  var draw = "DRAW Linechart AXIS BOTTOM AXIS LEFT; ";
+  var select = "SELECT 'mymetric' AS series, time AS x, ";
+  var from = " FROM " + metric;
+  var show;
+  var hasAggr;
+
+  if (inputs.show == null) {
+    show = "value as y";
+    hasAggr = false;
+  } else {
+    hasAggr = true;
+    show = (inputs.show + "(value) as y");
+  }
+
+  query += select + show + from;
+
+  /* check for time --> where clause and add to query */
+
+  if (hasAggr) {
+    /* group over timewindow needs a time and step info */
+    if (inputs.aggregation.time != null &&
+        inputs.aggregation.step != null) {
+      timewindow = 
+        " GROUP OVER TIMEWINDOW(" +
+        inputs.aggregation.time + ", " +
+        inputs.aggregation.step + ")";
+
+      query += timewindow;
+    }
+
+    if (inputs.group_by.length > 0) {
+      var columns = inputs.group_by.join(", ");
+      if (timewindow != null) {
+      /* Group over timewindow clause */
+        query += " BY " + columns;
+      } else {
+      /* GROUP BY */
+        query += " GROUP BY " + columns;
+      }
+    }
+  }
+
+  query += ";";
+  return query;
+}
+
+

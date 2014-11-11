@@ -17,56 +17,55 @@ if (FnordMetric.views === undefined) {
 }
 
 FnordMetric.util.MetricPreviewWidget = function() {
-
-  function updateResult(inputs) {
-    console.log("update result");
-  }
+  var metric;
 
   function updateEventHandler(elems) {
     var inputs = {
-      "show" : "Value",
+      "show" : null,
       "aggregation" : {
         "time" : null,
         "step" : null
         },
-      "seconds" : 10,
-      "date" : null,
+      "time" : null,
       "group_by" : []
     }
 
     elems.show.addEventListener('change', function() {
-      inputs.show = this.value;
-      updateResult(inputs);
+      var value = (this.value == "Value") ? null : this.value;
+      inputs.show = value;
+      FnordMetric.util.createQuery(inputs, metric);
     }, false);
 
     elems.aggregation.time.addEventListener('change', function() {
       inputs.aggregation.time = this.value;
-      updateResult(inputs);
+      FnordMetric.util.createQuery(inputs, metric);
     }, false);
 
     elems.aggregation.step.addEventListener('change', function() {
       inputs.aggregation.step = this.value;
-      updateResult(inputs);
+      FnordMetric.util.createQuery(inputs, metric);
     }, false);
 
     elems.seconds.addEventListener('change', function() {
-      inputs.seconds = this.value;
-      updateResult(inputs);
+      //inputs.last_seconds = this.value;
+      FnordMetric.util.createQuery(inputs, metric);
     }, false);
 
     elems.group_by.map(function(column) {
       column.addEventListener('click', function(e) {
         e.preventDefault();
-        //check if already set --> on /off
-        inputs.group_by.push(this.innerText);
-        updateResult(inputs);
+        var c = this.innerText;
+        var index = inputs.group_by.indexOf(c);
+        if (index == -1) {
+          inputs.group_by.push(this.innerText);
+        } else {
+          inputs.group_by.splice(index, 1);
+        }
+        FnordMetric.util.createQuery(inputs, metric);
       });
     }, false);
 
-    //timespan & datepicker --> date
-
-
-
+    //last_ seconds & timespan & datepicker --> date
   }
 
   function renderElems(elem, columns) {
@@ -155,10 +154,12 @@ FnordMetric.util.MetricPreviewWidget = function() {
     elem.appendChild(next_timespan);
 
     updateEventHandler(elems);
+    //createQuery(
 
   }
 
-  function render(elem, metric) {
+  function render(elem, metricname) {
+    metric = metricname;
     var columns = [];
     FnordMetric.httpGet("/metrics", function(r) {
       if (r.status == 200) {
