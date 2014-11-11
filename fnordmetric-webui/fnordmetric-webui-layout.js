@@ -39,6 +39,12 @@ FnordMetric.WebUI = function() {
     });
   }
 
+  function setSearchUrl(input) {
+    var input = FnordMetric.util.htmlEscape(input);
+    FnordMetric.WebUI.singleton.openUrl(
+      "metric_list?search="+input);
+  }
+
   function addSearchBar() {
     var searchbar = document.createElement("div");
     searchbar.className = "searchbar";
@@ -46,8 +52,8 @@ FnordMetric.WebUI = function() {
     searchbar.innerHTML = "<i class='fa fa-search'></i>";
     searchbar.appendChild(searchinput);
     headbar.appendChild(searchbar);
-    FnordMetric.util.Autocomplete(searchbar,searchinput, ["foo", "bar"]);
-
+    FnordMetric.util.Autocomplete(
+      searchbar,searchinput, setSearchUrl);
   }
 
   function init() {

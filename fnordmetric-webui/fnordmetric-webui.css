@@ -588,8 +588,9 @@ input {
 
 ul.autocomplete {
   position: absolute;
-  margin-top: 32px;
-  width: 208px;
+  top: 28px;
+  margin-left: 27px;
+  width: 360px;
   z-index: 999;
   padding-left: 0px;
 }
