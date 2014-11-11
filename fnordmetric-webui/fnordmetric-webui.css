@@ -72,6 +72,34 @@
 .fa-bolt:before {
   content: "\f0e7";
 }
+.fa-toggle-off:before {
+  content: "\f204";
+}
+.fa-toggle-on:before {
+  content: "\f205";
+}
+.fa-edit:before,
+.fa-pencil-square-o:before {
+  content: "\f044";
+}
+.fa-share:before {
+  content: "\f1e0";
+}
+.fa-pencil:before {
+  content: "\f040";
+}
+.fa-code-fork:before {
+  content: "\f126";
+}
+.fa-sign-out:before {
+  content: "\f08b";
+}
+.fa-chevron-left:before {
+  content: "\f053";
+}
+.fa-chevron-right:before {
+  content: "\f054";
+}
 
 .fa-spin {
   -webkit-animation: fa-spin 1s infinite linear;
@@ -102,7 +130,7 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #545758;
 }
@@ -207,10 +235,12 @@ input {
 }
 
 .viewport {
+  min-width: 900px;
   margin-top: 49px;
 }
 
 .headbar {
+  min-width: 900px;
   height: 49px;
   top: 0;
   position: absolute;
@@ -229,7 +259,7 @@ input {
 }
 
 .headbar a h1 {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 100%;
   line-height: 50px;
   height: 49px;
@@ -655,12 +685,16 @@ table.metric_list tr.list_header i.sort {
 table.metric_list th,
 table.metric_list td {
   text-align: left;
-  font-weight: 500;
+  font-weight: 400;
   border: none;
   height: 38px;
   line-height: 38px;
   font-size: 109%;
   padding: 0 20px;
+}
+
+table.metric_list th {
+  line-height: 40px;
 }
 
 table.metric_list th {
@@ -734,7 +768,7 @@ table.metric_list tr:hover td {
 
 h1.page_header {
   font-size: 140%;
-  font-weight: 500;
+  font-weight: 400;
   margin: 0 0 0 20px;
   padding: 17px 0 10px 0;
   color: #738694;
@@ -755,6 +789,7 @@ h1.page_header em {
 }
 
 .run_query_btn {
+  font-weight: 500;
   cursor: pointer;
   height: 29px;
   line-height: 30px;
@@ -764,6 +799,179 @@ h1.page_header em {
   padding: 0 12px;
   border-radius: 4px;
   color: #009fe9;
+}
+
+.metric_preview_controls {
+  margin-top: 5px;
+  height: 76px;
+  border-top: 2px solid rgb(226, 232, 237);
+  border-bottom: 2px solid rgb(226, 232, 237);
+  background-color: #f6f8fa;
+  color: #60707f;
+  overflow: hidden;
+}
+
+.metric_preview_secondary_controls {
+  height: 39px;
+  margin: 0px;
+  line-height: 39px;
+  border-bottom: 1px solid #dbdedf;
+  font-size: 90%;
+  padding: 0 20px;
+  text-align: right;
+}
+
+.metric_preview_secondary_controls .btn + .btn {
+  border-left: 1px solid #ececec;
+  padding-left: 20px;
+}
+
+.metric_preview_secondary_controls .btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.metric_preview_secondary_controls .btn {
+  float: left;
+  margin-right: 20px;
+  height: 22px;
+  line-height: 22px;
+  margin-top: 10px;
+}
+
+.metric_preview_secondary_controls .btn:first-child {
+  color: #009fe9;
+  font-weight:500;
+}
+
+.metric_preview_secondary_controls .btn .fa-database {
+  font-size: 87%;
+  position: relative;
+  top: -1px;
+}
+
+.metric_preview_secondary_controls .btn i {
+  position: relative;
+  margin-right: 4px;
+}
+
+.metric_preview_secondary_controls .fa-chevron-left {
+  color: rgb(84, 87, 88);
+  border-right: 1px solid #ececec;
+  margin-right: 5px;
+  padding-right: 15px;
+  height: 22px;
+  line-height: 24px;
+  font-size: 90%;
+}
+
+.metric_preview_secondary_controls .fa-chevron-right {
+  color: rgb(84, 87, 88);
+  border-left: 1px solid #ececec;
+  margin-left: 5px;
+  padding-left: 15px;
+  height: 22px;
+  line-height: 24px;
+  font-size: 90%;
+}
+
+.metric_preview_secondary_controls .fa-chevron-left:hover,
+.metric_preview_secondary_controls .fa-chevron-right:hover {
+  color: #009fe9;
+}
+
+.metric_preview_secondary_controls .current_date {
+  padding: 0 10px;
+  font-weight: 500;
+}
+
+.metric_preview_controls .group.aggregation_type {
+  border-right: 1px solid rgb(226, 232, 237);
+}
+
+.metric_preview_controls .group.aggregation_type select {
+  min-width: 100px;
+}
+
+.metric_preview_controls .group.aggregation_time_window select {
+  margin-right: 15px;
+  min-width: 60px;
+}
+
+.metric_preview_controls .group.aggregation_time_window {
+  padding-right: 0;
+  border-right: 1px solid rgb(226, 232, 237);
+}
+
+.metric_preview_controls .group.date {
+  float: right;
+}
+
+.metric_preview_controls .group.timespan {
+  float: right;
+  border-left: 1px solid rgb(226, 232, 237);
+  padding-right: 0;
+}
+
+.metric_preview_controls .group.timespan select {
+  min-width: 110px;
+}
+
+.metric_preview_controls .group {
+  height: 64px;
+  float: left;
+  padding: 14px 20px 0 20px;
+  overflow: hidden;
+}
+
+.metric_preview_controls .group.groupby i {
+  margin-right: 5px;
+}
+
+.metric_preview_controls .group.groupby a {
+  line-height: 28px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  padding: 0 8px;
+  text-align: center;
+  font-size: 12px;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #b3c2d0;
+  color: #545758;
+  height: 28px;
+  display: block;
+}
+
+.metric_preview_controls .group b {
+  font-weight: normal;
+  font-size: 80%;
+  line-height: 12px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+.metric_preview_controls .group input {
+  height: 28px;
+  line-height: 28px;
+  padding: 0 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid #b3c2d0;
+  color: #545758;
+}
+
+.metric_preview_controls .group select {
+  -webkit-appearance: menulist-button;
+  height: 30px;
+  font-size: 12px;
+  line-height: 30px;
+  min-width: 150px;
+  background: #fff;
+  border: 1px solid #b3c2d0;
+  color: #545758;
 }
 
 /* BASICS */

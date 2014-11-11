@@ -29,20 +29,6 @@ FnordMetric.util.singleMetricView = function() {
       FnordMetric.util.htmlEscape(query_params.value) + 
       "</em>", elem);
 
-    var editor_btn = FnordMetric.createButton(
-      "#", undefined, "Open in Query Editor");
-    elem.appendChild(editor_btn);
-
-    editor_btn.onclick = function(e) {
-      e.preventDefault();
-      var query = 
-        "SELECT * FROM `" + query_params.value + "` LIMIT 100;";
-      FnordMetric.util.setFragmentURL(
-        "query_playground", "sql_query", query, true);
-      //FIXME --> openUrl
-      location.reload();
-    }
-
     FnordMetric.util.MetricPreviewWidget().render(
       elem, query_params.value);
 
