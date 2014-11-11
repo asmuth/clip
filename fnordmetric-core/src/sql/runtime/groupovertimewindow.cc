@@ -35,12 +35,17 @@ GroupOverTimewindow::GroupOverTimewindow(
     group_expr_(group_expr),
     scratchpad_size_(scratchpad_size),
     child_(child) {
-  scratchpad_.reset(malloc(scratchpad_size_));
-  if (scratchpad_.get() == nullptr) {
+  scratchpad_ = malloc(scratchpad_size_);
+
+  if (scratchpad_ == nullptr) {
     RAISE(kMallocError, "malloc() failed");
   }
 
   child->setTarget(this);
+}
+
+GroupOverTimewindow::~GroupOverTimewindow() {
+  free(scratchpad_);
 }
 
 void GroupOverTimewindow::execute() {
@@ -127,13 +132,6 @@ void GroupOverTimewindow::emitGroup(Group* group) {
             rows[window_end_idx].first < window_end_time;
         ++window_end_idx);
 
-    printf("window %i, %i (%lu-%lu=%lu)\n",
-        window_start_idx,
-        window_end_idx,
-        window_start_time,
-        window_end_time,
-        window_end_time - window_start_time);
-
     emitWindow(
         window_end_time,
         rows.begin() + window_start_idx,
@@ -159,7 +157,7 @@ void GroupOverTimewindow::emitWindow(
   SValue out[128]; // FIXPAUL
   int out_len;
 
-  memset(scratchpad_.get(), 0, scratchpad_size_);
+  memset(scratchpad_, 0, scratchpad_size_);
 
   if (window_begin == window_end) {
     std::vector<SValue> row(input_row_size_, SValue());
@@ -167,7 +165,7 @@ void GroupOverTimewindow::emitWindow(
 
     executeExpression(
         select_expr_,
-        scratchpad_.get(),
+        scratchpad_,
         row.size(),
         row.data(),
         &out_len,
@@ -179,7 +177,7 @@ void GroupOverTimewindow::emitWindow(
 
       executeExpression(
           select_expr_,
-          scratchpad_.get(),
+          scratchpad_,
           row.size(),
           row.data(),
           &out_len,

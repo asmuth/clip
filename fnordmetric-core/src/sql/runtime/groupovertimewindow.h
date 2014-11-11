@@ -9,6 +9,8 @@
  */
 #ifndef _FNORDMETRIC_SQL_GROUPOVERTIMEWINDOW_H
 #define _FNORDMETRIC_SQL_GROUPOVERTIMEWINDOW_H
+#include <algorithm>
+#include <memory>
 #include <stdlib.h>
 #include <string>
 #include <string.h>
@@ -37,6 +39,8 @@ public:
       CompiledExpression* group_expr,
       size_t scratchpad_size,
       QueryPlanNode* child);
+
+  ~GroupOverTimewindow();
 
   void execute() override;
   bool nextRow(SValue* row, int row_len) override;
@@ -69,7 +73,7 @@ protected:
   CompiledExpression* group_expr_;
   size_t scratchpad_size_;
   QueryPlanNode* child_;
-  std::unique_ptr<void> scratchpad_;
+  void* scratchpad_;
   std::unordered_map<std::string, Group> groups_;
 };
 
