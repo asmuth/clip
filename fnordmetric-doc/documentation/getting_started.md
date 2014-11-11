@@ -38,32 +38,34 @@ FnordMetric ships two binaries, each with it's own usecase:
 
 #### FnordMetric CLI
 
-fnordmetric-cli is probably best described as gnuplot meets SQL. It allows you
-to run ChartSQL queries from the command line against external data sources,
+[fnordmetric-cli](/documentation/getting_started/fnordmetric-cli) is probably
+best described as gnuplot meets SQL. It allows you to run ChartSQL queries from
+the command line against [external data sources](/documentation/chartsql/external_data_sources/),
 like MySQL databases or CSV files.
 
 Use fnordmetric-cli if you have already collected the source data and just
 want to visualize it using ChartSQL.
 
-[Getting started with fnordmetric-cli](/documentation/getting_started/fnordmetric-cli)
+[&raquo; Getting started with fnordmetric-cli](/documentation/getting_started/fnordmetric-cli)
 <br style="line-height:30px;"/>
 
 #### FnordMetric Server
 
-fnordmetric-server is a standalone HTTP server application. It exposes a web UI
-and a HTTP API to run ChartSQL queries. The query results are returned as JSON,
-SVG or PNG.
+[fnordmetric-server](/documentation/getting_started/fnordmetric-server) is a
+standalone HTTP server application. It exposes a web UI and a HTTP API to run
+ChartSQL queries. The query results are returned as JSON, SVG or PNG.
 
 Like fnordmetric-cli, the server allows you to execute queries against a number
-of external backends like MySQL databases or CSV files. Additionally, the server
-includes a facility to collect timeseries data and store them either on local
-disk or in external storage (HBase).
+of [external data sources](/documentation/chartsql/external_data_sources/) like
+MySQL databases or CSV files. Additionally, the server includes a facility to
+[collect timeseries data](/documentation/metricdb/collecting_metrics/) and store
+them either on local disk or in external storage (HBase).
 
 You can use fnordmetric-server as a one-stop solution for metric collection and
 charting. Since fnordmetric-server aims to be a StatsD+graphite competitor, it
-implements a wire compatible StatsD API.
+implements a wire compatible [StatsD API](/documentation/metridb/statsd_interface/).
 
-[Getting started with fnordmetric-server](/documentation/getting_started/fnordmetric-server)
+[&raquo; Getting started with fnordmetric-server](/documentation/getting_started/fnordmetric-server)
 
 
 
@@ -86,7 +88,7 @@ The JavaScript client allows you to plug fnordmetric charts into any web
 application. It also includes helper code to collect counters/timeseries
 data in your node.js backend and send them to fnordmetric-server.
 
-[Getting started with the JavaScript API](/documentation/getting_started/fnordmetric-server)
+[&raquo; Getting started with the JavaScript API](/documentation/getting_started/fnordmetric-server)
 
 #### FnordMetric for Ruby (on Rails)
 
@@ -94,7 +96,7 @@ The ruby client allows you to plug fnordmetric charts into an Ruby (on Rails)
 web application. It also includes helper classes to collect counters/timeseries
 data and send them to fnordmetric-server.
 
-[Getting started with the ruby API](/documentation/getting_started/fnordmetric-server)
+[&raquo; Getting started with the ruby API](/documentation/getting_started/fnordmetric-server)
 
 
 FnordMetric Agents

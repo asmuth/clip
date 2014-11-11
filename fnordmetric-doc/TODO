@@ -1,16 +1,18 @@
-[ faq ] 
-  - how do i set the line color
-  - can i use fnordmetric with external data
-  - do I need an external database
-
+[ faq ]
+    - how do i set the line color
+    - can i use fnordmetric with external data
+    - do I need an external database
 
 [ doc ]
+    - dashboard api reference
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
     - make all the command in installation work
     - chart 2d/3d signature doc
     - all the doc links
     - better screenshot on homepage
+    - page: included agents
+    - finish http api 
 
 [ SQL ]
     - match function names case-insensitively
@@ -25,18 +27,26 @@
     - support red/green/blue/hex colors
     - round fn
 
+[ frontend ]
+    - clean up sql result view
+    - metric overview page
+    - syntax highlighting
+    - embed as iframe
+    - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
+    - vertical hover line in chartextensions
+
 [ release ]
+    - ruby client
+    - javascript client + doc
     - svg: escape series names, labels!
     - bug: NAN is not a valid value in SVG
     - inline libev
 
 -----
 
-[ frontend feature q ]
-    - vertical hover line in chartextensions
-    - syntax highlighting
-
 [ feature q ]
+    - dashboard params
+    - retention / downsampling + DOC
     - merge compaction
     - SQL: having
     - SQL: cross joins
