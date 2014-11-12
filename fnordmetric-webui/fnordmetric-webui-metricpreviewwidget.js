@@ -110,10 +110,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       }, false);
     }
 
-    elems.date.addEventListener('change', function() {
-      //inputs.time.start = 
-      runQuery(FnordMetric.util.createQuery(inputs, metric));
-    }, false);
 
     //last_ seconds & timespan & datepicker --> date
   }
@@ -190,6 +186,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var datepicker = document.createElement("input");
     date_group.appendChild(datepicker);
+    /* add callback */
     FnordMetric.util.DatePicker(date_group, datepicker);
     elems.date = datepicker;
 
@@ -236,8 +233,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     var secondary_controls = document.createElement("div");
     elem.appendChild(secondary_controls);
     secondary_controls.className = "metric_preview_secondary_controls";
-    secondary_controls.innerHTML = "<div class='btn'><i class='fa fa-database'></i> SQL Editor</div>";
-    secondary_controls.innerHTML += "<div class='btn'><i class='fa fa-share'></i> Embed</div>";
+    var controls_query = FnordMetric.createButton(
+      "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
+    var controls_embed = FnordMetric.createButton(
+      "#", "btn", "<i class='fa fa-share'></i> Embed");
+    secondary_controls.appendChild(controls_query);
+    secondary_controls.appendChild(controls_embed);
 
     var timespan_updater = document.createElement("div");
     var prev_timespan = FnordMetric.createButton(

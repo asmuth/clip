@@ -23,26 +23,63 @@ FnordMetric.util.DatePicker = function(elem, input) {
 
   var human_days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
-  function resetDatepicker(day, month, year) {
+  function resetDatepicker() {
     dp_widget.innerHTML = "";
-    input.value = month + "/" + day + "/" + year;
+    dp_widget.className = "datepicker_widget";
+  }
+
+  function setDate(hours, minutes, day, month, year) {
+    input.value =
+      (month+1) + "/" + day + "/" + year + "  " + hours + ":" + minutes;
+
+    var ts = new Date(year, (month+1), day, hours, minutes).getTime();
+    input.setAttribute("timestamp", ts);
   }
 
   function init(month, year) {
+    dp_widget.className = "datepicker_widget active";
+
+    var input_container = document.createElement("div");
+    input_container.className = "input_container";
+    var separator = document.createElement("span");
+    separator.innerHTML = ":";
+    var hour_input = document.createElement("input");
+    var minute_input = document.createElement("input");
+    input_container.appendChild(hour_input);
+    input_container.appendChild(separator);
+    input_container.appendChild(minute_input);
+    dp_widget.appendChild(input_container);
+
     var first_day = new Date(year + "-" + (month+1) + "-01").getDay();
     /* Mo = 1, ... , Su = 7 */
     first_day = (first_day === 0)? 7 : first_day-1;
-    console.log("first day " + first_day);
     var num_days = new Date(year, (month+1), 0).getDate();
     var table = document.createElement("table");
 
     var month_header = document.createElement("tr");
+
     var prev_ttp = FnordMetric.createButton(
-      "#", undefined, "<i class='fa fa-chevron-left'></i>");
+      "#", "month_ttp", "<i class='fa fa-chevron-left'></i>");
+    prev_ttp.addEventListener('click', function(e) {
+      e.preventDefault();
+      resetDatepicker();
+      year = (month == 0)? year-1 : year;
+      init((month-1 +12) % 12, year);
+    }, false);
+
     var next_ttp = FnordMetric.createButton(
-      "#", undefined, "<i class='fa fa-chevron-right'></i>");
+      "#", "month_ttp", "<i class='fa fa-chevron-right'></i>");
+    next_ttp.addEventListener('click', function(e) {
+      e.preventDefault();
+      resetDatepicker();
+      year = (month == 11)? year+1 : year;
+      init((month + 1) % 12, year);
+    }, false);
+
     var month_title = document.createElement("span");
-    month_title.innerHTML =  FnordMetric.util.getMonthStr(month);
+    month_title.innerHTML =
+      FnordMetric.util.getMonthStr(month) + " " + year;
+    month_title.className = "datepicker_title";
     var month_cell = document.createElement("td");
     month_cell.colSpan = "7";
     month_cell.appendChild(prev_ttp);
@@ -64,14 +101,18 @@ FnordMetric.util.DatePicker = function(elem, input) {
     rows++;
     for (var i = 0; i < 7; i++) { 
       var cell = document.createElement("td");
-      if (i < first_day) {
+      if (i < first_day || first_day == 0) {
         cell.innerHTML = "";
       } else {
         var link = FnordMetric.createButton(
           "#", undefined, day);
         link.addEventListener('click', function(e) {
           e.preventDefault();
-          resetDatepicker(this.innerText, month, year);
+          resetDatepicker();
+          setDate(
+            hour_input.value,
+            minute_input.value,
+            this.innerText, month, year);
         }, false);
 
         cell.appendChild(link);
@@ -79,12 +120,11 @@ FnordMetric.util.DatePicker = function(elem, input) {
       }
       first_row.appendChild(cell);
     }
-
     table.appendChild(day_header);
     table.appendChild(month_header);
     table.appendChild(first_row);
 
-    while (rows < 6) {
+    while (rows < 6 && day <= num_days) {
       var row = document.createElement("tr");
       rows++;
       for (var i = 0; i < 7 && day <= num_days; i++) {
@@ -93,7 +133,11 @@ FnordMetric.util.DatePicker = function(elem, input) {
           "#", undefined, day);
         link.addEventListener('click', function(e) {
           e.preventDefault();
-          resetDatepicker(this.innerText, month, year);
+          resetDatepicker();
+          setDate(
+            hour_input.value,
+            minute_input.value,
+            this.innerText, month, year);
         }, false);
 
         cell.appendChild(link);
@@ -103,7 +147,9 @@ FnordMetric.util.DatePicker = function(elem, input) {
       table.appendChild(row);
     }
 
+    console.log(rows);
     if (rows < 6) {
+      console.log("render last row");
       var last_row = document.createElement("tr");
       for (var i = 0; i < 7; i++) {
         var cell = document.createElement("td");
@@ -112,7 +158,11 @@ FnordMetric.util.DatePicker = function(elem, input) {
             "#", undefined, day);
           link.addEventListener('click', function(e) {
             e.preventDefault();
-            resetDatepicker(this.innerText, month, year);
+            resetDatepicker();
+            setDate(
+              hour_input.value,
+              minute_input.value,
+              this.innerText, month, year);
           }, false);
 
           cell.appendChild(link);

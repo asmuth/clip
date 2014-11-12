@@ -486,4 +486,3 @@ FnordMetric.util.getMonthStr = function(index) {
 }
 
 
-
