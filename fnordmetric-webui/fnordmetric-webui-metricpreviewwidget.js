@@ -45,7 +45,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
   }
 
   function runQuery(querystr) {
-    console.log(querystr);
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
@@ -191,7 +190,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var datepicker = document.createElement("input");
     date_group.appendChild(datepicker);
-    FnordMetric.util.DatePicker(elem, datepicker);
+    FnordMetric.util.DatePicker(date_group, datepicker);
     elems.date = datepicker;
 
     var timespan_group = document.createElement("div");

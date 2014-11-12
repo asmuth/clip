@@ -401,7 +401,6 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
   }
 */
 FnordMetric.util.createQuery = function(inputs, metric) {
-  console.log(inputs);
   var query = "";
   var timewindow = null;
   var where = null;
@@ -440,7 +439,6 @@ FnordMetric.util.createQuery = function(inputs, metric) {
 
   //query += where;
 
-  console.log("has agrr " + hasAggr);
   if (hasAggr) {
     /* group over timewindow needs a time and step info */
     if (inputs.aggregation.time != null &&
@@ -467,6 +465,24 @@ FnordMetric.util.createQuery = function(inputs, metric) {
 
   query += ";";
   return query;
+}
+
+FnordMetric.util.getMonthStr = function(index) {
+  var months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"];
+
+  return months[index];
 }
 
 
