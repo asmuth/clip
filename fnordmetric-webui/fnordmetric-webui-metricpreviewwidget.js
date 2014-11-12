@@ -235,6 +235,14 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     secondary_controls.className = "metric_preview_secondary_controls";
     var controls_query = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
+    controls_query.onclick = function(e) {
+      e.preventDefault();
+      var query = 
+        decodeURIComponent("SELECT * FROM " + metric);
+      FnordMetric.WebUI.singleton.openUrl(
+        "query_playground?sql_query="+query, true);
+    };
+
     var controls_embed = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-share'></i> Embed");
     secondary_controls.appendChild(controls_query);
