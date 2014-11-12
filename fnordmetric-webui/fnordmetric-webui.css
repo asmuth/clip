@@ -941,6 +941,8 @@ h1.page_header em {
   color: #545758;
   height: 28px;
   display: block;
+  float: left;
+  margin-right: 10px;
 }
 
 .metric_preview_controls .group b {
