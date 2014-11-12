@@ -49,7 +49,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
-        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
         }
@@ -65,8 +64,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     var inputs = {
       "show" : null,
       "aggregation" : {
-        "time" : null,
-        "step" : null
+        "time" : 1000,
+        "step" : 1000
         },
       "time" : {
         "start" : null,
@@ -82,12 +81,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     }, false);
 
     elems.aggregation.window.addEventListener('change', function() {
-      inputs.aggregation.time = this.value;
+      inputs.aggregation.time = FnordMetric.util.toMilliSeconds(this.value);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
     elems.aggregation.step.addEventListener('change', function() {
-      inputs.aggregation.step = this.value;
+      inputs.aggregation.step = FnordMetric.util.toMilliSeconds(this.value);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
@@ -175,7 +174,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     aggr_group.appendChild(aggr_step);
     aggregate_options.map(function(opt) {
       var option = document.createElement("option");
-      option.innerHTML = opt;
+      option.innerHTML = opt[0];
+      option.setAttribute("id", opt[1]);
       aggr_step.appendChild(option);
     });
 
@@ -263,13 +263,13 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var end_time = FnordMetric.util.humanDateToMikroTS(
       datepicker.value);
-    var start_time = end_time - (timespan_select.value * 1000);
+    var start_time = end_time - 30000;
 
     runQuery(FnordMetric.util.createQuery({
       "show" : null,
       "aggregation" : {
-        "time" : null,
-        "step" : null
+        "time" : 1000,
+        "step" : 1000
         },
       "time" : {
         "start" : start_time,

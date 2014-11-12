@@ -372,6 +372,18 @@ FnordMetric.util.filterStringArray = function(strings, filter) {
   return data;
 }
 
+FnordMetric.util.toMilliSeconds = function(timestr) {
+  var time = timestr.split(/([a-z])/);
+  var conversion = {
+    "s" : 1000,
+    "m" : 60000,
+    "h" : 360000
+  }
+
+  var seconds = time[0] * conversion[time[1]];
+  return seconds;
+}
+
 
 /*
   Inputs Object with default values
@@ -389,6 +401,7 @@ FnordMetric.util.filterStringArray = function(strings, filter) {
   }
 */
 FnordMetric.util.createQuery = function(inputs, metric) {
+  console.log(inputs);
   var query = "";
   var timewindow = null;
   var where = null;
@@ -427,7 +440,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
 
   //query += where;
 
-
+  console.log("has agrr " + hasAggr);
   if (hasAggr) {
     /* group over timewindow needs a time and step info */
     if (inputs.aggregation.time != null &&
