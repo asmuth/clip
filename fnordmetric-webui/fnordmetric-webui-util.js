@@ -416,7 +416,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
     hasAggr = false;
   } else {
     hasAggr = true;
-    show = (inputs.show + "(value) as y");
+    show = ((inputs.show).toLowerCase() + "(value) as y");
   }
 
   query += draw + select + show + from;
@@ -444,7 +444,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
     if (inputs.aggregation.time != null &&
         inputs.aggregation.step != null) {
       timewindow = 
-        " GROUP OVER TIMEWINDOW(" +
+        " GROUP OVER TIMEWINDOW(time, " +
         inputs.aggregation.time + ", " +
         inputs.aggregation.step + ")";
 
@@ -464,6 +464,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   }
 
   query += ";";
+  console.log(query);
   return query;
 }
 

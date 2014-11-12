@@ -45,9 +45,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
   }
 
   function runQuery(querystr) {
+    console.log("run query");
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
+        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
         }
@@ -169,8 +171,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     aggr_group.appendChild(aggr_step);
     aggregate_options.map(function(opt) {
       var option = document.createElement("option");
-      option.innerHTML = opt[0];
-      option.setAttribute("id", opt[1]);
+      option.innerHTML = opt;
       aggr_step.appendChild(option);
     });
 
