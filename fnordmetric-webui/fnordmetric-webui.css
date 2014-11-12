@@ -621,6 +621,17 @@ input {
   text-align:center
 }
 
+.datepicker_widget {
+  position:absolute;
+  z-index: 999;
+  background: #fff;
+}
+
+.metric_preview_controls .datepicker_widget {
+  margin-top: 31px;
+  width: 216px;
+}
+
 ul.autocomplete {
   position: absolute;
   top: 28px;
