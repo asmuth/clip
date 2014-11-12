@@ -233,6 +233,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     var secondary_controls = document.createElement("div");
     elem.appendChild(secondary_controls);
     secondary_controls.className = "metric_preview_secondary_controls";
+
     var controls_query = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
     controls_query.onclick = function(e) {
@@ -245,6 +246,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var controls_embed = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-share'></i> Embed");
+    controls_embed.onclick = function(e) {
+      e.preventDefault();
+      FnordMetric.util.openPopup(
+        elem, "TODO add embed snippet");
+    }
+
     secondary_controls.appendChild(controls_query);
     secondary_controls.appendChild(controls_embed);
 
