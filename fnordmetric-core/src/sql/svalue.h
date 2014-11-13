@@ -36,6 +36,7 @@ public:
 
   explicit SValue();
   explicit SValue(const fnordmetric::StringType& string_value);
+  explicit SValue(char const* string_value); // FIXPAUL HACK!!!
   explicit SValue(fnordmetric::IntegerType integer_value);
   explicit SValue(fnordmetric::FloatType float_value);
   explicit SValue(fnordmetric::BoolType bool_value);

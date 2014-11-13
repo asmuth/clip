@@ -1252,3 +1252,61 @@ TEST_CASE(SQLTest, TestSimpleGroupOverTimeWindow, [] () {
   EXPECT_EQ(result->getRow(15)[1], "NULL");
   EXPECT_EQ(result->getRow(28)[1], "28170");
 });
+
+TEST_CASE(SQLTest, TestNumericConversion, [] () {
+  {
+    SValue val("42");
+    EXPECT_EQ(val.getType(), SValue::T_STRING);
+    EXPECT(val.testType<fnordmetric::IntegerType>());
+    EXPECT(val.tryNumericConversion());
+    EXPECT_EQ(val.getInteger(), 42);
+  }
+
+  {
+    SValue val("1415912541648");
+    EXPECT_EQ(val.getType(), SValue::T_STRING);
+    EXPECT(val.testType<fnordmetric::IntegerType>());
+    EXPECT(val.tryNumericConversion());
+    EXPECT_EQ(val.getInteger(), 1415912541648lu);
+  }
+});
+
+TEST_CASE(SQLTest, TestCompareTimestamps, [] () {
+  auto result = executeTestQuery(
+      "  SELECT"
+      "  FROM_TIMESTAMP(1415916005281) > FROM_TIMESTAMP(1415916005281) as a,"
+      "  FROM_TIMESTAMP(1415916005281) < FROM_TIMESTAMP(1415916005281) as b,"
+      "  FROM_TIMESTAMP(1415916005282) > FROM_TIMESTAMP(1415916005281) as c,"
+      "  FROM_TIMESTAMP(1415916005280) < FROM_TIMESTAMP(1415916005281) as d,"
+      "  FROM_TIMESTAMP(1415916005280) > FROM_TIMESTAMP(1415916005281) as e,"
+      "  FROM_TIMESTAMP(1415916005282) < FROM_TIMESTAMP(1415916005281) as f;");
+
+  EXPECT_EQ(result->getNumRows(), 1);
+  EXPECT_EQ(result->getNumColumns(), 6);
+  EXPECT_EQ(result->getRow(0)[0], "false");
+  EXPECT_EQ(result->getRow(0)[1], "false");
+  EXPECT_EQ(result->getRow(0)[2], "true");
+  EXPECT_EQ(result->getRow(0)[3], "true");
+  EXPECT_EQ(result->getRow(0)[4], "false");
+  EXPECT_EQ(result->getRow(0)[5], "false");
+});
+
+TEST_CASE(SQLTest, TestInvalidQueries, [] () {
+  std::vector<std::string> queries;
+
+  queries.push_back(
+      "SELECT time AS x, count(value) as y FROM `http_status_codes`"
+      "where GROUP OVER TIMEWINDOW(time, 1000, 1) BY test;");
+
+  for (const auto& query : queries) {
+    bool raised = false;
+
+    try {
+      executeTestQuery(query.c_str());
+    } catch (std::exception& e) {
+      raised = true;
+    }
+
+    EXPECT(raised);
+  }
+});

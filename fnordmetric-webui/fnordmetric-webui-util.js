@@ -361,15 +361,27 @@ FnordMetric.util.htmlEscape = function(str) {
 
 
 /* returns all words that includes filter */
-FnordMetric.util.filterStringArray = function(strings, filter) {
+FnordMetric.util.filterStringArray = function(strings, filter, limit) {
   //FIXME ?
   var data = [];
   strings.map(function(string) {
-    if (string.indexOf(filter) > -1) {
+    if (string.indexOf(filter) > -1 && limit > 0) {
       data.push(string);
+      limit--;
     }
   });
   return data;
+}
+
+FnordMetric.util.toMilliSeconds = function(timestr) {
+  var time = timestr.split(/([a-z])/);
+  var conversion = {
+    "s" : 1000,
+    "m" : 60000,
+    "h" : 3600000
+  }
+  var seconds = time[0] * conversion[time[1]];
+  return parseInt(seconds, 10);
 }
 
 
@@ -382,79 +394,145 @@ FnordMetric.util.filterStringArray = function(strings, filter) {
       "step" : null
       },
     "time" : {
-      "start" : null,
+      "mseconds_to_end" : null,
       "end" : null
     }
-    "group_by" : []
+    "group_by" : [],
+    "columns" : [all possible group by columns]
   }
 */
 FnordMetric.util.createQuery = function(inputs, metric) {
   var query = "";
   var timewindow = null;
-  var where = null;
+  var where = "";
 
   var draw = "DRAW Linechart AXIS BOTTOM AXIS LEFT; ";
   var select = "SELECT time AS x, ";
   var from = " FROM `" + metric + "`";
   var show;
+  var group_by = "";
   var hasAggr;
+  var hasTimeWindow;
 
-  if (inputs.show == null) {
+  if (inputs.show == "Value") {
     show = "value as y";
+    hasTimeWindow = false;
     hasAggr = false;
+  } else if (inputs.show == "Rollup") {
+    draw = "DRAW BARCHART AXIS BOTTOM AXIS LEFT; ";
+    var column = (inputs.group_by.length > 0) ?
+      inputs.group_by[0] : inputs.columns[0];
+    select = "SELECT "+ column + " AS x, ";
+    show = "sum(value) as y";
+    hasAggr = true;
+    hasTimeWindow = false;
   } else {
     hasAggr = true;
-    show = (inputs.show + "(value) as y");
+    hasTimeWindow = true;
+    show = ((inputs.show).toLowerCase() + "(value) as y");
   }
 
   query += draw + select + show + from;
 
   /* check for time --> where clause and add to query */
-  if (inputs.time.start != null) {
+  if (inputs.time.mseconds_to_end != null && inputs.time.end != null ) {
+    var start = inputs.time.end - inputs.time.mseconds_to_end;
     where = 
-      " where time > FROM_TIMESTAMP(" + inputs.time.start + ")";
+      " where time > FROM_TIMESTAMP(" + Math.round(start / 1000) + ")" +
+      " and time < FROM_TIMESTAMP(" + Math.round(inputs.time.end / 1000) +")";
+    //console.log(where);
   }
-
-  if (inputs.time.end != null) {
-    if (where == null) {
-      where += 
-        "where time < FROM_TIMESTAMP(" + inputs.time.end + ")";
-    } else {
-      where += 
-        " and time < FROM_TIMESTAMP(" + inputs.time.end +")";
-    }
-  }
-
-  //query += where;
-
+  query += where;
 
   if (hasAggr) {
-    /* group over timewindow needs a time and step info */
-    if (inputs.aggregation.time != null &&
-        inputs.aggregation.step != null) {
+    var columns = (inputs.group_by.length > 0) ?
+      inputs.group_by.join(", ") : inputs.columns[0];
+    if (hasTimeWindow) {
       timewindow = 
-        " GROUP OVER TIMEWINDOW(" +
-        inputs.aggregation.time + ", " +
-        inputs.aggregation.step + ")";
+        " GROUP OVER TIMEWINDOW(time, " +
+        Math.round(inputs.aggregation.time / 1000) + ", " +
+        Math.round(inputs.aggregation.step / 1000) + ")";
 
       query += timewindow;
+      group_by = " BY " + columns;
+    } else {
+    /* GROUP BY */
+      group_by = " GROUP BY " + columns;
     }
-
-    if (inputs.group_by.length > 0) {
-      var columns = inputs.group_by.join(", ");
-      if (timewindow != null) {
-      /* Group over timewindow clause */
-        query += " BY " + columns;
-      } else {
-      /* GROUP BY */
-        query += " GROUP BY " + columns;
-      }
-    }
+    query += group_by;
   }
 
   query += ";";
+  console.log(query);
   return query;
 }
 
+FnordMetric.util.getMonthStr = function(index) {
+  var months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"];
 
+  return months[index];
+}
+
+FnordMetric.util.isNumKey = function(keycode) {
+  return (
+    (keycode >= 48 && keycode <= 57) || (keycode >= 96 && keycode <= 105));
+}
+
+/* tab, arrow-left, arrow-right, deletekeys */
+FnordMetric.util.isNavKey = function(keycode) {
+  return (
+    keycode == 8 ||
+    keycode == 9 ||
+    keycode == 37 ||
+    keycode == 39 ||
+    keycode == 46);
+}
+
+FnordMetric.util.validatedTimeInput = function (time_input, type) {
+  var input;
+  time_input.addEventListener('keydown', function(e) {
+    if (FnordMetric.util.isNumKey(e.keyCode)) {
+      var input = this.value;
+      //TODO validate input
+      return;
+    }
+    if (!FnordMetric.util.isNavKey(e.keyCode)) {
+      e.preventDefault();
+    }
+  }, false);
+
+}
+
+FnordMetric.util.appendLeadingZero = function (num) {
+  return (num > 9)? num : "0" + num;
+}
+
+
+/* returns mm/dd/yyyy hh:mm */
+FnordMetric.util.getDateTimeString = function(timestamp) {
+  var timestamp = timestamp == undefined?
+    new Date() : new Date(parseInt(timestamp, 10));
+
+  var month = timestamp.getMonth();
+  month = FnordMetric.util.appendLeadingZero(month +1);
+  var day = FnordMetric.util.appendLeadingZero(timestamp.getDate());
+  var hours = FnordMetric.util.appendLeadingZero(timestamp.getHours());
+  var minutes = FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
+  return (
+    month + "/" + day + "/" +
+    timestamp.getFullYear() + "  " + hours +
+    ":" + minutes);
+}
 
