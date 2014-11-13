@@ -16,6 +16,7 @@
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/format.h>
+#include <fnordmetric/util/inspect.h>
 
 namespace fnordmetric {
 namespace query {
@@ -44,22 +45,26 @@ SValue::SValue(const fnordmetric::StringType& string_value) {
       data_.u.t_string.len);
 }
 
-SValue::SValue(fnordmetric::IntegerType integer_value) : SValue() {
+SValue::SValue(
+    char const* string_value) :
+    SValue(std::string(string_value)) {}
+
+SValue::SValue(fnordmetric::IntegerType integer_value) {
   data_.type = T_INTEGER;
   data_.u.t_integer = integer_value;
 }
 
-SValue::SValue(fnordmetric::FloatType float_value) : SValue() {
+SValue::SValue(fnordmetric::FloatType float_value) {
   data_.type = T_FLOAT;
   data_.u.t_float = float_value;
 }
 
-SValue::SValue(fnordmetric::BoolType bool_value) : SValue() {
+SValue::SValue(fnordmetric::BoolType bool_value) {
   data_.type = T_BOOL;
   data_.u.t_bool = bool_value;
 }
 
-SValue::SValue(fnordmetric::TimeType time_value) : SValue() {
+SValue::SValue(fnordmetric::TimeType time_value) {
   data_.type = T_TIMESTAMP;
   data_.u.t_timestamp = static_cast<uint64_t>(time_value);
 }
@@ -147,7 +152,7 @@ fnordmetric::IntegerType SValue::getInteger() const {
 
     case T_STRING:
       try {
-        return std::stoi(getString());
+        return std::stol(getString());
       } catch (std::exception e) {
         /* fallthrough */
       }
@@ -373,14 +378,19 @@ template <> bool SValue::testType<fnordmetric::IntegerType>() const {
   }
 
   auto str = toString();
-  const char* c = str.c_str();
+  const char* cur = str.c_str();
+  const char* end = cur + str.size();
 
-  if (*c == '-') {
-    ++c;
+  if (*cur == '-') {
+    ++cur;
   }
 
-  for (; *c != 0; ++c) {
-    if (*c < '0' || *c > '9') {
+  if (cur == end) {
+    return false;
+  }
+
+  for (; cur < end; ++cur) {
+    if (*cur < '0' || *cur > '9') {
       return false;
     }
   }
@@ -461,6 +471,18 @@ bool SValue::tryTimeConversion() {
   return true;
 }
 
+
+}
+}
+
+namespace fnord {
+namespace util {
+
+template <>
+std::string inspect<fnordmetric::query::SValue::kSValueType>(
+    const fnordmetric::query::SValue::kSValueType& type) {
+  return fnordmetric::query::SValue::getTypeName(type);
+}
 
 }
 }

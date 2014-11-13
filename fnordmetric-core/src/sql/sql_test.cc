@@ -1252,3 +1252,21 @@ TEST_CASE(SQLTest, TestSimpleGroupOverTimeWindow, [] () {
   EXPECT_EQ(result->getRow(15)[1], "NULL");
   EXPECT_EQ(result->getRow(28)[1], "28170");
 });
+
+TEST_CASE(SQLTest, TestNumericConversion, [] () {
+  {
+    SValue val("42");
+    EXPECT_EQ(val.getType(), SValue::T_STRING);
+    EXPECT(val.testType<fnordmetric::IntegerType>());
+    EXPECT(val.tryNumericConversion());
+    EXPECT_EQ(val.getInteger(), 42);
+  }
+
+  {
+    SValue val("1415912541648");
+    EXPECT_EQ(val.getType(), SValue::T_STRING);
+    EXPECT(val.testType<fnordmetric::IntegerType>());
+    EXPECT(val.tryNumericConversion());
+    EXPECT_EQ(val.getInteger(), 1415912541648lu);
+  }
+});
