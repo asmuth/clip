@@ -108,6 +108,10 @@ ASTNode* ASTNode::deepCopy() const {
   }
 
   for (const auto child : children_) {
+    if (child == nullptr) {
+      continue;
+    }
+
     copy->appendChild(child->deepCopy());
   }
 

@@ -150,6 +150,9 @@ fnordmetric::IntegerType SValue::getInteger() const {
     case T_INTEGER:
       return data_.u.t_integer;
 
+    case T_TIMESTAMP:
+      return data_.u.t_timestamp;
+
     case T_STRING:
       try {
         return std::stol(getString());
@@ -160,7 +163,7 @@ fnordmetric::IntegerType SValue::getInteger() const {
     default:
       RAISE(
           kTypeError,
-          "can't convert %s '%s' to Float",
+          "can't convert %s '%s' to Integer",
           SValue::getTypeName(data_.type),
           toString().c_str());
 

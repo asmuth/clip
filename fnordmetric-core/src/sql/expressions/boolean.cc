@@ -30,8 +30,10 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
+    case SValue::T_TIMESTAMP:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getInteger() == rhs->getInteger());
           return;
         case SValue::T_FLOAT:
@@ -45,6 +47,7 @@ void eqExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
         case SValue::T_FLOAT:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getFloat() == rhs->getFloat());
           return;
         default:
@@ -167,8 +170,10 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
+    case SValue::T_TIMESTAMP:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getInteger() < rhs->getInteger());
           return;
         case SValue::T_FLOAT:
@@ -182,6 +187,7 @@ void ltExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
         case SValue::T_FLOAT:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getFloat() < rhs->getFloat());
           return;
         default:
@@ -215,8 +221,10 @@ void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
+    case SValue::T_TIMESTAMP:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getInteger() <= rhs->getInteger());
           return;
         case SValue::T_FLOAT:
@@ -230,6 +238,7 @@ void lteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
         case SValue::T_FLOAT:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getFloat() <= rhs->getFloat());
           return;
         default:
@@ -263,8 +272,10 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
+    case SValue::T_TIMESTAMP:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getInteger() > rhs->getInteger());
           return;
         case SValue::T_FLOAT:
@@ -278,6 +289,7 @@ void gtExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
         case SValue::T_FLOAT:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getFloat() > rhs->getFloat());
           return;
         default:
@@ -311,8 +323,10 @@ void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
 
   switch(lhs->testTypeWithNumericConversion()) {
     case SValue::T_INTEGER:
+    case SValue::T_TIMESTAMP:
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getInteger() >= rhs->getInteger());
           return;
         case SValue::T_FLOAT:
@@ -326,6 +340,7 @@ void gteExpr(void* scratchpad, int argc, SValue* argv, SValue* out) {
       switch(rhs->testTypeWithNumericConversion()) {
         case SValue::T_INTEGER:
         case SValue::T_FLOAT:
+        case SValue::T_TIMESTAMP:
           *out = SValue(lhs->getFloat() >= rhs->getFloat());
           return;
         default:
