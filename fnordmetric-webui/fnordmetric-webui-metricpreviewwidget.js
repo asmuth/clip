@@ -33,10 +33,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
   }
 
   function renderTable(table) {
-    console.log(table);
     table_container.innerHTML = "";
     var table_view = FnordMetric.util.TableView(
-      ["series", "x", "y"], table_container, 25);
+      table.columns, table_container, 25);
     elem.appendChild(table_container);
     for (i in table.rows) {
       table_view.addRow(table.rows[i]);
