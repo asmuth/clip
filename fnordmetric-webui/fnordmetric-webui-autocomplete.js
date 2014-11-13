@@ -18,7 +18,6 @@ if (FnordMetric.views === undefined) {
 
 FnordMetric.util.Autocomplete = function(elem, input, callback) {
   var source = [];
-  // /metrics
   var position;
   var list = document.createElement("ul");
   var items;
@@ -56,23 +55,28 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
 
   function init() {
 
-    input.addEventListener('focus', function() {
+    input.addEventListener('input', function() {
+      if (input.value.length == 0) {
+        resetList();
+        if (list.parentNode == elem) {
+          elem.removeChild(list);
+        }
+        return;
+      }
+      items = FnordMetric.util.filterStringArray(
+        source, input.value, 10);
       resetList();
       renderListItems();
       elem.appendChild(list);
     }, false);
 
     input.addEventListener('blur', function() {
-      elem.removeChild(list);
+      console.log(list);
+      if (list.parentNode == elem) {
+        elem.removeChild(list);
+      }
     }, false);
 
-    input.addEventListener('input', function() {
-      items = FnordMetric.util.filterStringArray(
-        source, input.value);
-      resetList();
-      renderListItems();
-      elem.appendChild(list);
-    }, false);
 
     input.addEventListener('keydown', function(e) {
       switch (e.keyCode) {
@@ -81,10 +85,9 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
           e.preventDefault();
           if (current_value.length > 0){
             input.value = current_value;
-            resetList();
-          } else {
-            callback(input.value);
           }
+          resetList();
+          callback(input.value);
           break;
         /* Up arrow */
         case 38:
