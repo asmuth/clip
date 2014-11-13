@@ -361,12 +361,13 @@ FnordMetric.util.htmlEscape = function(str) {
 
 
 /* returns all words that includes filter */
-FnordMetric.util.filterStringArray = function(strings, filter) {
+FnordMetric.util.filterStringArray = function(strings, filter, limit) {
   //FIXME ?
   var data = [];
   strings.map(function(string) {
-    if (string.indexOf(filter) > -1) {
+    if (string.indexOf(filter) > -1 && limit > 0) {
       data.push(string);
+      limit--;
     }
   });
   return data;
