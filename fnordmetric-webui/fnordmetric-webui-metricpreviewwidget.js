@@ -58,10 +58,34 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     });
   }
 
+  function handleAggrAvailability(show, tw_select, step_select, group_btns) {
+    /* show = "value" */
+    if (show == "Value" || show == "Rollup") {
+      tw_select.className = "disabled";
+      tw_select.disabled = true;
+      step_select.className = "disabled";
+      step_select.disabled = true;
+      if (show == "Value") {
+        group_btns.map(function(btn) {
+          btn.className = "disabled";
+        });
+      }
+    } else {
+      tw_select.className = "";
+      tw_select.disabled = false;
+      step_select.className = "";
+      step_select.disabled = false;
+      group_btns.map(function(btn) {
+        btn.className = "";
+      });
+    }
+
+  }
+
   //FIXME works but seems to be ugly
   function updateEventHandler(elems) {
     var inputs = {
-      "show" : null,
+      "show" : "Value",
       "aggregation" : {
         "time" : 1000,
         "step" : 1000
@@ -73,13 +97,16 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       "group_by" : []
     }
 
+    console.log(elems.aggregation);
+
     elems.rollup.addEventListener('change', function() {
-      var value = (this.value == "Value") ? null : this.value;
-      inputs.show = value;
+      inputs.show = this.value;
+      handleAggrAvailability(
+        this.value, elems.aggregation.timewindow, elems.aggregation.step, elems.group_by);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    elems.aggregation.window.addEventListener('change', function() {
+    elems.aggregation.timewindow.addEventListener('change', function() {
       inputs.aggregation.time = FnordMetric.util.toMilliSeconds(this.value);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
@@ -177,7 +204,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     });
 
     elems.aggregation = {
-      "window" : aggr_win,
+      "timewindow" : aggr_win,
       "step": aggr_step
     };
 
@@ -281,11 +308,13 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     var end_time = FnordMetric.util.humanDateToMikroTS(
       datepicker.value);
 
+    handleAggrAvailability("Value", aggr_win, aggr_step, group_buttons);
+
     runQuery(FnordMetric.util.createQuery({
-      "show" : null,
+      "show" : "Value",
       "aggregation" : {
-        "time" : 1000,
-        "step" : 1000
+        "time" : null,
+        "step" : null
         },
       "time" : {
         "time_to_end" : 30000,

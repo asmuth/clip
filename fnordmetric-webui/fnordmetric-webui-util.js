@@ -411,7 +411,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   var show;
   var hasAggr;
 
-  if (inputs.show == null) {
+  if (inputs.show == "Value") {
     show = "value as y";
     hasAggr = false;
   } else {

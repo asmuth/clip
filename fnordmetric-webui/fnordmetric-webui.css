@@ -978,6 +978,10 @@ h1.page_header em {
   border-right: 1px solid rgb(226, 232, 237);
 }
 
+.metric_preview_controls .group.aggregation_time_window .disabled {
+  opacity: 0.5;
+}
+
 .metric_preview_controls .group.date {
   float: right;
 }
@@ -1018,6 +1022,14 @@ h1.page_header em {
   display: block;
   float: left;
   margin-right: 10px;
+}
+
+.metric_preview_controls .group.groupby a.disabled {
+  opacity: 0.5;
+}
+
+.metric_preview_controls .group.groupby a.disabled:hover {
+  cursor: default;
 }
 
 .metric_preview_controls .group b {
