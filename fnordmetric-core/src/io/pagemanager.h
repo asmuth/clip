@@ -163,8 +163,24 @@ public:
   std::unique_ptr<PageManager::PageRef> getPage(
       const PageManager::Page& page) override;
 
+  /**
+   * Request a page to be mapped into memory but disallow padding the file
+   * . Returns a smart pointer.
+   */
+  struct kNoPadding {};
+  std::unique_ptr<PageManager::PageRef> getPage(
+      const PageManager::Page& page, kNoPadding no_padding);
+
+
+  /**
+   * Truncate the file to the actual used size
+   */
+  void shrinkFile();
+
 protected:
 
+  std::unique_ptr<PageManager::PageRef> getPageImpl(
+      const PageManager::Page& page, bool allow_padding);
   /**
    * Returns a mmap()ed memory region backend by the managed file spans until
    * at least last_byte
@@ -172,6 +188,7 @@ protected:
   MmappedFile* getMmappedFile(uint64_t last_byte);
 
   const std::string filename_;
+  size_t used_bytes_;
   size_t file_size_;
   MmappedFile* current_mapping_;
   std::mutex mmap_mutex_;

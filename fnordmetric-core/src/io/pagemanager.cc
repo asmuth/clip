@@ -95,6 +95,7 @@ MmapPageManager::MmapPageManager(
     PageManager(1, file_size),
     filename_(filename),
     file_size_(file_size),
+    used_bytes_(file_size),
     current_mapping_(nullptr) {
   sys_page_size_ = sysconf(_SC_PAGESIZE);
 }
@@ -103,9 +104,11 @@ MmapPageManager::MmapPageManager(MmapPageManager&& move) :
     PageManager(std::move(move)),
     filename_(move.filename_),
     file_size_(move.file_size_),
+    used_bytes_(move.used_bytes_),
     current_mapping_(move.current_mapping_),
     sys_page_size_(move.sys_page_size_) {
   move.file_size_ = 0;
+  move.used_bytes_ = 0;
   move.current_mapping_ = nullptr;
 }
 
@@ -115,15 +118,39 @@ MmapPageManager::~MmapPageManager() {
   }
 }
 
+void MmapPageManager::shrinkFile() {
+  FileUtil::truncate(filename_, used_bytes_);
+}
+
 std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
     const PageManager::Page& page) {
+  return getPageImpl(page, true);
+}
+
+std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
+    const PageManager::Page& page,
+    kNoPadding no_padding) {
+  return getPageImpl(page, false);
+}
+
+std::unique_ptr<PageManager::PageRef> MmapPageManager::getPageImpl(
+    const PageManager::Page& page,
+    bool allow_padding) {
   uint64_t last_byte = page.offset + page.size;
 
   mmap_mutex_.lock();
 
+  if (last_byte > used_bytes_) {
+    used_bytes_ = last_byte;
+  }
+
   if (last_byte > file_size_) {
-    auto new_size =
-        ((last_byte / kMmapSizeMultiplier) + 1) * kMmapSizeMultiplier;
+    size_t new_size;
+    if (allow_padding) {
+      new_size = ((last_byte / kMmapSizeMultiplier) + 1) * kMmapSizeMultiplier;
+    } else {
+      new_size = last_byte;
+    }
 
     if (fnordmetric::env()->verbose()) {
       fnordmetric::env()->logger()->printf(

@@ -143,7 +143,7 @@ void SSTableWriter::writeIndex(uint32_t index_type, void* data, size_t size) {
   }
 
   auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FooterHeader) + size);
-  auto page = mmap_->getPage(alloc);
+  auto page = mmap_->getPage(alloc, io::MmapPageManager::kNoPadding{});
 
   auto header = page->structAt<BinaryFormat::FooterHeader>(0);
   header->magic = BinaryFormat::kMagicBytes;
@@ -159,6 +159,7 @@ void SSTableWriter::writeIndex(uint32_t index_type, void* data, size_t size) {
   }
 
   page->sync();
+  mmap_->shrinkFile();
 }
 
 void SSTableWriter::reopen(size_t file_size) {
@@ -193,6 +194,7 @@ void SSTableWriter::finalize() {
   header.updateBodySize(body_size_);
 
   page->sync();
+  mmap_->shrinkFile();
 }
 
 // FIXPAUL lock
