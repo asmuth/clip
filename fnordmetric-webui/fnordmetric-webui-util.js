@@ -377,7 +377,7 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
   var conversion = {
     "s" : 1000,
     "m" : 60000,
-    "h" : 360000
+    "h" : 3600000
   }
 
   var seconds = time[0] * conversion[time[1]];

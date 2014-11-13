@@ -45,11 +45,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
   }
 
   function runQuery(querystr) {
-    console.log("run query");
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
-        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
         }
@@ -69,7 +67,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
         "step" : 1000
         },
       "time" : {
-        "start" : null,
+        "time_to_end" : null,
         "end" : null
       },
       "group_by" : []
@@ -92,7 +90,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     }, false);
 
     elems.seconds.addEventListener('change', function() {
-      inputs.time.start = inputs.time.end - (this.value * 1000);
+      inputs.time.time_to_end =
+        FnordMetric.util.toMilliSeconds(this.value);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
@@ -103,8 +102,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
           var c = this.innerText;
           var index = inputs.group_by.indexOf(c);
           if (index == -1) {
+            this.className = "selected";
             inputs.group_by.push(this.innerText);
           } else {
+            this.className = "";
             inputs.group_by.splice(index, 1);
           }
           runQuery(FnordMetric.util.createQuery(inputs, metric));
@@ -279,7 +280,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var end_time = FnordMetric.util.humanDateToMikroTS(
       datepicker.value);
-    var start_time = end_time - 30000;
 
     runQuery(FnordMetric.util.createQuery({
       "show" : null,
@@ -288,7 +288,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
         "step" : 1000
         },
       "time" : {
-        "start" : start_time,
+        "time_to_end" : 30000,
         "end" : end_time
       },
       "group_by" : []
