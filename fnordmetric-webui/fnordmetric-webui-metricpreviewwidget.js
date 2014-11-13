@@ -33,6 +33,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
   }
 
   function renderTable(table) {
+    console.log(table);
     table_container.innerHTML = "";
     var table_view = FnordMetric.util.TableView(
       ["series", "x", "y"], table_container, 25);
@@ -69,6 +70,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
         group_btns.map(function(btn) {
           btn.className = "disabled";
         });
+      } else {
+        group_btns.map(function(btn) {
+          btn.className = "";
+        });
       }
     } else {
       tw_select.className = "";
@@ -83,7 +88,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
   }
 
   //FIXME works but seems to be ugly
-  function updateEventHandler(elems) {
+  function updateEventHandler(elems, columns) {
     var inputs = {
       "show" : "Value",
       "aggregation" : {
@@ -94,10 +99,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
         "time_to_end" : null,
         "end" : null
       },
-      "group_by" : []
+      "group_by" : [],
+      "columns" : columns
     }
 
-    console.log(elems.aggregation);
 
     elems.rollup.addEventListener('change', function() {
       inputs.show = this.value;
@@ -158,7 +163,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var rollup_select = document.createElement("select");
     rollup_group.appendChild(rollup_select);
-    var rollup_options = ["Value", "Mean", "Count", "Sum"];
+    var rollup_options = ["Value", "Mean", "Count", "Sum", "Rollup"];
     rollup_options.map(function(rollup) {
       var option = document.createElement("option");
       option.innerHTML = rollup;
@@ -303,7 +308,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     secondary_controls.appendChild(updater_ttl);
     secondary_controls.appendChild(next_timespan);
 
-    updateEventHandler(elems);
+    updateEventHandler(elems, columns);
 
     var end_time = FnordMetric.util.humanDateToMikroTS(
       datepicker.value);

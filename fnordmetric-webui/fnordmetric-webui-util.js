@@ -397,7 +397,8 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
       "start" : null,
       "end" : null
     }
-    "group_by" : []
+    "group_by" : [],
+    "columns" : [all possible group by columns]
   }
 */
 FnordMetric.util.createQuery = function(inputs, metric) {
@@ -409,13 +410,25 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   var select = "SELECT time AS x, ";
   var from = " FROM `" + metric + "`";
   var show;
+  var group_by = "";
   var hasAggr;
+  var hasTimeWindow;
 
   if (inputs.show == "Value") {
     show = "value as y";
+    hasTimeWindow = false;
     hasAggr = false;
+  } else if (inputs.show == "Rollup") {
+    draw = "DRAW BARCHART AXIS BOTTOM AXIS LEFT; ";
+    var column = (inputs.group_by.length > 0) ?
+      inputs.group_by[0] : inputs.columns[0];
+    select = "SELECT "+ column + " AS x, ";
+    show = "sum(value) as y";
+    hasAggr = true;
+    hasTimeWindow = false;
   } else {
     hasAggr = true;
+    hasTimeWindow = true;
     show = ((inputs.show).toLowerCase() + "(value) as y");
   }
 
@@ -440,27 +453,21 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   //query += where;
 
   if (hasAggr) {
-    /* group over timewindow needs a time and step info */
-    if (inputs.aggregation.time != null &&
-        inputs.aggregation.step != null) {
+    var columns = (inputs.group_by.length > 0) ?
+      inputs.group_by.join(", ") : inputs.columns[0];
+    if (hasTimeWindow) {
       timewindow = 
         " GROUP OVER TIMEWINDOW(time, " +
         inputs.aggregation.time + ", " +
         inputs.aggregation.step + ")";
 
       query += timewindow;
+      group_by = " BY " + columns;
+    } else {
+    /* GROUP BY */
+      group_by = " GROUP BY " + columns;
     }
-
-    if (inputs.group_by.length > 0) {
-      var columns = inputs.group_by.join(", ");
-      if (timewindow != null) {
-      /* Group over timewindow clause */
-        query += " BY " + columns;
-      } else {
-      /* GROUP BY */
-        query += " GROUP BY " + columns;
-      }
-    }
+    query += group_by;
   }
 
   query += ";";
