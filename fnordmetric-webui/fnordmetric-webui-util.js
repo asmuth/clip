@@ -379,9 +379,8 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
     "m" : 60000,
     "h" : 3600000
   }
-
   var seconds = time[0] * conversion[time[1]];
-  return seconds;
+  return parseInt(seconds, 10);
 }
 
 
@@ -394,7 +393,7 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
       "step" : null
       },
     "time" : {
-      "start" : null,
+      "mseconds_to_end" : null,
       "end" : null
     }
     "group_by" : [],
@@ -404,7 +403,7 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
 FnordMetric.util.createQuery = function(inputs, metric) {
   var query = "";
   var timewindow = null;
-  var where = null;
+  var where = "";
 
   var draw = "DRAW Linechart AXIS BOTTOM AXIS LEFT; ";
   var select = "SELECT time AS x, ";
@@ -435,21 +434,13 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   query += draw + select + show + from;
 
   /* check for time --> where clause and add to query */
-  if (inputs.time.start != null) {
+  if (inputs.time.mseconds_to_end != null && inputs.time.end != null ) {
+    var start = inputs.time.end - inputs.time.mseconds_to_end;
     where = 
-      " where time > FROM_TIMESTAMP(" + inputs.time.start + ")";
+      " where time > FROM_TIMESTAMP(" + start + ")" +
+      " and time < FROM_TIMESTAMP(" + inputs.time.end +")";
+    //console.log(where);
   }
-
-  if (inputs.time.end != null) {
-    if (where == null) {
-      where += 
-        "where time < FROM_TIMESTAMP(" + inputs.time.end + ")";
-    } else {
-      where += 
-        " and time < FROM_TIMESTAMP(" + inputs.time.end +")";
-    }
-  }
-
   //query += where;
 
   if (hasAggr) {
@@ -493,4 +484,54 @@ FnordMetric.util.getMonthStr = function(index) {
   return months[index];
 }
 
+FnordMetric.util.isNumKey = function(keycode) {
+  return (
+    (keycode >= 48 && keycode <= 57) || (keycode >= 96 && keycode <= 105));
+}
+
+/* tab, arrow-left, arrow-right, deletekeys */
+FnordMetric.util.isNavKey = function(keycode) {
+  return (
+    keycode == 8 ||
+    keycode == 9 ||
+    keycode == 37 ||
+    keycode == 39 ||
+    keycode == 46);
+}
+
+FnordMetric.util.validatedTimeInput = function (time_input, type) {
+  var input;
+  time_input.addEventListener('keydown', function(e) {
+    if (FnordMetric.util.isNumKey(e.keyCode)) {
+      var input = this.value;
+      //TODO validate input
+      return;
+    }
+    if (!FnordMetric.util.isNavKey(e.keyCode)) {
+      e.preventDefault();
+    }
+  }, false);
+
+}
+
+FnordMetric.util.appendLeadingZero = function (num) {
+  return (num > 9)? num : "0" + num;
+}
+
+
+/* returns mm/dd/yyyy hh:mm */
+FnordMetric.util.getDateTimeString = function(timestamp) {
+  var timestamp = timestamp == undefined?
+    new Date() : new Date(parseInt(timestamp, 10));
+
+  var month = timestamp.getMonth();
+  month = FnordMetric.util.appendLeadingZero(month +1);
+  var day = FnordMetric.util.appendLeadingZero(timestamp.getDate());
+  var hours = FnordMetric.util.appendLeadingZero(timestamp.getHours());
+  var minutes = FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
+  return (
+    month + "/" + day + "/" +
+    timestamp.getFullYear() + "  " + hours +
+    ":" + minutes);
+}
 

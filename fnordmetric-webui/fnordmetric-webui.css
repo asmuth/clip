@@ -656,6 +656,7 @@ input {
   width: 200px;
   border: 1px solid rgb(226, 232, 237);
   border-radius: 3px;
+  border-collapse: collapse;
 }
 
 .datepicker_widget table th {
@@ -672,6 +673,10 @@ input {
   height: 20px;
   line-height: 20px;
   text-align:center;
+}
+
+.datepicker_widget table td.highlight {
+  background-color: rgb(226, 232, 237);
 }
 
 .datepicker_widget .month_ttp {
