@@ -438,11 +438,11 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   if (inputs.time.mseconds_to_end != null && inputs.time.end != null ) {
     var start = inputs.time.end - inputs.time.mseconds_to_end;
     where = 
-      " where time > FROM_TIMESTAMP(" + start + ")" +
-      " and time < FROM_TIMESTAMP(" + inputs.time.end +")";
+      " where time > FROM_TIMESTAMP(" + Math.round(start / 1000) + ")" +
+      " and time < FROM_TIMESTAMP(" + Math.round(inputs.time.end / 1000) +")";
     //console.log(where);
   }
-  //query += where;
+  query += where;
 
   if (hasAggr) {
     var columns = (inputs.group_by.length > 0) ?
@@ -450,8 +450,8 @@ FnordMetric.util.createQuery = function(inputs, metric) {
     if (hasTimeWindow) {
       timewindow = 
         " GROUP OVER TIMEWINDOW(time, " +
-        inputs.aggregation.time + ", " +
-        inputs.aggregation.step + ")";
+        Math.round(inputs.aggregation.time / 1000) + ", " +
+        Math.round(inputs.aggregation.step / 1000) + ")";
 
       query += timewindow;
       group_by = " BY " + columns;

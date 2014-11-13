@@ -16,23 +16,37 @@ if (FnordMetric.views === undefined) {
   FnordMetric.views = {};
 }
 
-FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
+FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   var dp_widget = document.createElement("div");
   dp_widget.className = "datepicker_widget";
   elem.appendChild(dp_widget);
+
   var curr_day = new Date().getDay();
   var curr_date = new Date().getDate();
   var curr_month = new Date().getMonth();
 
+  var selected_ts = new Date(
+    parseInt(dp_input.getAttribute("id"), 10));
+  //var selected_day = selected_ts.getDate();
+  var selected_hours = 
+    FnordMetric.util.appendLeadingZero(selected_ts.getHours());
+  console.log("hours " + selected_ts.getHours());
+  var selected_minutes = 
+    FnordMetric.util.appendLeadingZero(selected_ts.getMinutes());
 
   var human_days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+
 
   function resetDatepicker() {
     dp_widget.innerHTML = "";
     dp_widget.className = "datepicker_widget";
   }
 
-  function setDate(hours, minutes, day, month, year) {
+
+  function onSelect(hours, minutes, day, month, year) {
+    var hours = (hours.length > 0)? hours : selected_hours;
+    var minutes = (minutes.length > 0)? minutes : selected_minutes;
+
     dp_input.value =
       FnordMetric.util.appendLeadingZero(month+1) + 
       "/" +
@@ -42,9 +56,10 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
       ":" + 
       FnordMetric.util.appendLeadingZero(minutes);
 
-    var ts = new Date(year, (month+1), day, hours, minutes).getTime();
+    var ts = new Date(year, month, day, hours, minutes).getTime();
     dp_input.setAttribute("timestamp", ts);
     callback(ts);
+    resetDatepicker();
   }
 
 
@@ -58,18 +73,21 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
     separator.innerHTML = ":";
 
     var hour_input = document.createElement("input");
-    //FIXME
-    hour_input.placeholder = 12;
-    hour_input.addEventListener('focus', function() {
+
+    hour_input.placeholder = selected_hours;
+    hour_input.addEventListener('focus', function(e) {
+      e.preventDefault();
+      timeInputFocus = true;
       FnordMetric.util.validatedTimeInput(this, "hour");
     }, false);
 
     var minute_input = document.createElement("input");
-    //FIXME
-    minute_input.placeholder = 30;
+    minute_input.placeholder = selected_minutes;
     minute_input.addEventListener('focus', function() {
+      timeInputFocus = true;
       FnordMetric.util.validatedTimeInput(this, "minute");
     }, false);
+
 
     input_container.appendChild(hour_input);
     input_container.appendChild(separator);
@@ -140,7 +158,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
         link.addEventListener('click', function(e) {
           e.preventDefault();
           resetDatepicker();
-          setDate(
+          onSelect(
             hour_input.value,
             minute_input.value,
             this.innerText, month, year);
@@ -169,7 +187,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
         link.addEventListener('click', function(e) {
           e.preventDefault();
           resetDatepicker();
-          setDate(
+          onSelect(
             hour_input.value,
             minute_input.value,
             this.innerText, month, year);
@@ -196,7 +214,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
           link.addEventListener('click', function(e) {
             e.preventDefault();
             resetDatepicker();
-            setDate(
+            onSelect(
               hour_input.value,
               minute_input.value,
               this.innerText, month, year);
@@ -216,8 +234,17 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
   }
 
 
+  document.addEventListener('click', function() {
+    console.log("close dateoicker");
+    resetDatepicker();
+  }, false);
 
-  dp_input.addEventListener('focus', function() {
+
+  elem.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+
+  dp_input.addEventListener('focus', function(event) {
     dp_widget.innerHTML = "";
     var now = new Date();
     var month = now.getMonth();
@@ -225,9 +252,9 @@ FnordMetric.util.DatePicker = function(elem, dp_input, callback) {
     init(month, year)
   }, false);
 
-  dp_input.addEventListener('blur', function() {
-    //dp_widget.innerHTML = "";
-  }, false);
+
+
+
 
 };
 

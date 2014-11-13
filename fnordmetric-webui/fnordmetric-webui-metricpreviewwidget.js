@@ -36,6 +36,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     "columns" : null
   }
 
+  var elems = {};
 
   function renderChart(chart) {
     if (chart != undefined) {
@@ -63,6 +64,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
+        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
         }
@@ -72,6 +74,16 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
       }
     });
   }
+
+  function setInitialInputs(aggr_time, columns, timespan, end_time) {
+    inputs.aggregation.time = 
+      FnordMetric.util.toMilliSeconds(aggr_time);
+    inputs.aggregation.step = aggr_time;
+    inputs.time.mseconds_to_end = timespan;
+    inputs.columns = columns;
+    inputs.time.end = end_time;
+  }
+
 
   function handleAggrAvailability(show, tw_select, step_select, group_btns) {
     /* show = "value" */
@@ -101,11 +113,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
   }
 
-  function onDateSubmit(ts) {
-    inputs.time.end = ts;
-    runQuery(FnordMetric.util.createQuery(inputs, metric));
-  }
-
   function updateDateTimeElems(start, end, title, input) {
     var end_string = FnordMetric.util.getDateTimeString(end);
 
@@ -120,9 +127,16 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
   }
 
+  function onDateSubmit(ts) {
+    inputs.time.end = ts;
+    runQuery(FnordMetric.util.createQuery(inputs, metric));
+    var start = ts - inputs.time.mseconds_to_end;
+    updateDateTimeElems(start, ts, elems.timespan.title, null);
+  }
 
-  //FIXME works but seems to be ugly
-  function updateEventHandler(elems, columns) {
+
+  function updateEventHandler() {
+    var columns = inputs.columns;
     elems.rollup.addEventListener('change', function() {
       inputs.show = this.value;
       handleAggrAvailability(
@@ -196,7 +210,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
 
   function initElems(columns) {
-    var elems = {};
     var now = Date.now();
     var initial_timespan;
 
@@ -268,9 +281,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     var datepicker = document.createElement("input");
     date_group.appendChild(datepicker);
-    FnordMetric.util.DatePicker(date_group, datepicker, onDateSubmit);
-    datepicker.value = FnordMetric.util.getDateTimeString(now);
     datepicker.setAttribute("id", now);
+    FnordMetric.util.DatePicker(date_group, datepicker, elem, onDateSubmit);
+    datepicker.value = FnordMetric.util.getDateTimeString(now);
     elems.date = datepicker;
 
     var timespan_group = document.createElement("div");
@@ -364,14 +377,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     secondary_controls.appendChild(updater_ttl);
     secondary_controls.appendChild(next_timespan);
 
-    updateEventHandler(elems, columns);
+    updateEventHandler();
 
-    inputs.aggregation.time = FnordMetric.util.toMilliSeconds(
-      aggregate_options[0]);
-    inputs.aggregation.step = inputs.aggregation.time;
-    inputs.time.mseconds_to_end = initial_timespan;
-    inputs.columns = columns;
-    inputs.time.end = datepicker.getAttribute("id");
+    setInitialInputs(
+      aggregate_options[0], columns, initial_timespan, datepicker.getAttribute("id"));
+
 
     handleAggrAvailability("Value", aggr_win, aggr_step, group_buttons);
 
