@@ -70,21 +70,18 @@ FnordMetric.util.parseQueryString = function(qstr) {
 
 FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
   var path = "#"+hash+"?";
-  var params = query_params;
 
-
-  path += params.innerView + "=";
+  path += query_params.innerView + "=";
   path += (encode)?
-    encodeURIComponent(params.innerViewValue) :
-    params.innerViewValue;
-  
-  delete params.innerView;
-  delete params.innerViewValue;
+    encodeURIComponent(query_params.innerViewValue) :
+    query_params.innerViewValue;
 
-  for (var param in params) {
-    path += 
-      "&" + param +
-      "=" + params[param];
+  for (var param in query_params) {
+    if (param != "innerView" && param != "innerViewValue") {
+      path += 
+        "&" + param +
+        "=" + query_params[param];
+    }
   }
 
   if (push_state) {
@@ -119,7 +116,6 @@ FnordMetric.util.convertArrayToString = function(array) {
 
 /* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
-  console.log(elem);
   elem.innerHTML = "<div class='load_foreground'><i class='fa fa-refresh fa-spin'></div>";
 }
 
@@ -493,6 +489,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
 
 /* in singleMetricView */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
+  console.log(params);
   //FIX html escape 
   var query;
   var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";
@@ -504,7 +501,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
   var table_ref = params.innerViewValue
   var view = params.view;
-  var column = params.column; //column reference for rollups
+  /* column for rollups */
+  var columns = params.columns.split(",");; 
   var start_time = params.start_time;
   var end_time = params.end_time;
   var t_step = params.t_step;
@@ -514,15 +512,17 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   /* complete select_expr */
   if (view == "value") {
     select_expr += "value as y ";
-  } else if (view == "rollup_sum") {
+  } else if (view == "rollup_sum" || view == "rollup_count") {
     draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
+    var func = (view.split("_"))[1];
+    //how to choose a column if there are more than one? 
     select_expr = 
-      "SELECT " + column + " AS X, sum(value) AS Y;";
+      " SELECT `" + columns[0] + "` AS X, " + func + "(value) AS Y";
 
     //hasAggregation = true; ??
   } else {
     select_expr +=
-      view.toLowerCase() + "(value) AS Y;";
+      view.toLowerCase() + "(value) AS Y";
     hasAggregation = true;
   }
 
@@ -541,8 +541,12 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
   /*complete group_expr if an aggregate function is selected */
   if (hasAggregation) {
-    group_expr = "GROUP "
+    group_expr = " GROUP ";
+    var hasGroupStm = false;
+
     if (t_step != undefined) {
+      hasGroupStm = true;
+
       group_expr += 
         "OVER TIMEWINDOW(time, "+ t_step;
 
@@ -550,11 +554,23 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
         t_window : t_step;
 
       group_expr+= ")";
+
+      /* fallback if group_by wasn't selected */
+      if (by == undefined && columns != undefined) {
+        group_expr += " BY " + columns[0];
+      }
     }
 
     if (by != undefined) {
+      hasGroupStm = true;
+
       //check by format
       group_expr += "BY " + by;
+    }
+
+    /* aggregate function without group_by statement */
+    if (!hasGroupStm) {
+      group_expr = "";
     }
   }
 
@@ -562,7 +578,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     draw_stm + select_expr +// where_expr + 
     from_expr + group_expr + ";";
 
-
+  console.log(query);
   return query;
 }
 

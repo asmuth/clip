@@ -234,7 +234,6 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
 
 
   document.addEventListener('click', function() {
-    console.log("close dateoicker");
     resetDatepicker();
   }, false);
 

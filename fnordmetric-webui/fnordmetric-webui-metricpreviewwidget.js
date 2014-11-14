@@ -29,14 +29,13 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   var defaults = {
     view : "value",
-    column: null,
+    columns: null,
     end_time : now,
     /* 5 minutes  */
     time_to_end : 300000,
     /* 1 second */
     t_step : 1000,
     t_window : 1000,
-    by : columns.join(", ")
   }
 
 
@@ -49,6 +48,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   function updateURLParams(key, value) {
     query_params[key] = value;
+    FnordMetric.util.setURLQueryString(
+      "metric_list", query_params, false, true);
     //update url fragment
   }
 
@@ -88,7 +89,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
 
-  function handleAggrAvailability(show, tw_select, step_select, group_btns) {
+  function handleAggregationDisplay(show, tw_select, step_select, group_btns) {
     /* show = "value" */
     var group_btns = (group_btns == undefined)? [] : group_btns;
     if (show == "Value" || show == "Rollup") {
@@ -144,7 +145,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   function initElems() {
     var initial_timespan;
-    var by;
+    var group_buttons = [];
 
     var controls = document.createElement("div");
     controls.className = "metric_preview_controls";
@@ -157,7 +158,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     var rollup_select = document.createElement("select");
     rollup_group.appendChild(rollup_select);
-    var rollup_options = ["Value", "Mean", "Count", "Sum", "Rollup"];
+    var rollup_options = 
+      ["Value", "Mean", "Count", "Sum", "Rollup Sum", "Rollup Count"];
     rollup_options.map(function(rollup) {
       var option = document.createElement("option");
       option.innerHTML = rollup;
@@ -229,14 +231,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     timespans.map(function(timespan) {
       var option = document.createElement("option");
       option.innerHTML = timespan;
-      time_to_end_ttl.appendChild(option);
+      time_to_end.appendChild(option);
     });
 
-    //update
-    initial_timespan = FnordMetric.util.toMilliSeconds(
-      timespans[0]);
 
-    elems.time_to_end = time_to_end;
     timespan_group.appendChild(time_to_end_ttl);
     timespan_group.appendChild(time_to_end);
     controls.appendChild(timespan_group);
@@ -247,14 +245,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     controls.appendChild(groupby_group);
 
     if (columns.length > 0) {
-      var group_buttons = [];
       columns.map(function(column) {
         var btn = FnordMetric.createButton(
           "#", undefined, "<i class='fa fa-toggle-off'></i>" + column);
         group_buttons.push(btn);
         groupby_group.appendChild(btn);
       });
-      by = group_buttons;
     }
 
     var secondary_controls = document.createElement("div");
@@ -287,21 +283,16 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       "#", undefined, "<i class='fa fa-chevron-left'></i>");
     var next_timespan = FnordMetric.createButton(
       "#", undefined, "<i class='fa fa-chevron-right'></i>");
-    var updater_ttl = document.createElement("span");
-    updater_ttl.className = "current_date";
-    updater_ttl.innerHTML = 
+    var timespan_title = document.createElement("span");
+    timespan_title.className = "current_date";
+    timespan_title.innerHTML = 
       FnordMetric.util.getDateTimeString(
         now - initial_timespan) + " &mdash; " + 
       FnordMetric.util.getDateTimeString(now);
 
-
-    elems.timespan_next = next_timespan;
-    elems.timespan_prev = prev_timespan;
-    elems.timespan_title = updater_ttl;
-
     secondary_controls.appendChild(timespan_updater);
     secondary_controls.appendChild(prev_timespan);
-    secondary_controls.appendChild(updater_ttl);
+    secondary_controls.appendChild(timespan_title);
     secondary_controls.appendChild(next_timespan);
 
     chart_container.className = "single_metric_ui chart_container";
@@ -310,9 +301,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     /* set all EventListeners */
 
     rollup_select.addEventListener('change', function() {
-      updateURLParams("show", this.value);
-      handleAggrAvailability(
-        this.value, elems_timewindow, t_step, elems.by);
+      /* queryGenerator assumes this format */
+      var view = this.value.toLowerCase().replace(/ /g,"_");
+      updateURLParams("view", view);
+      handleAggregationDisplay(
+        this.value, t_window, t_step, group_buttons);
       runQuery();
     }, false);
 
@@ -328,8 +321,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       runQuery();
     }, false);
 
-    if (by != undefined) {
-      by.map(function(column) {
+    if (group_buttons.length > 0) {
+      group_buttons.map(function(column) {
         column.addEventListener('click', function(e) {
           e.preventDefault();
           var c = this.innerText;
@@ -351,7 +344,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         FnordMetric.util.toMilliSeconds(this.value);
       var start = getQueryParamOrDefault("end_time") - mseconds_to_end;
       updateURLParams("start_time", start);
-      updateDateTimeElems(elems.timespan_title, null);
+      updateDateTimeElems(timespan_title, null);
       runQuery();
     }, false);
 
@@ -362,7 +355,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         parseInt(mseconds_to_end, 10));
       updateURLParams("ent_time", end_time);
       //update start time
-      updateDateTimeElems(elems.timespan_title, elems.date);
+      updateDateTimeElems(timespan_title, elems.date);
       runQuery();
     }, false);
 
@@ -374,12 +367,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
       updateURLParams("end_time", end_time);
       //upfdate start_time
-      updateDateTimeElems(elems.timespan_title, elems.date);
+      updateDateTimeElems(timespan_title, elems.date);
       runQuery();
     }, false);
 
 
-    handleAggrAvailability("Value", t_window, t_step, group_buttons);
+    handleAggregationDisplay("Value", t_window, t_step, group_buttons);
     runQuery();
 
   }
@@ -389,10 +382,14 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
         json.metrics.map(function(m) {
+          //FIXME what's a better way to get the 
+          //metrics columns without searching through all metrics
           if (m.key != metric) {return;}
           m.labels.map(function(label) {
             columns.push(label);
           });
+          query_params.columns = m.labels.join(",");
+          defaults.columns = m.labels.join(",");
         });
         initElems();
       }
