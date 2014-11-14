@@ -48,8 +48,7 @@ public:
         request,
         response);
 
-    async_handler();
-    //request_scheduler_->run(thread::Task::create(async_handler));
+    request_scheduler_->run(thread::Task::create(async_handler));
 
     return true;
   }
@@ -68,7 +67,7 @@ public:
       }
     }
 
-    //x0_scheduler_->execute([request, response, req, res] () {
+    x0_scheduler_->execute([request, response, req, res] () {
       response->setStatus((xzero::HttpStatus) res->statusCode());
 
       for (const auto hdr : res->getHeaders()) {
@@ -83,7 +82,7 @@ public:
 
       delete res;
       delete req;
-    //});
+    });
   }
 
 protected:
