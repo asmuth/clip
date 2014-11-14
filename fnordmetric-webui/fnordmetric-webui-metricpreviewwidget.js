@@ -21,37 +21,42 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var metric = query_params.innerViewValue;
   var table_container = document.createElement("div");
   var chart_container = document.createElement("div");
-
-  var inputs = {
-    "show" : "Value",
-    "aggregation" : {
-      "time" : 1000,
-      "step" : 1000
-      },
-    "time" : {
-      "mseconds_to_end" : null,
-      "end" : 300000
-    },
-    "group_by" : [],
-    "columns" : null
-  }
-
-  function generateSQLQueryFromParams() {
-    FnordMetric.util.generateSQLQueryFromParams(query_params);
-  }
-
-  generateSQLQueryFromParams();
-
-  function setInitialInputs() {
-    if (query_params.length > 1) {
-      //FnordMetric.util.setSingleMetricInputs(inputs, query_params);
-    }
-  };
-
-  setInitialInputs();
-
-
+  var now = Date.now();
+  console.log(now);
+  var columns = [];
   var elems = {};
+  var mseconds_to_end;
+
+  var defaults = {
+    view : "value",
+    column: null,
+    end_time : now,
+    /* 5 minutes  */
+    time_to_end : 300000,
+    /* 1 second */
+    t_step : 1000,
+    t_window : 1000,
+    by : columns.join(", ")
+  }
+
+
+  function generateSQLQuery() {
+    return FnordMetric.util.generateSQLQueryFromParams(query_params);
+  }
+
+
+
+  function getQueryParamOrDefaultValue(key) {
+    var value = (query_params[key] == undefined)? 
+      defaults[key] : query_params[key];
+
+    return value;
+  }
+
+  function updateURLParameters(key, value) {
+    query_params.key = value;
+    //update url fragment
+  }
 
   function renderChart(chart) {
     if (chart != undefined) {
@@ -76,7 +81,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
   function runQuery(querystr) {
+    console.log("run qyery run");
+    console.log(querystr);
     FnordMetric.httpPost("/query", querystr, function(r) {
+      console.log(r);
       if (r.status == 200) {
         var json = JSON.parse(r.response);
         console.log(json);
@@ -90,7 +98,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     });
   }
 
-  
 
   function handleAggrAvailability(show, tw_select, step_select, group_btns) {
     /* show = "value" */
@@ -144,7 +151,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
 
   function updateEventHandler() {
-    var columns = inputs.columns;
     elems.rollup.addEventListener('change', function() {
       inputs.show = this.value;
       handleAggrAvailability(
@@ -152,28 +158,28 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    elems.aggregation.timewindow.addEventListener('change', function() {
+    elems.t_window.addEventListener('change', function() {
       inputs.aggregation.time = FnordMetric.util.toMilliSeconds(this.value);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    elems.aggregation.step.addEventListener('change', function() {
+    elems.t_step.addEventListener('change', function() {
       inputs.aggregation.step = FnordMetric.util.toMilliSeconds(this.value);
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    elems.seconds.addEventListener('change', function() {
+    elems.time_to_end.addEventListener('change', function() {
       var mseconds_to_end = 
         FnordMetric.util.toMilliSeconds(this.value);
       var start = inputs.time.end - mseconds_to_end;
       updateDateTimeElems(
-        start, inputs.time.end, elems.timespan.title, null);
+        start, inputs.time.end, elems.timespan_title, null);
       inputs.time.mseconds_to_end = mseconds_to_end;
       runQuery(FnordMetric.util.createQuery(inputs, metric));
     }, false);
 
-    if (elems.group_by) {
-      elems.group_by.map(function(column) {
+    if (elems.by) {
+      elems.by.map(function(column) {
         column.addEventListener('click', function(e) {
           e.preventDefault();
           var c = this.innerText;
@@ -190,12 +196,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       }, false);
     }
 
-    elems.timespan.next.addEventListener('click', function(e) {
+    elems.timespan_next.addEventListener('click', function(e) {
       e.preventDefault();
       var end_time = 
         parseInt(inputs.time.end, 10) + parseInt(inputs.time.mseconds_to_end, 10);
       updateDateTimeElems(
-        inputs.time.end, end_time, elems.timespan.title, elems.date);
+        inputs.time.end, end_time, elems.timespan_title, elems.date);
       inputs.time.end = end_time;
       runQuery(FnordMetric.util.createQuery(inputs, metric));
 
@@ -203,12 +209,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     }, false);
 
-    elems.timespan.prev.addEventListener('click', function(e) {
+    elems.timespan_prev.addEventListener('click', function(e) {
       e.preventDefault();
       var end_time = 
         inputs.time.end - inputs.time.mseconds_to_end;
       updateDateTimeElems(
-        end_time, inputs.time.end, elems.timespan.title, elems.date);
+        end_time, inputs.time.end, elems.timespan_title, elems.date);
       inputs.time.end = end_time;
       runQuery(FnordMetric.util.createQuery(inputs, metric));
       //update elems.timespan.title
@@ -217,9 +223,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
 
-  function initElems(columns) {
-    console.log("init elems");
-    var now = Date.now();
+  function initElems() {
     var initial_timespan;
 
     var controls = document.createElement("div");
@@ -239,6 +243,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       option.innerHTML = rollup;
       rollup_select.appendChild(option);
     });
+
     elems.rollup = rollup_select;
 
     var aggregate_options = [
@@ -257,31 +262,34 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         "12h",
         "24h"];
 
-    var aggr_group = document.createElement("div");
-    aggr_group.className = "group aggregation_time_window";
-    aggr_group.innerHTML = "<b>Time Window / Step<b>";
-    controls.appendChild(aggr_group);
+    var timewindow = document.createElement("div");
+    timewindow.className = "group aggregation_time_window";
+    timewindow.innerHTML = "<b>Time Window / Step<b>";
+    controls.appendChild(timewindow);
 
-    var aggr_win = document.createElement("select");
-    aggr_group.appendChild(aggr_win);
+    var t_window = document.createElement("select");
+    timewindow.appendChild(t_window);
     aggregate_options.map(function(opt) {
       var option = document.createElement("option");
       option.innerHTML = opt;
-      aggr_win.appendChild(option);
+      t_window.appendChild(option);
     });
 
-    var aggr_step = document.createElement("select");
-    aggr_group.appendChild(aggr_step);
+    var t_step = document.createElement("select");
+    timewindow.appendChild(t_step);
     aggregate_options.map(function(opt) {
       var option = document.createElement("option");
       option.innerHTML = opt;
-      aggr_step.appendChild(option);
+      t_step.appendChild(option);
     });
 
-    elems.aggregation = {
+    /*elems.aggregation = {
       "timewindow" : aggr_win,
       "step": aggr_step
-    };
+    };*/
+
+    elems.t_window = t_window;
+    elems.t_step = t_step;
 
     var date_group = document.createElement("div");
     date_group.innerHTML = "<b>End Time<b>"
@@ -299,9 +307,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     timespan_group.className = "group timespan";
     controls.appendChild(timespan_group);
 
-    var timespan_ttl = document.createElement("b");
-    timespan_ttl.innerHTML = "Show the last...";
-    var timespan_select = document.createElement("select");
+    var time_to_end_ttl = document.createElement("b");
+    time_to_end_ttl.innerHTML = "Show the last...";
+    var time_to_end = document.createElement("select");
     var timespans = [
         "5 minutes",
         "15 minutes",
@@ -311,15 +319,15 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     timespans.map(function(timespan) {
       var option = document.createElement("option");
       option.innerHTML = timespan;
-      timespan_select.appendChild(option);
+      time_to_end.appendChild(option);
     });
-
+    //update
     initial_timespan = FnordMetric.util.toMilliSeconds(
       timespans[0]);
 
-    elems.seconds = timespan_select;
-    timespan_group.appendChild(timespan_ttl);
-    timespan_group.appendChild(timespan_select);
+    elems.time_to_end = time_to_end;
+    timespan_group.appendChild(time_to_end_ttl);
+    timespan_group.appendChild(time_to_end);
     controls.appendChild(timespan_group);
 
     var groupby_group = document.createElement("div");
@@ -335,7 +343,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         group_buttons.push(btn);
         groupby_group.appendChild(btn);
       });
-      elems.group_by = group_buttons;
+      elems.by = group_buttons;
     }
 
     var secondary_controls = document.createElement("div");
@@ -375,11 +383,15 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         now - initial_timespan) + " &mdash; " + 
       FnordMetric.util.getDateTimeString(now);
 
-    elems.timespan = {
+    /*elems.timespan = {
       prev : prev_timespan,
       next : next_timespan,
       title: updater_ttl
-    }
+    }*/
+
+    elems.timespan_next = next_timespan;
+    elems.timespan_prev = prev_timespan;
+    elems.timespan_title = updater_ttl;
 
     secondary_controls.appendChild(timespan_updater);
     secondary_controls.appendChild(prev_timespan);
@@ -388,17 +400,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     updateEventHandler();
 
-    /*setInitialInputs(
-      aggregate_options[0], columns, initial_timespan, datepicker.getAttribute("id"));*/
+    handleAggrAvailability("Value", t_window, t_step, group_buttons);
 
-
-    handleAggrAvailability("Value", aggr_win, aggr_step, group_buttons);
-
-    runQuery(FnordMetric.util.createQuery(inputs, metric));
+    runQuery(generateSQLQuery());
   }
 
   function render() {
-    var columns = [];
     FnordMetric.httpGet("/metrics", function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
@@ -408,7 +415,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
             columns.push(label);
           });
         });
-        initElems(columns);
+        initElems();
       }
     });
 

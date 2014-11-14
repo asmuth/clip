@@ -493,6 +493,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
   console.log("generate sql query");
   console.log(params);
+  //FIX html escape 
   var query;
   var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";
   var select_expr = "SELECT time AS x, ";
@@ -506,7 +507,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   var column = params.column; //column reference for rollups
   var start_time = params.start_time;
   var end_time = params.end_time;
-  var group_timewindow = params.group_timewindow;
   var t_step = params.t_step;
   var t_window = params.t_window;
   var by = params.by;
@@ -527,7 +527,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   }
 
   /* complete from_expr */
-  from_expr += table_ref;
+  from_expr += "`" + table_ref + "`";
 
   /*complete where_expr */
   //is there any case in single metric view where only start or endtime are selected?
@@ -542,7 +542,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   /*complete group_expr if an aggregate function is selected */
   if (hasAggregation) {
     group_expr = "GROUP "
-    if (group_timewindow != undefined) {
+    if (t_step != undefined) {
       group_expr += 
         "OVER TIMEWINDOW(time, "+ t_step;
 
@@ -559,12 +559,12 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   }
 
   query = 
-    draw_stm + select_expr + where_expr + 
+    draw_stm + select_expr +// where_expr + 
     from_expr + group_expr + ";";
 
   console.log(query);
 
-
+  return query;
 }
 
 
