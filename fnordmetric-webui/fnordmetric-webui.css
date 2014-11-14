@@ -164,6 +164,11 @@ body {
   text-align: center;
 }
 
+.chart_container .load_foreground {
+  position: relative;
+  background: #fff;
+}
+
 
 .load_foreground i.fa {
   font-size: 48px;
@@ -1078,6 +1083,12 @@ h1.page_header em {
   height: 100%;
 }
 
+.metric_preview.load_pane {
+  position: absolute;
+  top: 171px;
+  width:100%;
+  height: 100%;
+}
 /* BASICS */
 
 .CodeMirror {

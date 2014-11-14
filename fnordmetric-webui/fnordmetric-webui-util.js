@@ -119,6 +119,7 @@ FnordMetric.util.convertArrayToString = function(array) {
 
 /* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
+  console.log(elem);
   elem.innerHTML = "<div class='load_foreground'><i class='fa fa-refresh fa-spin'></div>";
 }
 
@@ -129,6 +130,8 @@ FnordMetric.util.displayLoader = function(elem) {
 FnordMetric.util.Loader = function() {
   var loader  = document.createElement("div");
   loader.className = "load_foreground";
+  loader.innerHTML = 
+    "<i class = 'fa fa-refresh fa-spin'>";
   on_click = null;
 
   function onClick(on_click_new) {
