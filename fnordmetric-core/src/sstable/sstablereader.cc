@@ -63,8 +63,6 @@ void SSTableReader::readFooter(
     }
 
     if (footer_header->footer_size == 0) {
-      *size = 0;
-      *data = nullptr;
       return;
     }
 
@@ -97,10 +95,9 @@ void SSTableReader::readFooter(
 }
 
 util::Buffer SSTableReader::readFooter(uint32_t type) {
-  void* data;
-  size_t size;
+  void* data = nullptr;
+  size_t size = 0;
   readFooter(type, &data, &size);
-
   return util::Buffer(data, size);
 }
 
