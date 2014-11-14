@@ -29,6 +29,7 @@ public:
   void listen(int port);
 
 protected:
+  void listenOrCrash(int port);
   std::vector<std::unique_ptr<HTTPHandler>> handlers_;
   TaskScheduler* request_scheduler_;
 };

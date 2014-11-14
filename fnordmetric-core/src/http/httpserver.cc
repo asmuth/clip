@@ -12,6 +12,7 @@
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/wallclock.h>
 #include <xzero/TimeSpan.h>
 #include <xzero/http/HttpRequest.h>
 #include <xzero/http/HttpResponse.h>
@@ -100,6 +101,33 @@ HTTPServer::HTTPServer(
     request_scheduler_(request_scheduler) {}
 
 void HTTPServer::listen(int port) {
+  auto last_crash = util::WallClock::unixMillis();
+
+start_x0:
+
+  try {
+    listenOrCrash(port);
+  } catch (fnordmetric::util::RuntimeException& e) {
+    fnordmetric::env()->logger()->printf(
+        "ERROR",
+        "HTTP server crashed: %s",
+        e.getMessage().c_str());
+
+    if (util::WallClock::unixMillis() - last_crash < 30000) {
+      fnordmetric::env()->logger()->printf(
+          "ERROR",
+          "HTTP server crashing too fast, aborting");
+
+      throw;
+    } else {
+      fnordmetric::env()->logger()->printf("INFO", "Restarting HTTP server");
+      last_crash = util::WallClock::unixMillis();
+      goto start_x0;
+    }
+  }
+}
+
+void HTTPServer::listenOrCrash(int port) {
   xzero::IPAddress bind("0.0.0.0");
   xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
   xzero::HttpService http;

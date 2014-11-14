@@ -14,8 +14,6 @@
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ SQL ]
-    - proper thread/worker pool
-    - free scratchpads in group by
     - no more "UNKNOWN TOKEN"
     - match function names case-insensitively
     - sql time helpers (1hour, etc)
@@ -50,6 +48,7 @@
     - do I need an external database
 
 [ feature q ]
+    - max threads in takscheduler?
     - functions: variance, stddev, nth_derivate,
     - union
     - cross join
