@@ -20,8 +20,9 @@ if (FnordMetric.views === undefined) {
 FnordMetric.util.singleMetricView = function() {
   function render(elem, query_params) {
     /* set url and push history state */
-    FnordMetric.util.setURLQueryString(
-      "metric_list", query_params, false, true);
+
+    /*FnordMetric.util.setURLQueryString(
+      "metric_list", query_params, false, true);*/
     elem.innerHTML = "";
 
 

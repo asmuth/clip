@@ -70,25 +70,26 @@ FnordMetric.util.parseQueryString = function(qstr) {
 
 FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
   var path = "#"+hash+"?";
+  var params = query_params;
 
-  path += query_params.innerView + "=";
+
+  path += params.innerView + "=";
   path += (encode)?
-    encodeURIComponent(query_params.innerViewValue) :
-    query_params.innerViewValue;
+    encodeURIComponent(params.innerViewValue) :
+    params.innerViewValue;
+  
+  delete params.innerView;
+  delete params.innerViewValue;
 
-  delete query_params.innerView;
-  delete query_params.innerViewValue;
-
-  for (var param in query_params) {
+  for (var param in params) {
     path += 
       "&" + param +
-      "=" + query_params[param];
+      "=" + params[param];
   }
 
   if (push_state) {
     window.history.pushState({url:path}, "#", path);
   }
-
   window.location.hash = path;
 }
 
@@ -487,6 +488,85 @@ FnordMetric.util.createQuery = function(inputs, metric) {
   console.log(query);
   return query;
 }
+
+/* in singleMetricView */
+FnordMetric.util.generateSQLQueryFromParams = function(params) {
+  console.log("generate sql query");
+  console.log(params);
+  var query;
+  var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";
+  var select_expr = "SELECT time AS x, ";
+  var from_expr = " FROM ";
+  var where_expr = "";
+  var group_expr = "";
+  var hasAggregation = false;
+
+  var table_ref = params.innerViewValue
+  var view = params.view;
+  var column = params.column; //column reference for rollups
+  var start_time = params.start_time;
+  var end_time = params.end_time;
+  var group_timewindow = params.group_timewindow;
+  var t_step = params.t_step;
+  var t_window = params.t_window;
+  var by = params.by;
+
+  /* complete select_expr */
+  if (view == "value") {
+    select_expr += "value as y ";
+  } else if (view == "rollup_sum") {
+    draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
+    select_expr = 
+      "SELECT " + column + " AS X, sum(value) AS Y;";
+
+    //hasAggregation = true; ??
+  } else {
+    select_expr +=
+      view.toLowerCase() + "(value) AS Y;";
+    hasAggregation = true;
+  }
+
+  /* complete from_expr */
+  from_expr += table_ref;
+
+  /*complete where_expr */
+  //is there any case in single metric view where only start or endtime are selected?
+  if (start_time != undefined && end_time != undefined) {
+    //what to use in place of FROM_TIMESTAMP
+    where_expr =
+      "WHERE time > FROM_TIMESTAMP(" + Math.round(start_time / 1000) + ")" +
+      " AND time < FROM_TIMESTAMP(" + Math.round(end_time / 1000) + ")";
+  }
+
+
+  /*complete group_expr if an aggregate function is selected */
+  if (hasAggregation) {
+    group_expr = "GROUP "
+    if (group_timewindow != undefined) {
+      group_expr += 
+        "OVER TIMEWINDOW(time, "+ t_step;
+
+      group_expr += (t_window != undefined)?
+        t_window : t_step;
+
+      group_expr+= ")";
+    }
+
+    if (by != undefined) {
+      //check by format
+      group_expr += "BY " + by;
+    }
+  }
+
+  query = 
+    draw_stm + select_expr + where_expr + 
+    from_expr + group_expr + ";";
+
+  console.log(query);
+
+
+}
+
 
 FnordMetric.util.getMonthStr = function(index) {
   var months = [

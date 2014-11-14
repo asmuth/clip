@@ -29,8 +29,9 @@ FnordMetric.views.MetricList = function() {
 
 
   function render(viewport, url, query_params) {
-    if (query_params.innerViewValue != undefined) {
-      actions[query_params.innerViewValue].render(viewport, query_params);
+    if (query_params.innerView != undefined) {
+      console.log(query_params.innerView);
+      actions[query_params.innerView].render(viewport, query_params);
       return;
     }
     loadMetricList(viewport, query_params);
@@ -109,6 +110,7 @@ FnordMetric.views.MetricList = function() {
         var json = JSON.parse(r.response);
         var search_item;
         if (query_params.innerView != undefined) {
+          console.log(query_params.innerView);
           json.metrics =
               actions[query_params.innerView].data(json.metrics, query_params.innerViewValue);
           search_item = query_params.innerviewValue;

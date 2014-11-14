@@ -36,6 +36,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     "columns" : null
   }
 
+  function generateSQLQueryFromParams() {
+    FnordMetric.util.generateSQLQueryFromParams(query_params);
+  }
+
+  generateSQLQueryFromParams();
+
   function setInitialInputs() {
     if (query_params.length > 1) {
       //FnordMetric.util.setSingleMetricInputs(inputs, query_params);
