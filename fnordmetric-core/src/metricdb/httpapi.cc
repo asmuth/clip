@@ -12,12 +12,6 @@
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/metrictablerepository.h>
 #include <fnordmetric/util/stringutil.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <xzero/http/HttpStatus.h>
-#include <xzero/http/HttpRequest.h>
-#include <xzero/http/HttpResponse.h>
-#include <xzero/http/HttpOutput.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -29,20 +23,22 @@ static const char kLabelParamPrefix[] = "label[";
 
 HTTPAPI::HTTPAPI(IMetricRepository* metric_repo) : metric_repo_(metric_repo) {}
 
-bool HTTPAPI::handleRequest(
-    xzero::HttpRequest* request,
-    xzero::HttpResponse* response) {
-  util::URI uri(request->unparsedUri());
-  std::string path = request->path();
+bool HTTPAPI::handleHTTPRequest(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  util::URI uri(request->getUrl());
+  auto path = uri.path();
   fnord::util::StringUtil::stripTrailingSlashes(&path);
+
+  response->addHeader("Access-Control-Allow-Origin", "*");
 
   // PATH: ^/metrics/?$
   if (path == kMetricsUrl) {
     switch (request->method()) {
-      case xzero::HttpMethod::GET:
+      case http::HTTPRequest::M_GET:
         renderMetricList(request, response, &uri);
         return true;
-      case xzero::HttpMethod::POST:
+      case http::HTTPRequest::M_POST:
         insertSample(request, response, &uri);
         return true;
       default:
@@ -54,7 +50,7 @@ bool HTTPAPI::handleRequest(
   if (path.compare(0, sizeof(kMetricsUrlPrefix) - 1, kMetricsUrlPrefix) == 0) {
     // PATH: ^/metrics/(.*)$
     switch (request->method()) {
-      case xzero::HttpMethod::GET:
+      case http::HTTPRequest::M_GET:
         renderMetricSampleScan(request, response, &uri);
         return true;
       default:
@@ -65,8 +61,8 @@ bool HTTPAPI::handleRequest(
   // PATH: ^/query/?*
   if (path == kQueryUrl) {
     switch (request->method()) {
-      case xzero::HttpMethod::GET:
-      case xzero::HttpMethod::POST:
+      case http::HTTPRequest::M_GET:
+      case http::HTTPRequest::M_POST:
         executeQuery(request, response, &uri);
         return true;
       default:
@@ -79,13 +75,12 @@ bool HTTPAPI::handleRequest(
 }
 
 void HTTPAPI::renderMetricList(
-    xzero::HttpRequest* request,
-    xzero::HttpResponse* response,
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
     util::URI* uri) {
-  std::string resp;
-  std::shared_ptr<util::OutputStream> output_stream(
-      new util::StringOutputStream(&resp));
-  util::JSONOutputStream json(output_stream);
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  util::JSONOutputStream json(response->getBodyOutputStream());
 
   json.beginObject();
   json.addObjectEntry("metrics");
@@ -99,34 +94,25 @@ void HTTPAPI::renderMetricList(
 
   json.endArray();
   json.endObject();
-
-  response->setStatus(xzero::HttpStatus::Ok);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->setContentLength(resp.size());
-  response->output()->write(
-      resp,
-      std::bind(&xzero::HttpResponse::completed, response));
 }
 
 void HTTPAPI::insertSample(
-    xzero::HttpRequest* request,
-    xzero::HttpResponse* response,
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
     util::URI* uri) {
   auto params = uri->queryParams();
 
   std::string metric_key;
   if (!util::URI::getParam(params, "metric", &metric_key)) {
-    response->sendError(
-        xzero::HttpStatus::BadRequest,
-        "error: invalid metric key: " + metric_key);
+    response->addBody("error: invalid metric key: " + metric_key);
+    response->setStatus(http::kStatusBadRequest);
     return;
   }
 
   std::string value_str;
   if (!util::URI::getParam(params, "value", &value_str)) {
-    response->sendError(
-        xzero::HttpStatus::BadRequest,
-        "error: missing ?value=... parameter");
+    response->addBody("error: missing ?value=... parameter");
+    response->setStatus(http::kStatusBadRequest);
     return;
   }
 
@@ -149,43 +135,37 @@ void HTTPAPI::insertSample(
   try {
     sample_value = std::stod(value_str);
   } catch (std::exception& e) {
-    response->sendError(
-        xzero::HttpStatus::BadRequest,
-        "error: invalid value: " + value_str);
+    response->addBody("error: invalid value: " + value_str);
+    response->setStatus(http::kStatusBadRequest);
     return;
   }
 
   auto metric = metric_repo_->findOrCreateMetric(metric_key);
   metric->insertSample(sample_value, labels);
-
-  response->setStatus(xzero::HttpStatus::Created);
-  response->completed();
+  response->setStatus(http::kStatusCreated);
 }
 
 void HTTPAPI::renderMetricSampleScan(
-    xzero::HttpRequest* request,
-    xzero::HttpResponse* response,
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
     util::URI* uri) {
   auto metric_key = uri->path().substr(sizeof(kMetricsUrlPrefix) - 1);
   if (metric_key.size() < 3) {
-    response->sendError(
-        xzero::HttpStatus::BadRequest,
-        "error: invalid metric key: " + metric_key);
+    response->addBody("error: invalid metric key: " + metric_key);
+    response->setStatus(http::kStatusBadRequest);
     return;
   }
 
   auto metric = metric_repo_->findMetric(metric_key);
   if (metric == nullptr) {
-    response->sendError(
-        xzero::HttpStatus::NotFound,
-        "metric not found: " + metric_key);
+    response->addBody("metric not found: " + metric_key);
+    response->setStatus(http::kStatusNotFound);
     return;
   }
 
-  std::string resp;
-  std::shared_ptr<util::OutputStream> output_stream(
-      new util::StringOutputStream(&resp));
-  util::JSONOutputStream json(output_stream);
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  util::JSONOutputStream json(response->getBodyOutputStream());
 
   json.beginObject();
 
@@ -231,31 +211,21 @@ void HTTPAPI::renderMetricSampleScan(
 
   json.endArray();
   json.endObject();
-
-  response->setStatus(xzero::HttpStatus::Ok);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->setContentLength(resp.size());
-  response->output()->write(
-      resp,
-      std::bind(&xzero::HttpResponse::completed, response));
 }
 
 void HTTPAPI::executeQuery(
-    xzero::HttpRequest* request,
-    xzero::HttpResponse* response,
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
     util::URI* uri) {
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
 
-  xzero::Buffer body;
-  request->input()->read(&body);
+  std::shared_ptr<util::InputStream> input_stream =
+      request->getBodyInputStream();
 
-  std::shared_ptr<util::InputStream> input_stream(
-      new util::StringInputStream(body.str()));
+  std::shared_ptr<util::OutputStream> output_stream =
+      response->getBodyOutputStream();
 
-  std::string resp;
-  std::shared_ptr<util::OutputStream> output_stream(
-      new util::StringOutputStream(&resp));
-
-  // FIXPAUL move to thread/worker pool
   query::QueryService query_service;
   std::unique_ptr<query::TableRepository> table_repo(
       new MetricTableRepository(metric_repo_));
@@ -268,7 +238,7 @@ void HTTPAPI::executeQuery(
         std::move(table_repo));
 
   } catch (util::RuntimeException e) {
-    resp.clear();
+    response->clearBody();
 
     util::JSONOutputStream json(std::move(output_stream));
     json.beginObject();
@@ -279,14 +249,6 @@ void HTTPAPI::executeQuery(
     json.addString(e.getMessage());
     json.endObject();
   }
-
-  response->setStatus(xzero::HttpStatus::Ok);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->addHeader("Access-Control-Allow-Origin", "*");
-  response->setContentLength(resp.size());
-  response->output()->write(
-      resp,
-      std::bind(&xzero::HttpResponse::completed, response));
 }
 
 void HTTPAPI::renderMetricJSON(
