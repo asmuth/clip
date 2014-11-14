@@ -30,7 +30,6 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   //var selected_day = selected_ts.getDate();
   var selected_hours = 
     FnordMetric.util.appendLeadingZero(selected_ts.getHours());
-  console.log("hours " + selected_ts.getHours());
   var selected_minutes = 
     FnordMetric.util.appendLeadingZero(selected_ts.getMinutes());
 

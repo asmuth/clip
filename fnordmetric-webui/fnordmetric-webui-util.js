@@ -103,7 +103,6 @@ FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state
   var hash = 
     path + "#" + hash + "?" + name + "=" + value;
   window.location = hash;
-  console.log("push state: " + push_state);
   if (push_state == true) {
     window.history.pushState({url: hash}, "#", hash);
   }
@@ -491,8 +490,6 @@ FnordMetric.util.createQuery = function(inputs, metric) {
 
 /* in singleMetricView */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
-  console.log("generate sql query");
-  console.log(params);
   //FIX html escape 
   var query;
   var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";
@@ -562,7 +559,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     draw_stm + select_expr +// where_expr + 
     from_expr + group_expr + ";";
 
-  console.log(query);
 
   return query;
 }

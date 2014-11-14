@@ -89,7 +89,6 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function renderEditorView(view, editor_pane, result_pane, query) {
-    console.log(view);
     editorViews[view].render(editor_pane, query);
     editor_pane.insertBefore(button_bar, editor_pane.firstChild);
     if (query != undefined) {
