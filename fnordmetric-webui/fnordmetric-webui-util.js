@@ -652,4 +652,22 @@ FnordMetric.util.getDateTimeString = function(timestamp) {
     ":" + minutes);
 }
 
+FnordMetric.util.makeLowerCaseUnderscore = function(string) {
+  return (string.toLowerCase().replace(/ /g,"_"));
+}
+
+FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
+  var str = string[0].toUpperCase();
+  for (var i = 1; i < string.length; i++) {
+    if (string[i] == "_") {
+      str += " " + string[i+1].toUpperCase();
+      i++;
+    } else {
+      str += string[i];
+    }
+  }
+  return str;
+}
+
+
 

@@ -166,6 +166,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       rollup_select.appendChild(option);
     });
 
+    rollup_select.value = 
+      FnordMetric.util.reverseLowerCaseUnderscore(
+        getQueryParamOrDefaultValue("view"));
+
     var aggregate_options = [
         "1s",
         "5s",
@@ -302,7 +306,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     rollup_select.addEventListener('change', function() {
       /* queryGenerator assumes this format */
-      var view = this.value.toLowerCase().replace(/ /g,"_");
+      var view = 
+        FnordMetric.util.makeLowerCaseUnderscore(this.value);
       updateURLParams("view", view);
       handleAggregationDisplay(
         this.value, t_window, t_step, group_buttons);
