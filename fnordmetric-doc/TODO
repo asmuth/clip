@@ -1,5 +1,8 @@
 
 [ doc ]
+    - frontapge: gif
+    - readme for gh
+    - frontpage: example query result
     - dashboard api reference
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
@@ -12,12 +15,16 @@
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ SQL ]
+    - proper thread/worker pool
+    - free scratchpads in group by
+    - no more "UNKNOWN TOKEN"
     - match function names case-insensitively
     - sql time helpers (1hour, etc)
-    - functions: avg, mean, max/min, percentile, variance, stddev, delta, nth_derivate,
     - support red/green/blue/hex colors
     - round fn
+    - functions: round, mean, max/min, percentile, delta,  
     - better handling of missing/NULL values! in seriesadapter
+    - FROM_TIMESTAMP fix in syntax ref
 
 [ frontend ]
     - clean up sql result view
@@ -32,10 +39,7 @@
     - metric preview widget: auto refresh (on/off)
 
 [ release ]
-    - free scratchpads in group by
-    - no more "UNKNOWN TOKEN"
     - svg: escape series names, labels!
-    - proper thread/worker pool
     - inline libev
     - ruby client
     - javascript client + doc
@@ -48,6 +52,7 @@
     - do I need an external database
 
 [ feature q ]
+    - functions: variance, stddev, nth_derivate,
     - union
     - cross join
     - GROUP OVER TIMEWINDOW on multiple tables
