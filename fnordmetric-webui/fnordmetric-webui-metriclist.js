@@ -30,7 +30,7 @@ FnordMetric.views.MetricList = function() {
 
   function render(viewport, url, query_params) {
     if (query_params != undefined) {
-      actions[query_params.name].render(viewport, query_params);
+      actions[query_params.innerView].render(viewport, query_params);
       return;
     }
     loadMetricList(viewport, query_params);

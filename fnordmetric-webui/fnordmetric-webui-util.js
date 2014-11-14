@@ -40,28 +40,88 @@ if (FnordMetric.util === undefined) {
 
 FnordMetric.util.parseQueryString = function(qstr) {
   var path;
-  var query_params;
+  var query_params = {};
 
   if (qstr.indexOf("?") >= 0) {
     path = qstr.substr(0, qstr.indexOf("?"))
 
     var params_str = qstr.substr(qstr.indexOf("?") + 1);
     var raw_params = params_str.split('&');
-    for (var i in raw_params) {
+
+    /* set first param which defines view's view (metric, search ...) */
+    var param = raw_params[0].split('=');
+    query_params.innerView = decodeURIComponent(param[0]);
+    query_params.innerViewValue = decodeURIComponent(param[1]);
+
+    for (var i = 1; i < raw_params.length; i++) {
       var param = raw_params[i].split('=');
-      query_params = {};
-      query_params.name = decodeURIComponent(param[0]);
-      query_params.value = decodeURIComponent(param[1]);
+       query_params[decodeURIComponent(param[0])] =
+          decodeURIComponent(param[1]);
     }
+
   } else {
     path = qstr;
   }
-
+  console.log(query_params);
   return {
     "path": path,
     "query_params": query_params
   };
 }
+
+FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
+  var path = "#"+hash+"?";
+
+  path += query_params.innerView + "=";
+  path += (encode)?
+    encodeURIComponent(query_params.innerViewValue) :
+    query_params.innerViewValue;
+
+  delete query_params.innerView;
+  delete query_params.innerViewValue;
+
+  for (var param in query_params) {
+    path += 
+      "&" + param +
+      "=" + query_params[param];
+    console.log(param);
+    console.log(query_params[param]);
+  }
+
+  console.log("path " + path);
+
+  /*for (var i in query_params) {
+    path += 
+      query_params[i].name + "=";
+    path += (encode) ? 
+      encodeURIComponent(query_params[i].value) :
+      query_params[i].value;
+    path += (i == query_params.length -1) ? "" : "&";
+  }*/
+
+  if (push_state) {
+    window.history.pushState({url:path}, "#", path);
+  }
+
+  window.location.hash = path;
+}
+
+//REMOVE??
+FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
+  var path = window.location.pathname;
+  var value = value;
+  if (encode == true) {
+    value = encodeURIComponent(value);
+  }
+  var hash = 
+    path + "#" + hash + "?" + name + "=" + value;
+  window.location = hash;
+  console.log("push state: " + push_state);
+  if (push_state == true) {
+    window.history.pushState({url: hash}, "#", hash);
+  }
+}
+
 
 FnordMetric.util.convertArrayToString = function(array) {
   var string = "";
@@ -114,31 +174,6 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
 }
 
-FnordMetric.util.setURLQueryString = function(name, value, encode) {
-  var fragment = window.location.hash.substr(1).split("?");
-  fragment = fragment.length > 0 ? fragment[0] : "";
-  var value = value;
-  if (encode) {
-    value = encodeURIComponent(value);
-  }
-  var hash = fragment + "?" + name + "=" + value;
-  window.location.hash = hash;
-}
-
-FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
-  var path = window.location.pathname;
-  var value = value;
-  if (encode == true) {
-    value = encodeURIComponent(value);
-  }
-  var hash = 
-    path + "#" + hash + "?" + name + "=" + value;
-  window.location = hash;
-  console.log("push state: " + push_state);
-  if (push_state == true) {
-    window.history.pushState({url: hash}, "#", hash);
-  }
-}
 
 FnordMetric.util.openPopup = function(elem, text) {
   function closePopup() {
@@ -442,7 +477,7 @@ FnordMetric.util.createQuery = function(inputs, metric) {
       " and time < FROM_TIMESTAMP(" + Math.round(inputs.time.end / 1000) +")";
     //console.log(where);
   }
-  query += where;
+  //query += where;
 
   if (hasAggr) {
     var columns = (inputs.group_by.length > 0) ?
@@ -535,4 +570,5 @@ FnordMetric.util.getDateTimeString = function(timestamp) {
     timestamp.getFullYear() + "  " + hours +
     ":" + minutes);
 }
+
 

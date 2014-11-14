@@ -16,25 +16,34 @@ if (FnordMetric.views === undefined) {
   FnordMetric.views = {};
 }
 
-FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
+FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var elem = viewport;
-  var metric = metric;
+  var metric = query_params.innerViewValue;
   var table_container = document.createElement("div");
   var chart_container = document.createElement("div");
 
   var inputs = {
     "show" : "Value",
     "aggregation" : {
-      "time" : null,
-      "step" : null
+      "time" : 1000,
+      "step" : 1000
       },
     "time" : {
       "mseconds_to_end" : null,
-      "end" : null
+      "end" : 300000
     },
     "group_by" : [],
     "columns" : null
   }
+
+  function setInitialInputs() {
+    if (query_params.length > 1) {
+      //FnordMetric.util.setSingleMetricInputs(inputs, query_params);
+    }
+  };
+
+  setInitialInputs();
+
 
   var elems = {};
 
@@ -75,18 +84,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
     });
   }
 
-  function setInitialInputs(aggr_time, columns, timespan, end_time) {
-    inputs.aggregation.time = 
-      FnordMetric.util.toMilliSeconds(aggr_time);
-    inputs.aggregation.step = aggr_time;
-    inputs.time.mseconds_to_end = timespan;
-    inputs.columns = columns;
-    inputs.time.end = end_time;
-  }
-
+  
 
   function handleAggrAvailability(show, tw_select, step_select, group_btns) {
     /* show = "value" */
+    var group_btns = (group_btns == undefined)? [] : group_btns;
     if (show == "Value" || show == "Rollup") {
       tw_select.className = "disabled";
       tw_select.disabled = true;
@@ -210,6 +212,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
 
   function initElems(columns) {
+    console.log("init elems");
     var now = Date.now();
     var initial_timespan;
 
@@ -379,8 +382,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, metric) {
 
     updateEventHandler();
 
-    setInitialInputs(
-      aggregate_options[0], columns, initial_timespan, datepicker.getAttribute("id"));
+    /*setInitialInputs(
+      aggregate_options[0], columns, initial_timespan, datepicker.getAttribute("id"));*/
 
 
     handleAggrAvailability("Value", aggr_win, aggr_step, group_buttons);
