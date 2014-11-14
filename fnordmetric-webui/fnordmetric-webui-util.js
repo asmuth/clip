@@ -77,7 +77,11 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
     query_params.innerViewValue;
 
   for (var param in query_params) {
-    if (param != "innerView" && param != "innerViewValue") {
+    if (param != "innerView" && 
+        param != "innerViewValue" &&
+        query_params[param] != undefined &&
+        query_params[param].length > 0) {
+
       path += 
         "&" + param +
         "=" + query_params[param];
@@ -85,6 +89,7 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   }
 
   if (push_state) {
+    console.log("push state");
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
@@ -252,18 +257,25 @@ FnordMetric.util.parseMilliTS = function(ts) {
   if (ts < 1000) {
     if (ts == 0) {
       return " less than 1 millisecond";
-    } else if (ts == 1) {
-      return " 1 millisecond";
-    } else {
-      return ts + " milliseconds";
     }
-  } else if (ts < 60000) {
+    if (ts == 1) {
+      return " 1 millisecond";
+    }
+    return ts + " milliseconds";
+  }
+
+  if (ts < 60000) {
     ts = ts / 1000;
-  return (ts + (ts == 1? " second" : " seconds"));
-  } else {
+    return (ts + (ts == 1? " second" : " seconds"));
+  }
+
+  if (ts < 3600000){
     ts = ts / 60000;
     return (ts + (ts == 1? " minute" : " minutes"));
   }
+
+  ts = ts / 360000;
+  return (ts + (ts == 1? " hour" : " hours"));
 }
 
 FnordMetric.util.humanDateToMikroTS = function(date) {
@@ -409,7 +421,7 @@ FnordMetric.util.milliSecondsToTimeString = function(seconds) {
     return (seconds / 1000) + "s";
   }
   if (seconds < 3600000) {
-    return (seconds / 1000/ 60) + "m";
+    return (seconds / 60000) + "m";
   }
   return (seconds / 3600000) + "h";
 }
@@ -595,6 +607,18 @@ FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
     }
   }
   return str;
+}
+
+FnordMetric.util.removeFromString = function(start, end, str) {
+  var length = str.length;
+  if (end >= length) {
+    return "";
+  }
+
+  var res = str.substr(0, length - start);
+  res += str.substr(end, length-1);
+  console.log(res);
+  return res;
 }
 
 
