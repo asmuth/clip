@@ -20,11 +20,10 @@
     - no more "UNKNOWN TOKEN"
     - match function names case-insensitively
     - sql time helpers (1hour, etc)
+    ---
     - support red/green/blue/hex colors
     - round fn
     - functions: round, mean, max/min, percentile, delta,  
-    - better handling of missing/NULL values! in seriesadapter
-    - FROM_TIMESTAMP fix in syntax ref
 
 [ frontend ]
     - clean up sql result view
@@ -67,6 +66,7 @@
     - SQL: having
     - SQL: cross joins
     - SQL: subqueries
+    - better handling of missing/NULL values! in seriesadapter
     - mysql: re-serialize where condition
     - mysql backend
     - hbase backend

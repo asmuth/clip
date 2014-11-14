@@ -120,6 +120,7 @@ MmapPageManager::~MmapPageManager() {
 
 void MmapPageManager::shrinkFile() {
   FileUtil::truncate(filename_, used_bytes_);
+  file_size_ = used_bytes_;
 }
 
 std::unique_ptr<PageManager::PageRef> MmapPageManager::getPage(
