@@ -29,8 +29,8 @@ FnordMetric.views.MetricList = function() {
 
 
   function render(viewport, url, query_params) {
-    if (query_params != undefined) {
-      actions[query_params.name].render(viewport, query_params);
+    if (query_params.innerView != undefined) {
+      actions[query_params.innerView].render(viewport, query_params);
       return;
     }
     loadMetricList(viewport, query_params);
@@ -108,10 +108,10 @@ FnordMetric.views.MetricList = function() {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
         var search_item;
-        if (query_params != undefined) {
+        if (query_params.innerView != undefined) {
           json.metrics =
-              actions[query_params.name].data(json.metrics, query_params.value);
-          search_item = query_params.value;
+              actions[query_params.innerView].data(json.metrics, query_params.innerViewValue);
+          search_item = query_params.innerviewValue;
         }
         renderMetricList(viewport, json.metrics, search_item);
       } else {

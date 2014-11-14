@@ -213,8 +213,8 @@ FnordMetric.views.QueryPlayground = function() {
     updateLayout(editor_pane, result_pane, direction);
 
     if (query_params != undefined) {
-      current_view = urlName[query_params.name];
-      query = query_params.value;
+      current_view = urlName[query_params.innerView];
+      query = query_params.innerviewValue;
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
   }

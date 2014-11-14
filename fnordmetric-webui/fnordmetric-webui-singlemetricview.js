@@ -20,17 +20,19 @@ if (FnordMetric.views === undefined) {
 FnordMetric.util.singleMetricView = function() {
   function render(elem, query_params) {
     /* set url and push history state */
-    FnordMetric.util.setURLQueryString(
-      query_params.name, query_params.value, false, true);
+
+    /*FnordMetric.util.setURLQueryString(
+      "metric_list", query_params, false, true);*/
     elem.innerHTML = "";
+
 
     FnordMetric.util.renderPageHeader(
       "Metric &rsaquo; <em>" + 
-      FnordMetric.util.htmlEscape(query_params.value) + 
+      FnordMetric.util.htmlEscape(query_params.innerViewValue) + 
       "</em>", elem);
 
     var preview_widget = FnordMetric.util.MetricPreviewWidget(
-      elem, query_params.value);
+      elem, query_params);
     preview_widget.render();
 
   }

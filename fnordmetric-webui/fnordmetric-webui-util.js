@@ -40,28 +40,76 @@ if (FnordMetric.util === undefined) {
 
 FnordMetric.util.parseQueryString = function(qstr) {
   var path;
-  var query_params;
+  var query_params = {};
 
   if (qstr.indexOf("?") >= 0) {
     path = qstr.substr(0, qstr.indexOf("?"))
 
     var params_str = qstr.substr(qstr.indexOf("?") + 1);
     var raw_params = params_str.split('&');
-    for (var i in raw_params) {
+
+    /* set first param which defines view's view (metric, search ...) */
+    var param = raw_params[0].split('=');
+    query_params.innerView = decodeURIComponent(param[0]);
+    query_params.innerViewValue = decodeURIComponent(param[1]);
+
+    for (var i = 1; i < raw_params.length; i++) {
       var param = raw_params[i].split('=');
-      query_params = {};
-      query_params.name = decodeURIComponent(param[0]);
-      query_params.value = decodeURIComponent(param[1]);
+       query_params[decodeURIComponent(param[0])] =
+          decodeURIComponent(param[1]);
     }
+
   } else {
     path = qstr;
   }
-
   return {
     "path": path,
     "query_params": query_params
   };
 }
+
+FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
+  var path = "#"+hash+"?";
+
+  path += query_params.innerView + "=";
+  path += (encode)?
+    encodeURIComponent(query_params.innerViewValue) :
+    query_params.innerViewValue;
+
+  for (var param in query_params) {
+    if (param != "innerView" && 
+        param != "innerViewValue" &&
+        query_params[param] != undefined &&
+        query_params[param].length > 0) {
+
+      path += 
+        "&" + param +
+        "=" + query_params[param];
+    }
+  }
+
+  if (push_state) {
+    console.log("push state");
+    window.history.pushState({url:path}, "#", path);
+  }
+  window.location.hash = path;
+}
+
+//REMOVE??
+FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
+  var path = window.location.pathname;
+  var value = value;
+  if (encode == true) {
+    value = encodeURIComponent(value);
+  }
+  var hash = 
+    path + "#" + hash + "?" + name + "=" + value;
+  window.location = hash;
+  if (push_state == true) {
+    window.history.pushState({url: hash}, "#", hash);
+  }
+}
+
 
 FnordMetric.util.convertArrayToString = function(array) {
   var string = "";
@@ -83,6 +131,8 @@ FnordMetric.util.displayLoader = function(elem) {
 FnordMetric.util.Loader = function() {
   var loader  = document.createElement("div");
   loader.className = "load_foreground";
+  loader.innerHTML = 
+    "<i class = 'fa fa-refresh fa-spin'>";
   on_click = null;
 
   function onClick(on_click_new) {
@@ -114,31 +164,6 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
   elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
 }
 
-FnordMetric.util.setURLQueryString = function(name, value, encode) {
-  var fragment = window.location.hash.substr(1).split("?");
-  fragment = fragment.length > 0 ? fragment[0] : "";
-  var value = value;
-  if (encode) {
-    value = encodeURIComponent(value);
-  }
-  var hash = fragment + "?" + name + "=" + value;
-  window.location.hash = hash;
-}
-
-FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
-  var path = window.location.pathname;
-  var value = value;
-  if (encode == true) {
-    value = encodeURIComponent(value);
-  }
-  var hash = 
-    path + "#" + hash + "?" + name + "=" + value;
-  window.location = hash;
-  console.log("push state: " + push_state);
-  if (push_state == true) {
-    window.history.pushState({url: hash}, "#", hash);
-  }
-}
 
 FnordMetric.util.openPopup = function(elem, text) {
   function closePopup() {
@@ -232,18 +257,25 @@ FnordMetric.util.parseMilliTS = function(ts) {
   if (ts < 1000) {
     if (ts == 0) {
       return " less than 1 millisecond";
-    } else if (ts == 1) {
-      return " 1 millisecond";
-    } else {
-      return ts + " milliseconds";
     }
-  } else if (ts < 60000) {
+    if (ts == 1) {
+      return " 1 millisecond";
+    }
+    return ts + " milliseconds";
+  }
+
+  if (ts < 60000) {
     ts = ts / 1000;
-  return (ts + (ts == 1? " second" : " seconds"));
-  } else {
+    return (ts + (ts == 1? " second" : " seconds"));
+  }
+
+  if (ts < 3600000){
     ts = ts / 60000;
     return (ts + (ts == 1? " minute" : " minutes"));
   }
+
+  ts = ts / 360000;
+  return (ts + (ts == 1? " hour" : " hours"));
 }
 
 FnordMetric.util.humanDateToMikroTS = function(date) {
@@ -384,88 +416,112 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
   return parseInt(seconds, 10);
 }
 
-
-/*
-  Inputs Object with default values
-  inputs = {
-    "show" : null,
-    "aggregation" : {
-      "time" : null,
-      "step" : null
-      },
-    "time" : {
-      "mseconds_to_end" : null,
-      "end" : null
-    }
-    "group_by" : [],
-    "columns" : [all possible group by columns]
+FnordMetric.util.milliSecondsToTimeString = function(seconds) {
+  if (seconds < 60000) {
+    return (seconds / 1000) + "s";
   }
-*/
-FnordMetric.util.createQuery = function(inputs, metric) {
-  var query = "";
-  var timewindow = null;
-  var where = "";
+  if (seconds < 3600000) {
+    return (seconds / 60000) + "m";
+  }
+  return (seconds / 3600000) + "h";
+}
 
-  var draw = "DRAW Linechart AXIS BOTTOM AXIS LEFT; ";
-  var select = "SELECT time AS x, ";
-  var from = " FROM `" + metric + "`";
-  var show;
-  var group_by = "";
-  var hasAggr;
-  var hasTimeWindow;
 
-  if (inputs.show == "Value") {
-    show = "value as y";
-    hasTimeWindow = false;
-    hasAggr = false;
-  } else if (inputs.show == "Rollup") {
-    draw = "DRAW BARCHART AXIS BOTTOM AXIS LEFT; ";
-    var column = (inputs.group_by.length > 0) ?
-      inputs.group_by[0] : inputs.columns[0];
-    select = "SELECT "+ column + " AS x, ";
-    show = "sum(value) as y";
-    hasAggr = true;
-    hasTimeWindow = false;
+/* in singleMetricView */
+FnordMetric.util.generateSQLQueryFromParams = function(params) {
+  console.log(params);
+  //FIX html escape 
+  var query;
+  var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";
+  var select_expr = "SELECT time AS x, ";
+  var from_expr = " FROM ";
+  var where_expr = "";
+  var group_expr = "";
+  var hasAggregation = false;
+
+  var table_ref = params.innerViewValue
+  var view = params.view;
+  /* column for rollups */
+  var columns = params.columns.split(",");; 
+  var start_time = params.start_time;
+  var end_time = params.end_time;
+  var t_step = params.t_step;
+  var t_window = params.t_window;
+  var by = params.by;
+
+  /* complete select_expr */
+  if (view == "value") {
+    select_expr += "value as y ";
+  } else if (view == "rollup_sum" || view == "rollup_count") {
+    draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
+    var func = (view.split("_"))[1];
+    //how to choose a column if there are more than one? 
+    select_expr = 
+      " SELECT `" + columns[0] + "` AS X, " + func + "(value) AS Y";
+
+    //hasAggregation = true; ??
   } else {
-    hasAggr = true;
-    hasTimeWindow = true;
-    show = ((inputs.show).toLowerCase() + "(value) as y");
+    select_expr +=
+      view.toLowerCase() + "(value) AS Y";
+    hasAggregation = true;
   }
 
-  query += draw + select + show + from;
+  /* complete from_expr */
+  from_expr += "`" + table_ref + "`";
 
-  /* check for time --> where clause and add to query */
-  if (inputs.time.mseconds_to_end != null && inputs.time.end != null ) {
-    var start = inputs.time.end - inputs.time.mseconds_to_end;
-    where = 
-      " where time > FROM_TIMESTAMP(" + Math.round(start / 1000) + ")" +
-      " and time < FROM_TIMESTAMP(" + Math.round(inputs.time.end / 1000) +")";
-    //console.log(where);
+  /*complete where_expr */
+  //is there any case in single metric view where only start or endtime are selected?
+  if (start_time != undefined && end_time != undefined) {
+    //what to use in place of FROM_TIMESTAMP
+    where_expr =
+      "WHERE time > FROM_TIMESTAMP(" + Math.round(start_time / 1000) + ")" +
+      " AND time < FROM_TIMESTAMP(" + Math.round(end_time / 1000) + ")";
   }
-  query += where;
 
-  if (hasAggr) {
-    var columns = (inputs.group_by.length > 0) ?
-      inputs.group_by.join(", ") : inputs.columns[0];
-    if (hasTimeWindow) {
-      timewindow = 
-        " GROUP OVER TIMEWINDOW(time, " +
-        Math.round(inputs.aggregation.time / 1000) + ", " +
-        Math.round(inputs.aggregation.step / 1000) + ")";
 
-      query += timewindow;
-      group_by = " BY " + columns;
-    } else {
-    /* GROUP BY */
-      group_by = " GROUP BY " + columns;
+  /*complete group_expr if an aggregate function is selected */
+  if (hasAggregation) {
+    group_expr = " GROUP ";
+    var hasGroupStm = false;
+
+    if (t_step != undefined) {
+      hasGroupStm = true;
+
+      group_expr += 
+        "OVER TIMEWINDOW(time, " + t_step + ",";
+
+      group_expr += (t_window != undefined)?
+        t_window : t_step;
+
+      group_expr+= ")";
+
+      /* fallback if group_by wasn't selected */
+      if (by == undefined && columns != undefined) {
+        group_expr += " BY " + columns[0];
+      }
     }
-    query += group_by;
+
+    if (by != undefined) {
+      hasGroupStm = true;
+
+      //check by format
+      group_expr += "BY " + by;
+    }
+
+    /* aggregate function without group_by statement */
+    if (!hasGroupStm) {
+      group_expr = "";
+    }
   }
 
-  query += ";";
+  query = 
+    draw_stm + select_expr +// where_expr + 
+    from_expr + group_expr + ";";
+
   console.log(query);
   return query;
 }
+
 
 FnordMetric.util.getMonthStr = function(index) {
   var months = [
@@ -535,4 +591,35 @@ FnordMetric.util.getDateTimeString = function(timestamp) {
     timestamp.getFullYear() + "  " + hours +
     ":" + minutes);
 }
+
+FnordMetric.util.makeLowerCaseUnderscore = function(string) {
+  return (string.toLowerCase().replace(/ /g,"_"));
+}
+
+FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
+  var str = string[0].toUpperCase();
+  for (var i = 1; i < string.length; i++) {
+    if (string[i] == "_") {
+      str += " " + string[i+1].toUpperCase();
+      i++;
+    } else {
+      str += string[i];
+    }
+  }
+  return str;
+}
+
+FnordMetric.util.removeFromString = function(start, end, str) {
+  var length = str.length;
+  if (end >= length) {
+    return "";
+  }
+
+  var res = str.substr(0, length - start);
+  res += str.substr(end, length-1);
+  console.log(res);
+  return res;
+}
+
+
 
