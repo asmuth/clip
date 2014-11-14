@@ -87,7 +87,6 @@ FnordMetric.WebUI = function() {
 
   function openUrl(raw_url, push_state) {
     var url = FnordMetric.util.parseQueryString(raw_url);
-    console.log(url);
     var query_params = url["query_params"];
 
     view = routes[url["path"]];

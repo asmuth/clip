@@ -62,7 +62,6 @@ FnordMetric.util.parseQueryString = function(qstr) {
   } else {
     path = qstr;
   }
-  console.log(query_params);
   return {
     "path": path,
     "query_params": query_params
@@ -84,20 +83,7 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
     path += 
       "&" + param +
       "=" + query_params[param];
-    console.log(param);
-    console.log(query_params[param]);
   }
-
-  console.log("path " + path);
-
-  /*for (var i in query_params) {
-    path += 
-      query_params[i].name + "=";
-    path += (encode) ? 
-      encodeURIComponent(query_params[i].value) :
-      query_params[i].value;
-    path += (i == query_params.length -1) ? "" : "&";
-  }*/
 
   if (push_state) {
     window.history.pushState({url:path}, "#", path);
