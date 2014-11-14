@@ -38,7 +38,13 @@ FnordMetric.views.MetricList = function() {
 
 
   function onRowClick() {
-    var raw_url = "metric_list?metric="+ this.firstChild.id;
+    var end = Date.now();
+    var start = end - 300000;
+    var raw_url = 
+      "metric_list?metric="+ this.firstChild.id +
+      "&view=value&start_time=" + start +
+      "&end_time=" + end;
+
     FnordMetric.WebUI.singleton.openUrl(raw_url, true);
   };
 
