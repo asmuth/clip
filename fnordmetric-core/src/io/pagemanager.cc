@@ -148,7 +148,8 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPageImpl(
   if (last_byte > file_size_) {
     size_t new_size;
     if (allow_padding) {
-      new_size = ((last_byte / kMmapSizeMultiplier) + 1) * kMmapSizeMultiplier;
+      auto mmap_block_size = sys_page_size_ * kMmapSizeMultiplier;
+      new_size = ((last_byte / mmap_block_size) + 1) * mmap_block_size;
     } else {
       new_size = last_byte;
     }
@@ -184,17 +185,19 @@ MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
         File::O_READ | File::O_WRITE);
 
     auto mmap_size = file.size();
+    void* addr = nullptr;
+    if (mmap_size > 0) {
+      addr = mmap(
+          nullptr,
+          mmap_size,
+          PROT_WRITE | PROT_READ,
+          MAP_SHARED,
+          file.fd(),
+          0);
 
-    void* addr = mmap(
-        nullptr,
-        mmap_size,
-        PROT_WRITE | PROT_READ,
-        MAP_SHARED,
-        file.fd(),
-        0);
-
-    if (addr == MAP_FAILED) {
-      RAISE(kMallocError, "mmap() failed");
+      if (addr == MAP_FAILED) {
+        RAISE_ERRNO(kMallocError, "mmap() failed");
+      }
     }
 
     if (current_mapping_ != nullptr) {

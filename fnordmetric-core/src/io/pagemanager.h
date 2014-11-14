@@ -130,7 +130,7 @@ public:
    * Size of the initially create mmaping in bytes. All mmapings will be a
    * multiple of this size!
    */
-  static const size_t kMmapSizeMultiplier = 1048576; /* 1 MB */
+  static const size_t kMmapSizeMultiplier = 128; /* 128 * PAGE_SIZE */
 
   class MmappedPageRef : public PageManager::PageRef {
   public:

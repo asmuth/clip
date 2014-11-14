@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/io/pagemanager.h>
 #include <fnordmetric/util/unittest.h>
 #include <stdlib.h>
@@ -32,14 +33,18 @@ class TestMmapPageManager : public MmapPageManager {
 public:
   explicit TestMmapPageManager(
       const std::string& filename,
-      size_t len,
-      size_t block_size) :
+      size_t len) :
       MmapPageManager(filename, len) {}
 
   MmappedFile* getMmappedFileTest(uint64_t last_byte) {
+    getPage(PageManager::Page(0, last_byte));
     return getMmappedFile(last_byte);
   }
 };
+
+TEST_INITIALIZER(PageManagerTest, SetupTempFolder, [] () {
+  FileUtil::mkdir_p("build/tests/tmp");
+});
 
 TEST_CASE(PageManagerTest, TestAbstractPageManagerAlloc, [] () {
     ConcreteTestPageManager page_manager;
@@ -96,25 +101,27 @@ TEST_CASE(PageManagerTest, TestAbstractPageManagerAllocFree, [] () {
 });
 
 TEST_CASE(PageManagerTest, TestMmapPageManager, [] () {
-  int fd = open("/tmp/__fnordmetric_testMmapPageManager",
+  int fd = open("build/tests/tmp/__fnordmetric_testMmapPageManager",
       O_CREAT | O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR);
   EXPECT(fd > 0);
   auto page_manager = new TestMmapPageManager(
-      "/tmp/__fnordmetric_testMmapPageManager", 0, 4096);
-  unlink("/tmp/__fnordmetric_testMmapPageManager");
+      "build/tests/tmp/__fnordmetric_testMmapPageManager", 0);
 
   auto mfile1 = page_manager->getMmappedFileTest(3000);
   auto mfile2 = page_manager->getMmappedFileTest(304200);
-  EXPECT_EQ(mfile1->size, 1048576);
+  auto page_size = sysconf(_SC_PAGESIZE);
+  EXPECT_EQ(mfile1->size, page_size * MmapPageManager::kMmapSizeMultiplier);
   EXPECT_EQ((void *) mfile1, (void *) mfile2);
   mfile2->incrRefs();
 
-  auto mfile3 = page_manager->getMmappedFileTest(1048577);
-  EXPECT_EQ(mfile3->size, 1048576 * 2);
+  auto mfile3 = page_manager->getMmappedFileTest(
+      page_size * MmapPageManager::kMmapSizeMultiplier + 1);
+  EXPECT_EQ(mfile3->size, page_size * MmapPageManager::kMmapSizeMultiplier * 2);
   EXPECT(mfile3 != mfile2);
   mfile2->decrRefs();
 
   delete page_manager;
+  unlink("build/tests/tmp/__fnordmetric_testMmapPageManager");
   close(fd);
 });
 
