@@ -199,6 +199,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       t_window.appendChild(option);
     });
 
+    t_window.value = 
+      FnordMetric.util.milliSecondsToTimeString(
+        getQueryParamOrDefaultValue("t_window"));
+
     var t_step = document.createElement("select");
     timewindow.appendChild(t_step);
     aggregate_options.map(function(opt) {
@@ -206,6 +210,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       option.innerHTML = opt;
       t_step.appendChild(option);
     });
+
+    t_step.value = 
+      FnordMetric.util.milliSecondsToTimeString(
+        getQueryParamOrDefaultValue("t_step"));
 
     var date_group = document.createElement("div");
     date_group.innerHTML = "<b>End Time<b>"
@@ -377,7 +385,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     }, false);
 
 
-    handleAggregationDisplay("Value", t_window, t_step, group_buttons);
+    handleAggregationDisplay(rollup_select.value, t_window, t_step, group_buttons);
     runQuery();
 
   }

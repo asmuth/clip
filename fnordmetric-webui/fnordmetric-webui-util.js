@@ -404,88 +404,16 @@ FnordMetric.util.toMilliSeconds = function(timestr) {
   return parseInt(seconds, 10);
 }
 
-
-/*
-  Inputs Object with default values
-  inputs = {
-    "show" : null,
-    "aggregation" : {
-      "time" : null,
-      "step" : null
-      },
-    "time" : {
-      "mseconds_to_end" : null,
-      "end" : null
-    }
-    "group_by" : [],
-    "columns" : [all possible group by columns]
+FnordMetric.util.milliSecondsToTimeString = function(seconds) {
+  if (seconds < 60000) {
+    return (seconds / 1000) + "s";
   }
-*/
-FnordMetric.util.createQuery = function(inputs, metric) {
-  var query = "";
-  var timewindow = null;
-  var where = "";
-
-  var draw = "DRAW Linechart AXIS BOTTOM AXIS LEFT; ";
-  var select = "SELECT time AS x, ";
-  var from = " FROM `" + metric + "`";
-  var show;
-  var group_by = "";
-  var hasAggr;
-  var hasTimeWindow;
-
-  if (inputs.show == "Value") {
-    show = "value as y";
-    hasTimeWindow = false;
-    hasAggr = false;
-  } else if (inputs.show == "Rollup") {
-    draw = "DRAW BARCHART AXIS BOTTOM AXIS LEFT; ";
-    var column = (inputs.group_by.length > 0) ?
-      inputs.group_by[0] : inputs.columns[0];
-    select = "SELECT "+ column + " AS x, ";
-    show = "sum(value) as y";
-    hasAggr = true;
-    hasTimeWindow = false;
-  } else {
-    hasAggr = true;
-    hasTimeWindow = true;
-    show = ((inputs.show).toLowerCase() + "(value) as y");
+  if (seconds < 3600000) {
+    return (seconds / 1000/ 60) + "m";
   }
-
-  query += draw + select + show + from;
-
-  /* check for time --> where clause and add to query */
-  if (inputs.time.mseconds_to_end != null && inputs.time.end != null ) {
-    var start = inputs.time.end - inputs.time.mseconds_to_end;
-    where = 
-      " where time > FROM_TIMESTAMP(" + Math.round(start / 1000) + ")" +
-      " and time < FROM_TIMESTAMP(" + Math.round(inputs.time.end / 1000) +")";
-    //console.log(where);
-  }
-  //query += where;
-
-  if (hasAggr) {
-    var columns = (inputs.group_by.length > 0) ?
-      inputs.group_by.join(", ") : inputs.columns[0];
-    if (hasTimeWindow) {
-      timewindow = 
-        " GROUP OVER TIMEWINDOW(time, " +
-        Math.round(inputs.aggregation.time / 1000) + ", " +
-        Math.round(inputs.aggregation.step / 1000) + ")";
-
-      query += timewindow;
-      group_by = " BY " + columns;
-    } else {
-    /* GROUP BY */
-      group_by = " GROUP BY " + columns;
-    }
-    query += group_by;
-  }
-
-  query += ";";
-  console.log(query);
-  return query;
+  return (seconds / 3600000) + "h";
 }
+
 
 /* in singleMetricView */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
@@ -548,7 +476,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, "+ t_step;
+        "OVER TIMEWINDOW(time, " + t_step + ",";
 
       group_expr += (t_window != undefined)?
         t_window : t_step;
