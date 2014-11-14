@@ -189,6 +189,10 @@ add_executable(tests/test-uri
     stage/src/fnordmetric/util/uri_test.cc)
 target_link_libraries(tests/test-uri fnord-static)
 
+add_executable(tests/test-fnv
+    stage/src/fnordmetric/util/fnv_test.cc)
+target_link_libraries(tests/test-fnv fnord-static)
+
 add_executable(tests/test-csv-backend
     stage/src/fnordmetric/sql/backends/csv/csvbackend_test.cc)
 target_link_libraries(tests/test-csv-backend fnord-static)
@@ -220,7 +224,3 @@ target_link_libraries(tests/test-statsd fnord-static)
 add_executable(tests/test-disk-backend
     stage/src/fnordmetric/metricdb/backends/disk/diskbackend_test.cc)
 target_link_libraries(tests/test-disk-backend fnord-static)
-
-#add_executable(tests/test-metricrepository
-#    stage/src/fnordmetric/metricdb/metricrepository_test.cc)
-#target_link_libraries(tests/test-metricrepository fnord-static)

@@ -9,7 +9,6 @@
     - make all the command in installation work
     - chart 2d/3d signature doc
     - all the doc links
-    - better screenshot on homepage
     - page: included agents
     - finish http api 
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
