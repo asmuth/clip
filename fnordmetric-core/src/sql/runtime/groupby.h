@@ -40,6 +40,16 @@ public:
     child->setTarget(this);
   }
 
+  ~GroupBy() {
+    for (auto& pair : groups_) {
+      auto scratchpad = pair.second.scratchpad;
+
+      if (scratchpad != nullptr) {
+        free(scratchpad);
+      }
+    }
+  }
+
   void execute() override {
     child_->execute();
 
@@ -68,6 +78,11 @@ public:
     if (group_iter == groups_.end()) {
       group = &groups_[key_str];
       group->scratchpad = malloc(scratchpad_size_);
+
+      if (group->scratchpad == nullptr) {
+        RAISE(kMallocError, "malloc() failed");
+      }
+
       memset(group->scratchpad, 0, scratchpad_size_);
     } else {
       group = &group_iter->second;
