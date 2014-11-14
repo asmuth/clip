@@ -45,6 +45,12 @@ std::string inspect<long long>(
 }
 
 template <>
+std::string inspect<long>(
+    const long& value) {
+  return std::to_string(value);
+}
+
+template <>
 std::string inspect<float>(const float& value) {
   return std::to_string(value);
 }

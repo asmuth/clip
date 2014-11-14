@@ -142,6 +142,10 @@ void SSTableWriter::writeIndex(uint32_t index_type, void* data, size_t size) {
     RAISE(kIllegalStateError, "table is immutable (alread finalized)");
   }
 
+  if (size == 0) {
+    return;
+  }
+
   auto alloc = mmap_->allocPage(sizeof(BinaryFormat::FooterHeader) + size);
   auto page = mmap_->getPage(alloc, io::MmapPageManager::kNoPadding{});
 

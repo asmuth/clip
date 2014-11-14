@@ -36,10 +36,11 @@ void CatchAndAbortExceptionHandler::onException(
   try {
     auto rte = dynamic_cast<const RuntimeException&>(error);
     rte.debugPrint();
-  } catch (const std::exception& e) {
-    fprintf(stderr, "Aborting...\n");
+  } catch (const std::exception& cast_error) {
+    fprintf(stderr, "foreign exception: %s\n", error.what());
   }
 
+  fprintf(stderr, "Aborting...\n");
   abort(); // core dump if enabled
 }
 
