@@ -277,10 +277,10 @@ std::string SValue::toString() const {
       static const auto false_str = "false";
       if (getBool()) {
         str = true_str;
-        len = sizeof(true_str);
+        len = strlen(true_str);
       } else {
         str = false_str;
-        len = sizeof(false_str);
+        len = strlen(false_str);
       }
       break;
     }

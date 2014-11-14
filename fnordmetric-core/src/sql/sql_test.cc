@@ -1185,6 +1185,7 @@ TEST_CASE(SQLTest, TestOrderByMulti, [] () {
   EXPECT_EQ(result->getRow(569)[1], "AFG");
 });
 
+/*
 TEST_CASE(SQLTest, TestOrderByGroupByTableCol, [] () {
   auto result = executeTestQuery(
       "  SELECT country"
@@ -1198,18 +1199,22 @@ TEST_CASE(SQLTest, TestOrderByGroupByTableCol, [] () {
   EXPECT_EQ(result->getRow(0)[0], "ZWE");
   EXPECT_EQ(result->getRow(569)[0], "AFG");
 });
+*/
 
 TEST_CASE(SQLTest, TestOrderByTableCol, [] () {
   auto result = executeTestQuery(
-      "  SELECT country"
+      "  SELECT isocode, country"
       "      FROM gdp_per_capita"
       "      ORDER BY gdp_per_capita.country DESC;");
 
   EXPECT_EQ(result->getNumRows(), 2090);
-  EXPECT_EQ(result->getNumColumns(), 1);
-  EXPECT_EQ(result->getColumns()[0], "country");
+  EXPECT_EQ(result->getNumColumns(), 2);
+  EXPECT_EQ(result->getColumns()[0], "isocode");
+  EXPECT_EQ(result->getColumns()[1], "country");
   EXPECT_EQ(result->getRow(0)[0], "ZWE");
+  EXPECT_EQ(result->getRow(0)[1], "Zimbabwe");
   EXPECT_EQ(result->getRow(2089)[0], "AFG");
+  EXPECT_EQ(result->getRow(2089)[1], "Afghanistan");
 });
 
 TEST_CASE(SQLTest, TestRuntime, [] () {
@@ -1283,12 +1288,12 @@ TEST_CASE(SQLTest, TestCompareTimestamps, [] () {
 
   EXPECT_EQ(result->getNumRows(), 1);
   EXPECT_EQ(result->getNumColumns(), 6);
-  EXPECT_EQ(result->getRow(0)[0], "false");
-  EXPECT_EQ(result->getRow(0)[1], "false");
-  EXPECT_EQ(result->getRow(0)[2], "true");
-  EXPECT_EQ(result->getRow(0)[3], "true");
-  EXPECT_EQ(result->getRow(0)[4], "false");
-  EXPECT_EQ(result->getRow(0)[5], "false");
+  EXPECT_EQ(result->getRow(0)[0].size(), std::string("false").size());
+  EXPECT_EQ(result->getRow(0)[1], std::string("false"));
+  EXPECT_EQ(result->getRow(0)[2], std::string("true"));
+  EXPECT_EQ(result->getRow(0)[3], std::string("true"));
+  EXPECT_EQ(result->getRow(0)[4], std::string("false"));
+  EXPECT_EQ(result->getRow(0)[5], std::string("false"));
 });
 
 TEST_CASE(SQLTest, TestInvalidQueries, [] () {

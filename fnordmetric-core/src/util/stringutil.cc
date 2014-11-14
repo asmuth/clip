@@ -19,7 +19,7 @@ void StringUtil::stripTrailingSlashes(std::string* str) {
 }
 
 std::string StringUtil::hexPrint(
-    void* data,
+    const void* data,
     size_t size,
     bool sep /* = true */,
     bool reverse /* = fase */) {
@@ -30,14 +30,14 @@ std::string StringUtil::hexPrint(
   if (reverse) {
     for (int i = size - 1; i >= 0; --i) {
       if (sep && i > 0) { str += " "; }
-      auto byte = ((unsigned char*) data)[i];
+      auto byte = ((const unsigned char*) data)[i];
       str += hexTable[(byte & 0xf0) >> 4];
       str += hexTable[byte & 0x0f];
     }
   } else {
     for (int i = 0; i < size; ++i) {
       if (sep && i > 0) { str += " "; }
-      auto byte = ((unsigned char*) data)[i];
+      auto byte = ((const unsigned char*) data)[i];
       str += hexTable[(byte & 0xf0) >> 4];
       str += hexTable[byte & 0x0f];
     }
