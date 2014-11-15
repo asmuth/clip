@@ -248,7 +248,7 @@ FnordMetric.util.parseMilliTS = function(ts) {
     return (ts + (ts == 1? " minute" : " minutes"));
   }
 
-  ts = ts / 360000;
+  ts = ts / 3600000;
   return (ts + (ts == 1? " hour" : " hours"));
 }
 

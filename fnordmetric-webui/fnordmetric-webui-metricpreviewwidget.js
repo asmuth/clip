@@ -21,21 +21,18 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var metric = query_params.innerViewValue;
   var table_container = document.createElement("div");
   var chart_container = document.createElement("div");
-  var load_pane = document.createElement("div");
   var now = Date.now();
   var columns = [];
-  var elems = {};
-
 
   var defaults = {
     view : "value",
     columns: "",
     end_time : now,
     /* 5 minutes  */
-    time_to_end : 300000,
+    time_to_end : 3600000,
     /* 1 second */
-    t_step : 1000,
-    t_window : 1000,
+    t_step : 10000,
+    t_window : 5000,
     by: ""
   }
 
@@ -149,29 +146,44 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   }
 
-  function updateDateTimeElems(title, input) {
-    var start = FnordMetric.util.getDateTimeString(
-      getQueryParamOrDefaultValue("start_time"));
-    var end = getQueryParamOrDefaultValue("end_time");
-    var end_str = FnordMetric.util.getDateTimeString(end);
+  function updateDateTimeElems(title, input, start_time, end_time) {
+    var start_time = (start_time !== undefined) ? 
+       start_time : getQueryParamOrDefaultValue("start_time");
+    var start_str = 
+      FnordMetric.util.getDateTimeString(start_time);
+
+    var end_time = (end_time !== undefined) ?
+      end_time : getQueryParamOrDefaultValue("end_time");
+    var end_str = FnordMetric.util.getDateTimeString(end_time);
+
 
     if (input != null) {
-      input.value = end_string;
-      input.setAttribute("id", end);
+      input.value = end_str;
+      input.setAttribute("id", end_time);
     }
-
     title.innerHTML = 
-      start + " &mdash; " + end_str;
+      start_str + " &mdash; " + end_str;
   }
 
-  function onDateSubmit(ts) {
-    var start = 
-      ts - getQueryParamOrDefault(time_to_end);
-    updateURLParams("end_time", ts);
-    updateURLParams("start_time", start);
+
+  function onDateSubmit(timestamp) {
+    var timestamp = parseInt(timestamp, 10);
+    var start_time = 
+      parseInt(getQueryParamOrDefaultValue("start_time"), 10);
+    var end_time = 
+      parseInt(getQueryParamOrDefaultValue("end_time"), 10);
+
+    start_time = timestamp - (end_time - start_time);
+    updateURLParams("end_time", timestamp);
+    updateURLParams("start_time", start_time);
+
     runQuery();
-    updateDateTimeElems(elems.timespan_title, null);
+
+    //FIXME is it better to make the title elem accessible?
+    var title = elem.querySelector(".current_date");
+    updateDateTimeElems(title, null, start_time, timestamp);
   }
+
 
   function initElems() {
     var initial_timespan;
@@ -424,7 +436,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       start_time = 
         end_time - FnordMetric.util.toMilliSeconds(this.value);
       updateURLParams("start_time", start_time);
-      updateDateTimeElems(timespan_title, null);
+      updateDateTimeElems(
+        timespan_title, null, start_time, end_time);
       runQuery();
     }, false);
 
@@ -436,19 +449,25 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       start_time = start_time - diff;
       updateURLParams("end_time", end_time);
       updateURLParams("start_time", start_time);
-      updateDateTimeElems(timespan_title, elems.date);
+      updateDateTimeElems(
+        timespan_title, datepicker, start_time, end_time);
       runQuery();
     }, false);
 
     next_timespan.addEventListener('click', function(e) {
       e.preventDefault();
       var start = start_time;
-      start_time = end_time;
-      end_time = parseInt(end_time ,10) + (end_time - start);
-      updateURLParams("start_time", start_time);
-      updateURLParams("end_time", end_time);
-      updateDateTimeElems(timespan_title, elems.date);
-      runQuery();
+      var end =  parseInt(end_time ,10) + (end_time - start);
+
+      if (end <= now) {
+        start_time = end_time;
+        end_time = end;
+        updateURLParams("start_time", start_time);
+        updateURLParams("end_time", end_time);
+        updateDateTimeElems(
+          timespan_title, datepicker, start_time, end_time);
+        runQuery();
+      }
     }, false);
 
 

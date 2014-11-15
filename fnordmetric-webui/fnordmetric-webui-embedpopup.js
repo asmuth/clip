@@ -97,29 +97,3 @@ FnordMetric.util.embedPopup = function(elem) {
     "render" : render,
   }
 }
-
-/* function closePopup() {
-    elem.removeChild(popup);
-    loader.destroy(elem);
-  }
-
-  var loader = FnordMetric.util.Loader();
-  loader.onClick(closePopup);
-  loader.display(elem);
-  var popup = document.createElement("div");
-  popup.className = "popup";
-  var close_btn = FnordMetric.createButton(
-    "#", undefined, "X");
-  var innerWindow = document.createElement("div");
-  innerWindow.className = "inner_window";
-  innerWindow.innerHTML = text;
-
-  popup.appendChild(close_btn);
-  popup.appendChild(innerWindow);
-  elem.appendChild(popup);
-
-  close_btn.onclick = function(e) {
-    e.preventDefault();
-    closePopup();
-  }
-*/
