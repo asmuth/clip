@@ -13,12 +13,11 @@
 
 [ frontend ]
     - clean up sql result view
-    - syntax highlighting
     - embed popup
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
     - better error message style
     - compare with yesterday in metric preview widget
-    - metric preview widget: auto refresh (on/off)
+    - refresh btn in metric preview widget
 
 [ release ]
     - functions: round, median, percentile
@@ -32,6 +31,7 @@
     - do I need an external database
 
 [ feature q ]
+    - metric preview widget: auto refresh (on/off)
     - version numbers
     - deb pkg
     - homebrew pkg

@@ -24,8 +24,27 @@ FnordMetric.util.queryResultView = function() {
     var chart_pane = document.createElement("div");
     chart_pane.className = "chart_container";
     chart_pane.setAttribute("id", "chart_container");
+
+    var controls = document.createElement("div");
+    controls.className = "metric_preview_secondary_controls";
+    controls.innerHTML = "<a>Result Chart</a>"
+    chart_pane.appendChild(controls);
+
+    var controls_embed = FnordMetric.createButton(
+      "#", "btn", "<i class='fa fa-share'></i> Embed");
+    controls.appendChild(controls_embed);
+    controls_embed.onclick = function(e) {
+      e.preventDefault();
+      FnordMetric.util.embedPopup(elem).render()
+    }
+
+    var controls = document.createElement("div");
+
     if (chart != undefined) {
-      chart_pane.innerHTML = chart.svg;
+      var svg = document.createElement("div");
+      svg.className = "svg";
+      svg.innerHTML = chart.svg;
+      chart_pane.appendChild(svg);
     }
     elem.appendChild(chart_pane);
   }

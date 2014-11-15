@@ -495,10 +495,11 @@ input {
 }
 
 .result_pane .chart_container {
-  margin-top: 30px;
   text-align:center;
-  padding: 0px 15px;
-  margin-bottom: 70px;
+}
+
+.result_pane .chart_container .svg {
+  padding: 20px 10px;
 }
 
 .error_box {
