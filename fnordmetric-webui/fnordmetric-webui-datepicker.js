@@ -53,8 +53,8 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       FnordMetric.util.appendLeadingZero(minutes);
 
     var ts = new Date(year, month, day, hours, minutes).getTime();
-    dp_input.setAttribute("timestamp", ts);
     callback(ts);
+    dp_input.setAttribute("timestamp", ts);
     resetDatepicker();
   }
 

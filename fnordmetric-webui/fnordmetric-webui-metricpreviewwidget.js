@@ -147,7 +147,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
   function updateDateTimeElems(title, input, start_time, end_time) {
-    console.log("update date time elems");
     var start_time = (start_time !== undefined) ? 
        start_time : getQueryParamOrDefaultValue("start_time");
     var start_str = 
@@ -157,15 +156,15 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       end_time : getQueryParamOrDefaultValue("end_time");
     var end_str = FnordMetric.util.getDateTimeString(end_time);
 
+
     if (input != null) {
       input.value = end_str;
       input.setAttribute("id", end_time);
     }
-    console.log("start " + start_str);
-    console.log("end " + end_str);
     title.innerHTML = 
       start_str + " &mdash; " + end_str;
   }
+
 
   function onDateSubmit(timestamp) {
     var timestamp = parseInt(timestamp, 10);
@@ -173,16 +172,18 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       parseInt(getQueryParamOrDefaultValue("start_time"), 10);
     var end_time = 
       parseInt(getQueryParamOrDefaultValue("end_time"), 10);
-    console.log("time diff " + (end_time - start_time));
+
     start_time = timestamp - (end_time - start_time);
     updateURLParams("end_time", timestamp);
     updateURLParams("start_time", start_time);
+
     runQuery();
 
     //FIXME is it better to make the title elem accessible?
     var title = elem.querySelector(".current_date");
-    updateDateTimeElems(title, null, start_time, end_time);
+    updateDateTimeElems(title, null, start_time, timestamp);
   }
+
 
   function initElems() {
     var initial_timespan;
