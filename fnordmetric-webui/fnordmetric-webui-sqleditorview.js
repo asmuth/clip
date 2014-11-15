@@ -38,7 +38,8 @@ FnordMetric.util.SQLEditorView = function() {
     cm = CodeMirror(elem, {
       lineNumbers: true,
       lineWrapping: true,
-      autofocus: true
+      autofocus: true,
+      mode: "text/x-sql"
     });
 
     if (query != undefined) {
