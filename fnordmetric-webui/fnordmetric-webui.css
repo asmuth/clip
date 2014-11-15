@@ -818,7 +818,21 @@ table.metric_list tr:hover td {
   left: 5px;
 }
 
-.popup {
+.popup_ui.background {
+  position: absolute;
+  top: 0;
+  left:0;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  background: #e9ebed;
+  opacity: 0.5;
+  display: table;
+  text-align: center;
+}
+
+
+.popup_ui {
   position: absolute;
   min-height: 400px;
   width: 40%;
@@ -830,14 +844,29 @@ table.metric_list tr:hover td {
   background: #fff;
 }
 
-.popup a {
+.popup_ui .controls {
+  margin-top: 10px;
+  margin-left: 50px;
+  text-align:center;
+}
+
+.popup_ui .controls .tab {
+  float:left;
+  text-decoration: none;
+  padding: 8px 13px;
+  margin-right: 50px;
+  color: #444;
+  border: 1px solid #444;
+}
+
+.popup_ui .close_btn {
   float: left;
   color: #444;
   text-decoration: none;
   padding: 2px;
 }
 
-.popup .inner_window {
+.popup_ui .inner_window {
   margin-top: 30px;
   margin-left: 20px;
 }
