@@ -78,6 +78,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   function runQuery() {
     var querystr = 
       FnordMetric.util.generateSQLQueryFromParams(query_params);
+    console.log(querystr);
+
     FnordMetric.util.displayLoader(chart_container);
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
@@ -286,8 +288,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
     controls_query.onclick = function(e) {
       e.preventDefault();
-      var query = 
-        decodeURIComponent("SELECT * FROM " + metric);
+      var query = FnordMetric.util.generateSQLQueryFromParams(query_params);
+      console.log(query);
       FnordMetric.WebUI.singleton.openUrl(
         "query_playground?sql_query="+query, true);
     };

@@ -518,7 +518,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
 
-  console.log(query);
   return query;
 }
 
