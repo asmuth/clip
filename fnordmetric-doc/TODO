@@ -15,19 +15,15 @@
 
 [ frontend ]
     - clean up sql result view
-    - metric overview page
     - syntax highlighting
-    - embed as iframe
+    - embed popup
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
-    - make editr split draggable/resizable
     - better error message style
     - compare with yesterday in metric preview widget
     - metric preview widget: auto refresh (on/off)
 
-[ SQL ]
-    - functions: round, median, percentile, delta
-
 [ release ]
+    - functions: round, median, percentile
     - svg: escape series names, labels!
     - ruby client
     - javascript client + doc
@@ -40,6 +36,8 @@
     - do I need an external database
 
 [ feature q ]
+    - make query editor split draggable/resizable
+    - functions: delta
     - vertical hover line in chartextensions
     - sql time helpers (1hour, etc)
     - support red/green/blue colors

@@ -89,7 +89,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
   function renderError(message) {
-    chart_container.innerHTML = message;
+    var error_box = document.createElement("div");
+    error_box.className = "error_box";
+    error_box.innerHTML = message;
+    table_container.innerHTML = "";
+    chart_container.innerHTML = "";
+    chart_container.appendChild(error_box);
   }
 
   function runQuery() {
@@ -97,8 +102,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       FnordMetric.util.generateSQLQueryFromParams(query_params);
     console.log(querystr);
 
+    var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
     FnordMetric.util.displayLoader(chart_container);
-    FnordMetric.httpPost("/query", querystr, function(r) {
+    FnordMetric.httpPost(queryurl, querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
         if (json.charts != undefined) {

@@ -29,6 +29,16 @@ void Canvas::setSubtitle(const std::string& subtitle) {
   subtitle_ = subtitle;
 }
 
+void Canvas::setDimensions(int width, int height) {
+  if (width > 0) {
+    width_ = width;
+  }
+
+  if (height > 0) {
+    height_ = height;
+  }
+}
+
 void Canvas::render(RenderTarget* target) const {
   // FIXPAUL: initialize from rendertarget
   Viewport viewport(width_, height_);

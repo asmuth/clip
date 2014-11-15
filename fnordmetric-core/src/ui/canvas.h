@@ -53,6 +53,8 @@ public:
    */
   void setSubtitle(const std::string& subtitle);
 
+  void setDimensions(int width, int height);
+
   /**
    * FIXPAUL overcomplicated, just accept a ptr
    *

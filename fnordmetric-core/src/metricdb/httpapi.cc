@@ -224,11 +224,15 @@ void HTTPAPI::executeQuery(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     util::URI* uri) {
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  auto params = uri->queryParams();
 
-  std::shared_ptr<util::InputStream> input_stream =
-      request->getBodyInputStream();
+  std::shared_ptr<util::InputStream> input_stream;
+  std::string get_query;
+  if (util::URI::getParam(params, "q", &get_query)) {
+    input_stream.reset(new util::StringInputStream(get_query));
+  } else {
+    input_stream = request->getBodyInputStream();
+  }
 
   std::shared_ptr<util::OutputStream> output_stream =
       response->getBodyOutputStream();
@@ -237,12 +241,47 @@ void HTTPAPI::executeQuery(
   std::unique_ptr<query::TableRepository> table_repo(
       new MetricTableRepository(metric_repo_));
 
+  query::QueryService::kFormat resp_format = query::QueryService::FORMAT_JSON;
+  std::string format_param;
+  if (util::URI::getParam(params, "format", &format_param)) {
+    if (format_param == "svg") {
+      resp_format = query::QueryService::FORMAT_SVG;
+    }
+  }
+
+  response->setStatus(http::kStatusOK);
+
+  switch (resp_format) {
+    case query::QueryService::FORMAT_JSON:
+      response->addHeader("Content-Type", "application/json; charset=utf-8");
+      break;
+    case query::QueryService::FORMAT_SVG:
+      response->addHeader("Content-Type", "text/html; charset=utf-8");
+      break;
+    default:
+      break;
+  }
+
+  int width = -1;
+  std::string width_param;
+  if (util::URI::getParam(params, "width", &width_param)) {
+    width = std::stoi(width_param);
+  }
+
+  int height = -1;
+  std::string height_param;
+  if (util::URI::getParam(params, "height", &height_param)) {
+    height = std::stoi(height_param);
+  }
+
   try {
     query_service.executeQuery(
         input_stream,
-        query::QueryService::FORMAT_JSON,
+        resp_format,
         output_stream,
-        std::move(table_repo));
+        std::move(table_repo),
+        width,
+        height);
 
   } catch (util::RuntimeException e) {
     response->clearBody();
