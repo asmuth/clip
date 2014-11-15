@@ -143,7 +143,10 @@ void HTTPServer::listenOrCrash(int port) {
   X0Adapter adapter(&handlers_, &scheduler, request_scheduler_);
   http.addHandler(&adapter);
   http.start();
-  selector.select();
+
+  for (;;) {
+    selector.select();
+  }
 }
 
 }
