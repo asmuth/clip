@@ -47,10 +47,27 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     return value;
   }
 
+  // FIXLAURA allow multiple key value pairs as input
   function updateURLParams(key, value) {
     query_params[key] = value.toString();
     FnordMetric.util.setURLQueryString(
       "metric_list", query_params, false, true);
+  }
+
+  /* checks if required url params are misssing and adds those if so */
+  function addRequiredURLParamsForView(value) {
+    if (value == "count" || value == "sum") {
+      var group_by = query_params.by;
+      if (group_by == undefined) {
+        group_by = defaults.by;
+        updateURLParams("by", group_by);
+      }
+      var time_step = query_params.t_step;
+      if (time_step == undefined) {
+        time_step = defaults.t_step;
+        updateURLParams("t_step", time_step);
+      }
+    }
   }
 
   function renderChart(chart) {
@@ -332,6 +349,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       /* queryGenerator assumes this format */
       var view = 
         FnordMetric.util.makeLowerCaseUnderscore(this.value);
+      addRequiredURLParamsForView(view);
       updateURLParams("view", view);
       handleAggregationDisplay(
         this.value, t_window, t_step, group_buttons);
@@ -435,6 +453,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
           });
           query_params.columns = m.labels.join(",");
           defaults.columns = m.labels.join(",");
+          defaults.by = defaults.columns;
         });
         initElems();
       }
