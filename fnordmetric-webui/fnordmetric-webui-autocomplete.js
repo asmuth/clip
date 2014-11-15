@@ -23,6 +23,7 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
   var items;
   var list_items = [];
   var current_value;
+  var hover = false;
   list.className = "autocomplete";
 
   function renderListItems() {
@@ -32,18 +33,38 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
       li.innerHTML = "<a href='#'>"+item+"</href>";
       list.appendChild(li);
       list_items.push(li);
+
+      li.addEventListener('click', function(e) {
+        e.stopPropagation();
+        input.value = this.innerText;
+        resetList();
+        callback(this.innerText);
+      }, false);
+
+      li.addEventListener('mouseover', function() {
+        hover = true;
+        if (list_items[position] != undefined) {
+          list_items[position].className = "";
+        }
+      }, false);
+
+      li.addEventListener('mouseout', function() {
+        hover = false;
+      }, false);
     });
   }
 
   function keyNavigation(list_items, i) {
-    if (i < list_items.length) {
+    if (i > 0 && i < list_items.length) {
       if (i > 0) {
         list_items[i - 1].className = "";
       }
       if (i+1 < list_items.length) {
         list_items[i+1].className = "";
       }
-      list_items[i].className = "hover";
+      if (!hover) {
+        list_items[i].className = "hover";
+      }
     }
   }
 
@@ -70,11 +91,8 @@ FnordMetric.util.Autocomplete = function(elem, input, callback) {
       elem.appendChild(list);
     }, false);
 
-    input.addEventListener('blur', function() {
-      console.log(list);
-      if (list.parentNode == elem) {
-        elem.removeChild(list);
-      }
+    document.addEventListener('click', function() {
+      resetList();
     }, false);
 
 
