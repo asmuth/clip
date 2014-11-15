@@ -25,9 +25,7 @@
     - metric preview widget: auto refresh (on/off)
 
 [ SQL ]
-    - support hex colors
-    - round fn
-    - functions: round, mean, max/min, percentile, delta, 
+    - functions: round, mean, max/min, percentile, delta
 
 [ release ]
     - svg: escape series names, labels!

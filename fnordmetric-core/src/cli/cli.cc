@@ -45,33 +45,6 @@ void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
       "Write output to a file",
       "<format>");
 
-  // Start a user interface:
-  flags->defineFlag(
-      "repl",
-      FlagParser::T_SWITCH,
-      false,
-      NULL,
-      NULL,
-      "Start an interactive readline shell",
-      NULL);
-
-  flags->defineFlag(
-      "web",
-      FlagParser::T_INTEGER,
-      false,
-      NULL,
-      NULL,
-      "Start a web interface on this port",
-      "<port>");
-
-  flags->defineFlag(
-      "cgi",
-      FlagParser::T_SWITCH,
-      false,
-      NULL,
-      NULL,
-      "Run as CGI script");
-
   flags->defineFlag(
       "verbose",
       FlagParser::T_SWITCH,

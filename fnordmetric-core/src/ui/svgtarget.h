@@ -71,19 +71,26 @@ public:
       const std::string& series) override {
     std::string class_str(class_name);
     class_str += " ";
-    class_str += color;
+
+    std::string style_str;
+    if (color.size() > 3 && color.size() < 8 && color[0] == '#') {
+      style_str += "fill: " + color + ";";
+    } else {
+      class_str += color;
+    }
 
     // FIXPAUL escape me
     appendLine(
         "<rect x='%f' y='%f' width='%f' height='%f' class='%s' "
-            "fm:series='%s' fm:label='%s'></rect>\n",
+            "fm:series='%s' fm:label='%s' style='%s'></rect>\n",
         x,
         y,
         width,
         height,
         escapeString(class_str).c_str(),
         escapeString(series).c_str(),
-        escapeString(label).c_str());
+        escapeString(label).c_str(),
+        escapeString(style_str).c_str());
   }
 
   void drawLine(
@@ -146,19 +153,26 @@ public:
       const std::string& series /* = "" */) override {
     std::string class_str(class_name);
     class_str += " ";
-    class_str += color;
+
+    std::string style_str;
+    if (color.size() > 3 && color.size() < 8 && color[0] == '#') {
+      style_str += "fill: " + color + ";";
+    } else {
+      class_str += color;
+    }
 
     /* point_type: circle */
     // FIXPAUL escape label
     appendLine(
         "<circle cx='%f' cy='%f' r='%f' class='%s' fm:label='%s' "
-            "fm:series='%s'></circle>\n",
+            "fm:series='%s', style='%s'></circle>\n",
         x,
         y,
         point_type == "none" ? 0 : point_size,
         escapeString(class_str).c_str(),
         escapeString(label).c_str(),
-        escapeString(series).c_str());
+        escapeString(series).c_str(),
+        escapeString(style_str).c_str());
   }
 
    void drawPath(
@@ -170,12 +184,19 @@ public:
       const std::string& class_name = "") override {
     std::string class_str(class_name);
     class_str += " ";
-    class_str += color;
+
+    std::string style_str;
+    if (color.size() > 3 && color.size() < 8 && color[0] == '#') {
+      style_str += "stroke: " + color + ";";
+    } else {
+      class_str += color;
+    }
 
     appendLine(
-        "<path stroke-width='%f' class='%s' d='",
+        "<path stroke-width='%f' class='%s' style='%s' d='",
         line_width,
-        escapeString(class_str).c_str());
+        escapeString(class_str).c_str(),
+        escapeString(style_str).c_str());
 
     for (int i = 0; i < points.size(); ++i) {
       if (i == 0) {
