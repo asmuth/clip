@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
@@ -40,6 +41,13 @@ void QueryService::executeQuery(
     std::unique_ptr<TableRepository> table_repo) {
   std::string query_string;
   input_stream->readUntilEOF(&query_string);
+
+  if (fnordmetric::env()->verbose()) {
+    fnordmetric::env()->logger()->printf(
+        "DEBUG",
+        "Executing ChartSQL query: %s",
+        query_string.c_str());
+  }
 
   try {
     Query query(query_string, &runtime_, std::move(table_repo));
