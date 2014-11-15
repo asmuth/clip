@@ -39,7 +39,7 @@ FnordMetric.util.SQLEditorView = function() {
       lineNumbers: true,
       lineWrapping: true,
       autofocus: true,
-      mode: "text/x-sql"
+      mode: "text/x-chartsql"
     });
 
     if (query != undefined) {
