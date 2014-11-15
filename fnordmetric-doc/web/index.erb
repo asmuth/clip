@@ -18,6 +18,20 @@
         <a class="fancybutton-light" href="/documentation">Read the Documentation &rarr;</a>
       </div>
 
+      <div class="scroll_hint">
+        <div class="ico"><div class="tri"></div></div>
+        Scroll Down
+      </div>
+      <script type="text/javascript">
+        window.onscroll = function (e) {
+          var elem = document.body.querySelector(".scroll_hint");
+          if (window.pageYOffset + window.innerHeight > 900) {
+            elem.className = "scroll_hint hidden";
+          } else {
+            elem.className = "scroll_hint";
+          }
+        }
+      </script>
       <br style="clear:both;" />
   </div>
 </div>
