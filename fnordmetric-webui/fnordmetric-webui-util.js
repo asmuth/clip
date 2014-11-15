@@ -164,32 +164,7 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
 }
 
 
-FnordMetric.util.openPopup = function(elem, text) {
-  function closePopup() {
-    elem.removeChild(popup);
-    loader.destroy(elem);
-  }
 
-  var loader = FnordMetric.util.Loader();
-  loader.onClick(closePopup);
-  loader.display(elem);
-  var popup = document.createElement("div");
-  popup.className = "popup";
-  var close_btn = FnordMetric.createButton(
-    "#", undefined, "X");
-  var innerWindow = document.createElement("div");
-  innerWindow.className = "inner_window";
-  innerWindow.innerHTML = text;
-
-  popup.appendChild(close_btn);
-  popup.appendChild(innerWindow);
-  elem.appendChild(popup);
-
-  close_btn.onclick = function(e) {
-    e.preventDefault();
-    closePopup();
-  }
-}
 
 FnordMetric.util.renderPageHeader = function(text, elem) {
   var header = document.createElement("h1");
@@ -455,7 +430,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   /* complete select_expr */
   if (view == "value") {
     select_expr += "value as y ";
-  } else if (view == "rollup_sum" || view == "rollup_count") {
+  } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
     draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
     var func = (view.split("_"))[1];
     //how to define which column should be selected
@@ -505,7 +480,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     if (by != undefined) {
       hasGroupStm = true;
 
-      group_expr += "BY " + by;
+      group_expr += " BY " + by;
     }
 
     /* aggregate function without group_by statement */

@@ -56,7 +56,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   /* checks if required url params are misssing and adds those if so */
   function addRequiredURLParamsForView(value) {
-    if (value == "count" || value == "sum") {
+    if (value == "count" || value == "sum" || value == "mean") {
       var group_by = query_params.by;
       if (group_by == undefined) {
         group_by = defaults.by;
@@ -101,7 +101,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
-        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
         } else {
@@ -185,8 +184,20 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     var rollup_select = document.createElement("select");
     rollup_group.appendChild(rollup_select);
-    var rollup_options = 
-      ["Value", "Mean", "Count", "Sum", "Rollup Sum", "Rollup Count"];
+
+    var rollup_options = [
+      "Value",
+      "Mean",
+      "Rollup Mean",
+      "Count",
+      "Rollup Count",
+      "Sum",
+      "Rollup Sum",
+      "Min",
+      "Max",
+      "Median",
+      "Delta"];
+
     rollup_options.map(function(rollup) {
       var option = document.createElement("option");
       option.innerHTML = rollup;
@@ -306,8 +317,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     controls_query.onclick = function(e) {
       e.preventDefault();
       var query = encodeURIComponent(
-        FnordMetric.util.generateSQLQueryFromParams(query_params));
-      console.log(query);
+        FnordMetric.util.generateSQLQueryFromParams(
+          query_params));
       FnordMetric.WebUI.singleton.openUrl(
         "query_playground?sql_query="+query, true);
     };
@@ -316,8 +327,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       "#", "btn", "<i class='fa fa-share'></i> Embed");
     controls_embed.onclick = function(e) {
       e.preventDefault();
-      FnordMetric.util.openPopup(
-        elem, "TODO add embed snippet");
+      FnordMetric.util.embedPopup(elem).render()
     }
 
     secondary_controls.appendChild(controls_query);
