@@ -223,8 +223,11 @@ FnordMetric.views.QueryPlayground = function() {
         "" : query_params.innerViewValue;
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
-  }
 
+    window.attachEvent('onresize', function() {
+      updateLayout()
+    });
+  }
 
   function destroy() {
 

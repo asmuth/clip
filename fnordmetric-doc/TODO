@@ -1,6 +1,5 @@
 
 [ doc ]
-    - frontapge: gif
     - html5 api references
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
@@ -10,16 +9,13 @@
 
 [ frontend ]
     - embed popup
-    - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
     - onunload in query editor
-    - window resize in query editor
     - execution info fix
+    - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
 
 [ release ]
-    - ga js
     - median
-    - last insert should not be zero!
-    - svg: escape series names, labels!
+    - fix mean
 
 -----
 
@@ -100,11 +96,13 @@
     - report with markdown + chartsql
 
 [ bug q ]
+    - svg: escape series names, labels!
     - multiple unnamed select/series should not be merged
     - bug: NAN is not a valid value in SVG
     - SELECT count(*) AS row_count FROM `/osx/load_avg_5m`; --- does not return col name
     - bug: line chart with only negative values
     - bug: 2d area chart with explicit y domain, min > 0
+    - proper last insert on restart
 
 [ refactor q ]
     - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)
