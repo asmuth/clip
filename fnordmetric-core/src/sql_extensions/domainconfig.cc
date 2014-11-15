@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/sql_extensions/domainconfig.h>
 #include <fnordmetric/ui/continuousdomain.h>
+#include <fnordmetric/ui/timedomain.h>
 
 namespace fnordmetric {
 namespace query {
@@ -34,6 +35,13 @@ void DomainConfig::setMin(const SValue& value) {
     return;
   }
 
+  auto time_domain =
+      dynamic_cast<ui::TimeDomain*>(domain_);
+  if (time_domain != nullptr) {
+    time_domain->setMin(value.getValue<fnordmetric::TimeType>());
+    return;
+  }
+
   RAISE(
       kRuntimeError,
       "TypeError: can't set min value for %c domain",
@@ -52,6 +60,13 @@ void DomainConfig::setMax(const SValue& value) {
       dynamic_cast<ui::ContinuousDomain<fnordmetric::FloatType>*>(domain_);
   if (float_domain != nullptr) {
     float_domain->setMax(value.getValue<fnordmetric::FloatType>());
+    return;
+  }
+
+  auto time_domain =
+      dynamic_cast<ui::TimeDomain*>(domain_);
+  if (time_domain != nullptr) {
+    time_domain->setMax(value.getValue<fnordmetric::TimeType>());
     return;
   }
 
