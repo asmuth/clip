@@ -9,13 +9,8 @@
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ frontend ]
-    - clean up sql result view
     - embed popup
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
-    - better error message style
-    - compare with yesterday in metric preview widget
-    - refresh btn in metric preview widget
-
     - onunload in query editor
     - window resize in query editor
     - execution info fix
@@ -34,6 +29,8 @@
     - do I need an external database
 
 [ feature q ]
+    - compare with yesterday in metric preview widget
+    - refresh btn in metric preview widget
     - round fn
     - percentiles
     - metric preview widget: auto refresh (on/off)
