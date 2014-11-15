@@ -201,10 +201,9 @@ FnordMetric.views.QueryPlayground = function() {
       }
     }, false);
 
-    /* in dev mode disabled */
-    /*window.onbeforeunload = function(e) {
+    window.onbeforeunload = function(e) {
       return "You may loose your query when leaving the page.";
-    }*/
+    }
 
 
     result_pane = document.createElement("div");
@@ -219,7 +218,7 @@ FnordMetric.views.QueryPlayground = function() {
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
 
-    window.attachEvent('onresize', function() {
+    window.addEventListener('resize', function() {
       updateLayout()
     });
   }
