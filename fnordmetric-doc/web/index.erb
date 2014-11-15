@@ -18,6 +18,20 @@
         <a class="fancybutton-light" href="/documentation">Read the Documentation &rarr;</a>
       </div>
 
+      <div class="scroll_hint">
+        <div class="ico"><div class="tri"></div></div>
+        Scroll Down
+      </div>
+      <script type="text/javascript">
+        window.onscroll = function (e) {
+          var elem = document.body.querySelector(".scroll_hint");
+          if (window.pageYOffset + window.innerHeight > 900) {
+            elem.className = "scroll_hint hidden";
+          } else {
+            elem.className = "scroll_hint";
+          }
+        }
+      </script>
       <br style="clear:both;" />
   </div>
 </div>
@@ -107,15 +121,21 @@ padding: 8px 10px;">$  fnordmetric-cli --format=svg my_chart_sql_query.sql</code
       competitor, it implements a wire compatible StatsD API.
     </p>
 
-    <img style="margin: 30px;" src="/img/fnordmetric_server_screen.png" width="800" class="shadow" />
+    <div style="width:960px; margin:50px auto 40px auto; height:583px; overflow: hidden;" class="shadow">
+      <video width="960" height="583" autoplay="autoplay" loop>
+        <source src="/fnordmetric-server.mp4" type="video/mp4">
+        <script type="text/javascript">
+          if (!(navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0)) {
+            document.write('<source src="/fnordmetric-server.webm" type="video/webm">');
+          }
+        </script>
+        <img src="/img/fnordmetric_server_screen.png" width="875" />
+      </video>
+    </div>
 
     <p>
       FnordMetric Server can store the collected timeseries data on local disk or
       in external storage (HBase).
-    </p>
-
-    <p>
-      FnordMetric is free software and licensed under the GNU General Public License v3.0
     </p>
 
   </section>
@@ -124,123 +144,15 @@ padding: 8px 10px;">$  fnordmetric-cli --format=svg my_chart_sql_query.sql</code
     <h1 style="margin-bottom: 20px;">Getting Started</h1>
 
     <p>
-      Lebowski ipsum we're scattering the fucking ashes! It's all a goddamn fake.
-      Like Lenin said, look for the person who will benefit. And you will, uh,
-      you know, you'll, uh, you know what I'm trying to say.
+      FnordMetric is free software and licensed under the GNU General Public License v3.0.
+      You can use and modify it according to the terms of the license.
     </p>
-
     <p>
-      And so, Theodore Donald Karabotsos, in accordance with what we think your
-      dying wishes might well have been, we commit your mortal remains to the
-      bosom of the Pacific Ocean, which you loved so well.
+      We have three 5 minute getting started guides and a number of examples for impatient
+      people who don't like reading documentation (like the author). 
     </p>
 
     <a class="fancybutton" href="/examples">See Examples &rarr;</a>
     <a class="fancybutton" href="/documentation">Read the Documentation &rarr;</a>
   </section>
-
-<!--
-  <section>
-    <h1>Examples</h1>
-    <p>
-      An example says more than a thousand words so here is how you generate a
-      few shiny charts using nothing else than plain old SQL.
-    </p>
-    <div class="using_fm">
-      <ul class="fancylist">
-        <li>
-          <h3>Command Line Interface</h3>
-          <p>Lorem ipsum</p>
-        </li>
-        <li>
-          <h3>Web Interface</h3>
-          <p>Lorem ipsum</p>
-        </li>
-        <li>
-          <h3>Language Binding</h3>
-          <p>Lorem ipsum</p>
-        </li>
-        <li>
-          <h3>HTTP API</h3>
-          <p>Lorem ipsum</p>
-        </li>
-      </ul>
-
-      <div class="preview">
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h1>Using FnordMetric</h1>
-    <p>
-      FnordMetric consists of two components: a query engine that executes standard SQL
-      queries against a number of backends and a C++ library that renders SVG charts
-      from plain old data. While you can use each of these components on its own,
-      awesomness ensues when you mash them together. Think peanut butter and jelly.
-    </p>
-    <div class="using_fm">
-      <ul class="fancylist">
-        <li>
-          <h3>Command Line Interface</h3>
-          <p>Lorem ipsum</p>
-        </li>
-        <li>
-          <h3>Web Interface</h3>
-          <p>Lorem ipsum</p>
-        </li>
-        <li>
-          <h3>Language Binding</h3>
-          <p>Lorem ipsum</p>
-        </li>
-        <li>
-          <h3>HTTP API</h3>
-          <p>Lorem ipsum</p>
-        </li>
-      </ul>
-
-      <div class="preview">
-      </div>
-    </div>
-  </section>
-
--->
 </div>
-
-
-<!--
-<p class="biglink"><a href="http://railscasts.com/episodes/378-fnordmetric" target="_blank">Watch the Screencast on Railscasts.com</a></p>
-<hr style="margin-bottom:55px;" />
-
-<div class="code_snippets" style="margin-right:50px;">
-  <div class="title">Render a Timeseries Chart with the HTML5 API</div>
-  <pre class="dark">
-    <code style="overflow:hidden">
-  <span style="color:#d33682;">&lt;div</span>
-    <span style="color:#fff;">data-fnordmetric=</span><span style="color:#dc332f;">"timeseries"</span>
-    <span style="color:#fff;">data-since=</span><span style="color:#dc332f;">"-10minutes"</span>
-    <span style="color:#fff;">data-until=</span><span style="color:#dc332f;">"now"</span>
-    <span style="color:#fff;">data-gauges=</span><span style="color:#dc332f;">"sales_in_euro"</span>
-    <span style="color:#fff;">data-autoupdate=</span><span style="color:#dc332f;">"1"</span>
-    <span style="color:#d33682;">&gt;&lt;/div&gt;</span>
-    </code>
-  </pre>
-  <a href="/documentation/ui_index" class="link">Getting Started with the HTML 5 API &rarr;</a>
-</div>
-<div class="code_snippets">
-
-  <div class="title">Render a Timeseries Chart with the Ruby DSL</div>
-  <pre class="dark">
-    <code>
-  widget 'Sales',
-    <span style="color:#d33682;">:title</span> =&gt; <span style="color:#dc332f;">"Sales in Euro</span>,
-    <span style="color:#d33682;">:gauges</span> =&gt; [<span style="color:#d33682;">:sales_in_euro</span>],
-    <span style="color:#d33682;">:type</span> =&gt; <span style="color:#d33682;">:timeline</span>,
-    <span style="color:#d33682;">:width</span> =&gt; <span style="color:#b58900;">100</span>,
-    <span style="color:#d33682;">:autoupdate</span> =&gt; <span style="color:#b58900;">1</span>
-    </code>
-  </pre>
-  <a href="/documentation/classic_index" class="link">Getting Started with the Ruby DSL &rarr;</a>
-</div>
--->
-

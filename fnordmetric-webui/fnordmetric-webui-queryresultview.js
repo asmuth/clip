@@ -24,8 +24,27 @@ FnordMetric.util.queryResultView = function() {
     var chart_pane = document.createElement("div");
     chart_pane.className = "chart_container";
     chart_pane.setAttribute("id", "chart_container");
+
+    var controls = document.createElement("div");
+    controls.className = "metric_preview_secondary_controls";
+    controls.innerHTML = "<a style='float: left;'>Result Chart</a>"
+    chart_pane.appendChild(controls);
+
+    var controls_embed = FnordMetric.createButton(
+      "#", "btn", "<i class='fa fa-share'></i> Embed");
+    controls.appendChild(controls_embed);
+    controls_embed.onclick = function(e) {
+      e.preventDefault();
+      FnordMetric.util.embedPopup(elem).render()
+    }
+
+    var controls = document.createElement("div");
+
     if (chart != undefined) {
-      chart_pane.innerHTML = chart.svg;
+      var svg = document.createElement("div");
+      svg.className = "svg";
+      svg.innerHTML = chart.svg;
+      chart_pane.appendChild(svg);
     }
     elem.appendChild(chart_pane);
   }
@@ -42,8 +61,18 @@ FnordMetric.util.queryResultView = function() {
   }
 
   function renderTable(table, elem) {
+    var controls = document.createElement("div");
+    controls.className = "metric_preview_secondary_controls";
+    controls.innerHTML = "<a style='float: left;'>Result Table</a>"
+    elem.appendChild(controls);
+
+
+    var table_elem = document.createElement("div");
+    table_elem.className = "result_table";
+    elem.appendChild(table_elem);
+
     var table_view = FnordMetric.util.TableView(
-      table.columns, elem, 5);
+      table.columns, table_elem, 20);
 
     table.rows.map(function(row) {
       table_view.addRow(row);
@@ -68,7 +97,7 @@ FnordMetric.util.queryResultView = function() {
 
   function renderError(msg, elem) {
     var msg_field = document.createElement("div");
-    msg_field.className = "error_field";
+    msg_field.className = "error_box";
     msg_field.innerHTML = msg;
     elem.appendChild(msg_field);
   }

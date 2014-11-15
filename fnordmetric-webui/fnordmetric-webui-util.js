@@ -248,7 +248,7 @@ FnordMetric.util.parseMilliTS = function(ts) {
     return (ts + (ts == 1? " minute" : " minutes"));
   }
 
-  ts = ts / 360000;
+  ts = ts / 3600000;
   return (ts + (ts == 1? " hour" : " hours"));
 }
 
@@ -417,11 +417,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
   var query;
   var draw_stm = 
-    "DRAW LINECHART WITH XDOMAIN FROM_TIMESTAMP(" + 
-    start_time + "), FROM_TIMESTAMP(" + end_time + ")"
-    + " AXIS BOTTOM AXIS LEFT; ";
-  var select_expr = "SELECT time AS x, ";
-  var from_expr = " FROM ";
+    "DRAW LINECHART\n  XDOMAIN\n    FROM_TIMESTAMP(" + 
+    start_time + "),\n    FROM_TIMESTAMP(" + end_time + ")"
+    + "\n  AXIS BOTTOM\n  AXIS LEFT;\n\n";
+  var select_expr = "SELECT\n    time AS x,\n    ";
+  var from_expr = "\n  FROM\n";
   var where_expr = "";
   var group_expr = "";
   var hasAggregation = false;
@@ -431,7 +431,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   if (view == "value") {
     select_expr += "value as y ";
   } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
-    draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
+    draw_stm = "DRAW BARCHART\n  AXIS BOTTOM\n  AXIS LEFT;";
     var func = (view.split("_"))[1];
     //how to define which column should be selected
     var column = (columns[0].length > 0)? 
@@ -453,13 +453,13 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   console.log(select_expr);
 
   /* complete from_expr */
-  from_expr += "`" + table_ref + "`";
+  from_expr += "    `" + table_ref + "`\n";
 
   /*complete where_expr */
   if (start_time != undefined && end_time != undefined) {
     where_expr =
-      " WHERE time > FROM_TIMESTAMP(" + start_time + ")" +
-      " AND time < FROM_TIMESTAMP(" + end_time + ")";
+      "  WHERE\n    time > FROM_TIMESTAMP(" + start_time + ")\n" +
+      "    AND time < FROM_TIMESTAMP(" + end_time + ")";
   }
 
 
@@ -479,13 +479,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
       group_expr+= ")";
 
-      /* fallback if group_by wasn't selected */
-      if (by == undefined && columns != undefined) {
-        group_expr += " BY " + columns[0];
-      }
     }
 
-    if (by != undefined) {
+    if (by != undefined && by.length > 0) {
       hasGroupStm = true;
 
       group_expr += " BY " + by;
@@ -496,6 +492,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       group_expr = "";
     }
   }
+
+  console.log(group_expr);
 
   query = 
     draw_stm + select_expr + from_expr +
@@ -538,14 +536,54 @@ FnordMetric.util.isNavKey = function(keycode) {
     keycode == 46);
 }
 
+
 FnordMetric.util.validatedTimeInput = function (time_input, type) {
-  var input;
+  var input = time_input.value;
+
   time_input.addEventListener('keydown', function(e) {
     if (FnordMetric.util.isNumKey(e.keyCode)) {
-      var input = this.value;
-      //TODO validate input
-      return;
+      var n = String.fromCharCode(e.keyCode);
+      input = time_input.value;
+
+      if (type == "hour") {
+        if (input.length == 0) {
+          if (n >= 0 && n <= 2) {
+            input = n;
+            time_input.value = n;
+          } else{
+            e.preventDefault();
+          }
+        } else if (input.length == 1) {
+          console.log(input);
+          if (input < 2 || (input == 2 && n < 4)) {
+            input = input * 10 + n;
+            time_input.value += n;
+          } else {
+            e.preventDefault();
+          }
+        } else {
+          e.preventDefault();
+        }
+
+      } else if (type == "minute") {
+        if (input.length == 0) {
+          if (n >= 0 && n <= 5) {
+            input = n;
+            time_input.value = n;
+          } else {
+            e.preventDefault();
+          }
+        } else if (input.length == 1) {
+          input = input * 10 + n;
+          time_input.value += n;
+        } else {
+          e.preventDefault();
+        }
+      } else {
+        e.preventDefault();
+      }
     }
+
     if (!FnordMetric.util.isNavKey(e.keyCode)) {
       e.preventDefault();
     }
@@ -554,6 +592,10 @@ FnordMetric.util.validatedTimeInput = function (time_input, type) {
 }
 
 FnordMetric.util.appendLeadingZero = function (num) {
+  var num = num;
+  if (typeof num == 'string') {
+    return (num.length > 1)? num : "0" + num;
+  }
   return (num > 9)? num : "0" + num;
 }
 

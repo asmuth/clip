@@ -5,10 +5,18 @@ Standard SQL makes (moving) window queries over timeseries fairly akward. Since
 these kind of time based rollups are very common when working with timeseries data,
 FnordMetric introduces a new GROUP OVER TIMEWINDOW clause.
 
+---
+
+The syntax for the GROUP OVER TIMEWINDOW clause is:
+
+    GROUP OVER TIMEWINDOW(time_column, window_expr [, step_expr]) [BY ...]
+
+Where `time\_col` is the column that contains the time for each row, `window\_expr`
+is an expression that returns the length of the window in seconds and `step\_expr`
+is an expression that returns the output timestep in seconds.
+
 Here is a simple example that should demonstrate the general concept before we
 dig into the detailed semantics of the GROUP OVER TIMEWINDOW clause:
-
----
 
 _Display the moving average of mymetric's value over a moving 60s window_
 

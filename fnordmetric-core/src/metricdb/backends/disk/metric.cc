@@ -33,7 +33,7 @@ Metric::Metric(
     max_generation_(0),
     live_table_max_size_(kLiveTableMaxSize),
     live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
-    last_insert_(0) {}
+    last_insert_(fnord::util::WallClock::unixMicros()) {} // FIXPAUL
 
 Metric::Metric(
     const std::string& key,
@@ -43,7 +43,7 @@ Metric::Metric(
     file_repo_(file_repo),
     live_table_max_size_(kLiveTableMaxSize),
     live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
-    last_insert_(0) {
+    last_insert_(fnord::util::WallClock::unixMicros()) { // FIXPAUL
   TableRef* head_table = nullptr;
   std::vector<uint64_t> generations;
 

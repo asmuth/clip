@@ -6,7 +6,9 @@ enables you to build beautiful real-time analytics dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
-[ ![Screenshot](https://github.com/paulasmuth/fnordmetric/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
+Demo Video: http://fnordmetric.io/fnordmetric-server.mp4
+
+[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric-dev/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
 #### FnordMetric ChartSQL
@@ -31,6 +33,7 @@ a wire compatible StatsD API.
 FnordMetric Server can store the collected timeseries data on local disk or in
 external storage (HBase).
 
+
 Documentation
 -------------
 
@@ -42,23 +45,25 @@ Contributions
 
 #### Individial Contributors to FnordMetric
 
++ Laura Schlimmer (http://github.com/lauraschlimmer)
 + Christian Parpart (http://github.com/trapni)
- + Simon Menke (http://github.com/fd),
- + Bruno Michel (http://github.com/nono),
- + Marco Borromeo (http://github.com/mborromeo),
- + Leo Lou (http://github.com/l4u)
- + Andy Lindeman (http://github.com/alindeman),
- + Jurriaan Pruis (http://github.com/jurriaan),
- + Kacper Bielecki (http://github.com/kazjote),
- + John Murray (http://github.com/JohnMurray),
- + Lars Gierth (http://github.com/lgierth),
- + Ross Kaffenberger (http://github.com/rossta),
- + Kunal Modi (http://github.com/kunalmodi),
- + Michael Fairchild (http://github.com/fairchild),
- + James Cox (http://github.com/imajes),
- + Pieter Noordhuis (http://github.com/pietern),
- + Tadas Ščerbinskas (http://github.com/tadassce),
- + Sebastian Korfmann (http://github.com/skorfmann)
++ Simon Menke (http://github.com/fd),
++ Bruno Michel (http://github.com/nono),
++ Marco Borromeo (http://github.com/mborromeo),
++ Leo Lou (http://github.com/l4u)
++ Andy Lindeman (http://github.com/alindeman),
++ Jurriaan Pruis (http://github.com/jurriaan),
++ Kacper Bielecki (http://github.com/kazjote),
++ John Murray (http://github.com/JohnMurray),
++ Lars Gierth (http://github.com/lgierth),
++ Ross Kaffenberger (http://github.com/rossta),
++ Kunal Modi (http://github.com/kunalmodi),
++ Michael Fairchild (http://github.com/fairchild),
++ James Cox (http://github.com/imajes),
++ Pieter Noordhuis (http://github.com/pietern),
++ Tadas Ščerbinskas (http://github.com/tadassce),
++ Sebastian Korfmann (http://github.com/skorfmann)
++ Paul Asmuth (http://github.com/paulasmuth)
 
 To contribute, please fork this repository, make your changes and run the 
 specs, commit them to your github repository and send me a pull request.

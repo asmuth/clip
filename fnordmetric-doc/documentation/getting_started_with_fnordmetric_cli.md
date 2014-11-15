@@ -97,7 +97,5 @@ You are now able to execute a simple ChartSQL query from the command line,
 but there is a lot more to discover! These are some good starting points for further reading:
 
   + [Examples](/examples/)
-  + [ChartSQL Query Language](/chartsql/introduction/)
-  + [The DRAW Statement](/documentation/chartsql/draw_statement/)
-  + [External Data Source](/documentation/chartsql/external_data_sources/)
-  + [FnordMetric Server](/documentation/getting_started/fnordmetric-server/)
+  + [The ChartSQL Query Language](/documentation/chartsql/introduction/)
+  + [Getting Started with FnordMetric Server](/documentation/getting_started/fnordmetric-server/)

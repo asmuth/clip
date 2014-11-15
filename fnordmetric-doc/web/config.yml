@@ -101,10 +101,12 @@ documentation:
       #  url: "/query_language/reference"
       -
         title: "Line Charts"
-        url: "/query_language/reference"
+        url: "/chartsql/linecharts"
+        file: "chartsql_linecharts"
       -
         title: "Point Charts"
-        url: "/query_language/reference"
+        url: "/chartsql/pointcharts"
+        file: "chartsql_pointcharts"
       -
         title: "Area Charts"
         url: "/query_language/reference"

@@ -1,28 +1,14 @@
-
 [ doc ]
-    - frontapge: gif
-    - readme for gh
     - html5 api references
-    - frontpage: example query result
-    - dashboard api reference
-    - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
-    - pictures in getting started server
     - chart 2d/3d signature doc
-    - all the doc links
-    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ frontend ]
-    - clean up sql result view
-    - syntax highlighting
     - embed popup
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
-    - better error message style
-    - compare with yesterday in metric preview widget
-    - metric preview widget: auto refresh (on/off)
 
 [ release ]
-    - functions: round, median, percentile
-    - svg: escape series names, labels!
+    - median
+    - fix mean
 
 -----
 
@@ -30,12 +16,18 @@
     - how do i set the line color
     - can i use fnordmetric with external data
     - do I need an external database
+    - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
 
 [ feature q ]
+    - compare with yesterday in metric preview widget
+    - refresh btn in metric preview widget
+    - round fn
+    - percentiles
+    - metric preview widget: auto refresh (on/off)
     - version numbers
     - deb pkg
     - homebrew pkg
-    - doc: interactive queries
+    - doc: interactive charts
     - ruby client + doc
     - javascript client + doc
     - make query editor split draggable/resizable
@@ -98,10 +90,13 @@
     - report with markdown + chartsql
 
 [ bug q ]
+    - svg: escape series names, labels!
+    - multiple unnamed select/series should not be merged
     - bug: NAN is not a valid value in SVG
     - SELECT count(*) AS row_count FROM `/osx/load_avg_5m`; --- does not return col name
     - bug: line chart with only negative values
     - bug: 2d area chart with explicit y domain, min > 0
+    - proper last insert on restart
 
 [ refactor q ]
     - refactor nextRow(SValue* row, size_t len) -> nextRow(RowType) (std::vector<SValue>)

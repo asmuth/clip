@@ -495,10 +495,11 @@ input {
 }
 
 .result_pane .chart_container {
-  margin-top: 30px;
   text-align:center;
-  padding: 0px 15px;
-  margin-bottom: 70px;
+}
+
+.result_pane .chart_container .svg {
+  padding: 20px 10px;
 }
 
 .error_box {
@@ -542,11 +543,16 @@ input {
 
 .pagination_navbar .pagination_tooltip {
   text-align: center;
-  font-weight: bold;
-  border-radius: 2px;
-  border: 1px solid rgba(0,0,0,0.1);
-  background: linear-gradient(to bottom right, #f5f5f5, #f1f1f1);
-  padding: 0 5px;
+  font-weight: 500;
+  padding: 0 7px;
+}
+
+.pagination_navbar .pagination_tooltip:hover {
+  color: #009fe9;
+}
+
+.pagination_navbar .pagination_tooltip i.fa {
+  font-size:90%;
 }
 
 .pagination_navbar #tooltip_back.pagination_tooltip {
@@ -558,6 +564,36 @@ input {
   margin: auto;
   margin-top: -40px;
   right: 10px;
+}
+
+.pagination_navbar.metric.bottom {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.result_table .pagination_navbar {
+  font-size: 90%;
+  margin-top: -33px;
+}
+
+.result_table .metric_list {
+  margin-top: 0;
+}
+
+.result_table table.metric_list tr.list_header {
+  border-top: none;
+  border-bottom: 1px solid #dbdedf;
+}
+
+.result_table table.metric_list th, .result_table table.metric_list td {
+  height: 34px;
+  line-height: 34px;
+  font-size: 100%;
+}
+
+.result_pane .chart_container a.btn {
+  float: right;
+  margin-right: 0;
 }
 
 .result_pane table.result_table {
@@ -682,6 +718,10 @@ input {
 
 .datepicker_widget table td.highlight {
   background-color: rgb(226, 232, 237);
+}
+
+.datepicker_widget table td.highlight_border {
+  border: 1px solid #444;
 }
 
 .datepicker_widget .month_ttp {
@@ -813,9 +853,9 @@ table.metric_list tr:hover td {
 }
 
 .info_field {
-  font-style: italic;
-  position: absolute;
-  left: 5px;
+  margin: 20px 10px;
+  text-align: center;
+  font-size: 90%;
 }
 
 .popup_ui.background {
@@ -845,8 +885,8 @@ table.metric_list tr:hover td {
 }
 
 .popup_ui .controls {
-  margin-top: 10px;
-  margin-left: 50px;
+  padding-left: 50px;
+  height: 50px;
   text-align:center;
 }
 
@@ -1074,6 +1114,10 @@ h1.page_header em {
 
 .metric_preview_controls .group.groupby a.disabled:hover {
   cursor: default;
+}
+
+.metric_preview_controls .group.groupby a.active {
+  background: rgb(226, 232, 237);
 }
 
 .metric_preview_controls .group b {

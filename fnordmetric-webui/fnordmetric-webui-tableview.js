@@ -17,7 +17,7 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.TableView = function(columns, elem, per_page) {
+FnordMetric.util.TableView = function(columns, elem, per_page, pagination_pos) {
   var all_rows = [];
   var on_row_click = null;
 
@@ -35,8 +35,13 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     pages = Math.ceil(all_rows.length / per_page);
     var offset = current_page * per_page;
     var until = Math.min(offset + per_page, all_rows.length);
-    renderPagination(offset+1,until, all_rows.length, isSortable);
+    if (pagination_pos != "bottom") {
+      renderPagination(offset+1,until, all_rows.length, isSortable);
+    }
     renderTable(all_rows.slice(offset, until), isSortable);
+    if (pagination_pos == "bottom") {
+      renderPagination(offset+1,until, all_rows.length, isSortable);
+    }
   }
 
   function updatePage(page_index, isSortable) {
@@ -107,28 +112,28 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
 
   function renderPagination(from, until, total, isSortable) {
     var navbar = document.createElement("div");
-    navbar.className = "pagination_navbar metric";
+    navbar.className = "pagination_navbar metric " + pagination_pos;
 
     var ttp_forward = FnordMetric.createButton(
-      "#", "pagination_tooltip", "&#8594;");
+      "#", "pagination_tooltip", "<i class='fa fa-chevron-right'></i>");
     navbar.appendChild(ttp_forward);
     ttp_forward.onclick = function(e) {
       e.preventDefault();
       updatePage((current_page + 1) % pages, isSortable);
     }
 
+    var label = document.createElement("div");
+    label.className = "pagination_label";
+    label.innerHTML = from + " - " + until + " of " + total;
+    navbar.appendChild(label);
+
     var ttp_back = FnordMetric.createButton(
-      "#", "pagination_tooltip",  "&#8592;");
+      "#", "pagination_tooltip",  "<i class='fa fa-chevron-left'></i>");
     ttp_back.onclick = function(e) {
       e.preventDefault();
       updatePage((current_page + pages - 1) % pages, isSortable);
     }
     navbar.appendChild(ttp_back);
-
-    var label = document.createElement("div");
-    label.className = "pagination_label";
-    label.innerHTML = from + " - " + until + " of " + total;
-    navbar.appendChild(label);
 
     elem.appendChild(navbar);
   }

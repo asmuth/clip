@@ -38,18 +38,13 @@ FnordMetric.views.QueryPlayground = function() {
   var button_bar;
 
   function renderExecutionInfo(duration, tables, elem) {
-    if (tables == undefined) {return;}
-    if (elem.lastChild.className == "info_field") {
-      elem.removeChild(elem.lastChild);
-    }
     var info_field = document.createElement("div");
     info_field.className = "info_field";
     var duration = FnordMetric.util.parseMilliTS(duration);
     var rows = FnordMetric.util.humanCountRows(tables);
     info_field.innerHTML =
-      "The execution took " + duration + 
+      "Query execution took " + duration + 
       " and returned " + rows;
-    info_field.style.top = elem.offsetHeight + "px";
     elem.appendChild(info_field);
   }
 
@@ -58,7 +53,7 @@ FnordMetric.views.QueryPlayground = function() {
     var error_box = document.createElement("div");
     error_box.className = "error_box";
     error_box.innerHTML = 
-      "Oopps. FnordMetric Server encountered an error. " + "<br>" + 
+      "Sorry, FnordMetric Server encountered an error. " + "<br>" + 
       "If you believe this is a bug in FnordMetric Server "+
       "please report an issue at github.com/.../issues.";
     elem.appendChild(error_box);
@@ -72,6 +67,10 @@ FnordMetric.views.QueryPlayground = function() {
         innerView : urlName[view],
         innerViewValue : query_str};
       FnordMetric.util.setURLQueryString("query_playground", params, true, true);
+    }
+
+    if (query_str.length < 3) {
+      return;
     }
 
     FnordMetric.util.displayLoader(result_pane);
@@ -202,10 +201,9 @@ FnordMetric.views.QueryPlayground = function() {
       }
     }, false);
 
-    /* in dev mode disabled */
-    /*window.onbeforeunload = function(e) {
+    window.onbeforeunload = function(e) {
       return "You may loose your query when leaving the page.";
-    }*/
+    }
 
 
     result_pane = document.createElement("div");
@@ -219,8 +217,11 @@ FnordMetric.views.QueryPlayground = function() {
         "" : query_params.innerViewValue;
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
-  }
 
+    window.addEventListener('resize', function() {
+      updateLayout()
+    });
+  }
 
   function destroy() {
 

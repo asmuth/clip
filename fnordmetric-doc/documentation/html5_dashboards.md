@@ -78,4 +78,4 @@ page displaying a simple line chart.
 <img src="/img/fnordmetric_ui_example_screen.png" width="800" style="margin: 20px 0 40px 0;" class="shadow" />
 <br />
 
-Have a look at the full [API Reference](/documentation/ui_html5_api) to see what else is possible.
+Have a look at the full [API Reference](/documentation/html5_api_reference/) to see what else is possible.
