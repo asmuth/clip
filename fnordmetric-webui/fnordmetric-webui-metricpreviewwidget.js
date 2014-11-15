@@ -246,7 +246,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         "5 minutes",
         "15 minutes",
         "30 minutes",
-        "1 hour"];
+        "1 hour",
+        "4 hours",
+        "12 hours",
+        "1 day"];
 
     timespans.map(function(timespan) {
       var option = document.createElement("option");
