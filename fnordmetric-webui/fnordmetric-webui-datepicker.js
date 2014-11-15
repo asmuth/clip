@@ -25,13 +25,10 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   var curr_date = new Date().getDate();
   var curr_month = new Date().getMonth();
 
-  var selected_ts = new Date(
-    parseInt(dp_input.getAttribute("id"), 10));
+  var selected_ts;
   //var selected_day = selected_ts.getDate();
-  var selected_hours = 
-    FnordMetric.util.appendLeadingZero(selected_ts.getHours());
-  var selected_minutes = 
-    FnordMetric.util.appendLeadingZero(selected_ts.getMinutes());
+  var selected_hours;
+  var selected_minutes;
 
   var human_days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
@@ -65,6 +62,18 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   function init(month, year) {
     dp_widget.className = "datepicker_widget active";
     isCurrMonth = month == curr_month;
+
+    selected_ts = new Date(
+      parseInt(dp_input.getAttribute("id"), 10));
+
+    selected_hours =
+      FnordMetric.util.appendLeadingZero(
+        selected_ts.getHours());
+
+    selected_minutes = 
+      FnordMetric.util.appendLeadingZero(
+        selected_ts.getMinutes());
+
 
     var input_container = document.createElement("div");
     input_container.className = "input_container";
