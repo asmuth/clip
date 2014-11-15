@@ -20,7 +20,6 @@
     - embed as iframe
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
     - make editr split draggable/resizable
-    - vertical hover line in chartextensions
     - better error message style
     - compare with yesterday in metric preview widget
     - metric preview widget: auto refresh (on/off)
@@ -44,6 +43,7 @@
     - do I need an external database
 
 [ feature q ]
+    - vertical hover line in chartextensions
     - sql time helpers (1hour, etc)
     - support red/green/blue colors
     - max threads in takscheduler?

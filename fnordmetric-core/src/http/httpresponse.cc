@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/http/httpresponse.h>
+#include <fnordmetric/http/httpoutputstream.h>
 
 namespace fnord {
 namespace http {
@@ -23,6 +24,25 @@ void HTTPResponse::setStatus(int status_code, const std::string& status) {
 
 void HTTPResponse::setStatus(const HTTPStatus& status) {
   setStatus(status.code, status.name);
+}
+
+void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
+  setHeader("Content-Length", std::to_string(body_.size()));
+  output->writeStatusLine(version_, status_code_, status_);
+  output->writeHeaders(headers_);
+  output->getOutputStream()->write(body_);
+}
+
+void HTTPResponse::populateFromRequest(const HTTPRequest& request) {
+  setVersion(request.getVersion());
+
+  if (request.getVersion() == "HTTP/1.0") {
+    if (request.keepalive()) {
+      addHeader("Connection", "keep-alive");
+    } else {
+      addHeader("Connection", "close");
+    }
+  }
 }
 
 }

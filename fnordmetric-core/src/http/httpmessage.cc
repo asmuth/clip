@@ -63,10 +63,12 @@ const std::string& HTTPMessage::getBody() const {
 
 void HTTPMessage::addBody(const std::string& body) {
   body_ = body;
+  setHeader("Content-Length", std::to_string(body.size()));
 }
 
 void HTTPMessage::clearBody() {
   body_.clear();
+  // FIXPAUL remove Content-Length header
 }
 
 std::unique_ptr<InputStream> HTTPMessage::getBodyInputStream() const {
