@@ -1,13 +1,13 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
+#include <algorithm>
 #include <stdlib.h>
 #include <assert.h>
 #include <string>
@@ -20,7 +20,17 @@ namespace query {
 void SymbolTable::registerSymbol(
     const std::string& symbol,
     void (*method)(void*, int, SValue*, SValue*)) {
-  symbols_.emplace(std::make_pair(symbol, SymbolTableEntry(symbol, method)));
+  std::string symbol_downcase = symbol;
+  std::transform(
+      symbol_downcase.begin(),
+      symbol_downcase.end(),
+      symbol_downcase.begin(),
+      ::tolower);
+
+  symbols_.emplace(
+      std::make_pair(
+          symbol_downcase,
+          SymbolTableEntry(symbol_downcase, method)));
 }
 
 void SymbolTable::registerSymbol(
@@ -28,15 +38,33 @@ void SymbolTable::registerSymbol(
     void (*method)(void*, int, SValue*, SValue*),
     size_t scratchpad_size,
     void (*free_method)(void*)) {
+  std::string symbol_downcase = symbol;
+  std::transform(
+      symbol_downcase.begin(),
+      symbol_downcase.end(),
+      symbol_downcase.begin(),
+      ::tolower);
+
   symbols_.emplace(
       std::make_pair(
-          symbol,
-          SymbolTableEntry(symbol, method, scratchpad_size, free_method)));
+          symbol_downcase,
+          SymbolTableEntry(
+              symbol_downcase,
+              method,
+              scratchpad_size,
+              free_method)));
 }
 
 SymbolTableEntry const* SymbolTable::lookupSymbol(const std::string& symbol)
     const {
-  auto iter = symbols_.find(symbol);
+  std::string symbol_downcase = symbol;
+  std::transform(
+      symbol_downcase.begin(),
+      symbol_downcase.end(),
+      symbol_downcase.begin(),
+      ::tolower);
+
+  auto iter = symbols_.find(symbol_downcase);
 
   if (iter == symbols_.end()) {
     RAISE(kRuntimeError, "symbol not found: %s", symbol.c_str());

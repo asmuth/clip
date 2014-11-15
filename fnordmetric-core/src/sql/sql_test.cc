@@ -918,6 +918,16 @@ TEST_CASE(SQLTest, TestSimpleAggregateFromCSV, [] () {
   EXPECT_EQ(std::stof(results->getRow(0)[0]), 74209240);
 });
 
+TEST_CASE(SQLTest, TestCaseInsensitiveFunctionNames, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    sUM(gbp) as global_gbp"
+      "  FROM"
+      "    gbp_per_country;");
+
+  EXPECT_EQ(std::stof(results->getRow(0)[0]), 74209240);
+});
+
 TEST_CASE(SQLTest, TestSimpleOrderByAsc, [] () {
   auto results = executeTestQuery(
       "  SELECT"
