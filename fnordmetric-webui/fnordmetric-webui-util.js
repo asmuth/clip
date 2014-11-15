@@ -431,23 +431,27 @@ FnordMetric.util.milliSecondsToTimeString = function(seconds) {
 /* in singleMetricView */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
   //FIX html escape 
+  var table_ref = params.innerViewValue
+  var view = params.view;
+  /* column for rollups */
+  var columns = params.columns.split(",");; 
+  var start_time = Math.round(params.start_time / 1000);
+  var end_time = Math.round(params.end_time / 1000);
+  var t_step = params.t_step;
+  var t_window = params.t_window;
+  var by = params.by;
+
   var query;
-  var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";
+  var draw_stm = 
+    "DRAW LINECHART WITH XDOMAIN FROM_TIMESTAMP(" + 
+    start_time + "), FROM_TIMESTAMP(" + end_time + ")"
+    + " AXIS BOTTOM AXIS LEFT; ";
   var select_expr = "SELECT time AS x, ";
   var from_expr = " FROM ";
   var where_expr = "";
   var group_expr = "";
   var hasAggregation = false;
 
-  var table_ref = params.innerViewValue
-  var view = params.view;
-  /* column for rollups */
-  var columns = params.columns.split(",");; 
-  var start_time = params.start_time;
-  var end_time = params.end_time;
-  var t_step = params.t_step;
-  var t_window = params.t_window;
-  var by = params.by;
 
   /* complete select_expr */
   if (view == "value") {
@@ -455,11 +459,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   } else if (view == "rollup_sum" || view == "rollup_count") {
     draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
     var func = (view.split("_"))[1];
-    //how to choose a column if there are more than one? 
+    //how to define which column should be selected
     select_expr = 
       " SELECT `" + columns[0] + "` AS X, " + func + "(value) AS Y";
 
-    //hasAggregation = true; ??
+    hasAggregation = true;
   } else {
     select_expr +=
       view.toLowerCase() + "(value) AS Y";
@@ -470,12 +474,10 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   from_expr += "`" + table_ref + "`";
 
   /*complete where_expr */
-  //is there any case in single metric view where only start or endtime are selected?
   if (start_time != undefined && end_time != undefined) {
-    //what to use in place of FROM_TIMESTAMP
     where_expr =
-      " WHERE time > FROM_TIMESTAMP(" + Math.round(start_time / 1000) + ")" +
-      " AND time < FROM_TIMESTAMP(" + Math.round(end_time / 1000) + ")";
+      " WHERE time > FROM_TIMESTAMP(" + start_time + ")" +
+      " AND time < FROM_TIMESTAMP(" + end_time + ")";
   }
 
 
@@ -504,7 +506,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     if (by != undefined) {
       hasGroupStm = true;
 
-      //check by format
       group_expr += "BY " + by;
     }
 
