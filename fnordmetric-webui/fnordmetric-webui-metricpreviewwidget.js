@@ -53,7 +53,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   /* checks if required url params are misssing and adds those if so */
   function addRequiredURLParamsForView(value) {
-    if (value == "count" || value == "sum" || value == "mean") {
+    if (value != "value") {
       var group_by = query_params.by;
       if (group_by == undefined) {
         group_by = defaults.by;
@@ -96,7 +96,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   function runQuery() {
     var querystr = 
       FnordMetric.util.generateSQLQueryFromParams(query_params);
-
     var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
     FnordMetric.util.displayLoader(chart_container);
     table_container.innerHTML = "";
@@ -138,7 +137,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       tw_select.disabled = false;
       step_select.className = "";
       step_select.disabled = false;
-      var by_str = query_params.by;
+      var by_str = (query_params.by == undefined)?
+        "" : query_params.by;
       group_btns.map(function(btn) {
         if (by_str.indexOf(btn.innerText) > -1) {
           btn.className = "active";

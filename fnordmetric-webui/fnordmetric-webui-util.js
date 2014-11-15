@@ -471,13 +471,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
       group_expr+= ")";
 
-      /* fallback if group_by wasn't selected */
-      if (by == undefined && columns != undefined) {
-        group_expr += " BY " + columns[0];
-      }
     }
 
-    if (by != undefined) {
+    if (by != undefined && by.length > 0) {
       hasGroupStm = true;
 
       group_expr += " BY " + by;
@@ -488,6 +484,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       group_expr = "";
     }
   }
+
+  console.log(group_expr);
 
   query = 
     draw_stm + select_expr + from_expr +
