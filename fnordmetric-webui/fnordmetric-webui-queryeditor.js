@@ -68,7 +68,10 @@ FnordMetric.views.QueryPlayground = function() {
   function runQuery(result_pane, editor_pane, view, query_str) {
     if (query_str == undefined) {
       query_str = editorViews[view].getQuery();
-      FnordMetric.util.setURLQueryString(urlName[view], query_str, true);
+      var params = {
+        innerView : urlName[view],
+        innerViewValue : query_str};
+      FnordMetric.util.setURLQueryString("query_playground", params, true, true);
     }
 
     FnordMetric.util.displayLoader(result_pane);
@@ -91,7 +94,7 @@ FnordMetric.views.QueryPlayground = function() {
   function renderEditorView(view, editor_pane, result_pane, query) {
     editorViews[view].render(editor_pane, query);
     editor_pane.insertBefore(button_bar, editor_pane.firstChild);
-    if (query != undefined) {
+    if (query != null && query != undefined) {
       runQuery(result_pane, editor_pane, view, query);
     }
   }
@@ -150,7 +153,6 @@ FnordMetric.views.QueryPlayground = function() {
         direction = "horizontal"
       }
       updateLayout();
-      console.log("change view");
     }
 
     var refresh_btn = document.createElement("i");
@@ -211,10 +213,10 @@ FnordMetric.views.QueryPlayground = function() {
     viewport.appendChild(result_pane);
 
     updateLayout(editor_pane, result_pane, direction);
-
-    if (query_params != undefined) {
+    if ('innerView' in query_params) {
       current_view = urlName[query_params.innerView];
-      query = query_params.innerviewValue;
+      query = (query_params.innerViewValue == "undefined") ? 
+        "" : query_params.innerViewValue;
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
   }
