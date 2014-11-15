@@ -19,6 +19,7 @@
     - compare with yesterday in metric preview widget
     - refresh btn in metric preview widget
     - onunload in quert editor
+    - window resize in query editor
 
 [ release ]
     - functions: round, median, percentile

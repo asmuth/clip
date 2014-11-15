@@ -110,7 +110,7 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     navbar.className = "pagination_navbar metric";
 
     var ttp_forward = FnordMetric.createButton(
-      "#", "pagination_tooltip", "&#8594;");
+      "#", "pagination_tooltip", "<i class='fa fa-chevron-right'></i>");
     navbar.appendChild(ttp_forward);
     ttp_forward.onclick = function(e) {
       e.preventDefault();
@@ -123,7 +123,7 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
     navbar.appendChild(label);
 
     var ttp_back = FnordMetric.createButton(
-      "#", "pagination_tooltip",  "&#8592;");
+      "#", "pagination_tooltip",  "<i class='fa fa-chevron-left'></i>");
     ttp_back.onclick = function(e) {
       e.preventDefault();
       updatePage((current_page + pages - 1) % pages, isSortable);
