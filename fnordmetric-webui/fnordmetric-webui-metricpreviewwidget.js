@@ -138,8 +138,13 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       tw_select.disabled = false;
       step_select.className = "";
       step_select.disabled = false;
+      var by_str = query_params.by;
       group_btns.map(function(btn) {
-        btn.className = "";
+        if (by_str.indexOf(btn.innerText) > -1) {
+          btn.className = "active";
+        } else {
+          btn.className = "";
+        }
       });
     }
 
@@ -407,7 +412,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
           var index = selected_columns.indexOf(c);
 
           if (index == -1) {
-            this.className = "selected";
+            this.className = "active";
             if (selected_columns.length > 0) {
               selected_columns += ",";
             }
