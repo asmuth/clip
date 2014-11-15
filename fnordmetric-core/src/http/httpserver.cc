@@ -62,6 +62,12 @@ public:
         request->unparsedMethod(),
         request->unparsedUri());
 
+    xzero::Buffer body_buf;
+    request->input()->read(&body_buf);
+    if (!body_buf.empty()) {
+      req->addBody(body_buf.str());
+    }
+
     for (const auto& handler : *handlers_) {
       if (handler->handleHTTPRequest(req, res)) {
         break;
