@@ -100,7 +100,14 @@ void HTTPAPI::insertSample(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     util::URI* uri) {
-  auto params = uri->queryParams();
+  const auto& postbody = request->getBody();
+  util::URI::ParamList params;
+
+  if (postbody.size() > 0) {
+    util::URI::parseQueryString(postbody, &params);
+  } else {
+    params = uri->queryParams();
+  }
 
   std::string metric_key;
   if (!util::URI::getParam(params, "metric", &metric_key)) {

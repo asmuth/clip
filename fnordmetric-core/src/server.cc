@@ -76,9 +76,14 @@ static IMetricRepository* openBackend(
 }
 
 static int startServer() {
-  fnord::thread::ThreadPool thread_pool(
+  fnord::thread::ThreadPool server_pool(
       std::unique_ptr<fnord::util::ExceptionHandler>(
           new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
+
+  fnord::thread::ThreadPool worker_pool(
+      std::unique_ptr<fnord::util::ExceptionHandler>(
+          new fnord::util::CatchAndPrintExceptionHandler(
+              fnordmetric::env()->logger())));
 
   if (env()->flags()->isSet("datadir")) {
     auto datadir = env()->flags()->getString("datadir");
@@ -104,7 +109,7 @@ static int startServer() {
 
   auto metric_repo = openBackend(
       env()->flags()->getString("storage_backend"),
-      &thread_pool);
+      &server_pool);
 
   /* statsd server */
   if (env()->flags()->isSet("statsd_port")) {
@@ -115,7 +120,7 @@ static int startServer() {
         port);
 
     auto statsd_server =
-        new StatsdServer(metric_repo, &thread_pool, &thread_pool);
+        new StatsdServer(metric_repo, &server_pool, &worker_pool);
     statsd_server->listen(port);
   }
 
@@ -127,7 +132,10 @@ static int startServer() {
         "Starting HTTP server on port %i",
         port);
 
-    auto http_server = new fnord::http::HTTPServer(&thread_pool);
+    auto http_server = new fnord::http::HTTPServer(
+        &server_pool,
+        &worker_pool);
+
     http_server->addHandler(AdminUI::getHandler());
     http_server->addHandler(
         std::unique_ptr<http::HTTPHandler>(new HTTPAPI(metric_repo)));

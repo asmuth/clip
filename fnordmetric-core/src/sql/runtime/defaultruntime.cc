@@ -30,6 +30,36 @@ DefaultRuntime::DefaultRuntime() {
       expressions::sumExprScratchpadSize(),
       &expressions::sumExprFree);
 
+  symbol_table_.registerSymbol(
+      "mean",
+      &expressions::meanExpr,
+      expressions::meanExprScratchpadSize(),
+      &expressions::meanExprFree);
+
+  symbol_table_.registerSymbol(
+      "avg",
+      &expressions::meanExpr,
+      expressions::meanExprScratchpadSize(),
+      &expressions::meanExprFree);
+
+  symbol_table_.registerSymbol(
+      "average",
+      &expressions::meanExpr,
+      expressions::meanExprScratchpadSize(),
+      &expressions::meanExprFree);
+
+  symbol_table_.registerSymbol(
+      "min",
+      &expressions::minExpr,
+      expressions::minExprScratchpadSize(),
+      &expressions::minExprFree);
+
+  symbol_table_.registerSymbol(
+      "max",
+      &expressions::maxExpr,
+      expressions::maxExprScratchpadSize(),
+      &expressions::maxExprFree);
+
   /* expressions/boolean.h */
   symbol_table_.registerSymbol("eq", &expressions::eqExpr);
   symbol_table_.registerSymbol("neq", &expressions::neqExpr);

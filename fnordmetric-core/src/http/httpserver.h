@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -23,15 +23,19 @@ using fnord::thread::TaskScheduler;
 class HTTPServer {
 public:
   HTTPServer(
+      TaskScheduler* server_scheduler,
       TaskScheduler* request_scheduler);
 
   void addHandler(std::unique_ptr<HTTPHandler> handler);
   void listen(int port);
 
 protected:
-  void listenOrCrash(int port);
+  void accept();
+  void handleConnection(int fd) const;
   std::vector<std::unique_ptr<HTTPHandler>> handlers_;
+  TaskScheduler* server_scheduler_;
   TaskScheduler* request_scheduler_;
+  int ssock_;
 };
 
 }

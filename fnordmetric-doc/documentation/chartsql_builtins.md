@@ -6,10 +6,19 @@ Aggregate Functions
 -------------------
 
 #### sum(expr)
-Return the sum of all values in the result set.
+Returns the sum of all values in the result set.
 
 #### count(expr)
-Return the number of values in the result set
+Returns the number of values in the result set
+
+#### mean(expr)
+Returns the mean/average of values in the result set
+
+#### min(expr)
+Returns the min of values in the result set
+
+#### max(expr)
+Returns the max of values in the result set
 
 
 Boolean Functions

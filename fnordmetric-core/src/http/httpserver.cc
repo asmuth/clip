@@ -8,151 +8,141 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
+#include <fnordmetric/http/httpinputstream.h>
+#include <fnordmetric/http/httpoutputstream.h>
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/wallclock.h>
-#include <xzero/TimeSpan.h>
-#include <xzero/http/HttpRequest.h>
-#include <xzero/http/HttpResponse.h>
-#include <xzero/http/HttpService.h>
-#include <xzero/executor/ThreadedExecutor.h>
-#include <xzero/net/IPAddress.h>
-#include <xzero/net/InetConnector.h>
-#include <xzero/support/libev/LibevScheduler.h>
-#include <xzero/support/libev/LibevSelector.h>
-#include <xzero/support/libev/LibevClock.h>
-#include <ev++.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <string.h>
+#include <unistd.h>
+
+using fnordmetric::util::FileInputStream;
+using fnordmetric::util::FileOutputStream;
+using fnordmetric::util::RuntimeException;
 
 namespace fnord {
 namespace http {
 
-class X0Adapter : public xzero::HttpService::Handler {
-public:
+HTTPServer::HTTPServer(
+    TaskScheduler* server_scheduler,
+    TaskScheduler* request_scheduler) :
+    server_scheduler_(server_scheduler),
+    request_scheduler_(request_scheduler) {}
 
-  X0Adapter(
-      std::vector<std::unique_ptr<HTTPHandler>>* handlers,
-      xzero::support::LibevScheduler* x0_scheduler,
-      fnord::thread::TaskScheduler* request_scheduler) :
-      handlers_(handlers),
-      x0_scheduler_(x0_scheduler),
-      request_scheduler_(request_scheduler) {}
-
-  bool handleRequest(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response) override {
-
-    auto async_handler = std::bind(
-        &X0Adapter::handleRequestAsync,
-        this,
-        request,
-        response);
-
-    request_scheduler_->run(thread::Task::create(async_handler));
-
-    return true;
-  }
-
-  void handleRequestAsync(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response) {
-    auto res = new fnord::http::HTTPResponse();
-    auto req = new fnord::http::HTTPRequest(
-        request->unparsedMethod(),
-        request->unparsedUri());
-
-    xzero::Buffer body_buf;
-    request->input()->read(&body_buf);
-    if (!body_buf.empty()) {
-      req->addBody(body_buf.str());
-    }
-
-    for (const auto& handler : *handlers_) {
-      if (handler->handleHTTPRequest(req, res)) {
-        break;
-      }
-    }
-
-    x0_scheduler_->execute([request, response, req, res] () {
-      response->setStatus((xzero::HttpStatus) res->statusCode());
-
-      for (const auto hdr : res->getHeaders()) {
-        response->addHeader(hdr.first, hdr.second);
-      }
-
-      const auto& body = res->getBody();
-      response->setContentLength(body.size());
-      response->output()->write(
-          body,
-          std::bind(&xzero::HttpResponse::completed, response));
-
-      delete res;
-      delete req;
-    });
-  }
-
-protected:
-  std::vector<std::unique_ptr<HTTPHandler>>* handlers_;
-  xzero::support::LibevScheduler* x0_scheduler_;
-  fnord::thread::TaskScheduler* request_scheduler_;
-};
 
 void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
   handlers_.emplace_back(std::move(handler));
 }
 
-HTTPServer::HTTPServer(
-    TaskScheduler* request_scheduler) :
-    request_scheduler_(request_scheduler) {}
-
 void HTTPServer::listen(int port) {
-  auto last_crash = util::WallClock::unixMillis();
+  ssock_ = socket(AF_INET, SOCK_STREAM, 0);
+  if (ssock_ == 0) {
+    RAISE(kIOError, "create socket() failed");
+  }
 
-start_x0:
+  int opt = 1;
+  if (setsockopt(ssock_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+    RAISE_ERRNO(kIOError, "setsockopt(SO_REUSEADDR) failed");
+    return;
+  }
 
-  try {
-    listenOrCrash(port);
-  } catch (fnordmetric::util::RuntimeException& e) {
-    fnordmetric::env()->logger()->printf(
-        "ERROR",
-        "HTTP server crashed: %s",
-        e.getMessage().c_str());
+  struct sockaddr_in addr;
+  memset((char *) &addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
+  addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  addr.sin_port = htons(port);
+  if (::bind(ssock_, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+    RAISE_ERRNO(kIOError, "bind() failed");
+  }
 
-    if (util::WallClock::unixMillis() - last_crash < 30000) {
-      fnordmetric::env()->logger()->printf(
-          "ERROR",
-          "HTTP server crashing too fast, aborting");
+  if (::listen(ssock_, 1024) == -1) {
+    RAISE_ERRNO(kIOError, "listen() failed");
+    return;
+  }
 
-      throw;
-    } else {
-      fnordmetric::env()->logger()->printf("INFO", "Restarting HTTP server");
-      last_crash = util::WallClock::unixMillis();
-      goto start_x0;
+  accept();
+  //server_scheduler_->run(
+  //    thread::Task::create(std::bind(&HTTPServer::accept, this)));
+}
+
+void HTTPServer::accept() {
+  for (;;) {
+    int conn_fd = ::accept(ssock_, NULL, NULL);
+
+    if (conn_fd < 0) {
+      RAISE_ERRNO(kIOError, "accept() failed");
     }
+
+    request_scheduler_->run(
+        thread::Task::create(
+            std::bind(&HTTPServer::handleConnection, this, conn_fd)));
   }
 }
 
-void HTTPServer::listenOrCrash(int port) {
-  xzero::IPAddress bind("0.0.0.0");
-  xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
-  xzero::HttpService http;
-  ::ev::loop_ref loop = ::ev::default_loop(0);
-  xzero::support::LibevScheduler scheduler(loop);
-  xzero::support::LibevSelector selector(loop);
-  xzero::support::LibevClock clock(loop);
-
-  auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
-                                 idle, bind, port);
-  inet->setBlocking(false);
-
-  X0Adapter adapter(&handlers_, &scheduler, request_scheduler_);
-  http.addHandler(&adapter);
-  http.start();
-
-  for (;;) {
-    selector.select();
+void HTTPServer::handleConnection(int fd) const {
+  if (fnordmetric::env()->verbose()) {
+    fnordmetric::env()->logger()->printf(
+        "DEBUG",
+        "New HTTP connection on fd %i",
+        fd);
   }
+
+  bool keepalive = false;
+
+  FileInputStream input_stream(fd, true);
+  FileOutputStream output_stream(fd, true);
+
+  do {
+    HTTPRequest request;
+    HTTPResponse response;
+
+    keepalive = false;
+    try {
+      HTTPInputStream http_input_stream(&input_stream);
+      request.readFromInputStream(&http_input_stream);
+
+      if (request.keepalive()) {
+        keepalive = true;
+      }
+
+      response.populateFromRequest(request);
+    } catch (RuntimeException e) {
+      keepalive = false;
+      response.setStatus(kStatusNotFound);
+      response.addHeader("Connection", "close");
+      response.addBody("Bad Request");
+      e.debugPrint(); // FIXPAUL
+    }
+
+    bool handled = false;
+    try {
+      for (const auto& handler : handlers_) {
+        if (handler->handleHTTPRequest(&request, &response)) {
+          handled = true;
+          break;
+        }
+      }
+    } catch (RuntimeException e) {
+      keepalive = false;
+      response.setStatus(kStatusInternalServerError);
+      response.addHeader("Connection", "close");
+      response.addBody("Internal Server Error");
+      e.debugPrint(); // FIXPAUL
+    }
+
+    if (!handled) {
+      response.setStatus(kStatusNotFound);
+      response.addBody("Not Found");
+    }
+
+    HTTPOutputStream http_output_stream(&output_stream);
+    response.writeToOutputStream(&http_output_stream);
+  } while (keepalive);
 }
 
 }

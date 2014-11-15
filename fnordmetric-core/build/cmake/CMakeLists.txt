@@ -23,6 +23,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/io/pagemanager.cc
     stage/src/fnordmetric/net/udpserver.cc
     stage/src/fnordmetric/environment.cc
+    stage/src/fnordmetric/http/httpinputstream.cc
+    stage/src/fnordmetric/http/httpoutputstream.cc
     stage/src/fnordmetric/http/httpmessage.cc
     stage/src/fnordmetric/http/httprequest.cc
     stage/src/fnordmetric/http/httpresponse.cc
@@ -155,22 +157,6 @@ if(MYSQL_FOUND)
   target_link_libraries(fnord-static mysqlclient)
 endif()
 
-pkg_check_modules(XZERO "libxzero")
-SET(XZERO_BUNDLED libxzero-0.11.0_pre20141105.tgz)
-if(XZERO_FOUND)
-  link_directories(${XZERO_LIBRARY_DIRS})
-  include_directories(${XZERO_INCLUDE_DIRS})
-  target_link_libraries(fnord-static ${XZERO_LIBRARIES})
-else()
-  set(XZERO_STAGE_DIR ${CMAKE_SOURCE_DIR}/stage/libxzero)
-  execute_process(COMMAND mkdir -p ${XZERO_STAGE_DIR})
-  execute_process(COMMAND tar -xz -C ${XZERO_STAGE_DIR} -f ${CMAKE_SOURCE_DIR}/../../3rdparty/${XZERO_BUNDLED})
-  add_subdirectory(${XZERO_STAGE_DIR})
-  link_directories(${XZERO_STAGE_DIR})
-  include_directories(${XZERO_STAGE_DIR}/include)
-  target_link_libraries(fnord-static xzero)
-endif()
-
 # fnordmetric
 add_executable(fnordmetric-cli stage/src/fnordmetric/cli.cc)
 target_link_libraries(fnordmetric-cli fnord-static)
@@ -194,6 +180,11 @@ add_executable(tests/test-uri
     stage/src/fnordmetric/util/uri_test.cc)
 target_link_libraries(tests/test-uri fnord-static)
 
+add_executable(tests/test-http
+    stage/src/fnordmetric/http/http_test.cc)
+target_link_libraries(tests/test-http fnord-static)
+
+target_link_libraries(tests/test-uri fnord-static)
 add_executable(tests/test-fnv
     stage/src/fnordmetric/util/fnv_test.cc)
 target_link_libraries(tests/test-fnv fnord-static)

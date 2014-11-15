@@ -11,12 +11,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <fnordmetric/util/inputstream.h>
+#include <fnordmetric/http/httpinputstream.h>
+#include <fnordmetric/http/httpoutputstream.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/util/runtimeexception.h>
 
 using namespace fnord::http;
+using fnord::http::HTTPInputStream;
+using fnord::http::HTTPOutputStream;
+using fnordmetric::util::StringInputStream;
+using fnordmetric::util::StringOutputStream;
 
 UNIT_TEST(HTTPTest);
 
@@ -24,9 +30,9 @@ TEST_CASE(HTTPTest, ParseHTTP1dot0Request, [] () {
   auto req = "GET / HTTP/1.0\r\n" \
              "\r\n";
 
-  fnord::httputil::StringInputStream is(req);
-  fnord::httphttp::HTTPInputStream http_is(&is);
-  fnord::httphttp::HTTPRequest request;
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
   request.readFromInputStream(&http_is);
 
   EXPECT_EQ(request.getMethod(), "GET");
@@ -40,9 +46,9 @@ TEST_CASE(HTTPTest, ParseHTTP1dot0KeepaliveRequest, [] () {
              "Connection: keep-alive\r\n" \
              "\r\n";
 
-  fnord::httputil::StringInputStream is(req);
-  fnord::httphttp::HTTPInputStream http_is(&is);
-  fnord::httphttp::HTTPRequest request;
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
   request.readFromInputStream(&http_is);
 
   EXPECT_EQ(request.getMethod(), "GET");
@@ -55,9 +61,9 @@ TEST_CASE(HTTPTest, ParseHTTP1dot1Request, [] () {
   auto req = "GET / HTTP/1.1\r\n" \
              "\r\n";
 
-  fnord::httputil::StringInputStream is(req);
-  fnord::httphttp::HTTPInputStream http_is(&is);
-  fnord::httphttp::HTTPRequest request;
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
   request.readFromInputStream(&http_is);
 
   EXPECT_EQ(request.getMethod(), "GET");
@@ -70,13 +76,13 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot1Request, [] () {
   auto req = "GET / HTTP/1.1\r\n" \
              "\r\n";
 
-  fnord::httputil::StringInputStream is(req);
-  fnord::httphttp::HTTPInputStream http_is(&is);
-  fnord::httphttp::HTTPRequest request;
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
   request.readFromInputStream(&http_is);
   EXPECT(request.keepalive() == true);
 
-  fnord::httphttp::HTTPResponse response;
+  HTTPResponse response;
   response.populateFromRequest(request);
 
   EXPECT_EQ(response.getVersion(), "HTTP/1.1");
@@ -86,12 +92,12 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {
   auto req = "GET / HTTP/1.0\r\n" \
              "\r\n";
 
-  fnord::httputil::StringInputStream is(req);
-  fnord::httphttp::HTTPInputStream http_is(&is);
-  fnord::httphttp::HTTPRequest request;
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
   request.readFromInputStream(&http_is);
 
-  fnord::httphttp::HTTPResponse response;
+  HTTPResponse response;
   response.populateFromRequest(request);
 
   EXPECT_EQ(response.getVersion(), "HTTP/1.0");
@@ -103,12 +109,12 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0KeepaliveRequest, [] () {
              "Connection: keep-alive\r\n" \
              "\r\n";
 
-  fnord::httputil::StringInputStream is(req);
-  fnord::httphttp::HTTPInputStream http_is(&is);
-  fnord::httphttp::HTTPRequest request;
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
   request.readFromInputStream(&http_is);
 
-  fnord::httphttp::HTTPResponse response;
+  HTTPResponse response;
   response.populateFromRequest(request);
 
   EXPECT_EQ(response.getVersion(), "HTTP/1.0");

@@ -30,9 +30,13 @@ public:
     M_INVALID
   };
 
+  HTTPRequest();
+
   HTTPRequest(
       const std::string& method,
       const std::string& url);
+
+  void readFromInputStream(HTTPInputStream* input);
 
   const std::string& getMethod() const;
   kMethod method() const;
@@ -40,8 +44,8 @@ public:
   const bool keepalive() const;
 
 protected:
-  const std::string method_;
-  const std::string url_;
+  std::string method_;
+  std::string url_;
 };
 
 }
