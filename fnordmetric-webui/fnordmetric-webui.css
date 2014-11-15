@@ -1079,6 +1079,11 @@ h1.page_header em {
   text-align: center;
 }
 
+.single_metric_ui.table_container table.metric_list tr:hover td {
+  background-color: #fff;
+  cursor: default;
+}
+
 .single_metric_ui.chart_container svg {
   height: 100%;
 }

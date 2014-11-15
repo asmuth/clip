@@ -78,6 +78,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   function runQuery() {
     var querystr = 
       FnordMetric.util.generateSQLQueryFromParams(query_params);
+    console.log(querystr);
+
     FnordMetric.util.displayLoader(chart_container);
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
@@ -246,7 +248,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         "5 minutes",
         "15 minutes",
         "30 minutes",
-        "1 hour"];
+        "1 hour",
+        "4 hours",
+        "12 hours",
+        "1 day"];
 
     timespans.map(function(timespan) {
       var option = document.createElement("option");
@@ -283,8 +288,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
     controls_query.onclick = function(e) {
       e.preventDefault();
-      var query = 
-        decodeURIComponent("SELECT * FROM " + metric);
+      var query = FnordMetric.util.generateSQLQueryFromParams(query_params);
+      console.log(query);
       FnordMetric.WebUI.singleton.openUrl(
         "query_playground?sql_query="+query, true);
     };
@@ -317,6 +322,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     secondary_controls.appendChild(timespan_title);
     secondary_controls.appendChild(next_timespan);
 
+    table_container.className = "single_metric_ui table_container";
     chart_container.className = "single_metric_ui chart_container";
     elem.appendChild(chart_container);
 

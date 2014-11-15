@@ -155,12 +155,12 @@ public:
   }
 
   void setMin(T min) {
-    min_value_ = min;
+    min_value_ = static_cast<double>(min);
     padding_.first = 0.0f;
   }
 
   void setMax(T max) {
-    max_value_ = max;
+    max_value_ = static_cast<double>(max);
     padding_.second = 0.0f;
   }
 
