@@ -317,6 +317,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     secondary_controls.appendChild(timespan_title);
     secondary_controls.appendChild(next_timespan);
 
+    table_container.className = "single_metric_ui table_container";
     chart_container.className = "single_metric_ui chart_container";
     elem.appendChild(chart_container);
 
