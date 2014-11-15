@@ -305,7 +305,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
     controls_query.onclick = function(e) {
       e.preventDefault();
-      var query = FnordMetric.util.generateSQLQueryFromParams(query_params);
+      var query = encodeURIComponent(
+        FnordMetric.util.generateSQLQueryFromParams(query_params));
       console.log(query);
       FnordMetric.WebUI.singleton.openUrl(
         "query_playground?sql_query="+query, true);
