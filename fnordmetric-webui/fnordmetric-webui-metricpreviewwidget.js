@@ -205,16 +205,15 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     var rollup_options = [
       "Value",
-      "Mean",
-      "Rollup Mean",
-      "Count",
-      "Rollup Count",
       "Sum",
-      "Rollup Sum",
+      "Count",
       "Min",
       "Max",
+      "Mean",
       "Median",
-      "Delta"];
+      "Rollup Mean",
+      "Rollup Count",
+      "Rollup Sum"];
 
     rollup_options.map(function(rollup) {
       var option = document.createElement("option");
