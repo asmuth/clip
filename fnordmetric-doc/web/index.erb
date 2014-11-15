@@ -63,8 +63,10 @@ webpage without writing a single line of code. It gives you maximum flexiblitiy 
 control over layout and style with HTML and CSS.
     -->
 
-    <div style="margin: 40px auto; width: 600px;">
-<pre class="prettyprint" style="margin-top: 0; text-align:left;"><code>IMPORT TABLE city_temperatures
+    <div style="margin: 40px auto; width: 600px;" class="fm_preview">
+      <img src="/img/simple_line_chart.png" style="width:600px;" class="output" />
+      <div class="input">
+<pre class="prettyprint" class="input" style="margin-top: 0; text-align:left;"><code>IMPORT TABLE city_temperatures
    FROM 'csv:examples/data/city_temperatures.csv?headers=true';
 
 DRAW LINECHART WITH
@@ -73,7 +75,14 @@ DRAW LINECHART WITH
 SELECT city AS series, month AS x, temperature AS y
    FROM city_temperatures;
 </code></pre>
+      </div>
     </div>
+    <div style="text-align: center; margin-top: -15px; margin-bottom: 40px;">
+      Show:
+      <a style="color:#2980b9;" href="#" onclick="javascript:document.querySelector('.fm_preview').className = 'fm_preview'; return false;">Source</a> |
+      <a style="color:#2980b9" href="#" onclick="javascript:document.querySelector('.fm_preview').className = 'fm_preview show_output'; return false;">Output</a>
+    </div>
+
 
     <p>
       You can execute ChartSQL queries from the command line against a number of

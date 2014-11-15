@@ -718,3 +718,15 @@ p + .fancybutton {
   background-repeat: no-repeat;
   background-position: center center;
 }
+
+.fm_preview .output {
+  display: none;
+}
+
+.fm_preview.show_output .output {
+  display: block;
+}
+
+.fm_preview.show_output .input {
+  display: none;
+}
