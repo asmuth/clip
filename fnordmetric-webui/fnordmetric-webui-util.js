@@ -473,7 +473,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   if (start_time != undefined && end_time != undefined) {
     //what to use in place of FROM_TIMESTAMP
     where_expr =
-      "WHERE time > FROM_TIMESTAMP(" + Math.round(start_time / 1000) + ")" +
+      " WHERE time > FROM_TIMESTAMP(" + Math.round(start_time / 1000) + ")" +
       " AND time < FROM_TIMESTAMP(" + Math.round(end_time / 1000) + ")";
   }
 
@@ -514,8 +514,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   }
 
   query = 
-    draw_stm + select_expr +// where_expr + 
-    from_expr + group_expr + ";";
+    draw_stm + select_expr + from_expr +
+    where_expr + group_expr + ";";
 
   console.log(query);
   return query;
