@@ -429,7 +429,6 @@ FnordMetric.util.milliSecondsToTimeString = function(seconds) {
 
 /* in singleMetricView */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
-  console.log(params);
   //FIX html escape 
   var query;
   var draw_stm = "DRAW LINECHART AXIS BOTTOM AXIS LEFT; ";

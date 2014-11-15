@@ -25,7 +25,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var now = Date.now();
   var columns = [];
   var elems = {};
-  var mseconds_to_end;
+
 
   var defaults = {
     view : "value",
@@ -48,7 +48,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
   function updateURLParams(key, value) {
-    query_params[key] = value;
+    query_params[key] = value.toString();
     FnordMetric.util.setURLQueryString(
       "metric_list", query_params, false, true);
   }
@@ -71,6 +71,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   }
 
+  function renderError(message) {
+    chart_container.innerHTML = message;
+  }
+
   function runQuery() {
     var querystr = 
       FnordMetric.util.generateSQLQueryFromParams(query_params);
@@ -78,8 +82,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
+        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
+        } else {
+          renderError(json.error);
         }
         if (json.tables != undefined) {
           renderTable(json.tables[0]);
@@ -130,8 +137,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     }
 
     title.innerHTML = 
-      FnordMetric.util.getDateTimeString(start) +
-      " &mdash; " + end_str;
+      start + " &mdash; " + end_str;
   }
 
   function onDateSubmit(ts) {
@@ -385,7 +391,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       e.preventDefault();
       var end = end_time;
       end_time = start_time;
-      start_time = end - (end - start_time);
+      var diff = end - start_time;
+      start_time = start_time - diff;
       updateURLParams("end_time", end_time);
       updateURLParams("start_time", start_time);
       updateDateTimeElems(timespan_title, elems.date);
@@ -396,9 +403,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       e.preventDefault();
       var start = start_time;
       start_time = end_time;
-      end_time = end_time + (end_time - start);
-      updateURLParams("end_time", end_time);
+      end_time = parseInt(end_time ,10) + (end_time - start);
       updateURLParams("start_time", start_time);
+      updateURLParams("end_time", end_time);
       updateDateTimeElems(timespan_title, elems.date);
       runQuery();
     }, false);
