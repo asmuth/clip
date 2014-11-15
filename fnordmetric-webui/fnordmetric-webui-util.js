@@ -417,11 +417,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
   var query;
   var draw_stm = 
-    "DRAW LINECHART WITH XDOMAIN FROM_TIMESTAMP(" + 
-    start_time + "), FROM_TIMESTAMP(" + end_time + ")"
-    + " AXIS BOTTOM AXIS LEFT; ";
-  var select_expr = "SELECT time AS x, ";
-  var from_expr = " FROM ";
+    "DRAW LINECHART\n  XDOMAIN\n    FROM_TIMESTAMP(" + 
+    start_time + "),\n    FROM_TIMESTAMP(" + end_time + ")"
+    + "\n  AXIS BOTTOM\n  AXIS LEFT;\n\n";
+  var select_expr = "SELECT\n    time AS x,\n    ";
+  var from_expr = "\n  FROM\n";
   var where_expr = "";
   var group_expr = "";
   var hasAggregation = false;
@@ -431,11 +431,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   if (view == "value") {
     select_expr += "value as y ";
   } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
-    draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
+    draw_stm = "DRAW BARCHART\n  AXIS BOTTOM\n  AXIS LEFT;";
     var func = (view.split("_"))[1];
     //how to define which column should be selected
     select_expr = 
-      " SELECT `" + columns[0] + "` AS X, " + func + "(value) AS Y";
+      " SELECT\n    `" + columns[0] + "` AS X,\n    " + func + "(value) AS Y";
 
     hasAggregation = true;
   } else {
@@ -445,13 +445,13 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   }
 
   /* complete from_expr */
-  from_expr += "`" + table_ref + "`";
+  from_expr += "    `" + table_ref + "`\n";
 
   /*complete where_expr */
   if (start_time != undefined && end_time != undefined) {
     where_expr =
-      " WHERE time > FROM_TIMESTAMP(" + start_time + ")" +
-      " AND time < FROM_TIMESTAMP(" + end_time + ")";
+      "  WHERE\n    time > FROM_TIMESTAMP(" + start_time + ")\n" +
+      "    AND time < FROM_TIMESTAMP(" + end_time + ")";
   }
 
 
