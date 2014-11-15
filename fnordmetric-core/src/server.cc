@@ -14,6 +14,7 @@
 #include <vector>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
+#include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/httpapi.h>
@@ -29,16 +30,6 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/util/signalhandler.h>
 #include <fnordmetric/thread/threadpool.h>
-#include <fnordmetric/thread/task.h>
-#include <xzero/TimeSpan.h>
-#include <xzero/http/HttpService.h>
-#include <xzero/executor/ThreadedExecutor.h>
-#include <xzero/net/IPAddress.h>
-#include <xzero/net/InetConnector.h>
-#include <xzero/support/libev/LibevScheduler.h>
-#include <xzero/support/libev/LibevSelector.h>
-#include <xzero/support/libev/LibevClock.h>
-#include <ev++.h>
 
 using namespace fnordmetric;
 using namespace fnordmetric::metricdb;
@@ -89,10 +80,6 @@ static int startServer() {
       std::unique_ptr<fnord::util::ExceptionHandler>(
           new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
 
-  fnord::thread::ThreadPool insert_worker_pool(
-      std::unique_ptr<fnord::util::ExceptionHandler>(
-          new fnord::util::CatchAndPrintExceptionHandler(env()->logger())));
-
   if (env()->flags()->isSet("datadir")) {
     auto datadir = env()->flags()->getString("datadir");
 
@@ -122,43 +109,29 @@ static int startServer() {
   /* statsd server */
   if (env()->flags()->isSet("statsd_port")) {
     auto port = env()->flags()->getInt("statsd_port");
-    auto statsd_server =
-        new StatsdServer(metric_repo, &thread_pool, &insert_worker_pool);
-    statsd_server->listen(port);
-
     env()->logger()->printf(
         "INFO",
         "Starting statsd server on port %i",
         port);
+
+    auto statsd_server =
+        new StatsdServer(metric_repo, &thread_pool, &thread_pool);
+    statsd_server->listen(port);
   }
 
   /* http server */
   if (env()->flags()->isSet("http_port")) {
     auto port = env()->flags()->getInt("http_port");
-    xzero::IPAddress bind("0.0.0.0");
-    xzero::TimeSpan idle = xzero::TimeSpan::fromSeconds(30);
-    xzero::HttpService http;
-    HTTPAPI fmHttpApi(metric_repo);
-    http.addHandler(&fmHttpApi);
-    http.addHandler(fnordmetric::metricdb::AdminUI::get());
-
-    // single-threaded non-blocking execution
-    ::ev::loop_ref loop = ::ev::default_loop(0);
-    xzero::support::LibevScheduler scheduler(loop);
-    xzero::support::LibevSelector selector(loop);
-    xzero::support::LibevClock clock(loop);
-
-    auto inet = http.configureInet(&scheduler, &scheduler, &selector, &clock,
-                                   idle, bind, port);
-    inet->setBlocking(false);
-
     env()->logger()->printf(
         "INFO",
         "Starting HTTP server on port %i",
         port);
 
-    http.start();
-    selector.select();
+    auto http_server = new fnord::http::HTTPServer(&thread_pool);
+    http_server->addHandler(AdminUI::getHandler());
+    http_server->addHandler(
+        std::unique_ptr<http::HTTPHandler>(new HTTPAPI(metric_repo)));
+    http_server->listen(port);
   }
 
   return 0;

@@ -10,24 +10,27 @@
 #ifndef _FNORDMETRIC_WEBINTERFACE_H
 #define _FNORDMETRIC_WEBINTERFACE_H
 #include <memory>
-#include <xzero/http/HttpService.h>
+#include <fnordmetric/http/httphandler.h>
+#include <fnordmetric/http/httprequest.h>
+#include <fnordmetric/http/httpresponse.h>
 
+using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
-class AdminUI : public xzero::HttpService::Handler {
+class AdminUI : public http::HTTPHandler {
 public:
 
-  static xzero::HttpService::Handler* get();
+  static std::unique_ptr<http::HTTPHandler> getHandler();
 
-  bool handleRequest(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response) override;
+  bool handleHTTPRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response) override;
 
 private:
 
   void sendAsset(
-      xzero::HttpResponse* response,
+      http::HTTPResponse* response,
       const std::string& asset_path,
       const std::string& content_type) const;
 

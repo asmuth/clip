@@ -10,44 +10,47 @@
 #ifndef _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #define _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #include <memory>
+#include <fnordmetric/http/httphandler.h>
+#include <fnordmetric/http/httprequest.h>
+#include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/jsonoutputstream.h>
 #include <fnordmetric/util/uri.h>
-#include <xzero/http/HttpService.h>
 
+using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 class IMetric;
 class IMetricRepository;
 
-class HTTPAPI : public xzero::HttpService::Handler {
+class HTTPAPI : public http::HTTPHandler {
 public:
 
   HTTPAPI(IMetricRepository* metric_repo);
 
-  bool handleRequest(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response) override;
+  bool handleHTTPRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response) override;
 
 protected:
 
   void renderMetricList(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response,
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
       util::URI* uri);
 
   void renderMetricSampleScan(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response,
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
       util::URI* uri);
 
   void insertSample(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response,
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
       util::URI* uri);
 
   void executeQuery(
-      xzero::HttpRequest* request,
-      xzero::HttpResponse* response,
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
       util::URI* uri);
 
   void renderMetricJSON(

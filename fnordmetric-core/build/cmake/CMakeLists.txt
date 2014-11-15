@@ -23,6 +23,10 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/io/pagemanager.cc
     stage/src/fnordmetric/net/udpserver.cc
     stage/src/fnordmetric/environment.cc
+    stage/src/fnordmetric/http/httpmessage.cc
+    stage/src/fnordmetric/http/httprequest.cc
+    stage/src/fnordmetric/http/httpresponse.cc
+    stage/src/fnordmetric/http/httpserver.cc
     stage/src/fnordmetric/sstable/cursor.cc
     stage/src/fnordmetric/sstable/fileheaderreader.cc
     stage/src/fnordmetric/sstable/fileheaderwriter.cc
