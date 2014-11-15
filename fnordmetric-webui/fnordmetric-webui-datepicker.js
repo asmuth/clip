@@ -259,9 +259,5 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
     init(month, year)
   }, false);
 
-
-
-
-
 };
 
