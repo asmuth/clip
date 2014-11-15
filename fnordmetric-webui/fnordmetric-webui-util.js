@@ -89,7 +89,6 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   }
 
   if (push_state) {
-    console.log("push state");
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
@@ -490,10 +489,10 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, " + t_step + ",";
+        "OVER TIMEWINDOW(time, " + Math.round(t_step / 1000) + ",";
 
       group_expr += (t_window != undefined)?
-        t_window : t_step;
+        Math.round(t_window / 1000) : Math.round(t_step / 1000);
 
       group_expr+= ")";
 
