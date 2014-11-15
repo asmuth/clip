@@ -27,7 +27,7 @@ FnordMetric.util.queryResultView = function() {
 
     var controls = document.createElement("div");
     controls.className = "metric_preview_secondary_controls";
-    controls.innerHTML = "<a>Result Chart</a>"
+    controls.innerHTML = "<a style='float: left;'>Result Chart</a>"
     chart_pane.appendChild(controls);
 
     var controls_embed = FnordMetric.createButton(
@@ -61,8 +61,18 @@ FnordMetric.util.queryResultView = function() {
   }
 
   function renderTable(table, elem) {
+    var controls = document.createElement("div");
+    controls.className = "metric_preview_secondary_controls";
+    controls.innerHTML = "<a style='float: left;'>Result Table</a>"
+    elem.appendChild(controls);
+
+
+    var table_elem = document.createElement("div");
+    table_elem.className = "result_table";
+    elem.appendChild(table_elem);
+
     var table_view = FnordMetric.util.TableView(
-      table.columns, elem, 5);
+      table.columns, table_elem, 20);
 
     table.rows.map(function(row) {
       table_view.addRow(row);

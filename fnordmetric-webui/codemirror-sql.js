@@ -280,7 +280,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
   CodeMirror.defineMIME("text/x-chartsql", {
     name: "sql",
     keywords: set(sqlKeywords + "begin draw with"),
-    builtin: set("bool boolean bit blob enum long longblob longtext medium mediumblob mediumint mediumtext time timestamp tinyblob tinyint tinytext text bigint int int1 int2 int3 int4 int8 integer float float4 float8 double char varbinary varchar varcharacter precision real date datetime year unsigned signed decimal numeric axis bottom left right top xdomain ydomain grid inside outside legend title subtitle"),
+    builtin: set("bool boolean bit blob enum long longblob longtext medium mediumblob mediumint mediumtext time timestamp tinyblob tinyint tinytext text bigint int int1 int2 int3 int4 int8 integer float float4 float8 double char varbinary varchar varcharacter precision real date datetime year unsigned signed decimal numeric axis bottom left right top xdomain ydomain grid inside outside legend title subtitle value"),
     atoms: set("false true null unknown linechart barchart areachart pointchart stacked"),
     operatorChars: /^[*+\-%<>!=]/,
     dateSQL: set("date time timestamp"),

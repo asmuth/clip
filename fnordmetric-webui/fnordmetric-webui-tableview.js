@@ -117,6 +117,11 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
       updatePage((current_page + 1) % pages, isSortable);
     }
 
+    var label = document.createElement("div");
+    label.className = "pagination_label";
+    label.innerHTML = from + " - " + until + " of " + total;
+    navbar.appendChild(label);
+
     var ttp_back = FnordMetric.createButton(
       "#", "pagination_tooltip",  "&#8592;");
     ttp_back.onclick = function(e) {
@@ -124,11 +129,6 @@ FnordMetric.util.TableView = function(columns, elem, per_page) {
       updatePage((current_page + pages - 1) % pages, isSortable);
     }
     navbar.appendChild(ttp_back);
-
-    var label = document.createElement("div");
-    label.className = "pagination_label";
-    label.innerHTML = from + " - " + until + " of " + total;
-    navbar.appendChild(label);
 
     elem.appendChild(navbar);
   }

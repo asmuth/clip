@@ -561,6 +561,31 @@ input {
   right: 10px;
 }
 
+.result_table .pagination_navbar {
+  font-size: 90%;
+  margin-top: -33px;
+}
+
+.result_table .metric_list {
+  margin-top: 0;
+}
+
+.result_table table.metric_list tr.list_header {
+  border-top: none;
+  border-bottom: 1px solid #dbdedf;
+}
+
+.result_table table.metric_list th, .result_table table.metric_list td {
+  height: 34px;
+  line-height: 34px;
+  font-size: 100%;
+}
+
+.result_pane .chart_container a.btn {
+  float: right;
+  margin-right: 0;
+}
+
 .result_pane table.result_table {
   width: 100%;
   max-width: 1500px;

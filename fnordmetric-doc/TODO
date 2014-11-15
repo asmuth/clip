@@ -18,6 +18,7 @@
     - better error message style
     - compare with yesterday in metric preview widget
     - refresh btn in metric preview widget
+    - onunload in quert editor
 
 [ release ]
     - functions: round, median, percentile
