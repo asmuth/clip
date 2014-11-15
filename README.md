@@ -1,34 +1,35 @@
 FnordMetric
 ===========
 
-FnordMetric extends standard SQL; it allows to express queries that return SVG
-charts rather than tables. Turning a query result into a chart is literally one
-line of code.
+FnordMetric let's you collect and visualize timeseries data using only SQL. It
+enables you to build beautiful real-time analytics dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
-[ ![Build status - Travis-ci](https://secure.travis-ci.org/paulasmuth/fnordmetric.png) ](http://travis-ci.org/paulasmuth/fnordmetric)
-
 [ ![Screenshot](https://github.com/paulasmuth/fnordmetric/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
-If you're like me you are probably thinking something along the lines of "Does
-the world really need yet another data visualization tool?" right now. Surely,
-there already is gnuplot and about a bazillion javascript libraries that let you
-draw pretty charts.
 
-Most of the existing open source tools require you to provide the input data in
-some specific, custom format. I reckon this is not ideal. It means you have to
-write a heap of reptitive glue code (or sed incantations if that's your thing)
-to mangle your input data into that format. If you run a lot of ad-hoc queries
-you have to waste a significant amount of time on this boring legwork that could
-much better be spent on interesting tasks.
+### ChartSQL
 
-FnordMetric aims to fix that by extending standard SQL; it allows you to express
-queries that return charts rather than tables.
+FnordMetric ChartSQL allows you to write SQL queries that return charts instead
+of tables. The charts are rendered as SVG vector graphics and can easily be
+embedded into any website and customized with css in order to build beautiful
+dashboards.
 
-An example says more than a thousand words so here is how you generate a shiny
-timeseries chart from a csv file using nothing else than plain old SQL.
-   ...
+You can execute ChartSQL queries from the command line against a number of
+external sources like CSV files or a MySQL database.
+
+
+### FnordMetric Server
+
+Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
+and a HTTP API to run ChartSQL queries and collect timeseries data. You can use
+fnordmetric-server as a one-stop solution for metric collection and charting.
+Since fnordmetric-server aims to be a StatsD+graphite competitor, it implements
+a wire compatible StatsD API.
+
+FnordMetric Server can store the collected timeseries data on local disk or in
+external storage (HBase).
 
 Documentation
 -------------
@@ -39,30 +40,9 @@ You can find the full FnordMetric Documentation at http://fnordmetric.io/
 Contributions
 -------------
 
-Ways to contribute to FnordMetric:
-
-  + report bugs or suggest new features
-  + suggest or implement new options for existing charts or new chart types
-  + improve the documentation
-  + publish howtos, tutorials and videos
-  + add a new default stylesheet (requires css knowledge)
-  + add a new language binding (requires minimal c++ knowledge)
-  + add a new query backend (requires c++ knowledge)
-  + add a new render target (requires c++ knowledge)
-  + add some new features to the query engine (requires c++ knowledge)
-  + many more! improve all the things :)
-
-#### Other Open Source Software included in FnordMetric
-
-  + Christian Parpart's xzero -- HTTP library (http://github.com/xzero)
-  + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
-
 #### Individial Contributors to FnordMetric
 
-**Version 2.0.0**
-  + Christian Parpart (http://github.com/trapni)
-
-**Version 0.0.8 - v1.2.9**
++ Christian Parpart (http://github.com/trapni)
  + Simon Menke (http://github.com/fd),
  + Bruno Michel (http://github.com/nono),
  + Marco Borromeo (http://github.com/mborromeo),
@@ -84,6 +64,11 @@ To contribute, please fork this repository, make your changes and run the
 specs, commit them to your github repository and send me a pull request.
 Need help, head on over to our [Google Groups][1]  page to discuss any ideas
 that you might have.
+
+#### Other Open Source Software included in FnordMetric
+
+  + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
+  + FontAwesome --- icon font (http://fontawesome.io/)
 
 License
 -------
