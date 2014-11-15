@@ -18,13 +18,23 @@ if (FnordMetric.views === undefined) {
 
 
 FnordMetric.util.embedPopup = function(elem) {
-  function render() {
-    console.log("render popup");
-    var background = document.createElement("div");
-    background.className = "popup_ui background";
-    elem.appendChild(background);
+  var popup;
+  var background;
 
-    var popup = document.createElement("div");
+  function close() {
+    if (popup.parentNode == elem) {
+      elem.removeChild(popup);
+    }
+    if (background.parentNode == elem) {
+      elem.removeChild(background);
+    }
+  }
+
+  function render() {
+    background = document.createElement("div");
+    background.className = "popup_ui background";
+
+    popup = document.createElement("div");
     popup.className = "popup_ui";
 
     var tabbar = document.createElement("div");
@@ -42,17 +52,46 @@ FnordMetric.util.embedPopup = function(elem) {
     var html_tab = FnordMetric.createButton(
       "#", "tab", "HTML");
 
+    var inner_window = document.createElement("div");
+
+    elem.appendChild(background);
     popup.appendChild(close_btn);
     tabbar.appendChild(iframe_tab);
     tabbar.appendChild(url_tab);
     tabbar.appendChild(html_tab);
     popup.appendChild(tabbar);
+    popup.appendChild(inner_window);
     elem.appendChild(popup);
+
+
+    background.addEventListener('click', function(e) {
+      e.preventDefault();
+      close();
+    }, false);
+
+    close_btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      close();
+    }, false);
+
+    iframe_tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      inner_window.innerHTML = "FnordMetric IFrame";
+    }, false);
+
+    url_tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      inner_window.innerHTML = "FnordMetric URL";
+    }, false);
+
+    html_tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      inner_window.innerHTML = "FnordMetric HTML";
+    }, false);
+
+
   }
 
-  function close() {
-
-  }
 
   return {
     "render" : render,

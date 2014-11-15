@@ -845,8 +845,8 @@ table.metric_list tr:hover td {
 }
 
 .popup_ui .controls {
-  margin-top: 10px;
-  margin-left: 50px;
+  padding-left: 50px;
+  height: 50px;
   text-align:center;
 }
 
