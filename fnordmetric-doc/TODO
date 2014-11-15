@@ -1,10 +1,7 @@
 
 [ doc ]
     - frontapge: gif
-    - readme for gh
     - html5 api references
-    - frontpage: example query result
-    - dashboard api reference
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
     - chart 2d/3d signature doc
