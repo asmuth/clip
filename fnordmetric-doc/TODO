@@ -35,7 +35,7 @@
     - version numbers
     - deb pkg
     - homebrew pkg
-    - doc: interactive queries
+    - doc: interactive charts
     - ruby client + doc
     - javascript client + doc
     - make query editor split draggable/resizable
