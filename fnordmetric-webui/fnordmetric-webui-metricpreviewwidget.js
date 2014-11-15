@@ -25,7 +25,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var now = Date.now();
   var columns = [];
   var elems = {};
-  var mseconds_to_end;
+
 
   var defaults = {
     view : "value",
@@ -71,6 +71,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   }
 
+  function renderError(message) {
+    chart_container.innerHTML = message;
+  }
+
   function runQuery() {
     var querystr = 
       FnordMetric.util.generateSQLQueryFromParams(query_params);
@@ -78,8 +82,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     FnordMetric.httpPost("/query", querystr, function(r) {
       if (r.status == 200) {
         var json = JSON.parse(r.response);
+        console.log(json);
         if (json.charts != undefined) {
           renderChart(json.charts[0]);
+        } else {
+          renderError(json.error);
         }
         if (json.tables != undefined) {
           renderTable(json.tables[0]);
