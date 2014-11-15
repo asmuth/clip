@@ -15,14 +15,13 @@
 
 [ frontend ]
     - clean up sql result view
-    - metric overview page
     - syntax highlighting
     - embed as iframe
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
-    - make editr split draggable/resizable
     - better error message style
     - compare with yesterday in metric preview widget
     - metric preview widget: auto refresh (on/off)
+    - make editr split draggable/resizable
 
 [ SQL ]
     - functions: round, median, percentile, delta

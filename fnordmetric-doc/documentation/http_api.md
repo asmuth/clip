@@ -133,7 +133,7 @@ Execute a ChartSQL / SQL query and return the result.
 
 <table>
   <tr>
-    <th>query <i>(mandatory)</i></th>
+    <th>q <i>(mandatory)</i></th>
     <td>
       the ChartSQL / SQL query to execute
     </td>
@@ -141,18 +141,18 @@ Execute a ChartSQL / SQL query and return the result.
   <tr>
     <th>format</th>
     <td>
-      the response format: `svg`, `csv`, or `json` (default)
+      the response format: `svg` or `json` (default: json)
     </td>
   </tr>
 </table>
 <br />
 
-#### Examples:
 
 ### POST /query
 
-Execute a ChartSQL / SQL query and return the result.
+Execute a ChartSQL / SQL query and return the result. Send the ChartSQL query as
+the HTTP POST body and use the same GET query parameters as for the
+`GET /query` call
 
-#### Parameters:
 
-#### Examples:
+
