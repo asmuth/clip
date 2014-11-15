@@ -21,21 +21,18 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var metric = query_params.innerViewValue;
   var table_container = document.createElement("div");
   var chart_container = document.createElement("div");
-  var load_pane = document.createElement("div");
   var now = Date.now();
   var columns = [];
-  var elems = {};
-
 
   var defaults = {
     view : "value",
     columns: "",
     end_time : now,
     /* 5 minutes  */
-    time_to_end : 300000,
+    time_to_end : 3600000,
     /* 1 second */
-    t_step : 1000,
-    t_window : 1000,
+    t_step : 10000,
+    t_window : 5000,
     by: ""
   }
 
@@ -150,6 +147,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
   function updateDateTimeElems(title, input, start_time, end_time) {
+    console.log("update date time elems");
     var start_time = (start_time !== undefined) ? 
        start_time : getQueryParamOrDefaultValue("start_time");
     var start_str = 
@@ -163,18 +161,27 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       input.value = end_str;
       input.setAttribute("id", end_time);
     }
-
+    console.log("start " + start_str);
+    console.log("end " + end_str);
     title.innerHTML = 
       start_str + " &mdash; " + end_str;
   }
 
-  function onDateSubmit(ts) {
-    var start = 
-      ts - getQueryParamOrDefault(time_to_end);
-    updateURLParams("end_time", ts);
-    updateURLParams("start_time", start);
+  function onDateSubmit(timestamp) {
+    var timestamp = parseInt(timestamp, 10);
+    var start_time = 
+      parseInt(getQueryParamOrDefaultValue("start_time"), 10);
+    var end_time = 
+      parseInt(getQueryParamOrDefaultValue("end_time"), 10);
+    console.log("time diff " + (end_time - start_time));
+    start_time = timestamp - (end_time - start_time);
+    updateURLParams("end_time", timestamp);
+    updateURLParams("start_time", start_time);
     runQuery();
-    updateDateTimeElems(elems.timespan_title, null);
+
+    //FIXME is it better to make the title elem accessible?
+    var title = elem.querySelector(".current_date");
+    updateDateTimeElems(title, null, start_time, end_time);
   }
 
   function initElems() {

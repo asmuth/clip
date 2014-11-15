@@ -39,7 +39,7 @@ FnordMetric.views.MetricList = function() {
 
   function onRowClick() {
     var end = Date.now();
-    var start = end - 300000;
+    var start = end - 3600000;
     var raw_url = 
       "metric_list?metric="+ this.firstChild.id +
       "&view=value&start_time=" + start +
