@@ -9,7 +9,7 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 [ ![Screenshot](https://github.com/paulasmuth/fnordmetric/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
-### ChartSQL
+#### FnordMetric ChartSQL
 
 FnordMetric ChartSQL allows you to write SQL queries that return charts instead
 of tables. The charts are rendered as SVG vector graphics and can easily be
@@ -20,7 +20,7 @@ You can execute ChartSQL queries from the command line against a number of
 external sources like CSV files or a MySQL database.
 
 
-### FnordMetric Server
+#### FnordMetric Server
 
 Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
 and a HTTP API to run ChartSQL queries and collect timeseries data. You can use
