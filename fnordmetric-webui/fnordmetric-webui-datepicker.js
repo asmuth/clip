@@ -24,9 +24,12 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   var curr_day = new Date().getDay();
   var curr_date = new Date().getDate();
   var curr_month = new Date().getMonth();
+  var curr_year = new Date().getFullYear();
+  var m_month;
+  var y_year;
+  var isCurrMonth;
 
   var selected_ts;
-  //var selected_day = selected_ts.getDate();
   var selected_hours;
   var selected_minutes;
 
@@ -42,26 +45,38 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   function onSelect(hours, minutes, day, month, year) {
     var hours = (hours.length > 0)? hours : selected_hours;
     var minutes = (minutes.length > 0)? minutes : selected_minutes;
-
-    dp_input.value =
-      FnordMetric.util.appendLeadingZero(month+1) + 
-      "/" +
-      FnordMetric.util.appendLeadingZero(day) + 
-      "/" + year + "  " + 
-      FnordMetric.util.appendLeadingZero(hours) +
-      ":" + 
-      FnordMetric.util.appendLeadingZero(minutes);
-
     var ts = new Date(year, month, day, hours, minutes).getTime();
-    callback(ts);
-    dp_input.setAttribute("timestamp", ts);
-    resetDatepicker();
+
+    if (ts <= Date.now() ) {
+
+      dp_input.value =
+        FnordMetric.util.appendLeadingZero(month+1) + 
+        "/" +
+        FnordMetric.util.appendLeadingZero(day) + 
+        "/" + year + "  " + 
+        FnordMetric.util.appendLeadingZero(hours) +
+        ":" + 
+        FnordMetric.util.appendLeadingZero(minutes);
+
+      callback(ts);
+      dp_input.setAttribute("id", ts);
+      resetDatepicker();
+    }
+  }
+
+  function isSelectable(day) {
+    if (isCurrMonth) {
+      return day <= curr_date;
+    }
+    return y_year <= curr_year && m_month <= curr_month;
   }
 
 
   function init(month, year) {
+    y_year = year;
+    m_month = month;
+
     dp_widget.className = "datepicker_widget active";
-    isCurrMonth = month == curr_month;
 
     selected_ts = new Date(
       parseInt(dp_input.getAttribute("id"), 10));
@@ -74,6 +89,11 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       FnordMetric.util.appendLeadingZero(
         selected_ts.getMinutes());
 
+    var sltd_date = selected_ts.getDate();
+    var sltd_month = selected_ts.getMonth();
+    var sltd_year = selected_ts.getYear();
+    var isSltdMonth = (month == sltd_month && year == curr_year);
+    isCurrMonth = (month == curr_month && year == curr_year);
 
     var input_container = document.createElement("div");
     input_container.className = "input_container";
@@ -147,7 +167,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       header_cell.innerHTML = day;
       day_header.appendChild(header_cell);
     });
-
+    var is
     var day = 1;
     var rows = 0;
     var first_row = document.createElement("tr");
@@ -157,22 +177,30 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       if (i < first_day || first_day == 0) {
         cell.innerHTML = "";
       } else {
-        if (isCurrMonth && day == curr_date) {
-          cell.className = "highlight";
+
+        if (isSelectable(day)) {
+          if (isCurrMonth && day == curr_date) {
+            cell.className = "highlight_border";
+          }
+          if (isSltdMonth && day == sltd_date) {
+            cell.className += " highlight";
+          }
+
+          var link = FnordMetric.createButton(
+            "#", undefined, day);
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            onSelect(
+              hour_input.value,
+              minute_input.value,
+              this.innerText, month, year);
+          }, false);
+
+          cell.appendChild(link);
+        } else {
+          cell.innerHTML = day;
         }
 
-        var link = FnordMetric.createButton(
-          "#", undefined, day);
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          resetDatepicker();
-          onSelect(
-            hour_input.value,
-            minute_input.value,
-            this.innerText, month, year);
-        }, false);
-
-        cell.appendChild(link);
         day++;
       }
       first_row.appendChild(cell);
@@ -186,22 +214,30 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       rows++;
       for (var i = 0; i < 7 && day <= num_days; i++) {
         var cell = document.createElement("td");
-        if (isCurrMonth && day == curr_date) {
-          cell.className = "highlight";
+
+        if (isSelectable(day)) {
+          if (isCurrMonth && day == curr_date) {
+            cell.className = "highlight_border";
+          }
+          if (isSltdMonth && day == sltd_date) {
+            cell.className += " highlight";
+          }
+
+          var link = FnordMetric.createButton(
+            "#", undefined, day);
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            onSelect(
+              hour_input.value,
+              minute_input.value,
+              this.innerText, month, year);
+          }, false);
+
+          cell.appendChild(link);
+        } else {
+          cell.innerHTML = day;
         }
 
-        var link = FnordMetric.createButton(
-          "#", undefined, day);
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          resetDatepicker();
-          onSelect(
-            hour_input.value,
-            minute_input.value,
-            this.innerText, month, year);
-        }, false);
-
-        cell.appendChild(link);
         row.appendChild(cell);
         day++;
       }
@@ -213,22 +249,30 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       for (var i = 0; i < 7; i++) {
         var cell = document.createElement("td");
         if (day <= num_days) {
-          if (isCurrMonth && day == curr_date) {
-            cell.className = "highlight";
+
+          if (isSelectable(day)) {
+            if (isCurrMonth && day == curr_date) {
+              cell.className = "highlight_border";
+            }
+            if (isSltdMonth && day == sltd_date) {
+              cell.className += " highlight";
+            }
+
+            var link = FnordMetric.createButton(
+              "#", undefined, day);
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              onSelect(
+                hour_input.value,
+                minute_input.value,
+                this.innerText, month, year);
+            }, false);
+
+            cell.appendChild(link);
+          } else {
+            cell.innerHTML = day;
           }
 
-          var link = FnordMetric.createButton(
-            "#", undefined, day);
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            resetDatepicker();
-            onSelect(
-              hour_input.value,
-              minute_input.value,
-              this.innerText, month, year);
-          }, false);
-
-          cell.appendChild(link);
           day++;
         } else {
           cell.innerHTML = "";

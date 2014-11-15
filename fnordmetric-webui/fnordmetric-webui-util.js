@@ -586,6 +586,10 @@ FnordMetric.util.validatedTimeInput = function (time_input, type) {
 }
 
 FnordMetric.util.appendLeadingZero = function (num) {
+  var num = num;
+  if (typeof num == 'string') {
+    return (num.length > 1)? num : "0" + num;
+  }
   return (num > 9)? num : "0" + num;
 }
 
