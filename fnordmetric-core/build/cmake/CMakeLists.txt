@@ -160,9 +160,11 @@ endif()
 # fnordmetric
 add_executable(fnordmetric-cli stage/src/fnordmetric/cli.cc)
 target_link_libraries(fnordmetric-cli fnord-static)
+install(TARGETS fnordmetric-cli DESTINATION bin)
 
 add_executable(fnordmetric-server stage/src/fnordmetric/server.cc)
 target_link_libraries(fnordmetric-server fnord-static)
+install(TARGETS fnordmetric-server DESTINATION bin)
 
 # libfnord tests
 add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)

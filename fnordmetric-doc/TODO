@@ -2,15 +2,13 @@
 [ doc ]
     - frontapge: gif
     - readme for gh
+    - html5 api references
     - frontpage: example query result
     - dashboard api reference
     - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
-    - make all the command in installation work
     - chart 2d/3d signature doc
     - all the doc links
-    - page: included agents
-    - finish http api 
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ frontend ]
@@ -25,8 +23,6 @@
 [ release ]
     - functions: round, median, percentile
     - svg: escape series names, labels!
-    - ruby client
-    - javascript client + doc
 
 -----
 
@@ -36,6 +32,12 @@
     - do I need an external database
 
 [ feature q ]
+    - version numbers
+    - deb pkg
+    - homebrew pkg
+    - doc: interactive queries
+    - ruby client + doc
+    - javascript client + doc
     - make query editor split draggable/resizable
     - functions: delta
     - vertical hover line in chartextensions

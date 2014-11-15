@@ -68,12 +68,12 @@ documentation:
         title: "Sending data via statsd"
         url: "/metridb/statsd_interface"
         file: "metricdb_statsd_interface"
-      -
-        title: "Retention & Downsampling"
-        url: "/query_language/reference"
-      -
-        title: "Included agents"
-        url: "/query_language/reference"
+      #-
+      #  title: "Retention & Downsampling"
+      #  url: "/query_language/reference"
+      #-
+      #  title: "Included agents"
+      #  url: "/query_language/reference"
 
   -
     title: "Building Dashboards"
@@ -90,15 +90,15 @@ documentation:
   -
     title: "Customizing Charts"
     pages:
-      -
-        title: "Axis styles"
-        url: "/query_language/reference"
-      -
-        title: "Legend styles"
-        url: "/query_language/reference"
-      -
-        title: "Point and Line styles"
-        url: "/query_language/reference"
+      #-
+      #  title: "Axis styles"
+      #  url: "/query_language/reference"
+      #-
+      #  title: "Legend styles"
+      #  url: "/query_language/reference"
+      #-
+      #  title: "Point and Line styles"
+      #  url: "/query_language/reference"
       -
         title: "Line Charts"
         url: "/query_language/reference"
@@ -111,12 +111,12 @@ documentation:
       -
         title: "Bar Charts"
         url: "/query_language/reference"
-      -
-        title: "Interactive Charts"
-        url: "/query_language/reference"
-      -
-        title: "Styles / Themes"
-        url: "/query_language/reference"
+      #-
+      #  title: "Interactive Charts"
+      #  url: "/query_language/reference"
+      #-
+      #  title: "Styles / Themes"
+      #  url: "/query_language/reference"
 
   -
     title: "FnordMetric APIs &amp Clients"
@@ -125,12 +125,12 @@ documentation:
         title: "FnordMetric HTTP API"
         url: "/http_api"
         file: "http_api"
-      -
-        title: "FnordMetric for JavaScript"
-        url: "/query_language/reference"
-      -
-        title: "FnordMetric for Ruby (on Rails)"
-        url: "/query_language/reference"
+      #-
+      #  title: "FnordMetric for JavaScript"
+      #  url: "/query_language/reference"
+      #-
+      #  title: "FnordMetric for Ruby (on Rails)"
+      #  url: "/query_language/reference"
 
 
   -

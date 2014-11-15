@@ -82,6 +82,8 @@ minutes using only SQL and HTML/CSS. Includes generic dashboard control elements
 
 [Getting started with the HTML5 API](/documentation/getting_started/fnordmetric-server)
 
+<!--
+
 #### FnordMetric for JavaScript and node.js
 
 The JavaScript client allows you to plug fnordmetric charts into any web
@@ -106,7 +108,7 @@ FnordMetric also includes a number of pre-built agents to collect data from comm
 
   + Docker Agent (fm-docker-agent)
 
-
+-->
 
 Rationale
 ---------

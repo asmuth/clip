@@ -9,6 +9,9 @@ build:
 	(cd ../fnordmetric-webui && make)
 	(cd build/cmake && make)
 
+install: build
+	(cd build/cmake && make install)
+
 devserver: build
 	mkdir -p /tmp/fnordmetric-data
 	DEV_ASSET_PATH=../ ./build/cmake/target/fnordmetric-server --datadir /tmp/fnordmetric-data --verbose

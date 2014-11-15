@@ -9,6 +9,9 @@ build:
 	(cd fnordmetric-webui && make build)
 	(cd fnordmetric-core && make build)
 
+install:
+	(cd fnordmetric-core && make install)
+
 test:
 	(cd fnordmetric-core && make test)
 
