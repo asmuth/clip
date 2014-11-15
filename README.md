@@ -6,7 +6,7 @@ enables you to build beautiful real-time analytics dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
-[ ![Screenshot](https://github.com/paulasmuth/fnordmetric/raw/v1.0-alpha/doc/preview3.png) ](http://github.com/paulasmuth/fnordmetric)
+[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric-dev/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
 #### FnordMetric ChartSQL

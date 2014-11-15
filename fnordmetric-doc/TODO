@@ -18,8 +18,10 @@
     - better error message style
     - compare with yesterday in metric preview widget
     - refresh btn in metric preview widget
-    - onunload in quert editor
+
+    - onunload in query editor
     - window resize in query editor
+    - execution info fix
 
 [ release ]
     - functions: round, median, percentile
@@ -100,6 +102,7 @@
     - report with markdown + chartsql
 
 [ bug q ]
+    - multiple unnamed select/series should not be merged
     - bug: NAN is not a valid value in SVG
     - SELECT count(*) AS row_count FROM `/osx/load_avg_5m`; --- does not return col name
     - bug: line chart with only negative values
