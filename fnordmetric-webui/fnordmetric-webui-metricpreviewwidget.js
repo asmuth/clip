@@ -96,7 +96,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   function runQuery() {
     var querystr = 
       FnordMetric.util.generateSQLQueryFromParams(query_params);
-    console.log(querystr);
 
     var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
     FnordMetric.util.displayLoader(chart_container);

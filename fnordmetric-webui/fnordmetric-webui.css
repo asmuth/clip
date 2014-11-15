@@ -720,6 +720,10 @@ input {
   background-color: rgb(226, 232, 237);
 }
 
+.datepicker_widget table td.highlight_border {
+  border: 1px solid #444;
+}
+
 .datepicker_widget .month_ttp {
   color: #444;
   padding-left: 5px;
