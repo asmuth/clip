@@ -1,15 +1,12 @@
 
 [ doc ]
     - html5 api references
-    - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
     - pictures in getting started server
     - chart 2d/3d signature doc
     - all the doc links
-    - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ frontend ]
     - embed popup
-    - onunload in query editor
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
 
 [ release ]
@@ -22,6 +19,7 @@
     - how do i set the line color
     - can i use fnordmetric with external data
     - do I need an external database
+    - FM legt die timestamps der samples _immer_ selbst bei dateneingang fest?
 
 [ feature q ]
     - compare with yesterday in metric preview widget
