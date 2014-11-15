@@ -43,12 +43,17 @@ void UDPServer::listen(int port) {
     RAISE(kIOError, "create socket() failed");
   }
 
+  int opt = 1;
+  if (setsockopt(ssock_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+    RAISE_ERRNO(kIOError, "setsockopt(SO_REUSEADDR) failed");
+    return;
+  }
+
   struct sockaddr_in addr;
   memset((char *) &addr, 0, sizeof(addr));
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
   addr.sin_port = htons(port);
-
   if (bind(ssock_, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
     RAISE_ERRNO(kIOError, "bind() failed");
   }

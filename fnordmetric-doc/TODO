@@ -31,7 +31,6 @@
 
 [ release ]
     - svg: escape series names, labels!
-    - inline libev
     - ruby client
     - javascript client + doc
 

@@ -60,6 +60,11 @@ void HTTPInputStream::readHeaders(
 
     while (state_ == HTTP_STATE_HKEY) {
       readNextByte(&target->back().first);
+      std::transform(
+          target->back().first.begin(),
+          target->back().first.end(),
+          target->back().first.begin(),
+          ::tolower);
     }
 
     while (state_ == HTTP_STATE_HVAL) {
