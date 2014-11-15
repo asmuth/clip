@@ -566,6 +566,11 @@ input {
   right: 10px;
 }
 
+.pagination_navbar.metric.bottom {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .result_table .pagination_navbar {
   font-size: 90%;
   margin-top: -33px;

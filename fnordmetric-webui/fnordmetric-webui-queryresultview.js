@@ -97,7 +97,7 @@ FnordMetric.util.queryResultView = function() {
 
   function renderError(msg, elem) {
     var msg_field = document.createElement("div");
-    msg_field.className = "error_field";
+    msg_field.className = "error_box";
     msg_field.innerHTML = msg;
     elem.appendChild(msg_field);
   }

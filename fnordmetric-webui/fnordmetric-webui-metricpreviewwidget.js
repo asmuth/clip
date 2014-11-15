@@ -76,7 +76,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   function renderTable(table) {
     var table_view = FnordMetric.util.TableView(
-      table.columns, table_container, 25);
+      table.columns, table_container, 25, "bottom");
     elem.appendChild(table_container);
     for (i in table.rows) {
       table_view.addRow(table.rows[i]);

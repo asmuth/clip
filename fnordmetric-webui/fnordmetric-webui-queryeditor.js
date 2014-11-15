@@ -74,6 +74,10 @@ FnordMetric.views.QueryPlayground = function() {
       FnordMetric.util.setURLQueryString("query_playground", params, true, true);
     }
 
+    if (query_str.length < 3) {
+      return;
+    }
+
     FnordMetric.util.displayLoader(result_pane);
 
     FnordMetric.httpPost("/query", query_str, function(r, duration) {

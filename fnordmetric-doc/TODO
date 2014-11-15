@@ -21,7 +21,9 @@
     - execution info fix
 
 [ release ]
-    - functions: round, median, percentile
+    - ga js
+    - median
+    - last insert should not be zero!
     - svg: escape series names, labels!
 
 -----
@@ -32,6 +34,8 @@
     - do I need an external database
 
 [ feature q ]
+    - round fn
+    - percentiles
     - metric preview widget: auto refresh (on/off)
     - version numbers
     - deb pkg
