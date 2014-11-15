@@ -530,14 +530,54 @@ FnordMetric.util.isNavKey = function(keycode) {
     keycode == 46);
 }
 
+
 FnordMetric.util.validatedTimeInput = function (time_input, type) {
-  var input;
+  var input = time_input.value;
+
   time_input.addEventListener('keydown', function(e) {
     if (FnordMetric.util.isNumKey(e.keyCode)) {
-      var input = this.value;
-      //TODO validate input
-      return;
+      var n = String.fromCharCode(e.keyCode);
+      input = time_input.value;
+
+      if (type == "hour") {
+        if (input.length == 0) {
+          if (n >= 0 && n <= 2) {
+            input = n;
+            time_input.value = n;
+          } else{
+            e.preventDefault();
+          }
+        } else if (input.length == 1) {
+          console.log(input);
+          if (input < 2 || (input == 2 && n < 4)) {
+            input = input * 10 + n;
+            time_input.value += n;
+          } else {
+            e.preventDefault();
+          }
+        } else {
+          e.preventDefault();
+        }
+
+      } else if (type == "minute") {
+        if (input.length == 0) {
+          if (n >= 0 && n <= 5) {
+            input = n;
+            time_input.value = n;
+          } else {
+            e.preventDefault();
+          }
+        } else if (input.length == 1) {
+          input = input * 10 + n;
+          time_input.value += n;
+        } else {
+          e.preventDefault();
+        }
+      } else {
+        e.preventDefault();
+      }
     }
+
     if (!FnordMetric.util.isNavKey(e.keyCode)) {
       e.preventDefault();
     }
