@@ -14,7 +14,6 @@
     - group over doc: GROUP OVER TIMEWINDOW(time_window, step) oder so
 
 [ SQL ]
-    - no more "UNKNOWN TOKEN"
     - match function names case-insensitively
     - sql time helpers (1hour, etc)
     ---
