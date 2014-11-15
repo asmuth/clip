@@ -262,12 +262,26 @@ void HTTPAPI::executeQuery(
       break;
   }
 
+  int width = -1;
+  std::string width_param;
+  if (util::URI::getParam(params, "width", &width_param)) {
+    width = std::stoi(width_param);
+  }
+
+  int height = -1;
+  std::string height_param;
+  if (util::URI::getParam(params, "height", &height_param)) {
+    height = std::stoi(height_param);
+  }
+
   try {
     query_service.executeQuery(
         input_stream,
         resp_format,
         output_stream,
-        std::move(table_repo));
+        std::move(table_repo),
+        width,
+        height);
 
   } catch (util::RuntimeException e) {
     response->clearBody();

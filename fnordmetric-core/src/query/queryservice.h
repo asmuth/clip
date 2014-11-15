@@ -65,7 +65,9 @@ public:
       std::shared_ptr<util::InputStream> input_stream,
       kFormat output_format,
       std::shared_ptr<util::OutputStream> output_stream,
-      std::unique_ptr<TableRepository> table_repo);
+      std::unique_ptr<TableRepository> table_repo,
+      int width = -1,
+      int height = -1);
 
   /**
    * Register a query backend
@@ -74,8 +76,18 @@ public:
 
 protected:
 
-  void renderCharts(Query* query, ui::RenderTarget* target) const;
-  void renderJSON(Query* query, util::JSONOutputStream* target) const;
+  void renderCharts(
+      Query* query,
+      ui::RenderTarget* target,
+      int width,
+      int height) const;
+
+  void renderJSON(
+      Query* query,
+      util::JSONOutputStream* target,
+      int width,
+      int height) const;
+
   void renderTables(Query* query, util::OutputStream* out) const;
 
   DefaultRuntime runtime_;

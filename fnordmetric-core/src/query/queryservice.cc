@@ -38,7 +38,9 @@ void QueryService::executeQuery(
     std::shared_ptr<util::InputStream> input_stream,
     kFormat output_format,
     std::shared_ptr<util::OutputStream> output_stream,
-    std::unique_ptr<TableRepository> table_repo) {
+    std::unique_ptr<TableRepository> table_repo,
+    int width /* = -1 */,
+    int height /* = -1 */) {
   std::string query_string;
   input_stream->readUntilEOF(&query_string);
 
@@ -54,16 +56,15 @@ void QueryService::executeQuery(
     query.execute();
 
     switch (output_format) {
-
       case FORMAT_SVG: {
         ui::SVGTarget target(output_stream.get());
-        renderCharts(&query, &target);
+        renderCharts(&query, &target, width, height);
         break;
       }
 
       case FORMAT_JSON: {
         util::JSONOutputStream target(output_stream);
-        renderJSON(&query, &target);
+        renderJSON(&query, &target, width, height);
         break;
       }
 
@@ -86,14 +87,23 @@ void QueryService::registerBackend(std::unique_ptr<Backend>&& backend) {
   runtime_.addBackend(std::move(backend));
 }
 
-void QueryService::renderCharts(Query* query, ui::RenderTarget* target) const {
+void QueryService::renderCharts(
+    Query* query,
+    ui::RenderTarget* target,
+    int width,
+    int height) const {
   for (int i = 0; i < query->getNumCharts(); ++i) {
-    query->getChart(i)->render(target);
+    auto chart = query->getChart(i);
+    chart->setDimensions(width, height);
+    chart->render(target);
   }
 }
 
-void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
-    const {
+void QueryService::renderJSON(
+    Query* query,
+    util::JSONOutputStream* target,
+    int width,
+    int height) const {
   target->beginObject();
 
   if (query->getNumResultLists() > 0) {
@@ -153,7 +163,9 @@ void QueryService::renderJSON(Query* query, util::JSONOutputStream* target)
       std::string svg_data;
       auto string_stream = util::StringOutputStream::fromString(&svg_data);
       ui::SVGTarget svg_target(string_stream.get());
-      query->getChart(i)->render(&svg_target);
+      auto chart = query->getChart(i);
+      chart->setDimensions(width, height);
+      chart->render(&svg_target);
 
       target->beginObject();
       target->addObjectEntry("svg");
