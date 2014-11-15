@@ -38,18 +38,13 @@ FnordMetric.views.QueryPlayground = function() {
   var button_bar;
 
   function renderExecutionInfo(duration, tables, elem) {
-    if (tables == undefined) {return;}
-    if (elem.lastChild.className == "info_field") {
-      elem.removeChild(elem.lastChild);
-    }
     var info_field = document.createElement("div");
     info_field.className = "info_field";
     var duration = FnordMetric.util.parseMilliTS(duration);
     var rows = FnordMetric.util.humanCountRows(tables);
     info_field.innerHTML =
-      "The execution took " + duration + 
+      "Query execution took " + duration + 
       " and returned " + rows;
-    info_field.style.top = elem.offsetHeight + "px";
     elem.appendChild(info_field);
   }
 
@@ -58,7 +53,7 @@ FnordMetric.views.QueryPlayground = function() {
     var error_box = document.createElement("div");
     error_box.className = "error_box";
     error_box.innerHTML = 
-      "Oopps. FnordMetric Server encountered an error. " + "<br>" + 
+      "Sorry, FnordMetric Server encountered an error. " + "<br>" + 
       "If you believe this is a bug in FnordMetric Server "+
       "please report an issue at github.com/.../issues.";
     elem.appendChild(error_box);

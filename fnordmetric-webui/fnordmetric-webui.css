@@ -853,9 +853,9 @@ table.metric_list tr:hover td {
 }
 
 .info_field {
-  font-style: italic;
-  position: absolute;
-  left: 5px;
+  margin: 20px 10px;
+  text-align: center;
+  font-size: 90%;
 }
 
 .popup_ui.background {
