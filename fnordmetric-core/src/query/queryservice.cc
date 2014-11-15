@@ -132,11 +132,12 @@ void QueryService::renderJSON(
         const auto& row = result_list->getRow(j);
 
         target->beginArray();
-        for (const auto& col : row) {
-          target->addString(col);
-          if (col != row.back()) {
+        for (int i = 0; i < row.size(); ++i) {
+          if (i > 0) {
             target->addComma();
           }
+
+          target->addString(row[i]);
         }
         target->endArray();
 

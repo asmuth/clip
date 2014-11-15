@@ -8,8 +8,8 @@ general syntax of the DRAW statement is:
     DRAW <charttype> [ WITH ] <options>;
 
 All SELECT statements that follow a DRAW statement are interpreted as chart data.
-The currently implemented charttypes are `AREACHART`, `BARCHART`, `HEATMAP`, 
-`HISTOGRAM`, `LINECHART` and `POINTCHART`;
+The currently implemented charttypes are `AREACHART`, `BARCHART`, `LINECHART`
+and `POINTCHART`;
 
 For example, a simple draw statement to draw a line chart looks like this:
 
