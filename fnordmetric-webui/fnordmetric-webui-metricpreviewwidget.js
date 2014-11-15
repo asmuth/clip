@@ -89,7 +89,12 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   }
 
   function renderError(message) {
-    chart_container.innerHTML = message;
+    var error_box = document.createElement("div");
+    error_box.className = "error_box";
+    error_box.innerHTML = message;
+    table_container.innerHTML = "";
+    chart_container.innerHTML = "";
+    chart_container.appendChild(error_box);
   }
 
   function runQuery() {

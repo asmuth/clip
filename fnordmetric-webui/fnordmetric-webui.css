@@ -501,7 +501,7 @@ input {
   margin-bottom: 70px;
 }
 
-.result_pane .error_box {
+.error_box {
   width: 90%;
   margin:auto;
   margin-top: 20px;
@@ -904,6 +904,11 @@ h1.page_header em {
   font-size: 90%;
   padding: 0 20px;
   text-align: right;
+}
+
+.metric_preview_secondary_controls a {
+  color: #60707f;
+  text-decoration: none;
 }
 
 .metric_preview_secondary_controls .btn + .btn {
