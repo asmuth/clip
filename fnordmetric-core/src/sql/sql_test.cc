@@ -1325,3 +1325,37 @@ TEST_CASE(SQLTest, TestInvalidQueries, [] () {
     EXPECT(raised);
   }
 });
+
+TEST_CASE(SQLTest, TestMeanAggregation, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    mean(one)"
+      "  FROM"
+      "    testtable2;");
+
+  EXPECT_EQ(results->getNumRows(), 1);
+  EXPECT_EQ(results->getRow(0)[0], "6.875000");
+});
+
+TEST_CASE(SQLTest, TestMaxAggregation, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    max(one)"
+      "  FROM"
+      "    testtable2;");
+
+  EXPECT_EQ(results->getNumRows(), 1);
+  EXPECT_EQ(results->getRow(0)[0], "10.000000");
+});
+
+TEST_CASE(SQLTest, TestMinAggregation, [] () {
+  auto results = executeTestQuery(
+      "  SELECT"
+      "    min(one)"
+      "  FROM"
+      "    testtable2;");
+
+  EXPECT_EQ(results->getNumRows(), 1);
+  EXPECT_EQ(results->getRow(0)[0], "1.000000");
+});
+

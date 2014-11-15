@@ -25,7 +25,7 @@
     - metric preview widget: auto refresh (on/off)
 
 [ SQL ]
-    - functions: round, mean, max/min, percentile, delta
+    - functions: round, median, percentile, delta
 
 [ release ]
     - svg: escape series names, labels!
