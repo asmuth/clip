@@ -408,7 +408,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   var table_ref = params.innerViewValue
   var view = params.view;
   /* column for rollups */
-  var columns = params.columns.split(",");; 
+  var columns = params.columns.split(",");
   var start_time = Math.round(params.start_time / 1000);
   var end_time = Math.round(params.end_time / 1000);
   var t_step = params.t_step;
@@ -434,8 +434,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     draw_stm = "DRAW BARCHART AXIS BOTTOM AXIS LEFT;";
     var func = (view.split("_"))[1];
     //how to define which column should be selected
+    var column = (columns[0].length > 0)? 
+      ("`" + columns[0] + "`") : "'total'";
+    console.log("column " + columns[0].length);
     select_expr = 
-      " SELECT `" + columns[0] + "` AS X, " + func + "(value) AS Y";
+      " SELECT " + column + " AS X, " + func + "(value) AS Y";
 
     hasAggregation = true;
   } else {
@@ -443,6 +446,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       view.toLowerCase() + "(value) AS Y";
     hasAggregation = true;
   }
+  if (by != undefined && by.length > 0) {
+    select_expr += ", " + by + " AS series";
+  }
+
+  console.log(select_expr);
 
   /* complete from_expr */
   from_expr += "`" + table_ref + "`";

@@ -49,24 +49,31 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   // FIXLAURA allow multiple key value pairs as input
   function updateURLParams(key, value) {
-    query_params[key] = value.toString();
-    FnordMetric.util.setURLQueryString(
-      "metric_list", query_params, false, true);
+    if (value != undefined) {
+      query_params[key] = value.toString();
+      FnordMetric.util.setURLQueryString(
+        "metric_list", query_params, false, true);
+    }
   }
 
   /* checks if required url params are misssing and adds those if so */
   function addRequiredURLParamsForView(value) {
     if (value == "count" || value == "sum" || value == "mean") {
-      var group_by = query_params.by;
-      if (group_by == undefined) {
-        group_by = defaults.by;
-        updateURLParams("by", group_by);
-      }
       var time_step = query_params.t_step;
       if (time_step == undefined) {
         time_step = defaults.t_step;
         updateURLParams("t_step", time_step);
       }
+    }
+    var group_by = query_params.by;
+    if (group_by == undefined) {
+      group_by = defaults.by;
+      updateURLParams("by", group_by);
+    }
+    var param_columns = query_params.columns;
+    if (param_columns == undefined) {
+      param_columns = defaults.columns;
+      updateURLParams("columns", param_columns);
     }
   }
 
@@ -210,9 +217,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       rollup_select.appendChild(option);
     });
 
-    rollup_select.value = 
+    var rollup_value = 
       FnordMetric.util.reverseLowerCaseUnderscore(
         getQueryParamOrDefaultValue("view"));
+
+    rollup_select.value = rollup_value;
 
     var aggregate_options = [
         "1s",
@@ -451,7 +460,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       runQuery();
     }, false);
 
-
+    addRequiredURLParamsForView(rollup_value);
     handleAggregationDisplay(rollup_select.value, t_window, t_step, group_buttons);
     runQuery();
 
