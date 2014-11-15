@@ -25,18 +25,29 @@ FnordMetric.util.embedPopup = function(elem) {
     elem.appendChild(background);
 
     var popup = document.createElement("div");
-    popup.className = "popup";
+    popup.className = "popup_ui";
+
+    var tabbar = document.createElement("div");
+    tabbar.className = "controls";
 
     var close_btn = FnordMetric.createButton(
-      "#", undefined, "X");
+      "#", "close_btn", "X");
 
-    var innerWindow = document.createElement("div");
-    innerWindow.className = "inner_window";
+    var iframe_tab = FnordMetric.createButton(
+      "#", "tab", "iFrame");
+
+    var url_tab = FnordMetric.createButton(
+      "#", "tab", "URL");
+
+    var html_tab = FnordMetric.createButton(
+      "#", "tab", "HTML");
 
     popup.appendChild(close_btn);
-    popup.appendChild(innerWindow);
-    elem.appendChild(
-
+    tabbar.appendChild(iframe_tab);
+    tabbar.appendChild(url_tab);
+    tabbar.appendChild(html_tab);
+    popup.appendChild(tabbar);
+    elem.appendChild(popup);
   }
 
   function close() {
