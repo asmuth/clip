@@ -10,12 +10,12 @@ kindly referred to the remaining pages.
 If you want to learn how to draw charts from SQL query results using ChartSQL and
 the FnordMetric command line interface, read:
 
-  + [Gettting Started with ChartSQL in 5 minutes](/documentation/getting_started/fnordmetric-cli)
+  + [Getting Started with ChartSQL in 5 minutes](/documentation/getting_started/fnordmetric-cli)
 
 If you want to see how you can collect timeseries data with FnordMetric Server
 and query it using a web interface and ChartSQL, read:
 
-  + [Gettting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
+  + [Getting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
 
 ---
 
