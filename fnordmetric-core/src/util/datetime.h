@@ -82,10 +82,12 @@ protected:
 }
 }
 
-template <> class std::numeric_limits<fnord::util::DateTime> {
+namespace std {
+template <> class numeric_limits<fnord::util::DateTime> {
 public:
   static fnord::util::DateTime max();
   static fnord::util::DateTime min();
 };
+}
 
 #endif
