@@ -23,7 +23,7 @@ the first sample using the HTTP API, run this from your command line:
 In our example, this would record a single sale of 23.50 in or shop. Execute the
 command a few times with different values to simulate a few "sales". Then open
 the FnordMetric Server web UI on http://localhost:8080/ in your browser and
-excute this query to show the data you just inserted:
+execute this query to show the data you just inserted:
 
     SELECT time, value FROM myshop_sales;
 

@@ -19,7 +19,7 @@ that you might have.
   + add some new features to the query engine (requires c++ knowledge)
   + many more! improve all the things :)
 
-#### Individial Contributors to FnordMetric
+#### Individual Contributors to FnordMetric
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
 + Christian Parpart (http://github.com/trapni)

@@ -27,7 +27,7 @@ The IMPORT Statement
 --------------------
 
 The IMPORT statement allows you to import tables from External Data Sources,
-like CSV files or a MySQL database. Here is a asmple axmple of the IMPORT
+like CSV files or a MySQL database. Here is a sample example of the IMPORT
 statement:
 
     IMPORT TABLE example_data

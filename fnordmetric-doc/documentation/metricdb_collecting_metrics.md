@@ -68,7 +68,7 @@ can filter and aggregate/group by label values.
     > select time, value, hostname, datacenter from cpu_util;
 
     ==============================================================
-    | time                  |  value  | hostanme   | datacenter  |
+    | time                  |  value  | hostname   | datacenter  |
     ==============================================================
     | 2014-11-08 20:30:12   |  0.873  | machine64  | ams1        |
     | 2014-11-08 20:30:12   |  0.352  | machine65  | ams1        |

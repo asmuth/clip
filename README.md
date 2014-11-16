@@ -44,7 +44,7 @@ You can find the full FnordMetric Documentation at http://fnordmetric.io/
 Contributions
 -------------
 
-#### Individial Contributors to FnordMetric
+#### Individual Contributors to FnordMetric
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
 + Christian Parpart (http://github.com/trapni)
