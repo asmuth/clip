@@ -131,31 +131,21 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       tw_select.disabled = true;
       step_select.className = "disabled";
       step_select.disabled = true;
-      if (show == "Value") {
-        group_btns.map(function(btn) {
-          btn.className = "disabled";
-        });
-      } else {
-        group_btns.map(function(btn) {
-          btn.className = "";
-        });
-      }
     } else {
       tw_select.className = "";
       tw_select.disabled = false;
       step_select.className = "";
       step_select.disabled = false;
-      var by_str = (query_params.by == undefined)?
-        "" : query_params.by;
-      group_btns.map(function(btn) {
-        if (by_str.indexOf(btn.innerText) > -1) {
-          btn.className = "active";
-        } else {
-          btn.className = "";
-        }
-      });
     }
-
+    var by_str = (query_params.by == undefined)?
+      "" : query_params.by;
+    group_btns.map(function(btn) {
+      if (by_str.indexOf(btn.innerText) > -1) {
+        btn.className = "active";
+      } else {
+        btn.className = "";
+      }
+    });
   }
 
   function updateDateTimeElems(title, input, start_time, end_time) {

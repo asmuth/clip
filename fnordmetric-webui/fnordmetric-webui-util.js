@@ -433,10 +433,11 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
     draw_stm = "DRAW BARCHART\n  AXIS BOTTOM\n  AXIS LEFT;";
     var func = (view.split("_"))[1];
-    //how to define which column should be selected
+
+    /* if the metric hasn't any labels total is selected */
     var column = (columns[0].length > 0)? 
       ("`" + columns[0] + "`") : "'total'";
-    console.log("column " + columns[0].length);
+
     select_expr = 
       " SELECT " + column + " AS X, " + func + "(value) AS Y";
 
@@ -447,10 +448,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     hasAggregation = true;
   }
   if (by != undefined && by.length > 0) {
-    select_expr += ", " + by + " AS series";
+    var series = by.replace(/,/g, " + ',' + ");
+    select_expr += ", " + series + " AS series";
   }
-
-  console.log(select_expr);
 
   /* complete from_expr */
   from_expr += "    `" + table_ref + "`\n";
@@ -493,7 +493,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     }
   }
 
-  console.log(group_expr);
 
   query = 
     draw_stm + select_expr + from_expr +
