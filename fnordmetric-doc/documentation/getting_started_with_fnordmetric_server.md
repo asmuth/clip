@@ -26,8 +26,7 @@ metric data in a folder on the local hard disk. To start a FnordMetric server
 instance with a local disk storage backend on HTTP port 8080 run:
 
     $ mkdir -p /tmp/fnordmetric-data
-    $ fnordmetric-server --http_port 8080 --statsd_port 8125 --storage_backend=disk --datadir=/tmp/fnordmetric-data
-
+    $ fnordmetric-server --http_port 8080 --statsd_port 8125 --storage_backend disk --datadir /tmp/fnordmetric-data
 
 #### Collecting Timeseries Data
 

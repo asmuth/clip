@@ -151,7 +151,7 @@ static void printUsage() {
   err_stream->printf("\noptions:\n");
   env()->flags()->printUsage(err_stream.get());
   err_stream->printf("\nexamples:\n");
-  err_stream->printf("    $ fnordmeric-server --http_port 8080 --statsd_port 8125 --datadir /tmp/fnordmetric-data\n");
+  err_stream->printf("    $ fnordmetric-server --http_port 8080 --statsd_port 8125 --datadir /tmp/fnordmetric-data\n");
 }
 
 int main(int argc, const char** argv) {
