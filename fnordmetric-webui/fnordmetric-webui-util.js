@@ -408,7 +408,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   var table_ref = params.innerViewValue
   var view = params.view;
   /* column for rollups */
-  var columns = params.columns.split(",");; 
+  var columns = params.columns.split(",");
   var start_time = Math.round(params.start_time / 1000);
   var end_time = Math.round(params.end_time / 1000);
   var t_step = params.t_step;
@@ -433,15 +433,23 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
     draw_stm = "DRAW BARCHART\n  AXIS BOTTOM\n  AXIS LEFT;";
     var func = (view.split("_"))[1];
-    //how to define which column should be selected
+
+    /* if the metric hasn't any labels total is selected */
+    var column = (columns[0].length > 0)? 
+      ("`" + columns[0] + "`") : "'total'";
+
     select_expr = 
-      " SELECT\n    `" + columns[0] + "` AS X,\n    " + func + "(value) AS Y";
+      " SELECT " + column + " AS X, " + func + "(value) AS Y";
 
     hasAggregation = true;
   } else {
     select_expr +=
       view.toLowerCase() + "(value) AS Y";
     hasAggregation = true;
+  }
+  if (by != undefined && by.length > 0) {
+    var series = by.replace(/,/g, " + ',' + ");
+    select_expr += ", " + series + " AS series";
   }
 
   /* complete from_expr */
@@ -485,7 +493,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     }
   }
 
-  console.log(group_expr);
 
   query = 
     draw_stm + select_expr + from_expr +

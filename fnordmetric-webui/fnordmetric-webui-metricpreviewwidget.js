@@ -46,24 +46,32 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   // FIXLAURA allow multiple key value pairs as input
   function updateURLParams(key, value) {
-    query_params[key] = value.toString();
-    FnordMetric.util.setURLQueryString(
-      "metric_list", query_params, false, true);
+    if (value != undefined) {
+      query_params[key] = value.toString();
+      FnordMetric.util.setURLQueryString(
+        "metric_list", query_params, false, true);
+    }
   }
 
   /* checks if required url params are misssing and adds those if so */
   function addRequiredURLParamsForView(value) {
-    if (value != "value") {
-      var group_by = query_params.by;
-      if (group_by == undefined) {
-        group_by = defaults.by;
-        updateURLParams("by", group_by);
-      }
+    if (value == "count" || value == "sum" || value == "mean") {
+
       var time_step = query_params.t_step;
       if (time_step == undefined) {
         time_step = defaults.t_step;
         updateURLParams("t_step", time_step);
       }
+    }
+    var group_by = query_params.by;
+    if (group_by == undefined) {
+      group_by = defaults.by;
+      updateURLParams("by", group_by);
+    }
+    var param_columns = query_params.columns;
+    if (param_columns == undefined) {
+      param_columns = defaults.columns;
+      updateURLParams("columns", param_columns);
     }
   }
 
@@ -123,31 +131,21 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       tw_select.disabled = true;
       step_select.className = "disabled";
       step_select.disabled = true;
-      if (show == "Value") {
-        group_btns.map(function(btn) {
-          btn.className = "disabled";
-        });
-      } else {
-        group_btns.map(function(btn) {
-          btn.className = "";
-        });
-      }
     } else {
       tw_select.className = "";
       tw_select.disabled = false;
       step_select.className = "";
       step_select.disabled = false;
-      var by_str = (query_params.by == undefined)?
-        "" : query_params.by;
-      group_btns.map(function(btn) {
-        if (by_str.indexOf(btn.innerText) > -1) {
-          btn.className = "active";
-        } else {
-          btn.className = "";
-        }
-      });
     }
-
+    var by_str = (query_params.by == undefined)?
+      "" : query_params.by;
+    group_btns.map(function(btn) {
+      if (by_str.indexOf(btn.innerText) > -1) {
+        btn.className = "active";
+      } else {
+        btn.className = "";
+      }
+    });
   }
 
   function updateDateTimeElems(title, input, start_time, end_time) {
@@ -225,9 +223,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       rollup_select.appendChild(option);
     });
 
-    rollup_select.value = 
+    var rollup_value = 
       FnordMetric.util.reverseLowerCaseUnderscore(
         getQueryParamOrDefaultValue("view"));
+
+    rollup_select.value = rollup_value;
 
     var aggregate_options = [
         "1s",
@@ -473,7 +473,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       }
     }, false);
 
-
+    addRequiredURLParamsForView(rollup_value);
     handleAggregationDisplay(rollup_select.value, t_window, t_step, group_buttons);
     runQuery();
 
