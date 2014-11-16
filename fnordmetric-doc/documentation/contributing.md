@@ -19,31 +19,32 @@ that you might have.
   + add some new features to the query engine (requires c++ knowledge)
   + many more! improve all the things :)
 
-### Other Open Source Software included in FnordMetric
+#### Individial Contributors to FnordMetric
 
-  + Christian Parpart's xzero -- HTTP library (http://github.com/xzero)
-  + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
-
-### Individial Contributors to FnordMetric
-
- + Laura Schlimmer (http://github.com/lauraschlimmer)
- + Christian Parpart (http://github.com/trapni)
- + Simon Menke (http://github.com/fd),
- + Bruno Michel (http://github.com/nono),
- + Marco Borromeo (http://github.com/mborromeo),
- + Leo Lou (http://github.com/l4u)
- + Andy Lindeman (http://github.com/alindeman),
- + Jurriaan Pruis (http://github.com/jurriaan),
- + Kacper Bielecki (http://github.com/kazjote),
- + John Murray (http://github.com/JohnMurray),
- + Lars Gierth (http://github.com/lgierth),
- + Ross Kaffenberger (http://github.com/rossta),
- + Kunal Modi (http://github.com/kunalmodi),
- + Michael Fairchild (http://github.com/fairchild),
- + James Cox (http://github.com/imajes),
- + Pieter Noordhuis (http://github.com/pietern),
- + Tadas Ščerbinskas (http://github.com/tadassce),
- + Sebastian Korfmann (http://github.com/skorfmann)
- + Paul Asmuth (http://github.com/paulasmuth)
++ Laura Schlimmer (http://github.com/lauraschlimmer)
++ Christian Parpart (http://github.com/trapni)
++ Simon Menke (http://github.com/fd),
++ Bruno Michel (http://github.com/nono),
++ Marco Borromeo (http://github.com/mborromeo),
++ Leo Lou (http://github.com/l4u)
++ Andy Lindeman (http://github.com/alindeman),
++ Jurriaan Pruis (http://github.com/jurriaan),
++ Kacper Bielecki (http://github.com/kazjote),
++ John Murray (http://github.com/JohnMurray),
++ Lars Gierth (http://github.com/lgierth),
++ Ross Kaffenberger (http://github.com/rossta),
++ Kunal Modi (http://github.com/kunalmodi),
++ Michael Fairchild (http://github.com/fairchild),
++ James Cox (http://github.com/imajes),
++ Pieter Noordhuis (http://github.com/pietern),
++ Tadas Ščerbinskas (http://github.com/tadassce),
++ Sebastian Korfmann (http://github.com/skorfmann)
++ Paul Asmuth (http://github.com/paulasmuth)
 
 [http://github.com/paulasmuth/fnordmetric/graphs/contributors](http://github.com/paulasmuth/fnordmetric/graphs/contributors)
+
+#### Other Open Source Software included in FnordMetric
+
+  + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
+  + FontAwesome --- icon font (http://fontawesome.io/)
+

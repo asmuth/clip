@@ -44,13 +44,11 @@ ChartSQL Syntax Reference
 
     DRAW LINECHART
         [ [ WITH ]
-              common_chart_options
-              [ LABELS ] ]
+              common_chart_options ]
 
     DRAW POINTCHART
         [ [ WITH ]
-              common_chart_options
-              [ LABELS ] ]
+              common_chart_options ]
 
 ### The IMPORT statement
 
