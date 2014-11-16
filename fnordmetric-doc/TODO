@@ -1,6 +1,3 @@
-[ doc ]
-    - html5 api references
-
 [ frontend ]
     - embed popup
     - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
