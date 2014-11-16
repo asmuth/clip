@@ -23,6 +23,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var chart_container = document.createElement("div");
   var now = Date.now();
   var columns = [];
+  var controls_query;
 
   var defaults = {
     view : "value",
@@ -101,9 +102,16 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     chart_container.appendChild(error_box);
   }
 
+  function updateSQLQueryLink(query) {
+    controls_query.href =
+      "/admin#query_playground?sql_query=" +
+      encodeURIComponent(query);
+  }
+
   function runQuery() {
-    var querystr = 
+    var querystr =
       FnordMetric.util.generateSQLQueryFromParams(query_params);
+    updateSQLQueryLink(querystr);
     var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
     FnordMetric.util.displayLoader(chart_container);
     table_container.innerHTML = "";
@@ -124,9 +132,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
 
   function handleAggregationDisplay(show, tw_select, step_select, group_btns) {
-    // change shpow to view
     var group_btns = (group_btns == undefined)? [] : group_btns;
-    if (show == "Value" || show == "Rollup") {
+    if (show == "Value" || show.substr(0,6) == "Rollup") {
       tw_select.className = "disabled";
       tw_select.disabled = true;
       step_select.className = "disabled";
@@ -333,7 +340,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     elem.appendChild(secondary_controls);
     secondary_controls.className = "metric_preview_secondary_controls";
 
-    var controls_query = FnordMetric.createButton(
+    controls_query = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
     controls_query.onclick = function(e) {
       e.preventDefault();
@@ -343,6 +350,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       FnordMetric.WebUI.singleton.openUrl(
         "query_playground?sql_query="+query, true);
     };
+
 
     var controls_embed = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-share'></i> Embed");
