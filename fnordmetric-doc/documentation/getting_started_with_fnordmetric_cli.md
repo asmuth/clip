@@ -63,7 +63,7 @@ we want to plot the months on the X axis and the corresponding temperatures on t
 so we add this DRAW statement to our example_query.sql file:
 
 
-    IMPORT city_temperatures FROM "csv://city_temperatures.csv?headers=true"
+    IMPORT TABLE city_temperatures FROM "csv://city_temperatures.csv?headers=true"
 
     DRAW LINECHART;
 
@@ -78,7 +78,7 @@ somewhat like the chart in the beginning of this guide. We are still missing
 axes, the legend and points. After adding these, we have completed our
 example_query.sql file:
 
-    IMPORT city_temperatures FROM "csv://city_temperatures.csv?headers=true"
+    IMPORT TABLE city_temperatures FROM "csv://city_temperatures.csv?headers=true"
 
     DRAW LINECHART WITH
         AXIS LEFT
