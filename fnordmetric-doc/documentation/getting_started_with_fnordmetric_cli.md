@@ -26,7 +26,7 @@ where the content looks similar to this:
 
 Download city_temperatures.csv to a folder on your system. Within the same folder create another file called example_query.sql with the following content:
 
-    IMPORT city_temperatures FROM "csv://city_temperatures.csv?headers=true"
+    IMPORT TABLE city_temperatures FROM "csv://city_temperatures.csv?headers=true"
 
     SELECT * FROM city_temperatures;
 
