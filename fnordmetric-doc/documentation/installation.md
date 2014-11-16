@@ -13,7 +13,8 @@ You can find the complete [source code on Github](http://github.com/paulasmuth/f
 To compile fnordmetric
 
     $ git clone https://github.com/paulasmuth/fnordmetric.git && cd fnordmetric/fnordmetric-core
-    $ make install
+    $ make
+    $ sudo make install
 
 To run the tests
 
