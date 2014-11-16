@@ -88,7 +88,11 @@ like this:
 <div style="width:960px; margin:50px auto 40px auto; height:583px; overflow: hidden;" class="shadow">
   <video width="960" height="583" autoplay="autoplay" loop>
     <source src="/fnordmetric-server.mp4" type="video/mp4">
-    <source src="/fnordmetric-server.webm" type="video/webm">
+    <script type="text/javascript">
+      if (!(navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0)) {
+        document.write('<source src="/fnordmetric-server.webm" type="video/webm">');
+      }
+    </script>
     <img src="/img/fnordmetric_server_screen.png" width="875" />
   </video>
 </div>
