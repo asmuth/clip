@@ -1,7 +1,5 @@
-[ frontend ]
-    - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
-
 [ release ]
+    - hover flyoouts for button bar in sql editor "Refresh, Change View and use CTRL+enter"
     - median
     - fix mean
 
