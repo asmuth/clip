@@ -6,7 +6,7 @@ enables you to build beautiful real-time analytics dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
 
-Demo Video: http://fnordmetric.io/fnordmetric-server.mp4
+Demo Video: [http://fnordmetric.io/fnordmetric-server.mp4](http://fnordmetric.io/fnordmetric-server.mp4)
 
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric-dev/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
