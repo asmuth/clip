@@ -52,6 +52,12 @@ class DocApp < Sinatra::Base
     render_with_layout
   end
 
+  get "/chartsql" do
+    @yield = render(:erb, IO.read(File.join(BASEDIR, 'index.erb')))
+    @body_classes = "colorbg"
+    render_with_layout
+  end
+
   get "/examples" do
     @title = "Examples"
     @route = "/index"
@@ -132,6 +138,7 @@ task :render do
 
   routes = %w{
     /
+    /chartsql
     /documentation
     /examples}
 
