@@ -75,7 +75,7 @@ of the y column must be `Numeric`.
   <tr>
     <th>color <i>(optional)</i></th>
     <td>
-      the line/point color (hex value, eg. #ff0000)
+      the area/line/point color (hex value, eg. #ff0000)
     </td>
   </tr>
 </table>
@@ -154,7 +154,7 @@ of the y and z column must be `Numeric`.
   <tr>
     <th>color <i>(optional)</i></th>
     <td>
-      the line/point color (hex value, eg. #ff0000)
+      the area/line/point color (hex value, eg. #ff0000)
     </td>
   </tr>
 </table>

@@ -104,16 +104,17 @@ documentation:
         url: "/chartsql/linecharts"
         file: "chartsql_linecharts"
       -
-        title: "Point Charts"
-        url: "/chartsql/pointcharts"
-        file: "chartsql_pointcharts"
-      -
         title: "Area Charts"
         url: "/chartsql/areacharts"
         file: "chartsql_areacharts"
       -
         title: "Bar Charts"
-        url: "/query_language/reference"
+        url: "/chartsql/barcharts"
+        file: "chartsql_barcharts"
+      -
+        title: "Point Charts"
+        url: "/chartsql/pointcharts"
+        file: "chartsql_pointcharts"
       #-
       #  title: "Interactive Charts"
       #  url: "/query_language/reference"
