@@ -78,7 +78,7 @@ FnordMetric.views.QueryPlayground = function() {
     FnordMetric.httpPost("/query", query_str, function(r, duration) {
       if (r.status == 200 && r.statusText == "OK") {
         var res = JSON.parse(r.response);
-        FnordMetric.util.queryResultView().render(
+        FnordMetric.util.queryResultView(query_str).render(
           result_pane, res, duration);
         updateLayout(editor_pane, result_pane, direction);
         renderExecutionInfo(duration, res.tables, result_pane);

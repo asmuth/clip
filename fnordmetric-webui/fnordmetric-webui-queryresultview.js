@@ -17,7 +17,7 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
-FnordMetric.util.queryResultView = function() {
+FnordMetric.util.queryResultView = function(query_str) {
 
   function renderChart(chart, elem) {
     elem.innerHTML = "";
@@ -35,7 +35,7 @@ FnordMetric.util.queryResultView = function() {
     controls.appendChild(controls_embed);
     controls_embed.onclick = function(e) {
       e.preventDefault();
-      FnordMetric.util.embedPopup(elem).render()
+      FnordMetric.util.embedPopup(elem, query_str).render()
     }
 
     var controls = document.createElement("div");
