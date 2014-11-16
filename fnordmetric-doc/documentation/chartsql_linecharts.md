@@ -52,7 +52,7 @@ of the y column can be any of  `String`, `DateTime`, `Numeric`.
   <tr>
     <th>pointstyle <i>(optional)</i></th>
     <td>
-      the poiny style, valid values are `circle` and `none`. default: `none`
+      the point style, valid values are `circle` and `none`. default: `none`.
     </td>
   </tr>
   <tr>

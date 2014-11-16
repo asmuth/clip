@@ -109,7 +109,8 @@ documentation:
         file: "chartsql_pointcharts"
       -
         title: "Area Charts"
-        url: "/query_language/reference"
+        url: "/chartsql/areacharts"
+        file: "chartsql_areacharts"
       -
         title: "Bar Charts"
         url: "/query_language/reference"

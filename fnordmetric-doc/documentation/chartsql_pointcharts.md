@@ -11,7 +11,7 @@ The syntax for pointcharts is:
 2D Point Charts
 ---------------
 
-All 2D Point Chart series must have at least two columns: `x` and `y`. A 3D Point
+All 2D Point Chart series must have at least two columns: `x` and `y`. A 2D Point
 Chart will draw one point at (x, y) for each input row.
 
 The type of the x column can be any of `String`, `DateTime`, `Numeric`. The type
@@ -42,7 +42,7 @@ of the y column can be any of  `String`, `DateTime`, `Numeric`.
   <tr>
     <th>pointstyle <i>(optional)</i></th>
     <td>
-      the poiny style, valid values are `circle` and `none`. default: `none`
+      the point style, valid values are `circle` and `none`. default: `none`
     </td>
   </tr>
   <tr>
