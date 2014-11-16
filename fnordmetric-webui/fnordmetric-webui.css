@@ -100,7 +100,11 @@
 .fa-chevron-right:before {
   content: "\f054";
 }
-
+.fa-remove:before,
+.fa-close:before,
+.fa-times:before {
+  content: "\f00d";
+}
 .fa-spin {
   -webkit-animation: fa-spin 1s infinite linear;
   animation: fa-spin 1s infinite linear;
@@ -859,7 +863,7 @@ table.metric_list tr:hover td {
 }
 
 .popup_ui.background {
-  position: absolute;
+  position: fixed;
   top: 0;
   left:0;
   height: 100%;
@@ -871,9 +875,8 @@ table.metric_list tr:hover td {
   text-align: center;
 }
 
-
 .popup_ui {
-  position: absolute;
+  position: fixed;
   min-height: 400px;
   width: 40%;
   min-width: 700px;
@@ -882,6 +885,16 @@ table.metric_list tr:hover td {
   left: 30%;
   top:90px;
   background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 3px rgba(0,0,0,.1);
+}
+
+.popup_ui .inner {
+  padding: 20px;
+}
+
+.popup_ui .close_btn:hover {
+  color: #009fe9;
 }
 
 .popup_ui .controls {
@@ -900,10 +913,11 @@ table.metric_list tr:hover td {
 }
 
 .popup_ui .close_btn {
-  float: left;
+  float: right;
   color: #444;
   text-decoration: none;
-  padding: 2px;
+  line-height: 40px;
+  margin: 0 20px;
 }
 
 .popup_ui .inner_window {
@@ -973,6 +987,11 @@ h1.page_header em {
   font-size: 90%;
   padding: 0 20px;
   text-align: right;
+}
+
+.metric_preview_secondary_controls .tab {
+  float: left;
+  color: #009fe9;
 }
 
 .metric_preview_secondary_controls a {
@@ -1477,4 +1496,10 @@ div.CodeMirror-cursors {
   .CodeMirror div.CodeMirror-cursors {
     visibility: hidden;
   }
+}
+
+code {
+  display: block;
+  padding: 20px;
+  word-break: break-all;
 }

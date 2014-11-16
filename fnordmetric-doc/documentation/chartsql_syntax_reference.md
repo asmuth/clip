@@ -31,8 +31,7 @@ ChartSQL Syntax Reference
         [ [ WITH ]
               common_chart_options
               [ ORIENTATION { HORIZONTAL | VERTICAL } ]
-              [ STACKED ]
-              [ LABELS ] ]
+              [ STACKED ] ]
 
     DRAW HEATMAP
         [ [ WITH ]

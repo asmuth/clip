@@ -356,7 +356,9 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       "#", "btn", "<i class='fa fa-share'></i> Embed");
     controls_embed.onclick = function(e) {
       e.preventDefault();
-      FnordMetric.util.embedPopup(elem).render()
+      FnordMetric.util.embedPopup(
+          elem,
+          FnordMetric.util.generateSQLQueryFromParams(query_params)).render();
     }
 
     secondary_controls.appendChild(controls_query);

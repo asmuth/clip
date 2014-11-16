@@ -17,9 +17,10 @@ if (FnordMetric.views === undefined) {
 }
 
 
-FnordMetric.util.embedPopup = function(elem) {
+FnordMetric.util.embedPopup = function(elem, query) {
   var popup;
   var background;
+  var inner_window;
 
   function close() {
     if (popup.parentNode == elem) {
@@ -38,21 +39,22 @@ FnordMetric.util.embedPopup = function(elem) {
     popup.className = "popup_ui";
 
     var tabbar = document.createElement("div");
-    tabbar.className = "controls";
+    tabbar.className = "metric_preview_secondary_controls";
 
     var close_btn = FnordMetric.createButton(
-      "#", "close_btn", "X");
+      "#", "close_btn btn", "<i class='fa fa-close'></i>");
 
     var iframe_tab = FnordMetric.createButton(
-      "#", "tab", "iFrame");
+      "#", "tab btn", "IFrame");
 
     var url_tab = FnordMetric.createButton(
-      "#", "tab", "URL");
+      "#", "tab btn", "URL");
 
     var html_tab = FnordMetric.createButton(
-      "#", "tab", "HTML");
+      "#", "tab btn", "HTML5");
 
-    var inner_window = document.createElement("div");
+    inner_window = document.createElement("div");
+    inner_window.className = "inner";
 
     elem.appendChild(background);
     popup.appendChild(close_btn);
@@ -76,22 +78,50 @@ FnordMetric.util.embedPopup = function(elem) {
 
     iframe_tab.addEventListener('click', function(e) {
       e.preventDefault();
-      inner_window.innerHTML = "FnordMetric IFrame";
+      embedIFrame();
     }, false);
 
     url_tab.addEventListener('click', function(e) {
       e.preventDefault();
-      inner_window.innerHTML = "FnordMetric URL";
+      embedURL();
     }, false);
 
     html_tab.addEventListener('click', function(e) {
       e.preventDefault();
-      inner_window.innerHTML = "FnordMetric HTML";
+      embedHTML();
     }, false);
 
-
+    embedIFrame();
   }
 
+  function embedIFrame() {
+    inner_window.innerHTML = "Copy this into your HTML page:";
+    var code = document.createElement("code");
+    code.innerHTML = '&lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />&nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />&nbsp;&nbsp;&nbsp;&nbsp;src="' + queryUrl() + '"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;';
+    inner_window.appendChild(code);
+  }
+
+  function embedURL() {
+    inner_window.innerHTML = "Embed URL:";
+    var code = document.createElement("code");
+    code.innerHTML = queryUrl();
+    inner_window.appendChild(code);
+  }
+
+  function embedHTML() {
+    inner_window.innerHTML = "Copy this into the header of your html page:";
+    var code1 = document.createElement("code");
+    code1.innerHTML = '&lt;script href="http://' + document.location.host + '/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;';
+    inner_window.appendChild(code1);
+    inner_window.innerHTML += "Copy this into the body of your html page:";
+    var code2 = document.createElement("code");
+    code2.innerHTML = '&lt;fm-chart&gt;<br />' + query + '<br />&lt;/fm-chart&gt;';
+    inner_window.appendChild(code2);
+  }
+
+  function queryUrl() {
+    return "http://" + document.location.host + "/query?width=800&height=400&format=svg&q=" + encodeURIComponent(query);
+  }
 
   return {
     "render" : render,

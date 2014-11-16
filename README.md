@@ -47,21 +47,22 @@ Contributions
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
 + Christian Parpart (http://github.com/trapni)
-+ Simon Menke (http://github.com/fd),
-+ Bruno Michel (http://github.com/nono),
-+ Marco Borromeo (http://github.com/mborromeo),
++ Finn Zirngibl (https://github.com/finnomenon)
++ Simon Menke (http://github.com/fd)
++ Bruno Michel (http://github.com/nono)
++ Marco Borromeo (http://github.com/mborromeo)
 + Leo Lou (http://github.com/l4u)
-+ Andy Lindeman (http://github.com/alindeman),
-+ Jurriaan Pruis (http://github.com/jurriaan),
-+ Kacper Bielecki (http://github.com/kazjote),
-+ John Murray (http://github.com/JohnMurray),
-+ Lars Gierth (http://github.com/lgierth),
-+ Ross Kaffenberger (http://github.com/rossta),
-+ Kunal Modi (http://github.com/kunalmodi),
-+ Michael Fairchild (http://github.com/fairchild),
-+ James Cox (http://github.com/imajes),
-+ Pieter Noordhuis (http://github.com/pietern),
-+ Tadas Ščerbinskas (http://github.com/tadassce),
++ Andy Lindeman (http://github.com/alindeman)
++ Jurriaan Pruis (http://github.com/jurriaan)
++ Kacper Bielecki (http://github.com/kazjote)
++ John Murray (http://github.com/JohnMurray)
++ Lars Gierth (http://github.com/lgierth)
++ Ross Kaffenberger (http://github.com/rossta)
++ Kunal Modi (http://github.com/kunalmodi)
++ Michael Fairchild (http://github.com/fairchild)
++ James Cox (http://github.com/imajes)
++ Pieter Noordhuis (http://github.com/pietern)
++ Tadas Ščerbinskas (http://github.com/tadassce)
 + Sebastian Korfmann (http://github.com/skorfmann)
 + Paul Asmuth (http://github.com/paulasmuth)
 
