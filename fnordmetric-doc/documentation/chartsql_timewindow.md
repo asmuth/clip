@@ -29,7 +29,7 @@ _Display the moving average of mymetric's value over a moving 60s window_
 In contrast to a regular GROUP BY clause, which will produce one output row for
 each distinct group in the input row set, the GROUP OVER TIMEWINDOW will produce
 one output row for each step in time. Each of these output rows will be computed
-by grouping over all rows in the preceeding time window.
+by grouping over all rows in the preceding time window.
 
 To illustrate this concept, lets imagine we insert the number of registered users
 on our website every 10 seconds and our source table looks like this:

@@ -37,7 +37,7 @@ The line format for metrics with one label is:
 
     <metricname>[<label_key>=<label_value>]:<value>
 
-To attach multiple lables, repeat the square bracket clause:
+To attach multiple labels, repeat the square bracket clause:
 
     <metricname>[<label1_key>=<label1_value>][<label2_key>=<label2_value>]:<value>
 

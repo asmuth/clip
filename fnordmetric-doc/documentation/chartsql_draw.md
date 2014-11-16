@@ -22,7 +22,7 @@ Adding Series
 
 All charts render one or more series of data. Data is added to charts by
 subsequent SELECT statements. Each SELECT statement's results are added to
-the last DRAW statement that preceeds it.
+the last DRAW statement that precedes it.
 
     DRAW LINECHART;  -- first chart
     SELECT ...;      -- data is added to first chart
@@ -63,7 +63,7 @@ city like this:
 Labels, Colors & more
 ---------------------
 
-Besides the four "magic" columns we alread discussed (`x`, `y`, `y` and `series`),
+Besides the four "magic" columns we already discussed (`x`, `y`, `y` and `series`),
 the SELECT result list may contain these optional columns:
 
 #### label

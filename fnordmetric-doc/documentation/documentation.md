@@ -108,7 +108,7 @@ draw pretty charts.
 However, Most of the existing open source tools require you to provide the input
 data in
 some specific, custom format. I reckon this is not ideal; it means you have to
-write a heap of reptitive glue code (or sed incantations if that's your thing)
+write a heap of repetitive glue code (or sed incantations if that's your thing)
 to mangle your input data into that format. If you run a lot of ad-hoc queries
 you have to waste a significant amount of time on this boring legwork that could
 much better be spent on interesting tasks.

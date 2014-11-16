@@ -10,12 +10,12 @@ kindly referred to the remaining pages.
 If you want to learn how to draw charts from SQL query results using ChartSQL and
 the FnordMetric command line interface, read:
 
-  + [Gettting Started with ChartSQL in 5 minutes](/documentation/getting_started/fnordmetric-cli)
+  + [Getting Started with ChartSQL in 5 minutes](/documentation/getting_started/fnordmetric-cli)
 
 If you want to see how you can collect timeseries data with FnordMetric Server
 and query it using a web interface and ChartSQL, read:
 
-  + [Gettting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
+  + [Getting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
 
 ---
 
@@ -120,7 +120,7 @@ you draw pretty charts.
 
 However, most of the existing open source tools require you to provide the input
 data in some specific, custom format. I reckon this is not ideal. It means you
-have to write a heap of reptitive glue code (or sed incantations if that's your
+have to write a heap of repetitive glue code (or sed incantations if that's your
 thing) to mangle your input data into that format. If you run a lot of ad-hoc
 queries you have to waste a significant amount of time on this boring legwork
 that could much better be spent on interesting tasks.

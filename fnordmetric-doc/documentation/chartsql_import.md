@@ -91,7 +91,7 @@ MySQL database. The valid parameters for mysql database urls are:
     </td>
   </tr>
   <tr>
-    <th>paswword</th>
+    <th>password</th>
     <td>
       the mysql password
     </td>

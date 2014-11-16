@@ -76,7 +76,7 @@ means we record the response time of a single HTTP request that took 42ms.
 
 Execute this command a few times with different values to insert multiple samples
 into the metric. FnordMetric Server will automatically create the metric if it
-doesnt exist yet.
+doesn't exist yet.
 
 #### Execute Queries from the Web Interface
 
@@ -139,14 +139,14 @@ now has 4 columns:
     > select time, value, hostname, datacenter from http_response_times;
 
     ==============================================================
-    | time                  | value  | hostanme   | datacenter  |
+    | time                  | value  | hostname   | datacenter  |
     ==============================================================
     | 2014-11-08 20:30:12   | 18     | machine82  | ams1        |
     | 2014-11-08 20:30:12   | 42     | machine83  | ams1        |
     | 2014-11-08 20:30:12   | 23     | machine84  | ams1        |
     | ...                   | ...    | ...        | ...         |
 
-You can execute this query from the interactive query editor to dispalay the last
+You can execute this query from the interactive query editor to display the last
 hour of samples in the `http\_response\_times` metric rolled up by hostname. It
 will draw a line chart with the sample time plotted on the X axis and the sample value
 plotted on the Y axis and one series per hostname:
