@@ -1,7 +1,7 @@
 FnordMetric
 ===========
 
-FnordMetric let's you collect and visualize timeseries data using only SQL. It
+FnordMetric allows you collect and visualize timeseries data using only SQL. It
 enables you to build beautiful real-time analytics dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/documentation/)
