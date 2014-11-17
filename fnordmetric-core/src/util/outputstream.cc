@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <memory>
 #include <string>
+#include <cstdarg>
 #include <unistd.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/runtimeexception.h>
