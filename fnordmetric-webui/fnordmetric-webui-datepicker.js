@@ -16,6 +16,62 @@ if (FnordMetric.views === undefined) {
   FnordMetric.views = {};
 }
 
+ /* generate html for time input and handle input */
+FnordMetric.util.timeInput = function(selectedTimestamp, elem) {
+  var selectedMinutes =
+      FnordMetric.util.appendLeadingZero(
+        selectedTimestamp.getMinutes());
+
+    var selectedHours =
+      FnordMetric.util.appendLeadingZero(
+        selectedTimestamp.getHours());
+
+    var input_container = document.createElement("div");
+    input_container.className = "input_container";
+    var separator = document.createElement("span");
+    separator.innerHTML = ":";
+
+    var hour_input = document.createElement("input");
+    hour_input.placeholder = selectedHours;
+
+    var minute_input = document.createElement("input");
+    minute_input.placeholder = selectedMinutes;
+
+  function render() {
+    input_container.appendChild(hour_input);
+    input_container.appendChild(separator);
+    input_container.appendChild(minute_input);
+    elem.appendChild(input_container);
+
+    hour_input.addEventListener('focus', function(e) {
+      e.preventDefault();
+      FnordMetric.util.validatedTimeInput(this, "hour");
+    }, false);
+
+    minute_input.addEventListener('focus', function(e) {
+      e.preventDefault();
+      FnordMetric.util.validatedTimeInput(this, "minute");
+    }, false);
+  }
+
+  function getValues() {
+    var hours = hour_input.value.length > 0 ?
+      hour_input.value : selectedHours;
+    var minutes = minute_input.value.length > 0 ?
+      minute_input.value : selectedMinutes;
+    return {
+      "hours" : hours,
+      "minutes" : minutes
+    }
+  }
+
+  return {
+    "render" : render,
+    "getValues" : getValues
+  }
+}
+
+
 /* Displays a calendar from an input for selecting time and date*/
 FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   /* current date */
@@ -29,7 +85,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   var selectedMonth;
   var selectedDate;
 
-
+  var timeInput;
   var dp_widget = document.createElement("div");
   dp_widget.className = "datepicker_widget";
   elem.appendChild(dp_widget);
@@ -91,7 +147,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   }
 
   function onSelect(date, month, year) {
-    var inputs = timeInput.singleton.getValues();
+    var inputs = timeInput.getValues();
     var hours = inputs.hours;
     var minutes = inputs.minutes;
     var ts = new Date(year, month, date, hours, minutes).getTime();
@@ -118,62 +174,6 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
       e.preventDefault();
       onSelect(date, month, year);
     }, false);
-  }
-
-
-  /* generate html for time input and handle input */
-  var timeInput = function() {
-    var selectedMinutes =
-        FnordMetric.util.appendLeadingZero(
-          selectedTimestamp.getMinutes());
-
-      var selectedHours =
-        FnordMetric.util.appendLeadingZero(
-          selectedTimestamp.getHours());
-
-      var input_container = document.createElement("div");
-      input_container.className = "input_container";
-      var separator = document.createElement("span");
-      separator.innerHTML = ":";
-
-      var hour_input = document.createElement("input");
-      hour_input.placeholder = selectedHours;
-
-      var minute_input = document.createElement("input");
-      minute_input.placeholder = selectedMinutes;
-
-    function render() {
-      input_container.appendChild(hour_input);
-      input_container.appendChild(separator);
-      input_container.appendChild(minute_input);
-      dp_widget.appendChild(input_container);
-
-      hour_input.addEventListener('focus', function(e) {
-        e.preventDefault();
-        FnordMetric.util.validatedTimeInput(this, "hour");
-      }, false);
-
-      minute_input.addEventListener('focus', function(e) {
-        e.preventDefault();
-        FnordMetric.util.validatedTimeInput(this, "minute");
-      }, false);
-    }
-
-    function getValues() {
-      var hours = hour_input.value.length > 0 ?
-        hour_input.value : selectedHours;
-      var minutes = minute_input.value.length > 0 ?
-        minute_input.value : selectedMinutes;
-      return {
-        "hours" : hours,
-        "minutes" : minutes
-      }
-    }
-
-    return {
-      "render" : render,
-      "getValues" : getValues
-    }
   }
 
   function resetDatepicker() {
@@ -297,12 +297,10 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
 
     dp_widget.innerHTML = "";
     dp_widget.className += " active";
-    timeInput.singleton = timeInput();
-    timeInput.singleton.render();
+    timeInput = FnordMetric.util.timeInput(selectedTimestamp, dp_widget);
+    timeInput.render();
     renderCalendar(currYear, currMonth);
   }
-
-
 
   dp_input.addEventListener('focus', function(event) {
     init();
