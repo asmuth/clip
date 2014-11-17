@@ -49,7 +49,7 @@ public:
 
 protected:
 
-  class Cursor : public sstable::Cursor {
+  class Cursor : public ::fnord::sstable::Cursor {
   public:
     Cursor(
         std::shared_ptr<io::MmappedFile> file,
