@@ -136,13 +136,64 @@ FnordMetric.views.QueryPlayground = function() {
 
     /* render buttons */
     button_bar = document.createElement("div");
-    //button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor <i class='fa fa-chevron-down'></i></div>";
-    button_bar.innerHTML = "<div class='editor_type_picker'><i class='fa fa-database'></i> SQL Editor</div>";
     button_bar.className = "navbar";
+
+    var editor_picker = document.createElement("div");
+    editor_picker.className = "editor_type_picker";
+    editor_picker.innerHTML = 
+      "<i class='fa fa-database'></i> SQL Editor";
+    button_bar.appendChild(editor_picker);
 
     var split_btn = document.createElement("i");
     split_btn.className = "fa fa-columns icobtn";
     button_bar.appendChild(split_btn);
+
+    var refresh_btn = document.createElement("i");
+    refresh_btn.className = "fa fa-refresh icobtn";
+    button_bar.appendChild(refresh_btn);
+
+    var exec_btn = document.createElement("span");
+    exec_btn.className = "run_query_btn";
+    exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
+    button_bar.appendChild(exec_btn);
+
+
+    /* init editorpane & resultpane */
+    editor_pane = document.createElement("div");
+    editor_pane.className = "editor_pane";
+    viewport.appendChild(editor_pane);
+
+    result_pane = document.createElement("div");
+    result_pane.className = "result_pane";
+    viewport.appendChild(result_pane);
+
+
+    /* set eventListeners */
+    window.onbeforeunload = function(e) {
+      return "You may loose your query when leaving the page.";
+    }
+
+    window.addEventListener('resize', function() {
+      updateLayout()
+    });
+
+    editor_pane.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
+        e.preventDefault();
+        runQuery(
+          result_pane,
+          editor_pane,
+          current_view);
+      }
+    }, false);
+
+    exec_btn.onclick = function(e) {
+      e.preventDefault();
+      runQuery(
+        result_pane,
+        editor_pane,
+        current_view);
+    }
 
     split_btn.onclick = function(e) {
       e.preventDefault();
@@ -154,61 +205,57 @@ FnordMetric.views.QueryPlayground = function() {
       updateLayout();
     }
 
-    var refresh_btn = document.createElement("i");
-    refresh_btn.className = "fa fa-refresh icobtn";
-    button_bar.appendChild(refresh_btn);
-
-    var exec_btn = document.createElement("span");
-    exec_btn.className = "run_query_btn";
-    exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
-    button_bar.appendChild(exec_btn);
-
-    exec_btn.onclick = function(e) {
-      e.preventDefault();
-      runQuery(
-        result_pane,
-        editor_pane,
-        current_view);
+    refresh_btn.onclick = function() {
+      var query = query_params.innerViewValue;
+      query = (query != undefined)?
+        encodeURIComponent(query) : "";
+      FnordMetric.WebUI.singleton.openUrl(
+        "query_playground?" +
+        query_params.innerView + "=" +
+        query);
     }
 
-
-/*
-    var embed_btn = FnordMetric.createButton(
-      "#", "fancy_button", "Embed Query");
-
-    embed_btn.onclick = function(e) {
-      e.preventDefault();
-      FnordMetric.util.openPopup(
-        viewport, "Todo: Ruby/JS/html snippet");
-    }
-*/
-    //button_bar.appendChild(query_btn);
-    //button_bar.appendChild(embed_btn);
-
-    /* init editorpane & resultpane */
-    editor_pane = document.createElement("div");
-    editor_pane.className = "editor_pane";
-    viewport.appendChild(editor_pane);
-
-    /* set eventListeners */
-    editor_pane.addEventListener('keydown', function(e) {
-      if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
-        e.preventDefault();
-        runQuery(
-          result_pane,
-          editor_pane,
-          current_view);
-      }
+    var exec_flyout;
+    exec_btn.addEventListener('mouseover', function() {
+      var left = button_bar.offsetWidth;
+       left = (direction == "horizontal")? 
+        left - 215 : left - 370;
+      var text = "Execute the query. Hint: you can alse press Ctrl/Cmd + Enter";
+      exec_flyout = 
+        FnordMetric.util.renderFlyout(text, viewport, left);
     }, false);
 
-    window.onbeforeunload = function(e) {
-      return "You may loose your query when leaving the page.";
-    }
+    exec_btn.addEventListener('mouseout', function() {
+      FnordMetric.util.removeIfChild(
+        exec_flyout, viewport);
+    }, false);
 
+    var split_flyout;
+    split_btn.addEventListener('mouseover', function() {
+      var text = "Change View";
+      var left = editor_picker.offsetWidth - 20;
+      split_flyout =
+        FnordMetric.util.renderFlyout(text, viewport, left);
+    }, false);
 
-    result_pane = document.createElement("div");
-    result_pane.className = "result_pane";
-    viewport.appendChild(result_pane);
+    split_btn.addEventListener('mouseout', function() {
+      FnordMetric.util.removeIfChild(
+        split_flyout, viewport);
+    }, false);
+
+    var refresh_flyout;
+    refresh_btn.addEventListener('mouseover', function() {
+      var text = "Refresh";
+      var left = editor_picker.offsetWidth + split_btn.offsetWidth;
+      refresh_flyout =
+        FnordMetric.util.renderFlyout(text, viewport, left);
+    }, false);
+
+    refresh_btn.addEventListener('mouseout', function() {
+      FnordMetric.util.removeIfChild(
+        refresh_flyout, viewport);
+    }, false);
+
 
     updateLayout(editor_pane, result_pane, direction);
     if ('innerView' in query_params) {
@@ -218,9 +265,6 @@ FnordMetric.views.QueryPlayground = function() {
     }
     renderEditorView(current_view, editor_pane, result_pane, query);
 
-    window.addEventListener('resize', function() {
-      updateLayout()
-    });
   }
 
   function destroy() {

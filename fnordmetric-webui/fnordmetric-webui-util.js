@@ -640,9 +640,26 @@ FnordMetric.util.removeFromString = function(start, end, str) {
 
   var res = str.substr(0, length - start);
   res += str.substr(end, length-1);
-  console.log(res);
   return res;
 }
+
+FnordMetric.util.renderFlyout = function(text, elem, left) {
+  var flyout = document.createElement("div");
+  flyout.className = "hover_tooltip";
+  flyout.innerHTML = text;
+  flyout.style.top = "85px";
+  flyout.style.left = left + "px";
+  elem.appendChild(flyout);
+  return flyout;
+}
+
+
+FnordMetric.util.removeIfChild = function(child_n, parent_n) {
+  if (typeof child_n == 'object' && child_n.parentNode == parent_n) {
+    parent_n.removeChild(child_n);
+  }
+}
+
 
 
 
