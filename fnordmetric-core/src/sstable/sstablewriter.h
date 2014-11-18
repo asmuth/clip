@@ -34,6 +34,24 @@ namespace sstable {
  */
 class SSTableWriter {
 public:
+  class SSTableWriterCursor : public sstable::Cursor {
+  public:
+    SSTableWriterCursor(
+        SSTableWriter* table,
+        io::MmapPageManager* mmap);
+
+    void seekTo(size_t body_offset) override;
+    bool next() override;
+    bool valid() override;
+    void getKey(void** data, size_t* size) override;
+    void getData(void** data, size_t* size) override;
+    size_t position() const override;
+  protected:
+    std::unique_ptr<io::PageManager::PageRef> getPage();
+    SSTableWriter* table_;
+    io::MmapPageManager* mmap_;
+    size_t pos_;
+  };
 
   /**
    * Create and open a new sstable for writing
@@ -80,7 +98,7 @@ public:
   /**
    * Get an sstable cursor for the sstable currently being written
    */
-  std::unique_ptr<Cursor> getCursor();
+  std::unique_ptr<SSTableWriterCursor> getCursor();
 
   template <typename IndexType>
   IndexType* getIndex() const;
@@ -91,24 +109,6 @@ public:
   void writeIndex(uint32_t index_type, void* data, size_t size);
 
 protected:
-  class Cursor : public sstable::Cursor {
-  public:
-    Cursor(
-        SSTableWriter* table,
-        io::MmapPageManager* mmap);
-
-    void seekTo(size_t body_offset) override;
-    bool next() override;
-    bool valid() override;
-    void getKey(void** data, size_t* size) override;
-    void getData(void** data, size_t* size) override;
-    size_t position() const override;
-  protected:
-    std::unique_ptr<io::PageManager::PageRef> getPage();
-    SSTableWriter* table_;
-    io::MmapPageManager* mmap_;
-    size_t pos_;
-  };
 
   SSTableWriter(
       const std::string& filename,

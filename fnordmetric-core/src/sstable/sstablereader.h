@@ -29,29 +29,9 @@ namespace sstable {
 class SSTableReader {
 public:
 
-  SSTableReader(io::File&& file);
-  SSTableReader(const SSTableReader& other) = delete;
-  SSTableReader& operator=(const SSTableReader& other) = delete;
-  ~SSTableReader();
-
-  /**
-   * Get an sstable cursor for the body of this sstable
-   */
-  std::unique_ptr<Cursor> getCursor();
-
-  void readHeader(const void** data, size_t* size);
-  util::Buffer readHeader();
-  void readFooter(uint32_t type, void** data, size_t* size);
-  util::Buffer readFooter(uint32_t type);
-
-  size_t bodySize() const;
-  size_t headerSize() const;
-
-protected:
-
-  class Cursor : public sstable::Cursor {
+  class SSTableReaderCursor : public sstable::Cursor {
   public:
-    Cursor(
+    SSTableReaderCursor(
         std::shared_ptr<io::MmappedFile> file,
         size_t begin,
         size_t limit);
@@ -68,6 +48,24 @@ protected:
     size_t begin_;
     size_t limit_;
   };
+
+  SSTableReader(io::File&& file);
+  SSTableReader(const SSTableReader& other) = delete;
+  SSTableReader& operator=(const SSTableReader& other) = delete;
+  ~SSTableReader();
+
+  /**
+   * Get an sstable cursor for the body of this sstable
+   */
+  std::unique_ptr<SSTableReaderCursor> getCursor();
+
+  void readHeader(const void** data, size_t* size);
+  util::Buffer readHeader();
+  void readFooter(uint32_t type, void** data, size_t* size);
+  util::Buffer readFooter(uint32_t type);
+
+  size_t bodySize() const;
+  size_t headerSize() const;
 
 private:
   std::shared_ptr<io::MmappedFile> mmap_;

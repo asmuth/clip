@@ -202,9 +202,9 @@ void SSTableWriter::finalize() {
 }
 
 // FIXPAUL lock
-std::unique_ptr<Cursor> SSTableWriter::getCursor() {
-  return std::unique_ptr<Cursor>(
-      new SSTableWriter::Cursor(this, mmap_.get()));
+std::unique_ptr<SSTableWriter::SSTableWriterCursor> SSTableWriter::getCursor() {
+  return std::unique_ptr<SSTableWriterCursor>(
+      new SSTableWriter::SSTableWriterCursor(this, mmap_.get()));
 }
 
 // FIXPAUL lock
@@ -216,14 +216,14 @@ size_t SSTableWriter::headerSize() const {
   return header_size_;
 }
 
-SSTableWriter::Cursor::Cursor(
+SSTableWriter::SSTableWriterCursor::SSTableWriterCursor(
     SSTableWriter* table,
     io::MmapPageManager* mmap) :
     table_(table),
     mmap_(mmap),
     pos_(0) {}
 
-void SSTableWriter::Cursor::seekTo(size_t body_offset) {
+void SSTableWriter::SSTableWriterCursor::seekTo(size_t body_offset) {
   if (body_offset >= table_->bodySize()) {
     RAISE(kIndexError, "seekTo() out of bounds position");
   }
@@ -231,7 +231,7 @@ void SSTableWriter::Cursor::seekTo(size_t body_offset) {
   pos_ = body_offset;
 }
 
-bool SSTableWriter::Cursor::next() {
+bool SSTableWriter::SSTableWriterCursor::next() {
   auto page = getPage();
   auto header = page->structAt<BinaryFormat::RowHeader>(0);
 
@@ -251,11 +251,11 @@ bool SSTableWriter::Cursor::next() {
   }
 }
 
-bool SSTableWriter::Cursor::valid() {
+bool SSTableWriter::SSTableWriterCursor::valid() {
   return pos_ < table_->bodySize();
 }
 
-void SSTableWriter::Cursor::getKey(void** data, size_t* size) {
+void SSTableWriter::SSTableWriterCursor::getKey(void** data, size_t* size) {
   auto page = getPage();
   size_t page_size = page->page_.size;
 
@@ -272,11 +272,11 @@ void SSTableWriter::Cursor::getKey(void** data, size_t* size) {
   *size = header->key_size;
 }
 
-size_t SSTableWriter::Cursor::position() const {
+size_t SSTableWriter::SSTableWriterCursor::position() const {
   return pos_;
 }
 
-void SSTableWriter::Cursor::getData(void** data, size_t* size) {
+void SSTableWriter::SSTableWriterCursor::getData(void** data, size_t* size) {
   auto page = getPage();
   auto header = page->structAt<BinaryFormat::RowHeader>(0);
 
@@ -292,7 +292,8 @@ void SSTableWriter::Cursor::getData(void** data, size_t* size) {
   *size = header->data_size;
 }
 
-std::unique_ptr<io::PageManager::PageRef> SSTableWriter::Cursor::getPage() {
+std::unique_ptr<io::PageManager::PageRef>
+SSTableWriter::SSTableWriterCursor::getPage() {
   return mmap_->getPage(io::PageManager::Page(
       table_->headerSize() + pos_,
       table_->bodySize() - pos_));

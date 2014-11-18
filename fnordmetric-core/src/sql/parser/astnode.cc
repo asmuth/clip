@@ -247,16 +247,22 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
 } // namespace query
 } // namespace fnordmetric
 
+namespace fnord {
+namespace util {
+
 template <>
-std::string fnord::util::inspect<
+std::string inspect<
     fnordmetric::query::ASTNode::kASTNodeType>(
     const fnordmetric::query::ASTNode::kASTNodeType& value) {
   return "<ASTNode>";
 }
 
 template <>
-std::string fnord::util::inspect<
+std::string inspect<
     fnordmetric::query::ASTNode>(
     const fnordmetric::query::ASTNode& value) {
   return "<ASTNode>";
 }
+
+} // namespace util
+} // namespace fnord

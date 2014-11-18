@@ -101,13 +101,13 @@ util::Buffer SSTableReader::readFooter(uint32_t type) {
   return util::Buffer(data, size);
 }
 
-std::unique_ptr<Cursor> SSTableReader::getCursor() {
-  auto cursor = new Cursor(
+std::unique_ptr<SSTableReader::SSTableReaderCursor> SSTableReader::getCursor() {
+  auto cursor = new SSTableReaderCursor(
       mmap_,
       header_.headerSize(),
       header_.headerSize() + header_.bodySize());
 
-  return std::unique_ptr<Cursor>(cursor);
+  return std::unique_ptr<SSTableReaderCursor>(cursor);
 }
 
 size_t SSTableReader::bodySize() const {
@@ -118,7 +118,7 @@ size_t SSTableReader::headerSize() const {
   return header_.userdataSize();
 }
 
-SSTableReader::Cursor::Cursor(
+SSTableReader::SSTableReaderCursor::SSTableReaderCursor(
     std::shared_ptr<io::MmappedFile> mmap,
     size_t begin,
     size_t limit) :
@@ -127,15 +127,15 @@ SSTableReader::Cursor::Cursor(
     limit_(limit),
     pos_(begin) {}
 
-void SSTableReader::Cursor::seekTo(size_t body_offset) {
+void SSTableReader::SSTableReaderCursor::seekTo(size_t body_offset) {
   pos_ = begin_ + body_offset;
 }
 
-size_t SSTableReader::Cursor::position() const {
+size_t SSTableReader::SSTableReaderCursor::position() const {
   return pos_ - begin_;
 }
 
-bool SSTableReader::Cursor::next() {
+bool SSTableReader::SSTableReaderCursor::next() {
   auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
 
   auto next_pos = pos_ += sizeof(BinaryFormat::RowHeader) +
@@ -151,7 +151,7 @@ bool SSTableReader::Cursor::next() {
   return valid();
 }
 
-bool SSTableReader::Cursor::valid() {
+bool SSTableReader::SSTableReaderCursor::valid() {
   auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
 
   auto row_limit = pos_ + sizeof(BinaryFormat::RowHeader) +
@@ -161,7 +161,7 @@ bool SSTableReader::Cursor::valid() {
   return header->key_size > 0 && row_limit <= limit_;
 }
 
-void SSTableReader::Cursor::getKey(void** data, size_t* size) {
+void SSTableReader::SSTableReaderCursor::getKey(void** data, size_t* size) {
   if (!valid()) {
     RAISE(kIllegalStateError, "invalid cursor");
   }
@@ -171,7 +171,7 @@ void SSTableReader::Cursor::getKey(void** data, size_t* size) {
   *size = header->key_size;
 }
 
-void SSTableReader::Cursor::getData(void** data, size_t* size) {
+void SSTableReader::SSTableReaderCursor::getData(void** data, size_t* size) {
   if (!valid()) {
     RAISE(kIllegalStateError, "invalid cursor");
   }

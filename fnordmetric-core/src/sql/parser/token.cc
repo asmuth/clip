@@ -174,16 +174,22 @@ const std::string Token::getString() const {
 } // namespace query
 } // namespace fnordmetric
 
+namespace fnord {
+namespace util {
+
 template <>
-std::string fnord::util::inspect<
+std::string inspect<
     fnordmetric::query::Token::kTokenType>(
     const fnordmetric::query::Token::kTokenType& value) {
   return fnordmetric::query::Token::getTypeName(value);
 }
 
 template <>
-std::string fnord::util::inspect<
+std::string inspect<
     fnordmetric::query::Token>(
     const fnordmetric::query::Token& value) {
   return fnordmetric::query::Token::getTypeName(value.getType());
 }
+
+} // namespace util
+} // namespace fnord

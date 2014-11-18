@@ -150,6 +150,7 @@ endif()
 # libfnord
 add_definitions("-Wno-predefined-identifier-outside-function")
 add_library(fnord-static STATIC ${FNORDMETRIC_SOURCES})
+target_link_libraries(fnord-static m)
 
 find_package(MySQL)
 if(MYSQL_FOUND)

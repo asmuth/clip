@@ -11,6 +11,7 @@
 #include <fnordmetric/util/wallclock.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <sstream>
+#include <stdarg.h>
 
 using fnordmetric::util::RuntimeException;
 
