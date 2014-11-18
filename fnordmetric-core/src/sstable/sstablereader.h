@@ -28,7 +28,6 @@ namespace sstable {
 
 class SSTableReader {
 public:
-
   class SSTableReaderCursor : public sstable::Cursor {
   public:
     SSTableReaderCursor(
