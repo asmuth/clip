@@ -26,7 +26,7 @@ FnordMetric.UnitTests = function() {
 
   var testParseQueryString = function() {
     function test(querystr, expected) {
-      results++;
+      results.total++;
       var result = FnordMetric.util.parseQueryString(querystr);
       result = JSON.stringify(result);
       expected = JSON.stringify(expected);
@@ -55,7 +55,7 @@ FnordMetric.UnitTests = function() {
 
   var testSetUrlQueryString = function() {
     function test(hash, query_params, encode, push_state, expected) {
-      results++;
+      results.total++;
       FnordMetric.util.setURLQueryString(hash, query_params, encode, push_state);
       var result = window.location.hash;
       if (result != expected) {
@@ -87,5 +87,23 @@ FnordMetric.UnitTests = function() {
           "#query_playground?sql_query=SELECT%20*%20FROM%20%60http_status_codes%60%3B");
     test("", {}, false, false, "");
   }();
+
+  var testParseTimestamp = function() {
+    function test(timestamp, expected) {
+      results.total++;
+      var result = FnordMetric.util.parseTimestamp(timestamp);
+      if (result.substr(0,13) != expected) {
+        results.bad++;
+        console.log("Testing parseTimestamp expected " +
+          expected + ", but was " + result.substr(0,12));
+      }
+    }
+    var now = Date.now();
+    test(now, "0 seconds ago");
+    test(now *1000, "0 seconds ago")
+    test(Math.floor(now / 1000), "0 seconds ago");
+  }();
+
+  console.log(results.total + " tests, "+  results.bad + " failed.");
 
 }

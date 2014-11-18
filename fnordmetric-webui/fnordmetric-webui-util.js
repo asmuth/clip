@@ -145,8 +145,6 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
 }
 
 
-
-
 FnordMetric.util.renderPageHeader = function(text, elem) {
   var header = document.createElement("h1");
   header.className = "page_header";
@@ -155,13 +153,19 @@ FnordMetric.util.renderPageHeader = function(text, elem) {
   elem.appendChild(header);
 }
 
+/**
+  * creates a time description like 
+  * '2 hours ago - Nov 8 2014 11:33:11
+  * @param timestamp unix ts in seconds, milli or microseconds
+  */
 FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
     return "0";
   }
+  var timestamp =
+    FnordMetric.util.convertToMilliTS(timestamp);
 
   var time_str;
-  var timestamp = timestamp / 1000;
   var now = Date.now();
   var date = new Date(timestamp);
 
@@ -208,6 +212,18 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   return time_str;
 }
 
+//FIXLAURA check all cases 
+FnordMetric.util.convertToMilliTS = function(ts) {
+  var length = ts.toString().length;
+  if (length == 16) {
+    return (ts/1000);
+  } else if (length < 13 && length >= 10) {
+    return (ts * 1000);
+  } else {
+    return ts;
+  }
+}
+
 FnordMetric.util.parseMilliTS = function(ts) {
   if (ts < 1000) {
     if (ts == 0) {
@@ -233,14 +249,7 @@ FnordMetric.util.parseMilliTS = function(ts) {
   return (ts + (ts == 1? " hour" : " hours"));
 }
 
-FnordMetric.util.humanDateToMikroTS = function(date) {
-  /* first version until datepicker is implemented */ 
-  var ts;
-  if (date == "NOW") {
-    ts = Date.now();
-  }
-  return ts;
-}
+
 
 
 FnordMetric.util.humanCountRows = function(tables) {
