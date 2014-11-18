@@ -79,8 +79,7 @@ FnordMetric.views.MetricList = function() {
     for (i in metrics) {
       table_view.addRow([
           metrics[i]["key"],
-          FnordMetric.util.convertArrayToString(
-              metrics[i]["labels"]),
+          metrics[i]["labels"].join(", "),
           FnordMetric.util.parseTimestamp(
               metrics[i]["last_insert"]),
           metrics[i]["total_bytes"]]);

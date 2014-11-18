@@ -98,13 +98,6 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
 }
 
 
-FnordMetric.util.convertArrayToString = function(array) {
-  var string = "";
-  if (array.length > 0) {
-    string = array.join(", ");
-  }
-  return string;
-}
 
 /* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
