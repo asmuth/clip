@@ -39,23 +39,23 @@ TEST_CASE(SSTableTest, TestSSTableWriter, [] () {
   tbl->appendRow("key3", "value3");
 
   auto cursor = tbl->getCursor();
-  EXPECT_EQ(cursor->getKey(), "key1");
-  EXPECT_EQ(cursor->getData(), "value1");
+  EXPECT_EQ(cursor->getKeyString(), "key1");
+  EXPECT_EQ(cursor->getDataString(), "value1");
   EXPECT_EQ(cursor->next(), true);
 
-  EXPECT_EQ(cursor->getKey(), "key2");
-  EXPECT_EQ(cursor->getData(), "value2");
+  EXPECT_EQ(cursor->getKeyString(), "key2");
+  EXPECT_EQ(cursor->getDataString(), "value2");
   EXPECT_EQ(cursor->next(), true);
 
-  EXPECT_EQ(cursor->getKey(), "key3");
-  EXPECT_EQ(cursor->getData(), "value3");
+  EXPECT_EQ(cursor->getKeyString(), "key3");
+  EXPECT_EQ(cursor->getDataString(), "value3");
   EXPECT_EQ(cursor->next(), false);
 
   tbl->appendRow("key4", "value4");
 
   EXPECT_EQ(cursor->next(), true);
-  EXPECT_EQ(cursor->getKey(), "key4");
-  EXPECT_EQ(cursor->getData(), "value4");
+  EXPECT_EQ(cursor->getKeyString(), "key4");
+  EXPECT_EQ(cursor->getDataString(), "value4");
   EXPECT_EQ(cursor->next(), false);
 
   tbl->finalize();
@@ -82,23 +82,23 @@ TEST_CASE(SSTableTest, TestSSTableWriterWithIndexes, [] () {
   tbl->appendRow("key3", "value3");
 
   auto cursor = tbl->getCursor();
-  EXPECT_EQ(cursor->getKey(), "key1");
-  EXPECT_EQ(cursor->getData(), "value1");
+  EXPECT_EQ(cursor->getKeyString(), "key1");
+  EXPECT_EQ(cursor->getDataString(), "value1");
   EXPECT_EQ(cursor->next(), true);
 
-  EXPECT_EQ(cursor->getKey(), "key2");
-  EXPECT_EQ(cursor->getData(), "value2");
+  EXPECT_EQ(cursor->getKeyString(), "key2");
+  EXPECT_EQ(cursor->getDataString(), "value2");
   EXPECT_EQ(cursor->next(), true);
 
-  EXPECT_EQ(cursor->getKey(), "key3");
-  EXPECT_EQ(cursor->getData(), "value3");
+  EXPECT_EQ(cursor->getKeyString(), "key3");
+  EXPECT_EQ(cursor->getDataString(), "value3");
   EXPECT_EQ(cursor->next(), false);
 
   tbl->appendRow("key4", "value4");
 
   EXPECT_EQ(cursor->next(), true);
-  EXPECT_EQ(cursor->getKey(), "key4");
-  EXPECT_EQ(cursor->getData(), "value4");
+  EXPECT_EQ(cursor->getKeyString(), "key4");
+  EXPECT_EQ(cursor->getDataString(), "value4");
   EXPECT_EQ(cursor->next(), false);
 
   tbl->finalize();

@@ -142,9 +142,9 @@ include_directories(stage/src)
 include_directories(stage/assets)
 
 if(APPLE)
-  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ -lstdc++")
 else()
-  set(CMAKE_CXX_FLAGS "-std=c++0x")
+  set(CMAKE_CXX_FLAGS "-std=c++0x -lstdc++")
 endif()
 
 # libfnord

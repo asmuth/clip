@@ -16,14 +16,14 @@ Cursor::Cursor() {}
 
 Cursor::~Cursor() {}
 
-std::string Cursor::getKey() {
+std::string Cursor::getKeyString() {
   void* data;
   size_t size;
   getKey(&data, &size);
   return std::string((char *) data, size);
 }
 
-std::string Cursor::getData() {
+std::string Cursor::getDataString() {
   void* data;
   size_t size;
   getData(&data, &size);

@@ -29,9 +29,9 @@ public:
   virtual bool valid() = 0;
 
   virtual void getKey(void** data, size_t* size) = 0;
-  std::string getKey();
+  virtual std::string getKeyString();
   virtual void getData(void** data, size_t* size) = 0;
-  std::string getData();
+  virtual std::string getDataString();
 
   virtual size_t position() const = 0;
 
