@@ -57,23 +57,37 @@ FnordMetric.util.parseQueryString = function(qstr) {
   };
 }
 
+/**
+  * builds a querystring from the query_params, attachs it to the hash
+  * and sets the url
+  * @param query_params should be like query_params in parseQueryString
+  * @param encode (boolean) determines if innerViewValue should be URIencoded
+  * @param push_state (boolena) determines if the url should be
+  * added to the browser's history
+  */
 FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
-  var path = "#"+hash+"?";
+  if (hash === undefined || hash === "undefined") {
+    window.location.hash = "";
+    return;
+  }
+  var path = "#" + hash;
 
-  path += query_params.innerView + "=";
-  path += (encode)?
-    encodeURIComponent(query_params.innerViewValue) :
-    query_params.innerViewValue;
+  if ("innerView" in query_params && query_params.innerView != undefined) {
+    path += "?" + query_params.innerView + "=";
+    path += (encode)?
+      encodeURIComponent(query_params.innerViewValue) :
+      query_params.innerViewValue;
 
-  for (var param in query_params) {
-    if (param != "innerView" && 
-        param != "innerViewValue" &&
-        query_params[param] != undefined &&
-        query_params[param].length > 0) {
+    for (var param in query_params) {
+      if (param != "innerView" && 
+          param != "innerViewValue" &&
+          query_params[param] != undefined &&
+          query_params[param].length > 0) {
 
-      path += 
-        "&" + param +
-        "=" + query_params[param];
+        path += 
+          "&" + param +
+          "=" + query_params[param];
+      }
     }
   }
 

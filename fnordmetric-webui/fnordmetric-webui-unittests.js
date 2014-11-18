@@ -26,6 +26,7 @@ FnordMetric.UnitTests = function() {
 
   var testParseQueryString = function() {
     function test(querystr, expected) {
+      results++;
       var result = FnordMetric.util.parseQueryString(querystr);
       result = JSON.stringify(result);
       expected = JSON.stringify(expected);
@@ -50,6 +51,41 @@ FnordMetric.UnitTests = function() {
           innerViewValue : decodeURIComponent("select%20*%20from%20http_status_codes%3B")}});
     test("", {path : "", query_params: {}});
     test("undefined", {path: "", query_params:{}});
+  }();
+
+  var testSetUrlQueryString = function() {
+    function test(hash, query_params, encode, push_state, expected) {
+      results++;
+      FnordMetric.util.setURLQueryString(hash, query_params, encode, push_state);
+      var result = window.location.hash;
+      if (result != expected) {
+        results.bad++;
+        console.log("Testing setURLQueryString expected "
+          + expected + ", but was " + result);
+      }
+    }
+    test("metric_list", {}, false, false, "#metric_list");
+    test(undefined,
+        {innerView : "metric",
+          innerViewValue : "http_status_codes"}, 
+        false,
+        false,
+        "");
+
+    test("metric_list", 
+        {innerView : undefined,
+          innerViewValue : "http_status_codes"},
+        false,
+        false,
+        "#metric_list");
+
+    test("query_playground",
+          {innerView : "sql_query",
+          innerViewValue : "SELECT * FROM `http_status_codes`;"},
+          true,
+          true,
+          "#query_playground?sql_query=SELECT%20*%20FROM%20%60http_status_codes%60%3B");
+    test("", {}, false, false, "");
   }();
 
 }
