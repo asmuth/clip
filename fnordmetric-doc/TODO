@@ -39,6 +39,8 @@
     - sql: if
     - sql: case
     - dashboard params
+    - dashboards: Wanted feature: publish static to S3
+
     - retention / downsampling + DOC
     - merge compaction
     - SQL: having

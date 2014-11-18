@@ -6,7 +6,7 @@
 all: build
 
 clean:
-	rm fnordmetric-webui.js
+	-rm fnordmetric-webui.js
 
 build:
 	@( \
