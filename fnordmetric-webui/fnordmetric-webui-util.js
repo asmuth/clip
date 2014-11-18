@@ -9,27 +9,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- * TODOS:
- *
- * Query Playground:
- *  - "embed this query" opens up a popup with html/js/ruby snippets
- *  - prevent reload/navigation to other page (body onunload)
-*  - stretch: display a [fake] loading bar
- *  - nice to have: represent current chart and table, view in url --> renderResultPane
- *
- * Metric list view:
- *  - write meaningful error messages
- *
- *  - fix menuitems
- *  - fix resize tooltip, vertical split
- *  - wrong URL: redirect and display message 
- *  - fix back and for (push and pop states)
- *
- */
-
-
 if (FnordMetric === undefined) {
   FnordMetric = {};
 }
@@ -38,12 +17,18 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
+/**
+  * extracts the params from the url
+  * @param qstr like metric_list?metric=/osx/load_avg_15m&view=value
+  */
 FnordMetric.util.parseQueryString = function(qstr) {
   var path;
   var query_params = {};
 
   if (qstr.indexOf("?") >= 0) {
-    path = qstr.substr(0, qstr.indexOf("?"))
+    path = (qstr.substr(0, qstr.indexOf("?")) != "undefined")? 
+      qstr.substr(0, qstr.indexOf("?")) : "";
+
 
     var params_str = qstr.substr(qstr.indexOf("?") + 1);
     var raw_params = params_str.split('&');
@@ -54,13 +39,17 @@ FnordMetric.util.parseQueryString = function(qstr) {
     query_params.innerViewValue = decodeURIComponent(param[1]);
 
     for (var i = 1; i < raw_params.length; i++) {
-      var param = raw_params[i].split('=');
-       query_params[decodeURIComponent(param[0])] =
-          decodeURIComponent(param[1]);
+      var param = (raw_params[i].split('=') != "undefined") ? 
+        raw_params[i].split('=') : "";
+      if (param[0] != "undefined") {
+        query_params[decodeURIComponent(param[0])] =
+           (param[1] != "undefined") ? 
+           decodeURIComponent(param[1]) : "";
+      }
     }
 
   } else {
-    path = qstr;
+    path = qstr != "undefined" ? qstr : "";
   }
   return {
     "path": path,
