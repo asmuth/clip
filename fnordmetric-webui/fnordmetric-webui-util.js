@@ -225,6 +225,7 @@ FnordMetric.util.convertToMilliTS = function(ts) {
 }
 
 FnordMetric.util.parseMilliTS = function(ts) {
+  var ts = FnordMetric.util.convertToMilliTS(ts);
   if (ts < 1000) {
     if (ts == 0) {
       return " less than 1 millisecond";
@@ -249,9 +250,6 @@ FnordMetric.util.parseMilliTS = function(ts) {
   return (ts + (ts == 1? " hour" : " hours"));
 }
 
-
-
-
 FnordMetric.util.humanCountRows = function(tables) {
   var num = 0;
   tables.map(function(table) {
@@ -260,7 +258,13 @@ FnordMetric.util.humanCountRows = function(tables) {
   return (num == 1? num + " row" : num + " rows")
 }
 
-
+/**
+  * sorts the metric list for a specific column 
+  * @param metrics is an array of arrays
+  * @param column_index determines which 'column'
+  *   ar array index should be sorted
+  * @param order can be asc or desc
+  */
 FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   function compare(a, b) {
     if (a < b) {
@@ -340,12 +344,18 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
   return button;
 }
 
+/**
+  * returns those metric objects whose key includes search_item
+  * @param metrics array of metric objects
+  */
 FnordMetric.util.searchMetricList = function(metrics, search_item) {
   //FIXME works but seems not to be the best solution
   var data = [];
   metrics.map(function(item) {
-   if (item.key.indexOf(search_item) > -1) {
-      data.push(item);
+    if (item.key != undefined) {
+      if (item.key.indexOf(search_item) > -1) {
+        data.push(item);
+      }
     }
   });
   return data;

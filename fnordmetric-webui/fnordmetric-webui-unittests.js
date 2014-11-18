@@ -104,6 +104,53 @@ FnordMetric.UnitTests = function() {
     test(Math.floor(now / 1000), "0 seconds ago");
   }();
 
+  var testSortMetricList = function() {
+    function test(metrics, column_index, order, expected) {
+      results.total++;
+      FnordMetric.util.sortMetricList(metrics, column_index, order);
+      var result = metrics;
+      if (result[0][column_index] != expected[0][column_index]) {
+        results.bad++;
+        console.log("Testing sortMetricList expected "
+          + expected[0][column_index] + ", but was " + result[0][column_index]);
+      }
+    }
+    var metric1 = [
+      "/osx/load_avg_15m", "host", "5 hours ago - Nov 18 2014 11:33:11", 10693668];
+    var metric2 = [
+      "/osx/load_avg_5m", "", "5 hours ago - Nov 18 2014 11:33:12", 10693669];
+
+    test([metric1, metric2], 0, "asc", [metric1, metric2]);
+    test([metric1, metric2], 0, "desc", [metric2, metric1]);
+    test([metric1, metric1], 0, "asc", [metric1, metric1]);
+    test([metric1, metric2], 2, "desc", [metric2, metric1]);
+    test([metric1, metric2], 2, "asc", [metric1, metric2]);
+    test([metric1, metric2], 1, "desc", [metric1, metric2]);
+
+  }();
+
+  var testSearchMetricList = function() {
+    function test(metrics, search_item, expected) {
+      results.total++;
+      var result = FnordMetric.util.searchMetricList(metrics, search_item);
+      for (var i = 0; i < result.length; i++) {
+        if (JSON.stringify(result[i]) != JSON.stringify(expected[i])) {
+          results.bad++;
+          console.log("Testing setURLQueryString expected "
+            + expected[i] + ", but was " + result[i]);
+        }
+      }
+    }
+    var m1 = {key :  "/osx/load_avg_15m", labels : "", last_insert : 123};
+    var m2 = {key : "/osx/load 15m", labels : "" };
+    var m3 = {key : undefined, labels : ""};
+    var metrics = [m1, m2, m3];
+
+    test(metrics, "15", [m1, m2]);
+    test(metrics, 15, [m1, m2]);
+
+  }();
+
   console.log(results.total + " tests, "+  results.bad + " failed.");
 
 }
