@@ -97,21 +97,6 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   window.location.hash = path;
 }
 
-//REMOVE??
-FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
-  var path = window.location.pathname;
-  var value = value;
-  if (encode == true) {
-    value = encodeURIComponent(value);
-  }
-  var hash = 
-    path + "#" + hash + "?" + name + "=" + value;
-  window.location = hash;
-  if (push_state == true) {
-    window.history.pushState({url: hash}, "#", hash);
-  }
-}
-
 
 FnordMetric.util.convertArrayToString = function(array) {
   var string = "";
