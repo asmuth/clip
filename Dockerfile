@@ -10,7 +10,7 @@ RUN buildDeps='unzip git gcc make clang++-3.4 cmake libmysqlclient-dev'; \
 
 RUN mkdir -p /usr/src/ \
 	&& cd /usr/src \
-	&& curl -R -O https://codeload.github.com/dolfly/fnordmetric/zip/master \
+	&& curl -R -O https://codeload.github.com/paulasmuth/fnordmetric/zip/master \
 	&& unzip master \
 	&& cd fnordmetric-master/fnordmetric-core \
 	&& make  \
