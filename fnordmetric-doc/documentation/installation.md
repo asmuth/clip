@@ -20,6 +20,18 @@ To run the tests
 
     $ make test
 
+### Run via Docker
+
+To run FnordMetric Server using docker:
+
+    $ sudo mkdir -p /var/lib/fnordmetric-data
+    $ sudo docker run -p 8080:8080 -p 8125:8125/udp -v /var/lib/fnordmetric-data:/data/fnordmetric -t fnordmetric/fnordmetric-server
+
+To build a Docker Image for FnordMetric Server, use the included dockerfile:
+
+    $ git clone https://github.com/paulasmuth/fnordmetric.git && cd fnordmetric
+    $ sudo docker -t myrepo/fnordmetric-server build .
+
 ### Binary Releases
 
 _The first binary release will be published 2014-12-01_
