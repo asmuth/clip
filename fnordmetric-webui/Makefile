@@ -24,7 +24,6 @@ build:
 	      fnordmetric-webui-embedpopup.js \
 	      fnordmetric-webui-autocomplete.js \
 	      fnordmetric-webui-datepicker.js \
-	      fnordmetric-webui-unittests.js \
 	      codemirror.js \
 	      codemirror-sql.js \
 	) > fnordmetric-webui.js

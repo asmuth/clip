@@ -251,6 +251,10 @@ FnordMetric.util.parseMilliTS = function(ts) {
 }
 
 FnordMetric.util.humanCountRows = function(tables) {
+  if (tables == undefined) {
+    return "0 rows";
+  }
+
   var num = 0;
   tables.map(function(table) {
     num += table.rows.length;
@@ -366,7 +370,7 @@ FnordMetric.util.htmlEscape = function(str) {
 }
 
 
-/* returns all words that includes filter */
+/* returns all words that include filter */
 FnordMetric.util.filterStringArray = function(strings, filter, limit) {
   //FIXME ?
   var data = [];
@@ -402,13 +406,16 @@ FnordMetric.util.milliSecondsToTimeString = function(seconds) {
 }
 
 
-/* in singleMetricView */
+/**
+  * builds a ChartSQL query from url params
+  * @param params format as returned in parseQueryString
+  */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
   //FIX html escape 
   var table_ref = params.innerViewValue
   var view = params.view;
   /* column for rollups */
-  var columns = params.columns.split(",");
+  var columns = params.columns;
   var start_time = Math.round(params.start_time / 1000);
   var end_time = Math.round(params.end_time / 1000);
   var t_step = params.t_step;
@@ -417,26 +424,36 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
   var query;
   var draw_stm = 
-    "DRAW LINECHART\n  XDOMAIN\n    FROM_TIMESTAMP(" + 
-    start_time + "),\n    FROM_TIMESTAMP(" + end_time + ")"
-    + "\n  AXIS BOTTOM\n  AXIS LEFT;\n\n";
+    "DRAW LINECHART\n  ";
   var select_expr = "SELECT\n    time AS x,\n    ";
   var from_expr = "\n  FROM\n";
   var where_expr = "";
   var group_expr = "";
   var hasAggregation = false;
 
+  /* complement draw_stm */
+  if (!isNaN(start_time) && !isNaN(end_time)) {
+    draw_stm +=
+      "XDOMAIN\n    FROM_TIMESTAMP(" + start_time +
+      "),\n    FROM_TIMESTAMP(" + end_time + ")";
+  }
 
   /* complete select_expr */
   if (view == "value") {
-    select_expr += "value as y ";
+    select_expr += "value AS y ";
   } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
-    draw_stm = "DRAW BARCHART\n  AXIS BOTTOM\n  AXIS LEFT;";
+    /* adapt draw stm */
+    draw_stm = "DRAW BARCHART\n  ";
     var func = (view.split("_"))[1];
 
-    /* if the metric hasn't any labels total is selected */
-    var column = (columns[0].length > 0)? 
-      ("`" + columns[0] + "`") : "'total'";
+    var column;
+    if (columns != undefined && (columns.split(","))[0].length > 0) {
+      columns = columns.split(",")
+      column = "`" + columns[0] + "`";
+    } else {
+      /* fallback if the metric hasn't any labels */
+      column = "'total'";
+    }
 
     select_expr = 
       " SELECT " + column + " AS X, " + func + "(value) AS Y";
@@ -452,11 +469,17 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     select_expr += ", " + series + " AS series";
   }
 
+  /* complete draw stm */
+  draw_stm +=
+    "\n  AXIS BOTTOM\n  AXIS LEFT\n" +
+    "  LEGEND TOP RIGHT INSIDE;\n\n";
+
+
   /* complete from_expr */
   from_expr += "    `" + table_ref + "`\n";
 
   /*complete where_expr */
-  if (start_time != undefined && end_time != undefined) {
+  if (!isNaN(start_time) && !isNaN(end_time)) {
     where_expr =
       "  WHERE\n    time > FROM_TIMESTAMP(" + start_time + ")\n" +
       "    AND time < FROM_TIMESTAMP(" + end_time + ")";
@@ -468,14 +491,14 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     group_expr = " GROUP ";
     var hasGroupStm = false;
 
-    if (t_step != undefined) {
+    if (t_window != undefined) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, " + Math.round(t_step / 1000) + ",";
+        "OVER TIMEWINDOW(time, " + Math.round(t_window / 1000) + ",";
 
-      group_expr += (t_window != undefined)?
-        Math.round(t_window / 1000) : Math.round(t_step / 1000);
+      group_expr += (t_step != undefined)?
+        Math.round(t_step / 1000) : Math.round(t_window / 1000);
 
       group_expr+= ")";
 
@@ -494,7 +517,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   }
 
 
-  query = 
+  query =
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
 
@@ -553,7 +576,6 @@ FnordMetric.util.validatedTimeInput = function (time_input, type) {
             e.preventDefault();
           }
         } else if (input.length == 1) {
-          console.log(input);
           if (input < 2 || (input == 2 && n < 4)) {
             input = input * 10 + n;
             time_input.value += n;

@@ -86,7 +86,6 @@ FnordMetric.WebUI = function() {
   };
 
   function openUrl(raw_url, push_state) {
-    FnordMetric.UnitTests();
     var url = FnordMetric.util.parseQueryString(raw_url);
     var query_params = url["query_params"];
 

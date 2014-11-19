@@ -151,6 +151,71 @@ FnordMetric.UnitTests = function() {
 
   }();
 
-  console.log(results.total + " tests, "+  results.bad + " failed.");
+  var testGenerateSQLQueryFromParams = function() {
+    function test(params, expected) {
+      var result = FnordMetric.util.generateSQLQueryFromParams(params);
+      result = result.replace(/(\n\r|\n|\r|\s)/gm, "");
+      if (result != expected) {
+        results.bad++;
+        console.log("Testing generateSQLQueryFromParams expected "
+          + expected + ", but was " + result);
+      }
+    }
+    // test XDOMAIN and WHERE clause
+    test(
+      {innerView : "metric",
+      innerViewValue : "status_codes",
+      view : "value",
+      by : "host",
+      columns : "host",
+      end_time : "1416263880000",
+      start_time : "1416260280000"},
+      "DRAWLINECHARTXDOMAINFROM_TIMESTAMP(1416260280),FROM_TIMESTAMP(1416263880)" +
+      "AXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECTtimeASx,valueASy,hostASseriesFROM`status_codes`" +
+      "WHEREtime>FROM_TIMESTAMP(1416260280)ANDtime<FROM_TIMESTAMP(1416263880);");
+
+    // test rollup without columns
+    test(
+      {innerViewValue : "status_codes",
+      view : "rollup_mean"}, 
+      "DRAWBARCHARTAXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECT'total'ASX,mean(value)ASYFROM`status_codes`;");
+
+    // test rollup with one column
+    test(
+      {innerViewValue : "status_codes",
+      view : "rollup_count",
+      columns : "host"}, 
+      "DRAWBARCHARTAXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECT`host`ASX,count(value)ASYFROM`status_codes`;");
+
+    // test rollup with multiple columns
+    test(
+      {innerViewValue : "status_codes",
+      view : "rollup_sum",
+      columns : "host,server"}, 
+      "DRAWBARCHARTAXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECT`host`ASX,sum(value)ASYFROM`status_codes`;");
+
+    // test GROUP OVER timewindow with window and step
+    test(
+      {innerViewValue : "status_codes",
+      view : "max",
+      by : "host",
+      t_step : "20000",
+      t_window : "5000"}, 
+      "DRAWLINECHARTAXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECTtimeASx,max(value)ASY,hostASseriesFROM`status_codes`GROUPOVERTIMEWINDOW(time,5,20)BYhost;");
+
+    // test GROUP OVER TIMEWINDO with window only and without BY stm
+    test(
+      {innerViewValue : "status_codes",
+      view : "min",
+      t_window : "5000"}, 
+      "DRAWLINECHARTAXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECTtimeASx,min(value)ASYFROM`status_codes`GROUPOVERTIMEWINDOW(time,5,5);");
+
+
+  }();
+  if (results.bad == 0) {
+    console.log("Yeah, all " + results.total + " tests passed :-) ");
+  } else {
+    console.log(results.bad + " tests of " + results.totak + " failed.");
+  }
 
 }
