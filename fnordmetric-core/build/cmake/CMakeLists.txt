@@ -159,6 +159,10 @@ add_executable(fnordmetric-server ${FNORDMETRIC_SOURCES} stage/src/fnordmetric/s
 target_link_libraries(fnordmetric-server m)
 install(TARGETS fnordmetric-server DESTINATION bin)
 
+find_package(Threads)
+target_link_libraries(fnordmetric-cli ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(fnordmetric-server ${CMAKE_THREAD_LIBS_INIT})
+
 find_package(MySQL)
 if(MYSQL_FOUND)
   check_include_file_cxx(mysql.h FNORD_ENABLE_MYSQL)
