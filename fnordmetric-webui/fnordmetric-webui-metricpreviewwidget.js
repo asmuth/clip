@@ -365,12 +365,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
           FnordMetric.util.generateSQLQueryFromParams(query_params)).render();
     }
 
-    var controls_compare = FnordMetric.createButton(
-      "#", "btn", "Compare With Yesterday");
-
     secondary_controls.appendChild(controls_query);
     secondary_controls.appendChild(controls_embed);
-    secondary_controls.appendChild(controls_compare);
 
     var timespan_updater = document.createElement("div");
     var prev_timespan = FnordMetric.createButton(
@@ -460,25 +456,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       updateDateTimeElems(
         timespan_title, null, start_time, end_time);
       runQuery();
-    }, false);
-
-    controls_compare.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log("compare with yesterday");
-      console.log(query_params);
-      var query_today = FnordMetric.util.generateSQLQueryFromParams(
-        query_params);
-      var qparams_yesterday = query_params;
-      qparams_yesterday.start_time = 
-        parseInt(query_params.start_time, 10) - 86400000;
-      qparams_yesterday.end_time =
-        parseInt(query_params.end_time, 10) - 86400000;
-      var query_yesterday = 
-        FnordMetric.util.generateSQLQueryFromParams(qparams_yesterday);
-
-      console.log(query_today);
-      console.log(query_yesterday);
-
     }, false);
 
     prev_timespan.addEventListener('click', function(e) {
