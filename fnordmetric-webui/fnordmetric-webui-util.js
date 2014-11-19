@@ -26,9 +26,8 @@ FnordMetric.util.parseQueryString = function(qstr) {
   var query_params = {};
 
   if (qstr.indexOf("?") >= 0) {
-    path = (qstr.substr(0, qstr.indexOf("?")) != "undefined")? 
-      qstr.substr(0, qstr.indexOf("?")) : "";
-
+    path = qstr.substr(0, qstr.indexOf("?"));
+    path = path.replace("#", "");
 
     var params_str = qstr.substr(qstr.indexOf("?") + 1);
     var raw_params = params_str.split('&');
@@ -92,6 +91,7 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   }
 
   if (push_state) {
+    console.log("push state");
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
@@ -520,7 +520,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   query =
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
-
   return query;
 }
 
@@ -545,7 +544,7 @@ FnordMetric.util.getMonthStr = function(index) {
 
 FnordMetric.util.isNumKey = function(keycode) {
   return (
-    (keycode >= 48 && keycode <= 57) || (keycode >= 96 && keycode <= 105));
+    (keycode >= 48 && keycode <= 57));
 }
 
 /* tab, arrow-left, arrow-right, deletekeys */
@@ -558,62 +557,14 @@ FnordMetric.util.isNavKey = function(keycode) {
     keycode == 46);
 }
 
-
-FnordMetric.util.validatedTimeInput = function (time_input, type, callback) {
-  var input = time_input.value;
-
-  time_input.addEventListener('keydown', function(e) {
-    if (e.keyCode == 13) {
-      callback();
-      return;
-    }
-    if (FnordMetric.util.isNumKey(e.keyCode)) {
-      var n = String.fromCharCode(e.keyCode);
-      input = time_input.value;
-
-      if (type == "hour") {
-        if (input.length == 0) {
-          if (n >= 0 && n <= 2) {
-            input = n;
-            time_input.value = n;
-          } else{
-            e.preventDefault();
-          }
-        } else if (input.length == 1) {
-          if (input < 2 || (input == 2 && n < 4)) {
-            input = input * 10 + n;
-            time_input.value += n;
-          } else {
-            e.preventDefault();
-          }
-        } else {
-          e.preventDefault();
-        }
-
-      } else if (type == "minute") {
-        if (input.length == 0) {
-          if (n >= 0 && n <= 5) {
-            input = n;
-            time_input.value = n;
-          } else {
-            e.preventDefault();
-          }
-        } else if (input.length == 1) {
-          input = input * 10 + n;
-          time_input.value += n;
-        } else {
-          e.preventDefault();
-        }
-      } else {
-        e.preventDefault();
-      }
-    }
-
-    if (!FnordMetric.util.isNavKey(e.keyCode)) {
+FnordMetric.util.validatedTimeInput = function(time_input) {
+  time_input.maxLength = "2";
+  time_input.addEventListener('keypress', function(e) {
+    if (!FnordMetric.util.isNavKey(e.keyCode) &&
+      !FnordMetric.util.isNumKey(e.keyCode)) {
       e.preventDefault();
     }
-  }, false);
-
+  },false);
 }
 
 FnordMetric.util.appendLeadingZero = function (num) {
