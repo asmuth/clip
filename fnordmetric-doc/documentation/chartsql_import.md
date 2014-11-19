@@ -102,6 +102,6 @@ MySQL database. The valid parameters for mysql database urls are:
 Some examples:
 
     mysql://localhost:3306/mydb?username=root
-    mysql://127.0.0.1:3306/fnordmetric?username=hans&passwor=geheim
+    mysql://127.0.0.1:3306/fnordmetric?username=hans&password=geheim
 
 
