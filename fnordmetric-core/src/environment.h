@@ -12,6 +12,7 @@
 #include <memory>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/util/logger.h>
+#include "config.h"
 
 using fnord::util::Logger;
 

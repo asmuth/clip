@@ -140,6 +140,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/metricdb/sample.cc
     stage/src/fnordmetric/metricdb/statsd.cc)
 
+include_directories(${PROJECT_BINARY_DIR})
 include_directories(stage/src)
 include_directories(stage/assets)
 
@@ -149,7 +150,6 @@ else()
   set(CMAKE_CXX_FLAGS "-std=c++0x")
 endif()
 
-# fnordmetric
 add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} stage/src/fnordmetric/cli.cc)
 target_link_libraries(fnordmetric-cli m)
 install(TARGETS fnordmetric-cli DESTINATION bin)
@@ -160,10 +160,15 @@ install(TARGETS fnordmetric-server DESTINATION bin)
 
 find_package(MySQL)
 if(MYSQL_FOUND)
-#  include_directories(${MYSQL_INCLUDE_DIRS})
-#  target_link_libraries(fnordmetric-cli mysqlclient)
-#  target_link_libraries(fnordmetric-server mysqlclient)
+  include_directories(${MYSQL_INCLUDE_DIRS})
+  target_link_libraries(fnordmetric-cli mysqlclient)
+  target_link_libraries(fnordmetric-server mysqlclient)
+  set(FNORD_ENABLE_MYSQL true)
+else()
+  message("WARNING: libmysqlclient not found, FnordMetric will be compiled without MySQL support")
 endif()
+
+configure_file(config.h.in config.h)
 
 if(ENABLE_TESTS)
   add_library(fnord SHARED ${FNORDMETRIC_SOURCES})
