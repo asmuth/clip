@@ -243,6 +243,7 @@ input {
   font-size: 14px;
 }
 
+
 .viewport {
   min-width: 900px;
   margin-top: 49px;
@@ -1158,6 +1159,12 @@ h1.page_header em {
   border: 1px solid #b3c2d0;
   color: #545758;
 }
+
+.metric_preview_controls .group input.highlighted {
+  border: 1px solid rgba(230, 126, 34,1.0);
+  background: rgba(230, 126, 34,0.1);
+}
+
 
 .metric_preview_controls .group select {
   -webkit-appearance: menulist-button;
