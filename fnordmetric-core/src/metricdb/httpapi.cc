@@ -1,17 +1,20 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/metrictablerepository.h>
 #include <fnordmetric/util/stringutil.h>
+#include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -240,6 +243,17 @@ void HTTPAPI::executeQuery(
   query::QueryService query_service;
   std::unique_ptr<query::TableRepository> table_repo(
       new MetricTableRepository(metric_repo_));
+
+
+  if (!env()->flags()->isSet("disable_external_backends")) {
+    query_service.registerBackend(
+        std::unique_ptr<fnordmetric::query::Backend>(
+            new fnordmetric::query::mysql_backend::MySQLBackend));
+
+    query_service.registerBackend(
+        std::unique_ptr<fnordmetric::query::Backend>(
+            new fnordmetric::query::csv_backend::CSVBackend));
+  }
 
   query::QueryService::kFormat resp_format = query::QueryService::FORMAT_JSON;
   std::string format_param;

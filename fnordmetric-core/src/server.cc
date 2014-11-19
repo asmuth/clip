@@ -188,7 +188,6 @@ int main(int argc, const char** argv) {
       "One of 'disk', 'inmemory', 'mysql' or 'hbase'. Default: 'disk'",
       "<name>");
 
-  // flags
   env()->flags()->defineFlag(
       "datadir",
       cli::FlagParser::T_STRING,
@@ -197,6 +196,15 @@ int main(int argc, const char** argv) {
       NULL,
       "Store the database in this directory (disk backend only)",
       "<path>");
+
+  env()->flags()->defineFlag(
+      "disable_external_backends",
+      cli::FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      NULL,
+      "Disable queries against external backends like CSV files or MySQL");
 
   env()->flags()->defineFlag(
       "verbose",

@@ -28,12 +28,14 @@ static std::mutex global_mysql_init_lock;
 static bool global_mysql_initialized = false;
 
 MySQLBackend::MySQLBackend() {
+#ifdef FNORD_ENABLE_MYSQL
   global_mysql_init_lock.lock();
   if (!global_mysql_initialized) {
     mysql_library_init(0, NULL, NULL); // FIXPAUl mysql_library_end();
     global_mysql_initialized = true;
   }
   global_mysql_init_lock.unlock();
+#endif
 }
 
 bool MySQLBackend::openTables(

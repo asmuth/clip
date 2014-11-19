@@ -22,15 +22,23 @@ std::unique_ptr<MySQLConnection> MySQLConnection::openConnection(
 }
 
 MySQLConnection::MySQLConnection() : mysql_(nullptr) {
+#ifdef FNORD_ENABLE_MYSQL
   mysql_ = mysql_init(NULL);
 
   if (mysql_ == nullptr) {
     RAISE(kRuntimeError, "mysql_init() failed\n");
   }
+#else
+  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+#endif
 }
 
 MySQLConnection::~MySQLConnection() {
+#ifdef FNORD_ENABLE_MYSQL
   mysql_close(mysql_);
+#else
+  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+#endif
 }
 
 void MySQLConnection::connect(const util::URI& uri) {
@@ -88,6 +96,7 @@ void MySQLConnection::connect(
     const std::string& database,
     const std::string& username,
     const std::string& password) {
+#ifdef FNORD_ENABLE_MYSQL
   auto ret = mysql_real_connect(
       mysql_,
       host.c_str(),
@@ -104,11 +113,17 @@ void MySQLConnection::connect(
       "mysql_real_connect() failed: %s\n",
       mysql_error(mysql_));
   }
+#else
+  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+#endif
 }
 
 
 std::vector<std::string> MySQLConnection::describeTable(
     const std::string& table_name) {
+  std::vector<std::string> columns;
+
+#ifdef FNORD_ENABLE_MYSQL
   MYSQL_RES* res = mysql_list_fields(mysql_, table_name.c_str(), NULL);
   if (res == nullptr) {
     RAISE(
@@ -117,7 +132,6 @@ std::vector<std::string> MySQLConnection::describeTable(
       mysql_error(mysql_));
   }
 
-  std::vector<std::string> columns;
   auto num_cols = mysql_num_fields(res);
   for (int i = 0; i < num_cols; ++i) {
     MYSQL_FIELD* col = mysql_fetch_field_direct(res, i);
@@ -125,12 +139,16 @@ std::vector<std::string> MySQLConnection::describeTable(
   }
 
   mysql_free_result(res);
+#else
+  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+#endif
   return columns;
 }
 
 void MySQLConnection::executeQuery(
     const std::string& query,
     std::function<bool (const std::vector<std::string>&)> row_callback) {
+#ifdef FNORD_ENABLE_MYSQL
   if (env()->verbose()) {
     fnord::util::LogEntry entry;
     entry.append("__severity__", "DEBUG");
@@ -182,6 +200,9 @@ void MySQLConnection::executeQuery(
   }
 
   mysql_free_result(result);
+#else
+  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+#endif
 }
 
 }

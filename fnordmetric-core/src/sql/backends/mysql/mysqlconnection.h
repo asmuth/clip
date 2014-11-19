@@ -13,7 +13,9 @@
 #include <fnordmetric/util/uri.h>
 #include <fnordmetric/util/runtimeexception.h>
 #include <functional>
+#ifdef FNORD_ENABLE_MYSQL
 #include <mysql.h>
+#endif
 
 namespace fnordmetric {
 namespace query {
@@ -103,7 +105,11 @@ public:
       std::function<bool (const std::vector<std::string>&)> row_callback);
 
 protected:
+#ifdef FNORD_ENABLE_MYSQL
    MYSQL* mysql_;
+#else
+   void* mysql_;
+#endif
 };
 
 }

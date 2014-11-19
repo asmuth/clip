@@ -160,9 +160,9 @@ install(TARGETS fnordmetric-server DESTINATION bin)
 
 find_package(MySQL)
 if(MYSQL_FOUND)
-  include_directories(${MYSQL_INCLUDE_DIRS})
-  target_link_libraries(fnordmetric-cli mysqlclient)
-  target_link_libraries(fnordmetric-server mysqlclient)
+#  include_directories(${MYSQL_INCLUDE_DIRS})
+#  target_link_libraries(fnordmetric-cli mysqlclient)
+#  target_link_libraries(fnordmetric-server mysqlclient)
 endif()
 
 if(ENABLE_TESTS)
