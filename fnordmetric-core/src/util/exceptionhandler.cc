@@ -56,6 +56,7 @@ static void globalEHandler() {
       rte.debugPrint();
       exit(1);
     } catch (...) {
+      fprintf(stderr, "foreign exception: %s\n", e.what());
       /* fallthrough */
     }
   } catch (...) {
