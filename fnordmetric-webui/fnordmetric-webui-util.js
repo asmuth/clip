@@ -9,27 +9,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- * TODOS:
- *
- * Query Playground:
- *  - "embed this query" opens up a popup with html/js/ruby snippets
- *  - prevent reload/navigation to other page (body onunload)
-*  - stretch: display a [fake] loading bar
- *  - nice to have: represent current chart and table, view in url --> renderResultPane
- *
- * Metric list view:
- *  - write meaningful error messages
- *
- *  - fix menuitems
- *  - fix resize tooltip, vertical split
- *  - wrong URL: redirect and display message 
- *  - fix back and for (push and pop states)
- *
- */
-
-
 if (FnordMetric === undefined) {
   FnordMetric = {};
 }
@@ -38,12 +17,17 @@ if (FnordMetric.util === undefined) {
   FnordMetric.util = {};
 }
 
+/**
+  * extracts the params from the url
+  * @param qstr like metric_list?metric=/osx/load_avg_15m&view=value
+  */
 FnordMetric.util.parseQueryString = function(qstr) {
   var path;
   var query_params = {};
 
   if (qstr.indexOf("?") >= 0) {
-    path = qstr.substr(0, qstr.indexOf("?"))
+    path = qstr.substr(0, qstr.indexOf("?"));
+    path = path.replace("#", "");
 
     var params_str = qstr.substr(qstr.indexOf("?") + 1);
     var raw_params = params_str.split('&');
@@ -54,13 +38,17 @@ FnordMetric.util.parseQueryString = function(qstr) {
     query_params.innerViewValue = decodeURIComponent(param[1]);
 
     for (var i = 1; i < raw_params.length; i++) {
-      var param = raw_params[i].split('=');
-       query_params[decodeURIComponent(param[0])] =
-          decodeURIComponent(param[1]);
+      var param = (raw_params[i].split('=') != "undefined") ? 
+        raw_params[i].split('=') : "";
+      if (param[0] != "undefined") {
+        query_params[decodeURIComponent(param[0])] =
+           (param[1] != "undefined") ? 
+           decodeURIComponent(param[1]) : "";
+      }
     }
 
   } else {
-    path = qstr;
+    path = qstr != "undefined" ? qstr : "";
   }
   return {
     "path": path,
@@ -68,55 +56,48 @@ FnordMetric.util.parseQueryString = function(qstr) {
   };
 }
 
+/**
+  * builds a querystring from the query_params, attachs it to the hash
+  * and sets the url
+  * @param query_params should be like query_params in parseQueryString
+  * @param encode (boolean) determines if innerViewValue should be URIencoded
+  * @param push_state (boolena) determines if the url should be
+  * added to the browser's history
+  */
 FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
-  var path = "#"+hash+"?";
+  if (hash === undefined || hash === "undefined") {
+    window.location.hash = "";
+    return;
+  }
+  var path = "#" + hash;
 
-  path += query_params.innerView + "=";
-  path += (encode)?
-    encodeURIComponent(query_params.innerViewValue) :
-    query_params.innerViewValue;
+  if ("innerView" in query_params && query_params.innerView != undefined) {
+    path += "?" + query_params.innerView + "=";
+    path += (encode)?
+      encodeURIComponent(query_params.innerViewValue) :
+      query_params.innerViewValue;
 
-  for (var param in query_params) {
-    if (param != "innerView" && 
-        param != "innerViewValue" &&
-        query_params[param] != undefined &&
-        query_params[param].length > 0) {
+    for (var param in query_params) {
+      if (param != "innerView" && 
+          param != "innerViewValue" &&
+          query_params[param] != undefined &&
+          query_params[param].length > 0) {
 
-      path += 
-        "&" + param +
-        "=" + query_params[param];
+        path += 
+          "&" + param +
+          "=" + query_params[param];
+      }
     }
   }
 
   if (push_state) {
+    console.log("push state");
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
 }
 
-//REMOVE??
-FnordMetric.util.setFragmentURL = function(hash, name, value, encode, push_state) {
-  var path = window.location.pathname;
-  var value = value;
-  if (encode == true) {
-    value = encodeURIComponent(value);
-  }
-  var hash = 
-    path + "#" + hash + "?" + name + "=" + value;
-  window.location = hash;
-  if (push_state == true) {
-    window.history.pushState({url: hash}, "#", hash);
-  }
-}
 
-
-FnordMetric.util.convertArrayToString = function(array) {
-  var string = "";
-  if (array.length > 0) {
-    string = array.join(", ");
-  }
-  return string;
-}
 
 /* simple loader foreground */
 FnordMetric.util.displayLoader = function(elem) {
@@ -164,8 +145,6 @@ FnordMetric.util.displayErrorMessage = function(elem, msg) {
 }
 
 
-
-
 FnordMetric.util.renderPageHeader = function(text, elem) {
   var header = document.createElement("h1");
   header.className = "page_header";
@@ -174,13 +153,19 @@ FnordMetric.util.renderPageHeader = function(text, elem) {
   elem.appendChild(header);
 }
 
+/**
+  * creates a time description like 
+  * '2 hours ago - Nov 8 2014 11:33:11
+  * @param timestamp unix ts in seconds, milli or microseconds
+  */
 FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
     return "0";
   }
+  var timestamp =
+    FnordMetric.util.convertToMilliTS(timestamp);
 
   var time_str;
-  var timestamp = timestamp / 1000;
   var now = Date.now();
   var date = new Date(timestamp);
 
@@ -227,7 +212,20 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   return time_str;
 }
 
+//FIXLAURA check all cases 
+FnordMetric.util.convertToMilliTS = function(ts) {
+  var length = ts.toString().length;
+  if (length == 16) {
+    return (ts/1000);
+  } else if (length < 13 && length >= 10) {
+    return (ts * 1000);
+  } else {
+    return ts;
+  }
+}
+
 FnordMetric.util.parseMilliTS = function(ts) {
+  var ts = FnordMetric.util.convertToMilliTS(ts);
   if (ts < 1000) {
     if (ts == 0) {
       return " less than 1 millisecond";
@@ -252,17 +250,11 @@ FnordMetric.util.parseMilliTS = function(ts) {
   return (ts + (ts == 1? " hour" : " hours"));
 }
 
-FnordMetric.util.humanDateToMikroTS = function(date) {
-  /* first version until datepicker is implemented */ 
-  var ts;
-  if (date == "NOW") {
-    ts = Date.now();
-  }
-  return ts;
-}
-
-
 FnordMetric.util.humanCountRows = function(tables) {
+  if (tables == undefined) {
+    return "0 rows";
+  }
+
   var num = 0;
   tables.map(function(table) {
     num += table.rows.length;
@@ -270,7 +262,13 @@ FnordMetric.util.humanCountRows = function(tables) {
   return (num == 1? num + " row" : num + " rows")
 }
 
-
+/**
+  * sorts the metric list for a specific column 
+  * @param metrics is an array of arrays
+  * @param column_index determines which 'column'
+  *   ar array index should be sorted
+  * @param order can be asc or desc
+  */
 FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   function compare(a, b) {
     if (a < b) {
@@ -350,12 +348,18 @@ FnordMetric.createButton = function(href, class_name, inner_HTML) {
   return button;
 }
 
+/**
+  * returns those metric objects whose key includes search_item
+  * @param metrics array of metric objects
+  */
 FnordMetric.util.searchMetricList = function(metrics, search_item) {
   //FIXME works but seems not to be the best solution
   var data = [];
   metrics.map(function(item) {
-   if (item.key.indexOf(search_item) > -1) {
-      data.push(item);
+    if (item.key != undefined) {
+      if (item.key.indexOf(search_item) > -1) {
+        data.push(item);
+      }
     }
   });
   return data;
@@ -366,7 +370,7 @@ FnordMetric.util.htmlEscape = function(str) {
 }
 
 
-/* returns all words that includes filter */
+/* returns all words that include filter */
 FnordMetric.util.filterStringArray = function(strings, filter, limit) {
   //FIXME ?
   var data = [];
@@ -402,13 +406,16 @@ FnordMetric.util.milliSecondsToTimeString = function(seconds) {
 }
 
 
-/* in singleMetricView */
+/**
+  * builds a ChartSQL query from url params
+  * @param params format as returned in parseQueryString
+  */
 FnordMetric.util.generateSQLQueryFromParams = function(params) {
   //FIX html escape 
   var table_ref = params.innerViewValue
   var view = params.view;
   /* column for rollups */
-  var columns = params.columns.split(",");
+  var columns = params.columns;
   var start_time = Math.round(params.start_time / 1000);
   var end_time = Math.round(params.end_time / 1000);
   var t_step = params.t_step;
@@ -417,26 +424,36 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
 
   var query;
   var draw_stm = 
-    "DRAW LINECHART\n  XDOMAIN\n    FROM_TIMESTAMP(" + 
-    start_time + "),\n    FROM_TIMESTAMP(" + end_time + ")"
-    + "\n  AXIS BOTTOM\n  AXIS LEFT;\n\n";
+    "DRAW LINECHART\n  ";
   var select_expr = "SELECT\n    time AS x,\n    ";
   var from_expr = "\n  FROM\n";
   var where_expr = "";
   var group_expr = "";
   var hasAggregation = false;
 
+  /* complement draw_stm */
+  if (!isNaN(start_time) && !isNaN(end_time)) {
+    draw_stm +=
+      "XDOMAIN\n    FROM_TIMESTAMP(" + start_time +
+      "),\n    FROM_TIMESTAMP(" + end_time + ")";
+  }
 
   /* complete select_expr */
   if (view == "value") {
-    select_expr += "value as y ";
+    select_expr += "value AS y ";
   } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
-    draw_stm = "DRAW BARCHART\n  AXIS BOTTOM\n  AXIS LEFT;";
+    /* adapt draw stm */
+    draw_stm = "DRAW BARCHART\n  ";
     var func = (view.split("_"))[1];
 
-    /* if the metric hasn't any labels total is selected */
-    var column = (columns[0].length > 0)? 
-      ("`" + columns[0] + "`") : "'total'";
+    var column;
+    if (columns != undefined && (columns.split(","))[0].length > 0) {
+      columns = columns.split(",")
+      column = "`" + columns[0] + "`";
+    } else {
+      /* fallback if the metric hasn't any labels */
+      column = "'total'";
+    }
 
     select_expr = 
       " SELECT " + column + " AS X, " + func + "(value) AS Y";
@@ -452,11 +469,17 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     select_expr += ", " + series + " AS series";
   }
 
+  /* complete draw stm */
+  draw_stm +=
+    "\n  AXIS BOTTOM\n  AXIS LEFT\n" +
+    "  LEGEND TOP RIGHT INSIDE;\n\n";
+
+
   /* complete from_expr */
   from_expr += "    `" + table_ref + "`\n";
 
   /*complete where_expr */
-  if (start_time != undefined && end_time != undefined) {
+  if (!isNaN(start_time) && !isNaN(end_time)) {
     where_expr =
       "  WHERE\n    time > FROM_TIMESTAMP(" + start_time + ")\n" +
       "    AND time < FROM_TIMESTAMP(" + end_time + ")";
@@ -468,14 +491,14 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     group_expr = " GROUP ";
     var hasGroupStm = false;
 
-    if (t_step != undefined) {
+    if (t_window != undefined) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, " + Math.round(t_step / 1000) + ",";
+        "OVER TIMEWINDOW(time, " + Math.round(t_window / 1000) + ",";
 
-      group_expr += (t_window != undefined)?
-        Math.round(t_window / 1000) : Math.round(t_step / 1000);
+      group_expr += (t_step != undefined)?
+        Math.round(t_step / 1000) : Math.round(t_window / 1000);
 
       group_expr+= ")";
 
@@ -494,10 +517,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   }
 
 
-  query = 
+  query =
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
-
   return query;
 }
 
@@ -522,7 +544,7 @@ FnordMetric.util.getMonthStr = function(index) {
 
 FnordMetric.util.isNumKey = function(keycode) {
   return (
-    (keycode >= 48 && keycode <= 57) || (keycode >= 96 && keycode <= 105));
+    (keycode >= 48 && keycode <= 57));
 }
 
 /* tab, arrow-left, arrow-right, deletekeys */
@@ -535,59 +557,14 @@ FnordMetric.util.isNavKey = function(keycode) {
     keycode == 46);
 }
 
-
-FnordMetric.util.validatedTimeInput = function (time_input, type) {
-  var input = time_input.value;
-
-  time_input.addEventListener('keydown', function(e) {
-    if (FnordMetric.util.isNumKey(e.keyCode)) {
-      var n = String.fromCharCode(e.keyCode);
-      input = time_input.value;
-
-      if (type == "hour") {
-        if (input.length == 0) {
-          if (n >= 0 && n <= 2) {
-            input = n;
-            time_input.value = n;
-          } else{
-            e.preventDefault();
-          }
-        } else if (input.length == 1) {
-          console.log(input);
-          if (input < 2 || (input == 2 && n < 4)) {
-            input = input * 10 + n;
-            time_input.value += n;
-          } else {
-            e.preventDefault();
-          }
-        } else {
-          e.preventDefault();
-        }
-
-      } else if (type == "minute") {
-        if (input.length == 0) {
-          if (n >= 0 && n <= 5) {
-            input = n;
-            time_input.value = n;
-          } else {
-            e.preventDefault();
-          }
-        } else if (input.length == 1) {
-          input = input * 10 + n;
-          time_input.value += n;
-        } else {
-          e.preventDefault();
-        }
-      } else {
-        e.preventDefault();
-      }
-    }
-
-    if (!FnordMetric.util.isNavKey(e.keyCode)) {
+FnordMetric.util.validatedTimeInput = function(time_input) {
+  time_input.maxLength = "2";
+  time_input.addEventListener('keypress', function(e) {
+    if (!FnordMetric.util.isNavKey(e.keyCode) &&
+      !FnordMetric.util.isNumKey(e.keyCode)) {
       e.preventDefault();
     }
-  }, false);
-
+  },false);
 }
 
 FnordMetric.util.appendLeadingZero = function (num) {

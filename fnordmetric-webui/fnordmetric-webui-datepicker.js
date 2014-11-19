@@ -16,43 +16,155 @@ if (FnordMetric.views === undefined) {
   FnordMetric.views = {};
 }
 
+ /* generate html for time input and handle input */
+FnordMetric.util.timeInput = function(selectedTimestamp, elem, callback) {
+  var selectedMinutes =
+      FnordMetric.util.appendLeadingZero(
+        selectedTimestamp.getMinutes());
+
+    var selectedHours =
+      FnordMetric.util.appendLeadingZero(
+        selectedTimestamp.getHours());
+
+    var input_container = document.createElement("div");
+    input_container.className = "input_container";
+    var separator = document.createElement("span");
+    separator.innerHTML = ":";
+
+    var hour_input = document.createElement("input");
+    hour_input.placeholder = selectedHours;
+
+    var minute_input = document.createElement("input");
+    minute_input.placeholder = selectedMinutes;
+
+  function render() {
+    input_container.appendChild(hour_input);
+    input_container.appendChild(separator);
+    input_container.appendChild(minute_input);
+    elem.appendChild(input_container);
+
+    hour_input.addEventListener('focus', function(e) {
+      e.preventDefault();
+      FnordMetric.util.validatedTimeInput(this, "hour", callback);
+    }, false);
+
+    minute_input.addEventListener('focus', function(e) {
+      e.preventDefault();
+      FnordMetric.util.validatedTimeInput(this, "minute", callback);
+    }, false);
+
+  }
+
+  function getValues() {
+    var hours = hour_input.value.length > 0 ?
+      hour_input.value : selectedHours;
+    var minutes = minute_input.value.length > 0 ?
+      minute_input.value : selectedMinutes;
+    return {
+      "hours" : hours,
+      "minutes" : minutes
+    }
+  }
+
+  return {
+    "render" : render,
+    "getValues" : getValues,
+  }
+}
+
+
+/* Displays a calendar from an input for selecting time and date*/
 FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
+  /* current date */
+  var currMonth;
+  var currYear;
+  var currDate;
+
+  /* in datepicker selected date */
+  var selectedTimestamp;
+  var selectedYear;
+  var selectedMonth;
+  var selectedDate;
+
+  var timeInput;
   var dp_widget = document.createElement("div");
   dp_widget.className = "datepicker_widget";
   elem.appendChild(dp_widget);
 
-  var curr_day = new Date().getDay();
-  var curr_date = new Date().getDate();
-  var curr_month = new Date().getMonth();
-  var curr_year = new Date().getFullYear();
-  var m_month;
-  var y_year;
-  var isCurrMonth;
 
-  var selected_ts;
-  var selected_hours;
-  var selected_minutes;
+  function getDaysInMonth(year, month) {
+    return (new Date(year, (month+1), 0).getDate());
+  }
 
-  var human_days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  function getFirstDayOfMonth(year, month) {
+    return (new Date(year + "-" + (month+1) + "-01").getDay());
+  }
 
+  /*checks if the day is in this month or not
+    day and first_day are numeric weekday description
+    rowNum the actual row and date the actual date
+  */
+  function inThisMonth(day, first_day, date, daysInMonth, rowNum) {
+    if (rowNum > 0 && rowNum < 4) {return true}
+    if (rowNum == 0) {
+      /* the calendar has the same number of rows for each month */
+      if (first_day == 0) {
+        return false;
+      } else if (day < first_day) {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (rowNum >= 4) {
+      if (date <= daysInMonth) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 
-  function resetDatepicker() {
-    dp_widget.innerHTML = "";
-    dp_widget.className = "datepicker_widget";
+  function isSelectable(date, month, year) {
+    if (month == currMonth) {
+      return date <= currDate;
+    }
+    return (year <= currYear && month < currMonth);
+  }
+
+  /* if date is selectable */
+  function getCellName(date, month, year) {
+    var name = "";
+    /* date is today */
+    if (date == currDate && month == currMonth && year == currYear) {
+      name = "highlight_border";
+    }
+    /* date is selected date */
+    if (date == selectedDate && 
+        month == selectedMonth && 
+        year == selectedYear) {
+          name += " highlight";
+    }
+    return name;
   }
 
 
-  function onSelect(hours, minutes, day, month, year) {
-    var hours = (hours.length > 0)? hours : selected_hours;
-    var minutes = (minutes.length > 0)? minutes : selected_minutes;
-    var ts = new Date(year, month, day, hours, minutes).getTime();
-
+  function onSelect(date, month, year) {
+    /* fallback for time inputs */
+    var date = (date == undefined) ? 
+      selectedDate : date;
+    var month = (month == undefined)?
+      selectedMonth : month;
+    var year = (year == undefined) ?
+      selectedYear : year;
+    var inputs = timeInput.getValues();
+    var hours = inputs.hours;
+    var minutes = inputs.minutes;
+    var ts = new Date(year, month, date, hours, minutes).getTime();
     if (ts <= Date.now() ) {
-
       dp_input.value =
         FnordMetric.util.appendLeadingZero(month+1) + 
         "/" +
-        FnordMetric.util.appendLeadingZero(day) + 
+        FnordMetric.util.appendLeadingZero(date) + 
         "/" + year + "  " + 
         FnordMetric.util.appendLeadingZero(hours) +
         ":" + 
@@ -64,227 +176,145 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
     }
   }
 
-  function isSelectable(day) {
-    if (isCurrMonth) {
-      return day <= curr_date;
+
+  /* sets event listener for selectable dates */
+  function handleDateLinks(link, date, month, year) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      onSelect(date, month, year);
+    }, false);
+  }
+
+  function resetDatepicker() {
+    dp_widget.innerHTML = "";
+    dp_widget.className = "datepicker_widget";
+  }
+
+  function resetCalendar(table) {
+    table.innerHTML = "";
+    FnordMetric.util.removeIfChild(
+      table, dp_widget);
+  }
+
+  function renderWeekHeader(table) {
+    var header = document.createElement("tr");
+
+    var dayNames = 
+      ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+
+    dayNames.map(function(day) {
+      var cell = document.createElement("th");
+      cell.innerHTML = day;
+      header.appendChild(cell);
+    });
+
+    table.appendChild(header);
+  }
+
+  function renderMonthHeader(year, month, table) {
+    var year = parseInt(year, 10);
+    var month = parseInt(month, 10);
+    var row = document.createElement("tr");
+    var cell = document.createElement("td");
+    cell.colSpan = "7";
+
+    var month_title = document.createElement("span");
+    month_title.className = "datepicker_title";
+    month_title.innerHTML =
+      FnordMetric.util.getMonthStr(month) + " " + year;
+
+    /* tooltip to select previous month */
+    var prev_ttp = FnordMetric.createButton(
+      "#", "month_ttp", "<i class='fa fa-chevron-left'></i>");
+
+    /* tooltip to select next month */
+    var next_ttp = FnordMetric.createButton(
+      "#", "month_ttp", "<i class='fa fa-chevron-right'></i>");
+
+    prev_ttp.addEventListener('click', function(e) {
+      e.preventDefault();
+      resetCalendar(table);
+      year = (month == 0)? year-1 : year;
+      month = (month + 11) % 12;
+      renderCalendar(year, month);
+    }, false);
+
+    next_ttp.addEventListener('click', function(e) {
+      e.preventDefault();
+      resetCalendar(table);
+      year = (month == 11)? year+1 : year;
+      month = (month + 1) % 12;
+      renderCalendar(year, month);
+    }, false);
+
+    cell.appendChild(prev_ttp);
+    cell.appendChild(month_title);
+    cell.appendChild(next_ttp);
+    row.appendChild(cell);
+    table.appendChild(row);
+  }
+
+  function renderWeeks(year, month, calendar) {
+    var daysInMonth = getDaysInMonth(year, month);
+    var fDay = getFirstDayOfMonth(year, month);
+    var numRows = 6;
+    var date = 1;
+
+    /* generate the rows (that is the weeks) */
+    for (var dprow = 0; dprow < numRows; dprow++) {
+      var row = document.createElement("tr");
+      for (day = 0; day < 7; day ++) {
+        var cell = document.createElement("td");
+        if (inThisMonth(day, fDay, date, daysInMonth, dprow)) {
+          if (isSelectable(date, month, year)) {
+            var link = FnordMetric.createButton(
+              "#", undefined, date);
+            cell.className = getCellName(date, month, year);
+            cell.appendChild(link);
+            handleDateLinks(link, date, month, year);
+          } else {
+            cell.innerHTML = date;
+          }
+          date++;
+        }
+        row.appendChild(cell);
+      }
+      calendar.appendChild(row);
     }
-    return y_year <= curr_year && m_month <= curr_month;
   }
 
 
-  function init(month, year) {
-    y_year = year;
-    m_month = month;
-
-    dp_widget.className = "datepicker_widget active";
-
-    selected_ts = new Date(
-      parseInt(dp_input.getAttribute("id"), 10));
-
-    selected_hours =
-      FnordMetric.util.appendLeadingZero(
-        selected_ts.getHours());
-
-    selected_minutes = 
-      FnordMetric.util.appendLeadingZero(
-        selected_ts.getMinutes());
-
-    var sltd_date = selected_ts.getDate();
-    var sltd_month = selected_ts.getMonth();
-    var sltd_year = selected_ts.getYear();
-    var isSltdMonth = (month == sltd_month && year == curr_year);
-    isCurrMonth = (month == curr_month && year == curr_year);
-
-    var input_container = document.createElement("div");
-    input_container.className = "input_container";
-    var separator = document.createElement("span");
-    separator.innerHTML = ":";
-
-    var hour_input = document.createElement("input");
-
-    hour_input.placeholder = selected_hours;
-    hour_input.addEventListener('focus', function(e) {
-      e.preventDefault();
-      timeInputFocus = true;
-      FnordMetric.util.validatedTimeInput(this, "hour");
-    }, false);
-
-    var minute_input = document.createElement("input");
-    minute_input.placeholder = selected_minutes;
-    minute_input.addEventListener('focus', function() {
-      timeInputFocus = true;
-      FnordMetric.util.validatedTimeInput(this, "minute");
-    }, false);
-
-
-    input_container.appendChild(hour_input);
-    input_container.appendChild(separator);
-    input_container.appendChild(minute_input);
-    dp_widget.appendChild(input_container);
-
-
-    var first_day = new Date(year + "-" + (month+1) + "-01").getDay();
-    /* Mo = 1, ... , Su = 7 */
-    first_day = (first_day === 0)? 7 : first_day-1;
-    var num_days = new Date(year, (month+1), 0).getDate();
+  function renderCalendar(year, month) {
     var table = document.createElement("table");
-
-    var month_header = document.createElement("tr");
-
-    var prev_ttp = FnordMetric.createButton(
-      "#", "month_ttp", "<i class='fa fa-chevron-left'></i>");
-    prev_ttp.addEventListener('click', function(e) {
-      e.preventDefault();
-      resetDatepicker();
-      year = (month == 0)? year-1 : year;
-      init((month-1 +12) % 12, year);
-    }, false);
-
-    var next_ttp = FnordMetric.createButton(
-      "#", "month_ttp", "<i class='fa fa-chevron-right'></i>");
-    next_ttp.addEventListener('click', function(e) {
-      e.preventDefault();
-      resetDatepicker();
-      year = (month == 11)? year+1 : year;
-      init((month + 1) % 12, year);
-    }, false);
-
-    var month_title = document.createElement("span");
-    month_title.innerHTML =
-      FnordMetric.util.getMonthStr(month) + " " + year;
-    month_title.className = "datepicker_title";
-    var month_cell = document.createElement("td");
-    month_cell.colSpan = "7";
-    month_cell.appendChild(prev_ttp);
-    month_cell.appendChild(month_title);
-    month_cell.appendChild(next_ttp);
-    month_header.appendChild(month_cell);
-
-
-    var day_header = document.createElement("tr");
-    human_days.map(function(day) {
-      var header_cell = document.createElement("th");
-      header_cell.innerHTML = day;
-      day_header.appendChild(header_cell);
-    });
-    var is
-    var day = 1;
-    var rows = 0;
-    var first_row = document.createElement("tr");
-    rows++;
-    for (var i = 0; i < 7; i++) { 
-      var cell = document.createElement("td");
-      if (i < first_day || first_day == 0) {
-        cell.innerHTML = "";
-      } else {
-
-        if (isSelectable(day)) {
-          if (isCurrMonth && day == curr_date) {
-            cell.className = "highlight_border";
-          }
-          if (isSltdMonth && day == sltd_date) {
-            cell.className += " highlight";
-          }
-
-          var link = FnordMetric.createButton(
-            "#", undefined, day);
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            onSelect(
-              hour_input.value,
-              minute_input.value,
-              this.innerText, month, year);
-          }, false);
-
-          cell.appendChild(link);
-        } else {
-          cell.innerHTML = day;
-        }
-
-        day++;
-      }
-      first_row.appendChild(cell);
-    }
-    table.appendChild(day_header);
-    table.appendChild(month_header);
-    table.appendChild(first_row);
-
-    while (rows < 6 && day <= num_days) {
-      var row = document.createElement("tr");
-      rows++;
-      for (var i = 0; i < 7 && day <= num_days; i++) {
-        var cell = document.createElement("td");
-
-        if (isSelectable(day)) {
-          if (isCurrMonth && day == curr_date) {
-            cell.className = "highlight_border";
-          }
-          if (isSltdMonth && day == sltd_date) {
-            cell.className += " highlight";
-          }
-
-          var link = FnordMetric.createButton(
-            "#", undefined, day);
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            onSelect(
-              hour_input.value,
-              minute_input.value,
-              this.innerText, month, year);
-          }, false);
-
-          cell.appendChild(link);
-        } else {
-          cell.innerHTML = day;
-        }
-
-        row.appendChild(cell);
-        day++;
-      }
-      table.appendChild(row);
-    }
-
-    if (rows < 6) {
-      var last_row = document.createElement("tr");
-      for (var i = 0; i < 7; i++) {
-        var cell = document.createElement("td");
-        if (day <= num_days) {
-
-          if (isSelectable(day)) {
-            if (isCurrMonth && day == curr_date) {
-              cell.className = "highlight_border";
-            }
-            if (isSltdMonth && day == sltd_date) {
-              cell.className += " highlight";
-            }
-
-            var link = FnordMetric.createButton(
-              "#", undefined, day);
-            link.addEventListener('click', function(e) {
-              e.preventDefault();
-              onSelect(
-                hour_input.value,
-                minute_input.value,
-                this.innerText, month, year);
-            }, false);
-
-            cell.appendChild(link);
-          } else {
-            cell.innerHTML = day;
-          }
-
-          day++;
-        } else {
-          cell.innerHTML = "";
-        }
-        last_row.appendChild(cell);
-      }
-      table.appendChild(last_row);
-    }
-
+    renderWeekHeader(table);
+    renderMonthHeader(year, month, table);
+    renderWeeks(year, month, table);
     dp_widget.appendChild(table);
   }
 
+  function init() {
+    var now = new Date();
+    currYear = now.getFullYear();
+    currMonth = now.getMonth();
+    currDate = now.getDate();
+
+    selectedTimestamp = new Date(
+      parseInt(dp_input.getAttribute("id"), 10));
+    selectedYear = selectedTimestamp.getFullYear();
+    selectedMonth = selectedTimestamp.getMonth();
+    selectedDate = selectedTimestamp.getDate();
+
+    dp_widget.innerHTML = "";
+    dp_widget.className += " active";
+    timeInput = FnordMetric.util.timeInput(
+      selectedTimestamp, dp_widget, onSelect);
+    timeInput.render();
+    renderCalendar(currYear, currMonth);
+  }
+
+  dp_input.addEventListener('focus', function(event) {
+    init();
+  }, false);
 
   document.addEventListener('click', function() {
     resetDatepicker();
@@ -294,14 +324,5 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
   elem.addEventListener('click', function(e) {
     e.stopPropagation();
   });
-
-  dp_input.addEventListener('focus', function(event) {
-    dp_widget.innerHTML = "";
-    var now = new Date();
-    var month = now.getMonth();
-    var year = now.getFullYear();
-    init(month, year)
-  }, false);
-
-};
+}
 
