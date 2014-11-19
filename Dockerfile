@@ -3,7 +3,7 @@ RUN apt-get update \
 	&& apt-get install -y curl \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN buildDeps='unzip git gcc make clang++-3.4 cmake libmysqlclient-dev'; \
+RUN buildDeps='unzip gcc make clang++-3.4 cmake libmysqlclient-dev'; \
 	set -x \
 	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/* 
