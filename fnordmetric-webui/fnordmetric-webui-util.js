@@ -43,7 +43,8 @@ FnordMetric.util.parseQueryString = function(qstr) {
   var query_params = {};
 
   if (qstr.indexOf("?") >= 0) {
-    path = qstr.substr(0, qstr.indexOf("?"))
+    path = qstr.substr(0, qstr.indexOf("?"));
+    path = path.replace("#", "");
 
     var params_str = qstr.substr(qstr.indexOf("?") + 1);
     var raw_params = params_str.split('&');
@@ -497,7 +498,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   query = 
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
-
   return query;
 }
 
