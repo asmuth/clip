@@ -90,6 +90,7 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   }
 
   if (push_state) {
+    console.log("push state");
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
@@ -522,7 +523,7 @@ FnordMetric.util.getMonthStr = function(index) {
 
 FnordMetric.util.isNumKey = function(keycode) {
   return (
-    (keycode >= 48 && keycode <= 57) || (keycode >= 96 && keycode <= 105));
+    (keycode >= 48 && keycode <= 57));
 }
 
 /* tab, arrow-left, arrow-right, deletekeys */
@@ -536,14 +537,16 @@ FnordMetric.util.isNavKey = function(keycode) {
 }
 
 
+/*
 FnordMetric.util.validatedTimeInput = function (time_input, type) {
   var input = time_input.value;
-
-  time_input.addEventListener('keydown', function(e) {
+  // bug: keypress is invoked twice 
+  time_input.addEventListener('keypress', function(e) {
+    console.log("keypress");
+>>>>>>> Stashed changes
     if (FnordMetric.util.isNumKey(e.keyCode)) {
       var n = String.fromCharCode(e.keyCode);
       input = time_input.value;
-
       if (type == "hour") {
         if (input.length == 0) {
           if (n >= 0 && n <= 2) {
@@ -553,7 +556,11 @@ FnordMetric.util.validatedTimeInput = function (time_input, type) {
             e.preventDefault();
           }
         } else if (input.length == 1) {
+<<<<<<< Updated upstream
           console.log(input);
+=======
+
+>>>>>>> Stashed changes
           if (input < 2 || (input == 2 && n < 4)) {
             input = input * 10 + n;
             time_input.value += n;
@@ -588,6 +595,16 @@ FnordMetric.util.validatedTimeInput = function (time_input, type) {
     }
   }, false);
 
+}*/
+
+FnordMetric.util.validatedTimeInput = function(time_input) {
+  time_input.maxLength = "2";
+  time_input.addEventListener('keypress', function(e) {
+    if (!FnordMetric.util.isNavKey(e.keyCode) &&
+      !FnordMetric.util.isNumKey(e.keyCode)) {
+      e.preventDefault();
+    }
+  },false);
 }
 
 FnordMetric.util.appendLeadingZero = function (num) {
