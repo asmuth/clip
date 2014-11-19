@@ -146,9 +146,9 @@ include_directories(stage/src)
 include_directories(stage/assets)
 
 if(APPLE)
-  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
 else()
-  set(CMAKE_CXX_FLAGS "-std=c++0x")
+  set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 endif()
 
 add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} stage/src/fnordmetric/cli.cc)
