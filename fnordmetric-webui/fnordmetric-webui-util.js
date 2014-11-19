@@ -610,7 +610,7 @@ FnordMetric.util.getDateTimeString = function(timestamp) {
 }
 
 FnordMetric.util.makeLowerCaseUnderscore = function(string) {
-  return (string.toLowerCase().replace(/ /g,"_"));
+  return (string.toLowerCase().replace(/\s\s|\s/g,"_"));
 }
 
 FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
@@ -626,9 +626,13 @@ FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
   return str;
 }
 
+/* doesn't check if value is already in list */
 FnordMetric.util.addToCSV = function(list, value) {
   if (list.length == 0) {
     return value;
+  }
+  if (value.length == 0) {
+    return list;
   }
   var values = list.split(",");
   values.push(value);

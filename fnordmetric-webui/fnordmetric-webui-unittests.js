@@ -153,6 +153,7 @@ FnordMetric.UnitTests = function() {
 
   var testGenerateSQLQueryFromParams = function() {
     function test(params, expected) {
+      results.total++;
       var result = FnordMetric.util.generateSQLQueryFromParams(params);
       result = result.replace(/(\n\r|\n|\r|\s)/gm, "");
       if (result != expected) {
@@ -212,11 +213,70 @@ FnordMetric.UnitTests = function() {
 
   }();
 
+  var testAddToCSV = function() {
+    function test(list, value, expected) {
+      results.total++;
+      var result = FnordMetric.util.addToCSV(list, value);
+      if (result != expected) {
+        results.bad++;
+        console.log("Testing addToCSV expected "
+          + expected + ", but was " + result);
+      }
+    }
+    test("", "host", "host");
+    test("host", "mount_name", "host,mount_name");
+    test("mount_name", "", "mount_name");
+  }();
+
+  var testRemoveFromCSV = function() {
+    function test(list, value, expected) {
+      results.total++;
+      var result = FnordMetric.util.removeFromCSV(list, value);
+      if (result != expected) {
+        results.bad++;
+        console.log("Testing removeFromCSV expected " +
+          expected + ",but was " + result);
+      }
+    }
+    test("host,mount_name", "mount_name", "host");
+    test("", "host", "");
+    test("host,mount_name", "provider", "host,mount_name");
+    test("host,mount_name", "", "host,mount_name");
+  }();
+
+  var testMakeLowerCaseUnderscore = function() {
+    function test(string, expected) {
+      results.total++;
+      var result = FnordMetric.util.makeLowerCaseUnderscore(string);
+      if (result != expected) {
+        results.bad++;
+        console.log("Testing makeLowerCaseUnderscore expected " +
+          expected + ",but was " + result);
+      }
+    }
+    test("host name", "host_name");
+    test("hostname", "hostname");
+    test("HoSt  Name", "host_name");
+  }();
+
+  var testReverseLowerCaseUnderscore = function() {
+    function test(string, expected) {
+      results.total++;
+      var result = FnordMetric.util.reverseLowerCaseUnderscore(string);
+      if (result != expected) {
+        results.bad++;
+        console.log("Testing reverseLowerCaseUnderscore expected " +
+          expected + ",but was " + result);
+      }
+    }
+    test("host_name", "Host Name");
+    test("hostname", "Hostname");
+  }();
 
   if (results.bad == 0) {
     console.log("Yeah, all " + results.total + " tests passed :-) ");
   } else {
-    console.log(results.bad + " tests of " + results.totak + " failed.");
+    console.log(results.bad + " tests of " + results.total + " failed.");
   }
 
 }
