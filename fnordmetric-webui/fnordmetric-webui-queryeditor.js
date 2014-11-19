@@ -126,6 +126,12 @@ FnordMetric.views.QueryPlayground = function() {
     }
   }
 
+  function beforeUnloadEvent(e) {
+      e.returnValue = 
+        "You may loose your query when leaving the page.";
+  }
+
+
   function render(viewport, url, query_params) {
     direction = "horizontal";
     viewport = viewport;
@@ -169,13 +175,10 @@ FnordMetric.views.QueryPlayground = function() {
 
 
     /* set eventListeners */
-    window.onbeforeunload = function(e) {
-      return "You may loose your query when leaving the page.";
-    }
+    window.addEventListener(
+      'beforeunload', beforeUnloadEvent, false);
 
-    window.addEventListener('resize', function() {
-      updateLayout()
-    });
+    window.addEventListener('resize', updateLayout);
 
     editor_pane.addEventListener('keydown', function(e) {
       if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
@@ -268,7 +271,8 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
   function destroy() {
-
+    window.removeEventListener('beforeunload', beforeUnloadEvent, false);
+    window.removeEventListener('resize', updateLayout);
   }
 
   return {
