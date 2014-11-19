@@ -92,33 +92,37 @@ void ThreadPool::runInternal(std::function<void()> fn) {
 }
 
 void ThreadPool::startThread() {
-  std::thread thread([this] () {
-    for (;;) {
-      std::function<void()> task;
+  try {
+    std::thread thread([this] () {
+      for (;;) {
+        try {
+          std::function<void()> task;
 
-      {
-        std::unique_lock<std::mutex> lk(runq_mutex_);
-        free_threads_++;
+          {
+            std::unique_lock<std::mutex> lk(runq_mutex_);
+            free_threads_++;
 
-        while (runq_.size() == 0) {
-          wakeup_.wait(lk);
+            while (runq_.size() == 0) {
+              wakeup_.wait(lk);
+            }
+
+            assert(runq_.size() > 0);
+            task = runq_.front();
+            runq_.pop_front();
+            free_threads_--;
+          }
+
+          task();
+        } catch (const std::exception& e) {
+          this->error_handler_->onException(e);
         }
-
-        assert(runq_.size() > 0);
-        task = runq_.front();
-        runq_.pop_front();
-        free_threads_--;
       }
+    });
 
-      try {
-        task();
-      } catch (const std::exception& e) {
-        this->error_handler_->onException(e);
-      }
-    }
-  });
-
-  thread.detach();
+    thread.detach();
+  } catch (const std::exception& e) {
+    this->error_handler_->onException(e);
+  }
 }
 
 
