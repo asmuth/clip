@@ -80,9 +80,9 @@ std::unique_ptr<TableRef> TableRef::createTable(
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
-        "Creating new sstable for metric: '%s', generation: %" PRIu64,
+        "Creating new sstable for metric: '%s', generation: %llu",
         metric_key.c_str(),
-        generation);
+        (long long unsigned) generation);
   }
 
   // build header

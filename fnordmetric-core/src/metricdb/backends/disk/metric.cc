@@ -60,10 +60,10 @@ Metric::Metric(
   if (env()->verbose()) {
     env()->logger()->printf(
         "DEBUG",
-        "Reopening metric: '%s' with %i table(s), generation: %" PRIu64,
+        "Reopening metric: '%s' with %i table(s), generation: %llu",
         key.c_str(),
         (int) generations.size(),
-        head_table->generation());
+        (long long unsigned) head_table->generation());
   }
 
   std::shared_ptr<MetricSnapshot> snapshot(new MetricSnapshot());
