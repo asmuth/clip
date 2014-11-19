@@ -210,8 +210,9 @@ FnordMetric.UnitTests = function() {
       t_window : "5000"}, 
       "DRAWLINECHARTAXISBOTTOMAXISLEFTLEGENDTOPRIGHTINSIDE;SELECTtimeASx,min(value)ASYFROM`status_codes`GROUPOVERTIMEWINDOW(time,5,5);");
 
-
   }();
+
+
   if (results.bad == 0) {
     console.log("Yeah, all " + results.total + " tests passed :-) ");
   } else {

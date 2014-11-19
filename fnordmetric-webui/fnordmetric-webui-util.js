@@ -523,7 +523,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   return query;
 }
 
-
 FnordMetric.util.getMonthStr = function(index) {
   var months = [
     "January",
@@ -627,15 +626,25 @@ FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
   return str;
 }
 
-FnordMetric.util.removeFromString = function(start, end, str) {
-  var length = str.length;
-  if (end >= length) {
-    return "";
+FnordMetric.util.addToCSV = function(list, value) {
+  if (list.length == 0) {
+    return value;
   }
+  var values = list.split(",");
+  values.push(value);
+  list = values.join(",");
+  return list;
+}
 
-  var res = str.substr(0, length - start);
-  res += str.substr(end, length-1);
-  return res;
+FnordMetric.util.removeFromCSV = function(list, value) {
+  var values = list.split(",");
+  for (var i = 0; i < values.length; i ++) {
+    if (values[i] == value) {
+      values.splice(i, 1);
+      return values.join(",");
+    }
+  }
+  return list;
 }
 
 FnordMetric.util.renderFlyout = function(text, elem, left) {

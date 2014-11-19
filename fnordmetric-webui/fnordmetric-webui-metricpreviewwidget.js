@@ -71,6 +71,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     var group_by = query_params.by;
     if (group_by == undefined) {
       group_by = defaults.by;
+      console.log(group_by);
       updateURLParams("by", group_by);
     }
     var param_columns = query_params.columns;
@@ -419,30 +420,19 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       group_buttons.map(function(column) {
         column.addEventListener('click', function(e) {
           e.preventDefault();
-
           var selected_columns =
             getQueryParamOrDefaultValue("by");
           var c = this.innerText;
           var index = selected_columns.indexOf(c);
-
           if (index == -1) {
             this.className = "active";
-            if (selected_columns.length > 0) {
-              selected_columns += ",";
-            }
-            selected_columns += this.innerText;
-
+            selected_columns =
+              FnordMetric.util.addToCSV(selected_columns, c);
           } else {
             this.className = "";
-            //FIXME
-            selected_columns = 
-              FnordMetric.util.removeFromString(
-              c, this.innerText.length+1, selected_columns);
-            if (selected_columns[0] == ",") {
-              selected_columns.substr(1);
-            }
+            selected_columns =
+              FnordMetric.util.removeFromCSV(selected_columns, c);
           }
-
           updateURLParams("by", selected_columns);
           runQuery();
         });
