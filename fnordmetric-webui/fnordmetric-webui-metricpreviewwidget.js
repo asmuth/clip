@@ -56,12 +56,16 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
   /* checks if required url params are misssing and adds those if so */
   function addRequiredURLParamsForView(value) {
-    if (value == "count" || value == "sum" || value == "mean") {
+    if (value == "count" || 
+        value == "sum" || 
+        value == "mean" ||
+        value == "min" ||
+        value == "max") {
 
-      var time_step = query_params.t_step;
-      if (time_step == undefined) {
-        time_step = defaults.t_step;
-        updateURLParams("t_step", time_step);
+      var time_window = query_params.t_window;
+      if (time_window == undefined) {
+        time_window = defaults.t_window;
+        updateURLParams("t_window", time_window);
       }
     }
     var group_by = query_params.by;
@@ -456,10 +460,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     prev_timespan.addEventListener('click', function(e) {
       e.preventDefault();
-      var end = end_time;
-      end_time = start_time;
-      var diff = end - start_time;
-      start_time = start_time - diff;
+      var end = query_params.end_time;
+      end_time = query_params.start_time;
+      var diff = end - query_params.start_time;
+      start_time = query_params.start_time - diff;
       updateURLParams("end_time", end_time);
       updateURLParams("start_time", start_time);
       updateDateTimeElems(
@@ -469,11 +473,13 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     next_timespan.addEventListener('click', function(e) {
       e.preventDefault();
-      var start = start_time;
-      var end =  parseInt(end_time ,10) + (end_time - start);
+      var start = query_params.start_time;
+      var end =
+        parseInt(query_params.end_time ,10) + 
+        (query_params.end_time - start);
 
       if (end <= now) {
-        start_time = end_time;
+        start_time = query_params.end_time;
         end_time = end;
         updateURLParams("start_time", start_time);
         updateURLParams("end_time", end_time);
