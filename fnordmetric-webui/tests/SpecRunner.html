@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jasmine Spec Runner v2.1.2</title>
+
+  <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.1.2/jasmine_favicon.png">
+  <link rel="stylesheet" href="lib/jasmine-2.1.2/jasmine.css">
+
+  <script src="lib/jasmine-2.1.2/jasmine.js"></script>
+  <script src="lib/jasmine-2.1.2/jasmine-html.js"></script>
+  <script src="lib/jasmine-2.1.2/boot.js"></script>
+
+  <!-- include source files here... -->
+  <script src="src/util.js"></script>
+
+  <!-- include spec files here... -->
+  <script src="spec/utilSpec.js"></script>
+
+</head>
+
+<body>
+
+  describe("A suite is just a function", function() {
+    var a;
+
+    it("and so is a spec", function() {
+      a = true;
+
+      expect(a).toBe(true);
+    });
+  });
+</body>
+</html>
