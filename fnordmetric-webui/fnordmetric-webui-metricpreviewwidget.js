@@ -71,7 +71,6 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     var group_by = query_params.by;
     if (group_by == undefined) {
       group_by = defaults.by;
-      console.log(group_by);
       updateURLParams("by", group_by);
     }
     var param_columns = query_params.columns;
