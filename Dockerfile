@@ -21,4 +21,4 @@ RUN mkdir /data
 VOLUME /data
 WORKDIR /data
 EXPOSE 8080 8125
-CMD [ "/usr/local/fnordmetric-server --http_port 8080 --statsd_port 8125 --storage_backend disk --datadir /data"]
+CMD [ "/usr/local/bin/fnordmetric-server --http_port 8080 --statsd_port 8125 --storage_backend disk --datadir /data"]
