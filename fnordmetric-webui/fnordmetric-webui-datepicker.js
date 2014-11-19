@@ -32,10 +32,10 @@ FnordMetric.util.timeInput = function(selectedTimestamp, elem, callback) {
     separator.innerHTML = ":";
 
     var hour_input = document.createElement("input");
-    hour_input.placeholder = selectedHours;
+    hour_input.value = selectedHours;
 
     var minute_input = document.createElement("input");
-    minute_input.placeholder = selectedMinutes;
+    minute_input.value = selectedMinutes;
 
   function render() {
     input_container.appendChild(hour_input);
@@ -45,13 +45,14 @@ FnordMetric.util.timeInput = function(selectedTimestamp, elem, callback) {
 
     hour_input.addEventListener('focus', function(e) {
       e.preventDefault();
-      FnordMetric.util.validatedTimeInput(this, "hour", callback);
+      FnordMetric.util.validatedTimeInput(this, "hours", callback);
     }, false);
 
     minute_input.addEventListener('focus', function(e) {
       e.preventDefault();
-      FnordMetric.util.validatedTimeInput(this, "minute", callback);
+      FnordMetric.util.validatedTimeInput(this, "minutes", callback);
     }, false);
+
 
   }
 
