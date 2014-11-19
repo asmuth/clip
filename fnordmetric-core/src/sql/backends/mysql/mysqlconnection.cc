@@ -29,7 +29,7 @@ MySQLConnection::MySQLConnection() : mysql_(nullptr) {
     RAISE(kRuntimeError, "mysql_init() failed\n");
   }
 #else
-  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
 #endif
 }
 
@@ -37,7 +37,7 @@ MySQLConnection::~MySQLConnection() {
 #ifdef FNORD_ENABLE_MYSQL
   mysql_close(mysql_);
 #else
-  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
 #endif
 }
 
@@ -114,7 +114,7 @@ void MySQLConnection::connect(
       mysql_error(mysql_));
   }
 #else
-  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
 #endif
 }
 
@@ -140,7 +140,7 @@ std::vector<std::string> MySQLConnection::describeTable(
 
   mysql_free_result(res);
 #else
-  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
 #endif
   return columns;
 }
@@ -201,7 +201,7 @@ void MySQLConnection::executeQuery(
 
   mysql_free_result(result);
 #else
-  RAISE(kRuntimeError, "fnordmetric was compiled without libmysqlclient");
+  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
 #endif
 }
 

@@ -7,7 +7,7 @@
 # <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 2.6)
 include(FindPkgConfig)
-include(CheckIncludeFileCXX)
+include(CheckIncludeFile)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
 project(fnordmetric)
 
@@ -165,15 +165,11 @@ target_link_libraries(fnordmetric-server ${CMAKE_THREAD_LIBS_INIT})
 
 find_package(MySQL)
 if(MYSQL_FOUND)
-  check_include_file_cxx(mysql.h FNORD_ENABLE_MYSQL)
-else()
-  message("WARNING: libmysqlclient not found, FnordMetric will be compiled without MySQL support")
-endif()
-
-if(FNORD_ENABLE_MYSQL)
-  include_directories(${MYSQL_INCLUDE_DIRS})
+  set(FNORD_ENABLE_MYSQL true)
   target_link_libraries(fnordmetric-cli mysqlclient)
   target_link_libraries(fnordmetric-server mysqlclient)
+else()
+  message("WARNING: libmysqlclient not found, FnordMetric will be compiled without MySQL support")
 endif()
 
 configure_file(config.h.in config.h)
