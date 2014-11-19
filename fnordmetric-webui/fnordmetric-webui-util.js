@@ -559,10 +559,14 @@ FnordMetric.util.isNavKey = function(keycode) {
 }
 
 
-FnordMetric.util.validatedTimeInput = function (time_input, type) {
+FnordMetric.util.validatedTimeInput = function (time_input, type, callback) {
   var input = time_input.value;
 
   time_input.addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) {
+      callback();
+      return;
+    }
     if (FnordMetric.util.isNumKey(e.keyCode)) {
       var n = String.fromCharCode(e.keyCode);
       input = time_input.value;

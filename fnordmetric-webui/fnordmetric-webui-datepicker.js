@@ -17,7 +17,7 @@ if (FnordMetric.views === undefined) {
 }
 
  /* generate html for time input and handle input */
-FnordMetric.util.timeInput = function(selectedTimestamp, elem) {
+FnordMetric.util.timeInput = function(selectedTimestamp, elem, callback) {
   var selectedMinutes =
       FnordMetric.util.appendLeadingZero(
         selectedTimestamp.getMinutes());
@@ -45,13 +45,14 @@ FnordMetric.util.timeInput = function(selectedTimestamp, elem) {
 
     hour_input.addEventListener('focus', function(e) {
       e.preventDefault();
-      FnordMetric.util.validatedTimeInput(this, "hour");
+      FnordMetric.util.validatedTimeInput(this, "hour", callback);
     }, false);
 
     minute_input.addEventListener('focus', function(e) {
       e.preventDefault();
-      FnordMetric.util.validatedTimeInput(this, "minute");
+      FnordMetric.util.validatedTimeInput(this, "minute", callback);
     }, false);
+
   }
 
   function getValues() {
@@ -67,7 +68,7 @@ FnordMetric.util.timeInput = function(selectedTimestamp, elem) {
 
   return {
     "render" : render,
-    "getValues" : getValues
+    "getValues" : getValues,
   }
 }
 
@@ -146,7 +147,15 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
     return name;
   }
 
+
   function onSelect(date, month, year) {
+    /* fallback for time inputs */
+    var date = (date == undefined) ? 
+      selectedDate : date;
+    var month = (month == undefined)?
+      selectedMonth : month;
+    var year = (year == undefined) ?
+      selectedYear : year;
     var inputs = timeInput.getValues();
     var hours = inputs.hours;
     var minutes = inputs.minutes;
@@ -297,7 +306,8 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
 
     dp_widget.innerHTML = "";
     dp_widget.className += " active";
-    timeInput = FnordMetric.util.timeInput(selectedTimestamp, dp_widget);
+    timeInput = FnordMetric.util.timeInput(
+      selectedTimestamp, dp_widget, onSelect);
     timeInput.render();
     renderCalendar(currYear, currMonth);
   }
