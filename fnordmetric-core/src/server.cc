@@ -198,19 +198,17 @@ int main(int argc, const char** argv) {
       "<path>");
 
   env()->flags()->defineFlag(
-      "disable_external_backends",
+      "disable_external_sources",
       cli::FlagParser::T_SWITCH,
       false,
       NULL,
       NULL,
-      NULL,
-      "Disable queries against external backends like CSV files or MySQL");
+      "Disable queries against external data sources like CSV files or MySQL");
 
   env()->flags()->defineFlag(
       "verbose",
       cli::FlagParser::T_SWITCH,
       false,
-      NULL,
       NULL,
       "Be verbose");
 

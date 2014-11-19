@@ -182,7 +182,7 @@ const std::vector<std::string>& FlagParser::getArgv() const {
 void FlagParser::printUsage(util::OutputStream* target) const {
   for (const auto& flag : flags_) {
     if (flag.shortopt == nullptr) {
-      target->printf("    --%-16.16s", flag.longopt);
+      target->printf("    --%-26.26s", flag.longopt);
     } else {
       target->printf("    -%s, --%-12.12s", flag.shortopt, flag.longopt);
     }

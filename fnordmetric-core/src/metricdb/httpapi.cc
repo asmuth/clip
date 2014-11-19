@@ -245,7 +245,7 @@ void HTTPAPI::executeQuery(
       new MetricTableRepository(metric_repo_));
 
 
-  if (!env()->flags()->isSet("disable_external_backends")) {
+  if (!env()->flags()->isSet("disable_external_sources")) {
     query_service.registerBackend(
         std::unique_ptr<fnordmetric::query::Backend>(
             new fnordmetric::query::mysql_backend::MySQLBackend));
