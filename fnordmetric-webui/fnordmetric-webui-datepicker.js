@@ -222,7 +222,7 @@ FnordMetric.util.DatePicker = function(elem, dp_input, viewport, callback) {
     var month_title = document.createElement("span");
     month_title.className = "datepicker_title";
     month_title.innerHTML =
-      FnordMetric.util.getMonthStr(month) + " " + year;
+      FnordMetric.util.getHumanMonth(month, "long") + " " + year;
 
     /* tooltip to select previous month */
     var prev_ttp = FnordMetric.createButton(

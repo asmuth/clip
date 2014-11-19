@@ -154,6 +154,61 @@ FnordMetric.util.renderPageHeader = function(text, elem) {
 }
 
 /**
+  * @param offset in seconds
+  */
+FnordMetric.util.parseTimeOffset = function(offset) {
+  if (offset < 60) {
+    var label = (offset == 1)? " second ago" : " seconds ago";
+    return offset + label;
+  } else if (offset < 3600) {
+    var time = Math.floor(offset / 60);
+    var label = (time == 1)? " minute ago" : " minutes ago";
+    return time + label;
+  } else if (offset < 86400) {
+    var time =  Math.floor(offset / 3600);
+    var label = (time == 1)? " hour ago" : " hours ago";
+    return time + label;
+  } else {
+    var time = Math.floor(offset / 86400);
+    var label = (time == 1)? " day ago" : " days ago";
+    return time + label;
+  }
+}
+
+FnordMetric.util.getHumanMonth = function(index, type) {
+  var months = {
+    "long" : [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"],
+    "short" : [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"]};
+
+  return months[type][index];
+}
+
+
+/**
   * creates a time description like 
   * '2 hours ago - Nov 8 2014 11:33:11
   * @param timestamp unix ts in seconds, milli or microseconds
@@ -165,31 +220,14 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   var timestamp =
     FnordMetric.util.convertToMilliTS(timestamp);
 
-  var time_str;
   var now = Date.now();
   var date = new Date(timestamp);
 
   var offset =  Math.floor(
     (now - timestamp) / 1000);
-  if (offset < 60) {
-    var label = (offset == 1)? " second ago" : " seconds ago";
-    time_str  = offset + label;
-  } else if (offset < 3600) {
-    var time = Math.floor(offset / 60);
-    var label = (time == 1)? " minute ago" : " minutes ago";
-    time_str = time + label;
-  } else if (offset < 86400) {
-    var time =  Math.floor(offset / 3600);
-    var label = (time == 1)? " hour ago" : " hours ago";
-    time_str = time + label;
-  } else {
-    var time = Math.floor(offset / 86400);
-    var label = (time == 1)? " day ago" : " days ago";
-    time_str = time + label;
-  }
 
-  var months = ["Jan", "Feb", "Mar", "Apr", "May",
-    "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  var time_str = FnordMetric.util.parseTimeOffset(offset);
+
 
   var minutes = date.getMinutes();
   if (minutes < 10) {
@@ -202,7 +240,8 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   }
 
   time_str +=
-    " - " + months[date.getMonth()] + 
+    " - " + 
+    FnordMetric.util.getHumanMonth(date.getMonth(), "short") + 
     " " + date.getDate() +
     " " + date.getFullYear() +
     " " + date.getHours() +
@@ -521,24 +560,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
   return query;
-}
-
-FnordMetric.util.getMonthStr = function(index) {
-  var months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"];
-
-  return months[index];
 }
 
 FnordMetric.util.isNumKey = function(keycode) {
