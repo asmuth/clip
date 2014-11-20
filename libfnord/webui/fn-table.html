@@ -72,6 +72,7 @@
         header_row.appendChild(th_elem);
       });
 
+      this.shadowRoot.innerHTML = "";
       this.shadowRoot.appendChild(tpl);
       this.renderRows();
     };
@@ -83,27 +84,12 @@
         tbl.removeChild(old_rows[i]);
       }
 
-      var all_rows = this.querySelectorAll("tr");
-      var rows_per_page = this.rowsPerPage();
-      var begin;
-      var end;
-      if (rows_per_page < 0) {
-        begin = 0;
-        end = all_rows.length;
-      } else {
-        begin = this.currentPage() * rows_per_page;
-        end = begin + rows_per_page;
-
-        if (end > all_rows.length) {
-          end = all_rows.length;
-        }
-      }
-
-      for (var i = begin; i < end; ++i) {
-        var row = all_rows[i];
-        row.className = "row";
-        tbl.appendChild(row);
-      }
+      this.forEachRowWithPagination(function(row) {
+        var tr_elem = document.createElement("tr");
+        tr_elem.className = "row";
+        tr_elem.innerHTML = row.innerHTML;
+        tbl.appendChild(tr_elem);
+      });
     }
 
     this.rowsPerPage = function() {
@@ -122,6 +108,29 @@
       }
     }
 
+    this.forEachRowWithPagination = function(cb) {
+      var all_rows = this.querySelectorAll("tr");
+      var rows_per_page = this.rowsPerPage();
+      var begin;
+      var end;
+
+      if (rows_per_page < 0) {
+        begin = 0;
+        end = all_rows.length;
+      } else {
+        begin = this.currentPage() * rows_per_page;
+        end = begin + rows_per_page;
+
+        if (end > all_rows.length) {
+          end = all_rows.length;
+        }
+      }
+
+      for (var i = begin; i < end; ++i) {
+        cb(all_rows[i]);
+      }
+    }
+
     this.forEachColumn = function(cb) {
       var col_elems = this.querySelectorAll("fn-table-column");
       for (var i = 0; i < col_elems.length; ++i) {
@@ -133,6 +142,29 @@
       if (attr == "data-page" || attr == "data-per-page") {
         this.renderRows();
       }
+    }
+
+    this.resortRows = function(column_index) {
+      var col_elems = this.querySelectorAll("fn-table-column");
+      if (column_index >= col_elems.length) {
+        return;
+      }
+
+      var column = col_elems[column_index];
+      if (column.getAttribute("data-sort-state") == "asc") {
+        column.setAttribute("data-sort-state", "desc");
+        this.resortRowsWithOrder(column_index, "desc");
+      } else {
+        column.setAttribute("data-sort-state", "asc");
+        this.resortRowsWithOrder(column_index, "asc");
+      }
+
+      this.renderTable();
+    }
+
+    this.resortRowsWithOrder = function(column_index, order) {
+      var all_rows = this.querySelectorAll("tr");
+      console.log("resort rows in src", column_index, order, all_rows);
     }
 
   });
