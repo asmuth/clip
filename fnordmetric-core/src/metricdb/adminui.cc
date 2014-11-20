@@ -20,7 +20,7 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
 }
 
 AdminUI::AdminUI() : webui_mount_(&webui_bundle_) {
-
+  webui_bundle_.build();
 }
 
 bool AdminUI::handleHTTPRequest(

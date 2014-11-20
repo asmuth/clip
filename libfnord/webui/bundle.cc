@@ -7,28 +7,27 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_WEBUI_BUNDLE_H
-#define _FNORD_WEBUI_BUNDLE_H
-#include <string>
+#include "fnord/webui/bundle.h"
 
 namespace fnord {
 namespace webui {
 
-class Bundle {
-public:
-  void build();
+void Bundle::build() {
+  app_html_ = "<h1>Hello World</h1>";
+}
 
-  const std::string& applicationHTML();
-  const std::string& applicationCSS();
-  const std::string& applicationJS();
+const std::string& Bundle::applicationHTML() {
+  return app_html_;
+}
 
-protected:
-  std::string app_html_;
-  std::string app_css_;
-  std::string app_js_;
-};
+const std::string& Bundle::applicationCSS() {
+  return app_css_;
+}
+
+const std::string& Bundle::applicationJS() {
+  return app_js_;
+}
 
 } // namespace webui
 } // namespace fnord
 
-#endif

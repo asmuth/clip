@@ -16,6 +16,7 @@ option(ENABLE_TESTS "Build unit tests [default: off]" OFF)
 set(FNORDMETRIC_SOURCES
     stage/src/fnord/base/exception.cc
     stage/src/fnord/base/uri.cc
+    stage/src/fnord/webui/bundle.cc
     stage/src/fnord/webui/httpmount.cc
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
