@@ -19,6 +19,10 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
   return std::unique_ptr<http::HTTPHandler>(new AdminUI());
 }
 
+AdminUI::AdminUI() : webui_mount_(&webui_bundle_) {
+
+}
+
 bool AdminUI::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
@@ -35,6 +39,10 @@ bool AdminUI::handleHTTPRequest(
     env()->logger()->log(log_entry);
   }
 
+  if (webui_mount_.handleHTTPRequest(request, response)) {
+    return true;
+  }
+
   util::URI uri(request->getUrl());
   auto path = uri.path();
 
@@ -45,64 +53,7 @@ bool AdminUI::handleHTTPRequest(
     return true;
   }
 
-  if (path == "/admin") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-webui.html",
-        "text/html; charset=utf-8");
-    return true;
-  }
-
-  if (path == "/favicon.ico") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-favicon.ico",
-        "image/x-icon");
-    return true;
-  }
-
-  if (path == "/s/fnordmetric.js") {
-    sendAsset(
-        response,
-        "fnordmetric-js/fnordmetric.js",
-        "text/javascript");
-    return true;
-  }
-
-  if (path == "/s/fnordmetric-webui.css") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-webui.css",
-        "text/css");
-    return true;
-  }
-
-  if (path == "/s/fnordmetric-webui.js") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-webui.js",
-        "text/javascript");
-    return true;
-  }
-
-  if (path == "/s/fontawesome.woff") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fontawesome.woff",
-        "application/x-font-woff");
-    return true;
-  }
-
   return false;
-}
-
-void AdminUI::sendAsset(
-    http::HTTPResponse* response,
-    const std::string& asset_path,
-    const std::string& content_type) const {
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", content_type);
-  response->addBody(util::Assets::getAsset(asset_path));
 }
 
 

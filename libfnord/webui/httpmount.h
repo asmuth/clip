@@ -7,35 +7,35 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_WEBINTERFACE_H
-#define _FNORDMETRIC_WEBINTERFACE_H
-#include <memory>
+#ifndef _FNORD_WEBUI_HTTPMOUNT_H
+#define _FNORD_WEBUI_HTTPMOUNT_H
 #include <fnordmetric/http/httphandler.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
-#include <fnord/webui/bundle.h>
-#include <fnord/webui/httpmount.h>
 
-using namespace fnord;
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace webui {
+class Bundle;
 
-class AdminUI : public http::HTTPHandler {
+class HTTPMount : public http::HTTPHandler {
 public:
 
-  static std::unique_ptr<http::HTTPHandler> getHandler();
-
-  AdminUI();
+  HTTPMount(
+      Bundle* bundle,
+      const std::string base_url = "/");
 
   bool handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
-private:
-  fnord::webui::Bundle webui_bundle_;
-  fnord::webui::HTTPMount webui_mount_;
+protected:
+  Bundle* bundle_;
+  std::string app_url_;
+  std::string app_css_url_;
+  std::string app_js_url_;
 };
 
-}
-}
+} // namespace webui
+} // namespace fnord
+
 #endif

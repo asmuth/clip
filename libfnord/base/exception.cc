@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -10,13 +10,11 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
 
-RuntimeException::RuntimeException(
+Exception::Exception(
     const char* message,
     ...) :
     type_name_(nullptr),
@@ -29,8 +27,8 @@ RuntimeException::RuntimeException(
   va_end(args);
 }
 
-RuntimeException::RuntimeException(
-    const RuntimeException& other) :
+Exception::Exception(
+    const Exception& other) :
     type_name_(other.type_name_),
     file_(other.file_),
     line_(other.line_),
@@ -38,7 +36,7 @@ RuntimeException::RuntimeException(
   strncpy(message_, other.message_, sizeof(message_));
 }
 
-RuntimeException RuntimeException::setSource(
+Exception Exception::setSource(
     const char* file,
     int line,
     const char* func) {
@@ -48,12 +46,12 @@ RuntimeException RuntimeException::setSource(
   return *this;
 }
 
-RuntimeException RuntimeException::setTypeName(const char* type_name) {
+Exception Exception::setTypeName(const char* type_name) {
   type_name_ = type_name;
   return *this;
 }
 
-RuntimeException RuntimeException::setErrno(int posix_errno) {
+Exception Exception::setErrno(int posix_errno) {
   if (posix_errno > 0) {
     char buf[4096];
     char* errstr = buf;
@@ -71,7 +69,7 @@ RuntimeException RuntimeException::setErrno(int posix_errno) {
   return *this;
 }
 
-void RuntimeException::appendMessage(const char* message, ...) {
+void Exception::appendMessage(const char* message, ...) {
   va_list args;
   va_start(args, message);
   size_t pos = strlen(message_);
@@ -79,13 +77,13 @@ void RuntimeException::appendMessage(const char* message, ...) {
   va_end(args);
 }
 
-void RuntimeException::debugPrint(OutputStream* os /* = nullptr */) const {
+void Exception::debugPrint(fnordmetric::util::OutputStream* os /* = nullptr */) const {
   const char* type_name =
-      type_name_ == nullptr ? "RuntimeException" : type_name_;
+      type_name_ == nullptr ? "Exception" : type_name_;
 
-  std::unique_ptr<OutputStream> os_local;
+  std::unique_ptr<fnordmetric::util::OutputStream> os_local;
   if (os == nullptr) {
-    os_local = OutputStream::getStderr();
+    os_local = fnordmetric::util::OutputStream::getStderr();
     os = os_local.get();
   }
 
@@ -100,25 +98,25 @@ void RuntimeException::debugPrint(OutputStream* os /* = nullptr */) const {
       line_);
 }
 
-std::string RuntimeException::getMessage() const {
+std::string Exception::getMessage() const {
   return std::string(message_);
 }
 
-std::string RuntimeException::getTypeName() const {
+std::string Exception::getTypeName() const {
   return std::string(type_name_);
 }
 
-std::string RuntimeException::method() const {
+std::string Exception::method() const {
   return std::string(func_);
 }
 
-std::string RuntimeException::file() const {
+std::string Exception::file() const {
   return std::string(file_);
 }
 
-int RuntimeException::line() const {
+int Exception::line() const {
   return line_;
 }
 
-}
-}
+} // namespace fnord
+

@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <exception>
 #include <string>
+#include <fnordmetric/util/outputstream.h>
 
 const char kBufferOverflowError[] = "BufferOverflowError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";
@@ -38,28 +39,26 @@ const char kVersionMismatchError[] = "VersionMismatchError";
 
 #define RAISE(E, ...) \
     RAISE_EXCEPTION( \
-        fnordmetric::util::RuntimeException( __VA_ARGS__).setTypeName(E)); \
+        fnord::Exception( __VA_ARGS__).setTypeName(E)); \
         while(0) {}
 
 #define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
       RAISE_EXCEPTION( \
-          fnordmetric::util::RuntimeException( \
+          fnord::Exception( \
               __VA_ARGS__).setTypeName(E).setErrno(e)); \
     }
 
-namespace fnordmetric {
-namespace util {
-class OutputStream;
+namespace fnord {
 
-class RuntimeException : public std::exception {
+class Exception : public std::exception {
 public:
-  RuntimeException(const char* message, ...);
-  RuntimeException(const RuntimeException& other);
-  RuntimeException& operator=(const RuntimeException& other) = delete;
+  Exception(const char* message, ...);
+  Exception(const Exception& other);
+  Exception& operator=(const Exception& other) = delete;
 
-  void debugPrint(OutputStream* os = nullptr) const;
+  void debugPrint(fnordmetric::util::OutputStream* os = nullptr) const;
   std::string getMessage() const;
   std::string getTypeName() const;
   std::string method() const;
@@ -68,9 +67,9 @@ public:
 
   void appendMessage(const char* message, ...);
 
-  RuntimeException setSource(const char* file, int line, const char* func);
-  RuntimeException setTypeName(const char* type_name);
-  RuntimeException setErrno(int posix_errno);
+  Exception setSource(const char* file, int line, const char* func);
+  Exception setTypeName(const char* type_name);
+  Exception setErrno(int posix_errno);
 
 private:
   const char* type_name_;
@@ -80,6 +79,6 @@ private:
   char message_[1024];
 };
 
-}
-}
+} // namespace fnord
+
 #endif

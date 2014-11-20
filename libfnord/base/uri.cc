@@ -7,11 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/uri.h>
+#include <fnord/base/exception.h>
+#include <fnord/base/uri.h>
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
 
 std::string URI::urlDecode(const std::string& str) {
   std::string decoded;
@@ -267,5 +266,5 @@ void URI::parseQueryString(
   }
 }
 
-}
-}
+} // namespace fnord
+
