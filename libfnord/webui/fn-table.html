@@ -1,0 +1,87 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-table-base-tpl">
+  <table>
+    <tr class="header">
+    </tr>
+  </table>
+</template>
+
+<script type="text/javascript">
+  var table = Fnord.registerComponent("fn-table", function() {
+
+    this.createdCallback = function() {
+      this.createShadowRoot();
+      this.renderTable();
+    };
+
+    this.renderTable = function() {
+      var tpl = Fnord.getTemplate("fn-table", "base");
+      var header_row = tpl.content.querySelector("tr.header");
+
+      this.forEachColumn(function(col) {
+        var th_elem = document.createElement("th");
+        th_elem.innerHTML = col.innerHTML;
+        header_row.appendChild(th_elem);
+      });
+
+      this.shadowRoot.appendChild(document.importNode(tpl.content, true));
+      this.renderRows();
+    };
+
+    this.renderRows = function() {
+      var tbl = this.shadowRoot.querySelector("table");
+      var old_rows = tbl.querySelectorAll("tr.row");
+      for (var i = 0; i < old_rows.length; ++i) {
+        tbl.removeChild(old_rows[i]);
+      }
+
+      var all_rows = this.querySelectorAll("tr");
+      var begin = this.currentPage() * this.rowsPerPage();
+      var end = begin + this.rowsPerPage();
+
+      if (end > all_rows.length) {
+        end = all_rows.length;
+      }
+
+      for (var i = begin; i < end; ++i) {
+        var row = all_rows[i];
+        row.className = "row";
+        tbl.appendChild(row);
+      }
+    }
+
+    this.rowsPerPage = function() {
+      if (this.getAttribute("data-per-page") != null) {
+        return parseInt(this.getAttribute("data-per-page"), 10);
+      } else {
+        return 10;
+      }
+    }
+
+    this.currentPage = function() {
+      if (this.getAttribute("data-page") != null) {
+        return parseInt(this.getAttribute("data-page"), 10);
+      } else {
+        return 0;
+      }
+    }
+
+    this.forEachColumn = function(cb) {
+      console.log(this);
+      var col_elems = this.querySelectorAll("fn-table-column");
+      for (var i = 0; i < col_elems.length; ++i) {
+        cb(col_elems[i]);
+      }
+    }
+
+  });
+</script>
