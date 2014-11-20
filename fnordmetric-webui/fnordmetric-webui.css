@@ -1018,6 +1018,10 @@ h1.page_header em {
   margin-top: 10px;
 }
 
+.metric_preview_secondary_controls .btn.on {
+  color: #009fe9;
+}
+
 .metric_preview_secondary_controls .btn:first-child {
   color: #009fe9;
   font-weight:500;

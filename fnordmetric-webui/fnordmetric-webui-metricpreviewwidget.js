@@ -24,6 +24,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
   var now = Date.now();
   var columns = [];
   var controls_query;
+  var auto_refresh = FnordMetric.util.autoRefresh(
+    onRefresh);
+
+  var datetime_title;
+  var datetime_input;
 
   var defaults = {
     view : "value",
@@ -159,7 +164,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     });
   }
 
-  function updateDateTimeElems(title, input, start_time, end_time) {
+  function updateDateTimeElems(start_time, end_time) {
     var start_time = (start_time !== undefined) ? 
        start_time : getQueryParamOrDefaultValue("start_time");
     var start_str = 
@@ -169,12 +174,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       end_time : getQueryParamOrDefaultValue("end_time");
     var end_str = FnordMetric.util.getDateTimeString(end_time);
 
+    datetime_input.value = end_str;
+    datetime_input.setAttribute("id", end_time);
 
-    if (input != null) {
-      input.value = end_str;
-      input.setAttribute("id", end_time);
-    }
-    title.innerHTML = 
+    datetime_title.innerHTML = 
       start_str + " &mdash; " + end_str;
   }
 
@@ -191,10 +194,18 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     updateURLParams("start_time", start_time);
 
     runQuery();
+    updateDateTimeElems(start_time, timestamp);
+  }
 
-    //FIXME is it better to make the title elem accessible?
-    var title = elem.querySelector(".current_date");
-    updateDateTimeElems(title, null, start_time, timestamp);
+  function onRefresh() {
+    var end_time = Date.now();
+    var timediff = parseInt(query_params.end_time) -
+      parseInt(query_params.start_time);
+    var start_time = end_time - timediff;
+    updateURLParams("end_time", end_time);
+    updateURLParams("start_time", start_time);
+    updateDateTimeElems(start_time, end_time);
+    runQuery();
   }
 
 
@@ -203,6 +214,8 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     var group_buttons = [];
     var end_time = getQueryParamOrDefaultValue("end_time");
     var start_time = getQueryParamOrDefaultValue("start_time");
+
+    /***** primary controls *****/
 
     var controls = document.createElement("div");
     controls.className = "metric_preview_controls";
@@ -290,11 +303,11 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     date_group.className = "group date";
     controls.appendChild(date_group);
 
-    var datepicker = document.createElement("input");
-    date_group.appendChild(datepicker);
-    datepicker.setAttribute("id", end_time);
-    FnordMetric.util.DatePicker(date_group, datepicker, elem, onDateSubmit);
-    datepicker.value = 
+    datetime_input = document.createElement("input");
+    date_group.appendChild(datetime_input);
+    datetime_input.setAttribute("id", end_time);
+    FnordMetric.util.DatePicker(date_group, datetime_input, elem, onDateSubmit);
+    datetime_input.value = 
       FnordMetric.util.getDateTimeString(end_time);
 
     var timespan_group = document.createElement("div");
@@ -340,56 +353,47 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       });
     }
 
+    /****** secondary controls ******/
+
     var secondary_controls = document.createElement("div");
     elem.appendChild(secondary_controls);
     secondary_controls.className = "metric_preview_secondary_controls";
 
     controls_query = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-database'></i> SQL Editor");
-    controls_query.onclick = function(e) {
-      e.preventDefault();
-      var query = encodeURIComponent(
-        FnordMetric.util.generateSQLQueryFromParams(
-          query_params));
-      FnordMetric.WebUI.singleton.openUrl(
-        "query_playground?sql_query="+query, true);
-    };
-
 
     var controls_embed = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-share'></i> Embed");
-    controls_embed.onclick = function(e) {
-      e.preventDefault();
-      FnordMetric.util.embedPopup(
-          elem,
-          FnordMetric.util.generateSQLQueryFromParams(query_params)).render();
-    }
+
+    var controls_autorefresh = FnordMetric.createButton(
+      "#", "btn", "<i class='fa fa-refresh'></i> Auto Refresh");
 
     secondary_controls.appendChild(controls_query);
     secondary_controls.appendChild(controls_embed);
+    secondary_controls.appendChild(controls_autorefresh);
 
     var timespan_updater = document.createElement("div");
     var prev_timespan = FnordMetric.createButton(
       "#", undefined, "<i class='fa fa-chevron-left'></i>");
     var next_timespan = FnordMetric.createButton(
       "#", undefined, "<i class='fa fa-chevron-right'></i>");
-    var timespan_title = document.createElement("span");
-    timespan_title.className = "current_date";
-    timespan_title.innerHTML = 
+    datetime_title = document.createElement("span");
+    datetime_title.className = "current_date";
+    datetime_title.innerHTML = 
       FnordMetric.util.getDateTimeString(start_time) 
       + " &mdash; " + 
       FnordMetric.util.getDateTimeString(end_time);
 
     secondary_controls.appendChild(timespan_updater);
     secondary_controls.appendChild(prev_timespan);
-    secondary_controls.appendChild(timespan_title);
+    secondary_controls.appendChild(datetime_title);
     secondary_controls.appendChild(next_timespan);
 
     table_container.className = "single_metric_ui table_container";
     chart_container.className = "single_metric_ui chart_container";
     elem.appendChild(chart_container);
 
-    /* set all EventListeners */
+    /****** set all EventListeners ******/
 
     rollup_select.addEventListener('change', function() {
       /* queryGenerator assumes this format */
@@ -438,12 +442,41 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       }, false);
     }
 
+    controls_embed.addEventListener('click', function(e) {
+      e.preventDefault();
+      FnordMetric.util.embedPopup(
+          elem,
+          FnordMetric.util.generateSQLQueryFromParams(query_params)).render();
+    }, false);
+
+    controls_query.addEventListener('click', function(e) {
+      e.preventDefault();
+      var query = encodeURIComponent(
+        FnordMetric.util.generateSQLQueryFromParams(
+          query_params));
+      FnordMetric.WebUI.singleton.openUrl(
+        "query_playground?sql_query="+query, true);
+    }, false);
+
+    controls_autorefresh.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (auto_refresh.state()) {
+        this.className = "btn";
+        auto_refresh.off();
+      } else {
+        this.className += " on";
+        auto_refresh.on();
+        console.log(auto_refresh.state());
+      }
+      //auto_refresh.state = !auto_
+    }, false);
+
+
     time_to_end.addEventListener('change', function() {
       start_time = 
         end_time - FnordMetric.util.toMilliSeconds(this.value);
       updateURLParams("start_time", start_time);
-      updateDateTimeElems(
-        timespan_title, null, start_time, end_time);
+      updateDateTimeElems(start_time, end_time);
       runQuery();
     }, false);
 
@@ -455,8 +488,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
       start_time = query_params.start_time - diff;
       updateURLParams("end_time", end_time);
       updateURLParams("start_time", start_time);
-      updateDateTimeElems(
-        timespan_title, datepicker, start_time, end_time);
+      updateDateTimeElems(start_time, end_time);
       runQuery();
     }, false);
 
@@ -472,16 +504,15 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
         end_time = end;
         updateURLParams("start_time", start_time);
         updateURLParams("end_time", end_time);
-        updateDateTimeElems(
-          timespan_title, datepicker, start_time, end_time);
+        updateDateTimeElems(start_time, end_time);
         runQuery();
       }
     }, false);
 
+
     addRequiredURLParamsForView(rollup_value);
     handleAggregationDisplay(rollup_select.value, t_window, t_step, group_buttons);
     runQuery();
-
   }
 
   function render() {

@@ -689,6 +689,35 @@ FnordMetric.util.removeIfChild = function(child_n, parent_n) {
   }
 }
 
+/**
+  * calls every x seconds onRefresh
+  */
+FnordMetric.util.autoRefresh = function(onRefresh) {
+  var curr_state = false;
+  var intervalID;
+
+  function state() {
+    return curr_state;
+  }
+
+  function on() {
+    curr_state = true;
+    //30000
+    intervalID = window.setInterval(onRefresh, 30000);
+  }
+
+  function off() {
+    curr_state = false;
+    window.clearInterval(intervalID);
+  }
+
+  return {
+    "on" : on,
+    "off" : off,
+    "state" : state
+  }
+}
+
 
 
 
