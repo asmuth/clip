@@ -34,6 +34,7 @@ FnordMetric.views.QueryPlayground = function() {
   var direction;
   var editor_pane;
   var result_pane;
+  var editor_resizer_tooltip;
   var current_view;
   var button_bar;
 
@@ -80,7 +81,7 @@ FnordMetric.views.QueryPlayground = function() {
         var res = JSON.parse(r.response);
         FnordMetric.util.queryResultView(query_str).render(
           result_pane, res, duration);
-        updateLayout(editor_pane, result_pane, direction);
+        updateLayout();
         renderExecutionInfo(duration, res.tables, result_pane);
         FnordMetric.extendCharts();
       } else {
@@ -99,36 +100,57 @@ FnordMetric.views.QueryPlayground = function() {
   }
 
 
-  function updateLayout() {
+  function updateLayout(editor_width, editor_height) {
     if (direction == "horizontal") {
       var height = FnordMetric.util.getHorizontalEditorHeight(
         editor_pane.offsetHeight, result_pane.offsetHeight);
-      var editor_width =
+
+      var editor_width = (editor_width == undefined)?
         FnordMetric.util.getHorizontalEditorWidth(
-          editor_pane.offsetWidth);
+          editor_pane.offsetWidth) : editor_width;
+
       editor_pane.style.width = editor_width + "%";
       editor_pane.style.float = "left";
       editor_pane.style.height = (height - 40) + "px";
+
       result_pane.style.height = height + "px";
       result_pane.style.width = (100 - editor_width) + "%";
       result_pane.style.left = editor_width + "%";
       result_pane.style.top = "";
       result_pane.style.overflowY = "auto";
+
+      editor_resizer_tooltip.className = "editor_resizer_tooltip horizontal";
+      editor_resizer_tooltip.style.left = editor_width + "%";
+      editor_resizer_tooltip.style.top = editor_pane.offsetTop + "px";
+      editor_resizer_tooltip.style.height = height + "px";
     } else {
       editor_pane.style.float = "";
       editor_pane.style.width = "100%";
-      var editor_height = editorViews[current_view].getHeight();
+
+      var editor_height = editor_height == undefined ?
+        editorViews[current_view].getHeight() : editor_height;
       editor_pane.style.height = editor_height + "px";
+
       result_pane.style.width = "100%";
       result_pane.style.left = 0;
       result_pane.style.top = (editor_pane.offsetTop + editor_height) + "px";
       result_pane.style.height = "100%";
+
+      editor_resizer_tooltip.className = "editor_resizer_tooltip vertical";
+      editor_resizer_tooltip.style.top = (result_pane.offsetTop - 3) + "px";
+      editor_resizer_tooltip.style.left = "0px";
+      editor_resizer_tooltip.style.height = "5px";
     }
   }
 
+  /* window event functions must be declared to be able to destroy them */
   function beforeUnloadEvent(e) {
       e.returnValue = 
         "You may loose your query when leaving the page.";
+  }
+
+  function dragoverEvent(e) {
+    e.preventDefault();
   }
 
 
@@ -169,6 +191,11 @@ FnordMetric.views.QueryPlayground = function() {
     editor_pane.className = "editor_pane";
     viewport.appendChild(editor_pane);
 
+    editor_resizer_tooltip = document.createElement("div");
+    editor_resizer_tooltip.className = "editor_resizer_tooltip";
+    editor_resizer_tooltip.setAttribute('draggable', 'true');
+    viewport.appendChild(editor_resizer_tooltip);
+
     result_pane = document.createElement("div");
     result_pane.className = "result_pane";
     viewport.appendChild(result_pane);
@@ -180,6 +207,8 @@ FnordMetric.views.QueryPlayground = function() {
 
     window.addEventListener('resize', updateLayout);
 
+    window.addEventListener('dragover', dragoverEvent, false);
+
     editor_pane.addEventListener('keydown', function(e) {
       if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
         e.preventDefault();
@@ -189,6 +218,27 @@ FnordMetric.views.QueryPlayground = function() {
           current_view);
       }
     }, false);
+
+    editor_resizer_tooltip.addEventListener('drag', function(e) {
+      editor_resizer_tooltip.style.background = "";
+      if (direction == "horizontal" && e.clientX > 0) {
+        var editor_width = (e.clientX / window.innerWidth) * 100;
+        editor_width = Math.min(Math.max(25, editor_width), 60);
+        updateLayout(editor_width, undefined);
+      }
+
+      if (direction == "vertical" && e.clientY > 0) {
+        var editor_height = (e.clientY + window.pageYOffset) - editor_pane.offsetTop;
+        editor_height = Math.max(100, editor_height);
+        updateLayout(undefined, editor_height);
+      }
+
+    }, false);
+
+    editor_resizer_tooltip.addEventListener('dragstart', function() {
+      this.style.background = "transparent";
+    }, false);
+
 
     exec_btn.onclick = function(e) {
       e.preventDefault();
@@ -260,7 +310,7 @@ FnordMetric.views.QueryPlayground = function() {
     }, false);
 
 
-    updateLayout(editor_pane, result_pane, direction);
+    updateLayout();
     if ('innerView' in query_params) {
       current_view = urlName[query_params.innerView];
       query = (query_params.innerViewValue == "undefined") ? 
@@ -273,6 +323,7 @@ FnordMetric.views.QueryPlayground = function() {
   function destroy() {
     window.removeEventListener('beforeunload', beforeUnloadEvent, false);
     window.removeEventListener('resize', updateLayout);
+    window.removeEventListener('dragover', dragoverEvent, false);
   }
 
   return {
