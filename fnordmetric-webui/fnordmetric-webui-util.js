@@ -91,7 +91,6 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   }
 
   if (push_state) {
-    console.log("push state");
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
@@ -696,17 +695,21 @@ FnordMetric.util.autoRefresh = function(onRefresh) {
   var curr_state = false;
   var intervalID;
 
+  this.btn;
+
   function state() {
     return curr_state;
   }
 
   function on() {
+    this.btn.className += " on";
     curr_state = true;
-    //30000
+    //refresh every 30 seconds
     intervalID = window.setInterval(onRefresh, 30000);
   }
 
   function off() {
+    this.btn.className = "btn";
     curr_state = false;
     window.clearInterval(intervalID);
   }

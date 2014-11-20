@@ -183,6 +183,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
 
   function onDateSubmit(timestamp) {
+    auto_refresh.off();
     var timestamp = parseInt(timestamp, 10);
     var start_time = 
       parseInt(getQueryParamOrDefaultValue("start_time"), 10);
@@ -367,6 +368,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     var controls_autorefresh = FnordMetric.createButton(
       "#", "btn", "<i class='fa fa-refresh'></i> Auto Refresh");
+    auto_refresh.btn = controls_autorefresh;
 
     secondary_controls.appendChild(controls_query);
     secondary_controls.appendChild(controls_embed);
@@ -461,14 +463,10 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
     controls_autorefresh.addEventListener('click', function(e) {
       e.preventDefault();
       if (auto_refresh.state()) {
-        this.className = "btn";
         auto_refresh.off();
       } else {
-        this.className += " on";
         auto_refresh.on();
-        console.log(auto_refresh.state());
       }
-      //auto_refresh.state = !auto_
     }, false);
 
 
@@ -482,6 +480,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     prev_timespan.addEventListener('click', function(e) {
       e.preventDefault();
+      auto_refresh.off();
       var end = query_params.end_time;
       end_time = query_params.start_time;
       var diff = end - query_params.start_time;
@@ -494,6 +493,7 @@ FnordMetric.util.MetricPreviewWidget = function(viewport, query_params) {
 
     next_timespan.addEventListener('click', function(e) {
       e.preventDefault();
+      auto_refresh.off();
       var start = query_params.start_time;
       var end =
         parseInt(query_params.end_time ,10) + 
