@@ -8,6 +8,16 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style type="text/css">
+  fn-table {
+    display: none;
+  }
+
+  fn-table.resolved {
+    display: block;
+  }
+</style>
+
 <template id="fn-table-base-tpl">
   <style type="text/css">
     table {
@@ -58,6 +68,7 @@
   var table = Fnord.registerComponent("fn-table", function() {
 
     this.createdCallback = function() {
+      this.className += " resolved";
       this.createShadowRoot();
       this.renderTable();
     };
