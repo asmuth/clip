@@ -15,21 +15,33 @@
     <link type="text/css" rel="stylesheet" href="../themes/midnight-blue.css">
 
     <style type="text/css">
-      body {
-        margin: 60px 100px;
+      body, html {
+        margin: 0;
+        padding: 0 0 60px 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 22px;
       }
 
       h1 {
-        margin: 60px 0 30px 0;
-        font-size: 140%;
+        margin-left: 20px;
+      }
+
+      hr {
+        margin: 120px 0 0 0;
       }
     </style>
   </head>
   <body>
+    <link rel="import" href="fn-appbar.html" data-component="fn-appbar">
     <link rel="import" href="fn-table.html" data-component="fn-table">
 
+    <fn-appbar>
+
+    </fn-appbar>
+
     <!-- Example 1: Simple Sortable Table -->
-    <h1>Example 1: Simple Sortable Table</h1>
+    <h1><i>Example 1 &raquo;</i> Simple Sortable Table</h1>
     <fn-table id="example-table-1">
       <fn-table-column data-sortable>A</fn-table-column>
       <fn-table-column data-sortable>B</fn-table-column>
@@ -41,9 +53,10 @@
         <tr><td>9</td><td>9</td></tr>
       </table>
     </fn-table>
+    <hr />
 
     <!-- Example 1: Clickable Sortable Table -->
-    <h1>Example 1: Clickable Sortable Table</h1>
+    <h1><i>Example 2 &raquo;</i> Clickable Sortable Table</h1>
     <fn-table id="example-table-2">
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
@@ -55,9 +68,10 @@
         <tr><td>9</td><td>9</td></tr>
       </table>
     </fn-table>
+    <hr />
 
     <!-- Example 3: Paginated Table -->
-    <h1>Example 3: Paginated Table </h1>
+    <h1><i>Example 3 &raquo;</i> Paginated Table</h1>
     <fn-table id="example-table-3" data-per-page="3" data-page="0">
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>

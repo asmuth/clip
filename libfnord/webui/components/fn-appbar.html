@@ -1,0 +1,51 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+  fn-appbar {
+    display: none;
+  }
+
+  fn-appbar.resolved {
+    display: block;
+  }
+</style>
+
+<template id="fn-appbar-base-tpl">
+  <style type="text/css">
+    .appbar_outer {
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .appbar_inner {
+      height: 49px;
+      margin: 0 20px;
+    }
+  </style>
+
+  <div class="appbar_outer">
+    <div class="appbar_inner">
+    </div>
+  </div>
+</template>
+
+<script type="text/javascript">
+  var table = Fnord.registerComponent("fn-appbar", function() {
+
+    this.createdCallback = function() {
+      this.className += " resolved";
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-appbar", "base");
+      shadow.appendChild(tpl);
+    };
+
+  });
+</script>

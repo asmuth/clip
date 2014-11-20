@@ -7,6 +7,28 @@ body, html {
   color: #545758;
 }
 
+h1 {
+  color: #394b59;
+  display: block;
+  font-size: 20px;
+  font-weight: normal;
+  height: 56px;
+  line-height: 56px;
+  margin: 0;
+  padding: 0;
+}
+
+h1 i {
+  color: rgb(115, 134, 148);
+  font-style: normal;
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+/* fn-table */
 fn-table /deep/ table td,
 fn-table /deep/ table th {
   text-align: left;
@@ -31,4 +53,12 @@ fn-table /deep/ table tr.header {
   border-bottom: 2px solid rgb(226, 232, 237);
   background-color: #f6f8fa;
   color: #60707f;
+}
+
+/* fn-appbar */
+fn-appbar /deep/ .appbar_outer {
+  min-width: 900px;
+  height: 49px;
+  background: rgba(25, 32, 37, 1);
+  border-bottom: rgba(24, 31, 36, 1);
 }
