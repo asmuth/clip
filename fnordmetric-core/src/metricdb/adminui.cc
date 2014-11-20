@@ -10,7 +10,7 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/util/assets.h>
-#include <fnordmetric/util/uri.h>
+#include <fnord/base/uri.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -43,7 +43,7 @@ bool AdminUI::handleHTTPRequest(
     return true;
   }
 
-  util::URI uri(request->getUrl());
+  fnord::URI uri(request->getUrl());
   auto path = uri.path();
 
   if (path == "/") {

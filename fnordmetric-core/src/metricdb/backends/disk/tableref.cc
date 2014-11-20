@@ -28,7 +28,7 @@ namespace disk_backend {
 std::unique_ptr<TableRef> TableRef::openTable(const std::string filename) {
   try {
     return openTableUnsafe(filename);
-  } catch (util::RuntimeException& rte) {
+  } catch (fnord::Exception& rte) {
     RAISE(
         kIOError,
         "error while opening sstable %s: %s",

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <fnordmetric/util/assets.h>
 #include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <asset_bundle.cc>
 #include <cstdlib>
 

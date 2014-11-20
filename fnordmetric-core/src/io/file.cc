@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/io/file.h>
 #include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

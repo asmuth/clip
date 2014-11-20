@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_MYSQLBACKEND_MYSQLCONNECTION_H
 #define _FNORDMETRIC_MYSQLBACKEND_MYSQLCONNECTION_H
 #include <memory>
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/uri.h>
+#include <fnord/base/exception.h>
 #include <functional>
 #ifdef FNORD_ENABLE_MYSQL
 #include <mysql.h>
@@ -35,7 +35,7 @@ public:
    * @param URI the mysql:// URI
    * @returns a new MySQLConnection
    */
-  static std::unique_ptr<MySQLConnection> openConnection(const util::URI& uri);
+  static std::unique_ptr<MySQLConnection> openConnection(const fnord::URI& uri);
 
   /**
    * Create a new mysql connection
@@ -57,7 +57,7 @@ public:
    * @param URI the mysql:// URI
    * @returns a new MySQLConnection
    */
-  void connect(const util::URI& uri);
+  void connect(const fnord::URI& uri);
 
   /**
    * Connect to a mysql server. May throw an exception

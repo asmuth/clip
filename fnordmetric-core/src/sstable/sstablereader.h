@@ -21,7 +21,7 @@
 #include <fnordmetric/sstable/index.h>
 #include <fnordmetric/sstable/indexprovider.h>
 #include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnord {
 namespace sstable {

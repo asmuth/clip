@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/metricdb/metrictablerepository.h>
 #include <fnordmetric/metricdb/metrictableref.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace metricdb {

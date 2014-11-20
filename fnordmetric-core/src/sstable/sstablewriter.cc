@@ -12,7 +12,7 @@
 #include <fnordmetric/sstable/fileheaderreader.h>
 #include <fnordmetric/sstable/sstablewriter.h>
 #include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <string.h>
 
 namespace fnord {

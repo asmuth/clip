@@ -11,7 +11,7 @@
 #include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/util/ieee754.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <stdlib.h>
 
 namespace fnordmetric {

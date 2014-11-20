@@ -12,7 +12,7 @@
 #include <fnordmetric/metricdb/backends/disk/metric.h>
 #include <fnordmetric/metricdb/backends/disk/tableref.h>
 #include <fnordmetric/metricdb/backends/disk/samplewriter.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/util/freeondestroy.h>
 #include <fnordmetric/util/wallclock.h>
 #include <string.h>

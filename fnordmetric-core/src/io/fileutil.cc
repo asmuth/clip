@@ -9,7 +9,7 @@
  */
 #include <dirent.h>
 #include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/util/stringutil.h>
 #include <string.h>
 #include <sys/fcntl.h>

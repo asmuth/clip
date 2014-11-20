@@ -25,7 +25,7 @@ public:
 
   bool openTables(
       const std::vector<std::string>& table_names,
-      const util::URI& source_uri,
+      const fnord::URI& source_uri,
       std::vector<std::unique_ptr<TableRef>>* target) override;
 
 };

@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql_extensions/seriesadapter.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace query {

@@ -10,7 +10,7 @@
 #include <fnordmetric/environment.h>
 #include <fnordmetric/util/inspect.h>
 #include <fnordmetric/metricdb/statsd.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace metricdb {

@@ -9,8 +9,8 @@
  */
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/uri.h>
+#include <fnord/base/exception.h>
+#include <fnord/base/uri.h>
 
 namespace fnordmetric {
 namespace query {
@@ -35,7 +35,7 @@ void TableRepository::import(
     const std::vector<std::string>& tables,
     const std::string& source_uri_raw,
     const std::vector<std::unique_ptr<Backend>>& backends) {
-  util::URI source_uri(source_uri_raw);
+  fnord::URI source_uri(source_uri_raw);
 
   for (const auto& backend : backends) {
     std::vector<std::unique_ptr<TableRef>> tbl_refs;

@@ -16,7 +16,7 @@
 #include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 using namespace fnordmetric::query;
 

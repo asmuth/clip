@@ -2,7 +2,7 @@
 #include <vector>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace cli {

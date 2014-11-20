@@ -13,7 +13,7 @@
 #include <string.h>
 #include <string>
 #include <fnordmetric/http/httpinputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 using fnordmetric::util::InputStream;
 

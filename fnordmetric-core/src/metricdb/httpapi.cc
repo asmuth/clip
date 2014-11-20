@@ -29,7 +29,7 @@ HTTPAPI::HTTPAPI(IMetricRepository* metric_repo) : metric_repo_(metric_repo) {}
 bool HTTPAPI::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-  util::URI uri(request->getUrl());
+  fnord::URI uri(request->getUrl());
   auto path = uri.path();
   fnord::util::StringUtil::stripTrailingSlashes(&path);
 
@@ -80,7 +80,7 @@ bool HTTPAPI::handleHTTPRequest(
 void HTTPAPI::renderMetricList(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
-    util::URI* uri) {
+    fnord::URI* uri) {
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
   util::JSONOutputStream json(response->getBodyOutputStream());
@@ -102,25 +102,25 @@ void HTTPAPI::renderMetricList(
 void HTTPAPI::insertSample(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
-    util::URI* uri) {
+    fnord::URI* uri) {
   const auto& postbody = request->getBody();
-  util::URI::ParamList params;
+  fnord::URI::ParamList params;
 
   if (postbody.size() > 0) {
-    util::URI::parseQueryString(postbody, &params);
+    fnord::URI::parseQueryString(postbody, &params);
   } else {
     params = uri->queryParams();
   }
 
   std::string metric_key;
-  if (!util::URI::getParam(params, "metric", &metric_key)) {
+  if (!fnord::URI::getParam(params, "metric", &metric_key)) {
     response->addBody("error: invalid metric key: " + metric_key);
     response->setStatus(http::kStatusBadRequest);
     return;
   }
 
   std::string value_str;
-  if (!util::URI::getParam(params, "value", &value_str)) {
+  if (!fnord::URI::getParam(params, "value", &value_str)) {
     response->addBody("error: missing ?value=... parameter");
     response->setStatus(http::kStatusBadRequest);
     return;
@@ -158,7 +158,7 @@ void HTTPAPI::insertSample(
 void HTTPAPI::renderMetricSampleScan(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
-    util::URI* uri) {
+    fnord::URI* uri) {
   auto metric_key = uri->path().substr(sizeof(kMetricsUrlPrefix) - 1);
   if (metric_key.size() < 3) {
     response->addBody("error: invalid metric key: " + metric_key);
@@ -226,12 +226,12 @@ void HTTPAPI::renderMetricSampleScan(
 void HTTPAPI::executeQuery(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
-    util::URI* uri) {
+    fnord::URI* uri) {
   auto params = uri->queryParams();
 
   std::shared_ptr<util::InputStream> input_stream;
   std::string get_query;
-  if (util::URI::getParam(params, "q", &get_query)) {
+  if (fnord::URI::getParam(params, "q", &get_query)) {
     input_stream.reset(new util::StringInputStream(get_query));
   } else {
     input_stream = request->getBodyInputStream();
@@ -257,7 +257,7 @@ void HTTPAPI::executeQuery(
 
   query::QueryService::kFormat resp_format = query::QueryService::FORMAT_JSON;
   std::string format_param;
-  if (util::URI::getParam(params, "format", &format_param)) {
+  if (fnord::URI::getParam(params, "format", &format_param)) {
     if (format_param == "svg") {
       resp_format = query::QueryService::FORMAT_SVG;
     }
@@ -278,13 +278,13 @@ void HTTPAPI::executeQuery(
 
   int width = -1;
   std::string width_param;
-  if (util::URI::getParam(params, "width", &width_param)) {
+  if (fnord::URI::getParam(params, "width", &width_param)) {
     width = std::stoi(width_param);
   }
 
   int height = -1;
   std::string height_param;
-  if (util::URI::getParam(params, "height", &height_param)) {
+  if (fnord::URI::getParam(params, "height", &height_param)) {
     height = std::stoi(height_param);
   }
 
@@ -297,7 +297,7 @@ void HTTPAPI::executeQuery(
         width,
         height);
 
-  } catch (util::RuntimeException e) {
+  } catch (fnord::Exception e) {
     response->clearBody();
 
     util::JSONOutputStream json(std::move(output_stream));

@@ -15,7 +15,7 @@
 #include <fnordmetric/ui/canvas.h>
 #include <fnordmetric/ui/barchart.h>
 #include <fnordmetric/ui/series.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>
 #include <fnordmetric/sql/runtime/rowsink.h>

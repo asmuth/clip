@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_UTIL_UNITTEST_H
 #define _FNORDMETRIC_UTIL_UNITTEST_H
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/random.h>
@@ -59,7 +59,7 @@ void EXPECT_EQ(T1 left, T2 right) {
       bool raised = false; \
       try { \
         L(); \
-      } catch (fnordmetric::util::RuntimeException e) { \
+      } catch (fnord::Exception e) { \
         raised = true; \
         auto msg = e.getMessage().c_str(); \
         if (strcmp(msg, E) != 0) { \
@@ -148,7 +148,7 @@ public:
 
     const TestCase* current_test_case = nullptr;
     int num_tests_passed = 0;
-    std::unordered_map<const TestCase*, RuntimeException> errors;
+    std::unordered_map<const TestCase*, fnord::Exception> errors;
 
     for (auto test_case : cases_) {
       fprintf(stderr, "    %s::%s", name_, test_case->name_);
@@ -157,7 +157,7 @@ public:
 
       try {
         test_case->lambda_();
-      } catch (fnordmetric::util::RuntimeException e) {
+      } catch (fnord::Exception e) {
         fprintf(stderr, " \033[1;31m[FAIL]\e[0m\n");
         errors.emplace(test_case, e);
         continue;

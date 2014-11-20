@@ -13,7 +13,7 @@
 #include <fnordmetric/http/httpserver.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/util/wallclock.h>
 #include <netinet/in.h>
 #include <sys/types.h>
@@ -23,7 +23,7 @@
 
 using fnordmetric::util::FileInputStream;
 using fnordmetric::util::FileOutputStream;
-using fnordmetric::util::RuntimeException;
+using fnord::Exception;
 
 namespace fnord {
 namespace http {
@@ -111,7 +111,7 @@ void HTTPServer::handleConnection(int fd) const {
       }
 
       response.populateFromRequest(request);
-    } catch (RuntimeException e) {
+    } catch (fnord::Exception e) {
       keepalive = false;
       response.setStatus(kStatusNotFound);
       response.addHeader("Connection", "close");
@@ -127,7 +127,7 @@ void HTTPServer::handleConnection(int fd) const {
           break;
         }
       }
-    } catch (RuntimeException e) {
+    } catch (fnord::Exception e) {
       keepalive = false;
       response.setStatus(kStatusInternalServerError);
       response.addHeader("Connection", "close");

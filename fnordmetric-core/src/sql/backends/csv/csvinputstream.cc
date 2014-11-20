@@ -12,8 +12,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "csvinputstream.h"
-#include "../../../util/inputstream.h"
-#include "../../../util/runtimeexception.h"
+#include "fnord/base/exception.h"
+#include "fnordmetric/util/inputstream.h"
 
 namespace fnordmetric {
 namespace query {

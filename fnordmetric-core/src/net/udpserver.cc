@@ -9,7 +9,7 @@
  */
 #include <fcntl.h>
 #include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>

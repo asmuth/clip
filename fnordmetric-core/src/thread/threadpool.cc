@@ -10,7 +10,7 @@
 #include <assert.h>
 #include <memory>
 #include <fnordmetric/thread/threadpool.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <sys/select.h>
 #include <thread>
 
