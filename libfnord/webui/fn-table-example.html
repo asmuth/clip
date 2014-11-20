@@ -12,13 +12,59 @@
   <head>
     <title>Fnord Table Examples</title>
     <script type="text/javascript" src="fnord.js"></script>
+
+    <style type="text/css">
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+      }
+
+      body {
+        padding: 20px 100px;
+      }
+
+      h1 {
+        margin-top: 60px;
+        font-size: 140%;
+      }
+    </style>
   </head>
   <body>
     <link rel="import" href="fn-table.html" data-component="fn-table">
 
     <!-- Example 1: Simple Sortable Table -->
     <h1>Example 1: Simple Sortable Table</h1>
-    <fn-table id="example-table-1" data-per-page="3" data-page="1">
+    <fn-table id="example-table-1">
+      <fn-table-column data-sortable>A</fn-table-column>
+      <fn-table-column data-sortable>B</fn-table-column>
+
+      <table>
+        <tr><td>1</td><td>1</td></tr>
+        <tr><td>5</td><td>5</td></tr>
+        <tr><td>8</td><td>8</td></tr>
+        <tr><td>9</td><td>9</td></tr>
+      </table>
+    </fn-table>
+
+    <!-- Example 1: Clickable Sortable Table -->
+    <h1>Example 1: Clickable Sortable Table</h1>
+    <fn-table id="example-table-2">
+      <fn-table-column>A</fn-table-column>
+      <fn-table-column>B</fn-table-column>
+
+      <table>
+        <tr><td>2</td><td>2</td></tr>
+        <tr><td>4</td><td>4</td></tr>
+        <tr><td>6</td><td>6</td></tr>
+        <tr><td>9</td><td>9</td></tr>
+      </table>
+    </fn-table>
+
+    <!-- Example 3: Paginated Table -->
+    <h1>Example 3: Paginated Table </h1>
+    <fn-table id="example-table-2" data-per-page="3" data-page="1">
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
 
@@ -35,6 +81,5 @@
         <tr><td>9</td><td>9</td></tr>
       </table>
     </fn-table>
-
   </body>
 </html>

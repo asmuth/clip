@@ -9,6 +9,45 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fn-table-base-tpl">
+  <style type="text/css">
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+      text-align: left;
+      font-weight: 400;
+      border: none;
+      padding: 8px 20px;
+    }
+
+    table tr {
+      border-bottom: 1px solid #ececec;
+    }
+
+    table th {
+      border-right: 1px solid #ececec;
+    }
+
+    table tr.header {
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      background-color: #fcfcfc;
+    }
+
+    table tr.header i.sort {
+      float: right;
+      line-height: 40px;
+    }
+
+    table.clickable tr:hover td {
+      background-color: #f6f8fa;
+      cursor: pointer;
+    }
+  </style>
+
   <table>
     <tr class="header">
     </tr>
@@ -25,7 +64,7 @@
 
     this.renderTable = function() {
       var tpl = Fnord.getTemplate("fn-table", "base");
-      var header_row = tpl.content.querySelector("tr.header");
+      var header_row = tpl.querySelector("tr.header");
 
       this.forEachColumn(function(col) {
         var th_elem = document.createElement("th");
@@ -33,7 +72,7 @@
         header_row.appendChild(th_elem);
       });
 
-      this.shadowRoot.appendChild(document.importNode(tpl.content, true));
+      this.shadowRoot.appendChild(tpl);
       this.renderRows();
     };
 
@@ -45,11 +84,19 @@
       }
 
       var all_rows = this.querySelectorAll("tr");
-      var begin = this.currentPage() * this.rowsPerPage();
-      var end = begin + this.rowsPerPage();
-
-      if (end > all_rows.length) {
+      var rows_per_page = this.rowsPerPage();
+      var begin;
+      var end;
+      if (rows_per_page < 0) {
+        begin = 0;
         end = all_rows.length;
+      } else {
+        begin = this.currentPage() * rows_per_page;
+        end = begin + rows_per_page;
+
+        if (end > all_rows.length) {
+          end = all_rows.length;
+        }
       }
 
       for (var i = begin; i < end; ++i) {
@@ -63,7 +110,7 @@
       if (this.getAttribute("data-per-page") != null) {
         return parseInt(this.getAttribute("data-per-page"), 10);
       } else {
-        return 10;
+        return -1;
       }
     }
 
@@ -76,10 +123,15 @@
     }
 
     this.forEachColumn = function(cb) {
-      console.log(this);
       var col_elems = this.querySelectorAll("fn-table-column");
       for (var i = 0; i < col_elems.length; ++i) {
         cb(col_elems[i]);
+      }
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-page" || attr == "data-per-page") {
+        this.renderRows();
       }
     }
 

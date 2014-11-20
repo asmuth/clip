@@ -19,7 +19,13 @@ Fnord.getTemplate = function(component, template) {
     return null;
   }
 
-  return i.import.querySelector("#" + component + "-" + template + "-tpl");
+  var t = i.import.querySelector("#" + component + "-" + template + "-tpl");
+
+  if (!t) {
+    return null;
+  }
+
+  return document.importNode(t.content, true);
 }
 
 Fnord.registerComponent = function(component, cb) {
