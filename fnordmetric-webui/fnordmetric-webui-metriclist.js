@@ -49,7 +49,6 @@ FnordMetric.views.MetricList = function() {
   };
 
 
-
   function renderMetricList(viewport, metrics, search_item) {
     viewport.innerHTML = "";
 

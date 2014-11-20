@@ -384,12 +384,13 @@ input {
   background: #d7e4f2;
 }
 
-.viewport.vertical_split .editor_resizer_tooltip {
+.editor_resizer_tooltip.vertical {
   cursor: ns-resize;
+  right: 0;
 }
 
-.viewport.horizontal_split .editor_resizer_tooltip {
-  width: 6px;
+.editor_resizer_tooltip.horizontal {
+  width: 5px;
   cursor: ew-resize;
 }
 
