@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/backends/disk/metriccursor.h>
-#include <fnordmetric/util/stringutil.h>
 #include <stdlib.h>
 #include <cstring>
 #include <string>

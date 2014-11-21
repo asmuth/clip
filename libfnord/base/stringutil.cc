@@ -7,14 +7,28 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/stringutil.h>
+#include <fnord/base/stringutil.h>
 
 namespace fnord {
-namespace util {
 
 void StringUtil::stripTrailingSlashes(std::string* str) {
   while (str->back() == '/') {
     str->pop_back();
+  }
+}
+
+void StringUtil::replaceAll(
+    std::string* str,
+    const std::string& pattern,
+    const std::string& replacement) {
+  if (str->size() == 0) {
+    return;
+  }
+
+  auto cur = 0;
+  while((cur = str->find(pattern, cur)) != std::string::npos) {
+    str->replace(cur, pattern.size(), replacement);
+    cur += replacement.size();
   }
 }
 
@@ -46,5 +60,4 @@ std::string StringUtil::hexPrint(
   return str;
 }
 
-} // namespace util
 } // namespace fnord

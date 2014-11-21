@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/stringutil.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/metrictablerepository.h>
-#include <fnordmetric/util/stringutil.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
@@ -31,7 +31,7 @@ bool HTTPAPI::handleHTTPRequest(
     http::HTTPResponse* response) {
   fnord::URI uri(request->getUrl());
   auto path = uri.path();
-  fnord::util::StringUtil::stripTrailingSlashes(&path);
+  fnord::StringUtil::stripTrailingSlashes(&path);
 
   response->addHeader("Access-Control-Allow-Origin", "*");
 
