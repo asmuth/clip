@@ -90,7 +90,7 @@
 </template>
 
 <script type="text/javascript">
-  var search = Fnord.registerComponent("fn-search", function() {
+  var SearchComponent = function() {
 
     this.createdCallback = function() {
       var shadow = this.createShadowRoot();
@@ -238,5 +238,9 @@
       this.dispatchEvent(new Event('fn-search-submit'));
     };
 
+  };
+
+  window.addEventListener("fn-ready", function() {
+    var search = Fnord.registerComponent("fn-search", SearchComponent);
   });
 </script>
