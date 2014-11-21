@@ -40,7 +40,7 @@
           "fn-search-autocomplete",
           function(e) {
             var term = e.srcElement.getValue();
-            var res = ["asdasd", "2353242", "234234"];
+            var res = [{query :"asdasd"}, {query : "2353242"}, {query : "234234"}];
             e.srcElement.autocomplete(term, res);
           },
           false);
@@ -50,6 +50,13 @@
         function(e) {
           var search_term = e.srcElement.getValue();
           console.log(search_term);
+        },
+        false);
+
+      document.querySelector("#search-example-1").addEventListener(
+        "fn-search-clear",
+        function(e) {
+          console.log("search clear event");
         },
         false);
     </script>
