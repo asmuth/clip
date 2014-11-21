@@ -32,6 +32,17 @@ void StringUtil::replaceAll(
   }
 }
 
+bool StringUtil::endsWith(const std::string& str, const std::string& suffix) {
+  if (str.length() < suffix.length()) {
+    return false;
+  }
+
+  return str.compare(
+      str.length() - suffix.length(),
+      suffix.length(),
+      suffix) == 0;
+}
+
 std::string StringUtil::hexPrint(
     const void* data,
     size_t size,

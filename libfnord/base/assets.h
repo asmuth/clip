@@ -26,6 +26,11 @@ public:
         size_t size);
   };
 
+  static void registerAsset(
+      const std::string& filename,
+      const unsigned char* data,
+      size_t size);
+
   static std::string getAsset(const std::string& filename);
 
 protected:

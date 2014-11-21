@@ -8,27 +8,31 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/util/assets.h>
-#include <fnordmetric/util/inputstream.h>
+#include <fnord/base/assets.h>
 #include <fnord/base/exception.h>
-#include <asset_bundle.cc>
+#include <fnordmetric/util/inputstream.h>
 #include <cstdlib>
 
 namespace fnordmetric {
 namespace util {
 
-std::unordered_map<std::string, std::pair<const unsigned char*, size_t>>*
-    Assets::global_map() {
-  static std::unordered_map<
-      std::string, std::pair<const unsigned char*, size_t>> map;
-  return &map;
-}
+static std::unordered_map<
+    std::string, std::pair<const unsigned char*, size_t>> asset_lib;
+static std::mutex asset_lib_mutex;
 
 Assets::AssetFile::AssetFile(
     const std::string& name,
     const unsigned char* data,
     size_t size) {
-  Assets::global_map()->emplace(name, std::make_pair(data, size));
+  Assets::registerAsset(name, data, size);
+}
+
+void Assets::registerAsset(
+    const std::string& filename,
+    const unsigned char* data,
+    size_t size) {
+  std::lock_guard<std::mutex> lock_holder(asset_lib_mutex);
+  asset_lib.emplace(filename, std::make_pair(data, size));
 }
 
 std::string Assets::getAsset(const std::string& filename) {
@@ -46,10 +50,10 @@ std::string Assets::getAsset(const std::string& filename) {
   }
 #endif
 
-  auto asset_files = Assets::global_map();
-  const auto asset = asset_files->find(filename);
+  std::lock_guard<std::mutex> lock_holder(asset_lib_mutex);
+  const auto asset = asset_lib.find(filename);
 
-  if (asset != asset_files->end()) {
+  if (asset != asset_lib.end()) {
     const auto& data = asset->second;
     return std::string((const char*) data.first, data.second);
   }

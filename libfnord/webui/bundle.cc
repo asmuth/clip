@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/assets.h"
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/webui/bundle.h"
@@ -45,9 +46,17 @@ void Bundle::build(const std::string& base_path /* = "/" */) {
     app_html_.erase(body_cur, 8);
   }
 
-  app_html_.insert(body_cur, "fnord");
-  body_cur += 5;
-  app_html_.insert(body_cur, "bar");
+  for (const auto& component : components_) {
+    if (StringUtil::endsWith(component, ".html")) {
+      const auto& asset = fnordmetric::util::Assets::getAsset(component);
+      app_html_.insert(body_cur, asset);
+      body_cur += asset.size();
+    }
+  }
+}
+
+void Bundle::addComponent(const std::string& component_path) {
+  components_.emplace_back(component_path);
 }
 
 const std::string& Bundle::applicationHTML() {

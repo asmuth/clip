@@ -14,7 +14,7 @@ install: build
 
 devserver: build
 	mkdir -p /tmp/fnordmetric-data
-	DEV_ASSET_PATH=../ ./build/cmake/target/fnordmetric-server --datadir /tmp/fnordmetric-data --verbose
+	DEV_ASSET_PATH=./build/assets ./build/cmake/target/fnordmetric-server --datadir /tmp/fnordmetric-data --verbose
 
 test:
 	(cd build/cmake && make test)

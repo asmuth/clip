@@ -21,6 +21,10 @@ public:
 
   static void stripTrailingSlashes(std::string* str);
 
+  static bool endsWith(
+      const std::string& str,
+      const std::string& suffix);
+
   static void replaceAll(
       std::string* str,
       const std::string& pattern,

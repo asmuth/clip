@@ -14,6 +14,7 @@ project(fnordmetric)
 option(ENABLE_TESTS "Build unit tests [default: off]" OFF)
 
 set(FNORDMETRIC_SOURCES
+    stage/src/fnord/base/assets.cc
     stage/src/fnord/base/exception.cc
     stage/src/fnord/base/stringutil.cc
     stage/src/fnord/base/uri.cc
@@ -46,7 +47,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sstable/sstablereader.cc
     stage/src/fnordmetric/sstable/sstablerepair.cc
     stage/src/fnordmetric/sstable/sstablewriter.cc
-    stage/src/fnordmetric/util/assets.cc
     stage/src/fnordmetric/util/binarymessagereader.cc
     stage/src/fnordmetric/util/binarymessagewriter.cc
     stage/src/fnordmetric/util/buffer.cc
