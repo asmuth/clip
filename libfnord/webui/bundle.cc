@@ -81,17 +81,25 @@ void Bundle::addComponent(const std::string& component_path) {
   components_.emplace_back(component_path);
 }
 
-const std::string& Bundle::applicationHTML() {
+bool Bundle::hasComponent(const std::string& component_path) const {
+  std::lock_guard<std::mutex> lock_holder(mutex_);
+  return std::find(
+      components_.begin(),
+      components_.end(),
+      component_path) != components_.end();
+}
+
+const std::string& Bundle::applicationHTML() const {
   std::lock_guard<std::mutex> lock_holder(mutex_);
   return app_html_;
 }
 
-const std::string& Bundle::applicationCSS() {
+const std::string& Bundle::applicationCSS() const {
   std::lock_guard<std::mutex> lock_holder(mutex_);
   return app_css_;
 }
 
-const std::string& Bundle::applicationJS() {
+const std::string& Bundle::applicationJS() const {
   std::lock_guard<std::mutex> lock_holder(mutex_);
   return app_js_;
 }

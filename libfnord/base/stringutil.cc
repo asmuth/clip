@@ -32,6 +32,18 @@ void StringUtil::replaceAll(
   }
 }
 
+bool StringUtil::beginsWith(const std::string& str, const std::string& prefix) {
+  if (str.length() < prefix.length()) {
+    return false;
+  }
+
+  return str.compare(
+      0,
+      prefix.length(),
+      prefix) == 0;
+}
+
+
 bool StringUtil::endsWith(const std::string& str, const std::string& suffix) {
   if (str.length() < suffix.length()) {
     return false;

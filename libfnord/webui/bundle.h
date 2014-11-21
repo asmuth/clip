@@ -23,20 +23,20 @@ public:
   void build(const std::string& base_path = "/");
   void addComponent(const std::string& component_path);
 
-  const std::string& applicationHTML();
-  const std::string& applicationCSS();
-  const std::string& applicationJS();
+  const std::string& applicationHTML() const;
+  const std::string& applicationCSS() const;
+  const std::string& applicationJS() const;
 
+  bool hasComponent(const std::string& component_path) const;
+  const std::string getComponent(const std::string& component_path) const;
 
 protected:
-  std::mutex mutex_;
+  mutable std::mutex mutex_;
   std::string title_;
   std::string app_html_;
   std::string app_css_;
   std::string app_js_;
-
   std::vector<std::string> components_;
-
 };
 
 } // namespace webui

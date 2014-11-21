@@ -33,6 +33,7 @@ protected:
   std::string app_url_;
   std::string app_css_url_;
   std::string app_js_url_;
+  std::string app_components_base_url_;
 };
 
 } // namespace webui
