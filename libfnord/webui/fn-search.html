@@ -1,0 +1,61 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-search-base-tpl">
+  <style type="text/css">
+    input {
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      line-height: normal;
+      width: 100%;
+      height: 34px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #555;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    }
+  </style>
+
+  <input />
+</template>
+
+<script type="text/javascript">
+  var table = Fnord.registerComponent("fn-search", function() {
+
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-search", "base");
+
+      var input = tpl.querySelector("input");
+
+      var base = this;
+      input.onkeyup = function() {
+        console.log("asd");
+        base.fireSearchSubmitEvent();
+      }
+
+      shadow.appendChild(tpl);
+    };
+
+    this.fireSearchSubmitEvent = function() {
+      this.dispatchEvent(new Event('fn-search-submit'));
+    };
+
+  });
+</script>

@@ -1,0 +1,50 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<html>
+  <head>
+    <title>Fnord Search Examples</title>
+    <script type="text/javascript" src="fnord.js"></script>
+
+    <style type="text/css">
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+      }
+
+      body {
+        padding: 20px 100px;
+      }
+
+      h1 {
+        margin-top: 60px;
+        font-size: 140%;
+      }
+    </style>
+  </head>
+  <body>
+    <link rel="import" href="fn-search.html" data-component="fn-search" />
+
+    <!-- Example 1: Plain Search Field -->
+    <fn-search id="search-example-1"></fn-search>
+
+    <script type="text/javascript">
+      document.querySelector("#search-example-1").addEventListener(
+          "fn-search-submit",
+          function(e) {
+            console.log("submitted!", e);
+          },
+          false);
+    </script>
+
+  </body>
+</html>
