@@ -51,6 +51,31 @@
       border-top: none;
     }
 
+    table thead,
+    table.clickable tbody {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    table.clickable tbody > tr:hover,
+    table.selectable tbody > tr[data-selected] {
+      background-color: #f2f2f2;
+      cursor: pointer;
+    }
+
+    table.selectable > thead > tr > th:first-child,
+    table.selectable > tbody > tr > th:first-child,
+    table.selectable > tfoot > tr > th:first-child,
+    table.selectable > thead > tr > td:first-child,
+    table.selectable > tbody > tr > td:first-child,
+    table.selectable > tfoot > tr > td:first-child {
+      width: 20px;
+      vertical-align: middle;
+    }
   </style>
 
   <table>
@@ -76,7 +101,17 @@
 
     this.renderTable = function() {
       var tpl = Fnord.getTemplate("fn-table", "base");
+      var tbl = tpl.querySelector("table");
       var header_row = tpl.querySelector("table > thead > tr");
+
+      if (this.getAttribute("data-clickable") != null) {
+        tbl.className += " clickable";
+      }
+
+      if (this.getAttribute("data-selectable") != null) {
+        tbl.className += " selectable";
+        header_row.appendChild(document.createElement("th"));
+      }
 
       this.forEachColumn(function(col) {
         var th_elem = document.createElement("th");
@@ -93,10 +128,65 @@
       var tbody = this.shadowRoot.querySelector("table > tbody");
       tbody.innerHTML = "";
 
-      this.forEachRowWithPagination(function(row) {
+      var onRowClick = (function(base) {
+        return function() {
+          var ev = new CustomEvent("fn-table-row-click", {
+            bubbles: true,
+            cancelable: true
+          });
+
+          var row_index = parseInt(this.getAttribute("data-row-index"), 10);
+          var all_rows = base.querySelectorAll("tr");
+          all_rows[row_index].dispatchEvent(ev);
+        }
+      })(this);
+
+      var onRowSelectClick = (function(base) {
+        return function() {
+          var row = this.parentNode.parentNode;
+          var all_rows = base.querySelectorAll("tr");
+          var row_index = parseInt(row.getAttribute("data-row-index"), 10);
+
+          if (this.checked) {
+            var ev = new CustomEvent("fn-table-row-select", {
+              bubbles: true,
+              cancelable: true
+            });
+
+            row.setAttribute("data-selected", "true");
+            all_rows[row_index].setAttribute("data-selected", true);
+            all_rows[row_index].dispatchEvent(ev);
+          } else {
+            var ev = new CustomEvent("fn-table-row-deselect", {
+              bubbles: true,
+              cancelable: true
+            });
+
+            row.removeAttribute("data-selected");
+            all_rows[row_index].removeAttribute("data-selected");
+            all_rows[row_index].dispatchEvent(ev);
+          }
+        };
+      })(this);
+
+      var is_selectable = this.getAttribute("data-selectable") != null;
+      this.forEachRowWithPagination(function(row, index) {
         var tr_elem = document.createElement("tr");
+        tr_elem.addEventListener("click", onRowClick, false);
         tr_elem.className = "row";
         tr_elem.innerHTML = row.innerHTML;
+
+        if (is_selectable) {
+          var select_input = document.createElement("input");
+          select_input.setAttribute("type", "checkbox");
+          select_input.addEventListener("click", onRowSelectClick, false);
+
+          var select_td = document.createElement("td");
+          select_td.appendChild(select_input);
+          tr_elem.insertBefore(select_td, tr_elem.querySelector("td:first-child"));
+        }
+
+        tr_elem.setAttribute("data-row-index", index);
         tbody.appendChild(tr_elem);
       });
     }
@@ -136,7 +226,7 @@
       }
 
       for (var i = begin; i < end; ++i) {
-        cb(all_rows[i]);
+        cb(all_rows[i], i);
       }
     }
 

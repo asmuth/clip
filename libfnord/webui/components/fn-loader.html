@@ -10,11 +10,14 @@
 -->
 <style type="text/css">
   fn-loader {
-    display: block;
+    display: none;
     height: 100%;
     width: 100%;
   }
 
+  fn-loader[data-resolved] {
+    display: block;
+  }
 </style>
 
 <template id="fn-loader-base-tpl">
@@ -362,6 +365,7 @@
     this.createdCallback = function() {
       this.createShadowRoot();
       this.updateLoadingState();
+      this.setAttribute("data-resolved", "data-resolved");
     };
 
     this.updateLoadingState = function() {

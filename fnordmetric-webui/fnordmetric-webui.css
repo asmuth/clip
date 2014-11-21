@@ -16,6 +16,20 @@ fn-appbar /deep/ fn-search {
   width: 360px;
 }
 
+.le_fnord {
+  float: left;
+  line-height: 49px;
+  color: #cdd3d8;
+  margin: 0;
+  padding: 0;
+  margin-left: -10px;
+  font-family: "Arial";
+  width: 51px;
+  text-align: center;
+  font-size: 24px;
+  border-right: 1px solid #2e3135;
+  font-weight: 600;
+}
 /*
 
 body, html {
@@ -31,18 +45,6 @@ body {
   padding-bottom: 20px;
 }
 
-.le_fnord {
-  float: left;
-  line-height: 49px;
-  color: #cdd3d8;
-  margin: 0;
-  padding: 0;
-  font-family: "Arial";
-  width: 51px;
-  text-align: center;
-  font-size: 24px;
-  border-right: 1px solid #2e3135;
-}
 
 
 .chart_container .load_foreground {

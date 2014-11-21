@@ -12,15 +12,28 @@
 </style>
 
 <template id="fnordmetric-app-base-tpl">
-  <fn-appbar>
-    <fn-appbar-section data-position="right" />
-      <fn-icon data-icon="search"></fn-icon>
-      <fn-search></fn-search>
-    </fn-appbar-section>
-  </fn-appbar>
+  <fn-loader id="app-loader" data-loading>
+    <fn-appbar>
+      <div class="le_fnord">F</div>
 
-  <div id="fnordmetric-viewport">
-  </div>
+      <fn-appbar-section data-position="left" style="border-right: none;">
+        <fn-button data-url="query">
+          <fn-icon data-icon="file"></fn-icon> New Query
+        </fn-button>
+        <fn-button data-url="metrics">
+          <fn-icon data-icon="area-chart"></fn-icon> Metrics
+        </fn-button>
+      </fn-appbar-section>
+
+      <fn-appbar-section data-position="right">
+        <fn-icon data-icon="search"></fn-icon>
+        <fn-search></fn-search>
+      </fn-appbar-section>
+    </fn-appbar>
+
+    <div id="fnordmetric-viewport">
+    </div>
+  </fn-loader>
 </template>
 
 <script type="text/javascript">
@@ -36,8 +49,15 @@
 
     this.createdCallback = function() {
       this.className += " resolved";
-      var tpl = Fnord.getTemplate("fnordmetric-app", "base");
-      this.appendChild(tpl);
+      this.appendChild(Fnord.getTemplate("fnordmetric-app", "base"));
+
+      var nav_buttons = this.querySelectorAll("fn-button");
+      for (var i = 0; i < nav_buttons.length; ++i) {
+        nav_buttons[i].addEventListener("fn-button-click", function() {
+          var app = document.querySelector("fnordmetric-app");
+          app.openUrl(this.getAttribute("data-url"));
+        }, false);
+      }
 
       window.onpopstate = (function(base) {
         return function(e) {
@@ -76,6 +96,8 @@
       view.setAttribute("data-url", raw_url);
       viewport.innerHTML = "";
       viewport.appendChild(view);
+
+      document.querySelector("#app-loader").removeAttribute("data-loading");
     };
   };
 
