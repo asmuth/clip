@@ -37,6 +37,8 @@ Bundle::Bundle(
     title_(title) {}
 
 void Bundle::build(const std::string& base_path /* = "/" */) {
+  std::lock_guard<std::mutex> lock_holder(build_mutex_);
+
   app_html_ = kBaseHTML;
   app_js_.clear();
   app_css_.clear();

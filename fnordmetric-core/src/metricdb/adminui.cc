@@ -18,12 +18,16 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
   return std::unique_ptr<http::HTTPHandler>(new AdminUI());
 }
 
-AdminUI::AdminUI() : webui_mount_(&webui_bundle_) {
+AdminUI::AdminUI() :
+    webui_bundle_("FnordMetric"),
+    webui_mount_(&webui_bundle_) {
   webui_bundle_.addComponent("fnord/fnord.js");
   webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
+  webui_bundle_.addComponent("fnord/components/fn-table.html");
 
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");

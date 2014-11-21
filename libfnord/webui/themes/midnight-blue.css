@@ -10,10 +10,10 @@ body, html {
 h1 {
   color: #394b59;
   display: block;
-  font-size: 20px;
+  font-size: 140%;
   font-weight: normal;
   height: 56px;
-  line-height: 56px;
+  line-height: 58px;
   margin: 0;
   padding: 0;
 }
@@ -29,30 +29,37 @@ hr {
 }
 
 /* fn-table */
-fn-table /deep/ table td,
-fn-table /deep/ table th {
+fn-table /deep/ table > thead > tr > td,
+fn-table /deep/ table > thead > tr > th,
+fn-table /deep/ table > tbody > tr > td,
+fn-table /deep/ table > tbody > tr > th {
   text-align: left;
   font-weight: 400;
   border: none;
   height: 38px;
-  font-size: 14px;
+  font-size: 98%;
   padding: 0 20px;
 }
 
-fn-table /deep/ table td {
+fn-table /deep/ table > tbody > tr > td {
   color: #545758;
+  vertical-align: middle;
 }
 
-fn-table /deep/ table th {
+fn-table /deep/ table > thead > tr > th {
   line-height: 40px;
   border-right: 1px solid rgb(226, 232, 237);
 }
 
-fn-table /deep/ table tr.header {
+fn-table /deep/ table > thead > tr {
   border-top: 2px solid rgb(226, 232, 237);
   border-bottom: 2px solid rgb(226, 232, 237);
   background-color: #f6f8fa;
   color: #60707f;
+}
+
+fn-table /deep/ table > tbody > tr {
+  border-bottom: 1px solid rgb(226, 232, 237);
 }
 
 /* fn-appbar */

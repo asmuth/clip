@@ -1,3 +1,7 @@
+h1.page_header {
+  margin: 0 0 0 20px;
+}
+
 /*
 
 @font-face {
@@ -938,13 +942,6 @@ table.metric_list tr:hover td {
   border-radius: 1px
 }
 
-h1.page_header {
-  font-size: 140%;
-  font-weight: 400;
-  margin: 0 0 0 20px;
-  padding: 17px 0 10px 0;
-  color: #738694;
-}
 
 h1.page_header em {
   font-style: normal;

@@ -28,6 +28,7 @@ public:
 
 
 protected:
+  std::mutex build_mutex_;
   std::string title_;
   std::string app_html_;
   std::string app_css_;
