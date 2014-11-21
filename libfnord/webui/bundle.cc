@@ -40,7 +40,7 @@ Bundle::Bundle(
     title_(title) {}
 
 void Bundle::build(const std::string& base_path /* = "/" */) {
-  std::lock_guard<std::mutex> lock_holder(build_mutex_);
+  std::lock_guard<std::mutex> lock_holder(mutex_);
 
   app_html_ = kBaseHTML;
   app_js_.clear();
@@ -77,18 +77,22 @@ void Bundle::build(const std::string& base_path /* = "/" */) {
 }
 
 void Bundle::addComponent(const std::string& component_path) {
+  std::lock_guard<std::mutex> lock_holder(mutex_);
   components_.emplace_back(component_path);
 }
 
 const std::string& Bundle::applicationHTML() {
+  std::lock_guard<std::mutex> lock_holder(mutex_);
   return app_html_;
 }
 
 const std::string& Bundle::applicationCSS() {
+  std::lock_guard<std::mutex> lock_holder(mutex_);
   return app_css_;
 }
 
 const std::string& Bundle::applicationJS() {
+  std::lock_guard<std::mutex> lock_holder(mutex_);
   return app_js_;
 }
 
