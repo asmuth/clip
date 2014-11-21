@@ -59,6 +59,16 @@
         }, false);
       }
 
+      var onSearchSubmit = (function(base) {
+        return function(e) {
+          var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
+          base.openUrl(url);
+        }
+      })(this);
+
+      var nav_search = this.querySelector("fn-search");
+      nav_search.addEventListener("fn-search-submit", onSearchSubmit);
+
       window.onpopstate = (function(base) {
         return function(e) {
           e.preventDefault();
