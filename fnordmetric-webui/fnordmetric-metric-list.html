@@ -32,18 +32,53 @@
       this.loadMetricList();
     };
 
+    this.createTimeDescr = function(ts) {
+      if (ts == 0 || ts == "0") {return "0"}
+      var now = Date.now();
+      var ts = Math.round(ts / 1000);
+      var date = new Date(ts);
+
+      var offset =  Math.floor(
+        (now - ts) / 1000);
+
+      var minutes = date.getMinutes();
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+
+      var seconds = date.getSeconds();
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      var time_str =
+        FnordMetric.util.parseTimeOffset(offset) +
+        " - " +
+        FnordMetric.util.getHumanMonth(date.getMonth(), "short") + 
+        " " + date.getDate() +
+        " " + date.getFullYear() +
+        " " + date.getHours() +
+        ":" + minutes +
+        ":" + seconds
+
+      return time_str;
+    }
+
     this.loadMetricList = function() {
       var table = this.querySelector("fn-table");
       var loader = this.querySelector("fn-loader");
+
+      var base = this;
       Fnord.httpGet("/metrics", function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
 
           json.metrics.forEach(function(m) {
+            console.log(this);
             table.appendRow([
                 m.key,
-                JSON.stringify(m.labels),
-                m.last_insert,
+                m.labels.join(", "),
+                base.createTimeDescr(m.last_insert),
                 m.total_bytes]);
           });
 

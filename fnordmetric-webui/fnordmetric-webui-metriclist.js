@@ -74,7 +74,7 @@ FnordMetric.views.MetricList = function() {
         "Labels",
         "Last Insert",
         "Total stored bytes"], table_container, 25);
-
+    console.log("foo");
     for (i in metrics) {
       table_view.addRow([
           metrics[i]["key"],
