@@ -30,27 +30,208 @@
       -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
       transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     }
+
+    ul {
+      margin-bottom: 5px;
+      top: 100%;
+      left: 0;
+      z-index: 1000;
+      display: none;
+      float: left;
+      width: 100%;
+      padding: 5px 0;
+      margin: 2px 0 0;
+      font-size: 14px;
+      text-align: left;
+      list-style: none;
+      background-color: #fff;
+      -webkit-background-clip: padding-box;
+      background-clip: padding-box;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 4px;
+      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+      box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    }
+
+    li {
+      display: list-item;
+    }
+
+    ul>li>a {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: #333;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    ul>li>a:hover {
+      color: #262626;
+      background-color: #f5f5f5;
+    }
+
+    ul>li[data-active='true'] {
+      color: #262626;
+      background-color: #f5f5f5;
+    }
+
+
+
+
+
   </style>
 
   <input />
+  <ul></ul>
 </template>
 
 <script type="text/javascript">
-  var table = Fnord.registerComponent("fn-search", function() {
+  var search = Fnord.registerComponent("fn-search", function() {
 
     this.createdCallback = function() {
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-search", "base");
-
       var input = tpl.querySelector("input");
-
       var base = this;
-      input.onkeyup = function() {
-        console.log("asd");
-        base.fireSearchSubmitEvent();
-      }
+      var min_length = 1;
+
+      input.addEventListener('input', function() {
+        if (this.value.length >= min_length) {
+          base.fireAutoCompleteEvent();
+        } else {
+          base.closeDropDownMenu();
+        }
+      }, false);
+
+      input.addEventListener('keydown', function(e) {
+        switch (e.keyCode) {
+          //Enter
+          case 13:
+            base.submitSearch();
+            break;
+
+          //Up Arrow
+          case 38:
+            base.dropDownMoveUp();
+            break;
+
+          //Down Arrow
+          case 40:
+            base.dropDownMoveDown();
+            break;
+
+          default:
+            break;
+        }
+      }, false);
 
       shadow.appendChild(tpl);
+    };
+
+    this.getValue = function() {
+      var input = this.shadowRoot.querySelector("input");
+      return input.value;
+    };
+
+    this.getActiveListElem = function() {
+      var active_elem = this.shadowRoot.querySelectorAll("li[data-active='true']");
+
+      if (active_elem !== null) {
+        return active_elem[0];
+      }
+    }
+
+    this.updateDataActiveAttr = function(new_elem, old_elem) {
+      new_elem.setAttribute('data-active', 'true');
+
+      if (old_elem !== undefined) {
+        old_elem.setAttribute('data-active', 'false');
+      }
+    }
+
+    this.dropDownMoveUp = function() {
+      var active_elem = this.getActiveListElem();
+      var new_active_elem;
+      if (active_elem !== undefined ) {
+        new_active_elem = active_elem.previousSibling;
+        //first list elem is already active
+        if (new_active_elem === null) {
+          new_active_elem = active_elem;
+          active_elem = undefined;
+        }
+      } else {
+        new_active_elem = this.shadowRoot.querySelector("li");
+      }
+
+      this.updateDataActiveAttr(new_active_elem, active_elem);
+    }
+
+    this.dropDownMoveDown = function() {
+      var active_elem = this.getActiveListElem();
+      var new_active_elem;
+      if (active_elem !== undefined ) {
+        new_active_elem = active_elem.nextSibling;
+        //last list elem is already active
+        if (new_active_elem === null) {
+          new_active_elem = active_elem;
+          active_elem = undefined;
+        }
+      } else {
+        new_active_elem = this.shadowRoot.querySelector("li");
+      }
+
+      this.updateDataActiveAttr(new_active_elem, active_elem);
+    }
+
+    this.submitSearch = function(query) {
+      this.closeDropDownMenu();
+      this.fireSearchSubmitEvent();
+    }
+
+    this.openDropDownMenu = function(items) {
+      var list = this.shadowRoot.querySelector("ul");
+      list.innerHTML = "";
+      list.style.display = "block";
+
+      var base = this;
+      items.map(function(item) {
+        var list_elem = document.createElement("li");
+        list_elem.innerHTML = "<a href='#'>" + item + "</a>";
+        list.appendChild(list_elem);
+
+        list_elem.onclick = function(e) {
+          e.preventDefault();
+          base.shadowRoot.querySelector("input").value = this.innerText; // FIXME
+          base.submitSearch();
+        }
+
+        list_elem.addEventListener('mouseover', function() {
+          var active_elem = base.getActiveListElem();
+          if (active_elem !== undefined) {
+            active_elem.setAttribute('data-active', 'false');
+          }
+        }, false);
+      });
+    }
+
+    this.closeDropDownMenu = function() {
+      var list = this.shadowRoot.querySelector("ul");
+      list.innerHTML = "";
+      list.style.display = "none";
+    }
+
+    this.autocomplete = function(term, items) {
+      if (term == this.getValue() && items.length > 0) {
+        this.openDropDownMenu(items);
+      }
+    };
+
+    this.fireAutoCompleteEvent = function() {
+      this.dispatchEvent(new Event('fn-search-autocomplete'));
     };
 
     this.fireSearchSubmitEvent = function() {

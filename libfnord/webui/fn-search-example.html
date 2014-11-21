@@ -39,11 +39,21 @@
 
     <script type="text/javascript">
       document.querySelector("#search-example-1").addEventListener(
-          "fn-search-submit",
+          "fn-search-autocomplete",
           function(e) {
-            console.log("submitted!", e);
+            var term = e.srcElement.getValue();
+            var res = ["asdasd", "2353242", "234234"];
+            e.srcElement.autocomplete(term, res);
           },
           false);
+
+      document.querySelector("#search-example-1").addEventListener(
+        "fn-search-submit",
+        function(e) {
+          var search_term = e.srcElement.getValue();
+          console.log(search_term);
+        },
+        false);
     </script>
 
   </body>
