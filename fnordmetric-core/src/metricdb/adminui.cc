@@ -19,8 +19,14 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
 }
 
 AdminUI::AdminUI() : webui_mount_(&webui_bundle_) {
+  webui_bundle_.addComponent("fnord/fnord.js");
+  webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
+  webui_bundle_.addComponent("fnord/components/fn-appbar.html");
+
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
-  webui_bundle_.build();
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
 }
 
 bool AdminUI::handleHTTPRequest(
@@ -39,6 +45,7 @@ bool AdminUI::handleHTTPRequest(
     env()->logger()->log(log_entry);
   }
 
+  webui_bundle_.build();
   if (webui_mount_.handleHTTPRequest(request, response)) {
     return true;
   }

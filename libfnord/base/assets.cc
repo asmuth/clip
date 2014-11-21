@@ -13,8 +13,7 @@
 #include <fnordmetric/util/inputstream.h>
 #include <cstdlib>
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
 
 static std::unordered_map<
     std::string, std::pair<const unsigned char*, size_t>> asset_lib;
@@ -41,7 +40,7 @@ std::string Assets::getAsset(const std::string& filename) {
 
   if (dev_asset_path != nullptr) {
     // FIXPAUL check that file exists
-    auto file = util::FileInputStream::openFile(
+    auto file = fnordmetric::util::FileInputStream::openFile(
         std::string(dev_asset_path) + "/" + filename);
 
     std::string asset_str;
@@ -61,5 +60,5 @@ std::string Assets::getAsset(const std::string& filename) {
   RAISE(kRuntimeError, "asset not found: %s", filename.c_str());
 }
 
-}
-}
+} // namespace fnord
+

@@ -13,19 +13,25 @@ Fnord = {
 };
 
 Fnord.getTemplate = function(component, template) {
-  var i = document.querySelector("link[data-component='" + component + "']");
+  var template_selector = "#" + component + "-" + template + "-tpl";
 
-  if (!i) {
+  var template = document.querySelector(template_selector);
+  if (!template) {
+    var template_import = document.querySelector(
+        "link[data-component='" + component + "']");
+
+    if (!template_import) {
+      return null;
+    }
+
+    template = template_import.import.querySelector(template_selector);
+  }
+
+  if (!template) {
     return null;
   }
 
-  var t = i.import.querySelector("#" + component + "-" + template + "-tpl");
-
-  if (!t) {
-    return null;
-  }
-
-  return document.importNode(t.content, true);
+  return document.importNode(template.content, true);
 }
 
 Fnord.registerComponent = function(component, cb) {
@@ -35,3 +41,9 @@ Fnord.registerComponent = function(component, cb) {
   document.registerElement(component, { prototype: proto });
   return proto;
 }
+
+Fnord.ready = function() {
+  window.dispatchEvent(new Event("fn-ready"));
+};
+
+Fnord.ready();

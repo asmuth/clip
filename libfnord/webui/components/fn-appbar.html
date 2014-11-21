@@ -38,7 +38,7 @@
 </template>
 
 <script type="text/javascript">
-  var table = Fnord.registerComponent("fn-appbar", function() {
+  var TableComponent = function() {
 
     this.createdCallback = function() {
       this.className += " resolved";
@@ -47,5 +47,9 @@
       shadow.appendChild(tpl);
     };
 
-  });
+  };
+
+  window.addEventListener("fn-ready", function() {
+    var table = Fnord.registerComponent("fn-appbar", TableComponent);
+  }, false);
 </script>

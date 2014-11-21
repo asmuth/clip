@@ -6,7 +6,6 @@
 all: build
 
 build:
-	(cd ../fnordmetric-webui && make)
 	(cd build/cmake && make)
 
 install: build

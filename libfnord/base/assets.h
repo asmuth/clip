@@ -13,8 +13,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
 
 class Assets {
 public:
@@ -38,6 +37,6 @@ protected:
       std::string, std::pair<const unsigned char*, size_t>>* global_map();
 };
 
-}
-}
+} // namespace fnord
+
 #endif

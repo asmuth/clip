@@ -28,10 +28,24 @@ bool HTTPMount::handleHTTPRequest(
   fnord::URI uri(request->getUrl());
   auto path = uri.path();
 
-  if (path == app_url_) { 
+  if (path == app_url_) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addBody(bundle_->applicationHTML());
+    return true;
+  }
+
+  if (path == app_js_url_) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/javascript");
+    response->addBody(bundle_->applicationJS());
+    return true;
+  }
+
+  if (path == app_css_url_) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "text/css");
+    response->addBody(bundle_->applicationCSS());
     return true;
   }
 

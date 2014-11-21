@@ -15,7 +15,7 @@
 namespace fnord {
 namespace webui {
 
-static const char kBaseHTML[] = R"(<!DOCTYPE html>
+static const char kBaseHTML[] = R"html(<!DOCTYPE html>
 <html>
   <head>
     <title>{{title}}</title>
@@ -28,7 +28,9 @@ static const char kBaseHTML[] = R"(<!DOCTYPE html>
     <script src="{{basepath}}application.js" type="text/javascript"></script>
   </body>
 </html>
-)";
+)html";
+
+static const char kFnordJSReadyTrigger[] = "Fnord.ready();";
 
 Bundle::Bundle(
     const std::string& title /* = "Fnord WebUI" */) :
@@ -36,6 +38,9 @@ Bundle::Bundle(
 
 void Bundle::build(const std::string& base_path /* = "/" */) {
   app_html_ = kBaseHTML;
+  app_js_.clear();
+  app_css_.clear();
+
   StringUtil::replaceAll(&app_html_, "{{basepath}}", base_path);
   StringUtil::replaceAll(&app_html_, "{{title}}", title_);
 
@@ -48,11 +53,22 @@ void Bundle::build(const std::string& base_path /* = "/" */) {
 
   for (const auto& component : components_) {
     if (StringUtil::endsWith(component, ".html")) {
-      const auto& asset = fnordmetric::util::Assets::getAsset(component);
+      const auto& asset = Assets::getAsset(component);
       app_html_.insert(body_cur, asset);
       body_cur += asset.size();
     }
+
+    if (StringUtil::endsWith(component, ".js")) {
+      app_js_.append(Assets::getAsset(component));
+    }
+
+    if (StringUtil::endsWith(component, ".css")) {
+      app_css_.append(Assets::getAsset(component));
+    }
   }
+
+  StringUtil::replaceAll(&app_js_, kFnordJSReadyTrigger, "");
+  app_js_.append(kFnordJSReadyTrigger);
 }
 
 void Bundle::addComponent(const std::string& component_path) {
