@@ -84,7 +84,7 @@
       <table>
         <tr data-row-id="row1"><td>2</td><td>2</td></tr>
         <tr data-row-id="row2"><td>4</td><td>4</td></tr>
-        <tr data-row-id="row3"><td>6</td><td>6</td></tr>
+        <tr data-row-id="row3" data-selected><td>6</td><td>6</td></tr>
         <tr data-row-id="row4"><td>9</td><td>9</td></tr>
       </table>
     </fn-table>
@@ -102,6 +102,7 @@
         tbl3_desc.innerHTML = rows_str;
       };
 
+      updateTbl3Desc();
       tbl3.addEventListener("fn-table-row-select", updateTbl3Desc, false);
       tbl3.addEventListener("fn-table-row-deselect", updateTbl3Desc, false);
     </script>
