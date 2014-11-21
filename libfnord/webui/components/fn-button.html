@@ -23,7 +23,7 @@
   var ButtonComponent = function() {
     this.createdCallback = function() {
       this.addEventListener("click", function() {
-        this.dispatchEvent(new Event("fn-button-click"));
+        this.dispatchEvent(new CustomEvent("fn-button-click"));
       }, false);
     };
   };

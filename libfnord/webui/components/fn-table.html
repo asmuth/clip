@@ -51,6 +51,20 @@
       border-top: none;
     }
 
+    table thead,
+    table.clickable tbody {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    table.clickable tbody > tr:hover {
+      background-color: #f2f2f2;
+      cursor: pointer;
+    }
   </style>
 
   <table>
@@ -76,7 +90,12 @@
 
     this.renderTable = function() {
       var tpl = Fnord.getTemplate("fn-table", "base");
+      var tbl = tpl.querySelector("table");
       var header_row = tpl.querySelector("table > thead > tr");
+
+      if (this.getAttribute("data-clickable") != null) {
+        tbl.className += " clickable";
+      }
 
       this.forEachColumn(function(col) {
         var th_elem = document.createElement("th");
@@ -93,10 +112,25 @@
       var tbody = this.shadowRoot.querySelector("table > tbody");
       tbody.innerHTML = "";
 
-      this.forEachRowWithPagination(function(row) {
+      var onRowClick = (function(base) {
+        return function() {
+          var ev = new CustomEvent("fn-table-row-click", {
+            bubbles: true,
+            cancelable: true
+          });
+
+          var row_index = parseInt(this.getAttribute("data-row-index"), 10);
+          var all_rows = base.querySelectorAll("tr");
+          all_rows[row_index].dispatchEvent(ev);
+        }
+      })(this);
+
+      this.forEachRowWithPagination(function(row, index) {
         var tr_elem = document.createElement("tr");
+        tr_elem.addEventListener("click", onRowClick, false);
         tr_elem.className = "row";
         tr_elem.innerHTML = row.innerHTML;
+        tr_elem.setAttribute("data-row-index", index);
         tbody.appendChild(tr_elem);
       });
     }
@@ -136,7 +170,7 @@
       }
 
       for (var i = begin; i < end; ++i) {
-        cb(all_rows[i]);
+        cb(all_rows[i], i);
       }
     }
 

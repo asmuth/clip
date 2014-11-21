@@ -62,6 +62,10 @@ fn-table /deep/ table > tbody > tr {
   border-bottom: 1px solid rgb(226, 232, 237);
 }
 
+fn-table /deep/ table.clickable tbody > tr:hover {
+  background-color: #f6f8fa;
+}
+
 /* fn-appbar */
 fn-appbar /deep/ .appbar_outer {
   min-width: 900px;
@@ -124,4 +128,3 @@ fn-appbar /deep/ fn-search /deep/ input {
   top: -1px;
   left: 2px;
 }
-
