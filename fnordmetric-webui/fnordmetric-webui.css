@@ -1,3 +1,13 @@
+body, html {
+  height: 100%;
+}
+
+fnordmetric-app,
+#fnordmetric-viewport {
+  display: block;
+  height: 100%;
+}
+
 h1.page_header {
   margin: 0 0 0 20px;
 }
@@ -163,16 +173,6 @@ body {
   border-right: 1px solid #2e3135;
 }
 
-.load_foreground {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 1000;
-  background: #e9ebed;
-  display: table;
-  text-align: center;
-}
 
 .chart_container .load_foreground {
   position: relative;

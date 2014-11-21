@@ -11,6 +11,7 @@
 #define _FNORD_WEBUI_BUNDLE_H
 #include <string>
 #include <vector>
+#include <mutex>
 
 namespace fnord {
 namespace webui {

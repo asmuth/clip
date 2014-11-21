@@ -69,3 +69,8 @@ fn-appbar /deep/ .appbar_outer {
   background: rgba(25, 32, 37, 1);
   border-bottom: rgba(24, 31, 36, 1);
 }
+
+/* fn-loader */
+fn-loader /deep/ .loader {
+  background: #e9ebed;
+}

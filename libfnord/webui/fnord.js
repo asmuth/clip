@@ -44,6 +44,7 @@ Fnord.registerComponent = function(component, cb) {
 
 Fnord.ready = function() {
   window.dispatchEvent(new Event("fn-ready"));
+  document.body.removeAttribute("data-unresolved");
 };
 
 Fnord.httpGet = function(url, callback) {

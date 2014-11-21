@@ -9,6 +9,13 @@
   <http://www.gnu.org/licenses/>.
 -->
 <style type="text/css">
+  fn-table {
+    display: none;
+  }
+
+  fn-table[data-resolved]{
+    display: block;
+  }
 </style>
 
 <template id="fn-table-base-tpl">
@@ -64,6 +71,7 @@
 
       this.createShadowRoot();
       this.renderTable();
+      this.setAttribute("data-resolved", "data-resolved");
     };
 
     this.renderTable = function() {

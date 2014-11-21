@@ -22,8 +22,11 @@ static const char kBaseHTML[] = R"html(<!DOCTYPE html>
     <meta content="text/html; charset=utf-8" http-equiv="Content-type" />
     <link href="{{basepath}}application.css" rel="stylesheet" type="text/css" />
     <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+    <style type="text/css">
+      body[data-unresolved] * { display: none; }
+    </style>
   </head>
-  <body>
+  <body data-unresolved>
     {{body}}
     <script src="{{basepath}}application.js" type="text/javascript"></script>
   </body>

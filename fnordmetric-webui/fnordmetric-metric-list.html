@@ -14,12 +14,14 @@
 <template id="fnordmetric-metric-list-base-tpl">
   <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
 
-  <fn-table data-per-page="25">
-    <fn-table-column>Metric</fn-table-column>
-    <fn-table-column>Labels</fn-table-column>
-    <fn-table-column>Last Insert</fn-table-column>
-    <fn-table-column>Total Stored Bytes</fn-table-column>
-  </fn-table>
+  <fn-loader data-loading>
+    <fn-table data-per-page="25">
+      <fn-table-column>Metric</fn-table-column>
+      <fn-table-column>Labels</fn-table-column>
+      <fn-table-column>Last Insert</fn-table-column>
+      <fn-table-column>Total Stored Bytes</fn-table-column>
+    </fn-table>
+  </fn-loader>
 </template>
 
 <script type="text/javascript">
@@ -33,6 +35,7 @@
 
     this.loadMetricList = function() {
       var table = this.querySelector("fn-table");
+      var loader = this.querySelector("fn-loader");
       Fnord.httpGet("/metrics", function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
@@ -44,6 +47,8 @@
                 m.last_insert,
                 m.total_bytes]);
           });
+
+          loader.removeAttribute("data-loading");
         } else {
           //FnordMetric.util.displayErrorMessage(viewport, "Error connecting to server");
         }
