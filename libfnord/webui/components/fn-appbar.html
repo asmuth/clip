@@ -16,6 +16,18 @@
   fn-appbar.resolved {
     display: block;
   }
+
+  fn-appbar /deep/ fn-appbar-section {
+    padding: 0 10px;
+  }
+
+  fn-appbar /deep/ fn-appbar-section[data-position='left'] {
+    float: left;
+  }
+
+  fn-appbar /deep/ fn-appbar-section[data-position='right'] {
+    float: right;
+  }
 </style>
 
 <template id="fn-appbar-base-tpl">
@@ -27,12 +39,15 @@
 
     .appbar_inner {
       height: 49px;
-      margin: 0 20px;
+      line-height: 49px;
+      margin: 0 10px;
     }
+
   </style>
 
   <div class="appbar_outer">
     <div class="appbar_inner">
+      <content />
     </div>
   </div>
 </template>

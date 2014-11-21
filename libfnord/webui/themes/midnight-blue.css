@@ -70,7 +70,36 @@ fn-appbar /deep/ .appbar_outer {
   border-bottom: rgba(24, 31, 36, 1);
 }
 
+fn-appbar /deep/ fn-appbar-section {
+  height: 49px;
+  line-height: 49px;
+}
+
+fn-appbar /deep/ fn-appbar-section[data-position='left'] {
+  border-right: 1px solid #2e3135;
+}
+
+fn-appbar /deep/ fn-appbar-section[data-position='right'] {
+  border-left: 1px solid #2e3135;
+}
+
+fn-appbar i.fa {
+  margin: 0 10px;
+  font-size: 12px;
+}
+
 /* fn-loader */
 fn-loader /deep/ .loader {
   background: #e9ebed;
 }
+
+/* fn-search */
+
+fn-appbar /deep/ fn-search /deep/ input {
+  background: #2d363b;
+  border: 1px solid #444e54;
+  color: #fff;
+  font-size: 90%;
+  height: 32px;
+}
+

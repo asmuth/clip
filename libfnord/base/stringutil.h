@@ -21,6 +21,10 @@ public:
 
   static void stripTrailingSlashes(std::string* str);
 
+  static bool beginsWith(
+      const std::string& str,
+      const std::string& prefix);
+
   static bool endsWith(
       const std::string& str,
       const std::string& suffix);
