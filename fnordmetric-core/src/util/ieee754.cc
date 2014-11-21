@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/util/ieee754.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <limits>
 #include <string.h>
 #include <stdio.h>

@@ -1,0 +1,76 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  color: #545758;
+}
+
+h1 {
+  color: #394b59;
+  display: block;
+  font-size: 140%;
+  font-weight: normal;
+  height: 56px;
+  line-height: 58px;
+  margin: 0;
+  padding: 0;
+}
+
+h1 i {
+  color: rgb(115, 134, 148);
+  font-style: normal;
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+/* fn-table */
+fn-table /deep/ table > thead > tr > td,
+fn-table /deep/ table > thead > tr > th,
+fn-table /deep/ table > tbody > tr > td,
+fn-table /deep/ table > tbody > tr > th {
+  text-align: left;
+  font-weight: 400;
+  border: none;
+  height: 38px;
+  font-size: 98%;
+  padding: 0 20px;
+}
+
+fn-table /deep/ table > tbody > tr > td {
+  color: #545758;
+  vertical-align: middle;
+}
+
+fn-table /deep/ table > thead > tr > th {
+  line-height: 40px;
+  border-right: 1px solid rgb(226, 232, 237);
+}
+
+fn-table /deep/ table > thead > tr {
+  border-top: 2px solid rgb(226, 232, 237);
+  border-bottom: 2px solid rgb(226, 232, 237);
+  background-color: #f6f8fa;
+  color: #60707f;
+}
+
+fn-table /deep/ table > tbody > tr {
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+/* fn-appbar */
+fn-appbar /deep/ .appbar_outer {
+  min-width: 900px;
+  height: 49px;
+  background: rgba(25, 32, 37, 1);
+  border-bottom: rgba(24, 31, 36, 1);
+}
+
+/* fn-loader */
+fn-loader /deep/ .loader {
+  background: #e9ebed;
+}

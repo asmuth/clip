@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/astnode.h>
 
@@ -27,11 +27,11 @@ namespace query {
 class Parser {
   friend class QueryTest;
 public:
-  struct ParseError : public fnordmetric::util::RuntimeException {
+  struct ParseError : public fnord::Exception {
     template <typename... T>
     ParseError(
         const char* message, T... args) :
-        RuntimeException(message, args...) {}
+        fnord::Exception(message, args...) {}
   };
 
   /* precedence table

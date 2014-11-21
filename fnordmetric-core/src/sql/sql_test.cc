@@ -27,7 +27,7 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 using namespace fnordmetric::query;
 

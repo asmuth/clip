@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -13,6 +13,8 @@
 #include <fnordmetric/http/httphandler.h>
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
+#include <fnord/webui/bundle.h>
+#include <fnord/webui/httpmount.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -23,17 +25,15 @@ public:
 
   static std::unique_ptr<http::HTTPHandler> getHandler();
 
+  AdminUI();
+
   bool handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
 private:
-
-  void sendAsset(
-      http::HTTPResponse* response,
-      const std::string& asset_path,
-      const std::string& content_type) const;
-
+  fnord::webui::Bundle webui_bundle_;
+  fnord::webui::HTTPMount webui_mount_;
 };
 
 }

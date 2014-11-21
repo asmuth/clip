@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_FFS_OBJECTREF_H
 #define _FNORDMETRIC_FFS_OBJECTREF_H
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include "object.h"
 #include <fnordmetric/io/pagemanager.h>
 

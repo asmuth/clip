@@ -16,7 +16,7 @@
 #include <fnordmetric/util/exceptionhandler.h>
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
@@ -93,7 +93,7 @@ int CLI::executeSafely(Environment* env) {
     }
 
     execute(env);
-  } catch (const util::RuntimeException& e) {
+  } catch (const fnord::Exception& e) {
     if (e.getTypeName() == "UsageError") {
       err_stream->printf("\n");
       printUsage();

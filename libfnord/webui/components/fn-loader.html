@@ -1,0 +1,64 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+  fn-loader {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+</style>
+
+<template id="fn-loader-base-tpl">
+  <style type="text/css">
+    .loader {
+      height: 100%;
+      width: 100%;
+      background: #efefef;
+      display: table;
+      text-align: center;
+    }
+  </style>
+
+  <div class="loader">
+  </div>
+</template>
+
+<script type="text/javascript">
+  var LoaderComponent = function() {
+
+    this.createdCallback = function() {
+      this.createShadowRoot();
+      this.updateLoadingState();
+    };
+
+    this.updateLoadingState = function() {
+      this.shadowRoot.innerHTML = "";
+
+      if (this.getAttribute("data-loading") == null) {
+        this.shadowRoot.innerHTML = "<content />";
+      } else {
+        var tpl = Fnord.getTemplate("fn-loader", "base");
+        this.shadowRoot.appendChild(tpl);
+      }
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-loading") {
+        this.updateLoadingState();
+      }
+    }
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-loader", LoaderComponent);
+  }, false);
+</script>

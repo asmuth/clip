@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/ffs/volume.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

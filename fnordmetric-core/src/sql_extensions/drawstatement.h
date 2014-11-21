@@ -15,7 +15,7 @@
 #include <fnordmetric/sql/runtime/execute.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace ui {

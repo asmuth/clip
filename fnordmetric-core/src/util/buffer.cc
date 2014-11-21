@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <string.h>
 
 namespace fnord {

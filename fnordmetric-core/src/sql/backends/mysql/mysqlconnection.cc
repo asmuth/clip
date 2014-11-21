@@ -15,7 +15,7 @@ namespace query {
 namespace mysql_backend {
 
 std::unique_ptr<MySQLConnection> MySQLConnection::openConnection(
-    const util::URI& uri) {
+    const fnord::URI& uri) {
   std::unique_ptr<MySQLConnection> conn(new MySQLConnection());
   conn->connect(uri);
   return conn;
@@ -41,7 +41,7 @@ MySQLConnection::~MySQLConnection() {
 #endif
 }
 
-void MySQLConnection::connect(const util::URI& uri) {
+void MySQLConnection::connect(const fnord::URI& uri) {
   unsigned int port = 3306;
   std::string host = uri.host();
   std::string username;
@@ -191,7 +191,7 @@ void MySQLConnection::executeQuery(
     } catch (const std::exception& e) {
       mysql_free_result(result);
       try {
-        auto rte = dynamic_cast<const util::RuntimeException&>(e);
+        auto rte = dynamic_cast<const fnord::Exception&>(e);
         throw rte;
       } catch (std::bad_cast bce) {
         throw e;

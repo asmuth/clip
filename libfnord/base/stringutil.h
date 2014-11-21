@@ -7,20 +7,28 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_STRINGUTIL_H_
-#define _FNORDMETRIC_UTIL_STRINGUTIL_H_
+#ifndef _FNORD_BASE_STRINGUTIL_H_
+#define _FNORD_BASE_STRINGUTIL_H_
 
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
 
 namespace fnord {
-namespace util {
 
 class StringUtil {
 public:
 
   static void stripTrailingSlashes(std::string* str);
+
+  static bool endsWith(
+      const std::string& str,
+      const std::string& suffix);
+
+  static void replaceAll(
+      std::string* str,
+      const std::string& pattern,
+      const std::string& replacement);
 
   static std::string hexPrint(
       const void* data,
@@ -30,6 +38,6 @@ public:
 
 };
 
-}
-}
+} // namespace fnord
+
 #endif

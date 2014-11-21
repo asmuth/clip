@@ -1,0 +1,65 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+</style>
+
+<template id="fnordmetric-metric-list-base-tpl">
+  <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+
+  <fn-loader data-loading>
+    <fn-table data-per-page="25">
+      <fn-table-column>Metric</fn-table-column>
+      <fn-table-column>Labels</fn-table-column>
+      <fn-table-column>Last Insert</fn-table-column>
+      <fn-table-column>Total Stored Bytes</fn-table-column>
+    </fn-table>
+  </fn-loader>
+</template>
+
+<script type="text/javascript">
+  var FnordMetricMetricListComponent = function() {
+
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fnordmetric-metric-list", "base");
+      this.appendChild(tpl);
+      this.loadMetricList();
+    };
+
+    this.loadMetricList = function() {
+      var table = this.querySelector("fn-table");
+      var loader = this.querySelector("fn-loader");
+      Fnord.httpGet("/metrics", function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+
+          json.metrics.forEach(function(m) {
+            table.appendRow([
+                m.key,
+                JSON.stringify(m.labels),
+                m.last_insert,
+                m.total_bytes]);
+          });
+
+          loader.removeAttribute("data-loading");
+        } else {
+          FnordMetric.util.displayErrorMessage("Error connecting to server");
+        }
+      });
+    };
+
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent(
+        "fnordmetric-metric-list",
+        FnordMetricMetricListComponent);
+  }, false);
+</script>

@@ -14,6 +14,12 @@ project(fnordmetric)
 option(ENABLE_TESTS "Build unit tests [default: off]" OFF)
 
 set(FNORDMETRIC_SOURCES
+    stage/src/fnord/base/assets.cc
+    stage/src/fnord/base/exception.cc
+    stage/src/fnord/base/stringutil.cc
+    stage/src/fnord/base/uri.cc
+    stage/src/fnord/webui/bundle.cc
+    stage/src/fnord/webui/httpmount.cc
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
     stage/src/fnordmetric/cli/cli.cc
@@ -41,7 +47,6 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sstable/sstablereader.cc
     stage/src/fnordmetric/sstable/sstablerepair.cc
     stage/src/fnordmetric/sstable/sstablewriter.cc
-    stage/src/fnordmetric/util/assets.cc
     stage/src/fnordmetric/util/binarymessagereader.cc
     stage/src/fnordmetric/util/binarymessagewriter.cc
     stage/src/fnordmetric/util/buffer.cc
@@ -57,10 +62,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/util/outputstream.cc
     stage/src/fnordmetric/util/jsonoutputstream.cc
     stage/src/fnordmetric/util/random.cc
-    stage/src/fnordmetric/util/runtimeexception.cc
     stage/src/fnordmetric/util/signalhandler.cc
-    stage/src/fnordmetric/util/stringutil.cc
-    stage/src/fnordmetric/util/uri.cc
     stage/src/fnordmetric/util/wallclock.cc
     stage/src/fnordmetric/ui/axisdefinition.cc
     stage/src/fnordmetric/ui/areachart.cc

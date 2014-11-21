@@ -9,8 +9,8 @@
  */
 #include <dirent.h>
 #include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/stringutil.h>
+#include <fnord/base/exception.h>
+#include <fnord/base/stringutil.h>
 #include <string.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
@@ -91,9 +91,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   auto p1_stripped = p1;
-  util::StringUtil::stripTrailingSlashes(&p1_stripped);
+  fnord::StringUtil::stripTrailingSlashes(&p1_stripped);
   auto p2_stripped = p2;
-  util::StringUtil::stripTrailingSlashes(&p2_stripped);
+  fnord::StringUtil::stripTrailingSlashes(&p2_stripped);
   return p1_stripped + "/" + p2_stripped;
 }
 

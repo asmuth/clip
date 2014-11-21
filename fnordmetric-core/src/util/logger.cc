@@ -9,11 +9,11 @@
  */
 #include <fnordmetric/util/logger.h>
 #include <fnordmetric/util/wallclock.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <sstream>
 #include <stdarg.h>
 
-using fnordmetric::util::RuntimeException;
+using fnord::Exception;
 
 namespace fnord {
 namespace util {
@@ -48,7 +48,7 @@ void Logger::exception(
   entry.append("__message__", message);
 
   try {
-    auto rte = dynamic_cast<const RuntimeException&>(exception);
+    auto rte = dynamic_cast<const fnord::Exception&>(exception);
     entry.append("exception", rte.getTypeName());
     entry.printf("exception", "    in %s", rte.method().c_str());
     entry.printf("exception", "    in %s:%i", rte.file().c_str(), rte.line());

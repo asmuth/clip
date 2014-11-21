@@ -1,0 +1,79 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+</style>
+
+<template id="fnordmetric-app-base-tpl">
+  <fn-appbar>
+  </fn-appbar>
+  <div id="fnordmetric-viewport">
+  </div>
+</template>
+
+<script type="text/javascript">
+  var FnordMetricAppComponent = function() {
+    this.routes = {
+      "metric_list": "fnordmetric-metric-list",
+      "metric_preview": "fnordmetric-metric-preview",
+      "query_editor": "fnordmetric-query-editor"
+    };
+
+    this.default_route = "metric_list";
+
+    this.createdCallback = function() {
+      this.className += " resolved";
+      var tpl = Fnord.getTemplate("fnordmetric-app", "base");
+      this.appendChild(tpl);
+
+      window.onpopstate = (function(base) {
+        return function(e) {
+          e.preventDefault();
+
+          if (e.state != null && typeof e.state.url != "undefined") {
+            base.openUrl(e.state.url);
+          }
+        };
+      })(this);
+
+      var fragment = window.location.hash;
+      if (fragment) {
+        this.openUrl(fragment.substring(1));
+      } else {
+        this.openUrl(this.default_route);
+      }
+    };
+
+    this.openUrl = function(raw_url, push_state) {
+      var url = FnordMetric.util.parseQueryString(raw_url);
+      var query_params = url["query_params"];
+
+      var view_name = this.routes[url["path"]];
+      if (view_name == undefined) {
+        alert("no route found for: " + url["path"]);
+        return;
+      }
+
+      if (typeof push_state == "undefined" || push_state === true) {
+        window.history.pushState({url: raw_url}, "", "#" + raw_url);
+      }
+
+      var viewport = document.querySelector("#fnordmetric-viewport");
+      var view = document.createElement(view_name);
+      view.setAttribute("data-url", raw_url);
+      viewport.innerHTML = "";
+      viewport.appendChild(view);
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fnordmetric-app", FnordMetricAppComponent);
+  }, false);
+</script>

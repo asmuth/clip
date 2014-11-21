@@ -9,14 +9,29 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/adminui.h>
-#include <fnordmetric/util/assets.h>
-#include <fnordmetric/util/uri.h>
+#include <fnord/base/uri.h>
 
 namespace fnordmetric {
 namespace metricdb {
 
 std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
   return std::unique_ptr<http::HTTPHandler>(new AdminUI());
+}
+
+AdminUI::AdminUI() :
+    webui_bundle_("FnordMetric"),
+    webui_mount_(&webui_bundle_) {
+  webui_bundle_.addComponent("fnord/fnord.js");
+  webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
+  webui_bundle_.addComponent("fnord/components/fn-appbar.html");
+  webui_bundle_.addComponent("fnord/components/fn-loader.html");
+  webui_bundle_.addComponent("fnord/components/fn-table.html");
+
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
 }
 
 bool AdminUI::handleHTTPRequest(
@@ -35,7 +50,12 @@ bool AdminUI::handleHTTPRequest(
     env()->logger()->log(log_entry);
   }
 
-  util::URI uri(request->getUrl());
+  webui_bundle_.build();
+  if (webui_mount_.handleHTTPRequest(request, response)) {
+    return true;
+  }
+
+  fnord::URI uri(request->getUrl());
   auto path = uri.path();
 
   if (path == "/") {
@@ -45,64 +65,7 @@ bool AdminUI::handleHTTPRequest(
     return true;
   }
 
-  if (path == "/admin") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-webui.html",
-        "text/html; charset=utf-8");
-    return true;
-  }
-
-  if (path == "/favicon.ico") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-favicon.ico",
-        "image/x-icon");
-    return true;
-  }
-
-  if (path == "/s/fnordmetric.js") {
-    sendAsset(
-        response,
-        "fnordmetric-js/fnordmetric.js",
-        "text/javascript");
-    return true;
-  }
-
-  if (path == "/s/fnordmetric-webui.css") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-webui.css",
-        "text/css");
-    return true;
-  }
-
-  if (path == "/s/fnordmetric-webui.js") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fnordmetric-webui.js",
-        "text/javascript");
-    return true;
-  }
-
-  if (path == "/s/fontawesome.woff") {
-    sendAsset(
-        response,
-        "fnordmetric-webui/fontawesome.woff",
-        "application/x-font-woff");
-    return true;
-  }
-
   return false;
-}
-
-void AdminUI::sendAsset(
-    http::HTTPResponse* response,
-    const std::string& asset_path,
-    const std::string& content_type) const {
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", content_type);
-  response->addBody(util::Assets::getAsset(asset_path));
 }
 
 

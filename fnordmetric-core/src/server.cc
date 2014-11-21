@@ -27,7 +27,7 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/random.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/util/signalhandler.h>
 #include <fnordmetric/thread/threadpool.h>
 
@@ -230,7 +230,7 @@ int main(int argc, const char** argv) {
 
   try {
     return startServer();
-  } catch (const fnordmetric::util::RuntimeException& e) {
+  } catch (const fnord::Exception& e) {
     auto err_stream = fnordmetric::util::OutputStream::getStderr();
     auto msg = e.getMessage();
     err_stream->printf("[ERROR] ");

@@ -77,7 +77,7 @@ void QueryService::executeQuery(
         RAISE(kRuntimeError, "can't handle this output format");
 
     }
-  } catch (util::RuntimeException e) {
+  } catch (fnord::Exception e) {
     e.appendMessage(" while executing query: %s", query_string.c_str());
     throw e;
   }

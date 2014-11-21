@@ -8,12 +8,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-if (FnordMetric === undefined) {
+if (typeof FnordMetric == "undefined") {
   FnordMetric = {};
 }
 
-if (FnordMetric.util === undefined) {
+if (typeof FnordMetric.util == "undefined") {
   FnordMetric.util = {};
 }
 

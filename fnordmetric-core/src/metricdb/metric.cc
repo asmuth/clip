@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace metricdb {

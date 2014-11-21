@@ -20,7 +20,7 @@
 #include <fnordmetric/ui/drawable.h>
 #include <fnordmetric/ui/rendertarget.h>
 #include <fnordmetric/ui/seriesjoin.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace ui {

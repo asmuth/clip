@@ -10,7 +10,7 @@
 #include <fnordmetric/sstable/binaryformat.h>
 #include <fnordmetric/sstable/fileheaderreader.h>
 #include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnord {
 namespace sstable {

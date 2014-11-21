@@ -11,9 +11,9 @@
 #include <fnordmetric/sstable/sstablereader.h>
 #include <fnordmetric/sstable/sstablerepair.h>
 #include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
-using fnordmetric::util::RuntimeException;
+using fnord::Exception;
 
 namespace fnord {
 namespace sstable {
@@ -28,7 +28,7 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
 
   try {
     reader_.reset(new sstable::SSTableReader(std::move(file)));
-  } catch (RuntimeException& rte) {
+  } catch (fnord::Exception& rte) {
     fnordmetric::env()->logger()->printf(
         "INFO",
         "SSTableRepair: sstable %s header is corrupt: %s",
@@ -48,7 +48,7 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
       void* dummy_data;
       size_t dummy_size;
       reader_->readFooter(0, &dummy_data, &dummy_size);
-    } catch (RuntimeException& rte) {
+    } catch (fnord::Exception& rte) {
       fnordmetric::env()->logger()->printf(
           "INFO",
           "SSTableRepair: sstable %s footer is corrupt: %s",

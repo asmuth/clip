@@ -47,7 +47,7 @@ void CompactionTask::run() const {
         if (disk_metric != nullptr) {
           disk_metric->compact();
         }
-      } catch (util::RuntimeException e) {
+      } catch (fnord::Exception e) {
         env()->logger()->printf(
             "ERROR",
             "uncaught exception while executing Metric#compact(): %s\n");

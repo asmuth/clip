@@ -13,20 +13,26 @@ Fnord = {
 };
 
 Fnord.getTemplate = function(component, template) {
-  var i = document.querySelector("link[data-component='" + component + "']");
+  var template_selector = "#" + component + "-" + template + "-tpl";
 
-  if (!i) {
+  var template = document.querySelector(template_selector);
+  if (!template) {
+    var template_import = document.querySelector(
+        "link[data-component='" + component + "']");
+
+    if (!template_import) {
+      return null;
+    }
+
+    template = template_import.import.querySelector(template_selector);
+  }
+
+  if (!template) {
     return null;
   }
 
-  var t = i.import.querySelector("#" + component + "-" + template + "-tpl");
-
-  if (!t) {
-    return null;
-  }
-
-  return document.importNode(t.content, true);
-}
+  return document.importNode(template.content, true);
+};
 
 Fnord.registerComponent = function(component, cb) {
   var proto = Object.create(HTMLElement.prototype);
@@ -34,4 +40,39 @@ Fnord.registerComponent = function(component, cb) {
   Fnord.components[component] = proto;
   document.registerElement(component, { prototype: proto });
   return proto;
-}
+};
+
+Fnord.ready = function() {
+  window.dispatchEvent(new Event("fn-ready"));
+  document.body.removeAttribute("data-unresolved");
+};
+
+Fnord.httpGet = function(url, callback) {
+  var http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+
+  var base = this;
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      callback(http);
+    }
+  }
+};
+
+Fnord.httpPost = function(url, request, callback) {
+  var http = new XMLHttpRequest();
+  http.open("POST", url, true);
+  var start = (new Date()).getTime();
+  http.send(request);
+
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      var end = (new Date()).getTime();
+      var duration = end - start;
+      callback(http, duration);
+    }
+  }
+};
+
+Fnord.ready();

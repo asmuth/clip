@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace util {

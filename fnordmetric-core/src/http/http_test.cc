@@ -16,7 +16,7 @@
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 using namespace fnord::http;
 using fnord::http::HTTPInputStream;

@@ -7,14 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_URI_H
-#define _FNORDMETRIC_UTIL_URI_H
+#ifndef _FNORD_BASE_URI_H
+#define _FNORD_BASE_URI_H
 #include <string>
 #include <vector>
 #include <utility>
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
 
 class URI {
 public:
@@ -64,6 +63,6 @@ protected:
   std::string fragment_;
 };
 
-}
-}
+} // namespace fnord
+
 #endif

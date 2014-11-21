@@ -8,63 +8,75 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style type="text/css">
+  fn-table {
+    display: none;
+  }
+
+  fn-table[data-resolved]{
+    display: block;
+  }
+</style>
+
 <template id="fn-table-base-tpl">
   <style type="text/css">
     table {
       width: 100%;
+      border-spacing: 0;
       border-collapse: collapse;
+      background-color: transparent;
     }
 
-    table th,
-    table td {
+    table > thead > tr > th,
+    table > tbody > tr > th,
+    table > tfoot > tr > th,
+    table > thead > tr > td,
+    table > tbody > tr > td,
+    table > tfoot > tr > td {
       text-align: left;
       font-weight: 400;
       border: none;
-      padding: 8px 20px;
-    }
-
-    table tr {
-      border-bottom: 1px solid #ececec;
-    }
-
-    table th {
-      border-right: 1px solid #ececec;
-    }
-
-    table tr.header {
+      padding: 8px;
+      line-height: 1.42857143;
+      vertical-align: top;
       border-top: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
-      background-color: #fcfcfc;
     }
 
-    table tr.header i.sort {
-      float: right;
-      line-height: 40px;
+    table > thead > tr > th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #ddd;
     }
 
-    table.clickable tr:hover td {
-      background-color: #f6f8fa;
-      cursor: pointer;
+    table > thead > tr:first-child > th {
+      border-top: none;
     }
+
   </style>
 
   <table>
-    <tr class="header">
-    </tr>
+    <thead>
+      <tr></tr>
+    </thead>
+    <tbody>
+    </tbody>
   </table>
 </template>
 
 <script type="text/javascript">
-  var table = Fnord.registerComponent("fn-table", function() {
-
+  var TableComponent = function() {
     this.createdCallback = function() {
+      if (this.querySelector("table") == null) {
+        this.appendChild(document.createElement("table"));
+      }
+
       this.createShadowRoot();
       this.renderTable();
+      this.setAttribute("data-resolved", "data-resolved");
     };
 
     this.renderTable = function() {
       var tpl = Fnord.getTemplate("fn-table", "base");
-      var header_row = tpl.querySelector("tr.header");
+      var header_row = tpl.querySelector("table > thead > tr");
 
       this.forEachColumn(function(col) {
         var th_elem = document.createElement("th");
@@ -78,17 +90,14 @@
     };
 
     this.renderRows = function() {
-      var tbl = this.shadowRoot.querySelector("table");
-      var old_rows = tbl.querySelectorAll("tr.row");
-      for (var i = 0; i < old_rows.length; ++i) {
-        tbl.removeChild(old_rows[i]);
-      }
+      var tbody = this.shadowRoot.querySelector("table > tbody");
+      tbody.innerHTML = "";
 
       this.forEachRowWithPagination(function(row) {
         var tr_elem = document.createElement("tr");
         tr_elem.className = "row";
         tr_elem.innerHTML = row.innerHTML;
-        tbl.appendChild(tr_elem);
+        tbody.appendChild(tr_elem);
       });
     }
 
@@ -197,5 +206,19 @@
       }
     }
 
-  });
+    this.appendRow = function(row) {
+      var tr_elem = document.createElement("tr");
+      row.forEach(function(c) {
+        var td_elem = document.createElement("td");
+        td_elem.innerHTML = c;
+        tr_elem.appendChild(td_elem);
+      });
+      this.querySelector("table").appendChild(tr_elem);
+      this.renderTable();
+    }
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-table", TableComponent);
+  }, false);
 </script>

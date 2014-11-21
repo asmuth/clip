@@ -9,12 +9,12 @@
  */
 #include <stdlib.h>
 #include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnord {
 namespace util {
 
-using fnordmetric::util::RuntimeException;
+using fnord::Exception;
 
 CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler(
     Logger* logger) :
@@ -34,7 +34,7 @@ void CatchAndAbortExceptionHandler::onException(
   fprintf(stderr, "%s\n\n", message_.c_str()); // FIXPAUL
 
   try {
-    auto rte = dynamic_cast<const RuntimeException&>(error);
+    auto rte = dynamic_cast<const fnord::Exception&>(error);
     rte.debugPrint();
   } catch (const std::exception& cast_error) {
     fprintf(stderr, "foreign exception: %s\n", error.what());
@@ -52,7 +52,7 @@ static void globalEHandler() {
     throw;
   } catch (const std::exception& e) {
     try {
-      auto rte = dynamic_cast<const RuntimeException&>(e);
+      auto rte = dynamic_cast<const fnord::Exception&>(e);
       rte.debugPrint();
       exit(1);
     } catch (...) {

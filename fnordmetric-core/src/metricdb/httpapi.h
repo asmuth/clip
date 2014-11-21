@@ -14,7 +14,7 @@
 #include <fnordmetric/http/httprequest.h>
 #include <fnordmetric/http/httpresponse.h>
 #include <fnordmetric/util/jsonoutputstream.h>
-#include <fnordmetric/util/uri.h>
+#include <fnord/base/uri.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -36,22 +36,22 @@ protected:
   void renderMetricList(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
-      util::URI* uri);
+      fnord::URI* uri);
 
   void renderMetricSampleScan(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
-      util::URI* uri);
+      fnord::URI* uri);
 
   void insertSample(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
-      util::URI* uri);
+      fnord::URI* uri);
 
   void executeQuery(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
-      util::URI* uri);
+      fnord::URI* uri);
 
   void renderMetricJSON(
       IMetric* metric,

@@ -37,7 +37,7 @@ public:
   ~HTTPInputStream();
 
   /**
-   * Read the http status line. Throws a RuntimeException for invalid requests.
+   * Read the http status line. Throws a fnord::Exception for invalid requests.
    * Might throw a io::WouldBlockException if the InputStream is non blocking.
    */
   void readStatusLine(
@@ -46,7 +46,7 @@ public:
       std::string* version);
 
   /**
-   * Read the http headers. Throws a RuntimeException for invalid requests.
+   * Read the http headers. Throws a fnord::Exception for invalid requests.
    * Might throw a io::WouldBlockException if the InputStream is non blocking
    */
   void readHeaders(

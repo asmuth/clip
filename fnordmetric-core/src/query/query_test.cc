@@ -27,8 +27,8 @@
 #include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/uri.h>
+#include <fnord/base/exception.h>
 
 using namespace fnordmetric::query;
 
@@ -71,7 +71,7 @@ public:
 
   bool openTables(
     const std::vector<std::string>& table_names,
-    const fnordmetric::util::URI& source_uri,
+    const fnord::URI& source_uri,
     std::vector<std::unique_ptr<TableRef>>* target) {
     EXPECT_EQ(source_uri.scheme(), "testtable");
     target->emplace_back(new TestTableRef());
