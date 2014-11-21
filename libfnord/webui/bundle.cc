@@ -11,6 +11,7 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/webui/bundle.h"
+#include <fnordmetric/io/fileutil.h>
 
 namespace fnord {
 namespace webui {
@@ -20,7 +21,7 @@ static const char kBaseHTML[] = R"html(<!DOCTYPE html>
   <head>
     <title>{{title}}</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-type" />
-    <link href="{{basepath}}application.css" rel="stylesheet" type="text/css" />
+    <link href="{{app_css_path}}" rel="stylesheet" type="text/css" />
     <link href="/favicon.ico" rel="icon" type="image/x-icon" />
     <style type="text/css">
       body[data-unresolved] * { display: none; }
@@ -28,7 +29,7 @@ static const char kBaseHTML[] = R"html(<!DOCTYPE html>
   </head>
   <body data-unresolved>
     {{body}}
-    <script src="{{basepath}}application.js" type="text/javascript"></script>
+    <script src="{{app_js_path}}" type="text/javascript"></script>
   </body>
 </html>
 )html";
@@ -43,11 +44,14 @@ void Bundle::build(const std::string& base_path /* = "/" */) {
   std::lock_guard<std::mutex> lock_holder(mutex_);
 
   app_html_ = kBaseHTML;
-  app_js_.clear();
   app_css_.clear();
+  app_js_.clear();
 
-  StringUtil::replaceAll(&app_html_, "{{basepath}}", base_path);
   StringUtil::replaceAll(&app_html_, "{{title}}", title_);
+  StringUtil::replaceAll(&app_html_, "{{app_css_path}}",
+      io::FileUtil::joinPaths(base_path, "application.css"));
+  StringUtil::replaceAll(&app_html_, "{{app_js_path}}",
+      io::FileUtil::joinPaths(base_path, "application.js"));
 
   auto body_cur = app_html_.find("{{body}}");
   if (body_cur == std::string::npos) {

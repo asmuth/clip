@@ -13,7 +13,12 @@
 
 <template id="fnordmetric-app-base-tpl">
   <fn-appbar>
+    <fn-appbar-section data-position="right" />
+      <fn-icon data-icon="search"></fn-icon>
+      <fn-search></fn-search>
+    </fn-appbar-section>
   </fn-appbar>
+
   <div id="fnordmetric-viewport">
   </div>
 </template>
@@ -21,12 +26,13 @@
 <script type="text/javascript">
   var FnordMetricAppComponent = function() {
     this.routes = {
-      "metric_list": "fnordmetric-metric-list",
-      "metric_preview": "fnordmetric-metric-preview",
-      "query_editor": "fnordmetric-query-editor"
+      "metrics": "fnordmetric-metric-list",
+      "metric": "fnordmetric-metric-preview",
+      "search": "fnordmetric-metric-search",
+      "query": "fnordmetric-query-editor"
     };
 
-    this.default_route = "metric_list";
+    this.default_route = "metrics";
 
     this.createdCallback = function() {
       this.className += " resolved";

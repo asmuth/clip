@@ -20,11 +20,13 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
 
 AdminUI::AdminUI() :
     webui_bundle_("FnordMetric"),
-    webui_mount_(&webui_bundle_) {
+    webui_mount_(&webui_bundle_, "/admin") {
   webui_bundle_.addComponent("fnord/fnord.js");
   webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
+  webui_bundle_.addComponent("fnord/components/fn-icon.html");
   webui_bundle_.addComponent("fnord/components/fn-loader.html");
+  webui_bundle_.addComponent("fnord/components/fn-search.html");
   webui_bundle_.addComponent("fnord/components/fn-table.html");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
@@ -52,7 +54,6 @@ bool AdminUI::handleHTTPRequest(
     env()->logger()->log(log_entry);
   }
 
-  webui_bundle_.build();
   if (webui_mount_.handleHTTPRequest(request, response)) {
     return true;
   }

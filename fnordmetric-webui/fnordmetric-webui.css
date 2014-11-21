@@ -12,6 +12,10 @@ h1.page_header {
   margin: 0 0 0 20px;
 }
 
+fn-appbar /deep/ fn-search {
+  width: 360px;
+}
+
 /*
 
 body, html {
