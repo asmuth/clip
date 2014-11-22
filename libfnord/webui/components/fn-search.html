@@ -83,30 +83,8 @@
       background-color: #f5f5f5;
     }
 
-    .close_icon {
-      text-decoration: none;
-      outline: 0;
-      visibility: hidden;
-      width: 15px;
-      height: 15px;
-      position: relative;
-      z-index:1;
-      right: 5px;
-      top: 25px;
-      float:right;
-      padding: 2px;
-      text-align: center;
-      font-weight: normal;
-      font-size: 16px;
-      cursor: pointer;
-      background: #fff;
-      border: none;
-      color: rgba(0,0,0,.4);;
-    }
-
   </style>
 
-  <a href='#' class='close_icon'>X</a>
   <input />
   <ul></ul>
 
@@ -123,11 +101,9 @@
       var min_length = 1;
 
       input.addEventListener('input', function() {
-        base.showClearButton();
         if (this.value.length >= min_length) {
           base.fireAutoCompleteEvent();
         } else {
-          base.hideClearButton();
           base.closeDropDownMenu();
         }
       }, false);
@@ -225,26 +201,8 @@
       this.fireSearchSubmitEvent();
     };
 
-    this.showClearButton = function() {
-      var input = this.shadowRoot.querySelector("input");
-      var clear_btn = this.shadowRoot.querySelector(".close_icon");
-      clear_btn.style.visibility = "visible";
-      var base = this;
 
-      clear_btn.onclick = function(e) {
-        e.preventDefault();
-        input.value = "";
-        base.closeDropDownMenu();
-        base.hideClearButton();
-        base.fireSearchClearEvent();
-      }
-    };
 
-    this.hideClearButton = function() {
-      var input = this.shadowRoot.querySelector("input");
-      var clear_btn = this.shadowRoot.querySelector(".close_icon");
-      clear_btn.style.visibility = "hidden";
-    };
 
     this.openDropDownMenu = function(items) {
       var list = this.shadowRoot.querySelector("ul");
@@ -291,9 +249,7 @@
       this.dispatchEvent(new Event('fn-search-submit'));
     };
 
-    this.fireSearchClearEvent = function() {
-      this.dispatchEvent(new Event('fn-search-clear'));
-    };
+
 
   };
 
