@@ -1,0 +1,44 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+</style>
+
+<template id="fnordmetric-search-metric-list-base-tpl">
+  <fn-loader data-loading data-loader-type="loader3">
+    <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+    <fn-table data-per-page="25" data-clickable>
+      <fn-table-column>Metric</fn-table-column>
+      <fn-table-column>Labels</fn-table-column>
+      <fn-table-column>Last Insert</fn-table-column>
+      <fn-table-column>Total Stored Bytes</fn-table-column>
+    </fn-table>
+  </fn-loader>
+</template>
+
+
+<script type="text/javascript">
+  var FnordMetricMetricListComponent = function() {
+
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fnordmetric-search-metric-list", "base");
+      this.appendChild(tpl);
+      this.loadMetricList();
+    };
+
+   console.log("fn search");
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent(
+        "fnordmetric-search-metric-list",
+        FnordMetricMetricListComponent);
+  }, false);
+</script>

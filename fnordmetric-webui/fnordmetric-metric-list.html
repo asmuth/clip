@@ -74,7 +74,6 @@
           var json = JSON.parse(r.response);
 
           json.metrics.forEach(function(m) {
-            console.log(this);
             table.appendRow([
                 m.key,
                 m.labels.join(", "),
