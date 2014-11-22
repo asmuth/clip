@@ -31,6 +31,7 @@
       console.log("search");
       var tpl = Fnord.getTemplate("fnordmetric-metric-search", "base");
       this.appendChild(tpl);
+      //when attrivuteChangedCallback
       this.loadMetricList();
     };
 
@@ -38,13 +39,13 @@
       var table = this.querySelector("fn-table");
       var loader = this.querySelector("fn-loader");
 
-      console.log(this.getAttribute('data-url'));
       var params = FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
       var search_term = params.query_params.innerViewValue;
       var url = "/metrics?filter=" + search_term;
-      console.log(search_term);
 
       var base = this;
+      var app = document.querySelector("fnordmetric-app");
+
       Fnord.httpGet(url , function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
@@ -72,9 +73,17 @@
           FnordMetric.util.displayErrorMessage("Error connecting to server");
         }
       });
+
       table.addEventListener('fn-table-row-click', function(e) {
-        var row_id = e.srcElement;
-        console.log(row_id);
+        var metric_key = e.srcElement.getAttribute('metric-key');
+        var end = Date.now();
+        var start = end - 3600000;
+        var raw_url = 
+          "metric_list?metric="+ metric_key +
+          "&view=value&start_time=" + start +
+          "&end_time=" + end;
+        app.openUrl(raw_url);
+
       }, false);
     }
   };

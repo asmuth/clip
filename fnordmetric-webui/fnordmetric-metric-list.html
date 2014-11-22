@@ -69,6 +69,8 @@
       var loader = this.querySelector("fn-loader");
 
       var base = this;
+      var app = document.querySelector("fnordmetric-app");
+
       Fnord.httpGet("/metrics", function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
@@ -96,6 +98,19 @@
           FnordMetric.util.displayErrorMessage("Error connecting to server");
         }
       });
+
+      table.addEventListener('fn-table-row-click', function(e) {
+        var metric_key = e.srcElement.getAttribute('metric-key');
+        var end = Date.now();
+        var start = end - 3600000;
+        var raw_url = 
+          "metric_list?metric="+ metric_key +
+          "&view=value&start_time=" + start +
+          "&end_time=" + end;
+        app.openUrl(raw_url);
+
+      }, false);
+
     };
 
   };
