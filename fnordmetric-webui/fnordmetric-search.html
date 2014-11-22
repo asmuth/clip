@@ -13,7 +13,7 @@
 
 <template id="fnordmetric-metric-search-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
-    <h1 class="page_header"><i>Metrics</i> &rsaquo; Search Metrics</h1>
+    <h1 class="page_header"><i>Metrics</i> &rsaquo; Search </h1>
     <fn-table data-per-page="25" data-clickable>
       <fn-table-column>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
@@ -28,12 +28,16 @@
   var FnordMetricSearchComponent = function() {
 
     this.createdCallback = function() {
-      console.log("search");
       var tpl = Fnord.getTemplate("fnordmetric-metric-search", "base");
       this.appendChild(tpl);
       //when attrivuteChangedCallback
       this.loadMetricList();
     };
+
+    this.updateHeader = function(search_term) {
+      var header = this.querySelector("h1");;
+      header.innerHTML += " " + search_term;
+    }
 
     this.loadMetricList = function() {
       var table = this.querySelector("fn-table");
@@ -41,6 +45,9 @@
 
       var params = FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
       var search_term = params.query_params.innerViewValue;
+
+      this.updateHeader(search_term);
+
       var url = "/metrics?filter=" + search_term;
 
       var base = this;
@@ -79,7 +86,7 @@
         var end = Date.now();
         var start = end - 3600000;
         var raw_url = 
-          "metric_list?metric="+ metric_key +
+          "metric?key="+ metric_key +
           "&view=value&start_time=" + start +
           "&end_time=" + end;
         app.openUrl(raw_url);

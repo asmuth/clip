@@ -104,7 +104,7 @@
         var end = Date.now();
         var start = end - 3600000;
         var raw_url = 
-          "metric_list?metric="+ metric_key +
+          "metric?key="+ metric_key +
           "&view=value&start_time=" + start +
           "&end_time=" + end;
         app.openUrl(raw_url);
