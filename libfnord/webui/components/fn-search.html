@@ -100,6 +100,10 @@
       var base = this;
       var min_length = 1;
 
+      input.addEventListener('focus', function() {
+        this.value = "";
+      }, false);
+
       input.addEventListener('input', function() {
         if (this.value.length >= min_length) {
           base.fireAutoCompleteEvent();
@@ -128,6 +132,10 @@
           default:
             break;
         }
+      }, false);
+
+      window.addEventListener('click', function() {
+        base.closeDropDownMenu();
       }, false);
 
       shadow.appendChild(tpl);
@@ -201,8 +209,6 @@
     };
 
 
-
-
     this.openDropDownMenu = function(items) {
       var list = this.shadowRoot.querySelector("ul");
       list.innerHTML = "";
@@ -215,6 +221,7 @@
         list.appendChild(list_elem);
 
         list_elem.onclick = function(e) {
+          e.stopPropagation();
           e.preventDefault();
           base.submitSearch(this.innerText);
         }
@@ -247,8 +254,6 @@
     this.fireSearchSubmitEvent = function() {
       this.dispatchEvent(new Event('fn-search-submit'));
     };
-
-
 
   };
 
