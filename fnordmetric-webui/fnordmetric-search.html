@@ -11,9 +11,9 @@
 <style type="text/css">
 </style>
 
-<template id="fnordmetric-search-metric-list-base-tpl">
+<template id="fnordmetric-metric-search-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
-    <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+    <h1 class="page_header"><i>Metrics</i> &rsaquo; Search Metrics</h1>
     <fn-table data-per-page="25" data-clickable>
       <fn-table-column>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
@@ -25,20 +25,65 @@
 
 
 <script type="text/javascript">
-  var FnordMetricMetricListComponent = function() {
+  var FnordMetricSearchComponent = function() {
 
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fnordmetric-search-metric-list", "base");
+      console.log("search");
+      var tpl = Fnord.getTemplate("fnordmetric-metric-search", "base");
       this.appendChild(tpl);
       this.loadMetricList();
     };
 
-   console.log("fn search");
+    this.loadMetricList = function() {
+      var table = this.querySelector("fn-table");
+      var loader = this.querySelector("fn-loader");
+
+      console.log(this.getAttribute('data-url'));
+      var params = FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
+      var search_term = params.query_params.innerViewValue;
+      var url = "/metrics?filter=" + search_term;
+      console.log(search_term);
+
+      var base = this;
+      Fnord.httpGet(url , function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+
+          json.metrics.forEach(function(m) {
+            var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', m.key);
+            var cells = [
+              m.key,
+              m.labels.join(", "),
+              FnordMetric.util.parseTimestamp(m.last_insert),
+              m.total_bytes];
+
+            cells.map(function(cell) {
+              var td_elem = document.createElement("td");
+              td_elem.innerHTML = cell;
+              tr_elem.appendChild(td_elem);
+            });
+
+            table.appendRow(tr_elem);
+          });
+
+          loader.removeAttribute("data-loading");
+        } else {
+          FnordMetric.util.displayErrorMessage("Error connecting to server");
+        }
+      });
+      table.addEventListener('fn-table-row-click', function(e) {
+        var row_id = e.srcElement;
+        console.log(row_id);
+      }, false);
+    }
   };
+
+
 
   window.addEventListener("fn-ready", function() {
     Fnord.registerComponent(
-        "fnordmetric-search-metric-list",
-        FnordMetricMetricListComponent);
+        "fnordmetric-metric-search",
+         FnordMetricSearchComponent);
   }, false);
 </script>

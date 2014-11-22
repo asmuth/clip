@@ -74,11 +74,21 @@
           var json = JSON.parse(r.response);
 
           json.metrics.forEach(function(m) {
-            table.appendRow([
-                m.key,
-                m.labels.join(", "),
-                base.createTimeDescr(m.last_insert),
-                m.total_bytes]);
+            var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', m.key);
+            var cells = [
+              m.key,
+              m.labels.join(", "),
+              FnordMetric.util.parseTimestamp(m.last_insert),
+              m.total_bytes];
+
+            cells.map(function(cell) {
+              var td_elem = document.createElement("td");
+              td_elem.innerHTML = cell;
+              tr_elem.appendChild(td_elem);
+            });
+
+            table.appendRow(tr_elem);
           });
 
           loader.removeAttribute("data-loading");

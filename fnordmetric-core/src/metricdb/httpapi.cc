@@ -90,43 +90,36 @@ void HTTPAPI::renderMetricList(
   json.beginArray();
 
   fnord::URI::ParamList params = uri->queryParams();
+  std::string filter_query;
+  auto filter_enabled = fnord::URI::getParam(params, "filter", &filter_query);
 
-
-  /*const std::string& filter;
-  const std::string& limit;
-  if (fnord::URI::getParam(params, "filter", &metric_key)) {
-    for (const auto& param : params) {
-      if (param.first == "filter") {
-        filter = param.second;
-      } else if (param.first == "limit") {
-        limit = param.second;
-      }
-    }
-  }*/
-
-
-  int i = 0;
-  std::string metric_key;
-  for (const auto& metric : metric_repo_->listMetrics()) {
-    if (fnord::URI::getParam(params, "filter", &metric_key)) {
-      for (const auto& param : params) {
-        const auto& key = param.first;
-        const auto& value = param.second;
-
-        if (key == "filter") {
-          if ((metric->key()).find(value) != std::string::npos) {
-            if (i++ > 0) { json.addComma(); }
-            renderMetricJSON(metric, &json);
-          }
-        }
-      }
-
-    } else {
-      if (i++ > 0) { json.addComma(); }
-      renderMetricJSON(metric, &json);
+  int limit = -1;
+  std::string limit_string;
+  if (fnord::URI::getParam(params, "limit", &limit_string)) {
+    try {
+      limit = std::stoi(limit_string);
+    } catch (const std::exception& e) {
+      /* fallthrough */
     }
   }
 
+  int i = 0;
+  for (const auto& metric : metric_repo_->listMetrics()) {
+    if (filter_enabled &&
+        metric->key().find(filter_query) == std::string::npos) {
+      continue;
+    }
+
+    if (i++ > 0) {
+      json.addComma();
+    }
+
+    renderMetricJSON(metric, &json);
+
+    if (limit > 0 && i == limit) {
+      break;
+    }
+  }
 
   json.endArray();
   json.endObject();
