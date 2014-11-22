@@ -8,37 +8,10 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<html>
-  <head>
-    <title>Fnord Table Examples</title>
 
-    <style type="text/css">
-      body, html {
-        margin: 0;
-        padding: 0 0 60px 0;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        line-height: 22px;
-      }
-
-      h1 {
-        margin-left: 20px;
-      }
-
-      hr {
-        margin: 120px 0 0 0;
-      }
-    </style>
-  </head>
-  <body>
-    <link rel="import" href="fn-appbar.html" data-component="fn-appbar">
-    <link rel="import" href="fn-table.html" data-component="fn-table">
-
-    <fn-appbar>
-
-    </fn-appbar>
-
-    <!-- Example 1: Simple Sortable Table -->
+<template id="fn-table-demo-base-tpl">
+  <!-- Example 1: Simple Sortable Table -->
+  <section>
     <h1><i>Example 1 &raquo;</i> Simple Sortable Table</h1>
     <fn-table id="example-table-1">
       <fn-table-column data-sortable>A</fn-table-column>
@@ -51,9 +24,10 @@
         <tr><td>9</td><td>9</td></tr>
       </table>
     </fn-table>
-    <hr />
+  </section>
 
-    <!-- Example 1: Clickable Sortable Table -->
+  <!-- Example 1: Clickable Sortable Table -->
+  <section>
     <h1><i>Example 2 &raquo;</i> Clickable Sortable Table</h1>
     <fn-table id="example-table-2" data-clickable>
       <fn-table-column>A</fn-table-column>
@@ -72,11 +46,11 @@
         alert(e.srcElement.getAttribute("data-row-id"));
       }, false);
     </script>
-    <hr />
+  </section>
 
-    <!-- Example 3: Selectable Sortable Table -->
+  <!-- Example 3: Selectable Sortable Table -->
+  <section>
     <h1><i>Example 3 &raquo;</i> Selectable Sortable Table</h1>
-    <i>Selected: <span id="example-table-3-desc"></span></i>
     <fn-table id="example-table-3" data-selectable>
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
@@ -88,6 +62,7 @@
         <tr data-row-id="row4"><td>9</td><td>9</td></tr>
       </table>
     </fn-table>
+    <i>Selected: <span id="example-table-3-desc"></span></i>
     <script type="text/javascript">
       var tbl3 = document.body.querySelector("#example-table-3");
       var tbl3_desc = document.body.querySelector("#example-table-3-desc");
@@ -106,14 +81,14 @@
       tbl3.addEventListener("fn-table-row-select", updateTbl3Desc, false);
       tbl3.addEventListener("fn-table-row-deselect", updateTbl3Desc, false);
     </script>
-    <hr />
+  </section>
 
-    <!-- Example 4: Paginated Table -->
+  <!-- Example 4: Paginated Table -->
+  <section>
     <h1><i>Example 4 &raquo;</i> Paginated Table</h1>
     <fn-table id="example-table-4" data-per-page="3" data-page="0">
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
-
       <table>
         <tr><td>0</td><td>Z</td></tr>
         <tr><td>1</td><td>G</td></tr>
@@ -127,7 +102,6 @@
         <tr><td>9</td><td>A</td></tr>
       </table>
     </fn-table>
+  </section>
 
-    <script type="text/javascript" src="../fnord.js"></script>
-  </body>
-</html>
+</template>

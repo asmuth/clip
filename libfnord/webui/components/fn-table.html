@@ -183,6 +183,7 @@
 
           if (row.getAttribute("data-selected") != null) {
             select_input.setAttribute("checked", "checked");
+            tr_elem.setAttribute("data-selected", true);
           }
 
           var select_td = document.createElement("td");

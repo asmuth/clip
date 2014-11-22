@@ -8,35 +8,30 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<html>
-  <head>
-    <title>Fnord Search Examples</title>
-    <style type="text/css">
-      body, html {
-        margin: 0;
-        padding: 0;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 14px;
-      }
 
-      body {
-        padding: 20px 100px;
-      }
+<template id="fn-search-demo-base-tpl">
 
-      h1 {
-        margin-top: 60px;
-        font-size: 140%;
-      }
-    </style>
-  </head>
-  <body>
-    <link rel="import" href="fn-search.html" data-component="fn-search" />
-
-    <!-- Example 1: Plain Search Field -->
-    <fn-search id="search-example-1"></fn-search>
+  <section>
+    <h1><i>fn-search &rsaquo;</i> Search With Autcomplete</h1>
+    <fn-search id="search-example-1" style="width: 100%;"></fn-search>
 
     <script type="text/javascript">
       document.querySelector("#search-example-1").addEventListener(
+        "fn-search-submit",
+        function(e) {
+          var search_term = e.srcElement.getValue();
+          alert("Search for:" + search_term);
+        },
+        false);
+    </script>
+  </section>
+
+  <section>
+    <h1><i>fn-search &rsaquo;</i> Search With Autcomplete</h1>
+    <fn-search id="search-example-2" style="width: 100%;"></fn-search>
+
+    <script type="text/javascript">
+      document.querySelector("#search-example-2").addEventListener(
           "fn-search-autocomplete",
           function(e) {
             var term = e.srcElement.getValue();
@@ -45,15 +40,14 @@
           },
           false);
 
-      document.querySelector("#search-example-1").addEventListener(
+      document.querySelector("#search-example-2").addEventListener(
         "fn-search-submit",
         function(e) {
           var search_term = e.srcElement.getValue();
-          console.log(search_term);
+          alert("Search for:" + search_term);
         },
         false);
     </script>
+  </section>
 
-    <script type="text/javascript" src="../fnord.js"></script>
-  </body>
-</html>
+</template>
