@@ -62,7 +62,8 @@ fn-table /deep/ table > tbody > tr {
   border-bottom: 1px solid rgb(226, 232, 237);
 }
 
-fn-table /deep/ table.clickable tbody > tr:hover {
+fn-table /deep/ table.clickable tbody > tr:hover,
+fn-table /deep/ table.selectable tbody > tr[data-selected] {
   background-color: #f6f8fa;
 }
 

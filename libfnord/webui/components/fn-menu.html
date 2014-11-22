@@ -1,0 +1,105 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-menu-base-tpl">
+  <style type="text/css">
+    ul, li {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul.menu > li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    ul.menu > li.item {
+      padding: 10px 15px;
+    }
+
+    ul.menu > li.item:hover,
+    ul.menu > li > ul > li.item:hover {
+      background: #f2f2f2;
+      cursor: pointer;
+    }
+
+    ul.menu > li > .submenu_title {
+      padding: 0 15px 4px 15px;
+      font-weight: bold;
+    }
+
+    ul.menu > li > ul > li {
+      padding: 4px 15px;
+    }
+
+    ul.menu > li > ul > li > ul {
+      padding-left: 15px;
+    }
+
+    ul.menu > li > ul > li > .submenu_title {
+      padding-bottom: 2px;
+    }
+
+    ul.menu > li > ul > li > ul > li {
+      padding: 4px 0;
+    }
+
+  </style>
+  <ul class="menu">
+  </span>
+</template>
+
+<script type="text/javascript">
+  var MenuComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-menu", "base");
+      this.renderMenu(this, tpl.querySelector("ul.menu"));
+      shadow.appendChild(tpl);
+    };
+
+    this.renderMenu = function(in_elem, out_elem) {
+      for (var i = 0; i < in_elem.children.length; ++i) {
+        var elem = in_elem.children[i];
+
+        if (elem.tagName == "FN-MENU-ITEM") {
+          var li_elem = document.createElement("li");
+          li_elem.className = "item";
+          li_elem.innerHTML = elem.innerHTML;
+          out_elem.appendChild(li_elem);
+        }
+
+        if (elem.tagName == "FN-SUBMENU") {
+          var ul_elem = document.createElement("ul");
+          this.renderMenu(elem, ul_elem);
+
+          var li_elem = document.createElement("li");
+          li_elem.className = "submenu";
+          var submenu_title = elem.querySelector("fn-submenu-title");
+          if (submenu_title) {
+            var title_elem = document.createElement("div");
+            title_elem.className = "submenu_title";
+            title_elem.innerHTML = submenu_title.innerHTML;
+            li_elem.appendChild(title_elem);
+          }
+          li_elem.appendChild(ul_elem);
+
+          out_elem.appendChild(li_elem);
+        }
+      }
+    }
+
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-menu", MenuComponent);
+  }, false);
+</script>
