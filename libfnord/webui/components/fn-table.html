@@ -181,6 +181,11 @@
           select_input.setAttribute("type", "checkbox");
           select_input.addEventListener("click", onRowSelectClick, false);
 
+          if (row.getAttribute("data-selected") != null) {
+            select_input.setAttribute("checked", "checked");
+            tr_elem.setAttribute("data-selected", true);
+          }
+
           var select_td = document.createElement("td");
           select_td.appendChild(select_input);
           tr_elem.insertBefore(select_td, tr_elem.querySelector("td:first-child"));

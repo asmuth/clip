@@ -41,7 +41,7 @@
 
     ul {
       margin-bottom: 5px;
-      top: 100%;
+      top: 0;
       left: 0;
       z-index: 1000;
       display: none;
@@ -77,24 +77,39 @@
       text-decoration: none;
     }
 
-    ul>li>a:hover {
+    ul>li>a:hover,
+    ul>li[data-active='true']{
       color: #262626;
       background-color: #f5f5f5;
     }
 
-    ul>li[data-active='true'] {
-      color: #262626;
-      background-color: #f5f5f5;
+    .close_icon {
+      text-decoration: none;
+      outline: 0;
+      visibility: hidden;
+      width: 15px;
+      height: 15px;
+      position: relative;
+      z-index:1;
+      right: 5px;
+      top: 25px;
+      float:right;
+      padding: 2px;
+      text-align: center;
+      font-weight: normal;
+      font-size: 16px;
+      cursor: pointer;
+      background: #fff;
+      border: none;
+      color: rgba(0,0,0,.4);;
     }
-
-
-
-
 
   </style>
 
+  <a href='#' class='close_icon'>X</a>
   <input />
   <ul></ul>
+
 </template>
 
 <script type="text/javascript">
@@ -108,9 +123,11 @@
       var min_length = 1;
 
       input.addEventListener('input', function() {
+        base.showClearButton();
         if (this.value.length >= min_length) {
           base.fireAutoCompleteEvent();
         } else {
+          base.hideClearButton();
           base.closeDropDownMenu();
         }
       }, false);
@@ -151,7 +168,7 @@
       if (active_elem !== null) {
         return active_elem[0];
       }
-    }
+    };
 
     this.updateDataActiveAttr = function(new_elem, old_elem) {
       new_elem.setAttribute('data-active', 'true');
@@ -159,7 +176,7 @@
       if (old_elem !== undefined) {
         old_elem.setAttribute('data-active', 'false');
       }
-    }
+    };
 
     this.dropDownMoveUp = function() {
       var active_elem = this.getActiveListElem();
@@ -176,7 +193,7 @@
       }
 
       this.updateDataActiveAttr(new_active_elem, active_elem);
-    }
+    };
 
     this.dropDownMoveDown = function() {
       var active_elem = this.getActiveListElem();
@@ -193,12 +210,41 @@
       }
 
       this.updateDataActiveAttr(new_active_elem, active_elem);
-    }
+    };
 
     this.submitSearch = function(query) {
+      var active_elem = this.getActiveListElem();
+      if (active_elem !== undefined) {
+        this.shadowRoot.querySelector("input").value = active_elem.innerText;
+      }
+      if (query !== undefined) {
+        this.shadowRoot.querySelector("input").value = query;
+      }
+      this.hideClearButton();
       this.closeDropDownMenu();
       this.fireSearchSubmitEvent();
-    }
+    };
+
+    this.showClearButton = function() {
+      var input = this.shadowRoot.querySelector("input");
+      var clear_btn = this.shadowRoot.querySelector(".close_icon");
+      clear_btn.style.visibility = "visible";
+      var base = this;
+
+      clear_btn.onclick = function(e) {
+        e.preventDefault();
+        input.value = "";
+        base.closeDropDownMenu();
+        base.hideClearButton();
+        base.fireSearchClearEvent();
+      }
+    };
+
+    this.hideClearButton = function() {
+      var input = this.shadowRoot.querySelector("input");
+      var clear_btn = this.shadowRoot.querySelector(".close_icon");
+      clear_btn.style.visibility = "hidden";
+    };
 
     this.openDropDownMenu = function(items) {
       var list = this.shadowRoot.querySelector("ul");
@@ -208,13 +254,12 @@
       var base = this;
       items.map(function(item) {
         var list_elem = document.createElement("li");
-        list_elem.innerHTML = "<a href='#'>" + item + "</a>";
+        list_elem.innerHTML = "<a href='#'>" + item.query + "</a>";
         list.appendChild(list_elem);
 
         list_elem.onclick = function(e) {
           e.preventDefault();
-          base.shadowRoot.querySelector("input").value = this.innerText; // FIXME
-          base.submitSearch();
+          base.submitSearch(this.innerText);
         }
 
         list_elem.addEventListener('mouseover', function() {
@@ -224,13 +269,13 @@
           }
         }, false);
       });
-    }
+    };
 
     this.closeDropDownMenu = function() {
       var list = this.shadowRoot.querySelector("ul");
       list.innerHTML = "";
       list.style.display = "none";
-    }
+    };
 
     this.autocomplete = function(term, items) {
       if (term == this.getValue() && items.length > 0) {
@@ -244,6 +289,10 @@
 
     this.fireSearchSubmitEvent = function() {
       this.dispatchEvent(new Event('fn-search-submit'));
+    };
+
+    this.fireSearchClearEvent = function() {
+      this.dispatchEvent(new Event('fn-search-clear'));
     };
 
   };

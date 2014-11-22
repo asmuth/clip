@@ -16,6 +16,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
   }
 </style>
 
@@ -23,7 +24,12 @@
   var ButtonComponent = function() {
     this.createdCallback = function() {
       this.addEventListener("click", function() {
-        this.dispatchEvent(new CustomEvent("fn-button-click"));
+        var ev = new CustomEvent("fn-button-click", {
+          bubbles: true,
+          cancelable: true
+        });
+
+        this.dispatchEvent(ev);
       }, false);
     };
   };
