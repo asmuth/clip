@@ -16,6 +16,10 @@
       margin: 0;
     }
 
+    ul li [data-active] {
+      color: #06c;
+    }
+
     ul.menu > li {
       padding: 10px 0;
       border-bottom: 1px solid #eee;
@@ -71,9 +75,16 @@
         var elem = in_elem.children[i];
 
         if (elem.tagName == "FN-MENU-ITEM") {
+          var onItemClick = (function(base, item) {
+            return function(e) {
+              base.clickItem(elem, e.srcElement);
+            };
+          })(this, elem);
+
           var li_elem = document.createElement("li");
           li_elem.className = "item";
           li_elem.innerHTML = elem.innerHTML;
+          li_elem.addEventListener("click", onItemClick, false);
           out_elem.appendChild(li_elem);
         }
 
@@ -90,11 +101,33 @@
             title_elem.innerHTML = submenu_title.innerHTML;
             li_elem.appendChild(title_elem);
           }
-          li_elem.appendChild(ul_elem);
 
+          li_elem.appendChild(ul_elem);
           out_elem.appendChild(li_elem);
         }
       }
+    }
+
+    this.clickItem = function(item, shadow) {
+      var active_items = this.querySelectorAll("li.item[data-active]");
+      for (var i = 0; i < active_items.length; ++i) {
+        active_items[i].removeAttribute("data-active");
+      }
+
+      var active_shadow_items = this.shadowRoot.querySelectorAll(
+          "li.item[data-active]");
+      for (var i = 0; i < active_shadow_items.length; ++i) {
+        active_shadow_items[i].removeAttribute("data-active");
+      }
+
+      shadow.setAttribute("data-active", true);
+      item.setAttribute("data-active", true);
+
+      var ev = new CustomEvent("fn-menu-item-click", {
+        bubbles: true,
+        cancelable: true
+      });
+      item.dispatchEvent(ev);
     }
 
   };
