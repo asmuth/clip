@@ -1,0 +1,183 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-splitpane-base-tpl">
+  <style>
+    .splitpane {
+      box-sizing: border-box;
+      background-color:  #e9ebed;;
+      border: 1px solid #dbdedf;
+      border-radius: 4px 4px 0 0;
+      padding: 45px 15px 15px;
+      color: #959595;
+      float:left;
+    }
+
+    .resizer_tooltip {
+      display:block;
+      z-index: 100;
+      background: #d7e4f2;
+      position:absolute;
+
+    }
+
+    .resizer_tooltip:hover {
+      background: #d7e4f2;
+    }
+
+
+  </style>
+  <div class="splitpane" id="left-pane"></div>
+  <div class="resizer_tooltip"></div>
+  <div class="splitpane" id="right-pane"></div>
+</template>
+
+<script type="text/javascript">
+  var SplitPaneComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-splitpane", "base");
+      shadow.appendChild(tpl);
+
+      this.init();
+      this.updateView();
+      this.initResizerTooltip();
+
+    };
+
+    this.init = function() {
+      this.style.width = "100%";
+      this.style.display = "block";
+      this.style.height = "100%";
+    }
+
+    this.updateView = function() {
+      var orientation = this.getAttribute("data-split");
+      if (orientation == "horizontal") {
+        this.renderHorizontalView();
+      } else {
+        this.renderVerticalView();
+      }
+    };
+
+    this.resizeVerticalView = function(left_pane_width) {
+      var left_pane = this.shadowRoot.querySelector("#left-pane");
+      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      left_pane.style.width = left_pane_width + "px";
+      right_pane.style.width = left_pane_width + "px";
+      right_pane.style.marginLeft = left_pane_width;
+
+    }
+
+    this.resizeHorizontalView = function(left_pane_height) {
+
+    }
+
+    this.initResizerTooltip = function() {
+      var base = this;
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+      var orientation = this.getAttribute("data-split");
+      resizer_tooltip.setAttribute("draggable", "true");
+
+      resizer_tooltip.addEventListener('dragstart', function() {
+        this.style.background = "transparent";
+      }, false);
+
+      resizer_tooltip.addEventListener('drag', function(e) {
+        this.style.background = "";
+        if (orientation == "horizontal") {
+          base.resizeHorizontalView(e.clientY + window.pageYOffset);
+        } else {
+          console.log(e.clientX);
+          base.resizeVerticalView((base.offsetWidth / 2) - e.clientX);
+        }
+      }, false);
+
+    };
+
+    this.renderVerticalView = function() {
+      var left_pane = this.shadowRoot.querySelector("#left-pane");
+      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      //fixme
+      var left_pane_width = 50;
+      var left_pane_height = 400;
+
+      left_pane.style.width = left_pane_width + "%";
+      left_pane.style.height = left_pane_height + "px";
+      left_pane.style.top = "";
+
+      right_pane.style.width = (100 - left_pane_width) + "%";
+      right_pane.style.height = left_pane_height + "px";
+      right_pane.style.top = "";
+      right_pane.style.overflowY = "auto";
+
+      resizer_tooltip.style.height = left_pane_height + "px";
+      resizer_tooltip.style.marginLeft = left_pane_width + "%";
+      resizer_tooltip.style.width = "5px";
+      resizer_tooltip.style.cursor = "ew-resize";
+
+    };
+
+    this.renderHorizontalView = function() {
+      var left_pane = this.shadowRoot.querySelector("#left-pane");
+      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      //fixme
+      var left_pane_height = 200;
+
+      left_pane.style.width = "100%";
+      left_pane.style.height = left_pane_height + "px";
+
+      right_pane.style.width = "100%";
+      right_pane.style.height = "100%";
+      right_pane.style.marginLeft = "0px";
+      right_pane.style.top = (left_pane_height +3) + "px";
+
+      resizer_tooltip.style.top = left_pane_height + "px";
+      resizer_tooltip.style.marginLeft = "0px";
+      resizer_tooltip.style.height = "5px";
+      resizer_tooltip.style.cursor = "ns-resize";
+
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      console.log("changed attribute");
+      if (attr == "data-split") {
+        updateView();
+      }
+    }
+
+    /*
+      updateLayout --> check data-split 
+      if horizonta; 
+        renderHorizontalSplit
+      else
+        renderVerticalSplit
+
+      init 
+        update
+        renderresizerttp
+    */
+    /*
+      1) resizer ttp --> resize
+      attribute change callback(data-split) --> split
+      set/get direction
+      split
+    */
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var splitpane = Fnord.registerComponent("fn-splitpane", SplitPaneComponent);
+  });
+</script>

@@ -1,0 +1,27 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-splitpane-demo-base-tpl">
+ <section>
+    <h1><i>fn-splitpane &rsaquo;</i> Splitpane</h1>
+    <fn-splitpane id="splitpane-example-1" data-split="vertical"></fn-search>
+
+    <script type="text/javascript">
+      document.querySelector("#splitpane-example-1").addEventListener(
+        "fn-splitpane-direction",
+        function(e) {
+          console.log("change direction");
+        },
+        false);
+    </script>
+  </section>
+
+</template>
