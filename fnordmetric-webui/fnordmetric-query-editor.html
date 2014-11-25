@@ -13,6 +13,8 @@
 
 <template id="fnordmetric-query-editor-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
+    <fn-splitpane id="splitpane" data-split="vertical">
+    </fn-splitpane>
   </fn-loader>
 </template>
 
@@ -22,8 +24,67 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fnordmetric-query-editor", "base");
       this.appendChild(tpl);
-      console.log("query editor :)");
+
+      this.initEditor();
+      /*
+        if query_params 
+          runquery(query(query_params))
+      */
     };
+
+    this.initEditor = function() {
+      var loader = this.querySelector("fn-loader");
+      loader.removeAttribute("data-loading");
+
+      var splitpane = this.querySelector("fn-splitpane");
+      var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
+
+      var code_editor = document.createElement("fn-codeeditor");
+      left_pane.appendChild(code_editor);
+
+      var base = this;
+
+      code_editor.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
+          e.preventDefault();
+          base.runQuery();
+        }
+      }, false);
+    }
+
+    this.runQuery = function() {
+      var code_editor = splitpane.shadowRoot.querySelector("fn-codeeditor");
+      var query = code_editor.getValue();
+      var base = this;
+
+      Fnord.httpPost("/query", query, function(r, duration) {
+        if (r.status == 200 && r.statusText == "OK") {
+          var res = JSON.parse(r.response, duration);
+          base.renderResult(res);
+          //FnordMetric.extendCharts();
+        } else {
+          /* server error */
+        }
+      });
+
+    };
+
+    this.renderResult = function(response, duration) {
+      if (response.status == "error") {
+        this.renderQueryError(response.error);
+      } else {
+        //renderChart, tabke
+      }
+
+      //renderExecutionInfo
+    };
+
+    this.renderQueryError = function(error_message) {
+      var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
+      console.log(error_message);
+    };
+
+
 
   };
 

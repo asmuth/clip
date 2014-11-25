@@ -21,6 +21,7 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
 AdminUI::AdminUI() :
     webui_bundle_("FnordMetric"),
     webui_mount_(&webui_bundle_, "/admin") {
+  webui_bundle_.addComponent("fnord/3rdparty/codemirror.js");
   webui_bundle_.addComponent("fnord/fnord.js");
   webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
@@ -29,6 +30,8 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-loader.html");
   webui_bundle_.addComponent("fnord/components/fn-search.html");
   webui_bundle_.addComponent("fnord/components/fn-table.html");
+  webui_bundle_.addComponent("fnord/components/fn-splitpane.html");
+  webui_bundle_.addComponent("fnord/components/fn-codeeditor.html");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
 

@@ -10,13 +10,9 @@
 -->
 <template id="fn-splitpane-base-tpl">
   <style>
-    .splitpane {
+     fn-splitpane-left, fn-splitpane-right{
       position: absolute;
       box-sizing: border-box;
-      background-color:  #e9ebed;;
-      border: 1px solid #dbdedf;
-      border-radius: 4px 4px 0 0;
-      padding: 45px 15px 15px;
       color: #959595;
     }
 
@@ -34,9 +30,13 @@
 
 
   </style>
-  <div class="splitpane" id="left-pane"></div>
+  <fn-splitpane-left>
+    <content></content>
+  </fn-splitpane-left>
   <div class="resizer_tooltip"></div>
-  <div class="splitpane" id="right-pane"></div>
+  <fn-splitpane-right>
+    <content></content>
+  </fn-splitpane-right>
 </template>
 
 <script type="text/javascript">
@@ -57,7 +57,6 @@
     };
 
     this.init = function() {
-      this.style.width = "100%";
       this.style.display = "block";
       this.style.height = "100%";
     };
@@ -100,8 +99,8 @@
     };
 
     this.resizeVerticalView = function(offset) {
-      var left_pane = this.shadowRoot.querySelector("#left-pane");
-      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
+      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var left_pane_width = left_pane.offsetWidth - offset;
@@ -116,8 +115,8 @@
     };
 
     this.resizeHorizontalView = function(offset) {
-      var left_pane = this.shadowRoot.querySelector("#left-pane");
-      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
+      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var left_pane_height = left_pane.offsetHeight - offset;
@@ -133,8 +132,8 @@
 
 
     this.renderVerticalView = function() {
-      var left_pane = this.shadowRoot.querySelector("#left-pane");
-      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
+      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var left_pane_width = this.offsetWidth / 2;
@@ -157,8 +156,8 @@
     };
 
     this.renderHorizontalView = function() {
-      var left_pane = this.shadowRoot.querySelector("#left-pane");
-      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
+      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var height = this.offsetHeight / 2;
