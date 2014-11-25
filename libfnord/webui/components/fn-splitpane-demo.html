@@ -10,19 +10,12 @@
 -->
 
 <template id="fn-splitpane-demo-base-tpl">
- <section>
+  <section>
     <h1><i>fn-splitpane &rsaquo;</i> Splitpane</h1>
     <button type="button" class="btn" id="data-split-btn">Change View</button>
     <fn-splitpane id="splitpane-example-1" data-split="vertical"></fn-search>
 
     <script type="text/javascript">
-      document.querySelector("#splitpane-example-1").addEventListener(
-        "fn-splitpane-direction",
-        function(e) {
-          console.log("change direction");
-        },
-        false);
-
       document.querySelector("#data-split-btn").addEventListener(
         "click",
         function() {
