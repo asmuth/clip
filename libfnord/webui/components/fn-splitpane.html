@@ -11,13 +11,13 @@
 <template id="fn-splitpane-base-tpl">
   <style>
     .splitpane {
+      position: absolute;
       box-sizing: border-box;
       background-color:  #e9ebed;;
       border: 1px solid #dbdedf;
       border-radius: 4px 4px 0 0;
       padding: 45px 15px 15px;
       color: #959595;
-      float:left;
     }
 
     .resizer_tooltip {
@@ -45,10 +45,16 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-splitpane", "base");
       shadow.appendChild(tpl);
+      var base = this;
 
       this.init();
-      this.updateView();
+
+      document.addEventListener("DOMContentLoaded", function() {
+        base.renderView();
+      }, false);
+
       this.initResizerTooltip();
+
 
     };
 
@@ -58,7 +64,7 @@
       this.style.height = "100%";
     }
 
-    this.updateView = function() {
+    this.renderView = function() {
       var orientation = this.getAttribute("data-split");
       if (orientation == "horizontal") {
         this.renderHorizontalView();
@@ -67,12 +73,19 @@
       }
     };
 
-    this.resizeVerticalView = function(left_pane_width) {
+    this.resizeVerticalView = function(offset) {
+      console.log("resize veertical view");
       var left_pane = this.shadowRoot.querySelector("#left-pane");
       var right_pane = this.shadowRoot.querySelector("#right-pane");
-      left_pane.style.width = left_pane_width + "px";
-      right_pane.style.width = left_pane_width + "px";
-      right_pane.style.marginLeft = left_pane_width;
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+      var left_pane_width = left_pane.offsetWidth;
+
+      if (left_pane_width - offset > 350) {
+        left_pane.style.width = left_pane_width - offset + "px";
+        right_pane.style.width = left_pane_width + offset + "px";
+        right_pane.style.marginLeft = left_pane_width - offset + "px";
+        resizer_tooltip.style.marginLeft = left_pane_width - offset + "px";
+      }
 
     }
 
@@ -86,8 +99,12 @@
       var orientation = this.getAttribute("data-split");
       resizer_tooltip.setAttribute("draggable", "true");
 
-      resizer_tooltip.addEventListener('dragstart', function() {
+      var start_position;
+
+      resizer_tooltip.addEventListener('dragstart', function(e) {
         this.style.background = "transparent";
+        start_position = e.clientX;
+        console.log("dragstart" + e.clientX);
       }, false);
 
       resizer_tooltip.addEventListener('drag', function(e) {
@@ -95,8 +112,10 @@
         if (orientation == "horizontal") {
           base.resizeHorizontalView(e.clientY + window.pageYOffset);
         } else {
-          console.log(e.clientX);
-          base.resizeVerticalView((base.offsetWidth / 2) - e.clientX);
+          console.log(start_position, e.clientX);
+          if (e.clientX > 0) {
+            base.resizeVerticalView(start_position - e.clientX);
+          }
         }
       }, false);
 
@@ -107,21 +126,22 @@
       var right_pane = this.shadowRoot.querySelector("#right-pane");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
-      //fixme
-      var left_pane_width = 50;
+      var left_pane_width = this.offsetWidth / 2;
       var left_pane_height = 400;
 
-      left_pane.style.width = left_pane_width + "%";
+      left_pane.style.width = left_pane_width + "px";
       left_pane.style.height = left_pane_height + "px";
       left_pane.style.top = "";
 
-      right_pane.style.width = (100 - left_pane_width) + "%";
+      right_pane.style.width = left_pane_width + "px";
       right_pane.style.height = left_pane_height + "px";
+      right_pane.style.marginLeft = left_pane_width + "px";
       right_pane.style.top = "";
       right_pane.style.overflowY = "auto";
 
       resizer_tooltip.style.height = left_pane_height + "px";
-      resizer_tooltip.style.marginLeft = left_pane_width + "%";
+      //FIXME?
+      resizer_tooltip.style.marginLeft = left_pane_width + "px";
       resizer_tooltip.style.width = "5px";
       resizer_tooltip.style.cursor = "ew-resize";
 
