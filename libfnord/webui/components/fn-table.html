@@ -14,70 +14,11 @@
   }
 
   fn-table[data-resolved]{
-    display: block;
+    display: table;
   }
 </style>
 
 <template id="fn-table-base-tpl">
-  <style type="text/css">
-    table {
-      width: 100%;
-      border-spacing: 0;
-      border-collapse: collapse;
-      background-color: transparent;
-    }
-
-    table > thead > tr > th,
-    table > tbody > tr > th,
-    table > tfoot > tr > th,
-    table > thead > tr > td,
-    table > tbody > tr > td,
-    table > tfoot > tr > td {
-      text-align: left;
-      font-weight: 400;
-      border: none;
-      padding: 8px;
-      line-height: 1.42857143;
-      vertical-align: top;
-      border-top: 1px solid #ddd;
-    }
-
-    table > thead > tr > th {
-      vertical-align: bottom;
-      border-bottom: 2px solid #ddd;
-    }
-
-    table > thead > tr:first-child > th {
-      border-top: none;
-    }
-
-    table thead,
-    table.clickable tbody {
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    table.clickable tbody > tr:hover,
-    table.selectable tbody > tr[data-selected] {
-      background-color: #f2f2f2;
-      cursor: pointer;
-    }
-
-    table.selectable > thead > tr > th:first-child,
-    table.selectable > tbody > tr > th:first-child,
-    table.selectable > tfoot > tr > th:first-child,
-    table.selectable > thead > tr > td:first-child,
-    table.selectable > tbody > tr > td:first-child,
-    table.selectable > tfoot > tr > td:first-child {
-      width: 20px;
-      vertical-align: middle;
-    }
-  </style>
-
   <table>
     <thead>
       <tr></tr>
@@ -119,8 +60,7 @@
         header_row.appendChild(th_elem);
       });
 
-      this.shadowRoot.innerHTML = "";
-      this.shadowRoot.appendChild(tpl);
+      this.appendChild(tpl);
       this.renderRows();
     };
 
@@ -213,7 +153,7 @@
     }
 
     this.forEachRowWithPagination = function(cb) {
-      var all_rows = this.querySelectorAll("tr");
+      var all_rows = this.querySelectorAll("fn-table-row");
       var rows_per_page = this.rowsPerPage();
       var begin;
       var end;
@@ -236,7 +176,7 @@
     }
 
     this.forEachColumn = function(cb) {
-      var col_elems = this.querySelectorAll("fn-table-column");
+      var col_elems = this.querySelectorAll("fn-table-header > fn-table-column");
       for (var i = 0; i < col_elems.length; ++i) {
         cb(col_elems[i]);
       }
@@ -268,7 +208,7 @@
     }
 
     this.resortRowsWithOrder = function(column_index, order) {
-      var tbody = this.querySelector("table > tbody") || this.querySelector("table");
+      var tbody = this.querySelector("fn-table-body");
 
       var sort_fn = this.rowSortFunction;
       if (!sort_fn) {

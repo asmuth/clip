@@ -12,19 +12,64 @@
 <template id="fn-table-demo-base-tpl">
   <!-- Example 1: Simple Sortable Table -->
   <section>
-    <h1><i>Example 1 &raquo;</i> Simple Sortable Table</h1>
-    <fn-table id="example-table-1">
-      <fn-table-column data-sortable>A</fn-table-column>
-      <fn-table-column data-sortable>B</fn-table-column>
+    <h1><i>Example 1 &raquo;</i> Static Table</h1>
+      <table class="fn-table colsep striped">
+        <thead>
+          <tr>
+            <th colspan="3">Git Repository</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="collapse">
+            <i class="folder icon"></i> test
+          </td>
+          <td>Initial commit</td>
+          <td class="right collapse">10 hours ago</td>
+        </tr>
+        <tr>
+          <td class="collapse">
+            <i class="folder icon"></i> build
+          </td>
+          <td>Initial commit</td>
+          <td class="right collapse">10 hours ago</td>
+        </tr>
+        <tr>
+          <td class="collapse">
+            <i class="file outline icon"></i> package.json
+          </td>
+          <td>Initial commit</td>
+          <td class="right collapse">10 hours ago</td>
+        </tr>
+      </tbody>
+    </table>
 
-      <table>
-        <tr><td>1</td><td>1</td></tr>
-        <tr><td>5</td><td>5</td></tr>
-        <tr><td>8</td><td>8</td></tr>
-        <tr><td>9</td><td>9</td></tr>
+      <table class="fn-table">
+        <thead>
+          <th>A</th>
+          <th>B</th>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Normal</td></tr>
+          <tr class="success"><td>1</td><td>Success</td></tr>
+          <tr><td>1</td><td>2</td></tr>
+          <tr class="error"><td>1</td><td>Error</td></tr>
+          <tr class="warning"><td>1</td><td>Warning</td></tr>
+          <tr><td>1</td><td>2</td></tr>
+          <tr class="disabled"><td>1</td><td>Disabled</td></tr>
+          <tr class="active"><td>1</td><td>Active</td></tr>
+        </tbody>
+        <tfoot class="full-width">
+        <tr>
+          <th></th>
+          <th>
+            <h3>Footer</h3>
+          </th>
+        </tr>
+      </tfoot>
       </table>
-    </fn-table>
   </section>
+
 
   <!-- Example 1: Clickable Sortable Table -->
   <section>
