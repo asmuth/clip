@@ -127,6 +127,7 @@
 
       var sidebar = document.getElementById("sidebar");
       sidebar.addEventListener("fn-button-click", function(e) {
+        console.log("button click");
         openDemo(e.srcElement.getAttribute("data-target-demo"));
       }, false);
 
