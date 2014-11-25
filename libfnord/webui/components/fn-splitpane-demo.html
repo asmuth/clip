@@ -12,6 +12,7 @@
 <template id="fn-splitpane-demo-base-tpl">
  <section>
     <h1><i>fn-splitpane &rsaquo;</i> Splitpane</h1>
+    <button type="button" class="btn" id="data-split-btn">Change View</button>
     <fn-splitpane id="splitpane-example-1" data-split="vertical"></fn-search>
 
     <script type="text/javascript">
@@ -19,6 +20,18 @@
         "fn-splitpane-direction",
         function(e) {
           console.log("change direction");
+        },
+        false);
+
+      document.querySelector("#data-split-btn").addEventListener(
+        "click",
+        function() {
+          var splitpane = document.querySelector("#splitpane-example-1");
+          if (splitpane.getAttribute("data-split") == "vertical") {
+            splitpane.setAttribute("data-split", "horizontal");
+          } else {
+            splitpane.setAttribute("data-split", "vertical");
+          }
         },
         false);
     </script>

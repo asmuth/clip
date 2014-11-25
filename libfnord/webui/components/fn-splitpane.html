@@ -54,72 +54,83 @@
       }, false);
 
       this.initResizerTooltip();
-
-
     };
 
     this.init = function() {
       this.style.width = "100%";
       this.style.display = "block";
       this.style.height = "100%";
-    }
+    };
 
     this.renderView = function() {
-      var orientation = this.getAttribute("data-split");
-      if (orientation == "horizontal") {
+      if (this.getAttribute("data-split") == "horizontal") {
         this.renderHorizontalView();
       } else {
         this.renderVerticalView();
       }
     };
 
-    this.resizeVerticalView = function(offset) {
-      console.log("resize veertical view");
-      var left_pane = this.shadowRoot.querySelector("#left-pane");
-      var right_pane = this.shadowRoot.querySelector("#right-pane");
-      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
-      var left_pane_width = left_pane.offsetWidth;
-
-      if (left_pane_width - offset > 350) {
-        left_pane.style.width = left_pane_width - offset + "px";
-        right_pane.style.width = left_pane_width + offset + "px";
-        right_pane.style.marginLeft = left_pane_width - offset + "px";
-        resizer_tooltip.style.marginLeft = left_pane_width - offset + "px";
-      }
-
-    }
-
-    this.resizeHorizontalView = function(left_pane_height) {
-
-    }
 
     this.initResizerTooltip = function() {
       var base = this;
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
-      var orientation = this.getAttribute("data-split");
       resizer_tooltip.setAttribute("draggable", "true");
 
-      var start_position;
+      var benchmark_x;
+      var benchmark_y;
 
       resizer_tooltip.addEventListener('dragstart', function(e) {
         this.style.background = "transparent";
-        start_position = e.clientX;
-        console.log("dragstart" + e.clientX);
+        benchmark_x = e.clientX;
+        benchmark_y = e.clientY;
       }, false);
 
       resizer_tooltip.addEventListener('drag', function(e) {
+        e.preventDefault();
         this.style.background = "";
-        if (orientation == "horizontal") {
-          base.resizeHorizontalView(e.clientY + window.pageYOffset);
+        if (base.getAttribute("data-split") == "horizontal") {
+          //include window/pageYOffset ??
+          base.resizeHorizontalView(benchmark_y - e.clientY);
+          benchmark_y = e.clientY;
         } else {
-          console.log(start_position, e.clientX);
-          if (e.clientX > 0) {
-            base.resizeVerticalView(start_position - e.clientX);
-          }
+          base.resizeVerticalView(benchmark_x - e.clientX);
+          benchmark_x = e.clientX;
         }
       }, false);
-
     };
+
+    this.resizeVerticalView = function(offset) {
+      var left_pane = this.shadowRoot.querySelector("#left-pane");
+      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      var left_pane_width = left_pane.offsetWidth - offset;
+      var right_pane_width = this.offsetWidth - left_pane_width;
+
+      if (left_pane_width > 350 && right_pane_width > 350) {
+        left_pane.style.width = left_pane_width + "px";
+        right_pane.style.width = right_pane_width + "px";
+        right_pane.style.marginLeft = left_pane_width + "px";
+        resizer_tooltip.style.marginLeft = left_pane_width + "px";
+      }
+    };
+
+    this.resizeHorizontalView = function(offset) {
+      var left_pane = this.shadowRoot.querySelector("#left-pane");
+      var right_pane = this.shadowRoot.querySelector("#right-pane");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      var left_pane_height = left_pane.offsetHeight - offset;
+      var right_pane_height = this.offsetHeight- left_pane_height;
+
+      if (left_pane_height > 200 && right_pane_height > 200) {
+        left_pane.style.height = left_pane_height + "px";
+        right_pane.style.height = right_pane_height + "px";
+        right_pane.style.marginTop = left_pane_height + "px";
+        resizer_tooltip.style.marginTop = left_pane_height + "px";
+      }
+    };
+
 
     this.renderVerticalView = function() {
       var left_pane = this.shadowRoot.querySelector("#left-pane");
@@ -127,24 +138,22 @@
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var left_pane_width = this.offsetWidth / 2;
-      var left_pane_height = 400;
+      var left_pane_height = this.offsetHeight;
 
       left_pane.style.width = left_pane_width + "px";
       left_pane.style.height = left_pane_height + "px";
-      left_pane.style.top = "";
 
       right_pane.style.width = left_pane_width + "px";
       right_pane.style.height = left_pane_height + "px";
       right_pane.style.marginLeft = left_pane_width + "px";
-      right_pane.style.top = "";
+      right_pane.style.marginTop = "";
       right_pane.style.overflowY = "auto";
 
       resizer_tooltip.style.height = left_pane_height + "px";
-      //FIXME?
       resizer_tooltip.style.marginLeft = left_pane_width + "px";
+      resizer_tooltip.style.marginTop = "";
       resizer_tooltip.style.width = "5px";
       resizer_tooltip.style.cursor = "ew-resize";
-
     };
 
     this.renderHorizontalView = function() {
@@ -152,49 +161,29 @@
       var right_pane = this.shadowRoot.querySelector("#right-pane");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
-      //fixme
-      var left_pane_height = 200;
+      var height = this.offsetHeight / 2;
+      var width = this.offsetWidth;
 
-      left_pane.style.width = "100%";
-      left_pane.style.height = left_pane_height + "px";
+      left_pane.style.width = width + "px";
+      left_pane.style.height = height + "px";
 
-      right_pane.style.width = "100%";
-      right_pane.style.height = "100%";
+      right_pane.style.width = width + "px";
+      right_pane.style.height = height + "px";
       right_pane.style.marginLeft = "0px";
-      right_pane.style.top = (left_pane_height +3) + "px";
+      right_pane.style.marginTop = (height +3) + "px";
 
-      resizer_tooltip.style.top = left_pane_height + "px";
+      resizer_tooltip.style.marginTop = height + "px";
       resizer_tooltip.style.marginLeft = "0px";
+      resizer_tooltip.style.width = width + "px";
       resizer_tooltip.style.height = "5px";
       resizer_tooltip.style.cursor = "ns-resize";
-
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
-      console.log("changed attribute");
       if (attr == "data-split") {
-        updateView();
+        this.renderView();
       }
     }
-
-    /*
-      updateLayout --> check data-split 
-      if horizonta; 
-        renderHorizontalSplit
-      else
-        renderVerticalSplit
-
-      init 
-        update
-        renderresizerttp
-    */
-    /*
-      1) resizer ttp --> resize
-      attribute change callback(data-split) --> split
-      set/get direction
-      split
-    */
-
   };
 
   window.addEventListener('fn-ready', function() {
