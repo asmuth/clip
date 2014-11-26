@@ -32,13 +32,17 @@
 
       this.renderNavBar();
       this.renderCodeEditor();
+    };
 
-      /*
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url") {
+        console.log("data url is set");
+        /*
         if query_params(data_url)
           runquery(query(query_params))
       */
-    };
-
+      }
+    }
 
     this.runQuery = function() {
       console.log("run query");
