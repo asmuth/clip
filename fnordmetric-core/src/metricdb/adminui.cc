@@ -39,6 +39,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-search.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-query-editor.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-preview.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
