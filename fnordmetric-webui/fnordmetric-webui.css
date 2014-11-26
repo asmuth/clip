@@ -111,6 +111,33 @@ fnordmetric-query-editor /deep/ .run_query_btn {
   color: #009fe9;
 }
 
+fnordmetric-query-editor /deep/ .result_card {
+  background: #fff;
+  margin: 10px;
+  padding: 0;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 3px rgba(0,0,0,.1);
+  border-radius: 1px
+}
+
+fnordmetric-query-editor /deep/  .metric_preview_secondary_controls {
+  height: 39px;
+  margin: 0px;
+  line-height: 39px;
+  border-bottom: 1px solid #dbdedf;
+  font-size: 90%;
+  padding: 0 20px;
+  text-align: right;
+}
+
+fnordmetric-query-editor /deep/ .metric_preview_secondary_controls a {
+  color: #60707f;
+  text-decoration: none;
+}
+
+
+
+
 
 
 
@@ -833,15 +860,6 @@ table.metric_list tr:hover td {
 .popup_ui .inner_window {
   margin-top: 30px;
   margin-left: 20px;
-}
-
-.result_card {
-  background: #fff;
-  margin: 10px;
-  padding: 0;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 3px rgba(0,0,0,.1);
-  border-radius: 1px
 }
 
 

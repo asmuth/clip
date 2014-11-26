@@ -60,14 +60,20 @@
     };
 
     this.renderResult = function(response, duration) {
+      var splitpane = this.querySelector("fn-splitpane");
+      var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
+      var loader = document.createElement("fn-loader");
+      loader.setAttribute("data-loading", "data-loading");
+      right_pane.appendChild(loader);
+
       if (response.status == "error") {
         this.renderQueryError(response.error);
       } else {
         if (response.charts != undefined) {
-          this.renderChart(response.charts);
+          this.renderChart(response.charts, loader);
         }
         if (response.tables != undefined) {
-          this.renderTable(response.tables);
+          this.renderTable(response.tables, loader);
         }
       }
       //renderExecutionInfo
@@ -78,38 +84,45 @@
       console.log(error_message);
     };
 
-    this.renderChart = function(charts) {
+    this.renderChart = function(charts, loader) {
 
     }
 
-    this.renderTable = function(tables) {
-      var splitpane = this.querySelector("fn-splitpane");
-      var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
+    this.renderTable = function(tables, loader) {
+      var controls = document.createElement("div");
+      controls.className = "metric_preview_secondary_controls";
+      controls.innerHTML = "<a style='float: left;'>Result Table</a>";
+
+      var result_card = document.createElement("div");
+      result_card.className = "result_card";
 
       var table_elem = document.createElement("fn-table");
       table_elem.setAttribute("data-per-page", 25);
 
-      tables.forEach(function(t) {
-        t.columns.forEach(function(c) {
+      tables.map(function(t) {
+        t.columns.map(function(c) {
           var column_elem = document.createElement("fn-table-column");
           column_elem.innerHTML = c;
           table_elem.appendChild(column_elem);
         });
 
-        t.rows.forEach(function(r) {
+        t.rows.map(function(r) {
           var row_elem = document.createElement("tr");
-          r.forEach(function(cell) {
-            var cell_elem = document.createElement("td");
-            cell_elem.innerHTML = cell;
-            row_elem.appendChild(cell_elem);
+          r.map(function(cell) {
+            row_elem.innerHTML += "<td>" + cell + "</td>";
           });
-          table_elem.appendRow(row_elem);
+
+          //table_elem.appendRow(row_elem); soo slow
+          table_elem.appendChild(row_elem);
         });
+        table_elem.renderTable();
       });
 
-      right_pane.appendChild(table_elem);
-      console.log(right_pane);
 
+      loader.removeAttribute("data-loading");
+      result_card.appendChild(controls);
+      result_card.appendChild(table_elem);
+      loader.appendChild(result_card);
 
 
     }
