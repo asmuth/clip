@@ -9,11 +9,13 @@
   <http://www.gnu.org/licenses/>.
 -->
 <style type="text/css">
+  
 </style>
 
 <template id="fnordmetric-query-editor-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
     <fn-splitpane id="splitpane" data-split="vertical">
+
     </fn-splitpane>
   </fn-loader>
 </template>
@@ -25,35 +27,23 @@
       var tpl = Fnord.getTemplate("fnordmetric-query-editor", "base");
       this.appendChild(tpl);
 
-      this.initEditor();
+      var loader = this.querySelector("fn-loader");
+      loader.removeAttribute("data-loading");
+
+      this.renderNavBar();
+      this.renderCodeEditor();
+
       /*
-        if query_params 
+        if query_params(data_url)
           runquery(query(query_params))
       */
     };
 
-    this.initEditor = function() {
-      var loader = this.querySelector("fn-loader");
-      loader.removeAttribute("data-loading");
-
-      var splitpane = this.querySelector("fn-splitpane");
-      var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
-
-      var code_editor = document.createElement("fn-codeeditor");
-      left_pane.appendChild(code_editor);
-
-      var base = this;
-
-      code_editor.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
-          e.preventDefault();
-          base.runQuery();
-        }
-      }, false);
-    }
 
     this.runQuery = function() {
+      console.log("run query");
       var code_editor = splitpane.shadowRoot.querySelector("fn-codeeditor");
+      console.log(code_editor);
       var query = code_editor.getValue();
       var base = this;
 
@@ -73,9 +63,13 @@
       if (response.status == "error") {
         this.renderQueryError(response.error);
       } else {
-        //renderChart, tabke
+        if (response.charts != undefined) {
+          this.renderChart(response.charts);
+        }
+        if (response.tables != undefined) {
+          this.renderTable(response.tables);
+        }
       }
-
       //renderExecutionInfo
     };
 
@@ -83,6 +77,114 @@
       var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
       console.log(error_message);
     };
+
+    this.renderChart = function(charts) {
+
+    }
+
+    this.renderTable = function(tables) {
+      var splitpane = this.querySelector("fn-splitpane");
+      var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
+
+      var table_elem = document.createElement("fn-table");
+      table_elem.setAttribute("data-per-page", 25);
+
+      tables.forEach(function(t) {
+        t.columns.forEach(function(c) {
+          var column_elem = document.createElement("fn-table-column");
+          column_elem.innerHTML = c;
+          table_elem.appendChild(column_elem);
+        });
+
+        t.rows.forEach(function(r) {
+          var row_elem = document.createElement("tr");
+          r.forEach(function(cell) {
+            var cell_elem = document.createElement("td");
+            cell_elem.innerHTML = cell;
+            row_elem.appendChild(cell_elem);
+          });
+          table_elem.appendRow(row_elem);
+        });
+      });
+
+      right_pane.appendChild(table_elem);
+      console.log(right_pane);
+
+
+
+    }
+
+    this.renderCodeEditor = function() {
+      var splitpane = this.querySelector("fn-splitpane");
+      var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
+
+      var code_editor = document.createElement("fn-codeeditor");
+      left_pane.appendChild(code_editor);
+
+      var base = this;
+
+      code_editor.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
+          e.preventDefault();
+          base.runQuery();
+        }
+      }, false);
+    }
+
+    this.renderNavBar = function() {
+
+      var splitpane = this.querySelector("fn-splitpane");
+      var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
+      var base = this;
+      var app = document.querySelector("fnordmetric-app");
+
+      /* render buttons */
+      button_bar = document.createElement("div");
+      button_bar.className = "navbar";
+
+      var editor_picker = document.createElement("div");
+      editor_picker.className = "editor_type_picker";
+      editor_picker.innerHTML = 
+        "<i class='fa fa-database'></i> SQL Editor";
+      button_bar.appendChild(editor_picker);
+
+      var split_btn = document.createElement("i");
+      split_btn.className = "fa fa-columns icobtn";
+      button_bar.appendChild(split_btn);
+
+      var refresh_btn = document.createElement("i");
+      refresh_btn.className = "fa fa-refresh icobtn";
+      button_bar.appendChild(refresh_btn);
+
+      var exec_btn = document.createElement("span");
+      exec_btn.className = "run_query_btn";
+      exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
+      button_bar.appendChild(exec_btn);
+
+      left_pane.appendChild(button_bar);
+
+      exec_btn.onclick = base.runQuery;
+
+      split_btn.onclick = function(e) {
+        console.log(splitpane.getAttribute("data-split"));
+        if (splitpane.getAttribute("data-split") == "vertical") {
+          splitpane.setAttribute("data-split", "horizontal");
+        } else {
+          splitpane.setAttribute("data-split", "vertical");
+        }
+      }
+
+      refresh_btn.onclick = function() {
+        var query = query_params.innerViewValue;
+        query = (query != undefined)?
+          encodeURIComponent(query) : "";
+        app.openUrl(
+          "query_playground?" +
+          query_params.innerView + "=" +
+          query);
+      }
+
+    }
 
 
 
