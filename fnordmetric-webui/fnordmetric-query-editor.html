@@ -85,16 +85,35 @@
     };
 
     this.renderChart = function(charts, loader) {
+      var result_card = document.createElement("div");
+      result_card.className = "result_card";
 
+      var controls = document.createElement("div");
+      controls.className = "metric_preview_secondary_controls";
+      controls.innerHTML = "<a style='float: left;'>Result Chart</a>";
+
+      var embed_btn = document.createElement("i");
+      embed_btn.className = "fa fa-share";
+      embed_btn.innerHTML = "Embed";
+
+      controls.appendChild(embed_btn);
+      result_card.appendChild(controls);
+
+      var svg = document.createElement("div");
+      svg.className = "svg";
+      svg.innerHTML = charts[0].svg;
+      result_card.appendChild(svg);
+
+      loader.appendChild(result_card);
     }
 
     this.renderTable = function(tables, loader) {
+      var result_card = document.createElement("div");
+      result_card.className = "result_card";
+
       var controls = document.createElement("div");
       controls.className = "metric_preview_secondary_controls";
       controls.innerHTML = "<a style='float: left;'>Result Table</a>";
-
-      var result_card = document.createElement("div");
-      result_card.className = "result_card";
 
       var table_elem = document.createElement("fn-table");
       table_elem.setAttribute("data-per-page", 25);
@@ -118,13 +137,10 @@
         table_elem.renderTable();
       });
 
-
       loader.removeAttribute("data-loading");
       result_card.appendChild(controls);
       result_card.appendChild(table_elem);
       loader.appendChild(result_card);
-
-
     }
 
     this.renderCodeEditor = function() {
@@ -145,7 +161,6 @@
     }
 
     this.renderNavBar = function() {
-
       var splitpane = this.querySelector("fn-splitpane");
       var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
       var base = this;
