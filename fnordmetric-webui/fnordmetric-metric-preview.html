@@ -17,9 +17,21 @@
   var FnordMetricMetricPreviewComponent = function() {
     this.createdCallback = function() {
       console.log("single metric component ;) ");
+      var params = FnordMetric.util.parseQueryString(
+        this.getAttribute("data-url"));
+
+      var query = FnordMetric.util.generateSQLQueryFromParams(params.query_params);
     }
 
-    
+    /*
+    controls_primary --> get & set button value
+    controls_secondary --> get & set button values
+
+    renderchart
+    rendertable
+
+    runquery
+    */
   }
   
   window.addEventListener("fn-ready", function() {
