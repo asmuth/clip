@@ -32,6 +32,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-table.html");
   webui_bundle_.addComponent("fnord/components/fn-splitpane.html");
   webui_bundle_.addComponent("fnord/components/fn-codeeditor.html");
+  webui_bundle_.addComponent("fnord/components/fn-controls.html");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
 

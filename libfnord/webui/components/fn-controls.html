@@ -1,0 +1,32 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-controls-base-tpl">
+  <style>
+  </style>
+
+  
+</template>
+
+<script type="text/javascript">
+  var ControlsComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-controls", "base");
+      shadow.appendChild(tpl);
+      console.log("controls");
+    }
+
+  }
+
+  window.addEventListener("fn-ready", function() {
+    var controls = Fnord.registerComponent("fn-controls", ControlsComponent);
+  }, false);
+</script>
