@@ -8,11 +8,53 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style>
+  fn-controls /deep/ fn-controls-section {
+    padding: 0 10px;
+  }
+
+  fn-controls /deep/ fn-controls-section[data-position='left'] {
+    float: left;
+  }
+
+  fn-controls /deep/ fn-controls-section[data-position='right'] {
+    float: right;
+  }
+
+  fn-controls[type='primary'] /deep/ .controls_inner {
+    margin-top: 5px;
+    height: 76px;
+    border-top: 2px solid rgb(226, 232, 237);
+    border-bottom: 2px solid rgb(226, 232, 237);
+    background-color: #f6f8fa;
+    color: #60707f;
+    overflow: hidden;
+  }
+
+  fn-controls[type='secondary'] /deep/ .controls_inner {
+    height: 39px;
+    margin: 0px;
+    line-height: 39px;
+    border-bottom: 1px solid #dbdedf;
+    font-size: 90%;
+    padding: 0 20px;
+    text-align: right;
+
+  }
+
+
+</style>
 <template id="fn-controls-base-tpl">
   <style>
-  </style>
 
-  
+
+  </style>
+  <div class="controls_outer">
+    <div class="controls_inner">
+      <content />
+    </div>
+  </div>
+
 </template>
 
 <script type="text/javascript">

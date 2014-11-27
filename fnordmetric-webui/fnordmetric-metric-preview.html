@@ -10,34 +10,79 @@
 -->
 <template id="fnordmetric-metric-preview-base-tpl">
   <fn-loader>
+    <h1 class="page_header"><i>Metric</i> &rsaquo; </h1>
+    <fn-controls type='primary'>
+      <fn-controls-section data-position='left'>
+        Rollup
+        <fn-dropdown id='rollup'>
+        </fn-dropdown>
+        Time Window / Step
+        <fn-dropdown>
+        </fn-dropdown>
+      </fn-controls-section>
+      <fn-controls-section data-position='right'>
+        <fn-button>
+          End Time
+        </fn-button>
+        Show the last
+        <fn-dropdown>
+        </fn-dropdown>
+      </fn-controls-section>
+    </fn-controls>
+    <fn-controls type='secondary'>
+      <fn-controls-section data-position='left'>
+        <fn-button>
+          Open in Editor
+        </fn-button>
+        <fn-button>
+          Embed
+        </fn-button>
+      </fn-controls-section>
+      <fn-controls-section data-position='right'>
+        <fn-button>
+          Timespan
+        </fn-button>
+      <fn-controls-section>
+    </fn-controls>
   </fn-loader>
 </template>
 
 <script type="text/javascript">
   var FnordMetricMetricPreviewComponent = function() {
     this.createdCallback = function() {
-      console.log("single metric component ;) ");
-      console.log(this.getAttribute("data-url"));
-    }
+      var tpl = Fnord.getTemplate("fnordmetric-metric-preview", "base");
+      this.appendChild(tpl);
 
-    this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == "data-url") {
-        console.log("data url is set");
-        var params = FnordMetric.util.parseQueryString(
+      var controls = this.querySelector("fn-controls");
+      var header = this.querySelector(".page_header");
+      var params;
+      var query;
+
+      if (this.getAttribute('data-url') != null) {
+        params = FnordMetric.util.parseQueryString(
           this.getAttribute("data-url"));
-
-        console.log(params);
-
-        var query = 
+        query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
 
-        /*
-        if query_params(data_url)
-          runquery(query(query_params))
-      */
+        header.innerHTML += params.query_params.innerViewValue;
+
+        console.log(params);
+      } else {
+        this.attributeChangedCallback = function(attr, old_val, new_val) {
+          if (attr == "data-url") {
+            params = FnordMetric.util.parseQueryString(
+              this.getAttribute("data-url"));
+            query =
+              FnordMetric.util.generateSQLQueryFromParams(params.query_params);
+
+            header.innerHTML += params.query_params.innerViewValue;
+          }
+        }
       }
+
     }
 
+    
 
     /*
     controls_primary --> get & set button value
