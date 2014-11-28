@@ -9,8 +9,75 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id='fn-datepicker-base-tpl'>
+  <style>
+    input {
+      height: 28px;
+      line-height: 28px;
+      padding: 0 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid #b3c2d0;
+      color: #545758;
+      width: 200px;
+    }
+
+    #datepicker_widget.active {
+      position:absolute;
+      z-index: 999;
+      background: #fff;
+      border: 1px solid rgb(226, 232, 237);
+      border-radius: 1px;
+      width: 216px;
+
+    }
+
+    table {
+      margin: 9px;
+      width: 200px;
+      border: 1px solid rgb(226, 232, 237);
+      border-radius: 3px;
+      border-collapse: collapse;
+    }
+
+    table th {
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      font-weight: normal;
+      color: #60707f;
+    }
+
+    table td {
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
+      text-align:center;
+      color: rgb(115, 134, 148);
+    }
+
+    table td.selectable{
+      color: #444;
+    }
+
+    table td.selectable:hover {
+      cursor: pointer;
+    }
+
+    .fa {
+      color: #444;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+
+
+
+
+
+  </style>
   <input />
-  <div id="datepicker_elem">
+  <div id="datepicker_widget">
     <table>
     </table>
   </div>
@@ -22,18 +89,231 @@
       var tpl = Fnord.getTemplate("fn-datepicker", "base");
       var base = this;
       shadow.appendChild(tpl);
-      console.log("dropdown");
 
       var input = this.shadowRoot.querySelector("input");
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
 
       input.addEventListener('focus', function() {
+        base.setAttribute('active', 'active');
         base.renderCalendar();
       }, false);
+
+      /*document.addEventListener('click', function() {
+        console.log("document click");
+        base.resetDatepicker();
+      }, false);
+
+      widget.addEventListener('click', function(e) {
+        e.stopPropagation();
+      }); */
+
+
     };
 
     this.renderCalendar = function() {
       console.log("render datepicker calendar");
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+      var selected_year = selected_timestamp.getFullYear();
+      var selected_month = selected_timestamp.getMonth();
+      var selected_date = selected_timestamp.getDate();
+
+      this.renderWeekHeader();
+      this.renderMonthHeader(selected_year, selected_month);
+      this.renderWeeks(selected_year, selected_month);
+
+      this.shadowRoot.querySelector("#datepicker_widget").className += " active";
     };
+
+    this.renderWeekHeader = function() {
+      var table_elem = this.shadowRoot.querySelector("table");
+      var header_elem = document.createElement("tr");
+
+      var weekdays =
+        ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+      weekdays.map(function(day) {
+        var header_cell = document.createElement("th");
+        header_cell.innerHTML = day;
+        header_elem.appendChild(header_cell);
+      });
+
+      table_elem.appendChild(header_elem);
+    };
+
+    this.renderMonthHeader = function(year, month) {
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      var header_elem = document.createElement("tr");
+      var cell_elem = document.createElement("td");
+      cell_elem.colSpan = "7";
+
+      var month_title = document.createElement("b");
+      month_title.className = "datepicker_title";
+      month_title.innerHTML =
+        FnordMetric.util.getHumanMonth(month, "long") + " " + year;
+
+      /* tooltip to select previous month */
+      var prev_selector = document.createElement("i");
+      prev_selector.className = "fa fa-chevron-left";
+
+      /* tooltip to select next month */
+      var next_selector = document.createElement("i");
+      next_selector.className = "fa fa-chevron-right";
+
+      cell_elem.appendChild(prev_selector);
+      cell_elem.appendChild(month_title);
+      cell_elem.appendChild(next_selector);
+      header_elem.appendChild(cell_elem);
+      table_elem.appendChild(header_elem);
+
+    };
+
+    this.renderWeeks = function(year, month) {
+      console.log("render weeks");
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      var days_in_month = new Date(year, (month + 1), 0).getDate();
+      var first_weekday = new Date(year + "-" + (month+1) + "-01").getDay();
+      var num_rows = 6;
+      var date = 1;
+
+      for (var cur_row = 0; cur_row < num_rows; cur_row++) {
+        var row_elem = document.createElement("tr");
+        for (var day = 0; day < 7; day++) {
+          var cell_elem = document.createElement("td");
+          if (this.isInMonth(day, first_weekday, date, days_in_month, cur_row)) {
+            if (this.isSelectable(date, month, year)) {
+              cell_elem.innerHTML = date;
+              cell_elem.className = this.cellName(date, month, year);
+              this.handleDateLinks(cell_elem, date, month, year);
+            } else {
+              cell_elem.innerHTML = date;
+            }
+            date++;
+          }
+          row_elem.appendChild(cell_elem);
+        }
+        table_elem.appendChild(row_elem);
+      }
+    };
+
+    this.isInMonth = function(day, first_day, date, days_in_month, cur_row) {
+      if (cur_row > 0 && cur_row < 4) {return true}
+      if (cur_row == 0) {
+        /* the calendar has the same number of rows for each month */
+        if (first_day == 0) {
+          return false;
+        } else if (day < first_day) {
+          return false;
+        } else {
+          return true;
+        }
+      } else if (cur_row >= 4) {
+        if (date <= days_in_month) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    };
+
+    this.isSelectable = function(date, month, year) {
+      var now = new Date();
+      var cur_year = now.getFullYear();
+      var cur_month = now.getMonth();
+      var cur_date = now.getDate();
+
+      if (month == cur_month) {
+        return date <= cur_date;
+      }
+      return (year <= cur_year && month < cur_month);
+    };
+
+    this.cellName = function(date, month, year) {
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+      var selected_year = selected_timestamp.getFullYear();
+      var selected_month = selected_timestamp.getMonth();
+      var selected_date = selected_timestamp.getDate();
+
+      var now = new Date();
+      var cur_year = now.getFullYear();
+      var cur_month = now.getMonth();
+      var cur_date = now.getDate();
+
+      var name = "selectable ";
+      /* date is today */
+      if (date == cur_date && month == cur_month && year == cur_year) {
+        name = "highlight_border";
+      }
+      /* date is selected date */
+      if (date == selected_date && 
+          month == selected_month && 
+          year == selected_year) {
+            name += " highlight";
+      }
+      return name;
+    };
+
+    this.handleDateLinks = function(elem, date, month, year) {
+      var base = this;
+      elem.addEventListener('click', function() {
+        base.onSelect(date, month, year);
+      }, false);
+    };
+
+    this.onSelect = function(date, month, year) {
+      var input = this.shadowRoot.querySelector("input");
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+      var selected_year = selected_timestamp.getFullYear();
+      var selected_month = selected_timestamp.getMonth();
+      var selected_date = selected_timestamp.getDate();
+
+      /* fallback for time inputs */
+      var date = (date == undefined) ? 
+        selected_date : date;
+      var month = (month == undefined)?
+        selected_month : month;
+      var year = (year == undefined) ?
+        selected_year : year;
+      var hours = "12";
+      var minutes = "00";
+      /*var inputs = timeInput.getValues();
+      var hours = inputs.hours;
+      var minutes = inputs.minutes;*/
+      var ts = new Date(year, month, date, hours, minutes).getTime();
+      if (ts <= Date.now() ) {
+        input.value =
+          FnordMetric.util.appendLeadingZero(month+1) + 
+          "/" +
+          FnordMetric.util.appendLeadingZero(date) + 
+          "/" + year + "  " + 
+          FnordMetric.util.appendLeadingZero(hours) +
+          ":" + 
+          FnordMetric.util.appendLeadingZero(minutes);
+
+        input.setAttribute('data-timestamp', ts);
+        this.resetDatepicker();
+        this.fireSelectDateEvent();
+      }
+
+    };
+
+    this.resetDatepicker = function() {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      widget.className = "";
+      FnordMetric.util.removeIfChild(table_elem, widget);
+    };
+
+    this.fireSeleceDateEvent = function() {
+      this.dispatchEvent(new Event('fn-datepicker-select'));
+    };
+
+
   }
 
   window.addEventListener('fn-ready', function() {
