@@ -42,6 +42,51 @@
 
   }
 
+  fn-controls /deep/ .group {
+    height: 64px;
+    float: left;
+    padding: 14px 20px 0 20px;
+    overflow: hidden;
+  }
+
+  fn-controls /deep/ .group b {
+    font-weight: normal;
+    font-size: 80%;
+    line-height: 12px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  fn-controls /deep/ .group.aggregation_type {
+    border-right: 1px solid rgb(226, 232, 237);
+  }
+
+  fn-controls /deep/ .group.aggregation_time_window {
+    padding-right: 0;
+    border-right: 1px solid rgb(226, 232, 237);
+  }
+
+  fn-controls /deep/ .group.aggregation_time_window .disabled {
+    opacity: 0.5;
+  }
+
+  fn-controls /deep/ .group fn-dropdown /deep/ select {
+    -webkit-appearance: menulist-button;
+    height: 30px;
+    font-size: 12px;
+    line-height: 30px;
+    min-width: 150px;
+    background: #fff;
+    border: 1px solid #b3c2d0;
+    color: #545758;
+  }
+
+
+
+
+
 
 </style>
 <template id="fn-controls-base-tpl">

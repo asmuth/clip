@@ -8,4 +8,47 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<template id="fn-dropdown-base-tpl">
 
+  <select></select>
+</template>
+<script type="text/javascript">
+  var DropDownComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-dropdown", "base");
+      shadow.appendChild(tpl);
+    }
+
+    this.setOptions = function(options) {
+      console.log(options);
+      var select = this.shadowRoot.querySelector("select");
+      options.map(function(o) {
+        var option_elem = document.createElement("option");
+        option_elem.innerHTML = o;
+        select.appendChild(option_elem);
+      });
+    };
+
+    this.setValue = function(value) {
+      var select = this.shadowRoot.querySelector("select");
+      select.value = value;
+    }
+
+    this.getValue = function() {
+      var select = this.shadowRoot.querySelector("select");
+      return select.value;
+    };
+
+    /*
+    setAllValues
+    setDisplayValue
+    getDisplayValue
+    */
+
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-dropdown", DropDownComponent);
+  }, false);
+</script>

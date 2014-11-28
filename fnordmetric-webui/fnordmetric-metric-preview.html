@@ -13,20 +13,30 @@
     <h1 class="page_header"><i>Metric</i> &rsaquo; </h1>
     <fn-controls type='primary'>
       <fn-controls-section data-position='left'>
-        Rollup
-        <fn-dropdown id='rollup'>
-        </fn-dropdown>
-        Time Window / Step
-        <fn-dropdown>
-        </fn-dropdown>
+        <div class='group aggregation_type'>
+          <b>Rollup</b>
+          <fn-dropdown id='rollup'>
+          </fn-dropdown>
+        </div>
+        <div class='group aggregation_time_window'>
+          <b>Time Window / Step</b>
+          <fn-dropdown id='time_window'>
+          </fn-dropdown>
+          <fn-dropdown id='time_step'>
+          </fn-dropdown>
+        </div>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
-        <fn-button>
-          End Time
-        </fn-button>
-        Show the last
-        <fn-dropdown>
-        </fn-dropdown>
+        <div class='group timespan'>
+          <b>Show The Last...</b>
+          <fn-dropdown id='timespan'>
+          </fn-dropdown>
+        </div>
+        <div class='group date'>
+          <b>End Time</b>
+          <fn-datepicker>
+          </fn-datepicker>
+        </div>
       </fn-controls-section>
     </fn-controls>
     <fn-controls type='secondary'>
@@ -65,8 +75,7 @@
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
 
         header.innerHTML += params.query_params.innerViewValue;
-
-        console.log(params);
+        this.initControls();
       } else {
         this.attributeChangedCallback = function(attr, old_val, new_val) {
           if (attr == "data-url") {
@@ -79,10 +88,44 @@
           }
         }
       }
+    };
+
+    this.getQueryParamOrDefaultValue = function(key) {
+      var defaults = {
+        view : "value",
+        columns: "",
+        end_time : Date.now(),
+        /* 5 minutes  */
+        time_to_end : 3600000,
+        /* 1 second */
+        t_step : 10000,
+        t_window : 5000,
+        by: ""
+      }
+
+      var params = FnordMetric.util.parseQueryString(
+          this.getAttribute("data-url"));
+
+
+      var value = (params.query_params[key] == undefined)?
+        defaults[key] : params.query_params[key];
+
+
+      return value;
 
     }
 
-    
+    this.initControls = function() {
+      var rollup = this.querySelector("#rollup");
+      console.log(rollup);
+      rollup.setOptions(["Value", "Sum", "Count"]);
+      //to Title Case
+      /*rollup.setValue(
+        this.getQueryParamOrDefaultValue("view"));*/
+
+      rollup.setValue("Value");
+    }
+
 
     /*
     controls_primary --> get & set button value
