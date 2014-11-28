@@ -1,0 +1,56 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+
+  todo: add seconds-selectable and render third input if attr is set
+-->
+<template id="fn-timeinput-base-tpl">
+  <style>
+    #timeinput_container {
+      margin:auto;
+      height: 30px;
+      width: 126px;
+    }
+
+    input {
+      float: left;
+      width: 50px;
+      height: 23px;
+      line-height: 23px;
+    }
+
+    b {
+      float:left;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  </style>
+
+  <div id="timeinput_container">
+    <input id="hours"/>
+    <b>:</b>
+    <input id="minutes" />
+  </div>
+</template>
+<script type="text/javascript">
+  var TimeInputComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-timeinput", "base");
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+      console.log('time input');
+      
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    var timeinput = Fnord.registerComponent('fn-timeinput', TimeInputComponent);
+  }, false);
+</script>
+

@@ -35,6 +35,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-controls.html");
   webui_bundle_.addComponent("fnord/components/fn-dropdown.html");
   webui_bundle_.addComponent("fnord/components/fn-datepicker.html");
+  webui_bundle_.addComponent("fnord/components/fn-timeinput.html");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
 

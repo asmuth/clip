@@ -28,8 +28,9 @@
       border: 1px solid rgb(226, 232, 237);
       border-radius: 1px;
       width: 216px;
-
+      padding-top: 9px;
     }
+
 
     table {
       margin: 9px;
@@ -64,6 +65,14 @@
       cursor: pointer;
     }
 
+    table td.highlight {
+      background-color: rgb(226, 232, 237);
+    }
+
+    table td.highlight_border {
+       border: 1px solid #444;
+    }
+
     .fa {
       color: #444;
       padding-left: 5px;
@@ -72,14 +81,9 @@
 
 
 
-
-
-
   </style>
   <input />
   <div id="datepicker_widget">
-    <table>
-    </table>
   </div>
 </template>
 <script type="text/javascript">
@@ -93,30 +97,47 @@
       var input = this.shadowRoot.querySelector("input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
 
-      input.addEventListener('focus', function() {
+      var select_time_by = this.getAttribute("time-select");
+
+      input.addEventListener('click', function() {
         base.setAttribute('active', 'active');
+        if (select_time_by != null) {
+          base.renderTimeInput();
+        }
         base.renderCalendar();
+
       }, false);
 
-      /*document.addEventListener('click', function() {
+      document.addEventListener('click', function() {
         console.log("document click");
         base.resetDatepicker();
       }, false);
 
-      widget.addEventListener('click', function(e) {
+      this.addEventListener('click', function(e) {
         e.stopPropagation();
-      }); */
+      });
 
 
     };
 
+    this.renderTimeInput = function() {
+      console.log("render time input");
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var time_input = document.createElement("fn-timeinput");
+      widget.appendChild(time_input)
+    }
+
     this.renderCalendar = function() {
-      console.log("render datepicker calendar");
+      console.log("render calendar");
       var selected_timestamp = new Date(
         parseInt(this.getAttribute('data-timestamp'), 10));
       var selected_year = selected_timestamp.getFullYear();
       var selected_month = selected_timestamp.getMonth();
       var selected_date = selected_timestamp.getDate();
+
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var table_elem = document.createElement("table");
+      widget.appendChild(table_elem);
 
       this.renderWeekHeader();
       this.renderMonthHeader(selected_year, selected_month);
@@ -170,7 +191,6 @@
     };
 
     this.renderWeeks = function(year, month) {
-      console.log("render weeks");
       var table_elem = this.shadowRoot.querySelector("table");
 
       var days_in_month = new Date(year, (month + 1), 0).getDate();
@@ -306,10 +326,10 @@
       var table_elem = this.shadowRoot.querySelector("table");
 
       widget.className = "";
-      FnordMetric.util.removeIfChild(table_elem, widget);
+      widget.innerHTML = "";
     };
 
-    this.fireSeleceDateEvent = function() {
+    this.fireSelectDateEvent = function() {
       this.dispatchEvent(new Event('fn-datepicker-select'));
     };
 
