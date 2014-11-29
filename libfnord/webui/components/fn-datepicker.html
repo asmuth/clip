@@ -78,8 +78,6 @@
       padding-right: 5px;
     }
 
-
-
   </style>
   <input />
   <div id="datepicker_widget">
@@ -106,6 +104,7 @@
 
       input.addEventListener('click', function() {
         base.setAttribute('active', 'active');
+        //timeInput is optional and set bu time-select attribute
         if (select_time_by != null) {
           base.renderTimeInput();
         }

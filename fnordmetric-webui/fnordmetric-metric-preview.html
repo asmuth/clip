@@ -42,16 +42,17 @@
     <fn-controls type='secondary'>
       <fn-controls-section data-position='left'>
         <fn-button>
-          Open in Editor
+          <i class='fa fa-database'></i>
+          SQL Editor
         </fn-button>
         <fn-button>
+          <i class='fa fa-share'></i>
           Embed
         </fn-button>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
-        <fn-button>
-          Timespan
-        </fn-button>
+        <fn-daterangepicker>
+        </fn-daterangepicker>
       <fn-controls-section>
     </fn-controls>
   </fn-loader>
@@ -65,30 +66,31 @@
 
       var controls = this.querySelector("fn-controls");
       var header = this.querySelector(".page_header");
-      var params;
-      var query;
 
       if (this.getAttribute('data-url') != null) {
-        params = FnordMetric.util.parseQueryString(
+        var params = FnordMetric.util.parseQueryString(
           this.getAttribute("data-url"));
-        query =
+        var query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
 
         header.innerHTML += params.query_params.innerViewValue;
         this.initControls();
-      } else {
-        this.attributeChangedCallback = function(attr, old_val, new_val) {
-          if (attr == "data-url") {
-            params = FnordMetric.util.parseQueryString(
-              this.getAttribute("data-url"));
-            query =
-              FnordMetric.util.generateSQLQueryFromParams(params.query_params);
-
-            header.innerHTML += params.query_params.innerViewValue;
-          }
-        }
       }
+
+      this.attributeChangedCallback();
     };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url") {
+        var header = this.querySelector(".page_header");
+        var params = FnordMetric.util.parseQueryString(
+          this.getAttribute("data-url"));
+        var query =
+          FnordMetric.util.generateSQLQueryFromParams(params.query_params);
+
+        header.innerHTML += params.query_params.innerViewValue;
+      }
+    }
 
     this.getQueryParamOrDefaultValue = function(key) {
       var defaults = {

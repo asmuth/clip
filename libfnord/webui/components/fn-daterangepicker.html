@@ -1,0 +1,58 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-daterangepicker-base-tpl'>
+  <style type='text/css'>
+    .fa-chevron-left {
+      color: rgb(84, 87, 88);
+      border-right: 1px solid #ececec;
+      margin-right: 5px;
+      padding-right: 15px;
+      height: 22px;
+      line-height: 24px;
+      font-size: 90%;
+    }
+
+    .fa-chevron-right {
+      color: rgb(84, 87, 88);
+      border-left: 1px solid #ececec;
+      margin-left: 5px;
+      padding-left: 15px;
+      height: 22px;
+      line-height: 24px;
+      font-size: 90%;
+    }
+
+    .fa:hover {
+      color: #009fe9;
+    }
+
+
+
+  </style>
+  <i class='fa fa-chevron-left'></i>
+  <span></span>
+  <i class='fa fa-chevron-right'></i>
+</template>
+
+<script type="text/javascript">
+  var DateRangePicker = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-daterangepicker", "base");
+      shadow.appendChild(tpl);
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var daterange_picker = Fnord.registerComponent(
+      'fn-daterangepicker', DateRangePicker);
+  }, false);
+</script>
