@@ -353,58 +353,8 @@ FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
   }
 }
 
-FnordMetric.util.getHorizontalEditorHeight = function(
-  editor_height, result_height) {
-    var default_height = (window.innerHeight - 49);
-    editor_height = Math.max(editor_height, default_height);
-    var height = Math.max(editor_height, result_height);
-    return height;
-}
-
-FnordMetric.util.getHorizontalEditorWidth = 
-  function(editor_width) {
-    //returns the percental editor width
-    var wdn_width = window.innerWidth;
-    if (editor_width > 0) {
-      editor_width = wdn_width / editor_width;
-    }
-    var width = Math.max(35, Math.min(50, editor_width));
-    return width;
-}
 
 
-FnordMetric.createButton = function(href, class_name, inner_HTML) {
-  var button = document.createElement("a");
-  button.href = "#";
-  if (class_name !== undefined) {
-    button.className = class_name;
-  }
-  if (inner_HTML !== undefined) {
-    button.innerHTML = inner_HTML;
-  }
-  return button;
-}
-
-/**
-  * returns those metric objects whose key includes search_item
-  * @param metrics array of metric objects
-  */
-FnordMetric.util.searchMetricList = function(metrics, search_item) {
-  //FIXME works but seems not to be the best solution
-  var data = [];
-  metrics.map(function(item) {
-    if (item.key != undefined) {
-      if (item.key.indexOf(search_item) > -1) {
-        data.push(item);
-      }
-    }
-  });
-  return data;
-}
-
-FnordMetric.util.htmlEscape = function(str) {
-  return str;
-}
 
 
 /* returns all words that include filter */

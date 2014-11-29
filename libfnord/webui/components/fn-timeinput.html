@@ -47,6 +47,16 @@
       console.log('time input');
       
     }
+
+    this.setHoursValue = function(value) {
+      var input = this.shadowRoot.querySelector("#hours");
+      input.value = value;
+    };
+
+    this.setMinutesValue = function(value) {
+      var input = this.shadowRoot.querySelector("#minutes");
+      input.value = value;
+    }
   }
 
   window.addEventListener('fn-ready', function() {

@@ -31,7 +31,6 @@
       padding-top: 9px;
     }
 
-
     table {
       margin: 9px;
       width: 200px;
@@ -124,7 +123,13 @@
       console.log("render time input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
       var time_input = document.createElement("fn-timeinput");
-      widget.appendChild(time_input)
+
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+
+      time_input.setHoursValue(selected_timestamp.getHours());
+      time_input.setMinutesValue(selected_timestamp.getMinutes());
+      widget.appendChild(time_input);
     }
 
     this.renderCalendar = function() {
