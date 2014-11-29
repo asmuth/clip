@@ -98,6 +98,12 @@
 
       var select_time_by = this.getAttribute("time-select");
 
+      if (this.getAttribute('data-timestamp') != null) {
+        input.value = this.createDateTimeString(this.getAttribute('data-timestamp'));
+      }
+
+      this.attributeChangedCallback();
+
       input.addEventListener('click', function() {
         base.setAttribute('active', 'active');
         if (select_time_by != null) {
@@ -115,8 +121,13 @@
       this.addEventListener('click', function(e) {
         e.stopPropagation();
       });
+    };
 
-
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-timestamp") {
+        this.shadowRoot.querySelector("input").value = 
+          this.createDateTimeString(parseInt(new_val), 10);
+      }
     };
 
     this.renderTimeInput = function() {
@@ -125,8 +136,6 @@
 
       var selected_timestamp = new Date(
         parseInt(this.getAttribute('data-timestamp'), 10));
-
-      console.log(selected_timestamp);
 
       time_input.setHoursValue(selected_timestamp.getHours());
       time_input.setMinutesValue(selected_timestamp.getMinutes());
@@ -198,7 +207,6 @@
       cell_elem.appendChild(next_selector);
       header_elem.appendChild(cell_elem);
       table_elem.appendChild(header_elem);
-
     };
 
     this.renderWeeks = function(year, month) {
@@ -268,7 +276,6 @@
       var selected_month = selected_timestamp.getMonth();
       var selected_date = selected_timestamp.getDate();
 
-      console.log(this.getAttribute('data-timestamp'));
       var now = new Date();
       var cur_year = now.getFullYear();
       var cur_month = now.getMonth();
@@ -295,44 +302,45 @@
       }, false);
     };
 
+    this.createDateTimeString = function(timestamp) {
+      var timestamp = new Date(timestamp);
+      var month = timestamp.getMonth();
+      var string =
+          FnordMetric.util.appendLeadingZero(month + 1) +
+          "/" +
+          FnordMetric.util.appendLeadingZero(timestamp.getDate()) + 
+          "/" + timestamp.getFullYear() + "  " + 
+          FnordMetric.util.appendLeadingZero(timestamp.getHours()) +
+          ":" + 
+          FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
+
+      return string;
+    };
+
     this.onSelect = function(date, month, year) {
       var input = this.shadowRoot.querySelector("input");
       var time_values = this.shadowRoot.querySelector("fn-timeinput").getValues();
 
       var selected_timestamp = new Date(
         parseInt(this.getAttribute('data-timestamp'), 10));
-      var selected_year = selected_timestamp.getFullYear();
-      var selected_month = selected_timestamp.getMonth();
-      var selected_date = selected_timestamp.getDate();
 
       /* fallback for time inputs */
       var date = (date == undefined) ? 
-        selected_date : date;
+        selected_timestamp.getDate() : date;
       var month = (month == undefined)?
-        selected_month : month;
+        selected_timestamp.getMonth() : month;
       var year = (year == undefined) ?
-        selected_year : year;
+        selected_timestamp.getFullYear() : year;
+
       var hours = time_values.hours;
       var minutes = time_values.minutes;
-      /*var inputs = timeInput.getValues();
-      var hours = inputs.hours;
-      var minutes = inputs.minutes;*/
+
       var ts = new Date(year, month, date, hours, minutes).getTime();
       if (ts <= Date.now() ) {
-        input.value =
-          FnordMetric.util.appendLeadingZero(month+1) + 
-          "/" +
-          FnordMetric.util.appendLeadingZero(date) + 
-          "/" + year + "  " + 
-          FnordMetric.util.appendLeadingZero(hours) +
-          ":" + 
-          FnordMetric.util.appendLeadingZero(minutes);
-
         this.setAttribute('data-timestamp', ts);
         this.resetDatepicker();
         this.fireSelectDateEvent();
-      }
-
+      };
     };
 
     this.resetDatepicker = function() {
@@ -346,9 +354,7 @@
     this.fireSelectDateEvent = function() {
       this.dispatchEvent(new Event('fn-datepicker-select'));
     };
-
-
-  }
+  };
 
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-datepicker', DatePickerComponent);
