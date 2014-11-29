@@ -525,33 +525,7 @@ FnordMetric.util.isNavKey = function(keycode) {
     keycode == 46);
 }
 
-FnordMetric.util.validatedTimeInput = function(time_input,type, callback) {
-  time_input.maxLength = "2";
-  var classname = time_input.className;
-  time_input.addEventListener('keypress', function(e) {
-    if (e.keyCode == 13) {
-      var value = parseInt(time_input.value, 10);
-      if (type == "minutes") {
-        if (value > 59) {
-          this.className += " highlighted";
-          return;
-        }
-      } else {
-        if (value > 23) {
-          this.className += " highlighted";
-          return;
-        }
-      }
-      this.className = classname;
-      callback();
-      return;
-    }
-    if (!FnordMetric.util.isNavKey(e.keyCode) &&
-      !FnordMetric.util.isNumKey(e.keyCode)) {
-      e.preventDefault();
-    }
-  },false);
-}
+
 
 FnordMetric.util.appendLeadingZero = function (num) {
   var num = num;

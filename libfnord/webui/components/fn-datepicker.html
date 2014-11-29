@@ -120,20 +120,26 @@
     };
 
     this.renderTimeInput = function() {
-      console.log("render time input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
       var time_input = document.createElement("fn-timeinput");
 
       var selected_timestamp = new Date(
         parseInt(this.getAttribute('data-timestamp'), 10));
 
+      console.log(selected_timestamp);
+
       time_input.setHoursValue(selected_timestamp.getHours());
       time_input.setMinutesValue(selected_timestamp.getMinutes());
       widget.appendChild(time_input);
+
+      var base = this;
+
+      time_input.addEventListener('fn-timeinput-submit', function() {
+        base.onSelect();
+      }, false);
     }
 
     this.renderCalendar = function() {
-      console.log("render calendar");
       var selected_timestamp = new Date(
         parseInt(this.getAttribute('data-timestamp'), 10));
       var selected_year = selected_timestamp.getFullYear();
@@ -262,6 +268,7 @@
       var selected_month = selected_timestamp.getMonth();
       var selected_date = selected_timestamp.getDate();
 
+      console.log(this.getAttribute('data-timestamp'));
       var now = new Date();
       var cur_year = now.getFullYear();
       var cur_month = now.getMonth();
@@ -290,6 +297,8 @@
 
     this.onSelect = function(date, month, year) {
       var input = this.shadowRoot.querySelector("input");
+      var time_values = this.shadowRoot.querySelector("fn-timeinput").getValues();
+
       var selected_timestamp = new Date(
         parseInt(this.getAttribute('data-timestamp'), 10));
       var selected_year = selected_timestamp.getFullYear();
@@ -303,8 +312,8 @@
         selected_month : month;
       var year = (year == undefined) ?
         selected_year : year;
-      var hours = "12";
-      var minutes = "00";
+      var hours = time_values.hours;
+      var minutes = time_values.minutes;
       /*var inputs = timeInput.getValues();
       var hours = inputs.hours;
       var minutes = inputs.minutes;*/
@@ -319,7 +328,7 @@
           ":" + 
           FnordMetric.util.appendLeadingZero(minutes);
 
-        input.setAttribute('data-timestamp', ts);
+        this.setAttribute('data-timestamp', ts);
         this.resetDatepicker();
         this.fireSelectDateEvent();
       }

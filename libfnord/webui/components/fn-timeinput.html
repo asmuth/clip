@@ -20,9 +20,20 @@
 
     input {
       float: left;
-      width: 50px;
-      height: 23px;
-      line-height: 23px;
+      width: 30px;
+      height: 25px;
+      line-height: 25px;
+      padding: 0 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid #b3c2d0;
+      color: #545758;
+      background: #fff;
+    }
+
+    input.highlighted {
+      border: 1px solid rgba(230, 126, 34,1.0);
+      background: rgba(230, 126, 34,0.1);
     }
 
     b {
@@ -43,20 +54,86 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fn-timeinput", "base");
       var shadow = this.createShadowRoot();
+      var base = this;
       shadow.appendChild(tpl);
-      console.log('time input');
-      
-    }
+
+      var hours_input = this.shadowRoot.querySelector("#hours");
+      var minutes_input = this.shadowRoot.querySelector("#minutes");
+
+      hours_input.addEventListener('focus', function() {
+        base.validateHoursInput();
+      }, false);
+      minutes_input.addEventListener('focus', function() {
+        base.validateMinutesInput();
+      }, false);
+    };
+
+    this.validateHoursInput = function() {
+      var base = this;
+      var input = this.shadowRoot.querySelector("#hours");
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > 23) {
+            this.className = "highlighted";
+            return;
+          }
+          this.className = "";
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!FnordMetric.util.isNavKey(e.keyCode) &&
+          !FnordMetric.util.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
+    };
+
+    this.validateMinutesInput = function() {
+      var base = this;
+      var input = this.shadowRoot.querySelector("#minutes");
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > 59) {
+            this.className = "highlighted";
+            return;
+          }
+          this.className = "";
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!FnordMetric.util.isNavKey(e.keyCode) &&
+          !FnordMetric.util.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
+
+    };
 
     this.setHoursValue = function(value) {
       var input = this.shadowRoot.querySelector("#hours");
-      input.value = value;
+      input.value = FnordMetric.util.appendLeadingZero(value);
     };
 
     this.setMinutesValue = function(value) {
       var input = this.shadowRoot.querySelector("#minutes");
-      input.value = value;
-    }
+      input.value = FnordMetric.util.appendLeadingZero(value);
+    };
+
+    this.getValues = function() {
+      return {
+        'hours' : this.shadowRoot.querySelector("#hours").value,
+        'minutes' : this.shadowRoot.querySelector("#minutes").value};
+    };
+
+    this.fireTimeInputSubmitEvent = function() {
+      this.dispatchEvent(new Event("fn-timeinput-submit"));
+    };
   }
 
   window.addEventListener('fn-ready', function() {
