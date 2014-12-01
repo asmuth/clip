@@ -113,7 +113,6 @@
       }, false);
 
       document.addEventListener('click', function() {
-        console.log("document click");
         base.resetDatepicker();
       }, false);
 
@@ -124,6 +123,8 @@
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-timestamp") {
+        console.log("date time changed");
+        console.log(this.createDateTimeString(parseInt(new_val), 10));
         this.shadowRoot.querySelector("input").value = 
           this.createDateTimeString(parseInt(new_val), 10);
       }
@@ -345,9 +346,12 @@
     this.resetDatepicker = function() {
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
       var table_elem = this.shadowRoot.querySelector("table");
+      var base = this;
 
       widget.className = "";
       widget.innerHTML = "";
+      //fixme
+      document.removeEventListener('click', base.resetDatepicker, false);
     };
 
     this.fireSelectDateEvent = function() {

@@ -93,6 +93,7 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
+  return path;
 }
 
 
@@ -371,14 +372,15 @@ FnordMetric.util.filterStringArray = function(strings, filter, limit) {
 }
 
 FnordMetric.util.toMilliSeconds = function(timestr) {
-  var time = timestr.split(/([a-z])/);
+  var time = timestr.split(/([a-z])/i);
   var conversion = {
     "s" : 1000,
     "m" : 60000,
     "h" : 3600000,
     "d" : 86400000
   }
-  var seconds = time[0] * conversion[time[1]];
+  var unit = time[1].toLowerCase();
+  var seconds = time[0] * conversion[unit];
   return parseInt(seconds, 10);
 }
 

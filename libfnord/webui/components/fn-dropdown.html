@@ -9,7 +9,11 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fn-dropdown-base-tpl">
-
+  <style>
+    select.disabled {
+      opacity: 0.5;
+    }
+  </style>
   <select></select>
 </template>
 <script type="text/javascript">
@@ -18,14 +22,41 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-dropdown", "base");
       shadow.appendChild(tpl);
+
+      var base = this;
+
+      var select = this.shadowRoot.querySelector("select");
+      select.addEventListener('change', function(e) {
+        base.fireSelectEvent();
+      }, false);
+
+      this.attributeChangedCallback();
     }
 
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "disabled") {
+        this.handleDisableAttr(new_val);
+        console.log(new_val);
+      }
+    };
+
+    this.handleDisableAttr = function(val) {
+      var select = this.shadowRoot.querySelector("select");
+      if (val == "disabled") {
+        select.disabled = true;
+        select.className = "disabled";
+      } else {
+        select.disabled = false;
+        select.className = "";
+      }
+
+    };
+
     this.setOptions = function(options) {
-      console.log(options);
       var select = this.shadowRoot.querySelector("select");
       options.map(function(o) {
         var option_elem = document.createElement("option");
-        option_elem.innerHTML = o;
+        option_elem.innerHTML = o
         select.appendChild(option_elem);
       });
     };
@@ -33,12 +64,16 @@
     this.setValue = function(value) {
       var select = this.shadowRoot.querySelector("select");
       select.value = value;
-    }
+    };
 
     this.getValue = function() {
       var select = this.shadowRoot.querySelector("select");
       return select.value;
     };
+
+    this.fireSelectEvent = function() {
+      this.dispatchEvent(new Event("fn-dropdown-select"));
+    }
 
     /*
     setAllValues

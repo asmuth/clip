@@ -10,7 +10,7 @@
 -->
 <template id="fnordmetric-metric-preview-base-tpl">
   <fn-loader>
-    <h1 class="page_header"><i>Metric</i> &rsaquo; </h1>
+    <h1 class="page_header"><i>Metric</i> &rsaquo; <span></span> </h1>
     <fn-controls type='primary'>
       <fn-controls-section data-position='left'>
         <div class='group aggregation_type'>
@@ -27,9 +27,9 @@
         </div>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
-        <div class='group timespan'>
+        <div class='group timerange'>
           <b>Show The Last...</b>
-          <fn-dropdown id='timespan'>
+          <fn-dropdown id='timerange'>
           </fn-dropdown>
         </div>
         <div class='group date'>
@@ -73,7 +73,7 @@
         var query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
 
-        header.innerHTML += params.query_params.innerViewValue;
+        header.querySelector("span").innerHTML = params.query_params.innerViewValue;
         this.initControls();
       }
 
@@ -88,7 +88,7 @@
         var query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
 
-        header.innerHTML += params.query_params.innerViewValue;
+        header.querySelector("span").innerHTML = params.query_params.innerViewValue;
       }
     }
 
@@ -98,10 +98,12 @@
         columns: "",
         end_time : Date.now(),
         /* 5 minutes  */
-        time_to_end : 3600000,
+        //time_to_end
+        time_range : 300000,
         /* 1 second */
         t_step : 10000,
         t_window : 5000,
+        /*how to set by value */
         by: ""
       }
 
@@ -114,21 +116,126 @@
 
 
       return value;
+    };
 
+    this.updateUrlParams = function(key, value) {
+      console.log(key, value);
+      if (value != undefined) {
+        var params = FnordMetric.util.parseQueryString(
+          this.getAttribute("data-url"));
+
+        params.query_params[key] = value.toString();
+        var path =FnordMetric.util.setURLQueryString(
+          "metric", params.query_params, false, true);
+        console.log(path);
+        this.setAttribute("data-url", path);
+
+      }
+    };
+
+    this.updateDateTimeElems = function() {
+      var params = FnordMetric.util.parseQueryString(
+          this.getAttribute("data-url"));
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute("data-timestamp", params.query_params.end_time);
+
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute("data-endtime", params.query_params.end_time);
+    };
+
+    this.handleAggregationDisplay = function() {
+      var view = this.getQueryParamOrDefaultValue("view");
+      var time_window = this.querySelector("#time_window");
+      var time_step = this.querySelector("#time_step");
+      if (view == "Value" || view.substr(0,6) == "Rollup") {
+        time_window.setAttribute("disabled", "disabled");
+        time_step.setAttribute("disabled", "disabled");
+      } else {
+        time_window.removeAttribute("disabled");
+        time_step.removeAttribute("disabled");
+      }
+
+        
     }
 
     this.initControls = function() {
+      var base = this;
       var rollup = this.querySelector("#rollup");
-      console.log(rollup);
-      rollup.setOptions(["Value", "Sum", "Count"]);
-      //to Title Case
-      /*rollup.setValue(
-        this.getQueryParamOrDefaultValue("view"));*/
+      rollup.setOptions([
+        "Value", "Sum", "Count", "Min",
+        "Max", "Mean", "Median", "Rollup Mean",
+        "Rollup Count", "Rollup Sum"]);
 
-      rollup.setValue("Value");
+      console.log(this.getQueryParamOrDefaultValue("view"));
+
+      
+      var time_window_options = [
+        "1s", "5s", "10s", "20s", "30s", "1m", "5m",
+        "15m", "30m", "1h", "2h", "6h", "12h", "24h"];
+
+      var time_window = this.querySelector("#time_window");
+      time_window.setOptions(time_window_options);
+
+      var time_step = this.querySelector("#time_step");
+      time_step.setOptions(time_window_options);
+
+      var time_range = this.querySelector("#timerange");
+      time_range.setOptions([
+        "5 Minutes","15 Minutes", "30 Minutes", 
+        "1 Hour", "4 Hours", "12 Hours", "1 Day"]);
+
 
       var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute('data-timestamp', Date.now() );
+      datepicker.setAttribute(
+        'data-timestamp', this.getQueryParamOrDefaultValue("end_time") );
+
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute(
+        'data-daterange', this.getQueryParamOrDefaultValue("time_range"));
+      daterangepicker.setAttribute(
+        'data-endtime', this.getQueryParamOrDefaultValue("end_time"));
+
+      //set all controls event listeners
+      rollup.addEventListener("fn-dropdown-select", function() {
+        base.updateUrlParams("view", this.getValue());
+        base.handleAggregationDisplay();
+      }, false);
+
+      time_window.addEventListener("fn-dropdown-select", function() {
+        base.updateUrlParams(
+          "t_window", FnordMetric.util.toMilliSeconds(this.getValue()));
+      }, false);
+
+      time_step.addEventListener("fn-dropdown-select", function() {
+        base.updateUrlParams(
+          "t_step", FnordMetric.util.toMilliSeconds(this.getValue()));
+      }, false);
+
+      time_range.addEventListener("fn-dropdown-select", function() {
+        var endtime = base.getQueryParamOrDefaultValue("end_time");
+        var date_range = FnordMetric.util.toMilliSeconds(this.getValue());
+        var starttime = parseInt(endtime, 10) - date_range;
+        base.updateUrlParams("start_time", starttime);
+        daterangepicker.setAttribute("data-daterange", date_range);
+      }, false);
+
+      datepicker.addEventListener('fn-datepicker-select', function() {
+        console.log("selected date" + this.getAttribute("data-timestamp"));
+        base.updateUrlParams("end_time", this.getAttribute("data-timestamp"));
+        base.updateDateTimeElems();
+      }, false);
+
+      daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
+        function() {
+          base.updateUrlParams("end_time", this.getAttribute("data-endtime"));
+          base.updateDateTimeElements();
+      }, false);
+
+      daterangepicker.addEventListener('fn-daterangepicker-select-next',
+        function() {
+          base.updateUrlParams("end_time", this.getAttribute("data-endtime"));
+          base.updateDateTimeElements();
+      }, false);
     }
 
 

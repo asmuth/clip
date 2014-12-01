@@ -32,6 +32,12 @@
 
     .fa:hover {
       color: #009fe9;
+      cursor: pointer;
+    }
+
+    span {
+      padding: 0 10px;
+      font-weight: 500;
     }
 
 
@@ -48,7 +54,71 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-daterangepicker", "base");
       shadow.appendChild(tpl);
-    }
+
+      var base = this;
+
+      if (this.getAttribute('data-endtime') != null) {
+        this.updateDateTitle(this.getAttribute('data-endtime'));
+      }
+
+      this.attributeChangedCallback();
+
+      this.shadowRoot.querySelector(".fa-chevron-left").addEventListener(
+        'click',
+        function() {
+          base.selectPreviousDateRange();
+        },
+        false);
+
+      this.shadowRoot.querySelector(".fa-chevron-right").addEventListener(
+        'click',
+        function() {
+          base.selectNextDateRange();
+        },
+        false);
+
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-endtime" || attr == "data-daterange") {
+        this.updateDateTitle();
+      }
+    };
+
+
+    this.updateDateTitle = function() {
+      var timestamp = parseInt(this.getAttribute("data-endtime"), 10);
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+      var start_timestamp = timestamp - date_range;
+
+      var title = this.shadowRoot.querySelector("span");
+      title.innerHTML = 
+        FnordMetric.util.getDateTimeString(start_timestamp)
+        + " &mdash; " +
+        FnordMetric.util.getDateTimeString(timestamp);
+    };
+
+    this.selectPreviousDateRange = function() {
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+      var end_time = parseInt(this.getAttribute('data-endtime'), 10);
+      this.setAttribute('data-endtime', end_time - date_range);
+      this.fireSelectPreviousDateRangeEvent();
+    };
+
+    this.selectNextDateRange = function() {
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+      var end_time = parseInt(this.getAttribute('data-endtime'), 10);
+      this.setAttribute('data-endtime', end_time + date_range);
+      this.fireSelectNextDateRangeEvent();
+    };
+
+    this.fireSelectPreviousDateRangeEvent = function() {
+      this.dispatchEvent(new Event("fn-daterangepicker-select-previous"));
+    };
+
+    this.fireSelectNextDateRangeEvent = function() {
+      this.dispatchEvent(new Event("fn-daterangepicker-select-next"));
+    };
   };
 
   window.addEventListener('fn-ready', function() {
