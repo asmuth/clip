@@ -36,7 +36,6 @@
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "disabled") {
         this.handleDisableAttr(new_val);
-        console.log(new_val);
       }
     };
 
@@ -49,7 +48,6 @@
         select.disabled = false;
         select.className = "";
       }
-
     };
 
     this.setOptions = function(options) {

@@ -63,7 +63,7 @@ FnordMetric.util.parseQueryString = function(qstr) {
   * @param push_state (boolena) determines if the url should be
   * added to the browser's history
   */
-FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
+FnordMetric.util.setURLQueryString = function(hash, query_params, push_state) {
   if (hash === undefined || hash === "undefined") {
     window.location.hash = "";
     return;
@@ -71,10 +71,9 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   var path = "#" + hash;
 
   if ("innerView" in query_params && query_params.innerView != undefined) {
-    path += "?" + query_params.innerView + "=";
-    path += (encode)?
-      encodeURIComponent(query_params.innerViewValue) :
-      query_params.innerViewValue;
+    path += "?" + encodeURIComponent(query_params.innerView) + "=";
+    path +=
+      encodeURIComponent(query_params.innerViewValue);
 
     for (var param in query_params) {
       if (param != "innerView" && 
@@ -83,8 +82,8 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
           query_params[param].length > 0) {
 
         path += 
-          "&" + param +
-          "=" + query_params[param];
+          "&" + encodeURIComponent(param) +
+          "=" + encodeURIComponent(query_params[param]);
       }
     }
   }
@@ -98,50 +97,6 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
 
 
 
-/* simple loader foreground */
-FnordMetric.util.displayLoader = function(elem) {
-  elem.innerHTML = "<div class='load_foreground'><i class='fa fa-refresh fa-spin'></div>";
-}
-
-/*
- * loader foreground if loader can't be 
- * destroyed with resetting the innerHTML 
-*/
-FnordMetric.util.Loader = function() {
-  var loader  = document.createElement("div");
-  loader.className = "load_foreground";
-  loader.innerHTML = 
-    "<i class = 'fa fa-refresh fa-spin'>";
-  on_click = null;
-
-  function onClick(on_click_new) {
-    on_click = on_click_new;
-  }
-
-  function display(elem) {
-    elem.appendChild(loader);
-    if (on_click != null) {
-      loader.onclick = on_click;
-    }
-  }
-
-  function destroy(elem) {
-    //FIXME
-    loader = elem.querySelector(".load_foreground");
-    elem.removeChild(loader);
-  }
-
-  return {
-    "display" : display,
-    "destroy" : destroy,
-    "onClick" : onClick
-  }
-}
-
-
-FnordMetric.util.displayErrorMessage = function(elem, msg) {
-  elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
-}
 
 
 FnordMetric.util.renderPageHeader = function(text, elem) {
@@ -300,59 +255,6 @@ FnordMetric.util.humanCountRows = function(tables) {
   return (num == 1? num + " row" : num + " rows")
 }
 
-/**
-  * sorts the metric list for a specific column 
-  * @param metrics is an array of arrays
-  * @param column_index determines which 'column'
-  *   ar array index should be sorted
-  * @param order can be asc or desc
-  */
-FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
-  function compare(a, b) {
-    if (a < b) {
-      if (order == "asc") {
-        return -1;
-      } else {
-        return 1;
-      }
-    }
-    if (a > b) {
-      if (order == "asc") {
-        return 1;
-      } else {
-        return -1;
-      }
-    }
-    return 0;
-  }
-
-  var sorted_metrics = metrics;
-  column_index = parseInt(column_index);
-  switch (column_index) {
-    case 0:
-      sorted_metrics.sort(function(a, b) {
-        return (compare(
-          a[column_index].toLowerCase(),
-          b[column_index].toLowerCase()));
-      });
-      break;
-    case 2:
-      sorted_metrics.sort(function(a, b) {
-        return (compare(
-          a[column_index].toLowerCase(), 
-          b[column_index].toLowerCase()));
-      });
-      break;
-    case 3:
-      sorted_metrics.sort(function(a, b) {
-        return (compare(
-          a[column_index], b[column_index]));
-      });
-      break;
-    default:
-      break;
-  }
-}
 
 
 
@@ -554,22 +456,17 @@ FnordMetric.util.getDateTimeString = function(timestamp) {
     ":" + minutes);
 }
 
-FnordMetric.util.makeLowerCaseUnderscore = function(string) {
-  return (string.toLowerCase().replace(/\s\s|\s/g,"_"));
+/**
+  makes every word's first letter in string to upper case
+*/
+FnordMetric.util.toTitleCase = function(str) {
+  var words = str.split(" ");
+  for (var i = 0; i < words.length; i++) {
+    words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1).toLowerCase();
+  }
+  return words.join(" ");
 }
 
-FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
-  var str = string[0].toUpperCase();
-  for (var i = 1; i < string.length; i++) {
-    if (string[i] == "_") {
-      str += " " + string[i+1].toUpperCase();
-      i++;
-    } else {
-      str += string[i];
-    }
-  }
-  return str;
-}
 
 /* doesn't check if value is already in list */
 FnordMetric.util.addToCSV = function(list, value) {
