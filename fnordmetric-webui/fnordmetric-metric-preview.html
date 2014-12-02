@@ -60,7 +60,11 @@
     </fn-controls>
   </fn-loader>
   <fn-popup id="embed">
-    <fn-tabbar id="embed"></fn-tabbar>
+    <fn-tabbar id="embed">
+      <fn-tab data-active='active' >IFrame</fn-tab>
+      <fn-tab>HTML</fn-tab>
+      <fn-tab>URL</fn-tab>
+    </fn-tabbar>
   </fn-popup>
 </template>
 
@@ -303,10 +307,8 @@
       daterangepicker.setAttribute(
         'data-endtime', this.getQueryParamOrDefaultValue("end_time"));
 
-      var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
-      console.log(embed_popup_tabbar);
 
-      //set all controls event listeners
+      //set controls event listeners
       rollup.addEventListener("fn-dropdown-select", function() {
         base.updateUrlParams("view", this.getValue().toLowerCase());
         base.handleAggregationDisplay();
@@ -349,12 +351,13 @@
 
       var embed_btn = this.querySelector("#embed_btn");
       embed_btn.addEventListener("fn-button-click", function() {
-        console.log("render embed popup");
         var popup = base.querySelector("fn-popup#embed");
         popup.setAttribute("data-active", "active");
-        console.log(popup);
       }, false);
 
+      var embed_html_btn = this.querySelector("fn-tab#html");
+      var embed_iframe_btn = this.querySelector("fn-tab#iframe");
+      var embed_url_btn = this.querySelector("fn-tabe#url");
 
     }
 

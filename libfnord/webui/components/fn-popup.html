@@ -42,16 +42,27 @@
       border: 1px solid #dbdedf;
       left: 30%;
       top:90px;
-      background: #fff;
+      background-color: #fff;
       border-radius: 3px;
       box-shadow: 0 0 3px rgba(0,0,0,.1);
+      opacity: 1;
+    }
+
+    .fa.fa-times {
+      float:left;
+      padding: 5px;
+    }
+
+    .fa.fa-times:hover {
+      color: #009fe9;
+      cursor: pointer;
     }
 
   </style>
-  <div class="background">
-    <div class="inner">
-      <content />
-    </div>
+  <div class="background"></div>
+  <div class="inner">
+    <i class="fa fa-times"></i>
+    <content />
   </div>
 </template>
 
@@ -67,7 +78,13 @@
       background.addEventListener('click', function() {
         base.closePopup();
       }, false);
-    }
+
+      var close_btn = this.shadowRoot.querySelector(".fa.fa-times");
+      close_btn.addEventListener('click', function() {
+        base.closePopup();
+      }, false);
+    };
+
 
     this.closePopup = function() {
       this.removeAttribute("data-active");
