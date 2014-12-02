@@ -58,6 +58,10 @@
         </fn-daterangepicker>
       <fn-controls-section>
     </fn-controls>
+    <div class="result_pane chart">
+    </div>
+    <fn-table data-per-page='25'>
+    </fn-table>
   </fn-loader>
   <fn-popup id="embed">
     <fn-tabbar id="embed">
@@ -84,9 +88,10 @@
 
         var query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
-        //this.runQuery(query);
+
         this.init(params.query_params.innerViewValue);
         this.handleAggregationDisplay();
+        this.runQuery(query);
       }
 
       this.attributeChangedCallback();
@@ -104,13 +109,11 @@
         var query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
 
-        //this.runQuery(query);
-
-
         if (old_val == null) {
           this.init(params.query_params.innerViewValue);
           this.handleAggregationDisplay();
         }
+        this.runQuery(query);
       }
     }
 
@@ -127,14 +130,17 @@
         base.addRequiredURLParamsForView(base.getQueryParamOrDefaultValue("view"));
         base.initControls();
       });
-    }
+    };
 
     this.runQuery = function(query) {
+      var base = this;
       var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
       Fnord.httpPost(queryurl, query, function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
+          console.log(json);
           if (json.charts != undefined) {
+            base.renderChart(json.charts[0]);
             //renderChart(json.charts[0]);
           } else {
             //renderError(json.error);
@@ -236,6 +242,11 @@
       }
     };
 
+    this.renderChart = function(chart) {
+      var pane = this.querySelector(".result_pane.chart");
+      pane.innerHTML = chart.svg;
+      //FnordMetric.extendCharts();
+    }
 
     this.initControls = function() {
       var base = this;
@@ -355,9 +366,11 @@
         popup.setAttribute("data-active", "active");
       }, false);
 
-      var embed_html_btn = this.querySelector("fn-tab#html");
-      var embed_iframe_btn = this.querySelector("fn-tab#iframe");
-      var embed_url_btn = this.querySelector("fn-tabe#url");
+      var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
+      embed_popup_tabbar.addEventListener("fn-tabbar-click", function() {
+        console.log("render other emebed");
+      }, false);
+
 
     }
 
