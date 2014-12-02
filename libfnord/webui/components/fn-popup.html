@@ -1,0 +1,80 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+  fn-popup {
+    display: none;
+  }
+
+  fn-popup[data-active="active"] {
+    display: block;
+  }
+</style>
+
+<template id='fn-popup-base-tpl'>
+  <style type='text/css'>
+    .background {
+      position: fixed;
+      top: 0;
+      left:0;
+      height: 100%;
+      width: 100%;
+      z-index: 1000;
+      background: #e9ebed;
+      opacity: 0.5;
+      display: table;
+      text-align: center;
+    }
+
+    .inner {
+      position: fixed;
+      min-height: 400px;
+      width: 40%;
+      min-width: 700px;
+      z-index: 2000;
+      border: 1px solid #dbdedf;
+      left: 30%;
+      top:90px;
+      background: #fff;
+      border-radius: 3px;
+      box-shadow: 0 0 3px rgba(0,0,0,.1);
+    }
+
+  </style>
+  <div class="background">
+    <div class="inner">
+      <content />
+    </div>
+  </div>
+</template>
+
+<script type='text/javascript'>
+  var PopupComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-popup", "base");
+      shadow.appendChild(tpl);
+
+      var base = this;
+      var background = this.shadowRoot.querySelector(".background");
+      background.addEventListener('click', function() {
+        base.closePopup();
+      }, false);
+    }
+
+    this.closePopup = function() {
+      this.removeAttribute("data-active");
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    var popup = Fnord.registerComponent('fn-popup', PopupComponent);
+  }, false);
+</script>

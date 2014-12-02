@@ -25,6 +25,9 @@
           <fn-dropdown id='time_step'>
           </fn-dropdown>
         </div>
+        <div class="group group_by">
+          <b>Group by</b>
+        </div>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
         <div class='group timerange'>
@@ -45,7 +48,7 @@
           <i class='fa fa-database'></i>
           SQL Editor
         </fn-button>
-        <fn-button>
+        <fn-button id="embed_btn">
           <i class='fa fa-share'></i>
           Embed
         </fn-button>
@@ -56,6 +59,9 @@
       <fn-controls-section>
     </fn-controls>
   </fn-loader>
+  <fn-popup id="embed">
+    <fn-tabbar id="embed"></fn-tabbar>
+  </fn-popup>
 </template>
 
 <script type="text/javascript">
@@ -75,8 +81,7 @@
         var query =
           FnordMetric.util.generateSQLQueryFromParams(params.query_params);
         //this.runQuery(query);
-
-        this.initControls();
+        this.init(params.query_params.innerViewValue);
         this.handleAggregationDisplay();
       }
 
@@ -84,9 +89,10 @@
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
+      var params;
       if (attr == "data-url") {
         var header = this.querySelector(".page_header");
-        var params = FnordMetric.util.parseQueryString(
+        params = FnordMetric.util.parseQueryString(
           this.getAttribute("data-url"));
 
         header.querySelector("span").innerHTML = params.query_params.innerViewValue;
@@ -98,10 +104,25 @@
 
 
         if (old_val == null) {
-          this.initControls();
+          this.init(params.query_params.innerViewValue);
           this.handleAggregationDisplay();
         }
       }
+    }
+
+    this.init = function(metric) {
+      var url = "/metrics?filter=" + encodeURIComponent(metric);
+      var base = this;
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+          json.metrics.map(function(m) {
+            base.columns = m.labels.join(",");
+          });
+        }
+        base.addRequiredURLParamsForView(base.getQueryParamOrDefaultValue("view"));
+        base.initControls();
+      });
     }
 
     this.runQuery = function(query) {
@@ -109,7 +130,6 @@
       Fnord.httpPost(queryurl, query, function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
-          console.log(json);
           if (json.charts != undefined) {
             //renderChart(json.charts[0]);
           } else {
@@ -125,7 +145,7 @@
     this.getQueryParamOrDefaultValue = function(key) {
       var defaults = {
         view : "value",
-        columns: "",
+        columns: this.columns,
         end_time : Date.now(),
         /* 5 minutes  */
         //time_to_end
@@ -133,8 +153,7 @@
         /* 1 second */
         t_step : 10000,
         t_window : 5000,
-        /*how to set by value */
-        by: ""
+        by: this.columns
       }
 
       var params = FnordMetric.util.parseQueryString(
@@ -182,9 +201,37 @@
         time_window.removeAttribute("disabled");
         time_step.removeAttribute("disabled");
       }
-
-        
     };
+
+    /* checks if required url params are misssing and adds those if so */
+    this.addRequiredURLParamsForView = function(view) {
+      var params = FnordMetric.util.parseQueryString(
+        this.getAttribute("data-url"));
+
+      if (view == "count" || 
+          view == "sum" || 
+          view == "mean" ||
+          view == "min" ||
+          view == "max") {
+
+        var time_window = params.query_params.t_window;
+        if (time_window == undefined) {
+          this.updateUrlParams(
+            "t_window", this.getQueryParamOrDefaultValue("t_window"));
+        }
+      }
+      var group_by = params.query_params.by;
+      if (group_by == undefined) {
+        this.updateUrlParams(
+          "by", this.columns);
+      }
+      var param_columns = params.query_params.columns;
+      if (param_columns == undefined) {
+        this.updateUrlParams(
+          "columns", this.columns);
+      }
+    };
+
 
     this.initControls = function() {
       var base = this;
@@ -212,6 +259,31 @@
       time_step.setValue(
         FnordMetric.util.parseMilliTS(this.getQueryParamOrDefaultValue("t_step")));
 
+      var group_by_field = this.querySelector(".group.group_by");
+      var columns = this.getQueryParamOrDefaultValue("columns").split(",");
+      var by = this.getQueryParamOrDefaultValue("by").split(",");
+      columns.map(function(c) {
+        var button = document.createElement("fn-button");
+        button.innerHTML = c;
+        if (by.indexOf(c) > -1) {
+          button.setAttribute("data-active", "active");
+        }
+        group_by_field.appendChild(button);
+
+        button.addEventListener("fn-button-click", function() {
+          var isActive = this.hasAttribute("data-active");
+          var columns = base.getQueryParamOrDefaultValue("by");
+          if (isActive) {
+            this.removeAttribute("data-active");
+            columns = FnordMetric.util.removeFromCSV(columns, this.innerText);
+          } else {
+            this.setAttribute("data-active", "active");
+            columns = FnordMetric.util.addToCSV(columns, this.innerText);
+          }
+          base.updateUrlParams("by", columns);
+        });
+      });
+
       var time_range = this.querySelector("#timerange");
       time_range.setOptions([
         "5 minutes","15 minutes", "30 minutes", 
@@ -231,7 +303,8 @@
       daterangepicker.setAttribute(
         'data-endtime', this.getQueryParamOrDefaultValue("end_time"));
 
-      
+      var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
+      console.log(embed_popup_tabbar);
 
       //set all controls event listeners
       rollup.addEventListener("fn-dropdown-select", function() {
@@ -273,6 +346,16 @@
           base.updateUrlParams("end_time", this.getAttribute("data-endtime"));
           base.updateDateTimeElems();
       }, false);
+
+      var embed_btn = this.querySelector("#embed_btn");
+      embed_btn.addEventListener("fn-button-click", function() {
+        console.log("render embed popup");
+        var popup = base.querySelector("fn-popup#embed");
+        popup.setAttribute("data-active", "active");
+        console.log(popup);
+      }, false);
+
+
     }
 
 

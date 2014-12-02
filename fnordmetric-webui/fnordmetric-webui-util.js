@@ -468,12 +468,14 @@ FnordMetric.util.toTitleCase = function(str) {
 }
 
 
-/* doesn't check if value is already in list */
 FnordMetric.util.addToCSV = function(list, value) {
   if (list.length == 0) {
     return value;
   }
   if (value.length == 0) {
+    return list;
+  }
+  if (list.indexOf(value) > -1 ) {
     return list;
   }
   var values = list.split(",");

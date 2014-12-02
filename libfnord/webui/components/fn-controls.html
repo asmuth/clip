@@ -53,7 +53,6 @@
   }
 
   fn-controls[type='primary']  /deep/ .group.aggregation_time_window {
-    padding-right: 0;
     border-right: 1px solid rgb(226, 232, 237);
   }
 
@@ -70,6 +69,27 @@
     background: #fff;
     border: 1px solid #b3c2d0;
     color: #545758;
+  }
+
+  fn-controls[type='primary'] /deep/ .group.group_by fn-button {
+    line-height: 28px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    padding: 0 8px;
+    text-align: center;
+    font-size: 12px;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid #b3c2d0;
+    color: #545758;
+    height: 28px;
+    display: block;
+    float: left;
+    margin-right: 10px;
+  }
+
+  fn-controls[type='primary'] /deep/ .group.group_by fn-button[data-active='active'] {
+    background: rgb(226, 232, 237);
   }
 
   fn-controls[type='secondary'] /deep/ .controls_inner {
