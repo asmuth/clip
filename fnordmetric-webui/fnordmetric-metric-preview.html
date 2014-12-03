@@ -128,7 +128,9 @@
             base.columns = m.labels.join(",");
           });
         }
-        base.addRequiredURLParamsForView(base.getQueryParamOrDefaultValue("view"));
+        base.updateUrlParams(
+          base.addRequiredURLParamsForView(
+            base.getQueryParamOrDefaultValue("view")));
         base.initControls();
       });
     };
@@ -230,7 +232,7 @@
       }
     };
 
-    /* checks if required url params are misssing and adds those if so */
+    /* returns all missing params */
     this.addRequiredURLParamsForView = function(view) {
       var params = FnordMetric.util.parseQueryString(
         this.getAttribute("data-url"));
@@ -260,9 +262,7 @@
         update = true;
       }
 
-      if (update) {
-        this.updateUrlParams(new_params);
-      }
+      return new_params;
     };
 
     this.renderChart = function(chart) {
@@ -381,7 +381,10 @@
 
       //set controls event listeners
       rollup.addEventListener("fn-dropdown-select", function() {
-        base.updateUrlParams({"view" :this.getValue().toLowerCase()});
+        var view = this.getValue().toLowerCase();
+        var new_params = base.addRequiredURLParamsForView(view);
+        new_params.view = view;
+        base.updateUrlParams(new_params);
         base.handleAggregationDisplay();
       }, false);
 
@@ -427,22 +430,9 @@
       embed_popup_tabbar.addEventListener("fn-tabbar-click", function() {
         console.log("render other emebed");
       }, false);
+    };
+  };
 
-
-    }
-
-
-    /*
-    controls_primary --> get & set button value
-    controls_secondary --> get & set button values
-
-    renderchart
-    rendertable
-
-    runquery
-    */
-  }
-  
   window.addEventListener("fn-ready", function() {
     Fnord.registerComponent(
       "fnordmetric-metric-preview",
