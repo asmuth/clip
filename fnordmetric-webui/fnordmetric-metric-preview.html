@@ -170,10 +170,18 @@
       var params = FnordMetric.util.parseQueryString(
           this.getAttribute("data-url"));
 
+      if (key == "time_range") {
+        var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
+        var start_time = parseInt(params.query_params['start_time'], 10);
+        if (!isNaN(start_time)) {
+          return end_time - start_time;
+        } else {
+          return defaults['time_range'];
+        }
+      }
 
       var value = (params.query_params[key] == undefined)?
         defaults[key] : params.query_params[key];
-
 
       return value;
     };
@@ -187,18 +195,21 @@
         var path =FnordMetric.util.setURLQueryString(
           "metric", params.query_params, false, true);
         this.setAttribute("data-url", path);
-
       }
     };
 
-    this.updateDateTimeElems = function() {
+    this.updateDateTimeElems = function(end_time) {
       var params = FnordMetric.util.parseQueryString(
           this.getAttribute("data-url"));
+      var date_range = this.getQueryParamOrDefaultValue("time_range");
+      var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
       var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute("data-timestamp", params.query_params.end_time);
+      this.updateUrlParams("end_time", end_time);
+      this.updateUrlParams("start_time", start_time);
+      datepicker.setAttribute("data-timestamp", end_time);
 
       var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute("data-endtime", params.query_params.end_time);
+      daterangepicker.setAttribute("data-endtime", end_time);
     };
 
     this.handleAggregationDisplay = function() {
@@ -372,20 +383,17 @@
       }, false);
 
       datepicker.addEventListener('fn-datepicker-select', function() {
-        base.updateUrlParams("end_time", this.getAttribute("data-timestamp"));
-        base.updateDateTimeElems();
+        base.updateDateTimeElems(this.getAttribute('data-timestamp'));
       }, false);
 
       daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
         function() {
-          base.updateUrlParams("end_time", this.getAttribute("data-endtime"));
-          base.updateDateTimeElems();
+          base.updateDateTimeElems(this.getAttribute("data-endtime"));
       }, false);
 
       daterangepicker.addEventListener('fn-daterangepicker-select-next',
         function() {
-          base.updateUrlParams("end_time", this.getAttribute("data-endtime"));
-          base.updateDateTimeElems();
+          base.updateDateTimeElems(this.getAttribute("data-endtime"));
       }, false);
 
       var embed_btn = this.querySelector("#embed_btn");
