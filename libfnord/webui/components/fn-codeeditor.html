@@ -337,17 +337,18 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-codeeditor", "base");
       shadow.appendChild(tpl);
-
       var codemirror = CodeMirror(this.shadowRoot, {
         autofocus: true,
         lineNumbers: true,
         lineWrapping: true
       });
+
+      this.getValue = function() {
+        return codemirror.getValue();
+      };
+
     };
 
-    this.getValue = function() {
-      return "draw linechart; Select time as x, value as y from `/osx/load_avg_15m`;";
-    }
   };
 
   window.addEventListener('fn-ready', function() {

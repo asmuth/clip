@@ -58,11 +58,12 @@
         </fn-daterangepicker>
       <fn-controls-section>
     </fn-controls>
-    <div class="result_pane chart">
-      <fn-loader></fn-loader>
-    </div>
-    <fn-table data-per-page='25'>
-    </fn-table>
+    <fn-loader id="result_pane">
+      <div id="result_pane_chart">
+      </div>
+      <fn-table data-per-page='25'>
+      </fn-table>
+    </fn-loader>
   </fn-loader>
   <fn-popup id="embed">
     <fn-tabbar id="embed">
@@ -134,9 +135,11 @@
 
     this.runQuery = function(query) {
       var base = this;
+      this.renderChartLoader();
       var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
       Fnord.httpPost(queryurl, query, function(r) {
         if (r.status == 200) {
+          base.stopChartLoader();
           var json = JSON.parse(r.response);
           if (json.status == "error") {
             base.renderError(json.error);
@@ -263,13 +266,13 @@
     };
 
     this.renderChart = function(chart) {
-      var pane = this.querySelector(".result_pane.chart fn-loader");
+      var pane = this.querySelector("fn-loader#result_pane #result_pane_chart");
       pane.innerHTML = chart.svg;
       //FnordMetric.extendCharts();
     };
 
     this.renderTable = function(table) {
-      var table_elem = this.querySelector("fn-table");
+      var table_elem = this.querySelector("fn-loader#result_pane fn-table");
       table_elem.innerHTML = "";
       table.columns.map(function(c) {
         var column_elem = document.createElement("fn-table-column");
@@ -290,10 +293,20 @@
     };
 
     this.renderError = function(error) {
-      var pane = this.querySelector(".result_pane.chart fn-loader");
+      var pane = this.querySelector("fn-loader#result_pane #result_pane_chart");
       pane.innerHTML =
         "<div class='error_box'>" + error + "</div>";
     };
+
+    this.renderChartLoader = function() {
+      var loader = this.querySelector("fn-loader#result_pane");
+      loader.setAttribute('data-loading', 'loading');
+    };
+
+    this.stopChartLoader = function() {
+      var loader = this.querySelector("fn-loader#result_pane");
+      loader.removeAttribute('data-loading');
+    }
 
     this.initControls = function() {
       var base = this;
