@@ -82,6 +82,10 @@
       padding-right: 5px;
     }
 
+    .fa:hover {
+      cursor:pointer;
+    }
+
   </style>
   <input type='text' readonly/>
   <div id="datepicker_widget">
@@ -116,7 +120,12 @@
             base.renderTimeInput();
           }
 
-          base.renderCalendar();
+          var selected_timestamp = new Date(
+            parseInt(base.getAttribute('data-timestamp'), 10));
+          var selected_year = selected_timestamp.getFullYear();
+          var selected_month = selected_timestamp.getMonth();
+
+          base.renderCalendar(selected_year, selected_month);
         }
 
       }, false);
@@ -132,8 +141,6 @@
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-timestamp") {
-        console.log("date time changed");
-        console.log(this.createDateTimeString(parseInt(new_val), 10));
         this.shadowRoot.querySelector("input").value = 
           this.createDateTimeString(parseInt(new_val), 10);
       }
@@ -157,20 +164,20 @@
       }, false);
     }
 
-    this.renderCalendar = function() {
-      var selected_timestamp = new Date(
-        parseInt(this.getAttribute('data-timestamp'), 10));
-      var selected_year = selected_timestamp.getFullYear();
-      var selected_month = selected_timestamp.getMonth();
-      var selected_date = selected_timestamp.getDate();
-
+    this.renderCalendar = function(year, month) {
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
-      var table_elem = document.createElement("table");
+
+      var table_elem = widget.querySelector("table");
+      if (table_elem == null) {
+        table_elem = document.createElement("table");
+      } else {
+        table_elem.innerHTML = "";
+      }
       widget.appendChild(table_elem);
 
       this.renderWeekHeader();
-      this.renderMonthHeader(selected_year, selected_month);
-      this.renderWeeks(selected_year, selected_month);
+      this.renderMonthHeader(year, month);
+      this.renderWeeks(year, month);
 
       widget.setAttribute("data-active", "active");
     };
@@ -192,6 +199,7 @@
     };
 
     this.renderMonthHeader = function(year, month) {
+      var base = this;
       var table_elem = this.shadowRoot.querySelector("table");
 
       var header_elem = document.createElement("tr");
@@ -216,6 +224,18 @@
       cell_elem.appendChild(next_selector);
       header_elem.appendChild(cell_elem);
       table_elem.appendChild(header_elem);
+
+      prev_selector.addEventListener('click', function() {
+        year = (month == 0)? year-1 : year;
+        month = (month + 11) % 12;
+        base.renderCalendar(year, month);
+      }, false);
+
+      next_selector.addEventListener('click', function() {
+        year = (month == 11)? year+1 : year;
+        month = (month + 1) % 12;
+        base.renderCalendar(year, month);
+      }, false);
     };
 
     this.renderWeeks = function(year, month) {
