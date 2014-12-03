@@ -104,7 +104,6 @@
         var header = this.querySelector(".page_header");
         params = FnordMetric.util.parseQueryString(
           this.getAttribute("data-url"));
-
         header.querySelector("span").innerHTML = params.query_params.innerViewValue;
 
         var query =
@@ -186,16 +185,20 @@
       return value;
     };
 
-    this.updateUrlParams = function(key, value) {
-      if (value != undefined) {
-        var params = FnordMetric.util.parseQueryString(
-          this.getAttribute("data-url"));
+    this.updateUrlParams = function(new_params) {
+      var params = FnordMetric.util.parseQueryString(
+        this.getAttribute("data-url"));
 
-        params.query_params[key] = value.toString();
-        var path =FnordMetric.util.setURLQueryString(
-          "metric", params.query_params, false, true);
-        this.setAttribute("data-url", path);
+      for (var key in new_params) {
+        if (new_params[key] != undefined) {
+          params.query_params[key] = new_params[key].toString();
+        }
       }
+
+      var path =FnordMetric.util.setURLQueryString(
+          "metric", params.query_params, false, true);
+      this.setAttribute("data-url", path);
+
     };
 
     this.updateDateTimeElems = function(end_time) {
@@ -204,8 +207,7 @@
       var date_range = this.getQueryParamOrDefaultValue("time_range");
       var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
       var datepicker = this.querySelector("fn-datepicker");
-      this.updateUrlParams("end_time", end_time);
-      this.updateUrlParams("start_time", start_time);
+      this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
       datepicker.setAttribute("data-timestamp", end_time);
 
       var daterangepicker = this.querySelector("fn-daterangepicker");
@@ -229,6 +231,8 @@
     this.addRequiredURLParamsForView = function(view) {
       var params = FnordMetric.util.parseQueryString(
         this.getAttribute("data-url"));
+      var new_params = {};
+      var update = false;
 
       if (view == "count" || 
           view == "sum" || 
@@ -238,19 +242,23 @@
 
         var time_window = params.query_params.t_window;
         if (time_window == undefined) {
-          this.updateUrlParams(
-            "t_window", this.getQueryParamOrDefaultValue("t_window"));
+          new_params.t_window = this.getQueryParamOrDefaultValue("t_window");
+          update = true;
         }
       }
       var group_by = params.query_params.by;
       if (group_by == undefined) {
-        this.updateUrlParams(
-          "by", this.columns);
+        new_params.by = this.columns;
+        update = true;
       }
       var param_columns = params.query_params.columns;
       if (param_columns == undefined) {
-        this.updateUrlParams(
-          "columns", this.columns);
+        new_params.columns = this.columns;
+        update = true;
+      }
+
+      if (update) {
+        this.updateUrlParams(new_params);
       }
     };
 
@@ -334,7 +342,7 @@
             this.setAttribute("data-active", "active");
             columns = FnordMetric.util.addToCSV(columns, this.innerText);
           }
-          base.updateUrlParams("by", columns);
+          base.updateUrlParams({"by": columns});
         });
       });
 
@@ -360,25 +368,25 @@
 
       //set controls event listeners
       rollup.addEventListener("fn-dropdown-select", function() {
-        base.updateUrlParams("view", this.getValue().toLowerCase());
+        base.updateUrlParams({"view" :this.getValue().toLowerCase()});
         base.handleAggregationDisplay();
       }, false);
 
       time_window.addEventListener("fn-dropdown-select", function() {
         base.updateUrlParams(
-          "t_window", FnordMetric.util.toMilliSeconds(this.getValue()));
+          {"t_window": FnordMetric.util.toMilliSeconds(this.getValue())});
       }, false);
 
       time_step.addEventListener("fn-dropdown-select", function() {
         base.updateUrlParams(
-          "t_step", FnordMetric.util.toMilliSeconds(this.getValue()));
+          {"t_step": FnordMetric.util.toMilliSeconds(this.getValue())});
       }, false);
 
       time_range.addEventListener("fn-dropdown-select", function() {
         var endtime = base.getQueryParamOrDefaultValue("end_time");
         var date_range = FnordMetric.util.toMilliSeconds(this.getValue());
         var starttime = parseInt(endtime, 10) - date_range;
-        base.updateUrlParams("start_time", starttime);
+        base.updateUrlParams({"start_time": starttime});
         daterangepicker.setAttribute("data-daterange", date_range);
       }, false);
 
