@@ -130,6 +130,43 @@
       }
     };
 
+    this.getPaneWidths = function() {
+      var left_relative = this.getAttribute('left-width-relative');
+      if (left_relative != null) {
+        return {
+          left : left_relative + "%",
+          right: 100 - parseInt(left_relative, 10) + "%"};
+      }
+
+      var right_relative = this.getAttribute('right-width-relative');
+      if (right_relative != null) {
+        return {
+          left : 100 - parseInt(right_relative, 10) + "%",
+          right : right_relative + "%"};
+      }
+
+      var left_absolute = this.getAttribute('left-width-absolute');
+      if (left_absolute != null) {
+        var width = this.offsetWidth();
+        return {
+          left : left_absolute + "px",
+          right : width - parseInt(left_absolute, 10) + "px"};
+      }
+
+      var right_absolute = this.getAttribute('right-width-absolute');
+      if (right_absolute != null) {
+        var width = this.offsetwidth();
+        return {
+          left : width - parseInt(right_absolute, 10) + "px",
+          right : right_absolute + "px"};
+      }
+
+      var width = this.offsetWidth / 2;
+      return {
+        left : width + "px",
+        right : width + "px"};
+    }
+
 
     this.renderVerticalView = function() {
       console.log("render vertical view");
@@ -137,9 +174,27 @@
       var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
-      var left_pane_width = this.offsetWidth / 2;
+      var widths = this.getPaneWidths();
       var left_pane_height = this.offsetHeight;
+      console.log(widths);
 
+      left_pane.style.width = widths.left;
+      left_pane.style.height = left_pane_height + "px";
+
+      right_pane.style.width = widths.right;
+      right_pane.style.height = left_pane_height + "px";
+      right_pane.style.marginLeft = widths.left;
+      right_pane.style.marginTop = "";
+      right_pane.style.overflowY = "auto";
+
+      resizer_tooltip.style.height = left_pane_height + "px";
+      resizer_tooltip.style.marginLeft = widths.left;
+      resizer_tooltip.style.marginTop = "";
+      resizer_tooltip.style.width = "5px";
+      resizer_tooltip.style.cursor = "ew-resize";
+
+
+      /*var left_pane_width = this.offsetWidth / 2;
       left_pane.style.width = left_pane_width + "px";
       left_pane.style.height = left_pane_height + "px";
 
@@ -153,7 +208,7 @@
       resizer_tooltip.style.marginLeft = left_pane_width + "px";
       resizer_tooltip.style.marginTop = "";
       resizer_tooltip.style.width = "5px";
-      resizer_tooltip.style.cursor = "ew-resize";
+      resizer_tooltip.style.cursor = "ew-resize";*/
     };
 
     this.renderHorizontalView = function() {

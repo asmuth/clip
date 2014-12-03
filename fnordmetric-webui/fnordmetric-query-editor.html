@@ -14,8 +14,7 @@
 
 <template id="fnordmetric-query-editor-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
-    <fn-splitpane id="splitpane" data-split="vertical">
-
+    <fn-splitpane id="splitpane" data-split="vertical" left-width-relative='30'>
     </fn-splitpane>
   </fn-loader>
 </template>
@@ -33,26 +32,46 @@
       this.renderNavBar();
       this.renderCodeEditor();
 
+      if (this.getAttribute('data-url') != null) {
+        var params =
+          FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
+        var query = params.query_params.innerViewValue;
+        splitpane.shadowRoot.querySelector("fn-codeeditor").setValue(query);
+        //this.runQuery(query);
+      }
+
 
       this.attributeChangedCallback();
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-url") {
-        console.log("data url changed callback");
-        /*
-        if query_params(data_url)
-          runquery(query(query_params))
-      */
+        if (old_val == null) {
+          var params =
+            FnordMetric.util.parseQueryString(new_val);
+          var query = params.query_params.innerViewValue;
+          var splitpane = this.querySelector("fn-splitpane");
+          splitpane.shadowRoot.querySelector("fn-codeeditor").setValue(query);
+          console.log(splitpane.shadowRoot.querySelector("fn-codeeditor"))
+          //this.runQuery(query);
+
+        }
+
       }
     }
 
-    this.runQuery = function() {
-      console.log("run query");
+    this.updateUrl = function() {
       var code_editor = splitpane.shadowRoot.querySelector("fn-codeeditor");
-      console.log(code_editor);
       var query = code_editor.getValue();
-      console.log(query);
+      this.setAttribute('data-url', encodeURIComponent(query));
+      var params = {
+        innerView : "sql_editor",
+        innerViewValue : query};
+      FnordMetric.util.setURLQueryString("query", params, true);
+      //this.runQuery(query);
+    }
+
+    this.runQuery = function(query) {
       var base = this;
 
       Fnord.httpPost("/query", query, function(r, duration) {
@@ -62,6 +81,10 @@
           //FnordMetric.extendCharts();
         } else {
           /* server error */
+          base.renderError(
+            "Sorry, FnordMetric Server encountered an error. " + "<br>" + 
+            "If you believe this is a bug in FnordMetric Server "+
+            "please report an issue at github.com/.../issues.");
         }
       });
 
@@ -70,12 +93,13 @@
     this.renderResult = function(response, duration) {
       var splitpane = this.querySelector("fn-splitpane");
       var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
+      right_pane.innerHTML = "";
       var loader = document.createElement("fn-loader");
       loader.setAttribute("data-loading", "data-loading");
       right_pane.appendChild(loader);
 
       if (response.status == "error") {
-        this.renderQueryError(response.error);
+        this.renderError(response.error);
       } else {
         if (response.charts != undefined) {
           this.renderChart(response.charts, loader);
@@ -87,7 +111,7 @@
       //renderExecutionInfo
     };
 
-    this.renderQueryError = function(error_message) {
+    this.renderError = function(error_message) {
       var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
       right_pane.innerHTML =
         "<div class='error_box'>" + error_message + "</div>";
@@ -153,7 +177,6 @@
     }
 
     this.renderCodeEditor = function() {
-      console.log("rende code editor");
       var splitpane = this.querySelector("fn-splitpane");
       var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
 
@@ -165,7 +188,7 @@
       code_editor.addEventListener('keydown', function(e) {
         if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
           e.preventDefault();
-          base.runQuery();
+          base.updateUrl();
         }
       }, false);
     }
@@ -202,7 +225,7 @@
       left_pane.appendChild(button_bar);
 
       exec_btn.onclick = function() {
-        base.runQuery();
+        base.updateUrl();
       }
 
       split_btn.onclick = function(e) {
