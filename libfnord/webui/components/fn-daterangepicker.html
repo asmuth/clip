@@ -7,6 +7,8 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
+  only if attribute future-selectable is set future dates are selectable
+  same holds true for past-selectable
 -->
 <template id='fn-daterangepicker-base-tpl'>
   <style type='text/css'>
@@ -101,15 +103,21 @@
     this.selectPreviousDateRange = function() {
       var date_range = parseInt(this.getAttribute('data-daterange'), 10);
       var end_time = parseInt(this.getAttribute('data-endtime'), 10);
-      this.setAttribute('data-endtime', end_time - date_range);
-      this.fireSelectPreviousDateRangeEvent();
+      end_time = end_time - date_range;
+      if (this.hasAttribute('past-selectable') || end_time >= Date.now()) {
+        this.setAttribute('data-endtime', end_time);
+        this.fireSelectPreviousDateRangeEvent();
+      }
     };
 
     this.selectNextDateRange = function() {
       var date_range = parseInt(this.getAttribute('data-daterange'), 10);
       var end_time = parseInt(this.getAttribute('data-endtime'), 10);
-      this.setAttribute('data-endtime', end_time + date_range);
-      this.fireSelectNextDateRangeEvent();
+      end_time = end_time + date_range;
+      if (this.hasAttribute('future-selectable') || end_time <= Date.now()) {
+        this.setAttribute('data-endtime', end_time);
+        this.fireSelectNextDateRangeEvent();
+      }
     };
 
     this.fireSelectPreviousDateRangeEvent = function() {
