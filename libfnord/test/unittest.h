@@ -9,16 +9,18 @@
  */
 #ifndef _FNORDMETRIC_UTIL_UNITTEST_H
 #define _FNORDMETRIC_UTIL_UNITTEST_H
-#include <fnord/base/exception.h>
-#include <fnord/base/random.h>
-#include <fnord/io/inputstream.h>
-#include <fnord/io/outputstream.h>
-#include <fnordmetric/util/inspect.h>
+
 #include <functional>
 #include <unordered_map>
 #include <vector>
 #include <string>
 #include <string.h>
+
+#include "fnord/base/exception.h"
+#include "fnord/base/inspect.h"
+#include "fnord/base/random.h"
+#include "fnord/io/inputstream.h"
+#include "fnord/io/outputstream.h"
 
 const char kExpectationFailed[] = "ExpectationFailed";
 
@@ -49,8 +51,8 @@ void EXPECT_EQ(T1 left, T2 right) {
     RAISE(
         kExpectationFailed,
         "expectation failed: %s == %s",
-        fnord::util::inspect<T1>(left).c_str(),
-        fnord::util::inspect<T2>(right).c_str());
+        fnord::inspect<T1>(left).c_str(),
+        fnord::inspect<T2>(right).c_str());
   }
 }
 
@@ -77,8 +79,8 @@ void EXPECT_EQ(T1 left, T2 right) {
 
 #define EXPECT_FILES_EQ(F1, F2) \
   { \
-    auto one = fnord::test::FileInputStream::openFile(F1); \
-    auto two = fnord::test::FileInputStream::openFile(F2); \
+    auto one = fnord::io::FileInputStream::openFile(F1); \
+    auto two = fnord::io::FileInputStream::openFile(F2); \
     std::string one_str; \
     std::string two_str; \
     one->readUntilEOF(&one_str); \

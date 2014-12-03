@@ -13,7 +13,6 @@
 #include <vector>
 
 namespace fnord {
-namespace util {
 
 template <typename T>
 std::string inspect(const T& value);
@@ -24,7 +23,6 @@ std::string inspect(const std::pair<T1, T2>& value);
 template <typename T>
 std::string inspect(const std::vector<T>& value);
 
-}
 }
 
 #include "inspect_impl.h"

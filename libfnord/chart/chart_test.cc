@@ -20,13 +20,33 @@
 
 UNIT_TEST(UITest);
 
+using fnord::chart::AnyDomain;
+using fnord::chart::AxisDefinition;
+using fnord::chart::AreaChart;
+using fnord::chart::AreaChart2D;
+using fnord::chart::AreaChart3D;
+using fnord::chart::BarChart;
+using fnord::chart::BarChart2D;
+using fnord::chart::BarChart3D;
+using fnord::chart::LineChart2D;
+using fnord::chart::PointChart2D;
+using fnord::chart::PointChart3D;
+using fnord::chart::Canvas;
+using fnord::chart::ContinuousDomain;
+using fnord::chart::DomainProvider;
+using fnord::chart::Series;
+using fnord::chart::Series2D;
+using fnord::chart::Series3D;
+using fnord::chart::SVGTarget;
+using fnord::io::FileOutputStream;
+
 static void compareChart(
-    fnordmetric::chart::Canvas* chart,
+    Canvas* chart,
     const std::string& file_name) {
-  auto output_stream = fnordmetric::util::FileOutputStream::openFile(
+  auto output_stream = FileOutputStream::openFile(
       "build/tests/tmp/" + file_name);
 
-  fnordmetric::chart::SVGTarget target(output_stream.get());
+  SVGTarget target(output_stream.get());
   chart->render(&target);
 
   EXPECT_FILES_EQ(
@@ -361,9 +381,9 @@ TEST_CASE(UITest, TestCanvasWithAxisFromNumericalDomain, [] () {
 });
 
 
-static fnordmetric::util::UnitTest::TestCase __test_simple_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_simple_bar_chart_(
     &UITest, "TestSimpleBarChart", [] () {
-  auto series = new fnordmetric::Series2D<std::string, double>("myseries");
+  auto series = new Series2D<std::string, double>("myseries");
 
   series->addDatum("A", 34);
   series->addDatum("B", 18);
@@ -387,7 +407,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_bar_chart_(
       "UITest_TestSimpleBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_mulitseries_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
     &UITest, "TestMultiSeriesBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
@@ -421,7 +441,7 @@ static fnordmetric::util::UnitTest::TestCase __test_mulitseries_bar_chart_(
       "UITest_TestMultiSeriesBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_stacked_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_stacked_bar_chart_(
     &UITest, "TestStackedBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
@@ -455,7 +475,7 @@ static fnordmetric::util::UnitTest::TestCase __test_stacked_bar_chart_(
       "UITest_TestStackedBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_horizontal_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_horizontal_bar_chart_(
     &UITest, "TestHorizontalBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
@@ -480,7 +500,7 @@ static fnordmetric::util::UnitTest::TestCase __test_horizontal_bar_chart_(
       "UITest_TestHorizontalBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
     &UITest, "TestHorizontalMulitSeriesBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
@@ -514,7 +534,7 @@ static fnordmetric::util::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
       "UITest_TestHorizontalMulitSeriesBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
     &UITest, "TestHorizontalStackedBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
@@ -547,7 +567,7 @@ static fnordmetric::util::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
       "UITest_TestHorizontalStackedBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_range_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_range_bar_chart_(
     &UITest, "TestRangeBarChart", [] () {
   auto series1 = new Series3D<std::string, double, double>("myseries1");
   series1->addDatum("A", -40, +40);
@@ -580,7 +600,7 @@ static fnordmetric::util::UnitTest::TestCase __test_range_bar_chart_(
       "UITest_TestRangeBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_horiz_range_bar_chart_(
+static fnord::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
     &UITest, "TestHorizontalRangeBarChart", [] () {
   auto series1 = new Series3D<std::string, double, double>("myseries1");
   series1->addDatum("A", -40, +40);
@@ -613,7 +633,7 @@ static fnordmetric::util::UnitTest::TestCase __test_horiz_range_bar_chart_(
       "UITest_TestHorizontalRangeBarChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
+static fnord::test::UnitTest::TestCase __test_simple_point_chart_(
     &UITest, "TestSimplePointChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
@@ -645,7 +665,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_point_chart_(
       "UITest_TestSimplePointChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
+static fnord::test::UnitTest::TestCase __test_variablesize_point_chart_(
     &UITest, "TestVariableSizePointChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, 34, 5);
@@ -677,7 +697,7 @@ static fnordmetric::util::UnitTest::TestCase __test_variablesize_point_chart_(
       "UITest_TestVariableSizePointChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
+static fnord::test::UnitTest::TestCase __test_simple_line_chart_(
     &UITest, "TestSimpleLineChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
@@ -695,8 +715,8 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
   series2->addDatum(40, 18);
   series2->addDatum(50, 21);
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(0, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(0, 50, false);
 
   Canvas canvas;
   auto line_chart = canvas.addChart<LineChart2D<double, double>>(
@@ -713,7 +733,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_line_chart_(
       "UITest_TestSimpleLineChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_point_line_chart_(
+static fnord::test::UnitTest::TestCase __test_point_line_chart_(
     &UITest, "TestPointLineChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
@@ -733,8 +753,8 @@ static fnordmetric::util::UnitTest::TestCase __test_point_line_chart_(
   series2->addDatum(50, 21);
   series2->setDefaultProperty(Series::P_POINT_STYLE, "circle");
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(0, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(0, 50, false);
 
   Canvas canvas;
   auto line_chart = canvas.addChart<LineChart2D<double, double>>(
@@ -750,7 +770,7 @@ static fnordmetric::util::UnitTest::TestCase __test_point_line_chart_(
       "UITest_TestPointLineChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
+static fnord::test::UnitTest::TestCase __test_multi_chart_(
     &UITest, "TestMultiChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
@@ -784,8 +804,8 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
   series4->addDatum("E", 18);
   series4->addDatum("F", 21);
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(0, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(0, 50, false);
 
   Canvas canvas;
 
@@ -822,7 +842,7 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_chart_(
       "UITest_TestMultiChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
+static fnord::test::UnitTest::TestCase __test_simple_area_chart_(
     &UITest, "TestSimpleAreaChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
@@ -834,8 +854,8 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
   series1->setDefaultProperty(Series::P_LINE_STYLE, "solid");
   series1->setDefaultProperty(Series::P_POINT_STYLE, "circle");
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(0, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(0, 50, false);
 
   Canvas canvas;
   auto area_chart = canvas.addChart<AreaChart2D<double, double>>(
@@ -851,7 +871,7 @@ static fnordmetric::util::UnitTest::TestCase __test_simple_area_chart_(
       "UITest_TestSimpleAreaChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
+static fnord::test::UnitTest::TestCase __test_range_area_chart_(
     &UITest, "TestRangeAreaChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, -34, 34);
@@ -863,8 +883,8 @@ static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
   series1->setDefaultProperty(Series::P_LINE_STYLE, "solid");
   series1->setDefaultProperty(Series::P_POINT_STYLE, "circle");
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(-50, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(-50, 50, false);
 
   Canvas canvas;
   auto area_chart = canvas.addChart<AreaChart3D<double, double, double>>(
@@ -880,7 +900,7 @@ static fnordmetric::util::UnitTest::TestCase __test_range_area_chart_(
       "UITest_TestRangeAreaChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_chart_(
+static fnord::test::UnitTest::TestCase __test_multi_range_area_chart_(
     &UITest, "TestMultiRangeAreaChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, -34, 34);
@@ -898,8 +918,8 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_chart_(
   series2->addDatum(40, -7, 13);
   series2->addDatum(50, -18, 30);
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(-50, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(-50, 50, false);
 
   Canvas canvas;
   auto area_chart = canvas.addChart<AreaChart3D<double, double, double>>(
@@ -916,7 +936,7 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_chart_(
       "UITest_TestMultiRangeAreaChart_out.svg.html");
 });
 
-static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_line_(
+static fnord::test::UnitTest::TestCase __test_multi_range_area_line_(
     &UITest, "TestMultiRangeAreaLineChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, -34, 34);
@@ -943,8 +963,8 @@ static fnordmetric::util::UnitTest::TestCase __test_multi_range_area_line_(
   series3->addDatum(50, 9);
   series3->setDefaultProperty(Series::P_COLOR, "black");
 
-  chart::ContinuousDomain<double> x_domain(10, 50, false);
-  chart::ContinuousDomain<double> y_domain(-50, 50, false);
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(-50, 50, false);
 
   Canvas canvas;
   auto area_chart = canvas.addChart<AreaChart3D<double, double, double>>(
