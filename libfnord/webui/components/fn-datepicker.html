@@ -21,7 +21,11 @@
       width: 200px;
     }
 
-    #datepicker_widget.active {
+    input:hover {
+      cursor: pointer;
+    }
+
+    #datepicker_widget[data-active='active'] {
       position:absolute;
       z-index: 999;
       background: #fff;
@@ -79,7 +83,7 @@
     }
 
   </style>
-  <input />
+  <input type='text' readonly/>
   <div id="datepicker_widget">
   </div>
 </template>
@@ -103,12 +107,17 @@
       this.attributeChangedCallback();
 
       input.addEventListener('click', function() {
-        base.setAttribute('active', 'active');
-        //timeInput is optional and set bu time-select attribute
-        if (select_time_by != null) {
-          base.renderTimeInput();
+                //timeInput is optional and set bu time-select attribute
+        if (!widget.hasAttribute('data-active')) {
+          base.setAttribute('active', 'active');
+
+          //timeInput is optional and set bu time-select attribute
+          if (select_time_by != null) {
+            base.renderTimeInput();
+          }
+
+          base.renderCalendar();
         }
-        base.renderCalendar();
 
       }, false);
 
@@ -163,7 +172,7 @@
       this.renderMonthHeader(selected_year, selected_month);
       this.renderWeeks(selected_year, selected_month);
 
-      this.shadowRoot.querySelector("#datepicker_widget").className += " active";
+      widget.setAttribute("data-active", "active");
     };
 
     this.renderWeekHeader = function() {
@@ -284,7 +293,7 @@
       var name = "selectable ";
       /* date is today */
       if (date == cur_date && month == cur_month && year == cur_year) {
-        name = "highlight_border";
+        name += " highlight_border";
       }
       /* date is selected date */
       if (date == selected_date && 
@@ -348,7 +357,7 @@
       var table_elem = this.shadowRoot.querySelector("table");
       var base = this;
 
-      widget.className = "";
+      widget.removeAttribute("data-active");
       widget.innerHTML = "";
       //fixme
       document.removeEventListener('click', base.resetDatepicker, false);

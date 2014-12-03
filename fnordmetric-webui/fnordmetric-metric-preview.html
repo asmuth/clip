@@ -59,6 +59,7 @@
       <fn-controls-section>
     </fn-controls>
     <div class="result_pane chart">
+      <fn-loader></fn-loader>
     </div>
     <fn-table data-per-page='25'>
     </fn-table>
@@ -138,15 +139,15 @@
       Fnord.httpPost(queryurl, query, function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
-          console.log(json);
-          if (json.charts != undefined) {
-            base.renderChart(json.charts[0]);
-            //renderChart(json.charts[0]);
+          if (json.status == "error") {
+            base.renderError(json.error);
           } else {
-            //renderError(json.error);
-          }
-          if (json.tables != undefined) {
-            //renderTable(json.tables[0]);
+            if (json.charts != undefined) {
+              base.renderChart(json.charts[0]);
+            }
+            if (json.tables != undefined) {
+              base.renderTable(json.tables[0]);
+            }
           }
         }
       });
@@ -243,10 +244,37 @@
     };
 
     this.renderChart = function(chart) {
-      var pane = this.querySelector(".result_pane.chart");
+      var pane = this.querySelector(".result_pane.chart fn-loader");
       pane.innerHTML = chart.svg;
       //FnordMetric.extendCharts();
-    }
+    };
+
+    this.renderTable = function(table) {
+      var table_elem = this.querySelector("fn-table");
+      table_elem.innerHTML = "";
+      table.columns.map(function(c) {
+        var column_elem = document.createElement("fn-table-column");
+        column_elem.innerHTML = c;
+        table_elem.appendChild(column_elem);
+      });
+
+      table.rows.map(function(r) {
+        var tr_elem = document.createElement("tr");
+        r.map(function(c) {
+          var td_elem = document.createElement("td");
+          td_elem.innerHTML = c;
+          tr_elem.appendChild(td_elem);
+        });
+        table_elem.appendChild(tr_elem);
+      });
+      table_elem.renderTable();
+    };
+
+    this.renderError = function(error) {
+      var pane = this.querySelector(".result_pane.chart fn-loader");
+      pane.innerHTML =
+        "<div class='error_box'>" + error + "</div>";
+    };
 
     this.initControls = function() {
       var base = this;

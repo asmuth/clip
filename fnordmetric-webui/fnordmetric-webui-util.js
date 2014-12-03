@@ -332,10 +332,10 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   /* complete select_expr */
   if (view == "value") {
     select_expr += "value AS y ";
-  } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
+  } else if (view.substr(0,6) == "rollup") {
     /* adapt draw stm */
     draw_stm = "DRAW BARCHART\n  ";
-    var func = (view.split("_"))[1];
+    var func = (view.split(" "))[1];
 
     var column;
     if (columns != undefined && (columns.split(","))[0].length > 0) {
@@ -349,7 +349,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     select_expr = 
       " SELECT " + column + " AS X, " + func + "(value) AS Y";
 
-    hasAggregation = true;
+    //hasAggregation = true;
   } else {
     select_expr +=
       view.toLowerCase() + "(value) AS Y";

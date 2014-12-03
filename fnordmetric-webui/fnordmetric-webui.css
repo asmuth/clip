@@ -135,6 +135,22 @@ fnordmetric-query-editor /deep/ .metric_preview_secondary_controls a {
   text-decoration: none;
 }
 
+fnordmetric-metric-preview /deep/ fn-table {
+  margin-top: 30px;
+}
+
+fnordmetric-metric-preview /deep/ .error_box {
+  width: 90%;
+  margin:auto;
+  margin-top: 20px;
+  padding: 9px 14px;
+  background: rgba(230, 126, 34,0.1);
+  border: 1px solid rgba(230, 126, 34,1.0);
+  border-radius: 3px;
+  color: rgba(122, 07, 03,1.0);
+  line-height: 23px;
+}
+
 
 
 
