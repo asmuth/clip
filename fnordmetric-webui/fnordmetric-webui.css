@@ -139,7 +139,8 @@ fnordmetric-metric-preview /deep/ fn-table {
   margin-top: 30px;
 }
 
-fnordmetric-metric-preview /deep/ .error_box {
+fnordmetric-metric-preview /deep/ .error_box,
+fnordmetric-query-editor /deep/ .error_box{
   width: 90%;
   margin:auto;
   margin-top: 20px;

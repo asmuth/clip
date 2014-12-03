@@ -32,11 +32,14 @@
 
       this.renderNavBar();
       this.renderCodeEditor();
+
+
+      this.attributeChangedCallback();
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-url") {
-        console.log("data url is set");
+        console.log("data url changed callback");
         /*
         if query_params(data_url)
           runquery(query(query_params))
@@ -49,6 +52,7 @@
       var code_editor = splitpane.shadowRoot.querySelector("fn-codeeditor");
       console.log(code_editor);
       var query = code_editor.getValue();
+      console.log(query);
       var base = this;
 
       Fnord.httpPost("/query", query, function(r, duration) {
@@ -85,7 +89,8 @@
 
     this.renderQueryError = function(error_message) {
       var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
-      console.log(error_message);
+      right_pane.innerHTML =
+        "<div class='error_box'>" + error_message + "</div>";
     };
 
     this.renderChart = function(charts, loader) {
@@ -148,6 +153,7 @@
     }
 
     this.renderCodeEditor = function() {
+      console.log("rende code editor");
       var splitpane = this.querySelector("fn-splitpane");
       var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
 
@@ -195,7 +201,9 @@
 
       left_pane.appendChild(button_bar);
 
-      exec_btn.onclick = base.runQuery;
+      exec_btn.onclick = function() {
+        base.runQuery();
+      }
 
       split_btn.onclick = function(e) {
         console.log(splitpane.getAttribute("data-split"));
