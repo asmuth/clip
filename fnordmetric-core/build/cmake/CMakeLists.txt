@@ -183,10 +183,6 @@ if(ENABLE_TESTS)
   add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
   target_link_libraries(tests/test-sql fnord)
 
-  add_executable(tests/test-ui
-       stage/src/fnordmetric/ui/ui_test.cc)
-  target_link_libraries(tests/test-ui fnord)
-
   add_executable(tests/test-input-stream
       stage/src/fnordmetric/util/inputstream_test.cc)
   target_link_libraries(tests/test-input-stream fnord)

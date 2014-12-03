@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_RUNTIMEXCEPTION_H
-#define _FNORDMETRIC_UTIL_RUNTIMEXCEPTION_H
+#ifndef _FNORD_BASE_EXCEPTION_H
+#define _FNORD_BASE_EXCEPTION_H
 #include <errno.h>
 #include <exception>
 #include <string>
-#include <fnordmetric/util/outputstream.h>
+#include "fnord/io/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";
@@ -58,7 +58,7 @@ public:
   Exception(const Exception& other);
   Exception& operator=(const Exception& other) = delete;
 
-  void debugPrint(fnordmetric::util::OutputStream* os = nullptr) const;
+  void debugPrint(io::OutputStream* os = nullptr) const;
   std::string getMessage() const;
   std::string getTypeName() const;
   std::string method() const;
