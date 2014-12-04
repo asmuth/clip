@@ -52,6 +52,10 @@
           <i class='fa fa-share'></i>
           Embed
         </fn-button>
+        <fn-button id="auto_refresh">
+          <i class='fa fa-refresh'></i>
+          Auto Refresh
+        </fn-button>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
         <fn-daterangepicker past-selectable='selectable'>
@@ -93,7 +97,6 @@
 
         this.init(params.query_params.innerViewValue);
         this.handleAggregationDisplay();
-        this.runQuery(query);
       }
 
       this.attributeChangedCallback();
@@ -136,7 +139,6 @@
     };
 
     this.runQuery = function(query) {
-      console.log(query);
       var base = this;
       this.renderChartLoader();
       var queryurl = "/query?height=400&width=" + (window.innerWidth - 40);
@@ -309,6 +311,15 @@
       loader.removeAttribute('data-loading');
     };
 
+    this.onRefresh = function() {
+      var end_time = Date.now();
+      var time_range = this.getQueryParamOrDefaultValue('time_range');
+      var start_time = end_time - time_range;
+      this.updateUrlParams({
+        'end_time' : end_time,
+        'start_time' : start_time});
+    };
+
 
     this.initControls = function() {
       var base = this;
@@ -444,6 +455,18 @@
       var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
       embed_popup_tabbar.addEventListener("fn-tabbar-click", function() {
         base.renderPopupInnerView();
+      }, false);
+
+      var autorefresh_btn = this.querySelector("#auto_refresh");
+      var interval_id;
+      autorefresh_btn.addEventListener('fn-button-click', function() {
+        if (this.hasAttribute('auto-refresh-on')) {
+          window.clearInterval(interval_id);
+          this.removeAttribute('auto-refresh-on');
+        } else {
+          interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
+          this.setAttribute('auto-refresh-on', 'on');
+        }
       }, false);
     };
 

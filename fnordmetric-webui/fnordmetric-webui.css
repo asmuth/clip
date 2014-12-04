@@ -31,6 +31,19 @@ fn-appbar /deep/ fn-search {
   font-weight: 600;
 }
 
+fnordmetric-query-editor /deep/ fn-splitpane {
+  background-color: #e9ebed;
+}
+
+fnordmetric-query-editor /deep/ svg {
+  max-width: 1100px;
+}
+
+fnordmetric-query-editor /deep/ .svg {
+  padding: 20px 10px;
+  text-align:center;
+}
+
 fnordmetric-query-editor /deep/ .navbar {
   height: 39px;
   width: 100%;
@@ -38,6 +51,10 @@ fnordmetric-query-editor /deep/ .navbar {
   line-height: 39px;
   border-bottom: 1px solid #dbdedf;
   font-size: 95%;
+}
+
+fnordmetric-query-editor /deep/ .navbar {
+  background-color: #fff;
 }
 
 fnordmetric-query-editor /deep/ .navbar a {

@@ -516,32 +516,20 @@ FnordMetric.util.removeIfChild = function(child_n, parent_n) {
   * calls every x seconds onRefresh
   */
 FnordMetric.util.autoRefresh = function(onRefresh) {
-  var curr_state = false;
   var intervalID;
 
-  this.btn;
-
-  function state() {
-    return curr_state;
-  }
-
   function on() {
-    this.btn.className += " on";
-    curr_state = true;
     //refresh every 30 seconds
     intervalID = window.setInterval(onRefresh, 30000);
   }
 
   function off() {
-    this.btn.className = "btn";
-    curr_state = false;
     window.clearInterval(intervalID);
   }
 
   return {
     "on" : on,
-    "off" : off,
-    "state" : state
+    "off" : off
   }
 }
 

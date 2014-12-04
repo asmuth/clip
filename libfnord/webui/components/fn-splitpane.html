@@ -49,16 +49,13 @@
 
       this.init();
 
-      document.addEventListener("DOMContentLoaded", function() {
-        base.renderView();
-      }, false);
-
       this.initResizerTooltip();
     };
 
     this.init = function() {
       this.style.display = "block";
       this.style.height = "100%";
+      this.renderView();
     };
 
     this.renderView = function() {
@@ -174,41 +171,24 @@
       var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
+      console.log(left_pane);
       var widths = this.getPaneWidths();
-      var left_pane_height = this.offsetHeight;
-      console.log(widths);
+      var left_pane_height = "100%";
 
       left_pane.style.width = widths.left;
-      left_pane.style.height = left_pane_height + "px";
+      left_pane.style.height = left_pane_height;
 
       right_pane.style.width = widths.right;
-      right_pane.style.height = left_pane_height + "px";
+      right_pane.style.height = left_pane_height;
       right_pane.style.marginLeft = widths.left;
       right_pane.style.marginTop = "";
       right_pane.style.overflowY = "auto";
 
-      resizer_tooltip.style.height = left_pane_height + "px";
+      resizer_tooltip.style.height = left_pane_height;
       resizer_tooltip.style.marginLeft = widths.left;
       resizer_tooltip.style.marginTop = "";
       resizer_tooltip.style.width = "5px";
       resizer_tooltip.style.cursor = "ew-resize";
-
-
-      /*var left_pane_width = this.offsetWidth / 2;
-      left_pane.style.width = left_pane_width + "px";
-      left_pane.style.height = left_pane_height + "px";
-
-      right_pane.style.width = left_pane_width + "px";
-      right_pane.style.height = left_pane_height + "px";
-      right_pane.style.marginLeft = left_pane_width + "px";
-      right_pane.style.marginTop = "";
-      right_pane.style.overflowY = "auto";
-
-      resizer_tooltip.style.height = left_pane_height + "px";
-      resizer_tooltip.style.marginLeft = left_pane_width + "px";
-      resizer_tooltip.style.marginTop = "";
-      resizer_tooltip.style.width = "5px";
-      resizer_tooltip.style.cursor = "ew-resize";*/
     };
 
     this.renderHorizontalView = function() {

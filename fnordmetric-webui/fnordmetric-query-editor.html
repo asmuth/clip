@@ -37,7 +37,7 @@
           FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
         var query = params.query_params.innerViewValue;
         splitpane.shadowRoot.querySelector("fn-codeeditor").setValue(query);
-        //this.runQuery(query);
+        this.runQuery(query);
       }
 
 
@@ -53,7 +53,7 @@
           var splitpane = this.querySelector("fn-splitpane");
           splitpane.shadowRoot.querySelector("fn-codeeditor").setValue(query);
           console.log(splitpane.shadowRoot.querySelector("fn-codeeditor"))
-          //this.runQuery(query);
+          this.runQuery(query);
 
         }
 
@@ -68,7 +68,7 @@
         innerView : "sql_editor",
         innerViewValue : query};
       FnordMetric.util.setURLQueryString("query", params, true);
-      //this.runQuery(query);
+      this.runQuery(query);
     }
 
     this.runQuery = function(query) {
