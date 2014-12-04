@@ -22,7 +22,6 @@ fn-daterangepicker
 fn-search
 fn-timeinput
 fn-appbar (remove?))
-fn-navbar (remove??)
 fn-splitpane
 fn-tabbar
  
