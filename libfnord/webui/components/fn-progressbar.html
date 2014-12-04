@@ -9,12 +9,59 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id='fn-progressbar-base-tpl'>
+  <div class="bar">
+    <div class="progress"></div>
+  </div>
 </template>
 
 <script type='text/javascript'>
   var ProgressBarComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-progressbar", "base");
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
 
-  }
+      this.showsProgress = true;
+      if (this.getAttribute('data-show-progress') == "off") {
+        this.showsProgress = false;
+      }
+
+      if (this.hasAttribute('data-label')) {
+        this.renderDataLabel();
+      }
+
+       if (this.hasAttribute('data-progress')) {
+        this.updateProgressBar(this.getAttribute('data-progress'));
+      }
+
+      this.attributeChangedCallback();
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-progress") {
+        this.updateProgressBar(new_val);
+      }
+    }
+
+    this.renderDataLabel = function() {
+      var label_elem = document.createElement("div");
+      label_elem.className = "label";
+      label_elem.innerHTML = this.getAttribute('data-label');
+      this.shadowRoot.appendChild(label_elem);
+    }
+
+    this.updateProgressBar = function(progress) {
+      var bar_elem = this.shadowRoot.querySelector(".bar");
+      bar_elem.style.width = progress + "%";
+
+
+      if (this.showsProgress) {
+        var progress_elem = this.shadowRoot.querySelector(".progress");
+        progress_elem.innerHTML = progress + "%";
+      }
+    }
+
+  };
 
   window.addEventListener('fn-ready', function() {
     var progressbar = Fnord.registerComponent(
@@ -23,13 +70,13 @@
 </script>
 
 <!--
-  <fn-progressbar data-progress="0"></fn-progressbar>
+<fn-progressbar data-progress="0"></fn-progressbar>
 <fn-progressbar data-progress="30"></fn-progressbar>
 
 <script type="text/javascript">
- window.setTimeout(function() {
-   document.querySelector("fn-progressbar").setAttribute("data-progress", 100);
- }, 1000, false);
+window.setTimeout(function() {
+    document.querySelector("fn-progressbar").setAttribute("data-progress", 100);
+    }, 1000, false);
 </script>
 
 success, warning, error
