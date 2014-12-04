@@ -22,8 +22,14 @@ AdminUI::AdminUI() :
     webui_bundle_("FnordMetric"),
     webui_mount_(&webui_bundle_, "/admin") {
   webui_bundle_.addComponent("fnord/3rdparty/codemirror.js");
+
+  webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
+  webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
+  webui_bundle_.addComponent("fnord/3rdparty/reset.css");
+
   webui_bundle_.addComponent("fnord/fnord.js");
-  webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
+  //webui_bundle_.addComponent("fnord/themes/midnight-.css");
+  //webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
   webui_bundle_.addComponent("fnord/components/fn-button.html");
   webui_bundle_.addComponent("fnord/components/fn-icon.html");
@@ -39,16 +45,13 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-daterangepicker.html");
   webui_bundle_.addComponent("fnord/components/fn-popup.html");
   webui_bundle_.addComponent("fnord/components/fn-tabbar.html");
-  webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
-  webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
-
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-search.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-query-editor.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-preview.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
-  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
+  //webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
 }
 

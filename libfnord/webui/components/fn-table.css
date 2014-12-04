@@ -1,0 +1,200 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+.fn-table {
+  width: 100%;
+  background: #ffffff;
+  margin: 1em 0em;
+  border: 1px solid #d0d0d0;
+  box-shadow: none;
+  border-radius: 0.25rem;
+  color: rgba(0, 0, 0, 0.8);
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+.fn-table:first-child {
+  margin-top: 0em;
+}
+.fn-table:last-child {
+  margin-bottom: 0em;
+}
+
+.fn-table th,
+.fn-table td {
+  -webkit-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+}
+
+.fn-table thead {
+  box-shadow: none;
+}
+.fn-table thead th {
+  cursor: auto;
+  background: #f0f0f0;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.8);
+  padding: 0.7em 0.8em;
+  vertical-align: middle;
+  font-style: none;
+  font-weight: bold;
+  text-transform: none;
+  border-bottom: 1px solid #d4d4d5;
+  border-left: none;
+}
+.fn-table thead th:first-child {
+  border-radius: 0.25rem 0em 0em 0em;
+  border-left: none;
+}
+.fn-table thead th:last-child {
+  border-radius: 0em 0.25rem 0em 0em;
+}
+.fn-table thead th:only-child {
+  border-radius: 0.25rem 0.25rem 0em 0em;
+}
+
+.fn-table tfoot {
+  box-shadow: none;
+}
+.fn-table tfoot th {
+  cursor: auto;
+  border-top: 1px solid #d4d4d5;
+  background: #ffffff;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.8);
+  padding: 0.7em 0.8em;
+  vertical-align: middle;
+  font-style: normal;
+  font-weight: normal;
+  text-transform: none;
+}
+.fn-table tfoot th:first-child {
+  border-radius: 0em 0em 0em 0.25rem;
+}
+.fn-table tfoot th:last-child {
+  border-radius: 0em 0em 0.25rem 0em;
+}
+.fn-table tfoot th:only-child {
+  border-radius: 0em 0em 0.25rem 0.25rem;
+}
+
+.fn-table tr td {
+  border-top: 1px solid #d4d4d5;
+}
+.fn-table tr:first-child td {
+  border-top: none;
+}
+
+.fn-table td {
+  padding: 0.7em 0.8em;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.fn-table tr.success,
+.fn-table td.success {
+  box-shadow: 0px 0px 0px #b7caa7 inset;
+}
+.fn-table tr.success td,
+.fn-table td.success {
+  background: #eeffe7 !important;
+  color: #3c763d !important;
+}
+.fn-table.colsep tr.success:hover td,
+.fn-table.colsep tr:hover td.success {
+  background: #e3ffd8 !important;
+  color: #376c38 !important;
+}
+
+.fn-table tr.error,
+.fn-table td.error {
+  box-shadow: 0px 0px 0px #dbb1b1 inset;
+}
+.fn-table tr.error td,
+.fn-table td.error {
+  background: #fff0f0 !important;
+  color: #cd2929 !important;
+}
+.fn-table.colsep tr.error:hover td,
+.fn-table.colsep tr:hover td.error {
+  background: #ffe1e1 !important;
+  color: #c02626 !important;
+}
+
+.fn-table tr.warning,
+.fn-table td.warning {
+  box-shadow: 0px 0px 0px #d9caab inset;
+}
+.fn-table tr.warning td,
+.fn-table td.warning {
+  background: #fffbe6 !important;
+  color: #7d6c00 !important;
+}
+.fn-table.colsep tr.warning:hover td,
+.fn-table.colsep tr:hover td.warning {
+  background: #fff9d7 !important;
+  color: #6e5f00 !important;
+}
+
+.fn-table tr.active,
+.fn-table td.active {
+  box-shadow: 0px 0px 0px rgba(50, 50, 50, 0.9) inset;
+}
+.fn-table tr.active td,
+.fn-table td.active {
+  background: #e0e0e0 !important;
+  color: rgba(50, 50, 50, 0.9) !important;
+}
+.fn-table.colsep tr.active:hover td,
+.fn-table.colsep tr:hover td.active {
+  background: #e0e0e0 !important;
+  color: rgba(50, 50, 50, 0.9) !important;
+}
+
+.fn-table tr.disabled td,
+.fn-table tr td.disabled,
+.fn-table tr.disabled:hover td,
+.fn-table tr:hover td.disabled {
+  pointer-events: none;
+  color: rgba(40, 40, 40, 0.3);
+}
+
+.fn-table.left,
+.fn-table .left {
+  text-align: left;
+}
+.fn-table.center,
+.fn-table .center {
+  text-align: center;
+}
+.fn-table.right,
+.fn-table .right {
+  text-align: right;
+}
+
+.fn-table th.collapse,
+.fn-table td.collapse {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.fn-table.collapse {
+  width: auto;
+}
+
+.fn-table.striped > tr:nth-child(2n),
+.fn-table.striped tbody tr:nth-child(2n) {
+  background-color: rgba(0, 0, 50, 0.03);
+}
+
+.fn-table.colsep th,
+.fn-table.colsep td {
+  border-left: 1px solid #d4d4d5;
+}
+.fn-table.colsep th:first-child,
+.fn-table.colsep td:first-child {
+  border-left: none;
+}
+

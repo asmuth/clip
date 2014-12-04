@@ -1,0 +1,33 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fnordmetric-metric-preview-popup-base-tpl">
+  <fn-popup>
+    <fn-tabbar id="embed">
+      <fn-tab data-active='active'>IFrame</fn-tab>
+      <fn-tab>HTML</fn-tab>
+      <fn-tab>URL</fn-tab>
+    </fn-tabbar>
+  </fn-popup>
+</template>
+
+<script type='text/javascript'>
+  var FnordMetricMetricPreviewPopupComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fnordmetric-metric-preview-popup", "base");
+      this.appendChild(tpl);
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var metric_preview_popup = Fnord.registerComponent(
+      "fnordmetric-metric-preview-popup", FnordMetricMetricPreviewPopupComponent);
+  }, false);
+</script>
