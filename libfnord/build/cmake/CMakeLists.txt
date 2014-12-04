@@ -5,7 +5,7 @@
 # the terms of the GNU General Public License v3.0. You should have received a
 # copy of the GNU General Public License along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.8)
 include(FindPkgConfig)
 include(CheckIncludeFile)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/") 
@@ -22,8 +22,23 @@ else()
   set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 endif()
 
+# base
+add_library(fnord-base OBJECT
+    stage/fnord/base/assets.cc
+    stage/fnord/base/datetime.cc
+    stage/fnord/base/exception.cc
+    stage/fnord/base/inspect.cc
+    stage/fnord/base/random.cc
+    stage/fnord/base/stringutil.cc
+    stage/fnord/base/uri.cc
+    stage/fnord/base/wallclock.cc)
+
+add_executable(tests/test-uri
+    $<TARGET_OBJECTS:fnord-base>
+    stage/fnord/base/uri_test.cc)
+
 # chart
-set(FNORD_CHART_SOURCES
+add_library(fnord-chart OBJECT
     stage/fnord/chart/axisdefinition.cc
     stage/fnord/chart/areachart.cc
     stage/fnord/chart/barchart.cc
@@ -39,6 +54,6 @@ set(FNORD_CHART_SOURCES
     stage/fnord/chart/timedomain.cc)
 
 add_executable(tests/test-chart
-    ${FNORD_CHART_SOURCES}
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-chart>
     stage/fnord/chart/chart_test.cc)
-

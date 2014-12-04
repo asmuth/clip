@@ -77,13 +77,13 @@ void Exception::appendMessage(const char* message, ...) {
   va_end(args);
 }
 
-void Exception::debugPrint(fnordmetric::util::OutputStream* os /* = nullptr */) const {
+void Exception::debugPrint(io::OutputStream* os /* = nullptr */) const {
   const char* type_name =
       type_name_ == nullptr ? "Exception" : type_name_;
 
-  std::unique_ptr<fnordmetric::util::OutputStream> os_local;
+  std::unique_ptr<io::OutputStream> os_local;
   if (os == nullptr) {
-    os_local = fnordmetric::util::OutputStream::getStderr();
+    os_local = io::OutputStream::getStderr();
     os = os_local.get();
   }
 

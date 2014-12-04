@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/wallclock.h>
 #include <sys/time.h>
+#include "fnord/base/wallclock.h"
 
 namespace fnord {
 

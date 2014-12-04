@@ -9,8 +9,8 @@
  */
 #include <string>
 #include <ctime>
-#include <fnordmetric/util/datetime.h>
-#include <fnordmetric/util/wallclock.h>
+#include "fnord/base/datetime.h"
+#include "fnord/base/wallclock.h"
 
 namespace fnord {
 

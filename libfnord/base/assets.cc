@@ -8,10 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnord/base/assets.h>
-#include <fnord/base/exception.h>
-#include <fnordmetric/util/inputstream.h>
 #include <cstdlib>
+#include "fnord/base/assets.h"
+#include "fnord/base/exception.h"
+#include "fnord/io/inputstream.h"
 
 namespace fnord {
 
@@ -40,7 +40,7 @@ std::string Assets::getAsset(const std::string& filename) {
 
   if (dev_asset_path != nullptr) {
     // FIXPAUL check that file exists
-    auto file = fnordmetric::util::FileInputStream::openFile(
+    auto file = io::FileInputStream::openFile(
         std::string(dev_asset_path) + "/" + filename);
 
     std::string asset_str;
