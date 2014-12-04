@@ -238,13 +238,7 @@
       }
 
       refresh_btn.onclick = function() {
-        var query = query_params.innerViewValue;
-        query = (query != undefined)?
-          encodeURIComponent(query) : "";
-        app.openUrl(
-          "query_playground?" +
-          query_params.innerView + "=" +
-          query);
+        app.openUrl(base.getAttribute('data-url'));
       }
 
     }
