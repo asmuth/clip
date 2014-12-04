@@ -74,6 +74,7 @@ TEST_CASE(StringUtilTest, TestReplaceAll, [] () {
   StringUtil::replaceAll(&str, "butt", "");
   EXPECT_EQ(str, " computing, or in simpler shorthand just >the <...");
 });
+<<<<<<< HEAD
 
 TEST_CASE(StringUtilTest, TestFormat, [] () {
   auto str1 = StringUtil::format(
@@ -104,3 +105,5 @@ TEST_CASE(StringUtilTest, TestFormat, [] () {
   auto str4 = StringUtil::format("$1$1$1$1$1 $0", "Batman", "Na");
   EXPECT_EQ(str4, "NaNaNaNaNa Batman");
 });
+=======
+>>>>>>> 9ec11459c22cfbfb2a26922ef7240d03d9e9b713
