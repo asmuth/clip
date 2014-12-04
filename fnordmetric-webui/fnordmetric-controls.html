@@ -9,19 +9,19 @@
   <http://www.gnu.org/licenses/>.
 -->
 <style>
-  fn-controls /deep/ fn-controls-section {
+  fnordmetric-controls /deep/ fnordmetric-controls-section {
     padding: 0 10px;
   }
 
-  fn-controls /deep/ fn-controls-section[data-position='left'] {
+  fnordmetric-controls /deep/ fnordmetric-controls-section[data-position='left'] {
     float: left;
   }
 
-  fn-controls /deep/ fn-controls-section[data-position='right'] {
+  fnordmetric-controls /deep/ fnordmetric-controls-section[data-position='right'] {
     float: right;
   }
 
-  fn-controls[type='primary'] /deep/ .controls_inner {
+  fnordmetric-controls[type='primary'] /deep/ .controls_inner {
     margin-top: 5px;
     height: 76px;
     border-top: 2px solid rgb(226, 232, 237);
@@ -31,14 +31,14 @@
     overflow: hidden;
   }
 
-  fn-controls[type='primary']  /deep/ .group {
+  fnordmetric-controls[type='primary']  /deep/ .group {
     height: 64px;
     float: left;
     padding: 14px 20px 0 20px;
     overflow: hidden;
   }
 
-  fn-controls[type='primary']  /deep/ .group b {
+  fnordmetric-controls[type='primary']  /deep/ .group b {
     font-weight: normal;
     font-size: 80%;
     line-height: 12px;
@@ -48,19 +48,19 @@
     opacity: 0.7;
   }
 
-  fn-controls[type='primary']  /deep/ .group.aggregation_type {
+  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_type {
     border-right: 1px solid rgb(226, 232, 237);
   }
 
-  fn-controls[type='primary']  /deep/ .group.aggregation_time_window {
+  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window {
     border-right: 1px solid rgb(226, 232, 237);
   }
 
-  fn-controls[type='primary']  /deep/ .group.aggregation_time_window .disabled {
+  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window .disabled {
     opacity: 0.5;
   }
 
-  fn-controls[type='primary']  /deep/ .group fn-dropdown /deep/ select {
+  fnordmetric-controls[type='primary']  /deep/ .group fn-dropdown /deep/ select {
     -webkit-appearance: menulist-button;
     height: 30px;
     font-size: 12px;
@@ -71,7 +71,7 @@
     color: #545758;
   }
 
-  fn-controls[type='primary'] /deep/ .group.group_by fn-button {
+  fnordmetric-controls[type='primary'] /deep/ .group.group_by fn-button {
     line-height: 28px;
     border: 1px solid #bbb;
     border-radius: 3px;
@@ -88,11 +88,11 @@
     margin-right: 10px;
   }
 
-  fn-controls[type='primary'] /deep/ .group.group_by fn-button[data-active='active'] {
+  fnordmetric-controls[type='primary'] /deep/ .group.group_by fn-button[data-active='active'] {
     background: rgb(226, 232, 237);
   }
 
-  fn-controls[type='secondary'] /deep/ .controls_inner {
+  fnordmetric-controls[type='secondary'] /deep/ .controls_inner {
     height: 39px;
     margin: 0px;
     line-height: 39px;
@@ -102,7 +102,7 @@
     text-align: right;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button {
     margin-right: 20px;
     height: 22px;
     line-height: 22px;
@@ -110,40 +110,40 @@
     color: #545758;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button:hover {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button:hover {
     text-decoration: underline;
     cursor: pointer;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button /deep/ i {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button /deep/ i {
     position: relative;
     margin-right: 4px;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button .fa-database {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button .fa-database {
     font-size: 87%;
     position: relative;
     top: -1px;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button:first-child {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button:first-child {
     color: #009fe9;
     font-weight:500;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button + fn-button {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button + fn-button {
     border-left: 1px solid #ececec;
     padding-left: 20px;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button[auto-refresh-on='on'] {
+  fnordmetric-controls[type='secondary'] /deep/ fn-button[auto-refresh-on='on'] {
     color : #009fe9;
   }
 
 
 
 </style>
-<template id="fn-controls-base-tpl">
+<template id="fnordmetric-controls-base-tpl">
   <style>
 
 
@@ -157,16 +157,17 @@
 </template>
 
 <script type="text/javascript">
-  var ControlsComponent = function() {
+  var FnordMetricControlsComponent = function() {
     this.createdCallback = function() {
       var shadow = this.createShadowRoot();
-      var tpl = Fnord.getTemplate("fn-controls", "base");
+      var tpl = Fnord.getTemplate("fnordmetric-controls", "base");
       shadow.appendChild(tpl);
     }
 
   }
 
   window.addEventListener("fn-ready", function() {
-    var controls = Fnord.registerComponent("fn-controls", ControlsComponent);
+    var controls = Fnord.registerComponent(
+      "fnordmetric-controls", FnordMetricControlsComponent);
   }, false);
 </script>

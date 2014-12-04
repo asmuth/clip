@@ -1,29 +1,48 @@
---hiermit anfangen
-semantic divider -> <fn-divider>, <div class="fn-divider">
-semantic button -> <fn-button>, <button class="fn-button">
-semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
-semantic message -> <fn-message>, <div class="fn-message">
-semantic checkbox -> <fn-checkbox>, <input type="checkbox" class="fn-checkbox">
-semantic dropdown -> <fn-dropdown>, <select class="fn-dropdown">
-semantic modal -> <fn-modal>, <div class="fn-modal">
-semantic popup -> Fnord.tooltip
-semantic search -> <fn-search>, <input type="search" class="fn-search">
-
+-- done
+fn-blink
+fn-codeeditor
+fn-icon
+fn-loader
+fn-table
+ 
+-- hiermit anfangen
+fn-divier || semantic divider -> <fn-divider>, <div class="fn-divider">
+fn-button semantic button -> <fn-button>, <button class="fn-button">
+fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
+fn-message || semantic message -> <fn-message>, <div class="fn-message">
+fn-checkbox || semantic checkbox -> <fn-checkbox>, <input type="checkbox" class="fn-checkbox">
+fn-dropdown || semantic dropdown -> <fn-dropdown>, <select class="fn-dropdown">
+fn-modal || semantic modal -> <fn-modal>, <div class="fn-modal">
+fn-search || semantic search -> <fn-search>, <input type="search" class="fn-search">
+fn-tooltip || semantic popup -> Fnord.tooltip
+ 
+-- needs review/polish
+fn-datepicker
+fn-daterangepicker
+fn-search
+fn-timeinput
+fn-appbar (remove?))
+fn-navbar (remove??)
+fn-splitpane
+fn-tabbar
+ 
 -- die werden komplex
-input/form -> komplex, muessen wir drueber redeen
-label -> <fn-label>, <span class="fn-label">
-menu -> komplex, muessen wir drueber reden
-
+fn-form || input/form -> komplex, muessen wir drueber redeen
+fn-label || label -> <fn-label>, <span class="fn-label">
+fn-menu || menu -> komplex, muessen wir drueber reden
+ 
 -- nice to have
-progress
-rating
-step
-reveal
-card
-comment
-feed
-accordion
-
+fn-progress
+fn-rating
+fn-wizard || semantic step
+fn-reveal
+fn-card
+fn-comment
+fn-feed
+fn-accordion
+ 
 -- machen wir selbst
 fn-tabs
 fn-video
+fn-pager
+fn-pagination

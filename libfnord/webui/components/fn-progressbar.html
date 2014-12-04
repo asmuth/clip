@@ -1,0 +1,37 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-progressbar-base-tpl'>
+</template>
+
+<script type='text/javascript'>
+  var ProgressBarComponent = function() {
+
+  }
+
+  window.addEventListener('fn-ready', function() {
+    var progressbar = Fnord.registerComponent(
+      'fn-progressbar', ProgressBarComponent);
+  }, false);
+</script>
+
+<!--
+  <fn-progressbar data-progress="0"></fn-progressbar>
+<fn-progressbar data-progress="30"></fn-progressbar>
+
+<script type="text/javascript">
+ window.setTimeout(function() {
+   document.querySelector("fn-progressbar").setAttribute("data-progress", 100);
+ }, 1000, false);
+</script>
+
+success, warning, error
+disabled
+-->

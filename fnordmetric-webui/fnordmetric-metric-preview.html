@@ -11,8 +11,8 @@
 <template id="fnordmetric-metric-preview-base-tpl">
   <fn-loader>
     <h1 class="page_header"><i>Metric</i> &rsaquo; <span></span> </h1>
-    <fn-controls type='primary'>
-      <fn-controls-section data-position='left'>
+    <fnordmetric-controls type='primary'>
+      <fnordmetric-controls-section data-position='left'>
         <div class='group aggregation_type'>
           <b>Rollup</b>
           <fn-dropdown id='rollup'>
@@ -28,8 +28,8 @@
         <div class="group group_by">
           <b>Group by</b>
         </div>
-      </fn-controls-section>
-      <fn-controls-section data-position='right'>
+      </fnordmetric-controls-section>
+      <fnordmetric-controls-section data-position='right'>
         <div class='group timerange'>
           <b>Show The Last...</b>
           <fn-dropdown id='timerange'>
@@ -40,10 +40,10 @@
           <fn-datepicker time-select='input'>
           </fn-datepicker>
         </div>
-      </fn-controls-section>
-    </fn-controls>
-    <fn-controls type='secondary'>
-      <fn-controls-section data-position='left'>
+      </fnordmetric-controls-section>
+    </fnordmetric-controls>
+    <fnordmetric-controls type='secondary'>
+      <fnordmetric-controls-section data-position='left'>
         <fn-button id="sql_editor">
           <i class='fa fa-database'></i>
           SQL Editor
@@ -56,12 +56,12 @@
           <i class='fa fa-refresh'></i>
           Auto Refresh
         </fn-button>
-      </fn-controls-section>
-      <fn-controls-section data-position='right'>
+      </fnordmetric-controls-section>
+      <fnordmetric-controls-section data-position='right'>
         <fn-daterangepicker past-selectable='selectable'>
         </fn-daterangepicker>
-      <fn-controls-section>
-    </fn-controls>
+      <fnordmetric-controls-section>
+    </fnordmetric-controls>
     <fn-loader id="result_pane">
       <div id="result_pane_chart">
       </div>
@@ -69,13 +69,8 @@
       </fn-table>
     </fn-loader>
   </fn-loader>
-  <fn-popup id="embed">
-    <fn-tabbar id="embed">
-      <fn-tab data-active='active'>IFrame</fn-tab>
-      <fn-tab>HTML</fn-tab>
-      <fn-tab>URL</fn-tab>
-    </fn-tabbar>
-  </fn-popup>
+  <fnordmetric-metric-preview-popup id="embed">
+  </fnordmetric-metric-preview-popup>
 </template>
 
 <script type="text/javascript">
@@ -84,7 +79,7 @@
       var tpl = Fnord.getTemplate("fnordmetric-metric-preview", "base");
       this.appendChild(tpl);
 
-      var controls = this.querySelector("fn-controls");
+      var controls = this.querySelector("fnordmetric-controls");
       var header = this.querySelector(".page_header");
 
       if (this.getAttribute('data-url') != null) {
@@ -166,7 +161,6 @@
         columns: this.columns,
         end_time : Date.now(),
         /* 5 minutes  */
-        //time_to_end
         time_range : 300000,
         /* 1 second */
         t_step : 10000,
