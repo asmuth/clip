@@ -28,7 +28,6 @@ std::string StringUtil::toString(T value) {
   return std::to_string(value);
 }
 
-<<<<<<< HEAD
 template <typename ValueType, typename... T>
 void StringUtil::formatImpl(
     std::string* scratch,
@@ -59,11 +58,6 @@ std::string StringUtil::format(const char* fmt, T... values) {
   std::string str = fmt;
   StringUtil::formatImpl(&str, 0, values...);
   return str;
-=======
-template <typename... T>
-std::string StringUtil::format(const char* fmt, T... values) {
-  return "fnord!!!";
->>>>>>> 9ec11459c22cfbfb2a26922ef7240d03d9e9b713
 }
 
 template <typename T>
