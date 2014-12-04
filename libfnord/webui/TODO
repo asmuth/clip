@@ -23,12 +23,13 @@ fn-search
 fn-timeinput
 fn-appbar (remove?))
 fn-splitpane
-fn-tabbar
  
 -- die werden komplex
 fn-form || input/form -> komplex, muessen wir drueber redeen
 fn-label || label -> <fn-label>, <span class="fn-label">
 fn-menu || menu -> komplex, muessen wir drueber reden
+fn-toolbar
+fn-tabbar
  
 -- nice to have
 fn-progress
