@@ -13,7 +13,6 @@
     <title>Fnord Table Examples</title>
     <link rel="stylesheet" href="fnord.css" type="text/css">
     <link rel="stylesheet" href="components/fn-table.css" type="text/css">
-    <link rel="stylesheet" href="components/fn-progressbar.css" type="text/css">
     <style type="text/css">
       body, html {
         margin: 0;
@@ -84,6 +83,8 @@
     <link rel="import" href="components/fn-codeeditor.html" data-component="fn-codeeditor">
     <link rel="import" href="components/fn-progressbar.html" data-component="fn-progressbar">
     <link rel="import" href="components/fn-progressbar-demo.html" data-component="fn-progressbar-demo">
+    <link rel="import" href="components/fn-dropdown.html" data-component="fn-dropdown">
+    <link rel="import" href="components/fn-dropdown-demo.html" data-component="fn-dropdown-demo">
     <link rel="stylesheet" href="themes/midnight-blue.css" type="text/css">
 
     <div id="sidebar">
@@ -109,6 +110,7 @@
           <fn-menu-item data-target-demo="fn-table">fn-table</fn-menu-item>
           <fn-menu-item data-target-demo="fn-splitpane">fn-splitpane</fn-menu-item>
           <fn-menu-item data-target-demo="fn-codeeditor">fn-codeeditor</fn-menu-item>
+          <fn-menu-item data-target-demo="fn-dropdown">fn-dropdown</fn-menu-item>
         </fn-submenu>
 
         <fn-submenu>
@@ -138,6 +140,7 @@
 
       var sidebar = document.getElementById("sidebar");
       sidebar.addEventListener("fn-menu-item-click", function(e) {
+        console.log(e);
         openDemo(e.srcElement.getAttribute("data-target-demo"));
       }, false);
 

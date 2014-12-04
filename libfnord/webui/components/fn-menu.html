@@ -78,7 +78,7 @@
         if (elem.tagName == "FN-MENU-ITEM") {
           var onItemClick = (function(base, item) {
             return function(e) {
-              base.clickItem(elem, e.srcElement);
+              base.clickItem(item, e.srcElement);
             };
           })(this, elem);
 
