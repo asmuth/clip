@@ -7,17 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <cstdarg>
 #include <fcntl.h>
 #include <memory>
-#include <string>
-#include <cstdarg>
-#include <unistd.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnord/base/exception.h>
 #include <stdarg.h>
+#include <string>
+#include <unistd.h>
+#include "fnord/base/exception.h"
+#include "fnord/io/outputstream.h"
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
+namespace io {
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);
@@ -126,5 +126,6 @@ size_t StringOutputStream::write(const char* data, size_t size) {
   return size;
 }
 
-}
-}
+} // io
+} // fnord
+

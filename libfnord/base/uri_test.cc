@@ -6,11 +6,11 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "uri.h"
-#include "runtimeexception.h"
-#include "unittest.h"
+#include "fnord/base/exception.h"
+#include "fnord/base/uri.h"
+#include "fnord/test/unittest.h"
 
-using namespace fnordmetric::util;
+using namespace fnord;
 
 UNIT_TEST(URITest);
 

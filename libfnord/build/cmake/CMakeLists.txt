@@ -31,11 +31,17 @@ add_library(fnord-base OBJECT
     stage/fnord/base/random.cc
     stage/fnord/base/stringutil.cc
     stage/fnord/base/uri.cc
-    stage/fnord/base/wallclock.cc)
+    stage/fnord/base/wallclock.cc
+    stage/fnord/io/inputstream.cc
+    stage/fnord/io/outputstream.cc)
 
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
     stage/fnord/base/uri_test.cc)
+
+add_executable(tests/test-inputstream
+    $<TARGET_OBJECTS:fnord-base>
+    stage/fnord/io/inputstream_test.cc)
 
 # chart
 add_library(fnord-chart OBJECT

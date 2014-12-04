@@ -7,16 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <string>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <fnordmetric/util/inputstream.h>
 #include <fnord/base/exception.h>
+#include <fnord/io/inputstream.h>
 
-namespace fnordmetric {
-namespace util {
+namespace fnord {
+namespace io {
 
 std::unique_ptr<InputStream> InputStream::getStdin() {
   auto stdin_stream = new FileInputStream(0, false);
@@ -156,5 +155,6 @@ void StringInputStream::rewind() {
   cur_ = 0;
 }
 
-}
-}
+} // io
+} // fnord
+

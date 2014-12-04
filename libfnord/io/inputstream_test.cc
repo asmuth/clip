@@ -6,11 +6,11 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "inputstream.h"
-#include "runtimeexception.h"
-#include "unittest.h"
+#include "fnord/base/exception.h"
+#include "fnord/io/inputstream.h"
+#include "fnord/test/unittest.h"
 
-using namespace fnordmetric::util;
+using namespace fnord::io;
 
 UNIT_TEST(FileInputStreamTest);
 
