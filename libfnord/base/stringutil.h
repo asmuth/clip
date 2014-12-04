@@ -21,25 +21,68 @@ public:
 
   /**
    * Stringify the provided value
+   *
+   * @param value any value
+   * @return a string representation of the value
    */
   template <typename T>
   static std::string toString(T value);
 
+  /**
+   * Remove trailing slashes from the pointed to string
+   *
+   * @param str the string to remove trailing slashes from
+   */
   static void stripTrailingSlashes(std::string* str);
 
+  /**
+   * Check if the provided string begins with the provided prefix
+   *
+   * @param str the string to check
+   * @param prefix the prefix to check for
+   * @return true if the string begins with the provided prefix, false otherwise
+   */
   static bool beginsWith(
       const std::string& str,
       const std::string& prefix);
 
+  /**
+   * Check if the provided string ends with the provided suffix
+   *
+   * @param str the string to check
+   * @param suffix the suffix to check for
+   * @return true if the string ends with the provided suffix, false otherwise
+   */
   static bool endsWith(
       const std::string& str,
       const std::string& suffix);
 
+  /**
+   * Replace all occurences of pattern with replacement in str
+   *
+   * @param str the str that should be modified
+   * @param pattern the substring to replace
+   * @param replacement the string with which to replace occurences of pattern
+   */
   static void replaceAll(
       std::string* str,
       const std::string& pattern,
-      const std::string& replacement);
+      const std::string& replacement = "");
 
+  /**
+   * Print the contents of the pointed to memory as a series of hexadecimal
+   * bytes (hexdump):
+   *
+   * Example:
+   *   StringUtil::hexPrint("\x17\x23\x42\x01", 4);
+   *   // returns "17 23 42 01"
+   *
+   * @param data the data to print
+   * @param size the size of the data in bytes
+   * @param separate_bytes if true, insert a whitespace character between bytes
+   * @param reverse_byte_order if true, print the data from last to first byte
+   * @return the data formatted as a human readable hex string
+   */
   static std::string hexPrint(
       const void* data,
       size_t size,
@@ -47,12 +90,16 @@ public:
       bool reverse_byte_order = false);
 
   /**
-   * Insert values into a string with placeholders.
+   * Insert values into a string with placeholders. This method will throw an
+   * exception if an invalid placeholder is referenced
    *
    * Example:
    *    StringUtil::format("The $0 is $1 $2", "teapot", 23.5, "pounds");
    *    // returns "The teapot is 23.5 pounds"
    *
+   * @param fmt the format string
+   * @param values... the values to insert into the format string
+   * @return the format string with placeholders inserted
    */
   template <typename... T>
   static std::string format(const char* fmt, T... values);
@@ -68,18 +115,40 @@ public:
    *   micro μ  0.000001
    *   nano  n  0.000000001
    *   pico  p  0.000000000001
+   *
+   * @param value the value to format
+   * @return the number formatted as a string using the SI prefixes
    */
   template <typename T>
   static std::string formatNumberMetric(T value);
 
   /**
    * Format a number using the scientific notation
+   *
+   * @param value the value to format
+   * @return the number formatted as a string using the scientific notation
    */
   template <typename T>
   static std::string formatNumberScientific(T value);
+
+protected:
+
+  template <typename ValueType, typename... T>
+  static void formatImpl(
+      std::string* scratch,
+      int argn,
+      ValueType value,
+      T... values);
+
+  template <typename ValueType>
+  static void formatImpl(
+      std::string* scratch,
+      int argn,
+      ValueType value);
 
 };
 
 } // namespace fnord
 
+#include "stringutil_impl.h"
 #endif

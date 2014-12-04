@@ -8,7 +8,7 @@ all:
 	mkdir -p target/tests
 	mkdir -p stage
 	-test -e stage/fnord || ln -s ../../../ stage/fnord
-	(cd target && cmake .. -DCMAKE_BUILD_TYPE=Release && make)
+	(cd target && cmake .. -DCMAKE_BUILD_TYPE=Debug && make)
 
 install:
 	(cd target && cmake .. && make install)

@@ -11,6 +11,24 @@
 
 namespace fnord {
 
+template <>
+std::string StringUtil::toString(std::string value) {
+  return value;
+}
+
+template <>
+std::string StringUtil::toString(const char* value) {
+  return value;
+}
+
+template <>
+std::string StringUtil::toString(double value) {
+  char buf[128]; // FIXPAUL
+  *buf = 0;
+  snprintf(buf, sizeof(buf), "%g", value);
+  return buf;
+}
+
 void StringUtil::stripTrailingSlashes(std::string* str) {
   while (str->back() == '/') {
     str->pop_back();
@@ -66,7 +84,7 @@ std::string StringUtil::hexPrint(
 
   if (reverse) {
     for (int i = size - 1; i >= 0; --i) {
-      if (sep && i > 0) { str += " "; }
+      if (sep && i < size - 1) { str += " "; }
       auto byte = ((const unsigned char*) data)[i];
       str += hexTable[(byte & 0xf0) >> 4];
       str += hexTable[byte & 0x0f];

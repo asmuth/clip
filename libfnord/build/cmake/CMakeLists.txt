@@ -39,9 +39,14 @@ add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
     stage/fnord/base/uri_test.cc)
 
-add_executable(tests/test-inputstream
+add_executable(tests/test-stringutil
     $<TARGET_OBJECTS:fnord-base>
-    stage/fnord/io/inputstream_test.cc)
+    stage/fnord/base/stringutil_test.cc)
+
+
+#add_executable(tests/test-inputstream
+#    $<TARGET_OBJECTS:fnord-base>
+#    stage/fnord/io/inputstream_test.cc)
 
 # chart
 add_library(fnord-chart OBJECT
@@ -59,7 +64,7 @@ add_library(fnord-chart OBJECT
     stage/fnord/chart/series.cc
     stage/fnord/chart/timedomain.cc)
 
-add_executable(tests/test-chart
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-chart>
-    stage/fnord/chart/chart_test.cc)
+#add_executable(tests/test-chart
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-chart>
+#    stage/fnord/chart/chart_test.cc)
