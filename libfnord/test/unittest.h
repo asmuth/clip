@@ -45,6 +45,23 @@ const char kExpectationFailed[] = "ExpectationFailed";
           "expectation failed: %s", #X); \
     }
 
+
+void EXPECT_TRUE(bool val) {
+  if (!val) {
+    RAISE(
+        kExpectationFailed,
+        "expectation failed: expected TRUE, got FALSE");
+  }
+}
+
+void EXPECT_FALSE(bool val) {
+  if (val) {
+    RAISE(
+        kExpectationFailed,
+        "expectation failed: expected FALSE, got TRUE");
+  }
+}
+
 template <typename T1, typename T2>
 void EXPECT_EQ(T1 left, T2 right) {
   if (!(left == right)) {
