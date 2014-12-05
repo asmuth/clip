@@ -7,24 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_GROUPSSERVICE_ADAPTER_H
-#define _FNORD_GROUPSSERVICE_ADAPTER_H
-#include <stdlib.h>
-#include "fnord/format/json/jsonrpc.h"
+#include <fnord/storage/sstable/indexprovider.h>
 
 namespace fnord {
-namespace groups_service {
-class GroupsService;
+namespace sstable {
 
-class GroupsServiceAdapter {
-public:
+IndexProvider::IndexProvider() {}
 
-  static void registerJSONRPC(
-      GroupsService* groups_service,
-      json::JSONRPC* rpc);
+IndexProvider::IndexProvider(
+    IndexProvider&& other) :
+    indexes_(std::move(other.indexes_)) {}
 
-};
+std::vector<Index::IndexRef>&& IndexProvider::popIndexes() {
+  return std::move(indexes_);
+}
 
-} // namespace groups_service
-} // namsepace fnord
-#endif
+}
+}
+

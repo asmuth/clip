@@ -7,36 +7,36 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_WEBUI_HTTPMOUNT_H
-#define _FNORD_WEBUI_HTTPMOUNT_H
-#include <fnord/net/http/httphandler.h>
-#include <fnord/net/http/httprequest.h>
-#include <fnord/net/http/httpresponse.h>
+#ifndef _FNORD_JSON_JSONRPCHTTPADAPTER_H
+#define _FNORD_JSON_JSONRPCHTTPADAPTER_H
+#include <functional>
+#include <stdlib.h>
+#include <string>
+#include <vector>
+#include "fnord/net/http/httphandler.h"
 
 namespace fnord {
-namespace webui {
-class Bundle;
+namespace json {
+class JSONRPC;
 
-class HTTPMount : public http::HTTPHandler {
+class JSONRPCHTTPAdapter : public fnord::http::HTTPHandler {
 public:
 
-  HTTPMount(
-      Bundle* bundle,
-      const std::string base_url = "/");
+  static std::unique_ptr<http::HTTPHandler> make(JSONRPC* rpc);
+
+  JSONRPCHTTPAdapter(
+      JSONRPC* json_rpc,
+      const std::string path= "/rpc");
 
   bool handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
 protected:
-  Bundle* bundle_;
-  std::string app_url_;
-  std::string app_css_url_;
-  std::string app_js_url_;
-  std::string app_components_base_url_;
+  JSONRPC* json_rpc_;
+  std::string path_;
 };
 
-} // namespace webui
-} // namespace fnord
-
+} // namespace json
+} // namsepace fnord
 #endif

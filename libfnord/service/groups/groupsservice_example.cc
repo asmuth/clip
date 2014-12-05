@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "fnord/http/httpserver.h"
-#include "fnord/json/jsonrpc.h"
-#include "fnord/json/jsonrpchttpadapter.h"
+#include "fnord/net/http/httpserver.h"
+#include "fnord/format/json/jsonrpc.h"
+#include "fnord/format/json/jsonrpchttpadapter.h"
 #include "fnord/service/groups/groupsservice.h"
 #include "fnord/service/groups/groupsserviceadapter.h"
 #include "fnord/thread/threadpool.h"

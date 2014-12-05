@@ -7,24 +7,25 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_GROUPSSERVICE_ADAPTER_H
-#define _FNORD_GROUPSSERVICE_ADAPTER_H
-#include <stdlib.h>
-#include "fnord/format/json/jsonrpc.h"
+#ifndef _FNORDMETRIC_HTTPHANDLER_H
+#define _FNORDMETRIC_HTTPHANDLER_H
+#include <fnord/net/http/httprequest.h>
+#include <fnord/net/http/httpresponse.h>
 
 namespace fnord {
-namespace groups_service {
-class GroupsService;
+namespace http {
 
-class GroupsServiceAdapter {
+class HTTPHandler {
 public:
 
-  static void registerJSONRPC(
-      GroupsService* groups_service,
-      json::JSONRPC* rpc);
+  virtual ~HTTPHandler() {}
+
+  virtual bool handleHTTPRequest(
+      HTTPRequest* request,
+      HTTPResponse* response) = 0;
 
 };
 
-} // namespace groups_service
-} // namsepace fnord
+}
+}
 #endif

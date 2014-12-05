@@ -7,24 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_GROUPSSERVICE_ADAPTER_H
-#define _FNORD_GROUPSSERVICE_ADAPTER_H
-#include <stdlib.h>
-#include "fnord/format/json/jsonrpc.h"
+#include <fnord/storage/sstable/rowoffsetindex.h>
 
 namespace fnord {
-namespace groups_service {
-class GroupsService;
+namespace sstable {
 
-class GroupsServiceAdapter {
-public:
+RowOffsetIndex* RowOffsetIndex::makeIndex() {
+  return new RowOffsetIndex();
+}
 
-  static void registerJSONRPC(
-      GroupsService* groups_service,
-      json::JSONRPC* rpc);
+RowOffsetIndex::RowOffsetIndex() : Index(RowOffsetIndex::kIndexType) {}
 
-};
+void RowOffsetIndex::addRow(
+    size_t body_offset,
+    void const* key,
+    size_t key_size,
+    void const* data,
+    size_t data_size) const {
+}
 
-} // namespace groups_service
-} // namsepace fnord
-#endif
+}
+}
