@@ -7,24 +7,29 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_GROUPSSERVICE_ADAPTER_H
-#define _FNORD_GROUPSSERVICE_ADAPTER_H
-#include <stdlib.h>
-#include "fnord/json/jsonrpc.h"
+#include <fnord/sstable/cursor.h>
 
 namespace fnord {
-namespace groups_service {
-class GroupsService;
+namespace sstable {
 
-class GroupsServiceAdapter {
-public:
+Cursor::Cursor() {}
 
-  static void registerJSONRPC(
-      GroupsService* groups_service,
-      json::JSONRPC* rpc);
+Cursor::~Cursor() {}
 
-};
+std::string Cursor::getKeyString() {
+  void* data;
+  size_t size;
+  getKey(&data, &size);
+  return std::string((char *) data, size);
+}
 
-} // namespace groups_service
-} // namsepace fnord
-#endif
+std::string Cursor::getDataString() {
+  void* data;
+  size_t size;
+  getData(&data, &size);
+  return std::string((char *) data, size);
+}
+
+}
+}
+

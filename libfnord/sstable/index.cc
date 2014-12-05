@@ -7,24 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_GROUPSSERVICE_ADAPTER_H
-#define _FNORD_GROUPSSERVICE_ADAPTER_H
-#include <stdlib.h>
-#include "fnord/json/jsonrpc.h"
+#include <fnord/sstable/index.h>
 
 namespace fnord {
-namespace groups_service {
-class GroupsService;
+namespace sstable {
 
-class GroupsServiceAdapter {
-public:
+Index::Index(uint32_t type) : type_(type) {}
 
-  static void registerJSONRPC(
-      GroupsService* groups_service,
-      json::JSONRPC* rpc);
+uint32_t Index::type() const {
+  return type_;
+}
 
-};
+}
+}
 
-} // namespace groups_service
-} // namsepace fnord
-#endif

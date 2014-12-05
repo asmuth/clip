@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/format/json/jsonrpcrequest.h"
-#include "fnord/format/json/jsonrpcresponse.h"
+#include "fnord/json/jsonrpcrequest.h"
+#include "fnord/json/jsonrpcresponse.h"
 #include "fnord/service/groups/groupsservice.h"
 #include "fnord/service/groups/groupsserviceadapter.h"
 

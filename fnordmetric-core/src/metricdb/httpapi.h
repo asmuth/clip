@@ -14,7 +14,7 @@
 #include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
-#include <fnord/format/json/jsonoutputstream.h>
+#include <fnord/json/jsonoutputstream.h>
 
 using namespace fnord;
 namespace fnordmetric {

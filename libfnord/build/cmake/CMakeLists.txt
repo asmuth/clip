@@ -94,22 +94,22 @@ add_library(fnord-io OBJECT
 
 # json
 add_library(fnord-json OBJECT
-    stage/fnord/format/json/flatjsonreader.cc
-    stage/fnord/format/json/jsondocument.cc
-    stage/fnord/format/json/jsoninputstream.cc
-    stage/fnord/format/json/jsonoutputstream.cc
-    stage/fnord/format/json/jsonpointer.cc
-    stage/fnord/format/json/jsonrpc.cc
-    stage/fnord/format/json/jsonrpchttpadapter.cc
-    stage/fnord/format/json/jsonrpcrequest.cc
-    stage/fnord/format/json/jsonrpcresponse.cc)
+    stage/fnord/json/flatjsonreader.cc
+    stage/fnord/json/jsondocument.cc
+    stage/fnord/json/jsoninputstream.cc
+    stage/fnord/json/jsonoutputstream.cc
+    stage/fnord/json/jsonpointer.cc
+    stage/fnord/json/jsonrpc.cc
+    stage/fnord/json/jsonrpchttpadapter.cc
+    stage/fnord/json/jsonrpcrequest.cc
+    stage/fnord/json/jsonrpcresponse.cc)
 
 add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
-    stage/fnord/format/json/json_test.cc)
+    stage/fnord/json/json_test.cc)
 
 # service: groups
 add_library(fnord-groups-service OBJECT

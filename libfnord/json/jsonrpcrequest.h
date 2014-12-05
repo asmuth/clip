@@ -7,24 +7,30 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_GROUPSSERVICE_ADAPTER_H
-#define _FNORD_GROUPSSERVICE_ADAPTER_H
+#ifndef _FNORD_JSON_JSONRPCREQUEST_H
+#define _FNORD_JSON_JSONRPCREQUEST_H
 #include <stdlib.h>
-#include "fnord/json/jsonrpc.h"
+#include <string>
+#include <vector>
+#include "fnord/json/jsondocument.h"
+#include "fnord/json/jsoninputstream.h"
 
 namespace fnord {
-namespace groups_service {
-class GroupsService;
+namespace json {
 
-class GroupsServiceAdapter {
+class JSONRPCRequest {
 public:
 
-  static void registerJSONRPC(
-      GroupsService* groups_service,
-      json::JSONRPC* rpc);
+  JSONRPCRequest(JSONInputStream&& input);
 
+  const JSONDocument& body() const;
+  std::string id() const;
+  std::string method() const;
+
+protected:
+  JSONDocument body_;
 };
 
-} // namespace groups_service
+} // namespace json
 } // namsepace fnord
 #endif

@@ -52,17 +52,17 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnord/io/pagemanager.cc
     stage/src/fnord/io/inputstream.cc
     stage/src/fnord/io/outputstream.cc
-    stage/src/fnord/format/json/jsonoutputstream.cc
+    stage/src/fnord/json/jsonoutputstream.cc
     stage/src/fnord/net/udpserver.cc
-    stage/src/fnord/storage/sstable/cursor.cc
-    stage/src/fnord/storage/sstable/fileheaderreader.cc
-    stage/src/fnord/storage/sstable/fileheaderwriter.cc
-    stage/src/fnord/storage/sstable/index.cc
-    stage/src/fnord/storage/sstable/indexprovider.cc
-    stage/src/fnord/storage/sstable/rowoffsetindex.cc
-    stage/src/fnord/storage/sstable/sstablereader.cc
-    stage/src/fnord/storage/sstable/sstablerepair.cc
-    stage/src/fnord/storage/sstable/sstablewriter.cc
+    stage/src/fnord/sstable/cursor.cc
+    stage/src/fnord/sstable/fileheaderreader.cc
+    stage/src/fnord/sstable/fileheaderwriter.cc
+    stage/src/fnord/sstable/index.cc
+    stage/src/fnord/sstable/indexprovider.cc
+    stage/src/fnord/sstable/rowoffsetindex.cc
+    stage/src/fnord/sstable/sstablereader.cc
+    stage/src/fnord/sstable/sstablerepair.cc
+    stage/src/fnord/sstable/sstablewriter.cc
     stage/src/fnord/system/signalhandler.cc
     stage/src/fnord/thread/threadpool.cc
     stage/src/fnord/webui/bundle.cc

@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/storage/sstable/sstablerepair.h>
+#include <fnord/sstable/sstablerepair.h>
 #include <fnord/thread/task.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/metricdb/backends/disk/metricrepository.h>
