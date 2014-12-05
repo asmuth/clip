@@ -13,6 +13,10 @@
     display: block;
   }
 
+  fn-dropdown[data-style="inline"] {
+    display: inline-block;
+  }
+
 </style>
 
 <template id="fn-dropdown-base-tpl">
@@ -122,9 +126,9 @@
     }
 
     li.item[data-active] {
-      background: rgba(0,0,0,.03);
-      color: rgba(0,0,0,.8);
-      font-weight: 700;
+      background: transparent;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.8);
       box-shadow: none;
       z-index: 12;
     }
@@ -224,6 +228,45 @@
       white-space: normal;
       word-wrap: normal;
     }
+
+    #dropdown_ui.fancy li.item:hover {
+      box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    #dropdown_ui.fancy:hover {
+      border-color: rgba(39, 41, 43, 0.3);
+      box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.08);
+    }
+
+    #dropdown_ui.fancy:hover .menu {
+      border: 1px solid rgba(39, 41, 43, 0.3);
+      box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.08);
+    }
+
+    /*--------------
+      Inline
+    ---------------*/
+    #dropdown_ui.inline {
+      cursor: pointer;
+      display: inline-block;
+      color: inherit;
+    }
+
+     #dropdown_ui.inline i.icon {
+      margin: 0em 0.5em 0em 0.25em;
+      vertical-align: top;
+    }
+
+    #dropdown_ui.inline .text {
+      font-weight: bold;
+    }
+
+    #dropdown_ui.inline ul#menu{
+      cursor: auto;
+      margin-top: 0.25em;
+      border-radius: 0.2857rem;
+    }
+
 
     /*--------------
       Error
@@ -328,8 +371,7 @@
     this.setState = function() {
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
       dropdown_ui.className += " " + this.getAttribute('data-state');
-    }
-
+    };
 
     this.toggleDisplayDropdown = function() {
       var ul = this.shadowRoot.querySelector("ul");
@@ -416,6 +458,10 @@
       }
     };
   };
+
+  /*
+    inline
+  */
 
   window.addEventListener("fn-ready", function() {
     Fnord.registerComponent("fn-dropdown", DropDownComponent);
