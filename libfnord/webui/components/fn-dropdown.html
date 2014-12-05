@@ -8,75 +8,248 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style>
+  fn-dropdown {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    line-height: 1em;
+    outline: 0;
+    text-align:left;
+    transition: border-radius .1s ease,width .2s ease;
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    color: rgba(0,0,0,.8);
+
+  }
+</style>
+
 <template id="fn-dropdown-base-tpl">
   <style>
-    select.disabled {
-      opacity: 0.5;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    ::selection {
+      background-color: rgba(255,255,160,.4);
+      color: rgba(0,0,0,.8);
+    }
+
+    .text {
+      display: inline-block;
+      -webkit-transition: color .2s ease;
+      transition: color .2s ease;
+    }
+
+    i {
+      display: inline-block;
+      line-height: 1;
+      height: 1em;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      font-weight: 400;
+      font-style: normal;
+      text-align: center;
+      width: auto;
+      margin: 0 0 0 1em;
+    }
+
+
+    ol, ul {
+      display: none;
+      list-style: none;
+      cursor: auto;
+      position: absolute;
+      outline: 0;
+      top: 100%;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      min-width: 100%;
+      white-space: nowrap;
+      font-size: 1rem;
+      text-shadow: none;
+      text-align: left;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+      border: 1px solid rgba(39,41,43,.15);
+      border-radius: 0 0 .2857rem .2857rem;
+      -webkit-transition: opacity .2s ease;
+      transition: opacity .2s ease;
+      z-index: 11;
+      will-change: transform,opacity;
+    }
+
+    ol, ul[data-active] {
+      display: block;
+    }
+
+    ol, ul, li {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline;
+    }
+
+    ol, ul > li.item {
+      osition: relative;
+      cursor: pointer;
+      display: block;
+      border: none;
+      height: auto;
+      border-top: none;
+      line-height: 1.2em;
+      color: rgba(0, 0, 0, 0.8);
+      padding: 0.65rem 1.25rem !important;
+      font-size: 1rem;
+      text-transform: none;
+      font-weight: normal;
+      box-shadow: none;
+      -webkit-touch-callout: none;
+    }
+
+    li.item[data-active] {
+      background: rgba(0,0,0,.03);
+      color: rgba(0,0,0,.8);
+      font-weight: 700;
+      box-shadow: none;
+      z-index: 12;
+    }
+
+    li.item:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: rgba(0, 0, 0, 0.8);
+      z-index: 12;
+    }
+
   </style>
-  <select></select>
+
+  <div class="header">
+    <div class='text'>
+      <content select='fn-dropdown-header'></content>
+    </div>
+    <i class="fa fa-chevron-down"></i>
+  </div>
+  <ul>
+  </ul>
 </template>
+
 <script type="text/javascript">
   var DropDownComponent = function() {
     this.createdCallback = function() {
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-dropdown", "base");
       shadow.appendChild(tpl);
-
       var base = this;
 
-      var select = this.shadowRoot.querySelector("select");
-      select.addEventListener('change', function(e) {
-        base.fireSelectEvent();
-      }, false);
 
       this.attributeChangedCallback();
-    }
+
+      this.addEventListener('click', function(e) {
+        e.stopPropagation();
+        base.toggleDisplayDropdown();
+      }, false);
+
+      document.addEventListener('click', function() {
+        base.hideDropdown();
+      }, false);
+    };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == "disabled") {
-        this.handleDisableAttr(new_val);
+      if (attr == "data-active") {
+        this.showDropdown();
       }
     };
 
-    this.handleDisableAttr = function(val) {
-      var select = this.shadowRoot.querySelector("select");
-      if (val == "disabled") {
-        select.disabled = true;
-        select.className = "disabled";
+    this.toggleDisplayDropdown = function() {
+      var ul = this.shadowRoot.querySelector("ul");
+      if (ul.hasAttribute("data-active")) {
+        this.hideDropdown();
       } else {
-        select.disabled = false;
-        select.className = "";
+        this.showDropdown();
       }
-    };
-
-    this.setOptions = function(options) {
-      var select = this.shadowRoot.querySelector("select");
-      options.map(function(o) {
-        var option_elem = document.createElement("option");
-        option_elem.innerHTML = o
-        select.appendChild(option_elem);
-      });
-    };
-
-    this.setValue = function(value) {
-      var select = this.shadowRoot.querySelector("select");
-      select.value = value;
-    };
-
-    this.getValue = function() {
-      var select = this.shadowRoot.querySelector("select");
-      return select.value;
-    };
-
-    this.fireSelectEvent = function() {
-      this.dispatchEvent(new Event("fn-dropdown-select"));
     }
 
+    this.showDropdown = function() {
+      var list_items = this.shadowRoot.querySelectorAll("li.item");
+      if (list_items.length == 0) {
+        this.renderDropdown();
+      } else {
+        this.shadowRoot.querySelector("ul").setAttribute("data-active", "active");
+      }
+    };
+
+    this.hideDropdown = function() {
+      this.shadowRoot.querySelector("ul").removeAttribute("data-active");
+      this.removeAttribute("data-active");
+    };
+
+    this.renderDropdown = function() {
+      var ul = this.shadowRoot.querySelector("ul");
+      ul.setAttribute("data-active", "active");
+      var items = this.querySelectorAll("fn-dropdown-item");
+      var base = this;
+
+      for (var i = 0; i < items.length; i++) {
+        var elem = items[i];
+
+        var onItemClick = (function(base, item) {
+          return function(e) {
+            e.stopPropagation();
+            base.clickItem(item, e.srcElement);
+          };
+        })(this, elem);
+
+        var list_item = document.createElement("li");
+        list_item.className = "item";
+        list_item.innerHTML = elem.innerHTML;
+        ul.appendChild(list_item);
+
+        list_item.addEventListener('click', onItemClick, false); 
+      }
+    };
+
+    this.clickItem = function(item, shadow) {
+      var active_items = this.querySelectorAll("fn-dropdown-item[data-active]");
+      for (var i = 0; i < active_items.length; ++i) {
+        active_items[i].removeAttribute("data-active");
+      }
+
+      var active_shadow_items = this.shadowRoot.querySelectorAll(
+          "li.item[data-active]");
+      for (var i = 0; i < active_shadow_items.length; ++i) {
+        active_shadow_items[i].removeAttribute("data-active");
+      }
+
+      shadow.setAttribute("data-active", true);
+      item.setAttribute("data-active", true);
+
+      var ev = new CustomEvent("fn-dropdown-item-click", {
+        bubbles: true,
+        cancelable: true
+      });
+      item.dispatchEvent(ev);
+
+      this.updateHeader(shadow.innerText);
+      this.hideDropdown();
+    };
+
+    this.updateHeader = function(text) {
+      var header = this.querySelector("fn-dropdown-header");
+
+      if (!(header.getAttribute('data-changeable') == 'false')) {
+        var shadow_header = this.shadowRoot.querySelector(".header .text");
+        shadow_header.innerHTML = text;
+      }
+    };
+
+
+
     /*
-    setAllValues
-    setDisplayValue
-    getDisplayValue
+    disable
     */
 
   };

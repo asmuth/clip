@@ -11,7 +11,24 @@
 <template id="fn-dropdown-demo-base-tpl">
   <section>
     <h1><i>Example 1 &raquo;</i> Dropdown</h1>
-    <fn-dropdown id="exp1"></fn-dropdown>
+    <fn-dropdown id="exp1" style="margin-bottom: 30px;">
+      <fn-dropdown-header >Rollup</fn-dropdown-header>
+      <fn-dropdown-item>Value</fn-dropdown-item>
+      <fn-dropdown-item>Count</fn-dropdown-item>
+      <fn-dropdown-item>Sum</fn-dropdown-item>
+      <fn-dropdown-item>Min</fn-dropdown-item>
+      <fn-dropdown-item>Max</fn-dropdown-item>
+      <fn-dropdown-item>Median</fn-dropdown-item>
+    </fn-dropdown>
+
+    <h1><i>Example 2 &raquo;</i> Dropdown with Static Header</h1>
+    <fn-dropdown id="exp1">
+      <fn-dropdown-header data-changeable='false'>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    </fn-dropdown>
+
 
     <script type="text/javascript">
     </script>
