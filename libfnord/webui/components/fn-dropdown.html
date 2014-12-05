@@ -35,6 +35,16 @@
       color: rgba(0,0,0,.8);
     }
 
+    input {
+      letter-spacing: normal;
+      word-spacing: normal;
+      text-transform: none;
+      text-indent: 0px;
+      text-shadow: none;
+      display: inline-block;
+      text-align: start;
+    }
+
 
     #dropdown_ui {
       cursor: pointer;
@@ -124,7 +134,7 @@
       -webkit-touch-callout: none;
     }
 
-    li.item[data-active] {
+    li.item.active {
       background: transparent;
       font-weight: bold;
       color: rgba(0, 0, 0, 0.8);
@@ -283,6 +293,67 @@
     }
 
     /*--------------
+      Searchable
+    ---------------*/
+    #dropdown_ui.search {
+      display: block;
+      width: 100%;
+      height: 35px;
+      min-width: 0;
+      font-size: 1em;
+      position:relative;
+    }
+
+    #dropdown_ui.search input {
+      background: none transparent;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      border-radius: 0em !important;
+      top: 0em;
+      left: 0em;
+      width: 100%;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+      padding: inherit;
+      line-height: 1.2em;
+      cursor: auto;
+    }
+
+    #dropdown_ui.search i.icon {
+      display: none;
+    }
+
+     #dropdown_ui.search ul#menu {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-backface-visibility: hidden;
+              backface-visibility: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media only screen and (max-width: 767px) {
+      #dropdown_ui.search ul#menu{
+        max-height: 7.7142rem;
+      }
+    }
+    @media only screen and (min-width: 768px) {
+      #dropdown_ui.search ul#menu{
+        max-height: 10.2856rem;
+      }
+    }
+    @media only screen and (min-width: 992px) {
+      #dropdown_ui.search ul#menu {
+        max-height: 15.4284rem;
+      }
+    }
+    @media only screen and (min-width: 1920px) {
+      #dropdown_ui.search ul#menu {
+        max-height: 20.5712rem;
+      }
+    }
+
+    /*--------------
       Error
     ---------------*/
     #dropdown_ui.error,
@@ -311,7 +382,7 @@
       background-color: #fff2f2;
     }
 
-    #dropdown_ui.error ul#menu li.item[data-active]{
+    #dropdown_ui.error ul#menu li.item.active {
       background-color: #fdcfcf;
     }
 
@@ -346,9 +417,11 @@
       shadow.appendChild(tpl);
       var base = this;
 
-      /* syle options */
+      /* style options */
       if (this.hasAttribute('data-style')) {this.setStyle();}
       if (this.hasAttribute('data-state')) {this.setState();}
+
+      if (this.hasAttribute('data-searchable')) {this.renderSearchInput();}
 
       this.attributeChangedCallback();
 
@@ -387,33 +460,48 @@
       dropdown_ui.className += " " + this.getAttribute('data-state');
     };
 
+    this.renderSearchInput = function() {
+      this.search_item = "";
+      var input = document.createElement("input");
+      var placeholder = this.getAttribute('data-placeholder');
+      if (placeholder != null) {
+        input.placeholder = placeholder;
+      }
+      var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
+      dropdown_ui.className = "fancy search";
+      var header = this.shadowRoot.querySelector(".header");
+      dropdown_ui.insertBefore(input, header);
+
+      var base = this;
+
+      input.addEventListener('focus', function() {
+        base.search_item = "";
+      }, false);
+
+      input.addEventListener('keyup', function() {
+        base.search_item = this.value.toLowerCase();
+        base.renderDropdown();
+      }, false);
+    }
+
     this.toggleDisplayDropdown = function() {
       var ul = this.shadowRoot.querySelector("ul");
       if (ul.hasAttribute("data-active")) {
         this.hideDropdown();
       } else {
         if (this.getAttribute('data-state') != "disabled") {
-          this.showDropdown();
+          this.renderDropdown();
         }
       }
     };
 
-    this.showDropdown = function() {
-      var list_items = this.shadowRoot.querySelectorAll("li.item");
-      if (list_items.length == 0) {
-        this.renderDropdown();
-      } else {
-        this.shadowRoot.querySelector("ul").setAttribute("data-active", "active");
-      }
-    };
-
     this.hideDropdown = function() {
-      this.shadowRoot.querySelector("ul").removeAttribute("data-active");
+      var list = this.shadowRoot.querySelector("ul");
+      list.removeAttribute("data-active");
       this.removeAttribute("data-active");
     };
 
     this.renderListLabel = function(label, list_elem) {
-      console.log("render list label");
       var list_item = document.createElement("li");
       list_item.className = "label";
       list_item.innerHTML = label;
@@ -422,6 +510,7 @@
 
     this.renderDropdown = function() {
       var ul = this.shadowRoot.querySelector("ul");
+      ul.innerHTML = "";
       ul.setAttribute("data-active", "active");
 
       var items = this.querySelectorAll("fn-dropdown-item");
@@ -440,14 +529,23 @@
           };
         })(this, elem);
 
+        if (this.search_item && this.search_item.length > 0 ) {
+          var value = elem.getAttribute("data-value").toLowerCase();
+          if (value.indexOf(this.search_item) <= -1) {continue;}
+        }
+
         var list_item = document.createElement("li");
-        list_item.className = "item";
+        var class_name =
+          elem.hasAttribute('data-active') ? "item active" : "item";
+        list_item.className = class_name;
         list_item.innerHTML = elem.innerHTML;
         ul.appendChild(list_item);
 
-        list_item.addEventListener('click', onItemClick, false); 
+        list_item.addEventListener('click', onItemClick, false);
+
       }
     };
+
 
     this.clickItem = function(item, shadow) {
       var active_items = this.querySelectorAll("fn-dropdown-item[data-active]");
@@ -476,11 +574,15 @@
 
     this.updateHeader = function(text) {
       var header = this.querySelector("fn-dropdown-header");
+      if (header != null && header.getAttribute('data-changeable') == 'false') {return;}
 
-      if (!(header.getAttribute('data-changeable') == 'false')) {
+      if (this.hasAttribute('data-searchable')) {
+        this.shadowRoot.querySelector("input").value = text;
+      } else {
         var shadow_header = this.shadowRoot.querySelector(".header .text");
         shadow_header.innerHTML = text;
       }
+
     };
   };
 
