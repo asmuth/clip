@@ -17,7 +17,7 @@ namespace fnordmetric {
 namespace metricdb {
 namespace inmemory_backend {
 
-using fnord::util::DateTime;
+using fnord::DateTime;
 
 /**
  * should only be used for debugging purposes

@@ -9,7 +9,10 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_DISK_BACKEND_METRIC_H_
 #define _FNORDMETRIC_METRICDB_DISK_BACKEND_METRIC_H_
-#include <fnordmetric/io/filerepository.h>
+#include <string>
+#include <vector>
+#include <fnord/base/datetime.h>
+#include <fnord/io/filerepository.h>
 #include <fnordmetric/metricdb/backends/disk/compactionpolicy.h>
 #include <fnordmetric/metricdb/backends/disk/labelindex.h>
 #include <fnordmetric/metricdb/backends/disk/metriccursor.h>
@@ -18,9 +21,6 @@
 #include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/metricdb/metric.h>
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/util/datetime.h>
-#include <string>
-#include <vector>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -41,8 +41,8 @@ public:
       std::vector<std::unique_ptr<TableRef>>&& tables);
 
   void scanSamples(
-      const fnord::util::DateTime& time_begin,
-      const fnord::util::DateTime& time_end,
+      const fnord::DateTime& time_begin,
+      const fnord::DateTime& time_end,
       std::function<bool (Sample* sample)> callback) override;
 
   void compact(CompactionPolicy* compaction = nullptr);

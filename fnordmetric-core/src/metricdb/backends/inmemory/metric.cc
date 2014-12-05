@@ -7,15 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/wallclock.h>
 #include <fnordmetric/metricdb/backends/inmemory/metric.h>
-#include <fnordmetric/util/wallclock.h>
 
 namespace fnordmetric {
 namespace metricdb {
 namespace inmemory_backend {
 
-using fnord::util::DateTime;
-using fnord::util::WallClock;
+using fnord::DateTime;
+using fnord::WallClock;
 
 Metric::Metric(
     const std::string& key) :

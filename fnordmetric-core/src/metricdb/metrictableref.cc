@@ -61,8 +61,8 @@ std::vector<std::string> MetricTableRef::columns() {
 }
 
 void MetricTableRef::executeScan(query::TableScan* scan) {
-  auto begin = fnord::util::DateTime::epoch();
-  auto limit = fnord::util::DateTime::now();
+  auto begin = fnord::DateTime::epoch();
+  auto limit = fnord::DateTime::now();
 
   metric_->scanSamples(
       begin,

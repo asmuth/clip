@@ -12,9 +12,9 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <assert.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/util/format.h>
+#include <fnord/chart/domain.h>
+#include <fnord/chart/drawable.h>
+#include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {
@@ -26,8 +26,8 @@ public:
    * @param dimension 0 for x, 1 for y, etc
    */
   DomainConfig(
-      ui::Drawable* drawable,
-      ui::AnyDomain::kDimension dimension);
+      fnord::chart::Drawable* drawable,
+      fnord::chart::AnyDomain::kDimension dimension);
 
   void setMin(const SValue& value);
   void setMax(const SValue& value);
@@ -35,7 +35,7 @@ public:
   void setLogarithmic(bool logarithmic);
 
 protected:
-  ui::AnyDomain* domain_;
+  fnord::chart::AnyDomain* domain_;
   char dimension_letter_;
 };
 

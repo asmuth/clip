@@ -14,20 +14,6 @@
 
 namespace fnord {
 
-template <>
-std::string StringUtil::toString(std::string value);
-
-template <>
-std::string StringUtil::toString(const char* value);
-
-template <>
-std::string StringUtil::toString(double value);
-
-template <typename T>
-std::string StringUtil::toString(T value) {
-  return std::to_string(value);
-}
-
 template <typename ValueType, typename... T>
 void StringUtil::formatImpl(
     std::string* scratch,

@@ -9,71 +9,70 @@
  */
 #include <fnordmetric/sql_extensions/linechartbuilder.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/linechart.h>
 
 namespace fnordmetric {
 namespace query {
 
 LineChartBuilder::LineChartBuilder(
-    ui::Canvas* canvas,
+    fnord::chart::Canvas* canvas,
     DrawStatement const* draw_stmt) :
     ChartBuilder(canvas, draw_stmt) {}
 
-ui::Drawable* LineChartBuilder::getChart() const {
-  auto chart = dynamic_cast<ui::LineChart*>(findChartType());
+fnord::chart::Drawable* LineChartBuilder::getChart() const {
+  auto chart = dynamic_cast<fnord::chart::LineChart*>(findChartType());
   setLabels(chart);
   return chart;
 }
 
-ui::Drawable* LineChartBuilder::findChartType() const {
+fnord::chart::Drawable* LineChartBuilder::findChartType() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::TimeType,
         fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::TimeType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::TimeType,
         fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::FloatType,
         fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::FloatType,
         fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::FloatType,
         fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::StringType,
         fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::LineChart2D<
+  if (auto c = tryType2D<fnord::chart::LineChart2D<
         fnordmetric::StringType,
         fnordmetric::StringType>>())
     return c;
@@ -86,7 +85,7 @@ std::string LineChartBuilder::chartName() const {
   return "LineChart";
 }
 
-void LineChartBuilder::setLabels(ui::LineChart* chart) const {
+void LineChartBuilder::setLabels(fnord::chart::LineChart* chart) const {
   auto prop = draw_stmt_->getProperty(Token::T_LABELS);
   chart->setLabels(prop != nullptr);
 }

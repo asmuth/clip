@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <stdlib.h>
+#include <fnord/base/ieee754.h>
+#include <fnord/base/exception.h>
 #include <fnordmetric/metricdb/backends/disk/binaryformat.h>
 #include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/metricdb/backends/disk/tokenindex.h>
-#include <fnordmetric/util/ieee754.h>
-#include <fnord/base/exception.h>
-#include <stdlib.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -27,7 +27,7 @@ template <> void SampleWriter::writeValue<uint64_t>(uint64_t value) {
 }
 
 template <> void SampleWriter::writeValue<double>(double value) {
-  appendUInt64(fnord::util::IEEE754::toBytes(value));
+  appendUInt64(fnord::IEEE754::toBytes(value));
 }
 
 void SampleWriter::writeLabel(

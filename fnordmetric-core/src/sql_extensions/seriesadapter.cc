@@ -29,8 +29,8 @@ AnySeriesAdapter::AnySeriesAdapter(
 void AnySeriesAdapter::applyProperties(
     SValue* row,
     int row_len,
-    Series* series,
-    Series::AnyPoint* point) {
+    fnord::chart::Series* series,
+    fnord::chart::Series::AnyPoint* point) {
   for (const auto& prop : prop_indexes_) {
     if (prop.second >= row_len) {
       RAISE(kRuntimeError, "invalid index for property");

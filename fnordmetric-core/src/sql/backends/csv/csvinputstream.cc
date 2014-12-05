@@ -1,19 +1,18 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <assert.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include "csvinputstream.h"
 #include "fnord/base/exception.h"
-#include "fnordmetric/util/inputstream.h"
+#include "fnord/io/inputstream.h"
 
 namespace fnordmetric {
 namespace query {
@@ -24,7 +23,7 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) {
-  auto file = fnordmetric::util::FileInputStream::openFile(file_path);
+  auto file = fnord::io::FileInputStream::openFile(file_path);
   file->readByteOrderMark();
 
   auto csv_file = new CSVInputStream(
@@ -37,7 +36,7 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
 }
 
 CSVInputStream::CSVInputStream(
-    std::unique_ptr<fnordmetric::util::RewindableInputStream>&& input_stream,
+    std::unique_ptr<fnord::io::RewindableInputStream>&& input_stream,
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) :
@@ -95,7 +94,7 @@ void CSVInputStream::rewind() {
   input_->rewind();
 }
 
-const fnordmetric::util::RewindableInputStream& CSVInputStream::getInputStream()
+const fnord::io::RewindableInputStream& CSVInputStream::getInputStream()
     const {
   return *input_;
 }

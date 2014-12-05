@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/logger.h>
-#include <fnordmetric/util/wallclock.h>
-#include <fnord/base/exception.h>
 #include <sstream>
 #include <stdarg.h>
+#include <fnord/base/wallclock.h>
+#include <fnord/base/exception.h>
+#include <fnordmetric/util/logger.h>
 
 using fnord::Exception;
 

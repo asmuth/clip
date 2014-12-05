@@ -86,6 +86,16 @@ void JSONOutputStream::addValue(const int& value) {
 }
 
 template <>
+void JSONOutputStream::addValue(const unsigned long& value) {
+  addInteger(value);
+}
+
+template <>
+void JSONOutputStream::addValue(const unsigned long long& value) {
+  addInteger(value);
+}
+
+template <>
 void JSONOutputStream::addValue(const double& value) {
   addFloat(value);
 }

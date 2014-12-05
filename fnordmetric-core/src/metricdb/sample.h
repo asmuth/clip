@@ -9,12 +9,12 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_SAMPLE_H_
 #define _FNORDMETRIC_METRICDB_SAMPLE_H_
-#include <fnordmetric/util/datetime.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <fnord/base/datetime.h>
 
-using fnord::util::DateTime;
+using fnord::DateTime;
 
 namespace fnordmetric {
 namespace metricdb {

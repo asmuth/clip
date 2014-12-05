@@ -16,13 +16,10 @@
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnord/base/exception.h>
+#include <fnord/chart/canvas.h>
+#include <fnord/chart/drawable.h>
 
 namespace fnordmetric {
-namespace ui {
-class Canvas;
-class Drawable;
-class AxisDefinition;
-}
 namespace query {
 
 class DrawStatement {
@@ -34,14 +31,14 @@ public:
     result_lists_.emplace_back(target);
   }
 
-  void execute(ui::Canvas* canvas) const;
+  void execute(fnord::chart::Canvas* canvas) const;
 
   ASTNode const* getProperty(Token::kTokenType key) const;
 
 protected:
 
   template <typename ChartBuilderType>
-  ui::Drawable* mkChart(ui::Canvas* canvas) const {
+  fnord::chart::Drawable* mkChart(fnord::chart::Canvas* canvas) const {
     ChartBuilderType chart_builder(canvas, this);
 
     for (int i = 0; i < select_stmts_.size(); ++i) {
@@ -52,12 +49,12 @@ protected:
     return chart_builder.getChart();
   }
 
-  void applyAxisDefinitions(ui::Drawable* chart) const;
-  void applyAxisLabels(ASTNode* ast, ui::AxisDefinition* axis) const;
-  void applyDomainDefinitions(ui::Drawable* chart) const;
-  void applyGrid(ui::Drawable* chart) const;
-  void applyLegend(ui::Drawable* chart) const;
-  void applyTitle(ui::Drawable* chart) const;
+  void applyAxisDefinitions(fnord::chart::Drawable* chart) const;
+  void applyAxisLabels(ASTNode* ast, fnord::chart::AxisDefinition* axis) const;
+  void applyDomainDefinitions(fnord::chart::Drawable* chart) const;
+  void applyGrid(fnord::chart::Drawable* chart) const;
+  void applyLegend(fnord::chart::Drawable* chart) const;
+  void applyTitle(fnord::chart::Drawable* chart) const;
 
   std::vector<QueryPlanNode*> select_stmts_;
   std::vector<ResultList*> result_lists_;

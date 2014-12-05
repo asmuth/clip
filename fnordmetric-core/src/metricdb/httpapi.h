@@ -10,11 +10,11 @@
 #ifndef _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #define _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #include <memory>
-#include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
-#include <fnordmetric/util/jsonoutputstream.h>
 #include <fnord/base/uri.h>
+#include <fnord/http/httphandler.h>
+#include <fnord/http/httprequest.h>
+#include <fnord/http/httpresponse.h>
+#include <fnord/json/jsonoutputstream.h>
 
 using namespace fnord;
 namespace fnordmetric {
@@ -55,7 +55,7 @@ protected:
 
   void renderMetricJSON(
       IMetric* metric,
-      util::JSONOutputStream* json) const;
+      json::JSONOutputStream* json) const;
 
   IMetricRepository* metric_repo_;
 };

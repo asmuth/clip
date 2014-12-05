@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/metricdb/statsd.h>
 #include <fnord/base/exception.h>
+#include <fnord/base/inspect.h>
+#include <fnordmetric/environment.h>
+#include <fnordmetric/metricdb/statsd.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -22,7 +22,7 @@ StatsdServer::StatsdServer(
     metric_repo_(metric_repo),
     udp_server_(server_scheduler, work_scheduler) {
 
-  udp_server_.onMessage([this] (const fnord::util::Buffer& msg) {
+  udp_server_.onMessage([this] (const fnord::Buffer& msg) {
     this->messageReceived(msg);
   });
 }
@@ -38,7 +38,7 @@ enum StatsdParseState {
   S_VALUE
 };
 
-void StatsdServer::messageReceived(const fnord::util::Buffer& msg) {
+void StatsdServer::messageReceived(const fnord::Buffer& msg) {
   std::string key;
   std::string value;
   std::vector<std::pair<std::string, std::string>> labels;

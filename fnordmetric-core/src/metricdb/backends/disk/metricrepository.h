@@ -12,8 +12,8 @@
 #include <fnordmetric/metricdb/backends/disk/compactiontask.h>
 #include <fnordmetric/metricdb/backends/disk/metric.h>
 #include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/thread/taskscheduler.h>
+#include <fnord/io/filerepository.h>
+#include <fnord/thread/taskscheduler.h>
 
 namespace fnordmetric {
 namespace metricdb {

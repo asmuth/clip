@@ -7,15 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/chart/svgtarget.h>
+#include <fnord/io/inputstream.h>
+#include <fnord/json/jsonoutputstream.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/query/queryservice.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/ui/svgtarget.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/jsonoutputstream.h>
 
 namespace fnordmetric {
 namespace query {
@@ -23,9 +23,9 @@ namespace query {
 QueryService::QueryService() {}
 
 void QueryService::executeQuery(
-    std::shared_ptr<util::InputStream> input_stream,
+    std::shared_ptr<fnord::io::InputStream> input_stream,
     kFormat output_format,
-    std::shared_ptr<util::OutputStream> output_stream) {
+    std::shared_ptr<fnord::io::OutputStream> output_stream) {
   std::unique_ptr<TableRepository> table_repo(new TableRepository());
   executeQuery(
       input_stream,
@@ -35,9 +35,9 @@ void QueryService::executeQuery(
 }
 
 void QueryService::executeQuery(
-    std::shared_ptr<util::InputStream> input_stream,
+    std::shared_ptr<fnord::io::InputStream> input_stream,
     kFormat output_format,
-    std::shared_ptr<util::OutputStream> output_stream,
+    std::shared_ptr<fnord::io::OutputStream> output_stream,
     std::unique_ptr<TableRepository> table_repo,
     int width /* = -1 */,
     int height /* = -1 */) {
@@ -57,13 +57,13 @@ void QueryService::executeQuery(
 
     switch (output_format) {
       case FORMAT_SVG: {
-        ui::SVGTarget target(output_stream.get());
+        fnord::chart::SVGTarget target(output_stream.get());
         renderCharts(&query, &target, width, height);
         break;
       }
 
       case FORMAT_JSON: {
-        util::JSONOutputStream target(output_stream);
+        fnord::json::JSONOutputStream target(output_stream);
         renderJSON(&query, &target, width, height);
         break;
       }
@@ -89,7 +89,7 @@ void QueryService::registerBackend(std::unique_ptr<Backend>&& backend) {
 
 void QueryService::renderCharts(
     Query* query,
-    ui::RenderTarget* target,
+    fnord::chart::RenderTarget* target,
     int width,
     int height) const {
   for (int i = 0; i < query->getNumCharts(); ++i) {
@@ -101,7 +101,7 @@ void QueryService::renderCharts(
 
 void QueryService::renderJSON(
     Query* query,
-    util::JSONOutputStream* target,
+    fnord::json::JSONOutputStream* target,
     int width,
     int height) const {
   target->beginObject();
@@ -162,8 +162,8 @@ void QueryService::renderJSON(
 
     for (int i = 0; i < query->getNumCharts(); ++i) {
       std::string svg_data;
-      auto string_stream = util::StringOutputStream::fromString(&svg_data);
-      ui::SVGTarget svg_target(string_stream.get());
+      auto string_stream = fnord::io::StringOutputStream::fromString(&svg_data);
+      fnord::chart::SVGTarget svg_target(string_stream.get());
       auto chart = query->getChart(i);
       chart->setDimensions(width, height);
       chart->render(&svg_target);
@@ -188,7 +188,9 @@ void QueryService::renderJSON(
   target->endObject();
 }
 
-void QueryService::renderTables(Query* query, util::OutputStream* out) const {
+void QueryService::renderTables(
+    Query* query,
+    fnord::io::OutputStream* out) const {
   for (int i = 0; i < query->getNumResultLists(); ++i) {
     const auto result_list = query->getResultList(i);
     result_list->debugPrint();

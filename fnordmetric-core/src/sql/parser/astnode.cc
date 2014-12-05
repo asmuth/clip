@@ -11,7 +11,7 @@
 #include <assert.h>
 #include "astnode.h"
 #include "token.h"
-#include <fnordmetric/util/inspect.h>
+#include <fnord/base/inspect.h>
 
 namespace fnordmetric {
 namespace query {
@@ -248,7 +248,6 @@ void ASTNode::debugPrint(int indent /* = 0 */) const {
 } // namespace fnordmetric
 
 namespace fnord {
-namespace util {
 
 template <>
 std::string inspect<
@@ -264,5 +263,4 @@ std::string inspect<
   return "<ASTNode>";
 }
 
-} // namespace util
 } // namespace fnord

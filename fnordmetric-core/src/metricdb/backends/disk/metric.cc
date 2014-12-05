@@ -13,12 +13,12 @@
 #include <fnordmetric/metricdb/backends/disk/tableref.h>
 #include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnord/base/exception.h>
-#include <fnordmetric/util/freeondestroy.h>
-#include <fnordmetric/util/wallclock.h>
+#include <fnord/base/freeondestroy.h>
+#include <fnord/base/wallclock.h>
 #include <string.h>
 
 using namespace fnord;
-using fnord::util::WallClock;
+using fnord::WallClock;
 
 namespace fnordmetric {
 namespace metricdb {
@@ -33,7 +33,7 @@ Metric::Metric(
     max_generation_(0),
     live_table_max_size_(kLiveTableMaxSize),
     live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
-    last_insert_(fnord::util::WallClock::unixMicros()) {} // FIXPAUL
+    last_insert_(fnord::WallClock::unixMicros()) {} // FIXPAUL
 
 Metric::Metric(
     const std::string& key,
@@ -43,7 +43,7 @@ Metric::Metric(
     file_repo_(file_repo),
     live_table_max_size_(kLiveTableMaxSize),
     live_table_idle_time_micros_(kLiveTableIdleTimeMicros),
-    last_insert_(fnord::util::WallClock::unixMicros()) { // FIXPAUL
+    last_insert_(fnord::WallClock::unixMicros()) { // FIXPAUL
   TableRef* head_table = nullptr;
   std::vector<uint64_t> generations;
 
@@ -129,7 +129,7 @@ void Metric::insertSampleImpl(
   auto snapshot = getOrCreateSnapshot();
   auto& table = snapshot->tables().back();
 
-  uint64_t now = fnord::util::WallClock::unixMicros();
+  uint64_t now = fnord::WallClock::unixMicros();
   table->addSample(&writer, now);
   last_insert_ = now;
 }
@@ -169,8 +169,8 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
 }
 
 void Metric::scanSamples(
-    const fnord::util::DateTime& time_begin,
-    const fnord::util::DateTime& time_end,
+    const fnord::DateTime& time_begin,
+    const fnord::DateTime& time_end,
     std::function<bool (Sample* sample)> callback) {
   auto snapshot = getSnapshot();
   if (snapshot.get() == nullptr) {

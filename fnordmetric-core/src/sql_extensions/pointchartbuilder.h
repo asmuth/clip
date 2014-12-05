@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_SQLEXTENSIONS_POINTCHARTBUILDER_H
 #define _FNORDMETRIC_SQLEXTENSIONS_POINTCHARTBUILDER_H
 #include <fnordmetric/sql_extensions/chartbuilder.h>
+#include <fnord/chart/pointchart.h>
 
 namespace fnordmetric {
 namespace ui {
@@ -21,12 +22,15 @@ class DrawStatement;
 
 class PointChartBuilder : public ChartBuilder {
 public:
-  PointChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
-  ui::Drawable* getChart() const override;
+  PointChartBuilder(
+      fnord::chart::Canvas* canvas,
+      DrawStatement const* draw_stmt);
+
+  fnord::chart::Drawable* getChart() const override;
   std::string chartName() const override;
 protected:
-  ui::Drawable* findChartType() const;
-  void setLabels(ui::PointChart* chart) const;
+  fnord::chart::Drawable* findChartType() const;
+  void setLabels(fnord::chart::PointChart* chart) const;
 };
 
 }

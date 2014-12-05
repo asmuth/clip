@@ -7,9 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/buffer.h>
+#include <fnord/net/udpserver.h>
+#include <fnord/thread/taskscheduler.h>
 #include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/thread/taskscheduler.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -33,7 +34,7 @@ public:
 
 protected:
 
-  void messageReceived(const fnord::util::Buffer& msg);
+  void messageReceived(const fnord::Buffer& msg);
 
   IMetricRepository* metric_repo_;
   fnord::net::UDPServer udp_server_;

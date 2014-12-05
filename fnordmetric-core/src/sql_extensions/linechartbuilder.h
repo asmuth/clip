@@ -10,23 +10,20 @@
 #ifndef _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
 #define _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
 #include <fnordmetric/sql_extensions/chartbuilder.h>
+#include <fnord/chart/linechart.h>
 
 namespace fnordmetric {
-namespace ui {
-class LineChart;
-}
-
 namespace query {
 class DrawStatement;
 
 class LineChartBuilder : public ChartBuilder {
 public:
-  LineChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
-  ui::Drawable* getChart() const override;
+  LineChartBuilder(fnord::chart::Canvas* canvas, DrawStatement const* draw_stmt);
+  fnord::chart::Drawable* getChart() const override;
   std::string chartName() const override;
 protected:
-  ui::Drawable* findChartType() const;
-  void setLabels(ui::LineChart* chart) const;
+  fnord::chart::Drawable* findChartType() const;
+  void setLabels(fnord::chart::LineChart* chart) const;
 };
 
 }

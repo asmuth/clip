@@ -9,119 +9,118 @@
  */
 #include <fnordmetric/sql_extensions/pointchartbuilder.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/pointchart.h>
 
 namespace fnordmetric {
 namespace query {
 
 PointChartBuilder::PointChartBuilder(
-    ui::Canvas* canvas,
+    fnord::chart::Canvas* canvas,
     DrawStatement const* draw_stmt) :
     ChartBuilder(canvas, draw_stmt) {}
 
-ui::Drawable* PointChartBuilder::getChart() const {
-  auto chart = dynamic_cast<ui::PointChart*>(findChartType());
+fnord::chart::Drawable* PointChartBuilder::getChart() const {
+  auto chart = dynamic_cast<fnord::chart::PointChart*>(findChartType());
   setLabels(chart);
   return chart;
 }
 
-ui::Drawable* PointChartBuilder::findChartType() const {
+fnord::chart::Drawable* PointChartBuilder::findChartType() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::TimeType,
         fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::TimeType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::TimeType,
         fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::FloatType,
         fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::FloatType,
         fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::StringType,
         fnordmetric::TimeType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::PointChart2D<
+  if (auto c = tryType2D<fnord::chart::PointChart2D<
         fnordmetric::StringType,
         fnordmetric::StringType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::TimeType,
         fnordmetric::TimeType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::TimeType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::TimeType,
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::FloatType,
         fnordmetric::TimeType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::FloatType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::FloatType,
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::StringType,
         fnordmetric::TimeType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::StringType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::PointChart3D<
+  if (auto c = tryType3D<fnord::chart::PointChart3D<
         fnordmetric::StringType,
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
@@ -135,7 +134,7 @@ std::string PointChartBuilder::chartName() const {
   return "PointChart";
 }
 
-void PointChartBuilder::setLabels(ui::PointChart* chart) const {
+void PointChartBuilder::setLabels(fnord::chart::PointChart* chart) const {
   auto prop = draw_stmt_->getProperty(Token::T_LABELS);
   chart->setLabels(prop != nullptr);
 }

@@ -8,12 +8,12 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <memory>
+#include <fnord/base/exception.h>
+#include <fnord/io/inputstream.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace query {

@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/barchart.h>
-#include <fnordmetric/ui/series.h>
 #include <fnord/base/exception.h>
+#include <fnord/chart/canvas.h>
+#include <fnord/chart/barchart.h>
+#include <fnord/chart/series.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>
 #include <fnordmetric/sql/runtime/rowsink.h>
@@ -31,7 +31,7 @@ class ChartBuilder : public RowSink {
 public:
 
   ChartBuilder(
-      ui::Canvas* canvas,
+      fnord::chart::Canvas* canvas,
       DrawStatement const* draw_stmt) :
       canvas_(canvas),
       draw_stmt_(draw_stmt) {}
@@ -80,32 +80,40 @@ public:
 
     int color_ind = stmt->getColumnIndex("color");
     if (color_ind >= 0) {
-      prop_indexes_.emplace_back(Series::P_COLOR, color_ind);
+      prop_indexes_.emplace_back(fnord::chart::Series::P_COLOR, color_ind);
     }
 
     int label_ind = stmt->getColumnIndex("label");
     if (label_ind >= 0) {
-      prop_indexes_.emplace_back(Series::P_LABEL, label_ind);
+      prop_indexes_.emplace_back(fnord::chart::Series::P_LABEL, label_ind);
     }
 
     int line_style_ind = stmt->getColumnIndex("linestyle");
     if (line_style_ind >= 0) {
-      prop_indexes_.emplace_back(Series::P_LINE_STYLE, line_style_ind);
+      prop_indexes_.emplace_back(
+          fnord::chart::Series::P_LINE_STYLE,
+          line_style_ind);
     }
 
     int line_width_ind = stmt->getColumnIndex("linewidth");
     if (line_width_ind >= 0) {
-      prop_indexes_.emplace_back(Series::P_LINE_WIDTH, line_width_ind);
+      prop_indexes_.emplace_back(
+          fnord::chart::Series::P_LINE_WIDTH,
+          line_width_ind);
     }
 
     int point_style_ind = stmt->getColumnIndex("pointstyle");
     if (point_style_ind >= 0) {
-      prop_indexes_.emplace_back(Series::P_POINT_STYLE, point_style_ind);
+      prop_indexes_.emplace_back(
+          fnord::chart::Series::P_POINT_STYLE,
+          point_style_ind);
     }
 
     int point_size_ind = stmt->getColumnIndex("pointsize");
     if (point_size_ind >= 0) {
-      prop_indexes_.emplace_back(Series::P_POINT_SIZE, point_size_ind);
+      prop_indexes_.emplace_back(
+          fnord::chart::Series::P_POINT_SIZE,
+          point_size_ind);
     }
 
     stmt_ = stmt;
@@ -114,7 +122,7 @@ public:
     stmt->execute();
   }
 
-  virtual ui::Drawable* getChart() const = 0;
+  virtual fnord::chart::Drawable* getChart() const = 0;
   virtual std::string chartName() const = 0;
 
 protected:
@@ -237,10 +245,10 @@ protected:
   int x_ind_;
   int y_ind_;
   int z_ind_;
-  std::vector<std::pair<Series::kProperty, int>> prop_indexes_;
+  std::vector<std::pair<fnord::chart::Series::kProperty, int>> prop_indexes_;
   QueryPlanNode* stmt_;
   ResultList* result_list_;
-  ui::Canvas* canvas_;
+  fnord::chart::Canvas* canvas_;
   DrawStatement const* draw_stmt_;
 };
 

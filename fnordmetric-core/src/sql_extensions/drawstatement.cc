@@ -23,8 +23,8 @@ DrawStatement::DrawStatement(
     ast_(ast->deepCopy()),
     compiler_(compiler) {}
 
-void DrawStatement::execute(ui::Canvas* canvas) const {
-  ui::Drawable* chart = nullptr;
+void DrawStatement::execute(fnord::chart::Canvas* canvas) const {
+  fnord::chart::Drawable* chart = nullptr;
 
   switch (ast_->getToken()->getType()) {
     case Token::T_AREACHART:
@@ -74,7 +74,7 @@ ASTNode const* DrawStatement::getProperty(Token::kTokenType key) const {
   return nullptr;
 }
 
-void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
+void DrawStatement::applyAxisDefinitions(fnord::chart::Drawable* chart) const {
   for (const auto& child : ast_->getChildren()) {
     if (child->getType() != ASTNode::T_AXIS ||
         child->getChildren().size() < 1 ||
@@ -82,7 +82,7 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
       continue;
     }
 
-    ui::AxisDefinition* axis = nullptr;
+    fnord::chart::AxisDefinition* axis = nullptr;
 
     if (child->getChildren().size() < 1) {
       RAISE(kRuntimeError, "corrupt AST: AXIS has < 1 child");
@@ -90,19 +90,19 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
 
     switch (child->getChildren()[0]->getToken()->getType()) {
       case Token::T_TOP:
-        axis = chart->addAxis(ui::AxisDefinition::TOP);
+        axis = chart->addAxis(fnord::chart::AxisDefinition::TOP);
         break;
 
       case Token::T_RIGHT:
-        axis = chart->addAxis(ui::AxisDefinition::RIGHT);
+        axis = chart->addAxis(fnord::chart::AxisDefinition::RIGHT);
         break;
 
       case Token::T_BOTTOM:
-        axis = chart->addAxis(ui::AxisDefinition::BOTTOM);
+        axis = chart->addAxis(fnord::chart::AxisDefinition::BOTTOM);
         break;
 
       case Token::T_LEFT:
-        axis = chart->addAxis(ui::AxisDefinition::LEFT);
+        axis = chart->addAxis(fnord::chart::AxisDefinition::LEFT);
         break;
 
       default:
@@ -132,7 +132,7 @@ void DrawStatement::applyAxisDefinitions(ui::Drawable* chart) const {
 
 void DrawStatement::applyAxisLabels(
     ASTNode* ast,
-    ui::AxisDefinition* axis) const {
+    fnord::chart::AxisDefinition* axis) const {
   for (const auto& prop : ast->getChildren()) {
     if (prop->getType() != ASTNode::T_PROPERTY ||
         prop->getToken() == nullptr) {
@@ -141,13 +141,13 @@ void DrawStatement::applyAxisLabels(
 
     switch (prop->getToken()->getType()) {
       case Token::T_INSIDE:
-        axis->setLabelPosition(ui::AxisDefinition::LABELS_INSIDE);
+        axis->setLabelPosition(fnord::chart::AxisDefinition::LABELS_INSIDE);
         break;
       case Token::T_OUTSIDE:
-        axis->setLabelPosition(ui::AxisDefinition::LABELS_OUTSIDE);
+        axis->setLabelPosition(fnord::chart::AxisDefinition::LABELS_OUTSIDE);
         break;
       case Token::T_OFF:
-        axis->setLabelPosition(ui::AxisDefinition::LABELS_OFF);
+        axis->setLabelPosition(fnord::chart::AxisDefinition::LABELS_OFF);
         break;
       case Token::T_ROTATE: {
         if (prop->getChildren().size() != 1) {
@@ -166,7 +166,8 @@ void DrawStatement::applyAxisLabels(
   }
 }
 
-void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
+void DrawStatement::applyDomainDefinitions(
+    fnord::chart::Drawable* chart) const {
   for (const auto& child : ast_->getChildren()) {
     bool invert = false;
     bool logarithmic = false;
@@ -181,16 +182,16 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
       RAISE(kRuntimeError, "corrupt AST: DOMAIN has no token");
     }
 
-    ui::AnyDomain::kDimension dim;
+    fnord::chart::AnyDomain::kDimension dim;
     switch (child->getToken()->getType()) {
       case Token::T_XDOMAIN:
-        dim = ui::AnyDomain::DIM_X;
+        dim = fnord::chart::AnyDomain::DIM_X;
         break;
       case Token::T_YDOMAIN:
-        dim = ui::AnyDomain::DIM_Y;
+        dim = fnord::chart::AnyDomain::DIM_Y;
         break;
       case Token::T_ZDOMAIN:
-        dim = ui::AnyDomain::DIM_Z;
+        dim = fnord::chart::AnyDomain::DIM_Z;
         break;
       default:
         RAISE(kRuntimeError, "corrupt AST: DOMAIN has invalid token");
@@ -242,7 +243,7 @@ void DrawStatement::applyDomainDefinitions(ui::Drawable* chart) const {
   }
 }
 
-void DrawStatement::applyTitle(ui::Drawable* chart) const {
+void DrawStatement::applyTitle(fnord::chart::Drawable* chart) const {
   for (const auto& child : ast_->getChildren()) {
     if (child->getType() != ASTNode::T_PROPERTY ||
         child->getToken() == nullptr || !(
@@ -273,7 +274,7 @@ void DrawStatement::applyTitle(ui::Drawable* chart) const {
   }
 }
 
-void DrawStatement::applyGrid(ui::Drawable* chart) const {
+void DrawStatement::applyGrid(fnord::chart::Drawable* chart) const {
   ASTNode* grid = nullptr;
 
   for (const auto& child : ast_->getChildren()) {
@@ -306,15 +307,15 @@ void DrawStatement::applyGrid(ui::Drawable* chart) const {
   }
 
   if (horizontal) {
-    chart->addGrid(ui::GridDefinition::GRID_HORIZONTAL);
+    chart->addGrid(fnord::chart::GridDefinition::GRID_HORIZONTAL);
   }
 
   if (vertical) {
-    chart->addGrid(ui::GridDefinition::GRID_VERTICAL);
+    chart->addGrid(fnord::chart::GridDefinition::GRID_VERTICAL);
   }
 }
 
-void DrawStatement::applyLegend(ui::Drawable* chart) const {
+void DrawStatement::applyLegend(fnord::chart::Drawable* chart) const {
   ASTNode* legend = nullptr;
 
   for (const auto& child : ast_->getChildren()) {
@@ -329,34 +330,34 @@ void DrawStatement::applyLegend(ui::Drawable* chart) const {
   }
 
 
-  ui::LegendDefinition::kVerticalPosition vert_pos =
-      ui::LegendDefinition::LEGEND_BOTTOM;
-  ui::LegendDefinition::kHorizontalPosition horiz_pos =
-      ui::LegendDefinition::LEGEND_LEFT;
-  ui::LegendDefinition::kPlacement placement =
-      ui::LegendDefinition::LEGEND_OUTSIDE;
+  fnord::chart::LegendDefinition::kVerticalPosition vert_pos =
+      fnord::chart::LegendDefinition::LEGEND_BOTTOM;
+  fnord::chart::LegendDefinition::kHorizontalPosition horiz_pos =
+      fnord::chart::LegendDefinition::LEGEND_LEFT;
+  fnord::chart::LegendDefinition::kPlacement placement =
+      fnord::chart::LegendDefinition::LEGEND_OUTSIDE;
   std::string title;
 
   for (const auto& prop : legend->getChildren()) {
     if (prop->getType() == ASTNode::T_PROPERTY && prop->getToken() != nullptr) {
       switch (prop->getToken()->getType()) {
         case Token::T_TOP:
-          vert_pos = ui::LegendDefinition::LEGEND_TOP;
+          vert_pos = fnord::chart::LegendDefinition::LEGEND_TOP;
           break;
         case Token::T_RIGHT:
-          horiz_pos = ui::LegendDefinition::LEGEND_RIGHT;
+          horiz_pos = fnord::chart::LegendDefinition::LEGEND_RIGHT;
           break;
         case Token::T_BOTTOM:
-          vert_pos = ui::LegendDefinition::LEGEND_BOTTOM;
+          vert_pos = fnord::chart::LegendDefinition::LEGEND_BOTTOM;
           break;
         case Token::T_LEFT:
-          horiz_pos = ui::LegendDefinition::LEGEND_LEFT;
+          horiz_pos = fnord::chart::LegendDefinition::LEGEND_LEFT;
           break;
         case Token::T_INSIDE:
-          placement = ui::LegendDefinition::LEGEND_INSIDE;
+          placement = fnord::chart::LegendDefinition::LEGEND_INSIDE;
           break;
         case Token::T_OUTSIDE:
-          placement = ui::LegendDefinition::LEGEND_OUTSIDE;
+          placement = fnord::chart::LegendDefinition::LEGEND_OUTSIDE;
           break;
         case Token::T_TITLE: {
           if (prop->getChildren().size() != 1) {

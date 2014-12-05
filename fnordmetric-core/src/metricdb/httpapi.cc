@@ -83,20 +83,20 @@ void HTTPAPI::renderMetricList(
     fnord::URI* uri) {
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
-  util::JSONOutputStream json(response->getBodyOutputStream());
+  json::JSONOutputStream jsons(response->getBodyOutputStream());
 
-  json.beginObject();
-  json.addObjectEntry("metrics");
-  json.beginArray();
+  jsons.beginObject();
+  jsons.addObjectEntry("metrics");
+  jsons.beginArray();
 
   int i = 0;
   for (const auto& metric : metric_repo_->listMetrics()) {
-    if (i++ > 0) { json.addComma(); }
-    renderMetricJSON(metric, &json);
+    if (i++ > 0) { jsons.addComma(); }
+    renderMetricJSON(metric, &jsons);
   }
 
-  json.endArray();
-  json.endObject();
+  jsons.endArray();
+  jsons.endObject();
 }
 
 void HTTPAPI::insertSample(
@@ -175,52 +175,52 @@ void HTTPAPI::renderMetricSampleScan(
 
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
-  util::JSONOutputStream json(response->getBodyOutputStream());
+  json::JSONOutputStream jsons(response->getBodyOutputStream());
 
-  json.beginObject();
+  jsons.beginObject();
 
-  json.addObjectEntry("metric");
-  renderMetricJSON(metric, &json);
-  json.addComma();
+  jsons.addObjectEntry("metric");
+  renderMetricJSON(metric, &jsons);
+  jsons.addComma();
 
-  json.addObjectEntry("samples");
-  json.beginArray();
+  jsons.addObjectEntry("samples");
+  jsons.beginArray();
 
   int i = 0;
   metric->scanSamples(
-      fnord::util::DateTime::epoch(),
-      fnord::util::DateTime::now(),
-      [&json, &i] (Sample* sample) -> bool {
-        if (i++ > 0) { json.addComma(); }
-        json.beginObject();
+      fnord::DateTime::epoch(),
+      fnord::DateTime::now(),
+      [&jsons, &i] (Sample* sample) -> bool {
+        if (i++ > 0) { jsons.addComma(); }
+        jsons.beginObject();
 
-        json.addObjectEntry("time");
-        json.addLiteral<uint64_t>(static_cast<uint64_t>(sample->time()));
-        json.addComma();
+        jsons.addObjectEntry("time");
+        jsons.addValue<uint64_t>(static_cast<uint64_t>(sample->time()));
+        jsons.addComma();
 
-        json.addObjectEntry("value");
-        json.addLiteral<double>(sample->value());
-        json.addComma();
+        jsons.addObjectEntry("value");
+        jsons.addValue<double>(sample->value());
+        jsons.addComma();
 
-        json.addObjectEntry("labels");
-        json.beginObject();
+        jsons.addObjectEntry("labels");
+        jsons.beginObject();
         auto labels = sample->labels();
         for (int n = 0; n < labels.size(); n++) {
           if (n > 0) {
-            json.addComma();
+            jsons.addComma();
           }
 
-          json.addObjectEntry(labels[n].first);
-          json.addString(labels[n].second);
+          jsons.addObjectEntry(labels[n].first);
+          jsons.addString(labels[n].second);
         }
-        json.endObject();
+        jsons.endObject();
 
-        json.endObject();
+        jsons.endObject();
         return true;
       });
 
-  json.endArray();
-  json.endObject();
+  jsons.endArray();
+  jsons.endObject();
 }
 
 void HTTPAPI::executeQuery(
@@ -229,15 +229,15 @@ void HTTPAPI::executeQuery(
     fnord::URI* uri) {
   auto params = uri->queryParams();
 
-  std::shared_ptr<util::InputStream> input_stream;
+  std::shared_ptr<io::InputStream> input_stream;
   std::string get_query;
   if (fnord::URI::getParam(params, "q", &get_query)) {
-    input_stream.reset(new util::StringInputStream(get_query));
+    input_stream.reset(new fnord::io::StringInputStream(get_query));
   } else {
     input_stream = request->getBodyInputStream();
   }
 
-  std::shared_ptr<util::OutputStream> output_stream =
+  std::shared_ptr<io::OutputStream> output_stream =
       response->getBodyOutputStream();
 
   query::QueryService query_service;
@@ -300,7 +300,7 @@ void HTTPAPI::executeQuery(
   } catch (fnord::Exception e) {
     response->clearBody();
 
-    util::JSONOutputStream json(std::move(output_stream));
+    fnord::json::JSONOutputStream json(std::move(output_stream));
     json.beginObject();
     json.addObjectEntry("status");
     json.addString("error");
@@ -313,7 +313,7 @@ void HTTPAPI::executeQuery(
 
 void HTTPAPI::renderMetricJSON(
     IMetric* metric,
-    util::JSONOutputStream* json) const {
+    fnord::json::JSONOutputStream* json) const {
   json->beginObject();
 
   json->addObjectEntry("key");
@@ -321,11 +321,11 @@ void HTTPAPI::renderMetricJSON(
   json->addComma();
 
   json->addObjectEntry("total_bytes");
-  json->addLiteral<size_t>(metric->totalBytes());
+  json->addValue<size_t>(metric->totalBytes());
   json->addComma();
 
   json->addObjectEntry("last_insert");
-  json->addLiteral<uint64_t>(static_cast<uint64_t>(metric->lastInsertTime()));
+  json->addValue<uint64_t>(static_cast<uint64_t>(metric->lastInsertTime()));
   json->addComma();
 
   json->addObjectEntry("labels");

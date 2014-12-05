@@ -9,12 +9,12 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRIC_H_
 #define _FNORDMETRIC_METRICDB_METRIC_H_
-#include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/util/datetime.h>
 #include <functional>
 #include <string>
 #include <vector>
 #include <set>
+#include <fnord/base/datetime.h>
+#include <fnordmetric/metricdb/sample.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -32,8 +32,8 @@ public:
       const std::vector<std::pair<std::string, std::string>>& labels);
 
   virtual void scanSamples(
-      const fnord::util::DateTime& time_begin,
-      const fnord::util::DateTime& time_end,
+      const fnord::DateTime& time_begin,
+      const fnord::DateTime& time_end,
       std::function<bool (Sample* sample)> callback) = 0;
 
   const std::string& key() const;

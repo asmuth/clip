@@ -10,7 +10,9 @@
 #include <string>
 #include <ctime>
 #include "fnord/base/datetime.h"
+#include "fnord/base/inspect.h"
 #include "fnord/base/wallclock.h"
+#include "fnord/base/stringutil.h"
 
 namespace fnord {
 
@@ -68,6 +70,16 @@ std::string DateTime::toString(const char* fmt) const {
   strftime(buf, sizeof(buf), fmt, &tm);
 
   return std::string(buf);
+}
+
+template <>
+std::string StringUtil::toString(DateTime value) {
+  return value.toString();
+}
+
+template <>
+std::string inspect(const DateTime& value) {
+  return value.toString();
 }
 
 }

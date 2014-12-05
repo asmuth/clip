@@ -22,6 +22,11 @@ std::string StringUtil::toString(const char* value) {
 }
 
 template <>
+std::string StringUtil::toString(int value) {
+  return std::to_string(value);
+}
+
+template <>
 std::string StringUtil::toString(double value) {
   char buf[128]; // FIXPAUL
   *buf = 0;

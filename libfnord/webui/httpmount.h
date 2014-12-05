@@ -9,9 +9,9 @@
  */
 #ifndef _FNORD_WEBUI_HTTPMOUNT_H
 #define _FNORD_WEBUI_HTTPMOUNT_H
-#include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
+#include <fnord/http/httphandler.h>
+#include <fnord/http/httprequest.h>
+#include <fnord/http/httpresponse.h>
 
 namespace fnord {
 namespace webui {

@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/ieee754.h>
 #include <fnordmetric/metricdb/backends/disk/tokenindex.h>
 #include <fnordmetric/metricdb/backends/disk/samplereader.h>
-#include <fnordmetric/util/ieee754.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -86,7 +86,7 @@ std::string AbstractSampleReader::readToken() {
 }
 
 template <> double SampleReader<double>::readValue() {
-  return fnord::util::IEEE754::fromBytes(*readUInt64());
+  return fnord::IEEE754::fromBytes(*readUInt64());
 }
 
 }

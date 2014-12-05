@@ -9,11 +9,11 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_TABLEREF_H_
 #define _FNORDMETRIC_METRICDB_TABLEREF_H_
+#include <string>
+#include <fnord/sstable/sstablereader.h>
+#include <fnord/sstable/sstablewriter.h>
 #include <fnordmetric/metricdb/backends/disk/samplewriter.h>
 #include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/sstable/sstablereader.h>
-#include <fnordmetric/sstable/sstablewriter.h>
-#include <string>
 
 using namespace fnord;
 namespace fnordmetric {

@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/metricdb/sample.h>
 
-using fnord::util::DateTime;
+using fnord::DateTime;
 
 namespace fnordmetric {
 namespace metricdb {

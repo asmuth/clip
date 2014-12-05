@@ -12,9 +12,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/barchart.h>
-#include <fnordmetric/ui/series.h>
+#include <fnord/chart/canvas.h>
+#include <fnord/chart/barchart.h>
+#include <fnord/chart/series.h>
 #include <fnord/base/exception.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>
@@ -38,15 +38,15 @@ public:
   int x_ind_;
   int y_ind_;
   int z_ind_;
-  std::vector<std::pair<Series::kProperty, int>> prop_indexes_;
+  std::vector<std::pair<fnord::chart::Series::kProperty, int>> prop_indexes_;
 
 protected:
 
   void applyProperties(
       SValue* row,
       int row_len,
-      Series* series,
-      Series::AnyPoint* point);
+      fnord::chart::Series* series,
+      fnord::chart::Series::AnyPoint* point);
 
   void copyToResultList(SValue* row, int row_len);
 
@@ -72,10 +72,10 @@ public:
       name = row[name_ind_].template getValue<std::string>();
     }
 
-    Series2D<TX, TY>* series = nullptr;
+    fnord::chart::Series2D<TX, TY>* series = nullptr;
     const auto& series_iter = series_map_.find(name);
     if (series_iter == series_map_.end()) {
-      series = new Series2D<TX, TY>(name);
+      series = new fnord::chart::Series2D<TX, TY>(name);
       series_map_.emplace(name, series);
       series_list_.emplace_back(series);
     } else {
@@ -99,8 +99,8 @@ public:
     return true;
   }
 
-  std::unordered_map<std::string, Series2D<TX, TY>*> series_map_;
-  std::vector<Series2D<TX, TY>*> series_list_;
+  std::unordered_map<std::string, fnord::chart::Series2D<TX, TY>*> series_map_;
+  std::vector<fnord::chart::Series2D<TX, TY>*> series_list_;
 };
 
 template <typename TX, typename TY, typename TZ>
@@ -123,10 +123,10 @@ public:
       name = row[name_ind_].template getValue<std::string>();
     }
 
-    Series3D<TX, TY, TZ>* series = nullptr;
+    fnord::chart::Series3D<TX, TY, TZ>* series = nullptr;
     const auto& series_iter = series_map_.find(name);
     if (series_iter == series_map_.end()) {
-      series = new Series3D<TX, TY, TZ>(name);
+      series = new fnord::chart::Series3D<TX, TY, TZ>(name);
       series_map_.emplace(name, series);
       series_list_.emplace_back(series);
     } else {
@@ -147,8 +147,11 @@ public:
     return true;
   }
 
-  std::unordered_map<std::string, Series3D<TX, TY, TZ>*> series_map_;
-  std::vector<Series3D<TX, TY, TZ>*> series_list_;
+  std::unordered_map<
+      std::string,
+      fnord::chart::Series3D<TX, TY, TZ>*> series_map_;
+
+  std::vector<fnord::chart::Series3D<TX, TY, TZ>*> series_list_;
 };
 
 }

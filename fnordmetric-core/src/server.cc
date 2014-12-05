@@ -12,24 +12,24 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include <fnord/base/exception.h>
+#include <fnord/base/exceptionhandler.h>
+#include <fnord/base/random.h>
+#include <fnord/http/httpserver.h>
+#include <fnord/io/fileutil.h>
+#include <fnord/io/inputstream.h>
+#include <fnord/io/outputstream.h>
+#include <fnord/net/udpserver.h>
+#include <fnord/thread/threadpool.h>
+#include <fnord/system/signalhandler.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/http/httpserver.h>
-#include <fnordmetric/io/fileutil.h>
 #include <fnordmetric/metricdb/adminui.h>
 #include <fnordmetric/metricdb/httpapi.h>
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/backends/disk/metricrepository.h>
 #include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
 #include <fnordmetric/metricdb/statsd.h>
-#include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/random.h>
-#include <fnord/base/exception.h>
-#include <fnordmetric/util/signalhandler.h>
-#include <fnordmetric/thread/threadpool.h>
 
 using namespace fnordmetric;
 using namespace fnordmetric::metricdb;
@@ -77,13 +77,12 @@ static IMetricRepository* openBackend(
 
 static int startServer() {
   fnord::thread::ThreadPool server_pool(
-      std::unique_ptr<fnord::util::ExceptionHandler>(
-          new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
+      std::unique_ptr<fnord::ExceptionHandler>(
+          new fnord::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
 
   fnord::thread::ThreadPool worker_pool(
-      std::unique_ptr<fnord::util::ExceptionHandler>(
-          new fnord::util::CatchAndPrintExceptionHandler(
-              fnordmetric::env()->logger())));
+      std::unique_ptr<fnord::ExceptionHandler>(
+          new fnord::CatchAndPrintExceptionHandler(nullptr)));
 
   if (env()->flags()->isSet("datadir")) {
     auto datadir = env()->flags()->getString("datadir");
@@ -146,7 +145,7 @@ static int startServer() {
 }
 
 static void printUsage() {
-  auto err_stream = fnordmetric::util::OutputStream::getStderr();
+  auto err_stream = fnord::io::OutputStream::getStderr();
   err_stream->printf("usage: fnordmetric-server [options]\n");
   err_stream->printf("\noptions:\n");
   env()->flags()->printUsage(err_stream.get());
@@ -155,11 +154,11 @@ static void printUsage() {
 }
 
 int main(int argc, const char** argv) {
-  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  fnord::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
-  fnordmetric::util::SignalHandler::ignoreSIGHUP();
-  fnordmetric::util::SignalHandler::ignoreSIGPIPE();
-  fnord::util::Random::init();
+  fnord::system::SignalHandler::ignoreSIGHUP();
+  fnord::system::SignalHandler::ignoreSIGPIPE();
+  fnord::Random::init();
 
   env()->flags()->defineFlag(
       "http_port",
@@ -231,7 +230,7 @@ int main(int argc, const char** argv) {
   try {
     return startServer();
   } catch (const fnord::Exception& e) {
-    auto err_stream = fnordmetric::util::OutputStream::getStderr();
+    auto err_stream = fnord::io::OutputStream::getStderr();
     auto msg = e.getMessage();
     err_stream->printf("[ERROR] ");
     err_stream->write(msg.c_str(), msg.size());

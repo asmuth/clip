@@ -9,47 +9,47 @@
  */
 #include <fnordmetric/sql_extensions/areachartbuilder.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/areachart.h>
+#include <fnord/chart/areachart.h>
 
 namespace fnordmetric {
 namespace query {
 
 AreaChartBuilder::AreaChartBuilder(
-    ui::Canvas* canvas,
+    fnord::chart::Canvas* canvas,
     DrawStatement const* draw_stmt) :
     ChartBuilder(canvas, draw_stmt) {}
 
-ui::Drawable* AreaChartBuilder::getChart() const {
+fnord::chart::Drawable* AreaChartBuilder::getChart() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::AreaChart2D<
+  if (auto c = tryType2D<fnord::chart::AreaChart2D<
         fnordmetric::TimeType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::AreaChart2D<
+  if (auto c = tryType2D<fnord::chart::AreaChart2D<
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType2D<ui::AreaChart2D<
+  if (auto c = tryType2D<fnord::chart::AreaChart2D<
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::AreaChart3D<
+  if (auto c = tryType3D<fnord::chart::AreaChart3D<
         fnordmetric::TimeType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::AreaChart3D<
+  if (auto c = tryType3D<fnord::chart::AreaChart3D<
         fnordmetric::FloatType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::AreaChart3D<
+  if (auto c = tryType3D<fnord::chart::AreaChart3D<
         fnordmetric::StringType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())

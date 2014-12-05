@@ -17,7 +17,7 @@
 #include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/canvas.h>
+#include <fnord/chart/canvas.h>
 
 namespace fnordmetric {
 namespace query {
@@ -80,7 +80,7 @@ public:
    *
    * @param index the requested chart index
    */
-  ui::Canvas* getChart(size_t index) const;
+  fnord::chart::Canvas* getChart(size_t index) const;
 
 protected:
   Runtime* runtime_;
@@ -91,7 +91,7 @@ protected:
       statements_;
   std::vector<std::vector<std::unique_ptr<DrawStatement>>> draw_statements_;
   std::vector<std::unique_ptr<ResultList>> results_;
-  std::vector<std::unique_ptr<ui::Canvas>> charts_;
+  std::vector<std::unique_ptr<fnord::chart::Canvas>> charts_;
 };
 
 }

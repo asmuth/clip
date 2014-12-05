@@ -9,33 +9,33 @@
  */
 #include <fnordmetric/sql_extensions/barchartbuilder.h>
 #include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/barchart.h>
+#include <fnord/chart/barchart.h>
 
 namespace fnordmetric {
 namespace query {
 
 BarChartBuilder::BarChartBuilder(
-    ui::Canvas* canvas,
+    fnord::chart::Canvas* canvas,
     DrawStatement const* draw_stmt) :
     ChartBuilder(canvas, draw_stmt) {}
 
-ui::Drawable* BarChartBuilder::getChart() const {
-  auto chart = dynamic_cast<ui::BarChart*>(findChartType());
+fnord::chart::Drawable* BarChartBuilder::getChart() const {
+  auto chart = dynamic_cast<fnord::chart::BarChart*>(findChartType());
   setOrientation(chart);
   setStacked(chart);
   setLabels(chart);
   return chart;
 }
 
-ui::Drawable* BarChartBuilder::findChartType() const {
+fnord::chart::Drawable* BarChartBuilder::findChartType() const {
   preconditionCheck();
 
-  if (auto c = tryType2D<ui::BarChart2D<
+  if (auto c = tryType2D<fnord::chart::BarChart2D<
         fnordmetric::StringType,
         fnordmetric::FloatType>>())
     return c;
 
-  if (auto c = tryType3D<ui::BarChart3D<
+  if (auto c = tryType3D<fnord::chart::BarChart3D<
         fnordmetric::StringType,
         fnordmetric::FloatType,
         fnordmetric::FloatType>>())
@@ -45,7 +45,7 @@ ui::Drawable* BarChartBuilder::findChartType() const {
   return nullptr;
 }
 
-void BarChartBuilder::setOrientation(ui::BarChart* chart) const {
+void BarChartBuilder::setOrientation(fnord::chart::BarChart* chart) const {
   auto prop = draw_stmt_->getProperty(Token::T_ORIENTATION);
 
   if (prop == nullptr) {
@@ -54,11 +54,11 @@ void BarChartBuilder::setOrientation(ui::BarChart* chart) const {
 
   switch (prop->getToken()->getType()) {
     case Token::T_VERTICAL:
-      chart->setOrientation(ui::BarChart::O_VERTICAL);
+      chart->setOrientation(fnord::chart::BarChart::O_VERTICAL);
       break;
 
     case Token::T_HORIZONTAL:
-      chart->setOrientation(ui::BarChart::O_HORIZONTAL);
+      chart->setOrientation(fnord::chart::BarChart::O_HORIZONTAL);
       break;
 
     default:
@@ -66,7 +66,7 @@ void BarChartBuilder::setOrientation(ui::BarChart* chart) const {
   }
 }
 
-void BarChartBuilder::setStacked(ui::BarChart* chart) const {
+void BarChartBuilder::setStacked(fnord::chart::BarChart* chart) const {
   auto prop = draw_stmt_->getProperty(Token::T_STACKED);
   chart->setStacked(prop != nullptr);
 }
@@ -75,7 +75,7 @@ std::string BarChartBuilder::chartName() const {
   return "BarChart";
 }
 
-void BarChartBuilder::setLabels(ui::BarChart* chart) const {
+void BarChartBuilder::setLabels(fnord::chart::BarChart* chart) const {
   auto prop = draw_stmt_->getProperty(Token::T_LABELS);
   chart->setLabels(prop != nullptr);
 }

@@ -17,8 +17,10 @@ class DrawStatement;
 
 class AreaChartBuilder : public ChartBuilder {
 public:
-  AreaChartBuilder(ui::Canvas* canvas, DrawStatement const* draw_stmt);
-  ui::Drawable* getChart() const override;
+  AreaChartBuilder(
+      fnord::chart::Canvas* canvas,
+      DrawStatement const* draw_stmt);
+  fnord::chart::Drawable* getChart() const override;
   std::string chartName() const override;
 };
 

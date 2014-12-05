@@ -9,19 +9,13 @@
  */
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
+#include <fnord/chart/rendertarget.h>
+#include <fnord/io/inputstream.h>
+#include <fnord/json/jsonoutputstream.h>
 #include <fnordmetric/query/query.h>
 #include <fnordmetric/sql/runtime/defaultruntime.h>
 
 namespace fnordmetric {
-namespace ui {
-  class RenderTarget;
-}
-namespace util {
-  class InputStream;
-  class OutputStream;
-  class JSONOutputStream;
-}
-
 namespace query {
 
 /**
@@ -50,9 +44,9 @@ public:
    * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      std::shared_ptr<util::InputStream> input_stream,
+      std::shared_ptr<fnord::io::InputStream> input_stream,
       kFormat output_format,
-      std::shared_ptr<util::OutputStream> output_stream);
+      std::shared_ptr<fnord::io::OutputStream> output_stream);
 
   /**
    * Execute a query. This may raise an exception.
@@ -62,9 +56,9 @@ public:
    * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      std::shared_ptr<util::InputStream> input_stream,
+      std::shared_ptr<fnord::io::InputStream> input_stream,
       kFormat output_format,
-      std::shared_ptr<util::OutputStream> output_stream,
+      std::shared_ptr<fnord::io::OutputStream> output_stream,
       std::unique_ptr<TableRepository> table_repo,
       int width = -1,
       int height = -1);
@@ -78,17 +72,17 @@ protected:
 
   void renderCharts(
       Query* query,
-      ui::RenderTarget* target,
+      fnord::chart::RenderTarget* target,
       int width,
       int height) const;
 
   void renderJSON(
       Query* query,
-      util::JSONOutputStream* target,
+      fnord::json::JSONOutputStream* target,
       int width,
       int height) const;
 
-  void renderTables(Query* query, util::OutputStream* out) const;
+  void renderTables(Query* query, fnord::io::OutputStream* out) const;
 
   DefaultRuntime runtime_;
 };

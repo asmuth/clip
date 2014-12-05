@@ -34,30 +34,30 @@ public:
       output_(output_stream),
       indent_(0) {}
 
-#define append(...) { output_->printf(__VA_ARGS__); }
+#define SVG_append(...) { output_->printf(__VA_ARGS__); }
 
-#define appendLine(...) { \
-    for(int __i = 0; __i < indent_ * 2; ++__i) append(" "); \
-    append(__VA_ARGS__); }
+#define SVG_appendLine(...) { \
+    for(int __i = 0; __i < indent_ * 2; ++__i) SVG_append(" "); \
+    SVG_append(__VA_ARGS__); }
 
   void beginChart(
       int width,
       int height,
       const std::string& class_name) {
-    appendLine(
+    SVG_appendLine(
         "<svg viewBox='0 0 %i %i' class='%s'>\n",
         width,
         height,
         escapeString(class_name).c_str());
     indent_ ++;
-    appendLine("<style type='text/css'>\n");
-    appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());
-    appendLine("</style>\n");
+    SVG_appendLine("<style type='text/css'>\n");
+    SVG_appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());
+    SVG_appendLine("</style>\n");
   }
 
   void finishChart() {
     indent_--;
-    appendLine("</svg>\n");
+    SVG_appendLine("</svg>\n");
   }
 
   void drawRect(
@@ -80,7 +80,7 @@ public:
     }
 
     // FIXPAUL escape me
-    appendLine(
+    SVG_appendLine(
         "<rect x='%f' y='%f' width='%f' height='%f' class='%s' "
             "fm:series='%s' fm:label='%s' style='%s'></rect>\n",
         x,
@@ -99,7 +99,7 @@ public:
       double x2,
       double y2,
       const std::string& class_name) override {
-    appendLine(
+    SVG_appendLine(
         "<line x1='%f' y1='%f' x2='%f' y2='%f' class='%s' />\n",
         x1,
         y1,
@@ -130,7 +130,7 @@ public:
           y);
     }
 
-    appendLine(
+    SVG_appendLine(
         "<text x='%f' y='%f' style='text-anchor:%s; dominant-baseline:%s;' "
             "class='%s' %s>%s</text>\n",
         x,
@@ -163,7 +163,7 @@ public:
 
     /* point_type: circle */
     // FIXPAUL escape label
-    appendLine(
+    SVG_appendLine(
         "<circle cx='%f' cy='%f' r='%f' class='%s' fm:label='%s' "
             "fm:series='%s', style='%s'></circle>\n",
         x,
@@ -192,7 +192,7 @@ public:
       class_str += color;
     }
 
-    appendLine(
+    SVG_appendLine(
         "<path stroke-width='%f' class='%s' style='%s' d='",
         line_width,
         escapeString(class_str).c_str(),
@@ -200,25 +200,25 @@ public:
 
     for (int i = 0; i < points.size(); ++i) {
       if (i == 0) {
-        append("M%f %f ", points[i].first, points[i].second);
+        SVG_append("M%f %f ", points[i].first, points[i].second);
       } else if (smooth) {
-        append("L%f %f ", points[i].first, points[i].second);
+        SVG_append("L%f %f ", points[i].first, points[i].second);
       } else {
-        append("L%f %f ", points[i].first, points[i].second);
+        SVG_append("L%f %f ", points[i].first, points[i].second);
       }
     }
 
-    append("' />\n");
+    SVG_append("' />\n");
   }
 
   void beginGroup(const std::string& class_name) override {
-    appendLine("<g class='%s'>\n", escapeString(class_name).c_str());
+    SVG_appendLine("<g class='%s'>\n", escapeString(class_name).c_str());
     indent_++;
   }
 
   void finishGroup() override {
     indent_--;
-    appendLine("</g>\n");
+    SVG_appendLine("</g>\n");
   }
 
   // FIXPAUL

@@ -10,9 +10,9 @@
 #include <fnord/base/assets.h>
 #include <fnord/base/uri.h>
 #include <fnord/base/stringutil.h>
+#include <fnord/io/fileutil.h>
 #include <fnord/webui/bundle.h>
 #include <fnord/webui/httpmount.h>
-#include <fnordmetric/io/fileutil.h>
 
 namespace fnord {
 namespace webui {

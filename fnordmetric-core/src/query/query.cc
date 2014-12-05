@@ -90,7 +90,7 @@ void Query::execute() {
       continue;
     }
 
-    auto chart = new ui::Canvas();
+    auto chart = new fnord::chart::Canvas();
     for (const auto& draw_stmt : draw_group) {
       draw_stmt->execute(chart);
     }
@@ -114,7 +114,7 @@ size_t Query::getNumCharts() const {
   return charts_.size();
 }
 
-ui::Canvas* Query::getChart(size_t index) const {
+fnord::chart::Canvas* Query::getChart(size_t index) const {
   if (index >= charts_.size()) {
     RAISE(kIndexError, "invalid index: %i", index);
   }
