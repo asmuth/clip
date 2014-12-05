@@ -10,8 +10,13 @@
 -->
 <template id="fn-codeeditor-demo-base-tpl">
   <section>
-    <h1><i>fn-codeeditor &rsaquo;</i> Codeeditor</h1>
-    <fn-codeeditor id="codeeditor-example-1"></fn-codeeditor>
+    <h1><i>fn-codeeditor &rsaquo;</i> Code Editor</h1>
+    <fn-codeeditor style="height:400px; width:400px;">
+    </fn-codeeditor>
+
+    <script type='text/javascript'>
+      document.querySelector("fn-codeeditor").setValue("Basic Code Editor");
+    </script>
 
   </section>
 </template>

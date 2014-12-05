@@ -8,12 +8,32 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style type='text/css'>
+  fn-splitpane {
+    display: block;
+  }
+
+</style>
 <template id="fn-splitpane-base-tpl">
   <style>
-     fn-splitpane-left, fn-splitpane-right{
+    #splitter {
+      box-sizing: content-box;
+      overflow: hidden;
+      position: relative;
+      display:block;
+      height: 100%;
+      width: 100%;
+    }
+
+    #splitter .pane {
       position: absolute;
       box-sizing: border-box;
       color: #959595;
+      box-sizing: content-box;
+      overflow: hidden;
+      outline: none;
+      display:block;
+      height: 100%;
     }
 
     .resizer_tooltip {
@@ -30,13 +50,15 @@
 
 
   </style>
-  <fn-splitpane-left>
-    <content></content>
-  </fn-splitpane-left>
-  <div class="resizer_tooltip"></div>
-  <fn-splitpane-right>
-    <content></content>
-  </fn-splitpane-right>
+  <div id="splitter">
+    <div class="pane left">
+      <content select="fn-splitpane-left"></content>
+    </div>
+    <div class="resizer_tooltip"></div>
+    <div class="pane right">
+      <content select="fn-splitpane-right"></content>
+    </div>
+  </div>
 </template>
 
 <script type="text/javascript">
@@ -45,26 +67,29 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-splitpane", "base");
       shadow.appendChild(tpl);
-      var base = this;
-
-      this.init();
-
+      this.renderView();
       this.initResizerTooltip();
     };
 
-    this.init = function() {
-      this.style.display = "block";
-      this.style.height = "100%";
-      this.renderView();
-    };
 
     this.renderView = function() {
-      if (this.getAttribute("data-split") == "horizontal") {
+      if (this.getAttribute("data-split-direction") == "horizontal") {
         this.renderHorizontalView();
       } else {
         this.renderVerticalView();
       }
     };
+
+    this.toggleSplitDirection = function() {
+      if (this.getAttribute('data-split-direction') == "vertical") {
+        this.setAttribute('data-split-direction', 'horizontal');
+        this.renderHorizontalView();
+      } else {
+        this.setAttribute('data-split-direction', 'vertical');
+        this.renderVerticalView();
+      }
+    }
+
 
 
     this.initResizerTooltip = function() {
@@ -84,7 +109,7 @@
       resizer_tooltip.addEventListener('drag', function(e) {
         e.preventDefault();
         this.style.background = "";
-        if (base.getAttribute("data-split") == "horizontal") {
+        if (base.getAttribute("data-split-direction") == "horizontal") {
           //include window/pageYOffset ??
           base.resizeHorizontalView(benchmark_y - e.clientY);
           benchmark_y = e.clientY;
@@ -96,14 +121,14 @@
     };
 
     this.resizeVerticalView = function(offset) {
-      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
-      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var left_pane_width = left_pane.offsetWidth - offset;
       var right_pane_width = this.offsetWidth - left_pane_width;
 
-      if (left_pane_width > 350 && right_pane_width > 350) {
+      if (left_pane_width > 50 && right_pane_width > 50) {
         left_pane.style.width = left_pane_width + "px";
         right_pane.style.width = right_pane_width + "px";
         right_pane.style.marginLeft = left_pane_width + "px";
@@ -112,14 +137,14 @@
     };
 
     this.resizeHorizontalView = function(offset) {
-      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
-      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var left_pane_height = left_pane.offsetHeight - offset;
       var right_pane_height = this.offsetHeight- left_pane_height;
 
-      if (left_pane_height > 200 && right_pane_height > 200) {
+      if (left_pane_height > 50 && right_pane_height > 50) {
         left_pane.style.height = left_pane_height + "px";
         right_pane.style.height = right_pane_height + "px";
         right_pane.style.marginTop = left_pane_height + "px";
@@ -128,50 +153,25 @@
     };
 
     this.getPaneWidths = function() {
-      var left_relative = this.getAttribute('left-width-relative');
-      if (left_relative != null) {
+      var pos = this.getAttribute('data-split-position');
+      if (pos != null) {
         return {
-          left : left_relative + "%",
-          right: 100 - parseInt(left_relative, 10) + "%"};
+          left : pos + "%",
+          right: 100 - parseInt(pos, 10) + "%"
+        };
       }
 
-      var right_relative = this.getAttribute('right-width-relative');
-      if (right_relative != null) {
-        return {
-          left : 100 - parseInt(right_relative, 10) + "%",
-          right : right_relative + "%"};
-      }
-
-      var left_absolute = this.getAttribute('left-width-absolute');
-      if (left_absolute != null) {
-        var width = this.offsetWidth();
-        return {
-          left : left_absolute + "px",
-          right : width - parseInt(left_absolute, 10) + "px"};
-      }
-
-      var right_absolute = this.getAttribute('right-width-absolute');
-      if (right_absolute != null) {
-        var width = this.offsetwidth();
-        return {
-          left : width - parseInt(right_absolute, 10) + "px",
-          right : right_absolute + "px"};
-      }
-
-      var width = this.offsetWidth / 2;
       return {
-        left : width + "px",
-        right : width + "px"};
+        left : "50%",
+        right : "50%"
+      };
     }
 
-
     this.renderVerticalView = function() {
-      console.log("render vertical view");
-      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
-      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
-      console.log(left_pane);
       var widths = this.getPaneWidths();
       var left_pane_height = "100%";
 
@@ -192,8 +192,8 @@
     };
 
     this.renderHorizontalView = function() {
-      var left_pane = this.shadowRoot.querySelector("fn-splitpane-left");
-      var right_pane = this.shadowRoot.querySelector("fn-splitpane-right");
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
 
       var height = this.offsetHeight / 2;
@@ -213,12 +213,6 @@
       resizer_tooltip.style.height = "5px";
       resizer_tooltip.style.cursor = "ns-resize";
     };
-
-    this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == "data-split") {
-        this.renderView();
-      }
-    }
   };
 
   window.addEventListener('fn-ready', function() {

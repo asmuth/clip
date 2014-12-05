@@ -8,7 +8,11 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-
+<style>
+  fn-codeeditor {
+    display:block;
+  }
+</style>
 <template id="fn-codeeditor-base-tpl">
   <style>
     /* BASICS */
@@ -328,6 +332,8 @@
     }
 
   </style>
+
+  <textarea autofocus></textarea>
 </template>
 
 <script src="/3rdparty/codemirror.js"></script>
@@ -337,11 +343,28 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-codeeditor", "base");
       shadow.appendChild(tpl);
-      var codemirror = CodeMirror(this.shadowRoot, {
-        autofocus: true,
-        lineNumbers: true,
-        lineWrapping: true
-      });
+
+      var codemirror = CodeMirror.fromTextArea(
+          this.shadowRoot.querySelector("textarea"), 
+          {
+            autofocus: false,
+            lineNumbers: true,
+            lineWrapping: true
+          });
+
+      // FIXME horrible horrible hack to work around a bug in codemirror where
+      // the editor can't be rendered properly before the browser has actually
+      // rendered the backing textarea. yield to the browser and poll for
+      // completed rendering
+      var poll = (function(base){
+        return function() {
+          if (base.shadowRoot.querySelector(".CodeMirror-gutter").offsetWidth == 0) {
+            codemirror.refresh();
+            window.setTimeout(poll, 1);
+          }
+        };
+      })(this);
+      poll();
 
       this.getValue = function() {
         return codemirror.getValue();
