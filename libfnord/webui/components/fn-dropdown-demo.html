@@ -11,7 +11,7 @@
 <template id="fn-dropdown-demo-base-tpl">
   <section>
     <h1><i>Example 1 &raquo;</i> Dropdown</h1>
-    <fn-dropdown id="exp1" style="margin-bottom: 30px;">
+    <fn-dropdown style="margin-bottom: 30px;">
       <fn-dropdown-header >Rollup</fn-dropdown-header>
       <fn-dropdown-item>Value</fn-dropdown-item>
       <fn-dropdown-item>Count</fn-dropdown-item>
@@ -22,16 +22,49 @@
     </fn-dropdown>
 
     <h1><i>Example 2 &raquo;</i> Dropdown with Static Header</h1>
-    <fn-dropdown id="exp1">
+    <fn-dropdown style="margin-bottom: 30px;">
       <fn-dropdown-header data-changeable='false'>Categories</fn-dropdown-header>
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
     </fn-dropdown>
+  </section>
+
+  <section>
+    <h1><i>Example 3 &raquo;</i> Fancy Dropdown</h1>
+    <fn-dropdown data-style="fancy">
+      <fn-dropdown-header>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    </fn-dropdown>
+
+  </section>
+  <section>
+    <h1><i>Example 4 &raquo;</i> Disabled Dropdown</h1>
+    <fn-dropdown data-state='disabled' style="margin-bottom:30px;">
+      <fn-dropdown-header>Age</fn-dropdown-header>
+    </fn-dropdown>
+    <fn-dropdown data-style="fancy" data-state='disabled' style="margin-bottom:30px;">
+      <fn-dropdown-header>Age</fn-dropdown-header>
+    </fn-dropdown>
 
 
-    <script type="text/javascript">
-    </script>
+    <h1><i>Example 5 &raquo;</i> Dropdown with Error State</h1>
+    <fn-dropdown data-state="error" style="margin-bottom:30px;">
+      <fn-dropdown-header>Dropdown</fn-dropdown-header>
+      <fn-dropdown-item>Choice 1</fn-dropdown-item>
+      <fn-dropdown-item>Choice 2</fn-dropdown-item>
+      <fn-dropdown-item>Choice 3</fn-dropdown-item>
+    </fn-dropdown>
+
+    <fn-dropdown data-state="error" data-style="fancy">
+      <fn-dropdown-header>Dropdown</fn-dropdown-header>
+      <fn-dropdown-item>Choice 1</fn-dropdown-item>
+      <fn-dropdown-item>Choice 2</fn-dropdown-item>
+      <fn-dropdown-item>Choice 3</fn-dropdown-item>
+    </fn-dropdown>
+
 
   </section>
 </template>

@@ -10,22 +10,16 @@
 -->
 <style>
   fn-dropdown {
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    line-height: 1em;
-    outline: 0;
-    text-align:left;
-    transition: border-radius .1s ease,width .2s ease;
-    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-    font-size: 14px;
-    color: rgba(0,0,0,.8);
-
+    display: block;
   }
+
 </style>
 
 <template id="fn-dropdown-base-tpl">
   <style>
+    /*******************************
+            Basic
+    *******************************/
     * {
       margin: 0;
       padding: 0;
@@ -37,13 +31,28 @@
       color: rgba(0,0,0,.8);
     }
 
+    #dropdown_ui {
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      line-height: 1em;
+      outline: 0;
+      text-align:left;
+      transition: border-radius .1s ease,width .2s ease;
+      font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      color: rgba(0,0,0,.8);
+    }
+
+
+
     .text {
       display: inline-block;
       -webkit-transition: color .2s ease;
       transition: color .2s ease;
     }
 
-    i {
+    i.icon {
       display: inline-block;
       line-height: 1;
       height: 1em;
@@ -57,13 +66,14 @@
     }
 
 
-    ol, ul {
+    ol, ul#menu {
       display: none;
       list-style: none;
       cursor: auto;
       position: absolute;
       outline: 0;
       top: 100%;
+      left: 0;
       margin: 0;
       padding: 0;
       background: #fff;
@@ -81,7 +91,7 @@
       will-change: transform,opacity;
     }
 
-    ol, ul[data-active] {
+    ol, ul#menu[data-active] {
       display: block;
     }
 
@@ -95,7 +105,7 @@
     }
 
     ol, ul > li.item {
-      osition: relative;
+      position: relative;
       cursor: pointer;
       display: block;
       border: none;
@@ -125,16 +135,150 @@
       z-index: 12;
     }
 
+    /*******************************
+          Dropdown Styles
+    *******************************/
+
+    /*--------------
+      Fancy
+    ---------------*/
+    #dropdown_ui.fancy {
+      padding: .8em 1.1em;
+      cursor: pointer;
+      word-wrap: break-word;
+      white-space: normal;
+      outline: 0;
+      -webkit-transform: rotateZ(0deg);
+      transform: rotateZ(0deg);
+      min-width: 180px;
+      background: #fff;
+      display: inline-block;
+      color: rgba(0,0,0,.8);
+      box-shadow: none;
+      border: 1px solid rgba(39,41,43,.15);
+      border-radius: .2857rem;
+      -webkit-transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
+      transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
+    }
+
+    #dropdown_ui.fancy .text {
+      margin-right: 2em;
+    }
+
+    #dropdown_ui.fancy i.icon {
+      position: absolute;
+      top: auto;
+      margin: 0em;
+      width: auto;
+      right: 1.1em;
+      opacity: 0.8;
+      -webkit-transition: opacity 0.2s ease;
+      transition: opacity 0.2s ease;
+    }
+
+    #dropdown_ui.fancy ul#menu {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-backface-visibility: hidden;
+              backface-visibility: hidden;
+      -webkit-overflow-scrolling: touch;
+      border-top: none !important;
+      width: auto;
+      margin: 0px -1px;
+      min-width: -webkit-calc(100% + 2px);
+      min-width: calc(100% + 2px);
+      outline: none;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
+      -webkit-transition: box-shadow 0.2s ease, border 0.2s ease;
+      transition: box-shadow 0.2s ease, border 0.2s ease;
+    }
+
+    @media only screen and (max-width: 767px) {
+      #dropdown_ui.fancy ul#menu {
+        max-height: 7.7142rem;
+      }
+    }
+    @media only screen and (min-width: 768px) {
+      #dropdown_ui.fancy ul#menu {
+        max-height: 10.2856rem;
+      }
+    }
+    @media only screen and (min-width: 992px) {
+      #dropdown_ui.fancy ul#menu {
+        max-height: 15.4284rem;
+      }
+    }
+    @media only screen and (min-width: 1920px) {
+      #dropdown_ui.fancy ul#menu {
+        max-height: 20.5712rem;
+      }
+    }
+
+    #dropdown_ui.fancy li.item {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      padding-left: 1.1em !important;
+
+    /* Add in spacing for scroll bar */
+      padding-right: -webkit-calc(2.1em) !important;
+      padding-right: calc(2.1em) !important;
+      white-space: normal;
+      word-wrap: normal;
+    }
+
+    /*--------------
+      Error
+    ---------------*/
+    #dropdown_ui.error,
+    #dropdown_ui.error > .text {
+      color: #a94442;
+    }
+
+    #dropdown_ui.fancy.error {
+      background: #fff0f0;
+      border-color: #dbb1b1;
+    }
+
+    #dropdown_ui.fancy.error:hover {
+      border-color: #dbb1b1;
+    }
+
+    #dropdown_ui.error ul#menu {
+      border-color: #dbb1b1;
+    }
+
+    #dropdown_ui.error ul#menu li.item {
+      color: #d95c5c;
+    }
+
+    #dropdown_ui.error ul#menu li.item:hover {
+      background-color: #fff2f2;
+    }
+
+    #dropdown_ui.error ul#menu li.item[data-active]{
+      background-color: #fdcfcf;
+    }
+
+    /*--------------
+      Disabled
+    ---------------*/
+    #dropdown_ui.disabled {
+      cursor: auto;
+    }
+
+
+
   </style>
 
-  <div class="header">
-    <div class='text'>
-      <content select='fn-dropdown-header'></content>
+  <div id="dropdown_ui">
+    <div class="header">
+      <div class='text'>
+        <content select='fn-dropdown-header'></content>
+      </div>
+      <i class="icon fa fa-chevron-down"></i>
     </div>
-    <i class="fa fa-chevron-down"></i>
+    <ul id="menu">
+    </ul>
   </div>
-  <ul>
-  </ul>
 </template>
 
 <script type="text/javascript">
@@ -145,6 +289,9 @@
       shadow.appendChild(tpl);
       var base = this;
 
+      /* syle options */
+      if (this.hasAttribute('data-style')) {this.setStyle();}
+      if (this.hasAttribute('data-state')) {this.setState();}
 
       this.attributeChangedCallback();
 
@@ -156,22 +303,44 @@
       document.addEventListener('click', function() {
         base.hideDropdown();
       }, false);
+
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == "data-active") {
-        this.showDropdown();
+      switch (attr) {
+        case "data-active":
+          this.showDropdown();
+          break;
+        case "data-style":
+          this.setStyle();
+        case "data-state":
+          this.setState(new_val);
+        default:
+          break;
       }
     };
+
+    this.setStyle = function() {
+      var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
+      dropdown_ui.className = this.getAttribute('data-style');
+    };
+
+    this.setState = function() {
+      var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
+      dropdown_ui.className += " " + this.getAttribute('data-state');
+    }
+
 
     this.toggleDisplayDropdown = function() {
       var ul = this.shadowRoot.querySelector("ul");
       if (ul.hasAttribute("data-active")) {
         this.hideDropdown();
       } else {
-        this.showDropdown();
+        if (this.getAttribute('data-state') != "disabled") {
+          this.showDropdown();
+        }
       }
-    }
+    };
 
     this.showDropdown = function() {
       var list_items = this.shadowRoot.querySelectorAll("li.item");
@@ -190,6 +359,7 @@
     this.renderDropdown = function() {
       var ul = this.shadowRoot.querySelector("ul");
       ul.setAttribute("data-active", "active");
+
       var items = this.querySelectorAll("fn-dropdown-item");
       var base = this;
 
@@ -245,13 +415,6 @@
         shadow_header.innerHTML = text;
       }
     };
-
-
-
-    /*
-    disable
-    */
-
   };
 
   window.addEventListener("fn-ready", function() {
