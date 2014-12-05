@@ -27,26 +27,22 @@ add_library(fnord-base OBJECT
     stage/fnord/base/assets.cc
     stage/fnord/base/datetime.cc
     stage/fnord/base/exception.cc
+    stage/fnord/base/exceptionhandler.cc
     stage/fnord/base/inspect.cc
     stage/fnord/base/random.cc
     stage/fnord/base/stringutil.cc
     stage/fnord/base/uri.cc
-    stage/fnord/base/wallclock.cc
-    stage/fnord/io/inputstream.cc
-    stage/fnord/io/outputstream.cc)
+    stage/fnord/base/wallclock.cc)
 
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-io>
     stage/fnord/base/uri_test.cc)
 
 add_executable(tests/test-stringutil
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-io>
     stage/fnord/base/stringutil_test.cc)
-
-
-#add_executable(tests/test-inputstream
-#    $<TARGET_OBJECTS:fnord-base>
-#    stage/fnord/io/inputstream_test.cc)
 
 # chart
 add_library(fnord-chart OBJECT
@@ -64,7 +60,76 @@ add_library(fnord-chart OBJECT
     stage/fnord/chart/series.cc
     stage/fnord/chart/timedomain.cc)
 
-#add_executable(tests/test-chart
+add_executable(tests/test-chart
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-chart>
+    stage/fnord/chart/chart_test.cc)
+
+# http
+add_library(fnord-http OBJECT
+    stage/fnord/http/httpinputstream.cc
+    stage/fnord/http/httpmessage.cc
+    stage/fnord/http/httpoutputstream.cc
+    stage/fnord/http/httprequest.cc
+    stage/fnord/http/httpresponse.cc
+    stage/fnord/http/httpserver.cc)
+
+add_executable(tests/test-http
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-http>
+    stage/fnord/http/http_test.cc)
+
+# io
+add_library(fnord-io OBJECT
+    stage/fnord/io/fileutil.cc
+    stage/fnord/io/inputstream.cc
+    stage/fnord/io/outputstream.cc)
+
+#add_executable(tests/test-inputstream
 #    $<TARGET_OBJECTS:fnord-base>
-#    $<TARGET_OBJECTS:fnord-chart>
-#    stage/fnord/chart/chart_test.cc)
+#    $<TARGET_OBJECTS:fnord-io>
+#    stage/fnord/io/inputstream_test.cc)
+
+# json
+add_library(fnord-json OBJECT
+    stage/fnord/json/flatjsonreader.cc
+    stage/fnord/json/jsondocument.cc
+    stage/fnord/json/jsoninputstream.cc
+    stage/fnord/json/jsonoutputstream.cc
+    stage/fnord/json/jsonpointer.cc
+    stage/fnord/json/jsonrpc.cc
+    stage/fnord/json/jsonrpchttpadapter.cc
+    stage/fnord/json/jsonrpcrequest.cc
+    stage/fnord/json/jsonrpcresponse.cc)
+
+add_executable(tests/test-json
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    stage/fnord/json/json_test.cc)
+
+# service: groups
+add_library(fnord-groups-service OBJECT
+    stage/fnord/service/groups/groupsservice.cc
+    stage/fnord/service/groups/groupsserviceadapter.cc)
+
+add_executable(fnord-groups-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-groups-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-system>
+    $<TARGET_OBJECTS:fnord-thread>
+    stage/fnord/service/groups/groupsservice_example.cc)
+
+# system
+add_library(fnord-system OBJECT
+    stage/fnord/system/signalhandler.cc)
+
+# thread
+add_library(fnord-thread OBJECT
+    stage/fnord/thread/threadpool.cc)

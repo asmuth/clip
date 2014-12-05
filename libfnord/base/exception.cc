@@ -28,6 +28,15 @@ Exception::Exception(
 }
 
 Exception::Exception(
+    const std::string& message) :
+    type_name_(nullptr),
+    file_(nullptr),
+    line_(0),
+    func_(nullptr) {
+  strncpy(message_, message.c_str(), sizeof(message_));
+}
+
+Exception::Exception(
     const Exception& other) :
     type_name_(other.type_name_),
     file_(other.file_),

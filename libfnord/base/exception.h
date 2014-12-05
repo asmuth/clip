@@ -42,6 +42,11 @@ const char kVersionMismatchError[] = "VersionMismatchError";
         fnord::Exception( __VA_ARGS__).setTypeName(E)); \
         while(0) {}
 
+#define RAISEF(E, ...) \
+    RAISE_EXCEPTION( \
+        fnord::Exception(StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
+        while(0) {}
+
 #define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
@@ -55,6 +60,7 @@ namespace fnord {
 class Exception : public std::exception {
 public:
   Exception(const char* message, ...);
+  Exception(const std::string& message);
   Exception(const Exception& other);
   Exception& operator=(const Exception& other) = delete;
 

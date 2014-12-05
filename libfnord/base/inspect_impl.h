@@ -7,6 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/stringutil.h"
+#include "fnord/io/outputstream.h"
+
 namespace fnord {
 
 template <typename T1, typename T2>
@@ -33,6 +36,26 @@ std::string inspect(const std::vector<T>& value) {
   return str;
 }
 
+template <typename H, typename... T>
+std::vector<std::string> inspectAll(H head, T... tail) {
+  auto vec = inspectAll(tail...);
+  vec.insert(vec.begin(), inspect(head));
+  return vec;
+}
+
+template <typename H>
+std::vector<std::string> inspectAll(H head) {
+  std::vector<std::string> vec;
+  vec.push_back(inspect(head));
+  return vec;
+}
+
+template <typename... T>
+void iputs(const char* fmt, T... values) {
+  auto str = StringUtil::formatv(fmt, inspectAll(values...));
+  str += "\n";
+  io::OutputStream::getStdout()->write(str);
+}
 
 }
 

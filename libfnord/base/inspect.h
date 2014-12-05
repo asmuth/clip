@@ -23,6 +23,15 @@ std::string inspect(const std::pair<T1, T2>& value);
 template <typename T>
 std::string inspect(const std::vector<T>& value);
 
+template <typename H, typename... T>
+std::vector<std::string> inspectAll(H head, T... tail);
+
+template <typename H>
+std::vector<std::string> inspectAll(H head);
+
+template <typename... T>
+void iputs(const char* fmt, T... values);
+
 }
 
 #include "inspect_impl.h"

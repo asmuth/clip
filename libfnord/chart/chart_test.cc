@@ -19,9 +19,10 @@
 #include "fnord/chart/pointchart.h"
 #include "fnord/chart/series.h"
 #include "fnord/chart/svgtarget.h"
+#include "fnord/io/fileutil.h"
 #include "fnord/test/unittest.h"
 
-UNIT_TEST(UITest);
+UNIT_TEST(ChartTest);
 
 using fnord::chart::AnyDomain;
 using fnord::chart::AxisDefinition;
@@ -42,22 +43,25 @@ using fnord::chart::Series2D;
 using fnord::chart::Series3D;
 using fnord::chart::SVGTarget;
 using fnord::io::FileOutputStream;
+using fnord::io::FileUtil;
+using fnord::test::UnitTest;
 
 static void compareChart(
     Canvas* chart,
     const std::string& file_name) {
   auto output_stream = FileOutputStream::openFile(
-      "build/tests/tmp/" + file_name);
+      FileUtil::joinPaths(UnitTest::tempFilePath(), file_name));
 
   SVGTarget target(output_stream.get());
   chart->render(&target);
 
   EXPECT_FILES_EQ(
-    "test/fixtures/" + file_name,
-    "build/tests/tmp/" + file_name);
+      FileUtil::joinPaths(UnitTest::tempFilePath(), file_name),
+      FileUtil::joinPaths(
+          UnitTest::testDataPath(), "chart/testdata/" + file_name));
 }
 
-TEST_CASE(UITest, TestCanvasWithLeftAxis, [] () {
+TEST_CASE(ChartTest, TestCanvasWithLeftAxis, [] () {
   Canvas canvas;
 
   auto axis_left = canvas.addAxis(AxisDefinition::LEFT);
@@ -76,10 +80,10 @@ TEST_CASE(UITest, TestCanvasWithLeftAxis, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithLeftAxis_out.svg.html");
+      "ChartTest_TestCanvasWithLeftAxis_out.svg.html");
 });
 
-TEST_CASE(UITest, TestCanvasWithLeftAxisAndTitle, [] () {
+TEST_CASE(ChartTest, TestCanvasWithLeftAxisAndTitle, [] () {
   Canvas canvas;
 
   auto axis_left = canvas.addAxis(AxisDefinition::LEFT);
@@ -99,10 +103,10 @@ TEST_CASE(UITest, TestCanvasWithLeftAxisAndTitle, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithLeftAxisAndTitle_out.svg.html");
+      "ChartTest_TestCanvasWithLeftAxisAndTitle_out.svg.html");
 });
 
-TEST_CASE(UITest, TestCanvasWithLeftAndBottomAxis, [] () {
+TEST_CASE(ChartTest, TestCanvasWithLeftAndBottomAxis, [] () {
   Canvas canvas;
 
   auto axis_left = canvas.addAxis(AxisDefinition::LEFT);
@@ -135,10 +139,10 @@ TEST_CASE(UITest, TestCanvasWithLeftAndBottomAxis, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithLeftAndBottomAxis_out.svg.html");
+      "ChartTest_TestCanvasWithLeftAndBottomAxis_out.svg.html");
 });
 
-TEST_CASE(UITest, TestCanvasWithAllAxis, [] () {
+TEST_CASE(ChartTest, TestCanvasWithAllAxis, [] () {
   Canvas canvas;
 
   auto axis_left = canvas.addAxis(AxisDefinition::LEFT);
@@ -199,10 +203,10 @@ TEST_CASE(UITest, TestCanvasWithAllAxis, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithAllAxis_out.svg.html");
+      "ChartTest_TestCanvasWithAllAxis_out.svg.html");
 });
 
-TEST_CASE(UITest, TestCanvasWithAllMultiAxis, [] () {
+TEST_CASE(ChartTest, TestCanvasWithAllMultiAxis, [] () {
   Canvas canvas;
 
   {
@@ -331,10 +335,10 @@ TEST_CASE(UITest, TestCanvasWithAllMultiAxis, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithAllMultiAxis_out.svg.html");
+      "ChartTest_TestCanvasWithAllMultiAxis_out.svg.html");
 });
 
-TEST_CASE(UITest, TestCanvasWithMultiLeftAxis, [] () {
+TEST_CASE(ChartTest, TestCanvasWithMultiLeftAxis, [] () {
   Canvas canvas;
 
   auto axis1 = canvas.addAxis(AxisDefinition::LEFT);
@@ -366,10 +370,10 @@ TEST_CASE(UITest, TestCanvasWithMultiLeftAxis, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithMultiLeftAxis_out.svg.html");
+      "ChartTest_TestCanvasWithMultiLeftAxis_out.svg.html");
 });
 
-TEST_CASE(UITest, TestCanvasWithAxisFromNumericalDomain, [] () {
+TEST_CASE(ChartTest, TestCanvasWithAxisFromNumericalDomain, [] () {
   Canvas canvas;
 
   ContinuousDomain<double> domain(0, 100);
@@ -380,12 +384,12 @@ TEST_CASE(UITest, TestCanvasWithAxisFromNumericalDomain, [] () {
 
   compareChart(
       &canvas,
-      "UITest_TestCanvasWithAxisFromNumericalDomain_out.svg.html");
+      "ChartTest_TestCanvasWithAxisFromNumericalDomain_out.svg.html");
 });
 
 
 static fnord::test::UnitTest::TestCase __test_simple_bar_chart_(
-    &UITest, "TestSimpleBarChart", [] () {
+    &ChartTest, "TestSimpleBarChart", [] () {
   auto series = new Series2D<std::string, double>("myseries");
 
   series->addDatum("A", 34);
@@ -407,11 +411,11 @@ static fnord::test::UnitTest::TestCase __test_simple_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestSimpleBarChart_out.svg.html");
+      "ChartTest_TestSimpleBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
-    &UITest, "TestMultiSeriesBarChart", [] () {
+    &ChartTest, "TestMultiSeriesBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
   series1->addDatum("B", 35);
@@ -441,11 +445,11 @@ static fnord::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestMultiSeriesBarChart_out.svg.html");
+      "ChartTest_TestMultiSeriesBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_stacked_bar_chart_(
-    &UITest, "TestStackedBarChart", [] () {
+    &ChartTest, "TestStackedBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
   series1->addDatum("B", 35);
@@ -475,11 +479,11 @@ static fnord::test::UnitTest::TestCase __test_stacked_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestStackedBarChart_out.svg.html");
+      "ChartTest_TestStackedBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_horizontal_bar_chart_(
-    &UITest, "TestHorizontalBarChart", [] () {
+    &ChartTest, "TestHorizontalBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
   series1->addDatum("B", 35);
@@ -500,11 +504,11 @@ static fnord::test::UnitTest::TestCase __test_horizontal_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestHorizontalBarChart_out.svg.html");
+      "ChartTest_TestHorizontalBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
-    &UITest, "TestHorizontalMulitSeriesBarChart", [] () {
+    &ChartTest, "TestHorizontalMulitSeriesBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
   series1->addDatum("B", 35);
@@ -534,11 +538,11 @@ static fnord::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestHorizontalMulitSeriesBarChart_out.svg.html");
+      "ChartTest_TestHorizontalMulitSeriesBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
-    &UITest, "TestHorizontalStackedBarChart", [] () {
+    &ChartTest, "TestHorizontalStackedBarChart", [] () {
   auto series1 = new Series2D<std::string, double>("myseries1");
   series1->addDatum("A", 40);
   series1->addDatum("B", 35);
@@ -567,11 +571,11 @@ static fnord::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestHorizontalStackedBarChart_out.svg.html");
+      "ChartTest_TestHorizontalStackedBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_range_bar_chart_(
-    &UITest, "TestRangeBarChart", [] () {
+    &ChartTest, "TestRangeBarChart", [] () {
   auto series1 = new Series3D<std::string, double, double>("myseries1");
   series1->addDatum("A", -40, +40);
   series1->addDatum("B", -35, +35);
@@ -600,11 +604,11 @@ static fnord::test::UnitTest::TestCase __test_range_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestRangeBarChart_out.svg.html");
+      "ChartTest_TestRangeBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
-    &UITest, "TestHorizontalRangeBarChart", [] () {
+    &ChartTest, "TestHorizontalRangeBarChart", [] () {
   auto series1 = new Series3D<std::string, double, double>("myseries1");
   series1->addDatum("A", -40, +40);
   series1->addDatum("B", -35, +35);
@@ -633,11 +637,11 @@ static fnord::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestHorizontalRangeBarChart_out.svg.html");
+      "ChartTest_TestHorizontalRangeBarChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_simple_point_chart_(
-    &UITest, "TestSimplePointChart", [] () {
+    &ChartTest, "TestSimplePointChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
   series1->addDatum(15, -18);
@@ -665,11 +669,11 @@ static fnord::test::UnitTest::TestCase __test_simple_point_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestSimplePointChart_out.svg.html");
+      "ChartTest_TestSimplePointChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_variablesize_point_chart_(
-    &UITest, "TestVariableSizePointChart", [] () {
+    &ChartTest, "TestVariableSizePointChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, 34, 5);
   series1->addDatum(15, -18, 23);
@@ -697,11 +701,11 @@ static fnord::test::UnitTest::TestCase __test_variablesize_point_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestVariableSizePointChart_out.svg.html");
+      "ChartTest_TestVariableSizePointChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_simple_line_chart_(
-    &UITest, "TestSimpleLineChart", [] () {
+    &ChartTest, "TestSimpleLineChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
   series1->addDatum(15, 38);
@@ -733,11 +737,11 @@ static fnord::test::UnitTest::TestCase __test_simple_line_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestSimpleLineChart_out.svg.html");
+      "ChartTest_TestSimpleLineChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_point_line_chart_(
-    &UITest, "TestPointLineChart", [] () {
+    &ChartTest, "TestPointLineChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
   series1->addDatum(15, 38);
@@ -770,11 +774,11 @@ static fnord::test::UnitTest::TestCase __test_point_line_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestPointLineChart_out.svg.html");
+      "ChartTest_TestPointLineChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_multi_chart_(
-    &UITest, "TestMultiChart", [] () {
+    &ChartTest, "TestMultiChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
   series1->addDatum(15, 38);
@@ -836,17 +840,17 @@ static fnord::test::UnitTest::TestCase __test_multi_chart_(
 
   auto bar_domain = dynamic_cast<ContinuousDomain<double>*>(
       bar_chart->getDomain(AnyDomain::DIM_Y));
-  EXPECT(bar_domain != nullptr);
+  EXPECT_TRUE(bar_domain != nullptr);
   bar_domain->setMin(0);
   bar_domain->setMax(200);
 
   compareChart(
       &canvas,
-      "UITest_TestMultiChart_out.svg.html");
+      "ChartTest_TestMultiChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_simple_area_chart_(
-    &UITest, "TestSimpleAreaChart", [] () {
+    &ChartTest, "TestSimpleAreaChart", [] () {
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);
   series1->addDatum(15, 38);
@@ -871,11 +875,11 @@ static fnord::test::UnitTest::TestCase __test_simple_area_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestSimpleAreaChart_out.svg.html");
+      "ChartTest_TestSimpleAreaChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_range_area_chart_(
-    &UITest, "TestRangeAreaChart", [] () {
+    &ChartTest, "TestRangeAreaChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, -34, 34);
   series1->addDatum(15, -30, 38);
@@ -900,11 +904,11 @@ static fnord::test::UnitTest::TestCase __test_range_area_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestRangeAreaChart_out.svg.html");
+      "ChartTest_TestRangeAreaChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_multi_range_area_chart_(
-    &UITest, "TestMultiRangeAreaChart", [] () {
+    &ChartTest, "TestMultiRangeAreaChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, -34, 34);
   series1->addDatum(15, -30, 38);
@@ -936,11 +940,11 @@ static fnord::test::UnitTest::TestCase __test_multi_range_area_chart_(
 
   compareChart(
       &canvas,
-      "UITest_TestMultiRangeAreaChart_out.svg.html");
+      "ChartTest_TestMultiRangeAreaChart_out.svg.html");
 });
 
 static fnord::test::UnitTest::TestCase __test_multi_range_area_line_(
-    &UITest, "TestMultiRangeAreaLineChart", [] () {
+    &ChartTest, "TestMultiRangeAreaLineChart", [] () {
   auto series1 = new Series3D<double, double, double>("myseries1");
   series1->addDatum(10, -34, 34);
   series1->addDatum(15, -30, 38);
@@ -985,5 +989,5 @@ static fnord::test::UnitTest::TestCase __test_multi_range_area_line_(
 
   compareChart(
       &canvas,
-      "UITest_TestMultiRangeAreaLineChart_out.svg.html");
+      "ChartTest_TestMultiRangeAreaLineChart_out.svg.html");
 });

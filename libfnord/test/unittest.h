@@ -19,6 +19,7 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
 #include "fnord/base/random.h"
+#include "fnord/io/fileutil.h"
 #include "fnord/io/inputstream.h"
 #include "fnord/io/outputstream.h"
 
@@ -119,6 +120,14 @@ namespace test {
 class UnitTest {
 public:
 
+  static std::string tempFilePath() {
+    return "/tmp/_libfnord_test_tmp/";
+  }
+
+  static std::string testDataPath() {
+    return "./";
+  }
+
   class TestCase {
   public:
     TestCase(
@@ -158,6 +167,7 @@ public:
 
   int run() {
     fnord::Random::init();
+    fnord::io::FileUtil::mkdir_p(UnitTest::tempFilePath());
 
     for (auto initializer : initializers_) {
       initializer->lambda_();

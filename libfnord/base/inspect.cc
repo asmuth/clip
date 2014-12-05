@@ -79,5 +79,10 @@ std::string inspect<const void*>(void const* const& value) {
   return "<ptr>";
 }
 
+template <>
+std::string inspect<std::exception>(const std::exception& e) {
+  return e.what();
+}
+
 } // namespace fnord
 

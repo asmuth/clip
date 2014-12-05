@@ -101,4 +101,19 @@ std::string StringUtil::hexPrint(
   return str;
 }
 
+std::string StringUtil::formatv(
+    const char* fmt,
+    std::vector<std::string> values) {
+  std::string str = fmt;
+
+  for (int i = 0; i < values.size(); ++i) {
+    StringUtil::replaceAll(
+        &str,
+        "$" + std::to_string(i),
+        StringUtil::toString(values[i]));
+  }
+
+  return str;
+}
+
 } // namespace fnord
