@@ -35,6 +35,7 @@
       color: rgba(0,0,0,.8);
     }
 
+
     #dropdown_ui {
       cursor: pointer;
       position: relative;
@@ -47,8 +48,6 @@
       font-size: 14px;
       color: rgba(0,0,0,.8);
     }
-
-
 
     .text {
       display: inline-block;
@@ -197,6 +196,10 @@
       transition: box-shadow 0.2s ease, border 0.2s ease;
     }
 
+    #dropdown_ui.fancy.labeled ul#menu {
+      border-top: 1px solid rgba(39,41,43,.15)!important;
+    }
+
     @media only screen and (max-width: 767px) {
       #dropdown_ui.fancy ul#menu {
         max-height: 7.7142rem;
@@ -267,6 +270,17 @@
       border-radius: 0.2857rem;
     }
 
+    /*--------------
+      Labeled
+    ---------------*/
+    #dropdown_ui li.label {
+      margin: 1rem 0rem 0.75rem;
+      padding: 0em 1.25rem;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 0.8em;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
 
     /*--------------
       Error
@@ -398,12 +412,23 @@
       this.removeAttribute("data-active");
     };
 
+    this.renderListLabel = function(label, list_elem) {
+      console.log("render list label");
+      var list_item = document.createElement("li");
+      list_item.className = "label";
+      list_item.innerHTML = label;
+      list_elem.appendChild(list_item);
+    };
+
     this.renderDropdown = function() {
       var ul = this.shadowRoot.querySelector("ul");
       ul.setAttribute("data-active", "active");
 
       var items = this.querySelectorAll("fn-dropdown-item");
       var base = this;
+
+      var label = this.querySelector("fn-dropdown-label");
+      if (label != null) {this.renderListLabel(label.innerHTML, ul)};
 
       for (var i = 0; i < items.length; i++) {
         var elem = items[i];
