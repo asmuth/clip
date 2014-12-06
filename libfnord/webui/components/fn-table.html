@@ -58,7 +58,6 @@
         var th_elem = document.createElement("th");
         th_elem.innerHTML = col.innerHTML;
         header_row.appendChild(th_elem);
-        console.log(col);
       });
 
       this.shadowRoot.innerHTML = "";
@@ -179,7 +178,6 @@
 
     this.forEachColumn = function(cb) {
       var col_elems = this.querySelectorAll("fn-table-column");
-      console.log(col_elems);
       for (var i = 0; i < col_elems.length; ++i) {
         cb(col_elems[i]);
       }

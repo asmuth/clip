@@ -56,13 +56,27 @@
       }, false);
 
       var url = this.getAttribute("data-url");
+      if (url == null) {
+        return;
+      }
+
       var qry = Fnord.parseQueryString(url);
       if (qry.params.plugin) {
         this.openPlugin(qry.params.plugin, url);
       }
     };
 
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url") {
+        var qry = Fnord.parseQueryString(new_val);
+        if (qry.params.plugin) {
+          this.openPlugin(qry.params.plugin, new_val);
+        }
+      }
+    }
+
     this.openPlugin = function(plugin, url) {
+      console.log(plugin);
       var plugin = document.createElement("fnordmetric-plugin-hosts");
       plugin.setAttribute("data-url", url);
 
