@@ -17,7 +17,7 @@ LabelIndex::LabelIndex() {}
 
 void LabelIndex::addLabel(const std::string& label) {
   std::lock_guard<std::mutex> lock_holder(mutex_);
-  labels_.emplace(label);
+  labels_.insert(label);
 }
 
 bool LabelIndex::hasLabel(const std::string& label) const {
