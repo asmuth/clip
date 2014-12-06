@@ -427,27 +427,27 @@
 
 
       //set controls event listeners
-      rollup.addEventListener("fn-dropdown-select", function() {
-        var view = this.getValue().toLowerCase();
+      rollup.addEventListener("fn-dropdown-item-click", function(e) {
+        var view = e.srcElement.getAttribute('data-value');
         var new_params = base.addRequiredURLParamsForView(view);
         new_params.view = view;
         base.updateUrlParams(new_params);
         base.handleAggregationDisplay();
       }, false);
 
-      time_window.addEventListener("fn-dropdown-select", function() {
-        base.updateUrlParams(
-          {"t_window": FnordMetric.util.toMilliSeconds(this.getValue())});
+      time_window.addEventListener("fn-dropdown-item-click", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_window": value});
       }, false);
 
-      time_step.addEventListener("fn-dropdown-select", function() {
-        base.updateUrlParams(
-          {"t_step": FnordMetric.util.toMilliSeconds(this.getValue())});
+      time_step.addEventListener("fn-dropdown-select", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_step": value});
       }, false);
 
-      time_range.addEventListener("fn-dropdown-select", function() {
+      time_range.addEventListener("fn-dropdown-item-click", function(e) {
         var endtime = base.getQueryParamOrDefaultValue("end_time");
-        var date_range = FnordMetric.util.toMilliSeconds(this.getValue());
+        var date_range = parseInt(e.srcElement.getAttribute('data-value'));
         var starttime = parseInt(endtime, 10) - date_range;
         base.updateUrlParams({"start_time": starttime});
         daterangepicker.setAttribute("data-daterange", date_range);
