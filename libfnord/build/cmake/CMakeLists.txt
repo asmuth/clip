@@ -25,14 +25,17 @@ endif()
 # base
 add_library(fnord-base OBJECT
     stage/fnord/base/assets.cc
+    stage/fnord/base/buffer.cc
     stage/fnord/base/datetime.cc
     stage/fnord/base/exception.cc
     stage/fnord/base/exceptionhandler.cc
     stage/fnord/base/inspect.cc
+    stage/fnord/base/ieee754.cc
     stage/fnord/base/random.cc
     stage/fnord/base/stringutil.cc
     stage/fnord/base/uri.cc
-    stage/fnord/base/wallclock.cc)
+    stage/fnord/base/wallclock.cc
+    stage/fnord/hash/fnv.cc)
 
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
@@ -83,9 +86,13 @@ add_executable(tests/test-http
 
 # io
 add_library(fnord-io OBJECT
+    stage/fnord/io/file.cc
     stage/fnord/io/fileutil.cc
+    stage/fnord/io/filerepository.cc
     stage/fnord/io/inputstream.cc
-    stage/fnord/io/outputstream.cc)
+    stage/fnord/io/outputstream.cc
+    stage/fnord/io/mmappedfile.cc
+    stage/fnord/io/pagemanager.cc)
 
 #add_executable(tests/test-inputstream
 #    $<TARGET_OBJECTS:fnord-base>
@@ -111,6 +118,44 @@ add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-json>
     stage/fnord/json/json_test.cc)
 
+# service: metric
+add_library(fnord-metric-service OBJECT
+    stage/fnord/service/metric/backends/disk/compactiontask.cc
+    stage/fnord/service/metric/backends/disk/labelindex.cc
+    stage/fnord/service/metric/backends/disk/labelindexreader.cc
+    stage/fnord/service/metric/backends/disk/labelindexwriter.cc
+    stage/fnord/service/metric/backends/disk/metric.cc
+    stage/fnord/service/metric/backends/disk/metriccursor.cc
+    stage/fnord/service/metric/backends/disk/metricrepository.cc
+    stage/fnord/service/metric/backends/disk/metricsnapshot.cc
+    stage/fnord/service/metric/backends/disk/samplereader.cc
+    stage/fnord/service/metric/backends/disk/samplewriter.cc
+    stage/fnord/service/metric/backends/disk/tableheaderreader.cc
+    stage/fnord/service/metric/backends/disk/tableheaderwriter.cc
+    stage/fnord/service/metric/backends/disk/tableref.cc
+    stage/fnord/service/metric/backends/disk/tokenindex.cc
+    stage/fnord/service/metric/backends/disk/tokenindexreader.cc
+    stage/fnord/service/metric/backends/disk/tokenindexwriter.cc
+    stage/fnord/service/metric/backends/inmemory/metric.cc
+    stage/fnord/service/metric/backends/inmemory/metricrepository.cc
+    stage/fnord/service/metric/metric.cc
+    stage/fnord/service/metric/metricrepository.cc
+    stage/fnord/service/metric/metricservice.cc
+    stage/fnord/service/metric/metricservice.cc
+    stage/fnord/service/metric/sample.cc)
+
+add_executable(fnord-metric-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-metric-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-system>
+    $<TARGET_OBJECTS:fnord-sstable>
+    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-util>
+    stage/fnord/service/metric/metricservice_example.cc)
+
 # service: groups
 add_library(fnord-groups-service OBJECT
     stage/fnord/service/groups/groupsservice.cc
@@ -126,6 +171,20 @@ add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-thread>
     stage/fnord/service/groups/groupsservice_example.cc)
 
+# sstable
+add_library(fnord-sstable OBJECT
+    stage/fnord/sstable/cursor.cc
+    stage/fnord/sstable/fileheaderreader.cc
+    stage/fnord/sstable/fileheaderwriter.cc
+    stage/fnord/sstable/index.cc
+    stage/fnord/sstable/indexprovider.cc
+    stage/fnord/sstable/rowoffsetindex.cc
+    stage/fnord/sstable/sstablereader.cc
+    stage/fnord/sstable/sstablerepair.cc
+    stage/fnord/sstable/sstablewriter.cc)
+
+#sstable/sstable_test.cc
+
 # system
 add_library(fnord-system OBJECT
     stage/fnord/system/signalhandler.cc)
@@ -133,3 +192,8 @@ add_library(fnord-system OBJECT
 # thread
 add_library(fnord-thread OBJECT
     stage/fnord/thread/threadpool.cc)
+
+# util
+add_library(fnord-util OBJECT
+    stage/fnord/util/binarymessagereader.cc
+    stage/fnord/util/binarymessagewriter.cc)

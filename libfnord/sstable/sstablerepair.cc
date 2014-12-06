@@ -7,7 +7,6 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
 #include <fnord/base/exception.h>
 #include <fnord/hash/fnv.h>
 #include <fnord/sstable/sstablereader.h>
@@ -29,11 +28,13 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
   try {
     reader_.reset(new sstable::SSTableReader(std::move(file)));
   } catch (fnord::Exception& rte) {
+    /*
     fnordmetric::env()->logger()->printf(
         "INFO",
         "SSTableRepair: sstable %s header is corrupt: %s",
         filename_.c_str(),
         rte.getMessage().c_str());
+    */
 
     /* the constructor raises if the checksum is invalid or if the file
      * metadata exceeds the file bounds. there is nothing we can do to recover
@@ -49,11 +50,13 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
       size_t dummy_size;
       reader_->readFooter(0, &dummy_data, &dummy_size);
     } catch (fnord::Exception& rte) {
+      /*
       fnordmetric::env()->logger()->printf(
           "INFO",
           "SSTableRepair: sstable %s footer is corrupt: %s",
           filename_.c_str(),
           rte.getMessage().c_str());
+      */
 
       return false;
     }
@@ -99,21 +102,25 @@ bool SSTableRepair::checkAndRepairUnfinishedTable(bool repair) {
   }
 
   if (pos < end) {
+    /*
     fnordmetric::env()->logger()->printf(
         "INFO",
         "SSTableRepair: found %i extraneous trailing bytes in sstable %s",
         (int) (end - pos),
         filename_.c_str());
+    */
 
     if (repair) {
+      /*
       fnordmetric::env()->logger()->printf(
           "INFO",
           "SSTableRepair: truncating sstable %s to %i bytes",
           filename_.c_str(),
           (int) pos);
+      */
 
-        auto writable_file = io::File::openFile(filename_, io::File::O_WRITE);
-        writable_file.truncate(pos);
+      auto writable_file = io::File::openFile(filename_, io::File::O_WRITE);
+      writable_file.truncate(pos);
     } else {
       return false;
     }
