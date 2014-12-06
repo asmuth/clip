@@ -26,6 +26,40 @@
     };
   };
 
+  this.renderPopupInnerView = function() {
+      var query_url = this.getAttribute('data-url');
+      var popup = this.querySelector("fn-popup#embed");
+      var view = popup.querySelector("fn-tab[data-active='active']").innerText;
+      var code = document.createElement("code");
+      var inner_view = document.createElement("div");
+      popup.content = "foobar";
+      switch (view) {
+        case "IFrame":
+        inner_view.innerHTML = "Copy this into ypur HTML page:";
+        code.innerHTML = '&lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />&nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />&nbsp;&nbsp;&nbsp;&nbsp;src="' +            query_url + '"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;';
+        break;
+        case "URL":
+        inner_view.innerHTML = "Embed URL:";
+        code.innerHTML = query_url;
+        break;
+        case "HTML":
+        var query = FnordMetric.util.generateSQLQueryFromParams(
+          FnordMetric.util.parseQueryString(query_url).query_params);
+        inner_view.innerHTML = "Copy this into the header of your html page";
+        var code1 = document.createElement("code");
+        code1.innerHTML = '&lt;script href="http://' + document.location.host + '/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;';
+        inner_view.appendChild(code1);
+        inner_view.innerHTML += "Copy this into the body of your html page";
+        code.innerHTML = '&lt;fm-chart&gt;<br />' + query + '<br />&lt;/fm-chart&gt;';
+        default:
+        break;
+      }
+      inner_view.appendChild(code);
+      popup.clearContent();
+      popup.setContent(inner_view);
+    }
+
+
   window.addEventListener('fn-ready', function() {
     var metric_preview_popup = Fnord.registerComponent(
       "fnordmetric-metric-preview-popup", FnordMetricMetricPreviewPopupComponent);

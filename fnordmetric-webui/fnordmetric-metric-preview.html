@@ -7,6 +7,11 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
+    "1 second", "5 seconds", "10 seconds", "20 seconds", "30 seconds", 
+        "1 minute", "5 minues", "15 minutes", "30 minutes", "1 hour",
+        "2 hours", "6 hours", "12 hours", "24 hours"];
+
+
 -->
 <template id="fnordmetric-metric-preview-base-tpl">
   <fn-loader>
@@ -15,14 +20,55 @@
       <fnordmetric-controls-section data-position='left'>
         <div class='group aggregation_type'>
           <b>Rollup</b>
-          <fn-dropdown id='rollup'>
+          <fn-dropdown data-style="input" id='rollup'>
+            <fn-dropdown-header>Value</fn-dropdown-header>
+            <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+            <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+            <fn-dropdown-item data-value='count'>Count</fn-dropdown-item>
+            <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+            <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
+            <fn-dropdown-item data-value='mean'>Mean</fn-dropdown-item>
+            <fn-dropdown-item data-value='median'>Median</fn-dropdown-item>
+            <fn-dropdown-item data-value='rollup mean'>Rollup Mean</fn-dropdown-item>
+            <fn-dropdown-item data-value='rollup count'>Rollup Count</fn-dropdown-item>
+            <fn-dropdown-item data-value='rollup sum'>Rollup Sum</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group aggregation_time_window'>
           <b>Time Window / Step</b>
-          <fn-dropdown id='time_window'>
+          <fn-dropdown data-style="input" id='time_window'>
+            <fn-dropdown-header data-value='value'>5 seconds</fn-dropdown-header>
+            <fn-dropdown-item>1 second</fn-dropdown-item>
+            <fn-dropdown-item>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item>1 minute</fn-dropdown-item>
+            <fn-dropdown-item>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item>1 hour</fn-dropdown-item>
+            <fn-dropdown-item>2 hours</fn-dropdown-item>
+            <fn-dropdown-item>6 hours</fn-dropdown-item>
+            <fn-dropdown-item>12 hours</fn-dropdown-item>
+            <fn-dropdown-item>24 hours</fn-dropdown-item>
           </fn-dropdown>
-          <fn-dropdown id='time_step'>
+          <fn-dropdown data-style="input" id='time_step'>
+            <fn-dropdown-header>5 seconds</fn-dropdown-header>
+            <fn-dropdown-item>1 second</fn-dropdown-item>
+            <fn-dropdown-item>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item>1 minute</fn-dropdown-item>
+            <fn-dropdown-item>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item>1 hour</fn-dropdown-item>
+            <fn-dropdown-item>2 hours</fn-dropdown-item>
+            <fn-dropdown-item>6 hours</fn-dropdown-item>
+            <fn-dropdown-item>12 hours</fn-dropdown-item>
+            <fn-dropdown-item>24 hours</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class="group group_by">
@@ -32,7 +78,15 @@
       <fnordmetric-controls-section data-position='right'>
         <div class='group timerange'>
           <b>Show The Last...</b>
-          <fn-dropdown id='timerange'>
+          <fn-dropdown data-style="input" id='timerange'>
+            <fn-dropdown-header>1 hour</fn-dropdown-header>
+            <fn-dropdown-item>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item>1 hour</fn-dropdown-item>
+            <fn-dropdown-item>4 hours</fn-dropdown-item>
+            <fn-dropdown-item>12 hours</fn-dropdown-item>
+            <fn-dropdown-item>1 day</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group date'>
@@ -187,6 +241,23 @@
       return value;
     };
 
+    this.isDefaultValue = function(key) {
+      var defaults = {
+        view : "value",
+        end_time : Date.now(),
+        /* 5 minutes  */
+        time_range : 300000,
+        /* 1 second */
+        t_step : 10000,
+        t_window : 5000
+      }
+
+      var params = FnordMetric.util.parseQueryString(
+        this.getAttribute("data-url"));
+
+      return (params.query_params[key] == defaults[key]);
+    }
+
     this.updateUrlParams = function(new_params) {
       var params = FnordMetric.util.parseQueryString(
         this.getAttribute("data-url"));
@@ -318,28 +389,22 @@
     this.initControls = function() {
       var base = this;
       var rollup = this.querySelector("#rollup");
-      rollup.setOptions([
-        "Value", "Sum", "Count", "Min",
-        "Max", "Mean", "Median", "Rollup Mean",
-        "Rollup Count", "Rollup Sum"]);
-
-      rollup.setValue(
-        FnordMetric.util.toTitleCase(this.getQueryParamOrDefaultValue("view")));
-
-      var time_window_options = [
-        "1 second", "5 seconds", "10 seconds", "20 seconds", "30 seconds", 
-        "1 minute", "5 minues", "15 minutes", "30 minutes", "1 hour",
-        "2 hours", "6 hours", "12 hours", "24 hours"];
+      if (!(this.isDefaultValue("view"))) {
+        //set rollup 
+        console.log("set rollup");
+      }
 
       var time_window = this.querySelector("#time_window");
-      time_window.setOptions(time_window_options);
-      time_window.setValue(
-        FnordMetric.util.parseMilliTS(this.getQueryParamOrDefaultValue("t_window")));
+      if (!(this.isDefaultValue("t_window"))) {
+        //set rollup 
+        console.log("set time window");
+      }
 
       var time_step = this.querySelector("#time_step");
-      time_step.setOptions(time_window_options);
-      time_step.setValue(
-        FnordMetric.util.parseMilliTS(this.getQueryParamOrDefaultValue("t_step")));
+      if (!(this.isDefaultValue("t_step"))) {
+        //set rollup 
+        console.log("set time step");
+      }
 
       var group_by_field = this.querySelector(".group.group_by");
       var columns = this.getQueryParamOrDefaultValue("columns").split(",");
@@ -367,12 +432,10 @@
       });
 
       var time_range = this.querySelector("#timerange");
-      time_range.setOptions([
-        "5 minutes","15 minutes", "30 minutes", 
-        "1 hour", "4 hours", "12 hours", "1 day"]);
-      time_range.setValue(
-        FnordMetric.util.parseMilliTS(this.getQueryParamOrDefaultValue("time_range")));
-
+      if (!(this.isDefaultValue("time_range"))) {
+        //set rollup 
+        console.log("set time range");
+      }
 
       var datepicker = this.querySelector("fn-datepicker");
       datepicker.setAttribute(
@@ -446,10 +509,10 @@
         base.renderPopupInnerView();
       }, false);
 
-      var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
+      /*var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
       embed_popup_tabbar.addEventListener("fn-tabbar-click", function() {
         base.renderPopupInnerView();
-      }, false);
+      }, false);*/
 
       var autorefresh_btn = this.querySelector("#auto_refresh");
       var interval_id;
@@ -464,39 +527,7 @@
       }, false);
     };
 
-    this.renderPopupInnerView = function() {
-      var query_url = this.getAttribute('data-url');
-      var popup = this.querySelector("fn-popup#embed");
-      var view = popup.querySelector("fn-tab[data-active='active']").innerText;
-      var code = document.createElement("code");
-      var inner_view = document.createElement("div");
-      popup.content = "foobar";
-      switch (view) {
-        case "IFrame":
-        inner_view.innerHTML = "Copy this into ypur HTML page:";
-        code.innerHTML = '&lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />&nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />&nbsp;&nbsp;&nbsp;&nbsp;src="' +            query_url + '"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;';
-        break;
-        case "URL":
-        inner_view.innerHTML = "Embed URL:";
-        code.innerHTML = query_url;
-        break;
-        case "HTML":
-        var query = FnordMetric.util.generateSQLQueryFromParams(
-          FnordMetric.util.parseQueryString(query_url).query_params);
-        inner_view.innerHTML = "Copy this into the header of your html page";
-        var code1 = document.createElement("code");
-        code1.innerHTML = '&lt;script href="http://' + document.location.host + '/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;';
-        inner_view.appendChild(code1);
-        inner_view.innerHTML += "Copy this into the body of your html page";
-        code.innerHTML = '&lt;fm-chart&gt;<br />' + query + '<br />&lt;/fm-chart&gt;';
-        default:
-        break;
-      }
-      inner_view.appendChild(code);
-      popup.clearContent();
-      popup.setContent(inner_view);
-    }
-
+    
   };
 
   window.addEventListener("fn-ready", function() {

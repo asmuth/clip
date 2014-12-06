@@ -28,14 +28,12 @@
     border-bottom: 2px solid rgb(226, 232, 237);
     background-color: #f6f8fa;
     color: #60707f;
-    overflow: hidden;
   }
 
   fnordmetric-controls[type='primary']  /deep/ .group {
     height: 64px;
     float: left;
     padding: 14px 20px 0 20px;
-    overflow: hidden;
   }
 
   fnordmetric-controls[type='primary']  /deep/ .group b {
@@ -55,6 +53,11 @@
   fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window {
     border-right: 1px solid rgb(226, 232, 237);
   }
+
+  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window fn-dropdown {
+    float:left;
+  }
+
 
   fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window .disabled {
     opacity: 0.5;
