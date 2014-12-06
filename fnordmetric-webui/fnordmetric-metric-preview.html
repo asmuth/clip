@@ -38,37 +38,37 @@
           <b>Time Window / Step</b>
           <fn-dropdown data-style="input" id='time_window'>
             <fn-dropdown-header>5 seconds</fn-dropdown-header>
-            <fn-dropdown-item>1 second</fn-dropdown-item>
-            <fn-dropdown-item>5 seconds</fn-dropdown-item>
-            <fn-dropdown-item>10 seconds</fn-dropdown-item>
-            <fn-dropdown-item>20 seconds</fn-dropdown-item>
-            <fn-dropdown-item>30 seconds</fn-dropdown-item>
-            <fn-dropdown-item>1 minute</fn-dropdown-item>
-            <fn-dropdown-item>5 minutes</fn-dropdown-item>
-            <fn-dropdown-item>15 minutes</fn-dropdown-item>
-            <fn-dropdown-item>30 minutes</fn-dropdown-item>
-            <fn-dropdown-item>1 hour</fn-dropdown-item>
-            <fn-dropdown-item>2 hours</fn-dropdown-item>
-            <fn-dropdown-item>6 hours</fn-dropdown-item>
-            <fn-dropdown-item>12 hours</fn-dropdown-item>
-            <fn-dropdown-item>24 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+            <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
           <fn-dropdown data-style="input" id='time_step'>
             <fn-dropdown-header>5 seconds</fn-dropdown-header>
-            <fn-dropdown-item>1 second</fn-dropdown-item>
-            <fn-dropdown-item>5 seconds</fn-dropdown-item>
-            <fn-dropdown-item>10 seconds</fn-dropdown-item>
-            <fn-dropdown-item>20 seconds</fn-dropdown-item>
-            <fn-dropdown-item>30 seconds</fn-dropdown-item>
-            <fn-dropdown-item>1 minute</fn-dropdown-item>
-            <fn-dropdown-item>5 minutes</fn-dropdown-item>
-            <fn-dropdown-item>15 minutes</fn-dropdown-item>
-            <fn-dropdown-item>30 minutes</fn-dropdown-item>
-            <fn-dropdown-item>1 hour</fn-dropdown-item>
-            <fn-dropdown-item>2 hours</fn-dropdown-item>
-            <fn-dropdown-item>6 hours</fn-dropdown-item>
-            <fn-dropdown-item>12 hours</fn-dropdown-item>
-            <fn-dropdown-item>24 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+            <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class="group group_by">
@@ -80,13 +80,13 @@
           <b>Show The Last...</b>
           <fn-dropdown data-style="input" id='timerange'>
             <fn-dropdown-header>1 hour</fn-dropdown-header>
-            <fn-dropdown-item>5 minutes</fn-dropdown-item>
-            <fn-dropdown-item>15 minutes</fn-dropdown-item>
-            <fn-dropdown-item>30 minutes</fn-dropdown-item>
-            <fn-dropdown-item>1 hour</fn-dropdown-item>
-            <fn-dropdown-item>4 hours</fn-dropdown-item>
-            <fn-dropdown-item>12 hours</fn-dropdown-item>
-            <fn-dropdown-item>1 day</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group date'>
@@ -213,12 +213,12 @@
       var defaults = {
         view : "value",
         columns: this.columns,
-        end_time : Date.now(),
+        end_time : Date.now() / 1000,
         /* 5 minutes  */
-        time_range : 300000,
-        /* 1 second */
-        t_step : 10000,
-        t_window : 5000,
+        time_range : 3600,
+        /* 10, 5 seconds */
+        t_step : 10,
+        t_window : 5,
         by: this.columns
       }
 
@@ -267,10 +267,10 @@
       var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
       var datepicker = this.querySelector("fn-datepicker");
       this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
-      datepicker.setAttribute("data-timestamp", end_time);
+      datepicker.setAttribute("data-timestamp", end_time * 1000);
 
       var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute("data-endtime", end_time);
+      daterangepicker.setAttribute("data-endtime", end_time * 1000);
     };
 
     this.handleAggregationDisplay = function() {
@@ -374,7 +374,6 @@
 
     this.initControls = function() {
       var base = this;
-
       var rollup = this.querySelector("#rollup");
       var view = this.getQueryParamOrDefaultValue("view");
       rollup.setAttribute('data-preselected', view);
@@ -412,21 +411,19 @@
         });
       });
 
-      var time_range = this.querySelector("#timerange");
+
       var time_range_val = this.getQueryParamOrDefaultValue("time_range");
+      var end_time = this.getQueryParamOrDefaultValue("end_time");
+
+      var time_range = this.querySelector("#timerange");
       time_range.setAttribute('data-preselected', time_range_val);
 
-
       var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute(
-        'data-timestamp', this.getQueryParamOrDefaultValue("end_time") );
+      datepicker.setAttribute('data-timestamp', end_time);
 
       var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute(
-        'data-daterange', this.getQueryParamOrDefaultValue("time_range"));
-
-      daterangepicker.setAttribute(
-        'data-endtime', this.getQueryParamOrDefaultValue("end_time"));
+      daterangepicker.setAttribute('data-daterange', time_range_val);
+      daterangepicker.setAttribute('data-endtime', end_time);
 
 
       //set controls event listeners
@@ -506,8 +503,6 @@
         }
       }, false);
     };
-
-    
   };
 
   window.addEventListener("fn-ready", function() {
