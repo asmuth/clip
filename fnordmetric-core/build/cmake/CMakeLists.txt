@@ -65,6 +65,8 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnord/net/statsd/statsd.cc
     stage/src/fnord/service/groups/groupsservice.cc
     stage/src/fnord/service/groups/groupsserviceadapter.cc
+    stage/src/fnord/service/keyvalue/keyvalueservice.cc
+    stage/src/fnord/service/keyvalue/keyvalueserviceadapter.cc
     stage/src/fnord/service/metric/backends/disk/compactiontask.cc
     stage/src/fnord/service/metric/backends/disk/metric.cc
     stage/src/fnord/service/metric/backends/disk/metriccursor.cc

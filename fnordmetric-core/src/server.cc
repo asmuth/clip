@@ -27,6 +27,8 @@
 #include <fnord/service/metric/metricserviceadapter.h>
 #include <fnord/service/groups/groupsservice.h>
 #include <fnord/service/groups/groupsserviceadapter.h>
+#include <fnord/service/keyvalue/keyvalueservice.h>
+#include <fnord/service/keyvalue/keyvalueserviceadapter.h>
 #include <fnord/system/signalhandler.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
@@ -45,6 +47,8 @@ using fnord::metric_service::MetricService;
 using fnord::metric_service::MetricServiceAdapter;
 using fnord::groups_service::GroupsService;
 using fnord::groups_service::GroupsServiceAdapter;
+using fnord::keyvalue_service::KeyValueService;
+using fnord::keyvalue_service::KeyValueServiceAdapter;
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
 using fnord::statsd::StatsdServer;
@@ -127,6 +131,10 @@ static int startServer() {
   /* Setup GroupsService */
   GroupsService groups_service;
   GroupsServiceAdapter::registerJSONRPC(&groups_service, &json_rpc);
+
+  /* Setup KeyValueService */
+  KeyValueService keyvalue_service;
+  KeyValueServiceAdapter::registerJSONRPC(&keyvalue_service, &json_rpc);
 
   /* Setup statsd server */
   if (env()->flags()->isSet("statsd_port")) {
