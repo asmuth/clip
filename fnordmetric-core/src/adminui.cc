@@ -25,9 +25,10 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
   webui_bundle_.addComponent("fnord/3rdparty/reset.css");
+  webui_bundle_.addComponent("fnord/components/fn-table.css");
+  webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
 
   webui_bundle_.addComponent("fnord/fnord.js");
-  webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
   webui_bundle_.addComponent("fnord/components/fn-button.html");
   webui_bundle_.addComponent("fnord/components/fn-icon.html");
@@ -35,7 +36,6 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-menu.html");
   webui_bundle_.addComponent("fnord/components/fn-search.html");
   webui_bundle_.addComponent("fnord/components/fn-table.html");
-  webui_bundle_.addComponent("fnord/components/fn-table.css");
   webui_bundle_.addComponent("fnord/components/fn-splitpane.html");
   webui_bundle_.addComponent("fnord/components/fn-codeeditor.html");
   webui_bundle_.addComponent("fnord/components/fn-dropdown.html");
@@ -56,6 +56,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
   webui_bundle_.addComponent(
       "fnordmetric-plugins/hosts/fnordmetric-plugin-hosts.html");
+
 }
 
 bool AdminUI::handleHTTPRequest(
