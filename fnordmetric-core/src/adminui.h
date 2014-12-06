@@ -18,9 +18,8 @@
 
 using namespace fnord;
 namespace fnordmetric {
-namespace metricdb {
 
-class AdminUI : public http::HTTPHandler {
+class AdminUI : public fnord::http::HTTPHandler {
 public:
 
   static std::unique_ptr<http::HTTPHandler> getHandler();
@@ -36,6 +35,5 @@ private:
   fnord::webui::HTTPMount webui_mount_;
 };
 
-}
 }
 #endif

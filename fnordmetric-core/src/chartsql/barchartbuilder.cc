@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/barchartbuilder.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
+#include <fnordmetric/chartsql/barchartbuilder.h>
+#include <fnordmetric/chartsql/drawstatement.h>
 #include <fnord/chart/barchart.h>
 
 namespace fnordmetric {

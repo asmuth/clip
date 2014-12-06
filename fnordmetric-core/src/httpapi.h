@@ -18,14 +18,13 @@
 
 using namespace fnord;
 namespace fnordmetric {
-namespace metricdb {
 class IMetric;
 class IMetricRepository;
 
 class HTTPAPI : public http::HTTPHandler {
 public:
 
-  HTTPAPI(IMetricRepository* metric_repo);
+  HTTPAPI(fnord::metric_service::IMetricRepository* metric_repo);
 
   bool handleHTTPRequest(
       http::HTTPRequest* request,
@@ -54,12 +53,11 @@ protected:
       fnord::URI* uri);
 
   void renderMetricJSON(
-      IMetric* metric,
+      fnord::metric_service::IMetric* metric,
       json::JSONOutputStream* json) const;
 
-  IMetricRepository* metric_repo_;
+  fnord::metric_service::IMetricRepository* metric_repo_;
 };
 
-}
 }
 #endif

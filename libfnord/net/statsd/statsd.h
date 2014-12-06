@@ -10,16 +10,14 @@
 #include <fnord/base/buffer.h>
 #include <fnord/net/udpserver.h>
 #include <fnord/thread/taskscheduler.h>
-#include <fnordmetric/metricdb/metricrepository.h>
 
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace statsd {
 
 class StatsdServer {
 public:
 
   StatsdServer(
-      IMetricRepository* metric_repo,
       fnord::thread::TaskScheduler* server_scheduler,
       fnord::thread::TaskScheduler* work_scheduler);
 
@@ -36,7 +34,6 @@ protected:
 
   void messageReceived(const fnord::Buffer& msg);
 
-  IMetricRepository* metric_repo_;
   fnord::net::UDPServer udp_server_;
 };
 

@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/query/queryservice.h>
+#include <fnordmetric/chartsql/query.h>
+#include <fnordmetric/chartsql/queryservice.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/tableref.h>
 #include <fnordmetric/sql/parser/parser.h>

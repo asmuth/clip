@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql_extensions/seriesadapter.h>
+#include <fnordmetric/chartsql/seriesadapter.h>
 #include <fnord/base/exception.h>
 
 namespace fnordmetric {

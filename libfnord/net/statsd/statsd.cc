@@ -9,17 +9,14 @@
  */
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/statsd.h>
+#include <fnord/net/statsd/statsd.h>
 
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace statsd {
 
 StatsdServer::StatsdServer(
-    IMetricRepository* metric_repo,
     fnord::thread::TaskScheduler* server_scheduler,
     fnord::thread::TaskScheduler* work_scheduler) :
-    metric_repo_(metric_repo),
     udp_server_(server_scheduler, work_scheduler) {
 
   udp_server_.onMessage([this] (const fnord::Buffer& msg) {
@@ -57,17 +54,20 @@ void StatsdServer::messageReceived(const fnord::Buffer& msg) {
       return;
     }
 
+/*
     if (env()->verbose()) {
-      /*env()->logger()->printf(
+      env()->logger()->printf(
           "DEBUG",
           "statsd sample: %s=%f %s",
           key.c_str(),
           float_value,
-          fnord::util::inspect(labels).c_str());*/
+          fnord::util::inspect(labels).c_str());
     }
+*/
 
-    auto metric = metric_repo_->findOrCreateMetric(key);
-    metric->insertSample(float_value, labels);
+
+    //auto metric = metric_repo_->findOrCreateMetric(key);
+    //metric->insertSample(float_value, labels);
     labels.clear();
   }
 }

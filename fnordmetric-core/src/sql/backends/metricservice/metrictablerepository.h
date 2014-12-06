@@ -15,17 +15,17 @@
 #include <mutex>
 #include <vector>
 
-namespace fnord {
-namespace metric_service {
+namespace fnordmetric {
+namespace query {
 
-class MetricTableRepository : public fnord::query::TableRepository {
+class MetricTableRepository : public TableRepository {
 public:
 
-  MetricTableRepository(IMetricRepository* metric_repo);
+  MetricTableRepository(fnord::metric_service::IMetricRepository* metric_repo);
   query::TableRef* getTableRef(const std::string& table_name) const override;
 
 protected:
-  IMetricRepository* metric_repo_;
+  fnord::metric_service::IMetricRepository* metric_repo_;
 };
 
 }

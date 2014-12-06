@@ -8,23 +8,24 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/stringutil.h>
+#include <fnord/service/metric/metricrepository.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/httpapi.h>
-#include <fnordmetric/query/queryservice.h>
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/metrictablerepository.h>
+#include <fnordmetric/httpapi.h>
+#include <fnordmetric/chartsql/queryservice.h>
+#include <fnordmetric/sql/backends/metricservice/metrictablerepository.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
-namespace metricdb {
 
 static const char kMetricsUrl[] = "/metrics";
 static const char kMetricsUrlPrefix[] = "/metrics/";
 static const char kQueryUrl[] = "/query";
 static const char kLabelParamPrefix[] = "label[";
 
-HTTPAPI::HTTPAPI(IMetricRepository* metric_repo) : metric_repo_(metric_repo) {}
+HTTPAPI::HTTPAPI(
+    fnord::metric_service::IMetricRepository* metric_repo) :
+    metric_repo_(metric_repo) {}
 
 bool HTTPAPI::handleHTTPRequest(
     http::HTTPRequest* request,
@@ -190,7 +191,7 @@ void HTTPAPI::renderMetricSampleScan(
   metric->scanSamples(
       fnord::DateTime::epoch(),
       fnord::DateTime::now(),
-      [&jsons, &i] (Sample* sample) -> bool {
+      [&jsons, &i] (fnord::metric_service::Sample* sample) -> bool {
         if (i++ > 0) { jsons.addComma(); }
         jsons.beginObject();
 
@@ -242,8 +243,7 @@ void HTTPAPI::executeQuery(
 
   query::QueryService query_service;
   std::unique_ptr<query::TableRepository> table_repo(
-      new MetricTableRepository(metric_repo_));
-
+      new query::MetricTableRepository(metric_repo_));
 
   if (!env()->flags()->isSet("disable_external_sources")) {
     query_service.registerBackend(
@@ -312,7 +312,7 @@ void HTTPAPI::executeQuery(
 }
 
 void HTTPAPI::renderMetricJSON(
-    IMetric* metric,
+    fnord::metric_service::IMetric* metric,
     fnord::json::JSONOutputStream* json) const {
   json->beginObject();
 
@@ -342,5 +342,4 @@ void HTTPAPI::renderMetricJSON(
   json->endObject();
 }
 
-}
 }

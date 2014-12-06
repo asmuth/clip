@@ -11,8 +11,8 @@
 #include <fnord/io/inputstream.h>
 #include <fnord/json/jsonoutputstream.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/query/queryservice.h>
+#include <fnordmetric/chartsql/query.h>
+#include <fnordmetric/chartsql/queryservice.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>

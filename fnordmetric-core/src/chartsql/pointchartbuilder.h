@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_SQLEXTENSIONS_POINTCHARTBUILDER_H
 #define _FNORDMETRIC_SQLEXTENSIONS_POINTCHARTBUILDER_H
-#include <fnordmetric/sql_extensions/chartbuilder.h>
+#include <fnordmetric/chartsql/chartbuilder.h>
 #include <fnord/chart/pointchart.h>
 
 namespace fnordmetric {

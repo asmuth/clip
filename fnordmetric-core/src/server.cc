@@ -20,36 +20,36 @@
 #include <fnord/io/inputstream.h>
 #include <fnord/io/outputstream.h>
 #include <fnord/net/udpserver.h>
+#include <fnord/net/statsd/statsd.h>
 #include <fnord/thread/threadpool.h>
+#include <fnord/service/metric/metricservice.h>
 #include <fnord/system/signalhandler.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/adminui.h>
-#include <fnordmetric/metricdb/httpapi.h>
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
-#include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
-#include <fnordmetric/metricdb/statsd.h>
+#include <fnordmetric/adminui.h>
+#include <fnordmetric/httpapi.h>
 
 using namespace fnordmetric;
-using namespace fnordmetric::metricdb;
 
 static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
     "github.com/paulasmuth/fnordmetric";
 
+using fnord::metric_service::MetricService;
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
+using fnord::statsd::StatsdServer;
 
-static IMetricRepository* openBackend(
+static MetricService makeMetricService(
     const std::string& backend_type,
     TaskScheduler* backend_scheduler) {
+
   /* open inmemory backend */
   if (backend_type == "inmemory") {
     env()->logger()->printf(
         "INFO",
         "Opening new inmemory backend -- SHOULD ONlY BE USED FOR TESTING");
-    return new inmemory_backend::MetricRepository();
+    return MetricService::newWithInMemoryBackend();
   }
 
   /* open disk backend */
@@ -66,7 +66,7 @@ static IMetricRepository* openBackend(
         "Opening disk backend at %s",
         datadir.c_str());
 
-    return new disk_backend::MetricRepository(datadir, backend_scheduler);
+    return MetricService::newWithDiskBackend(datadir, backend_scheduler);
   }
 
   RAISE(
@@ -106,7 +106,7 @@ static int startServer() {
     }
   }
 
-  auto metric_repo = openBackend(
+  auto metric_service = makeMetricService(
       env()->flags()->getString("storage_backend"),
       &server_pool);
 
@@ -118,8 +118,7 @@ static int startServer() {
         "Starting statsd server on port %i",
         port);
 
-    auto statsd_server =
-        new StatsdServer(metric_repo, &server_pool, &worker_pool);
+    auto statsd_server = new StatsdServer(&server_pool, &worker_pool);
     statsd_server->listen(port);
   }
 
@@ -136,8 +135,8 @@ static int startServer() {
         &worker_pool);
 
     http_server->addHandler(AdminUI::getHandler());
-    http_server->addHandler(
-        std::unique_ptr<http::HTTPHandler>(new HTTPAPI(metric_repo)));
+    //http_server->addHandler(
+    //    std::unique_ptr<http::HTTPHandler>(new HTTPAPI(metric_repo)));
     http_server->listen(port);
   }
 

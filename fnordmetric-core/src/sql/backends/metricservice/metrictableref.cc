@@ -7,18 +7,16 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/service/metric/metrictableref.h>
+#include <fnordmetric/sql/backends/metricservice/metrictableref.h>
 #include <fnordmetric/sql/runtime/tablescan.h>
 #include <fnordmetric/sql/svalue.h>
 
-namespace fnord {
+namespace fnordmetric {
 namespace query {
-class TableScan;
-}
 
-namespace metric_service {
-
-MetricTableRef::MetricTableRef(IMetric* metric) : metric_(metric) {}
+MetricTableRef::MetricTableRef(
+    fnord::metric_service::IMetric* metric) :
+    metric_(metric) {}
 
 int MetricTableRef::getColumnIndex(const std::string& name) {
   if (name == "time") {
@@ -67,7 +65,7 @@ void MetricTableRef::executeScan(query::TableScan* scan) {
   metric_->scanSamples(
       begin,
       limit,
-      [this, scan] (Sample* sample) -> bool {
+      [this, scan] (fnord::metric_service::Sample* sample) -> bool {
         std::vector<query::SValue> row;
         row.emplace_back(sample->time());
         row.emplace_back(sample->value());

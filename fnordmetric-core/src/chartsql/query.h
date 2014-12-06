@@ -16,7 +16,7 @@
 #include <memory>
 #include <fnordmetric/sql/runtime/runtime.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
+#include <fnordmetric/chartsql/drawstatement.h>
 #include <fnord/chart/canvas.h>
 
 namespace fnordmetric {

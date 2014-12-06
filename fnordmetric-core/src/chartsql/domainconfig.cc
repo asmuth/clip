@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/domainconfig.h>
+#include <fnordmetric/chartsql/domainconfig.h>
 #include <fnord/chart/continuousdomain.h>
 #include <fnord/chart/timedomain.h>
 

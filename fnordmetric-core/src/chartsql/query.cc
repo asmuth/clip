@@ -9,14 +9,14 @@
  */
 #include <stdlib.h>
 #include <string.h>
-#include <fnordmetric/query/query.h>
+#include <fnordmetric/chartsql/query.h>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/parser/parser.h>
 #include <fnordmetric/sql/runtime/queryplanbuilder.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
+#include <fnordmetric/chartsql/drawstatement.h>
 #include <fnord/base/exception.h>
 
 namespace fnordmetric {

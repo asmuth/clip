@@ -15,16 +15,12 @@
 #include <string>
 #include <memory>
 
-namespace fnord {
+namespace fnordmetric {
 namespace query {
-class TableScan;
-}
-
-namespace metric_service {
 
 class MetricTableRef : public query::TableRef {
 public:
-  MetricTableRef(IMetric* metric);
+  MetricTableRef(fnord::metric_service::IMetric* metric);
 
   int getColumnIndex(const std::string& name) override;
   std::string getColumnName(int index) override;
@@ -32,7 +28,7 @@ public:
   std::vector<std::string> columns() override;
 
 protected:
-  IMetric* metric_;
+  fnord::metric_service::IMetric* metric_;
   std::vector<std::string> fields_;
 };
 

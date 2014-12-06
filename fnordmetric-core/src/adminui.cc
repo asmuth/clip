@@ -8,11 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/adminui.h>
+#include <fnordmetric/adminui.h>
 #include <fnord/base/uri.h>
 
 namespace fnordmetric {
-namespace metricdb {
 
 std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
   return std::unique_ptr<http::HTTPHandler>(new AdminUI());
@@ -77,5 +76,4 @@ bool AdminUI::handleHTTPRequest(
 }
 
 
-}
 }
