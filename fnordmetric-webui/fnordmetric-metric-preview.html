@@ -213,7 +213,7 @@
       var defaults = {
         view : "value",
         columns: this.columns,
-        end_time : Date.now() / 1000,
+        end_time : Math.round(Date.now() / 1000),
         /* 5 minutes  */
         time_range : 3600,
         /* 10, 5 seconds */
@@ -262,10 +262,10 @@
           this.getAttribute("data-url"));
       var date_range = this.getQueryParamOrDefaultValue("time_range");
       var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
-      var datepicker = this.querySelector("fn-datepicker");
       this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
-      datepicker.setAttribute("data-timestamp", end_time * 1000);
 
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute("data-timestamp", end_time * 1000);
       var daterangepicker = this.querySelector("fn-daterangepicker");
       daterangepicker.setAttribute("data-endtime", end_time * 1000);
     };
@@ -299,6 +299,12 @@
         var time_window = params.query_params.t_window;
         if (time_window == undefined) {
           new_params.t_window = this.getQueryParamOrDefaultValue("t_window");
+          update = true;
+        }
+
+        var t_step = params.query_params.t_step;
+        if (t_step == undefined) {
+          new_params.t_step = this.getQueryParamOrDefaultValue("t_step");
           update = true;
         }
       }
@@ -449,23 +455,26 @@
         var starttime = parseInt(endtime, 10) - date_range;
         base.updateUrlParams({"start_time": starttime});
         //check
-        daterangepicker.setAttribute("data-daterange", date_range);
+        daterangepicker.setAttribute("data-daterange", (date_range * 1000));
       }, false);
 
       datepicker.addEventListener('fn-datepicker-select', function() {
-        var timestamp = parseInt(this.getAttribute("data-timestamp"), 10) / 1000;
+        var timestamp = parseInt(this.getAttribute("data-timestamp"), 10);
+        timestamp = Math.round(timestamp / 1000);
         base.updateDateTimeElems(timestamp);
       }, false);
 
       daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
         function() {
-          var endtime = parseInt(this.getAttribute("data-endtime"), 10) / 1000;
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
+          endtime = Math.round(endtime / 1000);
           base.updateDateTimeElems(endtime);
       }, false);
 
       daterangepicker.addEventListener('fn-daterangepicker-select-next',
         function() {
-          var endtime = parseInt(this.getAttribute("data-endtime"), 10) / 1000;
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
+          endtime = Math.round(endtime / 1000);
           base.updateDateTimeElems(endtime);
       }, false);
 

@@ -386,10 +386,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, " + Math.round(t_window / 1000) + ",";
+        "OVER TIMEWINDOW(time, " + t_window + ",";
 
-      group_expr += (t_step != undefined)?
-        Math.round(t_step / 1000) : Math.round(t_window / 1000);
+      group_expr += (t_step != undefined)? t_step : t_window;
 
       group_expr+= ")";
 
