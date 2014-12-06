@@ -442,9 +442,10 @@
       shadow.appendChild(tpl);
       var base = this;
 
-      /* style options */
+      /* options */
       if (this.hasAttribute('data-style')) {this.setStyle();}
       if (this.hasAttribute('data-state')) {this.setState();}
+      if (this.hasAttribute('data-preselected')) {this.setPreselection();}
 
       if (this.hasAttribute('data-searchable')) {this.renderSearchInput();}
 
@@ -468,8 +469,13 @@
           break;
         case "data-style":
           this.setStyle();
+          break;
         case "data-state":
           this.setState(new_val);
+          break;
+        case "data-preselected":
+          this.setPreselection();
+          break;
         default:
           break;
       }
@@ -490,6 +496,19 @@
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
       dropdown_ui.className += " " + this.getAttribute('data-state');
     };
+
+    /* preselection only works if data-value is set */
+    this.setPreselection = function() {
+      var value = this.getAttribute('data-preselected');
+      var item = this.querySelector(
+        "fn-dropdown-item[data-value='" + value + "']");
+
+      if (item != null) {
+        var text = item.innerHTML;
+        this.updateHeader(text);
+        item.setAttribute('data-active', true);
+      }
+    }
 
     this.renderSearchInput = function() {
       this.search_item = "";

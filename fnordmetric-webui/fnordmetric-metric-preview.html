@@ -37,7 +37,7 @@
         <div class='group aggregation_time_window'>
           <b>Time Window / Step</b>
           <fn-dropdown data-style="input" id='time_window'>
-            <fn-dropdown-header data-value='value'>5 seconds</fn-dropdown-header>
+            <fn-dropdown-header>5 seconds</fn-dropdown-header>
             <fn-dropdown-item>1 second</fn-dropdown-item>
             <fn-dropdown-item>5 seconds</fn-dropdown-item>
             <fn-dropdown-item>10 seconds</fn-dropdown-item>
@@ -241,22 +241,8 @@
       return value;
     };
 
-    this.isDefaultValue = function(key) {
-      var defaults = {
-        view : "value",
-        end_time : Date.now(),
-        /* 5 minutes  */
-        time_range : 300000,
-        /* 1 second */
-        t_step : 10000,
-        t_window : 5000
-      }
 
-      var params = FnordMetric.util.parseQueryString(
-        this.getAttribute("data-url"));
 
-      return (params.query_params[key] == defaults[key]);
-    }
 
     this.updateUrlParams = function(new_params) {
       var params = FnordMetric.util.parseQueryString(
@@ -388,23 +374,18 @@
 
     this.initControls = function() {
       var base = this;
+
       var rollup = this.querySelector("#rollup");
-      if (!(this.isDefaultValue("view"))) {
-        //set rollup 
-        console.log("set rollup");
-      }
+      var view = this.getQueryParamOrDefaultValue("view");
+      rollup.setAttribute('data-preselected', view);
 
       var time_window = this.querySelector("#time_window");
-      if (!(this.isDefaultValue("t_window"))) {
-        //set rollup 
-        console.log("set time window");
-      }
+      var t_window_val = this.getQueryParamOrDefaultValue("t_window");
+      time_window.setAttribute('data-preselected', t_window_val);
 
       var time_step = this.querySelector("#time_step");
-      if (!(this.isDefaultValue("t_step"))) {
-        //set rollup 
-        console.log("set time step");
-      }
+      var t_step_val = this.getQueryParamOrDefaultValue("t_step");
+      time_step.setAttribute('data-preselected', t_step_val);
 
       var group_by_field = this.querySelector(".group.group_by");
       var columns = this.getQueryParamOrDefaultValue("columns").split(",");
@@ -432,10 +413,9 @@
       });
 
       var time_range = this.querySelector("#timerange");
-      if (!(this.isDefaultValue("time_range"))) {
-        //set rollup 
-        console.log("set time range");
-      }
+      var time_range_val = this.getQueryParamOrDefaultValue("time_range");
+      time_range.setAttribute('data-preselected', time_range_val);
+
 
       var datepicker = this.querySelector("fn-datepicker");
       datepicker.setAttribute(
