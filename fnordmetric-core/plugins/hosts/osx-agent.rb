@@ -23,9 +23,6 @@ if ARGV.length != 1
   exit 1
 end
 
-target_host = ARGV[0]
-target_port = ARGV[1].to_i
-
 def rpc_call(method, params)
   req = {
     "jsonrpc" => "2.0",
