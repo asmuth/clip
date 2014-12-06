@@ -36,6 +36,20 @@ std::string inspect(const std::vector<T>& value) {
   return str;
 }
 
+template <typename T>
+std::string inspect(const std::set<T>& value) {
+  std::string str = "{";
+  for (auto iter = value.begin(); iter != value.end(); ++iter) {
+    if (iter != value.begin()) {
+      str += ", ";
+    }
+
+    str += inspect(*iter);
+  }
+  str += '}';
+  return str;
+}
+
 template <typename H, typename... T>
 std::vector<std::string> inspectAll(H head, T... tail) {
   auto vec = inspectAll(tail...);
