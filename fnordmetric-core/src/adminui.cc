@@ -49,7 +49,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-preview.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-controls.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
-  //webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
 }
 
