@@ -14,12 +14,9 @@
 <template id="fnordmetric-plugin-hosts-base-tpl">
   <h1 class="page_header"><i>Hosts</i> &rsaquo; All Hosts</h1>
 
-  <fn-loader data-loading data-loader-type="loader3" data-transparent>
-    <fn-table data-per-page="25" data-clickable>
-      <fn-table-column>Metric</fn-table-column>
-      <fn-table-column>Labels</fn-table-column>
-      <fn-table-column>Last Insert</fn-table-column>
-      <fn-table-column>Total Stored Bytes</fn-table-column>
+  <fn-loader data-loader-type="loader3" data-transparent>
+    <fn-table data-per-page="25" data-clickable id="host-list" style="width:100%;">
+      <fn-table-column>Hostname</fn-table-column>
     </fn-table>
   </fn-loader>
 </template>
@@ -29,7 +26,20 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fnordmetric-plugin-hosts", "base");
       this.appendChild(tpl);
+      this.listHosts();
     };
+
+    this.listHosts = function() {
+      var table = this.querySelector("#host-list");
+
+      Fnord.jsonRPC("/rpc", "GroupsService.getMembers", { 
+        group: "fnordmetric-hosts-plugin-hostnames"
+      }, function(hosts) {
+        for (var i = 0; i < hosts.length; ++i) {
+          table.appendRowFromArray([hosts[i]]);
+        }
+      });
+    }
   };
 
   window.addEventListener("fn-ready", function() {

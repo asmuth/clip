@@ -35,6 +35,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-menu.html");
   webui_bundle_.addComponent("fnord/components/fn-search.html");
   webui_bundle_.addComponent("fnord/components/fn-table.html");
+  webui_bundle_.addComponent("fnord/components/fn-table.css");
   webui_bundle_.addComponent("fnord/components/fn-splitpane.html");
   webui_bundle_.addComponent("fnord/components/fn-codeeditor.html");
   webui_bundle_.addComponent("fnord/components/fn-dropdown.html");
