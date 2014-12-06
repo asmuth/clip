@@ -70,6 +70,28 @@ TEST_CASE(JSONTest, TestJSONInputStream, [] () {
   EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_END);
 });
 
+TEST_CASE(JSONTest, TestJSONInputStreamEscaping, [] () {
+  auto json1 = "{ 123: \"fno\\\"rd\" }";
+  JSONInputStream json1_stream(StringInputStream::fromString(json1));
+
+  JSONInputStream::kTokenType token_type;
+  std::string token_str;
+
+  EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_BEGIN);
+
+  EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSONInputStream::JSON_NUMBER);
+  EXPECT_EQ(token_str, "123");
+
+  EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSONInputStream::JSON_STRING);
+  EXPECT_EQ(token_str, "fno\"rd");
+
+  EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_END);
+});
+
 TEST_CASE(JSONTest, TestJSONDocumentGet, [] () {
   auto json1 = "{ 123: \"fnord\", \"blah\": [ true, false, null, 3.7e-5 ] }";
   JSONDocument json1_doc(json1);

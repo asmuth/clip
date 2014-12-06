@@ -55,21 +55,14 @@ loop do
   # hostname
   hostname = `hostname`.strip
 
-  rpc_call "GroupsService.addMember", {
-    :group => "fnordmetric-hosts-plugin-hostnames",
-    :member => hostname
-  }
-
   # uptime
-  uptime = `uptime`.strip
-
-  rpc_call "KeyValueService.set", {
-    :key => "fnordmetric-hosts-plugin-host-uptime~#{hostname}",
-    :value => uptime
-  }
+  uptime = `uptime`.strip.gsub(",", ".")
 
   # gather load averages
+  load_avg = 0.0
   if uptime =~ /load averages?: ([0-9]+[,\.][0-9]+)\s+([0-9]+[,\.][0-9]+)\s+([0-9]+[,\.][0-9]+)/
+    load_avg = $1
+
     rpc_call "MetricService.insertSample", {
       :metric => "load_avg_1m",
       :value => $1,
@@ -94,6 +87,20 @@ loop do
       }
     }
   end
+
+
+  rpc_call "GroupsService.addMember", {
+    :group => "fnordmetric-hosts-plugin-hostnames",
+    :member => hostname
+  }
+
+  rpc_call "KeyValueService.set", {
+    :key => "fnordmetric-hosts-plugin-hostdata~#{hostname}",
+    :value => {
+      :uptime => uptime,
+      :load_avg => load_avg
+    }.to_json
+  }
 
   # sleep if we completed executing faster than the requested interval
   sleep_for = (last_run + INTERVAL) - Time.now.to_f

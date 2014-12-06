@@ -32,6 +32,19 @@ void KeyValueServiceAdapter::registerJSONRPC(
     }
   });
 
+  rpc->registerMethod("KeyValueService.mget", [keyvalue_service] (
+      json::JSONRPCRequest* req,
+      json::JSONRPCResponse* res) {
+    std::vector<std::string> p_keys;
+    req->body().forEach("/params/keys", [&] (
+        const json::JSONPointer& path) -> bool {
+      p_keys.emplace_back(req->body().get(path));
+      return true;
+    });
+
+    res->successAndReturn(keyvalue_service->mget(p_keys));
+  });
+
   rpc->registerMethod("KeyValueService.set", [keyvalue_service] (
       json::JSONRPCRequest* req,
       json::JSONRPCResponse* res) {

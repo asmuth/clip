@@ -17,6 +17,12 @@
   <fn-loader data-loader-type="loader3" data-transparent>
     <fn-table data-per-page="25" data-clickable id="host-list" style="width:100%;">
       <fn-table-column>Hostname</fn-table-column>
+      <fn-table-column>Load Avg</fn-table-column>
+      <fn-table-column>CPU Util</fn-table-column>
+      <fn-table-column>Mem. Total (MB)</fn-table-column>
+      <fn-table-column>Mem. Util</fn-table-column>
+      <fn-table-column>Disk Total (GB)</fn-table-column>
+      <fn-table-column>Disk Util</fn-table-column>
     </fn-table>
   </fn-loader>
 </template>
@@ -26,18 +32,45 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fnordmetric-plugin-hosts", "base");
       this.appendChild(tpl);
-      this.listHosts();
+      this.renderHostList();
     };
 
-    this.listHosts = function() {
+    this.renderHostList = function() {
       var table = this.querySelector("#host-list");
 
       Fnord.jsonRPC("/rpc", "GroupsService.getMembers", { 
         group: "fnordmetric-hosts-plugin-hostnames"
       }, function(hosts) {
+        var kv_keys = [];
         for (var i = 0; i < hosts.length; ++i) {
-          table.appendRowFromArray([hosts[i]]);
+          kv_keys.push("fnordmetric-hosts-plugin-hostdata~" + hosts[i]);
         }
+
+        Fnord.jsonRPC("/rpc", "KeyValueService.mget", { keys: kv_keys },
+            function(host_data) {
+          for (var i = 0; i < hosts.length; ++i) {
+            var hname = hosts[i];
+            var hdata = host_data[i];
+
+            if (hdata.length == 0) {
+              console.log("missing data for host", hname);
+              continue;
+            } else {
+              hdata = JSON.parse(hdata);
+            }
+
+            table.appendRowFromArray([
+                hname,
+                hdata.load_avg,
+                "Loading...",
+                "Loading...",
+                "Loading...",
+                "Loading...",
+                "Loading..." 
+            ]);
+          }
+        });
+
       });
     }
   };

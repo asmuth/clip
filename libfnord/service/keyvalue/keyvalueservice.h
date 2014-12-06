@@ -14,6 +14,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace fnord {
 namespace keyvalue_service {
@@ -24,6 +25,8 @@ public:
   KeyValueService();
 
   bool get(const std::string& key, std::string* dst);
+  std::vector<std::string> mget(const std::vector<std::string>& keys);
+
   void set(const std::string& key, const std::string& value);
 
 protected:
