@@ -14,6 +14,7 @@
 #include <vector>
 #include <fnord/base/exception.h>
 #include <fnord/base/exceptionhandler.h>
+#include <fnord/base/inspect.h>
 #include <fnord/base/random.h>
 #include <fnord/net/http/httpserver.h>
 #include <fnord/io/fileutil.h>
@@ -24,6 +25,10 @@
 #include <fnord/thread/threadpool.h>
 #include <fnord/service/metric/metricservice.h>
 #include <fnord/service/metric/metricserviceadapter.h>
+#include <fnord/service/groups/groupsservice.h>
+#include <fnord/service/groups/groupsserviceadapter.h>
+#include <fnord/service/keyvalue/keyvalueservice.h>
+#include <fnord/service/keyvalue/keyvalueserviceadapter.h>
 #include <fnord/system/signalhandler.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
@@ -40,6 +45,10 @@ using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::metric_service::MetricService;
 using fnord::metric_service::MetricServiceAdapter;
+using fnord::groups_service::GroupsService;
+using fnord::groups_service::GroupsServiceAdapter;
+using fnord::keyvalue_service::KeyValueService;
+using fnord::keyvalue_service::KeyValueServiceAdapter;
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
 using fnord::statsd::StatsdServer;
@@ -119,6 +128,14 @@ static int startServer() {
 
   MetricServiceAdapter::registerJSONRPC(&metric_service, &json_rpc);
 
+  /* Setup GroupsService */
+  GroupsService groups_service;
+  GroupsServiceAdapter::registerJSONRPC(&groups_service, &json_rpc);
+
+  /* Setup KeyValueService */
+  KeyValueService keyvalue_service;
+  KeyValueServiceAdapter::registerJSONRPC(&keyvalue_service, &json_rpc);
+
   /* Setup statsd server */
   if (env()->flags()->isSet("statsd_port")) {
     auto port = env()->flags()->getInt("statsd_port");
@@ -128,6 +145,22 @@ static int startServer() {
         port);
 
     auto statsd_server = new StatsdServer(&server_pool, &worker_pool);
+    statsd_server->onSample([&metric_service] (
+        const std::string& key,
+        double value,
+        const std::vector<std::pair<std::string, std::string>>& labels) {
+      if (env()->verbose()) {
+        env()->logger()->printf(
+            "DEBUG",
+            "statsd sample: %s=%f %s",
+            key.c_str(),
+            value,
+            fnord::inspect(labels).c_str());
+      }
+
+      metric_service.insertSample(key, value, labels);
+    });
+
     statsd_server->listen(port);
   }
 

@@ -105,6 +105,11 @@ void JSONOutputStream::addValue(const bool& value) {
   value ? addTrue() : addFalse();
 }
 
+template <>
+void JSONOutputStream::addValue(const std::nullptr_t& value) {
+  addNull();
+}
+
 std::string JSONOutputStream::escapeString(const std::string& string) const {
   std::string new_str;
 

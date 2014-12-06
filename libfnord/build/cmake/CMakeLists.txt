@@ -171,6 +171,21 @@ add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-thread>
     stage/fnord/service/groups/groupsservice_example.cc)
 
+# service: keyvalue
+add_library(fnord-keyvalue-service OBJECT
+    stage/fnord/service/keyvalue/keyvalueservice.cc
+    stage/fnord/service/keyvalue/keyvalueserviceadapter.cc)
+
+add_executable(fnord-keyvalue-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-keyvalue-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-system>
+    $<TARGET_OBJECTS:fnord-thread>
+    stage/fnord/service/keyvalue/keyvalueservice_example.cc)
+
 # sstable
 add_library(fnord-sstable OBJECT
     stage/fnord/sstable/cursor.cc

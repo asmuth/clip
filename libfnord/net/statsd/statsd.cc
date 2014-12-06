@@ -28,6 +28,13 @@ void StatsdServer::listen(int port) {
   udp_server_.listen(port);
 }
 
+void StatsdServer::onSample(std::function<void (
+    const std::string&,
+    double,
+    const std::vector<std::pair<std::string, std::string>>&)> callback) {
+  callback_ = callback;
+}
+
 enum StatsdParseState {
   S_KEY,
   S_LABEL_OR_VALUE,
@@ -54,20 +61,10 @@ void StatsdServer::messageReceived(const fnord::Buffer& msg) {
       return;
     }
 
-/*
-    if (env()->verbose()) {
-      env()->logger()->printf(
-          "DEBUG",
-          "statsd sample: %s=%f %s",
-          key.c_str(),
-          float_value,
-          fnord::util::inspect(labels).c_str());
+    if (callback_) {
+      callback_(key, float_value, labels);
     }
-*/
 
-
-    //auto metric = metric_repo_->findOrCreateMetric(key);
-    //metric->insertSample(float_value, labels);
     labels.clear();
   }
 }

@@ -27,8 +27,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/3rdparty/reset.css");
 
   webui_bundle_.addComponent("fnord/fnord.js");
-  //webui_bundle_.addComponent("fnord/themes/midnight-.css");
-  //webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
+  webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
   webui_bundle_.addComponent("fnord/components/fn-button.html");
   webui_bundle_.addComponent("fnord/components/fn-icon.html");
