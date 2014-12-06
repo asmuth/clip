@@ -26,5 +26,21 @@ void JSONOutputStream::addValue(const std::set<T>& value) {
   endArray();
 }
 
+template <typename T>
+void JSONOutputStream::addValue(const std::vector<T>& value) {
+  beginArray();
+
+  int n = 0;
+  for (const auto& elem : value) {
+    if (n++ != 0) {
+      addComma();
+    }
+
+    addValue(elem);
+  }
+
+  endArray();
+}
+
 }
 }

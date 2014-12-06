@@ -9,13 +9,14 @@
   <http://www.gnu.org/licenses/>.
 -->
 <style type="text/css">
-  fn-menu {
+  fnordmetric-console fn-menu {
     width: 200;
     min-height: 100%;
     border-right: 1px solid #ccc;
+    padding-top: 5px;
   }
 
-  fn-menu /deep/ ul.menu {
+  fnordmetric-console fn-menu /deep/ ul.menu {
     margin: 0;
     box-shadow: none;
   }
@@ -28,6 +29,7 @@
         <fn-submenu-title>Hosts</fn-submenu-title>
         <fn-menu-item data-url="console?plugin=hosts&page=overview">Overview</fn-menu-item>
         <fn-menu-item data-url="console?plugin=hosts&page=by-service">Hosts By Service</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&page=sparklines">Sparklines</fn-menu-item>
       </fn-submenu>
       <fn-submenu>
     </fn-menu>

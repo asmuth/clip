@@ -40,6 +40,9 @@ public:
   void addValue(const std::set<T>& value);
 
   template <typename T>
+  void addValue(const std::vector<T>& value);
+
+  template <typename T>
   void addValue(const T& value);
 
 protected:

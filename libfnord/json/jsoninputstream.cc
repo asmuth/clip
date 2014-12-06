@@ -138,19 +138,29 @@ void JSONInputStream::readNumber(std::string* dst) {
 }
 
 void JSONInputStream::readString(std::string* dst) {
+  bool escaped = false;
   for (;;) {
     advanceCursor();
 
     switch (cur_) {
-      case '"':
-        advanceCursor();
-        return;
 
       case 0:
         RAISE(kRuntimeError, "invalid json. unterminated string");
         return;
 
+      case '\\':
+        escaped = !escaped;
+        break;
+
+      case '"':
+        if (!escaped) {
+          advanceCursor();
+          return;
+        }
+        /* fallthrough */
+
       default:
+        escaped = false;
         *dst += cur_;
         break;
     }
