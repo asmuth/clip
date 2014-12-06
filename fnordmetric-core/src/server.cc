@@ -23,6 +23,7 @@
 #include <fnord/net/statsd/statsd.h>
 #include <fnord/thread/threadpool.h>
 #include <fnord/service/metric/metricservice.h>
+#include <fnord/service/metric/metricserviceadapter.h>
 #include <fnord/system/signalhandler.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
@@ -35,7 +36,10 @@ static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
     "github.com/paulasmuth/fnordmetric";
 
+using fnord::json::JSONRPC;
+using fnord::json::JSONRPCHTTPAdapter;
 using fnord::metric_service::MetricService;
+using fnord::metric_service::MetricServiceAdapter;
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
 using fnord::statsd::StatsdServer;
@@ -84,6 +88,9 @@ static int startServer() {
       std::unique_ptr<fnord::ExceptionHandler>(
           new fnord::CatchAndPrintExceptionHandler(nullptr)));
 
+  JSONRPC json_rpc;
+
+  /* setup MetricService */
   if (env()->flags()->isSet("datadir")) {
     auto datadir = env()->flags()->getString("datadir");
 
@@ -110,7 +117,9 @@ static int startServer() {
       env()->flags()->getString("storage_backend"),
       &server_pool);
 
-  /* statsd server */
+  MetricServiceAdapter::registerJSONRPC(&metric_service, &json_rpc);
+
+  /* Setup statsd server */
   if (env()->flags()->isSet("statsd_port")) {
     auto port = env()->flags()->getInt("statsd_port");
     env()->logger()->printf(
@@ -122,7 +131,8 @@ static int startServer() {
     statsd_server->listen(port);
   }
 
-  /* http server */
+
+  /* Setup http server */
   if (env()->flags()->isSet("http_port")) {
     auto port = env()->flags()->getInt("http_port");
     env()->logger()->printf(
@@ -130,13 +140,15 @@ static int startServer() {
         "Starting HTTP server on port %i",
         port);
 
+    auto http_api = new HTTPAPI(metric_service.metricRepository());
+
     auto http_server = new fnord::http::HTTPServer(
         &server_pool,
         &worker_pool);
 
     http_server->addHandler(AdminUI::getHandler());
-    //http_server->addHandler(
-    //    std::unique_ptr<http::HTTPHandler>(new HTTPAPI(metric_repo)));
+    http_server->addHandler(JSONRPCHTTPAdapter::make(&json_rpc));
+    http_server->addHandler(std::unique_ptr<http::HTTPHandler>(http_api));
     http_server->listen(port);
   }
 

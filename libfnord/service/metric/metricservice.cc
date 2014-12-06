@@ -62,6 +62,10 @@ void MetricService::scanSamples(
   }
 }
 
+IMetricRepository* MetricService::metricRepository() const {
+  return metric_repo_.get();
+}
+
 } // namespace metric_service
 } // namsepace fnord
 

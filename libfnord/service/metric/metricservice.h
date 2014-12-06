@@ -54,6 +54,8 @@ public:
       const fnord::DateTime& time_end,
       std::function<bool (Sample* sample)> callback);
 
+  IMetricRepository* metricRepository() const;
+
 protected:
   std::unique_ptr<IMetricRepository> metric_repo_;
 };

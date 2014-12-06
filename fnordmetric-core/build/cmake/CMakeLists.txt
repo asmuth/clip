@@ -52,7 +52,15 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnord/io/pagemanager.cc
     stage/src/fnord/io/inputstream.cc
     stage/src/fnord/io/outputstream.cc
+    stage/src/fnord/json/flatjsonreader.cc
+    stage/src/fnord/json/jsondocument.cc
+    stage/src/fnord/json/jsoninputstream.cc
     stage/src/fnord/json/jsonoutputstream.cc
+    stage/src/fnord/json/jsonpointer.cc
+    stage/src/fnord/json/jsonrpc.cc
+    stage/src/fnord/json/jsonrpchttpadapter.cc
+    stage/src/fnord/json/jsonrpcrequest.cc
+    stage/src/fnord/json/jsonrpcresponse.cc
     stage/src/fnord/net/udpserver.cc
     stage/src/fnord/net/statsd/statsd.cc
     stage/src/fnord/service/metric/backends/disk/compactiontask.cc
@@ -76,6 +84,7 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnord/service/metric/metric.cc
     stage/src/fnord/service/metric/metricrepository.cc
     stage/src/fnord/service/metric/metricservice.cc
+    stage/src/fnord/service/metric/metricserviceadapter.cc
     stage/src/fnord/service/metric/sample.cc
     stage/src/fnord/sstable/cursor.cc
     stage/src/fnord/sstable/fileheaderreader.cc
