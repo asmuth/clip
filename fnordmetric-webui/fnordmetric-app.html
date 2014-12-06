@@ -59,6 +59,34 @@
         }, false);
       }
 
+      var onSearchSubmit = (function(base) {
+        return function(e) {
+          var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
+          base.openUrl(url);
+        }
+      })(this);
+
+      var onSearchAutocomplete = (function(base) {
+        return function(e) {
+          var term = e.srcElement.getValue();
+          var res = [];
+          var url = "/metrics?filter=" + term;
+          Fnord.httpGet(url, function(r) {
+            if (r.status == 200) {
+              var json = JSON.parse(r.response);
+              json.metrics.map(function(metric) {
+                res.push({query : metric.key});
+              });
+              e.srcElement.autocomplete(term, res);
+            }
+          });
+        }
+      })(this);
+
+      var nav_search = this.querySelector("fn-search");
+      nav_search.addEventListener("fn-search-submit", onSearchSubmit);
+      nav_search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
+
       window.onpopstate = (function(base) {
         return function(e) {
           e.preventDefault();

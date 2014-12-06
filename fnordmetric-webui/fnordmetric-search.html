@@ -11,9 +11,9 @@
 <style type="text/css">
 </style>
 
-<template id="fnordmetric-metric-list-base-tpl">
+<template id="fnordmetric-metric-search-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
-    <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+    <h1 class="page_header"><i>Metrics</i> &rsaquo; Search </h1>
     <fn-table data-per-page="25" data-clickable>
       <fn-table-column>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
@@ -23,55 +23,37 @@
   </fn-loader>
 </template>
 
+
 <script type="text/javascript">
-  var FnordMetricMetricListComponent = function() {
+  var FnordMetricSearchComponent = function() {
 
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fnordmetric-metric-list", "base");
+      var tpl = Fnord.getTemplate("fnordmetric-metric-search", "base");
       this.appendChild(tpl);
+      //when attrivuteChangedCallback
       this.loadMetricList();
     };
 
-    this.createTimeDescr = function(ts) {
-      if (ts == 0 || ts == "0") {return "0"}
-      var now = Date.now();
-      var ts = Math.round(ts / 1000);
-      var date = new Date(ts);
-
-      var offset =  Math.floor(
-        (now - ts) / 1000);
-
-      var minutes = date.getMinutes();
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-
-      var seconds = date.getSeconds();
-      if (seconds < 10) {
-        seconds = "0" + seconds;
-      }
-
-      var time_str =
-        FnordMetric.util.parseTimeOffset(offset) +
-        " - " +
-        FnordMetric.util.getHumanMonth(date.getMonth(), "short") + 
-        " " + date.getDate() +
-        " " + date.getFullYear() +
-        " " + date.getHours() +
-        ":" + minutes +
-        ":" + seconds
-
-      return time_str;
+    this.updateHeader = function(search_term) {
+      var header = this.querySelector("h1");;
+      header.innerHTML += " " + search_term;
     }
 
     this.loadMetricList = function() {
       var table = this.querySelector("fn-table");
       var loader = this.querySelector("fn-loader");
 
+      var params = FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
+      var search_term = params.query_params.innerViewValue;
+
+      this.updateHeader(search_term);
+
+      var url = "/metrics?filter=" + search_term;
+
       var base = this;
       var app = document.querySelector("fnordmetric-app");
 
-      Fnord.httpGet("/metrics", function(r) {
+      Fnord.httpGet(url , function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
 
@@ -110,14 +92,14 @@
         app.openUrl(raw_url);
 
       }, false);
-
-    };
-
+    }
   };
+
+
 
   window.addEventListener("fn-ready", function() {
     Fnord.registerComponent(
-        "fnordmetric-metric-list",
-        FnordMetricMetricListComponent);
+        "fnordmetric-metric-search",
+         FnordMetricSearchComponent);
   }, false);
 </script>

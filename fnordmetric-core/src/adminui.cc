@@ -20,6 +20,7 @@ std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
 AdminUI::AdminUI() :
     webui_bundle_("FnordMetric"),
     webui_mount_(&webui_bundle_, "/admin") {
+  webui_bundle_.addComponent("fnord/3rdparty/codemirror.js");
 
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
@@ -34,9 +35,20 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-loader.html");
   webui_bundle_.addComponent("fnord/components/fn-search.html");
   webui_bundle_.addComponent("fnord/components/fn-table.html");
-
+  webui_bundle_.addComponent("fnord/components/fn-splitpane.html");
+  webui_bundle_.addComponent("fnord/components/fn-codeeditor.html");
+  webui_bundle_.addComponent("fnord/components/fn-dropdown.html");
+  webui_bundle_.addComponent("fnord/components/fn-datepicker.html");
+  webui_bundle_.addComponent("fnord/components/fn-timeinput.html");
+  webui_bundle_.addComponent("fnord/components/fn-daterangepicker.html");
+  webui_bundle_.addComponent("fnord/components/fn-popup.html");
+  webui_bundle_.addComponent("fnord/components/fn-tabbar.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-search.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-query-editor.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-preview.html");
+  webui_bundle_.addComponent("fnordmetric/fnordmetric-controls.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
   //webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");

@@ -1,0 +1,396 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-datepicker-base-tpl'>
+  <style>
+    input {
+      height: 28px;
+      line-height: 28px;
+      padding: 0 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid #b3c2d0;
+      color: #545758;
+      width: 200px;
+    }
+
+    input:hover {
+      cursor: pointer;
+    }
+
+    #datepicker_widget[data-active='active'] {
+      position:absolute;
+      z-index: 999;
+      background: #fff;
+      border: 1px solid rgb(226, 232, 237);
+      border-radius: 1px;
+      width: 216px;
+      padding-top: 9px;
+    }
+
+    table {
+      margin: 9px;
+      width: 200px;
+      border: 1px solid rgb(226, 232, 237);
+      border-radius: 3px;
+      border-collapse: collapse;
+    }
+
+    table th {
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      font-weight: normal;
+      color: #60707f;
+    }
+
+    table td {
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
+      text-align:center;
+      color: rgb(115, 134, 148);
+    }
+
+    table td.selectable{
+      color: #444;
+    }
+
+    table td.selectable:hover {
+      cursor: pointer;
+    }
+
+    table td.highlight {
+      background-color: rgb(226, 232, 237);
+    }
+
+    table td.highlight_border {
+       border: 1px solid #444;
+    }
+
+    .fa {
+      color: #444;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .fa:hover {
+      cursor:pointer;
+    }
+
+  </style>
+  <input type='text' readonly/>
+  <div id="datepicker_widget">
+  </div>
+</template>
+<script type="text/javascript">
+  var DatePickerComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-datepicker", "base");
+      var base = this;
+      shadow.appendChild(tpl);
+
+      var input = this.shadowRoot.querySelector("input");
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+
+      var select_time_by = this.getAttribute("time-select");
+
+      if (this.getAttribute('data-timestamp') != null) {
+        input.value = this.createDateTimeString(this.getAttribute('data-timestamp'));
+      }
+
+      this.attributeChangedCallback();
+
+      input.addEventListener('click', function() {
+                //timeInput is optional and set bu time-select attribute
+        if (!widget.hasAttribute('data-active')) {
+          base.setAttribute('active', 'active');
+
+          //timeInput is optional and set bu time-select attribute
+          if (select_time_by != null) {
+            base.renderTimeInput();
+          }
+
+          var selected_timestamp = new Date(
+            parseInt(base.getAttribute('data-timestamp'), 10));
+          var selected_year = selected_timestamp.getFullYear();
+          var selected_month = selected_timestamp.getMonth();
+
+          base.renderCalendar(selected_year, selected_month);
+        }
+
+      }, false);
+
+      document.addEventListener('click', function() {
+        base.resetDatepicker();
+      }, false);
+
+      this.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-timestamp") {
+        this.shadowRoot.querySelector("input").value = 
+          this.createDateTimeString(parseInt(new_val), 10);
+      }
+    };
+
+    this.renderTimeInput = function() {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var time_input = document.createElement("fn-timeinput");
+
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+
+      time_input.setHoursValue(selected_timestamp.getHours());
+      time_input.setMinutesValue(selected_timestamp.getMinutes());
+      widget.appendChild(time_input);
+
+      var base = this;
+
+      time_input.addEventListener('fn-timeinput-submit', function() {
+        base.onSelect();
+      }, false);
+    }
+
+    this.renderCalendar = function(year, month) {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+
+      var table_elem = widget.querySelector("table");
+      if (table_elem == null) {
+        table_elem = document.createElement("table");
+      } else {
+        table_elem.innerHTML = "";
+      }
+      widget.appendChild(table_elem);
+
+      this.renderWeekHeader();
+      this.renderMonthHeader(year, month);
+      this.renderWeeks(year, month);
+
+      widget.setAttribute("data-active", "active");
+    };
+
+    this.renderWeekHeader = function() {
+      var table_elem = this.shadowRoot.querySelector("table");
+      var header_elem = document.createElement("tr");
+
+      var weekdays =
+        ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+      weekdays.map(function(day) {
+        var header_cell = document.createElement("th");
+        header_cell.innerHTML = day;
+        header_elem.appendChild(header_cell);
+      });
+
+      table_elem.appendChild(header_elem);
+    };
+
+    this.renderMonthHeader = function(year, month) {
+      var base = this;
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      var header_elem = document.createElement("tr");
+      var cell_elem = document.createElement("td");
+      cell_elem.colSpan = "7";
+
+      var month_title = document.createElement("b");
+      month_title.className = "datepicker_title";
+      month_title.innerHTML =
+        FnordMetric.util.getHumanMonth(month, "long") + " " + year;
+
+      /* tooltip to select previous month */
+      var prev_selector = document.createElement("i");
+      prev_selector.className = "fa fa-chevron-left";
+
+      /* tooltip to select next month */
+      var next_selector = document.createElement("i");
+      next_selector.className = "fa fa-chevron-right";
+
+      cell_elem.appendChild(prev_selector);
+      cell_elem.appendChild(month_title);
+      cell_elem.appendChild(next_selector);
+      header_elem.appendChild(cell_elem);
+      table_elem.appendChild(header_elem);
+
+      prev_selector.addEventListener('click', function() {
+        year = (month == 0)? year-1 : year;
+        month = (month + 11) % 12;
+        base.renderCalendar(year, month);
+      }, false);
+
+      next_selector.addEventListener('click', function() {
+        year = (month == 11)? year+1 : year;
+        month = (month + 1) % 12;
+        base.renderCalendar(year, month);
+      }, false);
+    };
+
+    this.renderWeeks = function(year, month) {
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      var days_in_month = new Date(year, (month + 1), 0).getDate();
+      var first_weekday = new Date(year + "-" + (month+1) + "-01").getDay();
+      var num_rows = 6;
+      var date = 1;
+
+      for (var cur_row = 0; cur_row < num_rows; cur_row++) {
+        var row_elem = document.createElement("tr");
+        for (var day = 0; day < 7; day++) {
+          var cell_elem = document.createElement("td");
+          if (this.isInMonth(day, first_weekday, date, days_in_month, cur_row)) {
+            if (this.isSelectable(date, month, year)) {
+              cell_elem.innerHTML = date;
+              cell_elem.className = this.cellName(date, month, year);
+              this.handleDateLinks(cell_elem, date, month, year);
+            } else {
+              cell_elem.innerHTML = date;
+            }
+            date++;
+          }
+          row_elem.appendChild(cell_elem);
+        }
+        table_elem.appendChild(row_elem);
+      }
+    };
+
+    this.isInMonth = function(day, first_day, date, days_in_month, cur_row) {
+      if (cur_row > 0 && cur_row < 4) {return true}
+      if (cur_row == 0) {
+        /* the calendar has the same number of rows for each month */
+        if (first_day == 0) {
+          return false;
+        } else if (day < first_day) {
+          return false;
+        } else {
+          return true;
+        }
+      } else if (cur_row >= 4) {
+        if (date <= days_in_month) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    };
+
+    this.isSelectable = function(date, month, year) {
+      var now = new Date();
+      var cur_year = now.getFullYear();
+      var cur_month = now.getMonth();
+      var cur_date = now.getDate();
+
+      if (month == cur_month) {
+        return date <= cur_date;
+      }
+      return (year <= cur_year && month < cur_month);
+    };
+
+    this.cellName = function(date, month, year) {
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+      var selected_year = selected_timestamp.getFullYear();
+      var selected_month = selected_timestamp.getMonth();
+      var selected_date = selected_timestamp.getDate();
+
+      var now = new Date();
+      var cur_year = now.getFullYear();
+      var cur_month = now.getMonth();
+      var cur_date = now.getDate();
+
+      var name = "selectable ";
+      /* date is today */
+      if (date == cur_date && month == cur_month && year == cur_year) {
+        name += " highlight_border";
+      }
+      /* date is selected date */
+      if (date == selected_date && 
+          month == selected_month && 
+          year == selected_year) {
+            name += " highlight";
+      }
+      return name;
+    };
+
+    this.handleDateLinks = function(elem, date, month, year) {
+      var base = this;
+      elem.addEventListener('click', function() {
+        base.onSelect(date, month, year);
+      }, false);
+    };
+
+    this.createDateTimeString = function(timestamp) {
+      var timestamp = new Date(timestamp);
+      var month = timestamp.getMonth();
+      var string =
+          FnordMetric.util.appendLeadingZero(month + 1) +
+          "/" +
+          FnordMetric.util.appendLeadingZero(timestamp.getDate()) + 
+          "/" + timestamp.getFullYear() + "  " + 
+          FnordMetric.util.appendLeadingZero(timestamp.getHours()) +
+          ":" + 
+          FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
+
+      return string;
+    };
+
+    this.onSelect = function(date, month, year) {
+      var input = this.shadowRoot.querySelector("input");
+      var time_values = this.shadowRoot.querySelector("fn-timeinput").getValues();
+
+      var selected_timestamp = new Date(
+        parseInt(this.getAttribute('data-timestamp'), 10));
+
+      /* fallback for time inputs */
+      var date = (date == undefined) ? 
+        selected_timestamp.getDate() : date;
+      var month = (month == undefined)?
+        selected_timestamp.getMonth() : month;
+      var year = (year == undefined) ?
+        selected_timestamp.getFullYear() : year;
+
+      var hours = time_values.hours;
+      var minutes = time_values.minutes;
+
+      var ts = new Date(year, month, date, hours, minutes).getTime();
+      if (ts <= Date.now() ) {
+        this.setAttribute('data-timestamp', ts);
+        this.resetDatepicker();
+        this.fireSelectDateEvent();
+      };
+    };
+
+    this.resetDatepicker = function() {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var table_elem = this.shadowRoot.querySelector("table");
+      var base = this;
+
+      widget.removeAttribute("data-active");
+      widget.innerHTML = "";
+      //fixme
+      document.removeEventListener('click', base.resetDatepicker, false);
+    };
+
+    this.fireSelectDateEvent = function() {
+      this.dispatchEvent(new Event('fn-datepicker-select'));
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-datepicker', DatePickerComponent);
+  }, false);
+</script>
+
+

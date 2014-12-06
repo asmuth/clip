@@ -90,10 +90,36 @@ void HTTPAPI::renderMetricList(
   jsons.addObjectEntry("metrics");
   jsons.beginArray();
 
+  fnord::URI::ParamList params = uri->queryParams();
+  std::string filter_query;
+  auto filter_enabled = fnord::URI::getParam(params, "filter", &filter_query);
+
+  int limit = -1;
+  std::string limit_string;
+  if (fnord::URI::getParam(params, "limit", &limit_string)) {
+    try {
+      limit = std::stoi(limit_string);
+    } catch (const std::exception& e) {
+      /* fallthrough */
+    }
+  }
+
   int i = 0;
   for (const auto& metric : metric_repo_->listMetrics()) {
-    if (i++ > 0) { jsons.addComma(); }
+    if (filter_enabled &&
+        metric->key().find(filter_query) == std::string::npos) {
+      continue;
+    }
+
+    if (i++ > 0) {
+      jsons.addComma();
+    }
+
     renderMetricJSON(metric, &jsons);
+
+    if (limit > 0 && i == limit) {
+      break;
+    }
   }
 
   jsons.endArray();

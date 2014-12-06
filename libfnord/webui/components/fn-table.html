@@ -241,13 +241,7 @@
       }
     }
 
-    this.appendRow = function(row) {
-      var tr_elem = document.createElement("tr");
-      row.forEach(function(c) {
-        var td_elem = document.createElement("td");
-        td_elem.innerHTML = c;
-        tr_elem.appendChild(td_elem);
-      });
+    this.appendRow = function(tr_elem) {
       this.querySelector("table").appendChild(tr_elem);
       this.renderTable();
     }

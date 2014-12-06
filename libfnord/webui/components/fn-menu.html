@@ -73,11 +73,12 @@
     this.renderMenu = function(in_elem, out_elem) {
       for (var i = 0; i < in_elem.children.length; ++i) {
         var elem = in_elem.children[i];
+        var base = this;
 
         if (elem.tagName == "FN-MENU-ITEM") {
           var onItemClick = (function(base, item) {
             return function(e) {
-              base.clickItem(elem, e.srcElement);
+              base.clickItem(item, e.srcElement);
             };
           })(this, elem);
 
@@ -86,6 +87,8 @@
           li_elem.innerHTML = elem.innerHTML;
           li_elem.addEventListener("click", onItemClick, false);
           out_elem.appendChild(li_elem);
+
+          li_elem.onclick = base.fireButtonClickEvent;
         }
 
         if (elem.tagName == "FN-SUBMENU") {
@@ -104,6 +107,7 @@
 
           li_elem.appendChild(ul_elem);
           out_elem.appendChild(li_elem);
+
         }
       }
     }

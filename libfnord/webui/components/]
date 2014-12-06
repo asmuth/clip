@@ -11,9 +11,7 @@
 <html>
   <head>
     <title>Fnord Table Examples</title>
-    <link rel="stylesheet" href="fnord.css" type="text/css">
-    <link rel="stylesheet" href="components/fn-table.css" type="text/css">
-    <link rel="stylesheet" href="3rdparty/fontawesome.css" type="text/css">
+
     <style type="text/css">
       body, html {
         margin: 0;
@@ -74,34 +72,22 @@
     <link rel="import" href="components/fn-loader.html" data-component="fn-loader">
     <link rel="import" href="components/fn-loader-demo.html" data-component="fn-loader-demo">
     <link rel="import" href="components/fn-menu.html" data-component="fn-menu">
-    <link rel="import" href="components/fn-menu-demo.html" data-component="fn-menu-demo">
     <link rel="import" href="components/fn-search.html" data-component="fn-search">
     <link rel="import" href="components/fn-search-demo.html" data-component="fn-search-demo">
     <link rel="import" href="components/fn-table.html" data-component="fn-table">
     <link rel="import" href="components/fn-table-demo.html" data-component="fn-table-demo">
     <link rel="import" href="components/fn-splitpane.html" data-component="fn-splitpane">
     <link rel="import" href="components/fn-splitpane-demo.html" data-component="fn-splitpane-demo">
-    <link rel="import" href="components/fn-codeeditor-demo.html" data-component="fn-codeeditor-demo">
-    <link rel="import" href="components/fn-codeeditor.html" data-component="fn-codeeditor">
-    <link rel="import" href="components/fn-progressbar.html" data-component="fn-progressbar">
-    <link rel="import" href="components/fn-progressbar-demo.html" data-component="fn-progressbar-demo">
-    <link rel="import" href="components/fn-dropdown.html" data-component="fn-dropdown">
-    <link rel="import" href="components/fn-dropdown-demo.html" data-component="fn-dropdown-demo">
     <link rel="stylesheet" href="themes/midnight-blue.css" type="text/css">
 
     <div id="sidebar">
-      <div style="border-bottom: 1px solid #eee; padding: 15px;">
-        <select>
-          <option>Select Theme</option>
-        </select>
-      </div>
-
       <fn-menu>
+        <fn-menu-item data-target-demo="fn-search">Home</fn-menu-item>
+
         <fn-submenu>
           <fn-submenu-title>
             Controls
           </fn-submenu-title>
-          <fn-menu-item data-target-demo="fn-menu">fn-menu</fn-menu-item>
           <fn-menu-item data-target-demo="fn-search">fn-search</fn-menu-item>
         </fn-submenu>
 
@@ -111,9 +97,6 @@
           </fn-submenu-title>
 
           <fn-menu-item data-target-demo="fn-table">fn-table</fn-menu-item>
-          <fn-menu-item data-target-demo="fn-splitpane">fn-splitpane</fn-menu-item>
-          <fn-menu-item data-target-demo="fn-codeeditor">fn-codeeditor</fn-menu-item>
-          <fn-menu-item data-target-demo="fn-dropdown">fn-dropdown</fn-menu-item>
         </fn-submenu>
 
         <fn-submenu>
@@ -122,9 +105,7 @@
           </fn-submenu-title>
 
           <fn-menu-item data-target-demo="fn-loader">fn-loader</fn-menu-item>
-          <fn-menu-item data-target-demo="fn-progressbar">
-            fn-progressbar
-          </fn-menu-item>
+          <fn-menu-item data-target-demo="fn-splitpane">fn-splitpane</fn-menu-item>
         </fn-submenu>
       </fn-menu>
     </div>
@@ -142,8 +123,8 @@
       }
 
       var sidebar = document.getElementById("sidebar");
-      sidebar.addEventListener("fn-menu-item-click", function(e) {
-        console.log(e);
+      sidebar.addEventListener("fn-button-click", function(e) {
+        console.log("fn button click");
         openDemo(e.srcElement.getAttribute("data-target-demo"));
       }, false);
 
