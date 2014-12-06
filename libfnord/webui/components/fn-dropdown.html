@@ -58,6 +58,7 @@
       font-size: 14px;
       color: rgba(0,0,0,.8);
       z-index: 100;
+      cursor: pointer;
     }
 
     .header {
@@ -380,41 +381,41 @@
     /*--------------
       Error
     ---------------*/
-    #dropdown_ui.error,
-    #dropdown_ui.error > .text {
+    #dropdown_ui[data-state='error'],
+    #dropdown_ui[data-state='error'] > .text {
       color: #a94442;
     }
 
-    #dropdown_ui.input.error {
+    #dropdown_ui.input[data-state='error'] {
       background: #fff0f0;
       border-color: #dbb1b1;
     }
 
-    #dropdown_ui.input.error:hover {
+    #dropdown_ui.input[data-state='error']:hover {
       border-color: #dbb1b1;
     }
 
-    #dropdown_ui.error ul#menu {
+    #dropdown_ui[data-state='error'] ul#menu {
       border-color: #dbb1b1;
     }
 
-    #dropdown_ui.error ul#menu li.item {
+    #dropdown_ui[data-state='error'] ul#menu li.item {
       color: #d95c5c;
     }
 
-    #dropdown_ui.error ul#menu li.item:hover,
-    #dropdown_ui.error ul#menu li.item[hover] {
+    #dropdown_ui[data-state='error'] ul#menu li.item:hover,
+    #dropdown_ui[data-state='error'] ul#menu li.item[hover] {
       background-color: #fff2f2;
     }
 
-    #dropdown_ui.error ul#menu li.item.active {
+    #dropdown_ui[data-state='error'] ul#menu li.item.active {
       background-color: #fdcfcf;
     }
 
     /*--------------
       Disabled
     ---------------*/
-    #dropdown_ui.disabled {
+    #dropdown_ui[data-state='disabled'] {
       cursor: auto;
     }
 
@@ -481,6 +482,7 @@
       }
     };
 
+    /* styles currently can't be removed by changing the attribute */
     this.setStyle = function() {
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
       var class_name = this.getAttribute('data-style');
@@ -492,9 +494,10 @@
       dropdown_ui.className = class_name;
     };
 
+    /* states can be added and removed */
     this.setState = function() {
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
-      dropdown_ui.className += " " + this.getAttribute('data-state');
+      dropdown_ui.setAttribute("data-state", this.getAttribute('data-state'));
     };
 
     /* preselection only works if data-value is set */

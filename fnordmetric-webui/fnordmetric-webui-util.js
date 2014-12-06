@@ -307,8 +307,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   var view = params.view;
   /* column for rollups */
   var columns = params.columns;
-  var start_time = Math.round(params.start_time / 1000);
-  var end_time = Math.round(params.end_time / 1000);
+  var start_time = params.start_time;
+  var end_time = params.end_time;
   var t_step = params.t_step;
   var t_window = params.t_window;
   var by = params.by;

@@ -241,9 +241,6 @@
       return value;
     };
 
-
-
-
     this.updateUrlParams = function(new_params) {
       var params = FnordMetric.util.parseQueryString(
         this.getAttribute("data-url"));
@@ -278,11 +275,11 @@
       var time_window = this.querySelector("#time_window");
       var time_step = this.querySelector("#time_step");
       if (view == "value" || view.substr(0,6) == "rollup") {
-        time_window.setAttribute("disabled", "disabled");
-        time_step.setAttribute("disabled", "disabled");
+        time_window.setAttribute("data-state", "disabled");
+        time_step.setAttribute("data-state", "disabled");
       } else {
-        time_window.removeAttribute("disabled");
-        time_step.removeAttribute("disabled");
+        time_window.removeAttribute("data-state");
+        time_step.removeAttribute("data-state");
       }
     };
 
@@ -412,18 +409,19 @@
       });
 
 
-      var time_range_val = this.getQueryParamOrDefaultValue("time_range");
-      var end_time = this.getQueryParamOrDefaultValue("end_time");
+      var time_range_val = parseInt(
+        this.getQueryParamOrDefaultValue("time_range"), 10);
+      var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
 
       var time_range = this.querySelector("#timerange");
       time_range.setAttribute('data-preselected', time_range_val);
 
       var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute('data-timestamp', end_time);
+      datepicker.setAttribute('data-timestamp', (end_time * 1000));
 
       var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute('data-daterange', time_range_val);
-      daterangepicker.setAttribute('data-endtime', end_time);
+      daterangepicker.setAttribute('data-daterange', (time_range_val * 1000));
+      daterangepicker.setAttribute('data-endtime', (end_time * 1000));
 
 
       //set controls event listeners
@@ -450,21 +448,25 @@
         var date_range = parseInt(e.srcElement.getAttribute('data-value'));
         var starttime = parseInt(endtime, 10) - date_range;
         base.updateUrlParams({"start_time": starttime});
+        //check
         daterangepicker.setAttribute("data-daterange", date_range);
       }, false);
 
       datepicker.addEventListener('fn-datepicker-select', function() {
-        base.updateDateTimeElems(this.getAttribute('data-timestamp'));
+        var timestamp = parseInt(this.getAttribute("data-timestamp"), 10) / 1000;
+        base.updateDateTimeElems(timestamp);
       }, false);
 
       daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
         function() {
-          base.updateDateTimeElems(this.getAttribute("data-endtime"));
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10) / 1000;
+          base.updateDateTimeElems(endtime);
       }, false);
 
       daterangepicker.addEventListener('fn-daterangepicker-select-next',
         function() {
-          base.updateDateTimeElems(this.getAttribute("data-endtime"));
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10) / 1000;
+          base.updateDateTimeElems(endtime);
       }, false);
 
       var sql_editor_btn = this.querySelector("#sql_editor");
