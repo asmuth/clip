@@ -21,7 +21,10 @@
           <fn-icon data-icon="file"></fn-icon> New Query
         </fn-button>
         <fn-button data-url="metrics">
-          <fn-icon data-icon="area-chart"></fn-icon> Metrics
+          <fn-icon data-icon="database"></fn-icon> Metrics
+        </fn-button>
+        <fn-button data-url="console">
+          <fn-icon data-icon="area-chart"></fn-icon> Console
         </fn-button>
       </fn-appbar-section>
 
@@ -39,6 +42,7 @@
 <script type="text/javascript">
   var FnordMetricAppComponent = function() {
     this.routes = {
+      "console": "fnordmetric-console",
       "metrics": "fnordmetric-metric-list",
       "metric": "fnordmetric-metric-preview",
       "search": "fnordmetric-metric-search",
