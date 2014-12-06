@@ -39,7 +39,6 @@ def rpc_call(method, params)
     http = Net::HTTP.new(uri.host, uri.port)
     resp = http.post(uri.path, req.to_json, {})
 
-    puts resp.body
     if resp.code.to_i != 200 || JSON.parse(resp.body).has_key?("error")
       STDERR.puts "RPC failed: " + resp.body
     end
