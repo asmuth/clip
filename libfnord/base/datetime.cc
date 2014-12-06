@@ -16,40 +16,42 @@
 
 namespace fnord {
 
-DateTime::DateTime(uint64_t utc_time) : utc_time_(utc_time) {}
+DateTime::DateTime() : utc_micros_(WallClock::unixMicros()) {}
+
+DateTime::DateTime(uint64_t utc_time) : utc_micros_(utc_time) {}
 
 DateTime& DateTime::operator=(const DateTime& other) {
-  utc_time_ = other.utc_time_;
+  utc_micros_ = other.utc_micros_;
   tz_offset_ = other.tz_offset_;
   return *this;
 }
 
 bool DateTime::operator==(const DateTime& other) const {
-  return utc_time_ < other.utc_time_;
+  return utc_micros_ < other.utc_micros_;
 }
 
 bool DateTime::operator<(const DateTime& other) const {
-  return utc_time_ < other.utc_time_;
+  return utc_micros_ < other.utc_micros_;
 }
 
 bool DateTime::operator>(const DateTime& other) const {
-  return utc_time_ > other.utc_time_;
+  return utc_micros_ > other.utc_micros_;
 }
 
 bool DateTime::operator<=(const DateTime& other) const {
-  return utc_time_ <= other.utc_time_;
+  return utc_micros_ <= other.utc_micros_;
 }
 
 bool DateTime::operator>=(const DateTime& other) const {
-  return utc_time_ >= other.utc_time_;
+  return utc_micros_ >= other.utc_micros_;
 }
 
 DateTime::operator uint64_t() const {
-  return utc_time_;
+  return utc_micros_;
 }
 
 DateTime::operator double() const {
-  return utc_time_;
+  return utc_micros_;
 }
 
 DateTime DateTime::epoch() {
@@ -62,7 +64,7 @@ DateTime DateTime::now() {
 
 std::string DateTime::toString(const char* fmt) const {
   struct tm tm;
-  time_t tt = utc_time_ / 1000000;
+  time_t tt = utc_micros_ / 1000000;
   localtime_r(&tt, &tm); // FIXPAUL
 
   char buf[256]; // FIXPAUL

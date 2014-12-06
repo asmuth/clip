@@ -82,17 +82,17 @@ void JSONOutputStream::addValue(const std::string& value) {
 
 template <>
 void JSONOutputStream::addValue(const int& value) {
-  addInteger(value);
+  output_->write(StringUtil::toString(value));
 }
 
 template <>
 void JSONOutputStream::addValue(const unsigned long& value) {
-  addInteger(value);
+  output_->write(StringUtil::toString(value));
 }
 
 template <>
 void JSONOutputStream::addValue(const unsigned long long& value) {
-  addInteger(value);
+  output_->write(StringUtil::toString(value));
 }
 
 template <>

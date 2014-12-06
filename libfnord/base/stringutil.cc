@@ -27,6 +27,26 @@ std::string StringUtil::toString(int value) {
 }
 
 template <>
+std::string StringUtil::toString(long value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::toString(unsigned long value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::toString(long long value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::toString(unsigned long long value) {
+  return std::to_string(value);
+}
+
+template <>
 std::string StringUtil::toString(double value) {
   char buf[128]; // FIXPAUL
   *buf = 0;

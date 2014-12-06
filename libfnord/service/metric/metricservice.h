@@ -14,6 +14,7 @@
 #include <string>
 #include "fnord/base/datetime.h"
 #include "fnord/service/metric/metricrepository.h"
+#include "fnord/thread/taskscheduler.h"
 
 namespace fnord {
 namespace metric_service {
@@ -21,7 +22,10 @@ namespace metric_service {
 class MetricService {
 public:
   static MetricService newWithInMemoryBackend();
-  static MetricService newWithDiskBackend();
+
+  static MetricService newWithDiskBackend(
+      const std::string& datadir_path,
+      fnord::thread::TaskScheduler* scheduler);
 
   MetricService(std::unique_ptr<IMetricRepository> metric_repo);
   MetricService(MetricService&& other);

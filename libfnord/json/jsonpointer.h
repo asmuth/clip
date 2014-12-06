@@ -34,6 +34,8 @@ public:
   void push(std::string str);
   void pop();
 
+  std::string head() const;
+
 protected:
   std::string path_;
 };

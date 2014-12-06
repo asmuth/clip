@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <set>
+#include "fnord/base/datetime.h"
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/base/inspect.h"
@@ -51,6 +52,76 @@ bool JSONDocument::getMaybe(const JSONPointer& path, std::string* dst) const {
   }
 
   return false;
+}
+
+template <>
+bool JSONDocument::getMaybeAs(const JSONPointer& path, double* dst) const {
+  std::string value;
+
+  if (!getMaybe(path, &value)) {
+    return false;
+  }
+
+  try {
+    *dst = std::stod(value);
+  } catch (std::exception& e) {
+    RAISEF(kIllegalArgumentError, "not a valid float: $0", value);
+    return false;
+  }
+
+  return true;
+}
+
+template <>
+bool JSONDocument::getMaybeAs(
+    const JSONPointer& path,
+    unsigned long* dst) const {
+  std::string value;
+
+  if (!getMaybe(path, &value)) {
+    return false;
+  }
+
+  try {
+    *dst = std::stoul(value);
+  } catch (std::exception& e) {
+    RAISEF(kIllegalArgumentError, "not a valid float: $0", value);
+    return false;
+  }
+
+  return true;
+}
+
+template <>
+bool JSONDocument::getMaybeAs(
+    const JSONPointer& path,
+    unsigned long long* dst) const {
+  std::string value;
+
+  if (!getMaybe(path, &value)) {
+    return false;
+  }
+
+  try {
+    *dst = std::stoull(value);
+  } catch (std::exception& e) {
+    RAISEF(kIllegalArgumentError, "not a valid float: $0", value);
+    return false;
+  }
+
+  return true;
+}
+
+template <>
+bool JSONDocument::getMaybeAs(const JSONPointer& path, DateTime* dst) const {
+  uint64_t val;
+
+  if (!getMaybeAs<uint64_t>(path, &val)) {
+    return false;
+  }
+
+  *dst = DateTime(val);
+  return true;
 }
 
 std::string JSONDocument::get(const JSONPointer& path) const {

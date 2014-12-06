@@ -39,6 +39,12 @@ void JSONPointer::pop() {
   path_.erase(cur, path_.end());
 }
 
+std::string JSONPointer::head() const {
+  auto cur = path_.end() - 1;
+  for (; cur >= path_.begin() && *cur != '/'; cur--);
+  return std::string(cur + 1, path_.end());
+}
+
 
 } // namespace json
 

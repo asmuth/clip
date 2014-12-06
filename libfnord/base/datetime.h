@@ -20,6 +20,11 @@ class DateTime {
 public:
 
   /**
+   * Create a new UTC DateTime instance with time = now
+   */
+  DateTime();
+
+  /**
    * Create a new UTC DateTime instance
    *
    * @param timestamp the UTC microsecond timestamp
@@ -68,7 +73,7 @@ protected:
   /**
    * The utc microsecond timestamp of the represented moment in time
    */
-  uint64_t utc_time_;
+  uint64_t utc_micros_;
 
   /**
    * The time zone offset to UTC in seconds

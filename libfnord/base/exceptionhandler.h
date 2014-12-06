@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #include <mutex>
 #include <memory>
+#include <string>
 
 namespace fnord {
 class Logger;
@@ -31,7 +32,7 @@ protected:
 
 class CatchAndAbortExceptionHandler : public ExceptionHandler {
 public:
-  CatchAndAbortExceptionHandler(const std::string& message);
+  CatchAndAbortExceptionHandler(const std::string& message = "Aborting...");
   void onException(const std::exception& error) const override;
 
   void installGlobalHandlers();

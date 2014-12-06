@@ -34,6 +34,15 @@ public:
   std::string get(const JSONPointer& path) const;
   std::string get(const JSONPointer& path, const std::string& fallback) const;
 
+  template <typename T>
+  bool getMaybeAs(const JSONPointer& path, T* dst) const;
+
+  template <typename T>
+  T getAs(const JSONPointer& path) const;
+
+  template <typename T>
+  T getAs(const JSONPointer& path, const T& fallback) const;
+
   void forEach(
       const JSONPointer& path,
       std::function<bool (const JSONPointer& path)> callback) const;
@@ -44,4 +53,6 @@ protected:
 
 } // namespace json
 } // namsepace fnord
+
+#include "jsondocument_impl.h"
 #endif

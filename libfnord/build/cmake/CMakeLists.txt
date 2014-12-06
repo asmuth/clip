@@ -141,7 +141,7 @@ add_library(fnord-metric-service OBJECT
     stage/fnord/service/metric/metric.cc
     stage/fnord/service/metric/metricrepository.cc
     stage/fnord/service/metric/metricservice.cc
-    stage/fnord/service/metric/metricservice.cc
+    stage/fnord/service/metric/metricserviceadapter.cc
     stage/fnord/service/metric/sample.cc)
 
 add_executable(fnord-metric-service-example
