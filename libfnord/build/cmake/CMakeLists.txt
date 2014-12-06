@@ -186,6 +186,21 @@ add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-thread>
     stage/fnord/service/keyvalue/keyvalueservice_example.cc)
 
+# service: ping
+add_library(fnord-ping-service OBJECT
+    stage/fnord/service/ping/pingservice.cc
+    stage/fnord/service/ping/pingserviceadapter.cc)
+
+add_executable(fnord-ping-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-ping-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-system>
+    $<TARGET_OBJECTS:fnord-thread>
+    stage/fnord/service/ping/pingservice_example.cc)
+
 # sstable
 add_library(fnord-sstable OBJECT
     stage/fnord/sstable/cursor.cc

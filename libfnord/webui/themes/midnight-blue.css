@@ -29,13 +29,18 @@ hr {
 }
 
 /* fn-table */
+fn-table /deep/ table {
+  border: none;
+  border-radius: 0;
+  margin-top: 0;
+}
+
 fn-table /deep/ table > thead > tr > td,
 fn-table /deep/ table > thead > tr > th,
 fn-table /deep/ table > tbody > tr > td,
 fn-table /deep/ table > tbody > tr > th {
   text-align: left;
   font-weight: 400;
-  border: none;
   height: 38px;
   font-size: 98%;
   padding: 0 20px;
@@ -51,14 +56,15 @@ fn-table /deep/ table > thead > tr > th {
   border-right: 1px solid rgb(226, 232, 237);
 }
 
-fn-table /deep/ table > thead > tr {
+fn-table /deep/ table > thead > tr > th {
   border-top: 2px solid rgb(226, 232, 237);
   border-bottom: 2px solid rgb(226, 232, 237);
   background-color: #f6f8fa;
   color: #60707f;
 }
 
-fn-table /deep/ table > tbody > tr {
+fn-table /deep/ table > tbody > tr > td {
+  border-top: none;
   border-bottom: 1px solid rgb(226, 232, 237);
 }
 

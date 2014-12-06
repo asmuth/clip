@@ -30,7 +30,7 @@ void Metric::insertSampleImpl(
   {
     std::lock_guard<std::mutex> lock_holder(labels_mutex_);
     for (const auto& pair : labels) {
-      labels_.emplace(pair.first);
+      labels_.insert(pair.first);
     }
   }
 

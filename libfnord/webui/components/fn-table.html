@@ -58,9 +58,11 @@
         var th_elem = document.createElement("th");
         th_elem.innerHTML = col.innerHTML;
         header_row.appendChild(th_elem);
+        console.log(col);
       });
 
-      this.appendChild(tpl);
+      this.shadowRoot.innerHTML = "";
+      this.shadowRoot.appendChild(tpl);
       this.renderRows();
     };
 
@@ -153,7 +155,7 @@
     }
 
     this.forEachRowWithPagination = function(cb) {
-      var all_rows = this.querySelectorAll("fn-table-row");
+      var all_rows = this.querySelectorAll("tr");
       var rows_per_page = this.rowsPerPage();
       var begin;
       var end;
@@ -176,7 +178,8 @@
     }
 
     this.forEachColumn = function(cb) {
-      var col_elems = this.querySelectorAll("fn-table-header > fn-table-column");
+      var col_elems = this.querySelectorAll("fn-table-column");
+      console.log(col_elems);
       for (var i = 0; i < col_elems.length; ++i) {
         cb(col_elems[i]);
       }
@@ -239,6 +242,19 @@
           break;
         }
       }
+    }
+
+    this.appendRowFromArray = function(cols) {
+      var tr = document.createElement("tr");
+
+      for (var i = 0; i < cols.length; ++i) {
+        var td = document.createElement("td");
+        td.innerHTML = cols[i];
+        tr.appendChild(td);
+      }
+
+      this.appendRow(tr);
+      return tr;
     }
 
     this.appendRow = function(tr_elem) {

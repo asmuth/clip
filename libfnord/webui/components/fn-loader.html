@@ -28,6 +28,10 @@
       background: #efefef;
       display: table;
     }
+
+    .loader[data-transparent] {
+      background: transparent;
+    }
   </style>
 
   <div class="loader">
@@ -366,6 +370,7 @@
       this.createShadowRoot();
       this.updateLoadingState();
       this.setAttribute("data-resolved", "data-resolved");
+
     };
 
     this.updateLoadingState = function() {
@@ -379,6 +384,10 @@
 
         tpl.querySelector(".loader").appendChild(
             Fnord.getTemplate("fn-loader", loader_type));
+
+        if (this.getAttribute("data-transparent") != null) {
+          tpl.querySelector(".loader").setAttribute("data-transparent", "true");
+        }
 
         this.shadowRoot.appendChild(tpl);
       }
