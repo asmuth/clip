@@ -23,6 +23,11 @@ public:
 
   void listen(int port);
 
+  void onSample(std::function<void (
+      const std::string&,
+      double,
+      const std::vector<std::pair<std::string, std::string>>&)> callback);
+
   static char const* parseStatsdSample(
       char const* begin,
       char const* end,
@@ -35,6 +40,11 @@ protected:
   void messageReceived(const fnord::Buffer& msg);
 
   fnord::net::UDPServer udp_server_;
+
+  std::function<void (
+      const std::string&,
+      double,
+      const std::vector<std::pair<std::string, std::string>>&)> callback_;
 };
 
 

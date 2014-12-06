@@ -14,6 +14,7 @@
 #include <vector>
 #include <fnord/base/exception.h>
 #include <fnord/base/exceptionhandler.h>
+#include <fnord/base/inspect.h>
 #include <fnord/base/random.h>
 #include <fnord/net/http/httpserver.h>
 #include <fnord/io/fileutil.h>
@@ -136,6 +137,22 @@ static int startServer() {
         port);
 
     auto statsd_server = new StatsdServer(&server_pool, &worker_pool);
+    statsd_server->onSample([&metric_service] (
+        const std::string& key,
+        double value,
+        const std::vector<std::pair<std::string, std::string>>& labels) {
+      if (env()->verbose()) {
+        env()->logger()->printf(
+            "DEBUG",
+            "statsd sample: %s=%f %s",
+            key.c_str(),
+            value,
+            fnord::inspect(labels).c_str());
+      }
+
+      metric_service.insertSample(key, value, labels);
+    });
+
     statsd_server->listen(port);
   }
 
