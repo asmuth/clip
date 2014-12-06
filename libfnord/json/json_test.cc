@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "fnord/io/inputstream.h"
-#include "fnord/jsonflatjsonreader.h"
+#include "fnord/json/flatjsonreader.h"
 #include "fnord/json/jsondocument.h"
 #include "fnord/json/jsoninputstream.h"
 #include "fnord/json/jsonpointer.h"

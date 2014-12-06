@@ -11,7 +11,7 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/base/inspect.h"
-#include "fnord/jsonflatjsonreader.h"
+#include "fnord/json/flatjsonreader.h"
 #include "fnord/json/jsondocument.h"
 #include "fnord/json/jsonpointer.h"
 
