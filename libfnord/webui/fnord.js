@@ -75,4 +75,26 @@ Fnord.httpPost = function(url, request, callback) {
   }
 };
 
+Fnord.parseQueryString = function(qstr) {
+  var path;
+  var query_params = {};
+
+  if (qstr.indexOf("?") >= 0) {
+    path = qstr.substr(0, qstr.indexOf("?"));
+
+    var params = qstr.substr(qstr.indexOf("?") + 1).split('&');
+    for (var i = 0; i < params.length; ++i) {
+      var param = params[i].split('=');
+      query_params[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
+    }
+  } else {
+    path = qstr;
+  }
+
+  return {
+    "path": path,
+    "params": query_params
+  };
+}
+
 Fnord.ready();

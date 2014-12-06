@@ -1,0 +1,40 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+</style>
+
+<template id="fnordmetric-plugin-hosts-base-tpl">
+  <h1 class="page_header"><i>Hosts</i> &rsaquo; All Hosts</h1>
+
+  <fn-loader data-loading data-loader-type="loader3" data-transparent>
+    <fn-table data-per-page="25" data-clickable>
+      <fn-table-column>Metric</fn-table-column>
+      <fn-table-column>Labels</fn-table-column>
+      <fn-table-column>Last Insert</fn-table-column>
+      <fn-table-column>Total Stored Bytes</fn-table-column>
+    </fn-table>
+  </fn-loader>
+</template>
+
+<script type="text/javascript">
+  var FnordMetricHostsPluginComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fnordmetric-plugin-hosts", "base");
+      this.appendChild(tpl);
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent(
+        "fnordmetric-plugin-hosts",
+        FnordMetricHostsPluginComponent);
+  }, false);
+</script>
