@@ -21,7 +21,8 @@
     float: right;
   }
 
-  fnordmetric-controls[type='primary'] /deep/ .controls_inner {
+  fnordmetric-controls[type='primary'] /deep/ .controls_inner,
+  fnordmetric-controls[type='primary-small'] /deep/ .controls_inner {
     margin-top: 5px;
     height: 76px;
     border-top: 2px solid rgb(226, 232, 237);
@@ -30,7 +31,13 @@
     color: #60707f;
   }
 
-  fnordmetric-controls[type='primary']  /deep/ .group {
+  fnordmetric-controls[type='primary-small'] /deep/ .controls_inner {
+    height: 22px;
+    padding: 10px 0;
+  }
+
+  fnordmetric-controls[type='primary']  /deep/ .group,
+  fnordmetric-controls[type='primary-small']  /deep/ .group {
     height: 64px;
     float: left;
     padding: 14px 20px 0 20px;

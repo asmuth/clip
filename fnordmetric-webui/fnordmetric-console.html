@@ -27,9 +27,9 @@
     <fn-menu>
       <fn-submenu>
         <fn-submenu-title>Hosts</fn-submenu-title>
-        <fn-menu-item data-url="console?plugin=hosts&page=overview">Overview</fn-menu-item>
-        <fn-menu-item data-url="console?plugin=hosts&page=by-service">Hosts By Service</fn-menu-item>
-        <fn-menu-item data-url="console?plugin=hosts&page=sparklines">Sparklines</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&view=overview">Overview</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&view=by-service">Hosts By Service</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&view=sparklines">Sparklines</fn-menu-item>
       </fn-submenu>
       <fn-submenu>
     </fn-menu>
@@ -56,11 +56,24 @@
       }, false);
 
       var url = this.getAttribute("data-url");
+      if (!url) {
+        return;
+      }
+
       var qry = Fnord.parseQueryString(url);
       if (qry.params.plugin) {
         this.openPlugin(qry.params.plugin, url);
       }
     };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url") {
+        var qry = Fnord.parseQueryString(new_val);
+        if (qry.params.plugin) {
+          this.openPlugin(qry.params.plugin, new_val);
+        }
+      }
+    }
 
     this.openPlugin = function(plugin, url) {
       var plugin = document.createElement("fnordmetric-plugin-hosts");
