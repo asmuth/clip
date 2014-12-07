@@ -186,6 +186,21 @@ add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-thread>
     stage/fnord/service/keyvalue/keyvalueservice_example.cc)
 
+# service: logstream
+add_library(fnord-logstream-service OBJECT
+    stage/fnord/service/logstream/logstreamservice.cc
+    stage/fnord/service/logstream/logstreamserviceadapter.cc)
+
+add_executable(fnord-logstream-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-logstream-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-system>
+    $<TARGET_OBJECTS:fnord-thread>
+    stage/fnord/service/logstream/logstreamservice_example.cc)
+
 # service: ping
 add_library(fnord-ping-service OBJECT
     stage/fnord/service/ping/pingservice.cc

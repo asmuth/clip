@@ -31,6 +31,8 @@ def rpc_call(method, params)
     "id" => SecureRandom.hex
   }
 
+  puts req.to_json
+  return
   begin
     uri = URI.parse(ARGV[0])
     http = Net::HTTP.new(uri.host, uri.port)
