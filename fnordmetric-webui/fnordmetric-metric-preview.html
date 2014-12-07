@@ -509,6 +509,7 @@
           window.clearInterval(interval_id);
           this.removeAttribute('auto-refresh-on');
         } else {
+          console.log("autorefresh on");
           interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
           this.setAttribute('auto-refresh-on', 'on');
         }
