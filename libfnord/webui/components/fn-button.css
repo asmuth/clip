@@ -119,24 +119,8 @@ fn-button-group fn-button {
   border-left: 1px solid rgba(39, 41, 43, 0.15);
 }
 
-fn-button-group[data-style-evenly] {
+fn-button-group[data-split-evenly] {
   width: 100%;
-}
-
-fn-button-group[data-style-evenly='2'] fn-button {
-  width: 50%;
-}
-
-fn-button-group[data-style-evenly='3'] fn-button {
-  width: 33.333%;
-}
-
-fn-button-group[data-style-evenly='4'] fn-button {
-  width: 25%;
-}
-
-fn-button-group[data-style-evenly='5'] fn-button {
-  width: 20%;
 }
 
 
