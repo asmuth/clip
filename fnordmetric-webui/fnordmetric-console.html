@@ -27,9 +27,9 @@
     <fn-menu>
       <fn-submenu>
         <fn-submenu-title>Hosts</fn-submenu-title>
-        <fn-menu-item data-url="console?plugin=hosts&page=overview">Overview</fn-menu-item>
-        <fn-menu-item data-url="console?plugin=hosts&page=by-service">Hosts By Service</fn-menu-item>
-        <fn-menu-item data-url="console?plugin=hosts&page=sparklines">Sparklines</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&view=overview">Overview</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&view=by-service">Hosts By Service</fn-menu-item>
+        <fn-menu-item data-url="console?plugin=hosts&view=sparklines">Sparklines</fn-menu-item>
       </fn-submenu>
       <fn-submenu>
     </fn-menu>
@@ -56,7 +56,7 @@
       }, false);
 
       var url = this.getAttribute("data-url");
-      if (url == null) {
+      if (!url) {
         return;
       }
 
@@ -76,7 +76,6 @@
     }
 
     this.openPlugin = function(plugin, url) {
-      console.log(plugin);
       var plugin = document.createElement("fnordmetric-plugin-hosts");
       plugin.setAttribute("data-url", url);
 

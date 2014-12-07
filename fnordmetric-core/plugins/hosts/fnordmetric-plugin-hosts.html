@@ -11,7 +11,7 @@
 <style type="text/css">
 </style>
 
-<template id="fnordmetric-plugin-hosts-base-tpl">
+<template id="fnordmetric-plugin-hosts-overview-tpl">
   <h1 class="page_header"><i>Hosts</i> &rsaquo; All Hosts</h1>
 
   <fn-loader data-loader-type="loader3" data-transparent>
@@ -27,16 +27,47 @@
   </fn-loader>
 </template>
 
+<template id="fnordmetric-plugin-hosts-detail-tpl">
+  <h1 class="page_header"></h1>
+
+  <fnordmetric-controls type='primary-small'>
+    <fnordmetric-controls-section data-position='left'>
+      <fn-dropdown id='timerange' style="float:left;">
+      </fn-dropdown>
+      <fn-datepicker time-select='input'>
+      </fn-datepicker>
+    </fnordmetric-controls-section>
+    <fnordmetric-controls-section data-position='right'>
+      <fn-daterangepicker past-selectable='selectable'>
+      </fn-daterangepicker>
+    <fnordmetric-controls-section>
+  </fnordmetric-controls>
+</template>
+
 <script type="text/javascript">
   var FnordMetricHostsPluginComponent = function() {
-    this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fnordmetric-plugin-hosts", "base");
-      this.appendChild(tpl);
-      this.renderHostList();
+    this.openUrl = function(url) {
+      this.innerHTML = "";
+      var qry = Fnord.parseQueryString(url);
+
+      if (qry.params.view == "detail") {
+        this.renderDetailView(qry.params.hostname);
+      } else {
+        this.renderOverview();
+      }
     };
 
-    this.renderHostList = function() {
+    this.renderOverview = function() {
+      var tpl = Fnord.getTemplate("fnordmetric-plugin-hosts", "overview");
+      this.innerHTML = "";
+      this.appendChild(tpl);
+
       var table = this.querySelector("#host-list");
+      table.addEventListener("fn-table-row-click", function(e) {
+        var hostname = e.srcElement.getAttribute("data-hostname");
+        var url = "console?plugin=hosts&view=detail&hostname=" + encodeURIComponent(hostname);
+        document.querySelector("fnordmetric-app").openUrl(url);
+      }, false);
 
       Fnord.jsonRPC("/rpc", "GroupsService.getMembers", { 
         group: "fnordmetric-hosts-plugin-hostnames"
@@ -59,7 +90,7 @@
               hdata = JSON.parse(hdata);
             }
 
-            table.appendRowFromArray([
+            var row = table.appendRowFromArray([
                 hname,
                 hdata.load_avg,
                 "Loading...",
@@ -68,10 +99,29 @@
                 "Loading...",
                 "Loading..." 
             ]);
+            row.setAttribute("data-hostname", hname);
           }
         });
-
       });
+    }
+
+    this.renderDetailView = function(hostname) {
+      var tpl = Fnord.getTemplate("fnordmetric-plugin-hosts", "detail");
+      this.appendChild(tpl);
+
+      this.querySelector("h1").innerHTML = "<i>Hosts</i> &rsaquo; " + hostname;
+    }
+
+    this.createdCallback = function() {
+      if (this.getAttribute("data-url")) {
+        this.openUrl(this.getAttribute("data-url"));
+      }
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url") {
+        this.openUrl(new_val);
+      }
     }
   };
 
