@@ -7,11 +7,35 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
-    "1 second", "5 seconds", "10 seconds", "20 seconds", "30 seconds", 
-        "1 minute", "5 minues", "15 minutes", "30 minutes", "1 hour",
-        "2 hours", "6 hours", "12 hours", "24 hours"];
-
-
+    
 -->
 <template id="fnordmetric-time-controls-base-tpl">
+  <fnordmetric-controls type='primary-small'>
+    <fnordmetric-controls-section data-position='left'>
+      <fn-dropdown id='timerange' style="float:left;">
+      </fn-dropdown>
+      <fn-datepicker time-select='input'>
+      </fn-datepicker>
+    </fnordmetric-controls-section>
+    <fnordmetric-controls-section data-position='right'>
+      <fn-daterangepicker past-selectable='selectable'>
+      </fn-daterangepicker>
+    <fnordmetric-controls-section>
+  </fnordmetric-controls>
+
 </template>
+<script type='text/javascript'>
+  var FnordMetricTimeControlsComponent = function() {
+    this.createdCallback = function() {
+      console.log("time controls");
+      var tpl = Fnord.getTemplate("fnordmetric-time-controls", "base");
+      this.appendChild(tpl);
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent(
+      "fnordmetric-time-controls",
+      FnordMetricTimeControlsComponent);
+  }, false);
+</script>

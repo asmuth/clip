@@ -102,7 +102,7 @@
       var input = this.shadowRoot.querySelector("input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
 
-      var select_time_by = this.getAttribute("time-select");
+      //var select_time_by = this.getAttribute("time-select");
 
       if (this.getAttribute('data-timestamp') != null) {
         input.value = this.createDateTimeString(this.getAttribute('data-timestamp'));
@@ -111,19 +111,17 @@
       this.attributeChangedCallback();
 
       input.addEventListener('click', function() {
-                //timeInput is optional and set bu time-select attribute
         if (!widget.hasAttribute('data-active')) {
           base.setAttribute('active', 'active');
 
-          //timeInput is optional and set bu time-select attribute
-          if (select_time_by != null) {
+          //timeInput is optional and set by data-time-select attribute
+          if (this.hasAttribute('data-time-select')) {
             base.renderTimeInput();
           }
 
-          var selected_timestamp = new Date(
-            parseInt(base.getAttribute('data-timestamp'), 10));
-          var selected_year = selected_timestamp.getFullYear();
-          var selected_month = selected_timestamp.getMonth();
+          var selected_date = base.getSelectedDate();
+          var selected_year = selected_date.getFullYear();
+          var selected_month = selected_date.getMonth();
 
           base.renderCalendar(selected_year, selected_month);
         }
@@ -146,15 +144,22 @@
       }
     };
 
+    this.getSelectedDate = function() {
+      if (this.hasAttribute('data-timestamp')) {
+        return (new Date(parseInt(this.getAttribute('data-timestamp'), 10)));
+      } else {
+        return (new Date());
+      }
+    }
+
     this.renderTimeInput = function() {
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
       var time_input = document.createElement("fn-timeinput");
 
-      var selected_timestamp = new Date(
-        parseInt(this.getAttribute('data-timestamp'), 10));
+      var selected_date = this.getSelectedDate();
 
-      time_input.setHoursValue(selected_timestamp.getHours());
-      time_input.setMinutesValue(selected_timestamp.getMinutes());
+      time_input.setHoursValue(selected_date.getHours());
+      time_input.setMinutesValue(selected_date.getMinutes());
       widget.appendChild(time_input);
 
       var base = this;
@@ -199,6 +204,20 @@
     };
 
     this.renderMonthHeader = function(year, month) {
+      var human_months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"];
+
       var base = this;
       var table_elem = this.shadowRoot.querySelector("table");
 
@@ -209,7 +228,7 @@
       var month_title = document.createElement("b");
       month_title.className = "datepicker_title";
       month_title.innerHTML =
-        FnordMetric.util.getHumanMonth(month, "long") + " " + year;
+        human_months[month] + " " + year;
 
       /* tooltip to select previous month */
       var prev_selector = document.createElement("i");
@@ -299,11 +318,10 @@
     };
 
     this.cellName = function(date, month, year) {
-      var selected_timestamp = new Date(
-        parseInt(this.getAttribute('data-timestamp'), 10));
-      var selected_year = selected_timestamp.getFullYear();
-      var selected_month = selected_timestamp.getMonth();
-      var selected_date = selected_timestamp.getDate();
+      var selected_date = this.getSelectedDate();
+      var selected_year = selected_date.getFullYear();
+      var selected_month = selected_date.getMonth();
+      var selected_date = selected_date.getDate();
 
       var now = new Date();
       var cur_year = now.getFullYear();
@@ -331,17 +349,24 @@
       }, false);
     };
 
+    this.appendLeadingZero = function(num) {
+      if (typeof num == 'string') {
+        return (num.length > 1)? num : "0" + num;
+      }
+      return (num > 9)? num : "0" + num;
+    }
+
     this.createDateTimeString = function(timestamp) {
       var timestamp = new Date(timestamp);
       var month = timestamp.getMonth();
       var string =
-          FnordMetric.util.appendLeadingZero(month + 1) +
+          this.appendLeadingZero(month + 1) +
           "/" +
-          FnordMetric.util.appendLeadingZero(timestamp.getDate()) + 
+          this.appendLeadingZero(timestamp.getDate()) + 
           "/" + timestamp.getFullYear() + "  " + 
-          FnordMetric.util.appendLeadingZero(timestamp.getHours()) +
+          this.appendLeadingZero(timestamp.getHours()) +
           ":" + 
-          FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
+          this.appendLeadingZero(timestamp.getMinutes());
 
       return string;
     };
@@ -350,16 +375,15 @@
       var input = this.shadowRoot.querySelector("input");
       var time_values = this.shadowRoot.querySelector("fn-timeinput").getValues();
 
-      var selected_timestamp = new Date(
-        parseInt(this.getAttribute('data-timestamp'), 10));
+      var selected_date = this.getSelectedDate();
 
       /* fallback for time inputs */
       var date = (date == undefined) ? 
-        selected_timestamp.getDate() : date;
+        selected_date.getDate() : date;
       var month = (month == undefined)?
-        selected_timestamp.getMonth() : month;
+        selected_date.getMonth() : month;
       var year = (year == undefined) ?
-        selected_timestamp.getFullYear() : year;
+        selected_date.getFullYear() : year;
 
       var hours = time_values.hours;
       var minutes = time_values.minutes;
