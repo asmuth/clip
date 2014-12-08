@@ -15,6 +15,11 @@
 </style>
 <template id="fn-input-base-tpl">
   <style type='text/css'>
+    /**
+     * Adapted from: Semantic UI:
+     *   https://github.com/Semantic-Org/Semantic-UI
+     *   http://www.semantic-ui.com/
+     */
     * {
       font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
       font-size: 14px;
@@ -120,6 +125,26 @@
       opacity: 0.5;
     }
 
+    /*--------------------
+        Inline
+    ---------------------*/
+    .field[data-style='inline'] {
+      display: inline-block;
+      float: none;
+      margin: 0em 1em 0em 0em;
+      padding: 0em;
+    }
+
+    .field[data-style='inline'] label,
+    .field[data-style='inline'] input{
+      display: inline-block;
+      width: auto;
+      margin-top: 0em;
+      margin-bottom: 0em;
+      vertical-align: middle;
+      font-size: 0.9285em;
+    }
+
 
 
   </style>
@@ -127,7 +152,7 @@
     <label>
       <content select="fn-input-label"></content>
     </label>
-    <input />
+    <input type="text" />
   </div>
 </template>
 <script type="text/javascript">
@@ -142,6 +167,7 @@
       if (this.hasAttribute('data-state')) {this.setState();}
       if (this.hasAttribute('data-readonly')) {this.setReadonly();}
       if (this.hasAttribute('data-disabled')) {this.disable();}
+      if (this.hasAttribute('data-style')) {this.setStyle();}
 
       this.attributeChangedCallback();
 
@@ -172,6 +198,9 @@
         case 'data-disabled':
           this.disable();
           break;
+        case 'data-style':
+          this.setStyle();
+          break;
         default:
           break;
       }
@@ -187,6 +216,11 @@
       var field = this.shadowRoot.querySelector(".field");
       field.setAttribute('data-state', this.getAttribute('data-state'));
     };
+
+    this.setStyle = function() {
+      var field= this.shadowRoot.querySelector(".field");
+      field.setAttribute('data-style', this.getAttribute('data-style'));
+    }
 
     this.setReadonly = function() {
       var input = this.shadowRoot.querySelector("input");
