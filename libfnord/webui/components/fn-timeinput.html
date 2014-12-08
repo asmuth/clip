@@ -10,49 +10,39 @@
 
   todo: add seconds-selectable and render third input if attr is set
 -->
-<template id="fn-timeinput-base-tpl">
+<template id="fn-input-time-base-tpl">
   <style>
     #timeinput_container {
       margin:auto;
-      height: 30px;
-      width: 126px;
+      width: 100%;
+      min-height: 42px;
+      display:block;
     }
 
-    input {
+    fn-input {
       float: left;
-      width: 30px;
-      height: 25px;
-      line-height: 25px;
-      padding: 0 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      border: 1px solid #b3c2d0;
-      color: #545758;
-      background: #fff;
+      width: 30%;
     }
 
-    input.highlighted {
-      border: 1px solid rgba(230, 126, 34,1.0);
-      background: rgba(230, 126, 34,0.1);
-    }
 
     b {
       float:left;
       margin-left: 5px;
       margin-right: 5px;
+      line-height: 42px;
     }
   </style>
 
   <div id="timeinput_container">
-    <input id="hours"/>
+    <fn-input id="hours"></fn-input>
     <b>:</b>
-    <input id="minutes" />
+    <fn-input id="minutes" />
   </div>
 </template>
 <script type="text/javascript">
   var TimeInputComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-timeinput", "base");
+      var tpl = Fnord.getTemplate("fn-input-time", "base");
       var shadow = this.createShadowRoot();
       var base = this;
       shadow.appendChild(tpl);
@@ -60,13 +50,21 @@
       var hours_input = this.shadowRoot.querySelector("#hours");
       var minutes_input = this.shadowRoot.querySelector("#minutes");
 
-      hours_input.addEventListener('focus', function() {
+      hours_input.addEventListener('fn-input-submit', function() {
         base.validateHoursInput();
       }, false);
-      minutes_input.addEventListener('focus', function() {
+      minutes_input.addEventListener('fn-input-submit', function() {
         base.validateMinutesInput();
       }, false);
     };
+
+    this.appendLeadingZero = function(num) {
+      if (typeof num == 'string') {
+        return (num.length > 1)? num : "0" + num;
+      }
+      return (num > 9)? num : "0" + num;
+    }
+
 
     this.validateHoursInput = function() {
       var base = this;
@@ -116,12 +114,12 @@
 
     this.setHoursValue = function(value) {
       var input = this.shadowRoot.querySelector("#hours");
-      input.value = FnordMetric.util.appendLeadingZero(value);
+      input.value = this.appendLeadingZero(value);
     };
 
     this.setMinutesValue = function(value) {
       var input = this.shadowRoot.querySelector("#minutes");
-      input.value = FnordMetric.util.appendLeadingZero(value);
+      input.value = this.appendLeadingZero(value);
     };
 
     this.getValues = function() {
@@ -136,7 +134,7 @@
   }
 
   window.addEventListener('fn-ready', function() {
-    var timeinput = Fnord.registerComponent('fn-timeinput', TimeInputComponent);
+    var timeinput = Fnord.registerComponent('fn-input-time', TimeInputComponent);
   }, false);
 </script>
 

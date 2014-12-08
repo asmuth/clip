@@ -1,0 +1,64 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-input.error {
+    width: 30%;
+    float:left;
+    margin-right: 10px;
+  }
+
+  fn-input.error:last-child {
+    margin-right: 0px;
+  }
+</style>
+<template id="fn-form-demo-base-tpl">
+  <section>
+    <h1>Input</h1>
+    <h3><i>Example 1 &raquo;</i> Basic</h3>
+    <fn-input data-placeholder="Username"></fn-input>
+    <h3><i>Example 2 &raquo;</i> Labeled Input</h3>
+    <fn-input>
+      <fn-input-label>First Name</fn-input-label>
+    </fn-input>
+
+  </section>
+
+  <section>
+    <h1>Checkbox</h1>
+    <h3><i>Example 1 &raquo;</i> Radio</h3>
+    <fn-checkbox><fn-checkbox>
+  </section>
+
+  <section>
+    <h1>States</h1>
+    <h3><i>Example 1 &raquo;</i> Error</h3>
+    <fn-input class="error" data-state="error" style="margin-top:17px;"></fn-input>
+    <fn-input class="error" data-state="error" data-placeholder="First Name" style>
+      <fn-input-label>Personal Information</fn-input-label>
+    </fn-input>
+    <div style="clear:both;"></div>
+    <h3><i>Example 2 &raquo;</i> Read Only</h3>
+    <fn-input data-readonly='true' data-placeholder='December 12 2014'>
+    </fn-input>
+    <h3><i>Example 3 &raquo;</i> Disabled</h3>
+    <fn-input data-disabled='true' data-placeholder='Last Name'>
+      <fn-input-label>Last Name</fn-input-label>
+    </fn-input>
+
+  </section>
+
+  <section>
+    <h3><i>Example 2 &raquo;</i> Time Input</h3>
+    <fn-input-time></fn-input-time>
+  </section>
+
+
+</template>

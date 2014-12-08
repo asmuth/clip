@@ -1,0 +1,208 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-input {
+    display:block;
+  }
+</style>
+<template id="fn-input-base-tpl">
+  <style type='text/css'>
+    * {
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      line-height: 1.33;
+      color: rgba(0,0,0,.8);
+    }
+
+    .field {
+      position: relative;
+      max-width: 100%;
+      clear: both;
+      margin: 0em 0em 1em;
+      display:block;
+      opacity: 1;
+    }
+
+    .field:last-child {
+      margin-bottom: 0em;
+    }
+
+    label {
+      display: block;
+      margin: 0em 0em 0.2857rem 0em;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 0.9285em;
+      font-weight: 700;
+      text-transform: none;
+    }
+
+    .field > input {
+      margin: 0em;
+      width: 100%;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+      text-align: left;
+      line-height: 1.2142em;
+      font-family: "Helvetica Neue", "Helvetica", Arial;
+      padding: 0.67861em 1em;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(0, 0, 0, 0.8);
+      border-radius: 0.2857rem;
+      -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+              transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: none;
+    }
+
+    input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 500;
+    }
+
+    input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 500;
+    }
+    input:focus {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+    input:focus input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    input:focus input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    /*--------------------
+        Error
+    ---------------------*/
+    .field[data-state="error"] > label {
+      color: #d95c5c;
+    }
+
+    .field[data-state='error'] input {
+      background-color: #fff0f0;
+      border-color: #dbb1b1;
+      color: #d95c5c;
+      box-shadow: none;
+    }
+    /* Error Placeholder */
+    .field[data-state='error'] input::-webkit-input-placeholder {
+      color: rgba(255, 80, 80, 0.4);
+    }
+    .field[data-state='error'] input::-moz-placeholder {
+      color: rgba(255, 80, 80, 0.4);
+    }
+
+    /* Focused Error Placeholder */
+    .field[data-state='error'] input:focus::-webkit-input-placeholder {
+      color: rgba(255, 80, 80, 0.7);
+    }
+    .field[data-state='error'] input:focus::-moz-placeholder {
+      color: rgba(255, 80, 80, 0.7);
+    }
+
+    /*--------------------
+        Disabled
+    ---------------------*/
+    .field[data-disabled='true'] {
+      opacity: 0.5;
+    }
+
+
+
+  </style>
+  <div class="field">
+    <label>
+      <content select="fn-input-label"></content>
+    </label>
+    <input />
+  </div>
+</template>
+<script type="text/javascript">
+  var InputComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-input", "base");
+      shadow.appendChild(tpl);
+
+      /* options */
+      if (this.hasAttribute('data-placeholder')) {this.setPlaceholder();}
+      if (this.hasAttribute('data-state')) {this.setState();}
+      if (this.hasAttribute('data-readonly')) {this.setReadonly();}
+      if (this.hasAttribute('data-disabled')) {this.disable();}
+
+      this.attributeChangedCallback();
+
+      this.shadowRoot.querySelector('input').addEventListener('keyup', 
+        function(e) {
+        //Enter
+        if (e.keyCode == 13) {
+          var ev = new CustomEvent("fn-input-submit", {
+            bubbles: true,
+            cancelable: true
+          });
+          this.dispatchEvent(ev);
+        }
+      }, false);
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-placeholder':
+          this.setPlaceholder();
+          break;
+        case 'data-state':
+          this.setState();
+          break;
+        case 'data-readonly':
+          this.setReadonly();
+          break;
+        case 'data-disabled':
+          this.disable();
+          break;
+        default:
+          break;
+      }
+    };
+
+    this.setPlaceholder = function() {
+      var placeholder = this.getAttribute('data-placeholder');
+      this.shadowRoot.querySelector('input').setAttribute(
+        'placeholder', placeholder);
+    };
+
+    this.setState = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      field.setAttribute('data-state', this.getAttribute('data-state'));
+    };
+
+    this.setReadonly = function() {
+      var input = this.shadowRoot.querySelector("input");
+      input.readOnly = this.getAttribute('data-readonly');
+    }
+
+    this.disable = function() {
+      var input = this.shadowRoot.querySelector("input");
+      var field = this.shadowRoot.querySelector(".field");
+      var state = this.getAttribute('data-disabled');
+      input.readOnly = state;
+      field.setAttribute('data-disabled', state);
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-input', InputComponent);
+  }, false);
+</script>
