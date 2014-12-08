@@ -128,24 +128,112 @@
     /*--------------------
         Inline
     ---------------------*/
-    .field[data-style='inline'] {
+    .field.inline {
       display: inline-block;
       float: none;
       margin: 0em 1em 0em 0em;
       padding: 0em;
     }
 
-    .field[data-style='inline'] label,
-    .field[data-style='inline'] input{
+    .field.inline label,
+    .field.inline input{
       display: inline-block;
       width: auto;
       margin-top: 0em;
       margin-bottom: 0em;
       vertical-align: middle;
-      font-size: 0.9285em;
     }
 
-
+    /*--------------------
+        Size
+    ---------------------*/
+    .field.mini {
+      font-size: 0.8125rem;
+    }
+    .field.small {
+      font-size: 0.875rem;
+    }
+    .field {
+      font-size: 1rem;
+    }
+    .field.large {
+      font-size: 1.125rem;
+    }
+    .field.big {
+      font-size: 1.25rem;
+    }
+    .field.huge {
+      font-size: 1.375rem;
+    }
+    .field.massive {
+      font-size: 1.5rem;
+    }
+    .field.mini input {
+      font-size: 0.8125rem;
+    }
+    .field.small input {
+      font-size: 0.875rem;
+    }
+    .field input {
+      font-size: 1rem;
+    }
+    .field.large input {
+      font-size: 1.125rem;
+    }
+    .field.big input {
+      font-size: 1.25rem;
+    }
+    .field.huge input {
+      font-size: 1.375rem;
+    }
+    .field.massive input {
+      font-size: 1.5rem;
+    }
+    .field.mini input::-webkit-input-placeholder {
+      font-size: 0.8125rem;
+    }
+    .field.small input::-webkit-input-placeholder {
+      font-size: 0.875rem;
+    }
+    .field input::-webkit-input-placeholder {
+      font-size: 1rem;
+    }
+    .field.large input::-webkit-input-placeholder {
+      font-size: 1.125rem;
+    }
+    .field.big input::-webkit-input-placeholder {
+      font-size: 1.25rem;
+    }
+    .field.huge input::-webkit-input-placeholder {
+      font-size: 1.375rem;
+    }
+    .field.massive input::-webkit-input-placeholder {
+      font-size: 1.5rem;
+    }
+    .field.mini input::-moz-placeholder {
+      font-size: 0.8125rem;
+    }
+    .field.small input::-moz-placeholder {
+      font-size: 0.875rem;
+    }
+    .field input::-moz-placeholder {
+      font-size: 1rem;
+    }
+    .field.large input::-moz-placeholder {
+      font-size: 1.125rem;
+    }
+    .field.huge input::-moz-placeholder {
+      font-size: 1.375rem;
+    }
+    .field.massive input::-moz-placeholder {
+      font-size: 1.5rem;
+    }
+    .field.mini input:focus::-webkit-input-placeholder {
+      font-size: 0.8125rem;
+    }
+    .field.massive input:focus::-webkit-input-placeholder {
+      font-size: 1.5rem;
+    }
 
   </style>
   <div class="field">
@@ -219,7 +307,7 @@
 
     this.setStyle = function() {
       var field= this.shadowRoot.querySelector(".field");
-      field.setAttribute('data-style', this.getAttribute('data-style'));
+      field.className += " " + this.getAttribute('data-style');
     }
 
     this.setReadonly = function() {
