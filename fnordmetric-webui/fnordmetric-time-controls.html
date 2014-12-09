@@ -10,17 +10,31 @@
     
 -->
 <template id="fnordmetric-time-controls-base-tpl">
+  <style type='text/css'>
+    fn-datepicker { 
+      display:inline-block;
+      width: 220px;
+    }
+  </style>
   <fnordmetric-controls type='primary-small'>
     <fnordmetric-controls-section data-position='left'>
-      <fn-dropdown id='timerange' style="float:left;">
+      <fn-dropdown id='timerange' data-style="input small">
+        <fn-dropdown-header>1 hour</fn-dropdown-header>
+        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+        <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
       </fn-dropdown>
-      <fn-datepicker time-select='input'>
+      <fn-datepicker data-time-select>
       </fn-datepicker>
     </fnordmetric-controls-section>
     <fnordmetric-controls-section data-position='right'>
       <fn-daterangepicker past-selectable='selectable'>
       </fn-daterangepicker>
-    <fnordmetric-controls-section>
+    </fnordmetric-controls-section>
   </fnordmetric-controls>
 
 </template>

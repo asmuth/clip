@@ -72,6 +72,7 @@
       -webkit-transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
       transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
       border: 1px solid #d4d4d5;
+      content: '';
     }
 
     .field label:after,
@@ -87,6 +88,12 @@
       color: rgba(0,0,0,.8);
       -webkit-transition: all .1s ease;
       transition: all .1s ease;
+      content: '';
+    }
+
+    .field[data-active] label:after {
+      opacity: 1;
+      content: 'x';
     }
 
     .field[data-type='radio'] label:before {
@@ -98,6 +105,7 @@
       -webkit-transform: none;
       -ms-transform: none;
       transform: none;
+      content: '';
     }
 
     .field[data-type='radio'] label:after {
@@ -113,8 +121,21 @@
       -ms-transform: scale(0.42857143);
       transform: scale(0.42857143);
       background-color: rgba(0,0,0,.8);
+      content: '';
     }
 
+    .field[data-state='error'] label {
+      color: #d95c5c;
+    }
+
+    .field[data-state='error'] label:before {
+      background: #fff0f0;
+      border-color: #dbb1b1;
+    }
+
+    .field[data-state='error'] label:after {
+      color: #d95c5c;
+    }
 
   </style>
 
@@ -133,14 +154,19 @@
       shadow.appendChild(tpl);
 
       if (this.hasAttribute('data-type')) {this.setInputType();}
+      if (this.hasAttribute('data-state')) {this.setState();}
 
       this.attributeChangedCallback();
 
       this.addEventListener('click', function() {
         if (this.hasAttribute('data-active')) {
           this.removeAttribute('data-active');
+          this.shadowRoot.querySelector(
+            ".field").removeAttribute("data-active");
         } else {
           this.setAttribute('data-active', 'active');
+          this.shadowRoot.querySelector(
+            ".field").setAttribute('data-active', 'active');
            var ev = new CustomEvent("fn-checkbox-submit", {
             bubbles: true,
             cancelable: true
@@ -152,8 +178,15 @@
     };
 
     this.attributeChangedCallback = function(attr, new_val, old_val) {
-      if (attr == "data-type") {
-        this.setInputType();
+      switch (attr) {
+        case 'data-type':
+          this.setInputType();
+          break;
+        case 'data-state':
+          this.setState();
+          break;
+        default:
+          break;
       }
     };
 
@@ -165,6 +198,11 @@
         input.type = type;
         field.setAttribute('data-type', type);
       }
+    };
+
+    this.setState = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      field.setAttribute('data-state', this.getAttribute('data-state'));
     };
   };
 

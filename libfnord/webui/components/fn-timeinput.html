@@ -20,13 +20,18 @@
     }
 
     fn-input {
-      float: left;
+      position:relative;
+      left: 15%;
       width: 30%;
+      display: block;
+      float:left;
     }
 
 
     b {
       float:left;
+      position: relative;
+      left: 15%;
       margin-left: 5px;
       margin-right: 5px;
       line-height: 42px;
@@ -34,9 +39,9 @@
   </style>
 
   <div id="timeinput_container">
-    <fn-input id="hours"></fn-input>
+    <fn-input id="hours" data-style="small"></fn-input>
     <b>:</b>
-    <fn-input id="minutes" />
+    <fn-input id="minutes" data-style="small"></fn-input>
   </div>
 </template>
 <script type="text/javascript">

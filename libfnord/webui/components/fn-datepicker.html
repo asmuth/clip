@@ -10,29 +10,39 @@
 -->
 <template id='fn-datepicker-base-tpl'>
   <style>
-    input {
-      height: 28px;
-      line-height: 28px;
-      padding: 0 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      border: 1px solid #b3c2d0;
-      color: #545758;
-      width: 200px;
+    fn-input {
+      width: 218px;
+      display:block;
     }
 
-    input:hover {
+    fn-input:hover {
       cursor: pointer;
     }
 
     #datepicker_widget[data-active='active'] {
       position:absolute;
-      z-index: 999;
+      display:inline-block;
       background: #fff;
-      border: 1px solid rgb(226, 232, 237);
-      border-radius: 1px;
       width: 216px;
-      padding-top: 9px;
+      outline: 0;
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      color: rgba(0,0,0,.8);
+      z-index: 100;
+      cursor: pointer;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+      border: 1px solid rgba(39,41,43,.15);
+      border-radius: 0 0 .2857rem .2857rem;
+      -webkit-transition: opacity .2s ease;
+      transition: opacity .2s ease;
+      z-index: 11;
+      will-change: transform,opacity;
+    }
+
+    fn-input-time {
+      margin:auto;
+      display:block;
+      width: 100%;
     }
 
     table {
@@ -41,6 +51,7 @@
       border: 1px solid rgb(226, 232, 237);
       border-radius: 3px;
       border-collapse: collapse;
+      font-size: 1rem;
     }
 
     table th {
@@ -57,7 +68,7 @@
       height: 20px;
       line-height: 20px;
       text-align:center;
-      color: rgb(115, 134, 148);
+      color: #60707f;
     }
 
     table td.selectable{
@@ -69,15 +80,15 @@
     }
 
     table td.highlight {
-      background-color: rgb(226, 232, 237);
+      background-color: #f6f8fa;
     }
 
     table td.highlight_border {
-       border: 1px solid #444;
+      border: 1px solid rgb(226, 232, 237);
     }
 
     .fa {
-      color: #444;
+      color:  #60707f;
       padding-left: 5px;
       padding-right: 5px;
     }
@@ -87,7 +98,7 @@
     }
 
   </style>
-  <fn-input data-readonly='true'></fn-input>
+  <fn-input data-readonly='true' data-style='small'></fn-input>
   <div id="datepicker_widget">
   </div>
 </template>
@@ -99,7 +110,7 @@
       var base = this;
       shadow.appendChild(tpl);
 
-      var input = this.shadowRoot.querySelector("input");
+      var input = this.shadowRoot.querySelector("fn-input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
 
       //var select_time_by = this.getAttribute("time-select");
@@ -154,7 +165,7 @@
 
     this.renderTimeInput = function() {
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
-      var time_input = document.createElement("fn-timeinput");
+      var time_input = document.createElement("fn-input-time");
 
       var selected_date = this.getSelectedDate();
 
