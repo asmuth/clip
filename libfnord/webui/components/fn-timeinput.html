@@ -91,7 +91,7 @@
 
     this.validateHoursInput = function(value) {
       var input = this.shadowRoot.querySelector("#hours");
-      if (value > 23) {
+      if (value > 23 || isNaN(value)) {
         input.setAttribute('data-state', 'error');
       } else {
         input.removeAttribute('data-state');
@@ -102,7 +102,7 @@
 
     this.validateMinutesInput = function(value) {
       var input = this.shadowRoot.querySelector("#minutes");
-      if (value > 59) {
+      if (value > 59 || isNaN(value)) {
         input.setAttribute('data-state', 'error');
       } else {
         input.removeAttribute('data-state');

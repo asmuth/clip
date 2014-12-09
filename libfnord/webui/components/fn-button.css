@@ -3,7 +3,9 @@
  *   https://github.com/Semantic-Org/Semantic-UI
  *   http://www.semantic-ui.com/
  */
-fn-button, fn-button * {
+fn-button,
+.fn-button,
+fn-button * {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -13,7 +15,8 @@ fn-button, fn-button * {
   cursor: pointer;
 }
 
-fn-button {
+fn-button,
+.fn-button {
   cursor: pointer;
   display: inline-block;
   min-height: 1em;
@@ -45,13 +48,16 @@ fn-button {
           transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }
-fn-button:hover {
+
+fn-button:hover,
+.fn-button:hover {
   background: #fafafa !important;
   color: rgba(0, 0, 0, 0.8) !important;
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px rgba(39, 41, 43, 0.15) inset;
 }
 
-fn-button:focus {
+fn-button:focus,
+.fn-button:focus {
   background-color: '';
   background-image: '';
   box-shadow: 0px 0px 0px 1px transparent inset, 0px 0px 1px rgba(81, 167, 232, 0.8) inset, 0px 0px 3px 2px rgba(81, 167, 232, 0.8);
@@ -59,7 +65,8 @@ fn-button:focus {
 }
 
 
-fn-button i {
+fn-button i,
+.fn-button i {
   display: inline-block;
   opacity: 1;
   margin: 0 .25rem 0 0;
@@ -81,7 +88,8 @@ fn-button i {
 /*******************************
      Fluid
 *******************************/
-fn-button[data-style='fluid'] {
+fn-button[data-style='fluid'],
+.fn-button[data-style='fluid']{
   display: block;
   width: 100%
 }
