@@ -8,8 +8,17 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style type='text/css'>
+  fn-datepicker {
+    display: block;
+  }
+
+  fn-datepicker:hover {
+    cursor: pointer;
+  }
+</style>
 <template id='fn-datepicker-base-tpl'>
-  <style>
+  <style type='text/css'>
     fn-input {
       width: 218px;
       display:block;
@@ -98,7 +107,8 @@
     }
 
   </style>
-  <fn-input data-readonly='true' data-style='small'></fn-input>
+  <fn-input data-readonly='true' data-style='small'>
+  </fn-input>
   <div id="datepicker_widget">
   </div>
 </template>
@@ -150,8 +160,9 @@
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-timestamp") {
-        this.shadowRoot.querySelector("input").value = 
-          this.createDateTimeString(parseInt(new_val), 10);
+        var value = this.createDateTimeString(parseInt(new_val), 10);
+        this.shadowRoot.querySelector(
+          "fn-input").setAttribute('data-value', value);
       }
     };
 
@@ -169,13 +180,13 @@
 
       var selected_date = this.getSelectedDate();
 
-      time_input.setHoursValue(selected_date.getHours());
-      time_input.setMinutesValue(selected_date.getMinutes());
+      time_input.setAttribute('data-hours-value', selected_date.getHours());
+      time_input.setAttribute('data-minutes-value', selected_date.getMinutes());
       widget.appendChild(time_input);
 
       var base = this;
 
-      time_input.addEventListener('fn-timeinput-submit', function() {
+      time_input.addEventListener('fn-input-time-submit', function() {
         base.onSelect();
       }, false);
     }
@@ -383,10 +394,17 @@
     };
 
     this.onSelect = function(date, month, year) {
-      var input = this.shadowRoot.querySelector("input");
-      var time_values = this.shadowRoot.querySelector("fn-timeinput").getValues();
-
+      var input = this.shadowRoot.querySelector("fn-input");
       var selected_date = this.getSelectedDate();
+
+      console.log("on select");
+      var hours = "00";
+      var minutes = "01";
+      if (this.hasAttribute('data-time-select')) {
+        var time_input = this.shadowRoot.querySelector("fn-input-time");
+        hours = time_input.getAttribute('data-hours-value');
+        minutes = time_input.getAttribute('data-minutes-value');
+      }
 
       /* fallback for time inputs */
       var date = (date == undefined) ? 
@@ -396,8 +414,6 @@
       var year = (year == undefined) ?
         selected_date.getFullYear() : year;
 
-      var hours = time_values.hours;
-      var minutes = time_values.minutes;
 
       var ts = new Date(year, month, date, hours, minutes).getTime();
       if (ts <= Date.now() ) {

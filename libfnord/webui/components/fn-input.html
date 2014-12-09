@@ -249,9 +249,11 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-input", "base");
       shadow.appendChild(tpl);
+      var base = this;
 
       /* options */
       if (this.hasAttribute('data-placeholder')) {this.setPlaceholder();}
+      if (this.hasAttribute('data-value')) {this.setValue();}
       if (this.hasAttribute('data-state')) {this.setState();}
       if (this.hasAttribute('data-readonly')) {this.setReadonly();}
       if (this.hasAttribute('data-disabled')) {this.disable();}
@@ -265,8 +267,10 @@
         if (e.keyCode == 13) {
           var ev = new CustomEvent("fn-input-submit", {
             bubbles: true,
-            cancelable: true
+            cancelable: true,
+            detail: this.value
           });
+          base.setAttribute('data-value', this.value);
           this.dispatchEvent(ev);
         }
       }, false);
@@ -274,6 +278,9 @@
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
+        case 'data-value':
+          this.setValue();
+          break;
         case 'data-placeholder':
           this.setPlaceholder();
           break;
@@ -292,6 +299,11 @@
         default:
           break;
       }
+    };
+
+    this.setValue = function() {
+      var value = this.getAttribute('data-value');
+      this.shadowRoot.querySelector("input").value = value;
     };
 
     this.setPlaceholder = function() {
