@@ -123,11 +123,8 @@
       var input = this.shadowRoot.querySelector("fn-input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
 
-      //var select_time_by = this.getAttribute("time-select");
 
-      if (this.getAttribute('data-timestamp') != null) {
-        input.value = this.createDateTimeString(this.getAttribute('data-timestamp'));
-      }
+      if (this.hasAttribute('data-timestamp')) {this.setTimeValues();}
 
       this.attributeChangedCallback();
 
@@ -160,11 +157,16 @@
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-timestamp") {
-        var value = this.createDateTimeString(parseInt(new_val), 10);
-        this.shadowRoot.querySelector(
-          "fn-input").setAttribute('data-value', value);
+        this.setTimeValues();
       }
     };
+
+    this.setTimeValues = function() {
+      var value = parseInt(this.getAttribute('data-timestamp'), 10);
+      var str = this.createDateTimeString(value);
+      this.shadowRoot.querySelector("fn-input").setAttribute(
+        'data-value', str);
+    }
 
     this.getSelectedDate = function() {
       if (this.hasAttribute('data-timestamp')) {
@@ -328,15 +330,26 @@
     };
 
     this.isSelectable = function(date, month, year) {
+      if (!(this.hasAttribute('data-selectable'))) {return true;}
       var now = new Date();
       var cur_year = now.getFullYear();
       var cur_month = now.getMonth();
       var cur_date = now.getDate();
+      var period = this.getAttribute('data-selectable');
 
-      if (month == cur_month) {
-        return date <= cur_date;
+      if (period == "past") {
+        if (month == cur_month) {
+          return date <= cur_date;
+        }
+        return (year <= cur_year && month < cur_month);
       }
-      return (year <= cur_year && month < cur_month);
+
+      if (period == "future") {
+        if (month == cur_month) {
+          return date >= cur_date;
+        }
+        return (year >= cur_year && month > cur_month);
+      }
     };
 
     this.cellName = function(date, month, year) {
@@ -397,7 +410,6 @@
       var input = this.shadowRoot.querySelector("fn-input");
       var selected_date = this.getSelectedDate();
 
-      console.log("on select");
       var hours = "00";
       var minutes = "01";
       if (this.hasAttribute('data-time-select')) {
@@ -414,9 +426,19 @@
       var year = (year == undefined) ?
         selected_date.getFullYear() : year;
 
-
       var ts = new Date(year, month, date, hours, minutes).getTime();
-      if (ts <= Date.now() ) {
+
+      var fireEvent;
+      var selectable = this.getAttribute('data-selectable');
+      if (selectable == "past") {
+        fireEvent = (ts <= Date.now());
+      } else if (selectable == 'future') {
+        fireEvent = (ts >= Date.now());
+      } else {
+        fireEvent = true;
+      }
+
+      if (fireEvent) {
         this.setAttribute('data-timestamp', ts);
         this.resetDatepicker();
         this.fireSelectDateEvent();

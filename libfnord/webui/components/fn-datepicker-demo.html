@@ -8,14 +8,40 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style type='text/css'>
+  fn-datepicker#left {
+    float:left;
+    width: auto;
+  }
+  .info_box {
+    float:left;
+    width: 40%;
+    margin-left: 10px;
+  }
+</style>
 <template id="fn-datepicker-demo-base-tpl">
-  <section>
-    <h1><i>Example 1 &raquo;</i> Simple Datepicker</h1>
-    <fn-datepicker></fn-datepicker>
+  <section style="height:130px;">
+    <h1><i>Example 1 &raquo;</i> Basic</h1>
+    <fn-datepicker id='left'></fn-datepicker>
+    <div class="info_box">Per Default is the current date and time preselected</div>
   </section>
   <section>
-    <h1><i>Example 1 &raquo;</i> Datepicker with Time Input</h1>
+    <h1><i>Example 2 &raquo;</i> With Time Input</h1>
     <fn-datepicker data-time-select></fn-datepicker>
   </section>
+  <section>
+    <h1><i>Example 3 &raquo;</i> Datepicker with Preselected Date</h1>
+    <fn-datepicker data-time-select data-timestamp='1418135883935'></fn-datepicker>
+  </section>
+  <section style="height:130px;">
+    <h1><i>Example 4 &raquo;</i> Datepicker with restricted data selection</h1>
+    <fn-datepicker id="left" data-time-select data-timestamp='1418135883935' data-selectable='past'>
+    </fn-datepicker>
+    <div class="info_box">
+      Future and past dates are per default selectable if no data-selectable attribute is set
+    </div>
+  </section>
+
+
 
 </template>
