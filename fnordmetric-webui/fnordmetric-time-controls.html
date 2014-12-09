@@ -7,11 +7,10 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
-    
 -->
 <template id="fnordmetric-time-controls-base-tpl">
   <style type='text/css'>
-    fn-datepicker { 
+    fn-datepicker {
       display:inline-block;
       width: 220px;
     }
@@ -28,11 +27,11 @@
         <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
         <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
       </fn-dropdown>
-      <fn-datepicker data-time-select>
+      <fn-datepicker data-time-select data-selectable='past'>
       </fn-datepicker>
     </fnordmetric-controls-section>
     <fnordmetric-controls-section data-position='right'>
-      <fn-daterangepicker past-selectable='selectable'>
+      <fn-daterangepicker data-selectable='past'>
       </fn-daterangepicker>
     </fnordmetric-controls-section>
   </fnordmetric-controls>
@@ -44,7 +43,69 @@
       console.log("time controls");
       var tpl = Fnord.getTemplate("fnordmetric-time-controls", "base");
       this.appendChild(tpl);
-    }
+      var base = this;
+
+      if (this.hasAttribute('data-timestamp') ||
+          this.hasAttribute('data-daterange')) {
+            this.updateDateTimeElems();
+      }
+
+      var daterangepicker = this.querySelector('fn-daterangepicker');
+      var dropdown = this.querySelector('fn-dropdown');
+      var datepicker = this.querySelector('fn-datepicker');
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+          var val = e.srcElement.getAttribute('data-value');
+          val = parseInt(val, 10) * 1000;
+          daterangepicker.setAttribute('data-daterange', val);
+      }, false);
+
+      datepicker.addEventListener("fn-datepicker-select", function(e) {
+          console.log("datepicker select");
+          console.log(e);
+      }, false);
+
+      daterangepicker.addEventListener("fn-daterangepicker-select-previous",
+        function(e) {
+          var end_time = this.getAttribute('data-endtime');
+          datepicker.setAttribute('data-timestamp', end_time);
+      }, false);
+
+      this.querySelector(
+        "fn-daterangepicker").addEventListener("fn-daterangepicker-select-next",
+        function() {
+          var end_time = this.getAttribute('data-endtime');
+          datepicker.setAttribute('data-timestamp', end_time);
+      }, false);
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-timestamp' || attr == 'data-daterange') {
+        this.updateDateTimeElems();
+      }
+    };
+
+    this.updateDateTimeElems = function() {
+      var daterangepicker = this.querySelector('fn-daterangepicker');
+      var dropdown = this.querySelector('fn-dropdown');
+      var datepicker = this.querySelector('fn-datepicker');
+
+      var timestamp = this.getAttribute('data-timestamp');
+      if (timestamp != null) {
+        timestamp = parseInt(timestamp, 10) * 1000;
+        datepicker.setAttribute('data-timestamp', timestamp);
+        daterangepicker.setAttribute('data-endtime', timestamp);
+      }
+
+      var date_range = this.getAttribute('data-daterange');
+      if (date_range != null) {
+        var item = dropdown.querySelector(
+          "fn-dropdown-item[data-value='" + date_range + "']");
+        item.setAttribute('data-active', 'active');
+        date_range = parseInt(date_range, 10) * 1000;
+        daterangepicker.setAttribute('data-daterange', date_range);
+      }
+    };
   };
 
   window.addEventListener('fn-ready', function() {
