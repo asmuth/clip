@@ -18,62 +18,14 @@
       display:block;
     }
 
-    input {
-      position: relative;
-      left: 15%;
+    fn-input {
       display: block;
       float:left;
-      margin: 0em;
-      width: 30%;
-      outline: none;
-      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-      text-align: left;
-      line-height: 1.2142em;
-      font-family: "Helvetica Neue", "Helvetica", Arial;
-      padding: 0.67861em 1em;
-      background: #ffffff;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      color: rgba(0, 0, 0, 0.8);
-      border-radius: 0.2857rem;
-      -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-              transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      box-shadow: none;
-      font-size: 0.875rem;
-    }
-
-    input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.4);
-      font-weight: 500;
-    }
-
-    input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.4);
-      font-weight: 500;
-    }
-    input:focus {
-      border-color: rgba(39, 41, 43, 0.3);
-      background: '';
-      color: rgba(0, 0, 0, 0.8);
-      box-shadow: none;
-    }
-    input:focus input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.8);
-    }
-    input:focus input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.8);
-    }
-
-    input[data-state='error']  {
-      background-color: #fff0f0;
-      border-color: #dbb1b1;
-      color: #d95c5c;
-      box-shadow: none;
+      width: 60px;
     }
 
     b {
       float:left;
-      position: relative;
-      left: 15%;
       margin-left: 5px;
       margin-right: 5px;
       line-height: 42px;
@@ -81,9 +33,9 @@
   </style>
 
   <div id="timeinput_container">
-    <input id="hours" />
+    <fn-input id="hours" data-style="input small"></fn-input>
     <b>:</b>
-    <input id="minutes" />
+    <fn-input id="minutes" data-style="input small"></fn-input>
   </div>
 </template>
 <script type="text/javascript">
@@ -102,16 +54,12 @@
 
       this.attributeChangedCallback();
 
-      hours_input.addEventListener('keyup', function(e) {
-        if (e.keyCode == 13) {
-          base.validateHoursInput(this.value);
-        }
+      hours_input.addEventListener('fn-input-submit', function(e) {
+        base.validateHoursInput(e.detail);
       }, false);
 
-      minutes_input.addEventListener('keyup', function(e) {
-        if (e.keyCode == 13) {
-          base.validateMinutesInput(this.value);
-        }
+      minutes_input.addEventListener('fn-input-submit', function(e) {
+        base.validateMinutesInput(e.detail);
       }, false);
     };
 

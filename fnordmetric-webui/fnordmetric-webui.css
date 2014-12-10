@@ -31,9 +31,7 @@ fn-appbar /deep/ fn-search {
   font-weight: 600;
 }
 
-fnordmetric-query-editor /deep/ fn-splitpane {
-  background-color: #e9ebed;
-}
+
 
 fnordmetric-query-editor /deep/ svg {
   max-width: 1100px;
@@ -44,89 +42,7 @@ fnordmetric-query-editor /deep/ .svg {
   text-align:center;
 }
 
-fnordmetric-query-editor /deep/ .navbar {
-  height: 39px;
-  width: 100%;
-  margin: 0px;
-  line-height: 39px;
-  border-bottom: 1px solid #dbdedf;
-  font-size: 95%;
-}
 
-fnordmetric-query-editor /deep/ .navbar {
-  background-color: #fff;
-}
-
-fnordmetric-query-editor /deep/ .navbar a {
-  text-decoration: none;
-  color: #545758;
-}
-
-fnordmetric-query-editor /deep/ .editor_type_picker {
-  float: left;
-  background: #f6f8fa;
-  border-right: 1px solid #dbdedf;
-  height: 39px;
-  display: block;
-  width: 90px;
-  text-align: center;
-  padding: 0 15px 0 15px;
-  line-height: 41px;
-  font-size: 95%;
-}
-
-fnordmetric-query-editor /deep/ editor_type_picker i {
-  font-size: 10px;
-  position: relative;
-  top: -1px;
-  left: -3px;
-}
-
-fnordmetric-query-editor /deep/ .editor_type_picker i.fa-chevron-down{
-  left: 6px;
-  opacity: 0.6;
-}
-
-fnordmetric-query-editor /deep/ .icobtn + .icobtn {
-  margin-left: 5px;
-}
-
-fnordmetric-query-editor /deep/ .icobtn {
-  float: left;
-  display: block;
-  height: 40px;
-  width: 30px;
-  margin-left: 10px;
-  line-height: 40px;
-  text-align: center;
-  cursor: pointer;
-}
-
-fnordmetric-query-editor /deep/ .icobtn:hover {
-  color: #009fe9;
-}
-
-fnordmetric-query-editor /deep/ .run_query_btn i {
-  margin-right: 4px;
-}
-
-fnordmetric-query-editor /deep/ .run_query_btn:hover {
-  background: #edf0f2;
-  color: #545758;
-}
-
-fnordmetric-query-editor /deep/ .run_query_btn {
-  font-weight: 500;
-  cursor: pointer;
-  height: 29px;
-  line-height: 30px;
-  margin-right: 8px;
-  margin-top: 6px;
-  float: right;
-  padding: 0 12px;
-  border-radius: 4px;
-  color: #009fe9;
-}
 
 fnordmetric-query-editor /deep/ .result_card {
   background: #fff;

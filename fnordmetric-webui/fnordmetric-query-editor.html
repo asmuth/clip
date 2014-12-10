@@ -7,14 +7,84 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
+  var editor_picker = document.createElement("div");
+      editor_picker.className = "editor_type_picker";
+      editor_picker.innerHTML = 
+        "<i class='fa fa-database'></i> SQL Editor";
+      button_bar.appendChild(editor_picker);
+
+      var split_btn = document.createElement("i");
+      split_btn.className = "fa fa-columns icobtn";
+      button_bar.appendChild(split_btn);
+
+      var refresh_btn = document.createElement("i");
+      refresh_btn.className = "fa fa-refresh icobtn";
+      button_bar.appendChild(refresh_btn);
+
+      var exec_btn = document.createElement("span");
+      exec_btn.className = "run_query_btn";
+      exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
+
 -->
-<style type="text/css">
-  
-</style>
+
 
 <template id="fnordmetric-query-editor-base-tpl">
+  <style>
+    fn-splitpane {
+      height: 90%;
+      background-color: #e9ebed;
+    }
+
+    .navbar {
+      display:block;
+      height: 45px;
+      width: 100%;
+      margin: 0px;
+      line-height: 39px;
+      font-size: 95%;
+      padding: 5px 5px;
+      background-color: #fff;
+    }
+
+    .navbar fn-button {
+      float:left;
+    }
+
+    .navbar fn-button#execute {
+      color: #009fe9;
+      float:right;
+    }
+
+
+
+    fn-codeeditor {
+      height: 100%;
+    }
+
+
+
+  </style>
   <fn-loader data-loading data-loader-type="loader3">
-    <fn-splitpane id="splitpane" data-split="vertical" left-width-relative='30'>
+    <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-min-position-vertical='420' data-min-position-horizontal='200'>
+      <fn-splitpane-left>
+        <div class="navbar">
+          <fn-button id="editor">
+            <i class='fa fa-database'></i> SQL Editor
+          </fn-button>
+          <fn-button id="split">
+            <i class='fa fa-columns'></i>
+          </fn-button>
+          <fn-button id="refresh">
+            <i class='fa fa-refresh'></i>
+          </fn-button>
+          <fn-button id='execute'>
+            <i class='fa fa-bolt'></i> Run Query
+          </fn-button>
+        </div>
+        <fn-codeeditor></fn-codeeditor>
+      </fn-splitpane-left>
+      <fn-splitpane-right>
+      </fn-splitpane-right>
     </fn-splitpane>
   </fn-loader>
 </template>
@@ -25,20 +95,31 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fnordmetric-query-editor", "base");
       this.appendChild(tpl);
+      var base = this;
 
       var loader = this.querySelector("fn-loader");
       loader.removeAttribute("data-loading");
 
-      this.renderNavBar();
-      this.renderCodeEditor();
+      var codeeditor = this.querySelector('fn-codeeditor');
+
+
+      this.initButtons();
 
       if (this.getAttribute('data-url') != null) {
         var params =
           FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
         var query = params.query_params.innerViewValue;
-        splitpane.shadowRoot.querySelector("fn-codeeditor").setValue(query);
+        codeeditor.setValue(query);
         this.runQuery(query);
       }
+
+      codeeditor.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
+          e.preventDefault();
+          base.updateUrl();
+        }
+      }, false);
+
 
 
       this.attributeChangedCallback();
@@ -176,72 +257,28 @@
       loader.appendChild(result_card);
     }
 
-    this.renderCodeEditor = function() {
-      var splitpane = this.querySelector("fn-splitpane");
-      var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
 
-      var code_editor = document.createElement("fn-codeeditor");
-      left_pane.appendChild(code_editor);
-
-      var base = this;
-
-      code_editor.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
-          e.preventDefault();
-          base.updateUrl();
-        }
-      }, false);
-    }
-
-    this.renderNavBar = function() {
-      var splitpane = this.querySelector("fn-splitpane");
-      var left_pane = splitpane.shadowRoot.querySelector("fn-splitpane-left");
+    this.initButtons = function() {
+      console.log("render nabar");
       var base = this;
       var app = document.querySelector("fnordmetric-app");
+      var splitpane = this.querySelector("fn-splitpane");
 
-      /* render buttons */
-      button_bar = document.createElement("div");
-      button_bar.className = "navbar";
-
-      var editor_picker = document.createElement("div");
-      editor_picker.className = "editor_type_picker";
-      editor_picker.innerHTML = 
-        "<i class='fa fa-database'></i> SQL Editor";
-      button_bar.appendChild(editor_picker);
-
-      var split_btn = document.createElement("i");
-      split_btn.className = "fa fa-columns icobtn";
-      button_bar.appendChild(split_btn);
-
-      var refresh_btn = document.createElement("i");
-      refresh_btn.className = "fa fa-refresh icobtn";
-      button_bar.appendChild(refresh_btn);
-
-      var exec_btn = document.createElement("span");
-      exec_btn.className = "run_query_btn";
-      exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
-      button_bar.appendChild(exec_btn);
-
-      left_pane.appendChild(button_bar);
-
+      var exec_btn = this.querySelector("fn-button#execute");
       exec_btn.onclick = function() {
         base.updateUrl();
       }
 
+      var split_btn = this.querySelector("fn-button#split");
       split_btn.onclick = function(e) {
-        console.log(splitpane.getAttribute("data-split"));
-        if (splitpane.getAttribute("data-split") == "vertical") {
-          splitpane.setAttribute("data-split", "horizontal");
-        } else {
-          splitpane.setAttribute("data-split", "vertical");
-        }
+        splitpane.toggleSplitDirection();
       }
 
+      var refresh_btn = this.querySelector("fn-button#refresh");
       refresh_btn.onclick = function() {
         app.openUrl(base.getAttribute('data-url'));
       }
-
-    }
+    };
 
 
 
