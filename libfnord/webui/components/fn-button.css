@@ -95,6 +95,31 @@ fn-button[data-style='fluid'],
 }
 
 /*******************************
+     Disabled
+*******************************/
+fn-button[data-state='disabled'],
+.fn-button[data-state='disbaled'] {
+  cursor: default;
+  background-color: #dcddde !important;
+  color: rgba(0, 0, 0, 0.4) !important;
+  opacity: 0.3 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+/*******************************
+     Mockup
+*******************************/
+fn-button[data-state='mockup'],
+.fn-button[data-state='mockup'] {
+  cursor: default;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+
+/*******************************
      Button Groups
 *******************************/
 fn-button-group {

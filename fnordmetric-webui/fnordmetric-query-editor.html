@@ -55,20 +55,63 @@
       float:right;
     }
 
-
-
     fn-codeeditor {
       height: 100%;
     }
 
+    .result_card {
+      display: none;
+      background: #fff;
+      margin: 10px;
+      padding: 0;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 3px rgba(0,0,0,.1);
+      border-radius: 1px
 
+    }
+
+    .result_card[data-active] {
+      display: block;
+    }
+
+    .result_card fn-table {
+      width: 100%;
+    }
+
+    .result_card .svg {
+      padding: 10px 10px 20px 10px;
+      text-align:center;
+    }
+
+    .result_card svg {
+      max-width: 1100px;
+    }
+
+    .result_card .controls {
+      padding: 5px 0;
+    }
+
+    .result_card .error_box {
+      width: 90%;
+      margin:20px auto;
+      padding: 9px 14px;
+      background: rgba(230, 126, 34,0.1);
+      border: 1px solid rgba(230, 126, 34,1.0);
+      border-radius: 3px;
+      color: rgba(122, 07, 03,1.0);
+      line-height: 23px;
+    }
+
+    #info.result_card {
+      padding: 15px;
+    }
 
   </style>
   <fn-loader data-loading data-loader-type="loader3">
     <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-min-position-vertical='420' data-min-position-horizontal='200'>
       <fn-splitpane-left>
         <div class="navbar">
-          <fn-button id="editor">
+          <fn-button data-state='mockup' id="editor">
             <i class='fa fa-database'></i> SQL Editor
           </fn-button>
           <fn-button id="split">
@@ -84,6 +127,25 @@
         <fn-codeeditor></fn-codeeditor>
       </fn-splitpane-left>
       <fn-splitpane-right>
+        <fn-loader id="result" data-loader-type="loader3">
+          <div class="result_card" id="error"></div>
+          <div class="result_card" id="chart">
+            <div class="controls">
+              <fn-button data-state="mockup">Result Chart</fn-button>
+              <fn-button style="float:right;"><i class="fa fa-share"></i> Embed</fn-button>
+            </div>
+            <div class="svg">
+            </div>
+          </div>
+          <div class="result_card" id="table">
+            <div class="controls">
+              <fn-button data-state="mockup">Result Table</fn-button>
+            </div>
+            <fn-table data-per-page="25"></fn-table>
+          </div>
+          <div class="result_card" id="info">
+          </div>
+        </fn-loader>
       </fn-splitpane-right>
     </fn-splitpane>
   </fn-loader>
@@ -99,12 +161,9 @@
 
       var loader = this.querySelector("fn-loader");
       loader.removeAttribute("data-loading");
-
-      var codeeditor = this.querySelector('fn-codeeditor');
-
-
       this.initButtons();
 
+      var codeeditor = this.querySelector('fn-codeeditor');
       if (this.getAttribute('data-url') != null) {
         var params =
           FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
@@ -120,8 +179,6 @@
         }
       }, false);
 
-
-
       this.attributeChangedCallback();
     };
 
@@ -132,33 +189,30 @@
             FnordMetric.util.parseQueryString(new_val);
           var query = params.query_params.innerViewValue;
           var splitpane = this.querySelector("fn-splitpane");
-          splitpane.shadowRoot.querySelector("fn-codeeditor").setValue(query);
-          console.log(splitpane.shadowRoot.querySelector("fn-codeeditor"))
+          splitpane.querySelector("fn-codeeditor").setValue(query);
           this.runQuery(query);
-
         }
-
       }
     }
 
     this.updateUrl = function() {
-      var code_editor = splitpane.shadowRoot.querySelector("fn-codeeditor");
+      var code_editor = this.querySelector("fn-codeeditor");
       var query = code_editor.getValue();
-      this.setAttribute('data-url', encodeURIComponent(query));
       var params = {
         innerView : "sql_editor",
         innerViewValue : query};
-      FnordMetric.util.setURLQueryString("query", params, true);
+      var url = FnordMetric.util.setURLQueryString("query", params, true);
+      this.setAttribute('data-url', url);
       this.runQuery(query);
-    }
+    };
 
     this.runQuery = function(query) {
       var base = this;
-
+      this.renderLoadingState();
       Fnord.httpPost("/query", query, function(r, duration) {
         if (r.status == 200 && r.statusText == "OK") {
           var res = JSON.parse(r.response, duration);
-          base.renderResult(res);
+          base.renderResult(res, duration);
           //FnordMetric.extendCharts();
         } else {
           /* server error */
@@ -168,69 +222,56 @@
             "please report an issue at github.com/.../issues.");
         }
       });
-
     };
 
-    this.renderResult = function(response, duration) {
-      var splitpane = this.querySelector("fn-splitpane");
-      var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
-      right_pane.innerHTML = "";
-      var loader = document.createElement("fn-loader");
+    this.renderLoadingState = function() {
+      var loader = this.querySelector("fn-loader#result");
       loader.setAttribute("data-loading", "data-loading");
-      right_pane.appendChild(loader);
+      var result_cards = this.querySelectorAll(".result_card");
+      for (var i = 0; i < result_cards.length; i++) {
+        result_cards[i].removeAttribute('data-active');
+      }
+    }
 
+    this.renderResult = function(response, duration) {
       if (response.status == "error") {
         this.renderError(response.error);
       } else {
         if (response.charts != undefined) {
-          this.renderChart(response.charts, loader);
+          this.renderChart(response.charts);
         }
         if (response.tables != undefined) {
-          this.renderTable(response.tables, loader);
+          this.renderTable(response.tables);
         }
       }
-      //renderExecutionInfo
+      this.renderExecutionInfo(duration);
     };
 
     this.renderError = function(error_message) {
-      var right_pane = splitpane.shadowRoot.querySelector("fn-splitpane-right");
-      right_pane.innerHTML =
+      var loader = this.querySelector("fn-loader#result");
+      loader.removeAttribute('data-loading');
+      var result_card = this.querySelector("#error.result_card");
+      result_card.setAttribute('data-active', 'active');
+      result_card.innerHTML =
         "<div class='error_box'>" + error_message + "</div>";
     };
 
     this.renderChart = function(charts, loader) {
-      var result_card = document.createElement("div");
-      result_card.className = "result_card";
+      var result_card = this.querySelector("#chart.result_card");
+      result_card.setAttribute('data-active', 'active');
 
-      var controls = document.createElement("div");
-      controls.className = "metric_preview_secondary_controls";
-      controls.innerHTML = "<a style='float: left;'>Result Chart</a>";
-
-      var embed_btn = document.createElement("i");
-      embed_btn.className = "fa fa-share";
-      embed_btn.innerHTML = "Embed";
-
-      controls.appendChild(embed_btn);
-      result_card.appendChild(controls);
-
-      var svg = document.createElement("div");
-      svg.className = "svg";
+      var svg = result_card.querySelector(".svg");
       svg.innerHTML = charts[0].svg;
-      result_card.appendChild(svg);
-
-      loader.appendChild(result_card);
     }
 
     this.renderTable = function(tables, loader) {
-      var result_card = document.createElement("div");
-      result_card.className = "result_card";
+      var loader = this.querySelector("fn-loader#result");
+      loader.removeAttribute('data-loading');
 
-      var controls = document.createElement("div");
-      controls.className = "metric_preview_secondary_controls";
-      controls.innerHTML = "<a style='float: left;'>Result Table</a>";
+      var result_card = this.querySelector("#table.result_card");
+      result_card.setAttribute('data-active', 'active');
 
-      var table_elem = document.createElement("fn-table");
-      table_elem.setAttribute("data-per-page", 25);
+      var table_elem = result_card.querySelector("fn-table");
 
       tables.map(function(t) {
         t.columns.map(function(c) {
@@ -250,16 +291,18 @@
         });
         table_elem.renderTable();
       });
+      var loader = this.querySelector("fn-loader#result");
+      loader.removeAttribute('data-loading');
+    };
 
-      loader.removeAttribute("data-loading");
-      result_card.appendChild(controls);
-      result_card.appendChild(table_elem);
-      loader.appendChild(result_card);
+    this.renderExecutionInfo = function(duration) {
+      var result_card = this.querySelector("#info.result_card");
+      result_card.setAttribute('data-active', 'active');
+      result_card.innerHTML = "The query execution took " + duration;
     }
 
 
     this.initButtons = function() {
-      console.log("render nabar");
       var base = this;
       var app = document.querySelector("fnordmetric-app");
       var splitpane = this.querySelector("fn-splitpane");
@@ -276,7 +319,10 @@
 
       var refresh_btn = this.querySelector("fn-button#refresh");
       refresh_btn.onclick = function() {
-        app.openUrl(base.getAttribute('data-url'));
+        var url = base.getAttribute('data-url');
+        if (url != null) {
+          app.openUrl(url);
+        }
       }
     };
 
