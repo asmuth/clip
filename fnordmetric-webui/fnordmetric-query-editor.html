@@ -132,7 +132,9 @@
           <div class="result_card" id="chart">
             <div class="controls">
               <fn-button data-state="mockup">Result Chart</fn-button>
-              <fn-button style="float:right;"><i class="fa fa-share"></i> Embed</fn-button>
+              <fn-button style="float:right;" id="embed">
+                <i class="fa fa-share"></i> Embed
+              </fn-button>
             </div>
             <div class="svg">
             </div>
@@ -148,6 +150,7 @@
         </fn-loader>
       </fn-splitpane-right>
     </fn-splitpane>
+    <fnordmetric-embed-query-popup></fnordmetric-embed-query-popup>
   </fn-loader>
 </template>
 
@@ -324,10 +327,15 @@
           app.openUrl(url);
         }
       }
+
+      var popup = this.querySelector("fnordmetric-embed-query-popup");
+      var embed_btn = this.querySelector("fn-button#embed");
+      console.log(popup);
+      embed_btn.onclick = function() {
+        popup.setAttribute('data-url', base.getAttribute('data-url'));
+        popup.setAttribute('data-active', 'active');
+      }
     };
-
-
-
   };
 
   window.addEventListener("fn-ready", function() {

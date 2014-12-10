@@ -32,6 +32,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/fnord.js");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
   webui_bundle_.addComponent("fnord/components/fn-button.html");
+  webui_bundle_.addComponent("fnord/components/fn-button-group.html");
   webui_bundle_.addComponent("fnord/components/fn-icon.html");
   webui_bundle_.addComponent("fnord/components/fn-input.html");
   webui_bundle_.addComponent("fnord/components/fn-loader.html");
@@ -44,7 +45,6 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-datepicker.html");
   webui_bundle_.addComponent("fnord/components/fn-timeinput.html");
   webui_bundle_.addComponent("fnord/components/fn-daterangepicker.html");
-  webui_bundle_.addComponent("fnord/components/fn-popup.html");
   webui_bundle_.addComponent("fnord/components/fn-tabbar.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-console.html");
@@ -57,6 +57,8 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
+  webui_bundle_.addComponent(
+    "fnordmetric/fnordmetric-embed-query-popup.html");
   webui_bundle_.addComponent(
       "fnordmetric-plugins/hosts/fnordmetric-plugin-hosts.html");
 

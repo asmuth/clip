@@ -123,8 +123,8 @@
       </fn-table>
     </fn-loader>
   </fn-loader>
-  <fnordmetric-metric-preview-popup id="embed">
-  </fnordmetric-metric-preview-popup>
+  <fnordmetric-embed-query-popup>
+  </fnordmetric-embed-query-popup>
 </template>
 
 <script type="text/javascript">
@@ -492,16 +492,13 @@
       }, false);
 
       var embed_btn = this.querySelector("#embed_btn");
+      var popup = this.querySelector("fnordmetric-embed-query-popup");
       embed_btn.addEventListener("fn-button-click", function() {
-        var popup = base.querySelector("fn-popup#embed");
+        //FIXME set data url
+        popup.setAttribute('data-url', base.getAttribute('data-url'));
         popup.setAttribute("data-active", "active");
-        base.renderPopupInnerView();
       }, false);
 
-      /*var embed_popup_tabbar = this.querySelector("fn-tabbar#embed");
-      embed_popup_tabbar.addEventListener("fn-tabbar-click", function() {
-        base.renderPopupInnerView();
-      }, false);*/
 
       var autorefresh_btn = this.querySelector("#auto_refresh");
       var interval_id;
