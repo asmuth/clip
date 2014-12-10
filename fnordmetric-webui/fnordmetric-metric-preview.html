@@ -7,13 +7,84 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
-    "1 second", "5 seconds", "10 seconds", "20 seconds", "30 seconds", 
-        "1 minute", "5 minues", "15 minutes", "30 minutes", "1 hour",
-        "2 hours", "6 hours", "12 hours", "24 hours"];
-
-
 -->
 <template id="fnordmetric-metric-preview-base-tpl">
+  <style type='text/css'>
+    fn-button {
+      box-shadow: none;
+    }
+
+    fn-button#sql_editor {
+      color: #009fe9;
+      font-weight: 500;
+    }
+
+    fn-button .fa-database {
+      font-size: 87%;
+      position: relative;
+      top: -1px;
+    }
+
+    fn-button + fn-button {
+      border-left: 1px solid #ececec;
+      padding-left: 20px;
+    }
+
+    fn-button[auto-refresh-on='on'] {
+      color : #009fe9;
+    }
+
+    .group.group_by fn-button[data-active='active'] {
+      background: rgb(226, 232, 237);
+    }
+
+    .group.group_by fn-button {
+      line-height: 28px;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      padding: 0 8px;
+      text-align: center;
+      font-size: 12px;
+      text-decoration: none;
+      background: #fff;
+      border: 1px solid #b3c2d0;
+      color: #545758;
+      height: 28px;
+      display: block;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .group.aggregation_time_window {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .group.aggregation_time_window fn-dropdown {
+      float:left;
+    }
+
+    .group.aggregation_type {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .group b {
+      font-weight: normal;
+      font-size: 80%;
+      line-height: 12px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .group {
+      height: 100%;
+      float: left;
+      padding: 14px 20px 0 20px;
+    }
+
+  </style>
+
   <fn-loader>
     <h1 class="page_header"><i>Metric</i> &rsaquo; <span></span> </h1>
     <fnordmetric-controls type='primary'>
@@ -91,7 +162,7 @@
         </div>
         <div class='group date'>
           <b>End Time</b>
-          <fn-datepicker time-select='input'>
+          <fn-datepicker data-time-select data-selectable="past">
           </fn-datepicker>
         </div>
       </fnordmetric-controls-section>
@@ -112,7 +183,7 @@
         </fn-button>
       </fnordmetric-controls-section>
       <fnordmetric-controls-section data-position='right'>
-        <fn-daterangepicker past-selectable='selectable'>
+        <fn-daterangepicker data-selectable='past'>
         </fn-daterangepicker>
       <fnordmetric-controls-section>
     </fnordmetric-controls>
