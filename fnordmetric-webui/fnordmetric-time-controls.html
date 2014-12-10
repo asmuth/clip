@@ -9,12 +9,7 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fnordmetric-time-controls-base-tpl">
-  <style type='text/css'>
-    fn-datepicker {
-      display:inline-block;
-      width: 220px;
-    }
-  </style>
+
   <fnordmetric-controls type='primary-small'>
     <fnordmetric-controls-section data-position='left'>
       <fn-dropdown id='timerange' data-style="input small">
@@ -40,10 +35,12 @@
 <script type='text/javascript'>
   var FnordMetricTimeControlsComponent = function() {
     this.createdCallback = function() {
-      console.log("time controls");
       var tpl = Fnord.getTemplate("fnordmetric-time-controls", "base");
       this.appendChild(tpl);
       var base = this;
+
+      var input = document.createElement("fn-datepicker");
+      console.log(input);
 
       if (this.hasAttribute('data-timestamp') ||
           this.hasAttribute('data-daterange')) {

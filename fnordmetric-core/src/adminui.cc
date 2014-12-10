@@ -32,6 +32,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
   webui_bundle_.addComponent("fnord/components/fn-button.html");
   webui_bundle_.addComponent("fnord/components/fn-icon.html");
+  webui_bundle_.addComponent("fnord/components/fn-input.html");
   webui_bundle_.addComponent("fnord/components/fn-loader.html");
   webui_bundle_.addComponent("fnord/components/fn-menu.html");
   webui_bundle_.addComponent("fnord/components/fn-search.html");

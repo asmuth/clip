@@ -8,7 +8,6 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 
-  todo: add seconds-selectable and render third input if attr is set
 -->
 <template id="fn-input-time-base-tpl">
   <style>
@@ -19,14 +18,57 @@
       display:block;
     }
 
-    fn-input {
-      position:relative;
+    input {
+      position: relative;
       left: 15%;
-      width: 30%;
       display: block;
       float:left;
+      margin: 0em;
+      width: 30%;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+      text-align: left;
+      line-height: 1.2142em;
+      font-family: "Helvetica Neue", "Helvetica", Arial;
+      padding: 0.67861em 1em;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(0, 0, 0, 0.8);
+      border-radius: 0.2857rem;
+      -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+              transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: none;
+      font-size: 0.875rem;
     }
 
+    input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 500;
+    }
+
+    input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 500;
+    }
+    input:focus {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+    input:focus input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    input:focus input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    input[data-state='error']  {
+      background-color: #fff0f0;
+      border-color: #dbb1b1;
+      color: #d95c5c;
+      box-shadow: none;
+    }
 
     b {
       float:left;
@@ -39,9 +81,9 @@
   </style>
 
   <div id="timeinput_container">
-    <fn-input id="hours" data-style="small"></fn-input>
+    <input id="hours" />
     <b>:</b>
-    <fn-input id="minutes" data-style="small"></fn-input>
+    <input id="minutes" />
   </div>
 </template>
 <script type="text/javascript">
@@ -60,12 +102,16 @@
 
       this.attributeChangedCallback();
 
-      hours_input.addEventListener('fn-input-submit', function(e) {
-        base.validateHoursInput(e.detail);
+      hours_input.addEventListener('keyup', function(e) {
+        if (e.keyCode == 13) {
+          base.validateHoursInput(this.value);
+        }
       }, false);
 
-      minutes_input.addEventListener('fn-input-submit', function(e) {
-        base.validateMinutesInput(e.detail);
+      minutes_input.addEventListener('keyup', function(e) {
+        if (e.keyCode == 13) {
+          base.validateMinutesInput(this.value);
+        }
       }, false);
     };
 
