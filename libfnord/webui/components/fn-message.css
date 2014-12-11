@@ -92,10 +92,13 @@ fn-message ul li ,
 fn-message ul li:before,
 .fn-message ul li:before {
   position: absolute;
-  content: '';
-  left: -1em;
+  content: "\f111";
+  font-family: FontAwesome;
+  font-size: 0.475em;
+  left: -1.5em;
+  top: 0.525em;
   height: 100%;
-  vertical-align: baseline;
+  vertical-align: middle;
 }
 
 fn-message ul li:last-child,

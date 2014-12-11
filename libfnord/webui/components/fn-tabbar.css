@@ -1,0 +1,106 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+fn-tabbar,
+.fn-tabbar {
+  background-color: transparent;
+  border-bottom: 1px solid #d4d4d5;
+  border-radius: 0em;
+  box-shadow: none !important;
+  margin: 1rem 0;
+  background: #fff;
+  font-weight: 400;
+  display:block;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+  font-size: 14px;
+  line-height: 1.33;
+  color: rgba(0,0,0,.8);
+}
+fn-tabbar fn-tab,
+.fn-tabbar .fn-tab {
+  display: inline-block;
+  padding: .76em .95em;
+  background-color: transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-top: 1px solid transparent;
+  padding-left: 1.4em;
+  padding-right: 1.4em;
+  color: rgba(0, 0, 0, 0.8);
+  vertical-align: middle;
+  line-height: 1;
+  text-decoration: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: opacity .2s ease,background .2s ease,box-shadow .2s ease;
+  transition: opacity .2s ease,background .2s ease,box-shadow .2s ease;
+}
+fn-tabbar fn-tab:before,
+.fn-tabbar .fn-tab:before {
+  display: none;
+  position: absolute;
+  content: '';
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: -webkit-linear-gradient(rgba(0,0,0,.05) 0,rgba(0,0,0,.1) 50%,rgba(0,0,0,.05) 100%);
+  background: linear-gradient(rgba(0,0,0,.05) 0,rgba(0,0,0,.1) 50%,rgba(0,0,0,.05) 100%);
+}
+
+/* Hover */
+fn-tabbar fn-tab:hover,
+.fn-tabbar .fn-tab:hover {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.8);
+  cursor:pointer;
+}
+
+/* Active */
+fn-tabbar fn-tab[data-active],
+.fn-tabbar .fn-tab[data-active] {
+  position: relative;
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.8);
+  border-color: #d4d4d5;
+  font-weight: bold;
+  margin-bottom: -1px;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: none;
+  border-radius: 5px 5px 0px 0px;
+}
+
+/* Coupling with segment for attachment */
+fn-tabbar[data-content-attached],
+.fn-tabbar[data-content-attached] {
+  border-bottom: none;
+}
+
+fn-tabbar[data-content-attached] fn-tab[data-active],
+.fn-tabbar[data-content-attached] .fn-tab[data-active] {
+  position: relative;
+  z-index: 2;
+}
+
+fn-tabbar[data-content-attached] fn-tab-content,
+.fn-tabbar[data-content-attached] .fn-tab-content {
+  display:block;
+  box-sizing: border-box;
+  margin: -1px 0px 0px;
+  border-radius: 0 0 .2857rem .2857rem;
+  top: 0;
+  bottom: 0;
+  box-shadow: none;
+  border: 1px solid #d4d4d5;
+  position: relative;
+  background-color: #fff;
+  padding: 1em;
+}
