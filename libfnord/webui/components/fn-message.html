@@ -11,7 +11,18 @@
 <script type='text/javascript'>
   var MessageComponent = function() {
     this.createdCallback = function() {
-      
+      var close_btn = this.querySelector('fn-message-close-icon');
+
+      if (close_btn != null) {
+        var base = this;
+        close_btn.onclick = function() {
+          base.setAttribute('data-state', 'hidden');
+        }
+      }
     }
   }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-message', MessageComponent);
+  }, false);
 </script>
