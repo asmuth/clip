@@ -1,0 +1,268 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-modal {
+    display:none;
+  }
+</style>
+<template id="fn-modal-base-tpl">
+  <style type='text/css'>
+    .dimmer {
+      position: absolute;
+      top: 0em !important;
+      left: 0em !important;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      vertical-align: middle;
+      background: rgba(0, 0, 0, 0.85);
+      opacity: 1;
+      line-height: 1;
+      -webkit-animation-fill-mode: both;
+              animation-fill-mode: both;
+      -webkit-animation-duration: 0.5s;
+              animation-duration: 0.5s;
+      -webkit-transition: background-color 0.5s linear;
+              transition: background-color 0.5s linear;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+      z-index: 1000;
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 1001;
+      top: 28%;
+      left: 50%;
+      text-align: left;
+      width: 56%;
+      margin-left: -28%;
+      background: #ffffff;
+      border: none;
+      box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.3);
+      border-radius: 0.2857rem;
+      -webkit-user-select: text;
+         -moz-user-select: text;
+          -ms-user-select: text;
+              user-select: text;
+      will-change: top, left, margin, transform, opacity;
+    }
+
+    .modal .close_icon {
+      display: block;
+      cursor: pointer;
+      position: absolute;
+      top: -2.5rem;
+      right: -2.5rem;
+      z-index: 1;
+      opacity: 0.8;
+      font-size: 1.25em;
+      color: #ffffff;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0.625rem 0rem 0rem 0rem;
+      display: inline-block;
+      margin: 0 0.25em 0 0;
+      font-style: normal;
+      line-height: 1;
+      font-family: FontAwesome;
+      font-weight: 400;
+      text-decoration: inherit;
+      text-align: center;
+      backface-visibility: hidden;
+      speak: none;
+    }
+
+    .modal .close_icon:before {
+      content: "\f00d";
+      background: none;
+    }
+
+    .modal .close_icon:hover {
+      opacity: 1;
+    }
+
+    .modal .close_icon.hidden {
+      display:none;
+    }
+
+
+    .modal .header {
+      display: block;
+      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      background: -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.05)) #ffffff;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.05)) #ffffff;
+      margin: 0em;
+      padding: 1.2rem 2rem;
+      box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
+      font-size: 1.6em;
+      line-height: 1.3em;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.85);
+      border-bottom: 1px solid rgba(39, 41, 43, 0.15);
+    }
+
+    .modal .content {
+      display: block;
+      font-size: 1em;
+      line-height: 1.4;
+      padding: 2rem;
+      background: #fff;
+      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-size: 1.1em;
+      border-bottom-left-radius: .2857rem;
+      border-bottom-right-radius: .2857rem;
+    }
+
+    .modal .content .icon {
+      display: none;
+    }
+
+    .modal[data-type*='icon'] .content .icon {
+      display: table-cell;
+      vertical-align: top;
+      width: 10%;
+      font-size: 4rem;
+    }
+
+    .modal .content .text {
+      display: table-cell;
+      vertical-align:top;
+      width: 80%;
+      color: rgba(0,0,0,.8);
+    }
+
+    .modal[data-type*='icon'] .content .text {
+      padding-left: 2em;
+    }
+
+    .modal[data-type*='input'] .content .text {
+      padding-bottom: .2em;
+    }
+
+    .modal>.close_icon:first-child+*, .modal>:first-child:not(.close_icon) {
+      border-top-left-radius: .2857rem;
+      border-top-right-radius: .2857rem;
+    }
+
+    .modal .actions {
+      display: none;
+    }
+
+    .modal[data-type*='actions'] .content {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .modal[data-type*='actions'] .actions {
+      display:block;
+      background: #efefef;
+      padding: 1rem 2rem;
+      border-top: 1px solid rgba(39,41,43,.15);
+      text-align: right;
+      border-bottom-left-radius: .2857rem;
+      border-bottom-right-radius: .2857rem;
+    }
+
+    .modal .content .input {
+      display: none;
+    }
+
+    .modal[data-type*='input'] .content .input {
+      display: block;
+    }
+  </style>
+
+  <div class="dimmer">
+  </div>
+  <div class="modal">
+    <i class="close_icon"></i>
+    <div class="header">
+      <content select="fn-modal-header"></content>
+    </div>
+    <div class="content">
+      <div class="any_content">
+        <content select="fn-modal-content"></content>
+      </div>
+      <div class="icon">
+        <content select="fn-modal-content-icon"></content>
+      </div>
+      <div class="text">
+        <content select="fn-modal-text"></content>
+      </div>
+      <div class="input">
+        <content select="fn-modal-input"></content>
+      </div>
+    </div>
+    <div class="actions">
+      <content select="fn-modal-actions"></content>
+    </div>
+  </div>
+</template>
+<script type='text/javascript'>
+  var ModalComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-modal", "base");
+      shadow.appendChild(tpl);
+      var base = this;
+
+
+      var type = this.getAttribute('data-type');
+      if (type != null) {
+        this.shadowRoot.querySelector(
+          '.modal').setAttribute('data-type', type);
+      }
+
+      this.setElementStyles();
+      this.setOptions();
+
+
+      this.shadowRoot.querySelector('.dimmer').onclick = function() {
+        base.close();
+      }
+
+      this.shadowRoot.querySelector('.close_icon').onclick = function() {
+        base.close();
+      }
+    }
+
+    this.show = function() {
+      this.style.display = "block";
+    };
+
+    this.close = function() {
+      this.style.display = "none";
+    };
+
+    this.setOptions = function() {
+      if (this.hasAttribute('data-not-closable')) {
+        this.shadowRoot.querySelector('.close_icon').className += " hidden";
+      }
+    }
+
+    this.setElementStyles = function() {
+      var modal_text = this.querySelector('fn-modal-text');
+      if (modal_text != null) {
+        var text_style = modal_text.getAttribute('data-style');
+        if (text_style != null) {
+          this.shadowRoot.querySelector('.text').className += " " + text_style;
+        }
+      }
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-modal', ModalComponent);
+  }, false);
+</script>
