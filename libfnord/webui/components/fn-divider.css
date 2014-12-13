@@ -1,0 +1,81 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+/*******************************
+            Divider
+*******************************/
+fn-divider,
+.fn-divider {
+  display: block;
+  margin: 1rem 0rem;
+  line-height: 1;
+  height: 0em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 1rem;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/*--------------
+      Basic
+---------------*/
+fn-divider,
+.fn-divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+fn-divider[data-direction='vertical'],
+.fn-divider[data-direction='vertical'] {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  margin: 0rem;
+  padding: 0em;
+  width: auto;
+  height: 50%;
+  line-height: 0em;
+  text-align: center;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
+
+/*--------------
+      Vertical
+---------------*/
+fn-divider[data-direction='vertical']:before,
+.fn-divider[data-direction='vertical']:before,
+fn-divider[data-direction='vertical']:after,
+.fn-divider[data-direction='vertical']:after {
+  position: absolute;
+  left: 50%;
+  content: '';
+  z-index: 3;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  width: 0%;
+  height: -webkit-calc(100% -  1rem );
+  height: calc(100% -  1rem );
+}
+
+fn-divider[data-direction='vertical']:before,
+.fn-divider[data-direction='vertical']:before {
+  top: -100%;
+}
+
+fn-divider[data-direction='vertical']:after,
+.fn-divider[data-direction='vertical']:after {
+  top: auto;
+  bottom: 0px;
+}

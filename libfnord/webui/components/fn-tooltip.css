@@ -1,0 +1,33 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+fn-tooltip {
+  display: none;
+  position: absolute;
+  top: 0px;
+  z-index: 900;
+  border: 1px solid #cccccc;
+  max-width: 250px;
+  background-color: #ffffff;
+  padding: 0.833em 1em;
+  font-weight: normal;
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 0.2857rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.1em;
+}
+
+fn-tooltip[data-active] {
+  display: block;
+}
+
+
+fn-tooltip fn-tooltip-header {
+  font-size: 1.125em;
+  line-height: 1.2;
+}

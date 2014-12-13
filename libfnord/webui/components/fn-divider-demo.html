@@ -1,0 +1,80 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  .wrapper {
+    position:relative;
+    text-align:center;
+    width:100%;
+  }
+
+  .column {
+    display: inline-block;
+    text-align: left;
+    font-size: 1rem;
+    width: 49%;
+    vertical-align: middle;
+  }
+
+  .column:first-child {
+    padding-right: 1.5rem;
+  }
+
+  .column:last-child {
+    padding-left: 1.5rem;
+  }
+
+  .column fn-input {
+    margin-bottom: 10px;
+  }
+
+  .column fn-input:last-child {
+    margin-bottom: 0;
+  }
+</style>
+<template id='fn-divider-demo-base-tpl'>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Standard Divider</h1>
+    <div class="box">
+      Lebowski ipsum you don't go out and make a living dressed like that in
+      the middle of a weekday. Dolor sit amet, consectetur adipiscing elit 
+      praesent ac magna justo pellentesque ac lectus. 
+    </div>
+    <fn-divider></fn-divider>
+    <div class="box">
+      My name is Walter Sobchak, we spoke on the phone, this is my 
+      associate Jeffrey Lebowski. Ligula, malesuada suscipit 
+      malesuada non, ultrices non urna.
+    </div>
+  </section>
+
+  <section>
+    <h1><i>Example 1 &raquo;</i> Vertical Divider</h1>
+    <div class="wrapper">
+      <div class="column">
+        <fn-input>
+          <fn-input-label>Username</fn-input-label>
+        </fn-input>
+        <fn-input>
+          <fn-input-label>Password</fn-input-label>
+        </fn-input>
+      </div>
+      <fn-divider data-direction='vertical'></fn-divider>
+      <div class="column">
+        <fn-input>
+          <fn-input-label>First Name</fn-input-label>
+        </fn-input>
+        <fn-input>
+          <fn-input-label>Last Name</fn-input-label>
+        </fn-input>
+        <fn-button>Sign Up</fn-button>
+      </div>
+    </div>
+</template>
