@@ -6,6 +6,9 @@
 /*******************************
             Divider
 *******************************/
+/*--------------
+      Basic
+---------------*/
 fn-divider,
 .fn-divider {
   display: block;
@@ -24,15 +27,16 @@ fn-divider,
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-/*--------------
-      Basic
----------------*/
+
 fn-divider,
 .fn-divider {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/*--------------
+      Vertical
+---------------*/
 fn-divider[data-direction='vertical'],
 .fn-divider[data-direction='vertical'] {
   position: absolute;
@@ -50,10 +54,6 @@ fn-divider[data-direction='vertical'],
           transform: translateX(-50%);
 }
 
-
-/*--------------
-      Vertical
----------------*/
 fn-divider[data-direction='vertical']:before,
 .fn-divider[data-direction='vertical']:before,
 fn-divider[data-direction='vertical']:after,
@@ -65,8 +65,7 @@ fn-divider[data-direction='vertical']:after,
   border-left: 1px solid rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   width: 0%;
-  height: -webkit-calc(100% -  1rem );
-  height: calc(100% -  1rem );
+  height: 100%;
 }
 
 fn-divider[data-direction='vertical']:before,
@@ -79,3 +78,81 @@ fn-divider[data-direction='vertical']:after,
   top: auto;
   bottom: 0px;
 }
+
+/*--------------
+  Vertical Text
+---------------*/
+fn-divider[data-direction='vertical'][data-text]:before,
+.fn-divider[data-direction='vertical'][data-text]:before,
+fn-divider[data-direction='vertical'][data-text]:after,
+.fn-divider[data-direction='vertical'][data-text]:after {
+  height: -webkit-calc(100% -  1rem );
+  height: calc(100% -  1rem );
+}
+
+
+/*--------------
+  Horizontal Text
+---------------*/
+
+fn-divider[data-direction='horizontal'][data-text],
+.fn-divider[data-direction='horizontal'][data-text] {
+  position: relative;
+  height: auto;
+  margin: '';
+  overflow: hidden;
+  line-height: 1;
+  text-align: center;
+  border-bottom: none;
+  border-top: none;
+}
+fn-divider[data-direction='horizontal'][data-text]:before,
+.fn-divider[data-direction='horizontal'][data-text]:before,
+fn-divider[data-direction='horizontal'][data-text]:after,
+.fn-divider[data-direction='horizontal'][data-text]:after {
+  position: absolute;
+  content: '';
+  z-index: 3;
+  width: 50%;
+  top: 50%;
+  height: 0px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+fn-divider[data-direction='horizontal'][data-text]:before,
+.fn-divider[data-direction='horizontal'][data-text]:before {
+  margin-left: -webkit-calc(-50% -  1em );
+  margin-left: calc(-50% -  1em );
+}
+fn-divider[data-direction='horizontal'][data-text]:after,
+.fn-divider[data-direction='horizontal'][data-text]:after {
+  margin-left: 1em;
+}
+
+/*--------------
+    Fitted
+---------------*/
+fn-divider[data-margin='fitted'],
+.fn-divider[data-margin='fitted'] {
+  margin: 0em;
+}
+
+/*--------------
+    Section
+---------------*/
+fn-divider[data-margin='section'],
+.fn-divider[data-margin='section'] {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/*--------------
+    Clearing
+---------------*/
+fn-divider[data-clear],
+.fn-divider[data-clear] {
+  clear: both;
+}
+
+
+
