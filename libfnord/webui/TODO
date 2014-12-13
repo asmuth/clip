@@ -4,35 +4,39 @@ fn-codeeditor
 fn-icon
 fn-loader
 fn-table
- 
--- hiermit anfangen
+
+--needs review
 fn-divier || semantic divider -> <fn-divider>, <div class="fn-divider">
 fn-button semantic button -> <fn-button>, <button class="fn-button">
-fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
 fn-message || semantic message -> <fn-message>, <div class="fn-message">
 fn-checkbox || semantic checkbox -> <fn-checkbox>, <input type="checkbox" class="fn-checkbox">
 fn-dropdown || semantic dropdown -> <fn-dropdown>, <select class="fn-dropdown">
 fn-modal || semantic modal -> <fn-modal>, <div class="fn-modal">
 fn-search || semantic search -> <fn-search>, <input type="search" class="fn-search">
-fn-tooltip || semantic popup -> Fnord.tooltip
- 
--- needs review/polish
-fn-datepicker
 fn-daterangepicker
 fn-search
-fn-timeinput
-fn-appbar (remove?))
 fn-splitpane
+fn-form || input/form -> komplex, muessen wir drueber redeen
+fn-progress
+fn-tabs
+
+
+ 
+-- hiermit anfangen
+fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
+fn-tooltip || semantic popup -> Fnord.tooltip
+ 
+-- needs polish
+fn-datepicker
+fn-timeinput
  
 -- die werden komplex
-fn-form || input/form -> komplex, muessen wir drueber redeen
 fn-label || label -> <fn-label>, <span class="fn-label">
 fn-menu || menu -> komplex, muessen wir drueber reden
 fn-toolbar
 fn-tabbar
  
 -- nice to have
-fn-progress
 fn-rating
 fn-wizard || semantic step
 fn-reveal
@@ -42,10 +46,9 @@ fn-feed
 fn-accordion
  
 -- machen wir selbst
-fn-tabs
 fn-video
 fn-pager
-fn-pagination
+fn-pagination http://getbootstrap.com/components/#pagination
 
 ---
 flyoout menu from toolbar  (like osx top toolbar)

@@ -13,11 +13,47 @@
 <script type='text/javascript'>
   var TooltipComponent = function() {
     this.createdCallback = function() {
-
     };
 
-    this.show = function() {
+    this.init = function(elem) {
+      var base = this;
+      elem.addEventListener('mouseover', function() {
+        base.show(this);
+      }, false);
+
+      elem.addEventListener('mouseout', function() {
+        base.hide();
+      }, false);
+    }
+
+    this.show = function(elem) {
+      var position = this.getAttribute('data-position');
+      var pos = elem.getBoundingClientRect();
       this.setAttribute('data-active', 'active');
+      var scroll_y = window.scrollY;
+      var scroll_x = window.scrollX;
+      switch (position) {
+        case 'bottom':
+          this.style.top = (pos.top + this.offsetHeight + scroll_y + 7) + "px";
+          this.style.left = pos.left + "px";
+          break;
+        case 'left':
+          this.style.top = pos.top + scroll_y + "px";
+          this.style.left = (pos.left - pos.width - 8) + "px";
+          break;
+        case 'right':
+          this.style.top = pos.top + scroll_y + "px";
+          this.style.left = (pos.left + pos.width + 8) + "px";
+          break;
+        default:
+          this.style.top = (pos.top - this.offsetHeight + scroll_y - 8) + "px";
+          this.style.left = pos.left + "px";
+          break;
+      }
+    }
+
+    this.hide = function() {
+      this.removeAttribute('data-active');
     }
   };
 
