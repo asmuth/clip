@@ -19,12 +19,12 @@ fn-splitpane
 fn-form || input/form -> komplex, muessen wir drueber redeen
 fn-progress
 fn-tabs
+fn-tooltip || semantic popup -> Fnord.tooltip
+fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
 
 
  
 -- hiermit anfangen
-fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
-fn-tooltip || semantic popup -> Fnord.tooltip
  
 -- needs polish
 fn-datepicker

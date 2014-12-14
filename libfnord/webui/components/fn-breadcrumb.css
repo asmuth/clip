@@ -16,7 +16,12 @@ fn-breadcrumb,
   font-family: Helvetica Neue',Arial,Helvetica,sans-serif;
   font-size: 14px;
   line-height: 1.33;
+  padding: 0;
   color: rgba(0,0,0,.8);
+}
+
+ul.fn-breadcrumb {
+  list-style-type: none;
 }
 
 fn-breadcrumb:first-child,

@@ -1,0 +1,159 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-pagination-base-tpl'>
+  <style type='text/css'>
+    ul {
+      display: inline-block;
+      list-style-type:none;
+      padding-left: 0;
+      margin: 20px 0;
+      border-radius: 4px;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 14px;
+      line-height: 1.3em;
+      color: rgba(0,0,0,.8);
+    }
+
+    ul > li {
+      display: inline;
+      position: relative;
+      float: left;
+      padding: 6px 12px;
+      margin-left: -1px;
+      line-height: 1.42857143;
+      color: rgba(0,0,0,.8);
+      background-color: #fff;
+      border: 1px solid #ddd;
+      line-height: 1.3em;
+    }
+
+    ul > li:hover {
+      cursor: pointer;
+    }
+
+    ul > li.prev i,
+    ul > li.next i {
+      line-height: 1.3em;
+    }
+
+    ul > li.prev {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    ul > li.next {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+
+
+  </style>
+  <ul>
+  </ul>
+</template>
+<script type='text/javascript'>
+  var PaginationComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-pagination', 'base');
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+      var start = this.start();
+      var end = this.end();
+
+      if (start <= end) {this.render(start, end);}
+
+    };
+
+    this.start = function() {
+      var start = this.getAttribute('data-start');
+      start = (start == null)? 1 : parseInt(start, 10);
+
+      return start;
+    };
+
+    this.end = function() {
+      var end = this.getAttribute('data-end');
+      end = (end == null)? 1 : parseInt(end, 10);
+
+      return end;
+    };
+
+
+    this.render = function(start, end) {
+      var list = this.shadowRoot.querySelector("ul");
+      list.innerHTML = '';
+
+      var index = this.getAttribute('data-per-index');
+      index = (index == null)? 5 : parseInt(index, 10);
+
+      var prev_tooltip = document.createElement("li");
+      prev_tooltip.innerHTML = "<i class='fa fa-angle-double-left'></i>";
+      prev_tooltip.className = "prev";
+      list.appendChild(prev_tooltip);
+
+      for (var i = start; i < index+start; i++) {
+        if (i > end) {break;}
+        var li = document.createElement("li");
+        li.innerHTML = i;
+        li.setAttribute('data-index', i);
+        list.appendChild(li);
+
+        li.addEventListener('click', function() {
+          var click_event = new CustomEvent(
+            'fn-pagination-click',
+            {'detail' : this.getAttribute('data-index')});
+
+          base.dispatchEvent(click_event);
+        }, false);
+      }
+
+
+      var next_tooltip = document.createElement("li");
+      next_tooltip.innerHTML = "<i class='fa fa-angle-double-right'></i>";
+      next_tooltip.className = "next";
+      list.appendChild(next_tooltip);
+
+      var base = this;
+
+      prev_tooltip.addEventListener('click', function() {
+        var new_start = start - index;
+        console.log(new_start);
+        if (new_start >= 1) {
+          base.render(new_start, end);
+        } else {
+          if (base.hasAttribute('data-circling')) {
+            console.log("modulo");
+            new_start = end + new_start;
+            base.render(new_start, end);
+          }
+        }
+      }, false);
+
+      next_tooltip.addEventListener('click', function() {
+        var new_start = start + index;
+        if (new_start < end) {
+          base.render(new_start, end);
+        } else {
+          if (base.hasAttribute('data-circling')) {
+            base.render(base.start(), end);
+          }
+        }
+      }, false);
+
+
+    };
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-pagination', PaginationComponent);
+  }, false);
+</script>
