@@ -61,25 +61,25 @@ std::string Cookies::mkCookie(
       URI::urlEncode(key),
       URI::urlEncode(value));
 
-  if (static_cast<uint64_t>(expire) > 0) {
-    cookie_str.append(StringUtil::format("; expires=$0",
-        expire.toString("%a, %d-%b-%Y %H:%M:%S %Z")));
-  }
-
   if (path.length() > 0) {
-    cookie_str.append(StringUtil::format("; path=$0", path));
+    cookie_str.append(StringUtil::format("; Path=$0", path));
   }
 
   if (domain.length() > 0) {
-    cookie_str.append(StringUtil::format("; domain=$0", domain));
+    cookie_str.append(StringUtil::format("; Domain=$0", domain));
+  }
+
+  if (static_cast<uint64_t>(expire) > 0) {
+    cookie_str.append(StringUtil::format("; Expires=$0",
+        expire.toString("%a, %d-%b-%Y %H:%M:%S %Z")));
   }
 
   if (httponly) {
-    cookie_str.append("; httponly");
+    cookie_str.append("; HttpOnly");
   }
 
   if (secure) {
-    cookie_str.append("; secure");
+    cookie_str.append("; Secure");
   }
 
   return cookie_str;

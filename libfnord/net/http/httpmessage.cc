@@ -73,13 +73,11 @@ const Buffer& HTTPMessage::getBody() const {
 
 void HTTPMessage::addBody(const std::string& body) {
   body_ = std::move(Buffer(body.c_str(), body.length()));
-  iputs("body size1: $0", body_.size());
   setHeader("Content-Length", std::to_string(body_.size()));
 }
 
 void HTTPMessage::addBody(void* data, size_t size) {
   body_ = std::move(Buffer(data, size));
-  iputs("body size2: $0", body_.size());
   setHeader("Content-Length", std::to_string(size));
 }
 
