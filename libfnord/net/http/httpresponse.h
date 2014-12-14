@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_WEB_HTTPRESPONSE_H
 #define _FNORDMETRIC_WEB_HTTPRESPONSE_H
+#include <fnord/base/datetime.h>
 #include <fnord/net/http/httpmessage.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/status.h>
@@ -24,6 +25,15 @@ public:
 
   void setStatus(int status_code, const std::string& status);
   void setStatus(const HTTPStatus& status);
+
+  void addCookie(
+      const std::string& key,
+      const std::string& value,
+      const DateTime& expire = DateTime::epoch(),
+      const std::string& path = "",
+      const std::string& domain = "",
+      bool secure = false,
+      bool httponly = false);
 
   void writeToOutputStream(HTTPOutputStream* output);
   void populateFromRequest(const HTTPRequest& request);

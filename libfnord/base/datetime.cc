@@ -62,6 +62,10 @@ DateTime DateTime::now() {
   return DateTime(WallClock::unixMicros());
 }
 
+DateTime DateTime::daysFromNow(double days) {
+  return DateTime(WallClock::unixMicros() + (days * kMicrosPerDay));
+}
+
 std::string DateTime::toString(const char* fmt) const {
   struct tm tm;
   time_t tt = utc_micros_ / 1000000;

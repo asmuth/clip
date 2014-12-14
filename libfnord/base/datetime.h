@@ -19,6 +19,24 @@ namespace fnord {
 class DateTime {
 public:
 
+  static constexpr const uint64_t kMicrosPerSecond = 1000000;
+  static constexpr const uint64_t kMillisPerSecond = 1000000;
+  static constexpr const uint64_t kSecondsPerMinute = 60;
+  static constexpr const uint64_t kMinutesPerHour = 60;
+  static constexpr const uint64_t kSecondsPerHour =
+      kSecondsPerMinute * kMinutesPerHour;
+  static constexpr const uint64_t kMillisPerHour =
+      kSecondsPerHour * kMillisPerSecond;
+  static constexpr const uint64_t kMicrosPerHour =
+      kSecondsPerHour * kMicrosPerSecond;
+  static constexpr const uint64_t kHoursPerDay = 24;
+  static constexpr const uint64_t kSecondsPerDay =
+      kSecondsPerHour * kHoursPerDay;
+  static constexpr const uint64_t kMillisPerDay =
+      kSecondsPerDay * kMillisPerSecond;
+  static constexpr const uint64_t kMicrosPerDay =
+      kSecondsPerDay * kMicrosPerSecond;
+
   /**
    * Create a new UTC DateTime instance with time = now
    */
@@ -67,6 +85,11 @@ public:
    * Return a new DateTime instance with time = now
    */
   static DateTime now();
+
+  /**
+   * Return a new DateTime instance with time = now + days
+   */
+  static DateTime daysFromNow(double days);
 
 protected:
 

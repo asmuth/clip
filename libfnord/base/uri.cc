@@ -12,6 +12,10 @@
 
 namespace fnord {
 
+std::string URI::urlEncode(const std::string& str) {
+  return str; // FIXPAUL
+}
+
 std::string URI::urlDecode(const std::string& str) {
   std::string decoded;
   const char* begin = str.c_str();
