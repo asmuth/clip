@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/net/http/cookies.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpinputstream.h>
 
@@ -71,6 +72,10 @@ void HTTPRequest::readFromInputStream(HTTPInputStream* input) {
   if (content_length > 0) {
     input->getInputStream()->readNextBytes(&body_, content_length);
   }
+}
+
+std::vector<std::pair<std::string, std::string>> HTTPRequest::cookies() const {
+  return Cookies::parseCookieHeader(getHeader("Cookie"));
 }
 
 }

@@ -187,3 +187,43 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
         response.getHeader("Set-Cookie"), "fnord=bar; secure");
   }
 });
+
+TEST_CASE(HTTPTest, TestGetCookies, [] () {
+  auto req = "GET / HTTP/1.0\r\n" \
+             "Cookie: __utma=1.1377480910.1406310643.1416763484.1416773800.23" \
+             "; __utmz=1.1406310643.1.1.utmcsr=(direct)|utmccn=(direct)|utmcm" \
+             "d=(none); _u=fnordbar\r\n\r\n";
+
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
+  request.readFromInputStream(&http_is);
+
+  auto cookies = request.cookies();
+  EXPECT_EQ(cookies.size(), 3);
+  EXPECT_EQ(cookies[0].first, "__utma");
+  EXPECT_EQ(
+      cookies[0].second,
+      "1.1377480910.1406310643.1416763484.1416773800.23");
+  EXPECT_EQ(cookies[1].first, "__utmz");
+  EXPECT_EQ(
+      cookies[1].second,
+      "1.1406310643.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)");
+  EXPECT_EQ(cookies[2].first, "_u");
+  EXPECT_EQ(cookies[2].second, "fnordbar");
+});
+
+TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
+  auto req = "GET / HTTP/1.0\r\n" \
+             "Cookie: _u=fnord; _x; =blah; =\r\n\r\n";
+
+  StringInputStream is(req);
+  HTTPInputStream http_is(&is);
+  HTTPRequest request;
+  request.readFromInputStream(&http_is);
+
+  auto cookies = request.cookies();
+  EXPECT_TRUE(cookies.size() >= 1);
+  EXPECT_EQ(cookies[0].first, "_u");
+  EXPECT_EQ(cookies[0].second, "fnord");
+});

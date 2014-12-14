@@ -42,6 +42,7 @@ public:
   kMethod method() const;
   const std::string& getUrl() const;
   const bool keepalive() const;
+  std::vector<std::pair<std::string, std::string>> cookies() const;
 
 protected:
   std::string method_;

@@ -9,6 +9,7 @@
  */
 #include <fnord/base/stringutil.h>
 #include <fnord/base/uri.h>
+#include <fnord/net/http/cookies.h>
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/http/httpoutputstream.h>
 
@@ -36,31 +37,14 @@ void HTTPResponse::addCookie(
     const std::string& domain /* = "" */,
     bool secure /* = false */,
     bool httponly /* = false */) {
-  auto cookie_str = StringUtil::format(
-      "$0=$1",
-      URI::urlEncode(key),
-      URI::urlEncode(value));
-
-  if (static_cast<uint64_t>(expire) > 0) {
-    cookie_str.append(StringUtil::format("; expires=$0",
-        expire.toString("%a, %d-%b-%Y %H:%M:%S %Z")));
-  }
-
-  if (path.length() > 0) {
-    cookie_str.append(StringUtil::format("; path=$0", path));
-  }
-
-  if (domain.length() > 0) {
-    cookie_str.append(StringUtil::format("; domain=$0", domain));
-  }
-
-  if (httponly) {
-    cookie_str.append("; httponly");
-  }
-
-  if (secure) {
-    cookie_str.append("; secure");
-  }
+  auto cookie_str = Cookies::mkCookie(
+      key,
+      value,
+      expire,
+      path,
+      domain,
+      secure,
+      httponly);
 
   // FIXPAUL appendheader
   setHeader("Set-Cookie", cookie_str);
