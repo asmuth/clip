@@ -31,7 +31,8 @@ HTTPServer::HTTPServer(
     TaskScheduler* server_scheduler,
     TaskScheduler* request_scheduler) :
     server_scheduler_(server_scheduler),
-    request_scheduler_(request_scheduler) {}
+    request_scheduler_(request_scheduler),
+    enable_keepalive_(false) {}
 
 
 void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
@@ -108,7 +109,7 @@ void HTTPServer::handleConnection(int fd) const {
       request.readFromInputStream(&http_input_stream);
 
       if (request.keepalive()) {
-        keepalive = true;
+        keepalive = enable_keepalive_;
       }
 
       response.populateFromRequest(request);
@@ -144,6 +145,8 @@ void HTTPServer::handleConnection(int fd) const {
     HTTPOutputStream http_output_stream(&output_stream);
     response.writeToOutputStream(&http_output_stream);
   } while (keepalive);
+
+  // FIXPAUL close connection
 }
 
 }

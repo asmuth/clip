@@ -27,6 +27,9 @@ std::string inspect(const std::vector<T>& value);
 template <typename T>
 std::string inspect(const std::set<T>& value);
 
+template <typename T>
+std::string inspect(T* value);
+
 template <typename H, typename... T>
 std::vector<std::string> inspectAll(H head, T... tail);
 

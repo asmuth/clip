@@ -36,6 +36,7 @@ protected:
   TaskScheduler* server_scheduler_;
   TaskScheduler* request_scheduler_;
   int ssock_;
+  bool enable_keepalive_;
 };
 
 }

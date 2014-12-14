@@ -50,6 +50,11 @@ std::string inspect(const std::set<T>& value) {
   return str;
 }
 
+template <typename T>
+std::string inspect(T* value) {
+  return "@0x" + StringUtil::hexPrint(&value, sizeof(void*), false);
+}
+
 template <typename H, typename... T>
 std::vector<std::string> inspectAll(H head, T... tail) {
   auto vec = inspectAll(tail...);

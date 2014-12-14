@@ -1,5 +1,5 @@
 SHELL          = /bin/sh
-CXX           ?= clang++
+CXX            = g++
 CXXFLAGS       = -stdlib=libc++ -I../.. -std=c++11
 LDFLAGS        =
 

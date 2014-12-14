@@ -12,22 +12,47 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include <random>
 
 namespace fnord {
 
 class Random {
 public:
 
+  Random();
+
   /**
-   * Call srand()
+   * Return 64 bits of random data
    */
-  static void init();
+  uint64_t random64();
+
+  /**
+   * Return 64 bits of random data as hex chars
+   */
+  std::string hex64();
+
+  /**
+   * Return 128 bits of random data as hex chars
+   */
+  std::string hex128();
+
+  /**
+   * Return 256 bits of random data as hex chars
+   */
+  std::string hex256();
+
+  /**
+   * Return 512 bits of random data as hex chars
+   */
+  std::string hex512();
 
   /**
    * Create a new random alphanumeric string
    */
-  static std::string alphanumericString(int nchars);
+  std::string alphanumericString(int nchars);
 
+protected:
+  std::mt19937_64 prng_;
 };
 
 }

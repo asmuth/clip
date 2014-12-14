@@ -19,9 +19,14 @@ namespace http {
 
 class Cookies {
 public:
+  typedef std::vector<std::pair<std::string, std::string>> CookieList;
 
-  static std::vector<std::pair<std::string, std::string>> parseCookieHeader(
-      const std::string& header_str);
+  static bool getCookie(
+      const CookieList& cookies,
+      const std::string& key,
+      std::string* dst);
+
+  static CookieList parseCookieHeader(const std::string& header_str);
 
   static std::string mkCookie(
       const std::string& key,

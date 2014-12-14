@@ -13,8 +13,21 @@
 namespace fnord {
 namespace http {
 
-std::vector<std::pair<std::string, std::string>> Cookies::parseCookieHeader(
-      const std::string& header_str) {
+bool Cookies::getCookie(
+    const CookieList& cookies,
+    const std::string& key,
+    std::string* dst) {
+  for (const auto& cookie : cookies) {
+    if (cookie.first == key) {
+      *dst = cookie.second;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+Cookies::CookieList Cookies::parseCookieHeader(const std::string& header_str) {
   std::vector<std::pair<std::string, std::string>> cookies;
 
   auto begin = header_str.c_str();
