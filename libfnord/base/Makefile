@@ -3,6 +3,11 @@ CXX           ?= clang++
 CXXFLAGS       = -I../.. -std=c++11
 LDFLAGS        =
 
+UNAME = $(shell uname)
+ifeq ($(UNAME), Darwin)
+CXXFLAGS += -stdlib=libc++
+endif
+
 FNORD_BASE_TARGET  = libfnord-base.a
 FNORD_BASE_SOURCES = assets.cc buffer.cc datetime.cc exception.cc exceptionhandler.cc inspect.cc ieee754.cc random.cc stringutil.cc uri.cc wallclock.cc fnv.cc
 FNORD_BASE_OBJECTS = $(subst .cc,.o,$(FNORD_BASE_SOURCES))

@@ -3,6 +3,11 @@ CXX            = clang++
 CXXFLAGS       = -I../.. -std=c++11
 LDFLAGS        =
 
+UNAME = $(shell uname)
+ifeq ($(UNAME), Darwin)
+CXXFLAGS += -stdlib=libc++
+endif
+
 FNORD_SYSTEM_TARGET  = libfnord-system.a
 FNORD_SYSTEM_SOURCES = signalhandler.cc
 FNORD_SYSTEM_OBJECTS = $(subst .cc,.o,$(FNORD_SYSTEM_SOURCES))

@@ -3,6 +3,11 @@ CXX           ?= clang++
 CXXFLAGS       = -I../../.. -std=c++11
 LDFLAGS        =
 
+UNAME = $(shell uname)
+ifeq ($(UNAME), Darwin)
+CXXFLAGS += -stdlib=libc++
+endif
+
 FNORD_HTTP_TARGET  = libfnord-http.a
 FNORD_HTTP_SOURCES = cookies.cc httpinputstream.cc httpmessage.cc httpoutputstream.cc httprequest.cc httpresponse.cc httpserver.cc
 FNORD_HTTP_OBJECTS = $(subst .cc,.o,$(FNORD_HTTP_SOURCES))

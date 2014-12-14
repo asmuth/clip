@@ -3,6 +3,11 @@ CXX           ?= clang++
 CXXFLAGS       = -I../.. -std=c++11
 LDFLAGS        =
 
+UNAME = $(shell uname)
+ifeq ($(UNAME), Darwin)
+CXXFLAGS += -stdlib=libc++
+endif
+
 FNORD_THREAD_TARGET  = libfnord-thread.a
 FNORD_THREAD_SOURCES = threadpool.cc
 FNORD_THREAD_OBJECTS = $(subst .cc,.o,$(FNORD_THREAD_SOURCES))
