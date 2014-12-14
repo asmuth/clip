@@ -51,7 +51,7 @@ void HTTPResponse::addCookie(
   }
 
   if (domain.length() > 0) {
-    cookie_str.append(StringUtil::format("; domain=$0", path));
+    cookie_str.append(StringUtil::format("; domain=$0", domain));
   }
 
   if (httponly) {

@@ -120,3 +120,70 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0KeepaliveRequest, [] () {
   EXPECT_EQ(response.getVersion(), "HTTP/1.0");
   EXPECT_EQ(response.getHeader("Connection"), "keep-alive");
 });
+
+TEST_CASE(HTTPTest, TestAddCookie, [] () {
+  {
+    HTTPResponse response;
+    response.addCookie("fnord", "bar");
+    EXPECT_EQ(response.getHeader("Set-Cookie"), "fnord=bar");
+  }
+
+  {
+    HTTPResponse response;
+    response.addCookie("fnord", "bar", fnord::DateTime(1418571527495314));
+    EXPECT_EQ(
+        response.getHeader("Set-Cookie"),
+        "fnord=bar; expires=Sun, 14-Dec-2014 15:38:47 GMT");
+  }
+
+  {
+    HTTPResponse response;
+    response.addCookie(
+        "fnord",
+        "bar",
+        fnord::DateTime::epoch(),
+        "/blah");
+    EXPECT_EQ(
+        response.getHeader("Set-Cookie"), "fnord=bar; path=/blah");
+  }
+
+  {
+    HTTPResponse response;
+    response.addCookie(
+        "fnord",
+        "bar",
+        fnord::DateTime::epoch(),
+        "",
+        ".fnrd.net");
+    EXPECT_EQ(
+        response.getHeader("Set-Cookie"), "fnord=bar; domain=.fnrd.net");
+  }
+
+  {
+    HTTPResponse response;
+    response.addCookie(
+        "fnord",
+        "bar",
+        fnord::DateTime::epoch(),
+        "",
+        "",
+        false,
+        true);
+    EXPECT_EQ(
+        response.getHeader("Set-Cookie"), "fnord=bar; httponly");
+  }
+
+  {
+    HTTPResponse response;
+    response.addCookie(
+        "fnord",
+        "bar",
+        fnord::DateTime::epoch(),
+        "",
+        "",
+        true,
+        false);
+    EXPECT_EQ(
+        response.getHeader("Set-Cookie"), "fnord=bar; secure");
+  }
+});
