@@ -22,8 +22,14 @@ CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler(
 
 void CatchAndPrintExceptionHandler::onException(
     const std::exception& error) const {
-  fnord::iputs("ERROR: Uncaught exception $0", error);
   //logger_->exception("ERROR", "Uncaught exception", error);
+  try {
+    auto rte = dynamic_cast<const fnord::Exception&>(error);
+    fprintf(stderr, "ERROR: Uncaught exception\n");
+    rte.debugPrint();
+  } catch (const std::exception& cast_error) {
+    fprintf(stderr, "ERROR: Uncaught foreign exception: %s\n", error.what());
+  }
 }
 
 CatchAndAbortExceptionHandler::CatchAndAbortExceptionHandler(

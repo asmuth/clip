@@ -18,20 +18,27 @@ namespace fnord {
 class Buffer {
 public:
 
+  Buffer();
   Buffer(const void* initial_data, size_t initial_size);
   Buffer(size_t initial_size);
   Buffer(const Buffer& copy);
   Buffer(Buffer&& move);
   Buffer& operator=(const Buffer& copy) = delete;
+  Buffer& operator=(Buffer&& move);
   ~Buffer();
 
+  void append(const void* data, size_t size);
+  void clear();
+
   void* data() const;
+  char charAt(size_t pos) const;
   size_t size() const;
   std::string toString() const;
 
 protected:
   void* data_;
   size_t size_;
+  size_t used_;
 };
 
 }

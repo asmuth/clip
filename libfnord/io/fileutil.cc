@@ -13,9 +13,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "fnord/base/buffer.h"
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/io/fileutil.h"
+#include "fnord/io/file.h"
 
 namespace fnord {
 namespace io {
@@ -148,6 +150,13 @@ void FileUtil::truncate(const std::string& filename, size_t new_size) {
   if (::truncate(filename.c_str(), new_size) < 0) {
     RAISE_ERRNO(kIOError, "truncate(%s) failed", filename.c_str());
   }
+}
+
+std::string FileUtil::read(const std::string& filename) {
+  auto file = File::openFile(filename, File::O_READ);
+  Buffer buf(file.size());
+  file.read(&buf);
+  return buf.toString();
 }
 
 }

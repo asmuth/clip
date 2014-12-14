@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <string>
 #include <unistd.h>
+#include "fnord/base/buffer.h"
 #include "fnord/base/exception.h"
 #include "fnord/io/outputstream.h"
 
@@ -31,6 +32,10 @@ std::unique_ptr<OutputStream> OutputStream::getStderr() {
 
 size_t OutputStream::write(const std::string& data) {
   return write(data.c_str(), data.size());
+}
+
+size_t OutputStream::write(const Buffer& buf) {
+  return write((const char*) buf.data(), buf.size());
 }
 
 // FIXPAUL: variable size buffer
@@ -123,6 +128,18 @@ StringOutputStream::StringOutputStream(std::string* string) : str_(string) {}
 
 size_t StringOutputStream::write(const char* data, size_t size) {
   *str_ += std::string(data, size);
+  return size;
+}
+
+std::unique_ptr<BufferOutputStream> BufferOutputStream::fromBuffer(
+    Buffer* buf) {
+  return std::unique_ptr<BufferOutputStream>(new BufferOutputStream(buf));
+}
+
+BufferOutputStream::BufferOutputStream(Buffer* buf) : buf_(buf) {}
+
+size_t BufferOutputStream::write(const char* data, size_t size) {
+  buf_->append(data, size);
   return size;
 }
 

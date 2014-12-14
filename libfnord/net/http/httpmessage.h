@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <fnord/base/buffer.h>
 #include <fnord/io/inputstream.h>
 #include <fnord/io/outputstream.h>
 
@@ -34,8 +35,9 @@ public:
   void addHeader(const std::string& key, const std::string& value);
   void setHeader(const std::string& key, const std::string& value);
 
-  const std::string& getBody() const;
+  const Buffer& getBody() const;
   void addBody(const std::string& body);
+  void addBody(void* data, size_t size);
   void clearBody();
 
   std::unique_ptr<InputStream> getBodyInputStream() const;
@@ -45,7 +47,7 @@ protected:
   std::string version_;
   static std::string kEmptyHeader;
   std::vector<std::pair<std::string, std::string>> headers_;
-  std::string body_;
+  Buffer body_;
 };
 
 }

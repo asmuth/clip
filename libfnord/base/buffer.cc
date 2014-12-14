@@ -13,6 +13,8 @@
 
 namespace fnord {
 
+Buffer::Buffer() : data_(nullptr), size_(0) {}
+
 Buffer::Buffer(
     const void* initial_data,
     size_t initial_size) :
@@ -49,14 +51,55 @@ Buffer::Buffer(Buffer&& move) : data_(move.data_), size_(move.size_) {
   move.size_ = 0;
 }
 
+Buffer& Buffer::operator=(Buffer&& move) {
+  data_ = move.data_;
+  size_ = move.size_;
+  move.data_ = nullptr;
+  move.size_ = 0;
+  return *this;
+}
+
 Buffer::~Buffer() {
   if (data_ != nullptr) {
     free(data_);
   }
 }
 
+void Buffer::append(const void* data, size_t size) {
+  if (data_ == nullptr) {
+    size_ = 0;
+    data_ = malloc(size);
+  } else {
+    data_ = realloc(data_, size_ + size);
+  }
+
+  if (data_ == nullptr) {
+    RAISE(kMallocError, "malloc() failed");
+  }
+
+  memcpy((char*) data_ + size_, data, size);
+}
+
+void Buffer::clear() {
+  size_ = 0;
+
+  if (data_ != nullptr) {
+    free(data_);
+  }
+
+  data_ = nullptr;
+}
+
 void* Buffer::data() const {
   return data_;
+}
+
+char Buffer::charAt(size_t pos) const {
+  if (pos >= size_) {
+    RAISE(kIndexError, "index out of bounds");
+  }
+
+  return static_cast<char *>(data_)[pos];
 }
 
 size_t Buffer::size() const {

@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <memory>
 #include <mutex>
+#include "fnord/base/buffer.h"
 
 namespace fnord {
 namespace io {
@@ -42,6 +43,7 @@ public:
    */
   virtual size_t write(const char* data, size_t size) = 0;
   virtual size_t write(const std::string& data);
+  virtual size_t write(const Buffer& buf);
   virtual size_t printf(const char* format, ...);
 
   mutable std::mutex mutex_;
@@ -124,6 +126,35 @@ protected:
   std::string* str_;
 };
 
+class BufferOutputStream : public OutputStream {
+public:
+
+  /**
+   * Create a new OutputStream from the provided string
+   *
+   * @param buf the output buffer
+   */
+  static std::unique_ptr<BufferOutputStream> fromBuffer(Buffer* buf);
+
+  /**
+   * Create a new OutputStream from the provided buffer
+   *
+   * @param buf the output buffer
+   */
+  BufferOutputStream(Buffer* string);
+
+  /**
+   * Write the next n bytes to the file. This may raise an exception.
+   * Returns the number of bytes that have been written.
+   *
+   * @param data a pointer to the data to be written
+   * @param size then number of bytes to be written
+   */
+  size_t write(const char* data, size_t size) override;
+
+protected:
+  Buffer* buf_;
+};
 }
 }
 #endif

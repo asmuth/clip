@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
+#include <fnord/base/inspect.h>
 #include <fnord/net/http/httprequest.h>
 
 using fnord::io::InputStream;
@@ -66,13 +67,20 @@ void HTTPMessage::setHeader(const std::string& key, const std::string& value) {
   headers_.emplace_back(key_low, value);
 }
 
-const std::string& HTTPMessage::getBody() const {
+const Buffer& HTTPMessage::getBody() const {
   return body_;
 }
 
 void HTTPMessage::addBody(const std::string& body) {
-  body_ = body;
-  setHeader("Content-Length", std::to_string(body.size()));
+  body_ = std::move(Buffer(body.c_str(), body.length()));
+  iputs("body size1: $0", body_.size());
+  setHeader("Content-Length", std::to_string(body_.size()));
+}
+
+void HTTPMessage::addBody(void* data, size_t size) {
+  body_ = std::move(Buffer(data, size));
+  iputs("body size2: $0", body_.size());
+  setHeader("Content-Length", std::to_string(size));
 }
 
 void HTTPMessage::clearBody() {
@@ -81,11 +89,11 @@ void HTTPMessage::clearBody() {
 }
 
 std::unique_ptr<InputStream> HTTPMessage::getBodyInputStream() const {
-  return StringInputStream::fromString(body_);
+  return io::BufferInputStream::fromBuffer(&body_);
 }
 
 std::unique_ptr<OutputStream> HTTPMessage::getBodyOutputStream() {
-  return StringOutputStream::fromString(&body_);
+  return io::BufferOutputStream::fromBuffer(&body_);
 }
 
 }

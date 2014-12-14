@@ -44,7 +44,8 @@ const char kVersionMismatchError[] = "VersionMismatchError";
 
 #define RAISEF(E, ...) \
     RAISE_EXCEPTION( \
-        fnord::Exception(StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
+        fnord::Exception( \
+            fnord::StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
         while(0) {}
 
 #define RAISE_ERRNO(E, ...) \

@@ -12,6 +12,7 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include "fnord/base/random.h"
 
 namespace fnord {
 namespace io {
@@ -28,7 +29,7 @@ public:
   /**
    * Create and return a new file
    */
-  FileRef createFile() const;
+  FileRef createFile();
 
   void listFiles(
       std::function<bool(const std::string& filename)> callback) const;
@@ -36,6 +37,7 @@ public:
   void deleteAllFiles();
 
 protected:
+  Random rnd_;
   std::string basedir_;
 };
 

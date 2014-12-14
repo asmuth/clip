@@ -11,6 +11,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <fnord/base/buffer.h>
 #include <fnord/base/exception.h>
 #include <fnord/io/inputstream.h>
 
@@ -41,6 +42,20 @@ size_t InputStream::readNextBytes(std::string* target, size_t n_bytes) {
 
   for (length = 0; length < n_bytes && readNextByte(&byte); ++length) {
     *target += byte;
+  }
+
+  return length;
+}
+
+// FIXPAUL: optimize?
+size_t InputStream::readNextBytes(Buffer* target, size_t n_bytes) {
+  char byte;
+  size_t length;
+
+  //target->reserve(n_bytes);
+
+  for (length = 0; length < n_bytes && readNextByte(&byte); ++length) {
+    target->append(&byte, sizeof(byte));
   }
 
   return length;
@@ -152,6 +167,30 @@ bool StringInputStream::readNextByte(char* target) {
 }
 
 void StringInputStream::rewind() {
+  cur_ = 0;
+}
+
+std::unique_ptr<BufferInputStream> BufferInputStream::fromBuffer(
+    const Buffer* buf) {
+  return std::unique_ptr<BufferInputStream>(new BufferInputStream(buf));
+}
+
+BufferInputStream::BufferInputStream(
+    const Buffer* buf) :
+    buf_(buf),
+    cur_(0) {
+}
+
+bool BufferInputStream::readNextByte(char* target) {
+  if (cur_ < buf_->size()) {
+    *target = buf_->charAt(cur_++);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void BufferInputStream::rewind() {
   cur_ = 0;
 }
 

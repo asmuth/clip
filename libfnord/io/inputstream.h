@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_INPUTSTREAM_H
 #include <memory>
 #include <string>
+#include "fnord/base/buffer.h"
 
 namespace fnord {
 namespace io {
@@ -43,6 +44,14 @@ public:
    * @param target the string to copy the data into
    */
   virtual size_t readNextBytes(std::string* target, size_t n_bytes);
+
+  /**
+   * Read N bytes from the stream and copy the data into the provided buffer
+   * Returns the number of bytes read.
+   *
+   * @param target the string to copy the data into
+   */
+  virtual size_t readNextBytes(Buffer* target, size_t n_bytes);
 
   /**
    * Read from the stream until EOF and copy the data into the provided string.
@@ -174,6 +183,40 @@ protected:
   size_t cur_;
 };
 
+class BufferInputStream : public RewindableInputStream {
+public:
+
+  /**
+   * Create a new InputStream from the provided buffer
+   *
+   * @param string the input string
+   */
+  static std::unique_ptr<BufferInputStream> fromBuffer(const Buffer* buffer);
+
+  /**
+   * Create a new InputStream from the provided string
+   *
+   * @param string the input string
+   */
+  BufferInputStream(const Buffer* buffer);
+
+  /**
+   * Read the next byte from the file. Returns true if the next byte was read
+   * and false if the end of the stream was reached.
+   *
+   * @param target the target char pointer
+   */
+  bool readNextByte(char* target) override;
+
+  /**
+   * Rewind the input stream
+   */
+  void rewind() override;
+
+protected:
+  const Buffer* buf_;
+  size_t cur_;
+};
 }
 }
 #endif

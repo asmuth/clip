@@ -62,6 +62,11 @@ public:
    */
   static void truncate(const std::string& filename, size_t size);
 
+  /**
+   * Read a while file
+   */
+  static std::string read(const std::string& filename);
+
 };
 
 }

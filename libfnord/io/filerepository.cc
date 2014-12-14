@@ -18,9 +18,9 @@ FileRepository::FileRepository(
     const std::string& basedir) :
     basedir_(basedir) {}
 
-FileRepository::FileRef FileRepository::createFile() const {
+FileRepository::FileRef FileRepository::createFile() {
   FileRef fileref;
-  fileref.logical_filename = Random::alphanumericString(32);
+  fileref.logical_filename = rnd_.alphanumericString(32);
   fileref.absolute_path = FileUtil::joinPaths(
       basedir_,
       fileref.logical_filename);
