@@ -1,0 +1,119 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+/*******************************
+           Breadcrumb
+*******************************/
+
+fn-breadcrumb,
+.fn-breadcrumb {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 1em 0em;
+  font-family: Helvetica Neue',Arial,Helvetica,sans-serif;
+  font-size: 14px;
+  line-height: 1.33;
+  color: rgba(0,0,0,.8);
+}
+
+fn-breadcrumb:first-child,
+.fn-breadcrumb :first-child {
+  margin-top: 0em;
+}
+fn-breadcrumb:last-child,
+.fn-breadcrumb:last-child {
+  margin-bottom: 0em;
+}
+
+/*******************************
+          Content
+*******************************/
+/* Section */
+fn-breadcrumb fn-breadcrumb-section,
+.fn-breadcrumb .fn-breadcrumb-section{
+  display: inline-block;
+  margin: 0em;
+  padding: 0em;
+}
+
+fn-breadcrumb fn-breadcrumb-section::after,
+.fn-breadcrumb .fn-breadcrumb-section::after {
+  font-size: 1.1em;
+  display: inline-block;
+  vertical-align:middle;
+  opacity: .5;
+  color: rgba(0,0,0,.4);
+  height: 1em;
+  line-height: 1;
+  font-weight: bold;
+  padding: 0 .1rem 0 .4rem;
+  margin:0;
+  font-family: FontAwesome;
+  content: "\f105";
+}
+
+fn-breadcrumb fn-breadcrumb-section:last-child::after,
+.fn-breadcrumb .fn-breadcrumb-section:last-child::after{
+  padding: 0;
+  content: '';
+}
+
+fn-breadcrumb fn-breadcrumb-section[data-active],
+.fn-breadcrumb .fn-breadcrumb-section[data-active]{
+  font-weight: bold;
+}
+
+/* Link */
+fn-breadcrumb fn-breadcrumb-section[data-link],
+.fn-breadcrumb .fn-breadcrumb-section[data-link] {
+  cursor: pointer;
+  color: #009fda;
+}
+
+fn-breadcrumb fn-breadcrumb-section[data-link]:hover,
+.fn-breadcrumb .fn-breadcrumb-section[data-link]:hover {
+  color: #00b2f3;
+}
+
+/* Custom Divider */
+fn-breadcrumb[data-divider='custom'] fn-breadcrumb-section:after {
+  display: none;
+}
+
+fn-breadcrumb[data-divider='custom'] fn-breadcrumb-divider {
+  display: inline-block;
+  opacity: 0.5;
+  margin: 0em 0.2rem 0em;
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.4);
+  vertical-align: baseline;
+  font-weight: bold;
+}
+
+/*******************************
+       Sizes
+*******************************/
+fn-breadcrumb[data-size='small'],
+.fn-breadcrumb[data-size='small'] {
+  font-size: 0.75em;
+}
+fn-breadcrumb,
+.fn-breadcrumb {
+  font-size: 1em;
+}
+fn-breadcrumb[data-size='large'],
+.fn-breadcrumb[data-size='large'] {
+  font-size: 1.1em;
+}
+fn-breadcrumb[data-size='big'],
+.fn-breadcrumb[data-size='big'] {
+  font-size: 1.05em;
+}
+fn-breadcrumb[data-size='huge'],
+.fn-breadcrumb[data-size='huge'] {
+  font-size: 1.3em;
+}
+
