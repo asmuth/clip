@@ -52,7 +52,7 @@ size_t InputStream::readNextBytes(Buffer* target, size_t n_bytes) {
   char byte;
   size_t length;
 
-  //target->reserve(n_bytes);
+  target->reserve(n_bytes);
 
   for (length = 0; length < n_bytes && readNextByte(&byte); ++length) {
     target->append(&byte, sizeof(byte));

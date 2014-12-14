@@ -35,10 +35,12 @@ public:
   size_t size() const;
   std::string toString() const;
 
+  void reserve(size_t size);
+
 protected:
   void* data_;
   size_t size_;
-  size_t used_;
+  size_t alloc_;
 };
 
 }

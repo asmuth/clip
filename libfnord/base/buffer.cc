@@ -19,7 +19,8 @@ Buffer::Buffer(
     const void* initial_data,
     size_t initial_size) :
     data_(malloc(initial_size)),
-    size_(initial_size) {
+    size_(initial_size),
+    alloc_(initial_size) {
   if (data_ == nullptr) {
     RAISE(kMallocError, "malloc() failed");
   }
@@ -30,13 +31,14 @@ Buffer::Buffer(
 Buffer::Buffer(
     size_t initial_size) :
     data_(malloc(initial_size)),
-    size_(initial_size) {
+    size_(initial_size),
+    alloc_(initial_size) {
   if (data_ == nullptr) {
     RAISE(kMallocError, "malloc() failed");
   }
 }
 
-Buffer::Buffer(const Buffer& copy) : size_(copy.size_) {
+Buffer::Buffer(const Buffer& copy) : size_(copy.size_), alloc_(copy.size_) {
   data_ = malloc(size_);
 
   if (data_ == nullptr) {
@@ -46,16 +48,23 @@ Buffer::Buffer(const Buffer& copy) : size_(copy.size_) {
   memcpy(data_, copy.data_, size_);
 }
 
-Buffer::Buffer(Buffer&& move) : data_(move.data_), size_(move.size_) {
+Buffer::Buffer(
+    Buffer&& move) :
+    data_(move.data_),
+    size_(move.size_),
+    alloc_(move.alloc_) {
   move.data_ = nullptr;
   move.size_ = 0;
+  move.alloc_ = 0;
 }
 
 Buffer& Buffer::operator=(Buffer&& move) {
   data_ = move.data_;
   size_ = move.size_;
+  alloc_ = move.alloc_;
   move.data_ = nullptr;
   move.size_ = 0;
+  move.alloc_ = 0;
   return *this;
 }
 
@@ -66,22 +75,31 @@ Buffer::~Buffer() {
 }
 
 void Buffer::append(const void* data, size_t size) {
+  if (size_ + size > alloc_) {
+    reserve((size_ + size) - alloc_);
+  }
+
+  memcpy((char*) data_ + size_, data, size);
+  size_ += size;
+}
+
+void Buffer::reserve(size_t size) {
+  alloc_ += size;
+
   if (data_ == nullptr) {
-    size_ = 0;
-    data_ = malloc(size);
+    data_ = malloc(alloc_);
   } else {
-    data_ = realloc(data_, size_ + size);
+    data_ = realloc(data_, alloc_);
   }
 
   if (data_ == nullptr) {
     RAISE(kMallocError, "malloc() failed");
   }
-
-  memcpy((char*) data_ + size_, data, size);
 }
 
 void Buffer::clear() {
   size_ = 0;
+  alloc_ = 0;
 
   if (data_ != nullptr) {
     free(data_);
