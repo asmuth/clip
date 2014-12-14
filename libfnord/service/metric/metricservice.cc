@@ -32,11 +32,13 @@ MetricService MetricService::newWithDiskBackend(
 
 MetricService::MetricService(
     std::unique_ptr<IMetricRepository> metric_repo) :
-    metric_repo_(std::move(metric_repo)) {}
+    metric_repo_(std::move(metric_repo)),
+    stat_samples_inserted_("/metric_service/samples_inserted") {}
 
 MetricService::MetricService(
     MetricService&& other) :
-    metric_repo_(std::move(other.metric_repo_)) {}
+    metric_repo_(std::move(other.metric_repo_)),
+    stat_samples_inserted_(std::move(stat_samples_inserted_)) {}
 
 std::vector<IMetric*> MetricService::listMetrics() const {
   return metric_repo_->listMetrics();
@@ -48,6 +50,7 @@ void MetricService::insertSample(
     const std::vector<std::pair<std::string, std::string>>& labels) {
   auto metric = metric_repo_->findOrCreateMetric(metric_key);
   metric->insertSample(value, labels);
+  stat_samples_inserted_.increment(1);
 }
 
 void MetricService::scanSamples(
