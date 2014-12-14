@@ -8,7 +8,7 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<template id="fn-step-demo-base-tpl">
+<template id="fn-steps-demo-base-tpl">
   <section>
     <h1>Steps</h1>
     <fn-steps>
@@ -38,6 +38,29 @@
 
   <section>
     <h1>Vertical Steps</h1>
+    <fn-steps data-direction='vertical'>
+      <fn-step>
+        <fn-step-icon><i class="fa fa-user"></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Agent</fn-step-title>
+          <fn-step-text>Select a hairdresser</fn-step-text>
+        </fn-step-content>
+      </fn-step>
+      <fn-step data-state='active'>
+        <fn-step-icon><i class="fa fa-clock-o"></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Date</fn-step-title>
+          <fn-step-text>Choose a date</fn-step-text>
+        </fn-step-content>
+      </fn-step>
+      <fn-step>
+        <fn-step-icon><i class="fa fa-check"></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Book</fn-step-title>
+          <fn-step-text>Confirm your Appointment</fn-step-text>
+        </fn-step-content>
+      </fn-step>
+    </fn-steps>
 
   </section>
 
@@ -66,8 +89,16 @@
         </fn-step-content>
       </fn-step>
     </fn-steps>
-
-
+    <h3><i>Example 4 &raquo;</i> Clickable Step</h3>
+    <fn-steps>
+      <fn-step data-link>
+        <fn-step-icon><i class='fa fa-credit-card'></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Billing</fn-step-title>
+          <fn-step-text>Enter Billing Information</fn-step-title>
+        </fn-step-content>
+      </fn-step>
+    </fn-steps>
   </section>
   <section>
     <h1>States</h1>
@@ -81,7 +112,18 @@
         </fn-step-content>
       </fn-step>
     </fn-steps>
-    <h3><i>Example 1 &raquo;</i> Disabled</h3>
+    <h3><i>Example 2 &raquo;</i> Completed</h3>
+    <fn-steps>
+      <fn-step data-state='completed'>
+        <fn-step-icon><i class="fa fa-clock-o"></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Date</fn-step-title>
+          <fn-step-text>Choose a date</fn-step-text>
+        </fn-step-content>
+      </fn-step>
+    </fn-steps>
+
+    <h3><i>Example 3 &raquo;</i> Disabled</h3>
     <fn-steps>
       <fn-step data-state='disabled'>
         <fn-step-content>
@@ -90,6 +132,43 @@
         </fn-step-content>
       </fn-step>
     </fn-steps>
+  </section>
+
+  <section>
+    <h1>Variations</h1>
+    <h3><i>Example 1 &raquo;</i> Fluid</h3>
+    <fn-steps data-fluid>
+      <fn-step data-state='completed'>
+        <fn-step-icon></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Confirm Order</fn-step-title>
+          <fn-step-text>Verify Your Details</fn-step-text>
+        </fn-step-content>
+      </fn-step>
+    </fn-steps>
+    <h3><i>Example 1 &raquo;</i> Evenly Divided Steps</h3>
+    <fn-steps data-split-evenly>
+      <fn-step>
+        <fn-step-icon><i class='fa fa-taxi'></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Select A Tour</fn-step-title>
+        </fn-step-content>
+      </fn-step>
+      <fn-step>
+        <fn-step-icon><i class='fa fa-calendar'></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Select A Date</fn-step-title>
+        </fn-step-content>
+      </fn-step>
+      <fn-step>
+        <fn-step-icon><i class='fa fa-info'></i></fn-step-icon>
+        <fn-step-content>
+          <fn-step-title>Fill Your Details</fn-step-title>
+        </fn-step-content>
+      </fn-step>
+
+    </fn-steps>
+
   </section>
 
   <section>
