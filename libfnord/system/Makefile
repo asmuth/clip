@@ -1,6 +1,6 @@
 SHELL          = /bin/sh
 CXX            = clang++
-CXXFLAGS       = -stdlib=libc++ -I../.. -std=c++11
+CXXFLAGS       = -I../.. -std=c++11
 LDFLAGS        =
 
 FNORD_SYSTEM_TARGET  = libfnord-system.a

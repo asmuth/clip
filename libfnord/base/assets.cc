@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <cstdlib>
 #include "fnord/base/assets.h"
 #include "fnord/base/exception.h"
 #include "fnord/io/inputstream.h"
