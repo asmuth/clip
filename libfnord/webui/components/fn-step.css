@@ -1,0 +1,210 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+/*******************************
+            Step
+*******************************/
+
+
+fn-steps fn-step,
+.fn-steps .fn-step{
+  display: inline-block;
+  position: relative;
+  margin: 0em 0em;
+  padding: 0.9285em 1.5em 0.9285em 2.25em;
+  vertical-align: top;
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15);
+  border-radius: 0em;
+  font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+  font-size: 14px;
+}
+
+fn-steps fn-step:after,
+.fn-steps .fn-step:after {
+  position: absolute;
+  z-index: 2;
+  content: '';
+  top: 50%;
+  right: 0em;
+  border: medium none;
+  background-color: #ffffff;
+  width: 1.5em;
+  height: 1.5em;
+  border-bottom: 1px solid rgba(39, 41, 43, 0.15);
+  border-right: 1px solid rgba(39, 41, 43, 0.15);
+  -webkit-transform: translateY(-50%) translateX(50%) rotate(-45deg);
+      -ms-transform: translateY(-50%) translateX(50%) rotate(-45deg);
+          transform: translateY(-50%) translateX(50%) rotate(-45deg);
+}
+
+fn-steps fn-step,
+.fn-steps .fn-step,
+fn-steps fn-step:after,
+.fn-steps .fn-step:after {
+  -webkit-transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/*******************************
+            Content
+*******************************/
+
+
+/* Title */
+fn-steps fn-step fn-step-title,
+.fn-steps .fn-step .fn-step-title {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 1.0714em;
+  font-weight: bold;
+}
+
+/* Description */
+fn-steps fn-step fn-step-text,
+.fn-steps .fn-step .fn-step-text {
+  display: block;
+  font-weight: normal;
+  font-size: 0.9285em;
+  color: rgba(0, 0, 0, 0.8);
+}
+fn-steps fn-step fn-step-title ~ fn-step-text,
+.fn-steps .fn-step .fn-step-title ~ .fn-step-text {
+  margin-top: 0.1em;
+}
+
+/* Icon */
+fn-steps fn-step > fn-step-icon,
+.fn-steps .fn-step > .fn-step-icon,
+fn-steps fn-step > fn-step-icon ~ fn-step-content,
+.fn-steps .fn-step > .fn-step-icon ~ .fn-step-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+fn-steps fn-step > fn-step-icon,
+.fn-steps .fn-step > .fn-step-icon {
+  font-size: 2em;
+  margin: 0em;
+  padding-right: 0.6em;
+}
+
+
+/*******************************
+            Group
+*******************************/
+fn-steps,
+.fn-steps {
+  display: inline-block;
+  font-size: 0em;
+  background: '';
+  box-shadow: '';
+  line-height: 1.15rem;
+  box-sizing: border-box;
+  border-radius: 0.2857rem;
+}
+
+fn-steps fn-step:first-child,
+.fn-steps .fn-step:first-child {
+  padding-left: 1.5em;
+  border-radius: 0.2857rem 0em 0em 0.2857rem;
+}
+fn-steps fn-step:last-child,
+.fn-steps .fn-step:last-child{
+  border-radius: 0em 0.2857rem 0.2857rem 0em;
+  margin-right: 0em;
+}
+fn-steps fn-step:only-child,
+.fn-steps .fn-step:only-child {
+  border-radius: 0.2857rem;
+}
+fn-steps fn-step:last-child:after,
+.fn-steps .fn-step:last-child:after {
+  display: none;
+}
+
+/*******************************
+             Sizes
+*******************************/
+
+fn-step[data-size="small"],
+.fn-step[data-size="small"],
+fn-steps[data-size="small"] fn-step,
+.fn-steps[data-size="small"] .fn-step  {
+  font-size: 0.92857143rem;
+}
+fn-step,
+.fn-step,
+fn-steps fn-step,
+.fn-steps .fn-step {
+  font-size: 1rem;
+}
+fn-step[data-size="large"],
+.fn-step[data-size="large"],
+fn-steps[data-size="large"] fn-step,
+.fn-steps[data-size="large"] .fn-step{
+  font-size: 1.14285714rem;
+}
+
+/*******************************
+             States
+*******************************/
+
+/* Active */
+fn-steps fn-step[data-state='active'],
+.fn-steps .fn-step[data-state='active'] {
+  cursor: auto;
+  background: #f0f0f0;
+}
+fn-steps fn-step[data-state='active']:after,
+.fn-steps .fn-step[data-state='active']:after {
+  background: #f0f0f0;
+}
+fn-steps fn-step[data-state='active'] fn-step-title,
+.fn-steps .fn-step[data-state='active'] .fn-step-title {
+  color: #009fda;
+}
+.ui.ordered.steps .step.active:before,
+fn-steps fn-step[data-state='active'] fn-step-icon,
+.fn-steps .fn-step[data-state='active'] .fn-step-icon {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* Active Hover */
+fn-steps fn-step[data-state='active']:hover::after,
+.fn-steps .fn-step[data-state='active']:hover::after,
+fn-steps fn-step[data-state='active']:hover,
+.fn-steps .fn-step[data-state='active']:hover,
+.ui.steps a.active.step:hover::after,
+.ui.steps a.active.step:hover {
+  cursor: pointer;
+  background: #ececec;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+
+/* Disabled */
+fn-steps fn-step[data-state='disabled'],
+.fn-steps .fn-step[data-state='disabled'] {
+  cursor: auto;
+  background: #ffffff;
+  pointer-events: none;
+}
+fn-steps fn-step[data-state='disabled'],
+.fn-steps .fn-step[data-state='disabled'],
+fn-steps fn-step[data-state='disabled'] fn-step-title,
+.fn-steps .fn-step[data-state='disabled'] .fn-step-title,
+fn-steps fn-step[data-state='disabled'] fn-step-text,
+.fn-steps .fn-step[data-state='disabled'] .fn-step-text {
+  color: rgba(40, 40, 40, 0.3);
+}
+fn-steps fn-step[data-state='disabled']:after,
+.fn-steps .fn-step[data-state='disabled']:after {
+  background: #ffffff;
+}
+
+
+
+
