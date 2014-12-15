@@ -35,6 +35,10 @@
       line-height: 1.3em;
     }
 
+    ul > li[data-active] {
+      background-color: #efefef;
+    }
+
     ul > li:hover {
       cursor: pointer;
     }
@@ -53,9 +57,6 @@
       border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
     }
-
-
-
   </style>
   <ul>
   </ul>
@@ -66,48 +67,51 @@
       var tpl = Fnord.getTemplate('fn-pagination', 'base');
       var shadow = this.createShadowRoot();
       shadow.appendChild(tpl);
-      var start = this.start();
-      var end = this.end();
 
-      if (start <= end) {this.render(start, end);}
+      this.render();
 
     };
 
-    this.start = function() {
-      var start = this.getAttribute('data-start');
-      start = (start == null)? 1 : parseInt(start, 10);
-
-      return start;
-    };
-
-    this.end = function() {
-      var end = this.getAttribute('data-end');
-      end = (end == null)? 1 : parseInt(end, 10);
-
-      return end;
-    };
-
-
-    this.render = function(start, end) {
+    this.render = function() {
+      var base = this;
       var list = this.shadowRoot.querySelector("ul");
       list.innerHTML = '';
 
-      var index = this.getAttribute('data-per-index');
-      index = (index == null)? 5 : parseInt(index, 10);
+      var first_page = this.getAttribute('data-first-page');
+      first_page = (first_page == null)? 1 : parseInt(first_page, 10);
 
-      var prev_tooltip = document.createElement("li");
-      prev_tooltip.innerHTML = "<i class='fa fa-angle-double-left'></i>";
-      prev_tooltip.className = "prev";
-      list.appendChild(prev_tooltip);
+      var last_page = this.getAttribute('data-last-page');
+      last_page = (last_page == null) ? 1 : parseInt(last_page, 10);
 
-      for (var i = start; i < index+start; i++) {
-        if (i > end) {break;}
+      var pages = this.getAttribute('data-show-pages');
+      pages = (pages == null) ? 1 : parseInt(pages, 10);
+
+      var current_page = this.getAttribute('data-active-page');
+      current_page = (current_page == null)? 
+        first_page : parseInt(current_page, 10);
+
+      var start = Math.floor(current_page / pages);
+      start = start * pages + 1;
+
+      var tooltip_back = document.createElement("li");
+      tooltip_back.innerHTML = "<i class='fa fa-angle-double-left'></i>";
+      tooltip_back.className = "prev";
+      list.appendChild(tooltip_back);
+
+      for (var i = start; i < start + pages; i++) {
+        if (i > last_page) {break;}
         var li = document.createElement("li");
         li.innerHTML = i;
         li.setAttribute('data-index', i);
+
+        if (i == current_page) {
+          li.setAttribute("data-active", "active");
+        }
+
         list.appendChild(li);
 
         li.addEventListener('click', function() {
+          base.toggleActiveItem(this);
           var click_event = new CustomEvent(
             'fn-pagination-click',
             {'detail' : this.getAttribute('data-index')});
@@ -116,41 +120,60 @@
         }, false);
       }
 
+      var tooltip_for = document.createElement("li");
+      tooltip_for.innerHTML = "<i class='fa fa-angle-double-right'></i>";
+      tooltip_for.className = "next";
+      list.appendChild(tooltip_for);
 
-      var next_tooltip = document.createElement("li");
-      next_tooltip.innerHTML = "<i class='fa fa-angle-double-right'></i>";
-      next_tooltip.className = "next";
-      list.appendChild(next_tooltip);
-
-      var base = this;
-
-      prev_tooltip.addEventListener('click', function() {
-        var new_start = start - index;
-        console.log(new_start);
-        if (new_start >= 1) {
-          base.render(new_start, end);
+      tooltip_for.addEventListener('click', function() {
+        var next_page = current_page + pages;
+        if (next_page < last_page) {
+          base.setAttribute('data-active-page', next_page);
+          base.fireNextRangeEvent();
+          base.render();
         } else {
           if (base.hasAttribute('data-circling')) {
-            console.log("modulo");
-            new_start = end + new_start;
-            base.render(new_start, end);
+            base.setAttribute('data-active-page', first_page);
+            base.fireNextRangeEvent();
+            base.render();
           }
         }
       }, false);
 
-      next_tooltip.addEventListener('click', function() {
-        var new_start = start + index;
-        if (new_start < end) {
-          base.render(new_start, end);
+      tooltip_back.addEventListener('click', function() {
+        var prev_page = current_page - pages;
+        if (prev_page < first_page && current_page > first_page) {
+          prev_page = first_page;
+        }
+        if (prev_page >= first_page) {
+          base.setAttribute('data-active-page', prev_page);
+          base.firePreviousRangeEvent();
+          base.render();
         } else {
           if (base.hasAttribute('data-circling')) {
-            base.render(base.start(), end);
+            prev_page = last_page + 1 - (last_page % pages);
+            base.setAttribute('data-active-page', prev_page);
+            base.firePreviousRangeEvent();
+            base.render();
           }
         }
       }, false);
-
-
     };
+
+    this.toggleActiveItem = function(item) {
+      this.shadowRoot.querySelector(
+        "li[data-active]").removeAttribute('data-active');
+      item.setAttribute('data-active', 'active');
+    }
+
+    this.fireNextRangeEvent = function() {
+      this.dispatchEvent(new Event('fn-pagination-forward'));
+    }
+
+    this.firePreviousRangeEvent = function() {
+      this.dispatchEvent(new Event('fn-pagination-backward'));
+    }
+
   }
 
   window.addEventListener('fn-ready', function() {
