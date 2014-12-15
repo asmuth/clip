@@ -9,9 +9,14 @@
  */
 #ifndef _FNORDMETRIC_UTIL_LOGGER_H
 #define _FNORDMETRIC_UTIL_LOGGER_H
-#include <fnord/base/datetime.h>
+#include <atomic>
+#include <vector>
 #include <string>
 #include <vector>
+
+#include "fnord/base/datetime.h"
+#include "fnord/logging/loglevel.h"
+#include "fnord/logging/logtags.h"
 
 namespace fnord {
 namespace log {
@@ -20,13 +25,15 @@ namespace log {
 #define FNORD_LOGGER_MAX_LISTENERS 64
 #endif
 
+class LogTarget;
+
 class Logger {
 public:
-  Logger() {}
-  virtual ~Logger() {}
+  Logger();
+  static Logger* get();
 
   void log(
-      kLogLevel log_level,
+      LogLevel log_level,
       const std::string& message);
 
   void log(
@@ -34,13 +41,13 @@ public:
       const LogTags* tags,
       const std::string& message);
 
-  template <typename T...>
+  template <typename... T>
   void logf(
       LogLevel log_level,
       const std::string& message,
       T... args);
 
-  template <typename T...>
+  template <typename... T>
   void logf(
       LogLevel log_level,
       const LogTags* tags,
@@ -72,10 +79,16 @@ public:
       std::string message,
       ...);
 
-  void listen(LogLevel min_level, LogTarget* target);
+  void listen(LogTarget* target);
+  void setMinimumLogLevel(LogLevel min_level);
 
 protected:
-  void setMinimumLogLevel(LogLevel min_level);
+
+  void logInternal(
+      LogLevel log_level,
+      const LogTags* tags,
+      const std::string& message);
+
   std::atomic<LogLevel> min_level_;
   std::atomic<size_t> max_listener_index_;
   std::atomic<LogTarget*> listeners_[FNORD_LOGGER_MAX_LISTENERS];
@@ -83,4 +96,6 @@ protected:
 
 }
 }
+
+#include "logger_impl.h"
 #endif

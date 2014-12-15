@@ -24,5 +24,16 @@ http_test: libfnord-http.a http_test.cc
 http_test\:run: http_test
 	./http_test
 
+httpserver_example: libfnord-http.a httpserver_example.cc
+	(cd ../../base && make)
+	(cd ../../io && make)
+	(cd ../../logging && make)
+	(cd ../../system && make)
+	(cd ../../thread && make)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) -o httpserver_example httpserver_example.cc -L. -L../../base -L../../io -L../../logging -L../../system -L../../thread -lfnord-http -lfnord-io -lfnord-base -lfnord-system -lfnord-thread -lfnord-logging -lpthread
+
+httpserver_example\:run: httpserver_example
+	./httpserver_example
+
 clean:
 	rm -f ${FNORD_HTTP_OBJECTS} $(FNORD_HTTP_TARGET)

@@ -9,15 +9,54 @@
  */
 #include <sstream>
 #include <stdarg.h>
-#include <fnord/base/wallclock.h>
 #include <fnord/base/exception.h>
-#include <fnordmetric/util/logger.h>
+#include <fnord/base/inspect.h>
+#include <fnord/base/wallclock.h>
+#include <fnord/logging/logger.h>
+#include <fnord/logging/logtarget.h>
 
 using fnord::Exception;
 
 namespace fnord {
-namespace util {
+namespace log {
 
+Logger* Logger::get() {
+  static Logger singleton;
+  return &singleton;
+}
+
+Logger::Logger() :
+    min_level_(kNotice),
+    max_listener_index_(0) {
+  for (int i = 0; i < FNORD_LOGGER_MAX_LISTENERS; ++i) {
+    listeners_[i] = nullptr;
+  }
+}
+
+void Logger::logInternal(
+      LogLevel log_level,
+      const LogTags* tags,
+      const std::string& message) {
+  const auto max_idx = max_listener_index_.load();
+  for (int i = 0; i < max_idx; ++i) {
+    auto listener = listeners_[i].load();
+
+    if (listener != nullptr) {
+      listener->log(log_level, tags, message);
+    }
+  }
+}
+
+void Logger::listen(LogTarget* target) {
+  auto listener_id = max_listener_index_.fetch_add(1);
+  listeners_[listener_id] = target;
+}
+
+void Logger::setMinimumLogLevel(LogLevel min_level) {
+  min_level_ = min_level;
+}
+
+/*
 void Logger::log(
     const std::string& severity,
     const std::string& message) {
@@ -91,6 +130,7 @@ const std::vector<std::pair<std::string, std::string>>& LogEntry::lines()
 const DateTime& LogEntry::time() const {
   return time_;
 }
+*/
 
 }
 }

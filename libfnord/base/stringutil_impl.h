@@ -46,6 +46,13 @@ std::string StringUtil::format(const char* fmt, T... values) {
   return str;
 }
 
+template <typename... T>
+std::string StringUtil::format(const std::string& fmt, T... values) {
+  std::string str = fmt;
+  StringUtil::formatImpl(&str, 0, values...);
+  return str;
+}
+
 template <typename T>
 std::string StringUtil::formatNumberMetric(T orig_value) {
   char buf[128];

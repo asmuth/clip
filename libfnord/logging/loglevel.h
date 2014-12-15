@@ -13,8 +13,6 @@
 namespace fnord {
 namespace log {
 
-class LogLevel {
-
 typedef int LogLevel;
 
 /**
@@ -51,6 +49,16 @@ const LogLevel kNotice = 4000;
  * INFO: Informational messages
  */
 const LogLevel kInfo = 3000;
+
+/**
+ * DEBUG: Debug messages
+ */
+const LogLevel kDebug = 2000;
+
+/**
+ * TRACE: Trace messages
+ */
+const LogLevel kTrace = 1000;
 
 
 /**

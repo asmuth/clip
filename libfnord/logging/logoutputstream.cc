@@ -7,54 +7,34 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/logoutputstream.h>
+#include "fnord/base/stringutil.h"
+#include "fnord/base/wallclock.h"
+#include "fnord/logging/logoutputstream.h"
 
 using fnord::io::OutputStream;
 
 namespace fnord {
-namespace util {
+namespace log {
 
 LogOutputStream::LogOutputStream(
     std::unique_ptr<OutputStream> target) :
     target_(std::move(target)) {}
 
-void LogOutputStream::log(const LogEntry& log_entry) {
-  std::string severity = "INFO";
-  std::vector<std::string> lines;
-  for (const auto& line : log_entry.lines()) {
-    if (line.first == "__severity__") {
-      severity = line.second;
-      continue;
-    }
+void LogOutputStream::log(
+    LogLevel level,
+    const LogTags* tags,
+    const std::string& message) {
+  const auto& severity = logLevelToStr(level);
+  const auto time = WallClock::now();
 
-    if (line.first == "__message__") {
-      lines.emplace_back(line.second);
-      continue;
-    }
+  std::string line = StringUtil::format(
+      "$0 [$1] $2\n",
+      time.toString("%Y-%m-%d %H:%M:%S"),
+      severity,
+      message);
 
-    lines.emplace_back("-- " + line.first + ": " + line.second);
-  }
-
-  std::string prefix;
-  prefix.append(log_entry.time().toString("%Y-%m-%d %H:%M:%S"));
-  prefix.append(" [" + severity + "] ");
-
-  std::string msg;
-  for (const auto& line : lines) {
-    msg.append(prefix);
-    msg.append(line);
-    msg.append("\n");
-  }
-
-  target_->mutex_.lock();
-  try {
-    target_->write(msg.c_str(), msg.size());
-  } catch (const std::exception& e) {
-    target_->mutex_.unlock();
-    throw e;
-  }
-
-  target_->mutex_.unlock();
+  std::lock_guard<std::mutex> lock_holder(target_->mutex_);
+  target_->write(line);
 }
 
 }

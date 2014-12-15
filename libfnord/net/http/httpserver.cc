@@ -32,7 +32,8 @@ HTTPServer::HTTPServer(
     TaskScheduler* request_scheduler) :
     server_scheduler_(server_scheduler),
     request_scheduler_(request_scheduler),
-    enable_keepalive_(false) {}
+    enable_keepalive_(false),
+    logger_(log::Logger::get()) {}
 
 
 void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
@@ -40,6 +41,8 @@ void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
 }
 
 void HTTPServer::listen(int port) {
+  logger_->logf(fnord::log::kNotice, "Starting HTTP server on port $0", port);
+
   ssock_ = socket(AF_INET, SOCK_STREAM, 0);
   if (ssock_ == 0) {
     RAISE(kIOError, "create socket() failed");
@@ -85,17 +88,9 @@ void HTTPServer::accept() {
 }
 
 void HTTPServer::handleConnection(int fd) const {
-  /*
-  if (fnordmetric::env()->verbose()) {
-    fnordmetric::env()->logger()->printf(
-        "DEBUG",
-        "New HTTP connection on fd %i",
-        fd);
-  }
-  */
+  logger_->logf(fnord::log::kDebug, "New HTTP connection on fd $0", fd);
 
   bool keepalive = false;
-
   FileInputStream input_stream(fd, true);
   FileOutputStream output_stream(fd, true);
 

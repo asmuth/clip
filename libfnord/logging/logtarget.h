@@ -7,28 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
-#define _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
-
-#include "fnord/io/outputstream.h"
-#include "fnord/logging/loglevel.h"
-#include "fnord/logging/logtags.h"
-#include "fnord/logging/logtarget.h"
+#ifndef _FNORD_LOG_LOGTARGET_H
+#define _FNORD_LOG_LOGTARGET_H
 
 namespace fnord {
 namespace log {
 
-class LogOutputStream : public LogTarget {
-public:
-  LogOutputStream(std::unique_ptr<fnord::io::OutputStream> target);
+#include "fnord/logging/loglevel.h"
+#include "fnord/logging/logtags.h"
 
-  void log(
+class LogTarget {
+public:
+  virtual ~LogTarget() {}
+
+  virtual void log(
       LogLevel level,
       const LogTags* tags,
-      const std::string& message) override;
+      const std::string& message) = 0;
 
-protected:
-  std::unique_ptr<fnord::io::OutputStream> target_;
 };
 
 }

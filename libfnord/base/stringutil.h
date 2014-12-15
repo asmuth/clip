@@ -127,10 +127,41 @@ public:
    *    // returns "The teapot is 23.5 pounds"
    *
    * @param fmt the format string
+   * @param values... the values to insert into the format string
+   * @return the format string with placeholders inserted
+   */
+  template <typename... T>
+  static std::string format(const std::string& fmt, T... values);
+
+  /**
+   * Insert values into a string with placeholders. This method will throw an
+   * exception if an invalid placeholder is referenced
+   *
+   * Example:
+   *    StringUtil::format("The $0 is $1 $2", "teapot", 23.5, "pounds");
+   *    // returns "The teapot is 23.5 pounds"
+   *
+   * @param fmt the format string
    * @param values the values to insert into the format string
    * @return the format string with placeholders inserted
    */
   static std::string formatv(const char* fmt, std::vector<std::string> values);
+
+  /**
+   * Insert values into a string with placeholders. This method will throw an
+   * exception if an invalid placeholder is referenced
+   *
+   * Example:
+   *    StringUtil::format("The $0 is $1 $2", "teapot", 23.5, "pounds");
+   *    // returns "The teapot is 23.5 pounds"
+   *
+   * @param fmt the format string
+   * @param values the values to insert into the format string
+   * @return the format string with placeholders inserted
+   */
+  static std::string formatv(
+      const std::string& fmt,
+      std::vector<std::string> values);
 
   /**
    * Format a number using these SI prefixes:
