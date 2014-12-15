@@ -33,6 +33,39 @@ Logger::Logger() :
   }
 }
 
+void Logger::logException(
+    LogLevel log_level,
+    const std::string& message,
+    const std::exception& exception) {
+  logException(log_level, nullptr, message, exception);
+}
+
+void Logger::logException(
+    LogLevel log_level,
+    const LogTags* tags,
+    const std::string& message,
+    const std::exception& exception) {
+  try {
+    auto rte = dynamic_cast<const fnord::Exception&>(exception);
+    logf(
+        log_level,
+        tags,
+        "$0: $1\n    in $2\n    in $3:$4",
+        message,
+        rte.getTypeName(),
+        rte.method(),
+        rte.file(),
+        rte.line());
+  } catch (const std::exception& e) {
+    logf(
+        log_level,
+        tags,
+        "$0: std::exception: <foreign exception>",
+        message);
+  }
+}
+
+
 void Logger::logInternal(
       LogLevel log_level,
       const LogTags* tags,
@@ -77,33 +110,13 @@ void Logger::printf(const std::string& key, std::string value, ...) {
 
   log(key, buf);
 }
-
-void Logger::exception(
-    const std::string& severity,
-    const std::string& message,
-    const std::exception& exception) {
-  LogEntry entry;
-  entry.append("__severity__", severity);
-  entry.append("__message__", message);
-
   try {
-    auto rte = dynamic_cast<const fnord::Exception&>(exception);
-    entry.append("exception", rte.getTypeName());
-    entry.printf("exception", "    in %s", rte.method().c_str());
-    entry.printf("exception", "    in %s:%i", rte.file().c_str(), rte.line());
-
-    std::stringstream ss(rte.getMessage());
-    std::string line;
-    while (std::getline(ss, line, '\n')) {
-      entry.append("exception", "message: " + line);
-    }
-  } catch (const std::exception& e) {
-    entry.append("exception", "std::exception: <unknown exception>");
+    auto rte = dynamic_cast<const fnord::Exception&>(error);
+    fprintf(stderr, "ERROR: Uncaught exception\n");
+    rte.debugPrint();
+  } catch (const std::exception& cast_error) {
+    fprintf(stderr, "ERROR: Uncaught foreign exception: %s\n", error.what());
   }
-
-  log(entry);
-}
-
 LogEntry::LogEntry() : time_(WallClock::now()) {}
 
 void LogEntry::append(const std::string& key, const std::string& value) {

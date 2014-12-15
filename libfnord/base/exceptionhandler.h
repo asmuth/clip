@@ -12,9 +12,9 @@
 #include <mutex>
 #include <memory>
 #include <string>
+#include "fnord/logging/logger.h"
 
 namespace fnord {
-class Logger;
 
 class ExceptionHandler {
 public:
@@ -24,10 +24,12 @@ public:
 
 class CatchAndPrintExceptionHandler : public ExceptionHandler {
 public:
-  CatchAndPrintExceptionHandler(Logger* logger);
+  CatchAndPrintExceptionHandler(
+      log::Logger* logger = fnord::log::Logger::get());
+
   void onException(const std::exception& error) const override;
 protected:
-  Logger* logger_;
+  log::Logger* logger_;
 };
 
 class CatchAndAbortExceptionHandler : public ExceptionHandler {

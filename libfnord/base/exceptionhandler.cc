@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include <assert.h>
 #include <fnord/base/exception.h>
 #include <fnord/base/exceptionhandler.h>
 #include <fnord/base/inspect.h>
@@ -17,19 +18,14 @@ namespace fnord {
 using fnord::Exception;
 
 CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler(
-    Logger* logger) :
-    logger_(logger) {}
+    log::Logger* logger) :
+    logger_(logger) {
+  assert(logger_ != nullptr);
+}
 
 void CatchAndPrintExceptionHandler::onException(
     const std::exception& error) const {
-  //logger_->exception("ERROR", "Uncaught exception", error);
-  try {
-    auto rte = dynamic_cast<const fnord::Exception&>(error);
-    fprintf(stderr, "ERROR: Uncaught exception\n");
-    rte.debugPrint();
-  } catch (const std::exception& cast_error) {
-    fprintf(stderr, "ERROR: Uncaught foreign exception: %s\n", error.what());
-  }
+  logger_->logException(fnord::log::kError, "Uncaught exception", error);
 }
 
 CatchAndAbortExceptionHandler::CatchAndAbortExceptionHandler(

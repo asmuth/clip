@@ -14,6 +14,7 @@
 
 #include "fnord/base/exception.h"
 #include "fnord/base/exceptionhandler.h"
+#include "fnord/logging/logger.h"
 #include "fnord/thread/threadpool.h"
 
 using fnord::ExceptionHandler;
@@ -23,7 +24,7 @@ namespace thread {
 
 ThreadPool::ThreadPool() :
     ThreadPool(std::unique_ptr<fnord::ExceptionHandler>(
-          new fnord::CatchAndPrintExceptionHandler(nullptr))) {}
+        new fnord::CatchAndPrintExceptionHandler())) {}
 
 ThreadPool::ThreadPool(
     std::unique_ptr<ExceptionHandler> error_handler) :

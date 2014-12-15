@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include "fnord/base/exception.h"
 #include "fnord/base/exceptionhandler.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/logging/logger.h"
