@@ -153,6 +153,7 @@
       }
     }
 
+    
     this.forEachRowWithPagination = function(cb) {
       var all_rows = this.querySelectorAll("tr");
       var rows_per_page = this.rowsPerPage();
@@ -258,7 +259,17 @@
     this.appendRow = function(tr_elem) {
       this.querySelector("table").appendChild(tr_elem);
       this.renderTable();
+    };
+
+    /* pagination element functions */
+    this.getNumberOfItems = function() {
+      return this.querySelectorAll("tr").length;
     }
+
+    this.pagerEvent = function(page, base) {
+      base.setAttribute('data-page', page);
+    };
+
   };
 
   window.addEventListener("fn-ready", function() {

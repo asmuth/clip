@@ -131,6 +131,7 @@
   <!-- Example 4: Paginated Table -->
   <section>
     <h1><i>Example 4 &raquo;</i> Paginated Table</h1>
+    <fn-pager data-for></fn-pager>
     <fn-table id="example-table-4" data-per-page="3" data-page="0">
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
@@ -148,5 +149,11 @@
       </table>
     </fn-table>
   </section>
+
+  <script type='text/javascript'>
+    var pager = document.querySelector('fn-pager');
+    var table = document.querySelector("fn-table#example-table-4");
+    pager.forElement(table);
+  </script>
 
 </template>

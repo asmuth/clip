@@ -74,43 +74,57 @@
       var shadow= this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-pager", "base");
       shadow.appendChild(tpl);
-      this.renderTitle(this.currentPage());
-      this.observeTooltips();
+
+      if (this.hasAttribute('data-for')) {
+        //set classname
+      } else {
+        this.init();
+        this.renderTitle();
+        this.observeTooltips(this.pageEvent, this);
+      }
     };
 
-    this.currentPage = function() {
+    this.forElement = function(elem) {
+      var page = elem.getAttribute('data-page');
+      page = (page == null)? 1 : parseInt(page, 10);
+      this.current_page = page;
+
+      var end = elem.getNumberOfItems();
+      end = (end == null)? 1 : parseInt(end, 10);
+      this.end = end;
+
+      var per_page = elem.getAttribute('data-per-page');
+      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
+      this.per_page = per_page;
+
+      var callback = elem.pagerEvent;
+
+      this.renderTitle();
+      this.observeTooltips(callback, elem);
+    };
+
+    this.init = function() {
       var page = this.getAttribute('data-current-page');
       page = (page == null)? 1 : parseInt(page, 10);
+      this.current_page = page;
 
-      return page;
-    };
-
-    this.start = function() {
-      var start = this.getAttribute('data-start-item');
-      start = (start == null)? 1 : parseInt(start,10);
-
-      return start;
-    }
-
-    this.end = function() {
       var end = this.getAttribute('data-last-item');
       end = (end == null)? 1 : parseInt(end, 10);
+      this.end = end;
 
-      return end;
-    };
-
-    this.perPage = function() {
       var per_page = this.getAttribute('data-per-page');
       per_page = (per_page == null)? 1 : parseInt(per_page, 10);
-
-      return per_page;
+      this.per_page = per_page;
     };
 
-    this.renderTitle = function(current_page) {
-      var per_page = this.perPage();
-      var start = this.start() + (current_page - 1) * per_page;
-      var current_end = start - 1 + per_page;
-      var end = this.end();
+    this.renderTitle = function() {
+      var current_page = this.current_page;
+      var per_page = this.per_page;
+      var end = this.end;
+
+      var start = current_page * per_page + 1;
+      var current_end = start + per_page - 1;
+
       if (current_end > end) {
         current_end = end;
       }
@@ -119,31 +133,39 @@
         "<b>" + start + "</b> - <b>" + current_end + "</b> of <b>" + end + "</b>";
     };
 
-    this.observeTooltips = function() {
+    this.observeTooltips = function(cb, caller) {
       var backward_tooltip = this.shadowRoot.querySelector(".backward");
       var forward_tooltip = this.shadowRoot.querySelector(".forward");
       var base = this;
 
-      var pages = Math.ceil(this.end() / this.perPage());
+      var pages = Math.ceil(this.end / this.per_page) - 1;
 
       backward_tooltip.onclick = function() {
-        var current_page = base.currentPage();
-        if (current_page > 1 || base.hasAttribute('data-circling')) {
-          var new_page = ((current_page + pages - 2) % pages) + 1;
-          base.setAttribute('data-current-page', new_page);
-          base.renderTitle(new_page);
+        var current_page = base.current_page;
+        if (current_page > 0 || base.hasAttribute('data-circling')) {
+          var new_page = ((current_page + pages - 1) % pages);
+          cb(new_page, caller);
+          base.current_page = new_page;
+          base.renderTitle();
         }
       };
 
       forward_tooltip.onclick = function() {
-        var current_page = base.currentPage();
+        var current_page = base.current_page;
         if (current_page < pages || base.hasAttribute('data-circling')) {
           var new_page = ((current_page) % pages) + 1;
-          base.setAttribute('data-current-page', new_page);
-          base.renderTitle(new_page);
+          cb(new_page, caller);
+          base.current_page = new_page;
+          base.renderTitle();
         }
       };
     };
+
+    this.pageEvent = function(current_page, base) {
+      var page_event = new CustomEvent("fn-pager-turn", {detail : current_page});
+      this.dispatchEvent(page_event);
+    }
+
   };
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-pager', PagerComponent);
