@@ -21,34 +21,35 @@ fn-progress
 fn-tabs
 fn-tooltip || semantic popup -> Fnord.tooltip
 fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
+fn-wizard || semantic step
+message box (http://dev.sencha.com/extjs/5.0.0/examples/kitchensink/#message-box)
+fn-accordion
+fn-menu || menu -> komplex, muessen wir drueber reden
 
 
- 
--- hiermit anfangen
- 
 -- needs polish
 fn-datepicker
 fn-timeinput
+fn-pagination http://getbootstrap.com/components/#pagination (fix circled tooltip prev)
+
+
  
 -- die werden komplex
 fn-label || label -> <fn-label>, <span class="fn-label">
-fn-menu || menu -> komplex, muessen wir drueber reden
 fn-toolbar
 fn-tabbar
  
 -- nice to have
 fn-rating
-fn-wizard || semantic step
 fn-reveal
 fn-card
 fn-comment
 fn-feed
-fn-accordion
  
 -- machen wir selbst
 fn-video
 fn-pager
-fn-pagination http://getbootstrap.com/components/#pagination
+
 
 ---
 flyoout menu from toolbar  (like osx top toolbar)
@@ -70,7 +71,6 @@ switch
 removable tag (https://openui5.hana.ondemand.com/explored.html#/sample/sap.m.sample.Tokenizer/preview)
 panel (header + body like extjs)
 resizable table
-message box (http://dev.sencha.com/extjs/5.0.0/examples/kitchensink/#message-box)
 "notification" (like growl)
 vertical toolbar
 multi input w/ autocomplete (like gmail TO field input)
