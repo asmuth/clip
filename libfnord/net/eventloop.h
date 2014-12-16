@@ -12,26 +12,24 @@
 #define FNORDMETRIC_EV_EVENTLOOP_H
 #include <sys/select.h>
 
-namespace fnordmetric {
-namespace ev {
+namespace fnord {
+namespace thread {
 
-class EventLoop {
+class EventLoop : public TaskScheduler {
 public:
+  typedef std::function<void (
+      EventLoop* loop,
+      int fd,
+      kInterestType interest)> CallbackType;
+
   enum kInterestType {
     EV_READABLE = 1,
     EV_WRITEABLE = 2
   };
 
-  class CallbackInterface {
-  public:
-    virtual void onEvent(
-        EventLoop* loop,
-        int fd,
-        kInterestType interest) = 0;
-  };
 
   EventLoop();
-  void watch(int fd, kInterestType interest, CallbackInterface* callback);
+  void watch(int fd, kInterestType interest, CallbackType callback);
   void unwatch(int fd, int flags);
   int poll();
   void loop();
@@ -40,7 +38,6 @@ protected:
   fd_set op_read_;
   fd_set op_write_;
   int max_fd_;
-  CallbackInterface** callbacks_;
   volatile bool running_;
 };
 

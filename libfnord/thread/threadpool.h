@@ -30,12 +30,11 @@ public:
   ThreadPool(
       std::unique_ptr<fnord::ExceptionHandler> error_handler);
 
-  void run(std::shared_ptr<Task> task) override;
-  void runOnReadable(std::shared_ptr<Task> task, int fd) override;
-  void runOnWritable(std::shared_ptr<Task> task, int fd) override;
+  void run(std::function<void()> task) override;
+  void runOnReadable(std::function<void()> task, int fd) override;
+  void runOnWritable(std::function<void()> task, int fd) override;
 
 protected:
-  void runInternal(std::function<void()> fn);
   void startThread();
 
   std::unique_ptr<fnord::ExceptionHandler> error_handler_;

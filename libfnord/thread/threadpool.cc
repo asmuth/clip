@@ -31,14 +31,27 @@ ThreadPool::ThreadPool(
     error_handler_(std::move(error_handler)),
     free_threads_(0) {}
 
-void ThreadPool::run(std::shared_ptr<Task> task) {
-  runInternal([this, task] () {
-    task->run();
-  });
+void ThreadPool::run(std::function<void()> task) {
+  bool start_thread = true;
+
+  {
+    std::lock_guard<std::mutex> lock_holder(runq_mutex_);
+    runq_.push_back(task);
+
+    if (runq_.size() < free_threads_) {
+      start_thread = false;
+    }
+  }
+
+  if (start_thread) {
+    startThread();
+  }
+
+  wakeup_.notify_one();
 }
 
-void ThreadPool::runOnReadable(std::shared_ptr<Task> task, int fd) {
-  runInternal([this, task, fd] () {
+void ThreadPool::runOnReadable(std::function<void()> task, int fd) {
+  run([this, task, fd] () {
     fd_set op_read, op_write;
     FD_ZERO(&op_read);
     FD_ZERO(&op_write);
@@ -54,12 +67,12 @@ void ThreadPool::runOnReadable(std::shared_ptr<Task> task, int fd) {
       RAISE_ERRNO(kIOError, "select() failed");
     }
 
-    task->run();
+    task();
   });
 }
 
-void ThreadPool::runOnWritable(std::shared_ptr<Task> task, int fd) {
-  runInternal([task, fd] () {
+void ThreadPool::runOnWritable(std::function<void()> task, int fd) {
+  run([task, fd] () {
     fd_set op_read, op_write;
     FD_ZERO(&op_read);
     FD_ZERO(&op_write);
@@ -75,27 +88,8 @@ void ThreadPool::runOnWritable(std::shared_ptr<Task> task, int fd) {
       RAISE_ERRNO(kIOError, "select() failed");
     }
 
-    task->run();
+    task();
   });
-}
-
-void ThreadPool::runInternal(std::function<void()> fn) {
-  bool start_thread = true;
-
-  {
-    std::lock_guard<std::mutex> lock_holder(runq_mutex_);
-    runq_.push_back(fn);
-
-    if (runq_.size() < free_threads_) {
-      start_thread = false;
-    }
-  }
-
-  if (start_thread) {
-    startThread();
-  }
-
-  wakeup_.notify_one();
 }
 
 void ThreadPool::startThread() {

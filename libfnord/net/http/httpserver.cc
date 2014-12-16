@@ -82,8 +82,7 @@ void HTTPServer::accept() {
     }
 
     request_scheduler_->run(
-        thread::Task::create(
-            std::bind(&HTTPServer::handleConnection, this, conn_fd)));
+        std::bind(&HTTPServer::handleConnection, this, conn_fd));
   }
 }
 
