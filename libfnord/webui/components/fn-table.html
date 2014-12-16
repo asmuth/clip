@@ -54,8 +54,20 @@
         header_row.appendChild(document.createElement("th"));
       }
 
-      this.forEachColumn(function(col) {
+      var base = this;
+
+      this.forEachColumn(function(col, index) {
         var th_elem = document.createElement("th");
+
+        if (col.hasAttribute("data-sortable")) {
+          th_elem.setAttribute('data-column-index', index);
+          th_elem.className += " sortable ";
+          if (col.getAttribute("data-sort-state") != null) {
+            th_elem.className += col.getAttribute("data-sort-state");
+          }
+          base.observeSortableColumns(th_elem);
+        }
+
         th_elem.innerHTML = col.innerHTML;
         header_row.appendChild(th_elem);
       });
@@ -153,7 +165,6 @@
       }
     }
 
-    
     this.forEachRowWithPagination = function(cb) {
       var all_rows = this.querySelectorAll("tr");
       var rows_per_page = this.rowsPerPage();
@@ -180,13 +191,21 @@
     this.forEachColumn = function(cb) {
       var col_elems = this.querySelectorAll("fn-table-column");
       for (var i = 0; i < col_elems.length; ++i) {
-        cb(col_elems[i]);
+        cb(col_elems[i], i);
       }
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-page" || attr == "data-per-page") {
         this.renderRows();
+      }
+    }
+
+    this.observeSortableColumns = function(column) {
+      var base = this;
+      column.onclick = function() {
+        console.log(this);
+        base.resortRows(this.getAttribute('data-column-index'));
       }
     }
 
@@ -210,7 +229,7 @@
     }
 
     this.resortRowsWithOrder = function(column_index, order) {
-      var tbody = this.querySelector("fn-table-body");
+      var tbody = this.querySelector("tbody");
 
       var sort_fn = this.rowSortFunction;
       if (!sort_fn) {

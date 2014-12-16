@@ -22,6 +22,10 @@
       color: rgba(0,0,0,.8);
     }
 
+    ul.attached {
+      margin: 0;
+    }
+
     ul > li {
       display: inline;
       position: relative;
@@ -70,6 +74,7 @@
 
       if (this.hasAttribute('data-for')) {
         //set style
+        this.shadowRoot.querySelector("ul").className = "attached";
       } else {
         this.render();
       }
@@ -92,7 +97,6 @@
       var callback = elem.paginationEvent;
 
       this.render(callback, elem);
-      
     }
 
     this.pages = function() {
