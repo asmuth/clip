@@ -8,86 +8,47 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style type='text/css'>
-  fnordmetric-embed-query-popup {
-    display:none;
-  }
 
-  fnordmetric-embed-query-popup[data-active] {
-    display: block;
-  }
-</style>
 <template id="fnordmetric-embed-query-popup-base-tpl">
   <style type='text/css'>
-    .background {
-      position: fixed;
-      top: 0;
-      left:0;
-      height: 100%;
-      width: 100%;
-      z-index: 100;
-      background: #e9ebed;
-      opacity: 0.5;
-      display: table;
-      text-align: center;
+    fn-modal#query fn-tabbar {
+      margin-top: 0;
     }
 
-    .popup {
-      position: fixed;
-      min-height: 400px;
-      width: 700px;
-      z-index: 200;
-      border: 1px solid #dbdedf;
-      left: 30%;
-      top:90px;
-      background-color: #fff;
-      border-radius: 3px;
-      box-shadow: 0 0 3px rgba(0,0,0,.1);
-      opacity: 1;
+    fn-modal#query .header {
+      font-weight: 500;
+      padding: 0.6em 0 1em;
     }
 
-    .popup fn-button#close {
-      float:left;
-      width:60px;
-      margin:0;
-      box-shadow: none;
-    }
-
-    .popup .controls {
-      float:left;
-      width: 638px;
-    }
-
-    .popup .inner {
-      text-align:center;
-      padding: 10px;
-    }
-
-    .popup .inner .header {
-      margin: 10px;
-    }
-
-    .popup .inner code {
-      word-wrap: break-word;
+    fn-modal#query .header.multi {
+      padding-top: 1.9em;
     }
   </style>
 
-  <div class="background"></div>
-  <div class="popup">
-    <fn-button id="close"><i class="fa fa-times"></i></fn-button>
-    <div class="controls">
-      <fn-button-group data-split-evenly>
-        <fn-button id="iframe">IFrame</fn-button>
-        <fn-button id="html">HTML</fn-button>
-        <fn-button id="url">URL</fn-button>
-      </fn-button-group>
-    </div>
-    <div style="clear:both;"></div>
-    <div class="inner">
-      <div class="header"></div>
-      <div class="code"></div>
-    </div>
-  </div>
+  <fn-modal id='query'>
+    <fn-modal-header>Embed</fn-modal-header>
+    <fn-modal-content>
+      <fn-tabbar data-content-attached>
+        <fn-tab data-index='0' data-active>IFrame</fn-tab>
+        <fn-tab data-index='1'>HTML</fn-tab>
+        <fn-tab data-index='2'>URL</fn-tab>
+        <fn-tab-content data-index='0'>
+          <div class="header">Copy this into your HTML Page</div>
+          <code></code>
+        </fn-tab-content>
+        <fn-tab-content data-index='1'>
+          <div class="header">Copy this into the header of your HTML Page</div>
+          <code id='code1'></code>
+          <div class="header multi">Copy this into the body of your HTML Page</div>
+          <code id="code2"></code>
+        </fn-tab-content>
+        <fn-tab-content data-index='2'>
+          <div class="header">Embed URL</div>
+          <code></code>
+        </fn-tab-content>
+      </fn-tabbar>
+    </fn-modal-content>
+  </fn-modal>
 </template>
 
 <script type='text/javascript'>
@@ -96,113 +57,43 @@
       var tpl = Fnord.getTemplate("fnordmetric-embed-query-popup", "base");
       this.appendChild(tpl);
 
-      if (this.hasAttribute('data-active')) {this.render();}
-
-      this.init();
+      if (this.hasAttribute('data-active')) {
+        this.initViews();
+        this.querySelector("fn-modal").show();
+      }
 
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-active') {
-        //default view
-        this.renderIFrameView();
-        this.querySelector(
-          "fn-button#iframe").setAttribute('data-state', 'active');
+        this.initViews();
+        this.querySelector("fn-modal").show();
       }
     };
 
-    this.close = function() {
-      this.removeAttribute('data-active');
-    }
-
-
-    this.init = function() {
-      var base = this;
-
-      this.querySelector(".background").onclick = function() {
-        base.close();
-      }
-
-      this.querySelector("fn-button#close").onclick = function() {
-        base.close();
-      }
-
-      this.querySelector("fn-button#iframe").onclick = function() {
-        base.renderIFrameView();
-        base.querySelector(
-          "fn-button[data-state='active']").removeAttribute('data-state');
-        this.setAttribute('data-state', 'active');
-      }
-
-      this.querySelector("fn-button#html").onclick = function() {
-        base.renderHTMLView();
-        base.querySelector(
-          "fn-button[data-state='active']").removeAttribute('data-state');
-        this.setAttribute('data-state', 'active');
-
-      }
-
-      this.querySelector("fn-button#url").onclick = function() {
-        base.renderURLView();
-        base.querySelector(
-          "fn-button[data-state='active']").removeAttribute('data-state');
-        this.setAttribute('data-state', 'active');
-
-      }
-    };
-
-    this.renderIFrameView = function() {
+    this.initViews = function() {
       var query_url = this.getAttribute('data-url');
-      var elem = this.querySelector(".code");
-      var code_elem = document.createElement("code");
-      var header = this.querySelector(".header");
 
-      header.innerHTML = "Copy this into ypur HTML page:";
-      code_elem.innerHTML = 
+      /* IFrame */
+      this.querySelector("fn-tab-content[data-index='0'] code").innerHTML =
         '&lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />' +
         '&nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />' +
         '&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />' +
         '&nbsp;&nbsp;&nbsp;&nbsp;src="' + query_url + 
-        '"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;';
-      elem.innerHTML = "";
-      elem.appendChild(code_elem);
-    }
+        '"&gt;<br />&lt;/iframe&gt;';
 
-    this.renderURLView = function() {
-      var query_url = this.getAttribute('data-url');
-      var elem = this.querySelector(".code");
-      var code_elem = document.createElement("code");
-      var header = this.querySelector(".header");
-
-      header.innerHTML = "Embed URL:";
-      code_elem.innerHTML = query_url;
-      elem.innerHTML = "";
-      elem.appendChild(code_elem);
-    };
-
-    this.renderHTMLView = function() {
-      var query_url = this.getAttribute('data-url');
-      var query = 
-        FnordMetric.util.parseQueryString(query_url).query_params.innerViewValue;
-
-      var elem = this.querySelector(".code");
-      var code_elem = document.createElement("code");
-      var code_elem2 = document.createElement("code");
-      var header = this.querySelector(".header");
-      var header2 = document.createElement("div");
-      header2.className = "header";
-
-      header.innerHTML = "Copy this into the header of your html page";
-      code_elem.innerHTML = 
+      /* HTML */
+      var html_tab = this.querySelector("fn-tab-content[data-index='1']");
+      html_tab.querySelector("#code1").innerHTML =
         '&lt;script href="http://' + document.location.host +
         '/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;';
-      header2.innerHTML = "Copy this into the body of your html page";
-      code_elem2.innerHTML = '&lt;fm-chart&gt;<br />' + query + '<br />&lt;/fm-chart&gt;';
 
-      elem.innerHTML = "";
-      elem.appendChild(code_elem);
-      elem.appendChild(header2);
-      elem.appendChild(code_elem2);
+      html_tab.querySelector("#code2").innerHTML =
+        '&lt;fm-chart&gt;<br />&nbsp;&nbsp;' + query_url + '<br />&lt;/fm-chart&gt;';
+
+      /* URL */
+      this.querySelector("fn-tab-content[data-index='2'] code").innerHTML =
+        query_url;
     };
   };
 

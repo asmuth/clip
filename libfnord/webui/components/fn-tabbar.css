@@ -92,7 +92,6 @@ fn-tabbar[data-content-attached] fn-tab[data-active],
 
 fn-tabbar[data-content-attached] fn-tab-content,
 .fn-tabbar[data-content-attached] .fn-tab-content {
-  display:block;
   box-sizing: border-box;
   margin: -1px 0px 0px;
   border-radius: 0 0 .2857rem .2857rem;
@@ -103,4 +102,14 @@ fn-tabbar[data-content-attached] fn-tab-content,
   position: relative;
   background-color: #fff;
   padding: 1em;
+}
+
+fn-tabbar[data-content-attached] fn-tab-content,
+.fn-tabbar[data-content-attached] .fn-tab-content {
+  display:none;
+}
+
+fn-tabbar[data-content-attached] fn-tab-content[data-active],
+.fn-tabbar[data-content-attached] .fn-tab-content[data-active] {
+  display: block;
 }

@@ -27,6 +27,8 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/3rdparty/reset.css");
   webui_bundle_.addComponent("fnord/components/fn-table.css");
   webui_bundle_.addComponent("fnord/components/fn-button.css");
+  webui_bundle_.addComponent("fnord/components/fn-modal.css");
+  webui_bundle_.addComponent("fnord/components/fn-tabbar.css");
   webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
 
   webui_bundle_.addComponent("fnord/fnord.js");
@@ -46,6 +48,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-timeinput.html");
   webui_bundle_.addComponent("fnord/components/fn-daterangepicker.html");
   webui_bundle_.addComponent("fnord/components/fn-tabbar.html");
+  webui_bundle_.addComponent("fnord/components/fn-modal.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-console.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");

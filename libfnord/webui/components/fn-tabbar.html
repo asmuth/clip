@@ -15,7 +15,13 @@
 
       var active_elem = this.querySelector("fn-tab[data-active]");
       if (active_elem == null) {
-        tabs[0].setAttribute('data-active', 'active');
+        active_elem = tabs[0];
+        active_elem.setAttribute('data-active', 'active');
+      }
+
+
+      if (this.hasAttribute('data-content-attached')) {
+        this.setActiveContent(active_elem.getAttribute('data-index'));
       }
 
       var base = this;
@@ -24,10 +30,30 @@
           base.querySelector(
             'fn-tab[data-active]').removeAttribute('data-active');
           this.setAttribute('data-active', 'active');
-          base.dispatchEvent(new Event('fn-tab-click'));
+
+          var click_event = new CustomEvent(
+            'fn-tab-click', {detail : this.getAttribute('data-index')});
+          base.dispatchEvent(click_event);
+
+          if (base.hasAttribute('data-content-attached')) {
+            base.setActiveContent(this.getAttribute('data-index'));
+          }
         }
       };
     };
+
+    this.setActiveContent = function(index) {
+      var active_elem = this.querySelector("fn-tab-content[data-active]")
+      if (active_elem != null) {
+        active_elem.removeAttribute("data-active");
+      }
+
+      var new_elem = this.querySelector("fn-tab-content[data-index='" + index + "']")
+      if (new_elem != null) {
+        new_elem.setAttribute('data-active', 'active');
+      }
+    }
+
 
   };
 
