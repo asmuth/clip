@@ -17,6 +17,11 @@ fn-table /deep/ table {
   border-spacing: 0px;
 }
 
+.fn-table[data-page],
+fn-table[data-page] /deep/ table {
+  margin-top: 0;
+}
+
 .fn-table:first-child {
   margin-top: 0em;
 }

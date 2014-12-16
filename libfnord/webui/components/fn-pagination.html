@@ -68,29 +68,53 @@
       var shadow = this.createShadowRoot();
       shadow.appendChild(tpl);
 
-      this.render();
+      if (this.hasAttribute('data-for')) {
+        //set style
+      } else {
+        this.render();
+      }
     };
 
-    this.render = function() {
+    this.forElement = function(elem) {
+      var page = elem.getAttribute('data-page');
+      page = (page == null)? 1 : parseInt(page, 10);
+      this.current_page = page;
+
+      var per_page = elem.getAttribute('data-per-page');
+      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
+      this.per_page = per_page;
+
+      var items = elem.getNumberOfItems();
+      items = (items == null)? 1 : parseInt(items, 10);
+
+      this.last_page = Math.ceil(items / per_page) - 1;
+
+      var callback = elem.paginationEvent;
+
+      this.render(callback, elem);
+      
+    }
+
+    this.pages = function() {
+      var pages = this.getAttribute('data-show-pages');
+      if (pages == null) {
+        return (this.last_page < 3)? this.last_page : 3;
+      }
+      return parseInt(pages, 10);
+    };
+
+
+    this.render = function(callback, caller) {
       var base = this;
       var list = this.shadowRoot.querySelector("ul");
       list.innerHTML = '';
+      var current_page = this.current_page;
+      var per_page = this.per_page;
+      var last_page = this.last_page;
+      var pages = this.pages();
 
-      var first_page = this.getAttribute('data-first-page');
-      first_page = (first_page == null)? 1 : parseInt(first_page, 10);
-
-      var last_page = this.getAttribute('data-last-page');
-      last_page = (last_page == null) ? 1 : parseInt(last_page, 10);
-
-      var pages = this.getAttribute('data-show-pages');
-      pages = (pages == null) ? 1 : parseInt(pages, 10);
-
-      var current_page = this.getAttribute('data-active-page');
-      current_page = (current_page == null)? 
-        first_page : parseInt(current_page, 10);
-
-      var start = Math.floor(current_page / pages);
-      start = start * pages + 1;
+      var start = Math.floor(current_page / pages) * pages;
+      console.log("start", start);
 
       var tooltip_back = document.createElement("li");
       tooltip_back.innerHTML = "<i class='fa fa-angle-double-left'></i>";
@@ -100,7 +124,7 @@
       for (var i = start; i < start + pages; i++) {
         if (i > last_page) {break;}
         var li = document.createElement("li");
-        li.innerHTML = i;
+        li.innerHTML = i + 1;
         li.setAttribute('data-index', i);
 
         if (i == current_page) {
@@ -111,12 +135,9 @@
 
         li.addEventListener('click', function() {
           base.toggleActiveItem(this);
-          var click_event = new CustomEvent(
-            'fn-pagination-click',
-            {'detail' : this.getAttribute('data-index')});
-
-          base.dispatchEvent(click_event);
+          callback(this.getAttribute('data-index'), caller);
         }, false);
+
       }
 
       var tooltip_for = document.createElement("li");
@@ -124,40 +145,77 @@
       tooltip_for.className = "next";
       list.appendChild(tooltip_for);
 
-      tooltip_for.addEventListener('click', function() {
-        var next_page = current_page + pages;
-        if (next_page < last_page) {
-          base.setAttribute('data-active-page', next_page);
-          base.fireNextRangeEvent();
-          base.render();
-        } else {
-          if (base.hasAttribute('data-circling')) {
-            base.setAttribute('data-active-page', first_page);
-            base.fireNextRangeEvent();
-            base.render();
-          }
-        }
-      }, false);
+      this.observeTooltips(callback, caller);
+
+    };
+
+    this.observeTooltips = function(callback, caller) {
+      var base = this;
+      var tooltip_back = this.shadowRoot.querySelector("li.prev");
+      var tooltip_for = this.shadowRoot.querySelector("li.next");
+
+      var last_page = this.last_page;
+      var pages = this.pages();
+
 
       tooltip_back.addEventListener('click', function() {
-        var prev_page = current_page - pages;
-        if (prev_page < first_page && current_page > first_page) {
-          prev_page = first_page;
-        }
-        if (prev_page >= first_page) {
+        var current_page = base.current_page;
+        var prev_page = current_page - 1;
+        var current_start = Math.floor(current_page / pages) * pages;
+        if (prev_page >= 0) {
+          base.current_page = prev_page;
           base.setAttribute('data-active-page', prev_page);
-          base.firePreviousRangeEvent();
-          base.render();
+          if (prev_page < current_start) {
+            base.render(callback, caller);
+          } else {
+            base.selectPreviousPage();
+          }
         } else {
           if (base.hasAttribute('data-circling')) {
-            prev_page = last_page + 1 - (last_page % pages);
-            base.setAttribute('data-active-page', prev_page);
-            base.firePreviousRangeEvent();
-            base.render();
+            prev_page = last_page;
+            base.current_page = last_page;
+            base.setAttribute('data-active-page', last_page);
+            base.render(callback, caller);
+          }
+        }
+        callback(prev_page, caller);
+
+      }, false);
+
+      tooltip_for.addEventListener('click', function() {
+        var current_page = base.current_page;
+        var next_page = current_page + 1;
+        var current_end = Math.floor(current_page / pages) + pages - 1;
+        if (next_page <= last_page) {
+          base.current_page = next_page;
+          if (current_end < next_page) {
+            base.render(callback, caller);
+          } else {
+            base.setAttribute('data-active-page', next_page);
+            base.selectNextPage();
+          }
+          callback(next_page, caller);
+        } else {
+          if (base.hasAttribute('data-circling')) {
+            base.setAttribute('data-active-page', 0);
+            base.current_page = 0;
+            base.render(callback, caller);
           }
         }
       }, false);
     };
+
+    this.selectNextPage = function() {
+      var old_page = this.shadowRoot.querySelector("li[data-active]");
+      old_page.removeAttribute("data-active");
+      old_page.nextSibling.setAttribute('data-active', 'active');
+    };
+
+    this.selectPreviousPage = function() {
+      var old_page = this.shadowRoot.querySelector("li[data-active]");
+      old_page.removeAttribute("data-active");
+      old_page.previousSibling.setAttribute('data-active', 'active');
+    }
 
     this.toggleActiveItem = function(item) {
       this.shadowRoot.querySelector(
@@ -172,6 +230,15 @@
     this.firePreviousRangeEvent = function() {
       this.dispatchEvent(new Event('fn-pagination-backward'));
     }
+
+  /*  this.clickEvent = function() {
+      var click_event = new CustomEvent(
+        'fn-pagination-click',
+        {'detail' : this.getAttribute('data-index')});
+
+      this.dispatchEvent(click_event);
+
+    }*/
 
   }
 

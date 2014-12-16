@@ -97,7 +97,7 @@
       per_page = (per_page == null)? 1 : parseInt(per_page, 10);
       this.per_page = per_page;
 
-      var callback = elem.pagerEvent;
+      var callback = elem.paginationEvent;
 
       this.renderTitle();
       this.observeTooltips(callback, elem);
