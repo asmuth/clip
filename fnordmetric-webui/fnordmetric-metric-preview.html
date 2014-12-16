@@ -10,27 +10,14 @@
 -->
 <template id="fnordmetric-metric-preview-base-tpl">
   <style type='text/css'>
-    fn-button {
-      box-shadow: none;
-    }
 
     fn-button#sql_editor {
       color: #009fe9;
       font-weight: 500;
     }
 
-    fn-button .fa-database {
-      font-size: 87%;
-      position: relative;
-      top: -1px;
-    }
 
-    fn-button + fn-button {
-      border-left: 1px solid #ececec;
-      padding-left: 20px;
-    }
-
-    fn-button[auto-refresh-on='on'] {
+    fn-button#auto_refresh[auto-refresh-on='on'] {
       color : #009fe9;
     }
 
@@ -39,20 +26,7 @@
     }
 
     .group.group_by fn-button {
-      line-height: 28px;
-      border: 1px solid #bbb;
-      border-radius: 3px;
-      padding: 0 8px;
-      text-align: center;
-      font-size: 12px;
-      text-decoration: none;
-      background: #fff;
-      border: 1px solid #b3c2d0;
-      color: #545758;
-      height: 28px;
-      display: block;
       float: left;
-      margin-right: 10px;
     }
 
     .group.aggregation_time_window {
@@ -61,6 +35,11 @@
 
     .group.aggregation_time_window fn-dropdown {
       float:left;
+      margin-right: 20px;
+    }
+
+    .group.aggregation_time_window fn-dropdown:last-child {
+      margin-right: 0;
     }
 
     .group.aggregation_type {
@@ -81,6 +60,10 @@
       height: 100%;
       float: left;
       padding: 14px 20px 0 20px;
+    }
+
+    fnordmetric-controls[type='secondary'] fn-button {
+      box-shadow:none;
     }
 
   </style>

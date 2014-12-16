@@ -90,9 +90,6 @@ fn-appbar fn-appbar-section {
 fn-appbar fn-button {
   color: #cdd3d8;
   cursor: pointer;
-  line-height: 50px;
-  margin: 0 19px 0 7px;
-  display: inline-block;
 }
 
 fn-appbar fn-button:hover {

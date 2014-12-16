@@ -7,25 +7,7 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
-  var editor_picker = document.createElement("div");
-      editor_picker.className = "editor_type_picker";
-      editor_picker.innerHTML = 
-        "<i class='fa fa-database'></i> SQL Editor";
-      button_bar.appendChild(editor_picker);
-
-      var split_btn = document.createElement("i");
-      split_btn.className = "fa fa-columns icobtn";
-      button_bar.appendChild(split_btn);
-
-      var refresh_btn = document.createElement("i");
-      refresh_btn.className = "fa fa-refresh icobtn";
-      button_bar.appendChild(refresh_btn);
-
-      var exec_btn = document.createElement("span");
-      exec_btn.className = "run_query_btn";
-      exec_btn.innerHTML = "<i class='fa fa-bolt'></i> Run Query";
-
--->
+ -->
 
 
 <template id="fnordmetric-query-editor-base-tpl">
@@ -52,6 +34,19 @@
 
     .navbar fn-button {
       float:left;
+    }
+
+    .navbar div#editor {
+      float:left;
+      color: rgba(0,0,0,.6);
+      line-height: 1;
+      font-weight: bold;
+      text-align: center;
+      min-height: 1em;
+      display: inline-block;
+      margin: 0em 0.25em 0em 0em;
+      padding: 0.78571em 1.5em 0.78571em 1em;
+
     }
 
     .navbar fn-button#execute {
@@ -115,9 +110,9 @@
     <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-min-position-vertical='420' data-min-position-horizontal='200'>
       <fn-splitpane-left>
         <div class="navbar">
-          <fn-button data-state='mockup' id="editor">
+          <div id="editor">
             <i class='fa fa-database'></i> SQL Editor
-          </fn-button>
+          </div>
           <fn-button id="split">
             <i class='fa fa-columns'></i>
           </fn-button>

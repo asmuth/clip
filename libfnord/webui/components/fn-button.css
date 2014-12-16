@@ -37,6 +37,7 @@ fn-button,
   line-height: 1;
   font-style: normal;
   text-align: center;
+  font-size: 1rem;
   text-decoration: none;
   background-image: none;
   border-radius: 0.2857rem;
@@ -104,16 +105,6 @@ fn-button[data-state='disabled'],
   color: rgba(0, 0, 0, 0.4) !important;
   opacity: 0.3 !important;
   background-image: none !important;
-  box-shadow: none !important;
-  pointer-events: none;
-}
-
-/*******************************
-     Mockup
-*******************************/
-fn-button[data-state='mockup'],
-.fn-button[data-state='mockup'] {
-  cursor: default;
   box-shadow: none !important;
   pointer-events: none;
 }
