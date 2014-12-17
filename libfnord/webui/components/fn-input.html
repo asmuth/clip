@@ -247,7 +247,6 @@
 <script type="text/javascript">
   var InputComponent = function() {
     this.createdCallback = function() {
-      console.log("called!\n");
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-input", "base");
       shadow.appendChild(tpl);
