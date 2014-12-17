@@ -287,6 +287,7 @@
 
       var pager = result_card.querySelector("fn-pager");
       var table_elem = result_card.querySelector("fn-table");
+      table_elem.innerHTML = "";
 
       tables.map(function(t) {
         t.columns.map(function(c) {
@@ -306,6 +307,7 @@
         });
         table_elem.renderTable();
       });
+      table_elem.setAttribute('data-page', 0);
       pager.forElement(table_elem);
       loader.removeAttribute('data-loading');
     };
