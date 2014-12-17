@@ -93,7 +93,9 @@ fn-appbar fn-button {
 }
 
 fn-appbar fn-button:hover {
-  color: #fff;
+  color: #fff!important;
+  background: transparent!important;
+  background-color: none!important;
 }
 
 fn-appbar fn-appbar-section[data-position='left'] {

@@ -61,6 +61,7 @@
 
         if (col.hasAttribute("data-sortable")) {
           th_elem.setAttribute('data-column-index', index);
+          th_elem.setAttribute('data-sortable', col.getAttribute('data-sortable'));
           th_elem.className += " sortable ";
           if (col.getAttribute("data-sort-state") != null) {
             th_elem.className += col.getAttribute("data-sort-state");
@@ -204,12 +205,15 @@
     this.observeSortableColumns = function(column) {
       var base = this;
       column.onclick = function() {
-        console.log(this);
-        base.resortRows(this.getAttribute('data-column-index'));
+        base.resortRows(
+          this.getAttribute('data-column-index'),
+          this.getAttribute('data-sortable'));
       }
     }
 
-    this.resortRows = function(column_index) {
+
+    this.resortRows = function(column_index, type) {
+      console.log(type);
       var col_elems = this.querySelectorAll("fn-table-column");
       if (column_index >= col_elems.length) {
         return;
@@ -231,6 +235,7 @@
     this.resortRowsWithOrder = function(column_index, order) {
       var tbody = this.querySelector("table");
 
+
       var sort_fn = this.rowSortFunction;
       if (!sort_fn) {
         if (order == "asc") {
@@ -244,12 +249,12 @@
         }
       }
 
+
       /* naive bubble sort */
       var n = tbody.children.length;
 
       while (true) {
         var swapped = false;
-
         for (var i = 1; i < n; ++i) {
           if (sort_fn(tbody.children[i-1], tbody.children[i])) {
             tbody.insertBefore(tbody.children[i], tbody.children[i-1]);

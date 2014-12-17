@@ -94,7 +94,7 @@ fn-tabbar[data-content-attached] fn-tab-content,
 .fn-tabbar[data-content-attached] .fn-tab-content {
   box-sizing: border-box;
   margin: -1px 0px 0px;
-  border-radius: 0 0 .2857rem .2857rem;
+  border-radius: 0 .2857rem .2857rem .2857rem;
   top: 0;
   bottom: 0;
   box-shadow: none;

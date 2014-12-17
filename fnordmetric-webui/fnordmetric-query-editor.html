@@ -69,6 +69,15 @@
 
     }
 
+    fn-loader#result fn-message {
+      display: none;
+      margin: 20px 15px;
+    }
+
+    fn-loader#result fn-message.active {
+      display: block;
+    }
+
     .result_card[data-active] {
       display: block;
     }
@@ -127,7 +136,7 @@
       </fn-splitpane-left>
       <fn-splitpane-right>
         <fn-loader id="result" data-loader-type="loader3">
-          <div class="result_card" id="error"></div>
+          <fn-message data-state="error"></fn-message>
           <div class="result_card" id="chart">
             <div class="controls">
               <fn-button data-state="mockup">Result Chart</fn-button>
@@ -144,8 +153,7 @@
             </div>
             <fn-table data-per-page="25"></fn-table>
           </div>
-          <div class="result_card" id="info">
-          </div>
+          <fn-message id="info"></fn-message>
         </fn-loader>
       </fn-splitpane-right>
     </fn-splitpane>
@@ -252,10 +260,9 @@
     this.renderError = function(error_message) {
       var loader = this.querySelector("fn-loader#result");
       loader.removeAttribute('data-loading');
-      var result_card = this.querySelector("#error.result_card");
-      result_card.setAttribute('data-active', 'active');
-      result_card.innerHTML =
-        "<div class='error_box'>" + error_message + "</div>";
+      var message = loader.querySelector("fn-message");
+      message.className = "active";
+      message.innerHTML = error_message;
     };
 
     this.renderChart = function(charts, loader) {
@@ -298,9 +305,9 @@
     };
 
     this.renderExecutionInfo = function(duration) {
-      var result_card = this.querySelector("#info.result_card");
-      result_card.setAttribute('data-active', 'active');
-      result_card.innerHTML = "The query execution took " + duration;
+      var message = this.querySelector("fn-message#info");
+      message.className ="active";
+      message.innerHTML = "The query execution took " + duration;
     }
 
 

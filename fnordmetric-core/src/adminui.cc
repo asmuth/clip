@@ -29,6 +29,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-button.css");
   webui_bundle_.addComponent("fnord/components/fn-modal.css");
   webui_bundle_.addComponent("fnord/components/fn-tabbar.css");
+  webui_bundle_.addComponent("fnord/components/fn-message.css");
   webui_bundle_.addComponent("fnord/themes/midnight-blue.css");
 
   webui_bundle_.addComponent("fnord/fnord.js");

@@ -16,10 +16,20 @@
 
 <template id="fn-search-base-tpl">
   <style type="text/css">
+    .wrapper {
+      display: block;
+      width: 100%;
+      height: 38px;
+      position: relative;
+
+    }
     input {
+      position: absolute;
       box-sizing: border-box;
       display: inline-block;
       margin: 0;
+      top: 0;
+      left: 0;
       font: inherit;
       color: inherit;
       line-height: normal;
@@ -32,6 +42,7 @@
       background-image: none;
       border: 1px solid #ccc;
       border-radius: 4px;
+      -webkit-tap-highlight-color: rgba(255,255,255,0);
       -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
       box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
       -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
@@ -40,15 +51,15 @@
     }
 
     ul {
-      margin-bottom: 5px;
-      top: 0;
-      left: 0;
+      position: absolute;
+      top: 100%;
+      margin: 3px -1px;
       z-index: 1000;
       display: none;
-      float: left;
-      width: 100%;
+      width: auto;
+      min-width: -webkit-calc(100% + 2px); */
+      min-width: calc(100% + 2px);
       padding: 5px 0;
-      margin: 2px 0 0;
       font-size: 14px;
       text-align: left;
       list-style: none;
@@ -85,8 +96,10 @@
 
   </style>
 
-  <input />
-  <ul></ul>
+  <div class="wrapper">
+    <input />
+    <ul></ul>
+  </div>
 
 </template>
 

@@ -66,6 +66,30 @@
       box-shadow:none;
     }
 
+    #result_pane fn-message {
+      display:none;
+      margin: 2em 4em;
+    }
+
+    #result_pane fn-message.active {
+      display: block;
+    }
+
+    #result_pane fn-table {
+      display:none;
+    }
+
+    #result_pane fn-table.active {
+      display:table;
+    }
+
+    #result_pane #result_pane_chart {
+      display:none;
+    }
+
+    #result_pane #result_pane_chart.active {
+      display:block;
+    }
   </style>
 
   <fn-loader>
@@ -171,6 +195,7 @@
       <fnordmetric-controls-section>
     </fnordmetric-controls>
     <fn-loader id="result_pane" data-transparent>
+      <fn-message data-state='error'></fn-message>
       <div id="result_pane_chart">
       </div>
       <fn-table data-per-page='25' style="width:100%;">
@@ -253,6 +278,9 @@
           if (json.status == "error") {
             base.renderError(json.error);
           } else {
+            base.querySelector(
+              "fn-loader#result_pane fn-message").className = "";
+
             if (json.charts != undefined) {
               base.renderChart(json.charts[0]);
             }
@@ -379,12 +407,14 @@
 
     this.renderChart = function(chart) {
       var pane = this.querySelector("fn-loader#result_pane #result_pane_chart");
+      pane.className = "active";
       pane.innerHTML = chart.svg;
       //FnordMetric.extendCharts();
     };
 
     this.renderTable = function(table) {
       var table_elem = this.querySelector("fn-loader#result_pane fn-table");
+      table_elem.className = "active";
       table_elem.innerHTML = "";
       table.columns.map(function(c) {
         var column_elem = document.createElement("fn-table-column");
@@ -405,9 +435,15 @@
     };
 
     this.renderError = function(error) {
-      var pane = this.querySelector("fn-loader#result_pane #result_pane_chart");
-      pane.innerHTML =
-        "<div class='error_box'>" + error + "</div>";
+      this.querySelector(
+        "fn-loader#result_pane #result_pane_chart").className = "";
+      this.querySelector(
+        "fn-loader#result_pane fn-table").className = "";
+
+      var message = this.querySelector("fn-loader#result_pane fn-message");
+      message.className = "active";
+      message.innerHTML = error;
+      console.log(message);
     };
 
     this.renderChartLoader = function() {

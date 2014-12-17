@@ -67,7 +67,7 @@ fn-table /deep/ thead th.sortable:before {
   font-weight: normal;
   padding-right: 0.2em;
   font-size: 0.9em;
-  content: "\f0dc";
+  content: "\f0dd";
 }
 
 fn-table /deep/ thead th.sortable.desc:before {
