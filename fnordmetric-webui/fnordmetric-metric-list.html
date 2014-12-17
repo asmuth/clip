@@ -10,9 +10,16 @@
 -->
 
 <template id="fnordmetric-metric-list-base-tpl">
+  <style type='text/css'>
+    fn-pager.table {
+      float:right;
+      margin-right: 5px;
+    }
+  </style>
   <fn-loader data-loading data-loader-type="loader3">
     <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
-    <fn-table data-per-page="25" data-clickable style="width: 100%;">
+    <fn-pager class='table' data-for data-circling></fn-pager>
+    <fn-table data-per-page="25" data-page='0' data-clickable style="width: 100%;">
       <fn-table-column data-sortable='string'>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
       <fn-table-column data-sortable='string'>Last Insert</fn-table-column>
@@ -65,6 +72,7 @@
     this.loadMetricList = function() {
       var table = this.querySelector("fn-table");
       var loader = this.querySelector("fn-loader");
+      var pager = this.querySelector("fn-pager");
 
       var base = this;
       var app = document.querySelector("fnordmetric-app");
@@ -92,6 +100,7 @@
           });
 
           loader.removeAttribute("data-loading");
+          pager.forElement(table);
         } else {
           FnordMetric.util.displayErrorMessage("Error connecting to server");
         }

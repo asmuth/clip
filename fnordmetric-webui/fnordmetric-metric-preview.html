@@ -75,20 +75,17 @@
       display: block;
     }
 
-    #result_pane fn-table {
+    .result_pane {
       display:none;
     }
 
-    #result_pane fn-table.active {
-      display:table;
-    }
-
-    #result_pane #result_pane_chart {
-      display:none;
-    }
-
-    #result_pane #result_pane_chart.active {
+    .result_pane.active {
       display:block;
+    }
+
+    .result_pane fn-pager.table {
+      float:right;
+      margin-right: 5px;
     }
   </style>
 
@@ -196,10 +193,12 @@
     </fnordmetric-controls>
     <fn-loader id="result_pane" data-transparent>
       <fn-message data-state='error'></fn-message>
-      <div id="result_pane_chart">
+      <div class="result_pane" id="chart">
       </div>
-      <fn-table data-per-page='25' style="width:100%;">
-      </fn-table>
+      <div class="result_pane" id="table">
+        <fn-pager class='table' data-for data-circling></fn-pager>
+        <fn-table data-per-page='25' data-page='0' style="width:100%;"></fn-table>
+      </div>
     </fn-loader>
   </fn-loader>
   <fnordmetric-embed-query-popup>
@@ -406,16 +405,19 @@
     };
 
     this.renderChart = function(chart) {
-      var pane = this.querySelector("fn-loader#result_pane #result_pane_chart");
-      pane.className = "active";
+      var pane = this.querySelector("#chart.result_pane");
+      pane.className += " active";
       pane.innerHTML = chart.svg;
       //FnordMetric.extendCharts();
     };
 
     this.renderTable = function(table) {
-      var table_elem = this.querySelector("fn-loader#result_pane fn-table");
-      table_elem.className = "active";
+      var pane = this.querySelector("#table.result_pane");
+      var table_elem = pane.querySelector("fn-table");
+      var pager = pane.querySelector("fn-pager");
+      pane.className += " active";
       table_elem.innerHTML = "";
+
       table.columns.map(function(c) {
         var column_elem = document.createElement("fn-table-column");
         column_elem.innerHTML = c;
@@ -432,18 +434,18 @@
         table_elem.appendChild(tr_elem);
       });
       table_elem.renderTable();
+      pager.forElement(table_elem);
     };
 
     this.renderError = function(error) {
-      this.querySelector(
-        "fn-loader#result_pane #result_pane_chart").className = "";
-      this.querySelector(
-        "fn-loader#result_pane fn-table").className = "";
+      var panes = this.querySelectorAll(".result_pane");
+      for (var i = 0; i < panes.length; i++) {
+        panes.className = "result_pane";
+      }
 
       var message = this.querySelector("fn-loader#result_pane fn-message");
       message.className = "active";
       message.innerHTML = error;
-      console.log(message);
     };
 
     this.renderChartLoader = function() {
@@ -457,7 +459,7 @@
     };
 
     this.onRefresh = function() {
-      var end_time = Date.now();
+      var end_time = Math.floor(Date.now() / 1000);
       var time_range = this.getQueryParamOrDefaultValue('time_range');
       var start_time = end_time - time_range;
       this.updateUrlParams({
@@ -573,7 +575,6 @@
       sql_editor_btn.addEventListener("fn-button-click", function() {
         var params =
           FnordMetric.util.parseQueryString(base.getAttribute('data-url'));
-        console.log(params);
         var query = FnordMetric.util.generateSQLQueryFromParams(
           params.query_params);
         var url =
@@ -584,9 +585,7 @@
       var embed_btn = this.querySelector("#embed_btn");
       var popup = this.querySelector("fnordmetric-embed-query-popup");
       embed_btn.addEventListener("fn-button-click", function() {
-        //FIXME set data url
-        popup.setAttribute('data-url', base.getAttribute('data-url'));
-        popup.setAttribute("data-active", "active");
+        popup.show(base.getAttribute('data-url'));
       }, false);
 
 
@@ -597,7 +596,6 @@
           window.clearInterval(interval_id);
           this.removeAttribute('auto-refresh-on');
         } else {
-          console.log("autorefresh on");
           interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
           this.setAttribute('auto-refresh-on', 'on');
         }

@@ -62,20 +62,21 @@ fn-table /deep/ thead th {
 .fn-table thead th,
 fn-table /deep/ thead th.sortable:before {
   font-family: FontAwesome;
-  line-height: 1em;
+  line-height: 1;
+  height: 1em;
   vertical-align:middle;
   font-weight: normal;
-  padding-right: 0.2em;
-  font-size: 0.9em;
-  content: "\f0dd";
+  padding-right: 0.5em;
+  font-size: 1em;
+  content: "\f0d8";
 }
 
 fn-table /deep/ thead th.sortable.desc:before {
-  content: "\f0de";
+  content: "\f0d7";
 }
 
 fn-table /deep/ thead th.sortable.asc:before {
-  content: "\f0dd";
+  content: "\f0d8";
 }
 
 fn-table /deep/ thead th.sortable:hover:before {

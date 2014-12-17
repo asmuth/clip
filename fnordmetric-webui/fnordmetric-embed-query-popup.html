@@ -68,6 +68,11 @@
 
     };
 
+    this.show = function(url) {
+      this.initViews(url);
+      this.querySelector("fn-modal").show();
+    }
+
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-active') {
         this.initViews();
@@ -75,8 +80,11 @@
       }
     };
 
-    this.initViews = function() {
-      var query_url = this.getAttribute('data-url');
+    this.initViews = function(url) {
+      var query_url = url;
+      if (query_url == null || query_url == undefined) {
+        query_url = this.getAttribute('data-url');
+      }
 
       /* IFrame */
       this.querySelector("fn-tab-content[data-index='0'] code").innerHTML =

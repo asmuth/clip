@@ -36,7 +36,7 @@
       float:left;
     }
 
-    .navbar div#editor {
+    .button_like {
       float:left;
       color: rgba(0,0,0,.6);
       line-height: 1;
@@ -114,12 +114,17 @@
       padding: 15px;
     }
 
+    .result_card fn-pager {
+      float:right;
+      margin-right: 1em;
+    }
+
   </style>
   <fn-loader data-loading data-loader-type="loader3">
     <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-min-position-vertical='420' data-min-position-horizontal='200'>
       <fn-splitpane-left>
         <div class="navbar">
-          <div id="editor">
+          <div class="button_like" id="editor">
             <i class='fa fa-database'></i> SQL Editor
           </div>
           <fn-button id="split">
@@ -139,7 +144,7 @@
           <fn-message data-state="error"></fn-message>
           <div class="result_card" id="chart">
             <div class="controls">
-              <fn-button data-state="mockup">Result Chart</fn-button>
+              <div class="button_like">Result Chart</div>
               <fn-button style="float:right;" id="embed">
                 <i class="fa fa-share"></i> Embed
               </fn-button>
@@ -149,9 +154,10 @@
           </div>
           <div class="result_card" id="table">
             <div class="controls">
-              <fn-button data-state="mockup">Result Table</fn-button>
+              <div class="button_like">Result Table</div>
             </div>
-            <fn-table data-per-page="25"></fn-table>
+            <fn-pager data-for data-circling></fn-pager>
+            <fn-table data-per-page="25" data-page='0'></fn-table>
           </div>
           <fn-message id="info"></fn-message>
         </fn-loader>
@@ -275,11 +281,11 @@
 
     this.renderTable = function(tables, loader) {
       var loader = this.querySelector("fn-loader#result");
-      loader.removeAttribute('data-loading');
 
       var result_card = this.querySelector("#table.result_card");
       result_card.setAttribute('data-active', 'active');
 
+      var pager = result_card.querySelector("fn-pager");
       var table_elem = result_card.querySelector("fn-table");
 
       tables.map(function(t) {
@@ -300,7 +306,7 @@
         });
         table_elem.renderTable();
       });
-      var loader = this.querySelector("fn-loader#result");
+      pager.forElement(table_elem);
       loader.removeAttribute('data-loading');
     };
 
@@ -336,10 +342,10 @@
 
       var popup = this.querySelector("fnordmetric-embed-query-popup");
       var embed_btn = this.querySelector("fn-button#embed");
-      console.log(popup);
       embed_btn.onclick = function() {
-        popup.setAttribute('data-url', base.getAttribute('data-url'));
-        popup.setAttribute('data-active', 'active');
+        var url = base.getAttribute('data-url');
+        console.log(url);
+        popup.show(url);
       }
     };
   };
