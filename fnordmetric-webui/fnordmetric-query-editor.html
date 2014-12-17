@@ -165,6 +165,15 @@
     </fn-splitpane>
     <fnordmetric-embed-query-popup></fnordmetric-embed-query-popup>
   </fn-loader>
+  <fn-tooltip data-position="bottom" id="ttp_view">
+    Change View
+  </fn-tooltip>
+  <fn-tooltip data-position="bottom" id="ttp_refresh">
+    Refresh
+  </fn-tooltip>
+  <fn-tooltip data-position="bottom" id="ttp_query">
+    Execute the query. Hint: you can alse press Ctrl/Cmd + Enter
+  </fn-tooltip>
 </template>
 
 <script type="text/javascript">
@@ -341,6 +350,11 @@
           app.openUrl(url);
         }
       }
+
+      this.querySelector("#ttp_query").init(exec_btn);
+      this.querySelector("#ttp_view").init(split_btn);
+      this.querySelector("#ttp_refresh").init(refresh_btn);
+
 
       var popup = this.querySelector("fnordmetric-embed-query-popup");
       var embed_btn = this.querySelector("fn-button#embed");

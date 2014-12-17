@@ -34,7 +34,7 @@
       var scroll_x = window.scrollX;
       switch (position) {
         case 'bottom':
-          this.style.top = (pos.top + this.offsetHeight + scroll_y + 7) + "px";
+          this.style.top = (pos.top + pos.height + scroll_y + 7) + "px";
           this.style.left = pos.left + "px";
           break;
         case 'left':
