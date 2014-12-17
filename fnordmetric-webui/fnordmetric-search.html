@@ -8,13 +8,17 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style type="text/css">
-</style>
 
 <template id="fnordmetric-metric-search-base-tpl">
+  <style type="text/css">
+    fn-table#search {
+      width: 100%;
+    }
+  </style>
+
   <fn-loader data-loading data-loader-type="loader3">
     <h1 class="page_header"><i>Metrics</i> &rsaquo; Search </h1>
-    <fn-table data-per-page="25" data-clickable>
+    <fn-table id='search' data-per-page="25" data-clickable>
       <fn-table-column>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
       <fn-table-column>Last Insert</fn-table-column>
@@ -30,8 +34,17 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fnordmetric-metric-search", "base");
       this.appendChild(tpl);
-      //when attrivuteChangedCallback
-      this.loadMetricList();
+
+      if (this.getAttribute('data-url') != null) {
+        this.loadMetricList();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr = 'data-url') {
+        console.log(new_val);
+        this.loadMetricList();
+      }
     };
 
     this.updateHeader = function(search_term) {
@@ -51,48 +64,56 @@
       var url = "/metrics?filter=" + search_term;
 
       var base = this;
-      var app = document.querySelector("fnordmetric-app");
 
       Fnord.httpGet(url , function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
+          if (json.metrics.length == 1) {
+            base.openMetricPreview(json.metrics[0].key);
+          } else {
+            json.metrics.forEach(function(m) {
+              var tr_elem = document.createElement("tr");
+              tr_elem.setAttribute('metric-key', m.key);
+              var cells = [
+                m.key,
+                m.labels.join(", "),
+                FnordMetric.util.parseTimestamp(m.last_insert),
+                m.total_bytes];
 
-          json.metrics.forEach(function(m) {
-            var tr_elem = document.createElement("tr");
-            tr_elem.setAttribute('metric-key', m.key);
-            var cells = [
-              m.key,
-              m.labels.join(", "),
-              FnordMetric.util.parseTimestamp(m.last_insert),
-              m.total_bytes];
+              cells.map(function(cell) {
+                var td_elem = document.createElement("td");
+                td_elem.innerHTML = cell;
+                tr_elem.appendChild(td_elem);
+              });
 
-            cells.map(function(cell) {
-              var td_elem = document.createElement("td");
-              td_elem.innerHTML = cell;
-              tr_elem.appendChild(td_elem);
+              table.appendRow(tr_elem);
             });
 
-            table.appendRow(tr_elem);
-          });
-
-          loader.removeAttribute("data-loading");
+            loader.removeAttribute("data-loading");
+          }
         } else {
           FnordMetric.util.displayErrorMessage("Error connecting to server");
         }
       });
 
+
       table.addEventListener('fn-table-row-click', function(e) {
         var metric_key = e.srcElement.getAttribute('metric-key');
-        var end = Date.now();
-        var start = end - 3600000;
-        var raw_url = 
-          "metric?key="+ metric_key +
-          "&view=value&start_time=" + start +
-          "&end_time=" + end;
-        app.openUrl(raw_url);
-
+        base.openMetricPreview(metric_key);
       }, false);
     }
+
+    this.openMetricPreview = function(metric_key) {
+      var app = document.querySelector("fnordmetric-app");
+      var end = Math.round(Date.now() / 1000);
+      var start = end - 3600;
+      var raw_url = 
+        "metric?key="+ metric_key +
+        "&view=value&start_time=" + start +
+        "&end_time=" + end;
+      app.openUrl(raw_url, true);
+    };
+
   };
 
 

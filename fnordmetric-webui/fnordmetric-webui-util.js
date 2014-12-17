@@ -21,6 +21,7 @@ if (typeof FnordMetric.util == "undefined") {
   * @param qstr like metric_list?metric=/osx/load_avg_15m&view=value
   */
 FnordMetric.util.parseQueryString = function(qstr) {
+  if (qstr == null) {return;}
   var path;
   var query_params = {};
 

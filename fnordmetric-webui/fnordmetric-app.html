@@ -72,7 +72,7 @@
       var onSearchSubmit = (function(base) {
         return function(e) {
           var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
-          base.openUrl(url);
+          base.openUrl(url, true);
         }
       })(this);
 
