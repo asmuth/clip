@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/bufferutil.h>
 #include <fnord/base/stringutil.h>
 
 namespace fnord {
@@ -43,6 +44,11 @@ std::string StringUtil::toString(long long value) {
 
 template <>
 std::string StringUtil::toString(unsigned long long value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string StringUtil::toString(unsigned char value) {
   return std::to_string(value);
 }
 
@@ -103,27 +109,8 @@ std::string StringUtil::hexPrint(
     size_t size,
     bool sep /* = true */,
     bool reverse /* = fase */) {
-  static const char hexTable[] = "0123456789abcdef";
-
-  std::string str;
-
-  if (reverse) {
-    for (int i = size - 1; i >= 0; --i) {
-      if (sep && i < size - 1) { str += " "; }
-      auto byte = ((const unsigned char*) data)[i];
-      str += hexTable[(byte & 0xf0) >> 4];
-      str += hexTable[byte & 0x0f];
-    }
-  } else {
-    for (int i = 0; i < size; ++i) {
-      if (sep && i > 0) { str += " "; }
-      auto byte = ((const unsigned char*) data)[i];
-      str += hexTable[(byte & 0xf0) >> 4];
-      str += hexTable[byte & 0x0f];
-    }
-  }
-
-  return str;
+  Buffer buf(data, size);
+  return BufferUtil::hexPrint(&buf, sep, reverse);
 }
 
 std::string StringUtil::formatv(

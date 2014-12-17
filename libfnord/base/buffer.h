@@ -17,6 +17,7 @@ namespace fnord {
 
 class Buffer {
 public:
+  static const size_t npos = -1;
 
   Buffer();
   Buffer(const void* initial_data, size_t initial_size);
@@ -27,11 +28,17 @@ public:
   Buffer& operator=(Buffer&& move);
   ~Buffer();
 
+  bool operator==(const Buffer& buf) const;
+  bool operator==(const char* str) const;
+  bool operator==(const std::string& str) const;
+
   void append(const void* data, size_t size);
   void clear();
+  void truncate(size_t size);
 
   void* data() const;
   char charAt(size_t pos) const;
+  size_t find(char chr) const;
   size_t size() const;
   std::string toString() const;
 

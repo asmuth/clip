@@ -21,7 +21,7 @@ namespace http {
 
 std::string HTTPMessage::kEmptyHeader = "";
 
-const std::string& HTTPMessage::getVersion() const {
+const std::string& HTTPMessage::version() const {
   return version_;
 }
 
@@ -30,7 +30,7 @@ void HTTPMessage::setVersion(const std::string& version) {
 }
 
 const std::vector<std::pair<std::string, std::string>>&
-    HTTPMessage::getHeaders() const {
+    HTTPMessage::headers() const {
   return headers_;
 }
 
@@ -95,4 +95,19 @@ std::unique_ptr<OutputStream> HTTPMessage::getBodyOutputStream() {
 }
 
 }
+
+template <>
+std::string inspect(const http::HTTPMessage::kHTTPMethod& method) {
+  switch (method) {
+    case http::HTTPMessage::M_CONNECT: return "CONNECT";
+    case http::HTTPMessage::M_DELETE: return "DELETE";
+    case http::HTTPMessage::M_GET: return "GET";
+    case http::HTTPMessage::M_HEAD: return "HEAD";
+    case http::HTTPMessage::M_OPTIONS: return "OPTIONS";
+    case http::HTTPMessage::M_POST: return "POST";
+    case http::HTTPMessage::M_PUT: return "PUT";
+    case http::HTTPMessage::M_TRACE: return "TRACE";
+  }
+}
+
 }

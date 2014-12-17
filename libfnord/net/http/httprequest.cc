@@ -7,44 +7,67 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/exception.h>
 #include <fnord/net/http/cookies.h>
+#include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpinputstream.h>
 
 namespace fnord {
 namespace http {
 
-HTTPRequest::HTTPRequest() {}
+HTTPRequest HTTPRequest::parse(const std::string& str) {
+  HTTPParser parser;
+  HTTPRequest request;
 
-HTTPRequest::HTTPRequest(
-    const std::string& method,
-    const std::string& url) :
-    method_(method),
-    url_(url) {}
+  parser.onMethod([&request] (HTTPMessage::kHTTPMethod method) {
+    request.setMethod(method);
+  });
 
-const std::string& HTTPRequest::getMethod() const {
+  parser.onURI([&request] (const char* data, size_t size) {
+    request.setURI(std::string(data, size));
+  });
+
+  parser.onVersion([&request] (const char* data, size_t size) {
+    request.setVersion(std::string(data, size));
+  });
+
+  parser.onHeader([&request] (
+      const char* key,
+      size_t key_size,
+      const char* val,
+      size_t val_size) {
+    request.addHeader(std::string(key, key_size), std::string(val, val_size));
+  });
+
+  parser.parse(str.c_str(), str.length());
+  if (parser.state() != HTTPParser::S_BODY) {
+    RAISE(kRuntimeError, "incomplete HTTP request");
+  }
+
+  return request;
+}
+
+HTTPRequest::HTTPRequest() : method_(HTTPMessage::M_GET) {}
+
+HTTPMessage::kHTTPMethod HTTPRequest::method() const {
   return method_;
 }
 
-// FIXPAUL sloooow
-HTTPRequest::kMethod HTTPRequest::method() const {
-  if (method_ == "CONNECT") { return M_CONNECT; }
-  if (method_ == "DELETE") { return M_DELETE; }
-  if (method_ == "GET") { return M_GET; }
-  if (method_ == "HEAD") { return M_HEAD; }
-  if (method_ == "OPTIONS") { return M_OPTIONS; }
-  if (method_ == "POST") { return M_POST; }
-  if (method_ == "PUT") { return M_PUT; }
-  if (method_ == "TRACE") { return M_TRACE; }
-  return M_INVALID;
+void HTTPRequest::setMethod(HTTPMessage::kHTTPMethod method) {
+  method_ = method;
 }
 
-const std::string& HTTPRequest::getUrl() const {
+const std::string& HTTPRequest::uri() const {
   return url_;
 }
 
+void HTTPRequest::setURI(const std::string& uri) {
+  url_ = uri;
+}
+
 const bool HTTPRequest::keepalive() const {
-  if (getVersion() == "HTTP/1.1") {
+  if (version() == "HTTP/1.1") {
     return true;
   }
 
@@ -55,6 +78,7 @@ const bool HTTPRequest::keepalive() const {
   return false;
 }
 
+/*
 void HTTPRequest::readFromInputStream(HTTPInputStream* input) {
   input->readStatusLine(&method_, &url_, &version_);
   input->readHeaders(&headers_);
@@ -65,7 +89,6 @@ void HTTPRequest::readFromInputStream(HTTPInputStream* input) {
     try {
       content_length = std::stoi(content_length_header);
     } catch (std::exception e){
-      /* invalid content length */
     }
   }
 
@@ -73,6 +96,7 @@ void HTTPRequest::readFromInputStream(HTTPInputStream* input) {
     input->getInputStream()->readNextBytes(&body_, content_length);
   }
 }
+*/
 
 std::vector<std::pair<std::string, std::string>> HTTPRequest::cookies() const {
   return Cookies::parseCookieHeader(getHeader("Cookie"));

@@ -64,7 +64,7 @@ void UDPServer::listen(int port) {
   }
 
   server_scheduler_->runOnReadable(
-      thread::Task::create(std::bind(&UDPServer::messageReceived, this)),
+      std::bind(&UDPServer::messageReceived, this),
       ssock_);
 }
 
@@ -82,7 +82,7 @@ void UDPServer::messageReceived() {
       &other_addr_len);
 
   server_scheduler_->runOnReadable(
-      thread::Task::create(std::bind(&UDPServer::messageReceived, this)),
+      std::bind(&UDPServer::messageReceived, this),
       ssock_);
 
   if (buf_len < 0) {
@@ -91,9 +91,7 @@ void UDPServer::messageReceived() {
 
   if (callback_) {
     Buffer msg(buf, buf_len);
-    callback_scheduler_->run(thread::Task::create([msg, this] () {
-      this->callback_(msg);
-    }));
+    callback_scheduler_->run([msg, this] () { this->callback_(msg); });
   }
 }
 

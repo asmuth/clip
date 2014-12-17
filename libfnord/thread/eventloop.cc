@@ -13,32 +13,37 @@
 #include <string.h>
 #include "eventloop.h"
 #include <fnord/base/exception.h>
+#include <fnord/base/inspect.h>
 
-namespace fnordmetric {
-namespace ev {
+namespace fnord {
+namespace thread {
 
 EventLoop::EventLoop() : max_fd_(1), running_(true) {
-  auto callbacks_size = sizeof(CallbackInterface*) * FD_SETSIZE;
-  callbacks_ = static_cast<CallbackInterface**>(malloc(callbacks_size));
-  if (callbacks_ == nullptr) { RAISE(kMallocError, "malloc failed"); }
-  memset(callbacks_, 0, callbacks_size);
-
+  callbacks_.reserve(FD_SETSIZE + 1);
   FD_ZERO(&op_read_);
   FD_ZERO(&op_write_);
 }
 
+void EventLoop::run(std::function<void()> task) {
+  task(); // FIXPAUL post from different thread!!
+}
+
+void EventLoop::runOnReadable(std::function<void()> task, int fd) {
+  if (fd > FD_SETSIZE) {
+    RAISEF(kIOError, "fd is too large: $0, max is $1", fd, FD_SETSIZE);
+  }
+}
+
+void EventLoop::runOnWritable(std::function<void()> task, int fd) {
+  if (fd > FD_SETSIZE) {
+    RAISEF(kIOError, "fd is too large: $0, max is $1", fd, FD_SETSIZE);
+  }
+}
+/*
 void EventLoop::watch(
     int fd,
     kInterestType interest,
     CallbackInterface* callback) {
-  if (fd >= FD_SETSIZE) {
-    RAISE(
-        kIOError,
-        "fd is too big: %i, max is %i\n",
-        fd,
-        FD_SETSIZE - 1);
-    return;
-  }
 
   if (fd > max_fd_) {
     max_fd_ = fd;
@@ -103,6 +108,6 @@ void EventLoop::loop() {
   }
 }
 
-
+*/
 }
 }

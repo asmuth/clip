@@ -13,6 +13,7 @@
 #include <fnord/base/exception.h>
 #include <fnord/net/http/httpinputstream.h>
 #include <fnord/net/http/httpoutputstream.h>
+#include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/io/inputstream.h>
@@ -27,97 +28,74 @@ using fnord::io::StringOutputStream;
 UNIT_TEST(HTTPTest);
 
 TEST_CASE(HTTPTest, ParseHTTP1dot0Request, [] () {
-  auto req = "GET / HTTP/1.0\r\n" \
-             "\r\n";
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.0\r\n" \
+      "\r\n");
 
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
-
-  EXPECT_EQ(request.getMethod(), "GET");
-  EXPECT_EQ(request.getUrl(), "/");
-  EXPECT_EQ(request.getVersion(), "HTTP/1.0");
+  EXPECT_EQ(request.method(), HTTPMessage::M_GET);
+  EXPECT_EQ(request.uri(), "/");
+  EXPECT_EQ(request.version(), "HTTP/1.0");
   EXPECT_EQ(request.keepalive(), false);
 });
 
 TEST_CASE(HTTPTest, ParseHTTP1dot0KeepaliveRequest, [] () {
-  auto req = "GET / HTTP/1.0\r\n" \
-             "Connection: keep-alive\r\n" \
-             "\r\n";
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.0\r\n" \
+       "Connection: keep-alive\r\n" \
+       "\r\n");
 
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
-
-  EXPECT_EQ(request.getMethod(), "GET");
-  EXPECT_EQ(request.getUrl(), "/");
-  EXPECT_EQ(request.getVersion(), "HTTP/1.0");
+  EXPECT_EQ(request.method(), HTTPMessage::M_GET);
+  EXPECT_EQ(request.uri(), "/");
+  EXPECT_EQ(request.version(), "HTTP/1.0");
   EXPECT_EQ(request.keepalive(), true);
 });
 
 TEST_CASE(HTTPTest, ParseHTTP1dot1Request, [] () {
-  auto req = "GET / HTTP/1.1\r\n" \
-             "\r\n";
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.1\r\n" \
+       "\r\n");
 
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
-
-  EXPECT_EQ(request.getMethod(), "GET");
-  EXPECT_EQ(request.getUrl(), "/");
-  EXPECT_EQ(request.getVersion(), "HTTP/1.1");
+  EXPECT_EQ(request.method(), HTTPMessage::M_GET);
+  EXPECT_EQ(request.uri(), "/");
+  EXPECT_EQ(request.version(), "HTTP/1.1");
   EXPECT_EQ(request.keepalive(), true);
 });
 
 TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot1Request, [] () {
-  auto req = "GET / HTTP/1.1\r\n" \
-             "\r\n";
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.1\r\n" \
+      "\r\n");
 
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
   EXPECT_TRUE(request.keepalive() == true);
 
   HTTPResponse response;
   response.populateFromRequest(request);
-
-  EXPECT_EQ(response.getVersion(), "HTTP/1.1");
+  EXPECT_EQ(response.version(), "HTTP/1.1");
 });
 
-TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {
-  auto req = "GET / HTTP/1.0\r\n" \
-             "\r\n";
 
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
+TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.0\r\n" \
+      "\r\n");
 
   HTTPResponse response;
   response.populateFromRequest(request);
 
-  EXPECT_EQ(response.getVersion(), "HTTP/1.0");
+  EXPECT_EQ(response.version(), "HTTP/1.0");
   EXPECT_EQ(response.getHeader("Connection"), "close");
 });
 
 TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0KeepaliveRequest, [] () {
-  auto req = "GET / HTTP/1.0\r\n" \
-             "Connection: keep-alive\r\n" \
-             "\r\n";
-
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.0\r\n" \
+      "Connection: keep-alive\r\n" \
+      "\r\n");
 
   HTTPResponse response;
   response.populateFromRequest(request);
 
-  EXPECT_EQ(response.getVersion(), "HTTP/1.0");
+  EXPECT_EQ(response.version(), "HTTP/1.0");
   EXPECT_EQ(response.getHeader("Connection"), "keep-alive");
 });
 
@@ -133,7 +111,7 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
     response.addCookie("fnord", "bar", fnord::DateTime(1418571527495314));
     EXPECT_EQ(
         response.getHeader("Set-Cookie"),
-        "fnord=bar; expires=Sun, 14-Dec-2014 15:38:47 GMT");
+        "fnord=bar; Expires=Sun, 14-Dec-2014 15:38:47 GMT");
   }
 
   {
@@ -144,7 +122,7 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
         fnord::DateTime::epoch(),
         "/blah");
     EXPECT_EQ(
-        response.getHeader("Set-Cookie"), "fnord=bar; path=/blah");
+        response.getHeader("Set-Cookie"), "fnord=bar; Path=/blah");
   }
 
   {
@@ -156,7 +134,7 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
         "",
         ".fnrd.net");
     EXPECT_EQ(
-        response.getHeader("Set-Cookie"), "fnord=bar; domain=.fnrd.net");
+        response.getHeader("Set-Cookie"), "fnord=bar; Domain=.fnrd.net");
   }
 
   {
@@ -170,7 +148,7 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
         false,
         true);
     EXPECT_EQ(
-        response.getHeader("Set-Cookie"), "fnord=bar; httponly");
+        response.getHeader("Set-Cookie"), "fnord=bar; HttpOnly");
   }
 
   {
@@ -184,20 +162,17 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
         true,
         false);
     EXPECT_EQ(
-        response.getHeader("Set-Cookie"), "fnord=bar; secure");
+        response.getHeader("Set-Cookie"), "fnord=bar; Secure");
   }
 });
 
 TEST_CASE(HTTPTest, TestGetCookies, [] () {
-  auto req = "GET / HTTP/1.0\r\n" \
-             "Cookie: __utma=1.1377480910.1406310643.1416763484.1416773800.23" \
-             "; __utmz=1.1406310643.1.1.utmcsr=(direct)|utmccn=(direct)|utmcm" \
-             "d=(none); _u=fnordbar\r\n\r\n";
-
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.0\r\n" \
+       "Cookie: __utma=1.1377480910.1406310643.1416763484.1416773800.23" \
+       "; __utmz=1.1406310643.1.1.utmcsr=(direct)|utmccn=(direct)|utmcm" \
+       "d=(none); _u=fnordbar\r\n" \
+       "\r\n");
 
   auto cookies = request.cookies();
   EXPECT_EQ(cookies.size(), 3);
@@ -214,13 +189,10 @@ TEST_CASE(HTTPTest, TestGetCookies, [] () {
 });
 
 TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
-  auto req = "GET / HTTP/1.0\r\n" \
-             "Cookie: _u=fnord; _x; =blah; =\r\n\r\n";
-
-  StringInputStream is(req);
-  HTTPInputStream http_is(&is);
-  HTTPRequest request;
-  request.readFromInputStream(&http_is);
+  auto request = HTTPRequest::parse(
+      "GET / HTTP/1.0\r\n" \
+      "Cookie: _u=fnord; _x; =blah; =\r\n" \
+      "\r\n");
 
   auto cookies = request.cookies();
   EXPECT_TRUE(cookies.size() >= 1);

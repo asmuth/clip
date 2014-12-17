@@ -166,7 +166,6 @@ public:
   }
 
   int run() {
-    fnord::Random::init();
     fnord::io::FileUtil::mkdir_p(UnitTest::tempFilePath());
 
     for (auto initializer : initializers_) {

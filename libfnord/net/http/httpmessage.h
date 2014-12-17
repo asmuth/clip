@@ -24,13 +24,24 @@ namespace http {
 
 class HTTPMessage {
 public:
+  enum kHTTPMethod {
+    M_CONNECT,
+    M_DELETE,
+    M_GET,
+    M_HEAD,
+    M_OPTIONS,
+    M_POST,
+    M_PUT,
+    M_TRACE
+  };
+
   HTTPMessage() {}
   virtual ~HTTPMessage() {}
 
-  const std::string& getVersion() const;
+  const std::string& version() const;
   void setVersion(const std::string& version);
 
-  const std::vector<std::pair<std::string, std::string>>& getHeaders() const;
+  const std::vector<std::pair<std::string, std::string>>& headers() const;
   const std::string& getHeader(const std::string& key) const;
   void addHeader(const std::string& key, const std::string& value);
   void setHeader(const std::string& key, const std::string& value);

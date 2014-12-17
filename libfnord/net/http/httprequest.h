@@ -18,34 +18,24 @@ class HTTPInputStream;
 
 class HTTPRequest : public HTTPMessage {
 public:
-  enum kMethod {
-    M_CONNECT,
-    M_DELETE,
-    M_GET,
-    M_HEAD,
-    M_OPTIONS,
-    M_POST,
-    M_PUT,
-    M_TRACE,
-    M_INVALID
-  };
+  /**
+   * Parse the provided http request string and return the parsed http request
+   */
+  static HTTPRequest parse(const std::string& str);
 
   HTTPRequest();
 
-  HTTPRequest(
-      const std::string& method,
-      const std::string& url);
+  kHTTPMethod method() const;
+  void setMethod(kHTTPMethod method);
 
-  void readFromInputStream(HTTPInputStream* input);
+  const std::string& uri() const;
+  void setURI(const std::string& uri);
 
-  const std::string& getMethod() const;
-  kMethod method() const;
-  const std::string& getUrl() const;
   const bool keepalive() const;
   std::vector<std::pair<std::string, std::string>> cookies() const;
 
 protected:
-  std::string method_;
+  kHTTPMethod method_;
   std::string url_;
 };
 

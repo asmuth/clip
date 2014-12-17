@@ -58,9 +58,11 @@ void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
 }
 
 void HTTPResponse::populateFromRequest(const HTTPRequest& request) {
-  setVersion(request.getVersion());
+  const auto& version = request.version();
 
-  if (request.getVersion() == "HTTP/1.0") {
+  setVersion(version);
+
+  if (version == "HTTP/1.0") {
     if (request.keepalive()) {
       addHeader("Connection", "keep-alive");
     } else {

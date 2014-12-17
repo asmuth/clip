@@ -7,39 +7,31 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_WEB_HTTPSERVER_H
-#define _FNORDMETRIC_WEB_HTTPSERVER_H
+#ifndef _FNORD_HTTP_CONNECTION_H
+#define _FNORD_HTTP_CONNECTION_H
 #include <memory>
 #include <vector>
 #include <fnord/logging/logger.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httphandler.h>
-#include <fnord/net/tcpserver.h>
 #include <fnord/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {
 
-using fnord::thread::TaskScheduler;
-
-class HTTPServer {
+class HTTPConnection {
 public:
-  HTTPServer(
-      TaskScheduler* server_scheduler,
-      TaskScheduler* request_scheduler);
-
-  void addHandler(std::unique_ptr<HTTPHandler> handler);
-  void listen(int port);
+  HTTPConnection(
+      int fd,
+      thread::TaskScheduler* server_scheduler,
+      thread::TaskScheduler* request_scheduler);
 
 protected:
-  void handleConnection(int fd) const;
+  void read();
 
-  net::TCPServer ssock_;
-  TaskScheduler* server_scheduler_;
-  TaskScheduler* request_scheduler_;
-  bool enable_keepalive_;
-  log::Logger* logger_;
-  std::vector<std::unique_ptr<HTTPHandler>> handlers_;
+  int fd_;
+  thread::TaskScheduler* server_scheduler_;
+  thread::TaskScheduler* request_scheduler_;
 };
 
 }

@@ -13,7 +13,7 @@
 
 namespace fnord {
 
-Buffer::Buffer() : data_(nullptr), size_(0) {}
+Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0) {}
 
 Buffer::Buffer(
     const void* initial_data,
@@ -74,6 +74,14 @@ Buffer::~Buffer() {
   }
 }
 
+bool Buffer::operator==(const char* str) const {
+  if (strlen(str) != size_) {
+    return false;
+  }
+
+  return memcmp(data_, str, size_) == 0;
+}
+
 void Buffer::append(const void* data, size_t size) {
   if (size_ + size > alloc_) {
     reserve((size_ + size) - alloc_);
@@ -81,6 +89,14 @@ void Buffer::append(const void* data, size_t size) {
 
   memcpy((char*) data_ + size_, data, size);
   size_ += size;
+}
+
+void Buffer::truncate(size_t size) {
+  if (size > size_) {
+    RAISE(kIndexError, "requested size is out of bounds");
+  }
+
+  size_ = size;
 }
 
 void Buffer::reserve(size_t size) {
@@ -118,6 +134,16 @@ char Buffer::charAt(size_t pos) const {
   }
 
   return static_cast<char *>(data_)[pos];
+}
+
+size_t Buffer::find(char chr) const {
+  for (size_t n = 0; n < size_; ++n) {
+    if (((char *) data_)[n] == chr) {
+      return n;
+    }
+  }
+
+  return Buffer::npos;
 }
 
 size_t Buffer::size() const {

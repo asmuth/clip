@@ -9,7 +9,7 @@ CXXFLAGS += -stdlib=libc++
 endif
 
 FNORD_THREAD_TARGET  = libfnord-thread.a
-FNORD_THREAD_SOURCES = threadpool.cc
+FNORD_THREAD_SOURCES = threadpool.cc eventloop.cc
 FNORD_THREAD_OBJECTS = $(subst .cc,.o,$(FNORD_THREAD_SOURCES))
 
 %.o : %.cc

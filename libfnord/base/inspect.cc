@@ -32,8 +32,12 @@ std::string inspect<unsigned long>(const unsigned long& value) {
 }
 
 template <>
-std::string inspect<unsigned long long>(
-    const unsigned long long& value) {
+std::string inspect<unsigned long long>(const unsigned long long& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string inspect<unsigned char>(const unsigned char& value) {
   return std::to_string(value);
 }
 

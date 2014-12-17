@@ -41,7 +41,7 @@ protected:
   std::mutex runq_mutex_;
   std::list<std::function<void()>> runq_;
   std::condition_variable wakeup_;
-  int free_threads_;
+  std::atomic<int> free_threads_;
 };
 
 }
