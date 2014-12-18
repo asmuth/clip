@@ -119,38 +119,6 @@ FnordMetric.util.parseTimeOffset = function(offset) {
   }
 }
 
-FnordMetric.util.getHumanMonth = function(index, type) {
-  var months = {
-    "long" : [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"],
-    "short" : [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"]};
-
-  return months[type][index];
-}
-
 /**
   * creates a time description like 
   * '2 hours ago - Nov 8 2014 11:33:11
@@ -160,8 +128,12 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
     return "0";
   }
-  var timestamp =
-    FnordMetric.util.convertToMilliTS(timestamp);
+
+  var months = [
+    "Jan","Feb", "Mar","Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct","Nov", "Dec"];
+
+  var timestamp = Math.floor(timestamp / 1000);
 
   var now = Date.now();
   var date = new Date(timestamp);
@@ -184,7 +156,7 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
 
   time_str +=
     " - " + 
-    FnordMetric.util.getHumanMonth(date.getMonth(), "short") + 
+    months[date.getMonth()] + 
     " " + date.getDate() +
     " " + date.getFullYear() +
     " " + date.getHours() +
@@ -192,18 +164,6 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
     ":" + seconds
 
   return time_str;
-}
-
-//FIXLAURA check all cases 
-FnordMetric.util.convertToMilliTS = function(ts) {
-  var length = ts.toString().length;
-  if (length == 16) {
-    return (ts/1000);
-  } else if (length < 13 && length >= 10) {
-    return (ts * 1000);
-  } else {
-    return ts;
-  }
 }
 
 /**

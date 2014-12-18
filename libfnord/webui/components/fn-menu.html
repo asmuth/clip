@@ -100,6 +100,8 @@
       color: rgba(0, 0, 0, 0.8);
     }
 
+
+
     /* submenu */
     ul.menu > li.submenu:first-child {
       border-radius: 0.2857rem 0.2857rem 0px 0px;
@@ -115,6 +117,7 @@
       font-weight: 500;
       font-size: 1rem;
     }
+
 
     ul.menu > li > ul > li.item {
       background: 0 0;
@@ -133,10 +136,31 @@
       cursor: pointer;
     }
 
+    li.submenu.accordion ul {
+      display:none;
+    }
+
+    li.submenu.accordion[data-active] ul {
+      display:block;
+    }
+
+    ul.menu li.submenu.accordion {
+      padding: 0;
+    }
+
+    ul.menu li.submenu.accordion .submenu_title {
+      padding: 0.78571em 0.95em;
+    }
+
+    ul.menu li.submenu.accordion .submenu_title:hover{
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.03);
+      color: rgba(0, 0, 0, 0.8);
+    }
 
 
   </style>
-  <ul class="menu">
+  <ul class="menu"></ul>
   </span>
 </template>
 
@@ -176,12 +200,24 @@
 
           var li_elem = document.createElement("li");
           li_elem.className = "submenu";
+
+          var type = this.getAttribute('data-type');
+          if (type != null) {
+            li_elem.className += " " +  type;
+          }
+
           var submenu_title = elem.querySelector("fn-submenu-title");
           if (submenu_title) {
             var title_elem = document.createElement("div");
             title_elem.className = "submenu_title";
             title_elem.innerHTML = submenu_title.innerHTML;
             li_elem.appendChild(title_elem);
+
+            if (type == 'accordion') {
+              title_elem.onclick = function() {
+                base.toggleAccordionSubmenu(this);
+              }
+            }
           }
 
           li_elem.appendChild(ul_elem);
@@ -189,6 +225,16 @@
 
         }
       }
+    }
+
+    this.toggleAccordionSubmenu = function(elem) {
+      console.log(elem);
+      console.log(elem.parentNode);
+      var active_submenu = this.shadowRoot.querySelector("li[data-active]");
+      if (active_submenu) {
+        active_submenu.removeAttribute('data-active');
+      }
+      elem.setAttribute('data-active', 'active');
     }
 
     this.clickItem = function(item, shadow) {
