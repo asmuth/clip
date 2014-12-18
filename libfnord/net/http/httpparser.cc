@@ -22,7 +22,9 @@ HTTPParser::HTTPParser(
     on_uri_cb_(nullptr),
     on_version_cb_(nullptr),
     on_header_cb_(nullptr),
-    on_headers_complete_cb_(nullptr) {
+    on_headers_complete_cb_(nullptr),
+    body_bytes_read_(0),
+    body_bytes_expected_(0) {
   buf_.reserve(buffer_size);
 }
 
@@ -75,7 +77,26 @@ void HTTPParser::parse(const char* data, size_t size) {
       case S_HEADER:
         parseHeader(&begin, end);
         break;
+      case S_DONE:
+        iputs("invalid trailng bytes: $0", std::string(begin, end - begin));
+        RAISE(kParseError, "invalid trailing bytes");
     }
+  }
+}
+
+void HTTPParser::eof() {
+  switch (state_) {
+    case S_METHOD:
+    case S_URI:
+    case S_VERSION:
+    case S_HEADER:
+    case S_BODY:
+      if (body_bytes_read_ < body_bytes_expected_) {
+        RAISE(kParseError, "unexpected end of file");
+      }
+      return;
+    case S_DONE:
+      return;
   }
 }
 
@@ -207,7 +228,11 @@ void HTTPParser::parseHeader(const char** begin, const char* end) {
         on_headers_complete_cb_();
       }
 
-      state_ = S_BODY;
+      if (body_bytes_expected_ == 0) {
+        state_ = S_DONE;
+      } else {
+        state_ = S_BODY;
+      }
     }
 
     (*begin)++;
@@ -225,6 +250,13 @@ bool HTTPParser::readUntil(const char** begin, const char* end, char search) {
   buf_.append(*begin, (cur - *begin));
   *begin = cur;
   return *cur == search;
+}
+
+void HTTPParser::reset() {
+  state_ = S_METHOD;
+  buf_.clear();
+  body_bytes_read_ = 0;
+  body_bytes_expected_ = 0;
 }
 
 }

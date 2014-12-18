@@ -44,10 +44,14 @@ public:
 
   void reserve(size_t size);
 
+  void setMark(size_t mark);
+  size_t mark() const;
+
 protected:
   void* data_;
   size_t size_;
   size_t alloc_;
+  size_t mark_;
 };
 
 }

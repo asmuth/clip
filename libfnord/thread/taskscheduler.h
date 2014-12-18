@@ -29,9 +29,29 @@ public:
   virtual void runOnReadable(std::function<void()> task, int fd) = 0;
 
   /**
+   * Run the provided task when the provided object becomes readable
+   */
+  template <class SelectableType>
+  void runOnReadable(
+      std::function<void()> task,
+      const SelectableType& t) {
+    runOnReadable(task, t.fd());
+  }
+
+  /**
    * Run the provided task when the provided filedescriptor becomes writable
    */
   virtual void runOnWritable(std::function<void()> task, int fd) = 0;
+
+  /**
+   * Run the provided task when the provided filedescriptor becomes writable
+   */
+  template <class SelectableType>
+  void runOnWritable(
+      std::function<void()> task,
+      const SelectableType& t) {
+    runOnWritable(task, t.fd());
+  }
 
 };
 

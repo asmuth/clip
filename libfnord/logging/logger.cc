@@ -33,6 +33,19 @@ Logger::Logger() :
   }
 }
 
+void Logger::log(
+    LogLevel log_level,
+    const std::string& message) {
+  logInternal(log_level, nullptr, message);
+}
+
+void Logger::log(
+    LogLevel log_level,
+    const LogTags* tags,
+    const std::string& message) {
+  logInternal(log_level, tags, message);
+}
+
 void Logger::logException(
     LogLevel log_level,
     const std::string& message,

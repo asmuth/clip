@@ -11,6 +11,7 @@
 #define _FNORD_NET_TCPSERVER_H
 
 #include "fnord/thread/taskscheduler.h"
+#include "fnord/net/tcpconnection.h"
 
 namespace fnord {
 namespace net {
@@ -21,7 +22,9 @@ public:
   TCPServer(
       thread::TaskScheduler* scheduler);
 
-  void onConnection(std::function<void (int fd)> callback);
+  void onConnection(
+      std::function<void (std::unique_ptr<TCPConnection>)> callback);
+
   void listen(int port);
 
 protected:
@@ -29,7 +32,7 @@ protected:
 
   int ssock_;
   thread::TaskScheduler* scheduler_;
-  std::function<void (int fd)> on_connection_cb_;
+  std::function<void (std::unique_ptr<TCPConnection>)> on_connection_cb_;
 };
 
 }

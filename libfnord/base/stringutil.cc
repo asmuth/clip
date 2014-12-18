@@ -53,6 +53,16 @@ std::string StringUtil::toString(unsigned char value) {
 }
 
 template <>
+std::string StringUtil::toString(void* value) {
+  return "<ptr>";
+}
+
+template <>
+std::string StringUtil::toString(const void* value) {
+  return "<ptr>";
+}
+
+template <>
 std::string StringUtil::toString(double value) {
   char buf[128]; // FIXPAUL
   *buf = 0;

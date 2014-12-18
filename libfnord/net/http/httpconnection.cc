@@ -7,24 +7,213 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/exception.h"
+#include "fnord/base/inspect.h"
 #include "fnord/net/http/httpconnection.h"
 
 namespace fnord {
+
+template <>
+std::string inspect(const http::HTTPConnection& conn) {
+  return "<HTTPConnection>";
+}
+
 namespace http {
 
 HTTPConnection::HTTPConnection(
-    int fd,
+    std::unique_ptr<net::TCPConnection> conn,
     thread::TaskScheduler* server_scheduler,
     thread::TaskScheduler* request_scheduler) :
-    fd_(fd),
+    conn_(std::move(conn)),
     server_scheduler_(server_scheduler),
-    request_scheduler_(request_scheduler) {
-  server_scheduler_->runOnReadable(std::bind(&HTTPConnection::read, this), fd_);
+    request_scheduler_(request_scheduler),
+    on_request_cb_(nullptr),
+    on_read_completed_cb_(nullptr),
+    on_write_completed_cb_(nullptr),
+    refcount_(1) {
+  log::Logger::get()->logf(
+      fnord::log::kTrace, "New HTTP connection: $0",
+      inspect(*this));
+
+  parser_.onMethod([this] (HTTPMessage::kHTTPMethod method) {
+    cur_request_->setMethod(method);
+  });
+
+  parser_.onURI([this] (const char* data, size_t size) {
+    cur_request_->setURI(std::string(data, size));
+  });
+
+  parser_.onVersion([this] (const char* data, size_t size) {
+    cur_request_->setVersion(std::string(data, size));
+  });
+
+  parser_.onHeader([this] (
+      const char* key,
+      size_t key_size,
+      const char* val,
+      size_t val_size) {
+    cur_request_->addHeader(
+        std::string(key, key_size),
+        std::string(val, val_size));
+  });
+
+  parser_.onHeadersComplete(std::bind(&HTTPConnection::dispatchRequest, this));
+  readNextRequestHeaders();
 }
 
 void HTTPConnection::read() {
+  char read_buf[10];
+
+  size_t len;
+  try {
+    len = conn_->read(&read_buf, sizeof(read_buf));
+  } catch (Exception& e) {
+    log::Logger::get()->logException(
+        fnord::log::kDebug,
+        "HTTP read() failed, closing connection",
+        e);
+
+    close();
+    return;
+  }
+
+  iputs("read... $0 $1", len, (int) parser_.state());
+
+  try {
+    if (len == 0) {
+      parser_.eof();
+      close();
+      return;
+    } else {
+      parser_.parse(read_buf, len);
+    }
+  } catch (Exception& e) {
+    log::Logger::get()->logException(
+        fnord::log::kDebug,
+        "HTTP parse error, closing connection",
+        e);
+
+    close();
+    return;
+  }
+
+  if (on_read_completed_cb_) {
+    on_read_completed_cb_();
+  }
 }
 
+void HTTPConnection::write() {
+  auto data = ((char *) buf_.data()) + buf_.mark();
+  auto size = buf_.size() - buf_.mark();
+
+  size_t len;
+  try {
+    len = conn_->write(data, size);
+  } catch (Exception& e) {
+    log::Logger::get()->logException(
+        fnord::log::kDebug,
+        "HTTP write() failed, closing connection",
+        e);
+
+    close();
+    return;
+  }
+
+  if (buf_.mark() + len < buf_.size()) {
+    buf_.setMark(buf_.mark() + len);
+
+    server_scheduler_->runOnWritable(
+        std::bind(&HTTPConnection::write, this),
+        *conn_);
+  } else {
+    buf_.clear();
+
+    if (on_write_completed_cb_) {
+      on_write_completed_cb_();
+    }
+  }
 }
+
+void HTTPConnection::dispatchRequest() {
+  HTTPResponse response;
+  response.setStatus(kStatusNotFound);
+  response.addBody("Not Found");
+
+  writeResponseHeaders(
+      response,
+      std::bind(&HTTPConnection::finishResponse, this));
 }
+
+void HTTPConnection::readNextRequestHeaders() {
+  parser_.reset();
+  cur_request_.reset(new HTTPRequest());
+
+  on_write_completed_cb_ = nullptr;
+  on_read_completed_cb_ = [this] () {
+    if (parser_.state() < HTTPParser::S_BODY) {
+      server_scheduler_->runOnReadable(
+          std::bind(&HTTPConnection::read, this),
+          *conn_);
+    }
+  };
+
+  server_scheduler_->runOnReadable(
+      std::bind(&HTTPConnection::read, this),
+      *conn_);
+}
+
+void HTTPConnection::writeResponseHeaders(
+    const HTTPResponse& resp,
+    std::function<void()> ready_callback) {
+  std::string res = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+  buf_.clear();
+  buf_.append(res.c_str(), res.length());
+
+  on_write_completed_cb_ = ready_callback;
+
+  server_scheduler_->runOnWritable(
+      std::bind(&HTTPConnection::write, this),
+      *conn_);
+}
+
+void HTTPConnection::writeResponseBody(
+    const void* data,
+    size_t size,
+    std::function<void()> ready_callback) {
+}
+
+void HTTPConnection::finishResponse() {
+  if (cur_request_->keepalive()) {
+    readNextRequestHeaders();
+  } else {
+    close();
+  }
+}
+
+void HTTPConnection::close() {
+  log::Logger::get()->logf(
+      fnord::log::kTrace, "HTTP connection close: $0",
+      inspect(*this));
+
+  conn_->close();
+  decRef();
+}
+
+void HTTPConnection::incRef() {
+  refcount_++;
+}
+
+void HTTPConnection::decRef() {
+  refcount_--;
+
+  if (refcount_ == 0) {
+    log::Logger::get()->logf(
+        fnord::log::kTrace, "HTTP connection free'd: $0",
+        inspect(*this));
+    delete this;
+  }
+}
+
+} // namespace http
+} // namespace fnord
 

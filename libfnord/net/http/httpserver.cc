@@ -27,7 +27,9 @@ HTTPServer::HTTPServer(
     request_scheduler_(request_scheduler),
     enable_keepalive_(false),
     logger_(log::Logger::get()) {
-  ssock_.onConnection([this] (int fd) { this->handleConnection(fd); });
+  ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
+    this->handleConnection(std::move(conn));
+  });
 }
 
 void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
@@ -39,11 +41,12 @@ void HTTPServer::listen(int port) {
   ssock_.listen(port);
 }
 
-void HTTPServer::handleConnection(int fd) const {
-  logger_->logf(fnord::log::kDebug, "New HTTP connection on fd $0", fd);
-
-  auto conn = new HTTPConnection(fd, server_scheduler_, request_scheduler_);
-
+void HTTPServer::handleConnection(
+    std::unique_ptr<net::TCPConnection> conn) const {
+  new HTTPConnection(
+      std::move(conn),
+      server_scheduler_,
+      request_scheduler_);
 
 /*
   FileInputStream input_stream(fd, true);

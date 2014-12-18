@@ -29,15 +29,18 @@ public:
   HTTPParser(size_t buffer_size = kDefaultBufferSize);
 
   enum kParserState {
-    S_METHOD,
-    S_URI,
-    S_VERSION,
-    S_HEADER,
-    S_BODY
+    S_METHOD = 1,
+    S_URI = 2,
+    S_VERSION = 3,
+    S_HEADER = 4,
+    S_BODY = 5,
+    S_DONE = 6
   };
 
   kParserState state() const;
   void parse(const char* data, size_t size);
+  void eof();
+  void reset();
 
   void onMethod(std::function<void(HTTPMessage::kHTTPMethod)> callback);
   void onURI(std::function<void(const char* data, size_t size)> callback);
@@ -68,6 +71,8 @@ protected:
 
   kParserState state_;
   Buffer buf_;
+  size_t body_bytes_read_;
+  size_t body_bytes_expected_;
 };
 
 }

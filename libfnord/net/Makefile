@@ -9,7 +9,7 @@ CXXFLAGS += -stdlib=libc++
 endif
 
 FNORD_NET_TARGET  = libfnord-net.a
-FNORD_NET_SOURCES = tcpserver.cc udpserver.cc
+FNORD_NET_SOURCES = tcpserver.cc udpserver.cc tcpconnection.cc
 FNORD_NET_OBJECTS = $(subst .cc,.o,$(FNORD_NET_SOURCES))
 
 %.o : %.cc

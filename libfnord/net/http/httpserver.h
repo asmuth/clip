@@ -32,7 +32,7 @@ public:
   void listen(int port);
 
 protected:
-  void handleConnection(int fd) const;
+  void handleConnection(std::unique_ptr<net::TCPConnection> conn) const;
 
   net::TCPServer ssock_;
   TaskScheduler* server_scheduler_;

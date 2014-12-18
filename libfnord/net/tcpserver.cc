@@ -25,7 +25,8 @@ TCPServer::TCPServer(
     scheduler_(scheduler),
     on_connection_cb_(nullptr) {}
 
-void TCPServer::onConnection(std::function<void (int fd)> callback) {
+void TCPServer::onConnection(
+    std::function<void (std::unique_ptr<TCPConnection>)> callback) {
   on_connection_cb_ = callback;
 }
 
@@ -44,7 +45,10 @@ void TCPServer::accept() {
   }
 
   if (on_connection_cb_) {
-    scheduler_->run(std::bind(on_connection_cb_, conn_fd));
+    scheduler_->run([this, conn_fd] () {
+      on_connection_cb_(
+          std::unique_ptr<TCPConnection>(new TCPConnection(conn_fd)));
+    });
   }
 
   scheduler_->runOnReadable(std::bind(&TCPServer::accept, this), ssock_);
@@ -53,7 +57,7 @@ void TCPServer::accept() {
 void TCPServer::listen(int port) {
   ssock_ = socket(AF_INET, SOCK_STREAM, 0);
   if (ssock_ == 0) {
-    RAISE(kIOError, "create socket() failed");
+    RAISE_ERRNO(kIOError, "create socket() failed");
   }
 
   int opt = 1;

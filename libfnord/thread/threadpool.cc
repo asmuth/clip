@@ -57,7 +57,7 @@ void ThreadPool::runOnReadable(std::function<void()> task, int fd) {
     FD_ZERO(&op_write);
     FD_SET(fd, &op_read);
 
-    auto res = select(fd + 1, &op_read, &op_write, NULL, NULL);
+    auto res = select(fd + 1, &op_read, &op_write, &op_read, NULL);
 
     if (res == 0) {
       RAISE(kIOError, "unexpected timeout while select()ing");
@@ -78,7 +78,7 @@ void ThreadPool::runOnWritable(std::function<void()> task, int fd) {
     FD_ZERO(&op_write);
     FD_SET(fd, &op_write);
 
-    auto res = select(fd + 1, &op_read, &op_write, NULL, NULL);
+    auto res = select(fd + 1, &op_read, &op_write, &op_write, NULL);
 
     if (res == 0) {
       RAISE(kIOError, "unexpected timeout while select()ing");

@@ -13,14 +13,15 @@
 
 namespace fnord {
 
-Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0) {}
+Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0), mark_(0) {}
 
 Buffer::Buffer(
     const void* initial_data,
     size_t initial_size) :
     data_(malloc(initial_size)),
     size_(initial_size),
-    alloc_(initial_size) {
+    alloc_(initial_size),
+    mark_(0) {
   if (data_ == nullptr) {
     RAISE(kMallocError, "malloc() failed");
   }
@@ -32,7 +33,8 @@ Buffer::Buffer(
     size_t initial_size) :
     data_(malloc(initial_size)),
     size_(initial_size),
-    alloc_(initial_size) {
+    alloc_(initial_size),
+    mark_(0) {
   if (data_ == nullptr) {
     RAISE(kMallocError, "malloc() failed");
   }
@@ -52,7 +54,8 @@ Buffer::Buffer(
     Buffer&& move) :
     data_(move.data_),
     size_(move.size_),
-    alloc_(move.alloc_) {
+    alloc_(move.alloc_),
+    mark_(0) {
   move.data_ = nullptr;
   move.size_ = 0;
   move.alloc_ = 0;
@@ -62,9 +65,11 @@ Buffer& Buffer::operator=(Buffer&& move) {
   data_ = move.data_;
   size_ = move.size_;
   alloc_ = move.alloc_;
+  mark_ = move.mark_;
   move.data_ = nullptr;
   move.size_ = 0;
   move.alloc_ = 0;
+  move.mark_ = 0;
   return *this;
 }
 
@@ -116,6 +121,7 @@ void Buffer::reserve(size_t size) {
 void Buffer::clear() {
   size_ = 0;
   alloc_ = 0;
+  mark_ = 0;
 
   if (data_ != nullptr) {
     free(data_);
@@ -152,6 +158,14 @@ size_t Buffer::size() const {
 
 std::string Buffer::toString() const {
   return std::string(static_cast<char *>(data_), size_);
+}
+
+void Buffer::setMark(size_t mark) {
+  mark_ = mark;
+}
+
+size_t Buffer::mark() const {
+  return mark_;
 }
 
 }

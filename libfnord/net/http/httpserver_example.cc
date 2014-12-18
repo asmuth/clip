@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include <unistd.h>
 #include "fnord/base/exception.h"
 #include "fnord/base/exceptionhandler.h"
 #include "fnord/net/http/httpserver.h"
@@ -30,6 +31,8 @@ int main() {
   fnord::thread::ThreadPool thread_pool;
   fnord::http::HTTPServer http_server(&thread_pool, &thread_pool);
   http_server.listen(8080);
+
+  for (;;) { usleep(100000); }
 
   return 0;
 }

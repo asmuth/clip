@@ -7,23 +7,25 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_HTTPHANDLER_H
-#define _FNORDMETRIC_HTTPHANDLER_H
-#include <fnord/net/http/httprequest.h>
-#include <fnord/net/http/httpresponse.h>
+#ifndef _FNORD_NET_TCPCONNECTION_H
+#define _FNORD_NET_TCPCONNECTION_H
+#include <stdlib.h>
 
 namespace fnord {
-namespace http {
+namespace net {
 
-class HTTPHandler {
+class TCPConnection {
 public:
 
-  virtual ~HTTPHandler() {}
+  TCPConnection(int fd);
+  int fd() const;
 
-  virtual bool handleHTTPRequest(
-      HTTPRequest* req,
-      HTTPResponse* res) = 0;
+  size_t read(void* dst, size_t size);
+  size_t write(const void* data, size_t size);
+  void close();
 
+protected:
+  int fd_;
 };
 
 }
