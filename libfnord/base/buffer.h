@@ -40,6 +40,7 @@ public:
   char charAt(size_t pos) const;
   size_t find(char chr) const;
   size_t size() const;
+  size_t allocSize() const;
   std::string toString() const;
 
   void reserve(size_t size);

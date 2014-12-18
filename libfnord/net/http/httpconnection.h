@@ -23,6 +23,8 @@ namespace http {
 
 class HTTPConnection {
 public:
+  static const size_t kMinBufferSize = 4096;
+
   HTTPConnection(
       std::unique_ptr<net::TCPConnection> conn,
       thread::TaskScheduler* server_scheduler,

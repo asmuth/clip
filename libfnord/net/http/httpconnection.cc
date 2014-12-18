@@ -35,6 +35,8 @@ HTTPConnection::HTTPConnection(
       fnord::log::kTrace, "New HTTP connection: $0",
       inspect(*this));
 
+  buf_.reserve(kMinBufferSize);
+
   parser_.onMethod([this] (HTTPMessage::kHTTPMethod method) {
     cur_request_->setMethod(method);
   });
@@ -62,11 +64,9 @@ HTTPConnection::HTTPConnection(
 }
 
 void HTTPConnection::read() {
-  char read_buf[10];
-
   size_t len;
   try {
-    len = conn_->read(&read_buf, sizeof(read_buf));
+    len = conn_->read(buf_.data(), buf_.allocSize());
   } catch (Exception& e) {
     log::Logger::get()->logException(
         fnord::log::kDebug,
@@ -77,15 +77,13 @@ void HTTPConnection::read() {
     return;
   }
 
-  iputs("read... $0 $1", len, (int) parser_.state());
-
   try {
     if (len == 0) {
       parser_.eof();
       close();
       return;
     } else {
-      parser_.parse(read_buf, len);
+      parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
     log::Logger::get()->logException(

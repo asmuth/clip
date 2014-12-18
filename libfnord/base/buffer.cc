@@ -156,6 +156,10 @@ size_t Buffer::size() const {
   return size_;
 }
 
+size_t Buffer::allocSize() const {
+  return alloc_;
+}
+
 std::string Buffer::toString() const {
   return std::string(static_cast<char *>(data_), size_);
 }
