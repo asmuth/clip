@@ -158,6 +158,13 @@
       color: rgba(0, 0, 0, 0.8);
     }
 
+    ul.menu li.submenu.accordion > ul > li.item {
+      padding: .5rem 1rem .5rem 2rem;
+    }
+
+    ul.menu li.submenu.accordion > ul {
+      padding-bottom: .95em;
+    }
 
   </style>
   <ul class="menu"></ul>
@@ -228,13 +235,16 @@
     }
 
     this.toggleAccordionSubmenu = function(elem) {
-      console.log(elem);
-      console.log(elem.parentNode);
       var active_submenu = this.shadowRoot.querySelector("li[data-active]");
+
+      if (!(elem.parentNode.hasAttribute('data-active'))) {
+        console.log("set attribute");
+        elem.parentNode.setAttribute('data-active', 'active');
+      }
+
       if (active_submenu) {
         active_submenu.removeAttribute('data-active');
       }
-      elem.setAttribute('data-active', 'active');
     }
 
     this.clickItem = function(item, shadow) {
