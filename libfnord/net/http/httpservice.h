@@ -7,26 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_HTTPHANDLER_H
-#define _FNORDMETRIC_HTTPHANDLER_H
+#ifndef _FNORDMETRIC_HTTPSERVICE_H
+#define _FNORDMETRIC_HTTPSERVICE_H
+#include <fnord/net/http/httprequest.h>
+#include <fnord/net/http/httpresponse.h>
 
 namespace fnord {
 namespace http {
-class HTTPConnection;
-class HTTPRequest;
 
-class HTTPHandler {
+class HTTPService {
 public:
-  virtual ~HTTPHandler() {}
-  virtual void handleHTTPRequest() = 0;
-};
 
-class HTTPHandlerFactory {
-public:
-  virtual ~HTTPHandlerFactory() {}
-  virtual std::unique_ptr<HTTPHandler> getHandler(
-      HTTPConnection* conn,
-      HTTPRequest* req) = 0;
+  virtual bool handleHTTPRequest(
+      HTTPRequest* req,
+      HTTPResponse* res) = 0;
+
 };
 
 }

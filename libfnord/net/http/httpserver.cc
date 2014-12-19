@@ -21,39 +21,48 @@ namespace fnord {
 namespace http {
 
 HTTPServer::HTTPServer(
+    HTTPHandlerFactory* handler_factory,
     TaskScheduler* server_scheduler,
     TaskScheduler* request_scheduler) :
-    ssock_(server_scheduler),
+    handler_factory_(handler_factory),
     server_scheduler_(server_scheduler),
     request_scheduler_(request_scheduler),
-    enable_keepalive_(false),
-    logger_(log::Logger::get()) {
+    ssock_(server_scheduler) {
   ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
     HTTPConnection::start(
+        handler_factory_,
         std::move(conn),
-        server_scheduler_,
-        [this] (HTTPConnection* conn, HTTPRequest* req) {
-            this->dispatchRequest(conn, req);
-        });
+        server_scheduler_);
   });
 }
 
-void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
-  handlers_.emplace_back(std::move(handler));
-}
-
 void HTTPServer::listen(int port) {
-  logger_->logf(fnord::log::kNotice, "Starting HTTP server on port $0", port);
+  log::Logger::get()->logf(
+      fnord::log::kNotice,
+      "Starting HTTP server on port $0",
+      port);
+
   ssock_.listen(port);
 }
 
 void HTTPServer::dispatchRequest(HTTPConnection* conn, HTTPRequest* req) {
   HTTPResponse response;
   response.populateFromRequest(*req);
-  response.setStatus(kStatusNotFound);
-  response.addBody("Not Found");
 
-  conn->writeResponseHeaders(
+  bool dispatched = false;
+  //for (const auto& handler : handlers_) {
+  //  if (handler->handleHTTPRequest(req, &response)) {
+  //    dispatched = true;
+  //    break;
+  //  }
+  //}
+
+  if (!dispatched) {
+    response.setStatus(kStatusNotFound);
+    response.addBody("Not Found");
+  }
+
+  conn->writeResponse(
       response,
       std::bind(&HTTPConnection::finishResponse, conn));
 }

@@ -9,7 +9,7 @@ CXXFLAGS += -stdlib=libc++
 endif
 
 FNORD_HTTP_TARGET  = libfnord-http.a
-FNORD_HTTP_SOURCES = cookies.cc httpconnection.cc httpmessage.cc httpparser.cc httpgenerator.cc httprequest.cc httpresponse.cc httpserver.cc
+FNORD_HTTP_SOURCES = cookies.cc httpconnection.cc httpmessage.cc httpparser.cc httpgenerator.cc httprequest.cc httpresponse.cc httpserver.cc httprouter.cc
 FNORD_HTTP_OBJECTS = $(subst .cc,.o,$(FNORD_HTTP_SOURCES))
 
 %.o : %.cc

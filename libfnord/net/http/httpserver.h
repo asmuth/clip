@@ -26,21 +26,19 @@ using fnord::thread::TaskScheduler;
 class HTTPServer {
 public:
   HTTPServer(
+      HTTPHandlerFactory* handler_factory,
       TaskScheduler* server_scheduler,
       TaskScheduler* request_scheduler);
 
-  void addHandler(std::unique_ptr<HTTPHandler> handler);
   void listen(int port);
 
 protected:
   void dispatchRequest(HTTPConnection* conn, HTTPRequest* req);
 
-  net::TCPServer ssock_;
+  HTTPHandlerFactory* handler_factory_;
   TaskScheduler* server_scheduler_;
   TaskScheduler* request_scheduler_;
-  bool enable_keepalive_;
-  log::Logger* logger_;
-  std::vector<std::unique_ptr<HTTPHandler>> handlers_;
+  net::TCPServer ssock_;
 };
 
 }

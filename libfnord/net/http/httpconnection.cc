@@ -22,22 +22,26 @@ std::string inspect(const http::HTTPConnection& conn) {
 namespace http {
 
 void HTTPConnection::start(
+    HTTPHandlerFactory* handler_factory,
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler,
-    std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request) {
+    thread::TaskScheduler* scheduler) {
   // N.B. we don't leak the connection here. it is ref counted and will
   // free itself
-  auto http_conn = new HTTPConnection(std::move(conn), scheduler, on_request);
+  auto http_conn = new HTTPConnection(
+      handler_factory,
+      std::move(conn),
+      scheduler);
+
   http_conn->nextRequest();
 }
 
 HTTPConnection::HTTPConnection(
+    HTTPHandlerFactory* handler_factory,
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler,
-    std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request) :
+    thread::TaskScheduler* scheduler) :
+    handler_factory_(handler_factory),
     conn_(std::move(conn)),
     scheduler_(scheduler),
-    on_request_cb_(on_request),
     on_read_completed_cb_(nullptr),
     on_write_completed_cb_(nullptr),
     refcount_(1) {
@@ -69,9 +73,7 @@ HTTPConnection::HTTPConnection(
         std::string(val, val_size));
   });
 
-  parser_.onHeadersComplete([this] () {
-    on_request_cb_(this, cur_request_.get());
-  });
+  parser_.onHeadersComplete(std::bind(&HTTPConnection::dispatchRequest, this));
 }
 
 void HTTPConnection::read() {
@@ -178,7 +180,12 @@ void HTTPConnection::nextRequest() {
   awaitRead();
 }
 
-void HTTPConnection::writeResponseHeaders(
+void HTTPConnection::dispatchRequest() {
+  cur_handler_= handler_factory_->getHandler(this, cur_request_.get());
+  cur_handler_->handleHTTPRequest();
+}
+
+void HTTPConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {
   buf_.clear();

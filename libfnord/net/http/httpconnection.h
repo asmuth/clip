@@ -12,9 +12,10 @@
 #include <memory>
 #include <vector>
 #include <fnord/logging/logger.h>
+#include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
-#include <fnord/net/http/httphandler.h>
+#include <fnord/net/http/httpresponse.h>
 #include <fnord/net/tcpconnection.h>
 #include <fnord/thread/taskscheduler.h>
 
@@ -65,9 +66,9 @@ public:
    *
    **/
   static void start(
+      HTTPHandlerFactory* handler_factory,
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler,
-      std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request);
+      thread::TaskScheduler* scheduler);
 
   void readRequestBody(
       std::function<void (
@@ -82,10 +83,6 @@ public:
       const HTTPResponse& resp,
       std::function<void()> ready_callback);
 
-  void writeResponseHeaders(
-      const HTTPResponse& resp,
-      std::function<void()> ready_callback);
-
   void writeResponseBody(
       const void* data,
       size_t size,
@@ -95,11 +92,13 @@ public:
 
 protected:
   HTTPConnection(
+      HTTPHandlerFactory* handler_factory,
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler,
-      std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request);
+      thread::TaskScheduler* scheduler);
 
   void nextRequest();
+  void dispatchRequest();
+
   void read();
   void write();
   void awaitRead();
@@ -109,15 +108,16 @@ protected:
   bool decRef();
   void close();
 
+  HTTPHandlerFactory* handler_factory_;
   std::unique_ptr<net::TCPConnection> conn_;
   thread::TaskScheduler* scheduler_;
-  std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request_cb_;
   HTTPParser parser_;
-  std::unique_ptr<HTTPRequest> cur_request_;
   std::function<void ()> on_read_completed_cb_;
   std::function<void ()> on_write_completed_cb_;
   std::atomic<int> refcount_;
   Buffer buf_;
+  std::unique_ptr<HTTPRequest> cur_request_;
+  std::unique_ptr<HTTPHandler> cur_handler_;
 };
 
 }
