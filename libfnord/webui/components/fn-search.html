@@ -25,8 +25,6 @@
     }
 
     input {
-      background: rgba(39, 41, 43, 0.3);
-
       position: absolute;
       box-sizing: border-box;
       display: inline-block;
@@ -54,12 +52,12 @@
     }
 
     input:focus {
-      border-color: rgba(39, 41, 43, 0.3);
-      background: '';
+      border: none;
+      background: none;
+      border: 1px solid rgba(39, 41, 43, 0.3);
       color: rgba(0, 0, 0, 0.8);
       box-shadow: none;
-      outline-color: rgba(39, 41, 43, 0.3);
-      outline-size: 1px;
+      outline: none;
     }
 
     input:active {
@@ -68,7 +66,6 @@
       color: rgba(0, 0, 0, 0.8);
       box-shadow: none;
     }
-
 
     ul {
       position: absolute;
@@ -121,10 +118,43 @@
       padding: 0em;
     }
 
+    input.transparent:focus {
+      outline: none;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .icon {
+      display: inline-block;
+      font-style: normal;
+      line-height: 1;
+      font-weight: 400;
+      text-decoration: inherit;
+      cursor: default;
+      position: absolute;
+      text-align: center;
+      top: 50%;
+      margin: 0;
+      right: 0;
+      margin-top: -.5em;
+      height: 100%;
+      width: 2.82142em;
+      opacity: .5;
+      border-radius: 0 .2857rem .2857rem 0;
+      -webkit-transition: opacity .3s ease;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+
+
   </style>
 
   <div class="wrapper">
     <input />
+    <div class="icon">
+      <content select="fn-search-icon"></content>
+    </div>
     <ul></ul>
   </div>
 
@@ -142,6 +172,10 @@
 
       if (this.hasAttribute('data-style')) {
         input.className += this.getAttribute('data-style');
+      }
+
+      if (this.getAttribute('data-placeholder') != null) {
+        input.placeholder = this.getAttribute('data-placeholder');
       }
 
       input.addEventListener('focus', function() {
@@ -184,6 +218,19 @@
 
       shadow.appendChild(tpl);
     };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-style':
+          this.shadowRoot.querySelector("input").className = new_val;
+          break;
+        case 'data-placeholder':
+          this.shadowRoot.querySelector("input").placeholder = new_val;
+          break;
+        default:
+          break;
+      }
+    }
 
     this.getValue = function() {
       var input = this.shadowRoot.querySelector("input");

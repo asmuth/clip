@@ -170,7 +170,7 @@
       position: relative;
       vertical-align:middle;
       display: inline-block;
-      width: 120px;
+      min-width: 120px;
     }
 
     .navigation .item.search {
@@ -178,10 +178,16 @@
       padding-left:10px;
     }
 
-    fn-search /deep/ input {
-      border: none;
+    .navigation .item.search[data-active] {
+      background: none;
       box-shadow: none;
     }
+
+    .navigation .item.search:hover {
+      background: none;
+    }
+
+
 
   </style>
 
@@ -229,6 +235,8 @@
         if (items[i].hasAttribute('data-search')) {
           console.log("search");
           var search = document.createElement("fn-search");
+          search.setAttribute('data-style', 'transparent');
+          search.setAttribute('data-placeholder', 'Search...');
           console.log(search);
           item.className += " search";
           item.appendChild(search);
