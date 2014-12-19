@@ -51,11 +51,14 @@ public:
 protected:
   void read();
   void write();
+  void awaitRead();
+  void awaitWrite();
+
   void dispatchRequest();
   void readNextRequestHeaders();
 
   void incRef();
-  void decRef();
+  bool decRef();
   void close();
 
   std::unique_ptr<net::TCPConnection> conn_;

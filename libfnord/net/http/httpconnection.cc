@@ -98,6 +98,10 @@ void HTTPConnection::read() {
   if (on_read_completed_cb_) {
     on_read_completed_cb_();
   }
+
+  if (decRef()) {
+    return;
+  }
 }
 
 void HTTPConnection::write() {
@@ -119,10 +123,7 @@ void HTTPConnection::write() {
 
   if (buf_.mark() + len < buf_.size()) {
     buf_.setMark(buf_.mark() + len);
-
-    server_scheduler_->runOnWritable(
-        std::bind(&HTTPConnection::write, this),
-        *conn_);
+    awaitWrite();
   } else {
     buf_.clear();
 
@@ -130,6 +131,26 @@ void HTTPConnection::write() {
       on_write_completed_cb_();
     }
   }
+
+  if (decRef()) {
+    return;
+  }
+}
+
+void HTTPConnection::awaitRead() {
+  incRef();
+
+  server_scheduler_->runOnReadable(
+      std::bind(&HTTPConnection::read, this),
+      *conn_);
+}
+
+void HTTPConnection::awaitWrite() {
+  incRef();
+
+  server_scheduler_->runOnWritable(
+      std::bind(&HTTPConnection::write, this),
+      *conn_);
 }
 
 void HTTPConnection::dispatchRequest() {
@@ -149,15 +170,11 @@ void HTTPConnection::readNextRequestHeaders() {
   on_write_completed_cb_ = nullptr;
   on_read_completed_cb_ = [this] () {
     if (parser_.state() < HTTPParser::S_BODY) {
-      server_scheduler_->runOnReadable(
-          std::bind(&HTTPConnection::read, this),
-          *conn_);
+      awaitRead();
     }
   };
 
-  server_scheduler_->runOnReadable(
-      std::bind(&HTTPConnection::read, this),
-      *conn_);
+  awaitRead();
 }
 
 void HTTPConnection::writeResponseHeaders(
@@ -168,10 +185,7 @@ void HTTPConnection::writeResponseHeaders(
   buf_.append(res.c_str(), res.length());
 
   on_write_completed_cb_ = ready_callback;
-
-  server_scheduler_->runOnWritable(
-      std::bind(&HTTPConnection::write, this),
-      *conn_);
+  awaitWrite();
 }
 
 void HTTPConnection::writeResponseBody(
@@ -201,15 +215,16 @@ void HTTPConnection::incRef() {
   refcount_++;
 }
 
-void HTTPConnection::decRef() {
-  refcount_--;
-
-  if (refcount_ == 0) {
+bool HTTPConnection::decRef() {
+  if (refcount_.fetch_sub(1) == 1) {
     log::Logger::get()->logf(
         fnord::log::kTrace, "HTTP connection free'd: $0",
         inspect(*this));
     delete this;
+    return true;
   }
+
+  return false;
 }
 
 } // namespace http
