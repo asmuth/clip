@@ -235,6 +235,7 @@
       var base = this;
       this.renderLoadingState();
       Fnord.httpPost("/query", query, function(r, duration) {
+        console.log(r.response);
         if (r.status == 200 && r.statusText == "OK") {
           var res = JSON.parse(r.response, duration);
           base.renderResult(res, duration);

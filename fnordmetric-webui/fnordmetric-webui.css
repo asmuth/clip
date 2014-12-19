@@ -12,8 +12,6 @@ h1.page_header {
   margin: 0 0 0 20px;
 }
 
-
-
 .le_fnord {
   float: left;
   line-height: 49px;
@@ -28,32 +26,6 @@ h1.page_header {
   border-right: 1px solid #2e3135;
   font-weight: 600;
 }
-
-
-
-
-
-
-
-
-fnordmetric-metric-preview /deep/ .error_box {
-  width: 90%;
-  margin:auto;
-  margin-top: 20px;
-  padding: 9px 14px;
-  background: rgba(230, 126, 34,0.1);
-  border: 1px solid rgba(230, 126, 34,1.0);
-  border-radius: 3px;
-  color: rgba(122, 07, 03,1.0);
-  line-height: 23px;
-}
-
-
-
-
-
-
-
 /*
 
 body, html {

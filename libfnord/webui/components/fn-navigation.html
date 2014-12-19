@@ -171,6 +171,7 @@
       vertical-align:middle;
       display: inline-block;
       min-width: 120px;
+      height: 2.5em;
     }
 
     .navigation .item.search {
@@ -233,13 +234,25 @@
         }
 
         if (items[i].hasAttribute('data-search')) {
-          console.log("search");
           var search = document.createElement("fn-search");
+          var search_icon = document.createElement("fn-search-icon");
+          search_icon.innerHTML = "<i class='fa fa-search'></i>";
+          search.appendChild(search_icon);
           search.setAttribute('data-style', 'transparent');
           search.setAttribute('data-placeholder', 'Search...');
-          console.log(search);
+
           item.className += " search";
           item.appendChild(search);
+
+
+          search.addEventListener('fn-search-autocomplete', function() {
+            console.log("autocomplete");
+            /*var term = search.getValue();
+            var res = [{query :"asdasd"}, {query : "2353242"}, {query : "234234"}];
+            search.autocomplete(term, res);*/
+
+          }, false);
+
         }
 
 
@@ -258,7 +271,11 @@
 
       item.setAttribute('data-active', 'active');
 
-      //this.dispatchEvent(
+      var ev = new CustomEvent('fn-navigation-item-click', {
+        bubbles: true,
+        cancelable: true
+      });
+      item.dispatchEvent(ev);
     }
   }
 

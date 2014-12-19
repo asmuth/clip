@@ -134,3 +134,14 @@ fn-appbar /deep/ fn-search /deep/ input {
   top: -1px;
   left: 2px;
 }
+
+fn-appbar /deep/ fn-search /deep/ input:focus {
+  background: #2d363b;
+  border: 1px solid #444e54;
+  color: #fff;
+  font-size: 90%;
+  height: 32px;
+  position: relative;
+  top: -1px;
+  left: 2px;
+}
