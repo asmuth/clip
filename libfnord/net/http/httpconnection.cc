@@ -22,19 +22,21 @@ namespace http {
 
 void HTTPConnection::start(
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler) {
+    thread::TaskScheduler* scheduler,
+    std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request) {
   // N.B. we don't leak the connection here. it is ref counted and will
   // free itself
-  auto http_conn = new HTTPConnection(std::move(conn), scheduler);
-  http_conn->readNextRequestHeaders();
+  auto http_conn = new HTTPConnection(std::move(conn), scheduler, on_request);
+  http_conn->nextRequest();
 }
 
 HTTPConnection::HTTPConnection(
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler) :
+    thread::TaskScheduler* scheduler,
+    std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request) :
     conn_(std::move(conn)),
     scheduler_(scheduler),
-    on_request_cb_(nullptr),
+    on_request_cb_(on_request),
     on_read_completed_cb_(nullptr),
     on_write_completed_cb_(nullptr),
     refcount_(1) {
@@ -66,7 +68,9 @@ HTTPConnection::HTTPConnection(
         std::string(val, val_size));
   });
 
-  parser_.onHeadersComplete(std::bind(&HTTPConnection::dispatchRequest, this));
+  parser_.onHeadersComplete([this] () {
+    on_request_cb_(this, cur_request_.get());
+  });
 }
 
 void HTTPConnection::read() {
@@ -159,17 +163,7 @@ void HTTPConnection::awaitWrite() {
       *conn_);
 }
 
-void HTTPConnection::dispatchRequest() {
-  HTTPResponse response;
-  response.setStatus(kStatusNotFound);
-  response.addBody("Not Found");
-
-  writeResponseHeaders(
-      response,
-      std::bind(&HTTPConnection::finishResponse, this));
-}
-
-void HTTPConnection::readNextRequestHeaders() {
+void HTTPConnection::nextRequest() {
   parser_.reset();
   cur_request_.reset(new HTTPRequest());
 
@@ -202,7 +196,7 @@ void HTTPConnection::writeResponseBody(
 
 void HTTPConnection::finishResponse() {
   if (cur_request_->keepalive()) {
-    readNextRequestHeaders();
+    nextRequest();
   } else {
     close();
   }

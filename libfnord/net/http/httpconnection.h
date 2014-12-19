@@ -25,16 +25,62 @@ class HTTPConnection {
 public:
   static const size_t kMinBufferSize = 4096;
 
+  /**
+   * Start a new HTTP connection. conn must be an opened and valid TCP
+   * connection.
+   *
+   * This method does not return a reference to the newly created HTTP
+   * connection to simplify connection lifetime management. The HTTP connection
+   * will free itself once it is closed.
+   *
+   * The user must provide a callback that is executed for each incoming
+   * request. A pointer to the HTTP connection will be passed to the onRequest
+   * callback and is valid only until the callback returns. Therefore it is
+   * crucial that the passed connection pointer is only dereferenced from the
+   * onRequest callback and not store anywhere.
+   *
+   * Note that the onRequest callback will be called after all headers are read.
+   * The onRequest callback _must_ call {read,discard}RequestBody to read or
+   * discard the remainder of the request, it then _must_ call one of the
+   * writeReponse methods to return a HTTP response to the user and then _must_
+   * call the finishResponse method from the callback that is passed to the
+   * writeResponse methods.
+   *
+   * Here is a simple example:
+   *
+   *    HTTPConnection::start(
+   *         ...,
+   *         ...,
+   *         [] (HTTPConnection* conn, HTTPRequest* req) {
+   *           conn->discardRequestBody([conn] () {
+   *             HTTPResponse response;
+   *             response.setStatus(kStatusOK);
+   *             response.addBody("pong");
+   *
+   *             conn->writeResponse(
+   *                 response,
+   *                 std::bind(&HTTPConnection::finishResponse, conn));
+   *           });
+   *         });
+   *
+   **/
   static void start(
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler);
-
-  void onRequest(std::function<void (HTTPRequest* req)> callback);
+      thread::TaskScheduler* scheduler,
+      std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request);
 
   void readRequestBody(
-      std::function<void (const void* data, size_t size, bool last_chunk)>);
+      std::function<void (
+          const void* data,
+          size_t size,
+          bool last_chunk)> ready_callback);
 
-  void writeResponse(const HTTPResponse& resp);
+  void discardRequestBody(
+      std::function<void ()> ready_callback);
+
+  void writeResponse(
+      const HTTPResponse& resp,
+      std::function<void()> ready_callback);
 
   void writeResponseHeaders(
       const HTTPResponse& resp,
@@ -50,15 +96,14 @@ public:
 protected:
   HTTPConnection(
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler);
+      thread::TaskScheduler* scheduler,
+      std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request);
 
+  void nextRequest();
   void read();
   void write();
   void awaitRead();
   void awaitWrite();
-
-  void dispatchRequest();
-  void readNextRequestHeaders();
 
   void incRef();
   bool decRef();
@@ -66,10 +111,9 @@ protected:
 
   std::unique_ptr<net::TCPConnection> conn_;
   thread::TaskScheduler* scheduler_;
-
+  std::function<void (HTTPConnection* conn, HTTPRequest* req)> on_request_cb_;
   HTTPParser parser_;
   std::unique_ptr<HTTPRequest> cur_request_;
-  std::function<void (HTTPRequest* req)> on_request_cb_;
   std::function<void ()> on_read_completed_cb_;
   std::function<void ()> on_write_completed_cb_;
   std::atomic<int> refcount_;

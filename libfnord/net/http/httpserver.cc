@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/exception.h>
+#include <fnord/base/inspect.h>
 #include <fnord/base/wallclock.h>
 #include <fnord/net/http/httpconnection.h>
 #include <fnord/net/http/httpserver.h>
@@ -28,7 +29,12 @@ HTTPServer::HTTPServer(
     enable_keepalive_(false),
     logger_(log::Logger::get()) {
   ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
-    HTTPConnection::start(std::move(conn), server_scheduler_);
+    HTTPConnection::start(
+        std::move(conn),
+        server_scheduler_,
+        [this] (HTTPConnection* conn, HTTPRequest* req) {
+            this->dispatchRequest(conn, req);
+        });
   });
 }
 
@@ -39,6 +45,17 @@ void HTTPServer::addHandler(std::unique_ptr<HTTPHandler> handler) {
 void HTTPServer::listen(int port) {
   logger_->logf(fnord::log::kNotice, "Starting HTTP server on port $0", port);
   ssock_.listen(port);
+}
+
+void HTTPServer::dispatchRequest(HTTPConnection* conn, HTTPRequest* req) {
+  HTTPResponse response;
+  response.populateFromRequest(*req);
+  response.setStatus(kStatusNotFound);
+  response.addBody("Not Found");
+
+  conn->writeResponseHeaders(
+      response,
+      std::bind(&HTTPConnection::finishResponse, conn));
 }
 
 }
