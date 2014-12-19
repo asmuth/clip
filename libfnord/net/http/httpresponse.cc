@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -11,7 +11,6 @@
 #include <fnord/base/uri.h>
 #include <fnord/net/http/cookies.h>
 #include <fnord/net/http/httpresponse.h>
-#include <fnord/net/http/httpoutputstream.h>
 
 namespace fnord {
 namespace http {
@@ -48,13 +47,6 @@ void HTTPResponse::addCookie(
 
   // FIXPAUL appendheader
   setHeader("Set-Cookie", cookie_str);
-}
-
-void HTTPResponse::writeToOutputStream(HTTPOutputStream* output) {
-  setHeader("Content-Length", std::to_string(body_.size()));
-  output->writeStatusLine(version_, status_code_, status_);
-  output->writeHeaders(headers_);
-  output->getOutputStream()->write(body_);
 }
 
 void HTTPResponse::populateFromRequest(const HTTPRequest& request) {

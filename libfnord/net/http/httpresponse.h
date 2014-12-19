@@ -17,7 +17,6 @@
 
 namespace fnord {
 namespace http {
-class HTTPOutputStream;
 
 class HTTPResponse : public HTTPMessage {
 public:
@@ -35,7 +34,6 @@ public:
       bool secure = false,
       bool httponly = false);
 
-  void writeToOutputStream(HTTPOutputStream* output);
   void populateFromRequest(const HTTPRequest& request);
 
   int statusCode() const { return status_code_; }

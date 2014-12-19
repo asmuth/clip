@@ -20,6 +20,12 @@ namespace http {
 class HTTPRouter : public HTTPHandlerFactory {
 public:
 
+  std::unique_ptr<HTTPHandler> getHandler(
+      HTTPConnection* conn,
+      HTTPRequest* req) override;
+
+protected:
+
   class NoSuchRouteHandler : public HTTPHandler {
   public:
     NoSuchRouteHandler(HTTPConnection* conn, HTTPRequest* req);
@@ -29,10 +35,6 @@ public:
     HTTPRequest* req_;
     HTTPResponse res_;
   };
-
-  std::unique_ptr<HTTPHandler> getHandler(
-      HTTPConnection* conn,
-      HTTPRequest* req) override;
 
 };
 
