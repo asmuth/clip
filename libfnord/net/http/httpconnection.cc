@@ -10,6 +10,7 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
 #include "fnord/net/http/httpconnection.h"
+#include "fnord/net/http/httpgenerator.h"
 
 namespace fnord {
 
@@ -180,10 +181,9 @@ void HTTPConnection::nextRequest() {
 void HTTPConnection::writeResponseHeaders(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {
-  std::string res = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
   buf_.clear();
-  buf_.append(res.c_str(), res.length());
-
+  io::BufferOutputStream os(&buf_);
+  HTTPGenerator::generate(resp, &os);
   on_write_completed_cb_ = ready_callback;
   awaitWrite();
 }

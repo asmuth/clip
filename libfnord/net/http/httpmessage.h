@@ -46,7 +46,7 @@ public:
   void addHeader(const std::string& key, const std::string& value);
   void setHeader(const std::string& key, const std::string& value);
 
-  const Buffer& getBody() const;
+  const Buffer& body() const;
   void addBody(const std::string& body);
   void addBody(void* data, size_t size);
   void clearBody();

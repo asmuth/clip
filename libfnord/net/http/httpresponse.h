@@ -39,6 +39,7 @@ public:
   void populateFromRequest(const HTTPRequest& request);
 
   int statusCode() const { return status_code_; }
+  const std::string& statusString() const { return status_; }
 
 protected:
   int status_code_;

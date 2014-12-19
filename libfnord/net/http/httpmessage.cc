@@ -67,7 +67,7 @@ void HTTPMessage::setHeader(const std::string& key, const std::string& value) {
   headers_.emplace_back(key_low, value);
 }
 
-const Buffer& HTTPMessage::getBody() const {
+const Buffer& HTTPMessage::body() const {
   return body_;
 }
 
