@@ -25,10 +25,9 @@ class HTTPConnection {
 public:
   static const size_t kMinBufferSize = 4096;
 
-  HTTPConnection(
+  static void start(
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* server_scheduler,
-      thread::TaskScheduler* request_scheduler);
+      thread::TaskScheduler* scheduler);
 
   void onRequest(std::function<void (HTTPRequest* req)> callback);
 
@@ -49,6 +48,10 @@ public:
   void finishResponse();
 
 protected:
+  HTTPConnection(
+      std::unique_ptr<net::TCPConnection> conn,
+      thread::TaskScheduler* scheduler);
+
   void read();
   void write();
   void awaitRead();
@@ -62,8 +65,7 @@ protected:
   void close();
 
   std::unique_ptr<net::TCPConnection> conn_;
-  thread::TaskScheduler* server_scheduler_;
-  thread::TaskScheduler* request_scheduler_;
+  thread::TaskScheduler* scheduler_;
 
   HTTPParser parser_;
   std::unique_ptr<HTTPRequest> cur_request_;
