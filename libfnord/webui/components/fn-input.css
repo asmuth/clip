@@ -2,39 +2,85 @@
  * Adapted from: Semantic UI:
  *   https://github.com/Semantic-Org/Semantic-UI
  *   http://www.semantic-ui.com/
- 
-fn-input-group {
-  position: relative;
-  max-width: 100%;
-  display:block;
-}
-fn-input-group > fn-input-group-header {
-  font-size: 1.071rem;
-  border: none;
-  margin: -webkit-calc(2rem - .165em) 0 1rem;
-  margin: calc(2rem - .165em) 0 1rem;
-  padding: 0;
-  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-  font-weight: 700;
-  line-height: 1.33em;
-  text-transform: none;
-  color: rgba(0,0,0,.8);
-  padding-bottom: .25rem;
-  border-bottom: 1px solid rgba(0,0,0,.1);
+ */
+input.fn-input {
+  margin: 0em;
   width: 100%;
-  display: block;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  text-align: left;
+  line-height: 1.2142em;
+  font-family: "Helvetica Neue", "Helvetica", Arial;
+  padding: 0.67861em 1em;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 0.2857rem;
+  -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
 }
 
-fn-input-group > fn-input {
-  float:left;
-  padding-left: .5em;
-  padding-right: .5em;
+input.fn-input {
+  background-color: blue;
 }
 
-fn-input-group fn-input:first-child {
-  padding-left: 0px;
+/*--------------------
+      Placeholder
+---------------------*/
+
+
+/* browsers require these rules separate */
+input.fn-input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+input.fn-input::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+input.fn-input:focus {
+  border-color: rgba(39, 41, 43, 0.3);
+  background: '';
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow: none;
+}
+input.fn-input:focus input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.8);
+}
+input.fn-input:focus input::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.8);
 }
 
-fn-input-group fn-input:last-child {
-  padding-right: 0px;
-}*/
+/*--------------------
+        Active
+---------------------*/
+
+input.fn-input:active {
+  border-color: rgba(0, 0, 0, 0.3);
+  background: #fafafa;
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow: none;
+}
+
+/*--------------------
+        Focus
+---------------------*/
+
+
+input.fn-input:focus {
+  border-color: rgba(39, 41, 43, 0.3);
+  background: '';
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow: none;
+}
+.ui.input.focus input input::-webkit-input-placeholder,
+.ui.input input:focus input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.8);
+}
+.ui.input.focus input input::-moz-placeholder,
+.ui.input input:focus input::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+

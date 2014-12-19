@@ -166,6 +166,23 @@
       opacity: 1;
     }
 
+    .navigation .item fn-search {
+      position: relative;
+      vertical-align:middle;
+      display: inline-block;
+      width: 120px;
+    }
+
+    .navigation .item.search {
+      padding: 0;
+      padding-left:10px;
+    }
+
+    fn-search /deep/ input {
+      border: none;
+      box-shadow: none;
+    }
+
   </style>
 
   <div class="navigation">
@@ -208,6 +225,15 @@
           text_elem.innerHTML = text.innerHTML;
           item.appendChild(text_elem);
         }
+
+        if (items[i].hasAttribute('data-search')) {
+          console.log("search");
+          var search = document.createElement("fn-search");
+          console.log(search);
+          item.className += " search";
+          item.appendChild(search);
+        }
+
 
         item.addEventListener('click', function() {
           base.onItemClick(this);

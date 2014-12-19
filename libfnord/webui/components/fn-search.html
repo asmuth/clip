@@ -11,6 +11,7 @@
 <style type="text/css">
   fn-search {
     display: inline-block;
+    width: 100%;
   }
 </style>
 
@@ -21,9 +22,11 @@
       width: 100%;
       height: 38px;
       position: relative;
-
     }
+
     input {
+      background: rgba(39, 41, 43, 0.3);
+
       position: absolute;
       box-sizing: border-box;
       display: inline-block;
@@ -49,6 +52,23 @@
       -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
       transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     }
+
+    input:focus {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+      outline-color: rgba(39, 41, 43, 0.3);
+      outline-size: 1px;
+    }
+
+    input:active {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+
 
     ul {
       position: absolute;
@@ -94,6 +114,13 @@
       background-color: #f5f5f5;
     }
 
+    input.transparent {
+      border-color: transparent;
+      background-color: transparent;
+      box-shadow: none;
+      padding: 0em;
+    }
+
   </style>
 
   <div class="wrapper">
@@ -112,6 +139,10 @@
       var input = tpl.querySelector("input");
       var base = this;
       var min_length = 1;
+
+      if (this.hasAttribute('data-style')) {
+        input.className += this.getAttribute('data-style');
+      }
 
       input.addEventListener('focus', function() {
         this.value = "";
