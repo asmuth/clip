@@ -63,9 +63,10 @@ void Logger::logException(
     logf(
         log_level,
         tags,
-        "$0: $1\n    in $2\n    in $3:$4",
+        "$0: $1: $2\n    in $3\n    in $4:$5",
         message,
         rte.getTypeName(),
+        rte.getMessage(),
         rte.method(),
         rte.file(),
         rte.line());

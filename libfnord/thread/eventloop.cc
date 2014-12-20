@@ -32,82 +32,71 @@ void EventLoop::runOnReadable(std::function<void()> task, int fd) {
   if (fd > FD_SETSIZE) {
     RAISEF(kIOError, "fd is too large: $0, max is $1", fd, FD_SETSIZE);
   }
+
+  if (fd > max_fd_) {
+    max_fd_ = fd;
+  }
+
+  FD_SET(fd, &op_read_);
+  FD_SET(fd, &op_error_);
+
+  callbacks_[fd] = task;
 }
 
 void EventLoop::runOnWritable(std::function<void()> task, int fd) {
   if (fd > FD_SETSIZE) {
     RAISEF(kIOError, "fd is too large: $0, max is $1", fd, FD_SETSIZE);
   }
-}
-/*
-void EventLoop::watch(
-    int fd,
-    kInterestType interest,
-    CallbackInterface* callback) {
 
   if (fd > max_fd_) {
     max_fd_ = fd;
   }
 
-  callbacks_[fd] = callback;
+  FD_SET(fd, &op_write_);
+  FD_SET(fd, &op_error_);
 
-  switch (interest) {
-    case EV_READABLE:
-      FD_SET(fd, &op_read_);
-      break;
-    case EV_WRITEABLE:
-      FD_SET(fd, &op_write_);
-      break;
-  }
+  callbacks_[fd] = task;
 }
 
-void EventLoop::unwatch(int fd, int flags) {
-  callbacks_[fd] = nullptr;
-  FD_CLR(fd, &op_read_);
-  FD_CLR(fd, &op_write_);
-}
-
-int EventLoop::poll() {
-  fd_set op_read, op_write;
+void EventLoop::poll() {
+  fd_set op_read, op_write, op_error;
 
   memcpy(&op_read, &op_read_, sizeof(fd_set));
   memcpy(&op_write, &op_write_, sizeof(fd_set));
+  memcpy(&op_error, &op_error_, sizeof(fd_set));
 
-  int res = select(max_fd_ + 1, &op_read, &op_write, NULL, NULL);
+  int res = select(max_fd_ + 1, &op_read, &op_write, &op_error, NULL);
 
   if (res == 0) {
-    return 0;
+    return;
   }
 
   if (res == -1) {
     RAISE_ERRNO(kIOError, "select() failed");
-    return -1;
   }
 
-  int num_events = 0;
   for (int fd = 0; fd <= max_fd_; fd++) {
     if (FD_ISSET(fd, &op_read)) {
       FD_CLR(fd, &op_read_);
-      callbacks_[fd]->onEvent(this, fd, EV_READABLE);
-      num_events++;
+      FD_CLR(fd, &op_error_);
+      callbacks_[fd]();
+      //callbacks_[fd] = nullptr;
     }
 
     else if (FD_ISSET(fd, &op_write)) {
       FD_CLR(fd, &op_write_);
-      callbacks_[fd]->onEvent(this, fd, EV_READABLE);
-      num_events++;
+      FD_CLR(fd, &op_error_);
+      callbacks_[fd]();
+      //callbacks_[fd] = nullptr;
     }
   }
-
-  return num_events;
 }
 
-void EventLoop::loop() {
+void EventLoop::run() {
   while (running_) {
     poll();
   }
 }
 
-*/
 }
 }

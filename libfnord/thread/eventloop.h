@@ -24,20 +24,15 @@ public:
   void runOnWritable(std::function<void()> task, int fd) override;
 
   EventLoop();
-  void loop();
+  void run();
 
 protected:
 
-  enum kInterestType {
-    EV_READABLE = 1,
-    EV_WRITEABLE = 2
-  };
-
-  void unwatch(int fd, int flags);
-  int poll();
+  void poll();
 
   fd_set op_read_;
   fd_set op_write_;
+  fd_set op_error_;
   int max_fd_;
   volatile bool running_;
   std::vector<std::function<void()>> callbacks_;

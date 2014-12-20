@@ -41,7 +41,18 @@ void HTTPServiceHandler::handleHTTPRequest() {
 
 void HTTPServiceHandler::dispatchRequest() {
   auto runnable = [this] () {
-    service_->handleHTTPRequest(req_, &res_);
+    try {
+      service_->handleHTTPRequest(req_, &res_);
+    } catch (const std::exception& e) {
+      log::Logger::get()->logException(
+          log::kError,
+          "Error while processing HTTP request",
+          e);
+
+      res_.setStatus(http::kStatusInternalServerError);
+      res_.clearBody();
+      res_.addBody("server error");
+    }
 
     conn_->writeResponse(
         res_,
