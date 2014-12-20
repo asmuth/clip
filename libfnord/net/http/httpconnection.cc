@@ -220,8 +220,8 @@ void HTTPConnection::readRequestBody(
     }
   };
 
-  parser_.onBodyChunk(read_body_chunk_fn);
   read_body_chunk_fn((const char*) body_buf_.data(), body_buf_.size());
+  parser_.onBodyChunk(read_body_chunk_fn);
 }
 
 void HTTPConnection::writeResponse(
@@ -241,6 +241,11 @@ void HTTPConnection::writeResponseBody(
     size_t size,
     std::function<void()> ready_callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+
+  buf_.clear();
+  buf_.append(data, size);
+  on_write_completed_cb_ = ready_callback;
+  awaitWrite();
 }
 
 void HTTPConnection::finishResponse() {

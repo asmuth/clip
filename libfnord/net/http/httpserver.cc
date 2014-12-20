@@ -19,12 +19,10 @@ using fnord::io::FileOutputStream;
 
 /*
 TODO:
-  - fix body read
   - discardRequest impl
   - run handler / service in request_scheduler
   - timeouts
   - httpconnection -> httpserverconnection
-  - streaming body write + example
   - eventloop
   - 100 continue
   - chunked encoding

@@ -12,10 +12,86 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/exceptionhandler.h"
 #include "fnord/net/http/httpserver.h"
+#include "fnord/net/http/httphandler.h"
+#include "fnord/net/http/httpservice.h"
 #include "fnord/logging/logger.h"
 #include "fnord/logging/logoutputstream.h"
 #include "fnord/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
+
+
+/**
+ * Example 2: A streaming HTTP Handler
+ */
+class StreamingTestHandler : public fnord::http::HTTPHandler {
+public:
+  StreamingTestHandler(
+      fnord::http::HTTPConnection* conn,
+      fnord::http::HTTPRequest* req) :
+      conn_(conn),
+      req_(req),
+      body_len_(0),
+      chunks_written_(0) {
+    res_.populateFromRequest(*req);
+  }
+
+  void handleHTTPRequest() override {
+    conn_->readRequestBody([this] (
+        const void* data,
+        size_t size,
+        bool last_chunk) {
+      body_len_ += size;
+
+      if (last_chunk) {
+        writeResponseHeaders();
+      }
+    });
+  }
+
+  void writeResponseHeaders() {
+    res_.setStatus(fnord::http::kStatusOK);
+    res_.addHeader("Content-Length", fnord::StringUtil::toString(5 * 10));
+    res_.addHeader("X-Orig-Bodylen", fnord::StringUtil::toString(body_len_));
+
+    conn_->writeResponse(
+        res_,
+        std::bind(&StreamingTestHandler::writeResponseBodyChunk, this));
+  }
+
+  void writeResponseBodyChunk() {
+    usleep(100000); // sleep for demo
+
+    std::string buf = "blah\n";
+    if (++chunks_written_ == 10) {
+      conn_->writeResponseBody(
+          buf.c_str(),
+          buf.length(),
+          std::bind(&fnord::http::HTTPConnection::finishResponse, conn_));
+    } else {
+      conn_->writeResponseBody(
+          buf.c_str(),
+          buf.length(),
+          std::bind(&StreamingTestHandler::writeResponseBodyChunk, this));
+    }
+  }
+
+protected:
+  size_t body_len_;
+  int chunks_written_;
+  fnord::http::HTTPConnection* conn_;
+  fnord::http::HTTPRequest* req_;
+  fnord::http::HTTPResponse res_;
+};
+
+class StreamingTestHandlerFactory : public fnord::http::HTTPHandlerFactory {
+public:
+  std::unique_ptr<fnord::http::HTTPHandler> getHandler(
+      fnord::http::HTTPConnection* conn,
+      fnord::http::HTTPRequest* req) override {
+    return std::unique_ptr<fnord::http::HTTPHandler>(
+        new StreamingTestHandler(conn, req));
+  }
+};
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
@@ -25,11 +101,12 @@ int main() {
   ehandler.installGlobalHandlers();
 
   fnord::log::LogOutputStream logger(fnord::io::OutputStream::getStderr());
-  fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kTrace);
+  fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kInfo);
   fnord::log::Logger::get()->listen(&logger);
 
   fnord::thread::ThreadPool thread_pool;
-  fnord::http::HTTPServer http_server(&thread_pool, &thread_pool);
+  StreamingTestHandlerFactory handlers;
+  fnord::http::HTTPServer http_server(&handlers, &thread_pool, &thread_pool);
   http_server.listen(8080);
 
   for (;;) { usleep(100000); }
