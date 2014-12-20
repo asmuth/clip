@@ -81,7 +81,6 @@ void HTTPConnection::read() {
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
-    iputs("read fired: $0", buf_.toString());
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
       decRef();
@@ -93,7 +92,7 @@ void HTTPConnection::read() {
         "HTTP read() failed, closing connection",
         e);
 
-    iputs("close b/c read error...\n", 1);
+    iputs("close b/c read error...", 1);
     close();
     return;
   }
@@ -101,7 +100,6 @@ void HTTPConnection::read() {
   try {
     if (len == 0) {
       parser_.eof();
-      iputs("close b/c eof...\n", 1);
       close();
       return;
     } else {
@@ -113,7 +111,7 @@ void HTTPConnection::read() {
         "HTTP parse error, closing connection",
         e);
 
-    iputs("close b/c parse error...\n", 1);
+    iputs("close b/c parse error...", 1);
     close();
     return;
   }
@@ -137,12 +135,9 @@ void HTTPConnection::write() {
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
 
-  //iputs("write fired: $0", buf_.toString());
-
   size_t len;
   try {
     len = conn_->write(data, size);
-    iputs("writing: $1 ($3/$4) >>$0<< from ($5) >>$2<< ", std::string(data, len), buf_.mark(), buf_.toString(), data, ((char *) buf_.data()) + buf_.mark(), buf_.size());
     buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
@@ -155,7 +150,6 @@ void HTTPConnection::write() {
         "HTTP write() failed, closing connection",
         e);
 
-    iputs("close b/c write error...\n", 1);
     close();
     return;
   }
@@ -163,7 +157,6 @@ void HTTPConnection::write() {
   if (buf_.mark() < buf_.size()) {
     awaitWrite();
   } else {
-    iputs("write done!!", 1);
     buf_.clear();
 
     if (on_write_completed_cb_) {
@@ -193,12 +186,11 @@ void HTTPConnection::awaitWrite() {
 }
 
 void HTTPConnection::nextRequest() {
-  iputs("next request...\n", 1);
-
   parser_.reset();
   cur_request_.reset(new HTTPRequest());
+  cur_handler_.reset(nullptr);
   body_buf_.clear();
-
+  read_body_ = false;
   on_write_completed_cb_ = nullptr;
   awaitRead();
 }
@@ -268,13 +260,11 @@ void HTTPConnection::finishResponse() {
   if (cur_request_->keepalive()) {
     nextRequest();
   } else {
-    iputs("close b/c no keepalive...\n", 1);
     close();
   }
 }
 
 void HTTPConnection::close() {
-  iputs("close...\n", 1);
   log::Logger::get()->logf(
       fnord::log::kTrace, "HTTP connection close: $0",
       inspect(*this));

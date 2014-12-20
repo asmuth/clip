@@ -120,14 +120,7 @@ void Buffer::reserve(size_t size) {
 
 void Buffer::clear() {
   size_ = 0;
-  alloc_ = 0;
   mark_ = 0;
-
-  if (data_ != nullptr) {
-    free(data_);
-  }
-
-  data_ = nullptr;
 }
 
 void* Buffer::data() const {
