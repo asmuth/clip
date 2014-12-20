@@ -9,6 +9,17 @@
   <http://www.gnu.org/licenses/>.
 -->
 <style type="text/css">
+  fn-loader {
+    position: absolute;
+  }
+
+  fn-appbar {
+    position: relative;
+  }
+
+  #fnordmetric-viewport {
+    position: relative;
+  }
 </style>
 
 <template id="fnordmetric-app-base-tpl">
@@ -19,31 +30,35 @@
   </style>
 
   <fn-loader id="app-loader" data-loading>
-    <fn-appbar>
-      <div class="le_fnord">F</div>
+    <fn-flexbox>
+      <fn-flexbox-item data-height='fixed'>
+        <fn-appbar>
+          <div class="le_fnord">F</div>
 
-      <fn-appbar-section data-position="left" style="border-right: none;">
-        <fn-button data-url="query">
-          <fn-icon data-icon="file"></fn-icon> New Query
-        </fn-button>
-        <fn-button data-url="metrics">
-          <fn-icon data-icon="database"></fn-icon> Metrics
-        </fn-button>
-        <fn-button data-url="console">
-          <fn-icon data-icon="area-chart"></fn-icon> Console
-        </fn-button>
-      </fn-appbar-section>
+          <fn-appbar-section data-position="left" style="border-right: none;">
+            <fn-button data-url="query">
+              <fn-icon data-icon="file"></fn-icon> New Query
+            </fn-button>
+            <fn-button data-url="metrics">
+              <fn-icon data-icon="database"></fn-icon> Metrics
+            </fn-button>
+            <fn-button data-url="console">
+              <fn-icon data-icon="area-chart"></fn-icon> Console
+            </fn-button>
+          </fn-appbar-section>
 
-      <fn-appbar-section data-position="right">
-        <fn-search>
-          <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
-        </fn-search>
-      </fn-appbar-section>
-    </fn-appbar>
-
-
-    <div id="fnordmetric-viewport">
-    </div>
+          <fn-appbar-section data-position="right">
+            <fn-search>
+              <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+            </fn-search>
+          </fn-appbar-section>
+        </fn-appbar>
+      </fn-flexbox-item>
+      <fn-flexbox-item data-height='full'>
+        <div id="fnordmetric-viewport">
+        </div>
+      </fn-flexbox-item>
+    </fn-flexbox>
   </fn-loader>
 </template>
 

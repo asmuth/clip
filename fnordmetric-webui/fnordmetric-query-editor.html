@@ -13,7 +13,7 @@
 <template id="fnordmetric-query-editor-base-tpl">
   <style>
     fn-splitpane {
-      height: 90%;
+      height: 100%;
       background-color: #e9ebed;
     }
 
@@ -268,8 +268,8 @@
         if (response.tables != undefined) {
           this.renderTable(response.tables);
         }
+        this.renderExecutionInfo(response.info, duration);
       }
-      this.renderExecutionInfo(response.info, duration);
     };
 
     this.renderError = function(error_message) {

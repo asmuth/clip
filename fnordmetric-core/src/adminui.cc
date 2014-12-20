@@ -53,6 +53,7 @@ AdminUI::AdminUI() :
   webui_bundle_.addComponent("fnord/components/fn-modal.html");
   webui_bundle_.addComponent("fnord/components/fn-pager.html");
   webui_bundle_.addComponent("fnord/components/fn-tooltip.html");
+  webui_bundle_.addComponent("fnord/components/fn-flexbox.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-console.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-metric-list.html");
