@@ -33,6 +33,19 @@ void HTTPRouter::addRoute(
   routes_.emplace_back(predicate, factory);
 }
 
+void HTTPRouter::addRoute(
+    std::function<bool (HTTPRequest*)> predicate,
+    HTTPHandlerFactory* handler_factory) {
+
+  auto factory = [handler_factory] (
+      HTTPConnection* conn,
+      HTTPRequest* req) ->std::unique_ptr<HTTPHandler> {
+    return handler_factory->getHandler(conn, req);
+  };
+
+  routes_.emplace_back(predicate, factory);
+}
+
 std::unique_ptr<HTTPHandler> HTTPRouter::getHandler(
     HTTPConnection* conn,
     HTTPRequest* req) {

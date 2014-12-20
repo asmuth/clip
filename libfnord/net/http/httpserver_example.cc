@@ -13,12 +13,30 @@
 #include "fnord/base/exceptionhandler.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/net/http/httphandler.h"
+#include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpservice.h"
 #include "fnord/logging/logger.h"
 #include "fnord/logging/logoutputstream.h"
 #include "fnord/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
 
+/**
+ * Example 1: A simple HTTP Service
+ */
+class TestService : public fnord::http::HTTPService {
+
+  void handleHTTPRequest(
+      fnord::http::HTTPRequest* req,
+      fnord::http::HTTPResponse* res) {
+    auto res_body = fnord::StringUtil::format(
+        "pong: $0",
+        req->body().toString());
+
+    res->setStatus(fnord::http::kStatusOK);
+    res->addBody(res_body);
+  }
+
+};
 
 /**
  * Example 2: A streaming HTTP Handler
@@ -105,8 +123,15 @@ int main() {
   fnord::log::Logger::get()->listen(&logger);
 
   fnord::thread::ThreadPool thread_pool;
-  StreamingTestHandlerFactory handlers;
-  fnord::http::HTTPServer http_server(&handlers, &thread_pool, &thread_pool);
+  fnord::http::HTTPRouter router;
+  fnord::http::HTTPServer http_server(&router, &thread_pool, &thread_pool);
+
+  TestService ping_example;
+  router.addRouteByPrefixMatch("/ping", &ping_example);
+
+  StreamingTestHandlerFactory streaming_example;
+  router.addRouteByPrefixMatch("/stream", &streaming_example);
+
   http_server.listen(8080);
 
   for (;;) { usleep(100000); }

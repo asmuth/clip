@@ -30,6 +30,10 @@ public:
       std::function<bool (HTTPRequest*)> predicate,
       HTTPService* service);
 
+  void addRoute(
+      std::function<bool (HTTPRequest*)> predicate,
+      HTTPHandlerFactory* factory);
+
   std::unique_ptr<HTTPHandler> getHandler(
       HTTPConnection* conn,
       HTTPRequest* req) override;

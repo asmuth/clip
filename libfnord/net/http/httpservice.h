@@ -19,7 +19,7 @@ namespace http {
 class HTTPService {
 public:
 
-  virtual bool handleHTTPRequest(
+  virtual void handleHTTPRequest(
       HTTPRequest* req,
       HTTPResponse* res) = 0;
 
