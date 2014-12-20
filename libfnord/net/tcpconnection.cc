@@ -26,7 +26,11 @@ size_t TCPConnection::read(void* dst, size_t size) {
   auto res = ::read(fd_, dst, size);
 
   if (res < 0) {
-    RAISE_ERRNO(kIOError, "read() failed");
+    if (errno == EWOULDBLOCK) {
+      RAISE(kWouldBlockError);
+    } else {
+      RAISE_ERRNO(kIOError, "read() failed");
+    }
   }
 
   return res;
@@ -46,6 +50,20 @@ size_t TCPConnection::write(const void* data, size_t size) {
 
 void TCPConnection::close() {
   ::close(fd_);
+}
+
+void TCPConnection::setNonblocking(bool nonblocking) {
+  int flags = fcntl(fd_, F_GETFL, 0);
+
+  if (nonblocking) {
+    flags |= O_NONBLOCK;
+  } else {
+    flags &= ~O_NONBLOCK;
+  }
+
+  if (fcntl(fd_, F_SETFL, flags) != 0) {
+    RAISE_ERRNO(kIOError, "fnctl(%i) failed", fd_);
+  }
 }
 
 }

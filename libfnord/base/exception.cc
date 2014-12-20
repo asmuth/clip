@@ -14,6 +14,14 @@
 
 namespace fnord {
 
+Exception::Exception() :
+    type_name_(nullptr),
+    file_(nullptr),
+    line_(0),
+    func_(nullptr) {
+  *message_ = 0;
+}
+
 Exception::Exception(
     const char* message,
     ...) :
@@ -105,6 +113,10 @@ void Exception::debugPrint(io::OutputStream* os /* = nullptr */) const {
       func_,
       file_,
       line_);
+}
+
+bool Exception::ofType(const char* type_name) {
+  return strcmp(type_name_, type_name) == 0;
 }
 
 std::string Exception::getMessage() const {

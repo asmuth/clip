@@ -20,7 +20,9 @@ HTTPServiceHandler::HTTPServiceHandler(
     HTTPRequest* req) :
     service_(service),
     conn_(conn),
-    req_(req) {}
+    req_(req) {
+  res_.populateFromRequest(*req);
+}
 
 void HTTPServiceHandler::handleHTTPRequest() {
   conn_->readRequestBody([this] (
@@ -36,7 +38,9 @@ void HTTPServiceHandler::handleHTTPRequest() {
 }
 
 void HTTPServiceHandler::dispatchRequest() {
-  abort();
+  res_.setStatus(http::kStatusOK);
+  res_.addBody("fnord");
+  conn_->writeResponse(res_, std::bind(&HTTPConnection::finishResponse, conn_));
 }
 
 }

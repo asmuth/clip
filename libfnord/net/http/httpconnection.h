@@ -119,6 +119,7 @@ protected:
   Buffer body_buf_;
   std::unique_ptr<HTTPRequest> cur_request_;
   std::unique_ptr<HTTPHandler> cur_handler_;
+  bool read_body_;
 };
 
 }

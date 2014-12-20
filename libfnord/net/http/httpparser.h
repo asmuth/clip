@@ -58,6 +58,7 @@ protected:
   void parseURI(const char** begin, const char* end);
   void parseVersion(const char** begin, const char* end);
   void parseHeader(const char** begin, const char* end);
+  void readBody(const char** begin, const char* end);
   bool readUntil(const char** begin, const char* end, char search);
   void processHeader(
       const char* key,

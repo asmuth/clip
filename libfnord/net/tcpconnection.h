@@ -23,6 +23,7 @@ public:
   size_t read(void* dst, size_t size);
   size_t write(const void* data, size_t size);
   void close();
+  void setNonblocking(bool nonblocking);
 
 protected:
   int fd_;

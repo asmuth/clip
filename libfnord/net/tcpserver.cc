@@ -37,13 +37,6 @@ void TCPServer::accept() {
     RAISE_ERRNO(kIOError, "accept() failed");
   }
 
-  int flags = fcntl(conn_fd, F_GETFL, 0);
-  flags = flags | O_NONBLOCK;
-
-  if (fcntl(conn_fd, F_SETFL, flags) != 0) {
-    RAISE_ERRNO(kIOError, "fnctl(%i) failed", conn_fd);
-  }
-
   if (on_connection_cb_) {
     scheduler_->run([this, conn_fd] () {
       on_connection_cb_(

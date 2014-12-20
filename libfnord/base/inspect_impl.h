@@ -52,7 +52,7 @@ std::string inspect(const std::set<T>& value) {
 
 template <typename T>
 std::string inspect(T* value) {
-  return "@0x" + StringUtil::hexPrint(&value, sizeof(void*), false);
+  return "@0x" + StringUtil::hexPrint(&value, sizeof(void*), false, true);
 }
 
 template <typename H, typename... T>

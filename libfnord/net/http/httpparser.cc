@@ -79,8 +79,11 @@ void HTTPParser::parse(const char* data, size_t size) {
       case S_HEADER:
         parseHeader(&begin, end);
         break;
+      case S_BODY:
+        readBody(&begin, end);
+        break;
       case S_DONE:
-        iputs("invalid trailng bytes: $0", std::string(begin, end - begin));
+        iputs("invalid trailing bytes: $0", std::string(begin, end - begin));
         RAISE(kParseError, "invalid trailing bytes");
     }
   }
@@ -260,6 +263,19 @@ void HTTPParser::processHeader(
 
   if (on_header_cb_) {
     on_header_cb_(key, key_len, val, val_len);
+  }
+}
+
+void HTTPParser::readBody(const char** begin, const char* end) {
+  iputs("body chunk $0 $1", *begin, end - *begin);
+
+  body_bytes_read_ += end - *begin;
+  *begin = end;
+
+  if (body_bytes_read_ == body_bytes_expected_) {
+    state_ = HTTPParser::S_DONE;
+  } else if (body_bytes_read_ > body_bytes_expected_) {
+    RAISE(kParseError, "invalid trailing body bytes");
   }
 }
 

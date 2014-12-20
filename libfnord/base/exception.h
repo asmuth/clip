@@ -26,13 +26,14 @@ const char kKeyError[] = "KeyError";
 const char kMallocError[] = "MallocError";
 const char kNotImplementedError[] = "NotImplementedError";
 const char kNotYetImplementedError[] = "NotYetImplementedError";
-const char kNullPointerError[] = "kNullPointerError";
+const char kNullPointerError[] = "NullPointerError";
 const char kParseError[] = "ParseError";
 const char kRangeError[] = "RangeError";
 const char kRuntimeError[] = "RuntimeError";
 const char kTypeError[] = "TypeError";
 const char kUsageError[] = "UsageError";
 const char kVersionMismatchError[] = "VersionMismatchError";
+const char kWouldBlockError[] = "WouldBlockError";
 
 #define RAISE_EXCEPTION(E) \
     throw (E).setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__); while(0) {}
@@ -60,6 +61,7 @@ namespace fnord {
 
 class Exception : public std::exception {
 public:
+  Exception();
   Exception(const char* message, ...);
   Exception(const std::string& message);
   Exception(const Exception& other);
@@ -76,6 +78,7 @@ public:
 
   Exception setSource(const char* file, int line, const char* func);
   Exception setTypeName(const char* type_name);
+  bool ofType(const char* type_name);
   Exception setErrno(int posix_errno);
 
 private:

@@ -42,13 +42,14 @@ HTTPConnection::HTTPConnection(
     handler_factory_(handler_factory),
     conn_(std::move(conn)),
     scheduler_(scheduler),
-    on_read_completed_cb_(nullptr),
     on_write_completed_cb_(nullptr),
-    refcount_(1) {
+    refcount_(1),
+    read_body_(false) {
   log::Logger::get()->logf(
       fnord::log::kTrace, "New HTTP connection: $0",
       inspect(*this));
 
+  conn_->setNonblocking(true);
   buf_.reserve(kMinBufferSize);
 
   parser_.onMethod([this] (HTTPMessage::kHTTPMethod method) {
@@ -80,12 +81,19 @@ void HTTPConnection::read() {
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
+    iputs("read fired: $0", buf_.toString());
   } catch (Exception& e) {
+    if (e.ofType(kWouldBlockError)) {
+      decRef();
+      return awaitRead();
+    }
+
     log::Logger::get()->logException(
         fnord::log::kDebug,
         "HTTP read() failed, closing connection",
         e);
 
+    iputs("close b/c read error...\n", 1);
     close();
     return;
   }
@@ -93,6 +101,7 @@ void HTTPConnection::read() {
   try {
     if (len == 0) {
       parser_.eof();
+      iputs("close b/c eof...\n", 1);
       close();
       return;
     } else {
@@ -104,12 +113,19 @@ void HTTPConnection::read() {
         "HTTP parse error, closing connection",
         e);
 
+    iputs("close b/c parse error...\n", 1);
     close();
     return;
   }
 
-  if (on_read_completed_cb_) {
-    on_read_completed_cb_();
+  if (read_body_) {
+    if (parser_.state() != HTTPParser::S_DONE) {
+      awaitRead();
+    }
+  } else {
+    if (parser_.state() < HTTPParser::S_BODY) {
+      awaitRead();
+    }
   }
 
   if (decRef()) {
@@ -121,23 +137,33 @@ void HTTPConnection::write() {
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
 
+  //iputs("write fired: $0", buf_.toString());
+
   size_t len;
   try {
     len = conn_->write(data, size);
+    iputs("writing: $1 ($3/$4) >>$0<< from ($5) >>$2<< ", std::string(data, len), buf_.mark(), buf_.toString(), data, ((char *) buf_.data()) + buf_.mark(), buf_.size());
+    buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
+    if (e.ofType(kWouldBlockError)) {
+      //decRef();
+      //return awaitWrite();
+    }
+
     log::Logger::get()->logException(
         fnord::log::kDebug,
         "HTTP write() failed, closing connection",
         e);
 
+    iputs("close b/c write error...\n", 1);
     close();
     return;
   }
 
-  if (buf_.mark() + len < buf_.size()) {
-    buf_.setMark(buf_.mark() + len);
+  if (buf_.mark() < buf_.size()) {
     awaitWrite();
   } else {
+    iputs("write done!!", 1);
     buf_.clear();
 
     if (on_write_completed_cb_) {
@@ -167,20 +193,18 @@ void HTTPConnection::awaitWrite() {
 }
 
 void HTTPConnection::nextRequest() {
+  iputs("next request...\n", 1);
+
   parser_.reset();
   cur_request_.reset(new HTTPRequest());
+  body_buf_.clear();
 
   on_write_completed_cb_ = nullptr;
-  on_read_completed_cb_ = [this] () {
-    if (parser_.state() < HTTPParser::S_BODY) {
-      awaitRead();
-    }
-  };
-
   awaitRead();
 }
 
 void HTTPConnection::dispatchRequest() {
+  incRef();
   cur_handler_= handler_factory_->getHandler(this, cur_request_.get());
   cur_handler_->handleHTTPRequest();
 }
@@ -188,7 +212,9 @@ void HTTPConnection::dispatchRequest() {
 void HTTPConnection::readRequestBody(
     std::function<void (const void*, size_t, bool)> callback) {
 
-  auto read_body_chunk = [this, &callback] () {
+/*
+  auto read_body_chunk = [this, callback] () {
+    iputs("read body called...\n", 1);
     bool last_chunk;
 
     switch (parser_.state()) {
@@ -208,24 +234,25 @@ void HTTPConnection::readRequestBody(
 
     // FIXPAUL handle exceptions?
     callback(body_buf_.data(), body_buf_.size(), last_chunk);
-
-    if (!last_chunk) {
-      body_buf_.clear();
-      awaitRead();
-    }
   };
-
-  on_read_completed_cb_ = read_body_chunk;
-  read_body_chunk();
+*/
+  if (parser_.state() == HTTPParser::S_DONE) {
+    callback(body_buf_.data(), body_buf_.size(), true);
+  } else {
+    abort();
+    awaitRead();
+  }
 }
 
 void HTTPConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {
+  decRef();
   buf_.clear();
   io::BufferOutputStream os(&buf_);
   HTTPGenerator::generate(resp, &os);
   on_write_completed_cb_ = ready_callback;
+  incRef();
   awaitWrite();
 }
 
@@ -236,14 +263,18 @@ void HTTPConnection::writeResponseBody(
 }
 
 void HTTPConnection::finishResponse() {
+  decRef();
+
   if (cur_request_->keepalive()) {
     nextRequest();
   } else {
+    iputs("close b/c no keepalive...\n", 1);
     close();
   }
 }
 
 void HTTPConnection::close() {
+  iputs("close...\n", 1);
   log::Logger::get()->logf(
       fnord::log::kTrace, "HTTP connection close: $0",
       inspect(*this));
