@@ -235,7 +235,6 @@
       var base = this;
       this.renderLoadingState();
       Fnord.httpPost("/query", query, function(r, duration) {
-        console.log(r.response);
         if (r.status == 200 && r.statusText == "OK") {
           var res = JSON.parse(r.response, duration);
           base.renderResult(res, duration);
@@ -270,7 +269,7 @@
           this.renderTable(response.tables);
         }
       }
-      this.renderExecutionInfo(duration);
+      this.renderExecutionInfo(response.info, duration);
     };
 
     this.renderError = function(error_message) {
@@ -322,10 +321,12 @@
       loader.removeAttribute('data-loading');
     };
 
-    this.renderExecutionInfo = function(duration) {
+    this.renderExecutionInfo = function(info, duration) {
       var message = this.querySelector("fn-message#info");
       message.className ="active";
-      message.innerHTML = "The query execution took " + duration;
+      message.innerHTML =
+        "The query execution took " + duration + 
+        " and returned " + info[0].num_rows + " rows;";
     }
 
 
