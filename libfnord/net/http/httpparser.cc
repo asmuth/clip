@@ -15,6 +15,8 @@
 namespace fnord {
 namespace http {
 
+const char HTTPParser::kContentLengthHeader[] = "Content-Length";
+
 HTTPParser::HTTPParser(
     size_t buffer_size /* = kDefaultBufferSize */) :
     state_(S_METHOD),
@@ -217,21 +219,18 @@ void HTTPParser::parseHeader(const char** begin, const char* end) {
         hval_len--;
       }
 
-      if (on_header_cb_) {
-        on_header_cb_(hkey, hkey_len, hval, hval_len);
-      }
-
+      processHeader(hkey, hkey_len, hval, hval_len);
       buf_.clear();
       state_ = S_HEADER;
     } else {
-      if (on_headers_complete_cb_) {
-        on_headers_complete_cb_();
-      }
-
       if (body_bytes_expected_ == 0) {
         state_ = S_DONE;
       } else {
         state_ = S_BODY;
+      }
+
+      if (on_headers_complete_cb_) {
+        on_headers_complete_cb_();
       }
     }
 
@@ -241,6 +240,26 @@ void HTTPParser::parseHeader(const char** begin, const char* end) {
 
   if (buf_.size() > kMaxHeaderSize) {
     RAISEF(kParseError, "HTTP header too large, max is $0", kMaxHeaderSize);
+  }
+}
+
+void HTTPParser::processHeader(
+    const char* key,
+    size_t key_len,
+    const char* val,
+    size_t val_len) {
+  if (key_len == strlen(kContentLengthHeader) &&
+      strncasecmp(key, kContentLengthHeader, key_len) == 0) {
+    std::string content_length_str(val, val_len);
+    try {
+      body_bytes_expected_ = std::stoul(content_length_str);
+    } catch (const std::exception& e) {
+      RAISEF(kParseError, "invalid content length: $0", content_length_str);
+    }
+  }
+
+  if (on_header_cb_) {
+    on_header_cb_(key, key_len, val, val_len);
   }
 }
 

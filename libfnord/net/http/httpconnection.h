@@ -74,7 +74,7 @@ public:
       std::function<void (
           const void* data,
           size_t size,
-          bool last_chunk)> ready_callback);
+          bool last_chunk)> callback);
 
   void discardRequestBody(
       std::function<void ()> ready_callback);
@@ -116,6 +116,7 @@ protected:
   std::function<void ()> on_write_completed_cb_;
   std::atomic<int> refcount_;
   Buffer buf_;
+  Buffer body_buf_;
   std::unique_ptr<HTTPRequest> cur_request_;
   std::unique_ptr<HTTPHandler> cur_handler_;
 };

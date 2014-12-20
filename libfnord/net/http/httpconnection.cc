@@ -185,6 +185,40 @@ void HTTPConnection::dispatchRequest() {
   cur_handler_->handleHTTPRequest();
 }
 
+void HTTPConnection::readRequestBody(
+    std::function<void (const void*, size_t, bool)> callback) {
+
+  auto read_body_chunk = [this, &callback] () {
+    bool last_chunk;
+
+    switch (parser_.state()) {
+      case HTTPParser::S_METHOD:
+      case HTTPParser::S_URI:
+      case HTTPParser::S_VERSION:
+      case HTTPParser::S_HEADER:
+        RAISE(kIllegalStateError, "can't read body before headers are parsed");
+      case HTTPParser::S_BODY:
+        last_chunk = false;
+        break;
+      case HTTPParser::S_DONE:
+        last_chunk = true;
+        break;
+    }
+    iputs("readbody state=$0 last=$1", (int) parser_.state(), last_chunk);
+
+    // FIXPAUL handle exceptions?
+    callback(body_buf_.data(), body_buf_.size(), last_chunk);
+
+    if (!last_chunk) {
+      body_buf_.clear();
+      awaitRead();
+    }
+  };
+
+  on_read_completed_cb_ = read_body_chunk;
+  read_body_chunk();
+}
+
 void HTTPConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {

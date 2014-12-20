@@ -34,6 +34,8 @@ public:
 
   void handleHTTPRequest() override;
 protected:
+  void dispatchRequest();
+
   HTTPService* service_;
   HTTPConnection* conn_;
   HTTPRequest* req_;

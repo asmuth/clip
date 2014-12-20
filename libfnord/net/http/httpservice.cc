@@ -7,6 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/inspect.h>
+#include <fnord/net/http/httpconnection.h>
 #include <fnord/net/http/httpservice.h>
 
 namespace fnord {
@@ -21,6 +23,19 @@ HTTPServiceHandler::HTTPServiceHandler(
     req_(req) {}
 
 void HTTPServiceHandler::handleHTTPRequest() {
+  conn_->readRequestBody([this] (
+      const void* data,
+      size_t size,
+      bool last_chunk) {
+    iputs("read body chunk: $0", size);
+
+    if (last_chunk) {
+      dispatchRequest();
+    }
+  });
+}
+
+void HTTPServiceHandler::dispatchRequest() {
   abort();
 }
 

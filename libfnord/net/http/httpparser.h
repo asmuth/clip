@@ -25,6 +25,7 @@ public:
   static const size_t kMaxURISize = 8192;
   static const size_t kMaxVersionSize = 16;
   static const size_t kMaxHeaderSize = 65535;
+  static const char kContentLengthHeader[];
 
   HTTPParser(size_t buffer_size = kDefaultBufferSize);
 
@@ -58,6 +59,11 @@ protected:
   void parseVersion(const char** begin, const char* end);
   void parseHeader(const char** begin, const char* end);
   bool readUntil(const char** begin, const char* end, char search);
+  void processHeader(
+      const char* key,
+      size_t key_len,
+      const char* val,
+      size_t val_len);
 
   std::function<void(HTTPMessage::kHTTPMethod)> on_method_cb_;
   std::function<void(const char* data, size_t size)> on_uri_cb_;
