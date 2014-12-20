@@ -24,7 +24,8 @@ namespace http {
 
 class HTTPConnection {
 public:
-  static const size_t kMinBufferSize = 4096;
+  //static const size_t kMinBufferSize = 4096;
+  static const size_t kMinBufferSize = 10;
 
   /**
    * Start a new HTTP connection. conn must be an opened and valid TCP
@@ -119,7 +120,7 @@ protected:
   Buffer body_buf_;
   std::unique_ptr<HTTPRequest> cur_request_;
   std::unique_ptr<HTTPHandler> cur_handler_;
-  bool read_body_;
+  std::recursive_mutex mutex_;
 };
 
 }

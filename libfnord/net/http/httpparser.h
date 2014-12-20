@@ -52,6 +52,7 @@ public:
       const char* val,
       size_t val_len)> callback);
   void onHeadersComplete(std::function<void()> callback);
+  void onBodyChunk(std::function<void(const char* data, size_t size)> callback);
 
 protected:
   void parseMethod(const char** begin, const char* end);
@@ -75,6 +76,7 @@ protected:
       const char* val,
       size_t val_len)> on_header_cb_;
   std::function<void()> on_headers_complete_cb_;
+  std::function<void(const char* data, size_t size)> on_body_chunk_cb_;
 
   kParserState state_;
   Buffer buf_;

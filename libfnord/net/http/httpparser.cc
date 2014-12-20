@@ -25,6 +25,7 @@ HTTPParser::HTTPParser(
     on_version_cb_(nullptr),
     on_header_cb_(nullptr),
     on_headers_complete_cb_(nullptr),
+    on_body_chunk_cb_(nullptr),
     body_bytes_read_(0),
     body_bytes_expected_(0) {
   buf_.reserve(buffer_size);
@@ -59,6 +60,11 @@ void HTTPParser::onHeader(std::function<void(
 
 void HTTPParser::onHeadersComplete(std::function<void()> callback) {
   on_headers_complete_cb_ = callback;
+}
+
+void HTTPParser::onBodyChunk(
+    std::function<void(const char* data, size_t size)> callback) {
+  on_body_chunk_cb_ = callback;
 }
 
 void HTTPParser::parse(const char* data, size_t size) {
@@ -267,16 +273,19 @@ void HTTPParser::processHeader(
 }
 
 void HTTPParser::readBody(const char** begin, const char* end) {
-  iputs("body chunk $0 $1", *begin, end - *begin);
-
   body_bytes_read_ += end - *begin;
-  *begin = end;
 
   if (body_bytes_read_ == body_bytes_expected_) {
     state_ = HTTPParser::S_DONE;
   } else if (body_bytes_read_ > body_bytes_expected_) {
     RAISE(kParseError, "invalid trailing body bytes");
   }
+
+  if (on_body_chunk_cb_) {
+    on_body_chunk_cb_(*begin, end - *begin);
+  }
+
+  *begin = end;
 }
 
 bool HTTPParser::readUntil(const char** begin, const char* end, char search) {

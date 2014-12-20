@@ -16,7 +16,7 @@ namespace fnord {
 
 template <>
 std::string inspect(const http::HTTPConnection& conn) {
-  return "<HTTPConnection>";
+  return StringUtil::format("<HTTPConnection $0>", inspect(&conn));
 }
 
 namespace http {
@@ -43,8 +43,7 @@ HTTPConnection::HTTPConnection(
     conn_(std::move(conn)),
     scheduler_(scheduler),
     on_write_completed_cb_(nullptr),
-    refcount_(1),
-    read_body_(false) {
+    refcount_(1) {
   log::Logger::get()->logf(
       fnord::log::kTrace, "New HTTP connection: $0",
       inspect(*this));
@@ -78,6 +77,8 @@ HTTPConnection::HTTPConnection(
 }
 
 void HTTPConnection::read() {
+  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
@@ -92,7 +93,6 @@ void HTTPConnection::read() {
         "HTTP read() failed, closing connection",
         e);
 
-    iputs("close b/c read error...", 1);
     close();
     return;
   }
@@ -111,19 +111,12 @@ void HTTPConnection::read() {
         "HTTP parse error, closing connection",
         e);
 
-    iputs("close b/c parse error...", 1);
     close();
     return;
   }
 
-  if (read_body_) {
-    if (parser_.state() != HTTPParser::S_DONE) {
-      awaitRead();
-    }
-  } else {
-    if (parser_.state() < HTTPParser::S_BODY) {
-      awaitRead();
-    }
+  if (parser_.state() != HTTPParser::S_DONE) {
+    awaitRead();
   }
 
   if (decRef()) {
@@ -132,6 +125,8 @@ void HTTPConnection::read() {
 }
 
 void HTTPConnection::write() {
+  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
 
@@ -141,8 +136,8 @@ void HTTPConnection::write() {
     buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
-      //decRef();
-      //return awaitWrite();
+      decRef();
+      return awaitWrite();
     }
 
     log::Logger::get()->logException(
@@ -189,9 +184,13 @@ void HTTPConnection::nextRequest() {
   parser_.reset();
   cur_request_.reset(new HTTPRequest());
   cur_handler_.reset(nullptr);
-  body_buf_.clear();
-  read_body_ = false;
   on_write_completed_cb_ = nullptr;
+  body_buf_.clear();
+
+  parser_.onBodyChunk([this] (const char* data, size_t size) {
+    body_buf_.append(data, size);
+  });
+
   awaitRead();
 }
 
@@ -203,43 +202,38 @@ void HTTPConnection::dispatchRequest() {
 
 void HTTPConnection::readRequestBody(
     std::function<void (const void*, size_t, bool)> callback) {
+  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 
-/*
-  auto read_body_chunk = [this, callback] () {
-    iputs("read body called...\n", 1);
-    bool last_chunk;
-
-    switch (parser_.state()) {
-      case HTTPParser::S_METHOD:
-      case HTTPParser::S_URI:
-      case HTTPParser::S_VERSION:
-      case HTTPParser::S_HEADER:
-        RAISE(kIllegalStateError, "can't read body before headers are parsed");
-      case HTTPParser::S_BODY:
-        last_chunk = false;
-        break;
-      case HTTPParser::S_DONE:
-        last_chunk = true;
-        break;
-    }
-    iputs("readbody state=$0 last=$1", (int) parser_.state(), last_chunk);
-
-    // FIXPAUL handle exceptions?
-    callback(body_buf_.data(), body_buf_.size(), last_chunk);
-  };
-*/
-  if (parser_.state() == HTTPParser::S_DONE) {
-    callback(body_buf_.data(), body_buf_.size(), true);
-  } else {
-    abort();
-    awaitRead();
+  switch (parser_.state()) {
+    case HTTPParser::S_METHOD:
+    case HTTPParser::S_URI:
+    case HTTPParser::S_VERSION:
+    case HTTPParser::S_HEADER:
+      RAISE(kIllegalStateError, "can't read body before headers are parsed");
+    case HTTPParser::S_BODY:
+    case HTTPParser::S_DONE:
+      break;
+      break;
   }
+
+  auto read_body_chunk_fn = [this, callback] (const char* data, size_t size) {
+    auto last_chunk = parser_.state() == HTTPParser::S_DONE;
+
+    if (last_chunk || size > 0) {
+      callback(data, size, last_chunk);
+    }
+  };
+
+  parser_.onBodyChunk(read_body_chunk_fn);
+  read_body_chunk_fn((const char*) body_buf_.data(), body_buf_.size());
 }
 
 void HTTPConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {
+  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
   decRef();
+
   buf_.clear();
   io::BufferOutputStream os(&buf_);
   HTTPGenerator::generate(resp, &os);
@@ -252,9 +246,11 @@ void HTTPConnection::writeResponseBody(
     const void* data,
     size_t size,
     std::function<void()> ready_callback) {
+  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 }
 
 void HTTPConnection::finishResponse() {
+  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
   decRef();
 
   if (cur_request_->keepalive()) {
