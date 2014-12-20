@@ -294,7 +294,7 @@ bool HTTPParser::readUntil(const char** begin, const char* end, char search) {
   for (; cur < end && *cur != search; ++cur);
   buf_.append(*begin, (cur - *begin));
   *begin = cur;
-  return *cur == search;
+  return cur != end && *cur == search;
 }
 
 void HTTPParser::reset() {
