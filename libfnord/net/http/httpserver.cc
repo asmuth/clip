@@ -13,10 +13,6 @@
 #include <fnord/net/http/httpconnection.h>
 #include <fnord/net/http/httpserver.h>
 
-using fnord::Exception;
-using fnord::io::FileInputStream;
-using fnord::io::FileOutputStream;
-
 /*
 TODO:
   - timeouts
