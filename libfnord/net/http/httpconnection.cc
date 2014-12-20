@@ -224,6 +224,14 @@ void HTTPConnection::readRequestBody(
   parser_.onBodyChunk(read_body_chunk_fn);
 }
 
+void HTTPConnection::discardRequestBody(std::function<void ()> callback) {
+  readRequestBody([callback] (const void* data, size_t size, bool last) {
+    if (last) {
+      callback();
+    }
+  });
+}
+
 void HTTPConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {

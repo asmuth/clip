@@ -19,7 +19,6 @@ using fnord::io::FileOutputStream;
 
 /*
 TODO:
-  - discardRequest impl
   - run handler / service in request_scheduler
   - timeouts
   - httpconnection -> httpserverconnection

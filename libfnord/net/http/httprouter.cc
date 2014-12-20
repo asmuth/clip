@@ -67,14 +67,14 @@ HTTPRouter::NoSuchRouteHandler::NoSuchRouteHandler(
 }
 
 void HTTPRouter::NoSuchRouteHandler::handleHTTPRequest() {
-  // FIXPAUL: discard body...
+  conn_->discardRequestBody([this] () {
+    res_.setStatus(kStatusNotFound);
+    res_.addBody("Not Found");
 
-  res_.setStatus(kStatusNotFound);
-  res_.addBody("Not Found");
-
-  conn_->writeResponse(
-      res_,
-      std::bind(&HTTPConnection::finishResponse, conn_));
+    conn_->writeResponse(
+        res_,
+        std::bind(&HTTPConnection::finishResponse, conn_));
+  });
 }
 
 }
