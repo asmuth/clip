@@ -29,6 +29,7 @@ class HTTPServiceHandler : public HTTPHandler {
 public:
   HTTPServiceHandler(
       HTTPService* service,
+      thread::TaskScheduler* scheduler,
       HTTPConnection* conn,
       HTTPRequest* req);
 
@@ -37,6 +38,7 @@ protected:
   void dispatchRequest();
 
   HTTPService* service_;
+  thread::TaskScheduler* scheduler_;
   HTTPConnection* conn_;
   HTTPRequest* req_;
   HTTPResponse res_;

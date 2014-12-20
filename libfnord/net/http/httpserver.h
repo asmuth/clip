@@ -27,15 +27,13 @@ class HTTPServer {
 public:
   HTTPServer(
       HTTPHandlerFactory* handler_factory,
-      TaskScheduler* server_scheduler,
-      TaskScheduler* request_scheduler);
+      TaskScheduler* scheduler);
 
   void listen(int port);
 
 protected:
   HTTPHandlerFactory* handler_factory_;
-  TaskScheduler* server_scheduler_;
-  TaskScheduler* request_scheduler_;
+  TaskScheduler* scheduler_;
   net::TCPServer ssock_;
 };
 

@@ -16,9 +16,11 @@ namespace http {
 
 HTTPServiceHandler::HTTPServiceHandler(
     HTTPService* service,
+    thread::TaskScheduler* scheduler,
     HTTPConnection* conn,
     HTTPRequest* req) :
     service_(service),
+    scheduler_(scheduler),
     conn_(conn),
     req_(req) {
   res_.populateFromRequest(*req);
@@ -29,7 +31,7 @@ void HTTPServiceHandler::handleHTTPRequest() {
       const void* data,
       size_t size,
       bool last_chunk) {
-    //iputs("read body chunk: $0, $1", size, last_chunk);
+    req_->appendBody((char *) data, size);
 
     if (last_chunk) {
       dispatchRequest();
@@ -38,9 +40,19 @@ void HTTPServiceHandler::handleHTTPRequest() {
 }
 
 void HTTPServiceHandler::dispatchRequest() {
-  res_.setStatus(http::kStatusOK);
-  res_.addBody("fnord");
-  conn_->writeResponse(res_, std::bind(&HTTPConnection::finishResponse, conn_));
+  auto runnable = [this] () {
+    service_->handleHTTPRequest(req_, &res_);
+
+    conn_->writeResponse(
+        res_,
+        std::bind(&HTTPConnection::finishResponse, conn_));
+  };
+
+  if (scheduler_ == nullptr) {
+    runnable();
+  } else {
+    scheduler_->run(runnable);
+  }
 }
 
 }

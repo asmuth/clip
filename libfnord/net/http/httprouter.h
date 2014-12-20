@@ -20,18 +20,29 @@ class HTTPService;
 
 class HTTPRouter : public HTTPHandlerFactory {
 public:
+  typedef std::function<bool (HTTPRequest*)> PredicateFnType;
 
-  template <typename HandlerType>
+  typedef std::function<
+      std::unique_ptr<HTTPHandler> (
+          HTTPConnection*,
+          HTTPRequest*)> FactoryFnType;
+
+  template <typename... HandlerArgs>
   void addRouteByPrefixMatch(
       const std::string& prefix,
-      HandlerType handler);
+      HandlerArgs... handler);
 
   void addRoute(
-      std::function<bool (HTTPRequest*)> predicate,
+      PredicateFnType predicate,
       HTTPService* service);
 
   void addRoute(
-      std::function<bool (HTTPRequest*)> predicate,
+      PredicateFnType predicate,
+      HTTPService* service,
+      thread::TaskScheduler* scheduler);
+
+  void addRoute(
+      PredicateFnType predicate,
       HTTPHandlerFactory* factory);
 
   std::unique_ptr<HTTPHandler> getHandler(
@@ -50,11 +61,6 @@ protected:
     HTTPResponse res_;
   };
 
-  typedef std::function<bool (HTTPRequest*)> PredicateFnType;
-  typedef std::function<
-      std::unique_ptr<HTTPHandler> (
-          HTTPConnection*,
-          HTTPRequest*)> FactoryFnType;
 
   std::vector<std::pair<PredicateFnType, FactoryFnType>> routes_;
 };

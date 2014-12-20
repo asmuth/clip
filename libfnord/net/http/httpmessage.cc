@@ -81,6 +81,10 @@ void HTTPMessage::addBody(void* data, size_t size) {
   setHeader("Content-Length", std::to_string(size));
 }
 
+void HTTPMessage::appendBody(void* data, size_t size) {
+  body_.append(data, size);
+}
+
 void HTTPMessage::clearBody() {
   body_.clear();
   // FIXPAUL remove Content-Length header

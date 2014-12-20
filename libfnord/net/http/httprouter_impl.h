@@ -12,15 +12,15 @@
 namespace fnord {
 namespace http {
 
-template <typename HandlerType>
+template <typename... HandlerArgs>
 void HTTPRouter::addRouteByPrefixMatch(
     const std::string& prefix,
-    HandlerType handler) {
+    HandlerArgs... handler_args) {
   auto pred = [prefix] (HTTPRequest* req) -> bool {
     return StringUtil::beginsWith(req->uri(), prefix);
   };
 
-  addRoute(pred, handler);
+  addRoute(pred, handler_args...);
 }
 
 }

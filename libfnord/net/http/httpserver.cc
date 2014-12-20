@@ -19,7 +19,6 @@ using fnord::io::FileOutputStream;
 
 /*
 TODO:
-  - run handler / service in request_scheduler
   - timeouts
   - httpconnection -> httpserverconnection
   - eventloop
@@ -33,17 +32,12 @@ namespace http {
 
 HTTPServer::HTTPServer(
     HTTPHandlerFactory* handler_factory,
-    TaskScheduler* server_scheduler,
-    TaskScheduler* request_scheduler) :
+    TaskScheduler* scheduler) :
     handler_factory_(handler_factory),
-    server_scheduler_(server_scheduler),
-    request_scheduler_(request_scheduler),
-    ssock_(server_scheduler) {
+    scheduler_(scheduler),
+    ssock_(scheduler) {
   ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
-    HTTPConnection::start(
-        handler_factory_,
-        std::move(conn),
-        server_scheduler_);
+    HTTPConnection::start(handler_factory_, std::move(conn), scheduler_);
   });
 }
 

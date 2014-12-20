@@ -124,10 +124,10 @@ int main() {
 
   fnord::thread::ThreadPool thread_pool;
   fnord::http::HTTPRouter router;
-  fnord::http::HTTPServer http_server(&router, &thread_pool, &thread_pool);
+  fnord::http::HTTPServer http_server(&router, &thread_pool);
 
   TestService ping_example;
-  router.addRouteByPrefixMatch("/ping", &ping_example);
+  router.addRouteByPrefixMatch("/ping", &ping_example, &thread_pool);
 
   StreamingTestHandlerFactory streaming_example;
   router.addRouteByPrefixMatch("/stream", &streaming_example);
