@@ -15,6 +15,7 @@
     width: 100%;
     border: 1px solid #ddd;
     box-sizing:border-box;
+    position: relative;
   }
 
   fn-flexbox-item {
@@ -22,6 +23,8 @@
     box-sizing: border-box;
     height: auto;
     width: auto;
+    overflow: hidden;
+    position: relative;
   }
 </style>
 <template id='fn-flexbox-base-tpl'>
@@ -29,7 +32,6 @@
 <script type='text/javascript'>
   var FlexBoxComponent = function() {
     this.createdCallback = function() {
-      console.log(this);
       var base = this;
       document.addEventListener("DOMContentLoaded", function() {
         base.setItemSizes();
@@ -42,7 +44,6 @@
         this.querySelectorAll("fn-flexbox-item[data-height='fixed']");
 
       for (var i = 0; i < fixed_height_items.length; i++) {
-        console.log(fixed_height_items[i].offsetHeight);
         var height = height - fixed_height_items[i].offsetHeight;
       }
 

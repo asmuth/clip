@@ -5,7 +5,6 @@ body, html {
 fnordmetric-app,
 #fnordmetric-viewport {
   display: block;
-  height: 100%;
 }
 
 h1.page_header {

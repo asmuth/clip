@@ -440,7 +440,7 @@
     this.renderError = function(error) {
       var panes = this.querySelectorAll(".result_pane");
       for (var i = 0; i < panes.length; i++) {
-        panes.className = "result_pane";
+        panes[i].className = "result_pane";
       }
 
       var message = this.querySelector("fn-loader#result_pane fn-message");
