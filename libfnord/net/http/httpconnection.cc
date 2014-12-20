@@ -77,14 +77,14 @@ HTTPConnection::HTTPConnection(
 }
 
 void HTTPConnection::read() {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+  mutex_.lock();
 
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
   } catch (Exception& e) {
+    mutex_.unlock();
     if (e.ofType(kWouldBlockError)) {
-      decRef();
       return awaitRead();
     }
 
@@ -100,12 +100,15 @@ void HTTPConnection::read() {
   try {
     if (len == 0) {
       parser_.eof();
+      mutex_.unlock();
       close();
       return;
     } else {
       parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
+    mutex_.unlock();
+
     log::Logger::get()->logException(
         fnord::log::kDebug,
         "HTTP parse error, closing connection",
@@ -119,13 +122,11 @@ void HTTPConnection::read() {
     awaitRead();
   }
 
-  if (decRef()) {
-    return;
-  }
+  mutex_.unlock();
 }
 
 void HTTPConnection::write() {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+  mutex_.lock();
 
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
@@ -135,8 +136,9 @@ void HTTPConnection::write() {
     len = conn_->write(data, size);
     buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
+    mutex_.unlock();
+
     if (e.ofType(kWouldBlockError)) {
-      decRef();
       return awaitWrite();
     }
 
@@ -149,32 +151,26 @@ void HTTPConnection::write() {
     return;
   }
 
+
   if (buf_.mark() < buf_.size()) {
+    mutex_.unlock();
     awaitWrite();
   } else {
     buf_.clear();
-
+    mutex_.unlock();
     if (on_write_completed_cb_) {
       on_write_completed_cb_();
     }
   }
-
-  if (decRef()) {
-    return;
-  }
 }
 
 void HTTPConnection::awaitRead() {
-  incRef();
-
   scheduler_->runOnReadable(
       std::bind(&HTTPConnection::read, this),
       *conn_);
 }
 
 void HTTPConnection::awaitWrite() {
-  incRef();
-
   scheduler_->runOnWritable(
       std::bind(&HTTPConnection::write, this),
       *conn_);
@@ -232,13 +228,11 @@ void HTTPConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
-  decRef();
 
   buf_.clear();
   io::BufferOutputStream os(&buf_);
   HTTPGenerator::generate(resp, &os);
   on_write_completed_cb_ = ready_callback;
-  incRef();
   awaitWrite();
 }
 
@@ -250,10 +244,12 @@ void HTTPConnection::writeResponseBody(
 }
 
 void HTTPConnection::finishResponse() {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
-  decRef();
+  if (decRef()) {
+    return;
+  }
 
   if (cur_request_->keepalive()) {
+    std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
     nextRequest();
   } else {
     close();

@@ -29,7 +29,7 @@ void HTTPServiceHandler::handleHTTPRequest() {
       const void* data,
       size_t size,
       bool last_chunk) {
-    iputs("read body chunk: $0, $1", size, last_chunk);
+    //iputs("read body chunk: $0, $1", size, last_chunk);
 
     if (last_chunk) {
       dispatchRequest();
