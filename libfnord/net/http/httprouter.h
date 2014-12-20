@@ -16,9 +16,19 @@
 
 namespace fnord {
 namespace http {
+class HTTPService;
 
 class HTTPRouter : public HTTPHandlerFactory {
 public:
+
+  template <typename HandlerType>
+  void addRouteByPrefixMatch(
+      const std::string& prefix,
+      HandlerType handler);
+
+  void addRoute(
+      std::function<bool (HTTPRequest*)> predicate,
+      HTTPService* service);
 
   std::unique_ptr<HTTPHandler> getHandler(
       HTTPConnection* conn,
@@ -36,8 +46,16 @@ protected:
     HTTPResponse res_;
   };
 
+  typedef std::function<bool (HTTPRequest*)> PredicateFnType;
+  typedef std::function<
+      std::unique_ptr<HTTPHandler> (
+          HTTPConnection*,
+          HTTPRequest*)> FactoryFnType;
+
+  std::vector<std::pair<PredicateFnType, FactoryFnType>> routes_;
 };
 
 }
 }
+#include "httprouter_impl.h"
 #endif

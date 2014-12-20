@@ -7,29 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_HTTPHANDLER_H
-#define _FNORDMETRIC_HTTPHANDLER_H
-#include <memory>
+#include "fnord/base/stringutil.h"
 
 namespace fnord {
 namespace http {
-class HTTPConnection;
-class HTTPRequest;
 
-class HTTPHandler {
-public:
-  virtual ~HTTPHandler() {}
-  virtual void handleHTTPRequest() = 0;
-};
+template <typename HandlerType>
+void HTTPRouter::addRouteByPrefixMatch(
+    const std::string& prefix,
+    HandlerType handler) {
+  auto pred = [prefix] (HTTPRequest* req) -> bool {
+    return StringUtil::beginsWith(req->uri(), prefix);
+  };
 
-class HTTPHandlerFactory {
-public:
-  virtual ~HTTPHandlerFactory() {}
-  virtual std::unique_ptr<HTTPHandler> getHandler(
-      HTTPConnection* conn,
-      HTTPRequest* req) = 0;
-};
+  addRoute(pred, handler);
+}
 
 }
 }
-#endif

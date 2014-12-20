@@ -45,27 +45,5 @@ void HTTPServer::listen(int port) {
   ssock_.listen(port);
 }
 
-void HTTPServer::dispatchRequest(HTTPConnection* conn, HTTPRequest* req) {
-  HTTPResponse response;
-  response.populateFromRequest(*req);
-
-  bool dispatched = false;
-  //for (const auto& handler : handlers_) {
-  //  if (handler->handleHTTPRequest(req, &response)) {
-  //    dispatched = true;
-  //    break;
-  //  }
-  //}
-
-  if (!dispatched) {
-    response.setStatus(kStatusNotFound);
-    response.addBody("Not Found");
-  }
-
-  conn->writeResponse(
-      response,
-      std::bind(&HTTPConnection::finishResponse, conn));
-}
-
 }
 }

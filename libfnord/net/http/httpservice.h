@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_HTTPSERVICE_H
 #define _FNORDMETRIC_HTTPSERVICE_H
+#include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
 
@@ -22,6 +23,21 @@ public:
       HTTPRequest* req,
       HTTPResponse* res) = 0;
 
+};
+
+class HTTPServiceHandler : public HTTPHandler {
+public:
+  HTTPServiceHandler(
+      HTTPService* service,
+      HTTPConnection* conn,
+      HTTPRequest* req);
+
+  void handleHTTPRequest() override;
+protected:
+  HTTPService* service_;
+  HTTPConnection* conn_;
+  HTTPRequest* req_;
+  HTTPResponse res_;
 };
 
 }

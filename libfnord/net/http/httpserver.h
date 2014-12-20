@@ -33,8 +33,6 @@ public:
   void listen(int port);
 
 protected:
-  void dispatchRequest(HTTPConnection* conn, HTTPRequest* req);
-
   HTTPHandlerFactory* handler_factory_;
   TaskScheduler* server_scheduler_;
   TaskScheduler* request_scheduler_;
