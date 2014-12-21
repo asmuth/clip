@@ -71,6 +71,13 @@ public:
       const std::string& replacement = "");
 
   /**
+   * Split the provided string on the provided pattern and return the parts
+   */
+  static std::vector<std::string> split(
+      const std::string& str,
+      const std::string& pattern);
+
+  /**
    * Print the contents of the pointed to memory as a series of hexadecimal
    * bytes (hexdump):
    *

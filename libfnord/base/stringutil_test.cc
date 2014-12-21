@@ -104,3 +104,17 @@ TEST_CASE(StringUtilTest, TestFormat, [] () {
   auto str4 = StringUtil::format("$1$1$1$1$1 $0", "Batman", "Na");
   EXPECT_EQ(str4, "NaNaNaNaNa Batman");
 });
+
+TEST_CASE(StringUtilTest, TestSplit, [] () {
+  auto parts1 = StringUtil::split("one,two,three", ",");
+  EXPECT_EQ(parts1.size(), 3);
+  EXPECT_EQ(parts1[0], "one");
+  EXPECT_EQ(parts1[1], "two");
+  EXPECT_EQ(parts1[2], "three");
+
+  auto parts2 = StringUtil::split("onexxtwoxxthree", "xx");
+  EXPECT_EQ(parts2.size(), 3);
+  EXPECT_EQ(parts2[0], "one");
+  EXPECT_EQ(parts2[1], "two");
+  EXPECT_EQ(parts2[2], "three");
+});

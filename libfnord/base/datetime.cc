@@ -54,6 +54,10 @@ DateTime::operator double() const {
   return utc_micros_;
 }
 
+uint64_t DateTime::unixMicros() const {
+  return utc_micros_;
+}
+
 DateTime DateTime::epoch() {
   return DateTime(0);
 }

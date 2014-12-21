@@ -91,6 +91,27 @@ void StringUtil::replaceAll(
   }
 }
 
+std::vector<std::string> StringUtil::split(
+      const std::string& str,
+      const std::string& pattern) {
+  std::vector<std::string> parts;
+
+  size_t begin = 0;
+  for (;;) {
+    auto end = str.find(pattern, begin);
+
+    if (end == std::string::npos) {
+      parts.emplace_back(str.substr(begin, end));
+      break;
+    } else {
+      parts.emplace_back(str.substr(begin, end - begin));
+      begin = end + pattern.length();
+    }
+  }
+
+  return parts;
+}
+
 bool StringUtil::beginsWith(const std::string& str, const std::string& prefix) {
   if (str.length() < prefix.length()) {
     return false;

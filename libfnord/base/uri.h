@@ -45,9 +45,7 @@ public:
       std::string* query,
       std::string* fragment);
 
-  static void parseQueryString(
-      const std::string& query,
-      std::vector<std::pair<std::string, std::string>>* params);
+  static void parseQueryString(const std::string& query, ParamList* params);
 
   static bool getParam(
       const ParamList&,

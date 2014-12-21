@@ -18,5 +18,12 @@ FNORD_BASE_OBJECTS = $(subst .cc,.o,$(FNORD_BASE_SOURCES))
 $(FNORD_BASE_TARGET): $(FNORD_BASE_OBJECTS)
 	ar rcs $(FNORD_BASE_TARGET) $(FNORD_BASE_OBJECTS)
 
+stringutil_test: $(FNORD_BASE_TARGET) stringutil_test.cc
+	(cd ../io && make libfnord-io.a)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) -o stringutil_test stringutil_test.cc -L. -L../io -lfnord-base -lfnord-io -lpthread
+
+stringutil_test\:run: stringutil_test
+	./stringutil_test
+
 clean:
 	rm -f ${FNORD_BASE_OBJECTS} $(FNORD_BASE_TARGET)

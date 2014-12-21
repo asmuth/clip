@@ -77,6 +77,11 @@ public:
   explicit operator double() const;
 
   /**
+   * Return the represented date/time as a UTC unix microsecond timestamp
+   */
+  uint64_t unixMicros() const;
+
+  /**
    * Return a new DateTime instance with time 00:00:00 UTC, 1 Jan. 1970
    */
   static DateTime epoch();
