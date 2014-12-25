@@ -52,7 +52,7 @@ void JSONRPC::ReflectionTarget<ClassType>::method(
     ArgNameTypes... arg_names) {
   self_->registerMethod(
       StringUtil::format("$0.$1", service_name_, method_name),
-      reflect::reflectMethod(method_call),
+      reflect::MetaClass<ClassType>::reflectMethod(method_call),
       service_);
 }
 

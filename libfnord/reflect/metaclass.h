@@ -22,10 +22,15 @@ public:
   template <class TargetType>
   static void reflectMethods(TargetType* target);
 
+  template <typename ReturnType, typename... ArgTypes>
+  static MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
+      ReturnType (ClassType::* method_fn)(ArgTypes...));
+
 };
 
 
 }
 }
 
+#include "metaclass_impl.h"
 #endif

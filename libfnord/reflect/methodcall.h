@@ -55,8 +55,8 @@ protected:
   ReturnType (ClassType::* fn_)(ArgTypes...);
 };
 
-
 }
 }
 
+#include "methodcall_impl.h"
 #endif

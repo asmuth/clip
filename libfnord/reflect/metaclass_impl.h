@@ -7,8 +7,16 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_REFLECT_H
-#define _FNORD_REFLECT_H
-#include "fnord/reflect/metaclass.h"
-#include "fnord/reflect/methodcall.h"
-#endif
+namespace fnord {
+namespace reflect {
+
+template <typename ClassType>
+template <typename ReturnType, typename... ArgTypes>
+MethodCall<ClassType, ReturnType, ArgTypes...>
+MetaClass<ClassType>::reflectMethod(
+    ReturnType (ClassType::* method_fn)(ArgTypes...)) {
+  return MethodCall<ClassType, ReturnType, ArgTypes...>(method_fn);
+}
+
+}
+}
