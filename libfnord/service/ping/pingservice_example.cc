@@ -24,6 +24,15 @@ using fnord::json::JSONRPCHTTPAdapter;
 using fnord::ping_service::PingService;
 using fnord::ping_service::PingServiceAdapter;
 
+class ArgList {
+public:
+  template <typename T>
+  T getArg(size_t index, const std::string& name) const {
+    fnord::iputs("getarg: $0, $1", index, name);
+    return 4444;
+  };
+};
+
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
   fnord::system::SignalHandler::ignoreSIGPIPE();
@@ -40,7 +49,8 @@ int main() {
 
   auto meta = fnord::reflect::reflect<fnord::ping_service::PingService>();
   auto method = dynamic_cast<const fnord::reflect::MethodCall<fnord::ping_service::PingService, std::string, int>*>(meta->method("ping2"));
-  fnord::iputs("res: $0", method->call(&ping_service, std::make_tuple(12223)));
+  ArgList args;
+  fnord::iputs("res: $0", method->call(&ping_service, args));
 
   return 0;
 }

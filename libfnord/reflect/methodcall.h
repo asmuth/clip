@@ -17,6 +17,10 @@
 namespace fnord {
 namespace reflect {
 
+//class ArgumentList {
+//public:
+//  virtual getArgument(size_t index, const std::string& name);
+
 class AnyMethodCall {
 public:
   AnyMethodCall(const std::string& name);
@@ -37,12 +41,21 @@ public:
   ReturnType call(ClassType* klass, ArgTypes... args) const;
   ReturnType call(ClassType* klass, const ArgPackType& args) const;
 
+  template <class ArgListType>
+  ReturnType call(ClassType* klass, const ArgListType& args) const;
+
 protected:
 
   template <int... I>
   ReturnType call(
       ClassType* klass,
       const ArgPackType& args,
+      IndexSequence<I...>) const;
+
+  template <class ArgListType, int... I>
+  ReturnType call(
+      ClassType* klass,
+      const ArgListType& args,
       IndexSequence<I...>) const;
 
   ReturnType (ClassType::* fn_)(ArgTypes...);

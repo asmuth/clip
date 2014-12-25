@@ -65,5 +65,27 @@ ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
   return std::bind(fn_, klass, std::get<I>(args)...)();
 }
 
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <class ArgListType>
+ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
+    ClassType* klass,
+    const ArgListType& args) const {
+  return call(klass, args, typename MkIndexSequenceFor<ArgTypes...>::type());
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <class ArgListType, int... I>
+ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
+    ClassType* klass,
+    const ArgListType& args,
+    IndexSequence<I...>) const {
+  return std::bind(
+      fn_,
+      klass,
+      args.template getArg<typename std::tuple_element<I, ArgPackType>::type>(
+          I,
+          "fnord")...)();
+}
+
 }
 }
