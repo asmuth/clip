@@ -8,6 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/service/ping/pingservice.h"
+#include "fnord/base/stringutil.h"
+#include "fnord/reflect/reflect.h"
 
 namespace fnord {
 namespace ping_service {
@@ -15,8 +17,21 @@ namespace ping_service {
 PingService::PingService() {}
 
 std::string PingService::ping() {
-  return "pong";
+  return StringUtil::format("pong: $0", (size_t) this);
+}
+
+std::string PingService::ping2(int i) {
+  return StringUtil::format("pong: $0", i);
 }
 
 } // namespace ping_service
-} // namsepace fnord
+
+namespace reflect {
+template <>
+void reflect(MetaClass<ping_service::PingService>* meta) {
+  meta->registerMethod(&ping_service::PingService::ping, "ping");
+  meta->registerMethod(&ping_service::PingService::ping2, "ping2");
+}
+} // namespace reflect
+
+} // namespace fnord

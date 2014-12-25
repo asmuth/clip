@@ -7,24 +7,23 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_PING_SERVICE_H
-#define _FNORD_PING_SERVICE_H
-#include <mutex>
-#include <stdlib.h>
-#include <set>
-#include <string>
-#include <unordered_map>
+#ifndef _FNORD_REFLECT_SERVICEMETA_H
+#define _FNORD_REFLECT_SERVICEMETA_H
 
 namespace fnord {
-namespace ping_service {
+namespace reflect {
 
-class PingService {
+class MetaClass {
 public:
-  PingService();
-  std::string ping();
-  std::string ping2(int i);
+  const MethodCall& method(const std::string& name) const;
+  MethodCall& registerMethod(const std::string& name);
+
+protected:
+  std::unordered_map<std::string, MethodCall> methods_;
 };
 
-} // namespace ping_service
-} // namsepace fnord
+
+}
+}
+
 #endif

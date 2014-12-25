@@ -25,6 +25,7 @@ const char kIllegalStateError[] = "IllegalState";
 const char kIndexError[] = "IndexError";
 const char kKeyError[] = "KeyError";
 const char kMallocError[] = "MallocError";
+const char kNoSuchMethodError[] = "NoSuchMethodError";
 const char kNotImplementedError[] = "NotImplementedError";
 const char kNotYetImplementedError[] = "NotYetImplementedError";
 const char kNullPointerError[] = "NullPointerError";

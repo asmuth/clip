@@ -8,14 +8,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include "fnord/base/inspect.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
+#include "fnord/reflect/reflect.h"
 #include "fnord/service/ping/pingservice.h"
 #include "fnord/service/ping/pingserviceadapter.h"
-#include "fnord/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
+#include "fnord/thread/threadpool.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
@@ -35,6 +37,10 @@ int main() {
   fnord::thread::ThreadPool thread_pool;
   fnord::http::HTTPServer http_server(&http_router, &thread_pool);
   http_server.listen(8080);
+
+  auto meta = fnord::reflect::reflect<fnord::ping_service::PingService>();
+  auto method = dynamic_cast<const fnord::reflect::MethodCall<fnord::ping_service::PingService, std::string, int>*>(meta->method("ping2"));
+  fnord::iputs("res: $0", method->call(&ping_service, std::make_tuple(12223)));
 
   return 0;
 }

@@ -7,24 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_PING_SERVICE_H
-#define _FNORD_PING_SERVICE_H
-#include <mutex>
-#include <stdlib.h>
-#include <set>
-#include <string>
-#include <unordered_map>
+#ifndef _FNORD_REFLECT_H
+#define _FNORD_REFLECT_H
+#include "fnord/reflect/metaclass.h"
 
 namespace fnord {
-namespace ping_service {
+namespace reflect {
 
-class PingService {
-public:
-  PingService();
-  std::string ping();
-  std::string ping2(int i);
-};
+template <class T>
+MetaClass<T>* reflect();
 
-} // namespace ping_service
-} // namsepace fnord
+template <class T>
+void reflect(MetaClass<T>* service);
+
+}
+}
+
+#include "reflect_impl.h"
 #endif

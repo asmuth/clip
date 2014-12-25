@@ -7,24 +7,23 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_PING_SERVICE_H
-#define _FNORD_PING_SERVICE_H
-#include <mutex>
-#include <stdlib.h>
-#include <set>
-#include <string>
-#include <unordered_map>
+#include "fnord/base/exception.h"
+#include "fnord/reflect/metaclass.h"
+#include "fnord/reflect/methodcall.h"
 
 namespace fnord {
-namespace ping_service {
+namespace reflect {
 
-class PingService {
-public:
-  PingService();
-  std::string ping();
-  std::string ping2(int i);
-};
+const AnyMethodCall* AnyMetaClass::method(const std::string& name) const {
+  auto iter = methods_.find(name);
 
-} // namespace ping_service
-} // namsepace fnord
-#endif
+  if (iter == methods_.end()) {
+    RAISEF(kNoSuchMethodError, "no such method: $0", name);
+  }
+
+  return iter->second.get();
+}
+
+
+}
+}
