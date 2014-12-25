@@ -171,8 +171,7 @@ add_executable(tests/test-json
 
 # service: groups
 add_library(fnord-groups-service OBJECT
-    service/groups/groupsservice.cc
-    service/groups/groupsserviceadapter.cc)
+    service/groups/groupsservice.cc)
 
 add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-base>
@@ -186,8 +185,7 @@ add_executable(fnord-groups-service-example
 
 # service: keyvalue
 add_library(fnord-keyvalue-service OBJECT
-    service/keyvalue/keyvalueservice.cc
-    service/keyvalue/keyvalueserviceadapter.cc)
+    service/keyvalue/keyvalueservice.cc)
 
 add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-base>

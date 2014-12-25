@@ -13,14 +13,12 @@
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/groups/groupsservice.h"
-#include "fnord/service/groups/groupsserviceadapter.h"
 #include "fnord/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::groups_service::GroupsService;
-using fnord::groups_service::GroupsServiceAdapter;
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
@@ -29,7 +27,6 @@ int main() {
   JSONRPC rpc;
 
   GroupsService groups_service;
-  GroupsServiceAdapter::registerJSONRPC(&groups_service, &rpc);
 
   fnord::http::HTTPRouter http_router;
   fnord::thread::ThreadPool thread_pool;

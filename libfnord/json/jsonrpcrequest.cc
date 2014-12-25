@@ -9,28 +9,56 @@
  */
 #include "fnord/base/exception.h"
 #include "fnord/json/jsonrpcrequest.h"
+#include "fnord/json/jsonutil.h"
 
 namespace fnord {
 namespace json {
 
 JSONRPCRequest::JSONRPCRequest(
-    JSONInputStream&& input) :
-    body_(std::move(input)) {
-  if (body_.get("/jsonrpc") != "2.0") {
+    JSONObject&& body) :
+    body_(std::move(body)) {
+  auto v_iter = JSONUtil::objectLookup(body_.begin(), body_.end(), "jsonrpc");
+  if (v_iter == body_.end()) {
     RAISE(kRuntimeError, "invalid JSONRPC 2.0 request, missing jsonrpc field");
+  }
+
+  auto v = fromJSON<std::string>(v_iter, body_.end());
+  if (v != "2.0") {
+    RAISEF(kRuntimeError, "invalid JSONRPC 2.0 request version: $0", v);
+  }
+
+  auto id_iter = JSONUtil::objectLookup(body_.begin(), body_.end(), "id");
+  if (id_iter != body_.end()) {
+    id_ = fromJSON<std::string>(id_iter, body_.end());
+  }
+
+  auto m_iter = JSONUtil::objectLookup(body_.begin(), body_.end(), "method");
+  if (m_iter == body_.end()) {
+    RAISE(kRuntimeError, "invalid JSONRPC 2.0 request, missing method field");
+  } else {
+    method_ = fromJSON<std::string>(m_iter, body_.end());
+  }
+
+  params_ = JSONUtil::objectLookup(body_.begin(), body_.end(), "params");
+  if (params_ == body_.end()) {
+    RAISE(kRuntimeError, "invalid JSONRPC 2.0 request, missing params");
   }
 }
 
-const JSONDocument& JSONRPCRequest::body() const {
-  return body_;
+JSONObject::const_iterator JSONRPCRequest::paramsBegin() const {
+  return params_;
 }
 
-std::string JSONRPCRequest::id() const {
-  return body_.get("/id", "");
+JSONObject::const_iterator JSONRPCRequest::paramsEnd() const {
+  return body_.end();
 }
 
-std::string JSONRPCRequest::method() const {
-  return body_.get("/method", "");
+const std::string& JSONRPCRequest::id() const {
+  return id_;
+}
+
+const std::string& JSONRPCRequest::method() const {
+  return method_;
 }
 
 } // namespace json

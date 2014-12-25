@@ -12,10 +12,12 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "fnord/base/buffer.h"
 
 namespace fnord {
 namespace json {
 class JSONOutputStream;
+class JSONInputStream;
 
 enum kTokenType {
   JSON_OBJECT_BEGIN,
@@ -51,6 +53,8 @@ template <typename T>
 T fromJSON(const std::string& json_str);
 
 JSONObject parseJSON(const std::string& json_str);
+JSONObject parseJSON(const fnord::Buffer& json_buf);
+JSONObject parseJSON(JSONInputStream* json);
 
 }
 }

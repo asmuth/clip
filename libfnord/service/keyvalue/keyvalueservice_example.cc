@@ -13,14 +13,12 @@
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/keyvalue/keyvalueservice.h"
-#include "fnord/service/keyvalue/keyvalueserviceadapter.h"
 #include "fnord/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::keyvalue_service::KeyValueService;
-using fnord::keyvalue_service::KeyValueServiceAdapter;
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
@@ -29,7 +27,6 @@ int main() {
   JSONRPC rpc;
 
   KeyValueService keyvalue_service;
-  KeyValueServiceAdapter::registerJSONRPC(&keyvalue_service, &rpc);
 
   fnord::http::HTTPRouter http_router;
   fnord::thread::ThreadPool thread_pool;

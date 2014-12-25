@@ -13,31 +13,33 @@
 #include <string>
 #include <vector>
 #include "fnord/base/inspect.h"
-#include "fnord/json/jsondocument.h"
-#include "fnord/json/jsoninputstream.h"
+#include "fnord/json/json.h"
 
 namespace fnord {
 namespace json {
 
 class JSONRPCRequest {
 public:
+  JSONRPCRequest(JSONObject&& body);
 
-  JSONRPCRequest(JSONInputStream&& input);
+  const std::string& id() const;
+  const std::string& method() const;
 
-  const JSONDocument& body() const;
-  std::string id() const;
-  std::string method() const;
+  JSONObject::const_iterator paramsBegin() const;
+  JSONObject::const_iterator paramsEnd() const;
 
   template <typename T>
-  T getArg(size_t index, const std::string& name) const {
-    fnord::iputs("getarg: $0, $1", index, name);
-    return 4444;
-  };
+  T getArg(size_t index, const std::string& name) const;
 
 protected:
-  JSONDocument body_;
+  JSONObject body_;
+  JSONObject::const_iterator params_;
+  std::string id_;
+  std::string method_;
 };
 
 } // namespace json
 } // namsepace fnord
+
+#include "jsonrpcrequest_impl.h"
 #endif

@@ -30,13 +30,21 @@ JSONToken::JSONToken(
 
 JSONObject parseJSON(const std::string& json_str) {
   JSONInputStream json(io::StringInputStream::fromString(json_str));
+  return parseJSON(&json);
+}
 
+JSONObject parseJSON(const fnord::Buffer& json_buf) {
+  JSONInputStream json(io::BufferInputStream::fromBuffer(&json_buf));
+  return parseJSON(&json);
+}
+
+JSONObject parseJSON(JSONInputStream* json) {
   JSONObject obj;
   std::stack<size_t> stack;
 
   kTokenType token;
   std::string token_str;
-  while (json.readNextToken(&token, &token_str)) {
+  while (json->readNextToken(&token, &token_str)) {
     switch (token) {
       case JSON_ARRAY_BEGIN:
       case JSON_OBJECT_BEGIN:
@@ -97,6 +105,33 @@ std::string fromJSON(
 
     default:
       RAISEF(kParseError, "can't convert $0 to string", begin->type);
+
+  }
+}
+
+template <>
+int fromJSON(
+    std::vector<JSONToken>::const_iterator begin,
+    std::vector<JSONToken>::const_iterator end) {
+  if (begin == end) {
+    RAISE(kIndexError);
+  }
+
+  switch (begin->type) {
+    case JSON_STRING:
+    case JSON_NUMBER:
+      try {
+        return std::stoi(begin->data);
+      } catch (std::exception& e) {
+        /* fallthrough */
+      }
+
+    default:
+      RAISEF(
+          kParseError,
+          "can't convert $0 ($1) to integer",
+          begin->type,
+          begin->data);
 
   }
 }

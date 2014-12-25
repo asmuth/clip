@@ -75,7 +75,7 @@ JSONObject::const_iterator JSONUtil::arrayLookup(
   }
 
   auto aend = begin + begin->size - 1;
-  if (aend > end) {
+  if (aend > end || begin == aend) {
     RAISE(kIndexError);
   }
 
@@ -86,7 +86,7 @@ JSONObject::const_iterator JSONUtil::arrayLookup(
     }
   }
 
-  RAISE(kIndexError);
+  RAISEF(kIndexError, "invalid index: $0", index);
   return end;
 }
 

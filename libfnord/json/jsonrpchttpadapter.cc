@@ -9,6 +9,7 @@
  */
 #include "fnord/base/inspect.h"
 #include "fnord/base/stringutil.h"
+#include "fnord/json/json.h"
 #include "fnord/json/jsonoutputstream.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
@@ -50,7 +51,7 @@ void JSONRPCHTTPAdapter::handleHTTPRequest(
   }
 
   try {
-    JSONRPCRequest req(JSONInputStream(request->getBodyInputStream()));
+    JSONRPCRequest req(parseJSON(request->body()));
     res.setID(req.id());
     json_rpc_->dispatch(&req, &res);
   } catch (const fnord::Exception& e) {
