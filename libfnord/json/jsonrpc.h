@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <vector>
 #include "fnord/json/jsonrpchttpadapter.h"
+#include "fnord/reflect/reflect.h"
 
 namespace fnord {
 namespace json {
@@ -27,6 +28,12 @@ public:
   JSONRPC();
 
   void dispatch(JSONRPCRequest* req, JSONRPCResponse* res);
+
+  template <typename MethodType>
+  void registerMethod(
+      const std::string& method_name,
+      MethodType method_call,
+      typename MethodType::ClassType* service);
 
   void registerMethod(
       const std::string& method,
@@ -41,4 +48,6 @@ protected:
 
 } // namespace json
 } // namsepace fnord
+
+#include "jsonrpc_impl.h"
 #endif

@@ -12,31 +12,25 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include "fnord/json/json.h"
 #include "fnord/reflect/indexsequence.h"
 
 namespace fnord {
 namespace reflect {
 
-//class ArgumentList {
-//public:
-//  virtual getArgument(size_t index, const std::string& name);
-
 class AnyMethodCall {
 public:
-  AnyMethodCall(const std::string& name);
   virtual ~AnyMethodCall() {}
-protected:
-  std::string name_;
 };
 
-template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <typename _ClassType, typename _ReturnType, typename... ArgTypes>
 class MethodCall : public AnyMethodCall {
 public:
   typedef std::tuple<ArgTypes...> ArgPackType;
+  typedef _ClassType ClassType;
+  typedef _ReturnType ReturnType;
 
-  MethodCall(
-      ReturnType (ClassType::* fn)(ArgTypes...),
-      const std::string& name);
+  MethodCall(ReturnType (ClassType::* fn)(ArgTypes...));
 
   ReturnType call(ClassType* klass, ArgTypes... args) const;
   ReturnType call(ClassType* klass, const ArgPackType& args) const;

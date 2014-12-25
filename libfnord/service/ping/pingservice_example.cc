@@ -40,17 +40,23 @@ int main() {
   JSONRPC rpc;
 
   PingService ping_service;
-  PingServiceAdapter::registerJSONRPC(&ping_service, &rpc);
+  rpc.registerMethod(
+      "PingService.ping",
+      fnord::reflect::reflectMethod(&PingService::ping),
+      &ping_service);
 
   fnord::http::HTTPRouter http_router;
+  fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;
-  fnord::http::HTTPServer http_server(&http_router, &thread_pool);
+  fnord::http::HTTPServer http_server(&http_router, &event_loop);
   http_server.listen(8080);
+  event_loop.run();
 
-  auto meta = fnord::reflect::reflect<fnord::ping_service::PingService>();
-  auto method = dynamic_cast<const fnord::reflect::MethodCall<fnord::ping_service::PingService, std::string, int>*>(meta->method("ping2"));
-  ArgList args;
-  fnord::iputs("res: $0", method->call(&ping_service, args));
+
+  //auto meta = fnord::reflect::reflect<fnord::ping_service::PingService>();
+  //auto method = dynamic_cast<const fnord::reflect::MethodCall<fnord::ping_service::PingService, std::string, int>*>(meta->method("ping2"));
+  //ArgList args;
+  //fnord::iputs("res: $0", method->call(&ping_service, args));
 
   return 0;
 }

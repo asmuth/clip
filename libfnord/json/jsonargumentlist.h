@@ -7,12 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/reflect/methodcall.h"
+#ifndef _FNORD_JSON_JSONARGUMENTLIST_H
+#define _FNORD_JSON_JSONARGUMENTLIST_H
+#include <functional>
+#include <stdlib.h>
+#include "fnord/json/json.h"
 
 namespace fnord {
-namespace reflect {
+namespace json {
 
+class JSONArgumentList {
+public:
 
-}
-}
+  JSONArgumentList(const JSONObject& obj);
 
+protected:
+  const JSONObject& obj_;
+};
+
+} // namespace json
+} // namsepace fnord
+#endif

@@ -17,6 +17,12 @@ namespace reflect {
 template <class T>
 MetaClass<T>* reflect();
 
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
+    ReturnType (ClassType::* method_fn)(ArgTypes...)) {
+  return MethodCall<ClassType, ReturnType, ArgTypes...>(method_fn);
+}
+
 template <class T>
 void reflect(MetaClass<T>* service);
 

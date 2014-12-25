@@ -25,13 +25,4 @@ std::string PingService::ping2(int i) {
 }
 
 } // namespace ping_service
-
-namespace reflect {
-template <>
-void reflect(MetaClass<ping_service::PingService>* meta) {
-  meta->registerMethod(&ping_service::PingService::ping, "ping");
-  meta->registerMethod(&ping_service::PingService::ping2, "ping2");
-}
-} // namespace reflect
-
 } // namespace fnord

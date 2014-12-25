@@ -37,9 +37,7 @@ void MetaClass<T>::registerMethod(
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>::MethodCall(
-    ReturnType (ClassType::* fn)(ArgTypes...),
-    const std::string& name) :
-    AnyMethodCall(name),
+    ReturnType (ClassType::* fn)(ArgTypes...)) :
     fn_(fn) {}
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
