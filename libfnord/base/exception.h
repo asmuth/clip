@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <exception>
 #include <string>
+#include "fnord/base/stringutil.h"
 #include "fnord/io/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";

@@ -34,6 +34,8 @@ void JSONRPCHTTPAdapter::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
   if (!StringUtil::beginsWith(request->uri(), path_)) {
+    response->setStatus(http::kStatusNotFound);
+    response->addBody("not found");
     return;
   }
 

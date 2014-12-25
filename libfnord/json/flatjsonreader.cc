@@ -22,7 +22,7 @@ FlatJSONReader::FlatJSONReader(
 
 void FlatJSONReader::read(
     std::function<bool (const JSONPointer&, const std::string&)> func) {
-  JSONInputStream::kTokenType token;
+  kTokenType token;
   std::string token_str;
   JSONPointer path;
 
@@ -31,11 +31,11 @@ void FlatJSONReader::read(
   }
 
   switch (token) {
-    case JSONInputStream::JSON_OBJECT_BEGIN:
+    case JSON_OBJECT_BEGIN:
       readObject(func, &path);
       return;
 
-    case JSONInputStream::JSON_ARRAY_BEGIN:
+    case JSON_ARRAY_BEGIN:
       readArray(func, &path);
       return;
 
@@ -48,7 +48,7 @@ void FlatJSONReader::readObject(
     std::function<bool (const JSONPointer&, const std::string&)> func,
     JSONPointer* path) {
   for (;;) {
-    JSONInputStream::kTokenType key_token;
+    kTokenType key_token;
     std::string key_str;
 
     if (!json_.readNextToken(&key_token, &key_str)) {
@@ -56,23 +56,23 @@ void FlatJSONReader::readObject(
     }
 
     switch (key_token) {
-      case json::JSONInputStream::JSON_OBJECT_END:
+      case JSON_OBJECT_END:
         return;
 
-      case json::JSONInputStream::JSON_STRING:
-      case json::JSONInputStream::JSON_NUMBER:
+      case JSON_STRING:
+      case JSON_NUMBER:
         path->push(key_str);
         break;
 
-      case json::JSONInputStream::JSON_TRUE:
+      case JSON_TRUE:
         path->push("true");
         break;
 
-      case json::JSONInputStream::JSON_FALSE:
+      case JSON_FALSE:
         path->push("false");
         break;
 
-      case json::JSONInputStream::JSON_NULL:
+      case JSON_NULL:
         path->push("null");
         break;
 
@@ -83,7 +83,7 @@ void FlatJSONReader::readObject(
             "or null");
     }
 
-    JSONInputStream::kTokenType value_token;
+    kTokenType value_token;
     std::string value_str;
 
     if (!json_.readNextToken(&value_token, &value_str)) {
@@ -91,19 +91,19 @@ void FlatJSONReader::readObject(
     }
 
     switch (value_token) {
-      case JSONInputStream::JSON_OBJECT_BEGIN:
+      case JSON_OBJECT_BEGIN:
         readObject(func, path);
         break;
 
-      case JSONInputStream::JSON_ARRAY_BEGIN:
+      case JSON_ARRAY_BEGIN:
         readArray(func, path);
         break;
 
-      case json::JSONInputStream::JSON_STRING:
-      case json::JSONInputStream::JSON_NUMBER:
-      case json::JSONInputStream::JSON_TRUE:
-      case json::JSONInputStream::JSON_FALSE:
-      case json::JSONInputStream::JSON_NULL:
+      case JSON_STRING:
+      case JSON_NUMBER:
+      case JSON_TRUE:
+      case JSON_FALSE:
+      case JSON_NULL:
         func(*path, value_str);
         break;
 
@@ -122,7 +122,7 @@ void FlatJSONReader::readArray(
     std::function<bool (const JSONPointer&, const std::string&)> func,
     JSONPointer* path) {
   for (int i = 0; ; i++) {
-    JSONInputStream::kTokenType elem_token;
+    kTokenType elem_token;
     std::string elem_str;
 
     if (!json_.readNextToken(&elem_token, &elem_str)) {
@@ -132,31 +132,31 @@ void FlatJSONReader::readArray(
     path->push(std::to_string(i));
 
     switch (elem_token) {
-      case json::JSONInputStream::JSON_ARRAY_END:
+      case JSON_ARRAY_END:
         return;
 
-      case JSONInputStream::JSON_OBJECT_BEGIN:
+      case JSON_OBJECT_BEGIN:
         readObject(func, path);
         break;
 
-      case JSONInputStream::JSON_ARRAY_BEGIN:
+      case JSON_ARRAY_BEGIN:
         readArray(func, path);
         break;
 
-      case json::JSONInputStream::JSON_STRING:
-      case json::JSONInputStream::JSON_NUMBER:
+      case JSON_STRING:
+      case JSON_NUMBER:
         func(*path, elem_str);
         break;
 
-      case json::JSONInputStream::JSON_TRUE:
+      case JSON_TRUE:
         func(*path, "true");
         break;
 
-      case json::JSONInputStream::JSON_FALSE:
+      case JSON_FALSE:
         func(*path, "false");
         break;
 
-      case json::JSONInputStream::JSON_NULL:
+      case JSON_NULL:
         func(*path, "null");
         break;
 

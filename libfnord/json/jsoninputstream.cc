@@ -188,17 +188,17 @@ void JSONInputStream::advanceCursor() {
 } // namespace json
 
 template <>
-std::string inspect(const json::JSONInputStream::kTokenType& token) {
+std::string inspect(const json::kTokenType& token) {
   switch (token) {
-    case json::JSONInputStream::JSON_OBJECT_BEGIN: return "JSON_OBJECT_BEGIN";
-    case json::JSONInputStream::JSON_OBJECT_END: return "JSON_OBJECT_END";
-    case json::JSONInputStream::JSON_ARRAY_BEGIN: return "JSON_ARRAY_BEGIN";
-    case json::JSONInputStream::JSON_ARRAY_END: return "JSON_ARRAY_END";
-    case json::JSONInputStream::JSON_STRING: return "JSON_STRING";
-    case json::JSONInputStream::JSON_NUMBER: return "JSON_NUMBER";
-    case json::JSONInputStream::JSON_TRUE: return "JSON_TRUE";
-    case json::JSONInputStream::JSON_FALSE: return "JSON_FALSE";
-    case json::JSONInputStream::JSON_NULL: return "JSON_NULL";
+    case json::JSON_OBJECT_BEGIN: return "JSON_OBJECT_BEGIN";
+    case json::JSON_OBJECT_END: return "JSON_OBJECT_END";
+    case json::JSON_ARRAY_BEGIN: return "JSON_ARRAY_BEGIN";
+    case json::JSON_ARRAY_END: return "JSON_ARRAY_END";
+    case json::JSON_STRING: return "JSON_STRING";
+    case json::JSON_NUMBER: return "JSON_NUMBER";
+    case json::JSON_TRUE: return "JSON_TRUE";
+    case json::JSON_FALSE: return "JSON_FALSE";
+    case json::JSON_NULL: return "JSON_NULL";
   }
 }
 

@@ -38,7 +38,9 @@ add_library(fnord-base OBJECT
     base/uri.cc
     base/wallclock.cc
     base/fnv.cc
-    logging/logger.cc)
+    logging/logger.cc
+    logging/loglevel.cc
+    logging/logoutputstream.cc)
 
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
@@ -111,6 +113,7 @@ add_library(fnord-io OBJECT
 # json
 add_library(fnord-json OBJECT
     json/flatjsonreader.cc
+    json/json.cc
     json/jsondocument.cc
     json/jsoninputstream.cc
     json/jsonoutputstream.cc
@@ -118,7 +121,8 @@ add_library(fnord-json OBJECT
     json/jsonrpc.cc
     json/jsonrpchttpadapter.cc
     json/jsonrpcrequest.cc
-    json/jsonrpcresponse.cc)
+    json/jsonrpcresponse.cc
+    json/jsonutil.cc)
 
 add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-base>
@@ -243,6 +247,7 @@ add_library(fnord-system OBJECT
 
 # thread
 add_library(fnord-thread OBJECT
+    thread/eventloop.cc
     thread/threadpool.cc)
 
 # util

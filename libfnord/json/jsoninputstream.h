@@ -14,6 +14,7 @@
 #include <vector>
 #include <functional>
 #include "fnord/io/inputstream.h"
+#include "fnord/json/json.h"
 #include "fnord/json/jsonpointer.h"
 
 namespace fnord {
@@ -21,18 +22,6 @@ namespace json {
 
 class JSONInputStream {
 public:
-
-  enum kTokenType {
-    JSON_OBJECT_BEGIN,
-    JSON_OBJECT_END,
-    JSON_ARRAY_BEGIN,
-    JSON_ARRAY_END,
-    JSON_STRING,
-    JSON_NUMBER,
-    JSON_TRUE,
-    JSON_FALSE,
-    JSON_NULL
-  };
 
   explicit JSONInputStream(std::unique_ptr<io::InputStream> input);
   JSONInputStream(JSONInputStream&& other);

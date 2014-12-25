@@ -43,6 +43,11 @@ void HTTPServiceHandler::dispatchRequest() {
   auto runnable = [this] () {
     try {
       service_->handleHTTPRequest(req_, &res_);
+
+      auto body_size = res_.body().size();
+      if (body_size > 0) {
+        res_.setHeader("Content-Length", StringUtil::toString(body_size));
+      }
     } catch (const std::exception& e) {
       log::Logger::get()->logException(
           log::kError,

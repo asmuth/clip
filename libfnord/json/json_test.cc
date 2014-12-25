@@ -13,6 +13,7 @@
 #include "fnord/io/inputstream.h"
 #include "fnord/json/flatjsonreader.h"
 #include "fnord/json/jsondocument.h"
+#include "fnord/json/jsonutil.h"
 #include "fnord/json/jsoninputstream.h"
 #include "fnord/json/jsonpointer.h"
 #include "fnord/test/unittest.h"
@@ -24,72 +25,73 @@ using fnord::json::FlatJSONReader;
 using fnord::json::JSONDocument;
 using fnord::json::JSONInputStream;
 using fnord::json::JSONPointer;
+using fnord::json::JSONUtil;
 
 TEST_CASE(JSONTest, TestJSONInputStream, [] () {
   auto json1 = "{ 123: \"fnord\", \"blah\": [ true, false, null, 3.7e-5 ] }";
   JSONInputStream json1_stream(StringInputStream::fromString(json1));
 
-  JSONInputStream::kTokenType token_type;
+  fnord::json::kTokenType token_type;
   std::string token_str;
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_BEGIN);
+  EXPECT_EQ(token_type, fnord::json::JSON_OBJECT_BEGIN);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_NUMBER);
+  EXPECT_EQ(token_type, fnord::json::JSON_NUMBER);
   EXPECT_EQ(token_str, "123");
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_STRING);
+  EXPECT_EQ(token_type, fnord::json::JSON_STRING);
   EXPECT_EQ(token_str, "fnord");
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_STRING);
+  EXPECT_EQ(token_type, fnord::json::JSON_STRING);
   EXPECT_EQ(token_str, "blah");
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_ARRAY_BEGIN);
+  EXPECT_EQ(token_type, fnord::json::JSON_ARRAY_BEGIN);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_TRUE);
+  EXPECT_EQ(token_type, fnord::json::JSON_TRUE);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_FALSE);
+  EXPECT_EQ(token_type, fnord::json::JSON_FALSE);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_NULL);
+  EXPECT_EQ(token_type, fnord::json::JSON_NULL);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_NUMBER);
+  EXPECT_EQ(token_type, fnord::json::JSON_NUMBER);
   EXPECT_EQ(token_str, "3.7e-5");
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_ARRAY_END);
+  EXPECT_EQ(token_type, fnord::json::JSON_ARRAY_END);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_END);
+  EXPECT_EQ(token_type, fnord::json::JSON_OBJECT_END);
 });
 
 TEST_CASE(JSONTest, TestJSONInputStreamEscaping, [] () {
   auto json1 = "{ 123: \"fno\\\"rd\" }";
   JSONInputStream json1_stream(StringInputStream::fromString(json1));
 
-  JSONInputStream::kTokenType token_type;
+  fnord::json::kTokenType token_type;
   std::string token_str;
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_BEGIN);
+  EXPECT_EQ(token_type, fnord::json::JSON_OBJECT_BEGIN);
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_NUMBER);
+  EXPECT_EQ(token_type, fnord::json::JSON_NUMBER);
   EXPECT_EQ(token_str, "123");
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_STRING);
+  EXPECT_EQ(token_type, fnord::json::JSON_STRING);
   EXPECT_EQ(token_str, "fno\"rd");
 
   EXPECT_TRUE(json1_stream.readNextToken(&token_type, &token_str));
-  EXPECT_EQ(token_type, JSONInputStream::JSON_OBJECT_END);
+  EXPECT_EQ(token_type, fnord::json::JSON_OBJECT_END);
 });
 
 TEST_CASE(JSONTest, TestJSONDocumentGet, [] () {
@@ -172,4 +174,29 @@ TEST_CASE(JSONTest, TestFlatJSONReader, [] () {
     n++;
     return true;
   });
+});
+
+TEST_CASE(JSONTest, TestFromJSON, [] () {
+  EXPECT_EQ(fnord::json::fromJSON<std::string>("\"fnord\""), "fnord");
+
+  auto json1 = fnord::json::parseJSON(
+      "{ 123: \"fnord\", \"blubb\": \"xxx\", \"blah\": [ true, false, null, " \
+      "3.7e-5 ] }");
+
+  auto iter = JSONUtil::objectLookup(json1.begin(), json1.end(), "blubb");
+  EXPECT_TRUE(iter != json1.end());
+  EXPECT_EQ(fnord::json::fromJSON<std::string>(iter, json1.end()), "xxx");
+
+  iter = JSONUtil::objectLookup(json1.begin(), json1.end(), "blah");
+  EXPECT_TRUE(iter != json1.end());
+  EXPECT_EQ(iter->type, fnord::json::JSON_ARRAY_BEGIN);
+  EXPECT_EQ(JSONUtil::arrayLength(iter, json1.end()), 4);
+
+  auto aiter = JSONUtil::arrayLookup(iter, json1.end(), 0);
+  EXPECT_EQ(fnord::json::fromJSON<std::string>(aiter, json1.end()), "true");
+
+  //auto idx = fnord::json::fromJSON<fnord::json::JSONObjectIndex>(
+  //    json1.begin(),
+  //    json1.end());
+
 });
