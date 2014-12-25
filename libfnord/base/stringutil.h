@@ -29,6 +29,17 @@ public:
   template <typename T>
   static std::string toString(T value);
 
+  template <typename... T>
+  static std::vector<std::string> toStringV(T... values);
+
+  template <typename H, typename... T>
+  static void toStringVImpl(
+      std::vector<std::string>* target,
+      H value,
+      T... values);
+
+  static void toStringVImpl(std::vector<std::string>* target);
+
   /**
    * Remove trailing slashes from the pointed to string
    *

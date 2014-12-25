@@ -11,11 +11,14 @@ namespace fnord {
 namespace reflect {
 
 template <typename ClassType>
-template <typename ReturnType, typename... ArgTypes>
+template <typename ReturnType, typename... ArgTypes, typename... ArgNameTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>
 MetaClass<ClassType>::reflectMethod(
-    ReturnType (ClassType::* method_fn)(ArgTypes...)) {
-  return MethodCall<ClassType, ReturnType, ArgTypes...>(method_fn);
+    ReturnType (ClassType::* method_fn)(ArgTypes...),
+    ArgNameTypes... arg_names) {
+  return MethodCall<ClassType, ReturnType, ArgTypes...>(
+      method_fn,
+      arg_names...);
 }
 
 }

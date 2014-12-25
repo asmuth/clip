@@ -15,7 +15,6 @@
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/reflect/reflect.h"
 #include "fnord/service/ping/pingservice.h"
-#include "fnord/service/ping/pingserviceadapter.h"
 #include "fnord/system/signalhandler.h"
 #include "fnord/thread/eventloop.h"
 #include "fnord/thread/threadpool.h"
@@ -23,7 +22,6 @@
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::ping_service::PingService;
-using fnord::ping_service::PingServiceAdapter;
 
 class ArgList {
 public:

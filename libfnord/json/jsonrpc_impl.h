@@ -18,7 +18,7 @@ void JSONRPC::registerService(
     const std::string& service_name,
     ServiceType* service) {
   JSONRPC::ReflectionTarget<ServiceType> target(this, service_name, service);
-
+  reflect::MetaClass<ServiceType>::reflectMethods(&target);
 }
 
 template <class MethodType>
@@ -40,9 +40,7 @@ JSONRPC::ReflectionTarget<ClassType>::ReflectionTarget(
     ClassType* service) :
     self_(self),
     service_name_(service_name),
-    service_(service) {
-  reflect::MetaClass<ClassType>::reflectMethods(this);
-}
+    service_(service) {}
 
 template <typename ClassType>
 template <typename MethodType, typename... ArgNameTypes>
@@ -52,7 +50,7 @@ void JSONRPC::ReflectionTarget<ClassType>::method(
     ArgNameTypes... arg_names) {
   self_->registerMethod(
       StringUtil::format("$0.$1", service_name_, method_name),
-      reflect::MetaClass<ClassType>::reflectMethod(method_call),
+      reflect::MetaClass<ClassType>::reflectMethod(method_call, arg_names...),
       service_);
 }
 

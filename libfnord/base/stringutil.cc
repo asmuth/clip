@@ -12,6 +12,8 @@
 
 namespace fnord {
 
+void StringUtil::toStringVImpl(std::vector<std::string>* target) {}
+
 template <>
 std::string StringUtil::toString(std::string value) {
   return value;

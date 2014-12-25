@@ -30,7 +30,8 @@ public:
   typedef _ClassType ClassType;
   typedef _ReturnType ReturnType;
 
-  MethodCall(ReturnType (ClassType::* fn)(ArgTypes...));
+  template <typename... ArgNameTypes>
+  MethodCall(ReturnType (ClassType::* fn)(ArgTypes...), ArgNameTypes... names);
 
   ReturnType call(ClassType* klass, ArgTypes... args) const;
   ReturnType call(ClassType* klass, const ArgPackType& args) const;
@@ -53,6 +54,7 @@ protected:
       IndexSequence<I...>) const;
 
   ReturnType (ClassType::* fn_)(ArgTypes...);
+  std::vector<std::string> arg_names_;
 };
 
 }

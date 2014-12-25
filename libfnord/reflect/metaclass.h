@@ -22,9 +22,10 @@ public:
   template <class TargetType>
   static void reflectMethods(TargetType* target);
 
-  template <typename ReturnType, typename... ArgTypes>
+  template <typename ReturnType, typename... ArgTypes, typename... ArgNameTypes>
   static MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
-      ReturnType (ClassType::* method_fn)(ArgTypes...));
+      ReturnType (ClassType::* method_fn)(ArgTypes...),
+      ArgNameTypes... arg_names);
 
 };
 

@@ -14,6 +14,22 @@
 
 namespace fnord {
 
+template <typename H, typename... T>
+void StringUtil::toStringVImpl(
+    std::vector<std::string>* target,
+    H value,
+    T... values) {
+  target->emplace_back(toString(value));
+  toStringVImpl(target, values...);
+}
+
+template <typename... T>
+std::vector<std::string> StringUtil::toStringV(T... values) {
+  std::vector<std::string> target;
+  toStringVImpl(&target, values...);
+  return target;
+}
+
 template <typename ValueType, typename... T>
 void StringUtil::formatImpl(
     std::string* scratch,

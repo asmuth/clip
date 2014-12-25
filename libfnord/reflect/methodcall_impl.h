@@ -11,9 +11,16 @@ namespace fnord {
 namespace reflect {
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <typename... ArgNameTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>::MethodCall(
-    ReturnType (ClassType::* fn)(ArgTypes...)) :
-    fn_(fn) {}
+    ReturnType (ClassType::* fn)(ArgTypes...),
+    ArgNameTypes... arg_names) :
+    fn_(fn),
+    arg_names_(StringUtil::toStringV(arg_names...)) {
+  static_assert(
+      (sizeof...(ArgTypes) == sizeof...(ArgNameTypes)),
+      "invalid argument name list");
+}
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
@@ -57,7 +64,7 @@ ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
       klass,
       args.template getArg<typename std::tuple_element<I, ArgPackType>::type>(
           I,
-          "fnord")...)();
+          arg_names_[I])...)();
 }
 
 }

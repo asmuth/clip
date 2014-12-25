@@ -216,8 +216,7 @@ add_executable(fnord-logstream-service-example
 
 # service: ping
 add_library(fnord-ping-service OBJECT
-    service/ping/pingservice.cc
-    service/ping/pingserviceadapter.cc)
+    service/ping/pingservice.cc)
 
 add_executable(fnord-ping-service-example
     $<TARGET_OBJECTS:fnord-base>

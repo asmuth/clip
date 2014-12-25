@@ -32,7 +32,7 @@ namespace reflect {
 template <> template <class T>
 void MetaClass<ping_service::PingService>::reflectMethods(T* t) {
   t->method("ping", &ping_service::PingService::ping);
-  t->method("ping2", &ping_service::PingService::ping2);
+  t->method("ping2", &ping_service::PingService::ping2, "i");
 }
 } // namespace reflect
 
