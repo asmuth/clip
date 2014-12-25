@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/fnv.h>
 #include <fnord/sstable/binaryformat.h>
 #include <fnord/sstable/fileheaderwriter.h>
-#include <fnord/hash/fnv.h>
 
 namespace fnord {
 namespace sstable {

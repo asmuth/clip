@@ -51,7 +51,7 @@ MetricRepository::MetricRepository(
     metrics_.emplace(iter.first, std::unique_ptr<Metric>(metric));
   }
 
-  scheduler->run(fnord::thread::Task::create(compaction_task_.runnable()));
+  scheduler->run(compaction_task_.runnable());
 }
 
 Metric* MetricRepository::createMetric(const std::string& key) {

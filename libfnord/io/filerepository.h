@@ -29,7 +29,7 @@ public:
   /**
    * Create and return a new file
    */
-  FileRef createFile();
+  FileRef createFile() const;
 
   void listFiles(
       std::function<bool(const std::string& filename)> callback) const;
@@ -37,7 +37,7 @@ public:
   void deleteAllFiles();
 
 protected:
-  Random rnd_;
+  mutable Random rnd_;
   std::string basedir_;
 };
 

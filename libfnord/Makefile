@@ -1,9 +1,10 @@
-clean:
-	cd base && make clean
-	cd io && make clean
-	cd logging && make clean
-	cd net/http && make clean
-	cd system && make clean
-	cd thread && make clean
+all: build test
 
-.PHONY: clean
+build:
+	mkdir -p build
+	(cd build && cmake .. && make)
+
+clean:
+	rm -rf build
+
+.PHONY: clean build test

@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/exception.h>
-#include <fnord/hash/fnv.h>
+#include <fnord/base/fnv.h>
 #include <fnord/sstable/sstablereader.h>
 #include <fnord/sstable/sstablerepair.h>
 

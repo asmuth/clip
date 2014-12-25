@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
@@ -30,9 +31,9 @@ int main() {
   KeyValueService keyvalue_service;
   KeyValueServiceAdapter::registerJSONRPC(&keyvalue_service, &rpc);
 
+  fnord::http::HTTPRouter http_router;
   fnord::thread::ThreadPool thread_pool;
-  fnord::http::HTTPServer http_server(&thread_pool, &thread_pool);
-  http_server.addHandler(JSONRPCHTTPAdapter::make(&rpc));
+  fnord::http::HTTPServer http_server(&http_router, &thread_pool);
   http_server.listen(8080);
 
   return 0;

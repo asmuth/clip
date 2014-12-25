@@ -18,8 +18,8 @@
 namespace fnord {
 namespace json {
 
-std::unique_ptr<http::HTTPHandler> JSONRPCHTTPAdapter::make(JSONRPC* rpc) {
-  return std::unique_ptr<http::HTTPHandler>(new JSONRPCHTTPAdapter(rpc));
+std::unique_ptr<http::HTTPService> JSONRPCHTTPAdapter::make(JSONRPC* rpc) {
+  return std::unique_ptr<http::HTTPService>(new JSONRPCHTTPAdapter(rpc));
 }
 
 JSONRPCHTTPAdapter::JSONRPCHTTPAdapter(
@@ -30,11 +30,11 @@ JSONRPCHTTPAdapter::JSONRPCHTTPAdapter(
   StringUtil::stripTrailingSlashes(&path_);
 }
 
-bool JSONRPCHTTPAdapter::handleHTTPRequest(
+void JSONRPCHTTPAdapter::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-  if (!StringUtil::beginsWith(request->getUrl(), path_)) {
-    return false;
+  if (!StringUtil::beginsWith(request->uri(), path_)) {
+    return;
   }
 
   response->setStatus(http::kStatusOK);
@@ -44,7 +44,7 @@ bool JSONRPCHTTPAdapter::handleHTTPRequest(
     res.error(
         JSONRPCResponse::kJSONRPCPInvalidRequestError,
         "HTTP method must be POST");
-    return true;
+    return;
   }
 
   try {
@@ -56,8 +56,6 @@ bool JSONRPCHTTPAdapter::handleHTTPRequest(
         JSONRPCResponse::kJSONRPCPInternalError,
         e.getMessage());
   }
-
-  return true;
 }
 
 

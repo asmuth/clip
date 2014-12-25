@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <fnord/base/exception.h>
-#include <fnord/net/http/httpinputstream.h>
-#include <fnord/net/http/httpoutputstream.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
@@ -20,8 +18,6 @@
 #include <fnord/test/unittest.h>
 
 using namespace fnord::http;
-using fnord::http::HTTPInputStream;
-using fnord::http::HTTPOutputStream;
 using fnord::io::StringInputStream;
 using fnord::io::StringOutputStream;
 

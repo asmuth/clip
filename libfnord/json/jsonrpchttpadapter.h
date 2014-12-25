@@ -13,22 +13,24 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "fnord/net/http/httphandler.h"
+#include "fnord/net/http/httprequest.h"
+#include "fnord/net/http/httpresponse.h"
+#include "fnord/net/http/httpservice.h"
 
 namespace fnord {
 namespace json {
 class JSONRPC;
 
-class JSONRPCHTTPAdapter : public fnord::http::HTTPHandler {
+class JSONRPCHTTPAdapter : public fnord::http::HTTPService {
 public:
 
-  static std::unique_ptr<http::HTTPHandler> make(JSONRPC* rpc);
+  static std::unique_ptr<http::HTTPService> make(JSONRPC* rpc);
 
   JSONRPCHTTPAdapter(
       JSONRPC* json_rpc,
       const std::string path= "/rpc");
 
-  bool handleHTTPRequest(
+  void handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
