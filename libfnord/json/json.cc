@@ -81,10 +81,23 @@ std::string fromJSON(
     RAISE(kIndexError);
   }
 
-  if (begin->type == JSON_STRING) {
-    return begin->data;
-  } else {
-    RAISEF(kParseError, "expected JSON_STRING, got $0", begin->type);
+  switch (begin->type) {
+    case JSON_STRING:
+    case JSON_NUMBER:
+      return begin->data;
+
+    case JSON_TRUE:
+      return "true";
+
+    case JSON_FALSE:
+      return "false";
+
+    case JSON_NULL:
+      return "null";
+
+    default:
+      RAISEF(kParseError, "can't convert $0 to string", begin->type);
+
   }
 }
 

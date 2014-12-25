@@ -194,9 +194,10 @@ TEST_CASE(JSONTest, TestFromJSON, [] () {
 
   auto aiter = JSONUtil::arrayLookup(iter, json1.end(), 0);
   EXPECT_EQ(fnord::json::fromJSON<std::string>(aiter, json1.end()), "true");
-
-  //auto idx = fnord::json::fromJSON<fnord::json::JSONObjectIndex>(
-  //    json1.begin(),
-  //    json1.end());
-
+  aiter = JSONUtil::arrayLookup(iter, json1.end(), 1);
+  EXPECT_EQ(fnord::json::fromJSON<std::string>(aiter, json1.end()), "false");
+  aiter = JSONUtil::arrayLookup(iter, json1.end(), 2);
+  EXPECT_EQ(fnord::json::fromJSON<std::string>(aiter, json1.end()), "null");
+  aiter = JSONUtil::arrayLookup(iter, json1.end(), 3);
+  EXPECT_EQ(fnord::json::fromJSON<std::string>(aiter, json1.end()), "3.7e-5");
 });

@@ -66,6 +66,30 @@ size_t JSONUtil::arrayLength(
   return length;
 }
 
+JSONObject::const_iterator JSONUtil::arrayLookup(
+    JSONObject::const_iterator begin,
+    JSONObject::const_iterator end,
+    size_t index) {
+  if (begin->type != json::JSON_ARRAY_BEGIN) {
+    RAISEF(kParseError, "expected JSON_OBJECT_BEGIN, got: $0", begin->type);
+  }
+
+  auto aend = begin + begin->size - 1;
+  if (aend > end) {
+    RAISE(kIndexError);
+  }
+
+  size_t idx = 0;
+  for (++begin; begin < aend; begin += begin->size) {
+    if (idx++ == index) {
+      return begin;
+    }
+  }
+
+  RAISE(kIndexError);
+  return end;
+}
+
 
 }
 }

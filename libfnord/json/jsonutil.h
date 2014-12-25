@@ -26,6 +26,10 @@ public:
       JSONObject::const_iterator begin,
       JSONObject::const_iterator end);
 
+  static JSONObject::const_iterator arrayLookup(
+      JSONObject::const_iterator begin,
+      JSONObject::const_iterator end,
+      size_t index);
 };
 
 }
