@@ -238,7 +238,6 @@
         if (r.status == 200 && r.statusText == "OK") {
           var res = JSON.parse(r.response, duration);
           base.renderResult(res, duration);
-          //FnordMetric.extendCharts();
         } else {
           /* server error */
           base.renderError(
@@ -325,8 +324,8 @@
       var message = this.querySelector("fn-message#info");
       message.className ="active";
       message.innerHTML =
-        "The query execution took " + duration + 
-        " and returned " + info[0].num_rows + " rows;";
+        "The query execution took " + (duration/1000) + 
+        " seconds and returned " + info[0].num_rows + " rows.";
     }
 
 
