@@ -40,7 +40,9 @@ HTTPRequest HTTPRequest::parse(const std::string& str) {
   });
 
   parser.parse(str.c_str(), str.length());
-  if (parser.state() != HTTPParser::S_BODY) {
+  parser.eof();
+
+  if (parser.state() != HTTPParser::S_DONE) {
     RAISE(kRuntimeError, "incomplete HTTP request");
   }
 
