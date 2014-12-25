@@ -15,27 +15,13 @@
 namespace fnord {
 namespace reflect {
 
-class AnyMetaClass {
+template <class ClassType>
+class MetaClass {
 public:
-  virtual ~AnyMetaClass() {}
-  const AnyMethodCall* method(const std::string& name) const;
 
-protected:
-  std::unordered_map<std::string, std::unique_ptr<AnyMethodCall>> methods_;
-};
+  template <class TargetType>
+  static void reflectMethods(TargetType* target);
 
-template <class T>
-class MetaClass : public AnyMetaClass {
-public:
-  static MetaClass<T>* get();
-
-  template <typename RetType, typename... ArgTypes>
-  void registerMethod(
-      RetType (T::* fn)(ArgTypes...),
-      const std::string& name);
-
-protected:
-  MetaClass();
 };
 
 

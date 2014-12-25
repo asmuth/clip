@@ -14,6 +14,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include "fnord/reflect/reflect.h"
 
 namespace fnord {
 namespace ping_service {
@@ -26,5 +27,14 @@ public:
 };
 
 } // namespace ping_service
+
+namespace reflect {
+template <> template <class T>
+void MetaClass<ping_service::PingService>::reflectMethods(T* t) {
+  t->method("ping", &ping_service::PingService::ping);
+  t->method("ping2", &ping_service::PingService::ping2);
+}
+} // namespace reflect
+
 } // namsepace fnord
 #endif

@@ -14,16 +14,5 @@
 namespace fnord {
 namespace reflect {
 
-const AnyMethodCall* AnyMetaClass::method(const std::string& name) const {
-  auto iter = methods_.find(name);
-
-  if (iter == methods_.end()) {
-    RAISEF(kNoSuchMethodError, "no such method: $0", name);
-  }
-
-  return iter->second.get();
-}
-
-
 }
 }

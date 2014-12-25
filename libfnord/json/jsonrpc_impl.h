@@ -13,7 +13,15 @@
 namespace fnord {
 namespace json {
 
-template <typename MethodType>
+template <class ServiceType>
+void JSONRPC::registerService(
+    const std::string& service_name,
+    ServiceType* service) {
+  JSONRPC::ReflectionTarget<ServiceType> target(this, service_name, service);
+
+}
+
+template <class MethodType>
 void JSONRPC::registerMethod(
     const std::string& method_name,
     MethodType method_call,
@@ -21,8 +29,31 @@ void JSONRPC::registerMethod(
   registerMethod(method_name, [method_call, service] (
       JSONRPCRequest* req,
       JSONRPCResponse* res) {
-    res->successAndReturn(method_call.call(service, req));
+    res->successAndReturn(method_call.call(service, *req));
   });
+}
+
+template <class ClassType>
+JSONRPC::ReflectionTarget<ClassType>::ReflectionTarget(
+    JSONRPC* self,
+    const std::string service_name,
+    ClassType* service) :
+    self_(self),
+    service_name_(service_name),
+    service_(service) {
+  reflect::MetaClass<ClassType>::reflectMethods(this);
+}
+
+template <typename ClassType>
+template <typename MethodType, typename... ArgNameTypes>
+void JSONRPC::ReflectionTarget<ClassType>::method(
+    const std::string& method_name,
+    MethodType method_call,
+    ArgNameTypes... arg_names) {
+  self_->registerMethod(
+      StringUtil::format("$0.$1", service_name_, method_name),
+      reflect::reflectMethod(method_call),
+      service_);
 }
 
 }

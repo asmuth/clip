@@ -17,6 +17,7 @@
 #include "fnord/service/ping/pingservice.h"
 #include "fnord/service/ping/pingserviceadapter.h"
 #include "fnord/system/signalhandler.h"
+#include "fnord/thread/eventloop.h"
 #include "fnord/thread/threadpool.h"
 
 using fnord::json::JSONRPC;
@@ -38,25 +39,18 @@ int main() {
   fnord::system::SignalHandler::ignoreSIGPIPE();
 
   JSONRPC rpc;
+  JSONRPCHTTPAdapter rpc_http(&rpc);
 
   PingService ping_service;
-  rpc.registerMethod(
-      "PingService.ping",
-      fnord::reflect::reflectMethod(&PingService::ping),
-      &ping_service);
+  rpc.registerService("PingService", &ping_service);
 
-  fnord::http::HTTPRouter http_router;
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;
+  fnord::http::HTTPRouter http_router;
+  http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
   fnord::http::HTTPServer http_server(&http_router, &event_loop);
   http_server.listen(8080);
   event_loop.run();
-
-
-  //auto meta = fnord::reflect::reflect<fnord::ping_service::PingService>();
-  //auto method = dynamic_cast<const fnord::reflect::MethodCall<fnord::ping_service::PingService, std::string, int>*>(meta->method("ping2"));
-  //ArgList args;
-  //fnord::iputs("res: $0", method->call(&ping_service, args));
 
   return 0;
 }

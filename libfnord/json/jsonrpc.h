@@ -29,7 +29,12 @@ public:
 
   void dispatch(JSONRPCRequest* req, JSONRPCResponse* res);
 
-  template <typename MethodType>
+  template <class ServiceType>
+  void registerService(
+      const std::string& service_name,
+      ServiceType* service);
+
+  template <class MethodType>
   void registerMethod(
       const std::string& method_name,
       MethodType method_call,
@@ -40,6 +45,26 @@ public:
       std::function<void (JSONRPCRequest* req, JSONRPCResponse* res)> handler);
 
 protected:
+  template <class ClassType>
+  class ReflectionTarget {
+  public:
+    ReflectionTarget(
+        JSONRPC* self,
+        const std::string service_name,
+        ClassType* service);
+
+    template <typename MethodType, typename... ArgNameTypes>
+    void method(
+        const std::string& method_name,
+        MethodType method_call,
+        ArgNameTypes... arg_names);
+
+  protected:
+    JSONRPC* self_;
+    std::string service_name_;
+    ClassType* service_;
+  };
+
   std::unordered_map<
       std::string,
       std::function<void (JSONRPCRequest* req, JSONRPCResponse* res)>>

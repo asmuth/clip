@@ -10,31 +10,6 @@
 namespace fnord {
 namespace reflect {
 
-template <class T>
-MetaClass<T>* reflect() {
-  return MetaClass<T>::get();
-}
-
-template <class T>
-MetaClass<T>* MetaClass<T>::get() {
-  static MetaClass<T> meta;
-  return &meta;
-}
-
-template <class T>
-MetaClass<T>::MetaClass() {
-  reflect<T>(this);
-}
-
-template <class T>
-template <typename RetType, typename... ArgTypes>
-void MetaClass<T>::registerMethod(
-    RetType (T::* fn)(ArgTypes...),
-    const std::string& name) {
-  methods_[name] = std::unique_ptr<AnyMethodCall>(
-      new MethodCall<T, RetType, ArgTypes...>(fn, name));
-}
-
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>::MethodCall(
     ReturnType (ClassType::* fn)(ArgTypes...)) :

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include "fnord/base/inspect.h"
 #include "fnord/json/jsondocument.h"
 #include "fnord/json/jsoninputstream.h"
 
@@ -26,6 +27,12 @@ public:
   const JSONDocument& body() const;
   std::string id() const;
   std::string method() const;
+
+  template <typename T>
+  T getArg(size_t index, const std::string& name) const {
+    fnord::iputs("getarg: $0, $1", index, name);
+    return 4444;
+  };
 
 protected:
   JSONDocument body_;
