@@ -21,9 +21,7 @@ namespace comm {
 class RPCChannel {
 public:
   virtual ~RPCChannel() {}
-
 };
-
 
 class LocalRPCChannel : public RPCChannel {
 public:
@@ -36,10 +34,6 @@ public:
 
   template <typename MethodType>
   void method(MethodType* method);
-
-  //std::unordered_map<std::string>
-  //template <class RPCType>
-  //void callImpl(RPCType* rpc);
 
 protected:
   void* service_;
