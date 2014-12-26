@@ -100,13 +100,21 @@ void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::tryMethod(
     T1 m2,
     const std::string& method_name,
     ArgNameTypes... arg_names) {
-  if (m1 == m2) {
-    method_call_.reset(
-        new MethodCall<ClassType, ReturnType, ArgTypes...>(
-            method_name,
-            m1,
-            arg_names...));
+  const char* m1_raw = static_cast<const char*>(static_cast<const void*>(&m1));
+  const char* m2_raw = static_cast<const char*>(static_cast<const void*>(&m2));
+  if (sizeof(m1) != sizeof(m2)) {
+    return;
   }
+
+  if (memcmp(m1_raw, m2_raw, sizeof(m1) != 0)) {
+    return;
+  }
+
+  method_call_.reset(
+      new MethodCall<ClassType, ReturnType, ArgTypes...>(
+          method_name,
+          m1,
+          arg_names...));
 }
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
@@ -130,14 +138,35 @@ void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::method(
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>
 MethodCallLookup<ClassType, ReturnType, ArgTypes...>::get() const {
+  if (method_call_ == nullptr) {
+    RAISE(kReflectionError, "reflection failed");
+  }
+
   return *method_call_;
 }
 
 template <typename MethodType>
 auto reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method))
-    const* {
-  static const auto method_call = reflectMethodImpl(method);
-  return &method_call;
+    const * {
+  static std::recursive_mutex cache_lock;
+  static std::vector<
+      std::pair<
+          MethodType,
+          std::unique_ptr<decltype(reflectMethodImpl(method))>>> cache;
+
+  std::lock_guard<std::recursive_mutex> l(cache_lock);
+
+  for (const auto& pair : cache) {
+    if (pair.first == method) {
+      return pair.second.get();
+    }
+  }
+
+  cache.emplace_back(std::make_pair(
+      method,
+      new decltype(reflectMethodImpl(method))(reflectMethodImpl(method))));
+
+  return cache.back().second.get();
 }
 
 template <class ClassType>

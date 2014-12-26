@@ -31,6 +31,7 @@ const char kNotYetImplementedError[] = "NotYetImplementedError";
 const char kNullPointerError[] = "NullPointerError";
 const char kParseError[] = "ParseError";
 const char kRangeError[] = "RangeError";
+const char kReflectionError[] = "kReflectionError";
 const char kRPCError[] = "kRPCError";
 const char kRuntimeError[] = "RuntimeError";
 const char kTypeError[] = "TypeError";

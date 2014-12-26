@@ -28,10 +28,11 @@ protected:
   std::string method_;
 };
 
-template <typename _ResultType, typename ArgPackType>
+template <typename _ResultType, typename _ArgPackType>
 class RPC : public AnyRPC {
 public:
   typedef _ResultType ResultType;
+  typedef _ArgPackType ArgPackType;
 
   RPC(const std::string& method, const ArgPackType& arguments);
 
