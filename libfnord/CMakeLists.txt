@@ -222,7 +222,6 @@ add_executable(fnord-ping-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-reflect>
     $<TARGET_OBJECTS:fnord-system>
     $<TARGET_OBJECTS:fnord-thread>
     service/ping/pingservice_example.cc)
@@ -238,11 +237,6 @@ add_library(fnord-sstable OBJECT
     sstable/sstablereader.cc
     sstable/sstablerepair.cc
     sstable/sstablewriter.cc)
-
-# system
-add_library(fnord-reflect OBJECT
-    reflect/metaclass.cc
-    reflect/methodcall.cc)
 
 # system
 add_library(fnord-system OBJECT
