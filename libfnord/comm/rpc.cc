@@ -33,7 +33,6 @@ void AnyRPC::wait() {
 }
 
 void AnyRPC::ready() {
-  iputs("ready...", 1);
   {
     std::unique_lock<std::mutex> l(mutex_);
     ready_ = true;
