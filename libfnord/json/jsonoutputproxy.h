@@ -7,26 +7,30 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_REFLECT_METACLASS_H
-#define _FNORD_REFLECT_METACLASS_H
+#ifndef _FNORD_JSONOUTPUTPROXY_H
+#define _FNORD_JSONOUTPUTPROXY_H
+#include <string>
 #include <unordered_map>
+#include <vector>
+#include "fnord/base/buffer.h"
 
 namespace fnord {
-namespace reflect {
+namespace json {
 
-template <class ClassType>
-class MetaClass {
+template <typename T>
+class JSONOutputProxy {
 public:
 
-  template <class TargetType>
-  static void reflectMethods(TargetType* target);
+  JSONOutputProxy(const T& value) {
+    reflect::MetaClass<T>::reflectProperties(this);
+  }
 
-  template <class TargetType>
-  static void reflectProperties(TargetType* target);
+  const JSONObject& object() const {
+    return obj_;
+  }
 
-  template <class TargetType>
-  static void reflect(TargetType* target);
-
+protected:
+  JSONObject obj_;
 };
 
 }

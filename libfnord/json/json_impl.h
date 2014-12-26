@@ -8,6 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/base/exception.h"
+#include "fnord/reflect/reflect.h"
+#include "fnord/json/jsonoutputproxy.h"
 
 namespace fnord {
 namespace json {
@@ -16,6 +18,19 @@ template <typename T>
 T fromJSON(const std::string& json_str) {
   auto tokens = parseJSON(json_str);
   return fromJSON<T>(tokens.begin(), tokens.end());
+}
+
+template <typename T>
+std::string toJSONString(const T& value) {
+  std::string json_str;
+  auto tokens = toJSON(value);
+  return json_str;
+}
+
+template <typename T>
+JSONObject toJSON(const T& value) {
+  JSONOutputProxy<T> proxy(value);
+  return proxy.object();
 }
 
 }

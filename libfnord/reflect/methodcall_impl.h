@@ -8,6 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <type_traits>
+#include "fnord/base/exception.h"
+#include "fnord/base/stringutil.h"
 #include "fnord/reflect/metaclass.h"
 
 namespace fnord {

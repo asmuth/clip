@@ -12,7 +12,6 @@
 #include <vector>
 #include <string>
 #include <functional>
-#include "fnord/json/json.h"
 #include "fnord/reflect/indexsequence.h"
 
 namespace fnord {

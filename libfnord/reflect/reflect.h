@@ -11,4 +11,5 @@
 #define _FNORD_REFLECT_H
 #include "fnord/reflect/metaclass.h"
 #include "fnord/reflect/methodcall.h"
+#include "fnord/reflect/property.h"
 #endif

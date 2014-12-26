@@ -39,10 +39,14 @@ struct JSONToken {
   uint32_t size;
 };
 
+
 typedef std::vector<JSONToken> JSONObject;
 
 template <typename T>
-void toJSON(const T& value, JSONOutputStream* out);
+JSONObject toJSON(const T& value);
+
+template <typename T>
+std::string toJSONString(const T& value);
 
 template <typename T>
 T fromJSON(

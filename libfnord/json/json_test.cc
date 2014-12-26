@@ -201,3 +201,10 @@ TEST_CASE(JSONTest, TestFromJSON, [] () {
   aiter = JSONUtil::arrayLookup(iter, json1.end(), 3);
   EXPECT_EQ(fnord::json::fromJSON<std::string>(aiter, json1.end()), "3.7e-5");
 });
+
+TEST_CASE(JSONTest, TestToJSON, [] () {
+  auto j1 = fnord::json::toJSON(std::string("blah"));
+  EXPECT_EQ(j1.size(), 1);
+  EXPECT_EQ(j1[0].type, fnord::json::JSON_STRING);
+  EXPECT_EQ(j1[0].data, "blah");
+});

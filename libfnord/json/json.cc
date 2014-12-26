@@ -136,6 +136,16 @@ int fromJSON(
   }
 }
 
+template <>
+JSONObject toJSON(const std::string& str) {
+  return JSONObject { JSONToken(json::JSON_STRING, str) };
+}
+
+template <>
+JSONObject toJSON(const char* const& str) {
+  return JSONObject { JSONToken(json::JSON_STRING, str) };
+}
+
 } // namespace json
 
 template <>
