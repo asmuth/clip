@@ -20,5 +20,9 @@ std::string PingService::ping(std::string echo) {
   return StringUtil::format("pong: $0", echo);
 }
 
+int PingService::pingint(int i) {
+  return i * 3;
+}
+
 } // namespace ping_service
 } // namespace fnord

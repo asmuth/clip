@@ -47,6 +47,11 @@ protected:
   ResultType result_;
 };
 
+template <class ReturnType, typename... ArgTypes>
+RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
+    const std::string& method,
+    ArgTypes... args);
+
 template <class MethodCall>
 RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType> mkRPC(
     const MethodCall* method,

@@ -49,6 +49,15 @@ const ArgPackType&  RPC<ResultType, ArgPackType>::args() const {
   return args_;
 }
 
+template <class ReturnType, typename... ArgTypes>
+RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
+    const std::string& method,
+    ArgTypes... args) {
+  return RPC<ReturnType, std::tuple<ArgTypes...>>(
+      method,
+      std::make_tuple(args...));
+}
+
 template <class MethodCall>
 RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType> mkRPC(
     const MethodCall* method,

@@ -78,6 +78,20 @@ class MethodCallLookup {
 public:
   MethodCallLookup(ReturnType (ClassType::* subject)(ArgTypes...));
 
+  template <typename T1, typename... ArgNameTypes>
+  void tryMethod(
+      T1 m1,
+      T1 m2,
+      const std::string& method_name,
+      ArgNameTypes... arg_names);
+
+  template <typename T1, typename T2, typename... ArgNameTypes>
+  void tryMethod(
+      T1 m1,
+      T2 m2,
+      const std::string& method_name,
+      ArgNameTypes... arg_names);
+
   template <typename MethodType, typename... ArgNameTypes>
   void method(
       const std::string& method_name,

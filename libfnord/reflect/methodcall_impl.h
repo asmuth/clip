@@ -94,18 +94,37 @@ MethodCallLookup<ClassType, ReturnType, ArgTypes...>::MethodCallLookup(
     subject_(subject) {}
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <typename T1, typename... ArgNameTypes>
+void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::tryMethod(
+    T1 m1,
+    T1 m2,
+    const std::string& method_name,
+    ArgNameTypes... arg_names) {
+  if (m1 == m2) {
+    method_call_.reset(
+        new MethodCall<ClassType, ReturnType, ArgTypes...>(
+            method_name,
+            m1,
+            arg_names...));
+  }
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <typename T1, typename T2, typename... ArgNameTypes>
+void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::tryMethod(
+    T1 m1,
+    T2 m2,
+    const std::string& method_name,
+    ArgNameTypes... arg_names) {
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
 template <typename MethodType, typename... ArgNameTypes>
 void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::method(
     const std::string& method_name,
     MethodType method_call,
     ArgNameTypes... arg_names) {
-  if (method_call == subject_) {
-    method_call_.reset(
-        new MethodCall<ClassType, ReturnType, ArgTypes...>(
-            method_name,
-            method_call,
-            arg_names...));
-  }
+  tryMethod(method_call, subject_, method_name, arg_names...);
 }
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
