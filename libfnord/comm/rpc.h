@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_COMM_RPCCHANNEL_H
-#define _FNORD_COMM_RPCCHANNEL_H
+#ifndef _FNORD_COMM_RPC_H
+#define _FNORD_COMM_RPC_H
 #include <functional>
 #include <stdlib.h>
 #include <string>
@@ -24,7 +24,7 @@ class RPC {
 public:
   typedef _ResultType ResultType;
 
-  RPC(const std::string& method, RPCChannel* channel);
+  RPC(const std::string& method);
 
   void call(const ArgPackType& arguments);
   void wait();
@@ -35,7 +35,17 @@ protected:
   ResultType result_;
 };
 
+template <class MethodCall>
+RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType> mkRPC(
+    MethodCall method);
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
+  ReturnType (ClassType::* method)(ArgTypes...));
+
 } // namespace comm
 } // namsepace fnord
 
+
+#include "rpc_impl.h"
 #endif

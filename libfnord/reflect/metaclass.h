@@ -10,7 +10,6 @@
 #ifndef _FNORD_REFLECT_METACLASS_H
 #define _FNORD_REFLECT_METACLASS_H
 #include <unordered_map>
-#include "fnord/reflect/methodcall.h"
 
 namespace fnord {
 namespace reflect {
@@ -21,11 +20,6 @@ public:
 
   template <class TargetType>
   static void reflectMethods(TargetType* target);
-
-  template <typename ReturnType, typename... ArgTypes, typename... ArgNameTypes>
-  static MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
-      ReturnType (ClassType::* method_fn)(ArgTypes...),
-      ArgNameTypes... arg_names);
 
 };
 

@@ -18,26 +18,26 @@
 namespace fnord {
 namespace reflect {
 
-class AnyMethodCall {
-public:
-  virtual ~AnyMethodCall() {}
-};
-
 template <typename _ClassType, typename _ReturnType, typename... ArgTypes>
-class MethodCall : public AnyMethodCall {
+class MethodCall {
 public:
   typedef std::tuple<ArgTypes...> ArgPackType;
   typedef _ClassType ClassType;
   typedef _ReturnType ReturnType;
 
   template <typename... ArgNameTypes>
-  MethodCall(ReturnType (ClassType::* fn)(ArgTypes...), ArgNameTypes... names);
+  MethodCall(
+    const std::string& name,
+    ReturnType (ClassType::* fn)(ArgTypes...),
+    ArgNameTypes... names);
 
   ReturnType call(ClassType* klass, ArgTypes... args) const;
   ReturnType call(ClassType* klass, const ArgPackType& args) const;
 
   template <class ArgListType>
   ReturnType call(ClassType* klass, const ArgListType& args) const;
+
+  const std::string& name() const;
 
 protected:
 
@@ -53,9 +53,38 @@ protected:
       const ArgListType& args,
       IndexSequence<I...>) const;
 
+  std::string name_;
   ReturnType (ClassType::* fn_)(ArgTypes...);
   std::vector<std::string> arg_names_;
 };
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+class MethodCallLookup {
+public:
+  MethodCallLookup(ReturnType (ClassType::* subject)(ArgTypes...));
+
+  template <typename MethodType, typename... ArgNameTypes>
+  void method(
+      const std::string& method_name,
+      MethodType method_call,
+      ArgNameTypes... arg_names);
+
+  MethodCall<ClassType, ReturnType, ArgTypes...> get() const;
+
+protected:
+  std::unique_ptr<MethodCall<ClassType, ReturnType, ArgTypes...>> method_call_;
+  ReturnType (ClassType::* subject_)(ArgTypes...);
+};
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
+    ReturnType (ClassType::* method)(ArgTypes...));
+
+
+//template <typename MethodType>
+//reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method)) {
+//
+//}
 
 }
 }

@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <type_traits>
+#include "fnord/reflect/metaclass.h"
 
 namespace fnord {
 namespace reflect {
@@ -15,13 +16,21 @@ namespace reflect {
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 template <typename... ArgNameTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>::MethodCall(
+    const std::string& name,
     ReturnType (ClassType::* fn)(ArgTypes...),
     ArgNameTypes... arg_names) :
+    name_(name),
     fn_(fn),
     arg_names_(StringUtil::toStringV(arg_names...)) {
   static_assert(
       (sizeof...(ArgTypes) == sizeof...(ArgNameTypes)),
       "invalid argument name list");
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+const std::string& MethodCall<ClassType, ReturnType, ArgTypes...>::name()
+    const {
+  return name_;
 }
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
@@ -70,6 +79,53 @@ ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
                   I,
                   arg_names_[I])...)();
 }
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
+    ReturnType (ClassType::* method)(ArgTypes...)) {
+  MethodCallLookup<ClassType, ReturnType, ArgTypes...> lookup(method);
+  fnord::reflect::MetaClass<ClassType>::reflectMethods(&lookup);
+  return lookup.get();
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+MethodCallLookup<ClassType, ReturnType, ArgTypes...>::MethodCallLookup(
+    ReturnType (ClassType::* subject)(ArgTypes...)) :
+    subject_(subject) {}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <typename MethodType, typename... ArgNameTypes>
+void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::method(
+    const std::string& method_name,
+    MethodType method_call,
+    ArgNameTypes... arg_names) {
+  if (method_call == subject_) {
+    method_call_.reset(
+        new MethodCall<ClassType, ReturnType, ArgTypes...>(
+            method_name,
+            method_call,
+            arg_names...));
+  }
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
+MethodCall<ClassType, ReturnType, ArgTypes...>
+MethodCallLookup<ClassType, ReturnType, ArgTypes...>::get() const {
+  return *method_call_;
+}
+
+/*
+template <typename ClassType>
+template <typename ReturnType, typename... ArgTypes, typename... ArgNameTypes>
+MethodCall<ClassType, ReturnType, ArgTypes...>
+MetaClass<ClassType>::reflectMethod(
+    ReturnType (ClassType::* method_fn)(ArgTypes...),
+    ArgNameTypes... arg_names) {
+  return MethodCall<ClassType, ReturnType, ArgTypes...>(
+      method_fn,
+      arg_names...);
+}
+*/
 
 }
 }
