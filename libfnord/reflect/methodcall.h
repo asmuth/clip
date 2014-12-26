@@ -133,10 +133,22 @@ public:
           MethodCallType>::type::ArgPackType>::type RPCType;
 
   typedef typename std::remove_pointer<RPCType>::type::ArgPackType
-      RPCArgListType;
+      RPCArgPackType;
+
+  typedef typename std::remove_pointer<RPCType>::type::ResultType
+      RPCReturnType;
+
+  typedef
+      typename std::remove_pointer<MethodCallType>::type::ClassType
+      RPCServiceType;
 
   template <typename... ArgNameTypes>
   RPCCall(MethodCallType method, ArgNameTypes... arg_names);
+
+  MethodCallType method() const;
+
+protected:
+  MethodCallType method_;
 };
 
 }

@@ -215,11 +215,16 @@ template <typename MethodCallType>
 template <typename... ArgNameTypes>
 RPCCall<MethodCallType>::RPCCall(
     MethodCallType method,
-    ArgNameTypes... arg_names) {
-
+    ArgNameTypes... arg_names) :
+    method_(method) {
   static_assert(
-      std::tuple_size<RPCArgListType>() == sizeof...(ArgNameTypes),
+      std::tuple_size<RPCArgPackType>() == sizeof...(ArgNameTypes),
       "invalid argument name list");
+}
+
+template <typename MethodCallType>
+MethodCallType RPCCall<MethodCallType>::method() const {
+  return method_;
 }
 
 }

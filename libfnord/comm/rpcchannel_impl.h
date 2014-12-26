@@ -42,6 +42,24 @@ void LocalRPCChannel::ReflectionProxy::method(MethodType* method) {
 
 template <typename RPCCallType>
 void LocalRPCChannel::ReflectionProxy::rpc(RPCCallType rpccall) {
+  auto service = base_->service_;
+  auto method = rpccall.method();
+
+  base_->methods_.emplace(method->name(), [service, method] (AnyRPC* anyrpc) {
+    auto rpc = dynamic_cast<
+        RPC<
+            typename RPCCallType::RPCReturnType,
+            typename RPCCallType::RPCArgPackType>*>(anyrpc);
+
+    if (rpc == nullptr) {
+        RAISEF(
+            kNoSuchMethodError,
+            "invalid argument signature for method: $0",
+            anyrpc->method());
+    }
+
+    method->call((typename RPCCallType::RPCServiceType*) service, rpc);
+  });
 }
 
 template <class RPCType>

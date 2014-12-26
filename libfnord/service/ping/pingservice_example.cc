@@ -46,7 +46,7 @@ int main() {
   fnord::comm::LocalRPCChannel chan(&ping_service);
 
   auto ping_rpc = fnord::comm::mkRPC(&PingService::ping, std::string("blah"));
-  auto ping2_rpc = fnord::comm::mkRPC<std::string>("ping_async", std::string("fasdasd"));
+  auto ping2_rpc = fnord::comm::mkRPC<std::string>("ping_async", std::string("fasdasd"), 123);
 
   ping_rpc.call(&chan);
   ping_rpc.wait();
