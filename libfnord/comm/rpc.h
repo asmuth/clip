@@ -14,6 +14,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <mutex>
 
 namespace fnord {
 namespace comm {
@@ -21,11 +22,19 @@ class RPCChannel;
 
 class AnyRPC {
 public:
-  virtual ~AnyRPC() {}
-  AnyRPC(const std::string& method) : method_(method) {}
-  const std::string& method() const { return method_; };
+  virtual ~AnyRPC();
+  AnyRPC(const std::string& method);
+
+  void wait();
+  void ready();
+
+  const std::string& method() const;
+
 protected:
   std::string method_;
+  bool ready_;
+  std::mutex mutex_;
+  std::condition_variable cond_;
 };
 
 template <typename _ResultType, typename _ArgPackType>
@@ -35,10 +44,10 @@ public:
   typedef _ArgPackType ArgPackType;
 
   RPC(const std::string& method, const ArgPackType& arguments);
+  RPC(const RPC<ResultType, ArgPackType>& other);
 
   void call(RPCChannel* channel);
   void ready(const ResultType& result);
-  void wait();
 
   const ArgPackType& args() const;
   const ResultType& result() const;

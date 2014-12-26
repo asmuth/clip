@@ -74,6 +74,10 @@ add_executable(tests/test-chart
     $<TARGET_OBJECTS:fnord-chart>
     chart/chart_test.cc)
 
+# comm
+add_library(fnord-comm OBJECT
+    comm/rpc.cc)
+
 # http
 add_library(fnord-http OBJECT
     net/tcpserver.cc
@@ -218,6 +222,7 @@ add_library(fnord-ping-service OBJECT
 
 add_executable(fnord-ping-service-example
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-ping-service>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>

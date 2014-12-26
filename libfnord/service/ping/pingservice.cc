@@ -10,6 +10,8 @@
 #include "fnord/service/ping/pingservice.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/reflect/reflect.h"
+#include <thread>
+#include <unistd.h>
 
 namespace fnord {
 namespace ping_service {
@@ -35,7 +37,12 @@ void PingService::ping_async(
       std::get<0>(rpc->args()),
       std::get<1>(rpc->args()));
 
-  rpc->ready(res);
+  auto t = std::thread([rpc, res] () {
+    usleep(1000000);
+    rpc->ready(res);
+  });
+
+  t.detach();
 }
 
 } // namespace ping_service
