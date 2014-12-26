@@ -26,9 +26,7 @@ public:
 
 };
 
-
 }
 }
 
-#include "metaclass_impl.h"
 #endif
