@@ -7,6 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <type_traits>
+
 namespace fnord {
 namespace reflect {
 
@@ -62,9 +64,11 @@ ReturnType MethodCall<ClassType, ReturnType, ArgTypes...>::call(
   return std::bind(
       fn_,
       klass,
-      args.template getArg<typename std::tuple_element<I, ArgPackType>::type>(
-          I,
-          arg_names_[I])...)();
+      args.template getArg<
+          typename std::decay<
+              typename std::tuple_element<I, ArgPackType>::type>::type>(
+                  I,
+                  arg_names_[I])...)();
 }
 
 }

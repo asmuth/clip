@@ -23,15 +23,6 @@ using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::ping_service::PingService;
 
-class ArgList {
-public:
-  template <typename T>
-  T getArg(size_t index, const std::string& name) const {
-    fnord::iputs("getarg: $0, $1", index, name);
-    return 4444;
-  };
-};
-
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
   fnord::system::SignalHandler::ignoreSIGPIPE();
@@ -40,7 +31,9 @@ int main() {
   JSONRPCHTTPAdapter rpc_http(&rpc);
 
   PingService ping_service;
-  rpc.registerService("PingService", &ping_service);
+  rpc.registerService<fnord::ping_service::PingServiceStub>(
+      "PingService",
+      &ping_service);
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;

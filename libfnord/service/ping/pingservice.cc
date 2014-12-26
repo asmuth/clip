@@ -16,14 +16,9 @@ namespace ping_service {
 
 PingService::PingService() {}
 
-std::string PingService::ping() {
-  return StringUtil::format("pong: $0", (size_t) this);
+std::string PingService::ping(const std::string& echo) {
+  return StringUtil::format("pong: $0", echo);
 }
-
-std::string PingService::ping2(int i) {
-  return StringUtil::format("pong: $0", i);
-}
-
 
 } // namespace ping_service
 } // namespace fnord
