@@ -147,8 +147,17 @@ public:
 
   MethodCallType method() const;
 
+  template <typename ArgListType>
+  RPCArgPackType getArgs(const ArgListType& args) const;
+
+  template <typename ArgListType, int... I>
+  RPCArgPackType getArgs(
+      const ArgListType& args,
+      IndexSequence<I...>) const;
+
 protected:
   MethodCallType method_;
+  std::vector<std::string> arg_names_;
 };
 
 }

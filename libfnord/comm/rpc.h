@@ -27,6 +27,7 @@ public:
 
   void wait();
   void ready();
+  void onReady(std::function<void ()> on_ready_cb);
 
   const std::string& method() const;
 
@@ -35,6 +36,7 @@ protected:
   bool ready_;
   std::mutex mutex_;
   std::condition_variable cond_;
+  std::function<void ()> on_ready_cb_;
 };
 
 template <typename _ResultType, typename _ArgPackType>

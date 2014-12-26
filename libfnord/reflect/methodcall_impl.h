@@ -220,11 +220,37 @@ RPCCall<MethodCallType>::RPCCall(
   static_assert(
       std::tuple_size<RPCArgPackType>() == sizeof...(ArgNameTypes),
       "invalid argument name list");
+  arg_names_ = StringUtil::toStringV(arg_names...);
 }
 
 template <typename MethodCallType>
 MethodCallType RPCCall<MethodCallType>::method() const {
   return method_;
+}
+
+template <typename MethodCallType>
+template <typename ArgListType>
+typename RPCCall<MethodCallType>::RPCArgPackType
+    RPCCall<MethodCallType>::getArgs(
+        const ArgListType& args) const {
+  return getArgs(
+      args,
+      typename IndexSequenceFor<
+          std::tuple_size<RPCArgPackType>::value>::IndexSequenceType());
+}
+
+template <typename MethodCallType>
+template <typename ArgListType, int... I>
+typename RPCCall<MethodCallType>::RPCArgPackType
+    RPCCall<MethodCallType>::getArgs(
+        const ArgListType& args,
+        IndexSequence<I...>) const {
+  return std::make_tuple(
+      args.template getArg<
+          typename std::decay<
+              typename std::tuple_element<I, RPCArgPackType>::type>::type>(
+                  I,
+                  arg_names_[I])...);
 }
 
 }

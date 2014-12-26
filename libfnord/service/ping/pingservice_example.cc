@@ -46,18 +46,7 @@ int main() {
   PingService ping_service;
   jsonrpc.registerService<PingService>("PingService", &ping_service);
 
-  fnord::comm::LocalRPCChannel chan(&ping_service, &thread_pool);
-
-  auto ping_rpc = fnord::comm::mkRPC(&PingService::ping, std::string("blah"));
-  auto ping2_rpc = fnord::comm::mkRPC<std::string>("ping_async", std::string("fasdasd"), 123);
-
-  ping_rpc.call(&chan);
-  ping_rpc.wait();
-  fnord::iputs("res: $0", ping_rpc.result());
-
-  ping2_rpc.call(&chan);
-  ping2_rpc.wait();
-  fnord::iputs("res: $0", ping2_rpc.result());
+  //fnord::comm::LocalRPCChannel chan(&ping_service, &thread_pool);
 
   fnord::http::HTTPRouter http_router;
   http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
