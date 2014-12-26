@@ -46,7 +46,7 @@ int main() {
   fnord::comm::LocalRPCChannel chan(&ping_service);
 
   auto ping_rpc = fnord::comm::mkRPC(&PingService::ping, std::string("blah"));
-  chan.call(&ping_rpc);
+  ping_rpc.call(&chan);
   ping_rpc.wait();
   fnord::iputs("res: $0", ping_rpc.result());
 

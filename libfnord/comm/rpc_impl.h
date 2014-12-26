@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/reflect/reflect.h"
+#include "fnord/comm/rpcchannel.h"
 
 namespace fnord {
 namespace comm {
@@ -18,6 +19,16 @@ RPC<ResultType, ArgPackType>::RPC(
   const ArgPackType& args) :
   AnyRPC(method),
   args_(args) {}
+
+template <typename ResultType, typename ArgPackType>
+void RPC<ResultType, ArgPackType>::call(RPCChannel* chan) {
+  auto local_chan = dynamic_cast<LocalRPCChannel*>(chan);
+  if (local_chan) {
+    return local_chan->call(this);
+  }
+
+  RAISE(kRPCError, "invalid RPC channel");
+}
 
 template <typename ResultType, typename ArgPackType>
 void RPC<ResultType, ArgPackType>::ready(const ResultType& result) {

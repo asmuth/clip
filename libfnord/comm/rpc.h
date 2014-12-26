@@ -35,6 +35,7 @@ public:
 
   RPC(const std::string& method, const ArgPackType& arguments);
 
+  void call(RPCChannel* channel);
   void ready(const ResultType& result);
   void wait();
 

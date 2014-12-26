@@ -20,11 +20,12 @@ namespace comm {
 
 class RPCChannel {
 public:
+  virtual ~RPCChannel() {}
 
 };
 
 
-class LocalRPCChannel {
+class LocalRPCChannel : public RPCChannel {
 public:
 
   template <typename ServiceType>
