@@ -30,7 +30,12 @@ int PingService::pingint(int i) {
 
 void PingService::ping_async(
     fnord::comm::RPC<std::string, std::tuple<std::string, int>>* rpc) {
-  rpc->ready(StringUtil::format("pong: $0", std::get<0>(rpc->args())));
+  auto res = StringUtil::format(
+      "pong: $0, $1",
+      std::get<0>(rpc->args()),
+      std::get<1>(rpc->args()));
+
+  rpc->ready(res);
 }
 
 } // namespace ping_service
