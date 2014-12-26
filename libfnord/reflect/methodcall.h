@@ -77,14 +77,12 @@ protected:
 };
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethod(
+MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethodImpl(
     ReturnType (ClassType::* method)(ArgTypes...));
 
-
-//template <typename MethodType>
-//reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method)) {
-//
-//}
+template <typename MethodType>
+auto reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method))
+    const*;
 
 }
 }

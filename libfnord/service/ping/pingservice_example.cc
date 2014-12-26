@@ -43,10 +43,12 @@ int main() {
   PingService ping_service;
   jsonrpc.registerService<PingServiceStub>("PingService", &ping_service);
 
-  auto ping_rpc = fnord::comm::mkRPC(&PingServiceStub::ping);
-  ping_rpc.call("blahblah");
+  auto ping_rpc = fnord::comm::mkRPC(
+      &PingServiceStub::ping,
+      std::string("blahblah"));
+
   ping_rpc.wait();
-  //fnord::iputs("res: $0", ping_rpc.result());
+  fnord::iputs("res: $0", ping_rpc.result());
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;

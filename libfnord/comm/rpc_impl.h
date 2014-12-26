@@ -13,11 +13,11 @@ namespace fnord {
 namespace comm {
 
 template <typename ResultType, typename ArgPackType>
-RPC<ResultType, ArgPackType>::RPC(const std::string& method) {}
-
-template <typename ResultType, typename ArgPackType>
-void RPC<ResultType, ArgPackType>::call(const ArgPackType& arguments) {
-}
+RPC<ResultType, ArgPackType>::RPC(
+  const std::string& method,
+  const ArgPackType& args) :
+  method_(method),
+  args_(args) {}
 
 template <typename ResultType, typename ArgPackType>
 void RPC<ResultType, ArgPackType>::wait() {
@@ -30,16 +30,20 @@ const ResultType& RPC<ResultType, ArgPackType>::result() const {
 
 template <class MethodCall>
 RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType> mkRPC(
-    MethodCall method) {
+    const MethodCall* method,
+    typename MethodCall::ArgPackType args) {
   return RPC<
       typename MethodCall::ReturnType,
-      typename MethodCall::ArgPackType>(method.name());
+      typename MethodCall::ArgPackType>(method->name(), args);
 }
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
-  ReturnType (ClassType::* method)(ArgTypes...)) {
-  return mkRPC(fnord::reflect::reflectMethod(method));
+  ReturnType (ClassType::* method)(ArgTypes...),
+  ArgTypes... args) {
+  return mkRPC(
+      fnord::reflect::reflectMethod(method),
+      std::tuple<typename std::decay<ArgTypes>::type...>(args...));
 }
 
 } // namespace comm

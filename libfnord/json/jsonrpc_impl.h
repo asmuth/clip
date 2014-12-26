@@ -24,12 +24,12 @@ void JSONRPC::registerService(
 template <class MethodType>
 void JSONRPC::registerMethod(
     const std::string& method_name,
-    MethodType method_call,
+    MethodType* method_call,
     typename MethodType::ClassType* service) {
   registerMethod(method_name, [method_call, service] (
       JSONRPCRequest* req,
       JSONRPCResponse* res) {
-    res->successAndReturn(method_call.call(service, *req));
+    res->successAndReturn(method_call->call(service, *req));
   });
 }
 

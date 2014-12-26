@@ -37,7 +37,7 @@ public:
   template <class MethodType>
   void registerMethod(
       const std::string& method_name,
-      MethodType method_call,
+      MethodType* method_call,
       typename MethodType::ClassType* service);
 
   void registerMethod(

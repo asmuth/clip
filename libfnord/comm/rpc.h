@@ -24,24 +24,27 @@ class RPC {
 public:
   typedef _ResultType ResultType;
 
-  RPC(const std::string& method);
+  RPC(const std::string& method, const ArgPackType& arguments);
 
-  void call(const ArgPackType& arguments);
   void wait();
 
   const ResultType& result() const;
 
 protected:
+  std::string method_;
+  ArgPackType args_;
   ResultType result_;
 };
 
 template <class MethodCall>
 RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType> mkRPC(
-    MethodCall method);
+    const MethodCall* method,
+    typename MethodCall::ArgPackType args);
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
-  ReturnType (ClassType::* method)(ArgTypes...));
+  ReturnType (ClassType::* method)(ArgTypes...),
+  ArgTypes... args);
 
 } // namespace comm
 } // namsepace fnord

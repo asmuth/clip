@@ -22,13 +22,13 @@ namespace ping_service {
 class PingServiceStub {
 public:
   virtual ~PingServiceStub() {}
-  virtual std::string ping(const std::string& string) = 0;
+  virtual std::string ping(std::string string) = 0;
 };
 
 class PingService : public PingServiceStub {
 public:
   PingService();
-  std::string ping(const std::string& echo) override;
+  std::string ping(std::string echo) override;
 };
 
 } // namespace ping_service

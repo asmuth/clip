@@ -16,7 +16,7 @@ namespace ping_service {
 
 PingService::PingService() {}
 
-std::string PingService::ping(const std::string& echo) {
+std::string PingService::ping(std::string echo) {
   return StringUtil::format("pong: $0", echo);
 }
 
