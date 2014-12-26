@@ -9,6 +9,7 @@
  */
 #include <stdlib.h>
 #include "fnord/base/inspect.h"
+#include "fnord/comm/rpc.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
@@ -36,11 +37,16 @@ int main() {
   fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
   fnord::log::Logger::get()->listen(&logger);
 
-  JSONRPC rpc;
-  JSONRPCHTTPAdapter rpc_http(&rpc);
+  JSONRPC jsonrpc;
+  JSONRPCHTTPAdapter rpc_http(&jsonrpc);
 
   PingService ping_service;
-  rpc.registerService<PingServiceStub>("PingService", &ping_service);
+  jsonrpc.registerService<PingServiceStub>("PingService", &ping_service);
+
+  fnord::comm::RPC<std::string, std::string> ping_rpc("ping", nullptr);
+  ping_rpc.call("blahblah");
+  ping_rpc.wait();
+  fnord::iputs("res: $0", ping_rpc.result());
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;
