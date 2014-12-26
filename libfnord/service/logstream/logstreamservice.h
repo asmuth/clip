@@ -14,13 +14,14 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include "fnord/reflect/reflect.h"
 
 namespace fnord {
 namespace logstream_service {
 
-class LogStreamService {
+class LogStreamServiceStub {
 public:
-  LogStreamService();
+  virtual ~LogStreamServiceStub() {}
 
   /**
    * Append an entry to the stream referenced by `stream` and return the offset
@@ -31,7 +32,15 @@ public:
    * @param entry the entry to append to the stream
    * @return the offset at which the entry was written
    */
-  uint64_t append(const std::string& stream, const std::string& entry);
+  virtual uint64_t append(
+      const std::string& stream,
+      const std::string& entry) = 0;
+
+};
+
+class LogStreamService : public LogStreamServiceStub {
+public:
+  LogStreamService();
 
   /**
    * Read one or more entries from the stream at or after the provided start
@@ -50,8 +59,24 @@ public:
       uint64_t start_offset,
       std::function<void (uint64_t offset, const std::string& entry)> callback);
 
+  uint64_t append(
+      const std::string& stream,
+      const std::string& entry) override;
+
 };
 
 } // namespace logstream_service
+
+namespace reflect {
+template <> template <class T>
+void MetaClass<logstream_service::LogStreamServiceStub>::reflectMethods(T* t) {
+  t->method(
+      "append",
+      &logstream_service::LogStreamServiceStub::append,
+      "stream",
+      "entry");
+}
+} // namespace reflect
+
 } // namsepace fnord
 #endif

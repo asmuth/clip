@@ -22,7 +22,7 @@
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::logstream_service::LogStreamService;
-using fnord::logstream_service::LogStreamServiceAdapter;
+using fnord::logstream_service::LogStreamServiceStub;
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
@@ -38,16 +38,16 @@ int main() {
   JSONRPC rpc;
   JSONRPCHTTPAdapter rpc_http(&rpc);
 
-  LogStreamService logstream_service;
-  LogStreamServiceAdapter::registerJSONRPC(&logstream_service, &rpc);
-
-  fnord::http::HTTPRouter http_router;
-  http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
+  LogStreamService ls_service;
+  rpc.registerService<LogStreamServiceStub>("LogStreamService", &ls_service);
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;
+  fnord::http::HTTPRouter http_router;
+  http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
   fnord::http::HTTPServer http_server(&http_router, &event_loop);
   http_server.listen(8080);
+  event_loop.run();
 
   event_loop.run();
   return 0;

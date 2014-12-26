@@ -13,6 +13,7 @@
 #include "fnord/net/http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
+#include "fnord/logging/logoutputstream.h"
 #include "fnord/reflect/reflect.h"
 #include "fnord/service/ping/pingservice.h"
 #include "fnord/system/signalhandler.h"
@@ -22,18 +23,24 @@
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::ping_service::PingService;
+using fnord::ping_service::PingServiceStub;
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
   fnord::system::SignalHandler::ignoreSIGPIPE();
 
+  fnord::CatchAndAbortExceptionHandler ehandler;
+  ehandler.installGlobalHandlers();
+
+  fnord::log::LogOutputStream logger(fnord::io::OutputStream::getStderr());
+  fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
+  fnord::log::Logger::get()->listen(&logger);
+
   JSONRPC rpc;
   JSONRPCHTTPAdapter rpc_http(&rpc);
 
   PingService ping_service;
-  rpc.registerService<fnord::ping_service::PingServiceStub>(
-      "PingService",
-      &ping_service);
+  rpc.registerService<PingServiceStub>("PingService", &ping_service);
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;
