@@ -16,8 +16,13 @@ template <typename ResultType, typename ArgPackType>
 RPC<ResultType, ArgPackType>::RPC(
   const std::string& method,
   const ArgPackType& args) :
-  method_(method),
+  AnyRPC(method),
   args_(args) {}
+
+template <typename ResultType, typename ArgPackType>
+void RPC<ResultType, ArgPackType>::ready(const ResultType& result) {
+  result_ = result;
+}
 
 template <typename ResultType, typename ArgPackType>
 void RPC<ResultType, ArgPackType>::wait() {
@@ -26,6 +31,11 @@ void RPC<ResultType, ArgPackType>::wait() {
 template <typename ResultType, typename ArgPackType>
 const ResultType& RPC<ResultType, ArgPackType>::result() const {
   return result_;
+}
+
+template <typename ResultType, typename ArgPackType>
+const ArgPackType&  RPC<ResultType, ArgPackType>::args() const {
+  return args_;
 }
 
 template <class MethodCall>

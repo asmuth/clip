@@ -21,6 +21,9 @@ public:
   template <class TargetType>
   static void reflectMethods(TargetType* target);
 
+  template <class TargetType>
+  static void reflect(TargetType* target);
+
 };
 
 

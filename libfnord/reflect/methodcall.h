@@ -58,6 +58,21 @@ protected:
   std::vector<std::string> arg_names_;
 };
 
+template <typename TargetType>
+class MethodCallProxy {
+public:
+  MethodCallProxy(TargetType* target);
+
+  template <typename MethodType, typename... ArgNameTypes>
+  void method(
+      const std::string& method_name,
+      MethodType method_call,
+      ArgNameTypes... arg_names);
+
+protected:
+  TargetType* target_;
+};
+
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 class MethodCallLookup {
 public:

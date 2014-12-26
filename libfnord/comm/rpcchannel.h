@@ -20,25 +20,33 @@ namespace comm {
 
 class RPCChannel {
 public:
-  virtual ~RPCChannel() {}
 
-  template <typename ResultType, typename... ArgTypes>
-  void call(
-      const std::string& method,
-      std::tuple<ArgTypes...> arguments,
-      std::function<void (ResultType result) success);
-
-  template <typename ResultType, typename... ArgTypes>
-  void call(
-      const std::string& method,
-      std::tuple<ArgTypes...> arguments,
-      std::function<void (ResultType result) success,
-      std::function<void (fnord::Exception)> error);
+};
 
 
+class LocalRPCChannel {
+public:
+
+  template <typename ServiceType>
+  LocalRPCChannel(ServiceType* service);
+
+  template <class RPCType>
+  void call(RPCType* rpc);
+
+  template <typename MethodType>
+  void method(MethodType* method);
+
+  //std::unordered_map<std::string>
+  //template <class RPCType>
+  //void callImpl(RPCType* rpc);
+
+protected:
+  void* service_;
+  std::unordered_map<std::string, std::function<void (AnyRPC* rpc)>> methods_;
 };
 
 } // namespace comm
 } // namsepace fnord
 
+#include "rpcchannel_impl.h"
 #endif

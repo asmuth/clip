@@ -69,7 +69,7 @@ public:
 
 namespace reflect {
 template <> template <class T>
-void MetaClass<logstream_service::LogStreamServiceStub>::reflectMethods(T* t) {
+void MetaClass<logstream_service::LogStreamServiceStub>::reflect(T* t) {
   t->method(
       "append",
       &logstream_service::LogStreamServiceStub::append,

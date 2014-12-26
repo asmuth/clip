@@ -43,14 +43,11 @@ JSONRPC::ReflectionTarget<ClassType>::ReflectionTarget(
     service_(service) {}
 
 template <typename ClassType>
-template <typename MethodType, typename... ArgNameTypes>
-void JSONRPC::ReflectionTarget<ClassType>::method(
-    const std::string& method_name,
-    MethodType method_call,
-    ArgNameTypes... arg_names) {
+template <typename MethodType>
+void JSONRPC::ReflectionTarget<ClassType>::method(MethodType* method_call) {
   self_->registerMethod(
-      StringUtil::format("$0.$1", service_name_, method_name),
-      reflect::reflectMethod(method_call),
+      StringUtil::format("$0.$1", service_name_, method_call->name()),
+      method_call,
       service_);
 }
 

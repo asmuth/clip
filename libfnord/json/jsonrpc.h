@@ -53,11 +53,8 @@ protected:
         const std::string service_name,
         ClassType* service);
 
-    template <typename MethodType, typename... ArgNameTypes>
-    void method(
-        const std::string& method_name,
-        MethodType method_call,
-        ArgNameTypes... arg_names);
+    template <typename MethodType>
+    void method(MethodType* method_call);
 
   protected:
     JSONRPC* self_;

@@ -84,7 +84,7 @@ template <typename ClassType, typename ReturnType, typename... ArgTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethodImpl(
     ReturnType (ClassType::* method)(ArgTypes...)) {
   MethodCallLookup<ClassType, ReturnType, ArgTypes...> lookup(method);
-  fnord::reflect::MetaClass<ClassType>::reflectMethods(&lookup);
+  fnord::reflect::MetaClass<ClassType>::reflect(&lookup);
   return lookup.get();
 }
 
@@ -119,6 +119,27 @@ auto reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method))
     const* {
   static const auto method_call = reflectMethodImpl(method);
   return &method_call;
+}
+
+template <class ClassType>
+template <class TargetType>
+void MetaClass<ClassType>::reflectMethods(TargetType* target) {
+  MethodCallProxy<TargetType> proxy(target);
+  reflect(&proxy);
+}
+
+template <class TargetType>
+MethodCallProxy<TargetType>::MethodCallProxy(
+    TargetType* target) :
+    target_(target) {}
+
+template <class TargetType>
+template <typename MethodType, typename... ArgNameTypes>
+void MethodCallProxy<TargetType>::method(
+      const std::string& method_name,
+      MethodType method_call,
+      ArgNameTypes... arg_names) {
+  target_->method(reflectMethod(method_call));
 }
 
 }

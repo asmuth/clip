@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "fnord/base/inspect.h"
 #include "fnord/comm/rpc.h"
+#include "fnord/comm/rpcchannel.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
@@ -24,7 +25,6 @@
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::ping_service::PingService;
-using fnord::ping_service::PingServiceStub;
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
@@ -41,12 +41,12 @@ int main() {
   JSONRPCHTTPAdapter rpc_http(&jsonrpc);
 
   PingService ping_service;
-  jsonrpc.registerService<PingServiceStub>("PingService", &ping_service);
+  jsonrpc.registerService<PingService>("PingService", &ping_service);
 
-  auto ping_rpc = fnord::comm::mkRPC(
-      &PingServiceStub::ping,
-      std::string("blahblah"));
+  fnord::comm::LocalRPCChannel chan(&ping_service);
 
+  auto ping_rpc = fnord::comm::mkRPC(&PingService::ping, std::string("blah"));
+  chan.call(&ping_rpc);
   ping_rpc.wait();
   fnord::iputs("res: $0", ping_rpc.result());
 

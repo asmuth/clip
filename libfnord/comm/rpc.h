@@ -19,19 +19,29 @@ namespace fnord {
 namespace comm {
 class RPCChannel;
 
+class AnyRPC {
+public:
+  virtual ~AnyRPC() {}
+  AnyRPC(const std::string& method) : method_(method) {}
+  const std::string& method() const { return method_; };
+protected:
+  std::string method_;
+};
+
 template <typename _ResultType, typename ArgPackType>
-class RPC {
+class RPC : public AnyRPC {
 public:
   typedef _ResultType ResultType;
 
   RPC(const std::string& method, const ArgPackType& arguments);
 
+  void ready(const ResultType& result);
   void wait();
 
+  const ArgPackType& args() const;
   const ResultType& result() const;
 
 protected:
-  std::string method_;
   ArgPackType args_;
   ResultType result_;
 };

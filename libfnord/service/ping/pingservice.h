@@ -19,26 +19,19 @@
 namespace fnord {
 namespace ping_service {
 
-class PingServiceStub {
-public:
-  virtual ~PingServiceStub() {}
-  virtual std::string ping(std::string string) = 0;
-};
-
-class PingService : public PingServiceStub {
+class PingService {
 public:
   PingService();
-  std::string ping(std::string echo) override;
+  std::string ping(std::string echo);
 };
 
 } // namespace ping_service
-
-namespace reflect {
-template <> template <class T>
-void MetaClass<ping_service::PingServiceStub>::reflectMethods(T* t) {
-  t->method("ping", &ping_service::PingServiceStub::ping, "echo");
-}
-} // namespace reflect
-
 } // namsepace fnord
+
+template <> template <class T>
+void fnord::reflect::MetaClass<
+    fnord::ping_service::PingService>::reflect(T* t) {
+  t->method("ping", &fnord::ping_service::PingService::ping, "echo");
+}
+
 #endif
