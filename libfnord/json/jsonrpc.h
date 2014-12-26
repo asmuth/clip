@@ -56,6 +56,9 @@ protected:
     template <typename MethodType>
     void method(MethodType* method_call);
 
+    template <typename RPCCallType>
+    void rpc(RPCCallType rpccall);
+
   protected:
     JSONRPC* self_;
     std::string service_name_;

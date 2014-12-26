@@ -14,12 +14,15 @@ namespace comm {
 
 template <typename ServiceType>
 LocalRPCChannel::LocalRPCChannel(ServiceType* service) : service_(service) {
-  fnord::reflect::MetaClass<ServiceType>::reflectMethods(this);
+  ReflectionProxy proxy(this);
+  fnord::reflect::MetaClass<ServiceType>::reflectMethods(&proxy);
 }
 
 template <typename MethodType>
-void LocalRPCChannel::method(MethodType* method) {
-  methods_.emplace(method->name(), [this, method] (AnyRPC* anyrpc) {
+void LocalRPCChannel::ReflectionProxy::method(MethodType* method) {
+  auto service = base_->service_;
+
+  base_->methods_.emplace(method->name(), [service, method] (AnyRPC* anyrpc) {
     auto rpc = dynamic_cast<
         RPC<
             typename MethodType::ReturnType,
@@ -33,8 +36,12 @@ void LocalRPCChannel::method(MethodType* method) {
     }
 
     rpc->ready(
-        method->call((typename MethodType::ClassType*) service_, rpc->args()));
+        method->call((typename MethodType::ClassType*) service, rpc->args()));
   });
+}
+
+template <typename RPCCallType>
+void LocalRPCChannel::ReflectionProxy::rpc(RPCCallType rpccall) {
 }
 
 template <class RPCType>

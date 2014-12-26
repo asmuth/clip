@@ -136,6 +136,15 @@ void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::method(
 }
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <typename MethodType, typename... ArgNameTypes>
+void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::rpc(
+    const std::string& method_name,
+    MethodType method_call,
+    ArgNameTypes... arg_names) {
+  tryMethod(method_call, subject_, method_name, "rpc");
+}
+
+template <typename ClassType, typename ReturnType, typename... ArgTypes>
 MethodCall<ClassType, ReturnType, ArgTypes...>
 MethodCallLookup<ClassType, ReturnType, ArgTypes...>::get() const {
   if (method_call_ == nullptr) {
@@ -188,6 +197,25 @@ void MethodCallProxy<TargetType>::method(
       MethodType method_call,
       ArgNameTypes... arg_names) {
   target_->method(reflectMethod(method_call));
+}
+
+template <class TargetType>
+template <typename MethodType, typename... ArgNameTypes>
+void MethodCallProxy<TargetType>::rpc(
+      const std::string& method_name,
+      MethodType method_call,
+      ArgNameTypes... arg_names) {
+  target_->rpc(RPCCall<
+      decltype(reflectMethod(method_call))>(
+          reflectMethod(method_call),
+          arg_names...));
+}
+
+template <typename MethodCallType>
+template <typename... ArgNameTypes>
+RPCCall<MethodCallType>::RPCCall(
+    MethodCallType method,
+    ArgNameTypes... arg_names) {
 }
 
 }

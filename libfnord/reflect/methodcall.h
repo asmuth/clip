@@ -69,6 +69,12 @@ public:
       MethodType method_call,
       ArgNameTypes... arg_names);
 
+  template <typename MethodType, typename... ArgNameTypes>
+  void rpc(
+      const std::string& method_name,
+      MethodType method_call,
+      ArgNameTypes... arg_names);
+
 protected:
   TargetType* target_;
 };
@@ -98,6 +104,12 @@ public:
       MethodType method_call,
       ArgNameTypes... arg_names);
 
+  template <typename MethodType, typename... ArgNameTypes>
+  void rpc(
+      const std::string& method_name,
+      MethodType method_call,
+      ArgNameTypes... arg_names);
+
   MethodCall<ClassType, ReturnType, ArgTypes...> get() const;
 
 protected:
@@ -112,6 +124,13 @@ MethodCall<ClassType, ReturnType, ArgTypes...> reflectMethodImpl(
 template <typename MethodType>
 auto reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method))
     const*;
+
+template <typename MethodCallType>
+class RPCCall {
+public:
+  template <typename... ArgNameTypes>
+  RPCCall(MethodCallType method, ArgNameTypes... arg_names);
+};
 
 }
 }

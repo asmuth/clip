@@ -28,5 +28,10 @@ int PingService::pingint(int i) {
   return i * 3;
 }
 
+void PingService::ping_async(
+    fnord::comm::RPC<std::string, std::tuple<std::string, int>>* rpc) {
+  rpc->ready(StringUtil::format("pong: $0", std::get<0>(rpc->args())));
+}
+
 } // namespace ping_service
 } // namespace fnord

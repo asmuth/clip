@@ -32,10 +32,21 @@ public:
   template <class RPCType>
   void call(RPCType* rpc);
 
-  template <typename MethodType>
-  void method(MethodType* method);
-
 protected:
+  class ReflectionProxy {
+  public:
+    ReflectionProxy(LocalRPCChannel* base) : base_(base) {}
+
+    template <typename MethodType>
+    void method(MethodType* method);
+
+    template <typename RPCCallType>
+    void rpc(RPCCallType rpccall);
+
+  protected:
+    LocalRPCChannel* base_;
+  };
+
   void* service_;
   std::unordered_map<std::string, std::function<void (AnyRPC* rpc)>> methods_;
 };

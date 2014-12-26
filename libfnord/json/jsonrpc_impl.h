@@ -51,5 +51,10 @@ void JSONRPC::ReflectionTarget<ClassType>::method(MethodType* method_call) {
       service_);
 }
 
+template <typename ClassType>
+template <typename RPCCallType>
+void JSONRPC::ReflectionTarget<ClassType>::rpc(RPCCallType rpccall) {
+}
+
 }
 }

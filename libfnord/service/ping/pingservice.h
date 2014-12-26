@@ -28,7 +28,7 @@ public:
   std::string ping2(std::string echo);
   int pingint(int i);
 
-  void ping_async(fnord::comm::RPC<std::string, std::tuple<std::string>>* rpc);
+  void ping_async(fnord::comm::RPC<std::string, std::tuple<std::string, int>>* rpc);
 
 };
 
@@ -41,7 +41,7 @@ void fnord::reflect::MetaClass<
   t->method("ping", &fnord::ping_service::PingService::ping, "echo");
   t->method("ping2", &fnord::ping_service::PingService::ping2, "echo");
   t->method("pingint", &fnord::ping_service::PingService::pingint, "i");
-  //t->method("ping", &fnord::ping_service::PingService::ping, "echo");
+  t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo");
   //t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo");
 }
 
