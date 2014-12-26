@@ -14,6 +14,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "fnord/thread/taskscheduler.h"
 
 namespace fnord {
 namespace comm {
@@ -27,7 +28,7 @@ class LocalRPCChannel : public RPCChannel {
 public:
 
   template <typename ServiceType>
-  LocalRPCChannel(ServiceType* service);
+  LocalRPCChannel(ServiceType* service, thread::TaskScheduler* scheduler);
 
   template <class RPCType>
   void call(RPCType* rpc);
@@ -48,6 +49,7 @@ protected:
   };
 
   void* service_;
+  thread::TaskScheduler* scheduler_;
   std::unordered_map<std::string, std::function<void (AnyRPC* rpc)>> methods_;
 };
 

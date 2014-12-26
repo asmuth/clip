@@ -13,7 +13,11 @@ namespace fnord {
 namespace comm {
 
 template <typename ServiceType>
-LocalRPCChannel::LocalRPCChannel(ServiceType* service) : service_(service) {
+LocalRPCChannel::LocalRPCChannel(
+    ServiceType* service,
+    thread::TaskScheduler* scheduler) :
+    service_(service),
+    scheduler_(scheduler) {
   ReflectionProxy proxy(this);
   fnord::reflect::MetaClass<ServiceType>::reflectMethods(&proxy);
 }
@@ -21,8 +25,7 @@ LocalRPCChannel::LocalRPCChannel(ServiceType* service) : service_(service) {
 template <typename MethodType>
 void LocalRPCChannel::ReflectionProxy::method(MethodType* method) {
   auto service = base_->service_;
-
-  base_->methods_.emplace(method->name(), [service, method] (AnyRPC* anyrpc) {
+  auto runnable = [service, method] (AnyRPC* anyrpc) {
     auto rpc = dynamic_cast<
         RPC<
             typename MethodType::ReturnType,
@@ -37,6 +40,13 @@ void LocalRPCChannel::ReflectionProxy::method(MethodType* method) {
 
     rpc->ready(
         method->call((typename MethodType::ClassType*) service, rpc->args()));
+  };
+
+  auto sched = base_->scheduler_;
+  base_->methods_.emplace(method->name(), [runnable, sched] (AnyRPC* anyrpc) {
+    sched->run([runnable, anyrpc] () {
+      runnable(anyrpc);
+    });
   });
 }
 
@@ -44,8 +54,7 @@ template <typename RPCCallType>
 void LocalRPCChannel::ReflectionProxy::rpc(RPCCallType rpccall) {
   auto service = base_->service_;
   auto method = rpccall.method();
-
-  base_->methods_.emplace(method->name(), [service, method] (AnyRPC* anyrpc) {
+  auto runnable = [service, method] (AnyRPC* anyrpc) {
     auto rpc = dynamic_cast<
         RPC<
             typename RPCCallType::RPCReturnType,
@@ -59,6 +68,13 @@ void LocalRPCChannel::ReflectionProxy::rpc(RPCCallType rpccall) {
     }
 
     method->call((typename RPCCallType::RPCServiceType*) service, rpc);
+  };
+
+  auto sched = base_->scheduler_;
+  base_->methods_.emplace(method->name(), [runnable, sched] (AnyRPC* anyrpc) {
+    sched->run([runnable, anyrpc] () {
+      runnable(anyrpc);
+    });
   });
 }
 

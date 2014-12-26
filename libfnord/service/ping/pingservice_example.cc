@@ -37,13 +37,16 @@ int main() {
   fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
   fnord::log::Logger::get()->listen(&logger);
 
+  fnord::thread::EventLoop event_loop;
+  fnord::thread::ThreadPool thread_pool;
+
   JSONRPC jsonrpc;
   JSONRPCHTTPAdapter rpc_http(&jsonrpc);
 
   PingService ping_service;
   jsonrpc.registerService<PingService>("PingService", &ping_service);
 
-  fnord::comm::LocalRPCChannel chan(&ping_service);
+  fnord::comm::LocalRPCChannel chan(&ping_service, &thread_pool);
 
   auto ping_rpc = fnord::comm::mkRPC(&PingService::ping, std::string("blah"));
   auto ping2_rpc = fnord::comm::mkRPC<std::string>("ping_async", std::string("fasdasd"), 123);
@@ -56,8 +59,6 @@ int main() {
   ping2_rpc.wait();
   fnord::iputs("res: $0", ping2_rpc.result());
 
-  fnord::thread::EventLoop event_loop;
-  fnord::thread::ThreadPool thread_pool;
   fnord::http::HTTPRouter http_router;
   http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
   fnord::http::HTTPServer http_server(&http_router, &event_loop);
