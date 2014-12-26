@@ -216,6 +216,10 @@ template <typename... ArgNameTypes>
 RPCCall<MethodCallType>::RPCCall(
     MethodCallType method,
     ArgNameTypes... arg_names) {
+
+  static_assert(
+      std::tuple_size<RPCArgListType>() == sizeof...(ArgNameTypes),
+      "invalid argument name list");
 }
 
 }

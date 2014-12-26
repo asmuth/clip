@@ -128,6 +128,13 @@ auto reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method))
 template <typename MethodCallType>
 class RPCCall {
 public:
+  typedef typename std::tuple_element<0,
+      typename std::remove_pointer<
+          MethodCallType>::type::ArgPackType>::type RPCType;
+
+  typedef typename std::remove_pointer<RPCType>::type::ArgPackType
+      RPCArgListType;
+
   template <typename... ArgNameTypes>
   RPCCall(MethodCallType method, ArgNameTypes... arg_names);
 };

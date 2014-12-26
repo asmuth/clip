@@ -41,7 +41,7 @@ void fnord::reflect::MetaClass<
   t->method("ping", &fnord::ping_service::PingService::ping, "echo");
   t->method("ping2", &fnord::ping_service::PingService::ping2, "echo");
   t->method("pingint", &fnord::ping_service::PingService::pingint, "i");
-  t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo");
+  t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo", "blah");
   //t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo");
 }
 
