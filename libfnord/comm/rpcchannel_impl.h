@@ -13,6 +13,14 @@ namespace fnord {
 namespace comm {
 
 template <typename ServiceType>
+std::unique_ptr<LocalRPCChannel> LocalRPCChannel::forService(
+    ServiceType* service,
+    thread::TaskScheduler* scheduler) {
+  return std::unique_ptr<LocalRPCChannel>(
+      new LocalRPCChannel(service, scheduler));
+}
+
+template <typename ServiceType>
 LocalRPCChannel::LocalRPCChannel(
     ServiceType* service,
     thread::TaskScheduler* scheduler) :

@@ -76,7 +76,8 @@ add_executable(tests/test-chart
 
 # comm
 add_library(fnord-comm OBJECT
-    comm/rpc.cc)
+    comm/rpc.cc
+    comm/rpcservicemap.cc)
 
 # http
 add_library(fnord-http OBJECT

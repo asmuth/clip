@@ -22,7 +22,6 @@
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::logstream_service::LogStreamService;
-using fnord::logstream_service::LogStreamServiceStub;
 
 int main() {
   fnord::system::SignalHandler::ignoreSIGHUP();
@@ -39,7 +38,7 @@ int main() {
   JSONRPCHTTPAdapter rpc_http(&rpc);
 
   LogStreamService ls_service;
-  rpc.registerService<LogStreamServiceStub>("LogStreamService", &ls_service);
+  rpc.registerService("LogStreamService", &ls_service);
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;

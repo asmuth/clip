@@ -28,6 +28,11 @@ class LocalRPCChannel : public RPCChannel {
 public:
 
   template <typename ServiceType>
+  static std::unique_ptr<LocalRPCChannel> forService(
+      ServiceType* service,
+      thread::TaskScheduler* scheduler);
+
+  template <typename ServiceType>
   LocalRPCChannel(ServiceType* service, thread::TaskScheduler* scheduler);
 
   template <class RPCType>

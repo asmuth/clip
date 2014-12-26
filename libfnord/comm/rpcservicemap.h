@@ -7,13 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_COMM_RPCCHANNEL_H
-#define _FNORD_COMM_RPCCHANNEL_H
-#include <functional>
+#ifndef _FNORD_COMM_RPCSERVICEMAP_H
+#define _FNORD_COMM_RPCSERVICEMAP_H
+#include <memory>
 #include <stdlib.h>
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include "fnord/comm/rpcchannel.h"
 
 namespace fnord {
 namespace comm {
@@ -31,7 +29,7 @@ protected:
 
   std::unordered_map<
       std::string,
-      std::unique_ptr<RPCChannel> channel> channels_;
+      std::unique_ptr<RPCChannel>> channels_;
 };
 
 } // namespace comm

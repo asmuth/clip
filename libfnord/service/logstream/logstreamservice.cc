@@ -15,9 +15,7 @@ namespace logstream_service {
 
 LogStreamService::LogStreamService() {}
 
-uint64_t LogStreamService::append(
-    const std::string& stream,
-    const std::string& entry) {
+uint64_t LogStreamService::append(std::string stream, std::string entry) {
   fnord::iputs("append $0 -> $1", stream, entry);
   return 0;
 }

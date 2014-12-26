@@ -19,9 +19,9 @@
 namespace fnord {
 namespace logstream_service {
 
-class LogStreamServiceStub {
+class LogStreamService {
 public:
-  virtual ~LogStreamServiceStub() {}
+  LogStreamService();
 
   /**
    * Append an entry to the stream referenced by `stream` and return the offset
@@ -32,15 +32,7 @@ public:
    * @param entry the entry to append to the stream
    * @return the offset at which the entry was written
    */
-  virtual uint64_t append(
-      const std::string& stream,
-      const std::string& entry) = 0;
-
-};
-
-class LogStreamService : public LogStreamServiceStub {
-public:
-  LogStreamService();
+  uint64_t append(std::string stream, std::string entry);
 
   /**
    * Read one or more entries from the stream at or after the provided start
@@ -59,24 +51,19 @@ public:
       uint64_t start_offset,
       std::function<void (uint64_t offset, const std::string& entry)> callback);
 
-  uint64_t append(
-      const std::string& stream,
-      const std::string& entry) override;
-
 };
 
 } // namespace logstream_service
+} // namespace fnord
 
-namespace reflect {
 template <> template <class T>
-void MetaClass<logstream_service::LogStreamServiceStub>::reflect(T* t) {
+void fnord::reflect::MetaClass<
+    fnord::logstream_service::LogStreamService>::reflect(T* t) {
   t->method(
       "append",
-      &logstream_service::LogStreamServiceStub::append,
+      &fnord::logstream_service::LogStreamService::append,
       "stream",
       "entry");
 }
-} // namespace reflect
 
-} // namsepace fnord
 #endif
