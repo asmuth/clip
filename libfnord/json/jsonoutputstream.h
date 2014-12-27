@@ -10,6 +10,7 @@
 #ifndef _FNORD_JSON_JSONOUTPUTSTREAM_H
 #define _FNORD_JSON_JSONOUTPUTSTREAM_H
 #include <set>
+#include <stack>
 #include <vector>
 #include <fnord/json/jsontypes.h>
 #include <fnord/base/exception.h>
@@ -35,6 +36,7 @@ public:
   void beginArray();
   void endArray();
   void addComma();
+  void addColon();
   void addString(const std::string& string);
   void addFloat(double value);
   void addInteger(int value);
@@ -43,6 +45,7 @@ public:
   void addFalse();
 
 protected:
+  std::stack<std::pair<kTokenType, int>> stack_;
   std::string escapeString(const std::string& string) const;
   std::shared_ptr<io::OutputStream> output_;
 };

@@ -19,7 +19,8 @@ namespace json {
 
 JSONOutputStream::JSONOutputStream(
     std::shared_ptr<io::OutputStream> output_stream) :
-    output_(output_stream) {}
+    output_(output_stream) {
+}
 
 JSONOutputStream::JSONOutputStream(
     std::unique_ptr<io::OutputStream> output_stream) {
@@ -39,7 +40,107 @@ void JSONOutputStream::emplace_back(kTokenType token) {
 void JSONOutputStream::emplace_back(
     kTokenType token,
     const std::string& data) {
-  iputs("json put: $0 $1", token, data);
+
+  switch (token) {
+    case JSON_ARRAY_END:
+      endArray();
+
+      if (!stack_.empty()) {
+        stack_.pop();
+      }
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      return;
+
+    case JSON_OBJECT_END:
+      endObject();
+
+      if (!stack_.empty()) {
+        stack_.pop();
+      }
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      return;
+
+    default:
+      break;
+
+  }
+
+  if (!stack_.empty() && stack_.top().second > 0) {
+    switch (stack_.top().first) {
+      case JSON_ARRAY_BEGIN:
+        addComma();
+        break;
+
+      case JSON_OBJECT_BEGIN:
+        (stack_.top().second % 2 == 0) ? addComma() : addColon();
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  switch (token) {
+
+    case JSON_ARRAY_BEGIN:
+      beginArray();
+      stack_.emplace(JSON_ARRAY_BEGIN, 0);
+      break;
+
+    case JSON_OBJECT_BEGIN:
+      beginObject();
+      stack_.emplace(JSON_OBJECT_BEGIN, 0);
+      break;
+
+    case JSON_STRING:
+      addString(data);
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      break;
+
+    case JSON_NUMBER:
+      addString(data);
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      break;
+
+    case JSON_TRUE:
+      addTrue();
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      break;
+
+    case JSON_FALSE:
+      addFalse();
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      break;
+
+    case JSON_NULL:
+      addNull();
+
+      if (!stack_.empty()) {
+        stack_.top().second++;
+      }
+      break;
+
+    default:
+      break;
+  }
 }
 
 void JSONOutputStream::beginObject() {
@@ -56,6 +157,10 @@ void JSONOutputStream::addObjectEntry(const std::string& key) {
 
 void JSONOutputStream::addComma() {
   output_->printf(",");
+}
+
+void JSONOutputStream::addColon() {
+  output_->printf(":");
 }
 
 void JSONOutputStream::addString(const std::string& string) {
