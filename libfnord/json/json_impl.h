@@ -55,7 +55,7 @@ template <
     typename = typename std::enable_if<
         fnord::reflect::is_reflected<T>::value>::type>
 void toJSON(const T& value, O* target) {
-  // JSONOutputProxy(value).object;
+  JSONOutputProxy<O> proxy(value, target);
 }
 
 template <
@@ -77,6 +77,13 @@ std::string toJSONString(const T& value) {
 
   toJSON(value, &json);
   return json_str;
+}
+
+template <typename T>
+JSONObject toJSON(const T& value) {
+  JSONObject obj;
+  toJSON(value, &obj);
+  return obj;
 }
 
 template <typename T>

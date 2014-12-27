@@ -56,6 +56,9 @@ public:
 };
 
 template <typename T>
+JSONObject toJSON(const T& value);
+
+template <typename T>
 std::string toJSONString(const T& value);
 
 template <typename T>
