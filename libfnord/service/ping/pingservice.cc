@@ -22,20 +22,9 @@ std::string PingService::ping(std::string echo) {
   return StringUtil::format("pong: $0", echo);
 }
 
-std::string PingService::ping2(std::string echo) {
-  return StringUtil::format("xxx: $0", echo);
-}
-
-int PingService::pingint(int i) {
-  return i * 3;
-}
-
 void PingService::ping_async(
-    fnord::comm::RPC<std::string, std::tuple<std::string, int>>* rpc) {
-  auto res = StringUtil::format(
-      "pong: $0, $1",
-      std::get<0>(rpc->args()),
-      std::get<1>(rpc->args()));
+    fnord::comm::RPC<std::string, std::tuple<std::string>>* rpc) {
+  auto res = StringUtil::format("pong: $0", std::get<0>(rpc->args()));
 
   auto t = std::thread([rpc, res] () {
     usleep(1000000);

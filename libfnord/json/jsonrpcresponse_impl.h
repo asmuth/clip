@@ -7,13 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/json/json.h"
+
 namespace fnord {
 namespace json {
 
 template <typename T>
 void JSONRPCResponse::successAndReturn(const T& ret_val) {
   success([&ret_val] (json::JSONOutputStream* json) {
-    json->addValue(ret_val);
+    json->write(toJSON(ret_val));
   });
 }
 

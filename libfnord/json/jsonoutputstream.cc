@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/stringutil.h>
+#include <fnord/base/inspect.h>
 #include <fnord/json/jsonoutputstream.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -23,6 +24,10 @@ JSONOutputStream::JSONOutputStream(
 JSONOutputStream::JSONOutputStream(
     std::unique_ptr<io::OutputStream> output_stream) {
   output_.reset(output_stream.release());
+}
+
+void JSONOutputStream::write(const JSONObject& obj) {
+  fnord::iputs("write: $0", obj);
 }
 
 void JSONOutputStream::beginObject() {
@@ -75,6 +80,7 @@ void JSONOutputStream::endArray() {
   output_->printf("]");
 }
 
+/*
 template <>
 void JSONOutputStream::addValue(const std::string& value) {
   addString(value);
@@ -109,6 +115,7 @@ template <>
 void JSONOutputStream::addValue(const std::nullptr_t& value) {
   addNull();
 }
+*/
 
 std::string JSONOutputStream::escapeString(const std::string& string) const {
   std::string new_str;

@@ -17,7 +17,6 @@ namespace reflect {
 template <class ClassType>
 class MetaClass {
 public:
-
   template <class TargetType>
   static void reflectMethods(TargetType* target);
 
@@ -27,7 +26,32 @@ public:
   template <class TargetType>
   static void reflect(TargetType* target);
 
+  template <class TargetType>
+  static void serialize(const ClassType& instance, TargetType* target);
+
+  template <class TargetType>
+  static ClassType unserialize(TargetType* target);
+
 };
+
+template <typename TargetType>
+struct DummyTarget {};
+
+template<typename T, typename X = void>
+struct is_reflected : std::false_type {};
+
+template<typename T>
+struct is_reflected<
+    T,
+    decltype(T::reflect((fnord::reflect::DummyTarget<T>*) nullptr))> :
+        std::true_type {};
+
+template <class ClassType>
+template <class TargetType>
+void MetaClass<ClassType>::reflect(TargetType* target) {
+  ClassType::reflect(target);
+}
+
 
 }
 }

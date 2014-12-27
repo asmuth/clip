@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <stack>
 #include <string>
+#include "fnord/base/inspect.h"
+#include "fnord/base/datetime.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsoninputstream.h"
 
@@ -137,20 +139,53 @@ int fromJSON(
 }
 
 template <>
-JSONObject toJSON(const std::string& str) {
+JSONObject toJSONImpl(const std::string& str) {
   return JSONObject { JSONToken(json::JSON_STRING, str) };
 }
 
 template <>
-JSONObject toJSON(const char* const& str) {
+JSONObject toJSONImpl(const char* const& str) {
   return JSONObject { JSONToken(json::JSON_STRING, str) };
+}
+
+template <>
+JSONObject toJSONImpl(unsigned long long const& val) {
+  return JSONObject { JSONToken(json::JSON_NUMBER, StringUtil::toString(val)) };
+}
+
+template <>
+JSONObject toJSONImpl(int const& val) {
+  return JSONObject { JSONToken(json::JSON_NUMBER, StringUtil::toString(val)) };
+}
+
+template <>
+JSONObject toJSONImpl(const fnord::DateTime& val) {
+  return toJSON(static_cast<uint64_t>(val));
 }
 
 } // namespace json
 
 template <>
 std::string StringUtil::toString(json::kTokenType type) {
-  return "<json token>";
+  switch (type) {
+    case json::JSON_OBJECT_BEGIN: return "JSON_OBJECT_BEGIN";
+    case json::JSON_OBJECT_END: return "JSON_OBJECT_END";
+    case json::JSON_ARRAY_BEGIN: return "JSON_ARRAY_BEGIN";
+    case json::JSON_ARRAY_END: return "JSON_ARRAY_END";
+    case json::JSON_STRING: return "JSON_STRING";
+    case json::JSON_NUMBER: return "JSON_NUMBER";
+    case json::JSON_TRUE: return "JSON_TRUE";
+    case json::JSON_FALSE: return "JSON_FALSE";
+    case json::JSON_NULL: return "JSON_NULL";
+  }
+}
+
+template <>
+std::string fnord::inspect(const json::JSONToken& token) {
+  return StringUtil::format(
+      "$0:$1",
+      fnord::StringUtil::toString(token.type),
+      token.data);
 }
 
 } // namespace fnord

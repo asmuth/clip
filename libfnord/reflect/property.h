@@ -17,10 +17,29 @@
 namespace fnord {
 namespace reflect {
 
-template <typename _ValueType>
-class Property {
+template <typename TargetType>
+class PropertyReader {
 public:
-  typedef _ValueType ValueType;
+  PropertyReader(TargetType* target);
+protected:
+  TargetType* target_;
+};
+
+template <typename ClassType, typename TargetType>
+class PropertyWriter {
+public:
+  PropertyWriter(const ClassType& intance, TargetType* target);
+
+  template <typename PropertyType>
+  void prop(
+      PropertyType prop,
+      uint32_t id,
+      const std::string& prop_name,
+      bool optional);
+
+protected:
+  const ClassType& instance_;
+  TargetType* target_;
 };
 
 template <typename TargetType>
@@ -38,6 +57,33 @@ public:
 protected:
   TargetType* target_;
 };
+
+template <typename ClassType, typename TargetType>
+PropertyWriter<ClassType, TargetType>::PropertyWriter(
+    const ClassType& instance,
+    TargetType* target) :
+    instance_(instance),
+    target_(target) {}
+
+template <typename ClassType, typename TargetType>
+template <typename PropertyType>
+void PropertyWriter<ClassType, TargetType>::prop(
+    PropertyType prop,
+    uint32_t id,
+    const std::string& prop_name,
+    bool optional) {
+  target_->putProperty(id, prop_name, instance_.*prop);
+}
+
+template <class ClassType>
+template <class TargetType>
+void MetaClass<ClassType>::serialize(
+    const ClassType& instance,
+    TargetType* target) {
+  PropertyWriter<ClassType, TargetType> writer(instance, target);
+  reflect(&writer);
+}
+
 
 
 }

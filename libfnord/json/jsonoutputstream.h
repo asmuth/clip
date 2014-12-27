@@ -11,6 +11,7 @@
 #define _FNORD_JSON_JSONOUTPUTSTREAM_H
 #include <set>
 #include <vector>
+#include <fnord/json/json.h>
 #include <fnord/base/exception.h>
 #include <fnord/io/outputstream.h>
 
@@ -22,6 +23,8 @@ public:
 
   JSONOutputStream(std::shared_ptr<io::OutputStream> output_stream);
   JSONOutputStream(std::unique_ptr<io::OutputStream> output_stream);
+
+  void write(const JSONObject& obj);
 
   void beginObject();
   void endObject();
@@ -36,15 +39,6 @@ public:
   void addTrue();
   void addFalse();
 
-  template <typename T>
-  void addValue(const std::set<T>& value);
-
-  template <typename T>
-  void addValue(const std::vector<T>& value);
-
-  template <typename T>
-  void addValue(const T& value);
-
 protected:
   std::string escapeString(const std::string& string) const;
   std::shared_ptr<io::OutputStream> output_;
@@ -53,5 +47,5 @@ protected:
 } // namespace json
 } // namespace fnord
 
-#include "jsonoutputstream_impl.h"
+//#include "jsonoutputstream_impl.h"
 #endif

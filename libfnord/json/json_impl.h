@@ -9,10 +9,26 @@
  */
 #include "fnord/base/exception.h"
 #include "fnord/reflect/reflect.h"
-#include "fnord/json/jsonoutputproxy.h"
 
 namespace fnord {
 namespace json {
+
+template <
+    typename T,
+    typename = typename std::enable_if<
+        fnord::reflect::is_reflected<T>::value>::type>
+JSONObject toJSON(const T& value) {
+  return JSONOutputProxy(value).object;
+}
+
+template <
+    typename T,
+    typename = typename std::enable_if<
+        !fnord::reflect::is_reflected<T>::value>::type,
+    typename = void>
+JSONObject toJSON(const T& value) {
+  return toJSONImpl(value);
+}
 
 template <typename T>
 T fromJSON(const std::string& json_str) {
@@ -28,9 +44,34 @@ std::string toJSONString(const T& value) {
 }
 
 template <typename T>
-JSONObject toJSON(const T& value) {
-  JSONOutputProxy<T> proxy(value);
-  return proxy.object();
+JSONOutputProxy::JSONOutputProxy(const T& instance) {
+  object.emplace_back(json::JSON_OBJECT_BEGIN);
+  fnord::reflect::MetaClass<T>::serialize(instance, this);
+  object.emplace_back(json::JSON_OBJECT_END);
+}
+
+template <typename T>
+void JSONOutputProxy::putProperty(
+    uint32_t id,
+    const std::string& name,
+    const T& value) {
+  object.emplace_back(json::JSON_STRING, name);
+  const auto& val = toJSON(value);
+  object.insert(object.end(), val.begin(), val.end());
+}
+
+template <typename T>
+JSONObject toJSONImpl(const std::vector<T>& value) {
+  JSONObject object;
+  object.emplace_back(json::JSON_ARRAY_BEGIN);
+
+  for (const auto& e : value) {
+    const auto& val = toJSON(e);
+    object.insert(object.end(), val.begin(), val.end());
+  }
+
+  object.emplace_back(json::JSON_ARRAY_END);
+  return object;
 }
 
 }

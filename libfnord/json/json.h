@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <vector>
 #include "fnord/base/buffer.h"
+#include "fnord/reflect/reflect.h"
 
 namespace fnord {
 namespace json {
@@ -39,11 +40,24 @@ struct JSONToken {
   uint32_t size;
 };
 
-
 typedef std::vector<JSONToken> JSONObject;
 
 template <typename T>
-JSONObject toJSON(const T& value);
+JSONObject toJSONImpl(const std::vector<T>& value);
+
+template <typename T>
+JSONObject toJSONImpl(const T& value);
+
+struct JSONOutputProxy {
+public:
+  template <typename T>
+  JSONOutputProxy(const T& instance);
+
+  template <typename T>
+  void putProperty(uint32_t id, const std::string& name, const T& value);
+
+  JSONObject object;
+};
 
 template <typename T>
 std::string toJSONString(const T& value);

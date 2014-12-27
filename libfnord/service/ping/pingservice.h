@@ -25,24 +25,16 @@ public:
   PingService();
 
   std::string ping(std::string echo);
-  std::string ping2(std::string echo);
-  int pingint(int i);
+  void ping_async(fnord::comm::RPC<std::string, std::tuple<std::string>>* rpc);
 
-  void ping_async(fnord::comm::RPC<std::string, std::tuple<std::string, int>>* rpc);
+  template <typename T>
+  static void reflect(T* meta) {
+    meta->method("ping", &PingService::ping, "echo");
+    meta->rpc("ping_async", &PingService::ping_async, "echo");
+  }
 
 };
 
 } // namespace ping_service
 } // namsepace fnord
-
-template <> template <class T>
-void fnord::reflect::MetaClass<
-    fnord::ping_service::PingService>::reflect(T* t) {
-  t->method("ping", &fnord::ping_service::PingService::ping, "echo");
-  t->method("ping2", &fnord::ping_service::PingService::ping2, "echo");
-  t->method("pingint", &fnord::ping_service::PingService::pingint, "i");
-  t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo", "blah");
-  //t->rpc("ping_async", &fnord::ping_service::PingService::ping_async, "echo");
-}
-
 #endif
