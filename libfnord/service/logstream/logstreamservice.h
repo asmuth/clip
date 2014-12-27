@@ -55,6 +55,7 @@ public:
 
 protected:
   LogStream* openStream(const std::string& name);
+  void reopenTable(const std::string& file_path);
 
   fnord::io::FileRepository file_repo_;
   std::unordered_map<std::string, std::unique_ptr<LogStream>> streams_;

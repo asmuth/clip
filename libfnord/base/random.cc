@@ -14,7 +14,10 @@
 
 namespace fnord {
 
-Random::Random() {}
+Random::Random() {
+  std::random_device r;
+  prng_.seed(r());
+}
 
 uint64_t Random::random64() {
   uint64_t rval = prng_();

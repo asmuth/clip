@@ -23,17 +23,11 @@ namespace logstream_service {
 
 class LogStream {
 public:
+  static const size_t kMaxTableSize = 1024;
+
   LogStream(const std::string& name, io::FileRepository* file_repo);
 
   uint64_t append(const std::string& entry);
-
-protected:
-  struct TableRef {
-    uint64_t offset;
-    std::string file_path;
-    std::unique_ptr<sstable::SSTableWriter> writer;
-    std::mutex writer_mutex_;
-  };
 
   struct TableHeader {
     uint64_t offset;
@@ -46,8 +40,18 @@ protected:
     }
   };
 
-  std::shared_ptr<TableRef> headTable();
+  void reopenTable(const std::string& file_path);
+
+protected:
+
+  struct TableRef {
+    uint64_t offset;
+    std::string file_path;
+    std::unique_ptr<sstable::SSTableWriter> writer;
+  };
+
   std::shared_ptr<TableRef> createTable();
+  size_t getTableBodySize(const std::string& file_path);
 
   std::string name_;
   io::FileRepository* file_repo_;

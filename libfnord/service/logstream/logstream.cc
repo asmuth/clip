@@ -9,6 +9,7 @@
  */
 #include "fnord/base/inspect.h"
 #include "fnord/json/json.h"
+#include "fnord/sstable/sstablereader.h"
 #include "fnord/service/logstream/logstream.h"
 
 namespace fnord {
@@ -21,24 +22,32 @@ LogStream::LogStream(
     file_repo_(file_repo) {}
 
 uint64_t LogStream::append(const std::string& entry) {
-  auto head_table = headTable();
-  std::unique_lock<std::mutex> l(head_table->writer_mutex_);
-  return head_table->writer->appendRow("", entry);
-}
-
-std::shared_ptr<LogStream::TableRef> LogStream::headTable() {
   std::unique_lock<std::mutex> l(tables_mutex_);
 
   if (tables_.size() == 0 || tables_.back()->writer.get() == nullptr) {
     tables_.emplace_back(createTable());
   }
 
-  return tables_.back();
+  const auto& tbl = tables_.back();
+  auto row_offset = tbl->writer->appendRow("", entry);
+
+  if (row_offset > kMaxTableSize) {
+    tbl->writer->finalize();
+    tbl->writer.reset(nullptr);
+  }
+
+  return tbl->offset + row_offset;
 }
 
 std::shared_ptr<LogStream::TableRef> LogStream::createTable() {
   std::shared_ptr<TableRef> table(new TableRef());
-  table->offset = 0;
+
+  if (tables_.empty()) {
+    table->offset = 0;
+  } else {
+    const auto& t = tables_.back();
+    table->offset = t->offset + getTableBodySize(t->file_path);
+  }
 
   auto file = file_repo_->createFile();
   table->file_path = file.absolute_path;
@@ -59,6 +68,35 @@ std::shared_ptr<LogStream::TableRef> LogStream::createTable() {
       tbl_header_json.length());
 
   return table;
+}
+
+void LogStream::reopenTable(const std::string& file_path) {
+  auto file = io::File::openFile(file_path, io::File::O_READ);
+  sstable::SSTableReader reader(std::move(file));
+
+  auto table_header = fnord::json::fromJSON<LogStream::TableHeader>(
+      reader.readHeader());
+
+  auto tbl = new TableRef();
+  tbl->offset = table_header.offset;
+  tbl->file_path = file_path;
+  tbl->writer.reset(nullptr);
+
+  std::unique_lock<std::mutex> l(tables_mutex_);
+  tables_.emplace_back(tbl);
+
+
+  std::sort(tables_.begin(), tables_.end(), [] (
+      std::shared_ptr<TableRef> t1,
+      std::shared_ptr<TableRef> t2) {
+    return t1->offset < t2->offset;
+  });
+}
+
+size_t LogStream::getTableBodySize(const std::string& file_path) {
+  auto file = io::File::openFile(file_path, io::File::O_READ);
+  sstable::SSTableReader reader(std::move(file));
+  return reader.bodySize();
 }
 
 } // namespace logstream_service
