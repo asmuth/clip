@@ -1,3 +1,4 @@
 
   -> implement JSONOutputStream::emplace_back(...)
   -> exception refactoring
+  -> fix StringUtil::toString (should take const& param)

@@ -104,15 +104,16 @@ void Exception::debugPrint(io::OutputStream* os /* = nullptr */) const {
     os = os_local.get();
   }
 
-  os->printf(
-      "%s: %s\n"
-      "    in %s\n"
-      "    in %s:%i\n",
-      type_name,
-      message_,
-      func_,
-      file_,
-      line_);
+  os->write(
+      StringUtil::format(
+          "$0: $1\n"
+          "    in $2\n"
+          "    in $3:$4\n",
+          type_name,
+          message_,
+          func_,
+          file_,
+          line_));
 }
 
 bool Exception::ofType(const char* type_name) {
