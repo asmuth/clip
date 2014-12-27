@@ -1,3 +1,3 @@
 
-  -> implement JSONOutputStream::write(JSONObject)
+  -> implement JSONOutputStream::emplace_back(...)
   -> exception refactoring

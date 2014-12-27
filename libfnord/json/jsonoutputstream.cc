@@ -27,7 +27,19 @@ JSONOutputStream::JSONOutputStream(
 }
 
 void JSONOutputStream::write(const JSONObject& obj) {
-  fnord::iputs("write: $0", obj);
+  for (const auto& t : obj) {
+    emplace_back(t.type, t.data);
+  }
+}
+
+void JSONOutputStream::emplace_back(kTokenType token) {
+  emplace_back(token, "");
+}
+
+void JSONOutputStream::emplace_back(
+    kTokenType token,
+    const std::string& data) {
+  iputs("json put: $0 $1", token, data);
 }
 
 void JSONOutputStream::beginObject() {

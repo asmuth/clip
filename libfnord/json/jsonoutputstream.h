@@ -11,7 +11,7 @@
 #define _FNORD_JSON_JSONOUTPUTSTREAM_H
 #include <set>
 #include <vector>
-#include <fnord/json/json.h>
+#include <fnord/json/jsontypes.h>
 #include <fnord/base/exception.h>
 #include <fnord/io/outputstream.h>
 
@@ -25,6 +25,9 @@ public:
   JSONOutputStream(std::unique_ptr<io::OutputStream> output_stream);
 
   void write(const JSONObject& obj);
+
+  void emplace_back(kTokenType token);
+  void emplace_back(kTokenType token, const std::string& data);
 
   void beginObject();
   void endObject();

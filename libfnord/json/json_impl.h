@@ -12,6 +12,7 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/datetime.h"
 #include "fnord/json/jsonutil.h"
+#include "fnord/json/jsonoutputstream.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
@@ -70,8 +71,11 @@ void toJSON(const T& value, O* target) {
 template <typename T>
 std::string toJSONString(const T& value) {
   std::string json_str;
-  JSONObject json_obj;
-  toJSON(value, &json_obj);
+  JSONOutputStream json(
+      static_cast<std::unique_ptr<io::OutputStream>>(
+          io::StringOutputStream::fromString(&json_str)));
+
+  toJSON(value, &json);
   return json_str;
 }
 
