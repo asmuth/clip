@@ -26,17 +26,29 @@ LogStreamService::LogStreamService(
 }
 
 uint64_t LogStreamService::append(std::string stream_key, std::string entry) {
-  auto stream = openStream(stream_key);
+  auto stream = openStream(stream_key, true);
   return stream->append(entry);
 }
 
-LogStream* LogStreamService::openStream(const std::string& name) {
+std::vector<LogStreamEntry> LogStreamService::fetch(
+      std::string stream_key,
+      uint64_t offset,
+      int batch_size) {
+  auto stream = openStream(stream_key, false);
+  return stream->fetch(offset, batch_size);
+}
+
+LogStream* LogStreamService::openStream(const std::string& name, bool create) {
   std::unique_lock<std::mutex> l(streams_mutex_);
 
   LogStream* stream = nullptr;
 
   auto stream_iter = streams_.find(name);
   if (stream_iter == streams_.end()) {
+    if (!create) {
+      RAISEF(kIndexError, "no such stream: $0", name);
+    }
+
     stream = new LogStream(name, &file_repo_);
     streams_.emplace(name, stream);
   } else {
@@ -65,7 +77,7 @@ void LogStreamService::reopenTable(const std::string& file_path) {
     writer->finalize();
   }
 
-  auto stream = openStream(table_header.stream_name);
+  auto stream = openStream(table_header.stream_name, true);
   stream->reopenTable(file_path);
 }
 

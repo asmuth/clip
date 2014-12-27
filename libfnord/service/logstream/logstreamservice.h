@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include "fnord/io/filerepository.h"
 #include "fnord/service/logstream/logstream.h"
+#include "fnord/service/logstream/logstreamentry.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
@@ -49,12 +50,13 @@ public:
    *
    * @param start_offset the start offset to read from
    */
-  void scan(
-      uint64_t start_offset,
-      std::function<void (uint64_t offset, const std::string& entry)> callback);
+  std::vector<LogStreamEntry> fetch(
+      std::string stream,
+      uint64_t offset,
+      int batch_size);
 
 protected:
-  LogStream* openStream(const std::string& name);
+  LogStream* openStream(const std::string& name, bool create);
   void reopenTable(const std::string& file_path);
 
   fnord::io::FileRepository file_repo_;
@@ -73,6 +75,13 @@ void fnord::reflect::MetaClass<
       &fnord::logstream_service::LogStreamService::append,
       "stream",
       "entry");
+
+  t->method(
+      "fetch",
+      &fnord::logstream_service::LogStreamService::fetch,
+      "stream",
+      "offset",
+      "batch_size");
 }
 
 #endif

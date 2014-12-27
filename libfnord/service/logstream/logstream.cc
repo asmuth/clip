@@ -39,6 +39,11 @@ uint64_t LogStream::append(const std::string& entry) {
   return tbl->offset + row_offset;
 }
 
+std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
+  std::vector<LogStreamEntry> entries;
+  return entries;
+}
+
 std::shared_ptr<LogStream::TableRef> LogStream::createTable() {
   std::shared_ptr<TableRef> table(new TableRef());
 

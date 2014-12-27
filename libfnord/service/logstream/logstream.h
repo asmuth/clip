@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include "fnord/io/filerepository.h"
 #include "fnord/reflect/reflect.h"
+#include "fnord/service/logstream/logstreamentry.h"
 #include "fnord/sstable/sstablewriter.h"
 
 namespace fnord {
@@ -28,6 +29,8 @@ public:
   LogStream(const std::string& name, io::FileRepository* file_repo);
 
   uint64_t append(const std::string& entry);
+
+  std::vector<LogStreamEntry> fetch(uint64_t offset, int batch_size);
 
   struct TableHeader {
     uint64_t offset;
