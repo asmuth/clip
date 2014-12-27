@@ -67,7 +67,7 @@ SSTableWriter::~SSTableWriter() {
 }
 
 // FIXPAUL lock
-void SSTableWriter::appendRow(
+uint64_t SSTableWriter::appendRow(
     void const* key,
     size_t key_size,
     void const* data,
@@ -105,12 +105,14 @@ void SSTableWriter::appendRow(
   for (const auto& idx : indexes_) {
     idx->addRow(row_body_offset, key, key_size, data, data_size);
   }
+
+  return row_body_offset;
 }
 
-void SSTableWriter::appendRow(
+uint64_t SSTableWriter::appendRow(
     const std::string& key,
     const std::string& value) {
-  appendRow(key.data(), key.size(), value.data(), value.size());
+  return appendRow(key.data(), key.size(), value.data(), value.size());
 }
 
 // FIXPAUL lock

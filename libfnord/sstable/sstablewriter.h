@@ -77,7 +77,7 @@ public:
   /**
    * Append a row to the sstable
    */
-  void appendRow(
+  uint64_t appendRow(
       void const* key,
       size_t key_size,
       void const* data,
@@ -86,7 +86,7 @@ public:
   /**
    * Append a row to the sstable
    */
-  void appendRow(
+  uint64_t appendRow(
       const std::string& key,
       const std::string& value);
 

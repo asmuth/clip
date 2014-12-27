@@ -13,11 +13,29 @@
 namespace fnord {
 namespace logstream_service {
 
-LogStreamService::LogStreamService() {}
+LogStreamService::LogStreamService(
+    fnord::io::FileRepository file_repo) :
+    file_repo_(file_repo) {}
 
-uint64_t LogStreamService::append(std::string stream, std::string entry) {
-  fnord::iputs("append $0 -> $1", stream, entry);
-  return 0;
+uint64_t LogStreamService::append(std::string stream_key, std::string entry) {
+  auto stream = openStream(stream_key);
+  return stream->append(entry);
+}
+
+LogStream* LogStreamService::openStream(const std::string& name) {
+  std::unique_lock<std::mutex> l(streams_mutex_);
+
+  LogStream* stream = nullptr;
+
+  auto stream_iter = streams_.find(name);
+  if (stream_iter == streams_.end()) {
+    stream = new LogStream(name, &file_repo_);
+    streams_.emplace(name, stream);
+  } else {
+    stream = stream_iter->second.get();
+  }
+
+  return stream;
 }
 
 } // namespace logstream_service

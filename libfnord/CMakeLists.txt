@@ -207,6 +207,7 @@ add_executable(fnord-keyvalue-service-example
 add_library(fnord-logstream-service OBJECT
     service/logstream/feed.cc
     service/logstream/feedfactory.cc
+    service/logstream/logstream.cc
     service/logstream/logstreamservice.cc)
 
 add_executable(fnord-logstream-service-example
@@ -216,8 +217,10 @@ add_executable(fnord-logstream-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-sstable>
     $<TARGET_OBJECTS:fnord-system>
     $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-util>
     service/logstream/logstreamservice_example.cc)
 
 # service: ping

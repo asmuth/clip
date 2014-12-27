@@ -14,6 +14,8 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include "fnord/io/filerepository.h"
+#include "fnord/service/logstream/logstream.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
@@ -21,7 +23,7 @@ namespace logstream_service {
 
 class LogStreamService {
 public:
-  LogStreamService();
+  LogStreamService(fnord::io::FileRepository file_repo);
 
   /**
    * Append an entry to the stream referenced by `stream` and return the offset
@@ -51,6 +53,12 @@ public:
       uint64_t start_offset,
       std::function<void (uint64_t offset, const std::string& entry)> callback);
 
+protected:
+  LogStream* openStream(const std::string& name);
+
+  fnord::io::FileRepository file_repo_;
+  std::unordered_map<std::string, std::unique_ptr<LogStream>> streams_;
+  std::mutex streams_mutex_;
 };
 
 } // namespace logstream_service

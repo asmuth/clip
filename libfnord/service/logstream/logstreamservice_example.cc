@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
+#include "fnord/io/filerepository.h"
+#include "fnord/io/fileutil.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/logging/logoutputstream.h"
 #include "fnord/json/jsonrpchttpadapter.h"
@@ -36,7 +38,10 @@ int main() {
   JSONRPC rpc;
   JSONRPCHTTPAdapter rpc_http(&rpc);
 
-  LogStreamService ls_service;
+  auto log_path = "/tmp/cm-logs";
+  fnord::io::FileUtil::mkdir_p(log_path);
+
+  LogStreamService ls_service{fnord::io::FileRepository(log_path)};
   rpc.registerService("LogStreamService", &ls_service);
 
   fnord::thread::EventLoop event_loop;
