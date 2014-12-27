@@ -208,3 +208,26 @@ TEST_CASE(JSONTest, TestToJSON, [] () {
   EXPECT_EQ(j1[0].type, fnord::json::JSON_STRING);
   EXPECT_EQ(j1[0].data, "blah");
 });
+
+struct TestMessage {
+  std::string a;
+  int b;
+
+  template <typename T>
+  static void reflect(T* meta) {
+    meta->prop(&TestMessage::a, 1, "a", false);
+    meta->prop(&TestMessage::b, 2, "b", false);
+  }
+};
+
+TEST_CASE(JSONTest, TestToFromJSON, [] () {
+  TestMessage m1;
+  m1.a = "stringdata";
+  m1.b = 23;
+
+  auto j1 = fnord::json::toJSON(m1);
+  auto m2 = fnord::json::fromJSON<TestMessage>(j1);
+
+  EXPECT_EQ(m1.a, m2.a);
+  EXPECT_EQ(m1.b, m2.b);
+});

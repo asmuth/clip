@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <vector>
 #include "fnord/base/buffer.h"
+#include "fnord/json/jsontypes.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
@@ -20,33 +21,26 @@ namespace json {
 class JSONOutputStream;
 class JSONInputStream;
 
-enum kTokenType {
-  JSON_OBJECT_BEGIN,
-  JSON_OBJECT_END,
-  JSON_ARRAY_BEGIN,
-  JSON_ARRAY_END,
-  JSON_STRING,
-  JSON_NUMBER,
-  JSON_TRUE,
-  JSON_FALSE,
-  JSON_NULL
-};
-
-struct JSONToken {
-  JSONToken(kTokenType _type, const std::string& _data);
-  JSONToken(kTokenType _type);
-  kTokenType type;
-  std::string data;
-  uint32_t size;
-};
-
-typedef std::vector<JSONToken> JSONObject;
-
 template <typename T>
 JSONObject toJSONImpl(const std::vector<T>& value);
 
 template <typename T>
 JSONObject toJSONImpl(const T& value);
+
+template <typename T>
+struct JSONInputProxy {
+public:
+  JSONInputProxy(
+      JSONObject::const_iterator begin,
+      JSONObject::const_iterator end);
+
+  template <typename PropertyType>
+  PropertyType getProperty(uint32_t id, const std::string& name);
+
+  JSONObject::const_iterator obj_begin;
+  JSONObject::const_iterator obj_end;
+  T value;
+};
 
 struct JSONOutputProxy {
 public:
@@ -63,12 +57,15 @@ template <typename T>
 std::string toJSONString(const T& value);
 
 template <typename T>
-T fromJSON(
+T fromJSONImpl(
     JSONObject::const_iterator begin,
     JSONObject::const_iterator end);
 
 template <typename T>
 T fromJSON(const std::string& json_str);
+
+template <typename T>
+T fromJSON(const JSONObject& jsonobj);
 
 JSONObject parseJSON(const std::string& json_str);
 JSONObject parseJSON(const fnord::Buffer& json_buf);
@@ -77,5 +74,5 @@ JSONObject parseJSON(JSONInputStream* json);
 }
 }
 
-#include "json_impl.h"
 #endif
+#include "json_impl.h"

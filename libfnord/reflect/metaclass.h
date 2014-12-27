@@ -52,8 +52,6 @@ void MetaClass<ClassType>::reflect(TargetType* target) {
   ClassType::reflect(target);
 }
 
-
 }
 }
-
 #endif

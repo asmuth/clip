@@ -84,7 +84,7 @@ JSONObject parseJSON(JSONInputStream* json) {
 }
 
 template <>
-std::string fromJSON(
+std::string fromJSONImpl(
     std::vector<JSONToken>::const_iterator begin,
     std::vector<JSONToken>::const_iterator end) {
   if (begin == end) {
@@ -112,7 +112,7 @@ std::string fromJSON(
 }
 
 template <>
-int fromJSON(
+int fromJSONImpl(
     std::vector<JSONToken>::const_iterator begin,
     std::vector<JSONToken>::const_iterator end) {
   if (begin == end) {

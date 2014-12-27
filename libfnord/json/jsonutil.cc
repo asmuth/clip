@@ -25,7 +25,7 @@ JSONObject::const_iterator JSONUtil::objectLookup(
     RAISE(kIndexError);
   }
 
-  for (++begin; begin != oend;) {
+  for (++begin; begin < end;) {
     switch (begin->type) {
       case json::JSON_STRING:
         if (begin->data == key) {
