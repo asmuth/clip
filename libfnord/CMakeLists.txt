@@ -76,6 +76,7 @@ add_executable(tests/test-chart
 
 # comm
 add_library(fnord-comm OBJECT
+    comm/feed.cc
     comm/rpc.cc
     comm/rpcservicemap.cc)
 
@@ -204,11 +205,13 @@ add_executable(fnord-keyvalue-service-example
 
 # service: logstream
 add_library(fnord-logstream-service OBJECT
-    service/logstream/logstreamservice.cc
-    service/logstream/logstreamserviceadapter.cc)
+    service/logstream/feed.cc
+    service/logstream/feedfactory.cc
+    service/logstream/logstreamservice.cc)
 
 add_executable(fnord-logstream-service-example
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-logstream-service>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>

@@ -7,24 +7,26 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_LOGSTREAM_SERVICE_ADAPTER_H
-#define _FNORD_LOGSTREAM_SERVICE_ADAPTER_H
-#include <stdlib.h>
-#include "fnord/json/jsonrpc.h"
+#ifndef _FNORD_LOGSTREAM_SERVICE_FEED_H
+#define _FNORD_LOGSTREAM_SERVICE_FEED_H
+#include "fnord/comm/feed.h"
+#include "fnord/comm/rpc.h"
 
 namespace fnord {
 namespace logstream_service {
-class LogStreamService;
 
-class LogStreamServiceAdapter {
+class LogStreamServiceFeed : public fnord::comm::Feed {
 public:
+  LogStreamServiceFeed(
+      const std::string& name,
+      fnord::comm::RPCChannel* rpc_channel);
 
-  static void registerJSONRPC(
-      LogStreamService* logstream_service,
-      json::JSONRPC* rpc);
+  uint64_t append(const std::string& entry) override;
 
+protected:
+  fnord::comm::RPCChannel* rpc_channel_;
 };
 
-} // namespace logstream_service
-} // namsepace fnord
+}
+}
 #endif

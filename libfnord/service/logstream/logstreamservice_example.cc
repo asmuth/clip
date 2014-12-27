@@ -14,7 +14,6 @@
 #include "fnord/logging/logoutputstream.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/logstream/logstreamservice.h"
-#include "fnord/service/logstream/logstreamserviceadapter.h"
 #include "fnord/thread/eventloop.h"
 #include "fnord/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
