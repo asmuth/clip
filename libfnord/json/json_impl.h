@@ -10,6 +10,7 @@
 #ifndef _FNORD_JSON_IMPL_H
 #define _FNORD_JSON_IMPL_H
 #include "fnord/base/exception.h"
+#include "fnord/base/datetime.h"
 #include "fnord/json/jsonutil.h"
 #include "fnord/reflect/reflect.h"
 
@@ -49,25 +50,28 @@ T fromJSON(const JSONObject& json_obj) {
 
 template <
     typename T,
+    typename O,
     typename = typename std::enable_if<
         fnord::reflect::is_reflected<T>::value>::type>
-JSONObject toJSON(const T& value) {
-  return JSONOutputProxy(value).object;
+void toJSON(const T& value, O* target) {
+  // JSONOutputProxy(value).object;
 }
 
 template <
     typename T,
+    typename O,
     typename = typename std::enable_if<
         !fnord::reflect::is_reflected<T>::value>::type,
     typename = void>
-JSONObject toJSON(const T& value) {
-  return toJSONImpl(value);
+void toJSON(const T& value, O* target) {
+  toJSONImpl(value, target);
 }
 
 template <typename T>
 std::string toJSONString(const T& value) {
   std::string json_str;
-  auto tokens = toJSON(value);
+  JSONObject json_obj;
+  toJSON(value, &json_obj);
   return json_str;
 }
 
@@ -93,37 +97,61 @@ PropertyType JSONInputProxy<T>::getProperty(
   return fromJSON<PropertyType>(iter, obj_end);
 }
 
+template <typename OutputType>
 template <typename T>
-JSONOutputProxy::JSONOutputProxy(const T& instance) {
-  object.emplace_back(json::JSON_OBJECT_BEGIN);
+JSONOutputProxy<OutputType>::JSONOutputProxy(
+    const T& instance,
+    OutputType* target) :
+    target_(target) {
+  target_->emplace_back(json::JSON_OBJECT_BEGIN);
   fnord::reflect::MetaClass<T>::serialize(instance, this);
-  object.emplace_back(json::JSON_OBJECT_END);
-  object[0].size = object.size();
+  target_->emplace_back(json::JSON_OBJECT_END);
 }
 
+template <typename OutputType>
 template <typename T>
-void JSONOutputProxy::putProperty(
+void JSONOutputProxy<OutputType>::putProperty(
     uint32_t id,
     const std::string& name,
     const T& value) {
-  object.emplace_back(json::JSON_STRING, name);
-  const auto& val = toJSON(value);
-  object.insert(object.end(), val.begin(), val.end());
+  target_->emplace_back(json::JSON_STRING, name);
+  toJSON(value, target_);
 }
 
-template <typename T>
-JSONObject toJSONImpl(const std::vector<T>& value) {
-  JSONObject object;
-  object.emplace_back(json::JSON_ARRAY_BEGIN);
+template <typename T, typename O>
+void toJSONImpl(const std::vector<T>& value, O* target) {
+  target->emplace_back(json::JSON_ARRAY_BEGIN);
 
   for (const auto& e : value) {
-    const auto& val = toJSON(e);
-    object.insert(object.end(), val.begin(), val.end());
+    toJSON(e, target);
   }
 
-  object.emplace_back(json::JSON_ARRAY_END);
-  object[0].size = object.size();
-  return object;
+  target->emplace_back(json::JSON_ARRAY_END);
+}
+
+template <typename O>
+void toJSONImpl(const std::string& str, O* target) {
+  target->emplace_back(json::JSON_STRING, str);
+}
+
+template <typename O>
+void toJSONImpl(const char* const& str, O* target) {
+  target->emplace_back(json::JSON_STRING, str);
+}
+
+template <typename O>
+void toJSONImpl(unsigned long long const& val, O* target) {
+  target->emplace_back(json::JSON_NUMBER, StringUtil::toString(val));
+}
+
+template <typename O>
+void toJSONImpl(int const& val, O* target) {
+  target->emplace_back(json::JSON_NUMBER, StringUtil::toString(val));
+}
+
+template <typename O>
+void toJSONImpl(const fnord::DateTime& val, O* target) {
+  toJSONImpl(static_cast<uint64_t>(val), target);
 }
 
 }

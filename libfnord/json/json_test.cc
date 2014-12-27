@@ -203,7 +203,9 @@ TEST_CASE(JSONTest, TestFromJSON, [] () {
 });
 
 TEST_CASE(JSONTest, TestToJSON, [] () {
-  auto j1 = fnord::json::toJSON(std::string("blah"));
+  fnord::json::JSONObject j1;
+  fnord::json::toJSON(std::string("blah"), &j1);
+
   EXPECT_EQ(j1.size(), 1);
   EXPECT_EQ(j1[0].type, fnord::json::JSON_STRING);
   EXPECT_EQ(j1[0].data, "blah");
@@ -225,7 +227,7 @@ TEST_CASE(JSONTest, TestToFromJSON, [] () {
   m1.a = "stringdata";
   m1.b = 23;
 
-  auto j1 = fnord::json::toJSON(m1);
+  auto j1 = fnord::json::parseJSON(fnord::json::toJSONString(m1));
   auto m2 = fnord::json::fromJSON<TestMessage>(j1);
 
   EXPECT_EQ(m1.a, m2.a);

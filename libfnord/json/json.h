@@ -21,11 +21,11 @@ namespace json {
 class JSONOutputStream;
 class JSONInputStream;
 
-template <typename T>
-JSONObject toJSONImpl(const std::vector<T>& value);
+template <typename T, typename O>
+void toJSONImpl(const std::vector<T>& value, O* target);
 
-template <typename T>
-JSONObject toJSONImpl(const T& value);
+template <typename T, typename O>
+void toJSONImpl(const T& value, O* target);
 
 template <typename T>
 struct JSONInputProxy {
@@ -42,15 +42,17 @@ public:
   T value;
 };
 
+template <typename OutputType>
 struct JSONOutputProxy {
 public:
   template <typename T>
-  JSONOutputProxy(const T& instance);
+  JSONOutputProxy(const T& instance, OutputType* target);
 
   template <typename T>
   void putProperty(uint32_t id, const std::string& name, const T& value);
 
   JSONObject object;
+  OutputType* target_;
 };
 
 template <typename T>

@@ -15,7 +15,9 @@ namespace json {
 template <typename T>
 void JSONRPCResponse::successAndReturn(const T& ret_val) {
   success([&ret_val] (json::JSONOutputStream* json) {
-    json->write(toJSON(ret_val));
+    JSONObject obj;
+    toJSON(ret_val, &obj);
+    json->write(obj);
   });
 }
 

@@ -138,31 +138,6 @@ int fromJSONImpl(
   }
 }
 
-template <>
-JSONObject toJSONImpl(const std::string& str) {
-  return JSONObject { JSONToken(json::JSON_STRING, str) };
-}
-
-template <>
-JSONObject toJSONImpl(const char* const& str) {
-  return JSONObject { JSONToken(json::JSON_STRING, str) };
-}
-
-template <>
-JSONObject toJSONImpl(unsigned long long const& val) {
-  return JSONObject { JSONToken(json::JSON_NUMBER, StringUtil::toString(val)) };
-}
-
-template <>
-JSONObject toJSONImpl(int const& val) {
-  return JSONObject { JSONToken(json::JSON_NUMBER, StringUtil::toString(val)) };
-}
-
-template <>
-JSONObject toJSONImpl(const fnord::DateTime& val) {
-  return toJSON(static_cast<uint64_t>(val));
-}
-
 } // namespace json
 
 template <>
