@@ -10,12 +10,28 @@
 #ifndef _FNORD_NET_TCPCONNECTION_H
 #define _FNORD_NET_TCPCONNECTION_H
 #include <stdlib.h>
+#include "fnord/net/inetaddr.h"
 
 namespace fnord {
 namespace net {
 
 class TCPConnection {
 public:
+
+  /**
+   * Open a new tcp (client) connection and block until the connection is
+   * established or raise an exception if the connction fails
+   */
+  static std::unique_ptr<TCPConnection> connect(const InetAddr& addr);
+
+  /**
+   * Open a new tcp (client) connection and return immediately. IMPORTANT
+   * the caller must call connection->checkErrors(); after the onReady callback
+   * fires!
+   */
+  static std::unique_ptr<TCPConnection> connectNonblocking(
+      const InetAddr& addr,
+      std::function<void()> on_ready);
 
   TCPConnection(int fd);
   int fd() const;
@@ -25,7 +41,15 @@ public:
   void close();
   void setNonblocking(bool nonblocking);
 
+  /**
+   * This will raise an exception if there are any pending errors on the
+   * connection
+   */
+  void checkErrors() const;
+
 protected:
+  void connectImpl(const InetAddr& addr);
+
   int fd_;
 };
 

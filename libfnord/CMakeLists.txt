@@ -91,8 +91,10 @@ add_library(fnord-comm OBJECT
 # http
 add_library(fnord-http OBJECT
     net/tcpserver.cc
+    net/inetaddr.cc
     net/tcpconnection.cc
     net/http/cookies.cc
+    net/http/httpclientconnection.cc
     net/http/httpgenerator.cc
     net/http/httpmessage.cc
     net/http/httpparser.cc

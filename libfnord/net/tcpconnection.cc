@@ -12,11 +12,38 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 namespace fnord {
 namespace net {
 
 TCPConnection::TCPConnection(int fd) : fd_(fd) {}
+
+std::unique_ptr<TCPConnection> TCPConnection::connect(const InetAddr& addr) {
+  int fd = socket(AF_INET, SOCK_STREAM, 0);
+
+  if (fd == -1) {
+    RAISE_ERRNO(kIOError, "socket() creation failed");
+  }
+
+  std::unique_ptr<TCPConnection> conn(new TCPConnection(fd));
+  conn->connectImpl(addr);
+  return conn;
+}
+
+void TCPConnection::connectImpl(const InetAddr& addr) {
+  struct sockaddr_in saddr;
+  saddr.sin_family = AF_INET;
+  saddr.sin_port = htons(addr.port());
+  inet_aton(addr.ip().c_str(), &(saddr.sin_addr));
+  memset(&(saddr.sin_zero), 0, 8);
+
+  if (::connect(fd_, (const struct sockaddr *) &saddr, sizeof(saddr)) < 0) {
+    RAISE_ERRNO(kIOError, "connect() failed");
+  }
+}
 
 int TCPConnection::fd() const {
   return fd_;

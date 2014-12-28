@@ -14,8 +14,10 @@
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
+#include <fnord/net/http/httpclientconnection.h>
 #include <fnord/io/inputstream.h>
 #include <fnord/test/unittest.h>
+#include <fnord/thread/eventloop.h>
 
 using namespace fnord::http;
 using fnord::io::StringInputStream;
@@ -233,4 +235,10 @@ TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
   EXPECT_TRUE(cookies.size() >= 1);
   EXPECT_EQ(cookies[0].first, "_u");
   EXPECT_EQ(cookies[0].second, "fnord");
+});
+
+TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
+  fnord::thread::EventLoop ev;
+  fnord::http::HTTPClientConnection conn(&ev);
+  conn.connect(fnord::net::InetAddr::resolve("localhost:8080"));
 });
