@@ -160,7 +160,11 @@ void URI::parseURI(
   /* scheme */
   bool has_scheme = false;
   for (const char* cur = begin; cur < end; ++cur) {
-    if (cur[0] == ':') {
+    if (*cur == '/') {
+      break;
+    }
+
+    if (*cur == ':') {
       *scheme = std::string(begin, cur - begin);
       begin = cur + 1;
       has_scheme = true;
