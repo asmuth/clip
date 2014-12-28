@@ -43,7 +43,8 @@ HTTPServerConnection::HTTPServerConnection(
     conn_(std::move(conn)),
     scheduler_(scheduler),
     on_write_completed_cb_(nullptr),
-    refcount_(1) {
+    refcount_(1),
+    parser_(HTTPParser::PARSE_HTTP_REQUEST) {
   log::Logger::get()->logf(
       fnord::log::kTrace, "New HTTP connection: $0",
       inspect(*this));
@@ -201,9 +202,12 @@ void HTTPServerConnection::readRequestBody(
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 
   switch (parser_.state()) {
-    case HTTPParser::S_METHOD:
-    case HTTPParser::S_URI:
-    case HTTPParser::S_VERSION:
+    case HTTPParser::S_REQ_METHOD:
+    case HTTPParser::S_REQ_URI:
+    case HTTPParser::S_REQ_VERSION:
+    case HTTPParser::S_RES_VERSION:
+    case HTTPParser::S_RES_STATUS_CODE:
+    case HTTPParser::S_RES_STATUS_NAME:
     case HTTPParser::S_HEADER:
       RAISE(kIllegalStateError, "can't read body before headers are parsed");
     case HTTPParser::S_BODY:

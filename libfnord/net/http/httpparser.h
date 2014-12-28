@@ -27,16 +27,24 @@ public:
   static const size_t kMaxHeaderSize = 65535;
   static const char kContentLengthHeader[];
 
-  HTTPParser(size_t buffer_size = kDefaultBufferSize);
+  enum kParserMode {
+    PARSE_HTTP_REQUEST,
+    PARSE_HTTP_RESPONSE
+  };
 
   enum kParserState {
-    S_METHOD = 1,
-    S_URI = 2,
-    S_VERSION = 3,
-    S_HEADER = 4,
-    S_BODY = 5,
-    S_DONE = 6
+    S_REQ_METHOD = 1,
+    S_REQ_URI = 2,
+    S_REQ_VERSION = 3,
+    S_RES_VERSION = 4,
+    S_RES_STATUS_CODE = 5,
+    S_RES_STATUS_NAME = 6,
+    S_HEADER = 7,
+    S_BODY = 8,
+    S_DONE = 9
   };
+
+  HTTPParser(kParserMode mode, size_t buffer_size = kDefaultBufferSize);
 
   kParserState state() const;
   void parse(const char* data, size_t size);
@@ -57,7 +65,7 @@ public:
 protected:
   void parseMethod(const char** begin, const char* end);
   void parseURI(const char** begin, const char* end);
-  void parseVersion(const char** begin, const char* end);
+  void parseRequestVersion(const char** begin, const char* end);
   void parseHeader(const char** begin, const char* end);
   void readBody(const char** begin, const char* end);
   bool readUntil(const char** begin, const char* end, char search);

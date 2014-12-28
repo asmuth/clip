@@ -69,6 +69,15 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot1Request, [] () {
   EXPECT_EQ(response.version(), "HTTP/1.1");
 });
 
+TEST_CASE(HTTPTest, ParseHTTP1dot0Response, [] () {
+  auto response = HTTPResponse::parse(
+      "HTTP/1.0 200 OK\r\n" \
+      "fnord: bar\r\n" \
+      "\r\n");
+
+  EXPECT_EQ(response.version(), "HTTP/1.0");
+  EXPECT_EQ(response.statusCode(), 200);
+});
 
 TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {
   auto request = HTTPRequest::parse(

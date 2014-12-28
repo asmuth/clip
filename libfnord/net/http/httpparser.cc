@@ -19,8 +19,8 @@ namespace http {
 const char HTTPParser::kContentLengthHeader[] = "Content-Length";
 
 HTTPParser::HTTPParser(
+    kParserMode mode,
     size_t buffer_size /* = kDefaultBufferSize */) :
-    state_(S_METHOD),
     on_method_cb_(nullptr),
     on_uri_cb_(nullptr),
     on_version_cb_(nullptr),
@@ -29,6 +29,18 @@ HTTPParser::HTTPParser(
     on_body_chunk_cb_(nullptr),
     body_bytes_read_(0),
     body_bytes_expected_(0) {
+  switch (mode) {
+    case PARSE_HTTP_REQUEST:
+      state_ = S_REQ_METHOD;
+      break;
+
+    case PARSE_HTTP_RESPONSE:
+      state_ = S_REQ_METHOD;
+      //state_ = S_RES_VERSION;
+      break;
+
+  }
+
   buf_.reserve(buffer_size);
 }
 
@@ -74,14 +86,14 @@ void HTTPParser::parse(const char* data, size_t size) {
 
   while (begin < end) {
     switch (state_) {
-      case S_METHOD:
+      case S_REQ_METHOD:
         parseMethod(&begin, end);
         break;
-      case S_URI:
+      case S_REQ_URI:
         parseURI(&begin, end);
         break;
-      case S_VERSION:
-        parseVersion(&begin, end);
+      case S_REQ_VERSION:
+        parseRequestVersion(&begin, end);
         break;
       case S_HEADER:
         parseHeader(&begin, end);
@@ -98,9 +110,12 @@ void HTTPParser::parse(const char* data, size_t size) {
 
 void HTTPParser::eof() {
   switch (state_) {
-    case S_METHOD:
-    case S_URI:
-    case S_VERSION:
+    case S_REQ_METHOD:
+    case S_REQ_URI:
+    case S_REQ_VERSION:
+    case S_RES_VERSION:
+    case S_RES_STATUS_CODE:
+    case S_RES_STATUS_NAME:
     case S_HEADER:
     case S_BODY:
       if (body_bytes_read_ < body_bytes_expected_) {
@@ -114,7 +129,7 @@ void HTTPParser::eof() {
 
 void HTTPParser::parseMethod(const char** begin, const char* end) {
   if (readUntil(begin, end, ' ')) {
-    state_ = S_URI;
+    state_ = S_REQ_URI;
     (*begin)++;
 
     if (on_method_cb_) {
@@ -182,7 +197,7 @@ void HTTPParser::parseURI(const char** begin, const char* end) {
     }
 
     buf_.clear();
-    state_ = S_VERSION;
+    state_ = S_REQ_VERSION;
     (*begin)++;
     return;
   }
@@ -192,7 +207,7 @@ void HTTPParser::parseURI(const char** begin, const char* end) {
   }
 }
 
-void HTTPParser::parseVersion(const char** begin, const char* end) {
+void HTTPParser::parseRequestVersion(const char** begin, const char* end) {
   if (readUntil(begin, end, '\n')) {
     BufferUtil::stripTrailingBytes(&buf_, '\r');
 
@@ -298,7 +313,7 @@ bool HTTPParser::readUntil(const char** begin, const char* end, char search) {
 }
 
 void HTTPParser::reset() {
-  state_ = S_METHOD;
+  state_ = S_REQ_METHOD;
   buf_.clear();
   body_bytes_read_ = 0;
   body_bytes_expected_ = 0;

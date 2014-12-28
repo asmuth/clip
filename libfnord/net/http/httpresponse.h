@@ -20,6 +20,11 @@ namespace http {
 
 class HTTPResponse : public HTTPMessage {
 public:
+  /**
+   * Parse the provided http response string and return the parsed http response
+   */
+  static HTTPResponse parse(const std::string& str);
+
   HTTPResponse();
 
   void setStatus(int status_code, const std::string& status);

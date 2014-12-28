@@ -16,7 +16,7 @@ namespace fnord {
 namespace http {
 
 HTTPRequest HTTPRequest::parse(const std::string& str) {
-  HTTPParser parser;
+  HTTPParser parser(HTTPParser::PARSE_HTTP_REQUEST);
   HTTPRequest request;
 
   parser.onMethod([&request] (HTTPMessage::kHTTPMethod method) {
