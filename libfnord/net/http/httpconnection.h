@@ -24,8 +24,7 @@ namespace http {
 
 class HTTPConnection {
 public:
-  //static const size_t kMinBufferSize = 4096;
-  static const size_t kMinBufferSize = 10;
+  static const size_t kMinBufferSize = 4096;
 
   /**
    * Start a new HTTP connection. conn must be an opened and valid TCP

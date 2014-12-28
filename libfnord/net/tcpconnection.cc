@@ -37,8 +37,6 @@ size_t TCPConnection::read(void* dst, size_t size) {
 }
 
 size_t TCPConnection::write(const void* data, size_t size) {
-  if (size > 10) { size = 10; } // FIXPAUL remove ;)
-
   auto res = ::write(fd_, data, size);
 
   if (res < 0) {
