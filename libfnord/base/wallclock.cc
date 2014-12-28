@@ -16,6 +16,13 @@ DateTime WallClock::now() {
   return DateTime(WallClock::getUnixMicros());
 }
 
+uint64_t WallClock::unixSeconds() {
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+  return tv.tv_sec;
+}
+
 uint64_t WallClock::getUnixMillis() {
   return unixMillis();
 }

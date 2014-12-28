@@ -24,7 +24,7 @@ namespace logstream_service {
 
 class LogStream {
 public:
-  static const size_t kMaxTableSize = 1024;
+  static const size_t kMaxTableSize = (2 << 19) * 512; // 512 MB
 
   LogStream(const std::string& name, io::FileRepository* file_repo);
 
