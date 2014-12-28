@@ -41,6 +41,61 @@ uint64_t LogStream::append(const std::string& entry) {
 
 std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
   std::vector<LogStreamEntry> entries;
+
+  std::shared_ptr<TableRef> table(nullptr);
+  {
+    std::unique_lock<std::mutex> l(tables_mutex_);
+
+    if (tables_.empty()) {
+      return entries;
+    }
+
+    if (offset == 0) {
+      table = tables_[0];
+    } else {
+      for (int i = tables_.size() - 1; i <= 0; --i) {
+        if (tables_[i]->offset <= offset) {
+          table = tables_[i];
+          break;
+        }
+      }
+    }
+  }
+
+  if (table.get() == nullptr) {
+    RAISEF(kIndexError, "invalid offset: $0 (stream: $1)", offset, name_);
+  }
+
+  std::unique_ptr<sstable::Cursor> cursor;
+  std::unique_ptr<sstable::SSTableReader> reader;
+
+  if (table->writer.get() == nullptr) {
+    reader.reset(new sstable::SSTableReader(
+        io::File::openFile(table->file_path, io::File::O_READ)));
+
+    cursor = reader->getCursor();
+  } else {
+    cursor = table->writer->getCursor();
+  }
+
+  if (offset > 0) {
+    cursor->seekTo(offset - table->offset);
+  }
+
+  for (int i = 0; i < batch_size; i++) {
+    if (!cursor->valid()) {
+      break;
+    }
+
+    LogStreamEntry entry;
+    entry.offset = table->offset + cursor->position();
+    entry.next_offset = 0;
+    entry.data = cursor->getDataString();
+    entries.emplace_back(std::move(entry));
+
+    cursor->next();
+  }
+
   return entries;
 }
 
@@ -89,7 +144,6 @@ void LogStream::reopenTable(const std::string& file_path) {
 
   std::unique_lock<std::mutex> l(tables_mutex_);
   tables_.emplace_back(tbl);
-
 
   std::sort(tables_.begin(), tables_.end(), [] (
       std::shared_ptr<TableRef> t1,

@@ -17,12 +17,14 @@ namespace logstream_service {
 
 struct LogStreamEntry {
   uint64_t offset;
+  uint64_t next_offset;
   std::string data;
 
   template <typename T>
   static void reflect(T* meta) {
     meta->prop(&LogStreamEntry::offset, 1, "offset", false);
-    meta->prop(&LogStreamEntry::data, 2, "data", false);
+    meta->prop(&LogStreamEntry::next_offset, 2, "next_offset", false);
+    meta->prop(&LogStreamEntry::data, 3, "data", false);
   }
 };
 

@@ -223,6 +223,19 @@ add_executable(fnord-logstream-service-example
     $<TARGET_OBJECTS:fnord-util>
     service/logstream/logstreamservice_example.cc)
 
+add_executable(tests/test-logstream-service
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
+    $<TARGET_OBJECTS:fnord-logstream-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-sstable>
+    $<TARGET_OBJECTS:fnord-system>
+    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-util>
+    service/logstream/logstreamservice_test.cc)
+
 # service: ping
 add_library(fnord-ping-service OBJECT
     service/ping/pingservice.cc)

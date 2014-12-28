@@ -9,6 +9,7 @@
  */
 #include <fnord/base/fnv.h>
 #include <fnord/base/exception.h>
+#include <fnord/base/inspect.h>
 #include <fnord/sstable/binaryformat.h>
 #include <fnord/sstable/sstablereader.h>
 
@@ -158,7 +159,7 @@ bool SSTableReader::SSTableReaderCursor::valid() {
       header->key_size +
       header->data_size;
 
-  return header->key_size > 0 && row_limit <= limit_;
+  return row_limit <= limit_;
 }
 
 void SSTableReader::SSTableReaderCursor::getKey(void** data, size_t* size) {
