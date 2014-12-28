@@ -74,8 +74,9 @@ void Logger::logException(
     logf(
         log_level,
         tags,
-        "$0: std::exception: <foreign exception>",
-        message);
+        "$0: std::exception: <foreign exception> $1",
+        message,
+        e.what());
   }
 }
 
