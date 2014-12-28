@@ -183,7 +183,7 @@ std::string StringUtil::toString(json::kTokenType type) {
 }
 
 template <>
-std::string fnord::inspect(const json::JSONToken& token) {
+std::string inspect(const json::JSONToken& token) {
   return StringUtil::format(
       "$0:$1",
       fnord::StringUtil::toString(token.type),

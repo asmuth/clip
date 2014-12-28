@@ -175,7 +175,8 @@ auto reflectMethod(MethodType method) -> decltype(reflectMethodImpl(method))
 
   cache.emplace_back(std::make_pair(
       method,
-      new decltype(reflectMethodImpl(method))(reflectMethodImpl(method))));
+      std::unique_ptr<decltype(reflectMethodImpl(method))>(
+          new decltype(reflectMethodImpl(method))(reflectMethodImpl(method)))));
 
   return cache.back().second.get();
 }

@@ -50,7 +50,7 @@ LogStream* LogStreamService::openStream(const std::string& name, bool create) {
     }
 
     stream = new LogStream(name, &file_repo_);
-    streams_.emplace(name, stream);
+    streams_.emplace(std::make_pair(name, std::unique_ptr<LogStream>(stream)));
   } else {
     stream = stream_iter->second.get();
   }
