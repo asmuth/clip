@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/exception.h>
+#include <fnord/base/inspect.h>
 #include <fnord/base/stringutil.h>
 #include <fnord/base/uri.h>
 #include <fnord/net/http/cookies.h>
@@ -23,6 +24,14 @@ HTTPResponse HTTPResponse::parse(const std::string& str) {
 
   parser.onVersion([&response] (const char* data, size_t size) {
     response.setVersion(std::string(data, size));
+  });
+
+  parser.onStatusName([&response] (const char* data, size_t size) {
+    response.setStatusName(std::string(data, size));
+  });
+
+  parser.onStatusCode([&response] (int code) {
+    response.setStatusCode(code);
   });
 
   parser.onHeader([&response] (
@@ -43,7 +52,6 @@ HTTPResponse HTTPResponse::parse(const std::string& str) {
   return response;
 }
 
-
 HTTPResponse::HTTPResponse() {
   setStatus(kStatusNotFound);
 }
@@ -55,6 +63,22 @@ void HTTPResponse::setStatus(int status_code, const std::string& status) {
 
 void HTTPResponse::setStatus(const HTTPStatus& status) {
   setStatus(status.code, status.name);
+}
+
+void HTTPResponse::setStatusCode(int code) {
+  status_code_ = code;
+}
+
+void HTTPResponse::setStatusName(const std::string& status) {
+  status_ = status;
+}
+
+int HTTPResponse::statusCode() const {
+  return status_code_;
+}
+
+const std::string& HTTPResponse::statusName() const {
+  return status_;
 }
 
 void HTTPResponse::addCookie(

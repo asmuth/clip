@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/stringutil.h>
 #include <fnord/net/http/httpgenerator.h>
 
 using fnord::io::OutputStream;
@@ -16,17 +17,18 @@ namespace http {
 
 // FIXPAUL use bufferless print
 void HTTPGenerator::generate(const HTTPResponse& res, OutputStream* os) {
-  os->printf(
-      "%s %i %s\r\n",
-      res.version().c_str(),
-      res.statusCode(),
-      res.statusString().c_str());
+  os->write(
+      StringUtil::format(
+          "$0 $1 $2\r\n",
+          res.version(),
+          res.statusCode(),
+          res.statusName()));
 
   for (const auto& header : res.headers()) {
-    os->printf("%s: %s\r\n", header.first.c_str(), header.second.c_str());
+    os->write(StringUtil::format("$0: $1\r\n", header.first, header.second));
   }
 
-  os->printf("\r\n");
+  os->write("\r\n");
 
   const auto& body = res.body();
   if (body.size() > 0) {

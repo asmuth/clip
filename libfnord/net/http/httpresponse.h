@@ -29,6 +29,8 @@ public:
 
   void setStatus(int status_code, const std::string& status);
   void setStatus(const HTTPStatus& status);
+  void setStatusCode(int code);
+  void setStatusName(const std::string& status);
 
   void addCookie(
       const std::string& key,
@@ -41,8 +43,8 @@ public:
 
   void populateFromRequest(const HTTPRequest& request);
 
-  int statusCode() const { return status_code_; }
-  const std::string& statusString() const { return status_; }
+  int statusCode() const;
+  const std::string& statusName() const;
 
 protected:
   int status_code_;

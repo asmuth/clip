@@ -24,6 +24,8 @@ HTTPParser::HTTPParser(
     on_method_cb_(nullptr),
     on_uri_cb_(nullptr),
     on_version_cb_(nullptr),
+    on_status_code_cb_(nullptr),
+    on_status_name_cb_(nullptr),
     on_header_cb_(nullptr),
     on_headers_complete_cb_(nullptr),
     on_body_chunk_cb_(nullptr),
@@ -35,8 +37,7 @@ HTTPParser::HTTPParser(
       break;
 
     case PARSE_HTTP_RESPONSE:
-      state_ = S_REQ_METHOD;
-      //state_ = S_RES_VERSION;
+      state_ = S_RES_VERSION;
       break;
 
   }
@@ -61,6 +62,15 @@ void HTTPParser::onURI(
 void HTTPParser::onVersion(
     std::function<void(const char* data, size_t size)> callback) {
   on_version_cb_ = callback;
+}
+
+void HTTPParser::onStatusCode(std::function<void(int)> callback) {
+  on_status_code_cb_ = callback;
+}
+
+void HTTPParser::onStatusName(
+    std::function<void(const char* data, size_t size)> callback) {
+  on_status_name_cb_ = callback;
 }
 
 void HTTPParser::onHeader(std::function<void(
@@ -94,6 +104,15 @@ void HTTPParser::parse(const char* data, size_t size) {
         break;
       case S_REQ_VERSION:
         parseRequestVersion(&begin, end);
+        break;
+      case S_RES_VERSION:
+        parseResponseVersion(&begin, end);
+        break;
+      case S_RES_STATUS_CODE:
+        parseResponseStatusCode(&begin, end);
+        break;
+      case S_RES_STATUS_NAME:
+        parseResponseStatusName(&begin, end);
         break;
       case S_HEADER:
         parseHeader(&begin, end);
@@ -213,6 +232,68 @@ void HTTPParser::parseRequestVersion(const char** begin, const char* end) {
 
     if (on_version_cb_) {
       on_version_cb_((char *) buf_.data(), buf_.size());
+    }
+
+    buf_.clear();
+    state_ = S_HEADER;
+    (*begin)++;
+    return;
+  }
+
+  if (buf_.size() > kMaxVersionSize) {
+    RAISEF(kParseError, "HTTP version too large, max is $0", kMaxVersionSize);
+  }
+}
+
+void HTTPParser::parseResponseVersion(const char** begin, const char* end) {
+  if (readUntil(begin, end, ' ')) {
+    if (on_version_cb_) {
+      on_version_cb_((char *) buf_.data(), buf_.size());
+    }
+
+    buf_.clear();
+    state_ = S_RES_STATUS_CODE;
+    (*begin)++;
+    return;
+  }
+
+  if (buf_.size() > kMaxVersionSize) {
+    RAISEF(kParseError, "HTTP version too large, max is $0", kMaxVersionSize);
+  }
+}
+
+void HTTPParser::parseResponseStatusCode(const char** begin, const char* end) {
+  if (readUntil(begin, end, ' ')) {
+    std::string status_code_str((char *) buf_.data(), buf_.size());
+    int status_code = 1;
+
+    try {
+      status_code = std::stoi(status_code_str);
+    } catch (const std::exception& e) {
+      RAISEF(kParseError, "invalid http status code: $0", status_code_str);
+    }
+
+    if (on_status_code_cb_) {
+      on_status_code_cb_(status_code);
+    }
+
+    buf_.clear();
+    state_ = S_RES_STATUS_NAME;
+    (*begin)++;
+    return;
+  }
+
+  if (buf_.size() > kMaxURISize) {
+    RAISEF(kParseError, "HTTP URI too large, max is $0", kMaxURISize);
+  }
+}
+
+void HTTPParser::parseResponseStatusName(const char** begin, const char* end) {
+  if (readUntil(begin, end, '\n')) {
+    BufferUtil::stripTrailingBytes(&buf_, '\r');
+
+    if (on_status_name_cb_) {
+      on_status_name_cb_((char *) buf_.data(), buf_.size());
     }
 
     buf_.clear();

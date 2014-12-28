@@ -71,12 +71,15 @@ TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot1Request, [] () {
 
 TEST_CASE(HTTPTest, ParseHTTP1dot0Response, [] () {
   auto response = HTTPResponse::parse(
-      "HTTP/1.0 200 OK\r\n" \
+      "HTTP/1.0 302 Found\r\n" \
       "fnord: bar\r\n" \
       "\r\n");
 
   EXPECT_EQ(response.version(), "HTTP/1.0");
-  EXPECT_EQ(response.statusCode(), 200);
+  EXPECT_EQ(response.statusCode(), 302);
+  EXPECT_EQ(response.statusName(), "Found");
+  EXPECT_EQ(response.headers().size(), 1);
+  EXPECT_EQ(response.getHeader("fnord"), "bar");
 });
 
 TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {

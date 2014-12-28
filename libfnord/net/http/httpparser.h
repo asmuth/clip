@@ -54,6 +54,9 @@ public:
   void onMethod(std::function<void(HTTPMessage::kHTTPMethod)> callback);
   void onURI(std::function<void(const char* data, size_t size)> callback);
   void onVersion(std::function<void(const char* data, size_t size)> callback);
+  void onStatusCode(std::function<void(int code)> callback);
+  void onStatusName(
+      std::function<void(const char* data, size_t size)> callback);
   void onHeader(std::function<void(
       const char* key,
       size_t key_len,
@@ -66,6 +69,9 @@ protected:
   void parseMethod(const char** begin, const char* end);
   void parseURI(const char** begin, const char* end);
   void parseRequestVersion(const char** begin, const char* end);
+  void parseResponseVersion(const char** begin, const char* end);
+  void parseResponseStatusCode(const char** begin, const char* end);
+  void parseResponseStatusName(const char** begin, const char* end);
   void parseHeader(const char** begin, const char* end);
   void readBody(const char** begin, const char* end);
   bool readUntil(const char** begin, const char* end, char search);
@@ -78,6 +84,8 @@ protected:
   std::function<void(HTTPMessage::kHTTPMethod)> on_method_cb_;
   std::function<void(const char* data, size_t size)> on_uri_cb_;
   std::function<void(const char* data, size_t size)> on_version_cb_;
+  std::function<void(int)> on_status_code_cb_;
+  std::function<void(const char* data, size_t size)> on_status_name_cb_;
   std::function<void(
       const char* key,
       size_t key_len,
