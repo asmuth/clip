@@ -94,6 +94,7 @@ protected:
   std::function<void()> on_headers_complete_cb_;
   std::function<void(const char* data, size_t size)> on_body_chunk_cb_;
 
+  kParserMode mode_;
   kParserState state_;
   Buffer buf_;
   size_t body_bytes_read_;

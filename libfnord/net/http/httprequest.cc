@@ -39,6 +39,10 @@ HTTPRequest HTTPRequest::parse(const std::string& str) {
     request.addHeader(std::string(key, key_size), std::string(val, val_size));
   });
 
+  parser.onBodyChunk([&request] (const char* data, size_t size) {
+    request.appendBody((char *) data, size);
+  });
+
   parser.parse(str.c_str(), str.length());
   parser.eof();
 

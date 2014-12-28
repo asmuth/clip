@@ -82,6 +82,33 @@ TEST_CASE(HTTPTest, ParseHTTP1dot0Response, [] () {
   EXPECT_EQ(response.getHeader("fnord"), "bar");
 });
 
+TEST_CASE(HTTPTest, ParseHTTP1dot0ResponseWithBodyAndContentLength, [] () {
+  auto response = HTTPResponse::parse(
+      "HTTP/1.0 200 OK\r\n" \
+      "Content-Length: 5\r\n" \
+      "\r\nfnord");
+
+  EXPECT_EQ(response.version(), "HTTP/1.0");
+  EXPECT_EQ(response.statusCode(), 200);
+  EXPECT_EQ(response.statusName(), "OK");
+  EXPECT_EQ(response.headers().size(), 1);
+  EXPECT_EQ(response.body().size(), 5);
+  EXPECT_EQ(response.body().toString(), "fnord");
+});
+
+TEST_CASE(HTTPTest, ParseHTTP1dot0ResponseWithBodyWithoutContentLength, [] () {
+  auto response = HTTPResponse::parse(
+      "HTTP/1.0 200 OK\r\n" \
+      "\r\nblah");
+
+  EXPECT_EQ(response.version(), "HTTP/1.0");
+  EXPECT_EQ(response.statusCode(), 200);
+  EXPECT_EQ(response.statusName(), "OK");
+  EXPECT_EQ(response.headers().size(), 0);
+  EXPECT_EQ(response.body().size(), 4);
+  EXPECT_EQ(response.body().toString(), "blah");
+});
+
 TEST_CASE(HTTPTest, PopulateHTTPResponseFromHTTP1dot0Request, [] () {
   auto request = HTTPRequest::parse(
       "GET / HTTP/1.0\r\n" \

@@ -21,6 +21,7 @@ const char HTTPParser::kContentLengthHeader[] = "Content-Length";
 HTTPParser::HTTPParser(
     kParserMode mode,
     size_t buffer_size /* = kDefaultBufferSize */) :
+    mode_(mode),
     on_method_cb_(nullptr),
     on_uri_cb_(nullptr),
     on_version_cb_(nullptr),
@@ -117,12 +118,15 @@ void HTTPParser::parse(const char* data, size_t size) {
       case S_HEADER:
         parseHeader(&begin, end);
         break;
+      case S_DONE:
+        if (mode_ == PARSE_HTTP_REQUEST) {
+          RAISE(kParseError, "invalid trailing bytes");
+        }
+        /* fallthrough */
       case S_BODY:
         readBody(&begin, end);
         break;
-      case S_DONE:
-        iputs("invalid trailing bytes: $0", std::string(begin, end - begin));
-        RAISE(kParseError, "invalid trailing bytes");
+
     }
   }
 }
@@ -139,6 +143,8 @@ void HTTPParser::eof() {
     case S_BODY:
       if (body_bytes_read_ < body_bytes_expected_) {
         RAISE(kParseError, "unexpected end of file");
+      } else {
+        state_ = S_DONE;
       }
       return;
     case S_DONE:
@@ -374,7 +380,10 @@ void HTTPParser::readBody(const char** begin, const char* end) {
 
   if (body_bytes_read_ == body_bytes_expected_) {
     state_ = HTTPParser::S_DONE;
-  } else if (body_bytes_read_ > body_bytes_expected_) {
+  }
+
+  if ((body_bytes_read_ > body_bytes_expected_) &&
+      !(body_bytes_expected_ == 0 && mode_ == PARSE_HTTP_RESPONSE)) {
     RAISE(kParseError, "invalid trailing body bytes");
   }
 

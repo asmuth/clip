@@ -42,6 +42,10 @@ HTTPResponse HTTPResponse::parse(const std::string& str) {
     response.addHeader(std::string(key, key_size), std::string(val, val_size));
   });
 
+  parser.onBodyChunk([&response] (const char* data, size_t size) {
+    response.appendBody((char *) data, size);
+  });
+
   parser.parse(str.c_str(), str.length());
   parser.eof();
 
