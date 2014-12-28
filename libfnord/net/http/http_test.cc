@@ -107,7 +107,7 @@ TEST_CASE(HTTPTest, TestAddCookie, [] () {
     response.addCookie("fnord", "bar", fnord::DateTime(1418571527495314));
     EXPECT_EQ(
         response.getHeader("Set-Cookie"),
-        "fnord=bar; Expires=Sun, 14-Dec-2014 15:38:47 GMT");
+        "fnord=bar; Expires=Sun, 14-Dec-2014 15:38:47 UTC");
   }
 
   {

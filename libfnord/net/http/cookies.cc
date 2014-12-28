@@ -71,7 +71,7 @@ std::string Cookies::mkCookie(
 
   if (static_cast<uint64_t>(expire) > 0) {
     cookie_str.append(StringUtil::format("; Expires=$0",
-        expire.toString("%a, %d-%b-%Y %H:%M:%S %Z")));
+        expire.toString("%a, %d-%b-%Y %H:%M:%S UTC")));
   }
 
   if (httponly) {

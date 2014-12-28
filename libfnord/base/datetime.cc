@@ -73,7 +73,7 @@ DateTime DateTime::daysFromNow(double days) {
 std::string DateTime::toString(const char* fmt) const {
   struct tm tm;
   time_t tt = utc_micros_ / 1000000;
-  localtime_r(&tt, &tm); // FIXPAUL
+  gmtime_r(&tt, &tm); // FIXPAUL
 
   char buf[256]; // FIXPAUL
   buf[0] = 0;
