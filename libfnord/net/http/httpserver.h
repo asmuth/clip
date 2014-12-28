@@ -14,7 +14,7 @@
 #include <fnord/logging/logger.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httphandler.h>
-#include <fnord/net/http/httpconnection.h>
+#include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/tcpserver.h>
 #include <fnord/thread/taskscheduler.h>
 

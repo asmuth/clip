@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_HTTP_CONNECTION_H
-#define _FNORD_HTTP_CONNECTION_H
+#ifndef _FNORD_HTTP_SERVERCONNECTION_H
+#define _FNORD_HTTP_SERVERCONNECTION_H
 #include <memory>
 #include <vector>
 #include <fnord/logging/logger.h>
@@ -22,7 +22,7 @@
 namespace fnord {
 namespace http {
 
-class HTTPConnection {
+class HTTPServerConnection {
 public:
   static const size_t kMinBufferSize = 4096;
 
@@ -49,10 +49,10 @@ public:
    *
    * Here is a simple example:
    *
-   *    HTTPConnection::start(
+   *    HTTPServerConnection::start(
    *         ...,
    *         ...,
-   *         [] (HTTPConnection* conn, HTTPRequest* req) {
+   *         [] (HTTPServerConnection* conn, HTTPRequest* req) {
    *           conn->discardRequestBody([conn] () {
    *             HTTPResponse response;
    *             response.setStatus(kStatusOK);
@@ -60,7 +60,7 @@ public:
    *
    *             conn->writeResponse(
    *                 response,
-   *                 std::bind(&HTTPConnection::finishResponse, conn));
+   *                 std::bind(&HTTPServerConnection::finishResponse, conn));
    *           });
    *         });
    *
@@ -91,7 +91,7 @@ public:
   void finishResponse();
 
 protected:
-  HTTPConnection(
+  HTTPServerConnection(
       HTTPHandlerFactory* handler_factory,
       std::unique_ptr<net::TCPConnection> conn,
       thread::TaskScheduler* scheduler);

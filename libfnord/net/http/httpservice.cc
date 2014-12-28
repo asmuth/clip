@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/inspect.h>
-#include <fnord/net/http/httpconnection.h>
+#include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/http/httpservice.h>
 
 namespace fnord {
@@ -17,7 +17,7 @@ namespace http {
 HTTPServiceHandler::HTTPServiceHandler(
     HTTPService* service,
     thread::TaskScheduler* scheduler,
-    HTTPConnection* conn,
+    HTTPServerConnection* conn,
     HTTPRequest* req) :
     service_(service),
     scheduler_(scheduler),
@@ -61,7 +61,7 @@ void HTTPServiceHandler::dispatchRequest() {
 
     conn_->writeResponse(
         res_,
-        std::bind(&HTTPConnection::finishResponse, conn_));
+        std::bind(&HTTPServerConnection::finishResponse, conn_));
   };
 
   if (scheduler_ == nullptr) {

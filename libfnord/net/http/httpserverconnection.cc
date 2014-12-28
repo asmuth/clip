@@ -9,25 +9,25 @@
  */
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
-#include "fnord/net/http/httpconnection.h"
+#include "fnord/net/http/httpserverconnection.h"
 #include "fnord/net/http/httpgenerator.h"
 
 namespace fnord {
 
 template <>
-std::string inspect(const http::HTTPConnection& conn) {
-  return StringUtil::format("<HTTPConnection $0>", inspect(&conn));
+std::string inspect(const http::HTTPServerConnection& conn) {
+  return StringUtil::format("<HTTPServerConnection $0>", inspect(&conn));
 }
 
 namespace http {
 
-void HTTPConnection::start(
+void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
     std::unique_ptr<net::TCPConnection> conn,
     thread::TaskScheduler* scheduler) {
   // N.B. we don't leak the connection here. it is ref counted and will
   // free itself
-  auto http_conn = new HTTPConnection(
+  auto http_conn = new HTTPServerConnection(
       handler_factory,
       std::move(conn),
       scheduler);
@@ -35,7 +35,7 @@ void HTTPConnection::start(
   http_conn->nextRequest();
 }
 
-HTTPConnection::HTTPConnection(
+HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
     std::unique_ptr<net::TCPConnection> conn,
     thread::TaskScheduler* scheduler) :
@@ -73,10 +73,10 @@ HTTPConnection::HTTPConnection(
         std::string(val, val_size));
   });
 
-  parser_.onHeadersComplete(std::bind(&HTTPConnection::dispatchRequest, this));
+  parser_.onHeadersComplete(std::bind(&HTTPServerConnection::dispatchRequest, this));
 }
 
-void HTTPConnection::read() {
+void HTTPServerConnection::read() {
   mutex_.lock();
 
   size_t len;
@@ -125,7 +125,7 @@ void HTTPConnection::read() {
   mutex_.unlock();
 }
 
-void HTTPConnection::write() {
+void HTTPServerConnection::write() {
   mutex_.lock();
 
   auto data = ((char *) buf_.data()) + buf_.mark();
@@ -164,19 +164,19 @@ void HTTPConnection::write() {
   }
 }
 
-void HTTPConnection::awaitRead() {
+void HTTPServerConnection::awaitRead() {
   scheduler_->runOnReadable(
-      std::bind(&HTTPConnection::read, this),
+      std::bind(&HTTPServerConnection::read, this),
       *conn_);
 }
 
-void HTTPConnection::awaitWrite() {
+void HTTPServerConnection::awaitWrite() {
   scheduler_->runOnWritable(
-      std::bind(&HTTPConnection::write, this),
+      std::bind(&HTTPServerConnection::write, this),
       *conn_);
 }
 
-void HTTPConnection::nextRequest() {
+void HTTPServerConnection::nextRequest() {
   parser_.reset();
   cur_request_.reset(new HTTPRequest());
   cur_handler_.reset(nullptr);
@@ -190,13 +190,13 @@ void HTTPConnection::nextRequest() {
   awaitRead();
 }
 
-void HTTPConnection::dispatchRequest() {
+void HTTPServerConnection::dispatchRequest() {
   incRef();
   cur_handler_= handler_factory_->getHandler(this, cur_request_.get());
   cur_handler_->handleHTTPRequest();
 }
 
-void HTTPConnection::readRequestBody(
+void HTTPServerConnection::readRequestBody(
     std::function<void (const void*, size_t, bool)> callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 
@@ -224,7 +224,7 @@ void HTTPConnection::readRequestBody(
   parser_.onBodyChunk(read_body_chunk_fn);
 }
 
-void HTTPConnection::discardRequestBody(std::function<void ()> callback) {
+void HTTPServerConnection::discardRequestBody(std::function<void ()> callback) {
   readRequestBody([callback] (const void* data, size_t size, bool last) {
     if (last) {
       callback();
@@ -232,7 +232,7 @@ void HTTPConnection::discardRequestBody(std::function<void ()> callback) {
   });
 }
 
-void HTTPConnection::writeResponse(
+void HTTPServerConnection::writeResponse(
     const HTTPResponse& resp,
     std::function<void()> ready_callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
@@ -244,7 +244,7 @@ void HTTPConnection::writeResponse(
   awaitWrite();
 }
 
-void HTTPConnection::writeResponseBody(
+void HTTPServerConnection::writeResponseBody(
     const void* data,
     size_t size,
     std::function<void()> ready_callback) {
@@ -256,7 +256,7 @@ void HTTPConnection::writeResponseBody(
   awaitWrite();
 }
 
-void HTTPConnection::finishResponse() {
+void HTTPServerConnection::finishResponse() {
   if (decRef()) {
     return;
   }
@@ -269,7 +269,7 @@ void HTTPConnection::finishResponse() {
   }
 }
 
-void HTTPConnection::close() {
+void HTTPServerConnection::close() {
   log::Logger::get()->logf(
       fnord::log::kTrace, "HTTP connection close: $0",
       inspect(*this));
@@ -278,11 +278,11 @@ void HTTPConnection::close() {
   decRef();
 }
 
-void HTTPConnection::incRef() {
+void HTTPServerConnection::incRef() {
   refcount_++;
 }
 
-bool HTTPConnection::decRef() {
+bool HTTPServerConnection::decRef() {
   if (refcount_.fetch_sub(1) == 1) {
     log::Logger::get()->logf(
         fnord::log::kTrace, "HTTP connection free'd: $0",

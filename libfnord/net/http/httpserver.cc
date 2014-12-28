@@ -10,7 +10,7 @@
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
 #include <fnord/base/wallclock.h>
-#include <fnord/net/http/httpconnection.h>
+#include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/http/httpserver.h>
 
 /*
@@ -33,7 +33,7 @@ HTTPServer::HTTPServer(
     scheduler_(scheduler),
     ssock_(scheduler) {
   ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
-    HTTPConnection::start(handler_factory_, std::move(conn), scheduler_);
+    HTTPServerConnection::start(handler_factory_, std::move(conn), scheduler_);
   });
 }
 

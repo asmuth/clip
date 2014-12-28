@@ -13,7 +13,7 @@
 
 namespace fnord {
 namespace http {
-class HTTPConnection;
+class HTTPServerConnection;
 class HTTPRequest;
 
 class HTTPHandler {
@@ -26,7 +26,7 @@ class HTTPHandlerFactory {
 public:
   virtual ~HTTPHandlerFactory() {}
   virtual std::unique_ptr<HTTPHandler> getHandler(
-      HTTPConnection* conn,
+      HTTPServerConnection* conn,
       HTTPRequest* req) = 0;
 };
 

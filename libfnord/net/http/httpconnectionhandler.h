@@ -15,10 +15,10 @@
 namespace fnord {
 namespace http {
 
-class HTTPConnectionHandler {
+class HTTPServerConnectionHandler {
 public:
 
-  virtual ~HTTPConnectionHandler() {}
+  virtual ~HTTPServerConnectionHandler() {}
 
   virtual bool handleHTTPRequest(
       HTTPRequest* request,

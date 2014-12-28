@@ -31,7 +31,7 @@ public:
   HTTPServiceHandler(
       HTTPService* service,
       thread::TaskScheduler* scheduler,
-      HTTPConnection* conn,
+      HTTPServerConnection* conn,
       HTTPRequest* req);
 
   void handleHTTPRequest() override;
@@ -40,7 +40,7 @@ protected:
 
   HTTPService* service_;
   thread::TaskScheduler* scheduler_;
-  HTTPConnection* conn_;
+  HTTPServerConnection* conn_;
   HTTPRequest* req_;
   HTTPResponse res_;
 };

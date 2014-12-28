@@ -9,7 +9,7 @@
  */
 #include <stdlib.h>
 #include <memory>
-#include "fnord/net/http/httpconnection.h"
+#include "fnord/net/http/httpserverconnection.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpservice.h"
 
@@ -27,7 +27,7 @@ void HTTPRouter::addRoute(
     HTTPService* service,
     thread::TaskScheduler* scheduler) {
   auto factory = [service, scheduler] (
-      HTTPConnection* conn,
+      HTTPServerConnection* conn,
       HTTPRequest* req) -> std::unique_ptr<HTTPHandler> {
     auto handler = new HTTPServiceHandler(
         service,
@@ -46,7 +46,7 @@ void HTTPRouter::addRoute(
     HTTPHandlerFactory* handler_factory) {
 
   auto factory = [handler_factory] (
-      HTTPConnection* conn,
+      HTTPServerConnection* conn,
       HTTPRequest* req) ->std::unique_ptr<HTTPHandler> {
     return handler_factory->getHandler(conn, req);
   };
@@ -55,7 +55,7 @@ void HTTPRouter::addRoute(
 }
 
 std::unique_ptr<HTTPHandler> HTTPRouter::getHandler(
-    HTTPConnection* conn,
+    HTTPServerConnection* conn,
     HTTPRequest* req) {
   for (const auto& route : routes_) {
     if (route.first(req)) {
@@ -67,7 +67,7 @@ std::unique_ptr<HTTPHandler> HTTPRouter::getHandler(
 }
 
 HTTPRouter::NoSuchRouteHandler::NoSuchRouteHandler(
-    HTTPConnection* conn,
+    HTTPServerConnection* conn,
     HTTPRequest* req) :
     conn_(conn),
     req_(req) {
@@ -81,7 +81,7 @@ void HTTPRouter::NoSuchRouteHandler::handleHTTPRequest() {
 
     conn_->writeResponse(
         res_,
-        std::bind(&HTTPConnection::finishResponse, conn_));
+        std::bind(&HTTPServerConnection::finishResponse, conn_));
   });
 }
 

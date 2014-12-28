@@ -1,4 +1,8 @@
 
+-> ratio of item visits to queries (only item visits but no queries -> fraud)
+-> number of userids per source ip
+-> session too long
+
   -> sstable row format improvements
   -> proper logger iface
   -> exception refactoring

@@ -25,7 +25,7 @@ public:
 
   typedef std::function<
       std::unique_ptr<HTTPHandler> (
-          HTTPConnection*,
+          HTTPServerConnection*,
           HTTPRequest*)> FactoryFnType;
 
   template <typename... HandlerArgs>
@@ -47,17 +47,17 @@ public:
       HTTPHandlerFactory* factory);
 
   std::unique_ptr<HTTPHandler> getHandler(
-      HTTPConnection* conn,
+      HTTPServerConnection* conn,
       HTTPRequest* req) override;
 
 protected:
 
   class NoSuchRouteHandler : public HTTPHandler {
   public:
-    NoSuchRouteHandler(HTTPConnection* conn, HTTPRequest* req);
+    NoSuchRouteHandler(HTTPServerConnection* conn, HTTPRequest* req);
     void handleHTTPRequest() override;
   protected:
-    HTTPConnection* conn_;
+    HTTPServerConnection* conn_;
     HTTPRequest* req_;
     HTTPResponse res_;
   };

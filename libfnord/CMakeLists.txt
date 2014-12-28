@@ -93,7 +93,6 @@ add_library(fnord-http OBJECT
     net/tcpserver.cc
     net/tcpconnection.cc
     net/http/cookies.cc
-    net/http/httpconnection.cc
     net/http/httpgenerator.cc
     net/http/httpmessage.cc
     net/http/httpparser.cc
@@ -101,6 +100,7 @@ add_library(fnord-http OBJECT
     net/http/httpresponse.cc
     net/http/httprouter.cc
     net/http/httpserver.cc
+    net/http/httpserverconnection.cc
     net/http/httpservice.cc)
 
 add_executable(tests/test-http

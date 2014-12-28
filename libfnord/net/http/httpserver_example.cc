@@ -44,7 +44,7 @@ class TestService : public fnord::http::HTTPService {
 class StreamingTestHandler : public fnord::http::HTTPHandler {
 public:
   StreamingTestHandler(
-      fnord::http::HTTPConnection* conn,
+      fnord::http::HTTPServerConnection* conn,
       fnord::http::HTTPRequest* req) :
       conn_(conn),
       req_(req),
@@ -84,7 +84,7 @@ public:
       conn_->writeResponseBody(
           buf.c_str(),
           buf.length(),
-          std::bind(&fnord::http::HTTPConnection::finishResponse, conn_));
+          std::bind(&fnord::http::HTTPServerConnection::finishResponse, conn_));
     } else {
       conn_->writeResponseBody(
           buf.c_str(),
@@ -96,7 +96,7 @@ public:
 protected:
   size_t body_len_;
   int chunks_written_;
-  fnord::http::HTTPConnection* conn_;
+  fnord::http::HTTPServerConnection* conn_;
   fnord::http::HTTPRequest* req_;
   fnord::http::HTTPResponse res_;
 };
@@ -104,7 +104,7 @@ protected:
 class StreamingTestHandlerFactory : public fnord::http::HTTPHandlerFactory {
 public:
   std::unique_ptr<fnord::http::HTTPHandler> getHandler(
-      fnord::http::HTTPConnection* conn,
+      fnord::http::HTTPServerConnection* conn,
       fnord::http::HTTPRequest* req) override {
     return std::unique_ptr<fnord::http::HTTPHandler>(
         new StreamingTestHandler(conn, req));
