@@ -160,3 +160,15 @@ TEST_CASE(URITest, TestParseQueryParams, [] () {
 
   EXPECT_EQ(uri.toString(), "fnord:path?fuu=bar&blah=123123");
 });
+
+TEST_CASE(URITest, TestWeirdUrls, [] () {
+  URI uri1(
+      "/t.gif?c=f9765c4564e077c0cb~4ae4a27f81fa&e=q&qstr:de=x" \
+          "xx&is=p~40938238~1,p~70579299~2");
+
+  EXPECT_EQ(uri1.path(), "/t.gif");
+  EXPECT_EQ(
+      uri1.query(),
+      "c=f9765c4564e077c0cb~4ae4a27f81fa&e=q&qstr:de=x" \
+          "xx&is=p~40938238~1,p~70579299~2");
+});
