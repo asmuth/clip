@@ -278,6 +278,15 @@ size_t SSTableWriter::SSTableWriterCursor::position() const {
   return pos_;
 }
 
+size_t SSTableWriter::SSTableWriterCursor::nextPosition() {
+  auto page = getPage();
+  auto header = page->structAt<BinaryFormat::RowHeader>(0);
+  size_t row_size = sizeof(BinaryFormat::RowHeader) + header->key_size +
+      header->data_size;
+
+  return pos_ + row_size;
+}
+
 void SSTableWriter::SSTableWriterCursor::getData(void** data, size_t* size) {
   auto page = getPage();
   auto header = page->structAt<BinaryFormat::RowHeader>(0);

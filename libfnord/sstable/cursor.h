@@ -34,6 +34,7 @@ public:
   virtual std::string getDataString();
 
   virtual size_t position() const = 0;
+  virtual size_t nextPosition() = 0;
 
 };
 

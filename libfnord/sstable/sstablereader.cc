@@ -136,6 +136,16 @@ size_t SSTableReader::SSTableReaderCursor::position() const {
   return pos_ - begin_;
 }
 
+size_t SSTableReader::SSTableReaderCursor::nextPosition() {
+  auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
+
+  auto next_pos = pos_ += sizeof(BinaryFormat::RowHeader) +
+      header->key_size +
+      header->data_size;
+
+  return next_pos - begin_;
+}
+
 bool SSTableReader::SSTableReaderCursor::next() {
   auto header = mmap_->structAt<BinaryFormat::RowHeader>(pos_);
 

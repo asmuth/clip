@@ -53,7 +53,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     if (offset == 0) {
       table = tables_[0];
     } else {
-      for (int i = tables_.size() - 1; i <= 0; --i) {
+      for (int i = tables_.size() - 1; i >= 0; --i) {
         if (tables_[i]->offset <= offset) {
           table = tables_[i];
           break;
@@ -89,11 +89,13 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 
     LogStreamEntry entry;
     entry.offset = table->offset + cursor->position();
-    entry.next_offset = 0;
+    entry.next_offset = table->offset + cursor->nextPosition();
     entry.data = cursor->getDataString();
     entries.emplace_back(std::move(entry));
 
-    cursor->next();
+    if (!cursor->next()) {
+      break;
+    }
   }
 
   return entries;
