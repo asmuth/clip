@@ -165,6 +165,33 @@ unsigned long long fromJSONImpl(
   }
 }
 
+template <>
+unsigned long fromJSONImpl(
+    std::vector<JSONToken>::const_iterator begin,
+    std::vector<JSONToken>::const_iterator end) {
+  if (begin == end) {
+    RAISE(kIndexError);
+  }
+
+  switch (begin->type) {
+    case JSON_STRING:
+    case JSON_NUMBER:
+      try {
+        return std::stoul(begin->data);
+      } catch (std::exception& e) {
+        /* fallthrough */
+      }
+
+    default:
+      RAISEF(
+          kParseError,
+          "can't convert $0 ($1) to unsigned long long",
+          begin->type,
+          begin->data);
+
+  }
+}
+
 } // namespace json
 
 template <>

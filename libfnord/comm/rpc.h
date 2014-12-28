@@ -9,12 +9,14 @@
  */
 #ifndef _FNORD_COMM_RPC_H
 #define _FNORD_COMM_RPC_H
+#include <condition_variable>
 #include <functional>
+#include <memory>
+#include <mutex>
 #include <stdlib.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <mutex>
 
 namespace fnord {
 namespace comm {

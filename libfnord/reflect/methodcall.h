@@ -9,9 +9,10 @@
  */
 #ifndef _FNORD_REFLECT_METHODCALL_H
 #define _FNORD_REFLECT_METHODCALL_H
-#include <vector>
-#include <string>
 #include <functional>
+#include <memory>
+#include <string>
+#include <vector>
 #include "fnord/reflect/indexsequence.h"
 
 namespace fnord {

@@ -10,11 +10,12 @@
 #ifndef _FNORD_COMM_FEED_H
 #define _FNORD_COMM_FEED_H
 #include <functional>
+#include <memory>
+#include <mutex>
 #include <stdlib.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <mutex>
 
 namespace fnord {
 namespace comm {
