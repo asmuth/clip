@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include "fnord/base/application.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/io/filerepository.h"
@@ -18,22 +19,14 @@
 #include "fnord/service/logstream/logstreamservice.h"
 #include "fnord/thread/eventloop.h"
 #include "fnord/thread/threadpool.h"
-#include "fnord/system/signalhandler.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::logstream_service::LogStreamService;
 
 int main() {
-  fnord::system::SignalHandler::ignoreSIGHUP();
-  fnord::system::SignalHandler::ignoreSIGPIPE();
-
-  fnord::CatchAndAbortExceptionHandler ehandler;
-  ehandler.installGlobalHandlers();
-
-  fnord::log::LogOutputStream logger(fnord::io::OutputStream::getStderr());
-  fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
-  fnord::log::Logger::get()->listen(&logger);
+  fnord::Application::init();
+  fnord::Application::logToStderr();
 
   JSONRPC rpc;
   JSONRPCHTTPAdapter rpc_http(&rpc);

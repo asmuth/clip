@@ -8,28 +8,30 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include "fnord/base/application.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/keyvalue/keyvalueservice.h"
 #include "fnord/thread/threadpool.h"
-#include "fnord/system/signalhandler.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::keyvalue_service::KeyValueService;
 
 int main() {
-  fnord::system::SignalHandler::ignoreSIGHUP();
-  fnord::system::SignalHandler::ignoreSIGPIPE();
+  fnord::Application::init();
+  fnord::Application::logToStderr();
 
   JSONRPC rpc;
+  JSONRPCHTTPAdapter rpc_http(&rpc);
 
   KeyValueService keyvalue_service;
 
-  fnord::http::HTTPRouter http_router;
   fnord::thread::ThreadPool thread_pool;
+  fnord::http::HTTPRouter http_router;
+  http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
   fnord::http::HTTPServer http_server(&http_router, &thread_pool);
   http_server.listen(8080);
 

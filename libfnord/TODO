@@ -1,3 +1,6 @@
 
+  -> sstable row format improvements
+  -> proper logger iface
   -> exception refactoring
   -> fix StringUtil::toString (should take const& param)
+  -> stats/counters

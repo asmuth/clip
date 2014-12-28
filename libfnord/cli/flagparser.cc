@@ -1,10 +1,10 @@
 #include <string>
 #include <vector>
 #include <fnord/base/exception.h>
+#include <fnord/cli/flagparser.h>
 #include <fnord/io/outputstream.h>
-#include <fnordmetric/cli/flagparser.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace cli {
 
 FlagParser::FlagParser() {}

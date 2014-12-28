@@ -18,6 +18,7 @@
 const char kBufferOverflowError[] = "BufferOverflowError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";
 const char kDivideByZeroError[] = "DivideByZeroError";
+const char kFlagError[] = "FlagError";
 const char kIOError[] = "IOError";
 const char kIllegalArgumentError[] = "IOIllegalArgument";
 const char kIllegalFormatError[] = "IllegalFormat";

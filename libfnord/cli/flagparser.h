@@ -7,22 +7,18 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#ifndef _FNORDMETRIC_FLAGPARSER_H
-#define _FNORDMETRIC_FLAGPARSER_H
+#ifndef _FNORD_CLI_FLAGPARSER_H
+#define _FNORD_CLI_FLAGPARSER_H
 #include <string>
 #include <vector>
 #include <fnord/base/exception.h>
 #include <fnord/io/outputstream.h>
 
-namespace fnordmetric {
+namespace fnord {
 namespace cli {
-
-const char kFlagError[] = "FlagError";
 
 class FlagParser {
 public:
-
   enum kFlagType {
     T_SWITCH,
     T_STRING,

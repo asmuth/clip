@@ -7,19 +7,26 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <signal.h>
-#include "fnord/system/signalhandler.h"
+#ifndef _FNORD_APPLICATION_H
+#define _FNORD_APPLICATION_H
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <stdlib.h>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace fnord {
-namespace system {
 
-void SignalHandler::ignoreSIGHUP() {
-  signal(SIGHUP, SIG_IGN);
-}
+class Application {
+public:
 
-void SignalHandler::ignoreSIGPIPE() {
-  signal(SIGPIPE, SIG_IGN);
-}
+  static void init();
+
+  static void logToStderr();
+
+};
 
 }
-}
+#endif

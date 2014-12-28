@@ -18,7 +18,6 @@
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/logstream/logstreamservice.h"
 #include "fnord/test/unittest.h"
-#include "fnord/system/signalhandler.h"
 
 UNIT_TEST(LogStreamServiceTest);
 
