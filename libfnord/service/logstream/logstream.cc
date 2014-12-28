@@ -79,7 +79,9 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
   }
 
   if (offset > 0) {
-    cursor->seekTo(offset - table->offset);
+    if (!cursor->trySeekTo(offset - table->offset)) {
+      return entries;
+    }
   }
 
   for (int i = 0; i < batch_size; i++) {

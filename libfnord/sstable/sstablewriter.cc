@@ -225,6 +225,15 @@ SSTableWriter::SSTableWriterCursor::SSTableWriterCursor(
     mmap_(mmap),
     pos_(0) {}
 
+bool SSTableWriter::SSTableWriterCursor::trySeekTo(size_t body_offset) {
+  if (body_offset >= table_->bodySize()) {
+    return false;
+  } else {
+    pos_ = body_offset;
+    return true;
+  }
+}
+
 void SSTableWriter::SSTableWriterCursor::seekTo(size_t body_offset) {
   if (body_offset >= table_->bodySize()) {
     RAISE(kIndexError, "seekTo() out of bounds position");

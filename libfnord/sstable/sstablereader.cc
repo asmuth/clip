@@ -132,6 +132,15 @@ void SSTableReader::SSTableReaderCursor::seekTo(size_t body_offset) {
   pos_ = begin_ + body_offset;
 }
 
+bool SSTableReader::SSTableReaderCursor::trySeekTo(size_t body_offset) {
+  if (begin_ + body_offset < limit_) {
+    pos_ = begin_ + body_offset;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 size_t SSTableReader::SSTableReaderCursor::position() const {
   return pos_ - begin_;
 }

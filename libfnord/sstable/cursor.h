@@ -25,6 +25,7 @@ public:
   virtual ~Cursor();
 
   virtual void seekTo(size_t body_offset) = 0;
+  virtual bool trySeekTo(size_t body_offset) = 0;
   virtual bool next() = 0;
   virtual bool valid() = 0;
 

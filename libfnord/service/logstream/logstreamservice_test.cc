@@ -29,27 +29,43 @@ TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
   repo.deleteAllFiles();
 
   auto msggen = [] (int i) { return fnord::StringUtil::format("msg$0", i); };
+
+  const int kPerRun = 1000;
+  const int kNumRuns = 10;
+  const int kBatchSize = 23;
+
+  auto checkall = [&] (fnord::logstream_service::LogStreamService* ls, int i) {
+    int n = 0;
+    for (size_t offset = 0; ;) {
+      auto entries = ls->fetch("teststream", offset, kBatchSize);
+
+      if (entries.size() == 0) {
+        break;
+      }
+
+      for (const auto& e : entries) {
+        EXPECT_EQ(e.data, msggen(n++));
+      }
+
+      offset = entries.back().next_offset;
+    }
+
+    EXPECT_EQ(n, i);
+  };
+
   int i = 0;
+  for (int r = 0; r < kNumRuns; ++r) {
+    fnord::logstream_service::LogStreamService ls_service{
+        fnord::io::FileRepository(log_path)};
 
-  fnord::logstream_service::LogStreamService ls_service(repo);
-  for (int limit = i + 100; i < limit ; ++i) {
-    ls_service.append("teststream", msggen(i));
-  }
-
-  int n = 0;
-  for (size_t offset = 0; ;) {
-    auto entries = ls_service.fetch("teststream", offset, 10);
-
-    if (entries.size() == 0) {
-      break;
+    if (r > 0) {
+      checkall(&ls_service, i);
     }
 
-    for (const auto& e : entries) {
-      EXPECT_EQ(e.data, msggen(n++));
+    for (int limit = i + kPerRun; i < limit ; ++i) {
+      ls_service.append("teststream", msggen(i));
     }
 
-    offset = entries.back().next_offset;
+    checkall(&ls_service, i);
   }
-
-  EXPECT_EQ(n, i);
 });
