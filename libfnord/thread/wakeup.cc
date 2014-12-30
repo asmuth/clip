@@ -14,11 +14,6 @@ namespace fnord {
 namespace thread {
 
 Wakeup::Wakeup() : gen_(0) {
-  fnord::iputs("wakeup create $0 $1", this, gen_.load());
-}
-
-Wakeup::~Wakeup() {
-  fnord::iputs("wakeup destroy $0 $1", this, gen_.load());
 }
 
 void Wakeup::waitForNextWakeup() {
@@ -26,13 +21,11 @@ void Wakeup::waitForNextWakeup() {
 }
 
 void Wakeup::waitForWakeup(long oldgen) {
-
-  fnord::iputs("wakeup wait $0 $1", this, oldgen);
   std::unique_lock<std::mutex> l(mutex_);
 
-  while (gen_.load() == oldgen) {
-    condvar_.wait(l);
-  }
+  condvar_.wait(l, [this, oldgen] {
+    return gen_.load() > oldgen;
+  });
 }
 
 long Wakeup::generation() const {
@@ -40,11 +33,9 @@ long Wakeup::generation() const {
 }
 
 void Wakeup::wakeup() {
-  {
-    std::unique_lock<std::mutex> l(mutex_);
-    gen_++;
-  }
-
+  std::unique_lock<std::mutex> l(mutex_);
+  gen_++;
+  l.unlock();
   condvar_.notify_all();
 }
 

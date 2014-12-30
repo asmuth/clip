@@ -254,14 +254,7 @@ TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
 
 TEST_CASE(HTTPTest, TestHTTPConnectionPoolEnd2End, [] () {
   fnord::thread::ThreadPool tp;
-
-  auto res = fnord::http::HTTPClient::get("http://localhost:8080/", &tp);
-  res->wait();
-
-  const auto& r = res->get();
-  fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
-/*
-HTTPConnectionPool http_pool(&tp);
+  HTTPConnectionPool http_pool(&tp);
 
   auto res = http_pool.executeRequest(
       fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));
@@ -272,5 +265,4 @@ HTTPConnectionPool http_pool(&tp);
 
   const auto& r = res->get();
   fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
-*/
 });

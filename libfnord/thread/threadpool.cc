@@ -11,6 +11,7 @@
 #include <memory>
 #include <sys/select.h>
 #include <thread>
+#include <unistd.h>
 
 #include "fnord/base/exception.h"
 #include "fnord/base/exceptionhandler.h"
@@ -32,21 +33,14 @@ ThreadPool::ThreadPool(
     free_threads_(0) {}
 
 void ThreadPool::run(std::function<void()> task) {
-  bool start_thread = true;
+  std::unique_lock<std::mutex> l(runq_mutex_);
+  runq_.push_back(task);
 
-  {
-    std::lock_guard<std::mutex> lock_holder(runq_mutex_);
-    runq_.push_back(task);
-
-    if (runq_.size() < free_threads_) {
-      start_thread = false;
-    }
-  }
-
-  if (start_thread) {
+  if (runq_.size() > free_threads_) {
     startThread();
   }
 
+  l.unlock();
   wakeup_.notify_one();
 }
 
@@ -106,21 +100,18 @@ void ThreadPool::startThread() {
     std::thread thread([this] () {
       for (;;) {
         try {
-          std::function<void()> task;
+          std::unique_lock<std::mutex> lk(runq_mutex_);
+          free_threads_++;
 
-          {
-            std::unique_lock<std::mutex> lk(runq_mutex_);
-            free_threads_++;
-
-            while (runq_.size() == 0) {
-              wakeup_.wait(lk);
-            }
-
-            assert(runq_.size() > 0);
-            task = runq_.front();
-            runq_.pop_front();
-            free_threads_--;
+          while (runq_.size() == 0) {
+            wakeup_.wait(lk);
           }
+
+          assert(runq_.size() > 0);
+          auto task = runq_.front();
+          runq_.pop_front();
+          free_threads_--;
+          lk.unlock();
 
           task();
         } catch (const std::exception& e) {
