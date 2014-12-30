@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_WEB_HTTPREQUEST_H
 #define _FNORDMETRIC_WEB_HTTPREQUEST_H
+#include <fnord/base/uri.h>
 #include <fnord/net/http/httpmessage.h>
 #include <string>
 
@@ -18,6 +19,19 @@ class HTTPInputStream;
 
 class HTTPRequest : public HTTPMessage {
 public:
+
+  static HTTPRequest mkGet(const std::string& uri);
+
+  static HTTPRequest mkGet(
+      const std::string& uri,
+      const HTTPMessage::HeaderList& headers);
+
+  static HTTPRequest mkGet(const URI& uri);
+
+  static HTTPRequest mkGet(
+      const URI& uri,
+      const HTTPMessage::HeaderList& headers);
+
   /**
    * Parse the provided http request string and return the parsed http request
    */

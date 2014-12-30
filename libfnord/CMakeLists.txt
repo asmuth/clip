@@ -96,6 +96,7 @@ add_library(fnord-http OBJECT
     net/http/cookies.cc
     net/http/httpclient.cc
     net/http/httpclientconnection.cc
+    net/http/httpconnectionpool.cc
     net/http/httpgenerator.cc
     net/http/httpmessage.cc
     net/http/httpparser.cc

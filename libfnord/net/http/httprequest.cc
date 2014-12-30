@@ -15,6 +15,34 @@
 namespace fnord {
 namespace http {
 
+HTTPRequest HTTPRequest::mkGet(const std::string& uri) {
+  return mkGet(URI(uri), HTTPMessage::HeaderList{});
+}
+
+HTTPRequest HTTPRequest::mkGet(
+    const std::string& uri,
+    const HTTPMessage::HeaderList& headers) {
+  return mkGet(URI(uri), headers);
+}
+
+HTTPRequest HTTPRequest::mkGet(const URI& uri) {
+  return mkGet(uri, HTTPMessage::HeaderList{});
+}
+
+HTTPRequest HTTPRequest::mkGet(
+    const URI& uri,
+    const HTTPMessage::HeaderList& headers) {
+  HTTPRequest req(HTTPMessage::M_GET, uri.pathAndQuery());
+  req.addHeader("Host", uri.hostAndPort());
+
+  for (const auto& hdr : headers) {
+    req.setHeader(hdr.first, hdr.second);
+  }
+
+  return req;
+}
+
+
 HTTPRequest HTTPRequest::parse(const std::string& str) {
   HTTPParser parser(HTTPParser::PARSE_HTTP_REQUEST);
   HTTPRequest request;

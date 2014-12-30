@@ -18,34 +18,27 @@ namespace http {
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const std::string& uri,
     fnord::thread::TaskScheduler* sched) {
-  return get(URI(uri), HTTPMessage::HeaderList{}, sched);
+  return executeRequest(HTTPRequest::mkGet(uri), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const std::string& uri,
     const HTTPMessage::HeaderList& headers,
     fnord::thread::TaskScheduler* sched) {
-  return get(URI(uri), headers, sched);
+  return executeRequest(HTTPRequest::mkGet(uri, headers), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const URI& uri,
     fnord::thread::TaskScheduler* sched) {
-  return get(uri, HTTPMessage::HeaderList{}, sched);
+  return executeRequest(HTTPRequest::mkGet(uri), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const URI& uri,
     const HTTPMessage::HeaderList& headers,
     fnord::thread::TaskScheduler* sched) {
-  HTTPRequest req(fnord::http::HTTPMessage::M_GET, uri.pathAndQuery());
-  req.addHeader("Host", uri.hostAndPort());
-
-  for (const auto& hdr : headers) {
-    req.setHeader(hdr.first, hdr.second);
-  }
-
-  return executeRequest(req, sched);
+  return executeRequest(HTTPRequest::mkGet(uri, headers), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(

@@ -10,8 +10,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <fnord/base/exception.h>
 #include <fnord/net/http/httpclient.h>
+#include <fnord/net/http/httpconnectionpool.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
@@ -244,6 +246,19 @@ TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
   fnord::thread::ThreadPool tp;
 
   auto res = fnord::http::HTTPClient::get("http://localhost:8080/", &tp);
+  res->wait();
+
+  const auto& r = res->get();
+  fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
+});
+
+TEST_CASE(HTTPTest, TestHTTPConnectionPoolEnd2End, [] () {
+  fnord::thread::ThreadPool tp;
+  HTTPConnectionPool http_pool(&tp);
+
+  auto res = http_pool.executeRequest(
+      fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));
+
   res->wait();
 
   const auto& r = res->get();
