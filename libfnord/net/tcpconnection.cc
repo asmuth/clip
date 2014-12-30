@@ -7,14 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/base/exception.h"
-#include "fnord/net/tcpconnection.h"
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <unistd.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <unistd.h>
+#include "fnord/base/exception.h"
+#include "fnord/net/tcpconnection.h"
 
 namespace fnord {
 namespace net {
