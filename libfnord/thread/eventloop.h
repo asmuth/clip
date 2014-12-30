@@ -22,6 +22,10 @@ public:
   void run(std::function<void()> task) override;
   void runOnReadable(std::function<void()> task, int fd) override;
   void runOnWritable(std::function<void()> task, int fd) override;
+  void runOnWakeup(
+      std::function<void()> task,
+      Wakeup* wakeup,
+      long wakeup_generation) override;
 
   EventLoop();
   void run();

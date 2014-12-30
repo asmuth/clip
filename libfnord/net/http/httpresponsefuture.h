@@ -28,6 +28,7 @@ public:
 
   const HTTPResponse& get() const;
   void wait();
+  thread::Wakeup* onReady();
 
   HTTPResponseHandler* responseHandler();
   void storeConnection(std::unique_ptr<HTTPClientConnection>&& conn);

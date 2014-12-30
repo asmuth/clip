@@ -17,6 +17,7 @@ JSONRPCHTTPChannel::JSONRPCHTTPChannel(
     fnord::thread::TaskScheduler* scheduler,
     const std::string path /* = "/rpc" */) :
     http_chan_(lb_group, scheduler),
+    scheduler_(scheduler),
     path_(path) {}
 
 
@@ -29,6 +30,17 @@ void JSONRPCHTTPChannel::call(
   json.write(json_req);
 
   auto http_future = http_chan_.executeRequest(http_req);
+
+  auto req_handle = new RequestHandle();
+  req_handle->http_future = std::move(http_future);
+  req_handle->on_success = on_success;
+  req_handle->on_error = on_error;
+
+  auto http_ready = [] {
+
+  };
+
+  scheduler_->runOnWakeup(http_ready, http_future->onReady(), 0);
 }
 
 } // namespace json

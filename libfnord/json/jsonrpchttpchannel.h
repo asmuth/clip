@@ -41,8 +41,14 @@ public:
       std::function<void (const std::exception& e)> on_error);
 
 protected:
+  struct RequestHandle {
+    std::unique_ptr<http::HTTPResponseFuture> http_future;
+    std::function<void (const JSONObject& res)> on_success;
+    std::function<void (const std::exception& e)> on_error;
+  };
 
   http::HTTPChannel http_chan_;
+  fnord::thread::TaskScheduler* scheduler_;
   std::string path_;
 };
 

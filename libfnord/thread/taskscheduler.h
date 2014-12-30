@@ -10,6 +10,7 @@
 #ifndef _FNORDMETRIC_THREAD_TASKSCHEDULER_H
 #define _FNORDMETRIC_THREAD_TASKSCHEDULER_H
 #include "fnord/thread/task.h"
+#include "fnord/thread/wakeup.h"
 
 namespace fnord {
 namespace thread {
@@ -53,6 +54,20 @@ public:
     runOnWritable(task, t.fd());
   }
 
+  /**
+   * Run the provided task when the wakeup handle is woken up
+   */
+  void runOnWakeup(std::function<void()> task, Wakeup* wakeup) {
+    runOnWakeup(task, wakeup, wakeup->generation());
+  }
+
+  /**
+   * Run the provided task when the wakeup handle is woken up
+   */
+  virtual void runOnWakeup(
+      std::function<void()> task,
+      Wakeup* wakeup,
+      long wakeup_generation) = 0;
 };
 
 }

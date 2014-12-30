@@ -34,7 +34,10 @@ public:
   void run(std::function<void()> task) override;
   void runOnReadable(std::function<void()> task, int fd) override;
   void runOnWritable(std::function<void()> task, int fd) override;
-  void runOnWakeup(std::function<void()> task, Wakeup* wakeup);
+  void runOnWakeup(
+      std::function<void()> task,
+      Wakeup* wakeup,
+      long generation) override;
 
 protected:
   void startThread();

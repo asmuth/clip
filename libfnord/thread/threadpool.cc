@@ -86,11 +86,13 @@ void ThreadPool::runOnWritable(std::function<void()> task, int fd) {
   });
 }
 
-void ThreadPool::runOnWakeup(std::function<void()> task, Wakeup* wakeup) {
-  auto oldgen = wakeup->generation();
+void ThreadPool::runOnWakeup(
+    std::function<void()> task,
+    Wakeup* wakeup,
+    long generation) {
 
-  run([task, wakeup, oldgen] () {
-    wakeup->waitForWakeup(oldgen);
+  run([task, wakeup, generation] () {
+    wakeup->waitForWakeup(generation);
     task();
   });
 }

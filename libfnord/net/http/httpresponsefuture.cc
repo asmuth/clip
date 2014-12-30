@@ -32,6 +32,10 @@ void HTTPResponseFuture::wait() {
   wakeup_.waitForWakeup(0);
 }
 
+thread::Wakeup* HTTPResponseFuture::onReady() {
+  return &wakeup_;
+}
+
 HTTPResponseHandler* HTTPResponseFuture::responseHandler() {
   return &res_handler_;
 }

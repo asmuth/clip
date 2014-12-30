@@ -92,6 +92,13 @@ void EventLoop::poll() {
   }
 }
 
+void EventLoop::runOnWakeup(
+    std::function<void()> task,
+    Wakeup* wakeup,
+    long wakeup_generation) {
+  RAISE(kNotYetImplementedError);
+}
+
 void EventLoop::run() {
   while (running_) {
     poll();
