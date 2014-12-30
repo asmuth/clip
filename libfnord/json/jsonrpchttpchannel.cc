@@ -15,9 +15,11 @@ namespace json {
 JSONRPCHTTPChannel::JSONRPCHTTPChannel(
     comm::LBGroup* lb_group,
     fnord::thread::TaskScheduler* scheduler,
-    const std::string path /* = "/rpc" */) :
+    const std::string& method_prefix,
+    const std::string& path /* = "/rpc" */) :
     http_chan_(lb_group, scheduler),
     scheduler_(scheduler),
+    method_prefix_(method_prefix),
     path_(path) {}
 
 void JSONRPCHTTPChannel::call(
@@ -27,7 +29,7 @@ void JSONRPCHTTPChannel::call(
   std::unique_ptr<http::HTTPResponseFuture> http_future;
 
   try {
-    http::HTTPRequest http_req(http::HTTPRequest::M_GET, path_);
+    http::HTTPRequest http_req(http::HTTPRequest::M_POST, path_);
     JSONOutputStream json(http_req.getBodyOutputStream());
     json.write(json_req);
     http_req.setHeader(

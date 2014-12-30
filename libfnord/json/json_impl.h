@@ -145,6 +145,13 @@ void toJSONImpl(const std::vector<T>& value, O* target) {
   target->emplace_back(json::JSON_ARRAY_END);
 }
 
+template <typename... T, typename O>
+void toJSONImpl(const std::tuple<T...>& value, O* target) {
+  target->emplace_back(json::JSON_ARRAY_BEGIN);
+
+  target->emplace_back(json::JSON_ARRAY_END);
+}
+
 template <typename O>
 void toJSONImpl(const std::string& str, O* target) {
   target->emplace_back(json::JSON_STRING, str);

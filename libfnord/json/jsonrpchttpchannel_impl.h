@@ -21,6 +21,14 @@ template <class RPCType>
 void JSONRPCHTTPChannel::call(RPCType* rpc) {
   JSONObject req;
   req.emplace_back(JSON_OBJECT_BEGIN);
+  req.emplace_back(JSON_STRING, "jsonrpc");
+  req.emplace_back(JSON_STRING, "2.0");
+  req.emplace_back(JSON_STRING, "method");
+  req.emplace_back(JSON_STRING, method_prefix_ + rpc->method());
+  req.emplace_back(JSON_STRING, "id");
+  req.emplace_back(JSON_STRING, "0"); // FIXPAUL
+  req.emplace_back(JSON_STRING, "params");
+  fnord::json::toJSON(rpc->args(), &req);
   req.emplace_back(JSON_OBJECT_END);
 
   auto on_success = [rpc] (const JSONObject& res) {
@@ -40,7 +48,6 @@ void JSONRPCHTTPChannel::call(RPCType* rpc) {
       rpc->error(e);
       return;
     }
-
   };
 
   auto on_error = [rpc] (const std::exception& e) {

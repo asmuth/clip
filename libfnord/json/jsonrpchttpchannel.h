@@ -30,7 +30,8 @@ public:
   JSONRPCHTTPChannel(
       comm::LBGroup* lb_group,
       fnord::thread::TaskScheduler* scheduler,
-      const std::string path = "/rpc");
+      const std::string& method_prefix,
+      const std::string& path = "/rpc");
 
   template <class RPCType>
   void call(RPCType* rpc);
@@ -49,6 +50,7 @@ protected:
 
   http::HTTPChannel http_chan_;
   fnord::thread::TaskScheduler* scheduler_;
+  std::string method_prefix_;
   std::string path_;
 };
 
