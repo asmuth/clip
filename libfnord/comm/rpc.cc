@@ -14,9 +14,7 @@ namespace comm {
 
 AnyRPC::AnyRPC(
     const std::string& method) :
-    method_(method),
-    ready_(false),
-    on_ready_cb_(nullptr) {}
+    method_(method) {}
 
 AnyRPC::~AnyRPC() {}
 
@@ -25,34 +23,11 @@ const std::string& AnyRPC::method() const {
 };
 
 void AnyRPC::wait() {
-  std::unique_lock<std::mutex> l(mutex_);
-
-  while (!ready_) {
-    cond_.wait(l);
-  }
+  ready_wakeup_.waitForWakeup(0);
 }
 
 void AnyRPC::ready() {
-  {
-    std::unique_lock<std::mutex> l(mutex_);
-    ready_ = true;
-  }
-
-  if (on_ready_cb_) {
-    on_ready_cb_();
-  }
-
-  cond_.notify_all();
-}
-
-void AnyRPC::onReady(std::function<void ()> on_ready_cb) {
-  std::unique_lock<std::mutex> l(mutex_);
-
-  if (ready_) {
-    on_ready_cb();
-  } else {
-    on_ready_cb_ = on_ready_cb;
-  }
+  ready_wakeup_.wakeup();
 }
 
 }

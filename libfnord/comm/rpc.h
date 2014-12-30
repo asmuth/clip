@@ -9,7 +9,6 @@
  */
 #ifndef _FNORD_COMM_RPC_H
 #define _FNORD_COMM_RPC_H
-#include <condition_variable>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -17,6 +16,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "fnord/thread/wakeup.h"
 
 namespace fnord {
 namespace comm {
@@ -28,17 +28,13 @@ public:
   AnyRPC(const std::string& method);
 
   void wait();
-  void ready();
-  void onReady(std::function<void ()> on_ready_cb);
 
+  void ready();
   const std::string& method() const;
 
 protected:
   std::string method_;
-  bool ready_;
-  std::mutex mutex_;
-  std::condition_variable cond_;
-  std::function<void ()> on_ready_cb_;
+  fnord::thread::Wakeup ready_wakeup_;
 };
 
 template <typename _ResultType, typename _ArgPackType>

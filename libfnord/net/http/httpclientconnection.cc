@@ -44,7 +44,6 @@ void HTTPClientConnection::executeRequest(
         "executeRequest called on non-idle HTTP connection");
   }
 
-
   parser_.onVersion([this] (const char* data, size_t size) {
     cur_handler_->onVersion(std::string(data, size));
   });
