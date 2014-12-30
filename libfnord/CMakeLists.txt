@@ -17,6 +17,8 @@ include_directories(${PROJECT_BINARY_DIR})
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 include_directories(../)
 
+find_package(Threads)
+
 if(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
 else()
@@ -115,6 +117,8 @@ add_executable(tests/test-http
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-thread>
     net/http/http_test.cc)
+
+target_link_libraries(tests/test-http ${CMAKE_THREAD_LIBS_INIT})
 
 # io
 add_library(fnord-io OBJECT
