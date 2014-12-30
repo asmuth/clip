@@ -1,6 +1,5 @@
 
 -> http connection timeouts + retry options
--> error handling in defaulthttpresponsehandler (map to http status codes)
 -> fix await* exceptionhandling vs mutex in httpserveronnection
 -> http client conn keepalive handling
 

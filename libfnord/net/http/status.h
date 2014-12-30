@@ -25,7 +25,8 @@ const HTTPStatus kStatusBadRequest(404, "Bad request");
 const HTTPStatus kStatusNotFound(404, "Not found");
 const HTTPStatus kStatusMovedPermanently(301, "Moved permanently");
 const HTTPStatus kStatusFound(302, "Found");
-const HTTPStatus kStatusInternalServerError(500, "InternalServerError");
+const HTTPStatus kStatusInternalServerError(500, "Internal Server Error");
+const HTTPStatus kStatusBadGateway(502, "Bad Gateway");
 
 }
 }

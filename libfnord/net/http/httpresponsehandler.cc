@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/base/inspect.h"
+#include "fnord/base/exception.h"
 #include "fnord/net/http/httpresponse.h"
 #include "fnord/net/http/httpresponsehandler.h"
 
@@ -21,7 +21,19 @@ DefaultHTTPResponseHandler::DefaultHTTPResponseHandler(
     wakeup_(wakeup) {}
 
 void DefaultHTTPResponseHandler::onError(const std::exception& e) {
+  response_->setStatus(fnord::http::kStatusBadGateway);
+  response_->clearBody();
+  response_->clearHeaders();
 
+  // FIXPAUL log exception w/ debug
+  try {
+    auto rte = dynamic_cast<const fnord::Exception&>(e);
+    response_->addBody(rte.getMessage());
+  } catch (const std::exception& bce) {
+    response_->addBody(e.what());
+  }
+
+  wakeup_->wakeup();
 }
 
 void DefaultHTTPResponseHandler::onVersion(const std::string& version) {

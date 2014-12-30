@@ -80,6 +80,10 @@ void HTTPMessage::setHeader(const std::string& key, const std::string& value) {
   headers_.emplace_back(key_low, value);
 }
 
+void HTTPMessage::clearHeaders() {
+  headers_.clear();
+}
+
 const Buffer& HTTPMessage::body() const {
   return body_;
 }

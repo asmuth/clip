@@ -48,6 +48,7 @@ public:
   bool hasHeader(const std::string& key) const;
   void addHeader(const std::string& key, const std::string& value);
   void setHeader(const std::string& key, const std::string& value);
+  void clearHeaders();
 
   const Buffer& body() const;
   void addBody(const std::string& body);
