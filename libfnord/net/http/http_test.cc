@@ -12,6 +12,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fnord/base/exception.h>
+#include <fnord/net/http/httpchannel.h>
 #include <fnord/net/http/httpclient.h>
 #include <fnord/net/http/httpconnectionpool.h>
 #include <fnord/net/http/httpparser.h>
@@ -249,7 +250,7 @@ TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
   res->wait();
 
   const auto& r = res->get();
-  fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
+  EXPECT_EQ(r.statusCode(), 200);
 });
 
 TEST_CASE(HTTPTest, TestHTTPConnectionPoolEnd2End, [] () {
@@ -258,11 +259,20 @@ TEST_CASE(HTTPTest, TestHTTPConnectionPoolEnd2End, [] () {
 
   auto res = http_pool.executeRequest(
       fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));
-
-  fnord::iputs("waiting", 1);
   res->wait();
-  fnord::iputs("ready", 1);
 
   const auto& r = res->get();
-  fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
+  EXPECT_EQ(r.statusCode(), 200);
+});
+
+TEST_CASE(HTTPTest, TestHTTPChannelEnd2End, [] () {
+  fnord::thread::ThreadPool tp;
+  HTTPChannel chan(&tp);
+
+  auto res = chan.executeRequest(
+      fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));
+  res->wait();
+
+  const auto& r = res->get();
+  EXPECT_EQ(r.statusCode(), 200);
 });
