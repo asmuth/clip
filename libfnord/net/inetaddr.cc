@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/stringutil.h"
 #include "fnord/net/inetaddr.h"
 
 namespace fnord {
@@ -32,8 +33,20 @@ const std::string& InetAddr::hostname() const {
   return hostname_;
 }
 
+std::string InetAddr::ipAndPort() const {
+  return StringUtil::format("$0:$1", ip_, port_);
+}
+
+bool InetAddr::hasPort() const {
+  return port_ > 0;
+}
+
 unsigned InetAddr::port() const {
   return port_;
+}
+
+void InetAddr::setPort(unsigned port) {
+  port_ = port;
 }
 
 }

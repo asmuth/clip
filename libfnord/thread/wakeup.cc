@@ -13,13 +13,21 @@
 namespace fnord {
 namespace thread {
 
-Wakeup::Wakeup() : gen_(0) {}
+Wakeup::Wakeup() : gen_(0) {
+  fnord::iputs("wakeup create $0 $1", this, gen_.load());
+}
+
+Wakeup::~Wakeup() {
+  fnord::iputs("wakeup destroy $0 $1", this, gen_.load());
+}
 
 void Wakeup::waitForNextWakeup() {
   waitForWakeup(generation());
 }
 
 void Wakeup::waitForWakeup(long oldgen) {
+
+  fnord::iputs("wakeup wait $0 $1", this, oldgen);
   std::unique_lock<std::mutex> l(mutex_);
 
   while (gen_.load() == oldgen) {

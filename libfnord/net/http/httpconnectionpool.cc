@@ -24,12 +24,39 @@ std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
   }
 
   auto addr = fnord::net::InetAddr::resolve(req.getHeader("Host"));
+  if (!addr.hasPort()) {
+    addr.setPort(80);
+  }
+
   return executeRequest(req, addr);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
     const HTTPRequest& req,
     const fnord::net::InetAddr& addr) {
+  std::unique_ptr<HTTPClientConnection> conn;
+
+  conn.reset(
+      new HTTPClientConnection(
+          std::move(fnord::net::TCPConnection::connect(addr)),
+          scheduler_));
+
+  //auto owned = new OwnedConnection();
+  //owned->conn = std::move(conn);
+  //owned->is_busy = true;
+
+  //{
+  //  std::unique_lock<std::mutex> l(connection_cache_mutex_);
+  //  connection_cache_.emplace(
+  //     addr.ipAndPort(),
+  //     std::unique_ptr<OwnedConnection>(owned));
+  //}
+
+  std::unique_ptr<HTTPResponseFuture> future(new HTTPResponseFuture());
+  conn->executeRequest(req, future->responseHandler());
+  future->storeConnection(std::move(conn));
+
+  return future;
 }
 
 

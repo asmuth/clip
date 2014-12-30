@@ -49,6 +49,10 @@ std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
   }
 
   auto addr = fnord::net::InetAddr::resolve(req.getHeader("Host"));
+  if (!addr.hasPort()) {
+    addr.setPort(80);
+  }
+
   return executeRequest(req, addr, sched);
 }
 

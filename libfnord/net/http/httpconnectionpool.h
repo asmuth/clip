@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDM_HTTPCONNECTIONPOOL_H
 #define _FNORDM_HTTPCONNECTIONPOOL_H
+#include <map>
 #include <vector>
 #include <string>
 #include "fnord/net/http/httprequest.h"
@@ -29,7 +30,18 @@ public:
       const fnord::net::InetAddr& addr);
 
 protected:
+  struct OwnedConnection {
+    std::unique_ptr<HTTPClientConnection> conn;
+    bool is_busy;
+  };
+
   fnord::thread::TaskScheduler* scheduler_;
+
+  std::multimap<
+      std::string,
+      std::unique_ptr<OwnedConnection>> connection_cache_;
+
+  std::mutex connection_cache_mutex_;
 };
 
 }

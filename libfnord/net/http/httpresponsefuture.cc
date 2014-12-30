@@ -17,6 +17,7 @@ namespace http {
 HTTPResponseFuture::HTTPResponseFuture() : res_handler_(&res_, &wakeup_) {}
 
 HTTPResponseFuture::~HTTPResponseFuture() {
+  fnord::iputs("future destroyed", 1);
   assert(wakeup_.generation() == 1); // pending HTTPResponseFuture destroyed
 }
 

@@ -22,6 +22,9 @@ public:
   const std::string& ip() const;
   const std::string& hostname() const;
   unsigned port() const;
+  bool hasPort() const;
+  void setPort(unsigned port);
+  std::string ipAndPort() const;
 
 protected:
   InetAddr(

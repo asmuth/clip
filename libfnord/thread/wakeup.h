@@ -19,6 +19,7 @@ namespace thread {
 class Wakeup {
 public:
   Wakeup();
+  ~Wakeup();
 
   /**
    * Block the current thread and wait for the next wakeup event
