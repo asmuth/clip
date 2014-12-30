@@ -31,9 +31,12 @@ public:
 
   void ready();
   const std::string& method() const;
+  void error(const std::exception& e);
 
 protected:
   std::string method_;
+  std::string error_;
+  bool is_error_;
   fnord::thread::Wakeup ready_wakeup_;
 };
 
@@ -58,17 +61,20 @@ protected:
 };
 
 template <class ReturnType, typename... ArgTypes>
-RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
+std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args);
 
 template <class MethodCall>
-RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType> mkRPC(
+std::unique_ptr<
+    RPC<
+        typename MethodCall::ReturnType,
+        typename MethodCall::ArgPackType>> mkRPC(
     const MethodCall* method,
     typename MethodCall::ArgPackType args);
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-RPC<ReturnType, std::tuple<ArgTypes...>> mkRPC(
+std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args);
 

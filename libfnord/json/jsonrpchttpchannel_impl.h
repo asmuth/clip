@@ -10,6 +10,7 @@
 #ifndef _FNORD_JSON_JSONRPCHTTPCHANNELIMPL_H
 #define _FNORD_JSON_JSONRPCHTTPCHANNELIMPL_H
 #include "fnord/base/exception.h"
+#include "fnord/base/inspect.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsonrpcrequest.h"
 
@@ -22,10 +23,12 @@ void JSONRPCHTTPChannel::call(RPCType* rpc) {
   req.emplace_back(JSON_OBJECT_BEGIN);
   req.emplace_back(JSON_OBJECT_END);
 
-  auto on_success = [] (const JSONObject& res) {
+  auto on_success = [rpc] (const JSONObject& res) {
+    fnord::iputs("yeahh!!", 1);
   };
 
-  auto on_error = [] (const std::exception& e) {
+  auto on_error = [rpc] (const std::exception& e) {
+    rpc->error(e);
   };
 
   call(req, on_success, on_error);

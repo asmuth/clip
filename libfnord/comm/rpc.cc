@@ -14,7 +14,8 @@ namespace comm {
 
 AnyRPC::AnyRPC(
     const std::string& method) :
-    method_(method) {}
+    method_(method),
+    is_error_(false) {}
 
 AnyRPC::~AnyRPC() {}
 
@@ -27,6 +28,19 @@ void AnyRPC::wait() {
 }
 
 void AnyRPC::ready() {
+  ready_wakeup_.wakeup();
+}
+
+void AnyRPC::error(const std::exception& e) {
+  is_error_ = true;
+
+  try {
+    auto rte = dynamic_cast<const fnord::Exception&>(e);
+    error_ = rte.getMessage();
+  } catch (const std::exception& cast_error) {
+    error_ = e.what();
+  }
+
   ready_wakeup_.wakeup();
 }
 
