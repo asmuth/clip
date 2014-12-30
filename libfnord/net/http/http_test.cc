@@ -14,6 +14,7 @@
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
+#include <fnord/net/http/httpresponsehandler.h>
 #include <fnord/net/http/httpclientconnection.h>
 #include <fnord/io/inputstream.h>
 #include <fnord/test/unittest.h>
@@ -244,7 +245,9 @@ TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
 
   HTTPRequest req(fnord::http::HTTPMessage::M_GET, "/");
   fnord::http::HTTPClientConnection http_conn(std::move(conn), &ev);
-  http_conn.executeRequest(req);
+
+  DefaultHTTPResponseHandler res;
+  http_conn.executeRequest(req, &res);
 
   ev.run();
 });

@@ -11,6 +11,7 @@
 #include <fnord/base/inspect.h>
 #include <fnord/net/http/httpgenerator.h>
 #include <fnord/net/http/httpclientconnection.h>
+#include <fnord/net/http/httpresponsehandler.h>
 
 namespace fnord {
 namespace http {
@@ -26,7 +27,9 @@ HTTPClientConnection::HTTPClientConnection(
   conn_->checkErrors();
 }
 
-void HTTPClientConnection::executeRequest(const HTTPRequest& req) {
+void HTTPClientConnection::executeRequest(
+    const HTTPRequest& request,
+    HTTPResponseHandler* response_handler) {
   std::unique_lock<std::recursive_mutex> l(mutex_);
 
   if (state_ != S_CONN_IDLE) {
@@ -37,8 +40,9 @@ void HTTPClientConnection::executeRequest(const HTTPRequest& req) {
 
   buf_.clear();
   io::BufferOutputStream os(&buf_);
-  HTTPGenerator::generate(req, &os);
+  HTTPGenerator::generate(request, &os);
   state_ = S_CONN_BUSY;
+  cur_handler_ = response_handler;
 
   awaitWrite();
 }
@@ -70,11 +74,7 @@ void HTTPClientConnection::read() {
       return awaitRead();
     }
 
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP read() failed, closing connection",
-        e);
-
+    cur_handler_->onError(e);
     close();
     return;
   }
@@ -86,17 +86,13 @@ void HTTPClientConnection::read() {
       parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP parse error, closing connection",
-        e);
-
+    cur_handler_->onError(e);
     close();
     return;
   }
 
   if (parser_.state() == HTTPParser::S_DONE) {
-    fnord::iputs("response received!!", 1);
+    cur_handler_->onResponseComplete();
     close(); // FIXPAUL keepalive
   } else {
     awaitRead();
@@ -118,11 +114,7 @@ void HTTPClientConnection::write() {
       return awaitWrite();
     }
 
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP write() failed, closing connection",
-        e);
-
+    cur_handler_->onError(e);
     close();
     return;
   }

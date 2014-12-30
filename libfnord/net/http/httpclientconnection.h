@@ -22,6 +22,7 @@
 
 namespace fnord {
 namespace http {
+class HTTPResponseHandler;
 
 class HTTPClientConnection {
 public:
@@ -31,7 +32,9 @@ public:
       std::unique_ptr<net::TCPConnection> conn,
       thread::TaskScheduler* scheduler);
 
-  void executeRequest(const HTTPRequest& req);
+  void executeRequest(
+      const HTTPRequest& request,
+      HTTPResponseHandler* response_handler);
 
 protected:
 
@@ -53,6 +56,7 @@ protected:
   HTTPParser parser_;
   Buffer buf_;
   std::recursive_mutex mutex_;
+  HTTPResponseHandler* cur_handler_;
 };
 
 }
