@@ -8,7 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/reflect/reflect.h"
+#include "fnord/comm/localrpcchannel.h"
 #include "fnord/comm/rpcchannel.h"
+#include "fnord/json/jsonrpchttpchannel.h"
 
 namespace fnord {
 namespace comm {
@@ -25,6 +27,11 @@ void RPC<ResultType, ArgPackType>::call(RPCChannel* chan) {
   auto local_chan = dynamic_cast<LocalRPCChannel*>(chan);
   if (local_chan) {
     return local_chan->call(this);
+  }
+
+  auto jsonrpchttp_chan = dynamic_cast<json::JSONRPCHTTPChannel*>(chan);
+  if (jsonrpchttp_chan) {
+    return jsonrpchttp_chan->call(this);
   }
 
   RAISE(kRPCError, "invalid RPC channel");

@@ -14,7 +14,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "fnord/thread/taskscheduler.h"
 
 namespace fnord {
 namespace comm {
@@ -24,42 +23,6 @@ public:
   virtual ~RPCChannel() {}
 };
 
-class LocalRPCChannel : public RPCChannel {
-public:
-
-  template <typename ServiceType>
-  static std::unique_ptr<LocalRPCChannel> forService(
-      ServiceType* service,
-      thread::TaskScheduler* scheduler);
-
-  template <typename ServiceType>
-  LocalRPCChannel(ServiceType* service, thread::TaskScheduler* scheduler);
-
-  template <class RPCType>
-  void call(RPCType* rpc);
-
-protected:
-  class ReflectionProxy {
-  public:
-    ReflectionProxy(LocalRPCChannel* base) : base_(base) {}
-
-    template <typename MethodType>
-    void method(MethodType* method);
-
-    template <typename RPCCallType>
-    void rpc(RPCCallType rpccall);
-
-  protected:
-    LocalRPCChannel* base_;
-  };
-
-  void* service_;
-  thread::TaskScheduler* scheduler_;
-  std::unordered_map<std::string, std::function<void (AnyRPC* rpc)>> methods_;
-};
-
 } // namespace comm
 } // namsepace fnord
-
-#include "rpcchannel_impl.h"
 #endif

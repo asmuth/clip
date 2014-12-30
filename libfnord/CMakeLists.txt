@@ -148,6 +148,7 @@ add_library(fnord-json OBJECT
     json/jsonpointer.cc
     json/jsonrpc.cc
     json/jsonrpchttpadapter.cc
+    json/jsonrpchttpchannel.cc
     json/jsonrpcrequest.cc
     json/jsonrpcresponse.cc
     json/jsonutil.cc)
