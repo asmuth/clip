@@ -47,6 +47,19 @@ const std::string& HTTPMessage::getHeader(const std::string& key) const {
   return kEmptyHeader;
 }
 
+bool HTTPMessage::hasHeader(const std::string& key) const {
+  auto key_low = key;
+  std::transform(key_low.begin(), key_low.end(), key_low.begin(), ::tolower);
+
+  for (const auto& header : headers_) {
+    if (header.first == key_low) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void HTTPMessage::addHeader(const std::string& key, const std::string& value) {
   auto key_low = key;
   std::transform(key_low.begin(), key_low.end(), key_low.begin(), ::tolower);

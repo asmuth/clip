@@ -14,6 +14,12 @@
 namespace fnord {
 namespace http {
 
+DefaultHTTPResponseHandler::DefaultHTTPResponseHandler(
+    fnord::http::HTTPResponse* response,
+    fnord::thread::Wakeup* wakeup) :
+    response_(response),
+    wakeup_(wakeup) {}
+
 void DefaultHTTPResponseHandler::onError(const std::exception& e) {
 }
 
@@ -38,11 +44,7 @@ void DefaultHTTPResponseHandler::onBodyChunk(const char* data, size_t size) {
 }
 
 void DefaultHTTPResponseHandler::onResponseComplete() {
-  on_ready.wakeup();
-}
-
-const HTTPResponse& DefaultHTTPResponseHandler::getResponse() const {
-  return res_;
+  wakeup_->wakeup();
 }
 
 }

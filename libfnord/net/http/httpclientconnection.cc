@@ -27,6 +27,12 @@ HTTPClientConnection::HTTPClientConnection(
   conn_->checkErrors();
 }
 
+HTTPClientConnection::~HTTPClientConnection() {
+  if (state_ != S_CONN_CLOSED) {
+    close();
+  }
+}
+
 void HTTPClientConnection::executeRequest(
     const HTTPRequest& request,
     HTTPResponseHandler* response_handler) {
@@ -64,18 +70,20 @@ void HTTPClientConnection::close() {
 }
 
 void HTTPClientConnection::read() {
-  std::unique_lock<std::recursive_mutex> l(mutex_);
+  mutex_.lock();
 
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
+      std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
       return awaitRead();
+    } else {
+      close();
+      mutex_.unlock();
+      cur_handler_->onError(e);
     }
-
-    cur_handler_->onError(e);
-    close();
     return;
   }
 
@@ -86,21 +94,24 @@ void HTTPClientConnection::read() {
       parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
-    cur_handler_->onError(e);
     close();
+    mutex_.unlock();
+    cur_handler_->onError(e);
     return;
   }
 
   if (parser_.state() == HTTPParser::S_DONE) {
-    cur_handler_->onResponseComplete();
     close(); // FIXPAUL keepalive
+    mutex_.unlock();
+    cur_handler_->onResponseComplete();
   } else {
+    std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
     awaitRead();
   }
 }
 
 void HTTPClientConnection::write() {
-  std::unique_lock<std::recursive_mutex> l(mutex_);
+  mutex_.lock();
 
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
@@ -111,13 +122,17 @@ void HTTPClientConnection::write() {
     buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
+      std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
       return awaitWrite();
+    } else {
+      close();
+      mutex_.unlock();
+      cur_handler_->onError(e);
+      return;
     }
-
-    cur_handler_->onError(e);
-    close();
-    return;
   }
+
+  std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
 
   if (buf_.mark() < buf_.size()) {
     awaitWrite();

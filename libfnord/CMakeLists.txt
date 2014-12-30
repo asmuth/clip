@@ -94,12 +94,14 @@ add_library(fnord-http OBJECT
     net/inetaddr.cc
     net/tcpconnection.cc
     net/http/cookies.cc
+    net/http/httpclient.cc
     net/http/httpclientconnection.cc
     net/http/httpgenerator.cc
     net/http/httpmessage.cc
     net/http/httpparser.cc
     net/http/httprequest.cc
     net/http/httpresponse.cc
+    net/http/httpresponsefuture.cc
     net/http/httpresponsehandler.cc
     net/http/httprouter.cc
     net/http/httpserver.cc

@@ -24,6 +24,8 @@ namespace http {
 
 class HTTPMessage {
 public:
+  typedef std::vector<std::pair<std::string, std::string>> HeaderList;
+
   enum kHTTPMethod {
     M_CONNECT,
     M_DELETE,
@@ -41,8 +43,9 @@ public:
   const std::string& version() const;
   void setVersion(const std::string& version);
 
-  const std::vector<std::pair<std::string, std::string>>& headers() const;
+  const HeaderList& headers() const;
   const std::string& getHeader(const std::string& key) const;
+  bool hasHeader(const std::string& key) const;
   void addHeader(const std::string& key, const std::string& value);
   void setHeader(const std::string& key, const std::string& value);
 

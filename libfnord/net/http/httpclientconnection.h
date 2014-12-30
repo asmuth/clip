@@ -32,6 +32,8 @@ public:
       std::unique_ptr<net::TCPConnection> conn,
       thread::TaskScheduler* scheduler);
 
+  ~HTTPClientConnection();
+
   void executeRequest(
       const HTTPRequest& request,
       HTTPResponseHandler* response_handler);

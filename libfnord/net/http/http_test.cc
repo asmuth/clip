@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <fnord/base/exception.h>
+#include <fnord/net/http/httpclient.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
@@ -242,20 +243,15 @@ TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
 TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
   fnord::thread::EventLoop ev;
   fnord::thread::ThreadPool tp;
-  auto conn = fnord::net::TCPConnection::connect(
-      fnord::net::InetAddr::resolve("localhost:8080"));
 
   HTTPRequest req(fnord::http::HTTPMessage::M_GET, "/");
-  fnord::http::HTTPClientConnection http_conn(std::move(conn), &tp);
+  req.setHeader("Host", "localhost:8080");
 
-  DefaultHTTPResponseHandler res;
-  auto cb = [&res] () {
-    const auto& r = res.getResponse();
-    fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
-  };
+  auto res = fnord::http::HTTPClient::executeRequest(req, &tp);
+  res->wait();
 
-  tp.runOnWakeup(cb, &(res.on_ready));
-  http_conn.executeRequest(req, &res);
+  const auto& r = res->get();
+  fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
 
-  ev.run();
+
 });
