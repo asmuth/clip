@@ -13,6 +13,7 @@
 #include "fnord/base/datetime.h"
 #include "fnord/json/jsonutil.h"
 #include "fnord/json/jsonoutputstream.h"
+#include "fnord/reflect/indexsequence.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
@@ -145,10 +146,32 @@ void toJSONImpl(const std::vector<T>& value, O* target) {
   target->emplace_back(json::JSON_ARRAY_END);
 }
 
+template <typename... T, typename H, typename O>
+void toJSONVariadicImpl(O* target, const H& head, const T&... tail) {
+  toJSON(head, target);
+  toJSONVariadicImpl(target, tail...);
+}
+
+template <typename T, typename O>
+void toJSONVariadicImpl(O* target, const T& head) {
+  toJSON(head, target);
+}
+
+template <typename... T, int... I, typename O>
+void toJSONTupleImpl(
+    const std::tuple<T...>& value,
+    O* target,
+    fnord::reflect::IndexSequence<I...>) {
+  toJSONVariadicImpl(target, std::get<I>(value)...);
+}
+
 template <typename... T, typename O>
 void toJSONImpl(const std::tuple<T...>& value, O* target) {
   target->emplace_back(json::JSON_ARRAY_BEGIN);
-
+  toJSONTupleImpl(
+      value,
+      target,
+      typename fnord::reflect::MkIndexSequenceFor<T...>::type());
   target->emplace_back(json::JSON_ARRAY_END);
 }
 

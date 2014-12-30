@@ -27,6 +27,7 @@ LogStreamService::LogStreamService(
 
 uint64_t LogStreamService::append(std::string stream_key, std::string entry) {
   auto stream = openStream(stream_key, true);
+  fnord::iputs("append: $0 $1", stream_key, entry);
   return stream->append(entry);
 }
 
