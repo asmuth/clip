@@ -245,4 +245,6 @@ TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
   HTTPRequest req(fnord::http::HTTPMessage::M_GET, "/");
   fnord::http::HTTPClientConnection http_conn(std::move(conn), &ev);
   http_conn.executeRequest(req);
+
+  ev.run();
 });

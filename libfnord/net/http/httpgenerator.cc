@@ -15,7 +15,26 @@ using fnord::io::OutputStream;
 namespace fnord {
 namespace http {
 
-// FIXPAUL use bufferless print
+void HTTPGenerator::generate(const HTTPRequest& req, OutputStream* os) {
+  os->write(
+      StringUtil::format(
+          "$0 $1 $2\r\n",
+          req.method(),
+          req.uri(),
+          req.version()));
+
+  for (const auto& header : req.headers()) {
+    os->write(StringUtil::format("$0: $1\r\n", header.first, header.second));
+  }
+
+  os->write("\r\n");
+
+  const auto& body = req.body();
+  if (body.size() > 0) {
+    os->write(body);
+  }
+}
+
 void HTTPGenerator::generate(const HTTPResponse& res, OutputStream* os) {
   os->write(
       StringUtil::format(

@@ -101,7 +101,7 @@ std::unique_ptr<OutputStream> HTTPMessage::getBodyOutputStream() {
 }
 
 template <>
-std::string inspect(const http::HTTPMessage::kHTTPMethod& method) {
+std::string StringUtil::toString(http::HTTPMessage::kHTTPMethod method) {
   switch (method) {
     case http::HTTPMessage::M_CONNECT: return "CONNECT";
     case http::HTTPMessage::M_DELETE: return "DELETE";
@@ -112,6 +112,11 @@ std::string inspect(const http::HTTPMessage::kHTTPMethod& method) {
     case http::HTTPMessage::M_PUT: return "PUT";
     case http::HTTPMessage::M_TRACE: return "TRACE";
   }
+}
+
+template <>
+std::string inspect(const http::HTTPMessage::kHTTPMethod& method) {
+  return StringUtil::toString(method);
 }
 
 }

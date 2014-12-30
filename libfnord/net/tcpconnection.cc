@@ -91,6 +91,10 @@ void TCPConnection::setNonblocking(bool nonblocking) {
   }
 }
 
+void TCPConnection::checkErrors() const {
+
+}
+
 }
 }
 

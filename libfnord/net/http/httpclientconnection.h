@@ -36,19 +36,16 @@ public:
 protected:
 
   enum kHTTPClientConnectionState {
-    S_CONN_INIT,
-    S_CONN_CONNECTING,
-    S_CONN_WRITE_REQ,
-    S_CONN_READ_RES,
     S_CONN_IDLE,
-    S_CONN_CLOSED,
-    S_CONN_ERROR
+    S_CONN_BUSY,
+    S_CONN_CLOSED
   };
 
-  //void read();
-  //void write();
-  //void awaitRead();
-  //void awaitWrite();
+  void read();
+  void write();
+  void awaitRead();
+  void awaitWrite();
+  void close();
 
   std::unique_ptr<net::TCPConnection> conn_;
   thread::TaskScheduler* scheduler_;
