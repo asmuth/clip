@@ -14,7 +14,7 @@ namespace fnord {
 namespace net {
 
 InetAddr InetAddr::resolve(const std::string& addr_str) {
-  return InetAddr("127.0.0.1", "127.0.0.1", 8080);
+  return InetAddr("127.0.0.1", "127.0.0.1", 8000);
 }
 
 InetAddr::InetAddr(

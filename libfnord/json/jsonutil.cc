@@ -16,13 +16,17 @@ JSONObject::const_iterator JSONUtil::objectLookup(
     JSONObject::const_iterator begin,
     JSONObject::const_iterator end,
     const std::string& key) {
+  if (begin == end) {
+    return end;
+  }
+
   if (begin->type != json::JSON_OBJECT_BEGIN) {
     RAISEF(kParseError, "expected JSON_OBJECT_BEGIN, got: $0", begin->type);
   }
 
   auto oend = begin + begin->size;
   if (oend > end) {
-    RAISE(kIndexError);
+    return end;
   }
 
   for (++begin; begin < end;) {

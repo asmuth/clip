@@ -47,11 +47,18 @@ void JSONRPCHTTPChannel::call(
 
   auto http_ready = [req_handle] {
     std::unique_ptr<RequestHandle> autodelete(req_handle);
-    const auto& http_req = req_handle->http_future->get();
+    const auto& http_res = req_handle->http_future->get();
     JSONObject res;
 
+    if (http_res.statusCode() != 200) {
+      fnord::Exception e("received non 200 HTTP status code for");
+      e.setTypeName(kRPCError);
+      req_handle->on_error(e);
+      return;
+    }
+
     try {
-      auto res = parseJSON(http_req.body());
+      res = parseJSON(http_res.body());
     } catch (std::exception& e) {
       req_handle->on_error(e);
       return;
