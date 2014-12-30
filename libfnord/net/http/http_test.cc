@@ -269,6 +269,8 @@ TEST_CASE(HTTPTest, TestHTTPChannelEnd2End, [] () {
   fnord::thread::ThreadPool tp;
 
   fnord::comm::RoundRobinLBGroup lb_group;
+  lb_group.addServer(fnord::net::InetAddr::resolve("localhost:8080"));
+
   HTTPChannel chan(&lb_group, &tp);
 
   auto res = chan.executeRequest(

@@ -38,6 +38,7 @@ protected:
   };
 
   struct Server {
+    Server(const net::InetAddr& addr);
     net::InetAddr addr;
     kServerState state;
   };
@@ -45,7 +46,7 @@ protected:
   /**
    * Should return the index of the picked host
    */
-  virtual size_t pickServerForNextRequest(
+  virtual int pickServerForNextRequest(
       const std::vector<Server>& servers) = 0;
 
 private:
@@ -54,8 +55,11 @@ private:
 };
 
 class RoundRobinLBGroup : public LBGroup {
+public:
+  RoundRobinLBGroup();
 protected:
-  size_t pickServerForNextRequest(const std::vector<Server>& servers) override;
+  int pickServerForNextRequest(const std::vector<Server>& servers) override;
+  unsigned last_index_;
 };
 
 }
