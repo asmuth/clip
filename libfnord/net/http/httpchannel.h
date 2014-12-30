@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "fnord/comm/lbgroup.h"
 #include "fnord/net/http/httpconnectionpool.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
@@ -22,11 +23,14 @@ namespace http {
 
 class HTTPChannel {
 public:
-  HTTPChannel(fnord::thread::TaskScheduler* scheduler);
+  HTTPChannel(
+      comm::LBGroup* lb_group,
+      fnord::thread::TaskScheduler* scheduler);
 
   std::unique_ptr<HTTPResponseFuture> executeRequest(const HTTPRequest& req);
 
 protected:
+  comm::LBGroup* lb_group_;
   HTTPConnectionPool conn_pool_;
 };
 

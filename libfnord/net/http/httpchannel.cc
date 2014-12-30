@@ -13,12 +13,14 @@ namespace fnord {
 namespace http {
 
 HTTPChannel::HTTPChannel(
+    comm::LBGroup* lb_group,
     fnord::thread::TaskScheduler* scheduler) :
-    conn_pool_(scheduler) {}
+    conn_pool_(scheduler),
+    lb_group_(lb_group) {}
 
 std::unique_ptr<HTTPResponseFuture> HTTPChannel::executeRequest(
     const HTTPRequest& req) {
-  return conn_pool_.executeRequest(req);
+  return conn_pool_.executeRequest(req, lb_group_->getServerForNextRequest());
 }
 
 }

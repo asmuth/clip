@@ -267,7 +267,9 @@ TEST_CASE(HTTPTest, TestHTTPConnectionPoolEnd2End, [] () {
 
 TEST_CASE(HTTPTest, TestHTTPChannelEnd2End, [] () {
   fnord::thread::ThreadPool tp;
-  HTTPChannel chan(&tp);
+
+  fnord::comm::RoundRobinLBGroup lb_group;
+  HTTPChannel chan(&lb_group, &tp);
 
   auto res = chan.executeRequest(
       fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));

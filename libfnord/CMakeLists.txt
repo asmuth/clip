@@ -87,6 +87,7 @@ add_library(fnord-cli OBJECT
 # comm
 add_library(fnord-comm OBJECT
     comm/feed.cc
+    comm/lbgroup.cc
     comm/rpc.cc
     comm/rpcservicemap.cc)
 
@@ -114,6 +115,7 @@ add_library(fnord-http OBJECT
 
 add_executable(tests/test-http
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-thread>
@@ -152,6 +154,7 @@ add_library(fnord-json OBJECT
 
 add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
@@ -202,6 +205,7 @@ add_library(fnord-groups-service OBJECT
 
 add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-groups-service>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
@@ -215,6 +219,7 @@ add_library(fnord-keyvalue-service OBJECT
 
 add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-keyvalue-service>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
