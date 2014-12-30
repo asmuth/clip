@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/net/inetaddr.h"
 
@@ -14,7 +15,24 @@ namespace fnord {
 namespace net {
 
 InetAddr InetAddr::resolve(const std::string& addr_str) {
-  return InetAddr("127.0.0.1", "127.0.0.1", 8000);
+  auto parts = StringUtil::split(addr_str, ":");
+  unsigned port = 0;
+  std::string ip;
+
+  switch (parts.size()) {
+    case 2:
+      port = std::stoi(parts[1]);
+      /* fallthrough */
+
+    case 1:
+      ip = parts[0]; // FIXPAUL resolve DNS
+      break;
+
+    default:
+      RAISEF(kIllegalArgumentError, "invalid address: $0", addr_str);
+  }
+
+  return InetAddr(addr_str, ip, port);
 }
 
 InetAddr::InetAddr(
