@@ -21,26 +21,31 @@ DefaultHTTPResponseHandler::DefaultHTTPResponseHandler(
     wakeup_(wakeup) {}
 
 void DefaultHTTPResponseHandler::onError(const std::exception& e) {
+
 }
 
 void DefaultHTTPResponseHandler::onVersion(const std::string& version) {
+  response_->setVersion(version);
 }
 
 void DefaultHTTPResponseHandler::onStatusCode(int status_code) {
+  response_->setStatusCode(status_code);
 }
 
 void DefaultHTTPResponseHandler::onStatusName(const std::string& status) {
+  response_->setStatusName(status);
 }
 
 void DefaultHTTPResponseHandler::onHeader(
     const std::string& key,
     const std::string& value) {
+  response_->addHeader(key, value);
 }
 
-void DefaultHTTPResponseHandler::onHeadersComplete() {
-}
+void DefaultHTTPResponseHandler::onHeadersComplete() {}
 
 void DefaultHTTPResponseHandler::onBodyChunk(const char* data, size_t size) {
+  response_->appendBody((char *) data, size);
 }
 
 void DefaultHTTPResponseHandler::onResponseComplete() {

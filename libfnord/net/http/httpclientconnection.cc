@@ -44,6 +44,38 @@ void HTTPClientConnection::executeRequest(
         "executeRequest called on non-idle HTTP connection");
   }
 
+
+  parser_.onVersion([this] (const char* data, size_t size) {
+    cur_handler_->onVersion(std::string(data, size));
+  });
+
+  parser_.onStatusName([this] (const char* data, size_t size) {
+    cur_handler_->onStatusName(std::string(data, size));
+  });
+
+  parser_.onStatusCode([this] (int code) {
+    cur_handler_->onStatusCode(code);
+  });
+
+  parser_.onHeader([this] (
+      const char* key,
+      size_t key_size,
+      const char* val,
+      size_t val_size) {
+    cur_handler_->onHeader(
+        std::string(key, key_size),
+        std::string(val, val_size));
+  });
+
+
+  parser_.onHeadersComplete([this] () {
+    cur_handler_->onHeadersComplete();
+  });
+
+  parser_.onBodyChunk([this] (const char* data, size_t size) {
+    cur_handler_->onBodyChunk(data, size);
+  });
+
   buf_.clear();
   io::BufferOutputStream os(&buf_);
   HTTPGenerator::generate(request, &os);

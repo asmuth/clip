@@ -241,17 +241,11 @@ TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
 });
 
 TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
-  fnord::thread::EventLoop ev;
   fnord::thread::ThreadPool tp;
 
-  HTTPRequest req(fnord::http::HTTPMessage::M_GET, "/");
-  req.setHeader("Host", "localhost:8080");
-
-  auto res = fnord::http::HTTPClient::executeRequest(req, &tp);
+  auto res = fnord::http::HTTPClient::get("http://localhost:8080/", &tp);
   res->wait();
 
   const auto& r = res->get();
   fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
-
-
 });
