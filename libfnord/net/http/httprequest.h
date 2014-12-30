@@ -24,6 +24,7 @@ public:
   static HTTPRequest parse(const std::string& str);
 
   HTTPRequest();
+  HTTPRequest(kHTTPMethod method, const std::string& uri);
 
   kHTTPMethod method() const;
   void setMethod(kHTTPMethod method);

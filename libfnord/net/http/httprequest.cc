@@ -55,6 +55,14 @@ HTTPRequest HTTPRequest::parse(const std::string& str) {
 
 HTTPRequest::HTTPRequest() : method_(HTTPMessage::M_GET) {}
 
+HTTPRequest::HTTPRequest(
+    kHTTPMethod method,
+    const std::string& uri) :
+    method_(method),
+    url_(uri) {
+  setVersion("HTTP/1.1");
+}
+
 HTTPMessage::kHTTPMethod HTTPRequest::method() const {
   return method_;
 }

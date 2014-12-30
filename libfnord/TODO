@@ -1,4 +1,13 @@
 
+-> thread pool: max queue size + max thread size
+-> thread pool wait()
+
+-> timeout impl
+-> httpresponsehandler
+-> httpconnectionpool
+-> httpclient (w/ onsucess,onerror for async)
+-> eventloop shutdown
+
 -> ratio of item visits to queries (only item visits but no queries -> fraud)
 -> number of userids per source ip
 -> session too long

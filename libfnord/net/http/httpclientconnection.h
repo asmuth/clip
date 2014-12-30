@@ -27,11 +27,11 @@ class HTTPClientConnection {
 public:
   static const size_t kMinBufferSize = 4096;
 
-  HTTPClientConnection(thread::TaskScheduler* scheduler);
+  HTTPClientConnection(
+      std::unique_ptr<net::TCPConnection> conn,
+      thread::TaskScheduler* scheduler);
 
-  void connect(const net::InetAddr& addr);
-
-  //void executeRequest(const HTTPRequest& req);
+  void executeRequest(const HTTPRequest& req);
 
 protected:
 
@@ -50,9 +50,9 @@ protected:
   //void awaitRead();
   //void awaitWrite();
 
+  std::unique_ptr<net::TCPConnection> conn_;
   thread::TaskScheduler* scheduler_;
   kHTTPClientConnectionState state_;
-  std::unique_ptr<net::TCPConnection> conn_;
   HTTPParser parser_;
   Buffer buf_;
   std::recursive_mutex mutex_;

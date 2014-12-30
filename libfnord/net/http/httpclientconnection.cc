@@ -7,19 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/inspect.h>
 #include <fnord/net/http/httpclientconnection.h>
 
 namespace fnord {
 namespace http {
 
 HTTPClientConnection::HTTPClientConnection(
+    std::unique_ptr<net::TCPConnection> conn,
     thread::TaskScheduler* scheduler) :
+    conn_(std::move(conn)),
     scheduler_(scheduler),
     state_(S_CONN_INIT),
     parser_(HTTPParser::PARSE_HTTP_RESPONSE) {}
 
-void HTTPClientConnection::connect(const net::InetAddr& addr) {
-  conn_ = net::TCPConnection::connect(addr);
+void HTTPClientConnection::executeRequest(const HTTPRequest& req) {
 }
 
 }

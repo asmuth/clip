@@ -239,6 +239,10 @@ TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
 
 TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
   fnord::thread::EventLoop ev;
-  fnord::http::HTTPClientConnection conn(&ev);
-  conn.connect(fnord::net::InetAddr::resolve("localhost:8080"));
+  auto conn = fnord::net::TCPConnection::connect(
+      fnord::net::InetAddr::resolve("localhost:8080"));
+
+  HTTPRequest req(fnord::http::HTTPMessage::M_GET, "/");
+  fnord::http::HTTPClientConnection http_conn(std::move(conn), &ev);
+  http_conn.executeRequest(req);
 });
