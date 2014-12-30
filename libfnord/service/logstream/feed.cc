@@ -19,11 +19,10 @@ LogStreamServiceFeed::LogStreamServiceFeed(
     fnord::comm::Feed(name),
     rpc_channel_(rpc_channel) {}
 
-uint64_t LogStreamServiceFeed::append(const std::string& entry) {
+void LogStreamServiceFeed::append(const std::string& entry) {
   auto rpc = fnord::comm::mkRPC(&LogStreamService::append, name(), entry);
   rpc->call(rpc_channel_);
-  rpc->wait();
-  return rpc->result();
+  comm::AnyRPC::fireAndForget(std::move(rpc));
 }
 
 }

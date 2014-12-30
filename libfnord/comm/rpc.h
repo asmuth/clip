@@ -27,6 +27,8 @@ public:
   virtual ~AnyRPC();
   AnyRPC(const std::string& method);
 
+  static void fireAndForget(std::unique_ptr<AnyRPC>&& rpc);
+
   void wait();
 
   void ready();
@@ -34,9 +36,15 @@ public:
   void error(const std::exception& e);
 
 protected:
+  void fireAndForget();
+  void reap();
+
   std::string method_;
   std::string error_;
   bool is_error_;
+  bool is_ready_;
+  bool autodelete_;
+  std::mutex mutex_;
   fnord::thread::Wakeup ready_wakeup_;
 };
 
@@ -56,9 +64,11 @@ public:
   const ResultType& result() const;
 
 protected:
+
   ArgPackType args_;
   ResultType result_;
 };
+
 
 template <class ReturnType, typename... ArgTypes>
 std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(

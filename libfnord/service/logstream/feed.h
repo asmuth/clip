@@ -21,7 +21,7 @@ public:
       const std::string& name,
       fnord::comm::RPCChannel* rpc_channel);
 
-  uint64_t append(const std::string& entry) override;
+  void append(const std::string& entry) override;
 
 protected:
   fnord::comm::RPCChannel* rpc_channel_;

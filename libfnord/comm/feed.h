@@ -25,7 +25,7 @@ public:
   Feed(const std::string& name);
   virtual ~Feed();
 
-  virtual uint64_t append(const std::string& entry) = 0;
+  virtual void append(const std::string& entry) = 0;
 
   const std::string& name() const;
 

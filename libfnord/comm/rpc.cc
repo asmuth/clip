@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/comm/rpc.h"
+#include "fnord/logging/logger.h"
 
 namespace fnord {
 namespace comm {
@@ -15,7 +16,9 @@ namespace comm {
 AnyRPC::AnyRPC(
     const std::string& method) :
     method_(method),
-    is_error_(false) {}
+    is_error_(false),
+    is_ready_(false),
+    autodelete_(false) {}
 
 AnyRPC::~AnyRPC() {}
 
@@ -28,7 +31,14 @@ void AnyRPC::wait() {
 }
 
 void AnyRPC::ready() {
+  std::unique_lock<std::mutex> lk(mutex_);
+  is_ready_ = true;
   ready_wakeup_.wakeup();
+
+  if (autodelete_) {
+    lk.unlock();
+    reap();
+  }
 }
 
 void AnyRPC::error(const std::exception& e) {
@@ -41,7 +51,35 @@ void AnyRPC::error(const std::exception& e) {
     error_ = e.what();
   }
 
-  ready_wakeup_.wakeup();
+  ready();
+}
+
+void AnyRPC::fireAndForget(std::unique_ptr<AnyRPC>&& rpc) {
+  auto rpc_raw = rpc.release();
+  rpc_raw->fireAndForget();
+}
+
+void AnyRPC::fireAndForget() {
+  std::unique_lock<std::mutex> lk(mutex_);
+
+  if (is_ready_) {
+    lk.unlock();
+    reap();
+    return;
+  } else {
+    autodelete_ = true;
+  }
+}
+
+void AnyRPC::reap() {
+  if (is_error_) {
+    fnord::log::Logger::get()->logf(
+        log::kWarning,
+        "Fire-And-Forget RPC failed: $0",
+        error_);
+  }
+
+  delete this;
 }
 
 }
