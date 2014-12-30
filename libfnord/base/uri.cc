@@ -71,8 +71,24 @@ const unsigned URI::port() const {
   return port_;
 }
 
+std::string URI::hostAndPort() const {
+  if (port_ > 0) {
+    return StringUtil::format("$0:$1", host_, port_);
+  } else {
+    return host_;
+  }
+}
+
 const std::string& URI::path() const {
   return path_;
+}
+
+std::string URI::pathAndQuery() const {
+  if (query_.length() > 0) {
+    return StringUtil::format("$0?$1", path_, query_);
+  } else {
+    return path_;
+  }
 }
 
 const std::string& URI::query() const {

@@ -30,6 +30,11 @@ std::string StringUtil::toString(int value) {
 }
 
 template <>
+std::string StringUtil::toString(unsigned value) {
+  return std::to_string(value);
+}
+
+template <>
 std::string StringUtil::toString(long value) {
   return std::to_string(value);
 }

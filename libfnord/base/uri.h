@@ -29,8 +29,10 @@ public:
   const std::string& userinfo() const;
   const std::string& host() const;
   const unsigned port() const;
+  std::string hostAndPort() const;
   const std::string& path() const;
   const std::string& query() const;
+  std::string pathAndQuery() const;
   ParamList queryParams() const;
   const std::string& fragment() const;
   std::string toString() const;
