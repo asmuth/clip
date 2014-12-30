@@ -19,6 +19,7 @@
 #include <fnord/io/inputstream.h>
 #include <fnord/test/unittest.h>
 #include <fnord/thread/eventloop.h>
+#include <fnord/thread/threadpool.h>
 
 using namespace fnord::http;
 using fnord::io::StringInputStream;
@@ -240,13 +241,20 @@ TEST_CASE(HTTPTest, TestInvalidCookies, [] () {
 
 TEST_CASE(HTTPTest, TestHTTPRequestEnd2End, [] () {
   fnord::thread::EventLoop ev;
+  fnord::thread::ThreadPool tp;
   auto conn = fnord::net::TCPConnection::connect(
       fnord::net::InetAddr::resolve("localhost:8080"));
 
   HTTPRequest req(fnord::http::HTTPMessage::M_GET, "/");
-  fnord::http::HTTPClientConnection http_conn(std::move(conn), &ev);
+  fnord::http::HTTPClientConnection http_conn(std::move(conn), &tp);
 
   DefaultHTTPResponseHandler res;
+  auto cb = [&res] () {
+    const auto& r = res.getResponse();
+    fnord::iputs("$0 $1 => $2", r.statusCode(), r.statusName(), r.body().toString());
+  };
+
+  tp.runOnWakeup(cb, &(res.on_ready));
   http_conn.executeRequest(req, &res);
 
   ev.run();

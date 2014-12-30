@@ -9,6 +9,7 @@
  */
 #ifndef _FNORDMETRIC_HTTPRESPONSEHANDLER_H
 #define _FNORDMETRIC_HTTPRESPONSEHANDLER_H
+#include "fnord/thread/wakeup.h"
 #include <memory>
 
 namespace fnord {
@@ -32,9 +33,11 @@ public:
 
 class DefaultHTTPResponseHandler : public HTTPResponseHandler {
 public:
+  fnord::thread::Wakeup on_ready;
+
+  const HTTPResponse& getResponse() const;
 
   void onError(const std::exception& e) override;
-
   void onVersion(const std::string& version) override;
   void onStatusCode(int status_code) override;
   void onStatusName(const std::string& status) override;
@@ -44,6 +47,7 @@ public:
   void onResponseComplete() override;
 
 protected:
+  std::mutex mutex_;
   HTTPResponse res_;
 };
 

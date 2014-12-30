@@ -15,6 +15,7 @@
 #include <list>
 #include "fnord/thread/task.h"
 #include "fnord/thread/taskscheduler.h"
+#include "fnord/thread/wakeup.h"
 #include "fnord/base/exceptionhandler.h"
 
 namespace fnord {
@@ -33,6 +34,7 @@ public:
   void run(std::function<void()> task) override;
   void runOnReadable(std::function<void()> task, int fd) override;
   void runOnWritable(std::function<void()> task, int fd) override;
+  void runOnWakeup(std::function<void()> task, Wakeup* wakeup);
 
 protected:
   void startThread();

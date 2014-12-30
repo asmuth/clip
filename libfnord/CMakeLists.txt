@@ -275,7 +275,8 @@ add_library(fnord-sstable OBJECT
 add_library(fnord-thread OBJECT
     thread/eventloop.cc
     thread/signalhandler.cc
-    thread/threadpool.cc)
+    thread/threadpool.cc
+    thread/wakeup.cc)
 
 # util
 add_library(fnord-util OBJECT

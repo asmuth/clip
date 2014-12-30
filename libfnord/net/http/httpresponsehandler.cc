@@ -38,7 +38,11 @@ void DefaultHTTPResponseHandler::onBodyChunk(const char* data, size_t size) {
 }
 
 void DefaultHTTPResponseHandler::onResponseComplete() {
-  fnord::iputs("ALL DONE", 1);
+  on_ready.wakeup();
+}
+
+const HTTPResponse& DefaultHTTPResponseHandler::getResponse() const {
+  return res_;
 }
 
 }
