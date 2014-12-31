@@ -38,6 +38,8 @@ public:
       const HTTPRequest& request,
       HTTPResponseHandler* response_handler);
 
+  thread::Wakeup* onReady();
+
 protected:
 
   enum kHTTPClientConnectionState {
@@ -59,6 +61,7 @@ protected:
   Buffer buf_;
   std::recursive_mutex mutex_;
   HTTPResponseHandler* cur_handler_;
+  thread::Wakeup on_ready_;
 };
 
 }

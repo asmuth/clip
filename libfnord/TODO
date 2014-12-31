@@ -1,6 +1,9 @@
+
+-> httpconnpoool: cache connections w/ idle timeout
 -> async tcp connect
 -> cancelable wait
--> httpconnpool impl
+
+-> http client conn keepalive impl
 
 -> http connection timeouts + retry options
 -> fix await* exceptionhandling vs mutex in httpserveronnection

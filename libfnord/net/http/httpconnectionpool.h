@@ -30,16 +30,15 @@ public:
       const fnord::net::InetAddr& addr);
 
 protected:
-  struct OwnedConnection {
-    std::unique_ptr<HTTPClientConnection> conn;
-    bool is_busy;
-  };
+
+  void parkConnection(HTTPClientConnection* conn);
+  HTTPClientConnection* leaseConnection(const fnord::net::InetAddr& addr);
 
   fnord::thread::TaskScheduler* scheduler_;
 
   std::multimap<
       std::string,
-      std::unique_ptr<OwnedConnection>> connection_cache_;
+      HTTPClientConnection*> connection_cache_;
 
   std::mutex connection_cache_mutex_;
 };

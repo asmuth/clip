@@ -34,31 +34,51 @@ std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
 std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
     const HTTPRequest& req,
     const fnord::net::InetAddr& addr) {
-  std::unique_ptr<HTTPClientConnection> conn;
-
-  conn.reset(
-      new HTTPClientConnection(
-          std::move(fnord::net::TCPConnection::connect(addr)),
-          scheduler_));
-
-  //auto owned = new OwnedConnection();
-  //owned->conn = std::move(conn);
-  //owned->is_busy = true;
-
-  //{
-  //  std::unique_lock<std::mutex> l(connection_cache_mutex_);
-  //  connection_cache_.emplace(
-  //     addr.ipAndPort(),
-  //     std::unique_ptr<OwnedConnection>(owned));
-  //}
-
+  auto conn = leaseConnection(addr);
   std::unique_ptr<HTTPResponseFuture> future(new HTTPResponseFuture());
-  conn->executeRequest(req, future->responseHandler());
-  future->storeConnection(std::move(conn));
+
+  try {
+    conn->executeRequest(req, future->responseHandler());
+  } catch (const std::exception& e) {
+    conn->onReady()->wakeup();
+  }
 
   return future;
 }
 
+void HTTPConnectionPool::parkConnection(HTTPClientConnection* conn) {
+  //if (true) {
+    delete conn;
+  //} else {
+  //  std::unique_lock<std::mutex> l(connection_cache_mutex_);
+  //  connection_cache_.emplace(addr.ipAndPort(), owned);
+  //}
+}
+
+HTTPClientConnection* HTTPConnectionPool::leaseConnection(
+    const fnord::net::InetAddr& addr) {
+  {
+    std::unique_lock<std::mutex> l(connection_cache_mutex_);
+    auto iter = connection_cache_.find(addr.ipAndPort());
+
+    if (iter != connection_cache_.end()) {
+      HTTPClientConnection* conn = iter->second;
+      connection_cache_.erase(iter);
+      return conn;
+    }
+  }
+
+  std::unique_ptr<HTTPClientConnection> conn(
+      new HTTPClientConnection(
+          std::move(fnord::net::TCPConnection::connect(addr)),
+          scheduler_));
+
+  scheduler_->runOnWakeup(
+      std::bind(&HTTPConnectionPool::parkConnection, this, conn.get()),
+      conn->onReady());
+
+  return conn.release();
+}
 
 }
 }

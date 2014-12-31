@@ -33,6 +33,10 @@ HTTPClientConnection::~HTTPClientConnection() {
   }
 }
 
+thread::Wakeup* HTTPClientConnection::onReady() {
+  return &on_ready_;
+}
+
 void HTTPClientConnection::executeRequest(
     const HTTPRequest& request,
     HTTPResponseHandler* response_handler) {
@@ -98,6 +102,7 @@ void HTTPClientConnection::awaitWrite() {
 
 void HTTPClientConnection::close() {
   state_ = S_CONN_CLOSED;
+  conn_->close();
 }
 
 void HTTPClientConnection::read() {
@@ -134,6 +139,7 @@ void HTTPClientConnection::read() {
   if (parser_.state() == HTTPParser::S_DONE) {
     close(); // FIXPAUL keepalive
     mutex_.unlock();
+    on_ready_.wakeup();
     cur_handler_->onResponseComplete();
   } else {
     std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});

@@ -70,13 +70,13 @@ void Logger::logException(
         rte.method(),
         rte.file(),
         rte.line());
-  } catch (const std::exception& e) {
+  } catch (const std::exception& bcee) {
     logf(
         log_level,
         tags,
         "$0: std::exception: <foreign exception> $1",
         message,
-        e.what());
+        exception.what());
   }
 }
 
