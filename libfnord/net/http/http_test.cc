@@ -12,7 +12,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <fnord/base/exception.h>
-#include <fnord/net/http/httpchannel.h>
 #include <fnord/net/http/httpclient.h>
 #include <fnord/net/http/httpconnectionpool.h>
 #include <fnord/net/http/httpparser.h>
@@ -258,22 +257,6 @@ TEST_CASE(HTTPTest, TestHTTPConnectionPoolEnd2End, [] () {
   HTTPConnectionPool http_pool(&tp);
 
   auto res = http_pool.executeRequest(
-      fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));
-  res->wait();
-
-  const auto& r = res->get();
-  EXPECT_EQ(r.statusCode(), 200);
-});
-
-TEST_CASE(HTTPTest, TestHTTPChannelEnd2End, [] () {
-  fnord::thread::ThreadPool tp;
-
-  fnord::comm::RoundRobinLBGroup lb_group;
-  lb_group.addServer(fnord::net::InetAddr::resolve("localhost:8080"));
-
-  HTTPChannel chan(&lb_group, &tp);
-
-  auto res = chan.executeRequest(
       fnord::http::HTTPRequest::mkGet("http://localhost:8080/"));
   res->wait();
 

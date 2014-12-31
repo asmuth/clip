@@ -17,9 +17,9 @@
 #include "fnord/comm/rpcchannel.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsonrpcrequest.h"
+#include "fnord/net/http/httpconnectionpool.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponse.h"
-#include "fnord/net/http/httpchannel.h"
 
 namespace fnord {
 namespace json {
@@ -29,9 +29,7 @@ public:
 
   JSONRPCHTTPChannel(
       comm::LBGroup* lb_group,
-      fnord::thread::TaskScheduler* scheduler,
-      const std::string& method_prefix,
-      const std::string& path = "/rpc");
+      fnord::thread::TaskScheduler* scheduler);
 
   template <class RPCType>
   void call(RPCType* rpc);
@@ -48,10 +46,9 @@ protected:
     std::function<void (const std::exception& e)> on_error;
   };
 
-  http::HTTPChannel http_chan_;
-  fnord::thread::TaskScheduler* scheduler_;
-  std::string method_prefix_;
-  std::string path_;
+  comm::LBGroup* lb_group_;
+  http::HTTPConnectionPool conn_pool_;
+  thread::TaskScheduler* scheduler_;
 };
 
 } // namespace json

@@ -29,7 +29,7 @@ int main() {
   JSONRPCHTTPAdapter rpc_http(&jsonrpc);
 
   PingService ping_service;
-  jsonrpc.registerService<PingService>("PingService", &ping_service);
+  jsonrpc.registerService<PingService>(&ping_service);
 
   fnord::http::HTTPRouter http_router;
   http_router.addRouteByPrefixMatch("/rpc", &rpc_http);

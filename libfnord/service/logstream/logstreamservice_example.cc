@@ -35,7 +35,7 @@ int main() {
   fnord::io::FileUtil::mkdir_p(log_path);
 
   LogStreamService ls_service{fnord::io::FileRepository(log_path)};
-  rpc.registerService("LogStreamService", &ls_service);
+  rpc.registerService(&ls_service);
 
   fnord::thread::EventLoop event_loop;
   fnord::thread::ThreadPool thread_pool;

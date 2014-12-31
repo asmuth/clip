@@ -14,13 +14,10 @@ namespace json {
 
 JSONRPCHTTPChannel::JSONRPCHTTPChannel(
     comm::LBGroup* lb_group,
-    fnord::thread::TaskScheduler* scheduler,
-    const std::string& method_prefix,
-    const std::string& path /* = "/rpc" */) :
-    http_chan_(lb_group, scheduler),
-    scheduler_(scheduler),
-    method_prefix_(method_prefix),
-    path_(path) {}
+    fnord::thread::TaskScheduler* scheduler) :
+    lb_group_(lb_group),
+    conn_pool_(scheduler),
+    scheduler_(scheduler) {}
 
 void JSONRPCHTTPChannel::call(
     const JSONObject& json_req,
@@ -29,14 +26,24 @@ void JSONRPCHTTPChannel::call(
   std::unique_ptr<http::HTTPResponseFuture> http_future;
 
   try {
-    http::HTTPRequest http_req(http::HTTPRequest::M_POST, path_);
+    URI server(lb_group_->getServerForNextRequest());
+    auto addr = fnord::net::InetAddr::resolve(server.hostAndPort());
+    if (!addr.hasPort()) {
+      addr.setPort(80);
+    }
+
+    http::HTTPRequest http_req(http::HTTPRequest::M_POST, server.path());
     JSONOutputStream json(http_req.getBodyOutputStream());
     json.write(json_req);
     http_req.setHeader(
         "Content-Length",
         StringUtil::toString(http_req.body().size()));
 
-    http_future = http_chan_.executeRequest(http_req);
+    if (!http_req.hasHeader("Host")) {
+      http_req.setHeader("Host", server.hostAndPort());
+    }
+
+    http_future = conn_pool_.executeRequest(http_req, addr);
   } catch (std::exception& e) {
     on_error(e);
     return;

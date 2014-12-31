@@ -1,3 +1,6 @@
+-> async tcp connect
+-> cancelable wait
+-> httpconnpool impl
 
 -> http connection timeouts + retry options
 -> fix await* exceptionhandling vs mutex in httpserveronnection

@@ -97,7 +97,6 @@ add_library(fnord-http OBJECT
     net/inetaddr.cc
     net/tcpconnection.cc
     net/http/cookies.cc
-    net/http/httpchannel.cc
     net/http/httpclient.cc
     net/http/httpclientconnection.cc
     net/http/httpconnectionpool.cc

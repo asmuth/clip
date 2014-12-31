@@ -15,7 +15,7 @@ namespace comm {
 
 LBGroup::LBGroup() {}
 
-net::InetAddr LBGroup::getServerForNextRequest() {
+std::string LBGroup::getServerForNextRequest() {
   std::unique_lock<std::mutex> lk(mutex_);
 
   if (servers_.empty()) {
@@ -30,19 +30,19 @@ net::InetAddr LBGroup::getServerForNextRequest() {
   return servers_[picked_index].addr;
 }
 
-void LBGroup::addServer(const net::InetAddr& addr) {
+void LBGroup::addServer(const std::string& addr) {
   std::unique_lock<std::mutex> lk(mutex_);
   servers_.emplace_back(addr);
 }
 
-void LBGroup::removeServer(const net::InetAddr& addr) {
+void LBGroup::removeServer(const std::string& addr) {
 }
 
-void LBGroup::markServerAsDown(const net::InetAddr& addr) {
+void LBGroup::markServerAsDown(const std::string& addr) {
 }
 
 LBGroup::Server::Server(
-    const net::InetAddr& _addr) :
+    const std::string& _addr) :
     addr(_addr),
     state(S_UP) {}
 

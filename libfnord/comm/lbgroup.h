@@ -25,11 +25,11 @@ class LBGroup {
 public:
   LBGroup();
 
-  net::InetAddr getServerForNextRequest();
+  std::string getServerForNextRequest();
 
-  void addServer(const net::InetAddr& addr);
-  void removeServer(const net::InetAddr& addr);
-  void markServerAsDown(const net::InetAddr& addr);
+  void addServer(const std::string& addr);
+  void removeServer(const std::string& addr);
+  void markServerAsDown(const std::string& addr);
 
 protected:
   enum kServerState {
@@ -38,8 +38,8 @@ protected:
   };
 
   struct Server {
-    Server(const net::InetAddr& addr);
-    net::InetAddr addr;
+    Server(const std::string& addr);
+    std::string addr;
     kServerState state;
   };
 

@@ -71,13 +71,13 @@ template <> template <class T>
 void fnord::reflect::MetaClass<
     fnord::logstream_service::LogStreamService>::reflect(T* t) {
   t->method(
-      "append",
+      "LogStreamService.append",
       &fnord::logstream_service::LogStreamService::append,
       "stream",
       "entry");
 
   t->method(
-      "fetch",
+      "LogStreamService.fetch",
       &fnord::logstream_service::LogStreamService::fetch,
       "stream",
       "offset",

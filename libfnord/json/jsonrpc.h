@@ -30,9 +30,7 @@ public:
   void dispatch(JSONRPCRequest* req, JSONRPCResponse* res);
 
   template <class ServiceType>
-  void registerService(
-      const std::string& service_name,
-      ServiceType* service);
+  void registerService(ServiceType* service);
 
   template <class MethodType>
   void registerMethod(
@@ -48,10 +46,7 @@ protected:
   template <class ClassType>
   class ReflectionTarget {
   public:
-    ReflectionTarget(
-        JSONRPC* self,
-        const std::string service_name,
-        ClassType* service);
+    ReflectionTarget(JSONRPC* self, ClassType* service);
 
     template <typename MethodType>
     void method(MethodType* method_call);
@@ -61,7 +56,6 @@ protected:
 
   protected:
     JSONRPC* self_;
-    std::string service_name_;
     ClassType* service_;
   };
 

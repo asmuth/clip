@@ -15,10 +15,8 @@ namespace fnord {
 namespace json {
 
 template <class ServiceType>
-void JSONRPC::registerService(
-    const std::string& service_name,
-    ServiceType* service) {
-  JSONRPC::ReflectionTarget<ServiceType> target(this, service_name, service);
+void JSONRPC::registerService(ServiceType* service) {
+  JSONRPC::ReflectionTarget<ServiceType> target(this, service);
   reflect::MetaClass<ServiceType>::reflectMethods(&target);
 }
 
@@ -37,17 +35,15 @@ void JSONRPC::registerMethod(
 template <class ClassType>
 JSONRPC::ReflectionTarget<ClassType>::ReflectionTarget(
     JSONRPC* self,
-    const std::string service_name,
     ClassType* service) :
     self_(self),
-    service_name_(service_name),
     service_(service) {}
 
 template <typename ClassType>
 template <typename MethodType>
 void JSONRPC::ReflectionTarget<ClassType>::method(MethodType* method_call) {
   self_->registerMethod(
-      StringUtil::format("$0.$1", service_name_, method_call->name()),
+      method_call->name(),
       method_call,
       service_);
 }
@@ -56,10 +52,7 @@ template <typename ClassType>
 template <typename RPCCallType>
 void JSONRPC::ReflectionTarget<ClassType>::rpc(RPCCallType rpc_call) {
   auto service = service_;
-  auto mname = StringUtil::format(
-      "$0.$1",
-      service_name_,
-      rpc_call.method()->name());
+  auto mname = rpc_call.method()->name();
 
   self_->registerMethod(mname, [rpc_call, service] (
       JSONRPCRequest* req,

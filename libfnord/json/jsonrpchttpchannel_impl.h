@@ -24,7 +24,7 @@ void JSONRPCHTTPChannel::call(RPCType* rpc) {
   req.emplace_back(JSON_STRING, "jsonrpc");
   req.emplace_back(JSON_STRING, "2.0");
   req.emplace_back(JSON_STRING, "method");
-  req.emplace_back(JSON_STRING, method_prefix_ + rpc->method());
+  req.emplace_back(JSON_STRING, rpc->method());
   req.emplace_back(JSON_STRING, "id");
   req.emplace_back(JSON_STRING, "0"); // FIXPAUL
   req.emplace_back(JSON_STRING, "params");
