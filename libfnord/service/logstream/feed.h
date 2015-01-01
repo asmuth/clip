@@ -29,6 +29,8 @@ public:
   void append(const std::string& entry) override;
   bool getNextEntry(std::string* entry) override;
 
+  void setOption(const std::string& optname,const std::string& optval) override;
+
 protected:
   void fillBuffer();
 

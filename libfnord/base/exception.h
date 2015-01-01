@@ -24,6 +24,7 @@ const char kIllegalArgumentError[] = "IOIllegalArgument";
 const char kIllegalFormatError[] = "IllegalFormat";
 const char kIllegalStateError[] = "IllegalState";
 const char kIndexError[] = "IndexError";
+const char kInvalidOptionError[] = "InvalidOptionError";
 const char kKeyError[] = "KeyError";
 const char kMallocError[] = "MallocError";
 const char kNoSuchMethodError[] = "NoSuchMethodError";

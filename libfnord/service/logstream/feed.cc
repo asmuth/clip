@@ -58,5 +58,16 @@ bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
   return true;
 }
 
+void LogStreamServiceFeed::setOption(
+    const std::string& optname,
+    const std::string& optval) {
+  if (optname == "batch_size") {
+    batch_size_ = std::stoi(optval);
+    return;
+  }
+
+  RAISEF(kInvalidOptionError, "invalid option: $0", optname);
+}
+
 }
 }

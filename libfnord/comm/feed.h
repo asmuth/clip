@@ -30,6 +30,10 @@ public:
 
   const std::string& name() const;
 
+  virtual void setOption(
+      const std::string& optname,
+      const std::string& optval) = 0;
+
 protected:
   std::string name_;
 };
