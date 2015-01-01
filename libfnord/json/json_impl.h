@@ -10,7 +10,9 @@
 #ifndef _FNORD_JSON_IMPL_H
 #define _FNORD_JSON_IMPL_H
 #include "fnord/base/exception.h"
+#include "fnord/base/inspect.h"
 #include "fnord/base/datetime.h"
+#include "fnord/base/traits.h"
 #include "fnord/json/jsonutil.h"
 #include "fnord/json/jsonoutputstream.h"
 #include "fnord/reflect/indexsequence.h"
@@ -18,26 +20,6 @@
 
 namespace fnord {
 namespace json {
-
-template <typename T, typename = void>
-struct TypeIsVector {
-  static const bool value = false;
-};
-
-template <typename T>
-struct TypeIsVector<
-    T,
-    typename std::enable_if<
-        std::is_same<
-            T,
-            std::vector<
-                typename T::value_type,
-                typename T::allocator_type>>::value>::type>  {
-  static const bool value = true;
-};
-
-template <typename T>
-using TypeIsReflected = fnord::reflect::is_reflected<T>;
 
 template <typename T>
 T fromJSONImpl(
@@ -60,7 +42,26 @@ template <
 T fromJSON(
     JSONObject::const_iterator begin,
     JSONObject::const_iterator end) {
-  abort();
+  if (begin == end) {
+    RAISE(kIndexError);
+  }
+
+  if (begin->type != JSON_ARRAY_BEGIN) {
+    RAISE(kIllegalArgumentError, "expected JSON_ARRAY_BEGIN");
+  }
+
+  std::vector<typename T::value_type> vec;
+  for (begin++; begin != end; ) {
+    if (begin->type == JSON_ARRAY_END) {
+      break;
+    }
+
+    fnord::iputs("next size: $0", begin->size);
+    vec.emplace_back(fromJSON<typename T::value_type>(begin, end));
+    begin += begin->size;
+  }
+
+  return vec;
 }
 
 template <

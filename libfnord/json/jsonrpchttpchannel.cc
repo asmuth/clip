@@ -63,7 +63,7 @@ void JSONRPCHTTPChannel::call(
       fnord::Exception e(
           StringUtil::format(
               "JSONRPC received non 200 HTTP status code: $0",
-              http_res.body());
+              http_res.body().toString()));
       e.setTypeName(kRPCError);
       req_handle->on_error(e);
       return;

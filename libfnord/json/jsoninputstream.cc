@@ -57,6 +57,7 @@ bool JSONInputStream::readNextToken(
       case ':':
       case ',':
       case ' ':
+      case '\n':
         advanceCursor();
         break;
 

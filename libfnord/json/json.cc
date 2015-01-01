@@ -59,6 +59,7 @@ JSONObject parseJSON(JSONInputStream* json) {
         obj.emplace_back(token);
         obj[stack.top()].size = obj.size() - stack.top();
         stack.pop();
+        break;
       }
 
       case JSON_STRING:

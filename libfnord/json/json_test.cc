@@ -233,3 +233,21 @@ TEST_CASE(JSONTest, TestToFromJSON, [] () {
   EXPECT_EQ(m1.a, m2.a);
   EXPECT_EQ(m1.b, m2.b);
 });
+
+TEST_CASE(JSONTest, TestParseJSON, [] () {
+  auto json = fnord::json::parseJSON(R"(
+    {
+       "jsonrpc":"2.0",
+       "id":"0",
+       "result":[
+          {
+             "a":"0",
+             "b":"c",
+             "data":"xxx|bbb|v=3&1,2,4~5,"
+          }
+       ]
+    }
+  )");
+
+  EXPECT_EQ(json.size(), 17);
+});
