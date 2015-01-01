@@ -26,7 +26,6 @@ public:
   virtual ~Feed();
 
   virtual void append(const std::string& entry) = 0;
-
   virtual bool getNextEntry(std::string* entry) = 0;
 
   const std::string& name() const;

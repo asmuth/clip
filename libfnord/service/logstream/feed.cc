@@ -37,6 +37,11 @@ void LogStreamServiceFeed::fillBuffer() {
 
   rpc->call(rpc_channel_);
   rpc->wait();
+
+  for (const auto& entry : rpc->result()) {
+    buf_.emplace_back(entry);
+    offset_ = entry.next_offset;
+  }
 }
 
 bool LogStreamServiceFeed::getNextEntry(std::string* entry) {

@@ -19,7 +19,7 @@ namespace logstream_service {
 
 class LogStreamServiceFeed : public fnord::comm::Feed {
 public:
-  static const int kDefaultBatchSize = 1;
+  static const int kDefaultBatchSize = 1024;
 
   LogStreamServiceFeed(
       const std::string& name,
