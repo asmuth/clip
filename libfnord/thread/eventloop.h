@@ -35,7 +35,6 @@ public:
 protected:
 
   void poll();
-
   void setupRunQWakeupPipe();
   void runQWakeup();
   void appendToRunQ(std::function<void()> task);
@@ -45,11 +44,11 @@ protected:
   fd_set op_error_;
   int max_fd_;
   volatile bool running_;
-  std::vector<std::function<void()>> callbacks_;
+  int runq_wakeup_pipe_[2];
   std::list<std::function<void()>> runq_;
   std::mutex runq_mutex_;
-  int runq_wakeup_pipe_[2];
   std::thread::id threadid_;
+  std::vector<std::function<void()>> callbacks_;
 };
 
 }

@@ -24,10 +24,11 @@ namespace thread {
 EventLoop::EventLoop() :
     max_fd_(1),
     running_(true),
-    threadid_(std::this_thread::get_id()) {
-  callbacks_.reserve(FD_SETSIZE + 1);
+    threadid_(std::this_thread::get_id()),
+    callbacks_(FD_SETSIZE + 1, nullptr) {
   FD_ZERO(&op_read_);
   FD_ZERO(&op_write_);
+  FD_ZERO(&op_error_);
   setupRunQWakeupPipe();
 }
 
