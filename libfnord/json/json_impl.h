@@ -56,7 +56,6 @@ T fromJSON(
       break;
     }
 
-    fnord::iputs("next size: $0", begin->size);
     vec.emplace_back(fromJSON<typename T::value_type>(begin, end));
     begin += begin->size;
   }
