@@ -21,7 +21,13 @@
 namespace fnord {
 namespace net {
 
-TCPConnection::TCPConnection(int fd) : fd_(fd) {}
+TCPConnection::TCPConnection(int fd) : fd_(fd), closed_(false) {}
+
+TCPConnection::~TCPConnection() {
+  if (!closed_) {
+    close();
+  }
+}
 
 std::unique_ptr<TCPConnection> TCPConnection::connect(const InetAddr& addr) {
   int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -76,6 +82,7 @@ size_t TCPConnection::write(const void* data, size_t size) {
 }
 
 void TCPConnection::close() {
+  closed_ = true;
   ::close(fd_);
 }
 

@@ -34,6 +34,7 @@ public:
       std::function<void()> on_ready);
 
   TCPConnection(int fd);
+  ~TCPConnection();
   int fd() const;
 
   size_t read(void* dst, size_t size);
@@ -50,6 +51,7 @@ public:
 protected:
   void connectImpl(const InetAddr& addr);
 
+  bool closed_;
   int fd_;
 };
 
