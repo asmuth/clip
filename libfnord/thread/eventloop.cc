@@ -177,6 +177,8 @@ void EventLoop::runQWakeup() {
 }
 
 void EventLoop::run() {
+  threadid_ = std::this_thread::get_id();
+
   while (running_) {
     poll();
   }
