@@ -19,10 +19,34 @@
 namespace fnord {
 namespace json {
 
+template <typename T, typename = void>
+struct TypeIsVector {
+  static const bool value = false;
+};
+
+template <typename T>
+struct TypeIsVector<
+    T,
+    typename std::enable_if<
+        std::is_same<
+            T,
+            std::vector<
+                typename T::value_type,
+                typename T::allocator_type>>::value>::type>  {
+  static const bool value = true;
+};
+
+template <typename T>
+using TypeIsReflected = fnord::reflect::is_reflected<T>;
+
+template <typename T>
+T fromJSONImpl(
+    JSONObject::const_iterator begin,
+    JSONObject::const_iterator end);
+
 template <
     typename T,
-    typename = typename std::enable_if<
-        fnord::reflect::is_reflected<T>::value>::type>
+    typename A = typename std::enable_if<TypeIsReflected<T>::value>::type>
 T fromJSON(
     JSONObject::const_iterator begin,
     JSONObject::const_iterator end) {
@@ -31,9 +55,19 @@ T fromJSON(
 
 template <
     typename T,
-    typename = typename std::enable_if<
-        !fnord::reflect::is_reflected<T>::value>::type,
-    typename = void>
+    typename A = typename std::enable_if<!TypeIsReflected<T>::value>::type,
+    typename B = typename std::enable_if<TypeIsVector<T>::value>::type>
+T fromJSON(
+    JSONObject::const_iterator begin,
+    JSONObject::const_iterator end) {
+  abort();
+}
+
+template <
+    typename T,
+    typename A = typename std::enable_if<!TypeIsReflected<T>::value>::type,
+    typename B = typename std::enable_if<!TypeIsVector<T>::value>::type,
+    typename C = void>
 T fromJSON(
     JSONObject::const_iterator begin,
     JSONObject::const_iterator end) {

@@ -9,22 +9,33 @@
  */
 #ifndef _FNORD_LOGSTREAM_SERVICE_FEED_H
 #define _FNORD_LOGSTREAM_SERVICE_FEED_H
+#include <deque>
 #include "fnord/comm/feed.h"
 #include "fnord/comm/rpc.h"
+#include "fnord/service/logstream/logstreamentry.h"
 
 namespace fnord {
 namespace logstream_service {
 
 class LogStreamServiceFeed : public fnord::comm::Feed {
 public:
+  static const int kDefaultBatchSize = 1024;
+
   LogStreamServiceFeed(
       const std::string& name,
-      fnord::comm::RPCChannel* rpc_channel);
+      fnord::comm::RPCChannel* rpc_channel,
+      int batch_size = kDefaultBatchSize);
 
   void append(const std::string& entry) override;
+  bool getNextEntry(std::string* entry) override;
 
 protected:
+  void fillBuffer();
+
   fnord::comm::RPCChannel* rpc_channel_;
+  int batch_size_;
+  uint64_t offset_;
+  std::deque<LogStreamEntry> buf_;
 };
 
 }

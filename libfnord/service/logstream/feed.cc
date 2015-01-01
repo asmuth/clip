@@ -15,14 +15,42 @@ namespace logstream_service {
 
 LogStreamServiceFeed::LogStreamServiceFeed(
     const std::string& name,
-    fnord::comm::RPCChannel* rpc_channel) :
+    fnord::comm::RPCChannel* rpc_channel,
+    int batch_size /* = kDefaultBatchSize */) :
     fnord::comm::Feed(name),
-    rpc_channel_(rpc_channel) {}
+    rpc_channel_(rpc_channel),
+    batch_size_(batch_size),
+    offset_(0) {}
 
 void LogStreamServiceFeed::append(const std::string& entry) {
   auto rpc = fnord::comm::mkRPC(&LogStreamService::append, name(), entry);
   rpc->call(rpc_channel_);
   comm::AnyRPC::fireAndForget(std::move(rpc));
+}
+
+void LogStreamServiceFeed::fillBuffer() {
+  auto rpc = fnord::comm::mkRPC(
+      &LogStreamService::fetch,
+      name(),
+      offset_,
+      batch_size_);
+
+  rpc->call(rpc_channel_);
+  rpc->wait();
+}
+
+bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
+  if (buf_.empty()) {
+    fillBuffer();
+  }
+
+  if (buf_.empty()) {
+    return false;
+  }
+
+  *entry = buf_.front().data;
+  buf_.pop_front();
+  return true;
 }
 
 }

@@ -28,6 +28,10 @@ const std::string& AnyRPC::method() const {
 
 void AnyRPC::wait() {
   ready_wakeup_.waitForWakeup(0);
+
+  if (is_error_) {
+    RAISE(kRPCError, error_);
+  }
 }
 
 void AnyRPC::ready() noexcept {

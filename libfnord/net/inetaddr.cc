@@ -7,6 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/net/inetaddr.h"
@@ -17,6 +21,7 @@ namespace net {
 InetAddr InetAddr::resolve(const std::string& addr_str) {
   auto parts = StringUtil::split(addr_str, ":");
   unsigned port = 0;
+  std::string hostname;
   std::string ip;
 
   switch (parts.size()) {
@@ -24,15 +29,23 @@ InetAddr InetAddr::resolve(const std::string& addr_str) {
       port = std::stoi(parts[1]);
       /* fallthrough */
 
-    case 1:
-      ip = parts[0]; // FIXPAUL resolve DNS
+    case 1: {
+      struct hostent* h = gethostbyname(parts[0].c_str());
+
+      if (h == nullptr) {
+        RAISEF(kResolveError, "gethostbyname($0) failed", parts[0]);
+      }
+
+      hostname = h->h_name;
+      ip = inet_ntoa(*((struct in_addr *) h->h_addr));
       break;
+    }
 
     default:
-      RAISEF(kIllegalArgumentError, "invalid address: $0", addr_str);
+      RAISEF(kResolveError, "invalid address: $0", addr_str);
   }
 
-  return InetAddr(addr_str, ip, port);
+  return InetAddr(hostname, ip, port);
 }
 
 InetAddr::InetAddr(

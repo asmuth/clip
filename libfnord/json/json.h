@@ -62,11 +62,6 @@ template <typename T>
 std::string toJSONString(const T& value);
 
 template <typename T>
-T fromJSONImpl(
-    JSONObject::const_iterator begin,
-    JSONObject::const_iterator end);
-
-template <typename T>
 T fromJSON(const std::string& json_str);
 
 template <typename T>

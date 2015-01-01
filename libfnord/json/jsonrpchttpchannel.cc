@@ -60,7 +60,10 @@ void JSONRPCHTTPChannel::call(
     JSONObject res;
 
     if (http_res.statusCode() != 200) {
-      fnord::Exception e("received non 200 HTTP status code for");
+      fnord::Exception e(
+          StringUtil::format(
+              "JSONRPC received non 200 HTTP status code: $0",
+              http_res.body());
       e.setTypeName(kRPCError);
       req_handle->on_error(e);
       return;
