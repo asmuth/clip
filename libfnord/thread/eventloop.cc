@@ -7,10 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <functional>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <thread>
 #include <unistd.h>
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
@@ -19,7 +21,10 @@
 namespace fnord {
 namespace thread {
 
-EventLoop::EventLoop() : max_fd_(1), running_(true) {
+EventLoop::EventLoop() :
+    max_fd_(1),
+    running_(true),
+    threadid_(std::this_thread::get_id()) {
   callbacks_.reserve(FD_SETSIZE + 1);
   FD_ZERO(&op_read_);
   FD_ZERO(&op_write_);
@@ -52,6 +57,15 @@ void EventLoop::setupRunQWakeupPipe() {
 }
 
 void EventLoop::run(std::function<void()> task) {
+  if (std::this_thread::get_id() == threadid_) {
+    task();
+  } else {
+    appendToRunQ(task);
+  }
+}
+
+void EventLoop::appendToRunQ(std::function<void()> task) {
+  fnord::iputs("run via runq", 1);
   std::unique_lock<std::mutex> lk(runq_mutex_);
   runq_.emplace_back(task);
   lk.unlock();
@@ -59,6 +73,14 @@ void EventLoop::run(std::function<void()> task) {
 }
 
 void EventLoop::runOnReadable(std::function<void()> task, int fd) {
+  if (std::this_thread::get_id() != threadid_) {
+    appendToRunQ([this, task, fd] {
+      runOnReadable(task, fd);
+    });
+
+    return;
+  }
+
   if (fd > FD_SETSIZE) {
     RAISEF(kIOError, "fd is too large: $0, max is $1", fd, FD_SETSIZE);
   }
@@ -74,6 +96,14 @@ void EventLoop::runOnReadable(std::function<void()> task, int fd) {
 }
 
 void EventLoop::runOnWritable(std::function<void()> task, int fd) {
+  if (std::this_thread::get_id() != threadid_) {
+    appendToRunQ([this, task, fd] {
+      runOnWritable(task, fd);
+    });
+
+    return;
+  }
+
   if (fd > FD_SETSIZE) {
     RAISEF(kIOError, "fd is too large: $0, max is $1", fd, FD_SETSIZE);
   }

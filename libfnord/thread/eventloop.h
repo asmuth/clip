@@ -11,6 +11,7 @@
 #define FNORDMETRIC_EV_EVENTLOOP_H
 #include <list>
 #include <sys/select.h>
+#include <thread>
 #include <vector>
 #include "fnord/thread/taskscheduler.h"
 
@@ -37,6 +38,7 @@ protected:
 
   void setupRunQWakeupPipe();
   void runQWakeup();
+  void appendToRunQ(std::function<void()> task);
 
   fd_set op_read_;
   fd_set op_write_;
@@ -47,6 +49,7 @@ protected:
   std::list<std::function<void()>> runq_;
   std::mutex runq_mutex_;
   int runq_wakeup_pipe_[2];
+  std::thread::id threadid_;
 };
 
 }
