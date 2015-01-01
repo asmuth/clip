@@ -38,7 +38,7 @@ void RPC<ResultType, ArgPackType>::call(RPCChannel* chan) {
 }
 
 template <typename ResultType, typename ArgPackType>
-void RPC<ResultType, ArgPackType>::ready(const ResultType& result) {
+void RPC<ResultType, ArgPackType>::ready(const ResultType& result) noexcept {
   result_ = result;
   AnyRPC::ready();
 }

@@ -32,21 +32,21 @@ void JSONRPCHTTPChannel::call(RPCType* rpc) {
   req.emplace_back(JSON_OBJECT_END);
 
   auto on_success = [rpc] (const JSONObject& res) {
-    auto err_iter = JSONUtil::objectLookup(res.begin(), res.end(), "error");
-    if (err_iter != res.end()) {
-      std::string err_str;
-
-      auto err_str_i = JSONUtil::objectLookup(err_iter, res.end(), "message");
-      if (err_str_i == res.end()) {
-        err_str = "invalid JSONRPC response";
-      } else {
-        err_str = err_str_i->data;
+    try {
+      auto err_iter = JSONUtil::objectLookup(res.begin(), res.end(), "error");
+      if (err_iter != res.end()) {
+        auto err_str_i = JSONUtil::objectLookup(err_iter, res.end(), "message");
+        if (err_str_i == res.end()) {
+          RAISE(kRPCError, "invalid JSONRPC response");
+        } else {
+          RAISE(kRPCError, err_str_i->data);
+        }
       }
 
-      fnord::Exception e(err_str);
-      e.setTypeName(kRPCError);
+      auto res_iter = JSONUtil::objectLookup(res.begin(), res.end(), "result");
+      rpc->ready(fromJSON<typename RPCType::ResultType>(res_iter, res.end()));
+    } catch (const std::exception& e) {
       rpc->error(e);
-      return;
     }
   };
 

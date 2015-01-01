@@ -65,7 +65,6 @@ void EventLoop::run(std::function<void()> task) {
 }
 
 void EventLoop::appendToRunQ(std::function<void()> task) {
-  fnord::iputs("run via runq", 1);
   std::unique_lock<std::mutex> lk(runq_mutex_);
   runq_.emplace_back(task);
   lk.unlock();
@@ -154,7 +153,9 @@ void EventLoop::runOnWakeup(
     std::function<void()> task,
     Wakeup* wakeup,
     long wakeup_generation) {
-  RAISE(kNotYetImplementedError);
+  wakeup->onWakeup(wakeup_generation, [this, task] {
+    this->run(task);
+  });
 }
 
 void EventLoop::runQWakeup() {

@@ -12,6 +12,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
+#include <list>
 
 namespace fnord {
 namespace thread {
@@ -27,6 +28,7 @@ public:
   void waitForWakeup(long generation);
 
   void wakeup();
+  void onWakeup(long generation, std::function<void()> callback);
 
   long generation() const;
 
@@ -34,6 +36,7 @@ protected:
   std::mutex mutex_;
   std::condition_variable condvar_;
   std::atomic<long> gen_;
+  std::list<std::function<void()>> callbacks_;
 };
 
 }

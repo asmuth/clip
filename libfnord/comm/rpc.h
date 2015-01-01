@@ -31,13 +31,13 @@ public:
 
   void wait();
 
-  void ready();
+  void ready() noexcept;
   const std::string& method() const;
   void error(const std::exception& e);
 
 protected:
   void fireAndForget();
-  void reap();
+  void reap() noexcept;
 
   std::string method_;
   std::string error_;
@@ -58,7 +58,7 @@ public:
   RPC(const RPC<ResultType, ArgPackType>& other);
 
   void call(RPCChannel* channel);
-  void ready(const ResultType& result);
+  void ready(const ResultType& result) noexcept;
 
   const ArgPackType& args() const;
   const ResultType& result() const;

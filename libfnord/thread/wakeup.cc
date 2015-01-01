@@ -28,15 +28,35 @@ void Wakeup::waitForWakeup(long oldgen) {
   });
 }
 
+void Wakeup::onWakeup(long generation, std::function<void()> callback) {
+  std::unique_lock<std::mutex> l(mutex_);
+
+  if (gen_.load() > generation) {
+    l.unlock();
+    callback();
+    return;
+  }
+
+  callbacks_.push_back(callback);
+}
+
 long Wakeup::generation() const {
   return gen_.load();
 }
 
 void Wakeup::wakeup() {
+  std::list<std::function<void ()>> callbacks;
+
   std::unique_lock<std::mutex> l(mutex_);
   gen_++;
+  callbacks.splice(callbacks.begin(), callbacks_);
   l.unlock();
+
   condvar_.notify_all();
+
+  for (const auto& callback: callbacks) {
+    callback();
+  }
 }
 
 }

@@ -30,7 +30,7 @@ void AnyRPC::wait() {
   ready_wakeup_.waitForWakeup(0);
 }
 
-void AnyRPC::ready() {
+void AnyRPC::ready() noexcept {
   std::unique_lock<std::mutex> lk(mutex_);
   is_ready_ = true;
   ready_wakeup_.wakeup();
@@ -71,7 +71,7 @@ void AnyRPC::fireAndForget() {
   }
 }
 
-void AnyRPC::reap() {
+void AnyRPC::reap() noexcept {
   if (is_error_) {
     fnord::log::Logger::get()->logf(
         log::kWarning,
