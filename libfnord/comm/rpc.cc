@@ -46,7 +46,7 @@ void AnyRPC::error(const std::exception& e) {
 
   try {
     auto rte = dynamic_cast<const fnord::Exception&>(e);
-    error_ = rte.getMessage();
+    error_ = StringUtil::format("$0: $1", rte.getTypeName(), rte.getMessage());
   } catch (const std::exception& cast_error) {
     error_ = e.what();
   }

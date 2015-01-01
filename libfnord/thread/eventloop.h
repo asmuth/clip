@@ -9,7 +9,7 @@
  */
 #ifndef FNORDMETRIC_EV_EVENTLOOP_H
 #define FNORDMETRIC_EV_EVENTLOOP_H
-
+#include <list>
 #include <sys/select.h>
 #include <vector>
 #include "fnord/thread/taskscheduler.h"
@@ -28,11 +28,15 @@ public:
       long wakeup_generation) override;
 
   EventLoop();
+  ~EventLoop();
   void run();
 
 protected:
 
   void poll();
+
+  void setupRunQWakeupPipe();
+  void runQWakeup();
 
   fd_set op_read_;
   fd_set op_write_;
@@ -40,6 +44,9 @@ protected:
   int max_fd_;
   volatile bool running_;
   std::vector<std::function<void()>> callbacks_;
+  std::list<std::function<void()>> runq_;
+  std::mutex runq_mutex_;
+  int runq_wakeup_pipe_[2];
 };
 
 }

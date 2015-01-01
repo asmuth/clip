@@ -11,9 +11,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
-#include "eventloop.h"
-#include <fnord/base/exception.h>
-#include <fnord/base/inspect.h>
+#include <unistd.h>
+#include "fnord/base/exception.h"
+#include "fnord/base/inspect.h"
+#include "fnord/thread/eventloop.h"
 
 namespace fnord {
 namespace thread {
@@ -22,10 +23,39 @@ EventLoop::EventLoop() : max_fd_(1), running_(true) {
   callbacks_.reserve(FD_SETSIZE + 1);
   FD_ZERO(&op_read_);
   FD_ZERO(&op_write_);
+  setupRunQWakeupPipe();
+}
+
+EventLoop::~EventLoop() {
+  close(runq_wakeup_pipe_[0]);
+  close(runq_wakeup_pipe_[1]);
+}
+
+void EventLoop::setupRunQWakeupPipe() {
+  if (pipe(runq_wakeup_pipe_) < 0) {
+    RAISE_ERRNO(kIOError, "pipe() failed");
+  }
+
+  int flags = fcntl(runq_wakeup_pipe_[0], F_GETFL, 0);
+  flags |= O_NONBLOCK;
+
+  if (fcntl(runq_wakeup_pipe_[0], F_SETFL, flags) != 0) {
+    RAISE_ERRNO(kIOError, "fnctl(%i) failed", runq_wakeup_pipe_[0]);
+  }
+
+  FD_SET(runq_wakeup_pipe_[0], &op_read_);
+  if (runq_wakeup_pipe_[0] > max_fd_) {
+    max_fd_ = runq_wakeup_pipe_[0];
+  }
+
+  callbacks_[runq_wakeup_pipe_[0]] = std::bind(&EventLoop::runQWakeup, this);
 }
 
 void EventLoop::run(std::function<void()> task) {
-  task(); // FIXPAUL post from different thread!!
+  std::unique_lock<std::mutex> lk(runq_mutex_);
+  runq_.emplace_back(task);
+  lk.unlock();
+  write(runq_wakeup_pipe_[1], "\x0", 1);
 }
 
 void EventLoop::runOnReadable(std::function<void()> task, int fd) {
@@ -80,14 +110,12 @@ void EventLoop::poll() {
       FD_CLR(fd, &op_read_);
       FD_CLR(fd, &op_error_);
       callbacks_[fd]();
-      //callbacks_[fd] = nullptr;
     }
 
     else if (FD_ISSET(fd, &op_write)) {
       FD_CLR(fd, &op_write_);
       FD_CLR(fd, &op_error_);
       callbacks_[fd]();
-      //callbacks_[fd] = nullptr;
     }
   }
 }
@@ -97,6 +125,23 @@ void EventLoop::runOnWakeup(
     Wakeup* wakeup,
     long wakeup_generation) {
   RAISE(kNotYetImplementedError);
+}
+
+void EventLoop::runQWakeup() {
+  FD_SET(runq_wakeup_pipe_[0], &op_read_);
+
+  static char devnull[512];
+  while (read(runq_wakeup_pipe_[0], devnull, sizeof(devnull)) > 0);
+
+  std::list<std::function<void()>> tasks;
+
+  std::unique_lock<std::mutex> lk(runq_mutex_);
+  tasks.splice(tasks.begin(), runq_);
+  lk.unlock();
+
+  for (const auto& task : tasks) {
+    task();
+  }
 }
 
 void EventLoop::run() {
