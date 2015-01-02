@@ -139,8 +139,12 @@ void HTTPClientConnection::read() {
   if (parser_.state() == HTTPParser::S_DONE) {
     close(); // FIXPAUL keepalive
     mutex_.unlock();
+
+    scheduler_->runOnWakeup(
+        std::bind(&HTTPResponseHandler::onResponseComplete, cur_handler_),
+        &on_ready_);
+
     on_ready_.wakeup();
-    cur_handler_->onResponseComplete();
   } else {
     std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
     awaitRead();
