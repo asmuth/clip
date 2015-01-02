@@ -20,11 +20,13 @@ namespace logstream_service {
 class LogStreamServiceFeed : public fnord::comm::Feed {
 public:
   static const int kDefaultBatchSize = 1024;
+  static const int kDefaultBufferSize = 8192;
 
   LogStreamServiceFeed(
       const std::string& name,
       fnord::comm::RPCChannel* rpc_channel,
-      int batch_size = kDefaultBatchSize);
+      int batch_size = kDefaultBatchSize,
+      int buffer_size = kDefaultBufferSize);
 
   void append(const std::string& entry) override;
   bool getNextEntry(std::string* entry) override;
@@ -32,12 +34,15 @@ public:
   void setOption(const std::string& optname,const std::string& optval) override;
 
 protected:
+  void maybeFillBuffer();
   void fillBuffer();
 
   fnord::comm::RPCChannel* rpc_channel_;
   int batch_size_;
+  int buffer_size_;
   uint64_t offset_;
   std::deque<LogStreamEntry> buf_;
+  std::unique_ptr<comm::RPC<std::vector<LogStreamEntry>, std::tuple<std::string, uint64_t, int>>> cur_rpc_;
 };
 
 }

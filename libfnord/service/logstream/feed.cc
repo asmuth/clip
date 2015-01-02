@@ -16,10 +16,12 @@ namespace logstream_service {
 LogStreamServiceFeed::LogStreamServiceFeed(
     const std::string& name,
     fnord::comm::RPCChannel* rpc_channel,
-    int batch_size /* = kDefaultBatchSize */) :
+    int batch_size /* = kDefaultBatchSize */,
+    int buffer_size /* = kDefaultBufferSize */) :
     fnord::comm::Feed(name),
     rpc_channel_(rpc_channel),
     batch_size_(batch_size),
+    buffer_size_(buffer_size),
     offset_(0) {}
 
 void LogStreamServiceFeed::append(const std::string& entry) {
@@ -28,25 +30,37 @@ void LogStreamServiceFeed::append(const std::string& entry) {
   comm::AnyRPC::fireAndForget(std::move(rpc));
 }
 
-void LogStreamServiceFeed::fillBuffer() {
-  auto rpc = fnord::comm::mkRPC(
+void LogStreamServiceFeed::maybeFillBuffer() {
+  if (cur_rpc_.get() != nullptr || buf_.size() >= buffer_size_) {
+    return;
+  }
+
+  cur_rpc_ = fnord::comm::mkRPC(
       &LogStreamService::fetch,
       name(),
       offset_,
       batch_size_);
 
-  rpc->call(rpc_channel_);
-  rpc->wait();
+  cur_rpc_->call(rpc_channel_);
+}
 
-  for (const auto& entry : rpc->result()) {
+void LogStreamServiceFeed::fillBuffer() {
+  maybeFillBuffer();
+  cur_rpc_->wait();
+
+  for (const auto& entry : cur_rpc_->result()) {
     buf_.emplace_back(entry);
     offset_ = entry.next_offset;
   }
+
+  cur_rpc_.reset(nullptr);
 }
 
 bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
   if (buf_.empty()) {
     fillBuffer();
+  } else {
+    maybeFillBuffer();
   }
 
   if (buf_.empty()) {
@@ -63,6 +77,11 @@ void LogStreamServiceFeed::setOption(
     const std::string& optval) {
   if (optname == "batch_size") {
     batch_size_ = std::stoi(optval);
+    return;
+  }
+
+  if (optname == "buffer_size") {
+    buffer_size_ = std::stoi(optval);
     return;
   }
 
