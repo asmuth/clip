@@ -46,6 +46,7 @@ void AnyRPC::ready() noexcept {
     lk.unlock();
     reap();
   } else {
+    lk.unlock();
     ready_wakeup_.wakeup();
   }
 }
