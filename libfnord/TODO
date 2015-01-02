@@ -4,11 +4,10 @@
 -> fix await* exceptionhandling vs mutex in httpserveronnection
 -> http server conn keepalie fixx
 
--> httpconnpoool: cache connections w/ idle timeout
+-> httpconnpoool: leaks connections, add idle timeout
 -> async tcp connect
 -> cancelable wait
 
--> http client conn keepalive impl
 -> http connection timeouts + retry options
 
 -> thread pool: max queue size + max thread size

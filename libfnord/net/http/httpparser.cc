@@ -40,7 +40,6 @@ HTTPParser::HTTPParser(
     case PARSE_HTTP_RESPONSE:
       state_ = S_RES_VERSION;
       break;
-
   }
 
   buf_.reserve(buffer_size);
@@ -403,7 +402,16 @@ bool HTTPParser::readUntil(const char** begin, const char* end, char search) {
 }
 
 void HTTPParser::reset() {
-  state_ = S_REQ_METHOD;
+  switch (mode_) {
+    case PARSE_HTTP_REQUEST:
+      state_ = S_REQ_METHOD;
+      break;
+
+    case PARSE_HTTP_RESPONSE:
+      state_ = S_RES_VERSION;
+      break;
+  }
+
   buf_.clear();
   body_bytes_read_ = 0;
   body_bytes_expected_ = 0;

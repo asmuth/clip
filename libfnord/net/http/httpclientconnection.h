@@ -40,6 +40,8 @@ public:
 
   thread::Wakeup* onReady();
 
+  bool isIdle() const;
+
 protected:
 
   enum kHTTPClientConnectionState {
@@ -53,6 +55,7 @@ protected:
   void awaitRead();
   void awaitWrite();
   void close();
+  void keepalive();
 
   std::unique_ptr<net::TCPConnection> conn_;
   thread::TaskScheduler* scheduler_;
@@ -62,6 +65,7 @@ protected:
   std::mutex mutex_;
   HTTPResponseHandler* cur_handler_;
   thread::Wakeup on_ready_;
+  bool keepalive_;
 };
 
 }

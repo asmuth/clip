@@ -22,7 +22,8 @@ HTTPClientConnection::HTTPClientConnection(
     conn_(std::move(conn)),
     scheduler_(scheduler),
     state_(S_CONN_IDLE),
-    parser_(HTTPParser::PARSE_HTTP_RESPONSE) {
+    parser_(HTTPParser::PARSE_HTTP_RESPONSE),
+    keepalive_(true) {
   buf_.reserve(kMinBufferSize);
   conn_->checkErrors();
 }
@@ -35,6 +36,10 @@ HTTPClientConnection::~HTTPClientConnection() {
 
 thread::Wakeup* HTTPClientConnection::onReady() {
   return &on_ready_;
+}
+
+bool HTTPClientConnection::isIdle() const {
+  return state_ == S_CONN_IDLE;
 }
 
 void HTTPClientConnection::executeRequest(
@@ -105,6 +110,13 @@ void HTTPClientConnection::close() {
   conn_->close();
 }
 
+void HTTPClientConnection::keepalive() {
+  state_ = S_CONN_IDLE;
+  parser_.reset();
+  buf_.clear();
+  keepalive_ = true;
+}
+
 void HTTPClientConnection::read() {
   mutex_.lock();
 
@@ -137,7 +149,12 @@ void HTTPClientConnection::read() {
   }
 
   if (parser_.state() == HTTPParser::S_DONE) {
-    close(); // FIXPAUL keepalive
+    if (keepalive_) {
+      keepalive();
+    } else {
+      close();
+    }
+
     mutex_.unlock();
 
     scheduler_->runOnWakeup(

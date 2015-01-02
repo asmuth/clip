@@ -31,7 +31,7 @@ public:
 
 protected:
 
-  void parkConnection(HTTPClientConnection* conn);
+  void parkConnection(HTTPClientConnection* conn, net::InetAddr addr);
   HTTPClientConnection* leaseConnection(const fnord::net::InetAddr& addr);
 
   fnord::thread::TaskScheduler* scheduler_;
