@@ -59,7 +59,7 @@ protected:
   kHTTPClientConnectionState state_;
   HTTPParser parser_;
   Buffer buf_;
-  std::recursive_mutex mutex_;
+  std::mutex mutex_;
   HTTPResponseHandler* cur_handler_;
   thread::Wakeup on_ready_;
 };

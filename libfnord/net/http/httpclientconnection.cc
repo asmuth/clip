@@ -40,7 +40,7 @@ thread::Wakeup* HTTPClientConnection::onReady() {
 void HTTPClientConnection::executeRequest(
     const HTTPRequest& request,
     HTTPResponseHandler* response_handler) {
-  std::unique_lock<std::recursive_mutex> l(mutex_);
+  std::unique_lock<std::mutex> l(mutex_);
 
   if (state_ != S_CONN_IDLE) {
     RAISE(
@@ -113,7 +113,7 @@ void HTTPClientConnection::read() {
     len = conn_->read(buf_.data(), buf_.allocSize());
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
-      std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
+      std::lock_guard<std::mutex> l(mutex_, std::adopt_lock_t {});
       return awaitRead();
     } else {
       close();
@@ -146,7 +146,7 @@ void HTTPClientConnection::read() {
 
     on_ready_.wakeup();
   } else {
-    std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
+    std::lock_guard<std::mutex> l(mutex_, std::adopt_lock_t {});
     awaitRead();
   }
 }
@@ -163,7 +163,7 @@ void HTTPClientConnection::write() {
     buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
-      std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
+      std::lock_guard<std::mutex> l(mutex_, std::adopt_lock_t {});
       return awaitWrite();
     } else {
       close();
@@ -173,7 +173,7 @@ void HTTPClientConnection::write() {
     }
   }
 
-  std::lock_guard<std::recursive_mutex> l(mutex_, std::adopt_lock_t {});
+  std::lock_guard<std::mutex> l(mutex_, std::adopt_lock_t {});
 
   if (buf_.mark() < buf_.size()) {
     awaitWrite();
