@@ -1,13 +1,15 @@
 
+-> spinlock in http{client,server} connection
+-> httpserverconn locking rework
+-> fix await* exceptionhandling vs mutex in httpserveronnection
+-> http server conn keepalie fixx
+
 -> httpconnpoool: cache connections w/ idle timeout
 -> async tcp connect
 -> cancelable wait
 
 -> http client conn keepalive impl
-
 -> http connection timeouts + retry options
--> fix await* exceptionhandling vs mutex in httpserveronnection
--> http client conn keepalive handling
 
 -> thread pool: max queue size + max thread size
 -> thread pool wait()

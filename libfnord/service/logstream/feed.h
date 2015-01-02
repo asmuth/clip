@@ -28,6 +28,8 @@ public:
       int batch_size = kDefaultBatchSize,
       int buffer_size = kDefaultBufferSize);
 
+  std::string offset() const override;
+
   void append(const std::string& entry) override;
   bool getNextEntry(std::string* entry) override;
 

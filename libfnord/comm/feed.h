@@ -25,10 +25,12 @@ public:
   Feed(const std::string& name);
   virtual ~Feed();
 
+  const std::string& name() const;
+
   virtual void append(const std::string& entry) = 0;
   virtual bool getNextEntry(std::string* entry) = 0;
 
-  const std::string& name() const;
+  virtual std::string offset() const = 0;
 
   virtual void setOption(
       const std::string& optname,

@@ -72,6 +72,10 @@ bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
   return true;
 }
 
+std::string LogStreamServiceFeed::offset() const {
+  return StringUtil::toString(offset_);
+}
+
 void LogStreamServiceFeed::setOption(
     const std::string& optname,
     const std::string& optval) {
