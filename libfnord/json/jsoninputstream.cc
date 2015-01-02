@@ -138,6 +138,8 @@ void JSONInputStream::readNumber(std::string* dst) {
   }
 }
 
+// FIXPAUL profiling says this is slow slow slow (90% of rpc server time spent
+// in this method)
 void JSONInputStream::readString(std::string* dst) {
   bool escaped = false;
   for (;;) {

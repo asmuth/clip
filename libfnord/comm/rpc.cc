@@ -41,11 +41,12 @@ void AnyRPC::onReady(std::function<void()> callback) {
 void AnyRPC::ready() noexcept {
   std::unique_lock<std::mutex> lk(mutex_);
   is_ready_ = true;
-  ready_wakeup_.wakeup();
 
   if (autodelete_) {
     lk.unlock();
     reap();
+  } else {
+    ready_wakeup_.wakeup();
   }
 }
 

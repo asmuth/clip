@@ -1,4 +1,12 @@
 
+-> benchmark + microoptimize StringUtil::split
+-> benchmark + microoptimize URI#decode for long urls
+-> use msgpack for rpcs because JSON#readString is slow
+-> cache gethostbyname lookups...
+
+-> logstreamservice delete
+-> logstreamservice getcuroffset
+
 -> spinlock in http{client,server} connection
 -> httpserverconn locking rework
 -> fix await* exceptionhandling vs mutex in httpserveronnection
