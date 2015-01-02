@@ -38,13 +38,26 @@ public:
 protected:
   void maybeFillBuffer();
   void fillBuffer();
+  void insertDone();
 
   fnord::comm::RPCChannel* rpc_channel_;
   int batch_size_;
   int buffer_size_;
   uint64_t offset_;
-  std::deque<LogStreamEntry> buf_;
-  std::unique_ptr<comm::RPC<std::vector<LogStreamEntry>, std::tuple<std::string, uint64_t, int>>> cur_rpc_;
+
+  std::mutex fetch_mutex_;
+  std::deque<LogStreamEntry> fetch_buf_;
+  std::unique_ptr<
+      comm::RPC<
+          std::vector<LogStreamEntry>,
+          std::tuple<std::string, uint64_t, int>>> cur_fetch_rpc_;
+
+  std::mutex insert_mutex_;
+  std::deque<std::string> insert_buf_;
+  std::unique_ptr<
+      comm::RPC<
+          uint64_t,
+          std::tuple<std::string, std::string>>> cur_insert_rpc_;
 };
 
 }

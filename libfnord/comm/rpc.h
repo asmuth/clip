@@ -35,6 +35,8 @@ public:
   const std::string& method() const;
   void error(const std::exception& e);
 
+  void onReady(std::function<void()> callback);
+
 protected:
   void fireAndForget();
   void reap() noexcept;

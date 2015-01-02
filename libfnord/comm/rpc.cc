@@ -34,6 +34,10 @@ void AnyRPC::wait() {
   }
 }
 
+void AnyRPC::onReady(std::function<void()> callback) {
+  ready_wakeup_.onWakeup(0, callback);
+}
+
 void AnyRPC::ready() noexcept {
   std::unique_lock<std::mutex> lk(mutex_);
   is_ready_ = true;

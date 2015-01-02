@@ -25,50 +25,81 @@ LogStreamServiceFeed::LogStreamServiceFeed(
     offset_(0) {}
 
 void LogStreamServiceFeed::append(const std::string& entry) {
-  auto rpc = fnord::comm::mkRPC(&LogStreamService::append, name(), entry);
-  rpc->call(rpc_channel_);
-  comm::AnyRPC::fireAndForget(std::move(rpc));
+  std::unique_lock<std::mutex> lk(insert_mutex_);
+
+  if (cur_insert_rpc_.get() == nullptr) {
+    cur_insert_rpc_ = fnord::comm::mkRPC(
+        &LogStreamService::append,
+        name(),
+        entry);
+
+    cur_insert_rpc_->onReady(
+        std::bind(&LogStreamServiceFeed::insertDone, this));
+    cur_insert_rpc_->call(rpc_channel_);
+  } else {
+    insert_buf_.emplace_front(entry);
+  }
+}
+
+void LogStreamServiceFeed::insertDone() {
+  std::unique_lock<std::mutex> lk(insert_mutex_);
+  cur_insert_rpc_.reset(nullptr);
+
+  if (insert_buf_.size() > 0) {
+    // FIXPAUL: batch insert
+    cur_insert_rpc_ = fnord::comm::mkRPC(
+        &LogStreamService::append,
+        name(),
+        insert_buf_.back());
+    insert_buf_.pop_back();
+
+    cur_insert_rpc_->onReady(
+        std::bind(&LogStreamServiceFeed::insertDone, this));
+    cur_insert_rpc_->call(rpc_channel_);
+  }
 }
 
 void LogStreamServiceFeed::maybeFillBuffer() {
-  if (cur_rpc_.get() != nullptr || buf_.size() >= buffer_size_) {
+  if (cur_fetch_rpc_.get() != nullptr || fetch_buf_.size() >= buffer_size_) {
     return;
   }
 
-  cur_rpc_ = fnord::comm::mkRPC(
+  cur_fetch_rpc_ = fnord::comm::mkRPC(
       &LogStreamService::fetch,
       name(),
       offset_,
       batch_size_);
 
-  cur_rpc_->call(rpc_channel_);
+  cur_fetch_rpc_->call(rpc_channel_);
 }
 
 void LogStreamServiceFeed::fillBuffer() {
   maybeFillBuffer();
-  cur_rpc_->wait();
+  cur_fetch_rpc_->wait();
 
-  for (const auto& entry : cur_rpc_->result()) {
-    buf_.emplace_back(entry);
+  for (const auto& entry : cur_fetch_rpc_->result()) {
+    fetch_buf_.emplace_back(entry);
     offset_ = entry.next_offset;
   }
 
-  cur_rpc_.reset(nullptr);
+  cur_fetch_rpc_.reset(nullptr);
 }
 
 bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
-  if (buf_.empty()) {
+  std::unique_lock<std::mutex> lk(fetch_mutex_);
+
+  if (fetch_buf_.empty()) {
     fillBuffer();
   } else {
     maybeFillBuffer();
   }
 
-  if (buf_.empty()) {
+  if (fetch_buf_.empty()) {
     return false;
   }
 
-  *entry = buf_.front().data;
-  buf_.pop_front();
+  *entry = fetch_buf_.front().data;
+  fetch_buf_.pop_front();
   return true;
 }
 
