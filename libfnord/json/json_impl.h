@@ -239,6 +239,15 @@ void toJSONImpl(const fnord::DateTime& val, O* target) {
   toJSONImpl(static_cast<uint64_t>(val), target);
 }
 
+template <typename O>
+void toJSONImpl(const bool& val, O* target) {
+  if (val) {
+    target->emplace_back(json::JSON_TRUE);
+  } else {
+    target->emplace_back(json::JSON_FALSE);
+  }
+}
+
 }
 }
 #endif
