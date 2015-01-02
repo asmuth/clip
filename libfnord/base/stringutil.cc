@@ -77,6 +77,11 @@ std::string StringUtil::toString(double value) {
   return buf;
 }
 
+template <>
+std::string StringUtil::toString(bool value) {
+  return value ? "true" : "false";
+}
+
 void StringUtil::stripTrailingSlashes(std::string* str) {
   while (str->back() == '/') {
     str->pop_back();
