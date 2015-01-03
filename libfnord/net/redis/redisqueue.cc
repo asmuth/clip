@@ -59,7 +59,8 @@ comm::Queue::QueueJob RedisQueue::leaseJob() {
   return job;
 }
 
-void RedisQueue::leaseJobAsync(std::function<void (const QueueJob& job)>) {
+void RedisQueue::leaseJobAsync(
+    std::function<void (const Status& status, const QueueJob& job)>) {
   RAISE(kNotYetImplementedError);
 }
 
@@ -88,7 +89,7 @@ Option<comm::Queue::QueueJob> RedisQueue::maybeLeaseJob() {
 }
 
 void RedisQueue::maybeLeaseJobAsync(
-    std::function<void (const Option<QueueJob>& job)>) {
+    std::function<void (const Status& status, const Option<QueueJob>& job)>) {
   RAISE(kNotYetImplementedError)
 }
 

@@ -63,7 +63,8 @@ public:
    * Lease a job from the queue, execute the callback as soon as a job is
    * available
    */
-  virtual void leaseJobAsync(std::function<void (const QueueJob& job)>) = 0;
+  virtual void leaseJobAsync(
+      std::function<void (const Status& status, const QueueJob& job)>) = 0;
 
   /**
    * Lease a job from the queue if one is available, blocking call
@@ -75,7 +76,9 @@ public:
    * The contents of job are undefined if is_valid is false
    */
   virtual void maybeLeaseJobAsync(
-      std::function<void (const Option<QueueJob>& job)>) = 0;
+      std::function<void (
+          const Status& status,
+          const Option<QueueJob>& job)>) = 0;
 
   /**
    * Commit a job as successfully processed, blcoking call

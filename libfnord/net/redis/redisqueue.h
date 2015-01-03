@@ -33,12 +33,15 @@ public:
 
   QueueJob leaseJob() override;
 
-  void leaseJobAsync(std::function<void (const QueueJob& job)>) override;
+  void leaseJobAsync(
+      std::function<void (const Status& status, const QueueJob& job)>) override;
 
   Option<QueueJob> maybeLeaseJob() override;
 
   void maybeLeaseJobAsync(
-      std::function<void (const Option<QueueJob>& job)>) override;
+      std::function<void (
+          const Status& status,
+          const Option<QueueJob>& job)>) override;
 
   void commitJobSuccess(const QueueJob& job);
 
