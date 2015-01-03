@@ -28,8 +28,22 @@ public:
   const std::string& name() const;
 
   virtual void append(const std::string& entry) = 0;
+
+  //virtual void appendEntry(const std::string& entry) = 0;
+  //virtual void appendEntryAsync(
+  //    const std::string& entry,
+  //    std::function<void (const Status& status)> callback) = 0;
+  //virtual void appendEntryAsyncUnsafe(const std::string& entry) = 0;
+
   virtual bool getNextEntry(std::string* entry) = 0;
 
+  //virtual Option<std::string> maybeGetNextEntry() = 0;
+  //virtual void getNextEntryAsync(
+  //    std::function<void (const Option<std::string>& entry)> callback) = 0;
+
+  /**
+   * Return the current read offset of the stream
+   */
   virtual std::string offset() const = 0;
 
   virtual void setOption(
