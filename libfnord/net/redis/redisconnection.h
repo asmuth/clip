@@ -22,19 +22,40 @@ namespace redis {
 
 class RedisConnection {
 public:
+  typedef std::function<void (const Status& status)> VoidReplyCallback;
+
+  typedef std::function<void (
+      const Status& status,
+      const Option<std::string>& reply)> StringReplyCallback;
+
   RedisConnection(
       const fnord::net::InetAddr& addr,
       fnord::thread::TaskScheduler* scheduler);
 
+  RedisConnection(const RedisConnection& other) = delete;
+  RedisConnection& operator=(const RedisConnection& other) = delete;
+
   ~RedisConnection();
+
+  void set(
+      const std::string& key,
+      const std::string& value,
+      VoidReplyCallback callback);
+
+  void get(
+      const std::string& key,
+      StringReplyCallback callback);
+
+protected:
 
   void executeCommand(
       const std::vector<std::string>& args,
-      std::function<void (
-          const Status& status,
-          const Option<std::string>& reply)> callback);
+      StringReplyCallback callback);
 
-protected:
+  void executeCommand(
+      const std::vector<std::string>& args,
+      VoidReplyCallback callback);
+
   redisContext* ctx_;
 };
 

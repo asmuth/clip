@@ -13,6 +13,8 @@
 #include <memory>
 #include <mutex>
 #include <stdlib.h>
+#include "fnord/base/inspect.h"
+#include "fnord/base/exception.h"
 
 namespace fnord {
 
@@ -21,6 +23,17 @@ class Option {
 public:
   Option();
   Option(const T& value);
+
+  Option(const Option<T>& other);
+  Option(const Option<T>&& other);
+  Option& operator=(const Option<T>& other) = delete;
+
+  bool isEmpty() const;
+  const T& get() const;
+
+protected:
+  char value_data_[sizeof(T)];
+  T* value_;
 };
 
 template <typename T>
