@@ -24,6 +24,12 @@ RedisConnection::RedisConnection(
   }
 }
 
+std::unique_ptr<RedisConnection> RedisConnection::connect(
+    const fnord::net::InetAddr& addr,
+    fnord::thread::TaskScheduler* sched) {
+  return std::unique_ptr<RedisConnection>(new RedisConnection(addr, sched));
+}
+
 void RedisConnection::set(
     const std::string& key,
     const std::string& value,

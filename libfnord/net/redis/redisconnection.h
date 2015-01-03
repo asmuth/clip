@@ -28,13 +28,12 @@ public:
       const Status& status,
       const Option<std::string>& reply)> StringReplyCallback;
 
-  RedisConnection(
+  static std::unique_ptr<RedisConnection> connect(
       const fnord::net::InetAddr& addr,
       fnord::thread::TaskScheduler* scheduler);
 
   RedisConnection(const RedisConnection& other) = delete;
   RedisConnection& operator=(const RedisConnection& other) = delete;
-
   ~RedisConnection();
 
   void set(
@@ -47,6 +46,10 @@ public:
       StringReplyCallback callback);
 
 protected:
+
+  RedisConnection(
+      const fnord::net::InetAddr& addr,
+      fnord::thread::TaskScheduler* scheduler);
 
   void executeCommand(
       const std::vector<std::string>& args,
