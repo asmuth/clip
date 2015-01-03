@@ -80,7 +80,7 @@ public:
   /**
    * Commit a job as successfully processed, blcoking call
    */
-  virtual void commitJobSuccess(const QueueJob& job);
+  virtual void commitJobSuccess(const QueueJob& job) = 0;
 
   /**
    * Commit a job as successfully processed, non blocking call
@@ -100,7 +100,7 @@ public:
    */
   virtual void commitJobError(
       const QueueJob& job,
-      const std::exception& error);
+      const std::exception& error) = 0;
 
   /**
    * Commit a job as error, non blocking call

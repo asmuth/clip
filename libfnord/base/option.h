@@ -23,9 +23,11 @@ class Option {
 public:
   Option();
   Option(const T& value);
-
+  Option(T&& value);
   Option(const Option<T>& other);
-  Option(const Option<T>&& other);
+  Option(Option<T>&& other);
+  ~Option();
+
   Option& operator=(const Option<T>& other) = delete;
 
   bool isEmpty() const;

@@ -12,15 +12,55 @@
 #include <memory>
 #include <vector>
 #include <fnord/net/redis/redisconnection.h>
+#include <fnord/comm/queue.h>
 
 namespace fnord {
 namespace redis {
 
-class RedisQueue {
+class RedisQueue : public comm::Queue {
 public:
   RedisQueue(
       const std::string& key_prefix,
       std::unique_ptr<RedisConnection> conn);
+
+  void enqueueJob(const QueueJob& job) override;
+
+  void enqueueJobAsync(
+      const QueueJob& job,
+      std::function<void (const Status& status)> callback) override;
+
+  void enqueueJobAsyncUnsafe(const QueueJob& job) override;
+
+  QueueJob leaseJob() override;
+
+  void leaseJobAsync(std::function<void (const QueueJob& job)>) override;
+
+  Option<QueueJob> maybeLeaseJob() override;
+
+  void maybeLeaseJobAsync(
+      std::function<void (const Option<QueueJob>& job)>) override;
+
+  void commitJobSuccess(const QueueJob& job);
+
+  void commitJobSuccessAsync(
+      const QueueJob& job,
+      std::function<void (const Status& status)> callback) override;
+
+  void commitJobSuccessAsyncUnsafe(const QueueJob& job) override;
+
+  void commitJobError(
+      const QueueJob& job,
+      const std::exception& error) override;
+
+  void commitJobErrorAsync(
+      const QueueJob& job,
+      std::function<void (const Status& status)> callback) override;
+
+  void commitJobErrorAsyncUnsafe(const QueueJob& job) override;
+
+  void setOption(
+      const std::string& optname,
+      const std::string& optval) override;
 
 protected:
   std::string key_prefix_;

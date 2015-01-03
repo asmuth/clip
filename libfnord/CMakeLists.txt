@@ -89,6 +89,7 @@ add_library(fnord-cli OBJECT
 add_library(fnord-comm OBJECT
     comm/feed.cc
     comm/lbgroup.cc
+    comm/queue.cc
     comm/rpc.cc
     comm/rpcservicemap.cc)
 
@@ -290,7 +291,8 @@ add_library(fnord-redis OBJECT
     3rdparty/hiredis/hiredis.c
     3rdparty/hiredis/net.c
     3rdparty/hiredis/sds.c
-    net/redis/redisconnection.cc)
+    net/redis/redisconnection.cc
+    net/redis/redisqueue.cc)
 
 # sstable
 add_library(fnord-sstable OBJECT

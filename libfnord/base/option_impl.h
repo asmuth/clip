@@ -30,6 +30,13 @@ Option<T>::Option(const Option<T>& other) {
 }
 
 template <typename T>
+Option<T>::~Option() {
+  if (value_) {
+    value_->~T();
+  }
+}
+
+template <typename T>
 const T& Option<T>::get() const {
   if (value_ == nullptr) {
     RAISE(kRuntimeError, "get() called on empty option");

@@ -11,11 +11,12 @@
 #define _FNORD_REDIS_CONNECTION_H
 #include <memory>
 #include <vector>
-#include <fnord/3rdparty/hiredis/hiredis.h>
+#include "fnord/3rdparty/hiredis/hiredis.h"
 #include "fnord/base/option.h"
 #include "fnord/base/status.h"
-#include <fnord/logging/logger.h>
-#include <fnord/net/inetaddr.h>
+#include "fnord/logging/logger.h"
+#include "fnord/net/inetaddr.h"
+#include "fnord/thread/taskscheduler.h"
 
 namespace fnord {
 namespace redis {
