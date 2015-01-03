@@ -2,7 +2,7 @@
 -> benchmark + microoptimize StringUtil::split
 -> benchmark + microoptimize URI#decode for long urls
 -> use msgpack for rpcs because JSON#readString is slow
--> cache gethostbyname lookups...
+-> InetAddr#resolve blocks...
 
 -> logstreamservice delete
 -> logstreamservice getcuroffset

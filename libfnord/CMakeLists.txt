@@ -202,6 +202,7 @@ add_executable(tests/test-json
 
 # net
 add_library(fnord-net OBJECT
+    net/dnscache.cc
     net/tcpserver.cc
     net/inetaddr.cc
     net/tcpconnection.cc)

@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "fnord/net/dnscache.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
 #include "fnord/thread/taskscheduler.h"
@@ -42,8 +43,9 @@ protected:
   std::multimap<
       std::string,
       HTTPClientConnection*> connection_cache_;
-
   std::mutex connection_cache_mutex_;
+
+  fnord::net::DNSCache dns_cache_;
 };
 
 }

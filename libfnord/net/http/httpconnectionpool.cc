@@ -23,7 +23,7 @@ std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
     RAISE(kRuntimeError, "missing Host header");
   }
 
-  auto addr = fnord::net::InetAddr::resolve(req.getHeader("Host"));
+  auto addr = dns_cache_.resolve(req.getHeader("Host"));
   if (!addr.hasPort()) {
     addr.setPort(80);
   }
