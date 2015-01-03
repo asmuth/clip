@@ -6,34 +6,47 @@
 /*******************************
             Standard
 *******************************/
-ui.cards {
+fn-cards,
+.fn-cards {
+  display:block;
   margin: 1em -0.5em 0em;
 }
 
 fn-card,
 .fn-card {
   display: block;
-  margin: 0em 0.5em 1.5em;
 }
 
-.ui.cards:first-child,
-.ui.card:first-child {
+fn-cards:first-child,
+fn-card:first-child,
+.fn-cards:first-child,
+.fn-card:first-child {
   margin-top: 0em;
 }
-.ui.cards:last-child,
-.ui.card:last-child {
+fn-cards:last-child,
+fn-card:last-child,
+.fn-cards:last-child,
+.fn-card:last-child {
   margin-bottom: 0em;
 }
 
 /* Clearing */
-.ui.cards:after,
-.ui.card:after {
+fn-cards:after,
+fn-card:after,
+.fn-cards:after,
+.fn-card:after {
   display: block;
   content: ' ';
   height: 0px;
   clear: both;
   overflow: hidden;
   visibility: hidden;
+}
+
+fn-cards > fn-card,
+.fn-cards > .fn-card {
+  float:left;
+  margin: 0 .5em 1.5em;
 }
 
 /*--------------
