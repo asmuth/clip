@@ -23,7 +23,7 @@ HTTPClientConnection::HTTPClientConnection(
     scheduler_(scheduler),
     state_(S_CONN_IDLE),
     parser_(HTTPParser::PARSE_HTTP_RESPONSE),
-    keepalive_(true) {
+    keepalive_(false) {
   buf_.reserve(kMinBufferSize);
   conn_->checkErrors();
 }
@@ -114,7 +114,7 @@ void HTTPClientConnection::keepalive() {
   state_ = S_CONN_IDLE;
   parser_.reset();
   buf_.clear();
-  keepalive_ = true;
+  keepalive_ = false;
 }
 
 void HTTPClientConnection::read() {
@@ -157,7 +157,7 @@ void HTTPClientConnection::read() {
 
     mutex_.unlock();
 
-    scheduler_->runOnWakeup(
+    scheduler_->runOnNextWakeup(
         std::bind(&HTTPResponseHandler::onResponseComplete, cur_handler_),
         &on_ready_);
 

@@ -57,8 +57,15 @@ public:
   /**
    * Run the provided task when the wakeup handle is woken up
    */
-  void runOnWakeup(std::function<void()> task, Wakeup* wakeup) {
+  void runOnNextWakeup(std::function<void()> task, Wakeup* wakeup) {
     runOnWakeup(task, wakeup, wakeup->generation());
+  }
+
+  /**
+   * Run the provided task when the wakeup handle is woken up
+   */
+  void runOnFirstWakeup(std::function<void()> task, Wakeup* wakeup) {
+    runOnWakeup(task, wakeup, 0);
   }
 
   /**

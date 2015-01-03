@@ -78,7 +78,7 @@ HTTPClientConnection* HTTPConnectionPool::leaseConnection(
             scheduler_));
   }
 
-  scheduler_->runOnWakeup(
+  scheduler_->runOnNextWakeup(
       std::bind(&HTTPConnectionPool::parkConnection, this, conn.get(), addr),
       conn->onReady());
 
