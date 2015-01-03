@@ -32,7 +32,10 @@ public:
 protected:
 
   void parkConnection(HTTPClientConnection* conn, net::InetAddr addr);
-  HTTPClientConnection* leaseConnection(const fnord::net::InetAddr& addr);
+  void leaseConnection(
+      const fnord::net::InetAddr& addr,
+      HTTPResponseFuture* future,
+      std::function<void (HTTPClientConnection* conn)> callback);
 
   fnord::thread::TaskScheduler* scheduler_;
 

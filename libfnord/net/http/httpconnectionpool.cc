@@ -34,14 +34,17 @@ std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
 std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
     const HTTPRequest& req,
     const fnord::net::InetAddr& addr) {
-  auto conn = leaseConnection(addr);
   std::unique_ptr<HTTPResponseFuture> future(new HTTPResponseFuture());
+  auto f = future.get();
 
-  try {
-    conn->executeRequest(req, future->responseHandler());
-  } catch (const std::exception& e) {
-    conn->onReady()->wakeup();
-  }
+  leaseConnection(addr, f, [this, req, f] (HTTPClientConnection* conn) {
+    try {
+      conn->executeRequest(req, f->responseHandler());
+    } catch (const std::exception& e) {
+      conn->onReady()->wakeup();
+      f->responseHandler()->onError(e);
+    }
+  });
 
   return future;
 }
@@ -57,32 +60,55 @@ void HTTPConnectionPool::parkConnection(
   }
 }
 
-HTTPClientConnection* HTTPConnectionPool::leaseConnection(
-    const fnord::net::InetAddr& addr) {
-  std::unique_ptr<HTTPClientConnection> conn(nullptr);
+void HTTPConnectionPool::leaseConnection(
+    const fnord::net::InetAddr& addr,
+    HTTPResponseFuture* future,
+    std::function<void (HTTPClientConnection* conn)> callback) {
+  std::unique_lock<std::mutex> lk(connection_cache_mutex_);
+  auto iter = connection_cache_.find(addr.ipAndPort());
 
-  {
-    std::unique_lock<std::mutex> l(connection_cache_mutex_);
-    auto iter = connection_cache_.find(addr.ipAndPort());
+  if (iter != connection_cache_.end()) {
+    std::unique_ptr<HTTPClientConnection> conn(iter->second);
+    connection_cache_.erase(iter);
+    lk.unlock();
 
-    if (iter != connection_cache_.end()) {
-      conn.reset(iter->second);
-      connection_cache_.erase(iter);
+    scheduler_->runOnNextWakeup(
+        std::bind(&HTTPConnectionPool::parkConnection, this, conn.get(), addr),
+        conn->onReady());
+
+    callback(conn.release());
+  } else {
+    lk.unlock();
+
+    try {
+      net::TCPConnection::connectAsync(
+          addr,
+          scheduler_,
+          [this, future, callback, addr] (
+              std::unique_ptr<net::TCPConnection> tcp_conn) {
+            try {
+              tcp_conn->checkErrors();
+
+              std::unique_ptr<HTTPClientConnection> conn(
+                  new HTTPClientConnection(std::move(tcp_conn), scheduler_));
+
+              scheduler_->runOnNextWakeup(
+                  std::bind(
+                      &HTTPConnectionPool::parkConnection,
+                      this,
+                      conn.get(),
+                      addr),
+                  conn->onReady());
+
+              callback(conn.release());
+            } catch (const std::exception& e) {
+              future->responseHandler()->onError(e);
+            }
+          });
+    } catch (const std::exception& e) {
+      future->responseHandler()->onError(e);
     }
   }
-
-  if (conn.get() == nullptr) {
-    conn.reset(
-        new HTTPClientConnection(
-            std::move(fnord::net::TCPConnection::connect(addr)),
-            scheduler_));
-  }
-
-  scheduler_->runOnNextWakeup(
-      std::bind(&HTTPConnectionPool::parkConnection, this, conn.get(), addr),
-      conn->onReady());
-
-  return conn.release();
 }
 
 }

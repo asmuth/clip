@@ -11,6 +11,7 @@
 #define _FNORD_NET_TCPCONNECTION_H
 #include <stdlib.h>
 #include "fnord/net/inetaddr.h"
+#include "fnord/thread/taskscheduler.h"
 
 namespace fnord {
 namespace net {
@@ -29,9 +30,10 @@ public:
    * the caller must call connection->checkErrors(); after the onReady callback
    * fires!
    */
-  static std::unique_ptr<TCPConnection> connectNonblocking(
+  static void connectAsync(
       const InetAddr& addr,
-      std::function<void()> on_ready);
+      thread::TaskScheduler* scheduler,
+      std::function<void(std::unique_ptr<TCPConnection> conn)> on_ready);
 
   TCPConnection(int fd);
   ~TCPConnection();
@@ -40,7 +42,7 @@ public:
   size_t read(void* dst, size_t size);
   size_t write(const void* data, size_t size);
   void close();
-  void setNonblocking(bool nonblocking);
+  void setNonblocking(bool nonblocking = true);
 
   /**
    * This will raise an exception if there are any pending errors on the

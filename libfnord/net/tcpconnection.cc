@@ -41,6 +41,28 @@ std::unique_ptr<TCPConnection> TCPConnection::connect(const InetAddr& addr) {
   return conn;
 }
 
+void TCPConnection::connectAsync(
+    const InetAddr& addr,
+    thread::TaskScheduler* scheduler,
+    std::function<void(std::unique_ptr<TCPConnection> conn)> on_ready) {
+  int fd = socket(AF_INET, SOCK_STREAM, 0);
+
+  if (fd == -1) {
+    RAISE_ERRNO(kIOError, "socket() creation failed");
+  }
+
+  std::unique_ptr<TCPConnection> conn(new TCPConnection(fd));
+  conn->setNonblocking();
+  conn->connectImpl(addr);
+
+  auto c = conn.get();
+  scheduler->runOnWritable([on_ready, c] {
+    on_ready(std::unique_ptr<TCPConnection>(c));
+  }, *c);
+
+  conn.release();
+}
+
 void TCPConnection::connectImpl(const InetAddr& addr) {
   struct sockaddr_in saddr;
   saddr.sin_family = AF_INET;
@@ -49,7 +71,9 @@ void TCPConnection::connectImpl(const InetAddr& addr) {
   memset(&(saddr.sin_zero), 0, 8);
 
   if (::connect(fd_, (const struct sockaddr *) &saddr, sizeof(saddr)) < 0) {
-    RAISE_ERRNO(kIOError, "connect() failed");
+    if (errno != EINPROGRESS) {
+      RAISE_ERRNO(kIOError, "connect() failed");
+    }
   }
 }
 
