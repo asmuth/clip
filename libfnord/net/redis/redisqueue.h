@@ -20,7 +20,7 @@ namespace redis {
 class RedisQueue : public comm::Queue {
 public:
   RedisQueue(
-      const std::string& key_prefix,
+      const std::string& redis_key,
       std::unique_ptr<RedisConnection> conn);
 
   void enqueueJob(const QueueJob& job) override;
@@ -63,7 +63,7 @@ public:
       const std::string& optval) override;
 
 protected:
-  std::string key_prefix_;
+  std::string redis_key_;
   std::unique_ptr<RedisConnection> conn_;
 };
 

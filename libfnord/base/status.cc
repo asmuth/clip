@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/base/inspect.h"
+#include "fnord/base/exception.h"
 #include "fnord/base/status.h"
 
 namespace fnord {
@@ -25,6 +26,10 @@ Status::Status(
     message_(message) {}
 
 bool Status::isError() const {
+  return type_ != eSuccess;
+}
+
+bool Status::isSuccess() const {
   return type_ == eSuccess;
 }
 
@@ -71,6 +76,12 @@ std::string StringUtil::toString<kStatusType>(kStatusType value) {
     case eUsageError: return "UsageError";
     case eVersionMismatchError: return "VersionMismatchError";
     case eWouldBlockError: return "WouldBlockError";
+  }
+}
+
+void Status::raiseIfError() const {
+  if (isError()) {
+    RAISE(StringUtil::toString(type_).c_str(), message_);
   }
 }
 

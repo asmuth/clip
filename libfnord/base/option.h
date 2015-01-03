@@ -28,7 +28,7 @@ public:
   Option(Option<T>&& other);
   ~Option();
 
-  Option& operator=(const Option<T>& other) = delete;
+  Option& operator=(const Option<T>& other);
 
   bool isEmpty() const;
   const T& get() const;

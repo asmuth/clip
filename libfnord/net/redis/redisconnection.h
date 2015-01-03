@@ -29,6 +29,10 @@ public:
       const Status& status,
       const Option<std::string>& reply)> StringReplyCallback;
 
+  typedef std::function<void (
+      const Status& status,
+      const Option<std::vector<std::string>>& reply)> ArrayReplyCallback;
+
   static std::unique_ptr<RedisConnection> connect(
       const fnord::net::InetAddr& addr,
       fnord::thread::TaskScheduler* scheduler);
@@ -37,6 +41,7 @@ public:
   RedisConnection& operator=(const RedisConnection& other) = delete;
   ~RedisConnection();
 
+  /* KEY commands */
   void set(
       const std::string& key,
       const std::string& value,
@@ -46,11 +51,34 @@ public:
       const std::string& key,
       StringReplyCallback callback);
 
+  /* LIST commands */
+  void lpop(
+      const std::string& key,
+      StringReplyCallback callback);
+
+  void blpop(
+      const std::string& key,
+      uint64_t timeout_secs,
+      ArrayReplyCallback callback);
+
+  void rpop(
+      const std::string& key,
+      StringReplyCallback callback);
+
+  void brpop(
+      const std::string& key,
+      uint64_t timeout_secs,
+      ArrayReplyCallback callback);
+
 protected:
 
   RedisConnection(
       const fnord::net::InetAddr& addr,
       fnord::thread::TaskScheduler* scheduler);
+
+  void executeCommand(
+      const std::vector<std::string>& args,
+      ArrayReplyCallback callback);
 
   void executeCommand(
       const std::vector<std::string>& args,

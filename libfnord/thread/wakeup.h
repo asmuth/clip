@@ -25,6 +25,7 @@ public:
    * Block the current thread and wait for the next wakeup event
    */
   void waitForNextWakeup();
+  void waitForFirstWakeup();
   void waitForWakeup(long generation);
 
   void wakeup();

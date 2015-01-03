@@ -20,6 +20,10 @@ void Wakeup::waitForNextWakeup() {
   waitForWakeup(generation());
 }
 
+void Wakeup::waitForFirstWakeup() {
+  waitForWakeup(0);
+}
+
 void Wakeup::waitForWakeup(long oldgen) {
   std::unique_lock<std::mutex> l(mutex_);
 

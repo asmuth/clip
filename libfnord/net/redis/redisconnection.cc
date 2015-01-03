@@ -48,6 +48,99 @@ void RedisConnection::get(
   executeCommand(args, callback);
 }
 
+void RedisConnection::lpop(
+    const std::string& key,
+    StringReplyCallback callback) {
+  std::vector<std::string> args = { "lpop" };
+  args.emplace_back(key);
+  executeCommand(args, callback);
+}
+
+void RedisConnection::blpop(
+    const std::string& key,
+    uint64_t timeout_secs,
+    ArrayReplyCallback callback) {
+  std::vector<std::string> args = { "blpop" };
+  args.emplace_back(key);
+  args.emplace_back(StringUtil::toString(timeout_secs));
+  executeCommand(args, callback);
+}
+
+void RedisConnection::rpop(
+    const std::string& key,
+    StringReplyCallback callback) {
+  std::vector<std::string> args = { "rpop" };
+  args.emplace_back(key);
+  executeCommand(args, callback);
+}
+
+void RedisConnection::brpop(
+    const std::string& key,
+      uint64_t timeout_secs,
+    ArrayReplyCallback callback) {
+  std::vector<std::string> args = { "brpop" };
+  args.emplace_back(key);
+  args.emplace_back(StringUtil::toString(timeout_secs));
+  executeCommand(args, callback);
+}
+
+void RedisConnection::executeCommand(
+    const std::vector<std::string>& args,
+    ArrayReplyCallback callback) {
+  size_t argc = args.size();
+  std::vector<const char*> argv;
+  std::vector<size_t> argvlen;
+
+  for (const auto& arg : args) {
+    argv.push_back(arg.c_str());
+    argvlen.push_back(arg.length());
+  }
+
+  auto reply = (redisReply *) redisCommandArgv(
+      ctx_,
+      argc,
+      argv.data(),
+      argvlen.data());
+
+  switch (reply->type) {
+    case REDIS_REPLY_ARRAY: {
+      std::vector<std::string> elements;
+
+      for (int i = 0; i < reply->elements; ++i) {
+        auto elem = reply->element[i];
+
+        if (elem->type == REDIS_REPLY_STRING) {
+          elements.emplace_back(elem->str);
+        } else {
+          callback(
+              Status(eRuntimeError, "unexpected redis return type"),
+              None<std::vector<std::string>>());
+          return;
+        }
+      }
+
+      callback(Status::success(), Some(elements));
+      return;
+    }
+
+    case REDIS_REPLY_NIL:
+      callback(Status::success(), None<std::vector<std::string>>());
+      return;
+
+    case REDIS_REPLY_ERROR:
+      callback(
+          Status(eRuntimeError, reply->str),
+          None<std::vector<std::string>>());
+      return;
+
+    default:
+      callback(
+          Status(eRuntimeError, "unexpected redis return type"),
+          None<std::vector<std::string>>());
+      return;
+  }
+}
+
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
     StringReplyCallback callback) {
@@ -69,6 +162,10 @@ void RedisConnection::executeCommand(
   switch (reply->type) {
     case REDIS_REPLY_STRING:
       callback(Status::success(), Some(std::string(reply->str)));
+      break;
+
+    case REDIS_REPLY_NIL:
+      callback(Status::success(), None<std::string>());
       break;
 
     case REDIS_REPLY_ERROR:

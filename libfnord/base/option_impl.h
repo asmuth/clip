@@ -31,9 +31,24 @@ Option<T>::Option(const Option<T>& other) {
 
 template <typename T>
 Option<T>::~Option() {
-  if (value_) {
+  if (value_ != nullptr) {
     value_->~T();
   }
+}
+
+template <typename T>
+Option<T>& Option<T>::operator=(const Option<T>& other) {
+  if (value_ != nullptr) {
+    value_->~T();
+  }
+
+  if (other.value_ == nullptr) {
+    value_ = nullptr;
+  } else {
+    value_ = new (value_data_) T(*other.value_);
+  }
+
+  return *this;
 }
 
 template <typename T>

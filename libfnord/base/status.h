@@ -55,9 +55,12 @@ public:
   Status(kStatusType type, const std::string& message);
 
   bool isError() const;
+  bool isSuccess() const;
 
   kStatusType type() const;
   const std::string& message() const;
+
+  void raiseIfError() const;
 
 protected:
   kStatusType type_;
