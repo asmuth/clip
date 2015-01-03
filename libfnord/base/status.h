@@ -13,11 +13,55 @@
 #include <memory>
 #include <mutex>
 #include <stdlib.h>
+#include <string>
 
 namespace fnord {
 
+enum kStatusType {
+  eSuccess,
+  eBufferOverflowError,
+  eConcurrentModificationError,
+  eDivideByZeroError,
+  eFlagError,
+  eIOError,
+  eIllegalArgumentError,
+  eIllegalFormatError,
+  eIllegalStateError,
+  eIndexError,
+  eInvalidOptionError,
+  eKeyError,
+  eMallocError,
+  eNoSuchMethodError,
+  eNotImplementedError,
+  eNotYetImplementedError,
+  eNullPointerError,
+  eParseError,
+  eRangeError,
+  eReflectionError,
+  eResolveError,
+  eRPCError,
+  eRuntimeError,
+  eTypeError,
+  eUsageError,
+  eVersionMismatchError,
+  eWouldBlockError
+};
+
 class Status {
 public:
+  static Status success();
+
+  Status(kStatusType type);
+  Status(kStatusType type, const std::string& message);
+
+  bool isError() const;
+
+  kStatusType type() const;
+  const std::string& message() const;
+
+protected:
+  kStatusType type_;
+  std::string message_;
 };
 
 }

@@ -12,6 +12,8 @@
 -> fix await* exceptionhandling vs mutex in httpserveronnection
 -> http server conn keepalie fixx
 
+-> use redis async conn on eventloop instead of blocking conn
+
 -> httpconnpoool: leaks connections, add idle timeout
 -> async tcp connect
 -> cancelable wait

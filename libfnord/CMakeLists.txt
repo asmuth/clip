@@ -37,6 +37,7 @@ add_library(fnord-base OBJECT
     base/inspect.cc
     base/ieee754.cc
     base/random.cc
+    base/status.cc
     base/stringutil.cc
     base/uri.cc
     base/wallclock.cc
@@ -93,9 +94,6 @@ add_library(fnord-comm OBJECT
 
 # http
 add_library(fnord-http OBJECT
-    net/tcpserver.cc
-    net/inetaddr.cc
-    net/tcpconnection.cc
     net/http/cookies.cc
     net/http/httpclient.cc
     net/http/httpclientconnection.cc
@@ -116,6 +114,7 @@ add_executable(tests/test-http
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-thread>
     net/http/http_test.cc)
@@ -156,6 +155,7 @@ add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-thread>
@@ -199,6 +199,12 @@ add_executable(tests/test-json
 #    $<TARGET_OBJECTS:fnord-util>
 #    service/metric/metricservice_example.cc)
 
+# net
+add_library(fnord-net OBJECT
+    net/tcpserver.cc
+    net/inetaddr.cc
+    net/tcpconnection.cc)
+
 # service: groups
 add_library(fnord-groups-service OBJECT
     service/groups/groupsservice.cc)
@@ -210,6 +216,7 @@ add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-thread>
     service/groups/groupsservice_example.cc)
 
@@ -224,6 +231,7 @@ add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-thread>
     service/keyvalue/keyvalueservice_example.cc)
 
@@ -241,6 +249,7 @@ add_executable(fnord-logstream-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-sstable>
     $<TARGET_OBJECTS:fnord-thread>
     $<TARGET_OBJECTS:fnord-util>
@@ -253,6 +262,7 @@ add_executable(tests/test-logstream-service
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-sstable>
     $<TARGET_OBJECTS:fnord-thread>
     $<TARGET_OBJECTS:fnord-util>
@@ -269,8 +279,18 @@ add_executable(fnord-ping-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-thread>
     service/ping/pingservice_example.cc)
+
+# redis
+add_library(fnord-redis OBJECT
+    3rdparty/hiredis/async.c
+    3rdparty/hiredis/dict.c
+    3rdparty/hiredis/hiredis.c
+    3rdparty/hiredis/net.c
+    3rdparty/hiredis/sds.c
+    net/redis/redisconnection.cc)
 
 # sstable
 add_library(fnord-sstable OBJECT

@@ -7,29 +7,26 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_BASE_OPTION_H
-#define _FNORD_BASE_OPTION_H
-#include <functional>
-#include <memory>
-#include <mutex>
-#include <stdlib.h>
+#ifndef _FNORD_BASE_OPTION_IMPL_H
+#define _FNORD_BASE_OPTION_IMPL_H
 
 namespace fnord {
 
 template <typename T>
-class Option {
-public:
-  Option();
-  Option(const T& value);
-};
+Option<T>::Option() {}
 
 template <typename T>
-Option<T> Some(const T& value);
+Option<T>::Option(const T& value) {}
 
 template <typename T>
-Option<T> None();
+Option<T> Some(const T& value) {
+  return Option<T>(value);
+}
 
-} // namespace fnord
+template <typename T>
+Option<T> None() {
+  return Option<T>();
+}
 
-#include "option_impl.h"
+}
 #endif
