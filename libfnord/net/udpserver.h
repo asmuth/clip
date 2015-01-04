@@ -19,8 +19,8 @@ namespace net {
 class UDPServer {
 public:
   UDPServer(
-      thread::TaskScheduler* server_scheduler,
-      thread::TaskScheduler* callback_scheduler);
+      TaskScheduler* server_scheduler,
+      TaskScheduler* callback_scheduler);
 
   ~UDPServer();
 
@@ -30,8 +30,8 @@ public:
 protected:
   void messageReceived();
 
-  thread::TaskScheduler* server_scheduler_;
-  thread::TaskScheduler* callback_scheduler_;
+  TaskScheduler* server_scheduler_;
+  TaskScheduler* callback_scheduler_;
   int ssock_;
   std::function<void (const fnord::Buffer&)> callback_;
 };

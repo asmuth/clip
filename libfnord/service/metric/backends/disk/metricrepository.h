@@ -23,7 +23,7 @@ class MetricRepository : public fnord::metric_service::IMetricRepository {
 public:
   MetricRepository(
       const std::string data_dir,
-      fnord::thread::TaskScheduler* scheduler);
+      fnord::TaskScheduler* scheduler);
 
 protected:
   Metric* createMetric(const std::string& key) override;

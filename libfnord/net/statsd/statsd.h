@@ -18,8 +18,8 @@ class StatsdServer {
 public:
 
   StatsdServer(
-      fnord::thread::TaskScheduler* server_scheduler,
-      fnord::thread::TaskScheduler* work_scheduler);
+      fnord::TaskScheduler* server_scheduler,
+      fnord::TaskScheduler* work_scheduler);
 
   void listen(int port);
 

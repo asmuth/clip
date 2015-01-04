@@ -34,10 +34,11 @@ void RedisQueue::enqueueJobAsyncUnsafe(const QueueJob& job) {
 }
 
 comm::Queue::QueueJob RedisQueue::leaseJob() {
-  thread::Wakeup wakeup;
+  Wakeup wakeup;
   Status status(eSuccess);
   QueueJob job;
 
+/*
   conn_->blpop(redis_key_, 0, [&wakeup, &status, &job] (
       const Status& s,
       const Option<std::vector<std::string>>& reply) {
@@ -53,7 +54,7 @@ comm::Queue::QueueJob RedisQueue::leaseJob() {
 
     wakeup.wakeup();
   });
-
+*/
   wakeup.waitForFirstWakeup();
   status.raiseIfError();
   return job;
@@ -65,10 +66,10 @@ void RedisQueue::leaseJobAsync(
 }
 
 Option<comm::Queue::QueueJob> RedisQueue::maybeLeaseJob() {
-  thread::Wakeup wakeup;
+  Wakeup wakeup;
   Status status(eSuccess);
   Option<QueueJob> job;
-
+/*
   conn_->lpop(redis_key_, [&wakeup, &status, &job] (
       const Status& s,
       const Option<std::string>& reply) {
@@ -82,7 +83,7 @@ Option<comm::Queue::QueueJob> RedisQueue::maybeLeaseJob() {
 
     wakeup.wakeup();
   });
-
+*/
   wakeup.waitForFirstWakeup();
   status.raiseIfError();
   return job;

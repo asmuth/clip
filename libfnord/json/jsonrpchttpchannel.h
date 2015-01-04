@@ -29,7 +29,7 @@ public:
 
   JSONRPCHTTPChannel(
       comm::LBGroup* lb_group,
-      fnord::thread::TaskScheduler* scheduler);
+      fnord::TaskScheduler* scheduler);
 
   template <class RPCType>
   void call(RPCType* rpc);
@@ -48,7 +48,7 @@ protected:
 
   comm::LBGroup* lb_group_;
   http::HTTPConnectionPool conn_pool_;
-  thread::TaskScheduler* scheduler_;
+  TaskScheduler* scheduler_;
 };
 
 } // namespace json

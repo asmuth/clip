@@ -16,7 +16,7 @@ namespace http {
 
 HTTPServiceHandler::HTTPServiceHandler(
     HTTPService* service,
-    thread::TaskScheduler* scheduler,
+    TaskScheduler* scheduler,
     HTTPServerConnection* conn,
     HTTPRequest* req) :
     service_(service),

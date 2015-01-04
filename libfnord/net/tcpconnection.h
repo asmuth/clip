@@ -32,7 +32,7 @@ public:
    */
   static void connectAsync(
       const InetAddr& addr,
-      thread::TaskScheduler* scheduler,
+      TaskScheduler* scheduler,
       std::function<void(std::unique_ptr<TCPConnection> conn)> on_ready);
 
   TCPConnection(int fd);

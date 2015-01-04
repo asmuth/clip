@@ -18,7 +18,7 @@ namespace http {
 
 HTTPClientConnection::HTTPClientConnection(
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler) :
+    TaskScheduler* scheduler) :
     conn_(std::move(conn)),
     scheduler_(scheduler),
     state_(S_CONN_IDLE),

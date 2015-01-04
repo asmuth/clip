@@ -30,7 +30,7 @@ public:
 
   HTTPClientConnection(
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler);
+      TaskScheduler* scheduler);
 
   ~HTTPClientConnection();
 
@@ -58,7 +58,7 @@ protected:
   void keepalive();
 
   std::unique_ptr<net::TCPConnection> conn_;
-  thread::TaskScheduler* scheduler_;
+  TaskScheduler* scheduler_;
   kHTTPClientConnectionState state_;
   HTTPParser parser_;
   Buffer buf_;

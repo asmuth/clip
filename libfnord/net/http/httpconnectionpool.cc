@@ -14,7 +14,7 @@ namespace fnord {
 namespace http {
 
 HTTPConnectionPool::HTTPConnectionPool(
-    fnord::thread::TaskScheduler* scheduler) :
+    fnord::TaskScheduler* scheduler) :
     scheduler_(scheduler) {}
 
 std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(

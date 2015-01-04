@@ -43,7 +43,7 @@ std::unique_ptr<TCPConnection> TCPConnection::connect(const InetAddr& addr) {
 
 void TCPConnection::connectAsync(
     const InetAddr& addr,
-    thread::TaskScheduler* scheduler,
+    TaskScheduler* scheduler,
     std::function<void(std::unique_ptr<TCPConnection> conn)> on_ready) {
   int fd = socket(AF_INET, SOCK_STREAM, 0);
 

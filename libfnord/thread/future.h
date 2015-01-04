@@ -7,16 +7,20 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_BASE_FUTURE_H
-#define _FNORD_BASE_FUTURE_H
+#ifndef _FNORD_THREAD_FUTURE_H
+#define _FNORD_THREAD_FUTURE_H
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <stdlib.h>
-#include "fnord/base/inspect.h"
+#include "fnord/base/autoref.h"
+#include "fnord/base/duration.h"
 #include "fnord/base/exception.h"
+#include "fnord/base/inspect.h"
+#include "fnord/thread/wakeup.h"
 
 namespace fnord {
+class TaskScheduler;
 
 template <typename T>
 class PromiseState {
@@ -30,31 +34,48 @@ public:
 template <typename T>
 class Future {
 public:
-  Future();
+  Future(AutoRef<PromiseState<T>> promise_state);
   Future(const Future<T>& other);
   Future(Future<T>&& other);
   ~Future();
 
   Future & operator=(const Future<T>& other);
 
-  bool isError() const;
+  bool isFailure() const;
   bool isSuccess() const;
 
-  void onError(std::function<void> fn);
+  void onFailure(std::function<void> fn);
   void onSuccess(std::function<void> fn);
 
   void wait() const;
   void wait(const Duration& timeout) const;
 
   void onReady(std::function<void> fn);
-  void onReady(thread::TaskScheduler* scheduler, std::function<void> fn);
+  void onReady(TaskScheduler* scheduler, std::function<void> fn);
 
   const T& get() const;
 
 protected:
+  AutoRef<PromiseState<T>> state_;
+};
 
+template <typename T>
+class Promise {
+public:
+  Promise();
+  Promise(const Promise<T>& other);
+  Promise(Promise<T>&& other);
+  ~Promise();
+
+  void success(const T& value);
+  void success(T&& value);
+  void failure(const std::exception& e);
+
+  Future<T> future() const;
+
+protected:
+  AutoRef<PromiseState<T>> state_;
 };
 
 } // namespace fnord
-
 #endif

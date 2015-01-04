@@ -68,7 +68,7 @@ public:
   static void start(
       HTTPHandlerFactory* handler_factory,
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler);
+      TaskScheduler* scheduler);
 
   void readRequestBody(
       std::function<void (
@@ -94,7 +94,7 @@ protected:
   HTTPServerConnection(
       HTTPHandlerFactory* handler_factory,
       std::unique_ptr<net::TCPConnection> conn,
-      thread::TaskScheduler* scheduler);
+      TaskScheduler* scheduler);
 
   void nextRequest();
   void dispatchRequest();
@@ -110,7 +110,7 @@ protected:
 
   HTTPHandlerFactory* handler_factory_;
   std::unique_ptr<net::TCPConnection> conn_;
-  thread::TaskScheduler* scheduler_;
+  TaskScheduler* scheduler_;
   HTTPParser parser_;
   std::function<void ()> on_read_completed_cb_;
   std::function<void ()> on_write_completed_cb_;

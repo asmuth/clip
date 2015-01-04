@@ -26,10 +26,10 @@ public:
   template <typename ServiceType>
   static std::unique_ptr<LocalRPCChannel> forService(
       ServiceType* service,
-      thread::TaskScheduler* scheduler);
+      TaskScheduler* scheduler);
 
   template <typename ServiceType>
-  LocalRPCChannel(ServiceType* service, thread::TaskScheduler* scheduler);
+  LocalRPCChannel(ServiceType* service, TaskScheduler* scheduler);
 
   template <class RPCType>
   void call(RPCType* rpc);
@@ -50,7 +50,7 @@ protected:
   };
 
   void* service_;
-  thread::TaskScheduler* scheduler_;
+  TaskScheduler* scheduler_;
   std::unordered_map<std::string, std::function<void (AnyRPC* rpc)>> methods_;
 };
 

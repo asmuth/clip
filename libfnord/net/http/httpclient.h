@@ -21,30 +21,30 @@ public:
 
   static std::unique_ptr<HTTPResponseFuture> get(
       const std::string& uri,
-      fnord::thread::TaskScheduler* sched);
+      fnord::TaskScheduler* sched);
 
   static std::unique_ptr<HTTPResponseFuture> get(
       const std::string& uri,
       const HTTPMessage::HeaderList& headers,
-      fnord::thread::TaskScheduler* sched);
+      fnord::TaskScheduler* sched);
 
   static std::unique_ptr<HTTPResponseFuture> get(
       const URI& uri,
-      fnord::thread::TaskScheduler* sched);
+      fnord::TaskScheduler* sched);
 
   static std::unique_ptr<HTTPResponseFuture> get(
       const URI& uri,
       const HTTPMessage::HeaderList& headers,
-      fnord::thread::TaskScheduler* sched);
+      fnord::TaskScheduler* sched);
 
   static std::unique_ptr<HTTPResponseFuture> executeRequest(
       const HTTPRequest& req,
-      fnord::thread::TaskScheduler* sched);
+      fnord::TaskScheduler* sched);
 
   static std::unique_ptr<HTTPResponseFuture> executeRequest(
       const HTTPRequest& req,
       const fnord::net::InetAddr& addr,
-      fnord::thread::TaskScheduler* sched);
+      fnord::TaskScheduler* sched);
 
 };
 

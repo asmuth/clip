@@ -295,6 +295,15 @@ add_library(fnord-redis OBJECT
     net/redis/redisconnection.cc
     net/redis/redisqueue.cc)
 
+add_executable(tests/test-redis
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
+    $<TARGET_OBJECTS:fnord-io>
+    $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-redis>
+    net/redis/redis_test.cc)
+
 # sstable
 add_library(fnord-sstable OBJECT
     sstable/cursor.cc

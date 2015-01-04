@@ -25,7 +25,7 @@ void HTTPRouter::addRoute(
 void HTTPRouter::addRoute(
     std::function<bool (HTTPRequest*)> predicate,
     HTTPService* service,
-    thread::TaskScheduler* scheduler) {
+    TaskScheduler* scheduler) {
   auto factory = [service, scheduler] (
       HTTPServerConnection* conn,
       HTTPRequest* req) -> std::unique_ptr<HTTPHandler> {

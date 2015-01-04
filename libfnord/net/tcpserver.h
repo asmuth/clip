@@ -20,7 +20,7 @@ class TCPServer {
 public:
 
   TCPServer(
-      thread::TaskScheduler* scheduler);
+      TaskScheduler* scheduler);
 
   void onConnection(
       std::function<void (std::unique_ptr<TCPConnection>)> callback);
@@ -31,7 +31,7 @@ protected:
   void accept();
 
   int ssock_;
-  thread::TaskScheduler* scheduler_;
+  TaskScheduler* scheduler_;
   std::function<void (std::unique_ptr<TCPConnection>)> on_connection_cb_;
 };
 

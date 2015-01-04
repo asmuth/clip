@@ -23,7 +23,7 @@ MetricService MetricService::newWithInMemoryBackend() {
 
 MetricService MetricService::newWithDiskBackend(
     const std::string& datadir_path,
-    fnord::thread::TaskScheduler* scheduler) {
+    fnord::TaskScheduler* scheduler) {
   std::unique_ptr<IMetricRepository> metric_repo(
       new disk_backend::MetricRepository(datadir_path, scheduler));
 

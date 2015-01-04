@@ -35,8 +35,8 @@ public:
       const Option<std::vector<std::string>>& reply)> ArrayReplyCallback;
 
   static std::unique_ptr<RedisConnection> connect(
-      const fnord::net::InetAddr& addr,
-      fnord::thread::TaskScheduler* scheduler);
+      const net::InetAddr& addr,
+      TaskScheduler* scheduler);
 
   RedisConnection(const RedisConnection& other) = delete;
   RedisConnection& operator=(const RedisConnection& other) = delete;
@@ -64,7 +64,7 @@ protected:
 
   RedisConnection(
       const fnord::net::InetAddr& addr,
-      fnord::thread::TaskScheduler* scheduler);
+      fnord::TaskScheduler* scheduler);
 
   void executeCommand(
       const std::vector<std::string>& args,

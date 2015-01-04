@@ -21,7 +21,7 @@
 namespace fnord {
 namespace http {
 
-using fnord::thread::TaskScheduler;
+using fnord::TaskScheduler;
 
 class HTTPServer {
 public:

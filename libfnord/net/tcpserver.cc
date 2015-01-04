@@ -21,7 +21,7 @@ namespace fnord {
 namespace net {
 
 TCPServer::TCPServer(
-    thread::TaskScheduler* scheduler) :
+    TaskScheduler* scheduler) :
     scheduler_(scheduler),
     on_connection_cb_(nullptr) {}
 

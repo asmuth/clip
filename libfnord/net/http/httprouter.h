@@ -40,7 +40,7 @@ public:
   void addRoute(
       PredicateFnType predicate,
       HTTPService* service,
-      thread::TaskScheduler* scheduler);
+      TaskScheduler* scheduler);
 
   void addRoute(
       PredicateFnType predicate,

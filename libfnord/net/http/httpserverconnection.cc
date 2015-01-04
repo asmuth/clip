@@ -24,7 +24,7 @@ namespace http {
 void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler) {
+    TaskScheduler* scheduler) {
   // N.B. we don't leak the connection here. it is ref counted and will
   // free itself
   auto http_conn = new HTTPServerConnection(
@@ -38,7 +38,7 @@ void HTTPServerConnection::start(
 HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
     std::unique_ptr<net::TCPConnection> conn,
-    thread::TaskScheduler* scheduler) :
+    TaskScheduler* scheduler) :
     handler_factory_(handler_factory),
     conn_(std::move(conn)),
     scheduler_(scheduler),

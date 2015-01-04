@@ -14,7 +14,7 @@ namespace json {
 
 JSONRPCHTTPChannel::JSONRPCHTTPChannel(
     comm::LBGroup* lb_group,
-    fnord::thread::TaskScheduler* scheduler) :
+    fnord::TaskScheduler* scheduler) :
     lb_group_(lb_group),
     conn_pool_(scheduler),
     scheduler_(scheduler) {}

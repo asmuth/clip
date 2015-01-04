@@ -28,7 +28,7 @@ public:
 
   static MetricService newWithDiskBackend(
       const std::string& datadir_path,
-      fnord::thread::TaskScheduler* scheduler,
+      fnord::TaskScheduler* scheduler,
       fnord::logging::Logger* logger,
       fnord::stats::StatsManager* stats);
 

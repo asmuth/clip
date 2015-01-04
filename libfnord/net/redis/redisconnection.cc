@@ -16,7 +16,7 @@ namespace redis {
 
 RedisConnection::RedisConnection(
     const fnord::net::InetAddr& addr,
-    fnord::thread::TaskScheduler* scheduler) {
+    fnord::TaskScheduler* scheduler) {
   ctx_ = redisConnect(addr.ip().c_str(), addr.port());
 
   if (ctx_ == NULL || ctx_->err) {
@@ -26,20 +26,23 @@ RedisConnection::RedisConnection(
 
 std::unique_ptr<RedisConnection> RedisConnection::connect(
     const fnord::net::InetAddr& addr,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   return std::unique_ptr<RedisConnection>(new RedisConnection(addr, sched));
 }
 
-/*
-void RedisConnection::set(
+Future<std::string> RedisConnection::set(
     const std::string& key,
-    const std::string& value,
-    VoidReplyCallback callback) {
+    const std::string& value) {
   std::vector<std::string> args = { "set" };
   args.emplace_back(key);
   args.emplace_back(value);
-  executeCommand(args, callback);
+
+  Promise<std::string> promise;
+  //executeCommand(args, callback);
+  return promise.future();
 }
+
+/*
 
 void RedisConnection::get(
     const std::string& key,

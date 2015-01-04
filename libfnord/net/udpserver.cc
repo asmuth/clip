@@ -20,8 +20,8 @@ namespace fnord {
 namespace net {
 
 UDPServer::UDPServer(
-    thread::TaskScheduler* server_scheduler,
-    thread::TaskScheduler* callback_scheduler) :
+    TaskScheduler* server_scheduler,
+    TaskScheduler* callback_scheduler) :
     server_scheduler_(server_scheduler),
     callback_scheduler_(callback_scheduler) {}
 

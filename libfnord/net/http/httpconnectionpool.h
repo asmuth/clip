@@ -22,7 +22,7 @@ namespace http {
 
 class HTTPConnectionPool {
 public:
-  HTTPConnectionPool(fnord::thread::TaskScheduler* scheduler);
+  HTTPConnectionPool(fnord::TaskScheduler* scheduler);
 
   std::unique_ptr<HTTPResponseFuture> executeRequest(const HTTPRequest& req);
 
@@ -38,7 +38,7 @@ protected:
       HTTPResponseFuture* future,
       std::function<void (HTTPClientConnection* conn)> callback);
 
-  fnord::thread::TaskScheduler* scheduler_;
+  fnord::TaskScheduler* scheduler_;
 
   std::multimap<
       std::string,

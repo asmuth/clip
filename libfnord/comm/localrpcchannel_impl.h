@@ -15,7 +15,7 @@ namespace comm {
 template <typename ServiceType>
 std::unique_ptr<LocalRPCChannel> LocalRPCChannel::forService(
     ServiceType* service,
-    thread::TaskScheduler* scheduler) {
+    TaskScheduler* scheduler) {
   return std::unique_ptr<LocalRPCChannel>(
       new LocalRPCChannel(service, scheduler));
 }
@@ -23,7 +23,7 @@ std::unique_ptr<LocalRPCChannel> LocalRPCChannel::forService(
 template <typename ServiceType>
 LocalRPCChannel::LocalRPCChannel(
     ServiceType* service,
-    thread::TaskScheduler* scheduler) :
+    TaskScheduler* scheduler) :
     service_(service),
     scheduler_(scheduler) {
   ReflectionProxy proxy(this);

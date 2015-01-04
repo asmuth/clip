@@ -13,7 +13,6 @@
 #include "fnord/thread/wakeup.h"
 
 namespace fnord {
-namespace thread {
 
 class TaskScheduler {
 public:
@@ -77,6 +76,5 @@ public:
       long wakeup_generation) = 0;
 };
 
-}
 }
 #endif

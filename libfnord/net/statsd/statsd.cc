@@ -15,8 +15,8 @@ namespace fnord {
 namespace statsd {
 
 StatsdServer::StatsdServer(
-    fnord::thread::TaskScheduler* server_scheduler,
-    fnord::thread::TaskScheduler* work_scheduler) :
+    fnord::TaskScheduler* server_scheduler,
+    fnord::TaskScheduler* work_scheduler) :
     udp_server_(server_scheduler, work_scheduler) {
 
   udp_server_.onMessage([this] (const fnord::Buffer& msg) {

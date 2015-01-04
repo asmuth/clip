@@ -17,33 +17,33 @@ namespace http {
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const std::string& uri,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const std::string& uri,
     const HTTPMessage::HeaderList& headers,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri, headers), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const URI& uri,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
     const URI& uri,
     const HTTPMessage::HeaderList& headers,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri, headers), sched);
 }
 
 std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
     const HTTPRequest& req,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   if (!req.hasHeader("Host")) {
     RAISE(kRuntimeError, "missing Host header");
   }
@@ -59,7 +59,7 @@ std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
 std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
     const HTTPRequest& req,
     const fnord::net::InetAddr& addr,
-    fnord::thread::TaskScheduler* sched) {
+    fnord::TaskScheduler* sched) {
   auto conn = std::unique_ptr<HTTPClientConnection>(
       new HTTPClientConnection(
           std::move(fnord::net::TCPConnection::connect(addr)),
