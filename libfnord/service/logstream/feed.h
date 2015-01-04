@@ -9,7 +9,7 @@
  */
 #ifndef _FNORD_LOGSTREAM_SERVICE_FEED_H
 #define _FNORD_LOGSTREAM_SERVICE_FEED_H
-#include <deque>
+#include "fnord/base/stdtypes.h"
 #include "fnord/comm/feed.h"
 #include "fnord/comm/rpc.h"
 #include "fnord/service/logstream/logstreamentry.h"
@@ -23,22 +23,22 @@ public:
   static const int kDefaultBufferSize = 8192;
 
   LogStreamServiceFeed(
-      const std::string& name,
+      const String& name,
       fnord::comm::RPCChannel* rpc_channel,
       int batch_size = kDefaultBatchSize,
       int buffer_size = kDefaultBufferSize);
 
-  std::string offset() const override;
+  Future<bool> appendEntry(const String& entry_data) override;
+  Future<Option<FeedEntry>> fetchEntry(const FeedOffset& offset) override;
+  Future<Option<FeedEntry>> fetchNextEntry(const FeedEntry& entry) override;
+  Future<Option<FeedEntry>> fetchFirstEntry() override;
+  Future<Option<FeedEntry>> fetchLastEntry() override;
 
-  void append(const std::string& entry) override;
-  bool getNextEntry(std::string* entry) override;
-
-  void setOption(const std::string& optname,const std::string& optval) override;
+  void setOption(const String& optname, const String& optval) override;
 
 protected:
   void maybeFillBuffer();
   void fillBuffer();
-  void insertDone();
 
   fnord::comm::RPCChannel* rpc_channel_;
   int batch_size_;
@@ -46,18 +46,11 @@ protected:
   uint64_t offset_;
 
   std::mutex fetch_mutex_;
-  std::deque<LogStreamEntry> fetch_buf_;
+  Deque<LogStreamEntry> fetch_buf_;
   std::unique_ptr<
       comm::RPC<
           std::vector<LogStreamEntry>,
-          std::tuple<std::string, uint64_t, int>>> cur_fetch_rpc_;
-
-  std::mutex insert_mutex_;
-  std::deque<std::string> insert_buf_;
-  std::unique_ptr<
-      comm::RPC<
-          uint64_t,
-          std::tuple<std::string, std::string>>> cur_insert_rpc_;
+          std::tuple<String, uint64_t, int>>> cur_fetch_rpc_;
 };
 
 }

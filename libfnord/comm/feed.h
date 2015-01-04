@@ -16,58 +16,57 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "fnord/base/option.h"
+#include "fnord/base/stdtypes.h"
+#include "fnord/thread/future.h"
 
 namespace fnord {
 namespace comm {
 
 class Feed {
 public:
-  Feed(const std::string& name);
+  using FeedOffset = String;
+
+  struct FeedEntry {
+    FeedOffset offset;
+    FeedOffset next_offset;
+    String entry_data;
+  };
+
+  Feed(const String& name);
   virtual ~Feed();
 
-  const std::string& name() const;
+  const String& name() const;
 
-  virtual void append(const std::string& entry) = 0;
+  virtual Future<bool> appendEntry(const String& entry_data) = 0;
 
-  //virtual void appendEntry(const std::string& entry) = 0;
-  //virtual void appendEntryAsync(
-  //    const std::string& entry,
-  //    std::function<void (const Status& status)> callback) = 0;
-  //virtual void appendEntryAsyncUnsafe(const std::string& entry) = 0;
-
-  virtual bool getNextEntry(std::string* entry) = 0;
-
-  //virtual Option<std::string> maybeGetNextEntry() = 0;
-  //virtual void getNextEntryAsync(
-  //    std::function<void (const Option<std::string>& entry)> callback) = 0;
-
-  /**
-   * Return the current read offset of the stream
-   */
-  virtual std::string offset() const = 0;
+  virtual Future<Option<FeedEntry>> fetchEntry(const FeedOffset& offset) = 0;
+  virtual Future<Option<FeedEntry>> fetchNextEntry(const FeedEntry& entry) = 0;
+  virtual Future<Option<FeedEntry>> fetchFirstEntry() = 0;
+  virtual Future<Option<FeedEntry>> fetchLastEntry() = 0;
 
   virtual void setOption(
-      const std::string& optname,
-      const std::string& optval) = 0;
+      const String& optname,
+      const String& optval) = 0;
 
 protected:
-  std::string name_;
+  String name_;
 };
 
 class FeedFactory {
 public:
   virtual ~FeedFactory() {}
-  virtual std::unique_ptr<Feed> getFeed(const std::string& name) = 0;
+  virtual std::unique_ptr<Feed> getFeed(const String& name) = 0;
 };
 
 class FeedCache {
 public:
   FeedCache(FeedFactory* factory);
-  Feed* getFeed(const std::string& name);
+  Feed* getFeed(const String& name);
 protected:
   FeedFactory* factory_;
   std::mutex mutex_;
-  std::unordered_map<std::string, std::unique_ptr<Feed>> cache_;
+  HashMap<String, std::unique_ptr<Feed>> cache_;
 };
 
 }

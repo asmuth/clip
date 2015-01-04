@@ -1,6 +1,6 @@
 
+-> stats/counters
 -> RPC::convertToFuture impl
--> use AutoRef in httpserverconn
 
 -> autolock
 -> spinlock
@@ -16,14 +16,11 @@
 -> logstreamservice getcuroffset
 
 -> spinlock in http{client,server} connection
--> httpserverconn locking rework
--> fix await* exceptionhandling vs mutex in httpserveronnection
 -> http server conn keepalie fixx
 
 -> use redis async conn on eventloop instead of blocking conn
 
 -> httpconnpoool: leaks connections, add idle timeout
--> async tcp connect
 -> cancelable wait
 
 -> http connection timeouts + retry options
@@ -32,16 +29,13 @@
 -> thread pool wait()
 
 -> timeout impl
--> httpresponsehandler
--> httpconnectionpool
 -> eventloop shutdown
 
 -> ratio of item visits to queries (only item visits but no queries -> fraud)
 -> number of userids per source ip
 -> session too long
 
-  -> sstable row format improvements
-  -> proper logger iface
-  -> exception refactoring
-  -> fix StringUtil::toString (should take const& param)
-  -> stats/counters
+-> sstable row format improvements
+-> proper logger iface
+-> exception refactoring
+-> fix StringUtil::toString (should take const& param)

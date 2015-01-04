@@ -23,6 +23,8 @@ namespace fnord {
 template <typename T>
 class AutoRef {
 public:
+  using ValueType = T;
+
   AutoRef(std::nullptr_t);
   AutoRef(T* ref);
   AutoRef(const AutoRef<T>& other);

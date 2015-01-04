@@ -14,7 +14,7 @@ namespace fnord {
 namespace logstream_service {
 
 LogStreamServiceFeed::LogStreamServiceFeed(
-    const std::string& name,
+    const String& name,
     fnord::comm::RPCChannel* rpc_channel,
     int batch_size /* = kDefaultBatchSize */,
     int buffer_size /* = kDefaultBufferSize */) :
@@ -24,23 +24,28 @@ LogStreamServiceFeed::LogStreamServiceFeed(
     buffer_size_(buffer_size),
     offset_(0) {}
 
-void LogStreamServiceFeed::append(const std::string& entry) {
-  std::unique_lock<std::mutex> lk(insert_mutex_);
+Future<bool> LogStreamServiceFeed::appendEntry(const String& entry) {
+  Promise<bool> promise;
 
-  if (cur_insert_rpc_.get() == nullptr) {
-    cur_insert_rpc_ = fnord::comm::mkRPC(
-        &LogStreamService::append,
-        name(),
-        entry);
+  auto rpc = fnord::comm::mkRPC(
+      &LogStreamService::append,
+      name(),
+      entry);
 
-    cur_insert_rpc_->onReady(
-        std::bind(&LogStreamServiceFeed::insertDone, this));
-    cur_insert_rpc_->call(rpc_channel_);
-  } else {
-    insert_buf_.emplace_front(entry);
-  }
+  rpc->call(rpc_channel_);
+
+  rpc->onSuccess([promise] (const decltype(rpc)::ValueType& r) mutable {
+    promise.success(true);
+  });
+
+  rpc->onError([promise] (const Status& status) mutable {
+    promise.failure(status);
+  });
+
+  return promise.future();
 }
 
+/*
 void LogStreamServiceFeed::insertDone() {
   std::unique_lock<std::mutex> lk(insert_mutex_);
   cur_insert_rpc_.reset(nullptr);
@@ -85,7 +90,7 @@ void LogStreamServiceFeed::fillBuffer() {
   cur_fetch_rpc_.reset(nullptr);
 }
 
-bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
+bool LogStreamServiceFeed::getNextEntry(String* entry) {
   std::unique_lock<std::mutex> lk(fetch_mutex_);
 
   if (fetch_buf_.empty()) {
@@ -102,14 +107,11 @@ bool LogStreamServiceFeed::getNextEntry(std::string* entry) {
   fetch_buf_.pop_front();
   return true;
 }
-
-std::string LogStreamServiceFeed::offset() const {
-  return StringUtil::toString(offset_);
-}
+*/
 
 void LogStreamServiceFeed::setOption(
-    const std::string& optname,
-    const std::string& optval) {
+    const String& optname,
+    const String& optval) {
   if (optname == "batch_size") {
     batch_size_ = std::stoi(optval);
     return;

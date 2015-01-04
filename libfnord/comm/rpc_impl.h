@@ -55,33 +55,27 @@ const ArgPackType&  RPC<ResultType, ArgPackType>::args() const {
 }
 
 template <class ReturnType, typename... ArgTypes>
-std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
+AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args) {
-  return std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>>(
+  return AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>>(
       new RPC<ReturnType, std::tuple<ArgTypes...>>(
           method,
           std::make_tuple(args...)));
 }
 
 template <class MethodCall>
-std::unique_ptr<
-    RPC<
-        typename MethodCall::ReturnType,
-        typename MethodCall::ArgPackType>> mkRPC(
-    const MethodCall* method,
-    typename MethodCall::ArgPackType args) {
-  return std::unique_ptr<
-    RPC<
-        typename MethodCall::ReturnType,
-        typename MethodCall::ArgPackType>>(
-      new RPC<
-          typename MethodCall::ReturnType,
-          typename MethodCall::ArgPackType>(method->name(), args));
+AutoRef<RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType>>
+    mkRPC(const MethodCall* method, typename MethodCall::ArgPackType args) {
+  return AutoRef<
+      RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType>>(
+          new RPC<
+              typename MethodCall::ReturnType,
+              typename MethodCall::ArgPackType>(method->name(), args));
 }
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
+AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args) {
   return mkRPC(

@@ -25,14 +25,13 @@ namespace fnord {
 namespace comm {
 class RPCChannel;
 
-class AnyRPC {
+class AnyRPC : public RefCounted {
 public:
   virtual ~AnyRPC();
   AnyRPC(const std::string& method);
 
-
   void wait();
-  void onReady(std::function<void()> callback);
+  void onReady(Function<void()> callback);
   void raiseIfError() const;
 
   const std::string& method() const;
@@ -41,11 +40,7 @@ public:
   void error(const std::exception& e);
   void error(const Status& status);
 
-  void autodelete();
-
 protected:
-  void reap() noexcept;
-
   Status status_;
   String method_;
   bool is_ready_;
@@ -66,6 +61,9 @@ public:
   void call(RPCChannel* channel);
   void ready(const ResultType& result) noexcept;
 
+  void onSuccess(Function<void(const RPC<ResultType, ArgPackType>& rpc)> fn);
+  void onError(Function<void(const Status& status)> fn);
+
   const ArgPackType& args() const;
   const ResultType& result() const;
 
@@ -75,19 +73,13 @@ protected:
   ResultType result_;
 };
 
-void fireAndForgetRPC(UniqueRef<AnyRPC>&& rpc);
-
 template <class ReturnType, typename... ArgTypes>
-Future<ReturnType> convertRPCtoFuture(
-    UniqueRef<RPC<ReturnType, std::tuple<ArgTypes...>>> rpc);
-
-template <class ReturnType, typename... ArgTypes>
-UniqueRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
+AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args);
 
 template <class MethodCall>
-UniqueRef<
+AutoRef<
     RPC<
         typename MethodCall::ReturnType,
         typename MethodCall::ArgPackType>> mkRPC(
@@ -95,7 +87,7 @@ UniqueRef<
     typename MethodCall::ArgPackType args);
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-UniqueRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
+AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args);
 
