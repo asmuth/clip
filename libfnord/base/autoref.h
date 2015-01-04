@@ -41,6 +41,7 @@ protected:
 
 class RefCounted {
 public:
+  RefCounted();
   void incRef();
   bool decRef();
 protected:

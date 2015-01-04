@@ -11,6 +11,8 @@
 
 namespace fnord {
 
+RefCounted::RefCounted() : refcount_(0) {}
+
 void RefCounted::incRef() {
   refcount_++;
 }
