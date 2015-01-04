@@ -65,12 +65,12 @@ void HTTPConnectionPool::parkConnection(
 void HTTPConnectionPool::leaseConnection(
     const fnord::net::InetAddr& addr,
     Promise<HTTPResponse> promise,
-    std::function<void (HTTPClientConnection* conn)> callback) {
+    Function<void (HTTPClientConnection* conn)> callback) {
   std::unique_lock<std::mutex> lk(connection_cache_mutex_);
   auto iter = connection_cache_.find(addr.ipAndPort());
 
   if (iter != connection_cache_.end()) {
-    std::unique_ptr<HTTPClientConnection> conn(iter->second);
+    UniqueRef<HTTPClientConnection> conn(iter->second);
     connection_cache_.erase(iter);
     lk.unlock();
 
@@ -87,11 +87,11 @@ void HTTPConnectionPool::leaseConnection(
           addr,
           scheduler_,
           [this, promise, callback, addr] (
-              std::unique_ptr<net::TCPConnection> tcp_conn) mutable {
+              UniqueRef<net::TCPConnection> tcp_conn) mutable {
             try {
               tcp_conn->checkErrors();
 
-              std::unique_ptr<HTTPClientConnection> conn(
+              UniqueRef<HTTPClientConnection> conn(
                   new HTTPClientConnection(std::move(tcp_conn), scheduler_));
 
               scheduler_->runOnNextWakeup(

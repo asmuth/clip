@@ -25,13 +25,14 @@ void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
     UniqueRef<net::TCPConnection> conn,
     TaskScheduler* scheduler) {
-  // N.B. we don't leak the connection here. it is ref counted and will
-  // free itself
   auto http_conn = new HTTPServerConnection(
       handler_factory,
       std::move(conn),
       scheduler);
 
+  // N.B. we don't leak the connection here. it is ref counted and will
+  // free itself
+  http_conn->incRef();
   http_conn->nextRequest();
 }
 
@@ -78,13 +79,12 @@ HTTPServerConnection::HTTPServerConnection(
 }
 
 void HTTPServerConnection::read() {
-  mutex_.lock();
+  std::unique_lock<std::mutex> lk(mutex_);
 
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
   } catch (Exception& e) {
-    mutex_.unlock();
     if (e.ofType(kWouldBlockError)) {
       return awaitRead();
     }
@@ -94,22 +94,22 @@ void HTTPServerConnection::read() {
         "HTTP read() failed, closing connection",
         e);
 
+    lk.unlock();
     close();
     return;
   }
 
+  lk.unlock();
+
   try {
     if (len == 0) {
       parser_.eof();
-      mutex_.unlock();
       close();
       return;
     } else {
       parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
-    mutex_.unlock();
-
     log::Logger::get()->logException(
         fnord::log::kDebug,
         "HTTP parse error, closing connection",
@@ -122,12 +122,10 @@ void HTTPServerConnection::read() {
   if (parser_.state() != HTTPParser::S_DONE) {
     awaitRead();
   }
-
-  mutex_.unlock();
 }
 
 void HTTPServerConnection::write() {
-  mutex_.lock();
+  std::unique_lock<std::mutex> lk(mutex_);
 
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
@@ -137,8 +135,6 @@ void HTTPServerConnection::write() {
     len = conn_->write(data, size);
     buf_.setMark(buf_.mark() + len);
   } catch (Exception& e) {
-    mutex_.unlock();
-
     if (e.ofType(kWouldBlockError)) {
       return awaitWrite();
     }
@@ -148,17 +144,16 @@ void HTTPServerConnection::write() {
         "HTTP write() failed, closing connection",
         e);
 
+    lk.unlock();
     close();
     return;
   }
 
-
   if (buf_.mark() < buf_.size()) {
-    mutex_.unlock();
     awaitWrite();
   } else {
     buf_.clear();
-    mutex_.unlock();
+    lk.unlock();
     if (on_write_completed_cb_) {
       on_write_completed_cb_();
     }
@@ -199,7 +194,7 @@ void HTTPServerConnection::dispatchRequest() {
 
 void HTTPServerConnection::readRequestBody(
     Function<void (const void*, size_t, bool)> callback) {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+  std::unique_lock<std::mutex> lk(mutex_);
 
   switch (parser_.state()) {
     case HTTPParser::S_REQ_METHOD:
@@ -224,6 +219,8 @@ void HTTPServerConnection::readRequestBody(
     }
   };
 
+  lk.unlock();
+
   read_body_chunk_fn((const char*) body_buf_.data(), body_buf_.size());
   parser_.onBodyChunk(read_body_chunk_fn);
 }
@@ -239,7 +236,7 @@ void HTTPServerConnection::discardRequestBody(Function<void ()> callback) {
 void HTTPServerConnection::writeResponse(
     const HTTPResponse& resp,
     Function<void()> ready_callback) {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+  std::lock_guard<std::mutex> lk(mutex_);
 
   buf_.clear();
   io::BufferOutputStream os(&buf_);
@@ -252,7 +249,7 @@ void HTTPServerConnection::writeResponseBody(
     const void* data,
     size_t size,
     Function<void()> ready_callback) {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+  std::lock_guard<std::mutex> lk(mutex_);
 
   buf_.clear();
   buf_.append(data, size);
@@ -266,7 +263,7 @@ void HTTPServerConnection::finishResponse() {
   }
 
   if (cur_request_->keepalive()) {
-    std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+    std::lock_guard<std::mutex> lk(mutex_);
     nextRequest();
   } else {
     close();

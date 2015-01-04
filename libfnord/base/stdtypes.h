@@ -39,5 +39,11 @@ using UniqueRef = std::unique_ptr<T>;
 template <typename T>
 using Function = std::function<T>;
 
+template <typename T1, typename T2>
+using Pair = std::pair<T1, T2>;
+
+template <typename... T>
+using Tuple = std::tuple<T...>;
+
 } // namespace fnord
 #endif

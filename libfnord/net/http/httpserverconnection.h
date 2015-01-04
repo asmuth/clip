@@ -111,13 +111,12 @@ protected:
   UniqueRef<net::TCPConnection> conn_;
   TaskScheduler* scheduler_;
   HTTPParser parser_;
-  Function<void ()> on_read_completed_cb_;
   Function<void ()> on_write_completed_cb_;
   Buffer buf_;
   Buffer body_buf_;
   UniqueRef<HTTPRequest> cur_request_;
   UniqueRef<HTTPHandler> cur_handler_;
-  std::recursive_mutex mutex_;
+  std::mutex mutex_;
 };
 
 }

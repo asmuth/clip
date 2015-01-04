@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "fnord/base/stdtypes.h"
 #include "fnord/net/dnscache.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
@@ -37,7 +38,7 @@ protected:
   void leaseConnection(
       const fnord::net::InetAddr& addr,
       Promise<HTTPResponse> promise,
-      std::function<void (HTTPClientConnection* conn)> callback);
+      Function<void (HTTPClientConnection* conn)> callback);
 
   fnord::TaskScheduler* scheduler_;
 
