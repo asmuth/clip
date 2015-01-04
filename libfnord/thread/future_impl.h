@@ -23,7 +23,7 @@ PromiseState<T>::PromiseState() :
 
 template <typename T>
 PromiseState<T>::~PromiseState() {
-  assery(ready == true);
+  assert(ready == true);
 
   if (value != nullptr) {
     value->~T();

@@ -44,6 +44,8 @@ protected:
 class RefCounted {
 public:
   RefCounted();
+  virtual ~RefCounted() {}
+
   void incRef();
   bool decRef();
 protected:

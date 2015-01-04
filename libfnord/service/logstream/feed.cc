@@ -45,6 +45,26 @@ Future<bool> LogStreamServiceFeed::appendEntry(const String& entry) {
   return promise.future();
 }
 
+Future<Option<LogStreamServiceFeed::FeedEntry>>
+    LogStreamServiceFeed::fetchEntry(const FeedOffset& offset) {
+  RAISE(kNotYetImplementedError);
+}
+
+Future<Option<LogStreamServiceFeed::FeedEntry>>
+    LogStreamServiceFeed::fetchNextEntry(const FeedEntry& entry) {
+  return fetchEntry(entry.next_offset);
+}
+
+Future<Option<LogStreamServiceFeed::FeedEntry>>
+    LogStreamServiceFeed::fetchFirstEntry() {
+  return fetchEntry("0");
+}
+
+Future<Option<LogStreamServiceFeed::FeedEntry>>
+    LogStreamServiceFeed::fetchLastEntry() {
+  RAISE(kNotYetImplementedError);
+}
+
 /*
 void LogStreamServiceFeed::insertDone() {
   std::unique_lock<std::mutex> lk(insert_mutex_);

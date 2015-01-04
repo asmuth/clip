@@ -40,6 +40,10 @@ public:
   void error(const std::exception& e);
   void error(const Status& status);
 
+  bool isSuccess() const;
+  bool isFailure() const;
+  const Status& status() const;
+
 protected:
   Status status_;
   String method_;

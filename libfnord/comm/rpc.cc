@@ -59,5 +59,17 @@ void AnyRPC::error(const Status& status) {
   ready();
 }
 
+bool AnyRPC::isSuccess() const {
+  return status_.isSuccess();
+}
+
+bool AnyRPC::isFailure() const {
+  return status_.isError();
+}
+
+const Status& AnyRPC::status() const {
+  return status_;
+}
+
 }
 }

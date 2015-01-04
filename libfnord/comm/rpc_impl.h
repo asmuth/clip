@@ -54,6 +54,26 @@ const ArgPackType&  RPC<ResultType, ArgPackType>::args() const {
   return args_;
 }
 
+template <typename ResultType, typename ArgPackType>
+void RPC<ResultType, ArgPackType>::onSuccess(
+    Function<void(const RPC<ResultType, ArgPackType>& rpc)> fn) {
+  onReady([this, fn] {
+    if (this->isSuccess()) {
+      fn(*this);
+    }
+  });
+}
+
+template <typename ResultType, typename ArgPackType>
+void RPC<ResultType, ArgPackType>::onError(
+    Function<void(const Status& status)> fn) {
+  onReady([this, fn] {
+    if (this->isFailure()) {
+      fn(this->status());
+    }
+  });
+}
+
 template <class ReturnType, typename... ArgTypes>
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
