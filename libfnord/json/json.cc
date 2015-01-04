@@ -193,6 +193,31 @@ unsigned long fromJSONImpl(
   }
 }
 
+template <>
+bool fromJSONImpl(
+    std::vector<JSONToken>::const_iterator begin,
+    std::vector<JSONToken>::const_iterator end) {
+  if (begin == end) {
+    RAISE(kIndexError);
+  }
+
+  switch (begin->type) {
+    case JSON_TRUE:
+      return true;
+
+    case JSON_FALSE:
+      return false;
+
+    default:
+      RAISEF(
+          kParseError,
+          "can't convert $0 ($1) to bool",
+          begin->type,
+          begin->data);
+
+  }
+}
+
 } // namespace json
 
 template <>

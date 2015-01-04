@@ -60,6 +60,16 @@ public:
   virtual std::unique_ptr<Feed> getFeed(const std::string& name) = 0;
 };
 
+class FeedCache {
+public:
+  FeedCache(FeedFactory* factory);
+  Feed* getFeed(const std::string& name);
+protected:
+  FeedFactory* factory_;
+  std::mutex mutex_;
+  std::unordered_map<std::string, std::unique_ptr<Feed>> cache_;
+};
+
 }
 }
 #endif

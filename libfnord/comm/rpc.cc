@@ -51,6 +51,12 @@ void AnyRPC::ready() noexcept {
   }
 }
 
+void AnyRPC::raiseIfError() const {
+  if (is_error_) {
+    RAISE(kRPCError, error_);
+  }
+}
+
 void AnyRPC::error(const std::exception& e) {
   is_error_ = true;
 

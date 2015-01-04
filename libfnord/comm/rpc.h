@@ -30,12 +30,13 @@ public:
   static void fireAndForget(std::unique_ptr<AnyRPC>&& rpc);
 
   void wait();
+  void onReady(std::function<void()> callback);
+  void raiseIfError() const;
+
+  const std::string& method() const;
 
   void ready() noexcept;
-  const std::string& method() const;
   void error(const std::exception& e);
-
-  void onReady(std::function<void()> callback);
 
 protected:
   void fireAndForget();
