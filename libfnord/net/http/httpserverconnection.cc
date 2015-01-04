@@ -9,6 +9,7 @@
  */
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
+#include "fnord/base/logging.h"
 #include "fnord/net/http/httpserverconnection.h"
 #include "fnord/net/http/httpgenerator.h"
 
@@ -45,9 +46,7 @@ HTTPServerConnection::HTTPServerConnection(
     scheduler_(scheduler),
     on_write_completed_cb_(nullptr),
     parser_(HTTPParser::PARSE_HTTP_REQUEST) {
-  log::Logger::get()->logf(
-      fnord::log::kTrace, "New HTTP connection: $0",
-      inspect(*this));
+  logTrace("fnord.http.server", "New HTTP connection: $0", inspect(*this));
 
   conn_->setNonblocking(true);
   buf_.reserve(kMinBufferSize);
@@ -89,12 +88,9 @@ void HTTPServerConnection::read() {
       return awaitRead();
     }
 
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP read() failed, closing connection",
-        e);
-
     lk.unlock();
+    logDebug("fnord.http.server", e, "read() failed, closing...");
+
     close();
     return;
   }
@@ -110,11 +106,7 @@ void HTTPServerConnection::read() {
       parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP parse error, closing connection",
-        e);
-
+    logDebug("fnord.http.server", e, "HTTP pase error, closing...");
     close();
     return;
   }
@@ -139,12 +131,8 @@ void HTTPServerConnection::write() {
       return awaitWrite();
     }
 
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP write() failed, closing connection",
-        e);
-
     lk.unlock();
+    logDebug("fnord.http.server", e, "write() failed, closing...");
     close();
     return;
   }
@@ -271,10 +259,7 @@ void HTTPServerConnection::finishResponse() {
 }
 
 void HTTPServerConnection::close() {
-  log::Logger::get()->logf(
-      fnord::log::kTrace, "HTTP connection close: $0",
-      inspect(*this));
-
+  logTrace("fnord.http.server", "HTTP connection close: $0", inspect(*this));
   conn_->close();
   decRef();
 }

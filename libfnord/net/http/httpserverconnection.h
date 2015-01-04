@@ -13,7 +13,6 @@
 #include <vector>
 #include <fnord/base/autoref.h>
 #include <fnord/base/stdtypes.h>
-#include <fnord/logging/logger.h>
 #include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>

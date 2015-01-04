@@ -9,6 +9,7 @@
  */
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
+#include <fnord/base/logging.h>
 #include <fnord/base/wallclock.h>
 #include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/http/httpserver.h>
@@ -38,11 +39,7 @@ HTTPServer::HTTPServer(
 }
 
 void HTTPServer::listen(int port) {
-  log::Logger::get()->logf(
-      fnord::log::kNotice,
-      "Starting HTTP server on port $0",
-      port);
-
+  logNotice("fnord.http.server", "Starting HTTP server on port $0", port);
   ssock_.listen(port);
 }
 

@@ -38,15 +38,13 @@ add_library(fnord-base OBJECT
     base/exceptionhandler.cc
     base/inspect.cc
     base/ieee754.cc
+    base/logging.cc
     base/random.cc
     base/status.cc
     base/stringutil.cc
     base/uri.cc
     base/wallclock.cc
-    base/fnv.cc
-    logging/logger.cc
-    logging/loglevel.cc
-    logging/logoutputstream.cc)
+    base/fnv.cc)
 
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>

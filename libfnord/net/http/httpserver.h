@@ -11,7 +11,6 @@
 #define _FNORDMETRIC_WEB_HTTPSERVER_H
 #include <memory>
 #include <vector>
-#include <fnord/logging/logger.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httphandler.h>
 #include "fnord/net/http/httpserverconnection.h"

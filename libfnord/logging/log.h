@@ -13,21 +13,21 @@
 namespace fnord {
 namespace log {
 
-void log_EMERGENCY(const std::string& msg) {
+void log_EMERGENCY(const String& msg) {
   Logger::get()::log(kEmergency, msg);
 }
 
-void log_EMERGENCY(const LogTags* tags, const std::string& msg) {
+void log_EMERGENCY(const LogTags* tags, const String& msg) {
   Logger::get()::log(kEmergency, tags, msg);
 }
 
 template <typename T...>
-void logf_EMERGENCY(const std::string& msg, T... args) {
+void logf_EMERGENCY(const String& component, const String& msg, T... args) {
   Logger::get()::logf(kEmergency, msg, args...);
 }
 
 template <typename T...>
-void logf_EMERGENCY(const LogTags* tags, const std::string& msg, T... args) {
+void logf_EMERGENCY(const LogTags* tags, const String& msg, T... args) {
   Logger::get()::logf(kEmergency, tags, msg, args...);
 }
 

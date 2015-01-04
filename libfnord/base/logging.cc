@@ -18,8 +18,21 @@
 using fnord::Exception;
 
 namespace fnord {
-namespace log {
 
+const char* logLevelToStr(LogLevel log_level) {
+  switch (log_level) {
+    case 9000: return "EMERGENCY";
+    case 8000: return "ALERT";
+    case 7000: return "CRITICAL";
+    case 6000: return "ERROR";
+    case 5000: return "WARNING";
+    case 4000: return "NOTICE";
+    case 3000: return "INFO";
+    case 2000: return "DEBUG";
+    case 1000: return "TRACE";
+    default: return "CUSTOM"; // FIXPAUL
+  }
+}
 Logger* Logger::get() {
   static Logger singleton;
   return &singleton;
@@ -160,5 +173,4 @@ const DateTime& LogEntry::time() const {
 }
 */
 
-}
 }

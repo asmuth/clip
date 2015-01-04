@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/comm/rpc.h"
-#include "fnord/logging/logger.h"
 
 namespace fnord {
 namespace comm {

@@ -11,7 +11,6 @@
 #define _FNORD_HTTP_CLIENTCONNECTION_H
 #include <memory>
 #include <vector>
-#include <fnord/logging/logger.h>
 #include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
