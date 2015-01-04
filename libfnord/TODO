@@ -1,5 +1,7 @@
 
--> rcp fireandforget -> autodelete, rpc resp futures
+-> rcp fireandforget -> autodelete,
+-> RPC::convertToFuture
+-> use AutoRef in httpserverconn
 
 -> autolock
 -> spinlock
