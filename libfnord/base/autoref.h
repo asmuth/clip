@@ -24,6 +24,7 @@ template <typename T>
 class AutoRef {
 public:
   AutoRef(std::nullptr_t);
+  AutoRef(T* ref);
   AutoRef(const AutoRef<T>& other);
   AutoRef(AutoRef<T>&& other);
   ~AutoRef();
@@ -38,10 +39,12 @@ protected:
 class RefCounted {
 public:
   void incRef();
-  void decRef();
+  bool decRef();
 protected:
   mutable std::atomic<size_t> refcount_;
 };
 
 } // namespace fnord
+
+#include "autoref_impl.h"
 #endif

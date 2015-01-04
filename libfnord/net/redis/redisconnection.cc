@@ -42,15 +42,16 @@ Future<std::string> RedisConnection::set(
   return promise.future();
 }
 
-/*
-
-void RedisConnection::get(
-    const std::string& key,
-    StringReplyCallback callback) {
+Future<Option<std::string>> RedisConnection::get(const std::string& key) {
   std::vector<std::string> args = { "get" };
   args.emplace_back(key);
-  executeCommand(args, callback);
+
+  Promise<Option<std::string>> promise;
+  //executeCommand(args, callback);
+  return promise.future();
 }
+
+/*
 
 void RedisConnection::lpop(
     const std::string& key,

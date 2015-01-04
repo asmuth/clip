@@ -23,7 +23,7 @@ namespace fnord {
 class TaskScheduler;
 
 template <typename T>
-class PromiseState {
+class PromiseState : public RefCounted {
 public:
   Wakeup wakeup;
   std::mutex mutex; // FIXPAUL use spinlock
@@ -39,7 +39,7 @@ public:
   Future(Future<T>&& other);
   ~Future();
 
-  Future & operator=(const Future<T>& other);
+  Future& operator=(const Future<T>& other);
 
   bool isFailure() const;
   bool isSuccess() const;
@@ -78,4 +78,6 @@ protected:
 };
 
 } // namespace fnord
+
+#include "future_impl.h"
 #endif

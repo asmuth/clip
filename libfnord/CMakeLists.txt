@@ -28,6 +28,7 @@ endif()
 # base
 add_library(fnord-base OBJECT
     base/application.cc
+    base/autoref.cc
     base/assets.cc
     base/buffer.cc
     base/bufferutil.cc

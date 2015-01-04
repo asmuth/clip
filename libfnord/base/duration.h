@@ -27,11 +27,11 @@ public:
    */
   Duration(uint64_t microseconds);
 
-  bool operator==(const DateTime& other) const;
-  bool operator<(const DateTime& other) const;
-  bool operator>(const DateTime& other) const;
-  bool operator<=(const DateTime& other) const;
-  bool operator>=(const DateTime& other) const;
+  bool operator==(const Duration& other) const;
+  bool operator<(const Duration& other) const;
+  bool operator>(const Duration& other) const;
+  bool operator<=(const Duration& other) const;
+  bool operator>=(const Duration& other) const;
 
   /**
    * Return the represented duration in microseconds
