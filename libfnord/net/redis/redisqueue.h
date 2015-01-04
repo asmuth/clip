@@ -9,6 +9,7 @@
  */
 #ifndef _FNORD_REDIS_QUEUE_H
 #define _FNORD_REDIS_QUEUE_H
+#include <functional>
 #include <memory>
 #include <vector>
 #include <fnord/net/redis/redisconnection.h>
@@ -23,43 +24,12 @@ public:
       const std::string& redis_key,
       std::unique_ptr<RedisConnection> conn);
 
-  void enqueueJob(const QueueJob& job) override;
+  Future<bool> enqueueJob(const QueueJob& job) override;
 
-  void enqueueJobAsync(
-      const QueueJob& job,
-      std::function<void (const Status& status)> callback) override;
+  Future<QueueJob> leaseJob() override;
+  Future<Option<QueueJob>> maybeLeaseJob() override;
 
-  void enqueueJobAsyncUnsafe(const QueueJob& job) override;
-
-  QueueJob leaseJob() override;
-
-  void leaseJobAsync(
-      std::function<void (const Status& status, const QueueJob& job)>) override;
-
-  Option<QueueJob> maybeLeaseJob() override;
-
-  void maybeLeaseJobAsync(
-      std::function<void (
-          const Status& status,
-          const Option<QueueJob>& job)>) override;
-
-  void commitJobSuccess(const QueueJob& job);
-
-  void commitJobSuccessAsync(
-      const QueueJob& job,
-      std::function<void (const Status& status)> callback) override;
-
-  void commitJobSuccessAsyncUnsafe(const QueueJob& job) override;
-
-  void commitJobError(
-      const QueueJob& job,
-      const std::exception& error) override;
-
-  void commitJobErrorAsync(
-      const QueueJob& job,
-      std::function<void (const Status& status)> callback) override;
-
-  void commitJobErrorAsyncUnsafe(const QueueJob& job) override;
+  Future<bool> commitJob(const QueueJob& job, const Status& status) override;
 
   void setOption(
       const std::string& optname,

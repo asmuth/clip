@@ -33,6 +33,10 @@ public:
   std::mutex mutex; // FIXPAUL use spinlock
   char value_data[sizeof(T)];
   T* value;
+  bool ready;
+
+  std::function<void (const Status& status)> on_failure;
+  std::function<void (const T& value)> on_success;
 };
 
 template <typename T>
@@ -48,8 +52,8 @@ public:
   bool isFailure() const;
   bool isSuccess() const;
 
-  void onFailure(std::function<void> fn);
-  void onSuccess(std::function<void> fn);
+  void onFailure(std::function<void (const Status& status)> fn);
+  void onSuccess(std::function<void (const T& value)> fn);
 
   void wait() const;
   void wait(const Duration& timeout) const;
@@ -58,6 +62,7 @@ public:
   void onReady(TaskScheduler* scheduler, std::function<void> fn);
 
   const T& get() const;
+  const T& waitAndGet() const;
 
 protected:
   AutoRef<PromiseState<T>> state_;

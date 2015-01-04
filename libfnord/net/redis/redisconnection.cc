@@ -51,48 +51,51 @@ Future<Option<std::string>> RedisConnection::get(const std::string& key) {
   return promise.future();
 }
 
-/*
-
-void RedisConnection::lpop(
-    const std::string& key,
-    StringReplyCallback callback) {
+Future<Option<std::string>> RedisConnection::lpop(const std::string& key) {
   std::vector<std::string> args = { "lpop" };
   args.emplace_back(key);
-  executeCommand(args, callback);
+
+  Promise<Option<std::string>> promise;
+  executeCommand(args, promise);
+  return promise.future();
 }
 
-void RedisConnection::blpop(
+Future<std::vector<std::string>> RedisConnection::blpop(
     const std::string& key,
-    uint64_t timeout_secs,
-    ArrayReplyCallback callback) {
+    const Duration& timeout) {
   std::vector<std::string> args = { "blpop" };
   args.emplace_back(key);
-  args.emplace_back(StringUtil::toString(timeout_secs));
-  executeCommand(args, callback);
+  args.emplace_back(StringUtil::toString(timeout.seconds()));
+
+  Promise<std::vector<std::string>> promise;
+  executeCommand(args, promise);
+  return promise.future();
 }
 
-void RedisConnection::rpop(
-    const std::string& key,
-    StringReplyCallback callback) {
+Future<Option<std::string>> RedisConnection::rpop(const std::string& key) {
   std::vector<std::string> args = { "rpop" };
   args.emplace_back(key);
-  executeCommand(args, callback);
+
+  Promise<Option<std::string>> promise;
+  executeCommand(args, promise);
+  return promise.future();
 }
 
-void RedisConnection::brpop(
+Future<std::vector<std::string>> RedisConnection::brpop(
     const std::string& key,
-      uint64_t timeout_secs,
-    ArrayReplyCallback callback) {
+    const Duration& timeout) {
   std::vector<std::string> args = { "brpop" };
   args.emplace_back(key);
-  args.emplace_back(StringUtil::toString(timeout_secs));
-  executeCommand(args, callback);
+  args.emplace_back(StringUtil::toString(timeout.seconds()));
+
+  Promise<std::vector<std::string>> promise;
+  executeCommand(args, promise);
+  return promise.future();
 }
-*/
-/*
+
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
-    ArrayReplyCallback callback) {
+    Promise<std::vector<std::string>> promise) {
   size_t argc = args.size();
   std::vector<const char*> argv;
   std::vector<size_t> argvlen;
@@ -118,35 +121,29 @@ void RedisConnection::executeCommand(
         if (elem->type == REDIS_REPLY_STRING) {
           elements.emplace_back(elem->str);
         } else {
-          callback(
-              Status(eRuntimeError, "unexpected redis return type"),
-              None<std::vector<std::string>>());
-          return;
+          promise.failure(
+              Status(eRuntimeError, "unexpected redis return type"));
+          goto exit;
         }
       }
 
-      callback(Status::success(), Some(elements));
-      return;
+      promise.success(elements);
+      break;
     }
 
-    case REDIS_REPLY_NIL:
-      callback(Status::success(), None<std::vector<std::string>>());
-      return;
-
     case REDIS_REPLY_ERROR:
-      callback(
-          Status(eRuntimeError, reply->str),
-          None<std::vector<std::string>>());
-      return;
+      promise.failure(Status(eRuntimeError, reply->str));
+      break;
 
     default:
-      callback(
-          Status(eRuntimeError, "unexpected redis return type"),
-          None<std::vector<std::string>>());
-      return;
+      promise.failure(Status(eRuntimeError, "unexpected redis return type"));
+      break;
   }
+
+exit:
+  freeReplyObject(reply);
 }
-*/
+
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
     Promise<Option<std::string>> promise) {

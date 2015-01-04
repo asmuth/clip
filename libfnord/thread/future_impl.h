@@ -9,14 +9,22 @@
  */
 #ifndef _FNORD_THREAD_FUTURE_IMPL_H
 #define _FNORD_THREAD_FUTURE_IMPL_H
+#include <assert.h>
 
 namespace fnord {
 
 template <typename T>
-PromiseState<T>::PromiseState() : status(eSuccess), value(nullptr) {}
+PromiseState<T>::PromiseState() :
+    status(eSuccess),
+    value(nullptr),
+    on_failure(nullptr),
+    on_success(nullptr),
+    ready(false) {}
 
 template <typename T>
 PromiseState<T>::~PromiseState() {
+  assery(ready == true);
+
   if (value != nullptr) {
     value->~T();
   }
@@ -44,29 +52,44 @@ void Future<T>::wait() const {
   state_->wakeup.waitForFirstWakeup();
 }
 
-/*
-  bool Future<T>::isFailure() const;
-  bool Future<T>::isSuccess() const;
+template <typename T>
+void Future<T>::onFailure(std::function<void (const Status& status)> fn) {
+  std::unique_lock<std::mutex> lk(state_->mutex);
 
-  void onFailure(std::function<void> fn);
-  void onSuccess(std::function<void> fn);
+  if (!state_->ready) {
+    state_->on_failure = fn;
+  } else if (state_->status.isError()) {
+    fn(state_->status);
+  }
+}
 
-  void wait(const Duration& timeout) const;
+template <typename T>
+void Future<T>::onSuccess(std::function<void (const T& value)> fn) {
+  std::unique_lock<std::mutex> lk(state_->mutex);
 
-  void onReady(std::function<void> fn);
-  void onReady(TaskScheduler* scheduler, std::function<void> fn);
+  if (!state_->ready) {
+    state_->on_success = fn;
+  } else if (state_->status.isSuccess()) {
+    fn(*(state_->value));
+  }
+}
 
-*/
 template <typename T>
 const T& Future<T>::get() const {
   std::unique_lock<std::mutex> lk(state_->mutex);
 
-  if (state_->wakeup.generation() != 1) {
+  if (!state_->ready) {
     RAISE(kFutureError, "get() called on pending future");
   }
 
   state_->status.raiseIfError();
   return *state_->value;
+}
+
+template <typename T>
+const T& Future<T>::waitAndGet() const {
+  wait();
+  return get();
 }
 
 template <typename T>
@@ -89,33 +112,57 @@ Future<T> Promise<T>::future() const {
 template <typename T>
 void Promise<T>::failure(const Status& status) {
   std::unique_lock<std::mutex> lk(state_->mutex);
+  if (state_->ready) {
+    RAISE(kFutureError, "promise was already fulfilled");
+  }
+
   state_->status = status;
+  state_->ready = true;
   lk.unlock();
+
   state_->wakeup.wakeup();
+
+  if (state_->on_failure) {
+    state_->on_failure(state_->status);
+  }
 }
 
 template <typename T>
 void Promise<T>::success(const T& value) {
   std::unique_lock<std::mutex> lk(state_->mutex);
+  if (state_->ready) {
+    RAISE(kFutureError, "promise was already fulfilled");
+  }
+
   state_->value = new (state_->value_data) T(value);
+  state_->ready = true;
   lk.unlock();
+
   state_->wakeup.wakeup();
+
+  if (state_->on_success) {
+    state_->on_success(*(state_->value));
+  }
 }
 
 template <typename T>
 void Promise<T>::success(T&& value) {
   std::unique_lock<std::mutex> lk(state_->mutex);
+  if (state_->ready) {
+    RAISE(kFutureError, "promise was already fulfilled");
+  }
+
   state_->value = new (state_->value_data) T(std::move(value));
+  state_->ready = true;
   lk.unlock();
+
   state_->wakeup.wakeup();
+
+  if (state_->on_success) {
+    state_->on_success(*(state_->value));
+  }
 }
 
-
-/*
-  void ;
-  void success(T&& value);
-
-*/
 
 } // namespace fnord
 

@@ -18,6 +18,7 @@
 #include <vector>
 #include "fnord/base/option.h"
 #include "fnord/base/status.h"
+#include <fnord/thread/future.h>
 
 namespace fnord {
 namespace comm {
@@ -36,87 +37,24 @@ public:
   const std::string& name() const;
 
   /**
-   * Insert a job into the queue and wait until the job is commited or raise
-   * an exception
+   * Insert a job into the queue
    */
-  virtual void enqueueJob(const QueueJob& job) = 0;
+  virtual Future<bool> enqueueJob(const QueueJob& job) = 0;
 
   /**
-   * Insert a job into the queue and return immediately
+   * Lease a job from the queue
    */
-  virtual void enqueueJobAsync(
-      const QueueJob& job,
-      std::function<void (const Status& status)> callback) = 0;
+  virtual Future<QueueJob> leaseJob() = 0;
 
   /**
-   * Insert a job into the queue and return immediately, don't care about
-   * errors
+   * Lease a job from the queue if one is available
    */
-  virtual void enqueueJobAsyncUnsafe(const QueueJob& job) = 0;
+  virtual Future<Option<QueueJob>> maybeLeaseJob() = 0;
 
   /**
-   * Lease a job from the queue, block until a job is available
+   * Commit a job as finish
    */
-  virtual QueueJob leaseJob() = 0;
-
-  /**
-   * Lease a job from the queue, execute the callback as soon as a job is
-   * available
-   */
-  virtual void leaseJobAsync(
-      std::function<void (const Status& status, const QueueJob& job)>) = 0;
-
-  /**
-   * Lease a job from the queue if one is available, blocking call
-   */
-  virtual Option<QueueJob> maybeLeaseJob() = 0;
-
-  /**
-   * lease a job from the queue, call the callback when a job is available
-   * The contents of job are undefined if is_valid is false
-   */
-  virtual void maybeLeaseJobAsync(
-      std::function<void (
-          const Status& status,
-          const Option<QueueJob>& job)>) = 0;
-
-  /**
-   * Commit a job as successfully processed, blcoking call
-   */
-  virtual void commitJobSuccess(const QueueJob& job) = 0;
-
-  /**
-   * Commit a job as successfully processed, non blocking call
-   */
-  virtual void commitJobSuccessAsync(
-      const QueueJob& job,
-      std::function<void (const Status& status)> callback) = 0;
-
-  /**
-   * Commit a job as successfully processed, non blocking call will swallow
-   * exceptions (uses a fire and forget rpc)
-   */
-  virtual void commitJobSuccessAsyncUnsafe(const QueueJob& job) = 0;
-
-  /**
-   * Commit a job as error, blocking call
-   */
-  virtual void commitJobError(
-      const QueueJob& job,
-      const std::exception& error) = 0;
-
-  /**
-   * Commit a job as error, non blocking call
-   */
-  virtual void commitJobErrorAsync(
-      const QueueJob& job,
-      std::function<void (const Status& status)> callback) = 0;
-
-  /**
-   * Commit a job as error, non blocking call will swallow exceptions (uses a
-   * fire and forget rpc)
-   */
-  virtual void commitJobErrorAsyncUnsafe(const QueueJob& job) = 0;
+  virtual Future<bool> commitJob(const QueueJob& job, const Status& status) = 0;
 
   virtual void setOption(
       const std::string& optname,

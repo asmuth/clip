@@ -33,6 +33,7 @@ add_library(fnord-base OBJECT
     base/buffer.cc
     base/bufferutil.cc
     base/datetime.cc
+    base/duration.cc
     base/exception.cc
     base/exceptionhandler.cc
     base/inspect.cc

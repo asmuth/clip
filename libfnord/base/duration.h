@@ -48,6 +48,11 @@ public:
    */
   uint64_t microseconds() const;
 
+  /**
+   * Return the represented duration in seconds
+   */
+  uint64_t seconds() const;
+
 
 protected:
   uint64_t micros_;

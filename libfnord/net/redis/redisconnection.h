@@ -24,15 +24,6 @@ namespace redis {
 
 class RedisConnection {
 public:
-  typedef std::function<void (const Status& status)> VoidReplyCallback;
-
-  typedef std::function<void (
-      const Status& status,
-      const Option<std::string>& reply)> StringReplyCallback;
-
-  typedef std::function<void (
-      const Status& status,
-      const Option<std::vector<std::string>>& reply)> ArrayReplyCallback;
 
   static std::unique_ptr<RedisConnection> connect(
       const net::InetAddr& addr,
@@ -50,13 +41,13 @@ public:
   /* LIST commands */
   Future<Option<std::string>> lpop(const std::string& key);
 
-  Future<Option<std::vector<std::string>>> blpop(
+  Future<std::vector<std::string>> blpop(
       const std::string& key,
       const Duration& timeout);
 
   Future<Option<std::string>> rpop(const std::string& key);
 
-  Future<Option<std::vector<std::string>>> brpop(
+  Future<std::vector<std::string>> brpop(
       const std::string& key,
       const Duration& timeout);
 
@@ -76,7 +67,7 @@ protected:
 
   void executeCommand(
       const std::vector<std::string>& args,
-      VoidReplyCallback callback);
+      Promise<std::vector<std::string>> promise);
 
   redisContext* ctx_;
 };

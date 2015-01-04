@@ -19,109 +19,60 @@ RedisQueue::RedisQueue(
     redis_key_(redis_key),
     conn_(std::move(conn)) {}
 
-void RedisQueue::enqueueJob(const QueueJob& job) {
+Future<bool> RedisQueue::enqueueJob(const QueueJob& job) {
   RAISE(kNotYetImplementedError);
 }
 
-void RedisQueue::enqueueJobAsync(
-    const QueueJob& job,
-    std::function<void (const Status& status)> callback) {
-  RAISE(kNotYetImplementedError);
-}
+Future<comm::Queue::QueueJob> RedisQueue::leaseJob() {
+  Promise<QueueJob> promise;
 
-void RedisQueue::enqueueJobAsyncUnsafe(const QueueJob& job) {
-  RAISE(kNotYetImplementedError);
-}
+  auto reply = conn_->blpop(redis_key_, 0);
 
-comm::Queue::QueueJob RedisQueue::leaseJob() {
-  Wakeup wakeup;
-  Status status(eSuccess);
-  QueueJob job;
-
-/*
-  conn_->blpop(redis_key_, 0, [&wakeup, &status, &job] (
-      const Status& s,
-      const Option<std::vector<std::string>>& reply) {
-    if (s.isSuccess()) {
-      if (reply.get().size() == 2) {
-        job.job_data = reply.get()[1];
-      } else {
-        status = Status(eRuntimeError, "invalid blpop reply");
-      }
+  reply.onSuccess([&promise] (const std::vector<std::string>& r) {
+    if (r.size() == 2) {
+      QueueJob job;
+      job.job_data = r[1];
+      promise.success(job);
     } else {
-      status = s;
+      promise.failure(Status(eRuntimeError, "invalid blpop reply"));
     }
-
-    wakeup.wakeup();
   });
-*/
-  wakeup.waitForFirstWakeup();
-  status.raiseIfError();
-  return job;
+
+  reply.onFailure([&promise] (const Status& status) {
+    promise.failure(status);
+  });
+
+  return promise.future();
 }
 
-void RedisQueue::leaseJobAsync(
-    std::function<void (const Status& status, const QueueJob& job)>) {
-  RAISE(kNotYetImplementedError);
-}
+Future<Option<comm::Queue::QueueJob>> RedisQueue::maybeLeaseJob() {
+  Promise<Option<QueueJob>> promise;
 
-Option<comm::Queue::QueueJob> RedisQueue::maybeLeaseJob() {
-  Wakeup wakeup;
-  Status status(eSuccess);
-  Option<QueueJob> job;
-/*
-  conn_->lpop(redis_key_, [&wakeup, &status, &job] (
-      const Status& s,
-      const Option<std::string>& reply) {
-    status = s;
+  auto reply = conn_->lpop(redis_key_);
 
-    if (s.isSuccess() && !reply.isEmpty()) {
-      QueueJob j;
-      j.job_data = reply.get();
-      job = j;
+  reply.onSuccess([&promise] (const Option<std::string>& reply) {
+    if (reply.isEmpty()) {
+      promise.success(None<QueueJob>());
+    } else {
+      QueueJob job;
+      job.job_data = reply.get();
+      promise.success(Some(job));
     }
-
-    wakeup.wakeup();
   });
-*/
-  wakeup.waitForFirstWakeup();
-  status.raiseIfError();
-  return job;
+
+  reply.onFailure([&promise] (const Status& status) {
+    promise.failure(status);
+  });
+
+  return promise.future();
 }
 
-void RedisQueue::maybeLeaseJobAsync(
-    std::function<void (const Status& status, const Option<QueueJob>& job)>) {
-  RAISE(kNotYetImplementedError)
-}
-
-void RedisQueue::commitJobSuccess(const QueueJob& job) {
-  /* noop */
-}
-
-void RedisQueue::commitJobSuccessAsync(
+Future<bool> RedisQueue::commitJob(
     const QueueJob& job,
-    std::function<void (const Status& status)> callback) {
-  /* noop */
-}
-
-void RedisQueue::commitJobSuccessAsyncUnsafe(const QueueJob& job) {
-  /* noop */
-}
-
-void RedisQueue::commitJobError(
-    const QueueJob& job,
-    const std::exception& error) {
-  /* noop */
-}
-
-void RedisQueue::commitJobErrorAsync(
-    const QueueJob& job,
-    std::function<void (const Status& status)> callback) {
-  /* noop */
-}
-
-void RedisQueue::commitJobErrorAsyncUnsafe(const QueueJob& job) {
-  /* noop */
+    const Status& error) {
+  Promise<bool> promise;
+  promise.success(true);
+  return promise.future();
 }
 
 void RedisQueue::setOption(
