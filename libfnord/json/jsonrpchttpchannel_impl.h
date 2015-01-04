@@ -31,7 +31,9 @@ void JSONRPCHTTPChannel::call(RPCType* rpc) {
   fnord::json::toJSON(rpc->args(), &req);
   req.emplace_back(JSON_OBJECT_END);
 
-  auto on_success = [rpc] (const JSONObject& res) {
+  auto future = call(req);
+
+  future.onSuccess([rpc] (const JSONObject& res) {
     try {
       auto err_iter = JSONUtil::objectLookup(res.begin(), res.end(), "error");
       if (err_iter != res.end()) {
@@ -48,13 +50,11 @@ void JSONRPCHTTPChannel::call(RPCType* rpc) {
     } catch (const std::exception& e) {
       rpc->error(e);
     }
-  };
+  });
 
-  auto on_error = [rpc] (const std::exception& e) {
-    rpc->error(e);
-  };
-
-  call(req, on_success, on_error);
+  future.onFailure([rpc] (const Status& status) {
+    rpc->error(status);
+  });
 }
 
 } // namespace json

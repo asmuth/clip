@@ -31,26 +31,6 @@ public:
 
 };
 
-class DefaultHTTPResponseHandler : public HTTPResponseHandler {
-public:
-  DefaultHTTPResponseHandler(
-      fnord::http::HTTPResponse* response,
-      fnord::Wakeup* wakeup);
-
-  void onError(const std::exception& e) override;
-  void onVersion(const std::string& version) override;
-  void onStatusCode(int status_code) override;
-  void onStatusName(const std::string& status) override;
-  void onHeader(const std::string& key, const std::string& value) override;
-  void onHeadersComplete() override;
-  void onBodyChunk(const char* data, size_t size) override;
-  void onResponseComplete() override;
-
-protected:
-  fnord::http::HTTPResponse* response_;
-  fnord::Wakeup* wakeup_;
-};
-
 }
 }
 #endif

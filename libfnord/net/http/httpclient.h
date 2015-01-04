@@ -19,29 +19,29 @@ namespace http {
 class HTTPClient {
 public:
 
-  static std::unique_ptr<HTTPResponseFuture> get(
+  static Future<HTTPResponse> get(
       const std::string& uri,
       fnord::TaskScheduler* sched);
 
-  static std::unique_ptr<HTTPResponseFuture> get(
+  static Future<HTTPResponse> get(
       const std::string& uri,
       const HTTPMessage::HeaderList& headers,
       fnord::TaskScheduler* sched);
 
-  static std::unique_ptr<HTTPResponseFuture> get(
+  static Future<HTTPResponse> get(
       const URI& uri,
       fnord::TaskScheduler* sched);
 
-  static std::unique_ptr<HTTPResponseFuture> get(
+  static Future<HTTPResponse> get(
       const URI& uri,
       const HTTPMessage::HeaderList& headers,
       fnord::TaskScheduler* sched);
 
-  static std::unique_ptr<HTTPResponseFuture> executeRequest(
+  static Future<HTTPResponse> executeRequest(
       const HTTPRequest& req,
       fnord::TaskScheduler* sched);
 
-  static std::unique_ptr<HTTPResponseFuture> executeRequest(
+  static Future<HTTPResponse> executeRequest(
       const HTTPRequest& req,
       const fnord::net::InetAddr& addr,
       fnord::TaskScheduler* sched);

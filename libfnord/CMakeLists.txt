@@ -107,7 +107,6 @@ add_library(fnord-http OBJECT
     net/http/httprequest.cc
     net/http/httpresponse.cc
     net/http/httpresponsefuture.cc
-    net/http/httpresponsehandler.cc
     net/http/httprouter.cc
     net/http/httpserver.cc
     net/http/httpserverconnection.cc

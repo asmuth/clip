@@ -24,18 +24,19 @@ class HTTPConnectionPool {
 public:
   HTTPConnectionPool(fnord::TaskScheduler* scheduler);
 
-  std::unique_ptr<HTTPResponseFuture> executeRequest(const HTTPRequest& req);
+  Future<HTTPResponse> executeRequest(const HTTPRequest& req);
 
-  std::unique_ptr<HTTPResponseFuture> executeRequest(
+  Future<HTTPResponse> executeRequest(
       const HTTPRequest& req,
       const fnord::net::InetAddr& addr);
 
 protected:
 
   void parkConnection(HTTPClientConnection* conn, net::InetAddr addr);
+
   void leaseConnection(
       const fnord::net::InetAddr& addr,
-      HTTPResponseFuture* future,
+      Promise<HTTPResponse> promise,
       std::function<void (HTTPClientConnection* conn)> callback);
 
   fnord::TaskScheduler* scheduler_;

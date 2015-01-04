@@ -15,33 +15,33 @@
 namespace fnord {
 namespace http {
 
-std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
+Future<HTTPResponse> HTTPClient::get(
     const std::string& uri,
     fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri), sched);
 }
 
-std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
+Future<HTTPResponse> HTTPClient::get(
     const std::string& uri,
     const HTTPMessage::HeaderList& headers,
     fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri, headers), sched);
 }
 
-std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
+Future<HTTPResponse> HTTPClient::get(
     const URI& uri,
     fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri), sched);
 }
 
-std::unique_ptr<HTTPResponseFuture> HTTPClient::get(
+Future<HTTPResponse> HTTPClient::get(
     const URI& uri,
     const HTTPMessage::HeaderList& headers,
     fnord::TaskScheduler* sched) {
   return executeRequest(HTTPRequest::mkGet(uri, headers), sched);
 }
 
-std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
+Future<HTTPResponse> HTTPClient::executeRequest(
     const HTTPRequest& req,
     fnord::TaskScheduler* sched) {
   if (!req.hasHeader("Host")) {
@@ -56,7 +56,7 @@ std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
   return executeRequest(req, addr, sched);
 }
 
-std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
+Future<HTTPResponse> HTTPClient::executeRequest(
     const HTTPRequest& req,
     const fnord::net::InetAddr& addr,
     fnord::TaskScheduler* sched) {
@@ -65,11 +65,17 @@ std::unique_ptr<HTTPResponseFuture> HTTPClient::executeRequest(
           std::move(fnord::net::TCPConnection::connect(addr)),
           sched));
 
-  std::unique_ptr<HTTPResponseFuture> future(new HTTPResponseFuture());
-  conn->executeRequest(req, future->responseHandler());
-  future->storeConnection(std::move(conn));
+  Promise<HTTPResponse> promise;
+  auto http_future = new HTTPResponseFuture(promise);
 
-  return future;
+  try {
+    conn->executeRequest(req, http_future);
+    http_future->storeConnection(std::move(conn));
+  } catch (const std::exception& e) {
+    http_future->onError(e);
+  }
+
+  return promise.future();
 }
 
 }

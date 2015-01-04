@@ -14,35 +14,49 @@
 namespace fnord {
 namespace http {
 
-HTTPResponseFuture::HTTPResponseFuture() : res_handler_(&res_, &wakeup_) {}
+HTTPResponseFuture::HTTPResponseFuture(
+    Promise<HTTPResponse> promise) :
+    promise_(promise) {}
 
 HTTPResponseFuture::~HTTPResponseFuture() {
-  assert(wakeup_.generation() == 1); // pending HTTPResponseFuture destroyed
-}
-
-const HTTPResponse& HTTPResponseFuture::get() const {
-  if (wakeup_.generation() == 0) {
-    RAISE(kIllegalStateError, "get() called on pending HTTPResponseFuture");
-  }
-
-  return res_;
-}
-
-void HTTPResponseFuture::wait() {
-  wakeup_.waitForWakeup(0);
-}
-
-Wakeup* HTTPResponseFuture::onReady() {
-  return &wakeup_;
-}
-
-HTTPResponseHandler* HTTPResponseFuture::responseHandler() {
-  return &res_handler_;
+  assert(promise_.isFulfilled() == true); // pending ResponseFuture destroyed
 }
 
 void HTTPResponseFuture::storeConnection(
     std::unique_ptr<HTTPClientConnection>&& conn) {
   conn_ = std::move(conn);
+}
+
+void HTTPResponseFuture::onError(const std::exception& e) {
+  promise_.failure(e);
+}
+
+void HTTPResponseFuture::onVersion(const std::string& version) {
+  res_.setVersion(version);
+}
+
+void HTTPResponseFuture::onStatusCode(int status_code) {
+  res_.setStatusCode(status_code);
+}
+
+void HTTPResponseFuture::onStatusName(const std::string& status) {
+  res_.setStatusName(status);
+}
+
+void HTTPResponseFuture::onHeader(
+    const std::string& key,
+    const std::string& value) {
+  res_.addHeader(key, value);
+}
+
+void HTTPResponseFuture::onHeadersComplete() {}
+
+void HTTPResponseFuture::onBodyChunk(const char* data, size_t size) {
+  res_.appendBody((char *) data, size);
+}
+
+void HTTPResponseFuture::onResponseComplete() {
+  promise_.success(res_);
 }
 
 }

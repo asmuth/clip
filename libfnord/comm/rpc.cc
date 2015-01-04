@@ -16,7 +16,7 @@ namespace comm {
 AnyRPC::AnyRPC(
     const std::string& method) :
     method_(method),
-    is_error_(false),
+    status_(eSuccess),
     is_ready_(false),
     autodelete_(false) {}
 
@@ -28,10 +28,7 @@ const std::string& AnyRPC::method() const {
 
 void AnyRPC::wait() {
   ready_wakeup_.waitForWakeup(0);
-
-  if (is_error_) {
-    RAISE(kRPCError, error_);
-  }
+  status_.raiseIfError();
 }
 
 void AnyRPC::onReady(std::function<void()> callback) {
@@ -52,21 +49,16 @@ void AnyRPC::ready() noexcept {
 }
 
 void AnyRPC::raiseIfError() const {
-  if (is_error_) {
-    RAISE(kRPCError, error_);
-  }
+  status_.raiseIfError();
 }
 
 void AnyRPC::error(const std::exception& e) {
-  is_error_ = true;
+  status_ = Status(e);
+  ready();
+}
 
-  try {
-    auto rte = dynamic_cast<const fnord::Exception&>(e);
-    error_ = StringUtil::format("$0: $1", rte.getTypeName(), rte.getMessage());
-  } catch (const std::exception& cast_error) {
-    error_ = e.what();
-  }
-
+void AnyRPC::error(const Status& status) {
+  status_ = status;
   ready();
 }
 
@@ -88,11 +80,11 @@ void AnyRPC::fireAndForget() {
 }
 
 void AnyRPC::reap() noexcept {
-  if (is_error_) {
+  if (status_.isError()) {
     fnord::log::Logger::get()->logf(
         log::kWarning,
         "Fire-And-Forget RPC failed: $0",
-        error_);
+        status_);
   }
 
   delete this;

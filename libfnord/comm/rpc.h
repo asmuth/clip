@@ -16,6 +16,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "fnord/base/status.h"
 #include "fnord/thread/wakeup.h"
 
 namespace fnord {
@@ -37,14 +38,14 @@ public:
 
   void ready() noexcept;
   void error(const std::exception& e);
+  void error(const Status& status);
 
 protected:
   void fireAndForget();
   void reap() noexcept;
 
+  Status status_;
   std::string method_;
-  std::string error_;
-  bool is_error_;
   bool is_ready_;
   bool autodelete_;
   std::mutex mutex_;

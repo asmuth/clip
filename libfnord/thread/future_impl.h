@@ -87,6 +87,11 @@ const T& Future<T>::get() const {
 }
 
 template <typename T>
+Wakeup* Future<T>::wakeup() const {
+  return &state_->wakeup;
+}
+
+template <typename T>
 const T& Future<T>::waitAndGet() const {
   wait();
   return get();
@@ -107,6 +112,11 @@ Promise<T>::~Promise() {}
 template <typename T>
 Future<T> Promise<T>::future() const {
   return Future<T>(state_);
+}
+
+template <typename T>
+void Promise<T>::failure(const std::exception& e) {
+  failure(Status(e));
 }
 
 template <typename T>
@@ -163,6 +173,11 @@ void Promise<T>::success(T&& value) {
   }
 }
 
+template <typename T>
+bool Promise<T>::isFulfilled() const {
+  std::unique_lock<std::mutex> lk(state_->mutex);
+  return state_->ready;
+}
 
 } // namespace fnord
 

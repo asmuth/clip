@@ -45,10 +45,7 @@ void RPC<ResultType, ArgPackType>::ready(const ResultType& result) noexcept {
 
 template <typename ResultType, typename ArgPackType>
 const ResultType& RPC<ResultType, ArgPackType>::result() const {
-  if (is_error_) {
-    RAISE(kRPCError, error_);
-  }
-
+  status_.raiseIfError();
   return result_;
 }
 

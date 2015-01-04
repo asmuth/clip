@@ -64,6 +64,8 @@ public:
   const T& get() const;
   const T& waitAndGet() const;
 
+  Wakeup* wakeup() const;
+
 protected:
   AutoRef<PromiseState<T>> state_;
 };
@@ -82,6 +84,8 @@ public:
   void failure(const Status& e);
 
   Future<T> future() const;
+
+  bool isFulfilled() const;
 
 protected:
   AutoRef<PromiseState<T>> state_;

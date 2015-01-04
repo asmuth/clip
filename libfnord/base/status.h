@@ -23,6 +23,7 @@ enum kStatusType {
   eConcurrentModificationError,
   eDivideByZeroError,
   eFlagError,
+  eForeignError,
   eIOError,
   eIllegalArgumentError,
   eIllegalFormatError,
@@ -51,6 +52,7 @@ class Status {
 public:
   static Status success();
 
+  Status(const std::exception& e);
   Status(kStatusType type);
   Status(kStatusType type, const std::string& message);
 

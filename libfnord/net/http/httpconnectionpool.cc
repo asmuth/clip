@@ -17,7 +17,7 @@ HTTPConnectionPool::HTTPConnectionPool(
     fnord::TaskScheduler* scheduler) :
     scheduler_(scheduler) {}
 
-std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
+Future<HTTPResponse> HTTPConnectionPool::executeRequest(
     const HTTPRequest& req) {
   if (!req.hasHeader("Host")) {
     RAISE(kRuntimeError, "missing Host header");
@@ -31,22 +31,24 @@ std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
   return executeRequest(req, addr);
 }
 
-std::unique_ptr<HTTPResponseFuture> HTTPConnectionPool::executeRequest(
+Future<HTTPResponse> HTTPConnectionPool::executeRequest(
     const HTTPRequest& req,
     const fnord::net::InetAddr& addr) {
-  std::unique_ptr<HTTPResponseFuture> future(new HTTPResponseFuture());
-  auto f = future.get();
+  Promise<HTTPResponse> promise;
 
-  leaseConnection(addr, f, [this, req, f] (HTTPClientConnection* conn) {
+  leaseConnection(
+      addr,
+      promise,
+      [this, req, promise] (HTTPClientConnection* conn) {
+    auto http_future = new HTTPResponseFuture(promise);
     try {
-      conn->executeRequest(req, f->responseHandler());
+      conn->executeRequest(req, http_future);
     } catch (const std::exception& e) {
-      conn->onReady()->wakeup();
-      f->responseHandler()->onError(e);
+      http_future->onError(e);
     }
   });
 
-  return future;
+  return promise.future();
 }
 
 void HTTPConnectionPool::parkConnection(
@@ -62,7 +64,7 @@ void HTTPConnectionPool::parkConnection(
 
 void HTTPConnectionPool::leaseConnection(
     const fnord::net::InetAddr& addr,
-    HTTPResponseFuture* future,
+    Promise<HTTPResponse> promise,
     std::function<void (HTTPClientConnection* conn)> callback) {
   std::unique_lock<std::mutex> lk(connection_cache_mutex_);
   auto iter = connection_cache_.find(addr.ipAndPort());
@@ -84,7 +86,7 @@ void HTTPConnectionPool::leaseConnection(
       net::TCPConnection::connectAsync(
           addr,
           scheduler_,
-          [this, future, callback, addr] (
+          [this, &promise, callback, addr] (
               std::unique_ptr<net::TCPConnection> tcp_conn) {
             try {
               tcp_conn->checkErrors();
@@ -102,11 +104,11 @@ void HTTPConnectionPool::leaseConnection(
 
               callback(conn.release());
             } catch (const std::exception& e) {
-              future->responseHandler()->onError(e);
+              promise.failure(e);
             }
           });
     } catch (const std::exception& e) {
-      future->responseHandler()->onError(e);
+      promise.failure(e);
     }
   }
 }

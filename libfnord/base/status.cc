@@ -19,6 +19,20 @@ Status Status::success() {
 
 Status::Status(kStatusType type) : type_(type) {}
 
+Status::Status(const std::exception& e) {
+  try {
+    auto rte = dynamic_cast<const fnord::Exception&>(e);
+    type_ = eRuntimeError; // FIXPAUL
+    message_ = StringUtil::format(
+        "$0: $1",
+        rte.getTypeName(),
+        rte.getMessage());
+  } catch (const std::exception& cast_error) {
+    type_ = eForeignError;
+    message_ = e.what();
+  }
+}
+
 Status::Status(
     kStatusType type,
     const std::string& message) :
@@ -47,12 +61,18 @@ std::string inspect<Status>(const Status& value) {
 }
 
 template <>
+std::string StringUtil::toString<Status>(Status value) {
+  return inspect(value);
+}
+
+template <>
 std::string StringUtil::toString<kStatusType>(kStatusType value) {
   switch (value) {
     case eSuccess: return "Success";
     case eBufferOverflowError: return "BufferOverflowError";
     case eConcurrentModificationError: return "ConcurrentModificationError";
     case eDivideByZeroError: return "DivideByZeroError";
+    case eForeignError: return "ForeignError";
     case eFlagError: return "FlagError";
     case eIOError: return "IOError";
     case eIllegalArgumentError: return "IllegalArgumentError";

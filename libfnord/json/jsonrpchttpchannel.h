@@ -20,6 +20,7 @@
 #include "fnord/net/http/httpconnectionpool.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponse.h"
+#include "fnord/thread/future.h"
 
 namespace fnord {
 namespace json {
@@ -34,18 +35,9 @@ public:
   template <class RPCType>
   void call(RPCType* rpc);
 
-  void call(
-      const JSONObject& json_req,
-      std::function<void (const JSONObject& res)> on_success,
-      std::function<void (const std::exception& e)> on_error);
+  Future<JSONObject> call(const JSONObject& json_req);
 
 protected:
-  struct RequestHandle {
-    std::unique_ptr<http::HTTPResponseFuture> http_future;
-    std::function<void (const JSONObject& res)> on_success;
-    std::function<void (const std::exception& e)> on_error;
-  };
-
   comm::LBGroup* lb_group_;
   http::HTTPConnectionPool conn_pool_;
   TaskScheduler* scheduler_;

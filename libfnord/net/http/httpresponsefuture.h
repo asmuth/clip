@@ -9,34 +9,39 @@
  */
 #ifndef _FNORDMETRIC_HTTPRESPONSEFUTURE_H
 #define _FNORDMETRIC_HTTPRESPONSEFUTURE_H
+#include "fnord/base/status.h"
 #include "fnord/net/http/httpresponse.h"
 #include "fnord/net/http/httpresponsehandler.h"
 #include "fnord/net/http/httpclientconnection.h"
+#include "fnord/thread/future.h"
 #include "fnord/thread/wakeup.h"
 #include <memory>
 
 namespace fnord {
 namespace http {
 
-class HTTPResponseFuture {
+class HTTPResponseFuture : public HTTPResponseHandler {
 public:
-  HTTPResponseFuture();
+  HTTPResponseFuture(Promise<HTTPResponse> promise);
   ~HTTPResponseFuture();
 
   HTTPResponseFuture(const HTTPResponseFuture& other) = delete;
   HTTPResponseFuture& operator=(const HTTPResponseFuture& other) = delete;
 
-  const HTTPResponse& get() const;
-  void wait();
-  Wakeup* onReady();
-
-  HTTPResponseHandler* responseHandler();
   void storeConnection(std::unique_ptr<HTTPClientConnection>&& conn);
+
+  void onError(const std::exception& e) override;
+  void onVersion(const std::string& version) override;
+  void onStatusCode(int status_code) override;
+  void onStatusName(const std::string& status) override;
+  void onHeader(const std::string& key, const std::string& value) override;
+  void onHeadersComplete() override;
+  void onBodyChunk(const char* data, size_t size) override;
+  void onResponseComplete() override;
 
 protected:
   HTTPResponse res_;
-  DefaultHTTPResponseHandler res_handler_;
-  Wakeup wakeup_;
+  Promise<HTTPResponse> promise_;
   std::unique_ptr<HTTPClientConnection> conn_;
 };
 

@@ -19,11 +19,31 @@ JSONRPCHTTPChannel::JSONRPCHTTPChannel(
     conn_pool_(scheduler),
     scheduler_(scheduler) {}
 
-void JSONRPCHTTPChannel::call(
-    const JSONObject& json_req,
-    std::function<void (const JSONObject& res)> on_success,
-    std::function<void (const std::exception& e)> on_error) {
-  std::unique_ptr<http::HTTPResponseFuture> http_future;
+Future<JSONObject> JSONRPCHTTPChannel::call(const JSONObject& json_req) {
+  Promise<JSONObject> promise;
+
+  auto on_http_success = [&promise] (const http::HTTPResponse& http_res) {
+    JSONObject res;
+
+    if (http_res.statusCode() != 200) {
+      promise.failure(
+          Status(
+              eRPCError,
+              StringUtil::format(
+                  "JSONRPC received non 200 HTTP status code: $0",
+                  http_res.body().toString())));
+      return;
+    }
+
+    try {
+      res = parseJSON(http_res.body());
+    } catch (std::exception& e) {
+      promise.failure(e);
+      return;
+    }
+
+    promise.success(res);
+  };
 
   try {
     URI server(lb_group_->getServerForNextRequest());
@@ -43,49 +63,16 @@ void JSONRPCHTTPChannel::call(
       http_req.setHeader("Host", server.hostAndPort());
     }
 
-    http_future = conn_pool_.executeRequest(http_req, addr);
+    auto http_future = conn_pool_.executeRequest(http_req, addr);
+    http_future.onSuccess(on_http_success);
+    http_future.onFailure([&promise] (const Status& status) {
+      promise.failure(status);
+    });
   } catch (std::exception& e) {
-    on_error(e);
-    return;
+    promise.failure(e);
   }
 
-  auto req_handle = new RequestHandle();
-  req_handle->http_future = std::move(http_future);
-  req_handle->on_success = on_success;
-  req_handle->on_error = on_error;
-
-  auto http_ready = [req_handle] {
-    std::unique_ptr<RequestHandle> autodelete(req_handle);
-    const auto& http_res = req_handle->http_future->get();
-    JSONObject res;
-
-    if (http_res.statusCode() != 200) {
-      fnord::Exception e(
-          StringUtil::format(
-              "JSONRPC received non 200 HTTP status code: $0",
-              http_res.body().toString()));
-      e.setTypeName(kRPCError);
-      req_handle->on_error(e);
-      return;
-    }
-
-    try {
-      res = parseJSON(http_res.body());
-    } catch (std::exception& e) {
-      req_handle->on_error(e);
-      return;
-    }
-
-    req_handle->on_success(res);
-  };
-
-  try {
-    scheduler_->runOnWakeup(http_ready, req_handle->http_future->onReady(), 0);
-  } catch (std::exception& e) {
-    on_error(e);
-    delete req_handle;
-    return;
-  }
+  return promise.future();
 }
 
 } // namespace json

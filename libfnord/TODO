@@ -1,3 +1,6 @@
+
+-> rcp fireandforget -> autodelete, rpc resp futures
+
 -> autolock
 -> spinlock
 
