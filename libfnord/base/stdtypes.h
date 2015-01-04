@@ -36,5 +36,8 @@ using Deque = std::deque<T>;
 template <typename T>
 using UniqueRef = std::unique_ptr<T>;
 
+template <typename T>
+using Function = std::function<T>;
+
 } // namespace fnord
 #endif

@@ -23,7 +23,7 @@ namespace http {
 
 void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
-    std::unique_ptr<net::TCPConnection> conn,
+    UniqueRef<net::TCPConnection> conn,
     TaskScheduler* scheduler) {
   // N.B. we don't leak the connection here. it is ref counted and will
   // free itself
@@ -37,13 +37,12 @@ void HTTPServerConnection::start(
 
 HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
-    std::unique_ptr<net::TCPConnection> conn,
+    UniqueRef<net::TCPConnection> conn,
     TaskScheduler* scheduler) :
     handler_factory_(handler_factory),
     conn_(std::move(conn)),
     scheduler_(scheduler),
     on_write_completed_cb_(nullptr),
-    refcount_(1),
     parser_(HTTPParser::PARSE_HTTP_REQUEST) {
   log::Logger::get()->logf(
       fnord::log::kTrace, "New HTTP connection: $0",
@@ -74,7 +73,8 @@ HTTPServerConnection::HTTPServerConnection(
         std::string(val, val_size));
   });
 
-  parser_.onHeadersComplete(std::bind(&HTTPServerConnection::dispatchRequest, this));
+  parser_.onHeadersComplete(
+      std::bind(&HTTPServerConnection::dispatchRequest, this));
 }
 
 void HTTPServerConnection::read() {
@@ -198,7 +198,7 @@ void HTTPServerConnection::dispatchRequest() {
 }
 
 void HTTPServerConnection::readRequestBody(
-    std::function<void (const void*, size_t, bool)> callback) {
+    Function<void (const void*, size_t, bool)> callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 
   switch (parser_.state()) {
@@ -228,7 +228,7 @@ void HTTPServerConnection::readRequestBody(
   parser_.onBodyChunk(read_body_chunk_fn);
 }
 
-void HTTPServerConnection::discardRequestBody(std::function<void ()> callback) {
+void HTTPServerConnection::discardRequestBody(Function<void ()> callback) {
   readRequestBody([callback] (const void* data, size_t size, bool last) {
     if (last) {
       callback();
@@ -238,7 +238,7 @@ void HTTPServerConnection::discardRequestBody(std::function<void ()> callback) {
 
 void HTTPServerConnection::writeResponse(
     const HTTPResponse& resp,
-    std::function<void()> ready_callback) {
+    Function<void()> ready_callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 
   buf_.clear();
@@ -251,7 +251,7 @@ void HTTPServerConnection::writeResponse(
 void HTTPServerConnection::writeResponseBody(
     const void* data,
     size_t size,
-    std::function<void()> ready_callback) {
+    Function<void()> ready_callback) {
   std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
 
   buf_.clear();
@@ -280,22 +280,6 @@ void HTTPServerConnection::close() {
 
   conn_->close();
   decRef();
-}
-
-void HTTPServerConnection::incRef() {
-  refcount_++;
-}
-
-bool HTTPServerConnection::decRef() {
-  if (refcount_.fetch_sub(1) == 1) {
-    log::Logger::get()->logf(
-        fnord::log::kTrace, "HTTP connection free'd: $0",
-        inspect(*this));
-    delete this;
-    return true;
-  }
-
-  return false;
 }
 
 } // namespace http

@@ -1,6 +1,5 @@
 
--> rcp fireandforget -> autodelete,
--> RPC::convertToFuture
+-> RPC::convertToFuture impl
 -> use AutoRef in httpserverconn
 
 -> autolock
