@@ -17,6 +17,8 @@
 #include <unordered_map>
 #include <vector>
 #include "fnord/base/status.h"
+#include "fnord/base/stdtypes.h"
+#include "fnord/thread/future.h"
 #include "fnord/thread/wakeup.h"
 
 namespace fnord {
@@ -28,7 +30,6 @@ public:
   virtual ~AnyRPC();
   AnyRPC(const std::string& method);
 
-  static void fireAndForget(std::unique_ptr<AnyRPC>&& rpc);
 
   void wait();
   void onReady(std::function<void()> callback);
@@ -40,12 +41,13 @@ public:
   void error(const std::exception& e);
   void error(const Status& status);
 
+  void autodelete();
+
 protected:
-  void fireAndForget();
   void reap() noexcept;
 
   Status status_;
-  std::string method_;
+  String method_;
   bool is_ready_;
   bool autodelete_;
   std::mutex mutex_;
@@ -73,14 +75,19 @@ protected:
   ResultType result_;
 };
 
+void fireAndForgetRPC(UniqueRef<AnyRPC>&& rpc);
 
 template <class ReturnType, typename... ArgTypes>
-std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
+Future<ReturnType> convertRPCtoFuture(
+    UniqueRef<RPC<ReturnType, std::tuple<ArgTypes...>>> rpc);
+
+template <class ReturnType, typename... ArgTypes>
+UniqueRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args);
 
 template <class MethodCall>
-std::unique_ptr<
+UniqueRef<
     RPC<
         typename MethodCall::ReturnType,
         typename MethodCall::ArgPackType>> mkRPC(
@@ -88,7 +95,7 @@ std::unique_ptr<
     typename MethodCall::ArgPackType args);
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-std::unique_ptr<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
+UniqueRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args);
 

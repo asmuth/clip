@@ -62,12 +62,7 @@ void AnyRPC::error(const Status& status) {
   ready();
 }
 
-void AnyRPC::fireAndForget(std::unique_ptr<AnyRPC>&& rpc) {
-  auto rpc_raw = rpc.release();
-  rpc_raw->fireAndForget();
-}
-
-void AnyRPC::fireAndForget() {
+void AnyRPC::autodelete() {
   std::unique_lock<std::mutex> lk(mutex_);
 
   if (is_ready_) {
@@ -88,6 +83,10 @@ void AnyRPC::reap() noexcept {
   }
 
   delete this;
+}
+
+void fireAndForgetRPC(std::unique_ptr<AnyRPC>&& rpc) {
+  rpc.release()->autodelete();
 }
 
 }
