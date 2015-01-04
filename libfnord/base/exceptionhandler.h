@@ -10,9 +10,7 @@
 #ifndef _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #define _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #include <mutex>
-#include <memory>
-#include <string>
-#include "fnord/logging/logger.h"
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
 
@@ -22,14 +20,12 @@ public:
   virtual void onException(const std::exception& error) const = 0;
 };
 
-class CatchAndPrintExceptionHandler : public ExceptionHandler {
+class CatchAndLogExceptionHandler : public ExceptionHandler {
 public:
-  CatchAndPrintExceptionHandler(
-      log::Logger* logger = fnord::log::Logger::get());
-
+  CatchAndLogExceptionHandler(const String& component);
   void onException(const std::exception& error) const override;
 protected:
-  log::Logger* logger_;
+  String component_;
 };
 
 class CatchAndAbortExceptionHandler : public ExceptionHandler {

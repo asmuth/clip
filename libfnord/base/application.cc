@@ -23,11 +23,11 @@ void Application::init() {
 }
 
 void Application::logToStderr() {
-  auto logger = new fnord::log::LogOutputStream(
-      fnord::io::OutputStream::getStderr());
+  //auto logger = new fnord::log::LogOutputStream(
+  //    fnord::io::OutputStream::getStderr());
 
-  fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
-  fnord::log::Logger::get()->listen(logger);
+  //fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
+  //fnord::log::Logger::get()->listen(logger);
 }
 
 }

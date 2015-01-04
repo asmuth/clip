@@ -13,6 +13,7 @@
 #include <exception>
 #include <string>
 #include "fnord/base/stringutil.h"
+#include "fnord/base/stdtypes.h"
 #include "fnord/io/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";
