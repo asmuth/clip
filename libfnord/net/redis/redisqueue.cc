@@ -28,7 +28,7 @@ Future<comm::Queue::QueueJob> RedisQueue::leaseJob() {
 
   auto reply = conn_->blpop(redis_key_, 0);
 
-  reply.onSuccess([&promise] (const std::vector<std::string>& r) {
+  reply.onSuccess([promise] (const std::vector<std::string>& r) mutable {
     if (r.size() == 2) {
       QueueJob job;
       job.job_data = r[1];
@@ -38,7 +38,7 @@ Future<comm::Queue::QueueJob> RedisQueue::leaseJob() {
     }
   });
 
-  reply.onFailure([&promise] (const Status& status) {
+  reply.onFailure([promise] (const Status& status) mutable {
     promise.failure(status);
   });
 
@@ -50,7 +50,7 @@ Future<Option<comm::Queue::QueueJob>> RedisQueue::maybeLeaseJob() {
 
   auto reply = conn_->lpop(redis_key_);
 
-  reply.onSuccess([&promise] (const Option<std::string>& reply) {
+  reply.onSuccess([promise] (const Option<std::string>& reply) mutable {
     if (reply.isEmpty()) {
       promise.success(None<QueueJob>());
     } else {
@@ -60,7 +60,7 @@ Future<Option<comm::Queue::QueueJob>> RedisQueue::maybeLeaseJob() {
     }
   });
 
-  reply.onFailure([&promise] (const Status& status) {
+  reply.onFailure([promise] (const Status& status) mutable {
     promise.failure(status);
   });
 

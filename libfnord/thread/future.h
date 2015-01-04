@@ -84,7 +84,6 @@ public:
   void failure(const Status& e);
 
   Future<T> future() const;
-
   bool isFulfilled() const;
 
 protected:

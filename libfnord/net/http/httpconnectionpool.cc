@@ -86,8 +86,8 @@ void HTTPConnectionPool::leaseConnection(
       net::TCPConnection::connectAsync(
           addr,
           scheduler_,
-          [this, &promise, callback, addr] (
-              std::unique_ptr<net::TCPConnection> tcp_conn) {
+          [this, promise, callback, addr] (
+              std::unique_ptr<net::TCPConnection> tcp_conn) mutable {
             try {
               tcp_conn->checkErrors();
 

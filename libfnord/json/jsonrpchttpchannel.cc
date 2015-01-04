@@ -22,7 +22,8 @@ JSONRPCHTTPChannel::JSONRPCHTTPChannel(
 Future<JSONObject> JSONRPCHTTPChannel::call(const JSONObject& json_req) {
   Promise<JSONObject> promise;
 
-  auto on_http_success = [&promise] (const http::HTTPResponse& http_res) {
+  auto on_http_success = [promise] (
+      const http::HTTPResponse& http_res) mutable {
     JSONObject res;
 
     if (http_res.statusCode() != 200) {
@@ -64,8 +65,10 @@ Future<JSONObject> JSONRPCHTTPChannel::call(const JSONObject& json_req) {
     }
 
     auto http_future = conn_pool_.executeRequest(http_req, addr);
+
     http_future.onSuccess(on_http_success);
-    http_future.onFailure([&promise] (const Status& status) {
+
+    http_future.onFailure([promise] (const Status& status) mutable{
       promise.failure(status);
     });
   } catch (std::exception& e) {
