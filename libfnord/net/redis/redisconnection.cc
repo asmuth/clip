@@ -182,6 +182,8 @@ void RedisConnection::executeCommand(
       promise.failure(Status(eRuntimeError, "unexpected redis return type"));
       break;
   }
+
+  freeReplyObject(reply);
 }
 
 void RedisConnection::executeCommand(
@@ -215,6 +217,8 @@ void RedisConnection::executeCommand(
       promise.failure(Status(eRuntimeError, "unexpected redis return type"));
       break;
   }
+
+  freeReplyObject(reply);
 }
 
 RedisConnection::~RedisConnection() {
