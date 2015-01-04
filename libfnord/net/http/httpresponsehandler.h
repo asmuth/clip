@@ -35,7 +35,7 @@ class DefaultHTTPResponseHandler : public HTTPResponseHandler {
 public:
   DefaultHTTPResponseHandler(
       fnord::http::HTTPResponse* response,
-      fnord::thread::Wakeup* wakeup);
+      fnord::Wakeup* wakeup);
 
   void onError(const std::exception& e) override;
   void onVersion(const std::string& version) override;
@@ -48,7 +48,7 @@ public:
 
 protected:
   fnord::http::HTTPResponse* response_;
-  fnord::thread::Wakeup* wakeup_;
+  fnord::Wakeup* wakeup_;
 };
 
 }

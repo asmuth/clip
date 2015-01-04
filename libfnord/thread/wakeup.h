@@ -15,7 +15,6 @@
 #include <list>
 
 namespace fnord {
-namespace thread {
 
 class Wakeup {
 public:
@@ -40,6 +39,5 @@ protected:
   std::list<std::function<void()>> callbacks_;
 };
 
-}
 }
 #endif

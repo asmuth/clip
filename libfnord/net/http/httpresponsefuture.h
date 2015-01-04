@@ -28,7 +28,7 @@ public:
 
   const HTTPResponse& get() const;
   void wait();
-  thread::Wakeup* onReady();
+  Wakeup* onReady();
 
   HTTPResponseHandler* responseHandler();
   void storeConnection(std::unique_ptr<HTTPClientConnection>&& conn);
@@ -36,7 +36,7 @@ public:
 protected:
   HTTPResponse res_;
   DefaultHTTPResponseHandler res_handler_;
-  fnord::thread::Wakeup wakeup_;
+  Wakeup wakeup_;
   std::unique_ptr<HTTPClientConnection> conn_;
 };
 

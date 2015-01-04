@@ -48,7 +48,7 @@ protected:
   bool is_ready_;
   bool autodelete_;
   std::mutex mutex_;
-  fnord::thread::Wakeup ready_wakeup_;
+  Wakeup ready_wakeup_;
 };
 
 template <typename _ResultType, typename _ArgPackType>

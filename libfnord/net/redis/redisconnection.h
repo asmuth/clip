@@ -16,6 +16,7 @@
 #include "fnord/base/status.h"
 #include "fnord/logging/logger.h"
 #include "fnord/net/inetaddr.h"
+#include "fnord/thread/future.h"
 #include "fnord/thread/taskscheduler.h"
 
 namespace fnord {
@@ -42,33 +43,22 @@ public:
   ~RedisConnection();
 
   /* KEY commands */
-  void set(
-      const std::string& key,
-      const std::string& value,
-      VoidReplyCallback callback);
+  Future<std::string> set(const std::string& key, const std::string& value);
 
-  void get(
-      const std::string& key,
-      StringReplyCallback callback);
+  Future<Option<std::string>> get(const std::string& key);
 
   /* LIST commands */
-  void lpop(
-      const std::string& key,
-      StringReplyCallback callback);
+  Future<Option<std::string>> lpop(const std::string& key);
 
-  void blpop(
+  Future<Option<std::vector<std::string>>> blpop(
       const std::string& key,
-      uint64_t timeout_secs,
-      ArrayReplyCallback callback);
+      const Duration& timeout);
 
-  void rpop(
-      const std::string& key,
-      StringReplyCallback callback);
+  Future<Option<std::string>> rpop(const std::string& key);
 
-  void brpop(
+  Future<Option<std::vector<std::string>>> brpop(
       const std::string& key,
-      uint64_t timeout_secs,
-      ArrayReplyCallback callback);
+      const Duration& timeout);
 
 protected:
 

@@ -38,7 +38,7 @@ public:
       const HTTPRequest& request,
       HTTPResponseHandler* response_handler);
 
-  thread::Wakeup* onReady();
+  Wakeup* onReady();
 
   bool isIdle() const;
 
@@ -64,7 +64,7 @@ protected:
   Buffer buf_;
   std::mutex mutex_;
   HTTPResponseHandler* cur_handler_;
-  thread::Wakeup on_ready_;
+  Wakeup on_ready_;
   bool keepalive_;
 };
 

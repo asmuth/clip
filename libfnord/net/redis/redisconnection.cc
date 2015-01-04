@@ -30,6 +30,7 @@ std::unique_ptr<RedisConnection> RedisConnection::connect(
   return std::unique_ptr<RedisConnection>(new RedisConnection(addr, sched));
 }
 
+/*
 void RedisConnection::set(
     const std::string& key,
     const std::string& value,
@@ -83,7 +84,7 @@ void RedisConnection::brpop(
   args.emplace_back(StringUtil::toString(timeout_secs));
   executeCommand(args, callback);
 }
-
+*/
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
     ArrayReplyCallback callback) {

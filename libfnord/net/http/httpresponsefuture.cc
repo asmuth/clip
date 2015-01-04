@@ -32,7 +32,7 @@ void HTTPResponseFuture::wait() {
   wakeup_.waitForWakeup(0);
 }
 
-thread::Wakeup* HTTPResponseFuture::onReady() {
+Wakeup* HTTPResponseFuture::onReady() {
   return &wakeup_;
 }
 

@@ -11,7 +11,6 @@
 #include "fnord/thread/wakeup.h"
 
 namespace fnord {
-namespace thread {
 
 Wakeup::Wakeup() : gen_(0) {
 }
@@ -63,5 +62,4 @@ void Wakeup::wakeup() {
   }
 }
 
-}
 }

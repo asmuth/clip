@@ -15,8 +15,8 @@ namespace fnord {
 namespace http {
 
 DefaultHTTPResponseHandler::DefaultHTTPResponseHandler(
-    fnord::http::HTTPResponse* response,
-    fnord::thread::Wakeup* wakeup) :
+    HTTPResponse* response,
+    Wakeup* wakeup) :
     response_(response),
     wakeup_(wakeup) {}
 

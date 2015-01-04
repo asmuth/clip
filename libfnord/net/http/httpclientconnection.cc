@@ -34,7 +34,7 @@ HTTPClientConnection::~HTTPClientConnection() {
   }
 }
 
-thread::Wakeup* HTTPClientConnection::onReady() {
+Wakeup* HTTPClientConnection::onReady() {
   return &on_ready_;
 }
 
