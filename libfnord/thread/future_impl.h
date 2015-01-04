@@ -13,7 +13,17 @@
 namespace fnord {
 
 template <typename T>
-Future<T>::Future(AutoRef<PromiseState<T>> promise_state) {}
+PromiseState<T>::PromiseState() : status(eSuccess), value(nullptr) {}
+
+template <typename T>
+PromiseState<T>::~PromiseState() {
+  if (value != nullptr) {
+    value->~T();
+  }
+}
+
+template <typename T>
+Future<T>::Future(AutoRef<PromiseState<T>> state) : state_(state) {}
 
 template <typename T>
 Future<T>::Future(const Future<T>& other) : state_(other.state_) {}
@@ -29,6 +39,11 @@ Future<T>& Future<T>::operator=(const Future<T>& other) {
   state_ = other.state_;
 }
 
+template <typename T>
+void Future<T>::wait() const {
+  state_->wakeup.waitForFirstWakeup();
+}
+
 /*
   bool Future<T>::isFailure() const;
   bool Future<T>::isSuccess() const;
@@ -36,15 +51,23 @@ Future<T>& Future<T>::operator=(const Future<T>& other) {
   void onFailure(std::function<void> fn);
   void onSuccess(std::function<void> fn);
 
-  void wait() const;
   void wait(const Duration& timeout) const;
 
   void onReady(std::function<void> fn);
   void onReady(TaskScheduler* scheduler, std::function<void> fn);
 
-  const T& get() const;
 */
+template <typename T>
+const T& Future<T>::get() const {
+  std::unique_lock<std::mutex> lk(state_->mutex);
 
+  if (state_->wakeup.generation() != 1) {
+    RAISE(kFutureError, "get() called on pending future");
+  }
+
+  state_->status.raiseIfError();
+  return *state_->value;
+}
 
 template <typename T>
 Promise<T>::Promise() : state_(new PromiseState<T>()) {}
@@ -58,12 +81,40 @@ Promise<T>::Promise(Promise<T>&& other) : state_(std::move(other.state_)) {}
 template <typename T>
 Promise<T>::~Promise() {}
 
-/*
-  void success(const T& value);
-  void success(T&& value);
-  void failure(const std::exception& e);
+template <typename T>
+Future<T> Promise<T>::future() const {
+  return Future<T>(state_);
+}
 
-  Future<T> future() const;
+template <typename T>
+void Promise<T>::failure(const Status& status) {
+  std::unique_lock<std::mutex> lk(state_->mutex);
+  state_->status = status;
+  lk.unlock();
+  state_->wakeup.wakeup();
+}
+
+template <typename T>
+void Promise<T>::success(const T& value) {
+  std::unique_lock<std::mutex> lk(state_->mutex);
+  state_->value = new (state_->value_data) T(value);
+  lk.unlock();
+  state_->wakeup.wakeup();
+}
+
+template <typename T>
+void Promise<T>::success(T&& value) {
+  std::unique_lock<std::mutex> lk(state_->mutex);
+  state_->value = new (state_->value_data) T(std::move(value));
+  lk.unlock();
+  state_->wakeup.wakeup();
+}
+
+
+/*
+  void ;
+  void success(T&& value);
+
 */
 
 } // namespace fnord

@@ -38,7 +38,7 @@ Future<std::string> RedisConnection::set(
   args.emplace_back(value);
 
   Promise<std::string> promise;
-  //executeCommand(args, callback);
+  executeCommand(args, promise);
   return promise.future();
 }
 
@@ -47,7 +47,7 @@ Future<Option<std::string>> RedisConnection::get(const std::string& key) {
   args.emplace_back(key);
 
   Promise<Option<std::string>> promise;
-  //executeCommand(args, callback);
+  executeCommand(args, promise);
   return promise.future();
 }
 
@@ -89,6 +89,7 @@ void RedisConnection::brpop(
   executeCommand(args, callback);
 }
 */
+/*
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
     ArrayReplyCallback callback) {
@@ -145,10 +146,10 @@ void RedisConnection::executeCommand(
       return;
   }
 }
-
+*/
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
-    StringReplyCallback callback) {
+    Promise<Option<std::string>> promise) {
   size_t argc = args.size();
   std::vector<const char*> argv;
   std::vector<size_t> argvlen;
@@ -166,28 +167,26 @@ void RedisConnection::executeCommand(
 
   switch (reply->type) {
     case REDIS_REPLY_STRING:
-      callback(Status::success(), Some(std::string(reply->str)));
+      promise.success(Some(std::string(reply->str)));
       break;
 
     case REDIS_REPLY_NIL:
-      callback(Status::success(), None<std::string>());
+      promise.success(None<std::string>());
       break;
 
     case REDIS_REPLY_ERROR:
-      callback(Status(eRuntimeError, reply->str), Option<std::string>());
+      promise.failure(Status(eRuntimeError, reply->str));
       break;
 
     default:
-      callback(
-          Status(eRuntimeError, "unexpected redis return type"),
-          Option<std::string>());
+      promise.failure(Status(eRuntimeError, "unexpected redis return type"));
       break;
   }
 }
 
 void RedisConnection::executeCommand(
     const std::vector<std::string>& args,
-    VoidReplyCallback callback) {
+    Promise<std::string> promise) {
   size_t argc = args.size();
   std::vector<const char*> argv;
   std::vector<size_t> argvlen;
@@ -205,15 +204,15 @@ void RedisConnection::executeCommand(
 
   switch (reply->type) {
     case REDIS_REPLY_STATUS:
-      callback(Status::success());
+      promise.success(reply->str);
       break;
 
     case REDIS_REPLY_ERROR:
-      callback(Status(eRuntimeError, reply->str));
+      promise.failure(Status(eRuntimeError, reply->str));
       break;
 
     default:
-      callback(Status(eRuntimeError, "unexpected redis return type"));
+      promise.failure(Status(eRuntimeError, "unexpected redis return type"));
       break;
   }
 }

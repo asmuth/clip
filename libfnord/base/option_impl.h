@@ -30,6 +30,17 @@ Option<T>::Option(const Option<T>& other) {
 }
 
 template <typename T>
+Option<T>::Option(Option<T>&& other) {
+  if (other.value_ == nullptr) {
+    value_ = nullptr;
+  } else {
+    value_ = new (value_data_) T(std::move(*other.value_));
+    other.value_->~T();
+    other.value_ = nullptr;
+  }
+}
+
+template <typename T>
 Option<T>::~Option() {
   if (value_ != nullptr) {
     value_->~T();

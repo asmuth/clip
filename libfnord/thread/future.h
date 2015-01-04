@@ -25,10 +25,14 @@ class TaskScheduler;
 template <typename T>
 class PromiseState : public RefCounted {
 public:
+  PromiseState();
+  ~PromiseState();
+
   Wakeup wakeup;
+  Status status;
   std::mutex mutex; // FIXPAUL use spinlock
-  bool is_ready;
-  char value_data_[sizeof(T)];
+  char value_data[sizeof(T)];
+  T* value;
 };
 
 template <typename T>
@@ -70,6 +74,7 @@ public:
   void success(const T& value);
   void success(T&& value);
   void failure(const std::exception& e);
+  void failure(const Status& e);
 
   Future<T> future() const;
 

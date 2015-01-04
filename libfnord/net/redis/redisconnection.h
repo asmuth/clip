@@ -68,11 +68,11 @@ protected:
 
   void executeCommand(
       const std::vector<std::string>& args,
-      ArrayReplyCallback callback);
+      Promise<std::string> promise);
 
   void executeCommand(
       const std::vector<std::string>& args,
-      StringReplyCallback callback);
+      Promise<Option<std::string>> promise);
 
   void executeCommand(
       const std::vector<std::string>& args,

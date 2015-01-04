@@ -36,6 +36,17 @@ AutoRef<T>::~AutoRef() {
     ref_->decRef();
   }
 }
+
+template <typename T>
+T& AutoRef<T>::operator*() const {
+  return *ref_;
+}
+
+template <typename T>
+T* AutoRef<T>::operator->() const {
+  return ref_;
+}
+
 template <typename T>
 T* AutoRef<T>::get() const {
   return ref_;

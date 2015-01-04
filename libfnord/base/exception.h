@@ -41,6 +41,7 @@ const char kTypeError[] = "TypeError";
 const char kUsageError[] = "UsageError";
 const char kVersionMismatchError[] = "VersionMismatchError";
 const char kWouldBlockError[] = "WouldBlockError";
+const char kFutureError[] = "FutureError";
 
 #define RAISE_EXCEPTION(E) \
     throw (E).setSource(__FILE__, __LINE__, __PRETTY_FUNCTION__); while(0) {}
