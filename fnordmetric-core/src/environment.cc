@@ -21,7 +21,7 @@ Environment* env() {
 }
 
 Environment::Environment() :
-    logger_(new LogOutputStream(util::OutputStream::getStderr())) {}
+    logger_(new LogOutputStream(fnord::io::OutputStream::getStderr())) {}
 
 void Environment::setVerbose(bool verbose) {
   verbose_ = verbose;

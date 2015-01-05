@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <string>
 #include "symboltable.h"
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 
 namespace fnordmetric {
 namespace query {

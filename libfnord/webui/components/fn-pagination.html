@@ -1,0 +1,252 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-pagination-base-tpl'>
+  <style type='text/css'>
+    ul {
+      display: inline-block;
+      list-style-type:none;
+      padding-left: 0;
+      margin: 20px 0;
+      border-radius: 4px;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 14px;
+      line-height: 1.3em;
+      color: rgba(0,0,0,.8);
+    }
+
+    ul.attached {
+      margin: 0;
+    }
+
+    ul > li {
+      display: inline;
+      position: relative;
+      float: left;
+      padding: 6px 12px;
+      margin-left: -1px;
+      line-height: 1.42857143;
+      color: rgba(0,0,0,.8);
+      background-color: #fff;
+      border: 1px solid #ddd;
+      line-height: 1.3em;
+    }
+
+    ul > li[data-active] {
+      background-color: #efefef;
+    }
+
+    ul > li:hover {
+      cursor: pointer;
+    }
+
+    ul > li.prev i,
+    ul > li.next i {
+      line-height: 1.3em;
+    }
+
+    ul > li.prev {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    ul > li.next {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+  </style>
+  <ul>
+  </ul>
+</template>
+<script type='text/javascript'>
+  var PaginationComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-pagination', 'base');
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+      if (this.hasAttribute('data-for')) {
+        //set style
+        this.shadowRoot.querySelector("ul").className = "attached";
+      } else {
+        this.render();
+      }
+    };
+
+    this.forElement = function(elem) {
+      var page = elem.getAttribute('data-page');
+      page = (page == null)? 1 : parseInt(page, 10);
+      this.current_page = page;
+
+      var per_page = elem.getAttribute('data-per-page');
+      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
+      this.per_page = per_page;
+
+      var items = elem.getNumberOfItems();
+      items = (items == null)? 1 : parseInt(items, 10);
+
+      this.last_page = Math.ceil(items / per_page) - 1;
+
+      var callback = elem.paginationEvent;
+
+      this.render(callback, elem);
+    }
+
+    this.pages = function() {
+      var pages = this.getAttribute('data-show-pages');
+      if (pages == null) {
+        return (this.last_page < 3)? this.last_page : 3;
+      }
+      return parseInt(pages, 10);
+    };
+
+
+    this.render = function(callback, caller) {
+      var base = this;
+      var list = this.shadowRoot.querySelector("ul");
+      list.innerHTML = '';
+      var current_page = this.current_page;
+      var per_page = this.per_page;
+      var last_page = this.last_page;
+      var pages = this.pages();
+
+      var start = Math.floor(current_page / pages) * pages;
+      console.log("start", start);
+
+      var tooltip_back = document.createElement("li");
+      tooltip_back.innerHTML = "<i class='fa fa-angle-double-left'></i>";
+      tooltip_back.className = "prev";
+      list.appendChild(tooltip_back);
+
+      for (var i = start; i < start + pages; i++) {
+        if (i > last_page) {break;}
+        var li = document.createElement("li");
+        li.innerHTML = i + 1;
+        li.setAttribute('data-index', i);
+
+        if (i == current_page) {
+          li.setAttribute("data-active", "active");
+        }
+
+        list.appendChild(li);
+
+        li.addEventListener('click', function() {
+          base.toggleActiveItem(this);
+          callback(this.getAttribute('data-index'), caller);
+        }, false);
+
+      }
+
+      var tooltip_for = document.createElement("li");
+      tooltip_for.innerHTML = "<i class='fa fa-angle-double-right'></i>";
+      tooltip_for.className = "next";
+      list.appendChild(tooltip_for);
+
+      this.observeTooltips(callback, caller);
+
+    };
+
+    this.observeTooltips = function(callback, caller) {
+      var base = this;
+      var tooltip_back = this.shadowRoot.querySelector("li.prev");
+      var tooltip_for = this.shadowRoot.querySelector("li.next");
+
+      var last_page = this.last_page;
+      var pages = this.pages();
+
+
+      tooltip_back.addEventListener('click', function() {
+        var current_page = base.current_page;
+        var prev_page = current_page - 1;
+        var current_start = Math.floor(current_page / pages) * pages;
+        if (prev_page >= 0) {
+          base.current_page = prev_page;
+          base.setAttribute('data-active-page', prev_page);
+          if (prev_page < current_start) {
+            base.render(callback, caller);
+          } else {
+            base.selectPreviousPage();
+          }
+        } else {
+          if (base.hasAttribute('data-circling')) {
+            prev_page = last_page;
+            base.current_page = last_page;
+            base.setAttribute('data-active-page', last_page);
+            base.render(callback, caller);
+          }
+        }
+        callback(prev_page, caller);
+
+      }, false);
+
+      tooltip_for.addEventListener('click', function() {
+        var current_page = base.current_page;
+        var next_page = current_page + 1;
+        var current_end = Math.floor(current_page / pages) + pages - 1;
+        if (next_page <= last_page) {
+          base.current_page = next_page;
+          if (current_end < next_page) {
+            base.render(callback, caller);
+          } else {
+            base.setAttribute('data-active-page', next_page);
+            base.selectNextPage();
+          }
+          callback(next_page, caller);
+        } else {
+          if (base.hasAttribute('data-circling')) {
+            base.setAttribute('data-active-page', 0);
+            base.current_page = 0;
+            base.render(callback, caller);
+          }
+        }
+      }, false);
+    };
+
+    this.selectNextPage = function() {
+      var old_page = this.shadowRoot.querySelector("li[data-active]");
+      old_page.removeAttribute("data-active");
+      old_page.nextSibling.setAttribute('data-active', 'active');
+    };
+
+    this.selectPreviousPage = function() {
+      var old_page = this.shadowRoot.querySelector("li[data-active]");
+      old_page.removeAttribute("data-active");
+      old_page.previousSibling.setAttribute('data-active', 'active');
+    }
+
+    this.toggleActiveItem = function(item) {
+      this.shadowRoot.querySelector(
+        "li[data-active]").removeAttribute('data-active');
+      item.setAttribute('data-active', 'active');
+    }
+
+    this.fireNextRangeEvent = function() {
+      this.dispatchEvent(new Event('fn-pagination-forward'));
+    }
+
+    this.firePreviousRangeEvent = function() {
+      this.dispatchEvent(new Event('fn-pagination-backward'));
+    }
+
+  /*  this.clickEvent = function() {
+      var click_event = new CustomEvent(
+        'fn-pagination-click',
+        {'detail' : this.getAttribute('data-index')});
+
+      this.dispatchEvent(click_event);
+
+    }*/
+
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-pagination', PaginationComponent);
+  }, false);
+</script>

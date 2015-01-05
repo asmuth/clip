@@ -11,7 +11,7 @@
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
 #include <fnordmetric/sql/backends/mysql/mysqltableref.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
 #include <memory>
 #include <mutex>
 
@@ -40,7 +40,7 @@ MySQLBackend::MySQLBackend() {
 
 bool MySQLBackend::openTables(
     const std::vector<std::string>& table_names,
-    const util::URI& source_uri,
+    const fnord::URI& source_uri,
     std::vector<std::unique_ptr<TableRef>>* target) {
   if (source_uri.scheme() != "mysql") {
     return false;

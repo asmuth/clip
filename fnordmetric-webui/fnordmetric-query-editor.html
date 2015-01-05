@@ -1,0 +1,378 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+ -->
+
+
+<template id="fnordmetric-query-editor-base-tpl">
+  <style>
+    fn-splitpane {
+      height: 100%;
+      background-color: #e9ebed;
+    }
+
+    .navbar {
+      display:block;
+      height: 45px;
+      width: 100%;
+      margin: 0px;
+      line-height: 39px;
+      font-size: 95%;
+      padding: 5px 5px;
+      background-color: #fff;
+    }
+
+    fn-button {
+      box-shadow:none;
+    }
+
+    .navbar fn-button {
+      float:left;
+    }
+
+    .button_like {
+      float:left;
+      color: rgba(0,0,0,.6);
+      line-height: 1;
+      font-weight: bold;
+      text-align: center;
+      min-height: 1em;
+      display: inline-block;
+      margin: 0em 0.25em 0em 0em;
+      padding: 0.78571em 1.5em 0.78571em 1em;
+
+    }
+
+    .navbar fn-button#execute {
+      color: #009fe9;
+      float:right;
+    }
+
+    fn-codeeditor {
+      height: 100%;
+    }
+
+    .result_card {
+      display: none;
+      background: #fff;
+      margin: 10px;
+      padding: 0;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 3px rgba(0,0,0,.1);
+      border-radius: 1px
+
+    }
+
+    fn-loader#result fn-message {
+      display: none;
+      margin: 20px 15px;
+    }
+
+    fn-loader#result fn-message.active {
+      display: block;
+    }
+
+    .result_card[data-active] {
+      display: block;
+    }
+
+    .result_card fn-table {
+      width: 100%;
+    }
+
+    .result_card .svg {
+      padding: 10px 10px 20px 10px;
+      text-align:center;
+    }
+
+    .result_card svg {
+      max-width: 1100px;
+    }
+
+    .result_card .controls {
+      padding: 5px 0;
+    }
+
+    .result_card .error_box {
+      width: 90%;
+      margin:20px auto;
+      padding: 9px 14px;
+      background: rgba(230, 126, 34,0.1);
+      border: 1px solid rgba(230, 126, 34,1.0);
+      border-radius: 3px;
+      color: rgba(122, 07, 03,1.0);
+      line-height: 23px;
+    }
+
+    #info.result_card {
+      padding: 15px;
+    }
+
+    .result_card fn-pager {
+      float:right;
+      margin-right: 1em;
+    }
+
+  </style>
+  <fn-loader data-loading data-loader-type="loader3">
+    <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-min-position-vertical='420' data-min-position-horizontal='200'>
+      <fn-splitpane-left>
+        <div class="navbar">
+          <div class="button_like" id="editor">
+            <i class='fa fa-database'></i> SQL Editor
+          </div>
+          <fn-button id="split">
+            <i class='fa fa-columns'></i>
+          </fn-button>
+          <fn-button id="refresh">
+            <i class='fa fa-refresh'></i>
+          </fn-button>
+          <fn-button id='execute'>
+            <i class='fa fa-bolt'></i> Run Query
+          </fn-button>
+        </div>
+        <fn-codeeditor></fn-codeeditor>
+      </fn-splitpane-left>
+      <fn-splitpane-right>
+        <fn-loader id="result" data-loader-type="loader3">
+          <fn-message data-state="error"></fn-message>
+          <div class="result_card" id="chart">
+            <div class="controls">
+              <div class="button_like">Result Chart</div>
+              <fn-button style="float:right;" id="embed">
+                <i class="fa fa-share"></i> Embed
+              </fn-button>
+            </div>
+            <div class="svg">
+            </div>
+          </div>
+          <div class="result_card" id="table">
+            <div class="controls">
+              <div class="button_like">Result Table</div>
+            </div>
+            <fn-pager data-for data-circling></fn-pager>
+            <fn-table data-per-page="25" data-page='0'></fn-table>
+          </div>
+          <fn-message id="info"></fn-message>
+        </fn-loader>
+      </fn-splitpane-right>
+    </fn-splitpane>
+    <fnordmetric-embed-query-popup></fnordmetric-embed-query-popup>
+  </fn-loader>
+  <fn-tooltip data-position="bottom" data-relative id="ttp_view">
+    Change View
+  </fn-tooltip>
+  <fn-tooltip data-position="bottom" data-relative id="ttp_refresh">
+    Refresh
+  </fn-tooltip>
+  <fn-tooltip data-position="bottom" data-relative id="ttp_query">
+    Execute the query. Hint: you can alse press Ctrl/Cmd + Enter
+  </fn-tooltip>
+</template>
+
+<script type="text/javascript">
+  var FnordMetricQueryEditorComponent = function() {
+
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fnordmetric-query-editor", "base");
+      this.appendChild(tpl);
+      var base = this;
+
+      var loader = this.querySelector("fn-loader");
+      loader.removeAttribute("data-loading");
+      this.initButtons();
+
+      var codeeditor = this.querySelector('fn-codeeditor');
+      if (this.getAttribute('data-url') != null) {
+        var params =
+          FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
+        var query = params.query_params.innerViewValue;
+        codeeditor.setValue(query);
+        this.runQuery(query);
+      }
+
+      codeeditor.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
+          e.preventDefault();
+          base.updateUrl();
+        }
+      }, false);
+
+      this.attributeChangedCallback();
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url") {
+        if (old_val == null) {
+          var params =
+            FnordMetric.util.parseQueryString(new_val);
+          var query = params.query_params.innerViewValue;
+          var splitpane = this.querySelector("fn-splitpane");
+          splitpane.querySelector("fn-codeeditor").setValue(query);
+          this.runQuery(query);
+        }
+      }
+    }
+
+    this.updateUrl = function() {
+      var code_editor = this.querySelector("fn-codeeditor");
+      var query = code_editor.getValue();
+      var params = {
+        innerView : "sql_editor",
+        innerViewValue : query};
+      var url = FnordMetric.util.setURLQueryString("query", params, true);
+      this.setAttribute('data-url', url);
+      this.runQuery(query);
+    };
+
+    this.runQuery = function(query) {
+      var base = this;
+      this.renderLoadingState();
+      Fnord.httpPost("/query", query, function(r, duration) {
+        if (r.status == 200 && r.statusText == "OK") {
+          var res = JSON.parse(r.response, duration);
+          base.renderResult(res, duration);
+        } else {
+          /* server error */
+          base.renderError(
+            "Sorry, FnordMetric Server encountered an error. " + "<br>" + 
+            "If you believe this is a bug in FnordMetric Server "+
+            "please report an issue at github.com/.../issues.");
+        }
+      });
+    };
+
+    this.renderLoadingState = function() {
+      var loader = this.querySelector("fn-loader#result");
+      loader.setAttribute("data-loading", "data-loading");
+      var result_cards = this.querySelectorAll(".result_card");
+      for (var i = 0; i < result_cards.length; i++) {
+        result_cards[i].removeAttribute('data-active');
+      }
+    }
+
+    this.renderResult = function(response, duration) {
+      if (response.status == "error") {
+        this.renderError(response.error);
+      } else {
+        if (response.charts != undefined) {
+          this.renderChart(response.charts);
+        }
+        if (response.tables != undefined) {
+          this.renderTable(response.tables);
+        }
+        this.renderExecutionInfo(response.info, duration);
+      }
+    };
+
+    this.renderError = function(error_message) {
+      var loader = this.querySelector("fn-loader#result");
+      loader.removeAttribute('data-loading');
+      var message = loader.querySelector("fn-message");
+      message.className = "active";
+      message.innerHTML = error_message;
+    };
+
+    this.renderChart = function(charts, loader) {
+      var result_card = this.querySelector("#chart.result_card");
+      result_card.setAttribute('data-active', 'active');
+
+      var svg = result_card.querySelector(".svg");
+      svg.innerHTML = charts[0].svg;
+    }
+
+    this.renderTable = function(tables, loader) {
+      var loader = this.querySelector("fn-loader#result");
+
+      var result_card = this.querySelector("#table.result_card");
+      result_card.setAttribute('data-active', 'active');
+
+      var pager = result_card.querySelector("fn-pager");
+      var table_elem = result_card.querySelector("fn-table");
+      table_elem.innerHTML = "";
+
+      tables.map(function(t) {
+        t.columns.map(function(c) {
+          var column_elem = document.createElement("fn-table-column");
+          column_elem.innerHTML = c;
+          table_elem.appendChild(column_elem);
+        });
+
+        t.rows.map(function(r) {
+          var row_elem = document.createElement("tr");
+          r.map(function(cell) {
+            row_elem.innerHTML += "<td>" + cell + "</td>";
+          });
+
+          //table_elem.appendRow(row_elem); soo slow
+          table_elem.appendChild(row_elem);
+        });
+        table_elem.renderTable();
+      });
+      table_elem.setAttribute('data-page', 0);
+      pager.forElement(table_elem);
+      loader.removeAttribute('data-loading');
+    };
+
+    this.renderExecutionInfo = function(info, duration) {
+      var message = this.querySelector("fn-message#info");
+      message.className ="active";
+      message.innerHTML =
+        "The query execution took " + (duration/1000) + 
+        " seconds and returned " + info[0].num_rows + " rows.";
+    }
+
+
+    this.initButtons = function() {
+      var base = this;
+      var app = document.querySelector("fnordmetric-app");
+      var splitpane = this.querySelector("fn-splitpane");
+
+      var exec_btn = this.querySelector("fn-button#execute");
+      exec_btn.onclick = function() {
+        base.updateUrl();
+      }
+
+      var split_btn = this.querySelector("fn-button#split");
+      split_btn.onclick = function(e) {
+        splitpane.toggleSplitDirection();
+      }
+
+      var refresh_btn = this.querySelector("fn-button#refresh");
+      refresh_btn.onclick = function() {
+        var url = base.getAttribute('data-url');
+        if (url != null) {
+          app.openUrl(url);
+        }
+      }
+
+      this.querySelector("#ttp_query").init(exec_btn);
+      this.querySelector("#ttp_view").init(split_btn);
+      this.querySelector("#ttp_refresh").init(refresh_btn);
+
+
+      var popup = this.querySelector("fnordmetric-embed-query-popup");
+      var embed_btn = this.querySelector("fn-button#embed");
+      embed_btn.onclick = function() {
+        var url = base.getAttribute('data-url');
+        console.log(url);
+        popup.show(url);
+      }
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent(
+        "fnordmetric-query-editor",
+        FnordMetricQueryEditorComponent);
+  }, false);
+</script>
+
+
+

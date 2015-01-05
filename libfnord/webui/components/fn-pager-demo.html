@@ -1,0 +1,29 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-pager-demo-base-tpl'>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Static</h1>
+    <div class='fn-pager'>
+      <div class='fn-pager-title'><b>1</b> - <b>20</b> of <b>52</b></div>
+      <div class='fn-pager-tooltip-backward'></div>
+      <div class='fn-pager-tooltip-forward'></div>
+    </div>
+  </section>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Basic</h1>
+    <fn-pager data-first-item='1' data-per-page='50' data-last-item='1423' data-current-page='1'></fn-pager>
+  </section>
+  <section>
+    <h1><i>Example 2 &raquo;</i> Circling Pager</h1>
+    <fn-pager data-first-item='1' data-per-page='50' data-last-item='1423' data-current-page='1' data-circling></fn-pager>
+  </section>
+
+</template>

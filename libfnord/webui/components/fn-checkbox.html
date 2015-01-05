@@ -1,0 +1,212 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-checkbox-base-tpl">
+  <style type='text/css'>
+    .field {
+      position: relative;
+      display: inline-block;
+      height: 17px;
+      font-size: 1rem;
+      line-height: 15px;
+      min-width: 17px;
+      -webkit-backface-visibility: hidden;
+              backface-visibility: hidden;
+      outline: none;
+      vertical-align: middle;
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      line-height: 1.33;
+      color: rgba(0,0,0,.8);
+    }
+
+    .field input {
+      color: inherit;
+      font: inherit;
+      margin: 0;
+      line-height: normal;
+      box-sizing: border-box;
+      padding: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0!important;
+      outline: 0;
+      z-index: -1;
+      vertical-align:top;
+    }
+
+    .field label {
+      cursor: pointer;
+      color: rgba(0,0,0,.8);
+      -webkit-transition: color .2s ease;
+      transition: color .2s ease;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      font-size: 1em;
+      display:block;
+      padding-left: 1.75em;
+      outline: 0;
+    }
+
+    .field label:before,
+    .field[data-type='checkbox'] label:before {
+      position: absolute;
+      line-height: 1;
+      width: 17px;
+      height: 17px;
+      top: 0;
+      left: 0;
+      content: '';
+      background: #fff;
+      border-radius: .25em;
+      -webkit-transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
+      transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
+      border: 1px solid #d4d4d5;
+      content: '';
+    }
+
+    .field label:after,
+    .field[data-type='checkbox'] label:after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      line-height: 17px;
+      width: 17px;
+      height: 17px;
+      text-align: center;
+      opacity: 0;
+      color: rgba(0,0,0,.8);
+      -webkit-transition: all .1s ease;
+      transition: all .1s ease;
+      content: '';
+    }
+
+    .field[data-active] label:after {
+      opacity: 1;
+      content: 'x';
+    }
+
+    .field[data-type='radio'] label:before {
+      width: 14px;
+      height: 14px;
+      border-radius: 500rem;
+      top: 1px;
+      left: 0;
+      -webkit-transform: none;
+      -ms-transform: none;
+      transform: none;
+      content: '';
+    }
+
+    .field[data-type='radio'] label:after {
+      border: none;
+      line-height: 14px;
+      top: 1px;
+      left: 0;
+      font-size: 9px;
+      width: 14px;
+      height: 14px;
+      border-radius: 500rem;
+      -webkit-transform: scale(0.42857143);
+      -ms-transform: scale(0.42857143);
+      transform: scale(0.42857143);
+      background-color: rgba(0,0,0,.8);
+      content: '';
+    }
+
+    .field[data-state='error'] label {
+      color: #d95c5c;
+    }
+
+    .field[data-state='error'] label:before {
+      background: #fff0f0;
+      border-color: #dbb1b1;
+    }
+
+    .field[data-state='error'] label:after {
+      color: #d95c5c;
+    }
+
+  </style>
+
+  <div class="field">
+    <input type="checkbox" />
+    <label>
+      <content select="fn-checkbox-label"></content>
+    </label>
+  </div>
+</template>
+<script type='text/javascript'>
+  var CheckBoxComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-checkbox", "base");
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+      if (this.hasAttribute('data-type')) {this.setInputType();}
+      if (this.hasAttribute('data-state')) {this.setState();}
+
+      this.attributeChangedCallback();
+
+      this.addEventListener('click', function() {
+        if (this.hasAttribute('data-active')) {
+          this.removeAttribute('data-active');
+          this.shadowRoot.querySelector(
+            ".field").removeAttribute("data-active");
+        } else {
+          this.setAttribute('data-active', 'active');
+          this.shadowRoot.querySelector(
+            ".field").setAttribute('data-active', 'active');
+           var ev = new CustomEvent("fn-checkbox-submit", {
+            bubbles: true,
+            cancelable: true
+          });
+          this.dispatchEvent(ev);
+        }
+      }, false);
+
+    };
+
+    this.attributeChangedCallback = function(attr, new_val, old_val) {
+      switch (attr) {
+        case 'data-type':
+          this.setInputType();
+          break;
+        case 'data-state':
+          this.setState();
+          break;
+        default:
+          break;
+      }
+    };
+
+    this.setInputType = function() {
+      var type = this.getAttribute('data-type');
+      if (type != null) {
+        var input = this.shadowRoot.querySelector("input");
+        var field = this.shadowRoot.querySelector(".field");
+        input.type = type;
+        field.setAttribute('data-type', type);
+      }
+    };
+
+    this.setState = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      field.setAttribute('data-state', this.getAttribute('data-state'));
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent("fn-checkbox", CheckBoxComponent);
+  }, false);
+</script>

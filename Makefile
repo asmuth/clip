@@ -6,7 +6,6 @@
 all: build
 
 build:
-	(cd fnordmetric-webui && make build)
 	(cd fnordmetric-core && make build)
 
 install:
@@ -16,7 +15,6 @@ test:
 	(cd fnordmetric-core && make test)
 
 clean:
-	(cd fnordmetric-webui && make clean)
 	(cd fnordmetric-core && make clean)
 
 doc:

@@ -161,7 +161,7 @@ void GroupOverTimewindow::emitWindow(
 
   if (window_begin == window_end) {
     std::vector<SValue> row(input_row_size_, SValue());
-    row[input_row_time_index_] = SValue(fnord::util::DateTime(window_time));
+    row[input_row_time_index_] = SValue(fnord::DateTime(window_time));
 
     executeExpression(
         select_expr_,
@@ -173,7 +173,7 @@ void GroupOverTimewindow::emitWindow(
   } else {
     for (; window_begin != window_end; window_begin++) {
       auto& row = window_begin->second;
-      row[input_row_time_index_] = SValue(fnord::util::DateTime(window_time));
+      row[input_row_time_index_] = SValue(fnord::DateTime(window_time));
 
       executeExpression(
           select_expr_,

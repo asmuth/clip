@@ -14,75 +14,117 @@ project(fnordmetric)
 option(ENABLE_TESTS "Build unit tests [default: off]" OFF)
 
 set(FNORDMETRIC_SOURCES
+    stage/src/fnord/base/assets.cc
+    stage/src/fnord/base/buffer.cc
+    stage/src/fnord/base/datetime.cc
+    stage/src/fnord/base/exceptionhandler.cc
+    stage/src/fnord/base/ieee754.cc
+    stage/src/fnord/base/inspect.cc
+    stage/src/fnord/base/random.cc
+    stage/src/fnord/base/exception.cc
+    stage/src/fnord/base/stringutil.cc
+    stage/src/fnord/base/uri.cc
+    stage/src/fnord/base/wallclock.cc
+    stage/src/fnord/chart/axisdefinition.cc
+    stage/src/fnord/chart/areachart.cc
+    stage/src/fnord/chart/barchart.cc
+    stage/src/fnord/chart/linechart.cc
+    stage/src/fnord/chart/pointchart.cc
+    stage/src/fnord/chart/canvas.cc
+    stage/src/fnord/chart/domain.cc
+    stage/src/fnord/chart/domainprovider.cc
+    stage/src/fnord/chart/drawable.cc
+    stage/src/fnord/chart/griddefinition.cc
+    stage/src/fnord/chart/legenddefinition.cc
+    stage/src/fnord/chart/series.cc
+    stage/src/fnord/chart/timedomain.cc
+    stage/src/fnord/hash/fnv.cc
+    stage/src/fnord/net/http/httpinputstream.cc
+    stage/src/fnord/net/http/httpoutputstream.cc
+    stage/src/fnord/net/http/httpmessage.cc
+    stage/src/fnord/net/http/httprequest.cc
+    stage/src/fnord/net/http/httpresponse.cc
+    stage/src/fnord/net/http/httpserver.cc
+    stage/src/fnord/io/file.cc
+    stage/src/fnord/io/fileutil.cc
+    stage/src/fnord/io/filerepository.cc
+    stage/src/fnord/io/mmappedfile.cc
+    stage/src/fnord/io/pagemanager.cc
+    stage/src/fnord/io/inputstream.cc
+    stage/src/fnord/io/outputstream.cc
+    stage/src/fnord/json/flatjsonreader.cc
+    stage/src/fnord/json/jsondocument.cc
+    stage/src/fnord/json/jsoninputstream.cc
+    stage/src/fnord/json/jsonoutputstream.cc
+    stage/src/fnord/json/jsonpointer.cc
+    stage/src/fnord/json/jsonrpc.cc
+    stage/src/fnord/json/jsonrpchttpadapter.cc
+    stage/src/fnord/json/jsonrpcrequest.cc
+    stage/src/fnord/json/jsonrpcresponse.cc
+    stage/src/fnord/net/udpserver.cc
+    stage/src/fnord/net/statsd/statsd.cc
+    stage/src/fnord/service/groups/groupsservice.cc
+    stage/src/fnord/service/groups/groupsserviceadapter.cc
+    stage/src/fnord/service/keyvalue/keyvalueservice.cc
+    stage/src/fnord/service/keyvalue/keyvalueserviceadapter.cc
+    stage/src/fnord/service/metric/backends/disk/compactiontask.cc
+    stage/src/fnord/service/metric/backends/disk/metric.cc
+    stage/src/fnord/service/metric/backends/disk/metriccursor.cc
+    stage/src/fnord/service/metric/backends/disk/metricsnapshot.cc
+    stage/src/fnord/service/metric/backends/disk/metricrepository.cc
+    stage/src/fnord/service/metric/backends/disk/labelindex.cc
+    stage/src/fnord/service/metric/backends/disk/labelindexreader.cc
+    stage/src/fnord/service/metric/backends/disk/labelindexwriter.cc
+    stage/src/fnord/service/metric/backends/disk/samplereader.cc
+    stage/src/fnord/service/metric/backends/disk/samplewriter.cc
+    stage/src/fnord/service/metric/backends/disk/tableheaderreader.cc
+    stage/src/fnord/service/metric/backends/disk/tableheaderwriter.cc
+    stage/src/fnord/service/metric/backends/disk/tableref.cc
+    stage/src/fnord/service/metric/backends/disk/tokenindex.cc
+    stage/src/fnord/service/metric/backends/disk/tokenindexreader.cc
+    stage/src/fnord/service/metric/backends/disk/tokenindexwriter.cc
+    stage/src/fnord/service/metric/backends/inmemory/metric.cc
+    stage/src/fnord/service/metric/backends/inmemory/metricrepository.cc
+    stage/src/fnord/service/metric/metric.cc
+    stage/src/fnord/service/metric/metricrepository.cc
+    stage/src/fnord/service/metric/metricservice.cc
+    stage/src/fnord/service/metric/metricserviceadapter.cc
+    stage/src/fnord/service/metric/sample.cc
+    stage/src/fnord/sstable/cursor.cc
+    stage/src/fnord/sstable/fileheaderreader.cc
+    stage/src/fnord/sstable/fileheaderwriter.cc
+    stage/src/fnord/sstable/index.cc
+    stage/src/fnord/sstable/indexprovider.cc
+    stage/src/fnord/sstable/rowoffsetindex.cc
+    stage/src/fnord/sstable/sstablereader.cc
+    stage/src/fnord/sstable/sstablerepair.cc
+    stage/src/fnord/sstable/sstablewriter.cc
+    stage/src/fnord/system/signalhandler.cc
+    stage/src/fnord/thread/threadpool.cc
+    stage/src/fnord/util/binarymessagereader.cc
+    stage/src/fnord/util/binarymessagewriter.cc
+    stage/src/fnord/webui/bundle.cc
+    stage/src/fnord/webui/httpmount.cc
+    stage/src/fnordmetric/chartsql/query.cc
+    stage/src/fnordmetric/chartsql/queryservice.cc
+    stage/src/fnordmetric/chartsql/areachartbuilder.cc
+    stage/src/fnordmetric/chartsql/barchartbuilder.cc
+    stage/src/fnordmetric/chartsql/linechartbuilder.cc
+    stage/src/fnordmetric/chartsql/pointchartbuilder.cc
+    stage/src/fnordmetric/chartsql/domainconfig.cc
+    stage/src/fnordmetric/chartsql/drawstatement.cc
+    stage/src/fnordmetric/chartsql/seriesadapter.cc
     stage/src/fnordmetric/cli/cli.cc
     stage/src/fnordmetric/cli/flagparser.cc
-    stage/src/fnordmetric/cli/cli.cc
-    stage/src/fnordmetric/io/acceptor.cc
-    stage/src/fnordmetric/io/eventloop.cc
-    stage/src/fnordmetric/io/file.cc
-    stage/src/fnordmetric/io/fileutil.cc
-    stage/src/fnordmetric/io/filerepository.cc
-    stage/src/fnordmetric/io/mmappedfile.cc
-    stage/src/fnordmetric/io/pagemanager.cc
-    stage/src/fnordmetric/net/udpserver.cc
     stage/src/fnordmetric/environment.cc
-    stage/src/fnordmetric/http/httpinputstream.cc
-    stage/src/fnordmetric/http/httpoutputstream.cc
-    stage/src/fnordmetric/http/httpmessage.cc
-    stage/src/fnordmetric/http/httprequest.cc
-    stage/src/fnordmetric/http/httpresponse.cc
-    stage/src/fnordmetric/http/httpserver.cc
-    stage/src/fnordmetric/sstable/cursor.cc
-    stage/src/fnordmetric/sstable/fileheaderreader.cc
-    stage/src/fnordmetric/sstable/fileheaderwriter.cc
-    stage/src/fnordmetric/sstable/index.cc
-    stage/src/fnordmetric/sstable/indexprovider.cc
-    stage/src/fnordmetric/sstable/rowoffsetindex.cc
-    stage/src/fnordmetric/sstable/sstablereader.cc
-    stage/src/fnordmetric/sstable/sstablerepair.cc
-    stage/src/fnordmetric/sstable/sstablewriter.cc
-    stage/src/fnordmetric/util/assets.cc
-    stage/src/fnordmetric/util/binarymessagereader.cc
-    stage/src/fnordmetric/util/binarymessagewriter.cc
-    stage/src/fnordmetric/util/buffer.cc
-    stage/src/fnordmetric/util/datetime.cc
-    stage/src/fnordmetric/util/exceptionhandler.cc
-    stage/src/fnordmetric/util/format.cc
-    stage/src/fnordmetric/util/fnv.cc
-    stage/src/fnordmetric/util/ieee754.cc
-    stage/src/fnordmetric/util/inputstream.cc
-    stage/src/fnordmetric/util/inspect.cc
-    stage/src/fnordmetric/util/logger.cc
-    stage/src/fnordmetric/util/logoutputstream.cc
-    stage/src/fnordmetric/util/outputstream.cc
-    stage/src/fnordmetric/util/jsonoutputstream.cc
-    stage/src/fnordmetric/util/random.cc
-    stage/src/fnordmetric/util/runtimeexception.cc
-    stage/src/fnordmetric/util/signalhandler.cc
-    stage/src/fnordmetric/util/stringutil.cc
-    stage/src/fnordmetric/util/uri.cc
-    stage/src/fnordmetric/util/wallclock.cc
-    stage/src/fnordmetric/ui/axisdefinition.cc
-    stage/src/fnordmetric/ui/areachart.cc
-    stage/src/fnordmetric/ui/barchart.cc
-    stage/src/fnordmetric/ui/linechart.cc
-    stage/src/fnordmetric/ui/pointchart.cc
-    stage/src/fnordmetric/ui/canvas.cc
-    stage/src/fnordmetric/ui/domain.cc
-    stage/src/fnordmetric/ui/domainprovider.cc
-    stage/src/fnordmetric/ui/drawable.cc
-    stage/src/fnordmetric/ui/griddefinition.cc
-    stage/src/fnordmetric/ui/legenddefinition.cc
-    stage/src/fnordmetric/ui/series.cc
-    stage/src/fnordmetric/ui/timedomain.cc
     stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
     stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
     stage/src/fnordmetric/sql/backends/csv/csvtableref.cc
+    stage/src/fnordmetric/sql/backends/metricservice/metrictableref.cc
+    stage/src/fnordmetric/sql/backends/metricservice/metrictablerepository.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc
-    stage/src/fnordmetric/query/query.cc
-    stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
     stage/src/fnordmetric/sql/expressions/boolean.cc
     stage/src/fnordmetric/sql/expressions/datetime.cc
@@ -106,40 +148,10 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql/runtime/tablerepository.cc
     stage/src/fnordmetric/sql/runtime/tablescan.cc
     stage/src/fnordmetric/sql/svalue.cc
-    stage/src/fnordmetric/sql_extensions/areachartbuilder.cc
-    stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
-    stage/src/fnordmetric/sql_extensions/linechartbuilder.cc
-    stage/src/fnordmetric/sql_extensions/pointchartbuilder.cc
-    stage/src/fnordmetric/sql_extensions/domainconfig.cc
-    stage/src/fnordmetric/sql_extensions/drawstatement.cc
-    stage/src/fnordmetric/sql_extensions/seriesadapter.cc
-    stage/src/fnordmetric/thread/threadpool.cc
-    stage/src/fnordmetric/metricdb/adminui.cc
-    stage/src/fnordmetric/metricdb/backends/disk/compactiontask.cc
-    stage/src/fnordmetric/metricdb/backends/disk/metric.cc
-    stage/src/fnordmetric/metricdb/backends/disk/metriccursor.cc
-    stage/src/fnordmetric/metricdb/backends/disk/metricsnapshot.cc
-    stage/src/fnordmetric/metricdb/backends/disk/metricrepository.cc
-    stage/src/fnordmetric/metricdb/backends/disk/labelindex.cc
-    stage/src/fnordmetric/metricdb/backends/disk/labelindexreader.cc
-    stage/src/fnordmetric/metricdb/backends/disk/labelindexwriter.cc
-    stage/src/fnordmetric/metricdb/backends/disk/samplereader.cc
-    stage/src/fnordmetric/metricdb/backends/disk/samplewriter.cc
-    stage/src/fnordmetric/metricdb/backends/disk/tableheaderreader.cc
-    stage/src/fnordmetric/metricdb/backends/disk/tableheaderwriter.cc
-    stage/src/fnordmetric/metricdb/backends/disk/tableref.cc
-    stage/src/fnordmetric/metricdb/backends/disk/tokenindex.cc
-    stage/src/fnordmetric/metricdb/backends/disk/tokenindexreader.cc
-    stage/src/fnordmetric/metricdb/backends/disk/tokenindexwriter.cc
-    stage/src/fnordmetric/metricdb/backends/inmemory/metric.cc
-    stage/src/fnordmetric/metricdb/backends/inmemory/metricrepository.cc
-    stage/src/fnordmetric/metricdb/httpapi.cc
-    stage/src/fnordmetric/metricdb/metric.cc
-    stage/src/fnordmetric/metricdb/metricrepository.cc
-    stage/src/fnordmetric/metricdb/metrictableref.cc
-    stage/src/fnordmetric/metricdb/metrictablerepository.cc
-    stage/src/fnordmetric/metricdb/sample.cc
-    stage/src/fnordmetric/metricdb/statsd.cc)
+    stage/src/fnordmetric/util/logger.cc
+    stage/src/fnordmetric/util/logoutputstream.cc
+    stage/src/fnordmetric/adminui.cc
+    stage/src/fnordmetric/httpapi.cc)
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(stage/src)
@@ -180,10 +192,6 @@ if(ENABLE_TESTS)
 
   add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
   target_link_libraries(tests/test-sql fnord)
-
-  add_executable(tests/test-ui
-       stage/src/fnordmetric/ui/ui_test.cc)
-  target_link_libraries(tests/test-ui fnord)
 
   add_executable(tests/test-input-stream
       stage/src/fnordmetric/util/inputstream_test.cc)

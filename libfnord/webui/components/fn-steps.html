@@ -1,0 +1,31 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-steps-base-tpl'></template>
+<script type='text/javascript'>
+  var StepsComponent = function() {
+    this.createdCallback = function() {
+      if (this.hasAttribute('data-split-evenly')) {this.renderEvenlySteps();}
+    };
+
+    this.renderEvenlySteps = function() {
+      var steps = this.querySelectorAll("fn-step");
+      var width = (100 / steps.length) + "%";
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].style.width = width;
+      }
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-steps', StepsComponent);
+  }, false);
+</script>
+

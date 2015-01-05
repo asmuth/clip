@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_TYPES_H
 #define _FNORDMETRIC_TYPES_H
-#include <fnordmetric/util/datetime.h>
+#include <fnord/base/datetime.h>
 
 namespace fnordmetric {
 
@@ -17,7 +17,7 @@ typedef std::string StringType;
 typedef double FloatType;
 typedef int64_t IntegerType;
 typedef bool BoolType;
-typedef fnord::util::DateTime TimeType;
+typedef fnord::DateTime TimeType;
 
 }
 

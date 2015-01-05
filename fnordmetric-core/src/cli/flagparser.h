@@ -12,12 +12,10 @@
 #define _FNORDMETRIC_FLAGPARSER_H
 #include <string>
 #include <vector>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnord/base/exception.h>
+#include <fnord/io/outputstream.h>
 
 namespace fnordmetric {
-namespace util {
-class OutputStream;
-}
 namespace cli {
 
 const char kFlagError[] = "FlagError";
@@ -84,7 +82,7 @@ public:
    */
   const std::vector<std::string>& getArgv() const;
 
-  void printUsage(util::OutputStream* target) const;
+  void printUsage(fnord::io::OutputStream* target) const;
 
 protected:
   struct FlagState {

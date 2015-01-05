@@ -10,13 +10,13 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <fnord/base/exception.h>
+#include <fnord/base/exceptionhandler.h>
+#include <fnord/io/inputstream.h>
+#include <fnord/io/outputstream.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/cli/cli.h>
 #include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
@@ -74,7 +74,7 @@ void CLI::parseArgs(Environment* env, int argc, const char** argv) {
 }
 
 void CLI::printUsage() {
-  auto err_stream = fnordmetric::util::OutputStream::getStderr();
+  auto err_stream = fnord::io::OutputStream::getStderr();
   err_stream->printf("usage: fnordmetric-cli [options] [file.sql]\n");
   err_stream->printf("\noptions:\n");
   env()->flags()->printUsage(err_stream.get());
@@ -84,7 +84,7 @@ void CLI::printUsage() {
 }
 
 int CLI::executeSafely(Environment* env) {
-  auto err_stream = util::OutputStream::getStderr();
+  auto err_stream = fnord::io::OutputStream::getStderr();
 
   try {
     if (env->flags()->isSet("help")) {
@@ -93,7 +93,7 @@ int CLI::executeSafely(Environment* env) {
     }
 
     execute(env);
-  } catch (const util::RuntimeException& e) {
+  } catch (const fnord::Exception& e) {
     if (e.getTypeName() == "UsageError") {
       err_stream->printf("\n");
       printUsage();
@@ -121,27 +121,27 @@ void CLI::execute(Environment* env) {
   const auto& args = flags->getArgv();
 
   /* open input stream */
-  std::shared_ptr<util::InputStream> input;
+  std::shared_ptr<fnord::io::InputStream> input;
   if (args.size() == 1) {
     if (args[0] == "-") {
       if (env->verbose()) {
         env->logger()->log("DEBUG", "Input from stdin");
       }
 
-      input = std::move(util::InputStream::getStdin());
+      input = std::move(fnord::io::InputStream::getStdin());
     } else {
       if (env->verbose()) {
         env->logger()->log("DEBUG", "Input file: " + args[0]);
       }
 
-      input = std::move(util::FileInputStream::openFile(args[0]));
+      input = std::move(fnord::io::FileInputStream::openFile(args[0]));
     }
   } else {
     RAISE("UsageError", "usage error");
   }
 
   /* open output stream */
-  std::shared_ptr<util::OutputStream> output;
+  std::shared_ptr<fnord::io::OutputStream> output;
   if (flags->isSet("output")) {
     auto output_file = flags->getString("output");
 
@@ -149,12 +149,12 @@ void CLI::execute(Environment* env) {
       env->logger()->log("DEBUG", "Output file: " + output_file);
     }
 
-    output = std::move(util::FileOutputStream::openFile(output_file));
+    output = std::move(fnord::io::FileOutputStream::openFile(output_file));
   } else {
     if (env->verbose()) {
       env->logger()->log("DEBUG", "Output to stdout");
     }
-    output = std::move(util::OutputStream::getStdout());
+    output = std::move(fnord::io::OutputStream::getStdout());
   }
 
   /* execute query */

@@ -7,12 +7,8 @@ all: assets
 	mkdir -p target/tests
 	mkdir -p stage/src
 	test -e stage/src/fnordmetric || ln -s ../../../../src stage/src/fnordmetric || true
+	test -e stage/src/fnord || ln -s ../../../../../libfnord stage/src/fnord || true
 	(cd target && cmake .. -DCMAKE_BUILD_TYPE=Release && make)
-	rm -f ../fnordmetric
-	rm -f ../libfnordmetric-static.a
-	rm -f ../libfnordmetric.dylib
-	rm -f ../libfnordmetric.so
-	ln -s cmake/target/fnordmetric ../fnordmetric
 
 install:
 	(cd target && cmake .. && make install)

@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/inspect.h>
+#include <fnord/base/exception.h>
+#include <fnord/base/inspect.h>
 #include <string.h>
 
 namespace fnordmetric {
@@ -175,7 +175,6 @@ const std::string Token::getString() const {
 } // namespace fnordmetric
 
 namespace fnord {
-namespace util {
 
 template <>
 std::string inspect<
@@ -191,5 +190,4 @@ std::string inspect<
   return fnordmetric::query::Token::getTypeName(value.getType());
 }
 
-} // namespace util
 } // namespace fnord

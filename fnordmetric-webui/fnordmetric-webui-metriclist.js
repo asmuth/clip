@@ -74,7 +74,7 @@ FnordMetric.views.MetricList = function() {
         "Labels",
         "Last Insert",
         "Total stored bytes"], table_container, 25);
-
+    console.log("foo");
     for (i in metrics) {
       table_view.addRow([
           metrics[i]["key"],
@@ -107,22 +107,6 @@ FnordMetric.views.MetricList = function() {
       elem, ["Metric", "Labels", "Last Insert", "Total stored bytes"]);
   }
 
-  function loadMetricList(viewport, query_params) {
-    FnordMetric.httpGet("/metrics", function(r) {
-      if (r.status == 200) {
-        var json = JSON.parse(r.response);
-        var search_item;
-        if (query_params.innerView != undefined) {
-          json.metrics =
-              actions[query_params.innerView].data(json.metrics, query_params.innerViewValue);
-          search_item = query_params.innerviewValue;
-        }
-        renderMetricList(viewport, json.metrics, search_item);
-      } else {
-        FnordMetric.util.displayErrorMessage(viewport, "Error connecting to server");
-      }
-    });
-  }
 
   var destroy = function(elem) {
   }

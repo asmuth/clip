@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
+#include <fnord/base/exception.h>
+#include <fnord/io/outputstream.h>
 #include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace cli {
@@ -179,7 +179,7 @@ const std::vector<std::string>& FlagParser::getArgv() const {
   return argv_;
 }
 
-void FlagParser::printUsage(util::OutputStream* target) const {
+void FlagParser::printUsage(fnord::io::OutputStream* target) const {
   for (const auto& flag : flags_) {
     if (flag.shortopt == nullptr) {
       target->printf("    --%-26.26s", flag.longopt);

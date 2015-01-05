@@ -8,12 +8,12 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <memory>
+#include <fnord/base/exception.h>
+#include <fnord/io/inputstream.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>
 #include <fnordmetric/sql/parser/astnode.h>
 #include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {
@@ -26,7 +26,7 @@ CSVBackend* CSVBackend::singleton() {
 
 bool CSVBackend::openTables(
     const std::vector<std::string>& table_names,
-    const util::URI& source_uri,
+    const fnord::URI& source_uri,
     std::vector<std::unique_ptr<TableRef>>* target) {
   if (source_uri.scheme() != "csv") {
     return false;

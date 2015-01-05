@@ -13,10 +13,10 @@
 #include <string>
 #include <ctime>
 #include <stdint.h>
+#include <fnord/base/inspect.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/format.h>
-#include <fnordmetric/util/inspect.h>
 
 namespace fnordmetric {
 namespace query {
@@ -263,7 +263,7 @@ std::string SValue::toString() const {
     }
 
     case T_TIMESTAMP: {
-      return util::format::formatTime(getTimestamp());
+      return getTimestamp().toString("%Y-%m-%d %H:%M:%S");
     }
 
     case T_FLOAT: {
@@ -479,7 +479,6 @@ bool SValue::tryTimeConversion() {
 }
 
 namespace fnord {
-namespace util {
 
 template <>
 std::string inspect<fnordmetric::query::SValue::kSValueType>(
@@ -487,5 +486,4 @@ std::string inspect<fnordmetric::query::SValue::kSValueType>(
   return fnordmetric::query::SValue::getTypeName(type);
 }
 
-}
 }

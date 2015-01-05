@@ -12,44 +12,57 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include <fnord/base/exception.h>
+#include <fnord/base/exceptionhandler.h>
+#include <fnord/base/inspect.h>
+#include <fnord/base/random.h>
+#include <fnord/net/http/httpserver.h>
+#include <fnord/io/fileutil.h>
+#include <fnord/io/inputstream.h>
+#include <fnord/io/outputstream.h>
+#include <fnord/net/udpserver.h>
+#include <fnord/net/statsd/statsd.h>
+#include <fnord/thread/threadpool.h>
+#include <fnord/service/metric/metricservice.h>
+#include <fnord/service/metric/metricserviceadapter.h>
+#include <fnord/service/groups/groupsservice.h>
+#include <fnord/service/groups/groupsserviceadapter.h>
+#include <fnord/service/keyvalue/keyvalueservice.h>
+#include <fnord/service/keyvalue/keyvalueserviceadapter.h>
+#include <fnord/system/signalhandler.h>
 #include <fnordmetric/cli/flagparser.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/http/httpserver.h>
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/metricdb/adminui.h>
-#include <fnordmetric/metricdb/httpapi.h>
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
-#include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
-#include <fnordmetric/metricdb/statsd.h>
-#include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/random.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/signalhandler.h>
-#include <fnordmetric/thread/threadpool.h>
+#include <fnordmetric/adminui.h>
+#include <fnordmetric/httpapi.h>
 
 using namespace fnordmetric;
-using namespace fnordmetric::metricdb;
 
 static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
     "github.com/paulasmuth/fnordmetric";
 
+using fnord::json::JSONRPC;
+using fnord::json::JSONRPCHTTPAdapter;
+using fnord::metric_service::MetricService;
+using fnord::metric_service::MetricServiceAdapter;
+using fnord::groups_service::GroupsService;
+using fnord::groups_service::GroupsServiceAdapter;
+using fnord::keyvalue_service::KeyValueService;
+using fnord::keyvalue_service::KeyValueServiceAdapter;
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
+using fnord::statsd::StatsdServer;
 
-static IMetricRepository* openBackend(
+static MetricService makeMetricService(
     const std::string& backend_type,
     TaskScheduler* backend_scheduler) {
+
   /* open inmemory backend */
   if (backend_type == "inmemory") {
     env()->logger()->printf(
         "INFO",
         "Opening new inmemory backend -- SHOULD ONlY BE USED FOR TESTING");
-    return new inmemory_backend::MetricRepository();
+    return MetricService::newWithInMemoryBackend();
   }
 
   /* open disk backend */
@@ -66,7 +79,7 @@ static IMetricRepository* openBackend(
         "Opening disk backend at %s",
         datadir.c_str());
 
-    return new disk_backend::MetricRepository(datadir, backend_scheduler);
+    return MetricService::newWithDiskBackend(datadir, backend_scheduler);
   }
 
   RAISE(
@@ -77,14 +90,16 @@ static IMetricRepository* openBackend(
 
 static int startServer() {
   fnord::thread::ThreadPool server_pool(
-      std::unique_ptr<fnord::util::ExceptionHandler>(
-          new fnord::util::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
+      std::unique_ptr<fnord::ExceptionHandler>(
+          new fnord::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
 
   fnord::thread::ThreadPool worker_pool(
-      std::unique_ptr<fnord::util::ExceptionHandler>(
-          new fnord::util::CatchAndPrintExceptionHandler(
-              fnordmetric::env()->logger())));
+      std::unique_ptr<fnord::ExceptionHandler>(
+          new fnord::CatchAndPrintExceptionHandler(nullptr)));
 
+  JSONRPC json_rpc;
+
+  /* setup MetricService */
   if (env()->flags()->isSet("datadir")) {
     auto datadir = env()->flags()->getString("datadir");
 
@@ -107,11 +122,21 @@ static int startServer() {
     }
   }
 
-  auto metric_repo = openBackend(
+  auto metric_service = makeMetricService(
       env()->flags()->getString("storage_backend"),
       &server_pool);
 
-  /* statsd server */
+  MetricServiceAdapter::registerJSONRPC(&metric_service, &json_rpc);
+
+  /* Setup GroupsService */
+  GroupsService groups_service;
+  GroupsServiceAdapter::registerJSONRPC(&groups_service, &json_rpc);
+
+  /* Setup KeyValueService */
+  KeyValueService keyvalue_service;
+  KeyValueServiceAdapter::registerJSONRPC(&keyvalue_service, &json_rpc);
+
+  /* Setup statsd server */
   if (env()->flags()->isSet("statsd_port")) {
     auto port = env()->flags()->getInt("statsd_port");
     env()->logger()->printf(
@@ -119,12 +144,28 @@ static int startServer() {
         "Starting statsd server on port %i",
         port);
 
-    auto statsd_server =
-        new StatsdServer(metric_repo, &server_pool, &worker_pool);
+    auto statsd_server = new StatsdServer(&server_pool, &worker_pool);
+    statsd_server->onSample([&metric_service] (
+        const std::string& key,
+        double value,
+        const std::vector<std::pair<std::string, std::string>>& labels) {
+      if (env()->verbose()) {
+        env()->logger()->printf(
+            "DEBUG",
+            "statsd sample: %s=%f %s",
+            key.c_str(),
+            value,
+            fnord::inspect(labels).c_str());
+      }
+
+      metric_service.insertSample(key, value, labels);
+    });
+
     statsd_server->listen(port);
   }
 
-  /* http server */
+
+  /* Setup http server */
   if (env()->flags()->isSet("http_port")) {
     auto port = env()->flags()->getInt("http_port");
     env()->logger()->printf(
@@ -132,13 +173,15 @@ static int startServer() {
         "Starting HTTP server on port %i",
         port);
 
+    auto http_api = new HTTPAPI(metric_service.metricRepository());
+
     auto http_server = new fnord::http::HTTPServer(
         &server_pool,
         &worker_pool);
 
     http_server->addHandler(AdminUI::getHandler());
-    http_server->addHandler(
-        std::unique_ptr<http::HTTPHandler>(new HTTPAPI(metric_repo)));
+    http_server->addHandler(JSONRPCHTTPAdapter::make(&json_rpc));
+    http_server->addHandler(std::unique_ptr<http::HTTPHandler>(http_api));
     http_server->listen(port);
   }
 
@@ -146,7 +189,7 @@ static int startServer() {
 }
 
 static void printUsage() {
-  auto err_stream = fnordmetric::util::OutputStream::getStderr();
+  auto err_stream = fnord::io::OutputStream::getStderr();
   err_stream->printf("usage: fnordmetric-server [options]\n");
   err_stream->printf("\noptions:\n");
   env()->flags()->printUsage(err_stream.get());
@@ -155,11 +198,11 @@ static void printUsage() {
 }
 
 int main(int argc, const char** argv) {
-  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  fnord::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
-  fnordmetric::util::SignalHandler::ignoreSIGHUP();
-  fnordmetric::util::SignalHandler::ignoreSIGPIPE();
-  fnord::util::Random::init();
+  fnord::system::SignalHandler::ignoreSIGHUP();
+  fnord::system::SignalHandler::ignoreSIGPIPE();
+  fnord::Random::init();
 
   env()->flags()->defineFlag(
       "http_port",
@@ -230,8 +273,8 @@ int main(int argc, const char** argv) {
 
   try {
     return startServer();
-  } catch (const fnordmetric::util::RuntimeException& e) {
-    auto err_stream = fnordmetric::util::OutputStream::getStderr();
+  } catch (const fnord::Exception& e) {
+    auto err_stream = fnord::io::OutputStream::getStderr();
     auto msg = e.getMessage();
     err_stream->printf("[ERROR] ");
     err_stream->write(msg.c_str(), msg.size());

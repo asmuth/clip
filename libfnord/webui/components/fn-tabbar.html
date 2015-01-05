@@ -1,0 +1,63 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>
+-->
+<script type='text/javascript'>
+  var TabBarComponent = function() {
+    this.createdCallback = function() {
+      var tabs = this.querySelectorAll("fn-tab");
+
+      var active_elem = this.querySelector("fn-tab[data-active]");
+      if (active_elem == null) {
+        active_elem = tabs[0];
+        active_elem.setAttribute('data-active', 'active');
+      }
+
+
+      if (this.hasAttribute('data-content-attached')) {
+        this.setActiveContent(active_elem.getAttribute('data-index'));
+      }
+
+      var base = this;
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].onclick = function() {
+          base.querySelector(
+            'fn-tab[data-active]').removeAttribute('data-active');
+          this.setAttribute('data-active', 'active');
+
+          var click_event = new CustomEvent(
+            'fn-tab-click', {detail : this.getAttribute('data-index')});
+          base.dispatchEvent(click_event);
+
+          if (base.hasAttribute('data-content-attached')) {
+            base.setActiveContent(this.getAttribute('data-index'));
+          }
+        }
+      };
+    };
+
+    this.setActiveContent = function(index) {
+      var active_elem = this.querySelector("fn-tab-content[data-active]")
+      if (active_elem != null) {
+        active_elem.removeAttribute("data-active");
+      }
+
+      var new_elem = this.querySelector("fn-tab-content[data-index='" + index + "']")
+      if (new_elem != null) {
+        new_elem.setAttribute('data-active', 'active');
+      }
+    }
+
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var tabbar = Fnord.registerComponent("fn-tabbar", TabBarComponent);
+  }, false);
+</script>

@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/util/logoutputstream.h>
 
-using fnordmetric::util::OutputStream;
+using fnord::io::OutputStream;
 
 namespace fnord {
 namespace util {

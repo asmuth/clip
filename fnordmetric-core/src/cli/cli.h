@@ -10,9 +10,9 @@
 
 #ifndef _FNORDMETRIC_CLI_H
 #define _FNORDMETRIC_CLI_H
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/query/queryservice.h>
+#include <fnord/base/exception.h>
+#include <fnord/io/outputstream.h>
+#include <fnordmetric/chartsql/queryservice.h>
 
 namespace fnordmetric {
 class Environment;

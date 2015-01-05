@@ -8,12 +8,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-if (FnordMetric === undefined) {
+if (typeof FnordMetric == "undefined") {
   FnordMetric = {};
 }
 
-if (FnordMetric.util === undefined) {
+if (typeof FnordMetric.util == "undefined") {
   FnordMetric.util = {};
 }
 
@@ -22,6 +21,7 @@ if (FnordMetric.util === undefined) {
   * @param qstr like metric_list?metric=/osx/load_avg_15m&view=value
   */
 FnordMetric.util.parseQueryString = function(qstr) {
+  if (qstr == null) {return;}
   var path;
   var query_params = {};
 
@@ -64,7 +64,7 @@ FnordMetric.util.parseQueryString = function(qstr) {
   * @param push_state (boolena) determines if the url should be
   * added to the browser's history
   */
-FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_state) {
+FnordMetric.util.setURLQueryString = function(hash, query_params, push_state) {
   if (hash === undefined || hash === "undefined") {
     window.location.hash = "";
     return;
@@ -72,10 +72,9 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
   var path = "#" + hash;
 
   if ("innerView" in query_params && query_params.innerView != undefined) {
-    path += "?" + query_params.innerView + "=";
-    path += (encode)?
-      encodeURIComponent(query_params.innerViewValue) :
-      query_params.innerViewValue;
+    path += "?" + encodeURIComponent(query_params.innerView) + "=";
+    path +=
+      encodeURIComponent(query_params.innerViewValue);
 
     for (var param in query_params) {
       if (param != "innerView" && 
@@ -84,8 +83,8 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
           query_params[param].length > 0) {
 
         path += 
-          "&" + param +
-          "=" + query_params[param];
+          "&" + encodeURIComponent(param) +
+          "=" + encodeURIComponent(query_params[param]);
       }
     }
   }
@@ -94,63 +93,9 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, encode, push_s
     window.history.pushState({url:path}, "#", path);
   }
   window.location.hash = path;
+  return path;
 }
 
-
-
-/* simple loader foreground */
-FnordMetric.util.displayLoader = function(elem) {
-  elem.innerHTML = "<div class='load_foreground'><i class='fa fa-refresh fa-spin'></div>";
-}
-
-/*
- * loader foreground if loader can't be 
- * destroyed with resetting the innerHTML 
-*/
-FnordMetric.util.Loader = function() {
-  var loader  = document.createElement("div");
-  loader.className = "load_foreground";
-  loader.innerHTML = 
-    "<i class = 'fa fa-refresh fa-spin'>";
-  on_click = null;
-
-  function onClick(on_click_new) {
-    on_click = on_click_new;
-  }
-
-  function display(elem) {
-    elem.appendChild(loader);
-    if (on_click != null) {
-      loader.onclick = on_click;
-    }
-  }
-
-  function destroy(elem) {
-    //FIXME
-    loader = elem.querySelector(".load_foreground");
-    elem.removeChild(loader);
-  }
-
-  return {
-    "display" : display,
-    "destroy" : destroy,
-    "onClick" : onClick
-  }
-}
-
-
-FnordMetric.util.displayErrorMessage = function(elem, msg) {
-  elem.innerHTML = "<div>" + msg + "</div>"; // XSS!
-}
-
-
-FnordMetric.util.renderPageHeader = function(text, elem) {
-  var header = document.createElement("h1");
-  header.className = "page_header";
-  header.innerHTML = text;
-
-  elem.appendChild(header);
-}
 
 /**
   * @param offset in seconds
@@ -174,39 +119,6 @@ FnordMetric.util.parseTimeOffset = function(offset) {
   }
 }
 
-FnordMetric.util.getHumanMonth = function(index, type) {
-  var months = {
-    "long" : [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"],
-    "short" : [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"]};
-
-  return months[type][index];
-}
-
-
 /**
   * creates a time description like 
   * '2 hours ago - Nov 8 2014 11:33:11
@@ -216,8 +128,12 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
     return "0";
   }
-  var timestamp =
-    FnordMetric.util.convertToMilliTS(timestamp);
+
+  var months = [
+    "Jan","Feb", "Mar","Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct","Nov", "Dec"];
+
+  var timestamp = Math.floor(timestamp / 1000);
 
   var now = Date.now();
   var date = new Date(timestamp);
@@ -240,7 +156,7 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
 
   time_str +=
     " - " + 
-    FnordMetric.util.getHumanMonth(date.getMonth(), "short") + 
+    months[date.getMonth()] + 
     " " + date.getDate() +
     " " + date.getFullYear() +
     " " + date.getHours() +
@@ -249,200 +165,6 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
 
   return time_str;
 }
-
-//FIXLAURA check all cases 
-FnordMetric.util.convertToMilliTS = function(ts) {
-  var length = ts.toString().length;
-  if (length == 16) {
-    return (ts/1000);
-  } else if (length < 13 && length >= 10) {
-    return (ts * 1000);
-  } else {
-    return ts;
-  }
-}
-
-FnordMetric.util.parseMilliTS = function(ts) {
-  var ts = FnordMetric.util.convertToMilliTS(ts);
-  if (ts < 1000) {
-    if (ts == 0) {
-      return " less than 1 millisecond";
-    }
-    if (ts == 1) {
-      return " 1 millisecond";
-    }
-    return ts + " milliseconds";
-  }
-
-  if (ts < 60000) {
-    ts = ts / 1000;
-    return (ts + (ts == 1? " second" : " seconds"));
-  }
-
-  if (ts < 3600000){
-    ts = ts / 60000;
-    return (ts + (ts == 1? " minute" : " minutes"));
-  }
-
-  ts = ts / 3600000;
-  return (ts + (ts == 1? " hour" : " hours"));
-}
-
-FnordMetric.util.humanCountRows = function(tables) {
-  if (tables == undefined) {
-    return "0 rows";
-  }
-
-  var num = 0;
-  tables.map(function(table) {
-    num += table.rows.length;
-  });
-  return (num == 1? num + " row" : num + " rows")
-}
-
-/**
-  * sorts the metric list for a specific column 
-  * @param metrics is an array of arrays
-  * @param column_index determines which 'column'
-  *   ar array index should be sorted
-  * @param order can be asc or desc
-  */
-FnordMetric.util.sortMetricList = function(metrics, column_index, order) {
-  function compare(a, b) {
-    if (a < b) {
-      if (order == "asc") {
-        return -1;
-      } else {
-        return 1;
-      }
-    }
-    if (a > b) {
-      if (order == "asc") {
-        return 1;
-      } else {
-        return -1;
-      }
-    }
-    return 0;
-  }
-
-  var sorted_metrics = metrics;
-  column_index = parseInt(column_index);
-  switch (column_index) {
-    case 0:
-      sorted_metrics.sort(function(a, b) {
-        return (compare(
-          a[column_index].toLowerCase(),
-          b[column_index].toLowerCase()));
-      });
-      break;
-    case 2:
-      sorted_metrics.sort(function(a, b) {
-        return (compare(
-          a[column_index].toLowerCase(), 
-          b[column_index].toLowerCase()));
-      });
-      break;
-    case 3:
-      sorted_metrics.sort(function(a, b) {
-        return (compare(
-          a[column_index], b[column_index]));
-      });
-      break;
-    default:
-      break;
-  }
-}
-
-FnordMetric.util.getHorizontalEditorHeight = function(
-  editor_height, result_height) {
-    var default_height = (window.innerHeight - 49);
-    editor_height = Math.max(editor_height, default_height);
-    var height = Math.max(editor_height, result_height);
-    return height;
-}
-
-FnordMetric.util.getHorizontalEditorWidth = 
-  function(editor_width) {
-    //returns the percental editor width
-    var wdn_width = window.innerWidth;
-    if (editor_width > 0) {
-      editor_width = wdn_width / editor_width;
-    }
-    var width = Math.max(35, Math.min(50, editor_width));
-    return width;
-}
-
-
-FnordMetric.createButton = function(href, class_name, inner_HTML) {
-  var button = document.createElement("a");
-  button.href = "#";
-  if (class_name !== undefined) {
-    button.className = class_name;
-  }
-  if (inner_HTML !== undefined) {
-    button.innerHTML = inner_HTML;
-  }
-  return button;
-}
-
-/**
-  * returns those metric objects whose key includes search_item
-  * @param metrics array of metric objects
-  */
-FnordMetric.util.searchMetricList = function(metrics, search_item) {
-  //FIXME works but seems not to be the best solution
-  var data = [];
-  metrics.map(function(item) {
-    if (item.key != undefined) {
-      if (item.key.indexOf(search_item) > -1) {
-        data.push(item);
-      }
-    }
-  });
-  return data;
-}
-
-FnordMetric.util.htmlEscape = function(str) {
-  return str;
-}
-
-
-/* returns all words that include filter */
-FnordMetric.util.filterStringArray = function(strings, filter, limit) {
-  //FIXME ?
-  var data = [];
-  strings.map(function(string) {
-    if (string.indexOf(filter) > -1 && limit > 0) {
-      data.push(string);
-      limit--;
-    }
-  });
-  return data;
-}
-
-FnordMetric.util.toMilliSeconds = function(timestr) {
-  var time = timestr.split(/([a-z])/);
-  var conversion = {
-    "s" : 1000,
-    "m" : 60000,
-    "h" : 3600000,
-    "d" : 86400000
-  }
-  var seconds = time[0] * conversion[time[1]];
-  return parseInt(seconds, 10);
-}
-
-FnordMetric.util.milliSecondsToTimeString = function(seconds) {
-  if (seconds < 60000) {
-    return (seconds / 1000) + "s";
-  }
-  if (seconds < 3600000) {
-    return (seconds / 60000) + "m";
-  }
-  return (seconds / 3600000) + "h";
-}
-
 
 /**
   * builds a ChartSQL query from url params
@@ -454,8 +176,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   var view = params.view;
   /* column for rollups */
   var columns = params.columns;
-  var start_time = Math.round(params.start_time / 1000);
-  var end_time = Math.round(params.end_time / 1000);
+  var start_time = params.start_time;
+  var end_time = params.end_time;
   var t_step = params.t_step;
   var t_window = params.t_window;
   var by = params.by;
@@ -479,10 +201,10 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   /* complete select_expr */
   if (view == "value") {
     select_expr += "value AS y ";
-  } else if (view == "rollup_sum" || view == "rollup_count" || view == "rollup_mean") {
+  } else if (view.substr(0,6) == "rollup") {
     /* adapt draw stm */
     draw_stm = "DRAW BARCHART\n  ";
-    var func = (view.split("_"))[1];
+    var func = (view.split(" "))[1];
 
     var column;
     if (columns != undefined && (columns.split(","))[0].length > 0) {
@@ -496,7 +218,7 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     select_expr = 
       " SELECT " + column + " AS X, " + func + "(value) AS Y";
 
-    hasAggregation = true;
+    //hasAggregation = true;
   } else {
     select_expr +=
       view.toLowerCase() + "(value) AS Y";
@@ -533,10 +255,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, " + Math.round(t_window / 1000) + ",";
+        "OVER TIMEWINDOW(time, " + t_window + ",";
 
-      group_expr += (t_step != undefined)?
-        Math.round(t_step / 1000) : Math.round(t_window / 1000);
+      group_expr += (t_step != undefined)? t_step : t_window;
 
       group_expr+= ")";
 
@@ -561,97 +282,14 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   return query;
 }
 
-FnordMetric.util.isNumKey = function(keycode) {
-  return (
-    (keycode >= 48 && keycode <= 57));
-}
-
-/* tab, arrow-left, arrow-right, deletekeys */
-FnordMetric.util.isNavKey = function(keycode) {
-  return (
-    keycode == 8 ||
-    keycode == 9 ||
-    keycode == 37 ||
-    keycode == 39 ||
-    keycode == 46);
-}
-
-FnordMetric.util.validatedTimeInput = function(time_input,type, callback) {
-  time_input.maxLength = "2";
-  var classname = time_input.className;
-  time_input.addEventListener('keypress', function(e) {
-    if (e.keyCode == 13) {
-      var value = parseInt(time_input.value, 10);
-      if (type == "minutes") {
-        if (value > 59) {
-          this.className += " highlighted";
-          return;
-        }
-      } else {
-        if (value > 23) {
-          this.className += " highlighted";
-          return;
-        }
-      }
-      this.className = classname;
-      callback();
-      return;
-    }
-    if (!FnordMetric.util.isNavKey(e.keyCode) &&
-      !FnordMetric.util.isNumKey(e.keyCode)) {
-      e.preventDefault();
-    }
-  },false);
-}
-
-FnordMetric.util.appendLeadingZero = function (num) {
-  var num = num;
-  if (typeof num == 'string') {
-    return (num.length > 1)? num : "0" + num;
-  }
-  return (num > 9)? num : "0" + num;
-}
-
-
-/* returns mm/dd/yyyy hh:mm */
-FnordMetric.util.getDateTimeString = function(timestamp) {
-  var timestamp = timestamp == undefined?
-    new Date() : new Date(parseInt(timestamp, 10));
-
-  var month = timestamp.getMonth();
-  month = FnordMetric.util.appendLeadingZero(month +1);
-  var day = FnordMetric.util.appendLeadingZero(timestamp.getDate());
-  var hours = FnordMetric.util.appendLeadingZero(timestamp.getHours());
-  var minutes = FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
-  return (
-    month + "/" + day + "/" +
-    timestamp.getFullYear() + "  " + hours +
-    ":" + minutes);
-}
-
-FnordMetric.util.makeLowerCaseUnderscore = function(string) {
-  return (string.toLowerCase().replace(/\s\s|\s/g,"_"));
-}
-
-FnordMetric.util.reverseLowerCaseUnderscore = function(string) {
-  var str = string[0].toUpperCase();
-  for (var i = 1; i < string.length; i++) {
-    if (string[i] == "_") {
-      str += " " + string[i+1].toUpperCase();
-      i++;
-    } else {
-      str += string[i];
-    }
-  }
-  return str;
-}
-
-/* doesn't check if value is already in list */
 FnordMetric.util.addToCSV = function(list, value) {
   if (list.length == 0) {
     return value;
   }
   if (value.length == 0) {
+    return list;
+  }
+  if (list.indexOf(value) > -1 ) {
     return list;
   }
   var values = list.split(",");
@@ -670,57 +308,3 @@ FnordMetric.util.removeFromCSV = function(list, value) {
   }
   return list;
 }
-
-FnordMetric.util.renderFlyout = function(text, elem, left) {
-  var flyout = document.createElement("div");
-  flyout.className = "hover_tooltip";
-  flyout.innerHTML = text;
-  flyout.style.top = "85px";
-  flyout.style.left = left + "px";
-  elem.appendChild(flyout);
-  return flyout;
-}
-
-
-FnordMetric.util.removeIfChild = function(child_n, parent_n) {
-  if (typeof child_n == 'object' && child_n.parentNode == parent_n) {
-    parent_n.removeChild(child_n);
-  }
-}
-
-/**
-  * calls every x seconds onRefresh
-  */
-FnordMetric.util.autoRefresh = function(onRefresh) {
-  var curr_state = false;
-  var intervalID;
-
-  this.btn;
-
-  function state() {
-    return curr_state;
-  }
-
-  function on() {
-    this.btn.className += " on";
-    curr_state = true;
-    //refresh every 30 seconds
-    intervalID = window.setInterval(onRefresh, 30000);
-  }
-
-  function off() {
-    this.btn.className = "btn";
-    curr_state = false;
-    window.clearInterval(intervalID);
-  }
-
-  return {
-    "on" : on,
-    "off" : off,
-    "state" : state
-  }
-}
-
-
-
-

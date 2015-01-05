@@ -1,0 +1,96 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style>
+  fnordmetric-controls /deep/ fnordmetric-controls-section {
+    padding: 0 10px;
+  }
+
+  fnordmetric-controls /deep/ fnordmetric-controls-section[data-position='left'] {
+    float: left;
+    height: 100%;
+  }
+
+  fnordmetric-controls /deep/ fnordmetric-controls-section[data-position='right'] {
+    float: right;
+  }
+
+  fnordmetric-controls[type='primary'] /deep/ .controls_inner,
+  fnordmetric-controls[type='primary-small'] /deep/ .controls_inner {
+    margin-top: 5px;
+    height: 76px;
+    border-top: 2px solid rgb(226, 232, 237);
+    border-bottom: 2px solid rgb(226, 232, 237);
+    background-color: #f6f8fa;
+    color: #60707f;
+  }
+
+  fnordmetric-controls[type='primary-small'] /deep/ .controls_inner {
+    height: 22px;
+    padding: 10px 0;
+  }
+
+
+  fnordmetric-controls[type='secondary'] /deep/ .controls_inner {
+    height: 39px;
+    margin: 0px;
+    line-height: 39px;
+    border-bottom: 1px solid #dbdedf;
+    font-size: 90%;
+    padding: 0 20px;
+    text-align: right;
+  }
+
+  fnordmetric-controls fn-button + fn-button {
+    border-left: 1px solid #ececec;
+    padding-left: 20px;
+  }
+
+  fnordmetric-controls fn-button {
+    font-size: 0.9rem;
+  }
+
+  fnordmetric-controls fn-dropdown[data-state='disabled'] {
+    opacity: 0.5;
+  }
+
+
+
+
+
+</style>
+<template id="fnordmetric-controls-base-tpl">
+  <style>
+
+
+  </style>
+  <div class="controls_outer">
+    <div class="controls_inner">
+      <content />
+    </div>
+  </div>
+
+</template>
+
+<script type="text/javascript">
+  var FnordMetricControlsComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fnordmetric-controls", "base");
+      shadow.appendChild(tpl);
+    }
+
+  }
+
+  window.addEventListener("fn-ready", function() {
+    var controls = Fnord.registerComponent(
+      "fnordmetric-controls", FnordMetricControlsComponent);
+  }, false);
+</script>

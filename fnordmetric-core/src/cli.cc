@@ -12,11 +12,11 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include <fnordmetric/cli/cli.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/random.h>
+#include <fnord/base/exceptionhandler.h>
+#include <fnord/base/random.h>
+#include <fnord/system/signalhandler.h>
 #include <fnordmetric/environment.h>
-#include <fnordmetric/util/signalhandler.h>
+#include <fnordmetric/cli/cli.h>
 
 using namespace fnordmetric;
 
@@ -26,11 +26,11 @@ static const char kCrashErrorMsg[] =
 
 int main(int argc, const char** argv) {
   /* setup environment */
-  fnord::util::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
+  fnord::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
   ehandler.installGlobalHandlers();
-  util::SignalHandler::ignoreSIGHUP();
-  util::SignalHandler::ignoreSIGPIPE();
-  fnord::util::Random::init();
+  fnord::system::SignalHandler::ignoreSIGHUP();
+  fnord::system::SignalHandler::ignoreSIGPIPE();
+  fnord::Random::init();
 
   /* execute commandline */
   cli::CLI::parseArgs(env(), argc, argv);

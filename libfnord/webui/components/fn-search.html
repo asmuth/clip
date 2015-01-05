@@ -1,0 +1,366 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+  fn-search {
+    display: inline-block;
+    width: 100%;
+  }
+</style>
+
+<template id="fn-search-base-tpl">
+  <style type="text/css">
+    .wrapper {
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    input {
+      position: absolute;
+      box-sizing: border-box;
+      display: inline-block;
+      margin: 0;
+      top: 0;
+      left: 0;
+      font: inherit;
+      color: inherit;
+      line-height: normal;
+      width: 100%;
+      height: 100%;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #555;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      -webkit-tap-highlight-color: rgba(255,255,255,0);
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    }
+
+    input:focus {
+      border: none;
+      background: '';
+      border: 1px solid rgba(39, 41, 43, 0.3);
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+      outline: none;
+    }
+
+    input:active {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+
+    ul {
+      position: absolute;
+      top: 100%;
+      margin: 3px -1px;
+      z-index: 1000;
+      display: none;
+      width: auto;
+      min-width: -webkit-calc(100% + 2px); */
+      min-width: calc(100% + 2px);
+      padding: 5px 0;
+      font-size: 14px;
+      text-align: left;
+      list-style: none;
+      background-color: #fff;
+      -webkit-background-clip: padding-box;
+      background-clip: padding-box;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 4px;
+      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+      box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    }
+
+    li {
+      display: list-item;
+    }
+
+    ul>li>a {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: #333;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    ul>li>a:hover,
+    ul>li[data-active='true']{
+      color: #262626;
+      background-color: #f5f5f5;
+    }
+
+    input.transparent {
+      border-color: transparent;
+      background-color: transparent;
+      box-shadow: none;
+      padding: 0em;
+    }
+
+    input.transparent:focus {
+      outline: none;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .icon {
+      display: inline-block;
+      font-style: normal;
+      line-height: 1;
+      font-weight: 400;
+      text-decoration: inherit;
+      cursor: default;
+      position: absolute;
+      text-align: center;
+      top: 50%;
+      margin: 0;
+      right: 0;
+      margin-top: -.5em;
+      height: 100%;
+      width: 2.82142em;
+      opacity: .5;
+      border-radius: 0 .2857rem .2857rem 0;
+      -webkit-transition: opacity .3s ease;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      cursor: pointer;
+    }
+
+    .icon:hover,
+    .icn:active {
+      opacity: 1!important;
+    }
+
+
+
+
+  </style>
+
+  <div class="wrapper">
+    <input />
+    <div class="icon">
+      <content select="fn-search-icon"></content>
+    </div>
+    <ul></ul>
+  </div>
+
+</template>
+
+<script type="text/javascript">
+  var SearchComponent = function() {
+
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-search", "base");
+      shadow.appendChild(tpl);
+
+      var input = this.shadowRoot.querySelector("input");
+      var base = this;
+      var min_length = 1;
+
+      if (this.hasAttribute('data-style')) {
+        input.className += this.getAttribute('data-style');
+      }
+
+      if (this.getAttribute('data-placeholder') != null) {
+        input.placeholder = this.getAttribute('data-placeholder');
+      }
+
+      this.shadowRoot.querySelector('.icon').onclick = function() {
+        base.submitSearch();
+      }
+
+      input.addEventListener('focus', function() {
+        this.value = "";
+      }, false);
+
+      input.addEventListener('input', function() {
+        if (this.value.length >= min_length) {
+          base.fireAutoCompleteEvent();
+        } else {
+          base.closeDropDownMenu();
+        }
+      }, false);
+
+      input.addEventListener('keydown', function(e) {
+        switch (e.keyCode) {
+          //Enter
+          case 13:
+            base.submitSearch();
+            break;
+
+          //Up Arrow
+          case 38:
+            base.dropDownMoveUp();
+            break;
+
+          //Down Arrow
+          case 40:
+            base.dropDownMoveDown();
+            break;
+
+          default:
+            break;
+        }
+      }, false);
+
+      window.addEventListener('click', function() {
+        base.closeDropDownMenu();
+      }, false);
+
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-style':
+          this.shadowRoot.querySelector("input").className = new_val;
+          break;
+        case 'data-placeholder':
+          this.shadowRoot.querySelector("input").placeholder = new_val;
+          break;
+        default:
+          break;
+      }
+    }
+
+    this.getValue = function() {
+      var input = this.shadowRoot.querySelector("input");
+      return input.value;
+    };
+
+    this.getActiveListElem = function() {
+      var active_elem = this.shadowRoot.querySelectorAll("li[data-active='true']");
+
+      if (active_elem !== null) {
+        return active_elem[0];
+      }
+    };
+
+    this.updateDataActiveAttr = function(new_elem, old_elem) {
+      new_elem.setAttribute('data-active', 'true');
+
+      if (old_elem !== undefined) {
+        old_elem.setAttribute('data-active', 'false');
+      }
+    };
+
+    this.dropDownMoveUp = function() {
+      var active_elem = this.getActiveListElem();
+      var new_active_elem;
+      if (active_elem !== undefined ) {
+        new_active_elem = active_elem.previousSibling;
+        //first list elem is already active
+        if (new_active_elem === null) {
+          new_active_elem = active_elem;
+          active_elem = undefined;
+        }
+      } else {
+        new_active_elem = this.shadowRoot.querySelector("li");
+      }
+
+      this.updateDataActiveAttr(new_active_elem, active_elem);
+    };
+
+    this.dropDownMoveDown = function() {
+      var active_elem = this.getActiveListElem();
+      var new_active_elem;
+      if (active_elem !== undefined ) {
+        new_active_elem = active_elem.nextSibling;
+        //last list elem is already active
+        if (new_active_elem === null) {
+          new_active_elem = active_elem;
+          active_elem = undefined;
+        }
+      } else {
+        new_active_elem = this.shadowRoot.querySelector("li");
+      }
+
+      this.updateDataActiveAttr(new_active_elem, active_elem);
+    };
+
+    this.submitSearch = function(query) {
+      var active_elem = this.getActiveListElem();
+      if (active_elem !== undefined) {
+        this.shadowRoot.querySelector("input").value = active_elem.innerText;
+      }
+      if (query !== undefined) {
+        this.shadowRoot.querySelector("input").value = query;
+      }
+      this.closeDropDownMenu();
+      this.fireSearchSubmitEvent();
+    };
+
+
+    this.openDropDownMenu = function(items) {
+      var list = this.shadowRoot.querySelector("ul");
+      list.innerHTML = "";
+      list.style.display = "block";
+
+      var base = this;
+      items.map(function(item) {
+        var list_elem = document.createElement("li");
+        list_elem.innerHTML = "<a href='#'>" + item.query + "</a>";
+        list.appendChild(list_elem);
+
+        list_elem.onclick = function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          base.submitSearch(this.innerText);
+        }
+
+        list_elem.addEventListener('mouseover', function() {
+          var active_elem = base.getActiveListElem();
+          if (active_elem !== undefined) {
+            active_elem.setAttribute('data-active', 'false');
+          }
+        }, false);
+      });
+    };
+
+    this.closeDropDownMenu = function() {
+      var list = this.shadowRoot.querySelector("ul");
+      list.innerHTML = "";
+      list.style.display = "none";
+    };
+
+    this.autocomplete = function(term, items) {
+      if (term == this.getValue() && items.length > 0) {
+        this.openDropDownMenu(items);
+      }
+    };
+
+    this.fireAutoCompleteEvent = function() {
+      this.dispatchEvent(new Event('fn-search-autocomplete'));
+    };
+
+    this.fireSearchSubmitEvent = function() {
+      this.dispatchEvent(new Event('fn-search-submit'));
+    };
+
+  };
+
+  window.addEventListener("fn-ready", function() {
+    var search = Fnord.registerComponent("fn-search", SearchComponent);
+  });
+</script>
