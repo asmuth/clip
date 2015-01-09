@@ -13,10 +13,9 @@
 #include "fnord/base/wallclock.h"
 #include "fnord/logging/logoutputstream.h"
 
-using fnord::io::OutputStream;
+using fnord::OutputStream;
 
 namespace fnord {
-namespace log {
 
 LogOutputStream::LogOutputStream(
     std::unique_ptr<OutputStream> target) :
@@ -39,5 +38,4 @@ void LogOutputStream::log(
   target_->write(lines);
 }
 
-}
 }

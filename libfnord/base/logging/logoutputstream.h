@@ -10,27 +10,25 @@
 #ifndef _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
 #define _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
 
-#include "fnord/io/outputstream.h"
-#include "fnord/logging/loglevel.h"
-#include "fnord/logging/logtags.h"
-#include "fnord/logging/logtarget.h"
+#include "fnord/base/io/outputstream.h"
+#include "fnord/base/logging/loglevel.h"
+#include "fnord/base/logging/logtarget.h"
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
-namespace log {
 
 class LogOutputStream : public LogTarget {
 public:
-  LogOutputStream(std::unique_ptr<fnord::io::OutputStream> target);
+  LogOutputStream(std::unique_ptr<OutputStream> target);
 
   void log(
       LogLevel level,
-      const LogTags* tags,
-      const std::string& message) override;
+      const String& component,
+      const String& message) override;
 
 protected:
-  std::unique_ptr<fnord::io::OutputStream> target_;
+  ScopedPtr<OutputStream> target_;
 };
 
-}
 }
 #endif

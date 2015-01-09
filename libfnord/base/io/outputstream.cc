@@ -15,10 +15,9 @@
 #include <unistd.h>
 #include "fnord/base/buffer.h"
 #include "fnord/base/exception.h"
-#include "fnord/io/outputstream.h"
+#include "fnord/base/io/outputstream.h"
 
 namespace fnord {
-namespace io {
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);
@@ -143,6 +142,5 @@ size_t BufferOutputStream::write(const char* data, size_t size) {
   return size;
 }
 
-} // io
 } // fnord
 

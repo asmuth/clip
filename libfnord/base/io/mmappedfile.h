@@ -10,7 +10,7 @@
 #ifndef _FNORD_IO_MMAPPED_FILE_H_
 #define _FNORD_IO_MMAPPED_FILE_H_
 #include <fnord/base/exception.h>
-#include <fnord/io/file.h>
+#include <fnord/base/io/file.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>

@@ -18,7 +18,7 @@
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/tcpconnection.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {
@@ -68,7 +68,7 @@ public:
    **/
   static void start(
       HTTPHandlerFactory* handler_factory,
-      UniqueRef<net::TCPConnection> conn,
+      ScopedPtr<net::TCPConnection> conn,
       TaskScheduler* scheduler);
 
   void readRequestBody(
@@ -94,7 +94,7 @@ public:
 protected:
   HTTPServerConnection(
       HTTPHandlerFactory* handler_factory,
-      UniqueRef<net::TCPConnection> conn,
+      ScopedPtr<net::TCPConnection> conn,
       TaskScheduler* scheduler);
 
   void nextRequest();
@@ -107,14 +107,14 @@ protected:
   void close();
 
   HTTPHandlerFactory* handler_factory_;
-  UniqueRef<net::TCPConnection> conn_;
+  ScopedPtr<net::TCPConnection> conn_;
   TaskScheduler* scheduler_;
   HTTPParser parser_;
   Function<void ()> on_write_completed_cb_;
   Buffer buf_;
   Buffer body_buf_;
-  UniqueRef<HTTPRequest> cur_request_;
-  UniqueRef<HTTPHandler> cur_handler_;
+  ScopedPtr<HTTPRequest> cur_request_;
+  ScopedPtr<HTTPHandler> cur_handler_;
   std::mutex mutex_;
 };
 

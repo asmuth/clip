@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/base/stringutil.h"
-#include "fnord/io/outputstream.h"
+#include "fnord/base/io/outputstream.h"
 
 namespace fnord {
 
@@ -73,7 +73,7 @@ template <typename... T>
 void iputs(const char* fmt, T... values) {
   auto str = StringUtil::formatv(fmt, inspectAll(values...));
   str += "\n";
-  io::OutputStream::getStdout()->write(str);
+  OutputStream::getStdout()->write(str);
 }
 
 }

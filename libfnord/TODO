@@ -1,4 +1,11 @@
 
+better inetaddr:resolve iface:
+  -> future<inteaddr> resolve(string);
+  -> future<inetaddr> resolve(url); // resolves service port e.g. http->80, https->443
+-> datetime -> walltime (or unixtime?), audit usage vs monotonic/tai time
+
+-> queueworker abstraction (max concurrent jobs)
+
 -> stats/counters
 -> RPC::convertToFuture impl
 

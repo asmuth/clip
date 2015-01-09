@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "fnord/io/inputstream.h"
+#include "fnord/base/io/inputstream.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsonpointer.h"
 
@@ -23,7 +23,7 @@ namespace json {
 class JSONInputStream {
 public:
 
-  explicit JSONInputStream(std::unique_ptr<io::InputStream> input);
+  explicit JSONInputStream(std::unique_ptr<InputStream> input);
   JSONInputStream(JSONInputStream&& other);
   JSONInputStream(const JSONInputStream& other) = delete;
   JSONInputStream& operator=(const JSONInputStream& other) = delete;
@@ -39,7 +39,7 @@ protected:
   void expectString(const std::string& expect);
   void advanceCursor();
 
-  std::unique_ptr<io::InputStream> input_;
+  std::unique_ptr<InputStream> input_;
   char cur_;
 };
 

@@ -7,170 +7,166 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_LOGGER_H
-#define _FNORDMETRIC_UTIL_LOGGER_H
-#include <atomic>
-#include "fnord/base/datetime.h"
-#include "fnord/base/stdtypes.h"
+#ifndef _FNORDMETRIC_UTIL_LOGGING_H
+#define _FNORDMETRIC_UTIL_LOGGING_H
+
+#include "fnord/base/logging/loglevel.h"
+#include "fnord/base/logging/logger.h"
 
 namespace fnord {
-class LogTarget;
-class Logger;
-
-typedef int LogLevel;
 
 /**
  * EMERGENCY: Something very bad happened
  */
-namespace loglevel {
-const LogLevel kEmergency = 9000;
-}
-
 template <typename... T>
-void logEmergency(const String& component, const String& msg, T... args);
+void logEmergency(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kEmergency, component, msg, args...);
+}
 
 template <typename... T>
 void logEmergency(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kEmergency, component, e, msg, args...);
+}
 
 /**
  * ALERT: Action must be taken immediately
  */
-namespace loglevel {
-const LogLevel kAlert = 8000;
-}
-
 template <typename... T>
-void logAlert(const String& component, const String& msg, T... args);
+void logAlert(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kAlert, component, msg, args...);
+}
 
 template <typename... T>
 void logAlert(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kAlert, component, e, msg, args...);
+}
 
 /**
  * CRITICAL: Action should be taken as soon as possible
  */
-namespace loglevel {
-const LogLevel kCritical = 7000;
-}
-
 template <typename... T>
-void logCritical(const String& component, const String& msg, T... args);
+void logCritical(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kCritical, component, msg, args...);
+}
 
 template <typename... T>
 void logCritical(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kCritical, component, e, msg, args...);
+}
 
 /**
  * ERROR: User-visible Runtime Errors
  */
-namespace loglevel {
-const LogLevel kError = 6000;
-}
-
 template <typename... T>
-void logError(const String& component, const String& msg, T... args);
+void logError(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kError, component, msg, args...);
+}
 
 template <typename... T>
 void logError(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kError, component, e, msg, args...);
+}
 
 /**
  * WARNING: Something unexpected happened that should not have happened
  */
-namespace loglevel {
-const LogLevel kWarning = 5000;
-}
-
 template <typename... T>
-void logWarning(const String& component, const String& msg, T... args);
+void logWarning(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kWarning, component, msg, args...);
+}
 
 template <typename... T>
 void logWarning(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kWarning, component, e, msg, args...);
+}
 
 /**
  * NOTICE: Normal but significant condition.
  */
-namespace loglevel {
-const LogLevel kNotice = 4000;
-}
-
 template <typename... T>
-void logNotice(const String& component, const String& msg, T... args);
+void logNotice(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kNotice, component, msg, args...);
+}
 
 template <typename... T>
 void logNotice(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kNotice, component, e, msg, args...);
+}
 
 /**
  * INFO: Informational messages
  */
-namespace loglevel {
-const LogLevel kInfo = 3000;
-}
-
 template <typename... T>
-void logInfo(const String& component, const String& msg, T... args);
+void logInfo(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kInfo, component, msg, args...);
+}
 
 template <typename... T>
 void logInfo(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kInfo, component, e, msg, args...);
+}
 
 /**
  * DEBUG: Debug messages
  */
-namespace loglevel {
-const LogLevel kDebug = 2000;
-}
-
 template <typename... T>
-void logDebug(const String& component, const String& msg, T... args);
+void logDebug(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kDebug, component, msg, args...);
+}
 
 template <typename... T>
 void logDebug(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kDebug, component, e, msg, args...);
+}
 
 /**
  * TRACE: Trace messages
  */
-namespace loglevel {
-const LogLevel kTrace = 1000;
-}
-
 template <typename... T>
-void logTrace(const String& component, const String& msg, T... args);
+void logTrace(const String& component, const String& msg, T... args) {
+  Logger::get()->log(LogLevel::kTrace, component, msg, args...);
+}
 
 template <typename... T>
 void logTrace(
     const String& component,
     const std::exception& e,
     const String& msg,
-    T... args);
+    T... args) {
+  Logger::get()->logException(LogLevel::kTrace, component, e, msg, args...);
+}
 
 /**
  * Return the human readable string representation of the provided log leval
@@ -182,63 +178,6 @@ const char* logLevelToStr(LogLevel log_level);
  * will raise an exception if no such log level is known
  */
 LogLevel strToLogLevel(const char* log_level);
-
-#ifndef FNORD_LOGGER_MAX_LISTENERS
-#define FNORD_LOGGER_MAX_LISTENERS 64
-#endif
-
-class Logger {
-public:
-  Logger();
-  static Logger* get();
-
-  void log(
-      LogLevel log_level,
-      const String& component,
-      const String& message);
-
-  template <typename... T>
-  void log(
-      LogLevel log_level,
-      const String& component,
-      const String& message,
-      T... args);
-
-  void logException(
-      LogLevel log_level,
-      const String& component,
-      const std::exception& exception);
-
-  void logException(
-      LogLevel log_level,
-      const String& component,
-      const String& message,
-      const std::exception& exception);
-
-  void addTarget(LogTarget* target);
-  void setMinimumLogLevel(LogLevel min_level);
-
-protected:
-
-  void logInternal(
-      LogLevel log_level,
-      const String& message);
-
-  std::atomic<LogLevel> min_level_;
-  std::atomic<size_t> max_listener_index_;
-  std::atomic<LogTarget*> listeners_[FNORD_LOGGER_MAX_LISTENERS];
-};
-
-class LogTarget {
-public:
-  virtual ~LogTarget() {}
-
-  virtual void log(
-      LogLevel level,
-      const String& component,
-      const String& message) = 0;
-
-};
 
 }
 

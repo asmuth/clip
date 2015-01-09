@@ -19,14 +19,14 @@
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/http/httpresponsehandler.h>
 #include <fnord/net/http/httpclientconnection.h>
-#include <fnord/io/inputstream.h>
+#include <fnord/base/io/inputstream.h>
 #include <fnord/test/unittest.h>
-#include <fnord/thread/eventloop.h>
-#include <fnord/thread/threadpool.h>
+#include <fnord/base/thread/eventloop.h>
+#include <fnord/base/thread/threadpool.h>
 
 using namespace fnord::http;
-using fnord::io::StringInputStream;
-using fnord::io::StringOutputStream;
+using fnord::StringInputStream;
+using fnord::StringOutputStream;
 
 UNIT_TEST(HTTPTest);
 

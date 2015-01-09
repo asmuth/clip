@@ -18,7 +18,7 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
 #include "fnord/base/status.h"
-#include "fnord/thread/wakeup.h"
+#include "fnord/base/thread/wakeup.h"
 
 namespace fnord {
 class TaskScheduler;

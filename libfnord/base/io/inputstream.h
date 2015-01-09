@@ -14,7 +14,6 @@
 #include "fnord/base/buffer.h"
 
 namespace fnord {
-namespace io {
 
 class InputStream {
 public:
@@ -217,6 +216,6 @@ protected:
   const Buffer* buf_;
   size_t cur_;
 };
-}
+
 }
 #endif

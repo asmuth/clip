@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 #include <fnord/base/datetime.h>
-#include <fnord/io/filerepository.h>
+#include <fnord/base/io/filerepository.h>
 #include <fnord/service/metric/backends/disk/compactionpolicy.h>
 #include <fnord/service/metric/backends/disk/labelindex.h>
 #include <fnord/service/metric/backends/disk/metriccursor.h>

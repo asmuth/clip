@@ -24,7 +24,7 @@ namespace http {
 
 void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
-    UniqueRef<net::TCPConnection> conn,
+    ScopedPtr<net::TCPConnection> conn,
     TaskScheduler* scheduler) {
   auto http_conn = new HTTPServerConnection(
       handler_factory,
@@ -39,7 +39,7 @@ void HTTPServerConnection::start(
 
 HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
-    UniqueRef<net::TCPConnection> conn,
+    ScopedPtr<net::TCPConnection> conn,
     TaskScheduler* scheduler) :
     handler_factory_(handler_factory),
     conn_(std::move(conn)),
@@ -227,7 +227,7 @@ void HTTPServerConnection::writeResponse(
   std::lock_guard<std::mutex> lk(mutex_);
 
   buf_.clear();
-  io::BufferOutputStream os(&buf_);
+  BufferOutputStream os(&buf_);
   HTTPGenerator::generate(resp, &os);
   on_write_completed_cb_ = ready_callback;
   awaitWrite();

@@ -12,8 +12,7 @@
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
 #include <fnord/base/wallclock.h>
-#include <fnord/logging/logger.h>
-#include <fnord/logging/logtarget.h>
+#include <fnord/base/logging.h>
 
 using fnord::Exception;
 
@@ -21,61 +20,46 @@ namespace fnord {
 
 const char* logLevelToStr(LogLevel log_level) {
   switch (log_level) {
-    case 9000: return "EMERGENCY";
-    case 8000: return "ALERT";
-    case 7000: return "CRITICAL";
-    case 6000: return "ERROR";
-    case 5000: return "WARNING";
-    case 4000: return "NOTICE";
-    case 3000: return "INFO";
-    case 2000: return "DEBUG";
-    case 1000: return "TRACE";
+    case LogLevel::kEmergency: return "EMERGENCY";
+    case LogLevel::kAlert: return "ALERT";
+    case LogLevel::kCritical: return "CRITICAL";
+    case LogLevel::kError: return "ERROR";
+    case LogLevel::kWarning: return "WARNING";
+    case LogLevel::kNotice: return "NOTICE";
+    case LogLevel::kInfo: return "INFO";
+    case LogLevel::kDebug: return "DEBUG";
+    case LogLevel::kTrace: return "TRACE";
     default: return "CUSTOM"; // FIXPAUL
   }
 }
+
 Logger* Logger::get() {
   static Logger singleton;
   return &singleton;
 }
 
 Logger::Logger() :
-    min_level_(kNotice),
+    min_level_(LogLevel::kNotice),
     max_listener_index_(0) {
   for (int i = 0; i < FNORD_LOGGER_MAX_LISTENERS; ++i) {
     listeners_[i] = nullptr;
   }
 }
 
-void Logger::log(
-    LogLevel log_level,
-    const std::string& message) {
-  logInternal(log_level, nullptr, message);
-}
-
-void Logger::log(
-    LogLevel log_level,
-    const LogTags* tags,
-    const std::string& message) {
-  logInternal(log_level, tags, message);
-}
-
 void Logger::logException(
     LogLevel log_level,
-    const std::string& message,
-    const std::exception& exception) {
-  logException(log_level, nullptr, message, exception);
-}
+    const String& component,
+    const std::exception& exception,
+    const String& message) {
+  if (log_level < min_level_) {
+    return;
+  }
 
-void Logger::logException(
-    LogLevel log_level,
-    const LogTags* tags,
-    const std::string& message,
-    const std::exception& exception) {
   try {
     auto rte = dynamic_cast<const fnord::Exception&>(exception);
-    logf(
+    log(
         log_level,
-        tags,
+        component,
         "$0: $1: $2\n    in $3\n    in $4:$5",
         message,
         rte.getTypeName(),
@@ -84,31 +68,34 @@ void Logger::logException(
         rte.file(),
         rte.line());
   } catch (const std::exception& bcee) {
-    logf(
+    log(
         log_level,
-        tags,
+        component,
         "$0: std::exception: <foreign exception> $1",
         message,
         exception.what());
   }
 }
 
-
-void Logger::logInternal(
+void Logger::log(
       LogLevel log_level,
-      const LogTags* tags,
-      const std::string& message) {
+      const String& component,
+      const String& message) {
+  if (log_level < min_level_) {
+    return;
+  }
+
   const auto max_idx = max_listener_index_.load();
   for (int i = 0; i < max_idx; ++i) {
     auto listener = listeners_[i].load();
 
     if (listener != nullptr) {
-      listener->log(log_level, tags, message);
+      listener->log(log_level, component, message);
     }
   }
 }
 
-void Logger::listen(LogTarget* target) {
+void Logger::addTarget(LogTarget* target) {
   auto listener_id = max_listener_index_.fetch_add(1);
   listeners_[listener_id] = target;
 }
@@ -117,60 +104,5 @@ void Logger::setMinimumLogLevel(LogLevel min_level) {
   min_level_ = min_level;
 }
 
-/*
-void Logger::log(
-    const std::string& severity,
-    const std::string& message) {
-  LogEntry entry;
-  entry.append("__severity__", severity);
-  entry.append("__message__", message);
-  log(entry);
-}
-
-void Logger::printf(const std::string& key, std::string value, ...) {
-  char buf[4096]; // FIXPAUL!
-  buf[0] = 0;
-
-  va_list args;
-  va_start(args, value);
-  vsnprintf(buf, sizeof(buf), value.c_str(), args);
-  va_end(args);
-
-  log(key, buf);
-}
-  try {
-    auto rte = dynamic_cast<const fnord::Exception&>(error);
-    fprintf(stderr, "ERROR: Uncaught exception\n");
-    rte.debugPrint();
-  } catch (const std::exception& cast_error) {
-    fprintf(stderr, "ERROR: Uncaught foreign exception: %s\n", error.what());
-  }
-LogEntry::LogEntry() : time_(WallClock::now()) {}
-
-void LogEntry::append(const std::string& key, const std::string& value) {
-  lines_.emplace_back(key, value);
-}
-
-void LogEntry::printf(const std::string& key, std::string value, ...) {
-  char buf[4096]; // FIXPAUL!
-  buf[0] = 0;
-
-  va_list args;
-  va_start(args, value);
-  vsnprintf(buf, sizeof(buf), value.c_str(), args);
-  va_end(args);
-
-  append(key, buf);
-}
-
-const std::vector<std::pair<std::string, std::string>>& LogEntry::lines()
-    const {
-  return lines_;
-}
-
-const DateTime& LogEntry::time() const {
-  return time_;
-}
-*/
 
 }

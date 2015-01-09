@@ -18,8 +18,8 @@
 #include <vector>
 #include "fnord/base/status.h"
 #include "fnord/base/stdtypes.h"
-#include "fnord/thread/future.h"
-#include "fnord/thread/wakeup.h"
+#include "fnord/base/thread/future.h"
+#include "fnord/base/thread/wakeup.h"
 
 namespace fnord {
 namespace comm {

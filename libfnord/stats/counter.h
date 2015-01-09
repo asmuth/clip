@@ -16,11 +16,12 @@
 namespace fnord {
 namespace stats {
 
-template <typename T>
+template <typename ValueType, typename LabelTypes>
 class Counter {
 public:
 
-  Counter(const std::string& name);
+  template <>
+  Counter(const std::string& );
 
   void increment(T value);
   void set(T value);
@@ -28,7 +29,8 @@ public:
   T value() const;
 
 protected:
-  T value_;
+  std::unordered_map<LabelValues, ValueType> values_;
+  std::mutex mutex_;
 };
 
 }

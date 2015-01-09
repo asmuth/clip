@@ -17,7 +17,7 @@
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/inetaddr.h>
 #include <fnord/net/tcpconnection.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {

@@ -19,9 +19,9 @@
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
 #include "fnord/base/random.h"
-#include "fnord/io/fileutil.h"
-#include "fnord/io/inputstream.h"
-#include "fnord/io/outputstream.h"
+#include "fnord/base/io/fileutil.h"
+#include "fnord/base/io/inputstream.h"
+#include "fnord/base/io/outputstream.h"
 
 const char kExpectationFailed[] = "ExpectationFailed";
 

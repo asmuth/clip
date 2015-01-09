@@ -16,7 +16,7 @@
 #include "fnord/net/dnscache.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace http {

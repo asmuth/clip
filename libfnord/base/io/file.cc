@@ -9,7 +9,7 @@
  */
 #include <fnord/base/buffer.h>
 #include <fnord/base/exception.h>
-#include <fnord/io/file.h>
+#include <fnord/base/io/file.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

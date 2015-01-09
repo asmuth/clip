@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 #include <fnord/base/exception.h>
-#include <fnord/io/outputstream.h>
+#include <fnord/base/io/outputstream.h>
 
 namespace fnord {
 namespace cli {
@@ -78,7 +78,7 @@ public:
    */
   const std::vector<std::string>& getArgv() const;
 
-  void printUsage(fnord::io::OutputStream* target) const;
+  void printUsage(fnord::OutputStream* target) const;
 
 protected:
   struct FlagState {

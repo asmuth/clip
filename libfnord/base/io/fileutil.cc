@@ -16,8 +16,8 @@
 #include "fnord/base/buffer.h"
 #include "fnord/base/exception.h"
 #include "fnord/base/stringutil.h"
-#include "fnord/io/fileutil.h"
-#include "fnord/io/file.h"
+#include "fnord/base/io/fileutil.h"
+#include "fnord/base/io/file.h"
 
 namespace fnord {
 namespace io {

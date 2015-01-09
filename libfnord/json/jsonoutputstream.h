@@ -14,7 +14,7 @@
 #include <vector>
 #include <fnord/json/jsontypes.h>
 #include <fnord/base/exception.h>
-#include <fnord/io/outputstream.h>
+#include <fnord/base/io/outputstream.h>
 
 namespace fnord {
 namespace json {
@@ -22,8 +22,8 @@ namespace json {
 class JSONOutputStream {
 public:
 
-  JSONOutputStream(std::shared_ptr<io::OutputStream> output_stream);
-  JSONOutputStream(std::unique_ptr<io::OutputStream> output_stream);
+  JSONOutputStream(std::shared_ptr<OutputStream> output_stream);
+  JSONOutputStream(std::unique_ptr<OutputStream> output_stream);
 
   void write(const JSONObject& obj);
 
@@ -47,7 +47,7 @@ public:
 protected:
   std::stack<std::pair<kTokenType, int>> stack_;
   std::string escapeString(const std::string& string) const;
-  std::shared_ptr<io::OutputStream> output_;
+  std::shared_ptr<OutputStream> output_;
 };
 
 } // namespace json

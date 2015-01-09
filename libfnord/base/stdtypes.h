@@ -22,8 +22,10 @@
 namespace fnord {
 
 using String = std::string;
+using WString = std::wstring;
 
-using Unit = decltype(nullptr);
+template <typename T>
+using ScopedPtr = std::unique_ptr<T>;
 
 template <typename T>
 using Vector = std::vector<T>;
@@ -33,9 +35,6 @@ using List = std::list<T>;
 
 template <typename T>
 using Deque = std::deque<T>;
-
-template <typename T>
-using UniqueRef = std::unique_ptr<T>;
 
 template <typename T>
 using Function = std::function<T>;

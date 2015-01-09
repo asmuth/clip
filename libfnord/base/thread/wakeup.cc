@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/base/inspect.h"
-#include "fnord/thread/wakeup.h"
+#include "fnord/base/thread/wakeup.h"
 
 namespace fnord {
 

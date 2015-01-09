@@ -11,10 +11,10 @@
 #include <fnord/base/inspect.h>
 #include <fnord/net/http/httprequest.h>
 
-using fnord::io::InputStream;
-using fnord::io::OutputStream;
-using fnord::io::StringInputStream;
-using fnord::io::StringOutputStream;
+using fnord::InputStream;
+using fnord::OutputStream;
+using fnord::StringInputStream;
+using fnord::StringOutputStream;
 
 namespace fnord {
 namespace http {
@@ -108,11 +108,11 @@ void HTTPMessage::clearBody() {
 }
 
 std::unique_ptr<InputStream> HTTPMessage::getBodyInputStream() const {
-  return io::BufferInputStream::fromBuffer(&body_);
+  return BufferInputStream::fromBuffer(&body_);
 }
 
 std::unique_ptr<OutputStream> HTTPMessage::getBodyOutputStream() {
-  return io::BufferOutputStream::fromBuffer(&body_);
+  return BufferOutputStream::fromBuffer(&body_);
 }
 
 }

@@ -14,7 +14,7 @@
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/groups/groupsservice.h"
-#include "fnord/thread/threadpool.h"
+#include "fnord/base/thread/threadpool.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;

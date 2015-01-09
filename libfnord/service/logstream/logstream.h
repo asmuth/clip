@@ -14,7 +14,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
-#include "fnord/io/filerepository.h"
+#include "fnord/base/io/filerepository.h"
 #include "fnord/reflect/reflect.h"
 #include "fnord/service/logstream/logstreamentry.h"
 #include "fnord/sstable/sstablewriter.h"

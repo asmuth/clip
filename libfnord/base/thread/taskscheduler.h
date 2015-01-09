@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_THREAD_TASKSCHEDULER_H
 #define _FNORDMETRIC_THREAD_TASKSCHEDULER_H
-#include "fnord/thread/task.h"
-#include "fnord/thread/wakeup.h"
+#include "fnord/base/thread/task.h"
+#include "fnord/base/thread/wakeup.h"
 
 namespace fnord {
 

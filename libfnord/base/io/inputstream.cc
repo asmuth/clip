@@ -13,10 +13,9 @@
 #include <fcntl.h>
 #include <fnord/base/buffer.h>
 #include <fnord/base/exception.h>
-#include <fnord/io/inputstream.h>
+#include <fnord/base/io/inputstream.h>
 
 namespace fnord {
-namespace io {
 
 std::unique_ptr<InputStream> InputStream::getStdin() {
   auto stdin_stream = new FileInputStream(0, false);
@@ -194,6 +193,5 @@ void BufferInputStream::rewind() {
   cur_ = 0;
 }
 
-} // io
 } // fnord
 

@@ -70,7 +70,7 @@ void HTTPConnectionPool::leaseConnection(
   auto iter = connection_cache_.find(addr.ipAndPort());
 
   if (iter != connection_cache_.end()) {
-    UniqueRef<HTTPClientConnection> conn(iter->second);
+    ScopedPtr<HTTPClientConnection> conn(iter->second);
     connection_cache_.erase(iter);
     lk.unlock();
 
@@ -87,11 +87,11 @@ void HTTPConnectionPool::leaseConnection(
           addr,
           scheduler_,
           [this, promise, callback, addr] (
-              UniqueRef<net::TCPConnection> tcp_conn) mutable {
+              ScopedPtr<net::TCPConnection> tcp_conn) mutable {
             try {
               tcp_conn->checkErrors();
 
-              UniqueRef<HTTPClientConnection> conn(
+              ScopedPtr<HTTPClientConnection> conn(
                   new HTTPClientConnection(std::move(tcp_conn), scheduler_));
 
               scheduler_->runOnNextWakeup(

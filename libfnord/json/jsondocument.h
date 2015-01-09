@@ -23,7 +23,7 @@ class JSONDocument {
 public:
 
   explicit JSONDocument(std::string json);
-  explicit JSONDocument(std::unique_ptr<io::InputStream> json);
+  explicit JSONDocument(std::unique_ptr<InputStream> json);
   explicit JSONDocument(std::unique_ptr<JSONInputStream> json);
   explicit JSONDocument(JSONInputStream&& json);
 

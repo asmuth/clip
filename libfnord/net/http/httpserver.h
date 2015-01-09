@@ -15,7 +15,7 @@
 #include <fnord/net/http/httphandler.h>
 #include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/tcpserver.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {

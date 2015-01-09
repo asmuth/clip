@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/random.h>
-#include <fnord/io/filerepository.h>
-#include <fnord/io/fileutil.h>
+#include <fnord/base/io/filerepository.h>
+#include <fnord/base/io/fileutil.h>
 
 namespace fnord {
 namespace io {

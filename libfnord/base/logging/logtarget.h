@@ -7,14 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_LOG_LOGTARGET_H
-#define _FNORD_LOG_LOGTARGET_H
+#ifndef _FNORDMETRIC_UTIL_LOGTARGET_H
+#define _FNORDMETRIC_UTIL_LOGTARGET_H
+#include "fnord/base/logging/loglevel.h"
 
 namespace fnord {
-namespace log {
-
-#include "fnord/logging/loglevel.h"
-#include "fnord/logging/logtags.h"
 
 class LogTarget {
 public:
@@ -22,11 +19,11 @@ public:
 
   virtual void log(
       LogLevel level,
-      const LogTags* tags,
-      const std::string& message) = 0;
+      const String& component,
+      const String& message) = 0;
 
 };
 
 }
-}
+
 #endif

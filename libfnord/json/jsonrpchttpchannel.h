@@ -20,7 +20,7 @@
 #include "fnord/net/http/httpconnectionpool.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponse.h"
-#include "fnord/thread/future.h"
+#include "fnord/base/thread/future.h"
 
 namespace fnord {
 namespace json {

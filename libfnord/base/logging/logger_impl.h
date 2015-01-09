@@ -7,36 +7,35 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#ifndef _FNORDMETRIC_UTIL_LOGGER_IMPL_H
+#define _FNORDMETRIC_UTIL_LOGGER_IMPL_H
 #include "fnord/base/stringutil.h"
-#include "fnord/base/inspect.h"
 
 namespace fnord {
-namespace log {
 
 template <typename... T>
-void Logger::logf(
+void Logger::log(
     LogLevel log_level,
-    const std::string& message,
+    const String& component,
+    const String& message,
     T... args) {
-  if (log_level < min_level_) {
-    return;
+  if (log_level >= min_level_) {
+    log(log_level, component, StringUtil::format(message, args...));
   }
-
-  logInternal(log_level, nullptr, StringUtil::format(message, args...));
 }
 
 template <typename... T>
-void Logger::logf(
+void Logger::logException(
     LogLevel log_level,
-    const LogTags* tags,
-    const std::string& message,
+    const String& component,
+    const std::exception& exception,
+    const String& message,
     T... args) {
-  if (log_level < min_level_) {
-    return;
+  if (log_level >= min_level_) {
+    logException(log_level, component, StringUtil::format(message, args...));
   }
-
-  logInternal(log_level, tags, StringUtil::format(message, args...));
 }
 
-}
-}
+} // namespace fnord
+
+#endif

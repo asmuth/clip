@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <vector>
 #include "fnord/comm/rpcchannel.h"
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace comm {

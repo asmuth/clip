@@ -7,17 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_LOG_LOGTAGS_H
-#define _FNORD_LOG_LOGTAGS_H
+#ifndef _FNORDMETRIC_UTIL_LOGLEVEL_H
+#define _FNORDMETRIC_UTIL_LOGLEVEL_H
+#include "fnord/base/datetime.h"
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
-namespace log {
 
-class LogTags {
-
-
+enum class LogLevel {
+  kEmergency = 9000,
+  kAlert = 8000,
+  kCritical = 7000,
+  kError = 6000,
+  kWarning = 5000,
+  kNotice = 4000,
+  kInfo = 3000,
+  kDebug = 2000,
+  kTrace = 1000
 };
 
-}
 }
 #endif

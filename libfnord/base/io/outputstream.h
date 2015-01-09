@@ -15,7 +15,6 @@
 #include "fnord/base/buffer.h"
 
 namespace fnord {
-namespace io {
 
 class OutputStream {
 public:
@@ -155,6 +154,6 @@ public:
 protected:
   Buffer* buf_;
 };
-}
+
 }
 #endif

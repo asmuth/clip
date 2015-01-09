@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
-#include "fnord/thread/eventloop.h"
+#include "fnord/base/thread/eventloop.h"
 
 namespace fnord {
 namespace thread {

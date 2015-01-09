@@ -112,8 +112,8 @@ template <typename T>
 std::string toJSONString(const T& value) {
   std::string json_str;
   JSONOutputStream json(
-      static_cast<std::unique_ptr<io::OutputStream>>(
-          io::StringOutputStream::fromString(&json_str)));
+      static_cast<std::unique_ptr<OutputStream>>(
+          StringOutputStream::fromString(&json_str)));
 
   toJSON(value, &json);
   return json_str;

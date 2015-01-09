@@ -11,7 +11,7 @@
 #define _FNORD_NET_TCPCONNECTION_H
 #include <stdlib.h>
 #include "fnord/net/inetaddr.h"
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace net {

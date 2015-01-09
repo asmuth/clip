@@ -22,7 +22,7 @@ public:
 
   virtual ~CounterStat {}
 
-  virtual void exportAll(io::OutputStream* out) const = 0;
+  virtual void exportAll(OutputStream* out) const = 0;
 
 protected:
 
