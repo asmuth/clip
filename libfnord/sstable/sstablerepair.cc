@@ -22,7 +22,7 @@ SSTableRepair::SSTableRepair(
     filename_(filename) {}
 
 bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
-  auto file = io::File::openFile(filename_, io::File::O_READ);
+  auto file = File::openFile(filename_, File::O_READ);
   std::unique_ptr<fnord::sstable::SSTableReader> reader_;
 
   try {
@@ -66,7 +66,7 @@ bool SSTableRepair::checkAndRepair(bool repair /* = false */) {
 }
 
 bool SSTableRepair::checkAndRepairUnfinishedTable(bool repair) {
-  io::MmappedFile file(io::File::openFile(filename_, io::File::O_READ));
+  io::MmappedFile file(File::openFile(filename_, File::O_READ));
   FileHeaderReader header_reader(file.data(), file.size());
 
   if (!header_reader.verify()) {
@@ -119,7 +119,7 @@ bool SSTableRepair::checkAndRepairUnfinishedTable(bool repair) {
           (int) pos);
       */
 
-      auto writable_file = io::File::openFile(filename_, io::File::O_WRITE);
+      auto writable_file = File::openFile(filename_, File::O_WRITE);
       writable_file.truncate(pos);
     } else {
       return false;

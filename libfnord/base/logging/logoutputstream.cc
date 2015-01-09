@@ -7,11 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <thread>
-
+#include "fnord/base/logging.h"
+#include "fnord/base/logging/logoutputstream.h"
 #include "fnord/base/stringutil.h"
 #include "fnord/base/wallclock.h"
-#include "fnord/logging/logoutputstream.h"
 
 using fnord::OutputStream;
 
@@ -23,18 +22,19 @@ LogOutputStream::LogOutputStream(
 
 void LogOutputStream::log(
     LogLevel level,
-    const LogTags* tags,
-    const std::string& message) {
+    const String& component,
+    const String& message) {
   const auto prefix = StringUtil::format(
-      "$0 [$1] ",
+      "$0 $1 [$2] ",
       WallClock::now().toString("%Y-%m-%d %H:%M:%S"),
-      logLevelToStr(level));
+      logLevelToStr(level),
+      component);
 
   std::string lines = prefix + message;
   StringUtil::replaceAll(&lines, "\n", "\n" + prefix);
   lines.append("\n");
 
-  std::lock_guard<std::mutex> lock_holder(target_->mutex_);
+  ScopedLock<std::mutex> lk(target_->mutex_);
   target_->write(lines);
 }
 

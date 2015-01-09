@@ -42,8 +42,8 @@ using fnord::chart::Series;
 using fnord::chart::Series2D;
 using fnord::chart::Series3D;
 using fnord::chart::SVGTarget;
-using fnord::io::FileOutputStream;
-using fnord::io::FileUtil;
+using fnord::FileOutputStream;
+using fnord::FileUtil;
 using fnord::test::UnitTest;
 
 static void compareChart(

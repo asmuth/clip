@@ -15,7 +15,6 @@
 #include "fnord/base/random.h"
 
 namespace fnord {
-namespace io {
 
 class FileRepository {
 public:
@@ -41,6 +40,5 @@ protected:
   std::string basedir_;
 };
 
-}
 }
 #endif

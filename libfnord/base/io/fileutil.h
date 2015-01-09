@@ -15,7 +15,6 @@
 #include <string>
 
 namespace fnord {
-namespace io {
 
 class FileUtil {
 public:
@@ -69,6 +68,5 @@ public:
 
 };
 
-}
 }
 #endif

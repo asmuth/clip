@@ -22,8 +22,8 @@ UNIT_TEST(LogStreamServiceTest);
 
 TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
   auto log_path = "/tmp/__fnord_logstream_service_test";
-  fnord::io::FileUtil::mkdir_p(log_path);
-  fnord::io::FileRepository repo(log_path);
+  fnord::FileUtil::mkdir_p(log_path);
+  fnord::FileRepository repo(log_path);
   repo.deleteAllFiles();
 
   auto msggen = [] (int i) { return fnord::StringUtil::format("msg$0", i); };
@@ -54,7 +54,7 @@ TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
   int i = 0;
   for (int r = 0; r < kNumRuns; ++r) {
     fnord::logstream_service::LogStreamService ls_service{
-        fnord::io::FileRepository(log_path)};
+        fnord::FileRepository(log_path)};
 
     if (r > 0) {
       checkall(&ls_service, i);

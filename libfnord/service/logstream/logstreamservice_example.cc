@@ -31,9 +31,9 @@ int main() {
   JSONRPCHTTPAdapter rpc_http(&rpc);
 
   auto log_path = "/tmp/cm-logs";
-  fnord::io::FileUtil::mkdir_p(log_path);
+  fnord::FileUtil::mkdir_p(log_path);
 
-  LogStreamService ls_service{fnord::io::FileRepository(log_path)};
+  LogStreamService ls_service{fnord::FileRepository(log_path)};
   rpc.registerService(&ls_service);
 
   fnord::thread::EventLoop event_loop;

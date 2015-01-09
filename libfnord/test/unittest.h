@@ -97,8 +97,8 @@ void EXPECT_EQ(T1 left, T2 right) {
 
 #define EXPECT_FILES_EQ(F1, F2) \
   { \
-    auto one = fnord::io::FileInputStream::openFile(F1); \
-    auto two = fnord::io::FileInputStream::openFile(F2); \
+    auto one = fnord::FileInputStream::openFile(F1); \
+    auto two = fnord::FileInputStream::openFile(F2); \
     std::string one_str; \
     std::string two_str; \
     one->readUntilEOF(&one_str); \
@@ -166,7 +166,7 @@ public:
   }
 
   int run() {
-    fnord::io::FileUtil::mkdir_p(UnitTest::tempFilePath());
+    fnord::FileUtil::mkdir_p(UnitTest::tempFilePath());
 
     for (auto initializer : initializers_) {
       initializer->lambda_();

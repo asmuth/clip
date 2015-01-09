@@ -50,7 +50,7 @@ public:
     size_t limit_;
   };
 
-  SSTableReader(io::File&& file);
+  SSTableReader(File&& file);
   SSTableReader(const SSTableReader& other) = delete;
   SSTableReader& operator=(const SSTableReader& other) = delete;
   ~SSTableReader();

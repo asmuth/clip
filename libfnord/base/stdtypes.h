@@ -15,6 +15,7 @@
 #include <limits>
 #include <list>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -26,6 +27,9 @@ using WString = std::wstring;
 
 template <typename T>
 using ScopedPtr = std::unique_ptr<T>;
+
+template <typename T>
+using ScopedLock = std::unique_lock<T>;
 
 template <typename T>
 using Vector = std::vector<T>;

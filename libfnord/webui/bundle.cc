@@ -49,9 +49,9 @@ void Bundle::build(const std::string& base_path /* = "/" */) {
 
   StringUtil::replaceAll(&app_html_, "{{title}}", title_);
   StringUtil::replaceAll(&app_html_, "{{app_css_path}}",
-      io::FileUtil::joinPaths(base_path, "application.css"));
+      FileUtil::joinPaths(base_path, "application.css"));
   StringUtil::replaceAll(&app_html_, "{{app_js_path}}",
-      io::FileUtil::joinPaths(base_path, "application.js"));
+      FileUtil::joinPaths(base_path, "application.js"));
 
   auto body_cur = app_html_.find("{{body}}");
   if (body_cur == std::string::npos) {

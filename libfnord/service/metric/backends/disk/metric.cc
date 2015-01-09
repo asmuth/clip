@@ -25,7 +25,7 @@ namespace disk_backend {
 
 Metric::Metric(
     const std::string& key,
-    io::FileRepository* file_repo) :
+    FileRepository* file_repo) :
     IMetric(key),
     file_repo_(file_repo),
     head_(nullptr),
@@ -36,7 +36,7 @@ Metric::Metric(
 
 Metric::Metric(
     const std::string& key,
-    io::FileRepository* file_repo,
+    FileRepository* file_repo,
     std::vector<std::unique_ptr<TableRef>>&& tables) :
     IMetric(key),
     file_repo_(file_repo),
@@ -156,9 +156,9 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
   if (writable) {
     // open new file
     auto fileref = file_repo_->createFile();
-    auto file = io::File::openFile(
+    auto file = File::openFile(
         fileref.absolute_path,
-        io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+        File::O_READ | File::O_WRITE | File::O_CREATE);
 
     snapshot->appendTable(TableRef::createTable(
         fileref.absolute_path,

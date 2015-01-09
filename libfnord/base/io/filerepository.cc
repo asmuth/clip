@@ -12,7 +12,6 @@
 #include <fnord/base/io/fileutil.h>
 
 namespace fnord {
-namespace io {
 
 FileRepository::FileRepository(
     const std::string& basedir) :
@@ -43,6 +42,5 @@ void FileRepository::deleteAllFiles() {
   });
 }
 
-}
 }
 

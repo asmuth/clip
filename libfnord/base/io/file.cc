@@ -16,7 +16,6 @@
 #include <unistd.h>
 
 namespace fnord {
-namespace io {
 
 File File::openFile(
     const std::string& filename,
@@ -132,5 +131,4 @@ void File::truncate(size_t new_size) {
   }
 }
 
-}
 }

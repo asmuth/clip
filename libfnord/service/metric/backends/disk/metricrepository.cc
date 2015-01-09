@@ -18,7 +18,7 @@ namespace disk_backend {
 MetricRepository::MetricRepository(
     const std::string data_dir,
     fnord::TaskScheduler* scheduler) :
-    file_repo_(new fnord::io::FileRepository(data_dir)),
+    file_repo_(new fnord::FileRepository(data_dir)),
     compaction_task_(this) {
   std::unordered_map<
       std::string,

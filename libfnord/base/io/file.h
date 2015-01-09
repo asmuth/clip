@@ -17,8 +17,6 @@
 namespace fnord {
 class Buffer;
 
-namespace io {
-
 #undef O_APPEND
 class File {
 public:
@@ -97,6 +95,5 @@ protected:
   int flags_;
 };
 
-}
 }
 #endif

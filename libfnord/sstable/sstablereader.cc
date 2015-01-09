@@ -17,7 +17,7 @@ namespace fnord {
 namespace sstable {
 
 SSTableReader::SSTableReader(
-    io::File&& file) :
+    File&& file) :
     mmap_(new io::MmappedFile(std::move(file))),
     file_size_(mmap_->size()),
     header_(mmap_->ptr(), file_size_) {

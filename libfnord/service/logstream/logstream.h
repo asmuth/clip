@@ -26,7 +26,7 @@ class LogStream {
 public:
   static const size_t kMaxTableSize = (2 << 19) * 512; // 512 MB
 
-  LogStream(const std::string& name, io::FileRepository* file_repo);
+  LogStream(const std::string& name, FileRepository* file_repo);
 
   uint64_t append(const std::string& entry);
 
@@ -57,7 +57,7 @@ protected:
   size_t getTableBodySize(const std::string& file_path);
 
   std::string name_;
-  io::FileRepository* file_repo_;
+  FileRepository* file_repo_;
   std::vector<std::shared_ptr<TableRef>> tables_;
   std::mutex tables_mutex_;
 };

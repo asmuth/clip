@@ -18,7 +18,7 @@ namespace logstream_service {
 
 LogStream::LogStream(
     const std::string& name,
-    io::FileRepository* file_repo) :
+    FileRepository* file_repo) :
     name_(name),
     file_repo_(file_repo) {}
 
@@ -72,7 +72,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 
   if (table->writer.get() == nullptr) {
     reader.reset(new sstable::SSTableReader(
-        io::File::openFile(table->file_path, io::File::O_READ)));
+        File::openFile(table->file_path, File::O_READ)));
 
     cursor = reader->getCursor();
   } else {
@@ -122,9 +122,9 @@ std::shared_ptr<LogStream::TableRef> LogStream::createTable() {
   tbl_header.stream_name = name_;
   auto tbl_header_json = fnord::json::toJSONString(tbl_header);
 
-  io::File::openFile(
+  File::openFile(
       table->file_path,
-      io::File::O_READ | io::File::O_WRITE | io::File::O_CREATE);
+      File::O_READ | File::O_WRITE | File::O_CREATE);
 
   table->writer = sstable::SSTableWriter::create(
       table->file_path,
@@ -136,7 +136,7 @@ std::shared_ptr<LogStream::TableRef> LogStream::createTable() {
 }
 
 void LogStream::reopenTable(const std::string& file_path) {
-  auto file = io::File::openFile(file_path, io::File::O_READ);
+  auto file = File::openFile(file_path, File::O_READ);
   sstable::SSTableReader reader(std::move(file));
 
   auto table_header = fnord::json::fromJSON<LogStream::TableHeader>(
@@ -158,7 +158,7 @@ void LogStream::reopenTable(const std::string& file_path) {
 }
 
 size_t LogStream::getTableBodySize(const std::string& file_path) {
-  auto file = io::File::openFile(file_path, io::File::O_READ);
+  auto file = File::openFile(file_path, File::O_READ);
   sstable::SSTableReader reader(std::move(file));
   return reader.bodySize();
 }

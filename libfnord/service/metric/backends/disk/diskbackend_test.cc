@@ -27,7 +27,7 @@ const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo2";
 using LabelListType = std::vector<std::pair<std::string, std::string>>;
 
 TEST_CASE(DiskBackendTest, TestCreateNewMetric, [] () {
-  io::FileUtil::mkdir_p(kTestRepoPath);
+  FileUtil::mkdir_p(kTestRepoPath);
   FileRepository file_repo(kTestRepoPath);
   file_repo.deleteAllFiles();
 

@@ -20,7 +20,6 @@
 #include "fnord/base/io/file.h"
 
 namespace fnord {
-namespace io {
 
 void FileUtil::mkdir(const std::string& dirname) {
   if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
@@ -159,5 +158,4 @@ std::string FileUtil::read(const std::string& filename) {
   return buf.toString();
 }
 
-}
 }

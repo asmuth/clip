@@ -181,7 +181,7 @@ MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
     uint64_t last_byte) {
   if (current_mapping_ == nullptr || last_byte > current_mapping_->size) {
     /* align mmap size to the next larger block boundary */
-    auto file = fnord::io::File::openFile(
+    auto file = fnord::File::openFile(
         filename_,
         File::O_READ | File::O_WRITE);
 

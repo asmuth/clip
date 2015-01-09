@@ -27,7 +27,7 @@ public:
 
 protected:
   Metric* createMetric(const std::string& key) override;
-  std::shared_ptr<fnord::io::FileRepository> file_repo_;
+  std::shared_ptr<fnord::FileRepository> file_repo_;
   CompactionTask compaction_task_;
 };
 

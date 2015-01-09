@@ -36,36 +36,33 @@ add_library(fnord-base OBJECT
     base/duration.cc
     base/exception.cc
     base/exceptionhandler.cc
-    base/inspect.cc
+    base/fnv.cc
     base/ieee754.cc
+    base/inspect.cc
+    base/io/file.cc
+    base/io/fileutil.cc
+    base/io/filerepository.cc
+    base/io/inputstream.cc
+    base/io/outputstream.cc
+    base/io/mmappedfile.cc
+    base/io/pagemanager.cc
     base/logging.cc
+    base/logging/logoutputstream.cc
     base/random.cc
     base/status.cc
     base/stringutil.cc
+    base/thread/eventloop.cc
+    base/thread/signalhandler.cc
+    base/thread/threadpool.cc
+    base/thread/wakeup.cc
     base/uri.cc
-    base/wallclock.cc
-    base/fnv.cc)
-
-#add_library(fnord-io OBJECT
-#    io/file.cc
-#    io/fileutil.cc
-#    io/filerepository.cc
-#    io/inputstream.cc
-#    io/outputstream.cc
-#    io/mmappedfile.cc
-#    io/pagemanager.cc)
+    base/wallclock.cc)
 
 #add_executable(tests/test-inputstream
 #    $<TARGET_OBJECTS:fnord-base>
 #    $<TARGET_OBJECTS:fnord-io>
 #    io/inputstream_test.cc)
 
-# thread
-# add_library(fnord-thread OBJECT
-#     thread/eventloop.cc
-#     thread/signalhandler.cc
-#     thread/threadpool.cc
-#     thread/wakeup.cc)
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
     base/uri_test.cc)
