@@ -132,6 +132,10 @@ void EventLoop::poll() {
   }
 
   if (res == -1) {
+    if (errno == EINTR) {
+      return;
+    }
+
     RAISE_ERRNO(kIOError, "select() failed");
   }
 
