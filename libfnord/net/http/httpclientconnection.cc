@@ -18,17 +18,28 @@ namespace http {
 
 HTTPClientConnection::HTTPClientConnection(
     std::unique_ptr<net::TCPConnection> conn,
-    TaskScheduler* scheduler) :
+    TaskScheduler* scheduler,
+    HTTPClientStats* stats) :
     conn_(std::move(conn)),
     scheduler_(scheduler),
+    stats_(stats),
     state_(S_CONN_IDLE),
     parser_(HTTPParser::PARSE_HTTP_RESPONSE),
     keepalive_(false) {
   buf_.reserve(kMinBufferSize);
   conn_->checkErrors();
+
+  if (stats_) {
+    stats_->current_connections.incr(1);
+    stats_->total_connections.incr(1);
+  }
 }
 
 HTTPClientConnection::~HTTPClientConnection() {
+  if (stats_) {
+    stats_->current_connections.decr(1);
+  }
+
   if (state_ != S_CONN_CLOSED) {
     close();
   }
@@ -123,6 +134,9 @@ void HTTPClientConnection::read() {
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
+    if (stats_) {
+      stats_->received_bytes.incr(len);
+    }
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
       std::lock_guard<std::mutex> l(mutex_, std::adopt_lock_t {});
@@ -178,6 +192,9 @@ void HTTPClientConnection::write() {
   try {
     len = conn_->write(data, size);
     buf_.setMark(buf_.mark() + len);
+    if (stats_) {
+      stats_->sent_bytes.incr(len);
+    }
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
       std::lock_guard<std::mutex> l(mutex_, std::adopt_lock_t {});

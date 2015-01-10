@@ -92,7 +92,10 @@ void HTTPConnectionPool::leaseConnection(
               tcp_conn->checkErrors();
 
               ScopedPtr<HTTPClientConnection> conn(
-                  new HTTPClientConnection(std::move(tcp_conn), scheduler_));
+                  new HTTPClientConnection(
+                      std::move(tcp_conn),
+                      scheduler_,
+                      &stats_));
 
               scheduler_->runOnNextWakeup(
                   std::bind(
@@ -102,8 +105,6 @@ void HTTPConnectionPool::leaseConnection(
                       addr),
                   conn->onReady());
 
-              stats_.current_connections.incr(1);
-              stats_.total_connections.incr(1);
               callback(conn.release());
             } catch (const std::exception& e) {
               promise.failure(e);

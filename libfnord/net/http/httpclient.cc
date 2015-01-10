@@ -63,7 +63,8 @@ Future<HTTPResponse> HTTPClient::executeRequest(
   auto conn = std::unique_ptr<HTTPClientConnection>(
       new HTTPClientConnection(
           std::move(fnord::net::TCPConnection::connect(addr)),
-          sched));
+          sched,
+          nullptr));
 
   Promise<HTTPResponse> promise;
   auto http_future = new HTTPResponseFuture(promise);

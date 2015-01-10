@@ -15,6 +15,7 @@
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
+#include <fnord/net/http/httpstats.h>
 #include <fnord/net/inetaddr.h>
 #include <fnord/net/tcpconnection.h>
 #include <fnord/base/thread/taskscheduler.h>
@@ -29,7 +30,8 @@ public:
 
   HTTPClientConnection(
       std::unique_ptr<net::TCPConnection> conn,
-      TaskScheduler* scheduler);
+      TaskScheduler* scheduler,
+      HTTPClientStats* stats);
 
   ~HTTPClientConnection();
 
@@ -65,6 +67,7 @@ protected:
   HTTPResponseHandler* cur_handler_;
   Wakeup on_ready_;
   bool keepalive_;
+  HTTPClientStats* stats_;
 };
 
 }
