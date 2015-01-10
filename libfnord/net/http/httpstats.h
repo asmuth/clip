@@ -23,7 +23,10 @@ struct HTTPClientStats {
   stats::Counter<uint64_t> sent_bytes;
   stats::Counter<uint64_t> received_bytes;
   stats::Counter<uint64_t> total_bytes;
-}
+
+  HTTPClientStats() :
+      status_codes("http_status") {}
+};
 
 /*
 struct HTTPServerStats {

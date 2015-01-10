@@ -16,6 +16,7 @@
 #include "fnord/net/dnscache.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
+#include "fnord/net/http/httpstats.h"
 #include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
@@ -48,6 +49,7 @@ protected:
   std::mutex connection_cache_mutex_;
 
   fnord::net::DNSCache dns_cache_;
+  HTTPClientStats stats_;
 };
 
 }
