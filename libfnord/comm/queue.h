@@ -18,7 +18,7 @@
 #include <vector>
 #include "fnord/base/option.h"
 #include "fnord/base/status.h"
-#include <fnord/thread/future.h>
+#include <fnord/base/thread/future.h>
 
 namespace fnord {
 namespace comm {

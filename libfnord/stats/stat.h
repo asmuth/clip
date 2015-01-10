@@ -9,32 +9,22 @@
  */
 #ifndef _FNORD_STATS_STAT_H
 #define _FNORD_STATS_STAT_H
+#include "fnord/base/autoref.h"
+#include "fnord/stats/statssink.h"
 
 namespace fnord {
 namespace stats {
 
-template <typename ValueType, typename... DimensionTypes>
-class Stat {
+class Stat : public RefCounted {
 public:
+  virtual ~Stat() {};
+  virtual void exportAll(const String& path, StatsSink* sink) const = 0;
+};
 
-  template <typename... DimensionTitleTypes>
-  CounterStat();
-
-  virtual ~CounterStat {}
-
-  virtual void exportAll(io::OutputStream* out) const = 0;
-
-protected:
-
-  T* lookup(DimensionTypes... dimensions);
-
-  void forEach(
-      std::function<void (const T& val)> callback,
-      DimensionTypes... dimensions);
-
-private:
-  std::unordered_map<std::tuple<DimensionTypes...>, ValueType> values_;
-  mutable std::mutex mutex_;
+class StatRef {
+public:
+  virtual ~StatRef() {};
+  virtual RefPtr<Stat> getStat() const = 0;
 };
 
 }

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "fnord/base/assets.h"
 #include "fnord/base/exception.h"
-#include "fnord/io/inputstream.h"
+#include "fnord/base/io/inputstream.h"
 
 namespace fnord {
 
@@ -39,7 +39,7 @@ std::string Assets::getAsset(const std::string& filename) {
 
   if (dev_asset_path != nullptr) {
     // FIXPAUL check that file exists
-    auto file = io::FileInputStream::openFile(
+    auto file = FileInputStream::openFile(
         std::string(dev_asset_path) + "/" + filename);
 
     std::string asset_str;

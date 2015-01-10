@@ -15,8 +15,8 @@
 #include <memory>
 #include <fnord/base/buffer.h>
 #include <fnord/base/exception.h>
-#include <fnord/io/file.h>
-#include <fnord/io/mmappedfile.h>
+#include <fnord/base/io/file.h>
+#include <fnord/base/io/mmappedfile.h>
 #include <fnord/sstable/binaryformat.h>
 #include <fnord/sstable/fileheaderreader.h>
 #include <fnord/sstable/cursor.h>
@@ -50,7 +50,7 @@ public:
     size_t limit_;
   };
 
-  SSTableReader(io::File&& file);
+  SSTableReader(File&& file);
   SSTableReader(const SSTableReader& other) = delete;
   SSTableReader& operator=(const SSTableReader& other) = delete;
   ~SSTableReader();

@@ -9,6 +9,7 @@
  */
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
+#include <fnord/base/logging.h>
 #include <fnord/base/wallclock.h>
 #include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/http/httpserver.h>
@@ -33,17 +34,21 @@ HTTPServer::HTTPServer(
     scheduler_(scheduler),
     ssock_(scheduler) {
   ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
-    HTTPServerConnection::start(handler_factory_, std::move(conn), scheduler_);
+    HTTPServerConnection::start(
+        handler_factory_,
+        std::move(conn),
+        scheduler_,
+        &stats_);
   });
 }
 
 void HTTPServer::listen(int port) {
-  log::Logger::get()->logf(
-      fnord::log::kNotice,
-      "Starting HTTP server on port $0",
-      port);
-
+  logNotice("fnord.http.server", "Starting HTTP server on port $0", port);
   ssock_.listen(port);
+}
+
+HTTPServerStats* HTTPServer::stats() {
+  return &stats_;
 }
 
 }

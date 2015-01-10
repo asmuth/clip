@@ -78,5 +78,9 @@ Future<JSONObject> JSONRPCHTTPChannel::call(const JSONObject& json_req) {
   return promise.future();
 }
 
+http::HTTPConnectionPool* JSONRPCHTTPChannel::httpConnectionPool() {
+  return &conn_pool_;
+}
+
 } // namespace json
 } // namsepace fnord

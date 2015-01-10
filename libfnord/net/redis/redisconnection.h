@@ -14,10 +14,10 @@
 #include "fnord/3rdparty/hiredis/hiredis.h"
 #include "fnord/base/option.h"
 #include "fnord/base/status.h"
-#include "fnord/logging/logger.h"
+#include "fnord/base/logging.h"
 #include "fnord/net/inetaddr.h"
-#include "fnord/thread/future.h"
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/base/thread/future.h"
+#include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace redis {

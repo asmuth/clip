@@ -12,8 +12,8 @@
 #include <fnord/service/metric/backends/disk/compactiontask.h>
 #include <fnord/service/metric/backends/disk/metric.h>
 #include <fnord/service/metric/metricrepository.h>
-#include <fnord/io/filerepository.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/io/filerepository.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace metric_service {
@@ -27,7 +27,7 @@ public:
 
 protected:
   Metric* createMetric(const std::string& key) override;
-  std::shared_ptr<fnord::io::FileRepository> file_repo_;
+  std::shared_ptr<fnord::FileRepository> file_repo_;
   CompactionTask compaction_task_;
 };
 

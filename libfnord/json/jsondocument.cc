@@ -21,10 +21,10 @@ namespace json {
 
 JSONDocument::JSONDocument(
     std::string json) :
-    JSONDocument(JSONInputStream(io::StringInputStream::fromString(json))) {}
+    JSONDocument(JSONInputStream(StringInputStream::fromString(json))) {}
 
 JSONDocument::JSONDocument(
-    std::unique_ptr<io::InputStream> json) :
+    std::unique_ptr<InputStream> json) :
     JSONDocument(JSONInputStream(std::move(json))) {}
 
 JSONDocument::JSONDocument(

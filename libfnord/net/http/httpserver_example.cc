@@ -17,7 +17,7 @@
 #include "fnord/net/http/httpservice.h"
 #include "fnord/logging/logger.h"
 #include "fnord/logging/logoutputstream.h"
-#include "fnord/thread/threadpool.h"
+#include "fnord/base/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
 
 /**
@@ -118,7 +118,7 @@ int main() {
   fnord::CatchAndAbortExceptionHandler ehandler;
   ehandler.installGlobalHandlers();
 
-  fnord::log::LogOutputStream logger(fnord::io::OutputStream::getStderr());
+  fnord::log::LogOutputStream logger(fnord::OutputStream::getStderr());
   fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kTrace);
   fnord::log::Logger::get()->listen(&logger);
 

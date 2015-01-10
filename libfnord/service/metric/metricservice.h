@@ -15,7 +15,7 @@
 #include "fnord/base/datetime.h"
 #include "fnord/service/metric/metricrepository.h"
 #include "fnord/stats/counter.h"
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace metric_service {

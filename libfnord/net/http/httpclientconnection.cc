@@ -85,7 +85,7 @@ void HTTPClientConnection::executeRequest(
   });
 
   buf_.clear();
-  io::BufferOutputStream os(&buf_);
+  BufferOutputStream os(&buf_);
   HTTPGenerator::generate(request, &os);
   state_ = S_CONN_BUSY;
   cur_handler_ = response_handler;

@@ -9,7 +9,7 @@
  */
 #include <fnord/base/buffer.h>
 #include <fnord/net/udpserver.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace statsd {

@@ -13,7 +13,7 @@
 #include "fnord/net/inetaddr.h"
 #include "fnord/net/redis/redisconnection.h"
 #include "fnord/test/unittest.h"
-#include "fnord/thread/threadpool.h"
+#include "fnord/base/thread/threadpool.h"
 
 using namespace fnord;
 

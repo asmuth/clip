@@ -12,7 +12,7 @@
 #include <string.h>
 #include <math.h>
 #include <fnord/base/wallclock.h>
-#include <fnord/io/fileutil.h>
+#include <fnord/base/io/fileutil.h>
 #include <fnord/service/metric/backends/disk/metric.h>
 #include <fnord/test/unittest.h>
 
@@ -27,7 +27,7 @@ const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo2";
 using LabelListType = std::vector<std::pair<std::string, std::string>>;
 
 TEST_CASE(DiskBackendTest, TestCreateNewMetric, [] () {
-  io::FileUtil::mkdir_p(kTestRepoPath);
+  FileUtil::mkdir_p(kTestRepoPath);
   FileRepository file_repo(kTestRepoPath);
   file_repo.deleteAllFiles();
 

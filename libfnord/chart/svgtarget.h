@@ -15,7 +15,7 @@
 #include <string>
 #include "fnord/chart/rendertarget.h"
 #include "fnord/chart/styles/style_default.h"
-#include "fnord/io/outputstream.h"
+#include "fnord/base/io/outputstream.h"
 
 namespace fnord {
 namespace chart {
@@ -30,7 +30,7 @@ public:
    *                      ownership!
    */
   SVGTarget(
-      io::OutputStream* output_stream) :
+      OutputStream* output_stream) :
       output_(output_stream),
       indent_(0) {}
 
@@ -227,7 +227,7 @@ public:
   }
 
 protected:
-  io::OutputStream* output_;
+  OutputStream* output_;
   int indent_;
 };
 

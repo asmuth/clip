@@ -12,20 +12,19 @@
 #include <fnord/base/exception.h>
 #include <fnord/base/exceptionhandler.h>
 #include <fnord/base/inspect.h>
+#include <fnord/base/logging.h>
 
 namespace fnord {
 
 using fnord::Exception;
 
-CatchAndPrintExceptionHandler::CatchAndPrintExceptionHandler(
-    log::Logger* logger) :
-    logger_(logger) {
-  assert(logger_ != nullptr);
-}
+CatchAndLogExceptionHandler::CatchAndLogExceptionHandler(
+    const String& component) :
+    component_(component) {}
 
-void CatchAndPrintExceptionHandler::onException(
+void CatchAndLogExceptionHandler::onException(
     const std::exception& error) const {
-  logger_->logException(fnord::log::kError, "Uncaught exception", error);
+  logError(component_, error, "Uncaught exception");
 }
 
 CatchAndAbortExceptionHandler::CatchAndAbortExceptionHandler(

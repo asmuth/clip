@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/base/inspect.h>
+#include <fnord/base/logging.h>
 #include "fnord/net/http/httpserverconnection.h"
 #include <fnord/net/http/httpservice.h>
 
@@ -49,11 +50,7 @@ void HTTPServiceHandler::dispatchRequest() {
         res_.setHeader("Content-Length", StringUtil::toString(body_size));
       }
     } catch (const std::exception& e) {
-      log::Logger::get()->logException(
-          log::kError,
-          "Error while processing HTTP request",
-          e);
-
+      logError("fnord.http.service", e, "Error while processing HTTP request");
       res_.setStatus(http::kStatusInternalServerError);
       res_.clearBody();
       res_.addBody("server error");

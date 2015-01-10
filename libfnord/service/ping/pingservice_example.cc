@@ -15,7 +15,7 @@
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/ping/pingservice.h"
-#include "fnord/thread/eventloop.h"
+#include "fnord/base/thread/eventloop.h"
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;

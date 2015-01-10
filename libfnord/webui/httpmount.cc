@@ -10,7 +10,7 @@
 #include <fnord/base/assets.h>
 #include <fnord/base/uri.h>
 #include <fnord/base/stringutil.h>
-#include <fnord/io/fileutil.h>
+#include <fnord/base/io/fileutil.h>
 #include <fnord/webui/bundle.h>
 #include <fnord/webui/httpmount.h>
 
@@ -22,10 +22,10 @@ HTTPMount::HTTPMount(
     const std::string base_url /* = "/" */) :
     bundle_(bundle),
     app_url_(base_url),
-    app_css_url_(io::FileUtil::joinPaths(base_url, "application.css")),
-    app_js_url_(io::FileUtil::joinPaths(base_url, "application.js")),
+    app_css_url_(FileUtil::joinPaths(base_url, "application.css")),
+    app_js_url_(FileUtil::joinPaths(base_url, "application.js")),
     app_components_base_url_(
-        io::FileUtil::joinPaths(base_url, "__components__") + "/") {}
+        FileUtil::joinPaths(base_url, "__components__") + "/") {}
 
 bool HTTPMount::handleHTTPRequest(
     http::HTTPRequest* request,

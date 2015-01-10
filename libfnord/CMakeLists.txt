@@ -36,28 +36,39 @@ add_library(fnord-base OBJECT
     base/duration.cc
     base/exception.cc
     base/exceptionhandler.cc
-    base/inspect.cc
+    base/fnv.cc
     base/ieee754.cc
+    base/inspect.cc
+    base/io/file.cc
+    base/io/fileutil.cc
+    base/io/filerepository.cc
+    base/io/inputstream.cc
+    base/io/outputstream.cc
+    base/io/mmappedfile.cc
+    base/io/pagemanager.cc
+    base/logging.cc
+    base/logging/logoutputstream.cc
     base/random.cc
     base/status.cc
     base/stringutil.cc
+    base/thread/eventloop.cc
+    base/thread/signalhandler.cc
+    base/thread/threadpool.cc
+    base/thread/wakeup.cc
     base/uri.cc
-    base/wallclock.cc
-    base/fnv.cc
-    logging/logger.cc
-    logging/loglevel.cc
-    logging/logoutputstream.cc)
+    base/wallclock.cc)
+
+#add_executable(tests/test-inputstream
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-io>
+#    io/inputstream_test.cc)
 
 add_executable(tests/test-uri
     $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-io>
-    $<TARGET_OBJECTS:fnord-thread>
     base/uri_test.cc)
 
 add_executable(tests/test-stringutil
     $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-io>
-    $<TARGET_OBJECTS:fnord-thread>
     base/stringutil_test.cc)
 
 # chart
@@ -78,9 +89,7 @@ add_library(fnord-chart OBJECT
 
 add_executable(tests/test-chart
     $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-chart>
-    $<TARGET_OBJECTS:fnord-thread>
     chart/chart_test.cc)
 
 # cli
@@ -115,28 +124,12 @@ add_library(fnord-http OBJECT
 add_executable(tests/test-http
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-stats>
     net/http/http_test.cc)
 
 target_link_libraries(tests/test-http ${CMAKE_THREAD_LIBS_INIT})
-
-# io
-add_library(fnord-io OBJECT
-    io/file.cc
-    io/fileutil.cc
-    io/filerepository.cc
-    io/inputstream.cc
-    io/outputstream.cc
-    io/mmappedfile.cc
-    io/pagemanager.cc)
-
-#add_executable(tests/test-inputstream
-#    $<TARGET_OBJECTS:fnord-base>
-#    $<TARGET_OBJECTS:fnord-io>
-#    io/inputstream_test.cc)
 
 # json
 add_library(fnord-json OBJECT
@@ -158,9 +151,8 @@ add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-stats>
     json/json_test.cc)
 
 # service: metric
@@ -193,11 +185,9 @@ add_executable(tests/test-json
 #    $<TARGET_OBJECTS:fnord-base>
 #    $<TARGET_OBJECTS:fnord-metric-service>
 #    $<TARGET_OBJECTS:fnord-http>
-#    $<TARGET_OBJECTS:fnord-io>
 #    $<TARGET_OBJECTS:fnord-json>
 #    $<TARGET_OBJECTS:fnord-system>
 #    $<TARGET_OBJECTS:fnord-sstable>
-#    $<TARGET_OBJECTS:fnord-thread>
 #    $<TARGET_OBJECTS:fnord-util>
 #    service/metric/metricservice_example.cc)
 
@@ -217,10 +207,9 @@ add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-groups-service>
     $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-stats>
     service/groups/groupsservice_example.cc)
 
 # service: keyvalue
@@ -232,10 +221,9 @@ add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-keyvalue-service>
     $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-stats>
     service/keyvalue/keyvalueservice_example.cc)
 
 # service: logstream
@@ -250,11 +238,10 @@ add_executable(fnord-logstream-service-example
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-logstream-service>
     $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     $<TARGET_OBJECTS:fnord-sstable>
-    $<TARGET_OBJECTS:fnord-thread>
     $<TARGET_OBJECTS:fnord-util>
     service/logstream/logstreamservice_example.cc)
 
@@ -263,11 +250,10 @@ add_executable(tests/test-logstream-service
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-logstream-service>
     $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     $<TARGET_OBJECTS:fnord-sstable>
-    $<TARGET_OBJECTS:fnord-thread>
     $<TARGET_OBJECTS:fnord-util>
     service/logstream/logstreamservice_test.cc)
 
@@ -280,10 +266,9 @@ add_executable(fnord-ping-service-example
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-ping-service>
     $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-thread>
+    $<TARGET_OBJECTS:fnord-stats>
     service/ping/pingservice_example.cc)
 
 # redis
@@ -299,11 +284,10 @@ add_library(fnord-redis OBJECT
 add_executable(tests/test-redis
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-io>
     $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-thread>
     $<TARGET_OBJECTS:fnord-redis>
     net/redis/redis_test.cc)
+
 
 # sstable
 add_library(fnord-sstable OBJECT
@@ -317,12 +301,10 @@ add_library(fnord-sstable OBJECT
     sstable/sstablerepair.cc
     sstable/sstablewriter.cc)
 
-# thread
-add_library(fnord-thread OBJECT
-    thread/eventloop.cc
-    thread/signalhandler.cc
-    thread/threadpool.cc
-    thread/wakeup.cc)
+add_library(fnord-stats OBJECT
+    stats/statshttpservlet.cc
+    stats/statsrepository.cc
+    stats/statssink.cc)
 
 # util
 add_library(fnord-util OBJECT

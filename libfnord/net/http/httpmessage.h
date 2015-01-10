@@ -13,11 +13,8 @@
 #include <string>
 #include <utility>
 #include <fnord/base/buffer.h>
-#include <fnord/io/inputstream.h>
-#include <fnord/io/outputstream.h>
-
-using fnord::io::InputStream;
-using fnord::io::OutputStream;
+#include <fnord/base/io/inputstream.h>
+#include <fnord/base/io/outputstream.h>
 
 namespace fnord {
 namespace http {
@@ -52,6 +49,7 @@ public:
 
   const Buffer& body() const;
   void addBody(const std::string& body);
+  void addBody(const Buffer& buf);
   void addBody(void* data, size_t size);
   void appendBody(void* data, size_t size);
   void clearBody();

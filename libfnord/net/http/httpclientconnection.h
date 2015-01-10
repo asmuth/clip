@@ -11,14 +11,13 @@
 #define _FNORD_HTTP_CLIENTCONNECTION_H
 #include <memory>
 #include <vector>
-#include <fnord/logging/logger.h>
 #include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/inetaddr.h>
 #include <fnord/net/tcpconnection.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {

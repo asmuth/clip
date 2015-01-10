@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 #include <fnord/base/datetime.h>
-#include <fnord/io/filerepository.h>
+#include <fnord/base/io/filerepository.h>
 #include <fnord/service/metric/backends/disk/compactionpolicy.h>
 #include <fnord/service/metric/backends/disk/labelindex.h>
 #include <fnord/service/metric/backends/disk/metriccursor.h>
@@ -33,11 +33,11 @@ public:
   static constexpr const uint64_t kLiveTableIdleTimeMicros = 
       5 * 60 * 1000000; /* 5 minutes */
 
-  Metric(const std::string& key, io::FileRepository* file_repo);
+  Metric(const std::string& key, FileRepository* file_repo);
 
   Metric(
       const std::string& key,
-      io::FileRepository* file_repo,
+      FileRepository* file_repo,
       std::vector<std::unique_ptr<TableRef>>&& tables);
 
   void scanSamples(
@@ -65,7 +65,7 @@ protected:
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();
   std::shared_ptr<MetricSnapshot> createSnapshot(bool writable);
 
-  io::FileRepository const* file_repo_;
+  FileRepository const* file_repo_;
   std::shared_ptr<MetricSnapshot> head_;
   mutable std::mutex head_mutex_;
   std::mutex append_mutex_;

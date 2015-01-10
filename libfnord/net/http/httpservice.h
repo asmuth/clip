@@ -12,7 +12,7 @@
 #include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace http {

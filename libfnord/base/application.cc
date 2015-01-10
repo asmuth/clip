@@ -8,9 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/base/application.h"
+#include "fnord/base/logging.h"
+#include "fnord/base/logging/logoutputstream.h"
 #include "fnord/base/exceptionhandler.h"
-#include "fnord/thread/signalhandler.h"
-#include "fnord/logging/logoutputstream.h"
+#include "fnord/base/thread/signalhandler.h"
 
 namespace fnord {
 
@@ -23,11 +24,9 @@ void Application::init() {
 }
 
 void Application::logToStderr() {
-  auto logger = new fnord::log::LogOutputStream(
-      fnord::io::OutputStream::getStderr());
-
-  fnord::log::Logger::get()->setMinimumLogLevel(fnord::log::kDebug);
-  fnord::log::Logger::get()->listen(logger);
+  auto logger = new LogOutputStream(OutputStream::getStderr());
+  Logger::get()->setMinimumLogLevel(LogLevel::kDebug);
+  Logger::get()->addTarget(logger);
 }
 
 }

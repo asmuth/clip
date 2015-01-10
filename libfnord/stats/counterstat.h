@@ -31,7 +31,7 @@ public:
   void desc(T value, DimensionTypes... dimensions);
   T value(DimensionTypes... dimensions) const;
 
-  void exportAll(io::OutputStream* out) const override;
+  void exportAll(OutputStream* out) const override;
 
 };
 

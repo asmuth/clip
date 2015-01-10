@@ -25,7 +25,7 @@ UNIT_TEST(MetricTest);
 const char kTestRepoPath[] = "/tmp/__fnordmetric_test_metricrepo2";
 
 TEST_CASE(MetricTest, TestCreateNewMetric, [] () {
-  io::FileUtil::mkdir_p(kTestRepoPath);
+  FileUtil::mkdir_p(kTestRepoPath);
   FileRepository file_repo(kTestRepoPath);
   file_repo.deleteAllFiles();
 

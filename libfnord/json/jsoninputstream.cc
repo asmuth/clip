@@ -16,7 +16,7 @@ namespace fnord {
 namespace json {
 
 JSONInputStream::JSONInputStream(
-    std::unique_ptr<io::InputStream> input) :
+    std::unique_ptr<InputStream> input) :
     input_(std::move(input)),
     cur_(' ') {}
 

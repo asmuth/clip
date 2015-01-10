@@ -11,12 +11,12 @@
 #define _FNORDMETRIC_WEB_HTTPSERVER_H
 #include <memory>
 #include <vector>
-#include <fnord/logging/logger.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httphandler.h>
 #include "fnord/net/http/httpserverconnection.h"
+#include <fnord/net/http/httpstats.h>
 #include <fnord/net/tcpserver.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {
@@ -31,7 +31,10 @@ public:
 
   void listen(int port);
 
+  HTTPServerStats* stats();
+
 protected:
+  HTTPServerStats stats_;
   HTTPHandlerFactory* handler_factory_;
   TaskScheduler* scheduler_;
   net::TCPServer ssock_;

@@ -11,10 +11,9 @@
 #include "fnord/base/stringutil.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
-#include "fnord/io/filerepository.h"
-#include "fnord/io/fileutil.h"
+#include "fnord/base/io/filerepository.h"
+#include "fnord/base/io/fileutil.h"
 #include "fnord/json/jsonrpc.h"
-#include "fnord/logging/logoutputstream.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/logstream/logstreamservice.h"
 #include "fnord/test/unittest.h"
@@ -23,8 +22,8 @@ UNIT_TEST(LogStreamServiceTest);
 
 TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
   auto log_path = "/tmp/__fnord_logstream_service_test";
-  fnord::io::FileUtil::mkdir_p(log_path);
-  fnord::io::FileRepository repo(log_path);
+  fnord::FileUtil::mkdir_p(log_path);
+  fnord::FileRepository repo(log_path);
   repo.deleteAllFiles();
 
   auto msggen = [] (int i) { return fnord::StringUtil::format("msg$0", i); };
@@ -55,7 +54,7 @@ TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
   int i = 0;
   for (int r = 0; r < kNumRuns; ++r) {
     fnord::logstream_service::LogStreamService ls_service{
-        fnord::io::FileRepository(log_path)};
+        fnord::FileRepository(log_path)};
 
     if (r > 0) {
       checkall(&ls_service, i);

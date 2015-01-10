@@ -16,18 +16,26 @@
 #include "fnord/base/duration.h"
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
-#include "fnord/thread/wakeup.h"
+#include "fnord/base/thread/wakeup.h"
 
 namespace fnord {
 
 template <typename T>
 class AutoRef {
 public:
+  using ValueType = T;
+
   AutoRef(std::nullptr_t);
   AutoRef(T* ref);
-  AutoRef(const AutoRef<T>& other);
-  AutoRef(AutoRef<T>&& other);
+
+  template <typename T1>
+  AutoRef(const AutoRef<T1>& other);
+
+  template <typename T1>
+  AutoRef(AutoRef<T1>&& other);
+
   ~AutoRef();
+  AutoRef<T>& operator=(const AutoRef<T>& other) = delete;
 
   T& operator*() const;
   T* operator->() const;
@@ -42,11 +50,16 @@ protected:
 class RefCounted {
 public:
   RefCounted();
+  virtual ~RefCounted() {}
+
   void incRef();
   bool decRef();
 protected:
   mutable std::atomic<size_t> refcount_;
 };
+
+template <typename T>
+using RefPtr = AutoRef<T>;
 
 } // namespace fnord
 

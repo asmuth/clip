@@ -14,7 +14,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
-#include "fnord/io/filerepository.h"
+#include "fnord/base/io/filerepository.h"
 #include "fnord/service/logstream/logstream.h"
 #include "fnord/service/logstream/logstreamentry.h"
 #include "fnord/reflect/reflect.h"
@@ -24,7 +24,7 @@ namespace logstream_service {
 
 class LogStreamService {
 public:
-  LogStreamService(fnord::io::FileRepository file_repo);
+  LogStreamService(fnord::FileRepository file_repo);
 
   /**
    * Append an entry to the stream referenced by `stream` and return the offset
@@ -59,7 +59,7 @@ protected:
   LogStream* openStream(const std::string& name, bool create);
   void reopenTable(const std::string& file_path);
 
-  fnord::io::FileRepository file_repo_;
+  fnord::FileRepository file_repo_;
   std::unordered_map<std::string, std::unique_ptr<LogStream>> streams_;
   std::mutex streams_mutex_;
 };

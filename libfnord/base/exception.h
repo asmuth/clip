@@ -13,7 +13,8 @@
 #include <exception>
 #include <string>
 #include "fnord/base/stringutil.h"
-#include "fnord/io/outputstream.h"
+#include "fnord/base/stdtypes.h"
+#include "fnord/base/io/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";
@@ -67,7 +68,9 @@ const char kFutureError[] = "FutureError";
 
 namespace fnord {
 
-class Exception : public std::exception {
+using StandardException = std::exception;
+
+class Exception : public StandardException {
 public:
   Exception();
   Exception(const char* message, ...);
@@ -75,7 +78,7 @@ public:
   Exception(const Exception& other);
   Exception& operator=(const Exception& other) = delete;
 
-  void debugPrint(io::OutputStream* os = nullptr) const;
+  void debugPrint(OutputStream* os = nullptr) const;
   std::string getMessage() const;
   std::string getTypeName() const;
   std::string method() const;

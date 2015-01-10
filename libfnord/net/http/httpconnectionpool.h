@@ -12,10 +12,13 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "fnord/base/stdtypes.h"
+#include "fnord/base/thread/taskscheduler.h"
 #include "fnord/net/dnscache.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
-#include "fnord/thread/taskscheduler.h"
+#include "fnord/net/http/httpstats.h"
+#include "fnord/stats/statsrepository.h"
 
 namespace fnord {
 namespace http {
@@ -30,6 +33,8 @@ public:
       const HTTPRequest& req,
       const fnord::net::InetAddr& addr);
 
+  HTTPClientStats* stats();
+
 protected:
 
   void parkConnection(HTTPClientConnection* conn, net::InetAddr addr);
@@ -37,7 +42,7 @@ protected:
   void leaseConnection(
       const fnord::net::InetAddr& addr,
       Promise<HTTPResponse> promise,
-      std::function<void (HTTPClientConnection* conn)> callback);
+      Function<void (HTTPClientConnection* conn)> callback);
 
   fnord::TaskScheduler* scheduler_;
 
@@ -47,6 +52,7 @@ protected:
   std::mutex connection_cache_mutex_;
 
   fnord::net::DNSCache dns_cache_;
+  HTTPClientStats stats_;
 };
 
 }

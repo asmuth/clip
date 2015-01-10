@@ -10,7 +10,7 @@
 #include <fnord/base/stringutil.h>
 #include <fnord/net/http/httpgenerator.h>
 
-using fnord::io::OutputStream;
+using fnord::OutputStream;
 
 namespace fnord {
 namespace http {

@@ -38,9 +38,9 @@ std::unique_ptr<TableRef> TableRef::openTable(const std::string filename) {
 
 std::unique_ptr<TableRef> TableRef::openTableUnsafe(
     const std::string filename) {
-  auto file = io::File::openFile(
+  auto file = File::openFile(
       filename,
-      io::File::O_READ | io::File::O_WRITE);
+      File::O_READ | File::O_WRITE);
 
   sstable::SSTableReader reader(file.clone());
   auto header_buf = reader.readHeader();
@@ -75,7 +75,7 @@ std::unique_ptr<TableRef> TableRef::openTableUnsafe(
 std::unique_ptr<TableRef> TableRef::createTable(
     const std::string& filename,
     const std::string& metric_key,
-    fnord::io::File&& file,
+    fnord::File&& file,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
 /*
@@ -111,7 +111,7 @@ std::unique_ptr<TableRef> TableRef::createTable(
 std::unique_ptr<TableRef> TableRef::reopenTable(
     const std::string& filename,
     const std::string& metric_key,
-    fnord::io::File&& file,
+    fnord::File&& file,
     uint64_t generation,
     const std::vector<uint64_t>& parents) {
   sstable::IndexProvider indexes;
@@ -340,7 +340,7 @@ std::unique_ptr<fnord::sstable::SSTableReader> ReadonlyTableRef::openTable() {
   }
   */
 
-  auto file = io::File::openFile(filename_, io::File::O_READ);
+  auto file = File::openFile(filename_, File::O_READ);
   return std::unique_ptr<fnord::sstable::SSTableReader>(
       new sstable::SSTableReader(std::move(file)));
 }

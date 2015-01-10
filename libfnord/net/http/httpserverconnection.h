@@ -11,18 +11,20 @@
 #define _FNORD_HTTP_SERVERCONNECTION_H
 #include <memory>
 #include <vector>
-#include <fnord/logging/logger.h>
+#include <fnord/base/autoref.h>
+#include <fnord/base/stdtypes.h>
 #include <fnord/net/http/httphandler.h>
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
+#include <fnord/net/http/httpstats.h>
 #include <fnord/net/tcpconnection.h>
-#include <fnord/thread/taskscheduler.h>
+#include <fnord/base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {
 
-class HTTPServerConnection {
+class HTTPServerConnection : public RefCounted {
 public:
   static const size_t kMinBufferSize = 4096;
 
@@ -67,34 +69,38 @@ public:
    **/
   static void start(
       HTTPHandlerFactory* handler_factory,
-      std::unique_ptr<net::TCPConnection> conn,
-      TaskScheduler* scheduler);
+      ScopedPtr<net::TCPConnection> conn,
+      TaskScheduler* scheduler,
+      HTTPServerStats* stats);
+
+  ~HTTPServerConnection();
 
   void readRequestBody(
-      std::function<void (
+      Function<void (
           const void* data,
           size_t size,
           bool last_chunk)> callback);
 
   void discardRequestBody(
-      std::function<void ()> ready_callback);
+      Function<void ()> ready_callback);
 
   void writeResponse(
       const HTTPResponse& resp,
-      std::function<void()> ready_callback);
+      Function<void()> ready_callback);
 
   void writeResponseBody(
       const void* data,
       size_t size,
-      std::function<void()> ready_callback);
+      Function<void()> ready_callback);
 
   void finishResponse();
 
 protected:
   HTTPServerConnection(
       HTTPHandlerFactory* handler_factory,
-      std::unique_ptr<net::TCPConnection> conn,
-      TaskScheduler* scheduler);
+      ScopedPtr<net::TCPConnection> conn,
+      TaskScheduler* scheduler,
+      HTTPServerStats* stats);
 
   void nextRequest();
   void dispatchRequest();
@@ -103,23 +109,19 @@ protected:
   void write();
   void awaitRead();
   void awaitWrite();
-
-  void incRef();
-  bool decRef();
   void close();
 
   HTTPHandlerFactory* handler_factory_;
-  std::unique_ptr<net::TCPConnection> conn_;
+  ScopedPtr<net::TCPConnection> conn_;
   TaskScheduler* scheduler_;
   HTTPParser parser_;
-  std::function<void ()> on_read_completed_cb_;
-  std::function<void ()> on_write_completed_cb_;
-  std::atomic<int> refcount_;
+  Function<void ()> on_write_completed_cb_;
   Buffer buf_;
   Buffer body_buf_;
-  std::unique_ptr<HTTPRequest> cur_request_;
-  std::unique_ptr<HTTPHandler> cur_handler_;
-  std::recursive_mutex mutex_;
+  ScopedPtr<HTTPRequest> cur_request_;
+  ScopedPtr<HTTPHandler> cur_handler_;
+  std::mutex mutex_;
+  HTTPServerStats* stats_;
 };
 
 }

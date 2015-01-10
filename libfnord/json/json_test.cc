@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "fnord/io/inputstream.h"
+#include "fnord/base/io/inputstream.h"
 #include "fnord/json/flatjsonreader.h"
 #include "fnord/json/jsondocument.h"
 #include "fnord/json/jsonutil.h"
@@ -20,7 +20,7 @@
 
 UNIT_TEST(JSONTest);
 
-using fnord::io::StringInputStream;
+using fnord::StringInputStream;
 using fnord::json::FlatJSONReader;
 using fnord::json::JSONDocument;
 using fnord::json::JSONInputStream;

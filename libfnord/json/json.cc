@@ -31,12 +31,12 @@ JSONToken::JSONToken(
     size(1) {}
 
 JSONObject parseJSON(const std::string& json_str) {
-  JSONInputStream json(io::StringInputStream::fromString(json_str));
+  JSONInputStream json(StringInputStream::fromString(json_str));
   return parseJSON(&json);
 }
 
 JSONObject parseJSON(const fnord::Buffer& json_buf) {
-  JSONInputStream json(io::BufferInputStream::fromBuffer(&json_buf));
+  JSONInputStream json(BufferInputStream::fromBuffer(&json_buf));
   return parseJSON(&json);
 }
 

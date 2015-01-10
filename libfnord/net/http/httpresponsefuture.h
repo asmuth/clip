@@ -13,8 +13,8 @@
 #include "fnord/net/http/httpresponse.h"
 #include "fnord/net/http/httpresponsehandler.h"
 #include "fnord/net/http/httpclientconnection.h"
-#include "fnord/thread/future.h"
-#include "fnord/thread/wakeup.h"
+#include "fnord/base/thread/future.h"
+#include "fnord/base/thread/wakeup.h"
 #include <memory>
 
 namespace fnord {

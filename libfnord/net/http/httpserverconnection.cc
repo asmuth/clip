@@ -9,6 +9,7 @@
  */
 #include "fnord/base/exception.h"
 #include "fnord/base/inspect.h"
+#include "fnord/base/logging.h"
 #include "fnord/net/http/httpserverconnection.h"
 #include "fnord/net/http/httpgenerator.h"
 
@@ -23,31 +24,35 @@ namespace http {
 
 void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
-    std::unique_ptr<net::TCPConnection> conn,
-    TaskScheduler* scheduler) {
-  // N.B. we don't leak the connection here. it is ref counted and will
-  // free itself
+    ScopedPtr<net::TCPConnection> conn,
+    TaskScheduler* scheduler,
+    HTTPServerStats* stats) {
   auto http_conn = new HTTPServerConnection(
       handler_factory,
       std::move(conn),
-      scheduler);
+      scheduler,
+      stats);
 
+  // N.B. we don't leak the connection here. it is ref counted and will
+  // free itself
+  http_conn->incRef();
   http_conn->nextRequest();
 }
 
 HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
-    std::unique_ptr<net::TCPConnection> conn,
-    TaskScheduler* scheduler) :
+    ScopedPtr<net::TCPConnection> conn,
+    TaskScheduler* scheduler,
+    HTTPServerStats* stats) :
     handler_factory_(handler_factory),
     conn_(std::move(conn)),
     scheduler_(scheduler),
     on_write_completed_cb_(nullptr),
-    refcount_(1),
+    stats_(stats),
     parser_(HTTPParser::PARSE_HTTP_REQUEST) {
-  log::Logger::get()->logf(
-      fnord::log::kTrace, "New HTTP connection: $0",
-      inspect(*this));
+  logTrace("fnord.http.server", "New HTTP connection: $0", inspect(*this));
+  stats_->total_connections.incr(1);
+  stats_->current_connections.incr(1);
 
   conn_->setNonblocking(true);
   buf_.reserve(kMinBufferSize);
@@ -74,47 +79,45 @@ HTTPServerConnection::HTTPServerConnection(
         std::string(val, val_size));
   });
 
-  parser_.onHeadersComplete(std::bind(&HTTPServerConnection::dispatchRequest, this));
+  parser_.onHeadersComplete(
+      std::bind(&HTTPServerConnection::dispatchRequest, this));
+}
+
+HTTPServerConnection::~HTTPServerConnection() {
+  stats_->current_connections.decr(1);
 }
 
 void HTTPServerConnection::read() {
-  mutex_.lock();
+  std::unique_lock<std::mutex> lk(mutex_);
 
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
+    stats_->received_bytes.incr(len);
   } catch (Exception& e) {
-    mutex_.unlock();
     if (e.ofType(kWouldBlockError)) {
       return awaitRead();
     }
 
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP read() failed, closing connection",
-        e);
+    lk.unlock();
+    logDebug("fnord.http.server", e, "read() failed, closing...");
 
     close();
     return;
   }
 
+  lk.unlock();
+
   try {
     if (len == 0) {
       parser_.eof();
-      mutex_.unlock();
       close();
       return;
     } else {
       parser_.parse((char *) buf_.data(), len);
     }
   } catch (Exception& e) {
-    mutex_.unlock();
-
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP parse error, closing connection",
-        e);
-
+    logDebug("fnord.http.server", e, "HTTP pase error, closing...");
     close();
     return;
   }
@@ -122,12 +125,10 @@ void HTTPServerConnection::read() {
   if (parser_.state() != HTTPParser::S_DONE) {
     awaitRead();
   }
-
-  mutex_.unlock();
 }
 
 void HTTPServerConnection::write() {
-  mutex_.lock();
+  std::unique_lock<std::mutex> lk(mutex_);
 
   auto data = ((char *) buf_.data()) + buf_.mark();
   auto size = buf_.size() - buf_.mark();
@@ -136,29 +137,23 @@ void HTTPServerConnection::write() {
   try {
     len = conn_->write(data, size);
     buf_.setMark(buf_.mark() + len);
+    stats_->sent_bytes.incr(len);
   } catch (Exception& e) {
-    mutex_.unlock();
-
     if (e.ofType(kWouldBlockError)) {
       return awaitWrite();
     }
 
-    log::Logger::get()->logException(
-        fnord::log::kDebug,
-        "HTTP write() failed, closing connection",
-        e);
-
+    lk.unlock();
+    logDebug("fnord.http.server", e, "write() failed, closing...");
     close();
     return;
   }
 
-
   if (buf_.mark() < buf_.size()) {
-    mutex_.unlock();
     awaitWrite();
   } else {
     buf_.clear();
-    mutex_.unlock();
+    lk.unlock();
     if (on_write_completed_cb_) {
       on_write_completed_cb_();
     }
@@ -192,14 +187,17 @@ void HTTPServerConnection::nextRequest() {
 }
 
 void HTTPServerConnection::dispatchRequest() {
+  stats_->total_requests.incr(1);
+  stats_->current_requests.incr(1);
+
   incRef();
   cur_handler_= handler_factory_->getHandler(this, cur_request_.get());
   cur_handler_->handleHTTPRequest();
 }
 
 void HTTPServerConnection::readRequestBody(
-    std::function<void (const void*, size_t, bool)> callback) {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+    Function<void (const void*, size_t, bool)> callback) {
+  std::unique_lock<std::mutex> lk(mutex_);
 
   switch (parser_.state()) {
     case HTTPParser::S_REQ_METHOD:
@@ -224,11 +222,13 @@ void HTTPServerConnection::readRequestBody(
     }
   };
 
+  lk.unlock();
+
   read_body_chunk_fn((const char*) body_buf_.data(), body_buf_.size());
   parser_.onBodyChunk(read_body_chunk_fn);
 }
 
-void HTTPServerConnection::discardRequestBody(std::function<void ()> callback) {
+void HTTPServerConnection::discardRequestBody(Function<void ()> callback) {
   readRequestBody([callback] (const void* data, size_t size, bool last) {
     if (last) {
       callback();
@@ -238,11 +238,11 @@ void HTTPServerConnection::discardRequestBody(std::function<void ()> callback) {
 
 void HTTPServerConnection::writeResponse(
     const HTTPResponse& resp,
-    std::function<void()> ready_callback) {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+    Function<void()> ready_callback) {
+  std::lock_guard<std::mutex> lk(mutex_);
 
   buf_.clear();
-  io::BufferOutputStream os(&buf_);
+  BufferOutputStream os(&buf_);
   HTTPGenerator::generate(resp, &os);
   on_write_completed_cb_ = ready_callback;
   awaitWrite();
@@ -251,8 +251,8 @@ void HTTPServerConnection::writeResponse(
 void HTTPServerConnection::writeResponseBody(
     const void* data,
     size_t size,
-    std::function<void()> ready_callback) {
-  std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+    Function<void()> ready_callback) {
+  std::lock_guard<std::mutex> lk(mutex_);
 
   buf_.clear();
   buf_.append(data, size);
@@ -261,12 +261,14 @@ void HTTPServerConnection::writeResponseBody(
 }
 
 void HTTPServerConnection::finishResponse() {
+  stats_->current_requests.decr(1);
+
   if (decRef()) {
     return;
   }
 
   if (cur_request_->keepalive()) {
-    std::lock_guard<std::recursive_mutex> lock_holder(mutex_);
+    std::lock_guard<std::mutex> lk(mutex_);
     nextRequest();
   } else {
     close();
@@ -274,28 +276,9 @@ void HTTPServerConnection::finishResponse() {
 }
 
 void HTTPServerConnection::close() {
-  log::Logger::get()->logf(
-      fnord::log::kTrace, "HTTP connection close: $0",
-      inspect(*this));
-
+  logTrace("fnord.http.server", "HTTP connection close: $0", inspect(*this));
   conn_->close();
   decRef();
-}
-
-void HTTPServerConnection::incRef() {
-  refcount_++;
-}
-
-bool HTTPServerConnection::decRef() {
-  if (refcount_.fetch_sub(1) == 1) {
-    log::Logger::get()->logf(
-        fnord::log::kTrace, "HTTP connection free'd: $0",
-        inspect(*this));
-    delete this;
-    return true;
-  }
-
-  return false;
 }
 
 } // namespace http

@@ -19,7 +19,7 @@
 #include "fnord/chart/pointchart.h"
 #include "fnord/chart/series.h"
 #include "fnord/chart/svgtarget.h"
-#include "fnord/io/fileutil.h"
+#include "fnord/base/io/fileutil.h"
 #include "fnord/test/unittest.h"
 
 UNIT_TEST(ChartTest);
@@ -42,8 +42,8 @@ using fnord::chart::Series;
 using fnord::chart::Series2D;
 using fnord::chart::Series3D;
 using fnord::chart::SVGTarget;
-using fnord::io::FileOutputStream;
-using fnord::io::FileUtil;
+using fnord::FileOutputStream;
+using fnord::FileUtil;
 using fnord::test::UnitTest;
 
 static void compareChart(

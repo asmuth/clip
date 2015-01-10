@@ -12,11 +12,11 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include <fnord/io/outputstream.h>
+#include <fnord/base/io/outputstream.h>
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/http/httprequest.h>
 
-using fnord::io::OutputStream;
+using fnord::OutputStream;
 
 namespace fnord {
 namespace http {

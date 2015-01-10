@@ -14,7 +14,7 @@
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/metric/metricservice.h"
 #include "fnord/service/metric/metricserviceadapter.h"
-#include "fnord/thread/threadpool.h"
+#include "fnord/base/thread/threadpool.h"
 #include "fnord/system/signalhandler.h"
 
 using fnord::http::HTTPServer;
