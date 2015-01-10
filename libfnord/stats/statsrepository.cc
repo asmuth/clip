@@ -7,19 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_STATS_STAT_H
-#define _FNORD_STATS_STAT_H
+#include "fnord/stats/statsrepository.h"
 
 namespace fnord {
 namespace stats {
 
-class Stat {
-public:
-  virtual ~Stat() {};
-  virtual void exportAll() const = 0;
-};
+StatsRepository* StatsRepository::get() {
+  static StatsRepository singleton;
+  return &singleton;
+}
 
 }
 }
-
-#endif

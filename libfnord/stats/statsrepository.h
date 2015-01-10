@@ -7,19 +7,23 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_STATS_STAT_H
-#define _FNORD_STATS_STAT_H
+#ifndef _FNORD_STATS_STATSREPOSITORY_H
+#define _FNORD_STATS_STATSREPOSITORY_H
+#include <mutex>
+#include <stdlib.h>
+#include <stdint.h>
 
 namespace fnord {
 namespace stats {
 
-class Stat {
+class StatsRepository {
 public:
-  virtual ~Stat() {};
-  virtual void exportAll() const = 0;
+  static StatsRepository* get();
+
+protected:
+  std::mutex mutex_;
 };
 
 }
 }
-
 #endif

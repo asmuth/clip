@@ -37,6 +37,8 @@ public:
 
   Future<JSONObject> call(const JSONObject& json_req);
 
+  http::HTTPConnectionPool* httpConnectionPool();
+
 protected:
   comm::LBGroup* lb_group_;
   http::HTTPConnectionPool conn_pool_;

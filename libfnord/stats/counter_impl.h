@@ -21,6 +21,11 @@ Counter<ValueType, LabelTypes...>::Counter(LabelNameTypes... label_names) {
       "number labels names does not match number of label template types");
 }
 
+template <typename ValueType, typename... LabelTypes>
+void Counter<ValueType, LabelTypes...>::exportAll() const {
+  ScopedLock<std::mutex> lk(mutex_);
+}
+
 /*
   void increment(ValueType value);
   void set(ValueType value);

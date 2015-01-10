@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_HTTPSTATS_H
 
 #include "fnord/stats/counter.h"
+#include "fnord/stats/statsrepository.h"
 
 namespace fnord {
 namespace http {
@@ -26,6 +27,16 @@ struct HTTPClientStats {
 
   HTTPClientStats() :
       status_codes("http_status") {}
+
+  void exportStats(
+      const String& path_prefix = "/fnord/http/client/",
+      stats::StatsRepository* stats_repo = nullptr) {
+
+    if (stats_repo == nullptr) {
+      stats_repo = stats::StatsRepository::get();
+    }
+  }
+
 };
 
 /*

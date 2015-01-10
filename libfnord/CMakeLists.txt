@@ -126,6 +126,7 @@ add_executable(tests/test-http
     $<TARGET_OBJECTS:fnord-comm>
     $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-stats>
     net/http/http_test.cc)
 
 target_link_libraries(tests/test-http ${CMAKE_THREAD_LIBS_INIT})
@@ -151,6 +152,7 @@ add_executable(tests/test-json
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-net>
     $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-stats>
     json/json_test.cc)
 
 # service: metric
@@ -207,6 +209,7 @@ add_executable(fnord-groups-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     service/groups/groupsservice_example.cc)
 
 # service: keyvalue
@@ -220,6 +223,7 @@ add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     service/keyvalue/keyvalueservice_example.cc)
 
 # service: logstream
@@ -236,6 +240,7 @@ add_executable(fnord-logstream-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     $<TARGET_OBJECTS:fnord-sstable>
     $<TARGET_OBJECTS:fnord-util>
     service/logstream/logstreamservice_example.cc)
@@ -247,6 +252,7 @@ add_executable(tests/test-logstream-service
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     $<TARGET_OBJECTS:fnord-sstable>
     $<TARGET_OBJECTS:fnord-util>
     service/logstream/logstreamservice_test.cc)
@@ -262,6 +268,7 @@ add_executable(fnord-ping-service-example
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-stats>
     service/ping/pingservice_example.cc)
 
 # redis
@@ -281,6 +288,7 @@ add_executable(tests/test-redis
     $<TARGET_OBJECTS:fnord-redis>
     net/redis/redis_test.cc)
 
+
 # sstable
 add_library(fnord-sstable OBJECT
     sstable/cursor.cc
@@ -292,6 +300,9 @@ add_library(fnord-sstable OBJECT
     sstable/sstablereader.cc
     sstable/sstablerepair.cc
     sstable/sstablewriter.cc)
+
+add_library(fnord-stats OBJECT
+    stats/statsrepository.cc)
 
 # util
 add_library(fnord-util OBJECT

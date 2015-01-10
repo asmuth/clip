@@ -13,11 +13,12 @@
 #include <vector>
 #include <string>
 #include "fnord/base/stdtypes.h"
+#include "fnord/base/thread/taskscheduler.h"
 #include "fnord/net/dnscache.h"
 #include "fnord/net/http/httprequest.h"
 #include "fnord/net/http/httpresponsefuture.h"
 #include "fnord/net/http/httpstats.h"
-#include "fnord/base/thread/taskscheduler.h"
+#include "fnord/stats/statsrepository.h"
 
 namespace fnord {
 namespace http {
@@ -31,6 +32,10 @@ public:
   Future<HTTPResponse> executeRequest(
       const HTTPRequest& req,
       const fnord::net::InetAddr& addr);
+
+  void exportStats(
+      const String& path_prefix = "/fnord/http/client/",
+      stats::StatsRepository* stats_repo = nullptr);
 
 protected:
 

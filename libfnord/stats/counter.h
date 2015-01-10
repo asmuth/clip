@@ -13,12 +13,13 @@
 #include <stdint.h>
 #include "fnord/base/datetime.h"
 #include "fnord/base/hash.h"
+#include "fnord/stats/stat.h"
 
 namespace fnord {
 namespace stats {
 
 template <typename ValueType, typename... LabelTypes>
-class Counter {
+class Counter : public Stat {
 public:
   typedef std::tuple<LabelTypes...> LabelValuesType;
 
@@ -28,9 +29,11 @@ public:
   void increment(ValueType value);
   void set(ValueType value);
 
+  void exportAll() const override;
+
 protected:
   std::unordered_map<LabelValuesType, ValueType, hash<LabelValuesType>> values_;
-  std::mutex mutex_;
+  mutable std::mutex mutex_;
 };
 
 }
