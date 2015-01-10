@@ -39,9 +39,6 @@ struct HTTPClientStats {
       stats_repo = stats::StatsRepository::get();
     }
 
-    fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "current_connections"));
-    fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "status_codes"));
-
     stats_repo->exportStat(
         FileUtil::joinPaths(path_prefix, "current_connections"),
         &current_connections,
