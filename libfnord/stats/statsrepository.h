@@ -51,6 +51,8 @@ protected:
   mutable std::mutex mutex_;
 };
 
+void exportStat(String path, StatRef* stat, ExportMode export_mode);
+
 }
 }
 #endif

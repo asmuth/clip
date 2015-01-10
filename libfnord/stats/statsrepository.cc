@@ -36,5 +36,9 @@ void StatsRepository::forEachStat(
   }
 }
 
+void exportStat(String path, StatRef* stat, ExportMode export_mode) {
+  StatsRepository::get()->exportStat(path, stat, export_mode);
+}
+
 }
 }
