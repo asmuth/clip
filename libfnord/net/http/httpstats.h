@@ -20,7 +20,8 @@ namespace fnord {
 namespace http {
 
 struct HTTPClientStats {
-  stats::Counter<uint64_t> open_connections;
+  stats::Counter<uint64_t> current_connections;
+  stats::Counter<uint64_t> total_connections;
   stats::MultiCounter<uint64_t, uint64_t> status_codes;
   stats::Counter<uint64_t> current_requests;
   stats::Counter<uint64_t> total_requests;
@@ -38,13 +39,18 @@ struct HTTPClientStats {
       stats_repo = stats::StatsRepository::get();
     }
 
-    fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "open_connections"));
+    fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "current_connections"));
     fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "status_codes"));
 
     stats_repo->exportStat(
-        FileUtil::joinPaths(path_prefix, "open_connections"),
-        &open_connections,
+        FileUtil::joinPaths(path_prefix, "current_connections"),
+        &current_connections,
         stats::ExportMode::EXPORT_NONE);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "total_connections"),
+        &total_connections,
+        stats::ExportMode::EXPORT_DELTA);
 
     stats_repo->exportStat(
         FileUtil::joinPaths(path_prefix, "status_codes"),
@@ -75,7 +81,8 @@ struct HTTPClientStats {
 };
 
 struct HTTPServerStats {
-  stats::Counter<uint64_t> open_connections;
+  stats::Counter<uint64_t> current_connections;
+  stats::Counter<uint64_t> total_connections;
   stats::MultiCounter<uint64_t, uint64_t> status_codes;
   stats::Counter<uint64_t> current_requests;
   stats::Counter<uint64_t> total_requests;
@@ -94,9 +101,14 @@ struct HTTPServerStats {
     }
 
     stats_repo->exportStat(
-        FileUtil::joinPaths(path_prefix, "open_connections"),
-        &open_connections,
+        FileUtil::joinPaths(path_prefix, "current_connections"),
+        &current_connections,
         stats::ExportMode::EXPORT_NONE);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "total_connections"),
+        &total_connections,
+        stats::ExportMode::EXPORT_DELTA);
 
     stats_repo->exportStat(
         FileUtil::joinPaths(path_prefix, "status_codes"),

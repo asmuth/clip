@@ -34,7 +34,11 @@ HTTPServer::HTTPServer(
     scheduler_(scheduler),
     ssock_(scheduler) {
   ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
-    HTTPServerConnection::start(handler_factory_, std::move(conn), scheduler_);
+    HTTPServerConnection::start(
+        handler_factory_,
+        std::move(conn),
+        scheduler_,
+        &stats_);
   });
 }
 

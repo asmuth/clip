@@ -23,7 +23,8 @@ class CounterStat : public Stat {
 public:
   CounterStat();
 
-  void increment(ValueType value);
+  void incr(ValueType value);
+  void decr(ValueType value);
   void set(ValueType value);
 
   void exportAll(const String& path, StatsSink* sink) const override;
@@ -37,7 +38,8 @@ class Counter : public StatRef {
 public:
   Counter();
 
-  void increment(ValueType value);
+  void incr(ValueType value);
+  void decr(ValueType value);
   void set(ValueType value);
 
   RefPtr<Stat> getStat() const override;

@@ -25,11 +25,13 @@ namespace http {
 void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
     ScopedPtr<net::TCPConnection> conn,
-    TaskScheduler* scheduler) {
+    TaskScheduler* scheduler,
+    HTTPServerStats* stats) {
   auto http_conn = new HTTPServerConnection(
       handler_factory,
       std::move(conn),
-      scheduler);
+      scheduler,
+      stats);
 
   // N.B. we don't leak the connection here. it is ref counted and will
   // free itself
@@ -40,13 +42,17 @@ void HTTPServerConnection::start(
 HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
     ScopedPtr<net::TCPConnection> conn,
-    TaskScheduler* scheduler) :
+    TaskScheduler* scheduler,
+    HTTPServerStats* stats) :
     handler_factory_(handler_factory),
     conn_(std::move(conn)),
     scheduler_(scheduler),
     on_write_completed_cb_(nullptr),
+    stats_(stats),
     parser_(HTTPParser::PARSE_HTTP_REQUEST) {
   logTrace("fnord.http.server", "New HTTP connection: $0", inspect(*this));
+  stats_->total_connections.incr(1);
+  stats_->current_connections.incr(1);
 
   conn_->setNonblocking(true);
   buf_.reserve(kMinBufferSize);
@@ -77,12 +83,17 @@ HTTPServerConnection::HTTPServerConnection(
       std::bind(&HTTPServerConnection::dispatchRequest, this));
 }
 
+HTTPServerConnection::~HTTPServerConnection() {
+  stats_->current_connections.decr(1);
+}
+
 void HTTPServerConnection::read() {
   std::unique_lock<std::mutex> lk(mutex_);
 
   size_t len;
   try {
     len = conn_->read(buf_.data(), buf_.allocSize());
+    stats_->received_bytes.incr(len);
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
       return awaitRead();
@@ -126,6 +137,7 @@ void HTTPServerConnection::write() {
   try {
     len = conn_->write(data, size);
     buf_.setMark(buf_.mark() + len);
+    stats_->sent_bytes.incr(len);
   } catch (Exception& e) {
     if (e.ofType(kWouldBlockError)) {
       return awaitWrite();
@@ -175,6 +187,9 @@ void HTTPServerConnection::nextRequest() {
 }
 
 void HTTPServerConnection::dispatchRequest() {
+  stats_->total_requests.incr(1);
+  stats_->current_requests.incr(1);
+
   incRef();
   cur_handler_= handler_factory_->getHandler(this, cur_request_.get());
   cur_handler_->handleHTTPRequest();
@@ -246,6 +261,8 @@ void HTTPServerConnection::writeResponseBody(
 }
 
 void HTTPServerConnection::finishResponse() {
+  stats_->current_requests.decr(1);
+
   if (decRef()) {
     return;
   }

@@ -17,6 +17,7 @@
 #include <fnord/net/http/httpparser.h>
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httpresponse.h>
+#include <fnord/net/http/httpstats.h>
 #include <fnord/net/tcpconnection.h>
 #include <fnord/base/thread/taskscheduler.h>
 
@@ -69,7 +70,10 @@ public:
   static void start(
       HTTPHandlerFactory* handler_factory,
       ScopedPtr<net::TCPConnection> conn,
-      TaskScheduler* scheduler);
+      TaskScheduler* scheduler,
+      HTTPServerStats* stats);
+
+  ~HTTPServerConnection();
 
   void readRequestBody(
       Function<void (
@@ -95,7 +99,8 @@ protected:
   HTTPServerConnection(
       HTTPHandlerFactory* handler_factory,
       ScopedPtr<net::TCPConnection> conn,
-      TaskScheduler* scheduler);
+      TaskScheduler* scheduler,
+      HTTPServerStats* stats);
 
   void nextRequest();
   void dispatchRequest();
@@ -116,6 +121,7 @@ protected:
   ScopedPtr<HTTPRequest> cur_request_;
   ScopedPtr<HTTPHandler> cur_handler_;
   std::mutex mutex_;
+  HTTPServerStats* stats_;
 };
 
 }

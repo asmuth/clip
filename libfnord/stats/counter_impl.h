@@ -24,12 +24,42 @@ void CounterStat<ValueType>::exportAll(
 }
 
 template <typename ValueType>
+void CounterStat<ValueType>::incr(ValueType value) {
+  value_ += value;
+}
+
+template <typename ValueType>
+void CounterStat<ValueType>::decr(ValueType value) {
+  value_ -= value;
+}
+
+template <typename ValueType>
+void CounterStat<ValueType>::set(ValueType value) {
+  value_ = value;
+}
+
+template <typename ValueType>
 Counter<ValueType>::Counter() :
     stat_(new CounterStat<ValueType>()) {}
 
 template <typename ValueType>
 RefPtr<Stat> Counter<ValueType>::getStat() const {
   return stat_;
+}
+
+template <typename ValueType>
+void Counter<ValueType>::incr(ValueType value) {
+  stat_->incr(value);
+}
+
+template <typename ValueType>
+void Counter<ValueType>::decr(ValueType value) {
+  stat_->decr(value);
+}
+
+template <typename ValueType>
+void Counter<ValueType>::set(ValueType value) {
+  stat_->set(value);
 }
 
 }

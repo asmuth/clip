@@ -102,6 +102,8 @@ void HTTPConnectionPool::leaseConnection(
                       addr),
                   conn->onReady());
 
+              stats_.current_connections.incr(1);
+              stats_.total_connections.incr(1);
               callback(conn.release());
             } catch (const std::exception& e) {
               promise.failure(e);
