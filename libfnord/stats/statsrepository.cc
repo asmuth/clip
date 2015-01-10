@@ -18,11 +18,22 @@ StatsRepository* StatsRepository::get() {
 }
 
 void StatsRepository::exportStat(
-    const String& path,
-    StatRef* stat,
+    String path,
+    StatRef* stat_ref,
     ExportMode export_mode) {
+  auto stat = stat_ref->getStat();
+  stat->incRef();
   ScopedLock<std::mutex> lk(mutex_);
-  stats_.emplace_back(path, stat->getStat(), export_mode);
+  stats_.emplace_back(path, stat.get(), export_mode);
+}
+
+void StatsRepository::forEachStat(
+    Function<void (const ExportedStat& stat)> fn) const {
+  ScopedLock<std::mutex> lk(mutex_);
+
+  for (const auto& stat : stats_) {
+    fn(stat);
+  }
 }
 
 }

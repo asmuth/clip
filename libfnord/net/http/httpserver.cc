@@ -43,5 +43,9 @@ void HTTPServer::listen(int port) {
   ssock_.listen(port);
 }
 
+HTTPServerStats* HTTPServer::stats() {
+  return &stats_;
+}
+
 }
 }

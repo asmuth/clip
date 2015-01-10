@@ -14,6 +14,7 @@
 #include <fnord/net/http/httprequest.h>
 #include <fnord/net/http/httphandler.h>
 #include "fnord/net/http/httpserverconnection.h"
+#include <fnord/net/http/httpstats.h>
 #include <fnord/net/tcpserver.h>
 #include <fnord/base/thread/taskscheduler.h>
 
@@ -30,7 +31,10 @@ public:
 
   void listen(int port);
 
+  HTTPServerStats* stats();
+
 protected:
+  HTTPServerStats stats_;
   HTTPHandlerFactory* handler_factory_;
   TaskScheduler* scheduler_;
   net::TCPServer ssock_;

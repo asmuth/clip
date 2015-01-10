@@ -11,16 +11,23 @@
 #define _FNORD_STATS_STATSHTTPSERVLET_H
 #include "fnord/base/autoref.h"
 #include "fnord/net/http/httpservice.h"
+#include "fnord/stats/statsrepository.h"
 
 namespace fnord {
 namespace stats {
 
 class StatsHTTPServlet : public fnord::http::HTTPService {
+public:
+
+  StatsHTTPServlet();
+  StatsHTTPServlet(StatsRepository* stats_repo);
 
   void handleHTTPRequest(
       fnord::http::HTTPRequest* req,
       fnord::http::HTTPResponse* res);
 
+protected:
+  StatsRepository* stats_repo_;
 };
 
 }

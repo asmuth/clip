@@ -33,10 +33,6 @@ public:
       const HTTPRequest& req,
       const fnord::net::InetAddr& addr);
 
-  void exportStats(
-      const String& path_prefix = "/fnord/http/client/",
-      stats::StatsRepository* stats_repo = nullptr);
-
   HTTPClientStats* stats();
 
 protected:

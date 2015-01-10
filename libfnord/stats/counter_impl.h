@@ -13,42 +13,24 @@
 namespace fnord {
 namespace stats {
 
-template <typename ValueType, typename... LabelTypes>
-template <typename... LabelNameTypes>
-CounterStat<ValueType, LabelTypes...>::CounterStat(
-    LabelNameTypes... label_names) {
-  static_assert(
-      sizeof...(LabelTypes) == sizeof...(LabelNameTypes),
-      "number labels names does not match number of label template types");
-}
+template <typename ValueType>
+CounterStat<ValueType>::CounterStat() : value_(0) {}
 
-template <typename ValueType, typename... LabelTypes>
-void CounterStat<ValueType, LabelTypes...>::exportAll(
+template <typename ValueType>
+void CounterStat<ValueType>::exportAll(
     const String& path,
     StatsSink* sink) const {
-  ScopedLock<std::mutex> lk(mutex_);
-
-  for (const auto& inst : values_) {
-    StatsSink::Labels labels;
-    sink->addStatValue(path, labels, inst.second);
-  }
+  sink->addStatValue(path, value_.load());
 }
 
-template <typename ValueType, typename... LabelTypes>
-template <typename... LabelNameTypes>
-Counter<ValueType, LabelTypes...>::Counter(
-    LabelNameTypes... label_names) :
-    stat_(new CounterStat<ValueType, LabelTypes...>(label_names...)) {}
+template <typename ValueType>
+Counter<ValueType>::Counter() :
+    stat_(new CounterStat<ValueType>()) {}
 
-template <typename ValueType, typename... LabelTypes>
-RefPtr<Stat> Counter<ValueType, LabelTypes...>::getStat() const {
+template <typename ValueType>
+RefPtr<Stat> Counter<ValueType>::getStat() const {
   return stat_;
 }
-
-/*
-  void increment(ValueType value);
-  void set(ValueType value);
-*/
 
 }
 }

@@ -50,6 +50,23 @@ Buffer::Buffer(const Buffer& copy) : size_(copy.size_), alloc_(copy.size_) {
   memcpy(data_, copy.data_, size_);
 }
 
+Buffer& Buffer::operator=(const Buffer& copy) {
+  if (data_ != nullptr) {
+    free(data_);
+  }
+
+  size_ = copy.size_;
+  alloc_ = copy.size_;
+  data_ = malloc(alloc_);
+
+  if (data_ == nullptr) {
+    RAISE(kMallocError, "malloc() failed");
+  }
+
+  memcpy(data_, copy.data_, size_);
+  return *this;
+}
+
 Buffer::Buffer(
     Buffer&& move) :
     data_(move.data_),
@@ -94,6 +111,10 @@ void Buffer::append(const void* data, size_t size) {
 
   memcpy((char*) data_ + size_, data, size);
   size_ += size;
+}
+
+void Buffer::append(const String& string) {
+  append(string.data(), string.length());
 }
 
 void Buffer::truncate(size_t size) {

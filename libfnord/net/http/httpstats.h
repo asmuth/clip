@@ -13,6 +13,7 @@
 #include "fnord/base/io/fileutil.h"
 #include "fnord/base/stdtypes.h"
 #include "fnord/stats/counter.h"
+#include "fnord/stats/multicounter.h"
 #include "fnord/stats/statsrepository.h"
 
 namespace fnord {
@@ -20,14 +21,68 @@ namespace http {
 
 struct HTTPClientStats {
   stats::Counter<uint64_t> open_connections;
-  stats::Counter<uint64_t, uint64_t> status_codes;
+  stats::MultiCounter<uint64_t, uint64_t> status_codes;
   stats::Counter<uint64_t> current_requests;
   stats::Counter<uint64_t> total_requests;
-  stats::Counter<uint64_t> sent_bytes;
   stats::Counter<uint64_t> received_bytes;
-  stats::Counter<uint64_t> total_bytes;
+  stats::Counter<uint64_t> sent_bytes;
 
   HTTPClientStats() :
+      status_codes(("http_status")) {}
+
+  void exportStats(
+      const String& path_prefix = "/fnord/http/client/",
+      stats::StatsRepository* stats_repo = nullptr) {
+
+    if (stats_repo == nullptr) {
+      stats_repo = stats::StatsRepository::get();
+    }
+
+    fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "open_connections"));
+    fnord::iputs("$0", FileUtil::joinPaths(path_prefix, "status_codes"));
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "open_connections"),
+        &open_connections,
+        stats::ExportMode::EXPORT_NONE);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "status_codes"),
+        &status_codes,
+        stats::ExportMode::EXPORT_DELTA);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "current_requests"),
+        &current_requests,
+        stats::ExportMode::EXPORT_NONE);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "total_requests"),
+        &total_requests,
+        stats::ExportMode::EXPORT_DELTA);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "received_bytes"),
+        &received_bytes,
+        stats::ExportMode::EXPORT_DELTA);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "sent_bytes"),
+        &sent_bytes,
+        stats::ExportMode::EXPORT_DELTA);
+  }
+
+};
+
+struct HTTPServerStats {
+  stats::Counter<uint64_t> open_connections;
+  stats::MultiCounter<uint64_t, uint64_t> status_codes;
+  stats::Counter<uint64_t> current_requests;
+  stats::Counter<uint64_t> total_requests;
+  stats::Counter<uint64_t> received_bytes;
+  stats::Counter<uint64_t> sent_bytes;
+
+  HTTPServerStats() :
       status_codes(("http_status")) {}
 
   void exportStats(
@@ -41,9 +96,34 @@ struct HTTPClientStats {
     stats_repo->exportStat(
         FileUtil::joinPaths(path_prefix, "open_connections"),
         &open_connections,
-        stats::ExportMode::EXPORT_DELTA);
-  }
+        stats::ExportMode::EXPORT_NONE);
 
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "status_codes"),
+        &status_codes,
+        stats::ExportMode::EXPORT_DELTA);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "current_requests"),
+        &current_requests,
+        stats::ExportMode::EXPORT_NONE);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "total_requests"),
+        &total_requests,
+        stats::ExportMode::EXPORT_DELTA);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "received_bytes"),
+        &received_bytes,
+        stats::ExportMode::EXPORT_DELTA);
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "sent_bytes"),
+        &sent_bytes,
+        stats::ExportMode::EXPORT_DELTA);
+
+  }
 };
 
 }

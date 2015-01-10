@@ -35,6 +35,7 @@ public:
   AutoRef(AutoRef<T1>&& other);
 
   ~AutoRef();
+  AutoRef<T>& operator=(const AutoRef<T>& other) = delete;
 
   T& operator*() const;
   T* operator->() const;

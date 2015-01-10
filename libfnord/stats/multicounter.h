@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_STATS_COUNTER_H
-#define _FNORD_STATS_COUNTER_H
+#ifndef _FNORD_STATS_MULTICOUNTER_H
+#define _FNORD_STATS_MULTICOUNTER_H
 #include <stdlib.h>
 #include <stdint.h>
 #include "fnord/base/datetime.h"
@@ -18,10 +18,13 @@
 namespace fnord {
 namespace stats {
 
-template <typename ValueType>
-class CounterStat : public Stat {
+template <typename ValueType, typename... LabelTypes>
+class MultiCounterStat : public Stat {
 public:
-  CounterStat();
+  typedef std::tuple<LabelTypes...> LabelValuesType;
+
+  template <typename... LabelNameTypes>
+  MultiCounterStat(LabelNameTypes... label_names);
 
   void increment(ValueType value);
   void set(ValueType value);
@@ -29,13 +32,16 @@ public:
   void exportAll(const String& path, StatsSink* sink) const override;
 
 protected:
-  std::atomic<ValueType> value_;
+  std::unordered_map<LabelValuesType, ValueType, hash<LabelValuesType>> values_;
+  mutable std::mutex mutex_;
 };
 
-template <typename ValueType>
-class Counter : public StatRef {
+template <typename ValueType, typename... LabelTypes>
+class MultiCounter : public StatRef {
 public:
-  Counter();
+
+  template <typename... LabelNameTypes>
+  MultiCounter(LabelNameTypes... label_names);
 
   void increment(ValueType value);
   void set(ValueType value);
@@ -43,11 +49,11 @@ public:
   RefPtr<Stat> getStat() const override;
 
 protected:
-  RefPtr<CounterStat<ValueType>> stat_;
+  RefPtr<MultiCounterStat<ValueType, LabelTypes...>> stat_;
 };
 
 }
 }
 
-#include "counter_impl.h"
+#include "multicounter_impl.h"
 #endif

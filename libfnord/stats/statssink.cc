@@ -7,27 +7,27 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/stringutil.h"
+#include "fnord/stats/statssink.h"
+
 namespace fnord {
 namespace stats {
 
-template <typename T>
-Counter<T>::Counter(const std::string& name) : value_(0) {}
+TextStatsSink::TextStatsSink(
+    Function<void (const String& line)> callback) :
+    callback_(callback) {}
 
-template <typename T>
-void Counter<T>::increment(T value) {
-  value_ += value;
+void TextStatsSink::addStatValue(
+    const String& path,
+    uint64_t value) {
+  callback_(StringUtil::format("$0:$1", path, value));
 }
 
-template <typename T>
-void Counter<T>::set(T value) {
-  value_ = value;
+void TextStatsSink::addStatValue(
+    const String& path,
+    const Labels& labels,
+    uint64_t value) {
 }
-
-template <typename T>
-T Counter<T>::value() const {
-  return value_;
-}
-
 
 }
 }

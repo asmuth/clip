@@ -303,7 +303,8 @@ add_library(fnord-sstable OBJECT
 
 add_library(fnord-stats OBJECT
     stats/statshttpservlet.cc
-    stats/statsrepository.cc)
+    stats/statsrepository.cc
+    stats/statssink.cc)
 
 # util
 add_library(fnord-util OBJECT

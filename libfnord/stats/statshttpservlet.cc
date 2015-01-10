@@ -8,19 +8,32 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/stats/statshttpservlet.h"
+#include "fnord/stats/statssink.h"
 
 namespace fnord {
 namespace stats {
 
+StatsHTTPServlet::StatsHTTPServlet() : stats_repo_(StatsRepository::get()) {}
+
+StatsHTTPServlet::StatsHTTPServlet(StatsRepository* stats_repo) :
+    stats_repo_(stats_repo) {}
+
 void StatsHTTPServlet::handleHTTPRequest(
     fnord::http::HTTPRequest* req,
     fnord::http::HTTPResponse* res) {
-  auto res_body = fnord::StringUtil::format(
-      "pong: $0",
-      req->body().toString());
+  Buffer buf;
+
+  TextStatsSink sink([&buf] (const String& line) {
+    buf.append(line);
+    buf.append("\n");
+  });
+
+  stats_repo_->forEachStat([&sink] (const ExportedStat& exp) {
+    exp.stat->exportAll(exp.path, &sink);
+  });
 
   res->setStatus(fnord::http::kStatusOK);
-  res->addBody(res_body);
+  res->addBody(buf);
 }
 
 }

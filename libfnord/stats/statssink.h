@@ -9,6 +9,8 @@
  */
 #ifndef _FNORD_STATS_STATSSINK_H
 #define _FNORD_STATS_STATSSINK_H
+#include <stdlib.h>
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
 namespace stats {
@@ -22,16 +24,30 @@ public:
 
   virtual void addStatValue(
       const String& path,
+      uint64_t value) = 0;
+
+  virtual void addStatValue(
+      const String& path,
       const Labels& labels,
       uint64_t value) = 0;
 };
 
 class TextStatsSink : public StatsSink {
 public:
+
+  TextStatsSink(Function<void (const String& line)> callback);
+
+  void addStatValue(
+      const String& path,
+      uint64_t value) override;
+
   void addStatValue(
       const String& path,
       const Labels& labels,
       uint64_t value) override;
+
+protected:
+  Function<void (const String& line)> callback_;
 };
 
 }

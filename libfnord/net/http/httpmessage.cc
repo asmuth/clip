@@ -98,6 +98,11 @@ void HTTPMessage::addBody(void* data, size_t size) {
   setHeader("Content-Length", std::to_string(size));
 }
 
+void HTTPMessage::addBody(const Buffer& buf) {
+  body_ = buf;
+  setHeader("Content-Length", std::to_string(body_.size()));
+}
+
 void HTTPMessage::appendBody(void* data, size_t size) {
   body_.append(data, size);
 }

@@ -18,17 +18,17 @@ namespace stats {
 enum class ExportMode {
   EXPORT_VALUE,
   EXPORT_DELTA,
-  NO_EXPORT
+  EXPORT_NONE
 };
 
 struct ExportedStat {
   const String path;
-  RefPtr<Stat> stat;
+  Stat* stat;
   const ExportMode export_mode;
 
   ExportedStat(
       const String& p,
-      RefPtr<Stat> s,
+      Stat* s,
       ExportMode m) :
       path(p),
       stat(s),
@@ -40,11 +40,11 @@ public:
   static StatsRepository* get();
 
   void exportStat(
-      const String& path,
+      String path,
       StatRef* stat,
       ExportMode export_mode);
 
-  void forEachStat(Function<void (const StatRef& stat)> fn) const;
+  void forEachStat(Function<void (const ExportedStat& stat)> fn) const;
 
 protected:
   std::vector<ExportedStat> stats_;

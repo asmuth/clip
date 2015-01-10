@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
 
@@ -24,7 +25,7 @@ public:
   Buffer(size_t initial_size);
   Buffer(const Buffer& copy);
   Buffer(Buffer&& move);
-  Buffer& operator=(const Buffer& copy) = delete;
+  Buffer& operator=(const Buffer& copy);
   Buffer& operator=(Buffer&& move);
   ~Buffer();
 
@@ -33,6 +34,7 @@ public:
   bool operator==(const std::string& str) const;
 
   void append(const void* data, size_t size);
+  void append(const String& string);
   void clear();
   void truncate(size_t size);
 

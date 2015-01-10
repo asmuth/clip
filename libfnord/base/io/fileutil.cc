@@ -91,9 +91,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 }
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
-  auto p1_stripped = p1;
+  String p1_stripped = p1;
   fnord::StringUtil::stripTrailingSlashes(&p1_stripped);
-  auto p2_stripped = p2;
+  String p2_stripped = p2;
   fnord::StringUtil::stripTrailingSlashes(&p2_stripped);
   return p1_stripped + "/" + p2_stripped;
 }
