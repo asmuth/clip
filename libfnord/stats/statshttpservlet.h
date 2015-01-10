@@ -7,27 +7,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_STATS_STAT_H
-#define _FNORD_STATS_STAT_H
+#ifndef _FNORD_STATS_STATSHTTPSERVLET_H
+#define _FNORD_STATS_STATSHTTPSERVLET_H
 #include "fnord/base/autoref.h"
-#include "fnord/stats/statssink.h"
+#include "fnord/net/http/httpservice.h"
 
 namespace fnord {
 namespace stats {
 
-class Stat : public RefCounted {
-public:
-  virtual ~Stat() {};
-  virtual void exportAll(const String& path, StatsSink* sink) const = 0;
-};
+class StatsHTTPServlet : public fnord::http::HTTPService {
 
-class StatRef {
-public:
-  virtual ~StatRef() {};
-  virtual RefPtr<Stat> getStat() const = 0;
+  void handleHTTPRequest(
+      fnord::http::HTTPRequest* req,
+      fnord::http::HTTPResponse* res);
+
 };
 
 }
 }
-
 #endif

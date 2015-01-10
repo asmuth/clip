@@ -29,7 +29,7 @@ public:
   void increment(ValueType value);
   void set(ValueType value);
 
-  void exportAll() const override;
+  void exportAll(const String& path, StatsSink* sink) const override;
 
 protected:
   std::unordered_map<LabelValuesType, ValueType, hash<LabelValuesType>> values_;

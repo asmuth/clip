@@ -7,27 +7,33 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_STATS_STAT_H
-#define _FNORD_STATS_STAT_H
-#include "fnord/base/autoref.h"
-#include "fnord/stats/statssink.h"
+#ifndef _FNORD_STATS_STATSSINK_H
+#define _FNORD_STATS_STATSSINK_H
 
 namespace fnord {
 namespace stats {
 
-class Stat : public RefCounted {
+class StatsSink {
 public:
-  virtual ~Stat() {};
-  virtual void exportAll(const String& path, StatsSink* sink) const = 0;
+  typedef Pair<String, String> Label;
+  typedef Vector<Label> Labels;
+
+  virtual ~StatsSink() {};
+
+  virtual void addStatValue(
+      const String& path,
+      const Labels& labels,
+      uint64_t value) = 0;
 };
 
-class StatRef {
+class TextStatsSink : public StatsSink {
 public:
-  virtual ~StatRef() {};
-  virtual RefPtr<Stat> getStat() const = 0;
+  void addStatValue(
+      const String& path,
+      const Labels& labels,
+      uint64_t value) override;
 };
 
 }
 }
-
 #endif

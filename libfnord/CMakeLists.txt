@@ -302,6 +302,7 @@ add_library(fnord-sstable OBJECT
     sstable/sstablewriter.cc)
 
 add_library(fnord-stats OBJECT
+    stats/statshttpservlet.cc
     stats/statsrepository.cc)
 
 # util

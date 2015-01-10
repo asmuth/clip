@@ -7,27 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_STATS_STAT_H
-#define _FNORD_STATS_STAT_H
-#include "fnord/base/autoref.h"
-#include "fnord/stats/statssink.h"
+#include "fnord/stats/statshttpservlet.h"
 
 namespace fnord {
 namespace stats {
 
-class Stat : public RefCounted {
-public:
-  virtual ~Stat() {};
-  virtual void exportAll(const String& path, StatsSink* sink) const = 0;
-};
+void StatsHTTPServlet::handleHTTPRequest(
+    fnord::http::HTTPRequest* req,
+    fnord::http::HTTPResponse* res) {
+  auto res_body = fnord::StringUtil::format(
+      "pong: $0",
+      req->body().toString());
 
-class StatRef {
-public:
-  virtual ~StatRef() {};
-  virtual RefPtr<Stat> getStat() const = 0;
-};
+  res->setStatus(fnord::http::kStatusOK);
+  res->addBody(res_body);
+}
 
 }
 }
-
-#endif

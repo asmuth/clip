@@ -23,8 +23,15 @@ CounterStat<ValueType, LabelTypes...>::CounterStat(
 }
 
 template <typename ValueType, typename... LabelTypes>
-void CounterStat<ValueType, LabelTypes...>::exportAll() const {
+void CounterStat<ValueType, LabelTypes...>::exportAll(
+    const String& path,
+    StatsSink* sink) const {
   ScopedLock<std::mutex> lk(mutex_);
+
+  for (const auto& inst : values_) {
+    StatsSink::Labels labels;
+    sink->addStatValue(path, labels, inst.second);
+  }
 }
 
 template <typename ValueType, typename... LabelTypes>
