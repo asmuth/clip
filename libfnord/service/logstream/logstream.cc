@@ -12,15 +12,22 @@
 #include "fnord/json/json.h"
 #include "fnord/sstable/sstablereader.h"
 #include "fnord/service/logstream/logstream.h"
+#include "fnord/service/logstream/logstreamservice.h"
+#include "fnord/stats/stats.h"
 
 namespace fnord {
 namespace logstream_service {
 
 LogStream::LogStream(
     const std::string& name,
-    FileRepository* file_repo) :
+    LogStreamService* base) :
     name_(name),
-    file_repo_(file_repo) {}
+    base_(base) {
+  exportStat(
+      StringUtil::format("$0/$1/$2", base_->stats_path_, name_, "head_offset"),
+      &stat_head_offset_,
+      stats::ExportMode::EXPORT_VALUE);
+}
 
 uint64_t LogStream::append(const std::string& entry) {
   std::unique_lock<std::mutex> l(tables_mutex_);
@@ -37,7 +44,9 @@ uint64_t LogStream::append(const std::string& entry) {
     tbl->writer.reset(nullptr);
   }
 
-  return tbl->offset + row_offset;
+  head_offset_ = tbl->offset + row_offset;
+  stat_head_offset_.set(head_offset_);
+  return head_offset_;
 }
 
 std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
@@ -114,7 +123,7 @@ std::shared_ptr<LogStream::TableRef> LogStream::createTable() {
     table->offset = t->offset + getTableBodySize(t->file_path);
   }
 
-  auto file = file_repo_->createFile();
+  auto file = base_->file_repo_.createFile();
   table->file_path = file.absolute_path;
 
   TableHeader tbl_header;
@@ -155,6 +164,12 @@ void LogStream::reopenTable(const std::string& file_path) {
       std::shared_ptr<TableRef> t2) {
     return t1->offset < t2->offset;
   });
+
+  auto this_head_offset = tbl->offset + reader.bodySize();
+  if (this_head_offset > head_offset_) {
+    head_offset_ = this_head_offset;
+    stat_head_offset_.set(head_offset_);
+  }
 }
 
 size_t LogStream::getTableBodySize(const std::string& file_path) {

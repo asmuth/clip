@@ -23,8 +23,11 @@ namespace fnord {
 namespace logstream_service {
 
 class LogStreamService {
+  friend class LogStream;
 public:
-  LogStreamService(fnord::FileRepository file_repo);
+  LogStreamService(
+      fnord::FileRepository file_repo,
+      const String& stats_path = "/feeds");
 
   /**
    * Append an entry to the stream referenced by `stream` and return the offset
@@ -56,6 +59,8 @@ public:
       int batch_size);
 
 protected:
+  String stats_path_;
+
   LogStream* openStream(const std::string& name, bool create);
   void reopenTable(const std::string& file_path);
 

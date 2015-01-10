@@ -149,7 +149,7 @@ void HTTPClientConnection::read() {
     } else {
       close();
       mutex_.unlock();
-      cur_handler_->onError(e);
+      error(e);
     }
     return;
   }
@@ -163,7 +163,7 @@ void HTTPClientConnection::read() {
   } catch (Exception& e) {
     close();
     mutex_.unlock();
-    cur_handler_->onError(e);
+    error(e);
     return;
   }
 
@@ -211,7 +211,7 @@ void HTTPClientConnection::write() {
     } else {
       close();
       mutex_.unlock();
-      cur_handler_->onError(e);
+      error(e);
       return;
     }
   }
@@ -224,6 +224,16 @@ void HTTPClientConnection::write() {
     buf_.clear();
     awaitRead();
   }
+}
+
+
+void HTTPClientConnection::error(const std::exception& e) {
+  if (cur_handler_) {
+    stats_->current_requests.decr(1);
+  }
+
+  cur_handler_->onError(e);
+  on_ready_.wakeup();
 }
 
 }

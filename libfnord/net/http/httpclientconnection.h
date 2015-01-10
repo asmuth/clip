@@ -58,6 +58,8 @@ protected:
   void close();
   void keepalive();
 
+  void error(const std::exception& e);
+
   std::unique_ptr<net::TCPConnection> conn_;
   TaskScheduler* scheduler_;
   kHTTPClientConnectionState state_;

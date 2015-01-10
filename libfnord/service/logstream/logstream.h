@@ -18,15 +18,19 @@
 #include "fnord/reflect/reflect.h"
 #include "fnord/service/logstream/logstreamentry.h"
 #include "fnord/sstable/sstablewriter.h"
+#include "fnord/stats/counter.h"
 
 namespace fnord {
 namespace logstream_service {
+class LogStreamService;
 
 class LogStream {
 public:
   static const size_t kMaxTableSize = (2 << 19) * 512; // 512 MB
 
-  LogStream(const std::string& name, FileRepository* file_repo);
+  LogStream(
+      const std::string& name,
+      LogStreamService* base);
 
   uint64_t append(const std::string& entry);
 
@@ -57,9 +61,12 @@ protected:
   size_t getTableBodySize(const std::string& file_path);
 
   std::string name_;
-  FileRepository* file_repo_;
+  LogStreamService* base_;
   std::vector<std::shared_ptr<TableRef>> tables_;
   std::mutex tables_mutex_;
+
+  uint64_t head_offset_;
+  stats::Counter<uint64_t> stat_head_offset_;
 };
 
 } // namespace logstream_service

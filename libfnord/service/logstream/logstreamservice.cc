@@ -17,8 +17,10 @@ namespace fnord {
 namespace logstream_service {
 
 LogStreamService::LogStreamService(
-    fnord::FileRepository file_repo) :
-    file_repo_(file_repo) {
+    fnord::FileRepository file_repo,
+    const String& stats_path /* = "/feeds" */) :
+    file_repo_(file_repo),
+    stats_path_(stats_path) {
   file_repo.listFiles([this] (const std::string& filename) -> bool {
     reopenTable(filename);
     return true;
@@ -49,7 +51,7 @@ LogStream* LogStreamService::openStream(const std::string& name, bool create) {
       RAISEF(kIndexError, "no such stream: $0", name);
     }
 
-    stream = new LogStream(name, &file_repo_);
+    stream = new LogStream(name, this);
     streams_.emplace(std::make_pair(name, std::unique_ptr<LogStream>(stream)));
   } else {
     stream = stream_iter->second.get();
