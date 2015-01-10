@@ -29,6 +29,7 @@ void HTTPResponseFuture::storeConnection(
 
 void HTTPResponseFuture::onError(const std::exception& e) {
   promise_.failure(e);
+  delete this;
 }
 
 void HTTPResponseFuture::onVersion(const std::string& version) {
@@ -57,6 +58,7 @@ void HTTPResponseFuture::onBodyChunk(const char* data, size_t size) {
 
 void HTTPResponseFuture::onResponseComplete() {
   promise_.success(res_);
+  delete this;
 }
 
 }
