@@ -101,6 +101,11 @@ void HTTPClientConnection::executeRequest(
   state_ = S_CONN_BUSY;
   cur_handler_ = response_handler;
 
+  if (stats_) {
+    stats_->current_requests.incr(len);
+    stats_->total_requests.incr(len);
+  }
+
   awaitWrite();
 }
 
@@ -163,6 +168,10 @@ void HTTPClientConnection::read() {
   }
 
   if (parser_.state() == HTTPParser::S_DONE) {
+    if (stats_) {
+      stats_->current_requests.decr(len);
+    }
+
     if (keepalive_) {
       keepalive();
     } else {
