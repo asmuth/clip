@@ -42,7 +42,7 @@ MultiCounter<ValueType, LabelTypes...>::MultiCounter(
 
 template <typename ValueType, typename... LabelTypes>
 RefPtr<Stat> MultiCounter<ValueType, LabelTypes...>::getStat() const {
-  return stat_;
+  return RefPtr<Stat>(stat_.get());
 }
 
 /*

@@ -44,7 +44,7 @@ Counter<ValueType>::Counter() :
 
 template <typename ValueType>
 RefPtr<Stat> Counter<ValueType>::getStat() const {
-  return stat_;
+  return RefPtr<Stat>(stat_.get());
 }
 
 template <typename ValueType>

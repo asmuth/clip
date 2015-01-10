@@ -21,14 +21,14 @@ AutoRef<T>::AutoRef(T* ref) : ref_(ref) {
 }
 
 template <typename T>
-template <typename T1>
-AutoRef<T>::AutoRef(const AutoRef<T1>& other) : ref_(other.get()) {
+AutoRef<T>::AutoRef(const AutoRef<T>& other) : ref_(other.ref_) {
   ref_->incRef();
 }
 
 template <typename T>
-template <typename T1>
-AutoRef<T>::AutoRef(AutoRef<T1>&& other) : ref_(other.release()) {}
+AutoRef<T>::AutoRef(AutoRef<T>&& other) : ref_(other.ref_) {
+  other.ref_ = nullptr;
+}
 
 template <typename T>
 AutoRef<T>::~AutoRef() {

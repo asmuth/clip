@@ -28,11 +28,8 @@ public:
   AutoRef(std::nullptr_t);
   AutoRef(T* ref);
 
-  template <typename T1>
-  AutoRef(const AutoRef<T1>& other);
-
-  template <typename T1>
-  AutoRef(AutoRef<T1>&& other);
+  AutoRef(const AutoRef<T>& other);
+  AutoRef(AutoRef<T>&& other);
 
   ~AutoRef();
   AutoRef<T>& operator=(const AutoRef<T>& other) = delete;
