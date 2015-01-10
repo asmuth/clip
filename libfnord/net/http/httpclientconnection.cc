@@ -102,8 +102,8 @@ void HTTPClientConnection::executeRequest(
   cur_handler_ = response_handler;
 
   if (stats_) {
-    stats_->current_requests.incr(len);
-    stats_->total_requests.incr(len);
+    stats_->current_requests.incr(1);
+    stats_->total_requests.incr(1);
   }
 
   awaitWrite();
@@ -169,7 +169,7 @@ void HTTPClientConnection::read() {
 
   if (parser_.state() == HTTPParser::S_DONE) {
     if (stats_) {
-      stats_->current_requests.decr(len);
+      stats_->current_requests.decr(1);
     }
 
     if (keepalive_) {
