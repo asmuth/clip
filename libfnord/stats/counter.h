@@ -19,12 +19,12 @@ namespace fnord {
 namespace stats {
 
 template <typename ValueType, typename... LabelTypes>
-class Counter : public Stat {
+class CounterStat : public Stat {
 public:
   typedef std::tuple<LabelTypes...> LabelValuesType;
 
   template <typename... LabelNameTypes>
-  Counter(LabelNameTypes... label_names);
+  CounterStat(LabelNameTypes... label_names);
 
   void increment(ValueType value);
   void set(ValueType value);
@@ -34,6 +34,22 @@ public:
 protected:
   std::unordered_map<LabelValuesType, ValueType, hash<LabelValuesType>> values_;
   mutable std::mutex mutex_;
+};
+
+template <typename ValueType, typename... LabelTypes>
+class Counter : public StatRef {
+public:
+
+  template <typename... LabelNameTypes>
+  Counter(LabelNameTypes... label_names);
+
+  void increment(ValueType value);
+  void set(ValueType value);
+
+  RefPtr<Stat> getStat() const override;
+
+protected:
+  RefPtr<CounterStat<ValueType, LabelTypes...>> stat_;
 };
 
 }

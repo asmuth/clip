@@ -27,8 +27,13 @@ public:
 
   AutoRef(std::nullptr_t);
   AutoRef(T* ref);
-  AutoRef(const AutoRef<T>& other);
-  AutoRef(AutoRef<T>&& other);
+
+  template <typename T1>
+  AutoRef(const AutoRef<T1>& other);
+
+  template <typename T1>
+  AutoRef(AutoRef<T1>&& other);
+
   ~AutoRef();
 
   T& operator*() const;
@@ -51,6 +56,9 @@ public:
 protected:
   mutable std::atomic<size_t> refcount_;
 };
+
+template <typename T>
+using RefPtr = AutoRef<T>;
 
 } // namespace fnord
 

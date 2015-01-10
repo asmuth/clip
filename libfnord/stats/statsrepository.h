@@ -9,19 +9,46 @@
  */
 #ifndef _FNORD_STATS_STATSREPOSITORY_H
 #define _FNORD_STATS_STATSREPOSITORY_H
-#include <mutex>
-#include <stdlib.h>
-#include <stdint.h>
+#include "fnord/base/stdtypes.h"
+#include "fnord/stats/stat.h"
 
 namespace fnord {
 namespace stats {
+
+enum class ExportMode {
+  EXPORT_VALUE,
+  EXPORT_DELTA,
+  NO_EXPORT
+};
+
+struct ExportedStat {
+  const String path;
+  RefPtr<Stat> stat;
+  const ExportMode export_mode;
+
+  ExportedStat(
+      const String& p,
+      RefPtr<Stat> s,
+      ExportMode m) :
+      path(p),
+      stat(s),
+      export_mode(m) {}
+};
 
 class StatsRepository {
 public:
   static StatsRepository* get();
 
+  void exportStat(
+      const String& path,
+      StatRef* stat,
+      ExportMode export_mode);
+
+  void forEachStat(Function<void (const StatRef& stat)> fn) const;
+
 protected:
-  std::mutex mutex_;
+  std::vector<ExportedStat> stats_;
+  mutable std::mutex mutex_;
 };
 
 }

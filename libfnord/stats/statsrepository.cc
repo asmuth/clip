@@ -17,5 +17,13 @@ StatsRepository* StatsRepository::get() {
   return &singleton;
 }
 
+void StatsRepository::exportStat(
+    const String& path,
+    StatRef* stat,
+    ExportMode export_mode) {
+  ScopedLock<std::mutex> lk(mutex_);
+  stats_.emplace_back(path, stat->getStat(), export_mode);
+}
+
 }
 }

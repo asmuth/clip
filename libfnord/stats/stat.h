@@ -9,14 +9,21 @@
  */
 #ifndef _FNORD_STATS_STAT_H
 #define _FNORD_STATS_STAT_H
+#include "fnord/base/autoref.h"
 
 namespace fnord {
 namespace stats {
 
-class Stat {
+class Stat : public RefCounted {
 public:
   virtual ~Stat() {};
   virtual void exportAll() const = 0;
+};
+
+class StatRef {
+public:
+  virtual ~StatRef() {};
+  virtual RefPtr<Stat> getStat() const = 0;
 };
 
 }

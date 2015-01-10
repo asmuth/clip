@@ -37,6 +37,8 @@ public:
       const String& path_prefix = "/fnord/http/client/",
       stats::StatsRepository* stats_repo = nullptr);
 
+  HTTPClientStats* stats();
+
 protected:
 
   void parkConnection(HTTPClientConnection* conn, net::InetAddr addr);

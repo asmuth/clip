@@ -10,6 +10,8 @@
 #ifndef _FNORDMETRIC_HTTPSTATS_H
 #define _FNORDMETRIC_HTTPSTATS_H
 
+#include "fnord/base/io/fileutil.h"
+#include "fnord/base/stdtypes.h"
 #include "fnord/stats/counter.h"
 #include "fnord/stats/statsrepository.h"
 
@@ -26,7 +28,7 @@ struct HTTPClientStats {
   stats::Counter<uint64_t> total_bytes;
 
   HTTPClientStats() :
-      status_codes("http_status") {}
+      status_codes(("http_status")) {}
 
   void exportStats(
       const String& path_prefix = "/fnord/http/client/",
@@ -35,16 +37,14 @@ struct HTTPClientStats {
     if (stats_repo == nullptr) {
       stats_repo = stats::StatsRepository::get();
     }
+
+    stats_repo->exportStat(
+        FileUtil::joinPaths(path_prefix, "open_connections"),
+        &open_connections,
+        stats::ExportMode::EXPORT_DELTA);
   }
 
 };
-
-/*
-struct HTTPServerStats {
-  stats::Counter<uint64_t> 
-  stats::Counter<uint64_t, uint64_t> http_status_codes;
-};
-*/
 
 }
 }

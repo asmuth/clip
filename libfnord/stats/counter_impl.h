@@ -15,15 +15,27 @@ namespace stats {
 
 template <typename ValueType, typename... LabelTypes>
 template <typename... LabelNameTypes>
-Counter<ValueType, LabelTypes...>::Counter(LabelNameTypes... label_names) {
+CounterStat<ValueType, LabelTypes...>::CounterStat(
+    LabelNameTypes... label_names) {
   static_assert(
       sizeof...(LabelTypes) == sizeof...(LabelNameTypes),
       "number labels names does not match number of label template types");
 }
 
 template <typename ValueType, typename... LabelTypes>
-void Counter<ValueType, LabelTypes...>::exportAll() const {
+void CounterStat<ValueType, LabelTypes...>::exportAll() const {
   ScopedLock<std::mutex> lk(mutex_);
+}
+
+template <typename ValueType, typename... LabelTypes>
+template <typename... LabelNameTypes>
+Counter<ValueType, LabelTypes...>::Counter(
+    LabelNameTypes... label_names) :
+    stat_(new CounterStat<ValueType, LabelTypes...>(label_names...)) {}
+
+template <typename ValueType, typename... LabelTypes>
+RefPtr<Stat> Counter<ValueType, LabelTypes...>::getStat() const {
+  return stat_;
 }
 
 /*

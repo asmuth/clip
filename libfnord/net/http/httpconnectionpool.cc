@@ -113,12 +113,9 @@ void HTTPConnectionPool::leaseConnection(
   }
 }
 
-void HTTPConnectionPool::exportStats(
-      const String& path_prefix,
-      stats::StatsRepository* stats_repo) {
-  stats_.exportStats(path_prefix, stats_repo);
+HTTPClientStats* HTTPConnectionPool::stats() {
+  return &stats_;
 }
-
 
 }
 }
