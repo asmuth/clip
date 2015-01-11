@@ -22,15 +22,11 @@ namespace metric_service {
 
 class MetricService {
 public:
-  static MetricService newWithInMemoryBackend(
-      fnord::logging::Logger* logger,
-      fnord::stats::StatsManager* stats);
+  static MetricService newWithInMemoryBackend();
 
   static MetricService newWithDiskBackend(
       const std::string& datadir_path,
-      fnord::TaskScheduler* scheduler,
-      fnord::logging::Logger* logger,
-      fnord::stats::StatsManager* stats);
+      fnord::TaskScheduler* scheduler);
 
   MetricService(std::unique_ptr<IMetricRepository> metric_repo);
   MetricService(MetricService&& other);
@@ -63,8 +59,6 @@ public:
 
 protected:
   std::unique_ptr<IMetricRepository> metric_repo_;
-
-  stats::Counter<uint64_t> stat_samples_inserted_;
 };
 
 } // namespace metric_service

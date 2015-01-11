@@ -8,38 +8,43 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
+#include "fnord/base/application.h"
 #include "fnord/base/exceptionhandler.h"
+#include "fnord/base/thread/eventloop.h"
 #include "fnord/net/http/httpserver.h"
+#include "fnord/net/http/httprouter.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/metric/metricservice.h"
-#include "fnord/service/metric/metricserviceadapter.h"
+#include "fnord/service/metric/httpapiservlet.h"
 #include "fnord/base/thread/threadpool.h"
-#include "fnord/system/signalhandler.h"
 
 using fnord::http::HTTPServer;
+using fnord::http::HTTPRouter;
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::metric_service::MetricService;
-using fnord::metric_service::MetricServiceAdapter;
 using fnord::thread::ThreadPool;
 
 int main() {
-  fnord::CatchAndAbortExceptionHandler ehandler;
-  ehandler.installGlobalHandlers();
-  fnord::system::SignalHandler::ignoreSIGHUP();
-  fnord::system::SignalHandler::ignoreSIGPIPE();
-
-  JSONRPC rpc;
+  fnord::Application::init();
+  fnord::Application::logToStderr();
 
   auto metric_service = MetricService::newWithInMemoryBackend();
-  MetricServiceAdapter::registerJSONRPC(&metric_service, &rpc);
 
-  ThreadPool thread_pool;
-  HTTPServer http_server(&thread_pool, &thread_pool);
-  http_server.addHandler(JSONRPCHTTPAdapter::make(&rpc));
-  http_server.listen(8080);
+  fnord::thread::EventLoop evloop;
+  HTTPRouter http_router;
+  HTTPServer http_server(&http_router, &evloop);
+  http_server.listen(9999);
 
+  fnord::metric_service::HTTPAPIServlet metrics_api(&metric_service);
+  http_router.addRouteByPrefixMatch("/metrics", &metrics_api);
+
+  JSONRPC jsonrpc;
+  JSONRPCHTTPAdapter jsonrpc_http(&jsonrpc);
+  http_router.addRouteByPrefixMatch("/rpc", &jsonrpc_http);
+
+  evloop.run();
   return 0;
 }
 

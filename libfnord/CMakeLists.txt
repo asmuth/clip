@@ -156,40 +156,41 @@ add_executable(tests/test-json
     json/json_test.cc)
 
 # service: metric
-#add_library(fnord-metric-service OBJECT
-#    service/metric/backends/disk/compactiontask.cc
-#    service/metric/backends/disk/labelindex.cc
-#    service/metric/backends/disk/labelindexreader.cc
-#    service/metric/backends/disk/labelindexwriter.cc
-#    service/metric/backends/disk/metric.cc
-#    service/metric/backends/disk/metriccursor.cc
-#    service/metric/backends/disk/metricrepository.cc
-#    service/metric/backends/disk/metricsnapshot.cc
-#    service/metric/backends/disk/samplereader.cc
-#    service/metric/backends/disk/samplewriter.cc
-#    service/metric/backends/disk/tableheaderreader.cc
-#    service/metric/backends/disk/tableheaderwriter.cc
-#    service/metric/backends/disk/tableref.cc
-#    service/metric/backends/disk/tokenindex.cc
-#    service/metric/backends/disk/tokenindexreader.cc
-#    service/metric/backends/disk/tokenindexwriter.cc
-#    service/metric/backends/inmemory/metric.cc
-#    service/metric/backends/inmemory/metricrepository.cc
-#    service/metric/metric.cc
-#    service/metric/metricrepository.cc
-#    service/metric/metricservice.cc
-#    service/metric/metricserviceadapter.cc
-#    service/metric/sample.cc)
-#
-#add_executable(fnord-metric-service-example
-#    $<TARGET_OBJECTS:fnord-base>
-#    $<TARGET_OBJECTS:fnord-metric-service>
-#    $<TARGET_OBJECTS:fnord-http>
-#    $<TARGET_OBJECTS:fnord-json>
-#    $<TARGET_OBJECTS:fnord-system>
-#    $<TARGET_OBJECTS:fnord-sstable>
-#    $<TARGET_OBJECTS:fnord-util>
-#    service/metric/metricservice_example.cc)
+add_library(fnord-metric-service OBJECT
+    service/metric/backends/disk/compactiontask.cc
+    service/metric/backends/disk/labelindex.cc
+    service/metric/backends/disk/labelindexreader.cc
+    service/metric/backends/disk/labelindexwriter.cc
+    service/metric/backends/disk/metric.cc
+    service/metric/backends/disk/metriccursor.cc
+    service/metric/backends/disk/metricrepository.cc
+    service/metric/backends/disk/metricsnapshot.cc
+    service/metric/backends/disk/samplereader.cc
+    service/metric/backends/disk/samplewriter.cc
+    service/metric/backends/disk/tableheaderreader.cc
+    service/metric/backends/disk/tableheaderwriter.cc
+    service/metric/backends/disk/tableref.cc
+    service/metric/backends/disk/tokenindex.cc
+    service/metric/backends/disk/tokenindexreader.cc
+    service/metric/backends/disk/tokenindexwriter.cc
+    service/metric/backends/inmemory/metric.cc
+    service/metric/backends/inmemory/metricrepository.cc
+    service/metric/httpapiservlet.cc
+    service/metric/metric.cc
+    service/metric/metricrepository.cc
+    service/metric/metricservice.cc
+    service/metric/sample.cc)
+
+add_executable(fnord-metric-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-metric-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-comm>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-sstable>
+    $<TARGET_OBJECTS:fnord-util>
+    service/metric/metricservice_example.cc)
 
 # net
 add_library(fnord-net OBJECT

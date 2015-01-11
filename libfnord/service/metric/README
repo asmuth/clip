@@ -1,0 +1,32 @@
+
+global opts:
+
+  ?format={svg,png,csv}
+
+  &title=<str>
+  &subtitle=<str>
+  &grid={horizontal,vertical,both}
+  &ymin=<val>
+  &xmax=<val>
+  &ylogarithmic=true
+  &xlogarithmic=true
+  &xinvert=true
+  &yinvert=true
+
+  &from=<timespec>
+  &until=<timespec>
+
+drawmode:
+  &draw=lines
+
+per metric:
+
+  &metric=<key>
+  &color=<color>
+  &scale=<factor>
+  &aggr_fn=<sum|max|min|ratio>
+  &aggr_window=<secs>
+  &aggr_step=<secs>
+  &join_with=<key>  
+  (&group_by= )...
+
