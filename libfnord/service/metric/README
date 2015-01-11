@@ -3,11 +3,11 @@ global opts:
 
   ?format={svg,png,csv}
 
-x  &width=<val>
-x  &height=<val>
+  &width=<val>
+  &height=<val>
 
-x  &title=<str>
-x  &subtitle=<str>
+  &title=<str>
+  &subtitle=<str>
 x  &grid={horizontal,vertical,both}
 
   &min=<val>

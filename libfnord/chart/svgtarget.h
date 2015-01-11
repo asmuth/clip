@@ -32,7 +32,8 @@ public:
   SVGTarget(
       OutputStream* output_stream) :
       output_(output_stream),
-      indent_(0) {}
+      indent_(0),
+      viewbox_(true) {}
 
 #define SVG_append(...) { output_->printf(__VA_ARGS__); }
 
@@ -44,12 +45,21 @@ public:
       int width,
       int height,
       const std::string& class_name) {
-    SVG_appendLine(
-        "<svg viewBox='0 0 %i %i' class='%s'>\n",
-        width,
-        height,
-        escapeString(class_name).c_str());
-    indent_ ++;
+    if (viewbox_) {
+      SVG_appendLine(
+          "<svg viewBox='0 0 %i %i' class='%s'>\n",
+          width,
+          height,
+          escapeString(class_name).c_str());
+    } else {
+      SVG_appendLine(
+          "<svg width='%i' height='%i' class='%s'>\n",
+          width,
+          height,
+          escapeString(class_name).c_str());
+    }
+
+    indent_++;
     SVG_appendLine("<style type='text/css'>\n");
     SVG_appendLine("<![CDATA[%s  ]]>\n", kStyleSheetDefault.c_str());
     SVG_appendLine("</style>\n");
@@ -226,7 +236,12 @@ public:
     return src;
   }
 
+  void setViewbox(bool vb) {
+    viewbox_ = vb;
+  }
+
 protected:
+  bool viewbox_;
   OutputStream* output_;
   int indent_;
 };

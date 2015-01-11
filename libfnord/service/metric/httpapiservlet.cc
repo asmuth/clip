@@ -266,6 +266,10 @@ void HTTPAPIServlet::timeseriesQuery(
     if (param.first == "max") continue;
     if (param.first == "logarithmic") continue;
     if (param.first == "inverted") continue;
+    if (param.first == "title") continue;
+    if (param.first == "subtitle") continue;
+    if (param.first == "width") continue;
+    if (param.first == "height") continue;
 
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
@@ -331,10 +335,12 @@ void HTTPAPIServlet::timeseriesQuery(
       }
 
       applyChartStyles(params, from, until, &charts);
+      applyCanvasStyles(params, &canvas);
 
       Buffer out;
       BufferOutputStream outs(&out);
       chart::SVGTarget svgtarget(&outs);
+      svgtarget.setViewbox(false);
       canvas.render(&svgtarget);
 
       response->setStatus(http::kStatusOK);
@@ -524,8 +530,43 @@ void HTTPAPIServlet::applyChartStyles(
   if (axis_top) {
     charts->front()->addAxis(chart::AxisDefinition::TOP);
   }
+}
 
+void HTTPAPIServlet::applyCanvasStyles(
+    const URI::ParamList& params,
+    chart::Canvas* canvas) {
+  int width = 800;
+  int height = 320;
 
+  for (const auto param : params) {
+
+    // param: title
+    if (param.first == "title") {
+      canvas->setTitle(param.second);
+      continue;
+    }
+
+    // param: subtitle
+    if (param.first == "subtitle") {
+      canvas->setSubtitle(param.second);
+      continue;
+    }
+
+    // param: width
+    if (param.first == "width") {
+      width = std::stoi(param.second);
+      continue;
+    }
+
+    // param: height
+    if (param.first == "height") {
+      height = std::stoi(param.second);
+      continue;
+    }
+
+  }
+
+  canvas->setDimensions(width, height);
 }
 
 }

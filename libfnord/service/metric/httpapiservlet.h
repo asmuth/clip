@@ -64,6 +64,10 @@ protected:
       Vector<ScopedPtr<TimeseriesQuery>>::iterator end,
       Vector<chart::Drawable*>* charts);
 
+  void applyCanvasStyles(
+      const URI::ParamList& params,
+      chart::Canvas* canvas);
+
   void applyChartStyles(
       const URI::ParamList& params,
       const DateTime& from,
