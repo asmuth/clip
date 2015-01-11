@@ -277,19 +277,47 @@ double TimeseriesQuery::aggregateWindow(
 double TimeseriesQuery::aggregateWindowMax(
     Vector<Pair<DateTime, double>>::iterator values_begin,
     Vector<Pair<DateTime, double>>::iterator values_end) const {
-  return 23.5;
+  if (values_begin == values_end) {
+    return 0;
+  }
+
+  double value = -1 * std::numeric_limits<double>::infinity();
+  for (; values_begin != values_end; ++values_begin) {
+    if (values_begin->second > value) {
+      value = values_begin->second;
+    }
+  }
+
+  return value;
 }
 
 double TimeseriesQuery::aggregateWindowMin(
     Vector<Pair<DateTime, double>>::iterator values_begin,
     Vector<Pair<DateTime, double>>::iterator values_end) const {
-  return 23.5;
+  if (values_begin == values_end) {
+    return 0;
+  }
+
+  double value = std::numeric_limits<double>::infinity();
+  for (; values_begin != values_end; ++values_begin) {
+    if (values_begin->second < value) {
+      value = values_begin->second;
+    }
+  }
+
+  return value;
 }
 
 double TimeseriesQuery::aggregateWindowSum(
     Vector<Pair<DateTime, double>>::iterator values_begin,
     Vector<Pair<DateTime, double>>::iterator values_end) const {
-  return 23.5;
+  double value = 0;
+
+  for (; values_begin != values_end; ++values_begin) {
+    value += values_begin->second;
+  }
+
+  return value;
 }
 
 void TimeseriesQuery::renderCSV(Buffer* out) {
