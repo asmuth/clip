@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "fnord/base/wallclock.h"
 #include "fnord/service/metric/httpapiservlet.h"
 #include "fnord/chart/axisdefinition.h"
 
@@ -159,7 +160,7 @@ void HTTPAPIServlet::timeseriesQuery(
   auto params = uri->queryParams();
 
   auto resp_format = ResponseFormat::kCSV;
-  DateTime from = DateTime::epoch();
+  DateTime from(WallClock::unixMicros() - kMillisPerHour);
   DateTime until;
 
   /* parse query param string */
@@ -263,6 +264,8 @@ void HTTPAPIServlet::timeseriesQuery(
     if (param.first == "axistop") continue;
     if (param.first == "min") continue;
     if (param.first == "max") continue;
+    if (param.first == "logarithmic") continue;
+    if (param.first == "inverted") continue;
 
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
@@ -460,6 +463,34 @@ void HTTPAPIServlet::applyChartStyles(
 
         if (ydomain != nullptr) {
           ydomain->setMin(std::stod(param.second));
+        }
+      }
+
+      continue;
+    }
+
+    // param: logarithmic
+    if (param.first == "logarithmic") {
+      for (const auto& chart : *charts) {
+        auto ydomain = dynamic_cast<chart::ContinuousDomain<double>*>(
+            chart->getDomain(chart::AnyDomain::DIM_Y));
+
+        if (ydomain != nullptr) {
+          ydomain->setLogarithmic(true);
+        }
+      }
+
+      continue;
+    }
+
+    // param: inverted
+    if (param.first == "inverted") {
+      for (const auto& chart : *charts) {
+        auto ydomain = dynamic_cast<chart::ContinuousDomain<double>*>(
+            chart->getDomain(chart::AnyDomain::DIM_Y));
+
+        if (ydomain != nullptr) {
+          ydomain->setInverted(true);
         }
       }
 

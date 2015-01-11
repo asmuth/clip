@@ -13,10 +13,8 @@ x  &grid={horizontal,vertical,both}
   &min=<val>
   &max=<val>
 
-x  &ylogarithmic=true
-x  &xlogarithmic=true
-x  &xinvert=true
-x  &yinvert=true
+  &logarithmic=true
+  &inverted=true
 
   &axisleft=true/false
   &axisbottom=true/false
