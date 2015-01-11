@@ -8,7 +8,7 @@ global opts:
 
   &title=<str>
   &subtitle=<str>
-x  &grid={horizontal,vertical,both}
+  &grid={horizontal,vertical,both}
 
   &min=<val>
   &max=<val>
@@ -16,10 +16,10 @@ x  &grid={horizontal,vertical,both}
   &logarithmic=true
   &inverted=true
 
-  &axisleft=true/false
-  &axisbottom=true/false
-  &axisright=true/false
-  &axistop=true/false
+  &axis_left=true/false
+  &axis_bottom=true/false
+  &axis_right=true/false
+  &axis_top=true/false
 
   &from=<timespec>
   &until=<timespec>

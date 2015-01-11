@@ -26,7 +26,7 @@ GridDefinition::kPlacement GridDefinition::placement() const {
 }
 
 const std::vector<double> GridDefinition::ticks() const {
-  if (domain_->empty()) {
+  if (domain_ == nullptr || domain_->empty()) {
     return std::vector<double>();
   } else {
     return domain_->get()->getTicks();

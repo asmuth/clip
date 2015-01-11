@@ -288,10 +288,10 @@ void HTTPAPIServlet::timeseriesQuery(
     }
 
     /* ignored params */
-    if (param.first == "axisleft") continue;
-    if (param.first == "axisbottom") continue;
-    if (param.first == "axisright") continue;
-    if (param.first == "axistop") continue;
+    if (param.first == "axis_left") continue;
+    if (param.first == "axis_bottom") continue;
+    if (param.first == "axis_right") continue;
+    if (param.first == "axis_top") continue;
     if (param.first == "min") continue;
     if (param.first == "max") continue;
     if (param.first == "logarithmic") continue;
@@ -300,6 +300,7 @@ void HTTPAPIServlet::timeseriesQuery(
     if (param.first == "subtitle") continue;
     if (param.first == "width") continue;
     if (param.first == "height") continue;
+    if (param.first == "grid") continue;
 
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
@@ -364,8 +365,8 @@ void HTTPAPIServlet::timeseriesQuery(
             (*qbegin)->draw_style);
       }
 
-      applyChartStyles(params, from, until, &charts);
       applyCanvasStyles(params, &canvas);
+      applyChartStyles(params, from, until, &charts);
 
       Buffer out;
       BufferOutputStream outs(&out);
@@ -453,26 +454,26 @@ void HTTPAPIServlet::applyChartStyles(
 
   for (const auto param : params) {
 
-    // param: axisleft
-    if (param.first == "axisleft") {
+    // param: axis_left
+    if (param.first == "axis_left") {
       axis_left = (param.second == "true");
       continue;
     }
 
-    // param: axisbottom
-    if (param.first == "axisbottom") {
+    // param: axis_bottom
+    if (param.first == "axis_bottom") {
       axis_bottom = (param.second == "true");
       continue;
     }
 
-    // param: axisright
-    if (param.first == "axisright") {
+    // param: axis_right
+    if (param.first == "axis_right") {
       axis_right = (param.second == "true");
       continue;
     }
 
-    // param: axistop
-    if (param.first == "axistop") {
+    // param: axis_top
+    if (param.first == "axis_top") {
       axis_top = (param.second == "true");
       continue;
     }
@@ -531,6 +532,27 @@ void HTTPAPIServlet::applyChartStyles(
       }
 
       continue;
+    }
+
+    // param: grid
+    if (param.first == "grid") {
+      if (param.second == "horizontal") {
+        charts->front()->addGrid(chart::GridDefinition::GRID_HORIZONTAL);
+        continue;
+      }
+
+      if (param.second == "vertical") {
+        charts->front()->addGrid(chart::GridDefinition::GRID_VERTICAL);
+        continue;
+      }
+
+      if (param.second == "both") {
+        charts->front()->addGrid(chart::GridDefinition::GRID_HORIZONTAL);
+        charts->front()->addGrid(chart::GridDefinition::GRID_VERTICAL);
+        continue;
+      }
+
+      RAISEF(kIllegalArgumentError, "invalid value for grid: $0", param.second);
     }
 
   }
@@ -593,7 +615,6 @@ void HTTPAPIServlet::applyCanvasStyles(
       height = std::stoi(param.second);
       continue;
     }
-
   }
 
   canvas->setDimensions(width, height);
