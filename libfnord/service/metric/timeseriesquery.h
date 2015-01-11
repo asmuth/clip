@@ -83,9 +83,21 @@ protected:
       Vector<Pair<DateTime, double>>::iterator joined_values_end);
 
   double aggregateWindow(
-      AggregationFunction aggr_fn,
+      AggregationFunction aggr,
       Vector<Pair<DateTime, double>>::iterator values_begin,
-      Vector<Pair<DateTime, double>>::iterator values_end);
+      Vector<Pair<DateTime, double>>::iterator values_end) const;
+
+  double aggregateWindowMax(
+      Vector<Pair<DateTime, double>>::iterator values_begin,
+      Vector<Pair<DateTime, double>>::iterator values_end) const;
+
+  double aggregateWindowMin(
+      Vector<Pair<DateTime, double>>::iterator values_begin,
+      Vector<Pair<DateTime, double>>::iterator values_end) const;
+
+  double aggregateWindowSum(
+      Vector<Pair<DateTime, double>>::iterator values_begin,
+      Vector<Pair<DateTime, double>>::iterator values_end) const;
 
   String fullGroupName(const String& group_name) const;
 

@@ -22,7 +22,8 @@ TimeseriesQuery::TimeseriesQuery() :
     join_fn(JoinFunction::kNoJoin),
     join_aggr_fn(AggregationFunction::kAggregateSum) {}
 
-TimeseriesQuery::AggregationFunction TimeseriesQuery::aggrFnFromString(const String& str) {
+TimeseriesQuery::AggregationFunction TimeseriesQuery::aggrFnFromString(
+    const String& str) {
   if (str == "max") {
     return AggregationFunction::kAggregateMax;
   }
@@ -38,7 +39,8 @@ TimeseriesQuery::AggregationFunction TimeseriesQuery::aggrFnFromString(const Str
   RAISEF(kIllegalArgumentError, "invalid aggregation function: $0", str);
 }
 
-TimeseriesQuery::JoinFunction TimeseriesQuery::joinFnFromString(const String& str) {
+TimeseriesQuery::JoinFunction TimeseriesQuery::joinFnFromString(
+    const String& str) {
   if (str == "divide") {
     return JoinFunction::kJoinDivide;
   }
@@ -253,9 +255,40 @@ void TimeseriesQuery::emitWindow(
 }
 
 double TimeseriesQuery::aggregateWindow(
-    AggregationFunction aggr_fn,
+    AggregationFunction aggr,
     Vector<Pair<DateTime, double>>::iterator values_begin,
-    Vector<Pair<DateTime, double>>::iterator values_end) {
+    Vector<Pair<DateTime, double>>::iterator values_end) const {
+
+  switch (aggr) {
+    case AggregationFunction::kAggregateMax:
+      return aggregateWindowMax(values_begin, values_end);
+
+    case AggregationFunction::kAggregateMin:
+      return aggregateWindowMin(values_begin, values_end);
+
+    case AggregationFunction::kAggregateSum:
+      return aggregateWindowSum(values_begin, values_end);
+
+    case AggregationFunction::kNoAggregation:
+      RAISE(kIllegalStateError);
+  }
+}
+
+double TimeseriesQuery::aggregateWindowMax(
+    Vector<Pair<DateTime, double>>::iterator values_begin,
+    Vector<Pair<DateTime, double>>::iterator values_end) const {
+  return 23.5;
+}
+
+double TimeseriesQuery::aggregateWindowMin(
+    Vector<Pair<DateTime, double>>::iterator values_begin,
+    Vector<Pair<DateTime, double>>::iterator values_end) const {
+  return 23.5;
+}
+
+double TimeseriesQuery::aggregateWindowSum(
+    Vector<Pair<DateTime, double>>::iterator values_begin,
+    Vector<Pair<DateTime, double>>::iterator values_end) const {
   return 23.5;
 }
 
