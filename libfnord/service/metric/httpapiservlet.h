@@ -21,7 +21,8 @@ class HTTPAPIServlet : public fnord::http::HTTPService {
 public:
   enum class ResponseFormat {
     kJSON,
-    kCSV
+    kCSV,
+    kSVG
   };
 
   HTTPAPIServlet(MetricService* metric_service);
@@ -50,6 +51,8 @@ protected:
   void renderMetricJSON(
       fnord::metric_service::IMetric* metric,
       json::JSONOutputStream* json) const;
+
+  ResponseFormat formatFromString(const String& format);
 
   MetricService* metric_service_;
 };

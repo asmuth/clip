@@ -244,14 +244,10 @@ void HTTPAPIServlet::timeseriesQuery(
 
   /* format */
   auto resp_format = ResponseFormat::kCSV;
-  /*
   std::string format_param;
   if (fnord::URI::getParam(params, "format", &format_param)) {
-    if (format_param == "svg") {
-      resp_format = query::QueryService::FORMAT_SVG;
-    }
+    resp_format = formatFromString(format_param);
   }
-  */
 
   /* execute queries */
   for (const auto& query : queries) {
@@ -313,6 +309,23 @@ void HTTPAPIServlet::renderMetricJSON(
   json->endArray();
 
   json->endObject();
+}
+
+HTTPAPIServlet::ResponseFormat HTTPAPIServlet::formatFromString(
+    const String& format) {
+  if (format == "csv") {
+    return ResponseFormat::kCSV;
+  }
+
+  if (format == "json") {
+    return ResponseFormat::kJSON;
+  }
+
+  if (format == "svg") {
+    return ResponseFormat::kSVG;
+  }
+
+  RAISEF(kIllegalArgumentError, "invalid format: $0", format);
 }
 
 }

@@ -142,7 +142,7 @@ void TimeseriesQuery::emitGroupWithoutAggregation(
   auto full_group_name = fullGroupName(group_name);
 
   for (const auto& value : group->values) {
-    results_.emplace_back(full_group_name, value.first, value.second);
+    results_.emplace_back(full_group_name, value.first, value.second * scale);
   }
 }
 
@@ -248,10 +248,7 @@ void TimeseriesQuery::emitWindow(
     }
   }
 
-  value *= scale;
-
-  results_.emplace_back(group_name, window_time, value);
-  //fnord::iputs("emit window: $0 $1 $2 $3", group_name, window_time, Vector<Pair<DateTime, double>>(values_begin, values_end), Vector<Pair<DateTime, double>>(joined_values_begin, joined_values_end));
+  results_.emplace_back(group_name, window_time, value * scale);
 }
 
 double TimeseriesQuery::aggregateWindow(
