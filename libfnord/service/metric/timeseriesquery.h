@@ -19,8 +19,6 @@ namespace metric_service {
 
 class TimeseriesQuery {
 public:
-  typedef Tuple<String, DateTime, double> ResultRowType;
-
   enum class AggregationFunction {
     kNoAggregation,
     kAggregateMax,
@@ -53,10 +51,13 @@ public:
   void run(
       const DateTime& from,
       const DateTime& until,
-      MetricService* metric_service,
-      std::vector<ResultRowType>* out);
+      MetricService* metric_service);
+
+  void renderCSV(Buffer* out);
 
 protected:
+  typedef Tuple<String, DateTime, double> ResultRowType;
+
   struct Group {
     Vector<Pair<DateTime, double>> values;
     Vector<Pair<DateTime, double>> joined_values;
@@ -66,13 +67,11 @@ protected:
 
   void emitGroup(
       const String& group_name,
-      Group* group,
-      std::vector<ResultRowType>* out);
+      Group* group);
 
   void emitGroupWithoutAggregation(
       const String& group_name,
-      Group* group,
-      std::vector<ResultRowType>* out);
+      Group* group);
 
   void emitWindow(
       const String& group_name,
@@ -80,10 +79,10 @@ protected:
       Vector<Pair<DateTime, double>>::iterator values_begin,
       Vector<Pair<DateTime, double>>::iterator values_end,
       Vector<Pair<DateTime, double>>::iterator joined_values_begin,
-      Vector<Pair<DateTime, double>>::iterator joined_values_end,
-      std::vector<ResultRowType>* out);
+      Vector<Pair<DateTime, double>>::iterator joined_values_end);
 
   HashMap<String, Group> groups_;
+  Vector<ResultRowType> results_;
 };
 
 }

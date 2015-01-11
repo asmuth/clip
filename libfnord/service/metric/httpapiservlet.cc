@@ -254,7 +254,12 @@ void HTTPAPIServlet::timeseriesQuery(
   }
   */
 
-  /* execute queries & render results */
+  /* execute queries */
+  for (const auto& query : queries) {
+    query->run(from, until, metric_service_);
+  }
+
+  /* render results */
   switch (resp_format) {
 
     /* format: csv */
@@ -262,17 +267,7 @@ void HTTPAPIServlet::timeseriesQuery(
       Buffer out;
 
       for (const auto& query : queries) {
-        Vector<TimeseriesQuery::ResultRowType> results;
-        query->run(from, until, metric_service_, &results);
-
-        for (const auto& res : results) {
-          out.append(
-              StringUtil::format(
-                  "$0;$1;$2\n",
-                  std::get<0>(res),
-                  std::get<1>(res),
-                  std::get<2>(res)));
-        }
+        query->renderCSV(&out);
       }
 
       response->setStatus(http::kStatusOK);

@@ -22,7 +22,6 @@ TimeseriesQuery::TimeseriesQuery() :
     join_fn(JoinFunction::kJoinDivide),
     join_aggr_fn(AggregationFunction::kAggregateSum) {}
 
-
 TimeseriesQuery::AggregationFunction TimeseriesQuery::aggrFnFromString(const String& str) {
   if (str == "max") {
     return AggregationFunction::kAggregateMax;
@@ -54,8 +53,7 @@ TimeseriesQuery::JoinFunction TimeseriesQuery::joinFnFromString(const String& st
 void TimeseriesQuery::run(
     const DateTime& from,
     const DateTime& until,
-    MetricService* metric_service,
-    std::vector<ResultRowType>* out) {
+    MetricService* metric_service) {
 
   metric_service->scanSamples(
       metric_key,
@@ -79,13 +77,15 @@ void TimeseriesQuery::run(
 
   if (aggr_fn == AggregationFunction::kNoAggregation) {
     for (auto& group : groups_) {
-      emitGroupWithoutAggregation(group.first, &group.second, out);
+      emitGroupWithoutAggregation(group.first, &group.second);
     }
   } else {
     for (auto& group : groups_) {
-      emitGroup(group.first, &group.second, out);
+      emitGroup(group.first, &group.second);
     }
   }
+
+  groups_.clear();
 }
 
 void TimeseriesQuery::processSample(Sample* sample, bool joined) {
@@ -125,17 +125,15 @@ void TimeseriesQuery::processSample(Sample* sample, bool joined) {
 
 void TimeseriesQuery::emitGroupWithoutAggregation(
     const String& group_name,
-    Group* group,
-    std::vector<ResultRowType>* out) {
+    Group* group) {
   for (const auto& value : group->values) {
-    out->emplace_back(group_name, value.first, value.second);
+    results_.emplace_back(group_name, value.first, value.second);
   }
 }
 
 void TimeseriesQuery::emitGroup(
     const String& group_name,
-    Group* group,
-    std::vector<ResultRowType>* out) {
+    Group* group) {
   auto& values = group->values;
   auto& joined_values = group->joined_values;
 
@@ -188,8 +186,7 @@ void TimeseriesQuery::emitGroup(
         values.begin() + window_start_idx,
         values.begin() + window_end_idx,
         joined_values.begin() + joined_window_start_idx,
-        joined_values.begin() + joined_window_end_idx,
-        out);
+        joined_values.begin() + joined_window_end_idx);
 
     /* advance window */
     window_start_time += aggr_step.microseconds();
@@ -207,9 +204,19 @@ void TimeseriesQuery::emitWindow(
     Vector<Pair<DateTime, double>>::iterator values_begin,
     Vector<Pair<DateTime, double>>::iterator values_end,
     Vector<Pair<DateTime, double>>::iterator joined_values_begin,
-    Vector<Pair<DateTime, double>>::iterator joined_values_end,
-    std::vector<ResultRowType>* out) {
+    Vector<Pair<DateTime, double>>::iterator joined_values_end) {
   fnord::iputs("emit window: $0 $1 $2 $3", group_name, window_time, Vector<Pair<DateTime, double>>(values_begin, values_end), Vector<Pair<DateTime, double>>(joined_values_begin, joined_values_end));
+}
+
+void TimeseriesQuery::renderCSV(Buffer* out) {
+  for (const auto& res : results_) {
+    out->append(
+        StringUtil::format(
+            "$0;$1;$2\n",
+            std::get<0>(res),
+            std::get<1>(res),
+            std::get<2>(res)));
+  }
 }
 
 }
