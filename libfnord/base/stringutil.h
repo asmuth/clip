@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
 
@@ -87,6 +88,11 @@ public:
   static std::vector<std::string> split(
       const std::string& str,
       const std::string& pattern);
+
+  /**
+   * Join the provided string array with the provided join string
+   */
+  static String join(const Vector<String>& list, const String& join);
 
   /**
    * Print the contents of the pointed to memory as a series of hexadecimal

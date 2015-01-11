@@ -124,6 +124,20 @@ std::vector<std::string> StringUtil::split(
   return parts;
 }
 
+String StringUtil::join(const Vector<String>& list, const String& join) {
+  String out;
+
+  for (int i = 0; i < list.size(); ++i) {
+    if (i > 0) {
+      out += join;
+    }
+
+    out += list[i];
+  }
+
+  return out;
+}
+
 bool StringUtil::beginsWith(const std::string& str, const std::string& prefix) {
   if (str.length() < prefix.length()) {
     return false;

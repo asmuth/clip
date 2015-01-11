@@ -35,6 +35,8 @@ public:
   static AggregationFunction aggrFnFromString(const String& str);
   static JoinFunction joinFnFromString(const String& str);
 
+  Query();
+
   String metric_key;
   AggregationFunction aggr_fn;
   Duration aggr_window;
@@ -47,14 +49,6 @@ public:
   JoinFunction join_fn;
   AggregationFunction join_aggr_fn;
 
-  Query() :
-    aggr_fn(AggregationFunction::kAggregateSum),
-    aggr_window(60 * kMicrosPerSecond),
-    aggr_step(10 * kMicrosPerSecond),
-    scale(1.0),
-    join_fn(JoinFunction::kJoinDivide),
-    join_aggr_fn(AggregationFunction::kAggregateSum) {}
-
   void run(
       const DateTime& from,
       const DateTime& until,
@@ -62,10 +56,28 @@ public:
       std::vector<ResultRowType>* out);
 
 protected:
+  struct Group {
+    Vector<Pair<DateTime, double>> values;
+    Vector<Pair<DateTime, double>> joined_values;
+  };
 
   void processSample(Sample* sample, bool joined);
 
-  HashMap<String, double> groups_;
+  void emitGroup(
+      const String& group_name,
+      Group* group,
+      std::vector<ResultRowType>* out);
+
+  void emitWindow(
+      const String& group_name,
+      DateTime window_time,
+      Vector<Pair<DateTime, double>>::iterator values_begin,
+      Vector<Pair<DateTime, double>>::iterator values_end,
+      Vector<Pair<DateTime, double>>::iterator joined_values_begin,
+      Vector<Pair<DateTime, double>>::iterator joined_values_end,
+      std::vector<ResultRowType>* out);
+
+  HashMap<String, Group> groups_;
 };
 
 }

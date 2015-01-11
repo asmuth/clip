@@ -14,6 +14,15 @@
 namespace fnord {
 namespace metric_service {
 
+Query::Query() :
+    aggr_fn(AggregationFunction::kAggregateSum),
+    aggr_window(60 * kMicrosPerSecond),
+    aggr_step(10 * kMicrosPerSecond),
+    scale(1.0),
+    join_fn(JoinFunction::kJoinDivide),
+    join_aggr_fn(AggregationFunction::kAggregateSum) {}
+
+
 Query::AggregationFunction Query::aggrFnFromString(const String& str) {
   if (str == "max") {
     return AggregationFunction::kAggregateMax;
@@ -67,10 +76,109 @@ void Query::run(
           return true;
         });
   }
+
+  for (auto& group : groups_) {
+    emitGroup(group.first, &group.second, out);
+  }
 }
 
 void Query::processSample(Sample* sample, bool joined) {
-  fnord::iputs("sample... $0, $1, $2", sample->time(), sample->value(), sample->labels());
+  Vector<String> group_keyv;
+
+  for (const auto& group : group_by) {
+    bool found = false;
+
+    for (const auto& label : sample->labels()) {
+      if (label.first == group) {
+        found = true;
+        group_keyv.emplace_back(label.second);
+        break;
+      }
+    }
+
+    if (!found) {
+      group_keyv.emplace_back("NULL");
+    }
+  }
+
+  Group* group = nullptr;
+  auto group_key = StringUtil::join(group_keyv, ", ");
+  auto group_iter = groups_.find(group_key);
+  if (group_iter == groups_.end()) {
+    group = &groups_[group_key];
+  } else {
+    group = &group_iter->second;
+  }
+
+  if (joined) {
+    group->joined_values.emplace_back(sample->time(), sample->value());
+  } else {
+    group->values.emplace_back(sample->time(), sample->value());
+  }
+}
+
+void Query::emitGroup(
+    const String& group_name,
+    Group* group,
+    std::vector<ResultRowType>* out) {
+  auto& values = group->values;
+  auto& joined_values = group->joined_values;
+
+  if (values.size() == 0) {
+    return;
+  }
+
+  /* sort rows */
+  std::sort(
+      values.begin(),
+      values.end(),
+      [] (const Pair<DateTime, double>& a, const Pair<DateTime, double>& b) {
+        return a.first.unixMicros() < b.first.unixMicros();
+      });
+
+  size_t window_start_idx = 0;
+  size_t window_end_idx;
+  uint64_t window_start_time = values[0].first.unixMicros();
+  size_t joined_window_start_idx = 0;
+  size_t joined_window_end_idx = 0;
+
+  do {
+    /* search end of current window */
+    auto window_end_time = window_start_time + aggr_window.microseconds();
+    for (
+        window_end_idx = window_start_idx;
+        window_end_idx < values.size() &&
+            values[window_end_idx].first.unixMicros() < window_end_time;
+        ++window_end_idx);
+
+    emitWindow(
+        group_name,
+        DateTime(window_end_time),
+        values.begin() + window_start_idx,
+        values.begin() + window_end_idx,
+        joined_values.begin() + joined_window_start_idx,
+        joined_values.begin() + joined_window_end_idx,
+        out);
+
+    /* advance window */
+    window_start_time += aggr_step.microseconds();
+    while (window_start_idx <= window_end_idx &&
+        values[window_start_idx].first.unixMicros() < window_start_time) {
+      window_start_idx++;
+    }
+
+  } while (window_end_idx < values.size());
+}
+
+void Query::emitWindow(
+    const String& group_name,
+    DateTime window_time,
+    Vector<Pair<DateTime, double>>::iterator values_begin,
+    Vector<Pair<DateTime, double>>::iterator values_end,
+    Vector<Pair<DateTime, double>>::iterator joined_values_begin,
+    Vector<Pair<DateTime, double>>::iterator joined_values_end,
+    std::vector<ResultRowType>* out) {
+  fnord::iputs("emit window: $0 $1 $2 $3", group_name, window_time, Vector<Pair<DateTime, double>>(values_begin, values_end), Vector<Pair<DateTime, double>>(joined_values_begin, joined_values_end));
 }
 
 }
