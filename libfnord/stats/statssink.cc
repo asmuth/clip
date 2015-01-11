@@ -29,5 +29,21 @@ void TextStatsSink::addStatValue(
     uint64_t value) {
 }
 
+void BufferStatsSinkStatsSink::addStatValue(
+    const String& path,
+    uint64_t value) {
+  values_.emplace_back(path, value);
+}
+
+void BufferStatsSinkStatsSink::addStatValue(
+    const String& path,
+    const Labels& labels,
+    uint64_t value) {
+}
+
+const Vector<Pair<String, double>>& BufferStatsSinkStatsSink::values() const {
+  return values_;
+}
+
 }
 }

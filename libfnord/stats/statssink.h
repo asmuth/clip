@@ -50,6 +50,24 @@ protected:
   Function<void (const String& line)> callback_;
 };
 
+class BufferStatsSinkStatsSink : public StatsSink {
+public:
+
+  void addStatValue(
+      const String& path,
+      uint64_t value) override;
+
+  void addStatValue(
+      const String& path,
+      const Labels& labels,
+      uint64_t value) override;
+
+  const Vector<Pair<String, double>>& values() const;
+
+protected:
+  Vector<Pair<String, double>> values_;
+};
+
 }
 }
 #endif

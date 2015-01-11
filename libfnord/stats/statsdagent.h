@@ -9,6 +9,7 @@
  */
 #ifndef _FNORD_STATS_STATSDAGENT_H_
 #define _FNORD_STATS_STATSDAGENT_H_
+#include <thread>
 #include "fnord/base/stdtypes.h"
 #include "fnord/stats/stat.h"
 #include "fnord/stats/statsrepository.h"
@@ -18,11 +19,24 @@ namespace stats {
 
 class StatsdAgent {
 public:
-  StatsdAgent();
-  StatsdAgent(StatsRepository* stats_repo);
+  StatsdAgent(Duration report_interval);
+  StatsdAgent(StatsRepository* stats_repo, Duration report_interval);
+
+  void start();
+  void stop();
 
 protected:
+  void report();
+
+  void reportValue(const String& path, Stat* stat, Vector<String>* out);
+  void reportDelta(const String& path, Stat* stat, Vector<String>* out);
+
+  std::atomic<bool> running_;
+  std::thread thread_;
   StatsRepository* stats_repo_;
+  Duration report_interval_;
+
+  HashMap<String, double> last_values_;
 };
 
 
