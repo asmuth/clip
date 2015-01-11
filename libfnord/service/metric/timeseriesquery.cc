@@ -9,13 +9,13 @@
  */
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
-#include <fnord/service/metric/query.h>
+#include <fnord/service/metric/timeseriesquery.h>
 
 namespace fnord {
 namespace metric_service {
 
-Query::Query() :
-    aggr_fn(AggregationFunction::kAggregateSum),
+TimeseriesQuery::TimeseriesQuery() :
+    aggr_fn(AggregationFunction::kNoAggregation),
     aggr_window(60 * kMicrosPerSecond),
     aggr_step(10 * kMicrosPerSecond),
     scale(1.0),
@@ -23,7 +23,7 @@ Query::Query() :
     join_aggr_fn(AggregationFunction::kAggregateSum) {}
 
 
-Query::AggregationFunction Query::aggrFnFromString(const String& str) {
+TimeseriesQuery::AggregationFunction TimeseriesQuery::aggrFnFromString(const String& str) {
   if (str == "max") {
     return AggregationFunction::kAggregateMax;
   }
@@ -39,7 +39,7 @@ Query::AggregationFunction Query::aggrFnFromString(const String& str) {
   RAISEF(kIllegalArgumentError, "invalid aggregation function: $0", str);
 }
 
-Query::JoinFunction Query::joinFnFromString(const String& str) {
+TimeseriesQuery::JoinFunction TimeseriesQuery::joinFnFromString(const String& str) {
   if (str == "divide") {
     return JoinFunction::kJoinDivide;
   }
@@ -51,7 +51,7 @@ Query::JoinFunction Query::joinFnFromString(const String& str) {
   RAISEF(kIllegalArgumentError, "invalid join function: $0", str);
 }
 
-void Query::run(
+void TimeseriesQuery::run(
     const DateTime& from,
     const DateTime& until,
     MetricService* metric_service,
@@ -77,12 +77,18 @@ void Query::run(
         });
   }
 
-  for (auto& group : groups_) {
-    emitGroup(group.first, &group.second, out);
+  if (aggr_fn == AggregationFunction::kNoAggregation) {
+    for (auto& group : groups_) {
+      emitGroupWithoutAggregation(group.first, &group.second, out);
+    }
+  } else {
+    for (auto& group : groups_) {
+      emitGroup(group.first, &group.second, out);
+    }
   }
 }
 
-void Query::processSample(Sample* sample, bool joined) {
+void TimeseriesQuery::processSample(Sample* sample, bool joined) {
   Vector<String> group_keyv;
 
   for (const auto& group : group_by) {
@@ -117,7 +123,16 @@ void Query::processSample(Sample* sample, bool joined) {
   }
 }
 
-void Query::emitGroup(
+void TimeseriesQuery::emitGroupWithoutAggregation(
+    const String& group_name,
+    Group* group,
+    std::vector<ResultRowType>* out) {
+  for (const auto& value : group->values) {
+    out->emplace_back(group_name, value.first, value.second);
+  }
+}
+
+void TimeseriesQuery::emitGroup(
     const String& group_name,
     Group* group,
     std::vector<ResultRowType>* out) {
@@ -186,7 +201,7 @@ void Query::emitGroup(
   } while (window_end_idx < values.size());
 }
 
-void Query::emitWindow(
+void TimeseriesQuery::emitWindow(
     const String& group_name,
     DateTime window_time,
     Vector<Pair<DateTime, double>>::iterator values_begin,

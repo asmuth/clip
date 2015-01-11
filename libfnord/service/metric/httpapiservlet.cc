@@ -30,14 +30,16 @@ void HTTPAPIServlet::handleHTTPRequest(
       return listMetrics(req, res, &uri);
     }
 
-    if (StringUtil::endsWith(uri.path(), "/query")) {
-      return query(req, res, &uri);
+    if (StringUtil::endsWith(uri.path(), "/timeseries")) {
+      return timeseriesQuery(req, res, &uri);
     }
 
-    if (StringUtil::endsWith(uri.path(), "/chart")) {
-      res->setStatus(fnord::http::kStatusOK);
-      res->addBody("chart");
-      return;
+    if (StringUtil::endsWith(uri.path(), "/histogram")) {
+      //return timeseriesQuery(req, res, &uri);
+    }
+
+    if (StringUtil::endsWith(uri.path(), "/rollup")) {
+      //return timeseriesQuery(req, res, &uri);
     }
 
     res->setStatus(fnord::http::kStatusNotFound);
@@ -149,7 +151,7 @@ void HTTPAPIServlet::insertSample(
   response->addBody("ok");
 }
 
-void HTTPAPIServlet::query(
+void HTTPAPIServlet::timeseriesQuery(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     URI* uri) {
@@ -158,15 +160,16 @@ void HTTPAPIServlet::query(
   DateTime from = DateTime::epoch();
   DateTime until;
 
-  Vector<ScopedPtr<Query>> queries;
-  queries.emplace_back(new Query());
+  /* parse query param string */
+  Vector<ScopedPtr<TimeseriesQuery>> queries;
+  queries.emplace_back(new TimeseriesQuery());
 
   for (const auto param : params) {
 
     // param: metric
     if (param.first == "metric") {
       if (queries.back()->metric_key.length() > 0) {
-        queries.emplace_back(new Query());
+        queries.emplace_back(new TimeseriesQuery());
       }
 
       queries.back()->metric_key = param.second;
@@ -175,7 +178,7 @@ void HTTPAPIServlet::query(
 
     // param: aggr_fn
     if (param.first == "aggr_fn") {
-      queries.back()->aggr_fn = Query::aggrFnFromString(param.second);
+      queries.back()->aggr_fn = TimeseriesQuery::aggrFnFromString(param.second);
       continue;
     }
 
@@ -207,13 +210,14 @@ void HTTPAPIServlet::query(
 
     // param: join_fn
     if (param.first == "join_fn") {
-      queries.back()->join_fn = Query::joinFnFromString(param.second);
+      queries.back()->join_fn = TimeseriesQuery::joinFnFromString(param.second);
       continue;
     }
 
     // param: join_aggr_fn
     if (param.first == "join_aggr_fn") {
-      queries.back()->join_aggr_fn = Query::aggrFnFromString(param.second);
+      queries.back()->join_aggr_fn =
+          TimeseriesQuery::aggrFnFromString(param.second);
       continue;
     }
 
@@ -238,22 +242,52 @@ void HTTPAPIServlet::query(
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
 
-  for (const auto& query : queries) {
-    std::vector<Query::ResultRowType> results;
-    query->run(from, until, metric_service_, &results);
-  }
 
-  response->setStatus(http::kStatusCreated);
-  response->addBody("ok");
-/*
-  query::QueryService::kFormat resp_format = query::QueryService::FORMAT_JSON;
+  /* format */
+  auto resp_format = ResponseFormat::kCSV;
+  /*
   std::string format_param;
   if (fnord::URI::getParam(params, "format", &format_param)) {
     if (format_param == "svg") {
       resp_format = query::QueryService::FORMAT_SVG;
     }
   }
-*/
+  */
+
+  /* execute queries & render results */
+  switch (resp_format) {
+
+    /* format: csv */
+    case ResponseFormat::kCSV: {
+      Buffer out;
+
+      for (const auto& query : queries) {
+        Vector<TimeseriesQuery::ResultRowType> results;
+        query->run(from, until, metric_service_, &results);
+
+        for (const auto& res : results) {
+          out.append(
+              StringUtil::format(
+                  "$0;$1;$2\n",
+                  std::get<0>(res),
+                  std::get<1>(res),
+                  std::get<2>(res)));
+        }
+      }
+
+      response->setStatus(http::kStatusOK);
+      response->addBody(out);
+      break;
+    }
+
+    /* unknown format */
+    default: {
+      response->setStatus(http::kStatusBadRequest);
+      response->addBody("unknown format");
+      break;
+    }
+
+  }
 }
 
 void HTTPAPIServlet::renderMetricJSON(

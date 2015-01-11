@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_METRICDB_QUERY_H_
-#define _FNORDMETRIC_METRICDB_QUERY_H_
+#ifndef _FNORDMETRIC_METRICDB_TIMESERIESQUERY_H_
+#define _FNORDMETRIC_METRICDB_TIMESERIESQUERY_H_
 #include <fnord/base/datetime.h>
 #include <fnord/base/stdtypes.h>
 #include <fnord/service/metric/sample.h>
@@ -17,11 +17,12 @@
 namespace fnord {
 namespace metric_service {
 
-class Query {
+class TimeseriesQuery {
 public:
   typedef Tuple<String, DateTime, double> ResultRowType;
 
   enum class AggregationFunction {
+    kNoAggregation,
     kAggregateMax,
     kAggregateMin,
     kAggregateSum
@@ -35,7 +36,7 @@ public:
   static AggregationFunction aggrFnFromString(const String& str);
   static JoinFunction joinFnFromString(const String& str);
 
-  Query();
+  TimeseriesQuery();
 
   String metric_key;
   AggregationFunction aggr_fn;
@@ -64,6 +65,11 @@ protected:
   void processSample(Sample* sample, bool joined);
 
   void emitGroup(
+      const String& group_name,
+      Group* group,
+      std::vector<ResultRowType>* out);
+
+  void emitGroupWithoutAggregation(
       const String& group_name,
       Group* group,
       std::vector<ResultRowType>* out);

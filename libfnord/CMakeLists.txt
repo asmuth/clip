@@ -179,7 +179,7 @@ add_library(fnord-metric-service OBJECT
     service/metric/metric.cc
     service/metric/metricrepository.cc
     service/metric/metricservice.cc
-    service/metric/query.cc
+    service/metric/timeseriesquery.cc
     service/metric/sample.cc)
 
 add_executable(fnord-metric-service-example

@@ -11,7 +11,7 @@
 #define _FNORD_METRIC_SERVICE_HTTPAPISERVLET_H
 #include "fnord/net/http/httpservice.h"
 #include "fnord/service/metric/metricservice.h"
-#include "fnord/service/metric/query.h"
+#include "fnord/service/metric/timeseriesquery.h"
 #include "fnord/json/json.h"
 
 namespace fnord {
@@ -19,6 +19,11 @@ namespace metric_service {
 
 class HTTPAPIServlet : public fnord::http::HTTPService {
 public:
+  enum class ResponseFormat {
+    kJSON,
+    kCSV
+  };
+
   HTTPAPIServlet(MetricService* metric_service);
 
   void handleHTTPRequest(
@@ -37,7 +42,7 @@ protected:
       http::HTTPResponse* response,
       URI* uri);
 
-  void query(
+  void timeseriesQuery(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
       URI* uri);
