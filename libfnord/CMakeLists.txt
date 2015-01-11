@@ -200,6 +200,7 @@ add_library(fnord-net OBJECT
     net/dnscache.cc
     net/tcpserver.cc
     net/udpserver.cc
+    net/udpsocket.cc
     net/inetaddr.cc
     net/tcpconnection.cc)
 

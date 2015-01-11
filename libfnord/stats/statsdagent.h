@@ -12,6 +12,7 @@
 #include <thread>
 #include "fnord/base/stdtypes.h"
 #include "fnord/net/inetaddr.h"
+#include "fnord/net/udpsocket.h"
 #include "fnord/stats/stat.h"
 #include "fnord/stats/statsrepository.h"
 
@@ -42,6 +43,7 @@ protected:
   void sendToStatsd(const Vector<String>& lines);
   void sendToStatsd(const Buffer& packet);
 
+  net::UDPSocket sock_;
   net::InetAddr addr_;
   std::atomic<bool> running_;
   std::thread thread_;

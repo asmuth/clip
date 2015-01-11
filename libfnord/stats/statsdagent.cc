@@ -9,6 +9,7 @@
  */
 #include <unistd.h>
 #include "fnord/base/inspect.h"
+#include "fnord/base/logging.h"
 #include "fnord/stats/statsdagent.h"
 
 namespace fnord {
@@ -34,7 +35,12 @@ void StatsdAgent::start() {
   thread_ = std::thread([this] () {
     while (running_) {
       usleep(report_interval_.microseconds());
-      report();
+
+      try {
+        report();
+      } catch (const StandardException& e) {
+        fnord::logError("fnord.statsd_agent", e, "StatsD push failed");
+      }
     }
   });
 }
@@ -112,7 +118,7 @@ void StatsdAgent::sendToStatsd(const Vector<String>& lines) {
 }
 
 void StatsdAgent::sendToStatsd(const Buffer& packet) {
-  fnord::iputs("send to statsd: $0", packet.toString());
+  sock_.sendTo(packet, addr_);
 }
 
 }
