@@ -27,6 +27,7 @@ public:
   };
 
   enum class JoinFunction {
+    kNoJoin,
     kJoinMultiply,
     kJoinDivide
   };
@@ -80,6 +81,13 @@ protected:
       Vector<Pair<DateTime, double>>::iterator values_end,
       Vector<Pair<DateTime, double>>::iterator joined_values_begin,
       Vector<Pair<DateTime, double>>::iterator joined_values_end);
+
+  double aggregateWindow(
+      AggregationFunction aggr_fn,
+      Vector<Pair<DateTime, double>>::iterator values_begin,
+      Vector<Pair<DateTime, double>>::iterator values_end);
+
+  String fullGroupName(const String& group_name) const;
 
   HashMap<String, Group> groups_;
   Vector<ResultRowType> results_;

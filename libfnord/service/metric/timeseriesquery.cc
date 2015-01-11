@@ -19,7 +19,7 @@ TimeseriesQuery::TimeseriesQuery() :
     aggr_window(60 * kMicrosPerSecond),
     aggr_step(10 * kMicrosPerSecond),
     scale(1.0),
-    join_fn(JoinFunction::kJoinDivide),
+    join_fn(JoinFunction::kNoJoin),
     join_aggr_fn(AggregationFunction::kAggregateSum) {}
 
 TimeseriesQuery::AggregationFunction TimeseriesQuery::aggrFnFromString(const String& str) {
@@ -64,7 +64,7 @@ void TimeseriesQuery::run(
         return true;
       });
 
-  if (join_metric_key.length() > 0) {
+  if (join_fn != JoinFunction::kNoJoin) {
     metric_service->scanSamples(
         join_metric_key,
         from,
@@ -123,17 +123,31 @@ void TimeseriesQuery::processSample(Sample* sample, bool joined) {
   }
 }
 
+String TimeseriesQuery::fullGroupName(const String& group_name) const {
+  auto full_group_name = metric_key;
+
+  if (group_name.length() > 0) {
+    full_group_name += ", ";
+    full_group_name += group_name;
+  }
+
+  return full_group_name;
+}
+
 void TimeseriesQuery::emitGroupWithoutAggregation(
     const String& group_name,
     Group* group) {
+  auto full_group_name = fullGroupName(group_name);
+
   for (const auto& value : group->values) {
-    results_.emplace_back(group_name, value.first, value.second);
+    results_.emplace_back(full_group_name, value.first, value.second);
   }
 }
 
 void TimeseriesQuery::emitGroup(
     const String& group_name,
     Group* group) {
+  auto full_group_name = fullGroupName(group_name);
   auto& values = group->values;
   auto& joined_values = group->joined_values;
 
@@ -181,7 +195,7 @@ void TimeseriesQuery::emitGroup(
         ++joined_window_end_idx);
 
     emitWindow(
-        group_name,
+        full_group_name,
         DateTime(window_end_time),
         values.begin() + window_start_idx,
         values.begin() + window_end_idx,
@@ -205,7 +219,44 @@ void TimeseriesQuery::emitWindow(
     Vector<Pair<DateTime, double>>::iterator values_end,
     Vector<Pair<DateTime, double>>::iterator joined_values_begin,
     Vector<Pair<DateTime, double>>::iterator joined_values_end) {
-  fnord::iputs("emit window: $0 $1 $2 $3", group_name, window_time, Vector<Pair<DateTime, double>>(values_begin, values_end), Vector<Pair<DateTime, double>>(joined_values_begin, joined_values_end));
+  double value;
+
+  value = aggregateWindow(aggr_fn, values_begin, values_end);
+
+  if (join_fn != JoinFunction::kNoJoin) {
+    auto joined_value = aggregateWindow(
+        join_aggr_fn,
+        joined_values_begin,
+        joined_values_end);
+
+    switch (join_fn) {
+      case JoinFunction::kJoinMultiply:
+        value = joined_value * value;
+        break;
+
+      case JoinFunction::kJoinDivide:
+        if (value != 0) {
+          value = joined_value / value;
+        }
+        break;
+
+      case JoinFunction::kNoJoin:
+        RAISE(kIllegalStateError);
+
+    }
+  }
+
+  value *= scale;
+
+  results_.emplace_back(group_name, window_time, value);
+  //fnord::iputs("emit window: $0 $1 $2 $3", group_name, window_time, Vector<Pair<DateTime, double>>(values_begin, values_end), Vector<Pair<DateTime, double>>(joined_values_begin, joined_values_end));
+}
+
+double TimeseriesQuery::aggregateWindow(
+    AggregationFunction aggr_fn,
+    Vector<Pair<DateTime, double>>::iterator values_begin,
+    Vector<Pair<DateTime, double>>::iterator values_end) {
+  return 23.5;
 }
 
 void TimeseriesQuery::renderCSV(Buffer* out) {

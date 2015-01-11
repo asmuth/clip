@@ -21,7 +21,7 @@ void HTTPAPIServlet::handleHTTPRequest(
     fnord::http::HTTPResponse* res) {
   URI uri(req->uri());
 
-  //try {
+  try {
     if (StringUtil::endsWith(uri.path(), "/insert")) {
       return insertSample(req, res, &uri);
     }
@@ -44,10 +44,10 @@ void HTTPAPIServlet::handleHTTPRequest(
 
     res->setStatus(fnord::http::kStatusNotFound);
     res->addBody("not found");
-  //} catch (const std::exception& e) {
-  //  res->setStatus(http::kStatusInternalServerError);
-  //  res->addBody(StringUtil::format("error: $0", e.what()));
- // }
+  } catch (const Exception& e) {
+    res->setStatus(http::kStatusInternalServerError);
+    res->addBody(StringUtil::format("error: $0", e.getMessage()));
+  }
 }
 
 void HTTPAPIServlet::listMetrics(
@@ -241,7 +241,6 @@ void HTTPAPIServlet::timeseriesQuery(
 
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
-
 
   /* format */
   auto resp_format = ResponseFormat::kCSV;
