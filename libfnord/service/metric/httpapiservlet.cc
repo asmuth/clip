@@ -301,6 +301,8 @@ void HTTPAPIServlet::timeseriesQuery(
     if (param.first == "width") continue;
     if (param.first == "height") continue;
     if (param.first == "grid") continue;
+    if (param.first == "legend") continue;
+    if (param.first == "legend_title") continue;
 
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
@@ -553,6 +555,97 @@ void HTTPAPIServlet::applyChartStyles(
       }
 
       RAISEF(kIllegalArgumentError, "invalid value for grid: $0", param.second);
+    }
+
+    // param: legend
+    if (param.first == "legend") {
+      std::string legend_title;
+      URI::getParam(params, "legend_title", &legend_title);
+
+      if (param.second == "topleftinside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_TOP,
+            chart::LegendDefinition::LEGEND_LEFT,
+            chart::LegendDefinition::LEGEND_INSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "topleftoutside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_TOP,
+            chart::LegendDefinition::LEGEND_LEFT,
+            chart::LegendDefinition::LEGEND_OUTSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "toprightinside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_TOP,
+            chart::LegendDefinition::LEGEND_RIGHT,
+            chart::LegendDefinition::LEGEND_INSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "toprightoutside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_TOP,
+            chart::LegendDefinition::LEGEND_RIGHT,
+            chart::LegendDefinition::LEGEND_OUTSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "bottomleftinside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_BOTTOM,
+            chart::LegendDefinition::LEGEND_LEFT,
+            chart::LegendDefinition::LEGEND_INSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "bottomleftoutside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_BOTTOM,
+            chart::LegendDefinition::LEGEND_LEFT,
+            chart::LegendDefinition::LEGEND_OUTSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "bottomrightinside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_BOTTOM,
+            chart::LegendDefinition::LEGEND_RIGHT,
+            chart::LegendDefinition::LEGEND_INSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      if (param.second == "bottomrightoutside") {
+        charts->front()->addLegend(
+            chart::LegendDefinition::LEGEND_BOTTOM,
+            chart::LegendDefinition::LEGEND_RIGHT,
+            chart::LegendDefinition::LEGEND_OUTSIDE,
+            legend_title);
+
+        continue;
+      }
+
+      RAISEF(
+          kIllegalArgumentError,
+          "invalid value for legend: $0",
+          param.second);
     }
 
   }
