@@ -14,12 +14,16 @@
 namespace fnord {
 namespace stats {
 
-StatsdAgent::StatsdAgent(Duration report_interval) :
-    StatsdAgent(StatsRepository::get(), report_interval) {}
+StatsdAgent::StatsdAgent(
+    net::InetAddr addr,
+    Duration report_interval) :
+    StatsdAgent(addr, report_interval, StatsRepository::get()) {}
 
 StatsdAgent::StatsdAgent(
-    StatsRepository* stats_repo,
-    Duration report_interval) :
+    net::InetAddr addr,
+    Duration report_interval,
+    StatsRepository* stats_repo) :
+    addr_(addr),
     stats_repo_(stats_repo),
     report_interval_(report_interval),
     running_(false) {}
@@ -60,7 +64,7 @@ void StatsdAgent::report() {
     }
   });
 
-  fnord::iputs("lines: $0", lines);
+  sendToStatsd(lines);
 }
 
 void StatsdAgent::reportValue(
@@ -87,6 +91,28 @@ void StatsdAgent::reportDelta(
     last_values_[pair.first] = pair.second;
     out->emplace_back(StringUtil::format("$0:$1", pair.first, delta));
   }
+}
+
+void StatsdAgent::sendToStatsd(const Vector<String>& lines) {
+  Vector<Buffer> pkts;
+
+  for (const auto& line : lines) {
+    if (pkts.size() == 0 ||
+        pkts.back().size() + line.length() + 2 >= kMaxPacketSize) {
+      pkts.emplace_back();
+    }
+
+    pkts.back().append(line);
+    pkts.back().append("\n");
+  }
+
+  for (const auto& pkt : pkts) {
+    sendToStatsd(pkt);
+  }
+}
+
+void StatsdAgent::sendToStatsd(const Buffer& packet) {
+  fnord::iputs("send to statsd: $0", packet.toString());
 }
 
 }

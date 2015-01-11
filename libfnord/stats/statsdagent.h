@@ -11,6 +11,7 @@
 #define _FNORD_STATS_STATSDAGENT_H_
 #include <thread>
 #include "fnord/base/stdtypes.h"
+#include "fnord/net/inetaddr.h"
 #include "fnord/stats/stat.h"
 #include "fnord/stats/statsrepository.h"
 
@@ -19,18 +20,29 @@ namespace stats {
 
 class StatsdAgent {
 public:
-  StatsdAgent(Duration report_interval);
-  StatsdAgent(StatsRepository* stats_repo, Duration report_interval);
+  static const size_t kMaxPacketSize = 1024 * 48; // 48k
+
+  StatsdAgent(
+      net::InetAddr addr,
+      Duration report_interval);
+
+  StatsdAgent(
+      net::InetAddr addr,
+      Duration report_interval,
+      StatsRepository* stats_repo);
 
   void start();
   void stop();
 
 protected:
   void report();
-
   void reportValue(const String& path, Stat* stat, Vector<String>* out);
   void reportDelta(const String& path, Stat* stat, Vector<String>* out);
 
+  void sendToStatsd(const Vector<String>& lines);
+  void sendToStatsd(const Buffer& packet);
+
+  net::InetAddr addr_;
   std::atomic<bool> running_;
   std::thread thread_;
   StatsRepository* stats_repo_;
