@@ -11,6 +11,7 @@
 #define _FNORDMETRIC_METRICDB_TIMESERIESQUERY_H_
 #include <fnord/base/datetime.h>
 #include <fnord/base/stdtypes.h>
+#include <fnord/chart/series.h>
 #include <fnord/service/metric/sample.h>
 #include <fnord/service/metric/metricservice.h>
 
@@ -55,6 +56,8 @@ public:
       MetricService* metric_service);
 
   void renderCSV(Buffer* out);
+
+  void renderSeries(Vector<chart::Series2D<DateTime, double>*>* out);
 
 protected:
   typedef Tuple<String, DateTime, double> ResultRowType;

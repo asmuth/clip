@@ -8,6 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/service/metric/httpapiservlet.h"
+#include "fnord/chart/axisdefinition.h"
+#include "fnord/chart/canvas.h"
+#include "fnord/chart/linechart.h"
+#include "fnord/chart/svgtarget.h"
 
 namespace fnord {
 namespace metric_service {
@@ -157,6 +161,7 @@ void HTTPAPIServlet::timeseriesQuery(
     URI* uri) {
   auto params = uri->queryParams();
 
+  auto resp_format = ResponseFormat::kCSV;
   DateTime from = DateTime::epoch();
   DateTime until;
 
@@ -239,14 +244,16 @@ void HTTPAPIServlet::timeseriesQuery(
       continue;
     }
 
-    RAISEF(kParseError, "invalid param: $0", param.first);
-  }
+    /* param: format */
+    if (param.first == "format") {
+      std::string format_param;
+      if (fnord::URI::getParam(params, "format", &format_param)) {
+        resp_format = formatFromString(format_param);
+      }
+      continue;
+    }
 
-  /* format */
-  auto resp_format = ResponseFormat::kCSV;
-  std::string format_param;
-  if (fnord::URI::getParam(params, "format", &format_param)) {
-    resp_format = formatFromString(format_param);
+    RAISEF(kParseError, "invalid param: $0", param.first);
   }
 
   /* execute queries */
@@ -266,6 +273,34 @@ void HTTPAPIServlet::timeseriesQuery(
       }
 
       response->setStatus(http::kStatusOK);
+      response->addBody(out);
+      break;
+    }
+
+    /* format: svg */
+    case ResponseFormat::kSVG: {
+      chart::Canvas canvas;
+
+      auto chart = canvas.addChart<chart::LineChart2D<DateTime, double>>();
+      chart->addAxis(chart::AxisDefinition::LEFT);
+      chart->addAxis(chart::AxisDefinition::BOTTOM);
+
+      for (const auto& query : queries) {
+        Vector<chart::Series2D<DateTime, double>*> res_series;
+        query->renderSeries(&res_series);
+
+        for (auto& series : res_series) {
+          chart->addSeries(series);
+        }
+      }
+
+      Buffer out;
+      BufferOutputStream outs(&out);
+      chart::SVGTarget svgtarget(&outs);
+      canvas.render(&svgtarget);
+
+      response->setStatus(http::kStatusOK);
+      response->addHeader("Content-Type", "text/html");
       response->addBody(out);
       break;
     }

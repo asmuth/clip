@@ -184,6 +184,7 @@ add_library(fnord-metric-service OBJECT
 
 add_executable(fnord-metric-service-example
     $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-chart>
     $<TARGET_OBJECTS:fnord-metric-service>
     $<TARGET_OBJECTS:fnord-http>
     $<TARGET_OBJECTS:fnord-net>

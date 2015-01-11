@@ -328,5 +328,26 @@ void TimeseriesQuery::renderCSV(Buffer* out) {
   }
 }
 
+void TimeseriesQuery::renderSeries(
+    Vector<chart::Series2D<DateTime, double>*>* out) {
+  HashMap<String, size_t> series_indexes;
+
+  for (const auto& res : results_) {
+    size_t idx;
+
+    auto iter = series_indexes.find(std::get<0>(res));
+    if (iter == series_indexes.end()) {
+      out->emplace_back(
+          new chart::Series2D<DateTime, double>(std::get<0>(res)));
+      idx = out->size() - 1;
+      series_indexes[std::get<0>(res)] = idx;
+    } else {
+      idx = iter->second;
+    }
+
+    (*out)[idx]->addDatum(std::get<1>(res), std::get<2>(res));
+  }
+}
+
 }
 }
