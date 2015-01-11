@@ -1,4 +1,18 @@
 
+
+from timespec impl
+
+metricdb: insert distribution value
+metric http api: histogram endpoint
+metric http api: rollup endpoint
+metric http api: list subdirectory (non-)recursive
+metric: mean/median aggregation
+metric: percentile aggregation
+charts: axis ticks+labels inside/outside
+charts: control no of ticks on grid/axis
+charts: png render target
+
+
 better inetaddr:resolve iface:
   -> future<inteaddr> resolve(string);
   -> future<inetaddr> resolve(url); // resolves service port e.g. http->80, https->443

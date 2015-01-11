@@ -57,6 +57,8 @@ void TimeseriesQuery::run(
     const DateTime& from,
     const DateTime& until,
     MetricService* metric_service) {
+  from_ = from;
+  until_ = until;
 
   metric_service->scanSamples(
       metric_key,
@@ -346,7 +348,9 @@ void TimeseriesQuery::renderSeries(
       idx = iter->second;
     }
 
-    (*out)[idx]->addDatum(std::get<1>(res), std::get<2>(res));
+    if (std::get<1>(res) < until_) {
+      (*out)[idx]->addDatum(std::get<1>(res), std::get<2>(res));
+    }
   }
 }
 

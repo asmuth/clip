@@ -112,6 +112,8 @@ protected:
 
   HashMap<String, Group> groups_;
   Vector<ResultRowType> results_;
+  DateTime from_;
+  DateTime until_;
 };
 
 }
