@@ -64,6 +64,10 @@ protected:
       Vector<ScopedPtr<TimeseriesQuery>>::iterator end,
       Vector<chart::Drawable*>* charts);
 
+  void applyChartStyles(
+      const URI::ParamList& params,
+      Vector<chart::Drawable*>* charts);
+
   ResponseFormat formatFromString(const String& format);
 
   MetricService* metric_service_;

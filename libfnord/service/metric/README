@@ -13,6 +13,11 @@ global opts:
   &xinvert=true
   &yinvert=true
 
+  &axisleft=true/false
+  &axisbottom=true/false
+  &axisright=true/false
+  &axistop=true/false
+
   &from=<timespec>
   &until=<timespec>
 

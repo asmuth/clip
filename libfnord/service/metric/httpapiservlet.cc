@@ -256,6 +256,12 @@ void HTTPAPIServlet::timeseriesQuery(
       continue;
     }
 
+    /* ignored params */
+    if (param.first == "axisleft") continue;
+    if (param.first == "axisbottom") continue;
+    if (param.first == "axisright") continue;
+    if (param.first == "axistop") continue;
+
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
 
@@ -318,6 +324,8 @@ void HTTPAPIServlet::timeseriesQuery(
             "invalid draw style: $0",
             (*qbegin)->draw_style);
       }
+
+      applyChartStyles(params, &charts);
 
       Buffer out;
       BufferOutputStream outs(&out);
@@ -386,6 +394,63 @@ HTTPAPIServlet::ResponseFormat HTTPAPIServlet::formatFromString(
   }
 
   RAISEF(kIllegalArgumentError, "invalid format: $0", format);
+}
+
+void HTTPAPIServlet::applyChartStyles(
+    const URI::ParamList& params,
+    Vector<chart::Drawable*>* charts) {
+  if (charts->size() == 0) {
+    return;
+  }
+
+  bool axis_left = true;
+  bool axis_bottom = true;
+  bool axis_right = false;
+  bool axis_top = false;
+
+  for (const auto param : params) {
+
+    // param: axisleft
+    if (param.first == "axisleft") {
+      axis_left = (param.second == "true");
+      continue;
+    }
+
+    // param: axisbottom
+    if (param.first == "axisbottom") {
+      axis_bottom = (param.second == "true");
+      continue;
+    }
+
+    // param: axisright
+    if (param.first == "axisright") {
+      axis_right = (param.second == "true");
+      continue;
+    }
+
+    // param: axistop
+    if (param.first == "axistop") {
+      axis_top = (param.second == "true");
+      continue;
+    }
+
+  }
+
+  if (axis_left) {
+    charts->front()->addAxis(chart::AxisDefinition::LEFT);
+  }
+
+  if (axis_bottom) {
+    charts->front()->addAxis(chart::AxisDefinition::BOTTOM);
+  }
+
+  if (axis_right) {
+    charts->front()->addAxis(chart::AxisDefinition::RIGHT);
+  }
+
+  if (axis_top) {
+    charts->front()->addAxis(chart::AxisDefinition::TOP);
+  }
 }
 
 }
