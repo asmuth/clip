@@ -13,6 +13,7 @@
 #include "fnord/base/thread/eventloop.h"
 #include "fnord/net/http/httpserver.h"
 #include "fnord/net/http/httprouter.h"
+#include "fnord/net/statsd/statsd.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/metric/metricservice.h"
@@ -40,11 +41,15 @@ int main() {
   fnord::metric_service::HTTPAPIServlet metrics_api(&metric_service);
   http_router.addRouteByPrefixMatch("/metrics", &metrics_api);
 
-  JSONRPC jsonrpc;
-  JSONRPCHTTPAdapter jsonrpc_http(&jsonrpc);
-  http_router.addRouteByPrefixMatch("/rpc", &jsonrpc_http);
+  fnord::statsd::StatsdServer statsd_server(&evloop, &evloop);
+  statsd_server.onSample([&metric_service] (
+      const std::string& key,
+      double value,
+      const std::vector<std::pair<std::string, std::string>>& labels) {
+    metric_service.insertSample(key, value, labels);
+  });
+  statsd_server.listen(8192);
 
   evloop.run();
   return 0;
 }
-

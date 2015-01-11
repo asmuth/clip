@@ -157,6 +157,7 @@ add_executable(tests/test-json
 
 # service: metric
 add_library(fnord-metric-service OBJECT
+    net/statsd/statsd.cc
     service/metric/backends/disk/compactiontask.cc
     service/metric/backends/disk/labelindex.cc
     service/metric/backends/disk/labelindexreader.cc
@@ -198,6 +199,7 @@ add_executable(fnord-metric-service-example
 add_library(fnord-net OBJECT
     net/dnscache.cc
     net/tcpserver.cc
+    net/udpserver.cc
     net/inetaddr.cc
     net/tcpconnection.cc)
 

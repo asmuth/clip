@@ -9,6 +9,7 @@
  */
 #include <fnord/base/exception.h>
 #include <fnord/base/inspect.h>
+#include <fnord/base/logging.h>
 #include <fnord/net/statsd/statsd.h>
 
 namespace fnord {
@@ -25,6 +26,7 @@ StatsdServer::StatsdServer(
 }
 
 void StatsdServer::listen(int port) {
+  logNotice("fnord.statsd.server", "Starting StatsD server on port $0", port);
   udp_server_.listen(port);
 }
 
