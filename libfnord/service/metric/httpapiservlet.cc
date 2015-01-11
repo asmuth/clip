@@ -261,6 +261,8 @@ void HTTPAPIServlet::timeseriesQuery(
     if (param.first == "axisbottom") continue;
     if (param.first == "axisright") continue;
     if (param.first == "axistop") continue;
+    if (param.first == "min") continue;
+    if (param.first == "max") continue;
 
     RAISEF(kParseError, "invalid param: $0", param.first);
   }
@@ -431,6 +433,34 @@ void HTTPAPIServlet::applyChartStyles(
     // param: axistop
     if (param.first == "axistop") {
       axis_top = (param.second == "true");
+      continue;
+    }
+
+    // param: max
+    if (param.first == "max") {
+      for (const auto& chart : *charts) {
+        auto ydomain = dynamic_cast<chart::ContinuousDomain<double>*>(
+            chart->getDomain(chart::AnyDomain::DIM_Y));
+
+        if (ydomain != nullptr) {
+          ydomain->setMax(std::stod(param.second));
+        }
+      }
+
+      continue;
+    }
+
+    // param: min
+    if (param.first == "min") {
+      for (const auto& chart : *charts) {
+        auto ydomain = dynamic_cast<chart::ContinuousDomain<double>*>(
+            chart->getDomain(chart::AnyDomain::DIM_Y));
+
+        if (ydomain != nullptr) {
+          ydomain->setMin(std::stod(param.second));
+        }
+      }
+
       continue;
     }
 
