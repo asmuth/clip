@@ -24,11 +24,10 @@ x  &grid={horizontal,vertical,both}
   &from=<timespec>
   &until=<timespec>
 
-drawmode:
 
-  &draw=<lines|areas>
+per metric:
+
   &metric=<key>
-x  &color=<color>
   &scale=<factor>
   &aggr_fn=<sum|max|min>
   &aggr_window=<secs>
@@ -37,4 +36,11 @@ x  &color=<color>
   &join_fn=<divide|multiply>
   &join_aggr_fn=<sum|max|min>
   (&group_by= )...
+
+  &draw=<lines|areas>
+  &color=<color>
+  &line_style=<val>
+  &line_width=<val>
+  &point_style=<val>
+  &point_size=<val>
 

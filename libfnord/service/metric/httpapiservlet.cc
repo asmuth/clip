@@ -236,6 +236,36 @@ void HTTPAPIServlet::timeseriesQuery(
       continue;
     }
 
+    // param: color
+    if (param.first == "color") {
+      queries.back()->color = param.second;
+      continue;
+    }
+
+    // param: line_style
+    if (param.first == "line_style") {
+      queries.back()->line_style = param.second;
+      continue;
+    }
+
+    // param: line_width
+    if (param.first == "line_width") {
+      queries.back()->line_width = param.second;
+      continue;
+    }
+
+    // param: point_style
+    if (param.first == "point_style") {
+      queries.back()->point_style = param.second;
+      continue;
+    }
+
+    // param: point_size
+    if (param.first == "point_size") {
+      queries.back()->point_size = param.second;
+      continue;
+    }
+
     // param: from
     if (param.first == "from") {
       //from = DateTime::fromTimespec(param.second);

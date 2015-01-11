@@ -93,7 +93,33 @@ void HTTPAPIServlet::renderCharts(
   for (; *qbegin != qend && (**qbegin)->draw_style == style; ++(*qbegin)) {
     Vector<chart::Series2D<DateTime, double>*> res_series;
     (**qbegin)->renderSeries(&res_series);
+
     for (auto& series : res_series) {
+      auto color = (**qbegin)->color;
+      if (color.length() > 0) {
+        series->setDefaultProperty(chart::Series::P_COLOR, color);
+      }
+
+      auto line_style = (**qbegin)->line_style;
+      if (line_style.length() > 0) {
+        series->setDefaultProperty(chart::Series::P_LINE_STYLE, line_style);
+      }
+
+      auto line_width = (**qbegin)->line_width;
+      if (line_width.length() > 0) {
+        series->setDefaultProperty(chart::Series::P_LINE_WIDTH, line_width);
+      }
+
+      auto point_style = (**qbegin)->point_style;
+      if (point_style.length() > 0) {
+        series->setDefaultProperty(chart::Series::P_POINT_STYLE, point_style);
+      }
+
+      auto point_size = (**qbegin)->point_size;
+      if (point_size.length() > 0) {
+        series->setDefaultProperty(chart::Series::P_POINT_SIZE, point_size);
+      }
+
       chart->addSeries(series);
     }
   }

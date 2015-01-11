@@ -40,6 +40,11 @@ public:
 
   String metric_key;
   String draw_style;
+  String color;
+  String line_style;
+  String line_width;
+  String point_style;
+  String point_size;
   AggregationFunction aggr_fn;
   Duration aggr_window;
   Duration aggr_step;
