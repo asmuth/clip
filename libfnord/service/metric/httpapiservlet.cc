@@ -327,7 +327,7 @@ void HTTPAPIServlet::timeseriesQuery(
             (*qbegin)->draw_style);
       }
 
-      applyChartStyles(params, &charts);
+      applyChartStyles(params, from, until, &charts);
 
       Buffer out;
       BufferOutputStream outs(&out);
@@ -400,6 +400,8 @@ HTTPAPIServlet::ResponseFormat HTTPAPIServlet::formatFromString(
 
 void HTTPAPIServlet::applyChartStyles(
     const URI::ParamList& params,
+    const DateTime& from,
+    const DateTime& until,
     Vector<chart::Drawable*>* charts) {
   if (charts->size() == 0) {
     return;
@@ -466,6 +468,16 @@ void HTTPAPIServlet::applyChartStyles(
 
   }
 
+  for (const auto& chart : *charts) {
+    auto xdomain = dynamic_cast<chart::ContinuousDomain<DateTime>*>(
+        chart->getDomain(chart::AnyDomain::DIM_X));
+
+    if (xdomain != nullptr) {
+      xdomain->setMin(from);
+      xdomain->setMax(until);
+    }
+  }
+
   if (axis_left) {
     charts->front()->addAxis(chart::AxisDefinition::LEFT);
   }
@@ -481,6 +493,8 @@ void HTTPAPIServlet::applyChartStyles(
   if (axis_top) {
     charts->front()->addAxis(chart::AxisDefinition::TOP);
   }
+
+
 }
 
 }

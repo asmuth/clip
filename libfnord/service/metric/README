@@ -3,15 +3,20 @@ global opts:
 
   ?format={svg,png,csv}
 
-  &title=<str>
-  &subtitle=<str>
-  &grid={horizontal,vertical,both}
-  &ymin=<val>
-  &xmax=<val>
-  &ylogarithmic=true
-  &xlogarithmic=true
-  &xinvert=true
-  &yinvert=true
+x  &width=<val>
+x  &height=<val>
+
+x  &title=<str>
+x  &subtitle=<str>
+x  &grid={horizontal,vertical,both}
+
+  &min=<val>
+  &max=<val>
+
+x  &ylogarithmic=true
+x  &xlogarithmic=true
+x  &xinvert=true
+x  &yinvert=true
 
   &axisleft=true/false
   &axisbottom=true/false
@@ -25,7 +30,7 @@ drawmode:
 
   &draw=<lines|areas>
   &metric=<key>
-  &color=<color>
+x  &color=<color>
   &scale=<factor>
   &aggr_fn=<sum|max|min>
   &aggr_window=<secs>

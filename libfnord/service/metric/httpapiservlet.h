@@ -66,6 +66,8 @@ protected:
 
   void applyChartStyles(
       const URI::ParamList& params,
+      const DateTime& from,
+      const DateTime& until,
       Vector<chart::Drawable*>* charts);
 
   ResponseFormat formatFromString(const String& format);
