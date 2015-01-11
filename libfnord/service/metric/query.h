@@ -22,14 +22,14 @@ public:
   typedef Tuple<String, DateTime, double> ResultRowType;
 
   enum class AggregationFunction {
-    kAggregateSum,
+    kAggregateMax,
     kAggregateMin,
-    kAggregateMax
+    kAggregateSum
   };
 
   enum class JoinFunction {
-    kJoinDivide,
-    kJoinMultiply
+    kJoinMultiply,
+    kJoinDivide
   };
 
   static AggregationFunction aggrFnFromString(const String& str);
@@ -61,6 +61,11 @@ public:
       MetricService* metric_service,
       std::vector<ResultRowType>* out);
 
+protected:
+
+  void processSample(Sample* sample, bool joined);
+
+  HashMap<String, double> groups_;
 };
 
 }
