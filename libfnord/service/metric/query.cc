@@ -129,12 +129,14 @@ void Query::emitGroup(
   }
 
   /* sort rows */
-  std::sort(
-      values.begin(),
-      values.end(),
-      [] (const Pair<DateTime, double>& a, const Pair<DateTime, double>& b) {
-        return a.first.unixMicros() < b.first.unixMicros();
-      });
+  auto cmp = [] (
+      const Pair<DateTime, double>& a,
+      const Pair<DateTime, double>& b) {
+    return a.first.unixMicros() < b.first.unixMicros();
+  };
+
+  std::sort(values.begin(), values.end(), cmp);
+  std::sort(joined_values.begin(), joined_values.end(), cmp);
 
   size_t window_start_idx = 0;
   size_t window_end_idx;
@@ -150,6 +152,20 @@ void Query::emitGroup(
         window_end_idx < values.size() &&
             values[window_end_idx].first.unixMicros() < window_end_time;
         ++window_end_idx);
+
+    /* find joined window */
+    while (joined_window_start_idx < joined_values.size() &&
+        joined_values[joined_window_start_idx].first.unixMicros() <
+            window_start_time) {
+      ++joined_window_start_idx;
+    }
+
+    for (
+        joined_window_end_idx = joined_window_start_idx;
+        joined_window_end_idx < joined_values.size() &&
+            joined_values[joined_window_end_idx].first.unixMicros() <
+                window_end_time;
+        ++joined_window_end_idx);
 
     emitWindow(
         group_name,
