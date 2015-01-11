@@ -11,6 +11,7 @@
 #define _FNORD_METRIC_SERVICE_HTTPAPISERVLET_H
 #include "fnord/net/http/httpservice.h"
 #include "fnord/service/metric/metricservice.h"
+#include "fnord/service/metric/query.h"
 #include "fnord/json/json.h"
 
 namespace fnord {
@@ -32,6 +33,11 @@ protected:
       URI* uri);
 
   void listMetrics(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      URI* uri);
+
+  void query(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
       URI* uri);

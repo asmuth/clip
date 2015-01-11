@@ -24,9 +24,11 @@ per metric:
   &metric=<key>
   &color=<color>
   &scale=<factor>
-  &aggr_fn=<sum|max|min|ratio>
+  &aggr_fn=<sum|max|min>
   &aggr_window=<secs>
   &aggr_step=<secs>
-  &join_with=<key>  
+  &join_with=<key>
+  &join_fn=<divide|multiply>
+  &join_aggr_fn=<sum|max|min>
   (&group_by= )...
 

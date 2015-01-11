@@ -16,6 +16,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -51,6 +52,9 @@ using Tuple = std::tuple<T...>;
 
 template <typename T1, typename T2>
 using HashMap = std::unordered_map<T1, T2>;
+
+template <typename T>
+using Stack = std::stack<T>;
 
 } // namespace fnord
 #endif

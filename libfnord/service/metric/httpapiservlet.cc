@@ -21,23 +21,31 @@ void HTTPAPIServlet::handleHTTPRequest(
     fnord::http::HTTPResponse* res) {
   URI uri(req->uri());
 
-  std::string res_body;
+  //try {
+    if (StringUtil::endsWith(uri.path(), "/insert")) {
+      return insertSample(req, res, &uri);
+    }
 
-  if (StringUtil::endsWith(uri.path(), "/insert")) {
-    return insertSample(req, res, &uri);
-  }
+    if (StringUtil::endsWith(uri.path(), "/list")) {
+      return listMetrics(req, res, &uri);
+    }
 
-  if (StringUtil::endsWith(uri.path(), "/list")) {
-    return listMetrics(req, res, &uri);
-  }
+    if (StringUtil::endsWith(uri.path(), "/query")) {
+      return query(req, res, &uri);
+    }
 
-  if (StringUtil::endsWith(uri.path(), "/chart")) {
-    res->setStatus(fnord::http::kStatusOK);
-    res->addBody("chart");
-  }
+    if (StringUtil::endsWith(uri.path(), "/chart")) {
+      res->setStatus(fnord::http::kStatusOK);
+      res->addBody("chart");
+      return;
+    }
 
-  res->setStatus(fnord::http::kStatusNotFound);
-  res->addBody("not found");
+    res->setStatus(fnord::http::kStatusNotFound);
+    res->addBody("not found");
+  //} catch (const std::exception& e) {
+  //  res->setStatus(http::kStatusInternalServerError);
+  //  res->addBody(StringUtil::format("error: $0", e.what()));
+ // }
 }
 
 void HTTPAPIServlet::listMetrics(
@@ -139,6 +147,113 @@ void HTTPAPIServlet::insertSample(
   metric_service_->insertSample(metric_key, sample_value, labels);
   response->setStatus(http::kStatusCreated);
   response->addBody("ok");
+}
+
+void HTTPAPIServlet::query(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    URI* uri) {
+  auto params = uri->queryParams();
+
+  DateTime from = DateTime::epoch();
+  DateTime until;
+
+  Vector<ScopedPtr<Query>> queries;
+  queries.emplace_back(new Query());
+
+  for (const auto param : params) {
+
+    // param: metric
+    if (param.first == "metric") {
+      if (queries.back()->metric_key.length() > 0) {
+        queries.emplace_back(new Query());
+      }
+
+      queries.back()->metric_key = param.second;
+      continue;
+    }
+
+    // param: aggr_fn
+    if (param.first == "aggr_fn") {
+      queries.back()->aggr_fn = Query::aggrFnFromString(param.second);
+      continue;
+    }
+
+    // param: aggr_window
+    if (param.first == "aggr_window") {
+      queries.back()->aggr_window =
+          Duration(std::stod(param.second) * kMicrosPerSecond);
+      continue;
+    }
+
+    // param: aggr_step
+    if (param.first == "aggr_step") {
+      queries.back()->aggr_step =
+          Duration(std::stod(param.second) * kMicrosPerSecond);
+      continue;
+    }
+
+    // param: group_by
+    if (param.first == "group_by") {
+      queries.back()->group_by.emplace_back(param.second);
+      continue;
+    }
+
+    // param: join_with
+    if (param.first == "join_with") {
+      queries.back()->join_metric_key = param.second;
+      continue;
+    }
+
+    // param: join_fn
+    if (param.first == "join_fn") {
+      queries.back()->join_fn = Query::joinFnFromString(param.second);
+      continue;
+    }
+
+    // param: join_aggr_fn
+    if (param.first == "join_aggr_fn") {
+      queries.back()->join_aggr_fn = Query::aggrFnFromString(param.second);
+      continue;
+    }
+
+    // param: scale
+    if (param.first == "scale") {
+      queries.back()->scale = std::stod(param.second);
+      continue;
+    }
+
+    // param: from
+    if (param.first == "from") {
+      //from = DateTime::fromTimespec(param.second);
+      continue;
+    }
+
+    // param: until
+    if (param.first == "until") {
+      //until = DateTime::fromTimespec(param.second);
+      continue;
+    }
+
+    RAISEF(kParseError, "invalid param: $0", param.first);
+  }
+
+  for (const auto& query : queries) {
+    std::vector<Query::ResultRowType> results;
+    query->run(from, until, metric_service_, &results);
+  }
+
+  response->setStatus(http::kStatusCreated);
+  response->addBody("ok");
+/*
+  query::QueryService::kFormat resp_format = query::QueryService::FORMAT_JSON;
+  std::string format_param;
+  if (fnord::URI::getParam(params, "format", &format_param)) {
+    if (format_param == "svg") {
+      resp_format = query::QueryService::FORMAT_SVG;
+    }
+  }
+*/
 }
 
 void HTTPAPIServlet::renderMetricJSON(
