@@ -9,9 +9,6 @@
  */
 #include "fnord/service/metric/httpapiservlet.h"
 #include "fnord/chart/axisdefinition.h"
-#include "fnord/chart/canvas.h"
-#include "fnord/chart/linechart.h"
-#include "fnord/chart/svgtarget.h"
 
 namespace fnord {
 namespace metric_service {
@@ -232,6 +229,12 @@ void HTTPAPIServlet::timeseriesQuery(
       continue;
     }
 
+    // param: draw
+    if (param.first == "draw") {
+      queries.back()->draw_style = param.second;
+      continue;
+    }
+
     // param: from
     if (param.first == "from") {
       //from = DateTime::fromTimespec(param.second);
@@ -280,18 +283,40 @@ void HTTPAPIServlet::timeseriesQuery(
     /* format: svg */
     case ResponseFormat::kSVG: {
       chart::Canvas canvas;
+      Vector<chart::Drawable*> charts;
 
-      auto chart = canvas.addChart<chart::LineChart2D<DateTime, double>>();
-      chart->addAxis(chart::AxisDefinition::LEFT);
-      chart->addAxis(chart::AxisDefinition::BOTTOM);
+      auto qbegin = queries.begin();
+      auto qend = queries.end();
 
-      for (const auto& query : queries) {
-        Vector<chart::Series2D<DateTime, double>*> res_series;
-        query->renderSeries(&res_series);
+      while (qbegin != qend) {
+        std::string style = (*qbegin)->draw_style;
 
-        for (auto& series : res_series) {
-          chart->addSeries(series);
+        if (style == "lines") {
+          renderCharts<chart::LineChart2D<DateTime, double>>(
+              &canvas,
+              style,
+              &qbegin,
+              qend,
+              &charts);
+
+          continue;
         }
+
+        if (style == "area") {
+          renderCharts<chart::AreaChart2D<DateTime, double>>(
+              &canvas,
+              style,
+              &qbegin,
+              qend,
+              &charts);
+
+          continue;
+        }
+
+        RAISEF(
+            kIllegalArgumentError,
+            "invalid draw style: $0",
+            (*qbegin)->draw_style);
       }
 
       Buffer out;

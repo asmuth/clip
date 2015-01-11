@@ -198,6 +198,10 @@ template <typename TX, typename TY>
 void LineChart2D<TX, TY>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
+    RAISE(kRuntimeError, "could not build domains");
+  }
+
   x_domain_.get()->build();
   y_domain_.get()->build();
 

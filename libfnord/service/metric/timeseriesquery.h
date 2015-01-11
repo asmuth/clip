@@ -39,6 +39,7 @@ public:
   TimeseriesQuery();
 
   String metric_key;
+  String draw_style;
   AggregationFunction aggr_fn;
   Duration aggr_window;
   Duration aggr_step;

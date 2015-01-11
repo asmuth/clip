@@ -18,6 +18,7 @@ TimeseriesQuery::TimeseriesQuery() :
     aggr_fn(AggregationFunction::kNoAggregation),
     aggr_window(60 * kMicrosPerSecond),
     aggr_step(10 * kMicrosPerSecond),
+    draw_style("lines"),
     scale(1.0),
     join_fn(JoinFunction::kNoJoin),
     join_aggr_fn(AggregationFunction::kAggregateSum) {}

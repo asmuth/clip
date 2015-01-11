@@ -17,10 +17,8 @@ global opts:
   &until=<timespec>
 
 drawmode:
-  &draw=lines
 
-per metric:
-
+  &draw=<lines|areas>
   &metric=<key>
   &color=<color>
   &scale=<factor>

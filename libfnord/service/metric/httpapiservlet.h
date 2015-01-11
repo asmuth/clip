@@ -9,6 +9,10 @@
  */
 #ifndef _FNORD_METRIC_SERVICE_HTTPAPISERVLET_H
 #define _FNORD_METRIC_SERVICE_HTTPAPISERVLET_H
+#include "fnord/chart/areachart.h"
+#include "fnord/chart/canvas.h"
+#include "fnord/chart/linechart.h"
+#include "fnord/chart/svgtarget.h"
 #include "fnord/net/http/httpservice.h"
 #include "fnord/service/metric/metricservice.h"
 #include "fnord/service/metric/timeseriesquery.h"
@@ -52,10 +56,38 @@ protected:
       fnord::metric_service::IMetric* metric,
       json::JSONOutputStream* json) const;
 
+  template <class ChartType>
+  void renderCharts(
+      chart::Canvas* canvas,
+      const String& style,
+      Vector<ScopedPtr<TimeseriesQuery>>::iterator* begin,
+      Vector<ScopedPtr<TimeseriesQuery>>::iterator end,
+      Vector<chart::Drawable*>* charts);
+
   ResponseFormat formatFromString(const String& format);
 
   MetricService* metric_service_;
 };
+
+
+template <class ChartType>
+void HTTPAPIServlet::renderCharts(
+    chart::Canvas* canvas,
+    const String& style,
+    Vector<ScopedPtr<TimeseriesQuery>>::iterator* qbegin,
+    Vector<ScopedPtr<TimeseriesQuery>>::iterator qend,
+    Vector<chart::Drawable*>* charts) {
+  auto chart = canvas->addChart<ChartType>();
+  charts->push_back(chart);
+
+  for (; *qbegin != qend && (**qbegin)->draw_style == style; ++(*qbegin)) {
+    Vector<chart::Series2D<DateTime, double>*> res_series;
+    (**qbegin)->renderSeries(&res_series);
+    for (auto& series : res_series) {
+      chart->addSeries(series);
+    }
+  }
+}
 
 }
 }
