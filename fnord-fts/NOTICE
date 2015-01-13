@@ -1,0 +1,19 @@
+Based on luceneplusplus - https://github.com/luceneplusplus
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+See the file APACHE.licence
+
+luceneplusplus original authors
+==============================
+Alan Wright
+Ben van Klinken
+Jamie Kirkpatrick
+
+luceneplusplus original acknowledgements
+========================================
+- Ben van Klinken and contributors to the CLucene project for inspiring this project.
+- md5 Copyright (C) 1999, 2000, 2002 Aladdin Enterprises
+- `Unicode character properties (guniprop) <http://library.gnome.org/devel/glib/>`_ Copyright (C) 1999 Tom Tromey, Copyright (C) 2000 Red Hat, Inc.
+- `Cotire (compile time reducer) <https://github.com/sakra/cotire>`_ by Sascha Kratky.

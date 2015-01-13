@@ -63,12 +63,12 @@ typedef std::shared_ptr<std::locale> localePtr;
 
 #include "LuceneFactory.h"
 #include "fnord-fts/util/LuceneException.h"
-#include "Array.h"
-#include "Collection.h"
-#include "Map.h"
-#include "Set.h"
-#include "HashMap.h"
-#include "HashSet.h"
+#include "fnord-fts/util/Array.h"
+#include "fnord-fts/util/Collection.h"
+#include "fnord-fts/util/Map.h"
+#include "fnord-fts/util/Set.h"
+#include "fnord-fts/util/HashMap.h"
+#include "fnord-fts/util/HashSet.h"
 #include "fnord-fts/util/Constants.h"
 
 namespace Lucene {
