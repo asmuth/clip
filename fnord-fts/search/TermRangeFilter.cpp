@@ -8,7 +8,7 @@
 #include "fnord-fts/search/TermRangeFilter.h"
 #include "fnord-fts/search/TermRangeQuery.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "fnord-fts/search/VariantUtils.h"
+#include "fnord-fts/util/VariantUtils.h"
 
 namespace Lucene {
 

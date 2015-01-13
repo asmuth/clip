@@ -10,7 +10,7 @@
 #include "FieldCache.h"
 #include "IndexReader.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "VariantUtils.h"
+#include "fnord-fts/util/VariantUtils.h"
 
 namespace Lucene {
 

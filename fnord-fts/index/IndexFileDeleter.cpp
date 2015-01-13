@@ -14,7 +14,7 @@
 #include "SegmentInfo.h"
 #include "Directory.h"
 #include "DocumentsWriter.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "DateTools.h"
 #include "LuceneThread.h"
 #include "fnord-fts/util/MiscUtils.h"

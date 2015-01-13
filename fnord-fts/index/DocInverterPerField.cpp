@@ -22,7 +22,7 @@
 #include "PositionIncrementAttribute.h"
 #include "OffsetAttribute.h"
 #include "AttributeSource.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

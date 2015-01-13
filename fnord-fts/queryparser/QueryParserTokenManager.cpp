@@ -9,7 +9,7 @@
 #include "QueryParserCharStream.h"
 #include "QueryParserToken.h"
 #include "QueryParseError.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

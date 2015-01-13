@@ -8,7 +8,7 @@
 #include <boost/algorithm/string.hpp>
 #include "fnord-fts/search/WildcardQuery.h"
 #include "fnord-fts/search/WildcardTermEnum.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/PrefixQuery.h"
 #include "fnord-fts/search/SingleTermEnum.h"
 #include "fnord-fts/util/MiscUtils.h"

@@ -6,14 +6,14 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/FieldCacheImpl.h"
-#include "fnord-fts/search/FieldCacheSanityChecker.h"
 #include "fnord-fts/index/IndexReader.h"
-#include "fnord-fts/search/InfoStream.h"
-#include "fnord-fts/search/TermEnum.h"
-#include "fnord-fts/search/TermDocs.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/util/InfoStream.h"
+#include "fnord-fts/index/TermEnum.h"
+#include "fnord-fts/index/TermDocs.h"
+#include "fnord-fts/index/Term.h"
+#include "fnord-fts/util/FieldCacheSanityChecker.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "fnord-fts/search/VariantUtils.h"
+#include "fnord-fts/util/VariantUtils.h"
 
 namespace Lucene {
 

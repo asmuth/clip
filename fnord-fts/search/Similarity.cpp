@@ -10,7 +10,7 @@
 #include "fnord-fts/search/DefaultSimilarity.h"
 #include "fnord-fts/index/FieldInvertState.h"
 #include "fnord-fts/search/Searcher.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/SmallDouble.h"
 #include "fnord-fts/util/StringUtils.h"
 

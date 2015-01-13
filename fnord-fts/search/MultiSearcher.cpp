@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/MultiSearcher.h"
 #include "fnord-fts/search/_MultiSearcher.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/ReaderUtil.h"
 #include "fnord-fts/search/HitQueue.h"
 #include "fnord-fts/search/Query.h"
@@ -18,7 +18,7 @@
 #include "fnord-fts/search/TopFieldDocs.h"
 #include "fnord-fts/search/FieldDoc.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "fnord-fts/search/VariantUtils.h"
+#include "fnord-fts/util/VariantUtils.h"
 
 namespace Lucene {
 

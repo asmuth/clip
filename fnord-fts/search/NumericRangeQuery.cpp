@@ -7,11 +7,11 @@
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/NumericRangeQuery.h"
 #include "fnord-fts/search/_NumericRangeQuery.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "fnord-fts/search/VariantUtils.h"
+#include "fnord-fts/util/VariantUtils.h"
 
 namespace Lucene {
 

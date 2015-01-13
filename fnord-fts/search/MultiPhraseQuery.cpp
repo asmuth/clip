@@ -8,7 +8,7 @@
 #include "fnord-fts/search/MultiPhraseQuery.h"
 #include "fnord-fts/search/_MultiPhraseQuery.h"
 #include "fnord-fts/search/Searcher.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/TermQuery.h"
 #include "fnord-fts/search/MultipleTermPositions.h"
 #include "fnord-fts/search/ExactPhraseScorer.h"

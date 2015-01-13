@@ -9,7 +9,7 @@
 #include "fnord-fts/search/_MatchAllDocsQuery.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/search/Similarity.h"
-#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/index/TermDocs.h"
 #include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/search/Searcher.h"
 #include "fnord-fts/util/MiscUtils.h"

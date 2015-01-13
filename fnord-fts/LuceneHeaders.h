@@ -107,7 +107,7 @@
 #include "BufferedReader.h"
 #include "DocIdBitSet.h"
 #include "FileReader.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "LuceneThread.h"
 #include "OpenBitSet.h"
 #include "fnord-fts/util/OpenBitSetDISI.h"

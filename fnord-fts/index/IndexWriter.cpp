@@ -26,7 +26,7 @@
 #include "SegmentMerger.h"
 #include "DateTools.h"
 #include "fnord-fts/util/Constants.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "TestPoint.h"
 #include "fnord-fts/util/StringUtils.h"
 

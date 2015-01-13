@@ -19,7 +19,7 @@
 #include "TermPositions.h"
 #include "Document.h"
 #include "FSDirectory.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

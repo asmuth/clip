@@ -10,7 +10,7 @@
 #include "fnord-fts/search/SortField.h"
 #include "fnord-fts/search/Collator.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "fnord-fts/search/VariantUtils.h"
+#include "fnord-fts/util/VariantUtils.h"
 
 namespace Lucene {
 

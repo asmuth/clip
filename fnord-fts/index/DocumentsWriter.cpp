@@ -24,7 +24,7 @@
 #include "NormsWriter.h"
 #include "BufferedDeletes.h"
 #include "FieldInfos.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "DocConsumerPerThread.h"
 #include "SegmentWriteState.h"
 #include "IndexFileNames.h"

@@ -21,7 +21,7 @@
 #include "Fieldable.h"
 #include "IndexWriter.h"
 #include "Document.h"
-#include "InfoStream.h"
+#include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

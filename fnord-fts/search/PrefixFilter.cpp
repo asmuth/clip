@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/PrefixFilter.h"
 #include "fnord-fts/search/PrefixQuery.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 
 namespace Lucene {
 

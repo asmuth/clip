@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/TermScorer.h"
-#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/index/TermDocs.h"
 #include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Collector.h"

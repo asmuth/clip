@@ -8,7 +8,7 @@
 #include "fnord-fts/search/FuzzyQuery.h"
 #include "fnord-fts/search/_FuzzyQuery.h"
 #include "fnord-fts/search/FuzzyTermEnum.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/TermQuery.h"
 #include "fnord-fts/search/BooleanQuery.h"
 #include "fnord-fts/search/BooleanClause.h"

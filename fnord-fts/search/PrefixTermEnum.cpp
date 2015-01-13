@@ -8,7 +8,7 @@
 #include <boost/algorithm/string.hpp>
 #include "fnord-fts/search/PrefixTermEnum.h"
 #include "fnord-fts/index/IndexReader.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 
 namespace Lucene {
 

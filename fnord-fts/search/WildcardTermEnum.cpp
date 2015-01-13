@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
 #include "fnord-fts/search/WildcardTermEnum.h"
-#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
