@@ -11,7 +11,7 @@
 #include "fnord-fts/ScoreDoc.h"
 #include "fnord-fts/Scorer.h"
 #include "fnord-fts/TopDocs.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -102,8 +102,8 @@
 #include "SimpleFSDirectory.h"
 
 // Include most common files: util
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "BufferedReader.h"
 #include "DocIdBitSet.h"
 #include "FileReader.h"

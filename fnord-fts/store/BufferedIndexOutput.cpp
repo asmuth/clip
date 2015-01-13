@@ -6,7 +6,7 @@
 
 #include "fnord-fts/store/LuceneInc.h"
 #include "BufferedIndexOutput.h"
-#include "fnord-fts/store/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

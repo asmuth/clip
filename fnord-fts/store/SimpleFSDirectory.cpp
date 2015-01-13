@@ -11,7 +11,7 @@
 #include "IndexOutput.h"
 #include "FileReader.h"
 #include "FileUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

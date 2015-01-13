@@ -6,8 +6,8 @@
 
 #include "fnord-fts/document//LuceneInc.h"
 #include "Field.h"
-#include "fnord-fts/document//MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "VariantUtils.h"
 
 namespace Lucene {

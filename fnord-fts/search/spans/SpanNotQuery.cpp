@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "SpanNotQuery.h"
 #include "_SpanNotQuery.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -9,7 +9,7 @@
 #include "fnord-fts/FieldCache.h"
 #include "fnord-fts/FieldComparator.h"
 #include "fnord-fts/FieldComparatorSource.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

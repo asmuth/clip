@@ -12,8 +12,8 @@
 #include "ComplexExplanation.h"
 #include "IndexReader.h"
 #include "TermDocs.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

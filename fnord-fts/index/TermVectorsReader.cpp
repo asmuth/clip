@@ -12,8 +12,8 @@
 #include "FieldInfos.h"
 #include "SegmentTermPositionVector.h"
 #include "TermVectorOffsetInfo.h"
-#include "fnord-fts/index//MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

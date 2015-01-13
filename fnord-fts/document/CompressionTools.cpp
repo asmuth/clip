@@ -6,9 +6,9 @@
 
 #include "fnord-fts/document//LuceneInc.h"
 #include "CompressionTools.h"
-#include "fnord-fts/document//MiscUtils.h"
-#include "UnicodeUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/filter/zlib.hpp>

@@ -7,7 +7,7 @@
 #include "fnord-fts/index//LuceneInc.h"
 #include "ByteBlockPool.h"
 #include "DocumentsWriter.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

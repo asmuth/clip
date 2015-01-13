@@ -17,7 +17,7 @@
 #include "TermInfo.h"
 #include "DefaultSkipListReader.h"
 #include "BitVector.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

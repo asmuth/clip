@@ -12,7 +12,7 @@
 #include "BufferedIndexInput.h"
 #include "LuceneThread.h"
 #include "FileUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 extern "C"
 {

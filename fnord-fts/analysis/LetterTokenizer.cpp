@@ -6,8 +6,8 @@
 
 #include "fnord-fts/analysis/LuceneInc.h"
 #include "LetterTokenizer.h"
-#include "fnord-fts/analysis/MiscUtils.h"
-#include "UnicodeUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
 
 namespace Lucene {
 

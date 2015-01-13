@@ -27,8 +27,8 @@
 #include "AllTermDocs.h"
 #include "DefaultSimilarity.h"
 #include "FieldCache.h"
-#include "fnord-fts/index//MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

@@ -8,7 +8,7 @@
 #include "ByteSliceReader.h"
 #include "DocumentsWriter.h"
 #include "IndexOutput.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

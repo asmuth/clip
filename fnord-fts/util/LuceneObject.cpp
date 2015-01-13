@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/util/LuceneObject.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

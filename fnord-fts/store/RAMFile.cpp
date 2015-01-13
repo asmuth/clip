@@ -7,7 +7,7 @@
 #include "fnord-fts/store/LuceneInc.h"
 #include "RAMFile.h"
 #include "RAMDirectory.h"
-#include "fnord-fts/store/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

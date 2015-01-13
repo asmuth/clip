@@ -12,7 +12,7 @@
 #include "fnord-fts/TermEnum.h"
 #include "fnord-fts/TermDocs.h"
 #include "fnord-fts/Term.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/VariantUtils.h"
 
 namespace Lucene {

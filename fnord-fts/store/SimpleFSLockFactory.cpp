@@ -9,7 +9,7 @@
 #include "SimpleFSLockFactory.h"
 #include "_SimpleFSLockFactory.h"
 #include "FileUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "PayloadAttribute.h"
 #include "Payload.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

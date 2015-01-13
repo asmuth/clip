@@ -6,7 +6,7 @@
 
 #include "fnord-fts/index//LuceneInc.h"
 #include "DefaultSkipListReader.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

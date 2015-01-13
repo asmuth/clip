@@ -13,8 +13,8 @@
 #include "IndexFileNames.h"
 #include "IndexWriter.h"
 #include "Directory.h"
-#include "fnord-fts/index//MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

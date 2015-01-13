@@ -11,8 +11,8 @@
 #include "NearSpansOrdered.h"
 #include "NearSpansUnordered.h"
 #include "Similarity.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

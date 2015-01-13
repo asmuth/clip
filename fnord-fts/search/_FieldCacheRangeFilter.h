@@ -10,8 +10,8 @@
 #include "Filter.h"
 #include "fnord-fts/search/DocIdSet.h"
 #include "DocIdSetIterator.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

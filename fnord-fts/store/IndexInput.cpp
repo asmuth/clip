@@ -8,7 +8,7 @@
 #include "IndexInput.h"
 #include "UTF8Stream.h"
 #include "Reader.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

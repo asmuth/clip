@@ -28,7 +28,7 @@
 #include "fnord-fts/util/Constants.h"
 #include "InfoStream.h"
 #include "TestPoint.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

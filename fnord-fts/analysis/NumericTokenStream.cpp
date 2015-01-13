@@ -6,7 +6,7 @@
 
 #include "fnord-fts/analysis/LuceneInc.h"
 #include "NumericTokenStream.h"
-#include "NumericUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
 #include "AttributeSource.h"
 #include "TermAttribute.h"
 #include "TypeAttribute.h"

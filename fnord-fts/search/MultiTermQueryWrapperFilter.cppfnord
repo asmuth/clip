@@ -14,7 +14,7 @@
 #include "fnord-fts/FilteredTermEnum.h"
 #include "fnord-fts/search/DocIdSet.h"
 #include "fnord-fts/OpenBitSet.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

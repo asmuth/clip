@@ -10,7 +10,7 @@
 #include "BooleanClause.h"
 #include "PhraseQuery.h"
 #include "MultiPhraseQuery.h"
-#include "fnord-fts/queryparser/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

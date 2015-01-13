@@ -10,7 +10,7 @@
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/search/TermDocs.h"
-#include "fnord-fts/search/NumericUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

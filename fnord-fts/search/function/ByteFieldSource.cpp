@@ -8,8 +8,8 @@
 #include "ByteFieldSource.h"
 #include "_ByteFieldSource.h"
 #include "FieldCache.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

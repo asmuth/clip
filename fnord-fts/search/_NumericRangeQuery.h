@@ -8,7 +8,7 @@
 #define _NUMERICRANGEQUERY_H
 
 #include "FilteredTermEnum.h"
-#include "NumericUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
 
 namespace Lucene {
 

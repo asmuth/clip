@@ -9,7 +9,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include "LuceneThread.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "FileUtils.h"
 
 #if defined(_WIN32) || defined(_WIN64)

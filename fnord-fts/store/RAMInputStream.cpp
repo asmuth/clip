@@ -8,8 +8,8 @@
 #include "RAMInputStream.h"
 #include "RAMFile.h"
 #include "RAMOutputStream.h"
-#include "fnord-fts/store/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

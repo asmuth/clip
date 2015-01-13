@@ -14,7 +14,7 @@
 #include "IndexReader.h"
 #include "Similarity.h"
 #include "PayloadFunction.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -6,9 +6,9 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
-#include "StringUtils.h"
-#include "fnord-fts/MiscUtils.h"
-#include "UnicodeUtils.h"
+#include "fnord-fts/util/StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
 #include "UTF8Stream.h"
 #include "Reader.h"
 #include "CharFolder.h"

@@ -7,9 +7,9 @@
 #include "fnord-fts/LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
 #include "FileReader.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 #include "FileUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

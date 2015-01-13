@@ -25,7 +25,7 @@
 #include "SegmentMergeInfo.h"
 #include "Lock.h"
 #include "FieldCache.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

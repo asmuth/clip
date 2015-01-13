@@ -8,7 +8,7 @@
 #include "OpenBitSet.h"
 #include "OpenBitSetIterator.h"
 #include "BitUtil.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

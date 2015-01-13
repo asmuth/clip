@@ -15,7 +15,7 @@
 #include "DocumentsWriter.h"
 #include "CharBlockPool.h"
 #include "FieldInfo.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -11,7 +11,7 @@
 #include "RAMOutputStream.h"
 #include "SingleInstanceLockFactory.h"
 #include "LuceneThread.h"
-#include "fnord-fts/store/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -9,7 +9,7 @@
 #include "Term.h"
 #include "TermSpans.h"
 #include "IndexReader.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

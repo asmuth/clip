@@ -10,8 +10,8 @@
 #include "fnord-fts/BooleanScorer.h"
 #include "fnord-fts/BooleanScorer2.h"
 #include "fnord-fts/ComplexExplanation.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

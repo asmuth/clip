@@ -12,8 +12,8 @@
 #include "fnord-fts/ComplexExplanation.h"
 #include "fnord-fts/Searcher.h"
 #include "fnord-fts/DisjunctionMaxScorer.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

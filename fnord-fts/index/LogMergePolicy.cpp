@@ -8,7 +8,7 @@
 #include "LogMergePolicy.h"
 #include "IndexWriter.h"
 #include "SegmentInfo.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

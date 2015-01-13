@@ -9,7 +9,7 @@
 
 #include "MultiTermQuery.h"
 #include "FilteredTermEnum.h"
-#include "NumericUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
 
 namespace Lucene {
 

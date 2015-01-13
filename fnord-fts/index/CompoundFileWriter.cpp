@@ -10,7 +10,7 @@
 #include "Directory.h"
 #include "IndexInput.h"
 #include "IndexOutput.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

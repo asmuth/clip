@@ -8,7 +8,7 @@
 #include "fnord-fts/util/ScorerDocQueue.h"
 #include "fnord-fts/util/ScorerDocQueue.h"
 #include "Scorer.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

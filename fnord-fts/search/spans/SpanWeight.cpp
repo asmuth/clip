@@ -11,7 +11,7 @@
 #include "IndexReader.h"
 #include "ComplexExplanation.h"
 #include "Similarity.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

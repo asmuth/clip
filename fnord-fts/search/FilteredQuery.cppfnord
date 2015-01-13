@@ -10,7 +10,7 @@
 #include "fnord-fts/Explanation.h"
 #include "fnord-fts/Filter.h"
 #include "fnord-fts/search/DocIdSet.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

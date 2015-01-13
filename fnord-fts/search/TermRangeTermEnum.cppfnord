@@ -9,7 +9,7 @@
 #include "fnord-fts/IndexReader.h"
 #include "fnord-fts/Term.h"
 #include "fnord-fts/Collator.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/VariantUtils.h"
 
 namespace Lucene {

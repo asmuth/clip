@@ -6,7 +6,7 @@
 
 #include "fnord-fts/analysis/LuceneInc.h"
 #include "CharArraySet.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "PositionIncrementAttribute.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

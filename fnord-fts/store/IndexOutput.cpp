@@ -7,9 +7,9 @@
 #include "fnord-fts/store/LuceneInc.h"
 #include "IndexOutput.h"
 #include "IndexInput.h"
-#include "fnord-fts/store/MiscUtils.h"
-#include "UnicodeUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

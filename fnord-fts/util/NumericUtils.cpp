@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "NumericUtils.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

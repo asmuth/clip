@@ -16,8 +16,8 @@
 #include "Document.h"
 #include "Field.h"
 #include "CompressionTools.h"
-#include "fnord-fts/index//MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "VariantUtils.h"
 
 namespace Lucene {

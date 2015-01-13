@@ -7,8 +7,8 @@
 #include "fnord-fts/LuceneInc.h"
 #include "DocValues.h"
 #include "Explanation.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 #include "VariantUtils.h"
 
 namespace Lucene {

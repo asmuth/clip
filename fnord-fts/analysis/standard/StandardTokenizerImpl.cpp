@@ -10,7 +10,7 @@
 #include "Reader.h"
 #include "Token.h"
 #include "TermAttribute.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 #include <boost/thread/once.hpp>
 

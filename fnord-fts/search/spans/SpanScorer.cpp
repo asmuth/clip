@@ -10,7 +10,7 @@
 #include "Weight.h"
 #include "Similarity.h"
 #include "Spans.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

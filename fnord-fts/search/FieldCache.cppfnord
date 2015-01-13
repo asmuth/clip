@@ -8,8 +8,8 @@
 #include "fnord-fts/FieldCache.h"
 #include "fnord-fts/_FieldCache.h"
 #include "fnord-fts/FieldCacheImpl.h"
-#include "fnord-fts/NumericUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

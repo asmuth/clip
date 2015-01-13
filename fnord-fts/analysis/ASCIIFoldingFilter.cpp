@@ -7,7 +7,7 @@
 #include "fnord-fts/analysis/LuceneInc.h"
 #include "ASCIIFoldingFilter.h"
 #include "TermAttribute.h"
-#include "fnord-fts/analysis/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -13,8 +13,8 @@
 #include "fnord-fts/Term.h"
 #include "fnord-fts/TermDocs.h"
 #include "fnord-fts/Similarity.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

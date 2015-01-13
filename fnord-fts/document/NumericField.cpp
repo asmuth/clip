@@ -7,9 +7,9 @@
 #include "fnord-fts/document//LuceneInc.h"
 #include "NumericField.h"
 #include "Field.h"
-#include "NumericUtils.h"
+#include "fnord-fts/util/NumericUtils.h"
 #include "NumericTokenStream.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

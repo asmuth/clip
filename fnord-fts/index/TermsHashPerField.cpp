@@ -20,7 +20,7 @@
 #include "RawPostingList.h"
 #include "fnord-fts/index/FieldInvertState.h"
 #include "UTF8Stream.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

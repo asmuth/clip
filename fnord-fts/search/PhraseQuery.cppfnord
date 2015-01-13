@@ -15,8 +15,8 @@
 #include "fnord-fts/ExactPhraseScorer.h"
 #include "fnord-fts/SloppyPhraseScorer.h"
 #include "fnord-fts/Explanation.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

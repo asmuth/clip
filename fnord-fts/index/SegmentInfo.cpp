@@ -14,9 +14,9 @@
 #include "IndexFileNames.h"
 #include "IndexFileNameFilter.h"
 #include "BitVector.h"
-#include "fnord-fts/index//MiscUtils.h"
-#include "UnicodeUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

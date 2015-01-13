@@ -14,7 +14,7 @@
 #include "DocInverterPerThread.h"
 #include "TermsHashConsumerPerField.h"
 #include "IndexWriter.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

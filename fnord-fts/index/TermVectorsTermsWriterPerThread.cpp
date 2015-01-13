@@ -11,8 +11,8 @@
 #include "TermsHashPerThread.h"
 #include "ByteSliceReader.h"
 #include "FieldInfo.h"
-#include "fnord-fts/index//MiscUtils.h"
-#include "UnicodeUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
 
 namespace Lucene {
 

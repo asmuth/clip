@@ -8,7 +8,7 @@
 #include "fnord-fts/PrefixQuery.h"
 #include "fnord-fts/PrefixTermEnum.h"
 #include "fnord-fts/Term.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

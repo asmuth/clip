@@ -10,7 +10,7 @@
 #include "IndexInput.h"
 #include "IndexOutput.h"
 #include "TestPoint.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

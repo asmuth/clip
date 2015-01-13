@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "FieldCacheSource.h"
 #include "FieldCache.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

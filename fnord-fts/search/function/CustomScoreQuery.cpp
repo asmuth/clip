@@ -9,8 +9,8 @@
 #include "_CustomScoreQuery.h"
 #include "ValueSourceQuery.h"
 #include "ComplexExplanation.h"
-#include "fnord-fts/MiscUtils.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

@@ -8,7 +8,7 @@
 #include "MergePolicy.h"
 #include "SegmentInfos.h"
 #include "SegmentInfo.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

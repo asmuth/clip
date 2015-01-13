@@ -10,7 +10,7 @@
 #include "_SegmentReader.h"
 #include "TermInfo.h"
 #include "IndexInput.h"
-#include "fnord-fts/index//MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

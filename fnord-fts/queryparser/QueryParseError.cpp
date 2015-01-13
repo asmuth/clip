@@ -7,7 +7,7 @@
 #include "fnord-fts/queryparser/LuceneInc.h"
 #include "QueryParseError.h"
 #include "QueryParserToken.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

@@ -12,7 +12,7 @@
 #include "fnord-fts/TermQuery.h"
 #include "fnord-fts/BooleanQuery.h"
 #include "fnord-fts/BooleanClause.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

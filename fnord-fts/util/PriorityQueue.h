@@ -8,7 +8,7 @@
 #define PRIORITYQUEUE_H
 
 #include "fnord-fts/util/LuceneObject.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -10,7 +10,7 @@
 #include "IndexInput.h"
 #include "TermBuffer.h"
 #include "TermInfo.h"
-#include "StringUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

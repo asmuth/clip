@@ -6,8 +6,8 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "CharFolder.h"
-#include "fnord-fts/MiscUtils.h"
-#include "UnicodeUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/UnicodeUtils.h"
 
 namespace Lucene {
 
