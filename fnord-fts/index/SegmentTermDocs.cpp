@@ -5,18 +5,18 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentTermDocs.h"
-#include "SegmentReader.h"
+#include "fnord-fts/index/SegmentTermDocs.h"
+#include "fnord-fts/index/SegmentReader.h"
 #include "_SegmentReader.h"
-#include "SegmentTermEnum.h"
-#include "IndexInput.h"
-#include "TermInfosReader.h"
-#include "FieldInfos.h"
-#include "FieldInfo.h"
+#include "fnord-fts/index/SegmentTermEnum.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/index/TermInfosReader.h"
+#include "fnord-fts/index/FieldInfos.h"
+#include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/index/Term.h"
-#include "TermInfo.h"
-#include "DefaultSkipListReader.h"
-#include "BitVector.h"
+#include "fnord-fts/index/TermInfo.h"
+#include "fnord-fts/index/DefaultSkipListReader.h"
+#include "fnord-fts/util/BitVector.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

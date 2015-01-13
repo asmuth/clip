@@ -7,7 +7,7 @@
 #ifndef DEFAULTSKIPLISTWRITER_H
 #define DEFAULTSKIPLISTWRITER_H
 
-#include "MultiLevelSkipListWriter.h"
+#include "fnord-fts/index/MultiLevelSkipListWriter.h"
 
 namespace Lucene {
 

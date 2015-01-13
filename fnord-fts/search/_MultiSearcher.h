@@ -7,8 +7,8 @@
 #ifndef _MULTISEARCHER_H
 #define _MULTISEARCHER_H
 
-#include "Searcher.h"
-#include "Collector.h"
+#include "fnord-fts/search/Searcher.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

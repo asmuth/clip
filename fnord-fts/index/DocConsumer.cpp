@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DocConsumer.h"
+#include "fnord-fts/index/DocConsumer.h"
 
 namespace Lucene {
 

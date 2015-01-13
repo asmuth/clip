@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentWriteState.h"
+#include "fnord-fts/index/SegmentWriteState.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermInfo.h"
+#include "fnord-fts/index/TermInfo.h"
 
 namespace Lucene {
 

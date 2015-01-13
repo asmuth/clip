@@ -7,7 +7,7 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include "AbstractField.h"
+#include "fnord-fts/document/AbstractField.h"
 
 namespace Lucene {
 

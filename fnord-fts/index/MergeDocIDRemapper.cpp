@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "MergeDocIDRemapper.h"
-#include "SegmentMerger.h"
-#include "MergePolicy.h"
-#include "SegmentInfo.h"
+#include "fnord-fts/index/MergeDocIDRemapper.h"
+#include "fnord-fts/index/SegmentMerger.h"
+#include "fnord-fts/index/MergePolicy.h"
+#include "fnord-fts/index/SegmentInfo.h"
 
 namespace Lucene {
 

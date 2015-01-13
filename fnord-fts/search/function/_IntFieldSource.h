@@ -7,7 +7,7 @@
 #ifndef _INTFIELDSOURCE_H
 #define _INTFIELDSOURCE_H
 
-#include "DocValues.h"
+#include "fnord-fts/search/function/DocValues.h"
 
 namespace Lucene {
 

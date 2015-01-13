@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "BufferedIndexInput.h"
+#include "fnord-fts/store/BufferedIndexInput.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

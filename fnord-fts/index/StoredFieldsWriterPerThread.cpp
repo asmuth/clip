@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "StoredFieldsWriterPerThread.h"
-#include "StoredFieldsWriter.h"
-#include "FieldsWriter.h"
-#include "RAMOutputStream.h"
+#include "fnord-fts/index/StoredFieldsWriterPerThread.h"
+#include "fnord-fts/index/StoredFieldsWriter.h"
+#include "fnord-fts/index/FieldsWriter.h"
+#include "fnord-fts/store/RAMOutputStream.h"
 
 namespace Lucene {
 

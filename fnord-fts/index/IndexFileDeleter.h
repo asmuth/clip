@@ -7,7 +7,7 @@
 #ifndef INDEXFILEDELETER_H
 #define INDEXFILEDELETER_H
 
-#include "IndexCommit.h"
+#include "fnord-fts/index/IndexCommit.h"
 
 namespace Lucene {
 

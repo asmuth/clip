@@ -7,7 +7,7 @@
 #ifndef QUERYWRAPPERFILTER_H
 #define QUERYWRAPPERFILTER_H
 
-#include "Filter.h"
+#include "fnord-fts/search/Filter.h"
 
 namespace Lucene {
 

@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermInfosWriter.h"
-#include "Directory.h"
-#include "IndexOutput.h"
+#include "fnord-fts/index/TermInfosWriter.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/index/Term.h"
-#include "TermInfo.h"
-#include "FieldInfos.h"
+#include "fnord-fts/index/TermInfo.h"
+#include "fnord-fts/index/FieldInfos.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"

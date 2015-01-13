@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/document//LuceneInc.h"
-#include "NumericField.h"
-#include "Field.h"
+#include "fnord-fts/document/NumericField.h"
+#include "fnord-fts/document/Field.h"
 #include "fnord-fts/util/NumericUtils.h"
 #include "fnord-fts/analysis/NumericTokenStream.h"
 #include "fnord-fts/util/StringUtils.h"

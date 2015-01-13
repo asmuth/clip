@@ -7,7 +7,7 @@
 #ifndef FORMATPOSTINGSPOSITIONSWRITER_H
 #define FORMATPOSTINGSPOSITIONSWRITER_H
 
-#include "FormatPostingsPositionsConsumer.h"
+#include "fnord-fts/index/FormatPostingsPositionsConsumer.h"
 
 namespace Lucene {
 

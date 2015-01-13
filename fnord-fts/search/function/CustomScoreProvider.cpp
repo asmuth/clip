@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "CustomScoreProvider.h"
+#include "fnord-fts/search/function/CustomScoreProvider.h"
 #include "fnord-fts/search/Explanation.h"
 
 namespace Lucene {

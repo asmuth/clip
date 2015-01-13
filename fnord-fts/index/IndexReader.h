@@ -7,7 +7,7 @@
 #ifndef INDEXREADER_H
 #define INDEXREADER_H
 
-#include "SegmentInfos.h"
+#include "fnord-fts/index/SegmentInfos.h"
 
 namespace Lucene {
 

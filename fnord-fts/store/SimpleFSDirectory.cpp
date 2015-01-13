@@ -6,11 +6,11 @@
 
 #include "fnord-fts/store/LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
-#include "SimpleFSDirectory.h"
+#include "fnord-fts/store/SimpleFSDirectory.h"
 #include "_SimpleFSDirectory.h"
-#include "IndexOutput.h"
-#include "FileReader.h"
-#include "FileUtils.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/util/FileReader.h"
+#include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

@@ -208,7 +208,7 @@ typedef enum {
     G_UNICODE_SCRIPT_LYDIAN              /* Lydi */
 } GUnicodeScript;
 
-#include "gunichartables.h"
+#include "fnord-fts/util/unicode/gunichartables.h"
 
 gboolean g_unichar_isalnum (gunichar c);
 gboolean g_unichar_isalpha (gunichar c);

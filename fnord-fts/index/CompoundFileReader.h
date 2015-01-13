@@ -7,8 +7,8 @@
 #ifndef COMPOUNDFILEREADER_H
 #define COMPOUNDFILEREADER_H
 
-#include "Directory.h"
-#include "BufferedIndexInput.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/store/BufferedIndexInput.h"
 
 namespace Lucene {
 

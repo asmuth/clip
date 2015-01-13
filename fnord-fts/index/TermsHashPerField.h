@@ -7,7 +7,7 @@
 #ifndef TERMSHASHPERFIELD_H
 #define TERMSHASHPERFIELD_H
 
-#include "InvertedDocConsumerPerField.h"
+#include "fnord-fts/index/InvertedDocConsumerPerField.h"
 
 namespace Lucene {
 

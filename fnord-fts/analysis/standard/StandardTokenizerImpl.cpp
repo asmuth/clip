@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "StandardTokenizerImpl.h"
-#include "StandardTokenizer.h"
-#include "Reader.h"
+#include "fnord-fts/analysis/standard/StandardTokenizerImpl.h"
+#include "fnord-fts/analysis/standard/StandardTokenizer.h"
+#include "fnord-fts/util/Reader.h"
 #include "fnord-fts/analysis/Token.h"
-#include "TermAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 #include <boost/thread/once.hpp>

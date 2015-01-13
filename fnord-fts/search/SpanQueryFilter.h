@@ -7,7 +7,7 @@
 #ifndef SPANQUERYFILTER_H
 #define SPANQUERYFILTER_H
 
-#include "SpanFilter.h"
+#include "fnord-fts/search/SpanFilter.h"
 
 namespace Lucene {
 

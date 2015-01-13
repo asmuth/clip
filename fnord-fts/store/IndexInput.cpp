@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "IndexInput.h"
-#include "UTF8Stream.h"
-#include "Reader.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/util/UTF8Stream.h"
+#include "fnord-fts/util/Reader.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

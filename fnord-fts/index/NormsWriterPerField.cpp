@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "NormsWriterPerField.h"
-#include "NormsWriterPerThread.h"
+#include "fnord-fts/index/NormsWriterPerField.h"
+#include "fnord-fts/index/NormsWriterPerThread.h"
 #include "fnord-fts/search/Similarity.h"
-#include "DocInverterPerField.h"
-#include "DocumentsWriter.h"
-#include "FieldInfo.h"
+#include "fnord-fts/index/DocInverterPerField.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

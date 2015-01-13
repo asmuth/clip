@@ -7,7 +7,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "Attribute.h"
+#include "fnord-fts/util/Attribute.h"
 #include "fnord-fts/util/AttributeSource.h"
 
 namespace Lucene {

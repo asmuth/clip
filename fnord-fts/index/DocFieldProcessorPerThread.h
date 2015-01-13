@@ -7,8 +7,8 @@
 #ifndef DOCFIELDPROCESSORPERTHREAD_H
 #define DOCFIELDPROCESSORPERTHREAD_H
 
-#include "DocConsumerPerThread.h"
-#include "DocumentsWriter.h"
+#include "fnord-fts/index/DocConsumerPerThread.h"
+#include "fnord-fts/index/DocumentsWriter.h"
 
 namespace Lucene {
 

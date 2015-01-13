@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "ReadOnlySegmentReader.h"
-#include "BitVector.h"
+#include "fnord-fts/index/ReadOnlySegmentReader.h"
+#include "fnord-fts/util/BitVector.h"
 
 namespace Lucene {
 

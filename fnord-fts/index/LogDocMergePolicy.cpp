@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "LogDocMergePolicy.h"
+#include "fnord-fts/index/LogDocMergePolicy.h"
 
 namespace Lucene {
 

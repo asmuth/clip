@@ -7,7 +7,7 @@
 #ifndef SINGLEINSTANCELOCKFACTORY_H
 #define SINGLEINSTANCELOCKFACTORY_H
 
-#include "LockFactory.h"
+#include "fnord-fts/store/LockFactory.h"
 
 namespace Lucene {
 

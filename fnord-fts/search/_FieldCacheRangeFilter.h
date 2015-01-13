@@ -7,9 +7,9 @@
 #ifndef _FIELDCACHERANGEFILTER_H
 #define _FIELDCACHERANGEFILTER_H
 
-#include "Filter.h"
+#include "fnord-fts/search/Filter.h"
 #include "fnord-fts/search/DocIdSet.h"
-#include "DocIdSetIterator.h"
+#include "fnord-fts/search/DocIdSetIterator.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

@@ -8,7 +8,7 @@
 #define FIELDCACHESANITYCHECKER_H
 
 #include "fnord-fts/util/LuceneObject.h"
-#include "MapOfSets.h"
+#include "fnord-fts/util/MapOfSets.h"
 
 namespace Lucene {
 

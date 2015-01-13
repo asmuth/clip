@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentMergeQueue.h"
-#include "SegmentMergeInfo.h"
+#include "fnord-fts/index/SegmentMergeQueue.h"
+#include "fnord-fts/index/SegmentMergeInfo.h"
 
 namespace Lucene {
 

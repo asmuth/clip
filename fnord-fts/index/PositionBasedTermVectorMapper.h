@@ -7,7 +7,7 @@
 #ifndef POSITIONBASEDTERMVECTORMAPPER_H
 #define POSITIONBASEDTERMVECTORMAPPER_H
 
-#include "TermVectorMapper.h"
+#include "fnord-fts/index/TermVectorMapper.h"
 
 namespace Lucene {
 

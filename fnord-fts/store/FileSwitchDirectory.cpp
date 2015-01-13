@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "FileSwitchDirectory.h"
+#include "fnord-fts/store/FileSwitchDirectory.h"
 
 namespace Lucene {
 

@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SerialMergeScheduler.h"
-#include "IndexWriter.h"
+#include "fnord-fts/index/SerialMergeScheduler.h"
+#include "fnord-fts/index/IndexWriter.h"
 
 namespace Lucene {
 

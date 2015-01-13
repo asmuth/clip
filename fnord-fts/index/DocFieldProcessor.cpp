@@ -5,15 +5,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DocFieldProcessor.h"
-#include "DocFieldProcessorPerThread.h"
-#include "DocFieldConsumerPerThread.h"
-#include "DocFieldConsumer.h"
-#include "StoredFieldsWriter.h"
-#include "SegmentWriteState.h"
-#include "IndexFileNames.h"
-#include "FieldInfos.h"
-#include "TestPoint.h"
+#include "fnord-fts/index/DocFieldProcessor.h"
+#include "fnord-fts/index/DocFieldProcessorPerThread.h"
+#include "fnord-fts/index/DocFieldConsumerPerThread.h"
+#include "fnord-fts/index/DocFieldConsumer.h"
+#include "fnord-fts/index/StoredFieldsWriter.h"
+#include "fnord-fts/index/SegmentWriteState.h"
+#include "fnord-fts/index/IndexFileNames.h"
+#include "fnord-fts/index/FieldInfos.h"
+#include "fnord-fts/util/TestPoint.h"
 
 namespace Lucene {
 

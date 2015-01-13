@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "LowerCaseFilter.h"
-#include "TermAttribute.h"
-#include "CharFolder.h"
+#include "fnord-fts/analysis/LowerCaseFilter.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
+#include "fnord-fts/util/CharFolder.h"
 
 namespace Lucene {
 

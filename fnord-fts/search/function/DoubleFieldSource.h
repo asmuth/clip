@@ -7,8 +7,8 @@
 #ifndef DOUBLEFIELDSOURCE_H
 #define DOUBLEFIELDSOURCE_H
 
-#include "FieldCacheSource.h"
-#include "DocValues.h"
+#include "fnord-fts/search/function/FieldCacheSource.h"
+#include "fnord-fts/search/function/DocValues.h"
 
 namespace Lucene {
 

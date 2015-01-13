@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DocumentsWriterThreadState.h"
-#include "DocumentsWriter.h"
-#include "DocConsumer.h"
+#include "fnord-fts/index/DocumentsWriterThreadState.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/index/DocConsumer.h"
 
 namespace Lucene {
 

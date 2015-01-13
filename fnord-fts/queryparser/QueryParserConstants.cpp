@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/queryparser/LuceneInc.h"
-#include "QueryParserConstants.h"
+#include "fnord-fts/queryparser/QueryParserConstants.h"
 
 namespace Lucene {
 

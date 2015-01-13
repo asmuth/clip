@@ -7,7 +7,7 @@
 #ifndef _ORDFIELDSOURCE_H
 #define _ORDFIELDSOURCE_H
 
-#include "DocValues.h"
+#include "fnord-fts/search/function/DocValues.h"
 
 namespace Lucene {
 

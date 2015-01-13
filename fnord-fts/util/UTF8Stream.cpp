@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "UTF8Stream.h"
-#include "Reader.h"
+#include "fnord-fts/util/UTF8Stream.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

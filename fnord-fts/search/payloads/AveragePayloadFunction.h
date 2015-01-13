@@ -7,7 +7,7 @@
 #ifndef AVERAGEPAYLOADFUNCTION_H
 #define AVERAGEPAYLOADFUNCTION_H
 
-#include "PayloadFunction.h"
+#include "fnord-fts/search/payloads/PayloadFunction.h"
 
 namespace Lucene {
 

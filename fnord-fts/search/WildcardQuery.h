@@ -7,7 +7,7 @@
 #ifndef WILDCARDQUERY_H
 #define WILDCARDQUERY_H
 
-#include "MultiTermQuery.h"
+#include "fnord-fts/search/MultiTermQuery.h"
 
 namespace Lucene {
 

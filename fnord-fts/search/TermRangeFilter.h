@@ -7,7 +7,7 @@
 #ifndef TERMRANGEFILTER_H
 #define TERMRANGEFILTER_H
 
-#include "MultiTermQueryWrapperFilter.h"
+#include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/document//LuceneInc.h"
-#include "MapFieldSelector.h"
+#include "fnord-fts/document/MapFieldSelector.h"
 
 namespace Lucene {
 

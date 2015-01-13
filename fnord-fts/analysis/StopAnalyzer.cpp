@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "StopAnalyzer.h"
+#include "fnord-fts/analysis/StopAnalyzer.h"
 #include "_StopAnalyzer.h"
-#include "StopFilter.h"
-#include "WordlistLoader.h"
-#include "Reader.h"
-#include "LowerCaseTokenizer.h"
+#include "fnord-fts/analysis/StopFilter.h"
+#include "fnord-fts/analysis/WordlistLoader.h"
+#include "fnord-fts/util/Reader.h"
+#include "fnord-fts/analysis/LowerCaseTokenizer.h"
 
 namespace Lucene {
 

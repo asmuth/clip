@@ -6,17 +6,17 @@
 
 #include "fnord-fts/store/LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
-#include "FSDirectory.h"
-#include "NativeFSLockFactory.h"
-#include "SimpleFSDirectory.h"
-#include "BufferedIndexInput.h"
+#include "fnord-fts/store/FSDirectory.h"
+#include "fnord-fts/store/NativeFSLockFactory.h"
+#include "fnord-fts/store/SimpleFSDirectory.h"
+#include "fnord-fts/store/BufferedIndexInput.h"
 #include "fnord-fts/util/LuceneThread.h"
-#include "FileUtils.h"
+#include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
 extern "C"
 {
-#include "../util/md5/md5.h"
+#include "fnord-fts/util/md5/md5.h"
 }
 
 namespace Lucene {

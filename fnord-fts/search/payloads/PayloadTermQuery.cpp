@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "PayloadTermQuery.h"
+#include "fnord-fts/search/payloads/PayloadTermQuery.h"
 #include "_PayloadTermQuery.h"
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/spans/TermSpans.h"
@@ -13,7 +13,7 @@
 #include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/search/Similarity.h"
-#include "PayloadFunction.h"
+#include "fnord-fts/search/payloads/PayloadFunction.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

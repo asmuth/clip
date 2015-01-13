@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "MMapDirectory.h"
+#include "fnord-fts/store/MMapDirectory.h"
 #include "_MMapDirectory.h"
-#include "SimpleFSDirectory.h"
+#include "fnord-fts/store/SimpleFSDirectory.h"
 #include "_SimpleFSDirectory.h"
 #include "fnord-fts/util/MiscUtils.h"
-#include "FileUtils.h"
+#include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

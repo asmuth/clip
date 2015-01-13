@@ -7,7 +7,7 @@
 #ifndef BYTESLICEREADER_H
 #define BYTESLICEREADER_H
 
-#include "IndexInput.h"
+#include "fnord-fts/store/IndexInput.h"
 
 namespace Lucene {
 

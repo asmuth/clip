@@ -7,7 +7,7 @@
 #ifndef TIMELIMITINGCOLLECTOR_H
 #define TIMELIMITINGCOLLECTOR_H
 
-#include "Collector.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

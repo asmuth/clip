@@ -7,7 +7,7 @@
 #ifndef _BYTEFIELDSOURCE_H
 #define _BYTEFIELDSOURCE_H
 
-#include "DocValues.h"
+#include "fnord-fts/search/function/DocValues.h"
 
 namespace Lucene {
 

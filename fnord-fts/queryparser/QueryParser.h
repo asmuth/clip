@@ -7,8 +7,8 @@
 #ifndef QUERYPARSER_H
 #define QUERYPARSER_H
 
-#include "QueryParserConstants.h"
-#include "DateTools.h"
+#include "fnord-fts/queryparser/QueryParserConstants.h"
+#include "fnord-fts/document/DateTools.h"
 #include "fnord-fts/search/BooleanClause.h"
 
 namespace Lucene {

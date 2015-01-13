@@ -7,7 +7,7 @@
 #ifndef OPENBITSETDISI_H
 #define OPENBITSETDISI_H
 
-#include "OpenBitSet.h"
+#include "fnord-fts/util/OpenBitSet.h"
 
 namespace Lucene {
 

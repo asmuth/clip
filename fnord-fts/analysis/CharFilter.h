@@ -7,7 +7,7 @@
 #ifndef CHARFILTER_H
 #define CHARFILTER_H
 
-#include "CharStream.h"
+#include "fnord-fts/analysis/CharStream.h"
 
 namespace Lucene {
 

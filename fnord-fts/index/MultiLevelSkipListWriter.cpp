@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "MultiLevelSkipListWriter.h"
-#include "RAMOutputStream.h"
+#include "fnord-fts/index/MultiLevelSkipListWriter.h"
+#include "fnord-fts/store/RAMOutputStream.h"
 
 namespace Lucene {
 

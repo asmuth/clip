@@ -7,7 +7,7 @@
 #ifndef INDEXWRITER_H
 #define INDEXWRITER_H
 
-#include "MergePolicy.h"
+#include "fnord-fts/index/MergePolicy.h"
 
 namespace Lucene {
 

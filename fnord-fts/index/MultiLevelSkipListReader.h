@@ -7,7 +7,7 @@
 #ifndef MULTILEVELSKIPLISTREADER_H
 #define MULTILEVELSKIPLISTREADER_H
 
-#include "IndexInput.h"
+#include "fnord-fts/store/IndexInput.h"
 
 namespace Lucene {
 

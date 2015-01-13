@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SnapshotDeletionPolicy.h"
+#include "fnord-fts/index/SnapshotDeletionPolicy.h"
 #include "_SnapshotDeletionPolicy.h"
 
 namespace Lucene {

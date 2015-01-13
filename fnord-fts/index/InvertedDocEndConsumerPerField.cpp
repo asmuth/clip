@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "InvertedDocEndConsumerPerField.h"
+#include "fnord-fts/index/InvertedDocEndConsumerPerField.h"
 
 namespace Lucene {
 

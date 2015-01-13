@@ -7,10 +7,10 @@
 #include "fnord-fts/store/LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
-#include "NativeFSLockFactory.h"
+#include "fnord-fts/store/NativeFSLockFactory.h"
 #include "_NativeFSLockFactory.h"
-#include "Random.h"
-#include "FileUtils.h"
+#include "fnord-fts/util/Random.h"
+#include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

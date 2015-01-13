@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "NormsWriterPerThread.h"
-#include "NormsWriterPerField.h"
-#include "DocInverterPerThread.h"
+#include "fnord-fts/index/NormsWriterPerThread.h"
+#include "fnord-fts/index/NormsWriterPerField.h"
+#include "fnord-fts/index/DocInverterPerThread.h"
 
 namespace Lucene {
 

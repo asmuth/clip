@@ -7,8 +7,8 @@
 #ifndef _SIMPLEFSDIRECTORY_H
 #define _SIMPLEFSDIRECTORY_H
 
-#include "BufferedIndexInput.h"
-#include "BufferedIndexOutput.h"
+#include "fnord-fts/store/BufferedIndexInput.h"
+#include "fnord-fts/store/BufferedIndexOutput.h"
 
 namespace Lucene {
 

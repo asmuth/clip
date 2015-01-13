@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "RawPostingList.h"
-#include "DocumentsWriter.h"
+#include "fnord-fts/index/RawPostingList.h"
+#include "fnord-fts/index/DocumentsWriter.h"
 
 namespace Lucene {
 

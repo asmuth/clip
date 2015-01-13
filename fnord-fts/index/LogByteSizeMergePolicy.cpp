@@ -6,7 +6,7 @@
 
 #include "fnord-fts/index//LuceneInc.h"
 #include <float.h>
-#include "LogByteSizeMergePolicy.h"
+#include "fnord-fts/index/LogByteSizeMergePolicy.h"
 
 namespace Lucene {
 

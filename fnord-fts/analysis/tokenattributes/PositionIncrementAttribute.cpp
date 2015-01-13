@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "PositionIncrementAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

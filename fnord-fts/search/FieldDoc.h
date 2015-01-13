@@ -7,7 +7,7 @@
 #ifndef FIELDDOC_H
 #define FIELDDOC_H
 
-#include "ScoreDoc.h"
+#include "fnord-fts/search/ScoreDoc.h"
 
 namespace Lucene {
 

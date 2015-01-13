@@ -7,7 +7,7 @@
 #ifndef FUZZYTERMENUM_H
 #define FUZZYTERMENUM_H
 
-#include "FilteredTermEnum.h"
+#include "fnord-fts/search/FilteredTermEnum.h"
 
 namespace Lucene {
 

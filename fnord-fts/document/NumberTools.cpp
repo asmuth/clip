@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/document//LuceneInc.h"
-#include "NumberTools.h"
+#include "fnord-fts/document/NumberTools.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

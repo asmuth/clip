@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermVectorOffsetInfo.h"
+#include "fnord-fts/index/TermVectorOffsetInfo.h"
 
 namespace Lucene {
 

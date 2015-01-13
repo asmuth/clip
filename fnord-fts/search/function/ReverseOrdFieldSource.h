@@ -7,7 +7,7 @@
 #ifndef REVERSEORDFIELDSOURCE_H
 #define REVERSEORDFIELDSOURCE_H
 
-#include "ValueSource.h"
+#include "fnord-fts/search/function/ValueSource.h"
 
 namespace Lucene {
 

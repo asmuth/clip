@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "BufferedDeletes.h"
-#include "MergeDocIDRemapper.h"
+#include "fnord-fts/index/BufferedDeletes.h"
+#include "fnord-fts/index/MergeDocIDRemapper.h"
 
 namespace Lucene {
 

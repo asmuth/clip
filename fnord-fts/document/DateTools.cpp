@@ -7,7 +7,7 @@
 #include "fnord-fts/document//LuceneInc.h"
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "DateTools.h"
+#include "fnord-fts/document/DateTools.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "IntBlockPool.h"
-#include "DocumentsWriter.h"
+#include "fnord-fts/index/IntBlockPool.h"
+#include "fnord-fts/index/DocumentsWriter.h"
 
 namespace Lucene {
 

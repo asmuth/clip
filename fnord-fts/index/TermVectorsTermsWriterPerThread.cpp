@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermVectorsTermsWriterPerThread.h"
-#include "TermVectorsTermsWriterPerField.h"
-#include "TermVectorsTermsWriter.h"
-#include "TermsHashPerThread.h"
-#include "ByteSliceReader.h"
-#include "FieldInfo.h"
+#include "fnord-fts/index/TermVectorsTermsWriterPerThread.h"
+#include "fnord-fts/index/TermVectorsTermsWriterPerField.h"
+#include "fnord-fts/index/TermVectorsTermsWriter.h"
+#include "fnord-fts/index/TermsHashPerThread.h"
+#include "fnord-fts/index/ByteSliceReader.h"
+#include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 

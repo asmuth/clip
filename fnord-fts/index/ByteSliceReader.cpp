@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "ByteSliceReader.h"
-#include "DocumentsWriter.h"
-#include "IndexOutput.h"
+#include "fnord-fts/index/ByteSliceReader.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

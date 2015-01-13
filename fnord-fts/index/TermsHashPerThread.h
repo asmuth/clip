@@ -7,7 +7,7 @@
 #ifndef TERMSHASHPERTHREAD_H
 #define TERMSHASHPERTHREAD_H
 
-#include "InvertedDocConsumerPerThread.h"
+#include "fnord-fts/index/InvertedDocConsumerPerThread.h"
 
 namespace Lucene {
 

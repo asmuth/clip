@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "BufferedIndexOutput.h"
+#include "fnord-fts/store/BufferedIndexOutput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

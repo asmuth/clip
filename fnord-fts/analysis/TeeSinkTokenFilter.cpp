@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "TeeSinkTokenFilter.h"
-#include "Attribute.h"
+#include "fnord-fts/analysis/TeeSinkTokenFilter.h"
+#include "fnord-fts/util/Attribute.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef NOLOCKFACTORY_H
 #define NOLOCKFACTORY_H
 
-#include "LockFactory.h"
+#include "fnord-fts/store/LockFactory.h"
 
 namespace Lucene {
 

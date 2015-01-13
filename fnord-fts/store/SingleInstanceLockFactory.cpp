@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "SingleInstanceLockFactory.h"
+#include "fnord-fts/store/SingleInstanceLockFactory.h"
 #include "_SingleInstanceLockFactory.h"
 
 namespace Lucene {

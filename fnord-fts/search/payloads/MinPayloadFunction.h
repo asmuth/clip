@@ -7,7 +7,7 @@
 #ifndef MINPAYLOADFUNCTION_H
 #define MINPAYLOADFUNCTION_H
 
-#include "PayloadFunction.h"
+#include "fnord-fts/search/payloads/PayloadFunction.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef SEGMENTTERMPOSITIONVECTOR_H
 #define SEGMENTTERMPOSITIONVECTOR_H
 
-#include "SegmentTermVector.h"
+#include "fnord-fts/index/SegmentTermVector.h"
 
 namespace Lucene {
 

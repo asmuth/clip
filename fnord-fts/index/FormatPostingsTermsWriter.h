@@ -7,7 +7,7 @@
 #ifndef FORMATPOSTINGSTERMSWRITER_H
 #define FORMATPOSTINGSTERMSWRITER_H
 
-#include "FormatPostingsTermsConsumer.h"
+#include "fnord-fts/index/FormatPostingsTermsConsumer.h"
 
 namespace Lucene {
 

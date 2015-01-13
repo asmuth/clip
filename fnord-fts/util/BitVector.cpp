@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "BitVector.h"
-#include "Directory.h"
-#include "IndexInput.h"
-#include "IndexOutput.h"
-#include "TestPoint.h"
+#include "fnord-fts/util/BitVector.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/util/TestPoint.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

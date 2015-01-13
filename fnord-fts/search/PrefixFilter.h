@@ -7,7 +7,7 @@
 #ifndef PREFIXFILTER_H
 #define PREFIXFILTER_H
 
-#include "MultiTermQueryWrapperFilter.h"
+#include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
 
 namespace Lucene {
 

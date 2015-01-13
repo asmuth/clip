@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "PayloadNearQuery.h"
-#include "AveragePayloadFunction.h"
+#include "fnord-fts/search/payloads/PayloadNearQuery.h"
+#include "fnord-fts/search/payloads/AveragePayloadFunction.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/search/spans/NearSpansOrdered.h"
 #include "fnord-fts/search/spans/NearSpansUnordered.h"

@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermBuffer.h"
-#include "IndexInput.h"
-#include "FieldInfos.h"
+#include "fnord-fts/index/TermBuffer.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/index/FieldInfos.h"
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"

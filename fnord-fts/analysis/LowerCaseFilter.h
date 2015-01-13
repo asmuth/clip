@@ -7,7 +7,7 @@
 #ifndef LOWERCASEFILTER_H
 #define LOWERCASEFILTER_H
 
-#include "TokenFilter.h"
+#include "fnord-fts/analysis/TokenFilter.h"
 
 namespace Lucene {
 

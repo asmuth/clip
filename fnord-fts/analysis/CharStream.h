@@ -7,7 +7,7 @@
 #ifndef CHARSTREAM_H
 #define CHARSTREAM_H
 
-#include "Reader.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

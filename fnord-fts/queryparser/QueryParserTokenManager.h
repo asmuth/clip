@@ -7,7 +7,7 @@
 #ifndef QUERYPARSERTOKENMANAGER_H
 #define QUERYPARSERTOKENMANAGER_H
 
-#include "QueryParserConstants.h"
+#include "fnord-fts/queryparser/QueryParserConstants.h"
 
 namespace Lucene {
 

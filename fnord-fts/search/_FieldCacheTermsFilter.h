@@ -8,7 +8,7 @@
 #define _FIELDCACHETERMSFILTER_H
 
 #include "fnord-fts/search/DocIdSet.h"
-#include "DocIdSetIterator.h"
+#include "fnord-fts/search/DocIdSetIterator.h"
 
 namespace Lucene {
 

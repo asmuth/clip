@@ -7,7 +7,7 @@
 #ifndef HITQUEUE_H
 #define HITQUEUE_H
 
-#include "HitQueueBase.h"
+#include "fnord-fts/search/HitQueueBase.h"
 
 namespace Lucene {
 

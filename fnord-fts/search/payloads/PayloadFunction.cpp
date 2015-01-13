@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "PayloadFunction.h"
+#include "fnord-fts/search/payloads/PayloadFunction.h"
 
 namespace Lucene {
 

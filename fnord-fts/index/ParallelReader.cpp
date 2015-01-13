@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "ParallelReader.h"
+#include "fnord-fts/index/ParallelReader.h"
 #include "_ParallelReader.h"
-#include "Document.h"
-#include "FieldSelector.h"
+#include "fnord-fts/document/Document.h"
+#include "fnord-fts/document/FieldSelector.h"
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/StringUtils.h"

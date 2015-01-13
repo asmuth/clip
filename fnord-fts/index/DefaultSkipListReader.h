@@ -7,7 +7,7 @@
 #ifndef DEFAULTSKIPLISTREADER_H
 #define DEFAULTSKIPLISTREADER_H
 
-#include "MultiLevelSkipListReader.h"
+#include "fnord-fts/index/MultiLevelSkipListReader.h"
 
 namespace Lucene {
 

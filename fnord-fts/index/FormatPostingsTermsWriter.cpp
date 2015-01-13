@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FormatPostingsTermsWriter.h"
-#include "FormatPostingsDocsWriter.h"
-#include "FormatPostingsFieldsWriter.h"
-#include "FormatPostingsPositionsWriter.h"
-#include "IndexOutput.h"
-#include "DefaultSkipListWriter.h"
+#include "fnord-fts/index/FormatPostingsTermsWriter.h"
+#include "fnord-fts/index/FormatPostingsDocsWriter.h"
+#include "fnord-fts/index/FormatPostingsFieldsWriter.h"
+#include "fnord-fts/index/FormatPostingsPositionsWriter.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/index/DefaultSkipListWriter.h"
 
 namespace Lucene {
 

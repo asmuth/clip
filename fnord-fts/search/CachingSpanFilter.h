@@ -7,8 +7,8 @@
 #ifndef CACHINGSPANFILTER_H
 #define CACHINGSPANFILTER_H
 
-#include "SpanFilter.h"
-#include "CachingWrapperFilter.h"
+#include "fnord-fts/search/SpanFilter.h"
+#include "fnord-fts/search/CachingWrapperFilter.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef STOREDFIELDSWRITER_H
 #define STOREDFIELDSWRITER_H
 
-#include "DocumentsWriter.h"
+#include "fnord-fts/index/DocumentsWriter.h"
 
 namespace Lucene {
 

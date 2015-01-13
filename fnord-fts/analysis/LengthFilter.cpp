@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "LengthFilter.h"
-#include "TermAttribute.h"
+#include "fnord-fts/analysis/LengthFilter.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
 namespace Lucene {
 

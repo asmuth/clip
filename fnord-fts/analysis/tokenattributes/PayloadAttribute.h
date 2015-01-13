@@ -7,7 +7,7 @@
 #ifndef PAYLOADATTRIBUTE_H
 #define PAYLOADATTRIBUTE_H
 
-#include "Attribute.h"
+#include "fnord-fts/util/Attribute.h"
 
 namespace Lucene {
 

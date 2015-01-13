@@ -7,7 +7,7 @@
 #ifndef _SIMILARITY_H
 #define _SIMILARITY_H
 
-#include "Explanation.h"
+#include "fnord-fts/search/Explanation.h"
 
 namespace Lucene {
 

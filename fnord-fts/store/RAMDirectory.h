@@ -7,7 +7,7 @@
 #ifndef RAMDIRECTORY_H
 #define RAMDIRECTORY_H
 
-#include "Directory.h"
+#include "fnord-fts/store/Directory.h"
 
 namespace Lucene {
 

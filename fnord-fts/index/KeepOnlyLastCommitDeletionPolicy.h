@@ -7,7 +7,7 @@
 #ifndef KEEPONLYLASTCOMMITDELETIONPOLICY_H
 #define KEEPONLYLASTCOMMITDELETIONPOLICY_H
 
-#include "IndexDeletionPolicy.h"
+#include "fnord-fts/index/IndexDeletionPolicy.h"
 
 namespace Lucene {
 

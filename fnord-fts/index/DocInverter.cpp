@@ -5,15 +5,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DocInverter.h"
-#include "InvertedDocConsumer.h"
-#include "InvertedDocEndConsumer.h"
-#include "InvertedDocConsumerPerThread.h"
-#include "InvertedDocEndConsumerPerThread.h"
-#include "DocFieldConsumerPerThread.h"
-#include "DocFieldConsumerPerField.h"
-#include "DocInverterPerField.h"
-#include "DocInverterPerThread.h"
+#include "fnord-fts/index/DocInverter.h"
+#include "fnord-fts/index/InvertedDocConsumer.h"
+#include "fnord-fts/index/InvertedDocEndConsumer.h"
+#include "fnord-fts/index/InvertedDocConsumerPerThread.h"
+#include "fnord-fts/index/InvertedDocEndConsumerPerThread.h"
+#include "fnord-fts/index/DocFieldConsumerPerThread.h"
+#include "fnord-fts/index/DocFieldConsumerPerField.h"
+#include "fnord-fts/index/DocInverterPerField.h"
+#include "fnord-fts/index/DocInverterPerThread.h"
 
 namespace Lucene {
 

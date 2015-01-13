@@ -26,7 +26,7 @@
  */
 
 #include "fnord-fts/LuceneInc.h"
-#include "guniprop.h"
+#include "fnord-fts/util/unicode/guniprop.h"
 
 #define ATTR_TABLE(Page) (((Page) <= G_UNICODE_LAST_PAGE_PART1) \
                           ? attr_table_part1[Page] \

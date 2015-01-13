@@ -7,7 +7,7 @@
 #ifndef _TOPSCOREDOCCOLLECTOR_H
 #define _TOPSCOREDOCCOLLECTOR_H
 
-#include "TopDocsCollector.h"
+#include "fnord-fts/search/TopDocsCollector.h"
 
 namespace Lucene {
 

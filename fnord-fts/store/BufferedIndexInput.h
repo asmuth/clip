@@ -7,7 +7,7 @@
 #ifndef BUFFEREDINDEXINPUT_H
 #define BUFFEREDINDEXINPUT_H
 
-#include "IndexInput.h"
+#include "fnord-fts/store/IndexInput.h"
 
 namespace Lucene {
 

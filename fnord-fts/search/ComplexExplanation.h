@@ -7,7 +7,7 @@
 #ifndef COMPLEXEXPLANATION_H
 #define COMPLEXEXPLANATION_H
 
-#include "Explanation.h"
+#include "fnord-fts/search/Explanation.h"
 
 namespace Lucene {
 

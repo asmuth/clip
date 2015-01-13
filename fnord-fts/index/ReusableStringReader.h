@@ -7,7 +7,7 @@
 #ifndef REUSABLESTRINGREADER_H
 #define REUSABLESTRINGREADER_H
 
-#include "Reader.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

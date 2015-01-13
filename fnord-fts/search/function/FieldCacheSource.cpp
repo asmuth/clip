@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "FieldCacheSource.h"
+#include "fnord-fts/search/function/FieldCacheSource.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/StringUtils.h"
 

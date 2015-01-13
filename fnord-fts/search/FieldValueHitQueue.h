@@ -7,8 +7,8 @@
 #ifndef FIELDVALUEHITQUEUE_H
 #define FIELDVALUEHITQUEUE_H
 
-#include "HitQueueBase.h"
-#include "ScoreDoc.h"
+#include "fnord-fts/search/HitQueueBase.h"
+#include "fnord-fts/search/ScoreDoc.h"
 
 namespace Lucene {
 

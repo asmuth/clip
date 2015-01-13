@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "ReverseOrdFieldSource.h"
+#include "fnord-fts/search/function/ReverseOrdFieldSource.h"
 #include "_ReverseOrdFieldSource.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"

@@ -7,7 +7,7 @@
 #ifndef INTFIELDSOURCE_H
 #define INTFIELDSOURCE_H
 
-#include "FieldCacheSource.h"
+#include "fnord-fts/search/function/FieldCacheSource.h"
 
 namespace Lucene {
 

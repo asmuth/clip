@@ -7,7 +7,7 @@
 #ifndef FSDIRECTORY_H
 #define FSDIRECTORY_H
 
-#include "Directory.h"
+#include "fnord-fts/store/Directory.h"
 
 namespace Lucene {
 

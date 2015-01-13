@@ -7,7 +7,7 @@
 #ifndef _REVERSEORDFIELDSOURCE_H
 #define _REVERSEORDFIELDSOURCE_H
 
-#include "DocValues.h"
+#include "fnord-fts/search/function/DocValues.h"
 
 namespace Lucene {
 

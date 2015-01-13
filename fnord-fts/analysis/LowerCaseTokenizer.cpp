@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "LowerCaseTokenizer.h"
-#include "CharFolder.h"
+#include "fnord-fts/analysis/LowerCaseTokenizer.h"
+#include "fnord-fts/util/CharFolder.h"
 
 namespace Lucene {
 

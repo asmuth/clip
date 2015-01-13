@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "NoLockFactory.h"
+#include "fnord-fts/store/NoLockFactory.h"
 #include "_NoLockFactory.h"
 
 namespace Lucene {

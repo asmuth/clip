@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "WhitespaceAnalyzer.h"
-#include "WhitespaceTokenizer.h"
+#include "fnord-fts/analysis/WhitespaceAnalyzer.h"
+#include "fnord-fts/analysis/WhitespaceTokenizer.h"
 
 namespace Lucene {
 

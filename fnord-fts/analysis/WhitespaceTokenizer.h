@@ -7,7 +7,7 @@
 #ifndef WHITESPACETOKENIZER_H
 #define WHITESPACETOKENIZER_H
 
-#include "CharTokenizer.h"
+#include "fnord-fts/analysis/CharTokenizer.h"
 
 namespace Lucene {
 

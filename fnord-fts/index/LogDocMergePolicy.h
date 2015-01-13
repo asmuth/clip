@@ -7,7 +7,7 @@
 #ifndef LOGDOCMERGEPOLICY_H
 #define LOGDOCMERGEPOLICY_H
 
-#include "LogMergePolicy.h"
+#include "fnord-fts/index/LogMergePolicy.h"
 
 namespace Lucene {
 

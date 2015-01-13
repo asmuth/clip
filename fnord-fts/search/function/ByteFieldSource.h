@@ -7,7 +7,7 @@
 #ifndef BYTEFIELDSOURCE_H
 #define BYTEFIELDSOURCE_H
 
-#include "FieldCacheSource.h"
+#include "fnord-fts/search/function/FieldCacheSource.h"
 
 namespace Lucene {
 

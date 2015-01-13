@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "TypeAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

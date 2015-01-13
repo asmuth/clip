@@ -7,7 +7,7 @@
 #ifndef ASCIIFOLDINGFILTER_H
 #define ASCIIFOLDINGFILTER_H
 
-#include "TokenFilter.h"
+#include "fnord-fts/analysis/TokenFilter.h"
 
 namespace Lucene {
 

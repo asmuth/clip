@@ -5,16 +5,16 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FreqProxFieldMergeState.h"
-#include "FreqProxTermsWriterPerField.h"
-#include "FreqProxTermsWriterPerThread.h"
-#include "FreqProxTermsWriter.h"
-#include "TermsHashPerThread.h"
-#include "TermsHashPerField.h"
-#include "ByteSliceReader.h"
-#include "DocumentsWriter.h"
-#include "CharBlockPool.h"
-#include "FieldInfo.h"
+#include "fnord-fts/index/FreqProxFieldMergeState.h"
+#include "fnord-fts/index/FreqProxTermsWriterPerField.h"
+#include "fnord-fts/index/FreqProxTermsWriterPerThread.h"
+#include "fnord-fts/index/FreqProxTermsWriter.h"
+#include "fnord-fts/index/TermsHashPerThread.h"
+#include "fnord-fts/index/TermsHashPerField.h"
+#include "fnord-fts/index/ByteSliceReader.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/index/CharBlockPool.h"
+#include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

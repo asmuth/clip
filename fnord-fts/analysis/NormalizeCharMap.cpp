@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "NormalizeCharMap.h"
+#include "fnord-fts/analysis/NormalizeCharMap.h"
 
 namespace Lucene {
 

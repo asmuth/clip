@@ -5,15 +5,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermsHash.h"
-#include "DocumentsWriter.h"
-#include "TermsHashConsumer.h"
-#include "TermsHashPerThread.h"
-#include "TermsHashPerField.h"
-#include "TermsHashConsumerPerThread.h"
-#include "DocInverterPerThread.h"
-#include "TermsHashConsumerPerField.h"
-#include "IndexWriter.h"
+#include "fnord-fts/index/TermsHash.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/index/TermsHashConsumer.h"
+#include "fnord-fts/index/TermsHashPerThread.h"
+#include "fnord-fts/index/TermsHashPerField.h"
+#include "fnord-fts/index/TermsHashConsumerPerThread.h"
+#include "fnord-fts/index/DocInverterPerThread.h"
+#include "fnord-fts/index/TermsHashConsumerPerField.h"
+#include "fnord-fts/index/IndexWriter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

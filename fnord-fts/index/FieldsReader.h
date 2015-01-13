@@ -7,7 +7,7 @@
 #ifndef FIELDSREADER_H
 #define FIELDSREADER_H
 
-#include "AbstractField.h"
+#include "fnord-fts/document/AbstractField.h"
 #include "fnord-fts/util/CloseableThreadLocal.h"
 
 namespace Lucene {

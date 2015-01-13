@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "PorterStemmer.h"
+#include "fnord-fts/analysis/PorterStemmer.h"
 
 namespace Lucene {
 

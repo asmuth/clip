@@ -7,9 +7,9 @@
 #ifndef TERMVECTORSTERMSWRITER_H
 #define TERMVECTORSTERMSWRITER_H
 
-#include "TermsHashConsumer.h"
-#include "DocumentsWriter.h"
-#include "RawPostingList.h"
+#include "fnord-fts/index/TermsHashConsumer.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/index/RawPostingList.h"
 
 namespace Lucene {
 

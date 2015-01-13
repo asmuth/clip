@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "BaseCharFilter.h"
+#include "fnord-fts/analysis/BaseCharFilter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

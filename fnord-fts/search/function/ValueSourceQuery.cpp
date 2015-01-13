@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "ValueSourceQuery.h"
+#include "fnord-fts/search/function/ValueSourceQuery.h"
 #include "_ValueSourceQuery.h"
-#include "ValueSource.h"
-#include "DocValues.h"
+#include "fnord-fts/search/function/ValueSource.h"
+#include "fnord-fts/search/function/DocValues.h"
 #include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/TermDocs.h"

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/document//LuceneInc.h"
-#include "LoadFirstFieldSelector.h"
+#include "fnord-fts/document/LoadFirstFieldSelector.h"
 
 namespace Lucene {
 

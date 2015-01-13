@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "FieldCacheSanityChecker.h"
+#include "fnord-fts/util/FieldCacheSanityChecker.h"
 #include "_FieldCacheSanityChecker.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/index/IndexReader.h"

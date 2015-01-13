@@ -7,7 +7,7 @@
 #ifndef INPUTSTREAMREADER_H
 #define INPUTSTREAMREADER_H
 
-#include "Reader.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

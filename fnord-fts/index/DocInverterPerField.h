@@ -7,7 +7,7 @@
 #ifndef DOCINVERTERPERFIELD_H
 #define DOCINVERTERPERFIELD_H
 
-#include "DocFieldConsumerPerField.h"
+#include "fnord-fts/index/DocFieldConsumerPerField.h"
 
 namespace Lucene {
 

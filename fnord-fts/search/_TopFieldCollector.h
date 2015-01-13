@@ -7,7 +7,7 @@
 #ifndef _TOPFIELDCOLLECTOR_H
 #define _TOPFIELDCOLLECTOR_H
 
-#include "TopDocsCollector.h"
+#include "fnord-fts/search/TopDocsCollector.h"
 
 namespace Lucene {
 

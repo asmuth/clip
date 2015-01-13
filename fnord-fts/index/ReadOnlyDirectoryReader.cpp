@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "ReadOnlyDirectoryReader.h"
-#include "ReadOnlySegmentReader.h"
+#include "fnord-fts/index/ReadOnlyDirectoryReader.h"
+#include "fnord-fts/index/ReadOnlySegmentReader.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef DOCFIELDCONSUMERSPERTHREAD_H
 #define DOCFIELDCONSUMERSPERTHREAD_H
 
-#include "DocFieldConsumerPerThread.h"
+#include "fnord-fts/index/DocFieldConsumerPerThread.h"
 
 namespace Lucene {
 

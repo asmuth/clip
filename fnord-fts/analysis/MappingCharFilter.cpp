@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "MappingCharFilter.h"
-#include "NormalizeCharMap.h"
-#include "CharReader.h"
+#include "fnord-fts/analysis/MappingCharFilter.h"
+#include "fnord-fts/analysis/NormalizeCharMap.h"
+#include "fnord-fts/analysis/CharReader.h"
 
 namespace Lucene {
 

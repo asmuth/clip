@@ -7,7 +7,7 @@
 #ifndef LOWERCASETOKENIZER_H
 #define LOWERCASETOKENIZER_H
 
-#include "LetterTokenizer.h"
+#include "fnord-fts/analysis/LetterTokenizer.h"
 
 namespace Lucene {
 

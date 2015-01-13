@@ -8,8 +8,8 @@
 #include "fnord-fts/search/QueryTermVector.h"
 #include "fnord-fts/analysis/Analyzer.h"
 #include "fnord-fts/analysis/TokenStream.h"
-#include "fnord-fts/search/StringReader.h"
-#include "fnord-fts/search/TermAttribute.h"
+#include "fnord-fts/util/StringReader.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
 namespace Lucene {
 

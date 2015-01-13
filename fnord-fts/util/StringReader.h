@@ -7,7 +7,7 @@
 #ifndef STRINGREADER_H
 #define STRINGREADER_H
 
-#include "Reader.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

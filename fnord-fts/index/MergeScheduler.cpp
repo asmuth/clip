@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "MergeScheduler.h"
+#include "fnord-fts/index/MergeScheduler.h"
 
 namespace Lucene {
 

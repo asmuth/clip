@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "KeepOnlyLastCommitDeletionPolicy.h"
-#include "IndexCommit.h"
+#include "fnord-fts/index/KeepOnlyLastCommitDeletionPolicy.h"
+#include "fnord-fts/index/IndexCommit.h"
 
 namespace Lucene {
 

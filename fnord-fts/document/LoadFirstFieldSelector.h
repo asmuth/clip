@@ -7,7 +7,7 @@
 #ifndef LOADFIRSTFIELDSELECTOR_H
 #define LOADFIRSTFIELDSELECTOR_H
 
-#include "FieldSelector.h"
+#include "fnord-fts/document/FieldSelector.h"
 
 namespace Lucene {
 

@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermInfosReader.h"
-#include "SegmentTermEnum.h"
-#include "Directory.h"
-#include "IndexFileNames.h"
+#include "fnord-fts/index/TermInfosReader.h"
+#include "fnord-fts/index/SegmentTermEnum.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/index/IndexFileNames.h"
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/util/StringUtils.h"
 

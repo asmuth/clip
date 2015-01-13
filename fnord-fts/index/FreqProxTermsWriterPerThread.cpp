@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FreqProxTermsWriterPerThread.h"
-#include "FreqProxTermsWriterPerField.h"
-#include "TermsHashPerThread.h"
+#include "fnord-fts/index/FreqProxTermsWriterPerThread.h"
+#include "fnord-fts/index/FreqProxTermsWriterPerField.h"
+#include "fnord-fts/index/TermsHashPerThread.h"
 
 namespace Lucene {
 

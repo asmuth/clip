@@ -7,7 +7,7 @@
 #ifndef MMAPDIRECTORY_H
 #define MMAPDIRECTORY_H
 
-#include "FSDirectory.h"
+#include "fnord-fts/store/FSDirectory.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "LuceneSignal.h"
+#include "fnord-fts/util/LuceneSignal.h"
 #include "fnord-fts/util/Synchronize.h"
 
 namespace Lucene {

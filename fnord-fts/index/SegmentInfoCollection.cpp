@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentInfoCollection.h"
-#include "SegmentInfo.h"
+#include "fnord-fts/index/SegmentInfoCollection.h"
+#include "fnord-fts/index/SegmentInfo.h"
 
 namespace Lucene {
 

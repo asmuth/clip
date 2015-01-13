@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "ChecksumIndexOutput.h"
+#include "fnord-fts/store/ChecksumIndexOutput.h"
 
 namespace Lucene {
 

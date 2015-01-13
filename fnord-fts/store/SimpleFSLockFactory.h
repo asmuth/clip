@@ -7,8 +7,8 @@
 #ifndef SIMPLEFSLOCKFACTORY_H
 #define SIMPLEFSLOCKFACTORY_H
 
-#include "FSLockFactory.h"
-#include "Lock.h"
+#include "fnord-fts/store/FSLockFactory.h"
+#include "fnord-fts/store/Lock.h"
 
 namespace Lucene {
 

@@ -8,7 +8,7 @@
 #define FIELDSORTEDTERMVECTORMAPPER_H
 
 #include <boost/function.hpp>
-#include "TermVectorMapper.h"
+#include "fnord-fts/index/TermVectorMapper.h"
 
 namespace Lucene {
 

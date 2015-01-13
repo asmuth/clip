@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "PorterStemFilter.h"
-#include "PorterStemmer.h"
-#include "TermAttribute.h"
+#include "fnord-fts/analysis/PorterStemFilter.h"
+#include "fnord-fts/analysis/PorterStemmer.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
 namespace Lucene {
 

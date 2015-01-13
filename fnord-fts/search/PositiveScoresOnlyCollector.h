@@ -7,7 +7,7 @@
 #ifndef POSITIVESCORESONLYCOLLECTOR_H
 #define POSITIVESCORESONLYCOLLECTOR_H
 
-#include "Collector.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

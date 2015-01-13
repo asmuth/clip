@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "SortedVIntList.h"
+#include "fnord-fts/util/SortedVIntList.h"
 #include "_SortedVIntList.h"
-#include "BitSet.h"
-#include "OpenBitSet.h"
-#include "DocIdSetIterator.h"
+#include "fnord-fts/util/BitSet.h"
+#include "fnord-fts/util/OpenBitSet.h"
+#include "fnord-fts/search/DocIdSetIterator.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

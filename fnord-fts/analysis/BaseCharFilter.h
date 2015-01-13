@@ -7,7 +7,7 @@
 #ifndef BASECHARFILTER_H
 #define BASECHARFILTER_H
 
-#include "CharFilter.h"
+#include "fnord-fts/analysis/CharFilter.h"
 
 namespace Lucene {
 

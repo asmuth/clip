@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "CharFilter.h"
+#include "fnord-fts/analysis/CharFilter.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef READONLYSEGMENTREADER_H
 #define READONLYSEGMENTREADER_H
 
-#include "SegmentReader.h"
+#include "fnord-fts/index/SegmentReader.h"
 
 namespace Lucene {
 

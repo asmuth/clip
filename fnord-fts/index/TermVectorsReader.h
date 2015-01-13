@@ -7,7 +7,7 @@
 #ifndef TERMVECTORSREADER_H
 #define TERMVECTORSREADER_H
 
-#include "TermVectorMapper.h"
+#include "fnord-fts/index/TermVectorMapper.h"
 
 namespace Lucene {
 

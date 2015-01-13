@@ -7,8 +7,8 @@
 #ifndef DOCFIELDCONSUMERS_H
 #define DOCFIELDCONSUMERS_H
 
-#include "DocFieldConsumer.h"
-#include "DocumentsWriter.h"
+#include "fnord-fts/index/DocFieldConsumer.h"
+#include "fnord-fts/index/DocumentsWriter.h"
 
 namespace Lucene {
 

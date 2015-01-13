@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentTermPositionVector.h"
-#include "TermVectorOffsetInfo.h"
+#include "fnord-fts/index/SegmentTermPositionVector.h"
+#include "fnord-fts/index/TermVectorOffsetInfo.h"
 
 namespace Lucene {
 

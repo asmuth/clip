@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "MultiReader.h"
-#include "DirectoryReader.h"
-#include "DefaultSimilarity.h"
+#include "fnord-fts/index/MultiReader.h"
+#include "fnord-fts/index/DirectoryReader.h"
+#include "fnord-fts/search/DefaultSimilarity.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"
 

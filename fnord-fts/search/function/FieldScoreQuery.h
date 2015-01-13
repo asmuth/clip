@@ -7,7 +7,7 @@
 #ifndef FIELDSCOREQUERY_H
 #define FIELDSCOREQUERY_H
 
-#include "ValueSourceQuery.h"
+#include "fnord-fts/search/function/ValueSourceQuery.h"
 
 namespace Lucene {
 

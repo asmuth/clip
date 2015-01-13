@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "PayloadSpanUtil.h"
+#include "fnord-fts/search/payloads/PayloadSpanUtil.h"
 #include "fnord-fts/search/BooleanQuery.h"
 #include "fnord-fts/search/BooleanClause.h"
 #include "fnord-fts/search/PhraseQuery.h"

@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "LogMergePolicy.h"
-#include "IndexWriter.h"
-#include "SegmentInfo.h"
+#include "fnord-fts/index/LogMergePolicy.h"
+#include "fnord-fts/index/IndexWriter.h"
+#include "fnord-fts/index/SegmentInfo.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

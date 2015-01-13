@@ -7,7 +7,7 @@
 #ifndef TOPFIELDDOCS_H
 #define TOPFIELDDOCS_H
 
-#include "TopDocs.h"
+#include "fnord-fts/search/TopDocs.h"
 
 namespace Lucene {
 

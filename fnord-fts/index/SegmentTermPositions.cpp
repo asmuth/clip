@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentTermPositions.h"
-#include "SegmentReader.h"
+#include "fnord-fts/index/SegmentTermPositions.h"
+#include "fnord-fts/index/SegmentReader.h"
 #include "_SegmentReader.h"
-#include "TermInfo.h"
-#include "IndexInput.h"
+#include "fnord-fts/index/TermInfo.h"
+#include "fnord-fts/store/IndexInput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

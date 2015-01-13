@@ -6,8 +6,8 @@
 
 #include "fnord-fts/index//LuceneInc.h"
 #include <boost/algorithm/string.hpp>
-#include "IndexFileNames.h"
-#include "SegmentInfo.h"
+#include "fnord-fts/index/IndexFileNames.h"
+#include "fnord-fts/index/SegmentInfo.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

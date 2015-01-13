@@ -7,7 +7,7 @@
 #ifndef TERMSHASH_H
 #define TERMSHASH_H
 
-#include "InvertedDocConsumer.h"
+#include "fnord-fts/index/InvertedDocConsumer.h"
 
 namespace Lucene {
 

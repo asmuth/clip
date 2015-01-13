@@ -7,7 +7,7 @@
 #ifndef INDEXSEARCHER_H
 #define INDEXSEARCHER_H
 
-#include "Searcher.h"
+#include "fnord-fts/search/Searcher.h"
 
 namespace Lucene {
 

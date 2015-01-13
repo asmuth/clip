@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "CompoundFileWriter.h"
-#include "SegmentMerger.h"
-#include "Directory.h"
-#include "IndexInput.h"
-#include "IndexOutput.h"
+#include "fnord-fts/index/CompoundFileWriter.h"
+#include "fnord-fts/index/SegmentMerger.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

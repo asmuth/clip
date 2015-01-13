@@ -7,7 +7,7 @@
 #ifndef _BOOLEANQUERY_H
 #define _BOOLEANQUERY_H
 
-#include "SimilarityDelegator.h"
+#include "fnord-fts/search/SimilarityDelegator.h"
 
 namespace Lucene {
 

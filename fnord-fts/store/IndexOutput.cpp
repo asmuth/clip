@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "IndexOutput.h"
-#include "IndexInput.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/store/IndexInput.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"

@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "StandardFilter.h"
-#include "StandardTokenizer.h"
-#include "TermAttribute.h"
-#include "TypeAttribute.h"
+#include "fnord-fts/analysis/standard/StandardFilter.h"
+#include "fnord-fts/analysis/standard/StandardTokenizer.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 
 namespace Lucene {
 

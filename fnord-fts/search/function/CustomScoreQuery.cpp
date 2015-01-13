@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "CustomScoreQuery.h"
+#include "fnord-fts/search/function/CustomScoreQuery.h"
 #include "_CustomScoreQuery.h"
-#include "ValueSourceQuery.h"
+#include "fnord-fts/search/function/ValueSourceQuery.h"
 #include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"

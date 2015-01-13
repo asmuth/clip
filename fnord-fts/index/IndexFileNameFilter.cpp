@@ -7,8 +7,8 @@
 #include "fnord-fts/index//LuceneInc.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
-#include "IndexFileNameFilter.h"
-#include "IndexFileNames.h"
+#include "fnord-fts/index/IndexFileNameFilter.h"
+#include "fnord-fts/index/IndexFileNames.h"
 
 namespace Lucene {
 

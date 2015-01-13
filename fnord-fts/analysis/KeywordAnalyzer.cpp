@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "KeywordAnalyzer.h"
-#include "KeywordTokenizer.h"
+#include "fnord-fts/analysis/KeywordAnalyzer.h"
+#include "fnord-fts/analysis/KeywordTokenizer.h"
 
 namespace Lucene {
 

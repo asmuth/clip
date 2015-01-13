@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "IndexCommit.h"
-#include "Directory.h"
+#include "fnord-fts/index/IndexCommit.h"
+#include "fnord-fts/store/Directory.h"
 
 namespace Lucene {
 

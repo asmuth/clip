@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "AllTermDocs.h"
-#include "SegmentReader.h"
-#include "BitVector.h"
+#include "fnord-fts/index/AllTermDocs.h"
+#include "fnord-fts/index/SegmentReader.h"
+#include "fnord-fts/util/BitVector.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef OPENBITSETITERATOR_H
 #define OPENBITSETITERATOR_H
 
-#include "DocIdSetIterator.h"
+#include "fnord-fts/search/DocIdSetIterator.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef PORTERSTEMFILTER_H
 #define PORTERSTEMFILTER_H
 
-#include "TokenFilter.h"
+#include "fnord-fts/analysis/TokenFilter.h"
 
 namespace Lucene {
 

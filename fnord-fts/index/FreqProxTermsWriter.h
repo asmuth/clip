@@ -7,8 +7,8 @@
 #ifndef FREQPROXTERMSWRITER_H
 #define FREQPROXTERMSWRITER_H
 
-#include "TermsHashConsumer.h"
-#include "RawPostingList.h"
+#include "fnord-fts/index/TermsHashConsumer.h"
+#include "fnord-fts/index/RawPostingList.h"
 
 namespace Lucene {
 

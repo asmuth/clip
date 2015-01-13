@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "StandardTokenizer.h"
-#include "StandardTokenizerImpl.h"
-#include "StandardAnalyzer.h"
-#include "TermAttribute.h"
-#include "OffsetAttribute.h"
-#include "PositionIncrementAttribute.h"
-#include "TypeAttribute.h"
+#include "fnord-fts/analysis/standard/StandardTokenizer.h"
+#include "fnord-fts/analysis/standard/StandardTokenizerImpl.h"
+#include "fnord-fts/analysis/standard/StandardAnalyzer.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/OffsetAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 
 namespace Lucene {
 

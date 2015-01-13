@@ -9,7 +9,7 @@
 
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Scorer.h"
-#include "CustomScoreProvider.h"
+#include "fnord-fts/search/function/CustomScoreProvider.h"
 
 namespace Lucene {
 

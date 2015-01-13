@@ -7,7 +7,7 @@
 #ifndef PREFIXQUERY_H
 #define PREFIXQUERY_H
 
-#include "MultiTermQuery.h"
+#include "fnord-fts/search/MultiTermQuery.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef SINGLETERMENUM_H
 #define SINGLETERMENUM_H
 
-#include "FilteredTermEnum.h"
+#include "fnord-fts/search/FilteredTermEnum.h"
 
 namespace Lucene {
 

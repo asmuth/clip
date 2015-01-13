@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "Random.h"
+#include "fnord-fts/util/Random.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

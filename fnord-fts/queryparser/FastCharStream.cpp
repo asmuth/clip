@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/queryparser/LuceneInc.h"
-#include "FastCharStream.h"
-#include "Reader.h"
+#include "fnord-fts/queryparser/FastCharStream.h"
+#include "fnord-fts/util/Reader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

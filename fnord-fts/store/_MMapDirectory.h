@@ -8,7 +8,7 @@
 #define _MMAPDIRECTORY_H
 
 #include <boost/iostreams/device/mapped_file.hpp>
-#include "IndexInput.h"
+#include "fnord-fts/store/IndexInput.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef SNAPSHOTDELETIONPOLICY_H
 #define SNAPSHOTDELETIONPOLICY_H
 
-#include "IndexDeletionPolicy.h"
+#include "fnord-fts/index/IndexDeletionPolicy.h"
 
 namespace Lucene {
 

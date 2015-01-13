@@ -8,7 +8,7 @@
 #define TERMINFOSREADER_H
 
 #include "fnord-fts/util/CloseableThreadLocal.h"
-#include "SimpleLRUCache.h"
+#include "fnord-fts/util/SimpleLRUCache.h"
 
 namespace Lucene {
 

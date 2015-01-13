@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "ISOLatin1AccentFilter.h"
-#include "TermAttribute.h"
+#include "fnord-fts/analysis/ISOLatin1AccentFilter.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
 namespace Lucene {
 

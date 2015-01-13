@@ -9,9 +9,9 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
-#include "UTF8Stream.h"
-#include "Reader.h"
-#include "CharFolder.h"
+#include "fnord-fts/util/UTF8Stream.h"
+#include "fnord-fts/util/Reader.h"
+#include "fnord-fts/util/CharFolder.h"
 
 namespace Lucene {
 

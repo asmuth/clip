@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DefaultSkipListWriter.h"
-#include "IndexOutput.h"
+#include "fnord-fts/index/DefaultSkipListWriter.h"
+#include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

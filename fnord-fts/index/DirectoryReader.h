@@ -10,8 +10,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/TermEnum.h"
 #include "fnord-fts/index/TermPositions.h"
-#include "IndexCommit.h"
-#include "SegmentMergeQueue.h"
+#include "fnord-fts/index/IndexCommit.h"
+#include "fnord-fts/index/SegmentMergeQueue.h"
 
 namespace Lucene {
 

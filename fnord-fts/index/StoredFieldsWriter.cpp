@@ -5,14 +5,14 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "StoredFieldsWriter.h"
-#include "StoredFieldsWriterPerThread.h"
-#include "RAMOutputStream.h"
-#include "SegmentWriteState.h"
-#include "FieldsWriter.h"
-#include "IndexFileNames.h"
-#include "IndexWriter.h"
-#include "Directory.h"
+#include "fnord-fts/index/StoredFieldsWriter.h"
+#include "fnord-fts/index/StoredFieldsWriterPerThread.h"
+#include "fnord-fts/store/RAMOutputStream.h"
+#include "fnord-fts/index/SegmentWriteState.h"
+#include "fnord-fts/index/FieldsWriter.h"
+#include "fnord-fts/index/IndexFileNames.h"
+#include "fnord-fts/index/IndexWriter.h"
+#include "fnord-fts/store/Directory.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

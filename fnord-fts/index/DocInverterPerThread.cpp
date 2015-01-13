@@ -5,18 +5,18 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DocInverterPerThread.h"
-#include "DocInverterPerField.h"
-#include "DocInverter.h"
-#include "TermAttribute.h"
-#include "OffsetAttribute.h"
-#include "DocFieldProcessorPerThread.h"
-#include "InvertedDocConsumer.h"
-#include "InvertedDocEndConsumer.h"
-#include "InvertedDocConsumerPerThread.h"
-#include "InvertedDocEndConsumerPerThread.h"
+#include "fnord-fts/index/DocInverterPerThread.h"
+#include "fnord-fts/index/DocInverterPerField.h"
+#include "fnord-fts/index/DocInverter.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/OffsetAttribute.h"
+#include "fnord-fts/index/DocFieldProcessorPerThread.h"
+#include "fnord-fts/index/InvertedDocConsumer.h"
+#include "fnord-fts/index/InvertedDocEndConsumer.h"
+#include "fnord-fts/index/InvertedDocConsumerPerThread.h"
+#include "fnord-fts/index/InvertedDocEndConsumerPerThread.h"
 #include "fnord-fts/index/FieldInvertState.h"
-#include "ReusableStringReader.h"
+#include "fnord-fts/index/ReusableStringReader.h"
 
 namespace Lucene {
 

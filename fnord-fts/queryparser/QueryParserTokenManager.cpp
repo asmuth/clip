@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/queryparser/LuceneInc.h"
-#include "QueryParserTokenManager.h"
-#include "QueryParserCharStream.h"
-#include "QueryParserToken.h"
-#include "QueryParseError.h"
+#include "fnord-fts/queryparser/QueryParserTokenManager.h"
+#include "fnord-fts/queryparser/QueryParserCharStream.h"
+#include "fnord-fts/queryparser/QueryParserToken.h"
+#include "fnord-fts/queryparser/QueryParseError.h"
 #include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 

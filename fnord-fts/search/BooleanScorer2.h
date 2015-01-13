@@ -7,8 +7,8 @@
 #ifndef BOOLEANSCORER2_H
 #define BOOLEANSCORER2_H
 
-#include "DisjunctionSumScorer.h"
-#include "ConjunctionScorer.h"
+#include "fnord-fts/search/DisjunctionSumScorer.h"
+#include "fnord-fts/search/ConjunctionScorer.h"
 
 namespace Lucene {
 

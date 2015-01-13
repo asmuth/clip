@@ -7,7 +7,7 @@
 #ifndef TERMRANGEQUERY_H
 #define TERMRANGEQUERY_H
 
-#include "MultiTermQuery.h"
+#include "fnord-fts/search/MultiTermQuery.h"
 
 namespace Lucene {
 

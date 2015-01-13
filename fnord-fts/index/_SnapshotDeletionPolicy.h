@@ -7,7 +7,7 @@
 #ifndef _SNAPSHOTDELETIONPOLICY_H
 #define _SNAPSHOTDELETIONPOLICY_H
 
-#include "IndexCommit.h"
+#include "fnord-fts/index/IndexCommit.h"
 
 namespace Lucene {
 

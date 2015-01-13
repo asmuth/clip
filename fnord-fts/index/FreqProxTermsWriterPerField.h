@@ -7,7 +7,7 @@
 #ifndef FREQPROXTERMSWRITERPERFIELD_H
 #define FREQPROXTERMSWRITERPERFIELD_H
 
-#include "TermsHashConsumerPerField.h"
+#include "fnord-fts/index/TermsHashConsumerPerField.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef SLOPPYPHRASESCORER_H
 #define SLOPPYPHRASESCORER_H
 
-#include "PhraseScorer.h"
+#include "fnord-fts/search/PhraseScorer.h"
 
 namespace Lucene {
 

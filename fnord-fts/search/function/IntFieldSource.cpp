@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "IntFieldSource.h"
+#include "fnord-fts/search/function/IntFieldSource.h"
 #include "_IntFieldSource.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"

@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "Tokenizer.h"
-#include "CharReader.h"
+#include "fnord-fts/analysis/Tokenizer.h"
+#include "fnord-fts/analysis/CharReader.h"
 
 namespace Lucene {
 

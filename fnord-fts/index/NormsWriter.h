@@ -7,7 +7,7 @@
 #ifndef NORMSWRITER_H
 #define NORMSWRITER_H
 
-#include "InvertedDocEndConsumer.h"
+#include "fnord-fts/index/InvertedDocEndConsumer.h"
 
 namespace Lucene {
 

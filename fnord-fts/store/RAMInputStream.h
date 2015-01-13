@@ -7,7 +7,7 @@
 #ifndef RAMINPUTSTREAM_H
 #define RAMINPUTSTREAM_H
 
-#include "IndexInput.h"
+#include "fnord-fts/store/IndexInput.h"
 
 namespace Lucene {
 

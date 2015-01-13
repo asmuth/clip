@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "DocIdBitSet.h"
+#include "fnord-fts/util/DocIdBitSet.h"
 #include "_DocIdBitSet.h"
-#include "BitSet.h"
+#include "fnord-fts/util/BitSet.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef BUFFEREDINDEXOUTPUT_H
 #define BUFFEREDINDEXOUTPUT_H
 
-#include "IndexOutput.h"
+#include "fnord-fts/store/IndexOutput.h"
 
 namespace Lucene {
 

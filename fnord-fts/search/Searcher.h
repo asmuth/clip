@@ -7,7 +7,7 @@
 #ifndef SEARCHER_H
 #define SEARCHER_H
 
-#include "Searchable.h"
+#include "fnord-fts/search/Searchable.h"
 
 namespace Lucene {
 

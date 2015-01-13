@@ -7,7 +7,7 @@
 #ifndef DOCFIELDPROCESSOR_H
 #define DOCFIELDPROCESSOR_H
 
-#include "DocConsumer.h"
+#include "fnord-fts/index/DocConsumer.h"
 
 namespace Lucene {
 

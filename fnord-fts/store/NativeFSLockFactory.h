@@ -7,7 +7,7 @@
 #ifndef NATIVEFSLOCKFACTORY_H
 #define NATIVEFSLOCKFACTORY_H
 
-#include "FSLockFactory.h"
+#include "fnord-fts/store/FSLockFactory.h"
 
 namespace Lucene {
 

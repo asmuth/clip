@@ -7,7 +7,7 @@
 #ifndef _DOCIDSET_H
 #define _DOCIDSET_H
 
-#include "DocIdSetIterator.h"
+#include "fnord-fts/search/DocIdSetIterator.h"
 
 namespace Lucene {
 

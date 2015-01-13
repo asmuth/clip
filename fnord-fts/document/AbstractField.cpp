@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/document//LuceneInc.h"
-#include "AbstractField.h"
-#include "Field.h"
+#include "fnord-fts/document/AbstractField.h"
+#include "fnord-fts/document/Field.h"
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 

@@ -7,7 +7,7 @@
 #ifndef ORDFIELDSOURCE_H
 #define ORDFIELDSOURCE_H
 
-#include "ValueSource.h"
+#include "fnord-fts/search/function/ValueSource.h"
 
 namespace Lucene {
 

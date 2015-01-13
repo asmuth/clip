@@ -10,7 +10,7 @@
 #include <boost/filesystem/path.hpp>
 #include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/StringUtils.h"
-#include "FileUtils.h"
+#include "fnord-fts/util/FileUtils.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>

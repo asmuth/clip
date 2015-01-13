@@ -7,7 +7,7 @@
 #ifndef FIELDCACHETERMSFILTER_H
 #define FIELDCACHETERMSFILTER_H
 
-#include "Filter.h"
+#include "fnord-fts/search/Filter.h"
 
 namespace Lucene {
 

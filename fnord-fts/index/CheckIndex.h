@@ -7,7 +7,7 @@
 #ifndef CHECKINDEX_H
 #define CHECKINDEX_H
 
-#include "SegmentTermDocs.h"
+#include "fnord-fts/index/SegmentTermDocs.h"
 
 namespace Lucene {
 

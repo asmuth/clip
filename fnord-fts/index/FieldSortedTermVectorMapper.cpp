@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FieldSortedTermVectorMapper.h"
-#include "TermVectorEntry.h"
+#include "fnord-fts/index/FieldSortedTermVectorMapper.h"
+#include "fnord-fts/index/TermVectorEntry.h"
 
 namespace Lucene {
 

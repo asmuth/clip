@@ -7,7 +7,7 @@
 #ifndef MULTITERMQUERYWRAPPERFILTER_H
 #define MULTITERMQUERYWRAPPERFILTER_H
 
-#include "Filter.h"
+#include "fnord-fts/search/Filter.h"
 
 namespace Lucene {
 

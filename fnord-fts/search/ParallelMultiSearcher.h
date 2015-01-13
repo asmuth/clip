@@ -7,7 +7,7 @@
 #ifndef PARALLELMULTISEARCHER_H
 #define PARALLELMULTISEARCHER_H
 
-#include "MultiSearcher.h"
+#include "fnord-fts/search/MultiSearcher.h"
 
 namespace Lucene {
 

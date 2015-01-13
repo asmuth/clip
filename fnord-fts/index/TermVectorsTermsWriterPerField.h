@@ -7,7 +7,7 @@
 #ifndef TERMVECTORSTERMSWRITERPERFIELD_H
 #define TERMVECTORSTERMSWRITERPERFIELD_H
 
-#include "TermsHashConsumerPerField.h"
+#include "fnord-fts/index/TermsHashConsumerPerField.h"
 
 namespace Lucene {
 

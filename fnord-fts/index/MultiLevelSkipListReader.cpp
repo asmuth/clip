@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "MultiLevelSkipListReader.h"
-#include "BufferedIndexInput.h"
+#include "fnord-fts/index/MultiLevelSkipListReader.h"
+#include "fnord-fts/store/BufferedIndexInput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

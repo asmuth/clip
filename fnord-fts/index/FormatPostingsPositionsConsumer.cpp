@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FormatPostingsPositionsConsumer.h"
+#include "fnord-fts/index/FormatPostingsPositionsConsumer.h"
 
 namespace Lucene {
 

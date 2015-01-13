@@ -7,7 +7,7 @@
 #ifndef _NATIVEFSLOCKFACTORY_H
 #define _NATIVEFSLOCKFACTORY_H
 
-#include "Lock.h"
+#include "fnord-fts/store/Lock.h"
 
 namespace Lucene {
 

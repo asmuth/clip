@@ -7,7 +7,7 @@
 #ifndef POSITIONINCREMENTATTRIBUTE_H
 #define POSITIONINCREMENTATTRIBUTE_H
 
-#include "Attribute.h"
+#include "fnord-fts/util/Attribute.h"
 
 namespace Lucene {
 

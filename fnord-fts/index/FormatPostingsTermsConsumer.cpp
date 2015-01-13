@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FormatPostingsTermsConsumer.h"
-#include "UTF8Stream.h"
+#include "fnord-fts/index/FormatPostingsTermsConsumer.h"
+#include "fnord-fts/util/UTF8Stream.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

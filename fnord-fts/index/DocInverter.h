@@ -7,7 +7,7 @@
 #ifndef DOCINVERTER_H
 #define DOCINVERTER_H
 
-#include "DocFieldConsumer.h"
+#include "fnord-fts/index/DocFieldConsumer.h"
 
 namespace Lucene {
 

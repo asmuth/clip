@@ -7,7 +7,7 @@
 #ifndef FORMATPOSTINGSFIELDSWRITER_H
 #define FORMATPOSTINGSFIELDSWRITER_H
 
-#include "FormatPostingsFieldsConsumer.h"
+#include "fnord-fts/index/FormatPostingsFieldsConsumer.h"
 
 namespace Lucene {
 

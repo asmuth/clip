@@ -7,7 +7,7 @@
 #ifndef CHARTOKENIZER_H
 #define CHARTOKENIZER_H
 
-#include "Tokenizer.h"
+#include "fnord-fts/analysis/Tokenizer.h"
 
 namespace Lucene {
 

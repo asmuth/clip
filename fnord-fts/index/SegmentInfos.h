@@ -7,7 +7,7 @@
 #ifndef SEGMENTINFOS_H
 #define SEGMENTINFOS_H
 
-#include "SegmentInfoCollection.h"
+#include "fnord-fts/index/SegmentInfoCollection.h"
 
 namespace Lucene {
 

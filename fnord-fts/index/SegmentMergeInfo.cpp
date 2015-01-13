@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentMergeInfo.h"
+#include "fnord-fts/index/SegmentMergeInfo.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/TermEnum.h"
 #include "fnord-fts/index/TermPositions.h"

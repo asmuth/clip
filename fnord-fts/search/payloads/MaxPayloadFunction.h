@@ -7,7 +7,7 @@
 #ifndef MAXPAYLOADFUNCTION_H
 #define MAXPAYLOADFUNCTION_H
 
-#include "PayloadFunction.h"
+#include "fnord-fts/search/payloads/PayloadFunction.h"
 
 namespace Lucene {
 

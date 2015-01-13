@@ -7,7 +7,7 @@
 #ifndef ALLTERMDOCS_H
 #define ALLTERMDOCS_H
 
-#include "AbstractAllTermDocs.h"
+#include "fnord-fts/index/AbstractAllTermDocs.h"
 
 namespace Lucene {
 

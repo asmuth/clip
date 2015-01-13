@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermVectorsReader.h"
-#include "BufferedIndexInput.h"
-#include "IndexFileNames.h"
-#include "Directory.h"
-#include "FieldInfos.h"
-#include "SegmentTermPositionVector.h"
-#include "TermVectorOffsetInfo.h"
+#include "fnord-fts/index/TermVectorsReader.h"
+#include "fnord-fts/store/BufferedIndexInput.h"
+#include "fnord-fts/index/IndexFileNames.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/index/FieldInfos.h"
+#include "fnord-fts/index/SegmentTermPositionVector.h"
+#include "fnord-fts/index/TermVectorOffsetInfo.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

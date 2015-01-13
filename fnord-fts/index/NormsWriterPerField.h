@@ -7,7 +7,7 @@
 #ifndef NORMSWRITERPERFIELD_H
 #define NORMSWRITERPERFIELD_H
 
-#include "InvertedDocEndConsumerPerField.h"
+#include "fnord-fts/index/InvertedDocEndConsumerPerField.h"
 
 namespace Lucene {
 

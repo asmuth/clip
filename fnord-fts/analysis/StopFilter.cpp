@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "StopFilter.h"
-#include "CharArraySet.h"
-#include "TermAttribute.h"
-#include "PositionIncrementAttribute.h"
+#include "fnord-fts/analysis/StopFilter.h"
+#include "fnord-fts/analysis/CharArraySet.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
 
 namespace Lucene {
 

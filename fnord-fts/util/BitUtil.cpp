@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "BitUtil.h"
+#include "fnord-fts/util/BitUtil.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

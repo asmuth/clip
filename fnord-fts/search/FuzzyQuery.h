@@ -7,7 +7,7 @@
 #ifndef FUZZYQUERY_H
 #define FUZZYQUERY_H
 
-#include "MultiTermQuery.h"
+#include "fnord-fts/search/MultiTermQuery.h"
 
 namespace Lucene {
 

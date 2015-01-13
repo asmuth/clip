@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "KeywordTokenizer.h"
-#include "TermAttribute.h"
-#include "OffsetAttribute.h"
-#include "Reader.h"
+#include "fnord-fts/analysis/KeywordTokenizer.h"
+#include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
+#include "fnord-fts/analysis/tokenattributes/OffsetAttribute.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/document//LuceneInc.h"
-#include "SetBasedFieldSelector.h"
+#include "fnord-fts/document/SetBasedFieldSelector.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef RAMOUTPUTSTREAM_H
 #define RAMOUTPUTSTREAM_H
 
-#include "IndexOutput.h"
+#include "fnord-fts/store/IndexOutput.h"
 
 namespace Lucene {
 

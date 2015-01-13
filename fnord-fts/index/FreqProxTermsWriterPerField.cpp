@@ -5,17 +5,17 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FreqProxTermsWriterPerField.h"
-#include "FreqProxTermsWriter.h"
-#include "FieldInfo.h"
+#include "fnord-fts/index/FreqProxTermsWriterPerField.h"
+#include "fnord-fts/index/FreqProxTermsWriter.h"
+#include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/document/Fieldable.h"
-#include "TermsHashPerField.h"
+#include "fnord-fts/index/TermsHashPerField.h"
 #include "fnord-fts/index/FieldInvertState.h"
 #include "fnord-fts/util/AttributeSource.h"
-#include "Payload.h"
-#include "PayloadAttribute.h"
-#include "DocumentsWriter.h"
-#include "RawPostingList.h"
+#include "fnord-fts/index/Payload.h"
+#include "fnord-fts/analysis/tokenattributes/PayloadAttribute.h"
+#include "fnord-fts/index/DocumentsWriter.h"
+#include "fnord-fts/index/RawPostingList.h"
 
 namespace Lucene {
 

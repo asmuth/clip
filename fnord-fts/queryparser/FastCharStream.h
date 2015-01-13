@@ -7,7 +7,7 @@
 #ifndef FASTCHARSTREAM_H
 #define FASTCHARSTREAM_H
 
-#include "QueryParserCharStream.h"
+#include "fnord-fts/queryparser/QueryParserCharStream.h"
 
 namespace Lucene {
 

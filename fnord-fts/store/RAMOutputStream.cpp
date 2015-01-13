@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "RAMOutputStream.h"
-#include "RAMFile.h"
-#include "RAMDirectory.h"
+#include "fnord-fts/store/RAMOutputStream.h"
+#include "fnord-fts/store/RAMFile.h"
+#include "fnord-fts/store/RAMDirectory.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

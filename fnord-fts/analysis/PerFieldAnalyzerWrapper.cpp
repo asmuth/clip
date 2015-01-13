@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "PerFieldAnalyzerWrapper.h"
+#include "fnord-fts/analysis/PerFieldAnalyzerWrapper.h"
 #include "fnord-fts/document/Fieldable.h"
 
 namespace Lucene {

@@ -7,7 +7,7 @@
 #ifndef ISOLATIN1ACCENTFILTER_H
 #define ISOLATIN1ACCENTFILTER_H
 
-#include "TokenFilter.h"
+#include "fnord-fts/analysis/TokenFilter.h"
 
 namespace Lucene {
 

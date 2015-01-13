@@ -7,7 +7,7 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
-#include "Reader.h"
+#include "fnord-fts/util/Reader.h"
 
 namespace Lucene {
 

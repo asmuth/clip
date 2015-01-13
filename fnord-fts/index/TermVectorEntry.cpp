@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermVectorEntry.h"
+#include "fnord-fts/index/TermVectorEntry.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

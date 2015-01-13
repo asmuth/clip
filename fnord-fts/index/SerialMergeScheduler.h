@@ -7,7 +7,7 @@
 #ifndef SERIALMERGESCHEDULER_H
 #define SERIALMERGESCHEDULER_H
 
-#include "MergeScheduler.h"
+#include "fnord-fts/index/MergeScheduler.h"
 
 namespace Lucene {
 

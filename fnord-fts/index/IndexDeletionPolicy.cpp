@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "IndexDeletionPolicy.h"
+#include "fnord-fts/index/IndexDeletionPolicy.h"
 
 namespace Lucene {
 

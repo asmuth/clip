@@ -6,9 +6,9 @@
 
 #include "fnord-fts/store/LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
-#include "SimpleFSLockFactory.h"
+#include "fnord-fts/store/SimpleFSLockFactory.h"
 #include "_SimpleFSLockFactory.h"
-#include "FileUtils.h"
+#include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

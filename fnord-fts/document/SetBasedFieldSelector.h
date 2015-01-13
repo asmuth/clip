@@ -7,7 +7,7 @@
 #ifndef SETBASEDFIELDSELECTOR_H
 #define SETBASEDFIELDSELECTOR_H
 
-#include "FieldSelector.h"
+#include "fnord-fts/document/FieldSelector.h"
 
 namespace Lucene {
 

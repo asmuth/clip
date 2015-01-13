@@ -9,13 +9,13 @@
 #include <iostream>
 #include "fnord-fts/index/IndexReader.h"
 #include "_IndexReader.h"
-#include "DirectoryReader.h"
-#include "IndexDeletionPolicy.h"
-#include "FSDirectory.h"
-#include "FieldSelector.h"
+#include "fnord-fts/index/DirectoryReader.h"
+#include "fnord-fts/index/IndexDeletionPolicy.h"
+#include "fnord-fts/store/FSDirectory.h"
+#include "fnord-fts/document/FieldSelector.h"
 #include "fnord-fts/search/Similarity.h"
-#include "CompoundFileReader.h"
-#include "FileUtils.h"
+#include "fnord-fts/index/CompoundFileReader.h"
+#include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

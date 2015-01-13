@@ -5,16 +5,16 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FieldsWriter.h"
-#include "IndexFileNames.h"
-#include "Directory.h"
-#include "IndexOutput.h"
-#include "RAMOutputStream.h"
-#include "FieldInfo.h"
-#include "FieldInfos.h"
+#include "fnord-fts/index/FieldsWriter.h"
+#include "fnord-fts/index/IndexFileNames.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/store/RAMOutputStream.h"
+#include "fnord-fts/index/FieldInfo.h"
+#include "fnord-fts/index/FieldInfos.h"
 #include "fnord-fts/document/Fieldable.h"
-#include "Document.h"
-#include "TestPoint.h"
+#include "fnord-fts/document/Document.h"
+#include "fnord-fts/util/TestPoint.h"
 
 namespace Lucene {
 

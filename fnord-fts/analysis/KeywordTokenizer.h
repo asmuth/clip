@@ -7,7 +7,7 @@
 #ifndef KEYWORDTOKENIZER_H
 #define KEYWORDTOKENIZER_H
 
-#include "Tokenizer.h"
+#include "fnord-fts/analysis/Tokenizer.h"
 
 namespace Lucene {
 

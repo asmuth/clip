@@ -7,7 +7,7 @@
 #ifndef FIELDCACHESOURCE_H
 #define FIELDCACHESOURCE_H
 
-#include "ValueSource.h"
+#include "fnord-fts/search/function/ValueSource.h"
 
 namespace Lucene {
 

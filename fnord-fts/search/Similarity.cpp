@@ -11,7 +11,7 @@
 #include "fnord-fts/index/FieldInvertState.h"
 #include "fnord-fts/search/Searcher.h"
 #include "fnord-fts/index/Term.h"
-#include "fnord-fts/search/SmallDouble.h"
+#include "fnord-fts/util/SmallDouble.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

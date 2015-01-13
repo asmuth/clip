@@ -7,7 +7,7 @@
 #ifndef MERGEPOLICY_H
 #define MERGEPOLICY_H
 
-#include "SegmentInfos.h"
+#include "fnord-fts/index/SegmentInfos.h"
 
 namespace Lucene {
 

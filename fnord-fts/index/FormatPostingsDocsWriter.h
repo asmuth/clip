@@ -7,7 +7,7 @@
 #ifndef FORMATPOSTINGSDOCSWRITER_H
 #define FORMATPOSTINGSDOCSWRITER_H
 
-#include "FormatPostingsDocsConsumer.h"
+#include "fnord-fts/index/FormatPostingsDocsConsumer.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef SPANFILTER_H
 #define SPANFILTER_H
 
-#include "Filter.h"
+#include "fnord-fts/search/Filter.h"
 
 namespace Lucene {
 

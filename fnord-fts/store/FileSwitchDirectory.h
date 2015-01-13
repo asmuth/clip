@@ -7,7 +7,7 @@
 #ifndef FILESWITCHDIRECTORY_H
 #define FILESWITCHDIRECTORY_H
 
-#include "Directory.h"
+#include "fnord-fts/store/Directory.h"
 
 namespace Lucene {
 

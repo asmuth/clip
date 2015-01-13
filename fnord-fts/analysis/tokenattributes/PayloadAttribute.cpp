@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "PayloadAttribute.h"
-#include "Payload.h"
+#include "fnord-fts/analysis/tokenattributes/PayloadAttribute.h"
+#include "fnord-fts/index/Payload.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

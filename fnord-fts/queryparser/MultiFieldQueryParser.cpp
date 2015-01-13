@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/queryparser/LuceneInc.h"
-#include "MultiFieldQueryParser.h"
+#include "fnord-fts/queryparser/MultiFieldQueryParser.h"
 #include "fnord-fts/search/BooleanQuery.h"
 #include "fnord-fts/search/BooleanClause.h"
 #include "fnord-fts/search/PhraseQuery.h"

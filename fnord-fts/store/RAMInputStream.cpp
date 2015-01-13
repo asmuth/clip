@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "RAMInputStream.h"
-#include "RAMFile.h"
-#include "RAMOutputStream.h"
+#include "fnord-fts/store/RAMInputStream.h"
+#include "fnord-fts/store/RAMFile.h"
+#include "fnord-fts/store/RAMOutputStream.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

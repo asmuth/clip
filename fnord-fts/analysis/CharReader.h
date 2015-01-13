@@ -7,7 +7,7 @@
 #ifndef CHARREADER_H
 #define CHARREADER_H
 
-#include "CharStream.h"
+#include "fnord-fts/analysis/CharStream.h"
 
 namespace Lucene {
 

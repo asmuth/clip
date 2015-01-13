@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "ConcurrentMergeScheduler.h"
+#include "fnord-fts/index/ConcurrentMergeScheduler.h"
 #include "_ConcurrentMergeScheduler.h"
-#include "IndexWriter.h"
-#include "TestPoint.h"
+#include "fnord-fts/index/IndexWriter.h"
+#include "fnord-fts/util/TestPoint.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

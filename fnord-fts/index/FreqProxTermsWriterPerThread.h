@@ -7,7 +7,7 @@
 #ifndef FREQPROXTERMSWRITERPERTHREAD_H
 #define FREQPROXTERMSWRITERPERTHREAD_H
 
-#include "TermsHashConsumerPerThread.h"
+#include "fnord-fts/index/TermsHashConsumerPerThread.h"
 
 namespace Lucene {
 

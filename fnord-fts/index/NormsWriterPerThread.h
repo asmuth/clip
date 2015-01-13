@@ -7,7 +7,7 @@
 #ifndef NORMSWRITERPERTHREAD_H
 #define NORMSWRITERPERTHREAD_H
 
-#include "InvertedDocEndConsumerPerThread.h"
+#include "fnord-fts/index/InvertedDocEndConsumerPerThread.h"
 
 namespace Lucene {
 

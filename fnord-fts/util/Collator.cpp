@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include <locale>
-#include "Collator.h"
+#include "fnord-fts/util/Collator.h"
 
 namespace Lucene {
 

@@ -5,18 +5,18 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "NormsWriter.h"
-#include "NormsWriterPerThread.h"
-#include "NormsWriterPerField.h"
+#include "fnord-fts/index/NormsWriter.h"
+#include "fnord-fts/index/NormsWriterPerThread.h"
+#include "fnord-fts/index/NormsWriterPerField.h"
 #include "fnord-fts/search/Similarity.h"
-#include "IndexFileNames.h"
-#include "IndexOutput.h"
-#include "SegmentMerger.h"
-#include "SegmentWriteState.h"
-#include "InvertedDocEndConsumerPerField.h"
-#include "FieldInfos.h"
-#include "FieldInfo.h"
-#include "Directory.h"
+#include "fnord-fts/index/IndexFileNames.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/index/SegmentMerger.h"
+#include "fnord-fts/index/SegmentWriteState.h"
+#include "fnord-fts/index/InvertedDocEndConsumerPerField.h"
+#include "fnord-fts/index/FieldInfos.h"
+#include "fnord-fts/index/FieldInfo.h"
+#include "fnord-fts/store/Directory.h"
 
 namespace Lucene {
 

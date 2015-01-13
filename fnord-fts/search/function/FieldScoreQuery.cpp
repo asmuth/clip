@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "FieldScoreQuery.h"
-#include "ByteFieldSource.h"
-#include "IntFieldSource.h"
-#include "DoubleFieldSource.h"
+#include "fnord-fts/search/function/FieldScoreQuery.h"
+#include "fnord-fts/search/function/ByteFieldSource.h"
+#include "fnord-fts/search/function/IntFieldSource.h"
+#include "fnord-fts/search/function/DoubleFieldSource.h"
 
 namespace Lucene {
 

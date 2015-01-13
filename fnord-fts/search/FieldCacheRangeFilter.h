@@ -7,7 +7,7 @@
 #ifndef FIELDCACHERANGEFILTER_H
 #define FIELDCACHERANGEFILTER_H
 
-#include "Filter.h"
+#include "fnord-fts/search/Filter.h"
 #include "fnord-fts/search/FieldCache.h"
 
 namespace Lucene {

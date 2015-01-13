@@ -7,7 +7,7 @@
 #ifndef NUMERICRANGEFILTER_H
 #define NUMERICRANGEFILTER_H
 
-#include "MultiTermQueryWrapperFilter.h"
+#include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
 
 namespace Lucene {
 

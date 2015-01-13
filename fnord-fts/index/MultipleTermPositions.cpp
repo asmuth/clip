@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "MultipleTermPositions.h"
+#include "fnord-fts/index/MultipleTermPositions.h"
 #include "_MultipleTermPositions.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/Term.h"

@@ -6,9 +6,9 @@
 
 #include "fnord-fts/analysis/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
-#include "WordlistLoader.h"
-#include "FileReader.h"
-#include "BufferedReader.h"
+#include "fnord-fts/analysis/WordlistLoader.h"
+#include "fnord-fts/util/FileReader.h"
+#include "fnord-fts/util/BufferedReader.h"
 
 namespace Lucene {
 

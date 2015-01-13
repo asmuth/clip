@@ -7,7 +7,7 @@
 #ifndef MAPFIELDSELECTOR_H
 #define MAPFIELDSELECTOR_H
 
-#include "FieldSelector.h"
+#include "fnord-fts/document/FieldSelector.h"
 
 namespace Lucene {
 

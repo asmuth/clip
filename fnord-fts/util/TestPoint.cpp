@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "TestPoint.h"
+#include "fnord-fts/util/TestPoint.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef FLAGSATTRIBUTE_H
 #define FLAGSATTRIBUTE_H
 
-#include "Attribute.h"
+#include "fnord-fts/util/Attribute.h"
 
 namespace Lucene {
 

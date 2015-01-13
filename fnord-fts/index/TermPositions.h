@@ -7,7 +7,7 @@
 #ifndef TERMPOSITIONS_H
 #define TERMPOSITIONS_H
 
-#include "TermDocs.h"
+#include "fnord-fts/index/TermDocs.h"
 
 namespace Lucene {
 

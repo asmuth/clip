@@ -7,8 +7,8 @@
 #ifndef DOCUMENTSWRITER_H
 #define DOCUMENTSWRITER_H
 
-#include "ByteBlockPool.h"
-#include "RAMFile.h"
+#include "fnord-fts/index/ByteBlockPool.h"
+#include "fnord-fts/store/RAMFile.h"
 
 namespace Lucene {
 

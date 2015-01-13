@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "DocFieldConsumersPerThread.h"
-#include "DocFieldProcessorPerThread.h"
-#include "DocFieldConsumers.h"
-#include "DocFieldConsumersPerField.h"
+#include "fnord-fts/index/DocFieldConsumersPerThread.h"
+#include "fnord-fts/index/DocFieldProcessorPerThread.h"
+#include "fnord-fts/index/DocFieldConsumers.h"
+#include "fnord-fts/index/DocFieldConsumersPerField.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef _NUMERICRANGEQUERY_H
 #define _NUMERICRANGEQUERY_H
 
-#include "FilteredTermEnum.h"
+#include "fnord-fts/search/FilteredTermEnum.h"
 #include "fnord-fts/util/NumericUtils.h"
 
 namespace Lucene {

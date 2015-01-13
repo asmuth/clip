@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "CompoundFileReader.h"
+#include "fnord-fts/index/CompoundFileReader.h"
 
 namespace Lucene {
 

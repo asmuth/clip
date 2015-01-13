@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "FieldInfos.h"
-#include "FieldInfo.h"
-#include "IndexInput.h"
-#include "IndexOutput.h"
-#include "Directory.h"
-#include "Document.h"
+#include "fnord-fts/index/FieldInfos.h"
+#include "fnord-fts/index/FieldInfo.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/store/IndexOutput.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/document/Document.h"
 #include "fnord-fts/document/Fieldable.h"
 #include "fnord-fts/util/StringUtils.h"
 

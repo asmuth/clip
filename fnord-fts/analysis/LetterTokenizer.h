@@ -7,7 +7,7 @@
 #ifndef LETTERTOKENIZER_H
 #define LETTERTOKENIZER_H
 
-#include "CharTokenizer.h"
+#include "fnord-fts/analysis/CharTokenizer.h"
 
 namespace Lucene {
 

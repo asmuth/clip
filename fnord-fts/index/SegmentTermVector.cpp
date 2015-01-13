@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "SegmentTermVector.h"
+#include "fnord-fts/index/SegmentTermVector.h"
 
 namespace Lucene {
 

@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "Directory.h"
-#include "LockFactory.h"
-#include "BufferedIndexOutput.h"
-#include "IndexFileNameFilter.h"
-#include "IndexInput.h"
-#include "IndexOutput.h"
+#include "fnord-fts/store/Directory.h"
+#include "fnord-fts/store/LockFactory.h"
+#include "fnord-fts/store/BufferedIndexOutput.h"
+#include "fnord-fts/index/IndexFileNameFilter.h"
+#include "fnord-fts/store/IndexInput.h"
+#include "fnord-fts/store/IndexOutput.h"
 
 namespace Lucene {
 

@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/store/LuceneInc.h"
-#include "RAMDirectory.h"
-#include "RAMFile.h"
-#include "RAMInputStream.h"
-#include "RAMOutputStream.h"
-#include "SingleInstanceLockFactory.h"
+#include "fnord-fts/store/RAMDirectory.h"
+#include "fnord-fts/store/RAMFile.h"
+#include "fnord-fts/store/RAMInputStream.h"
+#include "fnord-fts/store/RAMOutputStream.h"
+#include "fnord-fts/store/SingleInstanceLockFactory.h"
 #include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/MiscUtils.h"
 

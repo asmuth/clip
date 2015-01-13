@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "CachingTokenFilter.h"
+#include "fnord-fts/analysis/CachingTokenFilter.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef READONLYDIRECTORYREADER_H
 #define READONLYDIRECTORYREADER_H
 
-#include "DirectoryReader.h"
+#include "fnord-fts/index/DirectoryReader.h"
 
 namespace Lucene {
 
