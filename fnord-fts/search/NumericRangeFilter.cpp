@@ -49,23 +49,23 @@ NumericRangeFilterPtr NumericRangeFilter::newNumericRange(const String& field, N
 }
 
 String NumericRangeFilter::getField() {
-    return boost::static_pointer_cast<NumericRangeQuery>(query)->field;
+    return std::static_pointer_cast<NumericRangeQuery>(query)->field;
 }
 
 bool NumericRangeFilter::includesMin() {
-    return boost::static_pointer_cast<NumericRangeQuery>(query)->minInclusive;
+    return std::static_pointer_cast<NumericRangeQuery>(query)->minInclusive;
 }
 
 bool NumericRangeFilter::includesMax() {
-    return boost::static_pointer_cast<NumericRangeQuery>(query)->maxInclusive;
+    return std::static_pointer_cast<NumericRangeQuery>(query)->maxInclusive;
 }
 
 NumericValue NumericRangeFilter::getMin() {
-    return boost::static_pointer_cast<NumericRangeQuery>(query)->min;
+    return std::static_pointer_cast<NumericRangeQuery>(query)->min;
 }
 
 NumericValue NumericRangeFilter::getMax() {
-    return boost::static_pointer_cast<NumericRangeQuery>(query)->min;
+    return std::static_pointer_cast<NumericRangeQuery>(query)->min;
 }
 
 }

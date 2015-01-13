@@ -17,7 +17,7 @@ CharReader::~CharReader() {
 }
 
 CharStreamPtr CharReader::get(const ReaderPtr& input) {
-    CharStreamPtr charStream(boost::dynamic_pointer_cast<CharStream>(input));
+    CharStreamPtr charStream(std::dynamic_pointer_cast<CharStream>(input));
     return charStream ? charStream : newLucene<CharReader>(input);
 }
 

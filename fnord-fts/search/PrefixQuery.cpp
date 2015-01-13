@@ -38,7 +38,7 @@ String PrefixQuery::toString(const String& field) {
 
 LuceneObjectPtr PrefixQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = MultiTermQuery::clone(other ? other : newLucene<PrefixQuery>(prefix));
-    PrefixQueryPtr cloneQuery(boost::dynamic_pointer_cast<PrefixQuery>(clone));
+    PrefixQueryPtr cloneQuery(std::dynamic_pointer_cast<PrefixQuery>(clone));
     cloneQuery->prefix = prefix;
     return cloneQuery;
 }
@@ -60,7 +60,7 @@ bool PrefixQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    PrefixQueryPtr otherPrefixQuery(boost::dynamic_pointer_cast<PrefixQuery>(other));
+    PrefixQueryPtr otherPrefixQuery(std::dynamic_pointer_cast<PrefixQuery>(other));
     if (!otherPrefixQuery) {
         return false;
     }

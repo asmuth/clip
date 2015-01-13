@@ -18,7 +18,7 @@ TokenStreamPtr KeywordAnalyzer::tokenStream(const String& fieldName, const Reade
 }
 
 TokenStreamPtr KeywordAnalyzer::reusableTokenStream(const String& fieldName, const ReaderPtr& reader) {
-    TokenizerPtr tokenizer(boost::dynamic_pointer_cast<Tokenizer>(getPreviousTokenStream()));
+    TokenizerPtr tokenizer(std::dynamic_pointer_cast<Tokenizer>(getPreviousTokenStream()));
     if (!tokenizer) {
         tokenizer = newLucene<KeywordTokenizer>(reader);
         setPreviousTokenStream(tokenizer);

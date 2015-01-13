@@ -47,15 +47,15 @@ QueryPtr CustomScoreQuery::rewrite(const IndexReaderPtr& reader) {
 
     QueryPtr sq = subQuery->rewrite(reader);
     if (sq != subQuery) {
-        cloneQuery = boost::static_pointer_cast<CustomScoreQuery>(clone());
+        cloneQuery = std::static_pointer_cast<CustomScoreQuery>(clone());
         cloneQuery->subQuery = sq;
     }
 
     for (int32_t i = 0; i < valSrcQueries.size(); ++i) {
-        ValueSourceQueryPtr v = boost::dynamic_pointer_cast<ValueSourceQuery>(valSrcQueries[i]->rewrite(reader));
+        ValueSourceQueryPtr v = std::dynamic_pointer_cast<ValueSourceQuery>(valSrcQueries[i]->rewrite(reader));
         if (v != valSrcQueries[i]) {
             if (!cloneQuery) {
-                cloneQuery = boost::static_pointer_cast<CustomScoreQuery>(clone());
+                cloneQuery = std::static_pointer_cast<CustomScoreQuery>(clone());
             }
             cloneQuery->valSrcQueries[i] = v;
         }
@@ -73,12 +73,12 @@ void CustomScoreQuery::extractTerms(SetTerm terms) {
 
 LuceneObjectPtr CustomScoreQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Query::clone(other ? other : newLucene<CustomScoreQuery>(subQuery));
-    CustomScoreQueryPtr cloneQuery(boost::dynamic_pointer_cast<CustomScoreQuery>(clone));
+    CustomScoreQueryPtr cloneQuery(std::dynamic_pointer_cast<CustomScoreQuery>(clone));
     cloneQuery->strict = strict;
-    cloneQuery->subQuery = boost::dynamic_pointer_cast<Query>(subQuery->clone());
+    cloneQuery->subQuery = std::dynamic_pointer_cast<Query>(subQuery->clone());
     cloneQuery->valSrcQueries = Collection<ValueSourceQueryPtr>::newInstance(valSrcQueries.size());
     for (int32_t i = 0; i < valSrcQueries.size(); ++i) {
-        cloneQuery->valSrcQueries[i] = boost::dynamic_pointer_cast<ValueSourceQuery>(valSrcQueries[i]->clone());
+        cloneQuery->valSrcQueries[i] = std::dynamic_pointer_cast<ValueSourceQuery>(valSrcQueries[i]->clone());
     }
     return cloneQuery;
 }
@@ -94,7 +94,7 @@ String CustomScoreQuery::toString(const String& field) {
 }
 
 bool CustomScoreQuery::equals(const LuceneObjectPtr& other) {
-    CustomScoreQueryPtr otherQuery(boost::dynamic_pointer_cast<CustomScoreQuery>(other));
+    CustomScoreQueryPtr otherQuery(std::dynamic_pointer_cast<CustomScoreQuery>(other));
     if (!otherQuery) {
         return false;
     }

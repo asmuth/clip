@@ -60,10 +60,10 @@ QueryPtr MultiFieldQueryParser::getFieldQuery(const String& field, const String&
 
 void MultiFieldQueryParser::applySlop(const QueryPtr& query, int32_t slop) {
     if (MiscUtils::typeOf<PhraseQuery>(query)) {
-        boost::dynamic_pointer_cast<PhraseQuery>(query)->setSlop(slop);
+        std::dynamic_pointer_cast<PhraseQuery>(query)->setSlop(slop);
     }
     if (MiscUtils::typeOf<MultiPhraseQuery>(query)) {
-        boost::dynamic_pointer_cast<MultiPhraseQuery>(query)->setSlop(slop);
+        std::dynamic_pointer_cast<MultiPhraseQuery>(query)->setSlop(slop);
     }
 }
 
@@ -119,7 +119,7 @@ QueryPtr MultiFieldQueryParser::parse(LuceneVersion::Version matchVersion, Colle
     for (int32_t i = 0; i < fields.size(); ++i) {
         QueryParserPtr queryParser(newLucene<QueryParser>(matchVersion, fields[i], analyzer));
         QueryPtr query(queryParser->parse(queries[i]));
-        if (query && (!MiscUtils::typeOf<BooleanQuery>(query) || !boost::dynamic_pointer_cast<BooleanQuery>(query)->getClauses().empty())) {
+        if (query && (!MiscUtils::typeOf<BooleanQuery>(query) || !std::dynamic_pointer_cast<BooleanQuery>(query)->getClauses().empty())) {
             booleanQuery->add(query, BooleanClause::SHOULD);
         }
     }
@@ -134,7 +134,7 @@ QueryPtr MultiFieldQueryParser::parse(LuceneVersion::Version matchVersion, const
     for (int32_t i = 0; i < fields.size(); ++i) {
         QueryParserPtr queryParser(newLucene<QueryParser>(matchVersion, fields[i], analyzer));
         QueryPtr q(queryParser->parse(query));
-        if (q && (!MiscUtils::typeOf<BooleanQuery>(q) || !boost::dynamic_pointer_cast<BooleanQuery>(q)->getClauses().empty())) {
+        if (q && (!MiscUtils::typeOf<BooleanQuery>(q) || !std::dynamic_pointer_cast<BooleanQuery>(q)->getClauses().empty())) {
             booleanQuery->add(q, flags[i]);
         }
     }
@@ -149,7 +149,7 @@ QueryPtr MultiFieldQueryParser::parse(LuceneVersion::Version matchVersion, Colle
     for (int32_t i = 0; i < fields.size(); ++i) {
         QueryParserPtr queryParser(newLucene<QueryParser>(matchVersion, fields[i], analyzer));
         QueryPtr query(queryParser->parse(queries[i]));
-        if (query && (!MiscUtils::typeOf<BooleanQuery>(query) || !boost::dynamic_pointer_cast<BooleanQuery>(query)->getClauses().empty())) {
+        if (query && (!MiscUtils::typeOf<BooleanQuery>(query) || !std::dynamic_pointer_cast<BooleanQuery>(query)->getClauses().empty())) {
             booleanQuery->add(query, flags[i]);
         }
     }

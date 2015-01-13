@@ -30,27 +30,27 @@ TermRangeFilterPtr TermRangeFilter::More(const String& fieldName, StringValue lo
 }
 
 String TermRangeFilter::getField() {
-    return boost::static_pointer_cast<TermRangeQuery>(query)->getField();
+    return std::static_pointer_cast<TermRangeQuery>(query)->getField();
 }
 
 String TermRangeFilter::getLowerTerm() {
-    return boost::static_pointer_cast<TermRangeQuery>(query)->getLowerTerm();
+    return std::static_pointer_cast<TermRangeQuery>(query)->getLowerTerm();
 }
 
 String TermRangeFilter::getUpperTerm() {
-    return boost::static_pointer_cast<TermRangeQuery>(query)->getUpperTerm();
+    return std::static_pointer_cast<TermRangeQuery>(query)->getUpperTerm();
 }
 
 bool TermRangeFilter::includesLower() {
-    return boost::static_pointer_cast<TermRangeQuery>(query)->includesLower();
+    return std::static_pointer_cast<TermRangeQuery>(query)->includesLower();
 }
 
 bool TermRangeFilter::includesUpper() {
-    return boost::static_pointer_cast<TermRangeQuery>(query)->includesUpper();
+    return std::static_pointer_cast<TermRangeQuery>(query)->includesUpper();
 }
 
 CollatorPtr TermRangeFilter::getCollator() {
-    return boost::static_pointer_cast<TermRangeQuery>(query)->getCollator();
+    return std::static_pointer_cast<TermRangeQuery>(query)->getCollator();
 }
 
 }

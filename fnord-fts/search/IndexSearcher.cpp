@@ -102,7 +102,7 @@ TopFieldDocsPtr IndexSearcher::search(const WeightPtr& weight, const FilterPtr& 
 TopFieldDocsPtr IndexSearcher::search(const WeightPtr& weight, const FilterPtr& filter, int32_t n, const SortPtr& sort, bool fillFields) {
     TopFieldCollectorPtr collector(TopFieldCollector::create(sort, std::min(n, reader->maxDoc()), fillFields, fieldSortDoTrackScores, fieldSortDoMaxScore, !weight->scoresDocsOutOfOrder()));
     search(weight, filter, collector);
-    return boost::dynamic_pointer_cast<TopFieldDocs>(collector->topDocs());
+    return std::dynamic_pointer_cast<TopFieldDocs>(collector->topDocs());
 }
 
 void IndexSearcher::search(const WeightPtr& weight, const FilterPtr& filter, const CollectorPtr& results) {

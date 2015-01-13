@@ -150,7 +150,7 @@ void DocumentsWriter::initialize() {
     flushedDocCount = writer->maxDoc();
 
     consumer = indexingChain->getChain(shared_from_this());
-    docFieldProcessor = boost::dynamic_pointer_cast<DocFieldProcessor>(consumer);
+    docFieldProcessor = std::dynamic_pointer_cast<DocFieldProcessor>(consumer);
 }
 
 PerDocBufferPtr DocumentsWriter::newPerDocBuffer() {

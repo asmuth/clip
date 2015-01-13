@@ -202,10 +202,10 @@ void NumericUtils::addRange(const LuceneObjectPtr& builder, int32_t valSize, int
     // delegate to correct range builder
     switch (valSize) {
     case 64:
-        boost::dynamic_pointer_cast<LongRangeBuilder>(builder)->addRange(minBound, maxBound, shift);
+        std::dynamic_pointer_cast<LongRangeBuilder>(builder)->addRange(minBound, maxBound, shift);
         break;
     case 32:
-        boost::dynamic_pointer_cast<IntRangeBuilder>(builder)->addRange((int32_t)minBound, (int32_t)maxBound, shift);
+        std::dynamic_pointer_cast<IntRangeBuilder>(builder)->addRange((int32_t)minBound, (int32_t)maxBound, shift);
         break;
     default:
         boost::throw_exception(IllegalArgumentException(L"valSize must be 32 or 64."));

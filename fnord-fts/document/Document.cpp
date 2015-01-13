@@ -53,7 +53,7 @@ void Document::removeFields(const String& name) {
 }
 
 FieldPtr Document::getField(const String& name) {
-    return boost::static_pointer_cast<Field>(getFieldable(name));
+    return std::static_pointer_cast<Field>(getFieldable(name));
 }
 
 FieldablePtr Document::getFieldable(const String& name) {
@@ -78,7 +78,7 @@ Collection<FieldPtr> Document::getFields(const String& name) {
     Collection<FieldPtr> result(Collection<FieldPtr>::newInstance());
     for (Collection<FieldablePtr>::iterator field = fields.begin(); field != fields.end(); ++field) {
         if ((*field)->name() == name) {
-            result.add(boost::static_pointer_cast<Field>(*field));
+            result.add(std::static_pointer_cast<Field>(*field));
         }
     }
     return result;

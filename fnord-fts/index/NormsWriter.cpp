@@ -55,7 +55,7 @@ void NormsWriter::flush(MapInvertedDocEndConsumerPerThreadCollectionInvertedDocE
     // per-thread field instances that correspond to the same FieldInfo
     for (MapInvertedDocEndConsumerPerThreadCollectionInvertedDocEndConsumerPerField::iterator entry = threadsAndFields.begin(); entry != threadsAndFields.end(); ++entry) {
         for (Collection<InvertedDocEndConsumerPerFieldPtr>::iterator perField = entry->second.begin(); perField != entry->second.end();) {
-            NormsWriterPerFieldPtr normsPerField(boost::static_pointer_cast<NormsWriterPerField>(*perField));
+            NormsWriterPerFieldPtr normsPerField(std::static_pointer_cast<NormsWriterPerField>(*perField));
             if (normsPerField->upto > 0) {
                 // It has some norms
                 Collection<NormsWriterPerFieldPtr> l = byField.get(normsPerField->fieldInfo);

@@ -106,7 +106,7 @@ AttributeSourceStatePtr AttributeSource::captureState() {
         computeCurrentState();
     }
 
-    return boost::dynamic_pointer_cast<AttributeSourceState>(currentState->clone());
+    return std::dynamic_pointer_cast<AttributeSourceState>(currentState->clone());
 }
 
 void AttributeSource::restoreState(const AttributeSourceStatePtr& state) {
@@ -138,7 +138,7 @@ bool AttributeSource::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    AttributeSourcePtr otherAttributeSource = boost::dynamic_pointer_cast<AttributeSource>(other);
+    AttributeSourcePtr otherAttributeSource = std::dynamic_pointer_cast<AttributeSource>(other);
     if (otherAttributeSource) {
         if (hasAttributes()) {
             if (!otherAttributeSource->hasAttributes()) {
@@ -202,7 +202,7 @@ AttributeSourcePtr AttributeSource::cloneAttributes() {
             computeCurrentState();
         }
         for (AttributeSourceStatePtr state(currentState); state; state = state->next) {
-            clone->attributes.put(state->attribute->getClassName(), boost::dynamic_pointer_cast<Attribute>(state->attribute->clone()));
+            clone->attributes.put(state->attribute->getClassName(), std::dynamic_pointer_cast<Attribute>(state->attribute->clone()));
         }
     }
 
@@ -234,10 +234,10 @@ AttributeSourceState::~AttributeSourceState() {
 
 LuceneObjectPtr AttributeSourceState::clone(const LuceneObjectPtr& other) {
     AttributeSourceStatePtr clone(newLucene<AttributeSourceState>());
-    clone->attribute = boost::dynamic_pointer_cast<Attribute>(attribute->clone());
+    clone->attribute = std::dynamic_pointer_cast<Attribute>(attribute->clone());
 
     if (next) {
-        clone->next = boost::dynamic_pointer_cast<AttributeSourceState>(next->clone());
+        clone->next = std::dynamic_pointer_cast<AttributeSourceState>(next->clone());
     }
 
     return clone;

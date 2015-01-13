@@ -90,8 +90,8 @@ OneComparatorFieldValueHitQueue::~OneComparatorFieldValueHitQueue() {
 }
 
 bool OneComparatorFieldValueHitQueue::lessThan(const ScoreDocPtr& first, const ScoreDocPtr& second) {
-    FieldValueHitQueueEntryPtr firstEntry(boost::static_pointer_cast<FieldValueHitQueueEntry>(first));
-    FieldValueHitQueueEntryPtr secondEntry(boost::static_pointer_cast<FieldValueHitQueueEntry>(second));
+    FieldValueHitQueueEntryPtr firstEntry(std::static_pointer_cast<FieldValueHitQueueEntry>(first));
+    FieldValueHitQueueEntryPtr secondEntry(std::static_pointer_cast<FieldValueHitQueueEntry>(second));
 
     BOOST_ASSERT(firstEntry != secondEntry);
     BOOST_ASSERT(firstEntry->slot != secondEntry->slot);
@@ -115,8 +115,8 @@ MultiComparatorsFieldValueHitQueue::~MultiComparatorsFieldValueHitQueue() {
 }
 
 bool MultiComparatorsFieldValueHitQueue::lessThan(const ScoreDocPtr& first, const ScoreDocPtr& second) {
-    FieldValueHitQueueEntryPtr firstEntry(boost::static_pointer_cast<FieldValueHitQueueEntry>(first));
-    FieldValueHitQueueEntryPtr secondEntry(boost::static_pointer_cast<FieldValueHitQueueEntry>(second));
+    FieldValueHitQueueEntryPtr firstEntry(std::static_pointer_cast<FieldValueHitQueueEntry>(first));
+    FieldValueHitQueueEntryPtr secondEntry(std::static_pointer_cast<FieldValueHitQueueEntry>(second));
 
     BOOST_ASSERT(firstEntry != secondEntry);
     BOOST_ASSERT(firstEntry->slot != secondEntry->slot);

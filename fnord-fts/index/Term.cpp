@@ -39,7 +39,7 @@ bool Term::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    TermPtr otherTerm(boost::dynamic_pointer_cast<Term>(other));
+    TermPtr otherTerm(std::dynamic_pointer_cast<Term>(other));
     if (!otherTerm) {
         return false;
     }
@@ -55,7 +55,7 @@ int32_t Term::hashCode() {
 }
 
 int32_t Term::compareTo(const LuceneObjectPtr& other) {
-    TermPtr otherTerm(boost::static_pointer_cast<Term>(other));
+    TermPtr otherTerm(std::static_pointer_cast<Term>(other));
     if (_field == otherTerm->_field) {
         return _text.compare(otherTerm->_text);
     } else {

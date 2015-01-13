@@ -35,8 +35,8 @@ FieldsReader::FieldsReader(const FieldInfosPtr& fieldInfos, int32_t numTotalDocs
     this->docStoreOffset = docStoreOffset;
     this->cloneableFieldsStream = cloneableFieldsStream;
     this->cloneableIndexStream = cloneableIndexStream;
-    fieldsStream = boost::dynamic_pointer_cast<IndexInput>(cloneableFieldsStream->clone());
-    indexStream = boost::dynamic_pointer_cast<IndexInput>(cloneableIndexStream->clone());
+    fieldsStream = std::dynamic_pointer_cast<IndexInput>(cloneableFieldsStream->clone());
+    indexStream = std::dynamic_pointer_cast<IndexInput>(cloneableIndexStream->clone());
 }
 
 FieldsReader::FieldsReader(const DirectoryPtr& d, const String& segment, const FieldInfosPtr& fn) {
@@ -81,7 +81,7 @@ void FieldsReader::ConstructReader(const DirectoryPtr& d, const String& segment,
             cloneableFieldsStream->setModifiedUTF8StringsMode();
         }
 
-        fieldsStream = boost::dynamic_pointer_cast<IndexInput>(cloneableFieldsStream->clone());
+        fieldsStream = std::dynamic_pointer_cast<IndexInput>(cloneableFieldsStream->clone());
 
         int64_t indexSize = cloneableIndexStream->length() - formatSize;
 
@@ -97,7 +97,7 @@ void FieldsReader::ConstructReader(const DirectoryPtr& d, const String& segment,
             this->_size = (int32_t)(indexSize >> 3);
         }
 
-        indexStream = boost::dynamic_pointer_cast<IndexInput>(cloneableIndexStream->clone());
+        indexStream = std::dynamic_pointer_cast<IndexInput>(cloneableIndexStream->clone());
         numTotalDocs = (int32_t)(indexSize >> 3);
         success = true;
     } catch (LuceneException& e) {
@@ -368,7 +368,7 @@ IndexInputPtr LazyField::getFieldStream() {
     FieldsReaderPtr reader(_reader);
     IndexInputPtr localFieldsStream = reader->fieldsStreamTL.get();
     if (!localFieldsStream) {
-        localFieldsStream = boost::static_pointer_cast<IndexInput>(reader->cloneableFieldsStream->clone());
+        localFieldsStream = std::static_pointer_cast<IndexInput>(reader->cloneableFieldsStream->clone());
         reader->fieldsStreamTL.set(localFieldsStream);
     }
     return localFieldsStream;

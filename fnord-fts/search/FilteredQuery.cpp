@@ -31,7 +31,7 @@ WeightPtr FilteredQuery::createWeight(const SearcherPtr& searcher) {
 QueryPtr FilteredQuery::rewrite(const IndexReaderPtr& reader) {
     QueryPtr rewritten(query->rewrite(reader));
     if (rewritten != query) {
-        FilteredQueryPtr cloneQuery(boost::dynamic_pointer_cast<FilteredQuery>(clone()));
+        FilteredQueryPtr cloneQuery(std::dynamic_pointer_cast<FilteredQuery>(clone()));
         cloneQuery->query = rewritten;
         return cloneQuery;
     } else {
@@ -58,7 +58,7 @@ String FilteredQuery::toString(const String& field) {
 }
 
 bool FilteredQuery::equals(const LuceneObjectPtr& other) {
-    FilteredQueryPtr otherFilteredQuery(boost::dynamic_pointer_cast<FilteredQuery>(other));
+    FilteredQueryPtr otherFilteredQuery(std::dynamic_pointer_cast<FilteredQuery>(other));
     if (!otherFilteredQuery) {
         return false;
     }
@@ -71,7 +71,7 @@ int32_t FilteredQuery::hashCode() {
 
 LuceneObjectPtr FilteredQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<FilteredQuery>(query, filter);
-    FilteredQueryPtr cloneQuery(boost::dynamic_pointer_cast<FilteredQuery>(Query::clone(clone)));
+    FilteredQueryPtr cloneQuery(std::dynamic_pointer_cast<FilteredQuery>(Query::clone(clone)));
     cloneQuery->query = query;
     cloneQuery->filter = filter;
     return cloneQuery;

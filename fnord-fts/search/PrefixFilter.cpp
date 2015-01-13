@@ -18,7 +18,7 @@ PrefixFilter::~PrefixFilter() {
 }
 
 TermPtr PrefixFilter::getPrefix() {
-    return boost::static_pointer_cast<PrefixQuery>(query)->getPrefix();
+    return std::static_pointer_cast<PrefixQuery>(query)->getPrefix();
 }
 
 String PrefixFilter::toString() {

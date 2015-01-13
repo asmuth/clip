@@ -41,7 +41,7 @@ String ValueSourceQuery::toString(const String& field) {
 }
 
 bool ValueSourceQuery::equals(const LuceneObjectPtr& other) {
-    ValueSourceQueryPtr otherQuery(boost::dynamic_pointer_cast<ValueSourceQuery>(other));
+    ValueSourceQueryPtr otherQuery(std::dynamic_pointer_cast<ValueSourceQuery>(other));
     if (!otherQuery) {
         return false;
     }
@@ -54,7 +54,7 @@ int32_t ValueSourceQuery::hashCode() {
 
 LuceneObjectPtr ValueSourceQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<ValueSourceQuery>(valSrc);
-    ValueSourceQueryPtr cloneQuery(boost::dynamic_pointer_cast<ValueSourceQuery>(Query::clone(clone)));
+    ValueSourceQueryPtr cloneQuery(std::dynamic_pointer_cast<ValueSourceQuery>(Query::clone(clone)));
     cloneQuery->valSrc = valSrc;
     return cloneQuery;
 }

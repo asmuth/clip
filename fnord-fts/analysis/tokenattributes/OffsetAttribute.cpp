@@ -45,7 +45,7 @@ bool OffsetAttribute::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    OffsetAttributePtr otherOffsetAttribute(boost::dynamic_pointer_cast<OffsetAttribute>(other));
+    OffsetAttributePtr otherOffsetAttribute(std::dynamic_pointer_cast<OffsetAttribute>(other));
     if (otherOffsetAttribute) {
         return (otherOffsetAttribute->_startOffset == _startOffset && otherOffsetAttribute->_endOffset == _endOffset);
     }
@@ -60,13 +60,13 @@ int32_t OffsetAttribute::hashCode() {
 }
 
 void OffsetAttribute::copyTo(const AttributePtr& target) {
-    OffsetAttributePtr targetOffsetAttribute(boost::dynamic_pointer_cast<OffsetAttribute>(target));
+    OffsetAttributePtr targetOffsetAttribute(std::dynamic_pointer_cast<OffsetAttribute>(target));
     targetOffsetAttribute->setOffset(_startOffset, _endOffset);
 }
 
 LuceneObjectPtr OffsetAttribute::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<OffsetAttribute>();
-    OffsetAttributePtr cloneAttribute(boost::dynamic_pointer_cast<OffsetAttribute>(Attribute::clone(clone)));
+    OffsetAttributePtr cloneAttribute(std::dynamic_pointer_cast<OffsetAttribute>(Attribute::clone(clone)));
     cloneAttribute->_startOffset = _startOffset;
     cloneAttribute->_endOffset = _endOffset;
     return cloneAttribute;

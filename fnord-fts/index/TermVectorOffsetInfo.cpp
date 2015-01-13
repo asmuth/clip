@@ -45,7 +45,7 @@ bool TermVectorOffsetInfo::equals(const LuceneObjectPtr& other) {
     if (LuceneObject::equals(other)) {
         return true;
     }
-    TermVectorOffsetInfoPtr otherTermVector(boost::dynamic_pointer_cast<TermVectorOffsetInfo>(other));
+    TermVectorOffsetInfoPtr otherTermVector(std::dynamic_pointer_cast<TermVectorOffsetInfo>(other));
     if (!otherTermVector) {
         return false;
     }

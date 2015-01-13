@@ -82,19 +82,19 @@ TopFieldCollectorPtr TopFieldCollector::create(const SortPtr& sort, int32_t numH
 }
 
 void TopFieldCollector::add(int32_t slot, int32_t doc, double score) {
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->add(newLucene<FieldValueHitQueueEntry>(slot, docBase + doc, score)));
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->add(newLucene<FieldValueHitQueueEntry>(slot, docBase + doc, score)));
     queueFull = (totalHits == numHits);
 }
 
 void TopFieldCollector::populateResults(Collection<ScoreDocPtr> results, int32_t howMany) {
     if (fillFields) {
-        FieldValueHitQueuePtr queue(boost::static_pointer_cast<FieldValueHitQueue>(pq));
+        FieldValueHitQueuePtr queue(std::static_pointer_cast<FieldValueHitQueue>(pq));
         for (int32_t i = howMany - 1; i >= 0; --i) {
-            results[i] = queue->fillFields(boost::static_pointer_cast<FieldValueHitQueueEntry>(queue->pop()));
+            results[i] = queue->fillFields(std::static_pointer_cast<FieldValueHitQueueEntry>(queue->pop()));
         }
     } else {
         for (int32_t i = howMany - 1; i >= 0; --i) {
-            FieldValueHitQueueEntryPtr entry(boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->pop()));
+            FieldValueHitQueueEntryPtr entry(std::static_pointer_cast<FieldValueHitQueueEntry>(pq->pop()));
             results[i] = newLucene<FieldDoc>(entry->doc, entry->score);
         }
     }
@@ -108,7 +108,7 @@ TopDocsPtr TopFieldCollector::newTopDocs(Collection<ScoreDocPtr> results, int32_
     }
 
     // If this is a maxScoring tracking collector and there were no results
-    return newLucene<TopFieldDocs>(totalHits, results, boost::static_pointer_cast<FieldValueHitQueue>(pq)->getFields(), maxScore);
+    return newLucene<TopFieldDocs>(totalHits, results, std::static_pointer_cast<FieldValueHitQueue>(pq)->getFields(), maxScore);
 }
 
 bool TopFieldCollector::acceptsDocsOutOfOrder() {
@@ -123,7 +123,7 @@ OneComparatorNonScoringCollector::~OneComparatorNonScoringCollector() {
 
 void OneComparatorNonScoringCollector::initialize() {
     TopFieldCollector::initialize();
-    FieldValueHitQueuePtr queue(boost::static_pointer_cast<FieldValueHitQueue>(pq));
+    FieldValueHitQueuePtr queue(std::static_pointer_cast<FieldValueHitQueue>(pq));
     comparator = queue->getComparators()[0];
     reverseMul = queue->getReverseMul()[0];
 }
@@ -131,7 +131,7 @@ void OneComparatorNonScoringCollector::initialize() {
 void OneComparatorNonScoringCollector::updateBottom(int32_t doc) {
     // bottom.score is already set to NaN in add().
     bottom->doc = docBase + doc;
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
 }
 
 void OneComparatorNonScoringCollector::collect(int32_t doc) {
@@ -212,7 +212,7 @@ OneComparatorScoringNoMaxScoreCollector::~OneComparatorScoringNoMaxScoreCollecto
 void OneComparatorScoringNoMaxScoreCollector::updateBottom(int32_t doc, double score) {
     bottom->doc = docBase + doc;
     bottom->score = score;
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
 }
 
 void OneComparatorScoringNoMaxScoreCollector::collect(int32_t doc) {
@@ -303,7 +303,7 @@ OneComparatorScoringMaxScoreCollector::~OneComparatorScoringMaxScoreCollector() 
 void OneComparatorScoringMaxScoreCollector::updateBottom(int32_t doc, double score) {
     bottom->doc = docBase + doc;
     bottom->score = score;
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
 }
 
 void OneComparatorScoringMaxScoreCollector::collect(int32_t doc) {
@@ -387,7 +387,7 @@ MultiComparatorNonScoringCollector::~MultiComparatorNonScoringCollector() {
 
 void MultiComparatorNonScoringCollector::initialize() {
     TopFieldCollector::initialize();
-    FieldValueHitQueuePtr queue(boost::static_pointer_cast<FieldValueHitQueue>(pq));
+    FieldValueHitQueuePtr queue(std::static_pointer_cast<FieldValueHitQueue>(pq));
     comparators = queue->getComparators();
     reverseMul = queue->getReverseMul();
 }
@@ -395,7 +395,7 @@ void MultiComparatorNonScoringCollector::initialize() {
 void MultiComparatorNonScoringCollector::updateBottom(int32_t doc) {
     // bottom.score is already set to NaN in add().
     bottom->doc = docBase + doc;
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
 }
 
 void MultiComparatorNonScoringCollector::collect(int32_t doc) {
@@ -527,7 +527,7 @@ MultiComparatorScoringMaxScoreCollector::~MultiComparatorScoringMaxScoreCollecto
 void MultiComparatorScoringMaxScoreCollector::updateBottom(int32_t doc, double score) {
     bottom->doc = docBase + doc;
     bottom->score = score;
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
 }
 
 void MultiComparatorScoringMaxScoreCollector::collect(int32_t doc) {
@@ -656,7 +656,7 @@ MultiComparatorScoringNoMaxScoreCollector::~MultiComparatorScoringNoMaxScoreColl
 void MultiComparatorScoringNoMaxScoreCollector::updateBottom(int32_t doc, double score) {
     bottom->doc = docBase + doc;
     bottom->score = score;
-    bottom = boost::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
+    bottom = std::static_pointer_cast<FieldValueHitQueueEntry>(pq->updateTop());
 }
 
 void MultiComparatorScoringNoMaxScoreCollector::collect(int32_t doc) {

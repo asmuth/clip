@@ -90,7 +90,7 @@ void MultiTermQuery::setRewriteMethod(const RewriteMethodPtr& method) {
 
 LuceneObjectPtr MultiTermQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Query::clone(other);
-    MultiTermQueryPtr cloneQuery(boost::dynamic_pointer_cast<MultiTermQuery>(clone));
+    MultiTermQueryPtr cloneQuery(std::dynamic_pointer_cast<MultiTermQuery>(clone));
     cloneQuery->rewriteMethod = rewriteMethod;
     cloneQuery->numberOfTerms = numberOfTerms;
     return cloneQuery;
@@ -115,7 +115,7 @@ bool MultiTermQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    MultiTermQueryPtr otherMultiTermQuery(boost::dynamic_pointer_cast<MultiTermQuery>(other));
+    MultiTermQueryPtr otherMultiTermQuery(std::dynamic_pointer_cast<MultiTermQuery>(other));
     if (!otherMultiTermQuery) {
         return false;
     }
@@ -273,7 +273,7 @@ bool ConstantScoreAutoRewrite::equals(const LuceneObjectPtr& other) {
         return false;
     }
 
-    ConstantScoreAutoRewritePtr otherConstantScoreAutoRewrite(boost::dynamic_pointer_cast<ConstantScoreAutoRewrite>(other));
+    ConstantScoreAutoRewritePtr otherConstantScoreAutoRewrite(std::dynamic_pointer_cast<ConstantScoreAutoRewrite>(other));
     if (!otherConstantScoreAutoRewrite) {
         return false;
     }

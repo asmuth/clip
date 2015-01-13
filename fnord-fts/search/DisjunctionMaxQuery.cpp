@@ -58,7 +58,7 @@ QueryPtr DisjunctionMaxQuery::rewrite(const IndexReaderPtr& reader) {
         QueryPtr result(singleton->rewrite(reader));
         if (getBoost() != 1.0) {
             if (result == singleton) {
-                result = boost::dynamic_pointer_cast<Query>(result->clone());
+                result = std::dynamic_pointer_cast<Query>(result->clone());
             }
             result->setBoost(getBoost() * result->getBoost());
         }
@@ -70,7 +70,7 @@ QueryPtr DisjunctionMaxQuery::rewrite(const IndexReaderPtr& reader) {
         QueryPtr rewrite(clause->rewrite(reader));
         if (rewrite != clause) {
             if (!clone) {
-                clone = boost::dynamic_pointer_cast<DisjunctionMaxQuery>(this->clone());
+                clone = std::dynamic_pointer_cast<DisjunctionMaxQuery>(this->clone());
             }
             clone->disjuncts[i] = rewrite;
         }
@@ -80,7 +80,7 @@ QueryPtr DisjunctionMaxQuery::rewrite(const IndexReaderPtr& reader) {
 
 LuceneObjectPtr DisjunctionMaxQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Query::clone(other ? other : newLucene<DisjunctionMaxQuery>());
-    DisjunctionMaxQueryPtr cloneQuery(boost::dynamic_pointer_cast<DisjunctionMaxQuery>(clone));
+    DisjunctionMaxQueryPtr cloneQuery(std::dynamic_pointer_cast<DisjunctionMaxQuery>(clone));
     cloneQuery->tieBreakerMultiplier = tieBreakerMultiplier;
     cloneQuery->disjuncts = Collection<QueryPtr>::newInstance(disjuncts.begin(), disjuncts.end());
     return cloneQuery;
@@ -98,7 +98,7 @@ String DisjunctionMaxQuery::toString(const String& field) {
         if (query != disjuncts.begin()) {
             buffer += L" | ";
         }
-        if (boost::dynamic_pointer_cast<BooleanQuery>(*query)) { // wrap sub-bools in parens
+        if (std::dynamic_pointer_cast<BooleanQuery>(*query)) { // wrap sub-bools in parens
             buffer += L"(" + (*query)->toString(field) + L")";
         } else {
             buffer += (*query)->toString(field);
@@ -119,7 +119,7 @@ bool DisjunctionMaxQuery::equals(const LuceneObjectPtr& other) {
         return false;
     }
 
-    DisjunctionMaxQueryPtr otherDisjunctionMaxQuery(boost::dynamic_pointer_cast<DisjunctionMaxQuery>(other));
+    DisjunctionMaxQueryPtr otherDisjunctionMaxQuery(std::dynamic_pointer_cast<DisjunctionMaxQuery>(other));
     if (!otherDisjunctionMaxQuery) {
         return false;
     }

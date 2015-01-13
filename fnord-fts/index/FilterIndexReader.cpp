@@ -213,19 +213,19 @@ FilterTermPositions::~FilterTermPositions() {
 }
 
 int32_t FilterTermPositions::nextPosition() {
-    return boost::static_pointer_cast<TermPositions>(in)->nextPosition();
+    return std::static_pointer_cast<TermPositions>(in)->nextPosition();
 }
 
 int32_t FilterTermPositions::getPayloadLength() {
-    return boost::static_pointer_cast<TermPositions>(in)->getPayloadLength();
+    return std::static_pointer_cast<TermPositions>(in)->getPayloadLength();
 }
 
 ByteArray FilterTermPositions::getPayload(ByteArray data, int32_t offset) {
-    return boost::static_pointer_cast<TermPositions>(in)->getPayload(data, offset);
+    return std::static_pointer_cast<TermPositions>(in)->getPayload(data, offset);
 }
 
 bool FilterTermPositions::isPayloadAvailable() {
-    return boost::static_pointer_cast<TermPositions>(in)->isPayloadAvailable();
+    return std::static_pointer_cast<TermPositions>(in)->isPayloadAvailable();
 }
 
 FilterTermEnum::FilterTermEnum(const TermEnumPtr& in) {

@@ -17,7 +17,7 @@ bool IndexCommit::equals(const LuceneObjectPtr& other) {
     if (LuceneObject::equals(other)) {
         return true;
     }
-    IndexCommitPtr otherCommit(boost::dynamic_pointer_cast<IndexCommit>(other));
+    IndexCommitPtr otherCommit(std::dynamic_pointer_cast<IndexCommit>(other));
     if (!otherCommit) {
         return false;
     }

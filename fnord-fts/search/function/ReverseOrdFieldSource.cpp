@@ -35,7 +35,7 @@ bool ReverseOrdFieldSource::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    ReverseOrdFieldSourcePtr otherSource(boost::dynamic_pointer_cast<ReverseOrdFieldSource>(other));
+    ReverseOrdFieldSourcePtr otherSource(std::dynamic_pointer_cast<ReverseOrdFieldSource>(other));
     if (!otherSource) {
         return false;
     }

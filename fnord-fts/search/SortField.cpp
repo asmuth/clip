@@ -54,13 +54,13 @@ SortField::SortField(const String& field, int32_t type, bool reverse) {
 }
 
 SortField::SortField(const String& field, const ParserPtr& parser, bool reverse) {
-    if (boost::dynamic_pointer_cast<IntParser>(parser)) {
+    if (std::dynamic_pointer_cast<IntParser>(parser)) {
         initFieldType(field, INT);
-    } else if (boost::dynamic_pointer_cast<ByteParser>(parser)) {
+    } else if (std::dynamic_pointer_cast<ByteParser>(parser)) {
         initFieldType(field, BYTE);
-    } else if (boost::dynamic_pointer_cast<LongParser>(parser)) {
+    } else if (std::dynamic_pointer_cast<LongParser>(parser)) {
         initFieldType(field, LONG);
-    } else if (boost::dynamic_pointer_cast<DoubleParser>(parser)) {
+    } else if (std::dynamic_pointer_cast<DoubleParser>(parser)) {
         initFieldType(field, DOUBLE);
     } else {
         boost::throw_exception(IllegalArgumentException(L"Parser instance does not subclass existing numeric parser from FieldCache"));
@@ -190,7 +190,7 @@ bool SortField::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SortFieldPtr otherSortField(boost::dynamic_pointer_cast<SortField>(other));
+    SortFieldPtr otherSortField(std::dynamic_pointer_cast<SortField>(other));
     if (!otherSortField) {
         return false;
     }

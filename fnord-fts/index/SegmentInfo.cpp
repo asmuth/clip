@@ -540,7 +540,7 @@ bool SegmentInfo::equals(const LuceneObjectPtr& other) {
     if (LuceneObject::equals(other)) {
         return true;
     }
-    SegmentInfoPtr otherSegmentInfo(boost::dynamic_pointer_cast<SegmentInfo>(other));
+    SegmentInfoPtr otherSegmentInfo(std::dynamic_pointer_cast<SegmentInfo>(other));
     if (!otherSegmentInfo) {
         return false;
     }

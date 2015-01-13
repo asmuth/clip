@@ -7,7 +7,6 @@
 #ifndef LUCENEOBJECT_H
 #define LUCENEOBJECT_H
 
-#include <boost/enable_shared_from_this.hpp>
 #include "LuceneSync.h"
 
 #ifdef LPP_USE_CYCLIC_CHECK
@@ -23,12 +22,12 @@
 
 #define LUCENE_CLASS(Name) \
     LUCENE_INTERFACE(Name); \
-    std::shared_ptr<Name> shared_from_this() { return boost::static_pointer_cast<Name>(LuceneObject::shared_from_this()); } \
+    std::shared_ptr<Name> shared_from_this() { return std::static_pointer_cast<Name>(LuceneObject::shared_from_this()); } \
 
 namespace Lucene {
 
 /// Base class for all Lucene classes
-class LuceneObject : public LuceneSync, public boost::enable_shared_from_this<LuceneObject> {
+class LuceneObject : public LuceneSync, public std::enable_shared_from_this<LuceneObject> {
 public:
     virtual ~LuceneObject();
 

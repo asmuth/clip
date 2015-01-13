@@ -79,7 +79,7 @@ void Payload::copyTo(ByteArray target, int32_t targetOffset) {
 LuceneObjectPtr Payload::clone(const LuceneObjectPtr& other) {
     // Start with a shallow copy of data
     LuceneObjectPtr clone = LuceneObject::clone(other ? other : newLucene<Payload>());
-    PayloadPtr clonePayload(boost::dynamic_pointer_cast<Payload>(clone));
+    PayloadPtr clonePayload(std::dynamic_pointer_cast<Payload>(clone));
     clonePayload->offset = offset;
     clonePayload->_length = _length;
 
@@ -101,7 +101,7 @@ bool Payload::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    PayloadPtr otherPayload(boost::dynamic_pointer_cast<Payload>(other));
+    PayloadPtr otherPayload(std::dynamic_pointer_cast<Payload>(other));
     if (otherPayload) {
         if (_length == otherPayload->_length) {
             return (std::memcmp(data.get(), otherPayload->data.get(), _length) == 0);

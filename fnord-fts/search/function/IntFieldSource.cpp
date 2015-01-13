@@ -33,7 +33,7 @@ bool IntFieldSource::cachedFieldSourceEquals(const FieldCacheSourcePtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    IntFieldSourcePtr otherSource(boost::dynamic_pointer_cast<IntFieldSource>(other));
+    IntFieldSourcePtr otherSource(std::dynamic_pointer_cast<IntFieldSource>(other));
     if (!otherSource) {
         return false;
     }

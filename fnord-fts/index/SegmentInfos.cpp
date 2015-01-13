@@ -259,14 +259,14 @@ void SegmentInfos::write(const DirectoryPtr& directory) {
 
 LuceneObjectPtr SegmentInfos::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = SegmentInfoCollection::clone(other ? other : newLucene<SegmentInfos>());
-    SegmentInfosPtr cloneInfos(boost::dynamic_pointer_cast<SegmentInfos>(clone));
+    SegmentInfosPtr cloneInfos(std::dynamic_pointer_cast<SegmentInfos>(clone));
     cloneInfos->counter = counter;
     cloneInfos->generation = generation;
     cloneInfos->lastGeneration = lastGeneration;
     cloneInfos->version = version;
     cloneInfos->pendingSegnOutput = pendingSegnOutput;
     for (int32_t i = 0; i < cloneInfos->size(); ++i) {
-        cloneInfos->segmentInfos[i] = boost::dynamic_pointer_cast<SegmentInfo>(cloneInfos->info(i)->clone());
+        cloneInfos->segmentInfos[i] = std::dynamic_pointer_cast<SegmentInfo>(cloneInfos->info(i)->clone());
     }
     cloneInfos->userData = MapStringString::newInstance();
     cloneInfos->userData.putAll(userData.begin(), userData.end());

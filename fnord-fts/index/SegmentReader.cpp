@@ -121,7 +121,7 @@ ByteArray SegmentReader::cloneNormBytes(ByteArray bytes) {
 }
 
 BitVectorPtr SegmentReader::cloneDeletedDocs(const BitVectorPtr& bv) {
-    return boost::dynamic_pointer_cast<BitVector>(bv->clone());
+    return std::dynamic_pointer_cast<BitVector>(bv->clone());
 }
 
 LuceneObjectPtr SegmentReader::clone(const LuceneObjectPtr& other) {
@@ -211,7 +211,7 @@ SegmentReaderPtr SegmentReader::reopenSegment(const SegmentInfoPtr& si, bool doC
                 String curField(core->fieldInfos->fieldInfo(i)->name);
                 NormPtr norm(this->_norms.get(curField));
                 if (norm) {
-                    NormPtr cloneNorm(boost::dynamic_pointer_cast<Norm>(norm->clone()));
+                    NormPtr cloneNorm(std::dynamic_pointer_cast<Norm>(norm->clone()));
                     cloneNorm->_reader = clone;
                     clone->_norms.put(curField, cloneNorm);
                 }
@@ -588,7 +588,7 @@ TermVectorsReaderPtr SegmentReader::getTermVectorsReader() {
             return TermVectorsReaderPtr();
         } else {
             try {
-                tvReader = boost::dynamic_pointer_cast<TermVectorsReader>(orig->clone());
+                tvReader = std::dynamic_pointer_cast<TermVectorsReader>(orig->clone());
             } catch (...) {
                 return TermVectorsReaderPtr();
             }
@@ -668,7 +668,7 @@ void SegmentReader::setSegmentInfo(const SegmentInfoPtr& info) {
 }
 
 void SegmentReader::startCommit() {
-    rollbackSegmentInfo = boost::dynamic_pointer_cast<SegmentInfo>(si->clone());
+    rollbackSegmentInfo = std::dynamic_pointer_cast<SegmentInfo>(si->clone());
     rollbackHasChanges = _hasChanges;
     rollbackDeletedDocsDirty = deletedDocsDirty;
     rollbackNormsDirty = normsDirty;
@@ -712,18 +712,18 @@ SegmentReaderPtr SegmentReader::getOnlySegmentReader(const DirectoryPtr& dir) {
 }
 
 SegmentReaderPtr SegmentReader::getOnlySegmentReader(const IndexReaderPtr& reader) {
-    SegmentReaderPtr segmentReader(boost::dynamic_pointer_cast<SegmentReader>(reader));
+    SegmentReaderPtr segmentReader(std::dynamic_pointer_cast<SegmentReader>(reader));
     if (segmentReader) {
         return segmentReader;
     }
 
-    DirectoryReaderPtr directoryReader(boost::dynamic_pointer_cast<DirectoryReader>(reader));
+    DirectoryReaderPtr directoryReader(std::dynamic_pointer_cast<DirectoryReader>(reader));
     if (directoryReader) {
         Collection<IndexReaderPtr> subReaders(directoryReader->getSequentialSubReaders());
         if (subReaders.size() != 1) {
             boost::throw_exception(IllegalArgumentException(L"reader has " + StringUtils::toString(subReaders.size()) + L" segments instead of exactly one"));
         }
-        return boost::dynamic_pointer_cast<SegmentReader>(subReaders[0]);
+        return std::dynamic_pointer_cast<SegmentReader>(subReaders[0]);
     }
 
     boost::throw_exception(IllegalArgumentException(L"reader is not a SegmentReader or a single-segment DirectoryReader"));
@@ -926,7 +926,7 @@ FieldsReaderLocal::FieldsReaderLocal(const SegmentReaderPtr& reader) {
 }
 
 FieldsReaderPtr FieldsReaderLocal::initialValue() {
-    return boost::dynamic_pointer_cast<FieldsReader>(SegmentReaderPtr(_reader)->core->getFieldsReaderOrig()->clone());
+    return std::dynamic_pointer_cast<FieldsReader>(SegmentReaderPtr(_reader)->core->getFieldsReaderOrig()->clone());
 }
 
 SegmentReaderRef::SegmentReaderRef() {
@@ -1118,7 +1118,7 @@ LuceneObjectPtr Norm::clone(const LuceneObjectPtr& other) {
 
     BOOST_ASSERT(refCount > 0 && (!origNorm || origNorm->refCount > 0));
     LuceneObjectPtr clone = other ? other : newLucene<Norm>();
-    NormPtr cloneNorm(boost::dynamic_pointer_cast<Norm>(clone));
+    NormPtr cloneNorm(std::dynamic_pointer_cast<Norm>(clone));
     cloneNorm->_reader = _reader;
     cloneNorm->origNorm = origNorm;
     cloneNorm->origReader = origReader;

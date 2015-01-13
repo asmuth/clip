@@ -7,7 +7,6 @@
 #ifndef LUCENE_H
 #define LUCENE_H
 
-#define 
 //#include "Config.h"
 
 #include <wctype.h>

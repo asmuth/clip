@@ -111,7 +111,7 @@ void TermAttribute::clear() {
 
 LuceneObjectPtr TermAttribute::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Attribute::clone(other ? other : newLucene<TermAttribute>());
-    TermAttributePtr cloneAttribute(boost::dynamic_pointer_cast<TermAttribute>(clone));
+    TermAttributePtr cloneAttribute(std::dynamic_pointer_cast<TermAttribute>(clone));
     cloneAttribute->_termLength = _termLength;
     if (_termBuffer) {
         cloneAttribute->_termBuffer = CharArray::newInstance(_termBuffer.size());
@@ -125,7 +125,7 @@ bool TermAttribute::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    TermAttributePtr otherTermAttribute(boost::dynamic_pointer_cast<TermAttribute>(other));
+    TermAttributePtr otherTermAttribute(std::dynamic_pointer_cast<TermAttribute>(other));
     if (otherTermAttribute) {
         initTermBuffer();
         otherTermAttribute->initTermBuffer();
@@ -142,7 +142,7 @@ bool TermAttribute::equals(const LuceneObjectPtr& other) {
 
 void TermAttribute::copyTo(const AttributePtr& target) {
     initTermBuffer();
-    TermAttributePtr targetTermAttribute(boost::dynamic_pointer_cast<TermAttribute>(target));
+    TermAttributePtr targetTermAttribute(std::dynamic_pointer_cast<TermAttribute>(target));
     targetTermAttribute->setTermBuffer(_termBuffer.get(), 0, _termLength);
 }
 

@@ -146,7 +146,7 @@ IndexStatusPtr CheckIndex::checkIndex(Collection<String> onlySegments) {
         return result;
     }
 
-    result->newSegments = boost::dynamic_pointer_cast<SegmentInfos>(sis->clone());
+    result->newSegments = std::dynamic_pointer_cast<SegmentInfos>(sis->clone());
     result->newSegments->clear();
 
     for (int32_t i = 0; i < numSegments; ++i) {
@@ -278,7 +278,7 @@ IndexStatusPtr CheckIndex::checkIndex(Collection<String> onlySegments) {
         }
 
         // Keeper
-        result->newSegments->add(boost::dynamic_pointer_cast<SegmentInfo>(info->clone()));
+        result->newSegments->add(std::dynamic_pointer_cast<SegmentInfo>(info->clone()));
     }
 
     if (result->numBadSegments == 0) {

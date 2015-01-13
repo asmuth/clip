@@ -33,7 +33,7 @@ bool OrdFieldSource::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    OrdFieldSourcePtr otherSource(boost::dynamic_pointer_cast<OrdFieldSource>(other));
+    OrdFieldSourcePtr otherSource(std::dynamic_pointer_cast<OrdFieldSource>(other));
     if (!otherSource) {
         return false;
     }

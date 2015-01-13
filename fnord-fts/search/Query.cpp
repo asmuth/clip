@@ -61,7 +61,7 @@ QueryPtr Query::combine(Collection<QueryPtr> queries) {
     SetQuery uniques(SetQuery::newInstance());
     for (Collection<QueryPtr>::iterator query = queries.begin(); query != queries.end(); ++query) {
         Collection<BooleanClausePtr> clauses;
-        BooleanQueryPtr bq(boost::dynamic_pointer_cast<BooleanQuery>(*query));
+        BooleanQueryPtr bq(std::dynamic_pointer_cast<BooleanQuery>(*query));
         // check if we can split the query into clauses
         bool splittable = bq.get() != NULL;
         if (splittable) {
@@ -117,7 +117,7 @@ SimilarityPtr Query::getSimilarity(const SearcherPtr& searcher) {
 
 LuceneObjectPtr Query::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = LuceneObject::clone(other ? other : newLucene<Query>());
-    QueryPtr cloneQuery(boost::dynamic_pointer_cast<Query>(clone));
+    QueryPtr cloneQuery(std::dynamic_pointer_cast<Query>(clone));
     cloneQuery->boost = boost;
     return cloneQuery;
 }
@@ -139,7 +139,7 @@ bool Query::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    QueryPtr otherQuery(boost::dynamic_pointer_cast<Query>(other));
+    QueryPtr otherQuery(std::dynamic_pointer_cast<Query>(other));
     if (!otherQuery) {
         return false;
     }

@@ -51,7 +51,7 @@ bool TermQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    TermQueryPtr otherTermQuery(boost::dynamic_pointer_cast<TermQuery>(other));
+    TermQueryPtr otherTermQuery(std::dynamic_pointer_cast<TermQuery>(other));
     if (!otherTermQuery) {
         return false;
     }
@@ -65,7 +65,7 @@ int32_t TermQuery::hashCode() {
 
 LuceneObjectPtr TermQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<TermQuery>(term);
-    TermQueryPtr cloneQuery(boost::dynamic_pointer_cast<TermQuery>(Query::clone(clone)));
+    TermQueryPtr cloneQuery(std::dynamic_pointer_cast<TermQuery>(Query::clone(clone)));
     cloneQuery->term = term;
     return cloneQuery;
 }

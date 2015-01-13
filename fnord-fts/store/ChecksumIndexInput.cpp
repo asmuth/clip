@@ -49,7 +49,7 @@ int64_t ChecksumIndexInput::length() {
 
 LuceneObjectPtr ChecksumIndexInput::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = IndexInput::clone(other ? other : newLucene<ChecksumIndexInput>(main));
-    ChecksumIndexInputPtr cloneIndexInput(boost::dynamic_pointer_cast<ChecksumIndexInput>(clone));
+    ChecksumIndexInputPtr cloneIndexInput(std::dynamic_pointer_cast<ChecksumIndexInput>(clone));
     cloneIndexInput->main = main;
     cloneIndexInput->checksum = checksum;
     return cloneIndexInput;

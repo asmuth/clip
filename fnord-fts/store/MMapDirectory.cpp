@@ -91,7 +91,7 @@ LuceneObjectPtr MMapIndexInput::clone(const LuceneObjectPtr& other) {
         boost::throw_exception(AlreadyClosedException(L"MMapIndexInput already closed"));
     }
     LuceneObjectPtr clone = IndexInput::clone(other ? other : newLucene<MMapIndexInput>());
-    MMapIndexInputPtr cloneIndexInput(boost::dynamic_pointer_cast<MMapIndexInput>(clone));
+    MMapIndexInputPtr cloneIndexInput(std::dynamic_pointer_cast<MMapIndexInput>(clone));
     cloneIndexInput->_length = _length;
     cloneIndexInput->file = file;
     cloneIndexInput->bufferPosition = bufferPosition;

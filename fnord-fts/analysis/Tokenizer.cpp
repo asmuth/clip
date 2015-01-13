@@ -15,7 +15,7 @@ Tokenizer::Tokenizer() {
 
 Tokenizer::Tokenizer(const ReaderPtr& input) {
     this->input = CharReader::get(input);
-    this->charStream = boost::dynamic_pointer_cast<CharStream>(this->input);
+    this->charStream = std::dynamic_pointer_cast<CharStream>(this->input);
 }
 
 Tokenizer::Tokenizer(const AttributeFactoryPtr& factory) : TokenStream(factory) {
@@ -23,7 +23,7 @@ Tokenizer::Tokenizer(const AttributeFactoryPtr& factory) : TokenStream(factory) 
 
 Tokenizer::Tokenizer(const AttributeFactoryPtr& factory, const ReaderPtr& input) : TokenStream(factory) {
     this->input = CharReader::get(input);
-    this->charStream = boost::dynamic_pointer_cast<CharStream>(this->input);
+    this->charStream = std::dynamic_pointer_cast<CharStream>(this->input);
 }
 
 Tokenizer::Tokenizer(const AttributeSourcePtr& source) : TokenStream(source) {
@@ -31,7 +31,7 @@ Tokenizer::Tokenizer(const AttributeSourcePtr& source) : TokenStream(source) {
 
 Tokenizer::Tokenizer(const AttributeSourcePtr& source, const ReaderPtr& input) : TokenStream(source) {
     this->input = CharReader::get(input);
-    this->charStream = boost::dynamic_pointer_cast<CharStream>(this->input);
+    this->charStream = std::dynamic_pointer_cast<CharStream>(this->input);
 }
 
 Tokenizer::~Tokenizer() {

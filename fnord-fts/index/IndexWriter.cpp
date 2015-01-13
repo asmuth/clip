@@ -397,7 +397,7 @@ void IndexWriter::setMessageID(const InfoStreamPtr& infoStream) {
 }
 
 LogMergePolicyPtr IndexWriter::getLogMergePolicy() {
-    LogMergePolicyPtr logMergePolicy(boost::dynamic_pointer_cast<LogMergePolicy>(mergePolicy));
+    LogMergePolicyPtr logMergePolicy(std::dynamic_pointer_cast<LogMergePolicy>(mergePolicy));
     if (logMergePolicy) {
         return logMergePolicy;
     }
@@ -438,7 +438,7 @@ int32_t IndexWriter::getTermIndexInterval() {
 
 void IndexWriter::setRollbackSegmentInfos(const SegmentInfosPtr& infos) {
     SyncLock syncLock(this);
-    rollbackSegmentInfos = boost::dynamic_pointer_cast<SegmentInfos>(infos->clone());
+    rollbackSegmentInfos = std::dynamic_pointer_cast<SegmentInfos>(infos->clone());
     BOOST_ASSERT(!rollbackSegmentInfos->hasExternalSegments(directory));
     rollbackSegments = MapSegmentInfoInt::newInstance();
     int32_t size = rollbackSegmentInfos->size();
@@ -544,7 +544,7 @@ void IndexWriter::setMaxBufferedDocs(int32_t maxBufferedDocs) {
 
 void IndexWriter::pushMaxBufferedDocs() {
     if (docWriter->getMaxBufferedDocs() != DISABLE_AUTO_FLUSH) {
-        LogDocMergePolicyPtr lmp(boost::dynamic_pointer_cast<LogDocMergePolicy>(mergePolicy));
+        LogDocMergePolicyPtr lmp(std::dynamic_pointer_cast<LogDocMergePolicy>(mergePolicy));
         if (lmp) {
             int32_t maxBufferedDocs = docWriter->getMaxBufferedDocs();
             if (lmp->getMinMergeDocs() != maxBufferedDocs) {
@@ -1337,7 +1337,7 @@ void IndexWriter::startTransaction(bool haveReadLock) {
     success = false;
 
     try {
-        localRollbackSegmentInfos = boost::dynamic_pointer_cast<SegmentInfos>(segmentInfos->clone());
+        localRollbackSegmentInfos = std::dynamic_pointer_cast<SegmentInfos>(segmentInfos->clone());
 
         BOOST_ASSERT(!hasExternalSegments());
 
@@ -1766,7 +1766,7 @@ void IndexWriter::resolveExternalSegments() {
                 info = segmentInfos->info(i);
                 if (info->dir != directory) {
                     done = false;
-                    OneMergePtr newMerge(newLucene<OneMerge>(segmentInfos->range(i, i + 1), boost::dynamic_pointer_cast<LogMergePolicy>(mergePolicy) && getUseCompoundFile()));
+                    OneMergePtr newMerge(newLucene<OneMerge>(segmentInfos->range(i, i + 1), std::dynamic_pointer_cast<LogMergePolicy>(mergePolicy) && getUseCompoundFile()));
 
                     // Returns true if no running merge conflicts with this one (and, records this merge as
                     // pending), ie, this segment is not currently being merged
@@ -1904,7 +1904,7 @@ void IndexWriter::addIndexes(Collection<IndexReaderPtr> readers) {
 
         finally.throwException();
 
-        if (boost::dynamic_pointer_cast<LogMergePolicy>(mergePolicy) && getUseCompoundFile()) {
+        if (std::dynamic_pointer_cast<LogMergePolicy>(mergePolicy) && getUseCompoundFile()) {
             HashSet<String> files;
 
             {
@@ -2825,7 +2825,7 @@ int32_t IndexWriter::mergeMiddle(const OneMergePtr& merge) {
             SegmentReaderPtr reader(merge->readers[i]);
 
             // We clone the segment readers because other deletes may come in while we're merging so we need readers that will not change
-            merge->readersClone[i] = boost::dynamic_pointer_cast<SegmentReader>(reader->clone(true));
+            merge->readersClone[i] = std::dynamic_pointer_cast<SegmentReader>(reader->clone(true));
             SegmentReaderPtr clone(merge->readersClone[i]);
             merger->add(clone);
 
@@ -3153,7 +3153,7 @@ void IndexWriter::startCommit(int64_t sizeInBytes, MapStringString commitUserDat
                 // It's possible another flush (that did not close the open do stores) snook in after the flush we
                 // just did, so we remove any tail segments referencing the open doc store from the SegmentInfos
                 // we are about to sync (the main SegmentInfos will keep them)
-                toSync = boost::dynamic_pointer_cast<SegmentInfos>(segmentInfos->clone());
+                toSync = std::dynamic_pointer_cast<SegmentInfos>(segmentInfos->clone());
 
                 String dss(docWriter->getDocStoreSegment());
                 if (!dss.empty()) {
@@ -3487,7 +3487,7 @@ IndexReaderPtr ReaderPool::getReadOnlyClone(const SegmentInfoPtr& info, bool doO
     IndexReaderPtr clone;
     LuceneException finally;
     try {
-        clone = boost::dynamic_pointer_cast<IndexReader>(sr->clone(true));
+        clone = std::dynamic_pointer_cast<IndexReader>(sr->clone(true));
     } catch (LuceneException& e) {
         finally = e;
     }

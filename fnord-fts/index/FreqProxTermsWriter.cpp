@@ -71,7 +71,7 @@ void FreqProxTermsWriter::flush(MapTermsHashConsumerPerThreadCollectionTermsHash
 
     for (MapTermsHashConsumerPerThreadCollectionTermsHashConsumerPerField::iterator entry = threadsAndFields.begin(); entry != threadsAndFields.end(); ++entry) {
         for (Collection<TermsHashConsumerPerFieldPtr>::iterator perField = entry->second.begin(); perField != entry->second.end(); ++perField) {
-            FreqProxTermsWriterPerFieldPtr freqProxPerField(boost::static_pointer_cast<FreqProxTermsWriterPerField>(*perField));
+            FreqProxTermsWriterPerFieldPtr freqProxPerField(std::static_pointer_cast<FreqProxTermsWriterPerField>(*perField));
             if (TermsHashPerFieldPtr(freqProxPerField->_termsHashPerField)->numPostings > 0) {
                 allFields.add(freqProxPerField);
             }
@@ -130,7 +130,7 @@ void FreqProxTermsWriter::flush(MapTermsHashConsumerPerThreadCollectionTermsHash
     }
 
     for (MapTermsHashConsumerPerThreadCollectionTermsHashConsumerPerField::iterator entry = threadsAndFields.begin(); entry != threadsAndFields.end(); ++entry) {
-        TermsHashPerThreadPtr(boost::static_pointer_cast<FreqProxTermsWriterPerThread>(entry->first)->_termsHashPerThread)->reset(true);
+        TermsHashPerThreadPtr(std::static_pointer_cast<FreqProxTermsWriterPerThread>(entry->first)->_termsHashPerThread)->reset(true);
     }
 
     consumer->finish();

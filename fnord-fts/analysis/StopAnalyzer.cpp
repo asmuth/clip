@@ -57,7 +57,7 @@ TokenStreamPtr StopAnalyzer::tokenStream(const String& fieldName, const ReaderPt
 }
 
 TokenStreamPtr StopAnalyzer::reusableTokenStream(const String& fieldName, const ReaderPtr& reader) {
-    StopAnalyzerSavedStreamsPtr streams(boost::dynamic_pointer_cast<StopAnalyzerSavedStreams>(getPreviousTokenStream()));
+    StopAnalyzerSavedStreamsPtr streams(std::dynamic_pointer_cast<StopAnalyzerSavedStreams>(getPreviousTokenStream()));
     if (!streams) {
         streams = newLucene<StopAnalyzerSavedStreams>();
         streams->source = newLucene<LowerCaseTokenizer>(reader);

@@ -39,9 +39,9 @@ void PayloadAttribute::clear() {
 
 LuceneObjectPtr PayloadAttribute::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Attribute::clone(other ? other : newLucene<PayloadAttribute>());
-    PayloadAttributePtr cloneAttribute(boost::dynamic_pointer_cast<PayloadAttribute>(clone));
+    PayloadAttributePtr cloneAttribute(std::dynamic_pointer_cast<PayloadAttribute>(clone));
     if (payload) {
-        cloneAttribute->payload = boost::dynamic_pointer_cast<Payload>(payload->clone());
+        cloneAttribute->payload = std::dynamic_pointer_cast<Payload>(payload->clone());
     }
     return cloneAttribute;
 }
@@ -51,7 +51,7 @@ bool PayloadAttribute::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    PayloadAttributePtr otherAttribute(boost::dynamic_pointer_cast<PayloadAttribute>(other));
+    PayloadAttributePtr otherAttribute(std::dynamic_pointer_cast<PayloadAttribute>(other));
     if (otherAttribute) {
         if (!otherAttribute->payload && !payload) {
             return true;
@@ -67,8 +67,8 @@ int32_t PayloadAttribute::hashCode() {
 }
 
 void PayloadAttribute::copyTo(const AttributePtr& target) {
-    PayloadAttributePtr targetPayloadAttribute(boost::dynamic_pointer_cast<PayloadAttribute>(target));
-    targetPayloadAttribute->setPayload(payload ? boost::dynamic_pointer_cast<Payload>(payload->clone()) : PayloadPtr());
+    PayloadAttributePtr targetPayloadAttribute(std::dynamic_pointer_cast<PayloadAttribute>(target));
+    targetPayloadAttribute->setPayload(payload ? std::dynamic_pointer_cast<Payload>(payload->clone()) : PayloadPtr());
 }
 
 }

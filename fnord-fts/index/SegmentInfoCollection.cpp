@@ -46,7 +46,7 @@ bool SegmentInfoCollection::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SegmentInfoCollectionPtr otherColl(boost::dynamic_pointer_cast<SegmentInfoCollection>(other));
+    SegmentInfoCollectionPtr otherColl(std::dynamic_pointer_cast<SegmentInfoCollection>(other));
     if (!otherColl) {
         return false;
     }
@@ -73,7 +73,7 @@ void SegmentInfoCollection::remove(int32_t start, int32_t end) {
 
 LuceneObjectPtr SegmentInfoCollection::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = LuceneObject::clone(other ? other : newLucene<SegmentInfoCollection>());
-    SegmentInfoCollectionPtr cloneInfos(boost::dynamic_pointer_cast<SegmentInfoCollection>(clone));
+    SegmentInfoCollectionPtr cloneInfos(std::dynamic_pointer_cast<SegmentInfoCollection>(clone));
     for (Collection<SegmentInfoPtr>::iterator info = segmentInfos.begin(); info != segmentInfos.end(); ++info) {
         cloneInfos->segmentInfos.add(*info);
     }

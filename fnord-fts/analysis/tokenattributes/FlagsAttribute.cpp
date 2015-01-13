@@ -38,7 +38,7 @@ bool FlagsAttribute::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    FlagsAttributePtr otherFlagsAttribute(boost::dynamic_pointer_cast<FlagsAttribute>(other));
+    FlagsAttributePtr otherFlagsAttribute(std::dynamic_pointer_cast<FlagsAttribute>(other));
     if (otherFlagsAttribute) {
         return (otherFlagsAttribute->flags == flags);
     }
@@ -51,12 +51,12 @@ int32_t FlagsAttribute::hashCode() {
 }
 
 void FlagsAttribute::copyTo(const AttributePtr& target) {
-    boost::dynamic_pointer_cast<FlagsAttribute>(target)->setFlags(flags);
+    std::dynamic_pointer_cast<FlagsAttribute>(target)->setFlags(flags);
 }
 
 LuceneObjectPtr FlagsAttribute::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<FlagsAttribute>();
-    FlagsAttributePtr cloneAttribute(boost::dynamic_pointer_cast<FlagsAttribute>(Attribute::clone(clone)));
+    FlagsAttributePtr cloneAttribute(std::dynamic_pointer_cast<FlagsAttribute>(Attribute::clone(clone)));
     cloneAttribute->flags = flags;
     return cloneAttribute;
 }

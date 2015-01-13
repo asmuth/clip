@@ -92,7 +92,7 @@ QueryPtr BooleanQuery::rewrite(const IndexReaderPtr& reader) {
 
             if (getBoost() != 1.0) { // incorporate boost
                 if (query == c->getQuery()) { // if rewrite was no-op
-                    query = boost::dynamic_pointer_cast<Query>(query->clone());    // then clone before boost
+                    query = std::dynamic_pointer_cast<Query>(query->clone());    // then clone before boost
                 }
                 query->setBoost(getBoost() * query->getBoost());
             }
@@ -107,7 +107,7 @@ QueryPtr BooleanQuery::rewrite(const IndexReaderPtr& reader) {
         QueryPtr query(c->getQuery()->rewrite(reader));
         if (query != c->getQuery()) { // clause rewrote: must clone
             if (!clone) {
-                clone = boost::dynamic_pointer_cast<BooleanQuery>(this->clone());
+                clone = std::dynamic_pointer_cast<BooleanQuery>(this->clone());
             }
             clone->clauses[i] = newLucene<BooleanClause>(query, c->getOccur());
         }
@@ -128,7 +128,7 @@ void BooleanQuery::extractTerms(SetTerm terms) {
 
 LuceneObjectPtr BooleanQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Query::clone(other ? other : newLucene<BooleanQuery>());
-    BooleanQueryPtr cloneQuery(boost::dynamic_pointer_cast<BooleanQuery>(clone));
+    BooleanQueryPtr cloneQuery(std::dynamic_pointer_cast<BooleanQuery>(clone));
     cloneQuery->disableCoord = disableCoord;
     cloneQuery->minNrShouldMatch = minNrShouldMatch;
     cloneQuery->clauses = Collection<BooleanClausePtr>::newInstance(clauses.begin(), clauses.end());
@@ -155,7 +155,7 @@ String BooleanQuery::toString(const String& field) {
 
         QueryPtr subQuery((*clause)->getQuery());
         if (subQuery) {
-            if (boost::dynamic_pointer_cast<BooleanQuery>(subQuery)) { // wrap sub-bools in parens
+            if (std::dynamic_pointer_cast<BooleanQuery>(subQuery)) { // wrap sub-bools in parens
                 buffer += L"(";
                 buffer += subQuery->toString(field);
                 buffer += L")";
@@ -184,7 +184,7 @@ String BooleanQuery::toString(const String& field) {
 }
 
 bool BooleanQuery::equals(const LuceneObjectPtr& other) {
-    BooleanQueryPtr otherQuery(boost::dynamic_pointer_cast<BooleanQuery>(other));
+    BooleanQueryPtr otherQuery(std::dynamic_pointer_cast<BooleanQuery>(other));
     if (!otherQuery) {
         return false;
     }

@@ -179,7 +179,7 @@ void SegmentMerger::setMatchingSegmentReaders() {
     // "merged" FieldInfos, then we can do a bulk copy of the stored fields
     for (int32_t i = 0; i < numReaders; ++i) {
         IndexReaderPtr reader(readers[i]);
-        SegmentReaderPtr segmentReader(boost::dynamic_pointer_cast<SegmentReader>(reader));
+        SegmentReaderPtr segmentReader(std::dynamic_pointer_cast<SegmentReader>(reader));
         if (segmentReader) {
             bool same = true;
             FieldInfosPtr segmentFieldInfos(segmentReader->fieldInfos());
@@ -202,13 +202,13 @@ int32_t SegmentMerger::mergeFields() {
     if (!mergeDocStores) {
         // When we are not merging by doc stores, their field name -> number mapping are the same.
         // So, we start with the fieldInfos of the last segment in this case, to keep that numbering
-        fieldInfos = boost::dynamic_pointer_cast<FieldInfos>(boost::dynamic_pointer_cast<SegmentReader>(readers[readers.size() - 1])->core->fieldInfos->clone());
+        fieldInfos = std::dynamic_pointer_cast<FieldInfos>(std::dynamic_pointer_cast<SegmentReader>(readers[readers.size() - 1])->core->fieldInfos->clone());
     } else {
         fieldInfos = newLucene<FieldInfos>();    // merge field names
     }
 
     for (Collection<IndexReaderPtr>::iterator reader = readers.begin(); reader != readers.end(); ++reader) {
-        SegmentReaderPtr segmentReader(boost::dynamic_pointer_cast<SegmentReader>(*reader));
+        SegmentReaderPtr segmentReader(std::dynamic_pointer_cast<SegmentReader>(*reader));
         if (segmentReader) {
             FieldInfosPtr readerFieldInfos(segmentReader->fieldInfos());
             int32_t numReaderFieldInfos = readerFieldInfos->size();

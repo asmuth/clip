@@ -413,7 +413,7 @@ int64_t OpenBitSet::nextSetBit(int64_t index) {
 
 LuceneObjectPtr OpenBitSet::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<OpenBitSet>();
-    OpenBitSetPtr cloneSet(boost::dynamic_pointer_cast<OpenBitSet>(LuceneObject::clone(clone)));
+    OpenBitSetPtr cloneSet(std::dynamic_pointer_cast<OpenBitSet>(LuceneObject::clone(clone)));
     cloneSet->wlen = wlen;
     cloneSet->bits = LongArray::newInstance(bits.size());
     MiscUtils::arrayCopy(bits.get(), 0, cloneSet->bits.get(), 0, bits.size());
@@ -529,7 +529,7 @@ bool OpenBitSet::equals(const LuceneObjectPtr& other) {
     if (LuceneObject::equals(other)) {
         return true;
     }
-    OpenBitSetPtr otherBitSet(boost::dynamic_pointer_cast<OpenBitSet>(other));
+    OpenBitSetPtr otherBitSet(std::dynamic_pointer_cast<OpenBitSet>(other));
     if (!otherBitSet) {
         return false;
     }

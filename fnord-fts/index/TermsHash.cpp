@@ -96,15 +96,15 @@ void TermsHash::flush(MapInvertedDocConsumerPerThreadCollectionInvertedDocConsum
         }
 
         for (Collection<InvertedDocConsumerPerFieldPtr>::iterator perField = entry->second.begin(); perField != entry->second.end(); ++perField) {
-            childFields.add(boost::static_pointer_cast<TermsHashPerField>(*perField)->consumer);
+            childFields.add(std::static_pointer_cast<TermsHashPerField>(*perField)->consumer);
             if (nextTermsHash) {
-                nextChildFields.add(boost::static_pointer_cast<TermsHashPerField>(*perField)->nextPerField);
+                nextChildFields.add(std::static_pointer_cast<TermsHashPerField>(*perField)->nextPerField);
             }
         }
 
-        childThreadsAndFields.put(boost::static_pointer_cast<TermsHashPerThread>(entry->first)->consumer, childFields);
+        childThreadsAndFields.put(std::static_pointer_cast<TermsHashPerThread>(entry->first)->consumer, childFields);
         if (nextTermsHash) {
-            nextThreadsAndFields.put(boost::static_pointer_cast<TermsHashPerThread>(entry->first)->nextPerThread, nextChildFields);
+            nextThreadsAndFields.put(std::static_pointer_cast<TermsHashPerThread>(entry->first)->nextPerThread, nextChildFields);
         }
     }
 

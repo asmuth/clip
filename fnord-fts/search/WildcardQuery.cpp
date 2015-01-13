@@ -61,7 +61,7 @@ String WildcardQuery::toString(const String& field) {
 
 LuceneObjectPtr WildcardQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = MultiTermQuery::clone(other ? other : newLucene<WildcardQuery>(term));
-    WildcardQueryPtr cloneQuery(boost::dynamic_pointer_cast<WildcardQuery>(clone));
+    WildcardQueryPtr cloneQuery(std::dynamic_pointer_cast<WildcardQuery>(clone));
     cloneQuery->termContainsWildcard = termContainsWildcard;
     cloneQuery->termIsPrefix = termIsPrefix;
     cloneQuery->term = term;
@@ -85,7 +85,7 @@ bool WildcardQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    WildcardQueryPtr otherWildcardQuery(boost::dynamic_pointer_cast<WildcardQuery>(other));
+    WildcardQueryPtr otherWildcardQuery(std::dynamic_pointer_cast<WildcardQuery>(other));
     if (!otherWildcardQuery) {
         return false;
     }

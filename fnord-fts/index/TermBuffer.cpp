@@ -25,7 +25,7 @@ TermBuffer::~TermBuffer() {
 }
 
 int32_t TermBuffer::compareTo(const LuceneObjectPtr& other) {
-    TermBufferPtr otherTermBuffer(boost::static_pointer_cast<TermBuffer>(other));
+    TermBufferPtr otherTermBuffer(std::static_pointer_cast<TermBuffer>(other));
     if (field == otherTermBuffer->field) {
         return compareChars(text->result.get(), text->length, otherTermBuffer->text->result.get(), otherTermBuffer->text->length);
     } else {
@@ -105,7 +105,7 @@ TermPtr TermBuffer::toTerm() {
 
 LuceneObjectPtr TermBuffer::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<TermBuffer>();
-    TermBufferPtr cloneBuffer(boost::dynamic_pointer_cast<TermBuffer>(LuceneObject::clone(clone)));
+    TermBufferPtr cloneBuffer(std::dynamic_pointer_cast<TermBuffer>(LuceneObject::clone(clone)));
     cloneBuffer->field = field;
     cloneBuffer->term = term;
     cloneBuffer->preUTF8Strings = preUTF8Strings;

@@ -93,7 +93,7 @@ DirectoryReader::DirectoryReader(const IndexWriterPtr& writer, const SegmentInfo
     this->_directory = writer->getDirectory();
     this->readOnly = true;
     this->segmentInfos = infos;
-    this->segmentInfosStart = boost::dynamic_pointer_cast<SegmentInfos>(infos->clone());
+    this->segmentInfosStart = std::dynamic_pointer_cast<SegmentInfos>(infos->clone());
     this->termInfosIndexDivisor = termInfosIndexDivisor;
 
     if (!readOnly) {
@@ -115,7 +115,7 @@ DirectoryReader::DirectoryReader(const IndexWriterPtr& writer, const SegmentInfo
         try {
             SegmentInfoPtr info(infos->info(i));
             if (info->dir == dir) {
-                readers[upto++] = boost::dynamic_pointer_cast<SegmentReader>(writer->readerPool->getReadOnlyClone(info, true, termInfosIndexDivisor));
+                readers[upto++] = std::dynamic_pointer_cast<SegmentReader>(writer->readerPool->getReadOnlyClone(info, true, termInfosIndexDivisor));
             }
             success = true;
         } catch (LuceneException& e) {
@@ -307,7 +307,7 @@ LuceneObjectPtr DirectoryReader::clone(const LuceneObjectPtr& other) {
 
 LuceneObjectPtr DirectoryReader::clone(bool openReadOnly, const LuceneObjectPtr& other) {
     SyncLock syncLock(this);
-    DirectoryReaderPtr newReader(doReopen(boost::dynamic_pointer_cast<SegmentInfos>(segmentInfos->clone()), true, openReadOnly));
+    DirectoryReaderPtr newReader(doReopen(std::dynamic_pointer_cast<SegmentInfos>(segmentInfos->clone()), true, openReadOnly));
 
     if (shared_from_this() != newReader) {
         newReader->deletionPolicy = deletionPolicy;
@@ -383,14 +383,14 @@ IndexReaderPtr DirectoryReader::doReopenNoWriter(bool openReadOnly, const IndexC
             BOOST_ASSERT(isCurrent());
 
             if (openReadOnly) {
-                return boost::dynamic_pointer_cast<IndexReader>(clone(openReadOnly));
+                return std::dynamic_pointer_cast<IndexReader>(clone(openReadOnly));
             } else {
                 return shared_from_this();
             }
         } else if (isCurrent()) {
             if (openReadOnly != readOnly) {
                 // Just fallback to clone
-                return boost::dynamic_pointer_cast<IndexReader>(clone(openReadOnly));
+                return std::dynamic_pointer_cast<IndexReader>(clone(openReadOnly));
             } else {
                 return shared_from_this();
             }
@@ -402,7 +402,7 @@ IndexReaderPtr DirectoryReader::doReopenNoWriter(bool openReadOnly, const IndexC
         if (segmentInfos && commit->getSegmentsFileName() == segmentInfos->getCurrentSegmentFileName()) {
             if (readOnly != openReadOnly) {
                 // Just fallback to clone
-                return boost::dynamic_pointer_cast<IndexReader>(clone(openReadOnly));
+                return std::dynamic_pointer_cast<IndexReader>(clone(openReadOnly));
             } else {
                 return shared_from_this();
             }
@@ -954,7 +954,7 @@ void MultiTermDocs::seek(const TermPtr& term) {
 
 void MultiTermDocs::seek(const TermEnumPtr& termEnum) {
     seek(termEnum->term());
-    MultiTermEnumPtr multiTermEnum(boost::dynamic_pointer_cast<MultiTermEnum>(termEnum));
+    MultiTermEnumPtr multiTermEnum(std::dynamic_pointer_cast<MultiTermEnum>(termEnum));
     if (multiTermEnum) {
         tenum = multiTermEnum;
         if (IndexReaderPtr(_topReader) != IndexReaderPtr(tenum->_topReader)) {
@@ -1074,19 +1074,19 @@ TermDocsPtr MultiTermPositions::termDocs(const IndexReaderPtr& reader) {
 }
 
 int32_t MultiTermPositions::nextPosition() {
-    return boost::static_pointer_cast<TermPositions>(current)->nextPosition();
+    return std::static_pointer_cast<TermPositions>(current)->nextPosition();
 }
 
 int32_t MultiTermPositions::getPayloadLength() {
-    return boost::static_pointer_cast<TermPositions>(current)->getPayloadLength();
+    return std::static_pointer_cast<TermPositions>(current)->getPayloadLength();
 }
 
 ByteArray MultiTermPositions::getPayload(ByteArray data, int32_t offset) {
-    return boost::static_pointer_cast<TermPositions>(current)->getPayload(data, offset);
+    return std::static_pointer_cast<TermPositions>(current)->getPayload(data, offset);
 }
 
 bool MultiTermPositions::isPayloadAvailable() {
-    return boost::static_pointer_cast<TermPositions>(current)->isPayloadAvailable();
+    return std::static_pointer_cast<TermPositions>(current)->isPayloadAvailable();
 }
 
 ReaderCommit::ReaderCommit(const SegmentInfosPtr& infos, const DirectoryPtr& dir) {

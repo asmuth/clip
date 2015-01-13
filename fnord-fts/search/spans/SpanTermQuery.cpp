@@ -60,7 +60,7 @@ bool SpanTermQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    SpanTermQueryPtr otherQuery(boost::dynamic_pointer_cast<SpanTermQuery>(other));
+    SpanTermQueryPtr otherQuery(std::dynamic_pointer_cast<SpanTermQuery>(other));
     if (!otherQuery) {
         return false;
     }
@@ -76,7 +76,7 @@ bool SpanTermQuery::equals(const LuceneObjectPtr& other) {
 
 LuceneObjectPtr SpanTermQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = SpanQuery::clone(other ? other : newLucene<SpanTermQuery>(term));
-    SpanTermQueryPtr spanFirstQuery(boost::dynamic_pointer_cast<SpanTermQuery>(clone));
+    SpanTermQueryPtr spanFirstQuery(std::dynamic_pointer_cast<SpanTermQuery>(clone));
     spanFirstQuery->term = term;
     return spanFirstQuery;
 }

@@ -41,7 +41,7 @@ void NormsWriterPerField::abort() {
 }
 
 int32_t NormsWriterPerField::compareTo(const LuceneObjectPtr& other) {
-    return fieldInfo->name.compare(boost::static_pointer_cast<NormsWriterPerField>(other)->fieldInfo->name);
+    return fieldInfo->name.compare(std::static_pointer_cast<NormsWriterPerField>(other)->fieldInfo->name);
 }
 
 void NormsWriterPerField::finish() {

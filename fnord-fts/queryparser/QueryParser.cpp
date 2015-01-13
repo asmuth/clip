@@ -458,10 +458,10 @@ QueryPtr QueryParser::getFieldQuery(const String& field, const String& queryText
 QueryPtr QueryParser::getFieldQuery(const String& field, const String& queryText, int32_t slop) {
     QueryPtr query(getFieldQuery(field, queryText));
     if (MiscUtils::typeOf<PhraseQuery>(query)) {
-        boost::dynamic_pointer_cast<PhraseQuery>(query)->setSlop(slop);
+        std::dynamic_pointer_cast<PhraseQuery>(query)->setSlop(slop);
     }
     if (MiscUtils::typeOf<MultiPhraseQuery>(query)) {
-        boost::dynamic_pointer_cast<MultiPhraseQuery>(query)->setSlop(slop);
+        std::dynamic_pointer_cast<MultiPhraseQuery>(query)->setSlop(slop);
     }
     return query;
 }

@@ -41,7 +41,7 @@ NumericField::~NumericField() {
 }
 
 TokenStreamPtr NumericField::tokenStreamValue() {
-    return isIndexed() ? boost::static_pointer_cast<TokenStream>(tokenStream) : TokenStreamPtr();
+    return isIndexed() ? std::static_pointer_cast<TokenStream>(tokenStream) : TokenStreamPtr();
 }
 
 ByteArray NumericField::getBinaryValue(ByteArray result) {

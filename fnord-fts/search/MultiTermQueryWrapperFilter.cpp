@@ -40,7 +40,7 @@ bool MultiTermQueryWrapperFilter::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    MultiTermQueryWrapperFilterPtr otherMultiTermQueryWrapperFilter(boost::dynamic_pointer_cast<MultiTermQueryWrapperFilter>(other));
+    MultiTermQueryWrapperFilterPtr otherMultiTermQueryWrapperFilter(std::dynamic_pointer_cast<MultiTermQueryWrapperFilter>(other));
     if (otherMultiTermQueryWrapperFilter) {
         return query->equals(otherMultiTermQueryWrapperFilter->query);
     }

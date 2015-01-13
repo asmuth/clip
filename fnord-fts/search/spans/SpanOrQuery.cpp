@@ -47,7 +47,7 @@ LuceneObjectPtr SpanOrQuery::clone(const LuceneObjectPtr& other) {
     Collection<SpanQueryPtr> newClauses(Collection<SpanQueryPtr>::newInstance(sz));
 
     for (int32_t i = 0; i < sz; ++i) {
-        newClauses[i] = boost::dynamic_pointer_cast<SpanQuery>(clauses[i]->clone());
+        newClauses[i] = std::dynamic_pointer_cast<SpanQuery>(clauses[i]->clone());
     }
 
     SpanOrQueryPtr spanOrQuery(newLucene<SpanOrQuery>(newClauses));
@@ -59,10 +59,10 @@ QueryPtr SpanOrQuery::rewrite(const IndexReaderPtr& reader) {
     SpanOrQueryPtr clone;
     for (int32_t i = 0; i < clauses.size(); ++i) {
         SpanQueryPtr clause(clauses[i]);
-        SpanQueryPtr query(boost::dynamic_pointer_cast<SpanQuery>(clause->rewrite(reader)));
+        SpanQueryPtr query(std::dynamic_pointer_cast<SpanQuery>(clause->rewrite(reader)));
         if (query != clause) { // clause rewrote: must clone
             if (!clone) {
-                clone = boost::dynamic_pointer_cast<SpanOrQuery>(this->clone());
+                clone = std::dynamic_pointer_cast<SpanOrQuery>(this->clone());
             }
             clone->clauses[i] = query;
         }
@@ -92,7 +92,7 @@ bool SpanOrQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SpanOrQueryPtr otherQuery(boost::dynamic_pointer_cast<SpanOrQuery>(other));
+    SpanOrQueryPtr otherQuery(std::dynamic_pointer_cast<SpanOrQuery>(other));
     if (!otherQuery) {
         return false;
     }

@@ -48,7 +48,7 @@ FSDirectory::FSDirectory(const String& path, const LockFactoryPtr& lockFactory) 
 
     // for filesystem based LockFactory, delete the lockPrefix if the locks are placed
     // in index dir. if no index dir is given, set ourselves
-    FSLockFactoryPtr lf(boost::dynamic_pointer_cast<FSLockFactory>(_lockFactory));
+    FSLockFactoryPtr lf(std::dynamic_pointer_cast<FSLockFactory>(_lockFactory));
 
     if (lf) {
         if (lf->getLockDir().empty()) {

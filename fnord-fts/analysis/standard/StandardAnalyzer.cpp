@@ -64,7 +64,7 @@ int32_t StandardAnalyzer::getMaxTokenLength() {
 }
 
 TokenStreamPtr StandardAnalyzer::reusableTokenStream(const String& fieldName, const ReaderPtr& reader) {
-    StandardAnalyzerSavedStreamsPtr streams = boost::dynamic_pointer_cast<StandardAnalyzerSavedStreams>(getPreviousTokenStream());
+    StandardAnalyzerSavedStreamsPtr streams = std::dynamic_pointer_cast<StandardAnalyzerSavedStreams>(getPreviousTokenStream());
     if (!streams) {
         streams = newLucene<StandardAnalyzerSavedStreams>();
         setPreviousTokenStream(streams);

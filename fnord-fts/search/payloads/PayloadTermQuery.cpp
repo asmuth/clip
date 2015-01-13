@@ -32,7 +32,7 @@ WeightPtr PayloadTermQuery::createWeight(const SearcherPtr& searcher) {
 
 LuceneObjectPtr PayloadTermQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = SpanQuery::clone(other ? other : newLucene<PayloadTermQuery>(term, function, includeSpanScore));
-    PayloadTermQueryPtr termQuery(boost::dynamic_pointer_cast<PayloadTermQuery>(clone));
+    PayloadTermQueryPtr termQuery(std::dynamic_pointer_cast<PayloadTermQuery>(clone));
     termQuery->function = function;
     termQuery->includeSpanScore = includeSpanScore;
     return termQuery;
@@ -48,7 +48,7 @@ bool PayloadTermQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    PayloadTermQueryPtr otherQuery(boost::dynamic_pointer_cast<PayloadTermQuery>(other));
+    PayloadTermQueryPtr otherQuery(std::dynamic_pointer_cast<PayloadTermQuery>(other));
     if (!otherQuery) {
         return false;
     }
@@ -80,7 +80,7 @@ PayloadTermWeight::~PayloadTermWeight() {
 }
 
 ScorerPtr PayloadTermWeight::scorer(const IndexReaderPtr& reader, bool scoreDocsInOrder, bool topScorer) {
-    return newLucene<PayloadTermSpanScorer>(boost::dynamic_pointer_cast<TermSpans>(query->getSpans(reader)), shared_from_this(), similarity, reader->norms(query->getField()));
+    return newLucene<PayloadTermSpanScorer>(std::dynamic_pointer_cast<TermSpans>(query->getSpans(reader)), shared_from_this(), similarity, reader->norms(query->getField()));
 }
 
 PayloadTermSpanScorer::PayloadTermSpanScorer(const TermSpansPtr& spans, const WeightPtr& weight, const SimilarityPtr& similarity, ByteArray norms) : SpanScorer(spans, weight, similarity, norms) {
@@ -115,8 +115,8 @@ bool PayloadTermSpanScorer::setFreqCurrentDoc() {
 
 void PayloadTermSpanScorer::processPayload(const SimilarityPtr& similarity) {
     if (positions->isPayloadAvailable()) {
-        PayloadTermWeightPtr payloadWeight(boost::static_pointer_cast<PayloadTermWeight>(weight));
-        PayloadTermQueryPtr payloadQuery(boost::static_pointer_cast<PayloadTermQuery>(payloadWeight->query));
+        PayloadTermWeightPtr payloadWeight(std::static_pointer_cast<PayloadTermWeight>(weight));
+        PayloadTermQueryPtr payloadQuery(std::static_pointer_cast<PayloadTermQuery>(payloadWeight->query));
 
         payload = positions->getPayload(payload, 0);
         payloadScore = payloadQuery->function->currentScore(doc, payloadQuery->term->field(), spans->start(), spans->end(),
@@ -130,8 +130,8 @@ void PayloadTermSpanScorer::processPayload(const SimilarityPtr& similarity) {
 }
 
 double PayloadTermSpanScorer::score() {
-    PayloadTermWeightPtr payloadWeight(boost::static_pointer_cast<PayloadTermWeight>(weight));
-    PayloadTermQueryPtr payloadQuery(boost::static_pointer_cast<PayloadTermQuery>(payloadWeight->query));
+    PayloadTermWeightPtr payloadWeight(std::static_pointer_cast<PayloadTermWeight>(weight));
+    PayloadTermQueryPtr payloadQuery(std::static_pointer_cast<PayloadTermQuery>(payloadWeight->query));
     return payloadQuery->includeSpanScore ? getSpanScore() * getPayloadScore() : getPayloadScore();
 }
 
@@ -140,8 +140,8 @@ double PayloadTermSpanScorer::getSpanScore() {
 }
 
 double PayloadTermSpanScorer::getPayloadScore() {
-    PayloadTermWeightPtr payloadWeight(boost::static_pointer_cast<PayloadTermWeight>(weight));
-    PayloadTermQueryPtr payloadQuery(boost::static_pointer_cast<PayloadTermQuery>(payloadWeight->query));
+    PayloadTermWeightPtr payloadWeight(std::static_pointer_cast<PayloadTermWeight>(weight));
+    PayloadTermQueryPtr payloadQuery(std::static_pointer_cast<PayloadTermQuery>(payloadWeight->query));
     return payloadQuery->function->docScore(doc, payloadQuery->term->field(), payloadsSeen, payloadScore);
 }
 

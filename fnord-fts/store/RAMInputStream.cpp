@@ -107,7 +107,7 @@ void RAMInputStream::seek(int64_t pos) {
 
 LuceneObjectPtr RAMInputStream::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = IndexInput::clone(other ? other : newLucene<RAMInputStream>());
-    RAMInputStreamPtr cloneInputStream(boost::dynamic_pointer_cast<RAMInputStream>(clone));
+    RAMInputStreamPtr cloneInputStream(std::dynamic_pointer_cast<RAMInputStream>(clone));
     cloneInputStream->file = file;
     cloneInputStream->_length = _length;
     cloneInputStream->currentBuffer = currentBuffer;

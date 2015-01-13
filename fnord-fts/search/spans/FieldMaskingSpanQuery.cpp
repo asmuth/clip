@@ -49,9 +49,9 @@ SimilarityPtr FieldMaskingSpanQuery::getSimilarity(const SearcherPtr& searcher) 
 QueryPtr FieldMaskingSpanQuery::rewrite(const IndexReaderPtr& reader) {
     FieldMaskingSpanQueryPtr clone;
 
-    SpanQueryPtr rewritten(boost::dynamic_pointer_cast<SpanQuery>(maskedQuery->rewrite(reader)));
+    SpanQueryPtr rewritten(std::dynamic_pointer_cast<SpanQuery>(maskedQuery->rewrite(reader)));
     if (rewritten != maskedQuery) {
-        clone = boost::dynamic_pointer_cast<FieldMaskingSpanQuery>(this->clone());
+        clone = std::dynamic_pointer_cast<FieldMaskingSpanQuery>(this->clone());
         clone->maskedQuery = rewritten;
     }
 
@@ -74,7 +74,7 @@ bool FieldMaskingSpanQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    FieldMaskingSpanQueryPtr otherQuery(boost::dynamic_pointer_cast<FieldMaskingSpanQuery>(other));
+    FieldMaskingSpanQueryPtr otherQuery(std::dynamic_pointer_cast<FieldMaskingSpanQuery>(other));
     if (!otherQuery) {
         return false;
     }
@@ -89,7 +89,7 @@ int32_t FieldMaskingSpanQuery::hashCode() {
 
 LuceneObjectPtr FieldMaskingSpanQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = SpanQuery::clone(other ? other : newLucene<FieldMaskingSpanQuery>(maskedQuery, field));
-    FieldMaskingSpanQueryPtr cloneQuery(boost::dynamic_pointer_cast<FieldMaskingSpanQuery>(clone));
+    FieldMaskingSpanQueryPtr cloneQuery(std::dynamic_pointer_cast<FieldMaskingSpanQuery>(clone));
     cloneQuery->maskedQuery = maskedQuery;
     cloneQuery->field = field;
     return cloneQuery;

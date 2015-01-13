@@ -37,7 +37,7 @@ Collection<ByteArray> PayloadSpanUtil::getPayloadsForQuery(const QueryPtr& query
 
 void PayloadSpanUtil::queryToSpanQuery(const QueryPtr& query, Collection<ByteArray> payloads) {
     if (MiscUtils::typeOf<BooleanQuery>(query)) {
-        BooleanQueryPtr booleanQuery(boost::dynamic_pointer_cast<BooleanQuery>(query));
+        BooleanQueryPtr booleanQuery(std::dynamic_pointer_cast<BooleanQuery>(query));
         Collection<BooleanClausePtr> queryClauses(booleanQuery->getClauses());
         for (Collection<BooleanClausePtr>::iterator clause = queryClauses.begin(); clause != queryClauses.end(); ++clause) {
             if (!(*clause)->isProhibited()) {
@@ -45,7 +45,7 @@ void PayloadSpanUtil::queryToSpanQuery(const QueryPtr& query, Collection<ByteArr
             }
         }
     } else if (MiscUtils::typeOf<PhraseQuery>(query)) {
-        PhraseQueryPtr phraseQuery(boost::dynamic_pointer_cast<PhraseQuery>(query));
+        PhraseQueryPtr phraseQuery(std::dynamic_pointer_cast<PhraseQuery>(query));
         Collection<TermPtr> phraseQueryTerms(phraseQuery->getTerms());
         Collection<SpanQueryPtr> clauses(Collection<SpanQueryPtr>::newInstance(phraseQueryTerms.size()));
         for (int32_t i = 0; i < phraseQueryTerms.size(); ++i) {
@@ -63,23 +63,23 @@ void PayloadSpanUtil::queryToSpanQuery(const QueryPtr& query, Collection<ByteArr
         sp->setBoost(query->getBoost());
         getPayloads(payloads, sp);
     } else if (MiscUtils::typeOf<TermQuery>(query)) {
-        TermQueryPtr termQuery(boost::dynamic_pointer_cast<TermQuery>(query));
+        TermQueryPtr termQuery(std::dynamic_pointer_cast<TermQuery>(query));
         SpanTermQueryPtr stq(newLucene<SpanTermQuery>(termQuery->getTerm()));
         stq->setBoost(query->getBoost());
         getPayloads(payloads, stq);
     } else if (MiscUtils::typeOf<SpanQuery>(query)) {
-        SpanQueryPtr spanQuery(boost::dynamic_pointer_cast<SpanQuery>(query));
+        SpanQueryPtr spanQuery(std::dynamic_pointer_cast<SpanQuery>(query));
         getPayloads(payloads, spanQuery);
     } else if (MiscUtils::typeOf<FilteredQuery>(query)) {
-        FilteredQueryPtr filteredQuery(boost::dynamic_pointer_cast<FilteredQuery>(query));
+        FilteredQueryPtr filteredQuery(std::dynamic_pointer_cast<FilteredQuery>(query));
         queryToSpanQuery(filteredQuery->getQuery(), payloads);
     } else if (MiscUtils::typeOf<DisjunctionMaxQuery>(query)) {
-        DisjunctionMaxQueryPtr maxQuery(boost::dynamic_pointer_cast<DisjunctionMaxQuery>(query));
+        DisjunctionMaxQueryPtr maxQuery(std::dynamic_pointer_cast<DisjunctionMaxQuery>(query));
         for (Collection<QueryPtr>::iterator disjunct = maxQuery->begin(); disjunct != maxQuery->end(); ++disjunct) {
             queryToSpanQuery(*disjunct, payloads);
         }
     } else if (MiscUtils::typeOf<MultiPhraseQuery>(query)) {
-        MultiPhraseQueryPtr multiphraseQuery(boost::dynamic_pointer_cast<MultiPhraseQuery>(query));
+        MultiPhraseQueryPtr multiphraseQuery(std::dynamic_pointer_cast<MultiPhraseQuery>(query));
         Collection< Collection<TermPtr> > termArrays(multiphraseQuery->getTermArrays());
         Collection<int32_t> positions(multiphraseQuery->getPositions());
         if (!positions.empty()) {
@@ -114,7 +114,7 @@ void PayloadSpanUtil::queryToSpanQuery(const QueryPtr& query, Collection<ByteArr
                 if (disjuncts) {
                     Collection<SpanQueryPtr> spanDisjuncts(Collection<SpanQueryPtr>::newInstance(disjuncts.size()));
                     for (int32_t j = 0; j < disjuncts.size(); ++j) {
-                        spanDisjuncts[j] = boost::dynamic_pointer_cast<SpanQuery>(disjuncts[j]);
+                        spanDisjuncts[j] = std::dynamic_pointer_cast<SpanQuery>(disjuncts[j]);
                     }
                     clauses[position++] = newLucene<SpanOrQuery>(spanDisjuncts);
                 } else {

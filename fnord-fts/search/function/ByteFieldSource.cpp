@@ -33,7 +33,7 @@ bool ByteFieldSource::cachedFieldSourceEquals(const FieldCacheSourcePtr& other) 
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    ByteFieldSourcePtr otherSource(boost::dynamic_pointer_cast<ByteFieldSource>(other));
+    ByteFieldSourcePtr otherSource(std::dynamic_pointer_cast<ByteFieldSource>(other));
     if (!otherSource) {
         return false;
     }

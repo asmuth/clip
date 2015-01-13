@@ -120,7 +120,7 @@ void SegmentTermPositions::skipPayload() {
 void SegmentTermPositions::lazySkip() {
     if (!proxStream) {
         // clone lazily
-        proxStream = boost::dynamic_pointer_cast<IndexInput>(SegmentReaderPtr(_parent)->core->proxStream->clone());
+        proxStream = std::dynamic_pointer_cast<IndexInput>(SegmentReaderPtr(_parent)->core->proxStream->clone());
     }
 
     // we might have to skip the current payload if it was not read yet

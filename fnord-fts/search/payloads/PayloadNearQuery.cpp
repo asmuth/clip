@@ -38,7 +38,7 @@ LuceneObjectPtr PayloadNearQuery::clone(const LuceneObjectPtr& other) {
     Collection<SpanQueryPtr> newClauses(Collection<SpanQueryPtr>::newInstance(sz));
 
     for (int32_t i = 0; i < sz; ++i) {
-        newClauses[i] = boost::dynamic_pointer_cast<SpanQuery>(clauses[i]->clone());
+        newClauses[i] = std::dynamic_pointer_cast<SpanQuery>(clauses[i]->clone());
     }
 
     PayloadNearQueryPtr payloadNearQuery(newLucene<PayloadNearQuery>(newClauses, slop, inOrder));
@@ -69,7 +69,7 @@ bool PayloadNearQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    PayloadNearQueryPtr otherQuery(boost::dynamic_pointer_cast<PayloadNearQuery>(other));
+    PayloadNearQueryPtr otherQuery(std::dynamic_pointer_cast<PayloadNearQuery>(other));
     if (!otherQuery) {
         return false;
     }
@@ -117,13 +117,13 @@ PayloadNearSpanScorer::~PayloadNearSpanScorer() {
 void PayloadNearSpanScorer::getPayloads(Collection<SpansPtr> subSpans) {
     for (Collection<SpansPtr>::iterator span = subSpans.begin(); span != subSpans.end(); ++span) {
         if (MiscUtils::typeOf<NearSpansOrdered>(*span)) {
-            NearSpansOrderedPtr ordered(boost::static_pointer_cast<NearSpansOrdered>(*span));
+            NearSpansOrderedPtr ordered(std::static_pointer_cast<NearSpansOrdered>(*span));
             if (ordered->isPayloadAvailable()) {
                 processPayloads(ordered->getPayload(), ordered->start(), ordered->end());
             }
             getPayloads(ordered->getSubSpans());
         } else if (MiscUtils::typeOf<NearSpansUnordered>(*span)) {
-            NearSpansUnorderedPtr unordered(boost::static_pointer_cast<NearSpansUnordered>(*span));
+            NearSpansUnorderedPtr unordered(std::static_pointer_cast<NearSpansUnordered>(*span));
             if (unordered->isPayloadAvailable()) {
                 processPayloads(unordered->getPayload(), unordered->start(), unordered->end());
             }
@@ -133,8 +133,8 @@ void PayloadNearSpanScorer::getPayloads(Collection<SpansPtr> subSpans) {
 }
 
 void PayloadNearSpanScorer::processPayloads(Collection<ByteArray> payLoads, int32_t start, int32_t end) {
-    PayloadNearSpanWeightPtr spanWeight(boost::static_pointer_cast<PayloadNearSpanWeight>(weight));
-    PayloadNearQueryPtr nearQuery(boost::static_pointer_cast<PayloadNearQuery>(spanWeight->query));
+    PayloadNearSpanWeightPtr spanWeight(std::static_pointer_cast<PayloadNearSpanWeight>(weight));
+    PayloadNearQueryPtr nearQuery(std::static_pointer_cast<PayloadNearQuery>(spanWeight->query));
 
     for (Collection<ByteArray>::iterator payload = payLoads.begin(); payload != payLoads.end(); ++payload) {
         payloadScore = nearQuery->function->currentScore(doc, nearQuery->fieldName, start, end, payloadsSeen, payloadScore,
@@ -156,8 +156,8 @@ bool PayloadNearSpanScorer::setFreqCurrentDoc() {
 }
 
 double PayloadNearSpanScorer::score() {
-    PayloadNearSpanWeightPtr spanWeight(boost::static_pointer_cast<PayloadNearSpanWeight>(weight));
-    PayloadNearQueryPtr nearQuery(boost::static_pointer_cast<PayloadNearQuery>(spanWeight->query));
+    PayloadNearSpanWeightPtr spanWeight(std::static_pointer_cast<PayloadNearSpanWeight>(weight));
+    PayloadNearQueryPtr nearQuery(std::static_pointer_cast<PayloadNearQuery>(spanWeight->query));
     return SpanScorer::score() * nearQuery->function->docScore(doc, nearQuery->fieldName, payloadsSeen, payloadScore);
 }
 

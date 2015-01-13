@@ -18,7 +18,7 @@ TokenStreamPtr WhitespaceAnalyzer::tokenStream(const String& fieldName, const Re
 }
 
 TokenStreamPtr WhitespaceAnalyzer::reusableTokenStream(const String& fieldName, const ReaderPtr& reader) {
-    TokenizerPtr tokenizer(boost::dynamic_pointer_cast<Tokenizer>(getPreviousTokenStream()));
+    TokenizerPtr tokenizer(std::dynamic_pointer_cast<Tokenizer>(getPreviousTokenStream()));
     if (!tokenizer) {
         tokenizer = newLucene<WhitespaceTokenizer>(reader);
         setPreviousTokenStream(tokenizer);

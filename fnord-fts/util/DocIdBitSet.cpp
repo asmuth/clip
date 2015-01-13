@@ -37,7 +37,7 @@ bool DocIdBitSet::equals(const LuceneObjectPtr& other) {
     if (DocIdSet::equals(other)) {
         return true;
     }
-    DocIdBitSetPtr otherBitSet(boost::dynamic_pointer_cast<DocIdBitSet>(other));
+    DocIdBitSetPtr otherBitSet(std::dynamic_pointer_cast<DocIdBitSet>(other));
     return bitSet->equals(otherBitSet->bitSet);
 }
 
@@ -47,8 +47,8 @@ int32_t DocIdBitSet::hashCode() {
 
 LuceneObjectPtr DocIdBitSet::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<DocIdBitSet>();
-    DocIdBitSetPtr cloneBitSet(boost::dynamic_pointer_cast<DocIdBitSet>(LuceneObject::clone(clone)));
-    cloneBitSet->bitSet = boost::dynamic_pointer_cast<BitSet>(bitSet->clone());
+    DocIdBitSetPtr cloneBitSet(std::dynamic_pointer_cast<DocIdBitSet>(LuceneObject::clone(clone)));
+    cloneBitSet->bitSet = std::dynamic_pointer_cast<BitSet>(bitSet->clone());
     return cloneBitSet;
 }
 

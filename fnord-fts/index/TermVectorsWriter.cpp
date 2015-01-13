@@ -57,7 +57,7 @@ void TermVectorsWriter::addAllDocVectors(Collection<TermFreqVectorPtr> vectors) 
             int32_t numTerms = vectors[i]->size();
             tvf->writeVInt(numTerms);
 
-            TermPositionVectorPtr tpVector(boost::dynamic_pointer_cast<TermPositionVector>(vectors[i]));
+            TermPositionVectorPtr tpVector(std::dynamic_pointer_cast<TermPositionVector>(vectors[i]));
 
             uint8_t bits;
             bool storePositions;

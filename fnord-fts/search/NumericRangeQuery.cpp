@@ -114,7 +114,7 @@ NumericValue NumericRangeQuery::getMax() {
 
 LuceneObjectPtr NumericRangeQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = MultiTermQuery::clone(other ? other : newLucene<NumericRangeQuery>(field, precisionStep, valSize, min, max, minInclusive, maxInclusive));
-    NumericRangeQueryPtr cloneQuery(boost::dynamic_pointer_cast<NumericRangeQuery>(clone));
+    NumericRangeQueryPtr cloneQuery(std::dynamic_pointer_cast<NumericRangeQuery>(clone));
     cloneQuery->field = field;
     cloneQuery->precisionStep = precisionStep;
     cloneQuery->valSize = valSize;
@@ -155,7 +155,7 @@ bool NumericRangeQuery::equals(const LuceneObjectPtr& other) {
         return false;
     }
 
-    NumericRangeQueryPtr otherNumericRangeQuery(boost::dynamic_pointer_cast<NumericRangeQuery>(other));
+    NumericRangeQueryPtr otherNumericRangeQuery(std::dynamic_pointer_cast<NumericRangeQuery>(other));
     if (!otherNumericRangeQuery) {
         return false;
     }

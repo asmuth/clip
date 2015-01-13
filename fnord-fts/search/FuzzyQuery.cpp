@@ -125,7 +125,7 @@ QueryPtr FuzzyQuery::rewrite(const IndexReaderPtr& reader) {
 
 LuceneObjectPtr FuzzyQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = MultiTermQuery::clone(other ? other : newLucene<FuzzyQuery>(term));
-    FuzzyQueryPtr cloneQuery(boost::dynamic_pointer_cast<FuzzyQuery>(clone));
+    FuzzyQueryPtr cloneQuery(std::dynamic_pointer_cast<FuzzyQuery>(clone));
     cloneQuery->minimumSimilarity = minimumSimilarity;
     cloneQuery->prefixLength = prefixLength;
     cloneQuery->termLongEnough = termLongEnough;
@@ -161,7 +161,7 @@ bool FuzzyQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    FuzzyQueryPtr otherFuzzyQuery(boost::dynamic_pointer_cast<FuzzyQuery>(other));
+    FuzzyQueryPtr otherFuzzyQuery(std::dynamic_pointer_cast<FuzzyQuery>(other));
     if (!otherFuzzyQuery) {
         return false;
     }

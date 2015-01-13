@@ -56,7 +56,7 @@ FilteredTermEnumPtr TermRangeQuery::getEnum(const IndexReaderPtr& reader) {
 
 LuceneObjectPtr TermRangeQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = MultiTermQuery::clone(other ? other : newLucene<TermRangeQuery>(field, lowerTerm, upperTerm, includeLower, includeUpper, collator));
-    TermRangeQueryPtr cloneQuery(boost::dynamic_pointer_cast<TermRangeQuery>(clone));
+    TermRangeQueryPtr cloneQuery(std::dynamic_pointer_cast<TermRangeQuery>(clone));
     cloneQuery->lowerTerm = lowerTerm;
     cloneQuery->upperTerm = upperTerm;
     cloneQuery->collator = collator;
@@ -98,7 +98,7 @@ bool TermRangeQuery::equals(const LuceneObjectPtr& other) {
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    TermRangeQueryPtr otherQuery(boost::dynamic_pointer_cast<TermRangeQuery>(other));
+    TermRangeQueryPtr otherQuery(std::dynamic_pointer_cast<TermRangeQuery>(other));
     if (!otherQuery) {
         return false;
     }

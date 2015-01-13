@@ -119,7 +119,7 @@ public:
     /// Return whether given Lucene object is of a specified type
     template <typename TYPE>
     static bool typeOf(const LuceneObjectPtr& object) {
-        return boost::dynamic_pointer_cast<TYPE>(object).get() != NULL;
+        return std::dynamic_pointer_cast<TYPE>(object).get() != NULL;
     }
 
     /// Return whether given Lucene objects are of equal type.

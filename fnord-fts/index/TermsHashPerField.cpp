@@ -56,7 +56,7 @@ void TermsHashPerField::initialize() {
     streamCount = consumer->getStreamCount();
     numPostingInt = 2 * streamCount;
     if (nextPerThread) {
-        nextPerField = boost::dynamic_pointer_cast<TermsHashPerField>(nextPerThread->addField(docInverterPerField, fieldInfo));
+        nextPerField = std::dynamic_pointer_cast<TermsHashPerField>(nextPerThread->addField(docInverterPerField, fieldInfo));
     }
 }
 

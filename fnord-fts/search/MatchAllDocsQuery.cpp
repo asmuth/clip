@@ -46,7 +46,7 @@ int32_t MatchAllDocsQuery::hashCode() {
 
 LuceneObjectPtr MatchAllDocsQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<MatchAllDocsQuery>();
-    MatchAllDocsQueryPtr cloneQuery(boost::dynamic_pointer_cast<MatchAllDocsQuery>(Query::clone(clone)));
+    MatchAllDocsQueryPtr cloneQuery(std::dynamic_pointer_cast<MatchAllDocsQuery>(Query::clone(clone)));
     cloneQuery->normsField = normsField;
     return cloneQuery;
 }

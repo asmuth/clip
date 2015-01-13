@@ -158,7 +158,7 @@ void BufferedIndexInput::seek(int64_t pos) {
 }
 
 LuceneObjectPtr BufferedIndexInput::clone(const LuceneObjectPtr& other) {
-    BufferedIndexInputPtr cloneIndexInput(boost::dynamic_pointer_cast<BufferedIndexInput>(IndexInput::clone(other)));
+    BufferedIndexInputPtr cloneIndexInput(std::dynamic_pointer_cast<BufferedIndexInput>(IndexInput::clone(other)));
     cloneIndexInput->bufferSize = bufferSize;
     cloneIndexInput->buffer.reset();
     cloneIndexInput->bufferLength = 0;

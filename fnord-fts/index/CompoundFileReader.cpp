@@ -161,13 +161,13 @@ CSIndexInput::CSIndexInput() {
 }
 
 CSIndexInput::CSIndexInput(const IndexInputPtr& base, int64_t fileOffset, int64_t length) : BufferedIndexInput(BufferedIndexInput::BUFFER_SIZE) {
-    this->base = boost::dynamic_pointer_cast<IndexInput>(base->clone());
+    this->base = std::dynamic_pointer_cast<IndexInput>(base->clone());
     this->fileOffset = fileOffset;
     this->_length = length;
 }
 
 CSIndexInput::CSIndexInput(const IndexInputPtr& base, int64_t fileOffset, int64_t length, int32_t readBufferSize) : BufferedIndexInput(readBufferSize) {
-    this->base = boost::dynamic_pointer_cast<IndexInput>(base->clone());
+    this->base = std::dynamic_pointer_cast<IndexInput>(base->clone());
     this->fileOffset = fileOffset;
     this->_length = length;
 }
@@ -197,8 +197,8 @@ int64_t CSIndexInput::length() {
 
 LuceneObjectPtr CSIndexInput::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<CSIndexInput>();
-    CSIndexInputPtr cloneIndexInput(boost::dynamic_pointer_cast<CSIndexInput>(BufferedIndexInput::clone(clone)));
-    cloneIndexInput->base = boost::dynamic_pointer_cast<IndexInput>(this->base->clone());
+    CSIndexInputPtr cloneIndexInput(std::dynamic_pointer_cast<CSIndexInput>(BufferedIndexInput::clone(clone)));
+    cloneIndexInput->base = std::dynamic_pointer_cast<IndexInput>(this->base->clone());
     cloneIndexInput->fileOffset = fileOffset;
     cloneIndexInput->_length = _length;
     return cloneIndexInput;

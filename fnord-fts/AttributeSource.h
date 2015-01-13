@@ -70,9 +70,9 @@ public:
     template <class ATTR>
     std::shared_ptr<ATTR> addAttribute() {
         String className(ATTR::_getClassName());
-        std::shared_ptr<ATTR> attrImpl(boost::dynamic_pointer_cast<ATTR>(getAttribute(className)));
+        std::shared_ptr<ATTR> attrImpl(std::dynamic_pointer_cast<ATTR>(getAttribute(className)));
         if (!attrImpl) {
-            attrImpl = boost::dynamic_pointer_cast<ATTR>(factory->createInstance<ATTR>(className));
+            attrImpl = std::dynamic_pointer_cast<ATTR>(factory->createInstance<ATTR>(className));
             if (!attrImpl) {
                 boost::throw_exception(IllegalArgumentException(L"Could not instantiate implementing class for " + className));
             }
@@ -97,7 +97,7 @@ public:
     template <class ATTR>
     std::shared_ptr<ATTR> getAttribute() {
         String className(ATTR::_getClassName());
-        std::shared_ptr<ATTR> attr(boost::dynamic_pointer_cast<ATTR>(getAttribute(className)));
+        std::shared_ptr<ATTR> attr(std::dynamic_pointer_cast<ATTR>(getAttribute(className)));
         if (!attr) {
             boost::throw_exception(IllegalArgumentException(L"This AttributeSource does not have the attribute '" + className + L"'."));
         }

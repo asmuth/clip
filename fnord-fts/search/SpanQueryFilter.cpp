@@ -58,7 +58,7 @@ bool SpanQueryFilter::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SpanQueryFilterPtr otherSpanQueryFilter(boost::dynamic_pointer_cast<SpanQueryFilter>(other));
+    SpanQueryFilterPtr otherSpanQueryFilter(std::dynamic_pointer_cast<SpanQueryFilter>(other));
     if (!otherSpanQueryFilter) {
         return false;
     }

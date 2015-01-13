@@ -34,7 +34,7 @@ SpanFilterResultPtr CachingSpanFilter::getCachedResult(const IndexReaderPtr& rea
     LuceneObjectPtr coreKey = reader->getFieldCacheKey();
     LuceneObjectPtr delCoreKey = reader->hasDeletions() ? reader->getDeletesCacheKey() : coreKey;
 
-    SpanFilterResultPtr result(boost::dynamic_pointer_cast<SpanFilterResult>(cache->get(reader, coreKey, delCoreKey)));
+    SpanFilterResultPtr result(std::dynamic_pointer_cast<SpanFilterResult>(cache->get(reader, coreKey, delCoreKey)));
     if (result) {
         ++hitCount;
         return result;
@@ -61,7 +61,7 @@ bool CachingSpanFilter::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    CachingSpanFilterPtr otherCachingSpanFilter(boost::dynamic_pointer_cast<CachingSpanFilter>(other));
+    CachingSpanFilterPtr otherCachingSpanFilter(std::dynamic_pointer_cast<CachingSpanFilter>(other));
     if (!otherCachingSpanFilter) {
         return false;
     }

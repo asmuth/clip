@@ -40,12 +40,12 @@ void DocInverter::flush(MapDocFieldConsumerPerThreadCollectionDocFieldConsumerPe
         Collection<InvertedDocEndConsumerPerFieldPtr> endChildFields(Collection<InvertedDocEndConsumerPerFieldPtr>::newInstance());
 
         for (Collection<DocFieldConsumerPerFieldPtr>::iterator perField = entry->second.begin(); perField != entry->second.end(); ++perField) {
-            childFields.add(boost::static_pointer_cast<DocInverterPerField>(*perField)->consumer);
-            endChildFields.add(boost::static_pointer_cast<DocInverterPerField>(*perField)->endConsumer);
+            childFields.add(std::static_pointer_cast<DocInverterPerField>(*perField)->consumer);
+            endChildFields.add(std::static_pointer_cast<DocInverterPerField>(*perField)->endConsumer);
         }
 
-        childThreadsAndFields.put(boost::static_pointer_cast<DocInverterPerThread>(entry->first)->consumer, childFields);
-        endChildThreadsAndFields.put(boost::static_pointer_cast<DocInverterPerThread>(entry->first)->endConsumer, endChildFields);
+        childThreadsAndFields.put(std::static_pointer_cast<DocInverterPerThread>(entry->first)->consumer, childFields);
+        endChildThreadsAndFields.put(std::static_pointer_cast<DocInverterPerThread>(entry->first)->endConsumer, endChildFields);
     }
 
     consumer->flush(childThreadsAndFields, state);

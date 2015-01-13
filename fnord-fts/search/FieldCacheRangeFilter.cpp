@@ -143,7 +143,7 @@ bool FieldCacheRangeFilterString::equals(const LuceneObjectPtr& other) {
     if (Filter::equals(other)) {
         return true;
     }
-    FieldCacheRangeFilterStringPtr otherFilter(boost::dynamic_pointer_cast<FieldCacheRangeFilterString>(other));
+    FieldCacheRangeFilterStringPtr otherFilter(std::dynamic_pointer_cast<FieldCacheRangeFilterString>(other));
     if (!otherFilter) {
         return false;
     }
@@ -177,7 +177,7 @@ FieldCacheRangeFilterByte::~FieldCacheRangeFilterByte() {
 }
 
 Collection<uint8_t> FieldCacheRangeFilterByte::getValues(const IndexReaderPtr& reader) {
-    return FieldCache::DEFAULT()->getBytes(reader, field, boost::static_pointer_cast<ByteParser>(parser));
+    return FieldCache::DEFAULT()->getBytes(reader, field, std::static_pointer_cast<ByteParser>(parser));
 }
 
 FieldCacheRangeFilterInt::FieldCacheRangeFilterInt(const String& field, const ParserPtr& parser, int32_t lowerVal, int32_t upperVal, bool includeLower, bool includeUpper)
@@ -188,7 +188,7 @@ FieldCacheRangeFilterInt::~FieldCacheRangeFilterInt() {
 }
 
 Collection<int32_t> FieldCacheRangeFilterInt::getValues(const IndexReaderPtr& reader) {
-    return FieldCache::DEFAULT()->getInts(reader, field, boost::static_pointer_cast<IntParser>(parser));
+    return FieldCache::DEFAULT()->getInts(reader, field, std::static_pointer_cast<IntParser>(parser));
 }
 
 FieldCacheRangeFilterLong::FieldCacheRangeFilterLong(const String& field, const ParserPtr& parser, int64_t lowerVal, int64_t upperVal, bool includeLower, bool includeUpper)
@@ -199,7 +199,7 @@ FieldCacheRangeFilterLong::~FieldCacheRangeFilterLong() {
 }
 
 Collection<int64_t> FieldCacheRangeFilterLong::getValues(const IndexReaderPtr& reader) {
-    return FieldCache::DEFAULT()->getLongs(reader, field, boost::static_pointer_cast<LongParser>(parser));
+    return FieldCache::DEFAULT()->getLongs(reader, field, std::static_pointer_cast<LongParser>(parser));
 }
 
 FieldCacheRangeFilterDouble::FieldCacheRangeFilterDouble(const String& field, const ParserPtr& parser, double lowerVal, double upperVal, bool includeLower, bool includeUpper)
@@ -231,7 +231,7 @@ DocIdSetPtr FieldCacheRangeFilterDouble::getDocIdSet(const IndexReaderPtr& reade
 }
 
 Collection<double> FieldCacheRangeFilterDouble::getValues(const IndexReaderPtr& reader) {
-    return FieldCache::DEFAULT()->getDoubles(reader, field, boost::static_pointer_cast<DoubleParser>(parser));
+    return FieldCache::DEFAULT()->getDoubles(reader, field, std::static_pointer_cast<DoubleParser>(parser));
 }
 
 FieldCacheDocIdSet::FieldCacheDocIdSet(const IndexReaderPtr& reader, bool mayUseTermDocs) {

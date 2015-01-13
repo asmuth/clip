@@ -72,7 +72,7 @@ bool Sort::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SortPtr otherSort(boost::dynamic_pointer_cast<Sort>(other));
+    SortPtr otherSort(std::dynamic_pointer_cast<Sort>(other));
     if (!otherSort) {
         return false;
     }

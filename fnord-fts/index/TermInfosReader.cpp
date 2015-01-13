@@ -208,13 +208,13 @@ int64_t TermInfosReader::getPosition(const TermPtr& term) {
 }
 
 SegmentTermEnumPtr TermInfosReader::terms() {
-    return boost::static_pointer_cast<SegmentTermEnum>(origEnum->clone());
+    return std::static_pointer_cast<SegmentTermEnum>(origEnum->clone());
 }
 
 SegmentTermEnumPtr TermInfosReader::terms(const TermPtr& term) {
     // don't use the cache in this call because we want to reposition the enumeration
     get(term, false);
-    return boost::static_pointer_cast<SegmentTermEnum>(getThreadResources()->termEnum->clone());
+    return std::static_pointer_cast<SegmentTermEnum>(getThreadResources()->termEnum->clone());
 }
 
 TermInfosReaderThreadResources::~TermInfosReaderThreadResources() {

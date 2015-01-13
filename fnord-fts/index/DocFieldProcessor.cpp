@@ -38,7 +38,7 @@ void DocFieldProcessor::flush(Collection<DocConsumerPerThreadPtr> threads, const
     MapDocFieldConsumerPerThreadCollectionDocFieldConsumerPerField childThreadsAndFields(MapDocFieldConsumerPerThreadCollectionDocFieldConsumerPerField::newInstance());
 
     for (Collection<DocConsumerPerThreadPtr>::iterator thread = threads.begin(); thread != threads.end(); ++thread) {
-        DocFieldProcessorPerThreadPtr perThread(boost::static_pointer_cast<DocFieldProcessorPerThread>(*thread));
+        DocFieldProcessorPerThreadPtr perThread(std::static_pointer_cast<DocFieldProcessorPerThread>(*thread));
         childThreadsAndFields.put(perThread->consumer, perThread->fields());
         perThread->trimFields(state);
     }

@@ -39,12 +39,12 @@ void DocFieldConsumers::flush(MapDocFieldConsumerPerThreadCollectionDocFieldCons
         Collection<DocFieldConsumerPerFieldPtr> twoFields(Collection<DocFieldConsumerPerFieldPtr>::newInstance());
 
         for (Collection<DocFieldConsumerPerFieldPtr>::iterator perField = entry->second.begin(); perField != entry->second.end(); ++perField) {
-            oneFields.add(boost::static_pointer_cast<DocFieldConsumersPerField>(*perField)->one);
-            twoFields.add(boost::static_pointer_cast<DocFieldConsumersPerField>(*perField)->two);
+            oneFields.add(std::static_pointer_cast<DocFieldConsumersPerField>(*perField)->one);
+            twoFields.add(std::static_pointer_cast<DocFieldConsumersPerField>(*perField)->two);
         }
 
-        oneThreadsAndFields.put(boost::static_pointer_cast<DocFieldConsumersPerThread>(entry->first)->one, oneFields);
-        twoThreadsAndFields.put(boost::static_pointer_cast<DocFieldConsumersPerThread>(entry->first)->two, oneFields);
+        oneThreadsAndFields.put(std::static_pointer_cast<DocFieldConsumersPerThread>(entry->first)->one, oneFields);
+        twoThreadsAndFields.put(std::static_pointer_cast<DocFieldConsumersPerThread>(entry->first)->two, oneFields);
     }
 
     one->flush(oneThreadsAndFields, state);

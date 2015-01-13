@@ -137,7 +137,7 @@ bool MultiPhraseQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    MultiPhraseQueryPtr otherMultiPhraseQuery(boost::dynamic_pointer_cast<MultiPhraseQuery>(other));
+    MultiPhraseQueryPtr otherMultiPhraseQuery(std::dynamic_pointer_cast<MultiPhraseQuery>(other));
     if (!otherMultiPhraseQuery) {
         return false;
     }
@@ -174,7 +174,7 @@ bool MultiPhraseQuery::termArraysEquals(Collection< Collection<TermPtr> > first,
 
 LuceneObjectPtr MultiPhraseQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<MultiPhraseQuery>();
-    MultiPhraseQueryPtr cloneQuery(boost::dynamic_pointer_cast<MultiPhraseQuery>(Query::clone(clone)));
+    MultiPhraseQueryPtr cloneQuery(std::dynamic_pointer_cast<MultiPhraseQuery>(Query::clone(clone)));
     cloneQuery->field = field;
     cloneQuery->termArrays = termArrays;
     cloneQuery->positions = positions;
@@ -278,7 +278,7 @@ ExplanationPtr MultiPhraseWeight::explain(const IndexReaderPtr& reader, int32_t 
     ComplexExplanationPtr fieldExpl(newLucene<ComplexExplanation>());
     fieldExpl->setDescription(L"fieldWeight(" + query->toString() + L" in " + StringUtils::toString(doc) + L"), product of:");
 
-    PhraseScorerPtr phraseScorer(boost::dynamic_pointer_cast<PhraseScorer>(scorer(reader, true, false)));
+    PhraseScorerPtr phraseScorer(std::dynamic_pointer_cast<PhraseScorer>(scorer(reader, true, false)));
     if (!phraseScorer) {
         return newLucene<Explanation>(0.0, L"no matching docs");
     }

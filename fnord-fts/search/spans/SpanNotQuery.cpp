@@ -47,8 +47,8 @@ String SpanNotQuery::toString(const String& field) {
 }
 
 LuceneObjectPtr SpanNotQuery::clone(const LuceneObjectPtr& other) {
-    SpanNotQueryPtr spanNotQuery(newLucene<SpanNotQuery>(boost::dynamic_pointer_cast<SpanQuery>(include->clone()),
-                                 boost::dynamic_pointer_cast<SpanQuery>(exclude->clone())));
+    SpanNotQueryPtr spanNotQuery(newLucene<SpanNotQuery>(std::dynamic_pointer_cast<SpanQuery>(include->clone()),
+                                 std::dynamic_pointer_cast<SpanQuery>(exclude->clone())));
     spanNotQuery->setBoost(getBoost());
     return spanNotQuery;
 }
@@ -59,16 +59,16 @@ SpansPtr SpanNotQuery::getSpans(const IndexReaderPtr& reader) {
 
 QueryPtr SpanNotQuery::rewrite(const IndexReaderPtr& reader) {
     SpanNotQueryPtr clone;
-    SpanQueryPtr rewrittenInclude(boost::dynamic_pointer_cast<SpanQuery>(include->rewrite(reader)));
+    SpanQueryPtr rewrittenInclude(std::dynamic_pointer_cast<SpanQuery>(include->rewrite(reader)));
     if (rewrittenInclude != include) {
-        clone = boost::dynamic_pointer_cast<SpanNotQuery>(this->clone());
+        clone = std::dynamic_pointer_cast<SpanNotQuery>(this->clone());
         clone->include = rewrittenInclude;
     }
 
-    SpanQueryPtr rewrittenExclude(boost::dynamic_pointer_cast<SpanQuery>(exclude->rewrite(reader)));
+    SpanQueryPtr rewrittenExclude(std::dynamic_pointer_cast<SpanQuery>(exclude->rewrite(reader)));
     if (rewrittenExclude != exclude) {
         if (!clone) {
-            clone = boost::dynamic_pointer_cast<SpanNotQuery>(this->clone());
+            clone = std::dynamic_pointer_cast<SpanNotQuery>(this->clone());
         }
         clone->exclude = rewrittenExclude;
     }
@@ -85,7 +85,7 @@ bool SpanNotQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SpanNotQueryPtr otherQuery(boost::dynamic_pointer_cast<SpanNotQuery>(other));
+    SpanNotQueryPtr otherQuery(std::dynamic_pointer_cast<SpanNotQuery>(other));
     if (!otherQuery) {
         return false;
     }

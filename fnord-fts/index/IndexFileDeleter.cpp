@@ -171,7 +171,7 @@ void IndexFileDeleter::deleteCommits() {
         int32_t readFrom = 0;
         int32_t writeTo = 0;
         while (readFrom < size) {
-            CommitPointPtr commit(boost::dynamic_pointer_cast<CommitPoint>(commits[readFrom]));
+            CommitPointPtr commit(std::dynamic_pointer_cast<CommitPoint>(commits[readFrom]));
             if (!commit->deleted) {
                 if (writeTo != readFrom) {
                     commits[writeTo] = commits[readFrom];
@@ -470,7 +470,7 @@ bool CommitPoint::isDeleted() {
 }
 
 int32_t CommitPoint::compareTo(const LuceneObjectPtr& other) {
-    CommitPointPtr otherCommit(boost::static_pointer_cast<CommitPoint>(other));
+    CommitPointPtr otherCommit(std::static_pointer_cast<CommitPoint>(other));
     if (gen < otherCommit->gen) {
         return -1;
     }

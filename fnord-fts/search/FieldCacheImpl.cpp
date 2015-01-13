@@ -121,7 +121,7 @@ bool Entry::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    EntryPtr otherEntry(boost::dynamic_pointer_cast<Entry>(other));
+    EntryPtr otherEntry(std::dynamic_pointer_cast<Entry>(other));
     if (otherEntry) {
         if (otherEntry->field == field) {
             return VariantUtils::equalsType(custom, otherEntry->custom);

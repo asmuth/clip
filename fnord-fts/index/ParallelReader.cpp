@@ -100,7 +100,7 @@ IndexReaderPtr ParallelReader::doReopen(bool doClone) {
         for (Collection<IndexReaderPtr>::iterator oldReader = readers.begin(); oldReader != readers.end(); ++oldReader) {
             IndexReaderPtr newReader;
             if (doClone) {
-                newReader = boost::dynamic_pointer_cast<IndexReader>((*oldReader)->clone());
+                newReader = std::dynamic_pointer_cast<IndexReader>((*oldReader)->clone());
             } else {
                 newReader = (*oldReader)->reopen();
             }
@@ -520,22 +520,22 @@ void ParallelTermPositions::seek(const TermPtr& term) {
 
 int32_t ParallelTermPositions::nextPosition() {
     // It is an error to call this if there is no next position, eg. if termDocs==null
-    return boost::static_pointer_cast<TermPositions>(termDocs)->nextPosition();
+    return std::static_pointer_cast<TermPositions>(termDocs)->nextPosition();
 }
 
 int32_t ParallelTermPositions::getPayloadLength() {
     // It is an error to call this if there is no next position, eg. if termDocs==null
-    return boost::static_pointer_cast<TermPositions>(termDocs)->getPayloadLength();
+    return std::static_pointer_cast<TermPositions>(termDocs)->getPayloadLength();
 }
 
 ByteArray ParallelTermPositions::getPayload(ByteArray data, int32_t offset) {
     // It is an error to call this if there is no next position, eg. if termDocs==null
-    return boost::static_pointer_cast<TermPositions>(termDocs)->getPayload(data, offset);
+    return std::static_pointer_cast<TermPositions>(termDocs)->getPayload(data, offset);
 }
 
 bool ParallelTermPositions::isPayloadAvailable() {
     // It is an error to call this if there is no next position, eg. if termDocs==null
-    return boost::static_pointer_cast<TermPositions>(termDocs)->isPayloadAvailable();
+    return std::static_pointer_cast<TermPositions>(termDocs)->isPayloadAvailable();
 }
 
 }

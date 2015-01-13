@@ -47,7 +47,7 @@ bool ConstantScoreQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    ConstantScoreQueryPtr otherConstantScoreQuery(boost::dynamic_pointer_cast<ConstantScoreQuery>(other));
+    ConstantScoreQueryPtr otherConstantScoreQuery(std::dynamic_pointer_cast<ConstantScoreQuery>(other));
     if (!otherConstantScoreQuery) {
         return false;
     }
@@ -62,7 +62,7 @@ int32_t ConstantScoreQuery::hashCode() {
 
 LuceneObjectPtr ConstantScoreQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<ConstantScoreQuery>(filter);
-    ConstantScoreQueryPtr cloneQuery(boost::dynamic_pointer_cast<ConstantScoreQuery>(Query::clone(clone)));
+    ConstantScoreQueryPtr cloneQuery(std::dynamic_pointer_cast<ConstantScoreQuery>(Query::clone(clone)));
     cloneQuery->filter = filter;
     return cloneQuery;
 }

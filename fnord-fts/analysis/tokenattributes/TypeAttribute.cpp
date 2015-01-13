@@ -47,7 +47,7 @@ bool TypeAttribute::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    TypeAttributePtr otherTypeAttribute(boost::dynamic_pointer_cast<TypeAttribute>(other));
+    TypeAttributePtr otherTypeAttribute(std::dynamic_pointer_cast<TypeAttribute>(other));
     if (otherTypeAttribute) {
         return (otherTypeAttribute->_type == _type);
     }
@@ -60,12 +60,12 @@ int32_t TypeAttribute::hashCode() {
 }
 
 void TypeAttribute::copyTo(const AttributePtr& target) {
-    boost::dynamic_pointer_cast<TypeAttribute>(target)->setType(_type);
+    std::dynamic_pointer_cast<TypeAttribute>(target)->setType(_type);
 }
 
 LuceneObjectPtr TypeAttribute::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<TypeAttribute>();
-    TypeAttributePtr cloneAttribute(boost::dynamic_pointer_cast<TypeAttribute>(Attribute::clone(clone)));
+    TypeAttributePtr cloneAttribute(std::dynamic_pointer_cast<TypeAttribute>(Attribute::clone(clone)));
     cloneAttribute->_type = _type;
     return cloneAttribute;
 }

@@ -43,7 +43,7 @@ bool BooleanClause::isRequired() {
 }
 
 bool BooleanClause::equals(const LuceneObjectPtr& other) {
-    BooleanClausePtr otherBooleanClause(boost::dynamic_pointer_cast<BooleanClause>(other));
+    BooleanClausePtr otherBooleanClause(std::dynamic_pointer_cast<BooleanClause>(other));
     if (!otherBooleanClause) {
         return false;
     }

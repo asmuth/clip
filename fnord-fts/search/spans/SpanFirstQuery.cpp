@@ -39,8 +39,8 @@ String SpanFirstQuery::toString(const String& field) {
 }
 
 LuceneObjectPtr SpanFirstQuery::clone(const LuceneObjectPtr& other) {
-    LuceneObjectPtr clone = SpanQuery::clone(other ? other : newLucene<SpanFirstQuery>(boost::dynamic_pointer_cast<SpanQuery>(match->clone()), end));
-    SpanFirstQueryPtr spanFirstQuery(boost::dynamic_pointer_cast<SpanFirstQuery>(clone));
+    LuceneObjectPtr clone = SpanQuery::clone(other ? other : newLucene<SpanFirstQuery>(std::dynamic_pointer_cast<SpanQuery>(match->clone()), end));
+    SpanFirstQueryPtr spanFirstQuery(std::dynamic_pointer_cast<SpanFirstQuery>(clone));
     spanFirstQuery->match = match;
     spanFirstQuery->end = end;
     spanFirstQuery->setBoost(getBoost());
@@ -57,9 +57,9 @@ SpansPtr SpanFirstQuery::getSpans(const IndexReaderPtr& reader) {
 
 QueryPtr SpanFirstQuery::rewrite(const IndexReaderPtr& reader) {
     SpanFirstQueryPtr clone;
-    SpanQueryPtr rewritten(boost::dynamic_pointer_cast<SpanQuery>(match->rewrite(reader)));
+    SpanQueryPtr rewritten(std::dynamic_pointer_cast<SpanQuery>(match->rewrite(reader)));
     if (rewritten != match) {
-        clone = boost::dynamic_pointer_cast<SpanFirstQuery>(this->clone());
+        clone = std::dynamic_pointer_cast<SpanFirstQuery>(this->clone());
         clone->match = rewritten;
     }
 
@@ -75,7 +75,7 @@ bool SpanFirstQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SpanFirstQueryPtr otherQuery(boost::dynamic_pointer_cast<SpanFirstQuery>(other));
+    SpanFirstQueryPtr otherQuery(std::dynamic_pointer_cast<SpanFirstQuery>(other));
     if (!otherQuery) {
         return false;
     }

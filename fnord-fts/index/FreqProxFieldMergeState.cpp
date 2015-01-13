@@ -45,7 +45,7 @@ bool FreqProxFieldMergeState::nextTerm() {
         return false;
     }
 
-    p = boost::static_pointer_cast<FreqProxTermsWriterPostingList>(postings[postingUpto]);
+    p = std::static_pointer_cast<FreqProxTermsWriterPostingList>(postings[postingUpto]);
     docID = 0;
 
     text = charPool->buffers[p->textStart >> DocumentsWriter::CHAR_BLOCK_SHIFT];

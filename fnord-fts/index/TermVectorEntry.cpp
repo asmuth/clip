@@ -59,7 +59,7 @@ bool TermVectorEntry::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    TermVectorEntryPtr otherTermVectorEntry(boost::dynamic_pointer_cast<TermVectorEntry>(other));
+    TermVectorEntryPtr otherTermVectorEntry(std::dynamic_pointer_cast<TermVectorEntry>(other));
     if (otherTermVectorEntry) {
         return (term == otherTermVectorEntry->term);
     }

@@ -34,7 +34,7 @@ SegmentTermDocs::SegmentTermDocs(const SegmentReaderPtr& parent) {
     this->currentFieldStoresPayloads = false;
     this->currentFieldOmitTermFreqAndPositions = false;
 
-    this->_freqStream = boost::dynamic_pointer_cast<IndexInput>(parent->core->freqStream->clone());
+    this->_freqStream = std::dynamic_pointer_cast<IndexInput>(parent->core->freqStream->clone());
     {
         SyncLock parentLock(parent);
         this->deletedDocs = parent->deletedDocs;
@@ -55,7 +55,7 @@ void SegmentTermDocs::seek(const TermEnumPtr& termEnum) {
     TermInfoPtr ti;
     TermPtr term;
 
-    SegmentTermEnumPtr segmentTermEnum(boost::dynamic_pointer_cast<SegmentTermEnum>(termEnum));
+    SegmentTermEnumPtr segmentTermEnum(std::dynamic_pointer_cast<SegmentTermEnum>(termEnum));
     SegmentReaderPtr parent(_parent);
 
     // use comparison of fieldinfos to verify that termEnum belongs to the same segment as this SegmentTermDocs
@@ -186,7 +186,7 @@ void SegmentTermDocs::skipProx(int64_t proxPointer, int32_t payloadLength) {
 bool SegmentTermDocs::skipTo(int32_t target) {
     if (df >= skipInterval) { // optimized case
         if (!skipListReader) {
-            skipListReader = newLucene<DefaultSkipListReader>(boost::dynamic_pointer_cast<IndexInput>(_freqStream->clone()), maxSkipLevels, skipInterval);    // lazily clone
+            skipListReader = newLucene<DefaultSkipListReader>(std::dynamic_pointer_cast<IndexInput>(_freqStream->clone()), maxSkipLevels, skipInterval);    // lazily clone
         }
 
         if (!haveSkipped) { // lazily initialize skip stream

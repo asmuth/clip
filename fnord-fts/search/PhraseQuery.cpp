@@ -120,7 +120,7 @@ bool PhraseQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    PhraseQueryPtr otherPhraseQuery(boost::dynamic_pointer_cast<PhraseQuery>(other));
+    PhraseQueryPtr otherPhraseQuery(std::dynamic_pointer_cast<PhraseQuery>(other));
     if (!otherPhraseQuery) {
         return false;
     }
@@ -137,7 +137,7 @@ int32_t PhraseQuery::hashCode() {
 
 LuceneObjectPtr PhraseQuery::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<PhraseQuery>();
-    PhraseQueryPtr cloneQuery(boost::dynamic_pointer_cast<PhraseQuery>(Query::clone(clone)));
+    PhraseQueryPtr cloneQuery(std::dynamic_pointer_cast<PhraseQuery>(Query::clone(clone)));
     cloneQuery->field = field;
     cloneQuery->terms = terms;
     cloneQuery->positions = positions;
@@ -243,7 +243,7 @@ ExplanationPtr PhraseWeight::explain(const IndexReaderPtr& reader, int32_t doc) 
     ExplanationPtr fieldExpl(newLucene<Explanation>());
     fieldExpl->setDescription(L"fieldWeight(" +    query->field + L":" + query->toString() + L" in " + StringUtils::toString(doc) + L"), product of:");
 
-    PhraseScorerPtr phraseScorer(boost::dynamic_pointer_cast<PhraseScorer>(scorer(reader, true, false)));
+    PhraseScorerPtr phraseScorer(std::dynamic_pointer_cast<PhraseScorer>(scorer(reader, true, false)));
     if (!phraseScorer) {
         return newLucene<Explanation>(0.0, L"no matching docs");
     }

@@ -77,7 +77,7 @@ LuceneObjectPtr FieldInfos::clone(const LuceneObjectPtr& other) {
     SyncLock syncLock(this);
     FieldInfosPtr fis(newLucene<FieldInfos>());
     for (Collection<FieldInfoPtr>::iterator field = byNumber.begin(); field != byNumber.end(); ++field) {
-        FieldInfoPtr fi(boost::dynamic_pointer_cast<FieldInfo>((*field)->clone()));
+        FieldInfoPtr fi(std::dynamic_pointer_cast<FieldInfo>((*field)->clone()));
         fis->byNumber.add(fi);
         fis->byName.put(fi->name, fi);
     }

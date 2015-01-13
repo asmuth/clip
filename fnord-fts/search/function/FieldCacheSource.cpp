@@ -27,7 +27,7 @@ String FieldCacheSource::description() {
 }
 
 bool FieldCacheSource::equals(const LuceneObjectPtr& other) {
-    FieldCacheSourcePtr otherSource(boost::dynamic_pointer_cast<FieldCacheSource>(other));
+    FieldCacheSourcePtr otherSource(std::dynamic_pointer_cast<FieldCacheSource>(other));
     if (!otherSource) {
         return false;
     }

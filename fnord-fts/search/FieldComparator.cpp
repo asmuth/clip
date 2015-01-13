@@ -21,7 +21,7 @@ void FieldComparator::setScorer(const ScorerPtr& scorer) {
 }
 
 ByteComparator::ByteComparator(int32_t numHits, const String& field, const ParserPtr& parser) : NumericComparator<uint8_t>(numHits, field) {
-    this->parser = boost::static_pointer_cast<ByteParser>(parser);
+    this->parser = std::static_pointer_cast<ByteParser>(parser);
 }
 
 ByteComparator::~ByteComparator() {
@@ -52,7 +52,7 @@ void DocComparator::setNextReader(const IndexReaderPtr& reader, int32_t docBase)
 }
 
 DoubleComparator::DoubleComparator(int32_t numHits, const String& field, const ParserPtr& parser) : NumericComparator<double>(numHits, field) {
-    this->parser = boost::static_pointer_cast<DoubleParser>(parser);
+    this->parser = std::static_pointer_cast<DoubleParser>(parser);
 }
 
 DoubleComparator::~DoubleComparator() {
@@ -74,7 +74,7 @@ void DoubleComparator::setNextReader(const IndexReaderPtr& reader, int32_t docBa
 }
 
 IntComparator::IntComparator(int32_t numHits, const String& field, const ParserPtr& parser) : NumericComparator<int32_t>(numHits, field) {
-    this->parser = boost::static_pointer_cast<IntParser>(parser);
+    this->parser = std::static_pointer_cast<IntParser>(parser);
 }
 
 IntComparator::~IntComparator() {
@@ -96,7 +96,7 @@ void IntComparator::setNextReader(const IndexReaderPtr& reader, int32_t docBase)
 }
 
 LongComparator::LongComparator(int32_t numHits, const String& field, const ParserPtr& parser) : NumericComparator<int64_t>(numHits, field) {
-    this->parser = boost::static_pointer_cast<LongParser>(parser);
+    this->parser = std::static_pointer_cast<LongParser>(parser);
 }
 
 LongComparator::~LongComparator() {

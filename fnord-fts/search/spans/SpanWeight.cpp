@@ -82,7 +82,7 @@ ExplanationPtr SpanWeight::explain(const IndexReaderPtr& reader, int32_t doc) {
     ComplexExplanationPtr fieldExpl(newLucene<ComplexExplanation>());
     fieldExpl->setDescription(L"fieldWeight(" +    field + L":" + query->toString(field) + L" in " + StringUtils::toString(doc) + L"), product of:");
 
-    ExplanationPtr tfExpl(boost::dynamic_pointer_cast<SpanScorer>(scorer(reader, true, false))->explain(doc));
+    ExplanationPtr tfExpl(std::dynamic_pointer_cast<SpanScorer>(scorer(reader, true, false))->explain(doc));
     fieldExpl->addDetail(tfExpl);
     fieldExpl->addDetail(idfExpl);
 

@@ -167,7 +167,7 @@ Collection<LuceneObjectPtr> FieldCacheSanityChecker::getAllDecendentReaderKeys(c
     Collection<LuceneObjectPtr> all(Collection<LuceneObjectPtr>::newInstance()); // will grow as we iter
     all.add(seed);
     for (int32_t i = 0; i < all.size(); ++i) {
-        IndexReaderPtr indexReader(boost::dynamic_pointer_cast<IndexReader>(all[i]));
+        IndexReaderPtr indexReader(std::dynamic_pointer_cast<IndexReader>(all[i]));
         if (indexReader) {
             Collection<IndexReaderPtr> subs(indexReader->getSequentialSubReaders());
             for (int32_t j = 0; subs && j < subs.size(); ++j) {
@@ -194,7 +194,7 @@ int32_t ReaderField::hashCode() {
 }
 
 bool ReaderField::equals(const LuceneObjectPtr& other) {
-    ReaderFieldPtr otherReaderField(boost::dynamic_pointer_cast<ReaderField>(other));
+    ReaderFieldPtr otherReaderField(std::dynamic_pointer_cast<ReaderField>(other));
     if (!otherReaderField) {
         return false;
     }

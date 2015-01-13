@@ -63,12 +63,12 @@ void TermVectorsTermsWriter::flush(MapTermsHashConsumerPerThreadCollectionTermsH
 
     for (MapTermsHashConsumerPerThreadCollectionTermsHashConsumerPerField::iterator entry = threadsAndFields.begin(); entry != threadsAndFields.end(); ++entry) {
         for (Collection<TermsHashConsumerPerFieldPtr>::iterator field = entry->second.begin(); field != entry->second.end(); ++field) {
-            TermVectorsTermsWriterPerFieldPtr perField(boost::static_pointer_cast<TermVectorsTermsWriterPerField>(*field));
+            TermVectorsTermsWriterPerFieldPtr perField(std::static_pointer_cast<TermVectorsTermsWriterPerField>(*field));
             TermsHashPerFieldPtr(perField->_termsHashPerField)->reset();
             perField->shrinkHash();
         }
 
-        TermVectorsTermsWriterPerThreadPtr perThread(boost::static_pointer_cast<TermVectorsTermsWriterPerThread>(entry->first));
+        TermVectorsTermsWriterPerThreadPtr perThread(std::static_pointer_cast<TermVectorsTermsWriterPerThread>(entry->first));
         TermsHashPerThreadPtr(perThread->_termsHashPerThread)->reset(true);
     }
 }

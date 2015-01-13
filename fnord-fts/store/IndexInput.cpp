@@ -127,7 +127,7 @@ MapStringString IndexInput::readStringStringMap() {
 }
 
 LuceneObjectPtr IndexInput::clone(const LuceneObjectPtr& other) {
-    IndexInputPtr cloneIndexInput(boost::dynamic_pointer_cast<IndexInput>(LuceneObject::clone(other)));
+    IndexInputPtr cloneIndexInput(std::dynamic_pointer_cast<IndexInput>(LuceneObject::clone(other)));
     cloneIndexInput->preUTF8Strings = preUTF8Strings;
     return cloneIndexInput;
 }

@@ -41,7 +41,7 @@ bool PositionIncrementAttribute::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    PositionIncrementAttributePtr otherPositionIncrementAttribute(boost::dynamic_pointer_cast<PositionIncrementAttribute>(other));
+    PositionIncrementAttributePtr otherPositionIncrementAttribute(std::dynamic_pointer_cast<PositionIncrementAttribute>(other));
     if (otherPositionIncrementAttribute) {
         return positionIncrement == otherPositionIncrementAttribute->positionIncrement;
     }
@@ -54,13 +54,13 @@ int32_t PositionIncrementAttribute::hashCode() {
 }
 
 void PositionIncrementAttribute::copyTo(const AttributePtr& target) {
-    PositionIncrementAttributePtr targetPositionIncrementAttribute(boost::dynamic_pointer_cast<PositionIncrementAttribute>(target));
+    PositionIncrementAttributePtr targetPositionIncrementAttribute(std::dynamic_pointer_cast<PositionIncrementAttribute>(target));
     targetPositionIncrementAttribute->setPositionIncrement(positionIncrement);
 }
 
 LuceneObjectPtr PositionIncrementAttribute::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = other ? other : newLucene<PositionIncrementAttribute>();
-    PositionIncrementAttributePtr cloneAttribute(boost::dynamic_pointer_cast<PositionIncrementAttribute>(Attribute::clone(clone)));
+    PositionIncrementAttributePtr cloneAttribute(std::dynamic_pointer_cast<PositionIncrementAttribute>(Attribute::clone(clone)));
     cloneAttribute->positionIncrement = positionIncrement;
     return cloneAttribute;
 }

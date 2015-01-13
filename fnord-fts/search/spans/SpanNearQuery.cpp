@@ -78,18 +78,18 @@ SpansPtr SpanNearQuery::getSpans(const IndexReaderPtr& reader) {
     }
 
     return inOrder
-           ? boost::static_pointer_cast<Spans>(newLucene<NearSpansOrdered>(shared_from_this(), reader, collectPayloads))
-           : boost::static_pointer_cast<Spans>(newLucene<NearSpansUnordered>(shared_from_this(), reader));
+           ? std::static_pointer_cast<Spans>(newLucene<NearSpansOrdered>(shared_from_this(), reader, collectPayloads))
+           : std::static_pointer_cast<Spans>(newLucene<NearSpansUnordered>(shared_from_this(), reader));
 }
 
 QueryPtr SpanNearQuery::rewrite(const IndexReaderPtr& reader) {
     SpanNearQueryPtr clone;
     for (int32_t i = 0; i < clauses.size(); ++i) {
         SpanQueryPtr clause(clauses[i]);
-        SpanQueryPtr query(boost::dynamic_pointer_cast<SpanQuery>(clause->rewrite(reader)));
+        SpanQueryPtr query(std::dynamic_pointer_cast<SpanQuery>(clause->rewrite(reader)));
         if (query != clause) { // clause rewrote: must clone
             if (!clone) {
-                clone = boost::dynamic_pointer_cast<SpanNearQuery>(this->clone());
+                clone = std::dynamic_pointer_cast<SpanNearQuery>(this->clone());
             }
             clone->clauses[i] = query;
         }
@@ -106,7 +106,7 @@ LuceneObjectPtr SpanNearQuery::clone(const LuceneObjectPtr& other) {
     Collection<SpanQueryPtr> newClauses(Collection<SpanQueryPtr>::newInstance(sz));
 
     for (int32_t i = 0; i < sz; ++i) {
-        newClauses[i] = boost::dynamic_pointer_cast<SpanQuery>(clauses[i]->clone());
+        newClauses[i] = std::dynamic_pointer_cast<SpanQuery>(clauses[i]->clone());
     }
 
     SpanNearQueryPtr spanNearQuery(newLucene<SpanNearQuery>(newClauses, slop, inOrder));
@@ -119,7 +119,7 @@ bool SpanNearQuery::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    SpanNearQueryPtr otherQuery(boost::dynamic_pointer_cast<SpanNearQuery>(other));
+    SpanNearQueryPtr otherQuery(std::dynamic_pointer_cast<SpanNearQuery>(other));
     if (!otherQuery) {
         return false;
     }

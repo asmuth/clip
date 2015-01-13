@@ -18,7 +18,7 @@ TokenStreamPtr SimpleAnalyzer::tokenStream(const String& fieldName, const Reader
 }
 
 TokenStreamPtr SimpleAnalyzer::reusableTokenStream(const String& fieldName, const ReaderPtr& reader) {
-    TokenizerPtr tokenizer(boost::dynamic_pointer_cast<Tokenizer>(getPreviousTokenStream()));
+    TokenizerPtr tokenizer(std::dynamic_pointer_cast<Tokenizer>(getPreviousTokenStream()));
     if (!tokenizer) {
         tokenizer = newLucene<LowerCaseTokenizer>(reader);
         setPreviousTokenStream(tokenizer);

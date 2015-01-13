@@ -32,7 +32,7 @@ bool DoubleFieldSource::cachedFieldSourceEquals(const FieldCacheSourcePtr& other
     if (!MiscUtils::equalTypes(shared_from_this(), other)) {
         return false;
     }
-    DoubleFieldSourcePtr otherSource(boost::dynamic_pointer_cast<DoubleFieldSource>(other));
+    DoubleFieldSourcePtr otherSource(std::dynamic_pointer_cast<DoubleFieldSource>(other));
     if (!otherSource) {
         return false;
     }

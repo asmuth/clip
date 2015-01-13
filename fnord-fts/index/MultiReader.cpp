@@ -68,7 +68,7 @@ IndexReaderPtr MultiReader::doReopen(bool doClone) {
     try {
         for (int32_t i = 0; i < subReaders.size(); ++i) {
             if (doClone) {
-                newSubReaders[i] = boost::dynamic_pointer_cast<IndexReader>(subReaders[i]->clone());
+                newSubReaders[i] = std::dynamic_pointer_cast<IndexReader>(subReaders[i]->clone());
             } else {
                 newSubReaders[i] = subReaders[i]->reopen();
             }

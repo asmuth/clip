@@ -242,7 +242,7 @@ void Token::clear() {
 
 LuceneObjectPtr Token::clone(const LuceneObjectPtr& other) {
     LuceneObjectPtr clone = Attribute::clone(other ? other : newLucene<Token>());
-    TokenPtr cloneToken(boost::dynamic_pointer_cast<Token>(clone));
+    TokenPtr cloneToken(std::dynamic_pointer_cast<Token>(clone));
     cloneToken->_termLength = _termLength;
     cloneToken->_startOffset = _startOffset;
     cloneToken->_endOffset = _endOffset;
@@ -256,7 +256,7 @@ LuceneObjectPtr Token::clone(const LuceneObjectPtr& other) {
         MiscUtils::arrayCopy(_termBuffer.get(), 0, cloneToken->_termBuffer.get(), 0, _termBuffer.size());
     }
     if (payload) {
-        cloneToken->payload = boost::dynamic_pointer_cast<Payload>(payload->clone());
+        cloneToken->payload = std::dynamic_pointer_cast<Payload>(payload->clone());
     }
 
     return cloneToken;
@@ -268,7 +268,7 @@ TokenPtr Token::clone(CharArray newTermBuffer, int32_t newTermOffset, int32_t ne
     clone->flags = flags;
     clone->_type = _type;
     if (payload) {
-        clone->payload = boost::dynamic_pointer_cast<Payload>(payload->clone());
+        clone->payload = std::dynamic_pointer_cast<Payload>(payload->clone());
     }
     return clone;
 }
@@ -278,7 +278,7 @@ bool Token::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    TokenPtr otherToken(boost::dynamic_pointer_cast<Token>(other));
+    TokenPtr otherToken(std::dynamic_pointer_cast<Token>(other));
     if (otherToken) {
         initTermBuffer();
         otherToken->initTermBuffer();
@@ -411,36 +411,36 @@ void Token::reinit(const TokenPtr& prototype, CharArray newTermBuffer, int32_t o
 }
 
 void Token::copyTo(const AttributePtr& target) {
-    TokenPtr targetToken(boost::dynamic_pointer_cast<Token>(target));
+    TokenPtr targetToken(std::dynamic_pointer_cast<Token>(target));
     if (targetToken) {
         targetToken->reinit(shared_from_this());
         // reinit shares the payload, so clone it
         if (payload) {
-            targetToken->payload = boost::dynamic_pointer_cast<Payload>(payload->clone());
+            targetToken->payload = std::dynamic_pointer_cast<Payload>(payload->clone());
         }
     } else {
         initTermBuffer();
-        TermAttributePtr targetTermAttribute(boost::dynamic_pointer_cast<TermAttribute>(target));
+        TermAttributePtr targetTermAttribute(std::dynamic_pointer_cast<TermAttribute>(target));
         if (targetTermAttribute) {
             targetTermAttribute->setTermBuffer(_termBuffer.get(), 0, _termLength);
         }
-        OffsetAttributePtr targetOffsetAttribute(boost::dynamic_pointer_cast<OffsetAttribute>(target));
+        OffsetAttributePtr targetOffsetAttribute(std::dynamic_pointer_cast<OffsetAttribute>(target));
         if (targetOffsetAttribute) {
             targetOffsetAttribute->setOffset(_startOffset, _endOffset);
         }
-        PositionIncrementAttributePtr targetPositionIncrementAttribute(boost::dynamic_pointer_cast<PositionIncrementAttribute>(target));
+        PositionIncrementAttributePtr targetPositionIncrementAttribute(std::dynamic_pointer_cast<PositionIncrementAttribute>(target));
         if (targetPositionIncrementAttribute) {
             targetPositionIncrementAttribute->setPositionIncrement(positionIncrement);
         }
-        PayloadAttributePtr targetPayloadAttribute(boost::dynamic_pointer_cast<PayloadAttribute>(target));
+        PayloadAttributePtr targetPayloadAttribute(std::dynamic_pointer_cast<PayloadAttribute>(target));
         if (targetPayloadAttribute) {
-            targetPayloadAttribute->setPayload(payload ? boost::dynamic_pointer_cast<Payload>(payload->clone()) : PayloadPtr());
+            targetPayloadAttribute->setPayload(payload ? std::dynamic_pointer_cast<Payload>(payload->clone()) : PayloadPtr());
         }
-        FlagsAttributePtr targetFlagsAttribute(boost::dynamic_pointer_cast<FlagsAttribute>(target));
+        FlagsAttributePtr targetFlagsAttribute(std::dynamic_pointer_cast<FlagsAttribute>(target));
         if (targetFlagsAttribute) {
             targetFlagsAttribute->setFlags(flags);
         }
-        TypeAttributePtr targetTypeAttribute(boost::dynamic_pointer_cast<TypeAttribute>(target));
+        TypeAttributePtr targetTypeAttribute(std::dynamic_pointer_cast<TypeAttribute>(target));
         if (targetTypeAttribute) {
             targetTypeAttribute->setType(_type);
         }
@@ -472,7 +472,7 @@ bool TokenAttributeFactory::equals(const LuceneObjectPtr& other) {
         return true;
     }
 
-    TokenAttributeFactoryPtr otherTokenAttributeFactory(boost::dynamic_pointer_cast<TokenAttributeFactory>(other));
+    TokenAttributeFactoryPtr otherTokenAttributeFactory(std::dynamic_pointer_cast<TokenAttributeFactory>(other));
     if (otherTokenAttributeFactory) {
         return this->delegate->equals(otherTokenAttributeFactory->delegate);
     }

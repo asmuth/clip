@@ -31,7 +31,7 @@ String QueryWrapperFilter::toString() {
 }
 
 bool QueryWrapperFilter::equals(const LuceneObjectPtr& other) {
-    QueryWrapperFilterPtr otherQueryWrapperFilter(boost::dynamic_pointer_cast<QueryWrapperFilter>(other));
+    QueryWrapperFilterPtr otherQueryWrapperFilter(std::dynamic_pointer_cast<QueryWrapperFilter>(other));
     if (!otherQueryWrapperFilter) {
         return false;
     }
