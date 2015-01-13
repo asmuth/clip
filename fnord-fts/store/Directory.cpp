@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/store/LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/store/Directory.h"
 #include "fnord-fts/store/LockFactory.h"
 #include "fnord-fts/store/BufferedIndexOutput.h"

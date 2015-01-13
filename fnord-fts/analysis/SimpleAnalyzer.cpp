@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/analysis/LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/analysis/SimpleAnalyzer.h"
 #include "fnord-fts/analysis/LowerCaseTokenizer.h"
 

@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/queryparser/LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/queryparser/QueryParseError.h"
 #include "fnord-fts/queryparser/QueryParserToken.h"
 #include "fnord-fts/util/StringUtils.h"

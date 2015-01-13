@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/index//LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/index/DocFieldProcessorPerThread.h"
 #include "fnord-fts/index/DocFieldProcessorPerField.h"
 #include "fnord-fts/index/DocFieldProcessor.h"

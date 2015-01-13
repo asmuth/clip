@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/index//LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/index/SegmentMergeInfo.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/TermEnum.h"

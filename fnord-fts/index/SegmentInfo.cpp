@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/index//LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
 #include "fnord-fts/index/SegmentInfo.h"
 #include "fnord-fts/index/SegmentInfos.h"

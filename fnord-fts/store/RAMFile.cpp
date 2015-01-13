@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/store/LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/store/RAMFile.h"
 #include "fnord-fts/store/RAMDirectory.h"
 #include "fnord-fts/util/MiscUtils.h"

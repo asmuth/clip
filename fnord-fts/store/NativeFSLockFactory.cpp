@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/store/LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
 #include "fnord-fts/store/NativeFSLockFactory.h"

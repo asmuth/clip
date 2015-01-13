@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/analysis/LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/analysis/WhitespaceTokenizer.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"

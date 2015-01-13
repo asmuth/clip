@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/index//LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/index/FormatPostingsTermsConsumer.h"
 #include "fnord-fts/util/UTF8Stream.h"
 #include "fnord-fts/util/MiscUtils.h"
