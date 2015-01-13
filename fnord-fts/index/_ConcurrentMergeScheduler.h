@@ -7,7 +7,7 @@
 #ifndef _CONCURRENTMERGESCHEDULER_H
 #define _CONCURRENTMERGESCHEDULER_H
 
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

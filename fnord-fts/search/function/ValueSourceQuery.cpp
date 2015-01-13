@@ -10,7 +10,7 @@
 #include "ValueSource.h"
 #include "DocValues.h"
 #include "ComplexExplanation.h"
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "TermDocs.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"

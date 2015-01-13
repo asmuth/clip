@@ -7,7 +7,7 @@
 #ifndef CLOSEABLETHREADLOCAL_H
 #define CLOSEABLETHREADLOCAL_H
 
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

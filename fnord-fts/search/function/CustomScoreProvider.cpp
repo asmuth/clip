@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "CustomScoreProvider.h"
-#include "Explanation.h"
+#include "fnord-fts/search/Explanation.h"
 
 namespace Lucene {
 

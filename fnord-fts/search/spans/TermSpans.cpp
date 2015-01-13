@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "TermSpans.h"
 #include "TermPositions.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 
 namespace Lucene {
 

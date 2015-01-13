@@ -9,7 +9,7 @@
 #include "SegmentTermEnum.h"
 #include "Directory.h"
 #include "IndexFileNames.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

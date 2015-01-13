@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/TermRangeQuery.h"
 #include "fnord-fts/search/TermRangeTermEnum.h"
-#include "fnord-fts/search/Collator.h"
+#include "fnord-fts/util/Collator.h"
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 

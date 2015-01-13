@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "OrdFieldSource.h"
 #include "_OrdFieldSource.h"
-#include "FieldCache.h"
+#include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

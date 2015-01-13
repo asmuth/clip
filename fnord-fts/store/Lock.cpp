@@ -6,7 +6,7 @@
 
 #include "fnord-fts/store/LuceneInc.h"
 #include "Lock.h"
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

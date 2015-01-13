@@ -7,7 +7,7 @@
 #ifndef _FILTERMANAGER_H
 #define _FILTERMANAGER_H
 
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

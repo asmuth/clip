@@ -7,7 +7,7 @@
 #ifndef CUSTOMSCOREQUERY_H
 #define CUSTOMSCOREQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

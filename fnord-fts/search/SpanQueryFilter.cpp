@@ -9,7 +9,7 @@
 #include "fnord-fts/search/SpanQuery.h"
 #include "fnord-fts/search/SpanFilterResult.h"
 #include "fnord-fts/search/Spans.h"
-#include "fnord-fts/search/OpenBitSet.h"
+#include "fnord-fts/util/OpenBitSet.h"
 #include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {

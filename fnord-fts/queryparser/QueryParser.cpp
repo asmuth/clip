@@ -20,7 +20,7 @@
 #include "BooleanQuery.h"
 #include "CachingTokenFilter.h"
 #include "TermAttribute.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "PositionIncrementAttribute.h"
 #include "PhraseQuery.h"
 #include "MultiPhraseQuery.h"

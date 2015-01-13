@@ -10,7 +10,7 @@
 #include "NativeFSLockFactory.h"
 #include "SimpleFSDirectory.h"
 #include "BufferedIndexInput.h"
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 #include "FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

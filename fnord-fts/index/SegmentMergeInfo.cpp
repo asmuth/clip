@@ -7,7 +7,7 @@
 #include "fnord-fts/index//LuceneInc.h"
 #include "SegmentMergeInfo.h"
 #include "IndexReader.h"
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 #include "TermPositions.h"
 
 namespace Lucene {

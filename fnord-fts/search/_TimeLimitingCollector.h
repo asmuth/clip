@@ -7,7 +7,7 @@
 #ifndef _TIMELIMITINGCOLLECTOR_H
 #define _TIMELIMITINGCOLLECTOR_H
 
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

@@ -26,7 +26,7 @@
 #include "SegmentMerger.h"
 #include "AllTermDocs.h"
 #include "DefaultSimilarity.h"
-#include "FieldCache.h"
+#include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

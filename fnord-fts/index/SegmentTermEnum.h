@@ -7,7 +7,7 @@
 #ifndef SEGMENTTERMENUM_H
 #define SEGMENTTERMENUM_H
 
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 
 namespace Lucene {
 

@@ -10,7 +10,7 @@
 #include "RAMInputStream.h"
 #include "RAMOutputStream.h"
 #include "SingleInstanceLockFactory.h"
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

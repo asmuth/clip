@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include <boost/thread/thread.hpp>
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

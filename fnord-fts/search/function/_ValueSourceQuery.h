@@ -7,8 +7,8 @@
 #ifndef _VALUESOURCEQUERY_H
 #define _VALUESOURCEQUERY_H
 
-#include "Weight.h"
-#include "Scorer.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

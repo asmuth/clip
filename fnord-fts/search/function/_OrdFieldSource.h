@@ -11,7 +11,7 @@
 
 namespace Lucene {
 
-class LPPAPI OrdDocValues : public DocValues {
+class OrdDocValues : public DocValues {
 public:
     OrdDocValues(const OrdFieldSourcePtr& source, Collection<int32_t> arr);
     virtual ~OrdDocValues();

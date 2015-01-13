@@ -8,7 +8,7 @@
 #include "TermBuffer.h"
 #include "IndexInput.h"
 #include "FieldInfos.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"

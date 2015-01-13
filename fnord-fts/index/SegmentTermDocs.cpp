@@ -13,7 +13,7 @@
 #include "TermInfosReader.h"
 #include "FieldInfos.h"
 #include "FieldInfo.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "TermInfo.h"
 #include "DefaultSkipListReader.h"
 #include "BitVector.h"

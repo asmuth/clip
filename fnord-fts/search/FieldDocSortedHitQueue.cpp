@@ -8,7 +8,7 @@
 #include "fnord-fts/search/FieldDocSortedHitQueue.h"
 #include "fnord-fts/search/FieldDoc.h"
 #include "fnord-fts/search/SortField.h"
-#include "fnord-fts/search/Collator.h"
+#include "fnord-fts/util/Collator.h"
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 

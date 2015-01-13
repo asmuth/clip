@@ -7,7 +7,7 @@
 #ifndef _PARALLELREADER_H
 #define _PARALLELREADER_H
 
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 #include "TermDocs.h"
 #include "TermPositions.h"
 

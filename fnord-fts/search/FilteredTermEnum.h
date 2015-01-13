@@ -7,7 +7,7 @@
 #ifndef FILTEREDTERMENUM_H
 #define FILTEREDTERMENUM_H
 
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef BUFFEREDDELETES_H
 #define BUFFEREDDELETES_H
 
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "Query.h"
 
 namespace Lucene {

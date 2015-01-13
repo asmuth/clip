@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include <boost/thread/mutex.hpp>
 #include "fnord-fts/util/Synchronize.h"
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 
 namespace Lucene {
 

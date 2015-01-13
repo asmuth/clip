@@ -8,7 +8,7 @@
 #include "TermInfosWriter.h"
 #include "Directory.h"
 #include "IndexOutput.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "TermInfo.h"
 #include "FieldInfos.h"
 #include "fnord-fts/util/MiscUtils.h"

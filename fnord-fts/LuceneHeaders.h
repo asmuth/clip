@@ -47,9 +47,9 @@
 #include "MergeScheduler.h"
 #include "MultiReader.h"
 #include "ParallelReader.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "TermDocs.h"
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 
 // Include most common files: queryparser
 #include "MultiFieldQueryParser.h"
@@ -108,7 +108,7 @@
 #include "DocIdBitSet.h"
 #include "FileReader.h"
 #include "fnord-fts/util/InfoStream.h"
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 #include "OpenBitSet.h"
 #include "fnord-fts/util/OpenBitSetDISI.h"
 #include "OpenBitSetIterator.h"

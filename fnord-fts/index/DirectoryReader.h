@@ -8,7 +8,7 @@
 #define DIRECTORYREADER_H
 
 #include "IndexReader.h"
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 #include "TermPositions.h"
 #include "IndexCommit.h"
 #include "SegmentMergeQueue.h"

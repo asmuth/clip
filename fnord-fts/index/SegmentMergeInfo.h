@@ -7,7 +7,7 @@
 #ifndef SEGMENTMERGEINFO_H
 #define SEGMENTMERGEINFO_H
 
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 
 namespace Lucene {
 

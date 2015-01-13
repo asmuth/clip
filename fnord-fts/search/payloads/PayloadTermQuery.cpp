@@ -7,7 +7,7 @@
 #include "fnord-fts/LuceneInc.h"
 #include "PayloadTermQuery.h"
 #include "_PayloadTermQuery.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "TermSpans.h"
 #include "TermPositions.h"
 #include "ComplexExplanation.h"

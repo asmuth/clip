@@ -8,7 +8,7 @@
 #include "MultiReader.h"
 #include "DirectoryReader.h"
 #include "DefaultSimilarity.h"
-#include "FieldCache.h"
+#include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

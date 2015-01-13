@@ -14,7 +14,7 @@
 #include "ChecksumIndexInput.h"
 #include "ChecksumIndexOutput.h"
 #include "IndexCommit.h"
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/InfoStream.h"
 #include "TestPoint.h"
 #include "fnord-fts/util/MiscUtils.h"

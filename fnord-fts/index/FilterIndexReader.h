@@ -9,7 +9,7 @@
 
 #include "IndexReader.h"
 #include "TermPositions.h"
-#include "TermEnum.h"
+#include "fnord-fts/index/TermEnum.h"
 
 namespace Lucene {
 

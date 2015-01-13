@@ -8,7 +8,7 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include "LuceneThread.h"
+#include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/StringUtils.h"
 #include "FileUtils.h"
 

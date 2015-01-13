@@ -9,8 +9,8 @@
 #include "_ParallelReader.h"
 #include "Document.h"
 #include "FieldSelector.h"
-#include "Term.h"
-#include "FieldCache.h"
+#include "fnord-fts/index/Term.h"
+#include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

@@ -6,7 +6,7 @@
 
 #include "fnord-fts/index//LuceneInc.h"
 #include "FilterIndexReader.h"
-#include "FieldCache.h"
+#include "fnord-fts/search/FieldCache.h"
 
 namespace Lucene {
 

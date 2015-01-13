@@ -7,7 +7,7 @@
 #ifndef VALUESOURCEQUERY_H
 #define VALUESOURCEQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

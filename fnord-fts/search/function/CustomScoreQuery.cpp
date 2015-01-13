@@ -8,7 +8,7 @@
 #include "CustomScoreQuery.h"
 #include "_CustomScoreQuery.h"
 #include "ValueSourceQuery.h"
-#include "ComplexExplanation.h"
+#include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

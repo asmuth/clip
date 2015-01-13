@@ -7,7 +7,7 @@
 #ifndef FIELDCACHEIMPL_H
 #define FIELDCACHEIMPL_H
 
-#include "FieldCache.h"
+#include "fnord-fts/search/FieldCache.h"
 
 namespace Lucene {
 

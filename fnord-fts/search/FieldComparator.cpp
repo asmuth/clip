@@ -8,7 +8,7 @@
 #include "fnord-fts/search/FieldComparator.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/search/ScoreCachingWrappingScorer.h"
-#include "fnord-fts/search/Collator.h"
+#include "fnord-fts/util/Collator.h"
 
 namespace Lucene {
 

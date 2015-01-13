@@ -8,7 +8,7 @@
 #include "fnord-fts/search/FieldCacheTermsFilter.h"
 #include "fnord-fts/search/_FieldCacheTermsFilter.h"
 #include "fnord-fts/search/FieldCache.h"
-#include "fnord-fts/search/OpenBitSet.h"
+#include "fnord-fts/util/OpenBitSet.h"
 
 namespace Lucene {
 

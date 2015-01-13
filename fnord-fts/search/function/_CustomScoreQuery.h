@@ -7,8 +7,8 @@
 #ifndef _CUSTOMSCOREQUERY_H
 #define _CUSTOMSCOREQUERY_H
 
-#include "Weight.h"
-#include "Scorer.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Scorer.h"
 #include "CustomScoreProvider.h"
 
 namespace Lucene {

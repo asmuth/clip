@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "SpanTermQuery.h"
-#include "Term.h"
+#include "fnord-fts/index/Term.h"
 #include "TermSpans.h"
 #include "IndexReader.h"
 #include "fnord-fts/util/MiscUtils.h"
