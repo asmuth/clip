@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/index//LuceneInc.h"
-#include "TermFreqVector.h"
+#include "fnord-fts/index/TermFreqVector.h"
 
 namespace Lucene {
 

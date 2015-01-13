@@ -9,7 +9,7 @@
 #include "Explanation.h"
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Similarity.h"
-#include "Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

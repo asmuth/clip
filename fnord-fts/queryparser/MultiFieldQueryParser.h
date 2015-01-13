@@ -8,7 +8,7 @@
 #define MULTIFIELDQUERYPARSER_H
 
 #include "QueryParser.h"
-#include "BooleanClause.h"
+#include "fnord-fts/search/BooleanClause.h"
 
 namespace Lucene {
 

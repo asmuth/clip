@@ -18,7 +18,7 @@
 #include "SegmentWriteState.h"
 #include "FieldInfo.h"
 #include "FieldInfos.h"
-#include "Fieldable.h"
+#include "fnord-fts/document/Fieldable.h"
 #include "IndexWriter.h"
 #include "Document.h"
 #include "fnord-fts/util/InfoStream.h"

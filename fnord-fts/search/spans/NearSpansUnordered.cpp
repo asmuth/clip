@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "NearSpansUnordered.h"
+#include "fnord-fts/search/spans/NearSpansUnordered.h"
 #include "_NearSpansUnordered.h"
-#include "NearSpansOrdered.h"
+#include "fnord-fts/search/spans/NearSpansOrdered.h"
 #include "fnord-fts/search/spans/SpanNearQuery.h"
 #include "fnord-fts/util/StringUtils.h"
 

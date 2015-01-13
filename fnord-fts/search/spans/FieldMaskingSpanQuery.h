@@ -7,7 +7,7 @@
 #ifndef FIELDMASKINGSPANQUERY_H
 #define FIELDMASKINGSPANQUERY_H
 
-#include "SpanQuery.h"
+#include "fnord-fts/search/spans/SpanQuery.h"
 
 namespace Lucene {
 

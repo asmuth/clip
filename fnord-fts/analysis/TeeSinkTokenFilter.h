@@ -8,7 +8,7 @@
 #define TEESINKTOKENFILTER_H
 
 #include "TokenFilter.h"
-#include "TokenStream.h"
+#include "fnord-fts/analysis/TokenStream.h"
 
 namespace Lucene {
 

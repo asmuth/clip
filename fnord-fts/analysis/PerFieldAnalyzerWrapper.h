@@ -7,7 +7,7 @@
 #ifndef PERFIELDANALYZERWRAPPER_H
 #define PERFIELDANALYZERWRAPPER_H
 
-#include "Analyzer.h"
+#include "fnord-fts/analysis/Analyzer.h"
 
 namespace Lucene {
 

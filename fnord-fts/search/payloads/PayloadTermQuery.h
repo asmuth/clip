@@ -7,7 +7,7 @@
 #ifndef PAYLOADTERMQUERY_H
 #define PAYLOADTERMQUERY_H
 
-#include "SpanTermQuery.h"
+#include "fnord-fts/search/spans/SpanTermQuery.h"
 
 namespace Lucene {
 

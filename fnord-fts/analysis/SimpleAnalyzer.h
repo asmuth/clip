@@ -7,7 +7,7 @@
 #ifndef SIMPLEANALYZER_H
 #define SIMPLEANALYZER_H
 
-#include "Analyzer.h"
+#include "fnord-fts/analysis/Analyzer.h"
 
 namespace Lucene {
 

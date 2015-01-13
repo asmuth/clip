@@ -8,7 +8,7 @@
 #include "IndexWriter.h"
 #include "_IndexWriter.h"
 #include "Directory.h"
-#include "Analyzer.h"
+#include "fnord-fts/analysis/Analyzer.h"
 #include "KeepOnlyLastCommitDeletionPolicy.h"
 #include "DocumentsWriter.h"
 #include "IndexFileDeleter.h"

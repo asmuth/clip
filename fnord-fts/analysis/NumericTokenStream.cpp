@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "NumericTokenStream.h"
+#include "fnord-fts/analysis/NumericTokenStream.h"
 #include "fnord-fts/util/NumericUtils.h"
-#include "AttributeSource.h"
+#include "fnord-fts/util/AttributeSource.h"
 #include "TermAttribute.h"
 #include "TypeAttribute.h"
 #include "PositionIncrementAttribute.h"

@@ -6,7 +6,7 @@
 
 #include "fnord-fts/document//LuceneInc.h"
 #include "Document.h"
-#include "Fieldable.h"
+#include "fnord-fts/document/Fieldable.h"
 #include "Field.h"
 
 namespace Lucene {

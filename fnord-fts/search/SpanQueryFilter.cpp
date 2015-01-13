@@ -6,9 +6,9 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/SpanQueryFilter.h"
-#include "fnord-fts/search/SpanQuery.h"
+#include "fnord-fts/search/spans/SpanQuery.h"
 #include "fnord-fts/search/SpanFilterResult.h"
-#include "fnord-fts/search/Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 #include "fnord-fts/util/OpenBitSet.h"
 #include "fnord-fts/index/IndexReader.h"
 

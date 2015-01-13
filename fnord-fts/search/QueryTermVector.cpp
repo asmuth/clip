@@ -6,8 +6,8 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/QueryTermVector.h"
-#include "fnord-fts/search/Analyzer.h"
-#include "fnord-fts/search/TokenStream.h"
+#include "fnord-fts/analysis/Analyzer.h"
+#include "fnord-fts/analysis/TokenStream.h"
 #include "fnord-fts/search/StringReader.h"
 #include "fnord-fts/search/TermAttribute.h"
 

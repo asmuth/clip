@@ -9,7 +9,7 @@
 #include "fnord-fts/search/_PhraseQuery.h"
 #include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/index/Term.h"
-#include "fnord-fts/search/TermPositions.h"
+#include "fnord-fts/index/TermPositions.h"
 #include "fnord-fts/search/TermQuery.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/search/ExactPhraseScorer.h"

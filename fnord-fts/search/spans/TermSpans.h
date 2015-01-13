@@ -7,7 +7,7 @@
 #ifndef TERMSPANS_H
 #define TERMSPANS_H
 
-#include "Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 
 namespace Lucene {
 

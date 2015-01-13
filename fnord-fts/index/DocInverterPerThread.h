@@ -8,7 +8,7 @@
 #define DOCINVERTERPERTHREAD_H
 
 #include "DocFieldConsumerPerThread.h"
-#include "AttributeSource.h"
+#include "fnord-fts/util/AttributeSource.h"
 
 namespace Lucene {
 

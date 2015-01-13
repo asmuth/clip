@@ -7,7 +7,7 @@
 #ifndef STOPANALYZER_H
 #define STOPANALYZER_H
 
-#include "Analyzer.h"
+#include "fnord-fts/analysis/Analyzer.h"
 
 namespace Lucene {
 

@@ -6,7 +6,7 @@
 
 #include "fnord-fts/analysis/LuceneInc.h"
 #include "PerFieldAnalyzerWrapper.h"
-#include "Fieldable.h"
+#include "fnord-fts/document/Fieldable.h"
 
 namespace Lucene {
 

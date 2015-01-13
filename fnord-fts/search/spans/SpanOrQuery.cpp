@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "SpanOrQuery.h"
+#include "fnord-fts/search/spans/SpanOrQuery.h"
 #include "_SpanOrQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 

@@ -7,7 +7,7 @@
 #ifndef WHITESPACEANALYZER_H
 #define WHITESPACEANALYZER_H
 
-#include "Analyzer.h"
+#include "fnord-fts/analysis/Analyzer.h"
 
 namespace Lucene {
 

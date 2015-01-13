@@ -7,7 +7,7 @@
 #ifndef _SEGMENTREADER_H
 #define _SEGMENTREADER_H
 
-#include "CloseableThreadLocal.h"
+#include "fnord-fts/util/CloseableThreadLocal.h"
 
 namespace Lucene {
 

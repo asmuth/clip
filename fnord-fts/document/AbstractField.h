@@ -7,7 +7,7 @@
 #ifndef ABSTRACTFIELD_H
 #define ABSTRACTFIELD_H
 
-#include "Fieldable.h"
+#include "fnord-fts/document/Fieldable.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "Token.h"
+#include "fnord-fts/analysis/Token.h"
 #include "Payload.h"
 #include "TermAttribute.h"
 #include "OffsetAttribute.h"

@@ -8,7 +8,7 @@
 #include "StandardTokenizerImpl.h"
 #include "StandardTokenizer.h"
 #include "Reader.h"
-#include "Token.h"
+#include "fnord-fts/analysis/Token.h"
 #include "TermAttribute.h"
 #include "fnord-fts/util/MiscUtils.h"
 

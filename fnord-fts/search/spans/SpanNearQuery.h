@@ -7,7 +7,7 @@
 #ifndef SPANNEARQUERY_H
 #define SPANNEARQUERY_H
 
-#include "SpanQuery.h"
+#include "fnord-fts/search/spans/SpanQuery.h"
 
 namespace Lucene {
 

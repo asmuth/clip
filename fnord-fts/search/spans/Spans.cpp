@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 
 namespace Lucene {
 

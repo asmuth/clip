@@ -12,7 +12,7 @@
 #include "RAMOutputStream.h"
 #include "FieldInfo.h"
 #include "FieldInfos.h"
-#include "Fieldable.h"
+#include "fnord-fts/document/Fieldable.h"
 #include "Document.h"
 #include "TestPoint.h"
 

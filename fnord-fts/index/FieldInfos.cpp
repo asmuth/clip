@@ -11,7 +11,7 @@
 #include "IndexOutput.h"
 #include "Directory.h"
 #include "Document.h"
-#include "Fieldable.h"
+#include "fnord-fts/document/Fieldable.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

@@ -6,10 +6,10 @@
 
 #include "fnord-fts/queryparser/LuceneInc.h"
 #include "MultiFieldQueryParser.h"
-#include "BooleanQuery.h"
-#include "BooleanClause.h"
-#include "PhraseQuery.h"
-#include "MultiPhraseQuery.h"
+#include "fnord-fts/search/BooleanQuery.h"
+#include "fnord-fts/search/BooleanClause.h"
+#include "fnord-fts/search/PhraseQuery.h"
+#include "fnord-fts/search/MultiPhraseQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

@@ -11,7 +11,7 @@
 #include "TermsHashConsumerPerField.h"
 #include "TermsHash.h"
 #include "TermAttribute.h"
-#include "AttributeSource.h"
+#include "fnord-fts/util/AttributeSource.h"
 #include "DocInverterPerField.h"
 #include "DocumentsWriter.h"
 #include "IntBlockPool.h"

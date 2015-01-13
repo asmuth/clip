@@ -7,7 +7,7 @@
 #ifndef ANALYZER_H
 #define ANALYZER_H
 
-#include "CloseableThreadLocal.h"
+#include "fnord-fts/util/CloseableThreadLocal.h"
 
 namespace Lucene {
 

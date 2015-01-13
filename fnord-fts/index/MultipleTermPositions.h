@@ -7,7 +7,7 @@
 #ifndef MULTIPLETERMPOSITIONS_H
 #define MULTIPLETERMPOSITIONS_H
 
-#include "TermPositions.h"
+#include "fnord-fts/index/TermPositions.h"
 
 namespace Lucene {
 

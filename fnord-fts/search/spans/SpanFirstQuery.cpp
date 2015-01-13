@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "SpanFirstQuery.h"
+#include "fnord-fts/search/spans/SpanFirstQuery.h"
 #include "_SpanFirstQuery.h"
-#include "SpanQuery.h"
+#include "fnord-fts/search/spans/SpanQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

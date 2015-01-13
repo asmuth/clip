@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "NearSpansOrdered.h"
+#include "fnord-fts/search/spans/NearSpansOrdered.h"
 #include "fnord-fts/search/spans/SpanNearQuery.h"
 
 namespace Lucene {

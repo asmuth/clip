@@ -8,7 +8,7 @@
 #define FILTERINDEXREADER_H
 
 #include "fnord-fts/index/IndexReader.h"
-#include "TermPositions.h"
+#include "fnord-fts/index/TermPositions.h"
 #include "fnord-fts/index/TermEnum.h"
 
 namespace Lucene {

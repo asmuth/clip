@@ -7,7 +7,7 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-#include "TokenStream.h"
+#include "fnord-fts/analysis/TokenStream.h"
 
 namespace Lucene {
 

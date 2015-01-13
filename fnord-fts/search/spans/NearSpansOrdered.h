@@ -7,7 +7,7 @@
 #ifndef NEARSPANSORDERED_H
 #define NEARSPANSORDERED_H
 
-#include "Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "AttributeSource.h"
+#include "fnord-fts/util/AttributeSource.h"
 #include "Attribute.h"
 
 namespace Lucene {

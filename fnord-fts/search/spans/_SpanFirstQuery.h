@@ -7,7 +7,7 @@
 #ifndef _SPANFIRSTQUERY_H
 #define _SPANFIRSTQUERY_H
 
-#include "Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 
 namespace Lucene {
 

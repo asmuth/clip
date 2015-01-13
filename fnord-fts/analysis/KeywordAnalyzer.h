@@ -7,7 +7,7 @@
 #ifndef KEYWORDANALYZER_H
 #define KEYWORDANALYZER_H
 
-#include "Analyzer.h"
+#include "fnord-fts/analysis/Analyzer.h"
 
 namespace Lucene {
 

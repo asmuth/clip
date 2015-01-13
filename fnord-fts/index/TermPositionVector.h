@@ -7,7 +7,7 @@
 #ifndef TERMPOSITIONVECTOR_H
 #define TERMPOSITIONVECTOR_H
 
-#include "TermFreqVector.h"
+#include "fnord-fts/index/TermFreqVector.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef SEGMENTTERMDOCS_H
 #define SEGMENTTERMDOCS_H
 
-#include "TermPositions.h"
+#include "fnord-fts/index/TermPositions.h"
 
 namespace Lucene {
 

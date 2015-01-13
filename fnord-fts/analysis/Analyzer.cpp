@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "Analyzer.h"
-#include "Fieldable.h"
+#include "fnord-fts/analysis/Analyzer.h"
+#include "fnord-fts/document/Fieldable.h"
 
 namespace Lucene {
 

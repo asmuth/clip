@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "SpanTermQuery.h"
+#include "fnord-fts/search/spans/SpanTermQuery.h"
 #include "fnord-fts/index/Term.h"
-#include "TermSpans.h"
+#include "fnord-fts/search/spans/TermSpans.h"
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 

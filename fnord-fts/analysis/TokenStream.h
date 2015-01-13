@@ -7,7 +7,7 @@
 #ifndef TOKENSTREAM_H
 #define TOKENSTREAM_H
 
-#include "AttributeSource.h"
+#include "fnord-fts/util/AttributeSource.h"
 
 namespace Lucene {
 

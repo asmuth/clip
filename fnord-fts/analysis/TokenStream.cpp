@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/analysis/LuceneInc.h"
-#include "TokenStream.h"
+#include "fnord-fts/analysis/TokenStream.h"
 
 namespace Lucene {
 

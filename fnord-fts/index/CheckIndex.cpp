@@ -16,7 +16,7 @@
 #include "BitVector.h"
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/index/TermEnum.h"
-#include "TermPositions.h"
+#include "fnord-fts/index/TermPositions.h"
 #include "Document.h"
 #include "FSDirectory.h"
 #include "fnord-fts/util/InfoStream.h"

@@ -7,7 +7,7 @@
 #ifndef NUMERICTOKENSTREAM_H
 #define NUMERICTOKENSTREAM_H
 
-#include "TokenStream.h"
+#include "fnord-fts/analysis/TokenStream.h"
 
 namespace Lucene {
 

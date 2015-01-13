@@ -7,7 +7,7 @@
 #ifndef _NEARSPANSUNORDERED_H
 #define _NEARSPANSUNORDERED_H
 
-#include "Spans.h"
+#include "fnord-fts/search/spans/Spans.h"
 #include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {

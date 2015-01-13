@@ -7,7 +7,7 @@
 #ifndef QUERYTERMVECTOR_H
 #define QUERYTERMVECTOR_H
 
-#include "TermFreqVector.h"
+#include "fnord-fts/index/TermFreqVector.h"
 
 namespace Lucene {
 

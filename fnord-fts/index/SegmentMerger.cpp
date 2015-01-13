@@ -18,7 +18,7 @@
 #include "SegmentReader.h"
 #include "_SegmentReader.h"
 #include "Directory.h"
-#include "TermPositions.h"
+#include "fnord-fts/index/TermPositions.h"
 #include "TermVectorsReader.h"
 #include "TermVectorsWriter.h"
 #include "FormatPostingsDocsConsumer.h"
