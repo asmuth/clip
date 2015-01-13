@@ -7,7 +7,7 @@
 #ifndef FILTERINDEXREADER_H
 #define FILTERINDEXREADER_H
 
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "TermPositions.h"
 #include "fnord-fts/index/TermEnum.h"
 

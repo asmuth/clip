@@ -7,7 +7,7 @@
 #ifndef _MULTIPHRASEQUERY_H
 #define _MULTIPHRASEQUERY_H
 
-#include "Weight.h"
+#include "fnord-fts/search/Weight.h"
 
 namespace Lucene {
 

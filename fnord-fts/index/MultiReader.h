@@ -7,7 +7,7 @@
 #ifndef MULTIREADER_H
 #define MULTIREADER_H
 
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

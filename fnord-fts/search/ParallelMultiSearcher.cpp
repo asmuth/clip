@@ -13,7 +13,7 @@
 #include "fnord-fts/search/FieldDocSortedHitQueue.h"
 #include "fnord-fts/search/FieldDoc.h"
 #include "fnord-fts/search/TopFieldDocs.h"
-#include "fnord-fts/search/ThreadPool.h"
+#include "fnord-fts/util/ThreadPool.h"
 
 namespace Lucene {
 

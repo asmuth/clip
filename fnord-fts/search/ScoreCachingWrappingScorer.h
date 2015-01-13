@@ -7,7 +7,7 @@
 #ifndef SCORECACHINGWRAPPINGSCORER_H
 #define SCORECACHINGWRAPPINGSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

@@ -15,7 +15,7 @@
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/search/Filter.h"
 #include "fnord-fts/search/Query.h"
-#include "fnord-fts/search/ReaderUtil.h"
+#include "fnord-fts/util/ReaderUtil.h"
 
 namespace Lucene {
 

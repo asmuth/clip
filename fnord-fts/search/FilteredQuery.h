@@ -7,7 +7,7 @@
 #ifndef FILTEREDQUERY_H
 #define FILTEREDQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

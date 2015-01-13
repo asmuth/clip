@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "SpanWeight.h"
-#include "SpanScorer.h"
+#include "fnord-fts/search/spans/SpanWeight.h"
+#include "fnord-fts/search/spans/SpanScorer.h"
 #include "SpanQuery.h"
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "ComplexExplanation.h"
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

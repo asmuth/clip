@@ -9,9 +9,9 @@
 #include "_ValueSourceQuery.h"
 #include "ValueSource.h"
 #include "DocValues.h"
-#include "ComplexExplanation.h"
+#include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/index/IndexReader.h"
-#include "TermDocs.h"
+#include "fnord-fts/index/TermDocs.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

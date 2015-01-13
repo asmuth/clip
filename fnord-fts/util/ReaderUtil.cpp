@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "ReaderUtil.h"
-#include "IndexReader.h"
+#include "fnord-fts/util/ReaderUtil.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

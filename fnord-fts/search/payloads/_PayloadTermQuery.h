@@ -7,8 +7,8 @@
 #ifndef _PAYLOADTERMQUERY_H
 #define _PAYLOADTERMQUERY_H
 
-#include "SpanWeight.h"
-#include "SpanScorer.h"
+#include "fnord-fts/search/spans/SpanWeight.h"
+#include "fnord-fts/search/spans/SpanScorer.h"
 
 namespace Lucene {
 

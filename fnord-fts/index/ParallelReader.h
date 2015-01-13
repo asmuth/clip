@@ -7,7 +7,7 @@
 #ifndef PARALLELREADER_H
 #define PARALLELREADER_H
 
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

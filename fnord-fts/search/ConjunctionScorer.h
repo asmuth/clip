@@ -7,7 +7,7 @@
 #ifndef CONJUNCTIONSCORER_H
 #define CONJUNCTIONSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

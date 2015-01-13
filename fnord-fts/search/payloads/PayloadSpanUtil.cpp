@@ -10,7 +10,7 @@
 #include "BooleanClause.h"
 #include "PhraseQuery.h"
 #include "SpanTermQuery.h"
-#include "SpanNearQuery.h"
+#include "fnord-fts/search/spans/SpanNearQuery.h"
 #include "SpanOrQuery.h"
 #include "TermQuery.h"
 #include "FilteredQuery.h"

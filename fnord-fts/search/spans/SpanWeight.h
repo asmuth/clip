@@ -7,7 +7,7 @@
 #ifndef SPANWEIGHT_H
 #define SPANWEIGHT_H
 
-#include "Weight.h"
+#include "fnord-fts/search/Weight.h"
 
 namespace Lucene {
 

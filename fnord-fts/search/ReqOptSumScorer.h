@@ -7,7 +7,7 @@
 #ifndef REQOPTSUMSCORER_H
 #define REQOPTSUMSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

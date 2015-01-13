@@ -8,7 +8,7 @@
 #include "NormsWriter.h"
 #include "NormsWriterPerThread.h"
 #include "NormsWriterPerField.h"
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 #include "IndexFileNames.h"
 #include "IndexOutput.h"
 #include "SegmentMerger.h"

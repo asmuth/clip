@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "NearSpansOrdered.h"
-#include "SpanNearQuery.h"
+#include "fnord-fts/search/spans/SpanNearQuery.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef MATCHALLDOCSQUERY_H
 #define MATCHALLDOCSQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

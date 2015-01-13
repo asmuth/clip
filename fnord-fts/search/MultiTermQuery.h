@@ -7,7 +7,7 @@
 #ifndef MULTITERMQUERY_H
 #define MULTITERMQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

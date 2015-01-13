@@ -7,7 +7,7 @@
 #include "fnord-fts/index//LuceneInc.h"
 #include "MultipleTermPositions.h"
 #include "_MultipleTermPositions.h"
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/Term.h"
 
 namespace Lucene {

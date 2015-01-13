@@ -20,7 +20,7 @@
 #include "BufferedIndexInput.h"
 #include "LogByteSizeMergePolicy.h"
 #include "LogDocMergePolicy.h"
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 #include "ConcurrentMergeScheduler.h"
 #include "CompoundFileWriter.h"
 #include "SegmentMerger.h"

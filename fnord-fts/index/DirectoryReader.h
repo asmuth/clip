@@ -7,7 +7,7 @@
 #ifndef DIRECTORYREADER_H
 #define DIRECTORYREADER_H
 
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/TermEnum.h"
 #include "TermPositions.h"
 #include "IndexCommit.h"

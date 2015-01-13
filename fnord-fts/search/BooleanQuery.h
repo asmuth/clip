@@ -7,9 +7,9 @@
 #ifndef BOOLEANQUERY_H
 #define BOOLEANQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 #include "BooleanClause.h"
-#include "Weight.h"
+#include "fnord-fts/search/Weight.h"
 
 namespace Lucene {
 

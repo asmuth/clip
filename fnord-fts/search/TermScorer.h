@@ -7,7 +7,7 @@
 #ifndef TERMSCORER_H
 #define TERMSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

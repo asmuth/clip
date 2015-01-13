@@ -7,9 +7,9 @@
 #ifndef PAYLOADNEARQUERY_H
 #define PAYLOADNEARQUERY_H
 
-#include "SpanNearQuery.h"
-#include "SpanWeight.h"
-#include "SpanScorer.h"
+#include "fnord-fts/search/spans/SpanNearQuery.h"
+#include "fnord-fts/search/spans/SpanWeight.h"
+#include "fnord-fts/search/spans/SpanScorer.h"
 
 namespace Lucene {
 

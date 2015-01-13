@@ -7,13 +7,13 @@
 #include "fnord-fts/index//LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "_IndexReader.h"
 #include "DirectoryReader.h"
 #include "IndexDeletionPolicy.h"
 #include "FSDirectory.h"
 #include "FieldSelector.h"
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 #include "CompoundFileReader.h"
 #include "FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"

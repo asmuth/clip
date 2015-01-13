@@ -7,7 +7,7 @@
 #ifndef DISJUNCTIONMAXSCORER_H
 #define DISJUNCTIONMAXSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

@@ -7,7 +7,7 @@
 #ifndef PHRASEQUERY_H
 #define PHRASEQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

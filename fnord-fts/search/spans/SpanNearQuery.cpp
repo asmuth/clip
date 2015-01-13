@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "SpanNearQuery.h"
+#include "fnord-fts/search/spans/SpanNearQuery.h"
 #include "SpanQuery.h"
 #include "SpanOrQuery.h"
 #include "NearSpansOrdered.h"

@@ -7,7 +7,7 @@
 #ifndef DISJUNCTIONMAXQUERY_H
 #define DISJUNCTIONMAXQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

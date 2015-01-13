@@ -7,7 +7,7 @@
 #ifndef _PHRASEQUERY_H
 #define _PHRASEQUERY_H
 
-#include "Weight.h"
+#include "fnord-fts/search/Weight.h"
 
 namespace Lucene {
 

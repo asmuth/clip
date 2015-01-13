@@ -7,7 +7,7 @@
 #ifndef SPANSCORER_H
 #define SPANSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

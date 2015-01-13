@@ -7,7 +7,7 @@
 #include "fnord-fts/index//LuceneInc.h"
 #include "NormsWriterPerField.h"
 #include "NormsWriterPerThread.h"
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 #include "DocInverterPerField.h"
 #include "DocumentsWriter.h"
 #include "FieldInfo.h"

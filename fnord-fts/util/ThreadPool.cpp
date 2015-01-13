@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "ThreadPool.h"
+#include "fnord-fts/util/ThreadPool.h"
 
 namespace Lucene {
 

@@ -7,9 +7,9 @@
 #ifndef CONSTANTSCOREQUERY_H
 #define CONSTANTSCOREQUERY_H
 
-#include "Query.h"
-#include "Weight.h"
-#include "Scorer.h"
+#include "fnord-fts/search/Query.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

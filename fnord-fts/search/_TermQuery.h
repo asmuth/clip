@@ -7,7 +7,7 @@
 #ifndef _TERMQUERY_H
 #define _TERMQUERY_H
 
-#include "Weight.h"
+#include "fnord-fts/search/Weight.h"
 
 namespace Lucene {
 

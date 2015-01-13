@@ -8,7 +8,7 @@
 #include "fnord-fts/search/MultiSearcher.h"
 #include "fnord-fts/search/_MultiSearcher.h"
 #include "fnord-fts/index/Term.h"
-#include "fnord-fts/search/ReaderUtil.h"
+#include "fnord-fts/util/ReaderUtil.h"
 #include "fnord-fts/search/HitQueue.h"
 #include "fnord-fts/search/Query.h"
 #include "fnord-fts/search/FieldDocSortedHitQueue.h"

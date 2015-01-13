@@ -7,10 +7,10 @@
 #include "fnord-fts/LuceneInc.h"
 #include "PayloadNearQuery.h"
 #include "AveragePayloadFunction.h"
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "NearSpansOrdered.h"
 #include "NearSpansUnordered.h"
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 

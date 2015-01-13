@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "SpanQuery.h"
-#include "SpanWeight.h"
+#include "fnord-fts/search/spans/SpanWeight.h"
 
 namespace Lucene {
 

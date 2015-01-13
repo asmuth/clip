@@ -8,7 +8,7 @@
 #include "NearSpansUnordered.h"
 #include "_NearSpansUnordered.h"
 #include "NearSpansOrdered.h"
-#include "SpanNearQuery.h"
+#include "fnord-fts/search/spans/SpanNearQuery.h"
 #include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {

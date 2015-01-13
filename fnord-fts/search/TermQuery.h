@@ -7,7 +7,7 @@
 #ifndef TERMQUERY_H
 #define TERMQUERY_H
 
-#include "Query.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

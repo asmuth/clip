@@ -7,8 +7,8 @@
 #ifndef _FILTEREDQUERY_H
 #define _FILTEREDQUERY_H
 
-#include "Weight.h"
-#include "Scorer.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

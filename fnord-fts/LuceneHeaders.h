@@ -38,7 +38,7 @@
 // Include most common files: index
 #include "IndexCommit.h"
 #include "IndexDeletionPolicy.h"
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "IndexWriter.h"
 #include "KeepOnlyLastCommitDeletionPolicy.h"
 #include "LogByteSizeMergePolicy.h"
@@ -74,7 +74,7 @@
 #include "PrefixFilter.h"
 #include "PrefixQuery.h"
 #include "ScoreDoc.h"
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 #include "Searcher.h"
 #include "Sort.h"
 #include "TermQuery.h"
@@ -84,10 +84,10 @@
 #include "TopDocsCollector.h"
 #include "TopFieldCollector.h"
 #include "TopScoreDocCollector.h"
-#include "Weight.h"
+#include "fnord-fts/search/Weight.h"
 #include "WildcardQuery.h"
 #include "SpanFirstQuery.h"
-#include "SpanNearQuery.h"
+#include "fnord-fts/search/spans/SpanNearQuery.h"
 #include "SpanNotQuery.h"
 #include "SpanOrQuery.h"
 #include "SpanQuery.h"
@@ -113,6 +113,6 @@
 #include "fnord-fts/util/OpenBitSetDISI.h"
 #include "OpenBitSetIterator.h"
 #include "StringReader.h"
-#include "ThreadPool.h"
+#include "fnord-fts/util/ThreadPool.h"
 
 #endif

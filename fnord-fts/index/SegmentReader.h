@@ -7,7 +7,7 @@
 #ifndef SEGMENTREADER_H
 #define SEGMENTREADER_H
 
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "CloseableThreadLocal.h"
 
 namespace Lucene {

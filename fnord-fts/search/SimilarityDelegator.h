@@ -7,7 +7,7 @@
 #ifndef SIMILARITYDELEGATOR_H
 #define SIMILARITYDELEGATOR_H
 
-#include "Similarity.h"
+#include "fnord-fts/search/Similarity.h"
 
 namespace Lucene {
 

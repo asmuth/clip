@@ -7,8 +7,8 @@
 #ifndef _MATCHALLDOCSQUERY_H
 #define _MATCHALLDOCSQUERY_H
 
-#include "Weight.h"
-#include "Scorer.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Scorer.h"
 
 namespace Lucene {
 

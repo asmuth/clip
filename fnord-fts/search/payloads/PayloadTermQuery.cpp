@@ -11,8 +11,8 @@
 #include "TermSpans.h"
 #include "TermPositions.h"
 #include "ComplexExplanation.h"
-#include "IndexReader.h"
-#include "Similarity.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/Similarity.h"
 #include "PayloadFunction.h"
 #include "fnord-fts/util/MiscUtils.h"
 

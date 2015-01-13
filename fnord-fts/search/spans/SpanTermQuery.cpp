@@ -8,7 +8,7 @@
 #include "SpanTermQuery.h"
 #include "fnord-fts/index/Term.h"
 #include "TermSpans.h"
-#include "IndexReader.h"
+#include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

@@ -7,7 +7,7 @@
 #ifndef BOOLEANSCORER_H
 #define BOOLEANSCORER_H
 
-#include "Scorer.h"
+#include "fnord-fts/search/Scorer.h"
 #include "Collector.h"
 
 namespace Lucene {
