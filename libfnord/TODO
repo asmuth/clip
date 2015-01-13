@@ -11,7 +11,7 @@ metric: percentile aggregation
 charts: axis ticks+labels inside/outside
 charts: control no of ticks on grid/axis
 charts: png render target
-
+charts: stacked areas
 
 better inetaddr:resolve iface:
   -> future<inteaddr> resolve(string);
