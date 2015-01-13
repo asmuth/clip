@@ -7,7 +7,7 @@
 #ifndef PHRASEQUEUE_H
 #define PHRASEQUEUE_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 

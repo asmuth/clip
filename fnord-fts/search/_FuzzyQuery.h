@@ -7,7 +7,7 @@
 #ifndef _FUZZYQUERY_H
 #define _FUZZYQUERY_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 

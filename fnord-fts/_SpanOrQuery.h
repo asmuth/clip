@@ -7,7 +7,7 @@
 #ifndef _SPANORQUERY_H
 #define _SPANORQUERY_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 #include "Spans.h"
 
 namespace Lucene {

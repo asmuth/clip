@@ -7,7 +7,7 @@
 #ifndef _MULTIPLETERMPOSITIONS_H
 #define _MULTIPLETERMPOSITIONS_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 

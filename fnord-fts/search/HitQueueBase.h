@@ -7,7 +7,7 @@
 #ifndef HITQUEUEBASE_H
 #define HITQUEUEBASE_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 

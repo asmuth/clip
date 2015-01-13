@@ -7,7 +7,7 @@
 #ifndef SEGMENTMERGEQUEUE_H
 #define SEGMENTMERGEQUEUE_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 

@@ -8,7 +8,7 @@
 #define TOPDOCSCOLLECTOR_H
 
 #include "Collector.h"
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 

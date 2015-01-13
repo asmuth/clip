@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/search/DocIdSet.h"
-#include "fnord-fts/search/DocIdSet.h"
+#include "fnord-fts/search/_DocIdSet.h"
 
 namespace Lucene {
 

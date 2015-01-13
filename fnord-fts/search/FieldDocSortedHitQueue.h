@@ -7,7 +7,7 @@
 #ifndef FIELDDOCSORTEDHITQUEUE_H
 #define FIELDDOCSORTEDHITQUEUE_H
 
-#include "PriorityQueue.h"
+#include "fnord-fts/util/PriorityQueue.h"
 
 namespace Lucene {
 
