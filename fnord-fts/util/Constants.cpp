@@ -4,8 +4,8 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
-#include "Constants.h"
+#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/util/Constants.h"
 
 namespace Lucene {
 

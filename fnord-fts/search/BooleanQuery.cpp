@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/BooleanQuery.h"
-#include "fnord-fts/_BooleanQuery.h"
-#include "fnord-fts/BooleanScorer.h"
-#include "fnord-fts/BooleanScorer2.h"
-#include "fnord-fts/ComplexExplanation.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/BooleanQuery.h"
+#include "fnord-fts/search/_BooleanQuery.h"
+#include "fnord-fts/search/BooleanScorer.h"
+#include "fnord-fts/search/BooleanScorer2.h"
+#include "fnord-fts/search/ComplexExplanation.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

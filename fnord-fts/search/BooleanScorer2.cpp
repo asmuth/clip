@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/BooleanScorer2.h"
-#include "fnord-fts/ReqOptSumScorer.h"
-#include "fnord-fts/ReqExclScorer.h"
-#include "fnord-fts/Similarity.h"
-#include "fnord-fts/Collector.h"
+#include "fnord-fts/search/BooleanScorer2.h"
+#include "fnord-fts/search/ReqOptSumScorer.h"
+#include "fnord-fts/search/ReqExclScorer.h"
+#include "fnord-fts/search/Similarity.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

@@ -4,14 +4,14 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "NormsWriterPerField.h"
 #include "NormsWriterPerThread.h"
 #include "Similarity.h"
 #include "DocInverterPerField.h"
 #include "DocumentsWriter.h"
 #include "FieldInfo.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/analysis/LuceneInc.h"
 #include "Analyzer.h"
 #include "Fieldable.h"
 

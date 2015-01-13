@@ -4,8 +4,8 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
-#include "OpenBitSetDISI.h"
+#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/util/OpenBitSetDISI.h"
 
 namespace Lucene {
 

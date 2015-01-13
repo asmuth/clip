@@ -7,7 +7,7 @@
 #ifndef SPANS_H
 #define SPANS_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

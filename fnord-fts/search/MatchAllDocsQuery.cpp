@@ -5,14 +5,14 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/MatchAllDocsQuery.h"
-#include "fnord-fts/_MatchAllDocsQuery.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/Similarity.h"
-#include "fnord-fts/TermDocs.h"
-#include "fnord-fts/ComplexExplanation.h"
-#include "fnord-fts/Searcher.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/MatchAllDocsQuery.h"
+#include "fnord-fts/search/_MatchAllDocsQuery.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/Similarity.h"
+#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/search/ComplexExplanation.h"
+#include "fnord-fts/search/Searcher.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

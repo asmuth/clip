@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
 #include "IndexReader.h"

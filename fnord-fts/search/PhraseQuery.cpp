@@ -5,18 +5,18 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/PhraseQuery.h"
-#include "fnord-fts/_PhraseQuery.h"
-#include "fnord-fts/Similarity.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/TermPositions.h"
-#include "fnord-fts/TermQuery.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/ExactPhraseScorer.h"
-#include "fnord-fts/SloppyPhraseScorer.h"
-#include "fnord-fts/Explanation.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/PhraseQuery.h"
+#include "fnord-fts/search/_PhraseQuery.h"
+#include "fnord-fts/search/Similarity.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/search/TermPositions.h"
+#include "fnord-fts/search/TermQuery.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/ExactPhraseScorer.h"
+#include "fnord-fts/search/SloppyPhraseScorer.h"
+#include "fnord-fts/search/Explanation.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

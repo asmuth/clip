@@ -8,7 +8,7 @@
 #define SIMPLELRUCACHE_H
 
 #include <list>
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

@@ -4,10 +4,10 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "FormatPostingsTermsConsumer.h"
 #include "UTF8Stream.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

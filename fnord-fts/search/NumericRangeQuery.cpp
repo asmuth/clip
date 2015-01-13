@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/NumericRangeQuery.h"
-#include "fnord-fts/_NumericRangeQuery.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
-#include "fnord-fts/VariantUtils.h"
+#include "fnord-fts/search/NumericRangeQuery.h"
+#include "fnord-fts/search/_NumericRangeQuery.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
+#include "fnord-fts/search/VariantUtils.h"
 
 namespace Lucene {
 

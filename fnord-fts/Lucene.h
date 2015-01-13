@@ -25,7 +25,7 @@
 #define SIZEOF_ARRAY(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #include "LuceneTypes.h"
-#include "LuceneAllocator.h"
+#include "fnord-fts/util/LuceneAllocator.h"
 
 namespace boost {
 
@@ -62,14 +62,14 @@ typedef std::shared_ptr<std::locale> localePtr;
 }
 
 #include "LuceneFactory.h"
-#include "LuceneException.h"
+#include "fnord-fts/util/LuceneException.h"
 #include "Array.h"
 #include "Collection.h"
 #include "Map.h"
 #include "Set.h"
 #include "HashMap.h"
 #include "HashSet.h"
-#include "Constants.h"
+#include "fnord-fts/util/Constants.h"
 
 namespace Lucene {
 
@@ -198,8 +198,8 @@ typedef SimpleLRUCache< TermPtr, TermInfoPtr, luceneHash<TermPtr>, luceneEquals<
 typedef std::shared_ptr<TermInfoCache> TermInfoCachePtr;
 }
 
-#include "Synchronize.h"
-#include "CycleCheck.h"
+#include "fnord-fts/util/Synchronize.h"
+#include "fnord-fts/util/CycleCheck.h"
 #if defined(LPP_BUILDING_LIB) || defined(LPP_EXPOSE_INTERNAL)
 #define INTERNAL public
 #else

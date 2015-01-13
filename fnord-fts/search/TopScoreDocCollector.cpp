@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TopScoreDocCollector.h"
-#include "fnord-fts/_TopScoreDocCollector.h"
-#include "fnord-fts/HitQueue.h"
-#include "fnord-fts/ScoreDoc.h"
-#include "fnord-fts/Scorer.h"
-#include "fnord-fts/TopDocs.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/TopScoreDocCollector.h"
+#include "fnord-fts/search/_TopScoreDocCollector.h"
+#include "fnord-fts/search/HitQueue.h"
+#include "fnord-fts/search/ScoreDoc.h"
+#include "fnord-fts/search/Scorer.h"
+#include "fnord-fts/search/TopDocs.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

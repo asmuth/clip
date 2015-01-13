@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TermScorer.h"
-#include "fnord-fts/TermDocs.h"
-#include "fnord-fts/Similarity.h"
-#include "fnord-fts/Weight.h"
-#include "fnord-fts/Collector.h"
+#include "fnord-fts/search/TermScorer.h"
+#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/search/Similarity.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

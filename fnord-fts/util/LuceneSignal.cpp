@@ -4,9 +4,9 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "LuceneSignal.h"
-#include "Synchronize.h"
+#include "fnord-fts/util/Synchronize.h"
 
 namespace Lucene {
 

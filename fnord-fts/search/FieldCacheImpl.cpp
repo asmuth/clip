@@ -5,15 +5,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FieldCacheImpl.h"
-#include "fnord-fts/FieldCacheSanityChecker.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/InfoStream.h"
-#include "fnord-fts/TermEnum.h"
-#include "fnord-fts/TermDocs.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/StringUtils.h"
-#include "fnord-fts/VariantUtils.h"
+#include "fnord-fts/search/FieldCacheImpl.h"
+#include "fnord-fts/search/FieldCacheSanityChecker.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/InfoStream.h"
+#include "fnord-fts/search/TermEnum.h"
+#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/util/StringUtils.h"
+#include "fnord-fts/search/VariantUtils.h"
 
 namespace Lucene {
 

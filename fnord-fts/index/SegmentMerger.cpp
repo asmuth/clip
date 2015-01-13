@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "SegmentMerger.h"
 #include "MergePolicy.h"
 #include "IndexWriter.h"
@@ -29,7 +29,7 @@
 #include "SegmentMergeQueue.h"
 #include "SegmentWriteState.h"
 #include "TestPoint.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

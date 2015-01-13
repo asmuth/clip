@@ -8,7 +8,7 @@
 #define ARRAY_H
 
 #include <cstring>
-#include "Lucene.h"
+#include "fnord-fts/Lucene.h"
 
 namespace Lucene {
 

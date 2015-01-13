@@ -7,13 +7,13 @@
 #include "fnord-fts/LuceneInc.h"
 #include <boost/bind.hpp>
 #include <boost/bind/protect.hpp>
-#include "fnord-fts/ParallelMultiSearcher.h"
-#include "fnord-fts/_MultiSearcher.h"
-#include "fnord-fts/HitQueue.h"
-#include "fnord-fts/FieldDocSortedHitQueue.h"
-#include "fnord-fts/FieldDoc.h"
-#include "fnord-fts/TopFieldDocs.h"
-#include "fnord-fts/ThreadPool.h"
+#include "fnord-fts/search/ParallelMultiSearcher.h"
+#include "fnord-fts/search/_MultiSearcher.h"
+#include "fnord-fts/search/HitQueue.h"
+#include "fnord-fts/search/FieldDocSortedHitQueue.h"
+#include "fnord-fts/search/FieldDoc.h"
+#include "fnord-fts/search/TopFieldDocs.h"
+#include "fnord-fts/search/ThreadPool.h"
 
 namespace Lucene {
 

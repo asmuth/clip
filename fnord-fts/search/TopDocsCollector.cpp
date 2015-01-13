@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TopDocsCollector.h"
-#include "fnord-fts/TopDocs.h"
-#include "fnord-fts/HitQueueBase.h"
+#include "fnord-fts/search/TopDocsCollector.h"
+#include "fnord-fts/search/TopDocs.h"
+#include "fnord-fts/search/HitQueueBase.h"
 
 namespace Lucene {
 

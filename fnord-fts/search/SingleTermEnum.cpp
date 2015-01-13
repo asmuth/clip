@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/SingleTermEnum.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/Term.h"
+#include "fnord-fts/search/SingleTermEnum.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/Term.h"
 
 namespace Lucene {
 

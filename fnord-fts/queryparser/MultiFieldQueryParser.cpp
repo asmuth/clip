@@ -4,13 +4,13 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/queryparser/LuceneInc.h"
 #include "MultiFieldQueryParser.h"
 #include "BooleanQuery.h"
 #include "BooleanClause.h"
 #include "PhraseQuery.h"
 #include "MultiPhraseQuery.h"
-#include "MiscUtils.h"
+#include "fnord-fts/queryparser/MiscUtils.h"
 
 namespace Lucene {
 

@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "DocInverterPerField.h"
 #include "DocInverterPerThread.h"
 #include "InvertedDocConsumerPerThread.h"
@@ -13,7 +13,7 @@
 #include "InvertedDocEndConsumerPerField.h"
 #include "Fieldable.h"
 #include "FieldInfo.h"
-#include "FieldInvertState.h"
+#include "fnord-fts/index/FieldInvertState.h"
 #include "DocumentsWriter.h"
 #include "Document.h"
 #include "Analyzer.h"

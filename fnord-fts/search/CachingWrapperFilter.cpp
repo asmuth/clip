@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/CachingWrapperFilter.h"
-#include "fnord-fts/_CachingWrapperFilter.h"
-#include "fnord-fts/OpenBitSetDISI.h"
-#include "fnord-fts/IndexReader.h"
+#include "fnord-fts/search/CachingWrapperFilter.h"
+#include "fnord-fts/search/_CachingWrapperFilter.h"
+#include "fnord-fts/util/OpenBitSetDISI.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

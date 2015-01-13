@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/DisjunctionSumScorer.h"
-#include "fnord-fts/ScorerDocQueue.h"
-#include "fnord-fts/Collector.h"
+#include "fnord-fts/search/DisjunctionSumScorer.h"
+#include "fnord-fts/search/ScorerDocQueue.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

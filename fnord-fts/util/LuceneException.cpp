@@ -4,8 +4,8 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
-#include "LuceneException.h"
+#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/util/LuceneException.h"
 
 namespace Lucene {
 

@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/analysis/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
 #include "WordlistLoader.h"
 #include "FileReader.h"

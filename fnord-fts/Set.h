@@ -8,7 +8,7 @@
 #define SET_H
 
 #include <set>
-#include "LuceneSync.h"
+#include "fnord-fts/util/LuceneSync.h"
 
 namespace Lucene {
 

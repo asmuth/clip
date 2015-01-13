@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/analysis/LuceneInc.h"
 #include "KeywordTokenizer.h"
 #include "TermAttribute.h"
 #include "OffsetAttribute.h"

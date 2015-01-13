@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/Query.h"
-#include "fnord-fts/BooleanQuery.h"
-#include "fnord-fts/Searcher.h"
-#include "fnord-fts/Similarity.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/Query.h"
+#include "fnord-fts/search/BooleanQuery.h"
+#include "fnord-fts/search/Searcher.h"
+#include "fnord-fts/search/Similarity.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/Weight.h"
+#include "fnord-fts/search/Weight.h"
 
 namespace Lucene {
 

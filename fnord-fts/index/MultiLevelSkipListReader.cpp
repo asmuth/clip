@@ -4,10 +4,10 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "MultiLevelSkipListReader.h"
 #include "BufferedIndexInput.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

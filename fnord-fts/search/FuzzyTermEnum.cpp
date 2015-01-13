@@ -6,10 +6,10 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
-#include "fnord-fts/FuzzyTermEnum.h"
-#include "fnord-fts/FuzzyQuery.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/IndexReader.h"
+#include "fnord-fts/search/FuzzyTermEnum.h"
+#include "fnord-fts/search/FuzzyQuery.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

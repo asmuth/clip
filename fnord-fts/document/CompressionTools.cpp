@@ -4,9 +4,9 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/document//LuceneInc.h"
 #include "CompressionTools.h"
-#include "MiscUtils.h"
+#include "fnord-fts/document//MiscUtils.h"
 #include "UnicodeUtils.h"
 #include "StringUtils.h"
 #include <boost/iostreams/filtering_streambuf.hpp>

@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/NumericRangeFilter.h"
-#include "fnord-fts/NumericRangeQuery.h"
+#include "fnord-fts/search/NumericRangeFilter.h"
+#include "fnord-fts/search/NumericRangeQuery.h"
 
 namespace Lucene {
 

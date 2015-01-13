@@ -4,13 +4,13 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "SegmentTermPositions.h"
 #include "SegmentReader.h"
 #include "_SegmentReader.h"
 #include "TermInfo.h"
 #include "IndexInput.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

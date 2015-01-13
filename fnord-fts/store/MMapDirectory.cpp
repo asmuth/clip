@@ -4,12 +4,12 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/store/LuceneInc.h"
 #include "MMapDirectory.h"
 #include "_MMapDirectory.h"
 #include "SimpleFSDirectory.h"
 #include "_SimpleFSDirectory.h"
-#include "MiscUtils.h"
+#include "fnord-fts/store/MiscUtils.h"
 #include "FileUtils.h"
 #include "StringUtils.h"
 

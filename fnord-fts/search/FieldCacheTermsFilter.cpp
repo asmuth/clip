@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FieldCacheTermsFilter.h"
-#include "fnord-fts/_FieldCacheTermsFilter.h"
-#include "fnord-fts/FieldCache.h"
-#include "fnord-fts/OpenBitSet.h"
+#include "fnord-fts/search/FieldCacheTermsFilter.h"
+#include "fnord-fts/search/_FieldCacheTermsFilter.h"
+#include "fnord-fts/search/FieldCache.h"
+#include "fnord-fts/search/OpenBitSet.h"
 
 namespace Lucene {
 

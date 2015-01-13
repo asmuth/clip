@@ -8,7 +8,7 @@
 #define HASHSET_H
 
 #include <boost/unordered_set.hpp>
-#include "LuceneSync.h"
+#include "fnord-fts/util/LuceneSync.h"
 
 namespace Lucene {
 

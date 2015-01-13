@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "TermsHash.h"
 #include "DocumentsWriter.h"
 #include "TermsHashConsumer.h"
@@ -14,7 +14,7 @@
 #include "DocInverterPerThread.h"
 #include "TermsHashConsumerPerField.h"
 #include "IndexWriter.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

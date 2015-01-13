@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/Collector.h"
+#include "fnord-fts/search/Collector.h"
 
 namespace Lucene {
 

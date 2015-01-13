@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/SpanFilterResult.h"
+#include "fnord-fts/search/SpanFilterResult.h"
 
 namespace Lucene {
 

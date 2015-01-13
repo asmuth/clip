@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include <boost/algorithm/string.hpp>
 #include "DirectoryReader.h"
 #include "_DirectoryReader.h"
@@ -25,7 +25,7 @@
 #include "SegmentMergeInfo.h"
 #include "Lock.h"
 #include "FieldCache.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

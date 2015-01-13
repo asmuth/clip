@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/queryparser/LuceneInc.h"
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include "QueryParser.h"
@@ -29,7 +29,7 @@
 #include "MatchAllDocsQuery.h"
 #include "SimpleAnalyzer.h"
 #include "DateField.h"
-#include "MiscUtils.h"
+#include "fnord-fts/queryparser/MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

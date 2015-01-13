@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "TermVectorsTermsWriterPerField.h"
 #include "TermVectorsTermsWriterPerThread.h"
 #include "TermVectorsTermsWriter.h"
@@ -13,13 +13,13 @@
 #include "TermVectorsReader.h"
 #include "Fieldable.h"
 #include "FieldInfo.h"
-#include "FieldInvertState.h"
+#include "fnord-fts/index/FieldInvertState.h"
 #include "RAMOutputStream.h"
 #include "ByteSliceReader.h"
 #include "CharBlockPool.h"
 #include "OffsetAttribute.h"
 #include "AttributeSource.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "UnicodeUtils.h"
 #include "StringUtils.h"
 

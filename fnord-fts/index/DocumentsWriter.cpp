@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "DocumentsWriter.h"
 #include "DocumentsWriterThreadState.h"
 #include "LuceneThread.h"
@@ -37,7 +37,7 @@
 #include "Weight.h"
 #include "Scorer.h"
 #include "TestPoint.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

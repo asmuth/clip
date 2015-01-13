@@ -4,9 +4,9 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include <boost/thread/mutex.hpp>
-#include "Synchronize.h"
+#include "fnord-fts/util/Synchronize.h"
 #include "LuceneThread.h"
 
 namespace Lucene {

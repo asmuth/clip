@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "IndexWriter.h"
 #include "_IndexWriter.h"
 #include "Directory.h"
@@ -25,7 +25,7 @@
 #include "CompoundFileWriter.h"
 #include "SegmentMerger.h"
 #include "DateTools.h"
-#include "Constants.h"
+#include "fnord-fts/util/Constants.h"
 #include "InfoStream.h"
 #include "TestPoint.h"
 #include "StringUtils.h"

@@ -5,15 +5,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/DisjunctionMaxQuery.h"
-#include "fnord-fts/_DisjunctionMaxQuery.h"
-#include "fnord-fts/BooleanQuery.h"
-#include "fnord-fts/DocIdSetIterator.h"
-#include "fnord-fts/ComplexExplanation.h"
-#include "fnord-fts/Searcher.h"
-#include "fnord-fts/DisjunctionMaxScorer.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/DisjunctionMaxQuery.h"
+#include "fnord-fts/search/_DisjunctionMaxQuery.h"
+#include "fnord-fts/search/BooleanQuery.h"
+#include "fnord-fts/search/DocIdSetIterator.h"
+#include "fnord-fts/search/ComplexExplanation.h"
+#include "fnord-fts/search/Searcher.h"
+#include "fnord-fts/search/DisjunctionMaxScorer.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

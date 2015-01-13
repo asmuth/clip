@@ -4,12 +4,12 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "TermBuffer.h"
 #include "IndexInput.h"
 #include "FieldInfos.h"
 #include "Term.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "UnicodeUtils.h"
 #include "StringUtils.h"
 

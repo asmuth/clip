@@ -8,7 +8,7 @@
 #define COLLECTION_H
 
 #include <vector>
-#include "LuceneSync.h"
+#include "fnord-fts/util/LuceneSync.h"
 
 namespace Lucene {
 

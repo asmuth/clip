@@ -4,10 +4,10 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "OpenBitSetIterator.h"
 #include "OpenBitSet.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 
 namespace Lucene {
 

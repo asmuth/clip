@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/SimilarityDelegator.h"
+#include "fnord-fts/search/SimilarityDelegator.h"
 
 namespace Lucene {
 

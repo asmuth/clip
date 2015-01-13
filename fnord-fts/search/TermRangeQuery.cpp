@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TermRangeQuery.h"
-#include "fnord-fts/TermRangeTermEnum.h"
-#include "fnord-fts/Collator.h"
-#include "fnord-fts/StringUtils.h"
-#include "fnord-fts/VariantUtils.h"
+#include "fnord-fts/search/TermRangeQuery.h"
+#include "fnord-fts/search/TermRangeTermEnum.h"
+#include "fnord-fts/search/Collator.h"
+#include "fnord-fts/util/StringUtils.h"
+#include "fnord-fts/search/VariantUtils.h"
 
 namespace Lucene {
 

@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/PhrasePositions.h"
-#include "fnord-fts/TermPositions.h"
+#include "fnord-fts/search/PhrasePositions.h"
+#include "fnord-fts/search/TermPositions.h"
 
 namespace Lucene {
 

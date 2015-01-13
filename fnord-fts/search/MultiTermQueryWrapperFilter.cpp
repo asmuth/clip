@@ -5,16 +5,16 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/MultiTermQueryWrapperFilter.h"
-#include "fnord-fts/MultiTermQuery.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/TermEnum.h"
-#include "fnord-fts/TermDocs.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/FilteredTermEnum.h"
-#include "fnord-fts/DocIdSet.h"
-#include "fnord-fts/OpenBitSet.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
+#include "fnord-fts/search/MultiTermQuery.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/TermEnum.h"
+#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/search/FilteredTermEnum.h"
+#include "fnord-fts/search/DocIdSet.h"
+#include "fnord-fts/search/OpenBitSet.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/ScoreCachingWrappingScorer.h"
+#include "fnord-fts/search/ScoreCachingWrappingScorer.h"
 
 namespace Lucene {
 

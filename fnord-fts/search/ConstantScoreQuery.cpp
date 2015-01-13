@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/ConstantScoreQuery.h"
-#include "fnord-fts/_ConstantScoreQuery.h"
-#include "fnord-fts/Filter.h"
-#include "fnord-fts/ComplexExplanation.h"
-#include "fnord-fts/DocIdSet.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/ConstantScoreQuery.h"
+#include "fnord-fts/search/_ConstantScoreQuery.h"
+#include "fnord-fts/search/Filter.h"
+#include "fnord-fts/search/ComplexExplanation.h"
+#include "fnord-fts/search/DocIdSet.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

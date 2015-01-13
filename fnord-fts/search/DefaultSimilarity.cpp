@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/DefaultSimilarity.h"
-#include "fnord-fts/FieldInvertState.h"
+#include "fnord-fts/search/DefaultSimilarity.h"
+#include "fnord-fts/index/FieldInvertState.h"
 
 namespace Lucene {
 

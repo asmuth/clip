@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "FreqProxFieldMergeState.h"
 #include "FreqProxTermsWriterPerField.h"
 #include "FreqProxTermsWriterPerThread.h"
@@ -15,7 +15,7 @@
 #include "DocumentsWriter.h"
 #include "CharBlockPool.h"
 #include "FieldInfo.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

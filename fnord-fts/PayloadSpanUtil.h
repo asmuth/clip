@@ -7,7 +7,7 @@
 #ifndef PAYLOADSPANUTIL_H
 #define PAYLOADSPANUTIL_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

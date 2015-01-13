@@ -4,11 +4,11 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/document//LuceneInc.h"
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "DateTools.h"
-#include "MiscUtils.h"
+#include "fnord-fts/document//MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

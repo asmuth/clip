@@ -7,7 +7,7 @@
 #ifndef PAYLOADFUNCTION_H
 #define PAYLOADFUNCTION_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

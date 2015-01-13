@@ -6,12 +6,12 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include <boost/algorithm/string.hpp>
-#include "fnord-fts/WildcardQuery.h"
-#include "fnord-fts/WildcardTermEnum.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/PrefixQuery.h"
-#include "fnord-fts/SingleTermEnum.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/WildcardQuery.h"
+#include "fnord-fts/search/WildcardTermEnum.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/search/PrefixQuery.h"
+#include "fnord-fts/search/SingleTermEnum.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

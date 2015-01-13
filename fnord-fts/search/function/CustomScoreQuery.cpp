@@ -4,12 +4,12 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "CustomScoreQuery.h"
 #include "_CustomScoreQuery.h"
 #include "ValueSourceQuery.h"
 #include "ComplexExplanation.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

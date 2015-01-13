@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "DocInverterPerThread.h"
 #include "DocInverterPerField.h"
 #include "DocInverter.h"
@@ -15,7 +15,7 @@
 #include "InvertedDocEndConsumer.h"
 #include "InvertedDocConsumerPerThread.h"
 #include "InvertedDocEndConsumerPerThread.h"
-#include "FieldInvertState.h"
+#include "fnord-fts/index/FieldInvertState.h"
 #include "ReusableStringReader.h"
 
 namespace Lucene {

@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/BooleanScorer.h"
-#include "fnord-fts/Similarity.h"
+#include "fnord-fts/search/BooleanScorer.h"
+#include "fnord-fts/search/Similarity.h"
 
 namespace Lucene {
 

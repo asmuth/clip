@@ -4,9 +4,9 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "Base64.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 #include "UnicodeUtils.h"
 
 namespace Lucene {

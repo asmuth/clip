@@ -4,12 +4,12 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "MultiReader.h"
 #include "DirectoryReader.h"
 #include "DefaultSimilarity.h"
 #include "FieldCache.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

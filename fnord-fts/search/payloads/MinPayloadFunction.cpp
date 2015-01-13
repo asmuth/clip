@@ -4,9 +4,9 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "MinPayloadFunction.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

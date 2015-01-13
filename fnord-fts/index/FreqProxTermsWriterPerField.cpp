@@ -4,13 +4,13 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "FreqProxTermsWriterPerField.h"
 #include "FreqProxTermsWriter.h"
 #include "FieldInfo.h"
 #include "Fieldable.h"
 #include "TermsHashPerField.h"
-#include "FieldInvertState.h"
+#include "fnord-fts/index/FieldInvertState.h"
 #include "AttributeSource.h"
 #include "Payload.h"
 #include "PayloadAttribute.h"

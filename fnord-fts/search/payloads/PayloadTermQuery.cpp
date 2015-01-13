@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "PayloadTermQuery.h"
 #include "_PayloadTermQuery.h"
 #include "Term.h"
@@ -14,7 +14,7 @@
 #include "IndexReader.h"
 #include "Similarity.h"
 #include "PayloadFunction.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 
 namespace Lucene {
 

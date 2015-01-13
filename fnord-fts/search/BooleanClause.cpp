@@ -5,8 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/BooleanClause.h"
-#include "fnord-fts/Query.h"
+#include "fnord-fts/search/BooleanClause.h"
+#include "fnord-fts/search/Query.h"
 
 namespace Lucene {
 

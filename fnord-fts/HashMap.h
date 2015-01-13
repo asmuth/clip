@@ -8,7 +8,7 @@
 #define HASHMAP_H
 
 #include <boost/unordered_map.hpp>
-#include "LuceneSync.h"
+#include "fnord-fts/util/LuceneSync.h"
 
 namespace Lucene {
 

@@ -4,10 +4,10 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/queryparser/LuceneInc.h"
 #include "FastCharStream.h"
 #include "Reader.h"
-#include "MiscUtils.h"
+#include "fnord-fts/queryparser/MiscUtils.h"
 
 namespace Lucene {
 

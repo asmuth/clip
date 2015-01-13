@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FieldCache.h"
-#include "fnord-fts/_FieldCache.h"
-#include "fnord-fts/FieldCacheImpl.h"
-#include "fnord-fts/NumericUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/FieldCache.h"
+#include "fnord-fts/search/_FieldCache.h"
+#include "fnord-fts/search/FieldCacheImpl.h"
+#include "fnord-fts/search/NumericUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

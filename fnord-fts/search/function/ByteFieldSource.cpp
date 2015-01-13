@@ -4,11 +4,11 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "ByteFieldSource.h"
 #include "_ByteFieldSource.h"
 #include "FieldCache.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

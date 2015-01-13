@@ -4,14 +4,14 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/store/LuceneInc.h"
 #include "RAMDirectory.h"
 #include "RAMFile.h"
 #include "RAMInputStream.h"
 #include "RAMOutputStream.h"
 #include "SingleInstanceLockFactory.h"
 #include "LuceneThread.h"
-#include "MiscUtils.h"
+#include "fnord-fts/store/MiscUtils.h"
 
 namespace Lucene {
 

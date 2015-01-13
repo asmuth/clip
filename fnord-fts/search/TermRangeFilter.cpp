@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TermRangeFilter.h"
-#include "fnord-fts/TermRangeQuery.h"
-#include "fnord-fts/StringUtils.h"
-#include "fnord-fts/VariantUtils.h"
+#include "fnord-fts/search/TermRangeFilter.h"
+#include "fnord-fts/search/TermRangeQuery.h"
+#include "fnord-fts/util/StringUtils.h"
+#include "fnord-fts/search/VariantUtils.h"
 
 namespace Lucene {
 

@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FieldComparator.h"
-#include "fnord-fts/FieldCache.h"
-#include "fnord-fts/ScoreCachingWrappingScorer.h"
-#include "fnord-fts/Collator.h"
+#include "fnord-fts/search/FieldComparator.h"
+#include "fnord-fts/search/FieldCache.h"
+#include "fnord-fts/search/ScoreCachingWrappingScorer.h"
+#include "fnord-fts/search/Collator.h"
 
 namespace Lucene {
 

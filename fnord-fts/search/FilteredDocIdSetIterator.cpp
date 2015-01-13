@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FilteredDocIdSetIterator.h"
+#include "fnord-fts/search/FilteredDocIdSetIterator.h"
 
 namespace Lucene {
 

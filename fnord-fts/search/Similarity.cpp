@@ -5,14 +5,14 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/Similarity.h"
-#include "fnord-fts/_Similarity.h"
-#include "fnord-fts/DefaultSimilarity.h"
-#include "fnord-fts/FieldInvertState.h"
-#include "fnord-fts/Searcher.h"
-#include "fnord-fts/Term.h"
-#include "fnord-fts/SmallDouble.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/Similarity.h"
+#include "fnord-fts/search/_Similarity.h"
+#include "fnord-fts/search/DefaultSimilarity.h"
+#include "fnord-fts/index/FieldInvertState.h"
+#include "fnord-fts/search/Searcher.h"
+#include "fnord-fts/search/Term.h"
+#include "fnord-fts/search/SmallDouble.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

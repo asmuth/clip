@@ -7,7 +7,7 @@
 #ifndef LUCENEHEADERS_H
 #define LUCENEHEADERS_H
 
-#include "Lucene.h"
+#include "fnord-fts/Lucene.h"
 
 // Include most common files: analysis
 #include "StandardAnalyzer.h"
@@ -59,7 +59,7 @@
 // Include most common files: search
 #include "BooleanClause.h"
 #include "BooleanQuery.h"
-#include "DocIdSet.h"
+#include "fnord-fts/search/DocIdSet.h"
 #include "DocIdSetIterator.h"
 #include "Explanation.h"
 #include "IndexSearcher.h"
@@ -102,7 +102,7 @@
 #include "SimpleFSDirectory.h"
 
 // Include most common files: util
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 #include "StringUtils.h"
 #include "BufferedReader.h"
 #include "DocIdBitSet.h"
@@ -110,7 +110,7 @@
 #include "InfoStream.h"
 #include "LuceneThread.h"
 #include "OpenBitSet.h"
-#include "OpenBitSetDISI.h"
+#include "fnord-fts/util/OpenBitSetDISI.h"
 #include "OpenBitSetIterator.h"
 #include "StringReader.h"
 #include "ThreadPool.h"

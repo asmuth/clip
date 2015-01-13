@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/SpanQueryFilter.h"
-#include "fnord-fts/SpanQuery.h"
-#include "fnord-fts/SpanFilterResult.h"
-#include "fnord-fts/Spans.h"
-#include "fnord-fts/OpenBitSet.h"
-#include "fnord-fts/IndexReader.h"
+#include "fnord-fts/search/SpanQueryFilter.h"
+#include "fnord-fts/search/SpanQuery.h"
+#include "fnord-fts/search/SpanFilterResult.h"
+#include "fnord-fts/search/Spans.h"
+#include "fnord-fts/search/OpenBitSet.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

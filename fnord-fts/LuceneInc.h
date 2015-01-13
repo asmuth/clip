@@ -17,4 +17,4 @@
 
 #endif
 
-#include "Lucene.h"
+#include "fnord-fts/Lucene.h"

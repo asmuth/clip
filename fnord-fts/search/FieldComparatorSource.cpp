@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FieldComparatorSource.h"
+#include "fnord-fts/search/FieldComparatorSource.h"
 
 namespace Lucene {
 

@@ -8,7 +8,7 @@
 #define MAP_H
 
 #include <map>
-#include "LuceneSync.h"
+#include "fnord-fts/util/LuceneSync.h"
 
 namespace Lucene {
 

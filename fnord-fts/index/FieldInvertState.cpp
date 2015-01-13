@@ -4,8 +4,8 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
-#include "FieldInvertState.h"
+#include "fnord-fts/index//LuceneInc.h"
+#include "fnord-fts/index/FieldInvertState.h"
 
 namespace Lucene {
 

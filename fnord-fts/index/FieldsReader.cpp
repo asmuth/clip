@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "FieldsReader.h"
 #include "BufferedIndexInput.h"
 #include "IndexFileNames.h"
@@ -16,7 +16,7 @@
 #include "Document.h"
 #include "Field.h"
 #include "CompressionTools.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "StringUtils.h"
 #include "VariantUtils.h"
 

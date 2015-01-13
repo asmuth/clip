@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/Sort.h"
-#include "fnord-fts/SortField.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/Sort.h"
+#include "fnord-fts/search/SortField.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

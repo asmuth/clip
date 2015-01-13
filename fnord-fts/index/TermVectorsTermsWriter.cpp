@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "TermVectorsTermsWriter.h"
 #include "TermVectorsTermsWriterPerThread.h"
 #include "TermVectorsTermsWriterPerField.h"
@@ -16,7 +16,7 @@
 #include "IndexFileNames.h"
 #include "SegmentWriteState.h"
 #include "Directory.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

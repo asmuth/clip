@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/ReqOptSumScorer.h"
+#include "fnord-fts/search/ReqOptSumScorer.h"
 
 namespace Lucene {
 

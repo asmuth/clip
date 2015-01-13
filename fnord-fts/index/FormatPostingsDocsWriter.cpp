@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "FormatPostingsDocsWriter.h"
 #include "FormatPostingsTermsWriter.h"
 #include "FormatPostingsFieldsWriter.h"
@@ -17,7 +17,7 @@
 #include "FieldInfo.h"
 #include "IndexOutput.h"
 #include "TermInfo.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "UnicodeUtils.h"
 #include "StringUtils.h"
 

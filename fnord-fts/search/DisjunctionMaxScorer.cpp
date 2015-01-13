@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/DisjunctionMaxScorer.h"
+#include "fnord-fts/search/DisjunctionMaxScorer.h"
 
 namespace Lucene {
 

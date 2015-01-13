@@ -4,11 +4,11 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "SpanFirstQuery.h"
 #include "_SpanFirstQuery.h"
 #include "SpanQuery.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 
 namespace Lucene {
 

@@ -4,14 +4,14 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "PayloadNearQuery.h"
 #include "AveragePayloadFunction.h"
 #include "IndexReader.h"
 #include "NearSpansOrdered.h"
 #include "NearSpansUnordered.h"
 #include "Similarity.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

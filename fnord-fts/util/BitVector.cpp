@@ -4,13 +4,13 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "BitVector.h"
 #include "Directory.h"
 #include "IndexInput.h"
 #include "IndexOutput.h"
 #include "TestPoint.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 
 namespace Lucene {
 

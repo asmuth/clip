@@ -4,10 +4,10 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/store/LuceneInc.h"
 #include "IndexOutput.h"
 #include "IndexInput.h"
-#include "MiscUtils.h"
+#include "fnord-fts/store/MiscUtils.h"
 #include "UnicodeUtils.h"
 #include "StringUtils.h"
 

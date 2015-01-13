@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/analysis/LuceneInc.h"
 #include "Token.h"
 #include "Payload.h"
 #include "TermAttribute.h"
@@ -13,7 +13,7 @@
 #include "PayloadAttribute.h"
 #include "FlagsAttribute.h"
 #include "TypeAttribute.h"
-#include "MiscUtils.h"
+#include "fnord-fts/analysis/MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

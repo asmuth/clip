@@ -5,14 +5,14 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TopFieldCollector.h"
-#include "fnord-fts/_TopFieldCollector.h"
-#include "fnord-fts/FieldValueHitQueue.h"
-#include "fnord-fts/FieldComparator.h"
-#include "fnord-fts/FieldDoc.h"
-#include "fnord-fts/Scorer.h"
-#include "fnord-fts/Sort.h"
-#include "fnord-fts/TopFieldDocs.h"
+#include "fnord-fts/search/TopFieldCollector.h"
+#include "fnord-fts/search/_TopFieldCollector.h"
+#include "fnord-fts/search/FieldValueHitQueue.h"
+#include "fnord-fts/search/FieldComparator.h"
+#include "fnord-fts/search/FieldDoc.h"
+#include "fnord-fts/search/Scorer.h"
+#include "fnord-fts/search/Sort.h"
+#include "fnord-fts/search/TopFieldDocs.h"
 
 namespace Lucene {
 

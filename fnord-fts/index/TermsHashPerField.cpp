@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include "TermsHashPerField.h"
 #include "TermsHashPerThread.h"
 #include "TermsHashConsumerPerThread.h"
@@ -18,9 +18,9 @@
 #include "CharBlockPool.h"
 #include "ByteSliceReader.h"
 #include "RawPostingList.h"
-#include "FieldInvertState.h"
+#include "fnord-fts/index/FieldInvertState.h"
 #include "UTF8Stream.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 
 namespace Lucene {
 

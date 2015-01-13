@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FilteredQuery.h"
-#include "fnord-fts/_FilteredQuery.h"
-#include "fnord-fts/Explanation.h"
-#include "fnord-fts/Filter.h"
-#include "fnord-fts/DocIdSet.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/FilteredQuery.h"
+#include "fnord-fts/search/_FilteredQuery.h"
+#include "fnord-fts/search/Explanation.h"
+#include "fnord-fts/search/Filter.h"
+#include "fnord-fts/search/DocIdSet.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

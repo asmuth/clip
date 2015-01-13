@@ -7,7 +7,7 @@
 #ifndef STANDARDTOKENIZERIMPL_H
 #define STANDARDTOKENIZERIMPL_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

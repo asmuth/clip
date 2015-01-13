@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "Lucene.h"
+#include "fnord-fts/Lucene.h"
 
 #define DECLARE_SHARED_PTR(Type) \
     class Type; \

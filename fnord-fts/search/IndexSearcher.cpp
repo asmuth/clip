@@ -5,17 +5,17 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/IndexSearcher.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/TopScoreDocCollector.h"
-#include "fnord-fts/TopFieldDocs.h"
-#include "fnord-fts/TopFieldCollector.h"
-#include "fnord-fts/Weight.h"
-#include "fnord-fts/DocIdSet.h"
-#include "fnord-fts/Scorer.h"
-#include "fnord-fts/Filter.h"
-#include "fnord-fts/Query.h"
-#include "fnord-fts/ReaderUtil.h"
+#include "fnord-fts/search/IndexSearcher.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/TopScoreDocCollector.h"
+#include "fnord-fts/search/TopFieldDocs.h"
+#include "fnord-fts/search/TopFieldCollector.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/DocIdSet.h"
+#include "fnord-fts/search/Scorer.h"
+#include "fnord-fts/search/Filter.h"
+#include "fnord-fts/search/Query.h"
+#include "fnord-fts/search/ReaderUtil.h"
 
 namespace Lucene {
 

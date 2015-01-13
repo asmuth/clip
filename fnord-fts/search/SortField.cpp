@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/SortField.h"
-#include "fnord-fts/FieldCache.h"
-#include "fnord-fts/FieldComparator.h"
-#include "fnord-fts/FieldComparatorSource.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/SortField.h"
+#include "fnord-fts/search/FieldCache.h"
+#include "fnord-fts/search/FieldComparator.h"
+#include "fnord-fts/search/FieldComparatorSource.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

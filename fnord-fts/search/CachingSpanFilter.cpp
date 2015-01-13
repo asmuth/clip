@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/CachingSpanFilter.h"
-#include "fnord-fts/_CachingSpanFilter.h"
-#include "fnord-fts/SpanFilterResult.h"
-#include "fnord-fts/IndexReader.h"
+#include "fnord-fts/search/CachingSpanFilter.h"
+#include "fnord-fts/search/_CachingSpanFilter.h"
+#include "fnord-fts/search/SpanFilterResult.h"
+#include "fnord-fts/index/IndexReader.h"
 
 namespace Lucene {
 

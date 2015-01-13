@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/document//LuceneInc.h"
 #include "FieldSelector.h"
 
 namespace Lucene {

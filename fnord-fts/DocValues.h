@@ -7,7 +7,7 @@
 #ifndef DOCVALUES_H
 #define DOCVALUES_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

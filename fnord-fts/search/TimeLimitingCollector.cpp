@@ -5,9 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/TimeLimitingCollector.h"
-#include "fnord-fts/_TimeLimitingCollector.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/TimeLimitingCollector.h"
+#include "fnord-fts/search/_TimeLimitingCollector.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/index//LuceneInc.h"
 #include <boost/algorithm/string.hpp>
 #include "SegmentInfos.h"
 #include "_SegmentInfos.h"
@@ -17,7 +17,7 @@
 #include "LuceneThread.h"
 #include "InfoStream.h"
 #include "TestPoint.h"
-#include "MiscUtils.h"
+#include "fnord-fts/index//MiscUtils.h"
 #include "StringUtils.h"
 
 namespace Lucene {

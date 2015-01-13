@@ -5,14 +5,14 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FieldCacheRangeFilter.h"
-#include "fnord-fts/_FieldCacheRangeFilter.h"
-#include "fnord-fts/FieldCache.h"
-#include "fnord-fts/IndexReader.h"
-#include "fnord-fts/TermDocs.h"
-#include "fnord-fts/NumericUtils.h"
-#include "fnord-fts/MiscUtils.h"
-#include "fnord-fts/StringUtils.h"
+#include "fnord-fts/search/FieldCacheRangeFilter.h"
+#include "fnord-fts/search/_FieldCacheRangeFilter.h"
+#include "fnord-fts/search/FieldCache.h"
+#include "fnord-fts/index/IndexReader.h"
+#include "fnord-fts/search/TermDocs.h"
+#include "fnord-fts/search/NumericUtils.h"
+#include "fnord-fts/util/MiscUtils.h"
+#include "fnord-fts/util/StringUtils.h"
 
 namespace Lucene {
 

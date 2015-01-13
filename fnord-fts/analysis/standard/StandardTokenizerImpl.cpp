@@ -4,13 +4,13 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
+#include "fnord-fts/LuceneInc.h"
 #include "StandardTokenizerImpl.h"
 #include "StandardTokenizer.h"
 #include "Reader.h"
 #include "Token.h"
 #include "TermAttribute.h"
-#include "MiscUtils.h"
+#include "fnord-fts/MiscUtils.h"
 
 #include <boost/thread/once.hpp>
 

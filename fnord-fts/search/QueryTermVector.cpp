@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/QueryTermVector.h"
-#include "fnord-fts/Analyzer.h"
-#include "fnord-fts/TokenStream.h"
-#include "fnord-fts/StringReader.h"
-#include "fnord-fts/TermAttribute.h"
+#include "fnord-fts/search/QueryTermVector.h"
+#include "fnord-fts/search/Analyzer.h"
+#include "fnord-fts/search/TokenStream.h"
+#include "fnord-fts/search/StringReader.h"
+#include "fnord-fts/search/TermAttribute.h"
 
 namespace Lucene {
 

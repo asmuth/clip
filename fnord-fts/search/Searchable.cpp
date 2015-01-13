@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/Searchable.h"
+#include "fnord-fts/search/Searchable.h"
 
 namespace Lucene {
 

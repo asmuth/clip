@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/QueryWrapperFilter.h"
-#include "fnord-fts/_QueryWrapperFilter.h"
-#include "fnord-fts/Query.h"
-#include "fnord-fts/Weight.h"
-#include "fnord-fts/Scorer.h"
-#include "fnord-fts/IndexSearcher.h"
+#include "fnord-fts/search/QueryWrapperFilter.h"
+#include "fnord-fts/search/_QueryWrapperFilter.h"
+#include "fnord-fts/search/Query.h"
+#include "fnord-fts/search/Weight.h"
+#include "fnord-fts/search/Scorer.h"
+#include "fnord-fts/search/IndexSearcher.h"
 
 namespace Lucene {
 

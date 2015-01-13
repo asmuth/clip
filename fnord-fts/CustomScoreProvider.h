@@ -7,7 +7,7 @@
 #ifndef CUSTOMSCOREPROVIDER_H
 #define CUSTOMSCOREPROVIDER_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 

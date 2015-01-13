@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "fnord-fts/LuceneInc.h"
-#include "fnord-fts/FilterManager.h"
-#include "fnord-fts/_FilterManager.h"
-#include "fnord-fts/Filter.h"
-#include "fnord-fts/MiscUtils.h"
+#include "fnord-fts/search/FilterManager.h"
+#include "fnord-fts/search/_FilterManager.h"
+#include "fnord-fts/search/Filter.h"
+#include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {
 

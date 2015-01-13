@@ -7,7 +7,7 @@
 #ifndef _STANDARDANALYZER_H
 #define _STANDARDANALYZER_H
 
-#include "LuceneObject.h"
+#include "fnord-fts/util/LuceneObject.h"
 
 namespace Lucene {
 
