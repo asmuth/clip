@@ -90,14 +90,47 @@ namespace fts {
 /// IndexFileDeleter keeps track of the last non commit checkpoint.
 class IndexWriter : public LuceneObject {
 protected:
-    IndexWriter(const DirectoryPtr& d, const AnalyzerPtr& a, bool create, const IndexDeletionPolicyPtr& deletionPolicy, int32_t mfl, const IndexingChainPtr& indexingChain, const IndexCommitPtr& commit);
+    IndexWriter(
+        const DirectoryPtr& d,
+        const AnalyzerPtr& a,
+        bool create,
+        const IndexDeletionPolicyPtr& deletionPolicy,
+        int32_t mfl,
+        const IndexingChainPtr& indexingChain,
+        const IndexCommitPtr& commit);
 
 public:
-    IndexWriter(const DirectoryPtr& d, const AnalyzerPtr& a, bool create, int32_t mfl);
-    IndexWriter(const DirectoryPtr& d, const AnalyzerPtr& a, int32_t mfl);
-    IndexWriter(const DirectoryPtr& d, const AnalyzerPtr& a, const IndexDeletionPolicyPtr& deletionPolicy, int32_t mfl);
-    IndexWriter(const DirectoryPtr& d, const AnalyzerPtr& a, bool create, const IndexDeletionPolicyPtr& deletionPolicy, int32_t mfl);
-    IndexWriter(const DirectoryPtr& d, const AnalyzerPtr& a, const IndexDeletionPolicyPtr& deletionPolicy, int32_t mfl, const IndexCommitPtr& commit);
+    IndexWriter(
+        const DirectoryPtr& d,
+        const AnalyzerPtr& a,
+        bool create,
+        int32_t mfl);
+
+    IndexWriter(
+        const DirectoryPtr& d,
+        const AnalyzerPtr& a,
+        int32_t mfl);
+
+    IndexWriter(
+        const DirectoryPtr& d,
+        const AnalyzerPtr& a,
+        const IndexDeletionPolicyPtr& deletionPolicy,
+        int32_t mfl);
+
+    IndexWriter(
+        const DirectoryPtr& d,
+        const AnalyzerPtr& a,
+        bool create,
+        const IndexDeletionPolicyPtr& deletionPolicy,
+        int32_t mfl);
+
+    IndexWriter(
+        const DirectoryPtr& d,
+        const AnalyzerPtr& a,
+        const IndexDeletionPolicyPtr& deletionPolicy,
+        int32_t mfl,
+        const IndexCommitPtr& commit);
+
     virtual ~IndexWriter();
 
     LUCENE_CLASS(IndexWriter);
