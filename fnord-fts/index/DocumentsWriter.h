@@ -152,7 +152,7 @@ public:
 
     static const int32_t PER_DOC_BLOCK_SIZE;
 
-INTERNAL:
+public:
     IndexWriterWeakPtr _writer;
     DirectoryPtr directory;
     IndexingChainPtr indexingChain;

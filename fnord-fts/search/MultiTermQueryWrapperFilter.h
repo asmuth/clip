@@ -21,7 +21,7 @@ namespace fts {
 /// This class also provides the functionality behind {@link MultiTermQuery#CONSTANT_SCORE_FILTER_REWRITE};
 /// this is why it is not abstract.
 class MultiTermQueryWrapperFilter : public Filter {
-INTERNAL:
+public:
     /// Wrap a {@link MultiTermQuery} as a Filter.
     MultiTermQueryWrapperFilter(const MultiTermQueryPtr& query);
 

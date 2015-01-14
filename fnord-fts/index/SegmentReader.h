@@ -23,7 +23,7 @@ public:
 protected:
     bool readOnly;
 
-INTERNAL:
+public:
     BitVectorPtr deletedDocs;
     SegmentReaderRefPtr deletedDocsRef;
     CoreReadersPtr core;
