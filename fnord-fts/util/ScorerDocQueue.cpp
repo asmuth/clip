@@ -6,7 +6,7 @@
 
 #include "fnord-fts/LuceneInc.h"
 #include "fnord-fts/util/ScorerDocQueue.h"
-#include "fnord-fts/util/ScorerDocQueue.h"
+#include "fnord-fts/util/_ScorerDocQueue.h"
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/util/MiscUtils.h"
 
