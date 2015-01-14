@@ -8,6 +8,8 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include "fnord/base/io/fileutil.h"
+#include "fnord/base/logging.h"
 #include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/FileUtils.h"
@@ -87,13 +89,23 @@ bool removeFile(const String& path) {
     }
 }
 
-bool copyFile(const String& source, const String& dest) {
-    try {
-        boost::filesystem::copy_file(source.c_str(), dest.c_str());
-        return true;
-    } catch (...) {
-        return false;
-    }
+bool copyFile(const String& wsource, const String& wdest) {
+  auto source = fnord::StringUtil::convertUTF16To8(wsource);
+  auto dest = fnord::StringUtil::convertUTF16To8(wdest);
+
+  try {
+    fnord::FileUtil::cp(source, dest);
+    return true;
+  } catch (const std::exception& e) {
+    fnord::logWarning(
+        "fnord.fts.fileutil",
+        e,
+        "FileUtil::cp($0, $1) failed",
+        source,
+        dest);
+
+    return false;
+  }
 }
 
 bool createDirectory(const String& path) {

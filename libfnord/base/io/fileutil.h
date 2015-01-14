@@ -66,6 +66,11 @@ public:
    */
   static std::string read(const std::string& filename);
 
+  /**
+   * Copy a file
+   */
+  static void cp(const std::string& src, const std::string& destination);
+
 };
 
 }

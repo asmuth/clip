@@ -158,4 +158,8 @@ std::string FileUtil::read(const std::string& filename) {
   return buf.toString();
 }
 
+void FileUtil::cp(const std::string& src, const std::string& destination) {
+  RAISE(kNotYetImplementedError);
+}
+
 }

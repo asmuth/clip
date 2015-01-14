@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <string>
 #include <fnord/base/bufferutil.h>
 #include <fnord/base/stringutil.h>
 
@@ -183,6 +184,18 @@ std::string StringUtil::formatv(
   }
 
   return str;
+}
+
+std::wstring StringUtil::convertUTF8To16(const std::string& str) {
+  std::wstring out;
+  out.assign(str.begin(), str.end());
+  return out;
+}
+
+std::string StringUtil::convertUTF16To8(const std::wstring& str) {
+  std::string out;
+  out.assign(str.begin(), str.end());
+  return out;
 }
 
 } // namespace fnord

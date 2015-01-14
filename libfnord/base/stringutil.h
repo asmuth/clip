@@ -214,6 +214,9 @@ public:
   template <typename T>
   static std::string formatNumberScientific(T value);
 
+  static std::wstring convertUTF8To16(const std::string& str);
+  static std::string convertUTF16To8(const std::wstring& str);
+
 protected:
 
   template <typename ValueType, typename... T>

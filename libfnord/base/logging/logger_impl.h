@@ -32,7 +32,11 @@ void Logger::logException(
     const String& message,
     T... args) {
   if (log_level >= min_level_) {
-    logException(log_level, component, StringUtil::format(message, args...));
+    logException(
+        log_level,
+        component,
+        exception,
+        StringUtil::format(message, args...));
   }
 }
 
