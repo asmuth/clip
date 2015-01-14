@@ -17,4 +17,11 @@
 
 #endif
 
+/**
+ * Fix for Boost Bug #2792
+ *   HP aCC rejects string_parse_tree <> in string_parse_tree.hpp
+ *   https://svn.boost.org/trac/boost/ticket/2792
+ */
+#include "fnord-fts/util/boost_string_parse_tree_fix.h"
+
 #include "fnord-fts/Lucene.h"
