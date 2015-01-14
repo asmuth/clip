@@ -57,6 +57,11 @@ JSONObject parseJSON(JSONInputStream* json) {
       case JSON_ARRAY_END:
       case JSON_OBJECT_END: {
         obj.emplace_back(token);
+
+        if (stack.empty()) {
+          RAISE(kParseError, "unbalanced braces");
+        }
+
         obj[stack.top()].size = obj.size() - stack.top();
         stack.pop();
         break;
@@ -222,11 +227,11 @@ template <>
 JSONObject fromJSONImpl(
     std::vector<JSONToken>::const_iterator begin,
     std::vector<JSONToken>::const_iterator end) {
-  if (begin == end) {
+  if (begin + begin->size > end) {
     RAISE(kIndexError);
   }
 
-  return JSONObject(begin, end);
+  return JSONObject(begin, begin + begin->size);
 }
 
 } // namespace json
