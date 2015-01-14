@@ -61,12 +61,12 @@ include_directories(
 )
 
 file(GLOB_RECURSE lucene_sources
-  search/*.cpp
-  analysis/*.cpp
-  document/*.cpp
-  index/*.cpp
-  queryparser/*.cpp
-  store/*.cpp
+  search/*.cc
+  analysis/*.cc
+  document/*.cc
+  index/*.cc
+  queryparser/*.cc
+  store/*.cc
   util/*.c*)
 
 file(GLOB_RECURSE lucene_internal_headers
