@@ -29,6 +29,7 @@
  *   https://svn.boost.org/trac/boost/ticket/2792
  */
 #include "fnord-fts/util/boost_string_parse_tree_fix.h"
+#include "fnord-fts/util/boost_shared_ptr_adapter.h"
 
 #endif
 
