@@ -6,6 +6,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS date_time filesystem iostreams regex system thread REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(../)
 
 file(GLOB_RECURSE FNORD_FTS_SOURCES
   search/*.cc
