@@ -3,13 +3,184 @@
 // Distributable under the terms of either the Apache License (Version 2.0)
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
+#ifndef FNORD_FTS_H_
+#define FNORD_FTS_H_
 
-#ifndef LUCENETYPES_H
-#define LUCENETYPES_H
+#ifdef _WIN32
+#ifndef WINVER                  // Specifies that the minimum required platform is Windows XP.
+#define WINVER 0x0501           // Change this to the appropriate value to target other versions of Windows.
+#endif
+#ifndef _WIN32_WINNT            // Specifies that the minimum required platform is Windows XP.
+#define _WIN32_WINNT 0x0501     // Change this to the appropriate value to target other versions of Windows.
+#endif
+#define WIN32_LEAN_AND_MEAN
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif
 
+#define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
+#define BOOST_FILESYSTEM_VERSION 3
+
+/**
+ * Fix for Boost Bug #2792
+ *   HP aCC rejects string_parse_tree <> in string_parse_tree.hpp
+ *   https://svn.boost.org/trac/boost/ticket/2792
+ */
+#include "fnord-fts/util/boost_string_parse_tree_fix.h"
+
+#endif
+
+#ifndef FNORD_FTS_LUCENEFACTORY_H_
+#define FNORD_FTS_LUCENEFACTORY_H_
+
+namespace Lucene {
+
+template <class T>
+std::shared_ptr<T> newInstance() {
+  return std::make_shared<T>();
+}
+
+template <class T, class A1>
+std::shared_ptr<T> newInstance(A1 const& a1) {
+  return std::make_shared<T>(a1);
+}
+
+template <class T, class A1, class A2>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2) {
+  return std::make_shared<T>(a1, a2);
+}
+
+template <class T, class A1, class A2, class A3>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3) {
+  return std::make_shared<T>(a1, a2, a3);
+}
+
+template <class T, class A1, class A2, class A3, class A4>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4) {
+  return std::make_shared<T>(a1, a2, a3, a4);
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5) {
+  return std::make_shared<T>(a1, a2, a3, a4, a5);
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6) {
+  return std::make_shared<T>(a1, a2, a3, a4, a5, a6);
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6, A7 const& a7) {
+  return std::make_shared<T>(a1, a2, a3, a4, a5, a6, a7);
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6, A7 const& a7, A8 const& a8) {
+  return std::make_shared<T>(a1, a2, a3, a4, a5, a6, a7, a8);
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+std::shared_ptr<T> newInstance(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6, A7 const& a7, A8 const& a8, A9 const& a9) {
+  return std::make_shared<T>(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+}
+
+template <class T>
+std::shared_ptr<T> newLucene() {
+  std::shared_ptr<T> instance(newInstance<T>());
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1>
+std::shared_ptr<T> newLucene(A1 const& a1) {
+  std::shared_ptr<T> instance(newInstance<T>(a1));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3, class A4>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3, a4));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3, a4, a5));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3, a4, a5, a6));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6, A7 const& a7) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3, a4, a5, a6, a7));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6, A7 const& a7, A8 const& a8) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3, a4, a5, a6, a7, a8));
+  instance->initialize();
+  return instance;
+}
+
+template <class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const& a4, A5 const& a5, A6 const& a6, A7 const& a7, A8 const& a8, A9 const& a9) {
+  std::shared_ptr<T> instance(newInstance<T>(a1, a2, a3, a4, a5, a6, a7, a8, a9));
+  instance->initialize();
+  return instance;
+}
+
+}
+
+#endif
+
+#ifndef FNORD_FTS_LUCENETYPES_H_
+#define FNORD_FTS_LUCENETYPES_H_
+
+#include <wctype.h>
+#include <wchar.h>
+#include <sys/types.h>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <limits>
+#include <stdexcept>
 #include <memory>
 
-#include "fnord-fts/Lucene.h"
+#include <boost/cstdint.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/variant.hpp>
+#include <boost/version.hpp>
+
+#define SIZEOF_ARRAY(arr) (sizeof(arr) / sizeof((arr)[0]))
+
 
 #define DECLARE_SHARED_PTR(Type) \
     class Type; \
@@ -561,5 +732,185 @@ DECLARE_SHARED_PTR(UTF8EncoderStream)
 DECLARE_SHARED_PTR(UTF8Result)
 DECLARE_SHARED_PTR(UTF16Decoder)
 }
+
+#include "fnord-fts/util/LuceneAllocator.h"
+
+namespace boost {
+
+struct blank;
+class thread;
+class any;
+template < typename Signature > class function;
+namespace interprocess {
+
+class file_lock;
+}
+namespace posix_time {
+
+class ptime;
+}
+
+}
+
+namespace Lucene {
+
+typedef std::basic_string< char, std::char_traits<char> > SingleString;
+typedef std::basic_ostringstream< char, std::char_traits<char> > SingleStringStream;
+typedef std::basic_string< wchar_t, std::char_traits<wchar_t> > String;
+typedef std::basic_ostringstream< wchar_t, std::char_traits<wchar_t> > StringStream;
+
+const std::basic_string< wchar_t, std::char_traits<wchar_t> > EmptyString;
+
+typedef std::shared_ptr<boost::interprocess::file_lock> filelockPtr;
+typedef std::shared_ptr<boost::thread> threadPtr;
+
+typedef std::shared_ptr<boost::filesystem::ofstream> ofstreamPtr;
+typedef std::shared_ptr<boost::filesystem::ifstream> ifstreamPtr;
+typedef std::shared_ptr<std::locale> localePtr;
+}
+
+#include "fnord-fts/util/LuceneException.h"
+#include "fnord-fts/util/Array.h"
+#include "fnord-fts/util/Collection.h"
+#include "fnord-fts/util/Map.h"
+#include "fnord-fts/util/Set.h"
+#include "fnord-fts/util/HashMap.h"
+#include "fnord-fts/util/HashSet.h"
+#include "fnord-fts/util/Constants.h"
+
+namespace Lucene {
+
+typedef Array<uint8_t> ByteArray;
+typedef Array<int32_t> IntArray;
+typedef Array<int64_t> LongArray;
+typedef Array<wchar_t> CharArray;
+typedef Array<double> DoubleArray;
+
+template <class TYPE>
+struct luceneEquals {
+    inline bool operator()(const TYPE& first, const TYPE& second) const {
+        return first ? first->equals(second) : (!first && !second);
+    }
+};
+
+template <class TYPE>
+struct luceneEqualTo {
+    luceneEqualTo(const TYPE& type) : equalType(type) {}
+    inline bool operator()(const TYPE& other) const {
+        return equalType->equals(other);
+    }
+    const TYPE& equalType;
+};
+
+template <class TYPE>
+struct luceneWeakEquals {
+    inline bool operator()(const TYPE& first, const TYPE& second) const {
+        if (first.expired() || second.expired()) {
+            return (first.expired() && second.expired());
+        }
+        return first.lock()->equals(second.lock());
+    }
+};
+
+template <class TYPE>
+struct luceneHash : std::unary_function<TYPE, std::size_t> {
+    std::size_t operator()(const TYPE& type) const {
+        return type ? type->hashCode() : 0;
+    }
+};
+
+template <class TYPE>
+struct luceneWeakHash : std::unary_function<TYPE, std::size_t> {
+    std::size_t operator()(const TYPE& type) const {
+        return type.expired() ? 0 : type.lock()->hashCode();
+    }
+};
+
+template <class TYPE>
+struct luceneCompare {
+    inline bool operator()(const TYPE& first, const TYPE& second) const {
+        if (!second) {
+            return false;
+        }
+        if (!first) {
+            return true;
+        }
+        return (first->compareTo(second) < 0);
+    }
+};
+
+typedef boost::blank VariantNull;
+typedef boost::variant<String, int32_t, int64_t, double, ReaderPtr, ByteArray, VariantNull> FieldsData;
+typedef boost::variant<String, uint8_t, int32_t, int64_t, double, VariantNull> ComparableValue;
+typedef boost::variant<int32_t, int64_t, double, VariantNull> NumericValue;
+typedef boost::variant<String, VariantNull> StringValue;
+typedef boost::variant<Collection<uint8_t>, Collection<int32_t>, Collection<double>, VariantNull> CollectionValue;
+
+typedef HashSet< SegmentInfoPtr, luceneHash<SegmentInfoPtr>, luceneEquals<SegmentInfoPtr> > SetSegmentInfo;
+typedef HashSet< MergeThreadPtr, luceneHash<MergeThreadPtr>, luceneEquals<MergeThreadPtr> > SetMergeThread;
+typedef HashSet< OneMergePtr, luceneHash<OneMergePtr>, luceneEquals<OneMergePtr> > SetOneMerge;
+typedef HashSet< QueryPtr, luceneHash<QueryPtr>, luceneEquals<QueryPtr> > SetQuery;
+typedef HashSet< TermPtr, luceneHash<TermPtr>, luceneEquals<TermPtr> > SetTerm;
+typedef HashSet< BooleanClausePtr, luceneHash<BooleanClausePtr>, luceneEquals<BooleanClausePtr> > SetBooleanClause;
+typedef HashSet< ReaderFieldPtr, luceneHash<ReaderFieldPtr>, luceneEquals<ReaderFieldPtr> > SetReaderField;
+typedef HashSet<ByteArray> SetByteArray;
+
+typedef HashMap< String, String > MapStringString;
+typedef HashMap< wchar_t, NormalizeCharMapPtr > MapCharNormalizeCharMap;
+typedef HashMap< String, AnalyzerPtr > MapStringAnalyzer;
+typedef HashMap< String, ByteArray > MapStringByteArray;
+typedef HashMap< String, int32_t > MapStringInt;
+typedef HashMap< String, FieldInfoPtr > MapStringFieldInfo;
+typedef HashMap< String, Collection<TermVectorEntryPtr> > MapStringCollectionTermVectorEntry;
+typedef HashMap< String, RefCountPtr > MapStringRefCount;
+typedef HashMap< int32_t, TermVectorsPositionInfoPtr > MapIntTermVectorsPositionInfo;
+typedef HashMap< String, MapIntTermVectorsPositionInfo > MapStringMapIntTermVectorsPositionInfo;
+typedef HashMap< String, NormPtr > MapStringNorm;
+typedef HashMap< String, TermVectorEntryPtr > MapStringTermVectorEntry;
+typedef HashMap< String, RAMFilePtr > MapStringRAMFile;
+typedef HashMap< int32_t, ByteArray > MapIntByteArray;
+typedef HashMap< int32_t, FilterItemPtr > MapIntFilterItem;
+typedef HashMap< int32_t, double > MapIntDouble;
+typedef HashMap< int64_t, int32_t > MapLongInt;
+typedef HashMap< String, double > MapStringDouble;
+typedef HashMap< int32_t, CachePtr > MapStringCache;
+typedef HashMap< String, LockPtr > MapStringLock;
+
+typedef HashMap< SegmentInfoPtr, SegmentReaderPtr, luceneHash<SegmentInfoPtr>, luceneEquals<SegmentInfoPtr> > MapSegmentInfoSegmentReader;
+typedef HashMap< SegmentInfoPtr, int32_t, luceneHash<SegmentInfoPtr>, luceneEquals<SegmentInfoPtr> > MapSegmentInfoInt;
+typedef HashMap< DocFieldConsumerPerThreadPtr, Collection<DocFieldConsumerPerFieldPtr>, luceneHash<DocFieldConsumerPerThreadPtr>, luceneEquals<DocFieldConsumerPerThreadPtr> > MapDocFieldConsumerPerThreadCollectionDocFieldConsumerPerField;
+typedef HashMap< InvertedDocConsumerPerThreadPtr, Collection<InvertedDocConsumerPerFieldPtr>, luceneHash<InvertedDocConsumerPerThreadPtr>, luceneEquals<InvertedDocConsumerPerThreadPtr> > MapInvertedDocConsumerPerThreadCollectionInvertedDocConsumerPerField;
+typedef HashMap< InvertedDocEndConsumerPerThreadPtr, Collection<InvertedDocEndConsumerPerFieldPtr>, luceneHash<InvertedDocEndConsumerPerThreadPtr>, luceneEquals<InvertedDocEndConsumerPerThreadPtr> > MapInvertedDocEndConsumerPerThreadCollectionInvertedDocEndConsumerPerField;
+typedef HashMap< TermsHashConsumerPerThreadPtr, Collection<TermsHashConsumerPerFieldPtr>, luceneHash<TermsHashConsumerPerThreadPtr>, luceneEquals<TermsHashConsumerPerThreadPtr> > MapTermsHashConsumerPerThreadCollectionTermsHashConsumerPerField;
+typedef HashMap< FieldInfoPtr, Collection<NormsWriterPerFieldPtr>, luceneHash<FieldInfoPtr>, luceneEquals<FieldInfoPtr> > MapFieldInfoCollectionNormsWriterPerField;
+typedef HashMap< IndexReaderPtr, HashSet<String>, luceneHash<IndexReaderPtr>, luceneEquals<IndexReaderPtr> > MapIndexReaderSetString;
+typedef HashMap< TermPtr, int32_t, luceneHash<TermPtr>, luceneEquals<TermPtr> > MapTermInt;
+typedef HashMap< QueryPtr, int32_t, luceneHash<QueryPtr>, luceneEquals<QueryPtr> > MapQueryInt;
+typedef HashMap< EntryPtr, boost::any, luceneHash<EntryPtr>, luceneEquals<EntryPtr> > MapEntryAny;
+typedef HashMap< PhrasePositionsPtr, LuceneObjectPtr, luceneHash<PhrasePositionsPtr>, luceneEquals<PhrasePositionsPtr> > MapPhrasePositionsLuceneObject;
+typedef HashMap< ReaderFieldPtr, SetReaderField, luceneHash<ReaderFieldPtr>, luceneEquals<ReaderFieldPtr> > MapReaderFieldSetReaderField;
+
+typedef WeakHashMap< LuceneObjectWeakPtr, LuceneObjectPtr, luceneWeakHash<LuceneObjectWeakPtr>, luceneWeakEquals<LuceneObjectWeakPtr> > WeakMapObjectObject;
+typedef WeakHashMap< LuceneObjectWeakPtr, MapEntryAny, luceneWeakHash<LuceneObjectWeakPtr>, luceneWeakEquals<LuceneObjectWeakPtr> > WeakMapLuceneObjectMapEntryAny;
+
+typedef Map< String, AttributePtr > MapStringAttribute;
+typedef Map< int64_t, DocumentsWriterThreadStatePtr > MapThreadDocumentsWriterThreadState;
+typedef Map< String, IndexReaderPtr > MapStringIndexReader;
+typedef Map< TermPtr, NumPtr, luceneCompare<TermPtr> > MapTermNum;
+
+typedef boost::function<bool (const TermVectorEntryPtr&, const TermVectorEntryPtr&)> TermVectorEntryComparator;
+
+template < class KEY, class VALUE, class HASH = boost::hash<KEY>, class EQUAL = std::equal_to<KEY> > class SimpleLRUCache;
+typedef SimpleLRUCache< TermPtr, TermInfoPtr, luceneHash<TermPtr>, luceneEquals<TermPtr> > TermInfoCache;
+typedef std::shared_ptr<TermInfoCache> TermInfoCachePtr;
+}
+
+#include "fnord-fts/util/Synchronize.h"
+#include "fnord-fts/util/CycleCheck.h"
+#if defined(LPP_BUILDING_LIB) || defined(LPP_EXPOSE_INTERNAL)
+#define INTERNAL public
+#else
+#define INTERNAL protected
+#endif
 
 #endif

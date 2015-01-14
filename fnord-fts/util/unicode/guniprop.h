@@ -25,7 +25,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 typedef uint32_t gunichar;
 typedef uint16_t gunichar2;

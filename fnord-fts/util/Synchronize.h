@@ -8,7 +8,7 @@
 #define SYNCHRONIZE_H
 
 #include <boost/thread/recursive_mutex.hpp>
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

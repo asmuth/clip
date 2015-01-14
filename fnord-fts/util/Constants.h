@@ -7,7 +7,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

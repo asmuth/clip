@@ -7,7 +7,7 @@
 #ifndef MISCUTILS_H
 #define MISCUTILS_H
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

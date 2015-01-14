@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/search/function/FieldCacheSource.h"
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/StringUtils.h"

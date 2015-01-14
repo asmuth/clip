@@ -7,7 +7,7 @@
 #ifndef LUCENEEXCEPTION_H
 #define LUCENEEXCEPTION_H
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

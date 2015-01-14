@@ -7,7 +7,7 @@
 #ifndef MAPOFSETS_H
 #define MAPOFSETS_H
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

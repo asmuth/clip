@@ -25,7 +25,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/util/unicode/guniprop.h"
 
 #define ATTR_TABLE(Page) (((Page) <= G_UNICODE_LAST_PAGE_PART1) \

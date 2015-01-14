@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include <iostream>
 #include "fnord-fts/index/CheckIndex.h"
 #include "_CheckIndex.h"

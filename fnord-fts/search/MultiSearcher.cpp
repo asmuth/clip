@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/search/MultiSearcher.h"
 #include "fnord-fts/search/_MultiSearcher.h"
 #include "fnord-fts/index/Term.h"

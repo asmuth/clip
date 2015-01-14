@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/index/SegmentTermPositionVector.h"
 #include "fnord-fts/index/TermVectorOffsetInfo.h"
 

@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/search/function/ReverseOrdFieldSource.h"
 #include "_ReverseOrdFieldSource.h"
 #include "fnord-fts/search/FieldCache.h"

@@ -8,7 +8,7 @@
 #define VARIANTUTILS_H
 
 #include <boost/any.hpp>
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/util/MiscUtils.h"
 
 namespace Lucene {

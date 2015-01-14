@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include <boost/thread/mutex.hpp>
 #include "fnord-fts/util/Synchronize.h"
 #include "fnord-fts/util/LuceneThread.h"

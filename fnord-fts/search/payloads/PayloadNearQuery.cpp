@@ -4,7 +4,7 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "fnord-fts/LuceneInc.h"
+#include "fnord-fts/fts.h"
 #include "fnord-fts/search/payloads/PayloadNearQuery.h"
 #include "fnord-fts/search/payloads/AveragePayloadFunction.h"
 #include "fnord-fts/index/IndexReader.h"

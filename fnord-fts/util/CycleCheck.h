@@ -7,7 +7,7 @@
 #ifndef CYCLECHECK_H
 #define CYCLECHECK_H
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

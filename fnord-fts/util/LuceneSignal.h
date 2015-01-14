@@ -8,7 +8,7 @@
 #define LUCENESIGNAL_H
 
 #include <boost/thread/condition.hpp>
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 

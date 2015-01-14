@@ -7,7 +7,7 @@
 #ifndef STRINGUTILS_H
 #define STRINGUTILS_H
 
-#include "fnord-fts/Lucene.h"
+#include "fnord-fts/fts.h"
 
 namespace Lucene {
 
