@@ -37,6 +37,10 @@ void JSONOutputStream::emplace_back(kTokenType token) {
   emplace_back(token, "");
 }
 
+void JSONOutputStream::emplace_back(const JSONToken& token) {
+  emplace_back(token.type, token.data);
+}
+
 void JSONOutputStream::emplace_back(
     kTokenType token,
     const std::string& data) {
