@@ -246,6 +246,9 @@ std::string JSONOutputStream::escapeString(const std::string& string) const {
       case '"':
         new_str += "\\\"";
         break;
+      case '\\':
+        new_str += "\\\\";
+        break;
       case '\n':
         new_str += "\\n";
         break;
