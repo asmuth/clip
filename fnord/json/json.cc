@@ -218,6 +218,17 @@ bool fromJSONImpl(
   }
 }
 
+template <>
+JSONObject fromJSONImpl(
+    std::vector<JSONToken>::const_iterator begin,
+    std::vector<JSONToken>::const_iterator end) {
+  if (begin == end) {
+    RAISE(kIndexError);
+  }
+
+  return JSONObject(begin, end);
+}
+
 } // namespace json
 
 template <>
