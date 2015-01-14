@@ -23,6 +23,7 @@ namespace fts {
 /// </ul>
 class StandardAnalyzer : public Analyzer {
 public:
+
     /// Builds an analyzer with the default stop words ({@link #STOP_WORDS_SET}).
     /// @param matchVersion Lucene version to match.
     StandardAnalyzer(LuceneVersion::Version matchVersion);
