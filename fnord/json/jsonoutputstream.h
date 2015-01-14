@@ -29,6 +29,7 @@ public:
 
   void emplace_back(kTokenType token);
   void emplace_back(kTokenType token, const std::string& data);
+  void emplace_back(const JSONToken& token);
 
   void beginObject();
   void endObject();

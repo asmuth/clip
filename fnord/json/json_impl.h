@@ -248,6 +248,13 @@ void toJSONImpl(const bool& val, O* target) {
   }
 }
 
+template <typename O>
+void toJSONImpl(const JSONObject& obj, O* target) {
+  for (const auto& token : obj) {
+    target->emplace_back(token);
+  }
+}
+
 }
 }
 #endif
