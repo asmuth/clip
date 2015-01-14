@@ -41,6 +41,10 @@ public:
   virtual Future<bool> appendEntry(const String& entry_data) = 0;
 
   virtual Future<Option<FeedEntry>> fetchEntry(const FeedOffset& offset) = 0;
+  virtual Future<Vector<FeedEntry>> fetchEntries(
+      const FeedOffset& offset,
+      int batch_size) = 0;
+
   virtual Future<Option<FeedEntry>> fetchNextEntry(const FeedEntry& entry) = 0;
   virtual Future<Option<FeedEntry>> fetchFirstEntry() = 0;
   virtual Future<Option<FeedEntry>> fetchLastEntry() = 0;
