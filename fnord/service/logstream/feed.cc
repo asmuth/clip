@@ -47,7 +47,69 @@ Future<bool> LogStreamServiceFeed::appendEntry(const String& entry) {
 
 Future<Option<LogStreamServiceFeed::FeedEntry>>
     LogStreamServiceFeed::fetchEntry(const FeedOffset& offset) {
-  RAISE(kNotYetImplementedError);
+  Promise<Option<fnord::comm::Feed::FeedEntry>> promise;
+
+  auto rpc = fnord::comm::mkRPC(
+      &LogStreamService::fetch,
+      name(),
+      (uint64_t) std::stoul(offset),
+      (int) 1);
+
+  rpc->call(rpc_channel_);
+
+  rpc->onSuccess([promise] (const decltype(rpc)::ValueType& r) mutable {
+    if (r.result().size() == 1) {
+      comm::Feed::FeedEntry entry;
+      entry.offset = StringUtil::toString(r.result()[0].offset);
+      entry.next_offset = StringUtil::toString(r.result()[0].next_offset);
+      entry.entry_data = StringUtil::toString(r.result()[0].data);
+
+      promise.success(Some<fnord::comm::Feed::FeedEntry>(entry));
+    } else {
+      promise.success(None<fnord::comm::Feed::FeedEntry>());
+    }
+  });
+
+  rpc->onError([promise] (const Status& status) mutable {
+    promise.failure(status);
+  });
+
+  return promise.future();
+}
+
+Future<Vector<LogStreamServiceFeed::FeedEntry>>
+    LogStreamServiceFeed::fetchEntries(
+    const FeedOffset& offset,
+    int batch_size) {
+  Promise<Vector<fnord::comm::Feed::FeedEntry>> promise;
+
+  auto rpc = fnord::comm::mkRPC(
+      &LogStreamService::fetch,
+      name(),
+      (uint64_t) std::stoul(offset),
+      (int) batch_size);
+
+  rpc->call(rpc_channel_);
+
+  rpc->onSuccess([promise] (const decltype(rpc)::ValueType& r) mutable {
+    Vector<comm::Feed::FeedEntry> entries;
+
+    for (const auto& e : r.result()) {
+      comm::Feed::FeedEntry entry;
+      entry.offset = StringUtil::toString(e.offset);
+      entry.next_offset = StringUtil::toString(e.next_offset);
+      entry.entry_data = StringUtil::toString(e.data);
+      entries.emplace_back(entry);
+    }
+
+    promise.success(entries);
+  });
+
+  rpc->onError([promise] (const Status& status) mutable {
+    promise.failure(status);
+  });
+
+  return promise.future();
 }
 
 Future<Option<LogStreamServiceFeed::FeedEntry>>

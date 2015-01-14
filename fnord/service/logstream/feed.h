@@ -34,6 +34,10 @@ public:
   Future<Option<FeedEntry>> fetchFirstEntry() override;
   Future<Option<FeedEntry>> fetchLastEntry() override;
 
+  Future<Vector<FeedEntry>> fetchEntries(
+      const FeedOffset& offset,
+      int batch_size) override;
+
   void setOption(const String& optname, const String& optval) override;
 
 protected:
