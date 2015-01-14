@@ -14,6 +14,7 @@
 #include <vector>
 #include "fnord/base/buffer.h"
 #include "fnord/reflect/reflect.h"
+#include "fnord/base/traits.h"
 
 namespace fnord {
 namespace json {
@@ -40,7 +41,13 @@ struct JSONToken {
 
 typedef std::vector<JSONToken> JSONObject;
 
-}
-}
+} // namespace json
+
+template <>
+struct TypeIsVector<json::JSONObject> {
+  static const bool value = false;
+};
+
+} // namespace fnord
 
 #endif
