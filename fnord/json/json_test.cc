@@ -234,6 +234,31 @@ TEST_CASE(JSONTest, TestToFromJSON, [] () {
   EXPECT_EQ(m1.b, m2.b);
 });
 
+struct TestStruct {
+  fnord::String str;
+  fnord::json::JSONObject obj;
+
+  template <typename T>
+  static void reflect(T* meta) {
+    meta->prop(&TestStruct::str, 1, "str", false);
+    meta->prop(&TestStruct::obj, 2, "obj", false);
+  };
+};
+
+TEST_CASE(JSONTest, TestJSONShouldNotSegfaultOnInvalidInput, [] () {
+  EXPECT_EXCEPTION("unbalanced braces", [] {
+    auto orig_str = "{ \"str\": \"fnord\", \"obj\": { \"a\": 1, \"b\": 2 ] } }";
+    auto obj = fnord::json::fromJSON<TestStruct>(orig_str);
+  });
+});
+
+TEST_CASE(JSONTest, TestJSONReEncodingViaReflectionWithObject, [] () {
+  auto orig_str = "{\"str\":\"fnord\",\"obj\":{\"a\":\"1\",\"b\":\"2\"}}";
+  auto obj = fnord::json::fromJSON<TestStruct>(orig_str);
+  auto reenc_str = fnord::json::toJSONString(obj);
+  EXPECT_EQ(orig_str, reenc_str);
+});
+
 /*
 TEST_CASE(JSONTest, TestParseJSON, [] () {
   auto json = fnord::json::parseJSON(R"(

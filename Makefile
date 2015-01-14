@@ -1,24 +1,20 @@
-# This file is part of the "FnordMetric" project
-#   Copyright (c) 2014 Paul Asmuth, Google Inc.
-#
-# Licensed under the MIT license (see LICENSE).
-
-all: build
+all: build test
 
 build:
-	(cd fnordmetric-core && make build)
+	mkdir -p build
+	(cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release .. && ninja)
 
-install:
-	(cd fnordmetric-core && make install)
+build-dbg:
+	mkdir -p build-dbg
+	(cd build-dbg && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug .. && ninja)
 
-test:
-	(cd fnordmetric-core && make test)
+test: build
+	@find build/tests -name "test-*" -exec ./{} \;
+
+test-dbg: build-dbg
+	@find build-dbg/tests -name "test-*" -exec ./{} \;
 
 clean:
-	(cd fnordmetric-core && make clean)
+	rm -rf build build-dbg
 
-doc:
-	find doc/examples -name "*.sql" | while read file; do PATH=./build:$$PATH fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
-	(cd doc/web && rake build)
-
-.PHONY: all test clean doc build
+.PHONY: clean build build-dbg test
