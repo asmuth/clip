@@ -5,17 +5,21 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef _WIN32
-
-#include "targetver.h"
-
+#ifndef WINVER                  // Specifies that the minimum required platform is Windows XP.
+#define WINVER 0x0501           // Change this to the appropriate value to target other versions of Windows.
+#endif
+#ifndef _WIN32_WINNT            // Specifies that the minimum required platform is Windows XP.
+#define _WIN32_WINNT 0x0501     // Change this to the appropriate value to target other versions of Windows.
+#endif
 #define WIN32_LEAN_AND_MEAN
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-
 #include <windows.h>
-
 #endif
+
+#define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
+#define BOOST_FILESYSTEM_VERSION 3
 
 /**
  * Fix for Boost Bug #2792
