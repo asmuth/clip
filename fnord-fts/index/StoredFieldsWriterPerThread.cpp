@@ -10,7 +10,8 @@
 #include "fnord-fts/index/FieldsWriter.h"
 #include "fnord-fts/store/RAMOutputStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 StoredFieldsWriterPerThread::StoredFieldsWriterPerThread(const DocStatePtr& docState, const StoredFieldsWriterPtr& storedFieldsWriter) {
     this->_storedFieldsWriter = storedFieldsWriter;
@@ -57,6 +58,8 @@ void StoredFieldsWriterPerThread::abort() {
         doc->abort();
         doc.reset();
     }
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/SimpleAnalyzer.h"
 #include "fnord-fts/analysis/LowerCaseTokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SimpleAnalyzer::~SimpleAnalyzer() {
 }
@@ -26,6 +27,8 @@ TokenStreamPtr SimpleAnalyzer::reusableTokenStream(const String& fieldName, cons
         tokenizer->reset(reader);
     }
     return tokenizer;
+}
+
 }
 
 }

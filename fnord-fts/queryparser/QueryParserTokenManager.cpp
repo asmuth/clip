@@ -12,7 +12,8 @@
 #include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int64_t QueryParserTokenManager::jjbitVec0[] = {0x1LL, 0x0LL, 0x0LL, 0x0LL};
 const int64_t QueryParserTokenManager::jjbitVec1[] = {static_cast<int64_t>(0xfffffffffffffffeLL), static_cast<int64_t>(0xffffffffffffffffLL), static_cast<int64_t>(0xffffffffffffffffLL), static_cast<int64_t>(0xffffffffffffffffLL)};
@@ -1285,6 +1286,8 @@ void QueryParserTokenManager::jjCheckNAddStates(int32_t start, int32_t end) {
     do {
         jjCheckNAdd(jjnextStates[start]);
     } while (start++ != end);
+}
+
 }
 
 }

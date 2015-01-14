@@ -13,7 +13,8 @@
 #include "fnord-fts/index/IndexCommit.h"
 #include "fnord-fts/index/SegmentMergeQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An IndexReader which reads indexes with multiple segments.
 class DirectoryReader : public IndexReader {
@@ -346,4 +347,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SegmentMergeQueue : public PriorityQueue<SegmentMergeInfoPtr> {
 public:
@@ -27,4 +28,5 @@ protected:
 
 }
 
+}
 #endif

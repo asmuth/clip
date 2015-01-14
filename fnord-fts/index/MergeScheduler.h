@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// {@link IndexWriter} uses an instance implementing this interface to execute the merges
 /// selected by a {@link MergePolicy}.  The default MergeScheduler is {@link ConcurrentMergeScheduler}.
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A ScorerDocQueue maintains a partial ordering of its Scorers such that the least Scorer can always be
 /// found in constant time.  Put()'s and pop()'s require log(size) time.  The ordering is by Scorer::doc().
@@ -74,4 +75,5 @@ protected:
 
 }
 
+}
 #endif

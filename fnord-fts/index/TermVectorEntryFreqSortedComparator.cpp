@@ -8,7 +8,8 @@
 #include "fnord-fts/index/TermVectorEntryFreqSortedComparator.h"
 #include "fnord-fts/index/TermVectorEntry.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorEntryFreqSortedComparator::~TermVectorEntryFreqSortedComparator() {
 }
@@ -29,6 +30,8 @@ bool TermVectorEntryFreqSortedComparator::compare(const TermVectorEntryPtr& firs
         return false;
     }
     return (first->getField().compare(second->getField()) < 0);
+}
+
 }
 
 }

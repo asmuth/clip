@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Searchable.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An abstract base class for search implementations. Implements the main search methods.
 ///
@@ -102,4 +103,5 @@ protected:
 
 }
 
+}
 #endif

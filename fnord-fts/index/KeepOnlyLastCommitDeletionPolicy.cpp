@@ -8,7 +8,8 @@
 #include "fnord-fts/index/KeepOnlyLastCommitDeletionPolicy.h"
 #include "fnord-fts/index/IndexCommit.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 KeepOnlyLastCommitDeletionPolicy::~KeepOnlyLastCommitDeletionPolicy() {
 }
@@ -24,6 +25,8 @@ void KeepOnlyLastCommitDeletionPolicy::onCommit(Collection<IndexCommitPtr> commi
     for (int32_t i = 0; i < size - 1; ++i) {
         commits[i]->deleteCommit();
     }
+}
+
 }
 
 }

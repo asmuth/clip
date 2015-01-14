@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LetterTokenizer::LetterTokenizer(const ReaderPtr& input) : CharTokenizer(input) {
 }
@@ -25,6 +26,8 @@ LetterTokenizer::~LetterTokenizer() {
 
 bool LetterTokenizer::isTokenChar(wchar_t c) {
     return UnicodeUtil::isAlpha(c);
+}
+
 }
 
 }

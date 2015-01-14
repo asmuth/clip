@@ -9,7 +9,8 @@
 
 #include "fnord-fts/document/FieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Load the First field and break.
 /// See {@link FieldSelectorResult#LOAD_AND_BREAK}
@@ -25,4 +26,5 @@ public:
 
 }
 
+}
 #endif

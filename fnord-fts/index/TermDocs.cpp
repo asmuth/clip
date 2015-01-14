@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermDocs::TermDocs() {
 }
@@ -50,6 +51,8 @@ bool TermDocs::skipTo(int32_t target) {
 void TermDocs::close() {
     BOOST_ASSERT(false);
     // override
+}
+
 }
 
 }

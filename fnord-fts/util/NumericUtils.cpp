@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The default precision step used by {@link NumericField}, {@link NumericTokenStream}, {@link NumericRangeQuery},
 /// and {@link NumericRangeFilter} as default.
@@ -232,6 +233,8 @@ void IntRangeBuilder::addRange(const String& minPrefixCoded, const String& maxPr
 
 void IntRangeBuilder::addRange(int32_t min, int32_t max, int32_t shift) {
     addRange(NumericUtils::intToPrefixCoded(min, shift), NumericUtils::intToPrefixCoded(max, shift));
+}
+
 }
 
 }

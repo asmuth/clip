@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Tokenizer is a TokenStream whose input is a Reader.
 ///
@@ -67,4 +68,5 @@ public:
 
 }
 
+}
 #endif

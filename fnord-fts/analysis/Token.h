@@ -10,7 +10,8 @@
 #include "fnord-fts/util/Attribute.h"
 #include "fnord-fts/util/AttributeSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Token is an occurrence of a term from the text of a field.  It consists of a term's text, the start and end
 /// offset of the term in the text of the field and a type string.
@@ -353,4 +354,5 @@ public:
 
 }
 
+}
 #endif

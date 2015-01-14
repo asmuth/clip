@@ -16,7 +16,8 @@
 #include "fnord-fts/index/IndexWriter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermsHash::TermsHash(const DocumentsWriterPtr& docWriter, bool trackAllocations, const TermsHashConsumerPtr& consumer, const TermsHashPtr& nextTermsHash) {
     this->postingsFreeCount = 0;
@@ -200,6 +201,8 @@ void TermsHash::getPostings(Collection<RawPostingListPtr> postings) {
     if (trackAllocations) {
         docWriter->bytesUsed(postings.size() * bytesPerPosting);
     }
+}
+
 }
 
 }

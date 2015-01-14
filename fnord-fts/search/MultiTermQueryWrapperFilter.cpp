@@ -16,7 +16,8 @@
 #include "fnord-fts/util/OpenBitSet.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiTermQueryWrapperFilter::MultiTermQueryWrapperFilter(const MultiTermQueryPtr& query) {
     this->query = query;
@@ -105,6 +106,8 @@ DocIdSetPtr MultiTermQueryWrapperFilter::getDocIdSet(const IndexReaderPtr& reade
     enumerator->close();
     finally.throwException();
     return bitSet;
+}
+
 }
 
 }

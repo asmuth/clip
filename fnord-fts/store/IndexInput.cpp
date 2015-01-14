@@ -10,7 +10,8 @@
 #include "fnord-fts/util/Reader.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 IndexInput::IndexInput() {
     preUTF8Strings = false;
@@ -130,6 +131,8 @@ LuceneObjectPtr IndexInput::clone(const LuceneObjectPtr& other) {
     IndexInputPtr cloneIndexInput(std::dynamic_pointer_cast<IndexInput>(LuceneObject::clone(other)));
     cloneIndexInput->preUTF8Strings = preUTF8Strings;
     return cloneIndexInput;
+}
+
 }
 
 }

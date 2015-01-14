@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Class to write byte streams into slices of shared byte[].  This is used by DocumentsWriter to hold
 /// the posting list for many terms in RAM.
@@ -42,4 +43,5 @@ public:
 
 }
 
+}
 #endif

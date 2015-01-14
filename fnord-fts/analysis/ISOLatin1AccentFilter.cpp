@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/ISOLatin1AccentFilter.h"
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ISOLatin1AccentFilter::ISOLatin1AccentFilter(const TokenStreamPtr& input) : TokenFilter(input) {
     output = CharArray::newInstance(256);
@@ -221,6 +222,8 @@ void ISOLatin1AccentFilter::removeAccents(const wchar_t* input, int32_t length) 
             }
         }
     }
+}
+
 }
 
 }

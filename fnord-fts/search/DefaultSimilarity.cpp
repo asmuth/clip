@@ -8,7 +8,8 @@
 #include "fnord-fts/search/DefaultSimilarity.h"
 #include "fnord-fts/index/FieldInvertState.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DefaultSimilarity::DefaultSimilarity() {
     discountOverlaps = false;
@@ -57,6 +58,8 @@ void DefaultSimilarity::setDiscountOverlaps(bool v) {
 
 bool DefaultSimilarity::getDiscountOverlaps() {
     return discountOverlaps;
+}
+
 }
 
 }

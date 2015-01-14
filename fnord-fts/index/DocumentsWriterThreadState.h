@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Used by DocumentsWriter to maintain per-thread state.
 /// We keep a separate Posting hash and other state for each thread and then merge postings
@@ -36,4 +37,5 @@ public:
 
 }
 
+}
 #endif

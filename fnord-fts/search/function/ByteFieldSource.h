@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/function/FieldCacheSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Obtains byte field values from the {@link FieldCache} using getBytes() and makes those values available
 /// as other numeric types, casting as needed.
@@ -41,4 +42,5 @@ public:
 
 }
 
+}
 #endif

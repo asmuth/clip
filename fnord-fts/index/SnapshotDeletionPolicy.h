@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/IndexDeletionPolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SnapshotDeletionPolicy : public IndexDeletionPolicy {
 public:
@@ -50,4 +51,5 @@ protected:
 
 }
 
+}
 #endif

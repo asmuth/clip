@@ -10,7 +10,8 @@
 #include "fnord-fts/util/OpenBitSetDISI.h"
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CachingWrapperFilter::CachingWrapperFilter(const FilterPtr& filter, DeletesMode deletesMode) {
     this->filter = filter;
@@ -150,6 +151,8 @@ FilteredCacheDocIdSet::~FilteredCacheDocIdSet() {
 
 bool FilteredCacheDocIdSet::match(int32_t docid) {
     return !reader->isDeleted(docid);
+}
+
 }
 
 }

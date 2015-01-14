@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/document/Fieldable.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 void Fieldable::setBoost(double boost) {
     BOOST_ASSERT(false);
@@ -117,6 +118,8 @@ bool Fieldable::getOmitTermFreqAndPositions() {
 void Fieldable::setOmitTermFreqAndPositions(bool omitTermFreqAndPositions) {
     BOOST_ASSERT(false);
     // override
+}
+
 }
 
 }

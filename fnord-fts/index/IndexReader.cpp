@@ -18,7 +18,8 @@
 #include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t IndexReader::DEFAULT_TERMS_INDEX_DIVISOR = 1;
 
@@ -398,6 +399,8 @@ FindSegmentsModified::~FindSegmentsModified() {
 
 uint64_t FindSegmentsModified::doBody(const String& segmentFileName) {
     return directory->fileModified(segmentFileName);
+}
+
 }
 
 }

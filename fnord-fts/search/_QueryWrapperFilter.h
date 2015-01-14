@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class QueryWrapperFilterDocIdSet : public DocIdSet {
 public:
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

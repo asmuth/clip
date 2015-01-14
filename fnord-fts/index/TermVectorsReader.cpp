@@ -15,7 +15,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// NOTE: if you make a new format, it must be larger than the current format
 const int32_t TermVectorsReader::FORMAT_VERSION = 2;
@@ -540,6 +541,8 @@ TermFreqVectorPtr ParallelArrayTermVectorMapper::materializeVector() {
         }
     }
     return tv;
+}
+
 }
 
 }

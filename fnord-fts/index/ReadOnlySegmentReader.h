@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/SegmentReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ReadOnlySegmentReader : public SegmentReader {
 public:
@@ -26,4 +27,5 @@ public:
 
 }
 
+}
 #endif

@@ -15,7 +15,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DisjunctionMaxQuery::DisjunctionMaxQuery(double tieBreakerMultiplier) {
     this->tieBreakerMultiplier = tieBreakerMultiplier;
@@ -205,6 +206,8 @@ ExplanationPtr DisjunctionMaxWeight::explain(const IndexReaderPtr& reader, int32
     }
     result->setValue(max + (sum - max) * query->tieBreakerMultiplier);
     return result;
+}
+
 }
 
 }

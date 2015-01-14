@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/FilteredTermEnum.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Subclass of FilteredTermEnum for enumerating a single term.
 ///
@@ -36,4 +37,5 @@ protected:
 
 }
 
+}
 #endif

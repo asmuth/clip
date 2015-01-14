@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/document/MapFieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MapFieldSelector::MapFieldSelector(MapStringFieldSelectorResult fieldSelections) {
     this->fieldSelections = fieldSelections;
@@ -26,6 +27,8 @@ MapFieldSelector::~MapFieldSelector() {
 FieldSelector::FieldSelectorResult MapFieldSelector::accept(const String& fieldName) {
     MapStringFieldSelectorResult::iterator selection = fieldSelections.find(fieldName);
     return selection != fieldSelections.end() ? selection->second : FieldSelector::SELECTOR_NO_LOAD;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Weight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ConstantWeight : public Weight {
 public:
@@ -54,4 +55,5 @@ public:
 
 }
 
+}
 #endif

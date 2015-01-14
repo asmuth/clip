@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/DocConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is a DocConsumer that gathers all fields under the same name, and calls per-field consumers to process
 /// field by field.  This class doesn't doesn't do any "real" work of its own: it just forwards the fields to a
@@ -37,4 +38,5 @@ public:
 
 }
 
+}
 #endif

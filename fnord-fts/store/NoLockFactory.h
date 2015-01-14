@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/LockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Use this {@link LockFactory} to disable locking entirely.  Only one instance of this lock is created.
 /// You should call {@link #getNoLockFactory()} to get the instance.
@@ -37,4 +38,5 @@ public:
 
 }
 
+}
 #endif

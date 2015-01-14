@@ -9,7 +9,8 @@
 
 #include "_SegmentInfos.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FindSegmentsOpen : public FindSegmentsFileT<IndexReaderPtr> {
 public:
@@ -44,4 +45,5 @@ public:
 
 }
 
+}
 #endif

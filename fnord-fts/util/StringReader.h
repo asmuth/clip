@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Convenience class for reading strings.
 class StringReader : public Reader {
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

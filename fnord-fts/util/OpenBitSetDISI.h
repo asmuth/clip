@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/OpenBitSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class OpenBitSetDISI : public OpenBitSet {
 public:
@@ -47,4 +48,5 @@ public:
 
 }
 
+}
 #endif

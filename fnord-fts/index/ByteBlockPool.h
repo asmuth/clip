@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Class that Posting and PostingVector use to write byte streams into shared fixed-size byte[] arrays.
 /// The idea is to allocate slices of increasing lengths.  For example, the first slice is 5 bytes, the
@@ -65,4 +66,5 @@ public:
 
 }
 
+}
 #endif

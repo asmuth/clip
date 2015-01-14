@@ -9,7 +9,8 @@
 #include "_DocIdBitSet.h"
 #include "fnord-fts/util/BitSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocIdBitSet::DocIdBitSet() {
 }
@@ -74,6 +75,8 @@ int32_t DocIdBitSetIterator::advance(int32_t target) {
     int32_t doc = bitSet->nextSetBit(target);
     docId = doc == -1 ? NO_MORE_DOCS : doc;
     return docId;
+}
+
 }
 
 }

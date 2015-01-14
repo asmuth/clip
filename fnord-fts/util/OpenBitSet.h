@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An "open" BitSet implementation that allows direct access to the array of words storing the bits.
 ///
@@ -233,4 +234,5 @@ protected:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/search/spans/NearSpansOrdered.h"
 #include "fnord-fts/search/spans/SpanNearQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NearSpansOrdered::NearSpansOrdered(const SpanNearQueryPtr& spanNearQuery, const IndexReaderPtr& reader, bool collectPayloads) {
     if (spanNearQuery->getClauses().size() < 2) {
@@ -253,6 +254,8 @@ String NearSpansOrdered::toString() {
         }
     }
     return buffer.str();
+}
+
 }
 
 }

@@ -10,7 +10,8 @@
 #include "fnord-fts/index/TermEnum.h"
 #include "fnord-fts/index/TermPositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentMergeInfo::SegmentMergeInfo(int32_t b, const TermEnumPtr& te, const IndexReaderPtr& r) {
     base = b;
@@ -69,6 +70,8 @@ void SegmentMergeInfo::close() {
     if (postings) {
         postings->close();
     }
+}
+
 }
 
 }

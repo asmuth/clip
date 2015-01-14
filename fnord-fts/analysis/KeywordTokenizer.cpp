@@ -10,7 +10,8 @@
 #include "fnord-fts/analysis/tokenattributes/OffsetAttribute.h"
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t KeywordTokenizer::DEFAULT_BUFFER_SIZE = 256;
 
@@ -73,6 +74,8 @@ void KeywordTokenizer::end() {
 void KeywordTokenizer::reset() {
     Tokenizer::reset(input);
     done = false;
+}
+
 }
 
 }

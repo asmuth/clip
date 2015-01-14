@@ -8,7 +8,8 @@
 #include "fnord-fts/index/FilterIndexReader.h"
 #include "fnord-fts/search/FieldCache.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FilterIndexReader::FilterIndexReader(const IndexReaderPtr& in) {
     this->in = in;
@@ -249,6 +250,8 @@ int32_t FilterTermEnum::docFreq() {
 
 void FilterTermEnum::close() {
     in->close();
+}
+
 }
 
 }

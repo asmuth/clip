@@ -9,7 +9,8 @@
 #include "fnord-fts/analysis/NormalizeCharMap.h"
 #include "fnord-fts/analysis/CharReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MappingCharFilter::MappingCharFilter(const NormalizeCharMapPtr& normMap, const CharStreamPtr& in) : BaseCharFilter(in) {
     this->normMap = normMap;
@@ -121,6 +122,8 @@ int32_t MappingCharFilter::read(wchar_t* buffer, int32_t offset, int32_t length)
         ++l;
     }
     return l == 0 ? -1 : l;
+}
+
 }
 
 }

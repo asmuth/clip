@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Access to the Fieldable Info file that describes document fields and whether or not they are indexed.
 /// Each segment has a separate Fieldable Info file. Objects of this class are thread-safe for multiple
@@ -148,4 +149,5 @@ protected:
 
 }
 
+}
 #endif

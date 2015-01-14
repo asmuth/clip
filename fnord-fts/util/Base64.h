@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class Base64 : public LuceneObject {
 public:
@@ -30,4 +31,5 @@ protected:
 
 }
 
+}
 #endif

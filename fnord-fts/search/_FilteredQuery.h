@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FilteredQueryWeight : public Weight {
 public:
@@ -61,4 +62,5 @@ protected:
 
 }
 
+}
 #endif

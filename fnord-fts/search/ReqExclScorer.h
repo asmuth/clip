@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Scorer for queries with a required subscorer and an excluding (prohibited) sub DocIdSetIterator.
 /// This Scorer implements {@link Scorer#skipTo(int32_t)}, and it uses the skipTo() on the given scorers.
@@ -55,4 +56,5 @@ protected:
 
 }
 
+}
 #endif

@@ -14,7 +14,8 @@
 #include "fnord-fts/util/SmallDouble.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t Similarity::NO_DOC_ID_PROVIDED = -1;
 
@@ -107,6 +108,8 @@ String SimilarityIDFExplanation::explain() {
 
 double SimilarityIDFExplanation::getIdf() {
     return idf;
+}
+
 }
 
 }

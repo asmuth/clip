@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/Constants.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 #if defined(linux) || defined(__linux) || defined(__linux__)
 String Constants::OS_NAME = L"Linux";
@@ -44,6 +45,8 @@ LuceneVersion::~LuceneVersion() {
 
 bool LuceneVersion::onOrAfter(LuceneVersion::Version first, LuceneVersion::Version second) {
     return (first >= second);
+}
+
 }
 
 }

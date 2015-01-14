@@ -10,7 +10,8 @@
 #include "fnord-fts/search/spans/Spans.h"
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Wraps a Spans, and can be used to form a linked list.
 class SpansCell : public Spans {
@@ -56,4 +57,5 @@ protected:
 
 }
 
+}
 #endif

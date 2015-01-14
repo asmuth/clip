@@ -10,7 +10,8 @@
 #include "fnord-fts/index/DocConsumerPerThread.h"
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Gathers all Fieldables for a document under the same name, updates FieldInfos, and calls per-field
 /// consumers to process field by field.
@@ -82,4 +83,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/PorterStemmer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PorterStemmer::PorterStemmer() {
     b = NULL;
@@ -464,6 +465,8 @@ void PorterStemmer::step5() {
     if (b[k] == L'l' && doublec(k) && m() > 1) {
         --k;
     }
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/ReusableStringReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReusableStringReader::ReusableStringReader() {
     upto = 0;
@@ -43,6 +44,8 @@ int32_t ReusableStringReader::read(wchar_t* buffer, int32_t offset, int32_t leng
 }
 
 void ReusableStringReader::close() {
+}
+
 }
 
 }

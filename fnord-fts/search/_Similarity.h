@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Explanation.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SimilarityIDFExplanation : public IDFExplanation {
 public:
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

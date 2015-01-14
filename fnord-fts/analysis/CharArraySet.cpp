@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/CharArraySet.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CharArraySet::CharArraySet(bool ignoreCase) {
     this->ignoreCase = ignoreCase;
@@ -68,6 +69,8 @@ HashSet<String>::iterator CharArraySet::begin() {
 
 HashSet<String>::iterator CharArraySet::end() {
     return entries.end();
+}
+
 }
 
 }

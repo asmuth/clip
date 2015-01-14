@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Provides a {@link FieldComparator} for custom field sorting.
 class FieldComparatorSource : public LuceneObject {
@@ -26,4 +27,5 @@ public:
 
 }
 
+}
 #endif

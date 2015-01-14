@@ -10,7 +10,8 @@
 #include "fnord-fts/index/DocFieldConsumers.h"
 #include "fnord-fts/index/DocFieldConsumersPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldConsumersPerThread::DocFieldConsumersPerThread(const DocFieldProcessorPerThreadPtr& docFieldProcessorPerThread,
         const DocFieldConsumersPtr& parent,
@@ -64,6 +65,8 @@ DocWriterPtr DocFieldConsumersPerThread::finishDocument() {
 
 DocFieldConsumerPerFieldPtr DocFieldConsumersPerThread::addField(const FieldInfoPtr& fi) {
     return newLucene<DocFieldConsumersPerField>(shared_from_this(), one->addField(fi), two->addField(fi));
+}
+
 }
 
 }

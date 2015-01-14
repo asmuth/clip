@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const String Base64::BASE64_CHARS = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -120,6 +121,8 @@ ByteArray Base64::decode(const String& str) {
 
 bool Base64::isBase64(wchar_t ch) {
     return (UnicodeUtil::isAlnum(ch) || ch == L'+' || ch == L'/');
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/util/SmallDouble.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SmallDouble::~SmallDouble() {
 }
@@ -45,6 +46,8 @@ double SmallDouble::byteToDouble(uint8_t b) {
     int32_t exponent = (b >> 3) & 31;
     int32_t bits = ((exponent + (63 - 15)) << 24) | (mantissa << 21);
     return MiscUtils::intBitsToDouble(bits);
+}
+
 }
 
 }

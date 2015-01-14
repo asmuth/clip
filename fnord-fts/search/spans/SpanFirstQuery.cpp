@@ -10,7 +10,8 @@
 #include "fnord-fts/search/spans/SpanQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanFirstQuery::SpanFirstQuery(const SpanQueryPtr& match, int32_t end) {
     this->match = match;
@@ -137,6 +138,8 @@ Collection<ByteArray> FirstSpans::getPayload() {
 
 bool FirstSpans::isPayloadAvailable() {
     return spans->isPayloadAvailable();
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/LengthFilter.h"
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LengthFilter::LengthFilter(const TokenStreamPtr& input, int32_t min, int32_t max) : TokenFilter(input) {
     this->min = min;
@@ -30,6 +31,8 @@ bool LengthFilter::incrementToken() {
     }
     // reached EOS -- return false
     return false;
+}
+
 }
 
 }

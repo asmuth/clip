@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/WhitespaceAnalyzer.h"
 #include "fnord-fts/analysis/WhitespaceTokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 WhitespaceAnalyzer::~WhitespaceAnalyzer() {
 }
@@ -26,6 +27,8 @@ TokenStreamPtr WhitespaceAnalyzer::reusableTokenStream(const String& fieldName, 
         tokenizer->reset(reader);
     }
     return tokenizer;
+}
+
 }
 
 }

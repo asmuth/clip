@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/MultiLevelSkipListWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements the skip list writer for the default posting list format that stores positions and payloads.
 class DefaultSkipListWriter : public MultiLevelSkipListWriter {
@@ -50,4 +51,5 @@ protected:
 
 }
 
+}
 #endif

@@ -10,7 +10,8 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility class to support locking via a mutex.
 class Synchronize {
@@ -62,4 +63,5 @@ protected:
 
 }
 
+}
 #endif

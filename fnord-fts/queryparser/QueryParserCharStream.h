@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This interface describes a character stream that maintains line and column number positions of
 /// the characters.  It also has the capability to backup the stream to some extent.  An implementation
@@ -80,4 +81,5 @@ public:
 
 }
 
+}
 #endif

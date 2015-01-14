@@ -14,7 +14,8 @@
 #include "fnord-fts/search/BooleanClause.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t FuzzyQuery::defaultPrefixLength = 0;
 
@@ -200,6 +201,8 @@ ScoreTermQueue::~ScoreTermQueue() {
 
 bool ScoreTermQueue::lessThan(const ScoreTermPtr& first, const ScoreTermPtr& second) {
     return (first->compareTo(second) < 0);
+}
+
 }
 
 }

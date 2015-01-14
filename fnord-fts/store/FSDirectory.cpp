@@ -19,7 +19,8 @@ extern "C"
 #include "fnord-fts/util/md5/md5.h"
 }
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Default read chunk size.  This is a conditional default based on operating system.
 #ifdef LPP_BUILD_64
@@ -219,6 +220,8 @@ void FSDirectory::setReadChunkSize(int32_t chunkSize) {
 
 int32_t FSDirectory::getReadChunkSize() {
     return chunkSize;
+}
+
 }
 
 }

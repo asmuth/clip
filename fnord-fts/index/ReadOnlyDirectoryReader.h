@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/DirectoryReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ReadOnlyDirectoryReader : public DirectoryReader {
 public:
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

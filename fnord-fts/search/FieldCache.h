@@ -10,7 +10,8 @@
 #include <boost/any.hpp>
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Maintains caches of term values.
 /// @see FieldCacheSanityChecker
@@ -269,4 +270,5 @@ public:
 
 }
 
+}
 #endif

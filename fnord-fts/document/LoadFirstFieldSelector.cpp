@@ -7,13 +7,16 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/document/LoadFirstFieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LoadFirstFieldSelector::~LoadFirstFieldSelector() {
 }
 
 FieldSelector::FieldSelectorResult LoadFirstFieldSelector::accept(const String& fieldName) {
     return FieldSelector::SELECTOR_LOAD_AND_BREAK;
+}
+
 }
 
 }

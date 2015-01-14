@@ -8,7 +8,8 @@
 #include "fnord-fts/util/BitSet.h"
 #include "fnord-fts/util/BitUtil.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 BitSet::BitSet(uint32_t size) : bitSet(size) {
 }
@@ -259,6 +260,8 @@ LuceneObjectPtr BitSet::clone(const LuceneObjectPtr& other) {
     BitSetPtr cloneBitSet(std::dynamic_pointer_cast<BitSet>(LuceneObject::clone(clone)));
     cloneBitSet->bitSet = bitSet;
     return cloneBitSet;
+}
+
 }
 
 }

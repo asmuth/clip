@@ -10,7 +10,8 @@
 #include "fnord-fts/search/spans/SpanWeight.h"
 #include "fnord-fts/search/spans/SpanScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class PayloadTermWeight : public SpanWeight {
 public:
@@ -63,4 +64,5 @@ protected:
 
 }
 
+}
 #endif

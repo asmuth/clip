@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/SpanTermQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class is very similar to {@link SpanTermQuery} except that it factors in the value of the payload
 /// located at each of the positions where the {@link Term} occurs.
@@ -42,4 +43,5 @@ public:
 
 }
 
+}
 #endif

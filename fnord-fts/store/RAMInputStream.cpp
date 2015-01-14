@@ -11,7 +11,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t RAMInputStream::BUFFER_SIZE = RAMOutputStream::BUFFER_SIZE;
 
@@ -116,6 +117,8 @@ LuceneObjectPtr RAMInputStream::clone(const LuceneObjectPtr& other) {
     cloneInputStream->bufferStart = bufferStart;
     cloneInputStream->bufferLength = bufferLength;
     return cloneInputStream;
+}
+
 }
 
 }

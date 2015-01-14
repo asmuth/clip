@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Token literal values and constants.
 class QueryParserConstants {
@@ -74,4 +75,5 @@ protected:
 
 }
 
+}
 #endif

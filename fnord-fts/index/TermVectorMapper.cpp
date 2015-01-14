@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermVectorMapper.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorMapper::TermVectorMapper(bool ignoringPositions, bool ignoringOffsets) {
     this->ignoringPositions = ignoringPositions;
@@ -27,6 +28,8 @@ bool TermVectorMapper::isIgnoringOffsets() {
 
 void TermVectorMapper::setDocumentNumber(int32_t documentNumber) {
     // override
+}
+
 }
 
 }

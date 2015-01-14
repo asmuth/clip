@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/InvertedDocConsumerPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermsHashPerThread : public InvertedDocConsumerPerThread {
 public:
@@ -56,4 +57,5 @@ protected:
 
 }
 
+}
 #endif

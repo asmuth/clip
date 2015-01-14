@@ -9,7 +9,8 @@
 #include "fnord-fts/search/PrefixQuery.h"
 #include "fnord-fts/index/Term.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PrefixFilter::PrefixFilter(const TermPtr& prefix) : MultiTermQueryWrapperFilter(newLucene<PrefixQuery>(prefix)) {
 }
@@ -25,6 +26,8 @@ String PrefixFilter::toString() {
     StringStream buffer;
     buffer << L"PrefixFilter(" << getPrefix()->toString() << L")";
     return buffer.str();
+}
+
 }
 
 }

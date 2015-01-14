@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Analyzer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Filters {@link LetterTokenizer} with {@link LowerCaseFilter} and {@link StopFilter}.
 ///
@@ -49,4 +50,5 @@ public:
 
 }
 
+}
 #endif

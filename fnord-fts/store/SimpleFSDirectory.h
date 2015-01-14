@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/FSDirectory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A straightforward implementation of {@link FSDirectory} using std::ofstream and std::ifstream.
 class SimpleFSDirectory : public FSDirectory {
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

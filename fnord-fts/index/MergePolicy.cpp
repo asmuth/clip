@@ -10,7 +10,8 @@
 #include "fnord-fts/index/SegmentInfo.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MergePolicy::MergePolicy(const IndexWriterPtr& writer) {
     this->_writer = writer;
@@ -104,6 +105,8 @@ String MergeSpecification::segString(const DirectoryPtr& dir) {
         seg += L"  " + StringUtils::toString(i++) + L": " + (*merge)->segString(dir);
     }
     return seg;
+}
+
 }
 
 }

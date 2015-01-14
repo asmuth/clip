@@ -11,7 +11,8 @@
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Similarity.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PhraseScorer::PhraseScorer(const WeightPtr& weight, Collection<TermPositionsPtr> tps, Collection<int32_t> offsets, const SimilarityPtr& similarity, ByteArray norms) : Scorer(similarity) {
     this->firstTime = true;
@@ -143,6 +144,8 @@ void PhraseScorer::firstToLast() {
 
 String PhraseScorer::toString() {
     return L"scorer(" + weight->toString() + L")";
+}
+
 }
 
 }

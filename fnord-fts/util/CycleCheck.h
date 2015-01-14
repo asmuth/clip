@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Debug utility to track std::shared_ptr utilization.
 class CycleCheck {
@@ -47,4 +48,5 @@ public:
 
 }
 
+}
 #endif

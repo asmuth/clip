@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/NormalizeCharMap.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NormalizeCharMap::NormalizeCharMap() {
     diff = 0;
@@ -34,6 +35,8 @@ void NormalizeCharMap::add(const String& singleMatch, const String& replacement)
     }
     currMap->normStr = replacement;
     currMap->diff = (int32_t)(singleMatch.length() - replacement.length());
+}
+
 }
 
 }

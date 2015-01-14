@@ -10,7 +10,8 @@
 #include "fnord-fts/search/PhraseQueue.h"
 #include "fnord-fts/search/Similarity.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SloppyPhraseScorer::SloppyPhraseScorer(const WeightPtr& weight, Collection<TermPositionsPtr> tps, Collection<int32_t> offsets, const SimilarityPtr& similarity, int32_t slop, ByteArray norms) : PhraseScorer(weight, tps, offsets, similarity, norms) {
     this->slop = slop;
@@ -171,6 +172,8 @@ PhrasePositionsPtr SloppyPhraseScorer::termPositionsDiffer(const PhrasePositions
         }
     }
     return PhrasePositionsPtr();
+}
+
 }
 
 }

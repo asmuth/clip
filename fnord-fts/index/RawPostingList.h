@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is the base class for an in-memory posting list, keyed by a Token.  {@link TermsHash} maintains a
 /// hash table holding one instance of this per unique Token.  Consumers of TermsHash ({@link TermsHashConsumer})
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

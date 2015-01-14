@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermBuffer : public LuceneObject {
 public:
@@ -48,4 +49,5 @@ protected:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t TermAttribute::MIN_BUFFER_SIZE = 10;
 
@@ -144,6 +145,8 @@ void TermAttribute::copyTo(const AttributePtr& target) {
     initTermBuffer();
     TermAttributePtr targetTermAttribute(std::dynamic_pointer_cast<TermAttribute>(target));
     targetTermAttribute->setTermBuffer(_termBuffer.get(), 0, _termLength);
+}
+
 }
 
 }

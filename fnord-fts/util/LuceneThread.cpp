@@ -8,7 +8,8 @@
 #include <boost/thread/thread.hpp>
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 #if defined(_WIN32) || defined(_WIN64)
 const int32_t LuceneThread::MAX_THREAD_PRIORITY = THREAD_PRIORITY_HIGHEST;
@@ -105,6 +106,8 @@ void LuceneThread::threadSleep(int32_t time) {
 
 void LuceneThread::threadYield() {
     boost::this_thread::yield();
+}
+
 }
 
 }

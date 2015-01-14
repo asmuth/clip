@@ -10,7 +10,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/Term.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultipleTermPositions::MultipleTermPositions(const IndexReaderPtr& indexReader, Collection<TermPtr> terms) {
     Collection<TermPositionsPtr> termPositions(Collection<TermPositionsPtr>::newInstance());
@@ -169,6 +170,8 @@ int32_t IntQueue::size() {
 void IntQueue::growArray() {
     array.resize(arraySize * 2);
     arraySize *= 2;
+}
+
 }
 
 }

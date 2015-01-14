@@ -8,7 +8,8 @@
 #include "fnord-fts/search/BooleanScorer.h"
 #include "fnord-fts/search/Similarity.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 BooleanScorer::BooleanScorer(const SimilarityPtr& similarity, int32_t minNrShouldMatch, Collection<ScorerPtr> optionalScorers, Collection<ScorerPtr> prohibitedScorers) : Scorer(similarity) {
     this->bucketTable = newLucene<BucketTable>();
@@ -272,6 +273,8 @@ SubScorer::SubScorer(const ScorerPtr& scorer, bool required, bool prohibited, co
 }
 
 SubScorer::~SubScorer() {
+}
+
 }
 
 }

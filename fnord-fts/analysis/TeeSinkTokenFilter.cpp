@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/TeeSinkTokenFilter.h"
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TeeSinkTokenFilter::TeeSinkTokenFilter(const TokenStreamPtr& input) : TokenFilter(input) {
     this->sinks = Collection<SinkTokenStreamPtr>::newInstance();
@@ -144,6 +145,8 @@ void SinkTokenStream::end() {
 void SinkTokenStream::reset() {
     it = cachedStates.begin();
     initIterator = false;
+}
+
 }
 
 }

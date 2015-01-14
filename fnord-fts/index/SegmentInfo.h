@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Information about a segment such as it's name, directory, and files
 /// related to the segment.
@@ -170,4 +171,5 @@ protected:
 
 }
 
+}
 #endif

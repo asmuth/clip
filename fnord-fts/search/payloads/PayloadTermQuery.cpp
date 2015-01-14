@@ -16,7 +16,8 @@
 #include "fnord-fts/search/payloads/PayloadFunction.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PayloadTermQuery::PayloadTermQuery(const TermPtr& term, const PayloadFunctionPtr& function, bool includeSpanScore) : SpanTermQuery(term) {
     this->function = function;
@@ -162,6 +163,8 @@ ExplanationPtr PayloadTermSpanScorer::explain(int32_t doc) {
     result->setMatch(nonPayloadExpl->getValue() != 0.0);
 
     return result;
+}
+
 }
 
 }

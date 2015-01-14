@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Used by DocumentsWriter to implemented a StringReader that can be reset to a new string; we use this
 /// when tokenizing the string value from a Field.
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

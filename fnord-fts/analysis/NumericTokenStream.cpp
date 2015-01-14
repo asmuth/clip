@@ -12,7 +12,8 @@
 #include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 #include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NumericTokenStream::NumericTokenStream() {
     this->shift = 0;
@@ -134,6 +135,8 @@ String NumericTokenStream::toString() {
     StringStream buffer;
     buffer << L"(numeric,valSize=" << valSize << L",precisionStep=" << precisionStep << L")";
     return buffer.str();
+}
+
 }
 
 }

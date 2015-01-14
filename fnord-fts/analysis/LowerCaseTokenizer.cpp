@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/LowerCaseTokenizer.h"
 #include "fnord-fts/util/CharFolder.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LowerCaseTokenizer::LowerCaseTokenizer(const ReaderPtr& input) : LetterTokenizer(input) {
 }
@@ -24,6 +25,8 @@ LowerCaseTokenizer::~LowerCaseTokenizer() {
 
 wchar_t LowerCaseTokenizer::normalize(wchar_t c) {
     return CharFolder::toLower(c);
+}
+
 }
 
 }

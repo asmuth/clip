@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/SegmentInfoCollection.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A collection of SegmentInfo objects with methods for operating on those segments in relation to the file system.
 class SegmentInfos : public SegmentInfoCollection {
@@ -180,4 +181,5 @@ protected:
 
 }
 
+}
 #endif

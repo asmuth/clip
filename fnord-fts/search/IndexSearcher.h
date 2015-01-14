@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Searcher.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements search over a single IndexReader.
 ///
@@ -99,4 +100,5 @@ protected:
 
 }
 
+}
 #endif

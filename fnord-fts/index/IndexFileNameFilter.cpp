@@ -10,7 +10,8 @@
 #include "fnord-fts/index/IndexFileNameFilter.h"
 #include "fnord-fts/index/IndexFileNames.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 bool IndexFileNameFilter::accept(const String& directory, const String& name) {
     String::size_type i = name.find_last_of(L'.');
@@ -57,6 +58,8 @@ IndexFileNameFilterPtr IndexFileNameFilter::getFilter() {
         CycleCheck::addStatic(singleton);
     }
     return singleton;
+}
+
 }
 
 }

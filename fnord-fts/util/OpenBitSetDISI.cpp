@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/OpenBitSetDISI.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 OpenBitSetDISI::OpenBitSetDISI(const DocIdSetIteratorPtr& disi, int32_t maxSize) : OpenBitSet(maxSize) {
     inPlaceOr(disi);
@@ -53,6 +54,8 @@ void OpenBitSetDISI::inPlaceXor(const DocIdSetIteratorPtr& disi) {
     while ((doc = disi->nextDoc()) < _size) {
         flip(doc);
     }
+}
+
 }
 
 }

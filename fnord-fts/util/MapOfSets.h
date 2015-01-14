@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Helper class for keeping Lists of Objects associated with keys.
 template <class MAPKEY, class MAPHASH, class MAPEQUAL, class SETVALUE, class SETHASH, class SETEQUAL>
@@ -65,4 +66,5 @@ public:
 
 }
 
+}
 #endif

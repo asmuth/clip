@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/Directory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A memory-resident {@link Directory} implementation.  Locking implementation is by default the
 /// {@link SingleInstanceLockFactory} but can be changed with {@link #setLockFactory}.
@@ -83,4 +84,5 @@ public:
 
 }
 
+}
 #endif

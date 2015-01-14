@@ -13,7 +13,8 @@
 #include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
 #include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t StandardTokenizer::ALPHANUM = 0;
 const int32_t StandardTokenizer::APOSTROPHE = 1;
@@ -135,6 +136,8 @@ bool StandardTokenizer::isReplaceInvalidAcronym() {
 
 void StandardTokenizer::setReplaceInvalidAcronym(bool replaceInvalidAcronym) {
     this->replaceInvalidAcronym = replaceInvalidAcronym;
+}
+
 }
 
 }

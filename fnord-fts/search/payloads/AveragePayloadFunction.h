@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/payloads/PayloadFunction.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Calculate the final score as the average score of all payloads seen.
 ///
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

@@ -11,7 +11,8 @@
 #include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Query::Query() {
     boost = 1.0;
@@ -156,6 +157,8 @@ String Query::boostString() {
     boostString.setf(std::ios::fixed);
     boostString << L"^" << boost;
     return boostString.str();
+}
+
 }
 
 }

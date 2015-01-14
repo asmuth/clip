@@ -11,7 +11,8 @@
 #include "fnord-fts/search/BooleanClause.h"
 #include "fnord-fts/search/Weight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Query that matches documents matching boolean combinations of other queries, eg. {@link TermQuery}s,
 /// {@link PhraseQuery}s or other BooleanQuerys.
@@ -99,4 +100,5 @@ public:
 
 }
 
+}
 #endif

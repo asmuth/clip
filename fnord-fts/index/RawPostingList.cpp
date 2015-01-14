@@ -8,7 +8,8 @@
 #include "fnord-fts/index/RawPostingList.h"
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t RawPostingList::BYTES_SIZE = DocumentsWriter::OBJECT_HEADER_BYTES + 3 * DocumentsWriter::INT_NUM_BYTE;
 
@@ -19,6 +20,8 @@ RawPostingList::RawPostingList() {
 }
 
 RawPostingList::~RawPostingList() {
+}
+
 }
 
 }

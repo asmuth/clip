@@ -11,7 +11,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class VariantUtils {
 public:
@@ -97,4 +98,5 @@ public:
 
 }
 
+}
 #endif

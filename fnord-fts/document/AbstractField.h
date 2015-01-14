@@ -9,7 +9,8 @@
 
 #include "fnord-fts/document/Fieldable.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class AbstractField : public Fieldable, public LuceneObject {
 public:
@@ -218,4 +219,5 @@ protected:
 
 }
 
+}
 #endif

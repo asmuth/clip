@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Source of values for basic function queries.
 ///
@@ -43,4 +44,5 @@ public:
 
 }
 
+}
 #endif

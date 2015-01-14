@@ -13,7 +13,8 @@
 #include "fnord-fts/search/TopDocs.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TopScoreDocCollector::TopScoreDocCollector(int32_t numHits) : TopDocsCollector(newLucene<HitQueue>(numHits, true)) {
     // HitQueue implements getSentinelObject to return a ScoreDoc, so we know that at this point top()
@@ -115,6 +116,8 @@ void OutOfOrderTopScoreDocCollector::collect(int32_t doc) {
 
 bool OutOfOrderTopScoreDocCollector::acceptsDocsOutOfOrder() {
     return true;
+}
+
 }
 
 }

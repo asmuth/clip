@@ -10,7 +10,8 @@
 #include "fnord-fts/search/spans/SpanQuery.h"
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Matches spans near the beginning of a field.
 class SpanFirstQuery : public SpanQuery {
@@ -49,4 +50,5 @@ public:
 
 }
 
+}
 #endif

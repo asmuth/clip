@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class can be used if the token attributes of a TokenStream are intended to be consumed more than once.
 /// It caches all token attribute states locally in a List.
@@ -39,4 +40,5 @@ protected:
 
 }
 
+}
 #endif

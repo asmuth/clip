@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A filter that replaces accented characters in the ISO Latin 1 character set (ISO-8859-1) by their unaccented
 /// equivalent. The case will not be altered.
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

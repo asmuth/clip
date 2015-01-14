@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/queryparser/QueryParserToken.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 QueryParserToken::QueryParserToken(int32_t kind, const String& image) {
     this->kind = kind;
@@ -27,6 +28,8 @@ String QueryParserToken::toString() {
 
 QueryParserTokenPtr QueryParserToken::newToken(int32_t ofKind, const String& image) {
     return newLucene<QueryParserToken>(ofKind, image);
+}
+
 }
 
 }

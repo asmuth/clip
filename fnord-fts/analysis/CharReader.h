@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/CharStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// CharReader is a Reader wrapper.  It reads chars from Reader and outputs {@link CharStream}, defining an
 /// identify function {@link #correctOffset} method that simply returns the provided offset.
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

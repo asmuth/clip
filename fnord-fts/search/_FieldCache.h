@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// @see FieldCache#DEFAULT_BYTE_PARSER()
 class DefaultByteParser : public ByteParser {
@@ -90,4 +91,5 @@ public:
 
 }
 
+}
 #endif

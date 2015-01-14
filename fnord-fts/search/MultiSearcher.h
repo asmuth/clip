@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Searcher.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements search over a set of Searchables.
 ///
@@ -75,4 +76,5 @@ protected:
 
 }
 
+}
 #endif

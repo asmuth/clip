@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/BaseCharFilter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 BaseCharFilter::BaseCharFilter(const CharStreamPtr& in) : CharFilter(in) {
     size = 0;
@@ -63,6 +64,8 @@ void BaseCharFilter::addOffCorrectMap(int32_t off, int32_t cumulativeDiff) {
 
     offsets[size] = off;
     diffs[size++] = cumulativeDiff;
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/SerialMergeScheduler.h"
 #include "fnord-fts/index/IndexWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SerialMergeScheduler::~SerialMergeScheduler() {
 }
@@ -25,6 +26,8 @@ void SerialMergeScheduler::merge(const IndexWriterPtr& writer) {
 }
 
 void SerialMergeScheduler::close() {
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Common scoring functionality for different types of queries.
 ///
@@ -60,4 +61,5 @@ protected:
 
 }
 
+}
 #endif

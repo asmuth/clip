@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Analyzer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Tokenizes the entire stream as a single token. This is useful for data like zip codes, ids, and some
 /// product names.
@@ -26,4 +27,5 @@ public:
 
 }
 
+}
 #endif

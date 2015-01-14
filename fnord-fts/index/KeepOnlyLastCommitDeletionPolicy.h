@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/IndexDeletionPolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This {@link IndexDeletionPolicy} implementation that keeps only the most recent commit and immediately
 /// removes all prior commits after a new commit is done.  This is the default deletion policy.
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

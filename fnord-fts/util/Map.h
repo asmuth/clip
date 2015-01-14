@@ -10,7 +10,8 @@
 #include <map>
 #include "fnord-fts/util/LuceneSync.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility template class to handle maps that can be safely copied and shared
 template < class KEY, class VALUE, class LESS = std::less<KEY> >
@@ -33,7 +34,7 @@ protected:
 public:
     static this_type newInstance() {
         this_type instance;
-        instance.mapContainer = Lucene::newInstance<map_type>();
+        instance.mapContainer = fnord::fts::newInstance<map_type>();
         return instance;
     }
 
@@ -127,4 +128,5 @@ public:
 
 }
 
+}
 #endif

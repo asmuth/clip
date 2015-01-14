@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Encapsulates sort criteria for returned hits.
 ///
@@ -112,4 +113,5 @@ public:
 
 }
 
+}
 #endif

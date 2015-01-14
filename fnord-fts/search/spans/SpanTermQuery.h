@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/SpanQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Matches spans containing a term.
 class SpanTermQuery : public SpanQuery {
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

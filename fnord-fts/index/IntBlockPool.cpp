@@ -8,7 +8,8 @@
 #include "fnord-fts/index/IntBlockPool.h"
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 IntBlockPool::IntBlockPool(const DocumentsWriterPtr& docWriter, bool trackAllocations) {
     this->buffers = Collection<IntArray>::newInstance(10);
@@ -47,6 +48,8 @@ void IntBlockPool::nextBuffer() {
 
     intUpto = 0;
     intOffset += DocumentsWriter::INT_BLOCK_SIZE;
+}
+
 }
 
 }

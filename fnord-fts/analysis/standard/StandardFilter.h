@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Normalizes tokens extracted with {@link StandardTokenizer}.
 class StandardFilter : public TokenFilter {
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

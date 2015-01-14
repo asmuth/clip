@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/DocFieldConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class DocFieldConsumersPerField : public DocFieldConsumerPerField {
 public:
@@ -32,4 +33,5 @@ public:
 
 }
 
+}
 #endif

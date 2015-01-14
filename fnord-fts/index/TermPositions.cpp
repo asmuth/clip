@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermPositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermPositions::TermPositions() {
 }
@@ -33,6 +34,8 @@ ByteArray TermPositions::getPayload(ByteArray data, int32_t offset) {
 bool TermPositions::isPayloadAvailable() {
     BOOST_ASSERT(false);
     return false; // override
+}
+
 }
 
 }

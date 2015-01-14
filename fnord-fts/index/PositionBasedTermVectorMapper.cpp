@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/PositionBasedTermVectorMapper.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PositionBasedTermVectorMapper::PositionBasedTermVectorMapper(bool ignoringOffsets) : TermVectorMapper(false, ignoringOffsets) {
     storeOffsets = false;
@@ -77,6 +78,8 @@ Collection<String> TermVectorsPositionInfo::getTerms() {
 
 Collection<TermVectorOffsetInfoPtr> TermVectorsPositionInfo::getOffsets() {
     return offsets;
+}
+
 }
 
 }

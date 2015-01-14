@@ -8,7 +8,8 @@
 #include "fnord-fts/index/CharBlockPool.h"
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CharBlockPool::CharBlockPool(const DocumentsWriterPtr& docWriter) {
     numBuffer = 0;
@@ -39,6 +40,8 @@ void CharBlockPool::nextBuffer() {
 
     charUpto = 0;
     charOffset += DocumentsWriter::CHAR_BLOCK_SIZE;
+}
+
 }
 
 }

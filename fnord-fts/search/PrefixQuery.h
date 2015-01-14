@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Query that matches documents containing terms with a specified prefix. A PrefixQuery is built by
 /// QueryParser for input like app*.
@@ -46,4 +47,5 @@ protected:
 
 }
 
+}
 #endif

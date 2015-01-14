@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements the wildcard search query.  Supported wildcards are *, which matches any character sequence
 /// (including the empty one), and ?, which matches any single character. Note this query can be slow, as
@@ -51,4 +52,5 @@ protected:
 
 }
 
+}
 #endif

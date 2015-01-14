@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/SegmentWriteState.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentWriteState::SegmentWriteState(const DocumentsWriterPtr& docWriter, const DirectoryPtr& directory, const String& segmentName,
                                      const String& docStoreSegmentName, int32_t numDocs, int32_t numDocsInStore,
@@ -27,6 +28,8 @@ SegmentWriteState::~SegmentWriteState() {
 
 String SegmentWriteState::segmentFileName(const String& ext) {
     return segmentName + L"." + ext;
+}
+
 }
 
 }

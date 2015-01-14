@@ -22,7 +22,8 @@
 #include "fnord-fts/util/UTF8Stream.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermsHashPerField::TermsHashPerField(const DocInverterPerFieldPtr& docInverterPerField, const TermsHashPerThreadPtr& perThread, const TermsHashPerThreadPtr& nextPerThread, const FieldInfoPtr& fieldInfo) {
     this->_docInverterPerField = docInverterPerField;
@@ -492,6 +493,8 @@ void TermsHashPerField::rehashPostings(int32_t newSize) {
     postingsHash = newHash;
     postingsHashSize = newSize;
     postingsHashHalfSize = (newSize >> 1);
+}
+
 }
 
 }

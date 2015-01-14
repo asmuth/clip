@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TypeAttribute::TypeAttribute() {
     _type = DEFAULT_TYPE();
@@ -68,6 +69,8 @@ LuceneObjectPtr TypeAttribute::clone(const LuceneObjectPtr& other) {
     TypeAttributePtr cloneAttribute(std::dynamic_pointer_cast<TypeAttribute>(Attribute::clone(clone)));
     cloneAttribute->_type = _type;
     return cloneAttribute;
+}
+
 }
 
 }

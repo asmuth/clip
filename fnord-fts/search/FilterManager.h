@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Filter caching singleton.  It can be used to save filters locally for reuse.  Also could be used as a
 /// persistent storage for any filter as long as the filter provides a proper hashCode(), as that is used
@@ -68,4 +69,5 @@ public:
 
 }
 
+}
 #endif

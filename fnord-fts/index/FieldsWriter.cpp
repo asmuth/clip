@@ -16,7 +16,8 @@
 #include "fnord-fts/document/Document.h"
 #include "fnord-fts/util/TestPoint.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const uint8_t FieldsWriter::FIELD_IS_TOKENIZED = 0x1;
 const uint8_t FieldsWriter::FIELD_IS_BINARY = 0x2;
@@ -184,6 +185,8 @@ void FieldsWriter::addDocument(const DocumentPtr& doc) {
             writeField(fieldInfos->fieldInfo((*field)->name()), *field);
         }
     }
+}
+
 }
 
 }

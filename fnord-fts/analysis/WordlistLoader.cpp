@@ -10,7 +10,8 @@
 #include "fnord-fts/util/FileReader.h"
 #include "fnord-fts/util/BufferedReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 WordlistLoader::~WordlistLoader() {
 }
@@ -83,6 +84,8 @@ MapStringString WordlistLoader::getStemDict(const String& wordstemfile) {
     }
     finally.throwException();
     return result;
+}
+
 }
 
 }

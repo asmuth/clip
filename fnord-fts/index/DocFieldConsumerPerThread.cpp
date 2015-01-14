@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/DocFieldConsumerPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldConsumerPerThread::~DocFieldConsumerPerThread() {
+}
+
 }
 
 }

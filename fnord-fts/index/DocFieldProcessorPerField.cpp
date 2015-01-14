@@ -10,7 +10,8 @@
 #include "fnord-fts/index/DocFieldConsumerPerThread.h"
 #include "fnord-fts/index/DocFieldConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldProcessorPerField::DocFieldProcessorPerField(const DocFieldProcessorPerThreadPtr& perThread, const FieldInfoPtr& fieldInfo) {
     lastGen = -1;
@@ -25,6 +26,8 @@ DocFieldProcessorPerField::~DocFieldProcessorPerField() {
 
 void DocFieldProcessorPerField::abort() {
     consumer->abort();
+}
+
 }
 
 }

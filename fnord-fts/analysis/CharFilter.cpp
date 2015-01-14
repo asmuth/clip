@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/CharFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CharFilter::CharFilter(const CharStreamPtr& in) {
     input = in;
@@ -42,6 +43,8 @@ void CharFilter::mark(int32_t readAheadLimit) {
 
 void CharFilter::reset() {
     input->reset();
+}
+
 }
 
 }

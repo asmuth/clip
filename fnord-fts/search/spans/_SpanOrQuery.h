@@ -10,7 +10,8 @@
 #include "fnord-fts/util/PriorityQueue.h"
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SpanQueue : public PriorityQueue<SpansPtr> {
 public:
@@ -52,4 +53,5 @@ protected:
 
 }
 
+}
 #endif

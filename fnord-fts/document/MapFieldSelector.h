@@ -9,7 +9,8 @@
 
 #include "fnord-fts/document/FieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 typedef HashMap<String, FieldSelector::FieldSelectorResult> MapStringFieldSelectorResult;
 
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

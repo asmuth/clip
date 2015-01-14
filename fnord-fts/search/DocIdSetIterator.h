@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This abstract class defines methods to iterate over a set of non-decreasing doc ids.  Note that this class
 /// assumes it iterates on doc Ids, and therefore {@link #NO_MORE_DOCS} is set to {@value #NO_MORE_DOCS} in order to
@@ -72,4 +73,5 @@ public:
 
 }
 
+}
 #endif

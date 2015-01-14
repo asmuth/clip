@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An implementation of {@link FieldValueHitQueue} which is optimized in case there is just one comparator.
 class OneComparatorFieldValueHitQueue : public FieldValueHitQueue {
@@ -41,4 +42,5 @@ protected:
 
 }
 
+}
 #endif

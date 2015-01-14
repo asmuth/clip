@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Public for extension only
 class TermSpans : public Spans {
@@ -42,4 +43,5 @@ public:
 
 }
 
+}
 #endif

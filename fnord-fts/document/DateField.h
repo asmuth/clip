@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Provides support for converting dates to strings and vice-versa.  The strings are structured so that
 /// lexicographic sorting orders by date, which makes them suitable for use as field values and search terms.
@@ -53,4 +54,5 @@ public:
 
 }
 
+}
 #endif

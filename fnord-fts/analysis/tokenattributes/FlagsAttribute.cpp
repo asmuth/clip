@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/tokenattributes/FlagsAttribute.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FlagsAttribute::FlagsAttribute() {
     flags = 0;
@@ -59,6 +60,8 @@ LuceneObjectPtr FlagsAttribute::clone(const LuceneObjectPtr& other) {
     FlagsAttributePtr cloneAttribute(std::dynamic_pointer_cast<FlagsAttribute>(Attribute::clone(clone)));
     cloneAttribute->flags = flags;
     return cloneAttribute;
+}
+
 }
 
 }

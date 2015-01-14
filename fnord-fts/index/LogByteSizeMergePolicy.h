@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/LogMergePolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is a {@link LogMergePolicy} that measures size of a segment as the total byte size of the
 /// segment's files.
@@ -58,4 +59,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class DocConsumerPerThread : public LuceneObject {
 public:
@@ -28,4 +29,5 @@ public:
 
 }
 
+}
 #endif

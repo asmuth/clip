@@ -10,7 +10,8 @@
 #include "fnord-fts/search/function/FieldCacheSource.h"
 #include "fnord-fts/search/function/DocValues.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Obtains double field values from the {@link FieldCache} using getDoubles() and makes those values available
 /// as other numeric types, casting as needed.
@@ -59,4 +60,5 @@ public:
 
 }
 
+}
 #endif

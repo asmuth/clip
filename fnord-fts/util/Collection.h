@@ -10,7 +10,8 @@
 #include <vector>
 #include "fnord-fts/util/LuceneSync.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility template class to handle collections that can be safely copied and shared
 template <class TYPE>
@@ -32,14 +33,14 @@ protected:
 public:
     static this_type newInstance(int32_t size = 0) {
         this_type instance;
-        instance.container = Lucene::newInstance<collection_type>(size);
+        instance.container = fnord::fts::newInstance<collection_type>(size);
         return instance;
     }
 
     template <class ITER>
     static this_type newInstance(ITER first, ITER last) {
         this_type instance;
-        instance.container = Lucene::newInstance<collection_type>(first, last);
+        instance.container = fnord::fts::newInstance<collection_type>(first, last);
         return instance;
     }
 
@@ -267,4 +268,5 @@ Collection<TYPE> newCollection(const TYPE& a1, const TYPE& a2, const TYPE& a3, c
 
 }
 
+}
 #endif

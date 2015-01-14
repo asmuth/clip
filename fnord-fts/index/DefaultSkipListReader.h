@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/MultiLevelSkipListReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements the skip list reader for the default posting list format that stores positions and payloads.
 class DefaultSkipListReader : public MultiLevelSkipListReader {
@@ -57,4 +58,5 @@ protected:
 
 }
 
+}
 #endif

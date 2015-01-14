@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/TopDocsCollector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements a TopFieldCollector over one SortField criteria, without tracking document scores and maxScore.
 class OneComparatorNonScoringCollector : public TopFieldCollector {
@@ -204,4 +205,5 @@ public:
 
 }
 
+}
 #endif

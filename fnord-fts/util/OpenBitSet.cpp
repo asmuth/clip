@@ -10,7 +10,8 @@
 #include "fnord-fts/util/BitUtil.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 OpenBitSet::OpenBitSet(int64_t numBits) {
     bits = LongArray::newInstance(bits2words(numBits));
@@ -570,6 +571,8 @@ int32_t OpenBitSet::hashCode() {
     // Fold leftmost bits into right and add a constant to prevent empty sets from
     // returning 0, which is too common.
     return (int32_t)((hash >> 32) ^ hash) + 0x98761234;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Query that sets document score as a programmatic function of several (sub) scores:
 /// <ol>
@@ -129,4 +130,5 @@ protected:
 
 }
 
+}
 #endif

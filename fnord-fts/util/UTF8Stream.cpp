@@ -8,7 +8,8 @@
 #include "fnord-fts/util/UTF8Stream.h"
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const uint16_t UTF8Base::LEAD_SURROGATE_MIN = 0xd800u;
 const uint16_t UTF8Base::LEAD_SURROGATE_MAX = 0xdbffu;
@@ -391,3 +392,5 @@ int32_t UTF16Decoder::decode(wchar_t* unicode, int32_t length) {
 
 }
 
+
+}

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The term text of a Token.
 class TermAttribute : public Attribute {
@@ -89,4 +90,5 @@ protected:
 
 }
 
+}
 #endif

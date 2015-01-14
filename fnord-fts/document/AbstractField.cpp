@@ -10,7 +10,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 AbstractField::AbstractField() {
     this->_name = L"body";
@@ -202,6 +203,8 @@ String AbstractField::toString() {
 
     result << L">";
     return result.str();
+}
+
 }
 
 }

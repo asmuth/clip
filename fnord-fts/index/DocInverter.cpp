@@ -15,7 +15,8 @@
 #include "fnord-fts/index/DocInverterPerField.h"
 #include "fnord-fts/index/DocInverterPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocInverter::DocInverter(const InvertedDocConsumerPtr& consumer, const InvertedDocEndConsumerPtr& endConsumer) {
     this->consumer = consumer;
@@ -68,6 +69,8 @@ bool DocInverter::freeRAM() {
 
 DocFieldConsumerPerThreadPtr DocInverter::addThread(const DocFieldProcessorPerThreadPtr& docFieldProcessorPerThread) {
     return newLucene<DocInverterPerThread>(docFieldProcessorPerThread, shared_from_this());
+}
+
 }
 
 }

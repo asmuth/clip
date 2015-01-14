@@ -11,7 +11,8 @@
 #include "fnord-fts/util/StringReader.h"
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 QueryTermVector::QueryTermVector(Collection<String> queryTerms) {
     terms = Collection<String>::newInstance();
@@ -113,6 +114,8 @@ Collection<int32_t> QueryTermVector::indexesOf(Collection<String> terms, int32_t
         res[i] = indexOf(terms[i]);
     }
     return res;
+}
+
 }
 
 }

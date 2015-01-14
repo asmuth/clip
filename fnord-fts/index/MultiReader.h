@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An IndexReader which reads multiple indexes, appending their content.
 class MultiReader : public IndexReader {
@@ -139,4 +140,5 @@ protected:
 
 }
 
+}
 #endif

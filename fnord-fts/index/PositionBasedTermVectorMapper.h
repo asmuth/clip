@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermVectorMapper.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class PositionBasedTermVectorMapper : public TermVectorMapper {
 public:
@@ -76,4 +77,5 @@ public:
 
 }
 
+}
 #endif

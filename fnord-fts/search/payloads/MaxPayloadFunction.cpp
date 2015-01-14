@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MaxPayloadFunction::~MaxPayloadFunction() {
 }
@@ -45,6 +46,8 @@ bool MaxPayloadFunction::equals(const LuceneObjectPtr& other) {
         return false;
     }
     return true;
+}
+
 }
 
 }

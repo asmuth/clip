@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/function/DocValues.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class OrdDocValues : public DocValues {
 public:
@@ -31,4 +32,5 @@ public:
 
 }
 
+}
 #endif

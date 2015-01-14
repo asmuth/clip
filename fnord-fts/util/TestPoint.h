@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Used for unit testing as a substitute for stack trace
 class TestPoint {
@@ -40,4 +41,5 @@ protected:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/IndexCommit.h"
 #include "fnord-fts/store/Directory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 IndexCommit::~IndexCommit() {
 }
@@ -30,6 +31,8 @@ int32_t IndexCommit::hashCode() {
 
 int64_t IndexCommit::getTimestamp() {
     return getDirectory()->fileModified(getSegmentsFileName());
+}
+
 }
 
 }

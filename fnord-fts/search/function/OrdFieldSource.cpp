@@ -11,7 +11,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 OrdFieldSource::OrdFieldSource(const String& field) {
     this->field = field;
@@ -73,6 +74,8 @@ String OrdDocValues::toString(int32_t doc) {
 
 CollectionValue OrdDocValues::getInnerArray() {
     return arr;
+}
+
 }
 
 }

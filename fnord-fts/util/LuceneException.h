@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Lucene exception container.
 class LuceneException : public std::exception {
@@ -95,4 +96,5 @@ typedef ExceptionTemplate<LuceneException, LuceneException::QueryParser> QueryPa
 typedef ExceptionTemplate<LuceneException, LuceneException::Compression> CompressionException;
 }
 
+}
 #endif

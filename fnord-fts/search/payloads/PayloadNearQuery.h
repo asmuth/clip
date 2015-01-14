@@ -11,7 +11,8 @@
 #include "fnord-fts/search/spans/SpanWeight.h"
 #include "fnord-fts/search/spans/SpanScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class is very similar to {@link SpanNearQuery} except that it factors in the value of the payloads
 /// located at each of the positions where the {@link TermSpans} occurs.
@@ -96,4 +97,5 @@ protected:
 
 }
 
+}
 #endif

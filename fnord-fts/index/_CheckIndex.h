@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/SegmentTermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MySegmentTermDocs : public SegmentTermDocs {
 public:
@@ -28,4 +29,5 @@ public:
 
 }
 
+}
 #endif

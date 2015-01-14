@@ -10,7 +10,8 @@
 #include "fnord-fts/util/LuceneObject.h"
 #include <boost/filesystem/fstream.hpp>
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility class to support streaming info messages.
 class InfoStream : public LuceneObject {
@@ -62,4 +63,5 @@ public:
 
 }
 
+}
 #endif

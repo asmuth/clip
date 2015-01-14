@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/SpanQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Matches the union of its clauses.
 class SpanOrQuery : public SpanQuery {
@@ -44,4 +45,5 @@ public:
 
 }
 
+}
 #endif

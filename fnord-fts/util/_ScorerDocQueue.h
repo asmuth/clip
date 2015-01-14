@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class HeapedScorerDoc : public LuceneObject {
 public:
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

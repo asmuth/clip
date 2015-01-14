@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Default buffer size.
 const int32_t BufferedIndexInput::BUFFER_SIZE = 1024;
@@ -165,6 +166,8 @@ LuceneObjectPtr BufferedIndexInput::clone(const LuceneObjectPtr& other) {
     cloneIndexInput->bufferPosition = 0;
     cloneIndexInput->bufferStart = getFilePointer();
     return cloneIndexInput;
+}
+
 }
 
 }

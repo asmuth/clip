@@ -13,7 +13,8 @@
 #include "fnord-fts/util/Reader.h"
 #include "fnord-fts/util/CharFolder.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Maximum length of UTF encoding.
 const int32_t StringUtils::MAX_ENCODING_UTF8_SIZE = 4;
@@ -197,3 +198,5 @@ String StringUtils::toString(int64_t value, int32_t base) {
 
 }
 
+
+}

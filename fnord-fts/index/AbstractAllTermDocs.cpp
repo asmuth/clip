@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/AbstractAllTermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 AbstractAllTermDocs::AbstractAllTermDocs(int32_t maxDoc) {
     this->maxDoc = maxDoc;
@@ -67,6 +68,8 @@ bool AbstractAllTermDocs::skipTo(int32_t target) {
 }
 
 void AbstractAllTermDocs::close() {
+}
+
 }
 
 }

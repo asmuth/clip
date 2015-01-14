@@ -7,12 +7,15 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/payloads/PayloadFunction.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PayloadFunction::PayloadFunction() {
 }
 
 PayloadFunction::~PayloadFunction() {
+}
+
 }
 
 }

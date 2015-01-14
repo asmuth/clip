@@ -11,7 +11,8 @@
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A query that wraps a filter and simply returns a constant score equal to the query boost for every
 /// document in the filter.
@@ -49,4 +50,5 @@ public:
 
 }
 
+}
 #endif

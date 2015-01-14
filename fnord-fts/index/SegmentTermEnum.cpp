@@ -12,7 +12,8 @@
 #include "fnord-fts/index/TermInfo.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentTermEnum::SegmentTermEnum() {
     format = 0;
@@ -202,6 +203,8 @@ int64_t SegmentTermEnum::proxPointer() {
 
 void SegmentTermEnum::close() {
     input->close();
+}
+
 }
 
 }

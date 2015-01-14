@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An IndexReader which reads multiple, parallel indexes.  Each index added must have the same number of
 /// documents, but typically each contains different fields.  Each document contains the union of the fields
@@ -178,4 +179,5 @@ protected:
 
 }
 
+}
 #endif

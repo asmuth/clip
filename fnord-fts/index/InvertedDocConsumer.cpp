@@ -7,13 +7,16 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/InvertedDocConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 InvertedDocConsumer::~InvertedDocConsumer() {
 }
 
 void InvertedDocConsumer::setFieldInfos(const FieldInfosPtr& fieldInfos) {
     this->fieldInfos = fieldInfos;
+}
+
 }
 
 }

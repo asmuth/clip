@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Analyzer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An {@link Analyzer} that filters {@link LetterTokenizer} with {@link LowerCaseFilter}
 class SimpleAnalyzer : public Analyzer {
@@ -25,4 +26,5 @@ public:
 
 }
 
+}
 #endif

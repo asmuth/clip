@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/CachingTokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CachingTokenFilter::CachingTokenFilter(const TokenStreamPtr& input) : TokenFilter(input) {
 }
@@ -52,6 +53,8 @@ void CachingTokenFilter::fillCache() {
     // capture final state
     input->end();
     finalState = captureState();
+}
+
 }
 
 }

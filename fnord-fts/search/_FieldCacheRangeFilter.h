@@ -13,7 +13,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FieldCacheRangeFilterString : public FieldCacheRangeFilter {
 public:
@@ -260,4 +261,5 @@ public:
 
 }
 
+}
 #endif

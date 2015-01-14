@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/IndexInput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// IndexInput that knows how to read the byte slices written by Posting and PostingVector.  We read the bytes in each slice
 /// until we hit the end of that slice at which point we read the forwarding address of the next slice and then jump to it.
@@ -59,4 +60,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Similarity.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Delegating scoring implementation.  Useful in {@link Query#getSimilarity(Searcher)} implementations,
 /// to override only certain methods of a Searcher's Similarity implementation.
@@ -36,4 +37,5 @@ public:
 
 }
 
+}
 #endif

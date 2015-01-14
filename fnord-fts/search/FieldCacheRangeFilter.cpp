@@ -14,7 +14,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldCacheRangeFilter::FieldCacheRangeFilter(const String& field, const ParserPtr& parser, bool includeLower, bool includeUpper) {
     this->field = field;
@@ -357,6 +358,8 @@ int32_t FieldDocIdSetIteratorIncrement::advance(int32_t target) {
         doc = NO_MORE_DOCS;
         return doc;
     }
+}
+
 }
 
 }

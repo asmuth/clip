@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/DocFieldConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds state for inverting all occurrences of a single field in the document.  This class doesn't do
 /// anything itself; instead, it forwards the tokens produced by analysis to its own consumer
@@ -41,4 +42,5 @@ public:
 
 }
 
+}
 #endif

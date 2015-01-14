@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The {@link TimeLimitingCollector} is used to timeout search requests that take longer than the maximum
 /// allowed search time limit.  After this time is exceeded, the search thread is stopped by throwing a
@@ -94,4 +95,5 @@ protected:
 
 }
 
+}
 #endif

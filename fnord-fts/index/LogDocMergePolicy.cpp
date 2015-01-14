@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/LogDocMergePolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Default minimum segment size.  @see setMinMergeDocs
 const int32_t LogDocMergePolicy::DEFAULT_MIN_MERGE_DOCS = 1000;
@@ -32,6 +33,8 @@ void LogDocMergePolicy::setMinMergeDocs(int32_t minMergeDocs) {
 
 int32_t LogDocMergePolicy::getMinMergeDocs() {
     return (int32_t)minMergeSize;
+}
+
 }
 
 }

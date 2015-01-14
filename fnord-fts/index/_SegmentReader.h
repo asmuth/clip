@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/CloseableThreadLocal.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds core readers that are shared (unchanged) when SegmentReader is cloned or reopened
 class CoreReaders : public LuceneObject {
@@ -156,4 +157,5 @@ protected:
 
 }
 
+}
 #endif

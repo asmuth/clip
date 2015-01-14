@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Floating point numbers smaller than 32 bits.
 class SmallDouble : public LuceneObject {
@@ -30,4 +31,5 @@ public:
 
 }
 
+}
 #endif

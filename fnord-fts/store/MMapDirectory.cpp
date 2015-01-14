@@ -13,7 +13,8 @@
 #include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MMapDirectory::MMapDirectory(const String& path, const LockFactoryPtr& lockFactory) : FSDirectory(path, lockFactory) {
 }
@@ -97,6 +98,8 @@ LuceneObjectPtr MMapIndexInput::clone(const LuceneObjectPtr& other) {
     cloneIndexInput->bufferPosition = bufferPosition;
     cloneIndexInput->isClone = true;
     return cloneIndexInput;
+}
+
 }
 
 }

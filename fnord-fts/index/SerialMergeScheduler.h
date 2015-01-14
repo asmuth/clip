@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/MergeScheduler.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link MergeScheduler} that simply does each merge sequentially, using the current thread.
 class SerialMergeScheduler : public MergeScheduler {
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

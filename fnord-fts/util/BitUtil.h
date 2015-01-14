@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A variety of high efficiency bit twiddling routines.
 class BitUtil : public LuceneObject {
@@ -72,4 +73,5 @@ protected:
 
 }
 
+}
 #endif

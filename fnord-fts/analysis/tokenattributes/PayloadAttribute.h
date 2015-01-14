@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The start and end character offset of a Token.
 class PayloadAttribute : public Attribute {
@@ -45,4 +46,5 @@ public:
 
 }
 
+}
 #endif

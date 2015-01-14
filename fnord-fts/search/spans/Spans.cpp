@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Spans::~Spans() {
+}
+
 }
 
 }

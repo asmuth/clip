@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/IndexInput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This abstract class reads skip lists with multiple levels.
 ///
@@ -119,4 +120,5 @@ public:
 
 }
 
+}
 #endif

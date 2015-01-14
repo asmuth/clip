@@ -10,7 +10,8 @@
 #include <cstring>
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 template <typename TYPE>
 class ArrayData {
@@ -60,7 +61,7 @@ protected:
 public:
     static this_type newInstance(int32_t size) {
         this_type instance;
-        instance.container = Lucene::newInstance<array_type>(size);
+        instance.container = fnord::fts::newInstance<array_type>(size);
         instance.array = instance.container.get();
         return instance;
     }
@@ -73,7 +74,7 @@ public:
         if (size == 0) {
             container.reset();
         } else if (!container) {
-            container = Lucene::newInstance<array_type>(size);
+            container = fnord::fts::newInstance<array_type>(size);
         } else {
             container->resize(size);
         }
@@ -133,4 +134,5 @@ inline bool operator== (const Array<TYPE>& value1, const Array<TYPE>& value2) {
 
 }
 
+}
 #endif

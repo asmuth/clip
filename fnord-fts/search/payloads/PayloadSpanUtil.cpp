@@ -20,7 +20,8 @@
 #include "fnord-fts/search/spans/Spans.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PayloadSpanUtil::PayloadSpanUtil(const IndexReaderPtr& reader) {
     this->reader = reader;
@@ -143,6 +144,8 @@ void PayloadSpanUtil::getPayloads(Collection<ByteArray> payloads, const SpanQuer
             }
         }
     }
+}
+
 }
 
 }

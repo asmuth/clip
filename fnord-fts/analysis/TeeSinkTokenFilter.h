@@ -10,7 +10,8 @@
 #include "fnord-fts/analysis/TokenFilter.h"
 #include "fnord-fts/analysis/TokenStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This TokenFilter provides the ability to set aside attribute states that have already been analyzed.  This is
 /// useful in situations where multiple fields share many common analysis steps and then go their separate ways.
@@ -146,4 +147,5 @@ public:
 
 }
 
+}
 #endif

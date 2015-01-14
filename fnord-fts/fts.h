@@ -36,7 +36,8 @@
 #ifndef FNORD_FTS_LUCENEFACTORY_H_
 #define FNORD_FTS_LUCENEFACTORY_H_
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 template <class T>
 std::shared_ptr<T> newInstance() {
@@ -159,7 +160,7 @@ std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const&
 }
 
 }
-
+}
 #endif
 
 #ifndef FNORD_FTS_LUCENETYPES_H_
@@ -188,7 +189,8 @@ std::shared_ptr<T> newLucene(A1 const& a1, A2 const& a2, A3 const& a3, A4 const&
     typedef std::shared_ptr<Type> Type##Ptr; \
     typedef std::weak_ptr<Type> Type##WeakPtr;
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 // analysis
 DECLARE_SHARED_PTR(Analyzer)
@@ -733,6 +735,7 @@ DECLARE_SHARED_PTR(UTF8EncoderStream)
 DECLARE_SHARED_PTR(UTF8Result)
 DECLARE_SHARED_PTR(UTF16Decoder)
 }
+}
 
 #include "fnord-fts/util/LuceneAllocator.h"
 
@@ -753,7 +756,8 @@ class ptime;
 
 }
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 typedef std::basic_string< char, std::char_traits<char> > SingleString;
 typedef std::basic_ostringstream< char, std::char_traits<char> > SingleStringStream;
@@ -769,6 +773,7 @@ typedef std::shared_ptr<boost::filesystem::ofstream> ofstreamPtr;
 typedef std::shared_ptr<boost::filesystem::ifstream> ifstreamPtr;
 typedef std::shared_ptr<std::locale> localePtr;
 }
+}
 
 #include "fnord-fts/util/LuceneException.h"
 #include "fnord-fts/util/Array.h"
@@ -779,7 +784,8 @@ typedef std::shared_ptr<std::locale> localePtr;
 #include "fnord-fts/util/HashSet.h"
 #include "fnord-fts/util/Constants.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 typedef Array<uint8_t> ByteArray;
 typedef Array<int32_t> IntArray;
@@ -904,6 +910,7 @@ typedef boost::function<bool (const TermVectorEntryPtr&, const TermVectorEntryPt
 template < class KEY, class VALUE, class HASH = boost::hash<KEY>, class EQUAL = std::equal_to<KEY> > class SimpleLRUCache;
 typedef SimpleLRUCache< TermPtr, TermInfoPtr, luceneHash<TermPtr>, luceneEquals<TermPtr> > TermInfoCache;
 typedef std::shared_ptr<TermInfoCache> TermInfoCachePtr;
+}
 }
 
 #include "fnord-fts/util/Synchronize.h"

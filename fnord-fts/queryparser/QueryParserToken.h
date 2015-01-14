@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Describes the input token stream.
 class QueryParserToken : public LuceneObject {
@@ -67,4 +68,5 @@ public:
 
 }
 
+}
 #endif

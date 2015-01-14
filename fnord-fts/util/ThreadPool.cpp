@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/ThreadPool.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Future::~Future() {
 }
@@ -33,6 +34,8 @@ ThreadPoolPtr ThreadPool::getInstance() {
         CycleCheck::addStatic(threadPool);
     }
     return threadPool;
+}
+
 }
 
 }

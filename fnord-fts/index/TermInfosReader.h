@@ -10,7 +10,8 @@
 #include "fnord-fts/util/CloseableThreadLocal.h"
 #include "fnord-fts/util/SimpleLRUCache.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This stores a monotonically increasing set of <Term, TermInfo> pairs in a  Directory.  Pairs are
 /// accessed either by Term or by ordinal position the set.
@@ -86,4 +87,5 @@ public:
 
 }
 
+}
 #endif

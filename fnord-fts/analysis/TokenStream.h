@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/AttributeSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A TokenStream enumerates the sequence of tokens, either from {@link Field}s of a {@link Document} or from
 /// query text.
@@ -100,4 +101,5 @@ public:
 
 }
 
+}
 #endif

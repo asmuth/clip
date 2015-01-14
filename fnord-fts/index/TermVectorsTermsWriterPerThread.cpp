@@ -14,7 +14,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorsTermsWriterPerThread::TermVectorsTermsWriterPerThread(const TermsHashPerThreadPtr& termsHashPerThread, const TermVectorsTermsWriterPtr& termsWriter) {
     utf8Results = newCollection<UTF8ResultPtr>(newInstance<UTF8Result>(), newInstance<UTF8Result>());
@@ -61,6 +62,8 @@ bool TermVectorsTermsWriterPerThread::vectorFieldsInOrder(const FieldInfoPtr& fi
     bool inOrder = lastVectorFieldName.empty() ? true : (lastVectorFieldName < fi->name);
     lastVectorFieldName = fi->name;
     return inOrder;
+}
+
 }
 
 }

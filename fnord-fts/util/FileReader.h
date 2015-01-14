@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Convenience class for reading character files.
 class FileReader : public Reader {
@@ -51,4 +52,5 @@ public:
 
 }
 
+}
 #endif

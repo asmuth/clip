@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/FieldComparatorSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldComparatorSource::~FieldComparatorSource() {
+}
+
 }
 
 }

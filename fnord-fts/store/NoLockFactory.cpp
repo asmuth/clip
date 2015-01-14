@@ -8,7 +8,8 @@
 #include "fnord-fts/store/NoLockFactory.h"
 #include "_NoLockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NoLockFactory::~NoLockFactory() {
 }
@@ -55,6 +56,8 @@ bool NoLock::isLocked() {
 
 String NoLock::toString() {
     return getClassName();
+}
+
 }
 
 }

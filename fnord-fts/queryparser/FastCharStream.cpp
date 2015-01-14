@@ -9,7 +9,8 @@
 #include "fnord-fts/util/Reader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FastCharStream::FastCharStream(const ReaderPtr& reader) {
     input = reader;
@@ -104,6 +105,8 @@ int32_t FastCharStream::getBeginColumn() {
 
 int32_t FastCharStream::getBeginLine() {
     return 1;
+}
+
 }
 
 }

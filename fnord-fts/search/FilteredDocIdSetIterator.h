@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract decorator class of a DocIdSetIterator implementation that provides on-demand filter/validation
 /// mechanism on an underlying DocIdSetIterator.  See {@link FilteredDocIdSet}.
@@ -40,4 +41,5 @@ protected:
 
 }
 
+}
 #endif

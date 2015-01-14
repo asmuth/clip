@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermFreqVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class QueryTermVector : public TermFreqVector, public LuceneObject {
 public:
@@ -40,4 +41,5 @@ protected:
 
 }
 
+}
 #endif

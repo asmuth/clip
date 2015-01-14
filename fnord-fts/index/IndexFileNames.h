@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Constants representing filenames and extensions used by Lucene.
 class IndexFileNames : public LuceneObject {
@@ -113,4 +114,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/Searchable.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 void Searchable::search(const WeightPtr& weight, const FilterPtr& filter, const CollectorPtr& collector) {
     BOOST_ASSERT(false);
@@ -62,6 +63,8 @@ ExplanationPtr Searchable::explain(const WeightPtr& weight, int32_t doc) {
 TopFieldDocsPtr Searchable::search(const WeightPtr& weight, const FilterPtr& filter, int32_t n, const SortPtr& sort) {
     BOOST_ASSERT(false);
     return TopFieldDocsPtr(); // override
+}
+
 }
 
 }

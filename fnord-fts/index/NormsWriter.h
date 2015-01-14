@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/InvertedDocEndConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Writes norms.  Each thread X field accumulates the norms for the doc/fields it saw, then the flush method
 /// below merges all of these together into a single _X.nrm file.
@@ -42,4 +43,5 @@ protected:
 
 }
 
+}
 #endif

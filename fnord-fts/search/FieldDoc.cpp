@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/FieldDoc.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldDoc::FieldDoc(int32_t doc, double score, Collection<ComparableValue> fields) : ScoreDoc(doc, score) {
     this->fields = fields;
@@ -27,6 +28,8 @@ String FieldDoc::toString() {
     }
     buffer << L"]";
     return buffer.str();
+}
+
 }
 
 }

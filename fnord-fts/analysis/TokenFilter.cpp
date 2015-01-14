@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TokenFilter::TokenFilter(const TokenStreamPtr& input) : TokenStream(input) {
     this->input = input;
@@ -26,6 +27,8 @@ void TokenFilter::close() {
 
 void TokenFilter::reset() {
     input->reset();
+}
+
 }
 
 }

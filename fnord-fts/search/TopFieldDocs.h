@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/TopDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Represents hits returned by {@link Searcher#search(QueryPtr, FilterPtr, int32_t, SortPtr)}.
 class TopFieldDocs : public TopDocs {
@@ -31,4 +32,5 @@ public:
 
 }
 
+}
 #endif

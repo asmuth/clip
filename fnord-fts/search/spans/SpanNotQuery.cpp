@@ -9,7 +9,8 @@
 #include "_SpanNotQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanNotQuery::SpanNotQuery(const SpanQueryPtr& include, const SpanQueryPtr& exclude) {
     this->include = include;
@@ -192,6 +193,8 @@ bool NotSpans::isPayloadAvailable() {
 
 String NotSpans::toString() {
     return L"spans(" + query->toString() + L")";
+}
+
 }
 
 }

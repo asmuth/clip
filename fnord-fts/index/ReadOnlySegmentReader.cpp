@@ -8,7 +8,8 @@
 #include "fnord-fts/index/ReadOnlySegmentReader.h"
 #include "fnord-fts/util/BitVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReadOnlySegmentReader::~ReadOnlySegmentReader() {
 }
@@ -23,6 +24,8 @@ void ReadOnlySegmentReader::acquireWriteLock() {
 
 bool ReadOnlySegmentReader::isDeleted(int32_t n) {
     return (deletedDocs && deletedDocs->get(n));
+}
+
 }
 
 }

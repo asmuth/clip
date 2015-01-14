@@ -10,7 +10,8 @@
 #include "fnord-fts/index/ByteBlockPool.h"
 #include "fnord-fts/store/RAMFile.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class accepts multiple added documents and directly writes a single segment file.  It does this more
 /// efficiently than creating a single segment per document (with DocumentWriter) and doing standard merges on
@@ -519,4 +520,5 @@ public:
 
 }
 
+}
 #endif

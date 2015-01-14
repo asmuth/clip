@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/queryparser/QueryParserCharStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 wchar_t QueryParserCharStream::readChar() {
     BOOST_ASSERT(false);
@@ -67,6 +68,8 @@ CharArray QueryParserCharStream::GetSuffix(int32_t length) {
 void QueryParserCharStream::Done() {
     BOOST_ASSERT(false);
     // override
+}
+
 }
 
 }

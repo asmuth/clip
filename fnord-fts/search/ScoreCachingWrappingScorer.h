@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Scorer} which wraps another scorer and caches the score of the current document. Successive
 /// calls to {@link #score()} will return the same result and will not invoke the wrapped Scorer's score()
@@ -46,4 +47,5 @@ protected:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/Directory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Directory instance that switches files between two other
 /// Directory instances.
@@ -82,4 +83,5 @@ protected:
 
 }
 
+}
 #endif

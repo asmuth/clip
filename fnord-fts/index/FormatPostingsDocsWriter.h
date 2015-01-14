@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/FormatPostingsDocsConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Consumes doc & freq, writing them using the current index file format
 class FormatPostingsDocsWriter : public FormatPostingsDocsConsumer {
@@ -55,4 +56,5 @@ public:
 
 }
 
+}
 #endif

@@ -10,7 +10,8 @@
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t CharTokenizer::MAX_WORD_LEN = 255;
 const int32_t CharTokenizer::IO_BUFFER_SIZE = 4096;
@@ -108,6 +109,8 @@ void CharTokenizer::reset(const ReaderPtr& input) {
     bufferIndex = 0;
     offset = 0;
     dataLen = 0;
+}
+
 }
 
 }

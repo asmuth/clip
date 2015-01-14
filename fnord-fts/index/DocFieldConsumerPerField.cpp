@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/DocFieldConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldConsumerPerField::~DocFieldConsumerPerField() {
+}
+
 }
 
 }

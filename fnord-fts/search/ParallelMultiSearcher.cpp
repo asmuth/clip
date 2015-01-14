@@ -15,7 +15,8 @@
 #include "fnord-fts/search/TopFieldDocs.h"
 #include "fnord-fts/util/ThreadPool.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ParallelMultiSearcher::ParallelMultiSearcher(Collection<SearchablePtr> searchables) : MultiSearcher(searchables) {
 }
@@ -93,6 +94,8 @@ TopFieldDocsPtr ParallelMultiSearcher::search(const WeightPtr& weight, const Fil
     }
 
     return newLucene<TopFieldDocs>(totalHits, scoreDocs, hq->getFields(), maxScore);
+}
+
 }
 
 }

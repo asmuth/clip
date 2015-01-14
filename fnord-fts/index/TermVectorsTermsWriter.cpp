@@ -19,7 +19,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorsTermsWriter::TermVectorsTermsWriter(const DocumentsWriterPtr& docWriter) {
     this->freeCount = 0;
@@ -289,6 +290,8 @@ TermVectorsTermsWriterPostingList::TermVectorsTermsWriterPostingList() {
 }
 
 TermVectorsTermsWriterPostingList::~TermVectorsTermsWriterPostingList() {
+}
+
 }
 
 }

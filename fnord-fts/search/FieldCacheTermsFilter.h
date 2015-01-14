@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Filter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Filter} that only accepts documents whose single term value in the specified field is contained
 /// in the provided set of allowed terms.
@@ -62,4 +63,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "_SegmentInfos.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FindSegmentsModified : public FindSegmentsFileT<uint64_t> {
 public:
@@ -24,4 +25,5 @@ public:
 
 }
 
+}
 #endif

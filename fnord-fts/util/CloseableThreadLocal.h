@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// General purpose thread-local map.
 template <typename TYPE>
@@ -56,4 +57,5 @@ protected:
 
 }
 
+}
 #endif

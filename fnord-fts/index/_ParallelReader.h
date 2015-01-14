@@ -11,7 +11,8 @@
 #include "fnord-fts/index/TermDocs.h"
 #include "fnord-fts/index/TermPositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ParallelTermEnum : public TermEnum {
 public:
@@ -84,4 +85,5 @@ public:
 
 }
 
+}
 #endif

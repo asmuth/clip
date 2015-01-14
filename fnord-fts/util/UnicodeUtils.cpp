@@ -9,7 +9,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/unicode/guniprop.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 UnicodeUtil::~UnicodeUtil() {
 }
@@ -58,6 +59,8 @@ UTF8Result::~UTF8Result() {
 }
 
 UnicodeResult::~UnicodeResult() {
+}
+
 }
 
 }

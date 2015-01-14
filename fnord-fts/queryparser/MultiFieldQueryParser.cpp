@@ -12,7 +12,8 @@
 #include "fnord-fts/search/MultiPhraseQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiFieldQueryParser::MultiFieldQueryParser(LuceneVersion::Version matchVersion, Collection<String> fields, const AnalyzerPtr& analyzer, MapStringDouble boosts) : QueryParser(matchVersion, L"", analyzer) {
     this->boosts = boosts;
@@ -154,6 +155,8 @@ QueryPtr MultiFieldQueryParser::parse(LuceneVersion::Version matchVersion, Colle
         }
     }
     return booleanQuery;
+}
+
 }
 
 }

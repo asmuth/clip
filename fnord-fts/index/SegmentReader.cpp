@@ -30,7 +30,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentReader::SegmentReader() {
     _norms = MapStringNorm::newInstance();
@@ -1184,6 +1185,8 @@ void Norm::reWrite(const SegmentInfoPtr& si) {
     }
     finally.throwException();
     this->dirty = false;
+}
+
 }
 
 }

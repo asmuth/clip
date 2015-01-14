@@ -10,7 +10,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermRangeFilter::TermRangeFilter(const String& fieldName, StringValue lowerTerm, StringValue upperTerm, bool includeLower,
                                  bool includeUpper, CollatorPtr collator) :
@@ -51,6 +52,8 @@ bool TermRangeFilter::includesUpper() {
 
 CollatorPtr TermRangeFilter::getCollator() {
     return std::static_pointer_cast<TermRangeQuery>(query)->getCollator();
+}
+
 }
 
 }

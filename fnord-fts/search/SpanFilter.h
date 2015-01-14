@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Filter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract base class providing a mechanism to restrict searches to a subset of an index and also maintains
 /// and returns position information.
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

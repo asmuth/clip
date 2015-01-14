@@ -10,7 +10,8 @@
 #include "fnord-fts/search/FilteredTermEnum.h"
 #include "fnord-fts/util/NumericUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Subclass of FilteredTermEnum for enumerating all terms that match the sub-ranges for trie range queries.
 ///
@@ -83,4 +84,5 @@ public:
 
 }
 
+}
 #endif

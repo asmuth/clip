@@ -10,7 +10,8 @@
 #include "fnord-fts/search/SpanFilterResult.h"
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CachingSpanFilter::CachingSpanFilter(const SpanFilterPtr& filter, CachingWrapperFilter::DeletesMode deletesMode) {
     this->filter = filter;
@@ -82,6 +83,8 @@ FilterCacheSpanFilterResult::~FilterCacheSpanFilterResult() {
 LuceneObjectPtr FilterCacheSpanFilterResult::mergeDeletes(const IndexReaderPtr& reader, const LuceneObjectPtr& value) {
     boost::throw_exception(IllegalStateException(L"DeletesMode::DYNAMIC is not supported"));
     return LuceneObjectPtr();
+}
+
 }
 
 }

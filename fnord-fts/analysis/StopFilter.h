@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Removes stop words from a token stream.
 class StopFilter : public TokenFilter {
@@ -65,4 +66,5 @@ public:
 
 }
 
+}
 #endif

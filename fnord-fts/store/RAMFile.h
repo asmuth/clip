@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// File used as buffer in RAMDirectory
 class RAMFile : public LuceneObject {
@@ -54,4 +55,5 @@ protected:
 
 }
 
+}
 #endif

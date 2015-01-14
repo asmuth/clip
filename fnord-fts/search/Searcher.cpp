@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Query.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Searcher::Searcher() {
     similarity = Similarity::getDefault();
@@ -61,6 +62,8 @@ Collection<int32_t> Searcher::docFreqs(Collection<TermPtr> terms) {
         result[i] = docFreq(terms[i]);
     }
     return result;
+}
+
 }
 
 }

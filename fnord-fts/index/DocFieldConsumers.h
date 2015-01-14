@@ -10,7 +10,8 @@
 #include "fnord-fts/index/DocFieldConsumer.h"
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is just a "splitter" class: it lets you wrap two DocFieldConsumer instances as a single consumer.
 class DocFieldConsumers : public DocFieldConsumer {
@@ -69,4 +70,5 @@ public:
 
 }
 
+}
 #endif

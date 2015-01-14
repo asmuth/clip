@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class StringUtils {
 public:
@@ -92,4 +93,5 @@ public:
 #define UTF8_TO_STRING(utf8) StringUtils::toUnicode(utf8, SIZEOF_ARRAY(utf8))
 }
 
+}
 #endif

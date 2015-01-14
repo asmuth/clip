@@ -9,7 +9,8 @@
 #include "fnord-fts/index/DocumentsWriter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 // Size of each slice.  These arrays should be at most 16 elements (index is encoded with 4 bits).  First array
 // is just a compact way to encode X+1 with a max.  Second array is the length of each slice, ie first slice is
@@ -112,6 +113,8 @@ int32_t ByteBlockPool::allocSlice(ByteArray slice, int32_t upto) {
 }
 
 ByteBlockPoolAllocatorBase::~ByteBlockPoolAllocatorBase() {
+}
+
 }
 
 }

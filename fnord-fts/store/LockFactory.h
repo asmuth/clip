@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for Locking implementation.  {@link Directory} uses
 /// instances of this class to implement locking.
@@ -51,4 +52,5 @@ public:
 
 }
 
+}
 #endif

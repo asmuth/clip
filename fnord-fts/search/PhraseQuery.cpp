@@ -18,7 +18,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PhraseQuery::PhraseQuery() {
     terms = Collection<TermPtr>::newInstance();
@@ -276,6 +277,8 @@ ExplanationPtr PhraseWeight::explain(const IndexReaderPtr& reader, int32_t doc) 
     }
 
     return result;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/LockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for file system based locking implementation.
 class FSLockFactory : public LockFactory {
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/SpanFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanFilter::~SpanFilter() {
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/Analyzer.h"
 #include "fnord-fts/document/Fieldable.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Analyzer::~Analyzer() {
 }
@@ -35,6 +36,8 @@ int32_t Analyzer::getOffsetGap(const FieldablePtr& field) {
 
 void Analyzer::close() {
     tokenStreams.close();
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/PhraseScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SloppyPhraseScorer : public PhraseScorer {
 public:
@@ -66,4 +67,5 @@ protected:
 
 }
 
+}
 #endif

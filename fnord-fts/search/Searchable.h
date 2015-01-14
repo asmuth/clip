@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The interface for search implementations.
 ///
@@ -106,4 +107,5 @@ public:
 
 }
 
+}
 #endif

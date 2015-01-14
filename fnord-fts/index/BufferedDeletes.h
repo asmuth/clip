@@ -10,7 +10,8 @@
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds buffered deletes, by docID, term or query.  We hold two instances of this class: one for
 /// the deletes prior to the last flush, the other for deletes after the last flush.  This is so if
@@ -54,4 +55,5 @@ public:
 
 }
 
+}
 #endif

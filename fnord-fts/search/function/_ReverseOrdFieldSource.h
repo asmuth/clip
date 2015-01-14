@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/function/DocValues.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ReverseOrdDocValues : public DocValues {
 public:
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

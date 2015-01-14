@@ -16,7 +16,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t Token::MIN_BUFFER_SIZE = 10;
 
@@ -481,6 +482,8 @@ bool TokenAttributeFactory::equals(const LuceneObjectPtr& other) {
 
 int32_t TokenAttributeFactory::hashCode() {
     return (delegate->hashCode() ^ 0x0a45aa31);
+}
+
 }
 
 }

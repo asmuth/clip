@@ -8,7 +8,8 @@
 #include "fnord-fts/search/PositiveScoresOnlyCollector.h"
 #include "fnord-fts/search/ScoreCachingWrappingScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PositiveScoresOnlyCollector::PositiveScoresOnlyCollector(const CollectorPtr& collector) {
     this->collector = collector;
@@ -35,6 +36,8 @@ void PositiveScoresOnlyCollector::setScorer(const ScorerPtr& scorer) {
 
 bool PositiveScoresOnlyCollector::acceptsDocsOutOfOrder() {
     return collector->acceptsDocsOutOfOrder();
+}
+
 }
 
 }

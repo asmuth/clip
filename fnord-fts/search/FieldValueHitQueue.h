@@ -10,7 +10,8 @@
 #include "fnord-fts/search/HitQueueBase.h"
 #include "fnord-fts/search/ScoreDoc.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A hit queue for sorting by hits by terms in more than one field.  Uses FieldCache::DEFAULT for maintaining
 /// internal term lookup tables.
@@ -69,4 +70,5 @@ public:
 
 }
 
+}
 #endif

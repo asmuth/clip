@@ -14,7 +14,8 @@
 #include "fnord-fts/analysis/StopFilter.h"
 #include "fnord-fts/analysis/WordlistLoader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Construct an analyzer with the given stop words.
 const int32_t StandardAnalyzer::DEFAULT_MAX_TOKEN_LENGTH = 255;
@@ -83,6 +84,8 @@ TokenStreamPtr StandardAnalyzer::reusableTokenStream(const String& fieldName, co
 }
 
 StandardAnalyzerSavedStreams::~StandardAnalyzerSavedStreams() {
+}
+
 }
 
 }

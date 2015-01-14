@@ -11,7 +11,8 @@
 #include "fnord-fts/document/DateTools.h"
 #include "fnord-fts/search/BooleanClause.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 typedef HashMap<String, DateTools::Resolution> MapStringResolution;
 
@@ -470,4 +471,5 @@ protected:
 
 }
 
+}
 #endif

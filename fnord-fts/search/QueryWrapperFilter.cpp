@@ -12,7 +12,8 @@
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/search/IndexSearcher.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 QueryWrapperFilter::QueryWrapperFilter(const QueryPtr& query) {
     this->query = query;
@@ -56,6 +57,8 @@ DocIdSetIteratorPtr QueryWrapperFilterDocIdSet::iterator() {
 
 bool QueryWrapperFilterDocIdSet::isCacheable() {
     return false;
+}
+
 }
 
 }

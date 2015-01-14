@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MiscUtils {
 protected:
@@ -134,4 +135,5 @@ public:
 
 }
 
+}
 #endif

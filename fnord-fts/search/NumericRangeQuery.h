@@ -11,7 +11,8 @@
 #include "fnord-fts/search/FilteredTermEnum.h"
 #include "fnord-fts/util/NumericUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Query} that matches numeric values within a specified range.  To use this, you must first
 /// index the numeric values using {@link NumericField} (expert: {@link NumericTokenStream}).  If your
@@ -186,4 +187,5 @@ protected:
 
 }
 
+}
 #endif

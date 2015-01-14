@@ -13,7 +13,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermBuffer::TermBuffer() {
     preUTF8Strings = false;
@@ -114,6 +115,8 @@ LuceneObjectPtr TermBuffer::clone(const LuceneObjectPtr& other) {
     cloneBuffer->text = newLucene<UnicodeResult>();
     cloneBuffer->text->copyText(text);
     return cloneBuffer;
+}
+
 }
 
 }

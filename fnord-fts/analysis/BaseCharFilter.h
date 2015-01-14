@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/CharFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base utility class for implementing a {@link CharFilter}.  You subclass this, and then record mappings by
 /// calling {@link #addOffCorrectMap}, and then invoke the correct method to correct an offset.
@@ -35,4 +36,5 @@ protected:
 
 }
 
+}
 #endif

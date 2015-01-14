@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Filter.h"
 #include "fnord-fts/search/FieldCache.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A range filter built on top of a cached single term field (in {@link FieldCache}).
 ///
@@ -112,4 +113,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/FieldCache.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The default cache implementation, storing all values in memory.  A WeakHashMap is used for storage.
 class FieldCacheImpl : public FieldCache, public LuceneObject {
@@ -181,4 +182,5 @@ public:
 
 }
 
+}
 #endif

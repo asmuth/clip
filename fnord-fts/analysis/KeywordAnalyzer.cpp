@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/KeywordAnalyzer.h"
 #include "fnord-fts/analysis/KeywordTokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 KeywordAnalyzer::~KeywordAnalyzer() {
 }
@@ -26,6 +27,8 @@ TokenStreamPtr KeywordAnalyzer::reusableTokenStream(const String& fieldName, con
         tokenizer->reset(reader);
     }
     return tokenizer;
+}
+
 }
 
 }

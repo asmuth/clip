@@ -8,7 +8,8 @@
 #include "fnord-fts/index/SegmentTermPositionVector.h"
 #include "fnord-fts/index/TermVectorOffsetInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentTermPositionVector::SegmentTermPositionVector(const String& field, Collection<String> terms,
         Collection<int32_t> termFreqs, Collection< Collection<int32_t> > positions,
@@ -49,6 +50,8 @@ Collection<int32_t> SegmentTermPositionVector::getTermPositions(int32_t index) {
         result = positions[index];
     }
     return result;
+}
+
 }
 
 }

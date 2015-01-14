@@ -9,7 +9,8 @@
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldCacheSource::FieldCacheSource(const String& field) {
     this->field = field;
@@ -36,6 +37,8 @@ bool FieldCacheSource::equals(const LuceneObjectPtr& other) {
 
 int32_t FieldCacheSource::hashCode() {
     return StringUtils::hashCode(field) + cachedFieldSourceHashCode();
+}
+
 }
 
 }

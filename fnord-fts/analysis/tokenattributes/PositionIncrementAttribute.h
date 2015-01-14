@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The positionIncrement determines the position of this token relative to the previous Token in a
 /// TokenStream, used in phrase searching.
@@ -59,4 +60,5 @@ public:
 
 }
 
+}
 #endif

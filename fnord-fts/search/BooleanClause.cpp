@@ -8,7 +8,8 @@
 #include "fnord-fts/search/BooleanClause.h"
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 BooleanClause::BooleanClause(const QueryPtr& query, Occur occur) {
     this->query = query;
@@ -63,6 +64,8 @@ String BooleanClause::toString() {
     default:
         return query->toString();
     }
+}
+
 }
 
 }

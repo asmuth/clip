@@ -20,7 +20,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Change to true to see details of reference counts when infoStream != null
 bool IndexFileDeleter::VERBOSE_REF_COUNTS = false;
@@ -478,6 +479,8 @@ int32_t CommitPoint::compareTo(const LuceneObjectPtr& other) {
         return 1;
     }
     return 0;
+}
+
 }
 
 }

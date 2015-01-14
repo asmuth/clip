@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Token's lexical type. The Default value is "word".
 class TypeAttribute : public Attribute {
@@ -43,4 +44,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/BaseCharFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Simplistic {@link CharFilter} that applies the mappings contained in a {@link NormalizeCharMap} to the character
 /// stream, and correcting the resulting changes to the offsets.
@@ -45,4 +46,5 @@ protected:
 
 }
 
+}
 #endif

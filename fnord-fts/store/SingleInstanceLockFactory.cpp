@@ -8,7 +8,8 @@
 #include "fnord-fts/store/SingleInstanceLockFactory.h"
 #include "_SingleInstanceLockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SingleInstanceLockFactory::SingleInstanceLockFactory() {
     locks = HashSet<String>::newInstance();
@@ -53,6 +54,8 @@ bool SingleInstanceLock::isLocked() {
 
 String SingleInstanceLock::toString() {
     return lockName;
+}
+
 }
 
 }

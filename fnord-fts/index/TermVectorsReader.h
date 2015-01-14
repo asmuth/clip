@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermVectorMapper.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermVectorsReader : public LuceneObject {
 public:
@@ -147,4 +148,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/CharTokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A LetterTokenizer is a tokenizer that divides text at non-letters.  That's to say, it defines tokens as maximal
 /// strings of adjacent letters, as defined UnicodeUtil::isAlpha(c) predicate.
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/DocFieldConsumersPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldConsumersPerField::DocFieldConsumersPerField(const DocFieldConsumersPerThreadPtr& perThread, const DocFieldConsumerPerFieldPtr& one, const DocFieldConsumerPerFieldPtr& two) {
     this->_perThread = perThread;
@@ -36,6 +37,8 @@ void DocFieldConsumersPerField::abort() {
         finally = e;
     }
     finally.throwException();
+}
+
 }
 
 }

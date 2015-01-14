@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermPositionVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SegmentTermVector : public TermPositionVector, public LuceneObject {
 public:
@@ -48,4 +49,5 @@ public:
 
 }
 
+}
 #endif

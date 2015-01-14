@@ -10,7 +10,8 @@
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 #include "fnord-fts/analysis/tokenattributes/TypeAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 StandardFilter::StandardFilter(const TokenStreamPtr& input) : TokenFilter(input) {
     termAtt = addAttribute<TermAttribute>();
@@ -61,6 +62,8 @@ bool StandardFilter::incrementToken() {
     }
 
     return true;
+}
+
 }
 
 }

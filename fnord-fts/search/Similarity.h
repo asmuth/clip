@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Explanation.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Scoring API.
 ///
@@ -613,4 +614,5 @@ public:
 
 }
 
+}
 #endif

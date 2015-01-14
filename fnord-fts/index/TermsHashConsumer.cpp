@@ -7,13 +7,16 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermsHashConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermsHashConsumer::~TermsHashConsumer() {
 }
 
 void TermsHashConsumer::setFieldInfos(const FieldInfosPtr& fieldInfos) {
     this->fieldInfos = fieldInfos;
+}
+
 }
 
 }

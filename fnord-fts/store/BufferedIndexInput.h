@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/IndexInput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base implementation class for buffered {@link IndexInput}.
 class BufferedIndexInput : public IndexInput {
@@ -102,4 +103,5 @@ protected:
 
 }
 
+}
 #endif

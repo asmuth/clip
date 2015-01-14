@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/SimilarityDelegator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SimilarityDelegator::SimilarityDelegator(const SimilarityPtr& delegee) {
     this->delegee = delegee;
@@ -46,6 +47,8 @@ double SimilarityDelegator::coord(int32_t overlap, int32_t maxOverlap) {
 
 double SimilarityDelegator::scorePayload(int32_t docId, const String& fieldName, int32_t start, int32_t end, ByteArray payload, int32_t offset, int32_t length) {
     return delegee->scorePayload(docId, fieldName, start, end, payload, offset, length);
+}
+
 }
 
 }

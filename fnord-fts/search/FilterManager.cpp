@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Filter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The default maximum number of Filters in the cache
 const int32_t FilterManager::DEFAULT_CACHE_CLEAN_SIZE = 100;
@@ -106,6 +107,8 @@ void FilterCleaner::run() {
         // take a nap
         LuceneThread::threadSleep(manager->cleanSleepTime);
     }
+}
+
 }
 
 }

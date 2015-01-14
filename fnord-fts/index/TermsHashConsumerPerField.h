@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implement this class to plug into the TermsHash processor, which inverts & stores Tokens into a hash
 /// table and provides an API for writing bytes into multiple streams for each unique Token.
@@ -31,4 +32,5 @@ public:
 
 }
 
+}
 #endif

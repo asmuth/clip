@@ -10,7 +10,8 @@
 #include "fnord-fts/search/DocIdSet.h"
 #include "fnord-fts/search/FilteredDocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FilterCache : public LuceneObject {
 public:
@@ -58,4 +59,5 @@ protected:
 
 }
 
+}
 #endif

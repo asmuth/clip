@@ -12,7 +12,8 @@
 #include <boost/thread/thread.hpp>
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 typedef std::shared_ptr<boost::asio::io_service::work> workPtr;
 
@@ -79,4 +80,5 @@ protected:
 
 }
 
+}
 #endif

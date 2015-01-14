@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/CharStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CharStream::~CharStream() {
+}
+
 }
 
 }

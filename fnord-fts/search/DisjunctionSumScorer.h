@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Scorer for OR like queries, counterpart of ConjunctionScorer.  This Scorer implements {@link
 /// Scorer#skipTo(int32_t)} and uses skipTo() on the given Scorers.
@@ -92,4 +93,5 @@ protected:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The TermVectorMapper can be used to map Term Vectors into your own structure instead of the parallel
 /// array structure used by {@link IndexReader#getTermFreqVector(int,String)}.
@@ -70,4 +71,5 @@ public:
 
 }
 
+}
 #endif

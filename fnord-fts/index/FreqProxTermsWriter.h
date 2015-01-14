@@ -10,7 +10,8 @@
 #include "fnord-fts/index/TermsHashConsumer.h"
 #include "fnord-fts/index/RawPostingList.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FreqProxTermsWriter : public TermsHashConsumer {
 public:
@@ -54,4 +55,5 @@ public:
 
 }
 
+}
 #endif

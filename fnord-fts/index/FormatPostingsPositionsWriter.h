@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/FormatPostingsPositionsConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FormatPostingsPositionsWriter : public FormatPostingsPositionsConsumer {
 public:
@@ -42,4 +43,5 @@ public:
 
 }
 
+}
 #endif

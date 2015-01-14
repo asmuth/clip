@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Collector.h"
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A base class for all collectors that return a {@link TopDocs} output. This collector allows easy extension
 /// by providing a single constructor which accepts a {@link PriorityQueue} as well as protected members for
@@ -80,4 +81,5 @@ protected:
 
 }
 
+}
 #endif

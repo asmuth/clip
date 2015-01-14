@@ -8,7 +8,8 @@
 #include "fnord-fts/search/ComplexExplanation.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ComplexExplanation::ComplexExplanation(bool match, double value, const String& description) : Explanation(value, description) {
     this->match = match;
@@ -31,6 +32,8 @@ bool ComplexExplanation::isMatch() {
 
 String ComplexExplanation::getSummary() {
     return StringUtils::toString(getValue()) + L" = " + (isMatch() ? L"(MATCH) " : L"(NON-MATCH) ") + getDescription();
+}
+
 }
 
 }

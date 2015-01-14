@@ -15,7 +15,8 @@
 #include "fnord-fts/index/FieldInfos.h"
 #include "fnord-fts/util/TestPoint.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldProcessor::DocFieldProcessor(const DocumentsWriterPtr& docWriter, const DocFieldConsumerPtr& consumer) {
     this->fieldInfos = newLucene<FieldInfos>();
@@ -63,6 +64,8 @@ bool DocFieldProcessor::freeRAM() {
 
 DocConsumerPerThreadPtr DocFieldProcessor::addThread(const DocumentsWriterThreadStatePtr& perThread) {
     return newLucene<DocFieldProcessorPerThread>(perThread, shared_from_this());
+}
+
 }
 
 }

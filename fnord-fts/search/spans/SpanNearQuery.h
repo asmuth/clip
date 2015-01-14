@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/SpanQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Matches spans which are near one another.  One can specify slop, the maximum number of intervening
 /// unmatched positions, as well as whether matches are required to be in-order.
@@ -55,4 +56,5 @@ public:
 
 }
 
+}
 #endif

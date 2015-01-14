@@ -11,7 +11,8 @@
 #include "fnord-fts/search/FieldComparatorSource.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Sort by document score (relevancy).  Sort values are Double and higher values are at the front.
 const int32_t SortField::SCORE = 0;
@@ -248,6 +249,8 @@ FieldComparatorPtr SortField::getComparator(int32_t numHits, int32_t sortPos) {
         boost::throw_exception(IllegalStateException(L"Illegal sort type: " + StringUtils::toString(type)));
         return FieldComparatorPtr();
     }
+}
+
 }
 
 }

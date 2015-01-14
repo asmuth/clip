@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A query that applies a filter to the results of another query.
 ///
@@ -60,4 +61,5 @@ public:
 
 }
 
+}
 #endif

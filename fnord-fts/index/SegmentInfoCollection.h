@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A collection of SegmentInfo objects to be used as a base class for {@link SegmentInfos}
 class SegmentInfoCollection : public LuceneObject {
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

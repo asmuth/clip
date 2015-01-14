@@ -10,7 +10,8 @@
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PrefixQuery::PrefixQuery(const TermPtr& prefix) {
     this->prefix = prefix;
@@ -72,6 +73,8 @@ bool PrefixQuery::equals(const LuceneObjectPtr& other) {
         return false;
     }
     return true;
+}
+
 }
 
 }

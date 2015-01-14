@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Represents hits returned by {@link Searcher#search(QueryPtr, FilterPtr, int32_t)} and {@link
 /// Searcher#search(QueryPtr, int32_t)}.
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

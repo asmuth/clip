@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ConstantScoreFilterRewrite : public RewriteMethod {
 public:
@@ -50,4 +51,5 @@ public:
 
 }
 
+}
 #endif

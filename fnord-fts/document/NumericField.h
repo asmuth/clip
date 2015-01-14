@@ -9,7 +9,8 @@
 
 #include "fnord-fts/document/Field.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class provides a {@link Field} that enables indexing of numeric values for efficient range filtering and
 /// sorting.  The native types int32_t, int64_t and double are directly supported.  However, any value that can be
@@ -130,4 +131,5 @@ public:
 
 }
 
+}
 #endif

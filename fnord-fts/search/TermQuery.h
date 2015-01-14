@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Query that matches documents containing a term.  This may be combined with other terms with a
 /// {@link BooleanQuery}.
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

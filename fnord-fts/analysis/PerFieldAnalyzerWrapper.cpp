@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/PerFieldAnalyzerWrapper.h"
 #include "fnord-fts/document/Fieldable.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PerFieldAnalyzerWrapper::PerFieldAnalyzerWrapper(const AnalyzerPtr& defaultAnalyzer) {
     this->defaultAnalyzer = defaultAnalyzer;
@@ -64,6 +65,8 @@ int32_t PerFieldAnalyzerWrapper::getOffsetGap(const FieldablePtr& field) {
 
 String PerFieldAnalyzerWrapper::toString() {
     return L"PerFieldAnalyzerWrapper(default=" + defaultAnalyzer->toString() + L")";
+}
+
 }
 
 }

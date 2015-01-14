@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An iterator to iterate over set bits in an OpenBitSet.
 /// This is faster than nextSetBit() for iterating over the complete set of bits,
@@ -49,4 +50,5 @@ protected:
 
 }
 
+}
 #endif

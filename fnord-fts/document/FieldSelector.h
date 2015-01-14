@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The FieldSelector allows one to make decisions about what Fields get loaded on a {@link Document} by
 /// {@link IndexReader#document(int32_t, FieldSelector)}
@@ -70,4 +71,5 @@ public:
 
 }
 
+}
 #endif

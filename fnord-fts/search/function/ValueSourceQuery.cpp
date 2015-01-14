@@ -15,7 +15,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ValueSourceQuery::ValueSourceQuery(const ValueSourcePtr& valSrc) {
     this->valSrc = valSrc;
@@ -129,6 +130,8 @@ int32_t ValueSourceScorer::advance(int32_t target) {
 
 double ValueSourceScorer::score() {
     return qWeight * vals->doubleVal(termDocs->doc());
+}
+
 }
 
 }

@@ -30,7 +30,8 @@
 #include "fnord-fts/util/TestPoint.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The normal read buffer size defaults to 1024, but increasing this during merging seems to
 /// yield performance gains.  However we don't want to increase it too much because there are
@@ -3545,6 +3546,8 @@ SegmentReaderPtr ReaderPool::getIfExists(const SegmentInfoPtr& info) {
 }
 
 IndexReaderWarmer::~IndexReaderWarmer() {
+}
+
 }
 
 }

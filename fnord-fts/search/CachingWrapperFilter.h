@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Filter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Wraps another filter's result and caches it.  The purpose is to allow filters to simply filter, and
 /// then wrap with this class to add caching.
@@ -66,4 +67,5 @@ public:
 
 }
 
+}
 #endif

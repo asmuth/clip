@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/MergeScheduler.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link MergeScheduler} that runs each merge using a separate thread, up until a
 /// maximum number of threads ({@link #setMaxThreadCount}) at which when a merge is needed,
@@ -97,4 +98,5 @@ protected:
 
 }
 
+}
 #endif

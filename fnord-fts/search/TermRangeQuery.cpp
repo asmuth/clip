@@ -11,7 +11,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermRangeQuery::TermRangeQuery(const String& fieldName, StringValue lowerTerm, StringValue upperTerm, bool includeLower,
                                bool includeUpper, CollatorPtr collator) {
@@ -145,6 +146,8 @@ int32_t TermRangeQuery::hashCode() {
     result = prime * result + (VariantUtils::isNull(lowerTerm) ? 0 : StringUtils::hashCode(VariantUtils::get<String>(lowerTerm)));
     result = prime * result + (VariantUtils::isNull(upperTerm) ? 0 : StringUtils::hashCode(VariantUtils::get<String>(upperTerm)));
     return result;
+}
+
 }
 
 }

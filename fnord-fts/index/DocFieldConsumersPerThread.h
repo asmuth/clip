@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/DocFieldConsumerPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class DocFieldConsumersPerThread : public DocFieldConsumerPerThread {
 public:
@@ -34,4 +35,5 @@ public:
 
 }
 
+}
 #endif

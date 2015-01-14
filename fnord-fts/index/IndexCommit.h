@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Represents a single commit into an index as seen by the {@link IndexDeletionPolicy} or {@link IndexReader}.
 ///
@@ -73,4 +74,5 @@ public:
 
 }
 
+}
 #endif

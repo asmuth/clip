@@ -11,7 +11,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ByteFieldSource::ByteFieldSource(const String& field, const ByteParserPtr& parser) : FieldCacheSource(field) {
     this->parser = parser;
@@ -72,6 +73,8 @@ String ByteDocValues::toString(int32_t doc) {
 
 CollectionValue ByteDocValues::getInnerArray() {
     return arr;
+}
+
 }
 
 }

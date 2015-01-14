@@ -20,7 +20,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiPhraseQuery::MultiPhraseQuery() {
     termArrays = Collection< Collection<TermPtr> >::newInstance();
@@ -313,6 +314,8 @@ ExplanationPtr MultiPhraseWeight::explain(const IndexReaderPtr& reader, int32_t 
     }
 
     return result;
+}
+
 }
 
 }

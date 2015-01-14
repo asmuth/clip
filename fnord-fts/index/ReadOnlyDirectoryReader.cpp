@@ -8,7 +8,8 @@
 #include "fnord-fts/index/ReadOnlyDirectoryReader.h"
 #include "fnord-fts/index/ReadOnlySegmentReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReadOnlyDirectoryReader::ReadOnlyDirectoryReader(const DirectoryPtr& directory, const SegmentInfosPtr& sis,
         const IndexDeletionPolicyPtr& deletionPolicy, int32_t termInfosIndexDivisor) :
@@ -31,6 +32,8 @@ ReadOnlyDirectoryReader::~ReadOnlyDirectoryReader() {
 
 void ReadOnlyDirectoryReader::acquireWriteLock() {
     ReadOnlySegmentReader::noWrite();
+}
+
 }
 
 }

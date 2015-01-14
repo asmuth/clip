@@ -10,7 +10,8 @@
 #include "fnord-fts/store/RAMDirectory.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t RAMOutputStream::BUFFER_SIZE = 1024;
 
@@ -134,6 +135,8 @@ int64_t RAMOutputStream::getFilePointer() {
 
 int64_t RAMOutputStream::sizeInBytes() {
     return file->numBuffers() * BUFFER_SIZE;
+}
+
 }
 
 }

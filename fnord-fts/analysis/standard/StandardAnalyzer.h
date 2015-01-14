@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Analyzer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Filters {@link StandardTokenizer} with {@link StandardFilter}, {@link LowerCaseFilter} and {@link StopFilter}, using
 /// a list of English stop words.
@@ -83,4 +84,5 @@ public:
 
 }
 
+}
 #endif

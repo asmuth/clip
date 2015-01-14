@@ -10,7 +10,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/Term.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PrefixTermEnum::PrefixTermEnum(const IndexReaderPtr& reader, const TermPtr& prefix) {
     this->_endEnum = false;
@@ -40,6 +41,8 @@ bool PrefixTermEnum::termCompare(const TermPtr& term) {
     }
     _endEnum = true;
     return false;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class converts alphabetic, numeric, and symbolic Unicode characters which are not in the first 127 ASCII
 /// characters (the "Basic Latin" Unicode block) into their ASCII equivalents, if one exists.
@@ -63,4 +64,5 @@ public:
 
 }
 
+}
 #endif

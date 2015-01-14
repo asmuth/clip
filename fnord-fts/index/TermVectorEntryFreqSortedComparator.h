@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Compares {@link TermVectorEntry}s first by frequency and then by the term (case-sensitive)
 class TermVectorEntryFreqSortedComparator : public LuceneObject {
@@ -24,4 +25,5 @@ public:
 
 }
 
+}
 #endif

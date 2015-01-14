@@ -10,7 +10,8 @@
 #include "fnord-fts/index/DocFieldConsumerPerThread.h"
 #include "fnord-fts/util/AttributeSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is a DocFieldConsumer that inverts each field, separately, from a Document, and accepts a
 /// InvertedTermsConsumer to process those terms.
@@ -58,4 +59,5 @@ public:
 
 }
 
+}
 #endif

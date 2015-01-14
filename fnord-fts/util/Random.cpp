@@ -8,7 +8,8 @@
 #include "fnord-fts/util/Random.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Random::Random() {
     this->seed = (int64_t)MiscUtils::currentTimeMillis();
@@ -48,6 +49,8 @@ double Random::nextDouble() {
 int32_t Random::next(int32_t bits) {
     seed = (seed * 0x5deece66dLL + 0xb) & (((int64_t)1 << 48) - 1);
     return (int32_t)(seed >> (48 - bits));
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An abstract class that defines a way for Payload*Query instances to transform the cumulative
 /// effects of payload scores for a document.
@@ -55,4 +56,5 @@ public:
 
 }
 
+}
 #endif

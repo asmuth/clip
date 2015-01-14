@@ -8,7 +8,8 @@
 #include "fnord-fts/index/SnapshotDeletionPolicy.h"
 #include "_SnapshotDeletionPolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SnapshotDeletionPolicy::SnapshotDeletionPolicy(const IndexDeletionPolicyPtr& primary) {
     this->primary = primary;
@@ -110,6 +111,8 @@ MapStringString MyCommitPoint::getUserData() {
 
 bool MyCommitPoint::isOptimized() {
     return cp->isOptimized();
+}
+
 }
 
 }

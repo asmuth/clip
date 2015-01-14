@@ -12,7 +12,8 @@
 #include "fnord-fts/search/spans/NearSpansUnordered.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanNearQuery::SpanNearQuery(Collection<SpanQueryPtr> clauses, int32_t slop, bool inOrder, bool collectPayloads) {
     this->clauses = Collection<SpanQueryPtr>::newInstance();
@@ -146,6 +147,8 @@ int32_t SpanNearQuery::hashCode() {
     result += slop;
     result ^= (inOrder ? 0x99afd3bd : 0);
     return result;
+}
+
 }
 
 }

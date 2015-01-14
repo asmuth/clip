@@ -11,7 +11,8 @@
 #include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SimpleFSLockFactory::SimpleFSLockFactory() {
 }
@@ -74,6 +75,8 @@ bool SimpleFSLock::isLocked() {
 
 String SimpleFSLock::toString() {
     return getClassName() + L"@" + FileUtils::joinPath(lockDir, lockFile);
+}
+
 }
 
 }

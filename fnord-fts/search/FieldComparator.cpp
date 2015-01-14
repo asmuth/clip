@@ -10,7 +10,8 @@
 #include "fnord-fts/search/ScoreCachingWrappingScorer.h"
 #include "fnord-fts/util/Collator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldComparator::~FieldComparator() {
 }
@@ -324,6 +325,8 @@ void StringValComparator::setBottom(int32_t slot) {
 
 ComparableValue StringValComparator::value(int32_t slot) {
     return values[slot];
+}
+
 }
 
 }

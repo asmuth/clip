@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is a helper class to generate prefix-encoded representations for numerical values and supplies converters
 /// to represent double values as sortable integers/longs.
@@ -175,4 +176,5 @@ public:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/search/ConjunctionScorer.h"
 #include "fnord-fts/search/Similarity.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 struct lessScorerDocId {
     inline bool operator()(const ScorerPtr& first, const ScorerPtr& second) const {
@@ -107,6 +108,8 @@ double ConjunctionScorer::score() {
         sum += (*scorer)->score();
     }
     return sum * coord;
+}
+
 }
 
 }

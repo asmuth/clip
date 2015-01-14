@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/TopDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TopDocs::TopDocs(int32_t totalHits, Collection<ScoreDocPtr> scoreDocs) {
     this->totalHits = totalHits;
@@ -30,6 +31,8 @@ double TopDocs::getMaxScore() {
 
 void TopDocs::setMaxScore(double maxScore) {
     this->maxScore = maxScore;
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/search/NumericRangeFilter.h"
 #include "fnord-fts/search/NumericRangeQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NumericRangeFilter::NumericRangeFilter(const NumericRangeQueryPtr& query) : MultiTermQueryWrapperFilter(query) {
 }
@@ -66,6 +67,8 @@ NumericValue NumericRangeFilter::getMin() {
 
 NumericValue NumericRangeFilter::getMax() {
     return std::static_pointer_cast<NumericRangeQuery>(query)->min;
+}
+
 }
 
 }

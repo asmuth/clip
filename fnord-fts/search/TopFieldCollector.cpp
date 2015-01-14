@@ -14,7 +14,8 @@
 #include "fnord-fts/search/Sort.h"
 #include "fnord-fts/search/TopFieldDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TopFieldCollector::TopFieldCollector(const HitQueueBasePtr& pq, int32_t numHits, bool fillFields) : TopDocsCollector(pq) {
     this->numHits = numHits;
@@ -781,6 +782,8 @@ void OutOfOrderMultiComparatorScoringNoMaxScoreCollector::setScorer(const Scorer
 
 bool OutOfOrderMultiComparatorScoringNoMaxScoreCollector::acceptsDocsOutOfOrder() {
     return true;
+}
+
 }
 
 }

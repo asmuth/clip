@@ -10,7 +10,8 @@
 #include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ByteSliceReader::ByteSliceReader() {
     bufferUpto = 0;
@@ -137,6 +138,8 @@ void ByteSliceReader::seek(int64_t pos) {
 
 void ByteSliceReader::close() {
     boost::throw_exception(RuntimeException(L"not implemented"));
+}
+
 }
 
 }

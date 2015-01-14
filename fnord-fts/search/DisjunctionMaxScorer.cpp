@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/DisjunctionMaxScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DisjunctionMaxScorer::DisjunctionMaxScorer(double tieBreakerMultiplier, const SimilarityPtr& similarity, Collection<ScorerPtr> subScorers, int32_t numScorers) : Scorer(similarity) {
     this->doc = -1;
@@ -140,6 +141,8 @@ void DisjunctionMaxScorer::heapRemoveRoot() {
         --numScorers;
         heapAdjust(0);
     }
+}
+
 }
 
 }

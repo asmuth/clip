@@ -10,7 +10,8 @@
 #include "fnord-fts/index/DocFieldConsumersPerThread.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldConsumers::DocFieldConsumers(const DocFieldConsumerPtr& one, const DocFieldConsumerPtr& two) {
     freeCount = 0;
@@ -137,6 +138,8 @@ void DocFieldConsumersPerDoc::abort() {
     }
     DocFieldConsumersPtr(_fieldConsumers)->freePerDoc(shared_from_this());
     finally.throwException();
+}
+
 }
 
 }

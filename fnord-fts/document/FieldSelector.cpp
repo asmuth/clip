@@ -7,12 +7,15 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/document/FieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldSelector::FieldSelector() {
 }
 
 FieldSelector::~FieldSelector() {
+}
+
 }
 
 }

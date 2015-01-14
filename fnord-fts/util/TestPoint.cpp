@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/TestPoint.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MapStringInt TestPoint::testMethods = MapStringInt::newInstance();
 bool TestPoint::enable = false;
@@ -52,6 +53,8 @@ TestScope::TestScope(const String& object, const String& method) {
 
 TestScope::~TestScope() {
     TestPoint::setTestPoint(object, method, false);
+}
+
 }
 
 }

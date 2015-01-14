@@ -9,7 +9,8 @@
 #include "fnord-fts/search/TopDocs.h"
 #include "fnord-fts/search/HitQueueBase.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TopDocsCollector::TopDocsCollector(const HitQueueBasePtr& pq) {
     this->pq = pq;
@@ -81,6 +82,8 @@ TopDocsPtr TopDocsCollector::topDocs(int32_t start, int32_t howMany) {
     populateResults(results, howMany);
 
     return newTopDocs(results, start);
+}
+
 }
 
 }

@@ -15,7 +15,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldCacheImpl::FieldCacheImpl() {
 }
@@ -520,6 +521,8 @@ boost::any FieldCacheEntryImpl::getCustom() {
 
 boost::any FieldCacheEntryImpl::getValue() {
     return value;
+}
+
 }
 
 }

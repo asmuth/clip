@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This abstract class writes skip lists with multiple levels.
 ///
@@ -73,4 +74,5 @@ protected:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/Payload.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Payload::Payload() {
     this->offset = 0;
@@ -115,6 +116,8 @@ bool Payload::equals(const LuceneObjectPtr& other) {
 
 int32_t Payload::hashCode() {
     return MiscUtils::hashCode(data.get(), offset, offset + _length);
+}
+
 }
 
 }

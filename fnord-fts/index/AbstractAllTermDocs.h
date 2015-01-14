@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for enumerating all but deleted docs.
 ///
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

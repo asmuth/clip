@@ -8,7 +8,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const uint32_t MiscUtils::SINGLE_EXPONENT_MASK = 0x7f800000;
 const uint32_t MiscUtils::SINGLE_MANTISSA_MASK = 0x007fffff;
@@ -128,6 +129,8 @@ int64_t MiscUtils::unsignedShift(int64_t num, int64_t shift) {
 
 int32_t MiscUtils::unsignedShift(int32_t num, int32_t shift) {
     return (shift & 0x1f) == 0 ? num : (((uint32_t)num >> 1) & 0x7fffffff) >> ((shift & 0x1f) - 1);
+}
+
 }
 
 }

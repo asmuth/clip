@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract base class for output to a file in a Directory.  A random-access output stream.  Used for all
 /// Lucene index output operations.
@@ -105,4 +106,5 @@ public:
 
 }
 
+}
 #endif

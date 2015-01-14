@@ -15,7 +15,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The file format version, a negative number.
 const int32_t TermInfosWriter::FORMAT = -3;
@@ -167,6 +168,8 @@ void TermInfosWriter::close() {
     if (!isIndex) {
         TermInfosWriterPtr(_other)->close();
     }
+}
+
 }
 
 }

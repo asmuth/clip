@@ -9,7 +9,8 @@
 #include "fnord-fts/index/SegmentReader.h"
 #include "fnord-fts/util/BitVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 AllTermDocs::AllTermDocs(const SegmentReaderPtr& parent) : AbstractAllTermDocs(parent->maxDoc()) {
     SyncLock parentLock(parent);
@@ -22,6 +23,8 @@ AllTermDocs::~AllTermDocs() {
 bool AllTermDocs::isDeleted(int32_t doc) {
     BitVectorPtr deletedDocs(_deletedDocs.lock());
     return (deletedDocs && deletedDocs->get(_doc));
+}
+
 }
 
 }

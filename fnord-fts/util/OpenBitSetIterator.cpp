@@ -9,7 +9,8 @@
 #include "fnord-fts/util/OpenBitSet.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The General Idea: instead of having an array per byte that has the offsets of the
 /// next set bit, that array could be packed inside a 32 bit integer (8 4 bit numbers).
@@ -143,6 +144,8 @@ int32_t OpenBitSetIterator::advance(int32_t target) {
 
 int32_t OpenBitSetIterator::docID() {
     return curDocId;
+}
+
 }
 
 }

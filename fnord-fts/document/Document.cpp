@@ -9,7 +9,8 @@
 #include "fnord-fts/document/Fieldable.h"
 #include "fnord-fts/document/Field.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Document::Document() {
     fields = Collection<FieldablePtr>::newInstance();
@@ -134,6 +135,8 @@ String Document::toString() {
     }
     buffer << L">";
     return buffer.str();
+}
+
 }
 
 }

@@ -13,7 +13,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ConstantScoreQuery::ConstantScoreQuery(const FilterPtr& filter) {
     this->filter = filter;
@@ -152,6 +153,8 @@ double ConstantScorer::score() {
 
 int32_t ConstantScorer::advance(int32_t target) {
     return docIdSetIterator->advance(target);
+}
+
 }
 
 }

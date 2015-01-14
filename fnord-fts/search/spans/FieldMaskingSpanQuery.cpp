@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldMaskingSpanQuery::FieldMaskingSpanQuery(const SpanQueryPtr& maskedQuery, const String& maskedField) {
     this->maskedQuery = maskedQuery;
@@ -93,6 +94,8 @@ LuceneObjectPtr FieldMaskingSpanQuery::clone(const LuceneObjectPtr& other) {
     cloneQuery->maskedQuery = maskedQuery;
     cloneQuery->field = field;
     return cloneQuery;
+}
+
 }
 
 }

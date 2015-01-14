@@ -10,7 +10,8 @@
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 #include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 StopFilter::StopFilter(bool enablePositionIncrements, const TokenStreamPtr& input, HashSet<String> stopWords, bool ignoreCase) : TokenFilter(input) {
     this->stopWords = newLucene<CharArraySet>(stopWords, ignoreCase);
@@ -59,6 +60,8 @@ bool StopFilter::getEnablePositionIncrements() {
 
 void StopFilter::setEnablePositionIncrements(bool enable) {
     this->enablePositionIncrements = enable;
+}
+
 }
 
 }

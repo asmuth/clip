@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds a map of String input to String output, to be used with {@link MappingCharFilter}.
 class NormalizeCharMap : public LuceneObject {
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

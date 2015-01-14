@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/LuceneException.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LuceneException::LuceneException(const String& error, ExceptionType type) throw() {
     this->error = error;
@@ -89,6 +90,8 @@ void LuceneException::throwException() {
         // silence static analyzer
         break;
     }
+}
+
 }
 
 }

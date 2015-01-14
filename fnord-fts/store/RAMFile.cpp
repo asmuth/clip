@@ -9,7 +9,8 @@
 #include "fnord-fts/store/RAMDirectory.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 RAMFile::RAMFile() {
     this->buffers = Collection<ByteArray>::newInstance();
@@ -82,6 +83,8 @@ ByteArray RAMFile::newBuffer(int32_t size) {
 int64_t RAMFile::getSizeInBytes() {
     SyncLock syncLock(this);
     return sizeInBytes;
+}
+
 }
 
 }

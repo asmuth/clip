@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Collects sorted results from Searchable's and collates them.
 /// The elements put into this queue must be of type FieldDoc.
@@ -49,4 +50,5 @@ protected:
 
 }
 
+}
 #endif

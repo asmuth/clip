@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Loader for text files that represent a list of stopwords.
 class WordlistLoader : public LuceneObject {
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

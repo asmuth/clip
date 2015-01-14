@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Transforms the token stream as per the Porter stemming algorithm.  Note: the input to the stemming filter must
 /// already be in lower case, so you will need to use LowerCaseFilter or LowerCaseTokenizer further down the Tokenizer
@@ -45,4 +46,5 @@ public:
 
 }
 
+}
 #endif

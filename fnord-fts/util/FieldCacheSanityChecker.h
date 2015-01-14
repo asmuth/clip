@@ -10,7 +10,8 @@
 #include "fnord-fts/util/LuceneObject.h"
 #include "fnord-fts/util/MapOfSets.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Provides methods for sanity checking that entries in the FieldCache  are not wasteful or inconsistent.
 ///
@@ -121,4 +122,5 @@ public:
 
 }
 
+}
 #endif

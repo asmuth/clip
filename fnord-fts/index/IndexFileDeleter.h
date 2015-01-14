@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/IndexCommit.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class keeps track of each SegmentInfos instance that is still "live", either because it corresponds to a
 /// segments_N file in the Directory (a "commit", ie. a committed SegmentInfos) or because it's an in-memory
@@ -199,4 +200,5 @@ public:
 
 }
 
+}
 #endif

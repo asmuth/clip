@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A query that matches all documents.
 class MatchAllDocsQuery : public Query {
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermPositionVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermPositionVector::TermPositionVector() {
 }
@@ -23,6 +24,8 @@ Collection<int32_t> TermPositionVector::getTermPositions(int32_t index) {
 Collection<TermVectorOffsetInfoPtr> TermPositionVector::getOffsets(int32_t index) {
     BOOST_ASSERT(false);
     return Collection<TermVectorOffsetInfoPtr>(); // override
+}
+
 }
 
 }

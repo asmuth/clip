@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The results of a SpanQueryFilter.  Wraps the BitSet and the position information from the SpanQuery
 class SpanFilterResult : public LuceneObject {
@@ -74,4 +75,5 @@ public:
 
 }
 
+}
 #endif

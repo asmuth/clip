@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermFreqVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermFreqVector::TermFreqVector() {
 }
@@ -43,6 +44,8 @@ int32_t TermFreqVector::indexOf(const String& term) {
 Collection<int32_t> TermFreqVector::indexesOf(Collection<String> terms, int32_t start, int32_t length) {
     BOOST_ASSERT(false);
     return Collection<int32_t>(); // override
+}
+
 }
 
 }

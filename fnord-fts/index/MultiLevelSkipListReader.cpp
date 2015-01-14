@@ -9,7 +9,8 @@
 #include "fnord-fts/store/BufferedIndexInput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiLevelSkipListReader::MultiLevelSkipListReader(const IndexInputPtr& skipStream, int32_t maxSkipLevels, int32_t skipInterval) {
     this->numberOfLevelsToBuffer = 1;
@@ -209,6 +210,8 @@ void SkipBuffer::readBytes(uint8_t* b, int32_t offset, int32_t length) {
 
 void SkipBuffer::seek(int64_t pos) {
     this->pos = (int32_t)(pos - pointer);
+}
+
 }
 
 }

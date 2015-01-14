@@ -11,7 +11,8 @@
 #include "fnord-fts/analysis/NumericTokenStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NumericField::NumericField(const String& name)
     : AbstractField(name, Field::STORE_NO, Field::INDEX_ANALYZED_NO_NORMS, Field::TERM_VECTOR_NO) {
@@ -78,6 +79,8 @@ NumericFieldPtr NumericField::setDoubleValue(double value) {
     tokenStream->setDoubleValue(value);
     fieldsData = value;
     return shared_from_this();
+}
+
 }
 
 }

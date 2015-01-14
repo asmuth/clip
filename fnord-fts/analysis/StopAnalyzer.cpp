@@ -12,7 +12,8 @@
 #include "fnord-fts/util/Reader.h"
 #include "fnord-fts/analysis/LowerCaseTokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const wchar_t* StopAnalyzer::_ENGLISH_STOP_WORDS_SET[] = {
     L"a", L"an", L"and", L"are", L"as", L"at", L"be", L"but", L"by",
@@ -70,6 +71,8 @@ TokenStreamPtr StopAnalyzer::reusableTokenStream(const String& fieldName, const 
 }
 
 StopAnalyzerSavedStreams::~StopAnalyzerSavedStreams() {
+}
+
 }
 
 }

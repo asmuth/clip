@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/payloads/PayloadFunction.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Returns the maximum payload score seen, else 1 if there are no payloads on the doc.
 ///
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

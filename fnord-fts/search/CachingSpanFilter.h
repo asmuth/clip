@@ -10,7 +10,8 @@
 #include "fnord-fts/search/SpanFilter.h"
 #include "fnord-fts/search/CachingWrapperFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Wraps another SpanFilter's result and caches it.  The purpose is to allow filters to simply filter,
 /// and then wrap with this class to add caching.
@@ -45,4 +46,5 @@ protected:
 
 }
 
+}
 #endif

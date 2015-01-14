@@ -9,7 +9,8 @@
 #include "fnord-fts/util/Synchronize.h"
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Synchronize::Synchronize() {
     lockThread = 0;
@@ -71,6 +72,8 @@ void SyncLock::lock(int32_t timeout) {
     if (sync) {
         sync->lock(timeout);
     }
+}
+
 }
 
 }

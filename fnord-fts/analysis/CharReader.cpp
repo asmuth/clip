@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/CharReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CharReader::CharReader(const ReaderPtr& in) {
     input = in;
@@ -45,6 +46,8 @@ void CharReader::mark(int32_t readAheadLimit) {
 
 void CharReader::reset() {
     input->reset();
+}
+
 }
 
 }

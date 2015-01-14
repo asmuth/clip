@@ -8,7 +8,8 @@
 #include <float.h>
 #include "fnord-fts/index/LogByteSizeMergePolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Default minimum segment size.
 const double LogByteSizeMergePolicy::DEFAULT_MIN_MERGE_MB = 1.6;
@@ -42,6 +43,8 @@ void LogByteSizeMergePolicy::setMinMergeMB(double mb) {
 
 double LogByteSizeMergePolicy::getMinMergeMB() {
     return ((double)minMergeSize) / 1024 / 1024;
+}
+
 }
 
 }

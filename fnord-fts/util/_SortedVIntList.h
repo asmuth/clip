@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SortedDocIdSetIterator : public DocIdSetIterator {
 public:
@@ -35,4 +36,5 @@ protected:
 
 }
 
+}
 #endif

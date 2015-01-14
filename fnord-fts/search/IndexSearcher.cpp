@@ -17,7 +17,8 @@
 #include "fnord-fts/search/Query.h"
 #include "fnord-fts/util/ReaderUtil.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 IndexSearcher::IndexSearcher(const DirectoryPtr& path, bool readOnly) {
     ConstructSearcher(IndexReader::open(path, readOnly), true);
@@ -183,6 +184,8 @@ ExplanationPtr IndexSearcher::explain(const WeightPtr& weight, int32_t doc) {
 void IndexSearcher::setDefaultFieldSortScoring(bool doTrackScores, bool doMaxScore) {
     fieldSortDoTrackScores = doTrackScores;
     fieldSortDoMaxScore = doMaxScore;
+}
+
 }
 
 }

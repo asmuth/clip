@@ -8,7 +8,8 @@
 #include "fnord-fts/store/BufferedIndexOutput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t BufferedIndexOutput::BUFFER_SIZE = 16384;
 
@@ -90,6 +91,8 @@ int64_t BufferedIndexOutput::getFilePointer() {
 void BufferedIndexOutput::seek(int64_t pos) {
     flush();
     bufferStart = pos;
+}
+
 }
 
 }

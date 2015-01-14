@@ -13,7 +13,8 @@
 #include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NormsWriterPerField::NormsWriterPerField(const DocInverterPerFieldPtr& docInverterPerField, const NormsWriterPerThreadPtr& perThread, const FieldInfoPtr& fieldInfo) {
     docIDs = Collection<int32_t>::newInstance(1);
@@ -57,6 +58,8 @@ void NormsWriterPerField::finish() {
         docIDs[upto] = docState->docID;
         ++upto;
     }
+}
+
 }
 
 }

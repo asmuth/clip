@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/document/SetBasedFieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SetBasedFieldSelector::SetBasedFieldSelector(HashSet<String> fieldsToLoad, HashSet<String> lazyFieldsToLoad) {
     this->fieldsToLoad = fieldsToLoad;
@@ -26,6 +27,8 @@ FieldSelector::FieldSelectorResult SetBasedFieldSelector::accept(const String& f
         result = FieldSelector::SELECTOR_LAZY_LOAD;
     }
     return result;
+}
+
 }
 
 }

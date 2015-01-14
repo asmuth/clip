@@ -9,7 +9,8 @@
 #include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 InfoStream::InfoStream() {
 }
@@ -41,6 +42,8 @@ InfoStreamNull::~InfoStreamNull() {
 
 InfoStreamNull& InfoStreamNull::operator<< (const String& t) {
     return *this;
+}
+
 }
 
 }

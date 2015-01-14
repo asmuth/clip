@@ -9,7 +9,8 @@
 #include "fnord-fts/index/TermPositions.h"
 #include "fnord-fts/index/Term.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermSpans::TermSpans(const TermPositionsPtr& positions, const TermPtr& term) {
     this->positions = positions;
@@ -91,6 +92,8 @@ String TermSpans::toString() {
 
 TermPositionsPtr TermSpans::getPositions() {
     return positions;
+}
+
 }
 
 }

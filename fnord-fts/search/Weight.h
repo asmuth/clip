@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Calculate query weights and build query scorers.
 ///
@@ -81,4 +82,5 @@ public:
 
 }
 
+}
 #endif

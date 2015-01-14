@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Analyzer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This analyzer is used to facilitate scenarios where different fields require different analysis techniques.
 /// Use {@link #addAnalyzer} to add a non-default analyzer on a field name basis.
@@ -66,4 +67,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Stores information about how to sort documents by terms in an individual field.  Fields must be indexed
 /// in order to sort by them.
@@ -145,4 +146,5 @@ protected:
 
 }
 
+}
 #endif

@@ -10,7 +10,8 @@
 #include "fnord-fts/store/FSLockFactory.h"
 #include "fnord-fts/store/Lock.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements {@link LockFactory} using {@link File#createNewFile()}.
 /// @see LockFactory
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

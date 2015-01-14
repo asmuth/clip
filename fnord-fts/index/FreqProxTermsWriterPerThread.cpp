@@ -9,7 +9,8 @@
 #include "fnord-fts/index/FreqProxTermsWriterPerField.h"
 #include "fnord-fts/index/TermsHashPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FreqProxTermsWriterPerThread::FreqProxTermsWriterPerThread(const TermsHashPerThreadPtr& perThread) {
     docState = perThread->docState;
@@ -31,6 +32,8 @@ DocWriterPtr FreqProxTermsWriterPerThread::finishDocument() {
 }
 
 void FreqProxTermsWriterPerThread::abort() {
+}
+
 }
 
 }

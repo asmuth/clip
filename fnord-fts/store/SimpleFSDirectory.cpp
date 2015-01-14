@@ -13,7 +13,8 @@
 #include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SimpleFSDirectory::SimpleFSDirectory(const String& path, const LockFactoryPtr& lockFactory) : FSDirectory(path, lockFactory) {
 }
@@ -234,6 +235,8 @@ int64_t SimpleFSIndexOutput::length() {
 
 void SimpleFSIndexOutput::setLength(int64_t length) {
     file->setLength(length);
+}
+
 }
 
 }

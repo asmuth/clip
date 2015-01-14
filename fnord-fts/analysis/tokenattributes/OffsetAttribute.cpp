@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/tokenattributes/OffsetAttribute.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 OffsetAttribute::OffsetAttribute() {
     _startOffset = 0;
@@ -70,6 +71,8 @@ LuceneObjectPtr OffsetAttribute::clone(const LuceneObjectPtr& other) {
     cloneAttribute->_startOffset = _startOffset;
     cloneAttribute->_endOffset = _endOffset;
     return cloneAttribute;
+}
+
 }
 
 }

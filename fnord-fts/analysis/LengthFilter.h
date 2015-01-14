@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Removes words that are too long or too short from the stream.
 class LengthFilter : public TokenFilter {
@@ -34,4 +35,5 @@ public:
 
 }
 
+}
 #endif

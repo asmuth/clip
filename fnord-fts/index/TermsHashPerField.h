@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/InvertedDocConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermsHashPerField : public InvertedDocConsumerPerField {
 public:
@@ -96,4 +97,5 @@ protected:
 
 }
 
+}
 #endif

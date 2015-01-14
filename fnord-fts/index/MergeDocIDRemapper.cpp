@@ -10,7 +10,8 @@
 #include "fnord-fts/index/MergePolicy.h"
 #include "fnord-fts/index/SegmentInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MergeDocIDRemapper::MergeDocIDRemapper(const SegmentInfosPtr& infos, Collection< Collection<int32_t> > docMaps, Collection<int32_t> delCounts, const OneMergePtr& merge, int32_t mergedDocCount) {
     this->docMaps = docMaps;
@@ -74,6 +75,8 @@ int32_t MergeDocIDRemapper::remap(int32_t oldDocID) {
             return newStarts[docMap] + oldDocID - starts[docMap];
         }
     }
+}
+
 }
 
 }

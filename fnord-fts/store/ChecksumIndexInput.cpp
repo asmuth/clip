@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/store/ChecksumIndexInput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ChecksumIndexInput::ChecksumIndexInput(const IndexInputPtr& main) {
     this->main = main;
@@ -53,6 +54,8 @@ LuceneObjectPtr ChecksumIndexInput::clone(const LuceneObjectPtr& other) {
     cloneIndexInput->main = main;
     cloneIndexInput->checksum = checksum;
     return cloneIndexInput;
+}
+
 }
 
 }

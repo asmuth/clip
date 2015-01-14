@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A TokenFilter is a TokenStream whose input is another TokenStream.
 ///
@@ -43,4 +44,5 @@ public:
 
 }
 
+}
 #endif

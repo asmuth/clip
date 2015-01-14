@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds shared SegmentReader instances. IndexWriter uses SegmentReaders for 1) applying deletes,
 /// 2) doing merges, 3) handing out a real-time reader.  This pool reuses instances of the SegmentReaders
@@ -64,4 +65,5 @@ public:
 
 }
 
+}
 #endif

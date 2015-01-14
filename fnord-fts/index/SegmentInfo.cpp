@@ -18,7 +18,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t SegmentInfo::NO = -1; // no norms; no deletes;
 const int32_t SegmentInfo::YES = 1; // have norms; have deletes;
@@ -549,6 +550,8 @@ bool SegmentInfo::equals(const LuceneObjectPtr& other) {
 
 int32_t SegmentInfo::hashCode() {
     return dir->hashCode() + StringUtils::hashCode(name);
+}
+
 }
 
 }

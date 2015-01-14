@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An instance of this subclass should be returned by {@link CustomScoreQuery#getCustomScoreProvider},
 /// if you want to modify the custom score calculation of a {@link CustomScoreQuery}.
@@ -90,4 +91,5 @@ public:
 
 }
 
+}
 #endif

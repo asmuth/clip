@@ -40,7 +40,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Max # ThreadState instances; if there are more threads than this they share ThreadStates
 const int32_t DocumentsWriter::MAX_THREAD_STATE = 5;
@@ -1445,6 +1446,8 @@ void ByteBlockAllocator::recycleByteBlocks(Collection<ByteArray> blocks) {
     for (int32_t i = 0; i < size; ++i) {
         freeByteBlocks.add(blocks[i]);
     }
+}
+
 }
 
 }

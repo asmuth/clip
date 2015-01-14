@@ -15,7 +15,8 @@
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/copy.hpp>
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t CompressionTools::COMPRESS_BUFFER = 4096;
 
@@ -139,6 +140,8 @@ ByteArray CompressionTools::decompress(ByteArray value) {
 String CompressionTools::decompressString(ByteArray value) {
     ByteArray bytes(decompress(value));
     return StringUtils::toUnicode(bytes.get(), bytes.size());
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 WhitespaceTokenizer::WhitespaceTokenizer(const ReaderPtr& input) : CharTokenizer(input) {
 }
@@ -25,6 +26,8 @@ WhitespaceTokenizer::~WhitespaceTokenizer() {
 
 bool WhitespaceTokenizer::isTokenChar(wchar_t c) {
     return !UnicodeUtil::isSpace(c);
+}
+
 }
 
 }

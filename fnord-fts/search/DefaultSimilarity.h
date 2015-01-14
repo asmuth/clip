@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Similarity.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Default scoring implementation.
 class DefaultSimilarity : public Similarity {
@@ -57,4 +58,5 @@ public:
 
 }
 
+}
 #endif

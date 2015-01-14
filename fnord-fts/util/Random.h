@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility class to generate a stream of pseudorandom numbers.
 class Random : public LuceneObject {
@@ -33,4 +34,5 @@ protected:
 
 }
 
+}
 #endif

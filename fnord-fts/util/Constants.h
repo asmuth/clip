@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Some useful Lucene constants.
 class Constants {
@@ -83,4 +84,5 @@ public:
 
 }
 
+}
 #endif

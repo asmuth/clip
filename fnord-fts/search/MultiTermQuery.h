@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An abstract {@link Query} that matches documents containing a subset of terms provided by a {@link
 /// FilteredTermEnum} enumeration.
@@ -175,4 +176,5 @@ public:
 
 }
 
+}
 #endif

@@ -10,7 +10,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DoubleFieldSource::DoubleFieldSource(const String& field, const DoubleParserPtr& parser) : FieldCacheSource(field) {
     this->parser = parser;
@@ -64,6 +65,8 @@ String DoubleDocValues::toString(int32_t doc) {
 
 CollectionValue DoubleDocValues::getInnerArray() {
     return arr;
+}
+
 }
 
 }

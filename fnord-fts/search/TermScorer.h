@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Scorer for documents matching a Term.
 class TermScorer : public Scorer {
@@ -69,4 +70,5 @@ protected:
 
 }
 
+}
 #endif

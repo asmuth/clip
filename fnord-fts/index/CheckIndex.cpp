@@ -22,7 +22,8 @@
 #include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 bool CheckIndex::_assertsOn = false;
 
@@ -664,6 +665,8 @@ void MySegmentTermDocs::seek(const TermPtr& term) {
 
 void MySegmentTermDocs::skippingDoc() {
     ++delCount;
+}
+
 }
 
 }

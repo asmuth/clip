@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/IndexCommit.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MyCommitPoint : public IndexCommit {
 public:
@@ -55,4 +56,5 @@ public:
 
 }
 
+}
 #endif

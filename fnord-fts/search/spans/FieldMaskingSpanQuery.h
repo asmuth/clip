@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/SpanQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Wrapper to allow {@link SpanQuery} objects participate in composite single-field SpanQueries by
 /// 'lying' about their search field.  That is, the masked SpanQuery will function as normal, but
@@ -81,4 +82,5 @@ public:
 
 }
 
+}
 #endif

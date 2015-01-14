@@ -8,7 +8,8 @@
 #include "fnord-fts/index/FieldSortedTermVectorMapper.h"
 #include "fnord-fts/index/TermVectorEntry.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldSortedTermVectorMapper::FieldSortedTermVectorMapper(TermVectorEntryComparator comparator)
     : TermVectorMapper(false, false) {
@@ -44,6 +45,8 @@ MapStringCollectionTermVectorEntry FieldSortedTermVectorMapper::getFieldToTerms(
 
 TermVectorEntryComparator FieldSortedTermVectorMapper::getComparator() {
     return comparator;
+}
+
 }
 
 }

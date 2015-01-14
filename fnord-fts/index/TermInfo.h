@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A TermInfo is the record of information stored for a term.
 class TermInfo : public LuceneObject {
@@ -34,4 +35,5 @@ public:
 
 }
 
+}
 #endif

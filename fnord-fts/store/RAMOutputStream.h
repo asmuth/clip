@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/IndexOutput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A memory-resident {@link IndexOutput} implementation.
 class RAMOutputStream : public IndexOutput {
@@ -75,4 +76,5 @@ protected:
 
 }
 
+}
 #endif

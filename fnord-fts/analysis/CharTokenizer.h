@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Tokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An abstract base class for simple, character-oriented tokenizers.
 class CharTokenizer : public Tokenizer {
@@ -51,4 +52,5 @@ protected:
 
 }
 
+}
 #endif

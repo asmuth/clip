@@ -12,7 +12,8 @@
 #include "fnord-fts/search/DocIdSetIterator.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// When a BitSet has fewer than 1 in BITS2VINTLIST_SIZE bits set, a SortedVIntList representing the
 /// index numbers of the set bits will be smaller than that BitSet.
@@ -166,6 +167,8 @@ int32_t SortedDocIdSetIterator::advance(int32_t target) {
     }
     doc = NO_MORE_DOCS;
     return doc;
+}
+
 }
 
 }

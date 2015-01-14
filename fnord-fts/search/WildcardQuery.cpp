@@ -13,7 +13,8 @@
 #include "fnord-fts/search/SingleTermEnum.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 WildcardQuery::WildcardQuery(const TermPtr& term) {
     this->term = term;
@@ -97,6 +98,8 @@ bool WildcardQuery::equals(const LuceneObjectPtr& other) {
         return false;
     }
     return true;
+}
+
 }
 
 }

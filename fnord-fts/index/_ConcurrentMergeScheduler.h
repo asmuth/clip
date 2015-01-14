@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MergeThread : public LuceneThread {
 public:
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

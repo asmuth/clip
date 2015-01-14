@@ -11,7 +11,8 @@
 #include "fnord-fts/util/NumericUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Indicator for StringIndex values in the cache.
 const int32_t FieldCache::STRING_INDEX = -1;
@@ -295,6 +296,8 @@ String FieldCacheEntry::toString() {
     StringStream buffer;
     buffer << L"'" << getReaderKey()->toString() << L"'=>" << getFieldName() << L"'," << getCacheType();
     return buffer.str();
+}
+
 }
 
 }

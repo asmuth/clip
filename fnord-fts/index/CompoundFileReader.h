@@ -10,7 +10,8 @@
 #include "fnord-fts/store/Directory.h"
 #include "fnord-fts/store/BufferedIndexInput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Class for accessing a compound stream.
 /// This class implements a directory, but is limited to only read operations.
@@ -117,4 +118,5 @@ protected:
 
 }
 
+}
 #endif

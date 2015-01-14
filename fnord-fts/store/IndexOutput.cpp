@@ -11,7 +11,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t IndexOutput::COPY_BUFFER_SIZE = 16384;
 
@@ -101,6 +102,8 @@ void IndexOutput::writeStringStringMap(MapStringString map) {
             writeString(entry->second);
         }
     }
+}
+
 }
 
 }

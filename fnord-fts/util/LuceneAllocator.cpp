@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/LuceneAllocator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 void* AllocMemory(size_t size) {
 #if (defined(_WIN32) || defined(_WIN64)) && !defined(NDEBUG)
@@ -41,6 +42,8 @@ void FreeMemory(void* memory) {
 #else
     free(memory);
 #endif
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/util/BitUtil.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const uint8_t BitUtil::ntzTable[] = {
     8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
@@ -545,6 +546,8 @@ int64_t BitUtil::nextHighestPowerOfTwo(int64_t v) {
     v |= v >> 16;
     v |= v >> 32;
     return ++v;
+}
+
 }
 
 }

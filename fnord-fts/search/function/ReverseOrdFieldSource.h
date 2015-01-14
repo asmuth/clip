@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/function/ValueSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Obtains the ordinal of the field value from the default Lucene {@link FieldCache} using getStringIndex()
 /// and reverses the order.
@@ -49,4 +50,5 @@ public:
 
 }
 
+}
 #endif

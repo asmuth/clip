@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermPositionsQueue : public PriorityQueue<TermPositionsPtr> {
 public:
@@ -54,4 +55,5 @@ protected:
 
 }
 
+}
 #endif

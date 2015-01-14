@@ -10,7 +10,8 @@
 #include "fnord-fts/index/SegmentInfo.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 IndexFileNames::~IndexFileNames() {
 }
@@ -234,6 +235,8 @@ bool IndexFileNames::isDocStoreFile(const String& fileName) {
 
 String IndexFileNames::segmentFileName(const String& segmentName, const String& ext) {
     return segmentName + L"." + ext;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Expert: Returned by low-level search implementations.
 /// @see TopDocs
@@ -34,4 +35,5 @@ public:
 
 }
 
+}
 #endif

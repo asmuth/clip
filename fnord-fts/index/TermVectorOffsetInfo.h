@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The TermVectorOffsetInfo class holds information pertaining to a Term in a {@link TermPositionVector}'s
 /// offset information.  This offset information is the character offset as set during the Analysis phase
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

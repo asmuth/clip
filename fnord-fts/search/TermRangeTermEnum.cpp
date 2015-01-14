@@ -12,7 +12,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermRangeTermEnum::TermRangeTermEnum(const IndexReaderPtr& reader, const String& field, StringValue lowerTermText,
                                      StringValue upperTermText, bool includeLower, bool includeUpper, const CollatorPtr& collator) {
@@ -89,6 +90,8 @@ bool TermRangeTermEnum::termCompare(const TermPtr& term) {
         _endEnum = true;
         return false;
     }
+}
+
 }
 
 }

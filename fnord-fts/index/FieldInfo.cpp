@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/FieldInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldInfo::FieldInfo(const String& name, bool isIndexed, int32_t number, bool storeTermVector, bool storePositionWithTermVector,
                      bool storeOffsetWithTermVector, bool omitNorms, bool storePayloads, bool omitTermFreqAndPositions) {
@@ -58,6 +59,8 @@ void FieldInfo::update(bool isIndexed, bool storeTermVector, bool storePositionW
             this->omitTermFreqAndPositions = true;    // if one require omitTermFreqAndPositions at least once, it remains off for life
         }
     }
+}
+
 }
 
 }

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermInfo::TermInfo(const TermInfoPtr& ti) {
     set(ti);
@@ -35,6 +36,8 @@ void TermInfo::set(const TermInfoPtr& ti) {
     freqPointer = ti->freqPointer;
     proxPointer = ti->proxPointer;
     skipOffset = ti->skipOffset;
+}
+
 }
 
 }

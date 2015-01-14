@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermVectorOffsetInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorOffsetInfo::TermVectorOffsetInfo(int32_t startOffset, int32_t endOffset) {
     this->endOffset = endOffset;
@@ -55,6 +56,8 @@ bool TermVectorOffsetInfo::equals(const LuceneObjectPtr& other) {
 int32_t TermVectorOffsetInfo::hashCode() {
     int32_t result = startOffset;
     return (29 * result + endOffset);
+}
+
 }
 
 }

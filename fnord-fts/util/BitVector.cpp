@@ -12,7 +12,8 @@
 #include "fnord-fts/util/TestPoint.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const uint8_t BitVector::BYTE_COUNTS[] = {
     0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
@@ -234,6 +235,8 @@ BitVectorPtr BitVector::subset(int32_t start, int32_t end) {
     int32_t bitsToClear = (bits.size() * 8 - (end - start)) % 8;
     bits[bits.size() - 1] &= ~(0xff << (8 - bitsToClear));
     return newLucene<BitVector>(bits, end - start);
+}
+
 }
 
 }

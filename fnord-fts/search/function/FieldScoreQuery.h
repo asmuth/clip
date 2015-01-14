@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/function/ValueSourceQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A query that scores each document as the value of the numeric input field.
 ///
@@ -71,4 +72,5 @@ public:
 
 }
 
+}
 #endif

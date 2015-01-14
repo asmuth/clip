@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/InvertedDocConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class implements {@link InvertedDocConsumer}, which is passed each token produced by the analyzer on
 /// each field.  It stores these tokens in a hash table, and allocates separate byte streams per token.  Consumers
@@ -65,4 +66,5 @@ public:
 
 }
 
+}
 #endif

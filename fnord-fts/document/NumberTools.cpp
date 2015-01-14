@@ -8,7 +8,8 @@
 #include "fnord-fts/document/NumberTools.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t NumberTools::RADIX = 36;
 const wchar_t NumberTools::NEGATIVE_PREFIX = L'-';
@@ -89,6 +90,8 @@ int64_t NumberTools::stringToLong(const String& str) {
     }
 
     return l;
+}
+
 }
 
 }

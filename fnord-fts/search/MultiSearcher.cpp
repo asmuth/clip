@@ -20,7 +20,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiSearcher::MultiSearcher(Collection<SearchablePtr> searchables) {
     this->searchables = searchables;
@@ -343,6 +344,8 @@ void MultiSearcherCollector::setNextReader(const IndexReaderPtr& reader, int32_t
 
 bool MultiSearcherCollector::acceptsDocsOutOfOrder() {
     return collector->acceptsDocsOutOfOrder();
+}
+
 }
 
 }

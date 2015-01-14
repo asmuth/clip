@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/SpanFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Constrains search results to only match those which also match a provided query.  Also provides position
 /// information about where each document matches at the cost of extra space compared with the
@@ -43,4 +44,5 @@ public:
 
 }
 
+}
 #endif

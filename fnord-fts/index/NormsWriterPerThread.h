@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/InvertedDocEndConsumerPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class NormsWriterPerThread : public InvertedDocEndConsumerPerThread {
 public:
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

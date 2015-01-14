@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/FilteredTermEnum.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FilteredTermEnum::~FilteredTermEnum() {
 }
@@ -64,6 +65,8 @@ void FilteredTermEnum::close() {
     }
     currentTerm.reset();
     actualEnum.reset();
+}
+
 }
 
 }

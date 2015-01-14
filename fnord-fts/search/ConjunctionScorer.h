@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Scorer for conjunctions, sets of queries, all of which are required.
 class ConjunctionScorer : public Scorer {
@@ -36,4 +37,5 @@ protected:
 
 }
 
+}
 #endif

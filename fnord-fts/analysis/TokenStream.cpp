@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/analysis/TokenStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TokenStream::TokenStream() {
 }
@@ -29,6 +30,8 @@ void TokenStream::reset() {
 }
 
 void TokenStream::close() {
+}
+
 }
 
 }

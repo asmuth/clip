@@ -14,7 +14,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PayloadNearQuery::PayloadNearQuery(Collection<SpanQueryPtr> clauses, int32_t slop, bool inOrder) : SpanNearQuery(clauses, slop, inOrder) {
     fieldName = clauses[0]->getField(); // all clauses must have same field
@@ -173,6 +174,8 @@ ExplanationPtr PayloadNearSpanScorer::explain(int32_t doc) {
     result->setValue(nonPayloadExpl->getValue() * avgPayloadScore);
     result->setDescription(L"bnq, product of:");
     return result;
+}
+
 }
 
 }

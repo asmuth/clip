@@ -18,7 +18,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiTermQuery::MultiTermQuery() {
     numberOfTerms = 0;
@@ -298,6 +299,8 @@ void ConstantScoreAutoRewriteDefault::setTermCountCutoff(int32_t count) {
 
 void ConstantScoreAutoRewriteDefault::setDocCountPercent(double percent) {
     boost::throw_exception(UnsupportedOperationException(L"Please create a private instance"));
+}
+
 }
 
 }

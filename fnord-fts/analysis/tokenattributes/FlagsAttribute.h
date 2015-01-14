@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This attribute can be used to pass different flags down the tokenizer chain, eg from one TokenFilter
 /// to another one.
@@ -44,4 +45,5 @@ public:
 
 }
 
+}
 #endif

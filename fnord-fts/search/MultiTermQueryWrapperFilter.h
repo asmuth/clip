@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Filter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A wrapper for {@link MultiTermQuery}, that exposes its functionality as a {@link Filter}.
 ///
@@ -56,4 +57,5 @@ public:
 
 }
 
+}
 #endif

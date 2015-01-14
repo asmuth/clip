@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Analyzer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An Analyzer that uses {@link WhitespaceTokenizer}.
 class WhitespaceAnalyzer : public Analyzer {
@@ -25,4 +26,5 @@ public:
 
 }
 
+}
 #endif

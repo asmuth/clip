@@ -12,7 +12,8 @@
 #include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/index/DefaultSkipListWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FormatPostingsTermsWriter::FormatPostingsTermsWriter(const SegmentWriteStatePtr& state, const FormatPostingsFieldsWriterPtr& parent) {
     currentTermStart = 0;
@@ -55,6 +56,8 @@ void FormatPostingsTermsWriter::finish() {
 
 void FormatPostingsTermsWriter::close() {
     docsWriter->close();
+}
+
 }
 
 }

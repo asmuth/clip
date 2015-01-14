@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/StringReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 StringReader::StringReader(const String& str) {
     this->str = str;
@@ -45,6 +46,8 @@ void StringReader::reset() {
 
 int64_t StringReader::length() {
     return str.length();
+}
+
 }
 
 }

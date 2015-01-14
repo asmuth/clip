@@ -17,7 +17,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorsWriter::TermVectorsWriter(const DirectoryPtr& directory, const String& segment, const FieldInfosPtr& fieldInfos) {
     utf8Results = newCollection<UTF8ResultPtr>(newInstance<UTF8Result>(), newInstance<UTF8Result>());
@@ -195,6 +196,8 @@ void TermVectorsWriter::close() {
         }
     }
     keep.throwException();
+}
+
 }
 
 }

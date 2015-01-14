@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements the fuzzy search query.  The similarity measurement is based on the Levenshtein (edit
 /// distance) algorithm.
@@ -75,4 +76,5 @@ protected:
 
 }
 
+}
 #endif

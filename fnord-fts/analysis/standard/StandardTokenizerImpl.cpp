@@ -14,7 +14,8 @@
 
 #include <boost/thread/once.hpp>
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Initial size of the lookahead buffer
 const int32_t StandardTokenizerImpl::ZZ_BUFFERSIZE = 16384;
@@ -528,6 +529,8 @@ int32_t StandardTokenizerImpl::getNextToken() {
     }
 
     return YYINITIAL;
+}
+
 }
 
 }

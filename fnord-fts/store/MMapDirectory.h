@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/FSDirectory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// File-based {@link Directory} implementation that uses mmap for reading, and {@link SimpleFSIndexOutput} for writing.
 ///
@@ -42,4 +43,5 @@ public:
 
 }
 
+}
 #endif

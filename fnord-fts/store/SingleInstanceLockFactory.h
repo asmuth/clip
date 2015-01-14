@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/LockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements {@link LockFactory} for a single in-process instance, meaning all
 /// locking will take place through this one instance.  Only use this {@link LockFactory}
@@ -41,4 +42,5 @@ public:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/util/LuceneObject.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LuceneObject::LuceneObject() {
 }
@@ -41,6 +42,8 @@ int32_t LuceneObject::compareTo(const LuceneObjectPtr& other) {
 
 String LuceneObject::toString() {
     return StringUtils::toString(hashCode());
+}
+
 }
 
 }

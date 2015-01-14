@@ -10,7 +10,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/util/CloseableThreadLocal.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SegmentReader : public IndexReader {
 public:
@@ -218,4 +219,5 @@ protected:
 
 }
 
+}
 #endif

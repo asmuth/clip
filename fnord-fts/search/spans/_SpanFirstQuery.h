@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FirstSpans : public Spans {
 public:
@@ -34,4 +35,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Collectors are primarily meant to be used to gather raw results from a search, and implement sorting
 /// or custom result filtering, collation, etc.
@@ -135,4 +136,5 @@ public:
 
 }
 
+}
 #endif

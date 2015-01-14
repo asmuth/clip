@@ -8,7 +8,8 @@
 #include "fnord-fts/index/SegmentMergeQueue.h"
 #include "fnord-fts/index/SegmentMergeInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentMergeQueue::SegmentMergeQueue(int32_t size) : PriorityQueue<SegmentMergeInfoPtr>(size) {
 }
@@ -25,6 +26,8 @@ void SegmentMergeQueue::close() {
 bool SegmentMergeQueue::lessThan(const SegmentMergeInfoPtr& first, const SegmentMergeInfoPtr& second) {
     int32_t comparison = first->term->compareTo(second->term);
     return comparison == 0 ? (first->base < second->base) : (comparison < 0);
+}
+
 }
 
 }

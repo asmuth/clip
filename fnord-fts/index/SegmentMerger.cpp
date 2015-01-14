@@ -32,7 +32,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Maximum number of contiguous documents to bulk-copy when merging stored fields
 const int32_t SegmentMerger::MAX_RAW_MERGE_DOCS = 4192;
@@ -676,6 +677,8 @@ CheckAbortNull::~CheckAbortNull() {
 
 void CheckAbortNull::work(double units) {
     // do nothing
+}
+
 }
 
 }

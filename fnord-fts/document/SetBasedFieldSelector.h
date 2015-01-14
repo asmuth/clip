@@ -9,7 +9,8 @@
 
 #include "fnord-fts/document/FieldSelector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Declare what fields to load normally and what fields to load lazily
 class SetBasedFieldSelector : public FieldSelector {
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

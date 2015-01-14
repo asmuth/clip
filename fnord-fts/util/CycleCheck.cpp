@@ -8,7 +8,8 @@
 #include <iostream>
 #include "fnord-fts/util/CycleCheck.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MapStringInt CycleCheck::cycleMap;
 Set<LuceneObjectPtr*> CycleCheck::staticRefs;
@@ -62,6 +63,8 @@ void CycleCheck::dumpRefs() {
             }
         }
     }
+}
+
 }
 
 }

@@ -11,7 +11,8 @@
 #include "fnord-fts/index/DocumentsWriter.h"
 #include "fnord-fts/index/RawPostingList.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermVectorsTermsWriter : public TermsHashConsumer {
 public:
@@ -92,4 +93,5 @@ public:
 
 }
 
+}
 #endif

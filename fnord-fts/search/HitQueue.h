@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/HitQueueBase.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class HitQueue : public HitQueueBase {
 public:
@@ -31,4 +32,5 @@ protected:
 
 }
 
+}
 #endif

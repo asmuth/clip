@@ -20,7 +20,8 @@
 #include <unistd.h>
 #endif
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 namespace FileUtils {
 
@@ -181,4 +182,6 @@ String extractFile(const String& path) {
 }
 
 }
+}
+
 }

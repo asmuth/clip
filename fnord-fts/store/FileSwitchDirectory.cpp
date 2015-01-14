@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/store/FileSwitchDirectory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FileSwitchDirectory::FileSwitchDirectory(HashSet<String> primaryExtensions, const DirectoryPtr& primaryDir, const DirectoryPtr& secondaryDir, bool doClose) {
     this->primaryExtensions = primaryExtensions;
@@ -89,6 +90,8 @@ void FileSwitchDirectory::sync(const String& name) {
 
 IndexInputPtr FileSwitchDirectory::openInput(const String& name) {
     return getDirectory(name)->openInput(name);
+}
+
 }
 
 }

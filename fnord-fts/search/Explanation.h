@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Describes the score computation for document and query.
 class Explanation : public LuceneObject {
@@ -83,4 +84,5 @@ public:
 
 }
 
+}
 #endif

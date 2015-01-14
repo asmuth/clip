@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility class to handle query parse errors
 class QueryParseError : public LuceneObject {
@@ -50,4 +51,5 @@ protected:
 
 }
 
+}
 #endif

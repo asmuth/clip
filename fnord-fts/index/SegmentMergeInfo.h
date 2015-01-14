@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/Term.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SegmentMergeInfo : public LuceneObject {
 public:
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

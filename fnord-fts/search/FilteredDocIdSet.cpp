@@ -9,7 +9,8 @@
 #include "fnord-fts/search/FilteredDocIdSet.h"
 #include "fnord-fts/search/_FilteredDocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FilteredDocIdSet::FilteredDocIdSet(const DocIdSetPtr& innerSet) {
     this->innerSet = innerSet;
@@ -35,6 +36,8 @@ DefaultFilteredDocIdSetIterator::~DefaultFilteredDocIdSetIterator() {
 
 bool DefaultFilteredDocIdSetIterator::match(int32_t docid) {
     return filtered->match(docid);
+}
+
 }
 
 }

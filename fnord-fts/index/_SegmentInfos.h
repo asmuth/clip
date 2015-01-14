@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility class for executing code that needs to do something with the current segments file.
 class FindSegmentsFile : public LuceneObject {
@@ -66,4 +67,5 @@ public:
 
 }
 
+}
 #endif

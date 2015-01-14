@@ -10,7 +10,8 @@
 #include "fnord-fts/search/DisjunctionSumScorer.h"
 #include "fnord-fts/search/ConjunctionScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// See the description in BooleanScorer, comparing BooleanScorer & BooleanScorer2
 ///
@@ -163,4 +164,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/LetterTokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// LowerCaseTokenizer performs the function of LetterTokenizer and LowerCaseFilter together.  It divides text at
 /// non-letters and converts them to lower case.  While it is functionally equivalent to the combination of
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

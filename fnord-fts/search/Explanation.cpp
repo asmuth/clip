@@ -8,7 +8,8 @@
 #include "fnord-fts/search/Explanation.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Explanation::Explanation(double value, const String& description) {
     this->value = value;
@@ -86,6 +87,8 @@ String Explanation::toHtml() {
 }
 
 IDFExplanation::~IDFExplanation() {
+}
+
 }
 
 }

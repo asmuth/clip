@@ -11,7 +11,8 @@
 #include "fnord-fts/index/TermPositions.h"
 #include "fnord-fts/index/TermEnum.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A FilterIndexReader contains another IndexReader, which it uses as its basic source of data, possibly
 /// transforming the data along the way or providing additional functionality. The class FilterIndexReader
@@ -133,4 +134,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This stores a monotonically increasing set of <Term, TermInfo> pairs in a Directory.  A TermInfos
 /// can be written once, in order.
@@ -92,4 +93,5 @@ protected:
 
 }
 
+}
 #endif

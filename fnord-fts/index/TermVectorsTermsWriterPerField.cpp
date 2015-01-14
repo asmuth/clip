@@ -23,7 +23,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorsTermsWriterPerField::TermVectorsTermsWriterPerField(const TermsHashPerFieldPtr& termsHashPerField, const TermVectorsTermsWriterPerThreadPtr& perThread, const FieldInfoPtr& fieldInfo) {
     this->doVectors = false;
@@ -255,6 +256,8 @@ void TermVectorsTermsWriterPerField::addTerm(const RawPostingListPtr& p0) {
 }
 
 void TermVectorsTermsWriterPerField::skippingLongTerm() {
+}
+
 }
 
 }

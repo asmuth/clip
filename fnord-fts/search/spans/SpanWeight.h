@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Weight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Public for use by other weight implementations
 class SpanWeight : public Weight {
@@ -44,4 +45,5 @@ public:
 
 }
 
+}
 #endif

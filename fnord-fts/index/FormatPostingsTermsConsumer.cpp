@@ -9,7 +9,8 @@
 #include "fnord-fts/util/UTF8Stream.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FormatPostingsTermsConsumer::~FormatPostingsTermsConsumer() {
 }
@@ -25,6 +26,8 @@ FormatPostingsDocsConsumerPtr FormatPostingsTermsConsumer::addTerm(const String&
     MiscUtils::arrayCopy(text.begin(), 0, termBuffer.get(), 0, len);
     termBuffer[len] = UTF8Base::UNICODE_TERMINATOR;
     return addTerm(termBuffer, 0);
+}
+
 }
 
 }

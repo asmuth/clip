@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermFreqVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Extends TermFreqVector to provide additional information about positions in which each of the terms is found. A TermPositionVector not necessarily
 /// contains both positions and offsets, but at least one of these arrays exists.
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

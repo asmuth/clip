@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Query that matches documents containing a particular sequence of terms.  A PhraseQuery is built by
 /// QueryParser for input like "new york".
@@ -79,4 +80,5 @@ public:
 
 }
 
+}
 #endif

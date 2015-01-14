@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Simple utility class providing static methods to compress and decompress binary data for stored fields.
 class CompressionTools : public LuceneObject {
@@ -46,4 +47,5 @@ protected:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class tracks the number and position / offset parameters of terms being added to the index.
 /// The information collected in this class is also used to calculate the normalization factor for a field.
@@ -59,4 +60,5 @@ public:
 
 }
 
+}
 #endif

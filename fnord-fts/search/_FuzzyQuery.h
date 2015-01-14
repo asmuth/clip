@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ScoreTerm : public LuceneObject {
 public:
@@ -37,4 +38,5 @@ protected:
 
 }
 
+}
 #endif

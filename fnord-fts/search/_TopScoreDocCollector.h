@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/TopDocsCollector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Assumes docs are scored in order.
 class InOrderTopScoreDocCollector : public TopScoreDocCollector {
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

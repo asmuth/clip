@@ -10,7 +10,8 @@
 #include <boost/thread/condition.hpp>
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility class to support signaling notifications.
 class LuceneSignal {
@@ -36,4 +37,5 @@ public:
 
 }
 
+}
 #endif

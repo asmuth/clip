@@ -21,7 +21,8 @@
 #include "fnord-fts/util/UnicodeUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FormatPostingsDocsWriter::FormatPostingsDocsWriter(const SegmentWriteStatePtr& state, const FormatPostingsTermsWriterPtr& parent) {
     this->lastDocID = 0;
@@ -105,6 +106,8 @@ void FormatPostingsDocsWriter::finish() {
 void FormatPostingsDocsWriter::close() {
     out->close();
     posWriter->close();
+}
+
 }
 
 }

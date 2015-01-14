@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Filter that restricts search results to values that have a matching prefix in a given field.
 class PrefixFilter : public MultiTermQueryWrapperFilter {
@@ -27,4 +28,5 @@ public:
 
 }
 
+}
 #endif

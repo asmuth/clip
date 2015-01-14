@@ -12,7 +12,8 @@
 #include "fnord-fts/search/DocIdSet.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FilteredQuery::FilteredQuery(const QueryPtr& query, const FilterPtr& filter) {
     this->query = query;
@@ -184,6 +185,8 @@ int32_t FilteredQueryWeightScorer::advance(int32_t target) {
 
 double FilteredQueryWeightScorer::score() {
     return weight->query->getBoost() * scorer->score();
+}
+
 }
 
 }

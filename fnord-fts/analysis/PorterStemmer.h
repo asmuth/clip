@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is the Porter stemming algorithm, coded up as thread-safe ANSI C by the author.
 ///
@@ -123,4 +124,5 @@ protected:
 
 }
 
+}
 #endif

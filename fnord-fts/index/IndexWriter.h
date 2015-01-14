@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/MergePolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An IndexWriter creates and maintains an index.
 ///
@@ -1109,4 +1110,5 @@ public:
 
 }
 
+}
 #endif

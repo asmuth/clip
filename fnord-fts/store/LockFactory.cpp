@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/store/LockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LockFactory::~LockFactory() {
 }
@@ -18,6 +19,8 @@ void LockFactory::setLockPrefix(const String& lockPrefix) {
 
 String LockFactory::getLockPrefix() {
     return lockPrefix;
+}
+
 }
 
 }

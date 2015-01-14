@@ -11,7 +11,8 @@
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t TermScorer::SCORE_CACHE_SIZE = 32;
 
@@ -116,6 +117,8 @@ int32_t TermScorer::advance(int32_t target) {
 
 String TermScorer::toString() {
     return L"scorer(" + weight->toString() + L")";
+}
+
 }
 
 }

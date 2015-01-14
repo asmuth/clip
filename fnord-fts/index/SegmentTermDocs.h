@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermPositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SegmentTermDocs : public TermPositions, public LuceneObject {
 public:
@@ -80,4 +81,5 @@ protected:
 
 }
 
+}
 #endif

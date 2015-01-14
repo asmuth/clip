@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/tokenattributes/PositionIncrementAttribute.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PositionIncrementAttribute::PositionIncrementAttribute() {
     positionIncrement = 1;
@@ -63,6 +64,8 @@ LuceneObjectPtr PositionIncrementAttribute::clone(const LuceneObjectPtr& other) 
     PositionIncrementAttributePtr cloneAttribute(std::dynamic_pointer_cast<PositionIncrementAttribute>(Attribute::clone(clone)));
     cloneAttribute->positionIncrement = positionIncrement;
     return cloneAttribute;
+}
+
 }
 
 }

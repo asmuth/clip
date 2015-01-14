@@ -15,7 +15,8 @@
 #include "fnord-fts/index/IntBlockPool.h"
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermsHashPerThread::TermsHashPerThread(const DocInverterPerThreadPtr& docInverterPerThread, const TermsHashPtr& termsHash, const TermsHashPtr& nextTermsHash, const TermsHashPerThreadPtr& primaryPerThread) {
     this->freePostings = Collection<RawPostingListPtr>::newInstance(256);
@@ -110,6 +111,8 @@ void TermsHashPerThread::reset(bool recyclePostings) {
         TermsHashPtr(_termsHash)->recyclePostings(freePostings, freePostingsCount);
         freePostingsCount = 0;
     }
+}
+
 }
 
 }

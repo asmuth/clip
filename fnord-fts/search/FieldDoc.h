@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/ScoreDoc.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A ScoreDoc which also contains information about how to sort the referenced document.  In addition to the
 /// document number and score, this object contains an array of values for the document from the field(s) used
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

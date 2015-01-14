@@ -10,7 +10,8 @@
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const wchar_t WildcardTermEnum::WILDCARD_STRING = L'*';
 const wchar_t WildcardTermEnum::WILDCARD_CHAR = L'?';
@@ -126,6 +127,8 @@ bool WildcardTermEnum::wildcardEquals(const String& pattern, int32_t patternIdx,
         }
     }
     return false;
+}
+
 }
 
 }

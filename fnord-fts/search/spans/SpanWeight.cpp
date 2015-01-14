@@ -13,7 +13,8 @@
 #include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanWeight::SpanWeight(const SpanQueryPtr& query, const SearcherPtr& searcher) {
     this->similarity = query->getSimilarity(searcher);
@@ -107,6 +108,8 @@ ExplanationPtr SpanWeight::explain(const IndexReaderPtr& reader, int32_t doc) {
     }
 
     return result;
+}
+
 }
 
 }

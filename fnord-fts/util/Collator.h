@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Convenience class for storing collate objects.
 class Collator : public LuceneObject {
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

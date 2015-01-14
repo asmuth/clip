@@ -14,7 +14,8 @@
 #include "fnord-fts/document/Fieldable.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 // Used internally (ie not written to *.fnm files) for pre-2.9 files
 const int32_t FieldInfos::FORMAT_PRE = -1;
@@ -254,6 +255,8 @@ void FieldInfos::read(const IndexInputPtr& input, const String& fileName) {
                                StringUtils::toString(input->getFilePointer()) + L" vs size " +
                                StringUtils::toString(input->length())));
     }
+}
+
 }
 
 }

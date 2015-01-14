@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/Lock.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SimpleFSLock : public Lock {
 public:
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

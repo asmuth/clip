@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/payloads/PayloadFunction.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Calculates the minimum payload seen
 class MinPayloadFunction : public PayloadFunction {
@@ -27,4 +28,5 @@ public:
 
 }
 
+}
 #endif

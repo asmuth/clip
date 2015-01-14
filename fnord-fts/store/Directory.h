@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Directory is a flat list of files.  Files may be written once, when they are created.  Once a file
 /// is created it may only be opened for read, or deleted.  Random access is permitted both when reading
@@ -107,4 +108,5 @@ protected:
 
 }
 
+}
 #endif

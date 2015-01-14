@@ -32,7 +32,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t QueryParser::CONJ_NONE = 0;
 const int32_t QueryParser::CONJ_AND = 1;
@@ -1384,6 +1385,8 @@ void QueryParser::jj_save(int32_t index, int32_t xla) {
     p->gen = jj_gen + xla - jj_la;
     p->first = token;
     p->arg = xla;
+}
+
 }
 
 }

@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Searcher.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Document Frequency cache acting as a Dummy-Searcher.  This class is not a full-fledged Searcher, but
 /// only supports the methods necessary to initialize Weights.
@@ -106,4 +107,5 @@ public:
 
 }
 
+}
 #endif

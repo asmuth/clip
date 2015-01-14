@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A query that generates the union of documents produced by its subqueries, and that scores each
 /// document with the maximum score for that document as produced by any subquery, plus a tie breaking
@@ -95,4 +96,5 @@ public:
 
 }
 
+}
 #endif

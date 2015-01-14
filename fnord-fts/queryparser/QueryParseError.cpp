@@ -9,7 +9,8 @@
 #include "fnord-fts/queryparser/QueryParserToken.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 QueryParseError::~QueryParseError() {
 }
@@ -109,6 +110,8 @@ String QueryParseError::addEscapes(const String& str) {
         }
     }
     return buffer.str();
+}
+
 }
 
 }

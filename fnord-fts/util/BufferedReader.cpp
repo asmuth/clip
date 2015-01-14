@@ -8,7 +8,8 @@
 #include "fnord-fts/util/BufferedReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t BufferedReader::READER_BUFFER = 8192;
 
@@ -107,6 +108,8 @@ void BufferedReader::reset() {
     reader->reset();
     bufferLength = 0;
     bufferPosition = 0;
+}
+
 }
 
 }

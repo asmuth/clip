@@ -7,13 +7,16 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/Weight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Weight::~Weight() {
 }
 
 bool Weight::scoresDocsOutOfOrder() {
     return false;
+}
+
 }
 
 }

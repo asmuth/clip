@@ -19,7 +19,8 @@
 #include "fnord-fts/util/BitVector.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentTermDocs::SegmentTermDocs(const SegmentReaderPtr& parent) {
     this->_parent = parent;
@@ -219,6 +220,8 @@ IndexInputPtr SegmentTermDocs::freqStream() {
 
 void SegmentTermDocs::freqStream(const IndexInputPtr& freqStream) {
     _freqStream = freqStream;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/InvertedDocEndConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Taps into DocInverter, as an InvertedDocEndConsumer, which is called at the end of inverting each field.
 /// We just look at the length for the field (docState.length) and record the norm.
@@ -44,4 +45,5 @@ public:
 
 }
 
+}
 #endif

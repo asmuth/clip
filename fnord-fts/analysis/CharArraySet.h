@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A simple class that stores Strings as char[]'s in a hash table.  Note that this is not a general purpose class.
 /// For example, it cannot remove items from the set, nor does it resize its hash table to be smaller, etc.  It is
@@ -53,4 +54,5 @@ public:
 
 }
 
+}
 #endif

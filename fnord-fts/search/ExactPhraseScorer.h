@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/PhraseScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class ExactPhraseScorer : public PhraseScorer {
 public:
@@ -24,4 +25,5 @@ protected:
 
 }
 
+}
 #endif

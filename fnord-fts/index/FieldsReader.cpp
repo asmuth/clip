@@ -20,7 +20,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldsReader::FieldsReader(const FieldInfosPtr& fieldInfos, int32_t numTotalDocs, int32_t size, int32_t format,
                            int32_t formatSize, int32_t docStoreOffset, const IndexInputPtr& cloneableFieldsStream,
@@ -476,6 +477,8 @@ ByteArray LazyField::getBinaryValue(ByteArray result) {
     } else {
         return ByteArray();
     }
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Collector} implementation which wraps another {@link Collector} and makes sure only
 /// documents with scores > 0 are collected.
@@ -33,4 +34,5 @@ public:
 
 }
 
+}
 #endif

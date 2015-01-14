@@ -10,7 +10,8 @@
 #include "fnord-fts/search/DocIdSet.h"
 #include "fnord-fts/search/DocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FieldCacheTermsFilterDocIdSet : public DocIdSet {
 public:
@@ -50,4 +51,5 @@ public:
 
 }
 
+}
 #endif

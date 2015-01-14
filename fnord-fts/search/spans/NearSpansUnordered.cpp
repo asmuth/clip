@@ -11,7 +11,8 @@
 #include "fnord-fts/search/spans/SpanNearQuery.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NearSpansUnordered::NearSpansUnordered(const SpanNearQueryPtr& query, const IndexReaderPtr& reader) {
     this->query = query;
@@ -289,6 +290,8 @@ bool CellQueue::lessThan(const SpansCellPtr& first, const SpansCellPtr& second) 
     } else {
         return (first->doc() < second->doc());
     }
+}
+
 }
 
 }

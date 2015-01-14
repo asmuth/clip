@@ -9,7 +9,8 @@
 #include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DefaultSkipListWriter::DefaultSkipListWriter(int32_t skipInterval, int32_t numberOfSkipLevels, int32_t docCount, const IndexOutputPtr& freqOutput, const IndexOutputPtr& proxOutput) : MultiLevelSkipListWriter(skipInterval, numberOfSkipLevels, docCount) {
     curDoc = 0;
@@ -103,6 +104,8 @@ void DefaultSkipListWriter::writeSkipData(int32_t level, const IndexOutputPtr& s
 
     lastSkipFreqPointer[level] = curFreqPointer;
     lastSkipProxPointer[level] = curProxPointer;
+}
+
 }
 
 }

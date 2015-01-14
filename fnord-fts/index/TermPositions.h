@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// TermPositions provides an interface for enumerating the <document, frequency, <position>*>
 /// tuples for a term.  The document and frequency are the same as for a TermDocs.  The positions portion
@@ -52,4 +53,5 @@ public:
 
 }
 
+}
 #endif

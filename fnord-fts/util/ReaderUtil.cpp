@@ -8,7 +8,8 @@
 #include "fnord-fts/util/ReaderUtil.h"
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReaderUtil::~ReaderUtil() {
 }
@@ -47,6 +48,8 @@ int32_t ReaderUtil::subIndex(int32_t n, Collection<int32_t> docStarts) {
     // Binary search to locate reader
     Collection<int32_t>::iterator index = std::upper_bound(docStarts.begin(), docStarts.end(), n);
     return (std::distance(docStarts.begin(), index) - 1);
+}
+
 }
 
 }

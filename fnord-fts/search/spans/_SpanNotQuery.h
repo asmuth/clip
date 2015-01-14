@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class NotSpans : public Spans {
 public:
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

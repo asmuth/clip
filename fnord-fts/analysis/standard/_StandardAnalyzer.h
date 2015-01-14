@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class StandardAnalyzerSavedStreams : public LuceneObject {
 public:
@@ -22,4 +23,5 @@ public:
 
 }
 
+}
 #endif

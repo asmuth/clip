@@ -8,7 +8,8 @@
 #include "fnord-fts/analysis/Tokenizer.h"
 #include "fnord-fts/analysis/CharReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Tokenizer::Tokenizer() {
 }
@@ -50,6 +51,8 @@ int32_t Tokenizer::correctOffset(int32_t currentOff) {
 
 void Tokenizer::reset(const ReaderPtr& input) {
     this->input = input;
+}
+
 }
 
 }

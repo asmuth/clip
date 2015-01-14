@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/function/ValueSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A base class for ValueSource implementations that retrieve values for a single field from the
 /// {@link FieldCache}.
@@ -59,4 +60,5 @@ public:
 
 }
 
+}
 #endif

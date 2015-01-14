@@ -8,7 +8,8 @@
 #include "fnord-fts/index/BufferedDeletes.h"
 #include "fnord-fts/index/MergeDocIDRemapper.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 BufferedDeletes::BufferedDeletes(bool doTermSort) {
     // doTermSort not used: always use sorted term map
@@ -111,6 +112,8 @@ void Num::setNum(int32_t num) {
     // because if multiple threads are replacing the same doc at nearly the same time, it's
     // possible that one thread that got a higher docID is scheduled before the other threads.
     this->num = std::max(this->num, num);
+}
+
 }
 
 }

@@ -25,7 +25,8 @@
 #include "fnord-fts/util/UTF8Stream.h"
 #include "fnord-fts/util/TestPoint.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FreqProxTermsWriter::~FreqProxTermsWriter() {
 }
@@ -271,6 +272,8 @@ FreqProxTermsWriterPostingList::FreqProxTermsWriterPostingList() {
 }
 
 FreqProxTermsWriterPostingList::~FreqProxTermsWriterPostingList() {
+}
+
 }
 
 }

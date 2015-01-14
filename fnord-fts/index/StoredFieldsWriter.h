@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/DocumentsWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This is a DocFieldConsumer that writes stored fields.
 class StoredFieldsWriter : public LuceneObject {
@@ -71,4 +72,5 @@ public:
 
 }
 
+}
 #endif

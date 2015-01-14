@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Stores and iterate on sorted integers in compressed form in RAM.
 ///
@@ -85,4 +86,5 @@ protected:
 
 }
 
+}
 #endif

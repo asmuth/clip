@@ -9,7 +9,8 @@
 
 #include "fnord-fts/document/AbstractField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class Field : public AbstractField {
 public:
@@ -152,4 +153,5 @@ protected:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/ScoreDoc.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ScoreDoc::ScoreDoc(int32_t doc, double score) {
     this->doc = doc;
@@ -21,6 +22,8 @@ String ScoreDoc::toString() {
     StringStream buffer;
     buffer << L"doc=" << doc << L" score=" << score;
     return buffer.str();
+}
+
 }
 
 }

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/SegmentTermVector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentTermVector::SegmentTermVector(const String& field, Collection<String> terms, Collection<int32_t> termFreqs) {
     this->field = field;
@@ -63,6 +64,8 @@ Collection<int32_t> SegmentTermVector::indexesOf(Collection<String> termNumbers,
         res[i] = indexOf(termNumbers[start + i]);
     }
     return res;
+}
+
 }
 
 }

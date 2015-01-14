@@ -12,7 +12,8 @@
 #include "fnord-fts/store/IndexInput.h"
 #include "fnord-fts/store/IndexOutput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Directory::Directory() {
     isOpen = true;
@@ -115,6 +116,8 @@ void Directory::ensureOpen() {
     if (!isOpen) {
         boost::throw_exception(AlreadyClosedException(L"This directory is closed"));
     }
+}
+
 }
 
 }

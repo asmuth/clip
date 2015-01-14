@@ -12,7 +12,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldDocSortedHitQueue::FieldDocSortedHitQueue(int32_t size) : PriorityQueue<FieldDocPtr>(size) {
 }
@@ -75,6 +76,8 @@ bool FieldDocSortedHitQueue::lessThan(const FieldDocPtr& first, const FieldDocPt
     }
 
     return (c > 0);
+}
+
 }
 
 }

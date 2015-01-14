@@ -8,7 +8,8 @@
 #include "fnord-fts/search/PhraseQueue.h"
 #include "fnord-fts/search/PhrasePositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PhraseQueue::PhraseQueue(int32_t size) : PriorityQueue<PhrasePositionsPtr>(size) {
 }
@@ -28,6 +29,8 @@ bool PhraseQueue::lessThan(const PhrasePositionsPtr& first, const PhrasePosition
     } else {
         return first->doc < second->doc;
     }
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Payload is metadata that can be stored together with each occurrence of a term. This metadata is stored
 /// inline in the posting list of the specific term.
@@ -85,4 +86,5 @@ public:
 
 }
 
+}
 #endif

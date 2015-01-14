@@ -8,7 +8,8 @@
 #include "fnord-fts/index/DefaultSkipListReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DefaultSkipListReader::DefaultSkipListReader(const IndexInputPtr& skipStream, int32_t maxSkipLevels, int32_t skipInterval)
     : MultiLevelSkipListReader(skipStream, maxSkipLevels, skipInterval) {
@@ -84,6 +85,8 @@ int32_t DefaultSkipListReader::readSkipData(int32_t level, const IndexInputPtr& 
     proxPointer[level] += skipStream->readVInt();
 
     return delta;
+}
+
 }
 
 }

@@ -12,7 +12,8 @@
 #include "fnord-fts/store/IndexOutput.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CompoundFileWriter::CompoundFileWriter(const DirectoryPtr& dir, const String& name, const CheckAbortPtr& checkAbort) {
     if (!dir) {
@@ -174,6 +175,8 @@ void CompoundFileWriter::copyFile(const FileEntry& source, const IndexOutputPtr&
         is->close();
     }
     finally.throwException();
+}
+
 }
 
 }

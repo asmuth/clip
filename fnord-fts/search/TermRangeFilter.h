@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Filter that restricts search results to a range of term values in a given field.
 ///
@@ -65,4 +66,5 @@ public:
 
 }
 
+}
 #endif

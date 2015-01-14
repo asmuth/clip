@@ -9,7 +9,8 @@
 
 #include "_CachingWrapperFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FilterCacheSpanFilterResult : public FilterCache {
 public:
@@ -24,4 +25,5 @@ protected:
 
 }
 
+}
 #endif

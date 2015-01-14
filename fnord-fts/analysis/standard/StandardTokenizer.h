@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Tokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A grammar-based tokenizer
 ///
@@ -104,4 +105,5 @@ public:
 
 }
 
+}
 #endif

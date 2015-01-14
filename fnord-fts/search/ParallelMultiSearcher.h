@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiSearcher.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Implements parallel search over a set of Searchables.
 ///
@@ -39,4 +40,5 @@ public:
 
 }
 
+}
 #endif

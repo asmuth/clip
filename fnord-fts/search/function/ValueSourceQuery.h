@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Query that sets the scores of document to the values obtained from a {@link ValueSource}.
 ///
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

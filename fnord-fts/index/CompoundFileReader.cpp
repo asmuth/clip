@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/CompoundFileReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CompoundFileReader::CompoundFileReader(const DirectoryPtr& dir, const String& name) {
     ConstructReader(dir, name, BufferedIndexInput::BUFFER_SIZE);
@@ -202,6 +203,8 @@ LuceneObjectPtr CSIndexInput::clone(const LuceneObjectPtr& other) {
     cloneIndexInput->fileOffset = fileOffset;
     cloneIndexInput->_length = _length;
     return cloneIndexInput;
+}
+
 }
 
 }

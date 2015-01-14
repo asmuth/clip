@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/SegmentInfos.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// IndexReader is an abstract class, providing an interface for accessing an index.  Search of an index is done
 /// entirely through this abstract interface, so that any subclass which implements it is searchable.
@@ -554,4 +555,5 @@ protected:
 
 }
 
+}
 #endif

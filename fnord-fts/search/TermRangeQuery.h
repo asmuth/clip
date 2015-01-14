@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Query that matches documents within an range of terms.
 ///
@@ -86,4 +87,5 @@ protected:
 
 }
 
+}
 #endif

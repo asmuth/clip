@@ -10,7 +10,8 @@
 #include "fnord-fts/search/function/IntFieldSource.h"
 #include "fnord-fts/search/function/DoubleFieldSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldScoreQuery::FieldScoreQuery(const String& field, Type type) : ValueSourceQuery(getValueSource(field,type)) {
 }
@@ -30,6 +31,8 @@ ValueSourcePtr FieldScoreQuery::getValueSource(const String& field, Type type) {
         boost::throw_exception(IllegalArgumentException(L"not a known Field Score Query Type"));
         return ValueSourcePtr();
     }
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/UnicodeUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 bool CharFolder::lowerCache = CharFolder::fillLower();
 bool CharFolder::upperCache = CharFolder::fillUpper();
@@ -39,6 +40,8 @@ bool CharFolder::fillUpper() {
         upperChars[index - CHAR_MIN] = UnicodeUtil::toUpper((wchar_t)index);
     }
     return true;
+}
+
 }
 
 }

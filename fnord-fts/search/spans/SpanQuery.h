@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for span-based queries.
 class SpanQuery : public Query {
@@ -29,4 +30,5 @@ public:
 
 }
 
+}
 #endif

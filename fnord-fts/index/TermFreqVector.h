@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Provides access to stored term vector of a document field.  The vector consists of the name of the field, an
 /// array of the terms that occur in the field of the {@link Document} and a parallel array of frequencies.  Thus,
@@ -54,4 +55,5 @@ public:
 
 }
 
+}
 #endif

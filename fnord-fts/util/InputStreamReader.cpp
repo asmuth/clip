@@ -9,7 +9,8 @@
 #include "fnord-fts/util/BufferedReader.h"
 #include "fnord-fts/util/UTF8Stream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 InputStreamReader::InputStreamReader(const ReaderPtr& reader) {
     this->reader = reader;
@@ -38,6 +39,8 @@ bool InputStreamReader::markSupported() {
 
 void InputStreamReader::reset() {
     reader->reset();
+}
+
 }
 
 }

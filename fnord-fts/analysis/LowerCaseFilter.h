@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Normalizes token text to lower case.
 class LowerCaseFilter : public TokenFilter {
@@ -28,4 +29,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Weight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The Weight for DisjunctionMaxQuery, used to normalize, score and explain these queries.
 class DisjunctionMaxWeight : public Weight {
@@ -51,4 +52,5 @@ public:
 
 }
 
+}
 #endif

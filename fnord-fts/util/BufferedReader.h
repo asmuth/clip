@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Read text from a character-input stream, buffering characters so as to provide
 /// for the efficient reading of characters, arrays, and lines.
@@ -60,4 +61,5 @@ protected:
 
 }
 
+}
 #endif

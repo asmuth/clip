@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/queryparser/QueryParserConstants.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const wchar_t* QueryParserConstants::_tokenImage[] = {
     L"<EOF>",
@@ -51,6 +52,8 @@ QueryParserConstants::QueryParserConstants() {
 }
 
 QueryParserConstants::~QueryParserConstants() {
+}
+
 }
 
 }

@@ -18,7 +18,8 @@
 #include "fnord-fts/index/FieldInvertState.h"
 #include "fnord-fts/index/ReusableStringReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocInverterPerThread::DocInverterPerThread(const DocFieldProcessorPerThreadPtr& docFieldProcessorPerThread, const DocInverterPtr& docInverter) {
     this->fieldState = newLucene<FieldInvertState>();
@@ -77,6 +78,8 @@ SingleTokenAttributeSource::~SingleTokenAttributeSource() {
 void SingleTokenAttributeSource::reinit(const String& stringValue, int32_t startOffset, int32_t endOffset) {
     termAttribute->setTermBuffer(stringValue);
     offsetAttribute->setOffset(startOffset, endOffset);
+}
+
 }
 
 }

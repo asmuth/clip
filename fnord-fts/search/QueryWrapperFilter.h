@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Filter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Constrains search results to only match those which also match a provided query.
 ///
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

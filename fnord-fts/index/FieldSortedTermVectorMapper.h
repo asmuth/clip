@@ -10,7 +10,8 @@
 #include <boost/function.hpp>
 #include "fnord-fts/index/TermVectorMapper.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// For each Field, store a sorted collection of {@link TermVectorEntry}s
 /// This is not thread-safe.
@@ -48,4 +49,5 @@ public:
 
 }
 
+}
 #endif

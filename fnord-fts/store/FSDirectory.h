@@ -9,7 +9,8 @@
 
 #include "fnord-fts/store/Directory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for Directory implementations that store index files in the file system.  There are currently three
 /// core subclasses:
@@ -130,4 +131,5 @@ protected:
 
 }
 
+}
 #endif

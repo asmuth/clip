@@ -9,7 +9,8 @@
 
 #include "fnord-fts/queryparser/QueryParserCharStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An efficient implementation of QueryParserCharStream interface.
 ///
@@ -54,4 +55,5 @@ protected:
 
 }
 
+}
 #endif

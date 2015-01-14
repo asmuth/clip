@@ -8,7 +8,8 @@
 #include "fnord-fts/store/Lock.h"
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// How long {@link #obtain(int64_t)} waits, in milliseconds, in between attempts to acquire the lock.
 const int32_t Lock::LOCK_OBTAIN_WAIT_FOREVER = -1;
@@ -31,6 +32,8 @@ bool Lock::obtain(int32_t lockWaitTimeout) {
         locked = obtain();
     }
     return locked;
+}
+
 }
 
 }

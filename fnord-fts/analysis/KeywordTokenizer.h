@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/Tokenizer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Emits the entire input as a single token.
 class KeywordTokenizer : public Tokenizer {
@@ -42,4 +43,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract base class for restricting which documents may be returned during searching.
 class Filter : public LuceneObject {
@@ -37,4 +38,5 @@ public:
 
 }
 
+}
 #endif

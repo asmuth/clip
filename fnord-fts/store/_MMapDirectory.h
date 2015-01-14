@@ -10,7 +10,8 @@
 #include <boost/iostreams/device/mapped_file.hpp>
 #include "fnord-fts/store/IndexInput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MMapIndexInput : public IndexInput {
 public:
@@ -57,4 +58,5 @@ public:
 
 }
 
+}
 #endif

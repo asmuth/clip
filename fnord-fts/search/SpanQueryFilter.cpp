@@ -12,7 +12,8 @@
 #include "fnord-fts/util/OpenBitSet.h"
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanQueryFilter::SpanQueryFilter(const SpanQueryPtr& query) {
     this->query = query;
@@ -67,6 +68,8 @@ bool SpanQueryFilter::equals(const LuceneObjectPtr& other) {
 
 int32_t SpanQueryFilter::hashCode() {
     return query->hashCode() ^ 0x923f64b9;
+}
+
 }
 
 }

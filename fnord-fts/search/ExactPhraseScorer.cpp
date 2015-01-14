@@ -9,7 +9,8 @@
 #include "fnord-fts/search/PhrasePositions.h"
 #include "fnord-fts/search/PhraseQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ExactPhraseScorer::ExactPhraseScorer(const WeightPtr& weight, Collection<TermPositionsPtr> tps, Collection<int32_t> offsets, const SimilarityPtr& similarity, ByteArray norms) : PhraseScorer(weight, tps, offsets, similarity, norms) {
 }
@@ -42,6 +43,8 @@ double ExactPhraseScorer::phraseFreq() {
     } while (last->nextPosition());
 
     return freq;
+}
+
 }
 
 }

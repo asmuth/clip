@@ -10,7 +10,8 @@
 #include "fnord-fts/util/LuceneObject.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A PriorityQueue maintains a partial ordering of its elements such that the least element can always
 /// be found in constant time.  Put()'s and pop()'s require log(size) time.
@@ -198,4 +199,5 @@ protected:
 
 }
 
+}
 #endif

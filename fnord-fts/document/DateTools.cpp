@@ -11,7 +11,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DateTools::DateOrder DateTools::dateOrder = DateTools::DATEORDER_LOCALE;
 
@@ -205,6 +206,8 @@ boost::posix_time::ptime DateTools::parseDate(const String& dateString, std::loc
 
     boost::throw_exception(ParseException(L"Invalid date '" + dateString + L"'"));
     return boost::posix_time::ptime();
+}
+
 }
 
 }

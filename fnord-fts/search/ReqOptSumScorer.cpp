@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/ReqOptSumScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReqOptSumScorer::ReqOptSumScorer(const ScorerPtr& reqScorer, const ScorerPtr& optScorer) : Scorer(SimilarityPtr()) { // No similarity used.
     this->reqScorer = reqScorer;
@@ -43,6 +44,8 @@ double ReqOptSumScorer::score() {
     }
 
     return optScorerDoc == curDoc ? reqScore + optScorer->score() : reqScore;
+}
+
 }
 
 }

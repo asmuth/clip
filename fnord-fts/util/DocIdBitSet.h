@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Simple DocIdSet and DocIdSetIterator backed by a BitSet
 class DocIdBitSet : public DocIdSet {
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

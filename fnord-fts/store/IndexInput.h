@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract base class for input from a file in a {@link Directory}.
 /// A random-access input stream.  Used for all Lucene index input operations.
@@ -121,4 +122,5 @@ public:
 
 }
 
+}
 #endif

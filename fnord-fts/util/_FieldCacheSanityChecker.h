@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Simple pair object for using "readerKey + fieldName" a Map key
 class ReaderField : public LuceneObject {
@@ -31,4 +32,5 @@ public:
 
 }
 
+}
 #endif

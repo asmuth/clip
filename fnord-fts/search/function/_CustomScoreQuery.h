@@ -11,7 +11,8 @@
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/search/function/CustomScoreProvider.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 // when deprecated methods are removed, do not extend class here, just return new default CustomScoreProvider
 class DefaultCustomScoreProvider : public CustomScoreProvider {
@@ -83,4 +84,5 @@ public:
 
 }
 
+}
 #endif

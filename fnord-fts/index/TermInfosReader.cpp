@@ -12,7 +12,8 @@
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t TermInfosReader::DEFAULT_CACHE_SIZE = 1024;
 
@@ -218,6 +219,8 @@ SegmentTermEnumPtr TermInfosReader::terms(const TermPtr& term) {
 }
 
 TermInfosReaderThreadResources::~TermInfosReaderThreadResources() {
+}
+
 }
 
 }

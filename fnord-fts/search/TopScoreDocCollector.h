@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/TopDocsCollector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Collector} implementation that collects the top-scoring hits, returning them as a {@link TopDocs}.
 /// This is used by {@link IndexSearcher} to implement {@link TopDocs}-based search. Hits are sorted by score
@@ -46,4 +47,5 @@ protected:
 
 }
 
+}
 #endif

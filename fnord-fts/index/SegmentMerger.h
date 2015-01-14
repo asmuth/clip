@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The SegmentMerger class combines two or more Segments, represented by an IndexReader ({@link #add}, into a single
 /// Segment.  After adding the appropriate readers, call the merge method to combine the segments.
@@ -152,4 +153,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/ScoreCachingWrappingScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ScoreCachingWrappingScorer::ScoreCachingWrappingScorer(const ScorerPtr& scorer) : Scorer(scorer->getSimilarity()) {
     this->curDoc = -1;
@@ -50,6 +51,8 @@ void ScoreCachingWrappingScorer::score(const CollectorPtr& collector) {
 
 int32_t ScoreCachingWrappingScorer::advance(int32_t target) {
     return ScorerPtr(_scorer)->advance(target);
+}
+
 }
 
 }

@@ -11,7 +11,8 @@
 #include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t FileReader::FILE_EOF = Reader::READER_EOF;
 const int32_t FileReader::FILE_ERROR = -1;
@@ -67,6 +68,8 @@ void FileReader::reset() {
 
 int64_t FileReader::length() {
     return _length;
+}
+
 }
 
 }

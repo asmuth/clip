@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Combines multiple files into a single compound file.
 /// The file format:
@@ -74,4 +75,5 @@ protected:
 
 }
 
+}
 #endif

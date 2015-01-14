@@ -20,7 +20,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The file format version, a negative number.  Works since counter, the old 1st entry, is always >= 0
 const int32_t SegmentInfos::FORMAT = -1;
@@ -670,6 +671,8 @@ bool SegmentInfos::hasExternalSegments(const DirectoryPtr& dir) {
         }
     }
     return false;
+}
+
 }
 
 }

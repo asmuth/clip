@@ -7,7 +7,8 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Allocate block of memory.
 void* AllocMemory(size_t size);
@@ -19,4 +20,5 @@ void* ReallocMemory(void* memory, size_t size);
 void FreeMemory(void* memory);
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/index/Term.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SingleTermEnum::SingleTermEnum(const IndexReaderPtr& reader, const TermPtr& singleTerm) {
     this->_endEnum = false;
@@ -34,6 +35,8 @@ bool SingleTermEnum::termCompare(const TermPtr& term) {
     }
     _endEnum = true;
     return false;
+}
+
 }
 
 }

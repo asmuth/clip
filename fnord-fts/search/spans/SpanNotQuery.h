@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/SpanQuery.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Removes matches which overlap with another SpanQuery.
 class SpanNotQuery : public SpanQuery {
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

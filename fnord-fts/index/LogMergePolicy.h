@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/MergePolicy.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class implements a {@link MergePolicy} that tries to merge segments into levels of exponentially
 /// increasing size, where each level has fewer segments than the value of the merge factor. Whenever extra
@@ -158,4 +159,5 @@ protected:
 
 }
 
+}
 #endif

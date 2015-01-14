@@ -10,7 +10,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Field::Field(const String& name, const String& value, Store store, Index index) {
     ConstructField(name, value, store, index, TERM_VECTOR_NO);
@@ -350,6 +351,8 @@ Field::TermVector Field::toTermVector(bool stored, bool withOffsets, bool withPo
     }
 
     return withPositions ? TERM_VECTOR_WITH_POSITIONS : TERM_VECTOR_YES;
+}
+
 }
 
 }

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/ReqExclScorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReqExclScorer::ReqExclScorer(const ScorerPtr& reqScorer, const DocIdSetIteratorPtr& exclDisi) : Scorer(SimilarityPtr()) { // No similarity used.
     this->reqScorer = reqScorer;
@@ -79,6 +80,8 @@ int32_t ReqExclScorer::advance(int32_t target) {
     }
     doc = toNonExcluded();
     return doc;
+}
+
 }
 
 }

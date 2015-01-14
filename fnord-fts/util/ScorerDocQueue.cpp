@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ScorerDocQueue::ScorerDocQueue(int32_t maxSize) {
     this->_size = 0;
@@ -152,6 +153,8 @@ HeapedScorerDoc::~HeapedScorerDoc() {
 
 void HeapedScorerDoc::adjust() {
     doc = scorer->docID();
+}
+
 }
 
 }

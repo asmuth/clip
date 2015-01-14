@@ -18,7 +18,8 @@
 #include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/store/Directory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NormsWriter::NormsWriter() {
 }
@@ -163,6 +164,8 @@ void NormsWriter::flush(MapInvertedDocEndConsumerPerThreadCollectionInvertedDocE
 }
 
 void NormsWriter::closeDocStore(const SegmentWriteStatePtr& state) {
+}
+
 }
 
 }

@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/InvertedDocEndConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 InvertedDocEndConsumer::~InvertedDocEndConsumer() {
+}
+
 }
 
 }

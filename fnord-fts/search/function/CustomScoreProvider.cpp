@@ -8,7 +8,8 @@
 #include "fnord-fts/search/function/CustomScoreProvider.h"
 #include "fnord-fts/search/Explanation.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CustomScoreProvider::CustomScoreProvider(const IndexReaderPtr& reader) {
     this->reader = reader;
@@ -63,6 +64,8 @@ ExplanationPtr CustomScoreProvider::customExplain(int32_t doc, const Explanation
     exp->addDetail(subQueryExpl);
     exp->addDetail(valSrcExpl);
     return exp;
+}
+
 }
 
 }

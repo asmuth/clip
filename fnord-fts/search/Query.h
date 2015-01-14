@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The abstract base class for queries.
 ///
@@ -109,4 +110,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Weight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MultiPhraseWeight : public Weight {
 public:
@@ -37,4 +38,5 @@ public:
 
 }
 
+}
 #endif

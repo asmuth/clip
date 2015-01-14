@@ -11,7 +11,8 @@
 #include "fnord-fts/search/FieldDoc.h"
 #include "fnord-fts/search/SortField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldValueHitQueue::FieldValueHitQueue(Collection<SortFieldPtr> fields, int32_t size) : HitQueueBase(size) {
     // When we get here, fields.size() is guaranteed to be > 0, therefore no need to check it again.
@@ -131,6 +132,8 @@ bool MultiComparatorsFieldValueHitQueue::lessThan(const ScoreDocPtr& first, cons
 
     // avoid random sort order that could lead to duplicates
     return (firstEntry->doc > secondEntry->doc);
+}
+
 }
 
 }

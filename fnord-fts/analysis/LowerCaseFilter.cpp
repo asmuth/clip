@@ -9,7 +9,8 @@
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 #include "fnord-fts/util/CharFolder.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LowerCaseFilter::LowerCaseFilter(const TokenStreamPtr& input) : TokenFilter(input) {
     termAtt = addAttribute<TermAttribute>();
@@ -25,6 +26,8 @@ bool LowerCaseFilter::incrementToken() {
         return true;
     }
     return false;
+}
+
 }
 
 }

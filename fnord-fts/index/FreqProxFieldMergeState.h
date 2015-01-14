@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Used by DocumentsWriter to merge the postings from multiple ThreadStates when creating a segment
 class FreqProxFieldMergeState : public LuceneObject {
@@ -45,4 +46,5 @@ public:
 
 }
 
+}
 #endif

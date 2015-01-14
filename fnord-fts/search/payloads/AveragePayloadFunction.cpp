@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 AveragePayloadFunction::~AveragePayloadFunction() {
 }
@@ -41,6 +42,8 @@ bool AveragePayloadFunction::equals(const LuceneObjectPtr& other) {
         return false;
     }
     return true;
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include <locale>
 #include "fnord-fts/util/Collator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Collator::Collator(std::locale locale) : collate(std::use_facet< std::collate<wchar_t> >(locale)) {
 }
@@ -18,6 +19,8 @@ Collator::~Collator() {
 
 int32_t Collator::compare(const String& first, const String& second) {
     return collate.compare(first.c_str(), first.c_str() + first.length(), second.c_str(), second.c_str() + second.length());
+}
+
 }
 
 }

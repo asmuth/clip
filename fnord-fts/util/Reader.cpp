@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const int32_t Reader::READER_EOF = -1;
 
@@ -40,6 +41,8 @@ void Reader::reset() {
 
 int64_t Reader::length() {
     return 0; // override
+}
+
 }
 
 }

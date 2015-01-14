@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract class for reading character streams.
 class Reader : public LuceneObject {
@@ -53,4 +54,5 @@ public:
 
 }
 
+}
 #endif

@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/store/ChecksumIndexOutput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ChecksumIndexOutput::ChecksumIndexOutput(const IndexOutputPtr& main) {
     this->main = main;
@@ -64,6 +65,8 @@ void ChecksumIndexOutput::finishCommit() {
 
 int64_t ChecksumIndexOutput::length() {
     return main->length();
+}
+
 }
 
 }

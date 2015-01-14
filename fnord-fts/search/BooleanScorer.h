@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// BooleanScorer uses a ~16k array to score windows of docs. So it scores docs 0-16k first, then docs 16-32k,
 /// etc. For each window it iterates through all query terms and accumulates a score in table[doc%16k]. It also
@@ -152,4 +153,5 @@ public:
 
 }
 
+}
 #endif

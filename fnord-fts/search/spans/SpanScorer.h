@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Public for extension only.
 class SpanScorer : public Scorer {
@@ -47,4 +48,5 @@ protected:
 
 }
 
+}
 #endif

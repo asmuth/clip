@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/TopDocsCollector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Collector} that sorts by {@link SortField} using {@link FieldComparator}s.
 ///
@@ -70,4 +71,5 @@ protected:
 
 }
 
+}
 #endif

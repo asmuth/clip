@@ -7,13 +7,16 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/function/ValueSource.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ValueSource::~ValueSource() {
 }
 
 String ValueSource::toString() {
     return description();
+}
+
 }
 
 }

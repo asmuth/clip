@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/FormatPostingsFieldsConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FormatPostingsFieldsConsumer::~FormatPostingsFieldsConsumer() {
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Optimized implementation of a vector of bits.
 class BitVector : public LuceneObject {
@@ -92,4 +93,5 @@ protected:
 
 }
 
+}
 #endif

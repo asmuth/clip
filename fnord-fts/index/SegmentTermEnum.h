@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermEnum.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class SegmentTermEnum : public TermEnum {
 public:
@@ -85,4 +86,5 @@ public:
 
 }
 
+}
 #endif

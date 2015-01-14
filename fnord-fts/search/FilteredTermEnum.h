@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermEnum.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Abstract class for enumerating a subset of all terms.
 ///
@@ -59,4 +60,5 @@ protected:
 
 }
 
+}
 #endif

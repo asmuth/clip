@@ -9,7 +9,8 @@
 #include "fnord-fts/index/NormsWriterPerField.h"
 #include "fnord-fts/index/DocInverterPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NormsWriterPerThread::NormsWriterPerThread(const DocInverterPerThreadPtr& docInverterPerThread, const NormsWriterPtr& normsWriter) {
     this->_normsWriter = normsWriter;
@@ -34,6 +35,8 @@ void NormsWriterPerThread::finishDocument() {
 
 bool NormsWriterPerThread::freeRAM() {
     return false;
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/TermVectorEntry.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermVectorEntry::TermVectorEntry(const String& field, const String& term, int32_t frequency,
                                  Collection<TermVectorOffsetInfoPtr> offsets, Collection<int32_t> positions) {
@@ -77,6 +78,8 @@ String TermVectorEntry::toString() {
     buffer << L"\', term='" << term;
     buffer << L"\', frequency=" << frequency << L"}";
     return buffer.str();
+}
+
 }
 
 }

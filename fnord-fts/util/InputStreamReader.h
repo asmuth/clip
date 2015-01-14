@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An InputStreamReader is a bridge from byte streams to character streams.
 class InputStreamReader : public Reader {
@@ -43,4 +44,5 @@ public:
 
 }
 
+}
 #endif

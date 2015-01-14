@@ -10,7 +10,8 @@
 #include "fnord-fts/queryparser/QueryParser.h"
 #include "fnord-fts/search/BooleanClause.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A QueryParser which constructs queries to search multiple fields.
 class MultiFieldQueryParser : public QueryParser {
@@ -135,4 +136,5 @@ protected:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 #include "fnord-fts/search/SortField.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Sort::Sort() {
     setSort(SortField::FIELD_SCORE());
@@ -81,6 +82,8 @@ bool Sort::equals(const LuceneObjectPtr& other) {
 
 int32_t Sort::hashCode() {
     return 0x45aaf665 + MiscUtils::hashCode(fields.begin(), fields.end(), MiscUtils::hashLucene<SortFieldPtr>);
+}
+
 }
 
 }

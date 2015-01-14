@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Remaps docIDs after a merge has completed, where the merged segments had at least one deletion.
 /// This is used to renumber the buffered deletes in IndexWriter when a merge of segments with deletions
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

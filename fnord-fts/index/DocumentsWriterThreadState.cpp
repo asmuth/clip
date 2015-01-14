@@ -9,7 +9,8 @@
 #include "fnord-fts/index/DocumentsWriter.h"
 #include "fnord-fts/index/DocConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocumentsWriterThreadState::DocumentsWriterThreadState(const DocumentsWriterPtr& docWriter) {
     this->_docWriter = docWriter;
@@ -34,6 +35,8 @@ void DocumentsWriterThreadState::initialize() {
 void DocumentsWriterThreadState::doAfterFlush() {
     numThreads = 0;
     doFlushAfter = false;
+}
+
 }
 
 }

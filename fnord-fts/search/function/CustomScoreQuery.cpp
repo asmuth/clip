@@ -12,7 +12,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 CustomScoreQuery::CustomScoreQuery(const QueryPtr& subQuery) {
     ConstructQuery(subQuery, Collection<ValueSourceQueryPtr>::newInstance());
@@ -332,6 +333,8 @@ int32_t CustomScorer::advance(int32_t target) {
         }
     }
     return doc;
+}
+
 }
 
 }

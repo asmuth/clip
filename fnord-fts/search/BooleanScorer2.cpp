@@ -11,7 +11,8 @@
 #include "fnord-fts/search/Similarity.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 BooleanScorer2::BooleanScorer2(const SimilarityPtr& similarity, int32_t minNrShouldMatch, Collection<ScorerPtr> required, Collection<ScorerPtr> prohibited, Collection<ScorerPtr> optional) : Scorer(similarity) {
     this->minNrShouldMatch = minNrShouldMatch;
@@ -223,6 +224,8 @@ double CountingConjunctionSumScorer::score() {
     // All scorers match, so Similarity::getDefault() ConjunctionScorer::score() always has 1 as the
     /// coordination factor.  Therefore the sum of the scores of the requiredScorers is used as score.
     return lastDocScore;
+}
+
 }
 
 }

@@ -13,7 +13,8 @@
 #include "fnord-fts/util/LuceneThread.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 RAMDirectory::RAMDirectory() {
     this->fileMap = MapStringRAMFile::newInstance();
@@ -153,6 +154,8 @@ IndexInputPtr RAMDirectory::openInput(const String& name) {
 void RAMDirectory::close() {
     isOpen = false;
     fileMap.reset();
+}
+
 }
 
 }

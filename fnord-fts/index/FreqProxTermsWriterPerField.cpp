@@ -17,7 +17,8 @@
 #include "fnord-fts/index/DocumentsWriter.h"
 #include "fnord-fts/index/RawPostingList.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FreqProxTermsWriterPerField::FreqProxTermsWriterPerField(const TermsHashPerFieldPtr& termsHashPerField, const FreqProxTermsWriterPerThreadPtr& perThread, const FieldInfoPtr& fieldInfo) {
     this->hasPayloads = false;
@@ -142,6 +143,8 @@ void FreqProxTermsWriterPerField::addTerm(const RawPostingListPtr& p) {
 }
 
 void FreqProxTermsWriterPerField::abort() {
+}
+
 }
 
 }

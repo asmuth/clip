@@ -8,13 +8,16 @@
 #include "fnord-fts/search/spans/SpanQuery.h"
 #include "fnord-fts/search/spans/SpanWeight.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanQuery::~SpanQuery() {
 }
 
 WeightPtr SpanQuery::createWeight(const SearcherPtr& searcher) {
     return newLucene<SpanWeight>(shared_from_this(), searcher);
+}
+
 }
 
 }

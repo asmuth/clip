@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Represents field values as different types.  Normally created via a {@link ValueSuorce} for a
 /// particular field and reader.
@@ -95,4 +96,5 @@ protected:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/FormatPostingsFieldsConsumer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FormatPostingsFieldsWriter : public FormatPostingsFieldsConsumer {
 public:
@@ -40,4 +41,5 @@ public:
 
 }
 
+}
 #endif

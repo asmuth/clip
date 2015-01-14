@@ -11,7 +11,8 @@
 #include "fnord-fts/util/TestPoint.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Collection<ConcurrentMergeSchedulerPtr> ConcurrentMergeScheduler::allInstances;
 bool ConcurrentMergeScheduler::anyExceptions = false;
@@ -303,6 +304,8 @@ void MergeThread::run() {
         BOOST_ASSERT(removed);
     }
     finally.throwException();
+}
+
 }
 
 }

@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermsHashConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermsHashConsumerPerField::~TermsHashConsumerPerField() {
+}
+
 }
 
 }

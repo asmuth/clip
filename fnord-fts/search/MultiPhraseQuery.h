@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Query.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// MultiPhraseQuery is a generalized version of PhraseQuery, with an added method {@link #add(Term[])}.
 /// To use this class, to search for the phrase "Microsoft app*" first use add(Term) on the term "Microsoft",
@@ -77,4 +78,5 @@ protected:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/search/Scorer.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Scorer::Scorer(const SimilarityPtr& similarity) {
     this->similarity = similarity;
@@ -37,6 +38,8 @@ bool Scorer::score(const CollectorPtr& collector, int32_t max, int32_t firstDocI
         doc = nextDoc();
     }
     return (doc != NO_MORE_DOCS);
+}
+
 }
 
 }

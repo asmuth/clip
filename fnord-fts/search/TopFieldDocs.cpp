@@ -7,13 +7,16 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/TopFieldDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TopFieldDocs::TopFieldDocs(int32_t totalHits, Collection<ScoreDocPtr> scoreDocs, Collection<SortFieldPtr> fields, double maxScore) : TopDocs(totalHits, scoreDocs, maxScore) {
     this->fields = fields;
 }
 
 TopFieldDocs::~TopFieldDocs() {
+}
+
 }
 
 }

@@ -13,7 +13,8 @@
 #include "fnord-fts/util/FileUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NativeFSLockFactory::NativeFSLockFactory(const String& lockDirName) {
     setLockDir(lockDirName);
@@ -209,6 +210,8 @@ bool NativeFSLock::isLocked() {
 
 String NativeFSLock::toString() {
     return getClassName() + L"@" + path;
+}
+
 }
 
 }

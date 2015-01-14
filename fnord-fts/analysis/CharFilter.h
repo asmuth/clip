@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/CharStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Subclasses of CharFilter can be chained to filter CharStream.  They can be used as {@link Reader} with
 /// additional offset correction. {@link Tokenizer}s will automatically use {@link #correctOffset} if a
@@ -43,4 +44,5 @@ protected:
 
 }
 
+}
 #endif

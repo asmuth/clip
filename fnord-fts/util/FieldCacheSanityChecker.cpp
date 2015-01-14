@@ -12,7 +12,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldCacheSanityChecker::FieldCacheSanityChecker() {
 }
@@ -249,6 +250,8 @@ String Insanity::toString() {
     }
 
     return buffer.str();
+}
+
 }
 
 }

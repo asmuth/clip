@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Attribute::~Attribute() {
 }
@@ -22,6 +23,8 @@ bool Attribute::equals(const LuceneObjectPtr& other) {
 
 LuceneObjectPtr Attribute::clone(const LuceneObjectPtr& other) {
     return LuceneObject::clone(other);
+}
+
 }
 
 }

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/MultiLevelSkipListWriter.h"
 #include "fnord-fts/store/RAMOutputStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiLevelSkipListWriter::MultiLevelSkipListWriter(int32_t skipInterval, int32_t maxSkipLevels, int32_t df) {
     this->skipInterval = skipInterval;
@@ -83,5 +84,7 @@ int64_t MultiLevelSkipListWriter::writeSkip(const IndexOutputPtr& output) {
     return skipPointer;
 }
 
+
+}
 
 }

@@ -9,7 +9,8 @@
 #include "fnord-fts/search/_TimeLimitingCollector.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Default timer resolution.
 const int32_t TimeLimitingCollector::DEFAULT_RESOLUTION = 20;
@@ -121,6 +122,8 @@ int64_t TimerThread::getMilliseconds() {
 
 void TimerThread::stopThread() {
     _stopThread = true;
+}
+
 }
 
 }

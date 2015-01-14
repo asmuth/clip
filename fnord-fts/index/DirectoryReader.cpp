@@ -27,7 +27,8 @@
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DirectoryReader::DirectoryReader(const DirectoryPtr& directory, const SegmentInfosPtr& sis, const IndexDeletionPolicyPtr& deletionPolicy, bool readOnly, int32_t termInfosIndexDivisor) {
     normsCache = MapStringByteArray::newInstance();
@@ -1141,6 +1142,8 @@ MapStringString ReaderCommit::getUserData() {
 
 void ReaderCommit::deleteCommit() {
     boost::throw_exception(UnsupportedOperationException(L"This IndexCommit does not support deletions."));
+}
+
 }
 
 }

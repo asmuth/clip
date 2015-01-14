@@ -11,7 +11,8 @@
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MultiReader::MultiReader(Collection<IndexReaderPtr> subReaders, bool closeSubReaders) {
     this->normsCache = MapStringByteArray::newInstance();
@@ -326,6 +327,8 @@ int64_t MultiReader::getVersion() {
 
 Collection<IndexReaderPtr> MultiReader::getSequentialSubReaders() {
     return subReaders;
+}
+
 }
 
 }

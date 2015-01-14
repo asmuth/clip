@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/CloseableThreadLocal.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An Analyzer builds TokenStreams, which analyze text.  It thus represents a policy for extracting index terms
 /// from text.
@@ -67,4 +68,5 @@ protected:
 
 }
 
+}
 #endif

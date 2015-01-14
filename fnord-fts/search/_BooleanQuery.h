@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/SimilarityDelegator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// The Weight for BooleanQuery, used to normalize, score and explain these queries.
 class BooleanWeight : public Weight {
@@ -50,4 +51,5 @@ public:
 
 }
 
+}
 #endif

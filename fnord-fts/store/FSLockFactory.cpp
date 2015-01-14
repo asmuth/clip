@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/store/FSLockFactory.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FSLockFactory::FSLockFactory() {
 }
@@ -24,6 +25,8 @@ void FSLockFactory::setLockDir(const String& lockDir) {
 
 String FSLockFactory::getLockDir() {
     return lockDir;
+}
+
 }
 
 }

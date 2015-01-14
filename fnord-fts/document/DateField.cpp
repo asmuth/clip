@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DateField::~DateField() {
 }
@@ -57,6 +58,8 @@ String DateField::timeToString(int64_t time) {
 
 int64_t DateField::stringToTime(const String& s) {
     return StringUtils::toLong(s, StringUtils::CHARACTER_MAX_RADIX);
+}
+
 }
 
 }

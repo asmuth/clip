@@ -10,7 +10,8 @@
 #include "fnord-fts/index/SegmentInfo.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Defines the allowed range of log(size) for each level.  A level is computed by taking the max segment
 /// log size, minus LEVEL_LOG_SPAN, and finding all segments falling within that range.
@@ -369,6 +370,8 @@ void LogMergePolicy::setMaxMergeDocs(int32_t maxMergeDocs) {
 
 int32_t LogMergePolicy::getMaxMergeDocs() {
     return maxMergeDocs;
+}
+
 }
 
 }

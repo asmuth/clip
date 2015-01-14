@@ -12,7 +12,8 @@
 #include "fnord-fts/index/IndexFileNames.h"
 #include "fnord-fts/index/DefaultSkipListWriter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FormatPostingsFieldsWriter::FormatPostingsFieldsWriter(const SegmentWriteStatePtr& state, const FieldInfosPtr& fieldInfos) {
     dir = state->directory;
@@ -43,6 +44,8 @@ FormatPostingsTermsConsumerPtr FormatPostingsFieldsWriter::addField(const FieldI
 void FormatPostingsFieldsWriter::finish() {
     termsOut->close();
     termsWriter->close();
+}
+
 }
 
 }

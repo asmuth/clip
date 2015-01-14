@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/SegmentInfos.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A MergePolicy determines the sequence of primitive merge operations to be used for overall merge
 /// and optimize operations.
@@ -133,4 +134,5 @@ public:
 
 }
 
+}
 #endif

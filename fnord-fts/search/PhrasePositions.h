@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Position of a term in a document that takes into account the term offset within the phrase.
 class PhrasePositions : public LuceneObject {
@@ -37,4 +38,5 @@ public:
 
 }
 
+}
 #endif

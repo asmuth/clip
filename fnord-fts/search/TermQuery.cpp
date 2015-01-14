@@ -16,7 +16,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermQuery::TermQuery(const TermPtr& term) {
     this->term = term;
@@ -185,6 +186,8 @@ ExplanationPtr TermWeight::explain(const IndexReaderPtr& reader, int32_t doc) {
     }
 
     return result;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Filters LowerCaseTokenizer with StopFilter.
 class StopAnalyzerSavedStreams : public LuceneObject {
@@ -25,4 +26,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// TermDocs provides an interface for enumerating <document, frequency>; pairs for a term.  The document
 /// portion names each document containing the term.  Documents are indicated by number.  The frequency
@@ -56,4 +57,5 @@ public:
 
 }
 
+}
 #endif

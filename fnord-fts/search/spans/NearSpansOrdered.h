@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Spans that is formed from the ordered subspans of a SpanNearQuery where the subspans do not overlap
 /// and have a maximum slop between them.
@@ -96,4 +97,5 @@ protected:
 
 }
 
+}
 #endif

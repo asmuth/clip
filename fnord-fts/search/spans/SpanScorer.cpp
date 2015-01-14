@@ -12,7 +12,8 @@
 #include "fnord-fts/search/spans/Spans.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanScorer::SpanScorer(const SpansPtr& spans, const WeightPtr& weight, const SimilarityPtr& similarity, ByteArray norms) : Scorer(similarity) {
     this->spans = spans;
@@ -86,6 +87,8 @@ ExplanationPtr SpanScorer::explain(int32_t doc) {
     tfExplanation->setDescription(L"tf(phraseFreq=" + StringUtils::toString(phraseFreq) + L")");
 
     return tfExplanation;
+}
+
 }
 
 }

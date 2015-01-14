@@ -9,7 +9,8 @@
 
 #include "fnord-fts/analysis/TokenStream.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// This class provides a {@link TokenStream} for indexing numeric values that can be used by {@link NumericRangeQuery}
 /// or {@link NumericRangeFilter}.
@@ -117,4 +118,5 @@ public:
 
 }
 
+}
 #endif

@@ -13,7 +13,8 @@
 #include "fnord-fts/search/FieldCache.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ParallelReader::ParallelReader(bool closeSubReaders) {
     this->readers = Collection<IndexReaderPtr>::newInstance();
@@ -536,6 +537,8 @@ ByteArray ParallelTermPositions::getPayload(ByteArray data, int32_t offset) {
 bool ParallelTermPositions::isPayloadAvailable() {
     // It is an error to call this if there is no next position, eg. if termDocs==null
     return std::static_pointer_cast<TermPositions>(termDocs)->isPayloadAvailable();
+}
+
 }
 
 }

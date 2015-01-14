@@ -16,7 +16,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 StoredFieldsWriter::StoredFieldsWriter(const DocumentsWriterPtr& docWriter, const FieldInfosPtr& fieldInfos) {
     lastDocID = 0;
@@ -191,6 +192,8 @@ int64_t StoredFieldsWriterPerDoc::sizeInBytes() {
 
 void StoredFieldsWriterPerDoc::finish() {
     StoredFieldsWriterPtr(_fieldsWriter)->finishDocument(shared_from_this());
+}
+
 }
 
 }

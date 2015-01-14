@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Provides support for converting longs to Strings, and back again. The strings are structured so that
 /// lexicographic sorting order is preserved.
@@ -56,4 +57,5 @@ public:
 
 }
 
+}
 #endif

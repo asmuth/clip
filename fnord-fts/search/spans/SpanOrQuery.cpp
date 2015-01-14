@@ -9,7 +9,8 @@
 #include "_SpanOrQuery.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanOrQuery::SpanOrQuery(Collection<SpanQueryPtr> clauses) {
     // copy clauses array into an ArrayList
@@ -241,6 +242,8 @@ String OrSpans::toString() {
         }
     }
     return buffer.str();
+}
+
 }
 
 }

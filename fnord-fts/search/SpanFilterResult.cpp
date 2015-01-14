@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/SpanFilterResult.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanFilterResult::SpanFilterResult(const DocIdSetPtr& docIdSet, Collection<PositionInfoPtr> positions) {
     this->docIdSet = docIdSet;
@@ -59,6 +60,8 @@ int32_t StartEnd::getEnd() {
 
 int32_t StartEnd::getStart() {
     return start;
+}
+
 }
 
 }

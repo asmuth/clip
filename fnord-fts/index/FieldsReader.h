@@ -10,7 +10,8 @@
 #include "fnord-fts/document/AbstractField.h"
 #include "fnord-fts/util/CloseableThreadLocal.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Class responsible for access to stored document fields.  It uses <segment>.fdt and <segment>.fdx; files.
 class FieldsReader : public LuceneObject {
@@ -137,4 +138,5 @@ protected:
 
 }
 
+}
 #endif

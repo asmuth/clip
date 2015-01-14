@@ -10,7 +10,8 @@
 #include "fnord-fts/store/BufferedIndexInput.h"
 #include "fnord-fts/store/BufferedIndexOutput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class InputFile : public LuceneObject {
 public:
@@ -108,4 +109,5 @@ public:
 
 }
 
+}
 #endif

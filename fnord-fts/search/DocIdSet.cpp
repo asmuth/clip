@@ -8,7 +8,8 @@
 #include "fnord-fts/search/DocIdSet.h"
 #include "fnord-fts/search/_DocIdSet.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocIdSet::~DocIdSet() {
 }
@@ -50,6 +51,8 @@ DocIdSetIteratorPtr EmptyDocIdSet::iterator() {
 
 bool EmptyDocIdSet::isCacheable() {
     return true;
+}
+
 }
 
 }

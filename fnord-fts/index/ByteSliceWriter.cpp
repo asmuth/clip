@@ -9,7 +9,8 @@
 #include "fnord-fts/index/DocumentsWriter.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ByteSliceWriter::ByteSliceWriter(const ByteBlockPoolPtr& pool) {
     this->pool = pool;
@@ -65,6 +66,8 @@ void ByteSliceWriter::writeVInt(int32_t i) {
         i = MiscUtils::unsignedShift(i, 7);
     }
     writeByte((uint8_t)i);
+}
+
 }
 
 }

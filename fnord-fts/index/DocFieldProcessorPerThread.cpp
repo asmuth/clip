@@ -25,7 +25,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocFieldProcessorPerThread::DocFieldProcessorPerThread(const DocumentsWriterThreadStatePtr& threadState, const DocFieldProcessorPtr& docFieldProcessor) {
     _fields = Collection<DocFieldProcessorPerFieldPtr>::newInstance(1);
@@ -308,6 +309,8 @@ void DocFieldProcessorPerThreadPerDoc::abort() {
     }
     DocFieldProcessorPerThreadPtr(_docProcessor)->freePerDoc(shared_from_this());
     finally.throwException();
+}
+
 }
 
 }

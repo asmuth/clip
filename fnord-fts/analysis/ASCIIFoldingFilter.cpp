@@ -9,7 +9,8 @@
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ASCIIFoldingFilter::ASCIIFoldingFilter(const TokenStreamPtr& input) : TokenFilter(input) {
     output = CharArray::newInstance(512);
@@ -1971,6 +1972,8 @@ void ASCIIFoldingFilter::foldToASCII(const wchar_t* input, int32_t length) {
             }
         }
     }
+}
+
 }
 
 }

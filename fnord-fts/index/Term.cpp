@@ -9,7 +9,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 Term::Term(const String& fld, const String& txt) : _field(fld), _text(txt) {
 }
@@ -70,6 +71,8 @@ void Term::set(const String& fld, const String& txt) {
 
 String Term::toString() {
     return _field + L":" + _text;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds all per thread, per field state.
 class DocFieldProcessorPerField : public LuceneObject {
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

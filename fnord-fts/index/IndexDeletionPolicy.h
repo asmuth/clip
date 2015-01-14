@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Policy for deletion of stale {@link IndexCommit index commits}.
 /// Implement this interface, and pass
@@ -68,4 +69,5 @@ public:
 
 }
 
+}
 #endif

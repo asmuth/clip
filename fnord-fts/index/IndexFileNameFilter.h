@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Filename filter that accept filenames and extensions only created by Lucene.
 class IndexFileNameFilter : public LuceneObject {
@@ -28,4 +29,5 @@ public:
 
 }
 
+}
 #endif

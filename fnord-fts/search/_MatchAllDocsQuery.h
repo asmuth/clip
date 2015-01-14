@@ -10,7 +10,8 @@
 #include "fnord-fts/search/Weight.h"
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class MatchAllDocsWeight : public Weight {
 public:
@@ -60,4 +61,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/PriorityQueue.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class HitQueueBase : public LuceneObject {
 public:
@@ -59,4 +60,5 @@ protected:
 
 }
 
+}
 #endif

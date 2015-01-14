@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for all Lucene synchronised classes
 class LuceneSync {
@@ -45,4 +46,5 @@ public:
 
 }
 
+}
 #endif

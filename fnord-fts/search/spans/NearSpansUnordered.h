@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/spans/Spans.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Similar to {@link NearSpansOrdered}, but for the unordered case.
 ///
@@ -68,4 +69,5 @@ protected:
 
 }
 
+}
 #endif

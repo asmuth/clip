@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A Scorer for queries with a required part and an optional part.  Delays skipTo() on the optional part
 /// until a score() is needed.  This Scorer implements {@link Scorer#skipTo(int32_t)}.
@@ -38,4 +39,5 @@ public:
 
 }
 
+}
 #endif

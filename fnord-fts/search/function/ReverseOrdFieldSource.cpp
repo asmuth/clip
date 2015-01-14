@@ -11,7 +11,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 ReverseOrdFieldSource::ReverseOrdFieldSource(const String& field) {
     this->field = field;
@@ -80,6 +81,8 @@ String ReverseOrdDocValues::toString(int32_t doc) {
 
 CollectionValue ReverseOrdDocValues::getInnerArray() {
     return arr;
+}
+
 }
 
 }

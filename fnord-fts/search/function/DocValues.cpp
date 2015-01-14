@@ -11,7 +11,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocValues::DocValues() {
     minVal = std::numeric_limits<double>::quiet_NaN();
@@ -80,6 +81,8 @@ double DocValues::getMaxValue() {
 double DocValues::getAverageValue() {
     compute();
     return avgVal;
+}
+
 }
 
 }

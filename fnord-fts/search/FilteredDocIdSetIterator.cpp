@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/search/FilteredDocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FilteredDocIdSetIterator::FilteredDocIdSetIterator(const DocIdSetIteratorPtr& innerIter) {
     if (!innerIter) {
@@ -48,6 +49,8 @@ int32_t FilteredDocIdSetIterator::advance(int32_t target) {
         }
     }
     return doc;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/SegmentTermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Basic tool and API to check the health of an index and write a new segments file that removes reference to
 /// problematic segments.
@@ -311,4 +312,5 @@ public:
 
 }
 
+}
 #endif

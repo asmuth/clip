@@ -11,7 +11,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 IntFieldSource::IntFieldSource(const String& field, const IntParserPtr& parser) : FieldCacheSource(field) {
     this->parser = parser;
@@ -72,6 +73,8 @@ String IntDocValues::toString(int32_t doc) {
 
 CollectionValue IntDocValues::getInnerArray() {
     return arr;
+}
+
 }
 
 }

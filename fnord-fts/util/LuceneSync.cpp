@@ -9,7 +9,8 @@
 #include "fnord-fts/util/Synchronize.h"
 #include "fnord-fts/util/LuceneSignal.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LuceneSync::~LuceneSync() {
 }
@@ -42,6 +43,8 @@ void LuceneSync::wait(int32_t timeout) {
 
 void LuceneSync::notifyAll() {
     getSignal()->notifyAll();
+}
+
 }
 
 }

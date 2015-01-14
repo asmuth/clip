@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/AbstractAllTermDocs.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class AllTermDocs : public AbstractAllTermDocs {
 public:
@@ -27,4 +28,5 @@ public:
 
 }
 
+}
 #endif

@@ -14,7 +14,8 @@
 #include "fnord-fts/search/Searcher.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 MatchAllDocsQuery::MatchAllDocsQuery(const String& normsField) {
     this->normsField = normsField;
@@ -126,6 +127,8 @@ double MatchAllScorer::score() {
 int32_t MatchAllScorer::advance(int32_t target) {
     doc = termDocs->skipTo(target) ? termDocs->doc() : NO_MORE_DOCS;
     return doc;
+}
+
 }
 
 }

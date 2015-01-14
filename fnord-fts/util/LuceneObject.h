@@ -24,7 +24,8 @@
     LUCENE_INTERFACE(Name); \
     std::shared_ptr<Name> shared_from_this() { return std::static_pointer_cast<Name>(LuceneObject::shared_from_this()); } \
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Base class for all Lucene classes
 class LuceneObject : public LuceneSync, public std::enable_shared_from_this<LuceneObject> {
@@ -58,4 +59,5 @@ public:
 
 }
 
+}
 #endif

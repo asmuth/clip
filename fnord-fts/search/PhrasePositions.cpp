@@ -8,7 +8,8 @@
 #include "fnord-fts/search/PhrasePositions.h"
 #include "fnord-fts/index/TermPositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PhrasePositions::PhrasePositions(const TermPositionsPtr& t, int32_t o) {
     doc = 0;
@@ -57,6 +58,8 @@ bool PhrasePositions::nextPosition() {
     } else {
         return false;
     }
+}
+
 }
 
 }

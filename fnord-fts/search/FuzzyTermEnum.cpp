@@ -11,7 +11,8 @@
 #include "fnord-fts/index/Term.h"
 #include "fnord-fts/index/IndexReader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FuzzyTermEnum::FuzzyTermEnum(const IndexReaderPtr& reader, const TermPtr& term, double minSimilarity, int32_t prefixLength) {
     ConstructTermEnum(reader, term, minSimilarity, prefixLength);
@@ -149,6 +150,8 @@ void FuzzyTermEnum::close() {
     d.reset();
     searchTerm.reset();
     FilteredTermEnum::close(); // call FilteredTermEnum::close() and let the garbage collector do its work.
+}
+
 }
 
 }

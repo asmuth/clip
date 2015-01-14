@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A FieldComparator compares hits so as to determine their sort order when collecting the top results with
 /// {@link TopFieldCollector}.  The concrete public FieldComparator classes here correspond to the SortField types.
@@ -328,4 +329,5 @@ public:
 
 }
 
+}
 #endif

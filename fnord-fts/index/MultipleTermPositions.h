@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermPositions.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Allows you to iterate over the {@link TermPositions} for multiple {@link Term}s as a single
 /// {@link TermPositions}.
@@ -52,4 +53,5 @@ public:
 
 }
 
+}
 #endif

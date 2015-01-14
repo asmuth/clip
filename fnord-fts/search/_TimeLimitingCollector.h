@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TimerThread : public LuceneThread {
 public:
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Experimental class to get set of payloads for most standard Lucene queries.  Operates like Highlighter -
 /// IndexReader should only contain doc of interest, best to use MemoryIndex.
@@ -37,4 +38,5 @@ protected:
 
 }
 
+}
 #endif

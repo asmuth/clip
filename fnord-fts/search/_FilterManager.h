@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Holds the filter and the last time the filter was used, to make LRU-based cache cleaning possible.
 class FilterItem : public LuceneObject {
@@ -51,4 +52,5 @@ public:
 
 }
 
+}
 #endif

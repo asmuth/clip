@@ -7,7 +7,8 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/FieldInvertState.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FieldInvertState::FieldInvertState(int32_t position, int32_t length, int32_t numOverlap, int32_t offset, double boost) {
     this->position = position;
@@ -51,6 +52,8 @@ double FieldInvertState::getBoost() {
 
 AttributeSourcePtr FieldInvertState::getAttributeSource() {
     return attributeSource;
+}
+
 }
 
 }

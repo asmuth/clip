@@ -12,7 +12,8 @@
 #include "fnord-fts/store/IndexInput.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentTermPositions::SegmentTermPositions(const SegmentReaderPtr& parent) : SegmentTermDocs(parent) {
     this->proxCount = 0;
@@ -164,6 +165,8 @@ ByteArray SegmentTermPositions::getPayload(ByteArray data, int32_t offset) {
 
 bool SegmentTermPositions::isPayloadAvailable() {
     return (needToLoadPayload && payloadLength > 0);
+}
+
 }
 
 }

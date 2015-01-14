@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/Reader.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// CharStream adds {@link #correctOffset} functionality over {@link Reader}.  All Tokenizers accept a CharStream
 /// instead of {@link Reader} as input, which enables arbitrary character based filtering before tokenization.
@@ -30,4 +31,5 @@ public:
 
 }
 
+}
 #endif

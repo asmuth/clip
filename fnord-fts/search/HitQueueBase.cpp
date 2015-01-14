@@ -8,7 +8,8 @@
 #include "fnord-fts/search/HitQueueBase.h"
 #include "fnord-fts/search/ScoreDoc.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 HitQueueBase::HitQueueBase(int32_t size) {
     queueSize = size;
@@ -70,6 +71,8 @@ bool PriorityQueueScoreDocs::lessThan(const ScoreDocPtr& first, const ScoreDocPt
 
 ScoreDocPtr PriorityQueueScoreDocs::getSentinelObject() {
     return HitQueueBasePtr(_hitQueue)->getSentinelObject();
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/DocIdSetIterator.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A DocIdSet contains a set of doc ids. Implementing classes must only implement {@link #iterator} to
 /// provide access to the set.
@@ -35,4 +36,5 @@ public:
 
 }
 
+}
 #endif

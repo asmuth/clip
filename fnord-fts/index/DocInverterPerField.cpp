@@ -25,7 +25,8 @@
 #include "fnord-fts/util/InfoStream.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DocInverterPerField::DocInverterPerField(const DocInverterPerThreadPtr& perThread, const FieldInfoPtr& fieldInfo) {
     this->_perThread = perThread;
@@ -199,6 +200,8 @@ void DocInverterPerField::processFields(Collection<FieldablePtr> fields, int32_t
 
     consumer->finish();
     endConsumer->finish();
+}
+
 }
 
 }

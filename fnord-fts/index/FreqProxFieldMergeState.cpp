@@ -17,7 +17,8 @@
 #include "fnord-fts/index/FieldInfo.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FreqProxFieldMergeState::FreqProxFieldMergeState(const FreqProxTermsWriterPerFieldPtr& field) {
     this->numPostings = 0;
@@ -95,6 +96,8 @@ bool FreqProxFieldMergeState::nextDoc() {
     BOOST_ASSERT(docID != p->lastDocID);
 
     return true;
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 #include "fnord-fts/index/Payload.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PayloadAttribute::PayloadAttribute() {
 }
@@ -69,6 +70,8 @@ int32_t PayloadAttribute::hashCode() {
 void PayloadAttribute::copyTo(const AttributePtr& target) {
     PayloadAttributePtr targetPayloadAttribute(std::dynamic_pointer_cast<PayloadAttribute>(target));
     targetPayloadAttribute->setPayload(payload ? std::dynamic_pointer_cast<Payload>(payload->clone()) : PayloadPtr());
+}
+
 }
 
 }

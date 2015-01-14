@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An enumeration of span matches.  Used to implement span searching.  Each span represents a range of term
 /// positions within a document.  Matches are enumerated in order, by increasing document number, within that
@@ -75,4 +76,5 @@ public:
 
 }
 
+}
 #endif

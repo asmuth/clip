@@ -8,7 +8,8 @@
 #include "fnord-fts/util/AttributeSource.h"
 #include "fnord-fts/util/Attribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 AttributeFactory::AttributeFactory() {
 }
@@ -241,6 +242,8 @@ LuceneObjectPtr AttributeSourceState::clone(const LuceneObjectPtr& other) {
     }
 
     return clone;
+}
+
 }
 
 }

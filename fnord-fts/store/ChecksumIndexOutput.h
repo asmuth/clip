@@ -10,7 +10,8 @@
 #include <boost/crc.hpp>
 #include "fnord-fts/store/IndexOutput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Writes bytes through to a primary IndexOutput, computing
 /// checksum.  Note that you cannot use seek().
@@ -67,4 +68,5 @@ public:
 
 }
 
+}
 #endif

@@ -17,7 +17,8 @@
 #include "fnord-fts/index/DefaultSkipListWriter.h"
 #include "fnord-fts/store/IndexOutput.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 FormatPostingsPositionsWriter::FormatPostingsPositionsWriter(const SegmentWriteStatePtr& state, const FormatPostingsDocsWriterPtr& parent) {
     lastPosition = 0;
@@ -80,6 +81,8 @@ void FormatPostingsPositionsWriter::close() {
     if (out) {
         out->close();
     }
+}
+
 }
 
 }

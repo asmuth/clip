@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermsHashConsumerPerField.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class TermVectorsTermsWriterPerField : public TermsHashConsumerPerField {
 public:
@@ -52,4 +53,5 @@ public:
 
 }
 
+}
 #endif

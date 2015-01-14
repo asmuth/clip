@@ -7,9 +7,12 @@
 #include "fnord-fts/fts.h"
 #include "fnord-fts/index/TermsHashConsumerPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 TermsHashConsumerPerThread::~TermsHashConsumerPerThread() {
+}
+
 }
 
 }

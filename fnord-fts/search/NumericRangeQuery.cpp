@@ -13,7 +13,8 @@
 #include "fnord-fts/util/StringUtils.h"
 #include "fnord-fts/util/VariantUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 NumericRangeQuery::NumericRangeQuery(const String& field, int32_t precisionStep, int32_t valSize, NumericValue min, NumericValue max, bool minInclusive, bool maxInclusive) {
     BOOST_ASSERT(valSize == 32 || valSize == 64);
@@ -347,6 +348,8 @@ NumericIntRangeBuilder::~NumericIntRangeBuilder() {
 void NumericIntRangeBuilder::addRange(const String& minPrefixCoded, const String& maxPrefixCoded) {
     rangeBounds.add(minPrefixCoded);
     rangeBounds.add(maxPrefixCoded);
+}
+
 }
 
 }

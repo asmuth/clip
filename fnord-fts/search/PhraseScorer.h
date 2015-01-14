@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Scorer.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Scoring functionality for phrase queries.  A document is considered matching if it contains the
 /// phrase-query terms at "valid" positions. What "valid positions" are depends on the type of the
@@ -68,4 +69,5 @@ protected:
 
 }
 
+}
 #endif

@@ -8,7 +8,8 @@
 #include "fnord-fts/index/SegmentInfoCollection.h"
 #include "fnord-fts/index/SegmentInfo.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SegmentInfoCollection::SegmentInfoCollection() {
     segmentInfos = Collection<SegmentInfoPtr>::newInstance();
@@ -78,6 +79,8 @@ LuceneObjectPtr SegmentInfoCollection::clone(const LuceneObjectPtr& other) {
         cloneInfos->segmentInfos.add(*info);
     }
     return cloneInfos;
+}
+
 }
 
 }

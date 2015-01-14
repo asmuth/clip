@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Documents are the unit of indexing and search.
 ///
@@ -139,4 +140,5 @@ public:
 
 }
 
+}
 #endif

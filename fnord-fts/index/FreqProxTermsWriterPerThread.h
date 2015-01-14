@@ -9,7 +9,8 @@
 
 #include "fnord-fts/index/TermsHashConsumerPerThread.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 class FreqProxTermsWriterPerThread : public TermsHashConsumerPerThread {
 public:
@@ -31,4 +32,5 @@ public:
 
 }
 
+}
 #endif

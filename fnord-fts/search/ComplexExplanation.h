@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/Explanation.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Describes the score computation for document and query, and can distinguish a match independent
 /// of a positive value.
@@ -44,4 +45,5 @@ protected:
 
 }
 
+}
 #endif

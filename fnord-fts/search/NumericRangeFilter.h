@@ -9,7 +9,8 @@
 
 #include "fnord-fts/search/MultiTermQueryWrapperFilter.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// A {@link Filter} that only accepts numeric values within a specified range. To use this, you must first
 /// index the numeric values using {@link NumericField} ({@link NumericTokenStream}).
@@ -80,4 +81,5 @@ public:
 
 }
 
+}
 #endif

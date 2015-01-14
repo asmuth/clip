@@ -9,7 +9,8 @@
 #include "fnord-fts/util/ScorerDocQueue.h"
 #include "fnord-fts/search/Collector.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 DisjunctionSumScorer::DisjunctionSumScorer(Collection<ScorerPtr> subScorers, int32_t minimumNrMatchers) : Scorer(SimilarityPtr()) {
     this->currentDoc = -1;
@@ -130,6 +131,8 @@ int32_t DisjunctionSumScorer::advance(int32_t target) {
             }
         }
     } while (true);
+}
+
 }
 
 }

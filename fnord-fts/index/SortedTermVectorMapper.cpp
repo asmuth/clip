@@ -8,7 +8,8 @@
 #include "fnord-fts/index/SortedTermVectorMapper.h"
 #include "fnord-fts/index/TermVectorEntry.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 const wchar_t* SortedTermVectorMapper::ALL = L"_ALL_";
 
@@ -78,6 +79,8 @@ void SortedTermVectorMapper::setExpectations(const String& field, int32_t numTer
 
 Collection<TermVectorEntryPtr> SortedTermVectorMapper::getTermVectorEntrySet() {
     return currentSet;
+}
+
 }
 
 }

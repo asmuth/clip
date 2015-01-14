@@ -8,7 +8,8 @@
 #include "fnord-fts/search/HitQueue.h"
 #include "fnord-fts/search/ScoreDoc.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 HitQueue::HitQueue(int32_t size, bool prePopulate) : HitQueueBase(size) {
     this->prePopulate = prePopulate;
@@ -29,6 +30,8 @@ ScoreDocPtr HitQueue::getSentinelObject() {
     // Always set the doc Id to MAX_VALUE so that it won't be favored by lessThan. This generally should
     // not happen since if score is not NEG_INF, TopScoreDocCollector will always add the object to the queue.
     return !prePopulate ? ScoreDocPtr() : newLucene<ScoreDoc>(INT_MAX, -std::numeric_limits<double>::infinity());
+}
+
 }
 
 }

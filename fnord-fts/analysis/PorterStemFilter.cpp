@@ -9,7 +9,8 @@
 #include "fnord-fts/analysis/PorterStemmer.h"
 #include "fnord-fts/analysis/tokenattributes/TermAttribute.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 PorterStemFilter::PorterStemFilter(const TokenStreamPtr& input) : TokenFilter(input) {
     stemmer = newLucene<PorterStemmer>();
@@ -28,6 +29,8 @@ bool PorterStemFilter::incrementToken() {
         termAtt->setTermBuffer(stemmer->getResultBuffer(), 0, stemmer->getResultLength());
     }
     return true;
+}
+
 }
 
 }

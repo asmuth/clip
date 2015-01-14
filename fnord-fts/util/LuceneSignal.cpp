@@ -8,7 +8,8 @@
 #include "fnord-fts/util/LuceneSignal.h"
 #include "fnord-fts/util/Synchronize.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 LuceneSignal::LuceneSignal(const SynchronizePtr& objectLock) {
     this->objectLock = objectLock;
@@ -40,6 +41,8 @@ void LuceneSignal::wait(int32_t timeout) {
 
 void LuceneSignal::notifyAll() {
     signalCondition.notify_all();
+}
+
 }
 
 }

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/fts.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 namespace FileUtils {
 
@@ -64,4 +65,5 @@ String extractFile(const String& path);
 
 }
 
+}
 #endif

@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Convenience class for holding TermVector information.
 class TermVectorEntry : public LuceneObject {
@@ -46,4 +47,5 @@ public:
 
 }
 
+}
 #endif

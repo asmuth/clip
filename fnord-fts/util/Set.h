@@ -10,7 +10,8 @@
 #include <set>
 #include "fnord-fts/util/LuceneSync.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// Utility template class to handle set based collections that can be safely copied and shared
 template < class TYPE, class LESS = std::less<TYPE> >
@@ -31,14 +32,14 @@ protected:
 public:
     static this_type newInstance() {
         this_type instance;
-        instance.setContainer = Lucene::newInstance<set_type>();
+        instance.setContainer = fnord::fts::newInstance<set_type>();
         return instance;
     }
 
     template <class ITER>
     static this_type newInstance(ITER first, ITER last) {
         this_type instance;
-        instance.setContainer = Lucene::newInstance<set_type>(first, last);
+        instance.setContainer = fnord::fts::newInstance<set_type>(first, last);
         return instance;
     }
 
@@ -130,4 +131,5 @@ public:
 
 }
 
+}
 #endif

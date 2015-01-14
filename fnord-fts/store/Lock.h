@@ -9,7 +9,8 @@
 
 #include "fnord-fts/util/LuceneObject.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 /// An interprocess mutex lock.
 /// @see Directory#makeLock(const String&)
@@ -47,4 +48,5 @@ public:
 
 }
 
+}
 #endif

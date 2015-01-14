@@ -13,7 +13,8 @@
 #include "fnord-fts/util/MiscUtils.h"
 #include "fnord-fts/util/StringUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 int32_t BooleanQuery::maxClauseCount = 1024;
 
@@ -371,6 +372,8 @@ SimilarityDisableCoord::~SimilarityDisableCoord() {
 
 double SimilarityDisableCoord::coord(int32_t overlap, int32_t maxOverlap) {
     return 1.0; // disable coord
+}
+
 }
 
 }

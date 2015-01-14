@@ -11,7 +11,8 @@
 #include "fnord-fts/index/IndexReader.h"
 #include "fnord-fts/util/MiscUtils.h"
 
-namespace Lucene {
+namespace fnord {
+namespace fts {
 
 SpanTermQuery::SpanTermQuery(const TermPtr& term) {
     this->term = term;
@@ -83,6 +84,8 @@ LuceneObjectPtr SpanTermQuery::clone(const LuceneObjectPtr& other) {
 
 SpansPtr SpanTermQuery::getSpans(const IndexReaderPtr& reader) {
     return newLucene<TermSpans>(reader->termPositions(term), term);
+}
+
 }
 
 }
