@@ -32,7 +32,20 @@ public:
 
   Option<Buffer> get(const Buffer& key);
   Option<Buffer> get(const String& key);
-  bool get(const void* key, size_t key_size, void** data, size_t* data_size);
+  bool get(
+      const void* key,
+      size_t key_size,
+      void** value,
+      size_t* value_size);
+
+  void put(const String& key, const String& value);
+  void put(const String& key, const Buffer& value);
+  void put(const Buffer& key, const Buffer& value);
+  void put(
+      const void* key,
+      size_t key_size,
+      const void* value,
+      size_t value_size);
 
 protected:
   MDB_txn* mdb_txn_;
