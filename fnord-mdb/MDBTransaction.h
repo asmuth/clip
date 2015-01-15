@@ -7,35 +7,31 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_MDB_H
-#define _FNORD_MDB_H
+#ifndef _FNORD_MDBTRANSACTION_H
+#define _FNORD_MDBTRANSACTION_H
 #include <memory>
 #include <vector>
 #include <liblmdb/lmdb.h>
 #include "fnord/base/logging.h"
 #include "fnord/base/autoref.h"
-#include "fnord-mdb/MDBTransaction.h"
 
 namespace fnord {
 namespace mdb {
 
-class MDB : public RefCounted {
+class MDBTransaction : public RefCounted {
 public:
 
-  static RefPtr<MDB> open(const String& path);
+  MDBTransaction(MDB_txn* mdb_txn);
+  ~MDBTransaction();
+  MDBTransaction(const MDBTransaction& other) = delete;
+  MDBTransaction& operator=(const MDBTransaction& other) = delete;
 
-  MDB(const MDB& other) = delete;
-  MDB& operator=(const MDB& other) = delete;
-  ~MDB();
-
-  RefPtr<MDBTransaction> startTransaction(bool readonly = false);
+  void commit();
+  void abort();
 
 protected:
-  MDB(MDB_env* mdb_env);
-  void openDBHandle();
-
-  MDB_env* mdb_env_;
-  MDB_dbi mdb_handle_;
+  MDB_txn* mdb_txn_;
+  bool is_commited_;
 };
 
 }

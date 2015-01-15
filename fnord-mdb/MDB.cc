@@ -37,6 +37,23 @@ MDB::~MDB() {
   mdb_env_close(mdb_env_);
 }
 
+RefPtr<MDBTransaction> MDB::startTransaction(bool readonly /* = false */) {
+  MDB_txn* txn;
+
+  unsigned int flags = 0;
+  if (readonly) {
+    flags |= MDB_RDONLY;
+  }
+
+  auto rc = mdb_txn_begin(mdb_env_, NULL, flags, &txn);
+  if (rc != 0) {
+    auto err = String(mdb_strerror(rc));
+    RAISEF(kRuntimeError, "mdb_txn_begin() failed: $0", err);
+  }
+
+  return RefPtr<MDBTransaction>(new MDBTransaction(txn));
+}
+
 void MDB::openDBHandle() {
   MDB_txn* txn;
 
