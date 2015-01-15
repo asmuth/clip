@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="fn-metric-explorer.css" type="text/css">
   </head>
   <body>
-    <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="metric-explorer-list">
+    <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="fn-metric-explorer-list">
+    <link rel="import" href="metric-explorer-components/metric-explorer-search.html" data-component="fn-metric-explorer-search">
     <link rel="import" href="../components/fn-appbar.html" data-component="fn-appbar">
     <link rel="import" href="../components/fn-button.html" data-component="fn-button">
     <link rel="import" href="../components/fn-loader.html" data-component="fn-loader">
@@ -38,17 +39,61 @@
 <script type='text/javascript'>
 
   var views = {
-    "metric-explorer-list" : "<metric-explorer-list></metric-explorer-list>",
-    "metric-explorer-preview" : "<metric-explorer-preview></metric-explorer-preview>"
+    "metric-explorer-list" : "<fn-metric-explorer-list></fn-metric-explorer-list>",
+    "metric-explorer-preview" : "<fn-metric-explorer-preview></fn-metric-explorer-preview>",
+    "metric-explorer-search" : "<fn-metric-explorer-search></fn-metric-explorer-search>"
   }
 
-  function open(name) {
+  var routes = {
+    "metric-explorer-list" : "metrics",
+    "metric-explorer-preview" : "metric",
+    "metric-explorer-search" : "search"
+  }
+
+  function open(name, url_fragment) {
     var viewport = document.querySelector("#metric-explorer-viewport");
-    viewport.innerHTML = views[name];
+
+
+    var view = (name) ? views[name] : views["metric-explorer-search"];
+    console.log(view)
+    viewport.innerHTML = view;
+
+    if (url_fragment) {
+      window.location.hash = routes[name] + "?" + url_fragment;
+    }
+  }
+
+  function parseUrlHash(hash) {
+    var view;
+    var query_params = {};
+
+    if (hash.indexOf("?") >= 0) {
+      view = hash.substr(0, hash.indexOf("?")).replace("#", "");
+
+      var raw_params = hash.substr(hash.indexOf("?") + 1).split('&');
+
+      for (var i = 0; i < raw_params.length; i++) {
+        var param = (raw_params[i].split('=') != "undefined") ? 
+          raw_params[i].split('=') : "";
+        if (param[0] != "undefined") {
+          query_params[decodeURIComponent(param[0])] =
+             (param[1] != "undefined") ? 
+             decodeURIComponent(param[1]) : "";
+        }
+      }
+
+    } else {
+      view = (hash && hash != "undefined") ? hash : "";
+    }
+
+    return {
+      "view" : view,
+      "q_params" : query_params
+    }
   }
 
   window.addEventListener('fn-ready' ,function() {
-    open("metric-explorer-list");
+    open();
   }, false)
 </script>
 <script type='text/javascript' src='../fnord.js'></script>

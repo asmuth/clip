@@ -9,10 +9,10 @@
   <http://www.gnu.org/licenses/>.
 -->
 
-<template id="fn-metric-explorer-list-base-tpl">
+<template id="fn-metric-explorer-search-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
     <div class="navigation">
-      <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+      <h1 class="page_header"><i>Metrics</i> &rsaquo; Search</h1>
       <fn-search data-placeholder="Search...">
         <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
       </fn-search>
@@ -27,13 +27,13 @@
 </template>
 
 <script type='text/javascript'>
-  var MetricExplorerList = function() {
-
+  var MetricExplorerSearch = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-metric-explorer-list", "base");
+      console.log("search")
+      var tpl = Fnord.getTemplate("fn-metric-explorer-search", "base");
       this.appendChild(tpl);
 
-      this.loadMetricList();
+      this.loadMetricListWithFilter();
 
       var base = this;
 
@@ -65,10 +65,9 @@
       var search = this.querySelector("fn-search");
       search.addEventListener("fn-search-submit", onSearchSubmit);
       search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
-
     }
 
-    this.loadMetricListWithParams = function() {
+    this.loadMetricListWithFilter = function() {
       var q_params = parseUrlHash(window.location.hash).q_params;
 
       if (q_params && q_params.q) {
@@ -79,14 +78,16 @@
       }
     }
 
-    this.loadMetricList = function() {
+    this.loadMetricList = function(filter) {
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
-      var url = "https://rpc.fnrd.net/cm-stats/metrics/list";
+      var url = "https://rpc.fnrd.net/cm-stats/metrics/list" + filter;
 
       Fnord.httpGet(url, function(r) {
         if (r.status === 200) {
-          JSON.parse(r.response).metrics.forEach(function(m) {
+          var metrics = JSON.parse(r.response).metrics
+          console.log(metrics.length);
+          metrics.forEach(function(m) {
             var tr_elem = document.createElement("tr");
             tr_elem.setAttribute('metric-key', m.key);
             var cells = [
@@ -118,6 +119,6 @@
   }
 
   window.addEventListener('fn-ready', function() {
-    Fnord.registerComponent('fn-metric-explorer-list', MetricExplorerList);
+    Fnord.registerComponent('fn-metric-explorer-search', MetricExplorerSearch);
   }, false);
 </script>
