@@ -14,8 +14,10 @@ namespace fnord {
 namespace mdb {
 
 MDBTransaction::MDBTransaction(
-    MDB_txn* mdb_txn) :
+    MDB_txn* mdb_txn,
+    MDB_dbi mdb_handle) :
     mdb_txn_(mdb_txn),
+    mdb_handle_(mdb_handle),
     is_commited_(false) {}
 
 MDBTransaction::~MDBTransaction() {
@@ -44,6 +46,36 @@ void MDBTransaction::abort() {
 
   is_commited_ = true;
   mdb_txn_abort(mdb_txn_);
+}
+
+Option<Buffer> MDBTransaction::get(const Buffer& key) {
+  void* data;
+  size_t data_size;
+
+  if (get(key.data(), key.size(), &data, &data_size)) {
+    return Buffer(data, data_size);
+  } else {
+    return None<Buffer>();
+  }
+}
+
+Option<Buffer> MDBTransaction::get(const String& key) {
+  void* data;
+  size_t data_size;
+
+  if (get(key.c_str(), key.length(), &data, &data_size)) {
+    return Some(Buffer(data, data_size));
+  } else {
+    return None<Buffer>();
+  }
+}
+
+bool MDBTransaction::get(
+    const void* key,
+    size_t key_size,
+    void** data,
+    size_t* data_size) {
+  return false;
 }
 
 }

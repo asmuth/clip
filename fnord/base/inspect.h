@@ -12,6 +12,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "fnord/base/io/outputstream.h"
 
 namespace fnord {
 

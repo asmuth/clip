@@ -51,7 +51,7 @@ RefPtr<MDBTransaction> MDB::startTransaction(bool readonly /* = false */) {
     RAISEF(kRuntimeError, "mdb_txn_begin() failed: $0", err);
   }
 
-  return RefPtr<MDBTransaction>(new MDBTransaction(txn));
+  return RefPtr<MDBTransaction>(new MDBTransaction(txn, mdb_handle_));
 }
 
 void MDB::openDBHandle() {
