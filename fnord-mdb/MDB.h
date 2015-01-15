@@ -18,6 +18,18 @@
 namespace fnord {
 namespace mdb {
 
+class MDBTransaction : public RefCounted {
+public:
+
+  MDBTransaction(MDB_txn* mdb_txn);
+  ~MDBTransaction();
+  MDBTransaction(const MDBTransaction& other) = delete;
+  MDBTransaction& operator=(const MDBTransaction& other) = delete;
+
+protected:
+  MDB_txn* mdb_txn;
+};
+
 class MDB : public RefCounted {
 public:
 
@@ -27,10 +39,14 @@ public:
   MDB& operator=(const MDB& other) = delete;
   ~MDB();
 
+  RefPtr<MDBTransaction> startTransaction();
+
 protected:
   MDB(MDB_env* mdb_env);
+  void openDBHandle();
 
   MDB_env* mdb_env_;
+  MDB_dbi mdb_handle_;
 };
 
 }
