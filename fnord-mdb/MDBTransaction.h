@@ -47,6 +47,10 @@ public:
       const void* value,
       size_t value_size);
 
+  void del(const String& key);
+  void del(const Buffer& key);
+  void del(const void* key, size_t key_size);
+
 protected:
   MDB_txn* mdb_txn_;
   MDB_dbi mdb_handle_;

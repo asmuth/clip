@@ -128,5 +128,26 @@ void MDBTransaction::put(
   }
 }
 
+void MDBTransaction::del(const String& key) {
+  del(key.c_str(), key.length());
+}
+
+void MDBTransaction::del(const Buffer& key) {
+  del(key.data(), key.size());
+}
+
+void MDBTransaction::del(const void* key, size_t key_size) {
+  MDB_val mkey;
+  mkey.mv_data = const_cast<void*>(key);
+  mkey.mv_size = key_size;
+
+  auto rc = mdb_del(mdb_txn_, mdb_handle_, &mkey, NULL);
+  if (rc != 0) {
+    auto err = String(mdb_strerror(rc));
+    RAISEF(kRuntimeError, "mdb_del() failed: $0", err);
+  }
+}
+
+
 }
 }
