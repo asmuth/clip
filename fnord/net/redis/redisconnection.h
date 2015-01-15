@@ -11,7 +11,7 @@
 #define _FNORD_REDIS_CONNECTION_H
 #include <memory>
 #include <vector>
-#include "fnord/3rdparty/hiredis/hiredis.h"
+#include "hiredis/hiredis.h"
 #include "fnord/base/option.h"
 #include "fnord/base/status.h"
 #include "fnord/base/logging.h"

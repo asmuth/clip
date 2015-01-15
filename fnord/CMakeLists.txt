@@ -16,6 +16,7 @@ option(ENABLE_TESTS "Build unit tests [default: ON]" ON)
 include_directories(${PROJECT_BINARY_DIR})
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 include_directories(../)
+include_directories(../3rdparty/)
 
 find_package(Threads)
 
@@ -279,11 +280,11 @@ add_executable(fnord-ping-service-example
 
 # redis
 add_library(fnord-redis OBJECT
-    3rdparty/hiredis/async.c
-    3rdparty/hiredis/dict.c
-    3rdparty/hiredis/hiredis.c
-    3rdparty/hiredis/net.c
-    3rdparty/hiredis/sds.c
+    ../3rdparty/hiredis/async.c
+    ../3rdparty/hiredis/dict.c
+    ../3rdparty/hiredis/hiredis.c
+    ../3rdparty/hiredis/net.c
+    ../3rdparty/hiredis/sds.c
     net/redis/redisconnection.cc
     net/redis/redisqueue.cc)
 
