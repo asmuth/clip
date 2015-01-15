@@ -18,12 +18,11 @@ MDBTransaction::MDBTransaction(
     MDB_dbi mdb_handle) :
     mdb_txn_(mdb_txn),
     mdb_handle_(mdb_handle),
-    is_commited_(false) {}
-
-MDBTransaction::~MDBTransaction() {
-  assert(is_commited_);
-  mdb_txn_abort(mdb_txn_);
+    is_commited_(false) {
+  incRef();
 }
+
+MDBTransaction::~MDBTransaction() {}
 
 void MDBTransaction::commit() {
   if (is_commited_) {
@@ -37,6 +36,8 @@ void MDBTransaction::commit() {
     auto err = String(mdb_strerror(rc));
     RAISEF(kRuntimeError, "mdb_txn_commit() failed: $0", err);
   }
+
+  decRef();
 }
 
 void MDBTransaction::abort() {
@@ -46,6 +47,8 @@ void MDBTransaction::abort() {
 
   is_commited_ = true;
   mdb_txn_abort(mdb_txn_);
+
+  decRef();
 }
 
 Option<Buffer> MDBTransaction::get(const Buffer& key) {

@@ -30,6 +30,8 @@ public:
 
   RefPtr<MDBTransaction> startTransaction(bool readonly = false);
 
+  void setMaxSize(size_t size);
+
 protected:
   MDB(MDB_env* mdb_env);
   void openDBHandle();

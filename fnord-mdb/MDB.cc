@@ -72,5 +72,13 @@ void MDB::openDBHandle() {
   }
 }
 
+void MDB::setMaxSize(size_t size) {
+  auto rc = mdb_env_set_mapsize(mdb_env_, size);
+  if (rc != 0) {
+    auto err = String(mdb_strerror(rc));
+    RAISEF(kRuntimeError, "mdb_set_mapsize() failed: $0", err);
+  }
+}
+
 }
 }
