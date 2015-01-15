@@ -8,26 +8,24 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<template id="fnordmetric-metric-preview-popup-base-tpl">
-  <fn-popup>
-    <fn-tabbar id="embed">
-      <fn-tab data-active='active'>IFrame</fn-tab>
-      <fn-tab>HTML</fn-tab>
-      <fn-tab>URL</fn-tab>
-    </fn-tabbar>
-  </fn-popup>
-</template>
-
+<template id='fn-steps-base-tpl'></template>
 <script type='text/javascript'>
-  var FnordMetricMetricPreviewPopupComponent = function() {
+  var StepsComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fnordmetric-metric-preview-popup", "base");
-      this.appendChild(tpl);
+      if (this.hasAttribute('data-split-evenly')) {this.renderEvenlySteps();}
+    };
+
+    this.renderEvenlySteps = function() {
+      var steps = this.querySelectorAll("fn-step");
+      var width = (100 / steps.length) + "%";
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].style.width = width;
+      }
     };
   };
 
   window.addEventListener('fn-ready', function() {
-    var metric_preview_popup = Fnord.registerComponent(
-      "fnordmetric-metric-preview-popup", FnordMetricMetricPreviewPopupComponent);
+    Fnord.registerComponent('fn-steps', StepsComponent);
   }, false);
 </script>
+

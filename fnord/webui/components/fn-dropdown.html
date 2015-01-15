@@ -54,9 +54,15 @@
       outline: 0;
       text-align:left;
       transition: border-radius .1s ease,width .2s ease;
-      font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
       font-size: 14px;
       color: rgba(0,0,0,.8);
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    .header {
+      white-space: nowrap;
     }
 
     .text {
@@ -154,9 +160,9 @@
     *******************************/
 
     /*--------------
-      Fancy
+      Input like
     ---------------*/
-    #dropdown_ui.fancy {
+    #dropdown_ui.input {
       padding: .8em 1.1em;
       cursor: pointer;
       word-wrap: break-word;
@@ -175,11 +181,11 @@
       transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
     }
 
-    #dropdown_ui.fancy .text {
+    #dropdown_ui.input .text {
       margin-right: 2em;
     }
 
-    #dropdown_ui.fancy i.icon {
+    #dropdown_ui.input i.icon {
       position: absolute;
       top: auto;
       margin: 0em;
@@ -190,7 +196,7 @@
       transition: opacity 0.2s ease;
     }
 
-    #dropdown_ui.fancy ul#menu {
+    #dropdown_ui.input ul#menu {
       overflow-x: hidden;
       overflow-y: auto;
       -webkit-backface-visibility: hidden;
@@ -207,32 +213,32 @@
       transition: box-shadow 0.2s ease, border 0.2s ease;
     }
 
-    #dropdown_ui.fancy.labeled ul#menu {
+    #dropdown_ui.input.labeled ul#menu {
       border-top: 1px solid rgba(39,41,43,.15)!important;
     }
 
     @media only screen and (max-width: 767px) {
-      #dropdown_ui.fancy ul#menu {
+      #dropdown_ui.input ul#menu {
         max-height: 7.7142rem;
       }
     }
     @media only screen and (min-width: 768px) {
-      #dropdown_ui.fancy ul#menu {
+      #dropdown_ui.input ul#menu {
         max-height: 10.2856rem;
       }
     }
     @media only screen and (min-width: 992px) {
-      #dropdown_ui.fancy ul#menu {
+      #dropdown_ui.input ul#menu {
         max-height: 15.4284rem;
       }
     }
     @media only screen and (min-width: 1920px) {
-      #dropdown_ui.fancy ul#menu {
+      #dropdown_ui.input ul#menu {
         max-height: 20.5712rem;
       }
     }
 
-    #dropdown_ui.fancy li.item {
+    #dropdown_ui.input li.item {
       border-top: 1px solid rgba(0, 0, 0, 0.05);
       padding-left: 1.1em !important;
 
@@ -243,20 +249,50 @@
       word-wrap: normal;
     }
 
-    #dropdown_ui.fancy li.item:hover,
-    #dropdown_ui.fancy li.item[hover] {
+    #dropdown_ui.input li.item:hover,
+    #dropdown_ui.input li.item[hover] {
       box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
     }
 
-    #dropdown_ui.fancy:hover {
+    #dropdown_ui.input:hover {
       border-color: rgba(39, 41, 43, 0.3);
       box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.08);
     }
 
-    #dropdown_ui.fancy:hover .menu {
+    #dropdown_ui.input:hover .menu {
       border: 1px solid rgba(39, 41, 43, 0.3);
       box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.08);
     }
+
+     /*--------------
+      Small Input like
+    ---------------*/
+    #dropdown_ui.input.small {
+      min-width: 130px;
+      font-size: 0.9rem;
+    }
+    #dropdown_ui.input.small ul#menu {
+      min-width: 130px;
+    }
+
+    #dropdown_ui.input.small ul#menu li.item {
+      font-size: 0.9rem;
+    }
+
+
+    /*--------------
+      Compact Input like
+    ---------------*/
+    #dropdown_ui.input.compact ul#menu {
+      min-width: 0px;
+      width: auto;
+    }
+
+    #dropdown_ui.input.compact {
+      min-width: 0px;
+      width: auto;
+    }
+
 
     /*--------------
       Inline
@@ -300,7 +336,7 @@
     #dropdown_ui.search {
       display: block;
       width: 100%;
-      height: 35px;
+      height: 38px;
       min-width: 0;
       font-size: 1em;
       position:relative;
@@ -318,8 +354,11 @@
       outline: none;
       -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       padding: inherit;
-      line-height: 1.2em;
       cursor: auto;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1em;
+      color: #545758
     }
 
     #dropdown_ui.search i.icon {
@@ -358,41 +397,41 @@
     /*--------------
       Error
     ---------------*/
-    #dropdown_ui.error,
-    #dropdown_ui.error > .text {
+    #dropdown_ui[data-state='error'],
+    #dropdown_ui[data-state='error'] > .text {
       color: #a94442;
     }
 
-    #dropdown_ui.fancy.error {
+    #dropdown_ui.input[data-state='error'] {
       background: #fff0f0;
       border-color: #dbb1b1;
     }
 
-    #dropdown_ui.fancy.error:hover {
+    #dropdown_ui.input[data-state='error']:hover {
       border-color: #dbb1b1;
     }
 
-    #dropdown_ui.error ul#menu {
+    #dropdown_ui[data-state='error'] ul#menu {
       border-color: #dbb1b1;
     }
 
-    #dropdown_ui.error ul#menu li.item {
+    #dropdown_ui[data-state='error'] ul#menu li.item {
       color: #d95c5c;
     }
 
-    #dropdown_ui.error ul#menu li.item:hover,
-    #dropdown_ui.error ul#menu li.item[hover] {
+    #dropdown_ui[data-state='error'] ul#menu li.item:hover,
+    #dropdown_ui[data-state='error'] ul#menu li.item[hover] {
       background-color: #fff2f2;
     }
 
-    #dropdown_ui.error ul#menu li.item.active {
+    #dropdown_ui[data-state='error'] ul#menu li.item.active {
       background-color: #fdcfcf;
     }
 
     /*--------------
       Disabled
     ---------------*/
-    #dropdown_ui.disabled {
+    #dropdown_ui[data-state='disabled'] {
       cursor: auto;
     }
 
@@ -405,7 +444,7 @@
       <div class='text'>
         <content select='fn-dropdown-header'></content>
       </div>
-      <i class="icon fa fa-chevron-down"></i>
+      <i class="icon fa fa-caret-down"></i>
     </div>
     <ul id="menu">
     </ul>
@@ -420,9 +459,10 @@
       shadow.appendChild(tpl);
       var base = this;
 
-      /* style options */
+      /* options */
       if (this.hasAttribute('data-style')) {this.setStyle();}
       if (this.hasAttribute('data-state')) {this.setState();}
+      if (this.hasAttribute('data-preselected')) {this.setPreselection();}
 
       if (this.hasAttribute('data-searchable')) {this.renderSearchInput();}
 
@@ -442,26 +482,52 @@
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
         case "data-active":
-          this.showDropdown();
+          this.renderDropdown();
           break;
         case "data-style":
           this.setStyle();
+          break;
         case "data-state":
           this.setState(new_val);
+          break;
+        case "data-preselected":
+          this.setPreselection();
+          break;
         default:
           break;
       }
     };
 
+    /* styles currently can't be removed by changing the attribute */
     this.setStyle = function() {
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
-      dropdown_ui.className = this.getAttribute('data-style');
+      var class_name = this.getAttribute('data-style');
+
+      if (this.querySelector("fn-dropdown-label") != null) {
+        class_name += " labeled";
+      }
+
+      dropdown_ui.className = class_name;
     };
 
+    /* states can be added and removed */
     this.setState = function() {
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
-      dropdown_ui.className += " " + this.getAttribute('data-state');
+      dropdown_ui.setAttribute("data-state", this.getAttribute('data-state'));
     };
+
+    /* preselection only works if data-value is set */
+    this.setPreselection = function() {
+      var value = this.getAttribute('data-preselected');
+      var item = this.querySelector(
+        "fn-dropdown-item[data-value='" + value + "']");
+
+      if (item != null) {
+        var text = item.innerHTML;
+        this.updateHeader(text);
+        item.setAttribute('data-active', true);
+      }
+    }
 
     this.renderSearchInput = function() {
       this.search_item = "";
@@ -471,13 +537,13 @@
         input.placeholder = placeholder;
       }
       var dropdown_ui = this.shadowRoot.querySelector("#dropdown_ui");
-      dropdown_ui.className = "fancy search";
+      dropdown_ui.className = "input search";
       var header = this.shadowRoot.querySelector(".header");
       dropdown_ui.insertBefore(input, header);
 
       var base = this;
 
-      input.addEventListener('focus', function() {
+      input.addEventListener('click', function() {
         base.search_item = "";
       }, false);
 
@@ -488,6 +554,9 @@
             break;
           case 40:
             base.keyNavigationDown();
+            break;
+          case 13:
+            base.keyNavigationSubmit();
             break;
           default:
             base.search_item = this.value.toLowerCase();
@@ -559,43 +628,10 @@
           list_item.setAttribute('data-index', index);
           index++;
         }
-
         ul.appendChild(list_item);
-
         list_item.addEventListener('click', onItemClick, false);
-
       }
     };
-
-    this.keyNavigationUp = function() {
-      var hover_elem = this.shadowRoot.querySelector("li[hover]");
-      if (hover_elem != null) {
-        var index = parseInt(hover_elem.getAttribute('data-index'), 10) - 1;
-        var elem = this.shadowRoot.querySelector("li[data-index='" + index + "']");
-        if (elem != null) {
-          hover_elem.removeAttribute("hover");
-          elem.setAttribute("hover", "hover");
-          this.shadowRoot.querySelector("ul").scrollTop = elem.offsetTop;
-        }
-      }
-    }
-
-    this.keyNavigationDown = function() {
-      var hover_elem = this.shadowRoot.querySelector("li[hover]");
-      if (hover_elem != null) {
-        var index = parseInt(hover_elem.getAttribute('data-index'), 10) + 1;
-        var elem = this.shadowRoot.querySelector("li[data-index='" + index + "']");
-        if (elem != null) {
-          hover_elem.removeAttribute("hover");
-          elem.setAttribute("hover", "hover");
-          this.shadowRoot.querySelector("ul").scrollTop = elem.offsetTop;
-        }
-      } else {
-        var elem = this.shadowRoot.querySelector("li[data-index='0']");
-        elem.setAttribute("hover", "hover");
-      }
-    }
-
 
     this.clickItem = function(item, shadow) {
       var active_items = this.querySelectorAll("fn-dropdown-item[data-active]");
@@ -624,7 +660,7 @@
 
     this.updateHeader = function(text) {
       var header = this.querySelector("fn-dropdown-header");
-      if (header != null && header.getAttribute('data-changeable') == 'false') {return;}
+      if (header != null && header.getAttribute('data-display-selection') == 'false') {return;}
 
       if (this.hasAttribute('data-searchable')) {
         this.shadowRoot.querySelector("input").value = text;
@@ -632,13 +668,49 @@
         var shadow_header = this.shadowRoot.querySelector(".header .text");
         shadow_header.innerHTML = text;
       }
-
     };
-  };
 
-  /*
-    inline
-  */
+    /* Searchable Dropdown Key Navigation */
+    this.keyNavigationUp = function() {
+      var hover_elem = this.shadowRoot.querySelector("li[hover]");
+      if (hover_elem != null) {
+        var index = parseInt(hover_elem.getAttribute('data-index'), 10) - 1;
+        var elem = this.shadowRoot.querySelector("li[data-index='" + index + "']");
+        if (elem != null) {
+          hover_elem.removeAttribute("hover");
+          elem.setAttribute("hover", "hover");
+          this.shadowRoot.querySelector("ul").scrollTop = elem.offsetTop;
+        }
+      }
+    };
+
+    this.keyNavigationDown = function() {
+      var hover_elem = this.shadowRoot.querySelector("li[hover]");
+      if (hover_elem != null) {
+        var index = parseInt(hover_elem.getAttribute('data-index'), 10) + 1;
+        var elem = this.shadowRoot.querySelector("li[data-index='" + index + "']");
+        if (elem != null) {
+          hover_elem.removeAttribute("hover");
+          elem.setAttribute("hover", "hover");
+          this.shadowRoot.querySelector("ul").scrollTop = elem.offsetTop;
+        }
+      } else {
+        var elem = this.shadowRoot.querySelector("li[data-index='0']");
+        elem.setAttribute("hover", "hover");
+      }
+    };
+
+    this.keyNavigationSubmit = function() {
+      var shadow_elem = this.shadowRoot.querySelector("li[hover]");
+      if (shadow_elem != null) {
+        var value = shadow_elem.innerText;
+        var item = this.querySelector(
+          "fn-dropdown-item[data-value='" + value + "']");
+        this.clickItem(item, shadow_elem);
+      }
+    }
+
+  };
 
   window.addEventListener("fn-ready", function() {
     Fnord.registerComponent("fn-dropdown", DropDownComponent);

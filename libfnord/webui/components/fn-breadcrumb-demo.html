@@ -1,0 +1,60 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-breadcrumb-demo-base-tpl'>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Basic</h1>
+    <fn-breadcrumb>
+      <fn-breadcrumb-section data-link>Home</fn-breadcrumb-section>
+      <fn-breadcrumb-section data-link>Profile</fn-breadcrumb-section>
+      <fn-breadcrumb-section data-link data-active>Likes</fn-breadcrumb-section>
+    </fn-breadcrumb>
+  </section>
+  <section>
+    <h1><i>Example 2 &raquo;</i> Custom Divider</h1>
+    <fn-breadcrumb data-divider='custom'>
+      <fn-breadcrumb-section>Home</fn-breadcrumb-section>
+      <fn-breadcrumb-divider>/</fn-breadcrumb-divider>
+      <fn-breadcrumb-section>Profile</fn-breadcrumb-section>
+      <fn-breadcrumb-divider>/</fn-breadcrumb-divider>
+      <fn-breadcrumb-section>Likes</fn-breadcrumb-section>
+    </fn-breadcrumb>
+  </section>
+  <section>
+    <h1>Sizes</h1>
+    <fn-breadcrumb data-size='small'>
+      <fn-breadcrumb-section>Profile</fn-breadcrumb-section>
+      <fn-breadcrumb-section>Settings</fn-breadcrumb-section>
+      <fn-breadcrumb-section>Privacy</fn-breadcrumb-section>
+    </fn-breadcrumb>
+    <br />
+    <fn-breadcrumb data-size='large'>
+      <fn-breadcrumb-section>Profile</fn-breadcrumb-section>
+      <fn-breadcrumb-section>Settings</fn-breadcrumb-section>
+      <fn-breadcrumb-section>Privacy</fn-breadcrumb-section>
+    </fn-breadcrumb>
+    <br />
+    <fn-breadcrumb data-size='huge'>
+      <fn-breadcrumb-section>Profile</fn-breadcrumb-section>
+      <fn-breadcrumb-section>Settings</fn-breadcrumb-section>
+      <fn-breadcrumb-section>Privacy</fn-breadcrumb-section>
+    </fn-breadcrumb>
+  </section>
+  <section>
+    <h1><i>Example 2 &raquo;</i> HTML List Breadcrumb</h1>
+    <ul class='fn-breadcrumb'>
+      <li class='fn-breadcrumb-section'>Home</li>
+      <li class='fn-breadcrumb-section'>Profile</li>
+      <li class='fn-breadcrumb-section'>Likes</li>
+    </ul>
+  </section>
+
+
+</template>

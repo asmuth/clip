@@ -120,7 +120,15 @@
       }, false);
     };
 
+
     this.resizeVerticalView = function(offset) {
+      var min_width = this.getAttribute('data-min-position-vertical');
+      if (min_width != null) {
+        min_width = parseInt(min_width, 10);
+      } else {
+        min_width = 0;
+      }
+
       var left_pane = this.shadowRoot.querySelector(".left");
       var right_pane = this.shadowRoot.querySelector(".right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
@@ -128,7 +136,7 @@
       var left_pane_width = left_pane.offsetWidth - offset;
       var right_pane_width = this.offsetWidth - left_pane_width;
 
-      if (left_pane_width > 50 && right_pane_width > 50) {
+      if (left_pane_width > min_width && right_pane_width > min_width) {
         left_pane.style.width = left_pane_width + "px";
         right_pane.style.width = right_pane_width + "px";
         right_pane.style.marginLeft = left_pane_width + "px";
@@ -137,6 +145,13 @@
     };
 
     this.resizeHorizontalView = function(offset) {
+      var min_height = this.getAttribute('data-min-position-horizontal');
+      if (min_height != null) {
+        min_height = parseInt(min_height, 10);
+      } else {
+        min_height = 0;
+      }
+
       var left_pane = this.shadowRoot.querySelector(".left");
       var right_pane = this.shadowRoot.querySelector(".right");
       var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
@@ -144,7 +159,7 @@
       var left_pane_height = left_pane.offsetHeight - offset;
       var right_pane_height = this.offsetHeight- left_pane_height;
 
-      if (left_pane_height > 50 && right_pane_height > 50) {
+      if (left_pane_height > min_height && right_pane_height > min_height) {
         left_pane.style.height = left_pane_height + "px";
         right_pane.style.height = right_pane_height + "px";
         right_pane.style.marginTop = left_pane_height + "px";
