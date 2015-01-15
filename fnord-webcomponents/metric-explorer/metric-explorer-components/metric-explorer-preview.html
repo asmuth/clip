@@ -1,0 +1,78 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fnordmetric-metric-preview-base-tpl">
+  <fn-loader>
+    <h1 class="page_header">
+      <fn-button id="metric-list">
+        <i>Metric</i>
+      </fn-button>
+      &rsaquo;
+      <span></span>
+    </h1>
+    <fnordmetric-controls type='primary'>
+      <fnordmetric-controls-section data-position='left'>
+        <div class='group aggregation_type'>
+          <b>Rollup</b>
+          <fn-dropdown id='rollup'>
+          </fn-dropdown>
+        </div>
+        <div class='group aggregation_time_window'>
+          <b>Time Window / Step</b>
+          <fn-dropdown id='time_window'>
+          </fn-dropdown>
+          <fn-dropdown id='time_step'>
+          </fn-dropdown>
+        </div>
+        <div class="group group_by">
+          <b>Group by</b>
+        </div>
+      </fnordmetric-controls-section>
+      <fnordmetric-controls-section data-position='right'>
+        <div class='group timerange'>
+          <b>Show The Last...</b>
+          <fn-dropdown id='timerange'>
+          </fn-dropdown>
+        </div>
+        <div class='group date'>
+          <b>End Time</b>
+          <fn-datepicker time-select='input'>
+          </fn-datepicker>
+        </div>
+      </fnordmetric-controls-section>
+    </fnordmetric-controls>
+    <fnordmetric-controls type='secondary'>
+      <fnordmetric-controls-section data-position='left'>
+        <fn-button id="embed_btn">
+          <i class='fa fa-share'></i>
+          Embed
+        </fn-button>
+        <fn-button id="auto_refresh">
+          <i class='fa fa-refresh'></i>
+          Auto Refresh
+        </fn-button>
+      </fnordmetric-controls-section>
+      <fnordmetric-controls-section data-position='right'>
+        <fn-daterangepicker past-selectable='selectable'>
+        </fn-daterangepicker>
+      <fnordmetric-controls-section>
+    </fnordmetric-controls>
+    <fn-loader id="result_pane" data-transparent>
+      <div id="result_pane_chart">
+      </div>
+      <fn-table data-per-page='25' style="width:100%;">
+      </fn-table>
+    </fn-loader>
+  </fn-loader>
+  <fnordmetric-metric-preview-popup id="embed">
+  </fnordmetric-metric-preview-popup>
+</template>
+
