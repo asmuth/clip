@@ -224,6 +224,13 @@ bool fromJSONImpl(
 }
 
 template <>
+DateTime fromJSONImpl(
+    std::vector<JSONToken>::const_iterator begin,
+    std::vector<JSONToken>::const_iterator end) {
+  return DateTime(fromJSONImpl<uint64_t>(begin, end));
+}
+
+template <>
 JSONObject fromJSONImpl(
     std::vector<JSONToken>::const_iterator begin,
     std::vector<JSONToken>::const_iterator end) {
