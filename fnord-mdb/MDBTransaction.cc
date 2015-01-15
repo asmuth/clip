@@ -24,6 +24,18 @@ MDBTransaction::MDBTransaction(
 
 MDBTransaction::~MDBTransaction() {}
 
+RefPtr<MDBCursor> MDBTransaction::getCursor() {
+  MDB_cursor* cursor;
+
+  auto rc = mdb_cursor_open(mdb_txn_, mdb_handle_, &cursor);
+  if (rc != 0) {
+    auto err = String(mdb_strerror(rc));
+    RAISEF(kRuntimeError, "mdb_cusor_open() failed: $0", err);
+  }
+
+  return RefPtr<MDBCursor>(new MDBCursor(cursor));
+}
+
 void MDBTransaction::commit() {
   if (is_commited_) {
     RAISE(kRuntimeError, "transaction was already commited or aborted");

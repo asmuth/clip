@@ -15,6 +15,7 @@
 #include "fnord/base/autoref.h"
 #include "fnord/base/logging.h"
 #include "fnord/base/option.h"
+#include "fnord-mdb/MDBCursor.h"
 
 namespace fnord {
 namespace mdb {
@@ -26,6 +27,8 @@ public:
   ~MDBTransaction();
   MDBTransaction(const MDBTransaction& other) = delete;
   MDBTransaction& operator=(const MDBTransaction& other) = delete;
+
+  RefPtr<MDBCursor> getCursor();
 
   void commit();
   void abort();

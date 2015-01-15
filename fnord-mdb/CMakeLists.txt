@@ -7,4 +7,5 @@ add_library(fnord-mdb OBJECT
     ../3rdparty/liblmdb/mdb.c
     ../3rdparty/liblmdb/midl.c
     MDB.cc
+    MDBCursor.cc
     MDBTransaction.cc)
