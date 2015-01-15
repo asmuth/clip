@@ -75,7 +75,7 @@
   <section>
     <h1><i>Example 2 &raquo;</i> Clickable Sortable Table</h1>
     <fn-table id="example-table-2" data-clickable>
-      <fn-table-column>A</fn-table-column>
+      <fn-table-column data-sortable='num'>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
 
       <table>
@@ -97,14 +97,14 @@
   <section>
     <h1><i>Example 3 &raquo;</i> Selectable Sortable Table</h1>
     <fn-table id="example-table-3" data-selectable>
-      <fn-table-column>A</fn-table-column>
-      <fn-table-column>B</fn-table-column>
+      <fn-table-column data-sortable='num'>A</fn-table-column>
+      <fn-table-column data-sortable='num' data-sort-state='asc'>B</fn-table-column>
 
       <table>
-        <tr data-row-id="row1"><td>2</td><td>2</td></tr>
-        <tr data-row-id="row2"><td>4</td><td>4</td></tr>
-        <tr data-row-id="row3" data-selected><td>6</td><td>6</td></tr>
-        <tr data-row-id="row4"><td>9</td><td>9</td></tr>
+        <tr data-row-id="row1"><td>1</td><td>2</td></tr>
+        <tr data-row-id="row2"><td>2</td><td>4</td></tr>
+        <tr data-row-id="row3" data-selected><td>3</td><td>6</td></tr>
+        <tr data-row-id="row4"><td>4</td><td>9</td></tr>
       </table>
     </fn-table>
     <i>Selected: <span id="example-table-3-desc"></span></i>
@@ -131,7 +131,27 @@
   <!-- Example 4: Paginated Table -->
   <section>
     <h1><i>Example 4 &raquo;</i> Paginated Table</h1>
+    <fn-pager data-for></fn-pager>
     <fn-table id="example-table-4" data-per-page="3" data-page="0">
+      <fn-table-column>A</fn-table-column>
+      <fn-table-column>B</fn-table-column>
+      <fn-table-column>C</fn-table-column>
+      <table>
+        <tr><td>0</td><td>Z</td><td>a</td></tr>
+        <tr><td>1</td><td>G</td><td>a</td></tr>
+        <tr><td>2</td><td>H</td><td>a</td></tr>
+        <tr><td>3</td><td>Y</td><td>a</td></tr>
+        <tr><td>4</td><td>U</td><td>a</td></tr>
+        <tr><td>5</td><td>D</td><td>a</td></tr>
+        <tr><td>6</td><td>E</td><td>a</td></tr>
+        <tr><td>7</td><td>Y</td><td>a</td></tr>
+        <tr><td>8</td><td>R</td><td>a</td></tr>
+        <tr><td>9</td><td>A</td><td>a</td></tr>
+      </table>
+    </fn-table>
+
+    <fn-pagination data-for data-circling></fn-pagination>
+    <fn-table id="example-table-5" data-per-page="3" data-page="0">
       <fn-table-column>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
       <table>
@@ -147,6 +167,17 @@
         <tr><td>9</td><td>A</td></tr>
       </table>
     </fn-table>
+
   </section>
+
+  <script type='text/javascript'>
+    var pager = document.querySelector('fn-pager');
+    var table4 = document.querySelector("fn-table#example-table-4");
+    pager.forElement(table4);
+
+    var pagination = document.querySelector("fn-pagination");
+    var table5 = document.querySelector("fn-table#example-table-5");
+    pagination.forElement(table5);
+  </script>
 
 </template>

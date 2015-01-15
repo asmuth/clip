@@ -1,0 +1,184 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-pager {
+    display: block;
+  }
+</style>
+<template id='fn-pager-base-tpl'>
+  <style type='text/css'>
+    .pager {
+      display: inline-block;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 14px;
+      line-height: 1.3em;
+      color: rgba(0,0,0,.8);
+    }
+
+    .title {
+      float:left;
+      display:inline;
+      padding: 6px 10px 6px 0;
+    }
+
+    .title b {
+      font-weight: 500;
+    }
+    .tooltip {
+      display:inline;
+      float:left;
+      padding: 6px 12px;
+      margin-left: -1px;
+      color: rgba(0,0,0,.8);
+      background-color: #fff;
+      border: 1px solid #ddd;
+      line-height: 1.3em;
+    }
+
+    .tooltip i {
+      line-height: 1.3em;
+    }
+
+    .tooltip.backward {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .tooltip.forward {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    .tooltip:hover {
+      cursor:pointer;
+    }
+
+  </style>
+  <div class="pager">
+    <div class="title"></div>
+    <div class="tooltip backward">
+      <i class="fa fa-angle-double-left"></i>
+    </div>
+    <div class="tooltip forward">
+      <i class="fa fa-angle-double-right"></i>
+    </div>
+  </div>
+</template>
+<script type='text/javascript'>
+  var PagerComponent = function() {
+    this.createdCallback = function() {
+      var shadow= this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-pager", "base");
+      shadow.appendChild(tpl);
+
+      if (this.hasAttribute('data-for')) {
+        //set classname
+      } else {
+        this.init();
+        this.renderTitle();
+        this.observeTooltips(this.pageEvent, this);
+      }
+    };
+
+    this.forElement = function(elem) {
+      var page = elem.getAttribute('data-page');
+      page = (page == null)? 1 : parseInt(page, 10);
+      this.current_page = page;
+
+      var end = elem.getNumberOfItems();
+      end = (end == null)? 1 : parseInt(end, 10);
+      this.end = end;
+
+      var per_page = elem.getAttribute('data-per-page');
+      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
+      this.per_page = per_page;
+
+      var callback = elem.paginationEvent;
+
+      this.renderTitle();
+      this.observeTooltips(callback, elem);
+    };
+
+    this.init = function() {
+      var page = this.getAttribute('data-current-page');
+      page = (page == null)? 1 : parseInt(page, 10);
+      this.current_page = page;
+
+      var end = this.getAttribute('data-last-item');
+      end = (end == null)? 1 : parseInt(end, 10);
+      this.end = end;
+
+      var per_page = this.getAttribute('data-per-page');
+      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
+      this.per_page = per_page;
+    };
+
+    this.renderTitle = function() {
+      var current_page = this.current_page;
+      var per_page = this.per_page;
+      var end = this.end;
+
+      var start = current_page * per_page + 1;
+      var current_end = start + per_page - 1;
+
+      if (current_end > end) {
+        current_end = end;
+      }
+      var title = this.shadowRoot.querySelector(".title");
+      title.innerHTML =
+        "<b>" + start + "</b> - <b>" + current_end + "</b> of <b>" + end + "</b>";
+    };
+
+    this.observeTooltips = function(cb, caller) {
+      var backward_tooltip = this.shadowRoot.querySelector(".backward");
+      var forward_tooltip = this.shadowRoot.querySelector(".forward");
+      var base = this;
+
+      var pages = Math.ceil(this.end / this.per_page);
+
+      backward_tooltip.onclick = function() {
+        var current_page = base.current_page;
+        if (current_page > 0 || base.hasAttribute('data-circling')) {
+          var new_page = ((current_page + pages - 1) % pages);
+          cb(new_page, caller);
+          base.current_page = new_page;
+          base.renderTitle();
+        }
+      };
+
+      forward_tooltip.onclick = function() {
+        var current_page = base.current_page;
+        if (current_page < (pages-1)) {
+          var new_page = current_page + 1;
+          base.current_page = new_page;
+          base.renderTitle();
+          cb(new_page, caller);
+        } else {
+          if (base.hasAttribute('data-circling')) {
+            var new_page = 0;
+            base.current_page = new_page;
+            base.renderTitle();
+            cb(new_page, caller);
+          }
+        }
+      };
+    };
+
+    this.pageEvent = function(current_page, base) {
+      var page_event = new CustomEvent("fn-pager-turn", {detail : current_page});
+      this.dispatchEvent(page_event);
+    }
+
+  };
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-pager', PagerComponent);
+  }, false);
+</script>

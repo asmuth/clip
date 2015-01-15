@@ -90,13 +90,12 @@ fn-appbar fn-appbar-section {
 fn-appbar fn-button {
   color: #cdd3d8;
   cursor: pointer;
-  line-height: 50px;
-  margin: 0 19px 0 7px;
-  display: inline-block;
 }
 
 fn-appbar fn-button:hover {
-  color: #fff;
+  color: #fff!important;
+  background: transparent!important;
+  background-color: none!important;
 }
 
 fn-appbar fn-appbar-section[data-position='left'] {
@@ -126,6 +125,17 @@ fn-loader /deep/ .loader {
 
 /* fn-search */
 fn-appbar /deep/ fn-search /deep/ input {
+  background: #2d363b;
+  border: 1px solid #444e54;
+  color: #fff;
+  font-size: 90%;
+  height: 32px;
+  position: relative;
+  top: -1px;
+  left: 2px;
+}
+
+fn-appbar /deep/ fn-search /deep/ input:focus {
   background: #2d363b;
   border: 1px solid #444e54;
   color: #fff;
