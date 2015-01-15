@@ -26,6 +26,27 @@ public:
   MDBCursor(const MDBCursor& other) = delete;
   MDBCursor& operator=(const MDBCursor& other) = delete;
 
+  bool getFirst(Buffer* key, Buffer* value);
+  bool getFirst(
+      void** key,
+      size_t* key_size,
+      void** value,
+      size_t* value_size);
+
+  bool getLast(Buffer* key, Buffer* value);
+  bool getLast(
+      void** key,
+      size_t* key_size,
+      void** value,
+      size_t* value_size);
+
+  bool getNext(Buffer* key, Buffer* value);
+  bool getNext(
+      void** key,
+      size_t* key_size,
+      void** value,
+      size_t* value_size);
+
   void close();
 
 protected:
