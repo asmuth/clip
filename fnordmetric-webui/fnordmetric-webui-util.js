@@ -21,6 +21,7 @@ if (typeof FnordMetric.util == "undefined") {
   * @param qstr like metric_list?metric=/osx/load_avg_15m&view=value
   */
 FnordMetric.util.parseQueryString = function(qstr) {
+  if (qstr == null) {return;}
   var path;
   var query_params = {};
 
@@ -96,17 +97,6 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, push_state) {
 }
 
 
-
-
-
-FnordMetric.util.renderPageHeader = function(text, elem) {
-  var header = document.createElement("h1");
-  header.className = "page_header";
-  header.innerHTML = text;
-
-  elem.appendChild(header);
-}
-
 /**
   * @param offset in seconds
   */
@@ -129,39 +119,6 @@ FnordMetric.util.parseTimeOffset = function(offset) {
   }
 }
 
-FnordMetric.util.getHumanMonth = function(index, type) {
-  var months = {
-    "long" : [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"],
-    "short" : [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"]};
-
-  return months[type][index];
-}
-
-
 /**
   * creates a time description like 
   * '2 hours ago - Nov 8 2014 11:33:11
@@ -171,8 +128,12 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
   if (timestamp == 0) {
     return "0";
   }
-  var timestamp =
-    FnordMetric.util.convertToMilliTS(timestamp);
+
+  var months = [
+    "Jan","Feb", "Mar","Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct","Nov", "Dec"];
+
+  var timestamp = Math.floor(timestamp / 1000);
 
   var now = Date.now();
   var date = new Date(timestamp);
@@ -195,7 +156,7 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
 
   time_str +=
     " - " + 
-    FnordMetric.util.getHumanMonth(date.getMonth(), "short") + 
+    months[date.getMonth()] + 
     " " + date.getDate() +
     " " + date.getFullYear() +
     " " + date.getHours() +
@@ -204,98 +165,6 @@ FnordMetric.util.parseTimestamp = function(timestamp) {
 
   return time_str;
 }
-
-//FIXLAURA check all cases 
-FnordMetric.util.convertToMilliTS = function(ts) {
-  var length = ts.toString().length;
-  if (length == 16) {
-    return (ts/1000);
-  } else if (length < 13 && length >= 10) {
-    return (ts * 1000);
-  } else {
-    return ts;
-  }
-}
-
-FnordMetric.util.parseMilliTS = function(ts) {
-  var ts = FnordMetric.util.convertToMilliTS(ts);
-  if (ts < 1000) {
-    if (ts == 0) {
-      return " less than 1 millisecond";
-    }
-    if (ts == 1) {
-      return " 1 millisecond";
-    }
-    return ts + " milliseconds";
-  }
-
-  if (ts < 60000) {
-    ts = ts / 1000;
-    return (ts + (ts == 1? " second" : " seconds"));
-  }
-
-  if (ts < 3600000){
-    ts = ts / 60000;
-    return (ts + (ts == 1? " minute" : " minutes"));
-  }
-
-  ts = ts / 3600000;
-  return (ts + (ts == 1? " hour" : " hours"));
-}
-
-FnordMetric.util.humanCountRows = function(tables) {
-  if (tables == undefined) {
-    return "0 rows";
-  }
-
-  var num = 0;
-  tables.map(function(table) {
-    num += table.rows.length;
-  });
-  return (num == 1? num + " row" : num + " rows")
-}
-
-
-
-
-
-
-/* returns all words that include filter */
-FnordMetric.util.filterStringArray = function(strings, filter, limit) {
-  //FIXME ?
-  var data = [];
-  strings.map(function(string) {
-    if (string.indexOf(filter) > -1 && limit > 0) {
-      data.push(string);
-      limit--;
-    }
-  });
-  return data;
-}
-
-FnordMetric.util.toMilliSeconds = function(timestr) {
-  var time = timestr.split(/([a-z])/i);
-  var conversion = {
-    "s" : 1000,
-    "m" : 60000,
-    "h" : 3600000,
-    "d" : 86400000
-  }
-  var unit = time[1].toLowerCase();
-  var seconds = time[0] * conversion[unit];
-  return parseInt(seconds, 10);
-}
-
-FnordMetric.util.milliSecondsToTimeString = function(seconds) {
-  if (seconds < 60000) {
-    return (seconds / 1000) + "s";
-  }
-  if (seconds < 3600000) {
-    return (seconds / 60000) + "m";
-  }
-  return (seconds / 3600000) + "h";
-}
-
 
 /**
   * builds a ChartSQL query from url params
@@ -307,8 +176,8 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   var view = params.view;
   /* column for rollups */
   var columns = params.columns;
-  var start_time = Math.round(params.start_time / 1000);
-  var end_time = Math.round(params.end_time / 1000);
+  var start_time = params.start_time;
+  var end_time = params.end_time;
   var t_step = params.t_step;
   var t_window = params.t_window;
   var by = params.by;
@@ -386,10 +255,9 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
       hasGroupStm = true;
 
       group_expr += 
-        "OVER TIMEWINDOW(time, " + Math.round(t_window / 1000) + ",";
+        "OVER TIMEWINDOW(time, " + t_window + ",";
 
-      group_expr += (t_step != undefined)?
-        Math.round(t_step / 1000) : Math.round(t_window / 1000);
+      group_expr += (t_step != undefined)? t_step : t_window;
 
       group_expr+= ")";
 
@@ -413,60 +281,6 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     where_expr + group_expr + ";";
   return query;
 }
-
-FnordMetric.util.isNumKey = function(keycode) {
-  return (
-    (keycode >= 48 && keycode <= 57));
-}
-
-/* tab, arrow-left, arrow-right, deletekeys */
-FnordMetric.util.isNavKey = function(keycode) {
-  return (
-    keycode == 8 ||
-    keycode == 9 ||
-    keycode == 37 ||
-    keycode == 39 ||
-    keycode == 46);
-}
-
-
-
-FnordMetric.util.appendLeadingZero = function (num) {
-  var num = num;
-  if (typeof num == 'string') {
-    return (num.length > 1)? num : "0" + num;
-  }
-  return (num > 9)? num : "0" + num;
-}
-
-
-/* returns mm/dd/yyyy hh:mm */
-FnordMetric.util.getDateTimeString = function(timestamp) {
-  var timestamp = timestamp == undefined?
-    new Date() : new Date(parseInt(timestamp, 10));
-
-  var month = timestamp.getMonth();
-  month = FnordMetric.util.appendLeadingZero(month +1);
-  var day = FnordMetric.util.appendLeadingZero(timestamp.getDate());
-  var hours = FnordMetric.util.appendLeadingZero(timestamp.getHours());
-  var minutes = FnordMetric.util.appendLeadingZero(timestamp.getMinutes());
-  return (
-    month + "/" + day + "/" +
-    timestamp.getFullYear() + "  " + hours +
-    ":" + minutes);
-}
-
-/**
-  makes every word's first letter in string to upper case
-*/
-FnordMetric.util.toTitleCase = function(str) {
-  var words = str.split(" ");
-  for (var i = 0; i < words.length; i++) {
-    words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1).toLowerCase();
-  }
-  return words.join(" ");
-}
-
 
 FnordMetric.util.addToCSV = function(list, value) {
   if (list.length == 0) {
@@ -494,26 +308,3 @@ FnordMetric.util.removeFromCSV = function(list, value) {
   }
   return list;
 }
-
-FnordMetric.util.renderFlyout = function(text, elem, left) {
-  var flyout = document.createElement("div");
-  flyout.className = "hover_tooltip";
-  flyout.innerHTML = text;
-  flyout.style.top = "85px";
-  flyout.style.left = left + "px";
-  elem.appendChild(flyout);
-  return flyout;
-}
-
-
-FnordMetric.util.removeIfChild = function(child_n, parent_n) {
-  if (typeof child_n == 'object' && child_n.parentNode == parent_n) {
-    parent_n.removeChild(child_n);
-  }
-}
-
-
-
-
-
-

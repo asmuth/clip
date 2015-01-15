@@ -10,13 +10,20 @@
 -->
 
 <template id="fnordmetric-metric-list-base-tpl">
+  <style type='text/css'>
+    fn-pager.table {
+      float:right;
+      margin-right: 5px;
+    }
+  </style>
   <fn-loader data-loading data-loader-type="loader3">
     <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
-    <fn-table data-per-page="25" data-clickable style="width: 100%;">
-      <fn-table-column>Metric</fn-table-column>
+    <fn-pager class='table' data-for data-circling></fn-pager>
+    <fn-table data-per-page="25" data-page='0' data-clickable style="width: 100%;">
+      <fn-table-column data-sortable='string'>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
-      <fn-table-column>Last Insert</fn-table-column>
-      <fn-table-column>Total Stored Bytes</fn-table-column>
+      <fn-table-column data-sortable='string'>Last Insert</fn-table-column>
+      <fn-table-column data-sortable='num'>Total Stored Bytes</fn-table-column>
     </fn-table>
   </fn-loader>
 </template>
@@ -65,6 +72,7 @@
     this.loadMetricList = function() {
       var table = this.querySelector("fn-table");
       var loader = this.querySelector("fn-loader");
+      var pager = this.querySelector("fn-pager");
 
       var base = this;
       var app = document.querySelector("fnordmetric-app");
@@ -92,6 +100,8 @@
           });
 
           loader.removeAttribute("data-loading");
+          table.setAttribute('data-page', 0);
+          pager.forElement(table);
         } else {
           FnordMetric.util.displayErrorMessage("Error connecting to server");
         }
@@ -99,8 +109,8 @@
 
       table.addEventListener('fn-table-row-click', function(e) {
         var metric_key = e.srcElement.getAttribute('metric-key');
-        var end = Date.now();
-        var start = end - 3600000;
+        var end = Math.round(Date.now() / 1000);
+        var start = end - 3600;
         var raw_url = 
           "metric?key="+ metric_key +
           "&view=value&start_time=" + start +

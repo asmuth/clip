@@ -1,0 +1,285 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-navigation {
+    display: block;
+  }
+</style>
+<template id="fn-navigation-base-tpl">
+  <style type='text/css'>
+    .navigation {
+      margin: 0rem 0rem;
+      background: #ffffff;
+      font-size: 14px;
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      line-height: 1.33;
+      color: (0,0,0,.8);
+      font-weight: normal;
+      box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
+      border-radius: 0.2857rem;
+    }
+    .navigation:after {
+      content: '';
+      display: block;
+      height: 0px;
+      clear: both;
+      visibility: hidden;
+    }
+    .navigation:first-child {
+      margin-top: 0rem;
+    }
+    .navigation:last-child {
+      margin-bottom: 0rem;
+    }
+
+    /*--------------
+     Colors
+    ---------------*/
+
+
+    /* Text Color */
+    .navigation .item {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    .navigation .item .item {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Hover */
+    .navigation .item,
+    .navigation .item {
+      color: rgba(0, 0, 0, 0.85);
+    }
+
+    .navigation .item {
+      position: relative;
+      display: inline-block;
+      padding: 0.78571em 0.95em;
+      border-top: 0em solid transparent;
+      background: none;
+      vertical-align: middle;
+      line-height: 1;
+      text-decoration: none;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+      -webkit-transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+              transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .navigation .item .text {
+      display: inline-block;
+      position: relative;
+    }
+
+    /* Floated Content */
+    .navigation > .item:first-child {
+      border-radius: 0.2857rem 0px 0px 0.2857rem;
+    }
+    .navigation .item.left {
+      float: left;
+    }
+    .navigation .item.right {
+      float: right;
+    }
+
+   .navigation .item:before {
+      position: absolute;
+      content: '';
+      top: 0%;
+      right: 0px;
+      width: 1px;
+      height: 100%;
+      background: -webkit-linear-gradient(rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+      background: linear-gradient(rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+    }
+
+    .navigation .item.right:before {
+      right: auto;
+      left: 0px;
+    }
+
+    /*--------------
+      Icons
+    ---------------*/
+
+    .navigation .item > .icon {
+      display:inline-block;
+      opacity: 0.75;
+      float: none;
+      margin: 0em 0.25em 0em 0em;
+      width: 1.23em;
+      height: .9em;
+      font-style: normal;
+      line-height: 1;
+      font-weight: 400;
+      text-decoration: inherit;
+      text-align: center;
+      speak: none;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    .ui.menu .item > .dropdown.icon {
+      float: right;
+      margin-left: 1em;
+    }
+
+    /*--------------
+      Hover
+    ---------------*/
+    .navigation .item:hover {
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.03);
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    /*--------------
+      Pressed
+    ---------------*/
+    .navigation .item:active {
+      background: rgba(0, 0, 0, 0.03);
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    /*--------------
+      Active
+    ---------------*/
+    .navigation .item[data-active] {
+      background: rgba(0, 0, 0, 0.03);
+      color: rgba(0, 0, 0, 0.8);
+      font-weight: normal;
+      box-shadow: 0em 2px 0em inset;
+    }
+
+    .navigation .item[data-active] .icon {
+      opacity: 1;
+    }
+
+    .navigation .item fn-search {
+      position: relative;
+      vertical-align:middle;
+      display: inline-block;
+      min-width: 120px;
+      height: 2.5em;
+    }
+
+    .navigation .item.search {
+      padding: 0;
+      padding-left:10px;
+    }
+
+    .navigation .item.search[data-active] {
+      background: none;
+      box-shadow: none;
+    }
+
+    .navigation .item.search:hover {
+      background: none;
+    }
+
+
+
+  </style>
+
+  <div class="navigation">
+  </div>
+</template>
+<script type='text/javascript'>
+  var NavigationComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-navigation', 'base');
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+      this.render();
+    };
+
+    this.render = function() {
+      var base = this;
+      var navigation = this.shadowRoot.querySelector(".navigation");
+      var items = this.querySelectorAll('fn-navigation-item');
+      for (var i = 0; i < items.length; i++) {
+        var item = document.createElement("div");
+        item.className = "item";
+
+        if (items[i].hasAttribute('data-position')) {
+          item.className += " " + items[i].getAttribute('data-position');
+        }
+
+        var icon = items[i].querySelector("fn-navigation-icon");
+        if (icon) {
+          var icon_elem = document.createElement("div");
+          icon_elem.className = "icon";
+          icon_elem.innerHTML = icon.innerHTML;
+          item.appendChild(icon_elem);
+        }
+
+        var text = items[i].querySelector('fn-navigation-text');
+        if (text) {
+          var text_elem = document.createElement("div");
+          text_elem.className = "text";
+          text_elem.innerHTML = text.innerHTML;
+          item.appendChild(text_elem);
+        }
+
+        if (items[i].hasAttribute('data-search')) {
+          var search = document.createElement("fn-search");
+          var search_icon = document.createElement("fn-search-icon");
+          search_icon.innerHTML = "<i class='fa fa-search'></i>";
+          search.appendChild(search_icon);
+          search.setAttribute('data-style', 'transparent');
+          search.setAttribute('data-placeholder', 'Search...');
+
+          item.className += " search";
+          item.appendChild(search);
+
+
+          search.addEventListener('fn-search-autocomplete', function() {
+            console.log("autocomplete");
+            /*var term = search.getValue();
+            var res = [{query :"asdasd"}, {query : "2353242"}, {query : "234234"}];
+            search.autocomplete(term, res);*/
+
+          }, false);
+
+        }
+
+
+        item.addEventListener('click', function() {
+          base.onItemClick(this);
+        }, false);
+        navigation.appendChild(item);
+      }
+    }
+
+    this.onItemClick = function(item) {
+      var active_item = this.shadowRoot.querySelector(".item[data-active]");
+      if (active_item) {
+        active_item.removeAttribute('data-active');
+      }
+
+      item.setAttribute('data-active', 'active');
+
+      var ev = new CustomEvent('fn-navigation-item-click', {
+        bubbles: true,
+        cancelable: true
+      });
+      item.dispatchEvent(ev);
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-navigation', NavigationComponent);
+  }, false);
+</script>

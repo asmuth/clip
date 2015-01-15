@@ -17,6 +17,11 @@ fn-table /deep/ table {
   border-spacing: 0px;
 }
 
+.fn-table[data-page],
+fn-table[data-page] /deep/ table {
+  margin-top: 0;
+}
+
 .fn-table:first-child {
   margin-top: 0em;
 }
@@ -51,6 +56,31 @@ fn-table /deep/ thead th {
   text-transform: none;
   border-bottom: 1px solid #d4d4d5;
   border-left: none;
+  line-height: 1em;
+}
+
+.fn-table thead th,
+fn-table /deep/ thead th.sortable:before {
+  font-family: FontAwesome;
+  line-height: 1;
+  height: 1em;
+  vertical-align:middle;
+  font-weight: normal;
+  padding-right: 0.5em;
+  font-size: 1em;
+  content: "\f0d8";
+}
+
+fn-table /deep/ thead th.sortable.desc:before {
+  content: "\f0d7";
+}
+
+fn-table /deep/ thead th.sortable.asc:before {
+  content: "\f0d8";
+}
+
+fn-table /deep/ thead th.sortable:hover:before {
+  cursor:pointer;
 }
 
 .fn-table thead th:first-child,
@@ -88,6 +118,7 @@ fn-table /deep/ tfoot th {
   text-transform: none;
 }
 
+
 .fn-table tfoot th:first-child,
 fn-table /deep/ tfoot th:first-child {
   border-radius: 0em 0em 0em 0.25rem;
@@ -119,6 +150,12 @@ fn-table /deep/ td {
   text-align: left;
   vertical-align: middle;
 }
+
+.fn-table[data-clickable] tr:hover,
+fn-table[data-clickable] /deep/ tr:hover {
+  cursor: pointer;
+}
+
 
 .fn-table tr.success,
 .fn-table td.success,

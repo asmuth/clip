@@ -105,12 +105,14 @@ void QueryService::renderJSON(
     int width,
     int height) const {
   target->beginObject();
+  char num_rows[16];
 
   if (query->getNumResultLists() > 0) {
     target->addObjectEntry("tables");
     target->beginArray();
     for (int i = 0; i < query->getNumResultLists(); ++i) {
       const auto result_list = query->getResultList(i);
+      sprintf(num_rows, "%zu", result_list->getNumRows());
       target->beginObject();
 
       target->addObjectEntry("columns");
@@ -181,6 +183,15 @@ void QueryService::renderJSON(
     target->endArray();
     target->addComma();
   }
+
+  target->addObjectEntry("info");
+  target->beginArray();
+  target->beginObject();
+  target->addObjectEntry("num_rows");
+  target->addString(num_rows);
+  target->endObject();
+  target->endArray();
+  target->addComma();
 
   target->addObjectEntry("status");
   target->addString("success");

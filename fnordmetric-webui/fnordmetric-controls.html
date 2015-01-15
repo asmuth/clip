@@ -15,6 +15,7 @@
 
   fnordmetric-controls /deep/ fnordmetric-controls-section[data-position='left'] {
     float: left;
+    height: 100%;
   }
 
   fnordmetric-controls /deep/ fnordmetric-controls-section[data-position='right'] {
@@ -29,7 +30,6 @@
     border-bottom: 2px solid rgb(226, 232, 237);
     background-color: #f6f8fa;
     color: #60707f;
-    overflow: hidden;
   }
 
   fnordmetric-controls[type='primary-small'] /deep/ .controls_inner {
@@ -37,67 +37,6 @@
     padding: 10px 0;
   }
 
-  fnordmetric-controls[type='primary']  /deep/ .group,
-  fnordmetric-controls[type='primary-small']  /deep/ .group {
-    height: 64px;
-    float: left;
-    padding: 14px 20px 0 20px;
-    overflow: hidden;
-  }
-
-  fnordmetric-controls[type='primary']  /deep/ .group b {
-    font-weight: normal;
-    font-size: 80%;
-    line-height: 12px;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 6px;
-    opacity: 0.7;
-  }
-
-  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_type {
-    border-right: 1px solid rgb(226, 232, 237);
-  }
-
-  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window {
-    border-right: 1px solid rgb(226, 232, 237);
-  }
-
-  fnordmetric-controls[type='primary']  /deep/ .group.aggregation_time_window .disabled {
-    opacity: 0.5;
-  }
-
-  fnordmetric-controls[type='primary']  /deep/ .group fn-dropdown /deep/ select {
-    -webkit-appearance: menulist-button;
-    height: 30px;
-    font-size: 12px;
-    line-height: 30px;
-    min-width: 150px;
-    background: #fff;
-    border: 1px solid #b3c2d0;
-    color: #545758;
-  }
-
-  fnordmetric-controls[type='primary'] /deep/ .group.group_by fn-button {
-    line-height: 28px;
-    border: 1px solid #bbb;
-    border-radius: 3px;
-    padding: 0 8px;
-    text-align: center;
-    font-size: 12px;
-    text-decoration: none;
-    background: #fff;
-    border: 1px solid #b3c2d0;
-    color: #545758;
-    height: 28px;
-    display: block;
-    float: left;
-    margin-right: 10px;
-  }
-
-  fnordmetric-controls[type='primary'] /deep/ .group.group_by fn-button[data-active='active'] {
-    background: rgb(226, 232, 237);
-  }
 
   fnordmetric-controls[type='secondary'] /deep/ .controls_inner {
     height: 39px;
@@ -109,43 +48,20 @@
     text-align: right;
   }
 
-  fnordmetric-controls[type='secondary'] /deep/ fn-button {
-    margin-right: 20px;
-    height: 22px;
-    line-height: 22px;
-    margin-top: 10px;
-    color: #545758;
-  }
-
-  fnordmetric-controls[type='secondary'] /deep/ fn-button:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  fnordmetric-controls[type='secondary'] /deep/ fn-button /deep/ i {
-    position: relative;
-    margin-right: 4px;
-  }
-
-  fnordmetric-controls[type='secondary'] /deep/ fn-button .fa-database {
-    font-size: 87%;
-    position: relative;
-    top: -1px;
-  }
-
-  fnordmetric-controls[type='secondary'] /deep/ fn-button:first-child {
-    color: #009fe9;
-    font-weight:500;
-  }
-
-  fnordmetric-controls[type='secondary'] /deep/ fn-button + fn-button {
+  fnordmetric-controls fn-button + fn-button {
     border-left: 1px solid #ececec;
     padding-left: 20px;
   }
 
-  fnordmetric-controls[type='secondary'] /deep/ fn-button[auto-refresh-on='on'] {
-    color : #009fe9;
+  fnordmetric-controls fn-button {
+    font-size: 0.9rem;
   }
+
+  fnordmetric-controls fn-dropdown[data-state='disabled'] {
+    opacity: 0.5;
+  }
+
+
 
 
 

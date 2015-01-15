@@ -12,8 +12,8 @@
 <template id="fn-search-demo-base-tpl">
 
   <section>
-    <h1><i>fn-search &rsaquo;</i> Search With Autcomplete</h1>
-    <fn-search id="search-example-1" style="width: 100%;"></fn-search>
+    <h1><i>Example 1 &rsaquo;</i> Search</h1>
+    <fn-search id="search-example-1" style="height: 38px; width: 40%;"></fn-search>
 
     <script type="text/javascript">
       document.querySelector("#search-example-1").addEventListener(
@@ -27,8 +27,8 @@
   </section>
 
   <section>
-    <h1><i>fn-search &rsaquo;</i> Search With Autcomplete</h1>
-    <fn-search id="search-example-2" style="width: 100%;"></fn-search>
+    <h1><i>Example 2 &rsaquo;</i> Search With Autcomplete</h1>
+    <fn-search id="search-example-2" style="height: 38px; width: 40%;"></fn-search>
 
     <script type="text/javascript">
       document.querySelector("#search-example-2").addEventListener(
@@ -56,5 +56,17 @@
         false);
     </script>
   </section>
+  <section>
+    <h1><i>Example 3 &rsaquo;</i> Transparent Search</h1>
+    <fn-search data-style='transparent' style="height: 38px; width: 40%;"></fn-search>
+  </section>
+  <section>
+    <h1><i>Example 3 &rsaquo;</i> Search With Placeholder and Icon</h1>
+    <fn-search data-placeholder='Search...' style="height: 38px; width: 40%;">
+      <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+    </fn-search>
+  </section>
+
+
 
 </template>

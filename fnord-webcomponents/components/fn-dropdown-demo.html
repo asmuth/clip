@@ -10,7 +10,8 @@
 -->
 <template id="fn-dropdown-demo-base-tpl">
   <section>
-    <h1><i>Example 1 &raquo;</i> Dropdown</h1>
+    <h1>Styles</h1>
+    <h3><i>Example 1 &raquo;</i> Basic</h3>
     <fn-dropdown style="margin-bottom: 30px;">
       <fn-dropdown-header >Rollup</fn-dropdown-header>
       <fn-dropdown-item>Value</fn-dropdown-item>
@@ -21,38 +22,33 @@
       <fn-dropdown-item>Median</fn-dropdown-item>
     </fn-dropdown>
 
-    <h1><i>Example 2 &raquo;</i> Dropdown with Static Header</h1>
-    <fn-dropdown style="margin-bottom: 30px;">
-      <fn-dropdown-header data-changeable='false'>Categories</fn-dropdown-header>
-      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
-    </fn-dropdown>
-  </section>
-
-  <section>
-    <h1><i>Example 3 &raquo;</i> Fancy Dropdown</h1>
-    <fn-dropdown data-style="fancy">
+    <h3><i>Example 2 &raquo;</i> Input Like</h3>
+    <fn-dropdown data-style="input">
       <fn-dropdown-header>Categories</fn-dropdown-header>
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
     </fn-dropdown>
 
-  </section>
-  <section>
-    <h1><i>Example 4 &raquo;</i> Labeled Dropdown</h1>
-    <fn-dropdown data-style="fancy labeled">
-      <fn-dropdown-header>Filter</fn-dropdown-header>
-      <fn-dropdown-label>Filter by Tag</fn-dropdown-label>
-      <fn-dropdown-item>4 hours</fn-dropdown-item>
-      <fn-dropdown-item>12 hours</fn-dropdown-item>
-      <fn-dropdown-item>24 hours</fn-dropdown-item>
+    <h3><i>Example 2 &raquo;</i> Small Input Like</h3>
+    <fn-dropdown data-style="input small">
+      <fn-dropdown-header>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
     </fn-dropdown>
-  </section>
 
-  <section>
-    <h1><i>Example 4 &raquo;</i> Inline Dropdown</h1>
+
+    <h3><i>Example 3 &raquo;</i> Compact</h3>
+    <fn-dropdown data-style="input compact">
+      <fn-dropdown-header>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    </fn-dropdown>
+
+
+    <h3><i>Example 4 &raquo;</i> Inline</h3>
     <span>Show the last
       <fn-dropdown data-style="inline">
         <fn-dropdown-header>hour</fn-dropdown-header>
@@ -61,11 +57,32 @@
         <fn-dropdown-item>24 hours</fn-dropdown-item>
       </fn-dropdown>
     </span>
-
   </section>
 
   <section>
-    <h1><i>Example 4 &raquo;</i> Searchable Dropdown</h1>
+    <h1>Header and Label Options</h1>
+    <h3><i>Example 1 &raquo;</i> Static Header</h3>
+    <fn-dropdown style="margin-bottom: 30px;">
+      <fn-dropdown-header data-display-selection='false'>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    </fn-dropdown>
+
+    <h3><i>Example 2 &raquo;</i> Labeled Dropdown</h3>
+    <fn-dropdown data-style="input">
+      <fn-dropdown-header>Filter</fn-dropdown-header>
+      <fn-dropdown-label>Filter by Tag</fn-dropdown-label>
+      <fn-dropdown-item>4 hours</fn-dropdown-item>
+      <fn-dropdown-item>12 hours</fn-dropdown-item>
+      <fn-dropdown-item>24 hours</fn-dropdown-item>
+    </fn-dropdown>
+  </section>
+
+
+  <section>
+    <h1>Searchable Dropdown</h1>
+    <h3><i>Example 1 &raquo;</i> Full Width Input</h3>
     <fn-dropdown data-searchable data-placeholder="Select a Country">
       <fn-dropdown-item data-value="Spain">Spain</fn-dropdown-item>
       <fn-dropdown-item data-value="Italy">Italy</fn-dropdown-item>
@@ -79,20 +96,37 @@
       <fn-dropdown-item data-value="Austria">Austria</fn-dropdown-item>
     </fn-dropdown>
 
+    <h3><i>Example 2 &raquo;</i> Custom Width Input</h3>
+    <fn-dropdown data-searchable data-placeholder="Year" style="width:150px;">
+      <fn-dropdown-item data-value="2000">2000</fn-dropdown-item>
+      <fn-dropdown-item data-value="2001">2001</fn-dropdown-item>
+      <fn-dropdown-item data-value="2002">2002</fn-dropdown-item>
+      <fn-dropdown-item data-value="2003">2003</fn-dropdown-item>
+      <fn-dropdown-item data-value="2004">2004</fn-dropdown-item>
+      <fn-dropdown-item data-value="2005">2005</fn-dropdown-item>
+      <fn-dropdown-item data-value="2006">2006</fn-dropdown-item>
+      <fn-dropdown-item data-value="2007">2007</fn-dropdown-item>
+      <fn-dropdown-item data-value="2008">2008</fn-dropdown-item>
+      <fn-dropdown-item data-value="2009">2009</fn-dropdown-item>
+    </fn-dropdown>
+
   </section>
 
 
   <section>
-    <h1><i>Example 5 &raquo;</i> Disabled Dropdowns</h1>
+    <h1>States</h1>
+    <h3><i>Example 1 &raquo;</i> Disabled Basic Dropdown</h3>
     <fn-dropdown data-state='disabled' style="margin-bottom:30px;">
       <fn-dropdown-header>Age</fn-dropdown-header>
     </fn-dropdown>
-    <fn-dropdown data-style="fancy" data-state='disabled' style="margin-bottom:30px;">
+
+    <h3><i>Example 2 &raquo;</i> Disabled Input like Dropdown</h3>
+    <fn-dropdown data-style="input" data-state='disabled' style="margin-bottom:30px;">
       <fn-dropdown-header>Age</fn-dropdown-header>
     </fn-dropdown>
 
 
-    <h1><i>Example 6 &raquo;</i> Dropdowns with Error State</h1>
+    <h3><i>Example 3 &raquo;</i> Basic Dropdown with Error State</h3>
     <fn-dropdown data-state="error" style="margin-bottom:30px;">
       <fn-dropdown-header>Dropdown</fn-dropdown-header>
       <fn-dropdown-item>Choice 1</fn-dropdown-item>
@@ -100,7 +134,8 @@
       <fn-dropdown-item>Choice 3</fn-dropdown-item>
     </fn-dropdown>
 
-    <fn-dropdown data-state="error" data-style="fancy">
+    <h3><i>Example 4 &raquo;</i> Input like Dropdown with Error State</h3>
+    <fn-dropdown data-state="error" data-style="input">
       <fn-dropdown-header>Dropdown</fn-dropdown-header>
       <fn-dropdown-item>Choice 1</fn-dropdown-item>
       <fn-dropdown-item>Choice 2</fn-dropdown-item>
