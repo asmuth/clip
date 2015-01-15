@@ -52,7 +52,7 @@ public:
   void incRef();
   bool decRef();
 protected:
-  mutable std::atomic<size_t> refcount_;
+  mutable std::atomic<unsigned> refcount_;
 };
 
 template <typename T>
