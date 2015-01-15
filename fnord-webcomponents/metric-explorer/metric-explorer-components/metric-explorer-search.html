@@ -29,7 +29,6 @@
 <script type='text/javascript'>
   var MetricExplorerSearch = function() {
     this.createdCallback = function() {
-      console.log("search")
       var tpl = Fnord.getTemplate("fn-metric-explorer-search", "base");
       this.appendChild(tpl);
 
@@ -40,7 +39,7 @@
       var onSearchSubmit = (function(base) {
         return function(e) {
           var url = "q=" + encodeURIComponent(e.srcElement.getValue());
-          open("metric-explorer-search", url);
+          open("search", url);
         }
       })(this);
 
@@ -90,7 +89,7 @@
           var metrics = JSON.parse(r.response).metrics;
 
           if (metrics.length === 1) {
-            open("metric-explorer-preview", key);
+            open("metric", "m=" + key);
             return;
           }
 

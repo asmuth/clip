@@ -39,7 +39,6 @@
 
   fn-controls[type='primary']  /deep/ .group,
   fn-controls[type='primary-small']  /deep/ .group {
-    height: 64px;
     float: left;
     padding: 14px 20px 0 20px;
     overflow: hidden;
@@ -67,16 +66,7 @@
     opacity: 0.5;
   }
 
-  fn-controls[type='primary']  /deep/ .group fn-dropdown /deep/ select {
-    -webkit-appearance: menulist-button;
-    height: 30px;
-    font-size: 12px;
-    line-height: 30px;
-    min-width: 150px;
-    background: #fff;
-    border: 1px solid #b3c2d0;
-    color: #545758;
-  }
+
 
   fn-controls[type='primary'] /deep/ .group.group_by fn-button {
     line-height: 28px;
@@ -151,10 +141,7 @@
 
 </style>
 <template id="fn-controls-base-tpl">
-  <style>
 
-
-  </style>
   <div class="controls_outer">
     <div class="controls_inner">
       <content />

@@ -13,7 +13,11 @@
     <title>Metric Explorer</title>
     <link rel="stylesheet" href="../fnord.css" type="text/css">
     <link rel="stylesheet" href="../3rdparty/fontawesome.css" type="text/css">
+    <link rel="stylesheet" href="../3rdparty/fontawesome.woff" type="text/css">
     <link rel="stylesheet" href="fn-metric-explorer.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-button.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-input.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-table.css" type="text/css">
   </head>
   <body>
     <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="fn-metric-explorer-list">
@@ -27,7 +31,10 @@
     <link rel="import" href="../components/fn-table.html" data-component="fn-table">
     <link rel="import" href="../components/fn-progressbar.html" data-component="fn-progressbar">
     <link rel="import" href="../components/fn-dropdown.html" data-component="fn-dropdown">
-    <link rel="import" href="../../fnordmetric-webui/fnordmetric-controls.html" data-component="fnordmetric-controls">
+    <link rel="import" href="../components/fn-controls.html" data-component="fn-controls">
+    <link rel="import" href="../components/fn-datepicker.html" data-component="fn-datepicker">
+    <link rel="import" href="../components/fn-daterangepicker.html" data-component="fn-daterangepicker">
+    <link rel="import" href="../components/fn-input.html" data-component="fn-input">
     <link rel="stylesheet" href="../themes/midnight-blue.css" type="text/css">
 
 
@@ -41,39 +48,62 @@
 <script type='text/javascript'>
 
   var views = {
-    "metric-explorer-list" : "<fn-metric-explorer-list></fn-metric-explorer-list>",
-    "metric-explorer-preview" : "<fn-metric-explorer-preview></fn-metric-explorer-preview>",
-    "metric-explorer-search" : "<fn-metric-explorer-search></fn-metric-explorer-search>"
+    "metrics" : "<fn-metric-explorer-list></fn-metric-explorer-list>",
+    "metric" : "<fn-metric-explorer-preview></fn-metric-explorer-preview>",
+    "search" : "<fn-metric-explorer-search></fn-metric-explorer-search>"
   }
+
 
   var routes = {
-    "metric-explorer-list" : "metrics",
-    "metric-explorer-preview" : "metric",
-    "metric-explorer-search" : "search"
-  }
+    "metrics": "fn-metric-explorer-list",
+    "metric": "fn-metric-explorer-preview",
+    "search": "fn-metric-explorer-search"
+  };
 
-  function open(name, url_fragment) {
-    var viewport = document.querySelector("#metric-explorer-viewport");
+  var default_route = "metrics";
 
 
-    var view = (name) ? views[name] : views["metric-explorer-preview"];
-    viewport.innerHTML = view;
+  function openUrl(raw_url, push_state) {
+    var url = parseUrlQueryString(raw_url);
+    var query_params = url["query_params"];
 
-    if (url_fragment) {
-      window.location.hash = routes[name] + "?" + url_fragment;
+    var view_name = routes[url["path"]];
+    if (view_name == undefined) {
+      alert("no route found for: " + url["path"]);
+      return;
     }
-  }
 
-  function parseUrlHash(hash) {
-    var view;
+    if (typeof push_state == "undefined" || push_state === true) {
+      window.history.pushState({url: raw_url}, "", "#" + raw_url);
+    }
+
+    var viewport = document.querySelector("#metric-explorer-viewport");
+    var view = document.createElement(view_name);
+    view.setAttribute("data-url", raw_url);
+    viewport.innerHTML = "";
+    viewport.appendChild(view);
+
+  };
+
+
+  function parseUrlQueryString(qstr) {
+    if (qstr == null) {return;}
+    var path;
     var query_params = {};
 
-    if (hash.indexOf("?") >= 0) {
-      view = hash.substr(0, hash.indexOf("?")).replace("#", "");
+    if (qstr.indexOf("?") >= 0) {
+      path = qstr.substr(0, qstr.indexOf("?"));
+      path = path.replace("#", "");
 
-      var raw_params = hash.substr(hash.indexOf("?") + 1).split('&');
+      var params_str = qstr.substr(qstr.indexOf("?") + 1);
+      var raw_params = params_str.split('&');
 
-      for (var i = 0; i < raw_params.length; i++) {
+      /* set first param which defines view's view (metric, search ...) */
+      var param = raw_params[0].split('=');
+      query_params.innerView = decodeURIComponent(param[0]);
+      query_params.innerViewValue = decodeURIComponent(param[1]);
+
+      for (var i = 1; i < raw_params.length; i++) {
         var param = (raw_params[i].split('=') != "undefined") ? 
           raw_params[i].split('=') : "";
         if (param[0] != "undefined") {
@@ -84,17 +114,22 @@
       }
 
     } else {
-      view = (hash && hash != "undefined") ? hash : "";
+      path = qstr != "undefined" ? qstr : "";
     }
-
     return {
-      "view" : view,
-      "q_params" : query_params
+      "path": path,
+      "query_params": query_params
     }
-  }
+  };
 
   window.addEventListener('fn-ready' ,function() {
-    open();
+    var fragment = window.location.hash;
+    if (fragment) {
+      openUrl(fragment.substring(1));
+    } else {
+      openUrl(default_route);
+    }
+
   }, false)
 </script>
 <script type='text/javascript' src='../fnord.js'></script>

@@ -10,6 +10,64 @@
 -->
 
 <template id="fn-metric-explorer-preview-base-tpl">
+  <style type='text/css'>
+    fn-button#auto_refresh[auto-refresh-on='on'] {
+      color : #009fe9;
+    }
+    .group.group_by fn-button[data-active='active'] {
+      background: rgb(226, 232, 237);
+    }
+    .group.group_by fn-button {
+      float: left;
+    }
+    .group.aggregation_time_window {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+    .group.aggregation_time_window fn-dropdown {
+      float:left;
+      margin-right: 20px;
+    }
+    .group.aggregation_time_window fn-dropdown:last-child {
+      margin-right: 0;
+    }
+    .group.aggregation_type {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+    .group b {
+      font-weight: normal;
+      font-size: 80%;
+      line-height: 12px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+    .group {
+      height: 100%;
+      float: left;
+      padding: 14px 20px 0 20px;
+    }
+    fn-controls[type='secondary'] fn-button {
+      box-shadow:none;
+    }
+    #result_pane fn-message {
+      display:none;
+      margin: 2em 4em;
+    }
+    #result_pane fn-message.active {
+      display: block;
+    }
+    .result_pane {
+      display:none;
+    }
+    .result_pane.active {
+      display:block;
+    }
+    .result_pane fn-pager.table {
+      float:right;
+      margin-right: 5px;
+    }
+  </style>
   <fn-loader>
     <h1 class="page_header">
       <fn-button id="metric-list">
@@ -18,39 +76,82 @@
       &rsaquo;
       <span></span>
     </h1>
-    <fnordmetric-controls type='primary'>
-      <fnordmetric-controls-section data-position='left'>
+    <fn-controls type='primary'>
+      <fn-controls-section data-position='left'>
         <div class='group aggregation_type'>
           <b>Rollup</b>
-          <fn-dropdown id='rollup'>
+          <fn-dropdown id='rollup' data-style="input small">
+            <fn-dropdown-header>Value</fn-dropdown-header>
+            <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+            <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+            <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+            <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group aggregation_time_window'>
           <b>Time Window / Step</b>
-          <fn-dropdown id='time_window'>
+          <fn-dropdown id='time_window' data-style="input small">
+            <fn-dropdown-header>5 seconds</fn-dropdown-header>
+            <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+            <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
-          <fn-dropdown id='time_step'>
+          <fn-dropdown id='time_step' data-style="input small">
+            <fn-dropdown-header>5 seconds</fn-dropdown-header>
+            <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+            <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class="group group_by">
           <b>Group by</b>
         </div>
-      </fnordmetric-controls-section>
-      <fnordmetric-controls-section data-position='right'>
+      </fn-controls-section>
+      <fn-controls-section data-position='right'>
         <div class='group timerange'>
           <b>Show The Last...</b>
-          <fn-dropdown id='timerange'>
+          <fn-dropdown id='timerange' data-style="input small">
+            <fn-dropdown-header>1 hour</fn-dropdown-header>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group date'>
           <b>End Time</b>
-          <fn-datepicker time-select='input'>
+          <fn-datepicker data-time-select data-selectable="past">
           </fn-datepicker>
         </div>
-      </fnordmetric-controls-section>
-    </fnordmetric-controls>
-    <fnordmetric-controls type='secondary'>
-      <fnordmetric-controls-section data-position='left'>
+      </fn-controls-section>
+    </fn-controls>
+    <fn-controls type='secondary'>
+      <fn-controls-section data-position='left'>
         <fn-button id="embed_btn">
           <i class='fa fa-share'></i>
           Embed
@@ -59,12 +160,12 @@
           <i class='fa fa-refresh'></i>
           Auto Refresh
         </fn-button>
-      </fnordmetric-controls-section>
-      <fnordmetric-controls-section data-position='right'>
+      </fn-controls-section>
+      <fn-controls-section data-position='right'>
         <fn-daterangepicker past-selectable='selectable'>
         </fn-daterangepicker>
-      <fnordmetric-controls-section>
-    </fnordmetric-controls>
+      <fn-controls-section>
+    </fn-controls>
     <fn-loader id="result_pane" data-transparent>
       <div id="result_pane_chart">
       </div>
@@ -79,6 +180,188 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fn-metric-explorer-preview", "base");
       this.appendChild(tpl);
+
+      this.params = parseUrlHash(window.location.hash).q_params;
+
+      this.setHeader()
+      this.init(this.params.k);
+    }
+
+    this.setHeader = function() {
+      this.querySelector("h1 span").innerHTML = this.params.k
+    }
+
+    this.init = function(metric ) {
+      var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + encodeURIComponent(metric);
+      var base = this;
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+          json.metrics.map(function(m) {
+            base.columns = m.labels.join(",");
+          });
+        }
+        /*base.updateUrlParams(
+          base.addRequiredURLParamsForView(
+            base.getQueryParamOrDefaultValue("view")));*/
+        base.initControls();
+      });
+    };
+
+
+    this.updateUrlParams = function(new_params) {
+      var params = FnordMetric.util.parseQueryString(
+        this.getAttribute("data-url"));
+      for (var key in new_params) {
+        if (new_params[key] != undefined) {
+          params.query_params[key] = new_params[key].toString();
+        }
+      }
+      var path =FnordMetric.util.setURLQueryString(
+          "metric", params.query_params, false, true);
+      this.setAttribute("data-url", path);
+    };
+
+    this.updateDateTimeElems = function(end_time) {
+      var params = FnordMetric.util.parseQueryString(
+          this.getAttribute("data-url"));
+      var date_range = this.getQueryParamOrDefaultValue("time_range");
+      var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
+      this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute("data-timestamp", end_time * 1000);
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute("data-endtime", end_time * 1000);
+    };
+
+    this.getQueryParamOrDefaultValue = function(key) {
+      var defaults = {
+        view : "value",
+        columns: this.columns,
+        end_time : Math.round(Date.now() / 1000),
+        /* 5 minutes  */
+        time_range : 3600,
+        /* 10, 5 seconds */
+        t_step : 10,
+        t_window : 5,
+        by: this.columns
+      }
+
+      if (key == "time_range") {
+        var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
+        var start_time = parseInt(this.params['start_time'], 10);
+        if (!isNaN(start_time)) {
+          return end_time - start_time;
+        } else {
+          return defaults['time_range'];
+        }
+      }
+
+      var value = (this.params[key] == undefined)?
+        defaults[key] : params.query_params[key];
+      return value;
+    };
+
+    this.initControls = function() {
+      var base = this;
+      var rollup = this.querySelector("#rollup");
+      var view = this.getQueryParamOrDefaultValue("view");
+      rollup.setAttribute('data-preselected', view);
+
+      var time_window = this.querySelector("#time_window");
+      var t_window_val = this.getQueryParamOrDefaultValue("t_window");
+      time_window.setAttribute('data-preselected', t_window_val);
+
+      var time_step = this.querySelector("#time_step");
+      var t_step_val = this.getQueryParamOrDefaultValue("t_step");
+      time_step.setAttribute('data-preselected', t_step_val);
+
+      var group_by_field = this.querySelector(".group.group_by");
+      var columns = this.getQueryParamOrDefaultValue("columns").split(",");
+      var by = this.getQueryParamOrDefaultValue("by").split(",");
+      columns.map(function(c) {
+        var button = document.createElement("fn-button");
+        button.innerHTML = c;
+        if (by.indexOf(c) > -1) {
+          button.setAttribute("data-active", "active");
+        }
+        group_by_field.appendChild(button);
+        button.addEventListener("fn-button-click", function() {
+          var isActive = this.hasAttribute("data-active");
+          var columns = base.getQueryParamOrDefaultValue("by");
+          if (isActive) {
+            this.removeAttribute("data-active");
+            columns = FnordMetric.util.removeFromCSV(columns, this.innerText);
+          } else {
+            this.setAttribute("data-active", "active");
+            columns = FnordMetric.util.addToCSV(columns, this.innerText);
+          }
+          base.updateUrlParams({"by": columns});
+        });
+      });
+
+      var time_range_val = parseInt(
+        this.getQueryParamOrDefaultValue("time_range"), 10);
+      var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
+
+      var time_range = this.querySelector("#timerange");
+      time_range.setAttribute('data-preselected', time_range_val);
+
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute('data-timestamp', (end_time * 1000));
+
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute('data-daterange', (time_range_val * 1000));
+      daterangepicker.setAttribute('data-endtime', (end_time * 1000));
+
+      //set controls event listeners
+      rollup.addEventListener("fn-dropdown-item-click", function(e) {
+        var view = e.srcElement.getAttribute('data-value');
+        var new_params = base.addRequiredURLParamsForView(view);
+        new_params.view = view;
+        base.updateUrlParams(new_params);
+        base.handleAggregationDisplay();
+      }, false);
+
+      time_window.addEventListener("fn-dropdown-item-click", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_window": value});
+      }, false);
+
+      time_step.addEventListener("fn-dropdown-select", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_step": value});
+      }, false);
+
+      time_range.addEventListener("fn-dropdown-item-click", function(e) {
+        var endtime = base.getQueryParamOrDefaultValue("end_time");
+        var date_range = parseInt(e.srcElement.getAttribute('data-value'));
+        var starttime = parseInt(endtime, 10) - date_range;
+        base.updateUrlParams({"start_time": starttime});
+        //check
+        daterangepicker.setAttribute("data-daterange", (date_range * 1000));
+      }, false);
+
+      datepicker.addEventListener('fn-datepicker-select', function() {
+        var timestamp = parseInt(this.getAttribute("data-timestamp"), 10);
+        timestamp = Math.round(timestamp / 1000);
+        base.updateDateTimeElems(timestamp);
+      }, false);
+
+      daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
+        function() {
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
+          endtime = Math.round(endtime / 1000);
+          base.updateDateTimeElems(endtime);
+      }, false);
+
+      daterangepicker.addEventListener('fn-daterangepicker-select-next',
+        function() {
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
+          endtime = Math.round(endtime / 1000);
+          base.updateDateTimeElems(endtime);
+      }, false);
+
     }
 
   }

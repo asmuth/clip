@@ -40,7 +40,7 @@
       var onSearchSubmit = (function(base) {
         return function(e) {
           var url = "q=" + encodeURIComponent(e.srcElement.getValue());
-          open("metric-explorer-search", url);
+          open("search", url);
         }
       })(this);
 
@@ -68,16 +68,6 @@
 
     }
 
-    this.loadMetricListWithParams = function() {
-      var q_params = parseUrlHash(window.location.hash).q_params;
-
-      if (q_params && q_params.q) {
-        var filter = "?filter=" + q_params.q;
-        this.loadMetricList(filter);
-      } else {
-        this.loadMetricList("");
-      }
-    }
 
     this.loadMetricList = function() {
       var loader = this.querySelector("fn-loader");
@@ -111,6 +101,7 @@
 
       table.addEventListener('fn-table-row-click', function(e) {
         var metric_key = e.srcElement.getAttribute('metric-key');
+        open("metric", metric_key);
         console.log("clicked" + metric_key)
       }, false);
     }
