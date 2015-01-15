@@ -32,7 +32,9 @@
       var tpl = Fnord.getTemplate("fn-metric-explorer-search", "base");
       this.appendChild(tpl);
 
-      this.parseUrlAndLoad();
+      if (this.getAttribute('data-url') != null) {
+        this.parseUrlAndLoad();
+      }
 
       var base = this;
 
@@ -64,15 +66,22 @@
       var search = this.querySelector("fn-search");
       search.addEventListener("fn-search-submit", onSearchSubmit);
       search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
-    }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-url') {
+        this.parseUrlAndLoad();
+      }
+    };
 
     this.parseUrlAndLoad = function() {
-      var q_params = parseUrlHash(window.location.hash).q_params;
+      var q_params = 
+        parseUrlQueryString(this.getAttribute("data-url")).query_params;
 
-      if (q_params && q_params.q) {
-        this.loadMetricList(q_params.q);
+      if (q_params && q_params.innerViewValue) {
+        this.loadMetricList(q_params.innerViewValue);
 
-        this.querySelector(".navigation h1").innerHTML += " " + q_params.q;
+        this.querySelector(".navigation h1").innerHTML += " " + q_params.innerViewValue;
 
       } else {
         this.loadMetricList("");
@@ -83,13 +92,14 @@
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
       var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + key;
+      var base = this;
 
       Fnord.httpGet(url, function(r) {
         if (r.status === 200) {
           var metrics = JSON.parse(r.response).metrics;
 
           if (metrics.length === 1) {
-            open("metric", "m=" + key);
+            base.openMetricPreview(key);
             return;
           }
 
@@ -118,14 +128,19 @@
 
       table.addEventListener('fn-table-row-click', function(e) {
         var metric_key = e.srcElement.getAttribute('metric-key');
-        var end = Math.round(Date.now() / 1000);
-        var start = end - 3600;
-        var raw_url = 
-          "metric?key="+ encodeURIComponent(metric_key) +
-          "&view=value&start_time=" + start +
-          "&end_time=" + end;
-        openUrl(raw_url, true)
+        base.openMetricPreview(metric_key);
       }, false);
+    }
+
+    this.openMetricPreview = function(metric_key) {
+      var end = Math.round(Date.now() / 1000);
+      var start = end - 3600;
+      var raw_url = 
+        "metric?key="+ encodeURIComponent(metric_key) +
+        "&view=value&start_time=" + start +
+        "&end_time=" + end;
+      openUrl(raw_url, true)
+
     }
 
   }

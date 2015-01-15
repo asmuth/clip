@@ -39,8 +39,8 @@
 
       var onSearchSubmit = (function(base) {
         return function(e) {
-          var url = "q=" + encodeURIComponent(e.srcElement.getValue());
-          open("search", url);
+          var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
+          openUrl(url);
         }
       })(this);
 
