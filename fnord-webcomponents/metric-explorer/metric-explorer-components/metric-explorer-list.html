@@ -11,7 +11,10 @@
 
 <template id="metric-explorer-list-base-tpl">
   <fn-loader data-loading data-loader-type="loader3">
-    <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+    <div>
+      <h1 class="page_header"><i>Metrics</i> &rsaquo; All Metrics</h1>
+      <fn-search></fn-search>
+    </div>
     <fn-table data-per-page="25" data-clickable style="width: 100%;">
       <fn-table-column>Metric</fn-table-column>
       <fn-table-column>Labels</fn-table-column>
@@ -22,15 +25,48 @@
 </template>
 
 <script type='text/javascript'>
-  var MetricList = function() {
+  var MetricExplorerList = function() {
 
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("metric-explorer-list", "base");
       this.appendChild(tpl);
 
       console.log(this)
+      var base = this;
+
+      console.log(open)
 
       this.loadMetricList();
+
+      var onSearchSubmit = (function(base) {
+        return function(e) {
+          //var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
+          //base.openUrl(url);
+        }
+      })(this);
+
+
+      var onSearchAutocomplete = (function(base) {
+        return function(e) {
+          var term = e.srcElement.getValue();
+          var res = [];
+          var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + term;
+          Fnord.httpGet(url, function(r) {
+            if (r.status == 200) {
+              var json = JSON.parse(r.response);
+              json.metrics.map(function(metric) {
+                res.push({query : metric.key});
+              });
+              e.srcElement.autocomplete(term, res);
+            }
+          });
+        }
+      })(this);
+
+      var search = this.querySelector("fn-search");
+      search.addEventListener("fn-search-submit", onSearchSubmit);
+      search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
+
     }
 
     this.loadMetricList = function() {
@@ -71,6 +107,6 @@
   }
 
   window.addEventListener('fn-ready', function() {
-    Fnord.registerComponent('metric-explorer-list', MetricList);
+    Fnord.registerComponent('metric-explorer-list', MetricExplorerList);
   }, false);
 </script>

@@ -9,7 +9,7 @@
   <http://www.gnu.org/licenses/>.
 -->
 
-<template id="fnordmetric-metric-preview-base-tpl">
+<template id="metric-explorer-preview-base-tpl">
   <fn-loader>
     <h1 class="page_header">
       <fn-button id="metric-list">
@@ -72,7 +72,21 @@
       </fn-table>
     </fn-loader>
   </fn-loader>
-  <fnordmetric-metric-preview-popup id="embed">
-  </fnordmetric-metric-preview-popup>
 </template>
+
+<script type='text/javascript'>
+  var MetricExplorerPreview = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("metric-explorer-preview", "base");
+      this.appendChild(tpl);
+
+    }
+
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('metric-explorer-preview', MetricExplorerPreview);
+  }, false);
+</script>
+
 
