@@ -33,7 +33,7 @@
       var tpl = Fnord.getTemplate("fn-metric-explorer-search", "base");
       this.appendChild(tpl);
 
-      this.loadMetricListWithFilter();
+      this.parseUrlAndLoad();
 
       var base = this;
 
@@ -67,26 +67,33 @@
       search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
     }
 
-    this.loadMetricListWithFilter = function() {
+    this.parseUrlAndLoad = function() {
       var q_params = parseUrlHash(window.location.hash).q_params;
 
       if (q_params && q_params.q) {
-        var filter = "?filter=" + q_params.q;
-        this.loadMetricList(filter);
+        this.loadMetricList(q_params.q);
+
+        this.querySelector(".navigation h1").innerHTML += " " + q_params.q;
+
       } else {
         this.loadMetricList("");
       }
     }
 
-    this.loadMetricList = function(filter) {
+    this.loadMetricList = function(key) {
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
-      var url = "https://rpc.fnrd.net/cm-stats/metrics/list" + filter;
+      var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + key;
 
       Fnord.httpGet(url, function(r) {
         if (r.status === 200) {
-          var metrics = JSON.parse(r.response).metrics
-          console.log(metrics.length);
+          var metrics = JSON.parse(r.response).metrics;
+
+          if (metrics.length === 1) {
+            open("metric-explorer-preview", key);
+            return;
+          }
+
           metrics.forEach(function(m) {
             var tr_elem = document.createElement("tr");
             tr_elem.setAttribute('metric-key', m.key);

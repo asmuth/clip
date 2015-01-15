@@ -18,6 +18,7 @@
   <body>
     <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="fn-metric-explorer-list">
     <link rel="import" href="metric-explorer-components/metric-explorer-search.html" data-component="fn-metric-explorer-search">
+    <link rel="import" href="metric-explorer-components/metric-explorer-preview.html" data-component="fn-metric-explorer-preview">
     <link rel="import" href="../components/fn-appbar.html" data-component="fn-appbar">
     <link rel="import" href="../components/fn-button.html" data-component="fn-button">
     <link rel="import" href="../components/fn-loader.html" data-component="fn-loader">
@@ -26,6 +27,7 @@
     <link rel="import" href="../components/fn-table.html" data-component="fn-table">
     <link rel="import" href="../components/fn-progressbar.html" data-component="fn-progressbar">
     <link rel="import" href="../components/fn-dropdown.html" data-component="fn-dropdown">
+    <link rel="import" href="../../fnordmetric-webui/fnordmetric-controls.html" data-component="fnordmetric-controls">
     <link rel="stylesheet" href="../themes/midnight-blue.css" type="text/css">
 
 
@@ -54,8 +56,7 @@
     var viewport = document.querySelector("#metric-explorer-viewport");
 
 
-    var view = (name) ? views[name] : views["metric-explorer-search"];
-    console.log(view)
+    var view = (name) ? views[name] : views["metric-explorer-preview"];
     viewport.innerHTML = view;
 
     if (url_fragment) {
