@@ -1,0 +1,137 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  color: #545758;
+}
+
+h1 {
+  color: #394b59;
+  display: block;
+  font-size: 140%;
+  font-weight: normal;
+  height: 56px;
+  line-height: 58px;
+  margin: 0;
+  padding: 0;
+}
+
+h1 i {
+  color: rgb(115, 134, 148);
+  font-style: normal;
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+/* fn-table */
+fn-table /deep/ table {
+  border: none;
+  border-radius: 0;
+  margin-top: 0;
+}
+
+fn-table /deep/ table > thead > tr > td,
+fn-table /deep/ table > thead > tr > th,
+fn-table /deep/ table > tbody > tr > td,
+fn-table /deep/ table > tbody > tr > th {
+  text-align: left;
+  font-weight: 400;
+  height: 38px;
+  font-size: 98%;
+  padding: 0 20px;
+}
+
+fn-table /deep/ table > tbody > tr > td {
+  color: #545758;
+  vertical-align: middle;
+}
+
+fn-table /deep/ table > thead > tr > th {
+  line-height: 40px;
+  border-right: 1px solid rgb(226, 232, 237);
+}
+
+fn-table /deep/ table > thead > tr > th {
+  border-top: 2px solid rgb(226, 232, 237);
+  border-bottom: 2px solid rgb(226, 232, 237);
+  background-color: #f6f8fa;
+  color: #60707f;
+}
+
+fn-table /deep/ table > tbody > tr > td {
+  border-top: none;
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+fn-table /deep/ table.clickable tbody > tr:hover,
+fn-table /deep/ table.selectable tbody > tr[data-selected] {
+  background-color: #f6f8fa;
+}
+
+/* fn-appbar */
+fn-appbar /deep/ .appbar_outer {
+  min-width: 900px;
+  height: 49px;
+  background: rgba(25, 32, 37, 1);
+  border-bottom: rgba(24, 31, 36, 1);
+}
+
+fn-appbar fn-appbar-section {
+  height: 49px;
+  line-height: 49px;
+  padding: 0 8px;
+}
+
+fn-appbar fn-button {
+  color: #cdd3d8;
+  cursor: pointer;
+  line-height: 50px;
+  margin: 0 19px 0 7px;
+  display: inline-block;
+}
+
+fn-appbar fn-button:hover {
+  color: #fff;
+}
+
+fn-appbar fn-appbar-section[data-position='left'] {
+  border-right: 1px solid #2e3135;
+}
+
+fn-appbar fn-appbar-section[data-position='right'] {
+  border-left: 1px solid #2e3135;
+}
+
+fn-appbar fn-icon {
+  margin: 0 10px;
+  font-size: 12px;
+  position: relative;
+  top: -1px;
+}
+
+fn-appbar fn-button fn-icon {
+  font-size: 11px;
+  margin-right: 8px;
+}
+
+/* fn-loader */
+fn-loader /deep/ .loader {
+  background: #e9ebed;
+}
+
+/* fn-search */
+fn-appbar /deep/ fn-search /deep/ input {
+  background: #2d363b;
+  border: 1px solid #444e54;
+  color: #fff;
+  font-size: 90%;
+  height: 32px;
+  position: relative;
+  top: -1px;
+  left: 2px;
+}

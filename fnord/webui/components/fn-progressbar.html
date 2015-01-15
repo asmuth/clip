@@ -1,0 +1,205 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-progressbar {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    border: 1px solid rgba(39,41,43,.15);
+    margin: 1em 0 2.5em;
+    box-shadow: none;
+    background: rgba(0,0,0,.03);
+    padding: .2857em;
+    border-radius: .2857rem;
+    font-size: 1rem;
+  }
+
+  fn-progressbar[data-state='disabled'] {
+    opacity: .35;
+  }
+
+  fn-progressbar[data-state='success'] /deep/ .bar {
+    background-color: #5bbd72!important;
+  }
+
+  fn-progressbar[data-state='warning'] /deep/ .bar {
+    background-color: #f2c037!important;
+  }
+
+  fn-progressbar[data-state='error'] /deep/ .bar {
+    background-color: #d95c5c!important;
+  }
+
+  fn-progressbar[data-state] /deep/ .bar::after {
+    animation: none!important;
+    -webkit-animation: none!important;
+  }
+
+  fn-progressbar[data-state='success']  /deep/ .label {
+    color : #356e36;
+  }
+
+  fn-progressbar[data-state='warning']  /deep/ .label {
+    color : #825c01;
+  }
+
+  fn-progressbar[data-state='error']  /deep/ .label {
+    color : #d95c5c;
+  }
+
+</style>
+<template id='fn-progressbar-base-tpl'>
+  <style type='text/css'>
+    .bar {
+      display: block;
+      height: 1.75em;
+      line-height: 1;
+      position: relative;
+      width: 0;
+      min-width: 2em;
+      background: #888;
+      border-radius: .2857rem;
+      -webkit-transition: width .2s linear,background-color .2s linear;
+      transition: width .2s linear,background-color .2s linear;
+    }
+
+    .bar::after {
+      content: '';
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-radius: .2857rem;
+      -webkit-animation: progress-active 2s ease infinite;
+      animation: progress-active 2s ease infinite;
+    }
+
+    .bar > .progress {
+      white-space: nowrap;
+      position: absolute;
+      width: auto;
+      font-size: .9em;
+      top: 50%;
+      right: .5em;
+      left: auto;
+      bottom: auto;
+      color: rgba(255,255,255,.8);
+      text-shadow: none;
+      margin-top: -.5em;
+      font-weight: 700;
+      text-align: left;
+      font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+      line-height: 1;
+    }
+
+    .label {
+      position: absolute;
+      width: 100%;
+      font-size: 1em;
+      top: 100%;
+      right: auto;
+      left: 0;
+      bottom: auto;
+      color: rgba(0,0,0,.8);
+      font-weight: 700;
+      text-shadow: none;
+      margin-top: .2em;
+      text-align: center;
+      -webkit-transition: color .4s ease;
+      transition: color .4s ease;
+    }
+
+    @-webkit-keyframes progress-active {
+      0% {
+        opacity: 0.3;
+        width: 0;
+      }
+      100% {
+        opacity: 0;
+        width: 100%;
+      }
+    }
+
+    @keyframes progress-active {
+      0% {
+        opacity: 0.3;
+        width: 0;
+      }
+      100% {
+        opacity: 0;
+        width: 100%;
+      }
+    }
+  </style>
+  <div class="bar">
+    <div class="progress"></div>
+  </div>
+</template>
+
+<script type='text/javascript'>
+  var ProgressBarComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-progressbar", "base");
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+
+      if (this.hasAttribute('data-label')) {
+        this.renderDataLabel();
+      }
+
+       if (this.hasAttribute('data-progress')) {
+        this.updateProgressBar(this.getAttribute('data-progress'));
+      }
+
+      this.attributeChangedCallback();
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case "data-progress":
+          this.updateProgressBar(new_val);
+          break;
+        case "data-label":
+          this.renderDataLabel();
+          break;
+        default:
+          break;
+      }
+    };
+
+    this.renderDataLabel = function() {
+      var label_elem = document.createElement("div");
+      label_elem.className = "label";
+      label_elem.innerHTML = this.getAttribute('data-label');
+      this.shadowRoot.appendChild(label_elem);
+    };
+
+    this.updateProgressBar = function(progress) {
+      var bar_elem = this.shadowRoot.querySelector(".bar");
+      bar_elem.style.width = progress + "%";
+
+
+      if (!(this.getAttribute('data-show-progress') == "off")) {
+        var progress_elem = this.shadowRoot.querySelector(".progress");
+        progress_elem.innerHTML = progress + "%";
+      }
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var progressbar = Fnord.registerComponent(
+      'fn-progressbar', ProgressBarComponent);
+  }, false);
+</script>

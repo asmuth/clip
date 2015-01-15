@@ -1,0 +1,142 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+
+  todo: add seconds-selectable and render third input if attr is set
+-->
+<template id="fn-timeinput-base-tpl">
+  <style>
+    #timeinput_container {
+      margin:auto;
+      height: 30px;
+      width: 126px;
+    }
+
+    input {
+      float: left;
+      width: 30px;
+      height: 25px;
+      line-height: 25px;
+      padding: 0 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid #b3c2d0;
+      color: #545758;
+      background: #fff;
+    }
+
+    input.highlighted {
+      border: 1px solid rgba(230, 126, 34,1.0);
+      background: rgba(230, 126, 34,0.1);
+    }
+
+    b {
+      float:left;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  </style>
+
+  <div id="timeinput_container">
+    <input id="hours"/>
+    <b>:</b>
+    <input id="minutes" />
+  </div>
+</template>
+<script type="text/javascript">
+  var TimeInputComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-timeinput", "base");
+      var shadow = this.createShadowRoot();
+      var base = this;
+      shadow.appendChild(tpl);
+
+      var hours_input = this.shadowRoot.querySelector("#hours");
+      var minutes_input = this.shadowRoot.querySelector("#minutes");
+
+      hours_input.addEventListener('focus', function() {
+        base.validateHoursInput();
+      }, false);
+      minutes_input.addEventListener('focus', function() {
+        base.validateMinutesInput();
+      }, false);
+    };
+
+    this.validateHoursInput = function() {
+      var base = this;
+      var input = this.shadowRoot.querySelector("#hours");
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > 23) {
+            this.className = "highlighted";
+            return;
+          }
+          this.className = "";
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!FnordMetric.util.isNavKey(e.keyCode) &&
+          !FnordMetric.util.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
+    };
+
+    this.validateMinutesInput = function() {
+      var base = this;
+      var input = this.shadowRoot.querySelector("#minutes");
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > 59) {
+            this.className = "highlighted";
+            return;
+          }
+          this.className = "";
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!FnordMetric.util.isNavKey(e.keyCode) &&
+          !FnordMetric.util.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
+    };
+
+    this.setHoursValue = function(value) {
+      var input = this.shadowRoot.querySelector("#hours");
+      input.value = FnordMetric.util.appendLeadingZero(value);
+    };
+
+    this.setMinutesValue = function(value) {
+      var input = this.shadowRoot.querySelector("#minutes");
+      input.value = FnordMetric.util.appendLeadingZero(value);
+    };
+
+    this.getValues = function() {
+      return {
+        'hours' : this.shadowRoot.querySelector("#hours").value,
+        'minutes' : this.shadowRoot.querySelector("#minutes").value};
+    };
+
+    this.fireTimeInputSubmitEvent = function() {
+      this.dispatchEvent(new Event("fn-timeinput-submit"));
+    };
+  }
+
+  window.addEventListener('fn-ready', function() {
+    var timeinput = Fnord.registerComponent('fn-timeinput', TimeInputComponent);
+  }, false);
+</script>
+
